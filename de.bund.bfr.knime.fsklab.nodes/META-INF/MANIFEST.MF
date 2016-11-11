@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: FSK nodes
+Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: de.bund.bfr.knime.fsklab.nodes.FskPlugin
+Bundle-Vendor: BfR
+Require-Bundle: org.eclipse.core.runtime,
+ org.knime.base,
+ org.knime.js.core,
+ org.knime.workbench.core,
+ org.knime.workbench.repository,
+ com.fasterxml.jackson.core.jackson-annotations,
+ com.fasterxml.jackson.core.jackson-core,
+ com.fasterxml.jackson.core.jackson-databind,
+ org.apache.commons.lang,
+ org.knime.ext.svg,
+ org.apache.commons.codec
+Bundle-ActivationPolicy: lazy
+Export-Package: de.bund.bfr.knime.fsklab.nodes
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: library.jar
+

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="de.bund.bfr.knime.fsklab.feature"
+      label="FSK Lab Feature"
+      version="1.0.0.qualifier"
+      provider-name="BfR">
+
+   <description url="http://www.example.com/description">
+      Internal BfR Nodes.
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      Copyright (c) 2016 German Federal Institute for Risk Assessment (BfR)
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+ 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.knime.base"/>
+      <import plugin="org.knime.js.core"/>
+      <import plugin="org.knime.workbench.core"/>
+      <import plugin="org.knime.workbench.repository"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-core"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
+      <import plugin="org.apache.commons.lang"/>
+      <import plugin="org.knime.ext.svg"/>
+      <import plugin="org.apache.commons.codec"/>
+   </requires>
+
+   <plugin
+         id="de.bund.bfr.knime.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>

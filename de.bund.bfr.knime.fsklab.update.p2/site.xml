@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/de.bund.bfr.knime.fsklab.feature_1.0.0.qualifier.jar" id="de.bund.bfr.knime.fsklab.feature" version="1.0.0.qualifier">
+      <category name="fsklab"/>
+   </feature>
+   <category-def name="fsklab" label="FSK Lab nodes"/>
+</site>
