@@ -31,7 +31,7 @@ import org.apache.http.entity.FileEntity
 import org.apache.http.impl.client.AbstractHttpClient
 import org.apache.http.protocol.HttpContext
 
-class DeployToBintray {
+class DeployFSKToBintray {
 
 	static boolean USE_PROXY = true
 	static String PROXY = "webproxy"
