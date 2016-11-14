@@ -6,11 +6,11 @@
       provider-name="BfR">
 
    <description url="http://www.example.com/description">
-      Internal BfR Nodes.
+      FSK Lab nodes
    </description>
 
    <copyright url="http://www.example.com/copyright">
-      Copyright (c) 2016 German Federal Institute for Risk Assessment (BfR)
+      Copyright (c) 2016 Federal Institute for Risk Assessment (BfR), Germany
    </copyright>
 
    <license url="http://www.example.com/license">
