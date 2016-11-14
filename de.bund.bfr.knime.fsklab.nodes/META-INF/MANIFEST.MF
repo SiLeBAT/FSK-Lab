@@ -8,7 +8,6 @@ Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.fsklab.nodes
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Bundle-ClassPath: library.jar
 Require-Bundle: org.eclipse.core.runtime,
  org.knime.base,
  org.knime.workbench.core,
