@@ -35,5 +35,10 @@
       deprecated="false"
       factory-class="de.bund.bfr.knime.fsklab.nodes.reader.FskxReaderNodeFactory">
     </node>
+    <node
+      category-path="/fsklab"
+      deprecated="false"
+      factory-class="de.bund.bfr.knime.fsklab.nodes.writer.FskxWriterNodeFactory">
+    </node>
   </extension>
 </plugin>
