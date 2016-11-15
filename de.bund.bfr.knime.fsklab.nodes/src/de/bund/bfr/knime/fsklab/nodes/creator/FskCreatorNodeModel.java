@@ -64,7 +64,7 @@ import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 
-class FskCreatorNodeModel extends ExtToolOutputNodeModel {
+public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskCreatorNodeModel.class);
 
@@ -99,7 +99,7 @@ class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	private final SettingsModelStringArray m_selectedLibs = new SettingsModelStringArray(CFGKEY_LIBS, null);
 
 	/** {@inheritDoc} */
-	protected FskCreatorNodeModel() {
+	public FskCreatorNodeModel() {
 		super(inPortTypes, outPortTypes);
 	}
 

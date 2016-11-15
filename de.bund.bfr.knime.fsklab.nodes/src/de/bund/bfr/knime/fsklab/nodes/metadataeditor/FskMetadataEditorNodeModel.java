@@ -41,7 +41,7 @@ public final class FskMetadataEditorNodeModel
 
 	private FskPortObject m_port;
 
-	protected FskMetadataEditorNodeModel() {
+	public FskMetadataEditorNodeModel() {
 		super(new PortType[] { FskPortObject.TYPE }, new PortType[] { FskPortObject.TYPE },
 				(new FskMetadataEditorNodeFactory()).getInteractiveViewName());
 	}

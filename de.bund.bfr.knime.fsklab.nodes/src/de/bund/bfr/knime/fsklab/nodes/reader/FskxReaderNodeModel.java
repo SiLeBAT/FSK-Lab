@@ -79,12 +79,12 @@ import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.CombineArchiveException;
 
-class FskxReaderNodeModel extends NodeModel {
+public class FskxReaderNodeModel extends NodeModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskxReaderNodeModel.class);
 
 	// configuration keys
-	static final String CFGKEY_FILE = "filename";
+	public static final String CFGKEY_FILE = "filename";
 
 	// defaults for persistent state
 	private static final String DEFAULT_FILE = "c:/temp/foo.numl";
@@ -100,7 +100,7 @@ class FskxReaderNodeModel extends NodeModel {
 	private static final RPortObjectSpec rSpec = RPortObjectSpec.INSTANCE;
 	private static final DataTableSpec metadataSpec = FskMetaDataTuple.createSpec();
 
-	protected FskxReaderNodeModel() {
+	public FskxReaderNodeModel() {
 		super(inPortTypes, outPortTypes);
 	}
 

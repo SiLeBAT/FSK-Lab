@@ -23,8 +23,8 @@
   	</category>
   </extension>
   
-  <!-- FSK nodes -->
   <extension point="org.knime.workbench.repository.nodes">
+    <!-- FSK nodes -->
     <node
       category-path="/fsklab"
       deprecated="false"
@@ -54,6 +54,38 @@
       category-path="/fsklab"
       deprecated="false"
       factory-class="de.bund.bfr.knime.fsklab.nodes.metadataeditor.FskMetadataEditorNodeFactory">
+    </node>
+    
+	<!-- Legacy nodes from PmmLab -->    
+    <node
+      category-path="/fsklab"
+      deprecated="true"
+      factory-class="de.bund.bfr.knime.pmm.fskx.creator.FskxCreatorNodeFactory">
+    </node>
+    <node
+      category-path="/fsklab"
+      deprecated="true"
+      factory-class="de.bund.bfr.knime.pmm.fskx.reader.FskxReaderNodeFactory">
+    </node>
+    <node
+      category-path="/fsklab"
+      deprecated="true"
+      factory-class="de.bund.bfr.knime.pmm.fskx.writer.FskxWriterNodeFactory">
+    </node>
+    <node
+      category-path="/fsklab"
+      deprecated="true"
+      factory-class="de.bund.bfr.knime.pmm.fskx.runner.FskRunnerNodeFactory">
+    </node>
+    <node
+      category-path="/fsklab"
+      deprecated="true"
+      factory-class="de.bund.bfr.knime.pmm.fskx.editor.FskEditorNodeFactory">
+    </node>
+    <node
+      category-path="/fsklab"
+      deprecated="true"
+      factory-class="de.bund.bfr.knime.pmm.fskx.editor.FskMetadataEditorNodeFactory">
     </node>
   </extension>
   

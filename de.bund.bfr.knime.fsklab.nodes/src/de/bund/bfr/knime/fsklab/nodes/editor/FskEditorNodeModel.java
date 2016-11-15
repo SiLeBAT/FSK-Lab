@@ -20,7 +20,7 @@ import de.bund.bfr.knime.fsklab.nodes.FskTemplateSettings;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
 
-class FskEditorNodeModel extends NodeModel {
+public class FskEditorNodeModel extends NodeModel {
 
 	private static final PortType[] inPortTypes = new PortType[] { FskPortObject.TYPE };
 	private static final PortType[] outPortTypes = new PortType[] { FskPortObject.TYPE };

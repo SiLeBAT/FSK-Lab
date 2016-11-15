@@ -44,7 +44,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.util.FileUtil;
 
 
-class FskCreatorNodeDialog extends NodeDialogPane {
+public class FskCreatorNodeDialog extends NodeDialogPane {
 
 	// models
 	private final SettingsModelString m_modelScript;
@@ -60,7 +60,7 @@ class FskCreatorNodeDialog extends NodeDialogPane {
 	// type of the dialogs
 	private static final int dialogType = JFileChooser.OPEN_DIALOG;
 
-	protected FskCreatorNodeDialog() {
+	public FskCreatorNodeDialog() {
 
 		m_modelScript = new SettingsModelString(FskCreatorNodeModel.CFGKEY_MODEL_SCRIPT, "");
 		m_paramScript = new SettingsModelString(FskCreatorNodeModel.CFGKEY_PARAM_SCRIPT, "");

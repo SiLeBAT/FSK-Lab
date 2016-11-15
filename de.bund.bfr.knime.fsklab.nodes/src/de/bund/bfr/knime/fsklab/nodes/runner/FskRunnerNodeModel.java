@@ -40,7 +40,7 @@ import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
 
-class FskRunnerNodeModel extends NodeModel {
+public class FskRunnerNodeModel extends NodeModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
 

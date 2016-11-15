@@ -17,7 +17,7 @@ import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.MetaDataPane;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 
-class FskEditorNodeDialog extends DataAwareNodeDialogPane {
+public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 
 	private ScriptPanel modelScriptPanel = new ScriptPanel("Model script", "", true);
 	private ScriptPanel paramScriptPanel = new ScriptPanel("Parameters script", "", true);
