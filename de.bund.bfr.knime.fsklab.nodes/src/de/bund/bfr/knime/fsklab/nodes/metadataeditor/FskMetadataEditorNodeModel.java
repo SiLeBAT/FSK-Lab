@@ -58,7 +58,7 @@ public final class FskMetadataEditorNodeModel
 
 	@Override
 	public String getJavascriptObjectID() {
-		return "de.bund.bfr.knime.pmm.fskx.editor";
+		return "de.bund.bfr.knime.fsklab.nodes.metadataeditor";
 	}
 
 	@Override
