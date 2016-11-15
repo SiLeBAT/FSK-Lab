@@ -44,6 +44,11 @@
       category-path="/fsklab"
       deprecated="false"
       factory-class="de.bund.bfr.knime.fsklab.nodes.runner.FskRunnerNodeFactory">
-    </node>  
+    </node>
+    <node
+      category-path="/fsklab"
+      deprecated="false"
+      factory-class="de.bund.bfr.knime.fsklab.nodes.editor.FskEditorNodeFactory">
+    </node>
   </extension>
 </plugin>
