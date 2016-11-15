@@ -149,8 +149,8 @@
       <importResource relativePath="editor.css" type="CSS"> </importResource>
       
       <!-- Dependencies -->
-      <webDependency webResourceBundleID="boostrap"></webDependency>
-      <webDependency webResourceBundleID="jquery"></webDependency>
+      <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
+      <webDependency webResourceBundleID="jQuery_2.1.4"></webDependency>
       <webDependency webResourceBundleID="jQueryUi_1.10.4"></webDependency>
     </webResourceBundle>
   </extension>
