@@ -20,7 +20,7 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 
-import org.eclipse.core.runtime.Plugin;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -31,7 +31,7 @@ import org.osgi.framework.BundleContext;
  * 
  * @author Jorgen Brandt
  */
-public class FskPlugin extends Plugin {
+public class FskPlugin extends AbstractUIPlugin {
 	// The shared instance.
 	private static FskPlugin plugin;
 
