@@ -7,7 +7,7 @@ import org.knime.core.node.NodeView;
 import de.bund.bfr.knime.fsklab.nodes.creator.FskCreatorNodeModel;
 import de.bund.bfr.knime.fsklab.nodes.creator.FskCreatorNodeDialog;
 
-public class FskxCreatorNodeFactory extends NodeFactory<FskCreatorNodeModel> {
+public class FskCreatorNodeFactory extends NodeFactory<FskCreatorNodeModel> {
   
   /** {@inheritDoc} */
   @Override

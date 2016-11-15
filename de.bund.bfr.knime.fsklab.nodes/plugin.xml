@@ -60,7 +60,7 @@
     <node
       category-path="/fsklab"
       deprecated="true"
-      factory-class="de.bund.bfr.knime.pmm.fskx.creator.FskxCreatorNodeFactory">
+      factory-class="de.bund.bfr.knime.pmm.fskx.creator.FskCreatorNodeFactory">
     </node>
     <node
       category-path="/fsklab"
@@ -105,8 +105,8 @@
 		name="BfR R settings"/>
   </extension>
   
-  <!-- FSK port object -->
   <extension point="org.knime.core.PortType">
+    <!-- FSK port object -->
     <portType
       color="588C7E"
       hidden="false"
