@@ -11,6 +11,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.apache.poi.ooxml,
  org.eclipse.core.runtime,
  org.knime.base,
+ org.knime.js.core,
+ com.sun.jna,
  org.knime.workbench.core,
  org.knime.workbench.repository,
  org.knime.r,
@@ -19,6 +21,5 @@ Require-Bundle: org.apache.poi.ooxml,
  com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-core,
  com.fasterxml.jackson.core.jackson-databind,
- com.google.guava,
- com.sun.jna
+ com.google.guava
 

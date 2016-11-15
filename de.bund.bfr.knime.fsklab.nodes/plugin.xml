@@ -50,5 +50,77 @@
       deprecated="false"
       factory-class="de.bund.bfr.knime.fsklab.nodes.editor.FskEditorNodeFactory">
     </node>
+    <node
+      category-path="/fsklab"
+      deprecated="false"
+      factory-class="de.bund.bfr.knime.fsklab.nodes.metadataeditor.FskMetadataEditorNodeFactory">
+    </node>
   </extension>
+  
+  <!-- Preference initializer for custom R -->
+  <extension id="de.bund.bfr.knime.pmm.fskx.bin.preferences.RPreferenceInitializer"
+    point="org.eclipse.core.runtime.preferences">
+	<initializer class="de.bund.bfr.knime.fsklab.nodes.rbin.preferences.RPreferenceInitializer">
+	</initializer>
+  </extension>
+  
+  <!-- Preference page for custom R -->
+  <extension point="org.eclipse.ui.preferencePages">
+	<page
+		category="org.knime.workbench.ui.preferences"
+		class="de.bund.bfr.knime.fsklab.nodes.rbin.preferences.RPreferencePage"
+		id="de.bund.bfr.knime.fsklab.nodes.bin.rbin.preferences.RPreferencePage"
+		name="BfR R settings"/>
+  </extension>
+  
+  <!-- FSK port object -->
+  <extension point="org.knime.core.PortType">
+    <portType
+      color="588C7E"
+      hidden="false"
+      name="FSK object"
+	  objectClass="de.bund.bfr.knime.fsklab.nodes.port.FskPortObject"
+	  objectSerializer="de.bund.bfr.knime.fsklab.nodes.port.FskPortObject$Serializer"
+	  specClass="de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec"
+	  specSerializer="de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec$Serializer"/>
+  </extension>
+  
+  <!-- Javascript component for Fsk Metadata Editor node -->
+  <extension point="org.knime.js.core.javascriptComponents">
+   <javascriptComponent
+     getComponentValue-method-name="getComponentValue"
+     implementationBundleID="de.bund.bfr.knime.fsklab.nodes.metadataeditor.bundle"
+     init-method-name="init"
+     javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.metadataeditor"
+     name="FSK Metadata Editor"
+     namespace="metadata_editor">
+   </javascriptComponent>
+  </extension>
+  
+  <!-- JS and CSS code for Fsk Metadata Editor node -->
+  <extension point="org.knime.js.core.webResources">
+    <webResourceBundle
+      debug="true"
+      name="FSK Metadata Editor"
+      usesDefine="false"
+      version="0.0.1"
+      webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.metadataeditor.bundle">
+      
+      <!-- JS code -->
+      <webResource relativePathSource="js-src/editor.js" relativePathTarget="editor.js">
+      </webResource>
+      <importResource relativePath="editor.js" type="JAVASCRIPT"></importResource>
+      
+      <!-- CSS code -->
+      <webResource relativePathSource="js-src/editor.css" relativePathTarget="editor.css">
+      </webResource>
+      <importResource relativePath="editor.css" type="CSS"> </importResource>
+      
+      <!-- Dependencies -->
+      <webDependency webResourceBundleID="boostrap"></webDependency>
+      <webDependency webResourceBundleID="jquery"></webDependency>
+      <webDependency webResourceBundleID="jQueryUi_1.10.4"></webDependency>
+    </webResourceBundle>
+  </extension>
+  
 </plugin>
