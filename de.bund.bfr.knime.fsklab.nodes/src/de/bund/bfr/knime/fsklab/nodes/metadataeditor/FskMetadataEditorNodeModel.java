@@ -30,7 +30,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 
-import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
+import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 
 /**
  * Fsk meta data editor node model.

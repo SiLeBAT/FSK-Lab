@@ -65,8 +65,7 @@ import de.bund.bfr.knime.fsklab.nodes.*;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.controller.*;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
-import de.bund.bfr.knime.fsklab.nodes.port.*;
-
+import de.bund.bfr.knime.pmm.fskx.port.*;
 import de.bund.bfr.pmfml.sbml.Limits;
 import de.bund.bfr.pmfml.sbml.LimitsConstraint;
 import de.bund.bfr.pmfml.sbml.Metadata;

@@ -13,9 +13,9 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 
 import de.bund.bfr.knime.fsklab.nodes.FskTemplateSettings;
-import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.MetaDataPane;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
+import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 
 public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 

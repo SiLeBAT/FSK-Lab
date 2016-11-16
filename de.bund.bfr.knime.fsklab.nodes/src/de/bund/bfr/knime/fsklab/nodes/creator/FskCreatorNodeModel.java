@@ -58,9 +58,9 @@ import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.RScript;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
+import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
-import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
-import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 

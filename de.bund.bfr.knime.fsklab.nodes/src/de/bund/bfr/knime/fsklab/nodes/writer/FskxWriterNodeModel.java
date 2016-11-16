@@ -54,7 +54,7 @@ import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.RMetaDataNode;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
-import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
+import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.PMFUtil;
 import de.bund.bfr.pmfml.sbml.LimitsConstraint;

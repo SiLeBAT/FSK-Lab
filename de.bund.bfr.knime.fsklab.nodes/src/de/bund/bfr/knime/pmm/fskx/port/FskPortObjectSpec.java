@@ -1,4 +1,4 @@
-package de.bund.bfr.knime.fsklab.nodes.port;
+package de.bund.bfr.knime.pmm.fskx.port;
 
 import java.io.IOException;
 

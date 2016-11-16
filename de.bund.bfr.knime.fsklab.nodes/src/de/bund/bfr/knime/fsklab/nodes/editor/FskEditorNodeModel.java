@@ -17,8 +17,8 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 
 import de.bund.bfr.knime.fsklab.nodes.FskTemplateSettings;
-import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
-import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
+import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
+import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 
 public class FskEditorNodeModel extends NodeModel {
 

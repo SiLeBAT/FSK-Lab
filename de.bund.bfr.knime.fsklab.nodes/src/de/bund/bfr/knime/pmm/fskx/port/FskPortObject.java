@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.port;
+package de.bund.bfr.knime.pmm.fskx.port;
 
 import java.awt.BorderLayout;
 import java.io.File;
