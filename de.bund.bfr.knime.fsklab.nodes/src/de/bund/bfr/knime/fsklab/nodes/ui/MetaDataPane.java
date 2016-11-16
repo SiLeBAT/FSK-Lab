@@ -1,16 +1,20 @@
 package de.bund.bfr.knime.fsklab.nodes.ui;
 
+import java.awt.Component;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 
 import org.knime.core.node.NodeLogger;
 
@@ -44,361 +48,305 @@ public class MetaDataPane extends JScrollPane {
 		modelTypeStrings.put(ModelType.MANUAL_TERTIARY_MODEL, "Manual tertiary model");
 	}
 
-	private static enum Col {
-		Model_Name,
-		Model_Id,
-		Model_Link,
-		Organism_Name,
-		Organism_Detail,
-		Environment_Name,
-		Environment_Detail,
-		Model_Creator,
-		Model_Family_Name,
-		Model_Contact,
-		Software,
-		Model_Reference_Description,
-		Model_Reference_Description_Link,
-		Model_Created_Date,
-		Model_Modified_Date,
-		Model_Rights,
-		Model_Notes,
-		Model_Curation_Status,
-		Model_Type,
-		Model_Subject,
-		Model_Food_Process,
-		Dependent_Variable,
-		Dependent_Variable_Unit,
-		Dependent_Variable_Type,
-		Dependent_Variable_Min,
-		Dependent_Variable_Max,
-		Independent_Variable,
-		Independent_Variable_Units,
-		Independent_Variable_Types,
-		Independent_Variable_Mins,
-		Independent_Variable_Maxs,
-		Independent_Variable_Values,
-		Has_Data
+	private static enum Row {
+
+		MODEL_NAME("Model name"),
+		MODEL_ID("Model id"),
+		MODEL_LINK("Model link"),
+		ORGANISM_NAME("Organism name"),
+		ORGANISM_DETAIL("Organism detail"),
+		ENVIRONMENT_NAME("Environment name"),
+		ENVIRONMENT_DETAIL("Environment detail"),
+		CREATOR("Creator"),
+		FAMILY_NAME("Family name"),
+		CONTACT("Contact"),
+		SOFTWARE("Software"),
+		REFERENCE_DESCRIPTION("Reference description"),
+		REFERENCE_DESCRIPTION_LINK("Reference description link"),
+		CREATED_DATE("Created date"),
+		MODIFIED_DATE("Modified date"),
+		RIGHTS("Rights"),
+		NOTES("Notes"),
+		CURATION_STATUS("Curation status"),
+		TYPE("Type"),
+		SUBJECT("Subject"),
+		FOOD_PROCESS("Food process"),
+		DEPENDENT_VARIABLE("Dependent variable"),
+		DEPENDENT_VARIABLE_UNIT("Dependent variable unit"),
+		DEPENDENT_VARIABLE_TYPE("Dependent variable type"),
+		DEPENDENT_VARIABLE_MIN("Dependent variable min"),
+		DEPENDENT_VARIABLE_MAX("Dependent variable max"),
+		INDEPENDENT_VARIABLE("Independent variable"),
+		INDEPENDENT_VARIABLE_UNIT("Independent variable unit"),
+		INDEPENDENT_VARIABLE_TYPE("Independent variable type"),
+		INDEPENDENT_VARIABLE_MIN("Independent variable min"),
+		INDEPENDENT_VARIABLE_MAX("Independent variable max"),
+		INDEPENDENT_VARIABLE_VALUE("Independent variable value"),
+		HAS_DATA("Has data");
+
+		String name;
+
+		Row(String name) {
+			this.name = name;
+		}
 	}
 
 	public final FskMetaData template;
 
 	public MetaDataPane(FskMetaData template, boolean editable) {
-		super(new Table(template, editable));
+		super(new TransposedTable(template, editable));
 		this.template = template;
 	}
 
-	private static class Table extends JTable {
-		private static final long serialVersionUID = 8776004658791577404L;
+	private static class TransposedTable extends JTable {
 
-		public Table(FskMetaData template, boolean editable) {
-			super(new TableModel(template, editable));
+		private static final long serialVersionUID = 3577330711178390516L;
 
-			// Set columns witdth
-			for (int ncol = 0; ncol < getColumnCount(); ncol++) {
-				columnModel.getColumn(ncol).setPreferredWidth(150);
-			}
+		public TransposedTable(FskMetaData template, boolean editable) {
+			super(new TableModel2(template, editable));
+
+			// Set columns width (name and value)
+			columnModel.getColumn(0).setPreferredWidth(150);
+			columnModel.getColumn(1).setPreferredWidth(150);
+
 			setAutoResizeMode(AUTO_RESIZE_OFF);
 
-			// Set special editors
-			columnModel.getColumn(Col.Model_Type.ordinal()).setCellEditor(new ModelTypeEditor());
-			columnModel.getColumn(Col.Model_Subject.ordinal()).setCellEditor(new ModelSubjectEditor());
+			// Set cell editor for specific cells (model type and subject)
+			columnModel.getColumn(1).setCellEditor(new CustomTableCellEditor());
 		}
 	}
-
-	private static class ModelTypeEditor extends DefaultCellEditor {
-
-		private static final long serialVersionUID = 2923508881330612951L;
-		private static JComboBox<String> comboBox;
-
+	
+	public static class CustomTableCellEditor extends AbstractCellEditor implements TableCellEditor {
+		
+		private static final long serialVersionUID = 3883278971216889101L;
+		private TableCellEditor editor;
+		
+		private static JComboBox<String> typeComboBox;
+		private static JComboBox<String> subjectComboBox;
+		
 		static {
-			comboBox = new JComboBox<>();
-			modelTypeStrings.values().forEach(modelType -> comboBox.addItem(modelType));
-			comboBox.addItem(""); // empty string for non defined model types
+			typeComboBox = new JComboBox<>();
+			modelTypeStrings.values().forEach(typeComboBox::addItem);
+			typeComboBox.addItem("");  // Empty string for non defined model types
+			
+			subjectComboBox = new JComboBox<>();
+			Arrays.stream(ModelClass.values()).map(ModelClass::fullName).forEach(subjectComboBox::addItem);
+			subjectComboBox.addItem("");  // Empty string for non defined model class
 		}
 
-		public ModelTypeEditor() {
-			super(comboBox);
-		}
-	}
+        @Override
+        public Object getCellEditorValue() {
+            if (editor != null) {
+                return editor.getCellEditorValue();
+            }
 
-	private static class ModelSubjectEditor extends DefaultCellEditor {
+            return null;
+        }
 
-		private static final long serialVersionUID = -3451495357854026436L;
-		private static JComboBox<String> comboBox;
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        	if (row == Row.TYPE.ordinal()) {
+        		editor = new DefaultCellEditor(typeComboBox);
+        	} else if (row == Row.SUBJECT.ordinal()) {
+        		editor = new DefaultCellEditor(subjectComboBox);
+        	} else {
+        		editor = new DefaultCellEditor(new JTextField());
+        	}
 
-		static {
-			comboBox = new JComboBox<>();
-			Arrays.stream(ModelClass.values()).forEach(modelClass -> comboBox.addItem(modelClass.fullName()));
-			comboBox.addItem(""); // empty string for non defined model class
-		}
+            return editor.getTableCellEditorComponent(table, value, isSelected, row, column);
+        }
+    }
 
-		public ModelSubjectEditor() {
-			super(comboBox);
-		}
-	}
+	private static class TableModel2 extends AbstractTableModel {
 
-	private static class TableModel extends AbstractTableModel {
-
-		private static final long serialVersionUID = 5174052168162089904L;
-		private static String[] names;
-
-		static {
-			// Populate column names
-			names = new String[Col.values().length];
-			names[Col.Model_Name.ordinal()] = "Model name";
-			names[Col.Model_Id.ordinal()] = "Model id";
-			names[Col.Model_Link.ordinal()] = "Model link";
-			names[Col.Organism_Name.ordinal()] = "Organism name";
-			names[Col.Organism_Detail.ordinal()] = "Organism detail";
-			names[Col.Environment_Name.ordinal()] = "Environment name";
-			names[Col.Environment_Detail.ordinal()] = "Environment detail";
-			names[Col.Model_Creator.ordinal()] = "Model creator";
-			names[Col.Model_Family_Name.ordinal()] = "Model family name";
-			names[Col.Model_Contact.ordinal()] = "Model contact";
-			names[Col.Software.ordinal()] = "Software";
-			names[Col.Model_Reference_Description.ordinal()] = "Reference description";
-			names[Col.Model_Reference_Description_Link.ordinal()] = "Reference description link";
-			names[Col.Model_Created_Date.ordinal()] = "Created date";
-			names[Col.Model_Modified_Date.ordinal()] = "Modified date";
-			names[Col.Model_Rights.ordinal()] = "Rights";
-			names[Col.Model_Notes.ordinal()] = "Notes";
-			names[Col.Model_Curation_Status.ordinal()] = "Curation status";
-			names[Col.Model_Type.ordinal()] = "Model type";
-			names[Col.Model_Subject.ordinal()] = "Model subject";
-			names[Col.Model_Food_Process.ordinal()] = "Food process";
-			names[Col.Dependent_Variable.ordinal()] = "Dependent variable";
-			names[Col.Dependent_Variable_Unit.ordinal()] = "Dependent variable unit";
-			names[Col.Dependent_Variable_Type.ordinal()] = "Dependent variable type";
-			names[Col.Dependent_Variable_Min.ordinal()] = "Dependent variable minimum value";
-			names[Col.Dependent_Variable_Max.ordinal()] = "Dependent variable maximum value";
-			names[Col.Independent_Variable.ordinal()] = "Independent variables";
-			names[Col.Independent_Variable_Units.ordinal()] = "Independent variable units";
-			names[Col.Independent_Variable_Types.ordinal()] = "Independent variable types";
-			names[Col.Independent_Variable_Mins.ordinal()] = "Independent variable minimum values";
-			names[Col.Independent_Variable_Maxs.ordinal()] = "Independent variable maximum values";
-			names[Col.Independent_Variable_Values.ordinal()] = "Independent variable values";
-			names[Col.Has_Data.ordinal()] = "Has data?";
-		}
+		private static final long serialVersionUID = -4031679211807376226L;
 
 		private FskMetaData template;
 		private boolean editable;
 
-		public TableModel(FskMetaData template, boolean editable) {
+		public TableModel2(FskMetaData template, boolean editable) {
 			this.template = template;
 			this.editable = editable;
 		}
 
 		@Override
 		public int getColumnCount() {
-			return names.length;
+			return 2; // name + value
 		}
 
 		@Override
 		public int getRowCount() {
-			return 1; // so far only one template is supported
-		}
-
-		@Override
-		public String getColumnName(int column) {
-			return names[column];
+			return Row.values().length; // 1 row per field
 		}
 
 		@Override
 		public Object getValueAt(int row, int col) {
-			switch (Col.values()[col]) {
-			case Model_Name:
-				return template.modelName;
-			case Model_Id:
-				return template.modelId;
-			case Model_Link:
-				return template.modelLink;
-			case Organism_Name:
-				return template.organism;
-			case Organism_Detail:
-				return template.organismDetails;
-			case Environment_Name:
-				return template.matrix;
-			case Environment_Detail:
-				return template.matrixDetails;
-			case Model_Creator:
-				return template.creator;
-			case Model_Family_Name:
-				return template.familyName;
-			case Model_Contact:
-				return template.contact;
-			case Software:
-				return template.software == null ? "" : template.software.name();
-			case Model_Reference_Description:
-				return template.referenceDescription;
-			case Model_Reference_Description_Link:
-				return template.referenceDescriptionLink == null ? "" : template.referenceDescriptionLink.toString();
-			case Model_Created_Date:
-				return template.createdDate == null ? "" : FskMetaData.dateFormat.format(template.createdDate);
-			case Model_Modified_Date:
-				return template.modifiedDate == null ? "" : FskMetaData.dateFormat.format(template.modifiedDate);
-			case Model_Rights:
-				return template.rights;
-			case Model_Notes:
-				return template.notes;
-			case Model_Curation_Status:
-				return Boolean.toString(template.curated);
-			case Model_Type:
-				return template.type == null ? "" : modelTypeStrings.get(template.type);
-			case Model_Subject:
-				return template.subject == null ? "" : template.subject.fullName();
-			case Model_Food_Process:
-				return template.foodProcess;
-			case Dependent_Variable:
-				return template.dependentVariable.name;
-			case Dependent_Variable_Unit:
-				return template.dependentVariable.unit;
-			case Dependent_Variable_Type:
-				return template.dependentVariable.type == null ? "" : template.dependentVariable.type.name();
-			case Dependent_Variable_Min:
-				return template.dependentVariable.min;
-			case Dependent_Variable_Max:
-				return template.dependentVariable.max;
-			case Independent_Variable:
-				return template.independentVariables.stream().map(v -> v.name).collect(Collectors.joining("||"));
-			case Independent_Variable_Units:
-				return template.independentVariables.stream().map(v -> v.unit).collect(Collectors.joining("||"));
-			case Independent_Variable_Types:
-				return template.independentVariables.stream().map(v -> v.type.name()).collect(Collectors.joining("||"));
-			case Independent_Variable_Mins:
-				return template.independentVariables.stream().map(v -> v.min).collect(Collectors.joining("||"));
-			case Independent_Variable_Maxs:
-				return template.independentVariables.stream().map(v -> v.max).collect(Collectors.joining("||"));
-			case Independent_Variable_Values:
-				return template.independentVariables.stream().map(v -> v.value).collect(Collectors.joining("||"));
-			case Has_Data:
-				return Boolean.toString(template.hasData);
+			if (col == 0)
+				return Row.values()[row].name;
+			else if (col == 1) {
+				switch (Row.values()[row]) {
+				case MODEL_NAME:
+					return template.modelName;
+				case MODEL_ID:
+					return template.modelId;
+				case MODEL_LINK:
+					return template.modelLink;
+				case ORGANISM_NAME:
+					return template.organism;
+				case ORGANISM_DETAIL:
+					return template.organismDetails;
+				case ENVIRONMENT_NAME:
+					return template.matrix;
+				case ENVIRONMENT_DETAIL:
+					return template.matrixDetails;
+				case CREATOR:
+					return template.creator;
+				case FAMILY_NAME:
+					return template.familyName;
+				case CONTACT:
+					return template.contact;
+				case SOFTWARE:
+					return template.software == null ? "" : template.software.name();
+				case REFERENCE_DESCRIPTION:
+					return template.referenceDescription;
+				case REFERENCE_DESCRIPTION_LINK:
+					return template.referenceDescriptionLink == null ? ""
+							: template.referenceDescriptionLink.toString();
+				case CREATED_DATE:
+					return template.createdDate == null ? "" : FskMetaData.dateFormat.format(template.createdDate);
+				case MODIFIED_DATE:
+					return template.modifiedDate == null ? "" : FskMetaData.dateFormat.format(template.modifiedDate);
+				case RIGHTS:
+					return template.rights;
+				case NOTES:
+					return template.notes;
+				case CURATION_STATUS:
+					return Boolean.toString(template.curated);
+				case TYPE:
+					return template.type == null ? "" : modelTypeStrings.get(template.type);
+				case SUBJECT:
+					return template.subject == null ? "" : template.subject.fullName();
+				case FOOD_PROCESS:
+					return template.foodProcess;
+				case DEPENDENT_VARIABLE:
+					return template.dependentVariable.name;
+				case DEPENDENT_VARIABLE_UNIT:
+					return template.dependentVariable.unit;
+				case DEPENDENT_VARIABLE_TYPE:
+					return template.dependentVariable.type == null ? "" : template.dependentVariable.type.name();
+				case DEPENDENT_VARIABLE_MIN:
+					return template.dependentVariable.min;
+				case DEPENDENT_VARIABLE_MAX:
+					return template.dependentVariable.max;
+				case INDEPENDENT_VARIABLE:
+					return template.independentVariables.stream().map(v -> v.name).collect(Collectors.joining("||"));
+				case INDEPENDENT_VARIABLE_UNIT:
+					return template.independentVariables.stream().map(v -> v.unit).collect(Collectors.joining("||"));
+				case INDEPENDENT_VARIABLE_TYPE:
+					return template.independentVariables.stream().map(v -> v.type.name())
+							.collect(Collectors.joining("||"));
+				case INDEPENDENT_VARIABLE_MIN:
+					return template.independentVariables.stream().map(v -> v.min).collect(Collectors.joining("||"));
+				case INDEPENDENT_VARIABLE_MAX:
+					return template.independentVariables.stream().map(v -> v.max).collect(Collectors.joining("||"));
+				case INDEPENDENT_VARIABLE_VALUE:
+					return template.independentVariables.stream().map(v -> v.value).collect(Collectors.joining("||"));
+				case HAS_DATA:
+					return Boolean.toString(template.hasData);
+				}
 			}
+
 			throw new RuntimeException("Invalid row & col" + row + " " + col);
 		}
 
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 
-			String stringValue = (String) aValue;
+			if (columnIndex == 1) {
+				String stringValue = (String) aValue;
 
-			switch (Col.values()[columnIndex]) {
-			case Model_Name:
-				template.modelName = stringValue;
-				break;
-			case Model_Id:
-				template.modelId = stringValue;
-				break;
-			case Model_Link:
-				template.modelLink = stringValue;
-				break;
-			case Organism_Name:
-				template.organism = stringValue;
-				break;
-			case Organism_Detail:
-				template.organismDetails = stringValue;
-				break;
-			case Environment_Name:
-				template.matrix = stringValue;
-				break;
-			case Environment_Detail:
-				template.matrixDetails = stringValue;
-				break;
-			case Model_Creator:
-				template.creator = stringValue;
-				break;
-			case Model_Family_Name:
-				template.familyName = stringValue;
-				break;
-			case Model_Contact:
-				template.contact = stringValue;
-				break;
-			case Software:
-				template.software = Software.valueOf(stringValue);
-				break;
-			case Model_Reference_Description:
-				template.referenceDescription = stringValue;
-				break;
-			case Model_Reference_Description_Link:
-				template.referenceDescriptionLink = stringValue;
-				break;
-			case Model_Created_Date:
-				try {
-					template.createdDate = FskMetaData.dateFormat.parse(stringValue);
-				} catch (ParseException e) {
-					LOGGER.warn("Invalid date");
-				}
-				break;
-			case Model_Modified_Date:
-				try {
-					template.modifiedDate = FskMetaData.dateFormat.parse(stringValue);
-				} catch (ParseException e) {
-					LOGGER.warn("Invalid date");
-				}
-				break;
-			case Model_Rights:
-				template.rights = stringValue;
-				break;
-			case Model_Notes:
-				template.notes = stringValue;
-				break;
-			case Model_Curation_Status:
-				template.curated = Boolean.parseBoolean(stringValue);
-				break;
-			case Model_Type:
-				if (stringValue.isEmpty()) {
-					template.type = null;
-				} else {
-					for (Map.Entry<ModelType, String> entry : modelTypeStrings.entrySet()) {
-						if (stringValue.equals(entry.getValue())) {
-							template.type = entry.getKey();
-							break;
-						}
+				if (rowIndex == Row.MODEL_NAME.ordinal()) {
+					template.modelName = stringValue;
+				} else if (rowIndex == Row.MODEL_ID.ordinal()) {
+					template.modelId = stringValue;
+				} else if (rowIndex == Row.MODEL_LINK.ordinal()) {
+					template.modelLink = stringValue;
+				} else if (rowIndex == Row.ORGANISM_NAME.ordinal()) {
+					template.organism = stringValue;
+				} else if (rowIndex == Row.ORGANISM_DETAIL.ordinal()) {
+					template.organismDetails = stringValue;
+				} else if (rowIndex == Row.ENVIRONMENT_NAME.ordinal()) {
+					template.matrix = stringValue;
+				} else if (rowIndex == Row.ENVIRONMENT_DETAIL.ordinal()) {
+					template.matrixDetails = stringValue;
+				} else if (rowIndex == Row.CREATOR.ordinal()) {
+					template.creator = stringValue;
+				} else if (rowIndex == Row.FAMILY_NAME.ordinal()) {
+					template.familyName = stringValue;
+				} else if (rowIndex == Row.CONTACT.ordinal()) {
+					template.contact = stringValue;
+				} else if (rowIndex == Row.SOFTWARE.ordinal()) {
+					template.software = Software.valueOf(stringValue);
+				} else if (rowIndex == Row.REFERENCE_DESCRIPTION.ordinal()) {
+					template.referenceDescription = stringValue;
+				} else if (rowIndex == Row.REFERENCE_DESCRIPTION_LINK.ordinal()) {
+					template.referenceDescriptionLink = stringValue;
+				} else if (rowIndex == Row.CREATED_DATE.ordinal()) {
+					try {
+						template.createdDate = FskMetaData.dateFormat.parse(stringValue);
+					} catch (ParseException e) {
+						LOGGER.warn("Invalid date");
 					}
-				}
-				break;
-			case Model_Subject:
-				template.subject = stringValue.isEmpty() ? null : ModelClass.fromName(stringValue);
-				break;
-			case Model_Food_Process:
-				template.foodProcess = stringValue;
-				break;
-			case Dependent_Variable:
-				template.dependentVariable.name = stringValue;
-				break;
-			case Dependent_Variable_Unit:
-				template.dependentVariable.unit = stringValue;
-				break;
-			case Dependent_Variable_Type:
-				template.dependentVariable.type = Strings.isNullOrEmpty(stringValue) ? null : DataType.valueOf(stringValue);
-				break;
-			case Dependent_Variable_Min:
-				template.dependentVariable.min = stringValue;
-				break;
-			case Dependent_Variable_Max:
-				template.dependentVariable.max = stringValue;
-				break;
-			case Independent_Variable:
-				{
+				} else if (rowIndex == Row.MODIFIED_DATE.ordinal()) {
+					try {
+						template.modifiedDate = FskMetaData.dateFormat.parse(stringValue);
+					} catch (ParseException e) {
+						LOGGER.warn("Invalid date");
+					}
+				} else if (rowIndex == Row.RIGHTS.ordinal()) {
+					template.rights = stringValue;
+				} else if (rowIndex == Row.NOTES.ordinal()) {
+					template.notes = stringValue;
+				} else if (rowIndex == Row.CURATION_STATUS.ordinal()) {
+					template.curated = Boolean.parseBoolean(stringValue);
+				} else if (rowIndex == Row.TYPE.ordinal()) {
+					if (!stringValue.isEmpty()) {
+						template.type = modelTypeStrings.entrySet().stream()
+								.filter(entry -> entry.getValue().equals(stringValue)).findFirst().get().getKey();
+					}
+				} else if (rowIndex == Row.SUBJECT.ordinal()) {
+					if (!stringValue.isEmpty()) {
+						template.subject = ModelClass.fromName(stringValue);
+					}
+				} else if (rowIndex == Row.FOOD_PROCESS.ordinal()) {
+					template.foodProcess = stringValue;
+				} else if (rowIndex == Row.DEPENDENT_VARIABLE.ordinal()) {
+					template.dependentVariable.name = stringValue;
+				} else if (rowIndex == Row.DEPENDENT_VARIABLE_UNIT.ordinal()) {
+					template.dependentVariable.unit = stringValue;
+				} else if (rowIndex == Row.DEPENDENT_VARIABLE_TYPE.ordinal()) {
+					if (!Strings.isNullOrEmpty(stringValue)) {
+						template.dependentVariable.type = DataType.valueOf(stringValue);
+					}
+				} else if (rowIndex == Row.DEPENDENT_VARIABLE_MIN.ordinal()) {
+					template.dependentVariable.min = stringValue;
+				} else if (rowIndex == Row.DEPENDENT_VARIABLE_MAX.ordinal()) {
+					template.dependentVariable.max = stringValue;
+				} else if (rowIndex == Row.INDEPENDENT_VARIABLE.ordinal()) {
 					String[] tokens = stringValue.split("||");
 					if (tokens.length == template.independentVariables.size()) {
 						for (int i = 0; i < tokens.length; i++) {
 							template.independentVariables.get(i).name = tokens[i];
 						}
 					}
-				}
-				break;
-			case Independent_Variable_Units:
-				{
+				} else if (rowIndex == Row.INDEPENDENT_VARIABLE_UNIT.ordinal()) {
 					String[] tokens = stringValue.split("||");
 					if (tokens.length == template.independentVariables.size()) {
 						for (int i = 0; i < tokens.length; i++) {
 							template.independentVariables.get(i).unit = tokens[i];
 						}
 					}
-				}
-				break;
-			case Independent_Variable_Types:
-				{
+				} else if (rowIndex == Row.INDEPENDENT_VARIABLE_TYPE.ordinal()) {
 					String[] tokens = stringValue.split("||");
 					if (tokens.length == template.independentVariables.size()) {
 						for (int i = 0; i < tokens.length; i++) {
@@ -406,41 +354,30 @@ public class MetaDataPane extends JScrollPane {
 							template.independentVariables.get(i).type = dt;
 						}
 					}
-				}
-				break;
-			case Independent_Variable_Mins:
-				{
+				} else if (rowIndex == Row.INDEPENDENT_VARIABLE_MIN.ordinal()) {
 					String[] tokens = stringValue.split("||");
 					if (tokens.length == template.independentVariables.size()) {
 						for (int i = 0; i < tokens.length; i++) {
 							template.independentVariables.get(i).min = tokens[i];
 						}
 					}
-				}
-				break;
-			case Independent_Variable_Maxs:
-				{
+				} else if (rowIndex == Row.INDEPENDENT_VARIABLE_MAX.ordinal()) {
 					String[] tokens = stringValue.split("||");
 					if (tokens.length == template.independentVariables.size()) {
 						for (int i = 0; i < tokens.length; i++) {
 							template.independentVariables.get(i).max = tokens[i];
 						}
 					}
-				}
-				break;
-			case Independent_Variable_Values:
-				{
+				} else if (rowIndex == Row.INDEPENDENT_VARIABLE_VALUE.ordinal()) {
 					String[] tokens = stringValue.split("||");
 					if (tokens.length == template.independentVariables.size()) {
 						for (int i = 0; i < tokens.length; i++) {
 							template.independentVariables.get(i).value = tokens[i];
 						}
 					}
+				} else if (rowIndex == Row.HAS_DATA.ordinal()) {
+					template.hasData = Boolean.parseBoolean(stringValue);
 				}
-				break;
-			case Has_Data:
-				template.hasData = Boolean.parseBoolean(stringValue);
-				break;
 			}
 		}
 
