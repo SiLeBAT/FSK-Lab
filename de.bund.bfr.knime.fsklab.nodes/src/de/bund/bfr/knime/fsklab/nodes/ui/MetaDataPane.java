@@ -115,47 +115,58 @@ public class MetaDataPane extends JScrollPane {
 			columnModel.getColumn(1).setCellEditor(new CustomTableCellEditor());
 		}
 	}
-	
+
 	public static class CustomTableCellEditor extends AbstractCellEditor implements TableCellEditor {
-		
+
 		private static final long serialVersionUID = 3883278971216889101L;
 		private TableCellEditor editor;
-		
+
 		private static JComboBox<String> typeComboBox;
 		private static JComboBox<String> subjectComboBox;
-		
+		private static JComboBox<String> softwareComboBox;
+
 		static {
 			typeComboBox = new JComboBox<>();
 			modelTypeStrings.values().forEach(typeComboBox::addItem);
-			typeComboBox.addItem("");  // Empty string for non defined model types
-			
+			typeComboBox.addItem(""); // Empty string for non defined model
+										// types
+
 			subjectComboBox = new JComboBox<>();
 			Arrays.stream(ModelClass.values()).map(ModelClass::fullName).forEach(subjectComboBox::addItem);
-			subjectComboBox.addItem("");  // Empty string for non defined model class
+			subjectComboBox.addItem(""); // Empty string for non defined model
+											// class
+
+			softwareComboBox = new JComboBox<>();
+			Arrays.stream(FskMetaData.Software.values()).map(FskMetaData.Software::name)
+					.forEach(softwareComboBox::addItem);
+			softwareComboBox.addItem("");
 		}
 
-        @Override
-        public Object getCellEditorValue() {
-            if (editor != null) {
-                return editor.getCellEditorValue();
-            }
+		@Override
+		public Object getCellEditorValue() {
+			if (editor != null) {
+				return editor.getCellEditorValue();
+			}
 
-            return null;
-        }
+			return null;
+		}
 
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        	if (row == Row.TYPE.ordinal()) {
-        		editor = new DefaultCellEditor(typeComboBox);
-        	} else if (row == Row.SUBJECT.ordinal()) {
-        		editor = new DefaultCellEditor(subjectComboBox);
-        	} else {
-        		editor = new DefaultCellEditor(new JTextField());
-        	}
+		@Override
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+				int column) {
+			if (row == Row.TYPE.ordinal()) {
+				editor = new DefaultCellEditor(typeComboBox);
+			} else if (row == Row.SUBJECT.ordinal()) {
+				editor = new DefaultCellEditor(subjectComboBox);
+			} else if (row == Row.SOFTWARE.ordinal()) {
+				editor = new DefaultCellEditor(softwareComboBox);
+			} else {
+				editor = new DefaultCellEditor(new JTextField());
+			}
 
-            return editor.getTableCellEditorComponent(table, value, isSelected, row, column);
-        }
-    }
+			return editor.getTableCellEditorComponent(table, value, isSelected, row, column);
+		}
+	}
 
 	private static class TableModel2 extends AbstractTableModel {
 
@@ -286,7 +297,8 @@ public class MetaDataPane extends JScrollPane {
 				} else if (rowIndex == Row.CONTACT.ordinal()) {
 					template.contact = stringValue;
 				} else if (rowIndex == Row.SOFTWARE.ordinal()) {
-					template.software = Software.valueOf(stringValue);
+					// stringValue is either "" or a FskMetaData.Software string
+					template.software = stringValue.isEmpty() ? null : Software.valueOf(stringValue);
 				} else if (rowIndex == Row.REFERENCE_DESCRIPTION.ordinal()) {
 					template.referenceDescription = stringValue;
 				} else if (rowIndex == Row.REFERENCE_DESCRIPTION_LINK.ordinal()) {
