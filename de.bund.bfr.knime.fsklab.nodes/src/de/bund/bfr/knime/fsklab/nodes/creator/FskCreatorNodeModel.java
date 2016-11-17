@@ -47,13 +47,12 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 
-//
 import com.google.common.base.Strings;
 
 import de.bund.bfr.fskml.MissingValueError;
+import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
-import de.bund.bfr.knime.fsklab.nodes.RScript;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
@@ -157,18 +156,18 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 			throw new InvalidSettingsException("Model script is not provided");
 		}
 		RScript modelScript = readScript(m_modelScript.getStringValue());
-		portObj.model = modelScript.script;
+		portObj.model = modelScript.getScript();
 
 		// Reads parameters script
 		if (Strings.isNullOrEmpty(m_paramScript.getStringValue())) {
 			portObj.param = "";
 		} else {
-			portObj.param = readScript(m_paramScript.getStringValue()).script;
+			portObj.param = readScript(m_paramScript.getStringValue()).getScript();
 		}
 
 		// Reads visualization script
 		if (!Strings.isNullOrEmpty(m_vizScript.getStringValue())) {
-			portObj.viz = readScript(m_vizScript.getStringValue()).script;
+			portObj.viz = readScript(m_vizScript.getStringValue()).getScript();
 		} else {
 			portObj.viz = "";
 		}
@@ -211,17 +210,17 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 			}
 		}
 
-		if (!modelScript.libraries.isEmpty()) {
+		if (!modelScript.getLibraries().isEmpty()) {
 			try {
 				// Install missing libraries
 				LibRegistry libReg = LibRegistry.instance();
-				List<String> missingLibs = modelScript.libraries.stream().filter(lib -> !libReg.isInstalled(lib))
+				List<String> missingLibs = modelScript.getLibraries().stream().filter(lib -> !libReg.isInstalled(lib))
 						.collect(Collectors.toList());
 				if (!missingLibs.isEmpty()) {
 					libReg.installLibs(missingLibs);
 				}
 
-				Set<Path> libPaths = libReg.getPaths(modelScript.libraries);
+				Set<Path> libPaths = libReg.getPaths(modelScript.getLibraries());
 				libPaths.forEach(l -> portObj.libs.add(l.toFile()));
 			} catch (RException | REXPMismatchException e) {
 				LOGGER.error(e.getMessage());
