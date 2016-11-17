@@ -315,6 +315,7 @@ public class FskxWriterNodeModel extends NodeModel {
 			String var = v.name;
 			Parameter param = model.createParameter(PMFUtil.createId(var));
 			param.setName(var);
+			param.setValue(Double.parseDouble(v.value));
 			
 			try {
 				param.setUnits(PMFUtil.createId(v.unit));
