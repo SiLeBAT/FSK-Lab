@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,6 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -58,21 +56,15 @@ import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.RScript;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 
 public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskCreatorNodeModel.class);
-
-	// configuration key of the libraries directory
-	static final String CFGKEY_DIR_LIBS = "dirLibs";
-
-	// configuration key of the selected libraries
-	static final String CFGKEY_LIBS = "libs";
 
 	// configuration key of the path of the R model script
 	static final String CFGKEY_MODEL_SCRIPT = "modelScript";
@@ -95,8 +87,6 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	private final SettingsModelString m_paramScript = new SettingsModelString(CFGKEY_PARAM_SCRIPT, null);
 	private final SettingsModelString m_vizScript = new SettingsModelString(CFGKEY_VISUALIZATION_SCRIPT, null);
 	private final SettingsModelString m_metaDataDoc = new SettingsModelString(CFGKEY_SPREADSHEET, null);
-	private final SettingsModelString m_libDirectory = new SettingsModelString(CFGKEY_DIR_LIBS, null);
-	private final SettingsModelStringArray m_selectedLibs = new SettingsModelStringArray(CFGKEY_LIBS, null);
 
 	/** {@inheritDoc} */
 	public FskCreatorNodeModel() {
@@ -124,8 +114,6 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 		m_paramScript.saveSettingsTo(settings);
 		m_vizScript.saveSettingsTo(settings);
 		m_metaDataDoc.saveSettingsTo(settings);
-		m_libDirectory.saveSettingsTo(settings);
-		m_selectedLibs.saveSettingsTo(settings);
 	}
 
 	/** {@inheritDoc} */
@@ -135,8 +123,6 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 		m_paramScript.validateSettings(settings);
 		m_vizScript.validateSettings(settings);
 		m_metaDataDoc.validateSettings(settings);
-		m_libDirectory.validateSettings(settings);
-		m_selectedLibs.validateSettings(settings);
 	}
 
 	/** {@inheritDoc} */
@@ -146,8 +132,6 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 		m_paramScript.loadSettingsFrom(settings);
 		m_vizScript.loadSettingsFrom(settings);
 		m_metaDataDoc.loadSettingsFrom(settings);
-		m_libDirectory.loadSettingsFrom(settings);
-		m_selectedLibs.loadSettingsFrom(settings);
 	}
 
 	/** {@inheritDoc} */
@@ -172,7 +156,8 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 		if (Strings.isNullOrEmpty(m_modelScript.getStringValue())) {
 			throw new InvalidSettingsException("Model script is not provided");
 		}
-		portObj.model = readScript(m_modelScript.getStringValue()).script;
+		RScript modelScript = readScript(m_modelScript.getStringValue());
+		portObj.model = modelScript.script;
 
 		// Reads parameters script
 		if (Strings.isNullOrEmpty(m_paramScript.getStringValue())) {
@@ -226,10 +211,18 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 			}
 		}
 
-		// Reads R libraries
-		if (m_selectedLibs.getStringArrayValue() != null && m_selectedLibs.getStringArrayValue().length > 0) {
+		if (!modelScript.libraries.isEmpty()) {
 			try {
-				collectLibs().stream().map(Path::toFile).forEach(l -> portObj.libs.add(l));
+				// Install missing libraries
+				LibRegistry libReg = LibRegistry.instance();
+				List<String> missingLibs = modelScript.libraries.stream().filter(lib -> !libReg.isInstalled(lib))
+						.collect(Collectors.toList());
+				if (!missingLibs.isEmpty()) {
+					libReg.installLibs(missingLibs);
+				}
+
+				Set<Path> libPaths = libReg.getPaths(modelScript.libraries);
+				libPaths.forEach(l -> portObj.libs.add(l.toFile()));
 			} catch (RException | REXPMismatchException e) {
 				LOGGER.error(e.getMessage());
 			}
@@ -269,23 +262,6 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 			System.err.println(e.getMessage());
 			throw new IOException(trimmedPath + ": cannot be read");
 		}
-	}
-
-	private Set<Path> collectLibs() throws IOException, RException, REXPMismatchException {
-
-		List<String> libNames = Arrays.stream(m_selectedLibs.getStringArrayValue())
-				.map(libName -> libName.split("\\.")[0]).collect(Collectors.toList());
-
-		LibRegistry libRegistry = LibRegistry.instance();
-		// Out of all the libraries name only install those missing
-		List<String> missingLibs = libNames.stream().filter(lib -> !libRegistry.isInstalled(lib))
-				.collect(Collectors.toList());
-
-		if (!missingLibs.isEmpty()) {
-			libRegistry.installLibs(missingLibs);
-		}
-
-		return libRegistry.getPaths(libNames);
 	}
 
 	private static class SpreadsheetHandler {
