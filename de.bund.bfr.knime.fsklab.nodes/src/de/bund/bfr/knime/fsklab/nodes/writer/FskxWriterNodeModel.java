@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.Set;
@@ -94,16 +93,18 @@ public class FskxWriterNodeModel extends NodeModel {
 	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
 
 		FskPortObject portObject = (FskPortObject) inData[0];
+		
+		File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(filePath.getStringValue()));
 
 		try {
-			Files.deleteIfExists(Paths.get(filePath.getStringValue()));
+			Files.deleteIfExists(archiveFile.toPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new Exception("Previous file with same name could not be overwritten");
 		}
 
 		// try to create CombineArchive
-		try (CombineArchive archive = new CombineArchive(new File(filePath.getStringValue()))) {
+		try (CombineArchive archive = new CombineArchive(archiveFile)) {
 
 			RMetaDataNode metaDataNode = new RMetaDataNode();
 
@@ -135,10 +136,10 @@ public class FskxWriterNodeModel extends NodeModel {
 			if (portObject.template != null) {
 				SBMLDocument doc = createSbmlDocument(portObject.template);
 
-				File f = FileUtil.createTempFile("metaData", ".pmf");
+				File metadataFile = FileUtil.createTempFile("metaData", ".pmf");
 				try {
-					new SBMLWriter().write(doc, f);
-					archive.addEntry(f, "metaData.pmf", URIS.pmf);
+					new SBMLWriter().write(doc, metadataFile);
+					archive.addEntry(metadataFile, "metaData.pmf", URIS.pmf);
 				} catch (SBMLException | XMLStreamException e) {
 					e.printStackTrace();
 				}
@@ -153,7 +154,7 @@ public class FskxWriterNodeModel extends NodeModel {
 			archive.pack();
 		} catch (Exception e) {
 			try {
-				Files.delete(Paths.get(filePath.getStringValue()));
+				Files.delete(archiveFile.toPath());
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
