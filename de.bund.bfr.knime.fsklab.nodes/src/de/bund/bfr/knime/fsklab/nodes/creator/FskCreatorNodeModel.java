@@ -169,61 +169,60 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 		FskPortObject portObj = new FskPortObject();
 
 		// Reads model script
-		try {
-			portObj.model = readScript(m_modelScript.getStringValue()).script;
-		} catch (IOException e) {
-			portObj.model = "";
+		if (Strings.isNullOrEmpty(m_modelScript.getStringValue())) {
+			throw new InvalidSettingsException("Model script is not provided");
 		}
+		portObj.model = readScript(m_modelScript.getStringValue()).script;
 
 		// Reads parameters script
-		try {
-			portObj.param = readScript(m_paramScript.getStringValue()).script;
-		} catch (IOException e) {
+		if (Strings.isNullOrEmpty(m_paramScript.getStringValue())) {
 			portObj.param = "";
+		} else {
+			portObj.param = readScript(m_paramScript.getStringValue()).script;
 		}
 
 		// Reads visualization script
-		try {
+		if (!Strings.isNullOrEmpty(m_vizScript.getStringValue())) {
 			portObj.viz = readScript(m_vizScript.getStringValue()).script;
-		} catch (IOException e) {
+		} else {
 			portObj.viz = "";
 		}
 
 		// Reads model meta data
-		try (InputStream fis = FileUtil.openInputStream(m_metaDataDoc.getStringValue())) {
-			// Finds the workbook instance for XLSX file
-			XSSFWorkbook workbook = new XSSFWorkbook(fis);
-			fis.close();
+		if (!Strings.isNullOrEmpty(m_metaDataDoc.getStringValue())) {
+			try (InputStream fis = FileUtil.openInputStream(m_metaDataDoc.getStringValue())) {
+				// Finds the workbook instance for the XLSX file
+				XSSFWorkbook workbook = new XSSFWorkbook(fis);
+				portObj.template = SpreadsheetHandler.processSpreadsheet(workbook.getSheetAt(0));
+			}
+			portObj.template.software = FskMetaData.Software.R;
 
-			portObj.template = SpreadsheetHandler.processSpreadsheet(workbook.getSheetAt(0));
-		}
-		portObj.template.software = FskMetaData.Software.R;
-		
-		// Set variable values from parameters script
-		{
-			Map<String, String> vars = getVariablesFromAssignments(portObj.param);
-			for (Variable v : portObj.template.independentVariables) {
-				if (vars.containsKey(v.name.trim())) {
-					v.value = vars.get(v.name.trim());
+			// Set variable values from parameters script
+			{
+				Map<String, String> vars = getVariablesFromAssignments(portObj.param);
+				for (Variable v : portObj.template.independentVariables) {
+					if (vars.containsKey(v.name.trim())) {
+						v.value = vars.get(v.name.trim());
+					}
 				}
 			}
-		}
 
-		// Set types of variables
-		{
-			// TODO: usually the type of the depvar is numeric although it
-			// should be checked
-			portObj.template.dependentVariable.type = DataType.numeric;
+			// Set types of variables
+			{
+				// TODO: usually the type of the depvar is numeric although it
+				// should be checked
+				portObj.template.dependentVariable.type = DataType.numeric;
 
-			/*
-			 * TODO: FskMetaData is keeping only numeric types for independent
-			 * variables so it does not make sense to try to obtain the type
-			 * here since it will always be numeric. Once the rest of types are
-			 * supported in FskMetaData the following code should be update to
-			 * retrieve the types.
-			 */
-			for (Variable v : portObj.template.independentVariables) {
-				v.type = DataType.numeric;
+				/*
+				 * TODO: FskMetaData is keeping only numeric types for
+				 * independent variables so it does not make sense to try to
+				 * obtain the type here since it will always be numeric. Once
+				 * the rest of types are supported in FskMetaData the following
+				 * code should be update to retrieve the types.
+				 */
+				for (Variable v : portObj.template.independentVariables) {
+					v.type = DataType.numeric;
+				}
 			}
 		}
 
@@ -249,7 +248,8 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	 * Reads R script.
 	 * 
 	 * @param path
-	 *            File path to R model script.
+	 *            File path to R model script. If is assured not to be null or
+	 *            empty.
 	 * @throws InvalidSettingsException
 	 *             if {@link path} is null or whitespace.
 	 * @throws IOException
@@ -257,16 +257,7 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	 */
 	private static RScript readScript(final String path) throws InvalidSettingsException, IOException {
 
-		// throws InvalidSettingsException if path is null
-		if (path == null) {
-			throw new InvalidSettingsException("Unespecified script");
-		}
-
-		// throws InvalidSettingsException if path is whitespace
 		String trimmedPath = Strings.emptyToNull(path.trim());
-		if (trimmedPath == null) {
-			throw new InvalidSettingsException("Unespecified model script");
-		}
 
 		// path is not null or whitespace, thus try to read it
 		try {
@@ -434,17 +425,20 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 			equals,
 			/** R command with the <- assignment operator. E.g. x <- value */
 			left,
-			/** R command with the <<- scoping assignment operator. E.g. x <<- value */
+			/**
+			 * R command with the <<- scoping assignment operator. E.g. x <<-
+			 * value
+			 */
 			super_left,
 			/** R command with the -> assignment operator. E.g. value -> x */
 			right,
 			/** R command with the ->> assignment operator. E.g. value ->> x */
 			super_right
 		}
-		
+
 		String variable;
 		String value;
-		
+
 		public Assignment(String line, Assignment.Type type) {
 			if (type == Type.equals) {
 				String[] tokens = line.split("||");

@@ -43,7 +43,6 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 import org.knime.core.util.FileUtil;
 
-
 public class FskCreatorNodeDialog extends NodeDialogPane {
 
 	// models
@@ -115,19 +114,24 @@ public class FskCreatorNodeDialog extends NodeDialogPane {
 
 		DialogComponentFileChooser modelScriptChooser = new DialogComponentFileChooser(m_modelScript,
 				"modelScript-history", dialogType, rFilters);
-		modelScriptChooser.setBorderTitle("Select model script");
+		modelScriptChooser.setBorderTitle("Model script (*)");
+		modelScriptChooser.setToolTipText("Script that calculates the values of the model (Mandatory).");
 
 		DialogComponentFileChooser paramScriptChooser = new DialogComponentFileChooser(m_paramScript,
 				"paramScript-history", dialogType, rFilters);
-		paramScriptChooser.setBorderTitle("Select param script");
+		paramScriptChooser.setBorderTitle("Parameters script");
+		paramScriptChooser.setToolTipText("Script with the parameter values of the model (Optional).");
 
 		DialogComponentFileChooser vizScriptChooser = new DialogComponentFileChooser(m_visualizationScript,
 				"vizScript-history", dialogType, rFilters);
-		vizScriptChooser.setBorderTitle("Select visualization script");
+		vizScriptChooser.setBorderTitle("Visualization script");
+		vizScriptChooser.setToolTipText(
+				"Script with a number of commands to create plots or charts using the simulation results (Optional).");
 
 		DialogComponentFileChooser metaDataChooser = new DialogComponentFileChooser(m_metaDataDoc, "metaData-history",
 				dialogType);
-		metaDataChooser.setBorderTitle("Select spreadsheet");
+		metaDataChooser.setBorderTitle("XLSX spreadsheet");
+		metaDataChooser.setToolTipText("XLSX file with model metadata (Optional).");
 
 		Box box = Box.createVerticalBox();
 		box.add(modelScriptChooser.getComponentPanel());
