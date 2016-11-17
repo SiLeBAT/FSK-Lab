@@ -206,8 +206,18 @@ public class FskxReaderNodeModel extends NodeModel {
 
 		// Validate model
 		try (RController controller = new RController()) {
-			String fullScript = portObj.param + "\n" + portObj.model;
-			controller.eval(fullScript);
+			// Validate model with parameter values from parameter script
+			final String fullScriptA = portObj.param + "\n" + portObj.model;
+			controller.eval(fullScriptA);
+
+			// Validate model with parameter values from metadata
+			if (!portObj.template.independentVariables.isEmpty()) {
+				final String paramScript = portObj.template.independentVariables.stream()
+						.map(v -> v.name + " <- " + v.value).collect(Collectors.joining("\n"));
+				final String fullScriptB = paramScript + "\n" + portObj.model;
+				controller.eval(fullScriptB);
+			}
+
 		} catch (RException e) {
 			throw new RException("Input model is not valid", e);
 		}
