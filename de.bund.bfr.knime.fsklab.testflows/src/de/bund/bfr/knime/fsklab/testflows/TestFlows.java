@@ -30,7 +30,7 @@ public class TestFlows {
 	}
 
 	@Test
-	public void testAddressCreator() throws IOException, InvalidSettingsException, CanceledExecutionException,
+	public void testFskxReaderWriter() throws IOException, InvalidSettingsException, CanceledExecutionException,
 			UnsupportedWorkflowVersionException, LockFailedException, InterruptedException {
 		runner.runTestWorkflow(new File("workflows/FSKX-Reader-Writer-Test"));
 	}
