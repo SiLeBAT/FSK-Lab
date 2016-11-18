@@ -26,13 +26,10 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
-import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.swing.tree.TreeNode;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.io.IOUtils;
@@ -57,7 +54,6 @@ import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.rosuda.REngine.REXPMismatchException;
-import org.sbml.jsbml.ASTNode;
 import org.sbml.jsbml.AssignmentRule;
 import org.sbml.jsbml.InitialAssignment;
 import org.sbml.jsbml.Model;
@@ -71,6 +67,7 @@ import de.bund.bfr.fskml.RMetaDataNode;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataTuple;
+import de.bund.bfr.knime.fsklab.nodes.SelectorNode;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
@@ -460,14 +457,7 @@ public class FskxReaderNodeModel extends NodeModel {
 					variable.type = DataType.array;
 
 					InitialAssignment ia = model.getInitialAssignment(variable.name);
-					List<Double> array = new LinkedList<>();
-					ASTNode vectorNode = ia.getMath().getChild(0);
-
-					Enumeration<TreeNode> children = vectorNode.children();
-					while (children.hasMoreElements()) {
-						ASTNode childNode = (ASTNode) children.nextElement();
-						array.add(childNode.getReal());
-					}
+					List<Double> array = new SelectorNode(ia.getMath()).getArray();
 
 					variable.value = "c(" + array.stream().map(d -> Double.toString(d)).collect(Collectors.joining(","))
 							+ ")";

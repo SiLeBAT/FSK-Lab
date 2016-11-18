@@ -1,11 +1,11 @@
 package de.bund.bfr.knime.nodes;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import de.bund.bfr.knime.fsklab.nodes.Util;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
+import de.bund.bfr.knime.fsklab.nodes.Util;
 
 public class UtilTest {
 

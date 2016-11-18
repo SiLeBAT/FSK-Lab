@@ -61,8 +61,8 @@ import org.sbml.jsbml.xml.stax.SBMLWriter;
 
 import de.bund.bfr.fskml.RMetaDataNode;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
+import de.bund.bfr.knime.fsklab.nodes.SelectorNode;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
-import de.bund.bfr.knime.fsklab.nodes.Util;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.pmfml.ModelClass;
@@ -454,7 +454,7 @@ public class FskxWriterNodeModel extends NodeModel {
 		ia.setVariable(var);
 		
 		// Create math of initial assignment with a selector function
-		ia.setMath(Util.createSelectorNode(array, ia));
+		ia.setMath(new SelectorNode(array, ia).node);
 
 		ArraysSBasePlugin iaPlugin = (ArraysSBasePlugin) ia.getPlugin(ArraysConstants.shortLabel);
 		
