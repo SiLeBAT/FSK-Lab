@@ -26,10 +26,13 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
+import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.swing.tree.TreeNode;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.io.IOUtils;
@@ -54,7 +57,9 @@ import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.rosuda.REngine.REXPMismatchException;
+import org.sbml.jsbml.ASTNode;
 import org.sbml.jsbml.AssignmentRule;
+import org.sbml.jsbml.InitialAssignment;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.SBMLDocument;
@@ -435,7 +440,6 @@ public class FskxReaderNodeModel extends NodeModel {
 				Variable variable = new Variable();
 
 				variable.name = param.getName().trim();
-				variable.type = DataType.numeric;
 
 				// unit
 				String unitId = param.getUnits();
@@ -452,7 +456,26 @@ public class FskxReaderNodeModel extends NodeModel {
 				variable.min = paramLimits.getMin().toString();
 				variable.max = paramLimits.getMax().toString();
 
-				variable.value = param.isSetValue() ? Double.toString(param.getValue()) : "";
+				if (param.getNumPlugins() > 0) {
+					variable.type = DataType.array;
+
+					InitialAssignment ia = model.getInitialAssignment(variable.name);
+					List<Double> array = new LinkedList<>();
+					ASTNode vectorNode = ia.getMath().getChild(0);
+
+					Enumeration<TreeNode> children = vectorNode.children();
+					while (children.hasMoreElements()) {
+						ASTNode childNode = (ASTNode) children.nextElement();
+						array.add(childNode.getReal());
+					}
+
+					variable.value = "c(" + array.stream().map(d -> Double.toString(d)).collect(Collectors.joining(","))
+							+ ")";
+
+				} else {
+					variable.type = param.getValue() % 1 == 0 ? DataType.integer : DataType.numeric;
+					variable.value = Double.toString(param.getValue());
+				}
 
 				template.independentVariables.add(variable);
 			}
