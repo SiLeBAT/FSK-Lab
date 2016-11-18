@@ -2,7 +2,6 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.knime.core.data.DataCell;
@@ -118,7 +117,7 @@ public class FskMetaDataTuple implements DataRow {
 
 		cell[Key.has_data.ordinal()] = new StringCell(Boolean.toString(template.hasData));
 
-		rowKey = new RowKey(String.valueOf(new Random().nextInt()));
+		rowKey = new RowKey("0");
 	}
 
 	public void setCell(int key, String value) {

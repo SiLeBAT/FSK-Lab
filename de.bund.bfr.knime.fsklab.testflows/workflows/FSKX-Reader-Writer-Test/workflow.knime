@@ -6,8 +6,8 @@
 <config key="authorInformation">
 <entry key="authored-by" type="xstring" value="valentin"/>
 <entry key="authored-when" type="xstring" value="2016-11-17 17:43:49 +0100"/>
-<entry key="lastEdited-by" type="xstring" value="thoens"/>
-<entry key="lastEdited-when" type="xstring" value="2016-11-17 19:15:39 +0100"/>
+<entry key="lastEdited-by" type="xstring" value="de"/>
+<entry key="lastEdited-when" type="xstring" value="2016-11-18 14:36:54 +0100"/>
 </config>
 <entry key="customDescription" type="xstring" isnull="true" value=""/>
 <entry key="state" type="xstring" value="CONFIGURED"/>
