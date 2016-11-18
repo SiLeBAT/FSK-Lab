@@ -49,8 +49,8 @@ import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
 
+import de.bund.bfr.fskml.RMetaDataNode;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
-import de.bund.bfr.knime.fsklab.nodes.RMetaDataNode;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
