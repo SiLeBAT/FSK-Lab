@@ -20,9 +20,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -38,13 +41,20 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
+import org.sbml.jsbml.ASTNode;
 import org.sbml.jsbml.Annotation;
 import org.sbml.jsbml.AssignmentRule;
+import org.sbml.jsbml.InitialAssignment;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.UnitDefinition;
+import org.sbml.jsbml.ext.arrays.ArraysConstants;
+import org.sbml.jsbml.ext.arrays.ArraysSBasePlugin;
+import org.sbml.jsbml.ext.arrays.Dimension;
+import org.sbml.jsbml.ext.arrays.Index;
+import org.sbml.jsbml.text.parser.ParseException;
 import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
@@ -52,6 +62,7 @@ import org.sbml.jsbml.xml.stax.SBMLWriter;
 import de.bund.bfr.fskml.RMetaDataNode;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
+import de.bund.bfr.knime.fsklab.nodes.Util;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.pmfml.ModelClass;
@@ -93,7 +104,7 @@ public class FskxWriterNodeModel extends NodeModel {
 	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
 
 		FskPortObject portObject = (FskPortObject) inData[0];
-		
+
 		File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(filePath.getStringValue()));
 
 		try {
@@ -303,27 +314,49 @@ public class FskxWriterNodeModel extends NodeModel {
 		try {
 			double min = Double.parseDouble(template.dependentVariable.min);
 			double max = Double.parseDouble(template.dependentVariable.max);
-			LimitsConstraint lc = new LimitsConstraint(template.dependentVariable.name.replaceAll("\\.", "\\_"), min, max);
+			LimitsConstraint lc = new LimitsConstraint(template.dependentVariable.name.replaceAll("\\.", "\\_"), min,
+					max);
 			if (lc.getConstraint() != null) {
 				model.addConstraint(lc.getConstraint());
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
-		
+
 		// Adds independent parameters
 		for (Variable v : template.independentVariables) {
 			String var = v.name;
 			Parameter param = model.createParameter(PMFUtil.createId(var));
 			param.setName(var);
-			param.setValue(Double.parseDouble(v.value));
-			
+
+			switch (v.type) {
+			case integer:
+				param.setValue(Integer.parseInt(v.value));
+				break;
+			case numeric:
+				param.setValue(Double.parseDouble(v.value));
+				break;
+			case array:
+				// TODO: Add array
+				try {
+					param.setValue(0);
+					addArrayToParameter(param, v.value, v.name);	
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+				break;
+			case character:
+				// TODO: Add character
+				break;
+			}
+
 			try {
 				param.setUnits(PMFUtil.createId(v.unit));
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
 			}
-			
+
 			try {
 				double min = Double.parseDouble(v.min);
 				double max = Double.parseDouble(v.max);
@@ -339,7 +372,7 @@ public class FskxWriterNodeModel extends NodeModel {
 		// Add rule
 		String formulaName = "Missing formula name";
 		ModelClass modelClass = template.subject == null ? ModelClass.UNKNOWN : template.subject;
-		int modelId = - new Random().nextInt(Integer.MAX_VALUE);
+		int modelId = -new Random().nextInt(Integer.MAX_VALUE);
 		Reference[] references = new Reference[0];
 
 		AssignmentRule rule = new AssignmentRule(3, 1);
@@ -385,7 +418,7 @@ public class FskxWriterNodeModel extends NodeModel {
 			}
 		}
 	}
-	
+
 	private static class TableReader {
 		public final static int LEVEL = 3;
 		public final static int VERSION = 1;
@@ -393,7 +426,8 @@ public class FskxWriterNodeModel extends NodeModel {
 		public static void addNamespaces(SBMLDocument doc) {
 			doc.addDeclaredNamespace("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 			doc.addDeclaredNamespace("xmlns:pmml", "http://www.dmg.org/PMML-4_2");
-			doc.addDeclaredNamespace("xmlns:pmf", "http://sourceforge.net/projects/microbialmodelingexchange/files/PMF-ML");
+			doc.addDeclaredNamespace("xmlns:pmf",
+					"http://sourceforge.net/projects/microbialmodelingexchange/files/PMF-ML");
 			doc.addDeclaredNamespace("xmlns:dc", "http://purl.org/dc/elements/1.1");
 			doc.addDeclaredNamespace("xmlns:dcterms", "http://purl.org/dc/terms/");
 			doc.addDeclaredNamespace("xmlns:pmmlab",
@@ -401,5 +435,37 @@ public class FskxWriterNodeModel extends NodeModel {
 			doc.addDeclaredNamespace("xmlns:numl", "http://www.numl.org/numl/level1/version1");
 			doc.addDeclaredNamespace("xmlns:xlink", "http//www.w3.org/1999/xlink");
 		}
+	}
+
+	private static void addArrayToParameter(Parameter parameter, String value, String var) throws ParseException {
+		String cleanArray = value.substring(2, value.length() - 1);
+		String[] tokens = cleanArray.split(",");
+		List<Double> array = Arrays.stream(tokens).map(Double::parseDouble).collect(Collectors.toList());
+		int size = tokens.length;
+
+		// Create dimension within parameter
+		ArraysSBasePlugin arrayPlugin = (ArraysSBasePlugin) parameter.getPlugin(ArraysConstants.shortLabel);
+		Dimension dim = arrayPlugin.createDimension("d0");
+		dim.setSize(Integer.toString(size));
+		dim.setArrayDimension(0);
+
+		// Create initial assignment
+		InitialAssignment ia = parameter.getModel().createInitialAssignment();
+		ia.setVariable(var);
+		
+		// Create math of initial assignment with a selector function
+		ia.setMath(Util.createSelectorNode(array, ia));
+
+		ArraysSBasePlugin iaPlugin = (ArraysSBasePlugin) ia.getPlugin(ArraysConstants.shortLabel);
+		
+		// Add dimension to initial assignment
+		iaPlugin.addDimension(dim.clone());
+		
+		// Add index to initial assignment
+		Index index = iaPlugin.createIndex();
+		index.setReferencedAttribute("symbol");
+		index.setArrayDimension(0);
+		index.setMath(new ASTNode("d0"));
+		
 	}
 }

@@ -1,5 +1,10 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.util.List;
+
+import org.sbml.jsbml.ASTNode;
+import org.sbml.jsbml.MathContainer;
+
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 
 public class Util {
@@ -31,5 +36,34 @@ public class Util {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Create the {@link ASTNode} corresponding to a selector node with all the
+	 * values of an array.
+	 * 
+	 * Structure:
+	 * {@code
+	 * <apply>
+	 *   <selector>
+	 *   <vector>
+	 *     <cn>0</cn>
+	 *     <cn>1</cn>
+	 *     ...
+	 *     <cn>n</cn>
+	 *   </vector>
+	 * </apply>
+	 * }
+	 * 
+	 * @param numbers
+	 * @return
+	 */
+	public static ASTNode createSelectorNode(List<Double> numbers, MathContainer mc) {
+		ASTNode math = new ASTNode(ASTNode.Type.FUNCTION_SELECTOR, mc);
+		ASTNode vectorNode = new ASTNode(ASTNode.Type.VECTOR, mc);
+		numbers.forEach(d -> vectorNode.addChild(new ASTNode(d)));
+		math.addChild(vectorNode);
+		
+		return math;
 	}
 }
