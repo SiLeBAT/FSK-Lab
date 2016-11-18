@@ -52,7 +52,7 @@ import com.google.common.base.Strings;
 import de.bund.bfr.fskml.MissingValueError;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
-import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
+import de.bund.bfr.knime.fsklab.nodes.Util;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
@@ -181,31 +181,15 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 			}
 			portObj.template.software = FskMetaData.Software.R;
 
-			// Set variable values from parameters script
+			portObj.template.dependentVariable.type = Util.getValueType(portObj.template.dependentVariable.name);
+			// Set variable values and types from parameters script
 			{
 				Map<String, String> vars = getVariablesFromAssignments(portObj.param);
 				for (Variable v : portObj.template.independentVariables) {
 					if (vars.containsKey(v.name.trim())) {
 						v.value = vars.get(v.name.trim());
+						v.type = Util.getValueType(v.value);
 					}
-				}
-			}
-
-			// Set types of variables
-			{
-				// TODO: usually the type of the depvar is numeric although it
-				// should be checked
-				portObj.template.dependentVariable.type = DataType.numeric;
-
-				/*
-				 * TODO: FskMetaData is keeping only numeric types for
-				 * independent variables so it does not make sense to try to
-				 * obtain the type here since it will always be numeric. Once
-				 * the rest of types are supported in FskMetaData the following
-				 * code should be update to retrieve the types.
-				 */
-				for (Variable v : portObj.template.independentVariables) {
-					v.type = DataType.numeric;
 				}
 			}
 		}
