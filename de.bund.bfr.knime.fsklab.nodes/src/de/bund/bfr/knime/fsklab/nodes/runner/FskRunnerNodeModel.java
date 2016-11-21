@@ -33,12 +33,14 @@ import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.rosuda.REngine.REXPMismatchException;
 
+import com.sun.jna.Platform;
+
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataTuple;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
-import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
-import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
+import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
+import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 
 public class FskRunnerNodeModel extends NodeModel {
 
@@ -120,8 +122,7 @@ public class FskRunnerNodeModel extends NodeModel {
 		}
 
 		// If a metadata table is connected then update the model metadata
-		else
-			if (inObjects.length == 2 && inObjects[1] != null) {
+		else if (inObjects.length == 2 && inObjects[1] != null) {
 			BufferedDataTable metadataTable = (BufferedDataTable) inObjects[1];
 			if (metadataTable.size() == 1) {
 				try (CloseableRowIterator iterator = metadataTable.iterator()) {
@@ -168,8 +169,7 @@ public class FskRunnerNodeModel extends NodeModel {
 
 		// Add path
 		LibRegistry libRegistry = LibRegistry.instance();
-		String cmd = ".libPaths(c(\"" + libRegistry.getInstallationPath().toString().replace("\\", "/")
-				+ "\", .libPaths()))";
+		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString() + "', .libPaths()))";
 		String[] newPaths = controller.eval(cmd).asStrings();
 
 		// Run model
@@ -183,9 +183,16 @@ public class FskRunnerNodeModel extends NodeModel {
 
 		// Creates chart into m_imageFile
 		try {
-			controller.eval("png(\"" + internalSettings.imageFile.getAbsolutePath().replace("\\", "/")
-					+ "\", width=640, height=640, pointsize=12, bg=\"#ffffff\", res=\"NA\")");
-			controller.eval(fskObj.viz + "\n");
+			if (Platform.isMac()) {
+				controller.eval("library('Cairo')");
+				controller.eval("options(device='png', bitmapType='cairo')");	
+			} else {
+				controller.eval("options(device='png')");
+			}
+			
+			controller.eval("png('" + internalSettings.imageFile.getAbsolutePath().replace("\\", "/")
+					+ "', width=640, height=640, pointsize=12, bg='#ffffff', res='NA')");
+			controller.eval(fskObj.viz);
 			controller.eval("dev.off()");
 		} catch (RException e) {
 			LOGGER.warn("Visualization script failed");
