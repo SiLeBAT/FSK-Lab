@@ -14,7 +14,7 @@ import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
  * numbers, strings or even arrays. So they are kept as strings in order to
  * support all these types.
  * 
- * @author de
+ * @author Miguel Alba
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Variable implements Serializable {
