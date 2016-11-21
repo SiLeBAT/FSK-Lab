@@ -169,7 +169,7 @@ public class FskRunnerNodeModel extends NodeModel {
 
 		// Add path
 		LibRegistry libRegistry = LibRegistry.instance();
-		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString() + "', .libPaths()))";
+		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/") + "', .libPaths()))";
 		String[] newPaths = controller.eval(cmd).asStrings();
 
 		// Run model
