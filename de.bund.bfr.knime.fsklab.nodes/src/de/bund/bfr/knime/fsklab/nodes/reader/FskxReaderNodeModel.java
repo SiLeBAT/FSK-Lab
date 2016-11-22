@@ -307,7 +307,7 @@ public class FskxReaderNodeModel extends NodeModel {
 		template.modelName = model.getName();
 
 		// organism data
-		{
+		if (model.getNumSpecies() > 0) {
 			PMFSpecies species = SBMLFactory.createPMFSpecies(model.getSpecies(0));
 			template.organism = species.getName();
 			if (species.isSetDetail()) {
@@ -316,7 +316,7 @@ public class FskxReaderNodeModel extends NodeModel {
 		}
 
 		// matrix data
-		{
+		if (model.getNumCompartments() > 0) {
 			PMFCompartment compartment = SBMLFactory.createPMFCompartment(model.getCompartment(0));
 			template.matrix = compartment.getName();
 			if (compartment.isSetDetail()) {
