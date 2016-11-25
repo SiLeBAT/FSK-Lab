@@ -32,9 +32,6 @@ import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.PMFUtil;
 import de.bund.bfr.pmfml.sbml.Limits;
 import de.bund.bfr.pmfml.sbml.LimitsConstraint;
-import de.bund.bfr.pmfml.sbml.Metadata;
-import de.bund.bfr.pmfml.sbml.MetadataAnnotation;
-import de.bund.bfr.pmfml.sbml.MetadataImpl;
 import de.bund.bfr.pmfml.sbml.ModelRule;
 import de.bund.bfr.pmfml.sbml.PMFCompartment;
 import de.bund.bfr.pmfml.sbml.PMFSpecies;
@@ -63,33 +60,7 @@ public class MetadataDocument {
 		doc.addDeclaredNamespace("xmlns:xlink", "http//www.w3.org/1999/xlink");
 
 		// Adds document annotation
-		Metadata metaData = new MetadataImpl();
-		if (template.creator != null && !template.creator.isEmpty()) {
-			metaData.setGivenName(template.creator);
-		}
-		if (template.familyName != null && !template.familyName.isEmpty()) {
-			metaData.setFamilyName(template.familyName);
-		}
-		if (template.contact != null && !template.contact.isEmpty()) {
-			metaData.setContact(template.contact);
-		}
-		if (template.createdDate != null) {
-			metaData.setCreatedDate(FskMetaData.dateFormat.format(template.createdDate));
-		}
-		if (template.modifiedDate != null) {
-			metaData.setModifiedDate(FskMetaData.dateFormat.format(template.modifiedDate));
-		}
-		if (template.type != null) {
-			metaData.setType(template.type);
-		}
-		if (template.rights != null && !template.rights.isEmpty()) {
-			metaData.setRights(template.rights);
-		}
-		if (template.referenceDescriptionLink != null) {
-			metaData.setReferenceLink(template.referenceDescriptionLink.toString());
-		}
-
-		doc.setAnnotation(new MetadataAnnotation(metaData).getAnnotation());
+		doc.setAnnotation(new MetadataAnnotation(template).annotation);
 
 		// Creates model and names it
 		Model model = doc.createModel(PMFUtil.createId(template.modelId));
@@ -308,57 +279,16 @@ public class MetadataDocument {
 		}
 
 		// creator
-		Metadata metadataAnnot = new MetadataAnnotation(doc.getAnnotation()).getMetadata();
-		if (metadataAnnot.isSetGivenName()) {
-			template.creator = metadataAnnot.getGivenName();
-		}
-
-		// family name
-		if (metadataAnnot.isSetFamilyName()) {
-			template.familyName = metadataAnnot.getFamilyName();
-		}
-
-		// contact
-		if (metadataAnnot.isSetContact()) {
-			template.contact = metadataAnnot.getContact();
-		}
-
-		// reference description link
-		if (metadataAnnot.isSetReferenceLink()) {
-			template.referenceDescriptionLink = metadataAnnot.getReferenceLink();
-		}
-
-		// created date
-		if (metadataAnnot.isSetCreatedDate()) {
-			String dateAsString = metadataAnnot.getCreatedDate();
-			try {
-				template.createdDate = FskMetaData.dateFormat.parse(dateAsString);
-			} catch (ParseException e) {
-				System.err.println(dateAsString + " is not a valid date");
-				e.printStackTrace();
-			}
-		}
-
-		// modified date
-		if (metadataAnnot.isSetModifiedDate()) {
-			String dateAsString = metadataAnnot.getModifiedDate();
-			try {
-				template.modifiedDate = FskMetaData.dateFormat.parse(dateAsString);
-			} catch (ParseException e) {
-				System.err.println(dateAsString + " is not a valid date");
-				e.printStackTrace();
-			}
-		}
-
-		// model rights
-		if (metadataAnnot.isSetRights()) {
-			template.rights = metadataAnnot.getRights();
-		}
-
-		// model type
-		if (metadataAnnot.isSetType()) {
-			template.type = metadataAnnot.getType();
-		}
+		MetadataAnnotation annot = new MetadataAnnotation(doc.getAnnotation());
+		template.creator = annot.givenName;
+		template.familyName = annot.familyName;
+		template.contact = annot.contact;
+		template.createdDate = annot.createdDate;
+		template.modifiedDate = annot.modifiedDate;
+		template.type = annot.type;
+		template.rights = annot.rights;
+		template.referenceDescription = annot.referenceDescription;
+		template.referenceDescriptionLink = annot.referenceDescriptionLink;
 
 		template.subject = new ModelRule(rule).getModelClass();
 
