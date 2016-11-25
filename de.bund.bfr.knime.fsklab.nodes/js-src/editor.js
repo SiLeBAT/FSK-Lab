@@ -11,6 +11,7 @@ metadata_editor = function () {
     {
         _value = value;
         _data = value.metadata;
+        checkVariables();
         create_body ();
     };
 
@@ -394,9 +395,6 @@ metadata_editor = function () {
 
         // Saves and validates changes in variables table (dependent variable)
         var depRow = $('table tr:eq(1)');
-        $('td:eq(3) input', depRow).on('input', function() {
-            _value.metadata.dependentVariable.value = $(this).val();
-        });
         $('td:eq(4) input', depRow).on('input', function() {
             var newVal = Number($(this).val());
             var max = Number(_value.metadata.dependentVariable.max);
@@ -424,13 +422,19 @@ metadata_editor = function () {
             // Value change
             $("td:eq(3) input", this).on('input', function() {
                 var newVal = Number($(this).val());
-                var min = Number(_value.metadata.independentVariables[i].min);
-                var max = Number(_value.metadata.independentVariables[i].max);
-                if (min <= newVal && newVal <= max) {
-                    _value.metadata.independentVariables[i].value = newVal;
-                    markValidTd($(this).parent());
-                } else {
+                alert(newVal);
+                if (_data.independentVariables[i].type === 'integer'
+                    && newVal % 2 != 0) {
                     markInvalidTd($(this).parent());
+                } else {
+                    var min = Number(_value.metadata.independentVariables[i].min);
+                    var max = Number(_value.metadata.independentVariables[i].max);
+                    if (min <= newVal && newVal <= max) {
+                        _value.metadata.independentVariables[i].value = newVal;
+                        markValidTd($(this).parent());
+                    } else {
+                        markInvalidTd($(this).parent());
+                    }
                 }
             });
             // Minimum value change
@@ -452,7 +456,7 @@ metadata_editor = function () {
                     _value.metadata.independentVariables[i].max = newVal;
                     markValidTd($(this).parent());
                 } else {
-                    markInvalidId($(this).parent());
+                    markInvalidTd($(this).parent());
                 }
             });
         });
@@ -472,5 +476,15 @@ metadata_editor = function () {
 
     function nullToEmpty(stringVar) {
         return stringVar === null ? "" : stringVar;
+    }
+
+    /** Check variables. Integer variables will truncate decimals. */
+    function checkVariables() {
+        for (var i = 0; i < _data.independentVariables.length; i++) {
+            var variable = _data.independentVariables[i];
+            if (variable.type === 'integer') {
+                variable.value = Math.floor(variable.value);
+            }
+        }
     }
 }();
