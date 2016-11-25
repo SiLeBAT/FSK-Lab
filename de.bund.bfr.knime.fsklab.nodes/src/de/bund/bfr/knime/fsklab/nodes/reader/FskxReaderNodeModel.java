@@ -34,7 +34,6 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.io.IOUtils;
 import org.jdom2.JDOMException;
-import org.jsoup.Jsoup;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
@@ -54,35 +53,20 @@ import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.rosuda.REngine.REXPMismatchException;
-import org.sbml.jsbml.AssignmentRule;
-import org.sbml.jsbml.InitialAssignment;
-import org.sbml.jsbml.Model;
-import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.SBMLDocument;
-import org.sbml.jsbml.UnitDefinition;
-import org.sbml.jsbml.util.filters.Filter;
 import org.sbml.jsbml.xml.stax.SBMLReader;
 
 import de.bund.bfr.fskml.RMetaDataNode;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataTuple;
-import de.bund.bfr.knime.fsklab.nodes.SelectorNode;
+import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
-import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
-import de.bund.bfr.pmfml.sbml.Limits;
-import de.bund.bfr.pmfml.sbml.LimitsConstraint;
-import de.bund.bfr.pmfml.sbml.Metadata;
-import de.bund.bfr.pmfml.sbml.MetadataAnnotation;
-import de.bund.bfr.pmfml.sbml.ModelRule;
-import de.bund.bfr.pmfml.sbml.PMFCompartment;
-import de.bund.bfr.pmfml.sbml.PMFSpecies;
-import de.bund.bfr.pmfml.sbml.SBMLFactory;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.CombineArchiveException;
@@ -167,7 +151,7 @@ public class FskxReaderNodeModel extends NodeModel {
 
 				try (InputStream stream = Files.newInputStream(entry.getPath(), StandardOpenOption.READ)) {
 					SBMLDocument doc = new SBMLReader().readSBMLFromStream(stream);
-					portObj.template = processMetadata(doc);
+					portObj.template = new MetadataDocument(doc).getMetaData();
 				} catch (IOException | XMLStreamException e) {
 					LOGGER.error("Metadata document could not be read: " + entry.getFileName());
 					e.printStackTrace();
@@ -287,192 +271,5 @@ public class FskxReaderNodeModel extends NodeModel {
 	@Override
 	protected void reset() {
 		// does nothing
-	}
-
-	// --- utility ---
-
-	// TODO: take functionality out of FSMRUtils processPrevalenceModel
-	private static FskMetaData processMetadata(final SBMLDocument doc) {
-
-		FskMetaData template = new FskMetaData();
-
-		Model model = doc.getModel();
-		AssignmentRule rule = (AssignmentRule) model.getRule(0);
-
-		// caches limits
-		List<Limits> limits = model.getListOfConstraints().stream().map(LimitsConstraint::new)
-				.map(LimitsConstraint::getLimits).collect(Collectors.toList());
-
-		template.modelId = model.getId();
-		template.modelName = model.getName();
-
-		// organism data
-		if (model.getNumSpecies() > 0) {
-			PMFSpecies species = SBMLFactory.createPMFSpecies(model.getSpecies(0));
-			template.organism = species.getName();
-			if (species.isSetDetail()) {
-				template.organismDetails = species.getDetail();
-			}
-		}
-
-		// matrix data
-		if (model.getNumCompartments() > 0) {
-			PMFCompartment compartment = SBMLFactory.createPMFCompartment(model.getCompartment(0));
-			template.matrix = compartment.getName();
-			if (compartment.isSetDetail()) {
-				template.matrixDetails = compartment.getDetail();
-			}
-		}
-
-		// creator
-		Metadata metadataAnnot = new MetadataAnnotation(doc.getAnnotation()).getMetadata();
-		if (metadataAnnot.isSetGivenName()) {
-			template.creator = metadataAnnot.getGivenName();
-		}
-
-		// family name
-		if (metadataAnnot.isSetFamilyName()) {
-			template.familyName = metadataAnnot.getFamilyName();
-		}
-
-		// contact
-		if (metadataAnnot.isSetContact()) {
-			template.contact = metadataAnnot.getContact();
-		}
-
-		// reference description link
-		if (metadataAnnot.isSetReferenceLink()) {
-			template.referenceDescriptionLink = metadataAnnot.getReferenceLink();
-		}
-
-		// created date
-		if (metadataAnnot.isSetCreatedDate()) {
-			String dateAsString = metadataAnnot.getCreatedDate();
-			try {
-				template.createdDate = FskMetaData.dateFormat.parse(dateAsString);
-			} catch (ParseException e) {
-				System.err.println(dateAsString + " is not a valid date");
-				e.printStackTrace();
-			}
-		}
-
-		// modified date
-		if (metadataAnnot.isSetModifiedDate()) {
-			String dateAsString = metadataAnnot.getModifiedDate();
-			try {
-				template.modifiedDate = FskMetaData.dateFormat.parse(dateAsString);
-			} catch (ParseException e) {
-				System.err.println(dateAsString + " is not a valid date");
-				e.printStackTrace();
-			}
-		}
-
-		// model rights
-		if (metadataAnnot.isSetRights()) {
-			template.rights = metadataAnnot.getRights();
-		}
-
-		// model type
-		if (metadataAnnot.isSetType()) {
-			template.type = metadataAnnot.getType();
-		}
-
-		template.subject = new ModelRule(rule).getModelClass();
-
-		// model notes
-		if (model.isSetNotes()) {
-			try {
-				template.notes = Jsoup.parse(model.getNotesString()).text();
-			} catch (XMLStreamException e) {
-				System.err.println("Error accesing the notes of " + model);
-				e.printStackTrace();
-			}
-		}
-
-		// dependent variable data
-		{
-			String depId = rule.getVariable();
-
-			// Gets parameter for the dependent variable and sets it
-			Parameter param = model.getParameter(depId);
-			template.dependentVariable.name = param.getName();
-			template.dependentVariable.type = DataType.numeric;
-
-			// Gets and sets dependent variable unit
-			String unitId = param.getUnits();
-			if (!unitId.equals("dimensionless")) {
-				UnitDefinition unitDef = model.getUnitDefinition(unitId);
-				if (unitDef != null) {
-					template.dependentVariable.unit = unitDef.getName();
-				}
-			}
-
-			// Sets dependent variable min & max
-			for (Limits lim : limits) {
-				if (lim.getVar().replaceAll("\\_", "\\.").equals(depId)) {
-					if (lim.getMin() != null)
-						template.dependentVariable.min = lim.getMin().toString();
-					if (lim.getMax() != null)
-						template.dependentVariable.max = lim.getMax().toString();
-					break;
-				}
-			}
-		}
-
-		// independent variable data
-		{
-			String depId = rule.getVariable();
-
-			List<Parameter> indepParams = model.getListOfParameters().filterList(new Filter() {
-				@Override
-				public boolean accepts(Object o) {
-					return !((Parameter) o).getId().equals(depId);
-				}
-			});
-
-			final int numParams = indepParams.size();
-
-			for (int p = 0; p < numParams; p++) {
-				Parameter param = indepParams.get(p);
-				Variable variable = new Variable();
-
-				variable.name = param.getName().trim();
-
-				// unit
-				String unitId = param.getUnits();
-				variable.unit = "";
-				if (!unitId.equals("dimensionless")) {
-					UnitDefinition unitDef = model.getUnitDefinition(unitId);
-					if (unitDef != null) {
-						variable.unit = unitDef.getName();
-					}
-				}
-
-				Limits paramLimits = limits.stream().filter(lim -> lim.getVar().equals(param.getId())).findFirst()
-						.get();
-				variable.min = paramLimits.getMin().toString();
-				variable.max = paramLimits.getMax().toString();
-
-				if (param.getNumPlugins() > 0) {
-					variable.type = DataType.array;
-
-					InitialAssignment ia = model.getInitialAssignment(variable.name);
-					List<Double> array = new SelectorNode(ia.getMath()).getArray();
-
-					variable.value = "c(" + array.stream().map(d -> Double.toString(d)).collect(Collectors.joining(","))
-							+ ")";
-
-				} else {
-					variable.type = param.getValue() % 1 == 0 ? DataType.integer : DataType.numeric;
-					variable.value = Double.toString(param.getValue());
-				}
-
-				template.independentVariables.add(variable);
-			}
-		}
-
-		template.hasData = false;
-
-		return template;
 	}
 }

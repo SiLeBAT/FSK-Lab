@@ -20,12 +20,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -41,41 +35,14 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
-import org.sbml.jsbml.ASTNode;
-import org.sbml.jsbml.Annotation;
-import org.sbml.jsbml.AssignmentRule;
-import org.sbml.jsbml.InitialAssignment;
-import org.sbml.jsbml.Model;
-import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
-import org.sbml.jsbml.UnitDefinition;
-import org.sbml.jsbml.ext.arrays.ArraysConstants;
-import org.sbml.jsbml.ext.arrays.ArraysSBasePlugin;
-import org.sbml.jsbml.ext.arrays.Dimension;
-import org.sbml.jsbml.ext.arrays.Index;
-import org.sbml.jsbml.text.parser.ParseException;
-import org.sbml.jsbml.xml.XMLNode;
-import org.sbml.jsbml.xml.XMLTriple;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
 
 import de.bund.bfr.fskml.RMetaDataNode;
-import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
-import de.bund.bfr.knime.fsklab.nodes.SelectorNode;
+import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
-import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
-import de.bund.bfr.pmfml.ModelClass;
-import de.bund.bfr.pmfml.PMFUtil;
-import de.bund.bfr.pmfml.sbml.LimitsConstraint;
-import de.bund.bfr.pmfml.sbml.Metadata;
-import de.bund.bfr.pmfml.sbml.MetadataAnnotation;
-import de.bund.bfr.pmfml.sbml.MetadataImpl;
-import de.bund.bfr.pmfml.sbml.PMFCompartment;
-import de.bund.bfr.pmfml.sbml.PMFSpecies;
-import de.bund.bfr.pmfml.sbml.Reference;
-import de.bund.bfr.pmfml.sbml.ReferenceSBMLNode;
-import de.bund.bfr.pmfml.sbml.SBMLFactory;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
 
@@ -145,7 +112,7 @@ public class FskxWriterNodeModel extends NodeModel {
 
 			// Adds model meta data
 			if (portObject.template != null) {
-				SBMLDocument doc = createSbmlDocument(portObject.template);
+				SBMLDocument doc = new MetadataDocument(portObject.template).doc;
 
 				File metadataFile = FileUtil.createTempFile("metaData", ".pmf");
 				try {
@@ -227,245 +194,5 @@ public class FskxWriterNodeModel extends NodeModel {
 	protected void saveInternals(final File internDir, final ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
 		// nothing
-	}
-
-	/** Creates SBMLDocument out of a OpenFSMR template. */
-	private static SBMLDocument createSbmlDocument(final FskMetaData template) {
-
-		// Creates SBMLDocument for the primary model
-		final SBMLDocument sbmlDocument = new SBMLDocument(TableReader.LEVEL, TableReader.VERSION);
-
-		// Adds namespaces to the sbmlDocument
-		TableReader.addNamespaces(sbmlDocument);
-
-		// Adds document annotation
-		Metadata metaData = new MetadataImpl();
-		if (template.creator != null && !template.creator.isEmpty()) {
-			metaData.setGivenName(template.creator);
-		}
-		if (template.familyName != null && !template.familyName.isEmpty()) {
-			metaData.setFamilyName(template.familyName);
-		}
-		if (template.contact != null && !template.contact.isEmpty()) {
-			metaData.setContact(template.contact);
-		}
-		if (template.createdDate != null) {
-			metaData.setCreatedDate(FskMetaData.dateFormat.format(template.createdDate));
-		}
-		if (template.modifiedDate != null) {
-			metaData.setModifiedDate(FskMetaData.dateFormat.format(template.modifiedDate));
-		}
-		if (template.type != null) {
-			metaData.setType(template.type);
-		}
-		if (template.rights != null && !template.rights.isEmpty()) {
-			metaData.setRights(template.rights);
-		}
-		if (template.referenceDescriptionLink != null) {
-			metaData.setReferenceLink(template.referenceDescriptionLink.toString());
-		}
-
-		sbmlDocument.setAnnotation(new MetadataAnnotation(metaData).getAnnotation());
-
-		// Creates model and names it
-		Model model = sbmlDocument.createModel(PMFUtil.createId(template.modelId));
-		if (template.modelName != null && !template.modelName.isEmpty()) {
-			model.setName(template.modelName);
-		}
-
-		// Sets model notes
-		if (template.notes != null && !template.notes.isEmpty()) {
-			try {
-				model.setNotes(template.notes);
-			} catch (XMLStreamException e) {
-				e.printStackTrace();
-			}
-		}
-
-		// Creates and adds compartment to the model
-		PMFCompartment compartment = SBMLFactory.createPMFCompartment(PMFUtil.createId(template.matrix),
-				template.matrix);
-		compartment.setDetail(template.matrixDetails);
-		model.addCompartment(compartment.getCompartment());
-
-		// Creates and adds species to the model
-		String speciesId = PMFUtil.createId(template.organism);
-		String speciesName = template.organism;
-		String speciesUnit = PMFUtil.createId(template.dependentVariable.unit);
-		PMFSpecies species = SBMLFactory.createPMFSpecies(compartment.getId(), speciesId, speciesName, speciesUnit);
-		model.addSpecies(species.getSpecies());
-
-		// Add unit definitions here (before parameters)
-		Set<String> unitsSet = new LinkedHashSet<>();
-		unitsSet.add(template.dependentVariable.unit.trim());
-		template.independentVariables.forEach(v -> unitsSet.add(v.unit.trim()));
-		for (String unit : unitsSet) {
-			UnitDefinition ud = model.createUnitDefinition(PMFUtil.createId(unit));
-			ud.setName(unit);
-		}
-
-		// Adds dep parameter
-		Parameter depParam = new Parameter(PMFUtil.createId(template.dependentVariable.name));
-		depParam.setName(template.dependentVariable.name);
-		depParam.setUnits(PMFUtil.createId(template.dependentVariable.unit));
-		model.addParameter(depParam);
-
-		// Adds dep constraint
-		try {
-			double min = Double.parseDouble(template.dependentVariable.min);
-			double max = Double.parseDouble(template.dependentVariable.max);
-			LimitsConstraint lc = new LimitsConstraint(template.dependentVariable.name.replaceAll("\\.", "\\_"), min,
-					max);
-			if (lc.getConstraint() != null) {
-				model.addConstraint(lc.getConstraint());
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		}
-
-		// Adds independent parameters
-		for (Variable v : template.independentVariables) {
-			String var = v.name;
-			Parameter param = model.createParameter(PMFUtil.createId(var));
-			param.setName(var);
-
-			switch (v.type) {
-			case integer:
-				param.setValue(Integer.parseInt(v.value));
-				break;
-			case numeric:
-				param.setValue(Double.parseDouble(v.value));
-				break;
-			case array:
-				// TODO: Add array
-				try {
-					param.setValue(0);
-					addArrayToParameter(param, v.value, v.name);	
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				
-				break;
-			case character:
-				// TODO: Add character
-				break;
-			}
-
-			try {
-				param.setUnits(PMFUtil.createId(v.unit));
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				double min = Double.parseDouble(v.min);
-				double max = Double.parseDouble(v.max);
-				LimitsConstraint lc = new LimitsConstraint(param.getId(), min, max);
-				if (lc.getConstraint() != null) {
-					model.addConstraint(lc.getConstraint());
-				}
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-		}
-
-		// Add rule
-		String formulaName = "Missing formula name";
-		ModelClass modelClass = template.subject == null ? ModelClass.UNKNOWN : template.subject;
-		int modelId = -new Random().nextInt(Integer.MAX_VALUE);
-		Reference[] references = new Reference[0];
-
-		AssignmentRule rule = new AssignmentRule(3, 1);
-		rule.setVariable(depParam.getId());
-		rule.setAnnotation(new ModelRuleAnnotation(formulaName, modelClass, modelId, references).annotation);
-		model.addRule(rule);
-
-		return sbmlDocument;
-	}
-
-	private static class ModelRuleAnnotation {
-
-		private Annotation annotation;
-
-		private static final String FORMULA_TAG = "formulaName";
-		private static final String SUBJECT_TAG = "subject";
-		private static final String PMMLAB_ID = "pmmlabID";
-
-		private ModelRuleAnnotation(String formulaName, ModelClass modelClass, int pmmlabID, Reference[] references) {
-			// Builds metadata node
-			XMLNode metadataNode = new XMLNode(new XMLTriple("metadata", null, "pmf"));
-			this.annotation = new Annotation();
-			this.annotation.setNonRDFAnnotation(metadataNode);
-
-			// Creates annotation for formula name
-			XMLNode nameNode = new XMLNode(new XMLTriple(FORMULA_TAG, null, "pmmlab"));
-			nameNode.addChild(new XMLNode(formulaName));
-			metadataNode.addChild(nameNode);
-
-			// Creates annotation for modelClass
-			XMLNode modelClassNode = new XMLNode(new XMLTriple(SUBJECT_TAG, null, "pmmlab"));
-			modelClassNode.addChild(new XMLNode(modelClass.fullName()));
-			metadataNode.addChild(modelClassNode);
-
-			// Create annotation for pmmlabID
-			XMLNode idNode = new XMLNode(new XMLTriple(PMMLAB_ID, null, "pmmlab"));
-			idNode.addChild(new XMLNode(new Integer(pmmlabID).toString()));
-			metadataNode.addChild(idNode);
-
-			// Builds reference nodes
-			for (Reference ref : references) {
-				metadataNode.addChild(new ReferenceSBMLNode(ref).getNode());
-			}
-		}
-	}
-
-	private static class TableReader {
-		public final static int LEVEL = 3;
-		public final static int VERSION = 1;
-
-		public static void addNamespaces(SBMLDocument doc) {
-			doc.addDeclaredNamespace("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-			doc.addDeclaredNamespace("xmlns:pmml", "http://www.dmg.org/PMML-4_2");
-			doc.addDeclaredNamespace("xmlns:pmf",
-					"http://sourceforge.net/projects/microbialmodelingexchange/files/PMF-ML");
-			doc.addDeclaredNamespace("xmlns:dc", "http://purl.org/dc/elements/1.1");
-			doc.addDeclaredNamespace("xmlns:dcterms", "http://purl.org/dc/terms/");
-			doc.addDeclaredNamespace("xmlns:pmmlab",
-					"http://sourceforge.net/projects/microbialmodelingexchange/files/PMF-ML");
-			doc.addDeclaredNamespace("xmlns:numl", "http://www.numl.org/numl/level1/version1");
-			doc.addDeclaredNamespace("xmlns:xlink", "http//www.w3.org/1999/xlink");
-		}
-	}
-
-	private static void addArrayToParameter(Parameter parameter, String value, String var) throws ParseException {
-		String cleanArray = value.substring(2, value.length() - 1);
-		String[] tokens = cleanArray.split(",");
-		List<Double> array = Arrays.stream(tokens).map(Double::parseDouble).collect(Collectors.toList());
-		int size = tokens.length;
-
-		// Create dimension within parameter
-		ArraysSBasePlugin arrayPlugin = (ArraysSBasePlugin) parameter.getPlugin(ArraysConstants.shortLabel);
-		Dimension dim = arrayPlugin.createDimension("d0");
-		dim.setSize(Integer.toString(size));
-		dim.setArrayDimension(0);
-
-		// Create initial assignment
-		InitialAssignment ia = parameter.getModel().createInitialAssignment();
-		ia.setVariable(var);
-		
-		// Create math of initial assignment with a selector function
-		ia.setMath(new SelectorNode(array, ia).node);
-
-		ArraysSBasePlugin iaPlugin = (ArraysSBasePlugin) ia.getPlugin(ArraysConstants.shortLabel);
-		
-		// Add dimension to initial assignment
-		iaPlugin.addDimension(dim.clone());
-		
-		// Add index to initial assignment
-		Index index = iaPlugin.createIndex();
-		index.setReferencedAttribute("symbol");
-		index.setArrayDimension(0);
-		index.setMath(new ASTNode("d0"));
-		
 	}
 }
