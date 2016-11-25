@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,11 +31,8 @@ import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.PMFUtil;
 import de.bund.bfr.pmfml.sbml.Limits;
 import de.bund.bfr.pmfml.sbml.LimitsConstraint;
-import de.bund.bfr.pmfml.sbml.ModelRule;
 import de.bund.bfr.pmfml.sbml.PMFCompartment;
 import de.bund.bfr.pmfml.sbml.PMFSpecies;
-import de.bund.bfr.pmfml.sbml.Reference;
-import de.bund.bfr.pmfml.sbml.ReferenceSBMLNode;
 import de.bund.bfr.pmfml.sbml.SBMLFactory;
 
 public class MetadataDocument {
@@ -165,50 +161,51 @@ public class MetadataDocument {
 		}
 
 		// Add rule
-		String formulaName = "Missing formula name";
-		ModelClass modelClass = template.subject == null ? ModelClass.UNKNOWN : template.subject;
-		int modelId = -new Random().nextInt(Integer.MAX_VALUE);
-		Reference[] references = new Reference[0];
-
 		AssignmentRule rule = new AssignmentRule(3, 1);
 		rule.setVariable(depParam.getId());
-		rule.setAnnotation(new ModelRuleAnnotation(formulaName, modelClass, modelId, references).annotation);
+		ModelClass modelClass = template.subject == null ? ModelClass.UNKNOWN : template.subject;
+		rule.setAnnotation(new RuleAnnotation(modelClass).annotation);
 		model.addRule(rule);
 	}
 	
-	private static class ModelRuleAnnotation {
-
-		private Annotation annotation;
-
-		private static final String FORMULA_TAG = "formulaName";
-		private static final String SUBJECT_TAG = "subject";
-		private static final String PMMLAB_ID = "pmmlabID";
-
-		private ModelRuleAnnotation(String formulaName, ModelClass modelClass, int pmmlabID, Reference[] references) {
+	
+	/** Reduced version of PMF-ML ModelRuleAnnotation with only the model class. */
+	public class RuleAnnotation {
+		
+		public static final String SUBJECT_NAME = "subject";
+		public static final String SUBJECT_URI = "pmmlab";
+		
+		public ModelClass modelClass;
+		public Annotation annotation;
+		
+		public RuleAnnotation(final ModelClass modelClass) {
 			// Builds metadata node
-			XMLNode metadataNode = new XMLNode(new XMLTriple("metadata", null, "pmf"));
-			this.annotation = new Annotation();
-			this.annotation.setNonRDFAnnotation(metadataNode);
-
-			// Creates annotation for formula name
-			XMLNode nameNode = new XMLNode(new XMLTriple(FORMULA_TAG, null, "pmmlab"));
-			nameNode.addChild(new XMLNode(formulaName));
-			metadataNode.addChild(nameNode);
-
-			// Creates annotation for modelClass
-			XMLNode modelClassNode = new XMLNode(new XMLTriple(SUBJECT_TAG, null, "pmmlab"));
+			XMLTriple pmfTriple = new XMLTriple("metadata", null, "pmf");
+			XMLNode pmfNode = new XMLNode(pmfTriple);
+			
+			// Builds model class node
+			XMLTriple modelClassTriple = new XMLTriple(SUBJECT_NAME, null, SUBJECT_URI);
+			XMLNode modelClassNode = new XMLNode(modelClassTriple);
 			modelClassNode.addChild(new XMLNode(modelClass.fullName()));
-			metadataNode.addChild(modelClassNode);
-
-			// Create annotation for pmmlabID
-			XMLNode idNode = new XMLNode(new XMLTriple(PMMLAB_ID, null, "pmmlab"));
-			idNode.addChild(new XMLNode(new Integer(pmmlabID).toString()));
-			metadataNode.addChild(idNode);
-
-			// Builds reference nodes
-			for (Reference ref : references) {
-				metadataNode.addChild(new ReferenceSBMLNode(ref).getNode());
+			pmfNode.addChild(modelClassNode);
+			
+			// Create annotation
+			annotation = new Annotation();
+			annotation.setNonRDFAnnotation(pmfNode);
+		}
+		
+		public RuleAnnotation(final Annotation annotation) {
+			
+			XMLNode pmfNode = annotation.getNonRDFannotation().getChildElement("metadata", "");
+			
+			// Reads model class node
+			XMLNode modelClassNode = pmfNode.getChildElement(SUBJECT_NAME, "");
+			if (modelClassNode != null) {
+				modelClass = ModelClass.fromName(modelClassNode.getChild(0).getCharacters());
 			}
+			
+			// Copies annotation
+			this.annotation = annotation;
 		}
 	}
 	
@@ -290,7 +287,7 @@ public class MetadataDocument {
 		template.referenceDescription = annot.referenceDescription;
 		template.referenceDescriptionLink = annot.referenceDescriptionLink;
 
-		template.subject = new ModelRule(rule).getModelClass();
+		template.subject = new RuleAnnotation(rule.getAnnotation()).modelClass;
 
 		// model notes
 		if (model.isSetNotes()) {
