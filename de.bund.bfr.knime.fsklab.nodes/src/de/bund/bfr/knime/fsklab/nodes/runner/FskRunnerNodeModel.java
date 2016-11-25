@@ -29,8 +29,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
-import org.knime.ext.r.node.local.port.RPortObject;
-import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.rosuda.REngine.REXPMismatchException;
 
 import com.sun.jna.Platform;
@@ -49,16 +47,12 @@ public class FskRunnerNodeModel extends NodeModel {
 	/** Output spec for an FSK object. */
 	private static final FskPortObjectSpec FSK_SPEC = FskPortObjectSpec.INSTANCE;
 
-	/** Output spec for an R object. */
-	private static final RPortObjectSpec R_SPEC = RPortObjectSpec.INSTANCE;
-
 	/** Output spec for a PNG image. */
 	private static final ImagePortObjectSpec PNG_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
 
 	private static final PortType[] inPortTypes = new PortType[] { FskPortObject.TYPE,
 			BufferedDataTable.TYPE_OPTIONAL };
-	private static final PortType[] outPortTypes = new PortType[] { FskPortObject.TYPE, RPortObject.TYPE,
-			ImagePortObject.TYPE_OPTIONAL };
+	private static final PortType[] outPortTypes = new PortType[] { FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL };
 
 	private final InternalSettings internalSettings = new InternalSettings();
 
@@ -108,7 +102,7 @@ public class FskRunnerNodeModel extends NodeModel {
 	/** {@inheritDoc} */
 	@Override
 	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		return new PortObjectSpec[] { FSK_SPEC, R_SPEC, PNG_SPEC };
+		return new PortObjectSpec[] { FSK_SPEC, PNG_SPEC };
 	}
 
 	@Override
@@ -151,16 +145,15 @@ public class FskRunnerNodeModel extends NodeModel {
 		try (RController controller = new RController()) {
 			fskObj = runSnippet(controller, (FskPortObject) inObjects[0]);
 		}
-		RPortObject rObj = new RPortObject(fskObj.workspace);
 
 		try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
 			final PNGImageContent content = new PNGImageContent(fis);
 			internalSettings.plot = content.getImage();
 			ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
-			return new PortObject[] { fskObj, rObj, imgObj };
+			return new PortObject[] { fskObj, imgObj };
 		} catch (IOException e) {
 			LOGGER.warn("There is no image created");
-			return new PortObject[] { fskObj, rObj };
+			return new PortObject[] { fskObj };
 		}
 	}
 
@@ -169,7 +162,8 @@ public class FskRunnerNodeModel extends NodeModel {
 
 		// Add path
 		LibRegistry libRegistry = LibRegistry.instance();
-		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/") + "', .libPaths()))";
+		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
+				+ "', .libPaths()))";
 		String[] newPaths = controller.eval(cmd).asStrings();
 
 		// Run model
@@ -185,11 +179,11 @@ public class FskRunnerNodeModel extends NodeModel {
 		try {
 			if (Platform.isMac()) {
 				controller.eval("library('Cairo')");
-				controller.eval("options(device='png', bitmapType='cairo')");	
+				controller.eval("options(device='png', bitmapType='cairo')");
 			} else {
 				controller.eval("options(device='png')");
 			}
-			
+
 			controller.eval("png('" + internalSettings.imageFile.getAbsolutePath().replace("\\", "/")
 					+ "', width=640, height=640, pointsize=12, bg='#ffffff', res='NA')");
 			controller.eval(fskObj.viz);

@@ -17,8 +17,7 @@
 		<inPort name="FSK object" index="0">FSK object</inPort>
 		<inPort name="Parameters values" index="1" optional="true"></inPort>
 		<outPort name="FSK object" index="0">FSK object</outPort>
-		<outPort name="R object" index="1">R workspace</outPort>
-		<outPort name="Image Output" index="2">View Image</outPort>
+		<outPort name="Image Output" index="1">View Image</outPort>
 	</ports>
 	<views>
 		<view name="R View" index="0"></view>

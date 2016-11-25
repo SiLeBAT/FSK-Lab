@@ -50,8 +50,6 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
-import org.knime.ext.r.node.local.port.RPortObject;
-import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.rosuda.REngine.REXPMismatchException;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
@@ -85,11 +83,10 @@ public class FskxReaderNodeModel extends NodeModel {
 	private final SettingsModelString filename = new SettingsModelString(CFGKEY_FILE, DEFAULT_FILE);
 
 	private static final PortType[] inPortTypes = {};
-	private static final PortType[] outPortTypes = { FskPortObject.TYPE, RPortObject.TYPE, BufferedDataTable.TYPE };
+	private static final PortType[] outPortTypes = { FskPortObject.TYPE, BufferedDataTable.TYPE };
 
 	// Specs
 	private static final FskPortObjectSpec fskSpec = FskPortObjectSpec.INSTANCE;
-	private static final RPortObjectSpec rSpec = RPortObjectSpec.INSTANCE;
 	private static final DataTableSpec metadataSpec = FskMetaDataTuple.createSpec();
 
 	public FskxReaderNodeModel() {
@@ -211,9 +208,7 @@ public class FskxReaderNodeModel extends NodeModel {
 		fsmrContainer.addRowToTable(metaDataTuple);
 		fsmrContainer.close();
 
-		RPortObject rObj = new RPortObject(portObj.workspace);
-
-		return new PortObject[] { portObj, rObj, fsmrContainer.getTable() };
+		return new PortObject[] { portObj, fsmrContainer.getTable() };
 	}
 
 	private static String loadScriptFromEntry(final ArchiveEntry entry) throws IOException {
@@ -232,7 +227,7 @@ public class FskxReaderNodeModel extends NodeModel {
 	/** {@inheritDoc} */
 	@Override
 	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		return new PortObjectSpec[] { fskSpec, rSpec, metadataSpec };
+		return new PortObjectSpec[] { fskSpec, metadataSpec };
 	}
 
 	/** {@inheritDoc} */
