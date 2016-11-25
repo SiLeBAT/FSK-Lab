@@ -55,6 +55,7 @@ import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.rosuda.REngine.REXPMismatchException;
 import org.sbml.jsbml.AssignmentRule;
+import org.sbml.jsbml.InitialAssignment;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.SBMLDocument;
@@ -62,10 +63,11 @@ import org.sbml.jsbml.UnitDefinition;
 import org.sbml.jsbml.util.filters.Filter;
 import org.sbml.jsbml.xml.stax.SBMLReader;
 
+import de.bund.bfr.fskml.RMetaDataNode;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataTuple;
-import de.bund.bfr.knime.fsklab.nodes.RMetaDataNode;
+import de.bund.bfr.knime.fsklab.nodes.SelectorNode;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
@@ -305,7 +307,7 @@ public class FskxReaderNodeModel extends NodeModel {
 		template.modelName = model.getName();
 
 		// organism data
-		{
+		if (model.getNumSpecies() > 0) {
 			PMFSpecies species = SBMLFactory.createPMFSpecies(model.getSpecies(0));
 			template.organism = species.getName();
 			if (species.isSetDetail()) {
@@ -314,7 +316,7 @@ public class FskxReaderNodeModel extends NodeModel {
 		}
 
 		// matrix data
-		{
+		if (model.getNumCompartments() > 0) {
 			PMFCompartment compartment = SBMLFactory.createPMFCompartment(model.getCompartment(0));
 			template.matrix = compartment.getName();
 			if (compartment.isSetDetail()) {
@@ -435,7 +437,6 @@ public class FskxReaderNodeModel extends NodeModel {
 				Variable variable = new Variable();
 
 				variable.name = param.getName().trim();
-				variable.type = DataType.numeric;
 
 				// unit
 				String unitId = param.getUnits();
@@ -452,7 +453,19 @@ public class FskxReaderNodeModel extends NodeModel {
 				variable.min = paramLimits.getMin().toString();
 				variable.max = paramLimits.getMax().toString();
 
-				variable.value = param.isSetValue() ? Double.toString(param.getValue()) : "";
+				if (param.getNumPlugins() > 0) {
+					variable.type = DataType.array;
+
+					InitialAssignment ia = model.getInitialAssignment(variable.name);
+					List<Double> array = new SelectorNode(ia.getMath()).getArray();
+
+					variable.value = "c(" + array.stream().map(d -> Double.toString(d)).collect(Collectors.joining(","))
+							+ ")";
+
+				} else {
+					variable.type = param.getValue() % 1 == 0 ? DataType.integer : DataType.numeric;
+					variable.value = Double.toString(param.getValue());
+				}
 
 				template.independentVariables.add(variable);
 			}

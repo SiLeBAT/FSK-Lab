@@ -326,23 +326,31 @@ metadata_editor = function () {
         $('#foodProcessInput').val(nullToEmpty(_value.metadata.foodProcess));
         $('#hasDataInput').prop('checked', _value.metadata.hasData);
 
-        $('table tr:eq(1) td:eq(0)').text(_value.metadata.dependentVariable.name);
-        $('table tr:eq(1) td:eq(1)').text(_value.metadata.dependentVariable.unit);
-        $('table tr:eq(1) td:eq(2)').text(_value.metadata.dependentVariable.type);
-        $('table tr:eq(1) td:eq(3) input').val(_value.metadata.dependentVariable.value);
-        $('table tr:eq(1) td:eq(4) input').val(_value.metadata.dependentVariable.min);
-        $('table tr:eq(1) td:eq(5) input').val(_value.metadata.dependentVariable.max);
+        var depRow = $('table tr:eq(1)');
+        $('td:eq(0)', depRow).text(_value.metadata.dependentVariable.name);
+        $('td:eq(1)', depRow).text(_value.metadata.dependentVariable.unit);
+        $('td:eq(2)', depRow).text(_value.metadata.dependentVariable.type);
+        $('td:eq(3) input', depRow).val(_value.metadata.dependentVariable.value);
+        $('td:eq(4) input', depRow).val(_value.metadata.dependentVariable.min);
+        $('td:eq(5) input', depRow).val(_value.metadata.dependentVariable.max);
 
         for (var i = 0; i < _value.metadata.independentVariables.length; i++) {
             var variable = _value.metadata.independentVariables[i];
-            // Table row. Stars from 2 where 1 is the dependent variable row.
-            var tableRow = i + 2;
-            $('table tr:eq(' + tableRow + ') td:eq(0)').text(variable.name);
-            $('table tr:eq(' + tableRow + ') td:eq(1)').text(variable.unit);
-            $('table tr:eq(' + tableRow + ') td:eq(2)').text(variable.type);
-            $('table tr:eq(' + tableRow + ') td:eq(3) input').val(variable.value);
-            $('table tr:eq(' + tableRow + ') td:eq(4) input').val(variable.min);
-            $('table tr:eq(' + tableRow + ') td:eq(5) input').val(variable.max);
+            var tableRow = $('table tr:eq(' + (i + 2) + ')');
+
+            $('td:eq(0)', tableRow).text(variable.name);
+            $('td:eq(1)', tableRow).text(variable.unit);
+            $('td:eq(2)', tableRow).text(variable.type);
+            $('td:eq(3) input', tableRow).val(variable.value);
+            $('td:eq(4) input', tableRow).val(variable.min);
+            $('td:eq(5) input', tableRow).val(variable.max);
+
+            // Disable arrays
+            if (variable.type === 'array') {
+                $('td:eq(3) input', tableRow).prop('disabled', true);
+                $('td:eq(4) input', tableRow).prop('disabled', true);
+                $('td:eq(5) input', tableRow).prop('disabled', true);
+            }
         }
     }
 
@@ -385,10 +393,11 @@ metadata_editor = function () {
         $("#hasDataInput").change(function() { _value.metadata.hasData = $(this).is(':checked'); });
 
         // Saves and validates changes in variables table (dependent variable)
-        $('table tr:eq(1) td:eq(3) input').on('input', function() {
+        var depRow = $('table tr:eq(1)');
+        $('td:eq(3) input', depRow).on('input', function() {
             _value.metadata.dependentVariable.value = $(this).val();
         });
-        $('table tr:eq(1) td:eq(4) input').on('input', function() {
+        $('td:eq(4) input', depRow).on('input', function() {
             var newVal = Number($(this).val());
             var max = Number(_value.metadata.dependentVariable.max);
 
@@ -399,7 +408,7 @@ metadata_editor = function () {
                 markInvalidTd($(this).parent());
             }
         });
-        $('table tr:eq(1) td:eq(5) input').on('input', function() {
+        $('td:eq(5) input', depRow).on('input', function() {
             var newVal = Number($(this).val());
             var min = Number(_value.metadata.dependentVariable.min);
             if (newVal > min) {

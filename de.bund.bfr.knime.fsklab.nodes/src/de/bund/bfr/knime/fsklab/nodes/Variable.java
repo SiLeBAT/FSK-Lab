@@ -7,26 +7,36 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 
-
 /**
  * Holds variable-related data.
  * 
  * value, min and max can hold different types of values: integers, real
- * numbers, strings or even arrays. So they are kepts as strings in order to
+ * numbers, strings or even arrays. So they are kept as strings in order to
  * support all these types.
  * 
- * @author de
+ * @author Miguel Alba
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Variable implements Serializable {
 
 	private static final long serialVersionUID = -331516812131854597L;
-	
+
+	/** Null or empty if not set. */
 	public String name;
+	
+	/** Null or empty if not set. */
 	public String unit;
+	
+	/** Null or empty if not set. */
 	public String value;
+	
+	/** Null or empty if not set. */
 	public String min;
+	
+	/** Null or empty if not set. */
 	public String max;
+	
+	/** Null if not set. */
 	public DataType type;
 
 	@Override
