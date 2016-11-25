@@ -348,7 +348,7 @@ public class MetadataDocument {
 		return template;
 	}
 
-	public class MetadataAnnotation {
+	public static class MetadataAnnotation {
 
 		private static final String METADATA_TAG = "metadata"; // Metadata tag
 		private static final String METADATA_NS = "pmf"; // Metadata namespace
@@ -525,7 +525,7 @@ public class MetadataDocument {
 	/**
 	 * Reduced version of PMF-ML ModelRuleAnnotation with only the model class.
 	 */
-	public class RuleAnnotation {
+	public static class RuleAnnotation {
 
 		public static final String SUBJECT_NAME = "subject";
 		public static final String SUBJECT_URI = "pmmlab";
