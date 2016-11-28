@@ -34,9 +34,6 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.io.IOUtils;
 import org.jdom2.JDOMException;
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataContainer;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -57,7 +54,6 @@ import org.sbml.jsbml.xml.stax.SBMLReader;
 import de.bund.bfr.fskml.RMetaDataNode;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
-import de.bund.bfr.knime.fsklab.nodes.FskMetaDataTuple;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
@@ -83,11 +79,10 @@ public class FskxReaderNodeModel extends NodeModel {
 	private final SettingsModelString filename = new SettingsModelString(CFGKEY_FILE, DEFAULT_FILE);
 
 	private static final PortType[] inPortTypes = {};
-	private static final PortType[] outPortTypes = { FskPortObject.TYPE, BufferedDataTable.TYPE };
+	private static final PortType[] outPortTypes = { FskPortObject.TYPE };
 
 	// Specs
 	private static final FskPortObjectSpec fskSpec = FskPortObjectSpec.INSTANCE;
-	private static final DataTableSpec metadataSpec = FskMetaDataTuple.createSpec();
 
 	public FskxReaderNodeModel() {
 		super(inPortTypes, outPortTypes);
@@ -183,10 +178,6 @@ public class FskxReaderNodeModel extends NodeModel {
 			e.printStackTrace();
 		}
 
-		// Meta data port
-		BufferedDataContainer fsmrContainer = exec.createDataContainer(metadataSpec);
-		FskMetaDataTuple metaDataTuple = new FskMetaDataTuple(portObj.template);
-
 		// Validate model
 		try (RController controller = new RController()) {
 			// Validate model with parameter values from parameter script
@@ -205,10 +196,7 @@ public class FskxReaderNodeModel extends NodeModel {
 			throw new RException("Input model is not valid", e);
 		}
 
-		fsmrContainer.addRowToTable(metaDataTuple);
-		fsmrContainer.close();
-
-		return new PortObject[] { portObj, fsmrContainer.getTable() };
+		return new PortObject[] { portObj };
 	}
 
 	private static String loadScriptFromEntry(final ArchiveEntry entry) throws IOException {
@@ -227,7 +215,7 @@ public class FskxReaderNodeModel extends NodeModel {
 	/** {@inheritDoc} */
 	@Override
 	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		return new PortObjectSpec[] { fskSpec, metadataSpec };
+		return new PortObjectSpec[] { fskSpec };
 	}
 
 	/** {@inheritDoc} */
