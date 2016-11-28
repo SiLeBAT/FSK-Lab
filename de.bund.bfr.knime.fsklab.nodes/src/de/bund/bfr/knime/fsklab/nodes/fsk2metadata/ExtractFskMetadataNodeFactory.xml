@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="fsk2metadata.png" type="Manipulator" deprecated="false"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	<name>Extract metadata from an FSK object</name>
+
+	<shortDescription>Extract metadata from an FSK object</shortDescription>
+
+	<fullDescription>
+		<intro></intro>
+	</fullDescription>
+	<ports>
+		<inPort name="FSK object" index="0">FSK object</inPort>
+		<outPort name="R workspace" index="0">R workspace</outPort>
+	</ports>
+</knimeNode>
