@@ -177,17 +177,9 @@ public class FskRunnerNodeModel extends NodeModel {
 
 		// Creates chart into m_imageFile
 		try {
-			if (Platform.isMac()) {
-				controller.eval("library('Cairo')");
-				controller.eval("options(device='png', bitmapType='cairo')");
-			} else {
-				controller.eval("options(device='png')");
-			}
-
-			controller.eval("png('" + internalSettings.imageFile.getAbsolutePath().replace("\\", "/")
-					+ "', width=640, height=640, pointsize=12, bg='#ffffff', res='NA')");
-			controller.eval(fskObj.viz);
-			controller.eval("dev.off()");
+			ChartCreator cc = new ChartCreator(controller);
+			cc.plot(internalSettings.imageFile.getAbsolutePath().replace("\\", "/"), (short) 640, (short) 640, "NA",
+					"#ffffff", (byte) 12, fskObj.viz);
 		} catch (RException e) {
 			LOGGER.warn("Visualization script failed");
 		}
@@ -197,6 +189,32 @@ public class FskRunnerNodeModel extends NodeModel {
 		controller.eval(".libPaths()[" + newPaths.length + "]");
 
 		return fskObj;
+	}
+
+	private static class ChartCreator {
+
+		final RController controller;
+
+		public ChartCreator(RController controller) throws RException {
+			this.controller = controller;
+
+			// initialize necessary R stuff to plot
+			if (Platform.isMac()) {
+				controller.eval("library('Cairo')");
+				controller.eval("options(device='png', bitmapType='cairo')");
+			} else {
+				controller.eval("options(device='png')");
+			}
+		}
+
+		public void plot(String path, short width, short height, String resolution, String bgColor, byte pointSize,
+				String vizScript) throws RException {
+			String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize=" + pointSize
+					+ ", bg='" + bgColor + "', res='" + resolution + "')";
+			controller.eval(pngCommand);
+			controller.eval(vizScript);
+			controller.eval("dev.off()");
+		}
 	}
 
 	Image getResultImage() {
