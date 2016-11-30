@@ -29,13 +29,20 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 public class FskRunnerNodeSettings {
 	
+	// Default values
+	private static final int WIDTH = 640;
+	private static final int HEIGHT = 640;
+	private static final String RES = "NA";
+	private static final Color COLOUR = Color.white;
+	private static final int TEXT_POINT_SIZE = 12;
+
 	// Setting models, with keys and default values
-	SettingsModelInteger widthModel = new SettingsModelInteger("width", 640);
-	SettingsModelInteger heightModel = new SettingsModelInteger("height", 640);
-	SettingsModelString resolutionModel = new SettingsModelString("resolution", "NA");
-	SettingsModelColor colourModel = new SettingsModelColor("colour", Color.white);
-	SettingsModelInteger textPointSizeModel = new SettingsModelInteger("textPointSize", 12);
-	
+	SettingsModelInteger widthModel = new SettingsModelInteger("width", WIDTH);
+	SettingsModelInteger heightModel = new SettingsModelInteger("height", HEIGHT);
+	SettingsModelString resolutionModel = new SettingsModelString("resolution", RES);
+	SettingsModelColor colourModel = new SettingsModelColor("colour", COLOUR);
+	SettingsModelInteger textPointSizeModel = new SettingsModelInteger("textPointSize", TEXT_POINT_SIZE);
+
 	public void saveSettingsTo(NodeSettingsWO settings) {
 		widthModel.saveSettingsTo(settings);
 		heightModel.saveSettingsTo(settings);
@@ -44,19 +51,63 @@ public class FskRunnerNodeSettings {
 		textPointSizeModel.saveSettingsTo(settings);
 	}
 
-	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		widthModel.validateSettings(settings);
-		heightModel.validateSettings(settings);
-		resolutionModel.validateSettings(settings);
-		colourModel.validateSettings(settings);
-		textPointSizeModel.validateSettings(settings);
+	protected void validateSettings(NodeSettingsRO settings) {
+		try {
+			widthModel.validateSettings(settings);
+		} catch (InvalidSettingsException e) {
+			widthModel.setIntValue(WIDTH);
+		}
+		try {
+			heightModel.validateSettings(settings);
+		} catch (InvalidSettingsException e) {
+			heightModel.setIntValue(HEIGHT);
+		}
+		try {
+			resolutionModel.validateSettings(settings);
+		} catch (InvalidSettingsException e) {
+			resolutionModel.setStringValue(RES);
+		}
+		try {
+			colourModel.validateSettings(settings);
+		} catch (InvalidSettingsException e) {
+			colourModel.setColorValue(COLOUR);
+		}
+		try {
+			textPointSizeModel.validateSettings(settings);
+		} catch (InvalidSettingsException e) {
+			textPointSizeModel.setIntValue(TEXT_POINT_SIZE);
+		}
 	}
 
-	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		widthModel.loadSettingsFrom(settings);
-		heightModel.loadSettingsFrom(settings);
-		resolutionModel.loadSettingsFrom(settings);
-		colourModel.loadSettingsFrom(settings);
-		textPointSizeModel.loadSettingsFrom(settings);
+	/**
+	 * Loads settings. If a setting is missing (like in an old node) then it
+	 * loads the default value for that setting.
+	 */
+	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) {
+		try {
+			widthModel.loadSettingsFrom(settings);
+		} catch (InvalidSettingsException e) {
+			widthModel.setIntValue(WIDTH);
+		}
+		try {
+			heightModel.loadSettingsFrom(settings);
+		} catch (InvalidSettingsException e) {
+			heightModel.setIntValue(HEIGHT);
+		}
+		try {
+			resolutionModel.loadSettingsFrom(settings);
+		} catch (InvalidSettingsException e) {
+			resolutionModel.setStringValue(RES);
+		}
+		try {
+			colourModel.loadSettingsFrom(settings);
+		} catch (InvalidSettingsException e) {
+			colourModel.setColorValue(COLOUR);
+		}
+		try {
+			textPointSizeModel.loadSettingsFrom(settings);
+		} catch (InvalidSettingsException e) {
+			textPointSizeModel.setIntValue(TEXT_POINT_SIZE);
+		}
 	}
 }
