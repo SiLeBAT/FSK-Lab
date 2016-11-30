@@ -23,7 +23,6 @@ import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 public class FskCreatorNodeFactory extends NodeFactory<FskCreatorNodeModel> {
 
@@ -55,34 +54,30 @@ public class FskCreatorNodeFactory extends NodeFactory<FskCreatorNodeModel> {
 	@Override
 	public NodeDialogPane createNodeDialogPane() {
 
-		final SettingsModelString modelScript = new SettingsModelString(FskCreatorNodeModel.CFGKEY_MODEL_SCRIPT, "");
-		final SettingsModelString paramScript = new SettingsModelString(FskCreatorNodeModel.CFGKEY_PARAM_SCRIPT, "");
-		final SettingsModelString vizScript = new SettingsModelString(FskCreatorNodeModel.CFGKEY_VISUALIZATION_SCRIPT,
-				"");
-		final SettingsModelString metadata = new SettingsModelString(FskCreatorNodeModel.CFGKEY_SPREADSHEET, "");
+		FskCreatorNodeSettings settings = new FskCreatorNodeSettings();
 
 		// Create components
 		final int dlgType = JFileChooser.OPEN_DIALOG;
 		final String rFilters = ".r|.R"; // Extension filters for the R script
 
-		DialogComponentFileChooser modelScriptChooser = new DialogComponentFileChooser(modelScript,
+		DialogComponentFileChooser modelScriptChooser = new DialogComponentFileChooser(settings.modelScript,
 				"modelScript-history", dlgType, rFilters);
 		modelScriptChooser.setBorderTitle("Model script (*)");
 		modelScriptChooser.setToolTipText("Script that calculates the values of the model (Mandatory).");
 
-		DialogComponentFileChooser paramScriptChooser = new DialogComponentFileChooser(paramScript,
+		DialogComponentFileChooser paramScriptChooser = new DialogComponentFileChooser(settings.paramScript,
 				"paramScript-history", dlgType, rFilters);
 		paramScriptChooser.setBorderTitle("Parameters script");
 		paramScriptChooser.setToolTipText("Script with the parameter values of the model (Optional).");
 
-		DialogComponentFileChooser vizScriptChooser = new DialogComponentFileChooser(vizScript, "vizScript-history",
-				dlgType, rFilters);
+		DialogComponentFileChooser vizScriptChooser = new DialogComponentFileChooser(settings.vizScript,
+				"vizScript-history", dlgType, rFilters);
 		vizScriptChooser.setBorderTitle("Visualization script");
 		vizScriptChooser.setToolTipText(
 				"Script with a number of commands to create plots or charts using the simulation results (Optional).");
 
-		DialogComponentFileChooser metaDataChooser = new DialogComponentFileChooser(metadata, "metaData-history",
-				dlgType);
+		DialogComponentFileChooser metaDataChooser = new DialogComponentFileChooser(settings.metaDataDoc,
+				"metaData-history", dlgType);
 		metaDataChooser.setBorderTitle("XLSX spreadsheet");
 		metaDataChooser.setToolTipText("XLSX file with model metadata (Optional).");
 
@@ -92,7 +87,7 @@ public class FskCreatorNodeFactory extends NodeFactory<FskCreatorNodeModel> {
 		pane.addDialogComponent(paramScriptChooser);
 		pane.addDialogComponent(vizScriptChooser);
 		pane.addDialogComponent(metaDataChooser);
-		
+
 		return pane;
 	}
 }

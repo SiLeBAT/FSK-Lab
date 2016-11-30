@@ -40,7 +40,6 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -65,27 +64,10 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskCreatorNodeModel.class);
 
-	// configuration key of the path of the R model script
-	static final String CFGKEY_MODEL_SCRIPT = "modelScript";
-
-	// configuration key of the path of the R parameters script
-	static final String CFGKEY_PARAM_SCRIPT = "paramScript";
-
-	// configuration key of the path of the R visualization script
-	static final String CFGKEY_VISUALIZATION_SCRIPT = "visualizationScript";
-
-	// configuration key of the path of the XLSX spreadsheet with the model meta
-	// data
-	static final String CFGKEY_SPREADSHEET = "spreadsheet";
-
 	private final static PortType[] inPortTypes = new PortType[] {};
 	private final static PortType[] outPortTypes = new PortType[] { FskPortObject.TYPE };
 
-	// Settings models
-	private final SettingsModelString m_modelScript = new SettingsModelString(CFGKEY_MODEL_SCRIPT, null);
-	private final SettingsModelString m_paramScript = new SettingsModelString(CFGKEY_PARAM_SCRIPT, null);
-	private final SettingsModelString m_vizScript = new SettingsModelString(CFGKEY_VISUALIZATION_SCRIPT, null);
-	private final SettingsModelString m_metaDataDoc = new SettingsModelString(CFGKEY_SPREADSHEET, null);
+	private FskCreatorNodeSettings settings = new FskCreatorNodeSettings();
 
 	/** {@inheritDoc} */
 	public FskCreatorNodeModel() {
@@ -109,28 +91,19 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	/** {@inheritDoc} */
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
-		m_modelScript.saveSettingsTo(settings);
-		m_paramScript.saveSettingsTo(settings);
-		m_vizScript.saveSettingsTo(settings);
-		m_metaDataDoc.saveSettingsTo(settings);
+		this.settings.saveSettings(settings);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		m_modelScript.validateSettings(settings);
-		m_paramScript.validateSettings(settings);
-		m_vizScript.validateSettings(settings);
-		m_metaDataDoc.validateSettings(settings);
+		this.settings.validateSettings(settings);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		m_modelScript.loadSettingsFrom(settings);
-		m_paramScript.loadSettingsFrom(settings);
-		m_vizScript.loadSettingsFrom(settings);
-		m_metaDataDoc.loadSettingsFrom(settings);
+		this.settings.loadValidatedSettingsFrom(settings);
 	}
 
 	/** {@inheritDoc} */
@@ -152,29 +125,29 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 		FskPortObject portObj = new FskPortObject();
 
 		// Reads model script
-		if (Strings.isNullOrEmpty(m_modelScript.getStringValue())) {
+		if (Strings.isNullOrEmpty(settings.modelScript.getStringValue())) {
 			throw new InvalidSettingsException("Model script is not provided");
 		}
-		RScript modelScript = readScript(m_modelScript.getStringValue());
+		RScript modelScript = readScript(settings.modelScript.getStringValue());
 		portObj.model = modelScript.getScript();
 
 		// Reads parameters script
-		if (Strings.isNullOrEmpty(m_paramScript.getStringValue())) {
+		if (Strings.isNullOrEmpty(settings.paramScript.getStringValue())) {
 			portObj.param = "";
 		} else {
-			portObj.param = readScript(m_paramScript.getStringValue()).getScript();
+			portObj.param = readScript(settings.paramScript.getStringValue()).getScript();
 		}
 
 		// Reads visualization script
-		if (!Strings.isNullOrEmpty(m_vizScript.getStringValue())) {
-			portObj.viz = readScript(m_vizScript.getStringValue()).getScript();
+		if (!Strings.isNullOrEmpty(settings.vizScript.getStringValue())) {
+			portObj.viz = readScript(settings.vizScript.getStringValue()).getScript();
 		} else {
 			portObj.viz = "";
 		}
 
 		// Reads model meta data
-		if (!Strings.isNullOrEmpty(m_metaDataDoc.getStringValue())) {
-			try (InputStream fis = FileUtil.openInputStream(m_metaDataDoc.getStringValue())) {
+		if (!Strings.isNullOrEmpty(settings.metaDataDoc.getStringValue())) {
+			try (InputStream fis = FileUtil.openInputStream(settings.metaDataDoc.getStringValue())) {
 				// Finds the workbook instance for the XLSX file
 				XSSFWorkbook workbook = new XSSFWorkbook(fis);
 				portObj.template = SpreadsheetHandler.processSpreadsheet(workbook.getSheetAt(0));
