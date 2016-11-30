@@ -1,5 +1,6 @@
 package de.bund.bfr.knime.fsklab.nodes.runner;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,6 +56,8 @@ public class FskRunnerNodeModel extends NodeModel {
 	private static final PortType[] outPortTypes = new PortType[] { FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL };
 
 	private final InternalSettings internalSettings = new InternalSettings();
+	
+	private FskRunnerNodeSettings settings = new FskRunnerNodeSettings();
 
 	public FskRunnerNodeModel() {
 		super(inPortTypes, outPortTypes);
@@ -86,17 +89,17 @@ public class FskRunnerNodeModel extends NodeModel {
 
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
-		// no settings
+		this.settings.saveSettingsTo(settings);
 	}
 
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		// no settings
+		this.settings.validateSettings(settings);
 	}
 
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		// no settings
+		this.settings.loadValidatedSettingsFrom(settings);
 	}
 
 	/** {@inheritDoc} */
@@ -178,8 +181,7 @@ public class FskRunnerNodeModel extends NodeModel {
 		// Creates chart into m_imageFile
 		try {
 			ChartCreator cc = new ChartCreator(controller);
-			cc.plot(internalSettings.imageFile.getAbsolutePath().replace("\\", "/"), (short) 640, (short) 640, "NA",
-					"#ffffff", (byte) 12, fskObj.viz);
+			cc.plot(internalSettings.imageFile.getAbsolutePath().replace("\\", "/"), fskObj.viz);
 		} catch (RException e) {
 			LOGGER.warn("Visualization script failed");
 		}
@@ -191,7 +193,7 @@ public class FskRunnerNodeModel extends NodeModel {
 		return fskObj;
 	}
 
-	private static class ChartCreator {
+	private class ChartCreator {
 
 		final RController controller;
 
@@ -207,13 +209,22 @@ public class FskRunnerNodeModel extends NodeModel {
 			}
 		}
 
-		public void plot(String path, short width, short height, String resolution, String bgColor, byte pointSize,
-				String vizScript) throws RException {
-			String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize=" + pointSize
-					+ ", bg='" + bgColor + "', res='" + resolution + "')";
+		public void plot(String path, String vizScript) throws RException {
+			// Gets values
+			int width = settings.widthModel.getIntValue();
+			int height = settings.heightModel.getIntValue();
+			String res = settings.resolutionModel.getStringValue();
+			int textPointSize = settings.textPointSizeModel.getIntValue();
+			Color colour = settings.colourModel.getColorValue();
+			String hexColour = String.format("#%02x%02x%02x", colour.getRed(), colour.getGreen(), colour.getBlue());
+
+			String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize="
+					+ textPointSize + ", bg='" + hexColour + "', res='" + res + "')";
 			controller.eval(pngCommand);
+
 			controller.eval(vizScript);
 			controller.eval("dev.off()");
+
 		}
 	}
 
