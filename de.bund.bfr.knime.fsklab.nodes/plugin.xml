@@ -53,6 +53,11 @@
     <node
       category-path="/fsklab"
       deprecated="false"
+      factory-class="de.bund.bfr.knime.fsklab.nodes.editor.js.FskEditorNodeFactory">
+    </node>
+    <node
+      category-path="/fsklab"
+      deprecated="false"
       factory-class="de.bund.bfr.knime.fsklab.nodes.metadataeditor.FskMetadataEditorNodeFactory">
     </node>
     <node
@@ -95,20 +100,30 @@
 	  specSerializer="de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec$Serializer"/>
   </extension>
   
-  <!-- Javascript component for Fsk Metadata Editor node -->
   <extension point="org.knime.js.core.javascriptComponents">
-   <javascriptComponent
-     getComponentValue-method-name="getComponentValue"
-     implementationBundleID="de.bund.bfr.knime.fsklab.nodes.metadataeditor.bundle"
-     init-method-name="init"
-     javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.metadataeditor"
-     name="FSK Metadata Editor"
-     namespace="metadata_editor">
-   </javascriptComponent>
+    <!-- Javascript component for Fsk Metadata Editor node -->
+    <javascriptComponent
+      getComponentValue-method-name="getComponentValue"
+      implementationBundleID="de.bund.bfr.knime.fsklab.nodes.metadataeditor.bundle"
+      init-method-name="init"
+      javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.metadataeditor"
+      name="FSK Metadata Editor"
+      namespace="metadata_editor">
+    </javascriptComponent>
+    
+    <!-- Javascript component for Fsk Editor node -->
+    <javascriptComponent
+          getComponentValue-method-name="getComponentValue"
+          implementationBundleID="de.bund.bfr.knime.fsklab.nodes.editor.js.bundle"
+          init-method-name="init"
+          javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.editor.js"
+          name="FSK Editor JS"
+          namespace="fsk_editor">
+    </javascriptComponent>
   </extension>
   
-  <!-- JS and CSS code for Fsk Metadata Editor node -->
   <extension point="org.knime.js.core.webResources">
+    <!-- JS and CSS code for Fsk Metadata Editor node -->
     <webResourceBundle
       debug="true"
       name="FSK Metadata Editor"
@@ -130,6 +145,39 @@
       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
       <webDependency webResourceBundleID="jQuery_2.1.4"></webDependency>
       <webDependency webResourceBundleID="jQueryUi_1.10.4"></webDependency>
+    </webResourceBundle>
+
+    <!-- JS and CSS code for FSK Editor JS node -->
+    <webResourceBundle
+      debug="true"
+      name="FSK Editor JS"
+      usesDefine="false"
+      version="0.0.1"
+      webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.editor.js.bundle">
+      
+      <!-- JS code -->
+      <webResource
+            relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/editor/js/js-editor.js"
+            relativePathTarget="de/bund/bfr/knime/fsklab/nodes/editor/js/js-editor.js">
+      </webResource>
+      <importResource
+      	relativePath="de/bund/bfr/knime/fsklab/nodes/editor/js/js-editor.js"
+      	type="JAVASCRIPT">
+      </importResource>
+
+      <!-- CSS code -->
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/editor/js/js-editor.css"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/editor/js/js-editor.css">
+      </webResource>
+      <importResource
+      	relativePath="de/bund/bfr/knime/fsklab/nodes/editor/js/js-editor.css"
+      	type="CSS">
+      </importResource>
+
+      <!-- Dependencies -->
+      <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
+      <webDependency webResourceBundleID="jQuery_2.1.4"></webDependency>
     </webResourceBundle>
   </extension>
   
