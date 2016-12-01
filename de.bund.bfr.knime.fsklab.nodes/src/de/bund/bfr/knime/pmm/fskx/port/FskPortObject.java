@@ -68,6 +68,7 @@ public class FskPortObject implements PortObject {
 	 * <code>new PortType(FSKPortObject.class)</code>
 	 */
 	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(FskPortObject.class);
+	public static final PortType TYPE_OPTIONAL = PortTypeRegistry.getInstance().getPortType(FskPortObject.class, true);
 
 	/** Model script. */
 	public String model;

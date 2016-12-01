@@ -19,7 +19,7 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 
 public class FskEditorNodeModel extends NodeModel {
 
-	private static final PortType[] inPortTypes = new PortType[] { FskPortObject.TYPE };
+	private static final PortType[] inPortTypes = new PortType[] { FskPortObject.TYPE_OPTIONAL };
 	private static final PortType[] outPortTypes = new PortType[] { FskPortObject.TYPE };
 
 	private final FskEditorNodeSettings settings;
@@ -80,17 +80,31 @@ public class FskEditorNodeModel extends NodeModel {
 
 	@Override
 	protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
+		// If there is no input port connected create and return an FskPortObject from settings
+		if (inObjects[0] == null) {
+			FskPortObject fskObj = new FskPortObject();
+			fskObj.model = settings.modelScript.getStringValue();
+			fskObj.param = settings.paramScript.getStringValue();
+			fskObj.viz  = settings.vizScript.getStringValue();
+			return new PortObject[] { fskObj };
+		}
+		
+		// If there is an input port connected but the settings have no changes
+		// yet, then returns the input model in the input port
 		FskPortObject inObj = (FskPortObject) inObjects[0];
+		if (settings.modelScript.getStringValue().isEmpty() &&
+			settings.paramScript.getStringValue().isEmpty() &&
+			settings.vizScript.getStringValue().isEmpty()) {
 
-		// If the node is new and its dialog hasn't been opened (has not
-		// settings yet) then assigns the input
-		if (settings.modelScript.getStringValue().isEmpty() && settings.paramScript.getStringValue().isEmpty()
-				&& settings.vizScript.getStringValue().isEmpty()) {
 			settings.modelScript.setStringValue(inObj.model);
 			settings.paramScript.setStringValue(inObj.param);
 			settings.vizScript.setStringValue(inObj.viz);
+
+			return new PortObject[] { inObj };	
 		}
-				
+
+		// If there is an input port and changes in the settings then return
+		// the input model after applying the changes
 		inObj.model = settings.modelScript.getStringValue();
 		inObj.param = settings.paramScript.getStringValue();
 		inObj.viz = settings.vizScript.getStringValue();

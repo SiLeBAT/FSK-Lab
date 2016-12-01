@@ -9,6 +9,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectSpec;
 
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
@@ -67,6 +68,11 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 			this.settings.paramScript.setStringValue(fskObj.param);
 			this.settings.vizScript.setStringValue(fskObj.viz);
 		}
+	}
+	
+	@Override
+	protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs) throws NotConfigurableException {
+		// nothing to do - the scripts are already initialized in the constructor
 	}
 
 	@Override
