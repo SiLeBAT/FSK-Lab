@@ -39,12 +39,11 @@ import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
 
-import de.bund.bfr.fskml.RMetaDataNode;
+import de.bund.bfr.knime.fsklab.nodes.FskOmexMetaData;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.unirostock.sems.cbarchive.CombineArchive;
-import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
 
 /**
  */
@@ -83,31 +82,35 @@ public class FskxWriterNodeModel extends NodeModel {
 
 		// try to create CombineArchive
 		try (CombineArchive archive = new CombineArchive(archiveFile)) {
-
-			RMetaDataNode metaDataNode = new RMetaDataNode();
+			
+			FskOmexMetaData omexMd = new FskOmexMetaData();
 
 			// Adds model script
 			if (portObject.model != null) {
 				archive.addEntry(createScriptFile(portObject.model), "model.r", URIS.r);
-				metaDataNode.setMainScript("model.r");
+				omexMd.setRes(FskOmexMetaData.ResourceType.modelScript, "model.r");
+				archive.addDescription(omexMd.modelObj);
 			}
 
 			// Adds parameters script
 			if (portObject.param != null) {
 				archive.addEntry(createScriptFile(portObject.param), "param.r", URIS.r);
-				metaDataNode.setParamScript("param.r");
+				omexMd.setRes(FskOmexMetaData.ResourceType.parametersScript, "param.r");
+				archive.addDescription(omexMd.paramObj);
 			}
 
 			// Adds visualization script
 			if (portObject.viz != null) {
 				archive.addEntry(createScriptFile(portObject.viz), "visualization.r", URIS.r);
-				metaDataNode.setVisualizationScript("visualization.r");
+				omexMd.setRes(FskOmexMetaData.ResourceType.visualizationScript, "visualization.r");
+				archive.addDescription(omexMd.vizObj);
 			}
 
 			// Adds R workspace file
 			if (portObject.workspace != null) {
 				archive.addEntry(portObject.workspace, "workspace.r", URIS.r);
-				metaDataNode.setWorkspaceFile("workspace.r");
+				omexMd.setRes(FskOmexMetaData.ResourceType.workspace, "workspace.r");
+				archive.addDescription(omexMd.workspaceObj);
 			}
 
 			// Adds model meta data
@@ -128,7 +131,6 @@ public class FskxWriterNodeModel extends NodeModel {
 				archive.addEntry(lib, lib.getName(), URIS.zip);
 			}
 
-			archive.addDescription(new DefaultMetaDataObject(metaDataNode.getNode()));
 			archive.pack();
 		} catch (Exception e) {
 			try {
