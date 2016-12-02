@@ -52,10 +52,11 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
 
-import de.bund.bfr.fskml.RMetaDataNode;
+import de.bund.bfr.fskml.DCOmexMetaDataHandler;
+import de.bund.bfr.fskml.LegacyOmexMetaDataHandler;
+import de.bund.bfr.fskml.OmexMetaDataHandlerI;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
-import de.bund.bfr.knime.fsklab.nodes.FskOmexMetaData;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
@@ -66,6 +67,7 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.CombineArchiveException;
+import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 
 public class FskxReaderNodeModel extends NodeModel {
 
@@ -111,74 +113,45 @@ public class FskxReaderNodeModel extends NodeModel {
 			Element desc = archive.getDescriptions().get(0).getXmlDescription();
 			boolean isLegacyAnnot = desc.getChild("modelScript") != null || desc.getChild("paramScript") != null
 					|| desc.getChild("visualizationScript") != null || desc.getChild("workspace") != null;
+
+			OmexMetaDataHandlerI handler;
+
 			if (isLegacyAnnot) {
-				// Legacy annotation
-				RMetaDataNode node = new RMetaDataNode(archive.getDescriptions().get(0).getXmlDescription());
-				
-				// Gets model script
-				if (node.getMainScript() != null) {
-					ArchiveEntry entry = archive.getEntry(node.getMainScript());
-					portObj.model = loadScriptFromEntry(entry);
-				}
-				
-				// Gets parameters script
-				if (node.getParametersScript() != null) {
-					ArchiveEntry entry = archive.getEntry(node.getParametersScript());
-					portObj.param = loadScriptFromEntry(entry);
-				}
-				
-				// Gets visualization script
-				if (node.getVisualizationScript() != null) {
-					ArchiveEntry entry = archive.getEntry(node.getVisualizationScript());
-					portObj.viz = loadScriptFromEntry(entry);
-				}
-
-				// Workspace
-				if (node.getWorkspaceFile() != null) {
-					ArchiveEntry entry = archive.getEntry(node.getWorkspaceFile());
-					try {
-						portObj.workspace = FileUtil.createTempFile("workspace", ".r");
-						entry.extractFile(portObj.workspace);
-					} catch (IOException e) {
-						LOGGER.warn("Workspace could not be restored. Please rerun model to obtain results.");
-					}
-				}
-				
+				handler = new LegacyOmexMetaDataHandler(archive.getDescriptions().get(0).getXmlDescription());
 			} else {
-				// New annotation
-				FskOmexMetaData omexMd = new FskOmexMetaData(archive.getDescriptions());
-
-				// Model script
-				String modelSrc = omexMd.getRes(FskOmexMetaData.ResourceType.modelScript);
-				if (modelSrc != null) {
-					portObj.model = loadScriptFromEntry(archive.getEntry(modelSrc));
-				}
-
-				// Parameters script
-				String paramSrc = omexMd.getRes(FskOmexMetaData.ResourceType.parametersScript);
-				if (paramSrc != null) {
-					portObj.param = loadScriptFromEntry(archive.getEntry(paramSrc));
-				}
-
-				// Visualization script
-				String vizSrc = omexMd.getRes(FskOmexMetaData.ResourceType.visualizationScript);
-				if (vizSrc != null) {
-					portObj.viz = loadScriptFromEntry(archive.getEntry(vizSrc));
-				}
-
-				// Workspace
-				String workspace = omexMd.getRes(FskOmexMetaData.ResourceType.workspace);
-				if (workspace != null) {
-					ArchiveEntry entry = archive.getEntry(workspace);
-					try {
-						portObj.workspace = FileUtil.createTempFile("workspace", ".r");
-						entry.extractFile(portObj.workspace);
-					} catch (IOException e) {
-						LOGGER.warn("Workspace could not be restored. Please rerun model to obtain results.");
-					}
+				handler = new DCOmexMetaDataHandler(archive.getDescriptions().stream()
+						.map(MetaDataObject::getXmlDescription).collect(Collectors.toList()));
+			}
+			
+			// Gets model script
+			if (handler.getModelScript() != null) {
+				ArchiveEntry entry = archive.getEntry(handler.getModelScript());
+				portObj.model = loadScriptFromEntry(entry);
+			}
+			
+			// Gets parameters script
+			if (handler.getParametersScript() != null) {
+				ArchiveEntry entry = archive.getEntry(handler.getParametersScript());
+				portObj.param = loadScriptFromEntry(entry);
+			}
+			
+			// Gets visualization script
+			if (handler.getVisualizationScript() != null) {
+				ArchiveEntry entry = archive.getEntry(handler.getVisualizationScript());
+				portObj.viz = loadScriptFromEntry(entry);
+			}
+			
+			// Gets workspace
+			if (handler.getWorkspaceFile() != null) {
+				ArchiveEntry entry = archive.getEntry(handler.getWorkspaceFile());
+				try {
+					portObj.workspace = FileUtil.createTempFile("workspace", ".r");
+					entry.extractFile(portObj.workspace);
+				} catch (IOException e) {
+					LOGGER.warn("Workspace could not be restored. Please rerun model to obtain results.");
 				}
 			}
-
+			
 			// Gets model meta data
 			if (archive.getNumEntriesWithFormat(URIS.pmf) == 1) {
 				ArchiveEntry entry = archive.getEntriesWithFormat(URIS.pmf).get(0);
