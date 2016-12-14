@@ -63,215 +63,110 @@ metadata_editor = function () {
         }
         varTable += '</table>';
 
+        var softwareDic = {'R': 'R', 'Matlab': 'Matlab'};
+        var modelTypeDic = {
+            'EXPERIMENTAL_DATA': 'Experimental data',
+            'PRIMARY_MODEL_WDATA': 'Primary model with data',
+            'PRIMARY_MODEL_WODATA': 'Primary model without data',
+            'TWO_STEP_SECONDARY_MODEL': 'Two step secondary model',
+            'ONE_STEP_SECONDARY_MODEL': 'One step secondary model',
+            'MANUAL_SECONDARY_MODEL': 'Manual secondary model',
+            'TWO_STEP_TERTIARY_MODEL': 'Two step tertiary model',
+            'ONE_STEP_TERTIARY_MODEL': 'One step tertiary model',
+            'MANUAL_TERTIARY_MODEL': 'Manual tertiary model'
+        };
+        var modelClassDic = {
+            'UNKNOWN': 'unknown',
+            'GROWTH': 'growth',
+            'INACTIVATION': 'inactivation',
+            'SURVIVAL': 'survival',
+            'GROWTH_INACTIVATION': 'growth/inactivation',
+            'INACTIVATION_SURVIVAL': 'inactivation/survival',
+            'GROWTH_SURVIVAL': 'growth/survival',
+            'GROWTH_INACTIVATION_SURVIVAL': 'growth/inactivation/survival',
+            'T': 'T',
+            'PH': 'pH',
+            'AW': 'aw',
+            'T_PH': 'T/pH',
+            'T_AW': 'T/aw',
+            'PH_AW': 'pH/aw',
+            'T_PH_AW': 'T/pH/aw'
+        };
+
         var form = 
             '<form class="form-horizontal">' +
-
-            // Model name form
-            '  <div class="form-group">' +
-            '    <label for="modelName" class="col-sm-3 control-label">Model name:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" id="modelNameInput" class="form-control no-border" value="">' + 
-            '    </div>' +
-            '  </div>' +
-
-            // Model id form
-            '  <div class="form-group">' +
-            '    <label for="modelId" class="col-sm-3 control-label">Model id:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" id="modelIdInput" class="form-control no-border" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Model link form
-            '  <div class="form-group">' +
-            '    <label for="modelLinkInput" class="col-sm-3 control-label">Model link:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="url" class="form-control no-border" id="modelLinkInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Organism form
-            '  <div class="form-group">' +
-            '    <label for="organism" class="col-sm-3 control-label">Organism:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="organismInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Organism details form
-            '  <div class="form-group">' +
-            '    <label for="organismDetails" class="col-sm-3 control-label">Organism details:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="organismDetailsInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Matrix form
-            '  <div class="form-group">' +
-            '    <label for="matrix" class="col-sm-3 control-label">Matrix:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="matrixInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Matrix details form
-            '  <div class="form-group">' +
-            '    <label for="matrixDetails" class="col-sm-3 control-label">Matrix details:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="matrixDetailsInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Creator form
-            '  <div class="form-group">' +
-            '    <label for="creator" class="col-sm-3 control-label">Creator:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="creatorInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Family name form
-            '  <div class="form-group">' +
-            '    <label for="familyName" class="col-sm-3 control-label">Family name:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="familyNameInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Contact form
-            '  <div class="form-group">' +
-            '    <label for="contact" class="col-sm-3 control-label">Contact:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="contactInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Software form
-            '  <div class="form-group">' +
-            '    <label for="software" class="col-sm-3 control-label">Software:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <select class="form-control no-border" id="softwareInput" >' +
-            '        <option value="R">R</option>' +
-            '        <option value="Matlab">Matlab</option>' +
-            '      </select>' +
-            '    </div>' +
-            '  </div>' +
-
-            // Reference description form
-            '  <div class="form-group">' +
-            '    <label for="referenceDescription" class="col-sm-3 control-label">Reference description:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="referenceDescriptionInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Reference description link form
-            '  <div class="form-group">' +
-            '    <label for="referenceDescriptionLink" class="col-sm-3 control-label">Reference description link:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type"url" class="form-control no-border" id="referenceDescriptionLinkInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Created date form
-            '  <div class="form-group">' +
-            '    <label for="createdDate" class="col-sm-3 control-label">Created date:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="createdDateInput" value="">' + 
-            '    </div>' +
-            '  </div>' +
-
-            // Modified date form
-            '  <div class="form-group">' +
-            '    <label for="modifiedDate" class="col-sm-3 control-label">Modified date:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="modifiedDateInput" value="">' + 
-            '    </div>' +
-            '  </div>' +
-
-            // Rights form
-            '  <div class="form-group">' +
-            '    <label for="rights" class="col-sm-3 control-label">Rights:</label>' +
-            '      <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="rightsInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Notes form
-            '  <div class="form-group">' +
-            '    <label for="notes" class="col-sm-3 control-label">Notes:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <textarea id="notesInput" class="form-control no-border" rows="3"></textArea>' +
-            '    </div>' +
-            '  </div>' +
-
-            // Curated form
-            '  <div class="form-group">' +
-            '    <label for="curated" class="col-sm-3 control-label">Curated:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input id="curatedInput" type="checkbox">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Model type form
-            '  <div class="form-group">' +
-            '    <label for="modelType" class="col-sm-3 control-label">Model type:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <select class="form-control no-border" id="typeInput">' +
-            '        <option value="EXPERIMENTAL_DATA">Experimental data</option>' +
-            '        <option value="PRIMARY_MODEL_WDATA">Primary model with data</option>' +
-            '        <option value="PRIMARY_MODEL_WODATA">Primary model without data</option>' +
-            '        <option value="TWO_STEP_SECONDARY_MODEL">Two step secondary model</option>' +
-            '        <option value="ONE_STEP_SECONDARY_MODEL">One step secondary model</option>' +
-            '        <option value="MANUAL_SECONDARY_MODEL">Manual secondary model</option>' +
-            '        <option value="TWO_STEP_TERTIARY_MODEL">Two step tertiary model</option>' +
-            '        <option value="ONE_STEP_TERTIARY_MODEL">One step tertiary model</option>' +
-            '        <option value="MANUAL_TERTIARY_MODEL">Manual tertiary model</option>' +
-            '      </select>' +
-            '    </div>' +
-            '  </div>' +
-
-            // Model subject form
-            '  <div class="form-group">' +
-            '    <label for="modelSubject" class="col-sm-3 control-label">Model subject:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <select class="form-control no-border" id="subjectInput">' +
-            '        <option value="UNKNOWN">unknown</option>' +
-            '        <option value="GROWTH">growth</option>' +
-            '        <option value="INACTIVATION">inactivation</option>' +
-            '        <option value="SURVIVAL">survival</option>' +
-            '        <option value="GROWTH_INACTIVATION">growth/inactivation</option>' +
-            '        <option value="INACTIVATION_SURVIVAL">inactivation/survival</option>' +
-            '        <option value="GROWTH_SURVIVAL">growth/survival</option>' +
-            '        <option value="GROWTH_INACTIVATION_SURVIVAL">growth/inactivation/survival</option>' +
-            '        <option value="T">T</option>' +
-            '        <option value="PH">pH</option>' +
-            '        <option value="AW">aw</option>' +
-            '        <option value="T_PH">T/pH</option>' +
-            '        <option value="T_AW">T/aw</option>' +
-            '        <option value="PH_AW">pH/aw</option>' +
-            '        <option value="T_PH_AW">T/pH/aw</option>' +
-            '      </select>' +
-            '    </div>' +
-            '  </div>' +
-
-            // Food process form
-            '  <div class="form-group">' +
-            '    <label for="foodProcess" class="col-sm-3 control-label">Food process:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input type="text" class="form-control no-border" id="foodProcessInput" value="">' +
-            '    </div>' +
-            '  </div>' +
-
-            // Has data form
-            '  <div class="form-group">' +
-            '    <label for="hasData" class="col-sm-3 control-label">Has data?:</label>' +
-            '    <div class="col-sm-9">' +
-            '      <input id="hasDataInput" type="checkbox">' +
-            '    </div>' +
-            '  </div>' +
-
+            createInputForm("Model name", "modelNameInput", "text") +  // Model name form
+            createInputForm("Model id", "modelIdInput", "text") + // Model id form
+            createInputForm("Model link", "modelLinkInput", "text") +  // Model link form
+            createInputForm("Organism", "organismInput", "text") +  // Organism form
+            createInputForm("Organism details", "organismDetailsInput", "text") +  // Organism details form
+            createInputForm("Matrix", "matrixInput", "text") +  // Matrix form
+            createInputForm("Matrix details", "matrixDetailsInput", "text") +  // Matrix details form
+            createInputForm("Creator", "creatorInput", "text") +  // Creator form
+            createInputForm("Family name", "familyNameInput", "text") +  // Family name form
+            createInputForm("Contact", "contactInput", "text") +  // Contact form
+            createSelectForm("Software", "softwareInput", softwareDic) +  // Software form
+            createInputForm("Reference description", "referenceDescriptionInput", "text") +  // Reference description
+            createInputForm("Reference description link", "referenceDescriptionLinkInput", "url") +  // Reference description link form
+            createInputForm("Created date", "createdDateInput", "text") +  // Created date form
+            createInputForm("Modified date", "modifiedDateInput", "text") +  // Modified date form
+            createInputForm("Rights", "rightsInput", "text") +  // Rights form
+            createTextArea("Notes:", "notesInput") +  // Notes form 
+            createInputForm("Curated", "curatedInput", "checkbox") +  // Curated form
+            createSelectForm("Model type", "typeInput", modelTypeDic) + // Model type form
+            createSelectForm("Model subject", "subjectInput", modelClassDic) + // Model subject form
+            createInputForm("Food process", "foodProcessInput", "text") +  // Food process form
+            createInputForm("Has data?:", "hasDataInput", "checkbox") +  // Has data form
             '</form>';
+
+        /**
+         * Create a form-group.
+         * - label: Text label
+         * - id: Input id
+         * - type: Input type {text, checkbox}
+         */
+        function createInputForm(label, id, type) {
+            var formStr = '<div class="form-group">';
+            formStr += '<label for="' + id + '" class="col-sm-3 control-label">' + label + '</label>';
+            formStr += '<div class="col-sm-9">';
+            if (type === 'text') {
+                formStr += '<input type="text" class="form-control no-border" id="' + id + '" value="">';
+            } else if (type === 'url') {
+                formStr += '<input type="url" class="form-control no-border" id="' + id + '" value="">';
+            } else if (type === 'checkbox') {
+                formStr += '<input id="' + id + '" type="checkbox">';
+            }
+            formStr += '</div>';
+            formStr += '</div>';
+
+            return formStr;
+        }
+
+        function createTextArea(label, id) {
+            return '<div class="form-group">' +
+                '  <label for="' + id + '" class="col-sm-3 control-label">' + label + '</label>' +
+                '  <div class="col-sm-9">' +
+                '    <textarea id="' + id + '" class="form-control no-border" rows="3"></textArea>' +
+                '  </div>' +
+                '</div>';
+        }
+
+        /**
+         * Creates a form-group with a select input. Entries is a dictionary
+         * where the keys are the labels and the values are the option values. 
+         */
+        function createSelectForm(label, id, entries) {
+            var formStr = '<div class="form-group">';
+            formStr += '<label for="' + id + '" class="col-sm-3 control-label">' + label + '</label>';
+            formStr += '<div class="col-sm-9">';
+            formStr += '<select class="form-control no-border" id="' + id + '">';
+            for (var key in entries) {
+                formStr += '<option value="' + key + '">' + entries[key] + '</option>';
+            }
+            formStr += '</select></div></div>';
+
+            return formStr;
+        }
 
         document.createElement("body");
         $("body").html('<div class="container">' + form + varTable + '</div');
