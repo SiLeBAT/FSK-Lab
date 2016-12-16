@@ -125,7 +125,7 @@ public class MetadataDocument {
 
 			switch (v.type) {
 			case integer:
-				param.setValue(Integer.parseInt(v.value));
+				param.setValue(Double.valueOf(v.value).intValue());
 				break;
 			case numeric:
 				param.setValue(Double.parseDouble(v.value));

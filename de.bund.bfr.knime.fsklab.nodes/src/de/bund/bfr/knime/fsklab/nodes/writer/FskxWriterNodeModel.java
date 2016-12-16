@@ -139,7 +139,7 @@ public class FskxWriterNodeModel extends NodeModel {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
-			throw new Exception("File could not created");
+			throw new Exception("File could not be created", e.getCause());
 		}
 
 		return new PortObject[] {};
