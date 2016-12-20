@@ -19,13 +19,11 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 
 public class FskEditorNodeModel extends NodeModel {
 
-	private static final PortType[] inPortTypes = new PortType[] { FskPortObject.TYPE_OPTIONAL };
-	private static final PortType[] outPortTypes = new PortType[] { FskPortObject.TYPE };
-
 	private final FskEditorNodeSettings settings;
 
 	public FskEditorNodeModel() {
-		super(inPortTypes, outPortTypes);
+		super(new PortType[] { FskPortObject.TYPE_OPTIONAL},  // input port
+				new PortType[] { FskPortObject.TYPE});  // output port
 		settings = new FskEditorNodeSettings();
 	}
 

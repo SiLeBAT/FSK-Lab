@@ -64,14 +64,11 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskCreatorNodeModel.class);
 
-	private final static PortType[] inPortTypes = new PortType[] {};
-	private final static PortType[] outPortTypes = new PortType[] { FskPortObject.TYPE };
-
 	private FskCreatorNodeSettings settings = new FskCreatorNodeSettings();
 
 	/** {@inheritDoc} */
 	public FskCreatorNodeModel() {
-		super(inPortTypes, outPortTypes);
+		super(null, new PortType[] { FskPortObject.TYPE});
 	}
 
 	/** {@inheritDoc} */

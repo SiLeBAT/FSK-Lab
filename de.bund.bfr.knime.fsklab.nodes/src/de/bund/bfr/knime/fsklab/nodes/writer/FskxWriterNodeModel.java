@@ -58,11 +58,8 @@ public class FskxWriterNodeModel extends NodeModel {
 
 	private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
 
-	private static final PortType[] inPortTypes = { FskPortObject.TYPE };
-	private static final PortType[] outPortTypes = {};
-
 	public FskxWriterNodeModel() {
-		super(inPortTypes, outPortTypes);
+		super(new PortType[] { FskPortObject.TYPE}, null);  // input and output ports
 	}
 
 	/**

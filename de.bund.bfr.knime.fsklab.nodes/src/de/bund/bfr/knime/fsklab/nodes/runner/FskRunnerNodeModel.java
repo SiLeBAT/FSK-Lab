@@ -51,16 +51,13 @@ public class FskRunnerNodeModel extends NodeModel {
 	/** Output spec for a PNG image. */
 	private static final ImagePortObjectSpec PNG_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
 
-	private static final PortType[] inPortTypes = new PortType[] { FskPortObject.TYPE,
-			BufferedDataTable.TYPE_OPTIONAL };
-	private static final PortType[] outPortTypes = new PortType[] { FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL };
-
 	private final InternalSettings internalSettings = new InternalSettings();
 	
 	private FskRunnerNodeSettings settings = new FskRunnerNodeSettings();
 
 	public FskRunnerNodeModel() {
-		super(inPortTypes, outPortTypes);
+		super(new PortType[] { FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL},  // input ports
+				new PortType[] { FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL});  // output ports
 	}
 
 	// --- internal settings methods ---

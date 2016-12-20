@@ -85,14 +85,11 @@ public class FskxReaderNodeModel extends NodeModel {
 	// defaults for persistent state
 	private final SettingsModelString filename = new SettingsModelString(CFGKEY_FILE, DEFAULT_FILE);
 
-	private static final PortType[] inPortTypes = {};
-	private static final PortType[] outPortTypes = { FskPortObject.TYPE };
-
 	// Specs
 	private static final FskPortObjectSpec fskSpec = FskPortObjectSpec.INSTANCE;
 
 	public FskxReaderNodeModel() {
-		super(inPortTypes, outPortTypes);
+		super(null, new PortType[] { FskPortObject.TYPE});  // input and output ports
 	}
 
 	/**

@@ -37,7 +37,8 @@ public class ExtractFskMetadataNodeFactory extends NodeFactory<NodeModel> {
 
 	@Override
 	public NodeModel createNodeModel() {		
-		return new StatelessModel(new PortType[] { FskPortObject.TYPE}, new PortType[] { BufferedDataTable.TYPE}) {
+		return new StatelessModel(new PortType[] { FskPortObject.TYPE},  // input port
+				new PortType[] { BufferedDataTable.TYPE}) {  // output port  
 			@Override
 			protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 				return new PortObjectSpec[] { FskMetaDataTuple.createSpec() };

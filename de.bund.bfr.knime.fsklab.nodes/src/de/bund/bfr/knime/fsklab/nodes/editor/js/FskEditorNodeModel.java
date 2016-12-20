@@ -19,8 +19,9 @@ public class FskEditorNodeModel extends AbstractWizardNodeModel<FskEditorViewRep
 	private FskPortObject m_port;
 
 	public FskEditorNodeModel() {
-		super(new PortType[] { FskPortObject.TYPE }, new PortType[] { FskPortObject.TYPE },
-				(new FskEditorNodeFactory().getInteractiveViewName()));
+		super(new PortType[] { FskPortObject.TYPE },  // input port
+				new PortType[] { FskPortObject.TYPE },  // output port
+				(new FskEditorNodeFactory().getInteractiveViewName())); // view name
 	}
 
 	@Override

@@ -35,7 +35,8 @@ public class FskToRNodeFactory extends NodeFactory<NodeModel> {
 
 	@Override
 	public NodeModel createNodeModel() {		
-		return new StatelessModel(new PortType[] { FskPortObject.TYPE}, new PortType[] { RPortObject.TYPE}) {
+		return new StatelessModel(new PortType[] { FskPortObject.TYPE},  // input port
+				new PortType[] { RPortObject.TYPE}) {  // output port
 			@Override
 			protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) {
 				return new PortObjectSpec[] { RPortObjectSpec.INSTANCE };
