@@ -24,11 +24,9 @@ import java.nio.file.Files;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeModel;
+import org.knime.core.node.NoInternalsModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -51,7 +49,7 @@ import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
 
 /**
  */
-public class FskxWriterNodeModel extends NodeModel {
+public class FskxWriterNodeModel extends NoInternalsModel {
 
 	// Configuration keys
 	public static final String CFG_FILE = "file";
@@ -190,19 +188,5 @@ public class FskxWriterNodeModel extends NodeModel {
 	@Override
 	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 		filePath.validateSettings(settings);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected void loadInternals(final File internDir, final ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// nothing
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected void saveInternals(final File internDir, final ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// nothing
 	}
 }

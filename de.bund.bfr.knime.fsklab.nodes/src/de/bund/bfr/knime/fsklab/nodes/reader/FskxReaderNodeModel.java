@@ -36,12 +36,10 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.IOUtils;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NoInternalsModel;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -72,7 +70,7 @@ import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.CombineArchiveException;
 import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 
-public class FskxReaderNodeModel extends NodeModel {
+public class FskxReaderNodeModel extends NoInternalsModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskxReaderNodeModel.class);
 
@@ -256,20 +254,6 @@ public class FskxReaderNodeModel extends NodeModel {
 	@Override
 	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 		filename.validateSettings(settings);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// nothing
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// nothing
 	}
 
 	/** {@inheritDoc} */

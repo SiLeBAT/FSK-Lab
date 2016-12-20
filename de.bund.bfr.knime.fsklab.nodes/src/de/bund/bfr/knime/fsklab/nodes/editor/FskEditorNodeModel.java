@@ -1,13 +1,8 @@
 package de.bund.bfr.knime.fsklab.nodes.editor;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeModel;
+import org.knime.core.node.NoInternalsModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -17,7 +12,7 @@ import org.knime.core.node.port.PortType;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 
-public class FskEditorNodeModel extends NodeModel {
+public class FskEditorNodeModel extends NoInternalsModel {
 
 	private final FskEditorNodeSettings settings;
 
@@ -25,21 +20,6 @@ public class FskEditorNodeModel extends NodeModel {
 		super(new PortType[] { FskPortObject.TYPE_OPTIONAL},  // input port
 				new PortType[] { FskPortObject.TYPE});  // output port
 		settings = new FskEditorNodeSettings();
-	}
-
-	// --- internal settings methods ---
-	/** {@inheritDoc} */
-	@Override
-	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// no internal settings
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// no internal settings
 	}
 
 	/** {@inheritDoc} */
