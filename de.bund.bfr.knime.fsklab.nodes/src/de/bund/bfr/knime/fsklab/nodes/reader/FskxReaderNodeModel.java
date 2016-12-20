@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -51,6 +52,8 @@ import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
+
+import com.sun.jna.Platform;
 
 import de.bund.bfr.fskml.DCOmexMetaDataHandler;
 import de.bund.bfr.fskml.LegacyOmexMetaDataHandler;
@@ -170,7 +173,15 @@ public class FskxReaderNodeModel extends NodeModel {
 
 			// Gets R libraries
 			// Gets library names from the zip entries in the CombineArchive
-			List<String> libNames = archive.getEntriesWithFormat(URIS.zip).stream()
+			URI libUri = null;
+			if (Platform.isWindows()) {
+				libUri = URIS.zip;
+			} else if (Platform.isMac()) {
+				libUri = URIS.tgz;
+			} else if (Platform.isLinux()) {
+				libUri = URIS.tar_gz;
+			}
+			List<String> libNames = archive.getEntriesWithFormat(libUri).stream()
 					.map(entry -> entry.getFileName().split("\\_")[0]).collect(Collectors.toList());
 
 			if (!libNames.isEmpty()) {

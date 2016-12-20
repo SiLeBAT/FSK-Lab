@@ -6,6 +6,9 @@ import java.net.URISyntaxException;
 public class URIS {
 
 	public static final URI zip;
+	public static final URI tgz;
+	public static final URI tar_gz;
+	
 	public static final URI r;
 	public static final URI pmf;
 	public static final URI sbml;
@@ -15,6 +18,9 @@ public class URIS {
 	static {
 		try {
 			zip = new URI("http://purl.org/NET/mediatypes/application/zip");
+			tgz = new URI("http://purl.org/NET/mediatypes/application/x-tgz");
+			tar_gz = new URI("http://purl.org/NET/mediatypes/application/x-tar.gz");
+			
 			r = new URI("http://purl.org/NET/mediatypes/application/r");
 			pmf = new URI("http://purl.org/NET/mediatypes/application/x-pmf");
 			sbml = new URI("http://purl.org/NET/mediatypes/application/sbml+xml");

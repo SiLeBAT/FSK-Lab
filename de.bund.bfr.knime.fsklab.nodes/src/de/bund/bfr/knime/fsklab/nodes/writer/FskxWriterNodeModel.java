@@ -19,6 +19,7 @@ package de.bund.bfr.knime.fsklab.nodes.writer;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 
 import javax.xml.stream.XMLStreamException;
@@ -38,6 +39,8 @@ import org.knime.core.util.FileUtil;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
+
+import com.sun.jna.Platform;
 
 import de.bund.bfr.fskml.DCOmexMetaDataHandler;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
@@ -127,8 +130,16 @@ public class FskxWriterNodeModel extends NodeModel {
 			}
 
 			// Adds R libraries
+			URI libUri = null;
+			if (Platform.isWindows()) {
+				libUri = URIS.zip;
+			} else if (Platform.isMac()) {
+				libUri = URIS.tgz;
+			} else if (Platform.isLinux()) {
+				libUri = URIS.tar_gz;
+			}
 			for (File lib : portObject.libs) {
-				archive.addEntry(lib, lib.getName(), URIS.zip);
+				archive.addEntry(lib, lib.getName(), libUri);
 			}
 
 			archive.pack();
