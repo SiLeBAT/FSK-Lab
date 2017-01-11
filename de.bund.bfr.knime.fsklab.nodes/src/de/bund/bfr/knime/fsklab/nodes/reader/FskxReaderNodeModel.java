@@ -87,7 +87,8 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 	private static final FskPortObjectSpec fskSpec = FskPortObjectSpec.INSTANCE;
 
 	public FskxReaderNodeModel() {
-		super(null, new PortType[] { FskPortObject.TYPE});  // input and output ports
+		super(null, new PortType[] { FskPortObject.TYPE }); // input and output
+															// ports
 	}
 
 	/**
@@ -120,25 +121,25 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 				handler = new DCOmexMetaDataHandler(archive.getDescriptions().stream()
 						.map(MetaDataObject::getXmlDescription).collect(Collectors.toList()));
 			}
-			
+
 			// Gets model script
 			if (handler.getModelScript() != null) {
 				ArchiveEntry entry = archive.getEntry(handler.getModelScript());
 				portObj.model = loadScriptFromEntry(entry);
 			}
-			
+
 			// Gets parameters script
 			if (handler.getParametersScript() != null) {
 				ArchiveEntry entry = archive.getEntry(handler.getParametersScript());
 				portObj.param = loadScriptFromEntry(entry);
 			}
-			
+
 			// Gets visualization script
 			if (handler.getVisualizationScript() != null) {
 				ArchiveEntry entry = archive.getEntry(handler.getVisualizationScript());
 				portObj.viz = loadScriptFromEntry(entry);
 			}
-			
+
 			// Gets workspace
 			if (handler.getWorkspaceFile() != null) {
 				ArchiveEntry entry = archive.getEntry(handler.getWorkspaceFile());
@@ -149,7 +150,7 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 					LOGGER.warn("Workspace could not be restored. Please rerun model to obtain results.");
 				}
 			}
-			
+
 			// Gets model meta data
 			if (archive.getNumEntriesWithFormat(URIS.pmf) == 1) {
 				ArchiveEntry entry = archive.getEntriesWithFormat(URIS.pmf).get(0);
@@ -200,6 +201,13 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 
 		// Validate model
 		try (RController controller = new RController()) {
+			
+			// Add path
+			LibRegistry libRegistry = LibRegistry.instance();
+			String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
+					+ "', .libPaths()))";
+			String[] newPaths = controller.eval(cmd).asStrings();
+			
 			// Validate model with parameter values from parameter script
 			final String fullScriptA = portObj.param + "\n" + portObj.model;
 			controller.eval(fullScriptA);
@@ -211,9 +219,16 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 				final String fullScriptB = paramScript + "\n" + portObj.model;
 				controller.eval(fullScriptB);
 			}
+			
+			// Restore .libPaths() to the original library path which happens to be
+			// in the last position
+			controller.eval(".libPaths()[" + newPaths.length + "]");
 
 		} catch (RException e) {
 			throw new RException("Input model is not valid", e);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return new PortObject[] { portObj };
