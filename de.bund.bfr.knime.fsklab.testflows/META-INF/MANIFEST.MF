@@ -5,7 +5,7 @@ Bundle-SymbolicName: de.bund.bfr.knime.fsklab.testflows
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.knime.base,
- nl.esciencecenter.e3dchem.knime.testing.plugin,
  de.bund.bfr.knime.fsklab.nodes,
  org.knime.testing,
- org.junit
+ org.junit,
+ nl.esciencecenter.e3dchem.knime.testing.plugin
