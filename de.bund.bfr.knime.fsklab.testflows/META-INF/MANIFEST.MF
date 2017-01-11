@@ -8,4 +8,4 @@ Require-Bundle: org.knime.base,
  de.bund.bfr.knime.fsklab.nodes,
  org.knime.testing,
  org.junit,
- nl.esciencecenter.e3dchem.knime.testing.plugin
+ nl.esciencecenter.e3dchem.knime.testing

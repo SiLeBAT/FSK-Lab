@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="KNIME 3.2 TP" sequenceNumber="33">
+<?pde version="3.8"?><target includeMode="feature" name="KNIME 3.2 TP" sequenceNumber="37">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.knime.product.desktop" version="3.2.2.v201612191633"/>
 <unit id="org.knime.features.r.feature.group" version="3.2.2.v201611221300"/>
 <unit id="org.knime.features.js.views.feature.group" version="3.2.2.v201610041224"/>
+<repository location="http://update.knime.org/analytics-platform/3.2/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.knime.features.testingapplication.feature.group" version="3.2.2.v201611221300"/>
 <repository location="http://update.knime.org/analytics-platform/3.2/"/>
 </location>
 </locations>
