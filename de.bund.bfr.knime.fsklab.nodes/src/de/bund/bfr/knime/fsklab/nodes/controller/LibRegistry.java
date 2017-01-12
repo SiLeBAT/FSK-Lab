@@ -20,7 +20,6 @@ import com.sun.jna.Platform;
 
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 
-
 /**
  * Singleton!! There can only be one.
  * 
@@ -230,7 +229,7 @@ public class LibRegistry {
 		 */
 		void addPackage(final List<String> pkgs, final Path path, final String repos) throws RException {
 			String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '" + repos
-					+ "', type = '" + type + "')";
+					+ "', type = '" + type + "', Rversion = '3.0')";
 			controller.eval(cmd);
 		}
 
@@ -251,7 +250,8 @@ public class LibRegistry {
 		 *      miniCRAN documentation</a>
 		 */
 		List<Path> checkVersions(final List<String> pkgs, final Path path) throws REXPMismatchException, RException {
-			String cmd = "checkVersions(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', type = '" + type + "')";
+			String cmd = "checkVersions(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', type = '" + type
+					+ "', Rversion = '3.0')";
 			String[] pathsArray = controller.eval(cmd).asStrings();
 			return Arrays.stream(pathsArray).map(Paths::get).collect(Collectors.toList());
 		}
@@ -298,7 +298,7 @@ public class LibRegistry {
 		 *      miniCRAN documentation</a>
 		 */
 		List<String> pkgDep(final List<String> pkgs) throws RException, REXPMismatchException {
-			String cmd = "pkgDep(" + _pkgList(pkgs) + ", availPkgs = cranJuly2014, type = " + type + ")";
+			String cmd = "pkgDep(" + _pkgList(pkgs) + ", availPkgs = cranJuly2014, type = '" + type + "')";
 			REXP rexp = controller.eval(cmd);
 			return Arrays.asList(rexp.asStrings());
 		}
