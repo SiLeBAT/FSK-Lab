@@ -6,7 +6,9 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.bfr.knime.fsklab.nodes.FskPlugin
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
-Export-Package: de.bund.bfr.knime.fsklab.nodes
+Export-Package: de.bund.bfr.fskml,
+ de.bund.bfr.knime.fsklab.nodes,
+ de.bund.bfr.pmfml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.apache.poi.ooxml,
  org.eclipse.core.runtime,
