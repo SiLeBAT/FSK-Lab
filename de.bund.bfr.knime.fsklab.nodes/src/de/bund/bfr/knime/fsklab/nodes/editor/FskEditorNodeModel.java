@@ -58,16 +58,19 @@ public class FskEditorNodeModel extends NoInternalsModel {
 
 	@Override
 	protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
-		FskPortObject outObj = new FskPortObject();
+		FskPortObject outObj;
 
 		// If there is an input model
 		if (inObjects.length > 0 && inObjects[0] != null) {
 			FskPortObject inObj = (FskPortObject) inObjects[0];
+			
+			int connectedModelNum = inObj.objectNum;
+			int oldConnectedModelNum = settings.objectNumber.getIntValue();
 
 			// If the input model has changed
-			if (settings.objectNumber.getIntValue() != inObj.objectNum) {
+			if (oldConnectedModelNum != connectedModelNum) {
 				// Discard settings and replace them with input model
-				settings.objectNumber.setIntValue(inObj.objectNum);
+				settings.objectNumber.setIntValue(connectedModelNum);
 				settings.modelScript.setStringValue(inObj.model);
 				settings.paramScript.setStringValue(inObj.param);
 				settings.vizScript.setStringValue(inObj.viz);

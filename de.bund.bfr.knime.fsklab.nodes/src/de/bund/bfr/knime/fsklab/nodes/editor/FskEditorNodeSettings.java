@@ -1,5 +1,7 @@
 package de.bund.bfr.knime.fsklab.nodes.editor;
 
+import java.util.Random;
+
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -8,10 +10,12 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 class FskEditorNodeSettings {
 	
-	SettingsModelInteger objectNumber = new SettingsModelInteger("objectNum", 0);
+	SettingsModelInteger objectNumber = new SettingsModelInteger("objectNum", random.nextInt());
 	SettingsModelString modelScript = new SettingsModelString("model script", "");
 	SettingsModelString paramScript = new SettingsModelString("parameters script", "");
 	SettingsModelString vizScript = new SettingsModelString("visualization script", "");
+	
+	private static final Random random = new Random();
 	
 	void saveSettingsTo(final NodeSettingsWO settings) {
 		objectNumber.saveSettingsTo(settings);
@@ -24,7 +28,7 @@ class FskEditorNodeSettings {
 		try {
 			objectNumber.validateSettings(settings);
 		} catch (InvalidSettingsException e) {
-			objectNumber.setIntValue(0);
+			objectNumber.setIntValue(random.nextInt());
 		}
 		try {
 			modelScript.validateSettings(settings);
@@ -47,7 +51,7 @@ class FskEditorNodeSettings {
 		try {
 			objectNumber.loadSettingsFrom(settings);
 		} catch (InvalidSettingsException e) {
-			objectNumber.setIntValue(0);
+			objectNumber.setIntValue(random.nextInt());
 		}
 		try {
 			modelScript.loadSettingsFrom(settings);
