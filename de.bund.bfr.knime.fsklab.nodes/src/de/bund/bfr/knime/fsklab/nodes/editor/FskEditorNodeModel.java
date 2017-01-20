@@ -17,8 +17,8 @@ public class FskEditorNodeModel extends NoInternalsModel {
 	private final FskEditorNodeSettings settings;
 
 	public FskEditorNodeModel() {
-		super(new PortType[] { FskPortObject.TYPE_OPTIONAL},  // input port
-				new PortType[] { FskPortObject.TYPE});  // output port
+		super(new PortType[] { FskPortObject.TYPE_OPTIONAL }, // input port
+				new PortType[] { FskPortObject.TYPE }); // output port
 		settings = new FskEditorNodeSettings();
 	}
 
@@ -58,35 +58,39 @@ public class FskEditorNodeModel extends NoInternalsModel {
 
 	@Override
 	protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
-		// If there is no input port connected create and return an FskPortObject from settings
-		if (inObjects[0] == null) {
-			FskPortObject fskObj = new FskPortObject();
-			fskObj.model = settings.modelScript.getStringValue();
-			fskObj.param = settings.paramScript.getStringValue();
-			fskObj.viz  = settings.vizScript.getStringValue();
-			return new PortObject[] { fskObj };
+		FskPortObject outObj = new FskPortObject();
+
+		// If there is an input model
+		if (inObjects.length > 0 && inObjects[0] != null) {
+			FskPortObject inObj = (FskPortObject) inObjects[0];
+
+			// If the input model has changed
+			if (settings.objectNumber.getIntValue() != inObj.objectNum) {
+				// Discard settings and replace them with input model
+				settings.objectNumber.setIntValue(inObj.objectNum);
+				settings.modelScript.setStringValue(inObj.model);
+				settings.paramScript.setStringValue(inObj.param);
+				settings.vizScript.setStringValue(inObj.viz);
+				
+				// Assigns input model
+				outObj = inObj;
+			} else {
+				// Return model from settings (numObj remains unchanged)
+				outObj = inObj;
+				outObj.model = settings.modelScript.getStringValue();
+				outObj.param = settings.paramScript.getStringValue();
+				outObj.viz = settings.vizScript.getStringValue();
+			}
+		}
+		// If there is no input model then it will return the model created in the UI
+		else {
+			outObj = new FskPortObject();
+			outObj.model = settings.modelScript.getStringValue();
+			outObj.param = settings.paramScript.getStringValue();
+			outObj.viz = settings.vizScript.getStringValue();
+			outObj.objectNum = settings.objectNumber.getIntValue();
 		}
 		
-		// If there is an input port connected but the settings have no changes
-		// yet, then returns the input model in the input port
-		FskPortObject inObj = (FskPortObject) inObjects[0];
-		if (settings.modelScript.getStringValue().isEmpty() &&
-			settings.paramScript.getStringValue().isEmpty() &&
-			settings.vizScript.getStringValue().isEmpty()) {
-
-			settings.modelScript.setStringValue(inObj.model);
-			settings.paramScript.setStringValue(inObj.param);
-			settings.vizScript.setStringValue(inObj.viz);
-
-			return new PortObject[] { inObj };	
-		}
-
-		// If there is an input port and changes in the settings then return
-		// the input model after applying the changes
-		inObj.model = settings.modelScript.getStringValue();
-		inObj.param = settings.paramScript.getStringValue();
-		inObj.viz = settings.vizScript.getStringValue();
-
-		return new PortObject[] { inObj };
+		return new PortObject[] { outObj };
 	}
 }

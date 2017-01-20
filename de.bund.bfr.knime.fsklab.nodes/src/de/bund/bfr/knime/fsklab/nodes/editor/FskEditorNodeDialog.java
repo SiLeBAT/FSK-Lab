@@ -50,23 +50,29 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 	}
 
 	// --- settings methods ---
+	/** Loads settings from input port. */
 	@Override
-	protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] input) throws NotConfigurableException {
+	protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] input) throws NotConfigurableException {		
+		FskEditorNodeSettings newSettings = new FskEditorNodeSettings();
+		newSettings.loadValidatedSettingsFrom(settings);
 
-		FskPortObject fskObj = (FskPortObject) input[0];
+		FskPortObject inObj = (FskPortObject) input[0];
+		
+		int connectedModel = inObj.objectNum;
+		int oldConnectedModel = newSettings.objectNumber.getIntValue();
+		
+		// if input model has changed
+		if (connectedModel != oldConnectedModel) {
 
-		this.settings.loadValidatedSettingsFrom(settings);
+			// Discard settings and replace them with input model
+			this.settings.objectNumber.setIntValue(inObj.objectNum);
+			this.settings.modelScript.setStringValue(inObj.model);
+			this.settings.paramScript.setStringValue(inObj.param);
+			this.settings.vizScript.setStringValue(inObj.viz);
 
-		/*
-		 * Take data from the inputs if: 1) all the scripts are empty then the
-		 * editor is new
-		 */
-		if (this.settings.modelScript.getStringValue().isEmpty() && this.settings.paramScript.getStringValue().isEmpty()
-				&& this.settings.vizScript.getStringValue().isEmpty()) {
-
-			this.settings.modelScript.setStringValue(fskObj.model);
-			this.settings.paramScript.setStringValue(fskObj.param);
-			this.settings.vizScript.setStringValue(fskObj.viz);
+		} else {
+			// Return model from settings
+			this.settings = newSettings;
 		}
 	}
 	

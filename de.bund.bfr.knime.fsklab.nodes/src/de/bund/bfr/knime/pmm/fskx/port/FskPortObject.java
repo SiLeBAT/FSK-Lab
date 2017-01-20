@@ -90,7 +90,7 @@ public class FskPortObject implements PortObject {
 
 	private static int numOfInstances = 0;
 
-	private final int objectNum;
+	public int objectNum;
 
 	public FskPortObject() {
 		libs = new HashSet<>();
@@ -121,11 +121,6 @@ public class FskPortObject implements PortObject {
 	@Override
 	public String getSummary() {
 		return "FSK Object";
-	}
-
-	/** @return the object number. */
-	public int getObjectNumber() {
-		return objectNum;
 	}
 
 	/**
