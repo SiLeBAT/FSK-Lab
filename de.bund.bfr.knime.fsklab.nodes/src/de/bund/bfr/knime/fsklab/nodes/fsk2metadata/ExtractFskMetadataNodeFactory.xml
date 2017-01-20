@@ -8,10 +8,12 @@
 	<shortDescription>Extract metadata from an FSK object</shortDescription>
 
 	<fullDescription>
-		<intro></intro>
+		<intro>
+			Extracts the metadata in an FSK object into a KNIME table.
+		</intro>
 	</fullDescription>
 	<ports>
 		<inPort name="FSK object" index="0">FSK object</inPort>
-		<outPort name="R workspace" index="0">R workspace</outPort>
+		<outPort name="Metadata" index="0">Metadata</outPort>
 	</ports>
 </knimeNode>

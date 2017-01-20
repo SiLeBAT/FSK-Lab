@@ -6,25 +6,17 @@
 	<name>FSKX Writer</name>
 
 	<shortDescription>
-		This node writes an FSK object into an FSKX file.
+		Writes an FSK object into a FSKX file.
     </shortDescription>
 
 	<fullDescription>
 		<intro>
-			The contents of the FSKX object are:
-			<ul>
-				<li>Model script: Calculates the results of the script
-					(mandatory)</li>
-				<li>Parameters script: Used in some models to initialize
-					parameters in the model (currently optional)</li>
-				<li>Visualization script: Generates some form of visualization
-					for the results of the model (optional)</li>
-				<li>Model meta data encoded using the OpenFSMR template.</li>
-				<li>Set of libraries used.</li>
-			</ul>
+			Creates an FSKX file with the scripts, metadata and libraries in
+			the FSKX object.
 		</intro>
 		<option name="Output Path">
-			File path of the generated FSKX file.
+			Location to file. May be an absolute URL, a mount-point relative
+			URL or a local path.
 		</option>
 	</fullDescription>
 

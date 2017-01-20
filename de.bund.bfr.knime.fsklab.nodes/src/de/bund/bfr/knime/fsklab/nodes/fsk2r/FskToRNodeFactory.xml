@@ -6,11 +6,17 @@
 	<name>FSK to R</name>
 
 	<shortDescription>
-		Extracts the R workspace out of an FSK object. The R workspace may be used with KNIME R nodes.
+		Extracts the R workspace out of an FSK object. The R workspace may be
+		used with KNIME R nodes.
     </shortDescription>
 
 	<fullDescription>
-		<intro></intro>
+		<intro>
+			Extracts the R workspace out of an FSK object and places it into
+			the output RPortObject. If the R workspace is null or non-existent
+			(as when the model has not been run), the generated RPortObject
+			would be null.
+		</intro>
 	</fullDescription>
 	<ports>
 		<inPort name="FSK object" index="0">FSK object</inPort>

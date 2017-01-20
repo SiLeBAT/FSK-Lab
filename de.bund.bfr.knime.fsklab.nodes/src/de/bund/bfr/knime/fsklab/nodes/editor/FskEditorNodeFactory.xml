@@ -5,25 +5,14 @@
 	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
 	<name>FSK Editor</name>
 
-	<shortDescription>Edit an FSK object</shortDescription>
+	<shortDescription>Edit the scripts in an FSK object</shortDescription>
 
 	<fullDescription>
 		<intro>
-			The contents of the FSKX object are:
-			<ul>
-				<li>Model script: Calculates the results of the script
-					(mandatory)</li>
-				<li>Parameters script: Used in some models to initialize
-					parameters in the model (currently optional)</li>
-				<li>Visualization script: Generates some form of visualization
-					for the results of the model (optional)</li>
-				<li>Model meta data encoded using the OpenFSMR template.</li>
-				<li>Set of libraries used.</li>
-			</ul>
+			Edit the scripts in an FSK object: model, parameters and
+			visualization scripts. In case there is no input model connected
+			then it will create a new model from the user interface.
 		</intro>
-		<option name="Selected file">
-			File path of the selected FSKX file.
-		</option>
 	</fullDescription>
 	<ports>
 		<inPort name="FSK object" index="0">FSK object</inPort>
