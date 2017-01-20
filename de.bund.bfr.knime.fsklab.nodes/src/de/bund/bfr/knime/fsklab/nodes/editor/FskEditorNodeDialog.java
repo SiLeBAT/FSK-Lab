@@ -70,9 +70,10 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 	
+	/** Loads settings from saved settings. */
 	@Override
 	protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs) throws NotConfigurableException {
-		// nothing to do - the scripts are already initialized in the constructor
+		this.settings.loadValidatedSettingsFrom(settings);
 	}
 
 	@Override
