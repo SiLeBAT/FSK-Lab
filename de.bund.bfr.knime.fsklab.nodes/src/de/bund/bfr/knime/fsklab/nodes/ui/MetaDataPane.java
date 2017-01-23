@@ -254,7 +254,7 @@ public class MetaDataPane extends JScrollPane {
 				case INDEPENDENT_VARIABLE_UNIT:
 					return template.independentVariables.stream().map(v -> v.unit).collect(Collectors.joining("||"));
 				case INDEPENDENT_VARIABLE_TYPE:
-					return template.independentVariables.stream().map(v -> v.type.name())
+					return template.independentVariables.stream().map(v -> v.type == null ? "" : v.type.name())
 							.collect(Collectors.joining("||"));
 				case INDEPENDENT_VARIABLE_MIN:
 					return template.independentVariables.stream().map(v -> v.min).collect(Collectors.joining("||"));

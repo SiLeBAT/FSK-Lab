@@ -313,8 +313,7 @@ public class MetadataDocument {
 		}
 
 		// dependent variable data
-		if (model.getNumRules() > 0)
-		{
+		if (model.getNumRules() > 0) {
 			AssignmentRule rule = (AssignmentRule) model.getRule(0);
 			String depId = rule.getVariable();
 
@@ -344,8 +343,7 @@ public class MetadataDocument {
 		}
 
 		// independent variable data
-		if (model.getNumRules() > 0)
-		{
+		if (model.getNumRules() > 0) {
 			AssignmentRule rule = (AssignmentRule) model.getRule(0);
 			String depId = rule.getVariable();
 
@@ -378,18 +376,22 @@ public class MetadataDocument {
 				variable.min = paramLimits.getMin().toString();
 				variable.max = paramLimits.getMax().toString();
 
-				if (param.getNumPlugins() > 0) {
-					variable.type = DataType.array;
+				if (param.isSetValue()) {
+					if (param.getNumPlugins() > 0) {
+						variable.type = DataType.array;
 
-					InitialAssignment ia = model.getInitialAssignment(variable.name);
-					List<Double> array = new SelectorNode(ia.getMath()).getArray();
+						InitialAssignment ia = model.getInitialAssignment(variable.name);
+						List<Double> array = new SelectorNode(ia.getMath()).getArray();
 
-					variable.value = "c(" + array.stream().map(d -> Double.toString(d)).collect(Collectors.joining(","))
-							+ ")";
+						variable.value = "c("
+								+ array.stream().map(d -> Double.toString(d)).collect(Collectors.joining(",")) + ")";
 
+					} else {
+						variable.type = param.getValue() % 1 == 0 ? DataType.integer : DataType.numeric;
+						variable.value = Double.toString(param.getValue());
+					}
 				} else {
-					variable.type = param.getValue() % 1 == 0 ? DataType.integer : DataType.numeric;
-					variable.value = Double.toString(param.getValue());
+					variable.value = null;
 				}
 
 				template.independentVariables.add(variable);

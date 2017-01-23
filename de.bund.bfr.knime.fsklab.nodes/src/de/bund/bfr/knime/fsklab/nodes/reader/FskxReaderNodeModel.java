@@ -51,6 +51,7 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
 
+import com.google.common.base.Strings;
 import com.sun.jna.Platform;
 
 import de.bund.bfr.fskml.DCOmexMetaDataHandler;
@@ -60,6 +61,7 @@ import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
 import de.bund.bfr.knime.fsklab.nodes.URIS;
+import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
@@ -214,10 +216,28 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 
 			// Validate model with parameter values from metadata
 			if (!portObj.template.independentVariables.isEmpty()) {
-				final String paramScript = portObj.template.independentVariables.stream()
-						.map(v -> v.name + " <- " + v.value).collect(Collectors.joining("\n"));
-				final String fullScriptB = paramScript + "\n" + portObj.model;
-				controller.eval(fullScriptB);
+//				final String paramScript = portObj.template.independentVariables.stream()
+//						.map(v -> v.name + " <- " + v.value).collect(Collectors.joining("\n"));
+//				final String fullScriptB = paramScript + "\n" + portObj.model;
+//				controller.eval(fullScriptB);
+				
+				String newScript = "";
+				
+				boolean onError = false;
+				for (Variable v : portObj.template.independentVariables) {
+					if (Strings.isNullOrEmpty(v.name) || Strings.isNullOrEmpty(v.value)) {
+						onError = true;
+						break;
+					}
+					newScript += v.name + " <- " + v.value + "\n";
+				}
+				
+				if (onError) {
+					LOGGER.warn("Parameter values from metadata are not valid");
+				} else {
+					final String fullScriptB = newScript + "\n" + portObj.model;
+					controller.eval(fullScriptB);
+				}
 			}
 			
 			// Restore .libPaths() to the original library path which happens to be

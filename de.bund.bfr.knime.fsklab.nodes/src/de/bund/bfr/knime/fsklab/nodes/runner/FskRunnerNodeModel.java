@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.stream.Collectors;
 
 import org.knime.core.data.DataRow;
 import org.knime.core.data.container.CloseableRowIterator;
@@ -32,9 +31,11 @@ import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 
+import com.google.common.base.Strings;
 import com.sun.jna.Platform;
 
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataTuple;
+import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
@@ -52,12 +53,14 @@ public class FskRunnerNodeModel extends NodeModel {
 	private static final ImagePortObjectSpec PNG_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
 
 	private final InternalSettings internalSettings = new InternalSettings();
-	
+
 	private FskRunnerNodeSettings settings = new FskRunnerNodeSettings();
 
 	public FskRunnerNodeModel() {
-		super(new PortType[] { FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL},  // input ports
-				new PortType[] { FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL});  // output ports
+		super(new PortType[] { FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL }, // input
+																						// ports
+				new PortType[] { FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL }); // output
+																						// ports
 	}
 
 	// --- internal settings methods ---
@@ -110,9 +113,21 @@ public class FskRunnerNodeModel extends NodeModel {
 		exec.checkCanceled();
 		FskPortObject fskObj = (FskPortObject) inObjects[0];
 
-		if (!fskObj.template.independentVariables.isEmpty()) {
-			fskObj.param = fskObj.template.independentVariables.stream().map(v -> v.name + " <- " + v.value)
-					.collect(Collectors.joining("\n"));
+		if (fskObj.template.independentVariables != null && !fskObj.template.independentVariables.isEmpty()) {
+			String newScript = "";
+
+			boolean onError = false;
+			for (Variable v : fskObj.template.independentVariables) {
+				if (Strings.isNullOrEmpty(v.name) || Strings.isNullOrEmpty(v.value)) {
+					onError = true;
+					break;
+				}
+				newScript += v.name + " <- " + v.value + "\n";
+			}
+
+			if (!onError) {
+				fskObj.param = newScript;
+			}
 		}
 
 		// If a metadata table is connected then update the model metadata
@@ -132,11 +147,20 @@ public class FskRunnerNodeModel extends NodeModel {
 					String[] values = valuesCell.getStringValue().split("\\|\\|");
 
 					if (vars != null && values != null && vars.length == values.length) {
+						boolean onError = false;
+
 						StringBuilder sb = new StringBuilder();
 						for (int i = 0; i < vars.length; i++) {
-							sb.append(vars[i] + " <- " + values[i] + "\n");
+							if (Strings.isNullOrEmpty(vars[i]) && Strings.isNullOrEmpty(values[i])) {
+								onError = true;
+							} else {
+								sb.append(vars[i] + " <- " + values[i] + "\n");
+							}
 						}
-						fskObj.param = sb.toString();
+						
+						if (!onError) {
+							fskObj.param = sb.toString();
+						}
 					}
 				}
 			}
