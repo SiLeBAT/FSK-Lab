@@ -62,7 +62,13 @@ public class MetadataDocument {
 		doc.setAnnotation(new MetadataAnnotation(template).annotation);
 
 		// Creates model and names it
-		Model model = doc.createModel(PMFUtil.createId(template.modelId));
+		Model model;
+		if (template.modelId == null || template.modelId.isEmpty()) {
+			model = doc.createModel();
+		} else {
+			model = doc.createModel(PMFUtil.createId(template.modelId));
+		}
+
 		if (template.modelName != null && !template.modelName.isEmpty()) {
 			model.setName(template.modelName);
 		}
@@ -77,21 +83,36 @@ public class MetadataDocument {
 		}
 
 		// Creates and adds compartment to the model
-		PMFCompartment compartment = SBMLFactory.createPMFCompartment(PMFUtil.createId(template.matrix),
-				template.matrix);
-		compartment.setDetail(template.matrixDetails);
-		model.addCompartment(compartment.getCompartment());
+		if (template.matrix != null && !template.matrix.isEmpty()) {
+			PMFCompartment compartment = SBMLFactory.createPMFCompartment(PMFUtil.createId(template.matrix),
+					template.matrix);
+			if (template.matrixDetails != null && !template.matrixDetails.isEmpty()) {
+				compartment.setDetail(template.matrixDetails);
+			}
+			model.addCompartment(compartment.getCompartment());
+		}
 
 		// Creates and adds species to the model
-		String speciesId = PMFUtil.createId(template.organism);
-		String speciesName = template.organism;
-		String speciesUnit = PMFUtil.createId(template.dependentVariable.unit);
-		PMFSpecies species = SBMLFactory.createPMFSpecies(compartment.getId(), speciesId, speciesName, speciesUnit);
-		model.addSpecies(species.getSpecies());
+
+		// Creates and adds species to the model if:
+		// - template.organism is specified
+		// - template.dependentVariable.unit is specified
+		// - model has a compartment
+		if (!Strings.isNullOrEmpty(template.organism) && template.dependentVariable != null
+				&& !Strings.isNullOrEmpty(template.dependentVariable.unit) && model.getNumCompartments() > 0) {
+			String speciesId = PMFUtil.createId(template.organism);
+			String speciesName = template.organism;
+			String speciesUnit = PMFUtil.createId(template.dependentVariable.unit);
+			PMFSpecies species = SBMLFactory.createPMFSpecies(model.getCompartment(0).getId(), speciesId, speciesName,
+					speciesUnit);
+			model.addSpecies(species.getSpecies());
+		}
 
 		// Add unit definitions here (before parameters)
 		Set<String> unitsSet = new LinkedHashSet<>();
-		unitsSet.add(template.dependentVariable.unit.trim());
+		if (template.dependentVariable != null && !Strings.isNullOrEmpty(template.dependentVariable.unit)) {
+			unitsSet.add(template.dependentVariable.unit.trim());
+		}
 		template.independentVariables.forEach(v -> unitsSet.add(v.unit.trim()));
 		for (String unit : unitsSet) {
 			UnitDefinition ud = model.createUnitDefinition(PMFUtil.createId(unit));
@@ -99,76 +120,104 @@ public class MetadataDocument {
 		}
 
 		// Adds dep parameter
-		Parameter depParam = new Parameter(PMFUtil.createId(template.dependentVariable.name));
-		depParam.setName(template.dependentVariable.name);
-		depParam.setUnits(PMFUtil.createId(template.dependentVariable.unit));
-		model.addParameter(depParam);
-
-		// Adds dep constraint
-		try {
-			double min = Double.parseDouble(template.dependentVariable.min);
-			double max = Double.parseDouble(template.dependentVariable.max);
-			LimitsConstraint lc = new LimitsConstraint(template.dependentVariable.name.replaceAll("\\.", "\\_"), min,
-					max);
-			if (lc.getConstraint() != null) {
-				model.addConstraint(lc.getConstraint());
+		if (template.dependentVariable != null && !Strings.isNullOrEmpty(template.dependentVariable.name)) {
+			Parameter depParam = new Parameter(PMFUtil.createId(template.dependentVariable.name));
+			depParam.setName(template.dependentVariable.name);
+			if (!Strings.isNullOrEmpty(template.dependentVariable.unit)) {
+				depParam.setUnits(PMFUtil.createId(template.dependentVariable.unit));
 			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			model.addParameter(depParam);
+
+			// Adds dep constraint
+			if (!Strings.isNullOrEmpty(template.dependentVariable.min)
+					&& !Strings.isNullOrEmpty(template.dependentVariable.max)) {
+
+				try {
+					double min = Double.parseDouble(template.dependentVariable.min);
+					double max = Double.parseDouble(template.dependentVariable.max);
+					LimitsConstraint lc = new LimitsConstraint(template.dependentVariable.name.replaceAll("\\.", "\\_"),
+							min, max);
+					if (lc.getConstraint() != null) {
+						model.addConstraint(lc.getConstraint());
+					}
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+
+			}
 		}
 
 		// Adds independent parameters
 		for (Variable v : template.independentVariables) {
-			String var = v.name;
-			Parameter param = model.createParameter(PMFUtil.createId(var));
-			param.setName(var);
+			// String var = v.name;
+			// Parameter param = model.createParameter(PMFUtil.createId(var));
+			// param.setName(var);
+			if (Strings.isNullOrEmpty(v.name))
+				continue;
 
-			switch (v.type) {
-			case integer:
-				param.setValue(Double.valueOf(v.value).intValue());
-				break;
-			case numeric:
-				param.setValue(Double.parseDouble(v.value));
-				break;
-			case array:
-				// TODO: Add array
+			Parameter param = model.createParameter(PMFUtil.createId(v.name));
+			param.setName(v.name);
+
+			// Write value if v.type and v.value are not null
+			if (v.type != null && !Strings.isNullOrEmpty(v.value)) {
+				switch (v.type) {
+				case integer:
+					param.setValue(Double.valueOf(v.value).intValue());
+					break;
+				case numeric:
+					param.setValue(Double.parseDouble(v.value));
+					break;
+				case array:
+					// TODO: Add array
+					try {
+						param.setValue(0);
+						addArrayToParameter(param, v.value, v.name);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+
+					break;
+				case character:
+					// TODO: Add character
+					break;
+				}
+			}
+
+			// Write unit if v.unit is not null
+			if (!Strings.isNullOrEmpty(v.unit)) {
 				try {
-					param.setValue(0);
-					addArrayToParameter(param, v.value, v.name);
-				} catch (ParseException e) {
+					param.setUnits(PMFUtil.createId(v.unit));
+				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				}
-
-				break;
-			case character:
-				// TODO: Add character
-				break;
 			}
 
-			try {
-				param.setUnits(PMFUtil.createId(v.unit));
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				double min = Double.parseDouble(v.min);
-				double max = Double.parseDouble(v.max);
-				LimitsConstraint lc = new LimitsConstraint(param.getId(), min, max);
-				if (lc.getConstraint() != null) {
-					model.addConstraint(lc.getConstraint());
+			// Write min and max values if not null
+			if (!Strings.isNullOrEmpty(v.min) && !Strings.isNullOrEmpty(v.max)) {
+				try {
+					double min = Double.parseDouble(v.min);
+					double max = Double.parseDouble(v.max);
+					LimitsConstraint lc = new LimitsConstraint(param.getId(), min, max);
+					if (lc.getConstraint() != null) {
+						model.addConstraint(lc.getConstraint());
+					}
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
 				}
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
 			}
 		}
 
 		// Add rule
-		AssignmentRule rule = new AssignmentRule(3, 1);
-		rule.setVariable(depParam.getId());
-		ModelClass modelClass = template.subject == null ? ModelClass.UNKNOWN : template.subject;
-		rule.setAnnotation(new RuleAnnotation(modelClass).annotation);
-		model.addRule(rule);
+		if (model.getNumParameters() > 0 && !Strings.isNullOrEmpty(model.getParameter(0).getId())) {
+			AssignmentRule rule = new AssignmentRule(3, 1);
+			// Assigns the id of the dependent parameter which happens to be the
+			// first parameter of the model
+			rule.setVariable(model.getParameter(0).getId());
+
+			ModelClass modelClass = template.subject == null ? ModelClass.UNKNOWN : template.subject;
+			rule.setAnnotation(new RuleAnnotation(modelClass).annotation);
+			model.addRule(rule);
+		}
 	}
 
 	private static void addArrayToParameter(Parameter parameter, String value, String var) throws ParseException {
