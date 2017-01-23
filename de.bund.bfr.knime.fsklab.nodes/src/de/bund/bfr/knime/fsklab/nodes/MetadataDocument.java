@@ -259,7 +259,6 @@ public class MetadataDocument {
 		FskMetaData template = new FskMetaData();
 
 		Model model = doc.getModel();
-		AssignmentRule rule = (AssignmentRule) model.getRule(0);
 
 		// caches limits
 		List<Limits> limits = model.getListOfConstraints().stream().map(LimitsConstraint::new)
@@ -298,7 +297,10 @@ public class MetadataDocument {
 		template.referenceDescription = annot.referenceDescription;
 		template.referenceDescriptionLink = annot.referenceDescriptionLink;
 
-		template.subject = new RuleAnnotation(rule.getAnnotation()).modelClass;
+		if (model.getNumRules() > 0) {
+			AssignmentRule rule = (AssignmentRule) model.getRule(0);
+			template.subject = new RuleAnnotation(rule.getAnnotation()).modelClass;
+		}
 
 		// model notes
 		if (model.isSetNotes()) {
@@ -311,7 +313,9 @@ public class MetadataDocument {
 		}
 
 		// dependent variable data
+		if (model.getNumRules() > 0)
 		{
+			AssignmentRule rule = (AssignmentRule) model.getRule(0);
 			String depId = rule.getVariable();
 
 			// Gets parameter for the dependent variable and sets it
@@ -320,9 +324,8 @@ public class MetadataDocument {
 			template.dependentVariable.type = DataType.numeric;
 
 			// Gets and sets dependent variable unit
-			String unitId = param.getUnits();
-			if (!unitId.equals("dimensionless")) {
-				UnitDefinition unitDef = model.getUnitDefinition(unitId);
+			if (param.isSetUnits() && !param.getUnits().equals("dimensionless")) {
+				UnitDefinition unitDef = model.getUnitDefinition(param.getUnits());
 				if (unitDef != null) {
 					template.dependentVariable.unit = unitDef.getName();
 				}
@@ -341,7 +344,9 @@ public class MetadataDocument {
 		}
 
 		// independent variable data
+		if (model.getNumRules() > 0)
 		{
+			AssignmentRule rule = (AssignmentRule) model.getRule(0);
 			String depId = rule.getVariable();
 
 			List<Parameter> indepParams = model.getListOfParameters().filterList(new Filter() {
@@ -360,10 +365,9 @@ public class MetadataDocument {
 				variable.name = param.getName().trim();
 
 				// unit
-				String unitId = param.getUnits();
 				variable.unit = "";
-				if (!unitId.equals("dimensionless")) {
-					UnitDefinition unitDef = model.getUnitDefinition(unitId);
+				if (param.isSetUnits() && !param.getUnits().equals("dimensionless")) {
+					UnitDefinition unitDef = model.getUnitDefinition(param.getUnits());
 					if (unitDef != null) {
 						variable.unit = unitDef.getName();
 					}
