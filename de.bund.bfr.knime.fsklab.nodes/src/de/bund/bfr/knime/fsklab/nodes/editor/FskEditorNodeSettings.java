@@ -1,72 +1,85 @@
 package de.bund.bfr.knime.fsklab.nodes.editor;
 
-import java.util.Random;
-
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 class FskEditorNodeSettings {
 	
-	SettingsModelInteger objectNumber = new SettingsModelInteger("objectNum", random.nextInt());
-	SettingsModelString modelScript = new SettingsModelString("model script", "");
-	SettingsModelString paramScript = new SettingsModelString("parameters script", "");
-	SettingsModelString vizScript = new SettingsModelString("visualization script", "");
+	SettingsModelString originalModelScript;
+	SettingsModelString originalParametersScript;
+	SettingsModelString originalVisualizationScript;
 	
-	private static final Random random = new Random();
+	SettingsModelString modifiedModelScript;
+	SettingsModelString modifiedParametersScript;
+	SettingsModelString modifiedVisualizationScript;
+
+	FskEditorNodeSettings() {
+		originalModelScript = new SettingsModelString("originalModelScript", "");
+		originalParametersScript = new SettingsModelString("originalParametersScript", "");
+		originalVisualizationScript = new SettingsModelString("originalVisualizationScript", "");
+		
+		modifiedModelScript = new SettingsModelString("modifiedModelScript", "");
+		modifiedParametersScript = new SettingsModelString("modifiedParametersScript", "");
+		modifiedVisualizationScript = new SettingsModelString("modifiedVisualizationScript", "");
+	}
 	
 	void saveSettingsTo(final NodeSettingsWO settings) {
-		objectNumber.saveSettingsTo(settings);
-		modelScript.saveSettingsTo(settings);
-		paramScript.saveSettingsTo(settings);
-		vizScript.saveSettingsTo(settings);
+		originalModelScript.saveSettingsTo(settings);
+		originalParametersScript.saveSettingsTo(settings);
+		originalVisualizationScript.saveSettingsTo(settings);
+		
+		modifiedModelScript.saveSettingsTo(settings);
+		modifiedParametersScript.saveSettingsTo(settings);
+		modifiedVisualizationScript.saveSettingsTo(settings);
 	}
 	
-	void validateSettings(final NodeSettingsRO settings) {
-		try {
-			objectNumber.validateSettings(settings);
-		} catch (InvalidSettingsException e) {
-			objectNumber.setIntValue(random.nextInt());
-		}
-		try {
-			modelScript.validateSettings(settings);
-		} catch (InvalidSettingsException e) {
-			modelScript.setStringValue("");
-		}
-		try {
-			paramScript.validateSettings(settings);
-		} catch (InvalidSettingsException e) {
-			paramScript.setStringValue("");
-		}
-		try {
-			vizScript.validateSettings(settings);
-		} catch (InvalidSettingsException e) {
-			vizScript.setStringValue("");
-		}
+	void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
+		originalModelScript.validateSettings(settings);
+		originalParametersScript.validateSettings(settings);
+		originalVisualizationScript.validateSettings(settings);
+		
+		modifiedModelScript.validateSettings(settings);
+		modifiedParametersScript.validateSettings(settings);
+		modifiedVisualizationScript.validateSettings(settings);
 	}
 	
-	void loadValidatedSettingsFrom(final NodeSettingsRO settings) {
+	void loadValidatedSettingsFrom(final NodeSettingsRO settings)  {
 		try {
-			objectNumber.loadSettingsFrom(settings);
+			originalModelScript.loadSettingsFrom(settings);
 		} catch (InvalidSettingsException e) {
-			objectNumber.setIntValue(random.nextInt());
+			originalModelScript.setStringValue("");
 		}
+		
 		try {
-			modelScript.loadSettingsFrom(settings);
+			originalParametersScript.loadSettingsFrom(settings);
 		} catch (InvalidSettingsException e) {
-			modelScript.setStringValue("");
+			originalParametersScript.setStringValue("");
 		}
+
 		try {
-			paramScript.loadSettingsFrom(settings);
+			originalVisualizationScript.loadSettingsFrom(settings);
 		} catch (InvalidSettingsException e) {
-			paramScript.setStringValue("");
+			originalVisualizationScript.setStringValue("");
 		}
+
 		try {
-			vizScript.loadSettingsFrom(settings);
+			modifiedModelScript.loadSettingsFrom(settings);
 		} catch (InvalidSettingsException e) {
-			vizScript.setStringValue("");
+			modifiedModelScript.setStringValue("");
+		}
+		
+		try {
+			modifiedParametersScript.loadSettingsFrom(settings);
+		} catch (InvalidSettingsException e) {
+			modifiedParametersScript.setStringValue("");
+		}
+
+		try {
+			modifiedVisualizationScript.loadSettingsFrom(settings);
+		} catch (InvalidSettingsException e) {
+			modifiedVisualizationScript.setStringValue("");
 		}
 	}
 }
