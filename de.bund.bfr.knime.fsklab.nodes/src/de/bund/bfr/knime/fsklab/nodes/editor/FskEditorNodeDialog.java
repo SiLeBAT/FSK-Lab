@@ -89,8 +89,8 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 	protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
 		// Get scripts from ScriptPanels
 		String modifiedModelScript = modelScriptPanel.getTextArea().getText();
-		String modifiedParametersScript = paramScriptPanel.getTextArea().getText().trim();
-		String modifiedVisualizationScript = vizScriptPanel.getTextArea().getText().trim();
+		String modifiedParametersScript = paramScriptPanel.getTextArea().getText();
+		String modifiedVisualizationScript = vizScriptPanel.getTextArea().getText();
 		
 		// Trim scripts if not empty
 		if (!Strings.isNullOrEmpty(modifiedModelScript)) {
