@@ -14,6 +14,9 @@
 			also used in the KNIME web server.
 		</intro>
 	</fullDescription>
+	<interactiveView name="FSK Editor JS">
+		JavaScript view to modify scripts.
+	</interactiveView>
 	<ports>
 		<inPort name="FSK object" index="0">FSK object</inPort>
 		<outPort name="FSK object" index="0">FSK object</outPort>
