@@ -42,9 +42,9 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 
 	// Update the scripts in the ScriptPanels
 	private void updatePanels() {
-		modelScriptPanel.getTextArea().setText(settings.modifiedModelScript.getStringValue());
-		paramScriptPanel.getTextArea().setText(settings.modifiedParametersScript.getStringValue());
-		vizScriptPanel.getTextArea().setText(settings.modifiedVisualizationScript.getStringValue());
+		modelScriptPanel.getTextArea().setText(settings.modifiedModelScript);
+		paramScriptPanel.getTextArea().setText(settings.modifiedParametersScript);
+		vizScriptPanel.getTextArea().setText(settings.modifiedVisualizationScript);
 	}
 
 	// --- settings methods ---
@@ -52,27 +52,31 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 	@Override
 	protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] input) throws NotConfigurableException {
 		FskEditorNodeSettings editorSettings = new FskEditorNodeSettings();
-		editorSettings.loadValidatedSettingsFrom(settings);
+		try {
+			editorSettings.loadSettings(settings);
+		} catch (InvalidSettingsException e) {
+			throw new NotConfigurableException(e.getMessage(), e.getCause());
+		}
 
 		FskPortObject inObj = (FskPortObject) input[0];
 
 		// if input model has not changed (the original scripts stored in
 		// settings match the input model)
-		if (Objects.equal(editorSettings.originalModelScript.getStringValue(), inObj.model)
-				&& Objects.equal(editorSettings.originalParametersScript.getStringValue(), inObj.param)
-				&& Objects.equal(editorSettings.originalVisualizationScript.getStringValue(), inObj.viz)) {
+		if (Objects.equal(editorSettings.originalModelScript, inObj.model)
+				&& Objects.equal(editorSettings.originalParametersScript, inObj.param)
+				&& Objects.equal(editorSettings.originalVisualizationScript, inObj.viz)) {
 			// Updates settings
 			this.settings = editorSettings;
 
 		} else {
 			// Discard settings and replace them with input model
-			this.settings.originalModelScript.setStringValue(inObj.model);
-			this.settings.originalParametersScript.setStringValue(inObj.param);
-			this.settings.originalVisualizationScript.setStringValue(inObj.viz);
+			this.settings.originalModelScript = inObj.model;
+			this.settings.originalParametersScript = inObj.param;
+			this.settings.originalVisualizationScript = inObj.viz;
 
-			this.settings.modifiedModelScript.setStringValue(inObj.model);
-			this.settings.modifiedParametersScript.setStringValue(inObj.param);
-			this.settings.modifiedVisualizationScript.setStringValue(inObj.viz);
+			this.settings.modifiedModelScript = inObj.model;
+			this.settings.modifiedParametersScript = inObj.param;
+			this.settings.modifiedVisualizationScript = inObj.viz;
 		}
 		
 		updatePanels();
@@ -81,32 +85,32 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 	/** Loads settings from saved settings. */
 	@Override
 	protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs) throws NotConfigurableException {
-		this.settings.loadValidatedSettingsFrom(settings);
+		try {
+			this.settings.loadSettings(settings);
+		} catch (InvalidSettingsException e) {
+			throw new NotConfigurableException(e.getMessage(), e.getCause());
+		}
 		updatePanels();
 	}
 
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-		// Get scripts from ScriptPanels
-		String modifiedModelScript = modelScriptPanel.getTextArea().getText();
-		String modifiedParametersScript = paramScriptPanel.getTextArea().getText();
-		String modifiedVisualizationScript = vizScriptPanel.getTextArea().getText();
-		
-		// Trim scripts if not empty
-		if (!Strings.isNullOrEmpty(modifiedModelScript)) {
-			modifiedModelScript = modifiedModelScript.trim();
-		}
-		if (!Strings.isNullOrEmpty(modifiedParametersScript)) {
-			modifiedParametersScript = modifiedParametersScript.trim();
-		}
-		if (!Strings.isNullOrEmpty(modifiedVisualizationScript)) {
-			modifiedVisualizationScript = modifiedVisualizationScript.trim();
-		}
-		
 		// Save modified scripts to settings
-		this.settings.modifiedModelScript.setStringValue(modifiedModelScript);
-		this.settings.modifiedParametersScript.setStringValue(modifiedParametersScript);
-		this.settings.modifiedVisualizationScript.setStringValue(modifiedVisualizationScript);
-		this.settings.saveSettingsTo(settings);
+		this.settings.modifiedModelScript = modelScriptPanel.getTextArea().getText();
+		this.settings.modifiedParametersScript = paramScriptPanel.getTextArea().getText();
+		this.settings.modifiedVisualizationScript = vizScriptPanel.getTextArea().getText();
+		
+		// Trim non-empty scripts
+		if (!Strings.isNullOrEmpty(this.settings.modifiedModelScript)) {
+			this.settings.modifiedModelScript = this.settings.modifiedModelScript.trim();
+		}
+		if (!Strings.isNullOrEmpty(this.settings.modifiedParametersScript)) {
+			this.settings.modifiedParametersScript = this.settings.modifiedParametersScript.trim();
+		}
+		if (!Strings.isNullOrEmpty(this.settings.modifiedVisualizationScript)) {
+			this.settings.modifiedVisualizationScript = this.settings.modifiedVisualizationScript.trim();
+		}
+		
+		this.settings.saveSettings(settings);
 	}
 }

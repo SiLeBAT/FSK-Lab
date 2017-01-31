@@ -34,19 +34,19 @@ public class FskEditorNodeModel extends NoInternalsModel {
 	/** {@inheritDoc} */
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		this.settings.loadValidatedSettingsFrom(settings);
+		this.settings.loadSettings(settings);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		this.settings.validateSettings(settings);
+		(new FskEditorNodeSettings()).loadSettings(settings);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
-		this.settings.saveSettingsTo(settings);
+		this.settings.saveSettings(settings);
 	}
 
 	// --- other methods ---
@@ -66,21 +66,21 @@ public class FskEditorNodeModel extends NoInternalsModel {
 
 			// if input mode has not changed (the original script stored in
 			// settings match the input model)
-			if (Objects.equal(settings.originalModelScript.getStringValue(), inObj.model)
-					&& Objects.equal(settings.originalParametersScript.getStringValue(), inObj.param)
-					&& Objects.equal(settings.originalVisualizationScript.getStringValue(), inObj.viz)) {
+			if (Objects.equal(settings.originalModelScript, inObj.model)
+					&& Objects.equal(settings.originalParametersScript, inObj.param)
+					&& Objects.equal(settings.originalVisualizationScript, inObj.viz)) {
 				outObj = inObj;
-				outObj.model = settings.modifiedModelScript.getStringValue();
-				outObj.param = settings.modifiedParametersScript.getStringValue();
-				outObj.viz = settings.modifiedVisualizationScript.getStringValue();
+				outObj.model = settings.modifiedModelScript;
+				outObj.param = settings.modifiedParametersScript;
+				outObj.viz = settings.modifiedVisualizationScript;
 			} else {
-				settings.originalModelScript.setStringValue(inObj.model);
-				settings.originalParametersScript.setStringValue(inObj.param);
-				settings.originalVisualizationScript.setStringValue(inObj.viz);
+				settings.originalModelScript = inObj.model;
+				settings.originalParametersScript = inObj.param;
+				settings.originalVisualizationScript = inObj.viz;
 				
-				settings.modifiedModelScript.setStringValue(inObj.model);
-				settings.modifiedParametersScript.setStringValue(inObj.param);
-				settings.modifiedVisualizationScript.setStringValue(inObj.viz);
+				settings.modifiedModelScript = inObj.model;
+				settings.modifiedParametersScript = inObj.param;
+				settings.modifiedVisualizationScript = inObj.viz;
 				
 				outObj = inObj;
 			}
@@ -89,9 +89,9 @@ public class FskEditorNodeModel extends NoInternalsModel {
 		// the UI
 		else {
 			outObj = new FskPortObject();
-			outObj.model = settings.modifiedModelScript.getStringValue();
-			outObj.param = settings.modifiedParametersScript.getStringValue();
-			outObj.viz = settings.modifiedVisualizationScript.getStringValue();
+			outObj.model = settings.modifiedModelScript;
+			outObj.param = settings.modifiedParametersScript;
+			outObj.viz = settings.modifiedVisualizationScript;
 		}
 
 		return new PortObject[] { outObj };
