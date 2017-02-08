@@ -6,11 +6,17 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.bfr.knime.fsklab.nodes.FskPlugin
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
-Export-Package: de.bund.bfr.fskml,
- de.bund.bfr.knime.fsklab.nodes,
+Export-Package: de.bund.bfr.fskml;uses:="org.sbml.jsbml,org.jdom2,de.unirostock.sems.cbarchive",
+ de.bund.bfr.knime.fsklab.nodes;
+  uses:="org.osgi.framework,
+   org.sbml.jsbml,
+   de.bund.bfr.pmfml,
+   org.knime.core.data,
+   org.eclipse.ui.plugin",
  de.bund.bfr.pmfml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.apache.poi.ooxml,
+ com.fasterxml.jackson.core.jackson-databind,
  org.eclipse.core.runtime,
  org.knime.base,
  org.knime.js.core,
@@ -23,15 +29,15 @@ Require-Bundle: org.apache.poi.ooxml,
  org.knime.ext.r.type;bundle-version="3.1.0",
  com.fifesoft.rsyntaxtextarea,
  com.fasterxml.jackson.core.jackson-annotations,
- com.fasterxml.jackson.core.jackson-core,
- com.fasterxml.jackson.core.jackson-databind
-Bundle-ClassPath: library.jar,
- libs/CombineArchive-1.1.jar,
+ com.fasterxml.jackson.core.jackson-core
+Bundle-ClassPath: libs/CombineArchive-1.1.jar,
  libs/jdom-2.0.1.jar,
  libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar,
  libs/jsoup-1.9.2.jar,
  libs/fskml-1.0.2.jar,
  libs/pmfml-0.0.8.jar,
  libs/rengine-1.8.4.jar,
- libs/rserve-engine-1.8.4.jar
+ libs/rserve-engine-1.8.4.jar,
+ libs/ooxml-schemas-1.1.jar,
+ library.jar
 
