@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
@@ -119,7 +121,7 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	@Override
 	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
 			throws InvalidSettingsException, IOException {
-
+		try {
 		FskPortObject portObj = new FskPortObject();
 
 		// Reads model script
@@ -182,8 +184,17 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 				LOGGER.error(e.getMessage());
 			}
 		}
+		
 
 		return new PortObject[] { portObj };
+		} catch (Exception e) {
+			StringWriter thstack = new StringWriter();
+			
+			e.printStackTrace(new PrintWriter(thstack));
+			
+			NodeLogger.getLogger("Miguel's Logger").error(thstack.toString());
+			throw e;
+		}
 	}
 
 	/** {@inheritDoc} */
