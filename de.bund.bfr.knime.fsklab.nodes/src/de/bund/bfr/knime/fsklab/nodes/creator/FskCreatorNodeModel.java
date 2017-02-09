@@ -19,9 +19,7 @@
 package de.bund.bfr.knime.fsklab.nodes.creator;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
@@ -71,7 +69,7 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 
 	/** {@inheritDoc} */
 	public FskCreatorNodeModel() {
-		super(null, new PortType[] { FskPortObject.TYPE});
+		super(null, new PortType[] { FskPortObject.TYPE });
 	}
 
 	/** {@inheritDoc} */
@@ -122,76 +120,78 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
 			throws InvalidSettingsException, IOException {
 		try {
-		FskPortObject portObj = new FskPortObject();
+			FskPortObject portObj = new FskPortObject();
 
-		// Reads model script
-		if (Strings.isNullOrEmpty(settings.modelScript.getStringValue())) {
-			throw new InvalidSettingsException("Model script is not provided");
-		}
-		RScript modelScript = readScript(settings.modelScript.getStringValue());
-		portObj.model = modelScript.getScript();
-
-		// Reads parameters script
-		if (Strings.isNullOrEmpty(settings.paramScript.getStringValue())) {
-			portObj.param = "";
-		} else {
-			portObj.param = readScript(settings.paramScript.getStringValue()).getScript();
-		}
-
-		// Reads visualization script
-		if (!Strings.isNullOrEmpty(settings.vizScript.getStringValue())) {
-			portObj.viz = readScript(settings.vizScript.getStringValue()).getScript();
-		} else {
-			portObj.viz = "";
-		}
-
-		// Reads model meta data
-		if (!Strings.isNullOrEmpty(settings.metaDataDoc.getStringValue())) {
-			File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(settings.metaDataDoc.getStringValue()));
-			try (InputStream fis = new FileInputStream(metaDataFile)) {
-				// Finds the workbook instance for the XLSX file
-				XSSFWorkbook workbook = new XSSFWorkbook(fis);
-				portObj.template = SpreadsheetHandler.processSpreadsheet(workbook.getSheetAt(0));
+			// Reads model script
+			if (Strings.isNullOrEmpty(settings.modelScript.getStringValue())) {
+				throw new InvalidSettingsException("Model script is not provided");
 			}
-			portObj.template.software = FskMetaData.Software.R;
+			RScript modelScript = readScript(settings.modelScript.getStringValue());
+			portObj.model = modelScript.getScript();
 
-			portObj.template.dependentVariable.type = Util.getValueType(portObj.template.dependentVariable.name);
-			// Set variable values and types from parameters script
-			{
-				Map<String, String> vars = getVariablesFromAssignments(portObj.param);
-				for (Variable v : portObj.template.independentVariables) {
-					if (vars.containsKey(v.name.trim())) {
-						v.value = vars.get(v.name.trim());
-						v.type = Util.getValueType(v.value);
+			// Reads parameters script
+			if (Strings.isNullOrEmpty(settings.paramScript.getStringValue())) {
+				portObj.param = "";
+			} else {
+				portObj.param = readScript(settings.paramScript.getStringValue()).getScript();
+			}
+
+			// Reads visualization script
+			if (!Strings.isNullOrEmpty(settings.vizScript.getStringValue())) {
+				portObj.viz = readScript(settings.vizScript.getStringValue()).getScript();
+			} else {
+				portObj.viz = "";
+			}
+
+			// Reads model meta data
+			if (!Strings.isNullOrEmpty(settings.metaDataDoc.getStringValue())) {
+				File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(settings.metaDataDoc.getStringValue()));
+				try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
+					portObj.template = SpreadsheetHandler.processSpreadsheet(workbook.getSheetAt(0));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				portObj.template.software = FskMetaData.Software.R;
+
+				if (!Strings.isNullOrEmpty(portObj.template.dependentVariable.value)) {
+					portObj.template.dependentVariable.type = Util
+							.getValueType(portObj.template.dependentVariable.value);
+				}
+				// Set variable values and types from parameters script
+				{
+					Map<String, String> vars = getVariablesFromAssignments(portObj.param);
+					for (Variable v : portObj.template.independentVariables) {
+						if (vars.containsKey(v.name.trim())) {
+							v.value = vars.get(v.name.trim());
+							v.type = Util.getValueType(v.value);
+						}
 					}
 				}
 			}
-		}
 
-		if (!modelScript.getLibraries().isEmpty()) {
-			try {
-				// Install missing libraries
-				LibRegistry libReg = LibRegistry.instance();
-				List<String> missingLibs = modelScript.getLibraries().stream().filter(lib -> !libReg.isInstalled(lib))
-						.collect(Collectors.toList());
-				if (!missingLibs.isEmpty()) {
-					libReg.installLibs(missingLibs);
+			if (!modelScript.getLibraries().isEmpty()) {
+				try {
+					// Install missing libraries
+					LibRegistry libReg = LibRegistry.instance();
+					List<String> missingLibs = modelScript.getLibraries().stream()
+							.filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
+					if (!missingLibs.isEmpty()) {
+						libReg.installLibs(missingLibs);
+					}
+
+					Set<Path> libPaths = libReg.getPaths(modelScript.getLibraries());
+					libPaths.forEach(l -> portObj.libs.add(l.toFile()));
+				} catch (RException | REXPMismatchException e) {
+					LOGGER.error(e.getMessage());
 				}
-
-				Set<Path> libPaths = libReg.getPaths(modelScript.getLibraries());
-				libPaths.forEach(l -> portObj.libs.add(l.toFile()));
-			} catch (RException | REXPMismatchException e) {
-				LOGGER.error(e.getMessage());
 			}
-		}
-		
 
-		return new PortObject[] { portObj };
+			return new PortObject[] { portObj };
 		} catch (Exception e) {
 			StringWriter thstack = new StringWriter();
-			
+
 			e.printStackTrace(new PrintWriter(thstack));
-			
+
 			NodeLogger.getLogger("Miguel's Logger").error(thstack.toString());
 			throw e;
 		}
@@ -215,15 +215,17 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	 *             if the file cannot be read.
 	 */
 	private static RScript readScript(final String path) throws InvalidSettingsException, IOException {
+		String trimmedPath = Strings.emptyToNull(path.trim());
+
 		// path is not null or whitespace, thus try to read it
 		try {
 			// may throw IOException
-			File fScript = FileUtil.getFileFromURL(FileUtil.toURL(path));
+			File fScript = FileUtil.getFileFromURL(FileUtil.toURL(trimmedPath));
 			RScript script = new RScript(fScript);
 			return script;
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
-			throw new IOException(path + ": cannot be read");
+			throw new IOException(trimmedPath + ": cannot be read");
 		}
 	}
 

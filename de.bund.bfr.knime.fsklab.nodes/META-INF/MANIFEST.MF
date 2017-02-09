@@ -15,8 +15,7 @@ Export-Package: de.bund.bfr.fskml;uses:="org.sbml.jsbml,org.jdom2,de.unirostock.
    org.eclipse.ui.plugin",
  de.bund.bfr.pmfml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.apache.poi.ooxml,
- com.fasterxml.jackson.core.jackson-databind,
+Require-Bundle: com.fasterxml.jackson.core.jackson-databind,
  org.eclipse.core.runtime,
  org.knime.base,
  org.knime.js.core,
@@ -38,6 +37,12 @@ Bundle-ClassPath: libs/CombineArchive-1.1.jar,
  libs/pmfml-0.0.8.jar,
  libs/rengine-1.8.4.jar,
  libs/rserve-engine-1.8.4.jar,
- libs/ooxml-schemas-1.1.jar,
- library.jar
+ library.jar,
+ poi-lib/poi-3.15.jar,
+ poi-lib/poi-ooxml-3.15.jar,
+ poi-lib/poi-ooxml-schemas-3.15.jar,
+ poi-lib/xmlbeans-2.6.0.jar,
+ poi-lib/commons-codec-1.10.jar,
+ poi-lib/commons-collections4-4.1.jar,
+ poi-lib/commons-logging-1.2.jar
 
