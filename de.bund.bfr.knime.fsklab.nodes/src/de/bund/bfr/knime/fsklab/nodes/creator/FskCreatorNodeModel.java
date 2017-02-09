@@ -19,6 +19,7 @@
 package de.bund.bfr.knime.fsklab.nodes.creator;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -144,7 +145,8 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 
 		// Reads model meta data
 		if (!Strings.isNullOrEmpty(settings.metaDataDoc.getStringValue())) {
-			try (InputStream fis = FileUtil.openInputStream(settings.metaDataDoc.getStringValue())) {
+			File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(settings.metaDataDoc.getStringValue()));
+			try (InputStream fis = new FileInputStream(metaDataFile)) {
 				// Finds the workbook instance for the XLSX file
 				XSSFWorkbook workbook = new XSSFWorkbook(fis);
 				portObj.template = SpreadsheetHandler.processSpreadsheet(workbook.getSheetAt(0));
@@ -202,18 +204,15 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	 *             if the file cannot be read.
 	 */
 	private static RScript readScript(final String path) throws InvalidSettingsException, IOException {
-
-		String trimmedPath = Strings.emptyToNull(path.trim());
-
 		// path is not null or whitespace, thus try to read it
 		try {
 			// may throw IOException
-			File fScript = FileUtil.getFileFromURL(FileUtil.toURL(trimmedPath));
+			File fScript = FileUtil.getFileFromURL(FileUtil.toURL(path));
 			RScript script = new RScript(fScript);
 			return script;
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
-			throw new IOException(trimmedPath + ": cannot be read");
+			throw new IOException(path + ": cannot be read");
 		}
 	}
 
