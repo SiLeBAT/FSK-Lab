@@ -28,7 +28,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-databind,
  org.knime.ext.r.type;bundle-version="3.1.0",
  com.fifesoft.rsyntaxtextarea,
  com.fasterxml.jackson.core.jackson-annotations,
- com.fasterxml.jackson.core.jackson-core
+ com.fasterxml.jackson.core.jackson-core,
+ org.apache.servicemix.bundles.poi
 Bundle-ClassPath: libs/CombineArchive-1.1.jar,
  libs/jdom-2.0.1.jar,
  libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar,
