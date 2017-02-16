@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="de.bund.bfr.knime.fsklab.nodes.test/src"/>
+	<classpathentry kind="src" path="de.bund.bfr.knime.fsklab.nodes/src"/>
+	<classpathentry kind="src" path="de.bund.bfr.knime.fsklab.testflows/src"/>
+	<classpathentry kind="src" path="de.bund.bfr.knime.fsklab.update.p2.deploy/src"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.nodes/libs/CombineArchive-1.1.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.nodes/libs/fskml-1.0.2.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.nodes/libs/jdom-2.0.1.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.nodes/libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.nodes/libs/jsoup-1.9.2.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.nodes/libs/pmfml-0.0.8.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.nodes/libs/rengine-1.8.4.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.nodes/libs/rserve-engine-1.8.4.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/appengine-api-1.0-sdk-1.3.8.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/commons-beanutils-1.8.0.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/ezmorph-1.0.6.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/http-builder-0.7.2-sources.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/http-builder-0.7.2.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/httpclient-4.2.1.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/httpcore-4.2.1.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/json-lib-2.3-jdk15.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/nekohtml-1.9.16.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/signpost-commonshttp4-1.2.1.1.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/signpost-core-1.2.1.1.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/xercesImpl-2.9.1.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/xml-apis-1.3.04.jar"/>
+	<classpathentry kind="lib" path="de.bund.bfr.knime.fsklab.update.p2.deploy/lib/xml-resolver-1.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="de.bund.bfr.knime.fsklab.nodes/bin"/>
+</classpath>
