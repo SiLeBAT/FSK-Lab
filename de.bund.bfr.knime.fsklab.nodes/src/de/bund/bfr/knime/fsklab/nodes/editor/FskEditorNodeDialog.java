@@ -18,7 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.editor;
 
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -27,6 +26,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Date;
 
+import javax.swing.Box;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -180,316 +180,150 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 		private JCheckBox hasDataComp;
 
 		public MetaDataPanel() {
-			GridLayout layout = new GridLayout(21, 2);
-			layout.setHgap(5);
-			layout.setVgap(5);
-			setLayout(layout);
 
-			// Model name
-			_createModelNameComp();
-			addLabelAndComp(new JLabel("Model name:"), modelNameComp);
-
-			// Model id
-			_createModelIdComp();
-			addLabelAndComp(new JLabel("Model id:"), modelIdComp);
-
-			// Model link
-			_createModelLinkComp();
-			addLabelAndComp(new JLabel("Model link:"), modelLinkComp);
-
-			// Organism
-			_createOrganismComp();
-			addLabelAndComp(new JLabel("Organism:"), organismComp);
-
-			// Organism details
-			_createOrganismDetailsComp();
-			addLabelAndComp(new JLabel("Organism details:"), organismDetailsComp);
-
-			// Matrix
-			_createMatrixComp();
-			addLabelAndComp(new JLabel("Matrix:"), matrixComp);
-
-			// Matrix details
-			_createMatrixDetailsComp();
-			addLabelAndComp(new JLabel("Matrix details:"), matrixDetailsComp);
-
-			// Model creator
-			_createCreatorComp();
-			addLabelAndComp(new JLabel("Creator:"), creatorComp);
-
-			// Family name
-			_createFamilyNameComp();
-			addLabelAndComp(new JLabel("Family name:"), familyNameComp);
-
-			// Contact
-			_createContactComp();
-			addLabelAndComp(new JLabel("Contact:"), contactComp);
-
-			// Software
-			_createSoftwareComp();
-			addLabelAndComp(new JLabel("Software:"), softwareComp);
-			
-			// Reference description
-			_createReferenceDescriptionComp();
-			addLabelAndComp(new JLabel("Reference description:"), referenceDescriptionComp);
-			
-			// Reference description link
-			_createReferenceDescriptionLinkComp();
-			addLabelAndComp(new JLabel("Reference description link:"), referenceDescriptionLinkComp);
-			
-			// Created date
-			_createCreatedDateComp();
-			addLabelAndComp(new JLabel("Created date:"), createdDateComp);
-			
-			// Modified date
-			_createModifiedDateComp();
-			addLabelAndComp(new JLabel("Modified date:"), modifiedDateComp);
-			
-			// Notes
-			_createNotesComp();
-			addLabelAndComp(new JLabel("Notes:"), notesComp);
-			
-			// Curated
-			_createCuratedComp();
-			addLabelAndComp(new JLabel("Is curated?:"), curatedComp);
-			
-			// Model type
-			_createTypeComp();
-			addLabelAndComp(new JLabel("Model type:"), typeComp);
-
-			// Model subject
-			_createSubjectComp();
-			addLabelAndComp(new JLabel("Model subject:"), subjectComp);
-			
-			// Food process
-			_createFoodProcessComp();
-			addLabelAndComp(new JLabel("Food process:"), foodProcessComp);
-			
-			// Has data
-			_createHasDataComp();
-			addLabelAndComp(new JLabel("Has data:"), hasDataComp);
-		}
-
-		private void addLabelAndComp(JLabel label, JComponent comp) {
-			add(label);
-			add(comp);
-		}
-		
-		private void _createModelNameComp() {
-			modelNameComp = new JTextField();
-			modelNameComp.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.modelName = modelNameComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.modelName = modelNameComp.getText();
-				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
-			});
-		}
-		
-		private void _createModelIdComp() {
-			modelIdComp = new JTextField();
-			modelIdComp.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.modelId = modelIdComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.modelId = modelIdComp.getText();
-				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
-			});
-		}
-		
-		private void _createModelLinkComp() {
-			modelLinkComp = new JTextField();
-			modelLinkComp.getDocument().addDocumentListener(new DocumentListener() {
-				
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.modelLink = modelLinkComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.modelLink = modelLinkComp.getText();
-				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
-			});
-		}
-		
-		private void _createOrganismComp() {
-			organismComp = new JTextField();
-			organismComp.getDocument().addDocumentListener(new DocumentListener() {
-				
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.organism = organismComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.organism = organismComp.getText();
-				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
-			});
-		}
-		
-		private void _createOrganismDetailsComp() {
-			organismDetailsComp = new JTextField();
-			organismDetailsComp.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.organismDetails = organismDetailsComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.organismDetails = organismDetailsComp.getText();
-				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
-			});
-		}
-		
-		private void _createMatrixComp() {
-			matrixComp = new JTextField();
-			matrixComp.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.matrix = matrixComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.matrix = matrixComp.getText();
-				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
-			});
-		}
-		
-		private void _createMatrixDetailsComp() {
-			matrixDetailsComp = new JTextField();
-			matrixDetailsComp.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.matrixDetails = matrixDetailsComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.matrixDetails = matrixDetailsComp.getText();
-				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
-			});
-		}
-		
-		private void _createCreatorComp() {
-			creatorComp = new JTextField();
-			creatorComp.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.creator = creatorComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.creator = creatorComp.getText();
-				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
-			});
-		}
-		
-		private void _createFamilyNameComp() {
-			familyNameComp = new JTextField();
-			familyNameComp.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.familyName = familyNameComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.familyName = familyNameComp.getText();
-				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
-			});
-		}
-		
-		private void _createContactComp() {
-			contactComp = new JTextField();
-			contactComp.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.contact = contactComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.contact = contactComp.getText();
-				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
-			});
-		}
-		
-		private void _createSoftwareComp() {
+			// Create components
+			modelNameComp = new TextField();
+			modelIdComp = new TextField();
+			modelLinkComp = new TextField();
+			organismComp = new TextField();
+			organismDetailsComp = new TextField();
+			matrixComp = new TextField();
+			matrixDetailsComp = new TextField();
+			creatorComp = new TextField();
+			familyNameComp = new TextField();
+			contactComp = new TextField();
 			softwareComp = new JComboBox<>(Software.values());
+			referenceDescriptionComp = new TextField();
+			referenceDescriptionLinkComp = new TextField();
+			createdDateComp = new FixedJDateChooser();
+			modifiedDateComp = new FixedJDateChooser();
+			notesComp = new TextField();
+			curatedComp = new JCheckBox();
+			typeComp = new JComboBox<>(ModelType.values());
+			subjectComp = new JComboBox<>(ModelClass.values());
+			foodProcessComp = new TextField();
+			hasDataComp = new JCheckBox();
+
+			// Add listeners to components
+			modelNameComp.getDocument().addDocumentListener(new TextDocumentListener() {
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					settings.metaData.modelName = modelNameComp.getText();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					settings.metaData.modelName = modelNameComp.getText();
+				}
+			});
+			modelIdComp.getDocument().addDocumentListener(new TextDocumentListener() {
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					settings.metaData.modelId = modelIdComp.getText();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					settings.metaData.modelId = modelIdComp.getText();
+				}
+			});
+			modelLinkComp.getDocument().addDocumentListener(new TextDocumentListener() {
+				
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					settings.metaData.modelLink = modelLinkComp.getText();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					settings.metaData.modelLink = modelLinkComp.getText();
+				}
+			});
+			organismComp.getDocument().addDocumentListener(new TextDocumentListener() {
+				
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					settings.metaData.organism = organismComp.getText();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					settings.metaData.organism = organismComp.getText();
+				}
+			});
+			organismDetailsComp.getDocument().addDocumentListener(new TextDocumentListener() {
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					settings.metaData.organismDetails = organismDetailsComp.getText();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					settings.metaData.organismDetails = organismDetailsComp.getText();
+				}
+			});
+			matrixComp.getDocument().addDocumentListener(new TextDocumentListener() {
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					settings.metaData.matrix = matrixComp.getText();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					settings.metaData.matrix = matrixComp.getText();
+				}
+			});
+			matrixDetailsComp.getDocument().addDocumentListener(new TextDocumentListener() {
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					settings.metaData.matrixDetails = matrixDetailsComp.getText();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					settings.metaData.matrixDetails = matrixDetailsComp.getText();
+				}
+			});
+			creatorComp.getDocument().addDocumentListener(new TextDocumentListener() {
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					settings.metaData.creator = creatorComp.getText();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					settings.metaData.creator = creatorComp.getText();
+				}
+			});
+			familyNameComp.getDocument().addDocumentListener(new TextDocumentListener() {
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					settings.metaData.familyName = familyNameComp.getText();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					settings.metaData.familyName = familyNameComp.getText();
+				}
+			});
+			contactComp.getDocument().addDocumentListener(new TextDocumentListener() {
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					settings.metaData.contact = contactComp.getText();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					settings.metaData.contact = contactComp.getText();
+				}
+			});
 			softwareComp.addItemListener(new ItemListener() {
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 					settings.metaData.software = (Software)softwareComp.getSelectedItem();
 				}
 			});
-		}
-		
-		private void _createReferenceDescriptionComp() {
-			referenceDescriptionComp = new JTextField();
-			referenceDescriptionComp.getDocument().addDocumentListener(new DocumentListener() {
+			referenceDescriptionComp.getDocument().addDocumentListener(new TextDocumentListener() {
 				@Override
 				public void removeUpdate(DocumentEvent e) {
 					settings.metaData.referenceDescription = referenceDescriptionComp.getText();
@@ -499,17 +333,8 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 				public void insertUpdate(DocumentEvent e) {
 					settings.metaData.referenceDescription = referenceDescriptionComp.getText();
 				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
 			});
-		}
-
-		private void _createReferenceDescriptionLinkComp() {
-			referenceDescriptionLinkComp = new JTextField();
-			referenceDescriptionLinkComp.getDocument().addDocumentListener(new DocumentListener() {
+			referenceDescriptionLinkComp.getDocument().addDocumentListener(new TextDocumentListener() {
 				@Override
 				public void removeUpdate(DocumentEvent e) {
 					settings.metaData.referenceDescriptionLink = referenceDescriptionLinkComp.getText();
@@ -519,37 +344,20 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 				public void insertUpdate(DocumentEvent e) {
 					settings.metaData.referenceDescriptionLink = referenceDescriptionLinkComp.getText();
 				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
 			});
-		}
-		
-		private void _createCreatedDateComp() {
-			createdDateComp = new FixedJDateChooser();
 			createdDateComp.addPropertyChangeListener("date", new PropertyChangeListener() {
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					settings.metaData.createdDate = (Date) evt.getNewValue();
 				}
 			});
-		}
-
-		private void _createModifiedDateComp() {
-			modifiedDateComp = new FixedJDateChooser();
 			modifiedDateComp.addPropertyChangeListener("date", new PropertyChangeListener() {
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					settings.metaData.modifiedDate = (Date) evt.getNewValue();
 				}
 			});
-		}
-		
-		private void _createNotesComp() {
-			notesComp = new JTextField();
-			notesComp.getDocument().addDocumentListener(new DocumentListener() {
+			notesComp.getDocument().addDocumentListener(new TextDocumentListener() {
 				
 				@Override
 				public void removeUpdate(DocumentEvent e) {
@@ -560,47 +368,26 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 				public void insertUpdate(DocumentEvent e) {
 					settings.metaData.notes = notesComp.getText();
 				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
 			});
-		}
-		
-		private void _createCuratedComp() {
-			curatedComp = new JCheckBox();
 			curatedComp.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					settings.metaData.curated = curatedComp.isSelected();
 				}
 			});
-		}
-		
-		private void _createTypeComp() {
-			typeComp = new JComboBox<>(ModelType.values());
 			typeComp.addItemListener(new ItemListener() {
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 					settings.metaData.type = (ModelType)typeComp.getSelectedItem(); 
 				}
 			});
-		}
-		
-		private void _createSubjectComp() {
-			subjectComp = new JComboBox<>(ModelClass.values());
 			subjectComp.addItemListener(new ItemListener() {
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 					settings.metaData.subject = (ModelClass)subjectComp.getSelectedItem();
 				}
 			});
-		}
-		
-		private void _createFoodProcessComp() {
-			foodProcessComp = new JTextField();
-			foodProcessComp.getDocument().addDocumentListener(new DocumentListener() {
+			foodProcessComp.getDocument().addDocumentListener(new TextDocumentListener() {
 				@Override
 				public void removeUpdate(DocumentEvent e) {
 					settings.metaData.foodProcess = foodProcessComp.getText();
@@ -610,46 +397,156 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 				public void insertUpdate(DocumentEvent e) {
 					settings.metaData.foodProcess = foodProcessComp.getText();
 				}
-				
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					// Not fired by plain text documents
-				}
 			});
-		}
-
-		private void _createHasDataComp() {
-			hasDataComp = new JCheckBox();
 			hasDataComp.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					settings.metaData.hasData = hasDataComp.isSelected();
 				}
 			});
-		}
 
+			// Assemble components
+			Box vBox = Box.createVerticalBox();
+			vBox.add(createBoxForm("Model name:", modelNameComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Model id:", modelIdComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Model link:", modelLinkComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Organism:", organismComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Organism details:", organismDetailsComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Matrix:", matrixComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Matrix details:", matrixDetailsComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Creator:", creatorComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Family name:", familyNameComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Contact:", contactComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Software:", softwareComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Reference description:", referenceDescriptionComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Reference description link:", referenceDescriptionLinkComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Created date:", createdDateComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Modified date:", modifiedDateComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Notes:", notesComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Is curated?:", curatedComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Model type:", typeComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Model subject:", subjectComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Food process:", foodProcessComp));
+			vBox.add(Box.createVerticalStrut(10));
+			vBox.add(createBoxForm("Has data:", hasDataComp));
+			add(vBox);
+		}
+		
 		void update() {
-			modelNameComp.setText(Strings.nullToEmpty(settings.metaData.modelName));
-			modelIdComp.setText(Strings.nullToEmpty(settings.metaData.modelId));
-			modelLinkComp.setText(Strings.nullToEmpty(settings.metaData.modelLink));
-			organismComp.setText(Strings.nullToEmpty(settings.metaData.organism));
-			organismDetailsComp.setText(Strings.nullToEmpty(settings.metaData.organismDetails));
-			matrixComp.setText(Strings.nullToEmpty(settings.metaData.matrix));
-			matrixDetailsComp.setText(Strings.nullToEmpty(settings.metaData.matrixDetails));
-			creatorComp.setText(Strings.nullToEmpty(settings.metaData.creator));
-			familyNameComp.setText(Strings.nullToEmpty(settings.metaData.familyName));
-			contactComp.setText(Strings.nullToEmpty(settings.metaData.contact));
-			softwareComp.setSelectedItem(settings.metaData.software);
-			referenceDescriptionComp.setText(settings.metaData.referenceDescription);
-			referenceDescriptionLinkComp.setText(settings.metaData.referenceDescriptionLink);
-			createdDateComp.setDate(settings.metaData.createdDate);
-			modifiedDateComp.setDate(settings.metaData.modifiedDate);
-			notesComp.setText(settings.metaData.notes);
-			curatedComp.setSelected(settings.metaData.curated);
-			typeComp.setSelectedItem(settings.metaData.type);
-			subjectComp.setSelectedItem(settings.metaData.subject);
-			foodProcessComp.setText(Strings.nullToEmpty(settings.metaData.foodProcess));
-			hasDataComp.setSelected(settings.metaData.hasData);
+			if (settings.metaData.modelName != null && !settings.metaData.modelName.equals(modelNameComp.getText())) {
+				modelNameComp.setText(settings.metaData.modelName);
+			}
+			
+			if (settings.metaData.modelId != null && !settings.metaData.modelId.equals(modelIdComp.getText())) {
+				modelIdComp.setText(settings.metaData.modelId);
+			}
+			
+			if (settings.metaData.modelLink != null && !settings.metaData.modelLink.equals(modelLinkComp.getText())) {
+				modelLinkComp.setText(settings.metaData.modelLink);
+			}
+			
+			if (settings.metaData.organism != null && !settings.metaData.organism.equals(organismComp.getText())) {
+				organismComp.setText(settings.metaData.organism);
+			}
+			
+			if (settings.metaData.organismDetails != null && !settings.metaData.organismDetails.equals(organismDetailsComp.getText())) {
+				organismDetailsComp.setText(settings.metaData.organismDetails);
+			}
+			
+			if (settings.metaData.matrix != null && !settings.metaData.matrix.equals(matrixComp.getText())) {
+				matrixComp.setText(settings.metaData.matrix);
+			}
+			
+			if (settings.metaData.creator != null && !settings.metaData.creator.equals(creatorComp.getText())) {
+				creatorComp.setText(settings.metaData.creator);
+			}
+			
+			if (settings.metaData.familyName != null && !settings.metaData.familyName.equals(familyNameComp.getText())) {
+				familyNameComp.setText(settings.metaData.familyName);
+			}
+			
+			if (settings.metaData.contact != null && !settings.metaData.contact.equals(contactComp.getText())) {
+				contactComp.setText(settings.metaData.contact);
+			}
+			
+			if (settings.metaData.software != null && settings.metaData.software != (Software)softwareComp.getSelectedItem()) {
+				softwareComp.setSelectedItem(settings.metaData.software);
+			}
+			
+			if (settings.metaData.referenceDescription != null && !settings.metaData.referenceDescription.equals(referenceDescriptionComp.getText())) {
+				referenceDescriptionComp.setText(settings.metaData.referenceDescription);
+			}
+			
+			if (settings.metaData.referenceDescriptionLink != null && !settings.metaData.referenceDescriptionLink.equals(referenceDescriptionLinkComp.getText())) {
+				referenceDescriptionLinkComp.setText(settings.metaData.referenceDescriptionLink);
+			}
+			
+			if (settings.metaData.createdDate != null && !settings.metaData.createdDate.equals(createdDateComp.getDate())) {
+				createdDateComp.setDate(settings.metaData.createdDate);
+			}
+			
+			if (settings.metaData.modifiedDate != null && !settings.metaData.modifiedDate.equals(modifiedDateComp.getDate())) {
+				modifiedDateComp.setDate(settings.metaData.modifiedDate);
+			}
+			
+			if (settings.metaData.notes != null && !settings.metaData.notes.equals(notesComp.getText())) {
+				notesComp.setText(settings.metaData.notes);
+			}
+			
+			if (settings.metaData.curated != curatedComp.isSelected()) {
+				curatedComp.setSelected(settings.metaData.curated);
+			}
+			
+			if (settings.metaData.type != null && settings.metaData.type != (ModelType) typeComp.getSelectedItem()) {
+				typeComp.setSelectedItem((ModelType)typeComp.getSelectedItem());
+			}
+			
+			if (settings.metaData.subject != null && settings.metaData.subject != (ModelClass) subjectComp.getSelectedItem()) {
+				subjectComp.setSelectedItem((ModelClass)subjectComp.getSelectedItem());
+			}
+			
+			if (settings.metaData.foodProcess != null && !settings.metaData.foodProcess.equals(foodProcessComp.getText())) {
+				foodProcessComp.setText(settings.metaData.foodProcess);
+			}
+			
+			if (settings.metaData.hasData != hasDataComp.isSelected()) {
+				hasDataComp.setSelected(settings.metaData.hasData);
+			}
+		}
+	}
+	
+	abstract class TextDocumentListener implements DocumentListener {
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			// Not figred by plain text document
+		}
+	}
+	
+	class TextField extends JTextField {
+		private static final long serialVersionUID = -7509481457897120399L;
+
+		public TextField() {
+			super(50);
+			setHorizontalAlignment(JTextField.RIGHT);
 		}
 	}
 
@@ -666,5 +563,15 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 			// validate the dates
 			getDateEditor().setEnabled(false);
 		}
+	}
+	
+	/** Creates an horizontal box with a label and a form. */
+	private Box createBoxForm(final String label, final JComponent component) {
+		Box box = Box.createHorizontalBox();
+		box.add(new JLabel(label));
+		box.add(Box.createHorizontalStrut(10));
+		box.add(component);
+		
+		return box;
 	}
 }
