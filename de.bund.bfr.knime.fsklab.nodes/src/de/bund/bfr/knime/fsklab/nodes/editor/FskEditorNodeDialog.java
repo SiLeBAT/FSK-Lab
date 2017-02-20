@@ -537,7 +537,7 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 	abstract class TextDocumentListener implements DocumentListener {
 		@Override
 		public void changedUpdate(DocumentEvent e) {
-			// Not figred by plain text document
+			// Not fired by plain text document
 		}
 	}
 	

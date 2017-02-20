@@ -82,7 +82,7 @@ public class FskEditorNodeModel extends NoInternalsModel {
 		if (inObjects.length > 0 && inObjects[0] != null) {
 			FskPortObject inObj = (FskPortObject) inObjects[0];
 
-			// if input mode has not changed (the original script stored in
+			// if input model has not changed (the original script stored in
 			// settings match the input model)
 			if (Objects.equal(settings.originalModelScript, inObj.model)
 					&& Objects.equal(settings.originalParametersScript, inObj.param)
@@ -91,6 +91,7 @@ public class FskEditorNodeModel extends NoInternalsModel {
 				outObj.model = settings.modifiedModelScript;
 				outObj.param = settings.modifiedParametersScript;
 				outObj.viz = settings.modifiedVisualizationScript;
+				outObj.template = settings.metaData;
 			} else {
 				settings.originalModelScript = inObj.model;
 				settings.originalParametersScript = inObj.param;
@@ -99,6 +100,8 @@ public class FskEditorNodeModel extends NoInternalsModel {
 				settings.modifiedModelScript = inObj.model;
 				settings.modifiedParametersScript = inObj.param;
 				settings.modifiedVisualizationScript = inObj.viz;
+				
+				settings.metaData = inObj.template;
 				
 				outObj = inObj;
 			}
@@ -110,6 +113,7 @@ public class FskEditorNodeModel extends NoInternalsModel {
 			outObj.model = settings.modifiedModelScript;
 			outObj.param = settings.modifiedParametersScript;
 			outObj.viz = settings.modifiedVisualizationScript;
+			outObj.template = settings.metaData;
 		}
 
 		return new PortObject[] { outObj };
