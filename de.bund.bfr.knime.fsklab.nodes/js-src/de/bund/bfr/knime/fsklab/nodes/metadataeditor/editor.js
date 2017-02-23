@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 metadata_editor = function () {
 
     var softwareDic = {'R': 'R', 'Matlab': 'Matlab'};
@@ -92,46 +93,81 @@ metadata_editor = function () {
      */
     function VariableRow(variable) {
         this.variable = variable;
-        this.typeInput = new SelectInput(variable.name + "_type", this.variable.type, dataTypeDic);
 
         this.createHtml = function() {
-            function createTd(val, type) {
-                var td = '<td class="has-success">';
-                if (type === 'text') {
-                    td += '<input type="text" class="form-control input-sm" value="' + val + '">';
-                } else if (type === 'checkbox') {
-                    td += '<input type="checkbox" class="form-control input-sm" ' + (val ? 'checked' : '') + '>';
-                }
-                td += '</td>';
+            var name = this.variable.name === null ? "" : this.variable.name;
+            var unit = this.variable.unit === null ? "" : this.variable.unit;
+            var value = this.variable.val === null ? "" : this.variable.value;
+            var min = this.variable.min === null ? "" : this.variable.min;
+            var max = this.variable.max === null ? "" : this.variable.max;
 
-                return td;
-            }
-            
-            var row = '<tr>';
-            row += createTd(this.variable.name === null ? "" : this.variable.name, 'text');  // name td
-            row += createTd(this.variable.unit === null ? "" : this.variable.unit, 'text');  // unit td
-            row += '<td>' + this.typeInput.createHtml() + '</td>';  // type td
-            row += createTd(this.variable.value === null ? "" : this.variable.value, 'text'); // value td
-            row += createTd(this.variable.min === null ? "" : this.variable.min, 'text');  // min td
-            row += createTd(this.variable.max === null ? "" : this.variable.max, 'text');  // max td
-            row += createTd((this.variable.value ? false : true), 'checkbox');  // dependent td
-            row += '<td><button type="button" class="btn btn-default">' +
-                   '  <span class="glyphicon glyphicon-minus"></span>' +
-                   '</button></td>';
-            row += '</tr>';
+            var row = '<tr>' +
+            // Name column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="' + name + '">' +
+            '</td>' +
+            // Unit column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="' + unit + '">' +
+            '</td>' +
+            // Data type column
+            '<td class="has-success">' +
+            '  <select class="form-control no-border">' +
+            '    <option value="character">character</option>' +
+            '    <option value="integer">integer</option>' +
+            '    <option value="numeric">numeric</option>' +
+            '    <option value="array">array</option>' +
+            '  </select>' +
+            '</td>' +
+            // Value column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="' + value + '">' +
+            '</td>' +
+            // Min column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="' + min + '">' +
+            '</td>' +
+            // Max column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="' + max + '">' +
+            '</td>' +
+            // Dependent column: whether the parameter is dependent
+            // TODO: Disabled until the selection of the dependent parameter is implemented
+            '<td><input type="checkbox" class="form-control input-sm" disabled></td>' +
+            // Remove parameter button
+            '<td>' +
+            '  <button type="button" class="btn btn-default">' +
+            '    <span class="glyphicon glyphicon-minus"></span>' +
+            '  </button>' +
+            '</td>' +
+            '</tr>'; 
 
             return row;
         };
 
         this.loadData = function() {
-            var row = $('tr:first-child:contains(' + this.variable.name + ')').parent();
-            $('td:eq(0)', row).text(this.variable.name === null ? "" : this.variable.name);
-            $('td:eq(1)', row).text(this.variable.unit === null ? "" : this.variable.unit);
-            this.typeInput.loadData();
+            // TODO: Check loadData
+            // var row = $('tr:first-child:contains(' + this.variable.name + ')').parent();
+            // $('td:eq(0)', row).text(this.variable.name === null ? "" : this.variable.name);
+            // $('td:eq(1)', row).text(this.variable.unit === null ? "" : this.variable.unit);
+            // if (this.variable.value) {
+            //     $('td:eq(2) option[value="' + this.variable.value + '"]', row).prop('selected', true);
+            // }
 
-            var valueInput = $('td:eq(3) input');
-            var minInput = $('td:eq(4) input');
-            var maxInput = $('td:eq(5) input');
+            var outer = this;
+            var row = $('td:first-child input').filter(function() {
+                return $(this).val() == outer.variable.name;
+            }).parent().parent();
+
+            var nameInput = $('td:eq(0) input', row);
+            var unitInput = $('td:eq(1) input', row);
+            var typeSelect = $('td:eq(2) select', row);
+            var valueInput = $('td:eq(3) input', row);
+            var minInput = $('td:eq(4) input', row);
+            var maxInput = $('td:eq(5) input', row);
+
+            // Mark variable type as selected in typeSelect
+            $('option[value=' + this.variable.type + ']', typeSelect).prop('selected', true);
 
             valueInput.val(this.variable.value);
             minInput.val(this.variable.min);
@@ -146,16 +182,35 @@ metadata_editor = function () {
         };
 
         this.saveData = function() {
-            var row = $('tr:first-child:contains(' + this.variable.name + ')').parent();
-
             var outer = this;
-            $('td:eq(0)', row).on('input', function() { outer.variable.name = $(this).val(); });
-            $('td:eq(1)', row).on('input', function() { outer.variable.unit = $(this).val(); });
-            this.typeInput.saveData();
+            var row = $('td:first-child input').filter(function() {
+                return $(this).val() == outer.variable.name;
+            }).parent().parent();
 
+            var nameInput = $('td:eq(0) input', row);
+            var unitInput = $('td:eq(1) input', row);
+            var typeSelect = $('td:eq(2) select', row);
             var valueInput = $('td:eq(3) input', row);
             var minInput = $('td:eq(4) input', row);
             var maxInput = $('td:eq(5) input', row);
+
+            nameInput.on('input', function() { outer.variable.name = $(this).val(); });
+            unitInput.on('input', function() { outer.variable.unit = $(this).val(); });
+
+            // When the type changed discards the former value, min and max
+            typeSelect.change(function() {
+                if (outer.variable.type !== $(this).val()) {
+                    outer.variable.type = $(this).val();
+
+                    outer.variable.value = "";
+                    outer.variable.min = "";
+                    outer.variable.max = "";
+
+                    valueInput.val("");
+                    minInput.val("");
+                    maxInput.val("");
+                }
+            });
 
             // Independent variable
             if (this.value) {
@@ -219,8 +274,6 @@ metadata_editor = function () {
                     }
                 });
             }
-
-
         };
 
         /** Mark a table cell as valid. */
@@ -234,42 +287,6 @@ metadata_editor = function () {
             td.removeClass('has-success');
             td.addClass('has-error');
         }
-
-        return this;
-    }
-
-    /**
-     * Create a Bootstrap select input.
-     * - id: Select id
-     * - value: String value with the selected option
-     * - entries: Dictionary with labels as keys and option values as values
-     */
-    function SelectInput(id, value, entries) {
-        this.id = id;
-        this.value = value;
-        this.entries = entries;
-
-        this.createHtml = function() {
-            var html = '<select class="form-control no-border" id="' + this.id + '">';
-            for (var key in this.entries) {
-                html += '<option value="' + key + '">' + entries[key] + '</option>';
-            }
-            html += '</select>';
-
-            return html;
-        };
-
-        this.loadData = function() {
-            if (this.value) {
-                var option = $('#' + this.id + ' option[value="' + this.value + '"]');
-                option.prop('selected', true);
-            }
-        };
-
-        this.saveData = function() {
-            var outer = this;
-            $('#' + this.id).change(function() { outer.value = $(this).val(); });
-        };
 
         return this;
     }
@@ -454,16 +471,16 @@ metadata_editor = function () {
     {
         var varTable =
             '<table class="table table-condensed">' +
-            '<tr>' +
-            '<th>Name</th>' +
-            '<th>Unit</th>' +
-            '<th>Type</th>' +
-            '<th>Value</th>' +
-            '<th>Min</th>' +
-            '<th>Max</th>' +
-            '<th>Dependent</th>' +
-            '<th>Remove</th>' +
-            '</tr>';
+            '  <tr>' +
+            '    <th>Name</th>' +
+            '    <th>Unit</th>' +
+            '    <th>Type</th>' +
+            '    <th>Value</th>' +
+            '    <th>Min</th>' +
+            '    <th>Max</th>' +
+            '    <th>Dependent</th>' +
+            '    <th>Remove</th>' +
+            '  </tr>';
         for (var i = 0; i < _variableRows.length; i++) {
             varTable += _variableRows[i].createHtml();
         }
