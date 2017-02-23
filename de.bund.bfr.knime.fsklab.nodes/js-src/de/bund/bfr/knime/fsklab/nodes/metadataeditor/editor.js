@@ -133,7 +133,7 @@ metadata_editor = function () {
             '</td>' +
             // Dependent column: whether the parameter is dependent
             // TODO: Disabled until the selection of the dependent parameter is implemented
-            '<td><input type="checkbox" class="form-control input-sm" disabled></td>' +
+            '<td><input type="checkbox" class="form-control input-sm"></td>' +
             // Remove parameter button
             '<td>' +
             '  <button type="button" class="btn btn-default">' +
@@ -286,6 +286,27 @@ metadata_editor = function () {
                     }
                 });
             }
+
+
+            // When a dependent checkbox is checked, then uncheck the
+            // previously checked checkbox
+            var myCheckbox = $('td:eq(6) input', row);
+            myCheckbox.change(function() {
+                // Style row with dependent variable
+                row.addClass('danger');
+
+                if ($(this).is(':checked')) {
+                    var checkboxes = $('td input[type=checkbox]:checked');
+                    checkboxes.each(function() {
+                        // Get number of current row: input > td
+                        var currRow = $(this).parent().parent();
+                        if (currRow.index() != row.index()) {
+                            $(this).prop('checked', false);
+                            currRow.removeClass('danger');
+                        }
+                    });
+                }
+            });
         };
 
         /** Mark a table cell as valid. */
