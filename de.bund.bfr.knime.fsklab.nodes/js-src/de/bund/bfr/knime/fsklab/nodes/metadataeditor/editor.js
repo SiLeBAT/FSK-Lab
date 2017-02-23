@@ -146,14 +146,6 @@ metadata_editor = function () {
         };
 
         this.loadData = function() {
-            // TODO: Check loadData
-            // var row = $('tr:first-child:contains(' + this.variable.name + ')').parent();
-            // $('td:eq(0)', row).text(this.variable.name === null ? "" : this.variable.name);
-            // $('td:eq(1)', row).text(this.variable.unit === null ? "" : this.variable.unit);
-            // if (this.variable.value) {
-            //     $('td:eq(2) option[value="' + this.variable.value + '"]', row).prop('selected', true);
-            // }
-
             var outer = this;
             var row = $('td:first-child input').filter(function() {
                 return $(this).val() == outer.variable.name;
@@ -194,7 +186,27 @@ metadata_editor = function () {
             var minInput = $('td:eq(4) input', row);
             var maxInput = $('td:eq(5) input', row);
 
-            nameInput.on('input', function() { outer.variable.name = $(this).val(); });
+            nameInput.on('input', function() {
+                // Gets td > tr > tr number
+                var numRow = nameInput.parent().parent().index();
+                var table = $('table');
+
+                var names = [];
+                $('table tr').each(function(index, element) {
+                    if (index !== 0  && index !== numRow) {
+                        names.push($('td:first-child input', element).val());
+                    }
+                });
+
+                if (names.indexOf(nameInput.val()) > -1) {
+                    _markInvalidTd(nameInput.parent());
+                } else {
+                    _markValidTd(nameInput.parent());
+                    outer.variable.name = nameInput.val();
+                }
+            });
+
+
             unitInput.on('input', function() { outer.variable.unit = $(this).val(); });
 
             // When the type changed discards the former value, min and max
