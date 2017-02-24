@@ -320,18 +320,6 @@ metadata_editor = function () {
             });
         };
 
-        /** Mark a table cell as valid. */
-        function _markValidTd(td) {
-            td.removeClass('has-error');
-            td.addClass('has-success');
-        }
-
-        /** Mark a table cell as invalid. */
-        function _markInvalidTd(td) {
-            td.removeClass('has-success');
-            td.addClass('has-error');
-        }
-
         return this;
     }
 
@@ -517,9 +505,6 @@ metadata_editor = function () {
             }
 
             $('td:eq(7) button', row).click(function() {
-                // TODO: add parameter
-                alert("Add parameter : Not implemented yet");
-
                 // Create new row with new variable data
                 var cloneVariable = {
                     'name': outer.variable.name,
@@ -529,7 +514,6 @@ metadata_editor = function () {
                     'max': outer.variable.max,
                     'type': outer.variable.type
                 };
-                alert(JSON.stringify(cloneVariable));
                 var variableRow = new VariableRow(cloneVariable);
 
                 // Insert new row just on top of the new variable row
@@ -549,18 +533,6 @@ metadata_editor = function () {
                 typeInput.val('');
             });
         };
-
-        /** Mark a table cell as valid. */
-        function _markValidTd(td) {
-            td.removeClass('has-error');
-            td.addClass('has-success');
-        }
-
-        /** Mark a table cell as invalid. */
-        function _markInvalidTd(td) {
-            td.removeClass('has-success');
-            td.addClass('has-error');
-        }
 
         return this;
     }
@@ -637,6 +609,20 @@ metadata_editor = function () {
 
         return this;
     }
+
+    // Util
+    /** Mark a table cell as valid. */
+    function _markValidTd(td) {
+        td.removeClass('has-error');
+        td.addClass('has-success');
+    }
+
+    /** Mark a table cell as invalid. */
+    function _markInvalidTd(td) {
+        td.removeClass('has-success');
+        td.addClass('has-error');
+    }
+
 
     var editor = {
 	   version: "0.0.1"
