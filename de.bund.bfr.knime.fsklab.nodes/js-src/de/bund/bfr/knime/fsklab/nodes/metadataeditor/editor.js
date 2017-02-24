@@ -187,25 +187,31 @@ metadata_editor = function () {
             var maxInput = $('td:eq(5) input', row);
 
             nameInput.on('input', function() {
-                // Gets td > tr > tr number
-                var numRow = nameInput.parent().parent().index();
-                var table = $('table');
+                // If name is repeated mark cell as invalid
+                if (nameInput.val()) {
+                    // Gets td > tr > tr number
+                    var numRow = nameInput.parent().parent().index();
+                    var table = $('table');
 
-                var names = [];
-                $('table tr').each(function(index, element) {
-                    if (index !== 0  && index !== numRow) {
-                        names.push($('td:first-child input', element).val());
+                    var names = [];
+                    $('table tr').each(function(index, element) {
+                        if (index !== 0  && index !== numRow) {
+                            names.push($('td:first-child input', element).val());
+                        }
+                    });
+
+                    if (names.indexOf(nameInput.val()) > -1) {
+                        _markInvalidTd(nameInput.parent());
+                    } else {
+                        _markValidTd(nameInput.parent());
+                        outer.variable.name = nameInput.val();
                     }
-                });
-
-                if (names.indexOf(nameInput.val()) > -1) {
+                }
+                // If name is empty mark cell as invalid
+                else {
                     _markInvalidTd(nameInput.parent());
-                } else {
-                    _markValidTd(nameInput.parent());
-                    outer.variable.name = nameInput.val();
                 }
             });
-
 
             unitInput.on('input', function() { outer.variable.unit = $(this).val(); });
 
