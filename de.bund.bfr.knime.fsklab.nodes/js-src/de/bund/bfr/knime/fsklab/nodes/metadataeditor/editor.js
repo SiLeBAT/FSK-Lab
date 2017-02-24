@@ -132,11 +132,10 @@ metadata_editor = function () {
             '  <input type="text" class="form-control input-sm" value="' + max + '">' +
             '</td>' +
             // Dependent column: whether the parameter is dependent
-            // TODO: Disabled until the selection of the dependent parameter is implemented
             '<td><input type="checkbox" class="form-control input-sm"></td>' +
             // Remove parameter button
             '<td>' +
-            '  <button type="button" class="btn btn-default">' +
+            '  <button type="button" class="btn btn-default btn-danger">' +
             '    <span class="glyphicon glyphicon-minus"></span>' +
             '  </button>' +
             '</td>' +
@@ -312,6 +311,12 @@ metadata_editor = function () {
                         }
                     });
                 }
+            });
+
+            $('td:eq(7) button', row).click(function() {
+                var numRow = row.index() - 1;  // Skip headers (1st row)
+                _variableRows.splice(numRow, 1);  // Remove this row data
+                row.remove();  // Remove row from table
             });
         };
 
