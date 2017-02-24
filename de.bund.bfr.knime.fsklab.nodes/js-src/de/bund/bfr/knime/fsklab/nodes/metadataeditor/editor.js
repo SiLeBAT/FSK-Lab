@@ -30,12 +30,28 @@ metadata_editor = function () {
         'PH_AW': 'pH/aw',
         'T_PH_AW': 'T/pH/aw'
     };
-    var dataTypeDic = {
-        'character': 'character',
-        'integer': 'integer',
-        'numeric': 'numeric',
-        'array': 'array'
-    };
+
+    function Variable() {
+        this.name = '';
+        this.unit = '';
+        this.value = '';
+        this.min = '';
+        this.max = '';
+        this.type = '';
+
+        this.clone = function() {
+            return {
+                'name': this.name,
+                'unit': this.unit,
+                'value': this.value,
+                'min': this.min,
+                'max': this.max,
+                'type': this.type
+            };
+        };
+
+        return this;
+    }
 
     /**
      * Create a form-group envolving an input.
@@ -51,20 +67,20 @@ metadata_editor = function () {
         this.value = value;
 
         this.createHtml = function() {
-            var formStr = '<div class="form-group">';
-            formStr += '<label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>';
-            formStr += '<div class="col-sm-9">';
+            var form = '' +
+            '<div class="form-group">' +
+            '  <label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>' +
+            '  <div class="col-sm-9">';
             if (this.type === 'text') {
-                formStr += '<input type="text" class="form-control no-border" id="' + this.id + '" value="">';
+                form += '<input type="text" class="form-control no-border" id="' + this.id + '" value="">';
             } else if (this.type === 'url') {
-                formStr += '<input type="url" class="form-control no-border" id="' + this.id + '" value="">';
-            } else if (this.type === 'checkbox') {
-                formStr += '<input id="' + id + '" type="checkbox">';
+                form += '<input type="url" class="form-control no-border" id="' + this.id + '" value="">';
+            } else if (this.type == 'checkbox') {
+                form += '<input id="' + id + '" type="checkbox">';
             }
-            formStr += '</div>';
-            formStr += '</div>';
+            form += '</div></div>';
 
-            return formStr;
+            return form;
         };
 
         this.loadData = function() {
@@ -327,14 +343,7 @@ metadata_editor = function () {
      * Create a table row to introduce a new variable.
      */
      function NewVariableRow() {
-        this.variable = {
-            'name' : '',
-            'unit' : '',
-            'value' : '',
-            'min' : '',
-            'max': '',
-            'type': ''
-        };
+        this.variable = new Variable();
 
         this.createHtml = function() {
             var row = '<tr>' +
@@ -506,15 +515,7 @@ metadata_editor = function () {
 
             $('td:eq(7) button', row).click(function() {
                 // Create new row with new variable data
-                var cloneVariable = {
-                    'name': outer.variable.name,
-                    'unit': outer.variable.unit,
-                    'value': outer.variable.value,
-                    'min': outer.variable.min,
-                    'max': outer.variable.max,
-                    'type': outer.variable.type
-                };
-                var variableRow = new VariableRow(cloneVariable);
+                var variableRow = new VariableRow(outer.variable.clone());
 
                 // Insert new row just on top of the new variable row
                 row.before(variableRow.createHtml());
@@ -558,7 +559,7 @@ metadata_editor = function () {
         };
 
         this.loadData = function() {
-            $('#' + this.id).val(this.value === null ? "" : this.value);
+            $('#' + this.id).val(this.value ? "" : this.value);
         };
 
         this.saveData = function() {
@@ -583,16 +584,17 @@ metadata_editor = function () {
         this.value = value;
 
         this.createHtml = function() {
-            var formStr = '<div class="form-group">';
-            formStr += '<label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>';
-            formStr += '<div class="col-sm-9">';
-            formStr += '<select class="form-control no-border" id="' + this.id + '">';
+            var form = '' +
+            '<div class="form-group">' +
+            '  <label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>' +
+            '  <div class="col-sm-9">' +
+            '    <select class="form-control no-border" id="' + this.id + '">';
             for (var key in this.entries) {
-                formStr += '<option value="' + key + '">' + entries[key] + '</option>';
+                form += '<option value="' + key + '">' + entries[key] + '</option>';
             }
-            formStr += '</select></div></div>';
+            form += '</select></div></div>';
 
-            return formStr;
+            return form;
         };
 
         this.loadData = function() {
@@ -749,30 +751,30 @@ metadata_editor = function () {
         varTable += _newVariableRow.createHtml();
         varTable += '</table>';
 
-        var form = '<form class="form-horizontal">';
-        form += _modelNameInput.createHtml();
-        form += _modelIdInput.createHtml();
-        form += _modelLinkInput.createHtml();
-        form += _organismInput.createHtml();
-        form += _organismDetailsInput.createHtml();
-        form += _matrixInput.createHtml();
-        form += _matrixDetailsInput.createHtml();
-        form += _creatorInput.createHtml();
-        form += _familyNameInput.createHtml();
-        form += _contactInput.createHtml();
-        form += _softwareInput.createHtml();
-        form += _referenceDescriptionInput.createHtml();
-        form += _referenceDescriptionLinkInput.createHtml();
-        form += _createdDateInput.createHtml();
-        form += _modifiedDateInput.createHtml();
-        form += _rightsInput.createHtml();
-        form += _notesInput.createHtml();
-        form += _curatedInput.createHtml();
-        form += _typeInput.createHtml();
-        form += _subjectInput.createHtml();
-        form += _foodProcessInput.createHtml();
-        form += _hasDataInput.createHtml();
-        form += '</form>';
+        var form = '<form class="form-horizontal">' +
+            _modelNameInput.createHtml() +
+            _modelIdInput.createHtml() +
+            _modelLinkInput.createHtml() +
+            _organismInput.createHtml() +
+            _organismDetailsInput.createHtml() +
+            _matrixInput.createHtml() +
+            _matrixDetailsInput.createHtml() +
+            _creatorInput.createHtml() +
+            _familyNameInput.createHtml() +
+            _contactInput.createHtml() +
+            _softwareInput.createHtml() +
+            _referenceDescriptionInput.createHtml() +
+            _referenceDescriptionLinkInput.createHtml() +
+            _createdDateInput.createHtml() +
+            _modifiedDateInput.createHtml() +
+            _rightsInput.createHtml() +
+            _notesInput.createHtml() +
+            _curatedInput.createHtml() +
+            _typeInput.createHtml() +
+            _subjectInput.createHtml() +
+            _foodProcessInput.createHtml() +
+            _hasDataInput.createHtml() +
+            '</form>';
 
         document.createElement("body");
         $("body").html('<div class="container">' + form + varTable + '</div');
