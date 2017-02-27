@@ -162,50 +162,42 @@ metadata_editor = function () {
 
         this.loadData = function() {
             var outer = this;
-            var row = $('tbody tr td:first-child input').filter(function() {
+            this.row = $('tbody tr td:first-child input').filter(function() {
                 return $(this).val() == outer.variable.name;
             }).parent().parent();
 
-            var nameInput = $('td:eq(0) input', row);
-            var unitInput = $('td:eq(1) input', row);
-            var typeSelect = $('td:eq(2) select', row);
-            var valueInput = $('td:eq(3) input', row);
-            var minInput = $('td:eq(4) input', row);
-            var maxInput = $('td:eq(5) input', row);
+            this.nameInput = $('td:eq(0) input', this.row);
+            this.unitInput = $('td:eq(1) input', this.row);
+            this.typeSelect = $('td:eq(2) select', this.row);
+            this.valueInput = $('td:eq(3) input', this.row);
+            this.minInput = $('td:eq(4) input', this.row);
+            this.maxInput = $('td:eq(5) input', this.row);
+            this.depInput = $('td:eq(6) input', this.row);
+            this.removeButton = $('td:eq(7) button', this.row);
 
             // Mark variable type as selected in typeSelect
-            $('option[value=' + this.variable.type + ']', typeSelect).prop('selected', true);
+            $('option[value=' + this.variable.type + ']', this.typeSelect).prop('selected', true);
 
-            valueInput.val(this.variable.value);
-            minInput.val(this.variable.min);
-            maxInput.val(this.variable.max);
+            this.valueInput.val(this.variable.value);
+            this.minInput.val(this.variable.min);
+            this.maxInput.val(this.variable.max);
 
             // Disable value, min and max inputs for array variables
             if (this.variable.type === 'array') {
-                valueInput.prop('disabled', true);
-                minInput.prop('disabled', true);
-                maxInput.prop('disabled', true);
+                this.valueInput.prop('disabled', true);
+                this.minInput.prop('disabled', true);
+                this.maxInput.prop('disabled', true);
             }
         };
 
         this.saveData = function() {
             var outer = this;
-            var row = $('tbody tr td:first-child input').filter(function() {
-                return $(this).val() == outer.variable.name;
-            }).parent().parent();
 
-            var nameInput = $('td:eq(0) input', row);
-            var unitInput = $('td:eq(1) input', row);
-            var typeSelect = $('td:eq(2) select', row);
-            var valueInput = $('td:eq(3) input', row);
-            var minInput = $('td:eq(4) input', row);
-            var maxInput = $('td:eq(5) input', row);
-
-            nameInput.on('input', function() {
+            this.nameInput.on('input', function() {
                 // If name is repeated mark cell as invalid
-                if (nameInput.val()) {
+                if (outer.nameInput.val()) {
                     // Gets td > tr > tr number
-                    var numRow = nameInput.parent().parent().index();
+                    var numRow = outer.row.index();
                     var table = $('table');
 
                     var names = [];
@@ -215,23 +207,23 @@ metadata_editor = function () {
                         }
                     });
 
-                    if (names.indexOf(nameInput.val()) > -1) {
-                        _markInvalidTd(nameInput.parent());
+                    if (names.indexOf(outer.nameInput.val()) > -1) {
+                        _markInvalidTd(outer.nameInput.parent());
                     } else {
-                        _markValidTd(nameInput.parent());
-                        outer.variable.name = nameInput.val();
+                        _markValidTd(outer.nameInput.parent());
+                        outer.variable.name = outer.nameInput.val();
                     }
                 }
                 // If name is empty mark cell as invalid
                 else {
-                    _markInvalidTd(nameInput.parent());
+                    _markInvalidTd(outer.nameInput.parent());
                 }
             });
 
-            unitInput.on('input', function() { outer.variable.unit = $(this).val(); });
+            this.unitInput.on('input', function() { outer.variable.unit = $(this).val(); });
 
             // When the type changed discards the former value, min and max
-            typeSelect.change(function() {
+            this.typeSelect.change(function() {
                 if (outer.variable.type !== $(this).val()) {
                     outer.variable.type = $(this).val();
 
@@ -239,71 +231,71 @@ metadata_editor = function () {
                     outer.variable.min = "";
                     outer.variable.max = "";
 
-                    valueInput.val("");
-                    minInput.val("");
-                    maxInput.val("");
+                    outer.valueInput.val("");
+                    outer.minInput.val("");
+                    outer.maxInput.val("");
                 }
             });
 
             // Independent variable
             if (this.variable.value) {
-                valueInput.on('input', function() {
-                    var newVal = Number(valueInput.val());
+                outer.valueInput.on('input', function() {
+                    var newVal = Number(outer.valueInput.val());
                     if (this.variable.type === 'integer' && newVal % 2 !== 0) {
-                        _markInvalidTd(valueInput.parent());
+                        _markInvalidTd(outer.valueInput.parent());
                     } else {
                         var min = Number(this.variable.min);
                         var max = Number(this.variable.max);
                         if (min <= newVal && newVal <= max) {
                             this.variable.value = newVal;
-                            _markValidTd(valueInput.parent());
+                            _markValidTd(outer.valueInput.parent());
                         } else {
-                            _markInvalidTd(valueInput.parent());
+                            _markInvalidTd(outer.valueInput.parent());
                         }
                     }
                 });
-                minInput.on('input', function() {
-                    var newVal = Number(minInput.val());
+                this.minInput.on('input', function() {
+                    var newVal = Number(outer.minInput.val());
                     var max = Number(this.variable.max);
                     if (newVal < max) {
                         this.variable.min = newVal;
-                        _markValidTd(minInput.parent());
+                        _markValidTd(outer.minInput.parent());
                     } else {
-                        _markInvalidTd(minInput.parent());
+                        _markInvalidTd(outer.minInput.parent());
                     }
                 });
-                maxInput.on('input', function() {
-                    var newVal = Number(maxInput.val());
+                this.maxInput.on('input', function() {
+                    var newVal = Number(outer.maxInput.val());
                     var min = Number(this.variable.min);
                     if (newVal > min) {
                         this.variable.max = newVal;
-                        _markValidTd(maxInput.parent());
+                        _markValidTd(outer.maxInput.parent());
                     } else {
-                        _markInvalidTd(maxInput.parent());
+                        _markInvalidTd(outer.maxInput.parent());
                     }
                 });
             }
             // Dependent variable
             else {
-                minInput.on('input', function() {
-                    var newVal = Number(minInput.val());
+                this.minInput.on('input', function() {
+                    var newVal = Number(outer.minInput.val());
                     var max = Number(this.variable.max);
 
                     if (newVal < max) {
                         this.variable.min = newVal;
-                        _markValidTd(minInput.parent());
+                        _markValidTd(outer.minInput.parent());
                     } else {
-                        _markInvalidTd(minInput.parent());
+                        _markInvalidTd(outer.minInput.parent());
                     }
                 });
-                maxInput.on('input', function() {
-                    var newVal = Number(maxInput.val());
+                this.maxInput.on('input', function() {
+                    var newVal = Number(outer.maxInput.val());
                     var min = Number(this.variable.min);
                     if (newVal > min) {
                         this.variable.max = newVal;
-                        _markValidTd(maxInput.parent());
+                        _markValidTd(outer.maxInput.parent());
                     } else {
-                        _markInvalidTd(maxInput.parent());
+                        _markInvalidTd(outer.maxInput.parent());
                     }
                 });
             }
@@ -311,8 +303,7 @@ metadata_editor = function () {
 
             // When a dependent checkbox is checked, then uncheck the
             // previously checked checkbox
-            var myCheckbox = $('td:eq(6) input', row);
-            myCheckbox.change(function() {
+            this.depInput.change(function() {
                 // Style row with dependent variable
                 row.addClass('danger');
 
@@ -329,10 +320,10 @@ metadata_editor = function () {
                 }
             });
 
-            $('td:eq(7) button', row).click(function() {
-                alert(row.index());
-                _variableRows.splice(row.index(), 1);  // Remove this row data
-                row.remove();  // Remove row from table
+            alert(this.removeButton.length);
+            $(this.removeButton).click(function() {
+                _variableRows.splice(outer.row.index(), 1);  // Remove this row data
+                outer.row.remove();  // Remove row from table
             });
         };
 
