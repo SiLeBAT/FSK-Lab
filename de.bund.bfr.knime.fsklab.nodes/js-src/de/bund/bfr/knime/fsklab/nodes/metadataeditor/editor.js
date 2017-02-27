@@ -162,7 +162,7 @@ metadata_editor = function () {
 
         this.loadData = function() {
             var outer = this;
-            var row = $('td:first-child input').filter(function() {
+            var row = $('tbody tr td:first-child input').filter(function() {
                 return $(this).val() == outer.variable.name;
             }).parent().parent();
 
@@ -190,7 +190,7 @@ metadata_editor = function () {
 
         this.saveData = function() {
             var outer = this;
-            var row = $('td:first-child input').filter(function() {
+            var row = $('tbody tr td:first-child input').filter(function() {
                 return $(this).val() == outer.variable.name;
             }).parent().parent();
 
@@ -209,7 +209,7 @@ metadata_editor = function () {
                     var table = $('table');
 
                     var names = [];
-                    $('table tr').each(function(index, element) {
+                    $('tbody tr').each(function(index, element) {
                         if (index !== 0  && index !== numRow) {
                             names.push($('td:first-child input', element).val());
                         }
@@ -330,8 +330,8 @@ metadata_editor = function () {
             });
 
             $('td:eq(7) button', row).click(function() {
-                var numRow = row.index() - 1;  // Skip headers (1st row)
-                _variableRows.splice(numRow, 1);  // Remove this row data
+                alert(row.index());
+                _variableRows.splice(row.index(), 1);  // Remove this row data
                 row.remove();  // Remove row from table
             });
         };
@@ -395,7 +395,7 @@ metadata_editor = function () {
 
         this.saveData = function() {
             var outer = this;
-            var row = $('td:first-child input').filter(function() {
+            var row = $('tbody tr td:first-child input').filter(function() {
                 return $(this).val() == outer.variable.name;
             }).parent().parent();
 
@@ -410,11 +410,9 @@ metadata_editor = function () {
                 // If name is repeated mark cell as invalid
                 if (nameInput.val()) {
                     // Gets td > tr > tr number
-                    var numRow = nameInput.parent().parent().index();
-                    var table = $('table');
-
+                    var numRow = row.index();
                     var names = [];
-                    $('table tr').each(function(index, element) {
+                    $('tbody tr').each(function(index, element) {
                         if (index !== 0  && index !== numRow) {
                             names.push($('td:first-child input', element).val());
                         }
@@ -735,7 +733,7 @@ metadata_editor = function () {
     {
         var varTable =
             '<table class="table table-condensed">' +
-            '  <tr>' +
+            '  <thead><tr>' +
             '    <th>Name</th>' +
             '    <th>Unit</th>' +
             '    <th>Type</th>' +
@@ -744,12 +742,13 @@ metadata_editor = function () {
             '    <th>Max</th>' +
             '    <th>Dependent</th>' +
             '    <th>Remove</th>' +
-            '  </tr>';
+            '  </tr></thead>' +
+            '  <tbody>';
         for (var i = 0; i < _variableRows.length; i++) {
             varTable += _variableRows[i].createHtml();
         }
         varTable += _newVariableRow.createHtml();
-        varTable += '</table>';
+        varTable += '</tbody></table>';
 
         var form = '<form class="form-horizontal">' +
             _modelNameInput.createHtml() +
