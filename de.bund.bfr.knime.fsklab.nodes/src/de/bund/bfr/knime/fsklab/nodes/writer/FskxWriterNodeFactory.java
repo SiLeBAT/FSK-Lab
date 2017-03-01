@@ -1,6 +1,5 @@
-/*
- ***************************************************************************************************
- * Copyright (c) 2017 Federal Institute for Risk Assessment (BfR), Germany
+/*******************************************************************************
+ * Copyright (c) 2015 Federal Institute for Risk Assessment (BfR), Germany
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -14,8 +13,7 @@
  * not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors: Department Biological Safety - BfR
- *************************************************************************************************
- */
+ *******************************************************************************/
 package de.bund.bfr.knime.fsklab.nodes.writer;
 
 import javax.swing.JFileChooser;

@@ -1,21 +1,3 @@
-/*
- ***************************************************************************************************
- * Copyright (c) 2017 Federal Institute for Risk Assessment (BfR), Germany
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program. If
- * not, see <http://www.gnu.org/licenses/>.
- *
- * Contributors: Department Biological Safety - BfR
- *************************************************************************************************
- */
 package de.bund.bfr.knime.fsklab.nodes.editor;
 
 import org.knime.core.node.ExecutionContext;
@@ -82,7 +64,7 @@ public class FskEditorNodeModel extends NoInternalsModel {
 		if (inObjects.length > 0 && inObjects[0] != null) {
 			FskPortObject inObj = (FskPortObject) inObjects[0];
 
-			// if input model has not changed (the original script stored in
+			// if input mode has not changed (the original script stored in
 			// settings match the input model)
 			if (Objects.equal(settings.originalModelScript, inObj.model)
 					&& Objects.equal(settings.originalParametersScript, inObj.param)
@@ -91,7 +73,6 @@ public class FskEditorNodeModel extends NoInternalsModel {
 				outObj.model = settings.modifiedModelScript;
 				outObj.param = settings.modifiedParametersScript;
 				outObj.viz = settings.modifiedVisualizationScript;
-				outObj.template = settings.metaData;
 			} else {
 				settings.originalModelScript = inObj.model;
 				settings.originalParametersScript = inObj.param;
@@ -100,8 +81,6 @@ public class FskEditorNodeModel extends NoInternalsModel {
 				settings.modifiedModelScript = inObj.model;
 				settings.modifiedParametersScript = inObj.param;
 				settings.modifiedVisualizationScript = inObj.viz;
-				
-				settings.metaData = inObj.template;
 				
 				outObj = inObj;
 			}
@@ -113,7 +92,6 @@ public class FskEditorNodeModel extends NoInternalsModel {
 			outObj.model = settings.modifiedModelScript;
 			outObj.param = settings.modifiedParametersScript;
 			outObj.viz = settings.modifiedVisualizationScript;
-			outObj.template = settings.metaData;
 		}
 
 		return new PortObject[] { outObj };

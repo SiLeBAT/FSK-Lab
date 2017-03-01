@@ -132,16 +132,12 @@
       webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.metadataeditor.bundle">
       
       <!-- JS code -->
-      <webResource
-      	relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/metadataeditor/editor.js"
-      	relativePathTarget="editor.js">
+      <webResource relativePathSource="js-src/editor.js" relativePathTarget="editor.js">
       </webResource>
       <importResource relativePath="editor.js" type="JAVASCRIPT"></importResource>
       
       <!-- CSS code -->
-      <webResource
-      	relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/metadataeditor/editor.css"
-      	relativePathTarget="editor.css">
+      <webResource relativePathSource="js-src/editor.css" relativePathTarget="editor.css">
       </webResource>
       <importResource relativePath="editor.css" type="CSS"> </importResource>
       
