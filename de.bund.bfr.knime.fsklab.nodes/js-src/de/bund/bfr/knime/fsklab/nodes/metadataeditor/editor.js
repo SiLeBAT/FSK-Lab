@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+/* global $ */
 metadata_editor = function () {
 
     var softwareDic = {'R': 'R', 'Matlab': 'Matlab'};
@@ -30,6 +32,28 @@ metadata_editor = function () {
         'T_PH_AW': 'T/pH/aw'
     };
 
+    function Variable() {
+        this.name = '';
+        this.unit = '';
+        this.value = '';
+        this.min = '';
+        this.max = '';
+        this.type = '';
+
+        this.clone = function() {
+            return {
+                'name': this.name,
+                'unit': this.unit,
+                'value': this.value,
+                'min': this.min,
+                'max': this.max,
+                'type': this.type
+            };
+        };
+
+        return this;
+    }
+
     /**
      * Create a form-group envolving an input.
      * - id: Input id
@@ -44,20 +68,20 @@ metadata_editor = function () {
         this.value = value;
 
         this.createHtml = function() {
-            var formStr = '<div class="form-group">';
-            formStr += '<label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>';
-            formStr += '<div class="col-sm-9">';
+            var form = '' +
+            '<div class="form-group">' +
+            '  <label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>' +
+            '  <div class="col-sm-9">';
             if (this.type === 'text') {
-                formStr += '<input type="text" class="form-control no-border" id="' + this.id + '" value="">';
+                form += '<input type="text" class="form-control no-border" id="' + this.id + '" value="">';
             } else if (this.type === 'url') {
-                formStr += '<input type="url" class="form-control no-border" id="' + this.id + '" value="">';
-            } else if (this.type === 'checkbox') {
-                formStr += '<input id="' + id + '" type="checkbox">';
+                form += '<input type="url" class="form-control no-border" id="' + this.id + '" value="">';
+            } else if (this.type == 'checkbox') {
+                form += '<input id="' + id + '" type="checkbox">';
             }
-            formStr += '</div>';
-            formStr += '</div>';
+            form += '</div></div>';
 
-            return formStr;
+            return form;
         };
 
         this.loadData = function() {
@@ -80,6 +104,458 @@ metadata_editor = function () {
         return this;
     }
 
+
+    function VariableRowBase() {
+        this.variable = null;
+        
+        // HTML elements
+        this.row = null;
+        
+        this.nameInput = null;
+        this.unitInput = null;
+        this.typeSelect = null;
+        this.valueInput = null;
+        this.minInput = null;
+        this.maxInput = null;
+    }
+    
+    /**
+     * Returns whether the name is valid.
+     * name is not null or undefined.
+     */
+    VariableRowBase.prototype.validateName = function() {
+        var outer = this; 
+        $('tbody tr').filter(function() {$(this) !== outer.row}).each(function() {
+            var currInput = $('td:first-child input', this);
+            if (outer.nameInput.val() === currInput.val()) {
+                return false;
+            }
+        });
+        return true;
+    };
+        
+    /**
+     * Returns whether value is valid.
+     * value is not null or undefined.
+     */
+    VariableRowBase.prototype.validateValue = function() {
+        var value = Number(this.valueInput.val());
+        var min = Number(this.minInput.val());
+        var max = Number(this.maxInput.val());
+        
+        return min <= value && value <= max;
+    };
+    
+    /**
+     * Returns whether min is valid.
+     * min and max are not null or undefined.
+     */
+    VariableRowBase.prototype.validateMin = function() {
+        var min = Number(this.minInput.val());
+        var max = Number(this.maxInput.val());
+        
+        return min <= max;
+    };
+    
+    /**
+     * Returns whether max is valid.
+     * min and max are not null or undefined.
+     */
+    VariableRowBase.prototype.validateMax = function() {
+        var min = Number(this.minInput.val());
+        var max = Number(this.maxInput.val());
+
+        return max >= min;
+    };
+    
+    /**
+     * Create a table row with variable data.
+     * The value property is undefined or null for dependent variable.
+     */
+    function VariableRow(variable, is_dependent) {
+        VariableRowBase.call(this);
+        this.variable = variable;
+        this.is_dependent = is_dependent;
+        return this;
+    }
+    VariableRow.prototype = Object.create(VariableRowBase.prototype);
+    VariableRow.prototype.constructor = VariableRowBase;
+    
+    VariableRow.prototype.createHtml = function() {
+        var name = this.variable.name === null ? "" : this.variable.name;
+        var unit = this.variable.unit === null ? "" : this.variable.unit;
+        var value = this.variable.value === null ? "" : this.variable.value;
+        var min = this.variable.min === null ? "" : this.variable.min;
+        var max = this.variable.max === null ? "" : this.variable.max;
+
+        var row = '<tr>' +
+            // Name column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="' + name + '">' +
+            '</td>' +
+            // Unit column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="' + unit + '">' +
+            '</td>' +
+            // Data type column
+            '<td class="has-success">' +
+            '  <select class="form-control no-border">' +
+            '    <option value="character">character</option>' +
+            '    <option value="integer">integer</option>' +
+            '    <option value="numeric">numeric</option>' +
+            '    <option value="array">array</option>' +
+            '  </select>' +
+            '</td>' +
+            // Value column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="' + value + '">' +
+            '</td>' +
+            // Min column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="' + min + '">' +
+            '</td>' +
+            // Max column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="' + max + '">' +
+            '</td>' +
+            // Dependent column: whether the parameter is dependent
+            '<td><input type="checkbox" class="form-control input-sm"' +
+                (this.is_dependent ? " checked" : "") + '></td>' +
+            // Remove parameter button
+            '<td>' +
+            '  <button type="button" class="btn btn-default btn-danger">' +
+            '    <span class="glyphicon glyphicon-minus"></span>' +
+            '  </button>' +
+            '</td>' +
+            '</tr>'; 
+
+        return row;
+    };
+    
+    VariableRow.prototype.loadData = function() {
+        var outer = this;
+        this.row = $('tbody tr td:first-child input').filter(function() {
+            return $(this).val() == outer.variable.name;
+        }).parent().parent();
+
+        // Caches HTML elements
+        this.nameInput = $('td:eq(0) input', this.row);
+        this.unitInput = $('td:eq(1) input', this.row);
+        this.typeSelect = $('td:eq(2) select', this.row);
+        this.valueInput = $('td:eq(3) input', this.row);
+        this.minInput = $('td:eq(4) input', this.row);
+        this.maxInput = $('td:eq(5) input', this.row);
+        this.depInput = $('td:eq(6) input', this.row);
+        this.removeButton = $('td:eq(7) button', this.row);
+        
+        // Mark variable type as selected in typeSelect
+        $('option[value=' + this.variable.type + ']', this.typeSelect).prop('selected', true);
+
+        this.valueInput.val(this.variable.value);
+        this.minInput.val(this.variable.min);
+        this.maxInput.val(this.variable.max);
+
+        // Disable value, min and max inputs for array variables
+        if (this.variable.type === 'array') {
+            this.valueInput.prop('disabled', true);
+            this.minInput.prop('disabled', true);
+            this.maxInput.prop('disabled', true);
+        }
+    };
+    
+    VariableRow.prototype.saveData = function() {
+        var outer = this;
+
+        this.nameInput.on('input', function() {
+            
+            var nameTd = outer.nameInput.parent();
+            if (outer.nameInput.val()) {
+                if (outer.validateName()) {
+                    _markValidTd(nameTd);
+                } else {
+                    _markInvalidTd(nameTd);
+                }
+            }
+            // If name is empty mark cell as invalid
+            else {
+                _markInvalidTd(nameTd);
+            }
+        });
+
+        this.unitInput.on('input', function() { outer.variable.unit = $(this).val(); });
+
+        // When the type changed discards the former value, min and max
+        this.typeSelect.change(function() {
+            if (outer.variable.type !== $(this).val()) {
+                outer.variable.type = $(this).val();
+
+                outer.variable.value = "";
+                outer.variable.min = "";
+                outer.variable.max = "";
+
+                outer.valueInput.val("");
+                outer.minInput.val("");
+                outer.maxInput.val("");
+            }
+        });
+        
+        // Validates value
+        this.valueInput.on('input', function() {
+            var newVal = Number(outer.valueInput.val());
+            var valTd = outer.valueInput.parent();
+            
+            if (outer.variable.type === 'integer' && newVal % 2 !== 0) {
+                _markInvalidTd(valTd);
+            } else {
+                if (outer.validateValue()) {
+                    _markValidTd(valTd);
+                    outer.variable.value = outer.valueInput.val();
+                } else {
+                    _markInvalidTd(valTd);
+                }
+            }
+            
+            // outer.variable.value = outer.valueInput.val();
+        });
+            
+        // Validate min
+        this.minInput.on('input', function() {
+            var minTd = outer.maxInput.parent();  // Parent td of minInput
+            
+            if (outer.validateMin()) {
+                _markValidTd(minTd);
+            } else {
+                _markInvalidTd(minTd);
+            }
+        });
+        
+        // Validate max
+        this.maxInput.on('input', function() {
+            var maxTd = outer.maxInput.parent();  // Parent td of maxInput
+            
+            if (outer.validateMax()) {
+                _markValidTd(maxTd);
+            } else {
+                _markInvalidTd(maxTd);
+            }
+        });
+
+
+        // When a dependent checkbox is checked, then uncheck the
+        // previously checked checkbox
+        this.depInput.change(function() {
+            // Style row with dependent variable
+            outer.row.addClass('danger');
+
+            if ($(this).is(':checked')) {
+                var checkboxes = $('td input[type=checkbox]:checked');
+                checkboxes.each(function() {
+                    // Get number of current row: input > td
+                    var currRow = $(this).parent().parent();
+                    if (currRow.index() != outer.row.index()) {
+                        $(this).prop('checked', false);
+                        currRow.removeClass('danger');
+                    }
+                });
+            }
+        });
+
+        this.removeButton.click(function() {
+            _variableRows.splice(outer.row.index(), 1);  // Remove this row data
+            outer.row.remove();  // Remove row from table
+        });
+    }; 
+    
+    function NewVariableRow() {
+        VariableRowBase.call(this);
+        this.variable = new Variable();
+        
+        return this;
+    } 
+    NewVariableRow.prototype = Object.create(VariableRowBase.prototype);
+    NewVariableRow.prototype.constructor = VariableRowBase;
+    
+    NewVariableRow.prototype.createHtml = function() {
+        var row = '<tr>' +
+            // Name column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="">' +
+            '</td>' +
+            // Unit column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="">' +
+            '</td>' +
+            // Data type column
+            '<td class="has-success">' +
+            '  <select class="form-control no-border">' +
+            '    <option value="character">character</option>' +
+            '    <option value="integer">integer</option>' +
+            '    <option value="numeric">numeric</option>' +
+            '    <option value="array">array</option>' +
+            '  </select>' +
+            '</td>' +
+            // Value column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="">' +
+            '</td>' +
+            // Min column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="">' +
+            '</td>' +
+            // Max column
+            '<td class="has-success">' +
+            '  <input type="text" class="form-control input-sm" value="">' +
+            '</td>' +
+            // Dependent column (disabled)
+            '<td>' +
+            '  <input type="checkbox" class="form-control input-sm" disabled>' +
+            '</td>' +
+            // Add parameter button
+            '<td>' +
+            '  <button type="button" class="btn btn-default btn-success">' +
+            '    <span class="glyphicon glyphicon-plus"></span>' +
+            '  </button>' +
+            '</td>' +
+            '</tr>';
+    
+        return row;
+    };
+    
+    NewVariableRow.prototype.loadData = function() {
+        this.row = $('tfoot tr');
+        
+        this.nameInput = $('td:eq(0) input', this.row);
+        this.unitInput = $('td:eq(1) input', this.row);
+        this.typeSelect = $('td:eq(2) select', this.row);
+        this.valueInput = $('td:eq(3) input', this.row);
+        this.minInput = $('td:eq(4) input', this.row);
+        this.maxInput = $('td:eq(5) input', this.row);
+    };
+    
+    NewVariableRow.prototype.saveData = function() {
+        var outer = this;
+
+        this.nameInput.on('input', function() {
+            var nameTd = outer.nameInput.parent();  // Parent td of nameInput 
+            
+            // If name is repeated mark cell as invalid
+            if (outer.nameInput.val()) {
+                // Gets td > tr > tr number
+                var numRow = outer.row.index();
+                var names = [];
+                $('tbody tr').each(function(index, element) {
+                    if (index !== 0  && index !== numRow) {
+                        names.push($('td:first-child input', element).val());
+                    }
+                });
+
+                if (names.indexOf(outer.nameInput.val()) > -1) {
+                    _markInvalidTd(nameTd);
+                } else {
+                    _markValidTd(nameTd);
+                    outer.variable.name = outer.nameInput.val();
+                }
+            }
+            // If name is empty mark cell as invalid
+            else {
+                _markInvalidTd(nameTd);
+            }
+        });
+
+        this.unitInput.on('input', function() { outer.variable.unit = $(this).val(); });
+
+        // When the type changed discards the former value, min and max
+        this.typeSelect.change(function() {
+            if (outer.variable.type !== $(this).val()) {
+                outer.variable.type = $(this).val();
+
+                outer.variable.value = '';
+                outer.variable.min = '';
+                outer.variable.max = '';
+
+                outer.valueInput.val('');
+                outer.minInput.val('');
+                outer.maxInput.val('');
+            }
+        });
+    
+        // Saves value from valueInput. The value is not validated here but
+        // in the `Add parameter` event
+        this.valueInput.on('input', function() {
+            outer.variable.value = outer.valueInput.val();
+        });
+        
+        // Saves min from minInput. The min is not validated here but in the
+        // `Add parameter` event
+        this.minInput.on('input', function() {
+            outer.variable.min = outer.minInput.val();
+        });
+    
+        // Saves max from maxInput. The max is not validated here but in the
+        // `Add parameter` event
+        this.maxInput.on('input', function() {
+            outer.variable.max = outer.maxInput.val();
+        });
+
+        $('td:eq(7) button', this.row).click(function() {
+            if (!outer.nameInput.val()) {
+                outer.createWarning('Missing name');
+            } else if (!outer.unitInput.val()) {
+                outer.createWarning('Missing unit');
+            } else if (!outer.typeSelect.val()) {
+                outer.createWarning('Missing type');
+            } else if (!outer.valueInput.val()) {
+                outer.createWarning('Missing value');
+            } else if (!outer.minInput.val()) {
+                outer.createWarning('Missing min');
+            } else if (!outer.maxInput.val()) {
+                outer.createWarning('Missing max');
+            }
+            else if (!outer.validateName()) {
+                outer.createWarning('Invalid name: ' + outer.nameInput.val());
+            }
+            
+            else if (!outer.validateValue()) {
+                outer.createWarning('Invalid value: ' + outer.valueInput.val());
+            }
+            
+            else if (!outer.validateMin()) {
+                outer.createWarning('Invalid min: ' + outer.minInput.val());
+            }
+            
+            else if (!outer.validateMax()) {
+                outer.createWarning('Invalid max: ' + outer.maxInput.val());
+            }
+            
+            else {
+                // Create new row with new variable data
+                var variableRow = new VariableRow(outer.variable.clone());
+
+                // Insert new row just on top of the new variable row
+                $('tbody').append(variableRow.createHtml());
+                variableRow.loadData();
+                variableRow.saveData();
+
+                // Include the new variable data at the end of _variableRows
+                _variableRows.push(variableRow);
+
+                // Wipe out contents of the new variable data row
+                outer.nameInput.val('');
+                outer.unitInput.val('');
+                outer.valueInput.val('');
+                outer.minInput.val('');
+                outer.maxInput.val('');
+                outer.typeSelect.val('');
+            }
+        });
+    };
+    
+    NewVariableRow.prototype.createWarning = function(reason) {
+        var warning = $('<div class="alert alert-danger" role="alert">' + reason + '</div>');
+        $('table').before(warning);
+        window.setTimeout(function() {warning.remove();}, 5000);
+    };
+
     /**
      * Create a form-group envolving a textarea.
      * - id: Textarea id
@@ -101,7 +577,7 @@ metadata_editor = function () {
         };
 
         this.loadData = function() {
-            $('#' + this.id).val(this.value === null ? "" : this.value);
+            $('#' + this.id).val(this.value ? "" : this.value);
         };
 
         this.saveData = function() {
@@ -126,32 +602,47 @@ metadata_editor = function () {
         this.value = value;
 
         this.createHtml = function() {
-            var formStr = '<div class="form-group">';
-            formStr += '<label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>';
-            formStr += '<div class="col-sm-9">';
-            formStr += '<select class="form-control no-border" id="' + this.id + '">';
+            var form = '' +
+            '<div class="form-group">' +
+            '  <label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>' +
+            '  <div class="col-sm-9">' +
+            '    <select class="form-control no-border" id="' + this.id + '">';
             for (var key in this.entries) {
-                formStr += '<option value="' + key + '">' + entries[key] + '</option>';
+                form += '<option value="' + key + '">' + entries[key] + '</option>';
             }
-            formStr += '</select></div></div>';
+            form += '</select></div></div>';
 
-            return formStr;
-        }
+            return form;
+        };
 
         this.loadData = function() {
             if (this.value) {
                 var option = $('#' + this.id + ' option[value="' + this.value + '"]');
                 option.prop('selected', true);
             }
-        }
+        };
 
         this.saveData = function() {
             var outer = this;
             $('#' + this.id).change(function() { outer.value = $(this).val(); });
-        }
+        };
 
         return this;
     }
+
+    // Util
+    /** Mark a table cell as valid. */
+    function _markValidTd(td) {
+        td.removeClass('has-error');
+        td.addClass('has-success');
+    }
+
+    /** Mark a table cell as invalid. */
+    function _markInvalidTd(td) {
+        td.removeClass('has-success');
+        td.addClass('has-error');
+    }
+
 
     var editor = {
 	   version: "0.0.1"
@@ -183,6 +674,9 @@ metadata_editor = function () {
     var _foodProcessInput = new InputForm("foodProcessInput", "text", "Food process", "");
     var _hasDataInput = new InputForm("hasDataInput", "checkbox", "Has data?:", "");
 
+    var _variableRows;
+    var _newVariableRow;
+
     editor.init = function (representation, value)
     {
         _value = value;
@@ -210,6 +704,13 @@ metadata_editor = function () {
         _subjectInput.value = _value.metadata.subject;
         _foodProcessInput.value = _value.metadata.foodProcess;
         _hasDataInput.value = _value.metadata.hasData;
+
+        _variableRows = [];
+        _variableRows.push(new VariableRow(_value.metadata.dependentVariable, true));
+        for (var i = 0; i < _value.metadata.independentVariables.length; i++) {
+            _variableRows.push(new VariableRow(_value.metadata.independentVariables[i], false));
+        }
+        _newVariableRow = new NewVariableRow();
 
         checkVariables();
         create_body ();
@@ -241,6 +742,17 @@ metadata_editor = function () {
         _value.metadata.subject = _subjectInput.value;
         _value.metadata.foodProcess = _foodProcessInput.value;
         _value.metadata.hasData = _hasDataInput.value;
+        
+        // FIXME dummy
+        _value.metadata.independentVariables = [];
+        for (var i = 0; i < _variableRows.length; i++) {
+            var varRow = _variableRows[i];
+            if ($('td input[type=checkbox]', varRow.row).is(':checked')) {
+                _value.metadata.dependentVariable = varRow.variable;
+            } else {
+                _value.metadata.independentVariables.push(varRow.variable);
+            }
+        }
 
         return _value;
     };
@@ -252,66 +764,47 @@ metadata_editor = function () {
     {
         var varTable =
             '<table class="table table-condensed">' +
-            '  <tr>' +
+            '  <thead><tr>' +
             '    <th>Name</th>' +
             '    <th>Unit</th>' +
             '    <th>Type</th>' +
             '    <th>Value</th>' +
             '    <th>Min</th>' +
             '    <th>Max</th>' +
-            '    <th>Dependent</th>'
-            '  </tr>';
-        // Row with dependent variable
-        varTable +=
-            '<tr>' +
-            '  <td></td>' + // name
-            '  <td></td>' + // unit
-            '  <td></td>' + // type
-            '  <td class="has-success"><input type="text" class="form-control input-sm" value"" disabled></td>' + // value
-            '  <td class="has-success"><input type="text" class="form-control input-sm" value""></td>' + // min
-            '  <td class="has-success"><input type="text" class="form-control input-sm" value""></td>' + // max
-            '  <td class="has-success"><input type="checkbox" class="form-control" checked disabled></td>' +
-            '</tr>';
-        // Row with independent variables
-        for (var i = 0; i < _value.metadata.independentVariables.length; i++) {
-            var variable = _value.metadata.independentVariables[i];
-            varTable +=
-                '<tr>' +
-                '  <td></td>' + // name
-                '  <td></td>' + // unit
-                '  <td></td>' + // type
-                '  <td class="has-success"><input type="text" class="form-control input-sm" value""></td>' + // value
-                '  <td class="has-success"><input type="text" class="form-control input-sm" value""></td>' + // min
-                '  <td class="has-success"><input type="text" class="form-control input-sm" value""></td>' + // max
-                '  <td class="has-success"><input type="checkbox" class="form-control" disabled></td>' +
-                '</tr>';
+            '    <th>Dependent</th>' +
+            '    <th>Remove</th>' +
+            '  </tr></thead>' +
+            '  <tfoot>' + _newVariableRow.createHtml() + '</tfoot>' +
+            '  <tbody>';
+        for (var i = 0; i < _variableRows.length; i++) {
+            varTable += _variableRows[i].createHtml();
         }
-        varTable += '</table>';
+        varTable += '</tbody></table>';
 
-        var form = '<form class="form-horizontal">';
-        form += _modelNameInput.createHtml();
-        form += _modelIdInput.createHtml();
-        form += _modelLinkInput.createHtml();
-        form += _organismInput.createHtml();
-        form += _organismDetailsInput.createHtml();
-        form += _matrixInput.createHtml();
-        form += _matrixDetailsInput.createHtml();
-        form += _creatorInput.createHtml();
-        form += _familyNameInput.createHtml();
-        form += _contactInput.createHtml();
-        form += _softwareInput.createHtml();
-        form += _referenceDescriptionInput.createHtml();
-        form += _referenceDescriptionLinkInput.createHtml();
-        form += _createdDateInput.createHtml();
-        form += _modifiedDateInput.createHtml();
-        form += _rightsInput.createHtml();
-        form += _notesInput.createHtml();
-        form += _curatedInput.createHtml();
-        form += _typeInput.createHtml();
-        form += _subjectInput.createHtml();
-        form += _foodProcessInput.createHtml();
-        form += _hasDataInput.createHtml();
-        form += '</form>';
+        var form = '<form class="form-horizontal">' +
+            _modelNameInput.createHtml() +
+            _modelIdInput.createHtml() +
+            _modelLinkInput.createHtml() +
+            _organismInput.createHtml() +
+            _organismDetailsInput.createHtml() +
+            _matrixInput.createHtml() +
+            _matrixDetailsInput.createHtml() +
+            _creatorInput.createHtml() +
+            _familyNameInput.createHtml() +
+            _contactInput.createHtml() +
+            _softwareInput.createHtml() +
+            _referenceDescriptionInput.createHtml() +
+            _referenceDescriptionLinkInput.createHtml() +
+            _createdDateInput.createHtml() +
+            _modifiedDateInput.createHtml() +
+            _rightsInput.createHtml() +
+            _notesInput.createHtml() +
+            _curatedInput.createHtml() +
+            _typeInput.createHtml() +
+            _subjectInput.createHtml() +
+            _foodProcessInput.createHtml() +
+            _hasDataInput.createHtml() +
+            '</form>';
 
         document.createElement("body");
         $("body").html('<div class="container">' + form + varTable + '</div');
@@ -353,33 +846,10 @@ metadata_editor = function () {
         _subjectInput.loadData();
         _foodProcessInput.loadData();
         _hasDataInput.loadData();
-
-        var depRow = $('table tr:eq(1)');
-        $('td:eq(0)', depRow).text(_value.metadata.dependentVariable.name);
-        $('td:eq(1)', depRow).text(_value.metadata.dependentVariable.unit);
-        $('td:eq(2)', depRow).text(_value.metadata.dependentVariable.type);
-        $('td:eq(3) input', depRow).val(_value.metadata.dependentVariable.value);
-        $('td:eq(4) input', depRow).val(_value.metadata.dependentVariable.min);
-        $('td:eq(5) input', depRow).val(_value.metadata.dependentVariable.max);
-
-        for (var i = 0; i < _value.metadata.independentVariables.length; i++) {
-            var variable = _value.metadata.independentVariables[i];
-            var tableRow = $('table tr:eq(' + (i + 2) + ')');
-
-            $('td:eq(0)', tableRow).text(variable.name);
-            $('td:eq(1)', tableRow).text(variable.unit);
-            $('td:eq(2)', tableRow).text(variable.type);
-            $('td:eq(3) input', tableRow).val(variable.value);
-            $('td:eq(4) input', tableRow).val(variable.min);
-            $('td:eq(5) input', tableRow).val(variable.max);
-
-            // Disable arrays
-            if (variable.type === 'array') {
-                $('td:eq(3) input', tableRow).prop('disabled', true);
-                $('td:eq(4) input', tableRow).prop('disabled', true);
-                $('td:eq(5) input', tableRow).prop('disabled', true);
-            }
+        for (var i = 0; i < _variableRows.length; i++) {
+            _variableRows[i].loadData();
         }
+        _newVariableRow.loadData();
     }
 
     /**
@@ -413,84 +883,10 @@ metadata_editor = function () {
         _foodProcessInput.saveData();
         _hasDataInput.saveData();
 
-        // Saves and validates changes in variables table (dependent variable)
-        var depRow = $('table tr:eq(1)');
-        $('td:eq(4) input', depRow).on('input', function() {
-            var newVal = Number($(this).val());
-            var max = Number(_value.metadata.dependentVariable.max);
-
-            if (newVal < max) {
-                _value.metadata.dependentVariable.min = newVal;
-                markValidTd($(this).parent());
-            } else {
-                markInvalidTd($(this).parent());
-            }
-        });
-        $('td:eq(5) input', depRow).on('input', function() {
-            var newVal = Number($(this).val());
-            var min = Number(_value.metadata.dependentVariable.min);
-            if (newVal > min) {
-                _value.metadata.dependentVariable.max = newVal;
-                markValidTd($(this).parent());
-            } else {
-                markInvalidTd($(this).parent());
-            }
-        });
-
-        // Save changes in variables table (independent variables)
-        $("body div table tr:gt(1)").each(function(i, row) {
-            // Value change
-            $("td:eq(3) input", this).on('input', function() {
-                var newVal = Number($(this).val());
-                if (_value.metadata.independentVariables[i].type === 'integer'
-                    && newVal % 2 != 0) {
-                    markInvalidTd($(this).parent());
-                } else {
-                    var min = Number(_value.metadata.independentVariables[i].min);
-                    var max = Number(_value.metadata.independentVariables[i].max);
-                    if (min <= newVal && newVal <= max) {
-                        _value.metadata.independentVariables[i].value = newVal;
-                        markValidTd($(this).parent());
-                    } else {
-                        markInvalidTd($(this).parent());
-                    }
-                }
-            });
-            // Minimum value change
-            $("td:eq(4) input", this).on('input', function() {
-                var newVal = Number($(this).val());
-                var max = Number(_value.metadata.independentVariables[i].max);
-                if (newVal < max) {
-                    _value.metadata.independentVariables[i].min = newVal;
-                    markValidTd($(this).parent());
-                } else {
-                    markInvalidTd($(this).parent());
-                }
-            });
-            // Maximum value change
-            $("td:eq(5) input", this).on('input', function() {
-                var newVal = Number($(this).val());
-                var min = Number(_value.metadata.independentVariables[i].min);
-                if (newVal > min) {
-                    _value.metadata.independentVariables[i].max = newVal;
-                    markValidTd($(this).parent());
-                } else {
-                    markInvalidTd($(this).parent());
-                }
-            });
-        });
-
-        /** Mark a table cell as valid. */
-        function markValidTd(td) {
-            td.removeClass('has-error');
-            td.addClass('has-success');
+        for (var i = 0; i < _variableRows.length; i++) {
+            _variableRows[i].saveData();
         }
-
-        /** Mark a table cell as invalid. */
-        function markInvalidTd(td) {
-            td.removeClass('has-success');
-            td.addClass('has-error');
-        }
+        _newVariableRow.saveData();
     }
 
     /** Check variables. Integer variables will truncate decimals. */
