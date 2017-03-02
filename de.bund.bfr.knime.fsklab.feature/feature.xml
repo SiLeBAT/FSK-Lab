@@ -44,6 +44,7 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="org.apache.servicemix.bundles.poi" version="3.14.0" match="greaterOrEqual"/>
+      <import plugin="org.knime.quickform.nodes.legacy"/>
    </requires>
 
    <plugin
