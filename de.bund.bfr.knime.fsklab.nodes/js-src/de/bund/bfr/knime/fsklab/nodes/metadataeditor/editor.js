@@ -31,6 +31,12 @@ metadata_editor = function () {
         'PH_AW': 'pH/aw',
         'T_PH_AW': 'T/pH/aw'
     };
+    var dataTypeDic = {
+        'character': 'character',
+        'integer': 'integer',
+        'numeric': 'numeric',
+        'array': 'array'
+    };
 
     function Variable() {
         this.name = '';
@@ -56,67 +62,136 @@ metadata_editor = function () {
 
     /**
      * Create a form-group envolving an input.
-     * - id: Input id
      * - type: Input type {text, url, checkbox}
      * - label: Text label
-     * - value: String value
+     * 
+     * The input is accesible through the property `input`.
      */
-    function InputForm(id, type, label, value) {
-        this.id = id;
-        this.type = type;
-        this.label = label;
-        this.value = value;
-
-        this.createHtml = function() {
-            var form = '' +
-            '<div class="form-group">' +
-            '  <label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>' +
-            '  <div class="col-sm-9">';
-            if (this.type === 'text') {
-                form += '<input type="text" class="form-control no-border" id="' + this.id + '" value="">';
-            } else if (this.type === 'url') {
-                form += '<input type="url" class="form-control no-border" id="' + this.id + '" value="">';
-            } else if (this.type == 'checkbox') {
-                form += '<input id="' + id + '" type="checkbox">';
-            }
-            form += '</div></div>';
-
-            return form;
-        };
-
-        this.loadData = function() {
-            if (this.type === 'text' || this.type === 'url') {
-                $('#' + id).val(this.value === null ? "" : this.value);
-            } else if (this.type === 'checkbox') {
-                $('#' + id).prop('checked', _value.metadata.hasData);
-            }
-        };
-
-        this.saveData = function() {
-            var outer = this;
-            if (this.type === 'text' || this.type === 'url') {
-                $('#' + this.id).on('input', function() { outer.value = $(this).val(); });
-            } else if (this.type === 'checkbox') {
-                $('#' + this.id).change(function() { outer.value = $(this).is(':checked'); });
-            }
-        };
-
-        return this;
+    function InputForm(type, label) {
+        var form = $('<div class="form-group">' +
+            '  <label class="col-sm-3 control-label">' + label + '</label>' +
+            '  <div class="col-sm-9"></div>' +
+            '</div>');
+        form.input = new Input(type);
+        $('div', form).append(form.input);
+        
+        return form;
+    }
+    
+    function Input(type) {
+        var input;
+        
+        if (type === 'text') {
+            input = $('<input type="text" class="form-control no-border" value="">');
+        } else if (type === 'url') {
+            input = $('<input type="url" class="form-control no-border" value="">');
+        } else if (type === 'checkbox') {
+            input = $('<input type="checkbox" class="form-control no-border">');
+        } else if (type === 'date') {
+            input = $('<input type="text" class="form-control no-border">');
+            input.datepicker({ dateFormat: 'mm.dd.yy' });
+            input.click(function() { $(this).datepicker('show'); });
+        }
+        
+        return input;
+    }
+    
+    /**
+     * Create a form-group envolving a textarea.
+     * - label: Text label
+     */
+    function TextAreaForm(label) {
+        var form = $('<div class="form-group">' +
+            '  <label class="col-sm-3 control-label">' + label + '</label>' +
+            '  <div class="col-sm-9"></div>' +
+            '</div>');
+        form.textarea = $('<textarea class="form-control no-border" rows="3"></textarea>');
+        $('div', form).append(form.textarea);
+        
+        return form;
     }
 
+    function Select(entries) {
+        var select = $('<select class="form-control no-border"></select>');
+        for (var key in entries) {
+            select.append($('<option value="' + key + '">' + entries[key] + '</option>'));
+        }
+        return select;
+    }
+    
+    /**
+     * Create a form-group envolving a select.
+     * - label: Text label
+     * - entries: Dictionary where the keys are the labels and the values are
+     *   the option values.
+     */
+    function SelectForm(label, entries) {
+        var form = $('<div class="form-group">' +
+            '  <label class="col-sm-3 control-label">' + label + '</label>' +
+            '  <div class="col-sm-9"></div>' +
+            '</div>');
+        form.input = new Select(entries);
+        $('div', form).append(form.input);
+        
+        return form;
+    } 
+    
+    /**
+     * TableInput.
+     * 
+     * Text input with border. Extends Input.
+     */
+    function TableInput() {
+        var input = new Input('text');
+        input.removeClass('no-border');
+        
+        return input;
+    }
+    
+    /**
+     * Table select.
+     * 
+     * Table select with border. Extends Select.
+     */
+     function TableSelect(entries) {
+         var input = new Select(entries);
+         input.removeClass('no-border');
+         
+         return input;
+     }
 
     function VariableRowBase() {
         this.variable = null;
         
         // HTML elements
-        this.row = null;
+        this.nameInput = new TableInput();
+        this.unitInput = new TableInput();
+        this.typeSelect = new TableSelect(dataTypeDic);
+        this.valueInput = new TableInput();
+        this.minInput = new TableInput();
+        this.maxInput = new TableInput();
+        this.isDependentInput = null;
+        this.removeAddButton = null;
         
-        this.nameInput = null;
-        this.unitInput = null;
-        this.typeSelect = null;
-        this.valueInput = null;
-        this.minInput = null;
-        this.maxInput = null;
+        this.row = $('<tr>' +
+            '<td class="has-success">' +  // name column
+            '<td class="has-success">' +  // unit column
+            '<td class="has-success">' +  // data type column
+            '<td class="has-success">' +  // value column
+            '<td class="has-success">' +  // min column
+            '<td class="has-success">' +  // max column
+            '<td></td>' +  // dependent column
+            '<td></td>' +  // remove parameter button
+            '</tr>'
+        );
+            
+        // Add HTML elements to this.row
+        $('td:eq(0)', this.row).append(this.nameInput);
+        $('td:eq(1)', this.row).append(this.unitInput);
+        $('td:eq(2)', this.row).append(this.typeSelect);
+        $('td:eq(3)', this.row).append(this.valueInput);
+        $('td:eq(4)', this.row).append(this.minInput);
+        $('td:eq(5)', this.row).append(this.maxInput);
     }
     
     /**
@@ -170,87 +245,37 @@ metadata_editor = function () {
     
     /**
      * Create a table row with variable data.
-     * The value property is undefined or null for dependent variable.
+     * 
+     * Changes with VariableRowBase:
+     * - isDependentInput is enabled
+     * - removeAddButton is a removeButton
      */
     function VariableRow(variable, is_dependent) {
         VariableRowBase.call(this);
         this.variable = variable;
         this.is_dependent = is_dependent;
+       
+        // HTML elements
+        this.isDependentInput = $('<input type="checkbox" class="form-control input-sm">');
+        this.removeAddButton = $('<button type="button" class="btn btn-default btn-danger">' +
+            '  <span class="glyphicon glyphicon-minus"></span>' +
+            '</button>'); 
+            
+        $('td:eq(6)', this.row).append(this.isDependentInput);
+        $('td:eq(7)', this.row).append(this.removeAddButton);
+        
         return this;
     }
     VariableRow.prototype = Object.create(VariableRowBase.prototype);
     VariableRow.prototype.constructor = VariableRowBase;
     
-    VariableRow.prototype.createHtml = function() {
-        var name = this.variable.name === null ? "" : this.variable.name;
-        var unit = this.variable.unit === null ? "" : this.variable.unit;
-        var value = this.variable.value === null ? "" : this.variable.value;
-        var min = this.variable.min === null ? "" : this.variable.min;
-        var max = this.variable.max === null ? "" : this.variable.max;
-
-        var row = '<tr>' +
-            // Name column
-            '<td class="has-success">' +
-            '  <input type="text" class="form-control input-sm" value="' + name + '">' +
-            '</td>' +
-            // Unit column
-            '<td class="has-success">' +
-            '  <input type="text" class="form-control input-sm" value="' + unit + '">' +
-            '</td>' +
-            // Data type column
-            '<td class="has-success">' +
-            '  <select class="form-control no-border">' +
-            '    <option value="character">character</option>' +
-            '    <option value="integer">integer</option>' +
-            '    <option value="numeric">numeric</option>' +
-            '    <option value="array">array</option>' +
-            '  </select>' +
-            '</td>' +
-            // Value column
-            '<td class="has-success">' +
-            '  <input type="text" class="form-control input-sm" value="' + value + '">' +
-            '</td>' +
-            // Min column
-            '<td class="has-success">' +
-            '  <input type="text" class="form-control input-sm" value="' + min + '">' +
-            '</td>' +
-            // Max column
-            '<td class="has-success">' +
-            '  <input type="text" class="form-control input-sm" value="' + max + '">' +
-            '</td>' +
-            // Dependent column: whether the parameter is dependent
-            '<td><input type="checkbox" class="form-control input-sm"' +
-                (this.is_dependent ? " checked" : "") + '></td>' +
-            // Remove parameter button
-            '<td>' +
-            '  <button type="button" class="btn btn-default btn-danger">' +
-            '    <span class="glyphicon glyphicon-minus"></span>' +
-            '  </button>' +
-            '</td>' +
-            '</tr>'; 
-
-        return row;
-    };
-    
     VariableRow.prototype.loadData = function() {
-        var outer = this;
-        this.row = $('tbody tr td:first-child input').filter(function() {
-            return $(this).val() == outer.variable.name;
-        }).parent().parent();
-
-        // Caches HTML elements
-        this.nameInput = $('td:eq(0) input', this.row);
-        this.unitInput = $('td:eq(1) input', this.row);
-        this.typeSelect = $('td:eq(2) select', this.row);
-        this.valueInput = $('td:eq(3) input', this.row);
-        this.minInput = $('td:eq(4) input', this.row);
-        this.maxInput = $('td:eq(5) input', this.row);
-        this.depInput = $('td:eq(6) input', this.row);
-        this.removeButton = $('td:eq(7) button', this.row);
+        this.nameInput.val(this.variable.name ? this.variable.name : "");
+        this.unitInput.val(this.variable.unit ? this.variable.unit : "");
         
         // Mark variable type as selected in typeSelect
         $('option[value=' + this.variable.type + ']', this.typeSelect).prop('selected', true);
-
+        
         this.valueInput.val(this.variable.value);
         this.minInput.val(this.variable.min);
         this.maxInput.val(this.variable.max);
@@ -260,6 +285,10 @@ metadata_editor = function () {
             this.valueInput.prop('disabled', true);
             this.minInput.prop('disabled', true);
             this.maxInput.prop('disabled', true);
+        }
+        
+        if (this.is_dependent) {
+            this.isDependentInput.prop(':checked', true);
         }
     };
     
@@ -289,13 +318,13 @@ metadata_editor = function () {
             if (outer.variable.type !== $(this).val()) {
                 outer.variable.type = $(this).val();
 
-                outer.variable.value = "";
-                outer.variable.min = "";
-                outer.variable.max = "";
+                outer.variable.value = '';
+                outer.variable.min = '';
+                outer.variable.max = '';
 
-                outer.valueInput.val("");
-                outer.minInput.val("");
-                outer.maxInput.val("");
+                outer.valueInput.val('');
+                outer.minInput.val('');
+                outer.maxInput.val('');
             }
         });
         
@@ -314,8 +343,6 @@ metadata_editor = function () {
                     _markInvalidTd(valTd);
                 }
             }
-            
-            // outer.variable.value = outer.valueInput.val();
         });
             
         // Validate min
@@ -343,7 +370,7 @@ metadata_editor = function () {
 
         // When a dependent checkbox is checked, then uncheck the
         // previously checked checkbox
-        this.depInput.change(function() {
+        this.isDependentInput.change(function() {
             // Style row with dependent variable
             outer.row.addClass('danger');
 
@@ -360,106 +387,45 @@ metadata_editor = function () {
             }
         });
 
-        this.removeButton.click(function() {
+        this.removeAddButton.click(function() {
             _variableRows.splice(outer.row.index(), 1);  // Remove this row data
             outer.row.remove();  // Remove row from table
         });
     }; 
     
+    /**
+     * Create a table row to introduce a new variable.
+     * 
+     * Changes with VariableRowBase:
+     * - isDependentInput is disabled
+     * - removeAddButton is an add button
+     */
     function NewVariableRow() {
         VariableRowBase.call(this);
         this.variable = new Variable();
+        
+        // HTML elements
+        this.isDependentInput = $('<input type="checkbox" class="form-control input-sm" disabled>');
+        this.removeAddButton = $('<button type="button" class="btn btn-default btn-success">' +
+            '  <span class="glyphicon glyphicon-plus"></span>' +
+            '</button>');
+        
+        $('td:eq(6)', this.row).append(this.isDependentInput);
+        $('td:eq(7)', this.row).append(this.removeAddButton);
         
         return this;
     } 
     NewVariableRow.prototype = Object.create(VariableRowBase.prototype);
     NewVariableRow.prototype.constructor = VariableRowBase;
     
-    NewVariableRow.prototype.createHtml = function() {
-        var row = '<tr>' +
-            // Name column
-            '<td class="has-success">' +
-            '  <input type="text" class="form-control input-sm" value="">' +
-            '</td>' +
-            // Unit column
-            '<td class="has-success">' +
-            '  <input type="text" class="form-control input-sm" value="">' +
-            '</td>' +
-            // Data type column
-            '<td class="has-success">' +
-            '  <select class="form-control no-border">' +
-            '    <option value="character">character</option>' +
-            '    <option value="integer">integer</option>' +
-            '    <option value="numeric">numeric</option>' +
-            '    <option value="array">array</option>' +
-            '  </select>' +
-            '</td>' +
-            // Value column
-            '<td class="has-success">' +
-            '  <input type="text" class="form-control input-sm" value="">' +
-            '</td>' +
-            // Min column
-            '<td class="has-success">' +
-            '  <input type="text" class="form-control input-sm" value="">' +
-            '</td>' +
-            // Max column
-            '<td class="has-success">' +
-            '  <input type="text" class="form-control input-sm" value="">' +
-            '</td>' +
-            // Dependent column (disabled)
-            '<td>' +
-            '  <input type="checkbox" class="form-control input-sm" disabled>' +
-            '</td>' +
-            // Add parameter button
-            '<td>' +
-            '  <button type="button" class="btn btn-default btn-success">' +
-            '    <span class="glyphicon glyphicon-plus"></span>' +
-            '  </button>' +
-            '</td>' +
-            '</tr>';
-    
-        return row;
-    };
-    
     NewVariableRow.prototype.loadData = function() {
-        this.row = $('tfoot tr');
-        
-        this.nameInput = $('td:eq(0) input', this.row);
-        this.unitInput = $('td:eq(1) input', this.row);
-        this.typeSelect = $('td:eq(2) select', this.row);
-        this.valueInput = $('td:eq(3) input', this.row);
-        this.minInput = $('td:eq(4) input', this.row);
-        this.maxInput = $('td:eq(5) input', this.row);
     };
     
     NewVariableRow.prototype.saveData = function() {
         var outer = this;
 
         this.nameInput.on('input', function() {
-            var nameTd = outer.nameInput.parent();  // Parent td of nameInput 
-            
-            // If name is repeated mark cell as invalid
-            if (outer.nameInput.val()) {
-                // Gets td > tr > tr number
-                var numRow = outer.row.index();
-                var names = [];
-                $('tbody tr').each(function(index, element) {
-                    if (index !== 0  && index !== numRow) {
-                        names.push($('td:first-child input', element).val());
-                    }
-                });
-
-                if (names.indexOf(outer.nameInput.val()) > -1) {
-                    _markInvalidTd(nameTd);
-                } else {
-                    _markValidTd(nameTd);
-                    outer.variable.name = outer.nameInput.val();
-                }
-            }
-            // If name is empty mark cell as invalid
-            else {
-                _markInvalidTd(nameTd);
-            }
+            outer.variable.name = outer.nameInput.val();
         });
 
         this.unitInput.on('input', function() { outer.variable.unit = $(this).val(); });
@@ -497,7 +463,7 @@ metadata_editor = function () {
             outer.variable.max = outer.maxInput.val();
         });
 
-        $('td:eq(7) button', this.row).click(function() {
+        this.removeAddButton.click(function() {
             if (!outer.nameInput.val()) {
                 outer.createWarning('Missing name');
             } else if (!outer.unitInput.val()) {
@@ -532,7 +498,7 @@ metadata_editor = function () {
                 var variableRow = new VariableRow(outer.variable.clone());
 
                 // Insert new row just on top of the new variable row
-                $('tbody').append(variableRow.createHtml());
+                $('tbody').append(variableRow.row);
                 variableRow.loadData();
                 variableRow.saveData();
 
@@ -556,79 +522,7 @@ metadata_editor = function () {
         window.setTimeout(function() {warning.remove();}, 5000);
     };
 
-    /**
-     * Create a form-group envolving a textarea.
-     * - id: Textarea id
-     * - label: Text label
-     * - value: String value
-     */
-    function TextAreaForm(id, label, value) {
-        this.id = id;
-        this.label = label;
-        this.value = value;
 
-        this.createHtml = function() {
-            return '<div class="form-group">' +
-                '  <label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>' +
-                '  <div class="col-sm-9">' +
-                '    <textarea id="' + this.id + '" class="form-control no-border" rows="3"></textArea>' +
-                '  </div>' +
-                '</div>';
-        };
-
-        this.loadData = function() {
-            $('#' + this.id).val(this.value ? "" : this.value);
-        };
-
-        this.saveData = function() {
-            var outer = this;
-            $('#' + this.id).on('input', function() { outer.value = $(this).val(); });
-        };
-
-        return this;
-    }
-
-    /**
-     * Create a form-group envolving a select.
-     * - id: Select id
-     * - label: Text label
-     * - entries: Dictionary where the keys are the labels and the values are the option values
-     * - value: String value with the selected option
-     */
-    function SelectForm(id, label, entries, value) {
-        this.id = id;
-        this.label = label;
-        this.entries = entries;
-        this.value = value;
-
-        this.createHtml = function() {
-            var form = '' +
-            '<div class="form-group">' +
-            '  <label for="' + this.id + '" class="col-sm-3 control-label">' + this.label + '</label>' +
-            '  <div class="col-sm-9">' +
-            '    <select class="form-control no-border" id="' + this.id + '">';
-            for (var key in this.entries) {
-                form += '<option value="' + key + '">' + entries[key] + '</option>';
-            }
-            form += '</select></div></div>';
-
-            return form;
-        };
-
-        this.loadData = function() {
-            if (this.value) {
-                var option = $('#' + this.id + ' option[value="' + this.value + '"]');
-                option.prop('selected', true);
-            }
-        };
-
-        this.saveData = function() {
-            var outer = this;
-            $('#' + this.id).change(function() { outer.value = $(this).val(); });
-        };
-
-        return this;
-    }
 
     // Util
     /** Mark a table cell as valid. */
@@ -645,34 +539,34 @@ metadata_editor = function () {
 
 
     var editor = {
-	   version: "0.0.1"
+	   version: '0.0.1'
     };
-    editor.name = "FSK Metadata Editor";
+    editor.name = 'FSK Metadata Editor';
 
     var _value;  // Raw FskMetadataEditorViewValue
 
-    var _modelNameInput = new InputForm("modelNameInput", "text", "Model name", "");
-    var _modelIdInput = new InputForm("modelIdInput", "text", "Model id", "");
-    var _modelLinkInput = new InputForm("modelLinkInput", "url", "Model link", "");
-    var _organismInput = new InputForm("organismInput", "text", "Organism", "");
-    var _organismDetailsInput = new InputForm("organismDetailsInput", "text", "Organism details", "");
-    var _matrixInput = new InputForm("matrixInput", "text", "Matrix", "");
-    var _matrixDetailsInput = new InputForm("matrixDetailsInput", "text", "Matrix details", "");
-    var _creatorInput = new InputForm("creatorInput", "text", "Creator", "");
-    var _familyNameInput = new InputForm("familyNameInput", "text", "Family name", "");
-    var _contactInput = new InputForm("contactInput", "text", "Contact", "");
-    var _softwareInput = new SelectForm("softwareInput", "Software", softwareDic, "");
-    var _referenceDescriptionInput = new InputForm("referenceDescriptionInput", "text", "Reference description", "");
-    var _referenceDescriptionLinkInput = new InputForm("referenceDescriptionLinkInput", "url", "Reference description link", "");
-    var _createdDateInput = new InputForm("createdDateInput", "text", "Created date", "");
-    var _modifiedDateInput = new InputForm("modifiedDateInput", "text", "Modified date", "");
-    var _rightsInput = new InputForm("rightsInput", "text", "Rights", "");
-    var _notesInput = new TextAreaForm("notesInput", "Notes:", "");
-    var _curatedInput = new InputForm("curatedInput", "checkbox", "Curated", "");
-    var _typeInput = new SelectForm("typeInput", "Model type", modelTypeDic, "");
-    var _subjectInput = new SelectForm("subjectInput", "Model subject", modelClassDic, "");
-    var _foodProcessInput = new InputForm("foodProcessInput", "text", "Food process", "");
-    var _hasDataInput = new InputForm("hasDataInput", "checkbox", "Has data?:", "");
+    var _modelNameInput = new InputForm('text', 'Model name');
+    var _modelIdInput = new InputForm('text', 'Model id');
+    var _modelLinkInput = new InputForm('url', 'Model link');
+    var _organismInput = new InputForm('text', 'Organism');
+    var _organismDetailsInput = new InputForm('text', 'Organism details');
+    var _matrixInput = new InputForm('text', 'Matrix');
+    var _matrixDetailsInput = new InputForm('text', 'Matrix details');
+    var _creatorInput = new InputForm('text', 'Creator');
+    var _familyNameInput = new InputForm('text', 'Family name');
+    var _contactInput = new InputForm('text', 'Contact');
+    var _softwareInput = new SelectForm('Software', softwareDic);
+    var _referenceDescriptionInput = new InputForm('text', 'Reference description');
+    var _referenceDescriptionLinkInput = new InputForm('url', 'Reference description link');
+    var _createdDateInput = new InputForm('date', 'Created date');
+    var _modifiedDateInput = new InputForm('date', 'Modified date');
+    var _rightsInput = new InputForm('text', 'Rights');
+    var _notesInput = new TextAreaForm('Notes');
+    var _curatedInput = new InputForm('checkbox', 'Curated');
+    var _typeInput = new SelectForm('Model type', modelTypeDic);
+    var _subjectInput = new SelectForm('Model subject', modelClassDic);
+    var _foodProcessInput = new InputForm('text', 'Food process');
+    var _hasDataInput = new InputForm('checkbox', 'Has data?');
 
     var _variableRows;
     var _newVariableRow;
@@ -681,29 +575,28 @@ metadata_editor = function () {
     {
         _value = value;
 
-        // Initialize input with input metadata
-        _modelNameInput.value = _value.metadata.modelName;
-        _modelIdInput.value = _value.metadata.modelId;
-        _modelLinkInput.value = _value.metadata.modelLink;
-        _organismInput.value = _value.metadata.organism;
-        _organismDetailsInput.value = _value.metadata.organismDetails;
-        _matrixInput.value = _value.metadata.matrix;
-        _matrixDetailsInput.value = _value.metadata.matrixDetails;
-        _creatorInput.value = _value.metadata.creator;
-        _familyNameInput.value = _value.metadata.familyName;
-        _contactInput.value = _value.metadata.contact;
-        _softwareInput.value = _value.metadata.software;
-        _referenceDescriptionInput.value = _value.metadata.referenceDescription;
-        _referenceDescriptionLinkInput.value = _value.metadata.referenceDescriptionLink;
-        _createdDateInput.value = _value.metadata.createdDate;
-        _modifiedDateInput.value = _value.metadata.modifiedDate;
-        _rightsInput.value = _value.metadata.rights;
-        _notesInput.value = _value.metadata.notes;
-        _curatedInput.value = _value.metadata.curated;
-        _typeInput.value = _value.metadata.type;
-        _subjectInput.value = _value.metadata.subject;
-        _foodProcessInput.value = _value.metadata.foodProcess;
-        _hasDataInput.value = _value.metadata.hasData;
+        _modelNameInput.input.val(_value.metadata.modelName);
+        _modelIdInput.input.val(_value.metadata.modelId);
+        _modelLinkInput.input.val(_value.metadata.modelLink);
+        _organismInput.input.val(_value.metadata.organism);
+        _organismDetailsInput.input.val(_value.metadata.organismDetails);
+        _matrixInput.input.val(_value.metadata.matrix);
+        _matrixDetailsInput.input.val(_value.metadata.matrixDetails);
+        _creatorInput.input.val(_value.metadata.creator);
+        _familyNameInput.input.val(_value.metadata.familyName);
+        _contactInput.input.val(_value.metadata.contact);
+        $('option[value=' + _value.metadata.software + ']', _softwareInput.input).prop('selected', true);
+        _referenceDescriptionInput.input.val(_value.metadata.referenceDescription);
+        _referenceDescriptionLinkInput.input.val(_value.metadata.referenceDescriptionLink);
+        _createdDateInput.input.datepicker('setDate', _value.metadata.createdDate);
+        _modifiedDateInput.input.datepicker('setDate', _value.metadata.modifiedDate);
+        _rightsInput.input.val(_value.metadata.rights);
+        _notesInput.textarea.val(_value.metadata.notes);
+        _curatedInput.input.val(_value.metadata.curated);
+        $('option[value=' + _value.metadata.type + ']', _typeInput.input).prop('selected', true);
+        $('option[value=' + _value.metadata.subject + ']', _subjectInput.input).prop('selected', true);
+        _foodProcessInput.input.val(_value.metadata.foodProcess);
+        _hasDataInput.input.val(_value.metadata.hasData);
 
         _variableRows = [];
         _variableRows.push(new VariableRow(_value.metadata.dependentVariable, true));
@@ -719,31 +612,29 @@ metadata_editor = function () {
 
     editor.getComponentValue = function ()
     {
-        // assign input values to _value
-        _value.metadata.modelName = _modelNameInput.value;
-        _value.metadata.modelId = _modelIdInput.value;
-        _value.metadata.modelLink = _modelLinkInput.value;
-        _value.metadata.organism = _organismInput.value;
-        _value.metadata.organismDetails = _organismDetailsInput.value;
-        _value.metadata.matrix = _matrixInput.value;
-        _value.metadata.matrixDetails = _matrixDetailsInput.value;
-        _value.metadata.creator = _creatorInput.value;
-        _value.metadata.familyName = _familyNameInput.value;
-        _value.metadata.contact = _contactInput.value;
-        _value.metadata.software = _softwareInput.value;
-        _value.metadata.referenceDescription = _referenceDescriptionInput.value;
-        _value.metadata.referenceDescriptionLink = _referenceDescriptionLinkInput.value;
-        _value.metadata.createdDate = _createdDateInput.value;
-        _value.metadata.modifiedDate = _modifiedDateInput.value;
-        _value.metadata.rights = _rightsInput.value;
-        _value.metadata.notes = _notesInput.value;
-        _value.metadata.curated = _curatedInput.value;
-        _value.metadata.type = _typeInput.value;
-        _value.metadata.subject = _subjectInput.value;
-        _value.metadata.foodProcess = _foodProcessInput.value;
-        _value.metadata.hasData = _hasDataInput.value;
+        _value.metadata.modelName = _modelNameInput.input.val();
+        _value.metadata.modelId = _modelIdInput.input.val();
+        _value.metadata.modelLink = _modelLinkInput.input.val();
+        _value.metadata.organism = _organismInput.input.val();
+        _value.metadata.organismDetails = _organismDetailsInput.input.val();
+        _value.metadata.matrix = _matrixInput.input.val();
+        _value.metadata.matrixDetails = _matrixDetailsInput.input.val();
+        _value.metadata.creator = _creatorInput.input.val();
+        _value.metadata.familyName = _familyNameInput.input.val();
+        _value.metadata.contact = _contactInput.input.val();
+        _value.metadata.software = _softwareInput.input.val();
+        _value.metadata.referenceDescription = _referenceDescriptionInput.input.val();
+        _value.metadata.referenceDescriptionLink = _referenceDescriptionLinkInput.input.val();
+        _value.metadata.createdDate = _createdDateInput.input.datepicker('getDate');
+        _value.metadata.modifiedDate = _modifiedDateInput.input.datepicker('getDate');
+        _value.metadata.rights = _rightsInput.input.val();
+        _value.metadata.notes = _notesInput.textarea.val();
+        _value.metadata.curated = _curatedInput.input.val();
+        _value.metadata.type = _typeInput.input.val();
+        _value.metadata.subject = _subjectInput.input.val();
+        _value.metadata.foodProcess = _foodProcessInput.input.val();
+        _value.metadata.hasData = _hasDataInput.input.val();
         
-        // FIXME dummy
         _value.metadata.independentVariables = [];
         for (var i = 0; i < _variableRows.length; i++) {
             var varRow = _variableRows[i];
@@ -774,78 +665,50 @@ metadata_editor = function () {
             '    <th>Dependent</th>' +
             '    <th>Remove</th>' +
             '  </tr></thead>' +
-            '  <tfoot>' + _newVariableRow.createHtml() + '</tfoot>' +
-            '  <tbody>';
-        for (var i = 0; i < _variableRows.length; i++) {
-            varTable += _variableRows[i].createHtml();
-        }
-        varTable += '</tbody></table>';
+            '  <tfoot></tfoot>' +
+            '  <tbody></tbody>' +
+            '</table>';
 
-        var form = '<form class="form-horizontal">' +
-            _modelNameInput.createHtml() +
-            _modelIdInput.createHtml() +
-            _modelLinkInput.createHtml() +
-            _organismInput.createHtml() +
-            _organismDetailsInput.createHtml() +
-            _matrixInput.createHtml() +
-            _matrixDetailsInput.createHtml() +
-            _creatorInput.createHtml() +
-            _familyNameInput.createHtml() +
-            _contactInput.createHtml() +
-            _softwareInput.createHtml() +
-            _referenceDescriptionInput.createHtml() +
-            _referenceDescriptionLinkInput.createHtml() +
-            _createdDateInput.createHtml() +
-            _modifiedDateInput.createHtml() +
-            _rightsInput.createHtml() +
-            _notesInput.createHtml() +
-            _curatedInput.createHtml() +
-            _typeInput.createHtml() +
-            _subjectInput.createHtml() +
-            _foodProcessInput.createHtml() +
-            _hasDataInput.createHtml() +
-            '</form>';
+        var form = '<form class="form-horizontal"></form>';
 
         document.createElement("body");
         $("body").html('<div class="container">' + form + varTable + '</div');
-
-        // Create date pickers. Set date formats and save when dates change.
-        $("#createdDateInput").datepicker({
-            dateFormat: "mm.dd.yy",
-            onSelect: function(dateText) { _createdDateInput.value = dateText; }
-        });
-        $("#modifiedDateInput").datepicker({
-            dateFormat: "mm.dd.yy",
-            onSelect: function(dateText) { _modifiedDateInput.value = dateText; }
-        });
+        
+        // Add inputs for form
+        $('.form-horizontal').append(_modelNameInput);
+        $('.form-horizontal').append(_modelIdInput);
+        $('.form-horizontal').append(_modelLinkInput);
+        $('.form-horizontal').append(_organismInput);
+        $('.form-horizontal').append(_organismDetailsInput);
+        $('.form-horizontal').append(_matrixInput);
+        $('.form-horizontal').append(_matrixDetailsInput);
+        $('.form-horizontal').append(_creatorInput);
+        $('.form-horizontal').append(_familyNameInput);
+        $('.form-horizontal').append(_contactInput);
+        $('.form-horizontal').append(_softwareInput);
+        $('.form-horizontal').append(_referenceDescriptionInput);
+        $('.form-horizontal').append(_referenceDescriptionLinkInput);
+        $('.form-horizontal').append(_createdDateInput);
+        $('.form-horizontal').append(_modifiedDateInput);
+        $('.form-horizontal').append(_rightsInput);
+        $('.form-horizontal').append(_notesInput);
+        $('.form-horizontal').append(_curatedInput);
+        $('.form-horizontal').append(_typeInput);
+        $('.form-horizontal').append(_subjectInput);
+        $('.form-horizontal').append(_foodProcessInput);
+        $('.form-horizontal').append(_hasDataInput);
+        
+        // Add rows to table
+        for (var i = 0; i < _variableRows.length; i++) {
+            $('tbody').append(_variableRows[i].row);
+        }
+        $('tfoot').append(_newVariableRow.row);
 
         loadData();
         saveData();
     }
 
     function loadData () {
-        _modelNameInput.loadData();
-        _modelIdInput.loadData();
-        _modelLinkInput.loadData();
-        _organismInput.loadData();
-        _organismDetailsInput.loadData();
-        _matrixInput.loadData();
-        _matrixDetailsInput.loadData();
-        _creatorInput.loadData();
-        _familyNameInput.loadData();
-        _contactInput.loadData();
-        _softwareInput.loadData();
-        _referenceDescriptionInput.loadData();
-        _referenceDescriptionLinkInput.loadData();
-        _createdDateInput.loadData();
-        _modifiedDateInput.loadData();
-        _rightsInput.loadData();
-        _notesInput.loadData();
-        _curatedInput.loadData();
-        _typeInput.loadData();
-        _subjectInput.loadData();
-        _foodProcessInput.loadData();
-        _hasDataInput.loadData();
         for (var i = 0; i < _variableRows.length; i++) {
             _variableRows[i].loadData();
         }
@@ -860,29 +723,6 @@ metadata_editor = function () {
      * - jQuery datepickers are already saving their data. No need to save it here.
      */
     function saveData () {
-        _modelNameInput.saveData();
-        _modelIdInput.saveData();
-        _modelLinkInput.saveData();
-        _organismInput.saveData();
-        _organismDetailsInput.saveData();
-        _matrixInput.saveData();
-        _matrixDetailsInput.saveData();
-        _creatorInput.saveData();
-        _familyNameInput.saveData();
-        _contactInput.saveData();
-        _softwareInput.saveData();
-        _referenceDescriptionInput.saveData();
-        _referenceDescriptionLinkInput.saveData();
-        _createdDateInput.saveData();
-        _modifiedDateInput.saveData();
-        _rightsInput.saveData();
-        _notesInput.saveData();
-        _curatedInput.saveData();
-        _typeInput.saveData();
-        _subjectInput.saveData();
-        _foodProcessInput.saveData();
-        _hasDataInput.saveData();
-
         for (var i = 0; i < _variableRows.length; i++) {
             _variableRows[i].saveData();
         }

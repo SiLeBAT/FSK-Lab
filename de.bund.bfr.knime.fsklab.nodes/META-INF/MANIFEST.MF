@@ -31,7 +31,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-databind,
  com.fasterxml.jackson.core.jackson-core,
  org.apache.servicemix.bundles.poi,
  org.knime.quickform.nodes.legacy
-Bundle-ClassPath: libs/CombineArchive-1.1.jar,
+Bundle-ClassPath: library.jar,
+ libs/CombineArchive-1.1.jar,
  libs/jdom-2.0.1.jar,
  libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar,
  libs/jsoup-1.9.2.jar,
@@ -39,6 +40,5 @@ Bundle-ClassPath: libs/CombineArchive-1.1.jar,
  libs/pmfml-0.0.8.jar,
  libs/rengine-1.8.4.jar,
  libs/rserve-engine-1.8.4.jar,
- libs/jcalendar-1.4.jar,
- library.jar
+ libs/jcalendar-1.4.jar
 
