@@ -74,11 +74,12 @@ public class FskRunnerNodeModel extends NodeModel {
 
 	private FskRunnerNodeSettings settings = new FskRunnerNodeSettings();
 
+	// Input and output port types
+	private static final PortType[] IN_TYPES = { FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL };
+	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL };
+
 	public FskRunnerNodeModel() {
-		super(new PortType[] { FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL }, // input
-																						// ports
-				new PortType[] { FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL }); // output
-																						// ports
+		super(IN_TYPES, OUT_TYPES);
 	}
 
 	// --- internal settings methods ---

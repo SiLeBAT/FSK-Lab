@@ -37,10 +37,13 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 
 public class ExtractFskMetadataNodeFactory extends NodeFactory<NodeModel> {
 
+	// Input and output port types
+	private static final PortType[] IN_TYPES = { FskPortObject.TYPE };
+	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE };
+	
 	@Override
 	public NodeModel createNodeModel() {		
-		return new StatelessModel(new PortType[] { FskPortObject.TYPE},  // input port
-				new PortType[] { BufferedDataTable.TYPE}) {  // output port  
+		return new StatelessModel(IN_TYPES, OUT_TYPES) {  
 			@Override
 			protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 				return new PortObjectSpec[] { FskMetaDataTuple.createSpec() };

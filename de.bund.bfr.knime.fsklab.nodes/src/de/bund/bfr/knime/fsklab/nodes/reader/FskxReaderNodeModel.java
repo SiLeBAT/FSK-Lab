@@ -90,9 +90,12 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 	// Specs
 	private static final FskPortObjectSpec fskSpec = FskPortObjectSpec.INSTANCE;
 
+	// Input and output port types
+	private static final PortType[] IN_TYPES = {};
+	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE };
+
 	public FskxReaderNodeModel() {
-		super(null, new PortType[] { FskPortObject.TYPE }); // input and output
-															// ports
+		super(IN_TYPES, OUT_TYPES);
 	}
 
 	/**
