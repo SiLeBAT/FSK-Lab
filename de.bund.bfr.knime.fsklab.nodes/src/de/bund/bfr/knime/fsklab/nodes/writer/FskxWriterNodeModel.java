@@ -58,8 +58,12 @@ public class FskxWriterNodeModel extends NoInternalsModel {
 
 	private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
 
+	// Input and output port types
+	private static final PortType[] IN_TYPES = { FskPortObject.TYPE };
+	private static final PortType[] OUT_TYPES = {};
+
 	public FskxWriterNodeModel() {
-		super(new PortType[] { FskPortObject.TYPE}, null);  // input and output ports
+		super(IN_TYPES, OUT_TYPES);
 	}
 
 	/**

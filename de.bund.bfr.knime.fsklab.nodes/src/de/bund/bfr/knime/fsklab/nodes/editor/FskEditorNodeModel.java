@@ -36,9 +36,12 @@ public class FskEditorNodeModel extends NoInternalsModel {
 
 	private final FskEditorNodeSettings settings;
 
+	// Input and output port types
+	private static final PortType[] IN_TYPES = { FskPortObject.TYPE_OPTIONAL };
+	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE };
+	
 	public FskEditorNodeModel() {
-		super(new PortType[] { FskPortObject.TYPE_OPTIONAL }, // input port
-				new PortType[] { FskPortObject.TYPE }); // output port
+		super(IN_TYPES, OUT_TYPES);
 		settings = new FskEditorNodeSettings();
 	}
 

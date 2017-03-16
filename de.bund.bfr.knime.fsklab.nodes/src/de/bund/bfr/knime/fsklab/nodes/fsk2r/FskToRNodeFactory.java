@@ -35,10 +35,13 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 
 public class FskToRNodeFactory extends NodeFactory<NodeModel> {
 
+	// Input and output port types
+	private static final PortType[] IN_TYPES = { FskPortObject.TYPE };
+	private static final PortType[] OUT_TYPES = { RPortObject.TYPE };
+	
 	@Override
 	public NodeModel createNodeModel() {		
-		return new StatelessModel(new PortType[] { FskPortObject.TYPE},  // input port
-				new PortType[] { RPortObject.TYPE}) {  // output port
+		return new StatelessModel(IN_TYPES, OUT_TYPES) {  // output port
 			@Override
 			protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) {
 				return new PortObjectSpec[] { RPortObjectSpec.INSTANCE };

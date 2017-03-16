@@ -40,9 +40,12 @@ public final class FskMetadataEditorNodeModel
 
 	private FskPortObject m_port;
 
+	// Input and output port types
+	private static final PortType[] IN_TYPES = { FskPortObject.TYPE };
+	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE };
+
 	public FskMetadataEditorNodeModel() {
-		super(new PortType[] { FskPortObject.TYPE },  // Input port
-				new PortType[] { FskPortObject.TYPE },  // Output port
+		super(IN_TYPES, OUT_TYPES,
 				(new FskMetadataEditorNodeFactory()).getInteractiveViewName());  // View name
 	}
 
