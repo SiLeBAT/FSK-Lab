@@ -52,6 +52,7 @@ import com.google.common.base.Strings;
 import de.bund.bfr.fskml.MissingValueError;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
+import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.Util;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
@@ -238,69 +239,37 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 
 	private static class SpreadsheetHandler {
 
-		private enum Rows {
-			id((byte) 2),
-			name((byte) 1),
-			organism((byte) 3),
-			organism_detail((byte) 4),
-			matrix((byte) 5),
-			matrix_detail((byte) 6),
-			creator((byte) 7),
-			reference_description((byte) 8),
-			created_date((byte) 9),
-			modified_date((byte) 10),
-			rights((byte) 11),
-			type((byte) 13),
-			subject((byte) 14),
-			notes((byte) 12),
-			depvar((byte) 21),
-			depvar_unit((byte) 22),
-			depvar_min((byte) 23),
-			depvar_max((byte) 24),
-			indepvar((byte) 25),
-			indepvar_unit((byte) 26),
-			indepvar_min((byte) 27),
-			indepvar_max((byte) 28);
-			// values??
-
-			private final byte row;
-
-			Rows(byte row) {
-				this.row = row;
-			}
-		}
-
 		static FskMetaData processSpreadsheet(final XSSFSheet sheet) {
 
 			FskMetaData template = new FskMetaData();
 
-			template.modelId = getStringVal(sheet, Rows.id.row);
-			template.modelName = getStringVal(sheet, Rows.name.row);
+			template.modelId = getStringVal(sheet, FskMetaDataFields.id.row);
+			template.modelName = getStringVal(sheet, FskMetaDataFields.name.row);
 
 			// organism data
-			template.organism = getStringVal(sheet, Rows.organism.row);
-			template.organismDetails = getStringVal(sheet, Rows.organism_detail.row);
+			template.organism = getStringVal(sheet, FskMetaDataFields.species.row);
+			template.organismDetails = getStringVal(sheet, FskMetaDataFields.species_details.row);
 
 			// matrix data
-			template.matrix = getStringVal(sheet, Rows.matrix.row);
-			template.matrixDetails = getStringVal(sheet, Rows.matrix_detail.row);
+			template.matrix = getStringVal(sheet, FskMetaDataFields.matrix.row);
+			template.matrixDetails = getStringVal(sheet, FskMetaDataFields.matrix_details.row);
 
-			template.creator = getStringVal(sheet, Rows.creator.row);
+			template.creator = getStringVal(sheet, FskMetaDataFields.creator.row);
 
 			// no family name in the spreadsheet
 			// no contact in the spreadsheet
 
-			template.referenceDescription = getStringVal(sheet, Rows.reference_description.row);
+			template.referenceDescription = getStringVal(sheet, FskMetaDataFields.reference_description.row);
 
-			template.createdDate = sheet.getRow(Rows.created_date.row).getCell(5).getDateCellValue();
-			template.modifiedDate = sheet.getRow(Rows.modified_date.row).getCell(5).getDateCellValue();
+			template.createdDate = sheet.getRow(FskMetaDataFields.created_date.row).getCell(5).getDateCellValue();
+			template.modifiedDate = sheet.getRow(FskMetaDataFields.modified_date.row).getCell(5).getDateCellValue();
 
-			template.rights = getStringVal(sheet, Rows.rights.row);
+			template.rights = getStringVal(sheet, FskMetaDataFields.rights.row);
 
 			// model type
 			{
 				try {
-					String modelType = getStringVal(sheet, Rows.type.row);
+					String modelType = getStringVal(sheet, FskMetaDataFields.type.row);
 					template.type = ModelType.valueOf(modelType);
 				}
 				// if modelTypeAsString is not a valid ModelType
@@ -311,7 +280,7 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 
 			// model subject
 			{
-				String subject = getStringVal(sheet, Rows.subject.row);
+				String subject = getStringVal(sheet, FskMetaDataFields.subject.row);
 				try {
 					template.subject = ModelClass.valueOf(subject);
 				} catch (IllegalArgumentException e) {
@@ -321,14 +290,14 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 			}
 
 			// model notes
-			template.notes = getStringVal(sheet, Rows.notes.row);
+			template.notes = getStringVal(sheet, FskMetaDataFields.notes.row);
 
 			// dep var. Type is not in the spreadsheet.
 			{
-				String[] names = getStringVal(sheet, Rows.depvar.row).split("\\|\\|");
-				String[] units = getStringVal(sheet, Rows.depvar_unit.row).split("\\|\\|");
-				String[] mins = getStringVal(sheet, Rows.depvar_min.row).split("\\|\\|");
-				String[] maxs = getStringVal(sheet, Rows.depvar_max.row).split("\\|\\|");
+				String[] names = getStringVal(sheet, FskMetaDataFields.depvars.row).split("\\|\\|");
+				String[] units = getStringVal(sheet, FskMetaDataFields.depvars_units.row).split("\\|\\|");
+				String[] mins = getStringVal(sheet, FskMetaDataFields.depvars_mins.row).split("\\|\\|");
+				String[] maxs = getStringVal(sheet, FskMetaDataFields.depvars_maxs.row).split("\\|\\|");
 				
 				for (int i = 0; i < names.length; i++) {
 					Variable v = new Variable();
@@ -344,10 +313,10 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 
 			// indep vars
 			{
-				String[] names = getStringVal(sheet, Rows.indepvar.row).split("\\|\\|");
-				String[] units = getStringVal(sheet, Rows.indepvar_unit.row).split("\\|\\|");
-				String[] mins = getStringVal(sheet, Rows.indepvar_min.row).split("\\|\\|");
-				String[] maxs = getStringVal(sheet, Rows.indepvar_max.row).split("\\|\\|");
+				String[] names = getStringVal(sheet, FskMetaDataFields.indepvars.row).split("\\|\\|");
+				String[] units = getStringVal(sheet, FskMetaDataFields.indepvars_units.row).split("\\|\\|");
+				String[] mins = getStringVal(sheet, FskMetaDataFields.indepvars_mins.row).split("\\|\\|");
+				String[] maxs = getStringVal(sheet, FskMetaDataFields.indepvars_maxs.row).split("\\|\\|");
 
 				for (int i = 0; i < names.length; i++) {
 					Variable v = new Variable();
