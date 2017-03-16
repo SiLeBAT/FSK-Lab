@@ -36,8 +36,6 @@ import javax.swing.table.TableCellEditor;
 
 import org.knime.core.node.NodeLogger;
 
-import com.google.common.base.Strings;
-
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.Software;
@@ -258,15 +256,16 @@ public class MetaDataPane extends JScrollPane {
 				case FOOD_PROCESS:
 					return template.foodProcess;
 				case DEPENDENT_VARIABLE:
-					return template.dependentVariable.name;
+					return template.dependentVariables.stream().map(v -> v.name).collect(Collectors.joining("||"));
 				case DEPENDENT_VARIABLE_UNIT:
-					return template.dependentVariable.unit;
+					return template.dependentVariables.stream().map(v -> v.unit).collect(Collectors.joining("||"));
 				case DEPENDENT_VARIABLE_TYPE:
-					return template.dependentVariable.type == null ? "" : template.dependentVariable.type.name();
+					return template.dependentVariables.stream().map(v -> v.type == null ? "" : v.type.name())
+							.collect(Collectors.joining("||"));
 				case DEPENDENT_VARIABLE_MIN:
-					return template.dependentVariable.min;
+					return template.dependentVariables.stream().map(v -> v.min).collect(Collectors.joining("||"));
 				case DEPENDENT_VARIABLE_MAX:
-					return template.dependentVariable.max;
+					return template.dependentVariables.stream().map(v -> v.max).collect(Collectors.joining("||"));
 				case INDEPENDENT_VARIABLE:
 					return template.independentVariables.stream().map(v -> v.name).collect(Collectors.joining("||"));
 				case INDEPENDENT_VARIABLE_UNIT:
@@ -351,17 +350,41 @@ public class MetaDataPane extends JScrollPane {
 				} else if (rowIndex == Row.FOOD_PROCESS.ordinal()) {
 					template.foodProcess = stringValue;
 				} else if (rowIndex == Row.DEPENDENT_VARIABLE.ordinal()) {
-					template.dependentVariable.name = stringValue;
+					String[] tokens = stringValue.split("||");
+					if (tokens.length == template.dependentVariables.size()) {
+						for (int i = 0; i < tokens.length; i++) {
+							template.dependentVariables.get(i).name = tokens[i];
+						}
+					}
 				} else if (rowIndex == Row.DEPENDENT_VARIABLE_UNIT.ordinal()) {
-					template.dependentVariable.unit = stringValue;
+					String[] tokens = stringValue.split("||");
+					if (tokens.length == template.dependentVariables.size()) {
+						for (int i = 0; i < tokens.length; i++) {
+							template.dependentVariables.get(i).unit = tokens[i];
+						}
+					}
 				} else if (rowIndex == Row.DEPENDENT_VARIABLE_TYPE.ordinal()) {
-					if (!Strings.isNullOrEmpty(stringValue)) {
-						template.dependentVariable.type = DataType.valueOf(stringValue);
+					String[] tokens = stringValue.split("||");
+					if (tokens.length == template.dependentVariables.size()) {
+						for (int i = 0; i < tokens.length; i++) {							
+							DataType dt = DataType.valueOf(tokens[i]);
+							template.independentVariables.get(i).type = dt;
+						}
 					}
 				} else if (rowIndex == Row.DEPENDENT_VARIABLE_MIN.ordinal()) {
-					template.dependentVariable.min = stringValue;
+					String[] tokens = stringValue.split("||");
+					if (tokens.length == template.dependentVariables.size()) {
+						for (int i = 0; i < tokens.length; i++) {
+							template.dependentVariables.get(i).min = tokens[i];
+						}
+					}
 				} else if (rowIndex == Row.DEPENDENT_VARIABLE_MAX.ordinal()) {
-					template.dependentVariable.max = stringValue;
+					String[] tokens = stringValue.split("||");
+					if (tokens.length == template.dependentVariables.size()) {
+						for (int i = 0; i < tokens.length; i++) {
+							template.dependentVariables.get(i).max = tokens[i];
+						}
+					}
 				} else if (rowIndex == Row.INDEPENDENT_VARIABLE.ordinal()) {
 					String[] tokens = stringValue.split("||");
 					if (tokens.length == template.independentVariables.size()) {

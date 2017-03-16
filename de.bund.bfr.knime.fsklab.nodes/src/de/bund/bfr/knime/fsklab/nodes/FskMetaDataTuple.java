@@ -18,9 +18,9 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.stream.Collectors;
 
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
@@ -57,11 +57,11 @@ public class FskMetaDataTuple implements DataRow {
 		model_type,
 		subject,
 		food_process,
-		depvar,
-		depvar_unit,
-		depvar_type,
-		depvar_min,
-		depvar_max,
+		depvars,
+		depvars_units,
+		depvars_types,
+		depvars_mins,
+		depvars_maxs,
 		indepvars,
 		indepvars_units,
 		indepvars_types,
@@ -108,29 +108,52 @@ public class FskMetaDataTuple implements DataRow {
 		cell[Key.food_process.ordinal()] = new StringCell(Strings.nullToEmpty(template.foodProcess));
 
 		// Dependent variable
-		cell[Key.depvar.ordinal()] = new StringCell(Strings.nullToEmpty(template.dependentVariable.name));
-		cell[Key.depvar_unit.ordinal()] = new StringCell(Strings.nullToEmpty(template.dependentVariable.unit));
-		cell[Key.depvar_type.ordinal()] = new StringCell(
-				template.dependentVariable.type == null ? "" : template.dependentVariable.type.name());
-		cell[Key.depvar_min.ordinal()] = new StringCell(Strings.nullToEmpty(template.dependentVariable.min));
-		cell[Key.depvar_max.ordinal()] = new StringCell(Strings.nullToEmpty(template.dependentVariable.max));
+		{
+			ArrayList<String> nameList = new ArrayList<>(template.dependentVariables.size());
+			ArrayList<String> unitList = new ArrayList<>(template.dependentVariables.size());
+			ArrayList<String> typeList = new ArrayList<>(template.dependentVariables.size());
+			ArrayList<String> minList = new ArrayList<>(template.dependentVariables.size());
+			ArrayList<String> maxList = new ArrayList<>(template.dependentVariables.size());
+			
+			for (Variable var : template.dependentVariables) {
+				nameList.add(var.name);
+				unitList.add(var.unit);
+				typeList.add(var.type == null ? "" : var.type.name());
+				minList.add(var.min);
+				maxList.add(var.max);
+			}
+			
+			cell[Key.depvars.ordinal()] = new StringCell(String.join("||", nameList));
+			cell[Key.depvars_units.ordinal()] = new StringCell(String.join("||", unitList));
+			cell[Key.depvars_types.ordinal()] = new StringCell(String.join("||", typeList));
+			cell[Key.depvars_mins.ordinal()] = new StringCell(String.join("||", minList));
+			cell[Key.depvars_maxs.ordinal()] = new StringCell(String.join("||", maxList));
+		}
 
 		// Independent variables
 		{
-			String names = template.independentVariables.stream().map(v -> v.name).collect(Collectors.joining("||"));
-			String units = template.independentVariables.stream().map(v -> v.unit).collect(Collectors.joining("||"));
-			String types = template.independentVariables.stream().map(v -> v.type == null ? "" : v.type.name())
-					.collect(Collectors.joining("||"));
-			String mins = template.independentVariables.stream().map(v -> v.min).collect(Collectors.joining("||"));
-			String maxs = template.independentVariables.stream().map(v -> v.max).collect(Collectors.joining("||"));
-			String values = template.independentVariables.stream().map(v -> v.value).collect(Collectors.joining("||"));
+			ArrayList<String> nameList = new ArrayList<>(template.independentVariables.size());
+			ArrayList<String> unitList = new ArrayList<>(template.independentVariables.size());
+			ArrayList<String> typeList = new ArrayList<>(template.independentVariables.size());
+			ArrayList<String> minList = new ArrayList<>(template.independentVariables.size());
+			ArrayList<String> maxList = new ArrayList<>(template.independentVariables.size());
+			ArrayList<String> valList = new ArrayList<>(template.independentVariables.size());
 			
-			cell[Key.indepvars.ordinal()] = new StringCell(names);
-			cell[Key.indepvars_units.ordinal()] = new StringCell(units);
-			cell[Key.indepvars_types.ordinal()] = new StringCell(types);
-			cell[Key.indepvars_mins.ordinal()] = new StringCell(mins);
-			cell[Key.indepvars_maxs.ordinal()] = new StringCell(maxs);
-			cell[Key.indepvars_values.ordinal()] = new StringCell(values);
+			for (Variable var : template.independentVariables) {
+				nameList.add(var.name);
+				unitList.add(var.unit);
+				typeList.add(var.type == null ? "" : var.type.name());
+				minList.add(var.min);
+				maxList.add(var.max);
+				valList.add(var.value);
+			}
+			
+			cell[Key.indepvars.ordinal()] = new StringCell(String.join("||", nameList));
+			cell[Key.indepvars_units.ordinal()] = new StringCell(String.join("||", unitList));
+			cell[Key.indepvars_types.ordinal()] = new StringCell(String.join("||", typeList));
+			cell[Key.indepvars_mins.ordinal()] = new StringCell(String.join("||", minList));
+			cell[Key.indepvars_maxs.ordinal()] = new StringCell(String.join("||", maxList));
+			cell[Key.indepvars_values.ordinal()] = new StringCell(String.join("||", valList));
 		}
 
 		cell[Key.has_data.ordinal()] = new StringCell(Boolean.toString(template.hasData));
@@ -212,11 +235,11 @@ public class FskMetaDataTuple implements DataRow {
 		names[Key.subject.ordinal()] = "Subject";
 		names[Key.food_process.ordinal()] = "Food process";
 		
-		names[Key.depvar.ordinal()] = "Dependent variable";
-		names[Key.depvar_unit.ordinal()] = "Dependent variable unit";
-		names[Key.depvar_type.ordinal()] = "Dependent variable type";
-		names[Key.depvar_min.ordinal()] = "Dependent variable min";
-		names[Key.depvar_max.ordinal()] = "Dependent variable max";
+		names[Key.depvars.ordinal()] = "Dependent variables";
+		names[Key.depvars_units.ordinal()] = "Dependent variables units";
+		names[Key.depvars_types.ordinal()] = "Dependent variables types";
+		names[Key.depvars_mins.ordinal()] = "Dependent variables mins";
+		names[Key.depvars_maxs.ordinal()] = "Dependent variables maxs";
 		
 		names[Key.indepvars.ordinal()] = "Independent variables";
 		names[Key.indepvars_units.ordinal()] = "Independent variable units";

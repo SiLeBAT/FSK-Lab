@@ -52,6 +52,7 @@ import com.google.common.base.Strings;
 import de.bund.bfr.fskml.MissingValueError;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
+import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.Util;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
@@ -157,10 +158,12 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 				}
 				portObj.template.software = FskMetaData.Software.R;
 
-				if (!Strings.isNullOrEmpty(portObj.template.dependentVariable.value)) {
-					portObj.template.dependentVariable.type = Util
-							.getValueType(portObj.template.dependentVariable.value);
+				// Try to figure out the type of the dependent variables
+				for (int i = 0; i < portObj.template.dependentVariables.size(); i++) {
+					DataType dt = Util.getValueType(portObj.template.dependentVariables.get(i).value);
+					portObj.template.dependentVariables.get(i).type = dt;
 				}
+				
 				// Set variable values and types from parameters script
 				{
 					Map<String, String> vars = getVariablesFromAssignments(portObj.param);
@@ -321,10 +324,23 @@ public class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 			template.notes = getStringVal(sheet, Rows.notes.row);
 
 			// dep var. Type is not in the spreadsheet.
-			template.dependentVariable.name = getStringVal(sheet, Rows.depvar.row);
-			template.dependentVariable.unit = getStringVal(sheet, Rows.depvar_unit.row);
-			template.dependentVariable.min = getStringVal(sheet, Rows.depvar_min.row);
-			template.dependentVariable.max = getStringVal(sheet, Rows.depvar_max.row);
+			{
+				String[] names = getStringVal(sheet, Rows.depvar.row).split("\\|\\|");
+				String[] units = getStringVal(sheet, Rows.depvar_unit.row).split("\\|\\|");
+				String[] mins = getStringVal(sheet, Rows.depvar_min.row).split("\\|\\|");
+				String[] maxs = getStringVal(sheet, Rows.depvar_max.row).split("\\|\\|");
+				
+				for (int i = 0; i < names.length; i++) {
+					Variable v = new Variable();
+					v.name = names[i];
+					v.unit = units[i];
+					v.min = mins[i];
+					v.max = maxs[i];
+					// no values or types in the spreadsheet
+					v.value = "";
+					template.dependentVariables.add(v);
+				}
+			}
 
 			// indep vars
 			{
