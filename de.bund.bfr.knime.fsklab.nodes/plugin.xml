@@ -131,20 +131,21 @@
       version="0.0.1"
       webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.metadataeditor.bundle">
       
-      <!-- JS code -->
-      <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/metadataeditor/editor.js" relativePathTarget="editor.js">
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/metadataeditor/"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/metadataeditor/">
       </webResource>
-      <importResource relativePath="editor.js" type="JAVASCRIPT"></importResource>
-      
-      <!-- CSS code -->
-      <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/metadataeditor/editor.css" relativePathTarget="editor.css">
-      </webResource>
-      <importResource relativePath="editor.css" type="CSS"> </importResource>
+      <importResource
+        relativePath="de/bund/bfr/knime/fsklab/nodes/metadataeditor/editor.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="de/bund/bfr/knime/fsklab/nodes/metadataeditor/editor.js"
+        type="JAVASCRIPT">
+      </importResource>
       
       <!-- Dependencies -->
-      <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
-      <webDependency webResourceBundleID="jQuery_2.1.4"></webDependency>
-      <webDependency webResourceBundleID="jQueryUi_1.10.4"></webDependency>
+      <webDependency webResourceBundleID="bootstrap-datepicker_1.6.4_Debug"></webDependency>
     </webResourceBundle>
 
     <!-- JS and CSS code for FSK Editor JS node -->
@@ -179,6 +180,111 @@
       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
       <webDependency webResourceBundleID="jQuery_2.1.4"></webDependency>
     </webResourceBundle>
+    
+    <!--
+    bootstrap-datepicker debug
+    Requires:
+    * Bootstrap 2.0.4+
+    * jQuery 1.7.1+
+     -->
+    <webResourceBundle
+      debug="true"
+      name="bootstrap-datepicker 1.6.4"
+      usesDefine="false"
+      version="1.6.4"
+      webResourceBundleID="bootstrap-datepicker_1.6.4_Debug">
+      <webResource
+        relativePathSource="js-src/bootstrap-datepicker/1_6_4/debug/"
+        relativePathTarget="js-src/bootstrap-datepicker/1_6_4/debug/">
+      </webResource>
+      <importResource
+        relativePath="js-src/bootstrap-datepicker/1_6_4/debug/css/bootstrap-datepicker3.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-src/bootstrap-datepicker/1_6_4/debug/js/bootstrap-datepicker.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="bootstrap_3.3.7_Debug"></webDependency>
+    </webResourceBundle>
+    
+    <!--
+    bootstrap-datepicker
+    Requires:
+    * Bootstrap 2.0.4+
+    * jQuery 1.7.1+
+    -->
+    <webResourceBundle
+      debug="false"
+      name="bootstrap-datepicker 1.6.4"
+      usesDefine="false"
+      version="1.6.4"
+      webResourceBundleID="bootstrap-datepicker_1.6.4">
+      <webResource
+        relativePathSource="js-src/bootstrap-datepicker/1_6_4/min/"
+        relativePathTarget="js-src/bootstrap-datepicker/1_6_4/min/">
+      </webResource>
+      <importResource
+        relativePath="js-src/bootstrap-datepicker/1_6_4/min/css/bootstrap-datepicker3.min.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-src/bootstrap-datepicker/1_6_4/min/js/bootstrap-datepicker.min.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="bootstrap_3.3.7"></webDependency>
+    </webResourceBundle>
+    
+    <!-- Bootstrap 3.3.7 with jQuery3+ as dependency. -->
+    <webResourceBundle
+      debug="false"
+      name="bootstrap 3.3.7"
+      usesDefine="false"
+      version="3.3.7"
+      webResourceBundleID="bootstrap_3.3.7">
+      <webResource
+        relativePathSource="js-src/bootstrap/3_3_7/min/"
+        relativePathTarget="js-src/bootstrap/3_3_7/min/">
+      </webResource>
+      <importResource
+        relativePath="js-src/bootstrap/3.3.7/min/css/bootstrap.min.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-src/bootstrap/3.3.7/min/css/bootstrap-theme.min.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-src/bootstrap/3_3_7/min/js/bootstrap.min.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="jQuery_3.1.1"></webDependency>
+    </webResourceBundle>
+    
+    <!-- Bootstrap 3.3.7 with jQuery3+ as dependency. -->
+    <webResourceBundle
+      debug="true"
+      name="bootstrap 3.3.7"
+      usesDefine="false"
+      version="3.3.7"
+      webResourceBundleID="bootstrap_3.3.7_Debug">
+      <webResource
+        relativePathSource="js-src/bootstrap/3_3_7/debug/"
+        relativePathTarget="js-src/bootstrap/3_3_7/debug/">
+      </webResource>
+      <importResource
+        relativePath="js-src/bootstrap/3_3_7/debug/css/bootstrap.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-src/bootstrap/3_3_7/debug/css/bootstrap-theme.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-src/bootstrap/3_3_7/debug/js/bootstrap.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="jQuery_3.1.1"></webDependency>
+    </webResourceBundle>
   </extension>
-  
 </plugin>
