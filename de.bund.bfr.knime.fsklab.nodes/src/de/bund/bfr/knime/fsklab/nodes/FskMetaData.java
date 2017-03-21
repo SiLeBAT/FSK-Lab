@@ -107,7 +107,7 @@ public class FskMetaData implements Serializable {
 	public String foodProcess;
 
 	/** Null if not set. */
-	public Variable dependentVariable = new Variable();
+	public List<Variable> dependentVariables = new ArrayList<>();
 
 	/** Null if not set. */
 	public List<Variable> independentVariables = new ArrayList<>();
@@ -134,7 +134,7 @@ public class FskMetaData implements Serializable {
 	public int hashCode() {
 		return Objects.hash(modelName, modelId, modelLink, organism, organismDetails, matrix, matrixDetails, creator,
 				familyName, contact, software, referenceDescription, referenceDescriptionLink, createdDate,
-				modifiedDate, rights, notes, curated, type, subject, foodProcess, dependentVariable,
+				modifiedDate, rights, notes, curated, type, subject, foodProcess, dependentVariables,
 				independentVariables, hasData);
 	}
 
@@ -160,7 +160,7 @@ public class FskMetaData implements Serializable {
 				&& Objects.equals(rights, other.rights) && Objects.equals(notes, other.notes)
 				&& Objects.equals(curated, other.curated) && Objects.equals(type, other.type)
 				&& Objects.equals(subject, other.subject) && Objects.equals(foodProcess, other.foodProcess)
-				&& Objects.equals(dependentVariable, other.dependentVariable)
+				&& Objects.equals(dependentVariables, other.dependentVariables)
 				&& Objects.equals(independentVariables, other.independentVariables) && hasData == other.hasData;
 	}
 }

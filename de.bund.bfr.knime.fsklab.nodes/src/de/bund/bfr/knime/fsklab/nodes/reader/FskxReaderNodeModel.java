@@ -172,7 +172,9 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 			}
 			portObj.template.software = FskMetaData.Software.R;
 
-			portObj.template.dependentVariable.type = DataType.numeric;
+			for (int i = 0; i < portObj.template.dependentVariables.size(); i++) {
+				portObj.template.dependentVariables.get(i).type = DataType.numeric;
+			}
 
 			// Gets R libraries
 			// Gets library names from the zip entries in the CombineArchive
@@ -221,11 +223,6 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 
 			// Validate model with parameter values from metadata
 			if (!portObj.template.independentVariables.isEmpty()) {
-//				final String paramScript = portObj.template.independentVariables.stream()
-//						.map(v -> v.name + " <- " + v.value).collect(Collectors.joining("\n"));
-//				final String fullScriptB = paramScript + "\n" + portObj.model;
-//				controller.eval(fullScriptB);
-				
 				String newScript = "";
 				
 				boolean onError = false;

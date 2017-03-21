@@ -52,7 +52,7 @@ import org.rosuda.REngine.REXPMismatchException;
 import com.google.common.base.Strings;
 import com.sun.jna.Platform;
 
-import de.bund.bfr.knime.fsklab.nodes.FskMetaDataTuple;
+import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
@@ -158,11 +158,11 @@ public class FskRunnerNodeModel extends NodeModel {
 					iterator.close();
 
 					// Gets independent variables and their values
-					StringCell varCell = (StringCell) dataRow.getCell(FskMetaDataTuple.Key.indepvars.ordinal());
+					StringCell varCell = (StringCell) dataRow.getCell(FskMetaDataFields.indepvars.ordinal());
 					String[] vars = varCell.getStringValue().split("\\|\\|");
 
 					StringCell valuesCell = (StringCell) dataRow
-							.getCell(FskMetaDataTuple.Key.indepvars_values.ordinal());
+							.getCell(FskMetaDataFields.indepvars_values.ordinal());
 					String[] values = valuesCell.getStringValue().split("\\|\\|");
 
 					if (vars != null && values != null && vars.length == values.length) {
