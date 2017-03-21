@@ -1,4 +1,5 @@
 ![logo](https://foodrisklabs.bfr.bund.de/wp-content/uploads/2015/02/FSKlab7-1.png "FSK-Lab")
+
 FSK-Lab is an open source extension plugin to the Konstanz Information Miner
 (KNIME). FSK-Lab enables KNIME users to work with FSK models within KNIME.
 
