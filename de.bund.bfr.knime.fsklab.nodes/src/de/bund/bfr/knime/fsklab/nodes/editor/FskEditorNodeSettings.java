@@ -111,8 +111,8 @@ class FskEditorNodeSettings {
 				null : FskMetaData.Software.valueOf(softwareString);
 		metaData.referenceDescription = settings.getString("referenceDescription", "");
 		metaData.referenceDescriptionLink = settings.getString("referenceDescriptionLink", "");
-		metaData.createdDate = new Date(settings.getInt("createdDate", 0));
-		metaData.modifiedDate = new Date(settings.getInt("modifiedDate", 0));
+		metaData.createdDate = new Date(settings.getLong("createdDate", 0));
+		metaData.modifiedDate = new Date(settings.getLong("modifiedDate", 0));
 		metaData.notes = settings.getString("notes", "");
 		metaData.curated = settings.getBoolean("curated", false);
 		
