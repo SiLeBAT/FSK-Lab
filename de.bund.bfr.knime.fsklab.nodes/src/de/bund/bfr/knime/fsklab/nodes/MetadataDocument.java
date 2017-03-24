@@ -35,14 +35,12 @@ import org.sbml.jsbml.AssignmentRule;
 import org.sbml.jsbml.InitialAssignment;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Parameter;
-import org.sbml.jsbml.Rule;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.UnitDefinition;
 import org.sbml.jsbml.ext.arrays.ArraysConstants;
 import org.sbml.jsbml.ext.arrays.ArraysSBasePlugin;
 import org.sbml.jsbml.ext.arrays.Dimension;
 import org.sbml.jsbml.ext.arrays.Index;
-import org.sbml.jsbml.util.filters.Filter;
 import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
 
@@ -117,15 +115,20 @@ public class MetadataDocument {
 		// - template.organism is specified
 		// - template.dependentVariable.unit is specified
 		// - model has a compartment
-//		if (!Strings.isNullOrEmpty(template.organism) && template.dependentVariable != null
-//				&& !Strings.isNullOrEmpty(template.dependentVariable.unit) && model.getNumCompartments() > 0) {
-//			String speciesId = PMFUtil.createId(template.organism);
-//			String speciesName = template.organism;
-//			String speciesUnit = PMFUtil.createId(template.dependentVariable.unit);
-//			PMFSpecies species = SBMLFactory.createPMFSpecies(model.getCompartment(0).getId(), speciesId, speciesName,
-//					speciesUnit);
-//			model.addSpecies(species.getSpecies());
-//		}
+		// if (!Strings.isNullOrEmpty(template.organism) &&
+		// template.dependentVariable != null
+		// && !Strings.isNullOrEmpty(template.dependentVariable.unit) &&
+		// model.getNumCompartments() > 0) {
+		// String speciesId = PMFUtil.createId(template.organism);
+		// String speciesName = template.organism;
+		// String speciesUnit =
+		// PMFUtil.createId(template.dependentVariable.unit);
+		// PMFSpecies species =
+		// SBMLFactory.createPMFSpecies(model.getCompartment(0).getId(),
+		// speciesId, speciesName,
+		// speciesUnit);
+		// model.addSpecies(species.getSpecies());
+		// }
 
 		// Add unit definitions here (before parameters)
 		Set<String> unitsSet = new LinkedHashSet<>();
@@ -330,19 +333,11 @@ public class MetadataDocument {
 			}
 		}
 
-		// dependent variable data
-		for (Rule rule : model.getListOfRules()) {
-			AssignmentRule ar = (AssignmentRule) rule;
-			String depId = ar.getVariable();
-
-			// Gets parameter for the dependent varaible and sets it
-			Parameter param = model.getParameter(depId);
-
+		for (Parameter param : model.getListOfParameters()) {
 			Variable var = new Variable();
 			var.name = param.getName();
-			var.type = DataType.numeric;
 
-			// Gets and sets unit
+			var.unit = "";
 			if (param.isSetUnits() && !param.getUnits().equals("dimensionless")) {
 				UnitDefinition unitDef = model.getUnitDefinition(param.getUnits());
 				if (unitDef != null) {
@@ -350,71 +345,30 @@ public class MetadataDocument {
 				}
 			}
 
-			// Sets min & max
-			for (Limits lim : limits) {
-				if (lim.getVar().replaceAll("\\_", "\\.").equals(depId)) {
-					if (lim.getMin() != null)
-						var.min = lim.getMin().toString();
-					if (lim.getMax() != null)
-						var.max = lim.getMax().toString();
-					break;
-				}
-			}
-		}
+			Limits paramLimits = limits.stream().filter(lim -> lim.getVar().equals(param.getId())).findFirst().get();
+			var.min = paramLimits.getMin().toString();
+			var.max = paramLimits.getMax().toString();
 
-		// independent variable data
-		if (model.getNumRules() > 0) {
-			AssignmentRule rule = (AssignmentRule) model.getRule(0);
-			String depId = rule.getVariable();
-
-			List<Parameter> indepParams = model.getListOfParameters().filterList(new Filter() {
-				@Override
-				public boolean accepts(Object o) {
-					return !((Parameter) o).getId().equals(depId);
-				}
-			});
-
-			final int numParams = indepParams.size();
-
-			for (int p = 0; p < numParams; p++) {
-				Parameter param = indepParams.get(p);
-				Variable variable = new Variable();
-
-				variable.name = param.getName().trim();
-
-				// unit
-				variable.unit = "";
-				if (param.isSetUnits() && !param.getUnits().equals("dimensionless")) {
-					UnitDefinition unitDef = model.getUnitDefinition(param.getUnits());
-					if (unitDef != null) {
-						variable.unit = unitDef.getName();
-					}
-				}
-
-				Limits paramLimits = limits.stream().filter(lim -> lim.getVar().equals(param.getId())).findFirst()
-						.get();
-				variable.min = paramLimits.getMin().toString();
-				variable.max = paramLimits.getMax().toString();
-
-				if (param.isSetValue()) {
-					if (param.getNumPlugins() > 0) {
-						variable.type = DataType.array;
-
-						InitialAssignment ia = model.getInitialAssignment(variable.name);
-						List<Double> array = new SelectorNode(ia.getMath()).getArray();
-
-						variable.value = "c("
-								+ array.stream().map(d -> Double.toString(d)).collect(Collectors.joining(",")) + ")";
-
-					} else {
-						variable.type = param.getValue() % 1 == 0 ? DataType.integer : DataType.numeric;
-						variable.value = Double.toString(param.getValue());
-					}
+			// If param has value then var is an independent variable, otherwise
+			// dependent
+			if (param.isSetValue()) {
+				if (param.getNumPlugins() > 0) {
+					var.type = DataType.array;
+					InitialAssignment ia = model.getInitialAssignment(var.name);
+					List<Double> array = new SelectorNode(ia.getMath()).getArray();
+					var.value = "c(" + array.stream().map(d -> Double.toString(d)).collect(Collectors.joining(","))
+							+ ")";
 				} else {
-					variable.value = null;
+					var.type = param.getValue() % 1 == 0 ? DataType.integer : DataType.numeric;
+					var.value = Double.toString(param.getValue());
 				}
 
-				template.independentVariables.add(variable);
+				template.independentVariables.add(var);
+			} else {
+				var.type = null;
+				var.value = "";
+
+				template.dependentVariables.add(var);
 			}
 		}
 
