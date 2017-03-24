@@ -7,7 +7,7 @@ FSK-Lab is an open source extension plugin to the Konstanz Information Miner
 FSK-Lab may be installed throught the update site [https://dl.bintray.com/silebat/fsklab]. More information about the installation can be found at the [Food Risk Labs website](https://foodrisklabs.bfr.bund.de/index.php/fsk-lab/)
 
 ## Extension nodes
-- ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/creator/FSKCreator.png) FSK Creator
+- ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/creator/FskCreator.png) FSK Creator
 - ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/writer/FskxWriter.png) FSKX Writer
 - ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/reader/FskxReader.png) FSKX Reader
 - ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/runner/FskRunner.png) FSK Runner
