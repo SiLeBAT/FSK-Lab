@@ -44,9 +44,10 @@ public final class FskMetadataEditorNodeModel
 	private static final PortType[] IN_TYPES = { FskPortObject.TYPE };
 	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE };
 
+	private static final String VIEW_NAME = new FskMetadataEditorNodeFactory().getInteractiveViewName();
+
 	public FskMetadataEditorNodeModel() {
-		super(IN_TYPES, OUT_TYPES,
-				(new FskMetadataEditorNodeFactory()).getInteractiveViewName());  // View name
+		super(IN_TYPES, OUT_TYPES, VIEW_NAME);
 	}
 
 	@Override
