@@ -41,7 +41,6 @@ import org.sbml.jsbml.ext.arrays.ArraysConstants;
 import org.sbml.jsbml.ext.arrays.ArraysSBasePlugin;
 import org.sbml.jsbml.ext.arrays.Dimension;
 import org.sbml.jsbml.ext.arrays.Index;
-import org.sbml.jsbml.util.filters.Filter;
 import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
 
@@ -110,27 +109,30 @@ public class MetadataDocument {
 			model.addCompartment(compartment.getCompartment());
 		}
 
-		// Creates and adds species to the model
+		// TODO: Creates and adds species to the model
 
 		// Creates and adds species to the model if:
 		// - template.organism is specified
 		// - template.dependentVariable.unit is specified
 		// - model has a compartment
-		if (!Strings.isNullOrEmpty(template.organism) && template.dependentVariable != null
-				&& !Strings.isNullOrEmpty(template.dependentVariable.unit) && model.getNumCompartments() > 0) {
-			String speciesId = PMFUtil.createId(template.organism);
-			String speciesName = template.organism;
-			String speciesUnit = PMFUtil.createId(template.dependentVariable.unit);
-			PMFSpecies species = SBMLFactory.createPMFSpecies(model.getCompartment(0).getId(), speciesId, speciesName,
-					speciesUnit);
-			model.addSpecies(species.getSpecies());
-		}
+		// if (!Strings.isNullOrEmpty(template.organism) &&
+		// template.dependentVariable != null
+		// && !Strings.isNullOrEmpty(template.dependentVariable.unit) &&
+		// model.getNumCompartments() > 0) {
+		// String speciesId = PMFUtil.createId(template.organism);
+		// String speciesName = template.organism;
+		// String speciesUnit =
+		// PMFUtil.createId(template.dependentVariable.unit);
+		// PMFSpecies species =
+		// SBMLFactory.createPMFSpecies(model.getCompartment(0).getId(),
+		// speciesId, speciesName,
+		// speciesUnit);
+		// model.addSpecies(species.getSpecies());
+		// }
 
 		// Add unit definitions here (before parameters)
 		Set<String> unitsSet = new LinkedHashSet<>();
-		if (template.dependentVariable != null && !Strings.isNullOrEmpty(template.dependentVariable.unit)) {
-			unitsSet.add(template.dependentVariable.unit.trim());
-		}
+		template.dependentVariables.forEach(v -> unitsSet.add(v.unit.trim()));
 		template.independentVariables.forEach(v -> unitsSet.add(v.unit.trim()));
 		for (String unit : unitsSet) {
 			UnitDefinition ud = model.createUnitDefinition(PMFUtil.createId(unit));
@@ -138,38 +140,39 @@ public class MetadataDocument {
 		}
 
 		// Adds dep parameter
-		if (template.dependentVariable != null && !Strings.isNullOrEmpty(template.dependentVariable.name)) {
-			Parameter depParam = new Parameter(PMFUtil.createId(template.dependentVariable.name));
-			depParam.setName(template.dependentVariable.name);
-			if (!Strings.isNullOrEmpty(template.dependentVariable.unit)) {
-				depParam.setUnits(PMFUtil.createId(template.dependentVariable.unit));
-			}
-			model.addParameter(depParam);
+		for (Variable v : template.dependentVariables) {
+			if (Strings.isNullOrEmpty(v.name))
+				continue;
 
-			// Adds dep constraint
-			if (!Strings.isNullOrEmpty(template.dependentVariable.min)
-					&& !Strings.isNullOrEmpty(template.dependentVariable.max)) {
+			Parameter param = model.createParameter(PMFUtil.createId(v.name));
+			param.setName(v.name);
 
+			// Write unit if v.unit is not null
+			if (!Strings.isNullOrEmpty(v.unit)) {
 				try {
-					double min = Double.parseDouble(template.dependentVariable.min);
-					double max = Double.parseDouble(template.dependentVariable.max);
-					LimitsConstraint lc = new LimitsConstraint(template.dependentVariable.name.replaceAll("\\.", "\\_"),
-							min, max);
+					param.setUnits(PMFUtil.createId(v.unit));
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				}
+			}
+
+			// Write min and max values if not null
+			if (!Strings.isNullOrEmpty(v.min) && !Strings.isNullOrEmpty(v.max)) {
+				try {
+					double min = Double.parseDouble(v.min);
+					double max = Double.parseDouble(v.max);
+					LimitsConstraint lc = new LimitsConstraint(v.name.replaceAll("\\.", "\\_"), min, max);
 					if (lc.getConstraint() != null) {
 						model.addConstraint(lc.getConstraint());
 					}
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
-
 			}
 		}
 
 		// Adds independent parameters
 		for (Variable v : template.independentVariables) {
-			// String var = v.name;
-			// Parameter param = model.createParameter(PMFUtil.createId(var));
-			// param.setName(var);
 			if (Strings.isNullOrEmpty(v.name))
 				continue;
 
@@ -330,89 +333,42 @@ public class MetadataDocument {
 			}
 		}
 
-		// dependent variable data
-		if (model.getNumRules() > 0) {
-			AssignmentRule rule = (AssignmentRule) model.getRule(0);
-			String depId = rule.getVariable();
+		for (Parameter param : model.getListOfParameters()) {
+			Variable var = new Variable();
+			var.name = param.getName();
 
-			// Gets parameter for the dependent variable and sets it
-			Parameter param = model.getParameter(depId);
-			template.dependentVariable.name = param.getName();
-			template.dependentVariable.type = DataType.numeric;
-
-			// Gets and sets dependent variable unit
+			var.unit = "";
 			if (param.isSetUnits() && !param.getUnits().equals("dimensionless")) {
 				UnitDefinition unitDef = model.getUnitDefinition(param.getUnits());
 				if (unitDef != null) {
-					template.dependentVariable.unit = unitDef.getName();
+					var.unit = unitDef.getName();
 				}
 			}
 
-			// Sets dependent variable min & max
-			for (Limits lim : limits) {
-				if (lim.getVar().replaceAll("\\_", "\\.").equals(depId)) {
-					if (lim.getMin() != null)
-						template.dependentVariable.min = lim.getMin().toString();
-					if (lim.getMax() != null)
-						template.dependentVariable.max = lim.getMax().toString();
-					break;
-				}
-			}
-		}
+			Limits paramLimits = limits.stream().filter(lim -> lim.getVar().equals(param.getId())).findFirst().get();
+			var.min = paramLimits.getMin().toString();
+			var.max = paramLimits.getMax().toString();
 
-		// independent variable data
-		if (model.getNumRules() > 0) {
-			AssignmentRule rule = (AssignmentRule) model.getRule(0);
-			String depId = rule.getVariable();
-
-			List<Parameter> indepParams = model.getListOfParameters().filterList(new Filter() {
-				@Override
-				public boolean accepts(Object o) {
-					return !((Parameter) o).getId().equals(depId);
-				}
-			});
-
-			final int numParams = indepParams.size();
-
-			for (int p = 0; p < numParams; p++) {
-				Parameter param = indepParams.get(p);
-				Variable variable = new Variable();
-
-				variable.name = param.getName().trim();
-
-				// unit
-				variable.unit = "";
-				if (param.isSetUnits() && !param.getUnits().equals("dimensionless")) {
-					UnitDefinition unitDef = model.getUnitDefinition(param.getUnits());
-					if (unitDef != null) {
-						variable.unit = unitDef.getName();
-					}
-				}
-
-				Limits paramLimits = limits.stream().filter(lim -> lim.getVar().equals(param.getId())).findFirst()
-						.get();
-				variable.min = paramLimits.getMin().toString();
-				variable.max = paramLimits.getMax().toString();
-
-				if (param.isSetValue()) {
-					if (param.getNumPlugins() > 0) {
-						variable.type = DataType.array;
-
-						InitialAssignment ia = model.getInitialAssignment(variable.name);
-						List<Double> array = new SelectorNode(ia.getMath()).getArray();
-
-						variable.value = "c("
-								+ array.stream().map(d -> Double.toString(d)).collect(Collectors.joining(",")) + ")";
-
-					} else {
-						variable.type = param.getValue() % 1 == 0 ? DataType.integer : DataType.numeric;
-						variable.value = Double.toString(param.getValue());
-					}
+			// If param has value then var is an independent variable, otherwise
+			// dependent
+			if (param.isSetValue()) {
+				if (param.getNumPlugins() > 0) {
+					var.type = DataType.array;
+					InitialAssignment ia = model.getInitialAssignment(var.name);
+					List<Double> array = new SelectorNode(ia.getMath()).getArray();
+					var.value = "c(" + array.stream().map(d -> Double.toString(d)).collect(Collectors.joining(","))
+							+ ")";
 				} else {
-					variable.value = null;
+					var.type = param.getValue() % 1 == 0 ? DataType.integer : DataType.numeric;
+					var.value = Double.toString(param.getValue());
 				}
 
-				template.independentVariables.add(variable);
+				template.independentVariables.add(var);
+			} else {
+				var.type = null;
+				var.value = "";
+
+				template.dependentVariables.add(var);
 			}
 		}
 

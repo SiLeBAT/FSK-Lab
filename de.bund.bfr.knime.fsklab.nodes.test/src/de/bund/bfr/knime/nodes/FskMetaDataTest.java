@@ -40,7 +40,7 @@ public class FskMetaDataTest {
 		assertNull(metadata.type);
 		assertEquals(ModelClass.UNKNOWN, metadata.subject);
 		assertNull(metadata.foodProcess);
-		assertNotNull(metadata.dependentVariable);
+		assertNotNull(metadata.dependentVariables);
 		assertNotNull(metadata.independentVariables);
 		assertTrue(metadata.independentVariables.isEmpty());
 		assertFalse(metadata.hasData);
@@ -70,11 +70,15 @@ public class FskMetaDataTest {
 		fmd.subject = ModelClass.UNKNOWN;
 		fmd.foodProcess = "cooking";
 		// dep var
-		fmd.dependentVariable.name = "Prevalence";
-		fmd.dependentVariable.unit = "% (percent)";
-		fmd.dependentVariable.type = DataType.character;
-		fmd.dependentVariable.min = "0.0";
-		fmd.dependentVariable.max = "100.0";
+		{
+			Variable v = new Variable();
+			v.name = "Prevalence";
+			v.unit = "% (percent)";
+			v.type = DataType.character;
+			v.min = "0.0";
+			v.max = "100.0";
+			fmd.dependentVariables.add(v);
+		}
 		// indep vars
 		{
 			Variable v = new Variable();
@@ -119,7 +123,7 @@ public class FskMetaDataTest {
 		fmd2.type = fmd.type;
 		fmd2.subject = fmd.subject;
 		fmd2.foodProcess = fmd.foodProcess;
-		fmd2.dependentVariable = fmd.dependentVariable;
+		fmd2.dependentVariables = fmd.dependentVariables;
 		fmd2.independentVariables = fmd.independentVariables;
 		fmd2.hasData = fmd.hasData;
 		assertEquals(fmd2, fmd);
@@ -230,9 +234,9 @@ public class FskMetaDataTest {
 		fmd2.foodProcess = fmd.foodProcess;
 		
 		// equals with dependent variable
-		fmd2.dependentVariable = null;
+		fmd2.dependentVariables = null;
 		assertFalse(fmd2.equals(fmd));
-		fmd2.dependentVariable = fmd.dependentVariable;
+		fmd2.dependentVariables = fmd.dependentVariables;
 		
 		// equals with independent variables
 		fmd2.independentVariables = null;
@@ -269,11 +273,15 @@ public class FskMetaDataTest {
 		fmd.subject = ModelClass.UNKNOWN;
 		fmd.foodProcess = "cooking";
 		// dep var
-		fmd.dependentVariable.name = "Prevalence";
-		fmd.dependentVariable.unit = "% (percent)";
-		fmd.dependentVariable.type = DataType.character;
-		fmd.dependentVariable.min = "0.0";
-		fmd.dependentVariable.max = "100.0";
+		{
+			Variable v = new Variable();
+			v.name = "Prevalence";
+			v.unit = "% (percent)";
+			v.type = DataType.character;
+			v.min = "0.0";
+			v.max = "100.0";
+			fmd.dependentVariables.add(v);
+		}
 		// indep vars
 		{
 			Variable v = new Variable();
@@ -308,7 +316,7 @@ public class FskMetaDataTest {
 		fmd2.type = fmd.type;
 		fmd2.subject = fmd.subject;
 		fmd2.foodProcess = fmd.foodProcess;
-		fmd2.dependentVariable = fmd.dependentVariable;
+		fmd2.dependentVariables = fmd.dependentVariables;
 		fmd2.independentVariables = fmd.independentVariables;
 		fmd2.hasData = fmd.hasData;
 		

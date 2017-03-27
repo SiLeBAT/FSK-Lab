@@ -18,14 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.editor;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Date;
-
 import javax.swing.Box;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -33,8 +25,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
@@ -89,7 +79,27 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 		paramScriptPanel.getTextArea().setText(settings.modifiedParametersScript);
 		vizScriptPanel.getTextArea().setText(settings.modifiedVisualizationScript);
 
-		metaDataPanel.update();
+		metaDataPanel.modelNameComp.setText(settings.metaData.modelName);
+		metaDataPanel.modelIdComp.setText(settings.metaData.modelId);
+		metaDataPanel.modelLinkComp.setText(settings.metaData.modelLink);
+		metaDataPanel.organismComp.setText(settings.metaData.organism);
+		metaDataPanel.organismDetailsComp.setText(settings.metaData.organismDetails);
+		metaDataPanel.matrixComp.setText(settings.metaData.matrix);
+		metaDataPanel.matrixDetailsComp.setText(settings.metaData.matrixDetails);
+		metaDataPanel.creatorComp.setText(settings.metaData.creator);
+		metaDataPanel.familyNameComp.setText(settings.metaData.familyName);
+		metaDataPanel.contactComp.setText(settings.metaData.contact);
+		metaDataPanel.softwareComp.setSelectedItem(settings.metaData.software);
+		metaDataPanel.referenceDescriptionComp.setText(settings.metaData.referenceDescription);
+		metaDataPanel.referenceDescriptionLinkComp.setText(settings.metaData.referenceDescriptionLink);
+		metaDataPanel.createdDateComp.setDate(settings.metaData.createdDate);
+		metaDataPanel.modifiedDateComp.setDate(settings.metaData.modifiedDate);
+		metaDataPanel.notesComp.setText(settings.metaData.notes);
+		metaDataPanel.curatedComp.setSelected(settings.metaData.curated);	
+		metaDataPanel.typeComp.setSelectedItem(settings.metaData.type);
+		metaDataPanel.subjectComp.setSelectedItem(settings.metaData.subject);
+		metaDataPanel.foodProcessComp.setText(settings.metaData.foodProcess);
+		metaDataPanel.hasDataComp.setSelected(settings.metaData.hasData);
 	}
 
 	// --- settings methods ---
@@ -150,6 +160,28 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 			this.settings.modifiedVisualizationScript = this.settings.modifiedVisualizationScript.trim();
 		}
 
+		this.settings.metaData.modelName = metaDataPanel.modelNameComp.getText();
+		this.settings.metaData.modelId = metaDataPanel.modelIdComp.getText();
+		this.settings.metaData.modelLink = metaDataPanel.modelLinkComp.getText();
+		this.settings.metaData.organism = metaDataPanel.organismComp.getText();
+		this.settings.metaData.organismDetails = metaDataPanel.organismDetailsComp.getText();
+		this.settings.metaData.matrix = metaDataPanel.matrixComp.getText();
+		this.settings.metaData.matrixDetails = metaDataPanel.matrixDetailsComp.getText();
+		this.settings.metaData.creator = metaDataPanel.creatorComp.getText();
+		this.settings.metaData.familyName = metaDataPanel.familyNameComp.getText();
+		this.settings.metaData.contact = metaDataPanel.contactComp.getText();
+		this.settings.metaData.software = (Software)metaDataPanel.softwareComp.getSelectedItem();
+		this.settings.metaData.referenceDescription = metaDataPanel.referenceDescriptionComp.getText();
+		this.settings.metaData.referenceDescriptionLink = metaDataPanel.referenceDescriptionLinkComp.getText();
+		this.settings.metaData.createdDate = metaDataPanel.createdDateComp.getDate();
+		this.settings.metaData.modifiedDate = metaDataPanel.modifiedDateComp.getDate();
+		this.settings.metaData.notes = metaDataPanel.notesComp.getText();
+		this.settings.metaData.curated = metaDataPanel.curatedComp.isSelected();
+		this.settings.metaData.type = (ModelType)metaDataPanel.typeComp.getSelectedItem();
+		this.settings.metaData.subject = (ModelClass)metaDataPanel.subjectComp.getSelectedItem();
+		this.settings.metaData.foodProcess = metaDataPanel.foodProcessComp.getText();
+		this.settings.metaData.hasData = metaDataPanel.hasDataComp.isSelected();
+
 		this.settings.saveSettings(settings);
 	}
 
@@ -157,254 +189,29 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 6202252120461644668L;
 
-		private JTextField modelNameComp;
-		private JTextField modelIdComp;
-		private JTextField modelLinkComp;
-		private JTextField organismComp;
-		private JTextField organismDetailsComp;
-		private JTextField matrixComp;
-		private JTextField matrixDetailsComp;
-		private JTextField creatorComp;
-		private JTextField familyNameComp;
-		private JTextField contactComp;
-		private JComboBox<Software> softwareComp;
-		private JTextField referenceDescriptionComp;
-		private JTextField referenceDescriptionLinkComp;
-		private FixedJDateChooser createdDateComp;
-		private FixedJDateChooser modifiedDateComp;
-		private JTextField notesComp;
-		private JCheckBox curatedComp;
-		private JComboBox<ModelType> typeComp;
-		private JComboBox<ModelClass> subjectComp;
-		private JTextField foodProcessComp;
-		private JCheckBox hasDataComp;
+		final JTextField modelNameComp = new TextField();
+		final JTextField modelIdComp = new TextField();
+		final JTextField modelLinkComp = new TextField();
+		final JTextField organismComp = new TextField();
+		final JTextField organismDetailsComp = new TextField();
+		final JTextField matrixComp = new TextField();
+		final JTextField matrixDetailsComp = new TextField();
+		final JTextField creatorComp = new TextField();
+		final JTextField familyNameComp = new TextField();
+		final JTextField contactComp = new TextField();
+		final JComboBox<Software> softwareComp = new JComboBox<>(Software.values());
+		final JTextField referenceDescriptionComp = new TextField();
+		final JTextField referenceDescriptionLinkComp = new TextField();
+		final FixedJDateChooser createdDateComp = new FixedJDateChooser();
+		final FixedJDateChooser modifiedDateComp = new FixedJDateChooser();
+		final JTextField notesComp = new TextField();
+		final JCheckBox curatedComp = new JCheckBox();
+		final JComboBox<ModelType> typeComp = new JComboBox<>(ModelType.values());
+		final JComboBox<ModelClass> subjectComp = new JComboBox<>(ModelClass.values());
+		final JTextField foodProcessComp = new TextField();
+		final JCheckBox hasDataComp = new JCheckBox();
 
 		public MetaDataPanel() {
-
-			// Create components
-			modelNameComp = new TextField();
-			modelIdComp = new TextField();
-			modelLinkComp = new TextField();
-			organismComp = new TextField();
-			organismDetailsComp = new TextField();
-			matrixComp = new TextField();
-			matrixDetailsComp = new TextField();
-			creatorComp = new TextField();
-			familyNameComp = new TextField();
-			contactComp = new TextField();
-			softwareComp = new JComboBox<>(Software.values());
-			referenceDescriptionComp = new TextField();
-			referenceDescriptionLinkComp = new TextField();
-			createdDateComp = new FixedJDateChooser();
-			modifiedDateComp = new FixedJDateChooser();
-			notesComp = new TextField();
-			curatedComp = new JCheckBox();
-			typeComp = new JComboBox<>(ModelType.values());
-			subjectComp = new JComboBox<>(ModelClass.values());
-			foodProcessComp = new TextField();
-			hasDataComp = new JCheckBox();
-
-			// Add listeners to components
-			modelNameComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.modelName = modelNameComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.modelName = modelNameComp.getText();
-				}
-			});
-			modelIdComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.modelId = modelIdComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.modelId = modelIdComp.getText();
-				}
-			});
-			modelLinkComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.modelLink = modelLinkComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.modelLink = modelLinkComp.getText();
-				}
-			});
-			organismComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.organism = organismComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.organism = organismComp.getText();
-				}
-			});
-			organismDetailsComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.organismDetails = organismDetailsComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.organismDetails = organismDetailsComp.getText();
-				}
-			});
-			matrixComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.matrix = matrixComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.matrix = matrixComp.getText();
-				}
-			});
-			matrixDetailsComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.matrixDetails = matrixDetailsComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.matrixDetails = matrixDetailsComp.getText();
-				}
-			});
-			creatorComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.creator = creatorComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.creator = creatorComp.getText();
-				}
-			});
-			familyNameComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.familyName = familyNameComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.familyName = familyNameComp.getText();
-				}
-			});
-			contactComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.contact = contactComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.contact = contactComp.getText();
-				}
-			});
-			softwareComp.addItemListener(new ItemListener() {
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					settings.metaData.software = (Software)softwareComp.getSelectedItem();
-				}
-			});
-			referenceDescriptionComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.referenceDescription = referenceDescriptionComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.referenceDescription = referenceDescriptionComp.getText();
-				}
-			});
-			referenceDescriptionLinkComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.referenceDescriptionLink = referenceDescriptionLinkComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.referenceDescriptionLink = referenceDescriptionLinkComp.getText();
-				}
-			});
-			createdDateComp.addPropertyChangeListener("date", new PropertyChangeListener() {
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					settings.metaData.createdDate = (Date) evt.getNewValue();
-				}
-			});
-			modifiedDateComp.addPropertyChangeListener("date", new PropertyChangeListener() {
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					settings.metaData.modifiedDate = (Date) evt.getNewValue();
-				}
-			});
-			notesComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.notes = notesComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.notes = notesComp.getText();
-				}
-			});
-			curatedComp.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					settings.metaData.curated = curatedComp.isSelected();
-				}
-			});
-			typeComp.addItemListener(new ItemListener() {
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					settings.metaData.type = (ModelType)typeComp.getSelectedItem(); 
-				}
-			});
-			subjectComp.addItemListener(new ItemListener() {
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					settings.metaData.subject = (ModelClass)subjectComp.getSelectedItem();
-				}
-			});
-			foodProcessComp.getDocument().addDocumentListener(new TextDocumentListener() {
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					settings.metaData.foodProcess = foodProcessComp.getText();
-				}
-				
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					settings.metaData.foodProcess = foodProcessComp.getText();
-				}
-			});
-			hasDataComp.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					settings.metaData.hasData = hasDataComp.isSelected();
-				}
-			});
-
 			// Assemble components
 			Box vBox = Box.createVerticalBox();
 			vBox.add(createBoxForm("Model name:", modelNameComp));
@@ -449,95 +256,6 @@ public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 			vBox.add(Box.createVerticalStrut(10));
 			vBox.add(createBoxForm("Has data:", hasDataComp));
 			add(vBox);
-		}
-		
-		void update() {
-			if (settings.metaData.modelName != null && !settings.metaData.modelName.equals(modelNameComp.getText())) {
-				modelNameComp.setText(settings.metaData.modelName);
-			}
-			
-			if (settings.metaData.modelId != null && !settings.metaData.modelId.equals(modelIdComp.getText())) {
-				modelIdComp.setText(settings.metaData.modelId);
-			}
-			
-			if (settings.metaData.modelLink != null && !settings.metaData.modelLink.equals(modelLinkComp.getText())) {
-				modelLinkComp.setText(settings.metaData.modelLink);
-			}
-			
-			if (settings.metaData.organism != null && !settings.metaData.organism.equals(organismComp.getText())) {
-				organismComp.setText(settings.metaData.organism);
-			}
-			
-			if (settings.metaData.organismDetails != null && !settings.metaData.organismDetails.equals(organismDetailsComp.getText())) {
-				organismDetailsComp.setText(settings.metaData.organismDetails);
-			}
-			
-			if (settings.metaData.matrix != null && !settings.metaData.matrix.equals(matrixComp.getText())) {
-				matrixComp.setText(settings.metaData.matrix);
-			}
-			
-			if (settings.metaData.creator != null && !settings.metaData.creator.equals(creatorComp.getText())) {
-				creatorComp.setText(settings.metaData.creator);
-			}
-			
-			if (settings.metaData.familyName != null && !settings.metaData.familyName.equals(familyNameComp.getText())) {
-				familyNameComp.setText(settings.metaData.familyName);
-			}
-			
-			if (settings.metaData.contact != null && !settings.metaData.contact.equals(contactComp.getText())) {
-				contactComp.setText(settings.metaData.contact);
-			}
-			
-			if (settings.metaData.software != null && settings.metaData.software != (Software)softwareComp.getSelectedItem()) {
-				softwareComp.setSelectedItem(settings.metaData.software);
-			}
-			
-			if (settings.metaData.referenceDescription != null && !settings.metaData.referenceDescription.equals(referenceDescriptionComp.getText())) {
-				referenceDescriptionComp.setText(settings.metaData.referenceDescription);
-			}
-			
-			if (settings.metaData.referenceDescriptionLink != null && !settings.metaData.referenceDescriptionLink.equals(referenceDescriptionLinkComp.getText())) {
-				referenceDescriptionLinkComp.setText(settings.metaData.referenceDescriptionLink);
-			}
-			
-			if (settings.metaData.createdDate != null && !settings.metaData.createdDate.equals(createdDateComp.getDate())) {
-				createdDateComp.setDate(settings.metaData.createdDate);
-			}
-			
-			if (settings.metaData.modifiedDate != null && !settings.metaData.modifiedDate.equals(modifiedDateComp.getDate())) {
-				modifiedDateComp.setDate(settings.metaData.modifiedDate);
-			}
-			
-			if (settings.metaData.notes != null && !settings.metaData.notes.equals(notesComp.getText())) {
-				notesComp.setText(settings.metaData.notes);
-			}
-			
-			if (settings.metaData.curated != curatedComp.isSelected()) {
-				curatedComp.setSelected(settings.metaData.curated);
-			}
-			
-			if (settings.metaData.type != null && settings.metaData.type != (ModelType) typeComp.getSelectedItem()) {
-				typeComp.setSelectedItem((ModelType)typeComp.getSelectedItem());
-			}
-			
-			if (settings.metaData.subject != null && settings.metaData.subject != (ModelClass) subjectComp.getSelectedItem()) {
-				subjectComp.setSelectedItem((ModelClass)subjectComp.getSelectedItem());
-			}
-			
-			if (settings.metaData.foodProcess != null && !settings.metaData.foodProcess.equals(foodProcessComp.getText())) {
-				foodProcessComp.setText(settings.metaData.foodProcess);
-			}
-			
-			if (settings.metaData.hasData != hasDataComp.isSelected()) {
-				hasDataComp.setSelected(settings.metaData.hasData);
-			}
-		}
-	}
-	
-	abstract class TextDocumentListener implements DocumentListener {
-		@Override
-		public void changedUpdate(DocumentEvent e) {
-			// Not fired by plain text document
 		}
 	}
 	
