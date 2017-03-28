@@ -656,7 +656,7 @@ metadata_editor = function() {
         // type input
         var typeInput = new SelectForm('Model type', modelTypeDic);
         typeInput.input.val(form.metadata.type);
-        typeInput.input.on('input', function() {
+        typeInput.input.change(function() {
             form.metadata.type = typeInput.input.val();
         });
         form.append(typeInput);
