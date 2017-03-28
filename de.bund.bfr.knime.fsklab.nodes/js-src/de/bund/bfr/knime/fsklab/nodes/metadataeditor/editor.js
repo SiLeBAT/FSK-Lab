@@ -648,7 +648,7 @@ metadata_editor = function() {
         // curated input
         var curatedInput = new InputForm('checkbox', 'Curated');
         curatedInput.input.val(form.metadata.curated);
-        curatedInput.input.on('input', function() {
+        curatedInput.input.change(function() {
             form.metadata.curated = curatedInput.input.is(':checked');
         });
         form.append(curatedInput);
