@@ -508,32 +508,32 @@ metadata_editor = function() {
         // modelName input
         var modelNameInput = new InputForm('text', 'Model name');
         modelNameInput.input.val(form.metadata.modelName);
-        modelNameInput.on('input', function() {
-            form.metadata.modelName = $(this).val();
+        modelNameInput.input.on('input', function() {
+            form.metadata.modelName = modelNameInput.input.val();
         });
         form.append(modelNameInput);
 
         // model id input
         var modelIdInput = new InputForm('text', 'Model id');
         modelIdInput.input.val(form.metadata.modelId);
-        modelIdInput.on('input', function() {
-            form.metadata.modelId = $(this).val();
+        modelIdInput.input.on('input', function() {
+            form.metadata.modelid = modelIdInput.input.val();
         });
         form.append(modelIdInput);
 
         // model link input
         var modelLinkInput = new InputForm('url', 'Model link');
         modelLinkInput.input.val(form.metadata.modelLink);
-        modelLinkInput.on('input', function() {
-            form.metadata.modelLink = $(this).val();
+        modelLinkInput.input.on('input', function() {
+            form.metadata.modelLink = modelLinkInput.input.val();
         });
         form.append(modelLinkInput);
 
         // organism input
         var organismInput = new InputForm('text', 'Organism');
         organismInput.input.val(form.metadata.organism);
-        organismInput.on('input', function() {
-            form.metadata.organism = $(this).val();
+        organismInput.input.on('input', function() {
+            form.metadata.organism = organismInput.input.val();
         });
         form.append(organismInput);
 
@@ -541,7 +541,7 @@ metadata_editor = function() {
         var organismDetailsInput = new InputForm('text', 'Organism details');
         organismDetailsInput.input.val(form.metadata.organismDetailsInput);
         organismDetailsInput.input.on('input', function() {
-            form.metadata.organismDetails = $(this).val();
+            form.metadata.organismDetails = organismDetailsInput.input.val();
         });
         form.append(organismDetailsInput);
 
@@ -549,7 +549,7 @@ metadata_editor = function() {
         var matrixInput = new InputForm('text', 'Matrix');
         matrixInput.input.val(form.metadata.matrix);
         matrixInput.input.on('input', function() {
-            form.metadata.matrix = $(this).val();
+            form.metadata.matrix = matrixInput.input.val();
         });
         form.append(matrixInput);
 
@@ -557,7 +557,7 @@ metadata_editor = function() {
         var matrixDetailsInput = new InputForm('text', 'Matrix details');
         matrixDetailsInput.input.val(form.metadata.matrixDetails);
         matrixDetailsInput.input.on('input', function() {
-            form.metadata.matrixDetails = $(this).val();
+            form.metadata.matrixDetails = matrixDetailsInput.input.val();
         });
         form.append(matrixDetailsInput);
 
@@ -565,7 +565,7 @@ metadata_editor = function() {
         var creatorInput = new InputForm('text', 'Creator');
         creatorInput.input.val(form.metadata.creator);
         creatorInput.input.on('input', function() {
-            form.metadata.creator = $(this).val();
+            form.metadata.creator = creatorInput.input.val();
         });
         form.append(creatorInput);
 
@@ -573,7 +573,7 @@ metadata_editor = function() {
         var familyNameInput = new InputForm('text', 'Family name');
         familyNameInput.input.val(form.metadata.familyName);
         familyNameInput.input.on('input', function() {
-            form.metadata.familyName = $(this).val();
+            form.metadata.familyName = familyNameInput.input.val();
         });
         form.append(familyNameInput);
 
@@ -581,7 +581,7 @@ metadata_editor = function() {
         var contactInput = new InputForm('text', 'Contact');
         contactInput.input.val(form.metadata.contact);
         contactInput.input.on('input', function() {
-            form.metadata.contact = $(this).val();
+            form.metadata.contact = contactInput.input.val();
         });
         form.append(contactInput);
 
@@ -589,7 +589,7 @@ metadata_editor = function() {
         var softwareInput = new SelectForm('Software', softwareDic);
         softwareInput.input.val(form.metadata.software);
         softwareInput.input.change(function() {
-            form.metadata.software = $(this).val();
+            form.metadata.softwareInput = softwareInput.input.val();
         });
         form.append(softwareInput);
 
@@ -597,7 +597,7 @@ metadata_editor = function() {
         var referenceDescriptionInput = new InputForm('text', 'Reference description');
         referenceDescriptionInput.input.val(form.metadata.referenceDescriptionInput);
         referenceDescriptionInput.input.on('input', function() {
-            form.metadata.referenceDescription = $(this).val();
+            form.metadata.referenceDescription = referenceDescriptionInput.input.val();
         });
         form.append(referenceDescriptionInput);
 
@@ -605,7 +605,7 @@ metadata_editor = function() {
         var referenceDescriptionLinkInput = new InputForm('text', 'Reference link description');
         referenceDescriptionLinkInput.input.val(form.metadata.referenceDescriptionLinkInput);
         referenceDescriptionLinkInput.input.on('input', function() {
-            form.metadata.referenceDescriptionLink = $(this).val();
+            form.metadata.referenceDescriptionLink = referenceDescriptionLinkInput.input.val();
         });
         form.append(referenceDescriptionLinkInput);
 
@@ -633,7 +633,7 @@ metadata_editor = function() {
         var rightsInput = new InputForm('text', 'Rights');
         rightsInput.input.val(form.metadata.rights);
         rightsInput.input.on('input', function() {
-            form.metadata.rights = $(this).val();
+            form.metadata.rights = rightsInput.input.val();
         });
         form.append(rightsInput);
 
@@ -641,7 +641,7 @@ metadata_editor = function() {
         var notesInput = new TextAreaForm('Notes');
         notesInput.textarea.val(form.metadata.notes);
         notesInput.textarea.on('input', function() {
-            form.metadata.notes = $(this).val();
+            form.metadata.notes = notesInput.textarea.val();
         });
         form.append(notesInput);
 
@@ -649,7 +649,7 @@ metadata_editor = function() {
         var curatedInput = new InputForm('checkbox', 'Curated');
         curatedInput.input.val(form.metadata.curated);
         curatedInput.input.on('input', function() {
-            form.metadata.curated = $(this).is(':checked');
+            form.metadata.curated = curatedInput.input.is(':checked');
         });
         form.append(curatedInput);
 
@@ -657,23 +657,23 @@ metadata_editor = function() {
         var typeInput = new SelectForm('Model type', modelTypeDic);
         typeInput.input.val(form.metadata.type);
         typeInput.input.on('input', function() {
-            form.metadata.type = $(this).val();
+            form.metadata.type = typeInput.input.val();
         });
         form.append(typeInput);
 
         // subject input
         var subjectInput = new SelectForm('Model subject', modelClassDic);
         subjectInput.input.val(form.metadata.subject);
-        subjectInput.on('input', function() {
-            form.metadata.subject = $(this).val();
+        subjectInput.input.on('input', function() {
+            form.metadata.subject = subjectInput.input.val();
         });
         form.append(subjectInput);
 
         // food process input
         var foodProcessInput = new InputForm('text', 'Food process');
         foodProcessInput.input.val(form.metadata.foodProcess);
-        foodProcessInput.on('input', function() {
-            form.metadata.foodProcess = $(this).val();
+        foodProcessInput.input.on('input', function() {
+            form.metadata.foodProcess = foodProcessInput.input.val();
         });
         form.append(foodProcessInput);
 
@@ -681,7 +681,7 @@ metadata_editor = function() {
         var hasDataInput = new InputForm('checkbox', 'Has data?');
         hasDataInput.input.val(form.metadata.hasData);
         hasDataInput.input.change(function() {
-            form.metadata.hasData = $(this).is(':checked');
+            form.metadata.hasData = hasDataInput.input.is(':checked');
         });
         form.append(hasDataInput);
 
@@ -712,6 +712,7 @@ metadata_editor = function() {
 
 
     editor.getComponentValue = function() {
+        alert(JSON.stringify(_form.metadata));
         _value.metadata = _form.metadata;
 
         _value.metadata.dependentVariables = [];
