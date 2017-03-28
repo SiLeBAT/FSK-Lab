@@ -664,7 +664,7 @@ metadata_editor = function() {
         // subject input
         var subjectInput = new SelectForm('Model subject', modelClassDic);
         subjectInput.input.val(form.metadata.subject);
-        subjectInput.input.on('input', function() {
+        subjectInput.input.change(function() {
             form.metadata.subject = subjectInput.input.val();
         });
         form.append(subjectInput);
