@@ -712,7 +712,6 @@ metadata_editor = function() {
 
 
     editor.getComponentValue = function() {
-        alert(JSON.stringify(_form.metadata));
         _value.metadata = _form.metadata;
 
         _value.metadata.dependentVariables = [];
