@@ -32,14 +32,14 @@ import com.google.common.base.Objects;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 
-public class FskEditorNodeModel extends NoInternalsModel {
+class FskEditorNodeModel extends NoInternalsModel {
 
 	private final FskEditorNodeSettings settings;
 
 	// Input and output port types
 	private static final PortType[] IN_TYPES = { FskPortObject.TYPE_OPTIONAL };
 	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE };
-	
+
 	public FskEditorNodeModel() {
 		super(IN_TYPES, OUT_TYPES);
 		settings = new FskEditorNodeSettings();
@@ -99,13 +99,13 @@ public class FskEditorNodeModel extends NoInternalsModel {
 				settings.originalModelScript = inObj.model;
 				settings.originalParametersScript = inObj.param;
 				settings.originalVisualizationScript = inObj.viz;
-				
+
 				settings.modifiedModelScript = inObj.model;
 				settings.modifiedParametersScript = inObj.param;
 				settings.modifiedVisualizationScript = inObj.viz;
-				
+
 				settings.metaData = inObj.template;
-				
+
 				outObj = inObj;
 			}
 		}

@@ -31,7 +31,7 @@ import de.bund.bfr.knime.fsklab.nodes.ui.RPlotterViewPanel;
  *
  * @author Heiko Hofer
  */
-public class FskRunnerNodeView extends NodeView<FskRunnerNodeModel> {
+class FskRunnerNodeView extends NodeView<FskRunnerNodeModel> {
 
 	private final RPlotterViewPanel m_panel;
 

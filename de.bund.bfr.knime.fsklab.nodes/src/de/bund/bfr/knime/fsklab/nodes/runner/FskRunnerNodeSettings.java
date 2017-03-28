@@ -27,7 +27,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelColor;
 import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
-public class FskRunnerNodeSettings {
+class FskRunnerNodeSettings {
 	
 	// Default values
 	private static final int WIDTH = 640;

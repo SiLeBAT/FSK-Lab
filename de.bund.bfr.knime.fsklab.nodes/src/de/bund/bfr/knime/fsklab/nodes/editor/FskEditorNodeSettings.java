@@ -86,7 +86,7 @@ class FskEditorNodeSettings {
 	 * @param settings
 	 *            a node settings object
 	 */
-	public void loadSettings(final NodeSettingsRO settings){
+	public void loadSettings(final NodeSettingsRO settings) {
 		originalModelScript = settings.getString("originalModelScript", "");
 		originalParametersScript = settings.getString("originalParametersScript", "");
 		originalVisualizationScript = settings.getString("originalVisualizationScript", "");
@@ -94,7 +94,7 @@ class FskEditorNodeSettings {
 		modifiedModelScript = settings.getString("modifiedModelScript", "");
 		modifiedParametersScript = settings.getString("modifiedParametersScript", "");
 		modifiedVisualizationScript = settings.getString("modifiedVisualizationScript", "");
-		
+
 		// Load meta data
 		metaData.modelName = settings.getString("modelName", "");
 		metaData.modelId = settings.getString("modelId", "");
@@ -107,21 +107,20 @@ class FskEditorNodeSettings {
 		metaData.familyName = settings.getString("familyName", "");
 		metaData.contact = settings.getString("contact", "");
 		String softwareString = settings.getString("software", "");
-		metaData.software = Strings.isNullOrEmpty(softwareString) ?
-				null : FskMetaData.Software.valueOf(softwareString);
+		metaData.software = Strings.isNullOrEmpty(softwareString) ? null : FskMetaData.Software.valueOf(softwareString);
 		metaData.referenceDescription = settings.getString("referenceDescription", "");
 		metaData.referenceDescriptionLink = settings.getString("referenceDescriptionLink", "");
 		metaData.createdDate = new Date(settings.getLong("createdDate", 0));
 		metaData.modifiedDate = new Date(settings.getLong("modifiedDate", 0));
 		metaData.notes = settings.getString("notes", "");
 		metaData.curated = settings.getBoolean("curated", false);
-		
+
 		String typeString = settings.getString("type", "");
 		metaData.type = typeString.isEmpty() ? null : ModelType.valueOf(typeString);
-		
+
 		String subjectString = settings.getString("subject", "");
 		metaData.subject = subjectString.isEmpty() ? null : ModelClass.valueOf(subjectString);
-		
+
 		metaData.foodProcess = settings.getString("foodProcess", "");
 		metaData.hasData = settings.getBoolean("hasData", false);
 	}

@@ -704,6 +704,9 @@ metadata_editor = function() {
     editor.init = function(representation, value) {
         _value = value;
         _form = new Form(_value.metadata);
+
+        alert(JSON.stringify(_value.metadata.dependentVariables));
+        alert(JSON.stringify(_value.metadata.independentVariables));
         _table = new ParametersTable(_value.metadata.dependentVariables, _value.metadata.independentVariables);
 
         checkVariables();

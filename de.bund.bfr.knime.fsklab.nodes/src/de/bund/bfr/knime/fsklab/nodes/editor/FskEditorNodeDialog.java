@@ -44,7 +44,7 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 
-public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
+class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 
 	private ScriptPanel modelScriptPanel;
 	private ScriptPanel paramScriptPanel;

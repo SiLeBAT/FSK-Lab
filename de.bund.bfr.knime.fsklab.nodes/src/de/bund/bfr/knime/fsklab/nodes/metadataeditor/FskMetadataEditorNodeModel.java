@@ -34,7 +34,7 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 /**
  * Fsk meta data editor node model.
  */
-public final class FskMetadataEditorNodeModel
+final class FskMetadataEditorNodeModel
 		extends AbstractWizardNodeModel<FskMetadataEditorViewRepresentation, FskMetadataEditorViewValue>
 		implements PortObjectHolder {
 

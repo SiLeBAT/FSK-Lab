@@ -51,7 +51,7 @@ import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
 
 /**
  */
-public class FskxWriterNodeModel extends NoInternalsModel {
+class FskxWriterNodeModel extends NoInternalsModel {
 
 	// Configuration keys
 	public static final String CFG_FILE = "file";

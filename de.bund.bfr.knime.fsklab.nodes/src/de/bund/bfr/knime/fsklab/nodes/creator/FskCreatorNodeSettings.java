@@ -23,28 +23,28 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
-public class FskCreatorNodeSettings {
+class FskCreatorNodeSettings {
 
 	// Setting models, with keys and default values
 	SettingsModelString modelScript = new SettingsModelString("modelScript", "");
 	SettingsModelString paramScript = new SettingsModelString("paramScript", "");
 	SettingsModelString vizScript = new SettingsModelString("visualizationScript", "");
 	SettingsModelString metaDataDoc = new SettingsModelString("spreadsheet", "");
-	
+
 	public void saveSettings(final NodeSettingsWO settings) {
 		modelScript.saveSettingsTo(settings);
 		paramScript.saveSettingsTo(settings);
 		vizScript.saveSettingsTo(settings);
 		metaDataDoc.saveSettingsTo(settings);
 	}
-	
+
 	public void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 		modelScript.validateSettings(settings);
 		paramScript.validateSettings(settings);
 		vizScript.validateSettings(settings);
 		metaDataDoc.validateSettings(settings);
 	}
-	
+
 	public void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
 		modelScript.loadSettingsFrom(settings);
 		paramScript.loadSettingsFrom(settings);

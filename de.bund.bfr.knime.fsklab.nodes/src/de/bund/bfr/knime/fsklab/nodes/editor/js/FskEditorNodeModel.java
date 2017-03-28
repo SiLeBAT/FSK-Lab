@@ -31,7 +31,7 @@ import org.knime.js.core.node.AbstractWizardNodeModel;
 
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 
-public class FskEditorNodeModel extends AbstractWizardNodeModel<FskEditorViewRepresentation, FskEditorViewValue>
+class FskEditorNodeModel extends AbstractWizardNodeModel<FskEditorViewRepresentation, FskEditorViewValue>
 		implements PortObjectHolder {
 
 	private FskPortObject m_port;

@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class FskMetadataEditorViewValue extends JSONViewContent {
+class FskMetadataEditorViewValue extends JSONViewContent {
 
 	FskMetaData metadata;
 

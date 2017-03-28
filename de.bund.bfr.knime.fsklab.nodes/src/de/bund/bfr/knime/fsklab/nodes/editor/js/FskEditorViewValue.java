@@ -28,7 +28,7 @@ import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class FskEditorViewValue extends JSONViewContent {
+class FskEditorViewValue extends JSONViewContent {
 	
 	String modelScript = "";
 	String paramScript = "";
