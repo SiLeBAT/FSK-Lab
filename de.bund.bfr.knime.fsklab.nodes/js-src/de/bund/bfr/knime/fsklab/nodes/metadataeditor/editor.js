@@ -237,7 +237,6 @@ metadata_editor = function() {
             VariableRowBase.call(this);
 
             // HTML elements
-            // this.isDependentInput = $('<input type="checkbox" class="form-control input-sm">');
             this.isDependentInput = new Input('checkbox');
             $('td:eq(6)', this.row).append(this.isDependentInput);
 
@@ -340,10 +339,9 @@ metadata_editor = function() {
 
             this.isDependentInput.change(function() {
                 // Style row
-                if ($(this).is(':checked')) {
+                if (outer.isDependentInput.is(':checked')) {
                     outer.row.addClass('danger');
-                }
-                else {
+                } else {
                     outer.row.removeClass('danger');
                 }
             });
