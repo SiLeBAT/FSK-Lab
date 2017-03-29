@@ -267,6 +267,9 @@ metadata_editor = function() {
 
             if (is_dependent) {
                 this.isDependentInput.prop('checked', true);
+                this.row.addClass('danger');
+            } else {
+                this.row.removeClass('danger');
             }
 
             // Save data
