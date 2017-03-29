@@ -280,8 +280,7 @@ metadata_editor = function() {
                 if (outer.nameInput.val()) {
                     if (outer.validateName()) {
                         outer.markValidTd(nameTd);
-                    }
-                    else {
+                    } else {
                         outer.markInvalidTd(nameTd);
                     }
                 }
@@ -309,8 +308,7 @@ metadata_editor = function() {
                 else {
                     if (outer.validateValue()) {
                         outer.markValidTd(valTd);
-                    }
-                    else {
+                    } else {
                         outer.markInvalidTd(valTd);
                     }
                 }
@@ -322,8 +320,7 @@ metadata_editor = function() {
 
                 if (outer.validateMin()) {
                     outer.markValidTd(minTd);
-                }
-                else {
+                } else {
                     outer.markInvalidTd(minTd);
                 }
             });
@@ -334,8 +331,7 @@ metadata_editor = function() {
 
                 if (outer.validateMax()) {
                     outer.markValidTd(maxTd);
-                }
-                else {
+                } else {
                     outer.markInvalidTd(maxTd);
                 }
             });
@@ -344,6 +340,7 @@ metadata_editor = function() {
                 // Style row
                 if (outer.isDependentInput.is(':checked')) {
                     outer.row.addClass('danger');
+                    outer.valueInput.val('');
                 } else {
                     outer.row.removeClass('danger');
                 }
@@ -401,33 +398,25 @@ metadata_editor = function() {
             this.removeAddButton.click(function() {
                 if (!outer.nameInput.val()) {
                     outer.createWarning('Missing name');
-                }
-                else if (!outer.unitInput.val()) {
+                } else if (!outer.unitInput.val()) {
                     outer.createWarning('Missing unit');
-                }
-                else if (!outer.typeSelect.val()) {
+                } else if (!outer.typeSelect.val()) {
                     outer.createWarning('Missing type');
-                }
-                else if (!outer.valueInput.val()) {
+                } else if (!outer.valueInput.val()) {
                     outer.createWarning('Missing value');
-                }
-                else if (!outer.minInput.val()) {
+                } else if (!outer.minInput.val()) {
                     outer.createWarning('Missing min');
-                }
-                else if (!outer.maxInput.val()) {
+                } else if (!outer.maxInput.val()) {
                     outer.createWarning('Missing max');
                 }
 
                 else if (!outer.validateName()) {
                     outer.createWarning('Invalid name: ' + outer.nameInput.val());
-                }
-                else if (!outer.validateValue()) {
+                } else if (!outer.validateValue()) {
                     outer.createWarning('Invalid value: ' + outer.valueInput.val());
-                }
-                else if (!outer.validateMin()) {
+                } else if (!outer.validateMin()) {
                     outer.createWarning('Invalid min: ' + outer.minInput.val());
-                }
-                else if (!outer.validateMax()) {
+                } else if (!outer.validateMax()) {
                     outer.createWarning('Invalid max: ' + outer.maxInput.val());
                 }
 
