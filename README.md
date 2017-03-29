@@ -4,7 +4,7 @@ FSK-Lab is an open source extension plugin to the Konstanz Information Miner
 (KNIME). FSK-Lab enables KNIME users to work with FSK models within KNIME.
 
 ## Installation
-FSK-Lab may be installed throught the update site [https://dl.bintray.com/silebat/fsklab]. More information about the installation can be found at the [Food Risk Labs website](https://foodrisklabs.bfr.bund.de/index.php/fsk-lab/)
+FSK-Lab may be installed throught the update site <https://dl.bintray.com/silebat/fsklab>. More information about the installation can be found at the [Food Risk Labs website](https://foodrisklabs.bfr.bund.de/index.php/fsk-lab/)
 
 ## Extension nodes
 - ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/creator/FskCreator.png) FSK Creator
