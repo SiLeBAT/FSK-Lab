@@ -237,8 +237,10 @@ metadata_editor = function() {
             VariableRowBase.call(this);
 
             // HTML elements
-            this.isDependentInput = $('td:eq(6)', this.row).append(
-                '<input type="checkbox" class="form-control input-sm">');
+            // this.isDependentInput = $('<input type="checkbox" class="form-control input-sm">');
+            this.isDependentInput = new Input('checkbox');
+            $('td:eq(6)', this.row).append(this.isDependentInput);
+
             this.removeAddButton = $('td:eq(7)', this.row).append(
                 '<button type="button" class="btn btn-default btn-danger">' +
                 '  <span class="glyphicon glyphicon-minus"></span>' +
@@ -265,7 +267,7 @@ metadata_editor = function() {
             }
 
             if (is_dependent) {
-                this.isDependentInput.prop(':checked', true);
+                this.isDependentInput.prop('checked', true);
             }
 
             // Save data
