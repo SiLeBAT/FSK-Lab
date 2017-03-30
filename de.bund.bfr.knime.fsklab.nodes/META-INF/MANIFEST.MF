@@ -36,9 +36,9 @@ Bundle-ClassPath: library.jar,
  libs/jdom-2.0.1.jar,
  libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar,
  libs/jsoup-1.9.2.jar,
- libs/fskml-1.0.2.jar,
- libs/pmfml-0.0.8.jar,
  libs/rengine-1.8.4.jar,
  libs/rserve-engine-1.8.4.jar,
- libs/jcalendar-1.4.jar
+ libs/jcalendar-1.4.jar,
+ libs/fskml-1.0.3.jar,
+ libs/pmfml-0.0.10.jar
 
