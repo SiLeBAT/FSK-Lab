@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.knime.core.node.ExecutionContext;
@@ -52,9 +54,6 @@ import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
-
-import com.google.common.base.Strings;
-import com.sun.jna.Platform;
 
 import de.bund.bfr.fskml.DCOmexMetaDataHandler;
 import de.bund.bfr.fskml.LegacyOmexMetaDataHandler;
@@ -179,11 +178,11 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 			// Gets R libraries
 			// Gets library names from the zip entries in the CombineArchive
 			URI libUri = null;
-			if (Platform.isWindows()) {
+			if (SystemUtils.IS_OS_WINDOWS) {
 				libUri = URIS.zip;
-			} else if (Platform.isMac()) {
+			} else if (SystemUtils.IS_OS_MAC) {
 				libUri = URIS.tgz;
-			} else if (Platform.isLinux()) {
+			} else if (SystemUtils.IS_OS_LINUX) {
 				libUri = URIS.tar_gz;
 			}
 			List<String> libNames = archive.getEntriesWithFormat(libUri).stream()
@@ -227,7 +226,7 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 				
 				boolean onError = false;
 				for (Variable v : portObj.template.independentVariables) {
-					if (Strings.isNullOrEmpty(v.name) || Strings.isNullOrEmpty(v.value)) {
+					if (StringUtils.isAnyEmpty(v.name, v.value)) {
 						onError = true;
 						break;
 					}
