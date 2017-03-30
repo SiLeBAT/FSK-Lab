@@ -26,6 +26,7 @@ import java.nio.file.Files;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -39,8 +40,6 @@ import org.knime.core.util.FileUtil;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
-
-import com.sun.jna.Platform;
 
 import de.bund.bfr.fskml.DCOmexMetaDataHandler;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
@@ -132,11 +131,11 @@ class FskxWriterNodeModel extends NoInternalsModel {
 
 			// Adds R libraries
 			URI libUri = null;
-			if (Platform.isWindows()) {
+			if (SystemUtils.IS_OS_WINDOWS) {
 				libUri = URIS.zip;
-			} else if (Platform.isMac()) {
+			} else if (SystemUtils.IS_OS_MAC) {
 				libUri = URIS.tgz;
-			} else if (Platform.isLinux()) {
+			} else if (SystemUtils.IS_OS_LINUX) {
 				libUri = URIS.tar_gz;
 			}
 			for (File lib : portObject.libs) {
