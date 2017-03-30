@@ -13,10 +13,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
-
-import com.sun.jna.Platform;
 
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 
@@ -50,9 +49,9 @@ public class LibRegistry {
 		repoPath = Files.createTempDirectory("repo");
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 
-		if (Platform.isWindows()) {
+		if (SystemUtils.IS_OS_WINDOWS) {
 			type = "win.binary";
-		} else if (Platform.isMac()) {
+		} else if (SystemUtils.IS_OS_MAC) {
 			type = "mac.binary";
 		} else {
 			type = "source";
