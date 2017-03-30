@@ -8,9 +8,9 @@
 	<classpathentry exported="true" kind="lib" path="libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jsoup-1.9.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/fskml-1.0.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/pmfml-0.0.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/rengine-1.8.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/rserve-engine-1.8.4.jar"/>
 	<classpathentry kind="lib" path="libs/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="libs/pmfml-0.0.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
