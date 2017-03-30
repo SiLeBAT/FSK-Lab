@@ -4,6 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="/de.bund.bfr.knime.fsklab.nodes/libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar"/>
-	<classpathentry kind="lib" path="/de.bund.bfr.knime.fsklab.nodes/libs/pmfml-0.0.10.jar"/>
+	<classpathentry kind="lib" path="/de.bund.bfr.knime.fsklab.nodes/libs/pmfml-0.0.11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
