@@ -18,6 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.editor;
 
+import java.util.Objects;
+
 import javax.swing.Box;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -26,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -34,8 +37,6 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Strings;
 import com.toedter.calendar.JDateChooser;
 
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.Software;
@@ -113,9 +114,9 @@ class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 
 		// if input model has not changed (the original scripts stored in
 		// settings match the input model)
-		if (Objects.equal(editorSettings.originalModelScript, inObj.model)
-				&& Objects.equal(editorSettings.originalParametersScript, inObj.param)
-				&& Objects.equal(editorSettings.originalVisualizationScript, inObj.viz)) {
+		if (Objects.equals(editorSettings.originalModelScript, inObj.model)
+				&& Objects.equals(editorSettings.originalParametersScript, inObj.param)
+				&& Objects.equals(editorSettings.originalVisualizationScript, inObj.viz)) {
 			// Updates settings
 			this.settings = editorSettings;
 
@@ -150,15 +151,9 @@ class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 		this.settings.modifiedVisualizationScript = vizScriptPanel.getTextArea().getText();
 
 		// Trim non-empty scripts
-		if (!Strings.isNullOrEmpty(this.settings.modifiedModelScript)) {
-			this.settings.modifiedModelScript = this.settings.modifiedModelScript.trim();
-		}
-		if (!Strings.isNullOrEmpty(this.settings.modifiedParametersScript)) {
-			this.settings.modifiedParametersScript = this.settings.modifiedParametersScript.trim();
-		}
-		if (!Strings.isNullOrEmpty(this.settings.modifiedVisualizationScript)) {
-			this.settings.modifiedVisualizationScript = this.settings.modifiedVisualizationScript.trim();
-		}
+		this.settings.modifiedModelScript = StringUtils.trim(this.settings.modifiedModelScript);
+		this.settings.modifiedParametersScript = StringUtils.trim(this.settings.modifiedParametersScript);
+		this.settings.modifiedVisualizationScript = StringUtils.trim(this.settings.modifiedVisualizationScript);
 
 		this.settings.metaData.modelName = metaDataPanel.modelNameComp.getText();
 		this.settings.metaData.modelId = metaDataPanel.modelIdComp.getText();

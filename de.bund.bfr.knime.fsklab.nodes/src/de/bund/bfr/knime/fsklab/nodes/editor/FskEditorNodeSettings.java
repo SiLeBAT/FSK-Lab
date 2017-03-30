@@ -20,10 +20,9 @@ package de.bund.bfr.knime.fsklab.nodes.editor;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-
-import com.google.common.base.Strings;
 
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.pmfml.ModelClass;
@@ -107,7 +106,7 @@ class FskEditorNodeSettings {
 		metaData.familyName = settings.getString("familyName", "");
 		metaData.contact = settings.getString("contact", "");
 		String softwareString = settings.getString("software", "");
-		metaData.software = Strings.isNullOrEmpty(softwareString) ? null : FskMetaData.Software.valueOf(softwareString);
+		metaData.software = StringUtils.isEmpty(softwareString) ? null : FskMetaData.Software.valueOf(softwareString);
 		metaData.referenceDescription = settings.getString("referenceDescription", "");
 		metaData.referenceDescriptionLink = settings.getString("referenceDescriptionLink", "");
 		metaData.createdDate = new Date(settings.getLong("createdDate", 0));

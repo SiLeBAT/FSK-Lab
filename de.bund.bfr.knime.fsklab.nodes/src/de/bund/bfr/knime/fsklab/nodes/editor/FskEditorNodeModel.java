@@ -18,6 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.editor;
 
+import java.util.Objects;
+
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -26,8 +28,6 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-
-import com.google.common.base.Objects;
 
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
@@ -87,9 +87,9 @@ class FskEditorNodeModel extends NoInternalsModel {
 
 			// if input model has not changed (the original script stored in
 			// settings match the input model)
-			if (Objects.equal(settings.originalModelScript, inObj.model)
-					&& Objects.equal(settings.originalParametersScript, inObj.param)
-					&& Objects.equal(settings.originalVisualizationScript, inObj.viz)) {
+			if (Objects.equals(settings.originalModelScript, inObj.model)
+					&& Objects.equals(settings.originalParametersScript, inObj.param)
+					&& Objects.equals(settings.originalVisualizationScript, inObj.viz)) {
 				outObj = inObj;
 				outObj.model = settings.modifiedModelScript;
 				outObj.param = settings.modifiedParametersScript;
