@@ -30,7 +30,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-databind,
  com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-core,
  org.apache.servicemix.bundles.poi,
- org.knime.quickform.nodes.legacy
+ org.knime.quickform.nodes.legacy,
+ org.apache.commons.lang3
 Bundle-ClassPath: library.jar,
  libs/CombineArchive-1.1.jar,
  libs/jdom-2.0.1.jar,

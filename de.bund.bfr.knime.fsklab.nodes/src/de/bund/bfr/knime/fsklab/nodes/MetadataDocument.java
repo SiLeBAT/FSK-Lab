@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.sbml.jsbml.ASTNode;
 import org.sbml.jsbml.Annotation;
@@ -43,8 +44,6 @@ import org.sbml.jsbml.ext.arrays.Dimension;
 import org.sbml.jsbml.ext.arrays.Index;
 import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
-
-import com.google.common.base.Strings;
 
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.pmfml.ModelClass;
@@ -141,14 +140,14 @@ public class MetadataDocument {
 
 		// Adds dep parameter
 		for (Variable v : template.dependentVariables) {
-			if (Strings.isNullOrEmpty(v.name))
+			if (StringUtils.isEmpty(v.name))
 				continue;
 
 			Parameter param = model.createParameter(PMFUtil.createId(v.name));
 			param.setName(v.name);
 
 			// Write unit if v.unit is not null
-			if (!Strings.isNullOrEmpty(v.unit)) {
+			if (StringUtils.isNotEmpty(v.unit)) {
 				try {
 					param.setUnits(PMFUtil.createId(v.unit));
 				} catch (IllegalArgumentException e) {
@@ -157,7 +156,7 @@ public class MetadataDocument {
 			}
 
 			// Write min and max values if not null
-			if (!Strings.isNullOrEmpty(v.min) && !Strings.isNullOrEmpty(v.max)) {
+			if (StringUtils.isNoneEmpty(v.min, v.max)) {
 				try {
 					double min = Double.parseDouble(v.min);
 					double max = Double.parseDouble(v.max);
@@ -173,14 +172,14 @@ public class MetadataDocument {
 
 		// Adds independent parameters
 		for (Variable v : template.independentVariables) {
-			if (Strings.isNullOrEmpty(v.name))
+			if (StringUtils.isEmpty(v.name))
 				continue;
 
 			Parameter param = model.createParameter(PMFUtil.createId(v.name));
 			param.setName(v.name);
 
 			// Write value if v.type and v.value are not null
-			if (v.type != null && !Strings.isNullOrEmpty(v.value)) {
+			if (v.type != null && StringUtils.isNotEmpty(v.value)) {
 				switch (v.type) {
 				case integer:
 					param.setValue(Double.valueOf(v.value).intValue());
@@ -196,7 +195,6 @@ public class MetadataDocument {
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
-
 					break;
 				case character:
 					// TODO: Add character
@@ -205,7 +203,7 @@ public class MetadataDocument {
 			}
 
 			// Write unit if v.unit is not null
-			if (!Strings.isNullOrEmpty(v.unit)) {
+			if (StringUtils.isNotEmpty(v.unit)) {
 				try {
 					param.setUnits(PMFUtil.createId(v.unit));
 				} catch (IllegalArgumentException e) {
@@ -214,7 +212,7 @@ public class MetadataDocument {
 			}
 
 			// Write min and max values if not null
-			if (!Strings.isNullOrEmpty(v.min) && !Strings.isNullOrEmpty(v.max)) {
+			if (StringUtils.isNoneEmpty(v.min, v.max)) {
 				try {
 					double min = Double.parseDouble(v.min);
 					double max = Double.parseDouble(v.max);
@@ -229,7 +227,7 @@ public class MetadataDocument {
 		}
 
 		// Add rule
-		if (model.getNumParameters() > 0 && !Strings.isNullOrEmpty(model.getParameter(0).getId())) {
+		if (model.getNumParameters() > 0 && StringUtils.isNotEmpty(model.getParameter(0).getId())) {
 			AssignmentRule rule = new AssignmentRule(3, 1);
 			// Assigns the id of the dependent parameter which happens to be the
 			// first parameter of the model
@@ -429,11 +427,11 @@ public class MetadataDocument {
 			XMLNode pmfNode = new XMLNode(pmfTriple);
 
 			// Builds creator node
-			if (!Strings.isNullOrEmpty(metadata.creator) || !Strings.isNullOrEmpty(metadata.familyName)
-					|| !Strings.isNullOrEmpty(metadata.contact)) {
-				givenName = Strings.nullToEmpty(metadata.creator);
-				familyName = Strings.nullToEmpty(metadata.familyName);
-				contact = Strings.nullToEmpty(metadata.contact);
+			if (StringUtils.isNotEmpty(metadata.creator) || StringUtils.isNotEmpty(metadata.familyName)
+					|| StringUtils.isNotEmpty(metadata.contact)) {
+				givenName = StringUtils.defaultString(metadata.creator);
+				familyName = StringUtils.defaultString(metadata.familyName);
+				contact = StringUtils.defaultString(metadata.contact);
 
 				String creator = givenName + "." + familyName + "." + contact;
 				XMLNode creatorNode = new XMLNode(new XMLTriple(CREATOR_TAG, null, CREATOR_NS));
@@ -463,21 +461,21 @@ public class MetadataDocument {
 			}
 
 			// Builds rights node
-			if (!Strings.isNullOrEmpty(metadata.rights)) {
+			if (StringUtils.isNotEmpty(metadata.rights)) {
 				XMLNode rightsNode = new XMLNode(new XMLTriple(RIGHTS_TAG, "", RIGHTS_NS));
 				rightsNode.addChild(new XMLNode(metadata.rights));
 				pmfNode.addChild(rightsNode);
 			}
 
 			// Builds reference description node
-			if (!Strings.isNullOrEmpty(metadata.referenceDescription)) {
+			if (StringUtils.isNotEmpty(metadata.referenceDescription)) {
 				XMLNode refdescNode = new XMLNode(new XMLTriple(REFDESC_TAG, "", REFDESC_NS));
 				refdescNode.addChild(new XMLNode(metadata.referenceDescription));
 				pmfNode.addChild(refdescNode);
 			}
 
 			// Builds reference description link node
-			if (!Strings.isNullOrEmpty(metadata.referenceDescriptionLink)) {
+			if (StringUtils.isNotEmpty(metadata.referenceDescriptionLink)) {
 				XMLNode refdescLinkNode = new XMLNode(new XMLTriple(REFDESCLINK_TAG, "", REFDESCLINK_NS));
 				refdescLinkNode.addChild(new XMLNode(metadata.referenceDescriptionLink));
 				pmfNode.addChild(refdescLinkNode);
@@ -495,9 +493,9 @@ public class MetadataDocument {
 			XMLNode creatorNode = pmfNode.getChildElement(CREATOR_TAG, "");
 			if (creatorNode != null) {
 				String[] tempStrings = creatorNode.getChild(0).getCharacters().split("\\.", 3);
-				givenName = Strings.nullToEmpty(tempStrings[0]);
-				familyName = Strings.nullToEmpty(tempStrings[1]);
-				contact = Strings.nullToEmpty(tempStrings[2]);
+				givenName = StringUtils.defaultString(tempStrings[0]);
+				familyName = StringUtils.defaultString(tempStrings[1]);
+				contact = StringUtils.defaultString(tempStrings[2]);
 			}
 
 			// Reads created date

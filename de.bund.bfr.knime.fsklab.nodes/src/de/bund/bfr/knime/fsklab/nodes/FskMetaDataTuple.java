@@ -22,14 +22,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
 import org.knime.core.data.RowKey;
 import org.knime.core.data.def.StringCell;
-
-import com.google.common.base.Strings;
 
 import de.bund.bfr.pmfml.ModelClass;
 
@@ -41,35 +40,34 @@ public class FskMetaDataTuple implements DataRow {
 	public FskMetaDataTuple(final FskMetaData template) {
 		cell = new DataCell[FskMetaDataFields.values().length];
 
-		cell[FskMetaDataFields.name.ordinal()] = new StringCell(Strings.nullToEmpty(template.modelName));
-		cell[FskMetaDataFields.id.ordinal()] = new StringCell(Strings.nullToEmpty(template.modelId));
+		cell[FskMetaDataFields.name.ordinal()] = new StringCell(StringUtils.defaultString(template.modelId));
 		cell[FskMetaDataFields.model_link.ordinal()] = new StringCell(
 				template.modelLink == null ? "" : template.modelLink.toString());
 
-		cell[FskMetaDataFields.species.ordinal()] = new StringCell(Strings.nullToEmpty(template.organism));
-		cell[FskMetaDataFields.species_details.ordinal()] = new StringCell(Strings.nullToEmpty(template.organismDetails));
+		cell[FskMetaDataFields.species.ordinal()] = new StringCell(StringUtils.defaultString(template.organism));
+		cell[FskMetaDataFields.species_details.ordinal()] = new StringCell(StringUtils.defaultString(template.organismDetails));
 
-		cell[FskMetaDataFields.matrix.ordinal()] = new StringCell(Strings.nullToEmpty(template.matrix));
-		cell[FskMetaDataFields.matrix_details.ordinal()] = new StringCell(Strings.nullToEmpty(template.matrixDetails));
+		cell[FskMetaDataFields.matrix.ordinal()] = new StringCell(StringUtils.defaultString(template.matrix));
+		cell[FskMetaDataFields.matrix_details.ordinal()] = new StringCell(StringUtils.defaultString(template.matrixDetails));
 
-		cell[FskMetaDataFields.creator.ordinal()] = new StringCell(Strings.nullToEmpty(template.creator));
-		cell[FskMetaDataFields.family_name.ordinal()] = new StringCell(Strings.nullToEmpty(template.familyName));
-		cell[FskMetaDataFields.contact.ordinal()] = new StringCell(Strings.nullToEmpty(template.contact));
+		cell[FskMetaDataFields.creator.ordinal()] = new StringCell(StringUtils.defaultString(template.creator));
+		cell[FskMetaDataFields.family_name.ordinal()] = new StringCell(StringUtils.defaultString(template.familyName));
+		cell[FskMetaDataFields.contact.ordinal()] = new StringCell(StringUtils.defaultString(template.contact));
 		cell[FskMetaDataFields.software.ordinal()] = new StringCell(template.software == null ? "" : template.software.name());
-		cell[FskMetaDataFields.reference_description.ordinal()] = new StringCell(Strings.nullToEmpty(template.referenceDescription));
+		cell[FskMetaDataFields.reference_description.ordinal()] = new StringCell(StringUtils.defaultString(template.referenceDescription));
 		cell[FskMetaDataFields.reference_description_link.ordinal()] = new StringCell(
 				template.referenceDescriptionLink == null ? "" : template.referenceDescriptionLink.toString());
 		cell[FskMetaDataFields.created_date.ordinal()] = new StringCell(
 				template.createdDate == null ? "" : FskMetaData.dateFormat.format(template.createdDate));
 		cell[FskMetaDataFields.modified_date.ordinal()] = new StringCell(
 				template.modifiedDate == null ? "" : FskMetaData.dateFormat.format(template.modifiedDate));
-		cell[FskMetaDataFields.rights.ordinal()] = new StringCell(Strings.nullToEmpty(template.rights));
-		cell[FskMetaDataFields.notes.ordinal()] = new StringCell(Strings.nullToEmpty(template.notes));
+		cell[FskMetaDataFields.rights.ordinal()] = new StringCell(StringUtils.defaultString(template.rights));
+		cell[FskMetaDataFields.notes.ordinal()] = new StringCell(StringUtils.defaultString(template.notes));
 		cell[FskMetaDataFields.curation_status.ordinal()] = new StringCell(Boolean.toString(template.curated));
 		cell[FskMetaDataFields.type.ordinal()] = new StringCell(template.type == null ? "" : template.type.toString());
 		cell[FskMetaDataFields.subject.ordinal()] = new StringCell(
 				template.subject == null ? ModelClass.UNKNOWN.fullName() : template.subject.fullName());
-		cell[FskMetaDataFields.food_process.ordinal()] = new StringCell(Strings.nullToEmpty(template.foodProcess));
+		cell[FskMetaDataFields.food_process.ordinal()] = new StringCell(StringUtils.defaultString(template.foodProcess));
 
 		// Dependent variable
 		{
