@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.container.CloseableRowIterator;
 import org.knime.core.data.def.StringCell;
@@ -49,7 +50,6 @@ import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 
-import com.google.common.base.Strings;
 import com.sun.jna.Platform;
 
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
@@ -137,7 +137,7 @@ class FskRunnerNodeModel extends NodeModel {
 
 			boolean onError = false;
 			for (Variable v : fskObj.template.independentVariables) {
-				if (Strings.isNullOrEmpty(v.name) || Strings.isNullOrEmpty(v.value)) {
+				if (StringUtils.isAnyEmpty(v.name, v.value)) {
 					onError = true;
 					break;
 				}
@@ -170,10 +170,10 @@ class FskRunnerNodeModel extends NodeModel {
 
 						StringBuilder sb = new StringBuilder();
 						for (int i = 0; i < vars.length; i++) {
-							if (Strings.isNullOrEmpty(vars[i]) && Strings.isNullOrEmpty(values[i])) {
-								onError = true;
-							} else {
+							if (StringUtils.isNoneEmpty(vars[i], values[i])) {
 								sb.append(vars[i] + " <- " + values[i] + "\n");
+							} else {
+								onError = true;
 							}
 						}
 						
