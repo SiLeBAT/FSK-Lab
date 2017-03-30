@@ -57,7 +57,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
@@ -68,6 +67,8 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
+
+import com.sun.jna.Platform;
 
 import de.bund.bfr.knime.fsklab.nodes.rbin.RBinUtil;
 import de.bund.bfr.knime.fsklab.nodes.rbin.RBinUtil.InvalidRHomeException;
@@ -243,7 +244,7 @@ public class RController implements IRController {
 			}
 		}
 
-		if (SystemUtils.IS_OS_WINDOWS) {
+		if (Platform.isWindows()) {
 			try {
 				final String rMemoryLimit = m_rProps.get("memory.limit").toString().trim();
 				// set memory to the one of the used R
@@ -252,7 +253,7 @@ public class RController implements IRController {
 				LOGGER.error("R initialisation failed. " + e.getMessage());
 				throw new RuntimeException(e);
 			}
-		} else if (SystemUtils.IS_OS_MAC) {
+		} else if (Platform.isMac()) {
 			// produce a warning message if 'Cairo' package is not installed.
 			try {
 				final REXP ret = eval("find.package('Cairo')");
@@ -278,11 +279,11 @@ public class RController implements IRController {
 	 * @throws IOException
 	 */
 	private void installRserve() throws IOException {
-		if (SystemUtils.IS_OS_WINDOWS) {
+		if (Platform.isWindows()) {
 			installLib("/de/bund/bfr/knime/pmm/fskx/res/Rserve_1.8-0.zip", "Rserve_1.8-0", ".zip");
-		} else if (SystemUtils.IS_OS_MAC) {
+		} else if (Platform.isMac()) {
 			installLib("/de/bund/bfr/knime/pmm/fskx/res/Rserve_1.7-3", "Rserve_1.7-3", ".tgz");
-		} else if (SystemUtils.IS_OS_LINUX) {
+		} else if (Platform.isLinux()) {
 			installLib("/de/bund/bfr/knime/pmm/fskx/res/Rserve_1.8-5.tar.gz", "Rserve_1.8-5", ".tar.gz");
 		} else {
 			throw new RuntimeException("Non suppported platform, sorry." + System.getProperty("os.name"));
@@ -325,11 +326,11 @@ public class RController implements IRController {
 	 */
 	private void installMiniCran() throws IOException, RException {
 
-		if (SystemUtils.IS_OS_WINDOWS) {
+		if (Platform.isWindows()) {
 			installLib("/de/bund/bfr/knime/pmm/fskx/res/miniCRAN_0.2.5", "miniCRAN_0.2.5", ".zip");
-		} else if (SystemUtils.IS_OS_MAC) {
+		} else if (Platform.isMac()) {
 			installLib("/de/bund/bfr/knime/pmm/fskx/res/miniCRAN_0.2.6", "miniCRAN_0.2.6", ".tgz");
-		} else if (SystemUtils.IS_OS_LINUX) {
+		} else if (Platform.isLinux()) {
 			eval("install.packages('miniCRAN', repos = 'http://cran.us.r-project.org')");
 		} else {
 			throw new RuntimeException("Non suppported platform, sorry." + System.getProperty("os.name"));
