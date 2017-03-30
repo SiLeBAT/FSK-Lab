@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab.nodes.reader;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -35,7 +34,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.jdom2.Element;
@@ -263,9 +262,7 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 		entry.extractFile(f);
 
 		// Read script from f and return script
-		try (FileInputStream fis = new FileInputStream(f)) {
-			return IOUtils.toString(fis, "UTF-8");
-		}
+		return FileUtils.readFileToString(f, "UTF-8");
 	}
 
 	/** {@inheritDoc} */

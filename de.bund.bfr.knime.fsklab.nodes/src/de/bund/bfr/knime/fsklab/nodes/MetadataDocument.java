@@ -79,18 +79,18 @@ public class MetadataDocument {
 
 		// Creates model and names it
 		Model model;
-		if (template.modelId == null || template.modelId.isEmpty()) {
+		if (StringUtils.isEmpty(template.modelId)) {
 			model = doc.createModel();
 		} else {
 			model = doc.createModel(PMFUtil.createId(template.modelId));
 		}
 
-		if (template.modelName != null && !template.modelName.isEmpty()) {
+		if (StringUtils.isNotEmpty(template.modelName)) {
 			model.setName(template.modelName);
 		}
 
 		// Sets model notes
-		if (template.notes != null && !template.notes.isEmpty()) {
+		if (StringUtils.isNotEmpty(template.notes)) {
 			try {
 				model.setNotes(template.notes);
 			} catch (XMLStreamException e) {
@@ -99,10 +99,10 @@ public class MetadataDocument {
 		}
 
 		// Creates and adds compartment to the model
-		if (template.matrix != null && !template.matrix.isEmpty()) {
+		if (StringUtils.isNotEmpty(template.matrix)) {
 			PMFCompartment compartment = SBMLFactory.createPMFCompartment(PMFUtil.createId(template.matrix),
 					template.matrix);
-			if (template.matrixDetails != null && !template.matrixDetails.isEmpty()) {
+			if (StringUtils.isNotEmpty(template.matrixDetails)) {
 				compartment.setDetail(template.matrixDetails);
 			}
 			model.addCompartment(compartment.getCompartment());
@@ -504,7 +504,6 @@ public class MetadataDocument {
 				try {
 					createdDate = FskMetaData.dateFormat.parse(createdNode.getChild(0).getCharacters());
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -515,7 +514,6 @@ public class MetadataDocument {
 				try {
 					modifiedDate = FskMetaData.dateFormat.parse(modifiedNode.getChild(0).getCharacters());
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
