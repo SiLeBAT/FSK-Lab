@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -46,8 +47,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
-
-import com.google.common.base.Strings;
 
 import de.bund.bfr.fskml.MissingValueError;
 import de.bund.bfr.fskml.RScript;
@@ -129,28 +128,28 @@ class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 			FskPortObject portObj = new FskPortObject();
 
 			// Reads model script
-			if (Strings.isNullOrEmpty(settings.modelScript.getStringValue())) {
+			if (StringUtils.isEmpty(settings.modelScript.getStringValue())) {
 				throw new InvalidSettingsException("Model script is not provided");
 			}
 			RScript modelScript = readScript(settings.modelScript.getStringValue());
 			portObj.model = modelScript.getScript();
 
 			// Reads parameters script
-			if (Strings.isNullOrEmpty(settings.paramScript.getStringValue())) {
+			if (StringUtils.isEmpty(settings.paramScript.getStringValue())) {
 				portObj.param = "";
 			} else {
 				portObj.param = readScript(settings.paramScript.getStringValue()).getScript();
 			}
 
 			// Reads visualization script
-			if (!Strings.isNullOrEmpty(settings.vizScript.getStringValue())) {
+			if (StringUtils.isEmpty(settings.vizScript.getStringValue())) {
 				portObj.viz = readScript(settings.vizScript.getStringValue()).getScript();
 			} else {
 				portObj.viz = "";
 			}
 
 			// Reads model meta data
-			if (!Strings.isNullOrEmpty(settings.metaDataDoc.getStringValue())) {
+			if (StringUtils.isNotEmpty(settings.metaDataDoc.getStringValue())) {
 				File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(settings.metaDataDoc.getStringValue()));
 				try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
 					portObj.template = SpreadsheetHandler.processSpreadsheet(workbook.getSheetAt(0));
@@ -223,7 +222,7 @@ class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	 *             if the file cannot be read.
 	 */
 	private static RScript readScript(final String path) throws InvalidSettingsException, IOException {
-		String trimmedPath = Strings.emptyToNull(path.trim());
+		String trimmedPath = StringUtils.trimToNull(path.trim());
 
 		// path is not null or whitespace, thus try to read it
 		try {
