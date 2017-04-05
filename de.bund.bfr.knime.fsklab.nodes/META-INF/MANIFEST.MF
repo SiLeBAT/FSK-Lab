@@ -39,6 +39,6 @@ Bundle-ClassPath: library.jar,
  libs/rengine-1.8.4.jar,
  libs/rserve-engine-1.8.4.jar,
  libs/jcalendar-1.4.jar,
- libs/fskml-1.0.3.jar,
- libs/pmfml-0.0.11.jar
+ libs/pmfml-0.0.11.jar,
+ libs/fskml-1.0.4.jar
 

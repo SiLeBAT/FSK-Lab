@@ -42,8 +42,8 @@ import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
 
 import de.bund.bfr.fskml.DCOmexMetaDataHandler;
+import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
-import de.bund.bfr.knime.fsklab.nodes.URIS;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
