@@ -34,11 +34,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NoInternalsModel;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -51,8 +49,8 @@ import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.fskml.MissingValueError;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
-import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
+import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
 import de.bund.bfr.knime.fsklab.nodes.Util;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
@@ -62,7 +60,7 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 
-class FskCreatorNodeModel extends ExtToolOutputNodeModel {
+class FskCreatorNodeModel extends NoInternalsModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskCreatorNodeModel.class);
 
@@ -75,20 +73,6 @@ class FskCreatorNodeModel extends ExtToolOutputNodeModel {
 	/** {@inheritDoc} */
 	public FskCreatorNodeModel() {
 		super(IN_TYPES, OUT_TYPES);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// nothing
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// nothing
 	}
 
 	/** {@inheritDoc} */
