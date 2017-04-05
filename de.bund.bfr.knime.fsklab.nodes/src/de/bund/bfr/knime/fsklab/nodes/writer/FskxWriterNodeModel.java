@@ -41,7 +41,7 @@ import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
 
-import de.bund.bfr.fskml.DCOmexMetaDataHandler;
+import de.bund.bfr.fskml.OmexMetaDataHandler;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
@@ -87,7 +87,7 @@ class FskxWriterNodeModel extends NoInternalsModel {
 		// try to create CombineArchive
 		try (CombineArchive archive = new CombineArchive(archiveFile)) {
 
-			DCOmexMetaDataHandler omexMd = new DCOmexMetaDataHandler();
+			OmexMetaDataHandler omexMd = new OmexMetaDataHandler();
 
 			// Adds model script
 			if (portObject.model != null) {

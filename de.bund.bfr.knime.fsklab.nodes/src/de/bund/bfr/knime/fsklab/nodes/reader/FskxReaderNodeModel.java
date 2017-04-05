@@ -37,7 +37,6 @@ import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
-import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -54,9 +53,7 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
 
-import de.bund.bfr.fskml.DCOmexMetaDataHandler;
-import de.bund.bfr.fskml.LegacyOmexMetaDataHandler;
-import de.bund.bfr.fskml.OmexMetaDataHandlerI;
+import de.bund.bfr.fskml.OmexMetaDataHandler;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
@@ -114,18 +111,8 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 		File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(filename.getStringValue()));
 		try (CombineArchive archive = new CombineArchive(archiveFile)) {
 
-			Element desc = archive.getDescriptions().get(0).getXmlDescription();
-			boolean isLegacyAnnot = desc.getChild("modelScript") != null || desc.getChild("paramScript") != null
-					|| desc.getChild("visualizationScript") != null || desc.getChild("workspace") != null;
-
-			OmexMetaDataHandlerI handler;
-
-			if (isLegacyAnnot) {
-				handler = new LegacyOmexMetaDataHandler(archive.getDescriptions().get(0).getXmlDescription());
-			} else {
-				handler = new DCOmexMetaDataHandler(archive.getDescriptions().stream()
-						.map(MetaDataObject::getXmlDescription).collect(Collectors.toList()));
-			}
+			OmexMetaDataHandler handler = new OmexMetaDataHandler(
+					archive.getDescriptions().stream().map(MetaDataObject::getXmlDescription).collect(Collectors.toList()));
 
 			// Gets model script
 			if (handler.getModelScript() != null) {
