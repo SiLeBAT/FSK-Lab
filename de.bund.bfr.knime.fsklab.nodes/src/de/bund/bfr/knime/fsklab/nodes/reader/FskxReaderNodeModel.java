@@ -69,7 +69,7 @@ import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.CombineArchiveException;
 import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 
-public class FskxReaderNodeModel extends NoInternalsModel {
+class FskxReaderNodeModel extends NoInternalsModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskxReaderNodeModel.class);
 
