@@ -18,3 +18,4 @@ Export-Package: ezvcard,
  ezvcard.util,
  ezvcard.util.org.apache.commons.codec,
  ezvcard.util.org.apache.commons.codec.binary
+Bundle-ClassPath: ez-vcard-0.10.2.jar

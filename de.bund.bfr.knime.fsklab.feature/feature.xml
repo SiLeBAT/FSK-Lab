@@ -45,14 +45,44 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.apache.servicemix.bundles.poi" version="3.14.0" match="greaterOrEqual"/>
       <import plugin="org.knime.quickform.nodes.legacy"/>
       <import plugin="org.apache.commons.lang3"/>
-      <import plugin="com.github.fastluca.jris" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.googlecode.ez-vcard" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.kotlinlang" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="de.bund.bfr.knime" version="1.1.8" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.knime.base" version="3.2.0" match="greaterOrEqual"/>
+      <import plugin="edu.umd.cs.findbugs.annotations"/>
+      <import plugin="com.google.guava" version="19.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
          id="de.bund.bfr.knime.fsklab.nodes"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.github.fastluca.jris"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.googlecode.ez-vcard"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kotlinlang"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="de.bund.bfr.knime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="edu.umd.cs.findbugs.annotations"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

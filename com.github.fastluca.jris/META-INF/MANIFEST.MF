@@ -8,3 +8,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.gmail.gcolaianni5.jris.bean,
  com.gmail.gcolaianni5.jris.engine,
  com.gmail.gcolaianni5.jris.exception
+Bundle-ClassPath: jris-1.0.0.jar
