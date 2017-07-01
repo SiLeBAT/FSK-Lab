@@ -29,6 +29,12 @@
       deprecated="false"
       factory-class="de.bund.bfr.knime.fsklab.nodes.rakip.editor.NodeFactory">
     </node>
+    <node
+      category-path="/fsklab"
+      deprecated="false"
+      factory-class="de.bund.bfr.knime.fsklab.nodes.rakip.creator.NodeFactory">
+    </node>
+    
     <!-- deprecated nodes -->
     <node
       category-path="/fsklab"

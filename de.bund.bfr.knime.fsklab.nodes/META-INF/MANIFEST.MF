@@ -35,8 +35,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-databind,
  com.googlecode.ez-vcard,
  org.kotlinlang,
  de.bund.bfr.knime
-Bundle-ClassPath: library.jar,
- libs/CombineArchive-1.1.jar,
+Bundle-ClassPath: libs/CombineArchive-1.1.jar,
  libs/jdom-2.0.1.jar,
  libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar,
  libs/jsoup-1.9.2.jar,
@@ -47,6 +46,7 @@ Bundle-ClassPath: library.jar,
  libs/fskml-1.0.5.jar,
  libs/jackson-module-kotlin-2.8.7.jar,
  libs/rakip_editor-0.0.3a0.jar,
- libs/rakip_models-0.0.1a1.jar,
- libs/annotations-13.0.jar
+ libs/annotations-13.0.jar,
+ libs/rakip_models-0.0.1a3.jar,
+ library.jar
 
