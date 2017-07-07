@@ -18,7 +18,13 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.rakip.editor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+
+import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.DataAwareNodeDialogPane;
@@ -29,19 +35,26 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 
+import com.gmail.gcolaianni5.jris.bean.Record;
+
 import de.bund.bfr.knime.fsklab.nodes.rakip.port.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
+import de.bund.bfr.knime.ui.AutoSuggestField;
 import de.bund.bfr.rakip.editor.DataBackgroundPanel;
 import de.bund.bfr.rakip.editor.GeneralInformationPanel;
 import de.bund.bfr.rakip.editor.ModelMathPanel;
+import de.bund.bfr.rakip.editor.NonEditableTableModel;
 import de.bund.bfr.rakip.editor.ScopePanel;
+import de.bund.bfr.rakip.generic.GeneralInformation;
+import de.bund.bfr.rakip.generic.Scope;
+import ezvcard.VCard;
 
 class NodeDialog extends DataAwareNodeDialogPane {
 
 	private ScriptPanel modelScriptPanel;
 	private ScriptPanel paramScriptPanel;
 	private ScriptPanel vizScriptPanel;
-	
+
 	private GeneralInformationPanel generalInformationPanel;
 	private ScopePanel scopePanel;
 	private DataBackgroundPanel dataBackgroundPanel;
@@ -58,7 +71,7 @@ class NodeDialog extends DataAwareNodeDialogPane {
 		modelScriptPanel = new ScriptPanel("Model script", "", true);
 		paramScriptPanel = new ScriptPanel("Parameters script", "", true);
 		vizScriptPanel = new ScriptPanel("Visualization script", "", true);
-		
+
 		generalInformationPanel = new GeneralInformationPanel();
 		scopePanel = new ScopePanel();
 		dataBackgroundPanel = new DataBackgroundPanel();
@@ -83,27 +96,80 @@ class NodeDialog extends DataAwareNodeDialogPane {
 		vizScriptPanel.getTextArea().setText(settings.modifiedVisualizationScript);
 
 		// TODO: update metadata in GUI
-//		metaDataPanel.modelNameComp.setText(settings.metaData.modelName);
-//		metaDataPanel.modelIdComp.setText(settings.metaData.modelId);
-//		metaDataPanel.modelLinkComp.setText(settings.metaData.modelLink);
-//		metaDataPanel.organismComp.setText(settings.metaData.organism);
-//		metaDataPanel.organismDetailsComp.setText(settings.metaData.organismDetails);
-//		metaDataPanel.matrixComp.setText(settings.metaData.matrix);
-//		metaDataPanel.matrixDetailsComp.setText(settings.metaData.matrixDetails);
-//		metaDataPanel.creatorComp.setText(settings.metaData.creator);
-//		metaDataPanel.familyNameComp.setText(settings.metaData.familyName);
-//		metaDataPanel.contactComp.setText(settings.metaData.contact);
-//		metaDataPanel.softwareComp.setSelectedItem(settings.metaData.software);
-//		metaDataPanel.referenceDescriptionComp.setText(settings.metaData.referenceDescription);
-//		metaDataPanel.referenceDescriptionLinkComp.setText(settings.metaData.referenceDescriptionLink);
-//		metaDataPanel.createdDateComp.setDate(settings.metaData.createdDate);
-//		metaDataPanel.modifiedDateComp.setDate(settings.metaData.modifiedDate);
-//		metaDataPanel.notesComp.setText(settings.metaData.notes);
-//		metaDataPanel.curatedComp.setSelected(settings.metaData.curated);	
-//		metaDataPanel.typeComp.setSelectedItem(settings.metaData.type);
-//		metaDataPanel.subjectComp.setSelectedItem(settings.metaData.subject);
-//		metaDataPanel.foodProcessComp.setText(settings.metaData.foodProcess);
-//		metaDataPanel.hasDataComp.setSelected(settings.metaData.hasData);
+		// metaDataPanel.modelNameComp.setText(settings.metaData.modelName);
+		// metaDataPanel.modelIdComp.setText(settings.metaData.modelId);
+		// metaDataPanel.modelLinkComp.setText(settings.metaData.modelLink);
+		// metaDataPanel.organismComp.setText(settings.metaData.organism);
+		// metaDataPanel.organismDetailsComp.setText(settings.metaData.organismDetails);
+		// metaDataPanel.matrixComp.setText(settings.metaData.matrix);
+		// metaDataPanel.matrixDetailsComp.setText(settings.metaData.matrixDetails);
+		// metaDataPanel.creatorComp.setText(settings.metaData.creator);
+		// metaDataPanel.familyNameComp.setText(settings.metaData.familyName);
+		// metaDataPanel.contactComp.setText(settings.metaData.contact);
+		// metaDataPanel.softwareComp.setSelectedItem(settings.metaData.software);
+		// metaDataPanel.referenceDescriptionComp.setText(settings.metaData.referenceDescription);
+		// metaDataPanel.referenceDescriptionLinkComp.setText(settings.metaData.referenceDescriptionLink);
+		// metaDataPanel.createdDateComp.setDate(settings.metaData.createdDate);
+		// metaDataPanel.modifiedDateComp.setDate(settings.metaData.modifiedDate);
+		// metaDataPanel.notesComp.setText(settings.metaData.notes);
+		// metaDataPanel.curatedComp.setSelected(settings.metaData.curated);
+		// metaDataPanel.typeComp.setSelectedItem(settings.metaData.type);
+		// metaDataPanel.subjectComp.setSelectedItem(settings.metaData.subject);
+		// metaDataPanel.foodProcessComp.setText(settings.metaData.foodProcess);
+		// metaDataPanel.hasDataComp.setSelected(settings.metaData.hasData);
+
+		// TODO: Update mandatory field only
+		{
+			NonEditableTableModel creatorPanelModel = generalInformationPanel.getCreatorPanel().getDtm();
+			NonEditableTableModel referencePanelModel = generalInformationPanel.getReferencePanel().getDtm();
+
+			GeneralInformation gi = settings.genericModel.getGeneralInformation();
+
+			generalInformationPanel.getStudyNameTextField().setText(gi.getName());
+			generalInformationPanel.getIdentifierTextField().setText(gi.getIdentifier());
+			gi.getCreators().forEach(it -> creatorPanelModel.addRow(new VCard[] { it }));
+			generalInformationPanel.getCreationDateChooser().setDate(gi.getCreationDate());
+			generalInformationPanel.getRightsField().setSelectedItem(gi.getRights());
+			generalInformationPanel.getAvailabilityCheckBox().setSelected(gi.isAvailable());
+			generalInformationPanel.getUrlTextField().setText(gi.getUrl().toString());
+			generalInformationPanel.getFormatField().setSelectedItem(gi.getFormat());
+			gi.getReference().forEach(it -> referencePanelModel.addRow(new Record[] { it }));
+			generalInformationPanel.getLanguageField().setSelectedItem(gi.getLanguage());
+			generalInformationPanel.getSoftwareField().setSelectedItem(gi.getSoftware());
+			generalInformationPanel.getLanguageWrittenInField().setSelectedItem(gi.getLanguageWrittenIn());
+			generalInformationPanel.getStatusField().setSelectedItem(gi.getStatus());
+			generalInformationPanel.getObjectiveTextField().setText(gi.getObjective());
+			generalInformationPanel.getDescriptionTextField().setText(gi.getDescription());
+		}
+
+		// TODO: SP
+		{
+			Scope scope = settings.genericModel.getScope();
+			/*
+			 * TODO: scope should be made a variable in ScopePanel so that it
+			 * can be updated here
+			 */
+			String productButtonText = scope.getProduct().getEnvironmentName() + "["
+					+ scope.getProduct().getEnvironmentUnit() + "]";
+			scopePanel.getProductButton().setText(productButtonText);
+
+			String hazardButtonText = scope.getHazard().getHazardName() + "[" + scope.getHazard().getHazardUnit() + "]";
+			scopePanel.getHazardButton().setText(hazardButtonText);
+
+			scopePanel.getPopulationButton().setText(scope.getPopulationGroup().getPopulationName());
+
+			scopePanel.getCommentField().setText(scope.getGeneralComment());
+			// TODO: temporal information should be a date
+			// scopePanel.getDateChooser().setDate(scope.getTemporalInformation());
+
+			// TODO: regionField
+			// TODO: countryField
+		}
+
+		// TODO: DBP
+
+		// TODO: MMP
+
 	}
 
 	// --- settings methods ---
@@ -159,28 +225,104 @@ class NodeDialog extends DataAwareNodeDialogPane {
 		this.settings.modifiedVisualizationScript = StringUtils.trim(this.settings.modifiedVisualizationScript);
 
 		// TODO: update metadata in settings
-//		this.settings.metaData.modelName = metaDataPanel.modelNameComp.getText();
-//		this.settings.metaData.modelId = metaDataPanel.modelIdComp.getText();
-//		this.settings.metaData.modelLink = metaDataPanel.modelLinkComp.getText();
-//		this.settings.metaData.organism = metaDataPanel.organismComp.getText();
-//		this.settings.metaData.organismDetails = metaDataPanel.organismDetailsComp.getText();
-//		this.settings.metaData.matrix = metaDataPanel.matrixComp.getText();
-//		this.settings.metaData.matrixDetails = metaDataPanel.matrixDetailsComp.getText();
-//		this.settings.metaData.creator = metaDataPanel.creatorComp.getText();
-//		this.settings.metaData.familyName = metaDataPanel.familyNameComp.getText();
-//		this.settings.metaData.contact = metaDataPanel.contactComp.getText();
-//		this.settings.metaData.software = (Software)metaDataPanel.softwareComp.getSelectedItem();
-//		this.settings.metaData.referenceDescription = metaDataPanel.referenceDescriptionComp.getText();
-//		this.settings.metaData.referenceDescriptionLink = metaDataPanel.referenceDescriptionLinkComp.getText();
-//		this.settings.metaData.createdDate = metaDataPanel.createdDateComp.getDate();
-//		this.settings.metaData.modifiedDate = metaDataPanel.modifiedDateComp.getDate();
-//		this.settings.metaData.notes = metaDataPanel.notesComp.getText();
-//		this.settings.metaData.curated = metaDataPanel.curatedComp.isSelected();
-//		this.settings.metaData.type = (ModelType)metaDataPanel.typeComp.getSelectedItem();
-//		this.settings.metaData.subject = (ModelClass)metaDataPanel.subjectComp.getSelectedItem();
-//		this.settings.metaData.foodProcess = metaDataPanel.foodProcessComp.getText();
-//		this.settings.metaData.hasData = metaDataPanel.hasDataComp.isSelected();
+		// this.settings.metaData.modelName =
+		// metaDataPanel.modelNameComp.getText();
+		// this.settings.metaData.modelId = metaDataPanel.modelIdComp.getText();
+		// this.settings.metaData.modelLink =
+		// metaDataPanel.modelLinkComp.getText();
+		// this.settings.metaData.organism =
+		// metaDataPanel.organismComp.getText();
+		// this.settings.metaData.organismDetails =
+		// metaDataPanel.organismDetailsComp.getText();
+		// this.settings.metaData.matrix = metaDataPanel.matrixComp.getText();
+		// this.settings.metaData.matrixDetails =
+		// metaDataPanel.matrixDetailsComp.getText();
+		// this.settings.metaData.creator = metaDataPanel.creatorComp.getText();
+		// this.settings.metaData.familyName =
+		// metaDataPanel.familyNameComp.getText();
+		// this.settings.metaData.contact = metaDataPanel.contactComp.getText();
+		// this.settings.metaData.software =
+		// (Software)metaDataPanel.softwareComp.getSelectedItem();
+		// this.settings.metaData.referenceDescription =
+		// metaDataPanel.referenceDescriptionComp.getText();
+		// this.settings.metaData.referenceDescriptionLink =
+		// metaDataPanel.referenceDescriptionLinkComp.getText();
+		// this.settings.metaData.createdDate =
+		// metaDataPanel.createdDateComp.getDate();
+		// this.settings.metaData.modifiedDate =
+		// metaDataPanel.modifiedDateComp.getDate();
+		// this.settings.metaData.notes = metaDataPanel.notesComp.getText();
+		// this.settings.metaData.curated =
+		// metaDataPanel.curatedComp.isSelected();
+		// this.settings.metaData.type =
+		// (ModelType)metaDataPanel.typeComp.getSelectedItem();
+		// this.settings.metaData.subject =
+		// (ModelClass)metaDataPanel.subjectComp.getSelectedItem();
+		// this.settings.metaData.foodProcess =
+		// metaDataPanel.foodProcessComp.getText();
+		// this.settings.metaData.hasData =
+		// metaDataPanel.hasDataComp.isSelected();
+
+		// TODO: Save mandatory fields only to this.settings
+		// GeneralInformation
+		{
+			GeneralInformation gi = this.settings.genericModel.getGeneralInformation();
+
+			gi.setName(generalInformationPanel.getStudyNameTextField().getText());
+			// TODO: need to include JTextField for source in GUI
+			gi.setSource(null);
+			gi.setIdentifier(generalInformationPanel.getIdentifierTextField().getText());
+			gi.setCreationDate(generalInformationPanel.getCreationDateChooser().getDate());
+			gi.setRights((String) generalInformationPanel.getRightsField().getSelectedItem());
+			gi.setAvailable(generalInformationPanel.getAvailabilityCheckBox().isSelected());
+			try {
+				gi.setUrl(new URL(generalInformationPanel.getUrlTextField().getText()));
+			} catch (MalformedURLException e) {
+				// URL is already validated in GUI
+			}
+			gi.setFormat(UIHelper.getValue(generalInformationPanel.getFormatField()));
+			gi.getReference().clear();
+			gi.getReference().addAll(generalInformationPanel.getReferencePanel().getRefs());
+			gi.setLanguage(UIHelper.getValue(generalInformationPanel.getLanguageField()));
+			gi.setSoftware(UIHelper.getValue(generalInformationPanel.getSoftwareField()));
+			gi.setLanguageWrittenIn(UIHelper.getValue(generalInformationPanel.getLanguageWrittenInField()));
+			// TODO: modelcategory?
+			gi.setStatus(UIHelper.getValue(generalInformationPanel.getStatusField()));
+			gi.setObjective(UIHelper.getValue(generalInformationPanel.getObjectiveTextField()));
+			gi.setDescription(UIHelper.getValue(generalInformationPanel.getDescriptionTextField()));
+		}
+
+		// TODO: SP
+		// TODO: DBP
+		// TODO: MMP
 
 		this.settings.saveSettings(settings);
+	}
+
+	private static class UIHelper {
+		private UIHelper() {
+		}
+
+		/**
+		 * @param field
+		 *            AutoSuggestField with a controlled vocabulary. May be null
+		 *            if optional.
+		 * @return null if field is null or no value is selected. String value
+		 *         otherwise.
+		 */
+		static String getValue(final AutoSuggestField field) {
+			if (field != null && field.getSelectedIndex() != -1)
+				return (String) field.getSelectedItem();
+			return null;
+		}
+
+		/**
+		 * @param field
+		 *            JTextField with free text. May be null if optional.
+		 * @return null if field is optional. Free text otherwise.
+		 */
+		static String getValue(final JTextField field) {
+			return field == null ? null : field.getText();
+		}
 	}
 }

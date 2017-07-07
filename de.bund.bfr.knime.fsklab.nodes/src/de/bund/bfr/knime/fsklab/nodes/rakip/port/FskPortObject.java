@@ -250,9 +250,16 @@ public class FskPortObject implements PortObject {
 		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false);
 		
 		GeneralInformationPanel generalInformationPanel = new GeneralInformationPanel(genericModel.getGeneralInformation());
+		generalInformationPanel.setName("General information");
+		
 		ScopePanel scopePanel = new ScopePanel(genericModel.getScope());
+		scopePanel.setName("Scope");
+		
 		DataBackgroundPanel dataBackgroundPanel = new DataBackgroundPanel(genericModel.getDataBackground());
+		dataBackgroundPanel.setName("Data background");
+		
 		ModelMathPanel modelMathPanel = new ModelMathPanel(genericModel.getModelMath());
+		modelMathPanel.setName("Model math");
 
 		return new JComponent[] { modelScriptPanel, paramScriptPanel, vizScriptPanel,
 				generalInformationPanel, scopePanel, dataBackgroundPanel, modelMathPanel,

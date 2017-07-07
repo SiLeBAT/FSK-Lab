@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="lib" path="libs/pmfml-0.0.11.jar"/>
 	<classpathentry kind="lib" path="libs/fskml-1.0.5.jar"/>
-	<classpathentry kind="lib" path="libs/rakip_editor-0.0.3a0.jar" sourcepath="libs/rakip_editor-0.0.3a0-sources.jar">
+	<classpathentry kind="lib" path="libs/rakip_editor-0.0.6a1.jar" sourcepath="libs/rakip_editor-0.0.6a1-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/de.bund.bfr.knime.fsklab.nodes/libs/rakip_editor-0.0.3a0-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/de.bund.bfr.knime.fsklab.nodes/libs/rakip_editor-0.0.6a1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/jackson-module-kotlin-2.8.7.jar"/>
