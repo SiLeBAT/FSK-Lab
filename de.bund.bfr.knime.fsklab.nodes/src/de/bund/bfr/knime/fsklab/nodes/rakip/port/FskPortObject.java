@@ -53,6 +53,7 @@ import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
+import de.bund.bfr.rakip.ViewsKt;
 import de.bund.bfr.rakip.editor.DataBackgroundPanel;
 import de.bund.bfr.rakip.editor.GeneralInformationPanel;
 import de.bund.bfr.rakip.editor.ModelMathPanel;
@@ -248,21 +249,24 @@ public class FskPortObject implements PortObject {
 		JPanel modelScriptPanel = new ScriptPanel("Model script", model, false);
 		JPanel paramScriptPanel = new ScriptPanel("Param script", param, false);
 		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false);
-		
-		GeneralInformationPanel generalInformationPanel = new GeneralInformationPanel(genericModel.getGeneralInformation());
+
+		GeneralInformationPanel generalInformationPanel = new GeneralInformationPanel(
+				genericModel.getGeneralInformation());
 		generalInformationPanel.setName("General information");
-		
+
 		ScopePanel scopePanel = new ScopePanel(genericModel.getScope());
 		scopePanel.setName("Scope");
-		
+
 		DataBackgroundPanel dataBackgroundPanel = new DataBackgroundPanel(genericModel.getDataBackground());
 		dataBackgroundPanel.setName("Data background");
-		
+
 		ModelMathPanel modelMathPanel = new ModelMathPanel(genericModel.getModelMath());
 		modelMathPanel.setName("Model math");
 
-		return new JComponent[] { modelScriptPanel, paramScriptPanel, vizScriptPanel,
-				generalInformationPanel, scopePanel, dataBackgroundPanel, modelMathPanel,
+		JScrollPane metaDataPane = new JScrollPane(ViewsKt.createTree(genericModel));
+		metaDataPane.setName("Meta data");
+
+		return new JComponent[] { modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
 				new LibrariesPanel() };
 	}
 
