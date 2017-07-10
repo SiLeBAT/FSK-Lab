@@ -16,7 +16,6 @@
 	</fullDescription>
 	<ports>
 		<inPort name="FSK object" index="0">FSK object</inPort>
-		<inPort name="Parameters values" index="1" optional="true">Metadata table</inPort>
 		<outPort name="FSK object" index="0">FSK object</outPort>
 		<outPort name="Image Output" index="1">View Image</outPort>
 	</ports>
