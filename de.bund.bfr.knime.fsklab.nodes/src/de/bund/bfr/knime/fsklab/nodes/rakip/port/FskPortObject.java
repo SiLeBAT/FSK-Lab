@@ -23,8 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,6 +48,9 @@ import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.kotlin.ExtensionsKt;
+
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
@@ -59,6 +60,7 @@ import de.bund.bfr.rakip.editor.GeneralInformationPanel;
 import de.bund.bfr.rakip.editor.ModelMathPanel;
 import de.bund.bfr.rakip.editor.ScopePanel;
 import de.bund.bfr.rakip.generic.GenericModel;
+import de.bund.bfr.rakip.generic.RakipModule;
 
 /**
  * A port object for an FSK model port providing R scripts and model meta data.
@@ -138,6 +140,13 @@ public class FskPortObject implements PortObject {
 		private static final String VIZ = "viz.R";
 		private static final String META_DATA = "metaData";
 		private static final String WORKSPACE = "workspace";
+		
+		private static ObjectMapper objectMapper;
+		
+		static {
+			objectMapper = ExtensionsKt.jacksonObjectMapper().registerModule(new RakipModule());
+//			objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+		}
 
 		/** {@inheritDoc} */
 		@Override
@@ -161,8 +170,8 @@ public class FskPortObject implements PortObject {
 			// template entry (file with model meta data)
 			if (portObject.genericModel != null) {
 				out.putNextEntry(new ZipEntry(META_DATA));
-				ObjectOutputStream oos = new ObjectOutputStream(out);
-				oos.writeObject(portObject.genericModel);
+				String stringVal = objectMapper.writeValueAsString(portObject.genericModel);
+				IOUtils.write(stringVal, out);
 				out.closeEntry();
 			}
 
@@ -203,11 +212,8 @@ public class FskPortObject implements PortObject {
 				} else if (entryName.equals(VIZ)) {
 					portObj.viz = IOUtils.toString(in, "UTF-8");
 				} else if (entryName.equals(META_DATA)) {
-					try {
-						ObjectInputStream ois = new ObjectInputStream(in);
-						portObj.genericModel = (GenericModel) ois.readObject();
-					} catch (ClassNotFoundException e) {
-					}
+					String stringVal = IOUtils.toString(in, "UTF-8");
+					portObj.genericModel = objectMapper.readValue(stringVal, GenericModel.class);
 				} else if (entryName.equals(WORKSPACE)) {
 					portObj.workspace = FileUtil.createTempFile("workspace", ".r");
 					try (FileOutputStream fos = new FileOutputStream(portObj.workspace)) {
