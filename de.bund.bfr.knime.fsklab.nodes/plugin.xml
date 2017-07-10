@@ -34,6 +34,11 @@
       deprecated="false"
       factory-class="de.bund.bfr.knime.fsklab.nodes.rakip.creator.NodeFactory">
     </node>
+    <node
+      category-path="/fsklab"
+      deprecated="false"
+      factory-class="de.bund.bfr.knime.fsklab.nodes.rakip.writer.NodeFactory">
+    </node>
     
     <!-- deprecated nodes -->
     <node
@@ -49,7 +54,7 @@
     <node
       category-path="/fsklab"
       deprecated="true"
-      factory-class="de.bund.bfr.knime.fsklab.nodes.writer.FskxWriterNodeFactory">
+      factory-class="de.bund.bfr.knime.fsklab.nodes.rakip.writer.FskxWriterNodeFactory">
     </node>
     <node
       category-path="/fsklab"

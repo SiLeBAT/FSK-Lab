@@ -140,13 +140,8 @@ public class FskPortObject implements PortObject {
 		private static final String VIZ = "viz.R";
 		private static final String META_DATA = "metaData";
 		private static final String WORKSPACE = "workspace";
-		
-		private static ObjectMapper objectMapper;
-		
-		static {
-			objectMapper = ExtensionsKt.jacksonObjectMapper().registerModule(new RakipModule());
-//			objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-		}
+
+		private static ObjectMapper objectMapper = ExtensionsKt.jacksonObjectMapper().registerModule(new RakipModule());
 
 		/** {@inheritDoc} */
 		@Override
