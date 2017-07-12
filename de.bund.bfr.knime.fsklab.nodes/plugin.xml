@@ -49,7 +49,11 @@
       deprecated="false"
       factory-class="de.bund.bfr.knime.fsklab.nodes.rakip.runner.NodeFactory">
     </node>
-    
+    <node
+      category-path="/fsklab"
+      deprecated="false"
+      factory-class="de.bund.bfr.knime.fsklab.nodes.rakip.fsk2r.NodeFactory">
+    </node>
     <!-- deprecated nodes -->
     <node
       category-path="/fsklab"
