@@ -3,3 +3,5 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Kotlin
 Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes.kotlin
 Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.knime.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
