@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Kotlin
+Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes.kotlin
+Bundle-Version: 1.0.0.qualifier
