@@ -10,7 +10,7 @@ import org.knime.core.node.port.PortType
 import java.io.File
 import org.knime.core.node.NodeSettingsRO
 
-internal abstract class NoInternalsModel(inPortTypes: Array<PortType>, outPortTypes: Array<PortType>)
+abstract class NoInternalsModel(inPortTypes: Array<PortType>, outPortTypes: Array<PortType>)
 	: NodeModel(inPortTypes, outPortTypes) {
 
 	override fun loadInternals(nodeInternDir: File, exec: ExecutionMonitor) = Unit
@@ -23,7 +23,7 @@ internal abstract class NoInternalsModel(inPortTypes: Array<PortType>, outPortTy
  *
  * @author Miguel de Alba, BfR, Berlin.
  */
-internal class StatelessModel(inPortTypes: Array<PortType>, outPortTypes: Array<PortType>)
+class StatelessModel(inPortTypes: Array<PortType>, outPortTypes: Array<PortType>)
 	: NodeModel(inPortTypes, outPortTypes) {
 
 	// No internal settings
