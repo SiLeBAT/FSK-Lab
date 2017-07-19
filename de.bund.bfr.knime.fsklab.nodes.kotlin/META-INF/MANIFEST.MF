@@ -1,7 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Kotlin
-Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes.kotlin
+Bundle-Name: FSK nodes
+Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes.kotlin;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.knime.core
+Require-Bundle: org.knime.core,
+ com.fasterxml.jackson.core.jackson-databind,
+ com.fasterxml.jackson.core.jackson-annotations,
+ com.fasterxml.jackson.core.jackson-core,
+ org.eclipse.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: BfR
+Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin

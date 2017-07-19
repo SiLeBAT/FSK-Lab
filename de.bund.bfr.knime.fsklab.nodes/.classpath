@@ -17,7 +17,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="deprecated-src"/>
-	<classpathentry kind="src" path="kotlin"/>
 	<classpathentry exported="true" kind="lib" path="libs/CombineArchive-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jdom-2.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar"/>
@@ -26,6 +25,5 @@
 	<classpathentry exported="true" kind="lib" path="libs/rserve-engine-1.8.4.jar"/>
 	<classpathentry kind="lib" path="libs/jcalendar-1.4.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/de.bund.bfr.knime"/>
-	<classpathentry kind="con" path="org.jetbrains.kotlin.core.KOTLIN_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

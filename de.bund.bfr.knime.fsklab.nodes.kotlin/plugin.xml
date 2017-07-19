@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.knime.core.PortType">
+      <portType
+            color="000000"
+            hidden="false"
+            name="FSK object"
+            objectClass="de.bund.bfr.knime.fsklab.FskPortObject"
+            objectSerializer="de.bund.bfr.knime.fsklab.FskPortObjectSerializer"
+            specClass="de.bund.bfr.knime.fsklab.FskPortObjectSpec"
+            specSerializer="de.bund.bfr.knime.fsklab.nodes.rakip.port.FskPortObjectSpec$Serializer">
+      </portType>
+   </extension>
+
+</plugin>
