@@ -1,3 +1,5 @@
+package org.knime.core.node
+
 /*
  * Utility node models.
  */
