@@ -7,8 +7,22 @@ Require-Bundle: org.knime.core,
  com.fasterxml.jackson.core.jackson-databind,
  com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-core,
- org.eclipse.ui
+ org.eclipse.ui,
+ com.github.fastluca.jris,
+ com.googlecode.ez-vcard,
+ org.apache.servicemix.bundles.poi,
+ org.apache.commons.lang3,
+ de.bund.bfr.knime,
+ org.knime.ext.r.type;bundle-version="3.1.0",
+ org.knime.workbench.core,
+ org.knime.workbench.repository,
+ org.kotlinlang;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: BfR
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
+Bundle-ClassPath: .,
+ fskml-1.0.5.jar,
+ jackson-module-kotlin-2.8.7.jar,
+ rakip_editor-0.0.6a1.jar,
+ rakip_models-0.0.1a3.jar

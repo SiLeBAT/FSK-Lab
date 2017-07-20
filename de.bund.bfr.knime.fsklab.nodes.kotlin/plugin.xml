@@ -13,5 +13,8 @@
             specSerializer="de.bund.bfr.knime.fsklab.nodes.rakip.port.FskPortObjectSpec$Serializer">
       </portType>
    </extension>
+   <extension point="org.knime.workbench.repository.nodes">
+      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory"></node>
+   </extension>
 
 </plugin>
