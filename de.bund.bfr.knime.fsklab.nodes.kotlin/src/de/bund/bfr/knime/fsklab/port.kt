@@ -207,7 +207,9 @@ class FskPortObjectSerializer : PortObjectSerializer<FskPortObject>() {
 		if (missingLibs.isNotEmpty()) libRegistry.installLibs(missingLibs)
 
 		// Adds libs to the paths of the libraries converted to Files
-		libRegistry.getPaths(libNames).map { it.toFile() }.forEach { portObj.libs.add(it) }
+		if (libNames.isNotEmpty()) {
+			libRegistry.getPaths(libNames).map { it.toFile() }.forEach { portObj.libs.add(it) }
+		}
 
 		stream.close()
 
