@@ -66,7 +66,9 @@ class FskPortObjectSpec private constructor() : PortObjectSpec {
 
  * @author Miguel de Alba, BfR, Berlin.
  */
-class FskPortObject : PortObject {
+class FskPortObject(val model: String = "", val param: String = "", val viz: String = "",
+					val genericModel: GenericModel, val workspace: File? = null,
+					val libs: MutableSet<File> = mutableSetOf()) : PortObject {
 
 	companion object {
 		val TYPE = PortTypeRegistry.getInstance().getPortType(FskPortObject::class.java)
@@ -74,13 +76,6 @@ class FskPortObject : PortObject {
 
 		private var numOfInstances = 0
 	}
-
-	var model = ""
-	var param = ""
-	var viz = ""
-	var genericModel: GenericModel? = null
-	var workspace: File? = null
-	val libs = mutableSetOf<File>()
 
 	val objectNum = numOfInstances
 
@@ -98,19 +93,19 @@ class FskPortObject : PortObject {
 		val paramScriptPanel = ScriptPanel("Param script", param, false)
 		val vizScriptPanel = ScriptPanel("Visualization script", viz, false)
 
-		val generalInformationPanel = GeneralInformationPanel(genericModel?.generalInformation)
+		val generalInformationPanel = GeneralInformationPanel(genericModel.generalInformation)
 		generalInformationPanel.name = "General information"
 
-		val scopePanel = ScopePanel(genericModel?.scope)
+		val scopePanel = ScopePanel(genericModel.scope)
 		scopePanel.name = "Scope"
 
-		val dataBackgroundPanel = DataBackgroundPanel(genericModel?.dataBackground)
+		val dataBackgroundPanel = DataBackgroundPanel(genericModel.dataBackground)
 		dataBackgroundPanel.name = "Data background"
 
-		val modelMathPanel = ModelMathPanel(genericModel?.modelMath)
+		val modelMathPanel = ModelMathPanel(genericModel.modelMath)
 		modelMathPanel.name = "Model math"
 
-		val metaDataPane: JComponent = if (genericModel == null) JPanel() else JScrollPane(createTree(genericModel as GenericModel))
+		val metaDataPane = JScrollPane(createTree(genericModel = genericModel))
 		metaDataPane.name = "Meta data"
 
 		return arrayOf(modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane, LibrariesPanel())
@@ -166,45 +161,43 @@ class FskPortObjectSerializer : PortObjectSerializer<FskPortObject>() {
 
 		// template entry (file with model meta data)
 		stream.putNextEntry(ZipEntry(META_DATA))
-		portObject.genericModel?.let {
-			val stringVal = objectMapper.writeValueAsString(it)
-			IOUtils.write(stringVal, stream)
-		}
+		val stringVal = objectMapper.writeValueAsString(portObject.genericModel)
+		IOUtils.write(stringVal, stream)
 		stream.closeEntry()
 
 		// workspace entry
 		stream.putNextEntry(ZipEntry(WORKSPACE))
 		portObject.workspace?.let { workspace ->
-			FileInputStream(workspace).use { FileUtil.copy(it, stream)}
+			FileInputStream(workspace).use { FileUtil.copy(it, stream) }
 		}
 		stream.closeEntry()
 	}
 
 	override fun loadPortObject(stream: PortObjectZipInputStream, spec: PortObjectSpec, exec: ExecutionMonitor): FskPortObject {
 
-		val portObj = FskPortObject()
-
 		// model script entry
 		stream.getNextEntry()
-		portObj.model = IOUtils.toString(stream, "UTF-8")
+		val modelScript = IOUtils.toString(stream, "UTF-8")
 
 		// parameters script entry
 		stream.getNextEntry()
-		portObj.param = IOUtils.toString(stream, "UTF-8")
+		val parameterScript = IOUtils.toString(stream, "UTF-8")
 
 		// visualization script entry
 		stream.getNextEntry()
-		portObj.viz = IOUtils.toString(stream, "UTF-8")
+		val visualizationScript = IOUtils.toString(stream, "UTF-8")
 
 		// metadata entry
 		stream.getNextEntry()
 		val metadataAsString = IOUtils.toString(stream, "UTF-8")
-		portObj.genericModel = objectMapper.readValue(metadataAsString, GenericModel::class.java)
+		val genericModel = objectMapper.readValue(metadataAsString, GenericModel::class.java)
 
 		// workspace
 		stream.getNextEntry()
-		portObj.workspace = FileUtil.createTempFile("workspace", ".r")
-		FileOutputStream(portObj.workspace).use { FileUtil.copy(stream, it) }
+		val workspaceFile = FileUtil.createTempFile("workspace", ".r")
+		FileOutputStream(workspaceFile).use { FileUtil.copy(stream, it) }
+
+		val portObj = FskPortObject(model = modelScript, param = parameterScript, viz = visualizationScript, genericModel = genericModel, workspace = workspaceFile)
 
 		// libraries
 		stream.getNextEntry()
@@ -223,6 +216,6 @@ class FskPortObjectSerializer : PortObjectSerializer<FskPortObject>() {
 
 		stream.close()
 
-		return portObj;
+		return portObj
 	}
 }

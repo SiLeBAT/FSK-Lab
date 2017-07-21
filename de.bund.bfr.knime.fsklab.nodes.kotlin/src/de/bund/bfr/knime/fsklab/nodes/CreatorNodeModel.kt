@@ -50,61 +50,51 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 
 	override fun execute(inData: Array<PortObject>, exec: ExecutionContext): Array<PortObject> {
 
-		val portObj = FskPortObject()
-
 		// Reads model script
 		if (settings.modelScript.getStringValue().isNullOrEmpty()) {
 			throw InvalidSettingsException("Model script is not provided")
 		}
-		val modelScript = readScript(settings.modelScript.getStringValue())
-		portObj.model = modelScript.getScript()
+		val modelRScript = readScript(settings.modelScript.getStringValue())
+		val modelScript = modelRScript.getScript()
 
 		// Reads parameters script
-		if (settings.paramScript.getStringValue().isNullOrEmpty()) {
-			portObj.param = ""
-		} else {
-			portObj.param = readScript(settings.paramScript.getStringValue()).getScript()
-		}
+		val paramScript = if (settings.paramScript.getStringValue().isNullOrEmpty()) "" else readScript(settings.paramScript.getStringValue()).getScript()
 
 		// Reads visualization script
-		if (settings.vizScript.getStringValue().isNullOrEmpty()) {
-			portObj.viz = ""
-		} else {
-			portObj.viz = readScript(settings.vizScript.getStringValue()).getScript()
-		}
+		val vizScript = if (settings.vizScript.getStringValue().isNullOrEmpty()) "" else readScript(settings.vizScript.getStringValue()).getScript()
 
 		// Reads model meta data
-		if (settings.metaDataDoc.getStringValue().isNotEmpty()) {
+		if (settings.metaDataDoc.getStringValue().isNullOrEmpty()) {
+			throw InvalidSettingsException("Model metadata is not provided")
+		}
+		val metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(settings.metaDataDoc.getStringValue()))
 
-			val metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(settings.metaDataDoc.getStringValue()))
+		// process metadata
+		val book = XSSFWorkbook(metaDataFile)
+		val sheet = book.getSheetAt(0)
+		val genericModel = GenericModel(generalInformation = sheet.getGeneralInformation(), scope = sheet.getScope(), modelMath = sheet.getModelMath())
+		genericModel.generalInformation.software = "R"
 
-			// process metadata
-			XSSFWorkbook(metaDataFile).use { book ->
-
-				val sheet = book.getSheetAt(0)
-				portObj.genericModel = GenericModel(generalInformation = sheet.getGeneralInformation(), scope = sheet.getScope(), modelMath = sheet.getModelMath())
-				portObj.genericModel?.generalInformation?.software = "R"
-
-				// set variable values and types from parameters script
-				val vars = getVariablesFromAssignments(portObj.param)
-				val indepParams = portObj.genericModel?.modelMath?.parameter?.filter { it.classification == ParameterClassification.input }?.toList()
-				indepParams?.forEach { param ->
-					vars[param.name.trim()]?.let {
-						param.value = it
-						param.dataType = getValueType(it)
-					}
-				}
+		// set variable values and types from parameters script
+		val vars = getVariablesFromAssignments(paramScript)
+		val indepParams = genericModel.modelMath?.parameter?.filter { it.classification == ParameterClassification.input }?.toList()
+		indepParams?.forEach { param ->
+			vars[param.name.trim()]?.let {
+				param.value = it
+				param.dataType = getValueType(it)
 			}
 		}
+		
+		val portObj = FskPortObject(model = modelScript, param = paramScript, viz = vizScript, genericModel = genericModel)
 
-		if (modelScript.getLibraries().isNotEmpty()) {
+		if (modelRScript.getLibraries().isNotEmpty()) {
 			try {
 				// Install missing libraries
 				val libRegistry = LibRegistry.instance()
-				val missingLibs = modelScript.getLibraries().filter { it -> !libRegistry.isInstalled(it) }.toList()
+				val missingLibs = modelRScript.getLibraries().filter { it -> !libRegistry.isInstalled(it) }.toList()
 				if (missingLibs.isNotEmpty()) libRegistry.installLibs(missingLibs)
 
-				val libPaths = libRegistry.getPaths(modelScript.getLibraries())
+				val libPaths = libRegistry.getPaths(modelRScript.getLibraries())
 				libPaths.forEach { portObj.libs.add(it.toFile()) }
 
 			} catch (e: RException) {
@@ -157,7 +147,7 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 		// Creation date
 		val creationDate = getRow(9).getCell(5).getDateCellValue()
 		val modifiedDate = getRow(10).getCell(5).getDateCellValue()
-		
+
 		val urlString = getString(16)
 		val modelUrl = URL(if (urlString.isNullOrEmpty()) "http://www.bfr.bund.de/en/home.html" else urlString)
 
