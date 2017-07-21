@@ -25,15 +25,14 @@ import org.knime.core.node.port.PortTypeRegistry
 import org.knime.core.util.FileUtil
 import java.awt.BorderLayout
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.zip.ZipEntry
 import javax.swing.JComponent
 import javax.swing.JList
 import javax.swing.JPanel
 import javax.swing.JScrollPane
-import javax.swing.JTree
 import javax.swing.ListSelectionModel
-import com.fasterxml.jackson.annotation.JsonInclude
 
 /**
  * A port object spec for R model port.
@@ -172,23 +171,35 @@ class FskPortObjectSerializer : PortObjectSerializer<FskPortObject>() {
 			IOUtils.write(stringVal, stream)
 		}
 		stream.closeEntry()
+
+		// workspace entry
+		stream.putNextEntry(ZipEntry(WORKSPACE))
+		portObject.workspace?.let { workspace ->
+			FileInputStream(workspace).use { FileUtil.copy(it, stream)}
+		}
+		stream.closeEntry()
 	}
 
 	override fun loadPortObject(stream: PortObjectZipInputStream, spec: PortObjectSpec, exec: ExecutionMonitor): FskPortObject {
 
 		val portObj = FskPortObject()
 
-		// model entry
+		// model script entry
 		stream.getNextEntry()
 		portObj.model = IOUtils.toString(stream, "UTF-8")
 
-		// parameters script
+		// parameters script entry
 		stream.getNextEntry()
 		portObj.param = IOUtils.toString(stream, "UTF-8")
 
-		// visualization script
+		// visualization script entry
 		stream.getNextEntry()
 		portObj.viz = IOUtils.toString(stream, "UTF-8")
+
+		// metadata entry
+		stream.getNextEntry()
+		val metadataAsString = IOUtils.toString(stream, "UTF-8")
+		portObj.genericModel = objectMapper.readValue(metadataAsString, GenericModel::class.java)
 
 		// workspace
 		stream.getNextEntry()
