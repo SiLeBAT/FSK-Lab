@@ -117,7 +117,7 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 		return arrayOf(portObj)
 	}
 
-	override fun configure(inSpecs: Array<PortObjectSpec>) = arrayOf(FskPortObjectSpec)
+	override fun configure(inSpecs: Array<PortObjectSpec>) = arrayOf(FskPortObjectSpec.INSTANCE)
 
 	/**
 	 * Reads R script.

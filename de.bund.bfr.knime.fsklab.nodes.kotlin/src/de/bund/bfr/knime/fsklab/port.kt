@@ -39,12 +39,16 @@ import com.fasterxml.jackson.annotation.JsonInclude
  * A port object spec for R model port.
  * @author Miguel de Alba, BfR, Berlin.
  */
-object FskPortObjectSpec : PortObjectSpec {
+class FskPortObjectSpec : PortObjectSpec {
+	
+	companion object {
+		val INSTANCE = FskPortObjectSpec()
+	}
 	override fun getViews() = emptyArray<JComponent>()
 
-	object Serializer : PortObjectSpecSerializer<FskPortObjectSpec>() {
+	class Serializer : PortObjectSpecSerializer<FskPortObjectSpec>() {
 
-		override fun loadPortObjectSpec(stream: PortObjectSpecZipInputStream) = FskPortObjectSpec
+		override fun loadPortObjectSpec(stream: PortObjectSpecZipInputStream) = INSTANCE
 
 		override fun savePortObjectSpec(spec: FskPortObjectSpec, stream: PortObjectSpecZipOutputStream) = Unit
 	}
@@ -83,7 +87,7 @@ class FskPortObject : PortObject {
 		numOfInstances++
 	}
 
-	override fun getSpec() = FskPortObjectSpec
+	override fun getSpec() = FskPortObjectSpec.INSTANCE
 
 	override fun getSummary() = "FSK Object"
 	
