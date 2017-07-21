@@ -39,20 +39,27 @@ import com.fasterxml.jackson.annotation.JsonInclude
  * A port object spec for R model port.
  * @author Miguel de Alba, BfR, Berlin.
  */
-class FskPortObjectSpec : PortObjectSpec {
-	
+class FskPortObjectSpec private constructor() : PortObjectSpec {
+
 	companion object {
 		val INSTANCE = FskPortObjectSpec()
 	}
+
 	override fun getViews() = emptyArray<JComponent>()
+	
+//	fun getPortObjectSpecSerializer() = object: PortObjectSpecSerializer<FskPortObjectSpec>() {
+//		override fun loadPortObjectSpec(stream: PortObjectSpecZipInputStream) = INSTANCE
+//		override fun savePortObjectSpec(spec: FskPortObjectSpec, stream: PortObjectSpecZipOutputStream) = Unit
+//	}
+	
+	fun getPortObjectSpecSerializer() = Serializer()
 
 	class Serializer : PortObjectSpecSerializer<FskPortObjectSpec>() {
-
 		override fun loadPortObjectSpec(stream: PortObjectSpecZipInputStream) = INSTANCE
-
 		override fun savePortObjectSpec(spec: FskPortObjectSpec, stream: PortObjectSpecZipOutputStream) = Unit
 	}
 }
+
 
 /**
  * A port object for an FSK model port providing R scripts and model meta data.
@@ -90,44 +97,44 @@ class FskPortObject : PortObject {
 	override fun getSpec() = FskPortObjectSpec.INSTANCE
 
 	override fun getSummary() = "FSK Object"
-	
-	override fun getViews() : Array<JComponent> {
-		
+
+	override fun getViews(): Array<JComponent> {
+
 		val modelScriptPanel = ScriptPanel("Model script", model, false)
 		val paramScriptPanel = ScriptPanel("Param script", param, false)
 		val vizScriptPanel = ScriptPanel("Visualization script", viz, false)
-		
+
 		val generalInformationPanel = GeneralInformationPanel(genericModel?.generalInformation)
 		generalInformationPanel.name = "General information"
-		
+
 		val scopePanel = ScopePanel(genericModel?.scope)
 		scopePanel.name = "Scope"
-		
+
 		val dataBackgroundPanel = DataBackgroundPanel(genericModel?.dataBackground)
 		dataBackgroundPanel.name = "Data background"
-		
+
 		val modelMathPanel = ModelMathPanel(genericModel?.modelMath)
 		modelMathPanel.name = "Model math"
-		
+
 		val metaDataPane = JScrollPane()
 		genericModel?.let { metaDataPane.add(createTree(genericModel = it)) }
 		metaDataPane.name = "Meta data"
-		
+
 		return arrayOf(modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane, LibrariesPanel())
 	}
-	
+
 	/** JPanel with list of R libraries. */
 	private inner class LibrariesPanel : JPanel(BorderLayout()) {
-		
+
 		init {
 			name = "Libraries list"
-			
+
 			val libNames = libs.map { it.name }.toTypedArray()
-			
+
 			val list = JList<String>(libNames)
 			list.layoutOrientation = JList.VERTICAL
 			list.selectionMode = ListSelectionModel.SINGLE_SELECTION
-			
+
 			add(JScrollPane(list))
 		}
 	}
@@ -148,7 +155,7 @@ class FskPortObjectSerializer : PortObjectSerializer<FskPortObject>() {
 	val objectMapper: ObjectMapper = jacksonObjectMapper().registerModule(RakipModule())
 
 	override fun savePortObject(portObject: FskPortObject, stream: PortObjectZipOutputStream, exec: ExecutionMonitor) {
-		
+
 		// model entry (file with model script)
 		stream.putNextEntry(ZipEntry(MODEL))
 		IOUtils.write(portObject.model, stream)
