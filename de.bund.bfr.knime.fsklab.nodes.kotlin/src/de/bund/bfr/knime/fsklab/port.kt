@@ -46,12 +46,7 @@ class FskPortObjectSpec private constructor() : PortObjectSpec {
 	}
 
 	override fun getViews() = emptyArray<JComponent>()
-	
-//	fun getPortObjectSpecSerializer() = object: PortObjectSpecSerializer<FskPortObjectSpec>() {
-//		override fun loadPortObjectSpec(stream: PortObjectSpecZipInputStream) = INSTANCE
-//		override fun savePortObjectSpec(spec: FskPortObjectSpec, stream: PortObjectSpecZipOutputStream) = Unit
-//	}
-	
+
 	fun getPortObjectSpecSerializer() = Serializer()
 
 	class Serializer : PortObjectSpecSerializer<FskPortObjectSpec>() {
@@ -116,8 +111,8 @@ class FskPortObject : PortObject {
 		val modelMathPanel = ModelMathPanel(genericModel?.modelMath)
 		modelMathPanel.name = "Model math"
 
-		val metaDataPane = JScrollPane()
-		genericModel?.let { metaDataPane.add(createTree(genericModel = it)) }
+		val tree: JTree = if (genericModel == null) JTree() else createTree(genericModel as GenericModel)
+		val metaDataPane = JScrollPane(tree)
 		metaDataPane.name = "Meta data"
 
 		return arrayOf(modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane, LibrariesPanel())
