@@ -73,7 +73,7 @@ class FskPortObject : PortObject {
 	var model = ""
 	var param = ""
 	var viz = ""
-	val genericModel: GenericModel? = null
+	var genericModel: GenericModel? = null
 	var workspace: File? = null
 	val libs = mutableSetOf<File>()
 
@@ -105,8 +105,8 @@ class FskPortObject : PortObject {
 		val modelMathPanel = ModelMathPanel(genericModel?.modelMath)
 		modelMathPanel.name = "Model math"
 		
-		val tree = if (genericModel != null) createTree(genericModel) else JTree()
-		val metaDataPane = JScrollPane(tree)
+		val metaDataPane = JScrollPane()
+		genericModel?.let { metaDataPane.add(createTree(genericModel = it)) }
 		metaDataPane.name = "Meta data"
 		
 		return arrayOf(modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane, LibrariesPanel())

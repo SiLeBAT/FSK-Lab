@@ -13,6 +13,7 @@ Export-Package: de.bund.bfr.fskml;uses:="org.sbml.jsbml,org.jdom2,de.unirostock.
    de.bund.bfr.pmfml,
    org.knime.core.data,
    org.eclipse.ui.plugin",
+ de.bund.bfr.knime.fsklab.nodes.controller,
  de.bund.bfr.pmfml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: com.fasterxml.jackson.core.jackson-databind,

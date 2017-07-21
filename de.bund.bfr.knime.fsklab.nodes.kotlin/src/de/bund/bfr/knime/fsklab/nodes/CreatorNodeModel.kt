@@ -3,7 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes
 import de.bund.bfr.fskml.RScript
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry
-import de.bund.bfr.knime.fsklab.nodes.rakip.port.FskPortObject
+import de.bund.bfr.knime.fsklab.FskPortObject
 import de.bund.bfr.rakip.generic.GeneralInformation
 import de.bund.bfr.rakip.generic.GenericModel
 import de.bund.bfr.rakip.generic.Hazard
@@ -83,11 +83,11 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 
 				val sheet = book.getSheetAt(0)
 				portObj.genericModel = GenericModel(generalInformation = sheet.getGeneralInformation(), scope = sheet.getScope(), modelMath = sheet.getModelMath())
-				portObj.genericModel.generalInformation.software = "R"
+				portObj.genericModel?.generalInformation?.software = "R"
 
 				// set variable values and types from parameters script
 				val vars = getVariablesFromAssignments(portObj.param)
-				val indepParams = portObj.genericModel.modelMath?.parameter?.filter { it.classification == ParameterClassification.input }?.toList()
+				val indepParams = portObj.genericModel?.modelMath?.parameter?.filter { it.classification == ParameterClassification.input }?.toList()
 				indepParams?.forEach { param ->
 					vars[param.name.trim()]?.let {
 						param.value = it

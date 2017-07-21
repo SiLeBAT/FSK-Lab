@@ -9,5 +9,7 @@
 	<classpathentry kind="lib" path="libs/jackson-module-kotlin-2.8.7.jar"/>
 	<classpathentry kind="lib" path="libs/rakip_editor-0.0.6a1.jar"/>
 	<classpathentry kind="lib" path="libs/rakip_models-0.0.1a3.jar"/>
+	<classpathentry kind="lib" path="libs/rengine-1.8.4.jar"/>
+	<classpathentry kind="lib" path="libs/rserve-engine-1.8.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
