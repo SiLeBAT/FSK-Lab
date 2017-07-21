@@ -137,7 +137,7 @@ class FskPortObject : PortObject {
  * Serializer used to save this port object.
  * @return a {@link FskPortObject}.
  */
-object FskPortObjectSerializer : PortObjectSerializer<FskPortObject>() {
+class FskPortObjectSerializer : PortObjectSerializer<FskPortObject>() {
 
 	val MODEL = "model.R"
 	val PARAM = "param.R"
