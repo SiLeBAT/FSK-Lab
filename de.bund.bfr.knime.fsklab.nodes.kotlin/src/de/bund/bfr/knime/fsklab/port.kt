@@ -111,8 +111,7 @@ class FskPortObject : PortObject {
 		val modelMathPanel = ModelMathPanel(genericModel?.modelMath)
 		modelMathPanel.name = "Model math"
 
-		val tree: JTree = if (genericModel == null) JTree() else createTree(genericModel as GenericModel)
-		val metaDataPane = JScrollPane(tree)
+		val metaDataPane: JComponent = if (genericModel == null) JPanel() else JScrollPane(createTree(genericModel as GenericModel))
 		metaDataPane.name = "Meta data"
 
 		return arrayOf(modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane, LibrariesPanel())
