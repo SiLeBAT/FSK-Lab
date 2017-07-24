@@ -13,11 +13,12 @@ Require-Bundle: org.knime.core,
  org.apache.servicemix.bundles.poi,
  org.apache.commons.lang3,
  de.bund.bfr.knime,
- org.knime.ext.r.type;bundle-version="3.1.0",
+ org.knime.ext.r.type,
  org.knime.workbench.core,
  org.knime.workbench.repository,
  org.kotlinlang;bundle-version="1.0.0",
- de.bund.bfr.knime.fsklab.nodes;bundle-version="1.0.0"
+ de.bund.bfr.knime.fsklab.nodes;bundle-version="1.0.0",
+ com.sun.jna
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: BfR

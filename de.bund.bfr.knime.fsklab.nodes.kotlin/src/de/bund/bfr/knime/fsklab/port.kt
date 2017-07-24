@@ -66,8 +66,8 @@ class FskPortObjectSpec private constructor() : PortObjectSpec {
 
  * @author Miguel de Alba, BfR, Berlin.
  */
-class FskPortObject(val model: String = "", val param: String = "", val viz: String = "",
-					val genericModel: GenericModel, val workspace: File? = null,
+class FskPortObject(var model: String = "", var param: String = "", var viz: String = "",
+					val genericModel: GenericModel, var workspace: File? = null,
 					val libs: MutableSet<File> = mutableSetOf()) : PortObject {
 
 	companion object {
