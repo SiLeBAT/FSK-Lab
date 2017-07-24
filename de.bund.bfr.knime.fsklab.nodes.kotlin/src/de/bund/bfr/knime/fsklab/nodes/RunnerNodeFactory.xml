@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="FskRunner.png" type="Manipulator" deprecated="false"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	<name>FSK Runner (Kotlin)</name>
+
+	<shortDescription>This node runs an FSK model</shortDescription>
+
+	<fullDescription>
+		<intro>
+			Runs the input model and updates its workspace with the model
+			results. A chart or plot is generated if a visualization script is
+			provided.
+		</intro>
+	</fullDescription>
+	<ports>
+		<inPort name="FSK object" index="0">FSK object</inPort>
+		<outPort name="FSK object" index="0">FSK object</outPort>
+		<outPort name="Image Output" index="1">View Image</outPort>
+	</ports>
+	<views>
+		<view name="R View" index="0"></view>
+	</views>
+</knimeNode>

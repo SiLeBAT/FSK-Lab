@@ -8,7 +8,7 @@ import javax.swing.JFileChooser;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 
-public class CreatorNodeFactory : NodeFactory<CreatorNodeModel>() {
+class CreatorNodeFactory : NodeFactory<CreatorNodeModel>() {
 	
 	override fun createNodeModel() = CreatorNodeModel()
 	

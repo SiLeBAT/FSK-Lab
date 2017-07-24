@@ -15,6 +15,7 @@
    </extension>
    <extension point="org.knime.workbench.repository.nodes">
       <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory"></node>
+      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory"></node>
    </extension>
 
 </plugin>
