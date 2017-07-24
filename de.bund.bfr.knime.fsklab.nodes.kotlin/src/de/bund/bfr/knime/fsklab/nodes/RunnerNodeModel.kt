@@ -95,6 +95,8 @@ class RunnerNodeModel : NodeModel(IN_TYPES, OUT_TYPES) {
 			stream?.close()
 		}
 	}
+	
+	fun getResultImage() = InternalSettings.plot
 
 	private fun runSnippet(controller: RController, fskObj: FskPortObject): FskPortObject {
 
