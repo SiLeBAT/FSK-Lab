@@ -1,9 +1,10 @@
 package de.bund.bfr.knime.fsklab.nodes
 
 import de.bund.bfr.fskml.RScript
-import de.bund.bfr.knime.fsklab.FskPortObjectSpec
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry
 import de.bund.bfr.knime.fsklab.FskPortObject
+import de.bund.bfr.knime.fsklab.FskPortObjectSpec
+import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException
+import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry
 import de.bund.bfr.rakip.generic.GeneralInformation
 import de.bund.bfr.rakip.generic.GenericModel
 import de.bund.bfr.rakip.generic.Hazard
@@ -17,9 +18,15 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.knime.core.node.ExecutionContext
 import org.knime.core.node.InvalidSettingsException
 import org.knime.core.node.NoInternalsModel
+import org.knime.core.node.NodeDialogPane
+import org.knime.core.node.NodeFactory
 import org.knime.core.node.NodeLogger
 import org.knime.core.node.NodeSettingsRO
 import org.knime.core.node.NodeSettingsWO
+import org.knime.core.node.NodeView
+import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane
+import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser
+import org.knime.core.node.defaultnodesettings.SettingsModelString
 import org.knime.core.node.port.PortObject
 import org.knime.core.node.port.PortObjectSpec
 import org.knime.core.node.port.PortType
@@ -27,9 +34,37 @@ import org.knime.core.util.FileUtil
 import org.rosuda.REngine.REXPMismatchException
 import java.io.IOException
 import java.net.URL
+import javax.swing.JFileChooser
 
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+private class CreatorNodeSettings {
 
+	// Setting models, with keys and default values
+	val modelScript = SettingsModelString("modelScript", "")
+	val paramScript = SettingsModelString("paramScript", "")
+	val vizScript = SettingsModelString("visualizationScript", "")
+	val metaDataDoc = SettingsModelString("spreadsheet", "")
+	
+	fun saveSettings(settings: NodeSettingsWO) {
+		modelScript.saveSettingsTo(settings)
+		paramScript.saveSettingsTo(settings)
+		vizScript.saveSettingsTo(settings)
+		metaDataDoc.saveSettingsTo(settings)
+	}
+	
+	fun validateSettings(settings: NodeSettingsRO) {
+		modelScript.validateSettings(settings)
+		paramScript.validateSettings(settings)
+		vizScript.validateSettings(settings)
+		metaDataDoc.validateSettings(settings)
+	}
+	
+	fun loadValidatedSettings(settings: NodeSettingsRO) {
+		modelScript.loadSettingsFrom(settings)
+		paramScript.loadSettingsFrom(settings)
+		vizScript.loadSettingsFrom(settings)
+		metaDataDoc.loadSettingsFrom(settings)
+	}
+}
 
 private val IN_TYPES = emptyArray<PortType>()
 private val OUT_TYPES = arrayOf(FskPortObject.TYPE)
@@ -51,23 +86,23 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 	override fun execute(inData: Array<PortObject>, exec: ExecutionContext): Array<PortObject> {
 
 		// Reads model script
-		if (settings.modelScript.getStringValue().isNullOrEmpty()) {
+		if (settings.modelScript.stringValue.isNullOrEmpty()) {
 			throw InvalidSettingsException("Model script is not provided")
 		}
-		val modelRScript = readScript(settings.modelScript.getStringValue())
+		val modelRScript = readScript(settings.modelScript.stringValue)
 		val modelScript = modelRScript.getScript()
 
 		// Reads parameters script
-		val paramScript = if (settings.paramScript.getStringValue().isNullOrEmpty()) "" else readScript(settings.paramScript.getStringValue()).getScript()
+		val paramScript = if (settings.paramScript.stringValue.isNullOrEmpty()) "" else readScript(settings.paramScript.stringValue).getScript()
 
 		// Reads visualization script
-		val vizScript = if (settings.vizScript.getStringValue().isNullOrEmpty()) "" else readScript(settings.vizScript.getStringValue()).getScript()
+		val vizScript = if (settings.vizScript.stringValue.isNullOrEmpty()) "" else readScript(settings.vizScript.stringValue).getScript()
 
 		// Reads model meta data
-		if (settings.metaDataDoc.getStringValue().isNullOrEmpty()) {
+		if (settings.metaDataDoc.stringValue.isNullOrEmpty()) {
 			throw InvalidSettingsException("Model metadata is not provided")
 		}
-		val metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(settings.metaDataDoc.getStringValue()))
+		val metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(settings.metaDataDoc.stringValue))
 
 		// process metadata
 		val book = XSSFWorkbook(metaDataFile)
@@ -135,7 +170,7 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 		if (row == null)
 			throw IllegalArgumentException("Missing row: #$rowNumber")
 
-		return row.getCell(5).getStringCellValue()
+		return row.getCell(5).stringCellValue
 	}
 
 	private fun XSSFSheet.getGeneralInformation(): GeneralInformation {
@@ -145,8 +180,8 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 		val modelRights = getString(11) ?: ""
 
 		// Creation date
-		val creationDate = getRow(9).getCell(5).getDateCellValue()
-		val modifiedDate = getRow(10).getCell(5).getDateCellValue()
+		val creationDate = getRow(9).getCell(5).dateCellValue
+		val modifiedDate = getRow(10).getCell(5).dateCellValue
 
 		val urlString = getString(16)
 		val modelUrl = URL(if (urlString.isNullOrEmpty()) "http://www.bfr.bund.de/en/home.html" else urlString)
@@ -318,5 +353,51 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 		}
 
 		return vars;
+	}
+}
+
+class CreatorNodeFactory : NodeFactory<CreatorNodeModel>() {
+	
+	override fun createNodeModel() = CreatorNodeModel()
+	
+	override fun getNrNodeViews() = 0
+	
+	override fun createNodeView(viewIndex: Int, nodeModel: CreatorNodeModel) : NodeView<CreatorNodeModel>? = null
+	
+	override fun hasDialog() = true
+	
+	override fun createNodeDialogPane() : NodeDialogPane {
+		
+		val settings = CreatorNodeSettings()
+		
+		// Create components
+		val dlgType = JFileChooser.OPEN_DIALOG
+		val rFilters = ".r|.R"  // Extension filters for the R script
+		
+		val modelScriptChooser = DialogComponentFileChooser(settings.modelScript, "modelScript-history", dlgType, rFilters)
+		modelScriptChooser.setBorderTitle("Model script (*)")
+		modelScriptChooser.setToolTipText("Script that calculates the values of the model (mandatory)")
+		
+		val paramScriptChooser = DialogComponentFileChooser(settings.paramScript, "paramScript-history", dlgType, rFilters)
+		paramScriptChooser.setBorderTitle("Parameters script")
+		paramScriptChooser.setToolTipText("Script with the parameter values of the model (Optional)")
+		
+		val vizScriptChooser = DialogComponentFileChooser(settings.vizScript, "vizScript-history", dlgType, rFilters)
+		vizScriptChooser.setBorderTitle("Visualization script")
+		vizScriptChooser.setToolTipText(
+				"Script with a number of commands to create plots or charts using the simulation results (Optional)")
+		
+		val metaDataChooser = DialogComponentFileChooser(settings.metaDataDoc, "metaData-history", dlgType)
+		metaDataChooser.setBorderTitle("XLSX spreadsheet")
+		metaDataChooser.setToolTipText("XLSX file with model metadata (Optional)")
+		
+		// Create pane and add components
+		val pane = DefaultNodeSettingsPane()
+		pane.addDialogComponent(modelScriptChooser)
+		pane.addDialogComponent(paramScriptChooser)
+		pane.addDialogComponent(vizScriptChooser)
+		pane.addDialogComponent(metaDataChooser)
+		
+		return pane
 	}
 }
