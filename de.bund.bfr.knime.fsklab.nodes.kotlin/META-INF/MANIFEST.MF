@@ -24,7 +24,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-Vendor: BfR
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
 Bundle-ClassPath: .,
- libs/fskml-1.0.5.jar,
+ libs/fskml-1.0.7.jar,
  libs/jackson-module-kotlin-2.8.7.jar,
  libs/rakip_editor-0.0.6a1.jar,
  libs/rakip_models-0.0.1a3.jar,
