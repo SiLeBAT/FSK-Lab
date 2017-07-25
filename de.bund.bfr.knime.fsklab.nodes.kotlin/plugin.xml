@@ -18,6 +18,7 @@
       <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory"></node>
       <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory"></node>
       <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory"></node>
+      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.Fsk2RNodeFactory"></node>
    </extension>
 
 </plugin>

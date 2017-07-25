@@ -23,7 +23,7 @@ abstract class NoInternalsModel(inPortTypes: Array<PortType>, outPortTypes: Arra
  *
  * @author Miguel de Alba, BfR, Berlin.
  */
-class StatelessModel(inPortTypes: Array<PortType>, outPortTypes: Array<PortType>)
+abstract class StatelessModel(inPortTypes: Array<PortType>, outPortTypes: Array<PortType>)
 	: NodeModel(inPortTypes, outPortTypes) {
 
 	// No internal settings
