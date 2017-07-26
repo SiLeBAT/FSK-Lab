@@ -1,8 +1,6 @@
 package de.bund.bfr.knime.fsklab.nodes
 
 import com.sun.jna.Platform
-import de.bund.bfr.knime.fsklab.nodes.rbin.preferences.RPreferenceInitializer
-import de.bund.bfr.knime.fsklab.nodes.rbin.preferences.RPreferenceProvider
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer
 import org.eclipse.jface.preference.DirectoryFieldEditor
 import org.eclipse.jface.preference.FieldEditorPreferencePage
@@ -39,7 +37,7 @@ class InvalidRHomeException(message: String) : Exception(message)
  * @return properties about the used R.
  * @throws IOException in case that running R fails.
  */
-fun retrieveRProperties(): Properties = retrieveRProperties(RPreferenceInitializer.getR3Provider())
+fun retrieveRProperties(): Properties = retrieveRProperties(getR3Provider())
 
 /**
  * @return properties about the use R installation.
@@ -274,7 +272,7 @@ fun getR3Provider(): RPreferenceProvider {
 	val r3Home = FskPlugin.getDefault().preferenceStore.getString(R3_PATH)
 
 	val localProvider = cachedR3PreferenceProvider
-	if (localProvider == null || localProvider.rHome != r3Home) {
+	if (localProvider == null || localProvider.getRHome() != r3Home) {
 		cachedR3PreferenceProvider = DefaultRPreferenceProvider(r3Home)
 	}
 
