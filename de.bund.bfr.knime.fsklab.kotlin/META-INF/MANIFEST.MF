@@ -1,33 +1,37 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: FSK nodes
-Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes.kotlin;singleton:=true
+Bundle-Name: FSK Nodes (Kotlin)
+Bundle-SymbolicName: de.bund.bfr.knime.fsklab.kotlin;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.knime.core,
- com.fasterxml.jackson.core.jackson-databind,
+Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
+Bundle-Vendor: BfR
+Require-Bundle: de.bund.bfr.knime,
+ de.bund.bfr.knime.fsklab.java,
  com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-core,
- org.eclipse.ui,
+ com.fifesoft.rsyntaxtextarea,
  com.github.fastluca.jris,
  com.googlecode.ez-vcard,
- org.apache.servicemix.bundles.poi,
+ com.fasterxml.jackson.core.jackson-databind,
+ com.sun.jna,
  org.apache.commons.lang3,
- de.bund.bfr.knime,
+ org.apache.servicemix.bundles.poi,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.knime.core,
  org.knime.ext.r.type,
  org.knime.workbench.core,
  org.knime.workbench.repository,
- org.kotlinlang,
- com.sun.jna,
- de.bund.bfr.knime.fsklab.java
+ org.kotlinlang
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: BfR
-Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
 Bundle-ClassPath: .,
+ libs/CombineArchive-1.1.jar,
  libs/fskml-1.0.7.jar,
  libs/jackson-module-kotlin-2.8.7.jar,
+ libs/jcalendar-1.4.jar,
+ libs/jdom-2.0.1.jar,
  libs/rakip_editor-0.0.6a1.jar,
  libs/rakip_models-0.0.1a3.jar,
  libs/rengine-1.8.4.jar,
- libs/rserve-engine-1.8.4.jar,
- libs/jcalendar-1.4.jar
+ libs/rserve-engine-1.8.4.jar

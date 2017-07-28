@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.knime.core.PortType">
+      <portType
+            color="000000"
+            hidden="false"
+            name="FSK object"
+            objectClass="de.bund.bfr.knime.fsklab.FskPortObject"
+            objectSerializer="de.bund.bfr.knime.fsklab.FskPortObjectSerializer"
+            specClass="de.bund.bfr.knime.fsklab.FskPortObjectSpec"
+            specSerializer="de.bund.bfr.knime.fsklab.FskPortObjectSpec$Serializer">
+      </portType>
+   </extension>
+   
+   <extension point="org.knime.workbench.repository.nodes">
+      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
+      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
+      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
+      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />
+      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.Fsk2RNodeFactory" />
+   </extension>
+
+</plugin>
