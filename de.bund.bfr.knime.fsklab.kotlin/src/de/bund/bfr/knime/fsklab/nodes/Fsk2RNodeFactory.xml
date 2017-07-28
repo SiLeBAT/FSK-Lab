@@ -3,7 +3,7 @@
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
-	<name>FSK to R (Kotlin)</name>
+	<name>FSK to R</name>
 
 	<shortDescription>
 		Extracts the R workspace out of an FSK object. The R workspace may be
