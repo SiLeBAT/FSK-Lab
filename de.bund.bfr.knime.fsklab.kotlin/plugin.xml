@@ -14,11 +14,11 @@
    </extension>
    
    <extension point="org.knime.workbench.repository.nodes">
-      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
-      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
-      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
-      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />
-      <node deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.Fsk2RNodeFactory" />
+      <node category-path="/fsklab" deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
+      <node category-path="/fsklab" deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
+      <node category-path="/fsklab" deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
+      <node category-path="/fsklab" deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />
+      <node category-path="/fsklab" deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.Fsk2RNodeFactory" />
    </extension>
 
 </plugin>
