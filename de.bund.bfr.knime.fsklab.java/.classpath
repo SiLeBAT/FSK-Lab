@@ -11,10 +11,7 @@
 	<classpathentry kind="lib" path="libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="libs/CombineArchive-1.1.jar"/>
 	<classpathentry kind="lib" path="libs/jdom-2.0.1.jar"/>
-	<classpathentry kind="lib" path="libs/rakip_editor-0.0.6a1.jar"/>
-	<classpathentry kind="lib" path="libs/rakip_models-0.0.1a3.jar"/>
 	<classpathentry kind="lib" path="libs/fskml-1.0.5.jar"/>
-	<classpathentry kind="lib" path="libs/jackson-module-kotlin-2.8.7.jar"/>
 	<classpathentry kind="lib" path="libs/jcalendar-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
