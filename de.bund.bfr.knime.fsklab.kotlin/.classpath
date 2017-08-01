@@ -9,8 +9,6 @@
 	<classpathentry kind="lib" path="libs/jackson-module-kotlin-2.8.7.jar"/>
 	<classpathentry kind="lib" path="libs/CombineArchive-1.1.jar"/>
 	<classpathentry kind="lib" path="libs/fskml-1.0.7.jar"/>
-	<classpathentry kind="lib" path="libs/rengine-1.8.4.jar"/>
-	<classpathentry kind="lib" path="libs/rserve-engine-1.8.4.jar"/>
 	<classpathentry kind="lib" path="libs/jdom-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

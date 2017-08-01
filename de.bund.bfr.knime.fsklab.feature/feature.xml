@@ -29,26 +29,23 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
    </license>
 
    <requires>
-      <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.knime.base"/>
-      <import plugin="org.knime.js.core"/>
-      <import plugin="org.knime.product"/>
-      <import plugin="com.sun.jna"/>
-      <import plugin="org.knime.workbench.core"/>
-      <import plugin="org.knime.workbench.repository"/>
-      <import plugin="org.knime.r"/>
-      <import plugin="org.knime.ext.r.type" version="3.1.0" match="greaterOrEqual"/>
-      <import plugin="com.fifesoft.rsyntaxtextarea"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-core"/>
-      <import plugin="org.apache.servicemix.bundles.poi" version="3.14.0" match="greaterOrEqual"/>
-      <import plugin="org.knime.quickform.nodes.legacy"/>
-      <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.knime.base" version="3.2.0" match="greaterOrEqual"/>
-      <import plugin="edu.umd.cs.findbugs.annotations"/>
       <import plugin="com.google.guava" version="19.0.0" match="greaterOrEqual"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-core"/>
+      <import plugin="com.fifesoft.rsyntaxtextarea"/>
+      <import plugin="com.sun.jna"/>
+      <import plugin="org.apache.commons.lang3"/>
+      <import plugin="org.apache.servicemix.bundles.poi" version="3.14.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.knime.ext.r.type" version="3.1.0" match="greaterOrEqual"/>
+      <import plugin="org.knime.js.core"/>
+      <import plugin="org.knime.product"/>
+      <import plugin="org.knime.workbench.core"/>
+      <import plugin="org.knime.workbench.repository"/>
+      <import plugin="org.knime.core"/>
    </requires>
 
    <plugin
@@ -94,5 +91,11 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.rosuda.rengine"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

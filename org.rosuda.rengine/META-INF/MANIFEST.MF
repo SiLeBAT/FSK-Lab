@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Rengine
+Bundle-SymbolicName: org.rosuda.rengine
+Bundle-Version: 1.8.4
+Bundle-ClassPath: rengine-1.8.4.jar,
+  rserve-engine-1.8.4.jar
+Export-Package: org.rosuda.REngine,
+ org.rosuda.REngine.Rserve,
+ org.rosuda.REngine.Rserve.protocol
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

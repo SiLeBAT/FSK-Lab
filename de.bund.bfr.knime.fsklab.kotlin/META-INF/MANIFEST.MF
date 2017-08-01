@@ -22,7 +22,8 @@ Require-Bundle: de.bund.bfr.knime,
  org.knime.ext.r.type,
  org.knime.workbench.core,
  org.knime.workbench.repository,
- org.kotlinlang
+ org.kotlinlang,
+ org.rosuda.rengine
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
@@ -32,6 +33,4 @@ Bundle-ClassPath: .,
  libs/jcalendar-1.4.jar,
  libs/jdom-2.0.1.jar,
  libs/rakip_editor-0.0.6a1.jar,
- libs/rakip_models-0.0.1a3.jar,
- libs/rengine-1.8.4.jar,
- libs/rserve-engine-1.8.4.jar
+ libs/rakip_models-0.0.1a3.jar
