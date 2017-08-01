@@ -34,4 +34,5 @@ Bundle-ClassPath: .,
  libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar,
  libs/jsoup-1.9.2.jar,
  libs/pmfml-0.0.11.jar
-Export-Package: de.bund.bfr.knime.fsklab.nodes.controller
+Export-Package: de.bund.bfr.knime.fsklab.nodes.controller,
+ de.bund.bfr.knime.fsklab.nodes.ui
