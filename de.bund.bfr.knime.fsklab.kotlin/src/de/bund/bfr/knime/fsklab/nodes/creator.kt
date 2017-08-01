@@ -61,21 +61,21 @@ private class CreatorNodeSettings {
 	val paramScript = SettingsModelString("paramScript", "")
 	val vizScript = SettingsModelString("visualizationScript", "")
 	val metaDataDoc = SettingsModelString("spreadsheet", "")
-	
+
 	fun saveSettings(settings: NodeSettingsWO) {
 		modelScript.saveSettingsTo(settings)
 		paramScript.saveSettingsTo(settings)
 		vizScript.saveSettingsTo(settings)
 		metaDataDoc.saveSettingsTo(settings)
 	}
-	
+
 	fun validateSettings(settings: NodeSettingsRO) {
 		modelScript.validateSettings(settings)
 		paramScript.validateSettings(settings)
 		vizScript.validateSettings(settings)
 		metaDataDoc.validateSettings(settings)
 	}
-	
+
 	fun loadValidatedSettings(settings: NodeSettingsRO) {
 		modelScript.loadSettingsFrom(settings)
 		paramScript.loadSettingsFrom(settings)
@@ -137,7 +137,7 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 				param.dataType = getValueType(it)
 			}
 		}
-		
+
 		val portObj = FskPortObject(model = modelScript, param = paramScript, viz = vizScript, genericModel = genericModel)
 
 		if (modelRScript.getLibraries().isNotEmpty()) {
@@ -230,29 +230,25 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 		val modelMath = ModelMath()
 
 		// Dependent variables
-		val depNames = getString(21)?.split("\\|\\|")
-		val depUnits = getString(22)?.split("\\|\\|")
+		val depNames = getString(21)?.split("||")?.map(String::trim)?.toList()
+		val depUnits = getString(22)?.split("||")?.map(String::trim)?.toList()
 
 		if (depNames != null && depUnits != null) {
-			for (i in 0..depNames.size - 1) {
-				val name = depNames[i].trim()
-				val unit = depUnits[i].trim()
-
-				val param = Parameter(id = "", classification = ParameterClassification.output, name = name, unit = unit, unitCategory = "", dataType = "")
+			for (pair in depNames.zip(depUnits)) {
+				val param = Parameter(id = "", classification = ParameterClassification.output,
+						name = pair.first, unit = pair.second, unitCategory = "", dataType = "")
 				modelMath.parameter.add(param)
 			}
 		}
 
 		// Independent variables
-		val indepNames = getString(25)?.split("\\|\\|")
-		val indepUnits = getString(26)?.split("\\|\\|")
+		val indepNames = getString(25)?.split("||")?.map(String::trim)?.toList()
+		val indepUnits = getString(26)?.split("||")?.map(String::trim)?.toList()
 
 		if (indepNames != null && indepUnits != null) {
-			for (i in 0..indepNames.size - 1) {
-				val name = indepNames[i].trim()
-				val unit = indepUnits[i].trim()
-
-				val param = Parameter(id = "", classification = ParameterClassification.input, name = name, unit = unit, unitCategory = "", dataType = "")
+			for (pair in indepNames.zip(indepUnits)) {
+				val param = Parameter(id = "", classification = ParameterClassification.input,
+						name = pair.first, unit = pair.second, unitCategory = "", dataType = "")
 				modelMath.parameter.add(param)
 			}
 		}
@@ -375,47 +371,47 @@ class CreatorNodeModel : NoInternalsModel(inPortTypes = IN_TYPES, outPortTypes =
 }
 
 class CreatorNodeFactory : NodeFactory<CreatorNodeModel>() {
-	
+
 	override fun createNodeModel() = CreatorNodeModel()
-	
+
 	override fun getNrNodeViews() = 0
-	
-	override fun createNodeView(viewIndex: Int, nodeModel: CreatorNodeModel) : NodeView<CreatorNodeModel>? = null
-	
+
+	override fun createNodeView(viewIndex: Int, nodeModel: CreatorNodeModel): NodeView<CreatorNodeModel>? = null
+
 	override fun hasDialog() = true
-	
-	override fun createNodeDialogPane() : NodeDialogPane {
-		
+
+	override fun createNodeDialogPane(): NodeDialogPane {
+
 		val settings = CreatorNodeSettings()
-		
+
 		// Create components
 		val dlgType = JFileChooser.OPEN_DIALOG
 		val rFilters = ".r|.R"  // Extension filters for the R script
-		
+
 		val modelScriptChooser = DialogComponentFileChooser(settings.modelScript, "modelScript-history", dlgType, rFilters)
 		modelScriptChooser.setBorderTitle("Model script (*)")
 		modelScriptChooser.setToolTipText("Script that calculates the values of the model (mandatory)")
-		
+
 		val paramScriptChooser = DialogComponentFileChooser(settings.paramScript, "paramScript-history", dlgType, rFilters)
 		paramScriptChooser.setBorderTitle("Parameters script")
 		paramScriptChooser.setToolTipText("Script with the parameter values of the model (Optional)")
-		
+
 		val vizScriptChooser = DialogComponentFileChooser(settings.vizScript, "vizScript-history", dlgType, rFilters)
 		vizScriptChooser.setBorderTitle("Visualization script")
 		vizScriptChooser.setToolTipText(
 				"Script with a number of commands to create plots or charts using the simulation results (Optional)")
-		
+
 		val metaDataChooser = DialogComponentFileChooser(settings.metaDataDoc, "metaData-history", dlgType)
 		metaDataChooser.setBorderTitle("XLSX spreadsheet")
 		metaDataChooser.setToolTipText("XLSX file with model metadata (Optional)")
-		
+
 		// Create pane and add components
 		val pane = DefaultNodeSettingsPane()
 		pane.addDialogComponent(modelScriptChooser)
 		pane.addDialogComponent(paramScriptChooser)
 		pane.addDialogComponent(vizScriptChooser)
 		pane.addDialogComponent(metaDataChooser)
-		
+
 		return pane
 	}
 }
