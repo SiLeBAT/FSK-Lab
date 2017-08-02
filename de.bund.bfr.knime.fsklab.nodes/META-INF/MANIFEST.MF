@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: FSK nodes
+Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui
+Bundle-Vendor: BfR
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
