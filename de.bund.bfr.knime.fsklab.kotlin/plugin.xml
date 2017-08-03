@@ -14,7 +14,6 @@
    </extension>
    
    <extension point="org.knime.workbench.repository.nodes">
-      <node category-path="/fsklab" deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
       <node category-path="/fsklab" deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
       <node category-path="/fsklab" deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
       <node category-path="/fsklab" deprecated="false" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />

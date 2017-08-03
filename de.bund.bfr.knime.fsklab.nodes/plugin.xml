@@ -12,5 +12,8 @@
             specSerializer="de.bund.bfr.knime.fsklab.FskPortObjectSpec$Serializer">
       </portType>
    </extension>
-
+   
+   <extension point="org.knime.workbench.repository.nodes">
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
+   </extension>
 </plugin>
