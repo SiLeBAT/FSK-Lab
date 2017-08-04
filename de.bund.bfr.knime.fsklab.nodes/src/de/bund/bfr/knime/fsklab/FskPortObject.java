@@ -25,7 +25,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -182,6 +181,7 @@ public class FskPortObject implements PortObject {
 
 			// template entry (file with model meta data)
 			if (portObject.genericModel != null) {
+				out.putNextEntry(new ZipEntry(META_DATA));
 				final String stringVal = objectMapper.writeValueAsString(portObject.genericModel);
 				IOUtils.write(stringVal, out);
 				out.closeEntry();
@@ -309,7 +309,6 @@ public class FskPortObject implements PortObject {
 	}
 
 	// Metadata pane stuff
-	private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	private static void add(final DefaultMutableTreeNode node, final String label, final String value) {
 		if (StringUtils.isNotBlank(value)) {
@@ -318,7 +317,7 @@ public class FskPortObject implements PortObject {
 	}
 
 	private static void add(final DefaultMutableTreeNode node, final String label, final Date date) {
-		node.add(new DefaultMutableTreeNode(label + ": " + dateFormat.format(date)));
+		node.add(new DefaultMutableTreeNode(label + ": " + new SimpleDateFormat("yyyy-MM-dd").format(date)));
 	}
 
 	private static void add(final DefaultMutableTreeNode node, final Record record) {
