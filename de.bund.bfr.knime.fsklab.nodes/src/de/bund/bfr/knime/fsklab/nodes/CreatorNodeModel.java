@@ -241,9 +241,9 @@ class CreatorNodeModel extends NoInternalsModel {
 
 	private static GeneralInformation getGeneralInformation(final XSSFSheet sheet) throws MalformedURLException {
 
-		final String name = StringUtils.trimToEmpty(getString(sheet, 1));
+		final String name = StringUtils.defaultString(getString(sheet, 1));
 		final String source = "";
-		final String identifier = StringUtils.trimToEmpty(getString(sheet, 2));
+		final String identifier = StringUtils.defaultString(getString(sheet, 2));
 		final List<VCard> creators = Collections.emptyList();
 		final Date creationDate = sheet.getRow(9).getCell(5).getDateCellValue();
 		final List<Date> modifiedDate = Collections.singletonList(sheet.getRow(10).getCell(5).getDateCellValue());
@@ -251,7 +251,7 @@ class CreatorNodeModel extends NoInternalsModel {
 		final boolean isAvailable = true;
 
 		final String urlString = getString(sheet, 16);
-		final URL modelUrl = new URL(StringUtils.defaultString(urlString, "http://bfr.bund.de"));
+		final URL modelUrl = new URL(StringUtils.defaultIfEmpty(urlString, "http://bfr.bund.de"));
 
 		final String format = "";
 		final List<Record> reference = Collections.emptyList();
@@ -303,7 +303,7 @@ class CreatorNodeModel extends NoInternalsModel {
 		{
 			final String environmentName = StringUtils.defaultString(getString(sheet, 5));
 			final String environmentDescription = StringUtils.defaultString(getString(sheet, 6));
-			final String environmentUnit = null;
+			final String environmentUnit = "";
 			final List<String> productionMethod = Collections.emptyList();
 			final List<String> packaging = Collections.emptyList();
 			final List<String> productTreatment = Collections.emptyList();
