@@ -161,11 +161,12 @@ class CreatorNodeModel extends NoInternalsModel {
 			genericModel.getGeneralInformation().setSoftware("R");
 
 			// Set variable values and types from parameters script
-			{
+			if (modelMath != null) {
 				Map<String, String> vars = getVariablesFromAssignments(paramScript);
-				List<Parameter> indeps = genericModel.getModelMath().getParameter().stream()
+				final List<Parameter> indeps = modelMath.getParameter().stream()
 						.filter(it -> it.getClassification().equals(ParameterClassification.input))
 						.collect(Collectors.toList());
+
 				indeps.forEach(it -> {
 					final String value = vars.get(it.getName());
 					it.setValue(value);
