@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +55,7 @@ import com.sun.jna.Platform;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+import de.bund.bfr.rakip.generic.ModelMath;
 import de.bund.bfr.rakip.generic.Parameter;
 import de.bund.bfr.rakip.generic.ParameterClassification;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
@@ -127,8 +129,15 @@ public class RunnerNodeModel extends NodeModel {
 
 		FskPortObject fskObj = (FskPortObject) inData[0];
 
-		final List<Parameter> indepVars = fskObj.genericModel.getModelMath().getParameter().stream()
-				.filter(it -> it.getClassification() == ParameterClassification.input).collect(Collectors.toList());
+		final ModelMath modelMath = fskObj.genericModel.getModelMath();
+
+		final List<Parameter> indepVars;
+		if (modelMath == null) {
+			indepVars = Collections.emptyList();
+		} else {
+			indepVars = modelMath.getParameter().stream()
+					.filter(it -> it.getClassification() == ParameterClassification.input).collect(Collectors.toList());
+		}
 
 		if (!indepVars.isEmpty()) {
 			try {
