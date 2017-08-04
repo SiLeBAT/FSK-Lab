@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<knimeNode icon="runner.png" type="Manipulator" deprecated="false"
+<knimeNode icon="FskRunner.png" type="Manipulator" deprecated="false"
 	xmlns="http://knime.org/node/v2.8"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
@@ -16,6 +16,7 @@
 	</fullDescription>
 	<ports>
 		<inPort name="FSK object" index="0">FSK object</inPort>
+		<inPort name="Parameters values" index="1" optional="true">Metadata table</inPort>
 		<outPort name="FSK object" index="0">FSK object</outPort>
 		<outPort name="Image Output" index="1">View Image</outPort>
 	</ports>

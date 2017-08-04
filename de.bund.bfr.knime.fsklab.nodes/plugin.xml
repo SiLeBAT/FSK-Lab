@@ -15,5 +15,6 @@
    
    <extension point="org.knime.workbench.repository.nodes">
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
    </extension>
 </plugin>
