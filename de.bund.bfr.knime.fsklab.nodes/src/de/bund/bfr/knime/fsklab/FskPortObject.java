@@ -721,7 +721,8 @@ public class FskPortObject implements PortObject {
 
 		final List<String> regions = populationGroup.getRegion();
 		if (!regions.isEmpty()) {
-			final String label = bundle.getString("GM.EditPopulationGroupPanel.regionLabel");
+			final String key = prefix + "regionLabel";
+			final String label = bundle.getString(key);
 			final DefaultMutableTreeNode regionNode = new DefaultMutableTreeNode(label);
 			regions.forEach(it -> regionNode.add(new DefaultMutableTreeNode(it)));
 		}
@@ -746,7 +747,7 @@ public class FskPortObject implements PortObject {
 
 		final List<String> seasons = populationGroup.getSeason();
 		if (!seasons.isEmpty()) {
-			final String key = "seasonLabel";
+			final String key = prefix + "seasonLabel";
 			final String label = bundle.getString(key);
 
 			final DefaultMutableTreeNode seasonNode = new DefaultMutableTreeNode(label);
@@ -843,7 +844,7 @@ public class FskPortObject implements PortObject {
 
 		final String languageWrittenIn = generalInformation.getLanguageWrittenIn();
 		if (!StringUtils.isNotBlank(languageWrittenIn)) {
-			final String key = prefix + "languageWrittenIn";
+			final String key = prefix + "languageWrittenInLabel";
 			final String label = bundle.getString(key);
 			add(node, label, languageWrittenIn);
 		}
@@ -857,14 +858,14 @@ public class FskPortObject implements PortObject {
 
 		final String objective = generalInformation.getObjective();
 		if (!StringUtils.isNotBlank(objective)) {
-			final String key = "objectiveLabel";
+			final String key = prefix + "objectiveLabel";
 			final String label = bundle.getString(key);
 			add(node, label, objective);
 		}
 
 		final String desc = generalInformation.getDescription();
 		if (!StringUtils.isNotBlank(desc)) {
-			final String key = "descriptioinLabel";
+			final String key = prefix + "descriptionLabel";
 			final String label = bundle.getString(key);
 			add(node, label, desc);
 		}
