@@ -96,7 +96,7 @@ public class ReaderNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    final Map<String, ArchiveEntry> entriesMap = new HashMap<>();
+    final Map<String, File> entriesMap = new HashMap<>();
     final ArrayList<String> libNames = new ArrayList<>();
 
     final File file = FileUtil.getFileFromURL(FileUtil.toURL(filename.getStringValue()));
@@ -109,16 +109,16 @@ public class ReaderNodeModel extends NoInternalsModel {
 
         switch (resourceType) {
           case modelScript:
-            entriesMap.put("modelScript", entry);
+            entriesMap.put("modelScript", toTempFile(entry));
             break;
           case parametersScript:
-            entriesMap.put("paramScript", entry);
+            entriesMap.put("paramScript", toTempFile(entry));
             break;
           case visualizationScript:
-            entriesMap.put("visualizationScript", entry);
+            entriesMap.put("visualizationScript", toTempFile(entry));
             break;
           case workspace:
-            entriesMap.put("workspace", entry);
+            entriesMap.put("workspace", toTempFile(entry));
             break;
           // RAKIP JSON metadata is not supported currently by fskml.
           default:
@@ -128,7 +128,7 @@ public class ReaderNodeModel extends NoInternalsModel {
 
       // Gets metadata file
       final URI jsonURI = new URI("http://json.org");
-      entriesMap.put("metaData", archive.getEntriesWithFormat(jsonURI).get(0));
+      entriesMap.put("metaData", toTempFile(archive.getEntriesWithFormat(jsonURI).get(0)));
 
       // Gets library names
       // TODO: replace with JNA
@@ -148,7 +148,7 @@ public class ReaderNodeModel extends NoInternalsModel {
         libNames.add(name);
       }
     }
-
+    
     final String modelScript =
         entriesMap.containsKey("modelScript") ? loadScript(entriesMap.get("modelScript")) : "";
     final String paramScript =
@@ -156,13 +156,12 @@ public class ReaderNodeModel extends NoInternalsModel {
     final String visualizationScript = entriesMap.containsKey("visualizationScript")
         ? loadScript(entriesMap.get("visualizationScript"))
         : "";
-    final File workspaceFile =
-        entriesMap.containsKey("workspace") ? toTempFile(entriesMap.get("workspace")) : null;
+    final File workspaceFile = entriesMap.get("workspace");
     if (!entriesMap.containsKey("metaData")) {
       throw new InvalidSettingsException("Missing model meta data");
     }
-    final GenericModel genericModel = loadMetaData(entriesMap.get("metaData"));
 
+    final GenericModel genericModel = loadMetaData(entriesMap.get("metaData"));
 
     final Set<File> libFiles = new HashSet<>();
     if (!libNames.isEmpty()) {
@@ -200,7 +199,7 @@ public class ReaderNodeModel extends NoInternalsModel {
 
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
         genericModel, workspaceFile, libFiles);
-    return new FskPortObject[] { fskObj };
+    return new FskPortObject[] {fskObj};
   }
 
   private static File toTempFile(final ArchiveEntry archiveEntry) throws IOException {
@@ -210,13 +209,12 @@ public class ReaderNodeModel extends NoInternalsModel {
     return file;
   }
 
-  private static String loadScript(final ArchiveEntry archiveEntry) throws IOException {
+  private static String loadScript(final File file) throws IOException {
     // Read script from temporary file and return script
-    return FileUtils.readFileToString(toTempFile(archiveEntry), "UTF-8");
+    return FileUtils.readFileToString(file, "UTF-8");
   }
 
-  private static GenericModel loadMetaData(final ArchiveEntry archiveEntry) throws IOException {
-    final File file = toTempFile(archiveEntry);
+  private static GenericModel loadMetaData(final File file) throws IOException {
     final ObjectMapper objectMapper =
         ExtensionsKt.jacksonObjectMapper().registerModule(new RakipModule());
 
