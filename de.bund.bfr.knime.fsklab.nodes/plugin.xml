@@ -17,5 +17,6 @@
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FskToRNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
    </extension>
 </plugin>

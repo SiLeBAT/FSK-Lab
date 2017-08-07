@@ -7,5 +7,7 @@
 	<classpathentry kind="lib" path="rakip_models-0.0.1a3.jar"/>
 	<classpathentry kind="lib" path="jackson-module-kotlin-2.8.7.jar"/>
 	<classpathentry kind="lib" path="fskml-1.0.7.jar"/>
+	<classpathentry kind="lib" path="CombineArchive-1.1.jar"/>
+	<classpathentry kind="lib" path="jdom-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
