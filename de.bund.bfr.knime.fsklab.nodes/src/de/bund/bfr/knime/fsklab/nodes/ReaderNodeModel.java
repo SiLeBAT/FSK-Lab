@@ -187,7 +187,7 @@ public class ReaderNodeModel extends NoInternalsModel {
       // Add path
       final LibRegistry libRegistry = LibRegistry.instance();
       final String installationPath =
-          libRegistry.getInstallationPath().toString().replaceAll("\\", "/");
+          libRegistry.getInstallationPath().toString().replace("\\", "/");
       final String cmd = String.format(".libPaths(c('%s', .libPaths()))", installationPath);
       final String[] newPaths = controller.eval(cmd).asStrings();
 
