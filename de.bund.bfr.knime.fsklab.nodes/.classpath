@@ -4,10 +4,10 @@
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="rakip_models-0.0.1a3.jar"/>
-	<classpathentry kind="lib" path="jackson-module-kotlin-2.8.7.jar"/>
-	<classpathentry kind="lib" path="fskml-1.0.7.jar"/>
-	<classpathentry kind="lib" path="CombineArchive-1.1.jar"/>
-	<classpathentry kind="lib" path="jdom-2.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/CombineArchive-1.1.jar"/>
+	<classpathentry kind="lib" path="libs/fskml-1.0.7.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-module-kotlin-2.8.7.jar"/>
+	<classpathentry kind="lib" path="libs/jdom-2.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/rakip_models-0.0.1a3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
