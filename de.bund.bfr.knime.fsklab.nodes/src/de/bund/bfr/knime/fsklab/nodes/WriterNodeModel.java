@@ -28,6 +28,7 @@ import org.apache.commons.lang3.SystemUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -52,6 +53,8 @@ public class WriterNodeModel extends NoInternalsModel {
 
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {};
+  
+  private static final NodeLogger LOGGER = NodeLogger.getLogger("Writer node");
 
   private final SettingsModelString filename = new SettingsModelString("file", "");
 
@@ -133,6 +136,11 @@ public class WriterNodeModel extends NoInternalsModel {
       for (final File libFile : fskObj.libs) {
         archive.addEntry(libFile, libFile.getName(), libUri);
       }
+      
+      archive.pack();
+    } catch (Exception e) {
+      FileUtils.deleteQuietly(archiveFile);
+      LOGGER.error("File could not be created", e);
     }
     
     return new PortObject[] {};
