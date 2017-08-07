@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -49,8 +50,6 @@ import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
-
-import com.sun.jna.Platform;
 
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
@@ -227,7 +226,7 @@ public class RunnerNodeModel extends NodeModel {
 			this.controller = controller;
 
 			// initialize necessary R stuff to plot
-			if (Platform.isMac()) {
+			if (SystemUtils.IS_OS_MAC) {
 				controller.eval("library('Cairo')");
 				controller.eval("options(device='png', bitmapType='cairo')");
 			} else {
