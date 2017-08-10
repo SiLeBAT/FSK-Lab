@@ -3,21 +3,24 @@ Bundle-ManifestVersion: 2
 Bundle-Name: FSK nodes
 Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.7.1",
- com.fasterxml.jackson.core.jackson-core;bundle-version="2.7.1",
- com.fasterxml.jackson.core.jackson-databind;bundle-version="2.7.1",
+Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
+ com.fasterxml.jackson.core.jackson-core,
+ com.fasterxml.jackson.core.jackson-databind,
+ com.fifesoft.rsyntaxtextarea,
  com.googlecode.ez-vcard;bundle-version="1.0.0",
  com.github.fastluca.jris;bundle-version="1.0.0",
- de.bund.bfr.knime.fsklab.java;bundle-version="1.0.0",
- de.bund.bfr.knime.fsklab.rakip;bundle-version="1.0.0",
- edu.umd.cs.findbugs.annotations;bundle-version="3.0.1",
+ com.sun.jna,
+ org.rosuda.rengine,
+ de.bund.bfr.knime.fsklab.rakip,
+ edu.umd.cs.findbugs.annotations,
  org.apache.commons.lang3,
  org.apache.servicemix.bundles.poi,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.knime.core,
  org.knime.ext.r.type,
- org.rosuda.rengine
+ org.knime.js.core,
+ org.knime.product;bundle-version="3.3.3"
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
@@ -25,4 +28,11 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .,
  libs/CombineArchive-1.1.jar,
  libs/fskml-1.0.7.jar,
- libs/jdom-2.0.1.jar
+ libs/jdom-2.0.1.jar,
+ libs/jcalendar-1.4.jar,
+ libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar,
+ libs/pmfml-0.0.11.jar
+Export-Package: de.bund.bfr.knime.fsklab.nodes,
+ de.bund.bfr.knime.fsklab.nodes.controller,
+ de.bund.bfr.knime.fsklab.nodes.ui,
+ org.knime.core.node

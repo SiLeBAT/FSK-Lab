@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ez-vcard
-Bundle-SymbolicName: com.googlecode.ez-vcard
+Bundle-SymbolicName: com.googlecode.ez-vcard;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: GOOGLECODE
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -19,3 +19,4 @@ Export-Package: ezvcard,
  ezvcard.util.org.apache.commons.codec,
  ezvcard.util.org.apache.commons.codec.binary
 Bundle-ClassPath: ez-vcard-0.10.2.jar
+Bundle-ActivationPolicy: lazy

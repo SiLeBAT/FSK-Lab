@@ -29,9 +29,12 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
    </license>
 
    <requires>
+      <import plugin="com.googlecode.ez-vcard" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="com.github.fastluca.jris" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="edu.umd.cs.findbugs.annotations" version="3.0.1" match="greaterOrEqual"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-databind" version="2.7.1" match="greaterOrEqual"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-core" version="2.7.1" match="greaterOrEqual"/>
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="com.fifesoft.rsyntaxtextarea"/>
       <import plugin="com.sun.jna"/>
       <import plugin="org.apache.commons.lang3"/>
@@ -41,18 +44,8 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.core"/>
       <import plugin="org.knime.ext.r.type" version="3.1.0" match="greaterOrEqual"/>
       <import plugin="org.knime.js.core"/>
-      <import plugin="org.knime.product"/>
-      <import plugin="org.knime.workbench.core"/>
-      <import plugin="org.knime.workbench.repository"/>
-      <import plugin="de.bund.bfr.knime"/>
-      <import plugin="edu.umd.cs.findbugs.annotations" version="3.0.1" match="greaterOrEqual"/>
-      <import plugin="com.googlecode.ez-vcard" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.github.fastluca.jris" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-databind" version="2.7.1" match="greaterOrEqual"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-core" version="2.7.1" match="greaterOrEqual"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-annotations" version="2.7.1" match="greaterOrEqual"/>
-      <import plugin="de.bund.bfr.knime.fsklab.java" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="de.bund.bfr.knime.fsklab.rakip" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.knime.product" version="3.3.3" match="greaterOrEqual"/>
+      <import plugin="javax.xml.rpc"/>
    </requires>
 
    <plugin
@@ -66,19 +59,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
-   <plugin
-         id="org.kotlinlang"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="de.bund.bfr.knime.fsklab.java"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.rosuda.rengine"

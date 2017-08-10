@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Rakip
-Bundle-SymbolicName: de.bund.bfr.knime.fsklab.rakip
+Bundle-SymbolicName: de.bund.bfr.knime.fsklab.rakip;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: com.fasterxml.jackson.databind,
  de.bund.bfr.knime.fsklab.rakip
@@ -12,3 +12,4 @@ Require-Bundle: com.googlecode.ez-vcard;bundle-version="1.0.0",
  com.fasterxml.jackson.core.jackson-core;bundle-version="2.7.1",
  com.fasterxml.jackson.core.jackson-annotations
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy

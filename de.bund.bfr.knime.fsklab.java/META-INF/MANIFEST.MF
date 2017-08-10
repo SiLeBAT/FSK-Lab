@@ -12,7 +12,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  com.googlecode.ez-vcard,
  com.sun.jna,
  de.bund.bfr.knime,
- edu.umd.cs.findbugs.annotations;bundle-version="3.0.1",
+ edu.umd.cs.findbugs.annotations,
  org.apache.commons.lang3,
  org.apache.servicemix.bundles.poi,
  org.eclipse.core.runtime,
@@ -30,12 +30,4 @@ Bundle-Vendor: BfR
 Bundle-ClassPath: .,
  libs/CombineArchive-1.1.jar,
  libs/fskml-1.0.5.jar,
- libs/jcalendar-1.4.jar,
- libs/jdom-2.0.1.jar,
- libs/jsbml-1.2-SNAPSHOT-with-dependencies.jar,
- libs/jsoup-1.9.2.jar,
- libs/pmfml-0.0.11.jar
-Export-Package: de.bund.bfr.knime.fsklab.nodes,
- de.bund.bfr.knime.fsklab.nodes.controller,
- de.bund.bfr.knime.fsklab.nodes.ui,
- org.knime.core.node
+ libs/jsoup-1.9.2.jar

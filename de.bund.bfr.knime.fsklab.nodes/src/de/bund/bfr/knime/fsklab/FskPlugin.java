@@ -23,13 +23,25 @@ import org.osgi.framework.BundleContext;
 
 public class FskPlugin extends AbstractUIPlugin {
 
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-	}
+  private static FskPlugin plugin;
 
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-	}
+  public FskPlugin() {
+    plugin = this;
+  }
+
+  @Override
+  public void start(BundleContext context) throws Exception {
+    super.start(context);
+  }
+
+  @Override
+  public void stop(BundleContext context) throws Exception {
+    super.stop(context);
+    plugin = null;
+  }
+
+  /** @return Singleton instance of the plugin. */
+  public static FskPlugin getDefault() {
+    return plugin;
+  }
 }
