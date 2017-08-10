@@ -38,14 +38,13 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.kotlin.ExtensionsKt;
+import com.fasterxml.jackson.databind.RakipModule;
 
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.rakip.generic.GenericModel;
-import de.bund.bfr.rakip.generic.RakipModule;
+import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 
@@ -53,7 +52,7 @@ public class WriterNodeModel extends NoInternalsModel {
 
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {};
-  
+
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Writer node");
 
   private final SettingsModelString filename = new SettingsModelString("file", "");
@@ -79,7 +78,9 @@ public class WriterNodeModel extends NoInternalsModel {
   }
 
   @Override
-  protected void reset() {}
+  protected void reset() {
+    // does nothing
+  }
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
@@ -136,13 +137,13 @@ public class WriterNodeModel extends NoInternalsModel {
       for (final File libFile : fskObj.libs) {
         archive.addEntry(libFile, libFile.getName(), libUri);
       }
-      
+
       archive.pack();
     } catch (Exception e) {
       FileUtils.deleteQuietly(archiveFile);
       LOGGER.error("File could not be created", e);
     }
-    
+
     return new PortObject[] {};
   }
 
@@ -164,8 +165,7 @@ public class WriterNodeModel extends NoInternalsModel {
       throws IOException, URISyntaxException {
 
     final File file = File.createTempFile("temp", ".json");
-    final ObjectMapper objectMapper =
-        ExtensionsKt.jacksonObjectMapper().registerModule(new RakipModule());
+    final ObjectMapper objectMapper = new ObjectMapper().registerModule(new RakipModule());
     objectMapper.writeValue(file, genericModel);
 
     // TODO: JSON uri should be moved to fskml

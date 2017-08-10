@@ -9,13 +9,14 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations;bundle-version="2
  com.googlecode.ez-vcard;bundle-version="1.0.0",
  com.github.fastluca.jris;bundle-version="1.0.0",
  de.bund.bfr.knime.fsklab.java;bundle-version="1.0.0",
+ de.bund.bfr.knime.fsklab.rakip;bundle-version="1.0.0",
+ edu.umd.cs.findbugs.annotations;bundle-version="3.0.1",
  org.apache.commons.lang3,
  org.apache.servicemix.bundles.poi,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.knime.core,
  org.knime.ext.r.type,
- org.kotlinlang;bundle-version="1.0.0",
  org.rosuda.rengine
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
@@ -24,6 +25,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .,
  libs/CombineArchive-1.1.jar,
  libs/fskml-1.0.7.jar,
- libs/jackson-module-kotlin-2.8.7.jar,
- libs/jdom-2.0.1.jar,
- libs/rakip_models-0.0.1a3.jar
+ libs/jdom-2.0.1.jar

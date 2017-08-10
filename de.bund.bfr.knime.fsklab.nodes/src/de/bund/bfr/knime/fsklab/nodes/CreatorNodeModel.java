@@ -25,7 +25,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,409 +48,344 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 
-import com.gmail.gcolaianni5.jris.bean.Record;
-
 import de.bund.bfr.fskml.MissingValueError;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
-import de.bund.bfr.rakip.generic.GeneralInformation;
-import de.bund.bfr.rakip.generic.GenericModel;
-import de.bund.bfr.rakip.generic.Hazard;
-import de.bund.bfr.rakip.generic.ModelCategory;
-import de.bund.bfr.rakip.generic.ModelMath;
-import de.bund.bfr.rakip.generic.Parameter;
-import de.bund.bfr.rakip.generic.ParameterClassification;
-import de.bund.bfr.rakip.generic.Product;
-import de.bund.bfr.rakip.generic.Scope;
-import ezvcard.VCard;
+import de.bund.bfr.knime.fsklab.rakip.GeneralInformation;
+import de.bund.bfr.knime.fsklab.rakip.GenericModel;
+import de.bund.bfr.knime.fsklab.rakip.Hazard;
+import de.bund.bfr.knime.fsklab.rakip.ModelMath;
+import de.bund.bfr.knime.fsklab.rakip.Parameter;
+import de.bund.bfr.knime.fsklab.rakip.Product;
+import de.bund.bfr.knime.fsklab.rakip.Scope;
 
 class CreatorNodeModel extends NoInternalsModel {
 
-	private static final NodeLogger LOGGER = NodeLogger.getLogger(CreatorNodeModel.class);
+  private static final NodeLogger LOGGER = NodeLogger.getLogger(CreatorNodeModel.class);
 
-	private CreatorNodeSettings settings = new CreatorNodeSettings();
+  private CreatorNodeSettings nodeSettings = new CreatorNodeSettings();
 
-	// Input and output port types
-	private static final PortType[] IN_TYPES = {};
-	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE };
+  // Input and output port types
+  private static final PortType[] IN_TYPES = {};
+  private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
-	/** {@inheritDoc} */
-	public CreatorNodeModel() {
-		super(IN_TYPES, OUT_TYPES);
-	}
+  /** {@inheritDoc} */
+  public CreatorNodeModel() {
+    super(IN_TYPES, OUT_TYPES);
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void saveSettingsTo(NodeSettingsWO settings) {
-		this.settings.saveSettings(settings);
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected void saveSettingsTo(NodeSettingsWO settings) {
+    nodeSettings.saveSettings(settings);
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		this.settings.validateSettings(settings);
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+    nodeSettings.validateSettings(settings);
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		this.settings.loadValidatedSettingsFrom(settings);
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
+      throws InvalidSettingsException {
+    nodeSettings.loadValidatedSettingsFrom(settings);
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void reset() {
-		// does nothing
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected void reset() {
+    // does nothing
+  }
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws MissingValueError
-	 * @throws Exception
-	 */
-	@Override
-	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
-			throws InvalidSettingsException, IOException {
-		// Reads model script
-		final String modelScriptPath = settings.modelScript.getStringValue();
-		if (StringUtils.isEmpty(modelScriptPath)) {
-			throw new InvalidSettingsException("Model script is not provided");
-		}
-		final RScript modelRScript = readScript(modelScriptPath);
-		final String modelScript = modelRScript.getScript();
+  /**
+   * {@inheritDoc}
+   * 
+   * @throws MissingValueError
+   * @throws Exception
+   */
+  @Override
+  protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
+      throws InvalidSettingsException, IOException {
+    // Reads model script
+    final String modelScriptPath = nodeSettings.modelScript.getStringValue();
+    if (StringUtils.isEmpty(modelScriptPath)) {
+      throw new InvalidSettingsException("Model script is not provided");
+    }
+    final RScript modelRScript = readScript(modelScriptPath);
+    final String modelScript = modelRScript.getScript();
 
-		// Reads parameters script
-		final String paramScriptPath = settings.paramScript.getStringValue();
-		final String paramScript;
-		if (StringUtils.isNotEmpty(paramScriptPath)) {
-			paramScript = readScript(paramScriptPath).getScript();
-		} else {
-			paramScript = "";
-		}
+    // Reads parameters script
+    final String paramScriptPath = nodeSettings.paramScript.getStringValue();
+    final String paramScript;
+    if (StringUtils.isNotEmpty(paramScriptPath)) {
+      paramScript = readScript(paramScriptPath).getScript();
+    } else {
+      paramScript = "";
+    }
 
-		// Reads visualization script
-		final String visualizationScriptPath = settings.vizScript.getStringValue();
-		final String visualizationScript;
-		if (StringUtils.isNotEmpty(visualizationScriptPath)) {
-			visualizationScript = readScript(visualizationScriptPath).getScript();
-		} else {
-			visualizationScript = "";
-		}
+    // Reads visualization script
+    final String visualizationScriptPath = nodeSettings.vizScript.getStringValue();
+    final String visualizationScript;
+    if (StringUtils.isNotEmpty(visualizationScriptPath)) {
+      visualizationScript = readScript(visualizationScriptPath).getScript();
+    } else {
+      visualizationScript = "";
+    }
 
-		// Reads model meta data
-		final String metaDataPath = settings.metaDataDoc.getStringValue();
-		if (StringUtils.isEmpty(metaDataPath)) {
-			throw new InvalidSettingsException("Model metadata is not provided");
-		}
+    // Reads model meta data
+    final String metaDataPath = nodeSettings.metaDataDoc.getStringValue();
+    if (StringUtils.isEmpty(metaDataPath)) {
+      throw new InvalidSettingsException("Model metadata is not provided");
+    }
 
-		final GenericModel genericModel;
-		final File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(metaDataPath));
-		try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
-			final XSSFSheet sheet = workbook.getSheetAt(0);
+    final GenericModel genericModel;
+    final File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(metaDataPath));
+    try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
+      final XSSFSheet sheet = workbook.getSheetAt(0);
 
-			// Process metadata
-			final GeneralInformation generalInformation = getGeneralInformation(sheet);
-			final Scope scope = getScope(sheet);
-			final ModelMath modelMath = getModelMath(sheet);
-			genericModel = new GenericModel(generalInformation, scope, null, modelMath, null);
-			genericModel.getGeneralInformation().setSoftware("R");
+      // Process metadata
+      genericModel = new GenericModel();
+      genericModel.generalInformation = getGeneralInformation(sheet);
+      genericModel.generalInformation.software = "R";
+      genericModel.scope = getScope(sheet);
+      genericModel.modelMath = getModelMath(sheet);
 
-			// Set variable values and types from parameters script
-			if (modelMath != null) {
-				Map<String, String> vars = getVariablesFromAssignments(paramScript);
-				final List<Parameter> indeps = modelMath.getParameter().stream()
-						.filter(it -> it.getClassification().equals(ParameterClassification.input))
-						.collect(Collectors.toList());
+      // Set variable values and types from parameters script
+      if (genericModel.modelMath != null) {
+        Map<String, String> vars = getVariablesFromAssignments(paramScript);
+        final List<Parameter> indeps = genericModel.modelMath.parameter.stream()
+            .filter(it -> it.classification.equals(Parameter.Classification.input))
+            .collect(Collectors.toList());
 
-				indeps.forEach(it -> {
-					final String value = vars.get(it.getName());
-					it.setValue(value);
-				});
-			}
-		} catch (IOException | InvalidFormatException e) {
-			throw new InvalidSettingsException("Invalid metadata");
-		}
+        indeps.forEach(it -> {
+          final String value = vars.get(it.name);
+          it.value = value;
+        });
+      }
+    } catch (IOException | InvalidFormatException e) {
+      throw new InvalidSettingsException("Invalid metadata");
+    }
 
-		final FskPortObject portObj = new FskPortObject(modelScript, paramScript, visualizationScript, genericModel,
-				null, Collections.emptySet());
+    final FskPortObject portObj = new FskPortObject(modelScript, paramScript, visualizationScript,
+        genericModel, null, Collections.emptySet());
 
-		// libraries
-		List<String> libraries = modelRScript.getLibraries();
-		if (!libraries.isEmpty()) {
-			try {
-				// Install missing libraries
-				final LibRegistry libReg = LibRegistry.instance();
-				List<String> missingLibs = libraries.stream().filter(lib -> !libReg.isInstalled(lib))
-						.collect(Collectors.toList());
-				if (!missingLibs.isEmpty()) {
-					libReg.installLibs(missingLibs);
-				}
+    // libraries
+    List<String> libraries = modelRScript.getLibraries();
+    if (!libraries.isEmpty()) {
+      try {
+        // Install missing libraries
+        final LibRegistry libReg = LibRegistry.instance();
+        List<String> missingLibs =
+            libraries.stream().filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
+        if (!missingLibs.isEmpty()) {
+          libReg.installLibs(missingLibs);
+        }
 
-				Set<Path> libPaths = libReg.getPaths(libraries);
-				libPaths.forEach(l -> portObj.libs.add(l.toFile()));
-			} catch (RException | REXPMismatchException e) {
-				LOGGER.error(e.getMessage());
-			}
-		}
+        Set<Path> libPaths = libReg.getPaths(libraries);
+        libPaths.forEach(l -> portObj.libs.add(l.toFile()));
+      } catch (RException | REXPMismatchException e) {
+        LOGGER.error(e.getMessage());
+      }
+    }
 
-		return new PortObject[] { portObj };
-	}
+    return new PortObject[] {portObj};
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		return new PortObjectSpec[] { FskPortObjectSpec.INSTANCE };
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+    return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
+  }
 
-	/**
-	 * Reads R script.
-	 * 
-	 * @param path
-	 *            File path to R model script. If is assured not to be null or
-	 *            empty.
-	 * @throws InvalidSettingsException
-	 *             if {@link path} is null or whitespace.
-	 * @throws IOException
-	 *             if the file cannot be read.
-	 */
-	private static RScript readScript(final String path) throws InvalidSettingsException, IOException {
-		String trimmedPath = StringUtils.trimToNull(path.trim());
+  /**
+   * Reads R script.
+   * 
+   * @param path File path to R model script. If is assured not to be null or empty.
+   * @throws InvalidSettingsException if {@link path} is null or whitespace.
+   * @throws IOException if the file cannot be read.
+   */
+  private static RScript readScript(final String path)
+      throws InvalidSettingsException, IOException {
+    String trimmedPath = StringUtils.trimToNull(path.trim());
 
-		// path is not null or whitespace, thus try to read it
-		try {
-			// may throw IOException
-			File fScript = FileUtil.getFileFromURL(FileUtil.toURL(trimmedPath));
-			RScript script = new RScript(fScript);
-			return script;
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
-			throw new IOException(trimmedPath + ": cannot be read");
-		}
-	}
+    // path is not null or whitespace, thus try to read it
+    try {
+      // may throw IOException
+      File fScript = FileUtil.getFileFromURL(FileUtil.toURL(trimmedPath));
+      RScript script = new RScript(fScript);
+      return script;
+    } catch (IOException e) {
+      LOGGER.error(e.getMessage());
+      throw new IOException(trimmedPath + ": cannot be read");
+    }
+  }
 
-	private static String getString(final XSSFSheet sheet, final int rowNumber) {
-		final XSSFRow row = sheet.getRow(rowNumber);
-		if (row == null)
-			throw new IllegalArgumentException("Missing row: #" + rowNumber);
-		return row.getCell(5).getStringCellValue();
-	}
+  private static String getString(final XSSFSheet sheet, final int rowNumber) {
+    final XSSFRow row = sheet.getRow(rowNumber);
+    if (row == null) throw new IllegalArgumentException("Missing row: #" + rowNumber);
+    return row.getCell(5).getStringCellValue();
+  }
 
-	private static GeneralInformation getGeneralInformation(final XSSFSheet sheet) throws MalformedURLException {
+  private static GeneralInformation getGeneralInformation(final XSSFSheet sheet)
+      throws MalformedURLException, InvalidSettingsException {
 
-		final String name = StringUtils.defaultString(getString(sheet, 1));
-		final String source = "";
-		final String identifier = StringUtils.defaultString(getString(sheet, 2));
-		final List<VCard> creators = Collections.emptyList();
-		final Date creationDate = sheet.getRow(9).getCell(5).getDateCellValue();
-		final List<Date> modifiedDate = Collections.singletonList(sheet.getRow(10).getCell(5).getDateCellValue());
-		final String rights = StringUtils.trimToEmpty(getString(sheet, 11));
-		final boolean isAvailable = true;
+    final GeneralInformation gi = new GeneralInformation();
+    gi.name = getString(sheet, 1);
+    gi.identifier = getString(sheet, 2);
+    gi.creationDate = sheet.getRow(9).getCell(5).getDateCellValue();
+    gi.rights = getString(sheet, 11);
+    gi.isAvailable = true;
 
-		final String urlString = getString(sheet, 16);
-		final URL modelUrl = new URL(StringUtils.defaultIfEmpty(urlString, "http://bfr.bund.de"));
+    final String urlString = getString(sheet, 16);
+    gi.url = new URL(StringUtils.defaultIfEmpty(urlString, "http://bfr.bund.de"));
 
-		final String format = "";
-		final List<Record> reference = Collections.emptyList();
-		final String language = "";
-		final String software = "";
-		final String languageWrittenIn = "";
-		final ModelCategory modelCategory = null;
-		final String status = "";
-		final String objective = "";
-		final String description = "";
+    gi.format = "";
+    gi.modificationDate.add(sheet.getRow(10).getCell(5).getDateCellValue());
 
-		return new GeneralInformation(name, source, identifier, creators, creationDate, modifiedDate, rights,
-				isAvailable, modelUrl, format, reference, language, software, languageWrittenIn, modelCategory, status,
-				objective, description);
-	}
+    return gi;
+  }
 
-	private static Scope getScope(final XSSFSheet sheet) {
+  private static Scope getScope(final XSSFSheet sheet) throws InvalidSettingsException {
 
-		final Hazard hazard;
-		{
-			final String hazardType = "";
-			final String hazardName = StringUtils.defaultString(getString(sheet, 3));
-			final String hazardDescription = StringUtils.defaultString(getString(sheet, 4));
-			final String hazardUnit = "";
-			final String adverseEffect = null;
-			final String origin = null;
-			final String benchmarkDose = null;
-			final String maximumResidueLimit = null;
-			final String noObservedAdverse = null;
-			final String lowestObservedAdverse = null;
-			final String acceptableOperator = null;
-			final String acuteReferenceDose = null;
-			final String acceptableDailyIntake = null;
-			final String hazardIndSum = null;
-			final String laboratoryName = null;
-			final String laboratoryCountry = null;
-			final String detectionLimit = null;
-			final String quantificationLimit = null;
-			final String leftCensoredData = null;
-			final String rangeOfContamination = null;
+    final Scope scope = new Scope();
+    {
+      final Hazard hazard = new Hazard();
+      hazard.hazardType = "";
+      hazard.hazardName = getString(sheet, 3);
+      hazard.hazardUnit = "";
+      hazard.hazardDescription = getString(sheet, 4);
 
-			hazard = new Hazard(hazardType, hazardName, hazardDescription, hazardUnit, adverseEffect, origin,
-					benchmarkDose, maximumResidueLimit, noObservedAdverse, lowestObservedAdverse, acceptableOperator,
-					acuteReferenceDose, acceptableDailyIntake, hazardIndSum, laboratoryName, laboratoryCountry,
-					detectionLimit, quantificationLimit, leftCensoredData, rangeOfContamination);
-		}
+      scope.hazard = hazard;
+    }
 
-		final Product product;
-		{
-			final String environmentName = StringUtils.defaultString(getString(sheet, 5));
-			final String environmentDescription = StringUtils.defaultString(getString(sheet, 6));
-			final String environmentUnit = "";
-			final List<String> productionMethod = Collections.emptyList();
-			final List<String> packaging = Collections.emptyList();
-			final List<String> productTreatment = Collections.emptyList();
-			final String originCountry = null;
-			final String areaOfOrigin = null;
-			final String fisheriesArea = null;
-			final Date productionDate = null;
-			final Date expirationDate = null;
+    {
+      final Product product = new Product();
+      product.environmentName = getString(sheet, 5);
+      product.environmentUnit = "";
+      product.environmentDescription = getString(sheet, 6);
 
-			product = new Product(environmentName, environmentDescription, environmentUnit, productionMethod, packaging,
-					productTreatment, originCountry, areaOfOrigin, fisheriesArea, productionDate, expirationDate);
-		}
+      scope.product = product;
+    }
 
-		return new Scope(product, hazard, null, null, null, Collections.emptyList(), Collections.emptyList());
-	}
+    return scope;
+  }
 
-	private static ModelMath getModelMath(final XSSFSheet sheet) {
+  private static ModelMath getModelMath(final XSSFSheet sheet) throws InvalidSettingsException {
 
-		final ModelMath modelMath = new ModelMath();
+    final ModelMath modelMath = new ModelMath();
 
-		// Dependent variables
-		final List<String> depNames = Arrays.stream(getString(sheet, 21).split("\\|\\|")).map(String::trim)
-				.collect(Collectors.toList());
-		final List<String> depUnits = Arrays.stream(getString(sheet, 22).split("\\|\\|")).map(String::trim)
-				.collect(Collectors.toList());
-		for (int i = 0; i < depNames.size(); i++) {
-			final String id = "";
-			final ParameterClassification classification = ParameterClassification.input;
-			final String name = depNames.get(i);
-			final String description = "";
-			final String unit = depUnits.get(i);
-			final String unitCategory = "";
-			final String dataType = "";
-			final String source = "";
-			final String subject = "";
-			final String distribution = "";
-			final String value = "";
-			final String reference = "";
-			final String variabilitySubject = "";
-			final List<String> modelApplicability = Collections.emptyList();
-			final Double error = null;
+    // Dependent variables
+    final List<String> depNames = Arrays.stream(getString(sheet, 21).split("\\|\\|"))
+        .map(String::trim).collect(Collectors.toList());
+    final List<String> depUnits = Arrays.stream(getString(sheet, 22).split("\\|\\|"))
+        .map(String::trim).collect(Collectors.toList());
 
-			final Parameter param = new Parameter(id, classification, name, description, unit, unitCategory, dataType,
-					source, subject, distribution, value, reference, variabilitySubject, modelApplicability, error);
-			modelMath.getParameter().add(param);
-		}
+    for (int i = 0; i < depNames.size(); i++) {
+      final Parameter param = new Parameter();
+      param.id = "";
+      param.classification = Parameter.Classification.input;
+      param.name = depNames.get(i);
+      param.unit = depUnits.get(i);
+      param.unitCategory = "";
+      param.dataType = "";
 
-		// Independent variables
-		final List<String> indepNames = Arrays.stream(getString(sheet, 25).split("\\|\\|")).map(String::trim)
-				.collect(Collectors.toList());
-		final List<String> indepUnits = Arrays.stream(getString(sheet, 26).split("\\|\\|")).map(String::trim)
-				.collect(Collectors.toList());
-		for (int i = 0; i < indepNames.size(); i++) {
-			final String id = "";
-			final ParameterClassification classification = ParameterClassification.output;
-			final String name = indepNames.get(i);
-			final String description = "";
-			final String unit = indepUnits.get(i);
-			final String unitCategory = "";
-			final String dataType = "";
-			final String source = "";
-			final String subject = "";
-			final String distribution = "";
-			final String value = "";
-			final String reference = "";
-			final String variabilitySubject = "";
-			final List<String> modelApplicability = Collections.emptyList();
-			final Double error = null;
+      modelMath.parameter.add(param);
+    }
 
-			final Parameter param = new Parameter(id, classification, name, description, unit, unitCategory, dataType,
-					source, subject, distribution, value, reference, variabilitySubject, modelApplicability, error);
-			modelMath.getParameter().add(param);
-		}
+    // Independent variables
+    final List<String> indepNames = Arrays.stream(getString(sheet, 25).split("\\|\\|"))
+        .map(String::trim).collect(Collectors.toList());
+    final List<String> indepUnits = Arrays.stream(getString(sheet, 26).split("\\|\\|"))
+        .map(String::trim).collect(Collectors.toList());
+    for (int i = 0; i < indepNames.size(); i++) {
+      final Parameter param = new Parameter();
+      param.id = "";
+      param.classification = Parameter.Classification.output;
+      param.name = indepNames.get(i);
+      param.unit = indepUnits.get(i);
+      param.unitCategory = "";
+      param.dataType = "";
 
-		return modelMath;
-	}
+      modelMath.parameter.add(param);
+    }
 
-	private static class Assignment {
+    return modelMath;
+  }
 
-		enum Type {
-			/** R command with the = assignment operator. E.g. x = value */
-			equals,
-			/** R command with the <- assignment operator. E.g. x <- value */
-			left,
-			/**
-			 * R command with the <<- scoping assignment operator. E.g. x <<- value
-			 */
-			super_left,
-			/** R command with the -> assignment operator. E.g. value -> x */
-			right,
-			/** R command with the ->> assignment operator. E.g. value ->> x */
-			super_right
-		}
+  private static class Assignment {
 
-		String variable;
-		String value;
+    enum Type {
+      /** R command with the = assignment operator. E.g. x = value */
+      equals,
+      /** R command with the <- assignment operator. E.g. x <- value */
+      left,
+      /**
+       * R command with the <<- scoping assignment operator. E.g. x <<- value
+       */
+      super_left,
+      /** R command with the -> assignment operator. E.g. value -> x */
+      right,
+      /** R command with the ->> assignment operator. E.g. value ->> x */
+      super_right
+    }
 
-		public Assignment(String line, Assignment.Type type) {
-			if (type == Type.equals) {
-				String[] tokens = line.split("||");
-				variable = tokens[0].trim();
-				value = tokens[1].trim();
-			} else if (type == Type.left) {
-				String[] tokens = line.split("<-");
-				variable = tokens[0].trim();
-				value = tokens[1].trim();
-			} else if (type == Type.super_left) {
-				String[] tokens = line.split("<<-");
-				variable = tokens[0].trim();
-				value = tokens[1].trim();
-			} else if (type == Type.right) {
-				String[] tokens = line.split("->");
-				variable = tokens[1].trim();
-				value = tokens[0].trim();
-			} else if (type == Type.super_right) {
-				String[] tokens = line.split("->>");
-				variable = tokens[1].trim();
-				value = tokens[0].trim();
-			}
-		}
-	}
+    String variable;
+    String value;
 
-	private Map<String, String> getVariablesFromAssignments(String paramScript) {
-		Map<String, String> vars = new HashMap<>();
-		for (String line : paramScript.split("\\r?\\n")) {
-			line = line.trim();
-			if (line.startsWith("#"))
-				continue;
+    public Assignment(String line, Assignment.Type type) {
+      if (type == Type.equals) {
+        String[] tokens = line.split("||");
+        variable = tokens[0].trim();
+        value = tokens[1].trim();
+      } else if (type == Type.left) {
+        String[] tokens = line.split("<-");
+        variable = tokens[0].trim();
+        value = tokens[1].trim();
+      } else if (type == Type.super_left) {
+        String[] tokens = line.split("<<-");
+        variable = tokens[0].trim();
+        value = tokens[1].trim();
+      } else if (type == Type.right) {
+        String[] tokens = line.split("->");
+        variable = tokens[1].trim();
+        value = tokens[0].trim();
+      } else if (type == Type.super_right) {
+        String[] tokens = line.split("->>");
+        variable = tokens[1].trim();
+        value = tokens[0].trim();
+      }
+    }
+  }
 
-			if (line.indexOf("=") != -1) {
-				Assignment a = new Assignment(line, Assignment.Type.equals);
-				vars.put(a.variable, a.value);
-			} else if (line.indexOf("<-") != -1) {
-				Assignment a = new Assignment(line, Assignment.Type.left);
-				vars.put(a.variable, a.value);
-			} else if (line.indexOf("<<-") != -1) {
-				Assignment a = new Assignment(line, Assignment.Type.super_left);
-				vars.put(a.variable, a.value);
-			} else if (line.indexOf("->>") != -1) {
-				Assignment a = new Assignment(line, Assignment.Type.right);
-				vars.put(a.variable, a.value);
-			} else if (line.indexOf("->") != -1) {
-				Assignment a = new Assignment(line, Assignment.Type.super_right);
-				vars.put(a.variable, a.value);
-			}
-		}
+  private static Map<String, String> getVariablesFromAssignments(String paramScript) {
+    Map<String, String> vars = new HashMap<>();
+    for (String line : paramScript.split("\\r?\\n")) {
+      line = line.trim();
+      if (line.startsWith("#")) continue;
 
-		return vars;
-	}
+      if (line.indexOf("=") != -1) {
+        Assignment a = new Assignment(line, Assignment.Type.equals);
+        vars.put(a.variable, a.value);
+      } else if (line.indexOf("<-") != -1) {
+        Assignment a = new Assignment(line, Assignment.Type.left);
+        vars.put(a.variable, a.value);
+      } else if (line.indexOf("<<-") != -1) {
+        Assignment a = new Assignment(line, Assignment.Type.super_left);
+        vars.put(a.variable, a.value);
+      } else if (line.indexOf("->>") != -1) {
+        Assignment a = new Assignment(line, Assignment.Type.right);
+        vars.put(a.variable, a.value);
+      } else if (line.indexOf("->") != -1) {
+        Assignment a = new Assignment(line, Assignment.Type.super_right);
+        vars.put(a.variable, a.value);
+      }
+    }
+
+    return vars;
+  }
 }

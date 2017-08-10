@@ -44,7 +44,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.kotlin.ExtensionsKt;
+import com.fasterxml.jackson.databind.RakipModule;
 
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
@@ -53,8 +53,7 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
-import de.bund.bfr.rakip.generic.GenericModel;
-import de.bund.bfr.rakip.generic.RakipModule;
+import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 
@@ -86,7 +85,9 @@ public class ReaderNodeModel extends NoInternalsModel {
   }
 
   @Override
-  protected void reset() {}
+  protected void reset() {
+    // does nothing
+  }
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
@@ -148,7 +149,7 @@ public class ReaderNodeModel extends NoInternalsModel {
         libNames.add(name);
       }
     }
-    
+
     final String modelScript =
         entriesMap.containsKey("modelScript") ? loadScript(entriesMap.get("modelScript")) : "";
     final String paramScript =
@@ -215,8 +216,7 @@ public class ReaderNodeModel extends NoInternalsModel {
   }
 
   private static GenericModel loadMetaData(final File file) throws IOException {
-    final ObjectMapper objectMapper =
-        ExtensionsKt.jacksonObjectMapper().registerModule(new RakipModule());
+    final ObjectMapper objectMapper = new ObjectMapper().registerModule(new RakipModule());
 
     return objectMapper.readValue(file, GenericModel.class);
   }
