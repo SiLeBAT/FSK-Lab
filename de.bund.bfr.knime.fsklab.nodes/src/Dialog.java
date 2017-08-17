@@ -1,10 +1,12 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +21,9 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractSpinnerModel;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -52,14 +57,19 @@ import com.gmail.gcolaianni5.jris.bean.Type;
 import com.toedter.calendar.JDateChooser;
 
 import de.bund.bfr.knime.fsklab.rakip.Assay;
+import de.bund.bfr.knime.fsklab.rakip.DataBackground;
 import de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod;
+import de.bund.bfr.knime.fsklab.rakip.GeneralInformation;
 import de.bund.bfr.knime.fsklab.rakip.Hazard;
 import de.bund.bfr.knime.fsklab.rakip.ModelEquation;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
 import de.bund.bfr.knime.fsklab.rakip.Product;
+import de.bund.bfr.knime.fsklab.rakip.Scope;
+import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.knime.ui.AutoSuggestField;
+import ezvcard.VCard;
 
 
 class Dialog {
@@ -277,19 +287,19 @@ class Dialog {
     public DefaultTableCellRenderer getCellRenderer(final int row, final int column) {
       return renderer;
     }
+  }
 
-    private class ButtonsPanel extends JPanel {
+  private class ButtonsPanel extends JPanel {
 
-      private static final long serialVersionUID = 6605670621595008750L;
-      final JButton addButton = new JButton("Add");
-      final JButton modifyButton = new JButton("Modify");
-      final JButton removeButton = new JButton("Remove");
+    private static final long serialVersionUID = 6605670621595008750L;
+    final JButton addButton = new JButton("Add");
+    final JButton modifyButton = new JButton("Modify");
+    final JButton removeButton = new JButton("Remove");
 
-      ButtonsPanel() {
-        add(addButton);
-        add(modifyButton);
-        add(removeButton);
-      }
+    ButtonsPanel() {
+      add(addButton);
+      add(modifyButton);
+      add(removeButton);
     }
   }
 
@@ -350,6 +360,10 @@ class Dialog {
       pack();
       setLocationRelativeTo(null); // center dialog
       setVisible(true);
+    }
+
+    Object getValue() {
+      return optionPane.getValue();
     }
   }
 
@@ -931,9 +945,9 @@ class Dialog {
     EditModelEquationAdvanced(final ModelEquation modelEquation) {
 
       equationNameTextField = createTextField();
-      scriptTextArea = createTextArea();
+      equationClassTextField = createTextField();
       referencePanel = new ReferencePanel(
-          modelEquation != null ? modelEquation.equationReference : Collections.emptyList());
+          modelEquation != null ? modelEquation.equationReference : Collections.emptyList(), true);
       scriptTextArea = createTextArea();
 
       final JLabel equationNameLabel = createLabel("GM.EditModelEquationPanel.nameLabel",
@@ -990,6 +1004,10 @@ class Dialog {
 
   private class EditParameterPanelSimple extends EditPanel<Parameter> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1520117605016510640L;
     private final JTextField idTextField = createTextField();
     private final JComboBox<Parameter.Classification> classificationComboBox =
         new JComboBox<>(Parameter.Classification.values());
@@ -1084,6 +1102,10 @@ class Dialog {
 
   private class EditParameterPanelAdvanced extends EditPanel<Parameter> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1826555468897327895L;
     private JTextField idTextField;
     private JComboBox<Parameter.Classification> classificationComboBox;
     private JTextField nameTextField;
@@ -1439,6 +1461,10 @@ class Dialog {
 
   private class EditProductPanelSimple extends EditPanel<Product> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3525760228962813112L;
     private final AutoSuggestField envNameField = new AutoSuggestField(10);
     private final AutoSuggestField envUnitField = new AutoSuggestField(10);
 
@@ -1494,6 +1520,10 @@ class Dialog {
 
   private class EditProductPanelAdvanced extends EditPanel<Product> {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3646412829308198901L;
     private final AutoSuggestField envNameField;
     private final JTextArea envDescriptionTextArea;
     private final AutoSuggestField envUnitField;
@@ -1626,6 +1656,8 @@ class Dialog {
 
   private class EditReferencePanelSimple extends EditPanel<Record> {
 
+    private static final long serialVersionUID = -8131245850692172464L;
+
     private final JCheckBox isReferenceDescriptionCheckBox;
     private final JTextField doiTextField;
     private final JTextField titleTextField;
@@ -1691,9 +1723,11 @@ class Dialog {
     }
   }
 
-  private static class EditReferencePanelAdvanced extends EditPanel<Record> {
+  private class EditReferencePanelAdvanced extends EditPanel<Record> {
 
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final long serialVersionUID = -6874752919377124455L;
+
+    private static final String dateFormatStr = "yyyy-MM-dd";
 
     private final JCheckBox isReferenceDescriptionCheckBox;
     private final JComboBox<Type> typeComboBox;
@@ -1711,7 +1745,7 @@ class Dialog {
     private final JTextField websiteTextField;
     private final JTextArea commentTextArea;
 
-    public EditReferencePanelAdvanced() {
+    EditReferencePanelAdvanced() {
 
       // Create fields
       isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
@@ -1787,6 +1821,7 @@ class Dialog {
       if (t != null) {
         typeComboBox.setSelectedItem(t.getType());
         try {
+          final SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatStr);
           dateChooser.setDate(dateFormat.parse(t.getDate()));
         } catch (ParseException e) {
           e.printStackTrace();
@@ -1816,7 +1851,7 @@ class Dialog {
       final Record record = new Record();
       // TODO: isReferenceDescriptionCheckBox
       record.setType((Type) typeComboBox.getSelectedItem());
-      record.setDate(dateFormat.format(dateChooser.getDate()));
+      record.setDate(new SimpleDateFormat(dateFormatStr).format(dateChooser.getDate()));
       record.setDoi(doiTextField.getText());
 
       final String authors = authorListTextField.getText();
@@ -1860,8 +1895,9 @@ class Dialog {
     }
   }
 
-  // TODO: EditStudySamplePanel
   private class EditStudySamplePanelSimple extends EditPanel<StudySample> {
+
+    private static final long serialVersionUID = -2192070894283404114L;
 
     private final JTextField sampleNameTextField;
     private final JTextField sampleProtocolTextField;
@@ -1916,6 +1952,161 @@ class Dialog {
     StudySample get() {
       // TODO Auto-generated method stub
       return null;
+    }
+
+    @Override
+    List<String> validatePanel() {
+
+      final List<String> errors = new ArrayList<>(5);
+      if (!hasValidValue(sampleNameTextField)) {
+        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.sampleNameLabel"));
+      }
+      if (!hasValidValue(sampleProtocolTextField)) {
+        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.sampleProtocolLabel"));
+      }
+      if (!hasValidValue(samplingPlanTextField)) {
+        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingPlanLabel"));
+      }
+      if (!hasValidValue(samplingWeightTextField)) {
+        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingWeightLabel"));
+      }
+      if (!hasValidValue(samplingSizeTextField)) {
+        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingSizeTextField"));
+      }
+
+      return errors;
+    }
+  }
+
+  private class EditStudySamplePanelAdvanced extends EditPanel<StudySample> {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4740851101237646103L;
+    private final JTextField sampleNameTextField;
+    private final SpinnerNumberModel moisturePercentageSpinnerModel;
+    private final SpinnerNumberModel fatPercentageSpinnerModel;
+    private final JTextField sampleProtocolTextField;
+    private final AutoSuggestField samplingStrategyField;
+    private final AutoSuggestField samplingTypeField;
+    private final AutoSuggestField samplingMethodField;
+    private final JTextField samplingPlanTextField;
+    private final JTextField samplingWeightTextField;
+    private final JTextField samplingSizeTextField;
+    private final AutoSuggestField lotSizeUnitField;
+    private final AutoSuggestField samplingPointField;
+
+    public EditStudySamplePanelAdvanced() {
+
+      // Create fields
+      sampleNameTextField = createTextField();
+      moisturePercentageSpinnerModel = createSpinnerDoubleModel();
+      fatPercentageSpinnerModel = createSpinnerDoubleModel();
+      sampleProtocolTextField = createTextField();
+      samplingStrategyField = new AutoSuggestField(10);
+      samplingTypeField = new AutoSuggestField(10);
+      samplingMethodField = new AutoSuggestField(10);
+      samplingPlanTextField = createTextField();
+      samplingWeightTextField = createTextField();
+      samplingSizeTextField = createTextField();
+      lotSizeUnitField = new AutoSuggestField(10);
+      samplingPointField = new AutoSuggestField(10);
+
+      // Init combo boxes
+      samplingStrategyField.setPossibleValues(vocabs.get("Sampling strategy"));
+      samplingTypeField.setPossibleValues(vocabs.get("Type of sampling program"));
+      samplingMethodField.setPossibleValues(vocabs.get("Sampling method"));
+      lotSizeUnitField.setPossibleValues(vocabs.get("Lot size unit"));
+      samplingPointField.setPossibleValues(vocabs.get("Sampling point"));
+
+      // Create labels
+      final JLabel sampleNameLabel = createLabel("GM.EditStudySamplePanel.sampleNameLabel",
+          "GM.EditStudySamplePanel.sampleNameTooltip", true);;
+      final JLabel moisturePercentageLabel =
+          createLabel("GM.EditStudySamplePanel.moisturePercentageLabel",
+              "GM.EditStudySamplePanel.moisturePercentageTooltip", false);
+      final JLabel fatPercentageLabel = createLabel("GM.EditStudySamplePanel.fatPercentageLabel",
+          "GM.EditStudySamplePanel.fatPercentageTooltip", false);
+      final JLabel sampleProtocolLabel = createLabel("GM.EditStudySamplePanel.sampleProtocolLabel",
+          "GM.EditStudySamplePanel.sampleProtocolTooltip", true);;
+      final JLabel samplingStrategyLabel =
+          createLabel("GM.EditStudySamplePanel.samplingStrategyLabel",
+              "GM.EditStudySamplePanel.samplingStrategyTooltip", false);;
+      final JLabel samplingTypeLabel = createLabel("GM.EditStudySamplePanel.samplingTypeLabel",
+          "GM.EditStudySamplePanel.samplingTypeTooltip", false);;
+      final JLabel samplingMethodLabel = createLabel("GM.EditStudySamplePanel.samplingMethodLabel",
+          "GM.EditStudySamplePanel.samplingMethodTooltip", false);
+      final JLabel samplingPlanLabel = createLabel("GM.EditStudySamplePanel.samplingPlanLabel",
+          "GM.EditStudySamplePanel.samplingPlanTooltip", true);;
+      final JLabel samplingWeightLabel = createLabel("GM.EditStudySamplePanel.samplingWeightLabel",
+          "GM.EditStudySamplePanel.samplingWeightTooltip", true);;
+      final JLabel samplingSizeLabel = createLabel("GM.EditStudySamplePanel.samplingSizeLabel",
+          "GM.EditStudySamplePanel.samplingSizeTooltip", true);
+      final JLabel lotSizeUnitLabel = createLabel("GM.EditStudySamplePanel.lotSizeUnitLabel",
+          "GM.EditStudySamplePanel.lotSizeUnitTooltip", false);;
+      final JLabel samplingPointLabel = createLabel("GM.EditStudySamplePanel.samplingPointLabel",
+          "GM.EditStudySamplePanel.samplingPointTooltip", false);;
+
+      // Build UI
+      final List<Pair<JLabel, JComponent>> pairs =
+          Arrays.asList(new ImmutablePair<>(sampleNameLabel, sampleNameTextField),
+              new ImmutablePair<>(moisturePercentageLabel,
+                  createSpinner(moisturePercentageSpinnerModel)),
+              new ImmutablePair<>(fatPercentageLabel, createSpinner(fatPercentageSpinnerModel)),
+              new ImmutablePair<>(sampleProtocolLabel, sampleProtocolTextField),
+              new ImmutablePair<>(samplingStrategyLabel, samplingStrategyField),
+              new ImmutablePair<>(samplingTypeLabel, samplingTypeField),
+              new ImmutablePair<>(samplingMethodLabel, samplingMethodField),
+              new ImmutablePair<>(samplingPlanLabel, samplingPlanTextField),
+              new ImmutablePair<>(samplingWeightLabel, samplingWeightTextField),
+              new ImmutablePair<>(samplingSizeLabel, samplingSizeTextField),
+              new ImmutablePair<>(lotSizeUnitLabel, lotSizeUnitField),
+              new ImmutablePair<>(samplingPointLabel, samplingPointField));
+      addGridComponents(this, pairs);
+    }
+
+    @Override
+    void init(final StudySample t) {
+      if (t != null) {
+        sampleNameTextField.setText(t.sample);
+        if (t.moisturePercentage != null) {
+          moisturePercentageSpinnerModel.setValue(t.moisturePercentage);
+        }
+        if (t.fatPercentage != null) {
+          fatPercentageSpinnerModel.setValue(t.fatPercentage);
+        }
+        sampleProtocolTextField.setText(t.collectionProtocol);
+        samplingStrategyField.setSelectedItem(t.samplingStrategy);
+        samplingTypeField.setSelectedItem(t.samplingProgramType);
+        samplingMethodField.setSelectedItem(t.samplingMethod);
+        samplingPlanTextField.setText(t.samplingPlan);
+        samplingWeightTextField.setText(t.samplingWeight);
+        samplingSizeTextField.setText(t.samplingSize);
+        lotSizeUnitField.setSelectedItem(t.lotSizeUnit);
+        samplingPointField.setSelectedItem(t.samplingPoint);
+      }
+    }
+
+    @Override
+    StudySample get() {
+
+      final StudySample studySample = new StudySample();
+      studySample.sample = sampleNameTextField.getText();
+      studySample.collectionProtocol = sampleProtocolTextField.getText();
+      studySample.samplingPlan = samplingPlanTextField.getText();
+      studySample.samplingWeight = samplingWeightTextField.getText();
+      studySample.samplingSize = samplingSizeTextField.getText();
+
+      studySample.moisturePercentage = moisturePercentageSpinnerModel.getNumber().doubleValue();
+      studySample.fatPercentage = fatPercentageSpinnerModel.getNumber().doubleValue();
+      studySample.samplingStrategy = (String) samplingStrategyField.getSelectedItem();
+      studySample.samplingProgramType = (String) samplingTypeField.getSelectedItem();
+      studySample.samplingMethod = (String) samplingMethodField.getSelectedItem();
+      studySample.lotSizeUnit = (String) lotSizeUnitField.getSelectedItem();
+      studySample.samplingPoint = (String) samplingPointField.getSelectedItem();
+
+      return studySample;
     }
 
     @Override
@@ -2002,6 +2193,733 @@ class Dialog {
        * Then there is no need to validate the dates.
        */
       dateEditor.setEnabled(true);
+    }
+  }
+
+  private class GeneralInformationPanel extends Box {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2705689661594031061L;
+
+    private final JCheckBox advancedCheckBox;
+
+    private final JTextField studyNameTextField;
+    private final JTextField identifierTextField;
+    // TODO: creatorPanel
+    // private final CreatorPanel creatorPanel;
+    private final FixedDateChooser creationDateChooser;
+    private final AutoSuggestField rightsField;
+    private final JCheckBox availabilityCheckBox;
+    private final JTextField urlTextField;
+    private final AutoSuggestField formatField;
+    // TODO: referencePanel
+    // private final ReferencePanel referencePanel;
+    private final AutoSuggestField languageField;
+    private final AutoSuggestField softwareField;
+    private final AutoSuggestField languageWrittenInField;
+    private final AutoSuggestField statusField;
+    private final JTextField objectiveTextField;
+    private final JTextField descriptionTextField;
+
+    public GeneralInformationPanel() {
+
+      super(BoxLayout.PAGE_AXIS);
+
+      // Create fields
+      advancedCheckBox = new JCheckBox("Advanced");
+
+      studyNameTextField = createTextField();
+      identifierTextField = createTextField();
+      // TODO: creatorPanel ...
+      creationDateChooser = new FixedDateChooser();
+      rightsField = new AutoSuggestField(10);
+      availabilityCheckBox = new JCheckBox();
+      urlTextField = createTextField();
+      formatField = new AutoSuggestField(10);
+      // TODO: referencePanel ...
+      languageField = new AutoSuggestField(10);
+      softwareField = new AutoSuggestField(10);
+      languageWrittenInField = new AutoSuggestField(10);
+      statusField = new AutoSuggestField(10);
+      objectiveTextField = createTextField();
+      descriptionTextField = createTextField();
+
+      // Init combo boxes
+      rightsField.setPossibleValues(vocabs.get("Rights"));
+      formatField.setPossibleValues(vocabs.get("Format"));
+      languageField.setPossibleValues(vocabs.get("Language"));
+      softwareField.setPossibleValues(vocabs.get("Software"));
+      languageWrittenInField.setPossibleValues(vocabs.get("Language written in"));
+      statusField.setPossibleValues(vocabs.get("Status"));
+
+      // Create labels
+      final JLabel studyNameLabel = createLabel("GM.GeneralInformationPanel.studyNameLabel",
+          "GM.GeneralInformationPanel.studyNameTooltip", false);
+      final JLabel identifierLabel = createLabel("GM.GeneralInformationPanel.identifierLabel",
+          "GM.GeneralInformationPanel.identifierTooltip", false);
+      final JLabel creationDateLabel = createLabel("GM.GeneralInformationPanel.creationDateLabel",
+          "GM.GeneralInformationPanel.creationDateTooltip", false);
+      final JLabel rightsLabel = createLabel("GM.GeneralInformationPanel.rightsLabel",
+          "GM.GeneralInformationPanel.rightsTooltip", false);
+      final JLabel urlLabel = createLabel("GM.GeneralInformationPanel.urlLabel",
+          "GM.GeneralInformationPanel.urlTooltip", false);
+      final JLabel formatLabel = createLabel("GM.GeneralInformationPanel.formatLabel",
+          "GM.GeneralInformationPanel.formatTooltip", false);
+      final JLabel languageLabel = createLabel("GM.GeneralInformationPanel.languageLabel",
+          "GM.GeneralInformationPanel.languageTooltip", false);
+      final JLabel softwareLabel = createLabel("GM.GeneralInformationPanel.softwareLabel",
+          "GM.GeneralInformationPanel.softwareTooltip", false);
+      final JLabel languageWrittenInLabel =
+          createLabel("GM.GeneralInformationPanel.languageWrittenInLabel",
+              "GM.GeneralInformationPanel.languageWrittenInTooltip", false);
+      final JLabel statusLabel = createLabel("GM.GeneralInformationPanel.statusLabel",
+          "GM.GeneralInformationPanel.statusTooltip", false);
+      final JLabel objectiveLabel = createLabel("GM.GeneralInformationPanel.objectiveLabel",
+          "GM.GeneralInformationPanel.objectiveTooltip", false);
+      final JLabel descriptionLabel = createLabel("GM.GeneralInformationPanel.descriptionLabel",
+          "GM.GeneralInformationPanel.descriptionTooltip", false);
+
+      // Hide initially advanced components
+      final List<JComponent> advancedComponents = Arrays.asList(formatLabel, formatField,
+          languageLabel, languageField, softwareLabel, softwareField, languageWrittenInLabel,
+          languageWrittenInField, statusLabel, statusField, objectiveLabel, objectiveTextField,
+          descriptionLabel, descriptionTextField);
+      advancedComponents.forEach(it -> it.setVisible(false));
+
+      // TODO: Build UI
+      // ...
+
+      final JPanel propertiesPanel = new JPanel(new GridBagLayout());
+
+      Dialog.add(propertiesPanel, studyNameLabel, 0, 1);
+      Dialog.add(propertiesPanel, studyNameTextField, 1, 1, 2);
+
+      Dialog.add(propertiesPanel, identifierLabel, 0, 2);
+      Dialog.add(propertiesPanel, identifierTextField, 1, 2, 2);
+
+      // TODO: creatorPanel
+
+      Dialog.add(propertiesPanel, creationDateLabel, 0, 4);
+      Dialog.add(propertiesPanel, creationDateChooser, 1, 4);
+
+      Dialog.add(propertiesPanel, rightsLabel, 0, 5);
+      Dialog.add(propertiesPanel, rightsField, 1, 5, 2);
+
+      availabilityCheckBox
+          .setText(bundle.getString("GM.GeneralInformationPanel.availabilityLabel"));
+      availabilityCheckBox.setToolTipText("GM.GeneralInformationPanel.availabilityTooltip");
+      Dialog.add(propertiesPanel, availabilityCheckBox, 0, 6);
+
+      Dialog.add(propertiesPanel, urlLabel, 0, 7);
+      Dialog.add(propertiesPanel, urlTextField, 1, 7, 2);
+
+      Dialog.add(propertiesPanel, formatLabel, 0, 8);
+      Dialog.add(propertiesPanel, formatField, 1, 8, 2);
+
+      // TODO: reference
+
+      Dialog.add(propertiesPanel, languageLabel, 0, 10);
+      Dialog.add(propertiesPanel, languageField, 1, 10, 2);
+
+      Dialog.add(propertiesPanel, softwareLabel, 0, 11);
+      Dialog.add(propertiesPanel, softwareField, 1, 11);
+
+      Dialog.add(propertiesPanel, languageWrittenInLabel, 0, 12);
+      Dialog.add(propertiesPanel, languageWrittenInField, 1, 12);
+
+      Dialog.add(propertiesPanel, statusLabel, 0, 13);
+      Dialog.add(propertiesPanel, statusField, 1, 13, 2);
+
+      Dialog.add(propertiesPanel, objectiveLabel, 0, 14);
+      Dialog.add(propertiesPanel, objectiveTextField, 1, 14, 2);
+
+      Dialog.add(propertiesPanel, descriptionLabel, 0, 15);
+      Dialog.add(propertiesPanel, descriptionTextField, 1, 15, 2);
+
+      advancedCheckBox.addItemListener(event -> {
+        final boolean showAdvanced = advancedCheckBox.isSelected();
+        advancedComponents.forEach(it -> it.setVisible(showAdvanced));
+        // TODO: referencePanel
+        // referencePanel.isAdvanced = showAdvanced;
+      });
+
+      add(createAdvancedPanel(advancedCheckBox));
+      add(Box.createGlue());
+      add(propertiesPanel);
+    }
+
+    void init(final GeneralInformation generalInformation) {
+
+      if (generalInformation != null) {
+        studyNameTextField.setText(generalInformation.name);
+        identifierTextField.setText(generalInformation.identifier);
+        creationDateChooser.setDate(generalInformation.creationDate);
+        rightsField.setSelectedItem(generalInformation.rights);
+        availabilityCheckBox.setSelected(generalInformation.isAvailable);
+        urlTextField.setText(generalInformation.url.toString());
+        formatField.setSelectedItem(generalInformation.format);
+        languageField.setSelectedItem(generalInformation.language);
+        softwareField.setSelectedItem(generalInformation.software);
+        languageWrittenInField.setSelectedItem(generalInformation.languageWrittenIn);
+        statusField.setSelectedItem(generalInformation.status);
+        objectiveTextField.setText(generalInformation.objective);
+        descriptionTextField.setText(generalInformation.description);
+      }
+    }
+
+    GeneralInformation get() {
+
+      final GeneralInformation generalInformation = new GeneralInformation();
+      generalInformation.name = studyNameTextField.getText();
+      generalInformation.identifier = identifierTextField.getText();
+      generalInformation.creationDate = creationDateChooser.getDate();
+      generalInformation.rights = (String) rightsField.getSelectedItem();
+      generalInformation.isAvailable = availabilityCheckBox.isSelected();
+      try {
+        generalInformation.url = new URL(urlTextField.getText());
+      } catch (MalformedURLException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      // TODO: creatorPanel
+      generalInformation.format = (String) formatField.getSelectedItem();
+      // TODO: referencePanel
+      generalInformation.language = (String) languageField.getSelectedItem();
+      generalInformation.software = (String) softwareField.getSelectedItem();
+      generalInformation.languageWrittenIn = (String) languageWrittenInField.getSelectedItem();
+      generalInformation.status = (String) statusField.getSelectedItem();
+      generalInformation.objective = objectiveTextField.getText();
+      generalInformation.description = descriptionTextField.getText();
+
+      return generalInformation;
+    }
+  }
+
+  private class ReferencePanel extends JPanel {
+
+    private static final long serialVersionUID = 7457092378015891750L;
+
+    final NonEditableTableModel dtm = new NonEditableTableModel();
+    final List<Record> refs;
+    boolean isAdvanced;
+
+    public ReferencePanel(final List<Record> refs, final boolean isAdvanced) {
+
+      super(new BorderLayout());
+
+      this.refs = refs;
+      this.isAdvanced = isAdvanced;
+
+      refs.forEach(it -> dtm.addRow(new Record[] {it}));
+
+      final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 8702844072231755585L;
+
+        protected void setValue(Object value) {
+          if (value == null) {
+            setText("");
+          } else {
+            final Record record = (Record) value;
+
+            final String firstAuthor = record.getAuthors().get(0);
+            final String publicationYear = record.getPubblicationYear();
+            final String title = record.getTitle();
+            setText(String.format("{0}_{1}_{2}", firstAuthor, publicationYear, title));
+          }
+        };
+      };
+
+      final HeadlessTable myTable = new HeadlessTable(dtm, renderer);
+
+      // buttons
+      final ButtonsPanel buttonsPanel = new ButtonsPanel();
+      buttonsPanel.addButton.addActionListener(event -> {
+
+        if (isAdvanced) {
+          final EditReferencePanelAdvanced editPanel = new EditReferencePanelAdvanced();
+          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create reference");
+
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            dtm.addRow(new Record[] {editPanel.get()});
+          }
+        } else {
+          final EditReferencePanelSimple editPanel = new EditReferencePanelSimple();
+          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create reference");
+
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            dtm.addRow(new Record[] {editPanel.get()});
+          }
+        }
+      });
+
+      buttonsPanel.modifyButton.addActionListener(event -> {
+
+        final int rowToEdit = myTable.getSelectedRow();
+        if (rowToEdit != -1) {
+
+          final Record ref = (Record) dtm.getValueAt(rowToEdit, 0);
+
+          if (isAdvanced) {
+
+            final EditReferencePanelSimple editPanel = new EditReferencePanelSimple();
+            editPanel.init(ref);
+
+            final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify reference");
+            if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+              dtm.setValueAt(editPanel.get(), rowToEdit, 0);
+            }
+          } else {
+
+            final EditReferencePanelAdvanced editPanel = new EditReferencePanelAdvanced();
+            editPanel.init(ref);
+
+            final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify reference");
+            if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+              dtm.setValueAt(editPanel.get(), rowToEdit, 0);
+            }
+
+          }
+        }
+      });
+
+      buttonsPanel.removeButton.addActionListener(event -> {
+        final int rowToDelete = myTable.getSelectedRow();
+        if (rowToDelete != -1) {
+          dtm.removeRow(rowToDelete);
+        }
+      });
+
+      add(myTable, BorderLayout.NORTH);
+      add(buttonsPanel, BorderLayout.SOUTH);
+    }
+  }
+
+  private class CreatorPanel extends JPanel {
+
+    private static final long serialVersionUID = 3543570665869685092L;
+    final NonEditableTableModel dtm = new NonEditableTableModel();
+    final List<VCard> creators;
+
+    public CreatorPanel(final List<VCard> creators) {
+
+      super(new BorderLayout());
+
+      this.creators = creators;
+
+      setBorder(BorderFactory.createTitledBorder("Creators"));
+
+      creators.forEach(it -> dtm.addRow(new VCard[] {it}));
+
+      final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+
+        private static final long serialVersionUID = 1L;
+
+        protected void setValue(Object value) {
+
+          if (value != null) {
+            final VCard creator = (VCard) value;
+
+            final String givenName = creator.getNickname().getValues().get(0);
+            final String familyName = creator.getFormattedName().getValue();
+            final String contact = creator.getEmails().get(0).getValue();
+
+            setText(String.format("{0}_{1}_{2}", givenName, familyName, contact));
+          }
+        };
+      };
+
+      final JTable myTable = new HeadlessTable(dtm, renderer);
+
+      // buttons
+      final ButtonsPanel buttonsPanel = new ButtonsPanel();
+      buttonsPanel.addButton.addActionListener(event -> {
+
+        final EditCreatorPanel editPanel = new EditCreatorPanel();
+        final int result = showConfirmDialog(editPanel, "Create creator");
+        if (result == JOptionPane.OK_OPTION) {
+          dtm.addRow(new VCard[] {editPanel.get()});
+        }
+      });
+
+      buttonsPanel.modifyButton.addItemListener(event -> {
+
+        final int rowToEdit = myTable.getSelectedRow();
+        if (rowToEdit != -1) {
+
+          final VCard creator = (VCard) dtm.getValueAt(rowToEdit, 0);
+
+          final EditCreatorPanel editPanel = new EditCreatorPanel(creator);
+          final int result = showConfirmDialog(editPanel, "Modify creator");
+          if (result == JOptionPane.OK_OPTION) {
+            dtm.setValueAt(editPanel.toVCard(), rowToEdit, 0);
+          }
+        }
+      });
+
+      buttonsPanel.removeButton.addActionListener(event -> {
+        final int rowToDelete = myTable.getSelectedRow();
+        if (rowToDelete != -1) {
+          dtm.removeRow(rowToDelete);
+        }
+      });
+
+      add(myTable, BorderLayout.NORTH);
+      add(buttonsPanel, BorderLayout.SOUTH);
+    }
+  }
+
+  private class EditCreatorPanel extends JPanel {
+
+    private final JTextField givenNameTextField;
+    private final JTextField familyNameTextField;
+    private final JTextField contactTextField;
+
+    public EditCreatorPanel() {
+
+      super(new GridBagLayout());
+
+      // Create fields
+      givenNameTextField = createTextField();
+      familyNameTextField = createTextField();
+      contactTextField = createTextField();
+
+      // Create labels
+      final JLabel givenNameLabel =
+          new JLabel(bundle.getString("GM.EditCreatorPanel.givenNameLabel"));
+      final JLabel familyNameLabel =
+          new JLabel(bundle.getString("GM.EditCreatorPanel.familyNameLabel"));
+      final JLabel contactLabel = new JLabel(bundle.getString("GM.EditCreatorPanel.contactLabel"));
+
+      // Build UI
+      final List<Pair<JLabel, JComponent>> pairs =
+          Arrays.asList(new ImmutablePair<>(givenNameLabel, givenNameTextField),
+              new ImmutablePair<>(familyNameLabel, familyNameTextField),
+              new ImmutablePair<>(contactLabel, contactTextField));
+      addGridComponents(this, pairs);
+    }
+
+    void init(final VCard creator) {
+
+      if (creator != null) {
+        givenNameTextField.setText(creator.getNickname().getValues().get(0));
+        familyNameTextField.setText(creator.getFormattedName().getValue());
+        contactTextField.setText(creator.getEmails().get(0).getValue());
+      }
+    }
+
+    VCard toVCard() {
+
+      final VCard vCard = new VCard();
+
+      final String givenNameText = givenNameTextField.getText();
+      if (StringUtils.isNotEmpty(givenNameText)) {
+        vCard.setNickname(givenNameText);
+      }
+
+      final String familyNameText = familyNameTextField.getText();
+      if (StringUtils.isNotEmpty(familyNameText)) {
+        vCard.setFormattedName(familyNameText);
+      }
+
+      final String contactText = contactTextField.getText();
+      if (StringUtils.isNotEmpty(contactText)) {
+        vCard.addEmail(contactText);
+      }
+
+      return vCard;
+    }
+  }
+
+  private class ScopePanel extends Box {
+
+    final JButton productButton;
+    final JButton hazardButton;
+    final JButton populationButton;
+    final JTextArea commentField;
+    final FixedDateChooser dateChooser;
+    final AutoSuggestField regionField;
+    final AutoSuggestField countryField;
+
+    final JCheckBox advancedCheckBox;
+
+    final Scope scope;
+
+    ScopePanel(final Scope scope) {
+
+      super(BoxLayout.PAGE_AXIS);
+
+      this.scope = scope;
+
+      // Create fields
+      productButton = new JButton();
+      hazardButton = new JButton();
+      populationButton = new JButton();
+      commentField = createTextArea();
+      dateChooser = new FixedDateChooser();
+      regionField = new AutoSuggestField(10);
+      countryField = new AutoSuggestField(10);
+
+      advancedCheckBox = new JCheckBox("Advanced");
+
+      // Init combo boxes
+      regionField.setPossibleValues(vocabs.get("Region"));
+      countryField.setPossibleValues(vocabs.get("Country"));
+
+      // Build UI
+      productButton.setToolTipText("Click me to add a product");
+      productButton.addActionListener(event -> {
+
+        if (advancedCheckBox.isSelected()) {
+
+          final EditProductPanelAdvanced editPanel = new EditProductPanelAdvanced();
+          editPanel.init(scope.product);
+          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a product");
+
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            final Product product = editPanel.get();
+            productButton.setText(
+                String.format("{0}_[{1}]", product.environmentName, product.environmentUnit));
+            scope.product = product;
+          }
+
+        } else {
+          final EditProductPanelSimple editPanel = new EditProductPanelSimple();
+          editPanel.init(scope.product);
+          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a product");
+
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            final Product product = editPanel.get();
+            productButton.setText(
+                String.format("{0}_[{1}]", product.environmentName, product.environmentUnit));
+            scope.product = product;
+          }
+        }
+      });
+
+      hazardButton.setToolTipText("Click me to add a hazard");
+      hazardButton.addActionListener(event -> {
+
+        if (advancedCheckBox.isSelected()) {
+
+          final EditHazardPanelAdvanced editPanel = new EditHazardPanelAdvanced();
+          editPanel.init(scope.hazard);
+          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a hazard");
+
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            final Hazard hazard = editPanel.get();
+            hazardButton.setText(String.format("{0}_[{1}]", hazard.hazardName, hazard.hazardUnit));
+            scope.hazard = hazard;
+          }
+        } else {
+
+          final EditHazardPanelSimple editPanel = new EditHazardPanelSimple();
+          editPanel.init(scope.hazard);
+          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a hazard");
+
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            final Hazard hazard = editPanel.get();
+            hazardButton.setText(String.format("{0}_[{1}]", hazard.hazardName, hazard.hazardUnit));
+            scope.hazard = hazard;
+          }
+        }
+      });
+
+      populationButton.setToolTipText("Click me to add a Population group");
+      populationButton.addActionListener(event -> {
+        if (advancedCheckBox.isSelected()) {
+
+          final EditPopulationGroupPanelAdvanced editPanel = new EditPopulationGroupPanelAdvanced();
+          editPanel.init(scope.populationGroup);
+          final ValidatableDialog dlg =
+              new ValidatableDialog(editPanel, "Create a Population Group");
+
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            final PopulationGroup populationGroup = editPanel.get();
+            populationButton.setText(populationGroup.populationName);
+            scope.populationGroup = populationGroup;
+          }
+        } else {
+
+          final EditPopulationGroupPanelSimple editPanel = new EditPopulationGroupPanelSimple();
+          editPanel.init(scope.populationGroup);
+          final ValidatableDialog dlg =
+              new ValidatableDialog(editPanel, "Create a Population Group");
+
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            final PopulationGroup populationGroup = editPanel.get();
+            populationButton.setText(populationGroup.populationName);
+            scope.populationGroup = populationGroup;
+          }
+        }
+      });
+
+      // Create labels
+      final JLabel productLabel = new JLabel("GM.ScopePanel.productLabel");
+      final JLabel hazardLabel = new JLabel("GM.ScopePanel.hazardLabel");
+      final JLabel populationLabel = new JLabel("GM.ScopePanel.populationGroupLabel");
+      final JLabel commentLabel =
+          createLabel("GM.ScopePanel.commentLabel", "GM.ScopePanel.commentTooltip", false);
+      final JLabel temporalInformationLabel = createLabel("GM.ScopePanel.temporalInformationLabel",
+          "GM.ScopePanel.temporalInformationTooltip", false);
+      final JLabel regionLabel =
+          createLabel("GM.ScopePanel.regionLabel", "GM.ScopePanel.regionTooltip", false);
+      final JLabel countryLabel =
+          createLabel("GM.ScopePanel.countryLabel", "GM.ScopePanel.countryTooltip", false);
+
+      // Build UI
+      final List<Pair<JLabel, JComponent>> pairs =
+          Arrays.asList(new ImmutablePair<>(productLabel, productButton),
+              new ImmutablePair<>(hazardLabel, hazardButton),
+              new ImmutablePair<>(populationLabel, populationButton),
+              new ImmutablePair<>(commentLabel, commentField),
+              new ImmutablePair<>(temporalInformationLabel, dateChooser),
+              new ImmutablePair<>(regionLabel, regionField),
+              new ImmutablePair<>(countryLabel, countryField));
+
+      final JPanel propertiesPanel = new JPanel(new GridBagLayout());
+      addGridComponents(propertiesPanel, pairs);
+
+      // Advanced checkbox
+      advancedCheckBox.addItemListener(event -> {
+        // TODO: ...
+        System.out.println("Dummy listener");
+      });
+
+      add(createAdvancedPanel(advancedCheckBox));
+      add(Box.createGlue());
+      add(propertiesPanel);
+    }
+  }
+
+  private class DataBackgroundPanel extends Box {
+
+    final JCheckBox advancedCheckBox;
+
+    final AutoSuggestField laboratoryAccreditationField;
+
+    final DataBackground dataBackground;
+
+    DataBackgroundPanel(final DataBackground dataBackground) {
+
+      final StudyPanel studyPanel = new StudyPanel();
+      studyPanel.setBorder(BorderFactory.createTitledBorder());
+
+      final JButton studySampleButton = new JButton();
+      studySampleButton.setToolTipText("Click me to add Study Sample");
+      studySampleButton.addActionListener(event -> {
+
+        if (advancedCheckBox.isSelected()) {
+
+        } else {
+
+        }
+      });
+    }
+  }
+
+  private class StudyPanel extends JPanel {
+
+    private final JTextField studyIdentifierTextField;
+    private final JTextField studyTitleTextField;
+    private final JTextArea studyDescriptionTextArea;
+    private final AutoSuggestField studyDesignTypeField;
+    private final AutoSuggestField studyAssayMeasurementsTypeField;
+    private final AutoSuggestField studyAssayTechnologyTypeField;
+    private final JTextField studyAssayTechnologyPlatformTextField;
+    private final AutoSuggestField accreditationProcedureField;
+    private final JTextField studyProtocolNameTextField;
+    private final AutoSuggestField studyProtocolTypeField;
+    private final JTextField studyProtocolDescriptionTextField;
+    private final JTextField studyProtocolURITextField;
+    private final JTextField studyProtocolVersionTextField;
+    private final AutoSuggestField studyProtocolParametersField;
+    private final AutoSuggestField studyProtocolComponentsTypeField;
+
+
+    StudyPanel(final Study study) {
+
+      super(new GridBagLayout());
+
+      // Create fields
+      studyIdentifierTextField = createTextField();
+      studyTitleTextField = createTextField();
+      studyDescriptionTextArea = createTextArea();
+      studyDesignTypeField = new AutoSuggestField(10);
+      studyAssayMeasurementsTypeField = new AutoSuggestField(10);
+      studyAssayTechnologyTypeField = new AutoSuggestField(10);
+      studyAssayTechnologyPlatformTextField = createTextField();
+      accreditationProcedureField = new AutoSuggestField(10);
+      studyProtocolNameTextField = createTextField();
+      studyProtocolTypeField = new AutoSuggestField(10);
+      studyProtocolDescriptionTextField = createTextField();
+      studyProtocolURITextField = createTextField();
+      studyProtocolVersionTextField = createTextField();
+      studyProtocolParametersField = new AutoSuggestField(10);
+      studyProtocolComponentsTypeField = new AutoSuggestField(10);
+
+      // Create labels
+      final JLabel studyIdentifierLabel = createLabel("GM.StudyPanel.studyIdentifierLabel",
+          "GM.StudyPanel.studyIdentifierTooltip", true);
+      final JLabel studyTitleTextField =
+          createLabel("GM.StudyPanel.studyTitleLabel", "GM.StudyPanel.studyTitleTooltip", true);
+      final JLabel studyDescriptionLabel = createLabel("GM.StudyPanel.studyDescriptionLabel",
+          "GM.StudyPanel.studyDescriptionTooltip", false);
+      final JLabel studyDesignTypeLabel = createLabel("GM.StudyPanel.studyDesignTypeLabel",
+          "GM.StudyPanel.studyDesignTypeTooltip", false);
+      final JLabel studyAssayMeasurementsTypeLabel = createLabel(
+          "GM.StudyPanel.studyMeasurementLabel", "GM.StudyPanel.studyMeasurementTooltip", false);
+      final JLabel studyAssayTechnologyTypeLabel =
+          createLabel("GM.StudyPanel.studyTechnologyTypeLabel",
+              "GM.StudyPanel.studyTechnologyTypeTooltip", false);
+      final JLabel studyAssayTechnologyPlatformLabel =
+          createLabel("GM.StudyPanel.studyTechnologyPlatformLabel",
+              "GM.StudyPanel.studyTechnologyPlatformTooltip", false);
+      final JLabel accreditationProcedureLabel =
+          createLabel("GM.StudyPanel.accreditationProcedureLabel",
+              "GM.StudyPanel.accreditationProcedureTooltip", false);
+      final JLabel studyProtocolNameLabel = createLabel("GM.StudyPanel.studyProtocolNameLabel",
+          "GM.StudyPanel.studyProtocolNameTooltip", false);
+      final JLabel studyProtocolTypeLabel = createLabel("GM.StudyPanel.studyProtocolTypeLabel",
+          "GM.StudyPanel.studyProtocolTypeTooltip", false);
+      final JLabel studyProtocolDescriptionLabel =
+          createLabel("GM.StudyPanel.studyProtocolDescriptionLabel",
+              "GM.StudyPanel.studyProtocolDescriptionTooltip", false);
+      final JLabel studyProtocolURILabel = createLabel("GM.StudyPanel.studyProtocolURILabel",
+          "GM.StudyPanel.studyProtocolURITooltip", false);
+      final JLabel studyProtocolVersionLabel =
+          createLabel("GM.StudyPanel.studyProtocolVersionLabel",
+              "GM.StudyPanel.studyProtocolVersionTooltip", false);
+      final JLabel studyProtocolParametersLabel =
+          createLabel("GM.StudyPanel.parametersLabel", "GM.StudyPanel.parametersTooltip", false);
+      final JLabel studyProtocolComponentsTypeLabel =
+          createLabel("GM.StudyPanel.studyProtocolComponentsTypeLabel",
+              "GM.StudyPanel.studyProtocolComponentsTypeTooltip", false);
+
+      final List<JComponent> advancedComps = Arrays.asList(studyDescriptionLabel,
+          studyDescriptionTextArea, studyDesignTypeLabel, studyDesignTypeField,
+          studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField,
+          studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField,
+          studyAssayTechnologyPlatformLabel, studyAssayTechnologyPlatformTextField,
+          accreditationProcedureLabel, accreditationProcedureField, studyProtocolNameLabel,
+          studyProtocolNameTextField, studyProtocolTypeLabel, studyProtocolTypeField,
+          studyProtocolDescriptionLabel, studyProtocolDescriptionTextField, studyProtocolURILabel,
+          studyProtocolURITextField, studyProtocolVersionLabel, studyProtocolVersionTextField,
+          studyProtocolParametersLabel, studyProtocolParametersField,
+          studyProtocolComponentsTypeLabel, studyProtocolComponentsTypeField);
+
+      advancedComps.forEach(it -> it.setVisible(false));
+
+      // Init combo boxes
+      studyDesignTypeField.setPossibleValues(vocabs.get("Study Design Type"));
+      studyAssayMeasurementsTypeField.setPossibleValues(vocabs.get("Study Assay Measurement Type"));
+      studyAssayTechnologyTypeField.setPossibleValues(vocabs.get("Study Assay Technology Type"));
+      accreditationProcedureTypeField.setPossibleValues(vocabs.get("Accreditation procedure ))
+
     }
   }
 }
