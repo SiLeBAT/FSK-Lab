@@ -66,7 +66,6 @@ import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
 import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
-import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.knime.ui.AutoSuggestField;
 import ezvcard.VCard;
@@ -329,7 +328,6 @@ class Dialog {
       // Handle window closing properly
       setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-      // TODO: listener
       optionPane.addPropertyChangeListener(e -> {
 
         if (isVisible() && e.getSource() == optionPane
@@ -387,58 +385,13 @@ class Dialog {
     abstract T get();
   }
 
-  /** Panel to edit an assay with only mandatory properties. */
-  private class EditAssayPanelSimple extends EditPanel<Assay> {
-
-    private static final long serialVersionUID = 1751937902044407791L;
-
-    private final JTextField nameTextField = createTextField();
-
-    EditAssayPanelSimple() {
-
-      final JLabel nameLabel =
-          createLabel("GM.EditAssayPanel.nameLabel", "GM.EditAssayPanel.nameTooltip", true);
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(nameLabel, nameTextField));
-
-      addGridComponents(this, pairs);
-    }
-
-    @Override
-    void init(Assay assay) {
-      if (assay != null) {
-        nameTextField.setText(assay.name);
-      }
-    }
-
-    @Override
-    Assay get() {
-
-      final Assay assay = new Assay();
-      assay.name = nameTextField.getText();
-
-      return assay;
-    }
-
-    @Override
-    List<String> validatePanel() {
-      final List<String> errors = new ArrayList<>();
-      if (!hasValidValue(nameTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditAssayPanel.nameLabel"));
-      }
-
-      return errors;
-    }
-  }
-
-  /** Panel to edit an assay with all its properties. */
-  private class EditAssayPanelAdvanced extends EditPanel<Assay> {
+  private class EditAssayPanel extends EditPanel<Assay> {
 
     private static final long serialVersionUID = -1195181696127795655L;
     private final JTextField nameTextField = createTextField();
     private final JTextArea descriptionTextArea = createTextArea();
 
-    EditAssayPanelAdvanced() {
+    EditAssayPanel(final boolean isAdvanced) {
 
       final JLabel nameLabel =
           createLabel("GM.EditAssayPanel.nameLabel", "GM.EditAssayPanel.nameToolTip", true);
@@ -450,6 +403,12 @@ class Dialog {
               new ImmutablePair<>(descriptionLabel, descriptionTextArea));
 
       addGridComponents(this, pairs);
+
+      // If simple mode hide advanced components
+      if (!isAdvanced) {
+        descriptionLabel.setVisible(false);
+        descriptionTextArea.setVisible(false);
+      }
     }
 
     @Override
@@ -482,72 +441,10 @@ class Dialog {
     }
   }
 
-  private class EditDietaryAssessmentMethodPanelSimple extends EditPanel<DietaryAssessmentMethod> {
-
-    private static final long serialVersionUID = 4504171711228150568L;
-    private final AutoSuggestField dataCollectionToolField = new AutoSuggestField(10);
-    private final JTextField nonConsecutiveOneDayTextField = createTextField();
-
-    EditDietaryAssessmentMethodPanelSimple() {
-
-      // Init combo boxes
-      dataCollectionToolField.setPossibleValues(vocabs.get("Method. tool to collect data"));
-
-      // Create labels
-      final JLabel dataCollectionToolLabel =
-          createLabel("dataCollectionToolLabel", "dataCollectionToolTooltip", true);
-      final JLabel nonConsecutiveOneDayLabel =
-          createLabel("nonConsecutiveOneDayLabel", "nonConsecutiveOneDayTooltip", true);
-
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(dataCollectionToolLabel, dataCollectionToolField),
-              new ImmutablePair<>(nonConsecutiveOneDayLabel, nonConsecutiveOneDayTextField));
-
-      addGridComponents(this, pairs);
-    }
-
-    @Override
-    void init(final DietaryAssessmentMethod method) {
-      if (method != null) {
-        dataCollectionToolField.setSelectedItem(method.collectionTool);
-        nonConsecutiveOneDayTextField
-            .setText(Integer.toString(method.numberOfNonConsecutiveOneDay));
-      }
-    }
-
-    @Override
-    DietaryAssessmentMethod get() {
-
-      // TODO: cast temporarily null values to empty string and 0 (SHOULD be validated)
-      final DietaryAssessmentMethod method = new DietaryAssessmentMethod();
-      method.collectionTool = (String) dataCollectionToolField.getSelectedItem();
-      method.numberOfNonConsecutiveOneDay =
-          Integer.parseInt(nonConsecutiveOneDayTextField.getText());
-
-      return method;
-    }
-
-    @Override
-    List<String> validatePanel() {
-
-      final List<String> errors = new ArrayList<>(2);
-      if (!hasValidValue(dataCollectionToolField)) {
-        errors.add("Missing "
-            + bundle.getString("GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel"));
-      }
-      if (!hasValidValue(nonConsecutiveOneDayTextField)) {
-        errors.add("Missing "
-            + bundle.getString("GM.EditDietaryAssessmetnMethodPanel.nonConsecutiveOneDayLabel"));
-      }
-
-      return errors;
-    }
-  }
-
-  private class EditDietaryAssessmentMethodPanelAdvanced
-      extends EditPanel<DietaryAssessmentMethod> {
+  private class EditDietaryAssessmentMethodPanel extends EditPanel<DietaryAssessmentMethod> {
 
     private static final long serialVersionUID = -931984426171199928L;
+
     final AutoSuggestField dataCollectionToolField = new AutoSuggestField(10);
     final JTextField nonConsecutiveOneDayTextField = createTextField();
     final JTextField dietarySoftwareToolTextField = createTextField();
@@ -555,7 +452,7 @@ class Dialog {
     final JTextField recordTypeTextField = createTextField();
     final JComboBox<String> foodDescriptorComboBox = new JComboBox<>();
 
-    EditDietaryAssessmentMethodPanelAdvanced() {
+    EditDietaryAssessmentMethodPanel(final boolean isAdvanced) {
 
       // init combo boxes
       dataCollectionToolField.setPossibleValues(vocabs.get("Method. tool to collect data"));
@@ -589,6 +486,21 @@ class Dialog {
               new ImmutablePair<>(foodDescriptionLabel, foodDescriptorComboBox));
 
       addGridComponents(this, pairs);
+
+      // If simple mode hides advanced components
+      if (!isAdvanced) {
+        dietarySoftwareToolLabel.setVisible(false);
+        dietarySoftwareToolTextField.setVisible(false);
+
+        foodItemNumberLabel.setVisible(false);
+        foodItemNumberTextField.setVisible(false);
+
+        recordTypeLabel.setVisible(false);
+        recordTypeTextField.setVisible(false);
+
+        foodDescriptionLabel.setVisible(false);
+        foodDescriptorComboBox.setVisible(false);
+      }
     }
 
     @Override
@@ -642,73 +554,7 @@ class Dialog {
     }
   }
 
-  private class EditHazardPanelSimple extends EditPanel<Hazard> {
-
-    private static final long serialVersionUID = -2648017032463694751L;
-    private final AutoSuggestField hazardTypeField = new AutoSuggestField(10);
-    private final AutoSuggestField hazardNameField = new AutoSuggestField(10);
-    private final AutoSuggestField hazardUnitField = new AutoSuggestField(10);
-
-    EditHazardPanelSimple() {
-
-      // Init combo boxes
-      hazardTypeField.setPossibleValues(vocabs.get("Hazard type"));
-      hazardNameField.setPossibleValues(vocabs.get("Hazard name"));
-      hazardUnitField.setPossibleValues(vocabs.get("Hazard unit"));
-
-      // Create labels
-      final JLabel hazardTypeLabel = createLabel("GM.EditHazardPanel.hazardTypeLabel",
-          "GM.EditHazardPanel.hazardTypeTooltip", true);
-      final JLabel hazardNameLabel = createLabel("GM.EditHazardPanel.hazardNameLabel",
-          "GM.EditHazardPanel.hazardNameTooltip", true);
-      final JLabel hazardUnitLabel = createLabel("GM.EditHazardPanel.hazardUnitLabel",
-          "GM.EditHazardPanel.hazardUnitTooltip", true);
-
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<JLabel, JComponent>(hazardTypeLabel, hazardTypeField),
-              new ImmutablePair<JLabel, JComponent>(hazardNameLabel, hazardNameField),
-              new ImmutablePair<JLabel, JComponent>(hazardUnitLabel, hazardUnitField));
-      addGridComponents(this, pairs);
-    }
-
-    @Override
-    void init(final Hazard hazard) {
-      if (hazard != null) {
-        hazardTypeField.setSelectedItem(hazard.hazardType);
-        hazardNameField.setSelectedItem(hazard.hazardName);
-        hazardUnitField.setSelectedItem(hazard.hazardUnit);
-      }
-    }
-
-    @Override
-    Hazard get() {
-
-      final Hazard hazard = new Hazard();
-      hazard.hazardType = (String) hazardTypeField.getSelectedItem();
-      hazard.hazardName = (String) hazardNameField.getSelectedItem();
-      hazard.hazardUnit = (String) hazardUnitField.getSelectedItem();
-
-      return hazard;
-    }
-
-    @Override
-    List<String> validatePanel() {
-      final List<String> errors = new ArrayList<>();
-      if (!hasValidValue(hazardNameField)) {
-        errors.add("Missing " + bundle.getString("GM.EditHazardPanel.hazardTypeLabel"));
-      }
-      if (!hasValidValue(hazardNameField)) {
-        errors.add("Missing " + bundle.getString("GM.EditHazardPanel.hazardNameLabel"));
-      }
-      if (!hasValidValue(hazardUnitField)) {
-        errors.add("Missing " + bundle.getString("GM.EditHazardPanel.hazardUnitLabel"));
-      }
-
-      return errors;
-    }
-  }
-
-  private class EditHazardPanelAdvanced extends EditPanel<Hazard> {
+  private class EditHazardPanel extends EditPanel<Hazard> {
 
     private static final long serialVersionUID = -1981279747311233487L;
 
@@ -732,7 +578,7 @@ class Dialog {
     private final JTextField leftCensoredDataTextField = createTextField();
     private final JTextField contaminationRangeTextField = createTextField();
 
-    EditHazardPanelAdvanced() {
+    EditHazardPanel(final boolean isAdvanced) {
 
       // Init combo boxes
       hazardTypeField.setPossibleValues(vocabs.get("Hazard type"));
@@ -807,6 +653,51 @@ class Dialog {
               new ImmutablePair<>(leftCensoredDataLabel, leftCensoredDataTextField),
               new ImmutablePair<>(contaminationRangeLabel, contaminationRangeTextField));
       addGridComponents(this, pairs);
+
+      // If simple mode hide advanced components
+      if (!isAdvanced) {
+        hazardDescriptionLabel.setVisible(false);
+        hazardDescriptionTextArea.setVisible(false);
+
+        adverseEffectLabel.setVisible(false);
+        adverseEffectTextField.setVisible(false);
+
+        originLabel.setVisible(false);
+        originTextField.setVisible(false);
+
+        bmdLabel.setVisible(false);
+        bmdTextField.setVisible(false);
+
+        maxResidueLimitLabel.setVisible(false);
+        maxResidueLimitTextField.setVisible(false);
+
+        acuteReferenceDoseLabel.setVisible(false);
+        acuteReferenceDoseTextField.setVisible(false);
+
+        acceptableDailyIntakeLabel.setVisible(false);
+        acceptableDailyIntakeTextField.setVisible(false);
+
+        indSumLabel.setVisible(false);
+        indSumField.setVisible(false);
+
+        labNameLabel.setVisible(false);
+        labNameTextField.setVisible(false);
+
+        labCountryLabel.setVisible(false);
+        labCountryField.setVisible(false);
+
+        detectionLimitLabel.setVisible(false);
+        detectionLimitTextField.setVisible(false);
+
+        quantificationLimitLabel.setVisible(false);
+        quantificationLimitTextField.setVisible(false);
+
+        leftCensoredDataLabel.setVisible(false);
+        leftCensoredDataTextField.setVisible(false);
+
+        contaminationRangeLabel.setVisible(false);
+        contaminationRangeTextField.setVisible(false);
+      }
     }
 
     @Override
@@ -878,62 +769,7 @@ class Dialog {
     }
   }
 
-  private class EditModelEquationPanelSimple extends EditPanel<ModelEquation> {
-
-    private static final long serialVersionUID = 142679506574036762L;
-    private final JTextField equationNameTextField;
-    private final JTextArea scriptTextArea;
-
-    EditModelEquationPanelSimple() {
-
-      equationNameTextField = createTextField();
-      scriptTextArea = createTextArea();
-
-      final JLabel equationNameLabel = createLabel("GM.EditModelEquationPanel.nameLabel",
-          "GM.EditModelEquationPanel.nameTooltip", true);
-      final JLabel scriptLabel = createLabel("GM.EditModelEquationPanel.scriptLabel",
-          "GM.EditModelEquationPanel.scriptTooltip", true);
-
-      Dialog.add(this, equationNameLabel, 0, 0);
-      Dialog.add(this, equationNameTextField, 0, 1);
-      Dialog.add(this, scriptLabel, 1, 0);
-      Dialog.add(this, scriptTextArea, 1, 1, 2);
-    }
-
-    @Override
-    void init(final ModelEquation modelEquation) {
-      if (modelEquation != null) {
-        equationNameTextField.setText(modelEquation.equationName);
-        scriptTextArea.setText(modelEquation.equation);
-      }
-    }
-
-    @Override
-    List<String> validatePanel() {
-
-      final List<String> errors = new ArrayList<>();
-      if (!hasValidValue(equationNameTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditHazardPanel.nameLabel"));
-      }
-      if (!hasValidValue(scriptTextArea)) {
-        errors.add("Missing " + bundle.getString("GM.EditHazardPanel.scriptLabel"));
-      }
-
-      return errors;
-    }
-
-    @Override
-    ModelEquation get() {
-
-      final ModelEquation modelEquation = new ModelEquation();
-      modelEquation.equationName = equationNameTextField.getName();
-      modelEquation.equation = scriptTextArea.getText();
-
-      return modelEquation;
-    }
-  }
-
-  private class EditModelEquationAdvanced extends EditPanel<ModelEquation> {
+  private class EditModelEquationPanel extends EditPanel<ModelEquation> {
 
     private static final long serialVersionUID = 3586499490386620791L;
 
@@ -942,12 +778,11 @@ class Dialog {
     private final ReferencePanel referencePanel;
     private final JTextArea scriptTextArea;
 
-    EditModelEquationAdvanced(final ModelEquation modelEquation) {
+    EditModelEquationPanel(final ModelEquation modelEquation, final boolean isAdvanced) {
 
       equationNameTextField = createTextField();
       equationClassTextField = createTextField();
-      referencePanel = new ReferencePanel(
-          modelEquation != null ? modelEquation.equationReference : Collections.emptyList(), true);
+      referencePanel = new ReferencePanel(isAdvanced);
       scriptTextArea = createTextArea();
 
       final JLabel equationNameLabel = createLabel("GM.EditModelEquationPanel.nameLabel",
@@ -964,6 +799,14 @@ class Dialog {
       Dialog.add(this, referencePanel, 3, 0);
       Dialog.add(this, scriptLabel, 4, 0);
       Dialog.add(this, scriptTextArea, 4, 1);
+
+      // If simple mode hide avanced components
+      if (!isAdvanced) {
+        equationClassLabel.setVisible(false);
+        equationClassTextField.setVisible(false);
+
+        referencePanel.setVisible(false);
+      }
     }
 
     @Override
@@ -972,7 +815,7 @@ class Dialog {
       if (modelEquation != null) {
         equationNameTextField.setText(modelEquation.equationName);
         equationClassTextField.setText(modelEquation.equationClass);
-        // referencePanel is already initialized on declaration
+        referencePanel.init(modelEquation.equationReference);
         scriptTextArea.setText(modelEquation.equation);
       }
     }
@@ -1002,110 +845,10 @@ class Dialog {
     }
   }
 
-  private class EditParameterPanelSimple extends EditPanel<Parameter> {
+  private class EditParameterPanel extends EditPanel<Parameter> {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -1520117605016510640L;
-    private final JTextField idTextField = createTextField();
-    private final JComboBox<Parameter.Classification> classificationComboBox =
-        new JComboBox<>(Parameter.Classification.values());
-    private final JTextField nameTextField = createTextField();
-    private final AutoSuggestField unitField = new AutoSuggestField(10);
-    private final AutoSuggestField unitCategoryField = new AutoSuggestField(10);
-    private final AutoSuggestField dataTypeField = new AutoSuggestField(10);
-
-    EditParameterPanelSimple() {
-
-      // init combo boxes
-      unitField.setPossibleValues(vocabs.get("Parameter unit"));
-      unitCategoryField.setPossibleValues(vocabs.get("Parameter unit category"));
-      dataTypeField.setPossibleValues(vocabs.get("Parameter data type"));
-
-      // Build UI
-      final JLabel idLabel =
-          createLabel("GM.EditParameterPanel.idLabel", "GM.EditParameterPanel.idTooltip", true);
-      final JLabel classificationLabel = createLabel("GM.EditParameterPanel.classificationLabel",
-          "GM.EditParameterPanel.classificationTooltip", true);
-      final JLabel nameLabel =
-          createLabel("GM.EditParameterPanel.nameLabel", "GM.EditParameterPanel.nameTooltip", true);
-      final JLabel unitLabel =
-          createLabel("GM.EditParameterPanel.unitLabel", "GM.EditParameterPanel.unitTooltip", true);
-      final JLabel unitCategoryLabel = createLabel("GM.EditParameterPanel.unitCategoryLabel",
-          "GM.EditParameterPanel.unitCategoryTooltip", true);
-      final JLabel dataTypeLabel = createLabel("GM.EditParameterPanel.dataTypeLabel",
-          "GM.EditParameterPanel.dataTypeTooltip", true);
-
-      final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-          new ImmutablePair<>(idLabel, idTextField),
-          new ImmutablePair<>(classificationLabel, classificationComboBox),
-          new ImmutablePair<>(nameLabel, nameTextField), new ImmutablePair<>(unitLabel, unitField),
-          new ImmutablePair<>(unitCategoryLabel, unitCategoryField),
-          new ImmutablePair<>(dataTypeLabel, dataTypeField));
-      addGridComponents(this, pairs);
-    }
-
-    @Override
-    void init(final Parameter t) {
-
-      if (t != null) {
-        idTextField.setText(t.id);
-        classificationComboBox.setSelectedItem(t.classification);
-        nameTextField.setText(t.name);
-        unitField.setSelectedItem(t.unit);
-        unitCategoryField.setSelectedItem(t.unitCategory);
-        dataTypeField.setSelectedItem(t.dataType);
-      }
-    }
-
-    @Override
-    Parameter get() {
-
-      final Parameter param = new Parameter();
-      param.id = idTextField.getText();
-      param.classification = (Parameter.Classification) classificationComboBox.getSelectedItem();
-      param.name = nameTextField.getText();
-      param.unit = (String) unitField.getSelectedItem();
-      param.unitCategory = (String) unitCategoryField.getSelectedItem();
-      param.dataType = (String) dataTypeField.getSelectedItem();
-
-      return param;
-    }
-
-    @Override
-    List<String> validatePanel() {
-
-      final List<String> errors = new ArrayList<>();
-      if (!hasValidValue(idTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditParameterPanel.idLabel"));
-      }
-      if (classificationComboBox.getSelectedIndex() == -1) {
-        errors.add("Missing " + bundle.getString("GM.EditParameterPanel.classificationLabel"));
-      }
-      if (!hasValidValue(nameTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditParameterPanel.nameLabel"));
-      }
-      if (!hasValidValue(unitField)) {
-        errors.add("Missing " + bundle.getString("GM.EditParameterPanel.unitLabel"));
-      }
-      if (!hasValidValue(unitCategoryField)) {
-        errors.add("Missing " + bundle.getString("GM.EditParameterPanel.unitCategoryLabel"));
-      }
-      if (!hasValidValue(dataTypeField)) {
-        errors.add("Missing " + bundle.getString("GM.EditParametersPanel.dataTypeLabel"));
-      }
-
-      return errors;
-    }
-  }
-
-  private class EditParameterPanelAdvanced extends EditPanel<Parameter> {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1826555468897327895L;
+
     private JTextField idTextField;
     private JComboBox<Parameter.Classification> classificationComboBox;
     private JTextField nameTextField;
@@ -1123,7 +866,7 @@ class Dialog {
     private JTextArea applicabilityTextArea;
     private SpinnerNumberModel errorSpinnerModel;
 
-    public EditParameterPanelAdvanced() {
+    public EditParameterPanel(final boolean isAdvanced) {
 
       idTextField = createTextField();
       classificationComboBox = new JComboBox<>(Parameter.Classification.values());
@@ -1185,6 +928,7 @@ class Dialog {
       final JLabel errorLabel = createLabel("GM.EditParameterPanel.errorLabel",
           "GM.EditParameterPanel.errorTooltip", false);
 
+      final JSpinner errorSpinner = createSpinner(errorSpinnerModel);
       final List<Pair<JLabel, JComponent>> pairs =
           Arrays.asList(new ImmutablePair<>(idLabel, idTextField),
               new ImmutablePair<>(classificationLabel, classificationComboBox),
@@ -1200,8 +944,41 @@ class Dialog {
               new ImmutablePair<>(referenceLabel, referenceTextField),
               new ImmutablePair<>(variabilitySubjectLabel, variabilitySubjectTextArea),
               new ImmutablePair<>(applicabilityLabel, applicabilityTextArea),
-              new ImmutablePair<>(errorLabel, createSpinner(errorSpinnerModel)));
+              new ImmutablePair<>(errorLabel, errorSpinner));
       addGridComponents(this, pairs);
+
+      // If simple mode hide advanced components
+      if (!isAdvanced) {
+        descriptionLabel.setVisible(false);
+        descriptionTextArea.setVisible(false);
+
+        typeLabel.setVisible(false);
+        typeField.setVisible(false);
+
+        sourceLabel.setVisible(false);
+        sourceField.setVisible(false);
+
+        subjectLabel.setVisible(false);
+        subjectField.setVisible(false);
+
+        distributionLabel.setVisible(false);
+        distributionField.setVisible(false);
+
+        valueLabel.setVisible(false);
+        valueTextField.setVisible(false);
+
+        referenceLabel.setVisible(false);
+        referenceTextField.setVisible(false);
+
+        variabilitySubjectLabel.setVisible(false);
+        variabilitySubjectTextArea.setVisible(false);
+
+        applicabilityLabel.setVisible(false);
+        applicabilityTextArea.setVisible(false);
+
+        errorLabel.setVisible(false);
+        errorSpinner.setVisible(false);
+      }
     }
 
     @Override
@@ -1277,49 +1054,7 @@ class Dialog {
     }
   }
 
-  class EditPopulationGroupPanelSimple extends EditPanel<PopulationGroup> {
-
-    private static final long serialVersionUID = -5742413648031612767L;
-
-    private final JTextField populationNameTextField = new JTextField(30);
-
-    EditPopulationGroupPanelSimple() {
-      final JLabel populationNameLabel =
-          createLabel("GM.EditPopulationGroupPanel.populationNameLabel",
-              "GM.EditPopulationGroupPanel.populationNameTooltip", true);
-
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(populationNameLabel, populationNameTextField));
-      addGridComponents(this, pairs);
-    }
-
-    @Override
-    void init(final PopulationGroup t) {
-      if (t != null) {
-        populationNameTextField.setText(t.populationName);
-      }
-    }
-
-    @Override
-    PopulationGroup get() {
-      final PopulationGroup populationGroup = new PopulationGroup();
-      populationGroup.populationName = populationNameTextField.getText();
-
-      return populationGroup;
-    }
-
-    @Override
-    List<String> validatePanel() {
-      final List<String> errors = new ArrayList<>(1);
-      if (!hasValidValue(populationNameTextField)) {
-        errors
-            .add("Missing " + bundle.getString("GM.EditPopulationGroupPanel.populationNameLabel"));
-      }
-      return errors;
-    }
-  }
-
-  class EditPopulationGroupPanelAdvanced extends EditPanel<PopulationGroup> {
+  class EditPopulationGroupPanel extends EditPanel<PopulationGroup> {
 
     private static final long serialVersionUID = -4520186348489618333L;
 
@@ -1337,7 +1072,7 @@ class Dialog {
     private final JTextField riskTextField;
     private final JTextField seasonTextField;
 
-    public EditPopulationGroupPanelAdvanced() {
+    public EditPopulationGroupPanel(final boolean isAdvanced) {
 
       populationNameTextField = createTextField();
       targetPopulationTextField = createTextField();
@@ -1407,6 +1142,42 @@ class Dialog {
               new ImmutablePair<>(riskLabel, riskTextField),
               new ImmutablePair<>(seasonLabel, seasonTextField));
       addGridComponents(this, pairs);
+
+      // If simple mode hide advanced components
+      if (!isAdvanced) {
+        targetPopulationLabel.setVisible(false);
+        targetPopulationTextField.setVisible(false);
+
+        populationSpanLabel.setVisible(false);
+        populationSpanTextField.setVisible(false);
+
+        populationDescriptionLabel.setVisible(false);
+        populationDescriptionTextArea.setVisible(false);
+
+        populationAgeLabel.setVisible(false);
+        populationAgeTextField.setVisible(false);
+
+        bmiLabel.setVisible(false);
+        bmiTextField.setVisible(false);
+
+        specialDietGroupLabel.setVisible(false);
+        specialDietGroupTextField.setVisible(false);
+
+        patternConsumptionLabel.setVisible(false);
+        patternConsumptionTextField.setVisible(false);
+
+        regionLabel.setVisible(false);
+        regionComboBox.setVisible(false);
+
+        countryLabel.setVisible(false);
+        countryComboBox.setVisible(false);
+
+        riskLabel.setVisible(false);
+        riskTextField.setVisible(false);
+
+        seasonLabel.setVisible(false);
+        seasonTextField.setVisible(false);
+      }
     }
 
     @Override
@@ -1459,71 +1230,10 @@ class Dialog {
     }
   }
 
-  private class EditProductPanelSimple extends EditPanel<Product> {
+  private class EditProductPanel extends EditPanel<Product> {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3525760228962813112L;
-    private final AutoSuggestField envNameField = new AutoSuggestField(10);
-    private final AutoSuggestField envUnitField = new AutoSuggestField(10);
+    private static final long serialVersionUID = -7400646603919832139L;
 
-    EditProductPanelSimple() {
-
-      // init combo boxes
-      envNameField.setPossibleValues(vocabs.get("Product-matrix name"));
-      envUnitField.setPossibleValues(vocabs.get("Product-matrix unit"));
-
-      final JLabel envNameLabel =
-          createLabel("GM.EditProductPanel.envName", "GM.EditProductPanel.envNameTooltip", true);
-      final JLabel envUnitLabel =
-          createLabel("GM.EditProductPanel.envUnit", "GM.EditProductPanel.envUnitTooltip", true);
-
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(envNameLabel, envNameField),
-              new ImmutablePair<>(envUnitLabel, envUnitField));
-      addGridComponents(this, pairs);
-    }
-
-    @Override
-    void init(final Product t) {
-      if (t != null) {
-        envNameField.setSelectedItem(t.environmentName);
-        envUnitField.setSelectedItem(t.environmentUnit);
-      }
-    }
-
-    @Override
-    Product get() {
-
-      final Product product = new Product();
-      product.environmentName = (String) envNameField.getSelectedItem();
-      product.environmentUnit = (String) envUnitField.getSelectedItem();
-
-      return product;
-    }
-
-    @Override
-    List<String> validatePanel() {
-
-      final List<String> errors = new ArrayList<>(2);
-      if (!hasValidValue(envNameField)) {
-        errors.add("Missing " + bundle.getString("GM.EditProductPanel.envName"));
-      }
-      if (!hasValidValue(envUnitField)) {
-        errors.add("Missing " + bundle.getString("GM.EditProductPanel.envUnit"));
-      }
-
-      return errors;
-    }
-  }
-
-  private class EditProductPanelAdvanced extends EditPanel<Product> {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -3646412829308198901L;
     private final AutoSuggestField envNameField;
     private final JTextArea envDescriptionTextArea;
     private final AutoSuggestField envUnitField;
@@ -1536,8 +1246,7 @@ class Dialog {
     private final FixedDateChooser productionDateChooser;
     private final FixedDateChooser expirationDateChooser;
 
-    public EditProductPanelAdvanced() {
-
+    public EditProductPanel(boolean isAdvanced) {
       // Create fields
       envNameField = new AutoSuggestField(10);
       envDescriptionTextArea = createTextArea();
@@ -1597,6 +1306,17 @@ class Dialog {
               new ImmutablePair<>(productionDateLabel, productionDateChooser),
               new ImmutablePair<>(expirationDateLabel, expirationDateChooser));
       addGridComponents(this, pairs);
+
+      // If simple mode hides the advanced components
+      if (!isAdvanced) {
+        final List<JComponent> advancedComponents =
+            Arrays.asList(envDescriptionLabel, envDescriptionTextArea, productionMethodLabel,
+                productionMethodComboBox, packagingLabel, packagingComboBox, productTreatmentLabel,
+                productTreatmentComboBox, originCountryLabel, originCountryField, originAreaLabel,
+                originAreaField, fisheriesAreaLabel, fisheriesAreaField, productionDateLabel,
+                productionDateChooser, expirationDateLabel, expirationDateChooser);
+        advancedComponents.forEach(it -> it.setVisible(false));
+      }
     }
 
     @Override
@@ -1654,76 +1374,7 @@ class Dialog {
     }
   }
 
-  private class EditReferencePanelSimple extends EditPanel<Record> {
-
-    private static final long serialVersionUID = -8131245850692172464L;
-
-    private final JCheckBox isReferenceDescriptionCheckBox;
-    private final JTextField doiTextField;
-    private final JTextField titleTextField;
-
-    EditReferencePanelSimple() {
-
-      // Create fields
-      isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
-      doiTextField = createTextField();
-      titleTextField = createTextField();
-
-      // Create labels
-      final JLabel doiLabel = new JLabel(bundle.getString("GM.EditReferencePanel.doiLabel") + " *");
-      final JLabel titleLabel =
-          new JLabel(bundle.getString("GM.EditReferencePanel.titleLabel") + " *");
-
-      // Build UI
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(doiLabel, doiTextField),
-              new ImmutablePair<>(titleLabel, titleTextField));
-
-      Dialog.add(this, isReferenceDescriptionCheckBox, 0, 0);
-      for (int index = 0; index < pairs.size(); index++) {
-        final Pair<JLabel, JComponent> pair = pairs.get(index);
-        final JLabel label = pair.getLeft();
-        final JComponent field = pair.getRight();
-        label.setLabelFor(field);
-
-        Dialog.add(this, label, index + 1, 0);
-        Dialog.add(this, field, index + 1, 1);
-      }
-    }
-
-    @Override
-    void init(Record t) {
-      if (t != null) {
-        doiTextField.setText(t.getDoi());
-        titleTextField.setText(t.getTitle());
-      }
-    }
-
-    @Override
-    Record get() {
-      final Record record = new Record();
-      record.setDoi(doiTextField.getText());
-      record.setTitle(titleTextField.getText());
-
-      return record;
-    }
-
-    @Override
-    List<String> validatePanel() {
-
-      final List<String> errors = new ArrayList<>(2);
-      if (!hasValidValue(doiTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditReferencePanel.doiLabel"));
-      }
-      if (!hasValidValue(titleTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditReferencePanel.titleLabel"));
-      }
-
-      return errors;
-    }
-  }
-
-  private class EditReferencePanelAdvanced extends EditPanel<Record> {
+  private class EditReferencePanel extends EditPanel<Record> {
 
     private static final long serialVersionUID = -6874752919377124455L;
 
@@ -1745,7 +1396,7 @@ class Dialog {
     private final JTextField websiteTextField;
     private final JTextArea commentTextArea;
 
-    EditReferencePanelAdvanced() {
+    EditReferencePanel(final boolean isAdvanced) {
 
       // Create fields
       isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
@@ -1789,6 +1440,8 @@ class Dialog {
           new JLabel(bundle.getString("GM.EditReferencePanel.commentLabel"));
 
       // Build UI
+      final JSpinner volumeSpinner = createSpinner(volumeSpinnerModel);
+      final JSpinner issueSpinner = createSpinner(issueSpinnerModel);
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
           new ImmutablePair<>(typeLabel, typeComboBox), new ImmutablePair<>(dateLabel, dateChooser),
           new ImmutablePair<>(pmidLabel, pmidTextField),
@@ -1797,8 +1450,8 @@ class Dialog {
           new ImmutablePair<>(titleLabel, titleTextField),
           new ImmutablePair<>(abstractLabel, abstractTextArea),
           new ImmutablePair<>(journalLabel, journalTextField),
-          new ImmutablePair<>(volumeLabel, createSpinner(volumeSpinnerModel)),
-          new ImmutablePair<>(issueLabel, createSpinner(issueSpinnerModel)),
+          new ImmutablePair<>(volumeLabel, volumeSpinner),
+          new ImmutablePair<>(issueLabel, issueSpinner),
           new ImmutablePair<>(pageLabel, pageTextField),
           new ImmutablePair<>(statusLabel, statusTextField),
           new ImmutablePair<>(websiteLabel, websiteTextField),
@@ -1813,6 +1466,45 @@ class Dialog {
 
         Dialog.add(this, label, index + 1, 0);
         Dialog.add(this, field, index + 1, 1);
+      }
+
+      // If simple mode hide advanced components
+      if (!isAdvanced) {
+        typeLabel.setVisible(false);
+        typeComboBox.setVisible(false);
+
+        dateLabel.setVisible(false);
+        dateChooser.setVisible(false);
+
+        pmidLabel.setVisible(false);
+        pmidTextField.setVisible(false);
+
+        authorLabel.setVisible(false);
+        authorListTextField.setVisible(false);
+
+        abstractLabel.setVisible(false);
+        abstractTextArea.setVisible(false);
+
+        journalLabel.setVisible(false);
+        journalTextField.setVisible(false);
+
+        volumeLabel.setVisible(false);
+        volumeSpinner.setVisible(false);
+
+        issueLabel.setVisible(false);
+        issueSpinner.setVisible(false);
+
+        pageLabel.setVisible(false);
+        pageTextField.setVisible(false);
+
+        statusLabel.setVisible(false);
+        statusTextField.setVisible(false);
+
+        websiteLabel.setVisible(false);
+        websiteTextField.setVisible(false);
+
+        commentLabel.setVisible(false);
+        commentTextArea.setVisible(false);
       }
     }
 
@@ -1895,95 +1587,10 @@ class Dialog {
     }
   }
 
-  private class EditStudySamplePanelSimple extends EditPanel<StudySample> {
+  private class EditStudySamplePanel extends EditPanel<StudySample> {
 
-    private static final long serialVersionUID = -2192070894283404114L;
-
-    private final JTextField sampleNameTextField;
-    private final JTextField sampleProtocolTextField;
-    private final JTextField samplingPlanTextField;
-    private final JTextField samplingWeightTextField;
-    private final JTextField samplingSizeTextField;
-
-    public EditStudySamplePanelSimple() {
-
-      // Create fields
-      sampleNameTextField = createTextField();
-      sampleProtocolTextField = createTextField();
-      samplingPlanTextField = createTextField();
-      samplingWeightTextField = createTextField();
-      samplingSizeTextField = createTextField();
-
-      // Create labels
-      final JLabel sampleNameLabel = createLabel("GM.EditStudySamplePanel.sampleNameLabel",
-          "GM.EditStudySamplePanel.sampleNameTooltip", true);
-      final JLabel sampleProtocolLabel = createLabel("GM.EditStudySamplePanel.sampleProtocolLabel",
-          "GM.EditStudySamplePanel.sampleProtocolTooltip", true);
-      final JLabel samplingPlanLabel = createLabel("GM.EditStudySamplePanel.samplingPlanLabel",
-          "GM.EditStudySamplePanel.samplingPlanTooltip", true);
-      final JLabel samplingWeightLabel = createLabel("GM.EditStudySamplePanel.samplingWeightLabel",
-          "GM.EditStudySamplePanel.samplingWeightTooltip", true);;
-      final JLabel samplingSizeLabel = createLabel("GM.EditStudySamplePanel.samplingSizeLabel",
-          "GM.EditStudySamplePanel.samplingSizeTooltip", true);
-
-      // Build UI
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(sampleNameLabel, sampleNameTextField),
-              new ImmutablePair<>(sampleProtocolLabel, sampleProtocolTextField),
-              new ImmutablePair<>(samplingPlanLabel, samplingPlanTextField),
-              new ImmutablePair<>(samplingWeightLabel, samplingWeightTextField),
-              new ImmutablePair<>(samplingSizeLabel, samplingSizeTextField));
-      addGridComponents(this, pairs);
-    }
-
-    @Override
-    void init(final StudySample t) {
-
-      if (t != null) {
-        sampleNameTextField.setText(t.sample);
-        sampleProtocolTextField.setText(t.collectionProtocol);
-        samplingPlanTextField.setText(t.samplingPlan);
-        samplingWeightTextField.setText(t.samplingWeight);
-        samplingSizeTextField.setText(t.samplingSize);
-      }
-    }
-
-    @Override
-    StudySample get() {
-      // TODO Auto-generated method stub
-      return null;
-    }
-
-    @Override
-    List<String> validatePanel() {
-
-      final List<String> errors = new ArrayList<>(5);
-      if (!hasValidValue(sampleNameTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.sampleNameLabel"));
-      }
-      if (!hasValidValue(sampleProtocolTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.sampleProtocolLabel"));
-      }
-      if (!hasValidValue(samplingPlanTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingPlanLabel"));
-      }
-      if (!hasValidValue(samplingWeightTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingWeightLabel"));
-      }
-      if (!hasValidValue(samplingSizeTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingSizeTextField"));
-      }
-
-      return errors;
-    }
-  }
-
-  private class EditStudySamplePanelAdvanced extends EditPanel<StudySample> {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = -4740851101237646103L;
+
     private final JTextField sampleNameTextField;
     private final SpinnerNumberModel moisturePercentageSpinnerModel;
     private final SpinnerNumberModel fatPercentageSpinnerModel;
@@ -1997,7 +1604,7 @@ class Dialog {
     private final AutoSuggestField lotSizeUnitField;
     private final AutoSuggestField samplingPointField;
 
-    public EditStudySamplePanelAdvanced() {
+    public EditStudySamplePanel(final boolean isAdvanced) {
 
       // Create fields
       sampleNameTextField = createTextField();
@@ -2029,31 +1636,33 @@ class Dialog {
       final JLabel fatPercentageLabel = createLabel("GM.EditStudySamplePanel.fatPercentageLabel",
           "GM.EditStudySamplePanel.fatPercentageTooltip", false);
       final JLabel sampleProtocolLabel = createLabel("GM.EditStudySamplePanel.sampleProtocolLabel",
-          "GM.EditStudySamplePanel.sampleProtocolTooltip", true);;
+          "GM.EditStudySamplePanel.sampleProtocolTooltip", true);
       final JLabel samplingStrategyLabel =
           createLabel("GM.EditStudySamplePanel.samplingStrategyLabel",
-              "GM.EditStudySamplePanel.samplingStrategyTooltip", false);;
+              "GM.EditStudySamplePanel.samplingStrategyTooltip", false);
       final JLabel samplingTypeLabel = createLabel("GM.EditStudySamplePanel.samplingTypeLabel",
-          "GM.EditStudySamplePanel.samplingTypeTooltip", false);;
+          "GM.EditStudySamplePanel.samplingTypeTooltip", false);
       final JLabel samplingMethodLabel = createLabel("GM.EditStudySamplePanel.samplingMethodLabel",
           "GM.EditStudySamplePanel.samplingMethodTooltip", false);
       final JLabel samplingPlanLabel = createLabel("GM.EditStudySamplePanel.samplingPlanLabel",
-          "GM.EditStudySamplePanel.samplingPlanTooltip", true);;
+          "GM.EditStudySamplePanel.samplingPlanTooltip", true);
       final JLabel samplingWeightLabel = createLabel("GM.EditStudySamplePanel.samplingWeightLabel",
-          "GM.EditStudySamplePanel.samplingWeightTooltip", true);;
+          "GM.EditStudySamplePanel.samplingWeightTooltip", true);
       final JLabel samplingSizeLabel = createLabel("GM.EditStudySamplePanel.samplingSizeLabel",
           "GM.EditStudySamplePanel.samplingSizeTooltip", true);
       final JLabel lotSizeUnitLabel = createLabel("GM.EditStudySamplePanel.lotSizeUnitLabel",
-          "GM.EditStudySamplePanel.lotSizeUnitTooltip", false);;
+          "GM.EditStudySamplePanel.lotSizeUnitTooltip", false);
       final JLabel samplingPointLabel = createLabel("GM.EditStudySamplePanel.samplingPointLabel",
-          "GM.EditStudySamplePanel.samplingPointTooltip", false);;
+          "GM.EditStudySamplePanel.samplingPointTooltip", false);
 
       // Build UI
+      final JSpinner moisturePercentageSpinner = createSpinner(moisturePercentageSpinnerModel);
+      final JSpinner fatPercentageSpinner = createSpinner(fatPercentageSpinnerModel);
+
       final List<Pair<JLabel, JComponent>> pairs =
           Arrays.asList(new ImmutablePair<>(sampleNameLabel, sampleNameTextField),
-              new ImmutablePair<>(moisturePercentageLabel,
-                  createSpinner(moisturePercentageSpinnerModel)),
-              new ImmutablePair<>(fatPercentageLabel, createSpinner(fatPercentageSpinnerModel)),
+              new ImmutablePair<>(moisturePercentageLabel, moisturePercentageSpinner),
+              new ImmutablePair<>(fatPercentageLabel, fatPercentageSpinner),
               new ImmutablePair<>(sampleProtocolLabel, sampleProtocolTextField),
               new ImmutablePair<>(samplingStrategyLabel, samplingStrategyField),
               new ImmutablePair<>(samplingTypeLabel, samplingTypeField),
@@ -2064,6 +1673,36 @@ class Dialog {
               new ImmutablePair<>(lotSizeUnitLabel, lotSizeUnitField),
               new ImmutablePair<>(samplingPointLabel, samplingPointField));
       addGridComponents(this, pairs);
+
+      // If simple mode hide advanced components
+      if (!isAdvanced) {
+        moisturePercentageLabel.setVisible(false);
+        moisturePercentageSpinner.setVisible(false);
+
+        fatPercentageLabel.setVisible(false);
+        fatPercentageSpinner.setVisible(false);
+
+        samplingTypeLabel.setVisible(false);
+        samplingTypeField.setVisible(false);
+
+        samplingMethodLabel.setVisible(false);
+        samplingMethodField.setVisible(false);
+
+        samplingPlanLabel.setVisible(false);
+        samplingPlanTextField.setVisible(false);
+
+        samplingWeightLabel.setVisible(false);
+        samplingWeightTextField.setVisible(false);
+
+        samplingSizeLabel.setVisible(false);
+        samplingSizeTextField.setVisible(false);
+
+        lotSizeUnitLabel.setVisible(false);
+        lotSizeUnitField.setVisible(false);
+
+        samplingPointLabel.setVisible(false);
+        samplingPointField.setVisible(false);
+      }
     }
 
     @Override
@@ -2198,24 +1837,19 @@ class Dialog {
 
   private class GeneralInformationPanel extends Box {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 2705689661594031061L;
 
     private final JCheckBox advancedCheckBox;
 
     private final JTextField studyNameTextField;
     private final JTextField identifierTextField;
-    // TODO: creatorPanel
-    // private final CreatorPanel creatorPanel;
+    private final CreatorPanel creatorPanel;
     private final FixedDateChooser creationDateChooser;
     private final AutoSuggestField rightsField;
     private final JCheckBox availabilityCheckBox;
     private final JTextField urlTextField;
     private final AutoSuggestField formatField;
-    // TODO: referencePanel
-    // private final ReferencePanel referencePanel;
+    private final ReferencePanel referencePanel;
     private final AutoSuggestField languageField;
     private final AutoSuggestField softwareField;
     private final AutoSuggestField languageWrittenInField;
@@ -2232,13 +1866,13 @@ class Dialog {
 
       studyNameTextField = createTextField();
       identifierTextField = createTextField();
-      // TODO: creatorPanel ...
+      creatorPanel = new CreatorPanel();
       creationDateChooser = new FixedDateChooser();
       rightsField = new AutoSuggestField(10);
       availabilityCheckBox = new JCheckBox();
       urlTextField = createTextField();
       formatField = new AutoSuggestField(10);
-      // TODO: referencePanel ...
+      referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
       languageField = new AutoSuggestField(10);
       softwareField = new AutoSuggestField(10);
       languageWrittenInField = new AutoSuggestField(10);
@@ -2288,9 +1922,7 @@ class Dialog {
           descriptionLabel, descriptionTextField);
       advancedComponents.forEach(it -> it.setVisible(false));
 
-      // TODO: Build UI
-      // ...
-
+      // Build UI
       final JPanel propertiesPanel = new JPanel(new GridBagLayout());
 
       Dialog.add(propertiesPanel, studyNameLabel, 0, 1);
@@ -2299,7 +1931,7 @@ class Dialog {
       Dialog.add(propertiesPanel, identifierLabel, 0, 2);
       Dialog.add(propertiesPanel, identifierTextField, 1, 2, 2);
 
-      // TODO: creatorPanel
+      Dialog.add(propertiesPanel, creatorPanel, 0, 3);
 
       Dialog.add(propertiesPanel, creationDateLabel, 0, 4);
       Dialog.add(propertiesPanel, creationDateChooser, 1, 4);
@@ -2318,7 +1950,7 @@ class Dialog {
       Dialog.add(propertiesPanel, formatLabel, 0, 8);
       Dialog.add(propertiesPanel, formatField, 1, 8, 2);
 
-      // TODO: reference
+      Dialog.add(propertiesPanel, referencePanel, 0, 9);
 
       Dialog.add(propertiesPanel, languageLabel, 0, 10);
       Dialog.add(propertiesPanel, languageField, 1, 10, 2);
@@ -2341,8 +1973,7 @@ class Dialog {
       advancedCheckBox.addItemListener(event -> {
         final boolean showAdvanced = advancedCheckBox.isSelected();
         advancedComponents.forEach(it -> it.setVisible(showAdvanced));
-        // TODO: referencePanel
-        // referencePanel.isAdvanced = showAdvanced;
+        referencePanel.isAdvanced = showAdvanced;
       });
 
       add(createAdvancedPanel(advancedCheckBox));
@@ -2355,11 +1986,13 @@ class Dialog {
       if (generalInformation != null) {
         studyNameTextField.setText(generalInformation.name);
         identifierTextField.setText(generalInformation.identifier);
+        creatorPanel.init(generalInformation.creators);
         creationDateChooser.setDate(generalInformation.creationDate);
         rightsField.setSelectedItem(generalInformation.rights);
         availabilityCheckBox.setSelected(generalInformation.isAvailable);
         urlTextField.setText(generalInformation.url.toString());
         formatField.setSelectedItem(generalInformation.format);
+        referencePanel.init(generalInformation.reference);
         languageField.setSelectedItem(generalInformation.language);
         softwareField.setSelectedItem(generalInformation.software);
         languageWrittenInField.setSelectedItem(generalInformation.languageWrittenIn);
@@ -2383,9 +2016,9 @@ class Dialog {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      // TODO: creatorPanel
+      generalInformation.creators.addAll(creatorPanel.creators);
       generalInformation.format = (String) formatField.getSelectedItem();
-      // TODO: referencePanel
+      generalInformation.reference.addAll(referencePanel.refs);
       generalInformation.language = (String) languageField.getSelectedItem();
       generalInformation.software = (String) softwareField.getSelectedItem();
       generalInformation.languageWrittenIn = (String) languageWrittenInField.getSelectedItem();
@@ -2401,23 +2034,18 @@ class Dialog {
 
     private static final long serialVersionUID = 7457092378015891750L;
 
-    final NonEditableTableModel dtm = new NonEditableTableModel();
-    final List<Record> refs;
+    final NonEditableTableModel tableModel = new NonEditableTableModel();
+    final List<Record> refs = new ArrayList<>();
     boolean isAdvanced;
 
-    public ReferencePanel(final List<Record> refs, final boolean isAdvanced) {
+    public ReferencePanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
 
-      this.refs = refs;
       this.isAdvanced = isAdvanced;
 
-      refs.forEach(it -> dtm.addRow(new Record[] {it}));
-
       final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
-        /**
-         * 
-         */
+
         private static final long serialVersionUID = 8702844072231755585L;
 
         protected void setValue(Object value) {
@@ -2434,26 +2062,17 @@ class Dialog {
         };
       };
 
-      final HeadlessTable myTable = new HeadlessTable(dtm, renderer);
+      final HeadlessTable myTable = new HeadlessTable(tableModel, renderer);
 
       // buttons
       final ButtonsPanel buttonsPanel = new ButtonsPanel();
       buttonsPanel.addButton.addActionListener(event -> {
 
-        if (isAdvanced) {
-          final EditReferencePanelAdvanced editPanel = new EditReferencePanelAdvanced();
-          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create reference");
+        final EditReferencePanel editPanel = new EditReferencePanel(isAdvanced);
+        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create reference");
 
-          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-            dtm.addRow(new Record[] {editPanel.get()});
-          }
-        } else {
-          final EditReferencePanelSimple editPanel = new EditReferencePanelSimple();
-          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create reference");
-
-          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-            dtm.addRow(new Record[] {editPanel.get()});
-          }
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          tableModel.addRow(new Record[] {editPanel.get()});
         }
       });
 
@@ -2462,27 +2081,14 @@ class Dialog {
         final int rowToEdit = myTable.getSelectedRow();
         if (rowToEdit != -1) {
 
-          final Record ref = (Record) dtm.getValueAt(rowToEdit, 0);
+          final Record ref = (Record) tableModel.getValueAt(rowToEdit, 0);
 
-          if (isAdvanced) {
+          final EditReferencePanel editPanel = new EditReferencePanel(isAdvanced);
+          editPanel.init(ref);
 
-            final EditReferencePanelSimple editPanel = new EditReferencePanelSimple();
-            editPanel.init(ref);
-
-            final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify reference");
-            if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-              dtm.setValueAt(editPanel.get(), rowToEdit, 0);
-            }
-          } else {
-
-            final EditReferencePanelAdvanced editPanel = new EditReferencePanelAdvanced();
-            editPanel.init(ref);
-
-            final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify reference");
-            if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-              dtm.setValueAt(editPanel.get(), rowToEdit, 0);
-            }
-
+          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify reference");
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            tableModel.setValueAt(editPanel.get(), rowToEdit, 0);
           }
         }
       });
@@ -2490,30 +2096,31 @@ class Dialog {
       buttonsPanel.removeButton.addActionListener(event -> {
         final int rowToDelete = myTable.getSelectedRow();
         if (rowToDelete != -1) {
-          dtm.removeRow(rowToDelete);
+          tableModel.removeRow(rowToDelete);
         }
       });
 
       add(myTable, BorderLayout.NORTH);
       add(buttonsPanel, BorderLayout.SOUTH);
     }
+
+    void init(final List<Record> references) {
+      references.forEach(it -> tableModel.addRow(new Record[] {it}));
+      refs.addAll(references);
+    }
   }
 
   private class CreatorPanel extends JPanel {
 
     private static final long serialVersionUID = 3543570665869685092L;
-    final NonEditableTableModel dtm = new NonEditableTableModel();
-    final List<VCard> creators;
+    final NonEditableTableModel tableModel = new NonEditableTableModel();
+    final List<VCard> creators = new ArrayList<>();
 
-    public CreatorPanel(final List<VCard> creators) {
+    public CreatorPanel() {
 
       super(new BorderLayout());
 
-      this.creators = creators;
-
       setBorder(BorderFactory.createTitledBorder("Creators"));
-
-      creators.forEach(it -> dtm.addRow(new VCard[] {it}));
 
       final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
 
@@ -2533,7 +2140,7 @@ class Dialog {
         };
       };
 
-      final JTable myTable = new HeadlessTable(dtm, renderer);
+      final JTable myTable = new HeadlessTable(tableModel, renderer);
 
       // buttons
       final ButtonsPanel buttonsPanel = new ButtonsPanel();
@@ -2542,7 +2149,7 @@ class Dialog {
         final EditCreatorPanel editPanel = new EditCreatorPanel();
         final int result = showConfirmDialog(editPanel, "Create creator");
         if (result == JOptionPane.OK_OPTION) {
-          dtm.addRow(new VCard[] {editPanel.get()});
+          tableModel.addRow(new VCard[] {editPanel.toVCard()});
         }
       });
 
@@ -2551,12 +2158,13 @@ class Dialog {
         final int rowToEdit = myTable.getSelectedRow();
         if (rowToEdit != -1) {
 
-          final VCard creator = (VCard) dtm.getValueAt(rowToEdit, 0);
+          final VCard creator = (VCard) tableModel.getValueAt(rowToEdit, 0);
 
-          final EditCreatorPanel editPanel = new EditCreatorPanel(creator);
+          final EditCreatorPanel editPanel = new EditCreatorPanel();
+          editPanel.init(creator);
           final int result = showConfirmDialog(editPanel, "Modify creator");
           if (result == JOptionPane.OK_OPTION) {
-            dtm.setValueAt(editPanel.toVCard(), rowToEdit, 0);
+            tableModel.setValueAt(editPanel.toVCard(), rowToEdit, 0);
           }
         }
       });
@@ -2564,16 +2172,23 @@ class Dialog {
       buttonsPanel.removeButton.addActionListener(event -> {
         final int rowToDelete = myTable.getSelectedRow();
         if (rowToDelete != -1) {
-          dtm.removeRow(rowToDelete);
+          tableModel.removeRow(rowToDelete);
         }
       });
 
       add(myTable, BorderLayout.NORTH);
       add(buttonsPanel, BorderLayout.SOUTH);
     }
+
+    void init(final List<VCard> vcards) {
+      vcards.forEach(it -> tableModel.addRow(new VCard[] {it}));
+      creators.addAll(vcards);
+    }
   }
 
   private class EditCreatorPanel extends JPanel {
+
+    private static final long serialVersionUID = 3472281253338213542L;
 
     private final JTextField givenNameTextField;
     private final JTextField familyNameTextField;
@@ -2674,87 +2289,47 @@ class Dialog {
       productButton.setToolTipText("Click me to add a product");
       productButton.addActionListener(event -> {
 
-        if (advancedCheckBox.isSelected()) {
+        final EditProductPanel editPanel = new EditProductPanel(advancedCheckBox.isSelected());
+        editPanel.init(scope.product);
 
-          final EditProductPanelAdvanced editPanel = new EditProductPanelAdvanced();
-          editPanel.init(scope.product);
-          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a product");
+        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a product");
 
-          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-            final Product product = editPanel.get();
-            productButton.setText(
-                String.format("{0}_[{1}]", product.environmentName, product.environmentUnit));
-            scope.product = product;
-          }
-
-        } else {
-          final EditProductPanelSimple editPanel = new EditProductPanelSimple();
-          editPanel.init(scope.product);
-          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a product");
-
-          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-            final Product product = editPanel.get();
-            productButton.setText(
-                String.format("{0}_[{1}]", product.environmentName, product.environmentUnit));
-            scope.product = product;
-          }
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          final Product product = editPanel.get();
+          productButton.setText(
+              String.format("{0}_[{1}]", product.environmentName, product.environmentUnit));
+          scope.product = product;
         }
       });
 
       hazardButton.setToolTipText("Click me to add a hazard");
       hazardButton.addActionListener(event -> {
 
-        if (advancedCheckBox.isSelected()) {
+        final EditHazardPanel editPanel = new EditHazardPanel(advancedCheckBox.isSelected());
+        editPanel.init(scope.hazard);
 
-          final EditHazardPanelAdvanced editPanel = new EditHazardPanelAdvanced();
-          editPanel.init(scope.hazard);
-          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a hazard");
+        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a hazard");
 
-          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-            final Hazard hazard = editPanel.get();
-            hazardButton.setText(String.format("{0}_[{1}]", hazard.hazardName, hazard.hazardUnit));
-            scope.hazard = hazard;
-          }
-        } else {
-
-          final EditHazardPanelSimple editPanel = new EditHazardPanelSimple();
-          editPanel.init(scope.hazard);
-          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a hazard");
-
-          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-            final Hazard hazard = editPanel.get();
-            hazardButton.setText(String.format("{0}_[{1}]", hazard.hazardName, hazard.hazardUnit));
-            scope.hazard = hazard;
-          }
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          final Hazard hazard = editPanel.get();
+          hazardButton.setText(String.format("{0}_[{1}]", hazard.hazardName, hazard.hazardUnit));
+          scope.hazard = hazard;
         }
       });
 
       populationButton.setToolTipText("Click me to add a Population group");
       populationButton.addActionListener(event -> {
-        if (advancedCheckBox.isSelected()) {
 
-          final EditPopulationGroupPanelAdvanced editPanel = new EditPopulationGroupPanelAdvanced();
-          editPanel.init(scope.populationGroup);
-          final ValidatableDialog dlg =
-              new ValidatableDialog(editPanel, "Create a Population Group");
+        final EditPopulationGroupPanel editPanel =
+            new EditPopulationGroupPanel(advancedCheckBox.isSelected());
+        editPanel.init(scope.populationGroup);
 
-          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-            final PopulationGroup populationGroup = editPanel.get();
-            populationButton.setText(populationGroup.populationName);
-            scope.populationGroup = populationGroup;
-          }
-        } else {
+        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a Population Group");
 
-          final EditPopulationGroupPanelSimple editPanel = new EditPopulationGroupPanelSimple();
-          editPanel.init(scope.populationGroup);
-          final ValidatableDialog dlg =
-              new ValidatableDialog(editPanel, "Create a Population Group");
-
-          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-            final PopulationGroup populationGroup = editPanel.get();
-            populationButton.setText(populationGroup.populationName);
-            scope.populationGroup = populationGroup;
-          }
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          final PopulationGroup populationGroup = editPanel.get();
+          populationButton.setText(populationGroup.populationName);
+          scope.populationGroup = populationGroup;
         }
       });
 
@@ -2786,7 +2361,7 @@ class Dialog {
 
       // Advanced checkbox
       advancedCheckBox.addItemListener(event -> {
-        // TODO: ...
+        // TODO: not implemented yet
         System.out.println("Dummy listener");
       });
 
@@ -2798,31 +2373,121 @@ class Dialog {
 
   private class DataBackgroundPanel extends Box {
 
-    final JCheckBox advancedCheckBox;
+    final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
-    final AutoSuggestField laboratoryAccreditationField;
+    final AutoSuggestField laboratoryAccreditationField = new AutoSuggestField(10);
 
-    final DataBackground dataBackground;
+    DataBackground dataBackground;
 
     DataBackgroundPanel(final DataBackground dataBackground) {
 
+      super(BoxLayout.PAGE_AXIS);
+
+      this.dataBackground = dataBackground;
+
       final StudyPanel studyPanel = new StudyPanel();
-      studyPanel.setBorder(BorderFactory.createTitledBorder());
+      studyPanel.setBorder(BorderFactory.createTitledBorder("Study"));
 
       final JButton studySampleButton = new JButton();
       studySampleButton.setToolTipText("Click me to add Study Sample");
       studySampleButton.addActionListener(event -> {
 
-        if (advancedCheckBox.isSelected()) {
+        final EditStudySamplePanel editPanel =
+            new EditStudySamplePanel(advancedCheckBox.isSelected());
+        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create Study sample");
 
-        } else {
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          final StudySample studySample = editPanel.get();
+          // Update button's text
+          studySampleButton.setText(studySample.sample);
 
+          if (this.dataBackground == null) {
+            this.dataBackground = new DataBackground();
+          }
+          dataBackground.studySample = studySample;
         }
       });
+
+      final JButton dietaryAssessmentMethodButton = new JButton();
+      dietaryAssessmentMethodButton.setToolTipText("Click me to add Dietary assessment method");
+      dietaryAssessmentMethodButton.addActionListener(event -> {
+
+        final EditDietaryAssessmentMethodPanel editPanel =
+            new EditDietaryAssessmentMethodPanel(advancedCheckBox.isSelected());
+        final ValidatableDialog dlg =
+            new ValidatableDialog(editPanel, "Create dietary assessment method");
+
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          final DietaryAssessmentMethod method = editPanel.get();
+          // Update button's text
+          dietaryAssessmentMethodButton.setText(method.collectionTool);
+
+          if (this.dataBackground == null) {
+            this.dataBackground = new DataBackground();
+          }
+          dataBackground.dietaryAssessmentMethod = method;
+        }
+      });
+
+      laboratoryAccreditationField.setPossibleValues(vocabs.get("Laboratory accreditation"));
+
+      final JButton assayButton = new JButton();
+      assayButton.setToolTipText("Click me to add Assay");
+      assayButton.addActionListener(event -> {
+        final EditAssayPanel editPanel = new EditAssayPanel(advancedCheckBox.isSelected());
+
+        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create assay");
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          final Assay assay = editPanel.get();
+          // Update button's text
+          assayButton.setText(assay.name);
+
+          if (this.dataBackground == null) {
+            this.dataBackground = new DataBackground();
+          }
+          dataBackground.assay = assay;
+        }
+      });
+
+      final JLabel studySampleLabel =
+          new JLabel(bundle.getString("GM.DataBackgroundPanel.studySampleLabel"));
+      final JLabel dietaryAssessmentMethodLabel =
+          new JLabel(bundle.getString("GM.DataBackgroundPanel.dietaryAssessmentMethodLabel"));
+      final JLabel laboratoryAccreditationLabel =
+          new JLabel(bundle.getString("GM.DataBackgroundPanel.laboratoryAccreditationLabel"));
+      final JLabel assayLabel = new JLabel(bundle.getString("GM.DataBackgroundPanel.assayLabel"));
+
+      final JPanel propertiesPanel = new JPanel(new GridBagLayout());
+
+      Dialog.add(propertiesPanel, studyPanel, 0, 0, 3);
+
+      Dialog.add(propertiesPanel, studySampleLabel, 0, 1);
+      Dialog.add(propertiesPanel, studySampleButton, 1, 1);
+
+      Dialog.add(propertiesPanel, dietaryAssessmentMethodLabel, 0, 2);
+      Dialog.add(propertiesPanel, dietaryAssessmentMethodButton, 1, 2);
+
+      Dialog.add(propertiesPanel, laboratoryAccreditationLabel, 0, 3);
+      Dialog.add(propertiesPanel, laboratoryAccreditationField, 1, 3);
+
+      Dialog.add(propertiesPanel, assayLabel, 0, 4);
+      Dialog.add(propertiesPanel, assayButton, 1, 4);
+
+      // Advanced `checkbox`
+      advancedCheckBox.addItemListener(event -> {
+        // TODO: Implement listener
+        studyPanel.advancedComponents.forEach(it -> it.setVisible(advancedCheckBox.isSelected()));
+      });
+
+      add(createAdvancedPanel(advancedCheckBox));
+      add(Box.createGlue());
+      add(propertiesPanel);
     }
   }
 
   private class StudyPanel extends JPanel {
+
+    private static final long serialVersionUID = -6572236073945735826L;
 
     private final JTextField studyIdentifierTextField;
     private final JTextField studyTitleTextField;
@@ -2840,8 +2505,9 @@ class Dialog {
     private final AutoSuggestField studyProtocolParametersField;
     private final AutoSuggestField studyProtocolComponentsTypeField;
 
+    private final List<JComponent> advancedComponents;
 
-    StudyPanel(final Study study) {
+    StudyPanel() {
 
       super(new GridBagLayout());
 
@@ -2865,7 +2531,7 @@ class Dialog {
       // Create labels
       final JLabel studyIdentifierLabel = createLabel("GM.StudyPanel.studyIdentifierLabel",
           "GM.StudyPanel.studyIdentifierTooltip", true);
-      final JLabel studyTitleTextField =
+      final JLabel studyTitleLabel =
           createLabel("GM.StudyPanel.studyTitleLabel", "GM.StudyPanel.studyTitleTooltip", true);
       final JLabel studyDescriptionLabel = createLabel("GM.StudyPanel.studyDescriptionLabel",
           "GM.StudyPanel.studyDescriptionTooltip", false);
@@ -2900,26 +2566,246 @@ class Dialog {
           createLabel("GM.StudyPanel.studyProtocolComponentsTypeLabel",
               "GM.StudyPanel.studyProtocolComponentsTypeTooltip", false);
 
-      final List<JComponent> advancedComps = Arrays.asList(studyDescriptionLabel,
-          studyDescriptionTextArea, studyDesignTypeLabel, studyDesignTypeField,
-          studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField,
-          studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField,
-          studyAssayTechnologyPlatformLabel, studyAssayTechnologyPlatformTextField,
-          accreditationProcedureLabel, accreditationProcedureField, studyProtocolNameLabel,
-          studyProtocolNameTextField, studyProtocolTypeLabel, studyProtocolTypeField,
-          studyProtocolDescriptionLabel, studyProtocolDescriptionTextField, studyProtocolURILabel,
-          studyProtocolURITextField, studyProtocolVersionLabel, studyProtocolVersionTextField,
-          studyProtocolParametersLabel, studyProtocolParametersField,
-          studyProtocolComponentsTypeLabel, studyProtocolComponentsTypeField);
-
-      advancedComps.forEach(it -> it.setVisible(false));
-
       // Init combo boxes
       studyDesignTypeField.setPossibleValues(vocabs.get("Study Design Type"));
       studyAssayMeasurementsTypeField.setPossibleValues(vocabs.get("Study Assay Measurement Type"));
       studyAssayTechnologyTypeField.setPossibleValues(vocabs.get("Study Assay Technology Type"));
-      accreditationProcedureTypeField.setPossibleValues(vocabs.get("Accreditation procedure ))
+      accreditationProcedureField.setPossibleValues(vocabs.get("Accreditation procedure Ass.Tec"));
+      studyProtocolTypeField.setPossibleValues(vocabs.get("Study Protocol Type"));
+      studyProtocolParametersField.setPossibleValues(vocabs.get("Study Protocol Parameters Name"));
+      studyProtocolComponentsTypeField
+          .setPossibleValues(vocabs.get("Study Protocol Components Type"));
 
+      // Build UI
+      final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
+          new ImmutablePair<>(studyIdentifierLabel, studyIdentifierTextField),
+          new ImmutablePair<>(studyTitleLabel, studyTitleTextField),
+          new ImmutablePair<>(studyDescriptionLabel, studyDescriptionTextArea),
+          new ImmutablePair<>(studyDesignTypeLabel, studyDesignTypeField),
+          new ImmutablePair<>(studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField),
+          new ImmutablePair<>(studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField),
+          new ImmutablePair<>(studyAssayTechnologyPlatformLabel,
+              studyAssayTechnologyPlatformTextField),
+          new ImmutablePair<>(accreditationProcedureLabel, accreditationProcedureField),
+          new ImmutablePair<>(studyProtocolNameLabel, studyProtocolNameTextField),
+          new ImmutablePair<>(studyProtocolTypeLabel, studyProtocolTypeField),
+          new ImmutablePair<>(studyProtocolDescriptionLabel, studyProtocolDescriptionTextField),
+          new ImmutablePair<>(studyProtocolURILabel, studyProtocolURITextField),
+          new ImmutablePair<>(studyProtocolParametersLabel, studyProtocolParametersField),
+          new ImmutablePair<>(studyProtocolComponentsTypeLabel, studyProtocolComponentsTypeField));
+      Dialog.addGridComponents(this, pairs);
+
+      advancedComponents = Arrays.asList(studyDescriptionLabel, studyDescriptionTextArea,
+          studyDesignTypeLabel, studyDesignTypeField, studyAssayMeasurementsTypeLabel,
+          studyAssayMeasurementsTypeField, studyAssayTechnologyTypeLabel,
+          studyAssayTechnologyTypeField, studyAssayTechnologyPlatformLabel,
+          studyAssayTechnologyPlatformTextField, accreditationProcedureLabel,
+          accreditationProcedureField, studyProtocolNameLabel, studyProtocolNameTextField,
+          studyProtocolTypeLabel, studyProtocolTypeField, studyProtocolDescriptionLabel,
+          studyProtocolDescriptionTextField, studyProtocolURILabel, studyProtocolURITextField,
+          studyProtocolVersionLabel, studyProtocolVersionTextField, studyProtocolParametersLabel,
+          studyProtocolParametersField, studyProtocolComponentsTypeLabel,
+          studyProtocolComponentsTypeField);
+
+      advancedComponents.forEach(it -> it.setVisible(false));
+    }
+  }
+
+  private class ModelMathPanel extends Box {
+
+    private static final long serialVersionUID = -7488943574135793595L;
+
+    final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
+
+    ModelMathPanel() {
+
+      super(BoxLayout.PAGE_AXIS);
+
+      final boolean isAdvanced = advancedCheckBox.isSelected();
+
+      final ParametersPanel parametersPanel = new ParametersPanel(isAdvanced);
+      final QualityMeasuresPanel qualityMeasuresPanel =
+          new QualityMeasuresPanel(null, null, null, null, null, null);
+      final ModelEquationsPanel modelEquationPanel = new ModelEquationsPanel(isAdvanced);
+
+      final JPanel propertiesPanel = new JPanel(new GridBagLayout());
+      Dialog.add(propertiesPanel, parametersPanel, 0, 0);
+      Dialog.add(propertiesPanel, qualityMeasuresPanel, 0, 1);
+      Dialog.add(propertiesPanel, modelEquationPanel, 0, 2);
+
+      add(createAdvancedPanel(advancedCheckBox));
+      add(Box.createGlue());
+      add(propertiesPanel);
+
+      advancedCheckBox.addItemListener(event -> {
+        parametersPanel.isAdvanced = advancedCheckBox.isSelected();
+        modelEquationPanel.isAdvanced = advancedCheckBox.isSelected();
+      });
+    }
+  }
+
+  private class ParametersPanel extends JPanel {
+
+    private static final long serialVersionUID = -5986975090954482038L;
+
+    boolean isAdvanced;
+
+    ParametersPanel(final boolean isAdvanced) {
+
+      super(new BorderLayout());
+
+      this.isAdvanced = isAdvanced;
+
+      setBorder(BorderFactory.createTitledBorder("Parameters"));
+
+      final NonEditableTableModel tableModel = new NonEditableTableModel();
+      // TODO: parameters
+
+      final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+        private static final long serialVersionUID = -2930961770705064623L;
+
+        protected void setValue(Object value) {
+          setText(((Parameter) value).id);
+        };
+      };
+      final JTable myTable = new HeadlessTable(tableModel, renderer);
+
+      // buttons
+      final ButtonsPanel buttonsPanel = new ButtonsPanel();
+      buttonsPanel.addButton.addActionListener(event -> {
+        final EditParameterPanel editPanel = new EditParameterPanel(this.isAdvanced);
+        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create parameter");
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          tableModel.addRow(new Parameter[] {editPanel.get()});
+        }
+      });
+
+      buttonsPanel.modifyButton.addActionListener(event -> {
+        final int rowToEdit = myTable.getSelectedRow();
+        if (rowToEdit != -1) {
+
+          final Parameter param = (Parameter) tableModel.getValueAt(rowToEdit, 0);
+          final EditParameterPanel editPanel = new EditParameterPanel(this.isAdvanced);
+          editPanel.init(param);
+
+          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify parameter");
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            tableModel.setValueAt(editPanel.get(), rowToEdit, 0);
+          }
+        }
+      });
+
+      buttonsPanel.removeButton.addActionListener(event -> {
+        final int rowToDelete = myTable.getSelectedRow();
+        if (rowToDelete != -1) {
+          tableModel.removeRow(rowToDelete);
+        }
+      });
+
+      add(myTable, BorderLayout.NORTH);
+      add(buttonsPanel, BorderLayout.SOUTH);
+    }
+  }
+
+  private class QualityMeasuresPanel extends JPanel {
+
+    private static final long serialVersionUID = -5829602676812905793L;
+
+    final SpinnerNumberModel sseSpinnerModel = createSpinnerDoubleModel();
+    final SpinnerNumberModel mseSpinnerModel = createSpinnerDoubleModel();
+    final SpinnerNumberModel rmseSpinnerModel = createSpinnerDoubleModel();
+    final SpinnerNumberModel r2SpinnerModel = createSpinnerDoubleModel();
+    final SpinnerNumberModel aicSpinnerModel = createSpinnerDoubleModel();
+    final SpinnerNumberModel bicSpinnerModel = createSpinnerDoubleModel();
+
+    QualityMeasuresPanel(final Double sse, final Double mse, final Double rmse, final Double r2,
+        final Double aic, final Double bic) {
+
+      final JLabel sseLabel = new JLabel("SSE");
+      final JSpinner sseSpinner = createSpinner(sseSpinnerModel);
+
+      final JLabel mseLabel = new JLabel("MSE");
+      final JSpinner mseSpinner = createSpinner(mseSpinnerModel);
+
+      final JLabel rmseLabel = new JLabel("RMSE");
+      final JSpinner rmseSpinner = createSpinner(rmseSpinnerModel);
+
+      final JLabel r2Label = new JLabel("r-Squared");
+      final JSpinner r2Spinner = createSpinner(r2SpinnerModel);
+
+      final JLabel aicLabel = new JLabel("AIC");
+      final JSpinner aicSpinner = createSpinner(aicSpinnerModel);
+
+      final JLabel bicLabel = new JLabel("BIC");
+      final JSpinner bicSpinner = createSpinner(bicSpinnerModel);
+
+      final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
+          new ImmutablePair<>(sseLabel, sseSpinner), new ImmutablePair<>(mseLabel, mseSpinner),
+          new ImmutablePair<>(rmseLabel, rmseSpinner), new ImmutablePair<>(r2Label, r2Spinner),
+          new ImmutablePair<>(aicLabel, aicSpinner), new ImmutablePair<>(bicLabel, bicSpinner));
+      Dialog.addGridComponents(this, pairs);
+
+      setBorder(BorderFactory.createTitledBorder("Quality measures"));
+    }
+  }
+
+  private class ModelEquationsPanel extends JPanel {
+
+    private static final long serialVersionUID = 7194287921709100267L;
+
+    final NonEditableTableModel tableModel = new NonEditableTableModel();
+    final List<ModelEquation> equations = new ArrayList<>();
+    boolean isAdvanced;
+
+    ModelEquationsPanel(final boolean isAdvanced) {
+
+      super(new BorderLayout());
+      this.isAdvanced = isAdvanced;
+
+      setBorder(BorderFactory.createTitledBorder("Model equation"));
+      equations.forEach(it -> tableModel.addRow(new ModelEquation[] {it}));
+
+      final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+        private static final long serialVersionUID = 1L;
+
+        protected void setValue(Object value) {
+          setText(((ModelEquation) value).equationName);
+        }
+      };
+
+      final HeadlessTable myTable = new HeadlessTable(tableModel, renderer);
+
+      final ButtonsPanel buttonsPanel = new ButtonsPanel();
+
+      buttonsPanel.addButton.addActionListener(event -> {
+        final EditModelEquationPanel editPanel = new EditModelEquationPanel(null, isAdvanced);
+        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create equation");
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          tableModel.addRow(new ModelEquation[] {editPanel.get()});
+        }
+      });
+
+      buttonsPanel.modifyButton.addActionListener(event -> {
+        final int rowToEdit = myTable.getSelectedRow();
+        if (rowToEdit != -1) {
+          final ModelEquation equation = (ModelEquation) tableModel.getValueAt(rowToEdit, 0);
+          final EditModelEquationPanel editPanel = new EditModelEquationPanel(equation, isAdvanced);
+          final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify equation");
+          if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+            tableModel.setValueAt(editPanel.get(), rowToEdit, 0);
+          }
+        }
+      });
+
+      buttonsPanel.removeButton.addActionListener(event -> {
+        final int rowToDelete = myTable.getSelectedRow();
+        if (rowToDelete != -1) {
+          tableModel.removeRow(rowToDelete);
+        }
+      });
+
+      add(myTable, BorderLayout.NORTH);
+      add(buttonsPanel, BorderLayout.SOUTH);
     }
   }
 }
