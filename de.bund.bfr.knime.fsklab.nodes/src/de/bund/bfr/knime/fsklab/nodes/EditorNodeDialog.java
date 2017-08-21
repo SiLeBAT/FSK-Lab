@@ -106,7 +106,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   private final ScriptPanel paramScriptPanel = new ScriptPanel("Parameters script", "", true);
   private final ScriptPanel vizScriptPanel = new ScriptPanel("Visualization script", "", true);
   private final GeneralInformationPanel generalInformationPanel = new GeneralInformationPanel();
-  // TODO: scope panel
+  private final ScopePanel scopePanel = new ScopePanel();
   // TODO: data background panel
   // TODO: model math panel
 
@@ -125,6 +125,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     addTab(paramScriptPanel.getName(), paramScriptPanel);
     addTab(vizScriptPanel.getName(), vizScriptPanel);
     addTab("General information", new JScrollPane(generalInformationPanel));
+    addTab("Scope", new JScrollPane(scopePanel));
+    // TODO: add data background panel
+    // TODO: add model math panel
 
     updatePanels();
   }
@@ -136,7 +139,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     vizScriptPanel.getTextArea().setText(settings.modifiedVisualizationScript);
 
     generalInformationPanel.init(settings.genericModel.generalInformation);
-    // TODO: init scope panel
+    scopePanel.init(settings.genericModel.scope);
     // TODO: init data background panel
     // TODO: init model math panel
   }
@@ -210,7 +213,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         StringUtils.trim(this.settings.modifiedVisualizationScript);
 
     this.settings.genericModel.generalInformation = generalInformationPanel.get();
-    // TODO: get scope
+    this.settings.genericModel.scope = scopePanel.get();
     // TODO: get data background
     // TODO: get model math
 
@@ -1255,8 +1258,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           "GM.EditPopulationGroupPanel.regionTooltip", false);
       final JLabel countryLabel = createLabel("GM.EditPopulationGroupPanel.countryLabel",
           "GM.EditPopulationGroupPanel.countryTooltip", false);
-      final JLabel riskLabel = createLabel("GM.EditPopulationGroupPanel.riskLabel",
-          "GM.EditPopulationGroupPanel.riskTooltip", false);
+      final JLabel riskLabel = createLabel("GM.EditPopulationGroupPanel.riskAndPopulationLabel",
+          "GM.EditPopulationGroupPanel.riskAndPopulationTooltip", false);
       final JLabel seasonLabel = createLabel("GM.EditPopulationGroupPanel.seasonLabel",
           "GM.EditPopulationGroupPanel.seasonTooltip", false);
 
@@ -2377,6 +2380,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
   private class ScopePanel extends Box {
 
+    private static final long serialVersionUID = 8153319336584952056L;
+
     final JButton productButton;
     final JButton hazardButton;
     final JButton populationButton;
@@ -2387,13 +2392,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     final JCheckBox advancedCheckBox;
 
-    final Scope scope;
+    // TODO: advanced mode
+    private final EditProductPanel editProductPanel = new EditProductPanel(false);
+    // TODO: advanced mode
+    private final EditHazardPanel editHazardPanel = new EditHazardPanel(false);
+    // TODO: advanced mode
+    private final EditPopulationGroupPanel editPopulationGroupPanel =
+        new EditPopulationGroupPanel(false);
 
-    ScopePanel(final Scope scope) {
+    ScopePanel() {
 
       super(BoxLayout.PAGE_AXIS);
-
-      this.scope = scope;
 
       // Create fields
       productButton = new JButton();
@@ -2413,48 +2422,33 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Build UI
       productButton.setToolTipText("Click me to add a product");
       productButton.addActionListener(event -> {
-
-        final EditProductPanel editPanel = new EditProductPanel(advancedCheckBox.isSelected());
-        editPanel.init(scope.product);
-
-        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a product");
+        final ValidatableDialog dlg = new ValidatableDialog(editProductPanel, "Create a product");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-          final Product product = editPanel.get();
+          final Product product = editProductPanel.get();
           productButton.setText(
               String.format("{0}_[{1}]", product.environmentName, product.environmentUnit));
-          scope.product = product;
         }
       });
 
       hazardButton.setToolTipText("Click me to add a hazard");
       hazardButton.addActionListener(event -> {
-
-        final EditHazardPanel editPanel = new EditHazardPanel(advancedCheckBox.isSelected());
-        editPanel.init(scope.hazard);
-
-        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a hazard");
+        final ValidatableDialog dlg = new ValidatableDialog(editHazardPanel, "Create a hazard");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-          final Hazard hazard = editPanel.get();
+          final Hazard hazard = editHazardPanel.get();
           hazardButton.setText(String.format("{0}_[{1}]", hazard.hazardName, hazard.hazardUnit));
-          scope.hazard = hazard;
         }
       });
 
       populationButton.setToolTipText("Click me to add a Population group");
       populationButton.addActionListener(event -> {
-
-        final EditPopulationGroupPanel editPanel =
-            new EditPopulationGroupPanel(advancedCheckBox.isSelected());
-        editPanel.init(scope.populationGroup);
-
-        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create a Population Group");
+        final ValidatableDialog dlg =
+            new ValidatableDialog(editPopulationGroupPanel, "Create a Population Group");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-          final PopulationGroup populationGroup = editPanel.get();
+          final PopulationGroup populationGroup = editPopulationGroupPanel.get();
           populationButton.setText(populationGroup.populationName);
-          scope.populationGroup = populationGroup;
         }
       });
 
@@ -2490,6 +2484,41 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       add(createAdvancedPanel(advancedCheckBox));
       add(Box.createGlue());
       add(propertiesPanel);
+    }
+
+    void init(final Scope scope) {
+      if (scope != null) {
+        editProductPanel.init(scope.product);
+        editHazardPanel.init(scope.hazard);
+        editPopulationGroupPanel.init(scope.populationGroup);
+        if (StringUtils.isNotBlank(scope.temporalInformation)) {
+          try {
+            dateChooser
+                .setDate(new SimpleDateFormat("yyyy-MM-dd").parse(scope.temporalInformation));
+          } catch (ParseException e) {
+            e.printStackTrace();
+          }
+        }
+        if (!scope.region.isEmpty()) {
+          regionField.setSelectedItem(scope.region.get(0));
+        }
+        if (!scope.country.isEmpty()) {
+          countryField.setSelectedItem(scope.country.get(0));
+        }
+      }
+    }
+
+    Scope get() {
+      final Scope scope = new Scope();
+      scope.product = editProductPanel.get();
+      scope.hazard = editHazardPanel.get();
+      scope.populationGroup = editPopulationGroupPanel.get();
+      scope.temporalInformation =
+          new SimpleDateFormat(dateChooser.getDateFormatString()).format(dateChooser.getDate());
+      scope.region.add((String) regionField.getSelectedItem());
+      scope.country.add((String) countryField.getSelectedItem());
+
+      return scope;
     }
   }
 
