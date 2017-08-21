@@ -66,8 +66,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -79,6 +77,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.util.Pair;
 
 import com.gmail.gcolaianni5.jris.bean.Record;
 import com.gmail.gcolaianni5.jris.bean.Type;
@@ -525,9 +524,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel descriptionLabel = createLabel("GM.EditAssayPanel.descriptionLabel",
           "GM.EditAssayPanel.descriptionTooltip", true);
 
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(nameLabel, nameTextField),
-              new ImmutablePair<>(descriptionLabel, descriptionTextArea));
+      final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
+          new Pair<>(nameLabel, nameTextField), new Pair<>(descriptionLabel, descriptionTextArea));
 
       addGridComponents(this, pairs);
 
@@ -605,12 +603,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
               "GM.EditDietaryAssessmentMethodPanel.foodDescriptionTooltip", false);
 
       final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(dataCollectionToolLabel, dataCollectionToolField),
-              new ImmutablePair<>(nonConsecutiveOneDayLabel, nonConsecutiveOneDayTextField),
-              new ImmutablePair<>(dietarySoftwareToolLabel, dietarySoftwareToolTextField),
-              new ImmutablePair<>(foodItemNumberLabel, foodItemNumberTextField),
-              new ImmutablePair<>(recordTypeLabel, recordTypeTextField),
-              new ImmutablePair<>(foodDescriptionLabel, foodDescriptorComboBox));
+          Arrays.asList(new Pair<>(dataCollectionToolLabel, dataCollectionToolField),
+              new Pair<>(nonConsecutiveOneDayLabel, nonConsecutiveOneDayTextField),
+              new Pair<>(dietarySoftwareToolLabel, dietarySoftwareToolTextField),
+              new Pair<>(foodItemNumberLabel, foodItemNumberTextField),
+              new Pair<>(recordTypeLabel, recordTypeTextField),
+              new Pair<>(foodDescriptionLabel, foodDescriptorComboBox));
 
       addGridComponents(this, pairs);
 
@@ -759,26 +757,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           createLabel("GM.EditHazardPanel.contaminationRangeLabel",
               "GM.EditHazardPanel.contaminationRangeTooltip", false);
 
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(hazardTypeLabel, hazardTypeField),
-              new ImmutablePair<>(hazardNameLabel, hazardNameField),
-              new ImmutablePair<>(hazardDescriptionLabel, hazardDescriptionTextArea),
-              new ImmutablePair<>(hazardUnitLabel, hazardUnitField),
-              new ImmutablePair<>(adverseEffectLabel, adverseEffectTextField),
-              new ImmutablePair<>(originLabel, originTextField),
-              new ImmutablePair<>(bmdLabel, bmdTextField),
-              new ImmutablePair<>(maxResidueLimitLabel, maxResidueLimitTextField),
-              new ImmutablePair<>(noObserveAdverseLabel, noObservedAdverseTextField),
-              new ImmutablePair<>(acceptableOperatorLabel, acceptableOperatorTextField),
-              new ImmutablePair<>(acuteReferenceDoseLabel, acuteReferenceDoseTextField),
-              new ImmutablePair<>(indSumLabel, indSumField),
-              new ImmutablePair<>(acceptableDailyIntakeLabel, acceptableDailyIntakeTextField),
-              new ImmutablePair<>(labNameLabel, labNameTextField),
-              new ImmutablePair<>(labCountryLabel, labCountryField),
-              new ImmutablePair<>(detectionLimitLabel, detectionLimitTextField),
-              new ImmutablePair<>(quantificationLimitLabel, quantificationLimitTextField),
-              new ImmutablePair<>(leftCensoredDataLabel, leftCensoredDataTextField),
-              new ImmutablePair<>(contaminationRangeLabel, contaminationRangeTextField));
+      final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
+          new Pair<>(hazardTypeLabel, hazardTypeField),
+          new Pair<>(hazardNameLabel, hazardNameField),
+          new Pair<>(hazardDescriptionLabel, hazardDescriptionTextArea),
+          new Pair<>(hazardUnitLabel, hazardUnitField),
+          new Pair<>(adverseEffectLabel, adverseEffectTextField),
+          new Pair<>(originLabel, originTextField), new Pair<>(bmdLabel, bmdTextField),
+          new Pair<>(maxResidueLimitLabel, maxResidueLimitTextField),
+          new Pair<>(noObserveAdverseLabel, noObservedAdverseTextField),
+          new Pair<>(acceptableOperatorLabel, acceptableOperatorTextField),
+          new Pair<>(acuteReferenceDoseLabel, acuteReferenceDoseTextField),
+          new Pair<>(indSumLabel, indSumField),
+          new Pair<>(acceptableDailyIntakeLabel, acceptableDailyIntakeTextField),
+          new Pair<>(labNameLabel, labNameTextField), new Pair<>(labCountryLabel, labCountryField),
+          new Pair<>(detectionLimitLabel, detectionLimitTextField),
+          new Pair<>(quantificationLimitLabel, quantificationLimitTextField),
+          new Pair<>(leftCensoredDataLabel, leftCensoredDataTextField),
+          new Pair<>(contaminationRangeLabel, contaminationRangeTextField));
       addGridComponents(this, pairs);
 
       // If simple mode hide advanced components
@@ -1056,22 +1052,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           "GM.EditParameterPanel.errorTooltip", false);
 
       final JSpinner errorSpinner = createSpinner(errorSpinnerModel);
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(idLabel, idTextField),
-              new ImmutablePair<>(classificationLabel, classificationComboBox),
-              new ImmutablePair<>(nameLabel, nameTextField),
-              new ImmutablePair<>(descriptionLabel, descriptionTextArea),
-              new ImmutablePair<>(typeLabel, typeField), new ImmutablePair<>(unitLabel, unitField),
-              new ImmutablePair<>(unitCategoryLabel, unitCategoryField),
-              new ImmutablePair<>(dataTypeLabel, dataTypeField),
-              new ImmutablePair<>(sourceLabel, sourceField),
-              new ImmutablePair<>(subjectLabel, subjectField),
-              new ImmutablePair<>(distributionLabel, distributionField),
-              new ImmutablePair<>(valueLabel, valueTextField),
-              new ImmutablePair<>(referenceLabel, referenceTextField),
-              new ImmutablePair<>(variabilitySubjectLabel, variabilitySubjectTextArea),
-              new ImmutablePair<>(applicabilityLabel, applicabilityTextArea),
-              new ImmutablePair<>(errorLabel, errorSpinner));
+      final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(idLabel, idTextField),
+          new Pair<>(classificationLabel, classificationComboBox),
+          new Pair<>(nameLabel, nameTextField), new Pair<>(descriptionLabel, descriptionTextArea),
+          new Pair<>(typeLabel, typeField), new Pair<>(unitLabel, unitField),
+          new Pair<>(unitCategoryLabel, unitCategoryField),
+          new Pair<>(dataTypeLabel, dataTypeField), new Pair<>(sourceLabel, sourceField),
+          new Pair<>(subjectLabel, subjectField), new Pair<>(distributionLabel, distributionField),
+          new Pair<>(valueLabel, valueTextField), new Pair<>(referenceLabel, referenceTextField),
+          new Pair<>(variabilitySubjectLabel, variabilitySubjectTextArea),
+          new Pair<>(applicabilityLabel, applicabilityTextArea),
+          new Pair<>(errorLabel, errorSpinner));
       addGridComponents(this, pairs);
 
       // If simple mode hide advanced components
@@ -1255,19 +1246,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           "GM.EditPopulationGroupPanel.seasonTooltip", false);
 
       final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(populationNameLabel, populationNameTextField),
-              new ImmutablePair<>(targetPopulationLabel, targetPopulationTextField),
-              new ImmutablePair<>(populationSpanLabel, populationSpanTextField),
-              new ImmutablePair<>(populationDescriptionLabel, populationDescriptionTextArea),
-              new ImmutablePair<>(populationAgeLabel, populationAgeTextField),
-              new ImmutablePair<>(populationGenderLabel, populationGenderTextField),
-              new ImmutablePair<>(bmiLabel, bmiTextField),
-              new ImmutablePair<>(specialDietGroupLabel, specialDietGroupTextField),
-              new ImmutablePair<>(patternConsumptionLabel, patternConsumptionTextField),
-              new ImmutablePair<>(regionLabel, regionComboBox),
-              new ImmutablePair<>(countryLabel, countryComboBox),
-              new ImmutablePair<>(riskLabel, riskTextField),
-              new ImmutablePair<>(seasonLabel, seasonTextField));
+          Arrays.asList(new Pair<>(populationNameLabel, populationNameTextField),
+              new Pair<>(targetPopulationLabel, targetPopulationTextField),
+              new Pair<>(populationSpanLabel, populationSpanTextField),
+              new Pair<>(populationDescriptionLabel, populationDescriptionTextArea),
+              new Pair<>(populationAgeLabel, populationAgeTextField),
+              new Pair<>(populationGenderLabel, populationGenderTextField),
+              new Pair<>(bmiLabel, bmiTextField),
+              new Pair<>(specialDietGroupLabel, specialDietGroupTextField),
+              new Pair<>(patternConsumptionLabel, patternConsumptionTextField),
+              new Pair<>(regionLabel, regionComboBox), new Pair<>(countryLabel, countryComboBox),
+              new Pair<>(riskLabel, riskTextField), new Pair<>(seasonLabel, seasonTextField));
       addGridComponents(this, pairs);
 
       // If simple mode hide advanced components
@@ -1421,17 +1410,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(envNameLabel, envNameField),
-              new ImmutablePair<>(envDescriptionLabel, envDescriptionTextArea),
-              new ImmutablePair<>(envUnitLabel, envUnitField),
-              new ImmutablePair<>(productionMethodLabel, productionMethodComboBox),
-              new ImmutablePair<>(packagingLabel, packagingComboBox),
-              new ImmutablePair<>(productTreatmentLabel, productTreatmentComboBox),
-              new ImmutablePair<>(originCountryLabel, originCountryField),
-              new ImmutablePair<>(originAreaLabel, originAreaField),
-              new ImmutablePair<>(fisheriesAreaLabel, fisheriesAreaField),
-              new ImmutablePair<>(productionDateLabel, productionDateChooser),
-              new ImmutablePair<>(expirationDateLabel, expirationDateChooser));
+          Arrays.asList(new Pair<>(envNameLabel, envNameField),
+              new Pair<>(envDescriptionLabel, envDescriptionTextArea),
+              new Pair<>(envUnitLabel, envUnitField),
+              new Pair<>(productionMethodLabel, productionMethodComboBox),
+              new Pair<>(packagingLabel, packagingComboBox),
+              new Pair<>(productTreatmentLabel, productTreatmentComboBox),
+              new Pair<>(originCountryLabel, originCountryField),
+              new Pair<>(originAreaLabel, originAreaField),
+              new Pair<>(fisheriesAreaLabel, fisheriesAreaField),
+              new Pair<>(productionDateLabel, productionDateChooser),
+              new Pair<>(expirationDateLabel, expirationDateChooser));
       addGridComponents(this, pairs);
 
       // If simple mode hides the advanced components
@@ -1570,25 +1559,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JSpinner volumeSpinner = createSpinner(volumeSpinnerModel);
       final JSpinner issueSpinner = createSpinner(issueSpinnerModel);
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-          new ImmutablePair<>(typeLabel, typeComboBox), new ImmutablePair<>(dateLabel, dateChooser),
-          new ImmutablePair<>(pmidLabel, pmidTextField),
-          new ImmutablePair<>(doiLabel, doiTextField),
-          new ImmutablePair<>(authorLabel, authorListTextField),
-          new ImmutablePair<>(titleLabel, titleTextField),
-          new ImmutablePair<>(abstractLabel, abstractTextArea),
-          new ImmutablePair<>(journalLabel, journalTextField),
-          new ImmutablePair<>(volumeLabel, volumeSpinner),
-          new ImmutablePair<>(issueLabel, issueSpinner),
-          new ImmutablePair<>(pageLabel, pageTextField),
-          new ImmutablePair<>(statusLabel, statusTextField),
-          new ImmutablePair<>(websiteLabel, websiteTextField),
-          new ImmutablePair<>(commentLabel, commentTextArea));
+          new Pair<>(typeLabel, typeComboBox), new Pair<>(dateLabel, dateChooser),
+          new Pair<>(pmidLabel, pmidTextField), new Pair<>(doiLabel, doiTextField),
+          new Pair<>(authorLabel, authorListTextField), new Pair<>(titleLabel, titleTextField),
+          new Pair<>(abstractLabel, abstractTextArea), new Pair<>(journalLabel, journalTextField),
+          new Pair<>(volumeLabel, volumeSpinner), new Pair<>(issueLabel, issueSpinner),
+          new Pair<>(pageLabel, pageTextField), new Pair<>(statusLabel, statusTextField),
+          new Pair<>(websiteLabel, websiteTextField), new Pair<>(commentLabel, commentTextArea));
 
       EditorNodeDialog.add(this, isReferenceDescriptionCheckBox, 0, 0);
       for (int index = 0; index < pairs.size(); index++) {
         final Pair<JLabel, JComponent> pair = pairs.get(index);
-        final JLabel label = pair.getLeft();
-        final JComponent field = pair.getRight();
+        final JLabel label = pair.getFirst();
+        final JComponent field = pair.getSecond();
         label.setLabelFor(field);
 
         EditorNodeDialog.add(this, label, index + 1, 0);
@@ -1787,18 +1770,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JSpinner fatPercentageSpinner = createSpinner(fatPercentageSpinnerModel);
 
       final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(sampleNameLabel, sampleNameTextField),
-              new ImmutablePair<>(moisturePercentageLabel, moisturePercentageSpinner),
-              new ImmutablePair<>(fatPercentageLabel, fatPercentageSpinner),
-              new ImmutablePair<>(sampleProtocolLabel, sampleProtocolTextField),
-              new ImmutablePair<>(samplingStrategyLabel, samplingStrategyField),
-              new ImmutablePair<>(samplingTypeLabel, samplingTypeField),
-              new ImmutablePair<>(samplingMethodLabel, samplingMethodField),
-              new ImmutablePair<>(samplingPlanLabel, samplingPlanTextField),
-              new ImmutablePair<>(samplingWeightLabel, samplingWeightTextField),
-              new ImmutablePair<>(samplingSizeLabel, samplingSizeTextField),
-              new ImmutablePair<>(lotSizeUnitLabel, lotSizeUnitField),
-              new ImmutablePair<>(samplingPointLabel, samplingPointField));
+          Arrays.asList(new Pair<>(sampleNameLabel, sampleNameTextField),
+              new Pair<>(moisturePercentageLabel, moisturePercentageSpinner),
+              new Pair<>(fatPercentageLabel, fatPercentageSpinner),
+              new Pair<>(sampleProtocolLabel, sampleProtocolTextField),
+              new Pair<>(samplingStrategyLabel, samplingStrategyField),
+              new Pair<>(samplingTypeLabel, samplingTypeField),
+              new Pair<>(samplingMethodLabel, samplingMethodField),
+              new Pair<>(samplingPlanLabel, samplingPlanTextField),
+              new Pair<>(samplingWeightLabel, samplingWeightTextField),
+              new Pair<>(samplingSizeLabel, samplingSizeTextField),
+              new Pair<>(lotSizeUnitLabel, lotSizeUnitField),
+              new Pair<>(samplingPointLabel, samplingPointField));
       addGridComponents(this, pairs);
 
       // If simple mode hide advanced components
@@ -1932,8 +1915,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     for (int index = 0; index < pairs.size(); index++) {
 
       final Pair<JLabel, JComponent> entry = pairs.get(index);
-      final JLabel label = entry.getLeft();
-      final JComponent field = entry.getRight();
+      final JLabel label = entry.getFirst();
+      final JComponent field = entry.getSecond();
       label.setLabelFor(field);
 
       labelConstraints.gridy = index;
@@ -2339,9 +2322,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(givenNameLabel, givenNameTextField),
-              new ImmutablePair<>(familyNameLabel, familyNameTextField),
-              new ImmutablePair<>(contactLabel, contactTextField));
+          Arrays.asList(new Pair<>(givenNameLabel, givenNameTextField),
+              new Pair<>(familyNameLabel, familyNameTextField),
+              new Pair<>(contactLabel, contactTextField));
       addGridComponents(this, pairs);
     }
 
@@ -2474,14 +2457,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           createLabel("GM.ScopePanel.countryLabel", "GM.ScopePanel.countryTooltip", false);
 
       // Build UI
-      final List<Pair<JLabel, JComponent>> pairs =
-          Arrays.asList(new ImmutablePair<>(productLabel, productButton),
-              new ImmutablePair<>(hazardLabel, hazardButton),
-              new ImmutablePair<>(populationLabel, populationButton),
-              new ImmutablePair<>(commentLabel, commentField),
-              new ImmutablePair<>(temporalInformationLabel, dateChooser),
-              new ImmutablePair<>(regionLabel, regionField),
-              new ImmutablePair<>(countryLabel, countryField));
+      final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
+          new Pair<>(productLabel, productButton), new Pair<>(hazardLabel, hazardButton),
+          new Pair<>(populationLabel, populationButton), new Pair<>(commentLabel, commentField),
+          new Pair<>(temporalInformationLabel, dateChooser), new Pair<>(regionLabel, regionField),
+          new Pair<>(countryLabel, countryField));
 
       final JPanel propertiesPanel = new JPanel(new GridBagLayout());
       addGridComponents(propertiesPanel, pairs);
@@ -2704,22 +2684,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           .setPossibleValues(vocabs.get("Study Protocol Components Type"));
 
       // Build UI
-      final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-          new ImmutablePair<>(studyIdentifierLabel, studyIdentifierTextField),
-          new ImmutablePair<>(studyTitleLabel, studyTitleTextField),
-          new ImmutablePair<>(studyDescriptionLabel, studyDescriptionTextArea),
-          new ImmutablePair<>(studyDesignTypeLabel, studyDesignTypeField),
-          new ImmutablePair<>(studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField),
-          new ImmutablePair<>(studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField),
-          new ImmutablePair<>(studyAssayTechnologyPlatformLabel,
-              studyAssayTechnologyPlatformTextField),
-          new ImmutablePair<>(accreditationProcedureLabel, accreditationProcedureField),
-          new ImmutablePair<>(studyProtocolNameLabel, studyProtocolNameTextField),
-          new ImmutablePair<>(studyProtocolTypeLabel, studyProtocolTypeField),
-          new ImmutablePair<>(studyProtocolDescriptionLabel, studyProtocolDescriptionTextField),
-          new ImmutablePair<>(studyProtocolURILabel, studyProtocolURITextField),
-          new ImmutablePair<>(studyProtocolParametersLabel, studyProtocolParametersField),
-          new ImmutablePair<>(studyProtocolComponentsTypeLabel, studyProtocolComponentsTypeField));
+      final List<Pair<JLabel, JComponent>> pairs =
+          Arrays.asList(new Pair<>(studyIdentifierLabel, studyIdentifierTextField),
+              new Pair<>(studyTitleLabel, studyTitleTextField),
+              new Pair<>(studyDescriptionLabel, studyDescriptionTextArea),
+              new Pair<>(studyDesignTypeLabel, studyDesignTypeField),
+              new Pair<>(studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField),
+              new Pair<>(studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField),
+              new Pair<>(studyAssayTechnologyPlatformLabel, studyAssayTechnologyPlatformTextField),
+              new Pair<>(accreditationProcedureLabel, accreditationProcedureField),
+              new Pair<>(studyProtocolNameLabel, studyProtocolNameTextField),
+              new Pair<>(studyProtocolTypeLabel, studyProtocolTypeField),
+              new Pair<>(studyProtocolDescriptionLabel, studyProtocolDescriptionTextField),
+              new Pair<>(studyProtocolURILabel, studyProtocolURITextField),
+              new Pair<>(studyProtocolParametersLabel, studyProtocolParametersField),
+              new Pair<>(studyProtocolComponentsTypeLabel, studyProtocolComponentsTypeField));
       EditorNodeDialog.addGridComponents(this, pairs);
 
       advancedComponents = Arrays.asList(studyDescriptionLabel, studyDescriptionTextArea,
@@ -2866,10 +2845,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel bicLabel = new JLabel("BIC");
       final JSpinner bicSpinner = createSpinner(bicSpinnerModel);
 
-      final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-          new ImmutablePair<>(sseLabel, sseSpinner), new ImmutablePair<>(mseLabel, mseSpinner),
-          new ImmutablePair<>(rmseLabel, rmseSpinner), new ImmutablePair<>(r2Label, r2Spinner),
-          new ImmutablePair<>(aicLabel, aicSpinner), new ImmutablePair<>(bicLabel, bicSpinner));
+      final List<Pair<JLabel, JComponent>> pairs =
+          Arrays.asList(new Pair<>(sseLabel, sseSpinner), new Pair<>(mseLabel, mseSpinner),
+              new Pair<>(rmseLabel, rmseSpinner), new Pair<>(r2Label, r2Spinner),
+              new Pair<>(aicLabel, aicSpinner), new Pair<>(bicLabel, bicSpinner));
       EditorNodeDialog.addGridComponents(this, pairs);
 
       setBorder(BorderFactory.createTitledBorder("Quality measures"));
