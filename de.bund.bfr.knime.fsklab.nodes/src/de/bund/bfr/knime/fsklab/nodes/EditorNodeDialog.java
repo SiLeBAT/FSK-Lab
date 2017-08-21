@@ -89,6 +89,7 @@ import de.bund.bfr.knime.fsklab.rakip.Assay;
 import de.bund.bfr.knime.fsklab.rakip.DataBackground;
 import de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod;
 import de.bund.bfr.knime.fsklab.rakip.GeneralInformation;
+import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.Hazard;
 import de.bund.bfr.knime.fsklab.rakip.ModelEquation;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
@@ -104,7 +105,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   private final ScriptPanel modelScriptPanel = new ScriptPanel("Model script", "", true);
   private final ScriptPanel paramScriptPanel = new ScriptPanel("Parameters script", "", true);
   private final ScriptPanel vizScriptPanel = new ScriptPanel("Visualization script", "", true);
-  // TODO: metaDataPanel
+  private final GeneralInformationPanel generalInformationPanel = new GeneralInformationPanel();
+  // TODO: scope panel
+  // TODO: data background panel
+  // TODO: model math panel
 
   private EditorNodeSettings settings;
 
@@ -114,13 +118,27 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
      * Initialize settings (current values are garbage, need to be loaded from settings/input port).
      */
     settings = new EditorNodeSettings();
+    settings.genericModel = new GenericModel();
 
     // Add ScriptPanels
     addTab(modelScriptPanel.getName(), modelScriptPanel);
     addTab(paramScriptPanel.getName(), paramScriptPanel);
     addTab(vizScriptPanel.getName(), vizScriptPanel);
+    addTab("General information", new JScrollPane(generalInformationPanel));
 
     updatePanels();
+  }
+
+  // Update the scripts in the ScriptPanels
+  private void updatePanels() {
+    modelScriptPanel.getTextArea().setText(settings.modifiedModelScript);
+    paramScriptPanel.getTextArea().setText(settings.modifiedParametersScript);
+    vizScriptPanel.getTextArea().setText(settings.modifiedVisualizationScript);
+
+    generalInformationPanel.init(settings.genericModel.generalInformation);
+    // TODO: init scope panel
+    // TODO: init data background panel
+    // TODO: init model math panel
   }
 
   // --- settings methods ---
@@ -156,18 +174,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       this.settings.modifiedModelScript = inObj.model;
       this.settings.modifiedParametersScript = inObj.param;
       this.settings.modifiedVisualizationScript = inObj.viz;
+
+      this.settings.genericModel = inObj.genericModel;
     }
 
     updatePanels();
-  }
-
-  // Update the scripts in the ScriptPanels
-  private void updatePanels() {
-    modelScriptPanel.getTextArea().setText(settings.modifiedModelScript);
-    paramScriptPanel.getTextArea().setText(settings.modifiedParametersScript);
-    vizScriptPanel.getTextArea().setText(settings.modifiedVisualizationScript);
-
-    // TODO: metaDataPanel
   }
 
   /** Loads settings from saved settings. */
@@ -198,7 +209,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     this.settings.modifiedVisualizationScript =
         StringUtils.trim(this.settings.modifiedVisualizationScript);
 
-    // TODO: metadata
+    this.settings.genericModel.generalInformation = generalInformationPanel.get();
+    // TODO: get scope
+    // TODO: get data background
+    // TODO: get model math
 
     this.settings.saveSettings(settings);
   }
@@ -283,7 +297,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         if (StringUtils.isNotBlank(cellValue))
           vocab.add(cellValue);
       } catch (Exception e) {
-        LOGGER.warning("Controlled vocabulary " + sheetname + ": wrong value " + cell);
+        // FIXME: A NPE is produced here ...
+        // LOGGER.warning("Controlled vocabulary " + sheetname + ": wrong value " + cell);
       }
     }
 
