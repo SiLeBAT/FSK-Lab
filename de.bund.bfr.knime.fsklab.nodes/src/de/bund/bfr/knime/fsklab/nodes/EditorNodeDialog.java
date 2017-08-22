@@ -311,21 +311,32 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   // TODO: this should be shared through the plugin (all the FSK nodes)
   private static final ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle");
 
-  private static JLabel createLabel(final String text, final String tooltip) {
-
-    final JLabel label = new JLabel(text);
-    label.setToolTipText(tooltip);
-
-    return label;
+  /**
+   * Create a JLabel retrieving text and tool tip text from resource bundle.
+   * 
+   * @param textKey Key of the JLabel text in the resource bundle
+   * @param toolTipKey Key of the tool tip text in the resource bundle
+   * @return JLabel describing an optional property.
+   */
+  private static JLabel createLabel(final String textKey, final String toolTipKey) {
+    return createLabel(textKey, toolTipKey, false);
   }
 
+  /**
+   * Create a JLabel retrieving text and tool tip text from resource bundle.
+   * 
+   * @param textKey Key of the JLabel text in the resource bundle
+   * @param toolTipKey Key of the tool tip text in the resource bundle
+   * @param isMandatory Whether the property described by the JLabel is mandatory
+   * @return JLabel
+   */
   private static JLabel createLabel(final String textKey, final String toolTipKey,
       final boolean isMandatory) {
 
-    final String text = bundle.getString(textKey) + (isMandatory ? "*" : "");
-    final String toolTip = bundle.getString(toolTipKey);
+    final JLabel label = new JLabel(bundle.getString(textKey) + (isMandatory ? "*" : ""));
+    label.setToolTipText(bundle.getString(toolTipKey));
 
-    return createLabel(text, toolTip);
+    return label;
   }
 
   private static JPanel createAdvancedPanel(final JCheckBox checkbox) {
@@ -609,16 +620,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
               "GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDayToolTip", true);
       final JLabel dietarySoftwareToolLabel =
           createLabel("GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolLabel",
-              "GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolTooltip", false);
+              "GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolTooltip");
       final JLabel foodItemNumberLabel =
           createLabel("GM.EditDietaryAssessmentMethodPanel.foodItemNumberLabel",
-              "GM.EditDietaryAssessmentMethodPanel.foodItemNumberTooltip", false);
+              "GM.EditDietaryAssessmentMethodPanel.foodItemNumberTooltip");
       final JLabel recordTypeLabel =
           createLabel("GM.EditDietaryAssessmentMethodPanel.recordTypeLabel",
-              "GM.EditDietaryAssessmentMethodPanel.recordTypeTooltip", false);
+              "GM.EditDietaryAssessmentMethodPanel.recordTypeTooltip");
       final JLabel foodDescriptionLabel =
           createLabel("GM.EditDietaryAssessmentMethodPanel.foodDescriptionLabel",
-              "GM.EditDietaryAssessmentMethodPanel.foodDescriptionTooltip", false);
+              "GM.EditDietaryAssessmentMethodPanel.foodDescriptionTooltip");
 
       final List<Pair<JLabel, JComponent>> pairs =
           Arrays.asList(new Pair<>(dataCollectionToolLabel, dataCollectionToolField),
@@ -736,44 +747,44 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel hazardNameLabel = createLabel("GM.EditHazardPanel.hazardNameLabel",
           "GM.EditHazardPanel.hazardNameTooltip", true);
       final JLabel hazardDescriptionLabel = createLabel("GM.EditHazardPanel.hazardDescriptionLabel",
-          "GM.EditHazardPanel.hazardDescriptionTooltip", false);
+          "GM.EditHazardPanel.hazardDescriptionTooltip");
       final JLabel hazardUnitLabel = createLabel("GM.EditHazardPanel.hazardUnitLabel",
           "GM.EditHazardPanel.hazardUnitTooltip", true);
       final JLabel adverseEffectLabel = createLabel("GM.EditHazardPanel.adverseEffectLabel",
-          "GM.EditHazardPanel.adverseEffectTooltip", false);
+          "GM.EditHazardPanel.adverseEffectTooltip");
       final JLabel originLabel =
-          createLabel("GM.EditHazardPanel.originLabel", "GM.EditHazardPanel.originTooltip", false);
+          createLabel("GM.EditHazardPanel.originLabel", "GM.EditHazardPanel.originTooltip");
       final JLabel bmdLabel =
-          createLabel("GM.EditHazardPanel.bmdLabel", "GM.EditHazardPanel.bmdTooltip", false);
+          createLabel("GM.EditHazardPanel.bmdLabel", "GM.EditHazardPanel.bmdTooltip");
       final JLabel maxResidueLimitLabel = createLabel("GM.EditHazardPanel.maxResidueLimitLabel",
-          "GM.EditHazardPanel.maxResidueLimitTooltip", false);
+          "GM.EditHazardPanel.maxResidueLimitTooltip");
       final JLabel noObserveAdverseLabel = createLabel("GM.EditHazardPanel.noObservedAdverseLabel",
-          "GM.EditHazardPanel.noObservedAdverseTooltip", false);
+          "GM.EditHazardPanel.noObservedAdverseTooltip");
       final JLabel acceptableOperatorLabel =
           createLabel("GM.EditHazardPanel.acceptableOperatorLabel",
-              "GM.EditHazardPanel.acceptableOperatorTooltip", false);
+              "GM.EditHazardPanel.acceptableOperatorTooltip");
       final JLabel acuteReferenceDoseLabel =
           createLabel("GM.EditHazardPanel.acuteReferenceDoseLabel",
-              "GM.EditHazardPanel.acuteReferenceDoseTooltip", false);
+              "GM.EditHazardPanel.acuteReferenceDoseTooltip");
       final JLabel indSumLabel =
-          createLabel("GM.EditHazardPanel.indSumLabel", "GM.EditHazardPanel.indSumTooltip", false);
+          createLabel("GM.EditHazardPanel.indSumLabel", "GM.EditHazardPanel.indSumTooltip");
       final JLabel acceptableDailyIntakeLabel =
           createLabel("GM.EditHazardPanel.acceptableDailyIntakeLabel",
-              "GM.EditHazardPanel.acceptableDailyIntakeTooltip", false);
-      final JLabel labNameLabel = createLabel("GM.EditHazardPanel.labNameLabel",
-          "GM.EditHazardPanel.labNameTooltip", false);
-      final JLabel labCountryLabel = createLabel("GM.EditHazardPanel.labCountryLabel",
-          "GM.EditHazardPanel.labCountryTooltip", false);
+              "GM.EditHazardPanel.acceptableDailyIntakeTooltip");
+      final JLabel labNameLabel =
+          createLabel("GM.EditHazardPanel.labNameLabel", "GM.EditHazardPanel.labNameTooltip");
+      final JLabel labCountryLabel =
+          createLabel("GM.EditHazardPanel.labCountryLabel", "GM.EditHazardPanel.labCountryTooltip");
       final JLabel detectionLimitLabel = createLabel("GM.EditHazardPanel.detectionLimitLabel",
-          "GM.EditHazardPanel.detectionLimitTooltip", false);
+          "GM.EditHazardPanel.detectionLimitTooltip");
       final JLabel quantificationLimitLabel =
           createLabel("GM.EditHazardPanel.quantificationLimitLabel",
-              "GM.EditHazardPanel.quantificationLimitTooltip", false);
+              "GM.EditHazardPanel.quantificationLimitTooltip");
       final JLabel leftCensoredDataLabel = createLabel("GM.EditHazardPanel.leftCensoredDataLabel",
-          "GM.EditHazardPanel.leftCensoredDataTooltip", false);
+          "GM.EditHazardPanel.leftCensoredDataTooltip");
       final JLabel contaminationRangeLabel =
           createLabel("GM.EditHazardPanel.contaminationRangeLabel",
-              "GM.EditHazardPanel.contaminationRangeTooltip", false);
+              "GM.EditHazardPanel.contaminationRangeTooltip");
 
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
           new Pair<>(hazardTypeLabel, hazardTypeField),
@@ -929,7 +940,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel equationNameLabel = createLabel("GM.EditModelEquationPanel.nameLabel",
           "GM.EditModelEquationPanel.nameTooltip", true);
       final JLabel equationClassLabel = createLabel("GM.EditModelEquationPanel.classLabel",
-          "GM.EditModelEquationPanel.classTooltip", false);
+          "GM.EditModelEquationPanel.classTooltip");
       final JLabel scriptLabel = createLabel("GM.EditModelEquationPanel.scriptLabel",
           "GM.EditModelEquationPanel.scriptTooltip", true);
 
@@ -1042,32 +1053,32 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel nameLabel = createLabel("GM.EditParameterPanel.parameterNameLabel",
           "GM.EditParameterPanel.parameterNameTooltip", true);
       final JLabel descriptionLabel = createLabel("GM.EditParameterPanel.descriptionLabel",
-          "GM.EditParameterPanel.descriptionTooltip", false);
-      final JLabel typeLabel = createLabel("GM.EditParameterPanel.typeLabel",
-          "GM.EditParameterPanel.typeTooltip", false);
+          "GM.EditParameterPanel.descriptionTooltip");
+      final JLabel typeLabel =
+          createLabel("GM.EditParameterPanel.typeLabel", "GM.EditParameterPanel.typeTooltip");
       final JLabel unitLabel =
           createLabel("GM.EditParameterPanel.unitLabel", "GM.EditParameterPanel.unitTooltip", true);
       final JLabel unitCategoryLabel = createLabel("GM.EditParameterPanel.unitCategoryLabel",
           "GM.EditParameterPanel.unitCategoryTooltip", true);
       final JLabel dataTypeLabel = createLabel("GM.EditParameterPanel.dataTypeLabel",
           "GM.EditParameterPanel.dataTypeTooltip", true);
-      final JLabel sourceLabel = createLabel("GM.EditParameterPanel.sourceLabel",
-          "GM.EditParameterPanel.sourceTooltip", false);
-      final JLabel subjectLabel = createLabel("GM.EditParameterPanel.subjectLabel",
-          "GM.EditParameterPanel.subjectTooltip", false);
+      final JLabel sourceLabel =
+          createLabel("GM.EditParameterPanel.sourceLabel", "GM.EditParameterPanel.sourceTooltip");
+      final JLabel subjectLabel =
+          createLabel("GM.EditParameterPanel.subjectLabel", "GM.EditParameterPanel.subjectTooltip");
       final JLabel distributionLabel = createLabel("GM.EditParameterPanel.distributionLabel",
-          "GM.EditParameterPanel.distributionTooltip", false);
-      final JLabel valueLabel = createLabel("GM.EditParameterPanel.valueLabel",
-          "GM.EditParameterPanel.valueTooltip", false);
+          "GM.EditParameterPanel.distributionTooltip");
+      final JLabel valueLabel =
+          createLabel("GM.EditParameterPanel.valueLabel", "GM.EditParameterPanel.valueTooltip");
       final JLabel referenceLabel = createLabel("GM.EditParameterPanel.referenceLabel",
-          "GM.EditParameterPanel.referenceTooltip", false);
+          "GM.EditParameterPanel.referenceTooltip");
       final JLabel variabilitySubjectLabel =
           createLabel("GM.EditParameterPanel.variabilitySubjectLabel",
-              "GM.EditParameterPanel.variabilitySubjectTooltip", false);
+              "GM.EditParameterPanel.variabilitySubjectTooltip");
       final JLabel applicabilityLabel = createLabel("GM.EditParameterPanel.applicabilityLabel",
-          "GM.EditParameterPanel.applicabilityTooltip", false);
-      final JLabel errorLabel = createLabel("GM.EditParameterPanel.errorLabel",
-          "GM.EditParameterPanel.errorTooltip", false);
+          "GM.EditParameterPanel.applicabilityTooltip");
+      final JLabel errorLabel =
+          createLabel("GM.EditParameterPanel.errorLabel", "GM.EditParameterPanel.errorTooltip");
 
       final JSpinner errorSpinner = createSpinner(errorSpinnerModel);
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(idLabel, idTextField),
@@ -1233,13 +1244,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
               "GM.EditPopulationGroupPanel.populationNameTooltip", true);
       final JLabel targetPopulationLabel =
           createLabel("GM.EditPopulationGroupPanel.targetPopulationLabel",
-              "GM.EditPopulationGroupPanel.targetPopulationTooltip", false);
+              "GM.EditPopulationGroupPanel.targetPopulationTooltip");
       final JLabel populationSpanLabel =
           createLabel("GM.EditPopulationGroupPanel.populationSpanLabel",
-              "GM.EditPopulationGroupPanel.populationSpanTooltip", false);
+              "GM.EditPopulationGroupPanel.populationSpanTooltip");
       final JLabel populationDescriptionLabel =
           createLabel("GM.EditPopulationGroupPanel.populationDescriptionLabel",
-              "GM.EditPopulationGroupPanel.populationDescriptionTooltip", false);
+              "GM.EditPopulationGroupPanel.populationDescriptionTooltip");
       final JLabel populationAgeLabel =
           createLabel("GM.EditPopulationGroupPanel.populationAgeLabel",
               "GM.EditPopulationGroupPanel.populationAgeTooltip");
@@ -1247,21 +1258,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           createLabel("GM.EditPopulationGroupPanel.populationGenderLabel",
               "GM.EditPopulationGroupPanel.populationGenderTooltip");
       final JLabel bmiLabel = createLabel("GM.EditPopulationGroupPanel.bmiLabel",
-          "GM.EditPopulationGroupPanel.bmiTooltip", false);
+          "GM.EditPopulationGroupPanel.bmiTooltip");
       final JLabel specialDietGroupLabel =
           createLabel("GM.EditPopulationGroupPanel.specialDietGroupsLabel",
-              "GM.EditPopulationGroupPanel.specialDietGroupsTooltip", false);
+              "GM.EditPopulationGroupPanel.specialDietGroupsTooltip");
       final JLabel patternConsumptionLabel =
           createLabel("GM.EditPopulationGroupPanel.patternConsumptionLabel",
-              "GM.EditPopulationGroupPanel.patternConsumptionTooltip", false);
+              "GM.EditPopulationGroupPanel.patternConsumptionTooltip");
       final JLabel regionLabel = createLabel("GM.EditPopulationGroupPanel.regionLabel",
-          "GM.EditPopulationGroupPanel.regionTooltip", false);
+          "GM.EditPopulationGroupPanel.regionTooltip");
       final JLabel countryLabel = createLabel("GM.EditPopulationGroupPanel.countryLabel",
-          "GM.EditPopulationGroupPanel.countryTooltip", false);
+          "GM.EditPopulationGroupPanel.countryTooltip");
       final JLabel riskLabel = createLabel("GM.EditPopulationGroupPanel.riskAndPopulationLabel",
-          "GM.EditPopulationGroupPanel.riskAndPopulationTooltip", false);
+          "GM.EditPopulationGroupPanel.riskAndPopulationTooltip");
       final JLabel seasonLabel = createLabel("GM.EditPopulationGroupPanel.seasonLabel",
-          "GM.EditPopulationGroupPanel.seasonTooltip", false);
+          "GM.EditPopulationGroupPanel.seasonTooltip");
 
       final List<Pair<JLabel, JComponent>> pairs =
           Arrays.asList(new Pair<>(populationNameLabel, populationNameTextField),
@@ -1406,25 +1417,25 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel envNameLabel = createLabel("GM.EditProductPanel.envNameLabel",
           "GM.EditProductPanel.envNameTooltip", true);
       final JLabel envDescriptionLabel = createLabel("GM.EditProductPanel.envDescriptionLabel",
-          "GM.EditProductPanel.envDescriptionTooltip", false);;
+          "GM.EditProductPanel.envDescriptionTooltip");
       final JLabel envUnitLabel = createLabel("GM.EditProductPanel.envUnitLabel",
           "GM.EditProductPanel.envUnitTooltip", true);
       final JLabel productionMethodLabel = createLabel("GM.EditProductPanel.productionMethodLabel",
-          "GM.EditProductPanel.productionMethodTooltip", false);
+          "GM.EditProductPanel.productionMethodTooltip");
       final JLabel packagingLabel =
           createLabel("GM.EditProductPanel.packagingLabel", "GM.EditProductPanel.packagingTooltip");
       final JLabel productTreatmentLabel = createLabel("GM.EditProductPanel.productTreatmentLabel",
-          "GM.EditProductPanel.productTreatmentTooltip", false);
+          "GM.EditProductPanel.productTreatmentTooltip");
       final JLabel originCountryLabel = createLabel("GM.EditProductPanel.originCountryLabel",
-          "GM.EditProductPanel.originCountryTooltip", false);
+          "GM.EditProductPanel.originCountryTooltip");
       final JLabel originAreaLabel = createLabel("GM.EditProductPanel.originAreaLabel",
-          "GM.EditProductPanel.originAreaTooltip", false);
+          "GM.EditProductPanel.originAreaTooltip");
       final JLabel fisheriesAreaLabel = createLabel("GM.EditProductPanel.fisheriesAreaLabel",
-          "GM.EditProductPanel.fisheriesAreaTooltip", false);
+          "GM.EditProductPanel.fisheriesAreaTooltip");
       final JLabel productionDateLabel = createLabel("GM.EditProductPanel.productionDateLabel",
-          "GM.EditProductPanel.productionDateTooltip", false);
+          "GM.EditProductPanel.productionDateTooltip");
       final JLabel expirationDateLabel = createLabel("GM.EditProductPanel.expirationDateLabel",
-          "GM.EditProductPanel.expirationDateTooltip", false);
+          "GM.EditProductPanel.expirationDateTooltip");
 
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs =
@@ -1757,21 +1768,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Create labels
       final JLabel sampleNameLabel = createLabel("GM.EditStudySamplePanel.sampleNameLabel",
-          "GM.EditStudySamplePanel.sampleNameTooltip", true);;
+          "GM.EditStudySamplePanel.sampleNameTooltip", true);
       final JLabel moisturePercentageLabel =
           createLabel("GM.EditStudySamplePanel.moisturePercentageLabel",
-              "GM.EditStudySamplePanel.moisturePercentageTooltip", false);
+              "GM.EditStudySamplePanel.moisturePercentageTooltip");
       final JLabel fatPercentageLabel = createLabel("GM.EditStudySamplePanel.fatPercentageLabel",
-          "GM.EditStudySamplePanel.fatPercentageTooltip", false);
+          "GM.EditStudySamplePanel.fatPercentageTooltip");
       final JLabel sampleProtocolLabel = createLabel("GM.EditStudySamplePanel.sampleProtocolLabel",
           "GM.EditStudySamplePanel.sampleProtocolTooltip", true);
       final JLabel samplingStrategyLabel =
           createLabel("GM.EditStudySamplePanel.samplingStrategyLabel",
-              "GM.EditStudySamplePanel.samplingStrategyTooltip", false);
+              "GM.EditStudySamplePanel.samplingStrategyTooltip");
       final JLabel samplingTypeLabel = createLabel("GM.EditStudySamplePanel.samplingTypeLabel",
-          "GM.EditStudySamplePanel.samplingTypeTooltip", false);
+          "GM.EditStudySamplePanel.samplingTypeTooltip");
       final JLabel samplingMethodLabel = createLabel("GM.EditStudySamplePanel.samplingMethodLabel",
-          "GM.EditStudySamplePanel.samplingMethodTooltip", false);
+          "GM.EditStudySamplePanel.samplingMethodTooltip");
       final JLabel samplingPlanLabel = createLabel("GM.EditStudySamplePanel.samplingPlanLabel",
           "GM.EditStudySamplePanel.samplingPlanTooltip", true);
       final JLabel samplingWeightLabel = createLabel("GM.EditStudySamplePanel.samplingWeightLabel",
@@ -1779,9 +1790,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel samplingSizeLabel = createLabel("GM.EditStudySamplePanel.samplingSizeLabel",
           "GM.EditStudySamplePanel.samplingSizeTooltip", true);
       final JLabel lotSizeUnitLabel = createLabel("GM.EditStudySamplePanel.lotSizeUnitLabel",
-          "GM.EditStudySamplePanel.lotSizeUnitTooltip", false);
+          "GM.EditStudySamplePanel.lotSizeUnitTooltip");
       final JLabel samplingPointLabel = createLabel("GM.EditStudySamplePanel.samplingPointLabel",
-          "GM.EditStudySamplePanel.samplingPointTooltip", false);
+          "GM.EditStudySamplePanel.samplingPointTooltip");
 
       // Build UI
       final JSpinner moisturePercentageSpinner = createSpinner(moisturePercentageSpinnerModel);
@@ -2018,30 +2029,30 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Create labels
       final JLabel studyNameLabel = createLabel("GM.GeneralInformationPanel.studyNameLabel",
-          "GM.GeneralInformationPanel.studyNameTooltip", false);
+          "GM.GeneralInformationPanel.studyNameTooltip");
       final JLabel identifierLabel = createLabel("GM.GeneralInformationPanel.identifierLabel",
-          "GM.GeneralInformationPanel.identifierTooltip", false);
+          "GM.GeneralInformationPanel.identifierTooltip");
       final JLabel creationDateLabel = createLabel("GM.GeneralInformationPanel.creationDateLabel",
-          "GM.GeneralInformationPanel.creationDateTooltip", false);
+          "GM.GeneralInformationPanel.creationDateTooltip");
       final JLabel rightsLabel = createLabel("GM.GeneralInformationPanel.rightsLabel",
-          "GM.GeneralInformationPanel.rightsTooltip", false);
+          "GM.GeneralInformationPanel.rightsTooltip");
       final JLabel urlLabel = createLabel("GM.GeneralInformationPanel.urlLabel",
-          "GM.GeneralInformationPanel.urlTooltip", false);
+          "GM.GeneralInformationPanel.urlTooltip");
       final JLabel formatLabel = createLabel("GM.GeneralInformationPanel.formatLabel",
-          "GM.GeneralInformationPanel.formatTooltip", false);
+          "GM.GeneralInformationPanel.formatTooltip");
       final JLabel languageLabel = createLabel("GM.GeneralInformationPanel.languageLabel",
-          "GM.GeneralInformationPanel.languageTooltip", false);
+          "GM.GeneralInformationPanel.languageTooltip");
       final JLabel softwareLabel = createLabel("GM.GeneralInformationPanel.softwareLabel",
-          "GM.GeneralInformationPanel.softwareTooltip", false);
+          "GM.GeneralInformationPanel.softwareTooltip");
       final JLabel languageWrittenInLabel =
           createLabel("GM.GeneralInformationPanel.languageWrittenInLabel",
-              "GM.GeneralInformationPanel.languageWrittenInTooltip", false);
+              "GM.GeneralInformationPanel.languageWrittenInTooltip");
       final JLabel statusLabel = createLabel("GM.GeneralInformationPanel.statusLabel",
-          "GM.GeneralInformationPanel.statusTooltip", false);
+          "GM.GeneralInformationPanel.statusTooltip");
       final JLabel objectiveLabel = createLabel("GM.GeneralInformationPanel.objectiveLabel",
-          "GM.GeneralInformationPanel.objectiveTooltip", false);
+          "GM.GeneralInformationPanel.objectiveTooltip");
       final JLabel descriptionLabel = createLabel("GM.GeneralInformationPanel.descriptionLabel",
-          "GM.GeneralInformationPanel.descriptionTooltip", false);
+          "GM.GeneralInformationPanel.descriptionTooltip");
 
       // Hide initially advanced components
       final List<JComponent> advancedComponents = Arrays.asList(formatLabel, formatField,
@@ -2458,13 +2469,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel populationLabel =
           new JLabel(bundle.getString("GM.ScopePanel.populationGroupLabel"));
       final JLabel commentLabel =
-          createLabel("GM.ScopePanel.commentLabel", "GM.ScopePanel.commentTooltip", false);
+          createLabel("GM.ScopePanel.commentLabel", "GM.ScopePanel.commentTooltip");
       final JLabel temporalInformationLabel = createLabel("GM.ScopePanel.temporalInformationLabel",
-          "GM.ScopePanel.temporalInformationTooltip", false);
+          "GM.ScopePanel.temporalInformationTooltip");
       final JLabel regionLabel =
-          createLabel("GM.ScopePanel.regionLabel", "GM.ScopePanel.regionTooltip", false);
+          createLabel("GM.ScopePanel.regionLabel", "GM.ScopePanel.regionTooltip");
       final JLabel countryLabel =
-          createLabel("GM.ScopePanel.countryLabel", "GM.ScopePanel.countryTooltip", false);
+          createLabel("GM.ScopePanel.countryLabel", "GM.ScopePanel.countryTooltip");
 
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
@@ -2686,37 +2697,35 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel studyTitleLabel =
           createLabel("GM.StudyPanel.studyTitleLabel", "GM.StudyPanel.studyTitleTooltip", true);
       final JLabel studyDescriptionLabel = createLabel("GM.StudyPanel.studyDescriptionLabel",
-          "GM.StudyPanel.studyDescriptionTooltip", false);
-      final JLabel studyDesignTypeLabel = createLabel("GM.StudyPanel.studyDesignTypeLabel",
-          "GM.StudyPanel.studyDesignTypeTooltip", false);
+          "GM.StudyPanel.studyDescriptionTooltip");
+      final JLabel studyDesignTypeLabel =
+          createLabel("GM.StudyPanel.studyDesignTypeLabel", "GM.StudyPanel.studyDesignTypeTooltip");
       final JLabel studyAssayMeasurementsTypeLabel = createLabel(
-          "GM.StudyPanel.studyMeasurementLabel", "GM.StudyPanel.studyMeasurementTooltip", false);
-      final JLabel studyAssayTechnologyTypeLabel =
-          createLabel("GM.StudyPanel.studyTechnologyTypeLabel",
-              "GM.StudyPanel.studyTechnologyTypeTooltip", false);
+          "GM.StudyPanel.studyMeasurementLabel", "GM.StudyPanel.studyMeasurementTooltip");
+      final JLabel studyAssayTechnologyTypeLabel = createLabel(
+          "GM.StudyPanel.studyTechnologyTypeLabel", "GM.StudyPanel.studyTechnologyTypeTooltip");
       final JLabel studyAssayTechnologyPlatformLabel =
           createLabel("GM.StudyPanel.studyTechnologyPlatformLabel",
-              "GM.StudyPanel.studyTechnologyPlatformTooltip", false);
+              "GM.StudyPanel.studyTechnologyPlatformTooltip");
       final JLabel accreditationProcedureLabel =
           createLabel("GM.StudyPanel.accreditationProcedureLabel",
-              "GM.StudyPanel.accreditationProcedureTooltip", false);
+              "GM.StudyPanel.accreditationProcedureTooltip");
       final JLabel studyProtocolNameLabel = createLabel("GM.StudyPanel.studyProtocolNameLabel",
-          "GM.StudyPanel.studyProtocolNameTooltip", false);
+          "GM.StudyPanel.studyProtocolNameTooltip");
       final JLabel studyProtocolTypeLabel = createLabel("GM.StudyPanel.studyProtocolTypeLabel",
-          "GM.StudyPanel.studyProtocolTypeTooltip", false);
+          "GM.StudyPanel.studyProtocolTypeTooltip");
       final JLabel studyProtocolDescriptionLabel =
           createLabel("GM.StudyPanel.studyProtocolDescriptionLabel",
-              "GM.StudyPanel.studyProtocolDescriptionTooltip", false);
+              "GM.StudyPanel.studyProtocolDescriptionTooltip");
       final JLabel studyProtocolURILabel = createLabel("GM.StudyPanel.studyProtocolURILabel",
-          "GM.StudyPanel.studyProtocolURITooltip", false);
-      final JLabel studyProtocolVersionLabel =
-          createLabel("GM.StudyPanel.studyProtocolVersionLabel",
-              "GM.StudyPanel.studyProtocolVersionTooltip", false);
+          "GM.StudyPanel.studyProtocolURITooltip");
+      final JLabel studyProtocolVersionLabel = createLabel(
+          "GM.StudyPanel.studyProtocolVersionLabel", "GM.StudyPanel.studyProtocolVersionTooltip");
       final JLabel studyProtocolParametersLabel =
-          createLabel("GM.StudyPanel.parametersLabel", "GM.StudyPanel.parametersTooltip", false);
+          createLabel("GM.StudyPanel.parametersLabel", "GM.StudyPanel.parametersTooltip");
       final JLabel studyProtocolComponentsTypeLabel =
           createLabel("GM.StudyPanel.studyProtocolComponentsTypeLabel",
-              "GM.StudyPanel.studyProtocolComponentsTypeTooltip", false);
+              "GM.StudyPanel.studyProtocolComponentsTypeTooltip");
 
       // Init combo boxes
       studyDesignTypeField.setPossibleValues(vocabs.get("Study Design Type"));
