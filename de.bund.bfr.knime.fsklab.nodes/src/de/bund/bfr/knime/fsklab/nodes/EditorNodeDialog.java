@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -356,16 +357,56 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     return new JTextArea(5, 30);
   }
 
+  /**
+   * Adds a component to the end of a container. Also notifies the layout manager to add the
+   * component to this container's layout using the specified constraints. This is a convenience
+   * method for {@link EditorNodeDialog#add(JPanel, JComponent, int, int, int, int)} where the
+   * initial grid width and height are 1.
+   * 
+   * @param panel the panel the component is added to
+   * @param comp the component to be added
+   * @param gridx the initial gridx value
+   * @param gridy the initial gridy value
+   * 
+   * @see {@link Container#add(java.awt.Component, java.lang.Object)}
+   */
   private static void add(final JPanel panel, final JComponent comp, final int gridx,
       final int gridy) {
     add(panel, comp, gridx, gridy, 1, 1);
   }
 
+  /**
+   * Adds a component to the end of a container. Also notifies the layout manager to add the
+   * component to this container's layout using the specified constraints. This is a convenience
+   * method for {@link EditorNodeDialog#add(JPanel, JComponent, int, int, int, int) where the
+   * initial grid height is 1.
+   * 
+   * @param panel the panel the component is added to
+   * @param comp the component to be added
+   * @param gridx the initial gridx value
+   * @param gridy the initial gridy value
+   * @param gridwidth the initial grid width
+   * 
+   * @see {@link Container#add(java.awt.Component, java.lang.Object)}
+   */
   private static void add(final JPanel panel, final JComponent comp, final int gridx,
       final int gridy, final int gridwidth) {
     add(panel, comp, gridx, gridy, gridwidth, 1);
   }
 
+  /**
+   * Adds a component to the end of a container. Also notifies the layout manager to add the
+   * component to this container's layout using the specified constraints.
+   * 
+   * @param panel the panel the component is added to
+   * @param comp the component to be added
+   * @param gridx the initial gridx value
+   * @param gridy the initial gridy value
+   * @param gridwidth the initial grid width
+   * @param gridheight the initial grid height
+   * 
+   * @see {@link Container#add(java.awt.Component, java.lang.Object)}
+   */
   private static void add(final JPanel panel, final JComponent comp, final int gridx,
       final int gridy, final int gridwidth, final int gridheight) {
 
@@ -1603,8 +1644,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         final JComponent field = pair.getSecond();
         label.setLabelFor(field);
 
-        EditorNodeDialog.add(this, label, index + 1, 0);
-        EditorNodeDialog.add(this, field, index + 1, 1);
+        EditorNodeDialog.add(this, label, 0, index + 1);
+        EditorNodeDialog.add(this, field, 1, index + 1);
       }
 
       // If simple mode hide advanced components
