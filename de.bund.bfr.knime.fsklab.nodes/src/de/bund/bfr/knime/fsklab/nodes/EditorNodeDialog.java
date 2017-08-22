@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +41,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractSpinnerModel;
 import javax.swing.BorderFactory;
@@ -73,6 +73,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
@@ -108,7 +109,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   private final ScriptPanel vizScriptPanel = new ScriptPanel("Visualization script", "", true);
   private final GeneralInformationPanel generalInformationPanel = new GeneralInformationPanel();
   private final ScopePanel scopePanel = new ScopePanel();
-  // TODO: data background panel
+  private final DataBackgroundPanel dataBackgroundPanel = new DataBackgroundPanel();
   // TODO: model math panel
 
   private EditorNodeSettings settings;
@@ -127,7 +128,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     addTab(vizScriptPanel.getName(), vizScriptPanel);
     addTab("General information", new JScrollPane(generalInformationPanel));
     addTab("Scope", new JScrollPane(scopePanel));
-    // TODO: add data background panel
+    addTab("Data background", new JScrollPane(dataBackgroundPanel));
     // TODO: add model math panel
 
     updatePanels();
@@ -141,7 +142,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     generalInformationPanel.init(settings.genericModel.generalInformation);
     scopePanel.init(settings.genericModel.scope);
-    // TODO: init data background panel
+    dataBackgroundPanel.init(settings.genericModel.dataBackground);
     // TODO: init model math panel
   }
 
@@ -215,7 +216,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     this.settings.genericModel.generalInformation = generalInformationPanel.get();
     this.settings.genericModel.scope = scopePanel.get();
-    // TODO: get data background
+    this.settings.genericModel.dataBackground = dataBackgroundPanel.get();
     // TODO: get model math
 
     this.settings.saveSettings(settings);
@@ -273,7 +274,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  private static Logger LOGGER = Logger.getAnonymousLogger();
+  private static NodeLogger LOGGER = NodeLogger.getLogger("EditNodeDialog");
 
   /**
    * Read controlled vocabulary from spreadsheet.
@@ -285,7 +286,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     final XSSFSheet sheet = workbook.getSheet(sheetname);
     if (sheet == null) {
-      LOGGER.warning("Spreadsheet not found: " + sheetname);
+      LOGGER.warn("Spreadsheet not found: " + sheetname);
       return Collections.emptySet();
     }
 
@@ -590,7 +591,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     EditAssayPanel(final boolean isAdvanced) {
 
       final JLabel nameLabel =
-          createLabel("GM.EditAssayPanel.nameLabel", "GM.EditAssayPanel.nameToolTip", true);
+          createLabel("GM.EditAssayPanel.nameLabel", "GM.EditAssayPanel.nameTooltip", true);
       final JLabel descriptionLabel = createLabel("GM.EditAssayPanel.descriptionLabel",
           "GM.EditAssayPanel.descriptionTooltip", true);
 
@@ -657,8 +658,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           createLabel("GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel",
               "GM.EditDietaryAssessmentMethodPanel.dataCollectionToolTooltip", true);
       final JLabel nonConsecutiveOneDayLabel =
-          createLabel("GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDayLabel",
-              "GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDayToolTip", true);
+          createLabel("GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysLabel",
+              "GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysTooltip", true);
       final JLabel dietarySoftwareToolLabel =
           createLabel("GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolLabel",
               "GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolTooltip");
@@ -716,8 +717,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final DietaryAssessmentMethod method = new DietaryAssessmentMethod();
       method.collectionTool = (String) dataCollectionToolField.getSelectedItem();
-      method.numberOfNonConsecutiveOneDay =
-          Integer.parseInt(nonConsecutiveOneDayTextField.getText());
+
+      final String nonConsecutiveOneDayTextFieldText = nonConsecutiveOneDayTextField.getText();
+      if (StringUtils.isNotBlank(nonConsecutiveOneDayTextFieldText)) {
+        try {
+          method.numberOfNonConsecutiveOneDay = Integer.parseInt(nonConsecutiveOneDayTextFieldText);
+        } catch (final NumberFormatException exception) {
+          LOGGER.warn("numberOfNonConsecutiveOneDay", exception);
+        }
+      }
+
       method.softwareTool = dietarySoftwareToolTextField.getText();
       if (foodItemNumberTextField.getText() != null) {
         method.numberOfFoodItems.add(foodItemNumberTextField.getText());
@@ -2566,8 +2575,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       scope.product = editProductPanel.get();
       scope.hazard = editHazardPanel.get();
       scope.populationGroup = editPopulationGroupPanel.get();
-      scope.temporalInformation =
-          new SimpleDateFormat(dateChooser.getDateFormatString()).format(dateChooser.getDate());
+
+      final Date date = dateChooser.getDate();
+      if (date != null) {
+        scope.temporalInformation =
+            new SimpleDateFormat(dateChooser.getDateFormatString()).format(date);
+      }
       scope.region.add((String) regionField.getSelectedItem());
       scope.country.add((String) countryField.getSelectedItem());
 
@@ -2577,17 +2590,25 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
   private class DataBackgroundPanel extends Box {
 
+    private static final long serialVersionUID = 5789423098065477610L;
+
     final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
     final AutoSuggestField laboratoryAccreditationField = new AutoSuggestField(10);
 
-    DataBackground dataBackground;
+    // TODO: advanced mode
+    private final EditStudySamplePanel editStudySamplePanel = new EditStudySamplePanel(false);
 
-    DataBackgroundPanel(final DataBackground dataBackground) {
+    // TODO: advanced mode
+    private final EditDietaryAssessmentMethodPanel editDietaryAssessmentMethodPanel =
+        new EditDietaryAssessmentMethodPanel(false);
+
+    // TODO: advanced mode
+    private final EditAssayPanel editAssayPanel = new EditAssayPanel(false);
+
+    DataBackgroundPanel() {
 
       super(BoxLayout.PAGE_AXIS);
-
-      this.dataBackground = dataBackground;
 
       final StudyPanel studyPanel = new StudyPanel();
       studyPanel.setBorder(BorderFactory.createTitledBorder("Study"));
@@ -2596,40 +2617,26 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       studySampleButton.setToolTipText("Click me to add Study Sample");
       studySampleButton.addActionListener(event -> {
 
-        final EditStudySamplePanel editPanel =
-            new EditStudySamplePanel(advancedCheckBox.isSelected());
-        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create Study sample");
+        final ValidatableDialog dlg =
+            new ValidatableDialog(editStudySamplePanel, "Create Study sample");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-          final StudySample studySample = editPanel.get();
+          final StudySample studySample = editStudySamplePanel.get();
           // Update button's text
           studySampleButton.setText(studySample.sample);
-
-          if (this.dataBackground == null) {
-            this.dataBackground = new DataBackground();
-          }
-          dataBackground.studySample = studySample;
         }
       });
 
       final JButton dietaryAssessmentMethodButton = new JButton();
       dietaryAssessmentMethodButton.setToolTipText("Click me to add Dietary assessment method");
       dietaryAssessmentMethodButton.addActionListener(event -> {
-
-        final EditDietaryAssessmentMethodPanel editPanel =
-            new EditDietaryAssessmentMethodPanel(advancedCheckBox.isSelected());
-        final ValidatableDialog dlg =
-            new ValidatableDialog(editPanel, "Create dietary assessment method");
+        final ValidatableDialog dlg = new ValidatableDialog(editDietaryAssessmentMethodPanel,
+            "Create dietary assessment method");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-          final DietaryAssessmentMethod method = editPanel.get();
+          final DietaryAssessmentMethod method = editDietaryAssessmentMethodPanel.get();
           // Update button's text
           dietaryAssessmentMethodButton.setText(method.collectionTool);
-
-          if (this.dataBackground == null) {
-            this.dataBackground = new DataBackground();
-          }
-          dataBackground.dietaryAssessmentMethod = method;
         }
       });
 
@@ -2638,18 +2645,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JButton assayButton = new JButton();
       assayButton.setToolTipText("Click me to add Assay");
       assayButton.addActionListener(event -> {
-        final EditAssayPanel editPanel = new EditAssayPanel(advancedCheckBox.isSelected());
-
-        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create assay");
+        final ValidatableDialog dlg = new ValidatableDialog(editAssayPanel, "Create assay");
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-          final Assay assay = editPanel.get();
+          final Assay assay = editAssayPanel.get();
           // Update button's text
           assayButton.setText(assay.name);
-
-          if (this.dataBackground == null) {
-            this.dataBackground = new DataBackground();
-          }
-          dataBackground.assay = assay;
         }
       });
 
@@ -2686,6 +2686,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       add(createAdvancedPanel(advancedCheckBox));
       add(Box.createGlue());
       add(propertiesPanel);
+    }
+
+    void init(final DataBackground dataBackground) {
+      if (dataBackground != null) {
+        editStudySamplePanel.init(dataBackground.studySample);
+        editDietaryAssessmentMethodPanel.init(dataBackground.dietaryAssessmentMethod);
+        editAssayPanel.init(dataBackground.assay);
+      }
+    }
+
+    DataBackground get() {
+      final DataBackground dataBackground = new DataBackground();
+      dataBackground.studySample = editStudySamplePanel.get();
+      dataBackground.dietaryAssessmentMethod = editDietaryAssessmentMethodPanel.get();
+      dataBackground.assay = editAssayPanel.get();
+
+      return dataBackground;
     }
   }
 
@@ -2741,32 +2758,32 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           "GM.StudyPanel.studyDescriptionTooltip");
       final JLabel studyDesignTypeLabel =
           createLabel("GM.StudyPanel.studyDesignTypeLabel", "GM.StudyPanel.studyDesignTypeTooltip");
-      final JLabel studyAssayMeasurementsTypeLabel = createLabel(
-          "GM.StudyPanel.studyMeasurementLabel", "GM.StudyPanel.studyMeasurementTooltip");
-      final JLabel studyAssayTechnologyTypeLabel = createLabel(
-          "GM.StudyPanel.studyTechnologyTypeLabel", "GM.StudyPanel.studyTechnologyTypeTooltip");
+      final JLabel studyAssayMeasurementsTypeLabel =
+          createLabel("GM.StudyPanel.studyAssayMeasurementsTypeLabel",
+              "GM.StudyPanel.studyAssayMeasurementsTypeTooltip");
+      final JLabel studyAssayTechnologyTypeLabel =
+          createLabel("GM.StudyPanel.studyAssayTechnologyTypeLabel",
+              "GM.StudyPanel.studyAssayTechnologyTypeTooltip");
       final JLabel studyAssayTechnologyPlatformLabel =
-          createLabel("GM.StudyPanel.studyTechnologyPlatformLabel",
-              "GM.StudyPanel.studyTechnologyPlatformTooltip");
+          createLabel("GM.StudyPanel.studyAssayTechnologyPlatformLabel",
+              "GM.StudyPanel.studyAssayTechnologyPlatformTooltip");
       final JLabel accreditationProcedureLabel =
           createLabel("GM.StudyPanel.accreditationProcedureLabel",
               "GM.StudyPanel.accreditationProcedureTooltip");
-      final JLabel studyProtocolNameLabel = createLabel("GM.StudyPanel.studyProtocolNameLabel",
-          "GM.StudyPanel.studyProtocolNameTooltip");
-      final JLabel studyProtocolTypeLabel = createLabel("GM.StudyPanel.studyProtocolTypeLabel",
-          "GM.StudyPanel.studyProtocolTypeTooltip");
-      final JLabel studyProtocolDescriptionLabel =
-          createLabel("GM.StudyPanel.studyProtocolDescriptionLabel",
-              "GM.StudyPanel.studyProtocolDescriptionTooltip");
-      final JLabel studyProtocolURILabel = createLabel("GM.StudyPanel.studyProtocolURILabel",
-          "GM.StudyPanel.studyProtocolURITooltip");
-      final JLabel studyProtocolVersionLabel = createLabel(
-          "GM.StudyPanel.studyProtocolVersionLabel", "GM.StudyPanel.studyProtocolVersionTooltip");
+      final JLabel studyProtocolNameLabel =
+          createLabel("GM.StudyPanel.protocolNameLabel", "GM.StudyPanel.protocolNameTooltip");
+      final JLabel studyProtocolTypeLabel =
+          createLabel("GM.StudyPanel.protocolTypeLabel", "GM.StudyPanel.protocolTypeTooltip");
+      final JLabel studyProtocolDescriptionLabel = createLabel(
+          "GM.StudyPanel.protocolDescriptionLabel", "GM.StudyPanel.protocolDescriptionTooltip");
+      final JLabel studyProtocolURILabel =
+          createLabel("GM.StudyPanel.protocolURILabel", "GM.StudyPanel.protocolURITooltip");
+      final JLabel studyProtocolVersionLabel = createLabel("GM.StudyPanel.protocolDescriptionLabel",
+          "GM.StudyPanel.protocolDescriptionTooltip");
       final JLabel studyProtocolParametersLabel =
           createLabel("GM.StudyPanel.parametersLabel", "GM.StudyPanel.parametersTooltip");
       final JLabel studyProtocolComponentsTypeLabel =
-          createLabel("GM.StudyPanel.studyProtocolComponentsTypeLabel",
-              "GM.StudyPanel.studyProtocolComponentsTypeTooltip");
+          createLabel("GM.StudyPanel.componentsTypeLabel", "GM.StudyPanel.componentsTypeTooltip");
 
       // Init combo boxes
       studyDesignTypeField.setPossibleValues(vocabs.get("Study Design Type"));
