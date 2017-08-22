@@ -44,7 +44,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.RakipModule;
 
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
@@ -54,6 +53,7 @@ import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
+import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 

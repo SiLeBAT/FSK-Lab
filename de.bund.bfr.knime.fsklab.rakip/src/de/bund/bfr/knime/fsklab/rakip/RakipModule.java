@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.databind;
+package de.bund.bfr.knime.fsklab.rakip;
 
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;

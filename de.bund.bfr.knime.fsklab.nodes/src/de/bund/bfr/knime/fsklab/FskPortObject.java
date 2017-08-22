@@ -57,7 +57,6 @@ import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.RakipModule;
 import com.gmail.gcolaianni5.jris.bean.Record;
 import com.gmail.gcolaianni5.jris.bean.Type;
 
@@ -75,6 +74,7 @@ import de.bund.bfr.knime.fsklab.rakip.ModelMath;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
 import de.bund.bfr.knime.fsklab.rakip.Product;
+import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
