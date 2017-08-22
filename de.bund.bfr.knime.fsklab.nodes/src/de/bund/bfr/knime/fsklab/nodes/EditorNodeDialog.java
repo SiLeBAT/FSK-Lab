@@ -2453,9 +2453,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       // Create labels
-      final JLabel productLabel = new JLabel("GM.ScopePanel.productLabel");
-      final JLabel hazardLabel = new JLabel("GM.ScopePanel.hazardLabel");
-      final JLabel populationLabel = new JLabel("GM.ScopePanel.populationGroupLabel");
+      final JLabel productLabel = new JLabel(bundle.getString("GM.ScopePanel.productLabel"));
+      final JLabel hazardLabel = new JLabel(bundle.getString("GM.ScopePanel.hazardLabel"));
+      final JLabel populationLabel =
+          new JLabel(bundle.getString("GM.ScopePanel.populationGroupLabel"));
       final JLabel commentLabel =
           createLabel("GM.ScopePanel.commentLabel", "GM.ScopePanel.commentTooltip", false);
       final JLabel temporalInformationLabel = createLabel("GM.ScopePanel.temporalInformationLabel",
