@@ -2824,14 +2824,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     final AutoSuggestField laboratoryAccreditationField = new AutoSuggestField(10);
 
-    // TODO: advanced mode
     private final EditStudySamplePanel editStudySamplePanel = new EditStudySamplePanel(false);
-
-    // TODO: advanced mode
     private final EditDietaryAssessmentMethodPanel editDietaryAssessmentMethodPanel =
         new EditDietaryAssessmentMethodPanel(false);
-
-    // TODO: advanced mode
     private final EditAssayPanel editAssayPanel = new EditAssayPanel(false);
 
     DataBackgroundPanel() {
@@ -2906,8 +2901,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Advanced `checkbox`
       advancedCheckBox.addItemListener(event -> {
-        // TODO: Implement listener
         studyPanel.advancedComponents.forEach(it -> it.setVisible(advancedCheckBox.isSelected()));
+        editStudySamplePanel.toggleMode();
+        editDietaryAssessmentMethodPanel.toggleMode();
+        editAssayPanel.toggleMode();
       });
 
       add(createAdvancedPanel(advancedCheckBox));
