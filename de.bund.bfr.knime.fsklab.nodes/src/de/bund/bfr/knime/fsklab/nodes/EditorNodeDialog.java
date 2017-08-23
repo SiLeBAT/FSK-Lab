@@ -824,7 +824,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
       if (!hasValidValue(nonConsecutiveOneDayTextField)) {
         errors.add("Missing "
-            + bundle.getString("GM.EditDietaryAssessmetnMethodPanel.nonConsecutiveOneDayLabel"));
+            + bundle.getString("GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysLabel"));
       }
 
       return errors;
