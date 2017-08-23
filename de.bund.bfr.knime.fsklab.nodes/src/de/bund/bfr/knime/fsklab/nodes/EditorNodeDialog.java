@@ -392,6 +392,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   }
 
   /**
+   * @param possibleValues Set
+   * @return an AutoSuggestField with the passed possible values. The field has 10 columns.
+   */
+  private static AutoSuggestField createAutoSuggestField(final Set<String> possibleValues) {
+    final AutoSuggestField field = new AutoSuggestField(10);
+    field.setPossibleValues(possibleValues);
+    return field;
+  }
+
+  /**
    * Adds a component to the end of a container. Also notifies the layout manager to add the
    * component to this container's layout using the specified constraints. This is a convenience
    * method for {@link EditorNodeDialog#add(JPanel, JComponent, int, int, int, int)} where the
@@ -721,7 +731,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       dataCollectionToolLabel =
           createLabel("GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel",
               "GM.EditDietaryAssessmentMethodPanel.dataCollectionToolTooltip", true);
-      dataCollectionToolField = new AutoSuggestField(10);
+      dataCollectionToolField = createAutoSuggestField(vocabs.get("Method. tool to collect data"));
 
       nonConsecutiveOneDayLabel =
           createLabel("GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysLabel",
@@ -745,11 +755,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           "GM.EditDietaryAssessmentMethodPanel.foodDescriptionTooltip");
       final Set<String> foodDescriptionVocabulary = vocabs.get("Food descriptors");
       foodDescriptionComboBox = createComboBox(foodDescriptionVocabulary);
-
-      // init combo boxes
-      dataCollectionToolField.setPossibleValues(vocabs.get("Method. tool to collect data"));
-      vocabs.get("Food descriptors").forEach(it -> foodDescriptionComboBox.addItem(it));
-
 
       final List<Pair<JLabel, JComponent>> pairs =
           Arrays.asList(new Pair<>(dataCollectionToolLabel, dataCollectionToolField),
@@ -898,11 +903,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       hazardTypeLabel = createLabel("GM.EditHazardPanel.hazardTypeLabel",
           "GM.EditHazardPanel.hazardTypeTooltip", true);
-      hazardTypeField = new AutoSuggestField(10);
+      hazardTypeField = createAutoSuggestField(vocabs.get("Hazard type"));
 
       hazardNameLabel = createLabel("GM.EditHazardPanel.hazardNameLabel",
           "GM.EditHazardPanel.hazardNameTooltip", true);
-      hazardNameField = new AutoSuggestField(10);
+      hazardNameField = createAutoSuggestField(vocabs.get("Hazard name"));
 
       hazardDescriptionLabel = createLabel("GM.EditHazardPanel.hazardDescriptionLabel",
           "GM.EditHazardPanel.hazardDescriptionTooltip");
@@ -910,7 +915,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       hazardUnitLabel = createLabel("GM.EditHazardPanel.hazardUnitLabel",
           "GM.EditHazardPanel.hazardUnitTooltip", true);
-      hazardUnitField = new AutoSuggestField(10);
+      hazardUnitField = createAutoSuggestField(vocabs.get("Hazard unit"));
 
       adverseEffectLabel = createLabel("GM.EditHazardPanel.adverseEffectLabel",
           "GM.EditHazardPanel.adverseEffectTooltip");
@@ -941,7 +946,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       indSumLabel =
           createLabel("GM.EditHazardPanel.indSumLabel", "GM.EditHazardPanel.indSumTooltip");
-      indSumField = new AutoSuggestField(10);
+      indSumField = createAutoSuggestField(vocabs.get("Hazard ind sum"));
 
       acceptableDailyIntakeLabel = createLabel("GM.EditHazardPanel.acceptableDailyIntakeLabel",
           "GM.EditHazardPanel.acceptableDailyIntakeTooltip");
@@ -953,7 +958,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       labCountryLabel =
           createLabel("GM.EditHazardPanel.labCountryLabel", "GM.EditHazardPanel.labCountryTooltip");
-      labCountryField = new AutoSuggestField(10);
+      labCountryField = createAutoSuggestField(vocabs.get("Laboratory country"));
 
       detectionLimitLabel = createLabel("GM.EditHazardPanel.detectionLimitLabel",
           "GM.EditHazardPanel.detectionLimitTooltip");
@@ -970,13 +975,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       contaminationRangeLabel = createLabel("GM.EditHazardPanel.contaminationRangeLabel",
           "GM.EditHazardPanel.contaminationRangeTooltip");
       contaminationRangeTextField = createTextField();
-
-      // Init combo boxes
-      hazardTypeField.setPossibleValues(vocabs.get("Hazard type"));
-      hazardNameField.setPossibleValues(vocabs.get("Hazard name"));
-      hazardUnitField.setPossibleValues(vocabs.get("Hazard unit"));
-      indSumField.setPossibleValues(vocabs.get("Hazard ind sum"));
-      labCountryField.setPossibleValues(vocabs.get("Laboratory country"));
 
       // Create labels
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
@@ -1254,31 +1252,31 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       typeLabel =
           createLabel("GM.EditParameterPanel.typeLabel", "GM.EditParameterPanel.typeTooltip");
-      typeField = new AutoSuggestField(10);
+      typeField = createAutoSuggestField(vocabs.get("Parameter type"));
 
       unitLabel =
           createLabel("GM.EditParameterPanel.unitLabel", "GM.EditParameterPanel.unitTooltip", true);
-      unitField = new AutoSuggestField(10);
+      unitField = createAutoSuggestField(vocabs.get("Parameter unit"));
 
       unitCategoryLabel = createLabel("GM.EditParameterPanel.unitCategoryLabel",
           "GM.EditParameterPanel.unitCategoryTooltip", true);
-      unitCategoryField = new AutoSuggestField(10);
+      unitCategoryField = createAutoSuggestField(vocabs.get("Parameter unit category"));
 
       dataTypeLabel = createLabel("GM.EditParameterPanel.dataTypeLabel",
           "GM.EditParameterPanel.dataTypeTooltip", true);
-      dataTypeField = new AutoSuggestField(10);
+      dataTypeField = createAutoSuggestField(vocabs.get("Parameter data type"));
 
       sourceLabel =
           createLabel("GM.EditParameterPanel.sourceLabel", "GM.EditParameterPanel.sourceTooltip");
-      sourceField = new AutoSuggestField(10);
+      sourceField = createAutoSuggestField(vocabs.get("Parameter source"));
 
       subjectLabel =
           createLabel("GM.EditParameterPanel.subjectLabel", "GM.EditParameterPanel.subjectTooltip");
-      subjectField = new AutoSuggestField(10);
+      subjectField = createAutoSuggestField(vocabs.get("Parameter subject"));
 
       distributionLabel = createLabel("GM.EditParameterPanel.distributionLabel",
           "GM.EditParameterPanel.distributionTooltip");
-      distributionField = new AutoSuggestField(10);
+      distributionField = createAutoSuggestField(vocabs.get("Parameter distribution"));
 
       valueLabel =
           createLabel("GM.EditParameterPanel.valueLabel", "GM.EditParameterPanel.valueTooltip");
@@ -1300,15 +1298,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           createLabel("GM.EditParameterPanel.errorLabel", "GM.EditParameterPanel.errorTooltip");
       errorSpinnerModel = createSpinnerDoubleModel();
       errorSpinner = createSpinner(errorSpinnerModel);
-
-      // init combo boxes
-      typeField.setPossibleValues(vocabs.get("Parameter type"));
-      unitField.setPossibleValues(vocabs.get("Parameter unit"));
-      unitCategoryField.setPossibleValues(vocabs.get("Parameter unit category"));
-      dataTypeField.setPossibleValues(vocabs.get("Parameter data type"));
-      sourceField.setPossibleValues(vocabs.get("Parameter source"));
-      subjectField.setPossibleValues(vocabs.get("Parameter subject"));
-      distributionField.setPossibleValues(vocabs.get("Parameter distribution"));
 
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(idLabel, idTextField),
@@ -1638,7 +1627,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       envNameLabel = createLabel("GM.EditProductPanel.envNameLabel",
           "GM.EditProductPanel.envNameTooltip", true);
-      envNameField = new AutoSuggestField(10);
+      envNameField = createAutoSuggestField(vocabs.get("Product-matrix name"));
 
       envDescriptionLabel = createLabel("GM.EditProductPanel.envDescriptionLabel",
           "GM.EditProductPanel.envDescriptionTooltip");
@@ -1646,7 +1635,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       envUnitLabel = createLabel("GM.EditProductPanel.envUnitLabel",
           "GM.EditProductPanel.envUnitTooltip", true);
-      envUnitField = new AutoSuggestField(10);
+      envUnitField = createAutoSuggestField(vocabs.get("Product-matrix unit"));
 
       productionMethodLabel = createLabel("GM.EditProductPanel.productionMethodLabel",
           "GM.EditProductPanel.productionMethodTooltip");
@@ -1662,15 +1651,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       originCountryLabel = createLabel("GM.EditProductPanel.originCountryLabel",
           "GM.EditProductPanel.originCountryTooltip");
-      originCountryField = new AutoSuggestField(10);
+      originCountryField = createAutoSuggestField(vocabs.get("Country of origin"));
 
       originAreaLabel = createLabel("GM.EditProductPanel.originAreaLabel",
           "GM.EditProductPanel.originAreaTooltip");
-      originAreaField = new AutoSuggestField(10);
+      originAreaField = createAutoSuggestField(vocabs.get("Area of origin"));
 
       fisheriesAreaLabel = createLabel("GM.EditProductPanel.fisheriesAreaLabel",
           "GM.EditProductPanel.fisheriesAreaTooltip");
-      fisheriesAreaField = new AutoSuggestField(10);
+      fisheriesAreaField = createAutoSuggestField(vocabs.get("Fisheries area"));
 
       productionDateLabel = createLabel("GM.EditProductPanel.productionDateLabel",
           "GM.EditProductPanel.productionDateTooltip");
@@ -1679,15 +1668,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       expirationDateChooser = new FixedDateChooser();
       expirationDateLabel = createLabel("GM.EditProductPanel.expirationDateLabel",
           "GM.EditProductPanel.expirationDateTooltip");
-
-      // Init combo boxes
-      envNameField.setPossibleValues(vocabs.get("Product-matrix name"));
-      envUnitField.setPossibleValues(vocabs.get("Product-matrix unit"));
-      originCountryField.setPossibleValues(vocabs.get("Country of origin"));
-      originAreaField.setPossibleValues(vocabs.get("Area of origin"));
-      fisheriesAreaField.setPossibleValues(vocabs.get("Fisheries area"));
-
-      // Create labels
 
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs =
@@ -2073,15 +2053,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       samplingStrategyLabel = createLabel("GM.EditStudySamplePanel.samplingStrategyLabel",
           "GM.EditStudySamplePanel.samplingStrategyTooltip");
-      samplingStrategyField = new AutoSuggestField(10);
+      samplingStrategyField = createAutoSuggestField(vocabs.get("Sampling strategy"));
 
       samplingTypeLabel = createLabel("GM.EditStudySamplePanel.samplingTypeLabel",
           "GM.EditStudySamplePanel.samplingTypeTooltip");
-      samplingTypeField = new AutoSuggestField(10);
+      samplingTypeField = createAutoSuggestField(vocabs.get("Type of sampling program"));
 
       samplingMethodLabel = createLabel("GM.EditStudySamplePanel.samplingMethodLabel",
           "GM.EditStudySamplePanel.samplingMethodTooltip");
-      samplingMethodField = new AutoSuggestField(10);
+      samplingMethodField = createAutoSuggestField(vocabs.get("Sampling method"));
 
       samplingPlanLabel = createLabel("GM.EditStudySamplePanel.samplingPlanLabel",
           "GM.EditStudySamplePanel.samplingPlanTooltip", true);
@@ -2097,18 +2077,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       lotSizeUnitLabel = createLabel("GM.EditStudySamplePanel.lotSizeUnitLabel",
           "GM.EditStudySamplePanel.lotSizeUnitTooltip");
-      lotSizeUnitField = new AutoSuggestField(10);
+      lotSizeUnitField = createAutoSuggestField(vocabs.get("Lot size unit"));
 
       samplingPointLabel = createLabel("GM.EditStudySamplePanel.samplingPointLabel",
           "GM.EditStudySamplePanel.samplingPointTooltip");
-      samplingPointField = new AutoSuggestField(10);
-
-      // Init combo boxes
-      samplingStrategyField.setPossibleValues(vocabs.get("Sampling strategy"));
-      samplingTypeField.setPossibleValues(vocabs.get("Type of sampling program"));
-      samplingMethodField.setPossibleValues(vocabs.get("Sampling method"));
-      lotSizeUnitField.setPossibleValues(vocabs.get("Lot size unit"));
-      samplingPointField.setPossibleValues(vocabs.get("Sampling point"));
+      samplingPointField = createAutoSuggestField(vocabs.get("Sampling point"));
 
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs =
@@ -2304,25 +2277,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       identifierTextField = createTextField();
       creatorPanel = new CreatorPanel();
       creationDateChooser = new FixedDateChooser();
-      rightsField = new AutoSuggestField(10);
+      rightsField = createAutoSuggestField(vocabs.get("Rights"));
       availabilityCheckBox = new JCheckBox();
       urlTextField = createTextField();
-      formatField = new AutoSuggestField(10);
+      formatField = createAutoSuggestField(vocabs.get("Format"));
       referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
-      languageField = new AutoSuggestField(10);
-      softwareField = new AutoSuggestField(10);
-      languageWrittenInField = new AutoSuggestField(10);
-      statusField = new AutoSuggestField(10);
+      languageField = createAutoSuggestField(vocabs.get("Language"));
+      softwareField = createAutoSuggestField(vocabs.get("Software"));
+      languageWrittenInField = createAutoSuggestField(vocabs.get("Language written in"));
+      statusField = createAutoSuggestField(vocabs.get("Status"));
       objectiveTextField = createTextField();
       descriptionTextField = createTextField();
-
-      // Init combo boxes
-      rightsField.setPossibleValues(vocabs.get("Rights"));
-      formatField.setPossibleValues(vocabs.get("Format"));
-      languageField.setPossibleValues(vocabs.get("Language"));
-      softwareField.setPossibleValues(vocabs.get("Software"));
-      languageWrittenInField.setPossibleValues(vocabs.get("Language written in"));
-      statusField.setPossibleValues(vocabs.get("Status"));
 
       // Create labels
       final JLabel studyNameLabel = createLabel("GM.GeneralInformationPanel.studyNameLabel",
@@ -2714,14 +2679,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       populationButton = new JButton();
       commentField = createTextArea();
       dateChooser = new FixedDateChooser();
-      regionField = new AutoSuggestField(10);
-      countryField = new AutoSuggestField(10);
+      regionField = createAutoSuggestField(vocabs.get("Region"));
+      countryField = createAutoSuggestField(vocabs.get("Country"));
 
       advancedCheckBox = new JCheckBox("Advanced");
-
-      // Init combo boxes
-      regionField.setPossibleValues(vocabs.get("Region"));
-      countryField.setPossibleValues(vocabs.get("Country"));
 
       // Build UI
       productButton.setToolTipText("Click me to add a product");
@@ -2837,7 +2798,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
-    final AutoSuggestField laboratoryAccreditationField = new AutoSuggestField(10);
+    final AutoSuggestField laboratoryAccreditationField =
+        createAutoSuggestField(vocabs.get("Laboratory accreditation"));
 
     private final EditStudySamplePanel editStudySamplePanel = new EditStudySamplePanel(false);
     private final EditDietaryAssessmentMethodPanel editDietaryAssessmentMethodPanel =
@@ -2877,8 +2839,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           dietaryAssessmentMethodButton.setText(method.collectionTool);
         }
       });
-
-      laboratoryAccreditationField.setPossibleValues(vocabs.get("Laboratory accreditation"));
 
       final JButton assayButton = new JButton();
       assayButton.setToolTipText("Click me to add Assay");
@@ -2975,18 +2935,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       studyIdentifierTextField = createTextField();
       studyTitleTextField = createTextField();
       studyDescriptionTextArea = createTextArea();
-      studyDesignTypeField = new AutoSuggestField(10);
-      studyAssayMeasurementsTypeField = new AutoSuggestField(10);
-      studyAssayTechnologyTypeField = new AutoSuggestField(10);
+      studyDesignTypeField = createAutoSuggestField(vocabs.get("Study Design Type"));
+      studyAssayMeasurementsTypeField =
+          createAutoSuggestField(vocabs.get("Study Assay Measurement Type"));
+      studyAssayTechnologyTypeField =
+          createAutoSuggestField(vocabs.get("Study Assay Technology Type"));
       studyAssayTechnologyPlatformTextField = createTextField();
-      accreditationProcedureField = new AutoSuggestField(10);
+      accreditationProcedureField =
+          createAutoSuggestField(vocabs.get("Accreditation procedure Ass.Tec"));
       studyProtocolNameTextField = createTextField();
-      studyProtocolTypeField = new AutoSuggestField(10);
+      studyProtocolTypeField = createAutoSuggestField(vocabs.get("Study Protocol Type"));
       studyProtocolDescriptionTextField = createTextField();
       studyProtocolURITextField = createTextField();
       studyProtocolVersionTextField = createTextField();
-      studyProtocolParametersField = new AutoSuggestField(10);
-      studyProtocolComponentsTypeField = new AutoSuggestField(10);
+      studyProtocolParametersField =
+          createAutoSuggestField(vocabs.get("Study Protocol Parameters Name"));
+      studyProtocolComponentsTypeField =
+          createAutoSuggestField(vocabs.get("Study Protocol Components Type"));
 
       // Create labels
       final JLabel studyIdentifierLabel = createLabel("GM.StudyPanel.studyIdentifierLabel",
@@ -3023,16 +2988,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           createLabel("GM.StudyPanel.parametersLabel", "GM.StudyPanel.parametersTooltip");
       final JLabel studyProtocolComponentsTypeLabel =
           createLabel("GM.StudyPanel.componentsTypeLabel", "GM.StudyPanel.componentsTypeTooltip");
-
-      // Init combo boxes
-      studyDesignTypeField.setPossibleValues(vocabs.get("Study Design Type"));
-      studyAssayMeasurementsTypeField.setPossibleValues(vocabs.get("Study Assay Measurement Type"));
-      studyAssayTechnologyTypeField.setPossibleValues(vocabs.get("Study Assay Technology Type"));
-      accreditationProcedureField.setPossibleValues(vocabs.get("Accreditation procedure Ass.Tec"));
-      studyProtocolTypeField.setPossibleValues(vocabs.get("Study Protocol Type"));
-      studyProtocolParametersField.setPossibleValues(vocabs.get("Study Protocol Parameters Name"));
-      studyProtocolComponentsTypeField
-          .setPossibleValues(vocabs.get("Study Protocol Components Type"));
 
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs =
