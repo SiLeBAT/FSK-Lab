@@ -2165,7 +2165,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingWeightLabel"));
       }
       if (!hasValidValue(samplingSizeTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingSizeTextField"));
+        errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingSizeLabel"));
       }
 
       return errors;
