@@ -1869,21 +1869,30 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     void init(final Record t) {
       if (t != null) {
         typeComboBox.setSelectedItem(t.getType());
-        try {
-          final SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatStr);
-          dateChooser.setDate(dateFormat.parse(t.getDate()));
-        } catch (ParseException e) {
-          e.printStackTrace();
+
+        final String dateString = t.getDate();
+        if (dateString != null) {
+          try {
+            final SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatStr);
+            dateChooser.setDate(dateFormat.parse(dateString));
+          } catch (final ParseException exception) {
+            LOGGER.warn("Invalid date", exception);
+          }
         }
+
         doiTextField.setText(t.getDoi());
         authorListTextField.setText(String.join(";", t.getAuthors()));
         titleTextField.setText(t.getTitle());
         abstractTextArea.setText(t.getAbstr());
         journalTextField.setText(t.getSecondaryTitle());
 
-        final String volumeNumber = t.getVolumeNumber();
-        if (volumeNumber != null) {
-          volumeSpinnerModel.setValue(volumeNumber);
+        final String volumeNumberString = t.getVolumeNumber();
+        if (volumeNumberString != null) {
+          try {
+            int volumeNumber = Integer.parseInt(volumeNumberString);
+            volumeSpinnerModel.setValue(volumeNumber);
+          } catch (final NumberFormatException exception) {
+          }
         }
 
         final Integer issueNumber = t.getIssueNumber();
