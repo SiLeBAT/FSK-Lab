@@ -1678,6 +1678,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Init combo boxes
       envNameField.setPossibleValues(vocabs.get("Product-matrix name"));
       envUnitField.setPossibleValues(vocabs.get("Product-matrix unit"));
+
+      final Set<String> packagingVocab = vocabs.get("Packaging");
+      packagingVocab.forEach(it -> packagingComboBox.addItem(it));
+      // vocabs.get("Packaging").forEach(it -> packagingComboBox.addItem(it));
+
+      vocabs.get("Product treatment").forEach(it -> productTreatmentComboBox.addItem(it));
       vocabs.get("Method of production").forEach(it -> productionMethodComboBox.addItem(it));
       originCountryField.setPossibleValues(vocabs.get("Country of origin"));
       originAreaField.setPossibleValues(vocabs.get("Area of origin"));
@@ -1751,10 +1757,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final List<String> errors = new ArrayList<>(2);
       if (!hasValidValue(envNameField)) {
-        errors.add("Missing " + bundle.getString("GM.EditProductPanel.envName"));
+        errors.add("Missing " + bundle.getString("GM.EditProductPanel.envNameLabel"));
       }
       if (!hasValidValue(envUnitField)) {
-        errors.add("Missing " + bundle.getString("GM.EditProductPanel.envUnit"));
+        errors.add("Missing " + bundle.getString("GM.EditProductPanel.envUnitLabel"));
       }
 
       return errors;
