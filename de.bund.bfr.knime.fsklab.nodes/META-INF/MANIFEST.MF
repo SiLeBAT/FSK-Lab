@@ -10,9 +10,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  com.googlecode.ez-vcard;bundle-version="1.0.0",
  com.github.fastluca.jris;bundle-version="1.0.0",
  com.sun.jna,
- org.rosuda.rengine,
- de.bund.bfr.knime.fsklab.rakip,
  edu.umd.cs.findbugs.annotations,
+ de.bund.bfr.knime;bundle-version="1.1.33",
  org.apache.commons.lang3,
  org.apache.servicemix.bundles.poi,
  org.eclipse.core.runtime,
@@ -21,7 +20,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.ext.r.type,
  org.knime.js.core,
  org.knime.product;bundle-version="3.3.3",
- de.bund.bfr.knime;bundle-version="1.1.33"
+ org.rosuda.rengine
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
