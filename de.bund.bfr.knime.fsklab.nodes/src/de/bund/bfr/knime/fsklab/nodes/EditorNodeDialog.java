@@ -126,9 +126,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     addTab(modelScriptPanel.getName(), modelScriptPanel);
     addTab(paramScriptPanel.getName(), paramScriptPanel);
     addTab(vizScriptPanel.getName(), vizScriptPanel);
-    addTab("General information", new JScrollPane(generalInformationPanel));
-    addTab("Scope", new JScrollPane(scopePanel));
-    addTab("Data background", new JScrollPane(dataBackgroundPanel));
+    addTab("General information", generalInformationPanel, true);
+    addTab("Scope", scopePanel, true);
+    addTab("Data background", dataBackgroundPanel, true);
     // TODO: add model math panel
 
     updatePanels();
