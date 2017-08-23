@@ -1814,11 +1814,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       journalTextField = createTextField();
 
       volumeLabel = new JLabel(bundle.getString("GM.EditReferencePanel.volumeLabel"));
-      volumeSpinnerModel = createSpinnerIntegerModel();
+      // Create integer spinner model starting with 0 and taking positive ints only
+      volumeSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
       volumeSpinner = createSpinner(volumeSpinnerModel);
 
       issueLabel = new JLabel(bundle.getString("GM.EditReferencePanel.issueLabel"));
-      issueSpinnerModel = createSpinnerIntegerModel();
+      // Create integer spinner model starting with 0 and taking positive ints only
+      issueSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
       issueSpinner = createSpinner(issueSpinnerModel);
 
       pageLabel = new JLabel(bundle.getString("GM.EditReferencePanel.pageLabel"));
