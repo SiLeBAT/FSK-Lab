@@ -2718,8 +2718,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final Product product = editProductPanel.get();
-          productButton.setText(
-              String.format("{0}_[{1}]", product.environmentName, product.environmentUnit));
+          productButton
+              .setText(String.format("%s_%s", product.environmentName, product.environmentUnit));
         }
       });
 
@@ -2729,7 +2729,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final Hazard hazard = editHazardPanel.get();
-          hazardButton.setText(String.format("{0}_[{1}]", hazard.hazardName, hazard.hazardUnit));
+          hazardButton.setText(String.format("%s_%s", hazard.hazardName, hazard.hazardUnit));
         }
       });
 
