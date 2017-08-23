@@ -1050,7 +1050,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
       final List<String> errors = new ArrayList<>();
-      if (!hasValidValue(hazardNameField)) {
+      if (!hasValidValue(hazardTypeField)) {
         errors.add("Missing " + bundle.getString("GM.EditHazardPanel.hazardTypeLabel"));
       }
       if (!hasValidValue(hazardNameField)) {
@@ -1065,14 +1065,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return Arrays.asList(hazardDescriptionLabel, hazardDescriptionTextArea, adverseEffectLabel,
-          adverseEffectTextField, originLabel, originTextField, bmdLabel, bmdTextField,
-          maxResidueLimitLabel, maxResidueLimitTextField, acuteReferenceDoseLabel,
-          acuteReferenceDoseTextField, acceptableDailyIntakeLabel, acceptableDailyIntakeTextField,
-          indSumLabel, indSumField, labNameLabel, labNameTextField, labCountryLabel,
-          labCountryField, detectionLimitLabel, detectionLimitTextField, quantificationLimitLabel,
-          quantificationLimitTextField, leftCensoredDataLabel, leftCensoredDataTextField,
-          contaminationRangeLabel, contaminationRangeTextField);
+      return Arrays.asList(hazardDescriptionLabel, hazardDescriptionTextArea, // hazard description
+          adverseEffectLabel, adverseEffectTextField, // adverse effect
+          originLabel, originTextField, // origin
+          bmdLabel, bmdTextField, // benchmark dose
+          maxResidueLimitLabel, maxResidueLimitTextField, // maximum residue limit
+          acceptableOperatorLabel, acceptableOperatorTextField, // acceptable operator
+          noObservedAdverseLabel, noObservedAdverseTextField, // no observed adverse
+          acuteReferenceDoseLabel, acuteReferenceDoseTextField, // acute reference dose
+          acceptableDailyIntakeLabel, acceptableDailyIntakeTextField, // aceptable daily intake
+          indSumLabel, indSumField, // ind sum
+          labNameLabel, labNameTextField, // laboratory name
+          labCountryLabel, labCountryField, // laboratory country
+          detectionLimitLabel, detectionLimitTextField, // detection limit
+          quantificationLimitLabel, quantificationLimitTextField, // quantification limit
+          leftCensoredDataLabel, leftCensoredDataTextField, // left censored data
+          contaminationRangeLabel, contaminationRangeTextField); // contamination range
     }
   }
 
