@@ -2449,7 +2449,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final ButtonsPanel buttonsPanel = new ButtonsPanel();
       buttonsPanel.addButton.addActionListener(event -> {
 
-        final EditReferencePanel editPanel = new EditReferencePanel(isAdvanced);
+        final EditReferencePanel editPanel = new EditReferencePanel(this.isAdvanced);
         final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create reference");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
@@ -2464,7 +2464,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
           final Record ref = (Record) tableModel.getValueAt(rowToEdit, 0);
 
-          final EditReferencePanel editPanel = new EditReferencePanel(isAdvanced);
+          final EditReferencePanel editPanel = new EditReferencePanel(this.isAdvanced);
           editPanel.init(ref);
 
           final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify reference");

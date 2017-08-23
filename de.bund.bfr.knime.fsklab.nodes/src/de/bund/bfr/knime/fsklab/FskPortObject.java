@@ -960,7 +960,7 @@ public class FskPortObject implements PortObject {
 
     final StudySample studySample = dataBackground.studySample;
     if (studySample != null) {
-      final String key = prefix + "studySamplePanel";
+      final String key = prefix + "studySampleLabel";
       final String label = bundle.getString(key);
 
       final DefaultMutableTreeNode sampleNode = new DefaultMutableTreeNode(label);
