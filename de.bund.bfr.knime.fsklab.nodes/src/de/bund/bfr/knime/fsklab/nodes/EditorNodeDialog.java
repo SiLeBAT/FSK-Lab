@@ -314,7 +314,31 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   private static final ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle");
 
   /**
-   * Create a JLabel retrieving text and tool tip text from resource bundle.
+   * Create a JLabel with no tooltip, retrieving its text from resource bundle. This is a
+   * convenience method for {@link #createLabel(String, boolean)} where the property is not
+   * mandatory.
+   * 
+   * @param textKey Key of the JLabel text in the resource bundle
+   * @return JLabel
+   */
+  private static JLabel createLabel(final String textKey) {
+    return createLabel(textKey, false);
+  }
+
+  /**
+   * Create a JLabel with no tooltip, retrieving its text from resource bundle.
+   * 
+   * @param textKey Key of the JLabel text in the resource bundle
+   * @param isMandatory Whether the property described by the JLabel is mandatory
+   * @return JLabel
+   */
+  private static JLabel createLabel(final String textKey, final boolean isMandatory) {
+    return new JLabel(bundle.getString(textKey) + (isMandatory ? "*" : ""));
+  }
+
+  /**
+   * Create a JLabel retrieving text and tool tip text from resource bundle. This is a convenience
+   * method for {@link #createLabel(String, String, boolean)} where the property is not mandatory.
    * 
    * @param textKey Key of the JLabel text in the resource bundle
    * @param toolTipKey Key of the tool tip text in the resource bundle
@@ -1789,50 +1813,50 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Create fields
       isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
 
-      typeLabel = new JLabel(bundle.getString("GM.EditReferencePanel.typeLabel"));
+      typeLabel = createLabel("GM.EditReferencePanel.typeLabel");
       typeComboBox = new JComboBox<>();
 
-      dateLabel = new JLabel(bundle.getString("GM.EditReferencePanel.dateLabel"));
+      dateLabel = createLabel("GM.EditReferencePanel.dateLabel");
       dateChooser = new FixedDateChooser();
 
-      pmidLabel = new JLabel(bundle.getString("GM.EditReferencePanel.pmidLabel"));
+      pmidLabel = createLabel("GM.EditReferencePanel.pmidLabel");
       pmidTextField = createTextField();
 
-      doiLabel = new JLabel(bundle.getString("GM.EditReferencePanel.doiLabel") + " *");
+      doiLabel = createLabel("GM.EditReferencePanel.doiLabel", true);
       doiTextField = createTextField();
 
-      authorListLabel = new JLabel(bundle.getString("GM.EditReferencePanel.authorListLabel"));
+      authorListLabel = createLabel("GM.EditReferencePanel.authorListLabel");
       authorListTextField = createTextField();
 
-      titleLabel = new JLabel(bundle.getString("GM.EditReferencePanel.titleLabel") + " *");
+      titleLabel = createLabel("GM.EditReferencePanel.titleLabel", true);
       titleTextField = createTextField();
 
-      abstractLabel = new JLabel(bundle.getString("GM.EditReferencePanel.abstractLabel"));
+      abstractLabel = createLabel("GM.EditReferencePanel.abstractLabel");
       abstractTextArea = createTextArea();
 
-      journalLabel = new JLabel(bundle.getString("GM.EditReferencePanel.journalLabel"));
+      journalLabel = createLabel("GM.EditReferencePanel.journalLabel");
       journalTextField = createTextField();
 
-      volumeLabel = new JLabel(bundle.getString("GM.EditReferencePanel.volumeLabel"));
+      volumeLabel = createLabel("GM.EditReferencePanel.volumeLabel");
       // Create integer spinner model starting with 0 and taking positive ints only
       volumeSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
       volumeSpinner = createSpinner(volumeSpinnerModel);
 
-      issueLabel = new JLabel(bundle.getString("GM.EditReferencePanel.issueLabel"));
+      issueLabel = createLabel("GM.EditReferencePanel.issueLabel");
       // Create integer spinner model starting with 0 and taking positive ints only
       issueSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
       issueSpinner = createSpinner(issueSpinnerModel);
 
-      pageLabel = new JLabel(bundle.getString("GM.EditReferencePanel.pageLabel"));
+      pageLabel = createLabel("GM.EditReferencePanel.pageLabel");
       pageTextField = createTextField();
 
-      statusLabel = new JLabel(bundle.getString("GM.EditReferencePanel.statusLabel"));
+      statusLabel = createLabel("GM.EditReferencePanel.statusLabel");
       statusTextField = createTextField();
 
-      websiteLabel = new JLabel(bundle.getString("GM.EditReferencePanel.websiteLabel"));
+      websiteLabel = createLabel("GM.EditReferencePanel.websiteLabel");
       websiteTextField = createTextField();
 
-      commentLabel = new JLabel(bundle.getString("GM.EditReferencePanel.commentLabel"));
+      commentLabel = createLabel("GM.EditReferencePanel.commentLabel");
       commentTextArea = createTextArea();
 
       // Init combo boxes
@@ -2602,11 +2626,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       contactTextField = createTextField();
 
       // Create labels
-      final JLabel givenNameLabel =
-          new JLabel(bundle.getString("GM.EditCreatorPanel.givenNameLabel"));
-      final JLabel familyNameLabel =
-          new JLabel(bundle.getString("GM.EditCreatorPanel.familyNameLabel"));
-      final JLabel contactLabel = new JLabel(bundle.getString("GM.EditCreatorPanel.contactLabel"));
+      final JLabel givenNameLabel = createLabel("GM.EditCreatorPanel.givenNameLabel");
+      final JLabel familyNameLabel = createLabel("GM.EditCreatorPanel.familyNameLabel");
+      final JLabel contactLabel = createLabel("GM.EditCreatorPanel.contactLabel");
 
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs =
@@ -2723,10 +2745,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       // Create labels
-      final JLabel productLabel = new JLabel(bundle.getString("GM.ScopePanel.productLabel"));
-      final JLabel hazardLabel = new JLabel(bundle.getString("GM.ScopePanel.hazardLabel"));
-      final JLabel populationLabel =
-          new JLabel(bundle.getString("GM.ScopePanel.populationGroupLabel"));
+      final JLabel productLabel = createLabel("GM.ScopePanel.productLabel");
+      final JLabel hazardLabel = createLabel("GM.ScopePanel.hazardLabel");
+      final JLabel populationLabel = createLabel("GM.ScopePanel.populationGroupLabel");
       final JLabel commentLabel =
           createLabel("GM.ScopePanel.commentLabel", "GM.ScopePanel.commentTooltip");
       final JLabel temporalInformationLabel = createLabel("GM.ScopePanel.temporalInformationLabel",
@@ -2862,13 +2883,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
-      final JLabel studySampleLabel =
-          new JLabel(bundle.getString("GM.DataBackgroundPanel.studySampleLabel"));
+      final JLabel studySampleLabel = createLabel("GM.DataBackgroundPanel.studySampleLabel");
       final JLabel dietaryAssessmentMethodLabel =
-          new JLabel(bundle.getString("GM.DataBackgroundPanel.dietaryAssessmentMethodLabel"));
+          createLabel("GM.DataBackgroundPanel.dietaryAssessmentMethodLabel");
       final JLabel laboratoryAccreditationLabel =
-          new JLabel(bundle.getString("GM.DataBackgroundPanel.laboratoryAccreditationLabel"));
-      final JLabel assayLabel = new JLabel(bundle.getString("GM.DataBackgroundPanel.assayLabel"));
+          createLabel("GM.DataBackgroundPanel.laboratoryAccreditationLabel");
+      final JLabel assayLabel = createLabel("GM.DataBackgroundPanel.assayLabel");
 
       final JPanel propertiesPanel = new JPanel(new GridBagLayout());
 
