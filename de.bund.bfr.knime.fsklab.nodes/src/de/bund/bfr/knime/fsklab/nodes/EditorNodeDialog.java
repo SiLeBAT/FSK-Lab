@@ -2771,6 +2771,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       advancedCheckBox.addItemListener(event -> {
         // TODO: not implemented yet
         System.out.println("Dummy listener");
+        editProductPanel.toggleMode();
       });
 
       add(createAdvancedPanel(advancedCheckBox));
