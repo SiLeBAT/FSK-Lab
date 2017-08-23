@@ -2173,11 +2173,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return Arrays.asList(moisturePercentageLabel, moisturePercentageSpinner, fatPercentageLabel,
-          fatPercentageSpinner, samplingTypeLabel, samplingTypeField, samplingMethodLabel,
-          samplingMethodField, samplingPlanLabel, samplingPlanTextField, samplingWeightLabel,
-          samplingWeightTextField, samplingSizeLabel, samplingSizeTextField, lotSizeUnitLabel,
-          lotSizeUnitField, samplingPointLabel, samplingPointField);
+      return Arrays.asList(moisturePercentageLabel, moisturePercentageSpinner, // moisture
+                                                                               // percentage
+          fatPercentageLabel, fatPercentageSpinner, // fat percentag
+          samplingStrategyLabel, samplingStrategyField, // sampling strategy
+          samplingTypeLabel, samplingTypeField, // sampling program type
+          samplingMethodLabel, samplingMethodField, // sampling method
+          samplingSizeLabel, samplingSizeTextField, // sampling size
+          lotSizeUnitLabel, lotSizeUnitField, // lot size unit
+          samplingPointLabel, samplingPointField); // sampling point
     }
   }
 
