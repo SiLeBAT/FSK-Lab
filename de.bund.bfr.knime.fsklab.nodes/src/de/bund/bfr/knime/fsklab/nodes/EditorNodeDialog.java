@@ -1900,7 +1900,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final Record record = new Record();
       // TODO: isReferenceDescriptionCheckBox
       record.setType((Type) typeComboBox.getSelectedItem());
-      record.setDate(new SimpleDateFormat(dateFormatStr).format(dateChooser.getDate()));
+
+      final Date date = dateChooser.getDate();
+      if (date != null) {
+        record.setDate(new SimpleDateFormat(dateFormatStr).format(date));
+      }
+
       record.setDoi(doiTextField.getText());
 
       final String authors = authorListTextField.getText();
@@ -2422,6 +2427,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     public ReferencePanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
+      setBorder(BorderFactory.createTitledBorder("References"));
 
       this.isAdvanced = isAdvanced;
 
