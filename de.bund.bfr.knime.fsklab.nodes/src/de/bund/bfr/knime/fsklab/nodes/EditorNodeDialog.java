@@ -1798,13 +1798,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       pmidLabel = new JLabel(bundle.getString("GM.EditReferencePanel.pmidLabel"));
       pmidTextField = createTextField();
 
-      doiLabel = new JLabel(bundle.getString("GM.EditReferencePanel.doiLabel"));
+      doiLabel = new JLabel(bundle.getString("GM.EditReferencePanel.doiLabel") + " *");
       doiTextField = createTextField();
 
       authorListLabel = new JLabel(bundle.getString("GM.EditReferencePanel.authorListLabel"));
       authorListTextField = createTextField();
 
-      titleLabel = new JLabel(bundle.getString("GM.EditReferencePanel.titleLabel"));
+      titleLabel = new JLabel(bundle.getString("GM.EditReferencePanel.titleLabel") + " *");
       titleTextField = createTextField();
 
       abstractLabel = new JLabel(bundle.getString("GM.EditReferencePanel.abstractLabel"));
