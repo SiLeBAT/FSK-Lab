@@ -2516,7 +2516,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
             final String familyName = creator.getFormattedName().getValue();
             final String contact = creator.getEmails().get(0).getValue();
 
-            setText(String.format("{0}_{1}_{2}", givenName, familyName, contact));
+            setText(String.format("%s_%s_%s", givenName, familyName, contact));
           }
         };
       };
@@ -2534,7 +2534,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
-      buttonsPanel.modifyButton.addItemListener(event -> {
+      buttonsPanel.modifyButton.addActionListener(event -> {
 
         final int rowToEdit = myTable.getSelectedRow();
         if (rowToEdit != -1) {
