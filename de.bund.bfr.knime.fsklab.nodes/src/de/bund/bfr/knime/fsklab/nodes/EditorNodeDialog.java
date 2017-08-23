@@ -2686,7 +2686,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final EditProductPanel editProductPanel = new EditProductPanel(false);
     private final EditHazardPanel editHazardPanel = new EditHazardPanel(false);
-    // TODO: advanced mode
     private final EditPopulationGroupPanel editPopulationGroupPanel =
         new EditPopulationGroupPanel(false);
 
@@ -2767,10 +2766,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Advanced checkbox
       advancedCheckBox.addItemListener(event -> {
-        // TODO: not implemented yet
-        System.out.println("Dummy listener");
         editProductPanel.toggleMode();
         editHazardPanel.toggleMode();
+        editPopulationGroupPanel.toggleMode();
       });
 
       add(createAdvancedPanel(advancedCheckBox));
