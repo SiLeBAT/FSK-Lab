@@ -1577,12 +1577,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<JComponent> getAdvancedComponents() {
 
-      return Arrays.asList(targetPopulationLabel, targetPopulationTextField, populationSpanLabel,
-          populationSpanTextField, populationDescriptionLabel, populationDescriptionTextArea,
-          populationAgeLabel, populationAgeTextField, bmiLabel, bmiTextField, specialDietGroupLabel,
-          specialDietGroupTextField, patternConsumptionLabel, patternConsumptionTextField,
-          regionLabel, regionComboBox, countryLabel, countryComboBox, riskLabel, riskTextField,
-          seasonLabel, seasonTextField);
+      return Arrays.asList(targetPopulationLabel, targetPopulationTextField, // Target population
+          populationSpanLabel, populationSpanTextField, // Population span
+          populationDescriptionLabel, populationDescriptionTextArea, // Population description
+          populationAgeLabel, populationAgeTextField, // Population age
+          populationGenderLabel, populationGenderTextField, // Population gender
+          bmiLabel, bmiTextField, // BMI
+          specialDietGroupLabel, specialDietGroupTextField, // Special diet group
+          patternConsumptionLabel, patternConsumptionTextField, // Pattern consumption
+          regionLabel, regionComboBox, // Region
+          countryLabel, countryComboBox, // Country
+          riskLabel, riskTextField, // Risk
+          seasonLabel, seasonTextField); // Season
     }
   }
 
