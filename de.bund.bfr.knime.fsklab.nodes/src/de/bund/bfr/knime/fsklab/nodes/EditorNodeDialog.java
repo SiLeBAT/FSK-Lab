@@ -383,6 +383,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   }
 
   /**
+   * @param possibleValues Set
+   * @return a JComboBox with the passed possible values
+   */
+  private static JComboBox<String> createComboBox(final Set<String> possibleValues) {
+    final String[] array = possibleValues.stream().toArray(String[]::new);
+    return new JComboBox<String>(array);
+  }
+
+  /**
    * Adds a component to the end of a container. Also notifies the layout manager to add the
    * component to this container's layout using the specified constraints. This is a convenience
    * method for {@link EditorNodeDialog#add(JPanel, JComponent, int, int, int, int)} where the
@@ -734,7 +743,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       foodDescriptionLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.foodDescriptionLabel",
           "GM.EditDietaryAssessmentMethodPanel.foodDescriptionTooltip");
-      foodDescriptionComboBox = new JComboBox<>();
+      final Set<String> foodDescriptionVocabulary = vocabs.get("Food descriptors");
+      foodDescriptionComboBox = createComboBox(foodDescriptionVocabulary);
 
       // init combo boxes
       dataCollectionToolField.setPossibleValues(vocabs.get("Method. tool to collect data"));
@@ -1486,11 +1496,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       regionLabel = createLabel("GM.EditPopulationGroupPanel.regionLabel",
           "GM.EditPopulationGroupPanel.regionTooltip");
-      regionComboBox = new JComboBox<>();
+      regionComboBox = createComboBox(vocabs.get("Region"));
 
       countryLabel = createLabel("GM.EditPopulationGroupPanel.countryLabel",
           "GM.EditPopulationGroupPanel.countryTooltip");
-      countryComboBox = new JComboBox<>();
+      countryComboBox = createComboBox(vocabs.get("Country"));
 
       riskLabel = createLabel("GM.EditPopulationGroupPanel.riskAndPopulationLabel",
           "GM.EditPopulationGroupPanel.riskAndPopulationTooltip");
@@ -1499,11 +1509,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       seasonLabel = createLabel("GM.EditPopulationGroupPanel.seasonLabel",
           "GM.EditPopulationGroupPanel.seasonTooltip");
       seasonTextField = createTextField();
-
-      // init combo boxes
-      vocabs.get("Region").forEach(it -> regionComboBox.addItem(it));
-      vocabs.get("Country").forEach(it -> countryComboBox.addItem(it));
-
 
       final List<Pair<JLabel, JComponent>> pairs =
           Arrays.asList(new Pair<>(populationNameLabel, populationNameTextField),
@@ -1645,15 +1650,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       productionMethodLabel = createLabel("GM.EditProductPanel.productionMethodLabel",
           "GM.EditProductPanel.productionMethodTooltip");
-      productionMethodComboBox = new JComboBox<>();
+      productionMethodComboBox = createComboBox(vocabs.get("Method of production"));
 
       packagingLabel =
           createLabel("GM.EditProductPanel.packagingLabel", "GM.EditProductPanel.packagingTooltip");
-      packagingComboBox = new JComboBox<>();
+      packagingComboBox = createComboBox(vocabs.get("Packaging"));
 
       productTreatmentLabel = createLabel("GM.EditProductPanel.productTreatmentLabel",
           "GM.EditProductPanel.productTreatmentTooltip");
-      productTreatmentComboBox = new JComboBox<>();
+      productTreatmentComboBox = createComboBox(vocabs.get("Product treatment"));
 
       originCountryLabel = createLabel("GM.EditProductPanel.originCountryLabel",
           "GM.EditProductPanel.originCountryTooltip");
@@ -1678,13 +1683,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Init combo boxes
       envNameField.setPossibleValues(vocabs.get("Product-matrix name"));
       envUnitField.setPossibleValues(vocabs.get("Product-matrix unit"));
-
-      final Set<String> packagingVocab = vocabs.get("Packaging");
-      packagingVocab.forEach(it -> packagingComboBox.addItem(it));
-      // vocabs.get("Packaging").forEach(it -> packagingComboBox.addItem(it));
-
-      vocabs.get("Product treatment").forEach(it -> productTreatmentComboBox.addItem(it));
-      vocabs.get("Method of production").forEach(it -> productionMethodComboBox.addItem(it));
       originCountryField.setPossibleValues(vocabs.get("Country of origin"));
       originAreaField.setPossibleValues(vocabs.get("Area of origin"));
       fisheriesAreaField.setPossibleValues(vocabs.get("Fisheries area"));
@@ -1834,7 +1832,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
 
       typeLabel = createLabel("GM.EditReferencePanel.typeLabel");
-      typeComboBox = new JComboBox<>();
+      typeComboBox = new JComboBox<>(Type.values());
 
       dateLabel = createLabel("GM.EditReferencePanel.dateLabel");
       dateChooser = new FixedDateChooser();
@@ -1878,9 +1876,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       commentLabel = createLabel("GM.EditReferencePanel.commentLabel");
       commentTextArea = createTextArea();
-
-      // Init combo boxes
-      Arrays.stream(Type.values()).forEach(typeComboBox::addItem);
 
       // Create labels
 
