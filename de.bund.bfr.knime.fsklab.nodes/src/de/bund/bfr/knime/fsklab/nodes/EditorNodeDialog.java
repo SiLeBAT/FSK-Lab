@@ -2039,12 +2039,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       moisturePercentageLabel = createLabel("GM.EditStudySamplePanel.moisturePercentageLabel",
           "GM.EditStudySamplePanel.moisturePercentageTooltip");
-      moisturePercentageSpinnerModel = createSpinnerDoubleModel();
+      moisturePercentageSpinnerModel = createSpinnerPercentageModel();
       moisturePercentageSpinner = createSpinner(moisturePercentageSpinnerModel);
 
       fatPercentageLabel = createLabel("GM.EditStudySamplePanel.fatPercentageLabel",
           "GM.EditStudySamplePanel.fatPercentageTooltip");
-      fatPercentageSpinnerModel = createSpinnerDoubleModel();
+      fatPercentageSpinnerModel = createSpinnerPercentageModel();
       fatPercentageSpinner = createSpinner(fatPercentageSpinnerModel);
 
       sampleProtocolLabel = createLabel("GM.EditStudySamplePanel.sampleProtocolLabel",
