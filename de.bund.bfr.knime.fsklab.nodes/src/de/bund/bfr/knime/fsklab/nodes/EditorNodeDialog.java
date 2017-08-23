@@ -2444,7 +2444,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
             final String firstAuthor = record.getAuthors().get(0);
             final String publicationYear = record.getPubblicationYear();
             final String title = record.getTitle();
-            setText(String.format("{0}_{1}_{2}", firstAuthor, publicationYear, title));
+            setText(String.format("%s_%s_%s", firstAuthor, publicationYear, title));
           }
         };
       };
