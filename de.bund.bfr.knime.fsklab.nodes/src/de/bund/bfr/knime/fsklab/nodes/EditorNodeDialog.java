@@ -110,7 +110,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   private final GeneralInformationPanel generalInformationPanel = new GeneralInformationPanel();
   private final ScopePanel scopePanel = new ScopePanel();
   private final DataBackgroundPanel dataBackgroundPanel = new DataBackgroundPanel();
-  // TODO: model math panel
+  private final ModelMathPanel modelMathPanel = new ModelMathPanel();
 
   private EditorNodeSettings settings;
 
@@ -129,7 +129,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     addTab("General information", generalInformationPanel, true);
     addTab("Scope", scopePanel, true);
     addTab("Data background", dataBackgroundPanel, true);
-    // TODO: add model math panel
+    addTab("Model math", modelMathPanel, true);
 
     updatePanels();
   }
@@ -3136,6 +3136,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     QualityMeasuresPanel(final Double sse, final Double mse, final Double rmse, final Double r2,
         final Double aic, final Double bic) {
+
+      super(new GridBagLayout());
 
       final JLabel sseLabel = new JLabel("SSE");
       final JSpinner sseSpinner = createSpinner(sseSpinnerModel);
