@@ -307,16 +307,25 @@ public class FskPortObject implements PortObject {
   }
 
   // Metadata pane stuff
-  private static void add(final DefaultMutableTreeNode node, final String label,
-      final String value) {
+  private static void add(final DefaultMutableTreeNode node, final String key, final String value) {
     if (StringUtils.isNotBlank(value)) {
+      final String label = bundle.getString(key);
       node.add(new DefaultMutableTreeNode(label + ": " + value));
     }
   }
 
   private static void add(final DefaultMutableTreeNode node, final String label, final Date date) {
-    node.add(
-        new DefaultMutableTreeNode(label + ": " + new SimpleDateFormat("yyyy-MM-dd").format(date)));
+    if (date != null) {
+      final String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
+      node.add(new DefaultMutableTreeNode(label + ": " + dateStr));
+    }
+  }
+
+  private static void add(final DefaultMutableTreeNode node, final String label,
+      final Double value) {
+    if (value != null) {
+      node.add(new DefaultMutableTreeNode(label + ": " + value));
+    }
   }
 
   private static void add(final DefaultMutableTreeNode node, final String key,
@@ -338,18 +347,11 @@ public class FskPortObject implements PortObject {
 
     final Type recordType = record.getType();
     if (recordType != null) {
-      final String key = prefix + "typeLabel";
-      final String label = bundle.getString(key);
-      final String value = recordType.toString();
-      add(node, label, value);
+      add(node, prefix + "typeLabel", recordType.toString());
     }
 
     final String date = record.getDate();
-    if (StringUtils.isNotBlank(date)) {
-      final String key = prefix + "dateLabel";
-      final String label = bundle.getString(key);
-      add(node, label, date);
-    }
+    add(node, prefix + "dateLabel", date);
 
     // PubMedId is not supported
 
@@ -357,51 +359,26 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "authorListLabel", authors);
 
     final String title = record.getTitle();
-    if (StringUtils.isNotBlank(title)) {
-      final String key = prefix + "titleLabel";
-      final String label = bundle.getString(key);
-      add(node, label, title);
-    }
+    add(node, prefix + "titleLabel", title);
 
     final String abstr = record.getAbstr();
-    if (StringUtils.isNotBlank(abstr)) {
-      final String key = prefix + "abstractLabel";
-      final String label = bundle.getString(key);
-      add(node, label, abstr);
-    }
+    add(node, prefix + "abstractLabel", abstr);
 
     final String secondaryTitle = record.getSecondaryTitle();
-    if (StringUtils.isNotBlank(secondaryTitle)) {
-      final String key = prefix + "journalLabel";
-      final String label = bundle.getString(key);
-      add(node, label, secondaryTitle);
-    }
+    add(node, prefix + "journalLabel", secondaryTitle);
 
     final String volumeNumber = record.getVolumeNumber();
-    if (StringUtils.isNotBlank(volumeNumber)) {
-      final String key = prefix + "volumeLabel";
-      final String label = bundle.getString(key);
-      add(node, label, volumeNumber);
-    }
+    add(node, prefix + "volumeLabel", volumeNumber);
 
     final Integer issueNumber = record.getIssueNumber();
-    {
-      final String key = prefix + "issueLabel";
-      final String label = bundle.getString(key);
-      final String value = issueNumber.toString();
-      add(node, label, value);
-    }
+    add(node, prefix + "issueLabel", issueNumber.toString());
 
     // page not supported
 
     // status not supported
 
     final String websiteLink = record.getWebsiteLink();
-    if (StringUtils.isNotBlank(websiteLink)) {
-      final String key = prefix + "websiteLabel";
-      final String label = bundle.getString(key);
-      add(node, label, websiteLink);
-    }
+    add(node, prefix + "websiteLabel", websiteLink);
 
     // comment not supported
   }
@@ -412,25 +389,17 @@ public class FskPortObject implements PortObject {
 
     final ezvcard.property.Nickname nickname = vcard.getNickname();
     if (nickname != null) {
-      final String key = prefix + "givenNameLabel";
-      final String label = bundle.getString(key);
-      final String value = nickname.toString();
-      add(node, label, value);
+      add(node, prefix + "givenNameLabel", nickname.toString());
     }
 
     final ezvcard.property.FormattedName formattedName = vcard.getFormattedName();
     if (formattedName != null) {
-      final String key = prefix + "familyNameLabel";
-      final String label = bundle.getString(key);
-      final String value = formattedName.toString();
-      add(node, label, value);
+      add(node, prefix + "familyNameLabel", formattedName.toString());
     }
 
     if (!vcard.getEmails().isEmpty()) {
-      final String key = prefix + "contactLabel";
-      final String label = bundle.getString(key);
       final String value = vcard.getEmails().get(0).toString();
-      add(node, label, value);
+      add(node, prefix + "contactLabel", value);
     }
   }
 
@@ -438,208 +407,41 @@ public class FskPortObject implements PortObject {
 
     final String prefix = "GM.EditProductPanel.";
 
-    final String environmentName = product.environmentName;
-    if (StringUtils.isNotBlank(environmentName)) {
-      final String key = prefix + "envNameLabel";
-      final String label = bundle.getString(key);
-      add(node, label, environmentName);
-    }
-
-    final String environmentDescription = product.environmentDescription;
-    if (StringUtils.isNotBlank(environmentDescription)) {
-      final String key = prefix + "envDescriptionLabel";
-      final String label = bundle.getString(key);
-      add(node, label, environmentDescription);
-    }
-
-    final String environmentUnit = product.environmentUnit;
-    if (StringUtils.isNotBlank(environmentUnit)) {
-      final String key = prefix + "envUnitLabel";
-      final String label = bundle.getString(key);
-      add(node, label, environmentUnit);
-    }
-
+    add(node, prefix + "envNameLabel", product.environmentName);
+    add(node, prefix + "envDescriptionLabel", product.environmentDescription);
+    add(node, prefix + "envUnitLabel", product.environmentUnit);
     add(node, prefix + "productionMethodLabel", product.productionMethod);
-
-    final String originCountry = product.originCountry;
-    if (StringUtils.isNotBlank(originCountry)) {
-      final String key = prefix + "originCountryLabel";
-      final String label = bundle.getString(key);
-      add(node, label, product.originCountry);
-    }
-
-    final String originArea = product.originArea;
-    if (StringUtils.isNotBlank(originArea)) {
-      final String key = prefix + "originAreaLabel";
-      final String label = bundle.getString(key);
-      add(node, label, originArea);
-    }
-
-    final String fisheriesArea = product.fisheriesArea;
-    if (StringUtils.isNoneBlank(fisheriesArea)) {
-      final String key = prefix + "fisheriesAreaLabel";
-      final String label = bundle.getString(key);
-      add(node, label, fisheriesArea);
-    }
-
-    final Date productionDate = product.productionDate;
-    if (productionDate != null) {
-      final String key = prefix + "productionDateLabel";
-      final String label = bundle.getString(key);
-      add(node, label, productionDate);
-    }
-
-    final Date expirationDate = product.expirationDate;
-    if (expirationDate != null) {
-      final String key = prefix + "expirationDateLabel";
-      final String label = bundle.getString(key);
-      add(node, label, expirationDate);
-    }
+    add(node, prefix + "originCountryLabel", product.originCountry);
+    add(node, prefix + "originAreaLabel", product.originArea);
+    add(node, prefix + "fisheriesAreaLabel", product.fisheriesArea);
+    add(node, prefix + "productionDateLabel", product.productionDate);
+    add(node, prefix + "expirationDateLabel", product.expirationDate);
   }
 
   private static void add(final DefaultMutableTreeNode node, final Hazard hazard) {
 
     final String prefix = "GM.EditHazardPanel.";
 
-    final String hazardType = hazard.hazardType;
-    if (StringUtils.isNotBlank(hazardType)) {
-      final String key = prefix + "hazardTypeLabel";
-      final String label = bundle.getString(key);
-      add(node, label, hazardType);
-    }
-
-    final String hazardName = hazard.hazardName;
-    if (StringUtils.isNotBlank(hazardName)) {
-      final String key = prefix + "hazardNameLabel";
-      final String label = bundle.getString(key);
-      add(node, label, hazardName);
-    }
-
-    final String hazardDescription = hazard.hazardDescription;
-    if (StringUtils.isNotBlank(hazardDescription)) {
-      final String key = prefix + "hazardDescriptionLabel";
-      final String label = bundle.getString(key);
-      add(node, label, hazardDescription);
-    }
-
-    final String hazardUnit = hazard.hazardUnit;
-    if (StringUtils.isNotBlank(hazardUnit)) {
-      final String key = prefix + "hazardUnitLabel";
-      final String label = bundle.getString(key);
-      add(node, label, hazardUnit);
-    }
-
-    final String adverseEffect = hazard.adverseEffect;
-    if (StringUtils.isNotBlank(adverseEffect)) {
-      final String key = prefix + "adverseEffectLabel";
-      final String label = bundle.getString(key);
-      add(node, label, adverseEffect);
-    }
-
-    final String origin = hazard.origin;
-    if (StringUtils.isNotBlank(origin)) {
-      final String key = prefix + "originLabel";
-      final String label = bundle.getString(key);
-      add(node, label, origin);
-    }
-
-    final String benchmarkDose = hazard.benchmarkDose;
-    if (StringUtils.isNotBlank(benchmarkDose)) {
-      final String key = prefix + "bmdLabel";
-      final String label = bundle.getString(key);
-      add(node, label, benchmarkDose);
-    }
-
-    final String maximumResidueLimit = hazard.maximumResidueLimit;
-    if (StringUtils.isNotBlank(maximumResidueLimit)) {
-      final String key = prefix + "maxResidueLimitLabel";
-      final String label = bundle.getString(key);
-      add(node, label, maximumResidueLimit);
-    }
-
-    final String noObservedAdverse = hazard.noObservedAdverse;
-    if (StringUtils.isNotBlank(noObservedAdverse)) {
-      final String key = prefix + "noObservedAdverseLabel";
-      final String label = bundle.getString(key);
-      add(node, label, noObservedAdverse);
-    }
-
-    final String lowestObservedAdverse = hazard.lowestObservedAdverse;
-    if (StringUtils.isNotBlank(lowestObservedAdverse)) {
-      final String key = prefix + "lowestObserveLabel";
-      final String label = bundle.getString(key);
-      add(node, label, lowestObservedAdverse);
-    }
-
-    final String acceptableOperator = hazard.acceptableOperator;
-    if (StringUtils.isNotBlank(acceptableOperator)) {
-      final String key = prefix + "acceptableOperatorLabel";
-      final String label = bundle.getString(key);
-      add(node, label, acceptableOperator);
-    }
-
-    final String acuteReferenceDose = hazard.acuteReferenceDose;
-    if (StringUtils.isNotBlank(acuteReferenceDose)) {
-      final String key = prefix + "acuteReferenceDoseLabel";
-      final String label = bundle.getString(key);
-      add(node, label, acuteReferenceDose);
-    }
-
-    final String acceptableDailyIntake = hazard.acceptableDailyIntake;
-    if (StringUtils.isNotBlank(acceptableDailyIntake)) {
-      final String key = prefix + "acceptableDailyIntake";
-      final String label = bundle.getString(key);
-      add(node, label, acceptableDailyIntake);
-    }
-
-    final String hazardIndSum = hazard.hazardIndSum;
-    if (StringUtils.isNotBlank(hazardIndSum)) {
-      final String key = prefix + "indSumLabel";
-      final String label = bundle.getString(key);
-      add(node, label, hazardIndSum);
-    }
-
-    final String laboratoryName = hazard.laboratoryName;
-    if (StringUtils.isNotBlank(laboratoryName)) {
-      final String key = prefix + "labNameLabel";
-      final String label = bundle.getString(key);
-      add(node, label, laboratoryName);
-    }
-
-    final String laboratoryCountry = hazard.laboratoryCountry;
-    if (StringUtils.isNotBlank(laboratoryCountry)) {
-      final String key = prefix + "labCountryLabel";
-      final String label = bundle.getString(key);
-      add(node, label, laboratoryCountry);
-    }
-
-    final String detectionLimit = hazard.detectionLimit;
-    if (StringUtils.isNotBlank(detectionLimit)) {
-      final String key = prefix + "detectionLimitLabel";
-      final String label = bundle.getString(key);
-      add(node, label, detectionLimit);
-    }
-
-    final String quantificationLimit = hazard.quantificationLimit;
-    if (StringUtils.isNotBlank(quantificationLimit)) {
-      final String key = prefix + "quantificationLimitLabel";
-      final String label = bundle.getString(key);
-      add(node, label, quantificationLimit);
-    }
-
-    final String leftCensoredData = hazard.leftCensoredData;
-    if (StringUtils.isNotBlank(leftCensoredData)) {
-      final String key = prefix + "leftCensoredDataLabel";
-      final String label = bundle.getString(key);
-      add(node, label, leftCensoredData);
-    }
-
-    final String contaminationRange = hazard.rangeOfContamination;
-    if (StringUtils.isNotBlank(contaminationRange)) {
-      final String key = prefix + "contaminationRangeLabel";
-      final String label = bundle.getString(key);
-      add(node, label, contaminationRange);
-    }
+    add(node, prefix + "hazardTypeLabel", hazard.hazardType);
+    add(node, prefix + "hazardNameLabel", hazard.hazardName);
+    add(node, prefix + "hazardDescriptionLabel", hazard.hazardDescription);
+    add(node, prefix + "hazardUnitLabel", hazard.hazardUnit);
+    add(node, prefix + "adverseEffectLabel", hazard.adverseEffect);
+    add(node, prefix + "originLabel", hazard.origin);
+    add(node, prefix + "bmdLabel", hazard.benchmarkDose);
+    add(node, prefix + "maxResidueLimitLabel", hazard.maximumResidueLimit);
+    add(node, prefix + "noObservedAdverseLabel", hazard.noObservedAdverse);
+    add(node, prefix + "lowestObserveLabel", hazard.lowestObservedAdverse);
+    add(node, prefix + "acceptableOperatorLabel", hazard.acceptableOperator);
+    add(node, prefix + "acuteReferenceDoseLabel", hazard.acuteReferenceDose);
+    add(node, prefix + "acceptableDailyIntake", hazard.acceptableDailyIntake);
+    add(node, prefix + "indSumLabel", hazard.hazardIndSum);
+    add(node, prefix + "labNameLabel", hazard.laboratoryName);
+    add(node, prefix + "labCountryLabel", hazard.laboratoryCountry);
+    add(node, prefix + "detectionLimitLabel", hazard.detectionLimit);
+    add(node, prefix + "quantificationLimitLabel", hazard.quantificationLimit);
+    add(node, prefix + "leftCensoredDataLabel", hazard.leftCensoredData);
+    add(node, prefix + "contaminationRangeLabel", hazard.rangeOfContamination);
   }
 
   private static void add(final DefaultMutableTreeNode node,
@@ -647,24 +449,11 @@ public class FskPortObject implements PortObject {
 
     final String prefix = "GM.EditPopulationGroupPanel.";
 
-    final String populationName = populationGroup.populationName;
-    if (StringUtils.isNotBlank(populationName)) {
-      final String key = prefix + "populationNameLabel";
-      final String label = bundle.getString(key);
-      add(node, label, populationName);
-    }
-
+    add(node, prefix + "populationNameLabel", populationGroup.populationName);
     add(node, prefix + "populationSpanLabel", populationGroup.populationSpan);
     add(node, prefix + "populationDescriptionLabel", populationGroup.populationDescription);
     add(node, prefix + "populationAgeLabel", populationGroup.populationAge);
-
-    final String populationGender = populationGroup.populationGender;
-    if (StringUtils.isNotBlank(populationGender)) {
-      final String key = prefix + "populationGenderLabel";
-      final String label = bundle.getString(key);
-      add(node, label, populationGender);
-    }
-
+    add(node, prefix + "populationGenderLabel", populationGroup.populationGender);
     add(node, prefix + "bmiLabel", populationGroup.bmi);
     add(node, prefix + "specialDietGroupsLabel", populationGroup.specialDietGroups);
     add(node, prefix + "patternConsumptionLabel", populationGroup.specialDietGroups);
@@ -679,19 +468,8 @@ public class FskPortObject implements PortObject {
 
     final String prefix = "GM.GeneralInformationPanel.";
 
-    final String name = generalInformation.name;
-    if (StringUtils.isNotBlank(name)) {
-      final String key = prefix + "studyNameLabel";
-      final String label = bundle.getString(key);
-      add(node, label, name);
-    }
-
-    final String identifier = generalInformation.identifier;
-    if (StringUtils.isNotBlank(identifier)) {
-      final String key = prefix + "identifierLabel";
-      final String label = bundle.getString(key);
-      add(node, label, identifier);
-    }
+    add(node, prefix + "studyNameLabel", generalInformation.name);
+    add(node, prefix + "identifierLabel", generalInformation.identifier);
 
     final List<VCard> creators = generalInformation.creators;
     if (!creators.isEmpty()) {
@@ -707,11 +485,7 @@ public class FskPortObject implements PortObject {
       node.add(creatorsNode);
     }
 
-    {
-      final String key = prefix + "creationDateLabel";
-      final String label = bundle.getString(key);
-      add(node, label, generalInformation.creationDate);
-    }
+    add(node, prefix + "creationDateLabel", generalInformation.creationDate);
 
     final List<Date> modificationDate = generalInformation.modificationDate;
     if (!modificationDate.isEmpty()) {
@@ -719,21 +493,11 @@ public class FskPortObject implements PortObject {
       modificationDate.forEach(it -> add(parentNode, "Modification date", it));
     }
 
-    final String rights = generalInformation.rights;
-    if (StringUtils.isNotBlank(rights)) {
-      final String key = prefix + "rightsLabel";
-      final String label = bundle.getString(key);
-      add(node, label, rights);
-    }
+    add(node, prefix + "rightsLabel", generalInformation.rights);
 
     // TODO: isAvailable
 
-    {
-      final String key = prefix + "urlLabel";
-      final String label = bundle.getString(key);
-      final String value = generalInformation.url.toString();
-      add(node, label, value);
-    }
+    add(node, prefix + "urlLabel", generalInformation.url.toString());
 
     final List<Record> reference = generalInformation.reference;
     if (!reference.isEmpty()) {
@@ -746,47 +510,12 @@ public class FskPortObject implements PortObject {
       node.add(parentNode);
     }
 
-    final String language = generalInformation.language;
-    if (StringUtils.isNotBlank(language)) {
-      final String key = prefix + "languageLabel";
-      final String label = bundle.getString(key);
-      add(node, label, language);
-    }
-
-    final String software = generalInformation.software;
-    if (StringUtils.isNotBlank(software)) {
-      final String key = prefix + "softwareLabel";
-      final String label = bundle.getString(key);
-      add(node, label, software);
-    }
-
-    final String languageWrittenIn = generalInformation.languageWrittenIn;
-    if (StringUtils.isNotBlank(languageWrittenIn)) {
-      final String key = prefix + "languageWrittenInLabel";
-      final String label = bundle.getString(key);
-      add(node, label, languageWrittenIn);
-    }
-
-    final String status = generalInformation.status;
-    if (StringUtils.isNotBlank(status)) {
-      final String key = prefix + "statusLabel";
-      final String label = bundle.getString(key);
-      add(node, label, status);
-    }
-
-    final String objective = generalInformation.objective;
-    if (StringUtils.isNotBlank(objective)) {
-      final String key = prefix + "objectiveLabel";
-      final String label = bundle.getString(key);
-      add(node, label, objective);
-    }
-
-    final String description = generalInformation.description;
-    if (StringUtils.isNotBlank(description)) {
-      final String key = prefix + "descriptionLabel";
-      final String label = bundle.getString(key);
-      add(node, label, description);
-    }
+    add(node, prefix + "languageLabel", generalInformation.language);
+    add(node, prefix + "softwareLabel", generalInformation.software);
+    add(node, prefix + "languageWrittenInLabel", generalInformation.languageWrittenIn);
+    add(node, prefix + "statusLabel", generalInformation.status);
+    add(node, prefix + "objectiveLabel", generalInformation.objective);
+    add(node, prefix + "descriptionLabel", generalInformation.description);
   }
 
   private static void add(final DefaultMutableTreeNode node, final Scope scope) {
@@ -830,20 +559,8 @@ public class FskPortObject implements PortObject {
       node.add(pgNode);
     }
 
-    final String generalComment = scope.generalComment;
-    if (StringUtils.isNotBlank(generalComment)) {
-      final String key = prefix + "commentLabel";
-      final String label = bundle.getString(key);
-      add(node, label, generalComment);
-    }
-
-    final String temporalInformation = scope.temporalInformation;
-    if (StringUtils.isNotBlank(temporalInformation)) {
-      final String key = prefix + "temporalInformationLabel";
-      final String label = bundle.getString(key);
-      add(node, label, temporalInformation);
-    }
-
+    add(node, prefix + "commentLabel", scope.generalComment);
+    add(node, prefix + "temporalInformationLabel", scope.temporalInformation);
     add(node, prefix + "regionLabel", scope.region);
     add(node, prefix + "countryLabel", scope.country);
   }
@@ -895,188 +612,43 @@ public class FskPortObject implements PortObject {
 
     final String prefix = "GM.StudyPanel.";
 
-    final String title = study.title;
-    if (StringUtils.isNotBlank(title)) {
-      final String key = prefix + "studyTitleLabel";
-      final String label = bundle.getString(key);
-      add(node, label, title);
-    }
-
-    final String description = study.description;
-    if (StringUtils.isNotBlank(description)) {
-      final String key = prefix + "studyDescriptionLabel";
-      final String label = bundle.getString(key);
-      add(node, label, description);
-    }
-
-    final String designType = study.designType;
-    if (StringUtils.isNotBlank(designType)) {
-      final String key = prefix + "studyDesignTypeLabel";
-      final String label = bundle.getString(key);
-      add(node, label, designType);
-    }
-
-    final String measurementType = study.measurementType;
-    if (StringUtils.isNotBlank(measurementType)) {
-      final String key = prefix + "studyAssayMeasurementsTypeLabel";
-      final String label = bundle.getString(key);
-      add(node, label, measurementType);
-    }
-
-    final String technologyType = study.technologyType;
-    if (StringUtils.isNotBlank(technologyType)) {
-      final String key = prefix + "studyAssayTechnologyTypeLabel";
-      final String label = bundle.getString(key);
-      add(node, label, technologyType);
-    }
-
-    final String technologyPlatform = study.technologyPlatform;
-    if (StringUtils.isNotBlank(technologyPlatform)) {
-      final String key = prefix + "studyAssayTechnologyPlatformLabel";
-      final String label = bundle.getString(key);
-      add(node, label, technologyPlatform);
-    }
-
-    final String accreditationProcedure = study.accreditationProcedure;
-    if (StringUtils.isNotBlank(accreditationProcedure)) {
-      final String key = prefix + "accreditationProcedureLabel";
-      final String label = bundle.getString(key);
-      add(node, label, accreditationProcedure);
-    }
-
-    final String protocolName = study.protocolName;
-    if (StringUtils.isNotBlank(protocolName)) {
-      final String key = prefix + "protocolNameLabel";
-      final String label = bundle.getString(key);
-      add(node, label, protocolName);
-    }
-
-    final String protocolType = study.protocolType;
-    if (StringUtils.isNotBlank(protocolType)) {
-      final String key = prefix + "protocolTypeLabel";
-      final String label = bundle.getString(key);
-      add(node, label, protocolType);
-    }
-
-    final String protocolDescription = study.protocolDescription;
-    if (StringUtils.isNotBlank(protocolDescription)) {
-      final String key = prefix + "protocolDescriptionLabel";
-      final String label = bundle.getString(key);
-      add(node, label, protocolDescription);
-    }
+    add(node, prefix + "studyTitleLabel", study.title);
+    add(node, prefix + "studyDescriptionLabel", study.description);
+    add(node, prefix + "studyDesignTypeLabel", study.designType);
+    add(node, prefix + "studyAssayMeasurementsTypeLabel", study.measurementType);
+    add(node, prefix + "studyAssayTechnologyTypeLabel", study.technologyType);
+    add(node, prefix + "studyAssayTechnologyPlatformLabel", study.technologyPlatform);
+    add(node, prefix + "accreditationProcedureLabel", study.accreditationProcedure);
+    add(node, prefix + "protocolNameLabel", study.protocolName);
+    add(node, prefix + "protocolTypeLabel", study.protocolType);
+    add(node, prefix + "protocolDescriptionLabel", study.protocolDescription);
 
     final URI protocolUri = study.protocolUri;
     if (protocolUri != null) {
-      final String key = prefix + "protocolURILabel";
-      final String label = bundle.getString(key);
       final String value = protocolUri.toString();
-      add(node, label, value);
+      add(node, prefix + "protocolURILabel", value);
     }
 
-    final String protocolVersion = study.protocolVersion;
-    if (StringUtils.isNotBlank(protocolVersion)) {
-      final String key = prefix + "protocolVersionLabel";
-      final String label = bundle.getString(key);
-      add(node, label, protocolVersion);
-    }
-
-    final String parametersName = study.parametersName;
-    if (StringUtils.isNotBlank(parametersName)) {
-      final String key = prefix + "parametersLabel";
-      final String label = bundle.getString(key);
-      add(node, label, parametersName);
-    }
-
-    final String componentsType = study.componentsType;
-    if (StringUtils.isNotBlank(componentsType)) {
-      final String key = prefix + "componentsTypeLabel";
-      final String label = bundle.getString(key);
-      add(node, label, study.componentsType);
-    }
+    add(node, prefix + "protocolVersionLabel", study.protocolVersion);
+    add(node, prefix + "parametersLabel", study.parametersName);
+    add(node, prefix + "componentsTypeLabel", study.componentsType);
   }
 
   private static void add(final DefaultMutableTreeNode node, final StudySample studySample) {
 
     final String prefix = "GM.EditStudySamplePanel.";
 
-    final String sample = studySample.sample;
-    if (StringUtils.isNotBlank(sample)) {
-      final String key = prefix + "sampleNameLabel";
-      final String label = bundle.getString(key);
-      add(node, label, sample);
-    }
-
-    final Double moisturePercentage = studySample.moisturePercentage;
-    if (moisturePercentage != null) {
-      final String key = prefix + "moisturePercentageLabel";
-      final String label = bundle.getString(key);
-      final String value = moisturePercentage.toString();
-      add(node, label, value);
-    }
-
-    final Double fatPercentage = studySample.fatPercentage;
-    if (fatPercentage != null) {
-      final String key = prefix + "fatPercentageLabel";
-      final String label = bundle.getString(key);
-      final String value = fatPercentage.toString();
-      add(node, label, value);
-    }
-
-    final String collectionProtocol = studySample.collectionProtocol;
-    if (StringUtils.isNotBlank(collectionProtocol)) {
-      final String key = prefix + "sampleProtocolLabel";
-      final String label = bundle.getString(key);
-      add(node, label, collectionProtocol);
-    }
-
-    final String samplingStrategy = studySample.samplingStrategy;
-    if (StringUtils.isNotBlank(samplingStrategy)) {
-      final String key = prefix + "samplingStrategyLabel";
-      final String label = bundle.getString(key);
-      add(node, label, samplingStrategy);
-    }
-
-    final String samplingMethod = studySample.samplingMethod;
-    if (StringUtils.isNotBlank(samplingMethod)) {
-      final String key = prefix + "samplingMethodLabel";
-      final String label = bundle.getString(key);
-      add(node, label, samplingMethod);
-    }
-
-    final String samplingPlan = studySample.samplingPlan;
-    if (StringUtils.isNotBlank(samplingPlan)) {
-      final String key = prefix + "samplingPlanLabel";
-      final String label = bundle.getString(key);
-      add(node, label, samplingPlan);
-    }
-
-    final String samplingWeight = studySample.samplingWeight;
-    if (StringUtils.isNotBlank(samplingWeight)) {
-      final String key = prefix + "samplingWeightLabel";
-      final String label = bundle.getString(key);
-      add(node, label, samplingWeight);
-    }
-
-    final String samplingSize = studySample.samplingSize;
-    if (StringUtils.isNotBlank(samplingSize)) {
-      final String key = prefix + "samplingSizeLabel";
-      final String label = bundle.getString(key);
-      add(node, label, samplingSize);
-    }
-
-    final String lotSizeUnit = studySample.lotSizeUnit;
-    if (StringUtils.isNotBlank(lotSizeUnit)) {
-      final String key = prefix + "lotSizeUnitLabel";
-      final String label = bundle.getString(key);
-      add(node, label, lotSizeUnit);
-    }
-
-    final String samplingPoint = studySample.samplingPoint;
-    if (StringUtils.isNotBlank(samplingPoint)) {
-      final String key = prefix + "samplingPointLabel";
-      final String label = bundle.getString(key);
-      add(node, label, samplingPoint);
-    }
+    add(node, prefix + "sampleNameLabel", studySample.sample);
+    add(node, prefix + "moisturePercentageLabel", studySample.moisturePercentage);
+    add(node, prefix + "fatPercentageLabel", studySample.fatPercentage);
+    add(node, prefix + "sampleProtocolLabel", studySample.collectionProtocol);
+    add(node, prefix + "samplingStrategyLabel", studySample.samplingStrategy);
+    add(node, prefix + "samplingMethodLabel", studySample.samplingMethod);
+    add(node, prefix + "samplingPlanLabel", studySample.samplingPlan);
+    add(node, prefix + "samplingWeightLabel", studySample.samplingWeight);
+    add(node, prefix + "samplingSizeLabel", studySample.samplingSize);
+    add(node, prefix + "lotSizeUnitLabel", studySample.lotSizeUnit);
+    add(node, prefix + "samplingPointLabel", studySample.lotSizeUnit);
   }
 
   private static void add(final DefaultMutableTreeNode node, final DietaryAssessmentMethod method) {
@@ -1084,27 +656,10 @@ public class FskPortObject implements PortObject {
     // Prefix in resource bundle
     final String prefix = "GM.EditDietaryAssessmentMethodPanel.";
 
-    final String collectionTool = method.collectionTool;
-    if (StringUtils.isNotBlank(collectionTool)) {
-      final String key = prefix + "dataCollectionToolLabel";
-      final String label = bundle.getString(key);
-      add(node, label, collectionTool);
-    }
-
-    {
-      final String key = prefix + "nonConsecutiveOneDaysLabel";
-      final String label = bundle.getString(key);
-      final String value = Integer.toString(method.numberOfNonConsecutiveOneDay);
-      add(node, label, value);
-    }
-
-    final String softwareTool = method.softwareTool;
-    if (StringUtils.isNotBlank(softwareTool)) {
-      final String key = prefix + "dietarySoftwareToolLabel";
-      final String label = bundle.getString(key);
-      add(node, label, softwareTool);
-    }
-
+    add(node, prefix + "dataCollectionToolLabel", method.collectionTool);
+    add(node, prefix + "nonConsecutiveOneDaysLabel",
+        Integer.toString(method.numberOfNonConsecutiveOneDay));
+    add(node, prefix + "dietarySoftwareToolLabel", method.softwareTool);
     add(node, prefix + "foodItemNumberLabel", method.numberOfFoodItems);
     add(node, prefix + "recordTypeLabel", method.recordTypes);
     add(node, prefix + "foodDescriptionLabel", method.foodDescriptors);
@@ -1112,143 +667,37 @@ public class FskPortObject implements PortObject {
 
   private static void add(final DefaultMutableTreeNode node, final Assay assay) {
 
-    final String name = assay.name;
-    if (StringUtils.isNotBlank(name)) {
-      final String key = "GM.EditAssayPanel.nameLabel";
-      final String label = bundle.getString(key);
-      add(node, label, name);
-    }
-
-    final String description = assay.description;
-    if (StringUtils.isNotBlank(description)) {
-      final String key = "GM.EditAssayPanel.descriptionLabel";
-      final String label = bundle.getString(key);
-      add(node, label, description);
-    }
+    add(node, "GM.EditAssayPanel.nameLabel", assay.name);
+    add(node, "GM.EditAssayPanel.descriptionLabel", assay.description);
   }
 
   private static void add(final DefaultMutableTreeNode node, final Parameter parameter) {
 
     final String prefix = "GM.EditParameterPanel.";
 
-    final String id = parameter.id;
-    if (StringUtils.isNotBlank(id)) {
-      final String key = prefix + "idLabel";
-      final String label = bundle.getString(key);
-      add(node, label, id);
-    }
-
-    {
-      final String key = prefix + "classificationLabel";
-      final String label = bundle.getString(key);
-      final String value = parameter.classification.toString();
-      add(node, label, value);
-    }
-
-    final String name = parameter.name;
-    if (StringUtils.isNotBlank(name)) {
-      final String key = prefix + "parameterNameLabel";
-      final String label = bundle.getString(key);
-      add(node, label, name);
-    }
-
-    final String description = parameter.description;
-    if (StringUtils.isNotBlank(description)) {
-      final String key = prefix + "descriptionLabel";
-      final String label = bundle.getString(key);
-      add(node, label, description);
-    }
-
-    final String unit = parameter.unit;
-    if (StringUtils.isNotBlank(unit)) {
-      final String key = prefix + "unitLabel";
-      final String label = bundle.getString(key);
-      add(node, label, unit);
-    }
-
-    final String unitCategory = parameter.unitCategory;
-    if (StringUtils.isNotBlank(unitCategory)) {
-      final String key = prefix + "unitCategoryLabel";
-      final String label = bundle.getString(key);
-      add(node, label, unitCategory);
-    }
-
-    final String dataType = parameter.dataType;
-    if (StringUtils.isNotBlank(dataType)) {
-      final String key = prefix + "dataTypeLabel";
-      final String label = bundle.getString(key);
-      add(node, label, dataType);
-    }
-
-    final String source = parameter.source;
-    if (StringUtils.isNotBlank(source)) {
-      final String key = prefix + "sourceLabel";
-      final String label = bundle.getString(key);
-      add(node, label, source);
-    }
-
-    final String subject = parameter.subject;
-    if (StringUtils.isNotBlank(subject)) {
-      final String key = prefix + "subjectLabel";
-      final String label = bundle.getString(key);
-      add(node, label, subject);
-    }
-
-    final String distribution = parameter.distribution;
-    if (StringUtils.isNotBlank(distribution)) {
-      final String key = prefix + "distributionLabel";
-      final String label = bundle.getString(key);
-      add(node, label, distribution);
-    }
-
-    final String value = parameter.value;
-    if (StringUtils.isNotBlank(value)) {
-      final String key = prefix + "valueLabel";
-      final String label = bundle.getString(key);
-      add(node, label, value);
-    }
-
-    final String reference = parameter.reference;
-    if (StringUtils.isNotBlank(reference)) {
-      final String key = prefix + "referenceLabel";
-      final String label = bundle.getString(key);
-      add(node, label, reference);
-    }
-
-    final String variabilitySubject = parameter.variabilitySubject;
-    if (StringUtils.isNotBlank(variabilitySubject)) {
-      final String key = prefix + "variabilitySubjectLabel";
-      final String label = bundle.getString(key);
-      add(node, label, variabilitySubject);
-    }
-
+    add(node, prefix + "idLabel", parameter.id);
+    add(node, prefix + "classificationLabel", parameter.classification.toString());
+    add(node, prefix + "parameterNameLabel", parameter.name);
+    add(node, prefix + "descriptionLabel", parameter.description);
+    add(node, prefix + "unitLabel", parameter.unit);
+    add(node, prefix + "unitCategoryLabel", parameter.unitCategory);
+    add(node, prefix + "dataTypeLabel", parameter.dataType);
+    add(node, prefix + "sourceLabel", parameter.source);
+    add(node, prefix + "subjectLabel", parameter.subject);
+    add(node, prefix + "distributionLabel", parameter.distribution);
+    add(node, prefix + "valueLabel", parameter.value);
+    add(node, prefix + "referenceLabel", parameter.reference);
+    add(node, prefix + "variabilitySubjectLabel", parameter.variabilitySubject);
     add(node, prefix + "applicabilityLabel", parameter.modelApplicability);
-
-    final Double error = parameter.error;
-    if (error != null) {
-      final String key = prefix + "errorLabel";
-      final String label = bundle.getString(key);
-      add(node, label, error.toString());
-    }
+    add(node, prefix + "errorLabel", parameter.error);
   }
 
   private static void add(final DefaultMutableTreeNode node, final ModelEquation modelEquation) {
 
     final String prefix = "GM.EditModelEquationPanel.";
 
-    final String equationName = modelEquation.equationName;
-    if (StringUtils.isNotBlank(equationName)) {
-      final String key = prefix + "nameLabel";
-      final String label = bundle.getString(key);
-      add(node, label, equationName);
-    }
-
-    final String equationClass = modelEquation.equationClass;
-    if (StringUtils.isNotBlank(equationClass)) {
-      final String key = prefix + "classLabel";
-      final String label = bundle.getString(key);
-      add(node, label, equationClass);
-    }
+    add(node, prefix + "nameLabel", modelEquation.equationName);
+    add(node, prefix + "classLabel", modelEquation.equationClass);
 
     final List<Record> equationReference = modelEquation.equationReference;
     if (!equationReference.isEmpty()) {
@@ -1261,12 +710,7 @@ public class FskPortObject implements PortObject {
       node.add(parentNode);
     }
 
-    final String equation = modelEquation.equation;
-    if (StringUtils.isNotBlank(equation)) {
-      final String key = prefix + "scriptLabel";
-      final String label = bundle.getString(key);
-      add(node, label, equation);
-    }
+    add(node, prefix + "scriptLabel", modelEquation.equation);
   }
 
   private static void add(final DefaultMutableTreeNode node, final ModelMath modelMath) {
@@ -1282,41 +726,12 @@ public class FskPortObject implements PortObject {
       node.add(parentNode);
     }
 
-    final Double sse = modelMath.sse;
-    if (sse != null) {
-      final String value = sse.toString();
-      add(node, "SSE", value);
-    }
-
-    final Double mse = modelMath.mse;
-    if (mse != null) {
-      final String value = mse.toString();
-      add(node, "MSE", value);
-    }
-
-    final Double rmse = modelMath.rmse;
-    if (rmse != null) {
-      final String value = rmse.toString();
-      add(node, "RMSE", value);
-    }
-
-    final Double rSquared = modelMath.rSquared;
-    if (rSquared != null) {
-      final String value = rSquared.toString();
-      add(node, "r-Squared", value);
-    }
-
-    final Double aic = modelMath.aic;
-    if (aic != null) {
-      final String value = aic.toString();
-      add(node, "aic", value);
-    }
-
-    final Double bic = modelMath.bic;
-    if (bic != null) {
-      final String value = bic.toString();
-      add(node, "bic", value);
-    }
+    add(node, "ModelMath.SSE", modelMath.sse);
+    add(node, "ModelMath.MSE", modelMath.mse);
+    add(node, "ModelMath.RMSE", modelMath.rmse);
+    add(node, "ModelMath.R2", modelMath.rSquared);
+    add(node, "ModelMath.AIC", modelMath.aic);
+    add(node, "ModelMath.BIC", modelMath.bic);
 
     final ModelEquation modelEquation = modelMath.modelEquation;
     if (modelEquation != null) {
@@ -1325,10 +740,7 @@ public class FskPortObject implements PortObject {
       node.add(equationNode);
     }
 
-    final String fittingProcedure = modelMath.fittingProcedure;
-    if (StringUtils.isNotBlank(fittingProcedure)) {
-      add(node, "Fitting procedure", fittingProcedure);
-    }
+    add(node, "Fitting procedure", modelMath.fittingProcedure);
 
     // TODO: exposure
 
