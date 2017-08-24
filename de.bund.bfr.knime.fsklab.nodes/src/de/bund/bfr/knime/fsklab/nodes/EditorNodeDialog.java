@@ -1152,12 +1152,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
       final List<String> errors = new ArrayList<>();
       if (!hasValidValue(equationNameTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditHazardPanel.nameLabel"));
+        errors.add("Missing " + bundle.getString("GM.EditModelEquationPanel.nameLabel"));
       }
       if (!hasValidValue(scriptTextArea)) {
-        errors.add("Missing " + bundle.getString("GM.EditHazardPanel.scriptLabel"));
+        errors.add("Missing " + bundle.getString("GM.EditModelEquationPanel.scriptLabel"));
       }
-
       return errors;
     }
 
@@ -1376,7 +1375,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         errors.add("Missing " + bundle.getString("GM.EditParameterPanel.classificationLabel"));
       }
       if (!hasValidValue(nameTextField)) {
-        errors.add("Missing " + bundle.getString("GM.EditParameterPanel.nameLabel"));
+        errors.add("Missing " + bundle.getString("GM.EditParameterPanel.parameterNameLabel"));
       }
       if (!hasValidValue(unitField)) {
         errors.add("Missing " + bundle.getString("GM.EditParameterPanel.unitLabel"));
@@ -1385,7 +1384,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         errors.add("Missing " + bundle.getString("GM.EditParameterPanel.unitCategoryLabel"));
       }
       if (!hasValidValue(dataTypeField)) {
-        errors.add("Missing " + bundle.getString("GM.EditParametersPanel.dataTypeLabel"));
+        errors.add("Missing " + bundle.getString("GM.EditParameterPanel.dataTypeLabel"));
       }
 
       return errors;
