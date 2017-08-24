@@ -17,6 +17,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.core,
  org.knime.ext.r.type,
  org.knime.js.core,
+ org.knime.json;bundle-version="3.3.3",
  org.knime.product;bundle-version="3.3.3"
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy

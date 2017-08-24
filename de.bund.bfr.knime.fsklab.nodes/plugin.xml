@@ -72,6 +72,7 @@
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.EditorNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FSK2MetadataNodeFactory" />
      
      <!-- Deprecated nodes -->
 	 <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.creator.FskCreatorNodeFactory" />
