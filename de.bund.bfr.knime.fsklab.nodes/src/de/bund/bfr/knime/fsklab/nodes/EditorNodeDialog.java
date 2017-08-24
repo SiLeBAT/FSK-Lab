@@ -1124,12 +1124,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       scriptTextArea = createTextArea();
 
       EditorNodeDialog.add(this, equationNameLabel, 0, 0);
-      EditorNodeDialog.add(this, equationNameTextField, 0, 1);
-      EditorNodeDialog.add(this, equationClassLabel, 1, 0);
+      EditorNodeDialog.add(this, equationNameTextField, 1, 0);
+      EditorNodeDialog.add(this, equationClassLabel, 0, 1);
       EditorNodeDialog.add(this, equationClassTextField, 1, 1);
-      EditorNodeDialog.add(this, referencePanel, 3, 0);
-      EditorNodeDialog.add(this, scriptLabel, 4, 0);
-      EditorNodeDialog.add(this, scriptTextArea, 4, 1);
+      EditorNodeDialog.add(this, referencePanel, 0, 2);
+      EditorNodeDialog.add(this, scriptLabel, 0, 3);
+      EditorNodeDialog.add(this, scriptTextArea, 1, 3);
 
       // If simple mode hide avanced components
       if (!isAdvanced) {
