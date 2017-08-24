@@ -319,6 +319,13 @@ public class FskPortObject implements PortObject {
         new DefaultMutableTreeNode(label + ": " + new SimpleDateFormat("yyyy-MM-dd").format(date)));
   }
 
+  private static void add(final DefaultMutableTreeNode node, final String label,
+      final List<String> value) {
+    final DefaultMutableTreeNode listNode = new DefaultMutableTreeNode(label);
+    value.stream().map(DefaultMutableTreeNode::new).forEach(listNode::add);
+    node.add(listNode);
+  }
+
   private static void add(final DefaultMutableTreeNode node, final Record record) {
 
     final String prefix = "GM.EditReferencePanel";
@@ -346,9 +353,7 @@ public class FskPortObject implements PortObject {
     if (authors != null && !authors.isEmpty()) {
       final String key = prefix + "authorListLabel";
       final String label = bundle.getString(key);
-
-      DefaultMutableTreeNode listNode = new DefaultMutableTreeNode(label);
-      authors.forEach(it -> add(listNode, "Author", it));
+      add(node, label, authors);
     }
 
     final String title = record.getTitle();
@@ -456,13 +461,9 @@ public class FskPortObject implements PortObject {
 
     final List<String> productionMethod = product.productionMethod;
     if (!productionMethod.isEmpty()) {
-      // Parent node that holds all the creators
       final String key = prefix + "productionMethodLabel";
       final String label = bundle.getString(key);
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-
-      productionMethod.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
-      node.add(parentNode);
+      add(node, label, productionMethod);
     }
 
     final String originCountry = product.originCountry;
@@ -474,7 +475,8 @@ public class FskPortObject implements PortObject {
 
     final String originArea = product.originArea;
     if (StringUtils.isNotBlank(originArea)) {
-      final String label = bundle.getString("GM.EditProductPanel.originAreaLabel");
+      final String key = prefix + "originAreaLabel";
+      final String label = bundle.getString(key);
       add(node, label, originArea);
     }
 
@@ -661,26 +663,21 @@ public class FskPortObject implements PortObject {
     if (!populationSpan.isEmpty()) {
       final String key = prefix + "populationSpanLabel";
       final String label = bundle.getString(key);
-      final DefaultMutableTreeNode spanNode = new DefaultMutableTreeNode(label);
-      populationSpan.stream().map(DefaultMutableTreeNode::new).forEach(spanNode::add);
+      add(node, label, populationSpan);
     }
 
     final List<String> populationDescription = populationGroup.populationDescription;
     if (!populationDescription.isEmpty()) {
       final String key = prefix + "populationDescriptionLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode descNode = new DefaultMutableTreeNode(label);
-      populationDescription.stream().map(DefaultMutableTreeNode::new).forEach(descNode::add);
+      add(node, label, populationDescription);
     }
 
     final List<String> populationAge = populationGroup.populationAge;
     if (!populationAge.isEmpty()) {
       final String key = prefix + "populationAgeLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode ageNode = new DefaultMutableTreeNode(label);
-      populationAge.stream().map(DefaultMutableTreeNode::new).forEach(ageNode::add);
+      add(node, label, populationAge);
     }
 
     final String populationGender = populationGroup.populationGender;
@@ -694,62 +691,49 @@ public class FskPortObject implements PortObject {
     if (!bmi.isEmpty()) {
       final String key = prefix + "bmiLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode bmiNode = new DefaultMutableTreeNode(label);
-      bmi.stream().map(DefaultMutableTreeNode::new).forEach(bmiNode::add);
+      add(node, label, bmi);
     }
 
     final List<String> specialDietGroups = populationGroup.specialDietGroups;
     if (!specialDietGroups.isEmpty()) {
       final String key = prefix + "specialDietGroupsLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(label);
-      specialDietGroups.stream().map(DefaultMutableTreeNode::new).forEach(groupNode::add);
+      add(node, label, specialDietGroups);
     }
 
     final List<String> patternConsumption = populationGroup.patternConsumption;
     if (!patternConsumption.isEmpty()) {
       final String key = prefix + "patternConsumptionLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode patternNode = new DefaultMutableTreeNode(label);
-      patternConsumption.stream().map(DefaultMutableTreeNode::new).forEach(patternNode::add);
+      add(node, label, patternConsumption);
     }
 
     final List<String> region = populationGroup.region;
     if (!region.isEmpty()) {
       final String key = prefix + "regionLabel";
       final String label = bundle.getString(key);
-      final DefaultMutableTreeNode regionNode = new DefaultMutableTreeNode(label);
-      region.stream().map(DefaultMutableTreeNode::new).forEach(regionNode::add);
+      add(node, label, region);
     }
 
     final List<String> country = populationGroup.country;
     if (!country.isEmpty()) {
       final String key = prefix + "countryLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode countryNode = new DefaultMutableTreeNode(label);
-      country.stream().map(DefaultMutableTreeNode::new).forEach(countryNode::add);
+      add(node, label, country);
     }
 
     final List<String> populationRiskFactor = populationGroup.populationRiskFactor;
     if (!populationRiskFactor.isEmpty()) {
       final String key = prefix + "riskAndPopulationLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode factorNode = new DefaultMutableTreeNode(label);
-      populationRiskFactor.stream().map(DefaultMutableTreeNode::new).forEach(factorNode::add);
+      add(node, label, populationRiskFactor);
     }
 
     final List<String> season = populationGroup.season;
     if (!season.isEmpty()) {
       final String key = prefix + "seasonLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode seasonNode = new DefaultMutableTreeNode(label);
-      season.stream().map(DefaultMutableTreeNode::new).forEach(seasonNode::add);
+      add(node, label, season);
     }
   }
 
@@ -927,20 +911,14 @@ public class FskPortObject implements PortObject {
     if (!region.isEmpty()) {
       final String key = prefix + "regionLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-      region.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
-      node.add(parentNode);
+      add(node, label, region);
     }
 
     final List<String> country = scope.country;
     if (!country.isEmpty()) {
       final String key = prefix + "countryLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-      country.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
-      node.add(parentNode);
+      add(node, label, country);
     }
   }
 
@@ -979,10 +957,7 @@ public class FskPortObject implements PortObject {
     if (!laboratoryAccreditation.isEmpty()) {
       final String key = prefix + "laboratoryAccreditationLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode accNode = new DefaultMutableTreeNode(label);
-      laboratoryAccreditation.forEach(it -> accNode.add(new DefaultMutableTreeNode(it)));
-      node.add(accNode);
+      add(node, label, laboratoryAccreditation);
     }
 
     final Assay assay = dataBackground.assay;
@@ -1214,27 +1189,21 @@ public class FskPortObject implements PortObject {
 
       final String key = prefix + "foodItemNumberLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-      numberOfFoodItems.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+      add(node, label, numberOfFoodItems);
     }
 
     final List<String> recordTypes = method.recordTypes;
     if (!recordTypes.isEmpty()) {
       final String key = prefix + "recordTypeLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-      recordTypes.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+      add(node, label, recordTypes);
     }
 
     final List<String> foodDescriptors = method.foodDescriptors;
     if (!foodDescriptors.isEmpty()) {
       final String key = prefix + "foodDescriptionLabel";
       final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-      foodDescriptors.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+      add(node, label, foodDescriptors);
     }
   }
 
@@ -1354,9 +1323,7 @@ public class FskPortObject implements PortObject {
     if (!modelApplicability.isEmpty()) {
       final String key = prefix + "applicabilityLabel";
       final String label = bundle.getString(key);
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-      modelApplicability.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
-      node.add(parentNode);
+      add(node, label, modelApplicability);
     }
 
     final Double error = parameter.error;
@@ -1469,9 +1436,7 @@ public class FskPortObject implements PortObject {
 
     final List<String> event = modelMath.event;
     if (!event.isEmpty()) {
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Events");
-      event.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
-      node.add(parentNode);
+      add(node, "Events", event);
     }
   }
 
