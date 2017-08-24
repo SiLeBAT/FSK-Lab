@@ -1230,7 +1230,7 @@ public class FskPortObject implements PortObject {
 
     final List<String> foodDescriptors = method.foodDescriptors;
     if (!foodDescriptors.isEmpty()) {
-      final String key = prefix + "foodDescriptorsLabel";
+      final String key = prefix + "foodDescriptionLabel";
       final String label = bundle.getString(key);
 
       final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
