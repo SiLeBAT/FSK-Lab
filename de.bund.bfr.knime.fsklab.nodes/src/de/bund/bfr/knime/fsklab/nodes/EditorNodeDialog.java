@@ -1107,7 +1107,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final JLabel scriptLabel;
     private final JTextArea scriptTextArea;
 
-    EditModelEquationPanel(final ModelEquation modelEquation, final boolean isAdvanced) {
+    EditModelEquationPanel(final boolean isAdvanced) {
 
       equationNameLabel = createLabel("GM.EditModelEquationPanel.nameLabel",
           "GM.EditModelEquationPanel.nameTooltip", true);
@@ -3055,7 +3055,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       advancedCheckBox.addItemListener(event -> {
         parametersPanel.isAdvanced = advancedCheckBox.isSelected();
-        modelEquationPanel.isAdvanced = advancedCheckBox.isSelected();
+        modelEquationPanel.toggleMode();
       });
     }
   }
@@ -3173,12 +3173,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     final NonEditableTableModel tableModel = new NonEditableTableModel();
     final List<ModelEquation> equations = new ArrayList<>();
-    boolean isAdvanced;
+
+    private final EditModelEquationPanel editPanel = new EditModelEquationPanel(false);
 
     ModelEquationsPanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
-      this.isAdvanced = isAdvanced;
 
       setBorder(BorderFactory.createTitledBorder("Model equation"));
       equations.forEach(it -> tableModel.addRow(new ModelEquation[] {it}));
@@ -3196,7 +3196,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final ButtonsPanel buttonsPanel = new ButtonsPanel();
 
       buttonsPanel.addButton.addActionListener(event -> {
-        final EditModelEquationPanel editPanel = new EditModelEquationPanel(null, isAdvanced);
         final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create equation");
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           tableModel.addRow(new ModelEquation[] {editPanel.get()});
@@ -3207,7 +3206,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         final int rowToEdit = myTable.getSelectedRow();
         if (rowToEdit != -1) {
           final ModelEquation equation = (ModelEquation) tableModel.getValueAt(rowToEdit, 0);
-          final EditModelEquationPanel editPanel = new EditModelEquationPanel(equation, isAdvanced);
+          editPanel.init(equation);
+
           final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify equation");
           if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
             tableModel.setValueAt(editPanel.get(), rowToEdit, 0);
@@ -3224,6 +3224,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       add(myTable, BorderLayout.NORTH);
       add(buttonsPanel, BorderLayout.SOUTH);
+    }
+
+    void toggleMode() {
+      editPanel.toggleMode();
     }
   }
 }
