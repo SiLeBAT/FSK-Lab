@@ -18,7 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab;
 
-import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,11 +34,9 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.ListSelectionModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -63,6 +60,7 @@ import com.gmail.gcolaianni5.jris.bean.Type;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
+import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.Assay;
 import de.bund.bfr.knime.fsklab.rakip.DataBackground;
 import de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod;
@@ -279,31 +277,7 @@ public class FskPortObject implements PortObject {
     metaDataPane.setName("Meta data");
 
     return new JComponent[] {modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
-        new LibrariesPanel()};
-  }
-
-  /** JPanel with list of R libraries. */
-  private class LibrariesPanel extends JPanel {
-
-    private static final long serialVersionUID = -5084804515050256443L;
-
-    LibrariesPanel() {
-      super(new BorderLayout());
-      setName("Libraries list");
-
-      String[] libNames = new String[libs.size()];
-      int i = 0;
-      for (File lib : libs) {
-        libNames[i] = lib.getName();
-        i++;
-      }
-
-      JList<String> list = new JList<>(libNames);
-      list.setLayoutOrientation(JList.VERTICAL);
-      list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-      add(new JScrollPane(list));
-    }
+        UIUtils.createLibrariesPanel(libs)};
   }
 
   // Metadata pane stuff

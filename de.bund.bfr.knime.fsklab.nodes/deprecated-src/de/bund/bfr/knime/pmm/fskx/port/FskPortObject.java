@@ -33,10 +33,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
 
 import org.apache.commons.io.IOUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -55,6 +52,7 @@ import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.ui.MetaDataPane;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
+import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 
 /**
  * A port object for an FSK model port providing R scripts and model meta data.
@@ -250,7 +248,7 @@ public class FskPortObject implements PortObject {
     JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false);
 
     return new JComponent[] {modelScriptPanel, paramScriptPanel, vizScriptPanel,
-        createMetaDataPanel(template), new LibrariesPanel()};
+        createMetaDataPanel(template), UIUtils.createLibrariesPanel(libs)};
   }
 
   /**
@@ -262,24 +260,5 @@ public class FskPortObject implements PortObject {
     panel.add(new MetaDataPane(template, false));
 
     return panel;
-  }
-
-  /** JPanel with list of R libraries. */
-  private class LibrariesPanel extends JPanel {
-
-    private static final long serialVersionUID = -5084804515050256443L;
-
-    LibrariesPanel() {
-      super(new BorderLayout());
-      setName("Libraries list");
-
-      String[] libNames = libs.stream().map(File::getName).toArray(String[]::new);
-
-      JList<String> list = new JList<>(libNames);
-      list.setLayoutOrientation(JList.VERTICAL);
-      list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-      add(new JScrollPane(list));
-    }
   }
 }
