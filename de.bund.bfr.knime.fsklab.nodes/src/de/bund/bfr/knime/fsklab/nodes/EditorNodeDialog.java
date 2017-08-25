@@ -32,10 +32,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -391,7 +393,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
    * @param possibleValues Set
    * @return a JComboBox with the passed possible values
    */
-  private static JComboBox<String> createComboBox(final Set<String> possibleValues) {
+  private static JComboBox<String> createComboBox(final Collection<String> possibleValues) {
     final String[] array = possibleValues.stream().toArray(String[]::new);
     return new JComboBox<String>(array);
   }
@@ -1773,6 +1775,66 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
+  private static LinkedHashMap<Type, String> referenceTypeLabels;
+  static {
+    referenceTypeLabels = new LinkedHashMap<>();
+    referenceTypeLabels.put(Type.ABST, "Abstract");
+    referenceTypeLabels.put(Type.ADVS, "Audiovisual material");
+    referenceTypeLabels.put(Type.AGGR, "Aggregated Database");
+    referenceTypeLabels.put(Type.ANCIENT, "Ancient Text");
+    referenceTypeLabels.put(Type.ART, "Art Work");
+    referenceTypeLabels.put(Type.BILL, "Bill");
+    referenceTypeLabels.put(Type.BLOG, "Blog");
+    referenceTypeLabels.put(Type.BOOK, "Whole book");
+    referenceTypeLabels.put(Type.CASE, "Case");
+    referenceTypeLabels.put(Type.CHAP, "Book chapter");
+    referenceTypeLabels.put(Type.CHART, "Chart");
+    referenceTypeLabels.put(Type.CLSWK, "Classical Work");
+    referenceTypeLabels.put(Type.COMP, "Computer program");
+    referenceTypeLabels.put(Type.CONF, "Conference proceeding");
+    referenceTypeLabels.put(Type.CPAPER, "Conference paper");
+    referenceTypeLabels.put(Type.CTLG, "Catalog");
+    referenceTypeLabels.put(Type.DATA, "Data file");
+    referenceTypeLabels.put(Type.DBASE, "Online Database");
+    referenceTypeLabels.put(Type.DICT, "Dictionary");
+    referenceTypeLabels.put(Type.EBOOK, "Electronic Book");
+    referenceTypeLabels.put(Type.ECHAP, "Electronic Book Section");
+    referenceTypeLabels.put(Type.EDBOOK, "Edited Book");
+    referenceTypeLabels.put(Type.EJOUR, "Electronic Article");
+    referenceTypeLabels.put(Type.ELEC, "Web Page");
+    referenceTypeLabels.put(Type.ENCYC, "Encyclopedia");
+    referenceTypeLabels.put(Type.EQUA, "Equation");
+    referenceTypeLabels.put(Type.FIGURE, "Figure");
+    referenceTypeLabels.put(Type.GEN, "Generic");
+    referenceTypeLabels.put(Type.GOVDOC, "Government Document");
+    referenceTypeLabels.put(Type.GRANT, "Grant");
+    referenceTypeLabels.put(Type.HEAR, "Hearing");
+    referenceTypeLabels.put(Type.ICOMM, "Internet Communication");
+    referenceTypeLabels.put(Type.INPR, "In Press");
+    referenceTypeLabels.put(Type.JFULL, "Journal (full)");
+    referenceTypeLabels.put(Type.JOUR, "Journal");
+    referenceTypeLabels.put(Type.LEGAL, "Legal Rule or Regulation");
+    referenceTypeLabels.put(Type.MANSCPT, "Manuscript");
+    referenceTypeLabels.put(Type.MAP, "Map");
+    referenceTypeLabels.put(Type.MGZN, "Magazine article");
+    referenceTypeLabels.put(Type.MPCT, "Motion picture");
+    referenceTypeLabels.put(Type.MULTI, "Online Multimedia");
+    referenceTypeLabels.put(Type.MUSIC, "Music score");
+    referenceTypeLabels.put(Type.NEWS, "Newspaper");
+    referenceTypeLabels.put(Type.PAMP, "Pamphlet");
+    referenceTypeLabels.put(Type.PAT, "Patent");
+    referenceTypeLabels.put(Type.PCOMM, "Personal communication");
+    referenceTypeLabels.put(Type.RPRT, "Report");
+    referenceTypeLabels.put(Type.SER, "Serial publication");
+    referenceTypeLabels.put(Type.SLIDE, "Slide");
+    referenceTypeLabels.put(Type.SOUND, "Sound recording");
+    referenceTypeLabels.put(Type.STAND, "Standard");
+    referenceTypeLabels.put(Type.STAT, "Statute");
+    referenceTypeLabels.put(Type.THES, "Thesis/Dissertation");
+    referenceTypeLabels.put(Type.UNPB, "Unpublished work");
+    referenceTypeLabels.put(Type.VIDEO, "Video recording");
+  }
+
   private class EditReferencePanel extends EditPanel<Record> {
 
     private static final long serialVersionUID = -6874752919377124455L;
@@ -1782,7 +1844,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final JCheckBox isReferenceDescriptionCheckBox;
 
     private final JLabel typeLabel;
-    private final JComboBox<Type> typeComboBox;
+    private final JComboBox<String> typeComboBox;
 
     private final JLabel dateLabel;
     private final FixedDateChooser dateChooser;
@@ -1833,7 +1895,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
 
       typeLabel = createLabel("GM.EditReferencePanel.typeLabel");
-      typeComboBox = new JComboBox<>(Type.values());
+      typeComboBox = createComboBox(referenceTypeLabels.values());
 
       dateLabel = createLabel("GM.EditReferencePanel.dateLabel");
       dateChooser = new FixedDateChooser();
@@ -1912,7 +1974,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(final Record t) {
       if (t != null) {
-        typeComboBox.setSelectedItem(t.getType());
+        final Type type = t.getType();
+        if (type != null) {
+          typeComboBox.setSelectedItem(referenceTypeLabels.get(type));
+        }
 
         final String dateString = t.getDate();
         if (dateString != null) {
@@ -1952,7 +2017,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final Record record = new Record();
       // TODO: isReferenceDescriptionCheckBox
-      record.setType((Type) typeComboBox.getSelectedItem());
+
+      final int selectedTypeIndex = typeComboBox.getSelectedIndex();
+      if (selectedTypeIndex != -1) {
+        final Type type = referenceTypeLabels.keySet()
+            .toArray(new Type[referenceTypeLabels.size()])[selectedTypeIndex];
+        record.setType(type);
+      }
 
       final Date date = dateChooser.getDate();
       if (date != null) {
