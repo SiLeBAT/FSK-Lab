@@ -83,9 +83,9 @@ import org.knime.core.util.Pair;
 
 import com.gmail.gcolaianni5.jris.bean.Record;
 import com.gmail.gcolaianni5.jris.bean.Type;
-import com.toedter.calendar.JDateChooser;
 
 import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.nodes.ui.FixedDateChooser;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.rakip.Assay;
 import de.bund.bfr.knime.fsklab.rakip.DataBackground;
@@ -2250,24 +2250,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       fieldConstraints.gridy = index;
       panel.add(field, fieldConstraints);
-    }
-  }
-
-  /** Fixes JDateChooser and disables the text field. */
-  private class FixedDateChooser extends JDateChooser {
-
-    private static final long serialVersionUID = 2475793638936369100L;
-
-    FixedDateChooser() {
-
-      // Fixes bug AP-5865
-      popup.setFocusable(false);
-
-      /*
-       * Text field is disabled so that the dates are only chooseable through the calendar widget.
-       * Then there is no need to validate the dates.
-       */
-      dateEditor.setEnabled(true);
     }
   }
 
