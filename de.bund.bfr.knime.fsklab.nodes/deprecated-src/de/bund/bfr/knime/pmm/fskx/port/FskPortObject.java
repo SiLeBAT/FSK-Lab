@@ -250,19 +250,18 @@ public class FskPortObject implements PortObject {
     JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false);
 
     return new JComponent[] {modelScriptPanel, paramScriptPanel, vizScriptPanel,
-        new MetaDataPanel(), new LibrariesPanel()};
+        createMetaDataPanel(template), new LibrariesPanel()};
   }
 
-  /** JPanel with a JTable populated with data from an FSMRTemplate. */
-  private class MetaDataPanel extends JPanel {
+  /**
+   * @return JPanel with a JTable populated with data from an FskMetaData template.
+   */
+  private static JPanel createMetaDataPanel(final FskMetaData template) {
+    final JPanel panel = new JPanel(new BorderLayout());
+    panel.setName("Meta data");
+    panel.add(new MetaDataPane(template, false));
 
-    private static final long serialVersionUID = 7056855986937773639L;
-
-    MetaDataPanel() {
-      super(new BorderLayout());
-      setName("Meta data");
-      add(new MetaDataPane(template, false));
-    }
+    return panel;
   }
 
   /** JPanel with list of R libraries. */
