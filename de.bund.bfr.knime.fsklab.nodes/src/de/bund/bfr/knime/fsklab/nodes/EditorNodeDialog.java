@@ -2471,7 +2471,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         creationDateChooser.setDate(generalInformation.creationDate);
         rightsField.setSelectedItem(generalInformation.rights);
         availabilityCheckBox.setSelected(generalInformation.isAvailable);
-        urlTextField.setText(generalInformation.url.toString());
+        if (generalInformation.url != null) {
+          urlTextField.setText(generalInformation.url.toString());
+        }
         formatField.setSelectedItem(generalInformation.format);
         referencePanel.init(generalInformation.reference);
         languageField.setSelectedItem(generalInformation.language);
