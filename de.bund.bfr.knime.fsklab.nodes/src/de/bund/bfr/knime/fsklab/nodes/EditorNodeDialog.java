@@ -379,7 +379,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   }
 
   private static JTextArea createTextArea() {
-    return new JTextArea(5, 30);
+    final JTextArea textArea = new JTextArea(5, 30);
+    textArea.setText("");
+    textArea.setLineWrap(true); // Wrap long lines
+    textArea.setWrapStyleWord(true); // Wrap only at white space
+
+    return textArea;
   }
 
   /**
@@ -647,6 +652,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JLabel descriptionLabel;
     private final JTextArea descriptionTextArea;
+    private final JScrollPane descriptionPane;
 
     EditAssayPanel(final boolean isAdvanced) {
 
@@ -656,9 +662,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       descriptionLabel = createLabel("GM.EditAssayPanel.descriptionLabel",
           "GM.EditAssayPanel.descriptionTooltip", true);
       descriptionTextArea = createTextArea();
+      descriptionPane = new JScrollPane(descriptionTextArea);
 
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-          new Pair<>(nameLabel, nameTextField), new Pair<>(descriptionLabel, descriptionTextArea));
+          new Pair<>(nameLabel, nameTextField), new Pair<>(descriptionLabel, descriptionPane));
 
       addGridComponents(this, pairs);
 
@@ -700,7 +707,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return Arrays.asList(descriptionLabel, descriptionTextArea);
+      return Arrays.asList(descriptionLabel, descriptionPane);
     }
   }
 
@@ -850,6 +857,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JLabel hazardDescriptionLabel;
     private final JTextArea hazardDescriptionTextArea;
+    private final JScrollPane hazardDescriptionPanel;
 
     private final JLabel hazardUnitLabel;
     private final AutoSuggestField hazardUnitField;
@@ -912,6 +920,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       hazardDescriptionLabel = createLabel("GM.EditHazardPanel.hazardDescriptionLabel",
           "GM.EditHazardPanel.hazardDescriptionTooltip");
       hazardDescriptionTextArea = createTextArea();
+      hazardDescriptionPanel = new JScrollPane(hazardDescriptionTextArea);
 
       hazardUnitLabel = createLabel("GM.EditHazardPanel.hazardUnitLabel",
           "GM.EditHazardPanel.hazardUnitTooltip", true);
@@ -980,7 +989,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
           new Pair<>(hazardTypeLabel, hazardTypeField),
           new Pair<>(hazardNameLabel, hazardNameField),
-          new Pair<>(hazardDescriptionLabel, hazardDescriptionTextArea),
+          new Pair<>(hazardDescriptionLabel, hazardDescriptionPanel),
           new Pair<>(hazardUnitLabel, hazardUnitField),
           new Pair<>(adverseEffectLabel, adverseEffectTextField),
           new Pair<>(originLabel, originTextField), new Pair<>(bmdLabel, bmdTextField),
@@ -1073,7 +1082,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return Arrays.asList(hazardDescriptionLabel, hazardDescriptionTextArea, // hazard description
+      return Arrays.asList(hazardDescriptionLabel, hazardDescriptionPanel, // hazard description
           adverseEffectLabel, adverseEffectTextField, // adverse effect
           originLabel, originTextField, // origin
           bmdLabel, bmdTextField, // benchmark dose
@@ -1106,6 +1115,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JLabel scriptLabel;
     private final JTextArea scriptTextArea;
+    private final JScrollPane scriptPane;
 
     EditModelEquationPanel(final boolean isAdvanced) {
 
@@ -1122,6 +1132,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       scriptLabel = createLabel("GM.EditModelEquationPanel.scriptLabel",
           "GM.EditModelEquationPanel.scriptTooltip", true);
       scriptTextArea = createTextArea();
+      scriptPane = new JScrollPane(scriptTextArea);
 
       EditorNodeDialog.add(this, equationNameLabel, 0, 0);
       EditorNodeDialog.add(this, equationNameTextField, 1, 0);
@@ -1129,7 +1140,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       EditorNodeDialog.add(this, equationClassTextField, 1, 1);
       EditorNodeDialog.add(this, referencePanel, 0, 2);
       EditorNodeDialog.add(this, scriptLabel, 0, 3);
-      EditorNodeDialog.add(this, scriptTextArea, 1, 3);
+      EditorNodeDialog.add(this, scriptPane, 1, 3);
 
       // If simple mode hide avanced components
       if (!isAdvanced) {
@@ -1192,6 +1203,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JLabel descriptionLabel;
     private final JTextArea descriptionTextArea;
+    private final JScrollPane descriptionPane;
 
     private final JLabel typeLabel;
     private final AutoSuggestField typeField;
@@ -1222,9 +1234,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JLabel variabilitySubjectLabel;
     private final JTextArea variabilitySubjectTextArea;
+    private final JScrollPane variabilitySubjectPane;
 
     private final JLabel applicabilityLabel;
     private final JTextArea applicabilityTextArea;
+    private final JScrollPane applicabilityPane;
 
     private final JLabel errorLabel;
     private final JSpinner errorSpinner;
@@ -1248,6 +1262,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       descriptionLabel = createLabel("GM.EditParameterPanel.descriptionLabel",
           "GM.EditParameterPanel.descriptionTooltip");
       descriptionTextArea = createTextArea();
+      descriptionPane = new JScrollPane(descriptionTextArea);
 
       typeLabel =
           createLabel("GM.EditParameterPanel.typeLabel", "GM.EditParameterPanel.typeTooltip");
@@ -1288,10 +1303,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       variabilitySubjectLabel = createLabel("GM.EditParameterPanel.variabilitySubjectLabel",
           "GM.EditParameterPanel.variabilitySubjectTooltip");
       variabilitySubjectTextArea = createTextArea();
+      variabilitySubjectPane = new JScrollPane(variabilitySubjectTextArea);
 
       applicabilityLabel = createLabel("GM.EditParameterPanel.applicabilityLabel",
           "GM.EditParameterPanel.applicabilityTooltip");
       applicabilityTextArea = createTextArea();
+      applicabilityPane = new JScrollPane(applicabilityTextArea);
 
       errorLabel =
           createLabel("GM.EditParameterPanel.errorLabel", "GM.EditParameterPanel.errorTooltip");
@@ -1301,15 +1318,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(idLabel, idTextField),
           new Pair<>(classificationLabel, classificationComboBox),
-          new Pair<>(nameLabel, nameTextField), new Pair<>(descriptionLabel, descriptionTextArea),
+          new Pair<>(nameLabel, nameTextField), new Pair<>(descriptionLabel, descriptionPane),
           new Pair<>(typeLabel, typeField), new Pair<>(unitLabel, unitField),
           new Pair<>(unitCategoryLabel, unitCategoryField),
           new Pair<>(dataTypeLabel, dataTypeField), new Pair<>(sourceLabel, sourceField),
           new Pair<>(subjectLabel, subjectField), new Pair<>(distributionLabel, distributionField),
           new Pair<>(valueLabel, valueTextField), new Pair<>(referenceLabel, referenceTextField),
-          new Pair<>(variabilitySubjectLabel, variabilitySubjectTextArea),
-          new Pair<>(applicabilityLabel, applicabilityTextArea),
-          new Pair<>(errorLabel, errorSpinner));
+          new Pair<>(variabilitySubjectLabel, variabilitySubjectPane),
+          new Pair<>(applicabilityLabel, applicabilityPane), new Pair<>(errorLabel, errorSpinner));
       addGridComponents(this, pairs);
 
       // If simple mode hide advanced components
@@ -1415,6 +1431,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JLabel populationDescriptionLabel;
     private final JTextArea populationDescriptionTextArea;
+    private final JScrollPane populationDescriptionPane;
 
     private final JLabel populationAgeLabel;
     private final JTextField populationAgeTextField;
@@ -1461,6 +1478,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           createLabel("GM.EditPopulationGroupPanel.populationDescriptionLabel",
               "GM.EditPopulationGroupPanel.populationDescriptionTooltip");
       populationDescriptionTextArea = createTextArea();
+      populationDescriptionPane = new JScrollPane(populationDescriptionTextArea);
 
       populationAgeLabel = createLabel("GM.EditPopulationGroupPanel.populationAgeLabel",
           "GM.EditPopulationGroupPanel.populationAgeTooltip");
@@ -1502,7 +1520,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           Arrays.asList(new Pair<>(populationNameLabel, populationNameTextField),
               new Pair<>(targetPopulationLabel, targetPopulationTextField),
               new Pair<>(populationSpanLabel, populationSpanTextField),
-              new Pair<>(populationDescriptionLabel, populationDescriptionTextArea),
+              new Pair<>(populationDescriptionLabel, populationDescriptionPane),
               new Pair<>(populationAgeLabel, populationAgeTextField),
               new Pair<>(populationGenderLabel, populationGenderTextField),
               new Pair<>(bmiLabel, bmiTextField),
@@ -1572,7 +1590,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       return Arrays.asList(targetPopulationLabel, targetPopulationTextField, // Target population
           populationSpanLabel, populationSpanTextField, // Population span
-          populationDescriptionLabel, populationDescriptionTextArea, // Population description
+          populationDescriptionLabel, populationDescriptionPane, // Population description
           populationAgeLabel, populationAgeTextField, // Population age
           populationGenderLabel, populationGenderTextField, // Population gender
           bmiLabel, bmiTextField, // BMI
@@ -1594,6 +1612,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JLabel envDescriptionLabel;
     private final JTextArea envDescriptionTextArea;
+    private final JScrollPane envDescriptionPane;
 
     private final JLabel envUnitLabel;
     private final AutoSuggestField envUnitField;
@@ -1631,6 +1650,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       envDescriptionLabel = createLabel("GM.EditProductPanel.envDescriptionLabel",
           "GM.EditProductPanel.envDescriptionTooltip");
       envDescriptionTextArea = createTextArea();
+      envDescriptionPane = new JScrollPane(envDescriptionTextArea);
 
       envUnitLabel = createLabel("GM.EditProductPanel.envUnitLabel",
           "GM.EditProductPanel.envUnitTooltip", true);
@@ -1671,7 +1691,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs =
           Arrays.asList(new Pair<>(envNameLabel, envNameField),
-              new Pair<>(envDescriptionLabel, envDescriptionTextArea),
+              new Pair<>(envDescriptionLabel, envDescriptionPane),
               new Pair<>(envUnitLabel, envUnitField),
               new Pair<>(productionMethodLabel, productionMethodComboBox),
               new Pair<>(packagingLabel, packagingComboBox),
@@ -1745,7 +1765,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return Arrays.asList(envDescriptionLabel, envDescriptionTextArea, productionMethodLabel,
+      return Arrays.asList(envDescriptionLabel, envDescriptionPane, productionMethodLabel,
           productionMethodComboBox, packagingLabel, packagingComboBox, productTreatmentLabel,
           productTreatmentComboBox, originCountryLabel, originCountryField, originAreaLabel,
           originAreaField, fisheriesAreaLabel, fisheriesAreaField, productionDateLabel,
@@ -1781,6 +1801,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JLabel abstractLabel;
     private final JTextArea abstractTextArea;
+    private final JScrollPane abstractPane;
 
     private final JLabel journalLabel;
     private final JTextField journalTextField;
@@ -1804,6 +1825,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JLabel commentLabel;
     private final JTextArea commentTextArea;
+    private final JScrollPane commentPane;
 
     EditReferencePanel(final boolean isAdvanced) {
 
@@ -1830,6 +1852,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       abstractLabel = createLabel("GM.EditReferencePanel.abstractLabel");
       abstractTextArea = createTextArea();
+      abstractPane = new JScrollPane(abstractTextArea);
 
       journalLabel = createLabel("GM.EditReferencePanel.journalLabel");
       journalTextField = createTextField();
@@ -1855,6 +1878,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       commentLabel = createLabel("GM.EditReferencePanel.commentLabel");
       commentTextArea = createTextArea();
+      commentPane = new JScrollPane(commentTextArea);
 
       // Create labels
 
@@ -1863,10 +1887,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           new Pair<>(typeLabel, typeComboBox), new Pair<>(dateLabel, dateChooser),
           new Pair<>(pmidLabel, pmidTextField), new Pair<>(doiLabel, doiTextField),
           new Pair<>(authorListLabel, authorListTextField), new Pair<>(titleLabel, titleTextField),
-          new Pair<>(abstractLabel, abstractTextArea), new Pair<>(journalLabel, journalTextField),
+          new Pair<>(abstractLabel, abstractPane), new Pair<>(journalLabel, journalTextField),
           new Pair<>(volumeLabel, volumeSpinner), new Pair<>(issueLabel, issueSpinner),
           new Pair<>(pageLabel, pageTextField), new Pair<>(statusLabel, statusTextField),
-          new Pair<>(websiteLabel, websiteTextField), new Pair<>(commentLabel, commentTextArea));
+          new Pair<>(websiteLabel, websiteTextField), new Pair<>(commentLabel, commentPane));
 
       EditorNodeDialog.add(this, isReferenceDescriptionCheckBox, 0, 0);
       for (int index = 0; index < pairs.size(); index++) {
@@ -1980,10 +2004,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<JComponent> getAdvancedComponents() {
       return Arrays.asList(typeLabel, typeComboBox, dateLabel, dateChooser, pmidLabel,
-          pmidTextField, authorListLabel, authorListTextField, abstractLabel, abstractTextArea,
+          pmidTextField, authorListLabel, authorListTextField, abstractLabel, abstractPane,
           journalLabel, journalTextField, volumeLabel, volumeSpinner, issueLabel, issueSpinner,
           pageLabel, pageTextField, statusLabel, statusTextField, websiteLabel, websiteTextField,
-          commentLabel, commentTextArea);
+          commentLabel, commentPane);
     }
   }
 
@@ -2660,7 +2684,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final JButton productButton;
     final JButton hazardButton;
     final JButton populationButton;
-    final JTextArea commentField;
+
+    final JTextArea commentTextArea;
+    final JScrollPane commentPane;
+
     final FixedDateChooser dateChooser;
     final AutoSuggestField regionField;
     final AutoSuggestField countryField;
@@ -2680,7 +2707,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       productButton = new JButton();
       hazardButton = new JButton();
       populationButton = new JButton();
-      commentField = createTextArea();
+
+      commentTextArea = createTextArea();
+      commentPane = new JScrollPane(commentTextArea);
+
       dateChooser = new FixedDateChooser();
       regionField = createAutoSuggestField(vocabs.get("Region"));
       countryField = createAutoSuggestField(vocabs.get("Country"));
@@ -2736,7 +2766,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Build UI
       final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
           new Pair<>(productLabel, productButton), new Pair<>(hazardLabel, hazardButton),
-          new Pair<>(populationLabel, populationButton), new Pair<>(commentLabel, commentField),
+          new Pair<>(populationLabel, populationButton), new Pair<>(commentLabel, commentPane),
           new Pair<>(temporalInformationLabel, dateChooser), new Pair<>(regionLabel, regionField),
           new Pair<>(countryLabel, countryField));
 
@@ -2914,7 +2944,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JTextField studyIdentifierTextField;
     private final JTextField studyTitleTextField;
+
     private final JTextArea studyDescriptionTextArea;
+    private final JScrollPane studyDescriptionPane;
+
     private final AutoSuggestField studyDesignTypeField;
     private final AutoSuggestField studyAssayMeasurementsTypeField;
     private final AutoSuggestField studyAssayTechnologyTypeField;
@@ -2937,7 +2970,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Create fields
       studyIdentifierTextField = createTextField();
       studyTitleTextField = createTextField();
+
       studyDescriptionTextArea = createTextArea();
+      studyDescriptionPane = new JScrollPane(studyDescriptionTextArea);
+
       studyDesignTypeField = createAutoSuggestField(vocabs.get("Study Design Type"));
       studyAssayMeasurementsTypeField =
           createAutoSuggestField(vocabs.get("Study Assay Measurement Type"));
@@ -2996,7 +3032,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final List<Pair<JLabel, JComponent>> pairs =
           Arrays.asList(new Pair<>(studyIdentifierLabel, studyIdentifierTextField),
               new Pair<>(studyTitleLabel, studyTitleTextField),
-              new Pair<>(studyDescriptionLabel, studyDescriptionTextArea),
+              new Pair<>(studyDescriptionLabel, studyDescriptionPane),
               new Pair<>(studyDesignTypeLabel, studyDesignTypeField),
               new Pair<>(studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField),
               new Pair<>(studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField),
@@ -3010,7 +3046,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
               new Pair<>(studyProtocolComponentsTypeLabel, studyProtocolComponentsTypeField));
       EditorNodeDialog.addGridComponents(this, pairs);
 
-      advancedComponents = Arrays.asList(studyDescriptionLabel, studyDescriptionTextArea,
+      advancedComponents = Arrays.asList(studyDescriptionLabel, studyDescriptionPane,
           studyDesignTypeLabel, studyDesignTypeField, studyAssayMeasurementsTypeLabel,
           studyAssayMeasurementsTypeField, studyAssayTechnologyTypeLabel,
           studyAssayTechnologyTypeField, studyAssayTechnologyPlatformLabel,
