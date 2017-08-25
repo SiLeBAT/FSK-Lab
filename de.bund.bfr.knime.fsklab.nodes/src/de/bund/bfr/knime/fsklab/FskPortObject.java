@@ -440,103 +440,107 @@ public class FskPortObject implements PortObject {
   private static void add(final DefaultMutableTreeNode node,
       final GeneralInformation generalInformation) {
 
-    final String prefix = "GM.GeneralInformationPanel.";
+    if (generalInformation != null) {
+      final String prefix = "GM.GeneralInformationPanel.";
 
-    add(node, prefix + "studyNameLabel", generalInformation.name);
-    add(node, prefix + "identifierLabel", generalInformation.identifier);
+      add(node, prefix + "studyNameLabel", generalInformation.name);
+      add(node, prefix + "identifierLabel", generalInformation.identifier);
 
-    final List<VCard> creators = generalInformation.creators;
-    if (!creators.isEmpty()) {
-      // Parent node that holds all the creators
-      final DefaultMutableTreeNode creatorsNode = new DefaultMutableTreeNode("Creators");
+      final List<VCard> creators = generalInformation.creators;
+      if (!creators.isEmpty()) {
+        // Parent node that holds all the creators
+        final DefaultMutableTreeNode creatorsNode = new DefaultMutableTreeNode("Creators");
 
-      for (VCard creator : creators) {
-        final DefaultMutableTreeNode creatorNode = new DefaultMutableTreeNode("Creator");
-        add(creatorNode, creator);
-        creatorsNode.add(creatorNode);
+        for (VCard creator : creators) {
+          final DefaultMutableTreeNode creatorNode = new DefaultMutableTreeNode("Creator");
+          add(creatorNode, creator);
+          creatorsNode.add(creatorNode);
+        }
+
+        node.add(creatorsNode);
       }
 
-      node.add(creatorsNode);
-    }
+      add(node, prefix + "creationDateLabel", generalInformation.creationDate);
 
-    add(node, prefix + "creationDateLabel", generalInformation.creationDate);
-
-    final List<Date> modificationDate = generalInformation.modificationDate;
-    if (!modificationDate.isEmpty()) {
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Modification dates");
-      modificationDate.forEach(it -> add(parentNode, "Modification date", it));
-    }
-
-    add(node, prefix + "rightsLabel", generalInformation.rights);
-
-    // TODO: isAvailable
-
-    add(node, prefix + "urlLabel", generalInformation.url.toString());
-
-    final List<Record> reference = generalInformation.reference;
-    if (!reference.isEmpty()) {
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("References");
-      for (Record record : reference) {
-        final DefaultMutableTreeNode refNode = new DefaultMutableTreeNode("Reference");
-        add(refNode, record);
-        parentNode.add(refNode);
+      final List<Date> modificationDate = generalInformation.modificationDate;
+      if (!modificationDate.isEmpty()) {
+        final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Modification dates");
+        modificationDate.forEach(it -> add(parentNode, "Modification date", it));
       }
-      node.add(parentNode);
-    }
 
-    add(node, prefix + "languageLabel", generalInformation.language);
-    add(node, prefix + "softwareLabel", generalInformation.software);
-    add(node, prefix + "languageWrittenInLabel", generalInformation.languageWrittenIn);
-    add(node, prefix + "statusLabel", generalInformation.status);
-    add(node, prefix + "objectiveLabel", generalInformation.objective);
-    add(node, prefix + "descriptionLabel", generalInformation.description);
+      add(node, prefix + "rightsLabel", generalInformation.rights);
+
+      // TODO: isAvailable
+
+      add(node, prefix + "urlLabel", generalInformation.url.toString());
+
+      final List<Record> reference = generalInformation.reference;
+      if (!reference.isEmpty()) {
+        final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("References");
+        for (Record record : reference) {
+          final DefaultMutableTreeNode refNode = new DefaultMutableTreeNode("Reference");
+          add(refNode, record);
+          parentNode.add(refNode);
+        }
+        node.add(parentNode);
+      }
+
+      add(node, prefix + "languageLabel", generalInformation.language);
+      add(node, prefix + "softwareLabel", generalInformation.software);
+      add(node, prefix + "languageWrittenInLabel", generalInformation.languageWrittenIn);
+      add(node, prefix + "statusLabel", generalInformation.status);
+      add(node, prefix + "objectiveLabel", generalInformation.objective);
+      add(node, prefix + "descriptionLabel", generalInformation.description);
+    }
   }
 
   private static void add(final DefaultMutableTreeNode node, final Scope scope) {
+    if (scope != null) {
 
-    final String prefix = "GM.ScopePanel.";
+      final String prefix = "GM.ScopePanel.";
 
-    {
-      final String key = prefix + "productLabel";
-      final String label = bundle.getString(key);
+      {
+        final String key = prefix + "productLabel";
+        final String label = bundle.getString(key);
 
-      // Create productNode
-      final DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(label);
-      final Product product = scope.product;
-      if (product != null) {
-        add(productNode, product);
+        // Create productNode
+        final DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(label);
+        final Product product = scope.product;
+        if (product != null) {
+          add(productNode, product);
+        }
+
+        node.add(productNode);
       }
 
-      node.add(productNode);
-    }
+      {
+        final String key = prefix + "hazardLabel";
+        final String label = bundle.getString(key);
 
-    {
-      final String key = prefix + "hazardLabel";
-      final String label = bundle.getString(key);
+        // Create hazardNode
+        final DefaultMutableTreeNode hazardNode = new DefaultMutableTreeNode(label);
+        final Hazard hazard = scope.hazard;
+        if (hazard != null) {
+          add(hazardNode, hazard);
+        }
 
-      // Create hazardNode
-      final DefaultMutableTreeNode hazardNode = new DefaultMutableTreeNode(label);
-      final Hazard hazard = scope.hazard;
-      if (hazard != null) {
-        add(hazardNode, hazard);
+        node.add(hazardNode);
       }
 
-      node.add(hazardNode);
-    }
-
-    {
-      final DefaultMutableTreeNode pgNode = new DefaultMutableTreeNode("Population group");
-      final PopulationGroup populationGroup = scope.populationGroup;
-      if (populationGroup != null) {
-        add(pgNode, populationGroup);
+      {
+        final DefaultMutableTreeNode pgNode = new DefaultMutableTreeNode("Population group");
+        final PopulationGroup populationGroup = scope.populationGroup;
+        if (populationGroup != null) {
+          add(pgNode, populationGroup);
+        }
+        node.add(pgNode);
       }
-      node.add(pgNode);
-    }
 
-    add(node, prefix + "commentLabel", scope.generalComment);
-    add(node, prefix + "temporalInformationLabel", scope.temporalInformation);
-    add(node, prefix + "regionLabel", scope.region);
-    add(node, prefix + "countryLabel", scope.country);
+      add(node, prefix + "commentLabel", scope.generalComment);
+      add(node, prefix + "temporalInformationLabel", scope.temporalInformation);
+      add(node, prefix + "regionLabel", scope.region);
+      add(node, prefix + "countryLabel", scope.country);
+    }
   }
 
   private static void add(final DefaultMutableTreeNode node, final DataBackground dataBackground) {
