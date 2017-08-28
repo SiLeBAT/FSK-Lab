@@ -444,6 +444,7 @@ public class FskPortObject implements PortObject {
       final String prefix = "GM.GeneralInformationPanel.";
 
       add(node, prefix + "studyNameLabel", generalInformation.name);
+      add(node, prefix + "sourceLabel", generalInformation.source);
       add(node, prefix + "identifierLabel", generalInformation.identifier);
 
       final List<VCard> creators = generalInformation.creators;
