@@ -281,6 +281,16 @@ public class FskPortObject implements PortObject {
   }
 
   // Metadata pane stuff
+
+  /**
+   * Create a tree node for a string property and add it to a passed node. If the value is
+   * {@code null} or blank then no new node is added.
+   * 
+   * @param node Existing node where the new node is added. Cannot be {@code null}.
+   * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
+   *        or blank.
+   * @param value Can be {@code null} or blank.
+   */
   private static void add(final DefaultMutableTreeNode node, final String key, final String value) {
     if (StringUtils.isNotBlank(value)) {
       final String label = bundle.getString(key);
@@ -288,6 +298,15 @@ public class FskPortObject implements PortObject {
     }
   }
 
+  /**
+   * Create a tree node for a date property and add it to a passed node. If the value is
+   * {@code null} then no new node is added. The date is formatted with the 'yyyy-MM-dd' format.
+   * 
+   * @param node Existing node where the new node is added. Cannot be {@code null}.
+   * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
+   *        or blank.
+   * @param date Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final String key, final Date date) {
     if (date != null) {
       final String label = bundle.getString(key);
@@ -296,6 +315,15 @@ public class FskPortObject implements PortObject {
     }
   }
 
+  /**
+   * Create a tree node for a Double property and add it to a passed node. If the value is
+   * {@code null} then no new node is added.
+   * 
+   * @param node Existing node where the new node is added. Cannot be {@code null}.
+   * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
+   *        or blank.
+   * @param value Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final String key, final Double value) {
     if (value != null) {
       final String label = bundle.getString(key);
@@ -303,6 +331,15 @@ public class FskPortObject implements PortObject {
     }
   }
 
+  /**
+   * Create a tree node for a {@code List<String>} property and add it to a passed node. If the
+   * value is {@code null} or empty then no new node is added.
+   * 
+   * @param node Existing node where the new node is added. Cannot be {@code null}.
+   * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
+   *        or blank.
+   * @param value Can be {@code null} or empty.
+   */
   private static void add(final DefaultMutableTreeNode node, final String key,
       final List<String> value) {
 
@@ -314,6 +351,17 @@ public class FskPortObject implements PortObject {
     }
   }
 
+  /**
+   * Creates and adds a number of tree nodes with several properties of a passed Record object. If
+   * the passed record is null then no nodes are added.
+   * <p>
+   * The Record properties to be added are: type, date, authors, title, abstract, volume, issue and
+   * website.
+   * 
+   * @param node Existing node where the new nodes for the properties are added. Cannot be
+   *        {@code null}.
+   * @param record Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final Record record) {
 
     final String prefix = "GM.EditReferencePanel";
@@ -358,7 +406,22 @@ public class FskPortObject implements PortObject {
     // comment not supported
   }
 
-  private static void add(DefaultMutableTreeNode node, final VCard vcard) {
+  /**
+   * Create and add a number of tree nodes with several properties of a passed {@code VCard} object.
+   * If the passed {@code VCard} object is {@code null} the no nodes are added.
+   * <p>
+   * The {@code VCard} properties to be added are:
+   * <ul>
+   * <li>Nickname as given name
+   * <li>Formatted name as family name
+   * <li>First e-mail as contact information
+   * </ul>
+   * 
+   * @param node Existing node where the new nodes for the properties are added. Cannot be
+   *        {@code null}.
+   * @param vcard Can be {@code null}.
+   */
+  private static void add(final DefaultMutableTreeNode node, final VCard vcard) {
 
     final String prefix = "GM.EditCreatorPanel.";
 
@@ -378,7 +441,14 @@ public class FskPortObject implements PortObject {
     }
   }
 
-  private static void add(DefaultMutableTreeNode node, final Product product) {
+  /**
+   * Creates tree nodes for the properties of a passed {@code Product} and adds them to a passed
+   * tree node. If the passed {@code Product} is {@code null} then no nodes are added.
+   * 
+   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
+   * @param product Can be {@code null}.
+   */
+  private static void add(final DefaultMutableTreeNode node, final Product product) {
 
     final String prefix = "GM.EditProductPanel.";
 
@@ -393,6 +463,13 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "expirationDateLabel", product.expirationDate);
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code Hazard} and adds them to a passed tree
+   * node. If the passed {@code Hazard} is {@code null} then no nodes are added.
+   * 
+   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
+   * @param hazard Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final Hazard hazard) {
 
     final String prefix = "GM.EditHazardPanel.";
@@ -419,6 +496,14 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "contaminationRangeLabel", hazard.rangeOfContamination);
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code PopulationGroup} and adds them to a
+   * passed tree node. If the passed {@code PopulationGroup} is {@code null} then no nodes are
+   * added.
+   * 
+   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
+   * @param populationGroup Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node,
       final PopulationGroup populationGroup) {
 
@@ -438,6 +523,14 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "seasonLabel", populationGroup.season);
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code GeneralInformation} and adds them to a
+   * passed tree node. If the passed {@code GeneralInformation} is {@code null} then no nodes are
+   * added.
+   * 
+   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
+   * @param generalInformation Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node,
       final GeneralInformation generalInformation) {
 
@@ -496,6 +589,13 @@ public class FskPortObject implements PortObject {
     }
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed Scope. If the passed Scope is {@code null}
+   * then no nodes are added.
+   * 
+   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
+   * @param scope Cannot be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final Scope scope) {
     if (scope != null) {
 
@@ -545,6 +645,13 @@ public class FskPortObject implements PortObject {
     }
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code DataBackground} and adds them to a
+   * passed tree node. If the passed {@code DataBackground} is {@code null} then no nodes are added.
+   * 
+   * @param node Existing node where the properties are added. Cannot be {@code null}.
+   * @param dataBackground Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final DataBackground dataBackground) {
 
     final String prefix = "GM.DataBackgroundPanel.";
@@ -588,6 +695,13 @@ public class FskPortObject implements PortObject {
     }
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code Study} and adds them to a passed tree
+   * node. If the passed {@code Study} is {@code null} then no nodes are added.
+   * 
+   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
+   * @param study Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final Study study) {
 
     final String prefix = "GM.StudyPanel.";
@@ -614,6 +728,13 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "componentsTypeLabel", study.componentsType);
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code StudySample} and adds them to a passed
+   * tree node. If the passed {@code StudySample} is {@code null} then no nodes are added.
+   * 
+   * @param node Existing node where the properties are added. Cannot be {@code null}.
+   * @param studySample Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final StudySample studySample) {
 
     final String prefix = "GM.EditStudySamplePanel.";
@@ -631,6 +752,14 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "samplingPointLabel", studySample.lotSizeUnit);
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code DietaryAssessmentMethod} and adds them
+   * to a passed tree node. If the passed {@code DietaryAssessmentMethod} is {@code null} then no
+   * nodes are added.
+   * 
+   * @param node Existing node where the properties are added. Cannot be {@code null}.
+   * @param method Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final DietaryAssessmentMethod method) {
 
     // Prefix in resource bundle
@@ -645,12 +774,26 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "foodDescriptionLabel", method.foodDescriptors);
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code Assay} and adds them to a passed tree
+   * node. If the passed {@code Assay} is {@code null} then no nodes are added.
+   * 
+   * @param node Existing node where the properties are added. Cannot be {@code null}.
+   * @param assay Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final Assay assay) {
 
     add(node, "GM.EditAssayPanel.nameLabel", assay.name);
     add(node, "GM.EditAssayPanel.descriptionLabel", assay.description);
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code Parameter} and adds them to a passed
+   * tree node. If the passed {@code Parameter} is {@code null} then no nodes are added.
+   * 
+   * @param node Existing node where the properties are added. Cannot be {@code null}.
+   * @param parameter Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final Parameter parameter) {
 
     final String prefix = "GM.EditParameterPanel.";
@@ -672,6 +815,13 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "errorLabel", parameter.error);
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code ModelEquation} and adds them to a
+   * passed tree node. If the passed {@code ModelEquation} is {@code null} then no nodes are added.
+   * 
+   * @param node Existing node where the properties are added. Cannot be {@code null}.
+   * @param modelEquation Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final ModelEquation modelEquation) {
 
     final String prefix = "GM.EditModelEquationPanel.";
@@ -693,6 +843,13 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "scriptLabel", modelEquation.equation);
   }
 
+  /**
+   * Creates tree nodes for the properties of a passed {@code ModelMath} and adds them to a passed
+   * tree node. If the passed {@code ModelMath} is {@code null} then no nodes are added.
+   * 
+   * @param node Existing node where the properties are added. Cannot be {@code null}.
+   * @param modelMath Can be {@code null}.
+   */
   private static void add(final DefaultMutableTreeNode node, final ModelMath modelMath) {
 
     final List<Parameter> parameter = modelMath.parameter;
