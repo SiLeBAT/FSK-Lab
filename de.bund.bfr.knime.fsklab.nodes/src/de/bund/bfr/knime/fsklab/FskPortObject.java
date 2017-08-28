@@ -288,16 +288,17 @@ public class FskPortObject implements PortObject {
     }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final String label, final Date date) {
+  private static void add(final DefaultMutableTreeNode node, final String key, final Date date) {
     if (date != null) {
+      final String label = bundle.getString(key);
       final String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
       node.add(new DefaultMutableTreeNode(label + ": " + dateStr));
     }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final String label,
-      final Double value) {
+  private static void add(final DefaultMutableTreeNode node, final String key, final Double value) {
     if (value != null) {
+      final String label = bundle.getString(key);
       node.add(new DefaultMutableTreeNode(label + ": " + value));
     }
   }
