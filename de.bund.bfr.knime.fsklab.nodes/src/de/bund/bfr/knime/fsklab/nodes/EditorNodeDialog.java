@@ -2331,6 +2331,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final JCheckBox advancedCheckBox;
 
     private final JTextField studyNameTextField;
+    private final JTextField sourceTextField;
     private final JTextField identifierTextField;
     private final CreatorPanel creatorPanel;
     private final FixedDateChooser creationDateChooser;
@@ -2354,6 +2355,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       advancedCheckBox = new JCheckBox("Advanced");
 
       studyNameTextField = createTextField();
+      sourceTextField = createTextField();
       identifierTextField = createTextField();
       creatorPanel = new CreatorPanel();
       creationDateChooser = new FixedDateChooser();
@@ -2372,6 +2374,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Create labels
       final JLabel studyNameLabel = createLabel("GM.GeneralInformationPanel.studyNameLabel",
           "GM.GeneralInformationPanel.studyNameTooltip");
+      final JLabel sourceLabel = createLabel("GM.GeneralInformationPanel.sourceLabel",
+          "GM.GeneralInformationPanel.sourceTooltip");
       final JLabel identifierLabel = createLabel("GM.GeneralInformationPanel.identifierLabel",
           "GM.GeneralInformationPanel.identifierTooltip");
       final JLabel creationDateLabel = createLabel("GM.GeneralInformationPanel.creationDateLabel",
@@ -2397,17 +2401,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           "GM.GeneralInformationPanel.descriptionTooltip");
 
       // Hide initially advanced components
-      final List<JComponent> advancedComponents = Arrays.asList(formatLabel, formatField,
-          languageLabel, languageField, softwareLabel, softwareField, languageWrittenInLabel,
-          languageWrittenInField, statusLabel, statusField, objectiveLabel, objectiveTextField,
-          descriptionLabel, descriptionTextField);
+      final List<JComponent> advancedComponents = Arrays.asList(sourceLabel, sourceTextField, // source
+          formatLabel, formatField, // format
+          languageLabel, languageField, // language
+          softwareLabel, softwareField, // software
+          languageWrittenInLabel, languageWrittenInField, // language written in
+          statusLabel, statusField, // status
+          objectiveLabel, objectiveTextField, // objective
+          descriptionLabel, descriptionTextField); // description
       advancedComponents.forEach(it -> it.setVisible(false));
 
       // Build UI
       final JPanel propertiesPanel = new JPanel(new GridBagLayout());
 
-      EditorNodeDialog.add(propertiesPanel, studyNameLabel, 0, 1);
-      EditorNodeDialog.add(propertiesPanel, studyNameTextField, 1, 1, 2);
+      EditorNodeDialog.add(propertiesPanel, studyNameLabel, 0, 0);
+      EditorNodeDialog.add(propertiesPanel, studyNameTextField, 1, 0, 2);
+
+      EditorNodeDialog.add(propertiesPanel, sourceLabel, 0, 1);
+      EditorNodeDialog.add(propertiesPanel, sourceTextField, 1, 1, 2);
 
       EditorNodeDialog.add(propertiesPanel, identifierLabel, 0, 2);
       EditorNodeDialog.add(propertiesPanel, identifierTextField, 1, 2, 2);
@@ -2466,6 +2477,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       if (generalInformation != null) {
         studyNameTextField.setText(generalInformation.name);
+        sourceTextField.setText(generalInformation.source);
         identifierTextField.setText(generalInformation.identifier);
         creatorPanel.init(generalInformation.creators);
         creationDateChooser.setDate(generalInformation.creationDate);
@@ -2489,6 +2501,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final GeneralInformation generalInformation = new GeneralInformation();
       generalInformation.name = studyNameTextField.getText();
+      generalInformation.source = sourceTextField.getText();
       generalInformation.identifier = identifierTextField.getText();
       generalInformation.creationDate = creationDateChooser.getDate();
       generalInformation.rights = (String) rightsField.getSelectedItem();
