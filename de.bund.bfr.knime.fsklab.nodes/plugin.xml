@@ -3,15 +3,6 @@
 <plugin>
 
   <!-- Splash extension to be shown when launching KNIME -->
-  <extension point="org.knime.product.splashExtension">
-    <splashExtension
-      icon="icons/fsk48.png"
-      icon24="icons/fsk24.png"
-      icon32="icons/fsk32.png"
-      id="de.bund.bfr.knime.fsklab.splashExtension"
-      tooltip="BfR.bund.de FSK Lab">
-    </splashExtension>
-  </extension>
 
   <!-- Category for FSK nodes -->
   <extension point="org.knime.workbench.repository.categories">
