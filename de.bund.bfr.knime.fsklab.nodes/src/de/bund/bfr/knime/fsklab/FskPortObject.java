@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,6 +44,7 @@ import javax.swing.tree.TreeSelectionModel;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.NonNullByDefault;
 import org.eclipse.jdt.annotation.Nullable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
@@ -205,6 +207,7 @@ public class FskPortObject implements PortObject {
       out.close();
     }
 
+    @SuppressWarnings("null")
     @Override
     public FskPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
         ExecutionMonitor exec) throws IOException, CanceledExecutionException {
@@ -295,7 +298,7 @@ public class FskPortObject implements PortObject {
    * @param value Can be {@code null} or blank.
    */
   private static void add(@NonNull final DefaultMutableTreeNode node, @NonNull final String key,
-      @Nullable final String value) {
+      final String value) {
     if (StringUtils.isNotBlank(value)) {
       final String label = bundle.getString(key);
       node.add(new DefaultMutableTreeNode(label + ": " + value));
@@ -309,15 +312,13 @@ public class FskPortObject implements PortObject {
    * @param node Existing node where the new node is added. Cannot be {@code null}.
    * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
    *        or blank.
-   * @param date Can be {@code null}.
+   * @param date Cannnot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node, @NonNull final String key,
-      @Nullable final Date date) {
-    if (date != null) {
-      final String label = bundle.getString(key);
-      final String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
-      node.add(new DefaultMutableTreeNode(label + ": " + dateStr));
-    }
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final String key, final Date date) {
+    final String label = bundle.getString(key);
+    final String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
+    node.add(new DefaultMutableTreeNode(label + ": " + dateStr));
   }
 
   /**
@@ -327,14 +328,12 @@ public class FskPortObject implements PortObject {
    * @param node Existing node where the new node is added. Cannot be {@code null}.
    * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
    *        or blank.
-   * @param value Can be {@code null}.
+   * @param value double
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node, @NonNull final String key,
-      @Nullable final Double value) {
-    if (value != null) {
-      final String label = bundle.getString(key);
-      node.add(new DefaultMutableTreeNode(label + ": " + value));
-    }
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final String key, final double value) {
+    final String label = bundle.getString(key);
+    node.add(new DefaultMutableTreeNode(label + ": " + value));
   }
 
   /**
@@ -344,7 +343,7 @@ public class FskPortObject implements PortObject {
    * @param node Existing node where the new node is added. Cannot be {@code null}.
    * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
    *        or blank.
-   * @param value Can be {@code null} or empty.
+   * @param value Can be null or empty.
    */
   private static void add(@NonNull final DefaultMutableTreeNode node, @NonNull final String key,
       @Nullable final List<String> value) {
@@ -366,53 +365,55 @@ public class FskPortObject implements PortObject {
    * 
    * @param node Existing node where the new nodes for the properties are added. Cannot be
    *        {@code null}.
-   * @param record Can be {@code null}.
+   * @param record Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final Record record) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final Record record) {
 
-    if (record != null) {
-      final String prefix = "GM.EditReferencePanel";
+    final String prefix = "GM.EditReferencePanel";
 
-      // isReferenceDescription is not supported
+    // isReferenceDescription is not supported
 
-      final Type recordType = record.getType();
-      if (recordType != null) {
-        add(node, prefix + "typeLabel", recordType.toString());
-      }
-
-      final String date = record.getDate();
-      add(node, prefix + "dateLabel", date);
-
-      // PubMedId is not supported
-
-      final List<String> authors = record.getAuthors();
-      add(node, prefix + "authorListLabel", authors);
-
-      final String title = record.getTitle();
-      add(node, prefix + "titleLabel", title);
-
-      final String abstr = record.getAbstr();
-      add(node, prefix + "abstractLabel", abstr);
-
-      final String secondaryTitle = record.getSecondaryTitle();
-      add(node, prefix + "journalLabel", secondaryTitle);
-
-      final String volumeNumber = record.getVolumeNumber();
-      add(node, prefix + "volumeLabel", volumeNumber);
-
-      final Integer issueNumber = record.getIssueNumber();
-      add(node, prefix + "issueLabel", issueNumber.toString());
-
-      // page not supported
-
-      // status not supported
-
-      final String websiteLink = record.getWebsiteLink();
-      add(node, prefix + "websiteLabel", websiteLink);
-
-      // comment not supported
+    final Type recordType = record.getType();
+    if (recordType != null) {
+      add(node, prefix + "typeLabel", recordType.toString());
     }
+
+    final String date = record.getDate();
+    add(node, prefix + "dateLabel", date);
+
+    // PubMedId is not supported
+
+    List<String> authors =
+        record.getAuthors().stream().filter(Objects::nonNull).collect(Collectors.toList());
+
+    if (authors != null) {
+      add(node, prefix + "authorListLabel", authors);
+    }
+
+    final String title = record.getTitle();
+    add(node, prefix + "titleLabel", title);
+
+    final String abstr = record.getAbstr();
+    add(node, prefix + "abstractLabel", abstr);
+
+    final String secondaryTitle = record.getSecondaryTitle();
+    add(node, prefix + "journalLabel", secondaryTitle);
+
+    final String volumeNumber = record.getVolumeNumber();
+    add(node, prefix + "volumeLabel", volumeNumber);
+
+    final Integer issueNumber = record.getIssueNumber();
+    add(node, prefix + "issueLabel", issueNumber.toString());
+
+    // page not supported
+
+    // status not supported
+
+    final String websiteLink = record.getWebsiteLink();
+    add(node, prefix + "websiteLabel", websiteLink);
+
+    // comment not supported
   }
 
   /**
@@ -428,27 +429,25 @@ public class FskPortObject implements PortObject {
    * 
    * @param node Existing node where the new nodes for the properties are added. Cannot be
    *        {@code null}.
-   * @param vcard Can be {@code null}.
+   * @param vcard Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node, @Nullable final VCard vcard) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final VCard vcard) {
+    final String prefix = "GM.EditCreatorPanel.";
 
-    if (vcard != null) {
-      final String prefix = "GM.EditCreatorPanel.";
+    final ezvcard.property.Nickname nickname = vcard.getNickname();
+    if (nickname != null) {
+      add(node, prefix + "givenNameLabel", nickname.toString());
+    }
 
-      final ezvcard.property.Nickname nickname = vcard.getNickname();
-      if (nickname != null) {
-        add(node, prefix + "givenNameLabel", nickname.toString());
-      }
+    final ezvcard.property.FormattedName formattedName = vcard.getFormattedName();
+    if (formattedName != null) {
+      add(node, prefix + "familyNameLabel", formattedName.toString());
+    }
 
-      final ezvcard.property.FormattedName formattedName = vcard.getFormattedName();
-      if (formattedName != null) {
-        add(node, prefix + "familyNameLabel", formattedName.toString());
-      }
-
-      if (!vcard.getEmails().isEmpty()) {
-        final String value = vcard.getEmails().get(0).toString();
-        add(node, prefix + "contactLabel", value);
-      }
+    if (!vcard.getEmails().isEmpty()) {
+      final String value = vcard.getEmails().get(0).toString();
+      add(node, prefix + "contactLabel", value);
     }
   }
 
@@ -457,22 +456,25 @@ public class FskPortObject implements PortObject {
    * tree node. If the passed {@code Product} is {@code null} then no nodes are added.
    * 
    * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
-   * @param product Can be {@code null}.
+   * @param product Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final Product product) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final Product product) {
 
-    if (product != null) {
-      final String prefix = "GM.EditProductPanel.";
+    final String prefix = "GM.EditProductPanel.";
 
-      add(node, prefix + "envNameLabel", product.environmentName);
-      add(node, prefix + "envDescriptionLabel", product.environmentDescription);
-      add(node, prefix + "envUnitLabel", product.environmentUnit);
-      add(node, prefix + "productionMethodLabel", product.productionMethod);
-      add(node, prefix + "originCountryLabel", product.originCountry);
-      add(node, prefix + "originAreaLabel", product.originArea);
-      add(node, prefix + "fisheriesAreaLabel", product.fisheriesArea);
+    add(node, prefix + "envNameLabel", product.environmentName);
+    add(node, prefix + "envDescriptionLabel", product.environmentDescription);
+    add(node, prefix + "envUnitLabel", product.environmentUnit);
+
+    add(node, prefix + "productionMethodLabel", product.productionMethod);
+    add(node, prefix + "originCountryLabel", product.originCountry);
+    add(node, prefix + "originAreaLabel", product.originArea);
+    add(node, prefix + "fisheriesAreaLabel", product.fisheriesArea);
+    if (product.productionDate != null) {
       add(node, prefix + "productionDateLabel", product.productionDate);
+    }
+    if (product.expirationDate != null) {
       add(node, prefix + "expirationDateLabel", product.expirationDate);
     }
   }
@@ -484,33 +486,31 @@ public class FskPortObject implements PortObject {
    * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
    * @param hazard Can be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final Hazard hazard) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final Hazard hazard) {
 
-    if (hazard != null) {
-      final String prefix = "GM.EditHazardPanel.";
+    final String prefix = "GM.EditHazardPanel.";
 
-      add(node, prefix + "hazardTypeLabel", hazard.hazardType);
-      add(node, prefix + "hazardNameLabel", hazard.hazardName);
-      add(node, prefix + "hazardDescriptionLabel", hazard.hazardDescription);
-      add(node, prefix + "hazardUnitLabel", hazard.hazardUnit);
-      add(node, prefix + "adverseEffectLabel", hazard.adverseEffect);
-      add(node, prefix + "originLabel", hazard.origin);
-      add(node, prefix + "bmdLabel", hazard.benchmarkDose);
-      add(node, prefix + "maxResidueLimitLabel", hazard.maximumResidueLimit);
-      add(node, prefix + "noObservedAdverseLabel", hazard.noObservedAdverse);
-      add(node, prefix + "lowestObserveLabel", hazard.lowestObservedAdverse);
-      add(node, prefix + "acceptableOperatorLabel", hazard.acceptableOperator);
-      add(node, prefix + "acuteReferenceDoseLabel", hazard.acuteReferenceDose);
-      add(node, prefix + "acceptableDailyIntake", hazard.acceptableDailyIntake);
-      add(node, prefix + "indSumLabel", hazard.hazardIndSum);
-      add(node, prefix + "labNameLabel", hazard.laboratoryName);
-      add(node, prefix + "labCountryLabel", hazard.laboratoryCountry);
-      add(node, prefix + "detectionLimitLabel", hazard.detectionLimit);
-      add(node, prefix + "quantificationLimitLabel", hazard.quantificationLimit);
-      add(node, prefix + "leftCensoredDataLabel", hazard.leftCensoredData);
-      add(node, prefix + "contaminationRangeLabel", hazard.rangeOfContamination);
-    }
+    add(node, prefix + "hazardTypeLabel", hazard.hazardType);
+    add(node, prefix + "hazardNameLabel", hazard.hazardName);
+    add(node, prefix + "hazardDescriptionLabel", hazard.hazardDescription);
+    add(node, prefix + "hazardUnitLabel", hazard.hazardUnit);
+    add(node, prefix + "adverseEffectLabel", hazard.adverseEffect);
+    add(node, prefix + "originLabel", hazard.origin);
+    add(node, prefix + "bmdLabel", hazard.benchmarkDose);
+    add(node, prefix + "maxResidueLimitLabel", hazard.maximumResidueLimit);
+    add(node, prefix + "noObservedAdverseLabel", hazard.noObservedAdverse);
+    add(node, prefix + "lowestObserveLabel", hazard.lowestObservedAdverse);
+    add(node, prefix + "acceptableOperatorLabel", hazard.acceptableOperator);
+    add(node, prefix + "acuteReferenceDoseLabel", hazard.acuteReferenceDose);
+    add(node, prefix + "acceptableDailyIntake", hazard.acceptableDailyIntake);
+    add(node, prefix + "indSumLabel", hazard.hazardIndSum);
+    add(node, prefix + "labNameLabel", hazard.laboratoryName);
+    add(node, prefix + "labCountryLabel", hazard.laboratoryCountry);
+    add(node, prefix + "detectionLimitLabel", hazard.detectionLimit);
+    add(node, prefix + "quantificationLimitLabel", hazard.quantificationLimit);
+    add(node, prefix + "leftCensoredDataLabel", hazard.leftCensoredData);
+    add(node, prefix + "contaminationRangeLabel", hazard.rangeOfContamination);
   }
 
   /**
@@ -519,27 +519,26 @@ public class FskPortObject implements PortObject {
    * added.
    * 
    * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
-   * @param populationGroup Can be {@code null}.
+   * @param populationGroup Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final PopulationGroup populationGroup) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node,
+      final PopulationGroup populationGroup) {
 
-    if (populationGroup != null) {
-      final String prefix = "GM.EditPopulationGroupPanel.";
+    final String prefix = "GM.EditPopulationGroupPanel.";
 
-      add(node, prefix + "populationNameLabel", populationGroup.populationName);
-      add(node, prefix + "populationSpanLabel", populationGroup.populationSpan);
-      add(node, prefix + "populationDescriptionLabel", populationGroup.populationDescription);
-      add(node, prefix + "populationAgeLabel", populationGroup.populationAge);
-      add(node, prefix + "populationGenderLabel", populationGroup.populationGender);
-      add(node, prefix + "bmiLabel", populationGroup.bmi);
-      add(node, prefix + "specialDietGroupsLabel", populationGroup.specialDietGroups);
-      add(node, prefix + "patternConsumptionLabel", populationGroup.specialDietGroups);
-      add(node, prefix + "regionLabel", populationGroup.region);
-      add(node, prefix + "countryLabel", populationGroup.country);
-      add(node, prefix + "riskAndPopulationLabel", populationGroup.populationRiskFactor);
-      add(node, prefix + "seasonLabel", populationGroup.season);
-    }
+    add(node, prefix + "populationNameLabel", populationGroup.populationName);
+    add(node, prefix + "populationSpanLabel", populationGroup.populationSpan);
+    add(node, prefix + "populationDescriptionLabel", populationGroup.populationDescription);
+    add(node, prefix + "populationAgeLabel", populationGroup.populationAge);
+    add(node, prefix + "populationGenderLabel", populationGroup.populationGender);
+    add(node, prefix + "bmiLabel", populationGroup.bmi);
+    add(node, prefix + "specialDietGroupsLabel", populationGroup.specialDietGroups);
+    add(node, prefix + "patternConsumptionLabel", populationGroup.specialDietGroups);
+    add(node, prefix + "regionLabel", populationGroup.region);
+    add(node, prefix + "countryLabel", populationGroup.country);
+    add(node, prefix + "riskAndPopulationLabel", populationGroup.populationRiskFactor);
+    add(node, prefix + "seasonLabel", populationGroup.season);
   }
 
   /**
@@ -548,64 +547,73 @@ public class FskPortObject implements PortObject {
    * added.
    * 
    * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
-   * @param generalInformation Can be {@code null}.
+   * @param generalInformation Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final GeneralInformation generalInformation) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node,
+      final GeneralInformation generalInformation) {
 
-    if (generalInformation != null) {
-      final String prefix = "GM.GeneralInformationPanel.";
+    final String prefix = "GM.GeneralInformationPanel.";
 
-      add(node, prefix + "studyNameLabel", generalInformation.name);
-      add(node, prefix + "sourceLabel", generalInformation.source);
-      add(node, prefix + "identifierLabel", generalInformation.identifier);
+    add(node, prefix + "studyNameLabel", generalInformation.name);
+    add(node, prefix + "sourceLabel", generalInformation.source);
+    add(node, prefix + "identifierLabel", generalInformation.identifier);
 
-      final List<VCard> creators = generalInformation.creators;
-      if (!creators.isEmpty()) {
-        // Parent node that holds all the creators
-        final DefaultMutableTreeNode creatorsNode = new DefaultMutableTreeNode("Creators");
+    // Remove null values in list
+    final List<VCard> creators =
+        generalInformation.creators.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    if (!creators.isEmpty()) {
+      // Parent node that holds all the creators
+      final DefaultMutableTreeNode creatorsNode = new DefaultMutableTreeNode("Creators");
 
-        for (VCard creator : creators) {
-          final DefaultMutableTreeNode creatorNode = new DefaultMutableTreeNode("Creator");
-          add(creatorNode, creator);
-          creatorsNode.add(creatorNode);
-        }
-
-        node.add(creatorsNode);
+      for (final VCard creator : creators) {
+        final DefaultMutableTreeNode creatorNode = new DefaultMutableTreeNode("Creator");
+        add(creatorNode, creator);
+        creatorsNode.add(creatorNode);
       }
 
-      add(node, prefix + "creationDateLabel", generalInformation.creationDate);
-
-      final List<Date> modificationDate = generalInformation.modificationDate;
-      if (!modificationDate.isEmpty()) {
-        final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Modification dates");
-        modificationDate.forEach(it -> add(parentNode, "Modification date", it));
-      }
-
-      add(node, prefix + "rightsLabel", generalInformation.rights);
-
-      // TODO: isAvailable
-
-      add(node, prefix + "urlLabel", generalInformation.url.toString());
-
-      final List<Record> reference = generalInformation.reference;
-      if (!reference.isEmpty()) {
-        final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("References");
-        for (Record record : reference) {
-          final DefaultMutableTreeNode refNode = new DefaultMutableTreeNode("Reference");
-          add(refNode, record);
-          parentNode.add(refNode);
-        }
-        node.add(parentNode);
-      }
-
-      add(node, prefix + "languageLabel", generalInformation.language);
-      add(node, prefix + "softwareLabel", generalInformation.software);
-      add(node, prefix + "languageWrittenInLabel", generalInformation.languageWrittenIn);
-      add(node, prefix + "statusLabel", generalInformation.status);
-      add(node, prefix + "objectiveLabel", generalInformation.objective);
-      add(node, prefix + "descriptionLabel", generalInformation.description);
+      node.add(creatorsNode);
     }
+
+    if (generalInformation.creationDate != null) {
+      add(node, prefix + "creationDateLabel", generalInformation.creationDate);
+    }
+
+    // Remove null values in list
+    final List<Date> modificationDate = generalInformation.modificationDate.stream()
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    if (!modificationDate.isEmpty()) {
+      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Modification dates");
+      for (final Date date : modificationDate) {
+        add(parentNode, prefix + "modificationDateLabel", date);
+      }
+    }
+
+    add(node, prefix + "rightsLabel", generalInformation.rights);
+
+    // TODO: isAvailable
+
+    add(node, prefix + "urlLabel", generalInformation.url.toString());
+
+    // Remove null values in list
+    final List<Record> reference =
+        generalInformation.reference.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    if (!reference.isEmpty()) {
+      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("References");
+      for (final Record record : reference) {
+        final DefaultMutableTreeNode refNode = new DefaultMutableTreeNode("Reference");
+        add(refNode, record);
+        parentNode.add(refNode);
+      }
+      node.add(parentNode);
+    }
+
+    add(node, prefix + "languageLabel", generalInformation.language);
+    add(node, prefix + "softwareLabel", generalInformation.software);
+    add(node, prefix + "languageWrittenInLabel", generalInformation.languageWrittenIn);
+    add(node, prefix + "statusLabel", generalInformation.status);
+    add(node, prefix + "objectiveLabel", generalInformation.objective);
+    add(node, prefix + "descriptionLabel", generalInformation.description);
   }
 
   /**
@@ -615,53 +623,52 @@ public class FskPortObject implements PortObject {
    * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
    * @param scope Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node, @Nullable final Scope scope) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final Scope scope) {
 
-    if (scope != null) {
-      final String prefix = "GM.ScopePanel.";
+    final String prefix = "GM.ScopePanel.";
 
-      {
-        final String key = prefix + "productLabel";
-        final String label = bundle.getString(key);
+    {
+      final String key = prefix + "productLabel";
+      final String label = bundle.getString(key);
 
-        // Create productNode
-        final DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(label);
-        final Product product = scope.product;
-        if (product != null) {
-          add(productNode, product);
-        }
-
-        node.add(productNode);
+      // Create productNode
+      final DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(label);
+      final Product product = scope.product;
+      if (product != null) {
+        add(productNode, product);
       }
 
-      {
-        final String key = prefix + "hazardLabel";
-        final String label = bundle.getString(key);
-
-        // Create hazardNode
-        final DefaultMutableTreeNode hazardNode = new DefaultMutableTreeNode(label);
-        final Hazard hazard = scope.hazard;
-        if (hazard != null) {
-          add(hazardNode, hazard);
-        }
-
-        node.add(hazardNode);
-      }
-
-      {
-        final DefaultMutableTreeNode pgNode = new DefaultMutableTreeNode("Population group");
-        final PopulationGroup populationGroup = scope.populationGroup;
-        if (populationGroup != null) {
-          add(pgNode, populationGroup);
-        }
-        node.add(pgNode);
-      }
-
-      add(node, prefix + "commentLabel", scope.generalComment);
-      add(node, prefix + "temporalInformationLabel", scope.temporalInformation);
-      add(node, prefix + "regionLabel", scope.region);
-      add(node, prefix + "countryLabel", scope.country);
+      node.add(productNode);
     }
+
+    {
+      final String key = prefix + "hazardLabel";
+      final String label = bundle.getString(key);
+
+      // Create hazardNode
+      final DefaultMutableTreeNode hazardNode = new DefaultMutableTreeNode(label);
+      final Hazard hazard = scope.hazard;
+      if (hazard != null) {
+        add(hazardNode, hazard);
+      }
+
+      node.add(hazardNode);
+    }
+
+    {
+      final DefaultMutableTreeNode pgNode = new DefaultMutableTreeNode("Population group");
+      final PopulationGroup populationGroup = scope.populationGroup;
+      if (populationGroup != null) {
+        add(pgNode, populationGroup);
+      }
+      node.add(pgNode);
+    }
+
+    add(node, prefix + "commentLabel", scope.generalComment);
+    add(node, prefix + "temporalInformationLabel", scope.temporalInformation);
+    add(node, prefix + "regionLabel", scope.region);
+    add(node, prefix + "countryLabel", scope.country);
   }
 
   /**
@@ -669,52 +676,49 @@ public class FskPortObject implements PortObject {
    * passed tree node. If the passed {@code DataBackground} is {@code null} then no nodes are added.
    * 
    * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param dataBackground Can be {@code null}.
+   * @param dataBackground Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final DataBackground dataBackground) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final DataBackground dataBackground) {
 
-    if (dataBackground != null) {
-      final String prefix = "GM.DataBackgroundPanel.";
+    final String prefix = "GM.DataBackgroundPanel.";
 
-      final Study study = dataBackground.study;
-      if (study != null) {
-        final DefaultMutableTreeNode studyNode = new DefaultMutableTreeNode("Study");
-        add(studyNode, study);
-        node.add(studyNode);
-      }
+    final Study study = dataBackground.study;
+    if (study != null) {
+      final DefaultMutableTreeNode studyNode = new DefaultMutableTreeNode("Study");
+      add(studyNode, study);
+      node.add(studyNode);
+    }
 
-      final StudySample studySample = dataBackground.studySample;
-      if (studySample != null) {
-        final String key = prefix + "studySampleLabel";
-        final String label = bundle.getString(key);
+    final StudySample studySample = dataBackground.studySample;
+    if (studySample != null) {
+      final String key = prefix + "studySampleLabel";
+      final String label = bundle.getString(key);
 
-        final DefaultMutableTreeNode sampleNode = new DefaultMutableTreeNode(label);
-        add(sampleNode, studySample);
-        node.add(sampleNode);
-      }
+      final DefaultMutableTreeNode sampleNode = new DefaultMutableTreeNode(label);
+      add(sampleNode, studySample);
+      node.add(sampleNode);
+    }
 
-      final DietaryAssessmentMethod dietaryAssessmentMethod =
-          dataBackground.dietaryAssessmentMethod;
-      if (dietaryAssessmentMethod != null) {
-        final String key = prefix + "dietaryAssessmentMethodLabel";
-        final String label = bundle.getString(key);
+    final DietaryAssessmentMethod dietaryAssessmentMethod = dataBackground.dietaryAssessmentMethod;
+    if (dietaryAssessmentMethod != null) {
+      final String key = prefix + "dietaryAssessmentMethodLabel";
+      final String label = bundle.getString(key);
 
-        final DefaultMutableTreeNode damNode = new DefaultMutableTreeNode(label);
-        add(damNode, dietaryAssessmentMethod);
-        node.add(damNode);
-      }
+      final DefaultMutableTreeNode damNode = new DefaultMutableTreeNode(label);
+      add(damNode, dietaryAssessmentMethod);
+      node.add(damNode);
+    }
 
-      add(node, prefix + "laboratoryAccreditationLabel", dataBackground.laboratoryAccreditation);
+    add(node, prefix + "laboratoryAccreditationLabel", dataBackground.laboratoryAccreditation);
 
-      final Assay assay = dataBackground.assay;
-      if (assay != null) {
-        final String key = prefix + "assayLabel";
-        final String label = bundle.getString(key);
-        final DefaultMutableTreeNode assayNode = new DefaultMutableTreeNode(label);
-        add(assayNode, assay);
-        node.add(assayNode);
-      }
+    final Assay assay = dataBackground.assay;
+    if (assay != null) {
+      final String key = prefix + "assayLabel";
+      final String label = bundle.getString(key);
+      final DefaultMutableTreeNode assayNode = new DefaultMutableTreeNode(label);
+      add(assayNode, assay);
+      node.add(assayNode);
     }
   }
 
@@ -723,34 +727,33 @@ public class FskPortObject implements PortObject {
    * node. If the passed {@code Study} is {@code null} then no nodes are added.
    * 
    * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
-   * @param study Can be {@code null}.
+   * @param study Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node, @Nullable final Study study) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final Study study) {
 
-    if (study != null) {
-      final String prefix = "GM.StudyPanel.";
+    final String prefix = "GM.StudyPanel.";
 
-      add(node, prefix + "studyTitleLabel", study.title);
-      add(node, prefix + "studyDescriptionLabel", study.description);
-      add(node, prefix + "studyDesignTypeLabel", study.designType);
-      add(node, prefix + "studyAssayMeasurementsTypeLabel", study.measurementType);
-      add(node, prefix + "studyAssayTechnologyTypeLabel", study.technologyType);
-      add(node, prefix + "studyAssayTechnologyPlatformLabel", study.technologyPlatform);
-      add(node, prefix + "accreditationProcedureLabel", study.accreditationProcedure);
-      add(node, prefix + "protocolNameLabel", study.protocolName);
-      add(node, prefix + "protocolTypeLabel", study.protocolType);
-      add(node, prefix + "protocolDescriptionLabel", study.protocolDescription);
+    add(node, prefix + "studyTitleLabel", study.title);
+    add(node, prefix + "studyDescriptionLabel", study.description);
+    add(node, prefix + "studyDesignTypeLabel", study.designType);
+    add(node, prefix + "studyAssayMeasurementsTypeLabel", study.measurementType);
+    add(node, prefix + "studyAssayTechnologyTypeLabel", study.technologyType);
+    add(node, prefix + "studyAssayTechnologyPlatformLabel", study.technologyPlatform);
+    add(node, prefix + "accreditationProcedureLabel", study.accreditationProcedure);
+    add(node, prefix + "protocolNameLabel", study.protocolName);
+    add(node, prefix + "protocolTypeLabel", study.protocolType);
+    add(node, prefix + "protocolDescriptionLabel", study.protocolDescription);
 
-      final URI protocolUri = study.protocolUri;
-      if (protocolUri != null) {
-        final String value = protocolUri.toString();
-        add(node, prefix + "protocolURILabel", value);
-      }
-
-      add(node, prefix + "protocolVersionLabel", study.protocolVersion);
-      add(node, prefix + "parametersLabel", study.parametersName);
-      add(node, prefix + "componentsTypeLabel", study.componentsType);
+    final URI protocolUri = study.protocolUri;
+    if (protocolUri != null) {
+      final String value = protocolUri.toString();
+      add(node, prefix + "protocolURILabel", value);
     }
+
+    add(node, prefix + "protocolVersionLabel", study.protocolVersion);
+    add(node, prefix + "parametersLabel", study.parametersName);
+    add(node, prefix + "componentsTypeLabel", study.componentsType);
   }
 
   /**
@@ -758,26 +761,30 @@ public class FskPortObject implements PortObject {
    * tree node. If the passed {@code StudySample} is {@code null} then no nodes are added.
    * 
    * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param studySample Can be {@code null}.
+   * @param studySample Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final StudySample studySample) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final StudySample studySample) {
 
-    if (studySample != null) {
-      final String prefix = "GM.EditStudySamplePanel.";
+    final String prefix = "GM.EditStudySamplePanel.";
 
-      add(node, prefix + "sampleNameLabel", studySample.sample);
-      add(node, prefix + "moisturePercentageLabel", studySample.moisturePercentage);
-      add(node, prefix + "fatPercentageLabel", studySample.fatPercentage);
-      add(node, prefix + "sampleProtocolLabel", studySample.collectionProtocol);
-      add(node, prefix + "samplingStrategyLabel", studySample.samplingStrategy);
-      add(node, prefix + "samplingMethodLabel", studySample.samplingMethod);
-      add(node, prefix + "samplingPlanLabel", studySample.samplingPlan);
-      add(node, prefix + "samplingWeightLabel", studySample.samplingWeight);
-      add(node, prefix + "samplingSizeLabel", studySample.samplingSize);
-      add(node, prefix + "lotSizeUnitLabel", studySample.lotSizeUnit);
-      add(node, prefix + "samplingPointLabel", studySample.lotSizeUnit);
+    add(node, prefix + "sampleNameLabel", studySample.sample);
+    if (studySample.moisturePercentage != null) {
+      add(node, prefix + "moisturePercentageLabel", studySample.moisturePercentage.doubleValue());
     }
+    if (studySample.fatPercentage != null) {
+      add(node, prefix + "fatPercentageLabel", studySample.fatPercentage.doubleValue());
+    }
+    if (studySample.collectionProtocol != null) {
+      add(node, prefix + "sampleProtocolLabel", studySample.collectionProtocol);
+    }
+    add(node, prefix + "samplingStrategyLabel", studySample.samplingStrategy);
+    add(node, prefix + "samplingMethodLabel", studySample.samplingMethod);
+    add(node, prefix + "samplingPlanLabel", studySample.samplingPlan);
+    add(node, prefix + "samplingWeightLabel", studySample.samplingWeight);
+    add(node, prefix + "samplingSizeLabel", studySample.samplingSize);
+    add(node, prefix + "lotSizeUnitLabel", studySample.lotSizeUnit);
+    add(node, prefix + "samplingPointLabel", studySample.lotSizeUnit);
   }
 
   /**
@@ -786,24 +793,21 @@ public class FskPortObject implements PortObject {
    * nodes are added.
    * 
    * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param method Can be {@code null}.
+   * @param method Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final DietaryAssessmentMethod method) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final DietaryAssessmentMethod method) {
 
-    if (method != null) {
+    // Prefix in resource bundle
+    final String prefix = "GM.EditDietaryAssessmentMethodPanel.";
 
-      // Prefix in resource bundle
-      final String prefix = "GM.EditDietaryAssessmentMethodPanel.";
-
-      add(node, prefix + "dataCollectionToolLabel", method.collectionTool);
-      add(node, prefix + "nonConsecutiveOneDaysLabel",
-          Integer.toString(method.numberOfNonConsecutiveOneDay));
-      add(node, prefix + "dietarySoftwareToolLabel", method.softwareTool);
-      add(node, prefix + "foodItemNumberLabel", method.numberOfFoodItems);
-      add(node, prefix + "recordTypeLabel", method.recordTypes);
-      add(node, prefix + "foodDescriptionLabel", method.foodDescriptors);
-    }
+    add(node, prefix + "dataCollectionToolLabel", method.collectionTool);
+    add(node, prefix + "nonConsecutiveOneDaysLabel",
+        Integer.toString(method.numberOfNonConsecutiveOneDay));
+    add(node, prefix + "dietarySoftwareToolLabel", method.softwareTool);
+    add(node, prefix + "foodItemNumberLabel", method.numberOfFoodItems);
+    add(node, prefix + "recordTypeLabel", method.recordTypes);
+    add(node, prefix + "foodDescriptionLabel", method.foodDescriptors);
   }
 
   /**
@@ -811,13 +815,12 @@ public class FskPortObject implements PortObject {
    * node. If the passed {@code Assay} is {@code null} then no nodes are added.
    * 
    * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param assay Can be {@code null}.
+   * @param assay Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node, @Nullable final Assay assay) {
-    if (assay != null) {
-      add(node, "GM.EditAssayPanel.nameLabel", assay.name);
-      add(node, "GM.EditAssayPanel.descriptionLabel", assay.description);
-    }
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final Assay assay) {
+    add(node, "GM.EditAssayPanel.nameLabel", assay.name);
+    add(node, "GM.EditAssayPanel.descriptionLabel", assay.description);
   }
 
   /**
@@ -825,29 +828,29 @@ public class FskPortObject implements PortObject {
    * tree node. If the passed {@code Parameter} is {@code null} then no nodes are added.
    * 
    * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param parameter Can be {@code null}.
+   * @param parameter Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final Parameter parameter) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final Parameter parameter) {
 
-    if (parameter != null) {
-      final String prefix = "GM.EditParameterPanel.";
+    final String prefix = "GM.EditParameterPanel.";
 
-      add(node, prefix + "idLabel", parameter.id);
-      add(node, prefix + "classificationLabel", parameter.classification.toString());
-      add(node, prefix + "parameterNameLabel", parameter.name);
-      add(node, prefix + "descriptionLabel", parameter.description);
-      add(node, prefix + "unitLabel", parameter.unit);
-      add(node, prefix + "unitCategoryLabel", parameter.unitCategory);
-      add(node, prefix + "dataTypeLabel", parameter.dataType);
-      add(node, prefix + "sourceLabel", parameter.source);
-      add(node, prefix + "subjectLabel", parameter.subject);
-      add(node, prefix + "distributionLabel", parameter.distribution);
-      add(node, prefix + "valueLabel", parameter.value);
-      add(node, prefix + "referenceLabel", parameter.reference);
-      add(node, prefix + "variabilitySubjectLabel", parameter.variabilitySubject);
-      add(node, prefix + "applicabilityLabel", parameter.modelApplicability);
-      add(node, prefix + "errorLabel", parameter.error);
+    add(node, prefix + "idLabel", parameter.id);
+    add(node, prefix + "classificationLabel", parameter.classification.toString());
+    add(node, prefix + "parameterNameLabel", parameter.name);
+    add(node, prefix + "descriptionLabel", parameter.description);
+    add(node, prefix + "unitLabel", parameter.unit);
+    add(node, prefix + "unitCategoryLabel", parameter.unitCategory);
+    add(node, prefix + "dataTypeLabel", parameter.dataType);
+    add(node, prefix + "sourceLabel", parameter.source);
+    add(node, prefix + "subjectLabel", parameter.subject);
+    add(node, prefix + "distributionLabel", parameter.distribution);
+    add(node, prefix + "valueLabel", parameter.value);
+    add(node, prefix + "referenceLabel", parameter.reference);
+    add(node, prefix + "variabilitySubjectLabel", parameter.variabilitySubject);
+    add(node, prefix + "applicabilityLabel", parameter.modelApplicability);
+    if (parameter.error != null) {
+      add(node, prefix + "errorLabel", parameter.error.doubleValue());
     }
   }
 
@@ -856,30 +859,29 @@ public class FskPortObject implements PortObject {
    * passed tree node. If the passed {@code ModelEquation} is {@code null} then no nodes are added.
    * 
    * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param modelEquation Can be {@code null}.
+   * @param modelEquation Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final ModelEquation modelEquation) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final ModelEquation modelEquation) {
 
-    if (modelEquation != null) {
-      final String prefix = "GM.EditModelEquationPanel.";
+    final String prefix = "GM.EditModelEquationPanel.";
 
-      add(node, prefix + "nameLabel", modelEquation.equationName);
-      add(node, prefix + "classLabel", modelEquation.equationClass);
+    add(node, prefix + "nameLabel", modelEquation.equationName);
+    add(node, prefix + "classLabel", modelEquation.equationClass);
 
-      final List<Record> equationReference = modelEquation.equationReference;
-      if (!equationReference.isEmpty()) {
-        final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("References");
-        for (Record ref : equationReference) {
-          final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode("Reference");
-          add(childNode, ref);
-          parentNode.add(childNode);
-        }
-        node.add(parentNode);
+    final List<Record> equationReference = modelEquation.equationReference.stream()
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    if (!equationReference.isEmpty()) {
+      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("References");
+      for (final Record ref : equationReference) {
+        final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode("Reference");
+        add(childNode, ref);
+        parentNode.add(childNode);
       }
-
-      add(node, prefix + "scriptLabel", modelEquation.equation);
+      node.add(parentNode);
     }
+
+    add(node, prefix + "scriptLabel", modelEquation.equation);
   }
 
   /**
@@ -887,47 +889,59 @@ public class FskPortObject implements PortObject {
    * tree node. If the passed {@code ModelMath} is {@code null} then no nodes are added.
    * 
    * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param modelMath Can be {@code null}.
+   * @param modelMath Cannot be {@code null}.
    */
-  private static void add(@NonNull final DefaultMutableTreeNode node,
-      @Nullable final ModelMath modelMath) {
+  @NonNullByDefault
+  private static void add(final DefaultMutableTreeNode node, final ModelMath modelMath) {
 
-    if (modelMath != null) {
-      final List<Parameter> parameter = modelMath.parameter;
-      if (!parameter.isEmpty()) {
-        final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Parameters");
-        for (Parameter param : parameter) {
-          final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode("Parameter");
-          add(childNode, param);
-          parentNode.add(childNode);
-        }
-        node.add(parentNode);
+    final List<Parameter> parameter =
+        modelMath.parameter.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    if (!parameter.isEmpty()) {
+      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Parameters");
+      for (Parameter param : parameter) {
+        final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode("Parameter");
+        add(childNode, param);
+        parentNode.add(childNode);
       }
+      node.add(parentNode);
+    }
 
-      add(node, "ModelMath.SSE", modelMath.sse);
-      add(node, "ModelMath.MSE", modelMath.mse);
-      add(node, "ModelMath.RMSE", modelMath.rmse);
-      add(node, "ModelMath.R2", modelMath.rSquared);
-      add(node, "ModelMath.AIC", modelMath.aic);
-      add(node, "ModelMath.BIC", modelMath.bic);
+    if (modelMath.sse != null) {
+      add(node, "ModelMath.SSE", modelMath.sse.doubleValue());
+    }
+    if (modelMath.mse != null) {
+      add(node, "ModelMath.MSE", modelMath.mse.doubleValue());
+    }
+    if (modelMath.rmse != null) {
+      add(node, "ModelMath.RMSE", modelMath.rmse.doubleValue());
+    }
+    if (modelMath.rSquared != null) {
+      add(node, "ModelMath.R2", modelMath.rSquared.doubleValue());
+    }
+    if (modelMath.aic != null) {
+      add(node, "ModelMath.AIC", modelMath.aic.doubleValue());
+    }
+    if (modelMath.bic != null) {
+      add(node, "ModelMath.BIC", modelMath.bic.doubleValue());
+    }
 
-      final ModelEquation modelEquation = modelMath.modelEquation;
-      if (modelEquation != null) {
-        final DefaultMutableTreeNode equationNode = new DefaultMutableTreeNode("Model equation");
-        add(equationNode, modelEquation);
-        node.add(equationNode);
-      }
+    final ModelEquation modelEquation = modelMath.modelEquation;
+    if (modelEquation != null) {
+      final DefaultMutableTreeNode equationNode = new DefaultMutableTreeNode("Model equation");
+      add(equationNode, modelEquation);
+      node.add(equationNode);
+    }
 
-      add(node, "Fitting procedure", modelMath.fittingProcedure);
+    add(node, "Fitting procedure", modelMath.fittingProcedure);
 
-      // TODO: exposure
+    // TODO: exposure
 
-      final List<String> event = modelMath.event;
-      if (event != null && !event.isEmpty()) {
-        final DefaultMutableTreeNode listNode = new DefaultMutableTreeNode("Events");
-        event.stream().map(DefaultMutableTreeNode::new).forEach(listNode::add);
-        node.add(listNode);
-      }
+    final List<String> event =
+        modelMath.event.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    if (event != null && !event.isEmpty()) {
+      final DefaultMutableTreeNode listNode = new DefaultMutableTreeNode("Events");
+      event.stream().map(DefaultMutableTreeNode::new).forEach(listNode::add);
+      node.add(listNode);
     }
   }
 
@@ -935,10 +949,14 @@ public class FskPortObject implements PortObject {
 
     final DefaultMutableTreeNode generalInformationNode =
         new DefaultMutableTreeNode("General information");
-    add(generalInformationNode, genericModel.generalInformation);
+    if (genericModel.generalInformation != null) {
+      add(generalInformationNode, genericModel.generalInformation);
+    }
 
     final DefaultMutableTreeNode scopeNode = new DefaultMutableTreeNode("Scope");
-    add(scopeNode, genericModel.scope);
+    if (genericModel.scope != null) {
+      add(scopeNode, genericModel.scope);
+    }
 
     final DefaultMutableTreeNode dataBackgroundNode = new DefaultMutableTreeNode("Data background");
     if (genericModel.dataBackground != null) {
