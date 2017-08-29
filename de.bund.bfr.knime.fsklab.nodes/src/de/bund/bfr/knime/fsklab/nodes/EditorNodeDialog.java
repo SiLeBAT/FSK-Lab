@@ -395,7 +395,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
    */
   private static JComboBox<String> createComboBox(final Collection<String> possibleValues) {
     final String[] array = possibleValues.stream().toArray(String[]::new);
-    return new JComboBox<String>(array);
+    return new JComboBox<>(array);
   }
 
   /**
