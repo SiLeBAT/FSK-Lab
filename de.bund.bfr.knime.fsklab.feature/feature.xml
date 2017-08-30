@@ -42,9 +42,10 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.core"/>
       <import plugin="org.knime.ext.r.type" version="3.1.0" match="greaterOrEqual"/>
       <import plugin="org.knime.js.core"/>
-      <import plugin="org.knime.product" version="3.3.3" match="greaterOrEqual"/>
       <import plugin="org.knime.base" version="3.2.0" match="greaterOrEqual"/>
       <import plugin="com.google.guava" version="19.0.0" match="greaterOrEqual"/>
+      <import plugin="org.knime.json" version="3.3.3" match="greaterOrEqual"/>
+      <import plugin="org.knime.workbench.repository"/>
    </requires>
 
    <plugin
