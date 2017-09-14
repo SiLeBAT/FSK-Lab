@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry exported="true" kind="lib" path="libs/jris-1.0.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/kotlin-osgi-bundle-1.1.4-3.jar"/>
 	<classpathentry kind="lib" path="libs/jackson-module-kotlin-2.8.7.jar"/>
 	<classpathentry kind="lib" path="ez-vcard-lib/ez-vcard-0.10.2.jar"/>
 	<classpathentry kind="lib" path="ez-vcard-lib/freemarker-2.3.23.jar"/>
 	<classpathentry kind="lib" path="ez-vcard-lib/jackson-core-2.6.1.jar"/>
 	<classpathentry kind="lib" path="ez-vcard-lib/jsoup-1.8.3.jar"/>
 	<classpathentry kind="lib" path="ez-vcard-lib/vinnie-2.0.0.jar"/>
+	<classpathentry kind="lib" path="kotlin-lib/kotlin-reflect-1.0.6.jar"/>
+	<classpathentry kind="lib" path="kotlin-lib/kotlin-stdlib-1.1.2-2.jar"/>
+	<classpathentry kind="lib" path="kotlin-lib/kotlin-stdlib-jre7-1.1.2-2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="java-src"/>
 	<classpathentry kind="con" path="org.jetbrains.kotlin.core.KOTLIN_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="libs/rengine-1.8.4.jar"/>

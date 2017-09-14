@@ -8,6 +8,7 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.rsnippet;
 
+
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexCTokenMaker;
 import org.fife.ui.rsyntaxtextarea.Token;
 import org.fife.ui.rsyntaxtextarea.TokenTypes;

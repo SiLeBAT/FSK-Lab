@@ -45,3 +45,7 @@ class FskPlugin : AbstractUIPlugin() {
         val MESSAGES_BUNDLE: ResourceBundle by lazy { ResourceBundle.getBundle("MessagesBundle") }
     }
 }
+
+fun main(args: Array<String>) {
+	println("Build de.bund.bfr.knime.fsklab.nodes")
+}
