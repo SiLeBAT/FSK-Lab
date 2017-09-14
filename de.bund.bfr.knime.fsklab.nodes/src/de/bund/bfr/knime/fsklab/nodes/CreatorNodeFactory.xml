@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="Creator.png" type="Source" deprecated="false"
+           xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+    <name>FSK Creator</name>
+
+    <shortDescription>Creates an FSK object</shortDescription>
+
+    <fullDescription>
+        <intro>
+            Creates an FSK object with the script and metadata provided by the user.
+        </intro>
+        <option name="R model script">
+            File path of the model script (mandatory)
+        </option>
+        <option name="Selected R parameters script">
+            File path of the parameters script (optional)
+        </option>
+        <option name="Selected R visualization script">
+            File path of the visualization script (optional)
+        </option>
+        <option name="Selected XLSX spreadsheet">
+            File path of the XLSX spreadsheet with meta data (optional).
+            If unspecified or error occurs the table will be empty.
+        </option>
+    </fullDescription>
+    <ports>
+        <outPort name="FSK object" index="0">FSK object</outPort>
+    </ports>
+</knimeNode>

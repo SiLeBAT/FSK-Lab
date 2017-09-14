@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+    <!-- Category for FSK nodes -->
+    <extension point="org.knime.workbench.repository.categories">
+        <category icon="icons/fsk48.png" level-id="fsklab" name="FSK-Lab" path="/"/>
+    </extension>
+
+    <extension point="org.knime.core.PortType">
+        <portType
+                color="000000"
+                hidden="false"
+                name="FSK object"
+                objectClass="de.bund.bfr.knime.fsklab.FskPortObject"
+                objectSerializer="de.bund.bfr.knime.fsklab.FskPortObjectSerializer"
+                specClass="de.bund.bfr.knime.fsklab.FskPortObjectSpec"
+                specSerializer="de.bund.bfr.knime.fsklab.FskPortObjectSpec$Serializer">
+        </portType>
+    </extension>
+
+    <!-- Splash extension to be shown when launching KNIME -->
+    <extension point="org.knime.product.splashExtension">
+        <splashExtension icon="icons/fsk48.png" icon24="icons/fsk24.png"
+                         icon32="icons/fsk32.png" id="de.bund.bfr.knime.fsklab.splashExtension"
+                         tooltip="BfR.bund.de FSK Lab">
+        </splashExtension>
+    </extension>
+
+    <!-- Preference initializer for custom R -->
+    <extension id="de.bund.bfr.knime.pmm.fskx.bin.preferences.RPreferenceInitializer"
+               point="org.eclipse.core.runtime.preferences">
+        <initializer class="de.bund.bfr.knime.fsklab.nodes.rbin.preferences.RPreferenceInitializer"/>
+    </extension>
+
+    <!-- Preference page for custom R -->
+    <extension point="org.eclipse.ui.preferencePages">
+        <page category="org.knime.workbench.ui.preferences"
+              class="de.bund.bfr.knime.fsklab.nodes.rbin.preferences.RPreferencePage"
+              id="de.bund.bfr.knime.fsklab.nodes.bin.rbin.preferences.RPreferencePage"
+              name="BfR R settings"/>
+    </extension>
+
+    <!-- nodes -->
+    <extension point="org.knime.workbench.repository.nodes">
+        <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory"/>
+        <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory"/>
+        <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FskToRNodeFactory"/>
+        <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory"/>
+        <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory"/>
+        <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.EditorNodeFactory"/>
+        <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FSK2MetadataNodeFactory"/>
+    </extension>
+
+</plugin>
