@@ -66,25 +66,19 @@ class RPreferenceProvider(val rHome: String) {
 
     fun getRBinPath(command: String): String {
         val binPath = Paths.get(rHome, "bin")
-        if (Platform.isWindows()) {
-            if (Platform.is64Bit()) {
-                return "${binPath.resolve("x64")}${File.separator}$command.exe"
-            }
-            return "${binPath.resolve("i386")}${File.separator}$command.exe"
-        }
-        return "$binPath${File.separator}$command"
+        return if (Platform.isWindows()) {
+            val arch = if (Platform.is64Bit()) "x64" else "i386"
+            "${binPath.resolve(arch)}${File.separator}$command.exe"
+        } else "$binPath${File.separator}$command"
     }
 
     fun getRServeBinPath(): String {
         val rservePath = Paths.get(properties.getProperty("Rserve.path"))
         val rserveLibs = rservePath.resolve("libs")
 
-        if (Platform.isWindows()) {
-            if (Platform.is64Bit()) {
-                return rserveLibs.resolve("x64/Rserve.exe").toString()
-            }
-            return rserveLibs.resolve("i386/Rserve.exe").toString()
-        }
-        return rserveLibs.resolve("Rserve.dbg").toString()
+        return if (Platform.isWindows()) {
+            if (Platform.is64Bit()) rserveLibs.resolve("x64/Rserve.exe").toString()
+            else rserveLibs.resolve("i386/Rserve.exe").toString()
+        } else rserveLibs.resolve("Rserve.dbg").toString()
     }
 }
