@@ -140,8 +140,8 @@ public class RController implements IRController {
 	}
 
 	/**
-	 * Terminate and relaunch the R process this controller is connected to.
-	 * This is currently the only way to interrupt command execution.
+	 * Terminate and relaunch the R process this controller is connected to. This is
+	 * currently the only way to interrupt command execution.
 	 */
 	private void terminateAndRelaunch() throws Exception {
 		LOGGER.debug("Terminate R process");
@@ -276,18 +276,38 @@ public class RController implements IRController {
 	}
 
 	/**
-	 * Install Rserve just in case the R environment provided by the user does
-	 * not have it installed.
+	 * Install Rserve just in case the R environment provided by the user does not
+	 * have it installed.
 	 * 
 	 * @throws IOException
 	 */
 	private void installRserve() throws IOException {
 		if (Platform.isWindows()) {
-			installLib("/de/bund/bfr/knime/pmm/fskx/res/Rserve_1.8-0.zip", "Rserve_1.8-0", ".zip");
+			installLib("/Rserve_1.7-3.zip", "Rserve_1.7-3", ".zip");
 		} else if (Platform.isMac()) {
-			installLib("/de/bund/bfr/knime/pmm/fskx/res/Rserve_1.7-3", "Rserve_1.7-3", ".tgz");
+			installLib("/Rserve_1.7-3.tgz", "Rserve_1.7-3", ".tgz");
 		} else if (Platform.isLinux()) {
-			installLib("/de/bund/bfr/knime/pmm/fskx/res/Rserve_1.8-5.tar.gz", "Rserve_1.8-5", ".tar.gz");
+			installLib("/Rserve_1.7-3.tar.gz", "Rserve_1.7-3", ".tar.gz");
+		} else {
+			throw new RuntimeException("Non suppported platform, sorry." + System.getProperty("os.name"));
+		}
+	}
+
+	/**
+	 * Install miniCRAN just in case the R environment provided by the user does not
+	 * have it installed.
+	 * 
+	 * @throws IOException
+	 * @throws RException
+	 */
+	private void installMiniCran() throws IOException, RException {
+
+		if (Platform.isWindows()) {
+			installLib("/miniCRAN_0.2.9.zip", "miniCRAN_0.2.9", ".zip");
+		} else if (Platform.isMac()) {
+			installLib("/miniCRAN_0.2.9.tgz", "miniCRAN_0.2.9", ".tgz");
+		} else if (Platform.isLinux()) {
+			eval("install.packages('miniCRAN', repos = 'http://cran.us.r-project.org')");
 		} else {
 			throw new RuntimeException("Non suppported platform, sorry." + System.getProperty("os.name"));
 		}
@@ -299,11 +319,10 @@ public class RController implements IRController {
 	 * @param path
 	 *            Path to resource
 	 * @param name
-	 *            Library name, such as "triangle", "maps", etc. May include
-	 *            version numbers.
+	 *            Library name, such as "triangle", "maps", etc. May include version
+	 *            numbers.
 	 * @param ext
-	 *            Library extension. Includes dot. E.g. ".zip", ".tgz" or
-	 *            ".tar.gz".
+	 *            Library extension. Includes dot. E.g. ".zip", ".tgz" or ".tar.gz".
 	 */
 	private void installLib(String path, String name, String ext) throws IOException {
 		try (InputStream is = getClass().getResourceAsStream(path)) {
@@ -317,26 +336,6 @@ public class RController implements IRController {
 			String cmd = rBinPath + " CMD INSTALL " + tempPath;
 
 			Runtime.getRuntime().exec(cmd);
-		}
-	}
-
-	/**
-	 * Install Rserve just in case the R environment provided by the user does
-	 * not have it installed.
-	 * 
-	 * @throws IOException
-	 * @throws RException
-	 */
-	private void installMiniCran() throws IOException, RException {
-
-		if (Platform.isWindows()) {
-			installLib("/de/bund/bfr/knime/pmm/fskx/res/miniCRAN_0.2.5", "miniCRAN_0.2.5", ".zip");
-		} else if (Platform.isMac()) {
-			installLib("/de/bund/bfr/knime/pmm/fskx/res/miniCRAN_0.2.6", "miniCRAN_0.2.6", ".tgz");
-		} else if (Platform.isLinux()) {
-			eval("install.packages('miniCRAN', repos = 'http://cran.us.r-project.org')");
-		} else {
-			throw new RuntimeException("Non suppported platform, sorry." + System.getProperty("os.name"));
 		}
 	}
 
@@ -378,8 +377,8 @@ public class RController implements IRController {
 	// --- Monitored Evaluation helpers ---
 
 	/**
-	 * Evaluation of R code with a monitor in a separate thread to cancel the
-	 * code execution in case the execution of the node is cancelled.
+	 * Evaluation of R code with a monitor in a separate thread to cancel the code
+	 * execution in case the execution of the node is cancelled.
 	 */
 	private final class MonitoredEval {
 
@@ -397,8 +396,8 @@ public class RController implements IRController {
 		}
 
 		/*
-		 * Run the Callable in a thread and make sure to cancel it, in case
-		 * execution is cancelled.
+		 * Run the Callable in a thread and make sure to cancel it, in case execution is
+		 * cancelled.
 		 */
 		private REXP monitor(final Callable<REXP> task) {
 			final FutureTask<REXP> runningTask = new FutureTask<>(task);
@@ -442,8 +441,8 @@ public class RController implements IRController {
 		 * @throws CanceledExecutionException
 		 *             when execution was cancelled
 		 * @throws IOException
-		 *             when initialization of R or Rserve failed when attempting
-		 *             to recover
+		 *             when initialization of R or Rserve failed when attempting to
+		 *             recover
 		 */
 		REXP run(final String cmd)
 				throws REngineException, REXPMismatchException, CanceledExecutionException, Exception {
