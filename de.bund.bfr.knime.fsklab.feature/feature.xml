@@ -32,16 +32,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.knime.base" version="3.2.0" match="greaterOrEqual"/>
       <import plugin="com.google.guava" version="19.0.0" match="greaterOrEqual"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-core" version="2.7.1" match="greaterOrEqual"/>
-      <import plugin="com.fasterxml.jackson.core.jackson-databind" version="2.7.1" match="greaterOrEqual"/>
-      <import plugin="com.fifesoft.rsyntaxtextarea"/>
-      <import plugin="com.sun.jna"/>
-      <import plugin="org.apache.servicemix.bundles.poi" version="3.14.0" match="greaterOrEqual"/>
-      <import plugin="org.knime.core"/>
-      <import plugin="org.knime.ext.r.type" version="3.1.0" match="greaterOrEqual"/>
-      <import plugin="org.knime.json" version="3.3.3" match="greaterOrEqual"/>
-      <import plugin="org.knime.workbench.repository"/>
    </requires>
 
    <plugin
@@ -52,13 +42,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
 
    <plugin
          id="de.bund.bfr.knime"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.bund.bfr.knime.fsklab.nodes"
          download-size="0"
          install-size="0"
          version="0.0.0"
