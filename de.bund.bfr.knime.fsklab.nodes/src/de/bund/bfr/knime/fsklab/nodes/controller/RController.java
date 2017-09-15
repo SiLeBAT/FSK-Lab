@@ -57,6 +57,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
@@ -212,7 +213,8 @@ public class RController implements IRController {
 			}
 
 			final String rserveProp = m_rProps.getProperty("Rserve.path");
-			if (rserveProp == null || rserveProp.isEmpty()) {
+			// Check rserveProp is not null or empty
+			if (StringUtils.isEmpty(rserveProp)) {
 				try {
 					installRserve();
 					m_rProps = RBinUtil.retrieveRProperties();
@@ -233,7 +235,8 @@ public class RController implements IRController {
 		m_initialized = (m_connection != null && m_connection.get().isConnected());
 
 		final String miniCranProp = m_rProps.getProperty("miniCRAN.path");
-		if (miniCranProp == null || miniCranProp.isEmpty()) {
+		// Check miniCranProp is not null or empty
+		if (StringUtils.isEmpty(miniCranProp)) {
 			try {
 				installMiniCran();
 				m_rProps = RBinUtil.retrieveRProperties();
@@ -259,9 +262,9 @@ public class RController implements IRController {
 				final REXP ret = eval("find.package('Cairo')");
 				final String cairoPath = ret.asString();
 
-				if (cairoPath == null || cairoPath.isEmpty()) {
-					// under Mac we need Cairo package to use png()/bmp() etc
-					// devices.
+				// Check cairoPath is not null or empty
+				if (StringUtils.isEmpty(cairoPath)) {
+					// under Mac we need Cairo package to use png()/bmp() devices.
 					throw new RException("");
 				}
 
