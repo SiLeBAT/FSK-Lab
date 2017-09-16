@@ -325,16 +325,28 @@ public class RController implements IRController {
 	 *            Library extension. Includes dot. E.g. ".zip", ".tgz" or ".tar.gz".
 	 */
 	private void installLib(String path, String name, String ext) throws IOException {
+
+		// Get input stream into the embedded library in the FSK-Lab binary and copy
+		// it to the temporary file. The input stream is closed in the try-with.
 		try (InputStream is = getClass().getResourceAsStream(path)) {
+			
+			// temporary file that holds a copy of the library
 			File tempFile = FileUtil.createTempFile(name, ext);
 			try (FileOutputStream os = new FileOutputStream(tempFile)) {
 				FileUtil.copy(is, os);
 			}
 
+			// String path to library file
 			String tempPath = tempFile.getAbsolutePath();
+			
+			// Full path to R binary
 			String rBinPath = RPreferenceInitializer.getR3Provider().getRBinPath("R");
+			
+			// R command to install R library (using full path).
+			// See https://stat.ethz.ch/R-manual/R-devel/library/utils/html/INSTALL.html
 			String cmd = rBinPath + " CMD INSTALL " + tempPath;
 
+			// Execute command
 			Runtime.getRuntime().exec(cmd);
 		}
 	}
