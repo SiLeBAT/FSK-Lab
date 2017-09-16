@@ -33,13 +33,13 @@ import org.apache.http.protocol.HttpContext
 
 class DeployFSKToBintray {
 
-	static boolean USE_PROXY = false
+	static boolean USE_PROXY = true
 	static String PROXY = "webproxy"
 	static int PORT = 8080
 
 	static String SUBJECT = "silebat"
-	static String REPO = "fsklab_test"
-	static String PACKAGE = "test"
+	static String REPO = "fsklab"
+	static String PACKAGE = "stable"
 
 	static String ARTIFACTS_JAR = "artifacts.jar"
 	static String CONTENT_JAR = "content.jar"
