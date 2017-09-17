@@ -18,30 +18,35 @@
  */
 package de.bund.bfr.knime.fsklab;
 
+import java.util.ResourceBundle;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 public class FskPlugin extends AbstractUIPlugin {
 
-  private static FskPlugin plugin;
+	private static FskPlugin plugin;
+	public ResourceBundle MESSAGES_BUNDLE;
 
-  public FskPlugin() {
-    plugin = this;
-  }
+	public FskPlugin() {
+		plugin = this;
+	}
 
-  @Override
-  public void start(BundleContext context) throws Exception {
-    super.start(context);
-  }
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		MESSAGES_BUNDLE = ResourceBundle.getBundle("MessagesBundle");
+	}
 
-  @Override
-  public void stop(BundleContext context) throws Exception {
-    super.stop(context);
-    plugin = null;
-  }
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+		ResourceBundle.clearCache();
+		plugin = null;
+	}
 
-  /** @return Singleton instance of the plugin. */
-  public static FskPlugin getDefault() {
-    return plugin;
-  }
+	/** @return Singleton instance of the plugin. */
+	public static FskPlugin getDefault() {
+		return plugin;
+	}
 }

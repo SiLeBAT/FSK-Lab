@@ -95,8 +95,6 @@ public class FskPortObject implements PortObject {
 	public static final PortType TYPE = PortTypeRegistry.getInstance().getPortType(FskPortObject.class);
 	public static final PortType TYPE_OPTIONAL = PortTypeRegistry.getInstance().getPortType(FskPortObject.class, true);
 
-	private static final ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle");
-
 	/** Model script. */
 	public String model;
 
@@ -301,7 +299,7 @@ public class FskPortObject implements PortObject {
 	 */
 	private static void add(@NonNull final DefaultMutableTreeNode node, @NonNull final String key, final String value) {
 		if (StringUtils.isNotBlank(value)) {
-			final String label = bundle.getString(key);
+			final String label = FskPlugin.getDefault().MESSAGES_BUNDLE.getString(key);
 			node.add(new DefaultMutableTreeNode(label + ": " + value));
 		}
 	}
@@ -321,7 +319,7 @@ public class FskPortObject implements PortObject {
 	 */
 	@NonNullByDefault
 	private static void add(final DefaultMutableTreeNode node, final String key, final Date date) {
-		final String label = bundle.getString(key);
+		final String label = FskPlugin.getDefault().MESSAGES_BUNDLE.getString(key);
 		final String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
 		node.add(new DefaultMutableTreeNode(label + ": " + dateStr));
 	}
@@ -340,7 +338,7 @@ public class FskPortObject implements PortObject {
 	 */
 	@NonNullByDefault
 	private static void add(final DefaultMutableTreeNode node, final String key, final double value) {
-		final String label = bundle.getString(key);
+		final String label = FskPlugin.getDefault().MESSAGES_BUNDLE.getString(key);
 		node.add(new DefaultMutableTreeNode(label + ": " + value));
 	}
 
@@ -360,7 +358,7 @@ public class FskPortObject implements PortObject {
 			@Nullable final List<String> value) {
 
 		if (value != null && !value.isEmpty()) {
-			final String label = bundle.getString(key);
+			final String label = FskPlugin.getDefault().MESSAGES_BUNDLE.getString(key);
 			final DefaultMutableTreeNode listNode = new DefaultMutableTreeNode(label);
 			value.stream().map(DefaultMutableTreeNode::new).forEach(listNode::add);
 			node.add(listNode);
@@ -656,6 +654,7 @@ public class FskPortObject implements PortObject {
 	@NonNullByDefault
 	private static void add(final DefaultMutableTreeNode node, final Scope scope) {
 
+		final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 		final String prefix = "GM.ScopePanel.";
 
 		{
@@ -715,6 +714,7 @@ public class FskPortObject implements PortObject {
 	@NonNullByDefault
 	private static void add(final DefaultMutableTreeNode node, final DataBackground dataBackground) {
 
+		final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 		final String prefix = "GM.DataBackgroundPanel.";
 
 		final Study study = dataBackground.study;
