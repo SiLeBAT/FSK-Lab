@@ -30,8 +30,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 
 public class EditorNodeSettings {
 
@@ -65,7 +65,7 @@ public class EditorNodeSettings {
 
     // save meta data
     if (genericModel != null) {
-      final ObjectMapper objectMapper = new ObjectMapper().registerModule(new RakipModule());
+      final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
       try {
         String stringVal = objectMapper.writeValueAsString(genericModel);
         settings.addString("metaData", stringVal);
@@ -97,7 +97,7 @@ public class EditorNodeSettings {
     // load meta data
     if (settings.containsKey("metaData")) {
       final String stringVal = settings.getString("metaData");
-      final ObjectMapper objectMapper = new ObjectMapper().registerModule(new RakipModule());
+      final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
       try {
         genericModel = objectMapper.readValue(stringVal, GenericModel.class);
       } catch (IOException e) {

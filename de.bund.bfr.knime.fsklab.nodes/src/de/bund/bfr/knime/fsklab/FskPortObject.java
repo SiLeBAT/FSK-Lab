@@ -76,7 +76,6 @@ import de.bund.bfr.knime.fsklab.rakip.ModelMath;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
 import de.bund.bfr.knime.fsklab.rakip.Product;
-import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
@@ -156,7 +155,7 @@ public class FskPortObject implements PortObject {
 		private static final String META_DATA = "metaData";
 		private static final String WORKSPACE = "workspace";
 
-		private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new RakipModule());
+		private static final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
 		/** {@inheritDoc} */
 		@Override

@@ -48,12 +48,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.URIS;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 
@@ -216,7 +216,7 @@ public class ReaderNodeModel extends NoInternalsModel {
   }
 
   private static GenericModel loadMetaData(final File file) throws IOException {
-    final ObjectMapper objectMapper = new ObjectMapper().registerModule(new RakipModule());
+    final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
     return objectMapper.readValue(file, GenericModel.class);
   }

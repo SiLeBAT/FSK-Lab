@@ -42,9 +42,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.URIS;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 
@@ -165,7 +165,7 @@ public class WriterNodeModel extends NoInternalsModel {
       throws IOException, URISyntaxException {
 
     final File file = File.createTempFile("temp", ".json");
-    final ObjectMapper objectMapper = new ObjectMapper().registerModule(new RakipModule());
+    final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
     objectMapper.writeValue(file, genericModel);
 
     // TODO: JSON uri should be moved to fskml

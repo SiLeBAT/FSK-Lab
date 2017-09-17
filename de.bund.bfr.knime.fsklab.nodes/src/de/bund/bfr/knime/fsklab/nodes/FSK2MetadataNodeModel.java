@@ -41,22 +41,14 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.json.util.JSONUtil;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 
 public class FSK2MetadataNodeModel extends StatelessModel {
 
   private static PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static PortType[] OUT_TYPES = {BufferedDataTable.TYPE};
-
-  private static final ObjectMapper objectMapper;
-  static {
-    objectMapper = new ObjectMapper();
-    objectMapper.registerModule(new RakipModule());
-  }
 
   /**
    * Constructor for the node model.
@@ -106,7 +98,7 @@ public class FSK2MetadataNodeModel extends StatelessModel {
 
     if (object != null) {
       try {
-        final String jsonStr = objectMapper.writeValueAsString(object);
+        final String jsonStr = FskPlugin.getDefault().OBJECT_MAPPER.writeValueAsString(object);
         jsonValue = JSONUtil.parseJSONValue(jsonStr);
       } catch (IOException e) {
       }
