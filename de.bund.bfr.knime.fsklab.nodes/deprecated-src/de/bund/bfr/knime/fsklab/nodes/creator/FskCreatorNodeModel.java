@@ -50,7 +50,6 @@ import de.bund.bfr.fskml.MissingValueError;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
-import de.bund.bfr.knime.fsklab.nodes.Util;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
@@ -145,7 +144,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
 
 				// Try to figure out the type of the dependent variables
 				for (int i = 0; i < portObj.template.dependentVariables.size(); i++) {
-					DataType dt = Util.getValueType(portObj.template.dependentVariables.get(i).value);
+					DataType dt = getValueType(portObj.template.dependentVariables.get(i).value);
 					portObj.template.dependentVariables.get(i).type = dt;
 				}
 				
@@ -155,7 +154,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
 					for (Variable v : portObj.template.independentVariables) {
 						if (vars.containsKey(v.name.trim())) {
 							v.value = vars.get(v.name.trim());
-							v.type = Util.getValueType(v.value);
+							v.type = getValueType(v.value);
 						}
 					}
 				}
@@ -404,5 +403,34 @@ class FskCreatorNodeModel extends NoInternalsModel {
 		}
 
 		return vars;
+	}
+	
+	/**
+	 * Returns the {@link FskMetaData.DataType} of a value.
+	 * 
+	 * <ul>
+	 * <li>{@code DataType#array} for Matlab like arrays, c(0, 1, 2, ...)
+	 * <li>{@code DataType#numeric} for real numbers.
+	 * <li>{@code DataType#integer} for integer numbers.
+	 * <li>{@code DataType#character} for any other variable. E.g. "zero",
+	 * "eins", "dos".
+	 * </ul>
+	 */
+	private static DataType getValueType(final String value) {
+		if (value.startsWith("c(") && value.endsWith(")")) {
+			return DataType.array;
+		} else {
+			try {
+				Integer.parseInt(value);
+				return DataType.integer;
+			} catch (NumberFormatException e1) {
+				try {
+					Double.parseDouble(value);
+					return DataType.numeric;
+				} catch (NumberFormatException e2) {
+					return DataType.character;
+				}
+			}
+		}
 	}
 }
