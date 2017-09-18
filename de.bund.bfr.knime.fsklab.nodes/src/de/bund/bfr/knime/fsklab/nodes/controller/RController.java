@@ -224,6 +224,20 @@ public class RController implements IRController {
 							+ "Please install it manually in your R installation by running \"install.packages('Rserve')\".");
 				}
 			}
+			
+			final String miniCranProp = m_rProps.getProperty("miniCRAN.path");
+			// Check miniCranProp is not null or empty
+			if (StringUtils.isEmpty(miniCranProp)) {
+				try {
+					installMiniCran();
+					m_rProps = RBinUtil.retrieveRProperties();
+				} catch (IOException e) {
+					RPreferenceInitializer.invalidateR3PreferenceProviderCache();
+					throw new RException("Could not find and install miniCRAN package. "
+							+ "Please install it manually in your R installation by running \"install.packages('miniCRAN')\".");
+				}
+			}
+			
 			m_connection = initRConnection();
 
 		} catch (final InvalidRHomeException ex) {
@@ -233,19 +247,6 @@ public class RController implements IRController {
 		}
 
 		m_initialized = (m_connection != null && m_connection.get().isConnected());
-
-		final String miniCranProp = m_rProps.getProperty("miniCRAN.path");
-		// Check miniCranProp is not null or empty
-		if (StringUtils.isEmpty(miniCranProp)) {
-			try {
-				installMiniCran();
-				m_rProps = RBinUtil.retrieveRProperties();
-			} catch (IOException e) {
-				RPreferenceInitializer.invalidateR3PreferenceProviderCache();
-				throw new RException("Could not find and install miniCRAN package. "
-						+ "Please install it manually in your R installation by running \"install.packages('miniCRAN')\".");
-			}
-		}
 
 		if (Platform.isWindows()) {
 			try {
