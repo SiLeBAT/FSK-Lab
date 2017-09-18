@@ -119,17 +119,6 @@ public class FskMetaData implements Serializable {
 		R, Matlab
 	}
 
-	public enum DataType {
-		/** String values. */
-		character,
-		/** Integers. */
-		integer,
-		/** Real numbers. */
-		numeric,
-		/** Arrays. */
-		array
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(modelName, modelId, modelLink, organism, organismDetails, matrix, matrixDetails, creator,

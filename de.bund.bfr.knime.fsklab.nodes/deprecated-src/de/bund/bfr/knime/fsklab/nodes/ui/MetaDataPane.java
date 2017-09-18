@@ -37,9 +37,9 @@ import javax.swing.table.TableCellEditor;
 import org.knime.core.node.NodeLogger;
 
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
-import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
-import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.Software;
+import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
+import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 

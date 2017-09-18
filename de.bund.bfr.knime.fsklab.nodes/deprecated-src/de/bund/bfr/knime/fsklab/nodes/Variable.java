@@ -23,8 +23,6 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
-import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
-
 /**
  * Holds variable-related data.
  * 
@@ -81,5 +79,16 @@ public class Variable implements Serializable {
 		return Objects.equals(name, other.name) && Objects.equals(unit, other.unit)
 				&& Objects.equals(value, other.value) && Objects.equals(min, other.min)
 				&& Objects.equals(max, other.max) && Objects.equals(type, other.type);
+	}
+	
+	public enum DataType {
+		/** String values. */
+		character,
+		/** Integers. */
+		integer,
+		/** Real numbers. */
+		numeric,
+		/** Arrays. */
+		array
 	}
 }

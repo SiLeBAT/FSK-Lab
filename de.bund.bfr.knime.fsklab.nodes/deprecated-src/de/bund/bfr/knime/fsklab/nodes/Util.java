@@ -18,7 +18,7 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
+import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 
 public class Util {
 
