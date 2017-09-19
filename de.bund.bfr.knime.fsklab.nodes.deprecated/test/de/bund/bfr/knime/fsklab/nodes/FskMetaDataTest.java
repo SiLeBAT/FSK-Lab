@@ -1,15 +1,35 @@
-package de.bund.bfr.knime.nodes;
+/*
+ ***************************************************************************************************
+ * Copyright (c) 2017 Federal Institute for Risk Assessment (BfR), Germany
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ *
+ * Contributors: Department Biological Safety - BfR
+ *************************************************************************************************
+ */
+package de.bund.bfr.knime.fsklab.nodes;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
 import org.junit.Test;
 
-import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
-import de.bund.bfr.knime.fsklab.nodes.FskMetaData.DataType;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.Software;
-import de.bund.bfr.knime.fsklab.nodes.Variable;
+import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 
@@ -60,12 +80,17 @@ public class FskMetaDataTest {
 		fmd.familyName = "";
 		fmd.contact = "";
 		fmd.software = Software.R;
-		fmd.referenceDescription = "C. Plaza-Rodríguez, H. Sharp, U. Roesler, A. Friese, A. Kaesbohrer (2015), Development of a model for the spread of ESBL/AmpC E.coli in broiler production. Poster presented at the National Symposium on zoonosis Research, Berlin, Germany";
+		fmd.referenceDescription = "C. Plaza-Rodríguez, H. Sharp, U. Roesler, A. Friese, A. Kaesbohrer (2015), "
+				+ "Development of a model for the spread of ESBL/AmpC E.coli in broiler production. Poster "
+				+ "presented at the National Symposium on zoonosis Research, Berlin, Germany";
 		fmd.referenceDescriptionLink = "";
 		fmd.createdDate = new Date(2018, 11, 18);
 		fmd.modifiedDate = new Date(2016, 6, 9);
 		fmd.rights = "Public";
-		fmd.notes = "This module initializes the prevalence of ESBL E.Coli among animals in a parent flock. Initialization is beeing done by drawing a random sample (with a sample size of n.iter) with values between 0 and 100 from a Beta distribution whose parameters are given by the values Npos and Ntotal (see below).";
+		fmd.notes = "This module initializes the prevalence of ESBL E.Coli among animals in a parent flock. "
+				+ "Initialization is beeing done by drawing a random sample (with a sample size of n.iter) "
+				+ "with values between 0 and 100 from a Beta distribution whose parameters are given by the "
+				+ "values Npos and Ntotal (see below).";
 		fmd.type = ModelType.PRIMARY_MODEL_WODATA;
 		fmd.subject = ModelClass.UNKNOWN;
 		fmd.foodProcess = "cooking";
@@ -263,12 +288,17 @@ public class FskMetaDataTest {
 		fmd.familyName = "";
 		fmd.contact = "";
 		fmd.software = Software.R;
-		fmd.referenceDescription = "C. Plaza-Rodríguez, H. Sharp, U. Roesler, A. Friese, A. Kaesbohrer (2015), Development of a model for the spread of ESBL/AmpC E.coli in broiler production. Poster presented at the National Symposium on zoonosis Research, Berlin, Germany";
+		fmd.referenceDescription = "C. Plaza-Rodríguez, H. Sharp, U. Roesler, A. Friese, A. Kaesbohrer (2015), "
+				+ "Development of a model for the spread of ESBL/AmpC E.coli in broiler production. Poster "
+				+ "presented at the National Symposium on zoonosis Research, Berlin, Germany";
 		fmd.referenceDescriptionLink = "";
 		fmd.createdDate = new Date(2018, 11, 18);
 		fmd.modifiedDate = new Date(2016, 6, 9);
 		fmd.rights = "Public";
-		fmd.notes = "This module initializes the prevalence of ESBL E.Coli among animals in a parent flock. Initialization is beeing done by drawing a random sample (with a sample size of n.iter) with values between 0 and 100 from a Beta distribution whose parameters are given by the values Npos and Ntotal (see below).";
+		fmd.notes = "This module initializes the prevalence of ESBL E.Coli among animals in a parent flock. "
+				+ "Initialization is beeing done by drawing a random sample (with a sample size of n.iter) with "
+				+ "values between 0 and 100 from a Beta distribution whose parameters are given by the values "
+				+ "Npos and Ntotal (see below).";
 		fmd.type = ModelType.PRIMARY_MODEL_WODATA;
 		fmd.subject = ModelClass.UNKNOWN;
 		fmd.foodProcess = "cooking";
