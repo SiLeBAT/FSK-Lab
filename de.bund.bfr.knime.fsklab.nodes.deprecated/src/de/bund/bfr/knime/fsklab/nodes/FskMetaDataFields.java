@@ -31,7 +31,7 @@ public enum FskMetaDataFields {
 	matrix_details("Environment details", (byte)6),
 	
 	creator("Creator", (byte)7),
-	family_name("Family name", (byte)8),
+	family_name("Family name", (byte)0),
 	contact("Contact", (byte)0),
 	
 	software("Software", (byte)0),

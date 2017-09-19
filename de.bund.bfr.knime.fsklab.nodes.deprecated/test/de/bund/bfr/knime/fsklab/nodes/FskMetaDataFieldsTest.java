@@ -86,7 +86,7 @@ public class FskMetaDataFieldsTest {
 		assertEquals(6, FskMetaDataFields.matrix_details.row);
 		
 		assertEquals(7, FskMetaDataFields.creator.row);
-		assertEquals(8, FskMetaDataFields.family_name.row);
+		assertEquals(0, FskMetaDataFields.family_name.row);
 		assertEquals(0, FskMetaDataFields.contact.row);
 		
 		assertEquals(0, FskMetaDataFields.software.row);
