@@ -40,7 +40,7 @@ public class ExtractFskMetadataNodeFactory extends NodeFactory<NodeModel> {
 
 	// Input and output port types
 	private static final PortType[] IN_TYPES = { FskPortObject.TYPE };
-	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE };
+	private static final PortType[] OUT_TYPES = { BufferedDataTable.TYPE };
 	
 	@Override
 	public NodeModel createNodeModel() {		
@@ -54,11 +54,13 @@ public class ExtractFskMetadataNodeFactory extends NodeFactory<NodeModel> {
 			protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) {
 				FskPortObject inObj = (FskPortObject) inObjects[0];
 				
-				BufferedDataContainer container = exec.createDataContainer(FskMetaDataTuple.createSpec());
-				container.addRowToTable(new FskMetaDataTuple(inObj.template));
+				final BufferedDataContainer container = exec.createDataContainer(FskMetaDataTuple.createSpec());
+				
+				final FskMetaDataTuple tuple = new FskMetaDataTuple(inObj.template);
+				container.addRowToTable(tuple);
 				container.close();
 				
-				return new BufferedDataTable[] { container.getTable() };
+				return new PortObject[] { container.getTable() };
 			}
 		};
 	}

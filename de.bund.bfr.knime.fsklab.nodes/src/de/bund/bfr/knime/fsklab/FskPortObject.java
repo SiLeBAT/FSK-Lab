@@ -43,9 +43,6 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.NonNullByDefault;
-import org.eclipse.jdt.annotation.Nullable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.port.PortObject;
@@ -296,7 +293,7 @@ public class FskPortObject implements PortObject {
 	 * @param value
 	 *            Can be {@code null} or blank.
 	 */
-	private static void add(@NonNull final DefaultMutableTreeNode node, @NonNull final String key, final String value) {
+	private static void add(final DefaultMutableTreeNode node, final String key, final String value) {
 		if (StringUtils.isNotBlank(value)) {
 			final String label = FskPlugin.getDefault().MESSAGES_BUNDLE.getString(key);
 			node.add(new DefaultMutableTreeNode(label + ": " + value));
@@ -316,7 +313,7 @@ public class FskPortObject implements PortObject {
 	 * @param date
 	 *            Cannnot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final String key, final Date date) {
 		final String label = FskPlugin.getDefault().MESSAGES_BUNDLE.getString(key);
 		final String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
@@ -335,7 +332,7 @@ public class FskPortObject implements PortObject {
 	 * @param value
 	 *            double
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final String key, final double value) {
 		final String label = FskPlugin.getDefault().MESSAGES_BUNDLE.getString(key);
 		node.add(new DefaultMutableTreeNode(label + ": " + value));
@@ -353,8 +350,7 @@ public class FskPortObject implements PortObject {
 	 * @param value
 	 *            Can be null or empty.
 	 */
-	private static void add(@NonNull final DefaultMutableTreeNode node, @NonNull final String key,
-			@Nullable final List<String> value) {
+	private static void add(final DefaultMutableTreeNode node, final String key, final List<String> value) {
 
 		if (value != null && !value.isEmpty()) {
 			final String label = FskPlugin.getDefault().MESSAGES_BUNDLE.getString(key);
@@ -377,7 +373,7 @@ public class FskPortObject implements PortObject {
 	 * @param record
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final Record record) {
 
 		final String prefix = "GM.EditReferencePanel";
@@ -443,7 +439,7 @@ public class FskPortObject implements PortObject {
 	 * @param vcard
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final VCard vcard) {
 		final String prefix = "GM.EditCreatorPanel.";
 
@@ -474,7 +470,7 @@ public class FskPortObject implements PortObject {
 	 * @param product
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final Product product) {
 
 		final String prefix = "GM.EditProductPanel.";
@@ -506,7 +502,7 @@ public class FskPortObject implements PortObject {
 	 * @param hazard
 	 *            Can be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final Hazard hazard) {
 
 		final String prefix = "GM.EditHazardPanel.";
@@ -544,7 +540,7 @@ public class FskPortObject implements PortObject {
 	 * @param populationGroup
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final PopulationGroup populationGroup) {
 
 		final String prefix = "GM.EditPopulationGroupPanel.";
@@ -574,7 +570,7 @@ public class FskPortObject implements PortObject {
 	 * @param generalInformation
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final GeneralInformation generalInformation) {
 
 		final String prefix = "GM.GeneralInformationPanel.";
@@ -650,7 +646,7 @@ public class FskPortObject implements PortObject {
 	 * @param scope
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final Scope scope) {
 
 		final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
@@ -710,7 +706,7 @@ public class FskPortObject implements PortObject {
 	 * @param dataBackground
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final DataBackground dataBackground) {
 
 		final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
@@ -766,7 +762,7 @@ public class FskPortObject implements PortObject {
 	 * @param study
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final Study study) {
 
 		final String prefix = "GM.StudyPanel.";
@@ -804,7 +800,7 @@ public class FskPortObject implements PortObject {
 	 * @param studySample
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final StudySample studySample) {
 
 		final String prefix = "GM.EditStudySamplePanel.";
@@ -840,7 +836,7 @@ public class FskPortObject implements PortObject {
 	 * @param method
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final DietaryAssessmentMethod method) {
 
 		// Prefix in resource bundle
@@ -865,7 +861,7 @@ public class FskPortObject implements PortObject {
 	 * @param assay
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final Assay assay) {
 		add(node, "GM.EditAssayPanel.nameLabel", assay.name);
 		add(node, "GM.EditAssayPanel.descriptionLabel", assay.description);
@@ -882,7 +878,7 @@ public class FskPortObject implements PortObject {
 	 * @param parameter
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final Parameter parameter) {
 
 		final String prefix = "GM.EditParameterPanel.";
@@ -917,7 +913,7 @@ public class FskPortObject implements PortObject {
 	 * @param modelEquation
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final ModelEquation modelEquation) {
 
 		final String prefix = "GM.EditModelEquationPanel.";
@@ -951,7 +947,7 @@ public class FskPortObject implements PortObject {
 	 * @param modelMath
 	 *            Cannot be {@code null}.
 	 */
-	@NonNullByDefault
+
 	private static void add(final DefaultMutableTreeNode node, final ModelMath modelMath) {
 
 		final List<Parameter> parameter = modelMath.parameter.stream().filter(Objects::nonNull)
@@ -1004,7 +1000,7 @@ public class FskPortObject implements PortObject {
 		}
 	}
 
-	private static JTree createTree(@NonNull GenericModel genericModel) {
+	private static JTree createTree(GenericModel genericModel) {
 
 		final DefaultMutableTreeNode generalInformationNode = new DefaultMutableTreeNode("General information");
 		if (genericModel.generalInformation != null) {

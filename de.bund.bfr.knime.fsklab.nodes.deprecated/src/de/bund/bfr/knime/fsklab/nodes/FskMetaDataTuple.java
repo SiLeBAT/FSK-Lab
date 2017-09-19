@@ -40,7 +40,8 @@ public class FskMetaDataTuple implements DataRow {
 	public FskMetaDataTuple(final FskMetaData template) {
 		cell = new DataCell[FskMetaDataFields.values().length];
 
-		cell[FskMetaDataFields.name.ordinal()] = new StringCell(StringUtils.defaultString(template.modelId));
+		cell[FskMetaDataFields.name.ordinal()] = new StringCell(StringUtils.defaultString(template.modelName));
+		cell[FskMetaDataFields.id.ordinal()] = new StringCell(StringUtils.defaultString(template.modelId));
 		cell[FskMetaDataFields.model_link.ordinal()] = new StringCell(
 				template.modelLink == null ? "" : template.modelLink.toString());
 
