@@ -29,7 +29,7 @@ FSK-Lab may be installed throught the update site <https://dl.bintray.com/sileba
 ## Eclipse plugin projects:
 - *de.bund.bfr.knime.fsklab.feature*: Eclipse Feature project
 - *de.bund.bfr.knime.fsklab.nodes*: Extension nodes
-- *de.bund.bfr.knime.fsklab.nodes.test*
+- *de.bund.bfr.knime.fsklab.nodes.deprecated*: Deprecated extension nodes
 - *de.bund.bfr.knime.fsklab.target*: KNIME .target file
 - *de.bund.bfr.knime.fsklab.testflows*: Test workflows
 - *de.bund.bfr.knime.fsklab.update.p2.deploy*: Deployment script
