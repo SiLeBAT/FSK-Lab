@@ -48,6 +48,7 @@ import org.rosuda.REngine.REXPMismatchException;
 
 import de.bund.bfr.fskml.MissingValueError;
 import de.bund.bfr.fskml.RScript;
+import de.bund.bfr.knime.fsklab.nodes.CreatorNodeSettings;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
@@ -64,7 +65,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskCreatorNodeModel.class);
 
-	private FskCreatorNodeSettings settings = new FskCreatorNodeSettings();
+	private CreatorNodeSettings settings = new CreatorNodeSettings();
 	
 	// Input and output port types
 	private static final PortType[] IN_TYPES = {};

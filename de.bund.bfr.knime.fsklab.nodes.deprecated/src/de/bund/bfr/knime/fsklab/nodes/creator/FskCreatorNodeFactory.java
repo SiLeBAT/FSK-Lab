@@ -26,6 +26,8 @@ import org.knime.core.node.NodeView;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 
+import de.bund.bfr.knime.fsklab.nodes.CreatorNodeSettings;
+
 @Deprecated
 public class FskCreatorNodeFactory extends NodeFactory<FskCreatorNodeModel> {
 
@@ -57,7 +59,7 @@ public class FskCreatorNodeFactory extends NodeFactory<FskCreatorNodeModel> {
 	@Override
 	public NodeDialogPane createNodeDialogPane() {
 
-		FskCreatorNodeSettings settings = new FskCreatorNodeSettings();
+		CreatorNodeSettings settings = new CreatorNodeSettings();
 
 		// Create components
 		final int dlgType = JFileChooser.OPEN_DIALOG;

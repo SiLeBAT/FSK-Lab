@@ -23,13 +23,13 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
-class CreatorNodeSettings {
+public class CreatorNodeSettings {
 
 	// Setting models, with keys and default values
-	final SettingsModelString modelScript = new SettingsModelString("modelScript", "");
-	final SettingsModelString paramScript = new SettingsModelString("paramScript", "");
-	final SettingsModelString vizScript = new SettingsModelString("visualizationScript", "");
-	final SettingsModelString metaDataDoc = new SettingsModelString("spreadsheet", "");
+	public final SettingsModelString modelScript = new SettingsModelString("modelScript", "");
+	public final SettingsModelString paramScript = new SettingsModelString("paramScript", "");
+	public final SettingsModelString vizScript = new SettingsModelString("visualizationScript", "");
+	public final SettingsModelString metaDataDoc = new SettingsModelString("spreadsheet", "");
 
 	public void saveSettings(final NodeSettingsWO settings) {
 		modelScript.saveSettingsTo(settings);
