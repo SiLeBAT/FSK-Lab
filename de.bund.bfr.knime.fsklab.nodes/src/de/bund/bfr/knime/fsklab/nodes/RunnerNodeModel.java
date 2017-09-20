@@ -18,7 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -200,8 +198,8 @@ public class RunnerNodeModel extends NodeModel {
 
 		// Creates chart into m_imageFile
 		try {
-			ChartCreator cc = new ChartCreator(controller);
-			cc.plot(internalSettings.imageFile.getAbsolutePath().replace("\\", "/"), fskObj.viz);
+			RunnerNodeChartCreator cc = new RunnerNodeChartCreator(controller);
+			cc.plot(internalSettings.imageFile, fskObj.viz, nodeSettings);
 		} catch (RException e) {
 			LOGGER.warn("Visualization script failed");
 		}
@@ -211,41 +209,6 @@ public class RunnerNodeModel extends NodeModel {
 		controller.eval(".libPaths()[" + newPaths.length + "]");
 
 		return fskObj;
-	}
-
-	private class ChartCreator {
-
-		final RController controller;
-
-		public ChartCreator(RController controller) throws RException {
-			this.controller = controller;
-
-			// initialize necessary R stuff to plot
-			if (SystemUtils.IS_OS_MAC) {
-				controller.eval("library('Cairo')");
-				controller.eval("options(device='png', bitmapType='cairo')");
-			} else {
-				controller.eval("options(device='png')");
-			}
-		}
-
-		public void plot(String path, String vizScript) throws RException {
-			// Gets values
-			int width = nodeSettings.widthModel.getIntValue();
-			int height = nodeSettings.heightModel.getIntValue();
-			String res = nodeSettings.resolutionModel.getStringValue();
-			int textPointSize = nodeSettings.textPointSizeModel.getIntValue();
-			Color colour = nodeSettings.colourModel.getColorValue();
-			String hexColour = String.format("#%02x%02x%02x", colour.getRed(), colour.getGreen(), colour.getBlue());
-
-			String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize="
-					+ textPointSize + ", bg='" + hexColour + "', res='" + res + "')";
-			controller.eval(pngCommand);
-
-			controller.eval(vizScript);
-			controller.eval("dev.off()");
-
-		}
 	}
 
 	Image getResultImage() {

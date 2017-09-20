@@ -18,7 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.runner;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,10 +45,10 @@ import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 
-import com.sun.jna.Platform;
-
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
+import de.bund.bfr.knime.fsklab.nodes.RunnerNodeChartCreator;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.nodes.RunnerNodeSettings;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
@@ -70,7 +69,7 @@ class FskRunnerNodeModel extends NodeModel {
 
 	private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
 
-	private FskRunnerNodeSettings settings = new FskRunnerNodeSettings();
+	private RunnerNodeSettings settings = new RunnerNodeSettings();
 
 	// Input and output port types
 	private static final PortType[] IN_TYPES = { FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL };
@@ -218,8 +217,8 @@ class FskRunnerNodeModel extends NodeModel {
 
 		// Creates chart into m_imageFile
 		try {
-			ChartCreator cc = new ChartCreator(controller);
-			cc.plot(internalSettings.imageFile.getAbsolutePath().replace("\\", "/"), fskObj.viz);
+			RunnerNodeChartCreator cc = new RunnerNodeChartCreator(controller);
+			cc.plot(internalSettings.imageFile, fskObj.viz, settings);
 		} catch (RException e) {
 			LOGGER.warn("Visualization script failed");
 		}
@@ -229,41 +228,6 @@ class FskRunnerNodeModel extends NodeModel {
 		controller.eval(".libPaths()[" + newPaths.length + "]");
 
 		return fskObj;
-	}
-
-	private class ChartCreator {
-
-		final RController controller;
-
-		public ChartCreator(RController controller) throws RException {
-			this.controller = controller;
-
-			// initialize necessary R stuff to plot
-			if (Platform.isMac()) {
-				controller.eval("library('Cairo')");
-				controller.eval("options(device='png', bitmapType='cairo')");
-			} else {
-				controller.eval("options(device='png')");
-			}
-		}
-
-		public void plot(String path, String vizScript) throws RException {
-			// Gets values
-			int width = settings.widthModel.getIntValue();
-			int height = settings.heightModel.getIntValue();
-			String res = settings.resolutionModel.getStringValue();
-			int textPointSize = settings.textPointSizeModel.getIntValue();
-			Color colour = settings.colourModel.getColorValue();
-			String hexColour = String.format("#%02x%02x%02x", colour.getRed(), colour.getGreen(), colour.getBlue());
-
-			String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize="
-					+ textPointSize + ", bg='" + hexColour + "', res='" + res + "')";
-			controller.eval(pngCommand);
-
-			controller.eval(vizScript);
-			controller.eval("dev.off()");
-
-		}
 	}
 
 	Image getResultImage() {

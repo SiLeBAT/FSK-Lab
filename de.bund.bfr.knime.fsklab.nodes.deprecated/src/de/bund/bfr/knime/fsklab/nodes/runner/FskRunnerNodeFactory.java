@@ -26,6 +26,8 @@ import org.knime.core.node.defaultnodesettings.DialogComponentColorChooser;
 import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
 
+import de.bund.bfr.knime.fsklab.nodes.RunnerNodeSettings;
+
 @Deprecated
 public class FskRunnerNodeFactory extends NodeFactory<FskRunnerNodeModel> {
 
@@ -55,7 +57,7 @@ public class FskRunnerNodeFactory extends NodeFactory<FskRunnerNodeModel> {
 		DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
 		pane.createNewGroup("Options");
 
-		FskRunnerNodeSettings settings = new FskRunnerNodeSettings();
+		RunnerNodeSettings settings = new RunnerNodeSettings();
 
 		// Width component
 		DialogComponentNumberEdit widthComp = new DialogComponentNumberEdit(settings.widthModel, "Width");

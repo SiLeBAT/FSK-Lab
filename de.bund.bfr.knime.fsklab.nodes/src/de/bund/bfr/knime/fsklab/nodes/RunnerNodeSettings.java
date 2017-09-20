@@ -33,26 +33,26 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 public class RunnerNodeSettings {
 
 	// Setting models
-	final SettingsModelInteger widthModel = new SettingsModelInteger("width", 640);
-	final SettingsModelInteger heightModel = new SettingsModelInteger("height", 640);
-	final SettingsModelString resolutionModel = new SettingsModelString("resolution", "NA");
-	final SettingsModelColor colourModel = new SettingsModelColor("colour", Color.white);
-	final SettingsModelInteger textPointSizeModel = new SettingsModelInteger("textPointSize", 12);
+	public final SettingsModelInteger widthModel = new SettingsModelInteger("width", 640);
+	public final SettingsModelInteger heightModel = new SettingsModelInteger("height", 640);
+	public final SettingsModelString resolutionModel = new SettingsModelString("resolution", "NA");
+	public final SettingsModelColor colourModel = new SettingsModelColor("colour", Color.white);
+	public final SettingsModelInteger textPointSizeModel = new SettingsModelInteger("textPointSize", 12);
 
 	private final List<SettingsModel> settingsModels = Arrays.asList(widthModel, heightModel, resolutionModel,
 			colourModel, textPointSizeModel);
 
-	void saveSettingsTo(final NodeSettingsWO settings) {
+	public void saveSettingsTo(final NodeSettingsWO settings) {
 		settingsModels.forEach(it -> it.saveSettingsTo(settings));
 	}
 
-	void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
+	public void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 		for (SettingsModel settingsModel : settingsModels) {
 			settingsModel.validateSettings(settings);
 		}
 	}
 
-	void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
+	public void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
 		for (SettingsModel settingsModel : settingsModels) {
 			settingsModel.loadSettingsFrom(settings);
 		}
