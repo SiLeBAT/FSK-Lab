@@ -66,7 +66,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(FskCreatorNodeModel.class);
 
 	private CreatorNodeSettings settings = new CreatorNodeSettings();
-	
+
 	// Input and output port types
 	private static final PortType[] IN_TYPES = {};
 	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE };
@@ -113,29 +113,33 @@ class FskCreatorNodeModel extends NoInternalsModel {
 			FskPortObject portObj = new FskPortObject();
 
 			// Reads model script
-			if (StringUtils.isEmpty(settings.modelScript.getStringValue())) {
+			final String modelScriptPath = settings.modelScript.getStringValue();
+			if (StringUtils.isEmpty(modelScriptPath)) {
 				throw new InvalidSettingsException("Model script is not provided");
 			}
-			RScript modelScript = readScript(settings.modelScript.getStringValue());
+			RScript modelScript = readScript(modelScriptPath);
 			portObj.model = modelScript.getScript();
 
 			// Reads parameters script
-			if (StringUtils.isEmpty(settings.paramScript.getStringValue())) {
-				portObj.param = "";
+			final String paramScriptPath = settings.paramScript.getStringValue();
+			if (StringUtils.isNotEmpty(paramScriptPath)) {
+				portObj.param = readScript(paramScriptPath).getScript();
 			} else {
-				portObj.param = readScript(settings.paramScript.getStringValue()).getScript();
+				portObj.param = "";
 			}
 
 			// Reads visualization script
-			if (StringUtils.isEmpty(settings.vizScript.getStringValue())) {
-				portObj.viz = "";
+			final String vizScriptPath = settings.vizScript.getStringValue();
+			if (StringUtils.isNotEmpty(vizScriptPath)) {
+				portObj.viz = readScript(vizScriptPath).getScript();
 			} else {
-				portObj.viz = readScript(settings.vizScript.getStringValue()).getScript();
+				portObj.viz = "";
 			}
 
 			// Reads model meta data
-			if (StringUtils.isNotEmpty(settings.metaDataDoc.getStringValue())) {
-				File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(settings.metaDataDoc.getStringValue()));
+			final String metaDataDocPath = settings.metaDataDoc.getStringValue();
+			if (StringUtils.isNotEmpty(metaDataDocPath)) {
+				File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(metaDataDocPath));
 				try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
 					portObj.template = SpreadsheetHandler.processSpreadsheet(workbook.getSheetAt(0));
 				} catch (Exception e) {
@@ -148,7 +152,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
 					DataType dt = getValueType(portObj.template.dependentVariables.get(i).value);
 					portObj.template.dependentVariables.get(i).type = dt;
 				}
-				
+
 				// Set variable values and types from parameters script
 				{
 					Map<String, String> vars = getVariablesFromAssignments(portObj.param);
@@ -282,7 +286,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
 				String[] units = getStringVal(sheet, FskMetaDataFields.depvars_units.row).split("\\|\\|");
 				String[] mins = getStringVal(sheet, FskMetaDataFields.depvars_mins.row).split("\\|\\|");
 				String[] maxs = getStringVal(sheet, FskMetaDataFields.depvars_maxs.row).split("\\|\\|");
-				
+
 				for (int i = 0; i < names.length; i++) {
 					Variable v = new Variable();
 					v.name = names[i];
@@ -320,8 +324,8 @@ class FskCreatorNodeModel extends NoInternalsModel {
 		}
 
 		/**
-		 * Gets the string value for the fifth column which holds the value for
-		 * that row.
+		 * Gets the string value for the fifth column which holds the value for that
+		 * row.
 		 */
 		private static String getStringVal(final XSSFSheet sheet, final byte rownum) {
 			XSSFCell cell = sheet.getRow(rownum).getCell(5);
@@ -340,8 +344,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
 			/** R command with the <- assignment operator. E.g. x <- value */
 			left,
 			/**
-			 * R command with the <<- scoping assignment operator. E.g. x <<-
-			 * value
+			 * R command with the <<- scoping assignment operator. E.g. x <<- value
 			 */
 			super_left,
 			/** R command with the -> assignment operator. E.g. value -> x */
@@ -405,7 +408,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
 
 		return vars;
 	}
-	
+
 	/**
 	 * Returns the {@link FskMetaData.DataType} of a value.
 	 * 
@@ -413,8 +416,8 @@ class FskCreatorNodeModel extends NoInternalsModel {
 	 * <li>{@code DataType#array} for Matlab like arrays, c(0, 1, 2, ...)
 	 * <li>{@code DataType#numeric} for real numbers.
 	 * <li>{@code DataType#integer} for integer numbers.
-	 * <li>{@code DataType#character} for any other variable. E.g. "zero",
-	 * "eins", "dos".
+	 * <li>{@code DataType#character} for any other variable. E.g. "zero", "eins",
+	 * "dos".
 	 * </ul>
 	 */
 	private static DataType getValueType(final String value) {
