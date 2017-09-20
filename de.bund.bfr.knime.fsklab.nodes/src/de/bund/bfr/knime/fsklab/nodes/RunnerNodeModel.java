@@ -22,11 +22,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,256 +57,198 @@ import de.bund.bfr.knime.fsklab.rakip.Parameter;
 
 public class RunnerNodeModel extends NodeModel {
 
-  private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
+	private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
 
-  /** Output spec for an FSK object. */
-  private static final FskPortObjectSpec FSK_SPEC = FskPortObjectSpec.INSTANCE;
+	/** Output spec for an FSK object. */
+	private static final FskPortObjectSpec FSK_SPEC = FskPortObjectSpec.INSTANCE;
 
-  /** Output spec for a PNG image. */
-  private static final ImagePortObjectSpec PNG_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
+	/** Output spec for a PNG image. */
+	private static final ImagePortObjectSpec PNG_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
 
-  private final InternalSettings internalSettings = new InternalSettings();
+	private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
 
-  private RunnerNodeSettings nodeSettings = new RunnerNodeSettings();
+	private RunnerNodeSettings nodeSettings = new RunnerNodeSettings();
 
-  // Input and output port types
-  private static final PortType[] IN_TYPES = {FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL};
-  private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
+	// Input and output port types
+	private static final PortType[] IN_TYPES = { FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL };
+	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL };
 
-  public RunnerNodeModel() {
-    super(IN_TYPES, OUT_TYPES);
-  }
+	public RunnerNodeModel() {
+		super(IN_TYPES, OUT_TYPES);
+	}
 
-  // --- internal settings methods ---
+	// --- internal settings methods ---
 
-  @Override
-  protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
-      throws IOException, CanceledExecutionException {
-    internalSettings.loadInternals(nodeInternDir);
-  }
+	@Override
+	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
+		internalSettings.loadInternals(nodeInternDir);
+	}
 
-  @Override
-  protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-      throws IOException, CanceledExecutionException {
-    internalSettings.saveInternals(nodeInternDir);
-  }
+	@Override
+	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
+		internalSettings.saveInternals(nodeInternDir);
+	}
 
-  @Override
-  protected void reset() {
-    internalSettings.reset();
-  }
+	@Override
+	protected void reset() {
+		internalSettings.reset();
+	}
 
-  // --- node settings methods ---
+	// --- node settings methods ---
 
-  @Override
-  protected void saveSettingsTo(NodeSettingsWO settings) {
-    nodeSettings.saveSettingsTo(settings);
-  }
+	@Override
+	protected void saveSettingsTo(NodeSettingsWO settings) {
+		nodeSettings.saveSettingsTo(settings);
+	}
 
-  @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    nodeSettings.validateSettings(settings);
-  }
+	@Override
+	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+		nodeSettings.validateSettings(settings);
+	}
 
-  @Override
-  protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
-      throws InvalidSettingsException {
-    nodeSettings.loadValidatedSettingsFrom(settings);
-  }
+	@Override
+	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
+		nodeSettings.loadValidatedSettingsFrom(settings);
+	}
 
-  @Override
-  protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    return new PortObjectSpec[] {FSK_SPEC, PNG_SPEC};
-  }
+	@Override
+	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+		return new PortObjectSpec[] { FSK_SPEC, PNG_SPEC };
+	}
 
-  @Override
-  protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
+	@Override
+	protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
 
-    FskPortObject fskObj = (FskPortObject) inData[0];
+		FskPortObject fskObj = (FskPortObject) inData[0];
 
-    final ModelMath modelMath = fskObj.genericModel.modelMath;
+		final ModelMath modelMath = fskObj.genericModel.modelMath;
 
-    final List<Parameter> indepVars;
-    if (modelMath == null) {
-      indepVars = Collections.emptyList();
-    } else {
-      indepVars = modelMath.parameter.stream()
-          .filter(it -> it.classification == Parameter.Classification.input)
-          .collect(Collectors.toList());
-    }
+		final List<Parameter> indepVars;
+		if (modelMath == null) {
+			indepVars = Collections.emptyList();
+		} else {
+			indepVars = modelMath.parameter.stream().filter(it -> it.classification == Parameter.Classification.input)
+					.collect(Collectors.toList());
+		}
 
-    if (!indepVars.isEmpty()) {
-      try {
-        fskObj.param = loadParameterScript(indepVars);
-      } catch (IllegalArgumentException exception) {
-        LOGGER.warn(exception.getMessage());
-      }
-    }
+		if (!indepVars.isEmpty()) {
+			try {
+				fskObj.param = loadParameterScript(indepVars);
+			} catch (IllegalArgumentException exception) {
+				LOGGER.warn(exception.getMessage());
+			}
+		}
 
-    try (RController controller = new RController()) {
-      fskObj = runSnippet(controller, fskObj);
-    }
+		try (RController controller = new RController()) {
+			fskObj = runSnippet(controller, fskObj);
+		}
 
-    try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
-      final PNGImageContent content = new PNGImageContent(fis);
-      internalSettings.plot = content.getImage();
-      ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
-      return new PortObject[] {fskObj, imgObj};
-    } catch (IOException e) {
-      LOGGER.warn("There is no image created");
-      return new PortObject[] {fskObj};
-    }
-  }
+		try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
+			final PNGImageContent content = new PNGImageContent(fis);
+			internalSettings.plot = content.getImage();
+			ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
+			return new PortObject[] { fskObj, imgObj };
+		} catch (IOException e) {
+			LOGGER.warn("There is no image created");
+			return new PortObject[] { fskObj };
+		}
+	}
 
-  /**
-   * Generate a parameter script with parameters names and values from the model metadata.
-   * 
-   * @param params non-empty list of input parameters.
-   * @throw IllegalArgumentException if a parameter is not valid
-   */
-  private static String loadParameterScript(final List<Parameter> params) {
+	/**
+	 * Generate a parameter script with parameters names and values from the model
+	 * metadata.
+	 * 
+	 * @param params
+	 *            non-empty list of input parameters.
+	 * @throw IllegalArgumentException if a parameter is not valid
+	 */
+	private static String loadParameterScript(final List<Parameter> params) {
 
-    String script = "";
-    for (final Parameter param : params) {
-      final String paramName = param.name;
-      final String paramValue = param.value;
+		String script = "";
+		for (final Parameter param : params) {
+			final String paramName = param.name;
+			final String paramValue = param.value;
 
-      if (StringUtils.isAnyEmpty(paramName, paramValue))
-        throw new IllegalArgumentException("Parameter from metadata is not valid: " + param);
+			if (StringUtils.isAnyEmpty(paramName, paramValue))
+				throw new IllegalArgumentException("Parameter from metadata is not valid: " + param);
 
-      script += paramName + " <- " + paramValue + "\n";
-    }
+			script += paramName + " <- " + paramValue + "\n";
+		}
 
-    return script;
-  }
+		return script;
+	}
 
-  private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj)
-      throws IOException, RException, REXPMismatchException {
+	private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj)
+			throws IOException, RException, REXPMismatchException {
 
-    // Add path
-    LibRegistry libRegistry = LibRegistry.instance();
-    String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
-        + "', .libPaths()))";
-    String[] newPaths = controller.eval(cmd).asStrings();
+		// Add path
+		LibRegistry libRegistry = LibRegistry.instance();
+		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
+				+ "', .libPaths()))";
+		String[] newPaths = controller.eval(cmd).asStrings();
 
-    // Run model
-    controller.eval(fskObj.param + "\n" + fskObj.model);
+		// Run model
+		controller.eval(fskObj.param + "\n" + fskObj.model);
 
-    // Save workspace
-    if (fskObj.workspace == null) {
-      fskObj.workspace = FileUtil.createTempFile("workspace", ".R");
-    }
-    controller.eval("save.image('" + fskObj.workspace.getAbsolutePath().replace("\\", "/") + "')");
+		// Save workspace
+		if (fskObj.workspace == null) {
+			fskObj.workspace = FileUtil.createTempFile("workspace", ".R");
+		}
+		controller.eval("save.image('" + fskObj.workspace.getAbsolutePath().replace("\\", "/") + "')");
 
-    // Creates chart into m_imageFile
-    try {
-      ChartCreator cc = new ChartCreator(controller);
-      cc.plot(internalSettings.imageFile.getAbsolutePath().replace("\\", "/"), fskObj.viz);
-    } catch (RException e) {
-      LOGGER.warn("Visualization script failed");
-    }
+		// Creates chart into m_imageFile
+		try {
+			ChartCreator cc = new ChartCreator(controller);
+			cc.plot(internalSettings.imageFile.getAbsolutePath().replace("\\", "/"), fskObj.viz);
+		} catch (RException e) {
+			LOGGER.warn("Visualization script failed");
+		}
 
-    // Restore .libPaths() to the original library path which happens to be
-    // in the last position
-    controller.eval(".libPaths()[" + newPaths.length + "]");
+		// Restore .libPaths() to the original library path which happens to be
+		// in the last position
+		controller.eval(".libPaths()[" + newPaths.length + "]");
 
-    return fskObj;
-  }
+		return fskObj;
+	}
 
-  private class ChartCreator {
+	private class ChartCreator {
 
-    final RController controller;
+		final RController controller;
 
-    public ChartCreator(RController controller) throws RException {
-      this.controller = controller;
+		public ChartCreator(RController controller) throws RException {
+			this.controller = controller;
 
-      // initialize necessary R stuff to plot
-      if (SystemUtils.IS_OS_MAC) {
-        controller.eval("library('Cairo')");
-        controller.eval("options(device='png', bitmapType='cairo')");
-      } else {
-        controller.eval("options(device='png')");
-      }
-    }
+			// initialize necessary R stuff to plot
+			if (SystemUtils.IS_OS_MAC) {
+				controller.eval("library('Cairo')");
+				controller.eval("options(device='png', bitmapType='cairo')");
+			} else {
+				controller.eval("options(device='png')");
+			}
+		}
 
-    public void plot(String path, String vizScript) throws RException {
-      // Gets values
-      int width = nodeSettings.widthModel.getIntValue();
-      int height = nodeSettings.heightModel.getIntValue();
-      String res = nodeSettings.resolutionModel.getStringValue();
-      int textPointSize = nodeSettings.textPointSizeModel.getIntValue();
-      Color colour = nodeSettings.colourModel.getColorValue();
-      String hexColour =
-          String.format("#%02x%02x%02x", colour.getRed(), colour.getGreen(), colour.getBlue());
+		public void plot(String path, String vizScript) throws RException {
+			// Gets values
+			int width = nodeSettings.widthModel.getIntValue();
+			int height = nodeSettings.heightModel.getIntValue();
+			String res = nodeSettings.resolutionModel.getStringValue();
+			int textPointSize = nodeSettings.textPointSizeModel.getIntValue();
+			Color colour = nodeSettings.colourModel.getColorValue();
+			String hexColour = String.format("#%02x%02x%02x", colour.getRed(), colour.getGreen(), colour.getBlue());
 
-      String pngCommand = "png('" + path + "', width=" + width + ", height=" + height
-          + ", pointsize=" + textPointSize + ", bg='" + hexColour + "', res='" + res + "')";
-      controller.eval(pngCommand);
+			String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize="
+					+ textPointSize + ", bg='" + hexColour + "', res='" + res + "')";
+			controller.eval(pngCommand);
 
-      controller.eval(vizScript);
-      controller.eval("dev.off()");
+			controller.eval(vizScript);
+			controller.eval("dev.off()");
 
-    }
-  }
+		}
+	}
 
-  Image getResultImage() {
-    return internalSettings.plot;
-  }
-
-  private class InternalSettings {
-
-    private static final String FILE_NAME = "Rplot";
-
-    /**
-     * Non-null image file to use for this current node. Initialized to temp location.
-     */
-    private File imageFile = null;
-
-    private Image plot = null;
-
-    InternalSettings() {
-      try {
-        imageFile = FileUtil.createTempFile("FskxRunner-", ".png");
-      } catch (IOException e) {
-        LOGGER.error("Cannot create temporary file.", e);
-        throw new RuntimeException(e);
-      }
-      imageFile.deleteOnExit();
-    }
-
-    /** Loads the saved image. */
-    void loadInternals(File nodeInternDir) throws IOException {
-      final File file = new File(nodeInternDir, FILE_NAME + ".png");
-
-      if (file.exists() && file.canRead()) {
-        FileUtil.copy(file, imageFile);
-        try (InputStream is = new FileInputStream(imageFile)) {
-          plot = new PNGImageContent(is).getImage();
-        }
-      }
-    }
-
-    /** Saves the saved image. */
-    protected void saveInternals(File nodeInternDir) throws IOException {
-      if (plot != null) {
-        final File file = new File(nodeInternDir, FILE_NAME + ".png");
-        FileUtil.copy(imageFile, file);
-      }
-    }
-
-    /** Clear the contents of the image file. */
-    protected void reset() {
-      plot = null;
-
-      if (imageFile != null) {
-        try (OutputStream erasor = new FileOutputStream(imageFile)) {
-          erasor.write((new String()).getBytes());
-        } catch (final FileNotFoundException e) {
-          LOGGER.error("Temporary file is removed.", e);
-        } catch (final IOException e) {
-          LOGGER.error("Cannot write temporary file.", e);
-        }
-      }
-    }
-  }
+	Image getResultImage() {
+		return internalSettings.plot;
+	}
 }

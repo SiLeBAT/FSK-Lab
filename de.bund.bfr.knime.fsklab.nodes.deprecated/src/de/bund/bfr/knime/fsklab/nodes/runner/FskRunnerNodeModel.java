@@ -22,11 +22,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.data.DataRow;
@@ -53,6 +49,7 @@ import org.rosuda.REngine.REXPMismatchException;
 import com.sun.jna.Platform;
 
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
+import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
@@ -71,7 +68,7 @@ class FskRunnerNodeModel extends NodeModel {
 	/** Output spec for a PNG image. */
 	private static final ImagePortObjectSpec PNG_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
 
-	private final InternalSettings internalSettings = new InternalSettings();
+	private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
 
 	private FskRunnerNodeSettings settings = new FskRunnerNodeSettings();
 
@@ -271,63 +268,5 @@ class FskRunnerNodeModel extends NodeModel {
 
 	Image getResultImage() {
 		return internalSettings.plot;
-	}
-
-	private class InternalSettings {
-
-		private static final String FILE_NAME = "Rplot";
-
-		/**
-		 * Non-null image file to use for this current node. Initialized to temp
-		 * location.
-		 */
-		private File imageFile = null;
-
-		private Image plot = null;
-
-		InternalSettings() {
-			try {
-				imageFile = FileUtil.createTempFile("FskxRunner-", ".png");
-			} catch (IOException e) {
-				LOGGER.error("Cannot create temporary file.", e);
-				throw new RuntimeException(e);
-			}
-			imageFile.deleteOnExit();
-		}
-
-		/** Loads the saved image. */
-		void loadInternals(File nodeInternDir) throws IOException {
-			final File file = new File(nodeInternDir, FILE_NAME + ".png");
-
-			if (file.exists() && file.canRead()) {
-				FileUtil.copy(file, imageFile);
-				try (InputStream is = new FileInputStream(imageFile)) {
-					plot = new PNGImageContent(is).getImage();
-				}
-			}
-		}
-
-		/** Saves the saved image. */
-		protected void saveInternals(File nodeInternDir) throws IOException {
-			if (plot != null) {
-				final File file = new File(nodeInternDir, FILE_NAME + ".png");
-				FileUtil.copy(imageFile, file);
-			}
-		}
-
-		/** Clear the contents of the image file. */
-		protected void reset() {
-			plot = null;
-
-			if (imageFile != null) {
-				try (OutputStream erasor = new FileOutputStream(imageFile)) {
-					erasor.write((new String()).getBytes());
-				} catch (final FileNotFoundException e) {
-					LOGGER.error("Temporary file is removed.", e);
-				} catch (final IOException e) {
-					LOGGER.error("Cannot write temporary file.", e);
-				}
-			}
-		}
 	}
 }
