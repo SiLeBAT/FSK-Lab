@@ -8,8 +8,12 @@ FSK-Lab may be installed throught the update site <https://dl.bintray.com/sileba
 
 ## Nodes
 - ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/Creator.png) FSK Creator
-- ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/Writer.png) FSKX Writer
+- ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/Runner.png) FSK Runner
+- ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/FSK2R.png) FSK to R
 - ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/Reader.png) FSKX Reader
+- ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/Writer.png) FSKX Writer
+- ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/Editor.png) FSK Editor
+- ![](de.bund.bfr.knime.fsklab.nodes/src/de/bund/bfr/knime/fsklab/nodes/fsk2metadata.png) FSK to metadata
 
 ## Deprecated nodes
 - ![](de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/creator/FskCreator.png) FSK Creator
