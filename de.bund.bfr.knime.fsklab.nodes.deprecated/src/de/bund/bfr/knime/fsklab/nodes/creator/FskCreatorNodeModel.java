@@ -128,9 +128,9 @@ class FskCreatorNodeModel extends NoInternalsModel {
 
 			// Reads visualization script
 			if (StringUtils.isEmpty(settings.vizScript.getStringValue())) {
-				portObj.viz = readScript(settings.vizScript.getStringValue()).getScript();
-			} else {
 				portObj.viz = "";
+			} else {
+				portObj.viz = readScript(settings.vizScript.getStringValue()).getScript();
 			}
 
 			// Reads model meta data
