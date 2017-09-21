@@ -692,12 +692,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel nameLabel = createLabel("GM.EditAssayPanel.nameLabel", "GM.EditAssayPanel.nameTooltip", true);
 			final JLabel descriptionLabel = createLabel("GM.EditAssayPanel.descriptionLabel",
 					"GM.EditAssayPanel.descriptionTooltip", true);
-			
+
 			// Wrap text area in JScrollPane
 			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
 
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-					new Pair<>(nameLabel, nameTextField), // name
+			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(nameLabel, nameTextField), // name
 					new Pair<>(descriptionLabel, descriptionPane)); // description
 			addGridComponents(this, pairs);
 
@@ -749,7 +748,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -931984426171199928L;
 
-		private final AutoSuggestField dataCollectionToolField = createAutoSuggestField(vocabs.get("Method. tool to collect data"));
+		private final AutoSuggestField dataCollectionToolField = createAutoSuggestField(
+				vocabs.get("Method. tool to collect data"));
 		private final JTextField nonConsecutiveOneDayTextField = createTextField();
 		private final JTextField dietarySoftwareToolTextField = createTextField();
 		private final JTextField foodItemNumberTextField = createTextField();
@@ -758,13 +758,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		EditDietaryAssessmentMethodPanel(final boolean isAdvanced) {
-			
+
 			// Create labels
-			final JLabel dataCollectionToolLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel",
+			final JLabel dataCollectionToolLabel = createLabel(
+					"GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel",
 					"GM.EditDietaryAssessmentMethodPanel.dataCollectionToolTooltip", true);
-			final JLabel nonConsecutiveOneDayLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysLabel",
+			final JLabel nonConsecutiveOneDayLabel = createLabel(
+					"GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysLabel",
 					"GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysTooltip", true);
-			final JLabel dietarySoftwareToolLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolLabel",
+			final JLabel dietarySoftwareToolLabel = createLabel(
+					"GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolLabel",
 					"GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolTooltip");
 			final JLabel foodItemNumberLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.foodItemNumberLabel",
 					"GM.EditDietaryAssessmentMethodPanel.foodItemNumberTooltip");
@@ -782,9 +785,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					new Pair<>(foodDescriptionLabel, foodDescriptionComboBox));
 			addGridComponents(this, pairs);
 
-			advancedComponents = Arrays.asList(dietarySoftwareToolLabel, dietarySoftwareToolTextField, foodItemNumberLabel,
-					foodItemNumberTextField, recordTypeLabel, recordTypeTextField, foodDescriptionLabel,
-					foodDescriptionComboBox);
+			advancedComponents = Arrays.asList(dietarySoftwareToolLabel, dietarySoftwareToolTextField,
+					foodItemNumberLabel, foodItemNumberTextField, recordTypeLabel, recordTypeTextField,
+					foodDescriptionLabel, foodDescriptionComboBox);
 
 			// If simple mode hides advanced components
 			if (!isAdvanced) {
@@ -875,137 +878,66 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -1981279747311233487L;
 
-		private final JLabel hazardTypeLabel;
-		private final AutoSuggestField hazardTypeField;
+		private final AutoSuggestField hazardTypeField = createAutoSuggestField(vocabs.get("Hazard type"));
+		private final AutoSuggestField hazardNameField = createAutoSuggestField(vocabs.get("Hazard name"));
+		private final JTextArea hazardDescriptionTextArea = createTextArea();
+		private final AutoSuggestField hazardUnitField = createAutoSuggestField(vocabs.get("Hazard unit"));
+		private final JTextField adverseEffectTextField = createTextField();
+		private final JTextField originTextField = createTextField();
+		private final JTextField bmdTextField = createTextField();
+		private final JTextField maxResidueLimitTextField = createTextField();
+		private final JTextField noObservedAdverseTextField = createTextField();
+		private final JTextField acceptableOperatorTextField = createTextField();
+		private final JTextField acuteReferenceDoseTextField = createTextField();
+		private final JTextField acceptableDailyIntakeTextField = createTextField();
+		private final AutoSuggestField indSumField = createAutoSuggestField(vocabs.get("Hazard ind sum"));
+		private final JTextField labNameTextField = createTextField();
+		private final AutoSuggestField labCountryField = createAutoSuggestField(vocabs.get("Laboratory country"));
+		private final JTextField detectionLimitTextField = createTextField();
+		private final JTextField quantificationLimitTextField = createTextField();
+		private final JTextField leftCensoredDataTextField = createTextField();
+		private final JTextField contaminationRangeTextField = createTextField();
 
-		private final JLabel hazardNameLabel;
-		private final AutoSuggestField hazardNameField;
-
-		private final JLabel hazardDescriptionLabel;
-		private final JTextArea hazardDescriptionTextArea;
-		private final JScrollPane hazardDescriptionPanel;
-
-		private final JLabel hazardUnitLabel;
-		private final AutoSuggestField hazardUnitField;
-
-		private final JLabel adverseEffectLabel;
-		private final JTextField adverseEffectTextField;
-
-		private final JLabel originLabel;
-		private final JTextField originTextField;
-
-		private final JLabel bmdLabel;
-		private final JTextField bmdTextField;
-
-		private final JLabel maxResidueLimitLabel;
-		private final JTextField maxResidueLimitTextField;
-
-		private final JLabel noObservedAdverseLabel;
-		private final JTextField noObservedAdverseTextField;
-
-		private final JLabel acceptableOperatorLabel;
-		private final JTextField acceptableOperatorTextField;
-
-		private final JLabel acuteReferenceDoseLabel;
-		private final JTextField acuteReferenceDoseTextField;
-
-		private final JLabel acceptableDailyIntakeLabel;
-		private final JTextField acceptableDailyIntakeTextField;
-
-		private final JLabel indSumLabel;
-		private final AutoSuggestField indSumField;
-
-		private final JLabel labNameLabel;
-		private final JTextField labNameTextField;
-
-		private final JLabel labCountryLabel;
-		private final AutoSuggestField labCountryField;
-
-		private final JLabel detectionLimitLabel;
-		private final JTextField detectionLimitTextField;
-
-		private final JLabel quantificationLimitLabel;
-		private final JTextField quantificationLimitTextField;
-
-		private final JLabel leftCensoredDataLabel;
-		private final JTextField leftCensoredDataTextField;
-
-		private final JLabel contaminationRangeLabel;
-		private final JTextField contaminationRangeTextField;
+		private final List<JComponent> advancedComponents;
 
 		EditHazardPanel(final boolean isAdvanced) {
 
-			hazardTypeLabel = createLabel("GM.EditHazardPanel.hazardTypeLabel", "GM.EditHazardPanel.hazardTypeTooltip",
+			final JLabel hazardTypeLabel = createLabel("GM.EditHazardPanel.hazardTypeLabel", "GM.EditHazardPanel.hazardTypeTooltip",
 					true);
-			hazardTypeField = createAutoSuggestField(vocabs.get("Hazard type"));
-
-			hazardNameLabel = createLabel("GM.EditHazardPanel.hazardNameLabel", "GM.EditHazardPanel.hazardNameTooltip",
+			final JLabel hazardNameLabel = createLabel("GM.EditHazardPanel.hazardNameLabel", "GM.EditHazardPanel.hazardNameTooltip",
 					true);
-			hazardNameField = createAutoSuggestField(vocabs.get("Hazard name"));
-
-			hazardDescriptionLabel = createLabel("GM.EditHazardPanel.hazardDescriptionLabel",
+			final JLabel hazardDescriptionLabel = createLabel("GM.EditHazardPanel.hazardDescriptionLabel",
 					"GM.EditHazardPanel.hazardDescriptionTooltip");
-			hazardDescriptionTextArea = createTextArea();
-			hazardDescriptionPanel = new JScrollPane(hazardDescriptionTextArea);
-
-			hazardUnitLabel = createLabel("GM.EditHazardPanel.hazardUnitLabel", "GM.EditHazardPanel.hazardUnitTooltip",
+			final JLabel hazardUnitLabel = createLabel("GM.EditHazardPanel.hazardUnitLabel", "GM.EditHazardPanel.hazardUnitTooltip",
 					true);
-			hazardUnitField = createAutoSuggestField(vocabs.get("Hazard unit"));
-
-			adverseEffectLabel = createLabel("GM.EditHazardPanel.adverseEffectLabel",
+			final JLabel adverseEffectLabel = createLabel("GM.EditHazardPanel.adverseEffectLabel",
 					"GM.EditHazardPanel.adverseEffectTooltip");
-			adverseEffectTextField = createTextField();
-
-			originLabel = createLabel("GM.EditHazardPanel.originLabel", "GM.EditHazardPanel.originTooltip");
-			originTextField = createTextField();
-
-			bmdLabel = createLabel("GM.EditHazardPanel.bmdLabel", "GM.EditHazardPanel.bmdTooltip");
-			bmdTextField = createTextField();
-
-			maxResidueLimitLabel = createLabel("GM.EditHazardPanel.maxResidueLimitLabel",
+			final JLabel originLabel = createLabel("GM.EditHazardPanel.originLabel", "GM.EditHazardPanel.originTooltip");
+			final JLabel bmdLabel = createLabel("GM.EditHazardPanel.bmdLabel", "GM.EditHazardPanel.bmdTooltip");
+			final JLabel maxResidueLimitLabel = createLabel("GM.EditHazardPanel.maxResidueLimitLabel",
 					"GM.EditHazardPanel.maxResidueLimitTooltip");
-			maxResidueLimitTextField = createTextField();
-
-			noObservedAdverseLabel = createLabel("GM.EditHazardPanel.noObservedAdverseLabel",
+			final JLabel noObservedAdverseLabel = createLabel("GM.EditHazardPanel.noObservedAdverseLabel",
 					"GM.EditHazardPanel.noObservedAdverseTooltip");
-			noObservedAdverseTextField = createTextField();
-
-			acceptableOperatorLabel = createLabel("GM.EditHazardPanel.acceptableOperatorLabel",
+			final JLabel acceptableOperatorLabel = createLabel("GM.EditHazardPanel.acceptableOperatorLabel",
 					"GM.EditHazardPanel.acceptableOperatorTooltip");
-			acceptableOperatorTextField = createTextField();
-
-			acuteReferenceDoseLabel = createLabel("GM.EditHazardPanel.acuteReferenceDoseLabel",
+			final JLabel acuteReferenceDoseLabel = createLabel("GM.EditHazardPanel.acuteReferenceDoseLabel",
 					"GM.EditHazardPanel.acuteReferenceDoseTooltip");
-			acuteReferenceDoseTextField = createTextField();
-
-			indSumLabel = createLabel("GM.EditHazardPanel.indSumLabel", "GM.EditHazardPanel.indSumTooltip");
-			indSumField = createAutoSuggestField(vocabs.get("Hazard ind sum"));
-
-			acceptableDailyIntakeLabel = createLabel("GM.EditHazardPanel.acceptableDailyIntakeLabel",
+			final JLabel indSumLabel = createLabel("GM.EditHazardPanel.indSumLabel", "GM.EditHazardPanel.indSumTooltip");
+			final JLabel acceptableDailyIntakeLabel = createLabel("GM.EditHazardPanel.acceptableDailyIntakeLabel",
 					"GM.EditHazardPanel.acceptableDailyIntakeTooltip");
-			acceptableDailyIntakeTextField = createTextField();
-
-			labNameLabel = createLabel("GM.EditHazardPanel.labNameLabel", "GM.EditHazardPanel.labNameTooltip");
-			labNameTextField = createTextField();
-
-			labCountryLabel = createLabel("GM.EditHazardPanel.labCountryLabel", "GM.EditHazardPanel.labCountryTooltip");
-			labCountryField = createAutoSuggestField(vocabs.get("Laboratory country"));
-
-			detectionLimitLabel = createLabel("GM.EditHazardPanel.detectionLimitLabel",
+			final JLabel labNameLabel = createLabel("GM.EditHazardPanel.labNameLabel", "GM.EditHazardPanel.labNameTooltip");
+			final JLabel labCountryLabel = createLabel("GM.EditHazardPanel.labCountryLabel", "GM.EditHazardPanel.labCountryTooltip");
+			final JLabel detectionLimitLabel = createLabel("GM.EditHazardPanel.detectionLimitLabel",
 					"GM.EditHazardPanel.detectionLimitTooltip");
-			detectionLimitTextField = createTextField();
-
-			quantificationLimitLabel = createLabel("GM.EditHazardPanel.quantificationLimitLabel",
+			final JLabel quantificationLimitLabel = createLabel("GM.EditHazardPanel.quantificationLimitLabel",
 					"GM.EditHazardPanel.quantificationLimitTooltip");
-			quantificationLimitTextField = createTextField();
-
-			leftCensoredDataLabel = createLabel("GM.EditHazardPanel.leftCensoredDataLabel",
+			final JLabel leftCensoredDataLabel = createLabel("GM.EditHazardPanel.leftCensoredDataLabel",
 					"GM.EditHazardPanel.leftCensoredDataTooltip");
-			leftCensoredDataTextField = createTextField();
-
-			contaminationRangeLabel = createLabel("GM.EditHazardPanel.contaminationRangeLabel",
+			final JLabel contaminationRangeLabel = createLabel("GM.EditHazardPanel.contaminationRangeLabel",
 					"GM.EditHazardPanel.contaminationRangeTooltip");
-			contaminationRangeTextField = createTextField();
+
+			// Wraps hazardDescriptionTextArea in a JScrollPane
+			final JScrollPane hazardDescriptionPanel = new JScrollPane(hazardDescriptionTextArea);
 
 			// Create labels
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(hazardTypeLabel, hazardTypeField),
@@ -1025,6 +957,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					new Pair<>(leftCensoredDataLabel, leftCensoredDataTextField),
 					new Pair<>(contaminationRangeLabel, contaminationRangeTextField));
 			addGridComponents(this, pairs);
+
+			advancedComponents = Arrays.asList(hazardDescriptionLabel, hazardDescriptionPanel, // hazard description
+					adverseEffectLabel, adverseEffectTextField, // adverse effect
+					originLabel, originTextField, // origin
+					bmdLabel, bmdTextField, // benchmark dose
+					maxResidueLimitLabel, maxResidueLimitTextField, // maximum residue limit
+					acceptableOperatorLabel, acceptableOperatorTextField, // acceptable operator
+					noObservedAdverseLabel, noObservedAdverseTextField, // no observed adverse
+					acuteReferenceDoseLabel, acuteReferenceDoseTextField, // acute reference dose
+					acceptableDailyIntakeLabel, acceptableDailyIntakeTextField, // aceptable daily intake
+					indSumLabel, indSumField, // ind sum
+					labNameLabel, labNameTextField, // laboratory name
+					labCountryLabel, labCountryField, // laboratory country
+					detectionLimitLabel, detectionLimitTextField, // detection limit
+					quantificationLimitLabel, quantificationLimitTextField, // quantification limit
+					leftCensoredDataLabel, leftCensoredDataTextField, // left censored data
+					contaminationRangeLabel, contaminationRangeTextField); // contamination range
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
@@ -1105,22 +1054,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		@Override
 		List<JComponent> getAdvancedComponents() {
-			return Arrays.asList(hazardDescriptionLabel, hazardDescriptionPanel, // hazard description
-					adverseEffectLabel, adverseEffectTextField, // adverse effect
-					originLabel, originTextField, // origin
-					bmdLabel, bmdTextField, // benchmark dose
-					maxResidueLimitLabel, maxResidueLimitTextField, // maximum residue limit
-					acceptableOperatorLabel, acceptableOperatorTextField, // acceptable operator
-					noObservedAdverseLabel, noObservedAdverseTextField, // no observed adverse
-					acuteReferenceDoseLabel, acuteReferenceDoseTextField, // acute reference dose
-					acceptableDailyIntakeLabel, acceptableDailyIntakeTextField, // aceptable daily intake
-					indSumLabel, indSumField, // ind sum
-					labNameLabel, labNameTextField, // laboratory name
-					labCountryLabel, labCountryField, // laboratory country
-					detectionLimitLabel, detectionLimitTextField, // detection limit
-					quantificationLimitLabel, quantificationLimitTextField, // quantification limit
-					leftCensoredDataLabel, leftCensoredDataTextField, // left censored data
-					contaminationRangeLabel, contaminationRangeTextField); // contamination range
+			return advancedComponents;
 		}
 	}
 
