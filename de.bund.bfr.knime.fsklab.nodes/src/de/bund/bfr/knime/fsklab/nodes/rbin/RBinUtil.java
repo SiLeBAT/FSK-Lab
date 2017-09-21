@@ -53,6 +53,9 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.knime.core.node.KNIMEConstants;
@@ -245,7 +248,8 @@ public class RBinUtil {
 	 *             If the specified R_HOME path is invalid.
 	 */
 	public static void checkRHome(final String rHomePath, final boolean fromPreferences) throws InvalidRHomeException {
-		final File rHome = new File(rHomePath);
+
+		final Path rHome = Paths.get(rHomePath);
 		final String msgSuffix = ((fromPreferences) ? ""
 				: " R_HOME ('" + rHomePath + "')" + " is meant to be the path to the folder which is the root of R's "
 						+ "installation tree. \nIt contains a 'bin' folder which itself contains the R executable and a "
@@ -253,30 +257,30 @@ public class RBinUtil {
 		final String R_HOME_NAME = (fromPreferences) ? "Path to R Home" : "R_HOME";
 
 		/* check if the directory exists. */
-		if (!rHome.exists()) {
+		if (Files.notExists(rHome)) {
 			throw new InvalidRHomeException(R_HOME_NAME + " does not exist." + msgSuffix);
 		}
 
 		/* Make sure R home is not a file. */
-		if (!rHome.isDirectory()) {
+		if (!Files.isDirectory(rHome)) {
 			throw new InvalidRHomeException(R_HOME_NAME + " is not a directory." + msgSuffix);
 		}
 
 		/* Check if there is a bin directory. */
-		File binDir = new File(rHome, "bin");
-		if (!binDir.isDirectory()) {
+		final Path binDir = rHome.resolve("bin");
+		if (!Files.isDirectory(binDir)) {
 			throw new InvalidRHomeException(R_HOME_NAME + " does not contain a folder with name 'bin'." + msgSuffix);
 		}
 
 		/* Check if there is an R Executable. */
-		File rExecutable = new File(new DefaultRPreferenceProvider(rHomePath).getRBinPath("R"));
-		if (!rExecutable.exists()) {
+		final Path rExecutable = Paths.get(new DefaultRPreferenceProvider(rHomePath).getRBinPath("R"));
+		if (Files.notExists(rExecutable)) {
 			throw new InvalidRHomeException(R_HOME_NAME + " does not contain an R executable." + msgSuffix);
 		}
 
 		/* Make sure there is a library directory. */
-		File libraryDir = new File(rHome, "library");
-		if (!libraryDir.isDirectory()) {
+		final Path libraryDir = rHome.resolve("library");
+		if (!Files.isDirectory(libraryDir)) {
 			throw new InvalidRHomeException(
 					R_HOME_NAME + " does not contain a folder with name 'library'." + msgSuffix);
 		}
@@ -287,16 +291,17 @@ public class RBinUtil {
 		 */
 		if (Platform.isWindows()) {
 			if (Platform.is64Bit()) {
-				File expectedFolder = new File(binDir, "x64");
-				File expectedFolder2 = new File(binDir, "i386");
-				if (!expectedFolder.isDirectory() && !expectedFolder2.isDirectory()) {
+				final Path x64Path = binDir.resolve("x64");
+				final Path i386Path = binDir.resolve("i386");
+				
+				if (!Files.isDirectory(x64Path) && !Files.isDirectory(i386Path)) {
 					throw new InvalidRHomeException(R_HOME_NAME
 							+ " does not contain a folder with name 'bin\\x64'. Please install R 64-bit files."
 							+ msgSuffix);
 				}
 			} else {
-				File expectedFolder = new File(binDir, "i386");
-				if (!expectedFolder.isDirectory()) {
+				final Path i386Path = binDir.resolve("i386");
+				if (!Files.isDirectory(i386Path)) {
 					throw new InvalidRHomeException(R_HOME_NAME
 							+ " does not contain a folder with name '\\bin\\i386'. Please install R 32-bit files."
 							+ msgSuffix);
