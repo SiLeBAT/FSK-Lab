@@ -253,24 +253,12 @@ class CreatorNodeModel extends NoInternalsModel {
   private static Scope getScope(final XSSFSheet sheet) throws InvalidSettingsException {
 
     final Scope scope = new Scope();
-    {
-      final Hazard hazard = new Hazard();
-      hazard.hazardType = "";
-      hazard.hazardName = getString(sheet, 3);
-      hazard.hazardUnit = "";
-      hazard.hazardDescription = getString(sheet, 4);
 
-      scope.hazard = hazard;
-    }
+    scope.hazard.hazardName = getString(sheet, 3);
+    scope.hazard.hazardDescription = getString(sheet, 4);
 
-    {
-      final Product product = new Product();
-      product.environmentName = getString(sheet, 5);
-      product.environmentUnit = "";
-      product.environmentDescription = getString(sheet, 6);
-
-      scope.product = product;
-    }
+    scope.product.environmentName = getString(sheet, 5);
+    scope.product.environmentDescription = getString(sheet, 6);
 
     return scope;
   }

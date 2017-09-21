@@ -195,7 +195,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		try {
 			this.settings.loadSettings(settings);
 		} catch (InvalidSettingsException exception) {
-			throw new NotConfigurableException("InvalidSettingsException", exception);
+//			throw new NotConfigurableException("InvalidSettingsException", exception);
+			LOGGER.warn("Settings were not loaded", exception);
 		}
 
 		updatePanels();
@@ -816,9 +817,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				dataCollectionToolField.setSelectedItem(method.collectionTool);
 				nonConsecutiveOneDayTextField.setText(Integer.toString(method.numberOfNonConsecutiveOneDay));
 				dietarySoftwareToolTextField.setText(method.softwareTool);
-				foodItemNumberTextField.setText(method.numberOfFoodItems.get(0));
-				recordTypeTextField.setText(method.recordTypes.get(0));
-				foodDescriptionComboBox.setSelectedItem(method.foodDescriptors.get(0));
+
+				if (!method.numberOfFoodItems.isEmpty()) {
+					foodItemNumberTextField.setText(method.numberOfFoodItems.get(0));
+				}
+
+				if (!method.recordTypes.isEmpty()) {
+					recordTypeTextField.setText(method.recordTypes.get(0));
+				}
+
+				if (!method.foodDescriptors.isEmpty()) {
+					foodDescriptionComboBox.setSelectedItem(method.foodDescriptors.get(0));
+				}
 			}
 		}
 
@@ -1563,17 +1573,44 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			if (t != null) {
 				populationNameTextField.setText(t.populationName);
 				targetPopulationTextField.setText(t.targetPopulation);
-				populationSpanTextField.setText(t.populationSpan.get(0));
-				populationDescriptionTextArea.setText(t.populationDescription.get(0));
-				populationAgeTextField.setText(t.populationAge.get(0));
+
+				if (!t.populationSpan.isEmpty()) {
+					populationSpanTextField.setText(t.populationSpan.get(0));
+				}
+
+				if (!t.populationDescription.isEmpty()) {
+					populationDescriptionTextArea.setText(t.populationDescription.get(0));
+				}
+
+				if (!t.populationAge.isEmpty()) {
+					populationAgeTextField.setText(t.populationAge.get(0));
+				}
+
 				populationGenderTextField.setText(t.populationGender);
-				bmiTextField.setText(t.bmi.get(0));
-				specialDietGroupTextField.setText(t.specialDietGroups.get(0));
-				patternConsumptionTextField.setText(t.patternConsumption.get(0));
+
+				if (!t.bmi.isEmpty()) {
+					bmiTextField.setText(t.bmi.get(0));
+				}
+
+				if (!t.specialDietGroups.isEmpty()) {
+					specialDietGroupTextField.setText(t.specialDietGroups.get(0));
+				}
+
+				if (!t.patternConsumption.isEmpty()) {
+					patternConsumptionTextField.setText(t.patternConsumption.get(0));
+				}
+
 				regionComboBox.setSelectedItem(t.region);
+
 				countryComboBox.setSelectedItem(t.country);
-				riskTextField.setText(t.populationRiskFactor.get(0));
-				seasonTextField.setText(t.season.get(0));
+				
+				if (!t.populationRiskFactor.isEmpty()) {
+					riskTextField.setText(t.populationRiskFactor.get(0));
+				}
+
+				if (!t.season.isEmpty()) {
+					seasonTextField.setText(t.season.get(0));
+				}
 			}
 		}
 
@@ -2523,12 +2560,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			generalInformation.creationDate = creationDateChooser.getDate();
 			generalInformation.rights = (String) rightsField.getSelectedItem();
 			generalInformation.isAvailable = availabilityCheckBox.isSelected();
-			try {
-				generalInformation.url = new URL(urlTextField.getText());
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			final String urlText = urlTextField.getText();
+			if (!urlText.isEmpty()) {
+				try {
+					generalInformation.url = new URL(urlText);
+				} catch (final MalformedURLException exception) {
+					LOGGER.error(urlText + " is not a valid URL");
+				}
 			}
+
 			generalInformation.creators.addAll(creatorPanel.creators);
 			generalInformation.format = (String) formatField.getSelectedItem();
 			generalInformation.reference.addAll(referencePanel.refs);

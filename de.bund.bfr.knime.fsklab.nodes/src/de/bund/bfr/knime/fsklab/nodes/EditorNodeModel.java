@@ -108,7 +108,7 @@ public class EditorNodeModel extends NoInternalsModel {
     /* If there is no input model then it will return the model created in the UI. */
     else {
       outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedParametersScript,
-          settings.modifiedVisualizationScript, new GenericModel(), null, Collections.emptySet());
+          settings.modifiedVisualizationScript, settings.genericModel, null, Collections.emptySet());
     }
 
     return new PortObject[] {outObj};

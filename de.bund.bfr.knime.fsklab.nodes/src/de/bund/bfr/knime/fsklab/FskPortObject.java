@@ -201,7 +201,6 @@ public class FskPortObject implements PortObject {
 			out.close();
 		}
 
-		@SuppressWarnings("null")
 		@Override
 		public FskPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec, ExecutionMonitor exec)
 				throws IOException, CanceledExecutionException {
@@ -613,7 +612,7 @@ public class FskPortObject implements PortObject {
 
 		// TODO: isAvailable
 
-		add(node, prefix + "urlLabel", generalInformation.url.toString());
+		add(node, prefix + "urlLabel", generalInformation.url != null ? generalInformation.url.toString() : "");
 
 		// Remove null values in list
 		final List<Record> reference = generalInformation.reference.stream().filter(Objects::nonNull)
