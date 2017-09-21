@@ -301,7 +301,7 @@ public class RConnectionFactory {
 				}
 			}
 			// no existing resource is available. Create a new one.
-			String path = RPreferenceInitializer.getR3Provider().getRServeBinPath();
+			String path = RPreferenceInitializer.getR3Provider().getRServeBinPath().toString();
 			int port = findFreePort();
 			final RInstance instance = launchRserve(path, "127.0.0.1", port);
 			RConnectionResource resource = new RConnectionResource(instance);

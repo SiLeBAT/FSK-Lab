@@ -341,7 +341,7 @@ public class RController implements IRController {
 			String tempPath = tempFile.getAbsolutePath();
 			
 			// Full path to R binary
-			String rBinPath = RPreferenceInitializer.getR3Provider().getRBinPath("R");
+			String rBinPath = RPreferenceInitializer.getR3Provider().getRBinPath("R").toString();
 			
 			// R command to install R library (using full path).
 			// See https://stat.ethz.ch/R-manual/R-devel/library/utils/html/INSTALL.html

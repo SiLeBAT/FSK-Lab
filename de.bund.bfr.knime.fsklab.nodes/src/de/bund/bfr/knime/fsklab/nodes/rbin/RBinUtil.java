@@ -154,7 +154,7 @@ public class RBinUtil {
 			return new Properties();
 		}
 		ProcessBuilder builder = new ProcessBuilder();
-		builder.command(rpref.getRBinPath("Rscript"), "--vanilla", rCommandFile.getName(), rOutFile.getName());
+		builder.command(rpref.getRBinPath("Rscript").toString(), "--vanilla", rCommandFile.getName(), rOutFile.getName());
 		builder.directory(rCommandFile.getParentFile());
 
 		/** Run R on the script to get properties */
@@ -273,7 +273,7 @@ public class RBinUtil {
 		}
 
 		/* Check if there is an R Executable. */
-		final Path rExecutable = Paths.get(new DefaultRPreferenceProvider(rHomePath).getRBinPath("R"));
+		final Path rExecutable = new DefaultRPreferenceProvider(rHomePath).getRBinPath("R");
 		if (Files.notExists(rExecutable)) {
 			throw new InvalidRHomeException(R_HOME_NAME + " does not contain an R executable." + msgSuffix);
 		}

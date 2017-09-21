@@ -47,6 +47,7 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
 
+import java.nio.file.Path;
 import java.util.Properties;
 
 /**
@@ -65,10 +66,10 @@ public interface RPreferenceProvider {
 	 *            R command ("R" or "Rscript" for example)
 	 * @return path to the command executable
 	 */
-	public String getRBinPath(String command);
+	public Path getRBinPath(String command);
 
 	/** @return path to an Rserve executable */
-	public String getRServeBinPath();
+	public Path getRServeBinPath();
 
 	public Properties getProperties();
 }
