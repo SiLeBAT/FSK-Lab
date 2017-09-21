@@ -195,7 +195,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		try {
 			this.settings.loadSettings(settings);
 		} catch (InvalidSettingsException exception) {
-//			throw new NotConfigurableException("InvalidSettingsException", exception);
+			// throw new NotConfigurableException("InvalidSettingsException", exception);
 			LOGGER.warn("Settings were not loaded", exception);
 		}
 
@@ -681,32 +681,31 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -1195181696127795655L;
 
-		private final JLabel nameLabel;
-		private final JTextField nameTextField;
+		private final JTextField nameTextField = createTextField();
+		private final JTextArea descriptionTextArea = createTextArea();
 
-		private final JLabel descriptionLabel;
-		private final JTextArea descriptionTextArea;
-		private final JScrollPane descriptionPane;
+		private final List<JComponent> advancedComponents;
 
 		EditAssayPanel(final boolean isAdvanced) {
 
-			nameLabel = createLabel("GM.EditAssayPanel.nameLabel", "GM.EditAssayPanel.nameTooltip", true);
-			nameTextField = createTextField();
+			// Create labels
+			final JLabel nameLabel = createLabel("GM.EditAssayPanel.nameLabel", "GM.EditAssayPanel.nameTooltip", true);
+			final JLabel descriptionLabel = createLabel("GM.EditAssayPanel.descriptionLabel",
+					"GM.EditAssayPanel.descriptionTooltip", true);
+			
+			// Wrap text area in JScrollPane
+			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
 
-			descriptionLabel = createLabel("GM.EditAssayPanel.descriptionLabel", "GM.EditAssayPanel.descriptionTooltip",
-					true);
-			descriptionTextArea = createTextArea();
-			descriptionPane = new JScrollPane(descriptionTextArea);
-
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(nameLabel, nameTextField),
-					new Pair<>(descriptionLabel, descriptionPane));
-
+			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
+					new Pair<>(nameLabel, nameTextField), // name
+					new Pair<>(descriptionLabel, descriptionPane)); // description
 			addGridComponents(this, pairs);
+
+			advancedComponents = Arrays.asList(descriptionLabel, descriptionPane);
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
-				descriptionLabel.setVisible(false);
-				descriptionTextArea.setVisible(false);
+				advancedComponents.forEach(it -> it.setVisible(false));
 			}
 		}
 
@@ -742,7 +741,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		@Override
 		List<JComponent> getAdvancedComponents() {
-			return Arrays.asList(descriptionLabel, descriptionPane);
+			return advancedComponents;
 		}
 	}
 
@@ -1608,7 +1607,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				regionComboBox.setSelectedItem(t.region);
 
 				countryComboBox.setSelectedItem(t.country);
-				
+
 				if (!t.populationRiskFactor.isEmpty()) {
 					riskTextField.setText(t.populationRiskFactor.get(0));
 				}
@@ -1624,7 +1623,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final PopulationGroup populationGroup = new PopulationGroup();
 			populationGroup.populationName = populationNameTextField.getText();
 			populationGroup.targetPopulation = targetPopulationTextField.getText();
-			
+
 			final String populationSpan = populationSpanTextField.getText();
 			if (!populationSpan.isEmpty()) {
 				populationGroup.populationSpan.add(populationSpan);
@@ -2978,12 +2977,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			if (date != null) {
 				scope.temporalInformation = new SimpleDateFormat(dateChooser.getDateFormatString()).format(date);
 			}
-			
+
 			final Object region = regionField.getSelectedItem();
 			if (region != null) {
 				scope.region.add((String) region);
 			}
-			
+
 			final Object country = countryField.getSelectedItem();
 			if (country != null) {
 				scope.country.add((String) country);
