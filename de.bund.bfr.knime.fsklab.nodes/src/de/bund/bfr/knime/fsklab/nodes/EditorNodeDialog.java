@@ -848,12 +848,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			}
 
 			method.softwareTool = dietarySoftwareToolTextField.getText();
-			if (foodItemNumberTextField.getText() != null) {
-				method.numberOfFoodItems.add(foodItemNumberTextField.getText());
+
+			final String foodItemNumber = foodItemNumberTextField.getText();
+			if (!foodItemNumber.isEmpty()) {
+				method.numberOfFoodItems.add(foodItemNumber);
 			}
-			if (recordTypeTextField.getText() != null) {
-				method.recordTypes.add(recordTypeTextField.getText());
+
+			final String recordType = recordTypeTextField.getText();
+			if (!recordType.isEmpty()) {
+				method.recordTypes.add(recordType);
 			}
+
 			for (final Object o : foodDescriptionComboBox.getSelectedObjects()) {
 				method.foodDescriptors.add((String) o);
 			}
@@ -1619,17 +1624,56 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final PopulationGroup populationGroup = new PopulationGroup();
 			populationGroup.populationName = populationNameTextField.getText();
 			populationGroup.targetPopulation = targetPopulationTextField.getText();
-			populationGroup.populationSpan.add(populationSpanTextField.getText());
-			populationGroup.populationDescription.add(populationDescriptionTextArea.getText());
-			populationGroup.populationAge.add(populationAgeTextField.getText());
+			
+			final String populationSpan = populationSpanTextField.getText();
+			if (!populationSpan.isEmpty()) {
+				populationGroup.populationSpan.add(populationSpan);
+			}
+
+			final String populationDescription = populationDescriptionTextArea.getText();
+			if (!populationDescription.isEmpty()) {
+				populationGroup.populationDescription.add(populationDescription);
+			}
+
+			final String populationAge = populationAgeTextField.getText();
+			if (!populationAge.isEmpty()) {
+				populationGroup.populationAge.add(populationAge);
+			}
+
 			populationGroup.populationGender = populationGenderTextField.getText();
-			populationGroup.bmi.add(bmiTextField.getText());
-			populationGroup.specialDietGroups.add(specialDietGroupTextField.getText());
-			populationGroup.patternConsumption.add(patternConsumptionTextField.getText());
-			populationGroup.region.add((String) regionComboBox.getSelectedItem());
-			populationGroup.country.add((String) countryComboBox.getSelectedItem());
-			populationGroup.populationRiskFactor.add(riskTextField.getText());
-			populationGroup.season.add(seasonTextField.getText());
+
+			final String bmi = bmiTextField.getText();
+			if (!bmi.isEmpty()) {
+				populationGroup.bmi.add(bmi);
+			}
+
+			final String specialDietGroup = specialDietGroupTextField.getText();
+			if (!specialDietGroup.isEmpty()) {
+				populationGroup.specialDietGroups.add(specialDietGroup);
+			}
+
+			final String patternConsumption = patternConsumptionTextField.getText();
+			if (!patternConsumption.isEmpty()) {
+				populationGroup.patternConsumption.add(patternConsumption);
+			}
+
+			if (regionComboBox.getSelectedIndex() != -1) {
+				populationGroup.region.add((String) regionComboBox.getSelectedItem());
+			}
+
+			if (countryComboBox.getSelectedIndex() != -1) {
+				populationGroup.country.add((String) countryComboBox.getSelectedItem());
+			}
+
+			final String risk = riskTextField.getText();
+			if (!risk.isEmpty()) {
+				populationGroup.populationRiskFactor.add(risk);
+			}
+
+			final String season = seasonTextField.getText();
+			if (!season.isEmpty()) {
+				populationGroup.season.add(season);
+			}
 
 			return populationGroup;
 		}
@@ -2934,8 +2978,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			if (date != null) {
 				scope.temporalInformation = new SimpleDateFormat(dateChooser.getDateFormatString()).format(date);
 			}
-			scope.region.add((String) regionField.getSelectedItem());
-			scope.country.add((String) countryField.getSelectedItem());
+			
+			final Object region = regionField.getSelectedItem();
+			if (region != null) {
+				scope.region.add((String) region);
+			}
+			
+			final Object country = countryField.getSelectedItem();
+			if (country != null) {
+				scope.country.add((String) country);
+			}
 
 			return scope;
 		}

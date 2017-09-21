@@ -32,7 +32,6 @@ import org.knime.core.node.port.PortType;
 
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 
 public class EditorNodeModel extends NoInternalsModel {
 

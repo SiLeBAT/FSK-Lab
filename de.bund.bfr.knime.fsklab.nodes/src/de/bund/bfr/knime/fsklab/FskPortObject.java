@@ -961,24 +961,12 @@ public class FskPortObject implements PortObject {
 			node.add(parentNode);
 		}
 
-		if (modelMath.sse != null) {
-			add(node, "ModelMath.SSE", modelMath.sse.doubleValue());
-		}
-		if (modelMath.mse != null) {
-			add(node, "ModelMath.MSE", modelMath.mse.doubleValue());
-		}
-		if (modelMath.rmse != null) {
-			add(node, "ModelMath.RMSE", modelMath.rmse.doubleValue());
-		}
-		if (modelMath.rSquared != null) {
-			add(node, "ModelMath.R2", modelMath.rSquared.doubleValue());
-		}
-		if (modelMath.aic != null) {
-			add(node, "ModelMath.AIC", modelMath.aic.doubleValue());
-		}
-		if (modelMath.bic != null) {
-			add(node, "ModelMath.BIC", modelMath.bic.doubleValue());
-		}
+		add(node, "ModelMath.SSE", modelMath.sse);
+		add(node, "ModelMath.MSE", modelMath.mse);
+		add(node, "ModelMath.RMSE", modelMath.rmse);
+		add(node, "ModelMath.R2", modelMath.rSquared);
+		add(node, "ModelMath.AIC", modelMath.aic);
+		add(node, "ModelMath.BIC", modelMath.bic);
 
 		final ModelEquation modelEquation = modelMath.modelEquation;
 		if (modelEquation != null) {

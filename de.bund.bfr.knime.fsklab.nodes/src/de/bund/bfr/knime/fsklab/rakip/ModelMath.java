@@ -23,17 +23,17 @@ public class ModelMath {
 
 	public final List<Parameter> parameter = new ArrayList<>();
 
-	public Double sse = .0;
+	public double sse = .0;
 
-	public Double mse = .0;
+	public double mse = .0;
 
-	public Double rmse = .0;
+	public double rmse = .0;
 
-	public Double rSquared = .0;
+	public double rSquared = .0;
 
-	public Double aic = .0;
+	public double aic = .0;
 
-	public Double bic = .0;
+	public double bic = .0;
 
 	public ModelEquation modelEquation = new ModelEquation();
 
