@@ -749,50 +749,29 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -931984426171199928L;
 
-		private final JLabel dataCollectionToolLabel;
-		private final AutoSuggestField dataCollectionToolField;
-
-		private final JLabel nonConsecutiveOneDayLabel;
-		private final JTextField nonConsecutiveOneDayTextField;
-
-		private final JLabel dietarySoftwareToolLabel;
-		private final JTextField dietarySoftwareToolTextField;
-
-		private final JLabel foodItemNumberLabel;
-		private final JTextField foodItemNumberTextField;
-
-		private final JLabel recordTypeLabel;
-		private final JTextField recordTypeTextField;
-
-		private final JLabel foodDescriptionLabel;
-		private final JComboBox<String> foodDescriptionComboBox;
+		private final AutoSuggestField dataCollectionToolField = createAutoSuggestField(vocabs.get("Method. tool to collect data"));
+		private final JTextField nonConsecutiveOneDayTextField = createTextField();
+		private final JTextField dietarySoftwareToolTextField = createTextField();
+		private final JTextField foodItemNumberTextField = createTextField();
+		private final JTextField recordTypeTextField = createTextField();
+		private final JComboBox<String> foodDescriptionComboBox = createComboBox(vocabs.get("Food descriptors"));
+		private final List<JComponent> advancedComponents;
 
 		EditDietaryAssessmentMethodPanel(final boolean isAdvanced) {
-
-			dataCollectionToolLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel",
+			
+			// Create labels
+			final JLabel dataCollectionToolLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel",
 					"GM.EditDietaryAssessmentMethodPanel.dataCollectionToolTooltip", true);
-			dataCollectionToolField = createAutoSuggestField(vocabs.get("Method. tool to collect data"));
-
-			nonConsecutiveOneDayLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysLabel",
+			final JLabel nonConsecutiveOneDayLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysLabel",
 					"GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysTooltip", true);
-			nonConsecutiveOneDayTextField = createTextField();
-
-			dietarySoftwareToolLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolLabel",
+			final JLabel dietarySoftwareToolLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolLabel",
 					"GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolTooltip");
-			dietarySoftwareToolTextField = createTextField();
-
-			foodItemNumberLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.foodItemNumberLabel",
+			final JLabel foodItemNumberLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.foodItemNumberLabel",
 					"GM.EditDietaryAssessmentMethodPanel.foodItemNumberTooltip");
-			foodItemNumberTextField = createTextField();
-
-			recordTypeLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.recordTypeLabel",
+			final JLabel recordTypeLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.recordTypeLabel",
 					"GM.EditDietaryAssessmentMethodPanel.recordTypeTooltip");
-			recordTypeTextField = createTextField();
-
-			foodDescriptionLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.foodDescriptionLabel",
+			final JLabel foodDescriptionLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.foodDescriptionLabel",
 					"GM.EditDietaryAssessmentMethodPanel.foodDescriptionTooltip");
-			final Set<String> foodDescriptionVocabulary = vocabs.get("Food descriptors");
-			foodDescriptionComboBox = createComboBox(foodDescriptionVocabulary);
 
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
 					new Pair<>(dataCollectionToolLabel, dataCollectionToolField),
@@ -801,12 +780,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					new Pair<>(foodItemNumberLabel, foodItemNumberTextField),
 					new Pair<>(recordTypeLabel, recordTypeTextField),
 					new Pair<>(foodDescriptionLabel, foodDescriptionComboBox));
-
 			addGridComponents(this, pairs);
+
+			advancedComponents = Arrays.asList(dietarySoftwareToolLabel, dietarySoftwareToolTextField, foodItemNumberLabel,
+					foodItemNumberTextField, recordTypeLabel, recordTypeTextField, foodDescriptionLabel,
+					foodDescriptionComboBox);
 
 			// If simple mode hides advanced components
 			if (!isAdvanced) {
-				getAdvancedComponents().forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setVisible(false));
 			}
 		}
 
@@ -885,9 +867,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		@Override
 		List<JComponent> getAdvancedComponents() {
-			return Arrays.asList(dietarySoftwareToolLabel, dietarySoftwareToolTextField, foodItemNumberLabel,
-					foodItemNumberTextField, recordTypeLabel, recordTypeTextField, foodDescriptionLabel,
-					foodDescriptionComboBox);
+			return advancedComponents;
 		}
 	}
 
