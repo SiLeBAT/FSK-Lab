@@ -89,10 +89,8 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 	public String getRBinPath(final String command) {
 		Path binPath = Paths.get(getRHome(), "bin");
 		if (Platform.isWindows()) {
-			if (Platform.is64Bit()) {
-				return binPath.resolve("x64").toString() + File.separator + command + ".exe";
-			}
-			return binPath.resolve("i386").toString() + File.separator + command + ".exe";
+			final String arch = Platform.is64Bit() ? "x64" : "i386";
+			return binPath.resolve(arch).toString() + File.separator + command + ".exe";
 		}
 		return binPath + File.separator + command;
 	}
@@ -107,10 +105,8 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 		final Path rserveLibs = rservePath.resolve("libs");
 
 		if (Platform.isWindows()) {
-			if (Platform.is64Bit()) {
-				return rserveLibs.resolve("x64/Rserve.exe").toString();
-			}
-			return rserveLibs.resolve("i386/Rserve.exe").toString();
+			final String arch = Platform.is64Bit() ? "x64" : "i386";
+			return rserveLibs.resolve(arch + "/Rserve.exe").toString();
 		}
 		return rserveLibs.resolve("Rserve.dbg").toString();
 	}
