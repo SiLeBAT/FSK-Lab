@@ -47,6 +47,8 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
 
+import java.util.Properties;
+
 /**
  * Class that provides a path to an R home directory.
  * 
@@ -55,15 +57,18 @@ package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
  */
 public interface RPreferenceProvider {
 
-  /** @return path to RHome */
-  public String getRHome();
+	/** @return path to RHome */
+	public String getRHome();
 
-  /**
-   * @param command R command ("R" or "Rscript" for example)
-   * @return path to the command executable
-   */
-  public String getRBinPath(String command);
+	/**
+	 * @param command
+	 *            R command ("R" or "Rscript" for example)
+	 * @return path to the command executable
+	 */
+	public String getRBinPath(String command);
 
-  /** @return path to an Rserve executable */
-  public String getRServeBinPath();
+	/** @return path to an Rserve executable */
+	public String getRServeBinPath();
+
+	public Properties getProperties();
 }

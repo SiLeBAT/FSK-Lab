@@ -84,7 +84,7 @@ public class RConnectionFactory {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
 
 	// connect to a localhost default port Rserve
-	private static final boolean DEBUG_RSERVE = true;
+	private static final boolean DEBUG_RSERVE = false;
 
 	private static final ArrayList<RConnectionResource> m_resources = new ArrayList<>();
 
@@ -109,8 +109,8 @@ public class RConnectionFactory {
 	}
 
 	/*
-	 * Whether the shutdown hooks have been added. Using atomic boolean enables
-	 * us to make sure we only add the shutdown hooks once.
+	 * Whether the shutdown hooks have been added. Using atomic boolean enables us
+	 * to make sure we only add the shutdown hooks once.
 	 */
 	private static final AtomicBoolean m_initialized = new AtomicBoolean(false);
 
@@ -154,8 +154,16 @@ public class RConnectionFactory {
 			// on windows, the Rserve executable is not reside in the R bin
 			// folder, but still requires the R.dll, so we need to put the R
 			// bin folder on path
-			env.put("PATH", rHome + File.pathSeparator + rHome
-					+ ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator + env.get("PATH"));
+
+			// archProperty is "i386" for 32 bit or "x86_64" for 64 bit
+			final String archProperty = RPreferenceInitializer.getR3Provider().getProperties().getProperty("arch");
+
+			// "x64" for 64 bit and "i386" for 32 bit.
+			final String arch = archProperty.equals("x86_64") ? "x64" : "i386";
+
+			env.put("PATH", rHome + File.pathSeparator + rHome + "\\bin\\" + arch + "\\" + File.pathSeparator
+					+ env.get("PATH"));
+
 		} else {
 			// on Unix we need priorize the "R_HOME/lib" folder in the
 			// LD_LIBRARY_PATH to ensure that the shared libraries of the
@@ -184,8 +192,8 @@ public class RConnectionFactory {
 	 *            process, this should always be "127.0.0.1"
 	 * @param port
 	 *            Port to launch the Rserve process on.
-	 * @return <code>true</code> if Rserve is running or was successfully
-	 *         started, <code>false</code>
+	 * @return <code>true</code> if Rserve is running or was successfully started,
+	 *         <code>false</code>
 	 * @throws IOException
 	 *             if Rserve could not be launched. This may be the case if R is
 	 *             either not found or does not have Rserve package installed.
@@ -212,9 +220,9 @@ public class RConnectionFactory {
 			rInstance = new RInstance(p, host, port);
 
 			/*
-			 * Consume output of process, to ensure buffer does not fill up,
-			 * which blocks processes on some OSs. Also, we can log errors in
-			 * the external process this way.
+			 * Consume output of process, to ensure buffer does not fill up, which blocks
+			 * processes on some OSs. Also, we can log errors in the external process this
+			 * way.
 			 */
 			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
 				if (DEBUG_RSERVE) {
@@ -263,8 +271,8 @@ public class RConnectionFactory {
 
 	/**
 	 * Create a new {@link RConnection}, creating a new R instance beforehand,
-	 * unless a connection of an existing instance has been closed in which case
-	 * an R instance will be reused.
+	 * unless a connection of an existing instance has been closed in which case an
+	 * R instance will be reused.
 	 * <p>
 	 * The method does not check {@link RConnection#isConnected()}.
 	 *
@@ -272,8 +280,8 @@ public class RConnectionFactory {
 	 *         <code>null</code>
 	 * @throws IOException
 	 *             if Rserve could not be launched. This may be the case if R is
-	 *             either not found or does not have Rserve package installed.
-	 *             Or if there was no open port found.
+	 *             either not found or does not have Rserve package installed. Or if
+	 *             there was no open port found.
 	 */
 	public static RConnectionResource createConnection() throws RserveException, IOException {
 		initializeShutdownHook(); // checks for re-initialization
@@ -343,8 +351,8 @@ public class RConnectionFactory {
 	}
 
 	/**
-	 * An instance of R running in an external process. The process is
-	 * terminated of {@link #close()}.
+	 * An instance of R running in an external process. The process is terminated of
+	 * {@link #close()}.
 	 */
 	private static class RInstance implements AutoCloseable {
 		private final Process m_process;
@@ -404,8 +412,8 @@ public class RConnectionFactory {
 	}
 
 	/**
-	 * Thread which processes an InputStream line by line via a processing
-	 * function specified by the user.
+	 * Thread which processes an InputStream line by line via a processing function
+	 * specified by the user.
 	 */
 	private static final class StreamReaderThread extends Thread {
 
@@ -454,9 +462,8 @@ public class RConnectionFactory {
 
 	/**
 	 * This class holds an RInstance and returns its RConnection of
-	 * {@link RConnectionResource#get()}. If released, a timeout will make sure
-	 * that the underlying {@link RInstance} is shutdown after a certain amount
-	 * of time.
+	 * {@link RConnectionResource#get()}. If released, a timeout will make sure that
+	 * the underlying {@link RInstance} is shutdown after a certain amount of time.
 	 *
 	 * @author Jonathan Hale
 	 */
@@ -483,8 +490,7 @@ public class RConnectionFactory {
 		}
 
 		/**
-		 * Acquire ownership of this resource. Only the factory should be able
-		 * to this.
+		 * Acquire ownership of this resource. Only the factory should be able to this.
 		 */
 		private synchronized void acquire() {
 			if (m_instance == null) {
@@ -499,8 +505,8 @@ public class RConnectionFactory {
 		}
 
 		/**
-		 * Acquire ownership of this resource, if it is available. Only the
-		 * factory should be able to do this.
+		 * Acquire ownership of this resource, if it is available. Only the factory
+		 * should be able to do this.
 		 *
 		 * @return Whether the resource has been acquired.
 		 */
@@ -543,8 +549,8 @@ public class RConnectionFactory {
 		}
 
 		/**
-		 * Note: Always call {@link #acquire()} of {@link #acquireIfAvailable()}
-		 * before using this method.
+		 * Note: Always call {@link #acquire()} of {@link #acquireIfAvailable()} before
+		 * using this method.
 		 *
 		 * @return The value of the resource.
 		 * @throws IllegalAccessError
@@ -638,8 +644,7 @@ public class RConnectionFactory {
 		 * Destroy the underlying resource.
 		 *
 		 * @param remove
-		 *            Whether to automatically remove this resource from
-		 *            m_resources.
+		 *            Whether to automatically remove this resource from m_resources.
 		 */
 		public synchronized void destroy(final boolean remove) {
 			if (m_instance == null) {

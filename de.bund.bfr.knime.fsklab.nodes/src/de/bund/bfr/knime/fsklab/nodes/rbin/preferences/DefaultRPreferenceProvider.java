@@ -48,9 +48,12 @@
 package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+
+import org.knime.core.node.NodeLogger;
 
 import com.sun.jna.Platform;
 
@@ -69,6 +72,8 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 	private final String m_rHome;
 
 	private Properties m_properties = null;
+	
+	private static final NodeLogger LOGGER = NodeLogger.getLogger("DefaultRPreferenceProvider");
 
 	/**
 	 * Creates a new preference provider based on the given R home directory.
@@ -88,10 +93,25 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 	@Override
 	public String getRBinPath(final String command) {
 		Path binPath = Paths.get(getRHome(), "bin");
+		
 		if (Platform.isWindows()) {
-			final String arch = Platform.is64Bit() ? "x64" : "i386";
-			return binPath.resolve(arch).toString() + File.separator + command + ".exe";
+			
+			final Path x64Path = binPath.resolve("x64");  // 64 bit binaries
+			final Path i386Path = binPath.resolve("i386");  // 32 bit binaries
+			
+			if (Platform.is64Bit()) {
+				if (Files.exists(x64Path)) {
+					return x64Path.toString() + File.separator + command + ".exe";
+				}
+				
+				// No 64 bits binaries were found. Then 32 bit binaries will be used.
+				LOGGER.warn("Using 32 bit R on 64 bit. Please consider using 64 bit R");
+				return i386Path.toString() + File.separator + command + ".exe";
+			}
+			
+			return i386Path.toString() + File.separator + command + ".exe";
 		}
+		
 		return binPath + File.separator + command;
 	}
 
@@ -105,7 +125,12 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 		final Path rserveLibs = rservePath.resolve("libs");
 
 		if (Platform.isWindows()) {
-			final String arch = Platform.is64Bit() ? "x64" : "i386";
+			// archProperty is "i386" for 32 bit or "x86_64" for 64 bit
+			final String archProperty = m_properties.getProperty("arch");
+			
+			// "x64" for 64 bit and "i386" for 32 bit.
+			final String arch = archProperty.equals("x86_64") ? "x64" : "i386";
+			
 			return rserveLibs.resolve(arch + "/Rserve.exe").toString();
 		}
 		return rserveLibs.resolve("Rserve.dbg").toString();
@@ -118,7 +143,7 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 	 *
 	 * @return The properties for this provider
 	 */
-	Properties getProperties() {
+	public Properties getProperties() {
 		if (m_properties == null) {
 			m_properties = RBinUtil.retrieveRProperties(this);
 		}
