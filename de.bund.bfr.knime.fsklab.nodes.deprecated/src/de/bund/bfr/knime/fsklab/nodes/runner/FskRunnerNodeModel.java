@@ -207,7 +207,8 @@ class FskRunnerNodeModel extends NodeModel {
 		String[] newPaths = controller.eval(cmd).asStrings();
 
 		// Run model
-		controller.eval(fskObj.param + "\n" + fskObj.model);
+		controller.eval(fskObj.param);
+		controller.eval(fskObj.model);
 
 		// Save workspace
 		if (fskObj.workspace == null) {
