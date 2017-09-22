@@ -1714,109 +1714,51 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private static final String dateFormatStr = "yyyy-MM-dd";
 
 		private final JCheckBox isReferenceDescriptionCheckBox;
+		private final JComboBox<String> typeComboBox = createComboBox(referenceTypeLabels.values());
+		private final FixedDateChooser dateChooser = new FixedDateChooser();
+		private final JTextField pmidTextField = createTextField();
+		private final JTextField doiTextField = createTextField();
+		private final JTextField authorListTextField = createTextField();
+		private final JTextField titleTextField = createTextField();
+		private final JTextArea abstractTextArea = createTextArea();
+		private final JTextField journalTextField = createTextField();
+		// Spinner models starting with 0 and taking positive ints only
+		private final SpinnerNumberModel volumeSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
+		private final SpinnerNumberModel issueSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
+		private final JTextField pageTextField = createTextField();
+		private final JTextField statusTextField = createTextField();
+		private final JTextField websiteTextField = createTextField();
+		private final JTextArea commentTextArea = createTextArea();
 
-		private final JLabel typeLabel;
-		private final JComboBox<String> typeComboBox;
-
-		private final JLabel dateLabel;
-		private final FixedDateChooser dateChooser;
-
-		private final JLabel pmidLabel;
-		private final JTextField pmidTextField;
-
-		private final JLabel doiLabel;
-		private final JTextField doiTextField;
-
-		private final JLabel authorListLabel;
-		private final JTextField authorListTextField;
-
-		private final JLabel titleLabel;
-		private final JTextField titleTextField;
-
-		private final JLabel abstractLabel;
-		private final JTextArea abstractTextArea;
-		private final JScrollPane abstractPane;
-
-		private final JLabel journalLabel;
-		private final JTextField journalTextField;
-
-		private final JLabel volumeLabel;
-		private final SpinnerNumberModel volumeSpinnerModel;
-		private final JSpinner volumeSpinner;
-
-		private final JLabel issueLabel;
-		private final SpinnerNumberModel issueSpinnerModel;
-		private final JSpinner issueSpinner;
-
-		private final JLabel pageLabel;
-		private final JTextField pageTextField;
-
-		private final JLabel statusLabel;
-		private final JTextField statusTextField;
-
-		private final JLabel websiteLabel;
-		private final JTextField websiteTextField;
-
-		private final JLabel commentLabel;
-		private final JTextArea commentTextArea;
-		private final JScrollPane commentPane;
+		private final List<JComponent> advancedComponents;
 
 		EditReferencePanel(final boolean isAdvanced) {
 
 			// Create fields
 			isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
 
-			typeLabel = createLabel("GM.EditReferencePanel.typeLabel");
-			typeComboBox = createComboBox(referenceTypeLabels.values());
-
-			dateLabel = createLabel("GM.EditReferencePanel.dateLabel");
-			dateChooser = new FixedDateChooser();
-
-			pmidLabel = createLabel("GM.EditReferencePanel.pmidLabel");
-			pmidTextField = createTextField();
-
-			doiLabel = createLabel("GM.EditReferencePanel.doiLabel", true);
-			doiTextField = createTextField();
-
-			authorListLabel = createLabel("GM.EditReferencePanel.authorListLabel");
-			authorListTextField = createTextField();
-
-			titleLabel = createLabel("GM.EditReferencePanel.titleLabel", true);
-			titleTextField = createTextField();
-
-			abstractLabel = createLabel("GM.EditReferencePanel.abstractLabel");
-			abstractTextArea = createTextArea();
-			abstractPane = new JScrollPane(abstractTextArea);
-
-			journalLabel = createLabel("GM.EditReferencePanel.journalLabel");
-			journalTextField = createTextField();
-
-			volumeLabel = createLabel("GM.EditReferencePanel.volumeLabel");
-			// Create integer spinner model starting with 0 and taking positive ints only
-			volumeSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
-			volumeSpinner = createSpinner(volumeSpinnerModel);
-
-			issueLabel = createLabel("GM.EditReferencePanel.issueLabel");
-			// Create integer spinner model starting with 0 and taking positive ints only
-			issueSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
-			issueSpinner = createSpinner(issueSpinnerModel);
-
-			pageLabel = createLabel("GM.EditReferencePanel.pageLabel");
-			pageTextField = createTextField();
-
-			statusLabel = createLabel("GM.EditReferencePanel.statusLabel");
-			statusTextField = createTextField();
-
-			websiteLabel = createLabel("GM.EditReferencePanel.websiteLabel");
-			websiteTextField = createTextField();
-
-			commentLabel = createLabel("GM.EditReferencePanel.commentLabel");
-			commentTextArea = createTextArea();
-			commentPane = new JScrollPane(commentTextArea);
-
 			// Create labels
+			final JLabel typeLabel = createLabel("GM.EditReferencePanel.typeLabel");
+			final JLabel dateLabel = createLabel("GM.EditReferencePanel.dateLabel");
+			final JLabel pmidLabel = createLabel("GM.EditReferencePanel.pmidLabel");
+			final JLabel doiLabel = createLabel("GM.EditReferencePanel.doiLabel", true);
+			final JLabel authorListLabel = createLabel("GM.EditReferencePanel.authorListLabel");
+			final JLabel titleLabel = createLabel("GM.EditReferencePanel.titleLabel", true);
+			final JLabel abstractLabel = createLabel("GM.EditReferencePanel.abstractLabel");
+			final JLabel journalLabel = createLabel("GM.EditReferencePanel.journalLabel");
+			final JLabel volumeLabel = createLabel("GM.EditReferencePanel.volumeLabel");
+			final JLabel issueLabel = createLabel("GM.EditReferencePanel.issueLabel");
+			final JLabel pageLabel = createLabel("GM.EditReferencePanel.pageLabel");
+			final JLabel statusLabel = createLabel("GM.EditReferencePanel.statusLabel");
+			final JLabel websiteLabel = createLabel("GM.EditReferencePanel.websiteLabel");
+			final JLabel commentLabel = createLabel("GM.EditReferencePanel.commentLabel");
 
 			// Build UI
+			final JScrollPane abstractPane = new JScrollPane(abstractTextArea);
+			final JSpinner volumeSpinner = createSpinner(volumeSpinnerModel);
+			final JSpinner issueSpinner = createSpinner(issueSpinnerModel);
+			final JScrollPane commentPane = new JScrollPane(commentTextArea);
+
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(typeLabel, typeComboBox),
 					new Pair<>(dateLabel, dateChooser), new Pair<>(pmidLabel, pmidTextField),
 					new Pair<>(doiLabel, doiTextField), new Pair<>(authorListLabel, authorListTextField),
@@ -1838,6 +1780,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			}
 
 			// If simple mode hide advanced components
+			advancedComponents = Arrays.asList(typeLabel, typeComboBox, dateLabel, dateChooser, pmidLabel, pmidTextField,
+					authorListLabel, authorListTextField, abstractLabel, abstractPane, journalLabel, journalTextField,
+					volumeLabel, volumeSpinner, issueLabel, issueSpinner, pageLabel, pageTextField, statusLabel,
+					statusTextField, websiteLabel, websiteTextField, commentLabel, commentPane);
 			if (!isAdvanced) {
 				getAdvancedComponents().forEach(it -> it.setVisible(false));
 			}
@@ -1948,10 +1894,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		@Override
 		List<JComponent> getAdvancedComponents() {
-			return Arrays.asList(typeLabel, typeComboBox, dateLabel, dateChooser, pmidLabel, pmidTextField,
-					authorListLabel, authorListTextField, abstractLabel, abstractPane, journalLabel, journalTextField,
-					volumeLabel, volumeSpinner, issueLabel, issueSpinner, pageLabel, pageTextField, statusLabel,
-					statusTextField, websiteLabel, websiteTextField, commentLabel, commentPane);
+			return advancedComponents;
 		}
 	}
 
