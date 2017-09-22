@@ -1524,85 +1524,44 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -7400646603919832139L;
 
-		private final JLabel envNameLabel;
-		private final AutoSuggestField envNameField;
+		private final AutoSuggestField envNameField = createAutoSuggestField(vocabs.get("Product-matrix name"));
+		private final JTextArea envDescriptionTextArea = createTextArea();
+		private final AutoSuggestField envUnitField = createAutoSuggestField(vocabs.get("Product-matrix unit"));
+		private final JComboBox<String> productionMethodComboBox = createComboBox(vocabs.get("Method of production"));
+		private final JComboBox<String> packagingComboBox = createComboBox(vocabs.get("Packaging"));
+		private final JComboBox<String> productTreatmentComboBox = createComboBox(vocabs.get("Product treatment"));
+		private final AutoSuggestField originCountryField = createAutoSuggestField(vocabs.get("Country of origin"));
+		private final AutoSuggestField originAreaField = createAutoSuggestField(vocabs.get("Area of origin"));
+		private final AutoSuggestField fisheriesAreaField = createAutoSuggestField(vocabs.get("Fisheries area"));
+		private final FixedDateChooser productionDateChooser = new FixedDateChooser();
+		private final FixedDateChooser expirationDateChooser = new FixedDateChooser();
 
-		private final JLabel envDescriptionLabel;
-		private final JTextArea envDescriptionTextArea;
-		private final JScrollPane envDescriptionPane;
-
-		private final JLabel envUnitLabel;
-		private final AutoSuggestField envUnitField;
-
-		private final JLabel productionMethodLabel;
-		private final JComboBox<String> productionMethodComboBox;
-
-		private final JLabel packagingLabel;
-		private final JComboBox<String> packagingComboBox;
-
-		private final JLabel productTreatmentLabel;
-		private final JComboBox<String> productTreatmentComboBox;
-
-		private final JLabel originCountryLabel;
-		private final AutoSuggestField originCountryField;
-
-		private final JLabel originAreaLabel;
-		private final AutoSuggestField originAreaField;
-
-		private final JLabel fisheriesAreaLabel;
-		private final AutoSuggestField fisheriesAreaField;
-
-		private final JLabel productionDateLabel;
-		private final FixedDateChooser productionDateChooser;
-
-		private final JLabel expirationDateLabel;
-		private final FixedDateChooser expirationDateChooser;
+		private final List<JComponent> advancedComponents;
 
 		public EditProductPanel(boolean isAdvanced) {
 
-			envNameLabel = createLabel("GM.EditProductPanel.envNameLabel", "GM.EditProductPanel.envNameTooltip", true);
-			envNameField = createAutoSuggestField(vocabs.get("Product-matrix name"));
-
-			envDescriptionLabel = createLabel("GM.EditProductPanel.envDescriptionLabel",
+			final JLabel envNameLabel = createLabel("GM.EditProductPanel.envNameLabel", "GM.EditProductPanel.envNameTooltip", true);
+			final JLabel envDescriptionLabel = createLabel("GM.EditProductPanel.envDescriptionLabel",
 					"GM.EditProductPanel.envDescriptionTooltip");
-			envDescriptionTextArea = createTextArea();
-			envDescriptionPane = new JScrollPane(envDescriptionTextArea);
-
-			envUnitLabel = createLabel("GM.EditProductPanel.envUnitLabel", "GM.EditProductPanel.envUnitTooltip", true);
-			envUnitField = createAutoSuggestField(vocabs.get("Product-matrix unit"));
-
-			productionMethodLabel = createLabel("GM.EditProductPanel.productionMethodLabel",
+			final JLabel envUnitLabel = createLabel("GM.EditProductPanel.envUnitLabel", "GM.EditProductPanel.envUnitTooltip", true);
+			final JLabel productionMethodLabel = createLabel("GM.EditProductPanel.productionMethodLabel",
 					"GM.EditProductPanel.productionMethodTooltip");
-			productionMethodComboBox = createComboBox(vocabs.get("Method of production"));
-
-			packagingLabel = createLabel("GM.EditProductPanel.packagingLabel", "GM.EditProductPanel.packagingTooltip");
-			packagingComboBox = createComboBox(vocabs.get("Packaging"));
-
-			productTreatmentLabel = createLabel("GM.EditProductPanel.productTreatmentLabel",
+			final JLabel packagingLabel = createLabel("GM.EditProductPanel.packagingLabel", "GM.EditProductPanel.packagingTooltip");
+			final JLabel productTreatmentLabel = createLabel("GM.EditProductPanel.productTreatmentLabel",
 					"GM.EditProductPanel.productTreatmentTooltip");
-			productTreatmentComboBox = createComboBox(vocabs.get("Product treatment"));
-
-			originCountryLabel = createLabel("GM.EditProductPanel.originCountryLabel",
+			final JLabel originCountryLabel = createLabel("GM.EditProductPanel.originCountryLabel",
 					"GM.EditProductPanel.originCountryTooltip");
-			originCountryField = createAutoSuggestField(vocabs.get("Country of origin"));
-
-			originAreaLabel = createLabel("GM.EditProductPanel.originAreaLabel",
+			final JLabel originAreaLabel = createLabel("GM.EditProductPanel.originAreaLabel",
 					"GM.EditProductPanel.originAreaTooltip");
-			originAreaField = createAutoSuggestField(vocabs.get("Area of origin"));
-
-			fisheriesAreaLabel = createLabel("GM.EditProductPanel.fisheriesAreaLabel",
+			final JLabel fisheriesAreaLabel = createLabel("GM.EditProductPanel.fisheriesAreaLabel",
 					"GM.EditProductPanel.fisheriesAreaTooltip");
-			fisheriesAreaField = createAutoSuggestField(vocabs.get("Fisheries area"));
-
-			productionDateLabel = createLabel("GM.EditProductPanel.productionDateLabel",
+			final JLabel productionDateLabel = createLabel("GM.EditProductPanel.productionDateLabel",
 					"GM.EditProductPanel.productionDateTooltip");
-			productionDateChooser = new FixedDateChooser();
-
-			expirationDateChooser = new FixedDateChooser();
-			expirationDateLabel = createLabel("GM.EditProductPanel.expirationDateLabel",
+			final JLabel expirationDateLabel = createLabel("GM.EditProductPanel.expirationDateLabel",
 					"GM.EditProductPanel.expirationDateTooltip");
 
 			// Build UI
+			final JScrollPane envDescriptionPane = new JScrollPane(envDescriptionTextArea);
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(envNameLabel, envNameField),
 					new Pair<>(envDescriptionLabel, envDescriptionPane), new Pair<>(envUnitLabel, envUnitField),
 					new Pair<>(productionMethodLabel, productionMethodComboBox),
@@ -1614,9 +1573,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					new Pair<>(expirationDateLabel, expirationDateChooser));
 			addGridComponents(this, pairs);
 
+			advancedComponents = Arrays.asList(envDescriptionLabel, envDescriptionPane, productionMethodLabel,
+					productionMethodComboBox, packagingLabel, packagingComboBox, productTreatmentLabel,
+					productTreatmentComboBox, originCountryLabel, originCountryField, originAreaLabel, originAreaField,
+					fisheriesAreaLabel, fisheriesAreaField, productionDateLabel, productionDateChooser,
+					expirationDateLabel, expirationDateChooser);
+
 			// If simple mode hides the advanced components
 			if (!isAdvanced) {
-				getAdvancedComponents().forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setVisible(false));
 			}
 		}
 
@@ -1678,11 +1643,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		@Override
 		List<JComponent> getAdvancedComponents() {
-			return Arrays.asList(envDescriptionLabel, envDescriptionPane, productionMethodLabel,
-					productionMethodComboBox, packagingLabel, packagingComboBox, productTreatmentLabel,
-					productTreatmentComboBox, originCountryLabel, originCountryField, originAreaLabel, originAreaField,
-					fisheriesAreaLabel, fisheriesAreaField, productionDateLabel, productionDateChooser,
-					expirationDateLabel, expirationDateChooser);
+			return advancedComponents;
 		}
 	}
 
