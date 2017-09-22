@@ -1316,116 +1316,84 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -4520186348489618333L;
 
-		private final JLabel populationNameLabel;
-		private final JTextField populationNameTextField;
-
-		private final JLabel targetPopulationLabel;
-		private final JTextField targetPopulationTextField;
-
-		private final JLabel populationSpanLabel;
-		private final JTextField populationSpanTextField;
-
-		private final JLabel populationDescriptionLabel;
-		private final JTextArea populationDescriptionTextArea;
-		private final JScrollPane populationDescriptionPane;
-
-		private final JLabel populationAgeLabel;
-		private final JTextField populationAgeTextField;
-
-		private final JLabel populationGenderLabel;
-		private final JTextField populationGenderTextField;
-
-		private final JLabel bmiLabel;
-		private final JTextField bmiTextField;
-
-		private final JLabel specialDietGroupLabel;
-		private final JTextField specialDietGroupTextField;
-
-		private final JLabel patternConsumptionLabel;
-		private final JTextField patternConsumptionTextField;
-
-		private final JLabel regionLabel;
-		private final JComboBox<String> regionComboBox;
-
-		private final JLabel countryLabel;
-		private final JComboBox<String> countryComboBox;
-
-		private final JLabel riskLabel;
-		private final JTextField riskTextField;
-
-		private final JLabel seasonLabel;
-		private final JTextField seasonTextField;
+		private final JTextField populationNameTextField = createTextField();
+		private final JTextField targetPopulationTextField = createTextField();
+		private final JTextField populationSpanTextField = createTextField();
+		private final JTextArea populationDescriptionTextArea = createTextArea();
+		private final JTextField populationAgeTextField = createTextField();
+		private final JTextField populationGenderTextField = createTextField();
+		private final JTextField bmiTextField = createTextField();
+		private final JTextField specialDietGroupTextField = createTextField();
+		private final JTextField patternConsumptionTextField = createTextField();
+		private final JComboBox<String> regionComboBox = createComboBox(vocabs.get("Region"));
+		private final JComboBox<String> countryComboBox = createComboBox(vocabs.get("Country"));
+		private final JTextField riskTextField = createTextField();
+		private final JTextField seasonTextField = createTextField();
+		
+		private final List<JComponent> advancedComponents;
 
 		public EditPopulationGroupPanel(final boolean isAdvanced) {
 
-			populationNameLabel = createLabel("GM.EditPopulationGroupPanel.populationNameLabel",
+			final JLabel populationNameLabel = createLabel("GM.EditPopulationGroupPanel.populationNameLabel",
 					"GM.EditPopulationGroupPanel.populationNameTooltip", true);
-			populationNameTextField = createTextField();
-
-			targetPopulationLabel = createLabel("GM.EditPopulationGroupPanel.targetPopulationLabel",
+			final JLabel targetPopulationLabel = createLabel("GM.EditPopulationGroupPanel.targetPopulationLabel",
 					"GM.EditPopulationGroupPanel.targetPopulationTooltip");
-			targetPopulationTextField = createTextField();
-
-			populationSpanLabel = createLabel("GM.EditPopulationGroupPanel.populationSpanLabel",
+			final JLabel populationSpanLabel = createLabel("GM.EditPopulationGroupPanel.populationSpanLabel",
 					"GM.EditPopulationGroupPanel.populationSpanTooltip");
-			populationSpanTextField = createTextField();
-
-			populationDescriptionLabel = createLabel("GM.EditPopulationGroupPanel.populationDescriptionLabel",
+			final JLabel populationDescriptionLabel = createLabel("GM.EditPopulationGroupPanel.populationDescriptionLabel",
 					"GM.EditPopulationGroupPanel.populationDescriptionTooltip");
-			populationDescriptionTextArea = createTextArea();
-			populationDescriptionPane = new JScrollPane(populationDescriptionTextArea);
-
-			populationAgeLabel = createLabel("GM.EditPopulationGroupPanel.populationAgeLabel",
+			final JLabel populationAgeLabel = createLabel("GM.EditPopulationGroupPanel.populationAgeLabel",
 					"GM.EditPopulationGroupPanel.populationAgeTooltip");
-			populationAgeTextField = createTextField();
-
-			populationGenderLabel = createLabel("GM.EditPopulationGroupPanel.populationGenderLabel",
+			final JLabel populationGenderLabel = createLabel("GM.EditPopulationGroupPanel.populationGenderLabel",
 					"GM.EditPopulationGroupPanel.populationGenderTooltip");
-			populationGenderTextField = createTextField();
-
-			bmiLabel = createLabel("GM.EditPopulationGroupPanel.bmiLabel", "GM.EditPopulationGroupPanel.bmiTooltip");
-			bmiTextField = createTextField();
-
-			specialDietGroupLabel = createLabel("GM.EditPopulationGroupPanel.specialDietGroupsLabel",
+			final JLabel bmiLabel = createLabel("GM.EditPopulationGroupPanel.bmiLabel", "GM.EditPopulationGroupPanel.bmiTooltip");
+			final JLabel specialDietGroupLabel = createLabel("GM.EditPopulationGroupPanel.specialDietGroupsLabel",
 					"GM.EditPopulationGroupPanel.specialDietGroupsTooltip");
-			specialDietGroupTextField = createTextField();
-
-			patternConsumptionLabel = createLabel("GM.EditPopulationGroupPanel.patternConsumptionLabel",
+			final JLabel patternConsumptionLabel = createLabel("GM.EditPopulationGroupPanel.patternConsumptionLabel",
 					"GM.EditPopulationGroupPanel.patternConsumptionTooltip");
-			patternConsumptionTextField = createTextField();
-
-			regionLabel = createLabel("GM.EditPopulationGroupPanel.regionLabel",
+			final JLabel regionLabel = createLabel("GM.EditPopulationGroupPanel.regionLabel",
 					"GM.EditPopulationGroupPanel.regionTooltip");
-			regionComboBox = createComboBox(vocabs.get("Region"));
-
-			countryLabel = createLabel("GM.EditPopulationGroupPanel.countryLabel",
+			final JLabel countryLabel = createLabel("GM.EditPopulationGroupPanel.countryLabel",
 					"GM.EditPopulationGroupPanel.countryTooltip");
-			countryComboBox = createComboBox(vocabs.get("Country"));
-
-			riskLabel = createLabel("GM.EditPopulationGroupPanel.riskAndPopulationLabel",
+			final JLabel riskLabel = createLabel("GM.EditPopulationGroupPanel.riskAndPopulationLabel",
 					"GM.EditPopulationGroupPanel.riskAndPopulationTooltip");
-			riskTextField = createTextField();
-
-			seasonLabel = createLabel("GM.EditPopulationGroupPanel.seasonLabel",
+			final JLabel seasonLabel = createLabel("GM.EditPopulationGroupPanel.seasonLabel",
 					"GM.EditPopulationGroupPanel.seasonTooltip");
-			seasonTextField = createTextField();
+
+			final JScrollPane populationDescriptionPane = new JScrollPane(populationDescriptionTextArea);
 
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-					new Pair<>(populationNameLabel, populationNameTextField),
-					new Pair<>(targetPopulationLabel, targetPopulationTextField),
-					new Pair<>(populationSpanLabel, populationSpanTextField),
-					new Pair<>(populationDescriptionLabel, populationDescriptionPane),
-					new Pair<>(populationAgeLabel, populationAgeTextField),
-					new Pair<>(populationGenderLabel, populationGenderTextField), new Pair<>(bmiLabel, bmiTextField),
-					new Pair<>(specialDietGroupLabel, specialDietGroupTextField),
-					new Pair<>(patternConsumptionLabel, patternConsumptionTextField),
-					new Pair<>(regionLabel, regionComboBox), new Pair<>(countryLabel, countryComboBox),
-					new Pair<>(riskLabel, riskTextField), new Pair<>(seasonLabel, seasonTextField));
+					new Pair<>(populationNameLabel, populationNameTextField),  // population name
+					new Pair<>(targetPopulationLabel, targetPopulationTextField), // target population
+					new Pair<>(populationSpanLabel, populationSpanTextField), // population span
+					new Pair<>(populationDescriptionLabel, populationDescriptionPane), // population description
+					new Pair<>(populationAgeLabel, populationAgeTextField), // population age
+					new Pair<>(populationGenderLabel, populationGenderTextField), // population gender
+					new Pair<>(bmiLabel, bmiTextField), // BMI
+					new Pair<>(specialDietGroupLabel, specialDietGroupTextField), // special diet group
+					new Pair<>(patternConsumptionLabel, patternConsumptionTextField), // pattern consumption
+					new Pair<>(regionLabel, regionComboBox), // region
+					new Pair<>(countryLabel, countryComboBox), // country
+					new Pair<>(riskLabel, riskTextField), // risk
+					new Pair<>(seasonLabel, seasonTextField)); // season
 			addGridComponents(this, pairs);
 
+			advancedComponents = Arrays.asList(targetPopulationLabel, targetPopulationTextField, // Target population
+					populationSpanLabel, populationSpanTextField, // Population span
+					populationDescriptionLabel, populationDescriptionPane, // Population description
+					populationAgeLabel, populationAgeTextField, // Population age
+					populationGenderLabel, populationGenderTextField, // Population gender
+					bmiLabel, bmiTextField, // BMI
+					specialDietGroupLabel, specialDietGroupTextField, // Special diet group
+					patternConsumptionLabel, patternConsumptionTextField, // Pattern consumption
+					regionLabel, regionComboBox, // Region
+					countryLabel, countryComboBox, // Country
+					riskLabel, riskTextField, // Risk
+					seasonLabel, seasonTextField); // Season	
+			
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
-				getAdvancedComponents().forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setVisible(false));
 			}
 		}
 
@@ -1548,19 +1516,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		@Override
 		List<JComponent> getAdvancedComponents() {
-
-			return Arrays.asList(targetPopulationLabel, targetPopulationTextField, // Target population
-					populationSpanLabel, populationSpanTextField, // Population span
-					populationDescriptionLabel, populationDescriptionPane, // Population description
-					populationAgeLabel, populationAgeTextField, // Population age
-					populationGenderLabel, populationGenderTextField, // Population gender
-					bmiLabel, bmiTextField, // BMI
-					specialDietGroupLabel, specialDietGroupTextField, // Special diet group
-					patternConsumptionLabel, patternConsumptionTextField, // Pattern consumption
-					regionLabel, regionComboBox, // Region
-					countryLabel, countryComboBox, // Country
-					riskLabel, riskTextField, // Risk
-					seasonLabel, seasonTextField); // Season
+			return advancedComponents;
 		}
 	}
 
