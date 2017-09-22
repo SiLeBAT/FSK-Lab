@@ -1062,34 +1062,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 3586499490386620791L;
 
-		private final JLabel equationNameLabel;
-		private final JTextField equationNameTextField;
-
-		private final JLabel equationClassLabel;
-		private final JTextField equationClassTextField;
-
+		private final JTextField equationNameTextField = createTextField();
+		private final JTextField equationClassTextField = createTextField();
 		private final ReferencePanel referencePanel;
-
-		private final JLabel scriptLabel;
-		private final JTextArea scriptTextArea;
-		private final JScrollPane scriptPane;
+		private final JTextArea scriptTextArea = createTextArea();
+		
+		private final List<JComponent> advancedComponents;
 
 		EditModelEquationPanel(final boolean isAdvanced) {
 
-			equationNameLabel = createLabel("GM.EditModelEquationPanel.nameLabel",
+			// Create labels
+			final JLabel equationNameLabel = createLabel("GM.EditModelEquationPanel.nameLabel",
 					"GM.EditModelEquationPanel.nameTooltip", true);
-			equationNameTextField = createTextField();
-
-			equationClassLabel = createLabel("GM.EditModelEquationPanel.classLabel",
+			final JLabel equationClassLabel = createLabel("GM.EditModelEquationPanel.classLabel",
 					"GM.EditModelEquationPanel.classTooltip");
-			equationClassTextField = createTextField();
+			final JLabel scriptLabel = createLabel("GM.EditModelEquationPanel.scriptLabel",
+					"GM.EditModelEquationPanel.scriptTooltip", true);
 
 			referencePanel = new ReferencePanel(isAdvanced);
-
-			scriptLabel = createLabel("GM.EditModelEquationPanel.scriptLabel",
-					"GM.EditModelEquationPanel.scriptTooltip", true);
-			scriptTextArea = createTextArea();
-			scriptPane = new JScrollPane(scriptTextArea);
 
 			EditorNodeDialog.add(this, equationNameLabel, 0, 0);
 			EditorNodeDialog.add(this, equationNameTextField, 1, 0);
@@ -1097,11 +1087,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			EditorNodeDialog.add(this, equationClassTextField, 1, 1);
 			EditorNodeDialog.add(this, referencePanel, 0, 2);
 			EditorNodeDialog.add(this, scriptLabel, 0, 3);
-			EditorNodeDialog.add(this, scriptPane, 1, 3);
+			EditorNodeDialog.add(this, new JScrollPane(scriptTextArea), 1, 3);
+			
+			advancedComponents = Arrays.asList(equationClassLabel, equationClassTextField, referencePanel);
 
-			// If simple mode hide avanced components
+			// If simple mode hide advanced components
 			if (!isAdvanced) {
-				getAdvancedComponents().forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setVisible(false));
 			}
 		}
 
@@ -1144,7 +1136,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		@Override
 		List<JComponent> getAdvancedComponents() {
-			return Arrays.asList(equationClassLabel, equationClassTextField, referencePanel);
+			return advancedComponents;
 		}
 	}
 
