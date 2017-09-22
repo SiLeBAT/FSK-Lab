@@ -84,8 +84,12 @@ public class LibRegistry {
 	 */
 	public void installLibs(final List<String> libs) throws RException, REXPMismatchException {
 
-		// Gets list of R dependencies of libs
-		List<String> deps = rWrapper.pkgDep(libs);
+		/*
+		 * Gets list of R dependencies of libs. pkgDep returns dependencies for the
+		 * required libs of which some may already be installed.
+		 */
+		final List<String> deps = rWrapper.pkgDep(libs).stream().filter(it -> !isInstalled(it))
+				.collect(Collectors.toList());
 
 		// Adds the dependencies to the miniCRAN repository
 		rWrapper.addPackage(deps, repoPath, "http://cran.us.r-project.org");
@@ -148,9 +152,9 @@ public class LibRegistry {
 		 * Install packages from local files.
 		 * 
 		 * @param pkgs
-		 *            List of package files. The files can be source
-		 *            distributions (.tar.gz) or binary distributions (.zip for
-		 *            Windows and .tgz for Mac).
+		 *            List of package files. The files can be source distributions
+		 *            (.tar.gz) or binary distributions (.zip for Windows and .tgz for
+		 *            Mac).
 		 * @param lib
 		 *            Directory where packages are installed.
 		 * @throws RException
@@ -175,8 +179,8 @@ public class LibRegistry {
 		 * @param pkgs
 		 *            List of names of packages to be downloaded.
 		 * @param path
-		 *            Destination download path. This path is the root folder of
-		 *            the repository.
+		 *            Destination download path. This path is the root folder of the
+		 *            repository.
 		 * @param repos
 		 *            URL of the 'contrib' sections of the repository, e.g.
 		 *            "http://cran.us.r-project.org".
@@ -198,8 +202,7 @@ public class LibRegistry {
 		 * @param pkgs
 		 *            List of names of packages.
 		 * @param path
-		 *            The local path to the directory where the miniCRAN repo
-		 *            resides.
+		 *            The local path to the directory where the miniCRAN repo resides.
 		 * @return the file paths for the specified packages
 		 * @throws REXPMismatchException
 		 * @throws RException
@@ -218,14 +221,14 @@ public class LibRegistry {
 		/**
 		 * Creates a local repository in the specified path.
 		 * <p>
-		 * Creates a CRAN folder structure in the specified destination folder
-		 * and then creates the PACKAGES index file. Since the folder structure
-		 * mimics the required structure and files of a CRAN repository, it
-		 * supports functions like <i>install.packages()</i>.
+		 * Creates a CRAN folder structure in the specified destination folder and then
+		 * creates the PACKAGES index file. Since the folder structure mimics the
+		 * required structure and files of a CRAN repository, it supports functions like
+		 * <i>install.packages()</i>.
 		 * 
 		 * @param path
-		 *            Destination download path. This path is the root folder of
-		 *            the repository.
+		 *            Destination download path. This path is the root folder of the
+		 *            repository.
 		 * @param repos
 		 *            URL of the 'contrib' sections of the repository, e.g.
 		 *            "http://cran.us.r-project.org".
@@ -243,8 +246,8 @@ public class LibRegistry {
 		/**
 		 * Retrieve package dependencies.
 		 * <p>
-		 * Perform recursive retrieve for Depends, Imports and LinkLibrary.
-		 * Performs non-recursive retrieve for Suggests.
+		 * Perform recursive retrieve for Depends, Imports and LinkLibrary. Performs
+		 * non-recursive retrieve for Suggests.
 		 * 
 		 * @param pkgs
 		 *            List of names of packages.
