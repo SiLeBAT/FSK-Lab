@@ -902,17 +902,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		EditHazardPanel(final boolean isAdvanced) {
 
-			final JLabel hazardTypeLabel = createLabel("GM.EditHazardPanel.hazardTypeLabel", "GM.EditHazardPanel.hazardTypeTooltip",
-					true);
-			final JLabel hazardNameLabel = createLabel("GM.EditHazardPanel.hazardNameLabel", "GM.EditHazardPanel.hazardNameTooltip",
-					true);
+			final JLabel hazardTypeLabel = createLabel("GM.EditHazardPanel.hazardTypeLabel",
+					"GM.EditHazardPanel.hazardTypeTooltip", true);
+			final JLabel hazardNameLabel = createLabel("GM.EditHazardPanel.hazardNameLabel",
+					"GM.EditHazardPanel.hazardNameTooltip", true);
 			final JLabel hazardDescriptionLabel = createLabel("GM.EditHazardPanel.hazardDescriptionLabel",
 					"GM.EditHazardPanel.hazardDescriptionTooltip");
-			final JLabel hazardUnitLabel = createLabel("GM.EditHazardPanel.hazardUnitLabel", "GM.EditHazardPanel.hazardUnitTooltip",
-					true);
+			final JLabel hazardUnitLabel = createLabel("GM.EditHazardPanel.hazardUnitLabel",
+					"GM.EditHazardPanel.hazardUnitTooltip", true);
 			final JLabel adverseEffectLabel = createLabel("GM.EditHazardPanel.adverseEffectLabel",
 					"GM.EditHazardPanel.adverseEffectTooltip");
-			final JLabel originLabel = createLabel("GM.EditHazardPanel.originLabel", "GM.EditHazardPanel.originTooltip");
+			final JLabel originLabel = createLabel("GM.EditHazardPanel.originLabel",
+					"GM.EditHazardPanel.originTooltip");
 			final JLabel bmdLabel = createLabel("GM.EditHazardPanel.bmdLabel", "GM.EditHazardPanel.bmdTooltip");
 			final JLabel maxResidueLimitLabel = createLabel("GM.EditHazardPanel.maxResidueLimitLabel",
 					"GM.EditHazardPanel.maxResidueLimitTooltip");
@@ -922,11 +923,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditHazardPanel.acceptableOperatorTooltip");
 			final JLabel acuteReferenceDoseLabel = createLabel("GM.EditHazardPanel.acuteReferenceDoseLabel",
 					"GM.EditHazardPanel.acuteReferenceDoseTooltip");
-			final JLabel indSumLabel = createLabel("GM.EditHazardPanel.indSumLabel", "GM.EditHazardPanel.indSumTooltip");
+			final JLabel indSumLabel = createLabel("GM.EditHazardPanel.indSumLabel",
+					"GM.EditHazardPanel.indSumTooltip");
 			final JLabel acceptableDailyIntakeLabel = createLabel("GM.EditHazardPanel.acceptableDailyIntakeLabel",
 					"GM.EditHazardPanel.acceptableDailyIntakeTooltip");
-			final JLabel labNameLabel = createLabel("GM.EditHazardPanel.labNameLabel", "GM.EditHazardPanel.labNameTooltip");
-			final JLabel labCountryLabel = createLabel("GM.EditHazardPanel.labCountryLabel", "GM.EditHazardPanel.labCountryTooltip");
+			final JLabel labNameLabel = createLabel("GM.EditHazardPanel.labNameLabel",
+					"GM.EditHazardPanel.labNameTooltip");
+			final JLabel labCountryLabel = createLabel("GM.EditHazardPanel.labCountryLabel",
+					"GM.EditHazardPanel.labCountryTooltip");
 			final JLabel detectionLimitLabel = createLabel("GM.EditHazardPanel.detectionLimitLabel",
 					"GM.EditHazardPanel.detectionLimitTooltip");
 			final JLabel quantificationLimitLabel = createLabel("GM.EditHazardPanel.quantificationLimitLabel",
@@ -1066,7 +1070,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final JTextField equationClassTextField = createTextField();
 		private final ReferencePanel referencePanel;
 		private final JTextArea scriptTextArea = createTextArea();
-		
+
 		private final List<JComponent> advancedComponents;
 
 		EditModelEquationPanel(final boolean isAdvanced) {
@@ -1088,7 +1092,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			EditorNodeDialog.add(this, referencePanel, 0, 2);
 			EditorNodeDialog.add(this, scriptLabel, 0, 3);
 			EditorNodeDialog.add(this, new JScrollPane(scriptTextArea), 1, 3);
-			
+
 			advancedComponents = Arrays.asList(equationClassLabel, equationClassTextField, referencePanel);
 
 			// If simple mode hide advanced components
@@ -1144,123 +1148,68 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 1826555468897327895L;
 
-		private final JLabel idLabel;
-		private final JTextField idTextField;
+		private final JTextField idTextField = createTextField();
+		private final JComboBox<Parameter.Classification> classificationComboBox = new JComboBox<>(
+				Parameter.Classification.values());
+		private final JTextField nameTextField = createTextField();
+		private final JTextArea descriptionTextArea = createTextArea();
+		private final AutoSuggestField typeField = createAutoSuggestField(vocabs.get("Parameter type"));
+		private final AutoSuggestField unitField = createAutoSuggestField(vocabs.get("Parameter unit"));
+		private final AutoSuggestField unitCategoryField = createAutoSuggestField(
+				vocabs.get("Parameter unit category"));
+		private final AutoSuggestField dataTypeField = createAutoSuggestField(vocabs.get("Parameter data type"));
+		private final AutoSuggestField sourceField = createAutoSuggestField(vocabs.get("Parameter source"));
+		private final AutoSuggestField subjectField = createAutoSuggestField(vocabs.get("Parameter subject"));
+		private final AutoSuggestField distributionField = createAutoSuggestField(vocabs.get("Parameter distribution"));
+		private final JTextField valueTextField = createTextField();
+		private final JTextField referenceTextField = createTextField();
+		private final JTextArea variabilitySubjectTextArea = createTextArea();
+		private final JTextArea applicabilityTextArea = createTextArea();
+		private SpinnerNumberModel errorSpinnerModel = createSpinnerDoubleModel();
 
-		private final JLabel classificationLabel;
-		private final JComboBox<Parameter.Classification> classificationComboBox;
-
-		private final JLabel nameLabel;
-		private final JTextField nameTextField;
-
-		private final JLabel descriptionLabel;
-		private final JTextArea descriptionTextArea;
-		private final JScrollPane descriptionPane;
-
-		private final JLabel typeLabel;
-		private final AutoSuggestField typeField;
-
-		private final JLabel unitLabel;
-		private final AutoSuggestField unitField;
-
-		private final JLabel unitCategoryLabel;
-		private final AutoSuggestField unitCategoryField;
-
-		private final JLabel dataTypeLabel;
-		private final AutoSuggestField dataTypeField;
-
-		private final JLabel sourceLabel;
-		private final AutoSuggestField sourceField;
-
-		private final JLabel subjectLabel;
-		private final AutoSuggestField subjectField;
-
-		private final JLabel distributionLabel;
-		private final AutoSuggestField distributionField;
-
-		private final JLabel valueLabel;
-		private final JTextField valueTextField;
-
-		private final JLabel referenceLabel;
-		private final JTextField referenceTextField;
-
-		private final JLabel variabilitySubjectLabel;
-		private final JTextArea variabilitySubjectTextArea;
-		private final JScrollPane variabilitySubjectPane;
-
-		private final JLabel applicabilityLabel;
-		private final JTextArea applicabilityTextArea;
-		private final JScrollPane applicabilityPane;
-
-		private final JLabel errorLabel;
-		private final JSpinner errorSpinner;
-
-		private SpinnerNumberModel errorSpinnerModel;
+		private final List<JComponent> advancedComponents;
 
 		public EditParameterPanel(final boolean isAdvanced) {
 
-			idLabel = createLabel("GM.EditParameterPanel.idLabel", "GM.EditParameterPanel.idTooltip", true);
-			idTextField = createTextField();
-
-			classificationLabel = createLabel("GM.EditParameterPanel.classificationLabel",
-					"GM.EditParameterPanel.classificationTooltip", true);
-			classificationComboBox = new JComboBox<>(Parameter.Classification.values());
-
-			nameLabel = createLabel("GM.EditParameterPanel.parameterNameLabel",
-					"GM.EditParameterPanel.parameterNameTooltip", true);
-			nameTextField = createTextField();
-
-			descriptionLabel = createLabel("GM.EditParameterPanel.descriptionLabel",
-					"GM.EditParameterPanel.descriptionTooltip");
-			descriptionTextArea = createTextArea();
-			descriptionPane = new JScrollPane(descriptionTextArea);
-
-			typeLabel = createLabel("GM.EditParameterPanel.typeLabel", "GM.EditParameterPanel.typeTooltip");
-			typeField = createAutoSuggestField(vocabs.get("Parameter type"));
-
-			unitLabel = createLabel("GM.EditParameterPanel.unitLabel", "GM.EditParameterPanel.unitTooltip", true);
-			unitField = createAutoSuggestField(vocabs.get("Parameter unit"));
-
-			unitCategoryLabel = createLabel("GM.EditParameterPanel.unitCategoryLabel",
-					"GM.EditParameterPanel.unitCategoryTooltip", true);
-			unitCategoryField = createAutoSuggestField(vocabs.get("Parameter unit category"));
-
-			dataTypeLabel = createLabel("GM.EditParameterPanel.dataTypeLabel", "GM.EditParameterPanel.dataTypeTooltip",
+			final JLabel idLabel = createLabel("GM.EditParameterPanel.idLabel", "GM.EditParameterPanel.idTooltip",
 					true);
-			dataTypeField = createAutoSuggestField(vocabs.get("Parameter data type"));
-
-			sourceLabel = createLabel("GM.EditParameterPanel.sourceLabel", "GM.EditParameterPanel.sourceTooltip");
-			sourceField = createAutoSuggestField(vocabs.get("Parameter source"));
-
-			subjectLabel = createLabel("GM.EditParameterPanel.subjectLabel", "GM.EditParameterPanel.subjectTooltip");
-			subjectField = createAutoSuggestField(vocabs.get("Parameter subject"));
-
-			distributionLabel = createLabel("GM.EditParameterPanel.distributionLabel",
+			final JLabel classificationLabel = createLabel("GM.EditParameterPanel.classificationLabel",
+					"GM.EditParameterPanel.classificationTooltip", true);
+			final JLabel nameLabel = createLabel("GM.EditParameterPanel.parameterNameLabel",
+					"GM.EditParameterPanel.parameterNameTooltip", true);
+			final JLabel descriptionLabel = createLabel("GM.EditParameterPanel.descriptionLabel",
+					"GM.EditParameterPanel.descriptionTooltip");
+			final JLabel typeLabel = createLabel("GM.EditParameterPanel.typeLabel",
+					"GM.EditParameterPanel.typeTooltip");
+			final JLabel unitLabel = createLabel("GM.EditParameterPanel.unitLabel", "GM.EditParameterPanel.unitTooltip",
+					true);
+			final JLabel unitCategoryLabel = createLabel("GM.EditParameterPanel.unitCategoryLabel",
+					"GM.EditParameterPanel.unitCategoryTooltip", true);
+			final JLabel dataTypeLabel = createLabel("GM.EditParameterPanel.dataTypeLabel",
+					"GM.EditParameterPanel.dataTypeTooltip", true);
+			final JLabel sourceLabel = createLabel("GM.EditParameterPanel.sourceLabel",
+					"GM.EditParameterPanel.sourceTooltip");
+			final JLabel subjectLabel = createLabel("GM.EditParameterPanel.subjectLabel",
+					"GM.EditParameterPanel.subjectTooltip");
+			final JLabel distributionLabel = createLabel("GM.EditParameterPanel.distributionLabel",
 					"GM.EditParameterPanel.distributionTooltip");
-			distributionField = createAutoSuggestField(vocabs.get("Parameter distribution"));
-
-			valueLabel = createLabel("GM.EditParameterPanel.valueLabel", "GM.EditParameterPanel.valueTooltip");
-			valueTextField = createTextField();
-
-			referenceLabel = createLabel("GM.EditParameterPanel.referenceLabel",
+			final JLabel valueLabel = createLabel("GM.EditParameterPanel.valueLabel",
+					"GM.EditParameterPanel.valueTooltip");
+			final JLabel referenceLabel = createLabel("GM.EditParameterPanel.referenceLabel",
 					"GM.EditParameterPanel.referenceTooltip");
-			referenceTextField = createTextField();
-
-			variabilitySubjectLabel = createLabel("GM.EditParameterPanel.variabilitySubjectLabel",
+			final JLabel variabilitySubjectLabel = createLabel("GM.EditParameterPanel.variabilitySubjectLabel",
 					"GM.EditParameterPanel.variabilitySubjectTooltip");
-			variabilitySubjectTextArea = createTextArea();
-			variabilitySubjectPane = new JScrollPane(variabilitySubjectTextArea);
-
-			applicabilityLabel = createLabel("GM.EditParameterPanel.applicabilityLabel",
+			final JLabel applicabilityLabel = createLabel("GM.EditParameterPanel.applicabilityLabel",
 					"GM.EditParameterPanel.applicabilityTooltip");
-			applicabilityTextArea = createTextArea();
-			applicabilityPane = new JScrollPane(applicabilityTextArea);
-
-			errorLabel = createLabel("GM.EditParameterPanel.errorLabel", "GM.EditParameterPanel.errorTooltip");
-			errorSpinnerModel = createSpinnerDoubleModel();
-			errorSpinner = createSpinner(errorSpinnerModel);
+			final JLabel errorLabel = createLabel("GM.EditParameterPanel.errorLabel",
+					"GM.EditParameterPanel.errorTooltip");
 
 			// Build UI
+			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
+			final JScrollPane variabilitySubjectPane = new JScrollPane(variabilitySubjectTextArea);
+			final JScrollPane applicabilityPane = new JScrollPane(applicabilityTextArea);
+			final JSpinner errorSpinner = createSpinner(errorSpinnerModel);
+
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(idLabel, idTextField),
 					new Pair<>(classificationLabel, classificationComboBox), new Pair<>(nameLabel, nameTextField),
 					new Pair<>(descriptionLabel, descriptionPane), new Pair<>(typeLabel, typeField),
@@ -1272,9 +1221,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					new Pair<>(applicabilityLabel, applicabilityPane), new Pair<>(errorLabel, errorSpinner));
 			addGridComponents(this, pairs);
 
+			advancedComponents = Arrays.asList(descriptionLabel, descriptionPane, typeLabel, typeField, sourceLabel,
+					sourceField, subjectLabel, subjectField, distributionLabel, distributionField, valueLabel,
+					valueTextField, referenceLabel, referenceTextField, variabilitySubjectLabel,
+					variabilitySubjectPane, applicabilityLabel, applicabilityPane, errorLabel, errorSpinner);
+
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
-				getAdvancedComponents().forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setVisible(false));
 			}
 		}
 
@@ -1354,10 +1308,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		@Override
 		List<JComponent> getAdvancedComponents() {
-			return Arrays.asList(descriptionLabel, descriptionTextArea, typeLabel, typeField, sourceLabel, sourceField,
-					subjectLabel, subjectField, distributionLabel, distributionField, valueLabel, valueTextField,
-					referenceLabel, referenceTextField, variabilitySubjectLabel, variabilitySubjectTextArea,
-					applicabilityLabel, applicabilityTextArea, errorLabel, errorSpinner);
+			return advancedComponents;
 		}
 	}
 
