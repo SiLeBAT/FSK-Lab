@@ -1902,98 +1902,52 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -4740851101237646103L;
 
-		private final JLabel sampleNameLabel;
-		private final JTextField sampleNameTextField;
+		private final JTextField sampleNameTextField = createTextField();
+		private final SpinnerNumberModel moisturePercentageSpinnerModel = createSpinnerPercentageModel();
+		private final SpinnerNumberModel fatPercentageSpinnerModel = createSpinnerPercentageModel();
+		private final JTextField sampleProtocolTextField = createTextField();
+		private final AutoSuggestField samplingStrategyField = createAutoSuggestField(vocabs.get("Sampling strategy"));
+		private final AutoSuggestField samplingTypeField = createAutoSuggestField(vocabs.get("Type of sampling program"));
+		private final AutoSuggestField samplingMethodField = createAutoSuggestField(vocabs.get("Sampling method"));
+		private final JTextField samplingPlanTextField = createTextField();
+		private final JTextField samplingWeightTextField = createTextField();
+		private final JTextField samplingSizeTextField = createTextField();
+		private final AutoSuggestField lotSizeUnitField = createAutoSuggestField(vocabs.get("Lot size unit"));
+		private final AutoSuggestField samplingPointField = createAutoSuggestField(vocabs.get("Sampling point"));
 
-		private final JLabel moisturePercentageLabel;
-		private final SpinnerNumberModel moisturePercentageSpinnerModel;
-		private final JSpinner moisturePercentageSpinner;
-
-		private final JLabel fatPercentageLabel;
-		private final SpinnerNumberModel fatPercentageSpinnerModel;
-		private final JSpinner fatPercentageSpinner;
-
-		private final JLabel sampleProtocolLabel;
-		private final JTextField sampleProtocolTextField;
-
-		private final JLabel samplingStrategyLabel;
-		private final AutoSuggestField samplingStrategyField;
-
-		private final JLabel samplingTypeLabel;
-		private final AutoSuggestField samplingTypeField;
-
-		private final JLabel samplingMethodLabel;
-		private final AutoSuggestField samplingMethodField;
-
-		private final JLabel samplingPlanLabel;
-		private final JTextField samplingPlanTextField;
-
-		private final JLabel samplingWeightLabel;
-		private final JTextField samplingWeightTextField;
-
-		private final JLabel samplingSizeLabel;
-		private final JTextField samplingSizeTextField;
-
-		private final JLabel lotSizeUnitLabel;
-		private final AutoSuggestField lotSizeUnitField;
-
-		private final JLabel samplingPointLabel;
-		private final AutoSuggestField samplingPointField;
+		private final List<JComponent> advancedComponents;
 
 		public EditStudySamplePanel(final boolean isAdvanced) {
 
 			// Create labels and fields
-			sampleNameLabel = createLabel("GM.EditStudySamplePanel.sampleNameLabel",
+			final JLabel sampleNameLabel = createLabel("GM.EditStudySamplePanel.sampleNameLabel",
 					"GM.EditStudySamplePanel.sampleNameTooltip", true);
-			sampleNameTextField = createTextField();
-
-			moisturePercentageLabel = createLabel("GM.EditStudySamplePanel.moisturePercentageLabel",
+			final JLabel moisturePercentageLabel = createLabel("GM.EditStudySamplePanel.moisturePercentageLabel",
 					"GM.EditStudySamplePanel.moisturePercentageTooltip");
-			moisturePercentageSpinnerModel = createSpinnerPercentageModel();
-			moisturePercentageSpinner = createSpinner(moisturePercentageSpinnerModel);
-
-			fatPercentageLabel = createLabel("GM.EditStudySamplePanel.fatPercentageLabel",
+			final JLabel fatPercentageLabel = createLabel("GM.EditStudySamplePanel.fatPercentageLabel",
 					"GM.EditStudySamplePanel.fatPercentageTooltip");
-			fatPercentageSpinnerModel = createSpinnerPercentageModel();
-			fatPercentageSpinner = createSpinner(fatPercentageSpinnerModel);
-
-			sampleProtocolLabel = createLabel("GM.EditStudySamplePanel.sampleProtocolLabel",
+			final JLabel sampleProtocolLabel = createLabel("GM.EditStudySamplePanel.sampleProtocolLabel",
 					"GM.EditStudySamplePanel.sampleProtocolTooltip", true);
-			sampleProtocolTextField = createTextField();
-
-			samplingStrategyLabel = createLabel("GM.EditStudySamplePanel.samplingStrategyLabel",
+			final JLabel samplingStrategyLabel = createLabel("GM.EditStudySamplePanel.samplingStrategyLabel",
 					"GM.EditStudySamplePanel.samplingStrategyTooltip");
-			samplingStrategyField = createAutoSuggestField(vocabs.get("Sampling strategy"));
-
-			samplingTypeLabel = createLabel("GM.EditStudySamplePanel.samplingTypeLabel",
+			final JLabel samplingTypeLabel = createLabel("GM.EditStudySamplePanel.samplingTypeLabel",
 					"GM.EditStudySamplePanel.samplingTypeTooltip");
-			samplingTypeField = createAutoSuggestField(vocabs.get("Type of sampling program"));
-
-			samplingMethodLabel = createLabel("GM.EditStudySamplePanel.samplingMethodLabel",
+			final JLabel samplingMethodLabel = createLabel("GM.EditStudySamplePanel.samplingMethodLabel",
 					"GM.EditStudySamplePanel.samplingMethodTooltip");
-			samplingMethodField = createAutoSuggestField(vocabs.get("Sampling method"));
-
-			samplingPlanLabel = createLabel("GM.EditStudySamplePanel.samplingPlanLabel",
+			final JLabel samplingPlanLabel = createLabel("GM.EditStudySamplePanel.samplingPlanLabel",
 					"GM.EditStudySamplePanel.samplingPlanTooltip", true);
-			samplingPlanTextField = createTextField();
-
-			samplingWeightLabel = createLabel("GM.EditStudySamplePanel.samplingWeightLabel",
+			final JLabel samplingWeightLabel = createLabel("GM.EditStudySamplePanel.samplingWeightLabel",
 					"GM.EditStudySamplePanel.samplingWeightTooltip", true);
-			samplingWeightTextField = createTextField();
-
-			samplingSizeLabel = createLabel("GM.EditStudySamplePanel.samplingSizeLabel",
+			final JLabel samplingSizeLabel = createLabel("GM.EditStudySamplePanel.samplingSizeLabel",
 					"GM.EditStudySamplePanel.samplingSizeTooltip", true);
-			samplingSizeTextField = createTextField();
-
-			lotSizeUnitLabel = createLabel("GM.EditStudySamplePanel.lotSizeUnitLabel",
+			final JLabel lotSizeUnitLabel = createLabel("GM.EditStudySamplePanel.lotSizeUnitLabel",
 					"GM.EditStudySamplePanel.lotSizeUnitTooltip");
-			lotSizeUnitField = createAutoSuggestField(vocabs.get("Lot size unit"));
-
-			samplingPointLabel = createLabel("GM.EditStudySamplePanel.samplingPointLabel",
+			final JLabel samplingPointLabel = createLabel("GM.EditStudySamplePanel.samplingPointLabel",
 					"GM.EditStudySamplePanel.samplingPointTooltip");
-			samplingPointField = createAutoSuggestField(vocabs.get("Sampling point"));
 
 			// Build UI
+			final JSpinner moisturePercentageSpinner = createSpinner(moisturePercentageSpinnerModel);
+			final JSpinner fatPercentageSpinner = createSpinner(fatPercentageSpinnerModel);
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(sampleNameLabel, sampleNameTextField),
 					new Pair<>(moisturePercentageLabel, moisturePercentageSpinner),
 					new Pair<>(fatPercentageLabel, fatPercentageSpinner),
@@ -2008,6 +1962,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			addGridComponents(this, pairs);
 
 			// If simple mode hide advanced components
+			advancedComponents =  Arrays.asList(
+					moisturePercentageLabel, moisturePercentageSpinner, // moisture percentage
+					fatPercentageLabel, fatPercentageSpinner, // fat percentag
+					samplingStrategyLabel, samplingStrategyField, // sampling strategy
+					samplingTypeLabel, samplingTypeField, // sampling program type
+					samplingMethodLabel, samplingMethodField, // sampling method
+					samplingSizeLabel, samplingSizeTextField, // sampling size
+					lotSizeUnitLabel, lotSizeUnitField, // lot size unit
+					samplingPointLabel, samplingPointField); // sampling point
 			if (!isAdvanced) {
 				getAdvancedComponents().forEach(it -> it.setVisible(false));
 			}
@@ -2083,15 +2046,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		@Override
 		List<JComponent> getAdvancedComponents() {
-			return Arrays.asList(moisturePercentageLabel, moisturePercentageSpinner, // moisture
-																						// percentage
-					fatPercentageLabel, fatPercentageSpinner, // fat percentag
-					samplingStrategyLabel, samplingStrategyField, // sampling strategy
-					samplingTypeLabel, samplingTypeField, // sampling program type
-					samplingMethodLabel, samplingMethodField, // sampling method
-					samplingSizeLabel, samplingSizeTextField, // sampling size
-					lotSizeUnitLabel, lotSizeUnitField, // lot size unit
-					samplingPointLabel, samplingPointField); // sampling point
+			return advancedComponents;
 		}
 	}
 
