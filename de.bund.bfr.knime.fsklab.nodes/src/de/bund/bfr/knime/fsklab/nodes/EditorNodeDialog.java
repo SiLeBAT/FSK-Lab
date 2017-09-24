@@ -311,113 +311,149 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		return vocab;
 	}
 
-	/**
-	 * Create a JLabel with no tooltip, retrieving its text from resource bundle.
-	 * This is a convenience method for {@link #createLabel(String, boolean)} where
-	 * the property is not mandatory.
-	 * 
-	 * @param textKey
-	 *            Key of the JLabel text in the resource bundle
-	 * @return JLabel
-	 */
-	private static JLabel createLabel(final String textKey) {
-		return createLabel(textKey, false);
-	}
+	private static class GUIFactory {
+	
+		/**
+		 * Create a JLabel with no tooltip, retrieving its text from resource bundle.
+		 * This is a convenience method for {@link #createLabel(String, boolean)} where
+		 * the property is not mandatory.
+		 * 
+		 * @param textKey
+		 *            Key of the JLabel text in the resource bundle
+		 * @return JLabel
+		 */
+		private static JLabel createLabel(final String textKey) {
+			return createLabel(textKey, false);
+		}
 
-	/**
-	 * Create a JLabel with no tooltip, retrieving its text from resource bundle.
-	 * 
-	 * @param textKey
-	 *            Key of the JLabel text in the resource bundle
-	 * @param isMandatory
-	 *            Whether the property described by the JLabel is mandatory
-	 * @return JLabel
-	 */
-	private static JLabel createLabel(final String textKey, final boolean isMandatory) {
-		final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-		return new JLabel(bundle.getString(textKey) + (isMandatory ? "*" : ""));
-	}
+		/**
+		 * Create a JLabel with no tooltip, retrieving its text from resource bundle.
+		 * 
+		 * @param textKey
+		 *            Key of the JLabel text in the resource bundle
+		 * @param isMandatory
+		 *            Whether the property described by the JLabel is mandatory
+		 * @return JLabel
+		 */
+		private static JLabel createLabel(final String textKey, final boolean isMandatory) {
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+			return new JLabel(bundle.getString(textKey) + (isMandatory ? "*" : ""));
+		}
+		
+		/**
+		 * Create a JLabel retrieving text and tool tip text from resource bundle. This
+		 * is a convenience method for {@link #createLabel(String, String, boolean)}
+		 * where the property is not mandatory.
+		 * 
+		 * @param textKey
+		 *            Key of the JLabel text in the resource bundle
+		 * @param toolTipKey
+		 *            Key of the tool tip text in the resource bundle
+		 * @return JLabel describing an optional property.
+		 */
+		private static JLabel createLabel(final String textKey, final String toolTipKey) {
+			return createLabel(textKey, toolTipKey, false);
+		}
+		
+		/**
+		 * Create a JLabel retrieving text and tool tip text from resource bundle.
+		 * 
+		 * @param textKey
+		 *            Key of the JLabel text in the resource bundle
+		 * @param toolTipKey
+		 *            Key of the tool tip text in the resource bundle
+		 * @param isMandatory
+		 *            Whether the property described by the JLabel is mandatory
+		 * @return JLabel
+		 */
+		private static JLabel createLabel(final String textKey, final String toolTipKey, final boolean isMandatory) {
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
-	/**
-	 * Create a JLabel retrieving text and tool tip text from resource bundle. This
-	 * is a convenience method for {@link #createLabel(String, String, boolean)}
-	 * where the property is not mandatory.
-	 * 
-	 * @param textKey
-	 *            Key of the JLabel text in the resource bundle
-	 * @param toolTipKey
-	 *            Key of the tool tip text in the resource bundle
-	 * @return JLabel describing an optional property.
-	 */
-	private static JLabel createLabel(final String textKey, final String toolTipKey) {
-		return createLabel(textKey, toolTipKey, false);
-	}
+			final JLabel label = new JLabel(bundle.getString(textKey) + (isMandatory ? "*" : ""));
+			label.setToolTipText(bundle.getString(toolTipKey));
 
-	/**
-	 * Create a JLabel retrieving text and tool tip text from resource bundle.
-	 * 
-	 * @param textKey
-	 *            Key of the JLabel text in the resource bundle
-	 * @param toolTipKey
-	 *            Key of the tool tip text in the resource bundle
-	 * @param isMandatory
-	 *            Whether the property described by the JLabel is mandatory
-	 * @return JLabel
-	 */
-	private static JLabel createLabel(final String textKey, final String toolTipKey, final boolean isMandatory) {
-		final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+			return label;
+		}
+		
+		private static JPanel createAdvancedPanel(final JCheckBox checkbox) {
 
-		final JLabel label = new JLabel(bundle.getString(textKey) + (isMandatory ? "*" : ""));
-		label.setToolTipText(bundle.getString(toolTipKey));
+			final JPanel panel = new JPanel();
+			panel.setBackground(Color.lightGray);
+			panel.add(checkbox);
 
-		return label;
-	}
+			return panel;
+		}
 
-	private static JPanel createAdvancedPanel(final JCheckBox checkbox) {
+		private static JTextField createTextField() {
+			return new JTextField(30);
+		}
 
-		final JPanel panel = new JPanel();
-		panel.setBackground(Color.lightGray);
-		panel.add(checkbox);
+		private static JTextArea createTextArea() {
+			final JTextArea textArea = new JTextArea(5, 30);
+			textArea.setText("");
+			textArea.setLineWrap(true); // Wrap long lines
+			textArea.setWrapStyleWord(true); // Wrap only at white space
 
-		return panel;
-	}
+			return textArea;
+		}
 
-	private static JTextField createTextField() {
-		return new JTextField(30);
-	}
+		/**
+		 * @param possibleValues
+		 *            Set
+		 * @return a JComboBox with the passed possible values
+		 */
+		private static JComboBox<String> createComboBox(final Collection<String> possibleValues) {
+			final String[] array = possibleValues.stream().toArray(String[]::new);
+			final JComboBox<String> comboBox = new JComboBox<>(array);
+			comboBox.setSelectedIndex(-1);
 
-	private static JTextArea createTextArea() {
-		final JTextArea textArea = new JTextArea(5, 30);
-		textArea.setText("");
-		textArea.setLineWrap(true); // Wrap long lines
-		textArea.setWrapStyleWord(true); // Wrap only at white space
+			return comboBox;
+		}
 
-		return textArea;
-	}
+		/**
+		 * @param possibleValues
+		 *            Set
+		 * @return an AutoSuggestField with the passed possible values. The field has 10
+		 *         columns.
+		 */
+		private static AutoSuggestField createAutoSuggestField(final Set<String> possibleValues) {
+			final AutoSuggestField field = new AutoSuggestField(10);
+			field.setPossibleValues(possibleValues);
+			return field;
+		}
 
-	/**
-	 * @param possibleValues
-	 *            Set
-	 * @return a JComboBox with the passed possible values
-	 */
-	private static JComboBox<String> createComboBox(final Collection<String> possibleValues) {
-		final String[] array = possibleValues.stream().toArray(String[]::new);
-		final JComboBox<String> comboBox = new JComboBox<>(array);
-		comboBox.setSelectedIndex(-1);
+		/** Creates a JSpinner with 5 columns. */
+		private static JSpinner createSpinner(final AbstractSpinnerModel model) {
 
-		return comboBox;
-	}
+			final JSpinner spinner = new JSpinner(model);
+			((DefaultEditor) spinner.getEditor()).getTextField().setColumns(5);
 
-	/**
-	 * @param possibleValues
-	 *            Set
-	 * @return an AutoSuggestField with the passed possible values. The field has 10
-	 *         columns.
-	 */
-	private static AutoSuggestField createAutoSuggestField(final Set<String> possibleValues) {
-		final AutoSuggestField field = new AutoSuggestField(10);
-		field.setPossibleValues(possibleValues);
-		return field;
+			return spinner;
+		}
+
+		/**
+		 * Creates a SpinnerNumberModel for integers with no limits and initial value 0.
+		 */
+		private static SpinnerNumberModel createSpinnerIntegerModel() {
+			return new SpinnerNumberModel(0, null, null, 1);
+		}
+
+		/**
+		 * Creates a SpinnerNumberModel for real numbers with no limits and initial
+		 * value.
+		 */
+		private static SpinnerNumberModel createSpinnerDoubleModel() {
+			return new SpinnerNumberModel(0.0, null, null, .01);
+		}
+
+		/**
+		 * Creates a SpinnerNumberModel for percentages (doubles) and initial value 0.0.
+		 *
+		 * Has limits 0.0 and 1.0.
+		 */
+		private static SpinnerNumberModel createSpinnerPercentageModel() {
+			return new SpinnerNumberModel(0.0, 0.0, 1.0, .01);
+		}
 	}
 
 	/**
@@ -502,38 +538,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		panel.add(comp, constraints);
 	}
 
-	/** Creates a JSpinner with 5 columns. */
-	private static JSpinner createSpinner(final AbstractSpinnerModel model) {
-
-		final JSpinner spinner = new JSpinner(model);
-		((DefaultEditor) spinner.getEditor()).getTextField().setColumns(5);
-
-		return spinner;
-	}
-
-	/**
-	 * Creates a SpinnerNumberModel for integers with no limits and initial value 0.
-	 */
-	private static SpinnerNumberModel createSpinnerIntegerModel() {
-		return new SpinnerNumberModel(0, null, null, 1);
-	}
-
-	/**
-	 * Creates a SpinnerNumberModel for real numbers with no limits and initial
-	 * value.
-	 */
-	private static SpinnerNumberModel createSpinnerDoubleModel() {
-		return new SpinnerNumberModel(0.0, null, null, .01);
-	}
-
-	/**
-	 * Creates a SpinnerNumberModel for percentages (doubles) and initial value 0.0.
-	 *
-	 * Has limits 0.0 and 1.0.
-	 */
-	private static SpinnerNumberModel createSpinnerPercentageModel() {
-		return new SpinnerNumberModel(0.0, 0.0, 1.0, .01);
-	}
 
 	private class NonEditableTableModel extends DefaultTableModel {
 
@@ -681,16 +685,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -1195181696127795655L;
 
-		private final JTextField nameTextField = createTextField();
-		private final JTextArea descriptionTextArea = createTextArea();
+		private final JTextField nameTextField = GUIFactory.createTextField();
+		private final JTextArea descriptionTextArea = GUIFactory.createTextArea();
 
 		private final List<JComponent> advancedComponents;
 
 		EditAssayPanel(final boolean isAdvanced) {
 
 			// Create labels
-			final JLabel nameLabel = createLabel("GM.EditAssayPanel.nameLabel", "GM.EditAssayPanel.nameTooltip", true);
-			final JLabel descriptionLabel = createLabel("GM.EditAssayPanel.descriptionLabel",
+			final JLabel nameLabel = GUIFactory.createLabel("GM.EditAssayPanel.nameLabel", "GM.EditAssayPanel.nameTooltip", true);
+			final JLabel descriptionLabel = GUIFactory.createLabel("GM.EditAssayPanel.descriptionLabel",
 					"GM.EditAssayPanel.descriptionTooltip", true);
 
 			// Wrap text area in JScrollPane
@@ -748,32 +752,32 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -931984426171199928L;
 
-		private final AutoSuggestField dataCollectionToolField = createAutoSuggestField(
+		private final AutoSuggestField dataCollectionToolField = GUIFactory.createAutoSuggestField(
 				vocabs.get("Method. tool to collect data"));
-		private final JTextField nonConsecutiveOneDayTextField = createTextField();
-		private final JTextField dietarySoftwareToolTextField = createTextField();
-		private final JTextField foodItemNumberTextField = createTextField();
-		private final JTextField recordTypeTextField = createTextField();
-		private final JComboBox<String> foodDescriptionComboBox = createComboBox(vocabs.get("Food descriptors"));
+		private final JTextField nonConsecutiveOneDayTextField = GUIFactory.createTextField();
+		private final JTextField dietarySoftwareToolTextField = GUIFactory.createTextField();
+		private final JTextField foodItemNumberTextField = GUIFactory.createTextField();
+		private final JTextField recordTypeTextField = GUIFactory.createTextField();
+		private final JComboBox<String> foodDescriptionComboBox = GUIFactory.createComboBox(vocabs.get("Food descriptors"));
 		private final List<JComponent> advancedComponents;
 
 		EditDietaryAssessmentMethodPanel(final boolean isAdvanced) {
 
 			// Create labels
-			final JLabel dataCollectionToolLabel = createLabel(
+			final JLabel dataCollectionToolLabel = GUIFactory.createLabel(
 					"GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel",
 					"GM.EditDietaryAssessmentMethodPanel.dataCollectionToolTooltip", true);
-			final JLabel nonConsecutiveOneDayLabel = createLabel(
+			final JLabel nonConsecutiveOneDayLabel = GUIFactory.createLabel(
 					"GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysLabel",
 					"GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysTooltip", true);
-			final JLabel dietarySoftwareToolLabel = createLabel(
+			final JLabel dietarySoftwareToolLabel = GUIFactory.createLabel(
 					"GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolLabel",
 					"GM.EditDietaryAssessmentMethodPanel.dietarySoftwareToolTooltip");
-			final JLabel foodItemNumberLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.foodItemNumberLabel",
+			final JLabel foodItemNumberLabel = GUIFactory.createLabel("GM.EditDietaryAssessmentMethodPanel.foodItemNumberLabel",
 					"GM.EditDietaryAssessmentMethodPanel.foodItemNumberTooltip");
-			final JLabel recordTypeLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.recordTypeLabel",
+			final JLabel recordTypeLabel = GUIFactory.createLabel("GM.EditDietaryAssessmentMethodPanel.recordTypeLabel",
 					"GM.EditDietaryAssessmentMethodPanel.recordTypeTooltip");
-			final JLabel foodDescriptionLabel = createLabel("GM.EditDietaryAssessmentMethodPanel.foodDescriptionLabel",
+			final JLabel foodDescriptionLabel = GUIFactory.createLabel("GM.EditDietaryAssessmentMethodPanel.foodDescriptionLabel",
 					"GM.EditDietaryAssessmentMethodPanel.foodDescriptionTooltip");
 
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
@@ -878,66 +882,66 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -1981279747311233487L;
 
-		private final AutoSuggestField hazardTypeField = createAutoSuggestField(vocabs.get("Hazard type"));
-		private final AutoSuggestField hazardNameField = createAutoSuggestField(vocabs.get("Hazard name"));
-		private final JTextArea hazardDescriptionTextArea = createTextArea();
-		private final AutoSuggestField hazardUnitField = createAutoSuggestField(vocabs.get("Hazard unit"));
-		private final JTextField adverseEffectTextField = createTextField();
-		private final JTextField originTextField = createTextField();
-		private final JTextField bmdTextField = createTextField();
-		private final JTextField maxResidueLimitTextField = createTextField();
-		private final JTextField noObservedAdverseTextField = createTextField();
-		private final JTextField acceptableOperatorTextField = createTextField();
-		private final JTextField acuteReferenceDoseTextField = createTextField();
-		private final JTextField acceptableDailyIntakeTextField = createTextField();
-		private final AutoSuggestField indSumField = createAutoSuggestField(vocabs.get("Hazard ind sum"));
-		private final JTextField labNameTextField = createTextField();
-		private final AutoSuggestField labCountryField = createAutoSuggestField(vocabs.get("Laboratory country"));
-		private final JTextField detectionLimitTextField = createTextField();
-		private final JTextField quantificationLimitTextField = createTextField();
-		private final JTextField leftCensoredDataTextField = createTextField();
-		private final JTextField contaminationRangeTextField = createTextField();
+		private final AutoSuggestField hazardTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard type"));
+		private final AutoSuggestField hazardNameField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard name"));
+		private final JTextArea hazardDescriptionTextArea = GUIFactory.createTextArea();
+		private final AutoSuggestField hazardUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard unit"));
+		private final JTextField adverseEffectTextField = GUIFactory.createTextField();
+		private final JTextField originTextField = GUIFactory.createTextField();
+		private final JTextField bmdTextField = GUIFactory.createTextField();
+		private final JTextField maxResidueLimitTextField = GUIFactory.createTextField();
+		private final JTextField noObservedAdverseTextField = GUIFactory.createTextField();
+		private final JTextField acceptableOperatorTextField = GUIFactory.createTextField();
+		private final JTextField acuteReferenceDoseTextField = GUIFactory.createTextField();
+		private final JTextField acceptableDailyIntakeTextField = GUIFactory.createTextField();
+		private final AutoSuggestField indSumField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind sum"));
+		private final JTextField labNameTextField = GUIFactory.createTextField();
+		private final AutoSuggestField labCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Laboratory country"));
+		private final JTextField detectionLimitTextField = GUIFactory.createTextField();
+		private final JTextField quantificationLimitTextField = GUIFactory.createTextField();
+		private final JTextField leftCensoredDataTextField = GUIFactory.createTextField();
+		private final JTextField contaminationRangeTextField = GUIFactory.createTextField();
 
 		private final List<JComponent> advancedComponents;
 
 		EditHazardPanel(final boolean isAdvanced) {
 
-			final JLabel hazardTypeLabel = createLabel("GM.EditHazardPanel.hazardTypeLabel",
+			final JLabel hazardTypeLabel = GUIFactory.createLabel("GM.EditHazardPanel.hazardTypeLabel",
 					"GM.EditHazardPanel.hazardTypeTooltip", true);
-			final JLabel hazardNameLabel = createLabel("GM.EditHazardPanel.hazardNameLabel",
+			final JLabel hazardNameLabel = GUIFactory.createLabel("GM.EditHazardPanel.hazardNameLabel",
 					"GM.EditHazardPanel.hazardNameTooltip", true);
-			final JLabel hazardDescriptionLabel = createLabel("GM.EditHazardPanel.hazardDescriptionLabel",
+			final JLabel hazardDescriptionLabel = GUIFactory.createLabel("GM.EditHazardPanel.hazardDescriptionLabel",
 					"GM.EditHazardPanel.hazardDescriptionTooltip");
-			final JLabel hazardUnitLabel = createLabel("GM.EditHazardPanel.hazardUnitLabel",
+			final JLabel hazardUnitLabel = GUIFactory.createLabel("GM.EditHazardPanel.hazardUnitLabel",
 					"GM.EditHazardPanel.hazardUnitTooltip", true);
-			final JLabel adverseEffectLabel = createLabel("GM.EditHazardPanel.adverseEffectLabel",
+			final JLabel adverseEffectLabel = GUIFactory.createLabel("GM.EditHazardPanel.adverseEffectLabel",
 					"GM.EditHazardPanel.adverseEffectTooltip");
-			final JLabel originLabel = createLabel("GM.EditHazardPanel.originLabel",
+			final JLabel originLabel = GUIFactory.createLabel("GM.EditHazardPanel.originLabel",
 					"GM.EditHazardPanel.originTooltip");
-			final JLabel bmdLabel = createLabel("GM.EditHazardPanel.bmdLabel", "GM.EditHazardPanel.bmdTooltip");
-			final JLabel maxResidueLimitLabel = createLabel("GM.EditHazardPanel.maxResidueLimitLabel",
+			final JLabel bmdLabel = GUIFactory.createLabel("GM.EditHazardPanel.bmdLabel", "GM.EditHazardPanel.bmdTooltip");
+			final JLabel maxResidueLimitLabel = GUIFactory.createLabel("GM.EditHazardPanel.maxResidueLimitLabel",
 					"GM.EditHazardPanel.maxResidueLimitTooltip");
-			final JLabel noObservedAdverseLabel = createLabel("GM.EditHazardPanel.noObservedAdverseLabel",
+			final JLabel noObservedAdverseLabel = GUIFactory.createLabel("GM.EditHazardPanel.noObservedAdverseLabel",
 					"GM.EditHazardPanel.noObservedAdverseTooltip");
-			final JLabel acceptableOperatorLabel = createLabel("GM.EditHazardPanel.acceptableOperatorLabel",
+			final JLabel acceptableOperatorLabel = GUIFactory.createLabel("GM.EditHazardPanel.acceptableOperatorLabel",
 					"GM.EditHazardPanel.acceptableOperatorTooltip");
-			final JLabel acuteReferenceDoseLabel = createLabel("GM.EditHazardPanel.acuteReferenceDoseLabel",
+			final JLabel acuteReferenceDoseLabel = GUIFactory.createLabel("GM.EditHazardPanel.acuteReferenceDoseLabel",
 					"GM.EditHazardPanel.acuteReferenceDoseTooltip");
-			final JLabel indSumLabel = createLabel("GM.EditHazardPanel.indSumLabel",
+			final JLabel indSumLabel = GUIFactory.createLabel("GM.EditHazardPanel.indSumLabel",
 					"GM.EditHazardPanel.indSumTooltip");
-			final JLabel acceptableDailyIntakeLabel = createLabel("GM.EditHazardPanel.acceptableDailyIntakeLabel",
+			final JLabel acceptableDailyIntakeLabel = GUIFactory.createLabel("GM.EditHazardPanel.acceptableDailyIntakeLabel",
 					"GM.EditHazardPanel.acceptableDailyIntakeTooltip");
-			final JLabel labNameLabel = createLabel("GM.EditHazardPanel.labNameLabel",
+			final JLabel labNameLabel = GUIFactory.createLabel("GM.EditHazardPanel.labNameLabel",
 					"GM.EditHazardPanel.labNameTooltip");
-			final JLabel labCountryLabel = createLabel("GM.EditHazardPanel.labCountryLabel",
+			final JLabel labCountryLabel = GUIFactory.createLabel("GM.EditHazardPanel.labCountryLabel",
 					"GM.EditHazardPanel.labCountryTooltip");
-			final JLabel detectionLimitLabel = createLabel("GM.EditHazardPanel.detectionLimitLabel",
+			final JLabel detectionLimitLabel = GUIFactory.createLabel("GM.EditHazardPanel.detectionLimitLabel",
 					"GM.EditHazardPanel.detectionLimitTooltip");
-			final JLabel quantificationLimitLabel = createLabel("GM.EditHazardPanel.quantificationLimitLabel",
+			final JLabel quantificationLimitLabel = GUIFactory.createLabel("GM.EditHazardPanel.quantificationLimitLabel",
 					"GM.EditHazardPanel.quantificationLimitTooltip");
-			final JLabel leftCensoredDataLabel = createLabel("GM.EditHazardPanel.leftCensoredDataLabel",
+			final JLabel leftCensoredDataLabel = GUIFactory.createLabel("GM.EditHazardPanel.leftCensoredDataLabel",
 					"GM.EditHazardPanel.leftCensoredDataTooltip");
-			final JLabel contaminationRangeLabel = createLabel("GM.EditHazardPanel.contaminationRangeLabel",
+			final JLabel contaminationRangeLabel = GUIFactory.createLabel("GM.EditHazardPanel.contaminationRangeLabel",
 					"GM.EditHazardPanel.contaminationRangeTooltip");
 
 			// Wraps hazardDescriptionTextArea in a JScrollPane
@@ -1066,21 +1070,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 3586499490386620791L;
 
-		private final JTextField equationNameTextField = createTextField();
-		private final JTextField equationClassTextField = createTextField();
+		private final JTextField equationNameTextField = GUIFactory.createTextField();
+		private final JTextField equationClassTextField = GUIFactory.createTextField();
 		private final ReferencePanel referencePanel;
-		private final JTextArea scriptTextArea = createTextArea();
+		private final JTextArea scriptTextArea = GUIFactory.createTextArea();
 
 		private final List<JComponent> advancedComponents;
 
 		EditModelEquationPanel(final boolean isAdvanced) {
 
 			// Create labels
-			final JLabel equationNameLabel = createLabel("GM.EditModelEquationPanel.nameLabel",
+			final JLabel equationNameLabel = GUIFactory.createLabel("GM.EditModelEquationPanel.nameLabel",
 					"GM.EditModelEquationPanel.nameTooltip", true);
-			final JLabel equationClassLabel = createLabel("GM.EditModelEquationPanel.classLabel",
+			final JLabel equationClassLabel = GUIFactory.createLabel("GM.EditModelEquationPanel.classLabel",
 					"GM.EditModelEquationPanel.classTooltip");
-			final JLabel scriptLabel = createLabel("GM.EditModelEquationPanel.scriptLabel",
+			final JLabel scriptLabel = GUIFactory.createLabel("GM.EditModelEquationPanel.scriptLabel",
 					"GM.EditModelEquationPanel.scriptTooltip", true);
 
 			referencePanel = new ReferencePanel(isAdvanced);
@@ -1148,67 +1152,67 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 1826555468897327895L;
 
-		private final JTextField idTextField = createTextField();
+		private final JTextField idTextField = GUIFactory.createTextField();
 		private final JComboBox<Parameter.Classification> classificationComboBox = new JComboBox<>(
 				Parameter.Classification.values());
-		private final JTextField nameTextField = createTextField();
-		private final JTextArea descriptionTextArea = createTextArea();
-		private final AutoSuggestField typeField = createAutoSuggestField(vocabs.get("Parameter type"));
-		private final AutoSuggestField unitField = createAutoSuggestField(vocabs.get("Parameter unit"));
-		private final AutoSuggestField unitCategoryField = createAutoSuggestField(
+		private final JTextField nameTextField = GUIFactory.createTextField();
+		private final JTextArea descriptionTextArea = GUIFactory.createTextArea();
+		private final AutoSuggestField typeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter type"));
+		private final AutoSuggestField unitField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit"));
+		private final AutoSuggestField unitCategoryField = GUIFactory.createAutoSuggestField(
 				vocabs.get("Parameter unit category"));
-		private final AutoSuggestField dataTypeField = createAutoSuggestField(vocabs.get("Parameter data type"));
-		private final AutoSuggestField sourceField = createAutoSuggestField(vocabs.get("Parameter source"));
-		private final AutoSuggestField subjectField = createAutoSuggestField(vocabs.get("Parameter subject"));
-		private final AutoSuggestField distributionField = createAutoSuggestField(vocabs.get("Parameter distribution"));
-		private final JTextField valueTextField = createTextField();
-		private final JTextField referenceTextField = createTextField();
-		private final JTextArea variabilitySubjectTextArea = createTextArea();
-		private final JTextArea applicabilityTextArea = createTextArea();
-		private SpinnerNumberModel errorSpinnerModel = createSpinnerDoubleModel();
+		private final AutoSuggestField dataTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter data type"));
+		private final AutoSuggestField sourceField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter source"));
+		private final AutoSuggestField subjectField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter subject"));
+		private final AutoSuggestField distributionField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter distribution"));
+		private final JTextField valueTextField = GUIFactory.createTextField();
+		private final JTextField referenceTextField = GUIFactory.createTextField();
+		private final JTextArea variabilitySubjectTextArea = GUIFactory.createTextArea();
+		private final JTextArea applicabilityTextArea = GUIFactory.createTextArea();
+		private SpinnerNumberModel errorSpinnerModel = GUIFactory.createSpinnerDoubleModel();
 
 		private final List<JComponent> advancedComponents;
 
 		public EditParameterPanel(final boolean isAdvanced) {
 
-			final JLabel idLabel = createLabel("GM.EditParameterPanel.idLabel", "GM.EditParameterPanel.idTooltip",
+			final JLabel idLabel = GUIFactory.createLabel("GM.EditParameterPanel.idLabel", "GM.EditParameterPanel.idTooltip",
 					true);
-			final JLabel classificationLabel = createLabel("GM.EditParameterPanel.classificationLabel",
+			final JLabel classificationLabel = GUIFactory.createLabel("GM.EditParameterPanel.classificationLabel",
 					"GM.EditParameterPanel.classificationTooltip", true);
-			final JLabel nameLabel = createLabel("GM.EditParameterPanel.parameterNameLabel",
+			final JLabel nameLabel = GUIFactory.createLabel("GM.EditParameterPanel.parameterNameLabel",
 					"GM.EditParameterPanel.parameterNameTooltip", true);
-			final JLabel descriptionLabel = createLabel("GM.EditParameterPanel.descriptionLabel",
+			final JLabel descriptionLabel = GUIFactory.createLabel("GM.EditParameterPanel.descriptionLabel",
 					"GM.EditParameterPanel.descriptionTooltip");
-			final JLabel typeLabel = createLabel("GM.EditParameterPanel.typeLabel",
+			final JLabel typeLabel = GUIFactory.createLabel("GM.EditParameterPanel.typeLabel",
 					"GM.EditParameterPanel.typeTooltip");
-			final JLabel unitLabel = createLabel("GM.EditParameterPanel.unitLabel", "GM.EditParameterPanel.unitTooltip",
+			final JLabel unitLabel = GUIFactory.createLabel("GM.EditParameterPanel.unitLabel", "GM.EditParameterPanel.unitTooltip",
 					true);
-			final JLabel unitCategoryLabel = createLabel("GM.EditParameterPanel.unitCategoryLabel",
+			final JLabel unitCategoryLabel = GUIFactory.createLabel("GM.EditParameterPanel.unitCategoryLabel",
 					"GM.EditParameterPanel.unitCategoryTooltip", true);
-			final JLabel dataTypeLabel = createLabel("GM.EditParameterPanel.dataTypeLabel",
+			final JLabel dataTypeLabel = GUIFactory.createLabel("GM.EditParameterPanel.dataTypeLabel",
 					"GM.EditParameterPanel.dataTypeTooltip", true);
-			final JLabel sourceLabel = createLabel("GM.EditParameterPanel.sourceLabel",
+			final JLabel sourceLabel = GUIFactory.createLabel("GM.EditParameterPanel.sourceLabel",
 					"GM.EditParameterPanel.sourceTooltip");
-			final JLabel subjectLabel = createLabel("GM.EditParameterPanel.subjectLabel",
+			final JLabel subjectLabel = GUIFactory.createLabel("GM.EditParameterPanel.subjectLabel",
 					"GM.EditParameterPanel.subjectTooltip");
-			final JLabel distributionLabel = createLabel("GM.EditParameterPanel.distributionLabel",
+			final JLabel distributionLabel = GUIFactory.createLabel("GM.EditParameterPanel.distributionLabel",
 					"GM.EditParameterPanel.distributionTooltip");
-			final JLabel valueLabel = createLabel("GM.EditParameterPanel.valueLabel",
+			final JLabel valueLabel = GUIFactory.createLabel("GM.EditParameterPanel.valueLabel",
 					"GM.EditParameterPanel.valueTooltip");
-			final JLabel referenceLabel = createLabel("GM.EditParameterPanel.referenceLabel",
+			final JLabel referenceLabel = GUIFactory.createLabel("GM.EditParameterPanel.referenceLabel",
 					"GM.EditParameterPanel.referenceTooltip");
-			final JLabel variabilitySubjectLabel = createLabel("GM.EditParameterPanel.variabilitySubjectLabel",
+			final JLabel variabilitySubjectLabel = GUIFactory.createLabel("GM.EditParameterPanel.variabilitySubjectLabel",
 					"GM.EditParameterPanel.variabilitySubjectTooltip");
-			final JLabel applicabilityLabel = createLabel("GM.EditParameterPanel.applicabilityLabel",
+			final JLabel applicabilityLabel = GUIFactory.createLabel("GM.EditParameterPanel.applicabilityLabel",
 					"GM.EditParameterPanel.applicabilityTooltip");
-			final JLabel errorLabel = createLabel("GM.EditParameterPanel.errorLabel",
+			final JLabel errorLabel = GUIFactory.createLabel("GM.EditParameterPanel.errorLabel",
 					"GM.EditParameterPanel.errorTooltip");
 
 			// Build UI
 			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
 			final JScrollPane variabilitySubjectPane = new JScrollPane(variabilitySubjectTextArea);
 			final JScrollPane applicabilityPane = new JScrollPane(applicabilityTextArea);
-			final JSpinner errorSpinner = createSpinner(errorSpinnerModel);
+			final JSpinner errorSpinner = GUIFactory.createSpinner(errorSpinnerModel);
 
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(idLabel, idTextField),
 					new Pair<>(classificationLabel, classificationComboBox), new Pair<>(nameLabel, nameTextField),
@@ -1316,48 +1320,48 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -4520186348489618333L;
 
-		private final JTextField populationNameTextField = createTextField();
-		private final JTextField targetPopulationTextField = createTextField();
-		private final JTextField populationSpanTextField = createTextField();
-		private final JTextArea populationDescriptionTextArea = createTextArea();
-		private final JTextField populationAgeTextField = createTextField();
-		private final JTextField populationGenderTextField = createTextField();
-		private final JTextField bmiTextField = createTextField();
-		private final JTextField specialDietGroupTextField = createTextField();
-		private final JTextField patternConsumptionTextField = createTextField();
-		private final JComboBox<String> regionComboBox = createComboBox(vocabs.get("Region"));
-		private final JComboBox<String> countryComboBox = createComboBox(vocabs.get("Country"));
-		private final JTextField riskTextField = createTextField();
-		private final JTextField seasonTextField = createTextField();
+		private final JTextField populationNameTextField = GUIFactory.createTextField();
+		private final JTextField targetPopulationTextField = GUIFactory.createTextField();
+		private final JTextField populationSpanTextField = GUIFactory.createTextField();
+		private final JTextArea populationDescriptionTextArea = GUIFactory.createTextArea();
+		private final JTextField populationAgeTextField = GUIFactory.createTextField();
+		private final JTextField populationGenderTextField = GUIFactory.createTextField();
+		private final JTextField bmiTextField = GUIFactory.createTextField();
+		private final JTextField specialDietGroupTextField = GUIFactory.createTextField();
+		private final JTextField patternConsumptionTextField = GUIFactory.createTextField();
+		private final JComboBox<String> regionComboBox = GUIFactory.createComboBox(vocabs.get("Region"));
+		private final JComboBox<String> countryComboBox = GUIFactory.createComboBox(vocabs.get("Country"));
+		private final JTextField riskTextField = GUIFactory.createTextField();
+		private final JTextField seasonTextField = GUIFactory.createTextField();
 		
 		private final List<JComponent> advancedComponents;
 
 		public EditPopulationGroupPanel(final boolean isAdvanced) {
 
-			final JLabel populationNameLabel = createLabel("GM.EditPopulationGroupPanel.populationNameLabel",
+			final JLabel populationNameLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.populationNameLabel",
 					"GM.EditPopulationGroupPanel.populationNameTooltip", true);
-			final JLabel targetPopulationLabel = createLabel("GM.EditPopulationGroupPanel.targetPopulationLabel",
+			final JLabel targetPopulationLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.targetPopulationLabel",
 					"GM.EditPopulationGroupPanel.targetPopulationTooltip");
-			final JLabel populationSpanLabel = createLabel("GM.EditPopulationGroupPanel.populationSpanLabel",
+			final JLabel populationSpanLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.populationSpanLabel",
 					"GM.EditPopulationGroupPanel.populationSpanTooltip");
-			final JLabel populationDescriptionLabel = createLabel("GM.EditPopulationGroupPanel.populationDescriptionLabel",
+			final JLabel populationDescriptionLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.populationDescriptionLabel",
 					"GM.EditPopulationGroupPanel.populationDescriptionTooltip");
-			final JLabel populationAgeLabel = createLabel("GM.EditPopulationGroupPanel.populationAgeLabel",
+			final JLabel populationAgeLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.populationAgeLabel",
 					"GM.EditPopulationGroupPanel.populationAgeTooltip");
-			final JLabel populationGenderLabel = createLabel("GM.EditPopulationGroupPanel.populationGenderLabel",
+			final JLabel populationGenderLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.populationGenderLabel",
 					"GM.EditPopulationGroupPanel.populationGenderTooltip");
-			final JLabel bmiLabel = createLabel("GM.EditPopulationGroupPanel.bmiLabel", "GM.EditPopulationGroupPanel.bmiTooltip");
-			final JLabel specialDietGroupLabel = createLabel("GM.EditPopulationGroupPanel.specialDietGroupsLabel",
+			final JLabel bmiLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.bmiLabel", "GM.EditPopulationGroupPanel.bmiTooltip");
+			final JLabel specialDietGroupLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.specialDietGroupsLabel",
 					"GM.EditPopulationGroupPanel.specialDietGroupsTooltip");
-			final JLabel patternConsumptionLabel = createLabel("GM.EditPopulationGroupPanel.patternConsumptionLabel",
+			final JLabel patternConsumptionLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.patternConsumptionLabel",
 					"GM.EditPopulationGroupPanel.patternConsumptionTooltip");
-			final JLabel regionLabel = createLabel("GM.EditPopulationGroupPanel.regionLabel",
+			final JLabel regionLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.regionLabel",
 					"GM.EditPopulationGroupPanel.regionTooltip");
-			final JLabel countryLabel = createLabel("GM.EditPopulationGroupPanel.countryLabel",
+			final JLabel countryLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.countryLabel",
 					"GM.EditPopulationGroupPanel.countryTooltip");
-			final JLabel riskLabel = createLabel("GM.EditPopulationGroupPanel.riskAndPopulationLabel",
+			final JLabel riskLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.riskAndPopulationLabel",
 					"GM.EditPopulationGroupPanel.riskAndPopulationTooltip");
-			final JLabel seasonLabel = createLabel("GM.EditPopulationGroupPanel.seasonLabel",
+			final JLabel seasonLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.seasonLabel",
 					"GM.EditPopulationGroupPanel.seasonTooltip");
 
 			final JScrollPane populationDescriptionPane = new JScrollPane(populationDescriptionTextArea);
@@ -1524,15 +1528,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -7400646603919832139L;
 
-		private final AutoSuggestField envNameField = createAutoSuggestField(vocabs.get("Product-matrix name"));
-		private final JTextArea envDescriptionTextArea = createTextArea();
-		private final AutoSuggestField envUnitField = createAutoSuggestField(vocabs.get("Product-matrix unit"));
-		private final JComboBox<String> productionMethodComboBox = createComboBox(vocabs.get("Method of production"));
-		private final JComboBox<String> packagingComboBox = createComboBox(vocabs.get("Packaging"));
-		private final JComboBox<String> productTreatmentComboBox = createComboBox(vocabs.get("Product treatment"));
-		private final AutoSuggestField originCountryField = createAutoSuggestField(vocabs.get("Country of origin"));
-		private final AutoSuggestField originAreaField = createAutoSuggestField(vocabs.get("Area of origin"));
-		private final AutoSuggestField fisheriesAreaField = createAutoSuggestField(vocabs.get("Fisheries area"));
+		private final AutoSuggestField envNameField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix name"));
+		private final JTextArea envDescriptionTextArea = GUIFactory.createTextArea();
+		private final AutoSuggestField envUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix unit"));
+		private final JComboBox<String> productionMethodComboBox = GUIFactory.createComboBox(vocabs.get("Method of production"));
+		private final JComboBox<String> packagingComboBox = GUIFactory.createComboBox(vocabs.get("Packaging"));
+		private final JComboBox<String> productTreatmentComboBox = GUIFactory.createComboBox(vocabs.get("Product treatment"));
+		private final AutoSuggestField originCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Country of origin"));
+		private final AutoSuggestField originAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Area of origin"));
+		private final AutoSuggestField fisheriesAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Fisheries area"));
 		private final FixedDateChooser productionDateChooser = new FixedDateChooser();
 		private final FixedDateChooser expirationDateChooser = new FixedDateChooser();
 
@@ -1540,24 +1544,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		public EditProductPanel(boolean isAdvanced) {
 
-			final JLabel envNameLabel = createLabel("GM.EditProductPanel.envNameLabel", "GM.EditProductPanel.envNameTooltip", true);
-			final JLabel envDescriptionLabel = createLabel("GM.EditProductPanel.envDescriptionLabel",
+			final JLabel envNameLabel = GUIFactory.createLabel("GM.EditProductPanel.envNameLabel", "GM.EditProductPanel.envNameTooltip", true);
+			final JLabel envDescriptionLabel = GUIFactory.createLabel("GM.EditProductPanel.envDescriptionLabel",
 					"GM.EditProductPanel.envDescriptionTooltip");
-			final JLabel envUnitLabel = createLabel("GM.EditProductPanel.envUnitLabel", "GM.EditProductPanel.envUnitTooltip", true);
-			final JLabel productionMethodLabel = createLabel("GM.EditProductPanel.productionMethodLabel",
+			final JLabel envUnitLabel = GUIFactory.createLabel("GM.EditProductPanel.envUnitLabel", "GM.EditProductPanel.envUnitTooltip", true);
+			final JLabel productionMethodLabel = GUIFactory.createLabel("GM.EditProductPanel.productionMethodLabel",
 					"GM.EditProductPanel.productionMethodTooltip");
-			final JLabel packagingLabel = createLabel("GM.EditProductPanel.packagingLabel", "GM.EditProductPanel.packagingTooltip");
-			final JLabel productTreatmentLabel = createLabel("GM.EditProductPanel.productTreatmentLabel",
+			final JLabel packagingLabel = GUIFactory.createLabel("GM.EditProductPanel.packagingLabel", "GM.EditProductPanel.packagingTooltip");
+			final JLabel productTreatmentLabel = GUIFactory.createLabel("GM.EditProductPanel.productTreatmentLabel",
 					"GM.EditProductPanel.productTreatmentTooltip");
-			final JLabel originCountryLabel = createLabel("GM.EditProductPanel.originCountryLabel",
+			final JLabel originCountryLabel = GUIFactory.createLabel("GM.EditProductPanel.originCountryLabel",
 					"GM.EditProductPanel.originCountryTooltip");
-			final JLabel originAreaLabel = createLabel("GM.EditProductPanel.originAreaLabel",
+			final JLabel originAreaLabel = GUIFactory.createLabel("GM.EditProductPanel.originAreaLabel",
 					"GM.EditProductPanel.originAreaTooltip");
-			final JLabel fisheriesAreaLabel = createLabel("GM.EditProductPanel.fisheriesAreaLabel",
+			final JLabel fisheriesAreaLabel = GUIFactory.createLabel("GM.EditProductPanel.fisheriesAreaLabel",
 					"GM.EditProductPanel.fisheriesAreaTooltip");
-			final JLabel productionDateLabel = createLabel("GM.EditProductPanel.productionDateLabel",
+			final JLabel productionDateLabel = GUIFactory.createLabel("GM.EditProductPanel.productionDateLabel",
 					"GM.EditProductPanel.productionDateTooltip");
-			final JLabel expirationDateLabel = createLabel("GM.EditProductPanel.expirationDateLabel",
+			final JLabel expirationDateLabel = GUIFactory.createLabel("GM.EditProductPanel.expirationDateLabel",
 					"GM.EditProductPanel.expirationDateTooltip");
 
 			// Build UI
@@ -1714,21 +1718,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private static final String dateFormatStr = "yyyy-MM-dd";
 
 		private final JCheckBox isReferenceDescriptionCheckBox;
-		private final JComboBox<String> typeComboBox = createComboBox(referenceTypeLabels.values());
+		private final JComboBox<String> typeComboBox = GUIFactory.createComboBox(referenceTypeLabels.values());
 		private final FixedDateChooser dateChooser = new FixedDateChooser();
-		private final JTextField pmidTextField = createTextField();
-		private final JTextField doiTextField = createTextField();
-		private final JTextField authorListTextField = createTextField();
-		private final JTextField titleTextField = createTextField();
-		private final JTextArea abstractTextArea = createTextArea();
-		private final JTextField journalTextField = createTextField();
+		private final JTextField pmidTextField = GUIFactory.createTextField();
+		private final JTextField doiTextField = GUIFactory.createTextField();
+		private final JTextField authorListTextField = GUIFactory.createTextField();
+		private final JTextField titleTextField = GUIFactory.createTextField();
+		private final JTextArea abstractTextArea = GUIFactory.createTextArea();
+		private final JTextField journalTextField = GUIFactory.createTextField();
 		// Spinner models starting with 0 and taking positive ints only
 		private final SpinnerNumberModel volumeSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
 		private final SpinnerNumberModel issueSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
-		private final JTextField pageTextField = createTextField();
-		private final JTextField statusTextField = createTextField();
-		private final JTextField websiteTextField = createTextField();
-		private final JTextArea commentTextArea = createTextArea();
+		private final JTextField pageTextField = GUIFactory.createTextField();
+		private final JTextField statusTextField = GUIFactory.createTextField();
+		private final JTextField websiteTextField = GUIFactory.createTextField();
+		private final JTextArea commentTextArea = GUIFactory.createTextArea();
 
 		private final List<JComponent> advancedComponents;
 
@@ -1738,25 +1742,25 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
 
 			// Create labels
-			final JLabel typeLabel = createLabel("GM.EditReferencePanel.typeLabel");
-			final JLabel dateLabel = createLabel("GM.EditReferencePanel.dateLabel");
-			final JLabel pmidLabel = createLabel("GM.EditReferencePanel.pmidLabel");
-			final JLabel doiLabel = createLabel("GM.EditReferencePanel.doiLabel", true);
-			final JLabel authorListLabel = createLabel("GM.EditReferencePanel.authorListLabel");
-			final JLabel titleLabel = createLabel("GM.EditReferencePanel.titleLabel", true);
-			final JLabel abstractLabel = createLabel("GM.EditReferencePanel.abstractLabel");
-			final JLabel journalLabel = createLabel("GM.EditReferencePanel.journalLabel");
-			final JLabel volumeLabel = createLabel("GM.EditReferencePanel.volumeLabel");
-			final JLabel issueLabel = createLabel("GM.EditReferencePanel.issueLabel");
-			final JLabel pageLabel = createLabel("GM.EditReferencePanel.pageLabel");
-			final JLabel statusLabel = createLabel("GM.EditReferencePanel.statusLabel");
-			final JLabel websiteLabel = createLabel("GM.EditReferencePanel.websiteLabel");
-			final JLabel commentLabel = createLabel("GM.EditReferencePanel.commentLabel");
+			final JLabel typeLabel = GUIFactory.createLabel("GM.EditReferencePanel.typeLabel");
+			final JLabel dateLabel = GUIFactory.createLabel("GM.EditReferencePanel.dateLabel");
+			final JLabel pmidLabel = GUIFactory.createLabel("GM.EditReferencePanel.pmidLabel");
+			final JLabel doiLabel = GUIFactory.createLabel("GM.EditReferencePanel.doiLabel", true);
+			final JLabel authorListLabel = GUIFactory.createLabel("GM.EditReferencePanel.authorListLabel");
+			final JLabel titleLabel = GUIFactory.createLabel("GM.EditReferencePanel.titleLabel", true);
+			final JLabel abstractLabel = GUIFactory.createLabel("GM.EditReferencePanel.abstractLabel");
+			final JLabel journalLabel = GUIFactory.createLabel("GM.EditReferencePanel.journalLabel");
+			final JLabel volumeLabel = GUIFactory.createLabel("GM.EditReferencePanel.volumeLabel");
+			final JLabel issueLabel = GUIFactory.createLabel("GM.EditReferencePanel.issueLabel");
+			final JLabel pageLabel = GUIFactory.createLabel("GM.EditReferencePanel.pageLabel");
+			final JLabel statusLabel = GUIFactory.createLabel("GM.EditReferencePanel.statusLabel");
+			final JLabel websiteLabel = GUIFactory.createLabel("GM.EditReferencePanel.websiteLabel");
+			final JLabel commentLabel = GUIFactory.createLabel("GM.EditReferencePanel.commentLabel");
 
 			// Build UI
 			final JScrollPane abstractPane = new JScrollPane(abstractTextArea);
-			final JSpinner volumeSpinner = createSpinner(volumeSpinnerModel);
-			final JSpinner issueSpinner = createSpinner(issueSpinnerModel);
+			final JSpinner volumeSpinner = GUIFactory.createSpinner(volumeSpinnerModel);
+			final JSpinner issueSpinner = GUIFactory.createSpinner(issueSpinnerModel);
 			final JScrollPane commentPane = new JScrollPane(commentTextArea);
 
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(typeLabel, typeComboBox),
@@ -1902,52 +1906,52 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -4740851101237646103L;
 
-		private final JTextField sampleNameTextField = createTextField();
-		private final SpinnerNumberModel moisturePercentageSpinnerModel = createSpinnerPercentageModel();
-		private final SpinnerNumberModel fatPercentageSpinnerModel = createSpinnerPercentageModel();
-		private final JTextField sampleProtocolTextField = createTextField();
-		private final AutoSuggestField samplingStrategyField = createAutoSuggestField(vocabs.get("Sampling strategy"));
-		private final AutoSuggestField samplingTypeField = createAutoSuggestField(vocabs.get("Type of sampling program"));
-		private final AutoSuggestField samplingMethodField = createAutoSuggestField(vocabs.get("Sampling method"));
-		private final JTextField samplingPlanTextField = createTextField();
-		private final JTextField samplingWeightTextField = createTextField();
-		private final JTextField samplingSizeTextField = createTextField();
-		private final AutoSuggestField lotSizeUnitField = createAutoSuggestField(vocabs.get("Lot size unit"));
-		private final AutoSuggestField samplingPointField = createAutoSuggestField(vocabs.get("Sampling point"));
+		private final JTextField sampleNameTextField = GUIFactory.createTextField();
+		private final SpinnerNumberModel moisturePercentageSpinnerModel = GUIFactory.createSpinnerPercentageModel();
+		private final SpinnerNumberModel fatPercentageSpinnerModel = GUIFactory.createSpinnerPercentageModel();
+		private final JTextField sampleProtocolTextField = GUIFactory.createTextField();
+		private final AutoSuggestField samplingStrategyField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling strategy"));
+		private final AutoSuggestField samplingTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Type of sampling program"));
+		private final AutoSuggestField samplingMethodField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling method"));
+		private final JTextField samplingPlanTextField = GUIFactory.createTextField();
+		private final JTextField samplingWeightTextField = GUIFactory.createTextField();
+		private final JTextField samplingSizeTextField = GUIFactory.createTextField();
+		private final AutoSuggestField lotSizeUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Lot size unit"));
+		private final AutoSuggestField samplingPointField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling point"));
 
 		private final List<JComponent> advancedComponents;
 
 		public EditStudySamplePanel(final boolean isAdvanced) {
 
 			// Create labels and fields
-			final JLabel sampleNameLabel = createLabel("GM.EditStudySamplePanel.sampleNameLabel",
+			final JLabel sampleNameLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.sampleNameLabel",
 					"GM.EditStudySamplePanel.sampleNameTooltip", true);
-			final JLabel moisturePercentageLabel = createLabel("GM.EditStudySamplePanel.moisturePercentageLabel",
+			final JLabel moisturePercentageLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.moisturePercentageLabel",
 					"GM.EditStudySamplePanel.moisturePercentageTooltip");
-			final JLabel fatPercentageLabel = createLabel("GM.EditStudySamplePanel.fatPercentageLabel",
+			final JLabel fatPercentageLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.fatPercentageLabel",
 					"GM.EditStudySamplePanel.fatPercentageTooltip");
-			final JLabel sampleProtocolLabel = createLabel("GM.EditStudySamplePanel.sampleProtocolLabel",
+			final JLabel sampleProtocolLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.sampleProtocolLabel",
 					"GM.EditStudySamplePanel.sampleProtocolTooltip", true);
-			final JLabel samplingStrategyLabel = createLabel("GM.EditStudySamplePanel.samplingStrategyLabel",
+			final JLabel samplingStrategyLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.samplingStrategyLabel",
 					"GM.EditStudySamplePanel.samplingStrategyTooltip");
-			final JLabel samplingTypeLabel = createLabel("GM.EditStudySamplePanel.samplingTypeLabel",
+			final JLabel samplingTypeLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.samplingTypeLabel",
 					"GM.EditStudySamplePanel.samplingTypeTooltip");
-			final JLabel samplingMethodLabel = createLabel("GM.EditStudySamplePanel.samplingMethodLabel",
+			final JLabel samplingMethodLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.samplingMethodLabel",
 					"GM.EditStudySamplePanel.samplingMethodTooltip");
-			final JLabel samplingPlanLabel = createLabel("GM.EditStudySamplePanel.samplingPlanLabel",
+			final JLabel samplingPlanLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.samplingPlanLabel",
 					"GM.EditStudySamplePanel.samplingPlanTooltip", true);
-			final JLabel samplingWeightLabel = createLabel("GM.EditStudySamplePanel.samplingWeightLabel",
+			final JLabel samplingWeightLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.samplingWeightLabel",
 					"GM.EditStudySamplePanel.samplingWeightTooltip", true);
-			final JLabel samplingSizeLabel = createLabel("GM.EditStudySamplePanel.samplingSizeLabel",
+			final JLabel samplingSizeLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.samplingSizeLabel",
 					"GM.EditStudySamplePanel.samplingSizeTooltip", true);
-			final JLabel lotSizeUnitLabel = createLabel("GM.EditStudySamplePanel.lotSizeUnitLabel",
+			final JLabel lotSizeUnitLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.lotSizeUnitLabel",
 					"GM.EditStudySamplePanel.lotSizeUnitTooltip");
-			final JLabel samplingPointLabel = createLabel("GM.EditStudySamplePanel.samplingPointLabel",
+			final JLabel samplingPointLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.samplingPointLabel",
 					"GM.EditStudySamplePanel.samplingPointTooltip");
 
 			// Build UI
-			final JSpinner moisturePercentageSpinner = createSpinner(moisturePercentageSpinnerModel);
-			final JSpinner fatPercentageSpinner = createSpinner(fatPercentageSpinnerModel);
+			final JSpinner moisturePercentageSpinner = GUIFactory.createSpinner(moisturePercentageSpinnerModel);
+			final JSpinner fatPercentageSpinner = GUIFactory.createSpinner(fatPercentageSpinnerModel);
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(sampleNameLabel, sampleNameTextField),
 					new Pair<>(moisturePercentageLabel, moisturePercentageSpinner),
 					new Pair<>(fatPercentageLabel, fatPercentageSpinner),
@@ -2124,49 +2128,49 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			// Create fields
 			advancedCheckBox = new JCheckBox("Advanced");
 
-			studyNameTextField = createTextField();
-			sourceTextField = createTextField();
-			identifierTextField = createTextField();
+			studyNameTextField = GUIFactory.createTextField();
+			sourceTextField = GUIFactory.createTextField();
+			identifierTextField = GUIFactory.createTextField();
 			creatorPanel = new CreatorPanel();
 			creationDateChooser = new FixedDateChooser();
-			rightsField = createAutoSuggestField(vocabs.get("Rights"));
+			rightsField = GUIFactory.createAutoSuggestField(vocabs.get("Rights"));
 			availabilityCheckBox = new JCheckBox();
-			urlTextField = createTextField();
-			formatField = createAutoSuggestField(vocabs.get("Format"));
+			urlTextField = GUIFactory.createTextField();
+			formatField = GUIFactory.createAutoSuggestField(vocabs.get("Format"));
 			referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
-			languageField = createAutoSuggestField(vocabs.get("Language"));
-			softwareField = createAutoSuggestField(vocabs.get("Software"));
-			languageWrittenInField = createAutoSuggestField(vocabs.get("Language written in"));
-			statusField = createAutoSuggestField(vocabs.get("Status"));
-			objectiveTextField = createTextField();
-			descriptionTextField = createTextField();
+			languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"));
+			softwareField = GUIFactory.createAutoSuggestField(vocabs.get("Software"));
+			languageWrittenInField = GUIFactory.createAutoSuggestField(vocabs.get("Language written in"));
+			statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"));
+			objectiveTextField = GUIFactory.createTextField();
+			descriptionTextField = GUIFactory.createTextField();
 
 			// Create labels
-			final JLabel studyNameLabel = createLabel("GM.GeneralInformationPanel.studyNameLabel",
+			final JLabel studyNameLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.studyNameLabel",
 					"GM.GeneralInformationPanel.studyNameTooltip");
-			final JLabel sourceLabel = createLabel("GM.GeneralInformationPanel.sourceLabel",
+			final JLabel sourceLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.sourceLabel",
 					"GM.GeneralInformationPanel.sourceTooltip");
-			final JLabel identifierLabel = createLabel("GM.GeneralInformationPanel.identifierLabel",
+			final JLabel identifierLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.identifierLabel",
 					"GM.GeneralInformationPanel.identifierTooltip");
-			final JLabel creationDateLabel = createLabel("GM.GeneralInformationPanel.creationDateLabel",
+			final JLabel creationDateLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.creationDateLabel",
 					"GM.GeneralInformationPanel.creationDateTooltip");
-			final JLabel rightsLabel = createLabel("GM.GeneralInformationPanel.rightsLabel",
+			final JLabel rightsLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.rightsLabel",
 					"GM.GeneralInformationPanel.rightsTooltip");
-			final JLabel urlLabel = createLabel("GM.GeneralInformationPanel.urlLabel",
+			final JLabel urlLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.urlLabel",
 					"GM.GeneralInformationPanel.urlTooltip");
-			final JLabel formatLabel = createLabel("GM.GeneralInformationPanel.formatLabel",
+			final JLabel formatLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.formatLabel",
 					"GM.GeneralInformationPanel.formatTooltip");
-			final JLabel languageLabel = createLabel("GM.GeneralInformationPanel.languageLabel",
+			final JLabel languageLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.languageLabel",
 					"GM.GeneralInformationPanel.languageTooltip");
-			final JLabel softwareLabel = createLabel("GM.GeneralInformationPanel.softwareLabel",
+			final JLabel softwareLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.softwareLabel",
 					"GM.GeneralInformationPanel.softwareTooltip");
-			final JLabel languageWrittenInLabel = createLabel("GM.GeneralInformationPanel.languageWrittenInLabel",
+			final JLabel languageWrittenInLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.languageWrittenInLabel",
 					"GM.GeneralInformationPanel.languageWrittenInTooltip");
-			final JLabel statusLabel = createLabel("GM.GeneralInformationPanel.statusLabel",
+			final JLabel statusLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.statusLabel",
 					"GM.GeneralInformationPanel.statusTooltip");
-			final JLabel objectiveLabel = createLabel("GM.GeneralInformationPanel.objectiveLabel",
+			final JLabel objectiveLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.objectiveLabel",
 					"GM.GeneralInformationPanel.objectiveTooltip");
-			final JLabel descriptionLabel = createLabel("GM.GeneralInformationPanel.descriptionLabel",
+			final JLabel descriptionLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.descriptionLabel",
 					"GM.GeneralInformationPanel.descriptionTooltip");
 
 			// Hide initially advanced components
@@ -2237,7 +2241,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				referencePanel.isAdvanced = showAdvanced;
 			});
 
-			add(createAdvancedPanel(advancedCheckBox));
+			add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			add(Box.createGlue());
 			add(propertiesPanel);
 		}
@@ -2469,14 +2473,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			super(new GridBagLayout());
 
 			// Create fields
-			givenNameTextField = createTextField();
-			familyNameTextField = createTextField();
-			contactTextField = createTextField();
+			givenNameTextField = GUIFactory.createTextField();
+			familyNameTextField = GUIFactory.createTextField();
+			contactTextField = GUIFactory.createTextField();
 
 			// Create labels
-			final JLabel givenNameLabel = createLabel("GM.EditCreatorPanel.givenNameLabel");
-			final JLabel familyNameLabel = createLabel("GM.EditCreatorPanel.familyNameLabel");
-			final JLabel contactLabel = createLabel("GM.EditCreatorPanel.contactLabel");
+			final JLabel givenNameLabel = GUIFactory.createLabel("GM.EditCreatorPanel.givenNameLabel");
+			final JLabel familyNameLabel = GUIFactory.createLabel("GM.EditCreatorPanel.familyNameLabel");
+			final JLabel contactLabel = GUIFactory.createLabel("GM.EditCreatorPanel.contactLabel");
 
 			// Build UI
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(givenNameLabel, givenNameTextField),
@@ -2546,12 +2550,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			hazardButton = new JButton();
 			populationButton = new JButton();
 
-			commentTextArea = createTextArea();
+			commentTextArea = GUIFactory.createTextArea();
 			commentPane = new JScrollPane(commentTextArea);
 
 			dateChooser = new FixedDateChooser();
-			regionField = createAutoSuggestField(vocabs.get("Region"));
-			countryField = createAutoSuggestField(vocabs.get("Country"));
+			regionField = GUIFactory.createAutoSuggestField(vocabs.get("Region"));
+			countryField = GUIFactory.createAutoSuggestField(vocabs.get("Country"));
 
 			advancedCheckBox = new JCheckBox("Advanced");
 
@@ -2588,14 +2592,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			});
 
 			// Create labels
-			final JLabel productLabel = createLabel("GM.ScopePanel.productLabel");
-			final JLabel hazardLabel = createLabel("GM.ScopePanel.hazardLabel");
-			final JLabel populationLabel = createLabel("GM.ScopePanel.populationGroupLabel");
-			final JLabel commentLabel = createLabel("GM.ScopePanel.commentLabel", "GM.ScopePanel.commentTooltip");
-			final JLabel temporalInformationLabel = createLabel("GM.ScopePanel.temporalInformationLabel",
+			final JLabel productLabel = GUIFactory.createLabel("GM.ScopePanel.productLabel");
+			final JLabel hazardLabel = GUIFactory.createLabel("GM.ScopePanel.hazardLabel");
+			final JLabel populationLabel = GUIFactory.createLabel("GM.ScopePanel.populationGroupLabel");
+			final JLabel commentLabel = GUIFactory.createLabel("GM.ScopePanel.commentLabel", "GM.ScopePanel.commentTooltip");
+			final JLabel temporalInformationLabel = GUIFactory.createLabel("GM.ScopePanel.temporalInformationLabel",
 					"GM.ScopePanel.temporalInformationTooltip");
-			final JLabel regionLabel = createLabel("GM.ScopePanel.regionLabel", "GM.ScopePanel.regionTooltip");
-			final JLabel countryLabel = createLabel("GM.ScopePanel.countryLabel", "GM.ScopePanel.countryTooltip");
+			final JLabel regionLabel = GUIFactory.createLabel("GM.ScopePanel.regionLabel", "GM.ScopePanel.regionTooltip");
+			final JLabel countryLabel = GUIFactory.createLabel("GM.ScopePanel.countryLabel", "GM.ScopePanel.countryTooltip");
 
 			// Build UI
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(productLabel, productButton),
@@ -2613,7 +2617,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				editPopulationGroupPanel.toggleMode();
 			});
 
-			add(createAdvancedPanel(advancedCheckBox));
+			add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			add(Box.createGlue());
 			add(propertiesPanel);
 		}
@@ -2670,7 +2674,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
-		final AutoSuggestField laboratoryAccreditationField = createAutoSuggestField(
+		final AutoSuggestField laboratoryAccreditationField = GUIFactory.createAutoSuggestField(
 				vocabs.get("Laboratory accreditation"));
 
 		private final EditStudySamplePanel editStudySamplePanel = new EditStudySamplePanel(false);
@@ -2722,12 +2726,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JLabel studySampleLabel = createLabel("GM.DataBackgroundPanel.studySampleLabel");
-			final JLabel dietaryAssessmentMethodLabel = createLabel(
+			final JLabel studySampleLabel = GUIFactory.createLabel("GM.DataBackgroundPanel.studySampleLabel");
+			final JLabel dietaryAssessmentMethodLabel = GUIFactory.createLabel(
 					"GM.DataBackgroundPanel.dietaryAssessmentMethodLabel");
-			final JLabel laboratoryAccreditationLabel = createLabel(
+			final JLabel laboratoryAccreditationLabel = GUIFactory.createLabel(
 					"GM.DataBackgroundPanel.laboratoryAccreditationLabel");
-			final JLabel assayLabel = createLabel("GM.DataBackgroundPanel.assayLabel");
+			final JLabel assayLabel = GUIFactory.createLabel("GM.DataBackgroundPanel.assayLabel");
 
 			final JPanel propertiesPanel = new JPanel(new GridBagLayout());
 
@@ -2753,7 +2757,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				editAssayPanel.toggleMode();
 			});
 
-			add(createAdvancedPanel(advancedCheckBox));
+			add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			add(Box.createGlue());
 			add(propertiesPanel);
 		}
@@ -2806,56 +2810,56 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			super(new GridBagLayout());
 
 			// Create fields
-			studyIdentifierTextField = createTextField();
-			studyTitleTextField = createTextField();
+			studyIdentifierTextField = GUIFactory.createTextField();
+			studyTitleTextField = GUIFactory.createTextField();
 
-			studyDescriptionTextArea = createTextArea();
+			studyDescriptionTextArea = GUIFactory.createTextArea();
 			studyDescriptionPane = new JScrollPane(studyDescriptionTextArea);
 
-			studyDesignTypeField = createAutoSuggestField(vocabs.get("Study Design Type"));
-			studyAssayMeasurementsTypeField = createAutoSuggestField(vocabs.get("Study Assay Measurement Type"));
-			studyAssayTechnologyTypeField = createAutoSuggestField(vocabs.get("Study Assay Technology Type"));
-			studyAssayTechnologyPlatformTextField = createTextField();
-			accreditationProcedureField = createAutoSuggestField(vocabs.get("Accreditation procedure Ass.Tec"));
-			studyProtocolNameTextField = createTextField();
-			studyProtocolTypeField = createAutoSuggestField(vocabs.get("Study Protocol Type"));
-			studyProtocolDescriptionTextField = createTextField();
-			studyProtocolURITextField = createTextField();
-			studyProtocolVersionTextField = createTextField();
-			studyProtocolParametersField = createAutoSuggestField(vocabs.get("Study Protocol Parameters Name"));
-			studyProtocolComponentsTypeField = createAutoSuggestField(vocabs.get("Study Protocol Components Type"));
+			studyDesignTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Design Type"));
+			studyAssayMeasurementsTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Assay Measurement Type"));
+			studyAssayTechnologyTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Assay Technology Type"));
+			studyAssayTechnologyPlatformTextField = GUIFactory.createTextField();
+			accreditationProcedureField = GUIFactory.createAutoSuggestField(vocabs.get("Accreditation procedure Ass.Tec"));
+			studyProtocolNameTextField = GUIFactory.createTextField();
+			studyProtocolTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Type"));
+			studyProtocolDescriptionTextField = GUIFactory.createTextField();
+			studyProtocolURITextField = GUIFactory.createTextField();
+			studyProtocolVersionTextField = GUIFactory.createTextField();
+			studyProtocolParametersField = GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Parameters Name"));
+			studyProtocolComponentsTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Components Type"));
 
 			// Create labels
-			final JLabel studyIdentifierLabel = createLabel("GM.StudyPanel.studyIdentifierLabel",
+			final JLabel studyIdentifierLabel = GUIFactory.createLabel("GM.StudyPanel.studyIdentifierLabel",
 					"GM.StudyPanel.studyIdentifierTooltip", true);
-			final JLabel studyTitleLabel = createLabel("GM.StudyPanel.studyTitleLabel",
+			final JLabel studyTitleLabel = GUIFactory.createLabel("GM.StudyPanel.studyTitleLabel",
 					"GM.StudyPanel.studyTitleTooltip", true);
-			final JLabel studyDescriptionLabel = createLabel("GM.StudyPanel.studyDescriptionLabel",
+			final JLabel studyDescriptionLabel = GUIFactory.createLabel("GM.StudyPanel.studyDescriptionLabel",
 					"GM.StudyPanel.studyDescriptionTooltip");
-			final JLabel studyDesignTypeLabel = createLabel("GM.StudyPanel.studyDesignTypeLabel",
+			final JLabel studyDesignTypeLabel = GUIFactory.createLabel("GM.StudyPanel.studyDesignTypeLabel",
 					"GM.StudyPanel.studyDesignTypeTooltip");
-			final JLabel studyAssayMeasurementsTypeLabel = createLabel("GM.StudyPanel.studyAssayMeasurementsTypeLabel",
+			final JLabel studyAssayMeasurementsTypeLabel = GUIFactory.createLabel("GM.StudyPanel.studyAssayMeasurementsTypeLabel",
 					"GM.StudyPanel.studyAssayMeasurementsTypeTooltip");
-			final JLabel studyAssayTechnologyTypeLabel = createLabel("GM.StudyPanel.studyAssayTechnologyTypeLabel",
+			final JLabel studyAssayTechnologyTypeLabel = GUIFactory.createLabel("GM.StudyPanel.studyAssayTechnologyTypeLabel",
 					"GM.StudyPanel.studyAssayTechnologyTypeTooltip");
-			final JLabel studyAssayTechnologyPlatformLabel = createLabel(
+			final JLabel studyAssayTechnologyPlatformLabel = GUIFactory.createLabel(
 					"GM.StudyPanel.studyAssayTechnologyPlatformLabel",
 					"GM.StudyPanel.studyAssayTechnologyPlatformTooltip");
-			final JLabel accreditationProcedureLabel = createLabel("GM.StudyPanel.accreditationProcedureLabel",
+			final JLabel accreditationProcedureLabel = GUIFactory.createLabel("GM.StudyPanel.accreditationProcedureLabel",
 					"GM.StudyPanel.accreditationProcedureTooltip");
-			final JLabel studyProtocolNameLabel = createLabel("GM.StudyPanel.protocolNameLabel",
+			final JLabel studyProtocolNameLabel = GUIFactory.createLabel("GM.StudyPanel.protocolNameLabel",
 					"GM.StudyPanel.protocolNameTooltip");
-			final JLabel studyProtocolTypeLabel = createLabel("GM.StudyPanel.protocolTypeLabel",
+			final JLabel studyProtocolTypeLabel = GUIFactory.createLabel("GM.StudyPanel.protocolTypeLabel",
 					"GM.StudyPanel.protocolTypeTooltip");
-			final JLabel studyProtocolDescriptionLabel = createLabel("GM.StudyPanel.protocolDescriptionLabel",
+			final JLabel studyProtocolDescriptionLabel = GUIFactory.createLabel("GM.StudyPanel.protocolDescriptionLabel",
 					"GM.StudyPanel.protocolDescriptionTooltip");
-			final JLabel studyProtocolURILabel = createLabel("GM.StudyPanel.protocolURILabel",
+			final JLabel studyProtocolURILabel = GUIFactory.createLabel("GM.StudyPanel.protocolURILabel",
 					"GM.StudyPanel.protocolURITooltip");
-			final JLabel studyProtocolVersionLabel = createLabel("GM.StudyPanel.protocolDescriptionLabel",
+			final JLabel studyProtocolVersionLabel = GUIFactory.createLabel("GM.StudyPanel.protocolDescriptionLabel",
 					"GM.StudyPanel.protocolDescriptionTooltip");
-			final JLabel studyProtocolParametersLabel = createLabel("GM.StudyPanel.parametersLabel",
+			final JLabel studyProtocolParametersLabel = GUIFactory.createLabel("GM.StudyPanel.parametersLabel",
 					"GM.StudyPanel.parametersTooltip");
-			final JLabel studyProtocolComponentsTypeLabel = createLabel("GM.StudyPanel.componentsTypeLabel",
+			final JLabel studyProtocolComponentsTypeLabel = GUIFactory.createLabel("GM.StudyPanel.componentsTypeLabel",
 					"GM.StudyPanel.componentsTypeTooltip");
 
 			// Build UI
@@ -2912,7 +2916,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			EditorNodeDialog.add(propertiesPanel, qualityMeasuresPanel, 0, 1);
 			EditorNodeDialog.add(propertiesPanel, modelEquationPanel, 0, 2);
 
-			add(createAdvancedPanel(advancedCheckBox));
+			add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			add(Box.createGlue());
 			add(propertiesPanel);
 
@@ -2990,12 +2994,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -5829602676812905793L;
 
-		final SpinnerNumberModel sseSpinnerModel = createSpinnerDoubleModel();
-		final SpinnerNumberModel mseSpinnerModel = createSpinnerDoubleModel();
-		final SpinnerNumberModel rmseSpinnerModel = createSpinnerDoubleModel();
-		final SpinnerNumberModel r2SpinnerModel = createSpinnerDoubleModel();
-		final SpinnerNumberModel aicSpinnerModel = createSpinnerDoubleModel();
-		final SpinnerNumberModel bicSpinnerModel = createSpinnerDoubleModel();
+		final SpinnerNumberModel sseSpinnerModel = GUIFactory.createSpinnerDoubleModel();
+		final SpinnerNumberModel mseSpinnerModel = GUIFactory.createSpinnerDoubleModel();
+		final SpinnerNumberModel rmseSpinnerModel = GUIFactory.createSpinnerDoubleModel();
+		final SpinnerNumberModel r2SpinnerModel = GUIFactory.createSpinnerDoubleModel();
+		final SpinnerNumberModel aicSpinnerModel = GUIFactory.createSpinnerDoubleModel();
+		final SpinnerNumberModel bicSpinnerModel = GUIFactory.createSpinnerDoubleModel();
 
 		QualityMeasuresPanel(final Double sse, final Double mse, final Double rmse, final Double r2, final Double aic,
 				final Double bic) {
@@ -3003,22 +3007,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			super(new GridBagLayout());
 
 			final JLabel sseLabel = new JLabel("SSE");
-			final JSpinner sseSpinner = createSpinner(sseSpinnerModel);
+			final JSpinner sseSpinner = GUIFactory.createSpinner(sseSpinnerModel);
 
 			final JLabel mseLabel = new JLabel("MSE");
-			final JSpinner mseSpinner = createSpinner(mseSpinnerModel);
+			final JSpinner mseSpinner = GUIFactory.createSpinner(mseSpinnerModel);
 
 			final JLabel rmseLabel = new JLabel("RMSE");
-			final JSpinner rmseSpinner = createSpinner(rmseSpinnerModel);
+			final JSpinner rmseSpinner = GUIFactory.createSpinner(rmseSpinnerModel);
 
 			final JLabel r2Label = new JLabel("r-Squared");
-			final JSpinner r2Spinner = createSpinner(r2SpinnerModel);
+			final JSpinner r2Spinner = GUIFactory.createSpinner(r2SpinnerModel);
 
 			final JLabel aicLabel = new JLabel("AIC");
-			final JSpinner aicSpinner = createSpinner(aicSpinnerModel);
+			final JSpinner aicSpinner = GUIFactory.createSpinner(aicSpinnerModel);
 
 			final JLabel bicLabel = new JLabel("BIC");
-			final JSpinner bicSpinner = createSpinner(bicSpinnerModel);
+			final JSpinner bicSpinner = GUIFactory.createSpinner(bicSpinnerModel);
 
 			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(sseLabel, sseSpinner),
 					new Pair<>(mseLabel, mseSpinner), new Pair<>(rmseLabel, rmseSpinner),
