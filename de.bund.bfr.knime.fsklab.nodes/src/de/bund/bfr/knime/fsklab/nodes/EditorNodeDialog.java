@@ -97,6 +97,7 @@ import de.bund.bfr.knime.fsklab.rakip.GeneralInformation;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.Hazard;
 import de.bund.bfr.knime.fsklab.rakip.ModelEquation;
+import de.bund.bfr.knime.fsklab.rakip.ModelMath;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
 import de.bund.bfr.knime.fsklab.rakip.Product;
@@ -147,7 +148,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		generalInformationPanel.init(settings.genericModel.generalInformation);
 		scopePanel.init(settings.genericModel.scope);
 		dataBackgroundPanel.init(settings.genericModel.dataBackground);
-		// TODO: init model math panel
+		modelMathPanel.init(settings.genericModel.modelMath);
 	}
 
 	// --- settings methods ---
@@ -218,7 +219,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		this.settings.genericModel.generalInformation = generalInformationPanel.get();
 		this.settings.genericModel.scope = scopePanel.get();
 		this.settings.genericModel.dataBackground = dataBackgroundPanel.get();
-		// TODO: get model math
+		this.settings.genericModel.modelMath = modelMathPanel.get();
 
 		this.settings.saveSettings(settings);
 	}
@@ -2940,21 +2941,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
-	private class ModelMathPanel extends Box {
+	private class ModelMathPanel extends TopLevelBox<ModelMath> {
 
 		private static final long serialVersionUID = -7488943574135793595L;
 
 		final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
-		ModelMathPanel() {
+		
+		final QualityMeasuresPanel qualityMeasuresPanel = new QualityMeasuresPanel();
 
-			super(BoxLayout.PAGE_AXIS);
+		ModelMathPanel() {
 
 			final boolean isAdvanced = advancedCheckBox.isSelected();
 
 			final ParametersPanel parametersPanel = new ParametersPanel(isAdvanced);
-			final QualityMeasuresPanel qualityMeasuresPanel = new QualityMeasuresPanel(null, null, null, null, null,
-					null);
 			final ModelEquationsPanel modelEquationPanel = new ModelEquationsPanel(isAdvanced);
 
 			final JPanel propertiesPanel = new JPanel(new GridBagLayout());
@@ -2970,6 +2970,51 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				parametersPanel.isAdvanced = advancedCheckBox.isSelected();
 				modelEquationPanel.toggleMode();
 			});
+		}
+
+		@Override
+		void init(final ModelMath t) {
+
+			if (t != null) {
+
+				// TODO: init parameters
+
+				// Init SSE, MSE, R2, RMSE, AIC and BIC
+				qualityMeasuresPanel.sseSpinnerModel.setValue(t.sse);
+				qualityMeasuresPanel.mseSpinnerModel.setValue(t.mse);
+				qualityMeasuresPanel.r2SpinnerModel.setValue(t.rSquared);
+				qualityMeasuresPanel.rmseSpinnerModel.setValue(t.rmse);
+				qualityMeasuresPanel.aicSpinnerModel.setValue(t.aic);
+				qualityMeasuresPanel.bicSpinnerModel.setValue(t.bic);
+
+				// TODO: init model equations
+				// TODO: init fitting procedure
+				// TODO: init exposure
+				// TODO: init events
+			}
+		}
+
+		@Override
+		ModelMath get() {
+			
+			final ModelMath modelMath = new ModelMath();
+			
+			// TODO: Save parameters
+			
+			// Save SSE, MSE, R2, RMSE, AIC and BIC
+			modelMath.sse = qualityMeasuresPanel.sseSpinnerModel.getNumber().doubleValue();
+			modelMath.mse = qualityMeasuresPanel.mseSpinnerModel.getNumber().doubleValue();
+			modelMath.rSquared = qualityMeasuresPanel.r2SpinnerModel.getNumber().doubleValue();
+			modelMath.rmse = qualityMeasuresPanel.rmseSpinnerModel.getNumber().doubleValue();
+			modelMath.aic = qualityMeasuresPanel.aicSpinnerModel.getNumber().doubleValue();
+			modelMath.bic = qualityMeasuresPanel.bicSpinnerModel.getNumber().doubleValue();
+			
+			// TODO: Save model equations
+			// TODO: Save fitting procedure
+			// TODO: Save exposure
+			// TODO: Save events
+			
+			return null;
 		}
 	}
 
@@ -3047,8 +3092,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		final SpinnerNumberModel aicSpinnerModel = GUIFactory.createSpinnerDoubleModel();
 		final SpinnerNumberModel bicSpinnerModel = GUIFactory.createSpinnerDoubleModel();
 
-		QualityMeasuresPanel(final Double sse, final Double mse, final Double rmse, final Double r2, final Double aic,
-				final Double bic) {
+		QualityMeasuresPanel() {
 
 			super(new GridBagLayout());
 
