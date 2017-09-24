@@ -2148,44 +2148,34 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private final JCheckBox advancedCheckBox;
 
-		private final JTextField studyNameTextField;
-		private final JTextField sourceTextField;
-		private final JTextField identifierTextField;
-		private final CreatorPanel creatorPanel;
-		private final FixedDateChooser creationDateChooser;
-		private final AutoSuggestField rightsField;
-		private final JCheckBox availabilityCheckBox;
-		private final JTextField urlTextField;
-		private final AutoSuggestField formatField;
+		private final JTextField studyNameTextField = GUIFactory.createTextField();
+		private final JTextField sourceTextField = GUIFactory.createTextField();
+		private final JTextField identifierTextField = GUIFactory.createTextField();
+		private final CreatorPanel creatorPanel = new CreatorPanel();
+		private final FixedDateChooser creationDateChooser = new FixedDateChooser();
+		private final AutoSuggestField rightsField = GUIFactory.createAutoSuggestField(vocabs.get("Rights"));
+		private final JCheckBox availabilityCheckBox = new JCheckBox();
+		private final JTextField urlTextField = GUIFactory.createTextField();
+		private final AutoSuggestField formatField = GUIFactory.createAutoSuggestField(vocabs.get("Format"));
 		private final ReferencePanel referencePanel;
-		private final AutoSuggestField languageField;
-		private final AutoSuggestField softwareField;
-		private final AutoSuggestField languageWrittenInField;
-		private final AutoSuggestField statusField;
-		private final JTextField objectiveTextField;
-		private final JTextField descriptionTextField;
+		private final AutoSuggestField languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"));
+		private final AutoSuggestField softwareField = GUIFactory.createAutoSuggestField(vocabs.get("Software"));
+		private final AutoSuggestField languageWrittenInField = GUIFactory
+				.createAutoSuggestField(vocabs.get("Language written in"));
+		private final AutoSuggestField statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"));
+		private final JTextField objectiveTextField = GUIFactory.createTextField();
+		private final JTextField descriptionTextField = GUIFactory.createTextField();
 
 		public GeneralInformationPanel() {
 
 			// Create fields
 			advancedCheckBox = new JCheckBox("Advanced");
 
-			studyNameTextField = GUIFactory.createTextField();
-			sourceTextField = GUIFactory.createTextField();
-			identifierTextField = GUIFactory.createTextField();
-			creatorPanel = new CreatorPanel();
-			creationDateChooser = new FixedDateChooser();
-			rightsField = GUIFactory.createAutoSuggestField(vocabs.get("Rights"));
-			availabilityCheckBox = new JCheckBox();
-			urlTextField = GUIFactory.createTextField();
-			formatField = GUIFactory.createAutoSuggestField(vocabs.get("Format"));
+			availabilityCheckBox.setText(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.availabilityLabel"));
+			availabilityCheckBox.setToolTipText("GM.GeneralInformationPanel.availabilityTooltip");
+
 			referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
-			languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"));
-			softwareField = GUIFactory.createAutoSuggestField(vocabs.get("Software"));
-			languageWrittenInField = GUIFactory.createAutoSuggestField(vocabs.get("Language written in"));
-			statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"));
-			objectiveTextField = GUIFactory.createTextField();
-			descriptionTextField = GUIFactory.createTextField();
 
 			// Create labels
 			final JLabel studyNameLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.studyNameLabel",
@@ -2247,9 +2237,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			EditorNodeDialog.add(propertiesPanel, rightsLabel, 0, 5);
 			EditorNodeDialog.add(propertiesPanel, rightsField, 1, 5, 2);
 
-			availabilityCheckBox.setText(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.availabilityLabel"));
-			availabilityCheckBox.setToolTipText("GM.GeneralInformationPanel.availabilityTooltip");
 			EditorNodeDialog.add(propertiesPanel, availabilityCheckBox, 0, 6);
 
 			EditorNodeDialog.add(propertiesPanel, urlLabel, 0, 7);
@@ -2947,7 +2934,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
-		
 		final QualityMeasuresPanel qualityMeasuresPanel = new QualityMeasuresPanel();
 
 		ModelMathPanel() {
@@ -2996,11 +2982,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		@Override
 		ModelMath get() {
-			
+
 			final ModelMath modelMath = new ModelMath();
-			
+
 			// TODO: Save parameters
-			
+
 			// Save SSE, MSE, R2, RMSE, AIC and BIC
 			modelMath.sse = qualityMeasuresPanel.sseSpinnerModel.getNumber().doubleValue();
 			modelMath.mse = qualityMeasuresPanel.mseSpinnerModel.getNumber().doubleValue();
@@ -3008,12 +2994,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			modelMath.rmse = qualityMeasuresPanel.rmseSpinnerModel.getNumber().doubleValue();
 			modelMath.aic = qualityMeasuresPanel.aicSpinnerModel.getNumber().doubleValue();
 			modelMath.bic = qualityMeasuresPanel.bicSpinnerModel.getNumber().doubleValue();
-			
+
 			// TODO: Save model equations
 			// TODO: Save fitting procedure
 			// TODO: Save exposure
 			// TODO: Save events
-			
+
 			return null;
 		}
 	}
