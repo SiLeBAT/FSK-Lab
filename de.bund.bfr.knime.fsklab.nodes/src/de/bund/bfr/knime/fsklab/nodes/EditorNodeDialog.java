@@ -2554,38 +2554,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 8153319336584952056L;
 
-		final JButton productButton;
-		final JButton hazardButton;
-		final JButton populationButton;
+		final JButton productButton = new JButton();
+		final JButton hazardButton = new JButton();
+		final JButton populationButton = new JButton();
 
-		final JTextArea commentTextArea;
-		final JScrollPane commentPane;
+		final JTextArea commentTextArea = GUIFactory.createTextArea();
+		final JScrollPane commentPane = new JScrollPane(commentTextArea);
 
-		final FixedDateChooser dateChooser;
-		final AutoSuggestField regionField;
-		final AutoSuggestField countryField;
+		final FixedDateChooser dateChooser = new FixedDateChooser();
+		final AutoSuggestField regionField = GUIFactory.createAutoSuggestField(vocabs.get("Region"));
+		final AutoSuggestField countryField = GUIFactory.createAutoSuggestField(vocabs.get("Country"));
 
-		final JCheckBox advancedCheckBox;
+		final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
 		private final EditProductPanel editProductPanel = new EditProductPanel(false);
 		private final EditHazardPanel editHazardPanel = new EditHazardPanel(false);
 		private final EditPopulationGroupPanel editPopulationGroupPanel = new EditPopulationGroupPanel(false);
 
 		ScopePanel() {
-
-			// Create fields
-			productButton = new JButton();
-			hazardButton = new JButton();
-			populationButton = new JButton();
-
-			commentTextArea = GUIFactory.createTextArea();
-			commentPane = new JScrollPane(commentTextArea);
-
-			dateChooser = new FixedDateChooser();
-			regionField = GUIFactory.createAutoSuggestField(vocabs.get("Region"));
-			countryField = GUIFactory.createAutoSuggestField(vocabs.get("Country"));
-
-			advancedCheckBox = new JCheckBox("Advanced");
 
 			// Build UI
 			productButton.setToolTipText("Click me to add a product");
