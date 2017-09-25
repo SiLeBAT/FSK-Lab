@@ -2920,13 +2920,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
+		private final ParametersPanel parametersPanel = new ParametersPanel(false);
 		final QualityMeasuresPanel qualityMeasuresPanel = new QualityMeasuresPanel();
 
 		ModelMathPanel() {
 
 			final boolean isAdvanced = advancedCheckBox.isSelected();
 
-			final ParametersPanel parametersPanel = new ParametersPanel(isAdvanced);
 			final ModelEquationsPanel modelEquationPanel = new ModelEquationsPanel(isAdvanced);
 
 			final JPanel propertiesPanel = new JPanel(new GridBagLayout());
@@ -2945,19 +2945,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 
 		@Override
-		void init(final ModelMath t) {
+		void init(final ModelMath modelMath) {
 
-			if (t != null) {
+			if (modelMath != null) {
 
-				// TODO: init parameters
+				parametersPanel.init(modelMath.parameter);
 
 				// Init SSE, MSE, R2, RMSE, AIC and BIC
-				qualityMeasuresPanel.sseSpinnerModel.setValue(t.sse);
-				qualityMeasuresPanel.mseSpinnerModel.setValue(t.mse);
-				qualityMeasuresPanel.r2SpinnerModel.setValue(t.rSquared);
-				qualityMeasuresPanel.rmseSpinnerModel.setValue(t.rmse);
-				qualityMeasuresPanel.aicSpinnerModel.setValue(t.aic);
-				qualityMeasuresPanel.bicSpinnerModel.setValue(t.bic);
+				qualityMeasuresPanel.sseSpinnerModel.setValue(modelMath.sse);
+				qualityMeasuresPanel.mseSpinnerModel.setValue(modelMath.mse);
+				qualityMeasuresPanel.r2SpinnerModel.setValue(modelMath.rSquared);
+				qualityMeasuresPanel.rmseSpinnerModel.setValue(modelMath.rmse);
+				qualityMeasuresPanel.aicSpinnerModel.setValue(modelMath.aic);
+				qualityMeasuresPanel.bicSpinnerModel.setValue(modelMath.bic);
 
 				// TODO: init model equations
 				// TODO: init fitting procedure
@@ -2971,7 +2971,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			final ModelMath modelMath = new ModelMath();
 
-			// TODO: Save parameters
+			// Save parameters
+			modelMath.parameter.addAll(parametersPanel.params);
 
 			// Save SSE, MSE, R2, RMSE, AIC and BIC
 			modelMath.sse = qualityMeasuresPanel.sseSpinnerModel.getNumber().doubleValue();
@@ -2986,13 +2987,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			// TODO: Save exposure
 			// TODO: Save events
 
-			return null;
+			return modelMath;
 		}
 	}
 
 	private class ParametersPanel extends JPanel {
 
 		private static final long serialVersionUID = -5986975090954482038L;
+
+		final NonEditableTableModel tableModel = new NonEditableTableModel();
+		final List<Parameter> params = new ArrayList<>(0);
 
 		boolean isAdvanced;
 
@@ -3004,14 +3008,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			setBorder(BorderFactory.createTitledBorder("Parameters"));
 
-			final NonEditableTableModel tableModel = new NonEditableTableModel();
-			// TODO: parameters
-
 			final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
 				private static final long serialVersionUID = -2930961770705064623L;
 
 				protected void setValue(Object value) {
-					setText(((Parameter) value).id);
+					final Parameter param = (Parameter) value;
+					setText(param.name + "[" + param.unit + "]");
 				};
 			};
 			final JTable myTable = new HeadlessTable(tableModel, renderer);
@@ -3050,6 +3052,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			add(myTable, BorderLayout.NORTH);
 			add(buttonsPanel, BorderLayout.SOUTH);
+		}
+
+		void init(final List<Parameter> parameters) {
+			parameters.forEach(it -> tableModel.addRow(new Parameter[] { it }));
+			params.addAll(parameters);
 		}
 	}
 
