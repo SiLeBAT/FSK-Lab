@@ -2921,18 +2921,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
 		private final ParametersPanel parametersPanel = new ParametersPanel(false);
-		final QualityMeasuresPanel qualityMeasuresPanel = new QualityMeasuresPanel();
-
+		private final QualityMeasuresPanel qualityMeasuresPanel = new QualityMeasuresPanel();
+		private final ModelEquationsPanel modelEquationsPanel = new ModelEquationsPanel(false);
+		
 		ModelMathPanel() {
-
-			final boolean isAdvanced = advancedCheckBox.isSelected();
-
-			final ModelEquationsPanel modelEquationPanel = new ModelEquationsPanel(isAdvanced);
 
 			final JPanel propertiesPanel = new JPanel(new GridBagLayout());
 			EditorNodeDialog.add(propertiesPanel, parametersPanel, 0, 0);
 			EditorNodeDialog.add(propertiesPanel, qualityMeasuresPanel, 0, 1);
-			EditorNodeDialog.add(propertiesPanel, modelEquationPanel, 0, 2);
+			EditorNodeDialog.add(propertiesPanel, modelEquationsPanel, 0, 2);
 
 			add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			add(Box.createGlue());
@@ -2940,7 +2937,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			advancedCheckBox.addItemListener(event -> {
 				parametersPanel.isAdvanced = advancedCheckBox.isSelected();
-				modelEquationPanel.toggleMode();
+				modelEquationsPanel.toggleMode();
 			});
 		}
 
@@ -2951,7 +2948,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 				parametersPanel.init(modelMath.parameter);
 
-				// Init SSE, MSE, R2, RMSE, AIC and BIC
+				// Initialize SSE, MSE, R2, RMSE, AIC and BIC
 				qualityMeasuresPanel.sseSpinnerModel.setValue(modelMath.sse);
 				qualityMeasuresPanel.mseSpinnerModel.setValue(modelMath.mse);
 				qualityMeasuresPanel.r2SpinnerModel.setValue(modelMath.rSquared);
@@ -2959,7 +2956,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				qualityMeasuresPanel.aicSpinnerModel.setValue(modelMath.aic);
 				qualityMeasuresPanel.bicSpinnerModel.setValue(modelMath.bic);
 
-				// TODO: init model equations
+				// Initialize model equations
+				modelEquationsPanel.init(modelMath.modelEquation);
+				
 				// TODO: init fitting procedure
 				// TODO: init exposure
 				// TODO: init events
@@ -2982,7 +2981,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			modelMath.aic = qualityMeasuresPanel.aicSpinnerModel.getNumber().doubleValue();
 			modelMath.bic = qualityMeasuresPanel.bicSpinnerModel.getNumber().doubleValue();
 
-			// TODO: Save model equations
+			// Save model equations
+			modelMath.modelEquation.addAll(modelEquationsPanel.equations);
+			
 			// TODO: Save fitting procedure
 			// TODO: Save exposure
 			// TODO: Save events
@@ -3163,6 +3164,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		void toggleMode() {
 			editPanel.toggleMode();
+		}
+		
+		void init(final List<ModelEquation> modelEquations) {
+			modelEquations.forEach(it -> tableModel.addRow(new ModelEquation[] { it }));
+			equations.addAll(modelEquations);
 		}
 	}
 }

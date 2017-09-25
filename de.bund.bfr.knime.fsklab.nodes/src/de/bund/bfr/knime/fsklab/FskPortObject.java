@@ -968,11 +968,14 @@ public class FskPortObject implements PortObject {
 		add(node, "ModelMath.AIC", modelMath.aic);
 		add(node, "ModelMath.BIC", modelMath.bic);
 
-		final ModelEquation modelEquation = modelMath.modelEquation;
-		if (modelEquation != null) {
-			final DefaultMutableTreeNode equationNode = new DefaultMutableTreeNode("Model equation");
-			add(equationNode, modelEquation);
-			node.add(equationNode);
+		if (modelMath.modelEquation != null && !modelMath.modelEquation.isEmpty()) {
+			final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Model equations");
+			for (final ModelEquation equation : modelMath.modelEquation) {
+				final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode("Model equation");
+				add(childNode, equation);
+				parentNode.add(childNode);
+			}
+			node.add(parentNode);
 		}
 
 		add(node, "Fitting procedure", modelMath.fittingProcedure);

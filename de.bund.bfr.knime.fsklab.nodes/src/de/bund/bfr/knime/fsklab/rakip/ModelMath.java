@@ -21,7 +21,7 @@ import java.util.List;
 
 public class ModelMath {
 
-	public final List<Parameter> parameter = new ArrayList<>();
+	public final List<Parameter> parameter = new ArrayList<>(0);
 
 	public double sse = .0;
 
@@ -35,11 +35,11 @@ public class ModelMath {
 
 	public double bic = .0;
 
-	public ModelEquation modelEquation = new ModelEquation();
+	public List<ModelEquation> modelEquation = new ArrayList<>(0);
 
 	public String fittingProcedure = "";
 
 	public Exposure exposure = new Exposure();
 
-	public final List<String> event = new ArrayList<>();
+	public final List<String> event = new ArrayList<>(0);
 }
