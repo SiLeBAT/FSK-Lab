@@ -43,7 +43,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
-import org.rosuda.REngine.REXPMismatchException;
 
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
@@ -140,7 +139,7 @@ public class RunnerNodeModel extends NodeModel {
 		}
 
 		try (RController controller = new RController()) {
-			fskObj = runSnippet(controller, fskObj);
+			fskObj = runSnippet(controller, fskObj, exec.createSubExecutionContext(1.0));
 		}
 
 		try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
@@ -178,8 +177,8 @@ public class RunnerNodeModel extends NodeModel {
 		return script;
 	}
 
-	private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj)
-			throws IOException, RException, REXPMismatchException {
+	private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
+			final ExecutionMonitor exec) throws Exception {
 
 		// Add path
 		LibRegistry libRegistry = LibRegistry.instance();
@@ -194,8 +193,7 @@ public class RunnerNodeModel extends NodeModel {
 		if (fskObj.workspace == null) {
 			fskObj.workspace = FileUtil.createTempFile("workspace", ".R");
 		}
-		// TODO: Replace with RController#saveWorkspace
-		controller.eval("save.image('" + fskObj.workspace.getAbsolutePath().replace("\\", "/") + "')", false);
+		controller.saveWorkspace(fskObj.workspace, exec);
 
 		// Creates chart into m_imageFile
 		try {
