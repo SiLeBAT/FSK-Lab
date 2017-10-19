@@ -35,10 +35,10 @@ public class RunnerNodeChartCreator {
 
 		// initialize necessary R stuff to plot
 		if (SystemUtils.IS_OS_MAC) {
-			controller.eval("library('Cairo')");
-			controller.eval("options(device='png', bitmapType='cairo')");
+			controller.eval("library('Cairo')", false);
+			controller.eval("options(device='png', bitmapType='cairo')", false);
 		} else {
-			controller.eval("options(device='png')");
+			controller.eval("options(device='png')", false);
 		}
 	}
 
@@ -58,9 +58,9 @@ public class RunnerNodeChartCreator {
 
 		String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize=" + textPointSize
 				+ ", bg='" + hexColour + "', res='" + res + "')";
-		controller.eval(pngCommand);
+		controller.eval(pngCommand, false);
 
-		controller.eval(vizScript);
-		controller.eval("dev.off()");
+		controller.eval(vizScript, false);
+		controller.eval("dev.off()", false);
 	}
 }

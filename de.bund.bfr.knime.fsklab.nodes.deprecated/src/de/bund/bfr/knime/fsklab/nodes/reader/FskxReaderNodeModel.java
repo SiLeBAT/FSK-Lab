@@ -202,11 +202,11 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 			LibRegistry libRegistry = LibRegistry.instance();
 			String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
 					+ "', .libPaths()))";
-			String[] newPaths = controller.eval(cmd).asStrings();
+			String[] newPaths = controller.eval(cmd, true).asStrings();
 			
 			// Validate model with parameter values from parameter script
 			final String fullScriptA = portObj.param + "\n" + portObj.model;
-			controller.eval(fullScriptA);
+			controller.eval(fullScriptA, false);
 
 			// Validate model with parameter values from metadata
 			if (!portObj.template.independentVariables.isEmpty()) {
@@ -225,13 +225,13 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 					LOGGER.warn("Parameter values from metadata are not valid");
 				} else {
 					final String fullScriptB = newScript + "\n" + portObj.model;
-					controller.eval(fullScriptB);
+					controller.eval(fullScriptB, false);
 				}
 			}
 			
 			// Restore .libPaths() to the original library path which happens to be
 			// in the last position
-			controller.eval(".libPaths()[" + newPaths.length + "]");
+			controller.eval(".libPaths()[" + newPaths.length + "]", false);
 
 		} catch (RException e) {
 			throw new RException("Input model is not valid", e);

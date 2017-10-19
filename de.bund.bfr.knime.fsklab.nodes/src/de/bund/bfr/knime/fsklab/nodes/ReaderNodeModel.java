@@ -190,12 +190,12 @@ public class ReaderNodeModel extends NoInternalsModel {
       final String installationPath =
           libRegistry.getInstallationPath().toString().replace("\\", "/");
       final String cmd = String.format(".libPaths(c('%s', .libPaths()))", installationPath);
-      final String[] newPaths = controller.eval(cmd).asStrings();
+      final String[] newPaths = controller.eval(cmd, true).asStrings();
 
       // TODO: validate model with parameter values from parameter script
 
       // Restore .libPaths() to the original library path which is in the last position
-      controller.eval(String.format(".libPaths()[%d]", newPaths.length));
+      controller.eval(String.format(".libPaths()[%d]", newPaths.length), false);
     }
 
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,

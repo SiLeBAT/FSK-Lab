@@ -145,7 +145,7 @@ public class LibRegistry {
 		 */
 		void library(final String pkg) throws RException {
 			String cmd = "library(" + pkg + ")";
-			controller.eval(cmd);
+			controller.eval(cmd, false);
 		}
 
 		/**
@@ -169,7 +169,7 @@ public class LibRegistry {
 			String pkgList = "c(" + pkgsAsString + ")";
 			String cmd = "install.packages(" + pkgList + ", repos = NULL, lib = '" + _path2String(lib) + "', type = '"
 					+ type + "')";
-			controller.eval(cmd);
+			controller.eval(cmd, false);
 		}
 
 		// miniCRAN commands
@@ -193,7 +193,7 @@ public class LibRegistry {
 		void addPackage(final List<String> pkgs, final Path path, final String repos) throws RException {
 			String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '" + repos
 					+ "', type = '" + type + "', Rversion = '3.0')";
-			controller.eval(cmd);
+			controller.eval(cmd, false);
 		}
 
 		/**
@@ -214,7 +214,7 @@ public class LibRegistry {
 		List<Path> checkVersions(final List<String> pkgs, final Path path) throws REXPMismatchException, RException {
 			String cmd = "checkVersions(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', type = '" + type
 					+ "', Rversion = '3.0')";
-			String[] pathsArray = controller.eval(cmd).asStrings();
+			String[] pathsArray = controller.eval(cmd, true).asStrings();
 			return Arrays.stream(pathsArray).map(Paths::get).collect(Collectors.toList());
 		}
 
@@ -240,7 +240,7 @@ public class LibRegistry {
 		 */
 		void makeRepo(final Path path, final String repos) throws RException {
 			String cmd = "makeRepo(c(), '" + _path2String(path) + "', repos = '" + repos + "', type = '" + type + "')";
-			controller.eval(cmd);
+			controller.eval(cmd, false);
 		}
 
 		/**
@@ -261,7 +261,7 @@ public class LibRegistry {
 		 */
 		List<String> pkgDep(final List<String> pkgs) throws RException, REXPMismatchException {
 			String cmd = "pkgDep(" + _pkgList(pkgs) + ", availPkgs = cranJuly2014, type = '" + type + "')";
-			REXP rexp = controller.eval(cmd);
+			REXP rexp = controller.eval(cmd, true);
 			return Arrays.asList(rexp.asStrings());
 		}
 

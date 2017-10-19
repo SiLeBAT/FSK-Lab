@@ -185,16 +185,17 @@ public class RunnerNodeModel extends NodeModel {
 		LibRegistry libRegistry = LibRegistry.instance();
 		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
 				+ "', .libPaths()))";
-		String[] newPaths = controller.eval(cmd).asStrings();
+		String[] newPaths = controller.eval(cmd, true).asStrings();
 
 		// Run model
-		controller.eval(fskObj.param + "\n" + fskObj.model);
+		controller.eval(fskObj.param + "\n" + fskObj.model, false);
 
 		// Save workspace
 		if (fskObj.workspace == null) {
 			fskObj.workspace = FileUtil.createTempFile("workspace", ".R");
 		}
-		controller.eval("save.image('" + fskObj.workspace.getAbsolutePath().replace("\\", "/") + "')");
+		// TODO: Replace with RController#saveWorkspace
+		controller.eval("save.image('" + fskObj.workspace.getAbsolutePath().replace("\\", "/") + "')", false);
 
 		// Creates chart into m_imageFile
 		try {
@@ -206,7 +207,7 @@ public class RunnerNodeModel extends NodeModel {
 
 		// Restore .libPaths() to the original library path which happens to be
 		// in the last position
-		controller.eval(".libPaths()[" + newPaths.length + "]");
+		controller.eval(".libPaths()[" + newPaths.length + "]", false);
 
 		return fskObj;
 	}
