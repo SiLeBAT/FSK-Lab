@@ -22,11 +22,14 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -34,7 +37,6 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -46,13 +48,14 @@ import org.knime.core.util.FileUtil;
 
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.rakip.ModelMath;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
 
-public class RunnerNodeModel extends NodeModel {
+public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
 
@@ -179,15 +182,22 @@ public class RunnerNodeModel extends NodeModel {
 
 	private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
 			final ExecutionMonitor exec) throws Exception {
-
+		
+		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
+		
+		exec.setMessage("Setting up output capturing");
+		executor.setupOutputCapturing(exec);
+		
+		exec.setMessage("Executing R script");
+		
 		// Add path
 		LibRegistry libRegistry = LibRegistry.instance();
 		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
 				+ "', .libPaths()))";
-		String[] newPaths = controller.eval(cmd, true).asStrings();
+		final String[] newPaths = executor.execute(cmd, exec).asStrings();
 
 		// Run model
-		controller.eval(fskObj.param + "\n" + fskObj.model, false);
+		executor.executeIgnoreResult(fskObj.param + "\n" + fskObj.model, exec);
 
 		// Save workspace
 		if (fskObj.workspace == null) {
@@ -198,6 +208,7 @@ public class RunnerNodeModel extends NodeModel {
 		// Creates chart into m_imageFile
 		try {
 			RunnerNodeChartCreator cc = new RunnerNodeChartCreator(controller);
+			// TODO: Use ConsoleLikeRExecutor in RunnerNodeChartCreator
 			cc.plot(internalSettings.imageFile, fskObj.viz, nodeSettings);
 		} catch (RException e) {
 			LOGGER.warn("Visualization script failed");
@@ -205,9 +216,39 @@ public class RunnerNodeModel extends NodeModel {
 
 		// Restore .libPaths() to the original library path which happens to be
 		// in the last position
-		controller.eval(".libPaths()[" + newPaths.length + "]", false);
-
+		executor.executeIgnoreResult(".libPaths()[" + newPaths.length + "]", exec);
+		
+		exec.setMessage("Collecting captured output");
+		executor.finishOutputCapturing(exec);
+		
+		// process the return value of error capturing and update error and
+		// output views accordingly
+		if (!executor.getStdErr().isEmpty()) {
+			setExternalOutput(getLinkedListFromOutput(executor.getStdOut()));
+		}
+		
+		if (!executor.getStdErr().isEmpty()) {
+			final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
+			setExternalErrorOutput(output);
+			
+			for (final String line : output) {
+				if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
+					throw new RException("Error in R code: \"" + line + "\"", null);
+				}
+			}
+		}
+		
+		// cleanup temporary variables of output capturing and consoleLikeCommand stuff
+		exec.setMessage("Cleaning up");
+		executor.cleanup(exec);
+		
 		return fskObj;
+	}
+	
+	private static final LinkedList<String> getLinkedListFromOutput(final String output) {
+		final LinkedList<String> list = new LinkedList<>();
+		Arrays.stream(output.split("\\r?\\n")).forEach((s) -> list.add(s));
+		return list;
 	}
 
 	Image getResultImage() {

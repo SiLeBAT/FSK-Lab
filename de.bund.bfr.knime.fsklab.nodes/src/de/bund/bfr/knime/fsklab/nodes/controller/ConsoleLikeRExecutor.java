@@ -193,7 +193,7 @@ public class ConsoleLikeRExecutor {
 	}
 
 	/**
-	 * Execute and R script and handle printing of the result aswell as correctly printing errors.
+	 * Execute an R script and handle printing of the result aswell as correctly printing errors.
 	 *
 	 * <b>Performance notes:</b> If the result is not needed, use {@link #executeIgnoreResult(String, ExecutionMonitor)}
 	 * instead.
