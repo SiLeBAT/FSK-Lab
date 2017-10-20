@@ -22,8 +22,12 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.container.CloseableRowIterator;
 import org.knime.core.data.def.StringCell;
@@ -34,7 +38,6 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -50,13 +53,14 @@ import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeSettings;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 
 @Deprecated
-class FskRunnerNodeModel extends NodeModel {
+class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 
 	private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
 
@@ -198,18 +202,24 @@ class FskRunnerNodeModel extends NodeModel {
 
 	private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
 			final ExecutionContext exec) throws Exception {
-
+		
+		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
+		
+		exec.setMessage("Setting up output capturing");
+		executor.setupOutputCapturing(exec);
+		
+		exec.setMessage("Executing R script");
+		
 		// Add path
-		LibRegistry libRegistry = LibRegistry.instance();
-		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
+		final LibRegistry libRegistry = LibRegistry.instance();
+		final String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
 				+ "', .libPaths()))";
-		String[] newPaths = controller.eval(cmd, true).asStrings();
+		final String[] newPaths = executor.execute(cmd, exec).asStrings();
 
 		// Run model
-		controller.eval(fskObj.param, false);
-		controller.eval(fskObj.model, false);
+		executor.executeIgnoreResult(fskObj.param, exec);
+		executor.executeIgnoreResult(fskObj.model, exec);
 
-		// TODO: Replace with RController#saveWorkspace
 		// Save workspace
 		if (fskObj.workspace == null) {
 			fskObj.workspace = FileUtil.createTempFile("workspace", ".R");
@@ -219,16 +229,46 @@ class FskRunnerNodeModel extends NodeModel {
 		// Creates chart into m_imageFile
 		try {
 			RunnerNodeChartCreator cc = new RunnerNodeChartCreator(controller);
+			// TODO: Use ConsoleLikeRExecutor in RunnerNodeChartCreator
 			cc.plot(internalSettings.imageFile, fskObj.viz, settings);
 		} catch (RException e) {
-			LOGGER.warn("Visualization script failed");
+			LOGGER.warn("Visualization script failed", e);
 		}
 
 		// Restore .libPaths() to the original library path which happens to be
 		// in the last position
 		controller.eval(".libPaths()[" + newPaths.length + "]", false);
+		executor.executeIgnoreResult(".libPaths()[" + newPaths.length + "]", exec);
 
+		exec.setMessage("Collecting captured output");
+		executor.finishOutputCapturing(exec);
+		
+		// process the return value of error capturing and update error
+		// and output views accordingly
+		if (!executor.getStdErr().isEmpty()) {
+			setExternalOutput(getLinkedListFromOutput(executor.getStdErr()));
+		}
+		
+		if (!executor.getStdErr().isEmpty()) {
+			final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
+			setExternalErrorOutput(output);
+			
+			for (final String line : output) {
+				if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
+					throw new RException("Error in R code: \"" + line + "\"", null);
+				}
+			}
+		}
+		
+		// cleanup temporary variables of output capturing and consoleLikeCommand stuff
+		exec.setMessage("Cleaning up");
+		executor.cleanup(exec);
+		
 		return fskObj;
+	}
+	
+	private static final LinkedList<String> getLinkedListFromOutput(final String output) {
+		return Arrays.stream(output.split("\\r?\\n")).collect(Collectors.toCollection(LinkedList::new));
 	}
 
 	Image getResultImage() {
