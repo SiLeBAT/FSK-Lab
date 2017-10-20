@@ -48,7 +48,7 @@ import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
-import de.bund.bfr.knime.fsklab.nodes.RunnerNodeChartCreator;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeSettings;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
@@ -228,8 +228,7 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 
 		// Creates chart into m_imageFile
 		try {
-			RunnerNodeChartCreator cc = new RunnerNodeChartCreator(executor, exec.createSubProgress(1.0));
-			cc.plot(internalSettings.imageFile, fskObj.viz, settings);
+			NodeUtils.plot(internalSettings.imageFile, fskObj.viz, settings, executor, exec.createSubProgress(1.0));
 		} catch (RException e) {
 			LOGGER.warn("Visualization script failed", e);
 		}

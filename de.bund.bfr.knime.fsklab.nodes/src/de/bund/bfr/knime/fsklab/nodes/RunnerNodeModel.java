@@ -182,14 +182,14 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
 	private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
 			final ExecutionMonitor exec) throws Exception {
-		
+
 		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
-		
+
 		exec.setMessage("Setting up output capturing");
 		executor.setupOutputCapturing(exec);
-		
+
 		exec.setMessage("Executing R script");
-		
+
 		// Add path
 		LibRegistry libRegistry = LibRegistry.instance();
 		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
@@ -207,8 +207,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
 		// Creates chart into m_imageFile
 		try {
-			RunnerNodeChartCreator cc = new RunnerNodeChartCreator(executor, exec.createSubProgress(1.0));
-			cc.plot(internalSettings.imageFile, fskObj.viz, nodeSettings);
+			NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings, executor, exec.createSubProgress(1.0));
 		} catch (RException e) {
 			LOGGER.warn("Visualization script failed");
 		}
@@ -216,34 +215,34 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 		// Restore .libPaths() to the original library path which happens to be
 		// in the last position
 		executor.executeIgnoreResult(".libPaths()[" + newPaths.length + "]", exec);
-		
+
 		exec.setMessage("Collecting captured output");
 		executor.finishOutputCapturing(exec);
-		
+
 		// process the return value of error capturing and update error and
 		// output views accordingly
 		if (!executor.getStdErr().isEmpty()) {
 			setExternalOutput(getLinkedListFromOutput(executor.getStdOut()));
 		}
-		
+
 		if (!executor.getStdErr().isEmpty()) {
 			final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
 			setExternalErrorOutput(output);
-			
+
 			for (final String line : output) {
 				if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
 					throw new RException("Error in R code: \"" + line + "\"", null);
 				}
 			}
 		}
-		
+
 		// cleanup temporary variables of output capturing and consoleLikeCommand stuff
 		exec.setMessage("Cleaning up");
 		executor.cleanup(exec);
-		
+
 		return fskObj;
 	}
-	
+
 	private static final LinkedList<String> getLinkedListFromOutput(final String output) {
 		final LinkedList<String> list = new LinkedList<>();
 		Arrays.stream(output.split("\\r?\\n")).forEach((s) -> list.add(s));
