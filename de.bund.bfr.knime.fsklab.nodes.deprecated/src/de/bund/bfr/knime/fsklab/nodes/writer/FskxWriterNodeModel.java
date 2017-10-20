@@ -26,6 +26,7 @@ import java.nio.file.Files;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -139,12 +140,8 @@ class FskxWriterNodeModel extends NoInternalsModel {
 
 			archive.pack();
 		} catch (Exception e) {
-			try {
-				Files.delete(archiveFile.toPath());
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
+			FileUtils.deleteQuietly(archiveFile);
+			e.printStackTrace(); // TODO: Log with KNIME NodeLogger
 			throw new Exception("File could not be created", e.getCause());
 		}
 
