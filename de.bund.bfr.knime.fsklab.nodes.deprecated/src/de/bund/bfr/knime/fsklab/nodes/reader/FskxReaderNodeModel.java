@@ -36,7 +36,6 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.jdom2.JDOMException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -53,13 +52,12 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
 
-import com.sun.jna.Platform;
-
 import de.bund.bfr.fskml.OmexMetaDataHandler;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
@@ -68,7 +66,6 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
-import de.unirostock.sems.cbarchive.CombineArchiveException;
 import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 
 // It is a deprecated node, thus lots of deprecated warnings are thrown.
@@ -165,17 +162,11 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 			}
 
 			// Gets R libraries
+			
+			// Gets library URI for the running platform
+			final URI libUri = NodeUtils.getLibURI();
+			
 			// Gets library names from the zip entries in the CombineArchive
-			final URI libUri;
-			if (Platform.isWindows()) {
-				libUri = URIS.zip;
-			} else if (Platform.isMac()) {
-				libUri = URIS.tgz;
-			} else if (Platform.isLinux()) {
-				libUri = URIS.tar_gz;
-			} else {
-				throw new InvalidSettingsException("Unsupported platform");
-			}
 			List<String> libNames = archive.getEntriesWithFormat(libUri).stream()
 					.map(entry -> entry.getFileName().split("\\_")[0]).collect(Collectors.toList());
 

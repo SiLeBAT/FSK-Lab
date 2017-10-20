@@ -26,7 +26,6 @@ import java.nio.file.Files;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -41,11 +40,10 @@ import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
 
-import com.sun.jna.Platform;
-
 import de.bund.bfr.fskml.OmexMetaDataHandler;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
@@ -131,18 +129,10 @@ class FskxWriterNodeModel extends NoInternalsModel {
 				}
 			}
 
-			// Adds R libraries
-			final URI libUri;
-			if (Platform.isWindows()) {
-				libUri = URIS.zip;
-			} else if (Platform.isMac()) {
-				libUri = URIS.tgz;
-			} else if (Platform.isLinux()) {
-				libUri = URIS.tar_gz;
-			} else {
-				throw new InvalidSettingsException("Unsupported platform");
-			}
+			// Gets library URI for the running platform
+			final URI libUri = NodeUtils.getLibURI();
 			
+			// Adds R libraries
 			for (File lib : portObject.libs) {
 				archive.addEntry(lib, lib.getName(), libUri);
 			}

@@ -43,7 +43,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jna.Platform;
 
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
@@ -131,18 +130,10 @@ public class ReaderNodeModel extends NoInternalsModel {
       final URI jsonURI = new URI("http://json.org");
       entriesMap.put("metaData", toTempFile(archive.getEntriesWithFormat(jsonURI).get(0)));
 
-      // Gets library names
-      final URI libUri;
-      if (Platform.isWindows()) {
-        libUri = URIS.zip;
-      } else if (Platform.isMac()) {
-        libUri = URIS.tgz;
-      } else if (Platform.isLinux()) {
-        libUri = URIS.tar_gz;
-      } else {
-        throw new InvalidSettingsException("Unsupported platform");
-      }
+      // Gets library URI for the running platform
+      final URI libUri = NodeUtils.getLibURI();
 
+      // Gets library names
       for (final ArchiveEntry entry : archive.getEntriesWithFormat(libUri)) {
         final String name = entry.getFileName().split("\\_")[0];
         libNames.add(name);

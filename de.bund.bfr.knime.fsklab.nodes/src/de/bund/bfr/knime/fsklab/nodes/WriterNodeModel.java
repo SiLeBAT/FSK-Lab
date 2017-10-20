@@ -37,7 +37,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jna.Platform;
 
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
@@ -121,18 +120,10 @@ public class WriterNodeModel extends NoInternalsModel {
       // Adds model metadata
       addMetaData(archive, fskObj.genericModel, "metaData.json");
 
-      // Adds R libraries
-      final URI libUri;
-      if (Platform.isWindows()) {
-        libUri = URIS.zip;
-      } else if (Platform.isMac()) {
-        libUri = URIS.tgz;
-      } else if (Platform.isLinux()) {
-        libUri = URIS.tar_gz;
-      } else {
-        throw new InvalidSettingsException("Unsupported platform");
-      }
+      // Gets library URI for the running platform
+      final URI libUri = NodeUtils.getLibURI();
 
+      // Adds R libraries
       for (final File libFile : fskObj.libs) {
         archive.addEntry(libFile, libFile.getName(), libUri);
       }
