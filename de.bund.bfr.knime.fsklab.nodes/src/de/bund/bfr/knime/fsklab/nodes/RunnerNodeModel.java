@@ -50,7 +50,6 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.rakip.ModelMath;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
@@ -185,19 +184,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
 		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
 
-		exec.setMessage("Setting up output capturing");
-		executor.setupOutputCapturing(exec);
-
-		exec.setMessage("Executing R script");
-
-		// Add path
-		LibRegistry libRegistry = LibRegistry.instance();
-		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
-				+ "', .libPaths()))";
-		final String[] newPaths = executor.execute(cmd, exec).asStrings();
-
-		// Run model
-		executor.executeIgnoreResult(fskObj.param + "\n" + fskObj.model, exec);
+		NodeUtils.runSnippet(executor, fskObj.model, fskObj.param, fskObj.viz, exec, internalSettings.imageFile,
+				nodeSettings);
 
 		// Save workspace
 		if (fskObj.workspace == null) {
@@ -205,23 +193,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 		}
 		controller.saveWorkspace(fskObj.workspace, exec);
 
-		// Creates chart into m_imageFile
-		try {
-			NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings, executor, exec.createSubProgress(1.0));
-		} catch (RException e) {
-			LOGGER.warn("Visualization script failed");
-		}
-
-		// Restore .libPaths() to the original library path which happens to be
-		// in the last position
-		executor.executeIgnoreResult(".libPaths()[" + newPaths.length + "]", exec);
-
-		exec.setMessage("Collecting captured output");
-		executor.finishOutputCapturing(exec);
-
 		// process the return value of error capturing and update error and
 		// output views accordingly
-		if (!executor.getStdErr().isEmpty()) {
+		if (!executor.getStdOut().isEmpty()) {
 			setExternalOutput(getLinkedListFromOutput(executor.getStdOut()));
 		}
 
@@ -244,9 +218,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 	}
 
 	private static final LinkedList<String> getLinkedListFromOutput(final String output) {
-		final LinkedList<String> list = new LinkedList<>();
-		Arrays.stream(output.split("\\r?\\n")).forEach((s) -> list.add(s));
-		return list;
+		return Arrays.stream(output.split("\\r?\\n")).collect(Collectors.toCollection(LinkedList::new));
 	}
 
 	Image getResultImage() {

@@ -54,7 +54,6 @@ import de.bund.bfr.knime.fsklab.nodes.RunnerNodeSettings;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
@@ -161,8 +160,7 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 					StringCell varCell = (StringCell) dataRow.getCell(FskMetaDataFields.indepvars.ordinal());
 					String[] vars = varCell.getStringValue().split("\\|\\|");
 
-					StringCell valuesCell = (StringCell) dataRow
-							.getCell(FskMetaDataFields.indepvars_values.ordinal());
+					StringCell valuesCell = (StringCell) dataRow.getCell(FskMetaDataFields.indepvars_values.ordinal());
 					String[] values = valuesCell.getStringValue().split("\\|\\|");
 
 					if (vars != null && values != null && vars.length == values.length) {
@@ -176,7 +174,7 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 								onError = true;
 							}
 						}
-						
+
 						if (!onError) {
 							fskObj.param = sb.toString();
 						}
@@ -202,23 +200,11 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 
 	private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
 			final ExecutionContext exec) throws Exception {
-		
-		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
-		
-		exec.setMessage("Setting up output capturing");
-		executor.setupOutputCapturing(exec);
-		
-		exec.setMessage("Executing R script");
-		
-		// Add path
-		final LibRegistry libRegistry = LibRegistry.instance();
-		final String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
-				+ "', .libPaths()))";
-		final String[] newPaths = executor.execute(cmd, exec).asStrings();
 
-		// Run model
-		executor.executeIgnoreResult(fskObj.param, exec);
-		executor.executeIgnoreResult(fskObj.model, exec);
+		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
+
+		NodeUtils.runSnippet(executor, fskObj.model, fskObj.param, fskObj.viz, exec, internalSettings.imageFile,
+				settings);
 
 		// Save workspace
 		if (fskObj.workspace == null) {
@@ -226,45 +212,30 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 		}
 		controller.saveWorkspace(fskObj.workspace, exec);
 
-		// Creates chart into m_imageFile
-		try {
-			NodeUtils.plot(internalSettings.imageFile, fskObj.viz, settings, executor, exec.createSubProgress(1.0));
-		} catch (RException e) {
-			LOGGER.warn("Visualization script failed", e);
-		}
-
-		// Restore .libPaths() to the original library path which happens to be
-		// in the last position
-		controller.eval(".libPaths()[" + newPaths.length + "]", false);
-		executor.executeIgnoreResult(".libPaths()[" + newPaths.length + "]", exec);
-
-		exec.setMessage("Collecting captured output");
-		executor.finishOutputCapturing(exec);
-		
 		// process the return value of error capturing and update error
 		// and output views accordingly
 		if (!executor.getStdErr().isEmpty()) {
 			setExternalOutput(getLinkedListFromOutput(executor.getStdErr()));
 		}
-		
+
 		if (!executor.getStdErr().isEmpty()) {
 			final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
 			setExternalErrorOutput(output);
-			
+
 			for (final String line : output) {
 				if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
 					throw new RException("Error in R code: \"" + line + "\"", null);
 				}
 			}
 		}
-		
+
 		// cleanup temporary variables of output capturing and consoleLikeCommand stuff
 		exec.setMessage("Cleaning up");
 		executor.cleanup(exec);
-		
+
 		return fskObj;
 	}
-	
+
 	private static final LinkedList<String> getLinkedListFromOutput(final String output) {
 		return Arrays.stream(output.split("\\r?\\n")).collect(Collectors.toCollection(LinkedList::new));
 	}
