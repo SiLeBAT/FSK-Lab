@@ -142,17 +142,17 @@ public class FskPortObject implements PortObject {
         final ExecutionMonitor exec) throws IOException, CanceledExecutionException {
       // model entry (file with model script)
       out.putNextEntry(new ZipEntry(MODEL));
-      IOUtils.write(portObject.model, out);
+      IOUtils.write(portObject.model, out, "UTF-8");
       out.closeEntry();
 
       // param entry (file with param script)
       out.putNextEntry(new ZipEntry(PARAM));
-      IOUtils.write(portObject.param, out);
+      IOUtils.write(portObject.param, out, "UTF-8");
       out.closeEntry();
 
       // viz entry (file with visualization script)
       out.putNextEntry(new ZipEntry(VIZ));
-      IOUtils.write(portObject.viz, out);
+      IOUtils.write(portObject.viz, out, "UTF-8");
       out.closeEntry();
 
       // template entry (file with model meta data)
