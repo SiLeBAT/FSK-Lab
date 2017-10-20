@@ -53,6 +53,8 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
 
+import com.sun.jna.Platform;
+
 import de.bund.bfr.fskml.OmexMetaDataHandler;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
@@ -105,8 +107,7 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 	 */
 	@Override
 	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
-			throws CombineArchiveException, REXPMismatchException, RException, InvalidPathException,
-			MalformedURLException {
+			throws Exception {
 
 		FskPortObject portObj = new FskPortObject();
 
@@ -165,13 +166,15 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 
 			// Gets R libraries
 			// Gets library names from the zip entries in the CombineArchive
-			URI libUri = null;
-			if (SystemUtils.IS_OS_WINDOWS) {
+			final URI libUri;
+			if (Platform.isWindows()) {
 				libUri = URIS.zip;
-			} else if (SystemUtils.IS_OS_MAC) {
+			} else if (Platform.isMac()) {
 				libUri = URIS.tgz;
-			} else if (SystemUtils.IS_OS_LINUX) {
+			} else if (Platform.isLinux()) {
 				libUri = URIS.tar_gz;
+			} else {
+				throw new InvalidSettingsException("Unsupported platform");
 			}
 			List<String> libNames = archive.getEntriesWithFormat(libUri).stream()
 					.map(entry -> entry.getFileName().split("\\_")[0]).collect(Collectors.toList());

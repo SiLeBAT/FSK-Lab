@@ -41,6 +41,8 @@ import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
 
+import com.sun.jna.Platform;
+
 import de.bund.bfr.fskml.OmexMetaDataHandler;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
@@ -130,14 +132,17 @@ class FskxWriterNodeModel extends NoInternalsModel {
 			}
 
 			// Adds R libraries
-			URI libUri = null;
-			if (SystemUtils.IS_OS_WINDOWS) {
+			final URI libUri;
+			if (Platform.isWindows()) {
 				libUri = URIS.zip;
-			} else if (SystemUtils.IS_OS_MAC) {
+			} else if (Platform.isMac()) {
 				libUri = URIS.tgz;
-			} else if (SystemUtils.IS_OS_LINUX) {
+			} else if (Platform.isLinux()) {
 				libUri = URIS.tar_gz;
+			} else {
+				throw new InvalidSettingsException("Unsupported platform");
 			}
+			
 			for (File lib : portObject.libs) {
 				archive.addEntry(lib, lib.getName(), libUri);
 			}
