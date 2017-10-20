@@ -24,7 +24,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -38,6 +37,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.jna.Platform;
 
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
@@ -122,13 +122,12 @@ public class WriterNodeModel extends NoInternalsModel {
       addMetaData(archive, fskObj.genericModel, "metaData.json");
 
       // Adds R libraries
-      // TODO: replace with JNA
       final URI libUri;
-      if (SystemUtils.IS_OS_WINDOWS) {
+      if (Platform.isWindows()) {
         libUri = URIS.zip;
-      } else if (SystemUtils.IS_OS_MAC) {
+      } else if (Platform.isMac()) {
         libUri = URIS.tgz;
-      } else if (SystemUtils.IS_OS_LINUX) {
+      } else if (Platform.isLinux()) {
         libUri = URIS.tar_gz;
       } else {
         throw new InvalidSettingsException("Unsupported platform");
