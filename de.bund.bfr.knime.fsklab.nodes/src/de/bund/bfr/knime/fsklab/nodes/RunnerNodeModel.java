@@ -207,8 +207,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
 		// Creates chart into m_imageFile
 		try {
-			RunnerNodeChartCreator cc = new RunnerNodeChartCreator(controller);
-			// TODO: Use ConsoleLikeRExecutor in RunnerNodeChartCreator
+			RunnerNodeChartCreator cc = new RunnerNodeChartCreator(executor, exec.createSubProgress(1.0));
 			cc.plot(internalSettings.imageFile, fskObj.viz, nodeSettings);
 		} catch (RException e) {
 			LOGGER.warn("Visualization script failed");

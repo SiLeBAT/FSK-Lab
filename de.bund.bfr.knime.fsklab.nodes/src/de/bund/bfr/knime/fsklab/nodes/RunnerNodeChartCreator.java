@@ -21,33 +21,44 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.awt.Color;
 import java.io.File;
 
-import org.apache.commons.lang3.SystemUtils;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionMonitor;
 
-import de.bund.bfr.knime.fsklab.nodes.controller.RController;
+import com.sun.jna.Platform;
+
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 
+/*
+ * TODO: Since the object is created and immediately used the whole class could be refactored into
+ * a static function in NodeUtils.
+ */
 public class RunnerNodeChartCreator {
 
-	private final RController controller;
+	private final ConsoleLikeRExecutor executor;
+	private final ExecutionMonitor monitor;
 
-	public RunnerNodeChartCreator(final RController controller) throws RException {
-		this.controller = controller;
+	public RunnerNodeChartCreator(final ConsoleLikeRExecutor executor, final ExecutionMonitor mon)
+			throws RException, CanceledExecutionException, InterruptedException {
+
+		this.executor = executor;
+		this.monitor = mon;
 
 		// initialize necessary R stuff to plot
-		if (SystemUtils.IS_OS_MAC) {
-			controller.eval("library('Cairo')", false);
-			controller.eval("options(device='png', bitmapType='cairo')", false);
+		if (Platform.isMac()) {
+			executor.executeIgnoreResult("library('Cairo')", mon);
+			executor.executeIgnoreResult("options(device='png', bitmapType='cairo')", mon);
 		} else {
-			controller.eval("options(device='png')", false);
+			executor.executeIgnoreResult("options(device='png')", mon);
 		}
 	}
 
 	public void plot(final File imageFile, final String vizScript, final RunnerNodeSettings nodeSettings)
-			throws RException {
-		
+			throws RException, CanceledExecutionException, InterruptedException {
+
 		// Get image path (with proper slashes)
 		final String path = imageFile.getAbsolutePath().replace("\\", "/");
-		
+
 		// Gets values
 		int width = nodeSettings.widthModel.getIntValue();
 		int height = nodeSettings.heightModel.getIntValue();
@@ -58,9 +69,9 @@ public class RunnerNodeChartCreator {
 
 		String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize=" + textPointSize
 				+ ", bg='" + hexColour + "', res='" + res + "')";
-		controller.eval(pngCommand, false);
 
-		controller.eval(vizScript, false);
-		controller.eval("dev.off()", false);
+		executor.executeIgnoreResult(pngCommand, monitor);
+		executor.executeIgnoreResult(vizScript, monitor);
+		executor.executeIgnoreResult("dev.off()", monitor);
 	}
 }
