@@ -1147,7 +1147,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			modelEquation.equationName = equationNameTextField.getText();
 			modelEquation.equation = scriptTextArea.getText();
 			modelEquation.equationClass = equationClassTextField.getText();
-			referencePanel.refs.forEach(it -> modelEquation.equationReference.add(it));
+			for (int i = 0; i < referencePanel.tableModel.getRowCount(); i++) {
+				Record record = (Record) referencePanel.tableModel.getValueAt(i, 0);
+				modelEquation.equationReference.add(record);
+			}
 
 			return modelEquation;
 		}
@@ -2325,7 +2328,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			generalInformation.creators.addAll(creatorPanel.creators);
 			generalInformation.format = (String) formatField.getSelectedItem();
-			generalInformation.reference.addAll(referencePanel.refs);
+			for (int i = 0; i < referencePanel.tableModel.getRowCount(); i++) {
+				generalInformation.reference.add((Record)referencePanel.tableModel.getValueAt(i, 0));
+			}
 			generalInformation.language = (String) languageField.getSelectedItem();
 			generalInformation.software = (String) softwareField.getSelectedItem();
 			generalInformation.languageWrittenIn = (String) languageWrittenInField.getSelectedItem();
@@ -2342,7 +2347,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private static final long serialVersionUID = 7457092378015891750L;
 
 		final NonEditableTableModel tableModel = new NonEditableTableModel();
-		final List<Record> refs = new ArrayList<>();
 		boolean isAdvanced;
 
 		public ReferencePanel(final boolean isAdvanced) {
@@ -2438,7 +2442,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		void init(final List<Record> references) {
 			references.forEach(it -> tableModel.addRow(new Record[] { it }));
-			refs.addAll(references);
 		}
 	}
 

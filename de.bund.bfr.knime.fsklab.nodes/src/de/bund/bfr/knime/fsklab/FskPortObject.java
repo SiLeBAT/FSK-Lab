@@ -375,7 +375,7 @@ public class FskPortObject implements PortObject {
 
 	private static void add(final DefaultMutableTreeNode node, final Record record) {
 
-		final String prefix = "GM.EditReferencePanel";
+		final String prefix = "GM.EditReferencePanel.";
 
 		// isReferenceDescription is not supported
 
@@ -408,7 +408,9 @@ public class FskPortObject implements PortObject {
 		add(node, prefix + "volumeLabel", volumeNumber);
 
 		final Integer issueNumber = record.getIssueNumber();
-		add(node, prefix + "issueLabel", issueNumber.toString());
+		if (issueNumber != null) {
+			add(node, prefix + "issueLabel", issueNumber.toString());
+		}
 
 		// page not supported
 
