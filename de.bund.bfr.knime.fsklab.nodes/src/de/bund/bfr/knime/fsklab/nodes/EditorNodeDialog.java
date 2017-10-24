@@ -53,6 +53,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -82,9 +83,12 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.util.Pair;
+import org.knime.core.util.SimpleFileFilter;
 
 import com.gmail.gcolaianni5.jris.bean.Record;
 import com.gmail.gcolaianni5.jris.bean.Type;
+import com.gmail.gcolaianni5.jris.engine.JRis;
+import com.gmail.gcolaianni5.jris.exception.JRisException;
 
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
@@ -2379,6 +2383,30 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					tableModel.addRow(new Record[] { editPanel.get() });
 				}
 			});
+			
+			final JButton importButton = new JButton("Import from file");
+			importButton.addActionListener(event -> {
+				
+				// Configure file chooser 
+				final JFileChooser fc = new JFileChooser();
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fc.addChoosableFileFilter(new SimpleFileFilter("ris", "RIS"));
+				
+				
+				final int returnVal = fc.showOpenDialog(this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					try {
+						final List<Record> importedRecords = JRis.parse(fc.getSelectedFile());
+						for (final Record importedRecord : importedRecords) {
+							tableModel.addRow(new Record[] { importedRecord });
+						}
+					} catch (final IOException | JRisException exception) {
+						LOGGER.warn("Error importing RIS references", exception);
+					}
+					
+				}
+			});
+			buttonsPanel.add(importButton, 1);
 
 			buttonsPanel.modifyButton.addActionListener(event -> {
 
