@@ -2170,8 +2170,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final AutoSuggestField languageWrittenInField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Language written in"));
 		private final AutoSuggestField statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"));
-		private final JTextField objectiveTextField = GUIFactory.createTextField();
-		private final JTextField descriptionTextField = GUIFactory.createTextField();
+		private final JTextArea objectiveTextArea = GUIFactory.createTextArea();
+		private final JTextArea descriptionTextArea = GUIFactory.createTextArea();
 
 		public GeneralInformationPanel() {
 
@@ -2214,14 +2214,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.GeneralInformationPanel.descriptionTooltip");
 
 			// Hide initially advanced components
+			final JScrollPane objectivePane = new JScrollPane(objectiveTextArea);
+			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
 			final List<JComponent> advancedComponents = Arrays.asList(sourceLabel, sourceTextField, // source
 					formatLabel, formatField, // format
 					languageLabel, languageField, // language
 					softwareLabel, softwareField, // software
 					languageWrittenInLabel, languageWrittenInField, // language written in
 					statusLabel, statusField, // status
-					objectiveLabel, objectiveTextField, // objective
-					descriptionLabel, descriptionTextField); // description
+					objectiveLabel, objectivePane, // objective
+					descriptionLabel, descriptionPane); // description
 			advancedComponents.forEach(it -> it.setVisible(false));
 
 			// Build UI
@@ -2267,10 +2269,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			EditorNodeDialog.add(propertiesPanel, statusField, 1, 13, 2);
 
 			EditorNodeDialog.add(propertiesPanel, objectiveLabel, 0, 14);
-			EditorNodeDialog.add(propertiesPanel, objectiveTextField, 1, 14, 2);
+			EditorNodeDialog.add(propertiesPanel, objectivePane, 1, 14, 2);
 
 			EditorNodeDialog.add(propertiesPanel, descriptionLabel, 0, 15);
-			EditorNodeDialog.add(propertiesPanel, descriptionTextField, 1, 15, 2);
+			EditorNodeDialog.add(propertiesPanel, descriptionPane, 1, 15, 2);
 
 			advancedCheckBox.addItemListener(event -> {
 				final boolean showAdvanced = advancedCheckBox.isSelected();
@@ -2302,8 +2304,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				softwareField.setSelectedItem(generalInformation.software);
 				languageWrittenInField.setSelectedItem(generalInformation.languageWrittenIn);
 				statusField.setSelectedItem(generalInformation.status);
-				objectiveTextField.setText(generalInformation.objective);
-				descriptionTextField.setText(generalInformation.description);
+				objectiveTextArea.setText(generalInformation.objective);
+				descriptionTextArea.setText(generalInformation.description);
 			}
 		}
 
@@ -2335,8 +2337,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			generalInformation.software = (String) softwareField.getSelectedItem();
 			generalInformation.languageWrittenIn = (String) languageWrittenInField.getSelectedItem();
 			generalInformation.status = (String) statusField.getSelectedItem();
-			generalInformation.objective = objectiveTextField.getText();
-			generalInformation.description = descriptionTextField.getText();
+			generalInformation.objective = objectiveTextArea.getText();
+			generalInformation.description = descriptionTextArea.getText();
 
 			return generalInformation;
 		}
