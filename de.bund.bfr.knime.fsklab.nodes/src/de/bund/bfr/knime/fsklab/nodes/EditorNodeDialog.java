@@ -108,6 +108,7 @@ import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.knime.ui.AutoSuggestField;
+import ezvcard.Ezvcard;
 import ezvcard.VCard;
 
 public class EditorNodeDialog extends DataAwareNodeDialogPane {
@@ -2328,10 +2329,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			}
 
-			generalInformation.creators.addAll(creatorPanel.creators);
+			for (int i = 0; i < creatorPanel.tableModel.getRowCount(); i++) {
+				final VCard vcard = (VCard) creatorPanel.tableModel.getValueAt(i, 0);
+				generalInformation.creators.add(vcard);
+			}
 			generalInformation.format = (String) formatField.getSelectedItem();
 			for (int i = 0; i < referencePanel.tableModel.getRowCount(); i++) {
-				generalInformation.reference.add((Record)referencePanel.tableModel.getValueAt(i, 0));
+				generalInformation.reference.add((Record) referencePanel.tableModel.getValueAt(i, 0));
 			}
 			generalInformation.language = (String) languageField.getSelectedItem();
 			generalInformation.software = (String) softwareField.getSelectedItem();
@@ -2389,16 +2393,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					tableModel.addRow(new Record[] { editPanel.get() });
 				}
 			});
-			
+
 			final JButton importButton = new JButton("Import from file");
 			importButton.addActionListener(event -> {
-				
-				// Configure file chooser 
+
+				// Configure file chooser
 				final JFileChooser fc = new JFileChooser();
 				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				fc.addChoosableFileFilter(new SimpleFileFilter("ris", "RIS"));
-				
-				
+
 				final int returnVal = fc.showOpenDialog(this);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					try {
@@ -2409,7 +2412,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					} catch (final IOException | JRisException exception) {
 						LOGGER.warn("Error importing RIS references", exception);
 					}
-					
+
 				}
 			});
 			buttonsPanel.add(importButton, 1);
@@ -2451,7 +2454,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 3543570665869685092L;
 		final NonEditableTableModel tableModel = new NonEditableTableModel();
-		final List<VCard> creators = new ArrayList<>();
 
 		public CreatorPanel() {
 
@@ -2464,23 +2466,37 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				private static final long serialVersionUID = 1L;
 
 				protected void setValue(Object value) {
-
 					if (value != null) {
-						final VCard creator = (VCard) value;
-
-						final String givenName = creator.getNickname().getValues().get(0);
-						final String familyName = creator.getFormattedName().getValue();
-						final String contact = creator.getEmails().get(0).getValue();
-
-						setText(String.format("%s_%s_%s", givenName, familyName, contact));
+						setText(((VCard) value).write());
 					}
 				};
 			};
+
+			final JButton importButton = new JButton("Import from file");
+			importButton.addActionListener(event -> {
+
+				// Configure file chooser
+				final JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.addChoosableFileFilter(new SimpleFileFilter(".vcf", ".VCF"));
+
+				// Read file
+				final int returnVal = fileChooser.showOpenDialog(this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					try {
+						final List<VCard> vcards = Ezvcard.parse(fileChooser.getSelectedFile()).all();
+						vcards.forEach(it -> tableModel.addRow(new VCard[] { it } ));
+					} catch (final IOException exception) {
+						LOGGER.warn("Error importing VCards", exception);
+					}
+				}
+			});
 
 			final JTable myTable = new HeadlessTable(tableModel, renderer);
 
 			// buttons
 			final ButtonsPanel buttonsPanel = new ButtonsPanel();
+			buttonsPanel.add(importButton, 1);
 			buttonsPanel.addButton.addActionListener(event -> {
 
 				final EditCreatorPanel editPanel = new EditCreatorPanel();
@@ -2519,7 +2535,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		void init(final List<VCard> vcards) {
 			vcards.forEach(it -> tableModel.addRow(new VCard[] { it }));
-			creators.addAll(vcards);
 		}
 	}
 
@@ -2956,7 +2971,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final ParametersPanel parametersPanel = new ParametersPanel(false);
 		private final QualityMeasuresPanel qualityMeasuresPanel = new QualityMeasuresPanel();
 		private final ModelEquationsPanel modelEquationsPanel = new ModelEquationsPanel(false);
-		
+
 		ModelMathPanel() {
 
 			final JPanel propertiesPanel = new JPanel(new GridBagLayout());
@@ -2991,7 +3006,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 				// Initialize model equations
 				modelEquationsPanel.init(modelMath.modelEquation);
-				
+
 				// TODO: init fitting procedure
 				// TODO: init exposure
 				// TODO: init events
@@ -3016,7 +3031,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			// Save model equations
 			modelMath.modelEquation.addAll(modelEquationsPanel.equations);
-			
+
 			// TODO: Save fitting procedure
 			// TODO: Save exposure
 			// TODO: Save events
@@ -3198,7 +3213,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		void toggleMode() {
 			editPanel.toggleMode();
 		}
-		
+
 		void init(final List<ModelEquation> modelEquations) {
 			modelEquations.forEach(it -> tableModel.addRow(new ModelEquation[] { it }));
 			equations.addAll(modelEquations);
