@@ -2446,6 +2446,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 
 		void init(final List<Record> references) {
+			tableModel.setRowCount(0);  // Delete all rows in table
 			references.forEach(it -> tableModel.addRow(new Record[] { it }));
 		}
 	}
@@ -2485,7 +2486,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					try {
 						final List<VCard> vcards = Ezvcard.parse(fileChooser.getSelectedFile()).all();
-						vcards.forEach(it -> tableModel.addRow(new VCard[] { it } ));
+						vcards.forEach(it -> tableModel.addRow(new VCard[] { it }));
 					} catch (final IOException exception) {
 						LOGGER.warn("Error importing VCards", exception);
 					}
@@ -3019,6 +3020,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final ModelMath modelMath = new ModelMath();
 
 			// Save parameters
+			modelMath.parameter.clear();
 			modelMath.parameter.addAll(parametersPanel.params);
 
 			// Save SSE, MSE, R2, RMSE, AIC and BIC
@@ -3099,11 +3101,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
+			// add(myTable, BorderLayout.NORTH);
 			add(myTable, BorderLayout.NORTH);
 			add(buttonsPanel, BorderLayout.SOUTH);
 		}
 
 		void init(final List<Parameter> parameters) {
+			tableModel.setRowCount(0);  // Remove all rows in table
 			parameters.forEach(it -> tableModel.addRow(new Parameter[] { it }));
 			params.addAll(parameters);
 		}
