@@ -3101,7 +3101,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			// add(myTable, BorderLayout.NORTH);
 			add(myTable, BorderLayout.NORTH);
 			add(buttonsPanel, BorderLayout.SOUTH);
 		}
