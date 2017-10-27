@@ -21,9 +21,11 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -390,15 +392,34 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			return panel;
 		}
 
+		@Deprecated
 		private static JTextField createTextField() {
 			return new JTextField(30);
 		}
 
+		private static JTextField createTextField2() {
+			final JTextField field = new JTextField(30);
+			field.setPreferredSize(new Dimension(100, field.getPreferredSize().height));
+
+			return field;
+		}
+
+		@Deprecated
 		private static JTextArea createTextArea() {
 			final JTextArea textArea = new JTextArea(5, 30);
 			textArea.setText("");
 			textArea.setLineWrap(true); // Wrap long lines
 			textArea.setWrapStyleWord(true); // Wrap only at white space
+
+			return textArea;
+		}
+
+		private static JTextArea createTextArea2() {
+			final JTextArea textArea = new JTextArea(5, 30);
+			textArea.setText("");
+			textArea.setLineWrap(true); // Wrap long lines
+			textArea.setWrapStyleWord(true); // Wrap only at white space
+			textArea.setPreferredSize(new Dimension(100, textArea.getPreferredSize().height));
 
 			return textArea;
 		}
@@ -425,6 +446,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private static AutoSuggestField createAutoSuggestField(final Set<String> possibleValues) {
 			final AutoSuggestField field = new AutoSuggestField(10);
 			field.setPossibleValues(possibleValues);
+			field.setPreferredSize(new Dimension(100, field.getPreferredSize().height));
 			return field;
 		}
 
@@ -2137,6 +2159,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
+	@Deprecated
 	private abstract class TopLevelBox<T> extends Box {
 
 		private static final long serialVersionUID = 2274280243699676402L;
@@ -2150,20 +2173,29 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		abstract T get();
 	}
 
-	private class GeneralInformationPanel extends TopLevelBox<GeneralInformation> {
+	private abstract class TopLevelPanel<T> extends JPanel {
+
+		private static final long serialVersionUID = 6410915237186157478L;
+
+		abstract void init(final T t);
+
+		abstract T get();
+	}
+
+	private class GeneralInformationPanel extends TopLevelPanel<GeneralInformation> {
 
 		private static final long serialVersionUID = 2705689661594031061L;
 
 		private final JCheckBox advancedCheckBox;
 
-		private final JTextField studyNameTextField = GUIFactory.createTextField();
-		private final JTextField sourceTextField = GUIFactory.createTextField();
-		private final JTextField identifierTextField = GUIFactory.createTextField();
+		private final JTextField studyNameTextField = GUIFactory.createTextField2();
+		private final JTextField sourceTextField = GUIFactory.createTextField2();
+		private final JTextField identifierTextField = GUIFactory.createTextField2();
 		private final CreatorPanel creatorPanel = new CreatorPanel();
 		private final FixedDateChooser creationDateChooser = new FixedDateChooser();
 		private final AutoSuggestField rightsField = GUIFactory.createAutoSuggestField(vocabs.get("Rights"));
 		private final JCheckBox availabilityCheckBox = new JCheckBox();
-		private final JTextField urlTextField = GUIFactory.createTextField();
+		private final JTextField urlTextField = GUIFactory.createTextField2();
 		private final AutoSuggestField formatField = GUIFactory.createAutoSuggestField(vocabs.get("Format"));
 		private final ReferencePanel referencePanel;
 		private final AutoSuggestField languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"));
@@ -2171,8 +2203,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final AutoSuggestField languageWrittenInField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Language written in"));
 		private final AutoSuggestField statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"));
-		private final JTextArea objectiveTextArea = GUIFactory.createTextArea();
-		private final JTextArea descriptionTextArea = GUIFactory.createTextArea();
+		private final JTextArea objectiveTextArea = GUIFactory.createTextArea2();
+		private final JTextArea descriptionTextArea = GUIFactory.createTextArea2();
 
 		public GeneralInformationPanel() {
 
@@ -2181,7 +2213,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			availabilityCheckBox.setText(
 					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.availabilityLabel"));
-			availabilityCheckBox.setToolTipText("GM.GeneralInformationPanel.availabilityTooltip");
+			availabilityCheckBox.setToolTipText(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.availabilityTooltip"));
 
 			referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
 
@@ -2225,65 +2258,81 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					statusLabel, statusField, // status
 					objectiveLabel, objectivePane, // objective
 					descriptionLabel, descriptionPane); // description
-			advancedComponents.forEach(it -> it.setVisible(false));
+			advancedComponents.forEach(it -> it.setEnabled(false));
 
-			// Build UI
-			final JPanel propertiesPanel = new JPanel(new GridBagLayout());
+			// leftPanel
+			final JPanel leftPanel = new JPanel(new GridLayout(12, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-			EditorNodeDialog.add(propertiesPanel, studyNameLabel, 0, 0);
-			EditorNodeDialog.add(propertiesPanel, studyNameTextField, 1, 0, 2);
+			leftPanel.add(studyNameLabel);
+			leftPanel.add(identifierLabel);
+			leftPanel.add(creationDateLabel);
+			leftPanel.add(rightsLabel);
+			leftPanel.add(availabilityCheckBox);
+			leftPanel.add(urlLabel);
+			leftPanel.add(sourceLabel);
+			leftPanel.add(formatLabel);
+			leftPanel.add(languageLabel);
+			leftPanel.add(softwareLabel);
+			leftPanel.add(languageWrittenInLabel);
+			leftPanel.add(statusLabel);
 
-			EditorNodeDialog.add(propertiesPanel, sourceLabel, 0, 1);
-			EditorNodeDialog.add(propertiesPanel, sourceTextField, 1, 1, 2);
+			// rightPanel
+			final JPanel rightPanel = new JPanel(new GridLayout(12, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-			EditorNodeDialog.add(propertiesPanel, identifierLabel, 0, 2);
-			EditorNodeDialog.add(propertiesPanel, identifierTextField, 1, 2, 2);
+			rightPanel.add(studyNameTextField);
+			rightPanel.add(identifierTextField);
+			rightPanel.add(creationDateChooser);
+			rightPanel.add(rightsField);
+			rightPanel.add(new JLabel()); // availabilityCheckBox in leftPanel
+			rightPanel.add(urlTextField);
+			rightPanel.add(sourceTextField);
+			rightPanel.add(formatField);
+			rightPanel.add(languageField);
+			rightPanel.add(softwareField);
+			rightPanel.add(languageWrittenInField);
+			rightPanel.add(statusField);
 
-			EditorNodeDialog.add(propertiesPanel, creatorPanel, 0, 3);
-
-			EditorNodeDialog.add(propertiesPanel, creationDateLabel, 0, 4);
-			EditorNodeDialog.add(propertiesPanel, creationDateChooser, 1, 4);
-
-			EditorNodeDialog.add(propertiesPanel, rightsLabel, 0, 5);
-			EditorNodeDialog.add(propertiesPanel, rightsField, 1, 5, 2);
-
-			EditorNodeDialog.add(propertiesPanel, availabilityCheckBox, 0, 6);
-
-			EditorNodeDialog.add(propertiesPanel, urlLabel, 0, 7);
-			EditorNodeDialog.add(propertiesPanel, urlTextField, 1, 7, 2);
-
-			EditorNodeDialog.add(propertiesPanel, formatLabel, 0, 8);
-			EditorNodeDialog.add(propertiesPanel, formatField, 1, 8, 2);
-
-			EditorNodeDialog.add(propertiesPanel, referencePanel, 0, 9);
-
-			EditorNodeDialog.add(propertiesPanel, languageLabel, 0, 10);
-			EditorNodeDialog.add(propertiesPanel, languageField, 1, 10, 2);
-
-			EditorNodeDialog.add(propertiesPanel, softwareLabel, 0, 11);
-			EditorNodeDialog.add(propertiesPanel, softwareField, 1, 11);
-
-			EditorNodeDialog.add(propertiesPanel, languageWrittenInLabel, 0, 12);
-			EditorNodeDialog.add(propertiesPanel, languageWrittenInField, 1, 12);
-
-			EditorNodeDialog.add(propertiesPanel, statusLabel, 0, 13);
-			EditorNodeDialog.add(propertiesPanel, statusField, 1, 13, 2);
-
-			EditorNodeDialog.add(propertiesPanel, objectiveLabel, 0, 14);
-			EditorNodeDialog.add(propertiesPanel, objectivePane, 1, 14, 2);
-
-			EditorNodeDialog.add(propertiesPanel, descriptionLabel, 0, 15);
-			EditorNodeDialog.add(propertiesPanel, descriptionPane, 1, 15, 2);
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+			
+			// left panel for text areas
+			final JPanel taLeftPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+			taLeftPanel.setBorder(BorderFactory.createEmptyBorder(5,  5,  5,  5));
+			taLeftPanel.add(objectiveLabel);
+			taLeftPanel.add(descriptionLabel);
+			
+			// right panel for text areas
+			final JPanel taRightPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+			taRightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			taRightPanel.add(objectivePane);
+			taRightPanel.add(descriptionPane);
+			
+			// taPanel: form with text areas
+			final JPanel taPanel = new JPanel(new BorderLayout());
+			taPanel.add(taLeftPanel, BorderLayout.WEST);
+			taPanel.add(taRightPanel, BorderLayout.CENTER);
 
 			advancedCheckBox.addItemListener(event -> {
 				final boolean showAdvanced = advancedCheckBox.isSelected();
-				advancedComponents.forEach(it -> it.setVisible(showAdvanced));
+				advancedComponents.forEach(it -> it.setEnabled(showAdvanced));
 				referencePanel.isAdvanced = showAdvanced;
 			});
 
-			add(GUIFactory.createAdvancedPanel(advancedCheckBox));
-			add(Box.createGlue());
-			add(propertiesPanel);
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
+			northPanel.add(formPanel);
+			northPanel.add(taPanel);
+			northPanel.add(creatorPanel);
+			northPanel.add(referencePanel);
+
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 		}
 
 		void init(final GeneralInformation generalInformation) {
@@ -2446,7 +2495,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 
 		void init(final List<Record> references) {
-			tableModel.setRowCount(0);  // Delete all rows in table
+			tableModel.setRowCount(0); // Delete all rows in table
 			references.forEach(it -> tableModel.addRow(new Record[] { it }));
 		}
 	}
@@ -3051,6 +3100,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		boolean isAdvanced;
 
+		private final String[] columnNames = { "ID", "Classification", "Name", "Unit", "Unit category", "Data type" };
+		private final DefaultTableModel coolModel = new DefaultTableModel(columnNames, 6);
+
 		ParametersPanel(final boolean isAdvanced) {
 
 			super(new BorderLayout());
@@ -3101,14 +3153,30 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			add(myTable, BorderLayout.NORTH);
+			// add(myTable, BorderLayout.NORTH);
+
+			JTable coolTable = new JTable(coolModel);
+			add(new JScrollPane(coolTable), BorderLayout.CENTER); // Cool table 4eva
+
+			// JPanel tablePanel = new JPanel();
+			// tablePanel.add(new JScrollPane(coolTable));
+			// add(tablePanel, BorderLayout.NORTH);
+
 			add(buttonsPanel, BorderLayout.SOUTH);
 		}
 
 		void init(final List<Parameter> parameters) {
-			tableModel.setRowCount(0);  // Remove all rows in table
+			tableModel.setRowCount(0); // Remove all rows in table
 			parameters.forEach(it -> tableModel.addRow(new Parameter[] { it }));
 			params.addAll(parameters);
+
+			// cool table
+			coolModel.setRowCount(0); // Remove all rows in table
+			parameters.forEach(param -> {
+				String[] cells = { param.id, param.classification.toString(), param.name, param.unit,
+						param.unitCategory, param.dataType };
+				coolModel.addRow(cells);
+			});
 		}
 	}
 
