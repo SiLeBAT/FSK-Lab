@@ -705,7 +705,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		 */
 		void toggleMode() {
 			final List<JComponent> components = getAdvancedComponents();
-			components.forEach(it -> it.setVisible(!it.isVisible()));
+			components.forEach(it -> it.setEnabled(!it.isEnabled()));
 		}
 	}
 
@@ -1622,16 +1622,52 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			// Build UI
 			final JScrollPane envDescriptionPane = new JScrollPane(envDescriptionTextArea);
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(envNameLabel, envNameField),
-					new Pair<>(envDescriptionLabel, envDescriptionPane), new Pair<>(envUnitLabel, envUnitField),
-					new Pair<>(productionMethodLabel, productionMethodComboBox),
-					new Pair<>(packagingLabel, packagingComboBox),
-					new Pair<>(productTreatmentLabel, productTreatmentComboBox),
-					new Pair<>(originCountryLabel, originCountryField), new Pair<>(originAreaLabel, originAreaField),
-					new Pair<>(fisheriesAreaLabel, fisheriesAreaField),
-					new Pair<>(productionDateLabel, productionDateChooser),
-					new Pair<>(expirationDateLabel, expirationDateChooser));
-			addGridComponents(this, pairs);
+			envDescriptionPane.setBorder(BorderFactory.createTitledBorder(envDescriptionLabel.getText()));
+			envDescriptionPane.setToolTipText(envDescriptionLabel.getToolTipText());
+			
+			// leftPanel
+			final JPanel leftPanel = new JPanel(new GridLayout(10, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			leftPanel.add(envNameLabel);
+			leftPanel.add(envUnitLabel);
+			leftPanel.add(productionMethodLabel);
+			leftPanel.add(packagingLabel);
+			leftPanel.add(productTreatmentLabel);
+			leftPanel.add(originCountryLabel);
+			leftPanel.add(originAreaLabel);
+			leftPanel.add(fisheriesAreaLabel);
+			leftPanel.add(productionDateLabel);
+			leftPanel.add(expirationDateLabel);
+			
+			// rightPanel
+			final JPanel rightPanel = new JPanel(new GridLayout(10, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			rightPanel.add(envNameField);
+			rightPanel.add(envUnitField);
+			rightPanel.add(productionMethodComboBox);
+			rightPanel.add(packagingComboBox);
+			rightPanel.add(productTreatmentComboBox);
+			rightPanel.add(originCountryField);
+			rightPanel.add(originAreaField);
+			rightPanel.add(fisheriesAreaField);
+			rightPanel.add(productionDateChooser);
+			rightPanel.add(expirationDateChooser);
+			
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+			
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(formPanel);
+			northPanel.add(envDescriptionPane);
+			
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(envDescriptionLabel, envDescriptionPane, productionMethodLabel,
 					productionMethodComboBox, packagingLabel, packagingComboBox, productTreatmentLabel,
@@ -1641,7 +1677,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			// If simple mode hides the advanced components
 			if (!isAdvanced) {
-				advancedComponents.forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setEnabled(false));
 			}
 		}
 
