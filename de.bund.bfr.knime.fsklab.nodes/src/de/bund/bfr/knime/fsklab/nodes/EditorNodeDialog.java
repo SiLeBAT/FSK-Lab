@@ -633,7 +633,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		ValidatableDialog(final ValidatablePanel panel, final String dialogTitle) {
 			super((Frame) null, true);
 
-			optionPane = new JOptionPane(new JScrollPane(panel), JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_OPTION);
+			optionPane = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_OPTION);
 			setTitle(dialogTitle);
 
 			// Handle window closing properly
@@ -665,6 +665,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			});
 
 			setContentPane(optionPane);
+			setResizable(false);
 			pack();
 			setLocationRelativeTo(null); // center dialog
 			setVisible(true);
@@ -1813,38 +1814,86 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel commentLabel = GUIFactory.createLabel("GM.EditReferencePanel.commentLabel");
 
 			// Build UI
-			final JScrollPane abstractPane = new JScrollPane(abstractTextArea);
 			final JSpinner volumeSpinner = GUIFactory.createSpinner(volumeSpinnerModel);
 			final JSpinner issueSpinner = GUIFactory.createSpinner(issueSpinnerModel);
-			final JScrollPane commentPane = new JScrollPane(commentTextArea);
 
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(typeLabel, typeComboBox),
-					new Pair<>(dateLabel, dateChooser), new Pair<>(pmidLabel, pmidTextField),
-					new Pair<>(doiLabel, doiTextField), new Pair<>(authorListLabel, authorListTextField),
-					new Pair<>(titleLabel, titleTextField), new Pair<>(abstractLabel, abstractPane),
-					new Pair<>(journalLabel, journalTextField), new Pair<>(volumeLabel, volumeSpinner),
-					new Pair<>(issueLabel, issueSpinner), new Pair<>(pageLabel, pageTextField),
-					new Pair<>(statusLabel, statusTextField), new Pair<>(websiteLabel, websiteTextField),
-					new Pair<>(commentLabel, commentPane));
+			// isReferenceDescription panel
+			final JPanel isReferenceDescriptionPanel = new JPanel(new BorderLayout());
+			isReferenceDescriptionPanel.add(isReferenceDescriptionCheckBox, BorderLayout.WEST);
 
-			EditorNodeDialog.add(this, isReferenceDescriptionCheckBox, 0, 0);
-			for (int index = 0; index < pairs.size(); index++) {
-				final Pair<JLabel, JComponent> pair = pairs.get(index);
-				final JLabel label = pair.getFirst();
-				final JComponent field = pair.getSecond();
-				label.setLabelFor(field);
+			// left panel for the form (labels)
+			final JPanel leftPanel = new JPanel(new GridLayout(12, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-				EditorNodeDialog.add(this, label, 0, index + 1);
-				EditorNodeDialog.add(this, field, 1, index + 1);
-			}
+			leftPanel.add(typeLabel);
+			leftPanel.add(dateLabel);
+			leftPanel.add(pmidLabel);
+			leftPanel.add(doiLabel);
+			leftPanel.add(authorListLabel);
+			leftPanel.add(titleLabel);
+			leftPanel.add(journalLabel);
+			leftPanel.add(volumeLabel);
+			leftPanel.add(issueLabel);
+			leftPanel.add(pageLabel);
+			leftPanel.add(statusLabel);
+			leftPanel.add(websiteLabel);
+
+			// right panel for the form (inputs)
+			final JPanel rightPanel = new JPanel(new GridLayout(12, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+			rightPanel.add(typeComboBox);
+			rightPanel.add(dateChooser);
+			rightPanel.add(pmidTextField);
+			rightPanel.add(doiTextField);
+			rightPanel.add(authorListTextField);
+			rightPanel.add(titleTextField);
+			rightPanel.add(journalTextField);
+			rightPanel.add(volumeSpinner);
+			rightPanel.add(issueSpinner);
+			rightPanel.add(pageTextField);
+			rightPanel.add(statusTextField);
+			rightPanel.add(websiteTextField);
+
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+
+			// left panel for text areas (labels)
+			final JPanel taLeftPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+			taLeftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			taLeftPanel.add(abstractLabel);
+			taLeftPanel.add(commentLabel);
+
+			// right panel for text areas (inputs)
+			final JPanel taRightPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+			taRightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			taRightPanel.add(abstractTextArea);
+			taRightPanel.add(commentTextArea);
+			
+			// taPanel: form with text areas
+			final JPanel taPanel = new JPanel(new BorderLayout());
+			taPanel.add(taLeftPanel, BorderLayout.WEST);
+			taPanel.add(taRightPanel, BorderLayout.CENTER);
+
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(isReferenceDescriptionPanel);
+			northPanel.add(formPanel);
+			northPanel.add(taPanel);
+
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 
 			// If simple mode hide advanced components
 			advancedComponents = Arrays.asList(typeLabel, typeComboBox, dateLabel, dateChooser, pmidLabel,
-					pmidTextField, authorListLabel, authorListTextField, abstractLabel, abstractPane, journalLabel,
+					pmidTextField, authorListLabel, authorListTextField, abstractLabel, abstractTextArea, journalLabel,
 					journalTextField, volumeLabel, volumeSpinner, issueLabel, issueSpinner, pageLabel, pageTextField,
-					statusLabel, statusTextField, websiteLabel, websiteTextField, commentLabel, commentPane);
+					statusLabel, statusTextField, websiteLabel, websiteTextField, commentLabel, commentTextArea);
 			if (!isAdvanced) {
-				getAdvancedComponents().forEach(it -> it.setVisible(false));
+				getAdvancedComponents().forEach(it -> it.setEnabled(false));
 			}
 		}
 
