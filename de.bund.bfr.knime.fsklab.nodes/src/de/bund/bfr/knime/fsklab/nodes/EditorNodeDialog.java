@@ -2298,19 +2298,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel formPanel = new JPanel(new BorderLayout());
 			formPanel.add(leftPanel, BorderLayout.WEST);
 			formPanel.add(rightPanel, BorderLayout.CENTER);
-			
+
 			// left panel for text areas
 			final JPanel taLeftPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-			taLeftPanel.setBorder(BorderFactory.createEmptyBorder(5,  5,  5,  5));
+			taLeftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 			taLeftPanel.add(objectiveLabel);
 			taLeftPanel.add(descriptionLabel);
-			
+
 			// right panel for text areas
 			final JPanel taRightPanel = new JPanel(new GridLayout(2, 1, 5, 5));
 			taRightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 			taRightPanel.add(objectivePane);
 			taRightPanel.add(descriptionPane);
-			
+
 			// taPanel: form with text areas
 			final JPanel taPanel = new JPanel(new BorderLayout());
 			taPanel.add(taLeftPanel, BorderLayout.WEST);
@@ -3100,9 +3100,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		boolean isAdvanced;
 
-		private final String[] columnNames = { "ID", "Classification", "Name", "Unit", "Unit category", "Data type" };
-		private final DefaultTableModel coolModel = new DefaultTableModel(columnNames, 6);
-
 		ParametersPanel(final boolean isAdvanced) {
 
 			super(new BorderLayout());
@@ -3153,15 +3150,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			// add(myTable, BorderLayout.NORTH);
-
-			JTable coolTable = new JTable(coolModel);
-			add(new JScrollPane(coolTable), BorderLayout.CENTER); // Cool table 4eva
-
-			// JPanel tablePanel = new JPanel();
-			// tablePanel.add(new JScrollPane(coolTable));
-			// add(tablePanel, BorderLayout.NORTH);
-
+			add(myTable, BorderLayout.NORTH);
 			add(buttonsPanel, BorderLayout.SOUTH);
 		}
 
@@ -3169,14 +3158,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			tableModel.setRowCount(0); // Remove all rows in table
 			parameters.forEach(it -> tableModel.addRow(new Parameter[] { it }));
 			params.addAll(parameters);
-
-			// cool table
-			coolModel.setRowCount(0); // Remove all rows in table
-			parameters.forEach(param -> {
-				String[] cells = { param.id, param.classification.toString(), param.name, param.unit,
-						param.unitCategory, param.dataType };
-				coolModel.addRow(cells);
-			});
 		}
 	}
 
