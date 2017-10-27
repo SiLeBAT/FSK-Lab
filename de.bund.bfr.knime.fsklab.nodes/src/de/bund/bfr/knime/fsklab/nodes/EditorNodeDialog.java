@@ -2697,7 +2697,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
-	private class ScopePanel extends TopLevelBox<Scope> {
+	private class ScopePanel extends TopLevelPanel<Scope> {
 
 		private static final long serialVersionUID = 8153319336584952056L;
 
@@ -2765,15 +2765,48 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel countryLabel = GUIFactory.createLabel("GM.ScopePanel.countryLabel",
 					"GM.ScopePanel.countryTooltip");
 
-			// Build UI
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(productLabel, productButton),
-					new Pair<>(hazardLabel, hazardButton), new Pair<>(populationLabel, populationButton),
-					new Pair<>(commentLabel, commentPane), new Pair<>(temporalInformationLabel, dateChooser),
-					new Pair<>(regionLabel, regionField), new Pair<>(countryLabel, countryField));
-
-			final JPanel propertiesPanel = new JPanel(new GridBagLayout());
-			addGridComponents(propertiesPanel, pairs);
-
+			// leftPanel (labels)
+			final JPanel leftPanel = new JPanel(new GridLayout(6, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			leftPanel.add(productLabel);
+			leftPanel.add(hazardLabel);
+			leftPanel.add(populationLabel);
+			leftPanel.add(temporalInformationLabel);
+			leftPanel.add(regionLabel);
+			leftPanel.add(countryLabel);
+			
+			// rightPanel (inputs)
+			final JPanel rightPanel = new JPanel(new GridLayout(6, 1,5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5,  5, 5, 5));
+			
+			rightPanel.add(productButton);
+			rightPanel.add(hazardButton);
+			rightPanel.add(populationButton);
+			rightPanel.add(dateChooser);
+			rightPanel.add(regionField);
+			rightPanel.add(countryField);
+			
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+			
+			// left panel for text areas
+			final JPanel taLeftPanel = new JPanel(new GridLayout(1, 1, 5, 5));
+			taLeftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			taLeftPanel.add(commentLabel);
+			
+			// right panel for text areas
+			final JPanel taRightPanel = new JPanel(new GridLayout(1, 1, 5, 5));
+			taRightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			taRightPanel.add(commentPane);
+			
+			// taPanel: form with text area (comment)
+			final JPanel taPanel = new JPanel(new BorderLayout());
+			taPanel.add(taLeftPanel, BorderLayout.WEST);
+			taPanel.add(taRightPanel, BorderLayout.CENTER);
+			
 			// Advanced checkbox
 			advancedCheckBox.addItemListener(event -> {
 				editProductPanel.toggleMode();
@@ -2781,9 +2814,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				editPopulationGroupPanel.toggleMode();
 			});
 
-			add(GUIFactory.createAdvancedPanel(advancedCheckBox));
-			add(Box.createGlue());
-			add(propertiesPanel);
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
+			northPanel.add(formPanel);
+			northPanel.add(taPanel);
+			
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 		}
 
 		void init(final Scope scope) {
