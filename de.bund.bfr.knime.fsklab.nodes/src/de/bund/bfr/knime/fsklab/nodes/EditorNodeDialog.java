@@ -980,25 +980,70 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			// Wraps hazardDescriptionTextArea in a JScrollPane
 			final JScrollPane hazardDescriptionPanel = new JScrollPane(hazardDescriptionTextArea);
+			hazardDescriptionPanel.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditHazardPanel.hazardDescriptionLabel")));
+			hazardDescriptionPanel.setToolTipText(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditHazardPanel.hazardDescriptionTooltip"));
 
-			// Create labels
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(hazardTypeLabel, hazardTypeField),
-					new Pair<>(hazardNameLabel, hazardNameField),
-					new Pair<>(hazardDescriptionLabel, hazardDescriptionPanel),
-					new Pair<>(hazardUnitLabel, hazardUnitField),
-					new Pair<>(adverseEffectLabel, adverseEffectTextField), new Pair<>(originLabel, originTextField),
-					new Pair<>(bmdLabel, bmdTextField), new Pair<>(maxResidueLimitLabel, maxResidueLimitTextField),
-					new Pair<>(noObservedAdverseLabel, noObservedAdverseTextField),
-					new Pair<>(acceptableOperatorLabel, acceptableOperatorTextField),
-					new Pair<>(acuteReferenceDoseLabel, acuteReferenceDoseTextField),
-					new Pair<>(indSumLabel, indSumField),
-					new Pair<>(acceptableDailyIntakeLabel, acceptableDailyIntakeTextField),
-					new Pair<>(labNameLabel, labNameTextField), new Pair<>(labCountryLabel, labCountryField),
-					new Pair<>(detectionLimitLabel, detectionLimitTextField),
-					new Pair<>(quantificationLimitLabel, quantificationLimitTextField),
-					new Pair<>(leftCensoredDataLabel, leftCensoredDataTextField),
-					new Pair<>(contaminationRangeLabel, contaminationRangeTextField));
-			addGridComponents(this, pairs);
+			// leftPanel
+			final JPanel leftPanel = new JPanel(new GridLayout(18, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+			leftPanel.add(hazardTypeLabel);
+			leftPanel.add(hazardNameLabel);
+			leftPanel.add(hazardUnitLabel);
+			leftPanel.add(adverseEffectLabel);
+			leftPanel.add(originLabel);
+			leftPanel.add(bmdLabel);
+			leftPanel.add(maxResidueLimitLabel);
+			leftPanel.add(noObservedAdverseLabel);
+			leftPanel.add(acceptableOperatorLabel);
+			leftPanel.add(acuteReferenceDoseLabel);
+			leftPanel.add(indSumLabel);
+			leftPanel.add(acceptableDailyIntakeLabel);
+			leftPanel.add(labNameLabel);
+			leftPanel.add(labCountryLabel);
+			leftPanel.add(detectionLimitLabel);
+			leftPanel.add(quantificationLimitLabel);
+			leftPanel.add(leftCensoredDataLabel);
+			leftPanel.add(contaminationRangeLabel);
+
+			// rightPanel
+			final JPanel rightPanel = new JPanel(new GridLayout(18, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+			rightPanel.add(hazardTypeField);
+			rightPanel.add(hazardNameField);
+			rightPanel.add(hazardUnitField);
+			rightPanel.add(adverseEffectTextField);
+			rightPanel.add(originTextField);
+			rightPanel.add(bmdTextField);
+			rightPanel.add(maxResidueLimitTextField);
+			rightPanel.add(noObservedAdverseTextField);
+			rightPanel.add(acceptableOperatorTextField);
+			rightPanel.add(acuteReferenceDoseTextField);
+			rightPanel.add(indSumField);
+			rightPanel.add(acceptableDailyIntakeTextField);
+			rightPanel.add(labNameTextField);
+			rightPanel.add(labCountryField);
+			rightPanel.add(detectionLimitTextField);
+			rightPanel.add(quantificationLimitTextField);
+			rightPanel.add(leftCensoredDataTextField);
+			rightPanel.add(contaminationRangeTextField);
+
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(formPanel);
+			northPanel.add(hazardDescriptionPanel);
+
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(hazardDescriptionLabel, hazardDescriptionPanel, // hazard description
 					adverseEffectLabel, adverseEffectTextField, // adverse effect
@@ -1019,7 +1064,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
-				getAdvancedComponents().forEach(it -> it.setVisible(false));
+				getAdvancedComponents().forEach(it -> it.setEnabled(false));
 			}
 		}
 
@@ -1624,11 +1669,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JScrollPane envDescriptionPane = new JScrollPane(envDescriptionTextArea);
 			envDescriptionPane.setBorder(BorderFactory.createTitledBorder(envDescriptionLabel.getText()));
 			envDescriptionPane.setToolTipText(envDescriptionLabel.getToolTipText());
-			
+
 			// leftPanel
 			final JPanel leftPanel = new JPanel(new GridLayout(10, 1, 5, 5));
 			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			
+
 			leftPanel.add(envNameLabel);
 			leftPanel.add(envUnitLabel);
 			leftPanel.add(productionMethodLabel);
@@ -1639,11 +1684,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			leftPanel.add(fisheriesAreaLabel);
 			leftPanel.add(productionDateLabel);
 			leftPanel.add(expirationDateLabel);
-			
+
 			// rightPanel
 			final JPanel rightPanel = new JPanel(new GridLayout(10, 1, 5, 5));
 			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			
+
 			rightPanel.add(envNameField);
 			rightPanel.add(envUnitField);
 			rightPanel.add(productionMethodComboBox);
@@ -1654,18 +1699,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			rightPanel.add(fisheriesAreaField);
 			rightPanel.add(productionDateChooser);
 			rightPanel.add(expirationDateChooser);
-			
+
 			// formPanel
 			final JPanel formPanel = new JPanel(new BorderLayout());
 			formPanel.add(leftPanel, BorderLayout.WEST);
 			formPanel.add(rightPanel, BorderLayout.CENTER);
-			
+
 			// northPanel
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
 			northPanel.add(envDescriptionPane);
-			
+
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
@@ -1907,7 +1952,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			taRightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 			taRightPanel.add(abstractTextArea);
 			taRightPanel.add(commentTextArea);
-			
+
 			// taPanel: form with text areas
 			final JPanel taPanel = new JPanel(new BorderLayout());
 			taPanel.add(taLeftPanel, BorderLayout.WEST);
@@ -2804,45 +2849,45 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			// leftPanel (labels)
 			final JPanel leftPanel = new JPanel(new GridLayout(6, 1, 5, 5));
 			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			
+
 			leftPanel.add(productLabel);
 			leftPanel.add(hazardLabel);
 			leftPanel.add(populationLabel);
 			leftPanel.add(temporalInformationLabel);
 			leftPanel.add(regionLabel);
 			leftPanel.add(countryLabel);
-			
+
 			// rightPanel (inputs)
-			final JPanel rightPanel = new JPanel(new GridLayout(6, 1,5, 5));
-			rightPanel.setBorder(BorderFactory.createEmptyBorder(5,  5, 5, 5));
-			
+			final JPanel rightPanel = new JPanel(new GridLayout(6, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
 			rightPanel.add(productButton);
 			rightPanel.add(hazardButton);
 			rightPanel.add(populationButton);
 			rightPanel.add(dateChooser);
 			rightPanel.add(regionField);
 			rightPanel.add(countryField);
-			
+
 			// formPanel
 			final JPanel formPanel = new JPanel(new BorderLayout());
 			formPanel.add(leftPanel, BorderLayout.WEST);
 			formPanel.add(rightPanel, BorderLayout.CENTER);
-			
+
 			// left panel for text areas
 			final JPanel taLeftPanel = new JPanel(new GridLayout(1, 1, 5, 5));
 			taLeftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 			taLeftPanel.add(commentLabel);
-			
+
 			// right panel for text areas
 			final JPanel taRightPanel = new JPanel(new GridLayout(1, 1, 5, 5));
 			taRightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 			taRightPanel.add(commentPane);
-			
+
 			// taPanel: form with text area (comment)
 			final JPanel taPanel = new JPanel(new BorderLayout());
 			taPanel.add(taLeftPanel, BorderLayout.WEST);
 			taPanel.add(taRightPanel, BorderLayout.CENTER);
-			
+
 			// Advanced checkbox
 			advancedCheckBox.addItemListener(event -> {
 				editProductPanel.toggleMode();
@@ -2856,7 +2901,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			northPanel.add(formPanel);
 			northPanel.add(taPanel);
-			
+
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 		}
