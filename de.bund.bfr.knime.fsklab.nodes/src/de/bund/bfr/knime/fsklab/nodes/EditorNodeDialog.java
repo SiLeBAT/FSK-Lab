@@ -60,7 +60,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
@@ -392,14 +391,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			return panel;
 		}
 
-		private static JTextArea createTextArea() {
-			final JTextArea textArea = new JTextArea(5, 30);
-			textArea.setText("");
-			textArea.setLineWrap(true); // Wrap long lines
-			textArea.setWrapStyleWord(true); // Wrap only at white space
-
-			return textArea;
-		}
+//		private static JTextArea createTextArea() {
+//			final JTextArea textArea = new JTextArea(5, 30);
+//			textArea.setText("");
+//			textArea.setLineWrap(true); // Wrap long lines
+//			textArea.setWrapStyleWord(true); // Wrap only at white space
+//
+//			return textArea;
+//		}
 
 		/**
 		 * @param possibleValues
@@ -618,7 +617,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private static final long serialVersionUID = -1195181696127795655L;
 
 		private final StringTextField nameTextField = new StringTextField(false, 30);
-		private final JTextArea descriptionTextArea = GUIFactory.createTextArea();
+		private final StringTextArea descriptionTextArea = new StringTextArea(true, 5, 30);
 
 		private final List<JComponent> advancedComponents;
 
@@ -677,7 +676,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
 			final List<String> errors = new ArrayList<>(1);
-			if (!hasValidValue(nameTextField)) {
+			if (!nameTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditAssayPanel.nameLabel"));
 			}
 
@@ -826,7 +825,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				errors.add(
 						"Missing " + bundle.getString("GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel"));
 			}
-			if (!hasValidValue(nonConsecutiveOneDayField)) {
+			if (!nonConsecutiveOneDayField.isValueValid()) {
 				errors.add("Missing "
 						+ bundle.getString("GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysLabel"));
 			}
@@ -1126,10 +1125,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
 			final List<String> errors = new ArrayList<>();
-			if (!hasValidValue(equationNameTextField)) {
+			if (!equationNameTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditModelEquationPanel.nameLabel"));
 			}
-			if (!hasValidValue(scriptTextArea)) {
+			if (!scriptTextArea.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditModelEquationPanel.scriptLabel"));
 			}
 			return errors;
@@ -1315,13 +1314,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
 			final List<String> errors = new ArrayList<>();
-			if (!hasValidValue(idTextField)) {
+			if (!idTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditParameterPanel.idLabel"));
 			}
 			if (classificationComboBox.getSelectedIndex() == -1) {
 				errors.add("Missing " + bundle.getString("GM.EditParameterPanel.classificationLabel"));
 			}
-			if (!hasValidValue(nameTextField)) {
+			if (!nameTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditParameterPanel.parameterNameLabel"));
 			}
 			if (!hasValidValue(unitField)) {
@@ -1561,7 +1560,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
 			final List<String> errors = new ArrayList<>(1);
-			if (!hasValidValue(populationNameTextField)) {
+			if (!populationNameTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditPopulationGroupPanel.populationNameLabel"));
 			}
 			return errors;
@@ -1579,7 +1578,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private final AutoSuggestField envNameField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Product-matrix name"));
-		private final JTextArea envDescriptionTextArea = GUIFactory.createTextArea();
+		private final StringTextArea envDescriptionTextArea = new StringTextArea(true, 5, 30);
 		private final AutoSuggestField envUnitField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Product-matrix unit"));
 		private final JComboBox<String> productionMethodComboBox = GUIFactory
@@ -1813,7 +1812,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final StringTextField doiTextField = new StringTextField(false, 30);
 		private final StringTextField authorListTextField = new StringTextField(true, 30);
 		private final StringTextField titleTextField = new StringTextField(false, 30);
-		private final JTextArea abstractTextArea = GUIFactory.createTextArea();
+		private final StringTextArea abstractTextArea = new StringTextArea(true, 5, 30);
 		private final StringTextField journalTextField = new StringTextField(true, 30);
 		// Spinner models starting with 0 and taking positive ints only
 		private final SpinnerNumberModel volumeSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
@@ -1821,7 +1820,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final StringTextField pageTextField = new StringTextField(true, 30);
 		private final StringTextField statusTextField = new StringTextField(true, 30);
 		private final StringTextField websiteTextField = new StringTextField(true, 30);
-		private final JTextArea commentTextArea = GUIFactory.createTextArea();
+		private final StringTextArea commentTextArea = new StringTextArea(true, 5, 30);
 
 		private final List<JComponent> advancedComponents;
 
@@ -1978,10 +1977,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
 			final List<String> errors = new ArrayList<>(2);
-			if (!hasValidValue(doiTextField)) {
+			if (!doiTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditReferencePanel.doiLabel"));
 			}
-			if (!hasValidValue(titleTextField)) {
+			if (!titleTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditReferencePanel.titleLabel"));
 			}
 
@@ -2144,19 +2143,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
 			final List<String> errors = new ArrayList<>(5);
-			if (!hasValidValue(sampleNameTextField)) {
+			if (!sampleNameTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.sampleNameLabel"));
 			}
-			if (!hasValidValue(sampleProtocolTextField)) {
+			if (!sampleProtocolTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.sampleProtocolLabel"));
 			}
-			if (!hasValidValue(samplingPlanTextField)) {
+			if (!samplingPlanTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingPlanLabel"));
 			}
-			if (!hasValidValue(samplingWeightTextField)) {
+			if (!samplingWeightTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingWeightLabel"));
 			}
-			if (!hasValidValue(samplingSizeTextField)) {
+			if (!samplingSizeTextField.isValueValid()) {
 				errors.add("Missing " + bundle.getString("GM.EditStudySamplePanel.samplingSizeLabel"));
 			}
 
@@ -2170,14 +2169,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	}
 
 	// Validation methods
-	private static boolean hasValidValue(final JTextField textField) {
-		return StringUtils.isNotBlank(textField.getText());
-	}
-
-	private static boolean hasValidValue(final JTextArea textArea) {
-		return StringUtils.isNotBlank(textArea.getText());
-	}
-
 	private static boolean hasValidValue(final AutoSuggestField field) {
 		final JTextField textField = (JTextField) field.getEditor().getEditorComponent();
 		return StringUtils.isNotBlank(textField.getText());
@@ -2213,8 +2204,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final AutoSuggestField languageWrittenInField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Language written in"));
 		private final AutoSuggestField statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"));
-		private final JTextArea objectiveTextArea = GUIFactory.createTextArea();
-		private final JTextArea descriptionTextArea = GUIFactory.createTextArea();
+		private final StringTextArea objectiveTextArea = new StringTextArea(true, 5, 30);
+		private final StringTextArea descriptionTextArea = new StringTextArea(true, 5, 30);
 
 		public GeneralInformationPanel() {
 
@@ -2612,20 +2603,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		final JButton hazardButton = new JButton();
 		final JButton populationButton = new JButton();
 
-		final JTextArea commentTextArea = GUIFactory.createTextArea();
-		final JScrollPane commentPane = new JScrollPane(commentTextArea);
+		final StringTextArea commentTextArea = new StringTextArea(true, 5, 30);
 
 		final FixedDateChooser dateChooser = new FixedDateChooser();
 		final AutoSuggestField regionField = GUIFactory.createAutoSuggestField(vocabs.get("Region"));
 		final AutoSuggestField countryField = GUIFactory.createAutoSuggestField(vocabs.get("Country"));
-
-		final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
 		private final EditProductPanel editProductPanel = new EditProductPanel(false);
 		private final EditHazardPanel editHazardPanel = new EditHazardPanel(false);
 		private final EditPopulationGroupPanel editPopulationGroupPanel = new EditPopulationGroupPanel(false);
 
 		ScopePanel() {
+			final JScrollPane commentPane = new JScrollPane(commentTextArea);
 
 			final Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
 
@@ -2685,6 +2674,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel taPanel = UI.createOptionsPanel(Arrays.asList(commentLabel), Arrays.asList(commentPane));
 
 			// Advanced checkbox
+			final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 			advancedCheckBox.addItemListener(event -> {
 				editProductPanel.toggleMode();
 				editHazardPanel.toggleMode();
@@ -2864,9 +2854,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private final StringTextField studyIdentifierTextField = new StringTextField(true, 30);
 		private final StringTextField studyTitleTextField = new StringTextField(true, 30);
-
-		private final JTextArea studyDescriptionTextArea;
-
+		private final StringTextArea studyDescriptionTextArea = new StringTextArea(true, 5, 30);
 		private final AutoSuggestField studyDesignTypeField;
 		private final AutoSuggestField studyAssayMeasurementsTypeField;
 		private final AutoSuggestField studyAssayTechnologyTypeField;
@@ -2885,9 +2873,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		StudyPanel() {
 
 			super(new GridBagLayout());
-
-			// Create fields
-			studyDescriptionTextArea = GUIFactory.createTextArea();
 
 			studyDesignTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Design Type"));
 			studyAssayMeasurementsTypeField = GUIFactory
