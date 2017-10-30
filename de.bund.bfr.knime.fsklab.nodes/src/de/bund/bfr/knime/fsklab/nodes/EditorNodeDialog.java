@@ -48,7 +48,6 @@ import java.util.Set;
 
 import javax.swing.AbstractSpinnerModel;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -2247,18 +2246,53 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			// Build UI
 			final JSpinner moisturePercentageSpinner = GUIFactory.createSpinner(moisturePercentageSpinnerModel);
 			final JSpinner fatPercentageSpinner = GUIFactory.createSpinner(fatPercentageSpinnerModel);
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(sampleNameLabel, sampleNameTextField),
-					new Pair<>(moisturePercentageLabel, moisturePercentageSpinner),
-					new Pair<>(fatPercentageLabel, fatPercentageSpinner),
-					new Pair<>(sampleProtocolLabel, sampleProtocolTextField),
-					new Pair<>(samplingStrategyLabel, samplingStrategyField),
-					new Pair<>(samplingTypeLabel, samplingTypeField),
-					new Pair<>(samplingMethodLabel, samplingMethodField),
-					new Pair<>(samplingPlanLabel, samplingPlanTextField),
-					new Pair<>(samplingWeightLabel, samplingWeightTextField),
-					new Pair<>(samplingSizeLabel, samplingSizeTextField),
-					new Pair<>(lotSizeUnitLabel, lotSizeUnitField), new Pair<>(samplingPointLabel, samplingPointField));
-			addGridComponents(this, pairs);
+			
+			// leftPanel (labels)
+			final JPanel leftPanel = new JPanel(new GridLayout(12, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			leftPanel.add(sampleNameLabel);
+			leftPanel.add(moisturePercentageLabel);
+			leftPanel.add(fatPercentageLabel);
+			leftPanel.add(sampleProtocolLabel);
+			leftPanel.add(samplingStrategyLabel);
+			leftPanel.add(samplingTypeLabel);
+			leftPanel.add(samplingMethodLabel);
+			leftPanel.add(samplingPlanLabel);
+			leftPanel.add(samplingWeightLabel);
+			leftPanel.add(samplingSizeLabel);
+			leftPanel.add(lotSizeUnitLabel);
+			leftPanel.add(samplingPointLabel);
+			
+			// rightPanel (inputs)
+			final JPanel rightPanel = new JPanel(new GridLayout(12, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			rightPanel.add(sampleNameTextField);
+			rightPanel.add(moisturePercentageSpinner);
+			rightPanel.add(fatPercentageSpinner);
+			rightPanel.add(sampleProtocolTextField);
+			rightPanel.add(samplingStrategyField);
+			rightPanel.add(samplingTypeField);
+			rightPanel.add(samplingMethodField);
+			rightPanel.add(samplingPlanTextField);
+			rightPanel.add(samplingWeightTextField);
+			rightPanel.add(samplingSizeTextField);
+			rightPanel.add(lotSizeUnitField);
+			rightPanel.add(samplingPointField);
+			
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+			
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(formPanel);
+			
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 
 			// If simple mode hide advanced components
 			advancedComponents = Arrays.asList(moisturePercentageLabel, moisturePercentageSpinner, // moisture
@@ -2271,7 +2305,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					lotSizeUnitLabel, lotSizeUnitField, // lot size unit
 					samplingPointLabel, samplingPointField); // sampling point
 			if (!isAdvanced) {
-				getAdvancedComponents().forEach(it -> it.setVisible(false));
+				getAdvancedComponents().forEach(it -> it.setEnabled(false));
 			}
 		}
 
@@ -2391,20 +2425,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			fieldConstraints.gridy = index;
 			panel.add(field, fieldConstraints);
 		}
-	}
-
-	@Deprecated
-	private abstract class TopLevelBox<T> extends Box {
-
-		private static final long serialVersionUID = 2274280243699676402L;
-
-		TopLevelBox() {
-			super(BoxLayout.PAGE_AXIS);
-		}
-
-		abstract void init(final T t);
-
-		abstract T get();
 	}
 
 	private abstract class TopLevelPanel<T> extends JPanel {
