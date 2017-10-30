@@ -2526,28 +2526,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 3472281253338213542L;
 
-		private final JTextField givenNameTextField;
-		private final JTextField familyNameTextField;
-		private final JTextField contactTextField;
+		private final JTextField givenNameTextField = GUIFactory.createTextField();
+		private final JTextField familyNameTextField = GUIFactory.createTextField();
+		private final JTextField contactTextField = GUIFactory.createTextField();
 
 		public EditCreatorPanel() {
 
-			super(new GridBagLayout());
-
-			// Create fields
-			givenNameTextField = GUIFactory.createTextField();
-			familyNameTextField = GUIFactory.createTextField();
-			contactTextField = GUIFactory.createTextField();
+			super(new BorderLayout());
 
 			// Create labels
 			final JLabel givenNameLabel = GUIFactory.createLabel("GM.EditCreatorPanel.givenNameLabel");
 			final JLabel familyNameLabel = GUIFactory.createLabel("GM.EditCreatorPanel.familyNameLabel");
 			final JLabel contactLabel = GUIFactory.createLabel("GM.EditCreatorPanel.contactLabel");
 
-			// Build UI
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(givenNameLabel, givenNameTextField),
-					new Pair<>(familyNameLabel, familyNameTextField), new Pair<>(contactLabel, contactTextField));
-			addGridComponents(this, pairs);
+			final JPanel formPanel = UI.createOptionsPanel(Arrays.asList(givenNameLabel, familyNameLabel, contactLabel),
+					Arrays.asList(givenNameTextField, familyNameTextField, contactTextField));
+			add(formPanel, BorderLayout.NORTH);
 		}
 
 		void init(final VCard creator) {
@@ -2801,8 +2795,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			});
 
 			// formPanel
-			final JPanel formPanel = UI.createOptionsPanel(Arrays.asList(studySampleLabel, dietaryAssessmentMethodLabel, laboratoryAccreditationLabel, assayLabel),
-					Arrays.asList(studySampleButton, dietaryAssessmentMethodButton, laboratoryAccreditationField, assayButton));
+			final JPanel formPanel = UI.createOptionsPanel(
+					Arrays.asList(studySampleLabel, dietaryAssessmentMethodLabel, laboratoryAccreditationLabel,
+							assayLabel),
+					Arrays.asList(studySampleButton, dietaryAssessmentMethodButton, laboratoryAccreditationField,
+							assayButton));
 
 			// northPanel
 			final JPanel northPanel = new JPanel();
@@ -2922,12 +2919,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(
-					Arrays.asList(studyIdentifierLabel, studyTitleLabel, studyDesignTypeLabel, studyAssayMeasurementsTypeLabel, studyAssayTechnologyPlatformLabel,
-							accreditationProcedureLabel, studyProtocolNameLabel, studyProtocolTypeLabel, studyProtocolDescriptionLabel, studyProtocolURILabel,
-							studyProtocolParametersLabel, studyProtocolComponentsTypeLabel),
-					Arrays.asList(studyIdentifierTextField, studyTitleTextField, studyDesignTypeField, studyAssayMeasurementsTypeField, studyAssayTechnologyPlatformTextField,
-							accreditationProcedureField, studyProtocolNameTextField, studyProtocolTypeField, studyProtocolDescriptionTextField, studyProtocolURITextField,
-							studyProtocolParametersField, studyProtocolComponentsTypeField));
+					Arrays.asList(studyIdentifierLabel, studyTitleLabel, studyDesignTypeLabel,
+							studyAssayMeasurementsTypeLabel, studyAssayTechnologyPlatformLabel,
+							accreditationProcedureLabel, studyProtocolNameLabel, studyProtocolTypeLabel,
+							studyProtocolDescriptionLabel, studyProtocolURILabel, studyProtocolParametersLabel,
+							studyProtocolComponentsTypeLabel),
+					Arrays.asList(studyIdentifierTextField, studyTitleTextField, studyDesignTypeField,
+							studyAssayMeasurementsTypeField, studyAssayTechnologyPlatformTextField,
+							accreditationProcedureField, studyProtocolNameTextField, studyProtocolTypeField,
+							studyProtocolDescriptionTextField, studyProtocolURITextField, studyProtocolParametersField,
+							studyProtocolComponentsTypeField));
 
 			// northPanel
 			final JPanel northPanel = new JPanel();
