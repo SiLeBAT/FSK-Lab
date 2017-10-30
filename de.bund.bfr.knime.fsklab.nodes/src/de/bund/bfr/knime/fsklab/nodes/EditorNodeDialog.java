@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -65,6 +66,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -546,8 +548,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private static final long serialVersionUID = -6572257674130882251L;
 		private final JOptionPane optionPane;
 
-		ValidatableDialog(final ValidatablePanel panel, final String dialogTitle) {
-			super((Frame) null, true);
+		ValidatableDialog(final Frame parent, final ValidatablePanel panel, final String dialogTitle) {
+			super(parent, Dialog.ModalityType.APPLICATION_MODAL);
 
 			optionPane = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_OPTION);
 			setTitle(dialogTitle);
@@ -2651,11 +2653,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final HeadlessTable myTable = new HeadlessTable(tableModel, renderer);
 
 			// buttons
+			final Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
 			final ButtonsPanel buttonsPanel = new ButtonsPanel();
 			buttonsPanel.addButton.addActionListener(event -> {
-
+				
 				final EditReferencePanel editPanel = new EditReferencePanel(this.isAdvanced);
-				final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create reference");
+				final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editPanel, "Create reference");
 
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 					tableModel.addRow(new Record[] { editPanel.get() });
@@ -2695,7 +2698,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					final EditReferencePanel editPanel = new EditReferencePanel(this.isAdvanced);
 					editPanel.init(ref);
 
-					final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify reference");
+					final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editPanel, "Modify reference");
 					if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 						tableModel.setValueAt(editPanel.get(), rowToEdit, 0);
 					}
@@ -2889,11 +2892,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final EditPopulationGroupPanel editPopulationGroupPanel = new EditPopulationGroupPanel(false);
 
 		ScopePanel() {
+			
+			final Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
 
 			// Build UI
 			productButton.setToolTipText("Click me to add a product");
 			productButton.addActionListener(event -> {
-				final ValidatableDialog dlg = new ValidatableDialog(editProductPanel, "Create a product");
+				final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editProductPanel, "Create a product");
 
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 					final Product product = editProductPanel.get();
@@ -2903,7 +2908,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			hazardButton.setToolTipText("Click me to add a hazard");
 			hazardButton.addActionListener(event -> {
-				final ValidatableDialog dlg = new ValidatableDialog(editHazardPanel, "Create a hazard");
+				final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editHazardPanel, "Create a hazard");
 
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 					final Hazard hazard = editHazardPanel.get();
@@ -2913,7 +2918,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			populationButton.setToolTipText("Click me to add a Population group");
 			populationButton.addActionListener(event -> {
-				final ValidatableDialog dlg = new ValidatableDialog(editPopulationGroupPanel,
+				final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editPopulationGroupPanel,
 						"Create a Population Group");
 
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
@@ -3056,6 +3061,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final EditAssayPanel editAssayPanel = new EditAssayPanel(false);
 
 		DataBackgroundPanel() {
+			
+			final Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
 
 			final StudyPanel studyPanel = new StudyPanel();
 			studyPanel.setBorder(BorderFactory.createTitledBorder("Study"));
@@ -3064,7 +3071,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			studySampleButton.setToolTipText("Click me to add Study Sample");
 			studySampleButton.addActionListener(event -> {
 
-				final ValidatableDialog dlg = new ValidatableDialog(editStudySamplePanel, "Create Study sample");
+				final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editStudySamplePanel, "Create Study sample");
 
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 					final StudySample studySample = editStudySamplePanel.get();
@@ -3076,7 +3083,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JButton dietaryAssessmentMethodButton = new JButton();
 			dietaryAssessmentMethodButton.setToolTipText("Click me to add Dietary assessment method");
 			dietaryAssessmentMethodButton.addActionListener(event -> {
-				final ValidatableDialog dlg = new ValidatableDialog(editDietaryAssessmentMethodPanel,
+				final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editDietaryAssessmentMethodPanel,
 						"Create dietary assessment method");
 
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
@@ -3089,7 +3096,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JButton assayButton = new JButton();
 			assayButton.setToolTipText("Click me to add Assay");
 			assayButton.addActionListener(event -> {
-				final ValidatableDialog dlg = new ValidatableDialog(editAssayPanel, "Create assay");
+				final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editAssayPanel, "Create assay");
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 					final Assay assay = editAssayPanel.get();
 					// Update button's text
@@ -3440,11 +3447,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			};
 			final JTable myTable = new HeadlessTable(tableModel, renderer);
 
+			final Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+
 			// buttons
 			final ButtonsPanel buttonsPanel = new ButtonsPanel();
 			buttonsPanel.addButton.addActionListener(event -> {
 				final EditParameterPanel editPanel = new EditParameterPanel(this.isAdvanced);
-				final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create parameter");
+				final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editPanel, "Create parameter");
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 					tableModel.addRow(new Parameter[] { editPanel.get() });
 				}
@@ -3458,7 +3467,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					final EditParameterPanel editPanel = new EditParameterPanel(this.isAdvanced);
 					editPanel.init(param);
 
-					final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify parameter");
+					final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editPanel, "Modify parameter");
 					if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 						tableModel.setValueAt(editPanel.get(), rowToEdit, 0);
 					}
@@ -3551,10 +3560,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			final HeadlessTable myTable = new HeadlessTable(tableModel, renderer);
 
+			final Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+
 			final ButtonsPanel buttonsPanel = new ButtonsPanel();
 
 			buttonsPanel.addButton.addActionListener(event -> {
-				final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create equation");
+				final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editPanel, "Create equation");
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 					tableModel.addRow(new ModelEquation[] { editPanel.get() });
 				}
@@ -3566,7 +3577,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					final ModelEquation equation = (ModelEquation) tableModel.getValueAt(rowToEdit, 0);
 					editPanel.init(equation);
 
-					final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify equation");
+					final ValidatableDialog dlg = new ValidatableDialog(parentFrame, editPanel, "Modify equation");
 					if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 						tableModel.setValueAt(editPanel.get(), rowToEdit, 0);
 					}
