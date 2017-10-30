@@ -3121,7 +3121,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			// Advanced `checkbox`
 			advancedCheckBox.addItemListener(event -> {
-				studyPanel.advancedComponents.forEach(it -> it.setVisible(advancedCheckBox.isSelected()));
+				studyPanel.advancedComponents.forEach(it -> it.setEnabled(advancedCheckBox.isSelected()));
 				editStudySamplePanel.toggleMode();
 				editDietaryAssessmentMethodPanel.toggleMode();
 				editAssayPanel.toggleMode();
@@ -3267,22 +3267,70 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.StudyPanel.componentsTypeTooltip");
 
 			// Build UI
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-					new Pair<>(studyIdentifierLabel, studyIdentifierTextField),
-					new Pair<>(studyTitleLabel, studyTitleTextField),
-					new Pair<>(studyDescriptionLabel, studyDescriptionPane),
-					new Pair<>(studyDesignTypeLabel, studyDesignTypeField),
-					new Pair<>(studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField),
-					new Pair<>(studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField),
-					new Pair<>(studyAssayTechnologyPlatformLabel, studyAssayTechnologyPlatformTextField),
-					new Pair<>(accreditationProcedureLabel, accreditationProcedureField),
-					new Pair<>(studyProtocolNameLabel, studyProtocolNameTextField),
-					new Pair<>(studyProtocolTypeLabel, studyProtocolTypeField),
-					new Pair<>(studyProtocolDescriptionLabel, studyProtocolDescriptionTextField),
-					new Pair<>(studyProtocolURILabel, studyProtocolURITextField),
-					new Pair<>(studyProtocolParametersLabel, studyProtocolParametersField),
-					new Pair<>(studyProtocolComponentsTypeLabel, studyProtocolComponentsTypeField));
-			EditorNodeDialog.addGridComponents(this, pairs);
+//			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
+//					new Pair<>(studyIdentifierLabel, studyIdentifierTextField),
+//					new Pair<>(studyTitleLabel, studyTitleTextField),
+//					new Pair<>(studyDescriptionLabel, studyDescriptionPane),
+//					new Pair<>(studyDesignTypeLabel, studyDesignTypeField),
+//					new Pair<>(studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField),
+//					new Pair<>(studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField),
+//					new Pair<>(studyAssayTechnologyPlatformLabel, studyAssayTechnologyPlatformTextField),
+//					new Pair<>(accreditationProcedureLabel, accreditationProcedureField),
+//					new Pair<>(studyProtocolNameLabel, studyProtocolNameTextField),
+//					new Pair<>(studyProtocolTypeLabel, studyProtocolTypeField),
+//					new Pair<>(studyProtocolDescriptionLabel, studyProtocolDescriptionTextField),
+//					new Pair<>(studyProtocolURILabel, studyProtocolURITextField),
+//					new Pair<>(studyProtocolParametersLabel, studyProtocolParametersField),
+//					new Pair<>(studyProtocolComponentsTypeLabel, studyProtocolComponentsTypeField));
+//			EditorNodeDialog.addGridComponents(this, pairs);
+			
+			// leftPanel (labels)
+			final JPanel leftPanel = new JPanel(new GridLayout(13, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			leftPanel.add(studyIdentifierLabel);
+			leftPanel.add(studyTitleLabel);
+			leftPanel.add(studyDesignTypeLabel);
+			leftPanel.add(studyAssayMeasurementsTypeLabel);
+			leftPanel.add(studyAssayTechnologyTypeLabel);
+			leftPanel.add(studyAssayTechnologyPlatformLabel);
+			leftPanel.add(accreditationProcedureLabel);
+			leftPanel.add(studyProtocolNameLabel);
+			leftPanel.add(studyProtocolTypeLabel);
+			leftPanel.add(studyProtocolDescriptionLabel);
+			leftPanel.add(studyProtocolURILabel);
+			leftPanel.add(studyProtocolParametersLabel);
+			leftPanel.add(studyProtocolComponentsTypeLabel);
+			
+			// rightPanel (inputs)
+			final JPanel rightPanel = new JPanel(new GridLayout(13, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			rightPanel.add(studyIdentifierTextField);
+			rightPanel.add(studyTitleTextField);
+			rightPanel.add(studyDesignTypeField);
+			rightPanel.add(studyAssayMeasurementsTypeField);
+			rightPanel.add(studyAssayTechnologyPlatformTextField);
+			rightPanel.add(accreditationProcedureField);
+			rightPanel.add(studyProtocolNameTextField);
+			rightPanel.add(studyProtocolTypeField);
+			rightPanel.add(studyProtocolDescriptionTextField);
+			rightPanel.add(studyProtocolURITextField);
+			rightPanel.add(studyProtocolParametersField);
+			rightPanel.add(studyProtocolComponentsTypeField);
+			
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+			
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(formPanel);
+			
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(studyDescriptionLabel, studyDescriptionPane, studyDesignTypeLabel,
 					studyDesignTypeField, studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField,
@@ -3294,7 +3342,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					studyProtocolParametersLabel, studyProtocolParametersField, studyProtocolComponentsTypeLabel,
 					studyProtocolComponentsTypeField);
 
-			advancedComponents.forEach(it -> it.setVisible(false));
+			advancedComponents.forEach(it -> it.setEnabled(false));
 		}
 	}
 
