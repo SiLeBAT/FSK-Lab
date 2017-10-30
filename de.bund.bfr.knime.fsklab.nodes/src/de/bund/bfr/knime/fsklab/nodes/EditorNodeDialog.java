@@ -658,7 +658,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
-			advancedComponents = Arrays.asList(descriptionPane);
+			advancedComponents = Arrays.asList(descriptionTextArea);
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
@@ -708,11 +708,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private final AutoSuggestField dataCollectionToolField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Method. tool to collect data"));
-		private final JTextField nonConsecutiveOneDayTextField = GUIFactory.createTextField();
-		private final JTextField dietarySoftwareToolTextField = GUIFactory.createTextField();
-		private final JTextField foodItemNumberTextField = GUIFactory.createTextField();
-		private final JTextField recordTypeTextField = GUIFactory.createTextField();
-		private final JComboBox<String> foodDescriptionComboBox = GUIFactory
+		private final JTextField nonConsecutiveOneDayField = GUIFactory.createTextField();
+		private final JTextField dietarySoftwareToolField = GUIFactory.createTextField();
+		private final JTextField foodItemNumberField = GUIFactory.createTextField();
+		private final JTextField recordTypeField = GUIFactory.createTextField();
+		private final JComboBox<String> foodDescriptionField = GUIFactory
 				.createComboBox(vocabs.get("Food descriptors"));
 		private final List<JComponent> advancedComponents;
 
@@ -740,8 +740,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel formPanel = UI.createOptionsPanel(
 					Arrays.asList(dataCollectionToolLabel, nonConsecutiveOneDayLabel, dietarySoftwareToolLabel,
 							foodItemNumberLabel, recordTypeLabel, foodDescriptionLabel),
-					Arrays.asList(dataCollectionToolField, nonConsecutiveOneDayTextField, dietarySoftwareToolTextField,
-							foodItemNumberTextField, recordTypeTextField, foodDescriptionComboBox));
+					Arrays.asList(dataCollectionToolField, nonConsecutiveOneDayField, dietarySoftwareToolField,
+							foodItemNumberField, recordTypeField, foodDescriptionField));
 
 			// northPanel
 			final JPanel northPanel = new JPanel();
@@ -751,9 +751,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
-			advancedComponents = Arrays.asList(dietarySoftwareToolLabel, dietarySoftwareToolTextField,
-					foodItemNumberLabel, foodItemNumberTextField, recordTypeLabel, recordTypeTextField,
-					foodDescriptionLabel, foodDescriptionComboBox);
+			advancedComponents = Arrays.asList(dietarySoftwareToolField, foodItemNumberField, recordTypeField,
+					foodDescriptionField);
 
 			// If simple mode hides advanced components
 			if (!isAdvanced) {
@@ -765,19 +764,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		void init(DietaryAssessmentMethod method) {
 			if (method != null) {
 				dataCollectionToolField.setSelectedItem(method.collectionTool);
-				nonConsecutiveOneDayTextField.setText(Integer.toString(method.numberOfNonConsecutiveOneDay));
-				dietarySoftwareToolTextField.setText(method.softwareTool);
+				nonConsecutiveOneDayField.setText(Integer.toString(method.numberOfNonConsecutiveOneDay));
+				dietarySoftwareToolField.setText(method.softwareTool);
 
 				if (!method.numberOfFoodItems.isEmpty()) {
-					foodItemNumberTextField.setText(method.numberOfFoodItems.get(0));
+					foodItemNumberField.setText(method.numberOfFoodItems.get(0));
 				}
 
 				if (!method.recordTypes.isEmpty()) {
-					recordTypeTextField.setText(method.recordTypes.get(0));
+					recordTypeField.setText(method.recordTypes.get(0));
 				}
 
 				if (!method.foodDescriptors.isEmpty()) {
-					foodDescriptionComboBox.setSelectedItem(method.foodDescriptors.get(0));
+					foodDescriptionField.setSelectedItem(method.foodDescriptors.get(0));
 				}
 			}
 		}
@@ -788,7 +787,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final DietaryAssessmentMethod method = new DietaryAssessmentMethod();
 			method.collectionTool = (String) dataCollectionToolField.getSelectedItem();
 
-			final String nonConsecutiveOneDayTextFieldText = nonConsecutiveOneDayTextField.getText();
+			final String nonConsecutiveOneDayTextFieldText = nonConsecutiveOneDayField.getText();
 			if (StringUtils.isNotBlank(nonConsecutiveOneDayTextFieldText)) {
 				try {
 					method.numberOfNonConsecutiveOneDay = Integer.parseInt(nonConsecutiveOneDayTextFieldText);
@@ -797,19 +796,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			}
 
-			method.softwareTool = dietarySoftwareToolTextField.getText();
+			method.softwareTool = dietarySoftwareToolField.getText();
 
-			final String foodItemNumber = foodItemNumberTextField.getText();
+			final String foodItemNumber = foodItemNumberField.getText();
 			if (!foodItemNumber.isEmpty()) {
 				method.numberOfFoodItems.add(foodItemNumber);
 			}
 
-			final String recordType = recordTypeTextField.getText();
+			final String recordType = recordTypeField.getText();
 			if (!recordType.isEmpty()) {
 				method.recordTypes.add(recordType);
 			}
 
-			for (final Object o : foodDescriptionComboBox.getSelectedObjects()) {
+			for (final Object o : foodDescriptionField.getSelectedObjects()) {
 				method.foodDescriptors.add((String) o);
 			}
 
@@ -826,7 +825,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				errors.add(
 						"Missing " + bundle.getString("GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel"));
 			}
-			if (!hasValidValue(nonConsecutiveOneDayTextField)) {
+			if (!hasValidValue(nonConsecutiveOneDayField)) {
 				errors.add("Missing "
 						+ bundle.getString("GM.EditDietaryAssessmentMethodPanel.nonConsecutiveOneDaysLabel"));
 			}
@@ -873,8 +872,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditHazardPanel.hazardTypeTooltip", true);
 			final JLabel hazardNameLabel = GUIFactory.createLabel("GM.EditHazardPanel.hazardNameLabel",
 					"GM.EditHazardPanel.hazardNameTooltip", true);
-			final JLabel hazardDescriptionLabel = GUIFactory.createLabel("GM.EditHazardPanel.hazardDescriptionLabel",
-					"GM.EditHazardPanel.hazardDescriptionTooltip");
 			final JLabel hazardUnitLabel = GUIFactory.createLabel("GM.EditHazardPanel.hazardUnitLabel",
 					"GM.EditHazardPanel.hazardUnitTooltip", true);
 			final JLabel adverseEffectLabel = GUIFactory.createLabel("GM.EditHazardPanel.adverseEffectLabel",
@@ -919,13 +916,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel formPanel = UI.createOptionsPanel(
 					Arrays.asList(hazardTypeLabel, hazardNameLabel, hazardUnitLabel, adverseEffectLabel, originLabel,
 							bmdLabel, maxResidueLimitLabel, noObservedAdverseLabel, acceptableOperatorLabel,
-							acuteReferenceDoseLabel, indSumLabel, labNameLabel, labCountryLabel, detectionLimitLabel,
-							quantificationLimitLabel, leftCensoredDataLabel, contaminationRangeLabel),
+							acuteReferenceDoseLabel, indSumLabel, acceptableDailyIntakeLabel, labNameLabel,
+							labCountryLabel, detectionLimitLabel, quantificationLimitLabel, leftCensoredDataLabel,
+							contaminationRangeLabel),
 					Arrays.asList(hazardTypeField, hazardNameField, hazardUnitField, adverseEffectTextField,
 							originTextField, bmdTextField, maxResidueLimitTextField, noObservedAdverseTextField,
-							acceptableOperatorTextField, acuteReferenceDoseTextField, indSumField, labNameTextField,
-							labCountryField, detectionLimitTextField, quantificationLimitTextField,
-							leftCensoredDataTextField, contaminationRangeTextField));
+							acceptableOperatorTextField, acuteReferenceDoseTextField, indSumField,
+							acceptableDailyIntakeTextField, labNameTextField, labCountryField, detectionLimitTextField,
+							quantificationLimitTextField, leftCensoredDataTextField, contaminationRangeTextField));
 
 			// northPanel
 			final JPanel northPanel = new JPanel();
@@ -936,22 +934,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
-			advancedComponents = Arrays.asList(hazardDescriptionLabel, hazardDescriptionPanel, // hazard description
-					adverseEffectLabel, adverseEffectTextField, // adverse effect
-					originLabel, originTextField, // origin
-					bmdLabel, bmdTextField, // benchmark dose
-					maxResidueLimitLabel, maxResidueLimitTextField, // maximum residue limit
-					acceptableOperatorLabel, acceptableOperatorTextField, // acceptable operator
-					noObservedAdverseLabel, noObservedAdverseTextField, // no observed adverse
-					acuteReferenceDoseLabel, acuteReferenceDoseTextField, // acute reference dose
-					acceptableDailyIntakeLabel, acceptableDailyIntakeTextField, // aceptable daily intake
-					indSumLabel, indSumField, // ind sum
-					labNameLabel, labNameTextField, // laboratory name
-					labCountryLabel, labCountryField, // laboratory country
-					detectionLimitLabel, detectionLimitTextField, // detection limit
-					quantificationLimitLabel, quantificationLimitTextField, // quantification limit
-					leftCensoredDataLabel, leftCensoredDataTextField, // left censored data
-					contaminationRangeLabel, contaminationRangeTextField); // contamination range
+			advancedComponents = Arrays.asList(hazardDescriptionTextArea, adverseEffectTextField, originTextField,
+					bmdTextField, maxResidueLimitTextField, acceptableOperatorTextField, noObservedAdverseTextField,
+					acuteReferenceDoseTextField, acceptableDailyIntakeTextField, indSumField, labNameTextField,
+					labCountryField, detectionLimitTextField, quantificationLimitTextField, leftCensoredDataTextField,
+					contaminationRangeTextField);
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
@@ -1077,7 +1064,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
-			advancedComponents = Arrays.asList(equationClassLabel, equationClassTextField, referencePanel);
+			advancedComponents = Arrays.asList(equationClassTextField, referencePanel);
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
@@ -1229,10 +1216,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
-			advancedComponents = Arrays.asList(descriptionPane, typeLabel, typeField, sourceLabel, sourceField,
-					subjectLabel, subjectField, distributionLabel, distributionField, valueLabel, valueTextField,
-					referenceLabel, referenceTextField, variabilitySubjectPane, applicabilityPane, errorLabel,
-					errorSpinner);
+			advancedComponents = Arrays.asList(descriptionTextArea, typeField, sourceField, subjectField,
+					distributionField, valueTextField, referenceTextField, variabilitySubjectTextArea,
+					applicabilityTextArea, errorSpinner);
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
@@ -1380,11 +1366,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(
 					Arrays.asList(populationNameLabel, targetPopulationLabel, populationSpanLabel, populationAgeLabel,
-							populationGenderLabel, bmiLabel, specialDietGroupLabel, regionLabel, countryLabel,
-							riskLabel, seasonLabel),
+							populationGenderLabel, bmiLabel, specialDietGroupLabel, patternConsumptionLabel,
+							regionLabel, countryLabel, riskLabel, seasonLabel),
 					Arrays.asList(populationNameTextField, targetPopulationTextField, populationSpanTextField,
 							populationAgeTextField, populationGenderTextField, bmiTextField, specialDietGroupTextField,
-							regionComboBox, countryComboBox, riskTextField, seasonTextField));
+							patternConsumptionTextField, regionComboBox, countryComboBox, riskTextField,
+							seasonTextField));
 
 			// northPanel
 			final JPanel northPanel = new JPanel();
@@ -1395,18 +1382,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
-			advancedComponents = Arrays.asList(targetPopulationLabel, targetPopulationTextField, // Target population
-					populationSpanLabel, populationSpanTextField, // Population span
-					populationDescriptionPane, // Population description
-					populationAgeLabel, populationAgeTextField, // Population age
-					populationGenderLabel, populationGenderTextField, // Population gender
-					bmiLabel, bmiTextField, // BMI
-					specialDietGroupLabel, specialDietGroupTextField, // Special diet group
-					patternConsumptionLabel, patternConsumptionTextField, // Pattern consumption
-					regionLabel, regionComboBox, // Region
-					countryLabel, countryComboBox, // Country
-					riskLabel, riskTextField, // Risk
-					seasonLabel, seasonTextField); // Season
+			advancedComponents = Arrays.asList(targetPopulationTextField, populationSpanTextField,
+					populationDescriptionTextArea, populationAgeTextField, populationGenderTextField, bmiTextField,
+					specialDietGroupTextField, patternConsumptionTextField, regionComboBox, countryComboBox,
+					riskTextField, seasonTextField);
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
@@ -1610,11 +1589,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
-			advancedComponents = Arrays.asList(envDescriptionLabel, envDescriptionPane, productionMethodLabel,
-					productionMethodComboBox, packagingLabel, packagingComboBox, productTreatmentLabel,
-					productTreatmentComboBox, originCountryLabel, originCountryField, originAreaLabel, originAreaField,
-					fisheriesAreaLabel, fisheriesAreaField, productionDateLabel, productionDateChooser,
-					expirationDateLabel, expirationDateChooser);
+			advancedComponents = Arrays.asList(envDescriptionTextArea, productionMethodComboBox, packagingComboBox,
+					productTreatmentComboBox, originCountryField, originAreaField, fisheriesAreaField,
+					productionDateChooser, expirationDateChooser);
 
 			// If simple mode hides the advanced components
 			if (!isAdvanced) {
@@ -1821,10 +1798,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			add(northPanel, BorderLayout.NORTH);
 
 			// If simple mode hide advanced components
-			advancedComponents = Arrays.asList(typeLabel, typeComboBox, dateLabel, dateChooser, pmidLabel,
-					pmidTextField, authorListLabel, authorListTextField, abstractLabel, abstractTextArea, journalLabel,
-					journalTextField, volumeLabel, volumeSpinner, issueLabel, issueSpinner, pageLabel, pageTextField,
-					statusLabel, statusTextField, websiteLabel, websiteTextField, commentLabel, commentTextArea);
+			advancedComponents = Arrays.asList(typeComboBox, dateChooser, pmidTextField, authorListTextField,
+					abstractTextArea, journalTextField, volumeSpinner, issueSpinner, pageTextField, statusTextField,
+					websiteTextField, commentTextArea);
 			if (!isAdvanced) {
 				getAdvancedComponents().forEach(it -> it.setEnabled(false));
 			}
@@ -2015,15 +1991,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			add(northPanel, BorderLayout.NORTH);
 
 			// If simple mode hide advanced components
-			advancedComponents = Arrays.asList(moisturePercentageLabel, moisturePercentageSpinner, // moisture
-																									// percentage
-					fatPercentageLabel, fatPercentageSpinner, // fat percentag
-					samplingStrategyLabel, samplingStrategyField, // sampling strategy
-					samplingTypeLabel, samplingTypeField, // sampling program type
-					samplingMethodLabel, samplingMethodField, // sampling method
-					samplingSizeLabel, samplingSizeTextField, // sampling size
-					lotSizeUnitLabel, lotSizeUnitField, // lot size unit
-					samplingPointLabel, samplingPointField); // sampling point
+			advancedComponents = Arrays.asList(moisturePercentageSpinner, fatPercentageSpinner, samplingStrategyField,
+					samplingTypeField, samplingMethodField, samplingSizeTextField, lotSizeUnitField,
+					samplingPointField);
 			if (!isAdvanced) {
 				getAdvancedComponents().forEach(it -> it.setEnabled(false));
 			}
@@ -2194,14 +2164,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			// Hide initially advanced components
 			final JScrollPane objectivePane = new JScrollPane(objectiveTextArea);
 			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
-			final List<JComponent> advancedComponents = Arrays.asList(sourceLabel, sourceTextField, // source
-					formatLabel, formatField, // format
-					languageLabel, languageField, // language
-					softwareLabel, softwareField, // software
-					languageWrittenInLabel, languageWrittenInField, // language written in
-					statusLabel, statusField, // status
-					objectiveLabel, objectivePane, // objective
-					descriptionLabel, descriptionPane); // description
+			final List<JComponent> advancedComponents = Arrays.asList(sourceTextField, formatField, languageField,
+					softwareField, languageWrittenInField, statusField, objectiveTextArea, descriptionTextArea);
 			advancedComponents.forEach(it -> it.setEnabled(false));
 
 			// formPanel
@@ -2806,7 +2770,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final JTextField studyTitleTextField;
 
 		private final JTextArea studyDescriptionTextArea;
-		private final JScrollPane studyDescriptionPane;
 
 		private final AutoSuggestField studyDesignTypeField;
 		private final AutoSuggestField studyAssayMeasurementsTypeField;
@@ -2832,7 +2795,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			studyTitleTextField = GUIFactory.createTextField();
 
 			studyDescriptionTextArea = GUIFactory.createTextArea();
-			studyDescriptionPane = new JScrollPane(studyDescriptionTextArea);
 
 			studyDesignTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Design Type"));
 			studyAssayMeasurementsTypeField = GUIFactory
@@ -2857,8 +2819,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.StudyPanel.studyIdentifierTooltip", true);
 			final JLabel studyTitleLabel = GUIFactory.createLabel("GM.StudyPanel.studyTitleLabel",
 					"GM.StudyPanel.studyTitleTooltip", true);
-			final JLabel studyDescriptionLabel = GUIFactory.createLabel("GM.StudyPanel.studyDescriptionLabel",
-					"GM.StudyPanel.studyDescriptionTooltip");
 			final JLabel studyDesignTypeLabel = GUIFactory.createLabel("GM.StudyPanel.studyDesignTypeLabel",
 					"GM.StudyPanel.studyDesignTypeTooltip");
 			final JLabel studyAssayMeasurementsTypeLabel = GUIFactory.createLabel(
@@ -2885,36 +2845,40 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel studyProtocolComponentsTypeLabel = GUIFactory.createLabel("GM.StudyPanel.componentsTypeLabel",
 					"GM.StudyPanel.componentsTypeTooltip");
 
+			final JScrollPane studyDescriptionPane = new JScrollPane(studyDescriptionTextArea);
+			studyDescriptionPane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.StudyPanel.studyDescriptionLabel")));
+			studyDescriptionPane.setToolTipText(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.StudyPanel.studyDescriptionTooltip"));
+
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(
 					Arrays.asList(studyIdentifierLabel, studyTitleLabel, studyDesignTypeLabel,
-							studyAssayMeasurementsTypeLabel, studyAssayTechnologyPlatformLabel,
-							accreditationProcedureLabel, studyProtocolNameLabel, studyProtocolTypeLabel,
-							studyProtocolDescriptionLabel, studyProtocolURILabel, studyProtocolParametersLabel,
-							studyProtocolComponentsTypeLabel),
+							studyAssayTechnologyTypeLabel, studyAssayMeasurementsTypeLabel,
+							studyAssayTechnologyPlatformLabel, accreditationProcedureLabel, studyProtocolNameLabel,
+							studyProtocolTypeLabel, studyProtocolDescriptionLabel, studyProtocolURILabel,
+							studyProtocolVersionLabel, studyProtocolParametersLabel, studyProtocolComponentsTypeLabel),
 					Arrays.asList(studyIdentifierTextField, studyTitleTextField, studyDesignTypeField,
-							studyAssayMeasurementsTypeField, studyAssayTechnologyPlatformTextField,
-							accreditationProcedureField, studyProtocolNameTextField, studyProtocolTypeField,
-							studyProtocolDescriptionTextField, studyProtocolURITextField, studyProtocolParametersField,
+							studyAssayTechnologyTypeField, studyAssayMeasurementsTypeField,
+							studyAssayTechnologyPlatformTextField, accreditationProcedureField,
+							studyProtocolNameTextField, studyProtocolTypeField, studyProtocolDescriptionTextField,
+							studyProtocolURITextField, studyProtocolVersionTextField, studyProtocolParametersField,
 							studyProtocolComponentsTypeField));
 
 			// northPanel
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
+			northPanel.add(studyDescriptionPane);
 
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
-			advancedComponents = Arrays.asList(studyDescriptionLabel, studyDescriptionPane, studyDesignTypeLabel,
-					studyDesignTypeField, studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField,
-					studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField, studyAssayTechnologyPlatformLabel,
-					studyAssayTechnologyPlatformTextField, accreditationProcedureLabel, accreditationProcedureField,
-					studyProtocolNameLabel, studyProtocolNameTextField, studyProtocolTypeLabel, studyProtocolTypeField,
-					studyProtocolDescriptionLabel, studyProtocolDescriptionTextField, studyProtocolURILabel,
-					studyProtocolURITextField, studyProtocolVersionLabel, studyProtocolVersionTextField,
-					studyProtocolParametersLabel, studyProtocolParametersField, studyProtocolComponentsTypeLabel,
-					studyProtocolComponentsTypeField);
+			advancedComponents = Arrays.asList(studyDescriptionTextArea, studyDesignTypeField,
+					studyAssayMeasurementsTypeField, studyAssayTechnologyTypeField,
+					studyAssayTechnologyPlatformTextField, accreditationProcedureField, studyProtocolNameTextField,
+					studyProtocolTypeField, studyProtocolDescriptionTextField, studyProtocolURITextField,
+					studyProtocolVersionTextField, studyProtocolParametersField, studyProtocolComponentsTypeField);
 
 			advancedComponents.forEach(it -> it.setEnabled(false));
 		}
