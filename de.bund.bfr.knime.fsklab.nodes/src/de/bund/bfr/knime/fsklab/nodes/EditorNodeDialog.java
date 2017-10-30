@@ -3056,7 +3056,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
-	private class DataBackgroundPanel extends TopLevelBox<DataBackground> {
+	private class DataBackgroundPanel extends TopLevelPanel<DataBackground> {
 
 		private static final long serialVersionUID = 5789423098065477610L;
 
@@ -3119,22 +3119,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					.createLabel("GM.DataBackgroundPanel.laboratoryAccreditationLabel");
 			final JLabel assayLabel = GUIFactory.createLabel("GM.DataBackgroundPanel.assayLabel");
 
-			final JPanel propertiesPanel = new JPanel(new GridBagLayout());
-
-			EditorNodeDialog.add(propertiesPanel, studyPanel, 0, 0, 3);
-
-			EditorNodeDialog.add(propertiesPanel, studySampleLabel, 0, 1);
-			EditorNodeDialog.add(propertiesPanel, studySampleButton, 1, 1);
-
-			EditorNodeDialog.add(propertiesPanel, dietaryAssessmentMethodLabel, 0, 2);
-			EditorNodeDialog.add(propertiesPanel, dietaryAssessmentMethodButton, 1, 2);
-
-			EditorNodeDialog.add(propertiesPanel, laboratoryAccreditationLabel, 0, 3);
-			EditorNodeDialog.add(propertiesPanel, laboratoryAccreditationField, 1, 3);
-
-			EditorNodeDialog.add(propertiesPanel, assayLabel, 0, 4);
-			EditorNodeDialog.add(propertiesPanel, assayButton, 1, 4);
-
 			// Advanced `checkbox`
 			advancedCheckBox.addItemListener(event -> {
 				studyPanel.advancedComponents.forEach(it -> it.setVisible(advancedCheckBox.isSelected()));
@@ -3143,9 +3127,38 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				editAssayPanel.toggleMode();
 			});
 
-			add(GUIFactory.createAdvancedPanel(advancedCheckBox));
-			add(Box.createGlue());
-			add(propertiesPanel);
+			// left panel (labels)
+			final JPanel leftPanel = new JPanel(new GridLayout(4, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			leftPanel.add(studySampleLabel);
+			leftPanel.add(dietaryAssessmentMethodLabel);
+			leftPanel.add(laboratoryAccreditationLabel);
+			leftPanel.add(assayLabel);
+
+			// right panel (inputs)
+			final JPanel rightPanel = new JPanel(new GridLayout(4, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			rightPanel.add(studySampleButton);
+			rightPanel.add(dietaryAssessmentMethodButton);
+			rightPanel.add(laboratoryAccreditationField);
+			rightPanel.add(assayButton);
+
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
+			northPanel.add(studyPanel);
+			northPanel.add(formPanel);
+
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 		}
 
 		void init(final DataBackground dataBackground) {
