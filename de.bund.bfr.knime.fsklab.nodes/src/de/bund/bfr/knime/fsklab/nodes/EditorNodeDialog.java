@@ -1430,9 +1430,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditPopulationGroupPanel.targetPopulationTooltip");
 			final JLabel populationSpanLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.populationSpanLabel",
 					"GM.EditPopulationGroupPanel.populationSpanTooltip");
-			final JLabel populationDescriptionLabel = GUIFactory.createLabel(
-					"GM.EditPopulationGroupPanel.populationDescriptionLabel",
-					"GM.EditPopulationGroupPanel.populationDescriptionTooltip");
 			final JLabel populationAgeLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.populationAgeLabel",
 					"GM.EditPopulationGroupPanel.populationAgeTooltip");
 			final JLabel populationGenderLabel = GUIFactory.createLabel(
@@ -1456,26 +1453,60 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditPopulationGroupPanel.seasonTooltip");
 
 			final JScrollPane populationDescriptionPane = new JScrollPane(populationDescriptionTextArea);
+			populationDescriptionPane.setBorder(BorderFactory.createTitledBorder(FskPlugin.getDefault().MESSAGES_BUNDLE
+					.getString("GM.EditPopulationGroupPanel.populationDescriptionLabel")));
+			populationDescriptionPane.setToolTipText(FskPlugin.getDefault().MESSAGES_BUNDLE
+					.getString("GM.EditPopulationGroupPanel.populationDescriptionTooltip"));
 
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-					new Pair<>(populationNameLabel, populationNameTextField), // population name
-					new Pair<>(targetPopulationLabel, targetPopulationTextField), // target population
-					new Pair<>(populationSpanLabel, populationSpanTextField), // population span
-					new Pair<>(populationDescriptionLabel, populationDescriptionPane), // population description
-					new Pair<>(populationAgeLabel, populationAgeTextField), // population age
-					new Pair<>(populationGenderLabel, populationGenderTextField), // population gender
-					new Pair<>(bmiLabel, bmiTextField), // BMI
-					new Pair<>(specialDietGroupLabel, specialDietGroupTextField), // special diet group
-					new Pair<>(patternConsumptionLabel, patternConsumptionTextField), // pattern consumption
-					new Pair<>(regionLabel, regionComboBox), // region
-					new Pair<>(countryLabel, countryComboBox), // country
-					new Pair<>(riskLabel, riskTextField), // risk
-					new Pair<>(seasonLabel, seasonTextField)); // season
-			addGridComponents(this, pairs);
+			// left panel
+			final JPanel leftPanel = new JPanel(new GridLayout(11, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+			leftPanel.add(populationNameLabel);
+			leftPanel.add(targetPopulationLabel);
+			leftPanel.add(populationSpanLabel);
+			leftPanel.add(populationAgeLabel);
+			leftPanel.add(populationGenderLabel);
+			leftPanel.add(bmiLabel);
+			leftPanel.add(specialDietGroupLabel);
+			leftPanel.add(regionLabel);
+			leftPanel.add(countryLabel);
+			leftPanel.add(riskLabel);
+			leftPanel.add(seasonLabel);
+
+			// right panel
+			final JPanel rightPanel = new JPanel(new GridLayout(11, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+			rightPanel.add(populationNameTextField);
+			rightPanel.add(targetPopulationTextField);
+			rightPanel.add(populationSpanTextField);
+			rightPanel.add(populationAgeTextField);
+			rightPanel.add(populationGenderTextField);
+			rightPanel.add(bmiTextField);
+			rightPanel.add(specialDietGroupTextField);
+			rightPanel.add(regionComboBox);
+			rightPanel.add(countryComboBox);
+			rightPanel.add(riskTextField);
+			rightPanel.add(seasonTextField);
+
+			// form panel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(formPanel);
+			northPanel.add(populationDescriptionPane);
+
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(targetPopulationLabel, targetPopulationTextField, // Target population
 					populationSpanLabel, populationSpanTextField, // Population span
-					populationDescriptionLabel, populationDescriptionPane, // Population description
+					populationDescriptionPane, // Population description
 					populationAgeLabel, populationAgeTextField, // Population age
 					populationGenderLabel, populationGenderTextField, // Population gender
 					bmiLabel, bmiTextField, // BMI
@@ -1488,7 +1519,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
-				advancedComponents.forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setEnabled(false));
 			}
 		}
 
