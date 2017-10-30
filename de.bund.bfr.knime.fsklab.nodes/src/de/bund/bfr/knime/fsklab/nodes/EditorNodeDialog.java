@@ -1163,24 +1163,47 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditModelEquationPanel.nameTooltip", true);
 			final JLabel equationClassLabel = GUIFactory.createLabel("GM.EditModelEquationPanel.classLabel",
 					"GM.EditModelEquationPanel.classTooltip");
-			final JLabel scriptLabel = GUIFactory.createLabel("GM.EditModelEquationPanel.scriptLabel",
-					"GM.EditModelEquationPanel.scriptTooltip", true);
 
 			referencePanel = new ReferencePanel(isAdvanced);
 
-			EditorNodeDialog.add(this, equationNameLabel, 0, 0);
-			EditorNodeDialog.add(this, equationNameTextField, 1, 0);
-			EditorNodeDialog.add(this, equationClassLabel, 0, 1);
-			EditorNodeDialog.add(this, equationClassTextField, 1, 1);
-			EditorNodeDialog.add(this, referencePanel, 0, 2);
-			EditorNodeDialog.add(this, scriptLabel, 0, 3);
-			EditorNodeDialog.add(this, new JScrollPane(scriptTextArea), 1, 3);
+			final JScrollPane scriptPane = new JScrollPane(scriptTextArea);
+			scriptPane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditModelEquationPanel.scriptLabel")));
+			scriptPane.setToolTipText(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditModelEquationPanel.scriptTooltip"));
+
+			// leftPanel (labels)
+			final JPanel leftPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			leftPanel.add(equationNameLabel);
+			leftPanel.add(equationClassLabel);
+
+			// rightPanel (inputs)
+			final JPanel rightPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			rightPanel.add(equationNameTextField);
+			rightPanel.add(equationClassTextField);
+
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(formPanel);
+			northPanel.add(referencePanel);
+			northPanel.add(scriptPane);
+
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(equationClassLabel, equationClassTextField, referencePanel);
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
-				advancedComponents.forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setEnabled(false));
 			}
 		}
 
