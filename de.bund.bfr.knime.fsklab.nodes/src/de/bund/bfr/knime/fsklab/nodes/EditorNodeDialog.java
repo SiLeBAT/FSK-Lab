@@ -108,6 +108,8 @@ import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.knime.ui.AutoSuggestField;
+import de.bund.bfr.knime.ui.StringTextArea;
+import de.bund.bfr.knime.ui.StringTextField;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 
@@ -390,34 +392,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			return panel;
 		}
 
-		@Deprecated
-		private static JTextField createTextField() {
-			return new JTextField(30);
-		}
-
-		private static JTextField createTextField2() {
-			final JTextField field = new JTextField(30);
-			field.setPreferredSize(new Dimension(100, field.getPreferredSize().height));
-
-			return field;
-		}
-
-		@Deprecated
 		private static JTextArea createTextArea() {
 			final JTextArea textArea = new JTextArea(5, 30);
 			textArea.setText("");
 			textArea.setLineWrap(true); // Wrap long lines
 			textArea.setWrapStyleWord(true); // Wrap only at white space
-
-			return textArea;
-		}
-
-		private static JTextArea createTextArea2() {
-			final JTextArea textArea = new JTextArea(5, 30);
-			textArea.setText("");
-			textArea.setLineWrap(true); // Wrap long lines
-			textArea.setWrapStyleWord(true); // Wrap only at white space
-			textArea.setPreferredSize(new Dimension(100, textArea.getPreferredSize().height));
 
 			return textArea;
 		}
@@ -625,11 +604,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
+	/**
+	 * Panel to create/edit an assay.
+	 * 
+	 * Fields:
+	 * <ul>
+	 * <li>name: Mandatory.
+	 * <li>description: Optional.
+	 * </ul>
+	 */
 	private class EditAssayPanel extends EditPanel<Assay> {
 
 		private static final long serialVersionUID = -1195181696127795655L;
 
-		private final JTextField nameTextField = GUIFactory.createTextField();
+		private final StringTextField nameTextField = new StringTextField(false, 30);
 		private final JTextArea descriptionTextArea = GUIFactory.createTextArea();
 
 		private final List<JComponent> advancedComponents;
@@ -702,16 +690,29 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
+	/**
+	 * Panel to create/modify a {@link DietaryAssessmentMethod}.
+	 * 
+	 * Fields:
+	 * <ul>
+	 * <li>Data collection tool: Mandatory
+	 * <li>Non consecutive one day: Mandatory
+	 * <li>Dietary software tool: Optional
+	 * <li>Food item number: Optional
+	 * <li>Record type: Optional
+	 * <li>Food description: Optional
+	 * </ul>
+	 */
 	private class EditDietaryAssessmentMethodPanel extends EditPanel<DietaryAssessmentMethod> {
 
 		private static final long serialVersionUID = -931984426171199928L;
 
 		private final AutoSuggestField dataCollectionToolField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Method. tool to collect data"));
-		private final JTextField nonConsecutiveOneDayField = GUIFactory.createTextField();
-		private final JTextField dietarySoftwareToolField = GUIFactory.createTextField();
-		private final JTextField foodItemNumberField = GUIFactory.createTextField();
-		private final JTextField recordTypeField = GUIFactory.createTextField();
+		private final StringTextField nonConsecutiveOneDayField = new StringTextField(true, 30);
+		private final StringTextField dietarySoftwareToolField = new StringTextField(false, 30);
+		private final StringTextField foodItemNumberField = new StringTextField(false, 30);
+		private final StringTextField recordTypeField = new StringTextField(false, 30);
 		private final JComboBox<String> foodDescriptionField = GUIFactory
 				.createComboBox(vocabs.get("Food descriptors"));
 		private final List<JComponent> advancedComponents;
@@ -839,30 +840,56 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
+	/**
+	 * Panel to create/edit an {@link Hazard}.
+	 * 
+	 * Fields:
+	 * <ul>
+	 * <li>Hazard type: Mandatory
+	 * <li>Hazard name: Mandatory
+	 * <li>Hazard description: Optional
+	 * <li>Hazard unit: Mandatory
+	 * <li>Adverse effect: Optional
+	 * <li>Origin: Optional
+	 * <li>BMD: Optional
+	 * <li>Maximum residue limit: Optional
+	 * <li>No observed adverse: Optional
+	 * <li>Acceptable operator: Optional
+	 * <li>Acute reference dose: Optional
+	 * <li>Acceptable daily intake: Optional
+	 * <li>Ind sum: Optional
+	 * <li>Laboratory name: Optional
+	 * <li>Laboratory country: Optional
+	 * <li>Detection limit: Optional
+	 * <li>Quantification limit: Optional
+	 * <li>Left censored data: Optional
+	 * <li>Contamination range: Optional
+	 * </ul>
+	 */
 	private class EditHazardPanel extends EditPanel<Hazard> {
 
 		private static final long serialVersionUID = -1981279747311233487L;
 
 		private final AutoSuggestField hazardTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard type"));
 		private final AutoSuggestField hazardNameField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard name"));
-		private final JTextArea hazardDescriptionTextArea = GUIFactory.createTextArea();
+		private final StringTextArea hazardDescriptionTextArea = new StringTextArea(true, 5, 30);
 		private final AutoSuggestField hazardUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard unit"));
-		private final JTextField adverseEffectTextField = GUIFactory.createTextField();
-		private final JTextField originTextField = GUIFactory.createTextField();
-		private final JTextField bmdTextField = GUIFactory.createTextField();
-		private final JTextField maxResidueLimitTextField = GUIFactory.createTextField();
-		private final JTextField noObservedAdverseTextField = GUIFactory.createTextField();
-		private final JTextField acceptableOperatorTextField = GUIFactory.createTextField();
-		private final JTextField acuteReferenceDoseTextField = GUIFactory.createTextField();
-		private final JTextField acceptableDailyIntakeTextField = GUIFactory.createTextField();
+		private final StringTextField adverseEffectTextField = new StringTextField(true, 30);
+		private final StringTextField originTextField = new StringTextField(true, 30);
+		private final StringTextField bmdTextField = new StringTextField(true, 30);
+		private final StringTextField maxResidueLimitTextField = new StringTextField(true, 30);
+		private final StringTextField noObservedAdverseTextField = new StringTextField(true, 30);
+		private final StringTextField acceptableOperatorTextField = new StringTextField(true, 30);
+		private final StringTextField acuteReferenceDoseTextField = new StringTextField(true, 30);
+		private final StringTextField acceptableDailyIntakeTextField = new StringTextField(true, 30);
 		private final AutoSuggestField indSumField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind sum"));
-		private final JTextField labNameTextField = GUIFactory.createTextField();
+		private final StringTextField labNameTextField = new StringTextField(true, 30);
 		private final AutoSuggestField labCountryField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Laboratory country"));
-		private final JTextField detectionLimitTextField = GUIFactory.createTextField();
-		private final JTextField quantificationLimitTextField = GUIFactory.createTextField();
-		private final JTextField leftCensoredDataTextField = GUIFactory.createTextField();
-		private final JTextField contaminationRangeTextField = GUIFactory.createTextField();
+		private final StringTextField detectionLimitTextField = new StringTextField(true, 30);
+		private final StringTextField quantificationLimitTextField = new StringTextField(true, 30);
+		private final StringTextField leftCensoredDataTextField = new StringTextField(true, 30);
+		private final StringTextField contaminationRangeTextField = new StringTextField(true, 30);
 
 		private final List<JComponent> advancedComponents;
 
@@ -1023,14 +1050,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
+	/**
+	 * Panel to create/edit a {@link ModelEquation}.
+	 * 
+	 * Fields:
+	 * <ul>
+	 * <li>Equation name: Mandatory
+	 * <li>Equation class: Optional
+	 * <li>Script: Mandatory
+	 * </ul>
+	 */
 	private class EditModelEquationPanel extends EditPanel<ModelEquation> {
 
 		private static final long serialVersionUID = 3586499490386620791L;
 
-		private final JTextField equationNameTextField = GUIFactory.createTextField();
-		private final JTextField equationClassTextField = GUIFactory.createTextField();
+		private final StringTextField equationNameTextField = new StringTextField(false, 30);
+		private final StringTextField equationClassTextField = new StringTextField(true, 30);
 		private final ReferencePanel referencePanel;
-		private final JTextArea scriptTextArea = GUIFactory.createTextArea();
+		private final StringTextArea scriptTextArea = new StringTextArea(false, 5, 30);
 
 		private final List<JComponent> advancedComponents;
 
@@ -1122,11 +1159,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 1826555468897327895L;
 
-		private final JTextField idTextField = GUIFactory.createTextField();
+		private final StringTextField idTextField = new StringTextField(false, 30);
 		private final JComboBox<Parameter.Classification> classificationComboBox = new JComboBox<>(
 				Parameter.Classification.values());
-		private final JTextField nameTextField = GUIFactory.createTextField();
-		private final JTextArea descriptionTextArea = GUIFactory.createTextArea();
+		private final StringTextField nameTextField = new StringTextField(false, 30);
+		private final StringTextArea descriptionTextArea = new StringTextArea(true, 5, 30);
 		private final AutoSuggestField typeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter type"));
 		private final AutoSuggestField unitField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit"));
 		private final AutoSuggestField unitCategoryField = GUIFactory
@@ -1138,10 +1175,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				.createAutoSuggestField(vocabs.get("Parameter subject"));
 		private final AutoSuggestField distributionField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Parameter distribution"));
-		private final JTextField valueTextField = GUIFactory.createTextField();
-		private final JTextField referenceTextField = GUIFactory.createTextField();
-		private final JTextArea variabilitySubjectTextArea = GUIFactory.createTextArea();
-		private final JTextArea applicabilityTextArea = GUIFactory.createTextArea();
+		private final StringTextField valueTextField = new StringTextField(false, 30);
+		private final StringTextField referenceTextField = new StringTextField(false, 30);
+		private final StringTextArea variabilitySubjectTextArea = new StringTextArea(false, 5, 30);
+		private final StringTextArea applicabilityTextArea = new StringTextArea(false, 5, 30);
 		private SpinnerNumberModel errorSpinnerModel = GUIFactory.createSpinnerDoubleModel();
 
 		private final List<JComponent> advancedComponents;
@@ -1306,23 +1343,43 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
+	/**
+	 * Panel to create/edit a {@link PopulationGroup}.
+	 * 
+	 * Fields:
+	 * <ul>
+	 * <li>Population name: Mandatory
+	 * <li>Target population: Optional
+	 * <li>Population span: Optional
+	 * <li>Population description: Optional
+	 * <li>Population age: Optional
+	 * <li>Population gender: Optional
+	 * <li>BMI: Optional
+	 * <li>Special diet group: Optional
+	 * <li>Pattern consumption: Optional
+	 * <li>Region: Optional
+	 * <li>Country: Optional
+	 * <li>Risk: Optional
+	 * <li>Season: Optional
+	 * </ul>
+	 */
 	private class EditPopulationGroupPanel extends EditPanel<PopulationGroup> {
 
 		private static final long serialVersionUID = -4520186348489618333L;
 
-		private final JTextField populationNameTextField = GUIFactory.createTextField();
-		private final JTextField targetPopulationTextField = GUIFactory.createTextField();
-		private final JTextField populationSpanTextField = GUIFactory.createTextField();
-		private final JTextArea populationDescriptionTextArea = GUIFactory.createTextArea();
-		private final JTextField populationAgeTextField = GUIFactory.createTextField();
-		private final JTextField populationGenderTextField = GUIFactory.createTextField();
-		private final JTextField bmiTextField = GUIFactory.createTextField();
-		private final JTextField specialDietGroupTextField = GUIFactory.createTextField();
-		private final JTextField patternConsumptionTextField = GUIFactory.createTextField();
+		private final StringTextField populationNameTextField = new StringTextField(false, 30);
+		private final StringTextField targetPopulationTextField = new StringTextField(true, 30);
+		private final StringTextField populationSpanTextField = new StringTextField(true, 30);
+		private final StringTextArea populationDescriptionTextArea = new StringTextArea(true, 5, 30);
+		private final StringTextField populationAgeTextField = new StringTextField(true, 30);
+		private final StringTextField populationGenderTextField = new StringTextField(true, 30);
+		private final StringTextField bmiTextField = new StringTextField(true, 30);
+		private final StringTextField specialDietGroupTextField = new StringTextField(true, 30);
+		private final StringTextField patternConsumptionTextField = new StringTextField(true, 30);
 		private final JComboBox<String> regionComboBox = GUIFactory.createComboBox(vocabs.get("Region"));
 		private final JComboBox<String> countryComboBox = GUIFactory.createComboBox(vocabs.get("Country"));
-		private final JTextField riskTextField = GUIFactory.createTextField();
-		private final JTextField seasonTextField = GUIFactory.createTextField();
+		private final StringTextField riskTextField = new StringTextField(true, 30);
+		private final StringTextField seasonTextField = new StringTextField(true, 30);
 
 		private final List<JComponent> advancedComponents;
 
@@ -1721,6 +1778,28 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		referenceTypeLabels.put(Type.VIDEO, "Video recording");
 	}
 
+	/**
+	 * Panel to create/edit a {@link Record}.
+	 * 
+	 * Fields:
+	 * <ul>
+	 * <li>Is reference description?: Optional
+	 * <li>Type: Optional
+	 * <li>Date: Optional
+	 * <li>PMID: Optional
+	 * <li>DOI: Mandatory
+	 * <li>Authors: Optional
+	 * <li>Title: Mandatory
+	 * <li>Abstract: Optional
+	 * <li>Journal: Optional
+	 * <li>Volume: Optional
+	 * <li>Issue: Optional
+	 * <li>Page: Optional
+	 * <li>Status: Optional
+	 * <li>Website: Optional
+	 * <li>Comment: Optional
+	 * </ul>
+	 */
 	private class EditReferencePanel extends EditPanel<Record> {
 
 		private static final long serialVersionUID = -6874752919377124455L;
@@ -1730,18 +1809,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final JCheckBox isReferenceDescriptionCheckBox;
 		private final JComboBox<String> typeComboBox = GUIFactory.createComboBox(referenceTypeLabels.values());
 		private final FixedDateChooser dateChooser = new FixedDateChooser();
-		private final JTextField pmidTextField = GUIFactory.createTextField();
-		private final JTextField doiTextField = GUIFactory.createTextField();
-		private final JTextField authorListTextField = GUIFactory.createTextField();
-		private final JTextField titleTextField = GUIFactory.createTextField();
+		private final StringTextField pmidTextField = new StringTextField(true, 30);
+		private final StringTextField doiTextField = new StringTextField(false, 30);
+		private final StringTextField authorListTextField = new StringTextField(true, 30);
+		private final StringTextField titleTextField = new StringTextField(false, 30);
 		private final JTextArea abstractTextArea = GUIFactory.createTextArea();
-		private final JTextField journalTextField = GUIFactory.createTextField();
+		private final StringTextField journalTextField = new StringTextField(true, 30);
 		// Spinner models starting with 0 and taking positive ints only
 		private final SpinnerNumberModel volumeSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
 		private final SpinnerNumberModel issueSpinnerModel = new SpinnerNumberModel(0, 0, null, 1);
-		private final JTextField pageTextField = GUIFactory.createTextField();
-		private final JTextField statusTextField = GUIFactory.createTextField();
-		private final JTextField websiteTextField = GUIFactory.createTextField();
+		private final StringTextField pageTextField = new StringTextField(true, 30);
+		private final StringTextField statusTextField = new StringTextField(true, 30);
+		private final StringTextField websiteTextField = new StringTextField(true, 30);
 		private final JTextArea commentTextArea = GUIFactory.createTextArea();
 
 		private final List<JComponent> advancedComponents;
@@ -1915,23 +1994,40 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
+	/**
+	 * Panel to create/edit a {@link StudySample}.
+	 * 
+	 * Fields:
+	 * <ul>
+	 * <li>Sample name: Mandatory
+	 * <li>Moisture percentage: Optional
+	 * <li>Fat percentage: Optional
+	 * <li>Sample protocol: Mandatory
+	 * <li>Sampling strategy: Optional
+	 * <li>Sampling type: Optional
+	 * <li>Sampling method: Optional
+	 * <li>Sampling plan: Mandatory
+	 * <li>Sampling weight: Mandatory
+	 * <li>Sampling size: Mandatory
+	 * </ul>
+	 */
 	private class EditStudySamplePanel extends EditPanel<StudySample> {
 
 		private static final long serialVersionUID = -4740851101237646103L;
 
-		private final JTextField sampleNameTextField = GUIFactory.createTextField();
+		private final StringTextField sampleNameTextField = new StringTextField(false, 30);
 		private final SpinnerNumberModel moisturePercentageSpinnerModel = GUIFactory.createSpinnerPercentageModel();
 		private final SpinnerNumberModel fatPercentageSpinnerModel = GUIFactory.createSpinnerPercentageModel();
-		private final JTextField sampleProtocolTextField = GUIFactory.createTextField();
+		private final StringTextField sampleProtocolTextField = new StringTextField(false, 30);
 		private final AutoSuggestField samplingStrategyField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Sampling strategy"));
 		private final AutoSuggestField samplingTypeField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Type of sampling program"));
 		private final AutoSuggestField samplingMethodField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Sampling method"));
-		private final JTextField samplingPlanTextField = GUIFactory.createTextField();
-		private final JTextField samplingWeightTextField = GUIFactory.createTextField();
-		private final JTextField samplingSizeTextField = GUIFactory.createTextField();
+		private final StringTextField samplingPlanTextField = new StringTextField(false, 30);
+		private final StringTextField samplingWeightTextField = new StringTextField(false, 30);
+		private final StringTextField samplingSizeTextField = new StringTextField(false, 30);
 		private final AutoSuggestField lotSizeUnitField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Lot size unit"));
 		private final AutoSuggestField samplingPointField = GUIFactory
@@ -2102,14 +2198,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private final JCheckBox advancedCheckBox;
 
-		private final JTextField studyNameTextField = GUIFactory.createTextField2();
-		private final JTextField sourceTextField = GUIFactory.createTextField2();
-		private final JTextField identifierTextField = GUIFactory.createTextField2();
+		private final StringTextField studyNameTextField = new StringTextField(true, 30);
+		private final StringTextField sourceTextField = new StringTextField(true, 30);
+		private final StringTextField identifierTextField = new StringTextField(true, 30);
 		private final CreatorPanel creatorPanel = new CreatorPanel();
 		private final FixedDateChooser creationDateChooser = new FixedDateChooser();
 		private final AutoSuggestField rightsField = GUIFactory.createAutoSuggestField(vocabs.get("Rights"));
 		private final JCheckBox availabilityCheckBox = new JCheckBox();
-		private final JTextField urlTextField = GUIFactory.createTextField2();
+		private final StringTextField urlTextField = new StringTextField(true, 30);
 		private final AutoSuggestField formatField = GUIFactory.createAutoSuggestField(vocabs.get("Format"));
 		private final ReferencePanel referencePanel;
 		private final AutoSuggestField languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"));
@@ -2117,8 +2213,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final AutoSuggestField languageWrittenInField = GUIFactory
 				.createAutoSuggestField(vocabs.get("Language written in"));
 		private final AutoSuggestField statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"));
-		private final JTextArea objectiveTextArea = GUIFactory.createTextArea2();
-		private final JTextArea descriptionTextArea = GUIFactory.createTextArea2();
+		private final JTextArea objectiveTextArea = GUIFactory.createTextArea();
+		private final JTextArea descriptionTextArea = GUIFactory.createTextArea();
 
 		public GeneralInformationPanel() {
 
@@ -2458,9 +2554,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 3472281253338213542L;
 
-		private final JTextField givenNameTextField = GUIFactory.createTextField();
-		private final JTextField familyNameTextField = GUIFactory.createTextField();
-		private final JTextField contactTextField = GUIFactory.createTextField();
+		private final StringTextField givenNameTextField = new StringTextField(false, 30);
+		private final StringTextField familyNameTextField = new StringTextField(false, 30);
+		private final StringTextField contactTextField = new StringTextField(false, 30);
 
 		public EditCreatorPanel() {
 
@@ -2766,21 +2862,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -6572236073945735826L;
 
-		private final JTextField studyIdentifierTextField;
-		private final JTextField studyTitleTextField;
+		private final StringTextField studyIdentifierTextField = new StringTextField(true, 30);
+		private final StringTextField studyTitleTextField = new StringTextField(true, 30);
 
 		private final JTextArea studyDescriptionTextArea;
 
 		private final AutoSuggestField studyDesignTypeField;
 		private final AutoSuggestField studyAssayMeasurementsTypeField;
 		private final AutoSuggestField studyAssayTechnologyTypeField;
-		private final JTextField studyAssayTechnologyPlatformTextField;
+		private final StringTextField studyAssayTechnologyPlatformTextField = new StringTextField(true, 30);
 		private final AutoSuggestField accreditationProcedureField;
-		private final JTextField studyProtocolNameTextField;
+		private final StringTextField studyProtocolNameTextField = new StringTextField(true, 30);
 		private final AutoSuggestField studyProtocolTypeField;
-		private final JTextField studyProtocolDescriptionTextField;
-		private final JTextField studyProtocolURITextField;
-		private final JTextField studyProtocolVersionTextField;
+		private final StringTextField studyProtocolDescriptionTextField = new StringTextField(true, 30);
+		private final StringTextField studyProtocolURITextField = new StringTextField(true, 30);
+		private final StringTextField studyProtocolVersionTextField = new StringTextField(true, 30);
 		private final AutoSuggestField studyProtocolParametersField;
 		private final AutoSuggestField studyProtocolComponentsTypeField;
 
@@ -2791,9 +2887,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			super(new GridBagLayout());
 
 			// Create fields
-			studyIdentifierTextField = GUIFactory.createTextField();
-			studyTitleTextField = GUIFactory.createTextField();
-
 			studyDescriptionTextArea = GUIFactory.createTextArea();
 
 			studyDesignTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Design Type"));
@@ -2801,14 +2894,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					.createAutoSuggestField(vocabs.get("Study Assay Measurement Type"));
 			studyAssayTechnologyTypeField = GUIFactory
 					.createAutoSuggestField(vocabs.get("Study Assay Technology Type"));
-			studyAssayTechnologyPlatformTextField = GUIFactory.createTextField();
 			accreditationProcedureField = GUIFactory
 					.createAutoSuggestField(vocabs.get("Accreditation procedure Ass.Tec"));
-			studyProtocolNameTextField = GUIFactory.createTextField();
 			studyProtocolTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Type"));
-			studyProtocolDescriptionTextField = GUIFactory.createTextField();
-			studyProtocolURITextField = GUIFactory.createTextField();
-			studyProtocolVersionTextField = GUIFactory.createTextField();
 			studyProtocolParametersField = GUIFactory
 					.createAutoSuggestField(vocabs.get("Study Protocol Parameters Name"));
 			studyProtocolComponentsTypeField = GUIFactory
