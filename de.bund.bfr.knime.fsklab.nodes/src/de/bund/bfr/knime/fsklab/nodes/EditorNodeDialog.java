@@ -832,15 +832,41 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel foodDescriptionLabel = GUIFactory.createLabel(
 					"GM.EditDietaryAssessmentMethodPanel.foodDescriptionLabel",
 					"GM.EditDietaryAssessmentMethodPanel.foodDescriptionTooltip");
+			
+			// leftPanel (labels)
+			final JPanel leftPanel = new JPanel(new GridLayout(6, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			leftPanel.add(dataCollectionToolLabel);
+			leftPanel.add(nonConsecutiveOneDayLabel);
+			leftPanel.add(dietarySoftwareToolLabel);
+			leftPanel.add(foodItemNumberLabel);
+			leftPanel.add(recordTypeLabel);
+			leftPanel.add(foodDescriptionLabel);
 
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-					new Pair<>(dataCollectionToolLabel, dataCollectionToolField),
-					new Pair<>(nonConsecutiveOneDayLabel, nonConsecutiveOneDayTextField),
-					new Pair<>(dietarySoftwareToolLabel, dietarySoftwareToolTextField),
-					new Pair<>(foodItemNumberLabel, foodItemNumberTextField),
-					new Pair<>(recordTypeLabel, recordTypeTextField),
-					new Pair<>(foodDescriptionLabel, foodDescriptionComboBox));
-			addGridComponents(this, pairs);
+			// rightPanel (inputs)
+			final JPanel rightPanel = new JPanel(new GridLayout(6, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			
+			rightPanel.add(dataCollectionToolField);
+			rightPanel.add(nonConsecutiveOneDayTextField);
+			rightPanel.add(dietarySoftwareToolTextField);
+			rightPanel.add(foodItemNumberTextField);
+			rightPanel.add(recordTypeTextField);
+			rightPanel.add(foodDescriptionComboBox);
+			
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+			
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(formPanel);
+
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(dietarySoftwareToolLabel, dietarySoftwareToolTextField,
 					foodItemNumberLabel, foodItemNumberTextField, recordTypeLabel, recordTypeTextField,
