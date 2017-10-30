@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
 import java.io.InputStream;
@@ -83,7 +82,6 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.util.Pair;
 import org.knime.core.util.SimpleFileFilter;
 
 import com.gmail.gcolaianni5.jris.bean.Record;
@@ -2119,36 +2117,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		return StringUtils.isNotBlank(textField.getText());
 	}
 
-	// other
-	private static void addGridComponents(final JPanel panel, final List<Pair<JLabel, JComponent>> pairs) {
-
-		final GridBagConstraints labelConstraints = new GridBagConstraints();
-		labelConstraints.gridx = 0;
-		labelConstraints.ipadx = 10;
-		labelConstraints.ipady = 10;
-		labelConstraints.anchor = GridBagConstraints.LINE_START;
-
-		final GridBagConstraints fieldConstraints = new GridBagConstraints();
-		fieldConstraints.gridx = 1;
-		fieldConstraints.ipadx = 10;
-		fieldConstraints.ipady = 10;
-		fieldConstraints.anchor = GridBagConstraints.LINE_START;
-
-		for (int index = 0; index < pairs.size(); index++) {
-
-			final Pair<JLabel, JComponent> entry = pairs.get(index);
-			final JLabel label = entry.getFirst();
-			final JComponent field = entry.getSecond();
-			label.setLabelFor(field);
-
-			labelConstraints.gridy = index;
-			panel.add(label, labelConstraints);
-
-			fieldConstraints.gridy = index;
-			panel.add(field, fieldConstraints);
-		}
-	}
-
 	private abstract class TopLevelPanel<T> extends JPanel {
 
 		private static final long serialVersionUID = 6410915237186157478L;
@@ -3117,7 +3085,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		QualityMeasuresPanel() {
 
-			super(new GridBagLayout());
+			super(new BorderLayout());
 
 			final JLabel sseLabel = new JLabel("SSE");
 			final JSpinner sseSpinner = GUIFactory.createSpinner(sseSpinnerModel);
@@ -3137,10 +3105,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel bicLabel = new JLabel("BIC");
 			final JSpinner bicSpinner = GUIFactory.createSpinner(bicSpinnerModel);
 
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(sseLabel, sseSpinner),
-					new Pair<>(mseLabel, mseSpinner), new Pair<>(rmseLabel, rmseSpinner),
-					new Pair<>(r2Label, r2Spinner), new Pair<>(aicLabel, aicSpinner), new Pair<>(bicLabel, bicSpinner));
-			EditorNodeDialog.addGridComponents(this, pairs);
+			final JPanel formPanel = UI.createOptionsPanel(
+					Arrays.asList(sseLabel, mseLabel, rmseLabel, r2Label, aicLabel, bicLabel),
+					Arrays.asList(sseSpinner, mseSpinner, rmseSpinner, r2Spinner, aicSpinner, bicSpinner));
+			add(formPanel, BorderLayout.NORTH);
 
 			setBorder(BorderFactory.createTitledBorder("Quality measures"));
 		}
