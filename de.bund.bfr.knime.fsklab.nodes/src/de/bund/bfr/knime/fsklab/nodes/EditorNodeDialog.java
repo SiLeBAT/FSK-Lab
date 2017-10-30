@@ -3212,7 +3212,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
-	private class ModelMathPanel extends TopLevelBox<ModelMath> {
+	private class ModelMathPanel extends TopLevelPanel<ModelMath> {
 
 		private static final long serialVersionUID = -7488943574135793595L;
 
@@ -3224,14 +3224,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		ModelMathPanel() {
 
-			final JPanel propertiesPanel = new JPanel(new GridBagLayout());
-			EditorNodeDialog.add(propertiesPanel, parametersPanel, 0, 0);
-			EditorNodeDialog.add(propertiesPanel, qualityMeasuresPanel, 0, 1);
-			EditorNodeDialog.add(propertiesPanel, modelEquationsPanel, 0, 2);
-
-			add(GUIFactory.createAdvancedPanel(advancedCheckBox));
-			add(Box.createGlue());
-			add(propertiesPanel);
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
+			northPanel.add(parametersPanel);
+			northPanel.add(qualityMeasuresPanel);
+			northPanel.add(modelEquationsPanel);
+			
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
 
 			advancedCheckBox.addItemListener(event -> {
 				parametersPanel.isAdvanced = advancedCheckBox.isSelected();
