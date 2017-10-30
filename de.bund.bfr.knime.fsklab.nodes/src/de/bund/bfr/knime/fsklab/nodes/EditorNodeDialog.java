@@ -1266,8 +1266,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditParameterPanel.classificationTooltip", true);
 			final JLabel nameLabel = GUIFactory.createLabel("GM.EditParameterPanel.parameterNameLabel",
 					"GM.EditParameterPanel.parameterNameTooltip", true);
-			final JLabel descriptionLabel = GUIFactory.createLabel("GM.EditParameterPanel.descriptionLabel",
-					"GM.EditParameterPanel.descriptionTooltip");
 			final JLabel typeLabel = GUIFactory.createLabel("GM.EditParameterPanel.typeLabel",
 					"GM.EditParameterPanel.typeTooltip");
 			final JLabel unitLabel = GUIFactory.createLabel("GM.EditParameterPanel.unitLabel",
@@ -1286,10 +1284,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditParameterPanel.valueTooltip");
 			final JLabel referenceLabel = GUIFactory.createLabel("GM.EditParameterPanel.referenceLabel",
 					"GM.EditParameterPanel.referenceTooltip");
-			final JLabel variabilitySubjectLabel = GUIFactory.createLabel(
-					"GM.EditParameterPanel.variabilitySubjectLabel", "GM.EditParameterPanel.variabilitySubjectTooltip");
-			final JLabel applicabilityLabel = GUIFactory.createLabel("GM.EditParameterPanel.applicabilityLabel",
-					"GM.EditParameterPanel.applicabilityTooltip");
 			final JLabel errorLabel = GUIFactory.createLabel("GM.EditParameterPanel.errorLabel",
 					"GM.EditParameterPanel.errorTooltip");
 
@@ -1299,25 +1293,81 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JScrollPane applicabilityPane = new JScrollPane(applicabilityTextArea);
 			final JSpinner errorSpinner = GUIFactory.createSpinner(errorSpinnerModel);
 
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(idLabel, idTextField),
-					new Pair<>(classificationLabel, classificationComboBox), new Pair<>(nameLabel, nameTextField),
-					new Pair<>(descriptionLabel, descriptionPane), new Pair<>(typeLabel, typeField),
-					new Pair<>(unitLabel, unitField), new Pair<>(unitCategoryLabel, unitCategoryField),
-					new Pair<>(dataTypeLabel, dataTypeField), new Pair<>(sourceLabel, sourceField),
-					new Pair<>(subjectLabel, subjectField), new Pair<>(distributionLabel, distributionField),
-					new Pair<>(valueLabel, valueTextField), new Pair<>(referenceLabel, referenceTextField),
-					new Pair<>(variabilitySubjectLabel, variabilitySubjectPane),
-					new Pair<>(applicabilityLabel, applicabilityPane), new Pair<>(errorLabel, errorSpinner));
-			addGridComponents(this, pairs);
+			descriptionPane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditParameterPanel.descriptionLabel")));
+			descriptionPane.setToolTipText(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditParameterPanel.descriptionTooltip"));
 
-			advancedComponents = Arrays.asList(descriptionLabel, descriptionPane, typeLabel, typeField, sourceLabel,
-					sourceField, subjectLabel, subjectField, distributionLabel, distributionField, valueLabel,
-					valueTextField, referenceLabel, referenceTextField, variabilitySubjectLabel, variabilitySubjectPane,
-					applicabilityLabel, applicabilityPane, errorLabel, errorSpinner);
+			variabilitySubjectPane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditParameterPanel.variabilitySubjectLabel")));
+			variabilitySubjectPane.setToolTipText(FskPlugin.getDefault().MESSAGES_BUNDLE
+					.getString("GM.EditParameterPanel.variabilitySubjectTooltip"));
+
+			applicabilityPane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditParameterPanel.applicabilityLabel")));
+			applicabilityPane.setToolTipText(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditParameterPanel.applicabilityTooltip"));
+
+			// leftPanel (labels)
+			final JPanel leftPanel = new JPanel(new GridLayout(13, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+			leftPanel.add(idLabel);
+			leftPanel.add(classificationLabel);
+			leftPanel.add(nameLabel);
+			leftPanel.add(typeLabel);
+			leftPanel.add(unitLabel);
+			leftPanel.add(unitCategoryLabel);
+			leftPanel.add(dataTypeLabel);
+			leftPanel.add(sourceLabel);
+			leftPanel.add(subjectLabel);
+			leftPanel.add(distributionLabel);
+			leftPanel.add(valueLabel);
+			leftPanel.add(referenceLabel);
+			leftPanel.add(errorLabel);
+
+			// rightPanel (inputs)
+			final JPanel rightPanel = new JPanel(new GridLayout(13, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+			rightPanel.add(idTextField);
+			rightPanel.add(classificationComboBox);
+			rightPanel.add(nameTextField);
+			rightPanel.add(typeField);
+			rightPanel.add(unitField);
+			rightPanel.add(unitCategoryField);
+			rightPanel.add(dataTypeField);
+			rightPanel.add(sourceField);
+			rightPanel.add(subjectField);
+			rightPanel.add(distributionField);
+			rightPanel.add(valueTextField);
+			rightPanel.add(referenceTextField);
+			rightPanel.add(errorSpinner);
+
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
+
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(formPanel);
+			northPanel.add(descriptionPane);
+			northPanel.add(variabilitySubjectPane);
+			northPanel.add(applicabilityPane);
+
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
+
+			advancedComponents = Arrays.asList(descriptionPane, typeLabel, typeField, sourceLabel, sourceField,
+					subjectLabel, subjectField, distributionLabel, distributionField, valueLabel, valueTextField,
+					referenceLabel, referenceTextField, variabilitySubjectPane, applicabilityPane, errorLabel,
+					errorSpinner);
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
-				advancedComponents.forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setEnabled(false));
 			}
 		}
 
@@ -3230,7 +3280,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.add(parametersPanel);
 			northPanel.add(qualityMeasuresPanel);
 			northPanel.add(modelEquationsPanel);
-			
+
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
