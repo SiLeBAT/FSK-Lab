@@ -722,21 +722,43 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			// Create labels
 			final JLabel nameLabel = GUIFactory.createLabel("GM.EditAssayPanel.nameLabel",
 					"GM.EditAssayPanel.nameTooltip", true);
-			final JLabel descriptionLabel = GUIFactory.createLabel("GM.EditAssayPanel.descriptionLabel",
-					"GM.EditAssayPanel.descriptionTooltip", true);
 
 			// Wrap text area in JScrollPane
 			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
+			descriptionPane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditAssayPanel.descriptionLabel")));
+			descriptionPane.setToolTipText(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditAssayPanel.descriptionTooltip"));
+			
+			// leftPanel (labels)
+			final JPanel leftPanel = new JPanel(new GridLayout(1, 1, 5, 5));
+			leftPanel.setBorder(BorderFactory.createEmptyBorder(5,  5, 5, 5));
+			leftPanel.add(nameLabel);
+			
+			// rightPanel (inputs)
+			final JPanel rightPanel = new JPanel(new GridLayout(1, 1, 5, 5));
+			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			rightPanel.add(nameTextField);
 
-			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(new Pair<>(nameLabel, nameTextField), // name
-					new Pair<>(descriptionLabel, descriptionPane)); // description
-			addGridComponents(this, pairs);
+			// formPanel
+			final JPanel formPanel = new JPanel(new BorderLayout());
+			formPanel.add(leftPanel, BorderLayout.WEST);
+			formPanel.add(rightPanel, BorderLayout.CENTER);
 
-			advancedComponents = Arrays.asList(descriptionLabel, descriptionPane);
+			// northPanel
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(formPanel);
+			northPanel.add(descriptionPane);
+
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
+
+			advancedComponents = Arrays.asList(descriptionPane);
 
 			// If simple mode hide advanced components
 			if (!isAdvanced) {
-				advancedComponents.forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setEnabled(false));
 			}
 		}
 
@@ -826,7 +848,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			// If simple mode hides advanced components
 			if (!isAdvanced) {
-				advancedComponents.forEach(it -> it.setVisible(false));
+				advancedComponents.forEach(it -> it.setEnabled(false));
 			}
 		}
 
@@ -2246,11 +2268,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			// Build UI
 			final JSpinner moisturePercentageSpinner = GUIFactory.createSpinner(moisturePercentageSpinnerModel);
 			final JSpinner fatPercentageSpinner = GUIFactory.createSpinner(fatPercentageSpinnerModel);
-			
+
 			// leftPanel (labels)
 			final JPanel leftPanel = new JPanel(new GridLayout(12, 1, 5, 5));
 			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			
+
 			leftPanel.add(sampleNameLabel);
 			leftPanel.add(moisturePercentageLabel);
 			leftPanel.add(fatPercentageLabel);
@@ -2263,11 +2285,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			leftPanel.add(samplingSizeLabel);
 			leftPanel.add(lotSizeUnitLabel);
 			leftPanel.add(samplingPointLabel);
-			
+
 			// rightPanel (inputs)
 			final JPanel rightPanel = new JPanel(new GridLayout(12, 1, 5, 5));
 			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			
+
 			rightPanel.add(sampleNameTextField);
 			rightPanel.add(moisturePercentageSpinner);
 			rightPanel.add(fatPercentageSpinner);
@@ -2280,17 +2302,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			rightPanel.add(samplingSizeTextField);
 			rightPanel.add(lotSizeUnitField);
 			rightPanel.add(samplingPointField);
-			
+
 			// formPanel
 			final JPanel formPanel = new JPanel(new BorderLayout());
 			formPanel.add(leftPanel, BorderLayout.WEST);
 			formPanel.add(rightPanel, BorderLayout.CENTER);
-			
+
 			// northPanel
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
-			
+
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
@@ -3150,7 +3172,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			// left panel (labels)
 			final JPanel leftPanel = new JPanel(new GridLayout(4, 1, 5, 5));
 			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			
+
 			leftPanel.add(studySampleLabel);
 			leftPanel.add(dietaryAssessmentMethodLabel);
 			leftPanel.add(laboratoryAccreditationLabel);
@@ -3159,7 +3181,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			// right panel (inputs)
 			final JPanel rightPanel = new JPanel(new GridLayout(4, 1, 5, 5));
 			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			
+
 			rightPanel.add(studySampleButton);
 			rightPanel.add(dietaryAssessmentMethodButton);
 			rightPanel.add(laboratoryAccreditationField);
@@ -3287,27 +3309,29 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.StudyPanel.componentsTypeTooltip");
 
 			// Build UI
-//			final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
-//					new Pair<>(studyIdentifierLabel, studyIdentifierTextField),
-//					new Pair<>(studyTitleLabel, studyTitleTextField),
-//					new Pair<>(studyDescriptionLabel, studyDescriptionPane),
-//					new Pair<>(studyDesignTypeLabel, studyDesignTypeField),
-//					new Pair<>(studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField),
-//					new Pair<>(studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField),
-//					new Pair<>(studyAssayTechnologyPlatformLabel, studyAssayTechnologyPlatformTextField),
-//					new Pair<>(accreditationProcedureLabel, accreditationProcedureField),
-//					new Pair<>(studyProtocolNameLabel, studyProtocolNameTextField),
-//					new Pair<>(studyProtocolTypeLabel, studyProtocolTypeField),
-//					new Pair<>(studyProtocolDescriptionLabel, studyProtocolDescriptionTextField),
-//					new Pair<>(studyProtocolURILabel, studyProtocolURITextField),
-//					new Pair<>(studyProtocolParametersLabel, studyProtocolParametersField),
-//					new Pair<>(studyProtocolComponentsTypeLabel, studyProtocolComponentsTypeField));
-//			EditorNodeDialog.addGridComponents(this, pairs);
-			
+			// final List<Pair<JLabel, JComponent>> pairs = Arrays.asList(
+			// new Pair<>(studyIdentifierLabel, studyIdentifierTextField),
+			// new Pair<>(studyTitleLabel, studyTitleTextField),
+			// new Pair<>(studyDescriptionLabel, studyDescriptionPane),
+			// new Pair<>(studyDesignTypeLabel, studyDesignTypeField),
+			// new Pair<>(studyAssayMeasurementsTypeLabel, studyAssayMeasurementsTypeField),
+			// new Pair<>(studyAssayTechnologyTypeLabel, studyAssayTechnologyTypeField),
+			// new Pair<>(studyAssayTechnologyPlatformLabel,
+			// studyAssayTechnologyPlatformTextField),
+			// new Pair<>(accreditationProcedureLabel, accreditationProcedureField),
+			// new Pair<>(studyProtocolNameLabel, studyProtocolNameTextField),
+			// new Pair<>(studyProtocolTypeLabel, studyProtocolTypeField),
+			// new Pair<>(studyProtocolDescriptionLabel, studyProtocolDescriptionTextField),
+			// new Pair<>(studyProtocolURILabel, studyProtocolURITextField),
+			// new Pair<>(studyProtocolParametersLabel, studyProtocolParametersField),
+			// new Pair<>(studyProtocolComponentsTypeLabel,
+			// studyProtocolComponentsTypeField));
+			// EditorNodeDialog.addGridComponents(this, pairs);
+
 			// leftPanel (labels)
 			final JPanel leftPanel = new JPanel(new GridLayout(13, 1, 5, 5));
 			leftPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			
+
 			leftPanel.add(studyIdentifierLabel);
 			leftPanel.add(studyTitleLabel);
 			leftPanel.add(studyDesignTypeLabel);
@@ -3321,11 +3345,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			leftPanel.add(studyProtocolURILabel);
 			leftPanel.add(studyProtocolParametersLabel);
 			leftPanel.add(studyProtocolComponentsTypeLabel);
-			
+
 			// rightPanel (inputs)
 			final JPanel rightPanel = new JPanel(new GridLayout(13, 1, 5, 5));
 			rightPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			
+
 			rightPanel.add(studyIdentifierTextField);
 			rightPanel.add(studyTitleTextField);
 			rightPanel.add(studyDesignTypeField);
@@ -3338,17 +3362,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			rightPanel.add(studyProtocolURITextField);
 			rightPanel.add(studyProtocolParametersField);
 			rightPanel.add(studyProtocolComponentsTypeField);
-			
+
 			// formPanel
 			final JPanel formPanel = new JPanel(new BorderLayout());
 			formPanel.add(leftPanel, BorderLayout.WEST);
 			formPanel.add(rightPanel, BorderLayout.CENTER);
-			
+
 			// northPanel
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
-			
+
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
