@@ -1827,18 +1827,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel doiLabel = GUIFactory.createLabel("GM.EditReferencePanel.doiLabel", true);
 			final JLabel authorListLabel = GUIFactory.createLabel("GM.EditReferencePanel.authorListLabel");
 			final JLabel titleLabel = GUIFactory.createLabel("GM.EditReferencePanel.titleLabel", true);
-			final JLabel abstractLabel = GUIFactory.createLabel("GM.EditReferencePanel.abstractLabel");
 			final JLabel journalLabel = GUIFactory.createLabel("GM.EditReferencePanel.journalLabel");
 			final JLabel volumeLabel = GUIFactory.createLabel("GM.EditReferencePanel.volumeLabel");
 			final JLabel issueLabel = GUIFactory.createLabel("GM.EditReferencePanel.issueLabel");
 			final JLabel pageLabel = GUIFactory.createLabel("GM.EditReferencePanel.pageLabel");
 			final JLabel statusLabel = GUIFactory.createLabel("GM.EditReferencePanel.statusLabel");
 			final JLabel websiteLabel = GUIFactory.createLabel("GM.EditReferencePanel.websiteLabel");
-			final JLabel commentLabel = GUIFactory.createLabel("GM.EditReferencePanel.commentLabel");
 
 			// Build UI
 			final JSpinner volumeSpinner = GUIFactory.createSpinner(volumeSpinnerModel);
 			final JSpinner issueSpinner = GUIFactory.createSpinner(issueSpinnerModel);
+
+			final JScrollPane abstractPane = new JScrollPane(abstractTextArea);
+			abstractPane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditReferencePanel.abstractLabel")));
+
+			final JScrollPane commentPane = new JScrollPane(commentTextArea);
+			commentPane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditReferencePanel.commentLabel")));
 
 			// isReferenceDescription panel
 			final JPanel isReferenceDescriptionPanel = new JPanel(new BorderLayout());
@@ -1852,16 +1858,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 							titleTextField, journalTextField, volumeSpinner, issueSpinner, pageTextField,
 							statusTextField, websiteTextField));
 
-			// taPanel: form with text areas
-			final JPanel taPanel = UI.createOptionsPanel(Arrays.asList(abstractLabel, commentLabel),
-					Arrays.asList(abstractTextArea, commentTextArea));
-
 			// northPanel
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(isReferenceDescriptionPanel);
 			northPanel.add(formPanel);
-			northPanel.add(taPanel);
+			northPanel.add(abstractPane);
+			northPanel.add(commentPane);
 
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
@@ -2234,14 +2237,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.GeneralInformationPanel.languageWrittenInTooltip");
 			final JLabel statusLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.statusLabel",
 					"GM.GeneralInformationPanel.statusTooltip");
-			final JLabel objectiveLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.objectiveLabel",
-					"GM.GeneralInformationPanel.objectiveTooltip");
-			final JLabel descriptionLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.descriptionLabel",
-					"GM.GeneralInformationPanel.descriptionTooltip");
 
 			// Hide initially advanced components
 			final JScrollPane objectivePane = new JScrollPane(objectiveTextArea);
+			objectivePane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.objectiveLabel")));
+			objectivePane.setToolTipText(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.objectiveTooltip"));
+
 			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
+			descriptionPane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.descriptionLabel")));
+			descriptionPane.setToolTipText(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.descriptionTooltip"));
+
 			final List<JComponent> advancedComponents = Arrays.asList(sourceTextField, formatField, languageField,
 					softwareField, languageWrittenInField, statusField, objectiveTextArea, descriptionTextArea);
 			advancedComponents.forEach(it -> it.setEnabled(false));
@@ -2255,10 +2264,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 							new JLabel(), urlTextField, sourceTextField, formatField, languageField, softwareField,
 							languageWrittenInField, statusField));
 
-			// taPanel: form with text areas
-			final JPanel taPanel = UI.createOptionsPanel(Arrays.asList(objectiveLabel, descriptionLabel),
-					Arrays.asList(objectivePane, descriptionPane));
-
 			advancedCheckBox.addItemListener(event -> {
 				final boolean showAdvanced = advancedCheckBox.isSelected();
 				advancedComponents.forEach(it -> it.setEnabled(showAdvanced));
@@ -2270,7 +2275,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			northPanel.add(formPanel);
-			northPanel.add(taPanel);
+			northPanel.add(objectivePane);
+			northPanel.add(descriptionPane);
 			northPanel.add(creatorPanel);
 			northPanel.add(referencePanel);
 
@@ -2606,6 +2612,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		ScopePanel() {
 			final JScrollPane commentPane = new JScrollPane(commentTextArea);
+			commentPane.setBorder(BorderFactory.createTitledBorder(
+					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.ScopePanel.commentLabel")));
+			commentPane.setToolTipText(FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.ScopePanel.commentTooltip"));
 
 			final Frame parentFrame = (Frame) SwingUtilities.getWindowAncestor(this);
 
@@ -2645,8 +2654,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel productLabel = GUIFactory.createLabel("GM.ScopePanel.productLabel");
 			final JLabel hazardLabel = GUIFactory.createLabel("GM.ScopePanel.hazardLabel");
 			final JLabel populationLabel = GUIFactory.createLabel("GM.ScopePanel.populationGroupLabel");
-			final JLabel commentLabel = GUIFactory.createLabel("GM.ScopePanel.commentLabel",
-					"GM.ScopePanel.commentTooltip");
 			final JLabel temporalInformationLabel = GUIFactory.createLabel("GM.ScopePanel.temporalInformationLabel",
 					"GM.ScopePanel.temporalInformationTooltip");
 			final JLabel regionLabel = GUIFactory.createLabel("GM.ScopePanel.regionLabel",
@@ -2661,9 +2668,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					Arrays.asList(productButton, hazardButton, populationButton, dateChooser, regionField,
 							countryField));
 
-			// taPanel: form with text area (comment)
-			final JPanel taPanel = UI.createOptionsPanel(Arrays.asList(commentLabel), Arrays.asList(commentPane));
-
 			// Advanced checkbox
 			final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 			advancedCheckBox.addItemListener(event -> {
@@ -2677,7 +2681,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			northPanel.add(formPanel);
-			northPanel.add(taPanel);
+			northPanel.add(commentPane);
 
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
