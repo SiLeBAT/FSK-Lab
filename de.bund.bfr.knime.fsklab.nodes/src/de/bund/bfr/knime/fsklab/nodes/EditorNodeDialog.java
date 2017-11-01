@@ -391,15 +391,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			return panel;
 		}
 
-//		private static JTextArea createTextArea() {
-//			final JTextArea textArea = new JTextArea(5, 30);
-//			textArea.setText("");
-//			textArea.setLineWrap(true); // Wrap long lines
-//			textArea.setWrapStyleWord(true); // Wrap only at white space
-//
-//			return textArea;
-//		}
-
 		/**
 		 * @param possibleValues
 		 *            Set
