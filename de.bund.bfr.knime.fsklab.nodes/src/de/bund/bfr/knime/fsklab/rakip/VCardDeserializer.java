@@ -33,7 +33,7 @@ public class VCardDeserializer extends JsonDeserializer<VCard> {
 	public VCard deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 
 		final JsonNode node = p.readValueAsTree();
-		final String cardString = node.asText();
+		final String cardString = node.get("creator").asText();
 		return Ezvcard.parseJson(cardString).first();
 	}
 }

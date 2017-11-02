@@ -497,16 +497,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 	}
 
-	/**
-	 * Shows Swing ok/cancel dialog.
-	 * 
-	 * @return the selected option. JOptionaPane.OK_OPTION or
-	 *         JOptionaPane.CANCEL_OPTION.
-	 */
-	private static int showConfirmDialog(final JPanel panel, final String title) {
-		return JOptionPane.showConfirmDialog(null, panel, title, JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE);
-	}
-
 	/** Validatable dialogs and panels. */
 	private class ValidatableDialog extends JDialog {
 
@@ -1129,7 +1119,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			modelEquation.equationName = equationNameTextField.getText();
 			modelEquation.equation = scriptTextArea.getText();
 			modelEquation.equationClass = equationClassTextField.getText();
-			modelEquation.equationReference.addAll(referencePanel.coolModel.records);
+			modelEquation.equationReference.addAll(referencePanel.tableModel.records);
 
 			return modelEquation;
 		}
@@ -2330,7 +2320,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			generalInformation.creators.addAll(creatorPanel.tableModel.vcards);
 
 			generalInformation.format = (String) formatField.getSelectedItem();
-			generalInformation.reference.addAll(referencePanel.coolModel.records);
+			generalInformation.reference.addAll(referencePanel.tableModel.records);
 
 			generalInformation.language = (String) languageField.getSelectedItem();
 			generalInformation.software = (String) softwareField.getSelectedItem();
@@ -2349,7 +2339,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		boolean isAdvanced;
 
-		RecordTableModel coolModel = new RecordTableModel();
+		RecordTableModel tableModel = new RecordTableModel();
 
 		// Non modifiable table model with headers
 		class RecordTableModel extends DefaultTableModel {
@@ -2401,7 +2391,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			this.isAdvanced = isAdvanced;
 
-			final JTable coolTable = new JTable(coolModel);
+			final JTable coolTable = new JTable(tableModel);
 
 			// buttons
 			final ButtonsPanel buttonsPanel = new ButtonsPanel();
@@ -2412,7 +2402,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
 					final Record newRecord = editPanel.get();
-					coolModel.add(newRecord);
+					tableModel.add(newRecord);
 				}
 			});
 
@@ -2428,7 +2418,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					try {
 						final List<Record> importedRecords = JRis.parse(fc.getSelectedFile());
-						importedRecords.forEach(coolModel::add);
+						importedRecords.forEach(tableModel::add);
 					} catch (final IOException | JRisException exception) {
 						LOGGER.warn("Error importing RIS references", exception);
 					}
@@ -2442,14 +2432,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				final int rowToEdit = coolTable.getSelectedRow();
 				if (rowToEdit != -1) {
 
-					final Record ref = coolModel.records.get(rowToEdit);
+					final Record ref = tableModel.records.get(rowToEdit);
 
 					final EditReferencePanel editPanel = new EditReferencePanel(this.isAdvanced);
 					editPanel.init(ref);
 
 					final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify reference");
 					if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-						coolModel.modify(rowToEdit, editPanel.get());
+						tableModel.modify(rowToEdit, editPanel.get());
 					}
 				}
 			});
@@ -2457,7 +2447,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			buttonsPanel.removeButton.addActionListener(event -> {
 				final int rowToDelete = coolTable.getSelectedRow();
 				if (rowToDelete != -1) {
-					coolModel.remove(rowToDelete);
+					tableModel.remove(rowToDelete);
 				}
 			});
 
@@ -2466,7 +2456,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 
 		void init(final List<Record> references) {
-			references.forEach(coolModel::add);
+			references.forEach(tableModel::add);
 		}
 	}
 
@@ -2554,20 +2544,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			buttonsPanel.addButton.addActionListener(event -> {
 
 				final EditCreatorPanel editPanel = new EditCreatorPanel();
-				final int result = showConfirmDialog(editPanel, "Create creator");
-				if (result == JOptionPane.OK_OPTION) {
-					
-					final VCard newCard = editPanel.toVCard();
-					
-					// Validate somehow
-					if (newCard.getNickname() == null)
-						return;
-					if (newCard.getFormattedName() == null)
-						return;
-					if (newCard.getEmails().isEmpty())
-						return;
-					
-					tableModel.add(editPanel.toVCard());
+				final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create creator");
+
+				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+					final VCard newCard = editPanel.get();
+					tableModel.add(newCard);
 				}
 			});
 
@@ -2581,9 +2562,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					final EditCreatorPanel editPanel = new EditCreatorPanel();
 					editPanel.init(creator);
 
-					final int result = showConfirmDialog(editPanel, "Modify creator");
-					if (result == JOptionPane.OK_OPTION) {
-						tableModel.modify(rowToEdit, editPanel.toVCard());
+					final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify creator");
+					if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+						tableModel.modify(rowToEdit, editPanel.get());
 					}
 				}
 			});
@@ -2600,11 +2581,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 
 		void init(final List<VCard> vcards) {
-			vcards.forEach(it -> tableModel.addRow(new VCard[] { it }));
+			tableModel.vcards.clear();
+			tableModel.setRowCount(0);
+			vcards.forEach(tableModel::add);
 		}
 	}
 
-	private class EditCreatorPanel extends JPanel {
+	private class EditCreatorPanel extends EditPanel<VCard> {
 
 		private static final long serialVersionUID = 3472281253338213542L;
 
@@ -2614,8 +2597,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		public EditCreatorPanel() {
 
-			super(new BorderLayout());
-
 			// Create labels
 			final JLabel givenNameLabel = GUIFactory.createLabel("GM.EditCreatorPanel.givenNameLabel");
 			final JLabel familyNameLabel = GUIFactory.createLabel("GM.EditCreatorPanel.familyNameLabel");
@@ -2623,7 +2604,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			final JPanel formPanel = UI.createOptionsPanel(Arrays.asList(givenNameLabel, familyNameLabel, contactLabel),
 					Arrays.asList(givenNameTextField, familyNameTextField, contactTextField));
-			add(formPanel, BorderLayout.NORTH);
+
+			final JPanel northPanel = UI.createNorthPanel(formPanel);
+
+			add(northPanel);
 		}
 
 		void init(final VCard creator) {
@@ -2638,7 +2622,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			}
 		}
 
-		VCard toVCard() {
+		@Override
+		VCard get() {
 
 			final VCard vCard = new VCard();
 
@@ -2658,6 +2643,30 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			}
 
 			return vCard;
+		}
+
+		@Override
+		List<String> validatePanel() {
+
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+
+			final List<String> errors = new ArrayList<>(3);
+			if (!givenNameTextField.isValueValid()) {
+				errors.add("Missing " + bundle.getString("GM.EditCreatorPanel.givenNameLabel"));
+			}
+			if (!familyNameTextField.isValueValid()) {
+				errors.add("Missing " + bundle.getString("GM.EditCreatorPanel.familyNameLabel"));
+			}
+			if (!contactTextField.isValueValid()) {
+				errors.add("Missing " + bundle.getString("GM.EditCreatorPanel.contactLabel"));
+			}
+
+			return errors;
+		}
+
+		@Override
+		List<JComponent> getAdvancedComponents() {
+			return Collections.emptyList();
 		}
 	}
 
