@@ -16,8 +16,25 @@
  **************************************************************************************************/
 package de.bund.bfr.knime.fsklab.rakip;
 
+import java.util.Objects;
+
 public class Assay {
 
-  public String name = "";
-  public String description = "";
+	public String name = "";
+	public String description = "";
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, description);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		Assay other = (Assay) obj;
+		return Objects.equals(description, other.description) && Objects.equals(name, other.name);
+	}
 }

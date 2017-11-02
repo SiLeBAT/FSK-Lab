@@ -17,6 +17,7 @@
 package de.bund.bfr.knime.fsklab.rakip;
 
 import java.net.URI;
+import java.util.Objects;
 
 public class Study {
 
@@ -52,4 +53,99 @@ public class Study {
 	public String parametersName = "";
 	public String componentsName = "";
 	public String componentsType = "";
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(accreditationProcedure, componentsName, componentsType, description, designType,
+				measurementType, parametersName, protocolDescription, protocolName, protocolType, protocolUri,
+				protocolVersion, technologyPlatform, technologyType, title);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Study other = (Study) obj;
+		if (accreditationProcedure == null) {
+			if (other.accreditationProcedure != null)
+				return false;
+		} else if (!accreditationProcedure.equals(other.accreditationProcedure))
+			return false;
+		if (componentsName == null) {
+			if (other.componentsName != null)
+				return false;
+		} else if (!componentsName.equals(other.componentsName))
+			return false;
+		if (componentsType == null) {
+			if (other.componentsType != null)
+				return false;
+		} else if (!componentsType.equals(other.componentsType))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (designType == null) {
+			if (other.designType != null)
+				return false;
+		} else if (!designType.equals(other.designType))
+			return false;
+		if (measurementType == null) {
+			if (other.measurementType != null)
+				return false;
+		} else if (!measurementType.equals(other.measurementType))
+			return false;
+		if (parametersName == null) {
+			if (other.parametersName != null)
+				return false;
+		} else if (!parametersName.equals(other.parametersName))
+			return false;
+		if (protocolDescription == null) {
+			if (other.protocolDescription != null)
+				return false;
+		} else if (!protocolDescription.equals(other.protocolDescription))
+			return false;
+		if (protocolName == null) {
+			if (other.protocolName != null)
+				return false;
+		} else if (!protocolName.equals(other.protocolName))
+			return false;
+		if (protocolType == null) {
+			if (other.protocolType != null)
+				return false;
+		} else if (!protocolType.equals(other.protocolType))
+			return false;
+		if (protocolUri == null) {
+			if (other.protocolUri != null)
+				return false;
+		} else if (!protocolUri.equals(other.protocolUri))
+			return false;
+		if (protocolVersion == null) {
+			if (other.protocolVersion != null)
+				return false;
+		} else if (!protocolVersion.equals(other.protocolVersion))
+			return false;
+		if (technologyPlatform == null) {
+			if (other.technologyPlatform != null)
+				return false;
+		} else if (!technologyPlatform.equals(other.technologyPlatform))
+			return false;
+		if (technologyType == null) {
+			if (other.technologyType != null)
+				return false;
+		} else if (!technologyType.equals(other.technologyType))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		return true;
+	}
+
 }

@@ -3084,8 +3084,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final ModelMath modelMath = new ModelMath();
 
 			// Save parameters
-			modelMath.parameter.clear();
-			modelMath.parameter.addAll(parametersPanel.params);
+			modelMath.parameter.addAll(parametersPanel.tableModel.parameters);
 
 			// Save SSE, MSE, R2, RMSE, AIC and BIC
 			modelMath.sse = qualityMeasuresPanel.sseSpinnerModel.getNumber().doubleValue();
@@ -3110,8 +3109,52 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -5986975090954482038L;
 
-		final NonEditableTableModel tableModel = new NonEditableTableModel();
-		final List<Parameter> params = new ArrayList<>(0);
+		final TableModel tableModel = new TableModel();
+
+		// Non modifiable table model with headers
+		class TableModel extends DefaultTableModel {
+
+			private static final long serialVersionUID = 1677268552154885327L;
+
+			final ArrayList<Parameter> parameters = new ArrayList<>();
+
+			TableModel() {
+				super(new Object[0][0], new String[] { "ID", "Name", "Unit", "Unit category", "Data type" });
+			}
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+
+			void add(final Parameter param) {
+
+				// Skip if param is already in table
+				for (final Parameter currentParam : parameters) {
+					if (currentParam.equals(param)) {
+						return;
+					}
+				}
+				parameters.add(param);
+
+				addRow(new String[] { param.id, param.name, param.unit, param.unitCategory, param.dataType });
+			}
+
+			void modify(final int rowNumber, final Parameter param) {
+				parameters.set(rowNumber, param);
+
+				setValueAt(param.id, rowNumber, 0);
+				setValueAt(param.name, rowNumber, 1);
+				setValueAt(param.unit, rowNumber, 2);
+				setValueAt(param.unitCategory, rowNumber, 3);
+				setValueAt(param.dataType, rowNumber, 4);
+			}
+
+			void remove(final int rowNumber) {
+				parameters.remove(rowNumber);
+				removeRow(rowNumber);
+			}
+		}
 
 		boolean isAdvanced;
 
@@ -3123,15 +3166,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			setBorder(BorderFactory.createTitledBorder("Parameters"));
 
-			final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
-				private static final long serialVersionUID = -2930961770705064623L;
-
-				protected void setValue(Object value) {
-					final Parameter param = (Parameter) value;
-					setText(param.name + "[" + param.unit + "]");
-				};
-			};
-			final JTable myTable = new HeadlessTable(tableModel, renderer);
+			final JTable myTable = new JTable(tableModel);
 
 			// buttons
 			final ButtonsPanel buttonsPanel = new ButtonsPanel();
@@ -3139,7 +3174,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				final EditParameterPanel editPanel = new EditParameterPanel(this.isAdvanced);
 				final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create parameter");
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-					tableModel.addRow(new Parameter[] { editPanel.get() });
+					tableModel.add(editPanel.get());
 				}
 			});
 
@@ -3153,7 +3188,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 					final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify parameter");
 					if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-						tableModel.setValueAt(editPanel.get(), rowToEdit, 0);
+						tableModel.modify(rowToEdit, editPanel.get());
 					}
 				}
 			});
@@ -3161,7 +3196,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			buttonsPanel.removeButton.addActionListener(event -> {
 				final int rowToDelete = myTable.getSelectedRow();
 				if (rowToDelete != -1) {
-					tableModel.removeRow(rowToDelete);
+					tableModel.remove(rowToDelete);
 				}
 			});
 
@@ -3170,9 +3205,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 
 		void init(final List<Parameter> parameters) {
-			tableModel.setRowCount(0); // Remove all rows in table
-			parameters.forEach(it -> tableModel.addRow(new Parameter[] { it }));
-			params.addAll(parameters);
+			parameters.forEach(tableModel::add);
 		}
 	}
 

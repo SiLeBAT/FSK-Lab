@@ -18,6 +18,7 @@ package de.bund.bfr.knime.fsklab.rakip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.gmail.gcolaianni5.jris.bean.Record;
 
@@ -34,4 +35,23 @@ public class ModelEquation {
 
 	/** Model equation or script. */
 	public String equation = "";
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(equation, equationClass, equationName, equationReference);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+
+		ModelEquation other = (ModelEquation) obj;
+		return Objects.equals(equation, other.equation) && Objects.equals(equationClass, other.equationClass)
+				&& Objects.equals(equationName, other.equationName)
+				&& Objects.equals(equationReference, other.equationReference);
+	}
+
 }

@@ -18,6 +18,7 @@ package de.bund.bfr.knime.fsklab.rakip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Parameter {
 
@@ -54,4 +55,29 @@ public class Parameter {
 	public final List<String> modelApplicability = new ArrayList<>();
 
 	public Double error = .0;
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(classification, dataType, description, distribution, error, id, modelApplicability, name,
+				reference, source, subject, unit, unitCategory, value, variabilitySubject);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+
+		Parameter other = (Parameter) obj;
+		return Objects.equals(id, other.id) && Objects.equals(classification, other.classification)
+				&& Objects.equals(name, other.name) && Objects.equals(description, other.description)
+				&& Objects.equals(unit, other.unit) && Objects.equals(unitCategory, other.unitCategory)
+				&& Objects.equals(dataType, other.dataType) && Objects.equals(source, other.source)
+				&& Objects.equals(subject, other.subject) && Objects.equals(distribution, other.distribution)
+				&& Objects.equals(value, other.value) && Objects.equals(reference, other.reference)
+				&& Objects.equals(variabilitySubject, other.variabilitySubject)
+				&& Objects.equals(modelApplicability, other.modelApplicability) && Objects.equals(error, other.error);
+	}
+
 }

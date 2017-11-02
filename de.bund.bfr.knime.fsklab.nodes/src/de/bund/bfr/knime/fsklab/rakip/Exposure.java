@@ -16,11 +16,33 @@
  **************************************************************************************************/
 package de.bund.bfr.knime.fsklab.rakip;
 
+import java.util.Objects;
+
 public class Exposure {
 
-  public String treatment = "";
-  public String contaminationLevel = "";
-  public String exposureType = "";
-  public String scenario = "";
-  public String uncertaintyEstimation = "";
+	public String treatment = "";
+	public String contaminationLevel = "";
+	public String exposureType = "";
+	public String scenario = "";
+	public String uncertaintyEstimation = "";
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(contaminationLevel, exposureType, scenario, treatment, uncertaintyEstimation);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		
+		Exposure other = (Exposure) obj;
+		return Objects.equals(contaminationLevel, other.contaminationLevel) &&
+				Objects.equals(exposureType, other.exposureType) &&
+				Objects.equals(scenario, other.scenario) &&
+				Objects.equals(treatment, other.treatment) &&
+				Objects.equals(uncertaintyEstimation, other.uncertaintyEstimation);
+	}
 }

@@ -18,6 +18,7 @@ package de.bund.bfr.knime.fsklab.rakip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PopulationGroup {
 
@@ -46,4 +47,34 @@ public class PopulationGroup {
 	public final List<String> populationRiskFactor = new ArrayList<>();
 
 	public final List<String> season = new ArrayList<>();
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(populationName, targetPopulation, populationSpan, populationDescription, populationAge,
+				populationGender, bmi, specialDietGroups, patternConsumption, region, country, populationRiskFactor,
+				season);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+
+		PopulationGroup other = (PopulationGroup) obj;
+
+		return Objects.equals(populationName, other.populationName)
+				&& Objects.equals(targetPopulation, other.targetPopulation)
+				&& Objects.equals(populationSpan, other.populationSpan)
+				&& Objects.equals(populationDescription, other.populationDescription)
+				&& Objects.equals(populationAge, other.populationAge)
+				&& Objects.equals(populationGender, other.populationGender) && Objects.equals(bmi, other.bmi)
+				&& Objects.equals(specialDietGroups, other.specialDietGroups)
+				&& Objects.equals(patternConsumption, other.patternConsumption) && Objects.equals(region, other.region)
+				&& Objects.equals(country, other.country)
+				&& Objects.equals(populationRiskFactor, other.populationRiskFactor)
+				&& Objects.equals(season, other.season);
+	}
+
 }

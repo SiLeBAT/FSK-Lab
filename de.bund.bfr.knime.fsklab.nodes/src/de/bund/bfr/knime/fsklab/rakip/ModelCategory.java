@@ -18,6 +18,7 @@ package de.bund.bfr.knime.fsklab.rakip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ModelCategory {
 
@@ -33,4 +34,24 @@ public class ModelCategory {
 
 	/** Impact of the specific process in the hazard. */
 	public final List<String> basicProcess = new ArrayList<>();
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(basicProcess, modelClass, modelClassComment, modelSubClass, modelSubSubClass);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+
+		ModelCategory other = (ModelCategory) obj;
+		return Objects.equals(basicProcess, other.basicProcess) && Objects.equals(modelClass, other.modelClass)
+				&& Objects.equals(modelClassComment, other.modelClassComment)
+				&& Objects.equals(modelSubClass, other.modelSubClass)
+				&& Objects.equals(modelSubSubClass, other.modelSubSubClass);
+
+	}
 }

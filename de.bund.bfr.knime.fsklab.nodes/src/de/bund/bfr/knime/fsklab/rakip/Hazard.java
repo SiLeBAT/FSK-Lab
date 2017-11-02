@@ -16,6 +16,8 @@
  **************************************************************************************************/
 package de.bund.bfr.knime.fsklab.rakip;
 
+import java.util.Objects;
+
 public class Hazard {
 
 	public String hazardType = "";
@@ -31,30 +33,67 @@ public class Hazard {
 	public String origin = "";
 
 	public String benchmarkDose = "";
-	
+
 	public String maximumResidueLimit = "";
-	
+
 	public String noObservedAdverse = "";
-	
+
 	public String lowestObservedAdverse = "";
-	
+
 	public String acceptableOperator = "";
-	
+
 	public String acuteReferenceDose = "";
-	
+
 	public String acceptableDailyIntake = "";
-	
+
 	public String hazardIndSum = "";
-	
+
 	public String laboratoryName = "";
-	
+
 	public String laboratoryCountry = "";
-	
+
 	public String detectionLimit = "";
-	
+
 	public String quantificationLimit = "";
-	
+
 	public String leftCensoredData = "";
-	
+
 	public String rangeOfContamination = "";
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(acceptableDailyIntake, acceptableOperator, acuteReferenceDose, adverseEffect, benchmarkDose,
+				detectionLimit, hazardDescription, hazardIndSum, hazardName, hazardType, hazardUnit, laboratoryCountry,
+				laboratoryName, leftCensoredData, lowestObservedAdverse, maximumResidueLimit, noObservedAdverse, origin,
+				quantificationLimit, rangeOfContamination);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+
+		Hazard other = (Hazard) obj;
+
+		return Objects.equals(acceptableDailyIntake, other.acceptableDailyIntake)
+				&& Objects.equals(acceptableOperator, other.acceptableOperator)
+				&& Objects.equals(acuteReferenceDose, other.acuteReferenceDose)
+				&& Objects.equals(adverseEffect, other.adverseEffect)
+				&& Objects.equals(benchmarkDose, other.benchmarkDose)
+				&& Objects.equals(detectionLimit, other.detectionLimit)
+				&& Objects.equals(hazardDescription, other.hazardDescription)
+				&& Objects.equals(hazardIndSum, other.hazardIndSum) && Objects.equals(hazardName, other.hazardName)
+				&& Objects.equals(hazardType, other.hazardType) && Objects.equals(hazardUnit, other.hazardUnit)
+				&& Objects.equals(laboratoryCountry, other.laboratoryCountry)
+				&& Objects.equals(laboratoryName, other.laboratoryName)
+				&& Objects.equals(leftCensoredData, other.leftCensoredData)
+				&& Objects.equals(lowestObservedAdverse, other.lowestObservedAdverse)
+				&& Objects.equals(maximumResidueLimit, other.maximumResidueLimit)
+				&& Objects.equals(noObservedAdverse, other.noObservedAdverse) && Objects.equals(origin, other.origin)
+				&& Objects.equals(quantificationLimit, other.quantificationLimit)
+				&& Objects.equals(rangeOfContamination, other.rangeOfContamination);
+	}
+
 }

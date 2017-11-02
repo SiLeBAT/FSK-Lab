@@ -18,6 +18,7 @@ package de.bund.bfr.knime.fsklab.rakip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Simulation {
 
@@ -37,4 +38,25 @@ public class Simulation {
 
 	/** Pointer to software code (R script). */
 	public String visualizationScript = "";
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(algorithm, description, parameterSettings, plotSettings, simulatedModel,
+				visualizationScript);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+
+		Simulation other = (Simulation) obj;
+		return Objects.equals(algorithm, other.algorithm) && Objects.equals(description, other.description)
+				&& Objects.equals(parameterSettings, other.parameterSettings)
+				&& Objects.equals(plotSettings, other.plotSettings)
+				&& Objects.equals(simulatedModel, other.simulatedModel)
+				&& Objects.equals(visualizationScript, other.visualizationScript);
+	}
 }
