@@ -16,10 +16,26 @@
  **************************************************************************************************/
 package de.bund.bfr.knime.fsklab.rakip;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Arrays;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.gmail.gcolaianni5.jris.bean.Record;
+import com.gmail.gcolaianni5.jris.engine.JRis;
+import com.gmail.gcolaianni5.jris.exception.JRisException;
 
+import ezvcard.Ezvcard;
 import ezvcard.VCard;
 
 public class RakipModule extends SimpleModule {
@@ -29,10 +45,60 @@ public class RakipModule extends SimpleModule {
 	public RakipModule() {
 		super("RakipModule", Version.unknownVersion());
 
-		addSerializer(Record.class, new RisReferenceSerializer());
-		addDeserializer(Record.class, new RisReferenceDeserializer());
+		addSerializer(Record.class, new JsonSerializer<Record>() {
+			@Override
+			public void serialize(Record value, JsonGenerator gen, SerializerProvider serializers)
+					throws IOException, JsonProcessingException {
 
-		addSerializer(VCard.class, new VCardSerializer());
-		addDeserializer(VCard.class, new VCardDeserializer());
+				gen.writeStartObject();
+
+				try (final StringWriter writer = new StringWriter()) {
+					JRis.build(Arrays.asList(value), writer);
+					gen.writeStringField("reference", writer.toString());
+				} catch (JRisException e) {
+					throw new IOException(e);
+				}
+
+				gen.writeEndObject();
+			}
+		});
+
+		addDeserializer(Record.class, new JsonDeserializer<Record>() {
+			@Override
+			public Record deserialize(JsonParser p, DeserializationContext ctxt)
+					throws IOException, JsonProcessingException {
+
+				final JsonNode node = p.readValueAsTree();
+				final String referenceString = node.get("reference").asText();
+
+				try (final StringReader reader = new StringReader(referenceString)) {
+					return JRis.parse(reader).get(0);
+				} catch (JRisException e) {
+					throw new IOException(e);
+				}
+			}
+		});
+
+		addSerializer(VCard.class, new JsonSerializer<VCard>() {
+			@Override
+			public void serialize(VCard value, JsonGenerator gen, SerializerProvider serializers)
+					throws IOException, JsonProcessingException {
+
+				gen.writeStartObject();
+				gen.writeStringField("creator", value.writeJson());
+				gen.writeEndObject();
+			}
+		});
+
+		addDeserializer(VCard.class, new JsonDeserializer<VCard>() {
+			@Override
+			public VCard deserialize(JsonParser p, DeserializationContext ctxt)
+					throws IOException, JsonProcessingException {
+
+				final JsonNode node = p.readValueAsTree();
+				final String cardString = node.get("creator").asText();
+				return Ezvcard.parseJson(cardString).first();
+			}
+		});
 	}
 }
