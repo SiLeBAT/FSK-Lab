@@ -2451,8 +2451,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			add(coolTable, BorderLayout.NORTH);
-			add(buttonsPanel, BorderLayout.SOUTH);
+			final JPanel panel = UI.createTablePanel(coolTable);
+			panel.add(buttonsPanel, BorderLayout.SOUTH);
+			
+			add(panel);
 		}
 
 		void init(final List<Record> references) {
@@ -2576,8 +2578,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			add(myTable, BorderLayout.NORTH);
-			add(buttonsPanel, BorderLayout.SOUTH);
+			JPanel panel = UI.createTablePanel(myTable);
+			panel.add(buttonsPanel, BorderLayout.SOUTH);
+			
+			add(panel);
 		}
 
 		void init(final List<VCard> vcards) {
@@ -3200,8 +3204,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			add(myTable, BorderLayout.NORTH);
-			add(buttonsPanel, BorderLayout.SOUTH);
+			final JPanel panel = UI.createTablePanel(myTable);
+			panel.add(buttonsPanel, BorderLayout.SOUTH);
+			
+			add(panel);
 		}
 
 		void init(final List<Parameter> parameters) {
