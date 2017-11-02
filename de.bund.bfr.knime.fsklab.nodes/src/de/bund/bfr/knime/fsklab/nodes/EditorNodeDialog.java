@@ -2327,10 +2327,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			}
 
-			for (int i = 0; i < creatorPanel.tableModel.getRowCount(); i++) {
-				final VCard vcard = (VCard) creatorPanel.tableModel.getValueAt(i, 0);
-				generalInformation.creators.add(vcard);
-			}
+			generalInformation.creators.addAll(creatorPanel.tableModel.vcards);
+
 			generalInformation.format = (String) formatField.getSelectedItem();
 			generalInformation.reference.addAll(referencePanel.coolModel.records);
 
@@ -2475,24 +2473,58 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	private class CreatorPanel extends JPanel {
 
 		private static final long serialVersionUID = 3543570665869685092L;
-		final NonEditableTableModel tableModel = new NonEditableTableModel();
+		TableModel tableModel = new TableModel();
+
+		// Non modifiable table model with headers
+		class TableModel extends DefaultTableModel {
+
+			private static final long serialVersionUID = -2363056543695517576L;
+			final ArrayList<VCard> vcards = new ArrayList<>();
+
+			TableModel() {
+				super(new Object[0][0], new String[] { "Given name", "Family name", "Contact" });
+			}
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+
+			void add(final VCard vcard) {
+
+				// Skip if vcard is already in table
+				for (final VCard currentCard : vcards) {
+					if (currentCard.equals(vcard)) {
+						return;
+					}
+				}
+				vcards.add(vcard);
+
+				final String givenName = vcard.getNickname().getValues().get(0);
+				final String familyName = vcard.getFormattedName().getValue();
+				final String contact = vcard.getEmails().get(0).getValue();
+				addRow(new String[] { givenName, familyName, contact });
+			}
+
+			void modify(final int rowNumber, final VCard vcard) {
+				vcards.set(rowNumber, vcard);
+
+				setValueAt(vcard.getNickname().getValues().get(0), rowNumber, 0);
+				setValueAt(vcard.getFormattedName().getValue(), rowNumber, 1);
+				setValueAt(vcard.getEmails().get(0).getValue(), rowNumber, 2);
+			}
+
+			void remove(final int rowNumber) {
+				vcards.remove(rowNumber);
+				removeRow(rowNumber);
+			}
+		}
 
 		public CreatorPanel() {
 
 			super(new BorderLayout());
 
 			setBorder(BorderFactory.createTitledBorder("Creators"));
-
-			final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
-
-				private static final long serialVersionUID = 1L;
-
-				protected void setValue(Object value) {
-					if (value != null) {
-						setText(((VCard) value).write());
-					}
-				};
-			};
 
 			final JButton importButton = new JButton("Import from file");
 			importButton.addActionListener(event -> {
@@ -2507,14 +2539,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					try {
 						final List<VCard> vcards = Ezvcard.parse(fileChooser.getSelectedFile()).all();
-						vcards.forEach(it -> tableModel.addRow(new VCard[] { it }));
+						vcards.forEach(tableModel::add);
 					} catch (final IOException exception) {
 						LOGGER.warn("Error importing VCards", exception);
 					}
 				}
 			});
 
-			final JTable myTable = new HeadlessTable(tableModel, renderer);
+			final JTable myTable = new JTable(tableModel);
 
 			// buttons
 			final ButtonsPanel buttonsPanel = new ButtonsPanel();
@@ -2524,7 +2556,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				final EditCreatorPanel editPanel = new EditCreatorPanel();
 				final int result = showConfirmDialog(editPanel, "Create creator");
 				if (result == JOptionPane.OK_OPTION) {
-					tableModel.addRow(new VCard[] { editPanel.toVCard() });
+					
+					final VCard newCard = editPanel.toVCard();
+					
+					// Validate somehow
+					if (newCard.getNickname() == null)
+						return;
+					if (newCard.getFormattedName() == null)
+						return;
+					if (newCard.getEmails().isEmpty())
+						return;
+					
+					tableModel.add(editPanel.toVCard());
 				}
 			});
 
@@ -2533,13 +2576,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				final int rowToEdit = myTable.getSelectedRow();
 				if (rowToEdit != -1) {
 
-					final VCard creator = (VCard) tableModel.getValueAt(rowToEdit, 0);
+					final VCard creator = tableModel.vcards.get(rowToEdit);
 
 					final EditCreatorPanel editPanel = new EditCreatorPanel();
 					editPanel.init(creator);
+
 					final int result = showConfirmDialog(editPanel, "Modify creator");
 					if (result == JOptionPane.OK_OPTION) {
-						tableModel.setValueAt(editPanel.toVCard(), rowToEdit, 0);
+						tableModel.modify(rowToEdit, editPanel.toVCard());
 					}
 				}
 			});
@@ -2547,7 +2591,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			buttonsPanel.removeButton.addActionListener(event -> {
 				final int rowToDelete = myTable.getSelectedRow();
 				if (rowToDelete != -1) {
-					tableModel.removeRow(rowToDelete);
+					tableModel.remove(rowToDelete);
 				}
 			});
 
@@ -2585,9 +2629,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		void init(final VCard creator) {
 
 			if (creator != null) {
-				givenNameTextField.setText(creator.getNickname().getValues().get(0));
-				familyNameTextField.setText(creator.getFormattedName().getValue());
-				contactTextField.setText(creator.getEmails().get(0).getValue());
+				if (creator.getNickname() != null)
+					givenNameTextField.setText(creator.getNickname().getValues().get(0));
+				if (creator.getFormattedName() != null)
+					familyNameTextField.setText(creator.getFormattedName().getValue());
+				if (!creator.getEmails().isEmpty())
+					contactTextField.setText(creator.getEmails().get(0).getValue());
 			}
 		}
 
