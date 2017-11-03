@@ -2453,7 +2453,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			final JPanel panel = UI.createTablePanel(coolTable);
 			panel.add(buttonsPanel, BorderLayout.SOUTH);
-			
+
 			add(panel);
 		}
 
@@ -2580,7 +2580,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			JPanel panel = UI.createTablePanel(myTable);
 			panel.add(buttonsPanel, BorderLayout.SOUTH);
-			
+
 			add(panel);
 		}
 
@@ -3206,7 +3206,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			final JPanel panel = UI.createTablePanel(myTable);
 			panel.add(buttonsPanel, BorderLayout.SOUTH);
-			
+
 			add(panel);
 		}
 
@@ -3230,28 +3230,35 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			super(new BorderLayout());
 
-			final JLabel sseLabel = new JLabel("SSE");
-			final JSpinner sseSpinner = GUIFactory.createSpinner(sseSpinnerModel);
+			final JPanel ssePanel = new JPanel();
+			ssePanel.add(new JLabel("SSE"));
+			ssePanel.add(GUIFactory.createSpinner(sseSpinnerModel));
 
-			final JLabel mseLabel = new JLabel("MSE");
-			final JSpinner mseSpinner = GUIFactory.createSpinner(mseSpinnerModel);
+			final JPanel msePanel = new JPanel();
+			msePanel.add(new JLabel("MSE"));
+			msePanel.add(GUIFactory.createSpinner(mseSpinnerModel));
 
-			final JLabel rmseLabel = new JLabel("RMSE");
-			final JSpinner rmseSpinner = GUIFactory.createSpinner(rmseSpinnerModel);
+			final JPanel rmsePanel = new JPanel();
+			rmsePanel.add(new JLabel("RMSE"));
+			rmsePanel.add(GUIFactory.createSpinner(rmseSpinnerModel));
 
-			final JLabel r2Label = new JLabel("r-Squared");
-			final JSpinner r2Spinner = GUIFactory.createSpinner(r2SpinnerModel);
+			final JPanel r2Panel = new JPanel();
+			r2Panel.add(new JLabel("r-Squared"));
+			r2Panel.add(GUIFactory.createSpinner(r2SpinnerModel));
 
-			final JLabel aicLabel = new JLabel("AIC");
-			final JSpinner aicSpinner = GUIFactory.createSpinner(aicSpinnerModel);
+			final JPanel aicPanel = new JPanel();
+			aicPanel.add(new JLabel("AIC"));
+			aicPanel.add(GUIFactory.createSpinner(aicSpinnerModel));
 
-			final JLabel bicLabel = new JLabel("BIC");
-			final JSpinner bicSpinner = GUIFactory.createSpinner(bicSpinnerModel);
+			final JPanel bicPanel = new JPanel();
+			bicPanel.add(new JLabel("BIC"));
+			bicPanel.add(GUIFactory.createSpinner(bicSpinnerModel));
 
-			final JPanel formPanel = UI.createOptionsPanel(
-					Arrays.asList(sseLabel, mseLabel, rmseLabel, r2Label, aicLabel, bicLabel),
-					Arrays.asList(sseSpinner, mseSpinner, rmseSpinner, r2Spinner, aicSpinner, bicSpinner));
-			add(formPanel, BorderLayout.NORTH);
+			final JPanel horizontalPanel = UI.createHorizontalPanel(ssePanel, msePanel, rmsePanel, r2Panel, aicPanel,
+					bicPanel);
+			final JPanel centeredPanel = UI.createCenterPanel(horizontalPanel);
+
+			add(centeredPanel);
 
 			setBorder(BorderFactory.createTitledBorder("Quality measures"));
 		}
