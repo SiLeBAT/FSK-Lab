@@ -76,5 +76,4 @@ public class PopulationGroup {
 				&& Objects.equals(populationRiskFactor, other.populationRiskFactor)
 				&& Objects.equals(season, other.season);
 	}
-
 }

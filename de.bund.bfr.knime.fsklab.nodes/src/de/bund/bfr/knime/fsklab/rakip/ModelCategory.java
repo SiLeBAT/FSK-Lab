@@ -52,6 +52,5 @@ public class ModelCategory {
 				&& Objects.equals(modelClassComment, other.modelClassComment)
 				&& Objects.equals(modelSubClass, other.modelSubClass)
 				&& Objects.equals(modelSubSubClass, other.modelSubSubClass);
-
 	}
 }

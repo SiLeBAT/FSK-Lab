@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import com.gmail.gcolaianni5.jris.bean.Record;
 
@@ -79,125 +80,27 @@ public class GeneralInformation {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
-		result = prime * result + ((creators == null) ? 0 : creators.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((format == null) ? 0 : format.hashCode());
-		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
-		result = prime * result + (isAvailable ? 1231 : 1237);
-		result = prime * result + ((language == null) ? 0 : language.hashCode());
-		result = prime * result + ((languageWrittenIn == null) ? 0 : languageWrittenIn.hashCode());
-		result = prime * result + ((modelCategory == null) ? 0 : modelCategory.hashCode());
-		result = prime * result + ((modificationDate == null) ? 0 : modificationDate.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((objective == null) ? 0 : objective.hashCode());
-		result = prime * result + ((reference == null) ? 0 : reference.hashCode());
-		result = prime * result + ((rights == null) ? 0 : rights.hashCode());
-		result = prime * result + ((software == null) ? 0 : software.hashCode());
-		result = prime * result + ((source == null) ? 0 : source.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
-		return result;
+		return Objects.hash(creationDate, creators, description, format, identifier, isAvailable, language,
+				languageWrittenIn, modelCategory, modificationDate, name, objective, reference, rights, software,
+				source, status, url);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (obj == null || getClass() != obj.getClass())
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+
 		GeneralInformation other = (GeneralInformation) obj;
-		if (creationDate == null) {
-			if (other.creationDate != null)
-				return false;
-		} else if (!creationDate.equals(other.creationDate))
-			return false;
-		if (creators == null) {
-			if (other.creators != null)
-				return false;
-		} else if (!creators.equals(other.creators))
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (format == null) {
-			if (other.format != null)
-				return false;
-		} else if (!format.equals(other.format))
-			return false;
-		if (identifier == null) {
-			if (other.identifier != null)
-				return false;
-		} else if (!identifier.equals(other.identifier))
-			return false;
-		if (isAvailable != other.isAvailable)
-			return false;
-		if (language == null) {
-			if (other.language != null)
-				return false;
-		} else if (!language.equals(other.language))
-			return false;
-		if (languageWrittenIn == null) {
-			if (other.languageWrittenIn != null)
-				return false;
-		} else if (!languageWrittenIn.equals(other.languageWrittenIn))
-			return false;
-		if (modelCategory == null) {
-			if (other.modelCategory != null)
-				return false;
-		} else if (!modelCategory.equals(other.modelCategory))
-			return false;
-		if (modificationDate == null) {
-			if (other.modificationDate != null)
-				return false;
-		} else if (!modificationDate.equals(other.modificationDate))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (objective == null) {
-			if (other.objective != null)
-				return false;
-		} else if (!objective.equals(other.objective))
-			return false;
-		if (reference == null) {
-			if (other.reference != null)
-				return false;
-		} else if (!reference.equals(other.reference))
-			return false;
-		if (rights == null) {
-			if (other.rights != null)
-				return false;
-		} else if (!rights.equals(other.rights))
-			return false;
-		if (software == null) {
-			if (other.software != null)
-				return false;
-		} else if (!software.equals(other.software))
-			return false;
-		if (source == null) {
-			if (other.source != null)
-				return false;
-		} else if (!source.equals(other.source))
-			return false;
-		if (status == null) {
-			if (other.status != null)
-				return false;
-		} else if (!status.equals(other.status))
-			return false;
-		if (url == null) {
-			if (other.url != null)
-				return false;
-		} else if (!url.equals(other.url))
-			return false;
-		return true;
+		return Objects.equals(creationDate, other.creationDate) && Objects.equals(creators, other.creators)
+				&& Objects.equals(description, other.description) && Objects.equals(format,  other.format)
+				&& Objects.equals(identifier, other.identifier) && isAvailable == other.isAvailable
+				&& Objects.equals(language, other.language) && Objects.equals(languageWrittenIn, other.languageWrittenIn)
+				&& Objects.equals(modelCategory, other.modelCategory) && Objects.equals(modificationDate, other.modificationDate)
+				&& Objects.equals(name, other.name) && Objects.equals(objective, other.objective)
+				&& Objects.equals(reference, other.reference) && Objects.equals(rights, other.rights)
+				&& Objects.equals(software,  other.software) && Objects.equals(source, other.source)
+				&& Objects.equals(status, other.status) && Objects.equals(url, other.url);
 	}
 }

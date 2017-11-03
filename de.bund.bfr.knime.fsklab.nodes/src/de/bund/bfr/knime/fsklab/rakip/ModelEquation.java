@@ -53,5 +53,4 @@ public class ModelEquation {
 				&& Objects.equals(equationName, other.equationName)
 				&& Objects.equals(equationReference, other.equationReference);
 	}
-
 }

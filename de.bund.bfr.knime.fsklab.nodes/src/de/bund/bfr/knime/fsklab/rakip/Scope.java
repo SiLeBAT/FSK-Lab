@@ -18,6 +18,7 @@ package de.bund.bfr.knime.fsklab.rakip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Scope {
 
@@ -39,62 +40,20 @@ public class Scope {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((country == null) ? 0 : country.hashCode());
-		result = prime * result + ((generalComment == null) ? 0 : generalComment.hashCode());
-		result = prime * result + ((hazard == null) ? 0 : hazard.hashCode());
-		result = prime * result + ((populationGroup == null) ? 0 : populationGroup.hashCode());
-		result = prime * result + ((product == null) ? 0 : product.hashCode());
-		result = prime * result + ((region == null) ? 0 : region.hashCode());
-		result = prime * result + ((temporalInformation == null) ? 0 : temporalInformation.hashCode());
-		return result;
+		return Objects.hash(country, generalComment, hazard, populationGroup, product, region, temporalInformation);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (obj == null || getClass() != obj.getClass())
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+
 		Scope other = (Scope) obj;
-		if (country == null) {
-			if (other.country != null)
-				return false;
-		} else if (!country.equals(other.country))
-			return false;
-		if (generalComment == null) {
-			if (other.generalComment != null)
-				return false;
-		} else if (!generalComment.equals(other.generalComment))
-			return false;
-		if (hazard == null) {
-			if (other.hazard != null)
-				return false;
-		} else if (!hazard.equals(other.hazard))
-			return false;
-		if (populationGroup == null) {
-			if (other.populationGroup != null)
-				return false;
-		} else if (!populationGroup.equals(other.populationGroup))
-			return false;
-		if (product == null) {
-			if (other.product != null)
-				return false;
-		} else if (!product.equals(other.product))
-			return false;
-		if (region == null) {
-			if (other.region != null)
-				return false;
-		} else if (!region.equals(other.region))
-			return false;
-		if (temporalInformation == null) {
-			if (other.temporalInformation != null)
-				return false;
-		} else if (!temporalInformation.equals(other.temporalInformation))
-			return false;
-		return true;
+		return Objects.equals(country, other.country) && Objects.equals(generalComment, other.generalComment) &&
+				Objects.equals(hazard, other.hazard) && Objects.equals(populationGroup, other.populationGroup) &&
+				Objects.equals(product, other.product) && Objects.equals(region, other.region) &&
+				Objects.equals(temporalInformation, other.temporalInformation);
 	}
 }

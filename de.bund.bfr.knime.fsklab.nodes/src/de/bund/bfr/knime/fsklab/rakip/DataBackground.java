@@ -18,6 +18,7 @@ package de.bund.bfr.knime.fsklab.rakip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DataBackground {
 
@@ -29,50 +30,21 @@ public class DataBackground {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((assay == null) ? 0 : assay.hashCode());
-		result = prime * result + ((dietaryAssessmentMethod == null) ? 0 : dietaryAssessmentMethod.hashCode());
-		result = prime * result + ((laboratoryAccreditation == null) ? 0 : laboratoryAccreditation.hashCode());
-		result = prime * result + ((study == null) ? 0 : study.hashCode());
-		result = prime * result + ((studySample == null) ? 0 : studySample.hashCode());
-		return result;
+		return Objects.hash(assay, dietaryAssessmentMethod, laboratoryAccreditation, study, studySample);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (obj == null || getClass() != obj.getClass())
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+
 		DataBackground other = (DataBackground) obj;
-		if (assay == null) {
-			if (other.assay != null)
-				return false;
-		} else if (!assay.equals(other.assay))
-			return false;
-		if (dietaryAssessmentMethod == null) {
-			if (other.dietaryAssessmentMethod != null)
-				return false;
-		} else if (!dietaryAssessmentMethod.equals(other.dietaryAssessmentMethod))
-			return false;
-		if (laboratoryAccreditation == null) {
-			if (other.laboratoryAccreditation != null)
-				return false;
-		} else if (!laboratoryAccreditation.equals(other.laboratoryAccreditation))
-			return false;
-		if (study == null) {
-			if (other.study != null)
-				return false;
-		} else if (!study.equals(other.study))
-			return false;
-		if (studySample == null) {
-			if (other.studySample != null)
-				return false;
-		} else if (!studySample.equals(other.studySample))
-			return false;
-		return true;
+		return Objects.equals(assay, other.assay)
+				&& Objects.equals(dietaryAssessmentMethod, other.dietaryAssessmentMethod)
+				&& Objects.equals(laboratoryAccreditation, other.laboratoryAccreditation)
+				&& Objects.equals(study, other.study)
+				&& Objects.equals(studySample, other.studySample);
 	}
 }

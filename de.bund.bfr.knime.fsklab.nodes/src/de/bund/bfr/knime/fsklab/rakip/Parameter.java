@@ -79,5 +79,4 @@ public class Parameter {
 				&& Objects.equals(variabilitySubject, other.variabilitySubject)
 				&& Objects.equals(modelApplicability, other.modelApplicability) && Objects.equals(error, other.error);
 	}
-
 }

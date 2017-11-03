@@ -18,6 +18,7 @@ package de.bund.bfr.knime.fsklab.rakip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DietaryAssessmentMethod {
 
@@ -31,53 +32,23 @@ public class DietaryAssessmentMethod {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((collectionTool == null) ? 0 : collectionTool.hashCode());
-		result = prime * result + ((foodDescriptors == null) ? 0 : foodDescriptors.hashCode());
-		result = prime * result + ((numberOfFoodItems == null) ? 0 : numberOfFoodItems.hashCode());
-		result = prime * result + numberOfNonConsecutiveOneDay;
-		result = prime * result + ((recordTypes == null) ? 0 : recordTypes.hashCode());
-		result = prime * result + ((softwareTool == null) ? 0 : softwareTool.hashCode());
-		return result;
+		return Objects.hash(collectionTool, foodDescriptors, numberOfFoodItems, numberOfNonConsecutiveOneDay,
+				recordTypes, softwareTool);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (obj == null || getClass() != obj.getClass())
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+
 		DietaryAssessmentMethod other = (DietaryAssessmentMethod) obj;
-		if (collectionTool == null) {
-			if (other.collectionTool != null)
-				return false;
-		} else if (!collectionTool.equals(other.collectionTool))
-			return false;
-		if (foodDescriptors == null) {
-			if (other.foodDescriptors != null)
-				return false;
-		} else if (!foodDescriptors.equals(other.foodDescriptors))
-			return false;
-		if (numberOfFoodItems == null) {
-			if (other.numberOfFoodItems != null)
-				return false;
-		} else if (!numberOfFoodItems.equals(other.numberOfFoodItems))
-			return false;
-		if (numberOfNonConsecutiveOneDay != other.numberOfNonConsecutiveOneDay)
-			return false;
-		if (recordTypes == null) {
-			if (other.recordTypes != null)
-				return false;
-		} else if (!recordTypes.equals(other.recordTypes))
-			return false;
-		if (softwareTool == null) {
-			if (other.softwareTool != null)
-				return false;
-		} else if (!softwareTool.equals(other.softwareTool))
-			return false;
-		return true;
+		return Objects.equals(collectionTool, other.collectionTool)
+				&& Objects.equals(foodDescriptors, other.foodDescriptors)
+				&& Objects.equals(numberOfFoodItems, other.numberOfFoodItems)
+				&& numberOfNonConsecutiveOneDay == other.numberOfNonConsecutiveOneDay
+				&& Objects.equals(recordTypes, other.recordTypes)
+				&& Objects.equals(softwareTool, other.softwareTool);
 	}
 }

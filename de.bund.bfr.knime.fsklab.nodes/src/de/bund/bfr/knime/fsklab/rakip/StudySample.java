@@ -16,98 +16,9 @@
  **************************************************************************************************/
 package de.bund.bfr.knime.fsklab.rakip;
 
+import java.util.Objects;
+
 public class StudySample {
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((collectionProtocol == null) ? 0 : collectionProtocol.hashCode());
-		result = prime * result + ((fatPercentage == null) ? 0 : fatPercentage.hashCode());
-		result = prime * result + ((lotSizeUnit == null) ? 0 : lotSizeUnit.hashCode());
-		result = prime * result + ((moisturePercentage == null) ? 0 : moisturePercentage.hashCode());
-		result = prime * result + ((sample == null) ? 0 : sample.hashCode());
-		result = prime * result + ((samplingMethod == null) ? 0 : samplingMethod.hashCode());
-		result = prime * result + ((samplingPlan == null) ? 0 : samplingPlan.hashCode());
-		result = prime * result + ((samplingPoint == null) ? 0 : samplingPoint.hashCode());
-		result = prime * result + ((samplingProgramType == null) ? 0 : samplingProgramType.hashCode());
-		result = prime * result + ((samplingSize == null) ? 0 : samplingSize.hashCode());
-		result = prime * result + ((samplingStrategy == null) ? 0 : samplingStrategy.hashCode());
-		result = prime * result + ((samplingWeight == null) ? 0 : samplingWeight.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		StudySample other = (StudySample) obj;
-		if (collectionProtocol == null) {
-			if (other.collectionProtocol != null)
-				return false;
-		} else if (!collectionProtocol.equals(other.collectionProtocol))
-			return false;
-		if (fatPercentage == null) {
-			if (other.fatPercentage != null)
-				return false;
-		} else if (!fatPercentage.equals(other.fatPercentage))
-			return false;
-		if (lotSizeUnit == null) {
-			if (other.lotSizeUnit != null)
-				return false;
-		} else if (!lotSizeUnit.equals(other.lotSizeUnit))
-			return false;
-		if (moisturePercentage == null) {
-			if (other.moisturePercentage != null)
-				return false;
-		} else if (!moisturePercentage.equals(other.moisturePercentage))
-			return false;
-		if (sample == null) {
-			if (other.sample != null)
-				return false;
-		} else if (!sample.equals(other.sample))
-			return false;
-		if (samplingMethod == null) {
-			if (other.samplingMethod != null)
-				return false;
-		} else if (!samplingMethod.equals(other.samplingMethod))
-			return false;
-		if (samplingPlan == null) {
-			if (other.samplingPlan != null)
-				return false;
-		} else if (!samplingPlan.equals(other.samplingPlan))
-			return false;
-		if (samplingPoint == null) {
-			if (other.samplingPoint != null)
-				return false;
-		} else if (!samplingPoint.equals(other.samplingPoint))
-			return false;
-		if (samplingProgramType == null) {
-			if (other.samplingProgramType != null)
-				return false;
-		} else if (!samplingProgramType.equals(other.samplingProgramType))
-			return false;
-		if (samplingSize == null) {
-			if (other.samplingSize != null)
-				return false;
-		} else if (!samplingSize.equals(other.samplingSize))
-			return false;
-		if (samplingStrategy == null) {
-			if (other.samplingStrategy != null)
-				return false;
-		} else if (!samplingStrategy.equals(other.samplingStrategy))
-			return false;
-		if (samplingWeight == null) {
-			if (other.samplingWeight != null)
-				return false;
-		} else if (!samplingWeight.equals(other.samplingWeight))
-			return false;
-		return true;
-	}
 
 	public String sample = "";
 	public Double moisturePercentage = 0.0;
@@ -120,5 +31,32 @@ public class StudySample {
 	public String samplingWeight = "";
 	public String samplingSize = "";
 	public String lotSizeUnit = "";
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(collectionProtocol, fatPercentage, lotSizeUnit, moisturePercentage, sample, samplingMethod,
+				samplingPlan, samplingPoint, samplingProgramType, samplingSize, samplingStrategy, samplingWeight);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+
+		StudySample other = (StudySample) obj;
+		return Objects.equals(collectionProtocol, other.collectionProtocol)
+				&& Objects.equals(fatPercentage, other.fatPercentage) && Objects.equals(lotSizeUnit, other.lotSizeUnit)
+				&& Objects.equals(moisturePercentage, other.moisturePercentage) && Objects.equals(sample, other.sample)
+				&& Objects.equals(samplingMethod, other.samplingMethod)
+				&& Objects.equals(samplingPlan, other.samplingPlan)
+				&& Objects.equals(samplingPoint, other.samplingPoint)
+				&& Objects.equals(samplingProgramType, other.samplingProgramType)
+				&& Objects.equals(samplingSize, other.samplingSize)
+				&& Objects.equals(samplingStrategy, other.samplingStrategy)
+				&& Objects.equals(samplingWeight, other.samplingWeight);
+	}
+
 	public String samplingPoint = "";
 }
