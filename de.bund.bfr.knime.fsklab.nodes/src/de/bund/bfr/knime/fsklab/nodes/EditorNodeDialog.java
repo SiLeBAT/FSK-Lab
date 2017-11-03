@@ -61,10 +61,8 @@ import javax.swing.JSpinner;
 import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.lang3.StringUtils;
@@ -483,40 +481,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			addButton.setToolTipText("Remove");
 
 			return addButton;
-		}
-	}
-
-	private class NonEditableTableModel extends DefaultTableModel {
-
-		private static final long serialVersionUID = 8760456472042745780L;
-
-		NonEditableTableModel() {
-			super(new Object[][] {}, new String[] { "header" });
-		}
-
-		@Override
-		public boolean isCellEditable(final int row, final int column) {
-			return false;
-		}
-	}
-
-	private class HeadlessTable extends JTable {
-
-		private static final long serialVersionUID = -8980920067513143776L;
-		private final DefaultTableCellRenderer renderer;
-
-		HeadlessTable(final NonEditableTableModel model, final DefaultTableCellRenderer renderer) {
-
-			super(model);
-			setTableHeader(null);
-			setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-			this.renderer = renderer;
-		}
-
-		@Override
-		public DefaultTableCellRenderer getCellRenderer(final int row, final int column) {
-			return renderer;
 		}
 	}
 
@@ -3128,7 +3092,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			modelMath.bic = qualityMeasuresPanel.bicSpinnerModel.getNumber().doubleValue();
 
 			// Save model equations
-			modelMath.modelEquation.addAll(modelEquationsPanel.equations);
+			modelMath.modelEquation.addAll(modelEquationsPanel.tableModel.equations);
 
 			// TODO: Save fitting procedure
 			// TODO: Save exposure
@@ -3216,9 +3180,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				final int rowToEdit = myTable.getSelectedRow();
 				if (rowToEdit != -1) {
 
-					final Parameter param = (Parameter) tableModel.getValueAt(rowToEdit, 0);
 					final EditParameterPanel editPanel = new EditParameterPanel(this.isAdvanced);
-					editPanel.init(param);
+					editPanel.init(tableModel.parameters.get(rowToEdit));
 
 					final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify parameter");
 					if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
@@ -3301,9 +3264,49 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 7194287921709100267L;
 
-		final NonEditableTableModel tableModel = new NonEditableTableModel();
-		final List<ModelEquation> equations = new ArrayList<>();
+		final TableModel tableModel = new TableModel();
+		
+		class TableModel extends DefaultTableModel {
+			
+			private static final long serialVersionUID = 6615864381589787261L;
 
+			final ArrayList<ModelEquation> equations = new ArrayList<>();
+			
+			public TableModel() {
+				super(new Object[0][0], new String[] { "Name", "Equation" });
+			}
+			
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+			
+			void add(final ModelEquation equation) {
+				
+				// Skip if equation is already in table
+				for (final ModelEquation e : equations) {
+					if (e.equals(equation)) {
+						return;
+					}
+				}
+				equations.add(equation);
+				
+				addRow(new String[] { equation.equationName, equation.equation });
+			}
+			
+			void modify(final int rowNumber, final ModelEquation equation) {
+				equations.set(rowNumber, equation);
+				
+				setValueAt(equation.equationName, rowNumber, 0);
+				setValueAt(equation.equation, rowNumber, 1);
+			}
+			
+			void remove(final int rowNumber) {
+				equations.remove(rowNumber);
+				removeRow(rowNumber);
+			}
+		}
+		
 		private final EditModelEquationPanel editPanel = new EditModelEquationPanel(false);
 
 		ModelEquationsPanel(final boolean isAdvanced) {
@@ -3311,23 +3314,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			super(new BorderLayout());
 
 			setBorder(BorderFactory.createTitledBorder("Model equation"));
-			equations.forEach(it -> tableModel.addRow(new ModelEquation[] { it }));
 
-			final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
-				private static final long serialVersionUID = 1L;
-
-				protected void setValue(Object value) {
-					setText(((ModelEquation) value).equationName);
-				}
-			};
-
-			final HeadlessTable myTable = new HeadlessTable(tableModel, renderer);
+			final JTable myTable = new JTable(tableModel);
 
 			final JButton addButton = GUIFactory.createAddButton();
 			addButton.addActionListener(event -> {
 				final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create equation");
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-					tableModel.addRow(new ModelEquation[] { editPanel.get() });
+					tableModel.add(editPanel.get());
 				}
 			});
 
@@ -3335,12 +3329,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			editButton.addActionListener(event -> {
 				final int rowToEdit = myTable.getSelectedRow();
 				if (rowToEdit != -1) {
-					final ModelEquation equation = (ModelEquation) tableModel.getValueAt(rowToEdit, 0);
-					editPanel.init(equation);
+
+					editPanel.init(tableModel.equations.get(rowToEdit));
 
 					final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify equation");
 					if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-						tableModel.setValueAt(editPanel.get(), rowToEdit, 0);
+						tableModel.modify(rowToEdit, editPanel.get());
 					}
 				}
 			});
@@ -3349,14 +3343,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			removeButton.addActionListener(event -> {
 				final int rowToDelete = myTable.getSelectedRow();
 				if (rowToDelete != -1) {
-					tableModel.removeRow(rowToDelete);
+					tableModel.remove(rowToDelete);
 				}
 			});
 
-			add(myTable, BorderLayout.NORTH);
-
+			final JPanel panel = UI.createTablePanel(myTable);
+			
 			final JPanel buttonsPanel = UI.createHorizontalPanel(addButton, editButton, removeButton);
-			add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
+			panel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
+			
+			add(panel);
 		}
 
 		void toggleMode() {
@@ -3364,8 +3360,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		}
 
 		void init(final List<ModelEquation> modelEquations) {
-			modelEquations.forEach(it -> tableModel.addRow(new ModelEquation[] { it }));
-			equations.addAll(modelEquations);
+			modelEquations.forEach(tableModel::add);
 		}
 	}
 }
