@@ -578,8 +578,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	 * Panel to create/edit an assay.
 	 * 
 	 * <table summary="EditAssayPanel fields">
-	 *   <tr><td>Name</td><td>Mandatory</td></tr>
-	 *   <tr><td>Description</td><td>Optional</td></tr>
+	 * <tr>
+	 * <td>Name</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Description</td>
+	 * <td>Optional</td>
+	 * </tr>
 	 * </table>
 	 */
 	private class EditAssayPanel extends EditPanel<Assay> {
@@ -598,11 +604,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditAssayPanel.nameTooltip", true);
 
 			// Wrap text area in JScrollPane
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
-			descriptionPane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditAssayPanel.descriptionLabel")));
-			descriptionPane.setToolTipText(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditAssayPanel.descriptionTooltip"));
+			descriptionPane.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.EditAssayPanel.descriptionLabel")));
+			descriptionPane.setToolTipText(bundle.getString("GM.EditAssayPanel.descriptionTooltip"));
 
 			final JPanel formPanel = UI.createOptionsPanel(Arrays.asList(nameLabel), Arrays.asList(nameTextField));
 
@@ -663,12 +669,30 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	 * Panel to create/modify a {@link DietaryAssessmentMethod}.
 	 * 
 	 * <table summary="EditDietaryAssessmentMethodPanel fields">
-	 *   <tr><td>Data collection tool</td><td>Mandatory</td></tr>
-	 *   <tr><td>Non consecutive one day</td><td>Mandatory</td></tr>
-	 *   <tr><td>Dietary software tool</td><td>Optional</td></tr>
-	 *   <tr><td>Food item number</td><td>Optional</td></tr>
-	 *   <tr><td>Record type</td><td>Optional</td></tr>
-	 *   <tr><td>Food description</td><td>Optional</td></tr>
+	 * <tr>
+	 * <td>Data collection tool</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Non consecutive one day</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Dietary software tool</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Food item number</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Record type</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Food description</td>
+	 * <td>Optional</td>
+	 * </tr>
 	 * </table>
 	 */
 	private class EditDietaryAssessmentMethodPanel extends EditPanel<DietaryAssessmentMethod> {
@@ -812,25 +836,82 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	 * Panel to create/edit an {@link Hazard}.
 	 * 
 	 * <table summary="EditHazardPanel fields">
-	 *   <tr><td>Hazard type</td><td>Mandatory</td></tr>
-	 *   <tr><td>Hazard name</td><td>Mandatory</td></tr>
-	 *   <tr><td>Hazard description</td><td>Optional</td></tr>
-	 *   <tr><td>Hazard unit</td><td>Optional</td></tr>
-	 *   <tr><td>Adverse effect</td><td>Optional</td></tr>
-	 *   <tr><td>Origin</td><td>Optional</td></tr>
-	 *   <tr><td>BMD</td><td>Optional</td></tr>
-	 *   <tr><td>Maximum residue limit</td><td>Optional</td></tr>
-	 *   <tr><td>No observed adverse</td><td>Optional</td></tr>
-	 *   <tr><td>Acceptable operator</td><td>Optional</td></tr>
-	 *   <tr><td>Acute reference dose</td><td>Optional</td></tr>
-	 *   <tr><td>Acceptable daily intake</td><td>Optional</td></tr>
-	 *   <tr><td>Ind sum</td><td>Optional</td></tr>
-	 *   <tr><td>Laboratory name</td><td>Optional</td></tr>
-	 *   <tr><td>Laboratory country</td><td>Optional</td></tr>
-	 *   <tr><td>Detection limit</td><td>Optional</td></tr>
-	 *   <tr><td>Quantification limit</td><td>Optional</td></tr>
-	 *   <tr><td>Left censored data</td><td>Optional</td></tr>
-	 *   <tr><td>Contamination range</td><td>Optional</td></tr>
+	 * <tr>
+	 * <td>Hazard type</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Hazard name</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Hazard description</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Hazard unit</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Adverse effect</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Origin</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>BMD</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Maximum residue limit</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>No observed adverse</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Acceptable operator</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Acute reference dose</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Acceptable daily intake</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Ind sum</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Laboratory name</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Laboratory country</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Detection limit</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Quantification limit</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Left censored data</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Contamination range</td>
+	 * <td>Optional</td>
+	 * </tr>
 	 * </table>
 	 */
 	private class EditHazardPanel extends EditPanel<Hazard> {
@@ -900,11 +981,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditHazardPanel.contaminationRangeTooltip");
 
 			// Wraps hazardDescriptionTextArea in a JScrollPane
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 			final JScrollPane hazardDescriptionPanel = new JScrollPane(hazardDescriptionTextArea);
-			hazardDescriptionPanel.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditHazardPanel.hazardDescriptionLabel")));
-			hazardDescriptionPanel.setToolTipText(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditHazardPanel.hazardDescriptionTooltip"));
+			hazardDescriptionPanel.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.EditHazardPanel.hazardDescriptionLabel")));
+			hazardDescriptionPanel.setToolTipText(bundle.getString("GM.EditHazardPanel.hazardDescriptionTooltip"));
 
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(
@@ -1021,9 +1102,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	 * Panel to create/edit a {@link ModelEquation}.
 	 * 
 	 * <table summary="EditModelEquationPanel fields">
-	 *   <tr><td>Equation name</td><td>Mandatory</td></tr>
-	 *   <tr><td>Equation class</td><td>Optional</td></tr>
-	 *   <tr><td>Script</td><td>Mandatory</td></tr>
+	 * <tr>
+	 * <td>Equation name</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Equation class</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Script</td>
+	 * <td>Mandatory</td>
+	 * </tr>
 	 * </table>
 	 */
 	private class EditModelEquationPanel extends EditPanel<ModelEquation> {
@@ -1047,11 +1137,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			referencePanel = new ReferencePanel(isAdvanced);
 
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 			final JScrollPane scriptPane = new JScrollPane(scriptTextArea);
-			scriptPane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditModelEquationPanel.scriptLabel")));
-			scriptPane.setToolTipText(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditModelEquationPanel.scriptTooltip"));
+			scriptPane.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.EditModelEquationPanel.scriptLabel")));
+			scriptPane.setToolTipText(bundle.getString("GM.EditModelEquationPanel.scriptTooltip"));
 
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(Arrays.asList(equationNameLabel, equationClassLabel),
@@ -1181,20 +1271,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JScrollPane applicabilityPane = new JScrollPane(applicabilityTextArea);
 			final JSpinner errorSpinner = GUIFactory.createSpinner(errorSpinnerModel);
 
-			descriptionPane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditParameterPanel.descriptionLabel")));
-			descriptionPane.setToolTipText(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditParameterPanel.descriptionTooltip"));
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
-			variabilitySubjectPane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditParameterPanel.variabilitySubjectLabel")));
-			variabilitySubjectPane.setToolTipText(FskPlugin.getDefault().MESSAGES_BUNDLE
-					.getString("GM.EditParameterPanel.variabilitySubjectTooltip"));
+			descriptionPane.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.EditParameterPanel.descriptionLabel")));
+			descriptionPane.setToolTipText(bundle.getString("GM.EditParameterPanel.descriptionTooltip"));
 
-			applicabilityPane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditParameterPanel.applicabilityLabel")));
-			applicabilityPane.setToolTipText(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditParameterPanel.applicabilityTooltip"));
+			variabilitySubjectPane.setBorder(BorderFactory
+					.createTitledBorder(bundle.getString("GM.EditParameterPanel.variabilitySubjectLabel")));
+			variabilitySubjectPane.setToolTipText(bundle.getString("GM.EditParameterPanel.variabilitySubjectTooltip"));
+
+			applicabilityPane.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.EditParameterPanel.applicabilityLabel")));
+			applicabilityPane.setToolTipText(bundle.getString("GM.EditParameterPanel.applicabilityTooltip"));
 
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(
@@ -1310,19 +1399,58 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	 * Panel to create/edit a {@link PopulationGroup}.
 	 * 
 	 * <table summary="EditPopulationGroupPanel fields">
-	 *   <tr><td>Population name</td><td>Mandatory</td></tr>
-	 *   <tr><td>Target population</td><td>Optional</td></tr>
-	 *   <tr><td>Population span</td><td>Optional</td></tr>
-	 *   <tr><td>Population description</td><td>Optional</td></tr>
-	 *   <tr><td>Population age</td><td>Optional</td></tr>
-	 *   <tr><td>Population gender</td><td>Optional</td></tr>
-	 *   <tr><td>BMI</td><td>Optional</td></tr>
-	 *   <tr><td>Special diet group</td><td>Optional</td></tr>
-	 *   <tr><td>Pattern consumption</td><td>Optional</td></tr>
-	 *   <tr><td>Region</td><td>Optional</td></tr>
-	 *   <tr><td>Country</td><td>Optional</td></tr>
-	 *   <tr><td>Risk</td><td>Optional</td></tr>
-	 *   <tr><td>Season</td><td>Optional</td></tr>
+	 * <tr>
+	 * <td>Population name</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Target population</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Population span</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Population description</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Population age</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Population gender</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>BMI</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Special diet group</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Pattern consumption</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Region</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Country</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Risk</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Season</td>
+	 * <td>Optional</td>
+	 * </tr>
 	 * </table>
 	 */
 	private class EditPopulationGroupPanel extends EditPanel<PopulationGroup> {
@@ -1564,8 +1692,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			final JLabel envNameLabel = GUIFactory.createLabel("GM.EditProductPanel.envNameLabel",
 					"GM.EditProductPanel.envNameTooltip", true);
-			final JLabel envDescriptionLabel = GUIFactory.createLabel("GM.EditProductPanel.envDescriptionLabel",
-					"GM.EditProductPanel.envDescriptionTooltip");
 			final JLabel envUnitLabel = GUIFactory.createLabel("GM.EditProductPanel.envUnitLabel",
 					"GM.EditProductPanel.envUnitTooltip", true);
 			final JLabel productionMethodLabel = GUIFactory.createLabel("GM.EditProductPanel.productionMethodLabel",
@@ -1586,9 +1712,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditProductPanel.expirationDateTooltip");
 
 			// Build UI
-			final JScrollPane envDescriptionPane = new JScrollPane(envDescriptionTextArea);
-			envDescriptionPane.setBorder(BorderFactory.createTitledBorder(envDescriptionLabel.getText()));
-			envDescriptionPane.setToolTipText(envDescriptionLabel.getToolTipText());
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+			envDescriptionTextArea.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.EditProductPanel.envDescriptionLabel")));
+			envDescriptionTextArea.setToolTipText(bundle.getString("GM.EditProductPanel.envDescriptionTooltip"));
 
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(
@@ -1603,7 +1730,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
-			northPanel.add(envDescriptionPane);
+			northPanel.add(new JScrollPane(envDescriptionTextArea));
 
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
@@ -1744,21 +1871,66 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	 * Panel to create/edit a {@link Record}.
 	 * 
 	 * <table summary="EditReferencePanel fields">
-	 *   <tr><td>Is reference description?</td><td>Optional</td></tr>
-	 *   <tr><td>Type</td><td>Optional</td></tr>
-	 *   <tr><td>Date</td><td>Optional</td></tr>
-	 *   <tr><td>PMID</td><td>Optional</td></tr>
-	 *   <tr><td>DOI</td><td>Mandatory</td></tr>
-	 *   <tr><td>Authors</td><td>Optional</td></tr>
-	 *   <tr><td>Title</td><td>Mandatory</td></tr>
-	 *   <tr><td>Abstract</td><td>Optional</td></tr>
-	 *   <tr><td>Journal</td><td>Optional</td></tr>
-	 *   <tr><td>Volume</td><td>Optional</td></tr>
-	 *   <tr><td>Issue</td><td>Optional</td></tr>
-	 *   <tr><td>Page</td><td>Optional</td></tr>
-	 *   <tr><td>Status</td><td>Optional</td></tr>
-	 *   <tr><td>Website</td><td>Optional</td></tr>
-	 *   <tr><td>Comment</td><td>Optional</td></tr>
+	 * <tr>
+	 * <td>Is reference description?</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Type</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Date</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>PMID</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>DOI</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Authors</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Title</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Abstract</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Journal</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Volume</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Issue</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Page</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Status</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Website</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Comment</td>
+	 * <td>Optional</td>
+	 * </tr>
 	 * </table>
 	 */
 	private class EditReferencePanel extends EditPanel<Record> {
@@ -1809,13 +1981,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JSpinner volumeSpinner = GUIFactory.createSpinner(volumeSpinnerModel);
 			final JSpinner issueSpinner = GUIFactory.createSpinner(issueSpinnerModel);
 
-			final JScrollPane abstractPane = new JScrollPane(abstractTextArea);
-			abstractPane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditReferencePanel.abstractLabel")));
-
-			final JScrollPane commentPane = new JScrollPane(commentTextArea);
-			commentPane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.EditReferencePanel.commentLabel")));
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+			abstractTextArea.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.EditReferencePanel.abstractLabel")));
+			commentTextArea.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.EditReferencePanel.commentLabel")));
 
 			// isReferenceDescription panel
 			final JPanel isReferenceDescriptionPanel = new JPanel(new BorderLayout());
@@ -1834,8 +2004,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(isReferenceDescriptionPanel);
 			northPanel.add(formPanel);
-			northPanel.add(abstractPane);
-			northPanel.add(commentPane);
+			northPanel.add(new JScrollPane(abstractTextArea));
+			northPanel.add(new JScrollPane(commentTextArea));
 
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
@@ -1967,16 +2137,46 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	 * Panel to create/edit a {@link StudySample}.
 	 * 
 	 * <table summary="EditStudySamplePanel fields">
-	 *   <tr><td>Sample name</td><td>Mandatory</td></tr>
-	 *   <tr><td>Moisture percentage</td><td>Optional</td></tr>
-	 *   <tr><td>Fat percentage</td><td>Optional</td></tr>
-	 *   <tr><td>Sample protocol</td><td>Mandatory</td></tr>
-	 *   <tr><td>Sampling strategy</td><td>Optional</td></tr>
-	 *   <tr><td>Sampling type</td><td>Optional</td></tr>
-	 *   <tr><td>Sampling method</td><td>Optional</td></tr>
-	 *   <tr><td>Sampling plan</td><td>Mandatory</td></tr>
-	 *   <tr><td>Sampling weight</td><td>Mandatory</td></tr>
-	 *   <tr><td>Sampling size</td><td>Mandatory</td></tr>
+	 * <tr>
+	 * <td>Sample name</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Moisture percentage</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Fat percentage</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Sample protocol</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Sampling strategy</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Sampling type</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Sampling method</td>
+	 * <td>Optional</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Sampling plan</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Sampling weight</td>
+	 * <td>Mandatory</td>
+	 * </tr>
+	 * <tr>
+	 * <td>Sampling size</td>
+	 * <td>Mandatory</td>
+	 * </tr>
 	 * </table>
 	 */
 	private class EditStudySamplePanel extends EditPanel<StudySample> {
@@ -2213,19 +2413,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel statusLabel = GUIFactory.createLabel("GM.GeneralInformationPanel.statusLabel",
 					"GM.GeneralInformationPanel.statusTooltip");
 
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+
+			objectiveTextArea.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.GeneralInformationPanel.objectiveLabel")));
+			objectiveTextArea.setToolTipText(bundle.getString("GM.GeneralInformationPanel.objectiveTooltip"));
+
+			descriptionTextArea.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.GeneralInformationPanel.descriptionLabel")));
+			descriptionTextArea.setToolTipText(bundle.getString("GM.GeneralInformationPanel.descriptionTooltip"));
+
 			// Hide initially advanced components
-			final JScrollPane objectivePane = new JScrollPane(objectiveTextArea);
-			objectivePane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.objectiveLabel")));
-			objectivePane.setToolTipText(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.objectiveTooltip"));
-
-			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
-			descriptionPane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.descriptionLabel")));
-			descriptionPane.setToolTipText(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.GeneralInformationPanel.descriptionTooltip"));
-
 			final List<JComponent> advancedComponents = Arrays.asList(sourceTextField, formatField, languageField,
 					softwareField, languageWrittenInField, statusField, objectiveTextArea, descriptionTextArea);
 			advancedComponents.forEach(it -> it.setEnabled(false));
@@ -2250,8 +2448,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			northPanel.add(formPanel);
-			northPanel.add(objectivePane);
-			northPanel.add(descriptionPane);
+			northPanel.add(new JScrollPane(objectiveTextArea));
+			northPanel.add(new JScrollPane(descriptionTextArea));
 			northPanel.add(creatorPanel);
 			northPanel.add(referencePanel);
 
@@ -2684,11 +2882,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final EditPopulationGroupPanel editPopulationGroupPanel = new EditPopulationGroupPanel(false);
 
 		ScopePanel() {
-			final JScrollPane commentPane = new JScrollPane(commentTextArea);
-			commentPane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.ScopePanel.commentLabel")));
-			commentPane
-					.setToolTipText(FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.ScopePanel.commentTooltip"));
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+			commentTextArea.setBorder(BorderFactory.createTitledBorder(bundle.getString("GM.ScopePanel.commentLabel")));
+			commentTextArea.setToolTipText(bundle.getString("GM.ScopePanel.commentTooltip"));
 
 			// Build UI
 			productButton.setToolTipText("Click me to add a product");
@@ -2753,7 +2949,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			northPanel.add(formPanel);
-			northPanel.add(commentPane);
+			northPanel.add(new JScrollPane(commentTextArea));
 
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
@@ -2982,11 +3178,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel studyProtocolComponentsTypeLabel = GUIFactory.createLabel("GM.StudyPanel.componentsTypeLabel",
 					"GM.StudyPanel.componentsTypeTooltip");
 
-			final JScrollPane studyDescriptionPane = new JScrollPane(studyDescriptionTextArea);
-			studyDescriptionPane.setBorder(BorderFactory.createTitledBorder(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.StudyPanel.studyDescriptionLabel")));
-			studyDescriptionPane.setToolTipText(
-					FskPlugin.getDefault().MESSAGES_BUNDLE.getString("GM.StudyPanel.studyDescriptionTooltip"));
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+			studyDescriptionTextArea.setBorder(
+					BorderFactory.createTitledBorder(bundle.getString("GM.StudyPanel.studyDescriptionLabel")));
+			studyDescriptionTextArea.setToolTipText(bundle.getString("GM.StudyPanel.studyDescriptionTooltip"));
 
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(
@@ -3006,7 +3201,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
-			northPanel.add(studyDescriptionPane);
+			northPanel.add(new JScrollPane(studyDescriptionTextArea));
 
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
@@ -3016,7 +3211,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					studyAssayTechnologyPlatformTextField, accreditationProcedureField, studyProtocolNameTextField,
 					studyProtocolTypeField, studyProtocolDescriptionTextField, studyProtocolURITextField,
 					studyProtocolVersionTextField, studyProtocolParametersField, studyProtocolComponentsTypeField);
-
 			advancedComponents.forEach(it -> it.setEnabled(false));
 		}
 	}
@@ -3392,7 +3586,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			final JPanel formPanel = UI.createOptionsPanel(Arrays.asList(algorithmLabel, modelLabel, scriptLabel),
 					Arrays.asList(algorithmField, modelField, scriptField));
-			
+
 			final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 			advancedCheckBox.addItemListener(event -> {
 				final boolean isAdvanced = advancedCheckBox.isSelected();
@@ -3411,7 +3605,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
-
 
 			// Initially the advanced mode is disabled, so advanced components must be
 			// disabled
