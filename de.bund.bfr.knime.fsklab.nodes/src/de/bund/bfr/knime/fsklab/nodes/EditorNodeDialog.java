@@ -22,7 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.GridBagLayout;
+import java.awt.LayoutManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -545,8 +545,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -314660860010487287L;
 
-		ValidatablePanel() {
-			super(new GridBagLayout());
+		ValidatablePanel(LayoutManager layout) {
+			super(layout);
 		}
 
 		abstract List<String> validatePanel();
@@ -555,6 +555,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	private abstract class EditPanel<T> extends ValidatablePanel {
 
 		private static final long serialVersionUID = 5109496284766147394L;
+
+		public EditPanel(LayoutManager layout) {
+			super(layout);
+		}
 
 		abstract void init(final T t);
 
@@ -598,6 +602,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		EditAssayPanel(final boolean isAdvanced) {
+			super(new BorderLayout());
 
 			// Create labels
 			final JLabel nameLabel = GUIFactory.createLabel("GM.EditAssayPanel.nameLabel",
@@ -617,8 +622,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
 			northPanel.add(descriptionPane);
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(descriptionTextArea);
@@ -711,6 +714,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		EditDietaryAssessmentMethodPanel(final boolean isAdvanced) {
 
+			super(new BorderLayout());
+
 			// Create labels
 			final JLabel dataCollectionToolLabel = GUIFactory.createLabel(
 					"GM.EditDietaryAssessmentMethodPanel.dataCollectionToolLabel",
@@ -740,8 +745,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(dietarySoftwareToolField, foodItemNumberField, recordTypeField,
@@ -942,6 +945,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		EditHazardPanel(final boolean isAdvanced) {
+			
+			super(new BorderLayout());
 
 			final JLabel hazardTypeLabel = GUIFactory.createLabel("GM.EditHazardPanel.hazardTypeLabel",
 					"GM.EditHazardPanel.hazardTypeTooltip", true);
@@ -1006,7 +1011,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.add(formPanel);
 			northPanel.add(hazardDescriptionPanel);
 
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(hazardDescriptionTextArea, adverseEffectTextField, originTextField,
@@ -1128,6 +1132,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		EditModelEquationPanel(final boolean isAdvanced) {
+			
+			super(new BorderLayout());
 
 			// Create labels
 			final JLabel equationNameLabel = GUIFactory.createLabel("GM.EditModelEquationPanel.nameLabel",
@@ -1154,7 +1160,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.add(referencePanel);
 			northPanel.add(scriptPane);
 
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(equationClassTextField, referencePanel);
@@ -1237,6 +1242,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		public EditParameterPanel(final boolean isAdvanced) {
+			
+			super(new BorderLayout());
 
 			final JLabel idLabel = GUIFactory.createLabel("GM.EditParameterPanel.idLabel",
 					"GM.EditParameterPanel.idTooltip", true);
@@ -1301,8 +1308,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.add(descriptionPane);
 			northPanel.add(variabilitySubjectPane);
 			northPanel.add(applicabilityPane);
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(descriptionTextArea, typeField, sourceField, subjectField,
@@ -1474,6 +1479,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		public EditPopulationGroupPanel(final boolean isAdvanced) {
+			
+			super(new BorderLayout());
 
 			final JLabel populationNameLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.populationNameLabel",
 					"GM.EditPopulationGroupPanel.populationNameTooltip", true);
@@ -1525,8 +1532,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
 			northPanel.add(populationDescriptionPane);
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(targetPopulationTextField, populationSpanTextField,
@@ -1689,6 +1694,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		public EditProductPanel(boolean isAdvanced) {
+			
+			super(new BorderLayout());
 
 			final JLabel envNameLabel = GUIFactory.createLabel("GM.EditProductPanel.envNameLabel",
 					"GM.EditProductPanel.envNameTooltip", true);
@@ -1731,8 +1738,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
 			northPanel.add(new JScrollPane(envDescriptionTextArea));
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(envDescriptionTextArea, productionMethodComboBox, packagingComboBox,
@@ -1959,6 +1964,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		EditReferencePanel(final boolean isAdvanced) {
+			
+			super(new BorderLayout());
 
 			// Create fields
 			isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
@@ -2006,8 +2013,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.add(formPanel);
 			northPanel.add(new JScrollPane(abstractTextArea));
 			northPanel.add(new JScrollPane(commentTextArea));
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			// If simple mode hide advanced components
@@ -2204,6 +2209,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		public EditStudySamplePanel(final boolean isAdvanced) {
+			
+			super(new BorderLayout());
 
 			// Create labels and fields
 			final JLabel sampleNameLabel = GUIFactory.createLabel("GM.EditStudySamplePanel.sampleNameLabel",
@@ -2250,8 +2257,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			// If simple mode hide advanced components
@@ -2347,6 +2352,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = 6410915237186157478L;
 
+		public TopLevelPanel(final LayoutManager layout) {
+			super(layout);
+		}
+
 		abstract void init(final T t);
 
 		abstract T get();
@@ -2377,7 +2386,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final StringTextArea descriptionTextArea = new StringTextArea(true, 5, 30);
 
 		public GeneralInformationPanel() {
-
+			
+			super(new BorderLayout());
+			
 			// Create fields
 			advancedCheckBox = new JCheckBox("Advanced");
 
@@ -2452,8 +2463,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.add(new JScrollPane(descriptionTextArea));
 			northPanel.add(creatorPanel);
 			northPanel.add(referencePanel);
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 		}
 
@@ -2789,6 +2798,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final StringTextField contactTextField = new StringTextField(false, 30);
 
 		public EditCreatorPanel() {
+			super(new BorderLayout());
 
 			// Create labels
 			final JLabel givenNameLabel = GUIFactory.createLabel("GM.EditCreatorPanel.givenNameLabel");
@@ -2882,6 +2892,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final EditPopulationGroupPanel editPopulationGroupPanel = new EditPopulationGroupPanel(false);
 
 		ScopePanel() {
+			
+			super(new BorderLayout());
+
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 			commentTextArea.setBorder(BorderFactory.createTitledBorder(bundle.getString("GM.ScopePanel.commentLabel")));
 			commentTextArea.setToolTipText(bundle.getString("GM.ScopePanel.commentTooltip"));
@@ -2950,8 +2963,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			northPanel.add(formPanel);
 			northPanel.add(new JScrollPane(commentTextArea));
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 		}
 
@@ -3016,6 +3027,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final EditAssayPanel editAssayPanel = new EditAssayPanel(false);
 
 		DataBackgroundPanel() {
+			
+			super(new BorderLayout());
 
 			final StudyPanel studyPanel = new StudyPanel();
 			studyPanel.setBorder(BorderFactory.createTitledBorder("Study"));
@@ -3085,8 +3098,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
 			northPanel.add(studyPanel);
 			northPanel.add(formPanel);
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 		}
 
@@ -3132,7 +3143,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		StudyPanel() {
 
-			super(new GridBagLayout());
+			super(new BorderLayout());
 
 			studyDesignTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Design Type"));
 			studyAssayMeasurementsTypeField = GUIFactory
@@ -3202,8 +3213,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
 			northPanel.add(new JScrollPane(studyDescriptionTextArea));
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(studyDescriptionTextArea, studyDesignTypeField,
@@ -3226,6 +3235,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final ModelEquationsPanel modelEquationsPanel = new ModelEquationsPanel(false);
 
 		ModelMathPanel() {
+			
+			super(new BorderLayout());
 
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
@@ -3233,8 +3244,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.add(parametersPanel);
 			northPanel.add(qualityMeasuresPanel);
 			northPanel.add(modelEquationsPanel);
-
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedCheckBox.addItemListener(event -> {
@@ -3577,6 +3586,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final StringTextArea descriptionField = new StringTextArea(true, 5, 30);
 
 		public SimulationPanel() {
+			
+			super(new BorderLayout());
 
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
@@ -3603,7 +3614,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			descriptionField.setBorder(BorderFactory.createTitledBorder(bundle.getString("Simulation.Description")));
 			northPanel.add(new JScrollPane(descriptionField));
 
-			setLayout(new BorderLayout());
 			add(northPanel, BorderLayout.NORTH);
 
 			// Initially the advanced mode is disabled, so advanced components must be
