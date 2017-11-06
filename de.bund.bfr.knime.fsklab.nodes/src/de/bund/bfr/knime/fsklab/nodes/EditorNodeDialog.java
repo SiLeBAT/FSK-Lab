@@ -102,6 +102,7 @@ import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
 import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
+import de.bund.bfr.knime.fsklab.rakip.Simulation;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.knime.ui.AutoSuggestField;
 import de.bund.bfr.knime.ui.StringTextArea;
@@ -118,6 +119,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	private final ScopePanel scopePanel = new ScopePanel();
 	private final DataBackgroundPanel dataBackgroundPanel = new DataBackgroundPanel();
 	private final ModelMathPanel modelMathPanel = new ModelMathPanel();
+	private final SimulationPanel simulationPanel = new SimulationPanel();
 
 	private EditorNodeSettings settings;
 
@@ -138,6 +140,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		addTab("Scope", scopePanel, true);
 		addTab("Data background", dataBackgroundPanel, true);
 		addTab("Model math", modelMathPanel, true);
+		addTab("Simulation", simulationPanel, true);
 
 		updatePanels();
 	}
@@ -152,6 +155,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		scopePanel.init(settings.genericModel.scope);
 		dataBackgroundPanel.init(settings.genericModel.dataBackground);
 		modelMathPanel.init(settings.genericModel.modelMath);
+		simulationPanel.init(settings.genericModel.simulation);
 	}
 
 	// --- settings methods ---
@@ -223,6 +227,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		this.settings.genericModel.scope = scopePanel.get();
 		this.settings.genericModel.dataBackground = dataBackgroundPanel.get();
 		this.settings.genericModel.modelMath = modelMathPanel.get();
+		this.settings.genericModel.simulation = simulationPanel.get();
 
 		this.settings.saveSettings(settings);
 	}
@@ -3265,24 +3270,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private static final long serialVersionUID = 7194287921709100267L;
 
 		final TableModel tableModel = new TableModel();
-		
+
 		class TableModel extends DefaultTableModel {
-			
+
 			private static final long serialVersionUID = 6615864381589787261L;
 
 			final ArrayList<ModelEquation> equations = new ArrayList<>();
-			
+
 			public TableModel() {
 				super(new Object[0][0], new String[] { "Name", "Equation" });
 			}
-			
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
-			
+
 			void add(final ModelEquation equation) {
-				
+
 				// Skip if equation is already in table
 				for (final ModelEquation e : equations) {
 					if (e.equals(equation)) {
@@ -3290,23 +3295,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					}
 				}
 				equations.add(equation);
-				
+
 				addRow(new String[] { equation.equationName, equation.equation });
 			}
-			
+
 			void modify(final int rowNumber, final ModelEquation equation) {
 				equations.set(rowNumber, equation);
-				
+
 				setValueAt(equation.equationName, rowNumber, 0);
 				setValueAt(equation.equation, rowNumber, 1);
 			}
-			
+
 			void remove(final int rowNumber) {
 				equations.remove(rowNumber);
 				removeRow(rowNumber);
 			}
 		}
-		
+
 		private final EditModelEquationPanel editPanel = new EditModelEquationPanel(false);
 
 		ModelEquationsPanel(final boolean isAdvanced) {
@@ -3348,10 +3353,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			});
 
 			final JPanel panel = UI.createTablePanel(myTable);
-			
+
 			final JPanel buttonsPanel = UI.createHorizontalPanel(addButton, editButton, removeButton);
 			panel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
-			
+
 			add(panel);
 		}
 
@@ -3361,6 +3366,82 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		void init(final List<ModelEquation> modelEquations) {
 			modelEquations.forEach(tableModel::add);
+		}
+	}
+
+	/**
+	 * Panel to edit a {@link Simulation}.
+	 * 
+	 * Fields:
+	 * <ul>
+	 * <li>Simulation algorithm: Mandatory
+	 * <li>Simulated model: Mandatory
+	 * <li>Simulation description: Optional
+	 * <li>Visualization script: Optional
+	 * </ul>
+	 */
+	private class SimulationPanel extends TopLevelPanel<Simulation> {
+
+		private static final long serialVersionUID = -371214370549912535L;
+
+		private final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
+
+		private final StringTextField algorithmField = new StringTextField(false, 30);
+		private final StringTextField modelField = new StringTextField(false, 30);
+		private final StringTextField scriptField = new StringTextField(true, 30);
+		private final StringTextArea descriptionField = new StringTextArea(true, 5, 30);
+
+		public SimulationPanel() {
+			
+			final JLabel algorithmLabel = new JLabel("Simulation algorithm");
+			final JLabel modelLabel = new JLabel("Simulation model");
+			final JLabel scriptLabel = new JLabel("Visualization script");
+
+			final JPanel formPanel = UI.createOptionsPanel(Arrays.asList(algorithmLabel, modelLabel, scriptLabel),
+					Arrays.asList(algorithmField, modelField, scriptField));
+			
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
+			northPanel.add(formPanel);
+			
+			// descriptionField
+			descriptionField.setBorder(BorderFactory.createTitledBorder("Simulation description"));
+			northPanel.add(new JScrollPane(descriptionField));
+			
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
+			
+			advancedCheckBox.addItemListener(event -> {
+				final boolean isAdvanced = advancedCheckBox.isSelected();
+				scriptField.setEnabled(isAdvanced);
+				descriptionField.setEnabled(isAdvanced);
+			});
+			
+			// Initially the advanced mode is disabled, so advanced components must be disabled
+			scriptField.setEnabled(false);
+			descriptionField.setEnabled(false);
+		}
+
+		@Override
+		void init(final Simulation t) {
+			if (t != null) {
+				algorithmField.setText(t.algorithm);
+				modelField.setText(t.simulatedModel);
+				scriptField.setText(t.visualizationScript);
+				descriptionField.setText(t.description);
+			}
+		}
+
+		@Override
+		Simulation get() {
+			final Simulation simulation = new Simulation();
+			simulation.algorithm = algorithmField.getText();
+			simulation.simulatedModel = modelField.getText();
+			simulation.visualizationScript = scriptField.getText();
+			simulation.description = descriptionField.getText();
+			
+			return simulation;
 		}
 	}
 }

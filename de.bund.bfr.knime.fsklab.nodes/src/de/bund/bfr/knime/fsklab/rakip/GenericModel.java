@@ -27,10 +27,11 @@ public class GenericModel {
 	public Scope scope = new Scope();
 	public DataBackground dataBackground = new DataBackground();
 	public ModelMath modelMath = new ModelMath();
+	public Simulation simulation = new Simulation();
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(dataBackground, generalInformation, modelMath, scope);
+		return Objects.hash(dataBackground, generalInformation, modelMath, scope, simulation);
 	}
 
 	@Override
@@ -43,6 +44,7 @@ public class GenericModel {
 		GenericModel other = (GenericModel) obj;
 		return Objects.equals(dataBackground, other.dataBackground)
 				&& Objects.equals(generalInformation, other.generalInformation)
-				&& Objects.equals(modelMath, other.modelMath) && Objects.equals(scope, other.scope);
+				&& Objects.equals(modelMath, other.modelMath) && Objects.equals(scope, other.scope)
+				&& Objects.equals(simulation, other.simulation);
 	}
 }
