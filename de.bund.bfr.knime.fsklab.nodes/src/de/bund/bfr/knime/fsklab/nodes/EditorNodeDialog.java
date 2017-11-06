@@ -577,11 +577,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	/**
 	 * Panel to create/edit an assay.
 	 * 
-	 * Fields:
-	 * <ul>
-	 * <li>name: Mandatory.
-	 * <li>description: Optional.
-	 * </ul>
+	 * <table summary="EditAssayPanel fields">
+	 *   <tr><td>Name</td><td>Mandatory</td></tr>
+	 *   <tr><td>Description</td><td>Optional</td></tr>
+	 * </table>
 	 */
 	private class EditAssayPanel extends EditPanel<Assay> {
 
@@ -663,15 +662,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	/**
 	 * Panel to create/modify a {@link DietaryAssessmentMethod}.
 	 * 
-	 * Fields:
-	 * <ul>
-	 * <li>Data collection tool: Mandatory
-	 * <li>Non consecutive one day: Mandatory
-	 * <li>Dietary software tool: Optional
-	 * <li>Food item number: Optional
-	 * <li>Record type: Optional
-	 * <li>Food description: Optional
-	 * </ul>
+	 * <table summary="EditDietaryAssessmentMethodPanel fields">
+	 *   <tr><td>Data collection tool</td><td>Mandatory</td></tr>
+	 *   <tr><td>Non consecutive one day</td><td>Mandatory</td></tr>
+	 *   <tr><td>Dietary software tool</td><td>Optional</td></tr>
+	 *   <tr><td>Food item number</td><td>Optional</td></tr>
+	 *   <tr><td>Record type</td><td>Optional</td></tr>
+	 *   <tr><td>Food description</td><td>Optional</td></tr>
+	 * </table>
 	 */
 	private class EditDietaryAssessmentMethodPanel extends EditPanel<DietaryAssessmentMethod> {
 
@@ -813,28 +811,27 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	/**
 	 * Panel to create/edit an {@link Hazard}.
 	 * 
-	 * Fields:
-	 * <ul>
-	 * <li>Hazard type: Mandatory
-	 * <li>Hazard name: Mandatory
-	 * <li>Hazard description: Optional
-	 * <li>Hazard unit: Mandatory
-	 * <li>Adverse effect: Optional
-	 * <li>Origin: Optional
-	 * <li>BMD: Optional
-	 * <li>Maximum residue limit: Optional
-	 * <li>No observed adverse: Optional
-	 * <li>Acceptable operator: Optional
-	 * <li>Acute reference dose: Optional
-	 * <li>Acceptable daily intake: Optional
-	 * <li>Ind sum: Optional
-	 * <li>Laboratory name: Optional
-	 * <li>Laboratory country: Optional
-	 * <li>Detection limit: Optional
-	 * <li>Quantification limit: Optional
-	 * <li>Left censored data: Optional
-	 * <li>Contamination range: Optional
-	 * </ul>
+	 * <table summary="EditHazardPanel fields">
+	 *   <tr><td>Hazard type</td><td>Mandatory</td></tr>
+	 *   <tr><td>Hazard name</td><td>Mandatory</td></tr>
+	 *   <tr><td>Hazard description</td><td>Optional</td></tr>
+	 *   <tr><td>Hazard unit</td><td>Optional</td></tr>
+	 *   <tr><td>Adverse effect</td><td>Optional</td></tr>
+	 *   <tr><td>Origin</td><td>Optional</td></tr>
+	 *   <tr><td>BMD</td><td>Optional</td></tr>
+	 *   <tr><td>Maximum residue limit</td><td>Optional</td></tr>
+	 *   <tr><td>No observed adverse</td><td>Optional</td></tr>
+	 *   <tr><td>Acceptable operator</td><td>Optional</td></tr>
+	 *   <tr><td>Acute reference dose</td><td>Optional</td></tr>
+	 *   <tr><td>Acceptable daily intake</td><td>Optional</td></tr>
+	 *   <tr><td>Ind sum</td><td>Optional</td></tr>
+	 *   <tr><td>Laboratory name</td><td>Optional</td></tr>
+	 *   <tr><td>Laboratory country</td><td>Optional</td></tr>
+	 *   <tr><td>Detection limit</td><td>Optional</td></tr>
+	 *   <tr><td>Quantification limit</td><td>Optional</td></tr>
+	 *   <tr><td>Left censored data</td><td>Optional</td></tr>
+	 *   <tr><td>Contamination range</td><td>Optional</td></tr>
+	 * </table>
 	 */
 	private class EditHazardPanel extends EditPanel<Hazard> {
 
@@ -1023,12 +1020,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	/**
 	 * Panel to create/edit a {@link ModelEquation}.
 	 * 
-	 * Fields:
-	 * <ul>
-	 * <li>Equation name: Mandatory
-	 * <li>Equation class: Optional
-	 * <li>Script: Mandatory
-	 * </ul>
+	 * <table summary="EditModelEquationPanel fields">
+	 *   <tr><td>Equation name</td><td>Mandatory</td></tr>
+	 *   <tr><td>Equation class</td><td>Optional</td></tr>
+	 *   <tr><td>Script</td><td>Mandatory</td></tr>
+	 * </table>
 	 */
 	private class EditModelEquationPanel extends EditPanel<ModelEquation> {
 
@@ -1313,22 +1309,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	/**
 	 * Panel to create/edit a {@link PopulationGroup}.
 	 * 
-	 * Fields:
-	 * <ul>
-	 * <li>Population name: Mandatory
-	 * <li>Target population: Optional
-	 * <li>Population span: Optional
-	 * <li>Population description: Optional
-	 * <li>Population age: Optional
-	 * <li>Population gender: Optional
-	 * <li>BMI: Optional
-	 * <li>Special diet group: Optional
-	 * <li>Pattern consumption: Optional
-	 * <li>Region: Optional
-	 * <li>Country: Optional
-	 * <li>Risk: Optional
-	 * <li>Season: Optional
-	 * </ul>
+	 * <table summary="EditPopulationGroupPanel fields">
+	 *   <tr><td>Population name</td><td>Mandatory</td></tr>
+	 *   <tr><td>Target population</td><td>Optional</td></tr>
+	 *   <tr><td>Population span</td><td>Optional</td></tr>
+	 *   <tr><td>Population description</td><td>Optional</td></tr>
+	 *   <tr><td>Population age</td><td>Optional</td></tr>
+	 *   <tr><td>Population gender</td><td>Optional</td></tr>
+	 *   <tr><td>BMI</td><td>Optional</td></tr>
+	 *   <tr><td>Special diet group</td><td>Optional</td></tr>
+	 *   <tr><td>Pattern consumption</td><td>Optional</td></tr>
+	 *   <tr><td>Region</td><td>Optional</td></tr>
+	 *   <tr><td>Country</td><td>Optional</td></tr>
+	 *   <tr><td>Risk</td><td>Optional</td></tr>
+	 *   <tr><td>Season</td><td>Optional</td></tr>
+	 * </table>
 	 */
 	private class EditPopulationGroupPanel extends EditPanel<PopulationGroup> {
 
@@ -1748,24 +1743,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	/**
 	 * Panel to create/edit a {@link Record}.
 	 * 
-	 * Fields:
-	 * <ul>
-	 * <li>Is reference description?: Optional
-	 * <li>Type: Optional
-	 * <li>Date: Optional
-	 * <li>PMID: Optional
-	 * <li>DOI: Mandatory
-	 * <li>Authors: Optional
-	 * <li>Title: Mandatory
-	 * <li>Abstract: Optional
-	 * <li>Journal: Optional
-	 * <li>Volume: Optional
-	 * <li>Issue: Optional
-	 * <li>Page: Optional
-	 * <li>Status: Optional
-	 * <li>Website: Optional
-	 * <li>Comment: Optional
-	 * </ul>
+	 * <table summary="EditReferencePanel fields">
+	 *   <tr><td>Is reference description?</td><td>Optional</td></tr>
+	 *   <tr><td>Type</td><td>Optional</td></tr>
+	 *   <tr><td>Date</td><td>Optional</td></tr>
+	 *   <tr><td>PMID</td><td>Optional</td></tr>
+	 *   <tr><td>DOI</td><td>Mandatory</td></tr>
+	 *   <tr><td>Authors</td><td>Optional</td></tr>
+	 *   <tr><td>Title</td><td>Mandatory</td></tr>
+	 *   <tr><td>Abstract</td><td>Optional</td></tr>
+	 *   <tr><td>Journal</td><td>Optional</td></tr>
+	 *   <tr><td>Volume</td><td>Optional</td></tr>
+	 *   <tr><td>Issue</td><td>Optional</td></tr>
+	 *   <tr><td>Page</td><td>Optional</td></tr>
+	 *   <tr><td>Status</td><td>Optional</td></tr>
+	 *   <tr><td>Website</td><td>Optional</td></tr>
+	 *   <tr><td>Comment</td><td>Optional</td></tr>
+	 * </table>
 	 */
 	private class EditReferencePanel extends EditPanel<Record> {
 
@@ -1972,19 +1966,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	/**
 	 * Panel to create/edit a {@link StudySample}.
 	 * 
-	 * Fields:
-	 * <ul>
-	 * <li>Sample name: Mandatory
-	 * <li>Moisture percentage: Optional
-	 * <li>Fat percentage: Optional
-	 * <li>Sample protocol: Mandatory
-	 * <li>Sampling strategy: Optional
-	 * <li>Sampling type: Optional
-	 * <li>Sampling method: Optional
-	 * <li>Sampling plan: Mandatory
-	 * <li>Sampling weight: Mandatory
-	 * <li>Sampling size: Mandatory
-	 * </ul>
+	 * <table summary="EditStudySamplePanel fields">
+	 *   <tr><td>Sample name</td><td>Mandatory</td></tr>
+	 *   <tr><td>Moisture percentage</td><td>Optional</td></tr>
+	 *   <tr><td>Fat percentage</td><td>Optional</td></tr>
+	 *   <tr><td>Sample protocol</td><td>Mandatory</td></tr>
+	 *   <tr><td>Sampling strategy</td><td>Optional</td></tr>
+	 *   <tr><td>Sampling type</td><td>Optional</td></tr>
+	 *   <tr><td>Sampling method</td><td>Optional</td></tr>
+	 *   <tr><td>Sampling plan</td><td>Mandatory</td></tr>
+	 *   <tr><td>Sampling weight</td><td>Mandatory</td></tr>
+	 *   <tr><td>Sampling size</td><td>Mandatory</td></tr>
+	 * </table>
 	 */
 	private class EditStudySamplePanel extends EditPanel<StudySample> {
 
