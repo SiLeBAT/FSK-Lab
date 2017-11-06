@@ -610,10 +610,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			// Wrap text area in JScrollPane
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
-			descriptionPane.setBorder(
+			descriptionTextArea.setBorder(
 					BorderFactory.createTitledBorder(bundle.getString("GM.EditAssayPanel.descriptionLabel")));
-			descriptionPane.setToolTipText(bundle.getString("GM.EditAssayPanel.descriptionTooltip"));
+			descriptionTextArea.setToolTipText(bundle.getString("GM.EditAssayPanel.descriptionTooltip"));
 
 			final JPanel formPanel = UI.createOptionsPanel(Arrays.asList(nameLabel), Arrays.asList(nameTextField));
 
@@ -621,7 +620,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
-			northPanel.add(descriptionPane);
+			northPanel.add(new JScrollPane(descriptionTextArea));
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(descriptionTextArea);
@@ -945,7 +944,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		EditHazardPanel(final boolean isAdvanced) {
-			
+
 			super(new BorderLayout());
 
 			final JLabel hazardTypeLabel = GUIFactory.createLabel("GM.EditHazardPanel.hazardTypeLabel",
@@ -1132,7 +1131,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		EditModelEquationPanel(final boolean isAdvanced) {
-			
+
 			super(new BorderLayout());
 
 			// Create labels
@@ -1144,10 +1143,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			referencePanel = new ReferencePanel(isAdvanced);
 
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-			final JScrollPane scriptPane = new JScrollPane(scriptTextArea);
-			scriptPane.setBorder(
+			scriptTextArea.setBorder(
 					BorderFactory.createTitledBorder(bundle.getString("GM.EditModelEquationPanel.scriptLabel")));
-			scriptPane.setToolTipText(bundle.getString("GM.EditModelEquationPanel.scriptTooltip"));
+			scriptTextArea.setToolTipText(bundle.getString("GM.EditModelEquationPanel.scriptTooltip"));
 
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(Arrays.asList(equationNameLabel, equationClassLabel),
@@ -1158,8 +1156,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
 			northPanel.add(referencePanel);
-			northPanel.add(scriptPane);
-
+			northPanel.add(new JScrollPane(scriptTextArea));
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(equationClassTextField, referencePanel);
@@ -1242,7 +1239,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		public EditParameterPanel(final boolean isAdvanced) {
-			
+
 			super(new BorderLayout());
 
 			final JLabel idLabel = GUIFactory.createLabel("GM.EditParameterPanel.idLabel",
@@ -1273,24 +1270,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 					"GM.EditParameterPanel.errorTooltip");
 
 			// Build UI
-			final JScrollPane descriptionPane = new JScrollPane(descriptionTextArea);
-			final JScrollPane variabilitySubjectPane = new JScrollPane(variabilitySubjectTextArea);
-			final JScrollPane applicabilityPane = new JScrollPane(applicabilityTextArea);
 			final JSpinner errorSpinner = GUIFactory.createSpinner(errorSpinnerModel);
 
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
-			descriptionPane.setBorder(
+			descriptionTextArea.setBorder(
 					BorderFactory.createTitledBorder(bundle.getString("GM.EditParameterPanel.descriptionLabel")));
-			descriptionPane.setToolTipText(bundle.getString("GM.EditParameterPanel.descriptionTooltip"));
+			descriptionTextArea.setToolTipText(bundle.getString("GM.EditParameterPanel.descriptionTooltip"));
 
-			variabilitySubjectPane.setBorder(BorderFactory
+			variabilitySubjectTextArea.setBorder(BorderFactory
 					.createTitledBorder(bundle.getString("GM.EditParameterPanel.variabilitySubjectLabel")));
-			variabilitySubjectPane.setToolTipText(bundle.getString("GM.EditParameterPanel.variabilitySubjectTooltip"));
+			variabilitySubjectTextArea
+					.setToolTipText(bundle.getString("GM.EditParameterPanel.variabilitySubjectTooltip"));
 
-			applicabilityPane.setBorder(
+			applicabilityTextArea.setBorder(
 					BorderFactory.createTitledBorder(bundle.getString("GM.EditParameterPanel.applicabilityLabel")));
-			applicabilityPane.setToolTipText(bundle.getString("GM.EditParameterPanel.applicabilityTooltip"));
+			applicabilityTextArea.setToolTipText(bundle.getString("GM.EditParameterPanel.applicabilityTooltip"));
 
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(
@@ -1305,9 +1300,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
-			northPanel.add(descriptionPane);
-			northPanel.add(variabilitySubjectPane);
-			northPanel.add(applicabilityPane);
+			northPanel.add(new JScrollPane(descriptionTextArea));
+			northPanel.add(new JScrollPane(variabilitySubjectTextArea));
+			northPanel.add(new JScrollPane(applicabilityTextArea));
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(descriptionTextArea, typeField, sourceField, subjectField,
@@ -1479,7 +1474,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		public EditPopulationGroupPanel(final boolean isAdvanced) {
-			
+
 			super(new BorderLayout());
 
 			final JLabel populationNameLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.populationNameLabel",
@@ -1511,11 +1506,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JLabel seasonLabel = GUIFactory.createLabel("GM.EditPopulationGroupPanel.seasonLabel",
 					"GM.EditPopulationGroupPanel.seasonTooltip");
 
-			final JScrollPane populationDescriptionPane = new JScrollPane(populationDescriptionTextArea);
-			populationDescriptionPane.setBorder(BorderFactory.createTitledBorder(FskPlugin.getDefault().MESSAGES_BUNDLE
-					.getString("GM.EditPopulationGroupPanel.populationDescriptionLabel")));
-			populationDescriptionPane.setToolTipText(FskPlugin.getDefault().MESSAGES_BUNDLE
-					.getString("GM.EditPopulationGroupPanel.populationDescriptionTooltip"));
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+			populationDescriptionTextArea.setBorder(BorderFactory
+					.createTitledBorder(bundle.getString("GM.EditPopulationGroupPanel.populationDescriptionLabel")));
+			populationDescriptionTextArea
+					.setToolTipText(bundle.getString("GM.EditPopulationGroupPanel.populationDescriptionTooltip"));
 
 			// formPanel
 			final JPanel formPanel = UI.createOptionsPanel(
@@ -1531,7 +1526,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			final JPanel northPanel = new JPanel();
 			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 			northPanel.add(formPanel);
-			northPanel.add(populationDescriptionPane);
+			northPanel.add(new JScrollPane(populationDescriptionTextArea));
 			add(northPanel, BorderLayout.NORTH);
 
 			advancedComponents = Arrays.asList(targetPopulationTextField, populationSpanTextField,
@@ -1694,7 +1689,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		public EditProductPanel(boolean isAdvanced) {
-			
+
 			super(new BorderLayout());
 
 			final JLabel envNameLabel = GUIFactory.createLabel("GM.EditProductPanel.envNameLabel",
@@ -1964,7 +1959,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		EditReferencePanel(final boolean isAdvanced) {
-			
+
 			super(new BorderLayout());
 
 			// Create fields
@@ -2209,7 +2204,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final List<JComponent> advancedComponents;
 
 		public EditStudySamplePanel(final boolean isAdvanced) {
-			
+
 			super(new BorderLayout());
 
 			// Create labels and fields
@@ -2386,9 +2381,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final StringTextArea descriptionTextArea = new StringTextArea(true, 5, 30);
 
 		public GeneralInformationPanel() {
-			
+
 			super(new BorderLayout());
-			
+
 			// Create fields
 			advancedCheckBox = new JCheckBox("Advanced");
 
@@ -2892,7 +2887,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final EditPopulationGroupPanel editPopulationGroupPanel = new EditPopulationGroupPanel(false);
 
 		ScopePanel() {
-			
+
 			super(new BorderLayout());
 
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
@@ -3027,7 +3022,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final EditAssayPanel editAssayPanel = new EditAssayPanel(false);
 
 		DataBackgroundPanel() {
-			
+
 			super(new BorderLayout());
 
 			final StudyPanel studyPanel = new StudyPanel();
@@ -3235,7 +3230,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final ModelEquationsPanel modelEquationsPanel = new ModelEquationsPanel(false);
 
 		ModelMathPanel() {
-			
+
 			super(new BorderLayout());
 
 			final JPanel northPanel = new JPanel();
@@ -3586,7 +3581,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		private final StringTextArea descriptionField = new StringTextArea(true, 5, 30);
 
 		public SimulationPanel() {
-			
+
 			super(new BorderLayout());
 
 			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
