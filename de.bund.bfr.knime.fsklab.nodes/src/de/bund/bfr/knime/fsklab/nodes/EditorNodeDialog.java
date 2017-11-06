@@ -3384,41 +3384,44 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 		private static final long serialVersionUID = -371214370549912535L;
 
-		private final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
-
 		private final StringTextField algorithmField = new StringTextField(false, 30);
 		private final StringTextField modelField = new StringTextField(false, 30);
 		private final StringTextField scriptField = new StringTextField(true, 30);
 		private final StringTextArea descriptionField = new StringTextArea(true, 5, 30);
 
 		public SimulationPanel() {
-			
-			final JLabel algorithmLabel = new JLabel("Simulation algorithm");
-			final JLabel modelLabel = new JLabel("Simulation model");
-			final JLabel scriptLabel = new JLabel("Visualization script");
+
+			final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+
+			final JLabel algorithmLabel = new JLabel(bundle.getString("Simulation.Algorithm"));
+			final JLabel modelLabel = new JLabel(bundle.getString("Simulation.Model"));
+			final JLabel scriptLabel = new JLabel(bundle.getString("Simulation.Script"));
 
 			final JPanel formPanel = UI.createOptionsPanel(Arrays.asList(algorithmLabel, modelLabel, scriptLabel),
 					Arrays.asList(algorithmField, modelField, scriptField));
 			
-			final JPanel northPanel = new JPanel();
-			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
-			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
-			northPanel.add(formPanel);
-			
-			// descriptionField
-			descriptionField.setBorder(BorderFactory.createTitledBorder("Simulation description"));
-			northPanel.add(new JScrollPane(descriptionField));
-			
-			setLayout(new BorderLayout());
-			add(northPanel, BorderLayout.NORTH);
-			
+			final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 			advancedCheckBox.addItemListener(event -> {
 				final boolean isAdvanced = advancedCheckBox.isSelected();
 				scriptField.setEnabled(isAdvanced);
 				descriptionField.setEnabled(isAdvanced);
 			});
-			
-			// Initially the advanced mode is disabled, so advanced components must be disabled
+
+			final JPanel northPanel = new JPanel();
+			northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+			northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
+			northPanel.add(formPanel);
+
+			// descriptionField
+			descriptionField.setBorder(BorderFactory.createTitledBorder(bundle.getString("Simulation.Description")));
+			northPanel.add(new JScrollPane(descriptionField));
+
+			setLayout(new BorderLayout());
+			add(northPanel, BorderLayout.NORTH);
+
+
+			// Initially the advanced mode is disabled, so advanced components must be
+			// disabled
 			scriptField.setEnabled(false);
 			descriptionField.setEnabled(false);
 		}
@@ -3440,7 +3443,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			simulation.simulatedModel = modelField.getText();
 			simulation.visualizationScript = scriptField.getText();
 			simulation.description = descriptionField.getText();
-			
+
 			return simulation;
 		}
 	}
