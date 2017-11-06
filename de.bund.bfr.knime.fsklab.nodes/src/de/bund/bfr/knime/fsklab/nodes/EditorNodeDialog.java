@@ -64,6 +64,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -486,6 +487,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			addButton.setToolTipText("Remove");
 
 			return addButton;
+		}
+
+		/**
+		 * Do not use original JTable! On Mac grid lines are not visible.
+		 * 
+		 * @return JTable with light gray grid lines.
+		 */
+		private static JTable createTable(final TableModel model) {
+			final JTable table = new JTable(model);
+			table.setGridColor(Color.lightGray);
+			return table;
 		}
 	}
 
@@ -2578,7 +2590,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			this.isAdvanced = isAdvanced;
 
-			final JTable coolTable = new JTable(tableModel);
+			final JTable coolTable = GUIFactory.createTable(tableModel);
 
 			// buttons
 			final JButton addButton = GUIFactory.createAddButton();
@@ -2728,7 +2740,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JTable myTable = new JTable(tableModel);
+			final JTable myTable = GUIFactory.createTable(tableModel);
 
 			// buttons
 			final JButton addButton = GUIFactory.createAddButton();
@@ -3359,7 +3371,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			setBorder(BorderFactory.createTitledBorder("Parameters"));
 
-			final JTable myTable = new JTable(tableModel);
+			final JTable myTable = GUIFactory.createTable(tableModel);
 
 			// buttons
 			final JButton addButton = GUIFactory.createAddButton();
@@ -3511,7 +3523,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			setBorder(BorderFactory.createTitledBorder("Model equation"));
 
-			final JTable myTable = new JTable(tableModel);
+			final JTable myTable = GUIFactory.createTable(tableModel);
 
 			final JButton addButton = GUIFactory.createAddButton();
 			addButton.addActionListener(event -> {
