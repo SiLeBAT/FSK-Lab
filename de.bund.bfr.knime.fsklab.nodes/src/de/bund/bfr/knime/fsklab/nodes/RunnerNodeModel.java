@@ -49,6 +49,7 @@ import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
+import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.rakip.ModelMath;
@@ -184,8 +185,58 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
 		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
 
-		NodeUtils.runSnippet(executor, fskObj.model, fskObj.param, fskObj.viz, exec, internalSettings.imageFile,
-				nodeSettings);
+		// NodeUtils.runSnippet(executor, fskObj.model, fskObj.param, fskObj.viz, exec,
+		// internalSettings.imageFile,
+		// nodeSettings);
+
+		// START RUNNING MODEL
+		exec.setMessage("Setting up output capturing");
+		executor.setupOutputCapturing(exec);
+
+		exec.setMessage("Add paths to libraries");
+		LibRegistry libRegistry = LibRegistry.instance();
+		String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
+				+ "', .libPaths()))";
+		final String[] newPaths = executor.execute(cmd, exec).asStrings();
+
+		// If parameters are defined in metadata used the values from there, otherwise
+		// stick to the parameters script
+		exec.setMessage("Run parameters from metadata or script");
+		if (fskObj.genericModel.modelMath != null && !fskObj.genericModel.modelMath.parameter.isEmpty()) {
+			for (final Parameter p : fskObj.genericModel.modelMath.parameter) {
+				if (p.classification.equals(Parameter.Classification.input)) {
+					if (p.dataType.equals("Integer")) {
+						final int intValue = Integer.parseInt(p.value);
+						controller.getREngine().assign(p.name, new int[] { intValue });
+					} else if (p.dataType.equals("Double")) {
+						final double doubleValue = Double.parseDouble(p.value);
+						controller.getREngine().assign(p.name, new double[] { doubleValue});
+					}
+				}
+			}
+		} else {
+			executor.executeIgnoreResult(fskObj.param, exec);
+		}
+		
+		exec.setMessage("Run models script");
+		executor.executeIgnoreResult(fskObj.model, exec);
+		
+		exec.setMessage("Run visualization script");
+		try {
+			NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings, executor, exec);
+		} catch (final RException exception) {
+			LOGGER.warn("Visualization script failed", exception);
+		}
+		
+		// Restore .libPaths() to the original library path which happens to be in the
+		// last position
+		exec.setMessage("Restore library paths");
+		executor.executeIgnoreResult(".libPaths()[" + newPaths.length + "]", exec);
+
+		exec.setMessage("Collecting captured output");
+		executor.finishOutputCapturing(exec);
+		
+		// END RUNNING MODEL
 
 		// Save workspace
 		if (fskObj.workspace == null) {
