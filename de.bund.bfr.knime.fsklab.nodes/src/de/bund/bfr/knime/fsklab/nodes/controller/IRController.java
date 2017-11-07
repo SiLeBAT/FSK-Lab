@@ -138,6 +138,24 @@ public interface IRController extends AutoCloseable {
 			throws RException, CanceledExecutionException, InterruptedException;
 
 	/**
+	 * Assign an integer into an R variable.
+	 * 
+	 * @param symbol symbol name
+	 * @param value value to assign
+	 * @throws RException
+	 */
+	void assign(String symbol, int value) throws RException;
+	
+	/**
+	 * Assign a double into an R variable.
+	 * 
+	 * @param symbol symbol name
+	 * @param value value to assign
+	 * @throws RException
+	 */
+	void assign(String symbol, double value) throws RException;
+	
+	/**
 	 * Assign an REXP an R variable.
 	 * 
 	 * @param expr Expression to assign the value to. Usually a variable name

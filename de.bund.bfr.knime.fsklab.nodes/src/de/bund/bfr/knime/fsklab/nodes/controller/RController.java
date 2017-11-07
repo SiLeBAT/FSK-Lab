@@ -539,7 +539,31 @@ public class RController implements IRController {
 			throw new RException(RException.MSG_EVAL_FAILED + ": \"" + expr + "\"", e);
 		}
 	}
+	
+	@Override
+	public void assign(final String symbol, final int value) throws RException {
+		checkInitialized();
+		try {
+			synchronized(getREngine()) {
+				getREngine().assign(symbol, new int[] { value });
+			}
+		} catch (REngineException exception) {
+			throw new RException(RException.MSG_EVAL_FAILED + ": \"" + symbol + "\"", exception);
+		}
+	}
 
+	@Override
+	public void assign(final String symbol, final double value) throws RException {
+		checkInitialized();
+		try {
+			synchronized(getREngine()) {
+				getREngine().assign(symbol, new double[] { value });
+			}
+		} catch (REngineException exception) {
+			throw new RException(RException.MSG_EVAL_FAILED + ": \"" + symbol + "\"", exception);
+		}
+	}
+	
 	@Override
 	public void assign(final String expr, final String value) throws RException {
 		checkInitialized();

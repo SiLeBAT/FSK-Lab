@@ -185,10 +185,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
 		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
 
-		// NodeUtils.runSnippet(executor, fskObj.model, fskObj.param, fskObj.viz, exec,
-		// internalSettings.imageFile,
-		// nodeSettings);
-
 		// START RUNNING MODEL
 		exec.setMessage("Setting up output capturing");
 		executor.setupOutputCapturing(exec);
@@ -206,11 +202,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 			for (final Parameter p : fskObj.genericModel.modelMath.parameter) {
 				if (p.classification.equals(Parameter.Classification.input)) {
 					if (p.dataType.equals("Integer")) {
-						final int intValue = Integer.parseInt(p.value);
-						controller.getREngine().assign(p.name, new int[] { intValue });
+						controller.assign(p.name, Integer.parseInt(p.value));
 					} else if (p.dataType.equals("Double")) {
-						final double doubleValue = Double.parseDouble(p.value);
-						controller.getREngine().assign(p.name, new double[] { doubleValue});
+						controller.assign(p.name, Double.parseDouble(p.value));
 					}
 				}
 			}
