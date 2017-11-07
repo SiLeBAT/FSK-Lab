@@ -156,14 +156,11 @@ class CreatorNodeModel extends NoInternalsModel {
       // Set variable values and types from parameters script
       if (genericModel.modelMath != null) {
         Map<String, String> vars = getVariablesFromAssignments(paramScript);
-        final List<Parameter> indeps = genericModel.modelMath.parameter.stream()
-            .filter(it -> it.classification.equals(Parameter.Classification.input))
-            .collect(Collectors.toList());
-
-        indeps.forEach(it -> {
-          final String value = vars.get(it.name);
-          it.value = value;
-        });
+        for (final Parameter p : genericModel.modelMath.parameter) {
+        	if (p.classification.equals(Parameter.Classification.input)) {
+        		p.value = vars.get(p.name);
+        	}
+        }
       }
     } catch (IOException | InvalidFormatException e) {
       throw new InvalidSettingsException("Invalid metadata");
@@ -274,7 +271,7 @@ class CreatorNodeModel extends NoInternalsModel {
     for (int i = 0; i < depNames.size(); i++) {
       final Parameter param = new Parameter();
       param.id = "";
-      param.classification = Parameter.Classification.input;
+      param.classification = Parameter.Classification.output;
       param.name = depNames.get(i);
       param.unit = depUnits.get(i);
       param.unitCategory = "";
@@ -291,7 +288,7 @@ class CreatorNodeModel extends NoInternalsModel {
     for (int i = 0; i < indepNames.size(); i++) {
       final Parameter param = new Parameter();
       param.id = "";
-      param.classification = Parameter.Classification.output;
+      param.classification = Parameter.Classification.input;
       param.name = indepNames.get(i);
       param.unit = indepUnits.get(i);
       param.unitCategory = "";
