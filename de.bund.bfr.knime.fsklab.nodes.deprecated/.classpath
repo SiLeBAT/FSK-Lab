@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="libs/fskml-1.0.5.jar"/>
 	<classpathentry kind="lib" path="libs/pmfml-0.0.11.jar"/>
 	<classpathentry kind="lib" path="libs/jsoup-1.9.2.jar"/>
+	<classpathentry kind="lib" path="libs/bfr-swing-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

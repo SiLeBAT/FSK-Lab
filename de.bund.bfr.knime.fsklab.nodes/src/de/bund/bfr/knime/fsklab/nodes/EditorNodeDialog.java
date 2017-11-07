@@ -86,7 +86,7 @@ import com.gmail.gcolaianni5.jris.bean.Type;
 import com.gmail.gcolaianni5.jris.engine.JRis;
 import com.gmail.gcolaianni5.jris.exception.JRisException;
 
-import de.bund.bfr.knime.UI;
+//import de.bund.bfr.knime.UI;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.FixedDateChooser;
@@ -105,9 +105,10 @@ import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.Simulation;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
-import de.bund.bfr.knime.ui.AutoSuggestField;
-import de.bund.bfr.knime.ui.StringTextArea;
-import de.bund.bfr.knime.ui.StringTextField;
+import de.bund.bfr.swing.AutoSuggestField;
+import de.bund.bfr.swing.StringTextArea;
+import de.bund.bfr.swing.StringTextField;
+import de.bund.bfr.swing.UI;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 

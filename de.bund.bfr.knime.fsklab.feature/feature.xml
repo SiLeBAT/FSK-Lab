@@ -29,37 +29,24 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
    </license>
 
    <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.knime.base" version="3.2.0" match="greaterOrEqual"/>
-      <import plugin="com.google.guava" version="19.0.0" match="greaterOrEqual"/>
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
       <import plugin="com.fifesoft.rsyntaxtextarea"/>
+      <import plugin="com.google.guava" version="19.0.0" match="greaterOrEqual"/>
       <import plugin="com.sun.jna"/>
-      <import plugin="de.bund.bfr.knime" version="1.1.33" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.apache.servicemix.bundles.poi"/>
       <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.knime.base" version="3.2.0" match="greaterOrEqual"/>
       <import plugin="org.knime.core"/>
       <import plugin="org.knime.ext.r.type"/>
       <import plugin="org.knime.js.core"/>
       <import plugin="org.knime.json" version="3.3.3" match="greaterOrEqual"/>
       <import plugin="org.knime.workbench.repository"/>
+      <import plugin="org.junit"/>
    </requires>
-
-   <plugin
-         id="edu.umd.cs.findbugs.annotations"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="de.bund.bfr.knime"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="de.bund.bfr.knime.fsklab.nodes"
