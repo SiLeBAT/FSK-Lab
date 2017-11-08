@@ -6,6 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.bfr.knime.fsklab.nodes.fsk.Activator
 Bundle-Vendor: BfR
 Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
+ com.fasterxml.jackson.core.jackson-core,
+ com.fasterxml.jackson.core.jackson-databind,
  com.fifesoft.rsyntaxtextarea,
  com.google.guava,
  com.sun.jna,
