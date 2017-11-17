@@ -50,41 +50,39 @@ public class RunnerNodeFactory extends NodeFactory<RunnerNodeModel> {
 
 	@Override
 	protected NodeDialogPane createNodeDialogPane() {
-		// return new DefaultNodeSettingsPane();
-		DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
-		pane.createNewGroup("Options");
 
 		RunnerNodeSettings settings = new RunnerNodeSettings();
 
 		// Width component
 		DialogComponentNumberEdit widthComp = new DialogComponentNumberEdit(settings.widthModel, "Width");
 		widthComp.setToolTipText("Width of the plot");
-		pane.addDialogComponent(widthComp);
 
 		// Height component
 		DialogComponentNumberEdit heightComp = new DialogComponentNumberEdit(settings.heightModel, "Height");
 		heightComp.setToolTipText("Height of the plot");
-		pane.addDialogComponent(heightComp);
 
 		// Resolution component
 		DialogComponentString resolutionComp = new DialogComponentString(settings.resolutionModel, "Resolution");
 		resolutionComp.setToolTipText(
 				"Nominal resolution in ppi which will be recorded in the bitmap file, if a positive integer.");
-		pane.addDialogComponent(resolutionComp);
 
 		// Background colour component
 		DialogComponentColorChooser colorComp = new DialogComponentColorChooser(settings.colourModel,
 				"Background colour", true);
 		colorComp.setToolTipText("Background colour");
-		pane.addDialogComponent(colorComp);
 
 		// Text point size component
 		DialogComponentNumberEdit textPointSizeComp = new DialogComponentNumberEdit(settings.textPointSizeModel,
 				"Text point size");
 		textPointSizeComp.setToolTipText("Point size of plotted text, interpreted as big points (1/72 inch) at res ppi.");
 
+		// Create pane and add components
+		DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
+		pane.addDialogComponent(widthComp);
+		pane.addDialogComponent(heightComp);
+		pane.addDialogComponent(resolutionComp);
+		pane.addDialogComponent(colorComp);
 		pane.addDialogComponent(textPointSizeComp);
-
 		return pane;
 	}
 }
