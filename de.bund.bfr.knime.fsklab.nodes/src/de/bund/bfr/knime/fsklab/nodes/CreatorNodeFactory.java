@@ -18,13 +18,9 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import javax.swing.JFileChooser;
-
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 
 public class CreatorNodeFactory extends NodeFactory<CreatorNodeModel> {
 
@@ -56,42 +52,21 @@ public class CreatorNodeFactory extends NodeFactory<CreatorNodeModel> {
   /** {@inheritDoc} */
   @Override
   public NodeDialogPane createNodeDialogPane() {
-
-    CreatorNodeSettings settings = new CreatorNodeSettings();
-
-    // Create components
-    final int dlgType = JFileChooser.OPEN_DIALOG;
-    final String rFilters = ".r|.R"; // Extension filters for the R script
-
-    DialogComponentFileChooser modelScriptChooser = new DialogComponentFileChooser(
-        settings.modelScript, "modelScript-history", dlgType, rFilters);
-    modelScriptChooser.setBorderTitle("Model script (*)");
-    modelScriptChooser
-        .setToolTipText("Script that calculates the values of the model (Mandatory).");
-
-    DialogComponentFileChooser paramScriptChooser = new DialogComponentFileChooser(
-        settings.paramScript, "paramScript-history", dlgType, rFilters);
-    paramScriptChooser.setBorderTitle("Parameters script");
-    paramScriptChooser.setToolTipText("Script with the parameter values of the model (Optional).");
-
-    DialogComponentFileChooser vizScriptChooser =
-        new DialogComponentFileChooser(settings.vizScript, "vizScript-history", dlgType, rFilters);
-    vizScriptChooser.setBorderTitle("Visualization script");
-    vizScriptChooser.setToolTipText(
-        "Script with a number of commands to create plots or charts using the simulation results (Optional).");
-
-    DialogComponentFileChooser metaDataChooser =
-        new DialogComponentFileChooser(settings.metaDataDoc, "metaData-history", dlgType);
-    metaDataChooser.setBorderTitle("XLSX spreadsheet (*)");
-    metaDataChooser.setToolTipText("XLSX file with model metadata");
-
-    // Create pane and add components
-    DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
-    pane.addDialogComponent(modelScriptChooser);
-    pane.addDialogComponent(paramScriptChooser);
-    pane.addDialogComponent(vizScriptChooser);
-    pane.addDialogComponent(metaDataChooser);
-
-    return pane;
+	  return new CreatorNodeDialog();
   }
+  
+//  private JList<String> createFileList() {
+//	  
+//	  DefaultListModel<String> listModel = new DefaultListModel<String>();
+//	  listModel.addElement("one.txt");
+//	  listModel.addElement("two.r");
+//	  listModel.addElement("three.r");
+//	  
+//	  JList<String> list = new JList<String>(listModel);
+//	  list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//	  list.setSelectedIndex(0);
+//	  list.setVisibleRowCount(5);
+//	  
+//	  return list;
+//  }
 }
