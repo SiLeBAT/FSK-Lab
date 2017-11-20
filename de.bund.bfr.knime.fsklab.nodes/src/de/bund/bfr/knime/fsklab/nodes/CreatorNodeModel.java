@@ -183,6 +183,9 @@ class CreatorNodeModel extends NoInternalsModel {
         LOGGER.error(e.getMessage());
       }
     }
+    
+    // resource files
+    portObj.resources.addAll(nodeSettings.resources);
 
     return new PortObject[] {portObj};
   }

@@ -23,9 +23,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -103,6 +107,9 @@ public class FskPortObject implements PortObject {
 
 	/** Model meta data encoded as a RAKIP Generic model. */
 	public GenericModel genericModel;
+	
+	/** Paths to resources: plain text files and R workspace files (.rdata). */
+	public List<Path> resources;
 
 	/**
 	 * R workspace file with the results of running the model. It may be null if the
@@ -125,6 +132,7 @@ public class FskPortObject implements PortObject {
 		this.genericModel = genericModel;
 		this.workspace = workspace;
 		this.libs = libs;
+		this.resources = new ArrayList<>();
 
 		objectNum = numOfInstances;
 		numOfInstances += 1;
@@ -191,11 +199,21 @@ public class FskPortObject implements PortObject {
 				out.closeEntry();
 			}
 
+			// libraries
 			if (!portObject.libs.isEmpty()) {
 				out.putNextEntry(new ZipEntry("library.list"));
 				List<String> libNames = portObject.libs.stream().map(f -> f.getName().split("\\_")[0])
 						.collect(Collectors.toList());
-				IOUtils.writeLines(libNames, "\n", out, "UTF-8");
+				IOUtils.writeLines(libNames, "\n", out, StandardCharsets.UTF_8);
+				out.closeEntry();
+			}
+			
+			// resource files
+			if (!portObject.resources.isEmpty()) {
+				out.putNextEntry(new ZipEntry("resources.list"));
+				
+				List<String> lines = portObject.resources.stream().map(Path::toString).collect(Collectors.toList());
+				IOUtils.writeLines(lines, "\n", out, StandardCharsets.UTF_8);
 				out.closeEntry();
 			}
 
@@ -213,7 +231,8 @@ public class FskPortObject implements PortObject {
 			String visualizationScript = "";
 			GenericModel genericModel = null;
 			File workspaceFile = null;
-			Set<File> libs = Collections.emptySet();
+			Set<File> libs = new HashSet<>();
+			List<Path> resources = new ArrayList<>();
 
 			ZipEntry entry;
 			while ((entry = in.getNextEntry()) != null) {
@@ -254,6 +273,9 @@ public class FskPortObject implements PortObject {
 					} catch (RException | REXPMismatchException error) {
 						throw new IOException(error.getMessage());
 					}
+				} else if (entryName.equals("resources.list")) {
+					List<String> lines = IOUtils.readLines(in, StandardCharsets.UTF_8);
+					lines.forEach(it -> resources.add(Paths.get(it)));
 				}
 			}
 
