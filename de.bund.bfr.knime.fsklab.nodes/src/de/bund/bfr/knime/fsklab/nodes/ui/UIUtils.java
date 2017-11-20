@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,7 +39,7 @@ public class UIUtils {
 	}
 
 	/** Creates a panel with the names of a number of libraries. */
-	public static JPanel createLibrariesPanel(final Set<File> libs) {
+	public static JPanel createLibrariesPanel(final Collection<File> libs) {
 
 		final JPanel panel = new JPanel(new BorderLayout());
 		panel.setName("Libraries list");
