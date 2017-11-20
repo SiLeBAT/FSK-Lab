@@ -46,7 +46,6 @@ import java.util.Set;
 import javax.swing.AbstractSpinnerModel;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -64,7 +63,6 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -91,6 +89,7 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.FixedDateChooser;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
+import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.Assay;
 import de.bund.bfr.knime.fsklab.rakip.DataBackground;
 import de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod;
@@ -452,53 +451,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		 */
 		private static SpinnerNumberModel createSpinnerPercentageModel() {
 			return new SpinnerNumberModel(0.0, 0.0, 1.0, .01);
-		}
-
-		private static JButton createAddButton() {
-			JButton addButton = new JButton();
-			addButton.setIcon(new ImageIcon(GUIFactory.class.getResource("/img/ic_add_box_black_24dp_1x.png")));
-			addButton.setContentAreaFilled(false);
-			addButton.setToolTipText("Add");
-
-			return addButton;
-		}
-
-		private static JButton createFileUploadButton() {
-			JButton addButton = new JButton();
-			addButton.setIcon(new ImageIcon(GUIFactory.class.getResource("/img/ic_file_upload_black_24dp_1x.png")));
-			addButton.setContentAreaFilled(false);
-			addButton.setToolTipText("File upload");
-
-			return addButton;
-		}
-
-		private static JButton createEditButton() {
-			JButton addButton = new JButton();
-			addButton.setIcon(new ImageIcon(GUIFactory.class.getResource("/img/ic_mode_edit_black_24dp_1x.png")));
-			addButton.setContentAreaFilled(false);
-			addButton.setToolTipText("Edit");
-
-			return addButton;
-		}
-
-		private static JButton createRemoveButton() {
-			JButton addButton = new JButton();
-			addButton.setIcon(new ImageIcon(GUIFactory.class.getResource("/img/ic_remove_circle_black_24dp_1x.png")));
-			addButton.setContentAreaFilled(false);
-			addButton.setToolTipText("Remove");
-
-			return addButton;
-		}
-
-		/**
-		 * Do not use original JTable! On Mac grid lines are not visible.
-		 * 
-		 * @return JTable with light gray grid lines.
-		 */
-		private static JTable createTable(final TableModel model) {
-			final JTable table = new JTable(model);
-			table.setGridColor(Color.lightGray);
-			return table;
 		}
 	}
 
@@ -2591,10 +2543,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			this.isAdvanced = isAdvanced;
 
-			final JTable coolTable = GUIFactory.createTable(tableModel);
+			final JTable coolTable = UIUtils.createTable(tableModel);
 
 			// buttons
-			final JButton addButton = GUIFactory.createAddButton();
+			final JButton addButton = UIUtils.createAddButton();
 			addButton.addActionListener(event -> {
 
 				final EditReferencePanel editPanel = new EditReferencePanel(this.isAdvanced);
@@ -2606,7 +2558,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JButton fileUploadButton = GUIFactory.createFileUploadButton();
+			final JButton fileUploadButton = UIUtils.createFileUploadButton();
 			fileUploadButton.addActionListener(event -> {
 
 				// Configure file chooser
@@ -2626,7 +2578,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JButton editButton = GUIFactory.createEditButton();
+			final JButton editButton = UIUtils.createEditButton();
 			editButton.addActionListener(event -> {
 
 				final int rowToEdit = coolTable.getSelectedRow();
@@ -2644,7 +2596,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JButton removeButton = GUIFactory.createRemoveButton();
+			final JButton removeButton = UIUtils.createRemoveButton();
 			removeButton.addActionListener(event -> {
 				final int rowToDelete = coolTable.getSelectedRow();
 				if (rowToDelete != -1) {
@@ -2721,7 +2673,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			setBorder(BorderFactory.createTitledBorder("Creators"));
 
-			final JButton fileUploadButton = GUIFactory.createFileUploadButton();
+			final JButton fileUploadButton = UIUtils.createFileUploadButton();
 			fileUploadButton.addActionListener(event -> {
 
 				// Configure file chooser
@@ -2741,10 +2693,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JTable myTable = GUIFactory.createTable(tableModel);
+			final JTable myTable = UIUtils.createTable(tableModel);
 
 			// buttons
-			final JButton addButton = GUIFactory.createAddButton();
+			final JButton addButton = UIUtils.createAddButton();
 			addButton.addActionListener(event -> {
 
 				final EditCreatorPanel editPanel = new EditCreatorPanel();
@@ -2756,7 +2708,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JButton editButton = GUIFactory.createEditButton();
+			final JButton editButton = UIUtils.createEditButton();
 			editButton.addActionListener(event -> {
 
 				final int rowToEdit = myTable.getSelectedRow();
@@ -2774,7 +2726,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JButton removeButton = GUIFactory.createRemoveButton();
+			final JButton removeButton = UIUtils.createRemoveButton();
 			removeButton.addActionListener(event -> {
 				final int rowToDelete = myTable.getSelectedRow();
 				if (rowToDelete != -1) {
@@ -3372,10 +3324,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			setBorder(BorderFactory.createTitledBorder("Parameters"));
 
-			final JTable myTable = GUIFactory.createTable(tableModel);
+			final JTable myTable = UIUtils.createTable(tableModel);
 
 			// buttons
-			final JButton addButton = GUIFactory.createAddButton();
+			final JButton addButton = UIUtils.createAddButton();
 			addButton.addActionListener(event -> {
 				final EditParameterPanel editPanel = new EditParameterPanel(this.isAdvanced);
 				final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create parameter");
@@ -3384,7 +3336,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JButton editButton = GUIFactory.createEditButton();
+			final JButton editButton = UIUtils.createEditButton();
 			editButton.addActionListener(event -> {
 				final int rowToEdit = myTable.getSelectedRow();
 				if (rowToEdit != -1) {
@@ -3399,7 +3351,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JButton removeButton = GUIFactory.createRemoveButton();
+			final JButton removeButton = UIUtils.createRemoveButton();
 			removeButton.addActionListener(event -> {
 				final int rowToDelete = myTable.getSelectedRow();
 				if (rowToDelete != -1) {
@@ -3524,9 +3476,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
 			setBorder(BorderFactory.createTitledBorder("Model equation"));
 
-			final JTable myTable = GUIFactory.createTable(tableModel);
+			final JTable myTable = UIUtils.createTable(tableModel);
 
-			final JButton addButton = GUIFactory.createAddButton();
+			final JButton addButton = UIUtils.createAddButton();
 			addButton.addActionListener(event -> {
 				final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create equation");
 				if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
@@ -3534,7 +3486,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JButton editButton = GUIFactory.createEditButton();
+			final JButton editButton = UIUtils.createEditButton();
 			editButton.addActionListener(event -> {
 				final int rowToEdit = myTable.getSelectedRow();
 				if (rowToEdit != -1) {
@@ -3548,7 +3500,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 				}
 			});
 
-			final JButton removeButton = GUIFactory.createRemoveButton();
+			final JButton removeButton = UIUtils.createRemoveButton();
 			removeButton.addActionListener(event -> {
 				final int rowToDelete = myTable.getSelectedRow();
 				if (rowToDelete != -1) {
