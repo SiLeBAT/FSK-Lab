@@ -21,6 +21,8 @@ package de.bund.bfr.knime.fsklab.nodes.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.File;
+import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -52,6 +54,20 @@ public class UIUtils {
 		return panel;
 	}
 
+	/** Creates a panel with a list of resource files. */
+	public static final JPanel createResourcesPanel(final Collection<Path> resources) {
+
+		final JPanel panel = new JPanel(new BorderLayout());
+		panel.setName("Resources list");
+
+		final JList<Path> list = new JList<>(resources.stream().toArray(Path[]::new));
+		list.setLayoutOrientation(JList.VERTICAL);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		panel.add(new JScrollPane(list));
+
+		return panel;
+	}
+
 	/**
 	 * Do not use original JTable! On Mac grid lines are not visible.
 	 * 
@@ -62,7 +78,7 @@ public class UIUtils {
 		table.setGridColor(Color.lightGray);
 		return table;
 	}
-	
+
 	public static JButton createAddButton() {
 		JButton addButton = new JButton();
 		addButton.setIcon(new ImageIcon(UIUtils.class.getResource("/img/ic_add_box_black_24dp_1x.png")));

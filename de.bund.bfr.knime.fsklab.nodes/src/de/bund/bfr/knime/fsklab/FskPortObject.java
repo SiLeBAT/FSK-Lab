@@ -283,6 +283,7 @@ public class FskPortObject implements PortObject {
 
 			final FskPortObject portObj = new FskPortObject(modelScript, parametersScript, visualizationScript,
 					genericModel, workspaceFile, libs);
+			portObj.resources.addAll(resources);
 			return portObj;
 		}
 	}
@@ -296,9 +297,12 @@ public class FskPortObject implements PortObject {
 
 		final JScrollPane metaDataPane = new JScrollPane(genericModel != null ? createTree(genericModel) : new JTree());
 		metaDataPane.setName("Meta data");
+		
+		final JPanel librariesPanel = UIUtils.createLibrariesPanel(libs);
+		final JPanel resourcesPanel = UIUtils.createResourcesPanel(resources);
 
 		return new JComponent[] { modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
-				UIUtils.createLibrariesPanel(libs) };
+				librariesPanel, resourcesPanel };
 	}
 
 	// Metadata pane stuff
