@@ -1,27 +1,17 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.io.File;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.util.SimpleFileFilter;
 
-import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.swing.FilePanel;
 import de.bund.bfr.swing.UI;
 
@@ -66,20 +56,17 @@ public class CreatorNodeDialog extends NodeDialogPane {
 		JPanel northPanel = UI.createNorthPanel(gridPanel);
 
 		addTab("Options", northPanel);
-
-		// TODO: Test tab
-//		addTab("Files", createFilePanel());
 	}
 
 	@Override
 	protected void loadSettingsFrom(NodeSettingsRO settings, DataTableSpec[] specs) throws NotConfigurableException {
 		try {
-			this.settings.load(settings);
-
-			modelScriptChooser.setFileName(this.settings.modelScript);
-			paramScriptChooser.setFileName(this.settings.parameterScript);
-			vizScriptChooser.setFileName(this.settings.visualizationScript);
-			metaDataChooser.setFileName(this.settings.spreadsheet);
+			this.settings.loadValidatedSettingsFrom(settings);
+			
+			modelScriptChooser.setFileName(this.settings.modelScript.getStringValue());
+			paramScriptChooser.setFileName(this.settings.paramScript.getStringValue());
+			vizScriptChooser.setFileName(this.settings.vizScript.getStringValue());
+			metaDataChooser.setFileName(this.settings.metaDataDoc.getStringValue());
 		} catch (InvalidSettingsException exception) {
 			throw new NotConfigurableException(exception.getMessage(), exception);
 		}
@@ -88,51 +75,12 @@ public class CreatorNodeDialog extends NodeDialogPane {
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
 
-		this.settings.modelScript = modelScriptChooser.getFileName();
-		this.settings.parameterScript = paramScriptChooser.getFileName();
-		this.settings.visualizationScript = vizScriptChooser.getFileName();
-		this.settings.spreadsheet = metaDataChooser.getFileName();
+		this.settings.modelScript.setStringValue(modelScriptChooser.getFileName());
+		this.settings.paramScript.setStringValue(paramScriptChooser.getFileName());
+		this.settings.vizScript.setStringValue(vizScriptChooser.getFileName());
+		this.settings.metaDataDoc.setStringValue(metaDataChooser.getFileName());
 
-		this.settings.save(settings);
+		this.settings.saveSettings(settings);
 	}
 
-	JPanel createFilePanel() {
-		DefaultListModel<File> listModel = new DefaultListModel<>();
-		listModel.addElement(KNIMEConstants.getKNIMETempPath().toFile());
-
-		JList<File> list = new JList<>(listModel);
-		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		list.setLayoutOrientation(JList.VERTICAL);
-
-		final JButton addButton = UIUtils.createAddButton();
-		final JButton removeButton = UIUtils.createRemoveButton();
-		final JPanel buttonsPanel = UI.createHorizontalPanel(addButton, removeButton);
-
-		addButton.addActionListener(event -> {
-			final JFileChooser fc = new JFileChooser();
-			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fc.addChoosableFileFilter(new SimpleFileFilter("txt", "Plain text file"));
-			fc.addChoosableFileFilter(new SimpleFileFilter("rdata", "R workspace file"));
-			fc.setAcceptAllFileFilterUsed(false);  // do not use the AccepptAll FileFilter
-
-			final int returnVal = fc.showOpenDialog(getPanel());
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				if (!listModel.contains(fc.getSelectedFile())) {
-					listModel.addElement(fc.getSelectedFile());
-				}
-			}
-		});
-
-		removeButton.addActionListener(event -> {
-			final int selectedIndex = list.getSelectedIndex();
-			if (selectedIndex != -1) {
-				listModel.remove(selectedIndex);
-			}
-		});
-
-		final JPanel northPanel = UI.createNorthPanel(new JScrollPane(list));
-		northPanel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
-
-		return northPanel;
-	}
 }

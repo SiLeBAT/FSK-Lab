@@ -54,19 +54,4 @@ public class CreatorNodeFactory extends NodeFactory<CreatorNodeModel> {
   public NodeDialogPane createNodeDialogPane() {
 	  return new CreatorNodeDialog();
   }
-  
-//  private JList<String> createFileList() {
-//	  
-//	  DefaultListModel<String> listModel = new DefaultListModel<String>();
-//	  listModel.addElement("one.txt");
-//	  listModel.addElement("two.r");
-//	  listModel.addElement("three.r");
-//	  
-//	  JList<String> list = new JList<String>(listModel);
-//	  list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//	  list.setSelectedIndex(0);
-//	  list.setVisibleRowCount(5);
-//	  
-//	  return list;
-//  }
 }

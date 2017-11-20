@@ -78,20 +78,20 @@ class CreatorNodeModel extends NoInternalsModel {
   /** {@inheritDoc} */
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    nodeSettings.saveSettings(settings);
+    nodeSettings.save(settings);
   }
 
   /** {@inheritDoc} */
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    nodeSettings.validateSettings(settings);
+    // does not validate anything
   }
 
   /** {@inheritDoc} */
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    nodeSettings.loadValidatedSettingsFrom(settings);
+    nodeSettings.load(settings);
   }
 
   /** {@inheritDoc} */
@@ -110,39 +110,35 @@ class CreatorNodeModel extends NoInternalsModel {
   protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
       throws InvalidSettingsException, IOException {
     // Reads model script
-    final String modelScriptPath = nodeSettings.modelScript.getStringValue();
-    if (StringUtils.isEmpty(modelScriptPath)) {
+    if (StringUtils.isEmpty(nodeSettings.modelScript)) {
       throw new InvalidSettingsException("Model script is not provided");
     }
-    final RScript modelRScript = readScript(modelScriptPath);
+    final RScript modelRScript = readScript(nodeSettings.modelScript);
     final String modelScript = modelRScript.getScript();
 
     // Reads parameters script
-    final String paramScriptPath = nodeSettings.paramScript.getStringValue();
     final String paramScript;
-    if (StringUtils.isNotEmpty(paramScriptPath)) {
-      paramScript = readScript(paramScriptPath).getScript();
+    if (StringUtils.isNotEmpty(nodeSettings.parameterScript)) {
+      paramScript = readScript(nodeSettings.parameterScript).getScript();
     } else {
       paramScript = "";
     }
 
     // Reads visualization script
-    final String visualizationScriptPath = nodeSettings.vizScript.getStringValue();
     final String visualizationScript;
-    if (StringUtils.isNotEmpty(visualizationScriptPath)) {
-      visualizationScript = readScript(visualizationScriptPath).getScript();
+    if (StringUtils.isNotEmpty(nodeSettings.visualizationScript)) {
+      visualizationScript = readScript(nodeSettings.visualizationScript).getScript();
     } else {
       visualizationScript = "";
     }
 
     // Reads model meta data
-    final String metaDataPath = nodeSettings.metaDataDoc.getStringValue();
-    if (StringUtils.isEmpty(metaDataPath)) {
+    if (StringUtils.isEmpty(nodeSettings.spreadsheet)) {
       throw new InvalidSettingsException("Model metadata is not provided");
     }
 
     final GenericModel genericModel;
-    final File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(metaDataPath));
+    final File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.spreadsheet));
     try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
       final XSSFSheet sheet = workbook.getSheetAt(0);
 

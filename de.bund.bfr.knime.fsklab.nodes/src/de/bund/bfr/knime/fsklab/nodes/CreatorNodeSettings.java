@@ -21,34 +21,37 @@ package de.bund.bfr.knime.fsklab.nodes;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 public class CreatorNodeSettings {
 
-	// Setting models, with keys and default values
-	public final SettingsModelString modelScript = new SettingsModelString("modelScript", "");
-	public final SettingsModelString paramScript = new SettingsModelString("paramScript", "");
-	public final SettingsModelString vizScript = new SettingsModelString("visualizationScript", "");
-	public final SettingsModelString metaDataDoc = new SettingsModelString("spreadsheet", "");
-
-	public void saveSettings(final NodeSettingsWO settings) {
-		modelScript.saveSettingsTo(settings);
-		paramScript.saveSettingsTo(settings);
-		vizScript.saveSettingsTo(settings);
-		metaDataDoc.saveSettingsTo(settings);
+	private static final String CFG_MODEL_SCRIPT = "modelScript";
+	private static final String CFG_PARAMETERS_SCRIPT = "paramScript";
+	private static final String CFG_VISUALIZATION_SCRIPT = "visualizationScript";
+	private static final String CFG_SPREADSHEET = "spreadsheet";
+	
+	/** Path to model script. */
+	public String modelScript = "";
+	
+	/** Path to parameters script. */
+	public String parameterScript = "";
+	
+	/** Path to visualization script. */
+	public String visualizationScript = "";
+	
+	/** Path to spreadsheet. */
+	public String spreadsheet = "";
+	
+	public void load(final NodeSettingsRO settings) throws InvalidSettingsException {
+		modelScript = settings.getString(CFG_MODEL_SCRIPT);
+		parameterScript = settings.getString(CFG_PARAMETERS_SCRIPT);
+		visualizationScript = settings.getString(CFG_VISUALIZATION_SCRIPT);
+		spreadsheet = settings.getString(CFG_SPREADSHEET);
 	}
-
-	public void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-		modelScript.validateSettings(settings);
-		paramScript.validateSettings(settings);
-		vizScript.validateSettings(settings);
-		metaDataDoc.validateSettings(settings);
-	}
-
-	public void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
-		modelScript.loadSettingsFrom(settings);
-		paramScript.loadSettingsFrom(settings);
-		vizScript.loadSettingsFrom(settings);
-		metaDataDoc.loadSettingsFrom(settings);
+	
+	public void save(final NodeSettingsWO settings) {
+		settings.addString(CFG_MODEL_SCRIPT, modelScript);
+		settings.addString(CFG_PARAMETERS_SCRIPT, parameterScript);
+		settings.addString(CFG_VISUALIZATION_SCRIPT, visualizationScript);
+		settings.addString(CFG_SPREADSHEET, spreadsheet);
 	}
 }

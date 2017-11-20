@@ -79,19 +79,19 @@ class FskCreatorNodeModel extends NoInternalsModel {
 	/** {@inheritDoc} */
 	@Override
 	protected void saveSettingsTo(NodeSettingsWO settings) {
-		this.settings.saveSettings(settings);
+		this.settings.save(settings);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		this.settings.validateSettings(settings);
+		// does not validate anything
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		this.settings.loadValidatedSettingsFrom(settings);
+		this.settings.load(settings);
 	}
 
 	/** {@inheritDoc} */
@@ -113,33 +113,29 @@ class FskCreatorNodeModel extends NoInternalsModel {
 			FskPortObject portObj = new FskPortObject();
 
 			// Reads model script
-			final String modelScriptPath = settings.modelScript.getStringValue();
-			if (StringUtils.isEmpty(modelScriptPath)) {
+			if (StringUtils.isEmpty(settings.modelScript)) {
 				throw new InvalidSettingsException("Model script is not provided");
 			}
-			RScript modelScript = readScript(modelScriptPath);
+			RScript modelScript = readScript(settings.modelScript);
 			portObj.model = modelScript.getScript();
 
 			// Reads parameters script
-			final String paramScriptPath = settings.paramScript.getStringValue();
-			if (StringUtils.isNotEmpty(paramScriptPath)) {
-				portObj.param = readScript(paramScriptPath).getScript();
+			if (StringUtils.isNotEmpty(settings.parameterScript)) {
+				portObj.param = readScript(settings.parameterScript).getScript();
 			} else {
 				portObj.param = "";
 			}
 
 			// Reads visualization script
-			final String vizScriptPath = settings.vizScript.getStringValue();
-			if (StringUtils.isNotEmpty(vizScriptPath)) {
-				portObj.viz = readScript(vizScriptPath).getScript();
+			if (StringUtils.isNotEmpty(settings.visualizationScript)) {
+				portObj.viz = readScript(settings.visualizationScript).getScript();
 			} else {
 				portObj.viz = "";
 			}
 
 			// Reads model meta data
-			final String metaDataDocPath = settings.metaDataDoc.getStringValue();
-			if (StringUtils.isNotEmpty(metaDataDocPath)) {
-				File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(metaDataDocPath));
+			if (StringUtils.isNotEmpty(settings.spreadsheet)) {
+				File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(settings.spreadsheet));
 				try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
 					portObj.template = SpreadsheetHandler.processSpreadsheet(workbook.getSheetAt(0));
 				} catch (Exception e) {
