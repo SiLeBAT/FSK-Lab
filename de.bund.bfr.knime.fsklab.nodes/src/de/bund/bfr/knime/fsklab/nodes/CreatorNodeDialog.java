@@ -1,8 +1,26 @@
+/*
+ ***************************************************************************************************
+ * Copyright (c) 2017 Federal Institute for Risk Assessment (BfR), Germany
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ *
+ * Contributors: Department Biological Safety - BfR
+ *************************************************************************************************
+ */
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.io.File;
+import java.nio.file.Path;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -14,7 +32,6 @@ import javax.swing.ListSelectionModel;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -31,6 +48,8 @@ public class CreatorNodeDialog extends NodeDialogPane {
 	private final FilePanel paramScriptChooser;
 	private final FilePanel vizScriptChooser;
 	private final FilePanel metaDataChooser;
+
+	private final DefaultListModel<Path> listModel = new DefaultListModel<>();
 
 	private final CreatorNodeSettings settings = new CreatorNodeSettings();
 
@@ -68,7 +87,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
 		addTab("Options", northPanel);
 
 		// TODO: Test tab
-//		addTab("Files", createFilePanel());
+		addTab("Files", createFilePanel());
 	}
 
 	@Override
@@ -80,6 +99,14 @@ public class CreatorNodeDialog extends NodeDialogPane {
 			paramScriptChooser.setFileName(this.settings.parameterScript);
 			vizScriptChooser.setFileName(this.settings.visualizationScript);
 			metaDataChooser.setFileName(this.settings.spreadsheet);
+
+			// load resources			
+			for (final Path resource : this.settings.resources) {
+				if (!listModel.contains(resource)) {
+					listModel.addElement(resource);
+				}
+			}
+			
 		} catch (InvalidSettingsException exception) {
 			throw new NotConfigurableException(exception.getMessage(), exception);
 		}
@@ -93,14 +120,17 @@ public class CreatorNodeDialog extends NodeDialogPane {
 		this.settings.visualizationScript = vizScriptChooser.getFileName();
 		this.settings.spreadsheet = metaDataChooser.getFileName();
 
+		// save resources
+		this.settings.resources.clear();
+		for (int i = 0; i < listModel.size(); i++) {
+			this.settings.resources.add(listModel.get(i));
+		}
+
 		this.settings.save(settings);
 	}
 
 	JPanel createFilePanel() {
-		DefaultListModel<File> listModel = new DefaultListModel<>();
-		listModel.addElement(KNIMEConstants.getKNIMETempPath().toFile());
-
-		JList<File> list = new JList<>(listModel);
+		JList<Path> list = new JList<>(listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		list.setLayoutOrientation(JList.VERTICAL);
 
@@ -113,12 +143,13 @@ public class CreatorNodeDialog extends NodeDialogPane {
 			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			fc.addChoosableFileFilter(new SimpleFileFilter("txt", "Plain text file"));
 			fc.addChoosableFileFilter(new SimpleFileFilter("rdata", "R workspace file"));
-			fc.setAcceptAllFileFilterUsed(false);  // do not use the AccepptAll FileFilter
+			fc.setAcceptAllFileFilterUsed(false); // do not use the AccepptAll FileFilter
 
 			final int returnVal = fc.showOpenDialog(getPanel());
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				if (!listModel.contains(fc.getSelectedFile())) {
-					listModel.addElement(fc.getSelectedFile());
+				final Path selectedFile = fc.getSelectedFile().toPath();
+				if (!listModel.contains(selectedFile)) {
+					listModel.addElement(selectedFile);
 				}
 			}
 		});
