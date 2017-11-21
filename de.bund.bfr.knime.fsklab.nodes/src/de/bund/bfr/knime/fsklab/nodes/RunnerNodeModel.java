@@ -22,6 +22,8 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -184,6 +186,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 			final ExecutionMonitor exec) throws Exception {
 
 		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
+		
+		// Sets up working directory with resource files. This directory needs to be deleted.
+		final Path workingDirectory = Files.createTempDirectory("workingDirectory");
+		for (final Path resource : fskObj.resources) {
+			final Path targetPath = workingDirectory.resolveSibling(resource.getFileName());
+			Files.copy(resource, targetPath);
+		}
 
 		// START RUNNING MODEL
 		exec.setMessage("Setting up output capturing");
@@ -258,6 +267,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 		// cleanup temporary variables of output capturing and consoleLikeCommand stuff
 		exec.setMessage("Cleaning up");
 		executor.cleanup(exec);
+		
+		// deletes working directory
+		Files.delete(workingDirectory);
 
 		return fskObj;
 	}
