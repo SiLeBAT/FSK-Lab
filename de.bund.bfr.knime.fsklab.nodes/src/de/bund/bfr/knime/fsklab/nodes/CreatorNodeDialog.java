@@ -140,7 +140,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
 			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			fc.addChoosableFileFilter(new SimpleFileFilter("txt", "Plain text file"));
 			fc.addChoosableFileFilter(new SimpleFileFilter("rdata", "R workspace file"));
-			fc.setAcceptAllFileFilterUsed(false); // do not use the AccepptAll FileFilter
+			fc.setAcceptAllFileFilterUsed(false); // do not use the AcceptAll FileFilter
 
 			final int returnVal = fc.showOpenDialog(getPanel());
 			if (returnVal == JFileChooser.APPROVE_OPTION) {

@@ -56,6 +56,7 @@ public class CreatorNodeSettings {
 		visualizationScript = settings.getString(CFG_VISUALIZATION_SCRIPT);
 		spreadsheet = settings.getString(CFG_SPREADSHEET);
 
+		resources.clear();
 		try {
 			final String[] resourcesArray = settings.getStringArray(CFG_RESOURCES);
 			for (final String resourceAsString : resourcesArray) {
