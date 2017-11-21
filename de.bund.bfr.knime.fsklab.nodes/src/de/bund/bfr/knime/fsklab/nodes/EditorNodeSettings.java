@@ -43,6 +43,15 @@ public class EditorNodeSettings {
   private static final NodeLogger LOGGER = NodeLogger.getLogger(EditorNodeSettings.class);
   
   // Configuration keys
+  private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
+  private static final String CFG_ORIGINAL_PARAMETERS_SCRIPT = "originalParametersScript";
+  private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
+  
+  private static final String CFG_MODIFIED_MODEL_SCRIPT = "modifiedModelScript";
+  private static final String CFG_MODIFIED_PARAMETERS_SCRIPT = "modifiedParametersScript";
+  private static final String CFG_MODIFIED_VISUALIZATION_SCRIPT = "modifiedVisualizationScript";
+  
+  private static final String CFG_METADATA = "metaData";
   private static final String CFG_RESOURCES = "resources";
 
   String originalModelScript;
@@ -66,20 +75,20 @@ public class EditorNodeSettings {
    */
   void saveSettings(final NodeSettingsWO settings) {
 
-    settings.addString("originalModelScript", originalModelScript);
-    settings.addString("originalParametersScript", originalParametersScript);
-    settings.addString("originalVisualizationScript", originalVisualizationScript);
+    settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, originalModelScript);
+    settings.addString(CFG_ORIGINAL_PARAMETERS_SCRIPT, originalParametersScript);
+    settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, originalVisualizationScript);
 
-    settings.addString("modifiedModelScript", modifiedModelScript);
-    settings.addString("modifiedParametersScript", modifiedParametersScript);
-    settings.addString("modifiedVisualizationScript", modifiedVisualizationScript);
+    settings.addString(CFG_MODIFIED_MODEL_SCRIPT, modifiedModelScript);
+    settings.addString(CFG_MODIFIED_PARAMETERS_SCRIPT, modifiedParametersScript);
+    settings.addString(CFG_MODIFIED_VISUALIZATION_SCRIPT, modifiedVisualizationScript);
 
     // save meta data
     if (genericModel != null) {
       final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
       try {
         String stringVal = objectMapper.writeValueAsString(genericModel);
-        settings.addString("metaData", stringVal);
+        settings.addString(CFG_METADATA, stringVal);
       } catch (JsonProcessingException exception) {
         LOGGER.warn("Error saving meta data", exception);
       }
@@ -100,16 +109,16 @@ public class EditorNodeSettings {
    */
   void loadSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 
-    originalModelScript = settings.getString("originalModelScript");
-    originalParametersScript = settings.getString("originalParametersScript");
-    originalVisualizationScript = settings.getString("originalVisualizationScript");
+    originalModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
+    originalParametersScript = settings.getString(CFG_ORIGINAL_PARAMETERS_SCRIPT);
+    originalVisualizationScript = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
 
-    modifiedModelScript = settings.getString("modifiedModelScript");
-    modifiedParametersScript = settings.getString("modifiedParametersScript");
-    modifiedVisualizationScript = settings.getString("modifiedVisualizationScript");
+    modifiedModelScript = settings.getString(CFG_MODIFIED_MODEL_SCRIPT);
+    modifiedParametersScript = settings.getString(CFG_MODIFIED_PARAMETERS_SCRIPT);
+    modifiedVisualizationScript = settings.getString(CFG_MODIFIED_VISUALIZATION_SCRIPT);
 
     // load meta data
-    if (settings.containsKey("metaData")) {
+    if (settings.containsKey(CFG_METADATA)) {
       final String stringVal = settings.getString("metaData");
       final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
       try {
