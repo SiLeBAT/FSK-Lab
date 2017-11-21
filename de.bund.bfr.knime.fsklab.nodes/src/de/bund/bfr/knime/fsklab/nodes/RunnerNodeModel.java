@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.image.png.PNGImageContent;
@@ -51,8 +52,8 @@ import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.rakip.ModelMath;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
@@ -188,15 +189,22 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
 		
 		// Sets up working directory with resource files. This directory needs to be deleted.
-		final Path workingDirectory = Files.createTempDirectory("workingDirectory");
+		exec.setMessage("Add resource files");
+		final Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
 		for (final Path resource : fskObj.resources) {
-			final Path targetPath = workingDirectory.resolveSibling(resource.getFileName());
+			Path targetPath = workingDirectory.resolve(resource.getFileName());
 			Files.copy(resource, targetPath);
 		}
 
 		// START RUNNING MODEL
 		exec.setMessage("Setting up output capturing");
 		executor.setupOutputCapturing(exec);
+		
+		// Path of the working directory with forward slashes (required by R)
+		final String unixPath = FilenameUtils.separatorsToUnix(workingDirectory.toString());
+		
+		// Set unixPath as R's current working directory
+		executor.executeIgnoreResult(String.format("setwd('%s')", unixPath), exec);
 
 		exec.setMessage("Add paths to libraries");
 		LibRegistry libRegistry = LibRegistry.instance();
