@@ -100,13 +100,10 @@ public class CreatorNodeDialog extends NodeDialogPane {
 			vizScriptChooser.setFileName(this.settings.visualizationScript);
 			metaDataChooser.setFileName(this.settings.spreadsheet);
 
-			// load resources			
-			for (final Path resource : this.settings.resources) {
-				if (!listModel.contains(resource)) {
-					listModel.addElement(resource);
-				}
-			}
-			
+			// load resources
+			listModel.clear();
+			this.settings.resources.forEach(listModel::addElement);
+
 		} catch (InvalidSettingsException exception) {
 			throw new NotConfigurableException(exception.getMessage(), exception);
 		}
