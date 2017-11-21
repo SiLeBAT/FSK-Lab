@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ import java.util.Set;
 import javax.swing.AbstractSpinnerModel;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -121,7 +123,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 	private final DataBackgroundPanel dataBackgroundPanel = new DataBackgroundPanel();
 	private final ModelMathPanel modelMathPanel = new ModelMathPanel();
 	private final SimulationPanel simulationPanel = new SimulationPanel();
-
+	
+	/** List model for resource files. */
+	private final DefaultListModel<Path> listModel = new DefaultListModel<>();
+	
 	private EditorNodeSettings settings;
 
 	EditorNodeDialog() {
@@ -142,6 +147,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		addTab("Data background", dataBackgroundPanel, true);
 		addTab("Model math", modelMathPanel, true);
 		addTab("Simulation", simulationPanel, true);
+		addTab("Files", UIUtils.createResourcesPanel(getPanel(), listModel));
 
 		updatePanels();
 	}
@@ -157,6 +163,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		dataBackgroundPanel.init(settings.genericModel.dataBackground);
 		modelMathPanel.init(settings.genericModel.modelMath);
 		simulationPanel.init(settings.genericModel.simulation);
+		
+		listModel.clear();
+		settings.resources.forEach(listModel::addElement);
 	}
 
 	// --- settings methods ---
@@ -193,6 +202,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 			this.settings.modifiedVisualizationScript = inObj.viz;
 
 			this.settings.genericModel = inObj.genericModel;
+			
+			this.settings.resources = inObj.resources;
 		}
 
 		updatePanels();
@@ -224,11 +235,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 		this.settings.modifiedParametersScript = StringUtils.trim(this.settings.modifiedParametersScript);
 		this.settings.modifiedVisualizationScript = StringUtils.trim(this.settings.modifiedVisualizationScript);
 
+		// Save metadata
 		this.settings.genericModel.generalInformation = generalInformationPanel.get();
 		this.settings.genericModel.scope = scopePanel.get();
 		this.settings.genericModel.dataBackground = dataBackgroundPanel.get();
 		this.settings.genericModel.modelMath = modelMathPanel.get();
 		this.settings.genericModel.simulation = simulationPanel.get();
+		
+		// Save resources
+		this.settings.resources.clear();		
+		this.settings.resources.addAll(Collections.list(listModel.elements()));
 
 		this.settings.saveSettings(settings);
 	}

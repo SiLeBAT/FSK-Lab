@@ -299,7 +299,7 @@ public class FskPortObject implements PortObject {
 		metaDataPane.setName("Meta data");
 		
 		final JPanel librariesPanel = UIUtils.createLibrariesPanel(libs);
-		final JPanel resourcesPanel = UIUtils.createResourcesPanel(resources);
+		final JPanel resourcesPanel = UIUtils.createResourcesViewPanel(resources);
 
 		return new JComponent[] { modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
 				librariesPanel, resourcesPanel };

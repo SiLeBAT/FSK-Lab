@@ -20,18 +20,25 @@ package de.bund.bfr.knime.fsklab.nodes.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableModel;
+
+import org.knime.core.util.SimpleFileFilter;
+
+import de.bund.bfr.swing.UI;
 
 public class UIUtils {
 
@@ -54,7 +61,7 @@ public class UIUtils {
 	}
 
 	/** Creates a panel with a list of resource files. */
-	public static final JPanel createResourcesPanel(final Collection<Path> resources) {
+	public static final JPanel createResourcesViewPanel(final Collection<Path> resources) {
 
 		final JPanel panel = new JPanel(new BorderLayout());
 		panel.setName("Resources list");
@@ -112,5 +119,51 @@ public class UIUtils {
 		addButton.setToolTipText("Remove");
 
 		return addButton;
+	}
+	
+	
+	/**
+	 * Creates panel to add/remove resource files.
+	 * @param parent Parent component
+	 * @param listModel Model of the {@link JList} displaying the resources.
+	 */
+	public static JPanel createResourcesPanel(final Component parent, final DefaultListModel<Path> listModel) {
+		JList<Path> list = new JList<>(listModel);
+		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		list.setLayoutOrientation(JList.VERTICAL);
+
+		final JButton addButton = UIUtils.createAddButton();
+		final JButton removeButton = UIUtils.createRemoveButton();
+		final JPanel buttonsPanel = UI.createHorizontalPanel(addButton, removeButton);
+
+		// Initialize chooser before the event so that it remembers the current
+		// directory between uses.
+		final JFileChooser fc = new JFileChooser();
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.addChoosableFileFilter(new SimpleFileFilter("txt", "Plain text file"));
+		fc.addChoosableFileFilter(new SimpleFileFilter("rdata", "R workspace file"));
+		fc.setAcceptAllFileFilterUsed(false); // do not use the AcceptAll FileFilter
+
+		addButton.addActionListener(event -> {
+			final int returnVal = fc.showOpenDialog(parent);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				final Path selectedFile = fc.getSelectedFile().toPath();
+				if (!listModel.contains(selectedFile)) {
+					listModel.addElement(selectedFile);
+				}
+			}
+		});
+
+		removeButton.addActionListener(event -> {
+			final int selectedIndex = list.getSelectedIndex();
+			if (selectedIndex != -1) {
+				listModel.remove(selectedIndex);
+			}
+		});
+
+		final JPanel northPanel = UI.createNorthPanel(new JScrollPane(list));
+		northPanel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
+
+		return northPanel;
 	}
 }

@@ -108,6 +108,7 @@ public class EditorNodeModel extends NoInternalsModel {
     else {
       outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedParametersScript,
           settings.modifiedVisualizationScript, settings.genericModel, null, Collections.emptySet());
+      outObj.resources = this.settings.resources;
     }
 
     return new PortObject[] {outObj};

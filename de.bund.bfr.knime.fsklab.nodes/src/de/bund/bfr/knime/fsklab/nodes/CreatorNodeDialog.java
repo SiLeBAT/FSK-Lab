@@ -18,17 +18,11 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.nio.file.Path;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
@@ -36,7 +30,6 @@ import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.util.SimpleFileFilter;
 
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.swing.FilePanel;
@@ -85,9 +78,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
 		JPanel northPanel = UI.createNorthPanel(gridPanel);
 
 		addTab("Options", northPanel);
-
-		// TODO: Test tab
-		addTab("Files", createFilePanel());
+		addTab("Files", UIUtils.createResourcesPanel(getPanel(), listModel));
 	}
 
 	@Override
@@ -124,43 +115,5 @@ public class CreatorNodeDialog extends NodeDialogPane {
 		}
 
 		this.settings.save(settings);
-	}
-
-	JPanel createFilePanel() {
-		JList<Path> list = new JList<>(listModel);
-		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		list.setLayoutOrientation(JList.VERTICAL);
-
-		final JButton addButton = UIUtils.createAddButton();
-		final JButton removeButton = UIUtils.createRemoveButton();
-		final JPanel buttonsPanel = UI.createHorizontalPanel(addButton, removeButton);
-
-		addButton.addActionListener(event -> {
-			final JFileChooser fc = new JFileChooser();
-			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fc.addChoosableFileFilter(new SimpleFileFilter("txt", "Plain text file"));
-			fc.addChoosableFileFilter(new SimpleFileFilter("rdata", "R workspace file"));
-			fc.setAcceptAllFileFilterUsed(false); // do not use the AcceptAll FileFilter
-
-			final int returnVal = fc.showOpenDialog(getPanel());
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				final Path selectedFile = fc.getSelectedFile().toPath();
-				if (!listModel.contains(selectedFile)) {
-					listModel.addElement(selectedFile);
-				}
-			}
-		});
-
-		removeButton.addActionListener(event -> {
-			final int selectedIndex = list.getSelectedIndex();
-			if (selectedIndex != -1) {
-				listModel.remove(selectedIndex);
-			}
-		});
-
-		final JPanel northPanel = UI.createNorthPanel(new JScrollPane(list));
-		northPanel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
-
-		return northPanel;
 	}
 }
