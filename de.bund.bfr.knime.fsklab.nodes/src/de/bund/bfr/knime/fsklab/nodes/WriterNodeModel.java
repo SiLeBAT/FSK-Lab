@@ -184,7 +184,7 @@ public class WriterNodeModel extends NoInternalsModel {
   }
   
   private static ArchiveEntry addRWorkspace(final CombineArchive archive, final Path path) throws URISyntaxException, IOException {
-	  final URI plainTextURI = new URI("http://purl.org/NET/mediatypes/text/x-RData");
-	  return archive.addEntry(path.toFile(), path.getFileName().toString(), plainTextURI);
+	  final URI rDataURI = new URI("http://purl.org/NET/mediatypes/text/x-RData");
+	  return archive.addEntry(path.toFile(), path.getFileName().toString(), rDataURI);
   }
 }

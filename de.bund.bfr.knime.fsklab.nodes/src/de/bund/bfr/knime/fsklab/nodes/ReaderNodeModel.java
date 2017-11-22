@@ -62,6 +62,8 @@ public class ReaderNodeModel extends NoInternalsModel {
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
   private final SettingsModelString filename = new SettingsModelString("filename", "");
+  
+
 
   public ReaderNodeModel() {
     super(IN_TYPES, OUT_TYPES);
@@ -96,8 +98,12 @@ public class ReaderNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
+	final URI plainTextURI = new URI("http://purl.org/NET/mediatypes/text/plain");
+	final URI rDataURI = new URI("http://purl.org/NET/mediatypes/text/x-RData");  
+	  
     final Map<String, File> entriesMap = new HashMap<>();
     final ArrayList<String> libNames = new ArrayList<>();
+    final ArrayList<Path> resources = new ArrayList<>();
 
     final File file = FileUtil.getFileFromURL(FileUtil.toURL(filename.getStringValue()));
 
@@ -138,6 +144,20 @@ public class ReaderNodeModel extends NoInternalsModel {
         final String name = entry.getFileName().split("\\_")[0];
         libNames.add(name);
       }
+      
+      // Gets resources (plain text)
+      for (final ArchiveEntry entry : archive.getEntriesWithFormat(plainTextURI)) {
+    	  final File tempFile = FileUtil.createTempFile(entry.getFileName(), ".txt");
+    	  entry.extractFile(tempFile);
+    	  resources.add(tempFile.toPath());
+      }
+      
+      // Gets resources (R workspaces)
+      for (final ArchiveEntry entry : archive.getEntriesWithFormat(rDataURI)) {
+    	  final File tempFile = FileUtil.createTempFile(entry.getFileName(), ".rdata");
+    	  entry.extractFile(tempFile);
+    	  resources.add(tempFile.toPath());
+      }
     }
 
     final String modelScript =
@@ -171,7 +191,7 @@ public class ReaderNodeModel extends NoInternalsModel {
           libRegistry.getPaths(libNames).stream().map(Path::toFile).collect(Collectors.toSet());
       libFiles.addAll(libs);
     }
-
+    
     // validate model
     try (final RController controller = new RController()) {
 
@@ -190,6 +210,7 @@ public class ReaderNodeModel extends NoInternalsModel {
 
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
         genericModel, workspaceFile, libFiles);
+    fskObj.resources.addAll(resources);
     return new FskPortObject[] {fskObj};
   }
 
