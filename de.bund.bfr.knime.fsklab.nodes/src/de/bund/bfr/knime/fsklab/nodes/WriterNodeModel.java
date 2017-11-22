@@ -22,8 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -127,6 +129,17 @@ public class WriterNodeModel extends NoInternalsModel {
       for (final File libFile : fskObj.libs) {
         archive.addEntry(libFile, libFile.getName(), libUri);
       }
+      
+      // Adds resources
+      for (final Path resourcePath : fskObj.resources) {
+    	  final String filenameString = resourcePath.getFileName().toString();
+    	  
+    	  if (FilenameUtils.isExtension(filenameString, "txt")) {
+    		  addPlainText(archive, resourcePath);
+    	  } else if (FilenameUtils.isExtension(filenameString, ".rdata")) {
+    		  addRWorkspace(archive, resourcePath);
+    	  }
+      }
 
       archive.pack();
     } catch (Exception e) {
@@ -163,5 +176,15 @@ public class WriterNodeModel extends NoInternalsModel {
     file.delete();
 
     return entry;
+  }
+  
+  private static ArchiveEntry addPlainText(final CombineArchive archive, final Path path) throws URISyntaxException, IOException {
+	  final URI plainTextURI = new URI("http://purl.org/NET/mediatypes/text/plain");
+	  return archive.addEntry(path.toFile(), path.getFileName().toString(), plainTextURI);
+  }
+  
+  private static ArchiveEntry addRWorkspace(final CombineArchive archive, final Path path) throws URISyntaxException, IOException {
+	  final URI plainTextURI = new URI("http://purl.org/NET/mediatypes/text/x-RData");
+	  return archive.addEntry(path.toFile(), path.getFileName().toString(), plainTextURI);
   }
 }
