@@ -276,9 +276,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 		exec.setMessage("Cleaning up");
 		executor.cleanup(exec);
 		
-		// deletes working directory
-		Files.delete(workingDirectory);
-
 		return fskObj;
 	}
 
