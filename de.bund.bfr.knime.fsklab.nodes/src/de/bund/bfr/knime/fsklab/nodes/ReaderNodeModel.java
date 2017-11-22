@@ -98,9 +98,6 @@ public class ReaderNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-	final URI plainTextURI = new URI("http://purl.org/NET/mediatypes/text/plain");
-	final URI rDataURI = new URI("http://purl.org/NET/mediatypes/text/x-RData");  
-	  
     final Map<String, File> entriesMap = new HashMap<>();
     final ArrayList<String> libNames = new ArrayList<>();
     final ArrayList<Path> resources = new ArrayList<>();
@@ -133,8 +130,7 @@ public class ReaderNodeModel extends NoInternalsModel {
       }
 
       // Gets metadata file
-      final URI jsonURI = new URI("http://json.org");
-      entriesMap.put("metaData", toTempFile(archive.getEntriesWithFormat(jsonURI).get(0)));
+      entriesMap.put("metaData", toTempFile(archive.getEntriesWithFormat(URIS.json).get(0)));
 
       // Gets library URI for the running platform
       final URI libUri = NodeUtils.getLibURI();
@@ -146,14 +142,14 @@ public class ReaderNodeModel extends NoInternalsModel {
       }
       
       // Gets resources (plain text)
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(plainTextURI)) {
+      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.plainText)) {
     	  final File tempFile = FileUtil.createTempFile(entry.getFileName(), ".txt");
     	  entry.extractFile(tempFile);
     	  resources.add(tempFile.toPath());
       }
       
       // Gets resources (R workspaces)
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(rDataURI)) {
+      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.rData)) {
     	  final File tempFile = FileUtil.createTempFile(entry.getFileName(), ".rdata");
     	  entry.extractFile(tempFile);
     	  resources.add(tempFile.toPath());

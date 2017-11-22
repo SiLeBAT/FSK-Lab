@@ -135,9 +135,9 @@ public class WriterNodeModel extends NoInternalsModel {
     	  final String filenameString = resourcePath.getFileName().toString();
     	  
     	  if (FilenameUtils.isExtension(filenameString, "txt")) {
-    		  addPlainText(archive, resourcePath);
+    		  archive.addEntry(resourcePath.toFile(), resourcePath.getFileName().toString(), URIS.plainText);
     	  } else if (FilenameUtils.isExtension(filenameString, ".rdata")) {
-    		  addRWorkspace(archive, resourcePath);
+    		  archive.addEntry(resourcePath.toFile(), resourcePath.getFileName().toString(), URIS.rData);
     	  }
       }
 
@@ -172,19 +172,9 @@ public class WriterNodeModel extends NoInternalsModel {
     objectMapper.writeValue(file, genericModel);
 
     // TODO: JSON uri should be moved to fskml
-    final ArchiveEntry entry = archive.addEntry(file, filename, new URI("http://json.org"));
+    final ArchiveEntry entry = archive.addEntry(file, filename, URIS.json);
     file.delete();
 
     return entry;
-  }
-  
-  private static ArchiveEntry addPlainText(final CombineArchive archive, final Path path) throws URISyntaxException, IOException {
-	  final URI plainTextURI = new URI("http://purl.org/NET/mediatypes/text/plain");
-	  return archive.addEntry(path.toFile(), path.getFileName().toString(), plainTextURI);
-  }
-  
-  private static ArchiveEntry addRWorkspace(final CombineArchive archive, final Path path) throws URISyntaxException, IOException {
-	  final URI rDataURI = new URI("http://purl.org/NET/mediatypes/text/x-RData");
-	  return archive.addEntry(path.toFile(), path.getFileName().toString(), rDataURI);
   }
 }
