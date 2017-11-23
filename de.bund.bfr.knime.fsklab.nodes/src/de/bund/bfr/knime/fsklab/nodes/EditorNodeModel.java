@@ -119,7 +119,6 @@ public class EditorNodeModel extends NoInternalsModel {
     	  Files.copy(resource, targetPath);
     	  outObj.resources.add(targetPath);
       }
-      outObj.resources = this.settings.resources;
     }
 
     return new PortObject[] {outObj};
