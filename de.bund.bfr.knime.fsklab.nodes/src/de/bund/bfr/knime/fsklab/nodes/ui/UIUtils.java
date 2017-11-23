@@ -60,20 +60,6 @@ public class UIUtils {
 		return panel;
 	}
 
-	/** Creates a panel with a list of resource files. */
-	public static final JPanel createResourcesViewPanel(final Collection<Path> resources) {
-
-		final JPanel panel = new JPanel(new BorderLayout());
-		panel.setName("Resources list");
-
-		final JList<Path> list = new JList<>(resources.stream().toArray(Path[]::new));
-		list.setLayoutOrientation(JList.VERTICAL);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		panel.add(new JScrollPane(list));
-
-		return panel;
-	}
-
 	/**
 	 * Do not use original JTable! On Mac grid lines are not visible.
 	 * 

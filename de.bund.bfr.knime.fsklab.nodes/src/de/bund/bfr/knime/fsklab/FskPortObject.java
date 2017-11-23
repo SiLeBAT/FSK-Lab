@@ -18,6 +18,7 @@
  */
 package de.bund.bfr.knime.fsklab;
 
+import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -39,9 +41,11 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -299,7 +303,7 @@ public class FskPortObject implements PortObject {
 		metaDataPane.setName("Meta data");
 		
 		final JPanel librariesPanel = UIUtils.createLibrariesPanel(libs);
-		final JPanel resourcesPanel = UIUtils.createResourcesViewPanel(resources);
+		final JPanel resourcesPanel = createResourcesViewPanel(resources);
 
 		return new JComponent[] { modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
 				librariesPanel, resourcesPanel };
@@ -1065,5 +1069,19 @@ public class FskPortObject implements PortObject {
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
 		return tree;
+	}
+	
+	/** Creates a panel with a list of resource files. */
+	private static final JPanel createResourcesViewPanel(final Collection<Path> resources) {
+
+		final JPanel panel = new JPanel(new BorderLayout());
+		panel.setName("Resources list");
+
+		final JList<Path> list = new JList<>(resources.stream().toArray(Path[]::new));
+		list.setLayoutOrientation(JList.VERTICAL);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		panel.add(new JScrollPane(list));
+
+		return panel;
 	}
 }
