@@ -111,7 +111,7 @@ public class FskPortObject implements PortObject {
 
 	/** Model meta data encoded as a RAKIP Generic model. */
 	public GenericModel genericModel;
-	
+
 	/** Paths to resources: plain text files and R workspace files (.rdata). */
 	public List<Path> resources;
 
@@ -211,11 +211,11 @@ public class FskPortObject implements PortObject {
 				IOUtils.writeLines(libNames, "\n", out, StandardCharsets.UTF_8);
 				out.closeEntry();
 			}
-			
+
 			// resource files
 			if (!portObject.resources.isEmpty()) {
 				out.putNextEntry(new ZipEntry("resources.list"));
-				
+
 				List<String> lines = portObject.resources.stream().map(Path::toString).collect(Collectors.toList());
 				IOUtils.writeLines(lines, "\n", out, StandardCharsets.UTF_8);
 				out.closeEntry();
@@ -301,12 +301,12 @@ public class FskPortObject implements PortObject {
 
 		final JScrollPane metaDataPane = new JScrollPane(genericModel != null ? createTree(genericModel) : new JTree());
 		metaDataPane.setName("Meta data");
-		
+
 		final JPanel librariesPanel = UIUtils.createLibrariesPanel(libs);
 		final JPanel resourcesPanel = createResourcesViewPanel(resources);
 
-		return new JComponent[] { modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
-				librariesPanel, resourcesPanel };
+		return new JComponent[] { modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane, librariesPanel,
+				resourcesPanel };
 	}
 
 	// Metadata pane stuff
@@ -1011,7 +1011,7 @@ public class FskPortObject implements PortObject {
 			node.add(parentNode);
 		}
 
-//		add(node, "Fitting procedure", modelMath.fittingProcedure);
+		// add(node, "Fitting procedure", modelMath.fittingProcedure);
 
 		// TODO: exposure
 
@@ -1022,7 +1022,7 @@ public class FskPortObject implements PortObject {
 			node.add(listNode);
 		}
 	}
-	
+
 	private static void add(final DefaultMutableTreeNode node, final Simulation simulation) {
 		add(node, "Simulation.Algorithm", simulation.algorithm);
 		add(node, "Simulation.Model", simulation.simulatedModel);
@@ -1070,14 +1070,15 @@ public class FskPortObject implements PortObject {
 
 		return tree;
 	}
-	
+
 	/** Creates a panel with a list of resource files. */
 	private static final JPanel createResourcesViewPanel(final Collection<Path> resources) {
 
 		final JPanel panel = new JPanel(new BorderLayout());
 		panel.setName("Resources list");
 
-		final JList<Path> list = new JList<>(resources.stream().toArray(Path[]::new));
+		final String[] filenames = resources.stream().map(it -> it.getFileName().toString()).toArray(String[]::new);
+		final JList<String> list = new JList<>(filenames);
 		list.setLayoutOrientation(JList.VERTICAL);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panel.add(new JScrollPane(list));
