@@ -114,6 +114,8 @@ public class FskPortObject implements PortObject {
 
 	/** Paths to resources: plain text files and R workspace files (.rdata). */
 	public List<Path> resources;
+	
+	public final Path workingDirectory;
 
 	/**
 	 * R workspace file with the results of running the model. It may be null if the
@@ -129,7 +131,7 @@ public class FskPortObject implements PortObject {
 	public int objectNum;
 
 	public FskPortObject(final String model, final String param, final String viz, final GenericModel genericModel,
-			final File workspace, final Set<File> libs) {
+			final File workspace, final Set<File> libs) throws IOException {
 		this.model = model;
 		this.param = param;
 		this.viz = viz;
@@ -140,6 +142,8 @@ public class FskPortObject implements PortObject {
 
 		objectNum = numOfInstances;
 		numOfInstances += 1;
+		
+		workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
 	}
 
 	@Override

@@ -21,6 +21,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,7 +101,6 @@ public class ReaderNodeModel extends NoInternalsModel {
 
     final Map<String, File> entriesMap = new HashMap<>();
     final ArrayList<String> libNames = new ArrayList<>();
-    final ArrayList<Path> resources = new ArrayList<>();
 
     final File file = FileUtil.getFileFromURL(FileUtil.toURL(filename.getStringValue()));
 
@@ -139,20 +139,6 @@ public class ReaderNodeModel extends NoInternalsModel {
       for (final ArchiveEntry entry : archive.getEntriesWithFormat(libUri)) {
         final String name = entry.getFileName().split("\\_")[0];
         libNames.add(name);
-      }
-      
-      // Gets resources (plain text)
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.plainText)) {
-    	  final File tempFile = FileUtil.createTempFile(entry.getFileName(), ".txt");
-    	  entry.extractFile(tempFile);
-    	  resources.add(tempFile.toPath());
-      }
-      
-      // Gets resources (R workspaces)
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.rData)) {
-    	  final File tempFile = FileUtil.createTempFile(entry.getFileName(), ".rdata");
-    	  entry.extractFile(tempFile);
-    	  resources.add(tempFile.toPath());
       }
     }
 
@@ -206,7 +192,29 @@ public class ReaderNodeModel extends NoInternalsModel {
 
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
         genericModel, workspaceFile, libFiles);
-    fskObj.resources.addAll(resources);
+    
+    // Reads archive again to load resources
+    try (final CombineArchive archive = new CombineArchive(file)) {
+    	
+    	// Gets plain text resources (.txt)
+    	for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.plainText)) {
+    		final Path targetPath = fskObj.workingDirectory.resolve(entry.getFileName());
+    		Files.createFile(targetPath);
+    		entry.extractFile(targetPath.toFile());
+    		
+    		fskObj.resources.add(targetPath);
+    	}
+    	
+    	// Gets R workspace resources (.rdata)
+    	for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.rData)) {
+    		final Path targetPath = fskObj.workingDirectory.resolve(entry.getFileName());
+    		Files.createFile(targetPath);
+    		entry.extractFile(targetPath.toFile());
+    		
+    		fskObj.resources.add(targetPath);
+    	}
+    }
+    
     return new FskPortObject[] {fskObj};
   }
 

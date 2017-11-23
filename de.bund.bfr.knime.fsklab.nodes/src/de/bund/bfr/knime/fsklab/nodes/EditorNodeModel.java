@@ -18,6 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -108,6 +110,15 @@ public class EditorNodeModel extends NoInternalsModel {
     else {
       outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedParametersScript,
           settings.modifiedVisualizationScript, settings.genericModel, null, Collections.emptySet());
+      
+      for (final Path resource : settings.resources) {
+    	 
+    	  final String filename = resource.getFileName().toString();
+    	  final Path targetPath = outObj.workingDirectory.resolve(filename);
+    	  
+    	  Files.copy(resource, targetPath);
+    	  outObj.resources.add(targetPath);
+      }
       outObj.resources = this.settings.resources;
     }
 
