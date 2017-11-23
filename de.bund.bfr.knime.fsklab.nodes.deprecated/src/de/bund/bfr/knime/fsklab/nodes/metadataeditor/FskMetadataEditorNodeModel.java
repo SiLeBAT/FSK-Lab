@@ -28,7 +28,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
-
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 
 /**
@@ -36,129 +35,126 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
  */
 @Deprecated
 final class FskMetadataEditorNodeModel
-		extends AbstractWizardNodeModel<FskMetadataEditorViewRepresentation, FskMetadataEditorViewValue>
-		implements PortObjectHolder {
+    extends AbstractWizardNodeModel<FskMetadataEditorViewRepresentation, FskMetadataEditorViewValue>
+    implements PortObjectHolder {
 
-	private FskPortObject m_port;
+  private FskPortObject m_port;
 
-	// Input and output port types
-	private static final PortType[] IN_TYPES = { FskPortObject.TYPE };
-	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE };
+  // Input and output port types
+  private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
+  private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
-	private static final String VIEW_NAME = new FskMetadataEditorNodeFactory().getInteractiveViewName();
+  private static final String VIEW_NAME =
+      new FskMetadataEditorNodeFactory().getInteractiveViewName();
 
-	public FskMetadataEditorNodeModel() {
-		super(IN_TYPES, OUT_TYPES, VIEW_NAME);
-	}
+  public FskMetadataEditorNodeModel() {
+    super(IN_TYPES, OUT_TYPES, VIEW_NAME);
+  }
 
-	@Override
-	public FskMetadataEditorViewRepresentation createEmptyViewRepresentation() {
-		return new FskMetadataEditorViewRepresentation();
-	}
+  @Override
+  public FskMetadataEditorViewRepresentation createEmptyViewRepresentation() {
+    return new FskMetadataEditorViewRepresentation();
+  }
 
-	@Override
-	public FskMetadataEditorViewValue createEmptyViewValue() {
-		return new FskMetadataEditorViewValue();
-	}
+  @Override
+  public FskMetadataEditorViewValue createEmptyViewValue() {
+    return new FskMetadataEditorViewValue();
+  }
 
-	@Override
-	public String getJavascriptObjectID() {
-		return "de.bund.bfr.knime.fsklab.nodes.metadataeditor";
-	}
+  @Override
+  public String getJavascriptObjectID() {
+    return "de.bund.bfr.knime.fsklab.nodes.metadataeditor";
+  }
 
-	@Override
-	public boolean isHideInWizard() {
-		return false;
-	}
+  @Override
+  public boolean isHideInWizard() {
+    return false;
+  }
 
-	@Override
-	public ValidationError validateViewValue(FskMetadataEditorViewValue viewContent) {
-		return null;
-	}
+  @Override
+  public ValidationError validateViewValue(FskMetadataEditorViewValue viewContent) {
+    return null;
+  }
 
-	@Override
-	public void saveCurrentValue(NodeSettingsWO content) {
-	}
+  @Override
+  public void saveCurrentValue(NodeSettingsWO content) {}
 
-	@Override
-	public FskMetadataEditorViewValue getViewValue() {
-		FskMetadataEditorViewValue val;
-		synchronized (getLock()) {
-			val = super.getViewValue();
-			if (val == null) {
-				val = createEmptyViewValue();
-			}
-			if (val.metadata == null && m_port != null && m_port.template != null) {
-				val.metadata = m_port.template;
-			}
-		}
-		return val;
-	}
+  @Override
+  public FskMetadataEditorViewValue getViewValue() {
+    FskMetadataEditorViewValue val;
+    synchronized (getLock()) {
+      val = super.getViewValue();
+      if (val == null) {
+        val = createEmptyViewValue();
+      }
+      if (val.metadata == null && m_port != null && m_port.template != null) {
+        val.metadata = m_port.template;
+      }
+    }
+    return val;
+  }
 
-	@Override
-	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		return inSpecs;
-	}
+  @Override
+  protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+    return inSpecs;
+  }
 
-	@Override
-	protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) {
+  @Override
+  protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) {
 
-		FskPortObject inObj = (FskPortObject) inObjects[0];
-		FskPortObject outObj = new FskPortObject();
-		// Clone input object
-		outObj.model = inObj.model;
-		outObj.param = inObj.param;
-		outObj.viz = inObj.viz;
-		outObj.template = inObj.template;
-		outObj.workspace = inObj.workspace;
-		outObj.libs.addAll(inObj.libs);
+    FskPortObject inObj = (FskPortObject) inObjects[0];
+    FskPortObject outObj = new FskPortObject();
+    // Clone input object
+    outObj.model = inObj.model;
+    outObj.param = inObj.param;
+    outObj.viz = inObj.viz;
+    outObj.template = inObj.template;
+    outObj.workspace = inObj.workspace;
+    outObj.libs.addAll(inObj.libs);
 
-		synchronized (getLock()) {
-			FskMetadataEditorViewValue val = getViewValue();
+    synchronized (getLock()) {
+      FskMetadataEditorViewValue val = getViewValue();
 
-			// If not executed
-			if (val.metadata == null) {
-				val.metadata = inObj.template;
-				m_port = inObj;
-			}
+      // If not executed
+      if (val.metadata == null) {
+        val.metadata = inObj.template;
+        m_port = inObj;
+      }
 
-			// Takes modified metadata from val
-			outObj.template = val.metadata;
-			m_port = inObj;
-		}
+      // Takes modified metadata from val
+      outObj.template = val.metadata;
+      m_port = inObj;
+    }
 
-		exec.setProgress(1);
-		return new PortObject[] { outObj };
-	}
+    exec.setProgress(1);
+    return new PortObject[] {outObj};
+  }
 
-	@Override
-	protected void performReset() {
-		m_port = null;
-	}
+  @Override
+  protected void performReset() {
+    m_port = null;
+  }
 
-	@Override
-	protected void useCurrentValueAsDefault() {
-	}
+  @Override
+  protected void useCurrentValueAsDefault() {}
 
-	@Override
-	protected void saveSettingsTo(NodeSettingsWO settings) {
-	}
+  @Override
+  protected void saveSettingsTo(NodeSettingsWO settings) {}
 
-	@Override
-	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-	}
+  @Override
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
-	@Override
-	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-	}
+  @Override
+  protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
+      throws InvalidSettingsException {}
 
-	@Override
-	public PortObject[] getInternalPortObjects() {
-		return new PortObject[] { m_port };
-	}
+  @Override
+  public PortObject[] getInternalPortObjects() {
+    return new PortObject[] {m_port};
+  }
 
-	@Override
-	public void setInternalPortObjects(PortObject[] portObjects) {
-		m_port = (FskPortObject) portObjects[0];
-	}
+  @Override
+  public void setInternalPortObjects(PortObject[] portObjects) {
+    m_port = (FskPortObject) portObjects[0];
+  }
 }

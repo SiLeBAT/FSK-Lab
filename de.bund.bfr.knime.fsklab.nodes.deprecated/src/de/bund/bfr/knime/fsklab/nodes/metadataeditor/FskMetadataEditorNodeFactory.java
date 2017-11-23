@@ -25,30 +25,31 @@ import org.knime.core.node.wizard.WizardNodeFactoryExtension;
 
 @Deprecated
 public class FskMetadataEditorNodeFactory extends NodeFactory<FskMetadataEditorNodeModel> implements
-		WizardNodeFactoryExtension<FskMetadataEditorNodeModel, FskMetadataEditorViewRepresentation, FskMetadataEditorViewValue> {
+    WizardNodeFactoryExtension<FskMetadataEditorNodeModel, FskMetadataEditorViewRepresentation, FskMetadataEditorViewValue> {
 
-	@Override
-	public FskMetadataEditorNodeModel createNodeModel() {
-		return new FskMetadataEditorNodeModel();
-	}
+  @Override
+  public FskMetadataEditorNodeModel createNodeModel() {
+    return new FskMetadataEditorNodeModel();
+  }
 
-	@Override
-	protected int getNrNodeViews() {
-		return 0;
-	}
+  @Override
+  protected int getNrNodeViews() {
+    return 0;
+  }
 
-	@Override
-	public NodeView<FskMetadataEditorNodeModel> createNodeView(int viewIndex, FskMetadataEditorNodeModel nodeModel) {
-		return null;
-	}
+  @Override
+  public NodeView<FskMetadataEditorNodeModel> createNodeView(int viewIndex,
+      FskMetadataEditorNodeModel nodeModel) {
+    return null;
+  }
 
-	@Override
-	protected NodeDialogPane createNodeDialogPane() {
-		return null;
-	}
+  @Override
+  protected NodeDialogPane createNodeDialogPane() {
+    return null;
+  }
 
-	@Override
-	protected boolean hasDialog() {
-		return false;
-	}
+  @Override
+  protected boolean hasDialog() {
+    return false;
+  }
 }

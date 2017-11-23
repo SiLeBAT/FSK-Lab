@@ -24,31 +24,30 @@ import org.knime.core.node.wizard.WizardNodeFactoryExtension;
 import org.knime.core.node.NodeView;
 
 @Deprecated
-public class FskEditorNodeFactory
-	extends NodeFactory<FskEditorNodeModel>
-	implements WizardNodeFactoryExtension<FskEditorNodeModel, FskEditorViewRepresentation, FskEditorViewValue> {
+public class FskEditorNodeFactory extends NodeFactory<FskEditorNodeModel> implements
+    WizardNodeFactoryExtension<FskEditorNodeModel, FskEditorViewRepresentation, FskEditorViewValue> {
 
-	@Override
-	public FskEditorNodeModel createNodeModel() {
-		return new FskEditorNodeModel();
-	}
-	
-	@Override
-	protected int getNrNodeViews() {
-		return 0;
-	}
-	
-	public NodeView<FskEditorNodeModel> createNodeView(int viewIndex, FskEditorNodeModel nodeModel) {
-		return null;
-	};
-	
-	@Override
-	protected NodeDialogPane createNodeDialogPane() {
-		return null;
-	}
-	
-	@Override
-	protected boolean hasDialog() {
-		return false;
-	}
+  @Override
+  public FskEditorNodeModel createNodeModel() {
+    return new FskEditorNodeModel();
+  }
+
+  @Override
+  protected int getNrNodeViews() {
+    return 0;
+  }
+
+  public NodeView<FskEditorNodeModel> createNodeView(int viewIndex, FskEditorNodeModel nodeModel) {
+    return null;
+  };
+
+  @Override
+  protected NodeDialogPane createNodeDialogPane() {
+    return null;
+  }
+
+  @Override
+  protected boolean hasDialog() {
+    return false;
+  }
 }

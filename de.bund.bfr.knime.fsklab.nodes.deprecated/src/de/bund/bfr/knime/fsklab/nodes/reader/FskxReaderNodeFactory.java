@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab.nodes.reader;
 
 import javax.swing.JFileChooser;
-
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
@@ -29,53 +28,54 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 public class FskxReaderNodeFactory extends NodeFactory<FskxReaderNodeModel> {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public FskxReaderNodeModel createNodeModel() {
-		return new FskxReaderNodeModel();
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public FskxReaderNodeModel createNodeModel() {
+    return new FskxReaderNodeModel();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getNrNodeViews() {
-		return 0;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getNrNodeViews() {
+    return 0;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public NodeView<FskxReaderNodeModel> createNodeView(final int viewIndex, final FskxReaderNodeModel nodeModel) {
-		return null;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public NodeView<FskxReaderNodeModel> createNodeView(final int viewIndex,
+      final FskxReaderNodeModel nodeModel) {
+    return null;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean hasDialog() {
-		return true;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasDialog() {
+    return true;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public NodeDialogPane createNodeDialogPane() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public NodeDialogPane createNodeDialogPane() {
 
-		SettingsModelString filename = new SettingsModelString(FskxReaderNodeModel.CFGKEY_FILE, "");
-		DialogComponentFileChooser filechooser = new DialogComponentFileChooser(filename, "filename-history",
-				JFileChooser.OPEN_DIALOG, ".fskx");
+    SettingsModelString filename = new SettingsModelString(FskxReaderNodeModel.CFGKEY_FILE, "");
+    DialogComponentFileChooser filechooser = new DialogComponentFileChooser(filename,
+        "filename-history", JFileChooser.OPEN_DIALOG, ".fskx");
 
-		// Add widget
-		DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
-		pane.createNewGroup("Data source");
-		pane.addDialogComponent(filechooser);
+    // Add widget
+    DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
+    pane.createNewGroup("Data source");
+    pane.addDialogComponent(filechooser);
 
-		return pane;
-	}
+    return pane;
+  }
 }

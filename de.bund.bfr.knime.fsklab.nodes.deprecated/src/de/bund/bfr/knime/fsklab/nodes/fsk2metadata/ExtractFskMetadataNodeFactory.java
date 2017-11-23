@@ -31,57 +31,58 @@ import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataTuple;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 
 @Deprecated
 public class ExtractFskMetadataNodeFactory extends NodeFactory<NodeModel> {
 
-	// Input and output port types
-	private static final PortType[] IN_TYPES = { FskPortObject.TYPE };
-	private static final PortType[] OUT_TYPES = { BufferedDataTable.TYPE };
-	
-	@Override
-	public NodeModel createNodeModel() {		
-		return new StatelessModel(IN_TYPES, OUT_TYPES) {  
-			@Override
-			protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-				return new PortObjectSpec[] { FskMetaDataTuple.createSpec() };
-			}
-			
-			@Override
-			protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) {
-				FskPortObject inObj = (FskPortObject) inObjects[0];
-				
-				final BufferedDataContainer container = exec.createDataContainer(FskMetaDataTuple.createSpec());
-				
-				final FskMetaDataTuple tuple = new FskMetaDataTuple(inObj.template);
-				container.addRowToTable(tuple);
-				container.close();
-				
-				return new PortObject[] { container.getTable() };
-			}
-		};
-	}
+  // Input and output port types
+  private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
+  private static final PortType[] OUT_TYPES = {BufferedDataTable.TYPE};
 
-	@Override
-	public int getNrNodeViews() {
-		return 0;
-	}
+  @Override
+  public NodeModel createNodeModel() {
+    return new StatelessModel(IN_TYPES, OUT_TYPES) {
+      @Override
+      protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs)
+          throws InvalidSettingsException {
+        return new PortObjectSpec[] {FskMetaDataTuple.createSpec()};
+      }
 
-	@Override
-	public NodeView<NodeModel> createNodeView(final int viewIndex, final NodeModel nodeModel) {
-		return null;
-	}
+      @Override
+      protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) {
+        FskPortObject inObj = (FskPortObject) inObjects[0];
 
-	@Override
-	public boolean hasDialog() {
-		return false;
-	}
+        final BufferedDataContainer container =
+            exec.createDataContainer(FskMetaDataTuple.createSpec());
 
-	@Override
-	public NodeDialogPane createNodeDialogPane() {
-		return new DefaultNodeSettingsPane();
-	}
+        final FskMetaDataTuple tuple = new FskMetaDataTuple(inObj.template);
+        container.addRowToTable(tuple);
+        container.close();
+
+        return new PortObject[] {container.getTable()};
+      }
+    };
+  }
+
+  @Override
+  public int getNrNodeViews() {
+    return 0;
+  }
+
+  @Override
+  public NodeView<NodeModel> createNodeView(final int viewIndex, final NodeModel nodeModel) {
+    return null;
+  }
+
+  @Override
+  public boolean hasDialog() {
+    return false;
+  }
+
+  @Override
+  public NodeDialogPane createNodeDialogPane() {
+    return new DefaultNodeSettingsPane();
+  }
 }

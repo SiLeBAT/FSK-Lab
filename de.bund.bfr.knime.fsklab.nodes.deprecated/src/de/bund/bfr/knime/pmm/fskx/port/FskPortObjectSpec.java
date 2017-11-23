@@ -19,9 +19,7 @@
 package de.bund.bfr.knime.pmm.fskx.port;
 
 import java.io.IOException;
-
 import javax.swing.JComponent;
-
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectSpecZipInputStream;
 import org.knime.core.node.port.PortObjectSpecZipOutputStream;

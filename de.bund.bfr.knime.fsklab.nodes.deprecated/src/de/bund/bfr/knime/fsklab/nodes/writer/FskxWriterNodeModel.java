@@ -23,9 +23,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -40,7 +38,6 @@ import org.knime.core.util.FileUtil;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.xml.stax.SBMLWriter;
-
 import de.bund.bfr.fskml.OmexMetaDataHandler;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
@@ -49,141 +46,143 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
 
-//It is a deprecated node, thus lots of deprecated warnings are thrown.
+// It is a deprecated node, thus lots of deprecated warnings are thrown.
 @SuppressWarnings("deprecation")
 class FskxWriterNodeModel extends NoInternalsModel {
 
-	// Configuration keys
-	public static final String CFG_FILE = "file";
+  // Configuration keys
+  public static final String CFG_FILE = "file";
 
-	private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
+  private final SettingsModelString filePath = new SettingsModelString(CFG_FILE, null);
 
-	// Input and output port types
-	private static final PortType[] IN_TYPES = { FskPortObject.TYPE };
-	private static final PortType[] OUT_TYPES = {};
+  // Input and output port types
+  private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
+  private static final PortType[] OUT_TYPES = {};
 
-	public FskxWriterNodeModel() {
-		super(IN_TYPES, OUT_TYPES);
-	}
+  public FskxWriterNodeModel() {
+    super(IN_TYPES, OUT_TYPES);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws Exception
-	 */
-	@Override
-	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
+  /**
+   * {@inheritDoc}
+   * 
+   * @throws Exception
+   */
+  @Override
+  protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
+      throws Exception {
 
-		FskPortObject portObject = (FskPortObject) inData[0];
+    FskPortObject portObject = (FskPortObject) inData[0];
 
-		File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(filePath.getStringValue()));
+    File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(filePath.getStringValue()));
 
-		try {
-			Files.deleteIfExists(archiveFile.toPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new Exception("Previous file with same name could not be overwritten");
-		}
+    try {
+      Files.deleteIfExists(archiveFile.toPath());
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new Exception("Previous file with same name could not be overwritten");
+    }
 
-		// try to create CombineArchive
-		try (CombineArchive archive = new CombineArchive(archiveFile)) {
+    // try to create CombineArchive
+    try (CombineArchive archive = new CombineArchive(archiveFile)) {
 
-			OmexMetaDataHandler omexMd = new OmexMetaDataHandler();
+      OmexMetaDataHandler omexMd = new OmexMetaDataHandler();
 
-			// Adds model script
-			if (portObject.model != null) {
-				archive.addEntry(createScriptFile(portObject.model), "model.r", URIS.r);
-				omexMd.setModelScript("model.r");
-			}
+      // Adds model script
+      if (portObject.model != null) {
+        archive.addEntry(createScriptFile(portObject.model), "model.r", URIS.r);
+        omexMd.setModelScript("model.r");
+      }
 
-			// Adds parameters script
-			if (portObject.param != null) {
-				archive.addEntry(createScriptFile(portObject.param), "param.r", URIS.r);
-				omexMd.setParametersScript("param.r");
-			}
+      // Adds parameters script
+      if (portObject.param != null) {
+        archive.addEntry(createScriptFile(portObject.param), "param.r", URIS.r);
+        omexMd.setParametersScript("param.r");
+      }
 
-			// Adds visualization script
-			if (portObject.viz != null) {
-				archive.addEntry(createScriptFile(portObject.viz), "visualization.r", URIS.r);
-				omexMd.setVisualizationScript("visualization.r");
-			}
+      // Adds visualization script
+      if (portObject.viz != null) {
+        archive.addEntry(createScriptFile(portObject.viz), "visualization.r", URIS.r);
+        omexMd.setVisualizationScript("visualization.r");
+      }
 
-			// Adds R workspace file
-			if (portObject.workspace != null) {
-				archive.addEntry(portObject.workspace, "workspace.r", URIS.r);
-				omexMd.setWorkspaceFile("workspace.r");
-			}
+      // Adds R workspace file
+      if (portObject.workspace != null) {
+        archive.addEntry(portObject.workspace, "workspace.r", URIS.r);
+        omexMd.setWorkspaceFile("workspace.r");
+      }
 
-			// Add descriptions to archive
-			omexMd.getElements().stream().map(DefaultMetaDataObject::new).forEach(archive::addDescription);
+      // Add descriptions to archive
+      omexMd.getElements().stream().map(DefaultMetaDataObject::new)
+          .forEach(archive::addDescription);
 
-			// Adds model meta data
-			if (portObject.template != null) {
-				SBMLDocument doc = new MetadataDocument(portObject.template).doc;
+      // Adds model meta data
+      if (portObject.template != null) {
+        SBMLDocument doc = new MetadataDocument(portObject.template).doc;
 
-				File metadataFile = FileUtil.createTempFile("metaData", ".pmf");
-				try {
-					new SBMLWriter().write(doc, metadataFile);
-					archive.addEntry(metadataFile, "metaData.pmf", URIS.pmf);
-				} catch (SBMLException | XMLStreamException e) {
-					e.printStackTrace();
-				}
-			}
+        File metadataFile = FileUtil.createTempFile("metaData", ".pmf");
+        try {
+          new SBMLWriter().write(doc, metadataFile);
+          archive.addEntry(metadataFile, "metaData.pmf", URIS.pmf);
+        } catch (SBMLException | XMLStreamException e) {
+          e.printStackTrace();
+        }
+      }
 
-			// Gets library URI for the running platform
-			final URI libUri = NodeUtils.getLibURI();
-			
-			// Adds R libraries
-			for (File lib : portObject.libs) {
-				archive.addEntry(lib, lib.getName(), libUri);
-			}
+      // Gets library URI for the running platform
+      final URI libUri = NodeUtils.getLibURI();
 
-			archive.pack();
-		} catch (Exception e) {
-			FileUtils.deleteQuietly(archiveFile);
-			e.printStackTrace(); // TODO: Log with KNIME NodeLogger
-			throw new Exception("File could not be created", e.getCause());
-		}
+      // Adds R libraries
+      for (File lib : portObject.libs) {
+        archive.addEntry(lib, lib.getName(), libUri);
+      }
 
-		return new PortObject[] {};
-	}
+      archive.pack();
+    } catch (Exception e) {
+      FileUtils.deleteQuietly(archiveFile);
+      e.printStackTrace(); // TODO: Log with KNIME NodeLogger
+      throw new Exception("File could not be created", e.getCause());
+    }
 
-	private static File createScriptFile(String script) throws IOException {
-		File f = FileUtil.createTempFile("script", ".r");
-		try (FileWriter fw = new FileWriter(f)) {
-			fw.write(script);
-		}
+    return new PortObject[] {};
+  }
 
-		return f;
-	}
+  private static File createScriptFile(String script) throws IOException {
+    File f = FileUtil.createTempFile("script", ".r");
+    try (FileWriter fw = new FileWriter(f)) {
+      fw.write(script);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void reset() {
-		// does nothing
-	}
+    return f;
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		return new PortObjectSpec[] {};
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected void reset() {}
 
-	/** {@inheritDoc} */
-	@Override
-	protected void saveSettingsTo(final NodeSettingsWO settings) {
-		filePath.saveSettingsTo(settings);
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
+      throws InvalidSettingsException {
+    return new PortObjectSpec[] {};
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
-		filePath.loadSettingsFrom(settings);
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected void saveSettingsTo(final NodeSettingsWO settings) {
+    filePath.saveSettingsTo(settings);
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-		filePath.validateSettings(settings);
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
+      throws InvalidSettingsException {
+    filePath.loadSettingsFrom(settings);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
+    filePath.validateSettings(settings);
+  }
 }

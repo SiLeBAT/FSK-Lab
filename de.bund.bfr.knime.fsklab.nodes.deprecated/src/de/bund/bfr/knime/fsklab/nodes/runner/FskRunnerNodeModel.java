@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.DataRow;
@@ -46,7 +45,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
-
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
@@ -61,186 +59,190 @@ import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 @Deprecated
 class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 
-	private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
+  private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
 
-	/** Output spec for an FSK object. */
-	private static final FskPortObjectSpec FSK_SPEC = FskPortObjectSpec.INSTANCE;
+  /** Output spec for an FSK object. */
+  private static final FskPortObjectSpec FSK_SPEC = FskPortObjectSpec.INSTANCE;
 
-	/** Output spec for a PNG image. */
-	private static final ImagePortObjectSpec PNG_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
+  /** Output spec for a PNG image. */
+  private static final ImagePortObjectSpec PNG_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
 
-	private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
+  private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
 
-	private RunnerNodeSettings settings = new RunnerNodeSettings();
+  private RunnerNodeSettings settings = new RunnerNodeSettings();
 
-	// Input and output port types
-	private static final PortType[] IN_TYPES = { FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL };
-	private static final PortType[] OUT_TYPES = { FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL };
+  // Input and output port types
+  private static final PortType[] IN_TYPES = {FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL};
+  private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
 
-	public FskRunnerNodeModel() {
-		super(IN_TYPES, OUT_TYPES);
-	}
+  public FskRunnerNodeModel() {
+    super(IN_TYPES, OUT_TYPES);
+  }
 
-	// --- internal settings methods ---
+  // --- internal settings methods ---
 
-	/** {@inheritDoc} */
-	@Override
-	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		internalSettings.loadInternals(nodeInternDir);
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
+      throws IOException, CanceledExecutionException {
+    internalSettings.loadInternals(nodeInternDir);
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		internalSettings.saveInternals(nodeInternDir);
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
+      throws IOException, CanceledExecutionException {
+    internalSettings.saveInternals(nodeInternDir);
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void reset() {
-		internalSettings.reset();
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected void reset() {
+    internalSettings.reset();
+  }
 
-	// --- node settings methods ---
+  // --- node settings methods ---
 
-	@Override
-	protected void saveSettingsTo(NodeSettingsWO settings) {
-		this.settings.saveSettingsTo(settings);
-	}
+  @Override
+  protected void saveSettingsTo(NodeSettingsWO settings) {
+    this.settings.saveSettingsTo(settings);
+  }
 
-	@Override
-	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-		this.settings.validateSettings(settings);
-	}
+  @Override
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+    this.settings.validateSettings(settings);
+  }
 
-	@Override
-	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-		this.settings.loadValidatedSettingsFrom(settings);
-	}
+  @Override
+  protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
+      throws InvalidSettingsException {
+    this.settings.loadValidatedSettingsFrom(settings);
+  }
 
-	/** {@inheritDoc} */
-	@Override
-	protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		return new PortObjectSpec[] { FSK_SPEC, PNG_SPEC };
-	}
+  /** {@inheritDoc} */
+  @Override
+  protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+    return new PortObjectSpec[] {FSK_SPEC, PNG_SPEC};
+  }
 
-	@Override
-	protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
-		exec.checkCanceled();
-		FskPortObject fskObj = (FskPortObject) inObjects[0];
+  @Override
+  protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
+    exec.checkCanceled();
+    FskPortObject fskObj = (FskPortObject) inObjects[0];
 
-		if (fskObj.template.independentVariables != null && !fskObj.template.independentVariables.isEmpty()) {
-			String newScript = "";
+    if (fskObj.template.independentVariables != null
+        && !fskObj.template.independentVariables.isEmpty()) {
+      String newScript = "";
 
-			boolean onError = false;
-			for (Variable v : fskObj.template.independentVariables) {
-				if (StringUtils.isAnyEmpty(v.name, v.value)) {
-					onError = true;
-					break;
-				}
-				newScript += v.name + " <- " + v.value + "\n";
-			}
+      boolean onError = false;
+      for (Variable v : fskObj.template.independentVariables) {
+        if (StringUtils.isAnyEmpty(v.name, v.value)) {
+          onError = true;
+          break;
+        }
+        newScript += v.name + " <- " + v.value + "\n";
+      }
 
-			if (!onError) {
-				fskObj.param = newScript;
-			}
-		}
+      if (!onError) {
+        fskObj.param = newScript;
+      }
+    }
 
-		// If a metadata table is connected then update the model metadata
-		else if (inObjects.length == 2 && inObjects[1] != null) {
-			BufferedDataTable metadataTable = (BufferedDataTable) inObjects[1];
-			if (metadataTable.size() == 1) {
-				try (CloseableRowIterator iterator = metadataTable.iterator()) {
-					DataRow dataRow = iterator.next();
-					iterator.close();
+    // If a metadata table is connected then update the model metadata
+    else if (inObjects.length == 2 && inObjects[1] != null) {
+      BufferedDataTable metadataTable = (BufferedDataTable) inObjects[1];
+      if (metadataTable.size() == 1) {
+        try (CloseableRowIterator iterator = metadataTable.iterator()) {
+          DataRow dataRow = iterator.next();
+          iterator.close();
 
-					// Gets independent variables and their values
-					StringCell varCell = (StringCell) dataRow.getCell(FskMetaDataFields.indepvars.ordinal());
-					String[] vars = varCell.getStringValue().split("\\|\\|");
+          // Gets independent variables and their values
+          StringCell varCell = (StringCell) dataRow.getCell(FskMetaDataFields.indepvars.ordinal());
+          String[] vars = varCell.getStringValue().split("\\|\\|");
 
-					StringCell valuesCell = (StringCell) dataRow.getCell(FskMetaDataFields.indepvars_values.ordinal());
-					String[] values = valuesCell.getStringValue().split("\\|\\|");
+          StringCell valuesCell =
+              (StringCell) dataRow.getCell(FskMetaDataFields.indepvars_values.ordinal());
+          String[] values = valuesCell.getStringValue().split("\\|\\|");
 
-					if (vars != null && values != null && vars.length == values.length) {
-						boolean onError = false;
+          if (vars != null && values != null && vars.length == values.length) {
+            boolean onError = false;
 
-						StringBuilder sb = new StringBuilder();
-						for (int i = 0; i < vars.length; i++) {
-							if (StringUtils.isNoneEmpty(vars[i], values[i])) {
-								sb.append(vars[i] + " <- " + values[i] + "\n");
-							} else {
-								onError = true;
-							}
-						}
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < vars.length; i++) {
+              if (StringUtils.isNoneEmpty(vars[i], values[i])) {
+                sb.append(vars[i] + " <- " + values[i] + "\n");
+              } else {
+                onError = true;
+              }
+            }
 
-						if (!onError) {
-							fskObj.param = sb.toString();
-						}
-					}
-				}
-			}
-		}
+            if (!onError) {
+              fskObj.param = sb.toString();
+            }
+          }
+        }
+      }
+    }
 
-		try (RController controller = new RController()) {
-			fskObj = runSnippet(controller, (FskPortObject) inObjects[0], exec.createSubExecutionContext(1.0));
-		}
+    try (RController controller = new RController()) {
+      fskObj =
+          runSnippet(controller, (FskPortObject) inObjects[0], exec.createSubExecutionContext(1.0));
+    }
 
-		try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
-			final PNGImageContent content = new PNGImageContent(fis);
-			internalSettings.plot = content.getImage();
-			ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
-			return new PortObject[] { fskObj, imgObj };
-		} catch (IOException e) {
-			LOGGER.warn("There is no image created");
-			return new PortObject[] { fskObj };
-		}
-	}
+    try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
+      final PNGImageContent content = new PNGImageContent(fis);
+      internalSettings.plot = content.getImage();
+      ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
+      return new PortObject[] {fskObj, imgObj};
+    } catch (IOException e) {
+      LOGGER.warn("There is no image created");
+      return new PortObject[] {fskObj};
+    }
+  }
 
-	private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
-			final ExecutionContext exec) throws Exception {
+  private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
+      final ExecutionContext exec) throws Exception {
 
-		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
+    final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
 
-		NodeUtils.runSnippet(executor, fskObj.model, fskObj.param, fskObj.viz, exec, internalSettings.imageFile,
-				settings);
+    NodeUtils.runSnippet(executor, fskObj.model, fskObj.param, fskObj.viz, exec,
+        internalSettings.imageFile, settings);
 
-		// Save workspace
-		if (fskObj.workspace == null) {
-			fskObj.workspace = FileUtil.createTempFile("workspace", ".R");
-		}
-		controller.saveWorkspace(fskObj.workspace, exec);
+    // Save workspace
+    if (fskObj.workspace == null) {
+      fskObj.workspace = FileUtil.createTempFile("workspace", ".R");
+    }
+    controller.saveWorkspace(fskObj.workspace, exec);
 
-		// process the return value of error capturing and update error
-		// and output views accordingly
-		if (!executor.getStdErr().isEmpty()) {
-			setExternalOutput(getLinkedListFromOutput(executor.getStdErr()));
-		}
+    // process the return value of error capturing and update error
+    // and output views accordingly
+    if (!executor.getStdErr().isEmpty()) {
+      setExternalOutput(getLinkedListFromOutput(executor.getStdErr()));
+    }
 
-		if (!executor.getStdErr().isEmpty()) {
-			final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
-			setExternalErrorOutput(output);
+    if (!executor.getStdErr().isEmpty()) {
+      final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
+      setExternalErrorOutput(output);
 
-			for (final String line : output) {
-				if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
-					throw new RException("Error in R code: \"" + line + "\"", null);
-				}
-			}
-		}
+      for (final String line : output) {
+        if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
+          throw new RException("Error in R code: \"" + line + "\"", null);
+        }
+      }
+    }
 
-		// cleanup temporary variables of output capturing and consoleLikeCommand stuff
-		exec.setMessage("Cleaning up");
-		executor.cleanup(exec);
+    // cleanup temporary variables of output capturing and consoleLikeCommand stuff
+    exec.setMessage("Cleaning up");
+    executor.cleanup(exec);
 
-		return fskObj;
-	}
+    return fskObj;
+  }
 
-	private static final LinkedList<String> getLinkedListFromOutput(final String output) {
-		return Arrays.stream(output.split("\\r?\\n")).collect(Collectors.toCollection(LinkedList::new));
-	}
+  private static final LinkedList<String> getLinkedListFromOutput(final String output) {
+    return Arrays.stream(output.split("\\r?\\n")).collect(Collectors.toCollection(LinkedList::new));
+  }
 
-	Image getResultImage() {
-		return internalSettings.plot;
-	}
+  Image getResultImage() {
+    return internalSettings.plot;
+  }
 }
