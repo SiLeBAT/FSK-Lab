@@ -34,9 +34,7 @@ public class FskPortObjectSpec implements PortObjectSpec {
 
   public static final FskPortObjectSpec INSTANCE = new FskPortObjectSpec();
 
-  private FskPortObjectSpec() {
-    // empty
-  }
+  private FskPortObjectSpec() {}
 
   /** Serializer used to save this port object spec. */
   public static final class Serializer extends PortObjectSpecSerializer<FskPortObjectSpec> {
@@ -50,9 +48,7 @@ public class FskPortObjectSpec implements PortObjectSpec {
     /** {@inheritDoc} */
     @Override
     public void savePortObjectSpec(final FskPortObjectSpec portObjectSpec,
-        PortObjectSpecZipOutputStream out) throws IOException {
-      // empty
-    }
+        PortObjectSpecZipOutputStream out) throws IOException {}
   }
 
   /** {@inheritDoc} */

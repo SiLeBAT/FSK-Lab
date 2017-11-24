@@ -35,14 +35,10 @@ final class FskMetadataEditorViewRepresentation extends JSONViewContent {
   public final int pseudoIdentifier = (new Random()).nextInt();
 
   @Override
-  public void saveToNodeSettings(NodeSettingsWO settings) {
-    // Nothing to do.
-  }
+  public void saveToNodeSettings(NodeSettingsWO settings) {}
 
   @Override
-  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    // Nothing to do.
-  }
+  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
   /**
    * {@inheritDoc}
