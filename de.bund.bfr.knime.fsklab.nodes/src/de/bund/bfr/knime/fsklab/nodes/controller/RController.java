@@ -42,6 +42,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1618,5 +1620,25 @@ public class RController implements IRController {
         checkConnectionAndRecover();
       }
     }
+  }
+
+  @Override
+  public Path getWorkingDirectory() throws RException, REXPMismatchException {
+
+    // getwd returns NULL if the working directory is not avaible
+    REXP rexp = eval("getwd", true); // may throw RException
+
+    // throws REXPMismatchException if rexp value is NULL.
+    String stringPath = rexp.asString();
+
+    return Paths.get(stringPath);
+  }
+
+  @Override
+  public void setWorkingDirectory(final Path workingDirectory) throws RException {
+
+    String stringPath = FilenameUtils.separatorsToUnix(workingDirectory.toString());
+    String cmd = "setwd('" + stringPath + "')";
+    eval(cmd, false);
   }
 }

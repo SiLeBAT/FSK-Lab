@@ -198,11 +198,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     exec.setMessage("Setting up output capturing");
     executor.setupOutputCapturing(exec);
 
-    // Path of the working directory with forward slashes (required by R)
-    final String unixPath = FilenameUtils.separatorsToUnix(workingDirectory.toString());
-
-    // Set unixPath as R's current working directory
-    executor.executeIgnoreResult(String.format("setwd('%s')", unixPath), exec);
+    controller.setWorkingDirectory(workingDirectory);
 
     exec.setMessage("Add paths to libraries");
     LibRegistry libRegistry = LibRegistry.instance();

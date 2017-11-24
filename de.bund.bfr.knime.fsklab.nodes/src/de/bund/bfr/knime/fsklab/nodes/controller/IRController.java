@@ -18,15 +18,20 @@
 package de.bund.bfr.knime.fsklab.nodes.controller;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import org.knime.core.data.MissingCell;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.node.workflow.NodeContext;
+import org.knime.core.util.ThreadUtils;
 import org.rosuda.REngine.REXP;
+import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.Rserve.RConnection;
 
 /**
@@ -283,4 +288,15 @@ public interface IRController extends AutoCloseable {
    */
   void importDataFromPorts(PortObject[] inData, ExecutionMonitor exec, final int batchSize,
       final String rType, final boolean sendRowNames) throws RException, CanceledExecutionException;
+
+  /**
+   * Returns {@link Path} representing the current working directory of the R process.
+   * 
+   * @see <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/getwd.html">getwd</a>
+   * @throws RMismatchException if the working directory is not available
+   */
+  Path getWorkingDirectory() throws RException, REXPMismatchException;
+
+  /** Sets the current working directory of the R process. */
+  void setWorkingDirectory(final Path workingDirectory) throws RException;
 }
