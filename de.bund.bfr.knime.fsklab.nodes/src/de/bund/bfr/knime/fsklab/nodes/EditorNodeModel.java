@@ -20,22 +20,31 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-
+import org.rosuda.REngine.REXPMismatchException;
+import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 
 public class EditorNodeModel extends NoInternalsModel {
+
+  private static final NodeLogger LOGGER = NodeLogger.getLogger(EditorNodeModel.class);
 
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE_OPTIONAL};
@@ -109,15 +118,37 @@ public class EditorNodeModel extends NoInternalsModel {
     /* If there is no input model then it will return the model created in the UI. */
     else {
       outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedParametersScript,
-          settings.modifiedVisualizationScript, settings.genericModel, null, Collections.emptySet());
-      
+          settings.modifiedVisualizationScript, settings.genericModel, null, new HashSet<>());
+
       for (final Path resource : settings.resources) {
-    	 
-    	  final String filename = resource.getFileName().toString();
-    	  final Path targetPath = outObj.workingDirectory.resolve(filename);
-    	  
-    	  Files.copy(resource, targetPath);
-    	  outObj.resources.add(targetPath);
+
+        final String filename = resource.getFileName().toString();
+        final Path targetPath = outObj.workingDirectory.resolve(filename);
+
+        Files.copy(resource, targetPath);
+        outObj.resources.add(targetPath);
+      }
+    }
+
+    // Adds and installs libraries
+    final Path tempScript = Files.createTempFile("model", ".r");
+    FileUtils.writeStringToFile(tempScript.toFile(), outObj.model, "UTF-8");
+
+    final List<String> libraries = new RScript(tempScript.toFile()).getLibraries();
+    if (!libraries.isEmpty()) {
+      try {
+        // Install missing libraries
+        final LibRegistry libReg = LibRegistry.instance();
+        List<String> missingLibs =
+            libraries.stream().filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
+        if (!missingLibs.isEmpty()) {
+          libReg.installLibs(missingLibs);
+        }
+
+        Set<Path> libPaths = libReg.getPaths(libraries);
+        libPaths.forEach(l -> outObj.libs.add(l.toFile()));
+      } catch (RException | REXPMismatchException e) {
+        LOGGER.error(e.getMessage());
       }
     }
 
