@@ -27,7 +27,6 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import de.bund.bfr.knime.fsklab.nodes.editor.FskEditorNodeSettings;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 
@@ -45,34 +44,29 @@ class FskEditorNodeModel extends NoInternalsModel {
     settings = new FskEditorNodeSettings();
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void reset() {
     // do nothing
   }
 
   // --- node settings methods ---
-  /** {@inheritDoc} */
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
     this.settings.loadSettings(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
     (new FskEditorNodeSettings()).loadSettings(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
     this.settings.saveSettings(settings);
   }
 
   // --- other methods ---
-  /** {@inheritDoc} */
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};

@@ -38,20 +38,17 @@ public class FskPortObjectSpec implements PortObjectSpec {
 
   /** Serializer used to save this port object spec. */
   public static final class Serializer extends PortObjectSpecSerializer<FskPortObjectSpec> {
-    /** {@inheritDoc} */
     @Override
     public FskPortObjectSpec loadPortObjectSpec(final PortObjectSpecZipInputStream in)
         throws IOException {
       return INSTANCE;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void savePortObjectSpec(final FskPortObjectSpec portObjectSpec,
         PortObjectSpecZipOutputStream out) throws IOException {}
   }
 
-  /** {@inheritDoc} */
   @Override
   public JComponent[] getViews() {
     return new JComponent[] {};

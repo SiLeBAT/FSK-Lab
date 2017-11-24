@@ -133,7 +133,6 @@ public class FskPortObject implements PortObject {
     private static final String META_DATA = "metaData";
     private static final String WORKSPACE = "workspace";
 
-    /** {@inheritDoc} */
     @Override
     public void savePortObject(final FskPortObject portObject, final PortObjectZipOutputStream out,
         final ExecutionMonitor exec) throws IOException, CanceledExecutionException {
@@ -237,7 +236,6 @@ public class FskPortObject implements PortObject {
     }
   }
 
-  /** {Override} */
   @Override
   public JComponent[] getViews() {
     JPanel modelScriptPanel = new ScriptPanel("Model script", model, false);

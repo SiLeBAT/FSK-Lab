@@ -28,42 +28,27 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 public class FskxReaderNodeFactory extends NodeFactory<FskxReaderNodeModel> {
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public FskxReaderNodeModel createNodeModel() {
     return new FskxReaderNodeModel();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public int getNrNodeViews() {
     return 0;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public NodeView<FskxReaderNodeModel> createNodeView(final int viewIndex,
       final FskxReaderNodeModel nodeModel) {
     return null;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean hasDialog() {
     return true;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public NodeDialogPane createNodeDialogPane() {
 

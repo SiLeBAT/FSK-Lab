@@ -63,11 +63,6 @@ class FskxWriterNodeModel extends NoInternalsModel {
     super(IN_TYPES, OUT_TYPES);
   }
 
-  /**
-   * {@inheritDoc}
-   * 
-   * @throws Exception
-   */
   @Override
   protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
       throws Exception {
@@ -156,31 +151,26 @@ class FskxWriterNodeModel extends NoInternalsModel {
     return f;
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void reset() {}
 
-  /** {@inheritDoc} */
   @Override
   protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
       throws InvalidSettingsException {
     return new PortObjectSpec[] {};
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void saveSettingsTo(final NodeSettingsWO settings) {
     filePath.saveSettingsTo(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
       throws InvalidSettingsException {
     filePath.loadSettingsFrom(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     filePath.validateSettings(settings);

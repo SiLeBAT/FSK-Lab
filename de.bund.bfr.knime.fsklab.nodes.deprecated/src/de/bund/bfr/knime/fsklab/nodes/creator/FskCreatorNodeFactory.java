@@ -35,32 +35,27 @@ import de.bund.bfr.swing.UI;
 @Deprecated
 public class FskCreatorNodeFactory extends NodeFactory<FskCreatorNodeModel> {
 
-  /** {@inheritDoc} */
   @Override
   public FskCreatorNodeModel createNodeModel() {
     return new FskCreatorNodeModel();
   }
 
-  /** {@inheritDoc} */
   @Override
   public int getNrNodeViews() {
     return 0;
   }
 
-  /** {@inheritDoc} */
   @Override
   public NodeView<FskCreatorNodeModel> createNodeView(final int viewIndex,
       final FskCreatorNodeModel nodeModel) {
     return null;
   }
 
-  /** {@inheritDoc} */
   @Override
   public boolean hasDialog() {
     return true;
   }
 
-  /** {@inheritDoc} */
   @Override
   public NodeDialogPane createNodeDialogPane() {
     return new NodeDialog();

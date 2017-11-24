@@ -24,32 +24,27 @@ import org.knime.core.node.NodeView;
 
 public class CreatorNodeFactory extends NodeFactory<CreatorNodeModel> {
 
-  /** {@inheritDoc} */
   @Override
   public CreatorNodeModel createNodeModel() {
     return new CreatorNodeModel();
   }
 
-  /** {@inheritDoc} */
   @Override
   public int getNrNodeViews() {
     return 0;
   }
 
-  /** {@inheritDoc} */
   @Override
   public NodeView<CreatorNodeModel> createNodeView(final int viewIndex,
       final CreatorNodeModel nodeModel) {
     return null;
   }
 
-  /** {@inheritDoc} */
   @Override
   public boolean hasDialog() {
     return true;
   }
 
-  /** {@inheritDoc} */
   @Override
   public NodeDialogPane createNodeDialogPane() {
     return new CreatorNodeDialog();

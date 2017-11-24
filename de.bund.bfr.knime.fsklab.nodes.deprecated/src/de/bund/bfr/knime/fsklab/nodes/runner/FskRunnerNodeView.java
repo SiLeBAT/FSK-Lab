@@ -44,11 +44,7 @@ class FskRunnerNodeView extends NodeView<FskRunnerNodeModel> {
     super.setComponent(new JScrollPane(m_panel));
   }
 
-  /**
-   * Updates the image to display.
-   *
-   * {@inheritDoc}
-   */
+  /** Updates the image to display. */
   @Override
   protected void modelChanged() {
     final FskRunnerNodeModel model = super.getNodeModel();
@@ -56,15 +52,9 @@ class FskRunnerNodeView extends NodeView<FskRunnerNodeModel> {
     m_panel.update(image);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected void onClose() {}
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected void onOpen() {}
 }

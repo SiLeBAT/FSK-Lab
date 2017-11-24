@@ -21,10 +21,8 @@ package de.bund.bfr.knime.fsklab.nodes.reader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
@@ -46,7 +44,6 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
-import org.rosuda.REngine.REXPMismatchException;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
 import de.bund.bfr.fskml.OmexMetaDataHandler;
@@ -91,14 +88,6 @@ public class FskxReaderNodeModel extends NoInternalsModel {
     super(IN_TYPES, OUT_TYPES);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @throws RException
-   * @throws REXPMismatchException
-   * @throws MalformedURLException
-   * @throws InvalidPathException
-   */
   @Override
   protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
       throws Exception {
@@ -242,33 +231,28 @@ public class FskxReaderNodeModel extends NoInternalsModel {
     return FileUtils.readFileToString(f, "UTF-8");
   }
 
-  /** {@inheritDoc} */
   @Override
   protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
       throws InvalidSettingsException {
     return new PortObjectSpec[] {fskSpec};
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void saveSettingsTo(final NodeSettingsWO settings) {
     filename.saveSettingsTo(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
       throws InvalidSettingsException {
     filename.loadSettingsFrom(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     filename.validateSettings(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void reset() {}
 }

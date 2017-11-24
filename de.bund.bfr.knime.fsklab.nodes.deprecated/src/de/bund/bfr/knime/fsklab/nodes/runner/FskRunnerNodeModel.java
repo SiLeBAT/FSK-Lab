@@ -81,21 +81,18 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 
   // --- internal settings methods ---
 
-  /** {@inheritDoc} */
   @Override
   protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
     internalSettings.loadInternals(nodeInternDir);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
     internalSettings.saveInternals(nodeInternDir);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void reset() {
     internalSettings.reset();
@@ -119,7 +116,6 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
     this.settings.loadValidatedSettingsFrom(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
     return new PortObjectSpec[] {FSK_SPEC, PNG_SPEC};

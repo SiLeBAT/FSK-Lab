@@ -46,7 +46,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
-import de.bund.bfr.fskml.MissingValueError;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
@@ -68,40 +67,29 @@ class CreatorNodeModel extends NoInternalsModel {
   private static final PortType[] IN_TYPES = {};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
-  /** {@inheritDoc} */
   public CreatorNodeModel() {
     super(IN_TYPES, OUT_TYPES);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
     nodeSettings.save(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
     // does not validate anything
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
     nodeSettings.load(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void reset() {}
 
-  /**
-   * {@inheritDoc}
-   * 
-   * @throws MissingValueError
-   * @throws Exception
-   */
   @Override
   protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
       throws InvalidSettingsException, IOException {
@@ -186,7 +174,6 @@ class CreatorNodeModel extends NoInternalsModel {
     return new PortObject[] {portObj};
   }
 
-  /** {@inheritDoc} */
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};

@@ -40,13 +40,11 @@ class FskEditorViewRepresentation extends JSONViewContent {
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
-  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     return pseudoIdentifier;
   }
 
-  /** {@inheritDoc} */
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
