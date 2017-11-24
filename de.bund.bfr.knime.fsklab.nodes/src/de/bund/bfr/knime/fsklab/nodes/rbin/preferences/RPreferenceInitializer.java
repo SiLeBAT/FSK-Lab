@@ -18,7 +18,6 @@ package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-
 import de.bund.bfr.knime.fsklab.FskPlugin;
 
 /**

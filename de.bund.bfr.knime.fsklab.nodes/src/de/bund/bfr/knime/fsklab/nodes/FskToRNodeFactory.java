@@ -30,47 +30,46 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
-
 import de.bund.bfr.knime.fsklab.FskPortObject;
 
 public class FskToRNodeFactory extends NodeFactory<NodeModel> {
 
-	// Input and output port types
-	private static final PortType[] IN_TYPES = { FskPortObject.TYPE };
-	private static final PortType[] OUT_TYPES = { RPortObject.TYPE };
-	
-	@Override
-	public NodeModel createNodeModel() {		
-		return new StatelessModel(IN_TYPES, OUT_TYPES) {  // output port
-			@Override
-			protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) {
-				return new PortObjectSpec[] { RPortObjectSpec.INSTANCE };
-			}
-			
-			@Override
-			protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) {
-				return new RPortObject[] { new RPortObject(((FskPortObject) inObjects[0]).workspace) };
-			}
-		};
-	}
+  // Input and output port types
+  private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
+  private static final PortType[] OUT_TYPES = {RPortObject.TYPE};
 
-	@Override
-	public int getNrNodeViews() {
-		return 0;
-	}
+  @Override
+  public NodeModel createNodeModel() {
+    return new StatelessModel(IN_TYPES, OUT_TYPES) { // output port
+      @Override
+      protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) {
+        return new PortObjectSpec[] {RPortObjectSpec.INSTANCE};
+      }
 
-	@Override
-	public NodeView<NodeModel> createNodeView(final int viewIndex, final NodeModel nodeModel) {
-		return null;
-	}
+      @Override
+      protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) {
+        return new RPortObject[] {new RPortObject(((FskPortObject) inObjects[0]).workspace)};
+      }
+    };
+  }
 
-	@Override
-	public boolean hasDialog() {
-		return false;
-	}
+  @Override
+  public int getNrNodeViews() {
+    return 0;
+  }
 
-	@Override
-	public NodeDialogPane createNodeDialogPane() {
-		return new DefaultNodeSettingsPane();
-	}
+  @Override
+  public NodeView<NodeModel> createNodeView(final int viewIndex, final NodeModel nodeModel) {
+    return null;
+  }
+
+  @Override
+  public boolean hasDialog() {
+    return false;
+  }
+
+  @Override
+  public NodeDialogPane createNodeDialogPane() {
+    return new DefaultNodeSettingsPane();
+  }
 }

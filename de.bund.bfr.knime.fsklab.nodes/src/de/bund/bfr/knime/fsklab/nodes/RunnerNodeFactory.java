@@ -27,62 +27,66 @@ import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
 
 public class RunnerNodeFactory extends NodeFactory<RunnerNodeModel> {
-	
-	@Override
-	public RunnerNodeModel createNodeModel() {
-		return new RunnerNodeModel();
-	}
 
-	@Override
-	protected int getNrNodeViews() {
-		return 1;
-	}
+  @Override
+  public RunnerNodeModel createNodeModel() {
+    return new RunnerNodeModel();
+  }
 
-	@Override
-	public NodeView<RunnerNodeModel> createNodeView(int viewIndex, RunnerNodeModel nodeModel) {
-		return new RunnerNodeView(nodeModel);
-	}
+  @Override
+  protected int getNrNodeViews() {
+    return 1;
+  }
 
-	@Override
-	protected boolean hasDialog() {
-		return true;
-	}
+  @Override
+  public NodeView<RunnerNodeModel> createNodeView(int viewIndex, RunnerNodeModel nodeModel) {
+    return new RunnerNodeView(nodeModel);
+  }
 
-	@Override
-	protected NodeDialogPane createNodeDialogPane() {
+  @Override
+  protected boolean hasDialog() {
+    return true;
+  }
 
-		RunnerNodeSettings settings = new RunnerNodeSettings();
+  @Override
+  protected NodeDialogPane createNodeDialogPane() {
 
-		// Width component
-		DialogComponentNumberEdit widthComp = new DialogComponentNumberEdit(settings.widthModel, "Width");
-		widthComp.setToolTipText("Width of the plot");
+    RunnerNodeSettings settings = new RunnerNodeSettings();
 
-		// Height component
-		DialogComponentNumberEdit heightComp = new DialogComponentNumberEdit(settings.heightModel, "Height");
-		heightComp.setToolTipText("Height of the plot");
+    // Width component
+    DialogComponentNumberEdit widthComp =
+        new DialogComponentNumberEdit(settings.widthModel, "Width");
+    widthComp.setToolTipText("Width of the plot");
 
-		// Resolution component
-		DialogComponentString resolutionComp = new DialogComponentString(settings.resolutionModel, "Resolution");
-		resolutionComp.setToolTipText(
-				"Nominal resolution in ppi which will be recorded in the bitmap file, if a positive integer.");
+    // Height component
+    DialogComponentNumberEdit heightComp =
+        new DialogComponentNumberEdit(settings.heightModel, "Height");
+    heightComp.setToolTipText("Height of the plot");
 
-		// Background colour component
-		DialogComponentColorChooser colorComp = new DialogComponentColorChooser(settings.colourModel,
-				"Background colour", true);
-		colorComp.setToolTipText("Background colour");
+    // Resolution component
+    DialogComponentString resolutionComp =
+        new DialogComponentString(settings.resolutionModel, "Resolution");
+    resolutionComp.setToolTipText(
+        "Nominal resolution in ppi which will be recorded in the bitmap file, if a positive integer.");
 
-		// Text point size component
-		DialogComponentNumberEdit textPointSizeComp = new DialogComponentNumberEdit(settings.textPointSizeModel,
-				"Text point size");
-		textPointSizeComp.setToolTipText("Point size of plotted text, interpreted as big points (1/72 inch) at res ppi.");
+    // Background colour component
+    DialogComponentColorChooser colorComp =
+        new DialogComponentColorChooser(settings.colourModel, "Background colour", true);
+    colorComp.setToolTipText("Background colour");
 
-		// Create pane and add components
-		DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
-		pane.addDialogComponent(widthComp);
-		pane.addDialogComponent(heightComp);
-		pane.addDialogComponent(resolutionComp);
-		pane.addDialogComponent(colorComp);
-		pane.addDialogComponent(textPointSizeComp);
-		return pane;
-	}
+    // Text point size component
+    DialogComponentNumberEdit textPointSizeComp =
+        new DialogComponentNumberEdit(settings.textPointSizeModel, "Text point size");
+    textPointSizeComp.setToolTipText(
+        "Point size of plotted text, interpreted as big points (1/72 inch) at res ppi.");
+
+    // Create pane and add components
+    DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
+    pane.addDialogComponent(widthComp);
+    pane.addDialogComponent(heightComp);
+    pane.addDialogComponent(resolutionComp);
+    pane.addDialogComponent(colorComp);
+    pane.addDialogComponent(textPointSizeComp);
+    return pane;
+  }
 }

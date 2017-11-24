@@ -21,11 +21,9 @@ package de.bund.bfr.knime.fsklab.nodes.ui;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Theme;
 import org.knime.core.node.NodeLogger;
-
 import de.bund.bfr.knime.fsklab.nodes.rsnippet.RSnippetDocument;
 
 /**
@@ -59,8 +57,8 @@ public class RSnippetTextArea extends RSyntaxTextArea {
     String base = pack.getName().replace(".", "/") + "/";
     URL url = getClass().getClassLoader().getResource(base + "r_syntax_style.xml");
     try (InputStream in = url.openStream()) {
-    	Theme theme = Theme.load(in);
-    	theme.apply(this);
+      Theme theme = Theme.load(in);
+      theme.apply(this);
     }
   }
 }

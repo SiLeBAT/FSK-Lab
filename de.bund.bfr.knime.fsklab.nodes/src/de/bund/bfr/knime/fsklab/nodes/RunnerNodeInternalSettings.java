@@ -26,65 +26,63 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 
 public class RunnerNodeInternalSettings {
-	
-	private static final NodeLogger LOGGER = NodeLogger.getLogger("RunnerNodeInternalSettings");
 
-	/**
-	 * Non-null image file to use for this current node. Initialized to temp
-	 * location.
-	 */
-	public File imageFile = null;
+  private static final NodeLogger LOGGER = NodeLogger.getLogger("RunnerNodeInternalSettings");
 
-	public Image plot = null;
+  /**
+   * Non-null image file to use for this current node. Initialized to temp location.
+   */
+  public File imageFile = null;
 
-	public RunnerNodeInternalSettings() {
-		try {
-			imageFile = FileUtil.createTempFile("FskxRunner-", ".png");
-		} catch (IOException e) {
-			LOGGER.error("Cannot create temporary file.", e);
-			throw new RuntimeException(e);
-		}
-		imageFile.deleteOnExit();
-	}
+  public Image plot = null;
 
-	/** Loads the saved image. */
-	public void loadInternals(File nodeInternDir) throws IOException {
-		final File file = new File(nodeInternDir, "Rplot.png");
+  public RunnerNodeInternalSettings() {
+    try {
+      imageFile = FileUtil.createTempFile("FskxRunner-", ".png");
+    } catch (IOException e) {
+      LOGGER.error("Cannot create temporary file.", e);
+      throw new RuntimeException(e);
+    }
+    imageFile.deleteOnExit();
+  }
 
-		if (file.exists() && file.canRead()) {
-			FileUtil.copy(file, imageFile);
-			try (InputStream is = new FileInputStream(imageFile)) {
-				plot = new PNGImageContent(is).getImage();
-			}
-		}
-	}
+  /** Loads the saved image. */
+  public void loadInternals(File nodeInternDir) throws IOException {
+    final File file = new File(nodeInternDir, "Rplot.png");
 
-	/** Saves the saved image. */
-	public void saveInternals(File nodeInternDir) throws IOException {
-		if (plot != null) {
-			final File file = new File(nodeInternDir, "Rplot.png");
-			FileUtil.copy(imageFile, file);
-		}
-	}
+    if (file.exists() && file.canRead()) {
+      FileUtil.copy(file, imageFile);
+      try (InputStream is = new FileInputStream(imageFile)) {
+        plot = new PNGImageContent(is).getImage();
+      }
+    }
+  }
 
-	/** Clear the contents of the image file. */
-	public void reset() {
-		plot = null;
+  /** Saves the saved image. */
+  public void saveInternals(File nodeInternDir) throws IOException {
+    if (plot != null) {
+      final File file = new File(nodeInternDir, "Rplot.png");
+      FileUtil.copy(imageFile, file);
+    }
+  }
 
-		if (imageFile != null) {
-			try (OutputStream erasor = new FileOutputStream(imageFile)) {
-				erasor.write((new String()).getBytes());
-			} catch (final FileNotFoundException e) {
-				LOGGER.error("Temporary file is removed.", e);
-			} catch (final IOException e) {
-				LOGGER.error("Cannot write temporary file.", e);
-			}
-		}
-	}
+  /** Clear the contents of the image file. */
+  public void reset() {
+    plot = null;
+
+    if (imageFile != null) {
+      try (OutputStream erasor = new FileOutputStream(imageFile)) {
+        erasor.write((new String()).getBytes());
+      } catch (final FileNotFoundException e) {
+        LOGGER.error("Temporary file is removed.", e);
+      } catch (final IOException e) {
+        LOGGER.error("Cannot write temporary file.", e);
+      }
+    }
+  }
 }

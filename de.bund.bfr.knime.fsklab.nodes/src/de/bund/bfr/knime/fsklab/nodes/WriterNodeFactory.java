@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import javax.swing.JFileChooser;
-
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
@@ -29,42 +28,43 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 public class WriterNodeFactory extends NodeFactory<WriterNodeModel> {
 
-	@Override
-	public WriterNodeModel createNodeModel() {
-		return new WriterNodeModel();
-	}
+  @Override
+  public WriterNodeModel createNodeModel() {
+    return new WriterNodeModel();
+  }
 
-	@Override
-	public int getNrNodeViews() {
-		return 0;
-	}
+  @Override
+  public int getNrNodeViews() {
+    return 0;
+  }
 
-	@Override
-	public NodeView<WriterNodeModel> createNodeView(final int viewIndex, final WriterNodeModel nodeModel) {
-		return null;
-	}
+  @Override
+  public NodeView<WriterNodeModel> createNodeView(final int viewIndex,
+      final WriterNodeModel nodeModel) {
+    return null;
+  }
 
-	@Override
-	public boolean hasDialog() {
-		return true;
-	}
+  @Override
+  public boolean hasDialog() {
+    return true;
+  }
 
-	@Override
-	public NodeDialogPane createNodeDialogPane() {
-		// File dialog chooser
-		final String fileHistoryId = "fileHistory";
-		final int dlgType = JFileChooser.SAVE_DIALOG;
-		final boolean directoryOnly = false;
-		final String validExtensions = ".fskx|.FSKX";
+  @Override
+  public NodeDialogPane createNodeDialogPane() {
+    // File dialog chooser
+    final String fileHistoryId = "fileHistory";
+    final int dlgType = JFileChooser.SAVE_DIALOG;
+    final boolean directoryOnly = false;
+    final String validExtensions = ".fskx|.FSKX";
 
-		final SettingsModelString filePath = new SettingsModelString("file", null);
-		final DialogComponentFileChooser fileDlg = new DialogComponentFileChooser(filePath, fileHistoryId, dlgType,
-				directoryOnly, validExtensions);
-		fileDlg.setBorderTitle("Output file");
+    final SettingsModelString filePath = new SettingsModelString("file", null);
+    final DialogComponentFileChooser fileDlg = new DialogComponentFileChooser(filePath,
+        fileHistoryId, dlgType, directoryOnly, validExtensions);
+    fileDlg.setBorderTitle("Output file");
 
-		DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
-		pane.addDialogComponent(fileDlg);
+    DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
+    pane.addDialogComponent(fileDlg);
 
-		return pane;
-	}
+    return pane;
+  }
 }

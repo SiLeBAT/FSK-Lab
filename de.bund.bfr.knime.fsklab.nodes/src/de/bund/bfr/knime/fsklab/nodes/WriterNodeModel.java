@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.ExecutionContext;
@@ -37,9 +36,7 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.URIS;
@@ -129,16 +126,18 @@ public class WriterNodeModel extends NoInternalsModel {
       for (final File libFile : fskObj.libs) {
         archive.addEntry(libFile, libFile.getName(), libUri);
       }
-      
+
       // Adds resources
       for (final Path resourcePath : fskObj.resources) {
-    	  final String filenameString = resourcePath.getFileName().toString();
-    	  
-    	  if (FilenameUtils.isExtension(filenameString, "txt")) {
-    		  archive.addEntry(resourcePath.toFile(), resourcePath.getFileName().toString(), URIS.plainText);
-    	  } else if (FilenameUtils.isExtension(filenameString, ".rdata")) {
-    		  archive.addEntry(resourcePath.toFile(), resourcePath.getFileName().toString(), URIS.rData);
-    	  }
+        final String filenameString = resourcePath.getFileName().toString();
+
+        if (FilenameUtils.isExtension(filenameString, "txt")) {
+          archive.addEntry(resourcePath.toFile(), resourcePath.getFileName().toString(),
+              URIS.plainText);
+        } else if (FilenameUtils.isExtension(filenameString, ".rdata")) {
+          archive.addEntry(resourcePath.toFile(), resourcePath.getFileName().toString(),
+              URIS.rData);
+        }
       }
 
       archive.pack();

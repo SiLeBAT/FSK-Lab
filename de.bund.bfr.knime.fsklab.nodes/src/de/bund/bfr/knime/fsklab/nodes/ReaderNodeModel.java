@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -42,9 +41,7 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.URIS;
@@ -63,7 +60,7 @@ public class ReaderNodeModel extends NoInternalsModel {
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
   private final SettingsModelString filename = new SettingsModelString("filename", "");
-  
+
 
 
   public ReaderNodeModel() {
@@ -173,7 +170,7 @@ public class ReaderNodeModel extends NoInternalsModel {
           libRegistry.getPaths(libNames).stream().map(Path::toFile).collect(Collectors.toSet());
       libFiles.addAll(libs);
     }
-    
+
     // validate model
     try (final RController controller = new RController()) {
 
@@ -192,29 +189,29 @@ public class ReaderNodeModel extends NoInternalsModel {
 
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
         genericModel, workspaceFile, libFiles);
-    
+
     // Reads archive again to load resources
     try (final CombineArchive archive = new CombineArchive(file)) {
-    	
-    	// Gets plain text resources (.txt)
-    	for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.plainText)) {
-    		final Path targetPath = fskObj.workingDirectory.resolve(entry.getFileName());
-    		Files.createFile(targetPath);
-    		entry.extractFile(targetPath.toFile());
-    		
-    		fskObj.resources.add(targetPath);
-    	}
-    	
-    	// Gets R workspace resources (.rdata)
-    	for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.rData)) {
-    		final Path targetPath = fskObj.workingDirectory.resolve(entry.getFileName());
-    		Files.createFile(targetPath);
-    		entry.extractFile(targetPath.toFile());
-    		
-    		fskObj.resources.add(targetPath);
-    	}
+
+      // Gets plain text resources (.txt)
+      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.plainText)) {
+        final Path targetPath = fskObj.workingDirectory.resolve(entry.getFileName());
+        Files.createFile(targetPath);
+        entry.extractFile(targetPath.toFile());
+
+        fskObj.resources.add(targetPath);
+      }
+
+      // Gets R workspace resources (.rdata)
+      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.rData)) {
+        final Path targetPath = fskObj.workingDirectory.resolve(entry.getFileName());
+        Files.createFile(targetPath);
+        entry.extractFile(targetPath.toFile());
+
+        fskObj.resources.add(targetPath);
+      }
     }
-    
+
     return new FskPortObject[] {fskObj};
   }
 

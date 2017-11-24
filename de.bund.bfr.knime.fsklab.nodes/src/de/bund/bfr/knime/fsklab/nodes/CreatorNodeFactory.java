@@ -52,6 +52,6 @@ public class CreatorNodeFactory extends NodeFactory<CreatorNodeModel> {
   /** {@inheritDoc} */
   @Override
   public NodeDialogPane createNodeDialogPane() {
-	  return new CreatorNodeDialog();
+    return new CreatorNodeDialog();
   }
 }

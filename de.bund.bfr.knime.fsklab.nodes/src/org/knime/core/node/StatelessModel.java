@@ -2,7 +2,6 @@ package org.knime.core.node;
 
 import java.io.File;
 import java.io.IOException;
-
 import org.knime.core.node.port.PortType;
 
 /**
@@ -12,35 +11,30 @@ import org.knime.core.node.port.PortType;
  */
 public class StatelessModel extends NodeModel {
 
-	protected StatelessModel(PortType[] inPortTypes, PortType[] outPortTypes) {
-		super(inPortTypes, outPortTypes);
-	}
+  protected StatelessModel(PortType[] inPortTypes, PortType[] outPortTypes) {
+    super(inPortTypes, outPortTypes);
+  }
 
-	// No internal settings
-	@Override
-	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-	}
+  // No internal settings
+  @Override
+  protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
+      throws IOException, CanceledExecutionException {}
 
-	@Override
-	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-	}
+  @Override
+  protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
+      throws IOException, CanceledExecutionException {}
 
-	// No settings
-	@Override
-	protected void saveSettingsTo(NodeSettingsWO settings) {		
-	}
+  // No settings
+  @Override
+  protected void saveSettingsTo(NodeSettingsWO settings) {}
 
-	@Override
-	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-	}
+  @Override
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
-	@Override
-	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
-	}
+  @Override
+  protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
+      throws InvalidSettingsException {}
 
-	@Override
-	protected void reset() {		
-	}
+  @Override
+  protected void reset() {}
 }

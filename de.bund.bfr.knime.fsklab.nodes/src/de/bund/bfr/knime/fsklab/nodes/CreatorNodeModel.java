@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -47,7 +46,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
-
 import de.bund.bfr.fskml.MissingValueError;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
@@ -153,9 +151,9 @@ class CreatorNodeModel extends NoInternalsModel {
       if (genericModel.modelMath != null) {
         Map<String, String> vars = getVariablesFromAssignments(paramScript);
         for (final Parameter p : genericModel.modelMath.parameter) {
-        	if (p.classification.equals(Parameter.Classification.input)) {
-        		p.value = vars.get(p.name);
-        	}
+          if (p.classification.equals(Parameter.Classification.input)) {
+            p.value = vars.get(p.name);
+          }
         }
       }
     } catch (IOException | InvalidFormatException e) {
@@ -183,7 +181,7 @@ class CreatorNodeModel extends NoInternalsModel {
         LOGGER.error(e.getMessage());
       }
     }
-    
+
     // resource files
     portObj.resources.addAll(nodeSettings.resources);
 
@@ -221,7 +219,8 @@ class CreatorNodeModel extends NoInternalsModel {
 
   private static String getString(final XSSFSheet sheet, final int rowNumber) {
     final XSSFRow row = sheet.getRow(rowNumber);
-    if (row == null) throw new IllegalArgumentException("Missing row: #" + rowNumber);
+    if (row == null)
+      throw new IllegalArgumentException("Missing row: #" + rowNumber);
     return row.getCell(5).getStringCellValue();
   }
 
@@ -348,7 +347,8 @@ class CreatorNodeModel extends NoInternalsModel {
     Map<String, String> vars = new HashMap<>();
     for (String line : paramScript.split("\\r?\\n")) {
       line = line.trim();
-      if (line.startsWith("#")) continue;
+      if (line.startsWith("#"))
+        continue;
 
       if (line.indexOf("=") != -1) {
         Assignment a = new Assignment(line, Assignment.Type.equals);

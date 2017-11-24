@@ -24,7 +24,6 @@ import java.awt.Component;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
-
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -35,121 +34,124 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableModel;
-
 import org.knime.core.util.SimpleFileFilter;
-
 import de.bund.bfr.swing.UI;
 
 public class UIUtils {
 
-	private UIUtils() {
-	}
+  private UIUtils() {}
 
-	/** Creates a panel with the names of a number of libraries. */
-	public static JPanel createLibrariesPanel(final Collection<File> libs) {
+  /** Creates a panel with the names of a number of libraries. */
+  public static JPanel createLibrariesPanel(final Collection<File> libs) {
 
-		final JPanel panel = new JPanel(new BorderLayout());
-		panel.setName("Libraries list");
+    final JPanel panel = new JPanel(new BorderLayout());
+    panel.setName("Libraries list");
 
-		final String[] libNames = libs.stream().map(File::getName).toArray(String[]::new);
-		final JList<String> list = new JList<>(libNames);
-		list.setLayoutOrientation(JList.VERTICAL);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		panel.add(new JScrollPane(list));
+    final String[] libNames = libs.stream().map(File::getName).toArray(String[]::new);
+    final JList<String> list = new JList<>(libNames);
+    list.setLayoutOrientation(JList.VERTICAL);
+    list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    panel.add(new JScrollPane(list));
 
-		return panel;
-	}
+    return panel;
+  }
 
-	/**
-	 * Do not use original JTable! On Mac grid lines are not visible.
-	 * 
-	 * @return JTable with light gray grid lines.
-	 */
-	public static JTable createTable(final TableModel model) {
-		final JTable table = new JTable(model);
-		table.setGridColor(Color.lightGray);
-		return table;
-	}
+  /**
+   * Do not use original JTable! On Mac grid lines are not visible.
+   * 
+   * @return JTable with light gray grid lines.
+   */
+  public static JTable createTable(final TableModel model) {
+    final JTable table = new JTable(model);
+    table.setGridColor(Color.lightGray);
+    return table;
+  }
 
-	public static JButton createAddButton() {
-		JButton addButton = new JButton();
-		addButton.setIcon(new ImageIcon(UIUtils.class.getResource("/img/ic_add_box_black_24dp_1x.png")));
-		addButton.setContentAreaFilled(false);
-		addButton.setToolTipText("Add");
+  public static JButton createAddButton() {
+    JButton addButton = new JButton();
+    addButton
+        .setIcon(new ImageIcon(UIUtils.class.getResource("/img/ic_add_box_black_24dp_1x.png")));
+    addButton.setContentAreaFilled(false);
+    addButton.setToolTipText("Add");
 
-		return addButton;
-	}
+    return addButton;
+  }
 
-	public static JButton createFileUploadButton() {
-		JButton addButton = new JButton();
-		addButton.setIcon(new ImageIcon(UIUtils.class.getResource("/img/ic_file_upload_black_24dp_1x.png")));
-		addButton.setContentAreaFilled(false);
-		addButton.setToolTipText("File upload");
+  public static JButton createFileUploadButton() {
+    JButton addButton = new JButton();
+    addButton
+        .setIcon(new ImageIcon(UIUtils.class.getResource("/img/ic_file_upload_black_24dp_1x.png")));
+    addButton.setContentAreaFilled(false);
+    addButton.setToolTipText("File upload");
 
-		return addButton;
-	}
+    return addButton;
+  }
 
-	public static JButton createEditButton() {
-		JButton addButton = new JButton();
-		addButton.setIcon(new ImageIcon(UIUtils.class.getResource("/img/ic_mode_edit_black_24dp_1x.png")));
-		addButton.setContentAreaFilled(false);
-		addButton.setToolTipText("Edit");
+  public static JButton createEditButton() {
+    JButton addButton = new JButton();
+    addButton
+        .setIcon(new ImageIcon(UIUtils.class.getResource("/img/ic_mode_edit_black_24dp_1x.png")));
+    addButton.setContentAreaFilled(false);
+    addButton.setToolTipText("Edit");
 
-		return addButton;
-	}
+    return addButton;
+  }
 
-	public static JButton createRemoveButton() {
-		JButton addButton = new JButton();
-		addButton.setIcon(new ImageIcon(UIUtils.class.getResource("/img/ic_remove_circle_black_24dp_1x.png")));
-		addButton.setContentAreaFilled(false);
-		addButton.setToolTipText("Remove");
+  public static JButton createRemoveButton() {
+    JButton addButton = new JButton();
+    addButton.setIcon(
+        new ImageIcon(UIUtils.class.getResource("/img/ic_remove_circle_black_24dp_1x.png")));
+    addButton.setContentAreaFilled(false);
+    addButton.setToolTipText("Remove");
 
-		return addButton;
-	}
-	
-	
-	/**
-	 * Creates panel to add/remove resource files.
-	 * @param parent Parent component
-	 * @param listModel Model of the {@link JList} displaying the resources.
-	 */
-	public static JPanel createResourcesPanel(final Component parent, final DefaultListModel<Path> listModel) {
-		JList<Path> list = new JList<>(listModel);
-		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		list.setLayoutOrientation(JList.VERTICAL);
+    return addButton;
+  }
 
-		final JButton addButton = UIUtils.createAddButton();
-		final JButton removeButton = UIUtils.createRemoveButton();
-		final JPanel buttonsPanel = UI.createHorizontalPanel(addButton, removeButton);
 
-		// Initialize chooser before the event so that it remembers the current
-		// directory between uses.
-		final JFileChooser fc = new JFileChooser();
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.addChoosableFileFilter(new SimpleFileFilter("txt", "Plain text file"));
-		fc.addChoosableFileFilter(new SimpleFileFilter("rdata", "R workspace file"));
-		fc.setAcceptAllFileFilterUsed(false); // do not use the AcceptAll FileFilter
+  /**
+   * Creates panel to add/remove resource files.
+   * 
+   * @param parent Parent component
+   * @param listModel Model of the {@link JList} displaying the resources.
+   */
+  public static JPanel createResourcesPanel(final Component parent,
+      final DefaultListModel<Path> listModel) {
+    JList<Path> list = new JList<>(listModel);
+    list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+    list.setLayoutOrientation(JList.VERTICAL);
 
-		addButton.addActionListener(event -> {
-			final int returnVal = fc.showOpenDialog(parent);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				final Path selectedFile = fc.getSelectedFile().toPath();
-				if (!listModel.contains(selectedFile)) {
-					listModel.addElement(selectedFile);
-				}
-			}
-		});
+    final JButton addButton = UIUtils.createAddButton();
+    final JButton removeButton = UIUtils.createRemoveButton();
+    final JPanel buttonsPanel = UI.createHorizontalPanel(addButton, removeButton);
 
-		removeButton.addActionListener(event -> {
-			final int selectedIndex = list.getSelectedIndex();
-			if (selectedIndex != -1) {
-				listModel.remove(selectedIndex);
-			}
-		});
+    // Initialize chooser before the event so that it remembers the current
+    // directory between uses.
+    final JFileChooser fc = new JFileChooser();
+    fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    fc.addChoosableFileFilter(new SimpleFileFilter("txt", "Plain text file"));
+    fc.addChoosableFileFilter(new SimpleFileFilter("rdata", "R workspace file"));
+    fc.setAcceptAllFileFilterUsed(false); // do not use the AcceptAll FileFilter
 
-		final JPanel northPanel = UI.createNorthPanel(new JScrollPane(list));
-		northPanel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
+    addButton.addActionListener(event -> {
+      final int returnVal = fc.showOpenDialog(parent);
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        final Path selectedFile = fc.getSelectedFile().toPath();
+        if (!listModel.contains(selectedFile)) {
+          listModel.addElement(selectedFile);
+        }
+      }
+    });
 
-		return northPanel;
-	}
+    removeButton.addActionListener(event -> {
+      final int selectedIndex = list.getSelectedIndex();
+      if (selectedIndex != -1) {
+        listModel.remove(selectedIndex);
+      }
+    });
+
+    final JPanel northPanel = UI.createNorthPanel(new JScrollPane(list));
+    northPanel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
+
+    return northPanel;
+  }
 }

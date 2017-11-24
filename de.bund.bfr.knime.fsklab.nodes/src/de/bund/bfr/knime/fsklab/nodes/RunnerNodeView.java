@@ -19,11 +19,8 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.Image;
-
 import javax.swing.JScrollPane;
-
 import org.knime.core.node.NodeView;
-
 import de.bund.bfr.knime.fsklab.nodes.ui.RPlotterViewPanel;
 
 /**
@@ -33,31 +30,28 @@ import de.bund.bfr.knime.fsklab.nodes.ui.RPlotterViewPanel;
  */
 public class RunnerNodeView extends NodeView<RunnerNodeModel> {
 
-	private final RPlotterViewPanel panel = new RPlotterViewPanel();
+  private final RPlotterViewPanel panel = new RPlotterViewPanel();
 
-	/**
-	 * @param nodeModel
-	 *            the model associated with this view.
-	 */
-	public RunnerNodeView(final RunnerNodeModel nodeModel) {
-		super(nodeModel);
-		setComponent(new JScrollPane(panel));
-	}
+  /**
+   * @param nodeModel the model associated with this view.
+   */
+  public RunnerNodeView(final RunnerNodeModel nodeModel) {
+    super(nodeModel);
+    setComponent(new JScrollPane(panel));
+  }
 
-	/** Updates the image to display. */
-	@Override
-	protected void modelChanged() {
-		// TODO Auto-generated method stub
-		final RunnerNodeModel model = getNodeModel();
-		final Image image = model.getResultImage();
-		panel.update(image);
-	}
+  /** Updates the image to display. */
+  @Override
+  protected void modelChanged() {
+    // TODO Auto-generated method stub
+    final RunnerNodeModel model = getNodeModel();
+    final Image image = model.getResultImage();
+    panel.update(image);
+  }
 
-	@Override
-	protected void onClose() {
-	}
-	
-	@Override
-	protected void onOpen() {
-	}
+  @Override
+  protected void onClose() {}
+
+  @Override
+  protected void onOpen() {}
 }
