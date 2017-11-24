@@ -299,4 +299,15 @@ public interface IRController extends AutoCloseable {
 
   /** Sets the current working directory of the R process. */
   void setWorkingDirectory(final Path workingDirectory) throws RException;
+
+  /**
+   * Add a library tree to look for packages.
+   * 
+   * @see <a href=
+   *      "https://stat.ethz.ch/R-manual/R-devel/library/base/html/libPaths.html">.libPaths</a>
+   */
+  void addPackagePath(final Path path) throws RException;
+
+  /** Restore library trees to the default library. */
+  void restorePackagePath() throws RException;
 }

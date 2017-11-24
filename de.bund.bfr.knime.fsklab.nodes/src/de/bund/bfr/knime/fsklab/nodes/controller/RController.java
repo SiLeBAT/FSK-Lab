@@ -1641,4 +1641,16 @@ public class RController implements IRController {
     String cmd = "setwd('" + stringPath + "')";
     eval(cmd, false);
   }
+
+  @Override
+  public void addPackagePath(Path path) throws RException {
+    String unixPath = FilenameUtils.separatorsToUnix(path.toString());
+    String cmd = ".libPaths('" + unixPath + "')";
+    eval(cmd, false);
+  }
+
+  @Override
+  public void restorePackagePath() throws RException {
+    eval(".libPaths(.Library)", false);
+  }
 }

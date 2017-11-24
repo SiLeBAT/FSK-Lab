@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -173,15 +172,11 @@ public class ReaderNodeModel extends NoInternalsModel {
 
       // Add path
       final LibRegistry libRegistry = LibRegistry.instance();
-      final String installationPath =
-          FilenameUtils.separatorsToUnix(libRegistry.getInstallationPath().toString());
-      final String cmd = String.format(".libPaths(c('%s', .libPaths()))", installationPath);
-      final String[] newPaths = controller.eval(cmd, true).asStrings();
+      controller.addPackagePath(libRegistry.getInstallationPath());
 
       // TODO: validate model with parameter values from parameter script
 
-      // Restore .libPaths() to the original library path which is in the last position
-      controller.eval(String.format(".libPaths()[%d]", newPaths.length), false);
+      controller.restorePackagePath();
     }
 
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,

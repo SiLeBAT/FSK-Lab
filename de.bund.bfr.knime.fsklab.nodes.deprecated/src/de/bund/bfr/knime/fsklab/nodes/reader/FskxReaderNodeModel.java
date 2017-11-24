@@ -33,7 +33,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.JDOMException;
 import org.knime.core.node.ExecutionContext;
@@ -193,9 +192,7 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 
       // Add path
       LibRegistry libRegistry = LibRegistry.instance();
-      String cmd = String.format(".libPaths(c('%s', .libPaths()))",
-          FilenameUtils.separatorsToUnix(libRegistry.getInstallationPath().toString()));
-      String[] newPaths = controller.eval(cmd, true).asStrings();
+      controller.addPackagePath(libRegistry.getInstallationPath());
 
       // Validate model with parameter values from parameter script
       final String fullScriptA = portObj.param + "\n" + portObj.model;
@@ -222,9 +219,7 @@ public class FskxReaderNodeModel extends NoInternalsModel {
         }
       }
 
-      // Restore .libPaths() to the original library path which happens to be
-      // in the last position
-      controller.eval(".libPaths()[" + newPaths.length + "]", false);
+      controller.restorePackagePath();
 
     } catch (RException e) {
       throw new RException("Input model is not valid", e);

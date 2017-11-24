@@ -15,6 +15,7 @@ import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
+import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 
 public class NodeUtils {
 
@@ -79,19 +80,17 @@ public class NodeUtils {
     executor.executeIgnoreResult("dev.off()", monitor);
   }
 
-  public static void runSnippet(final ConsoleLikeRExecutor executor, final String modelScript,
-      final String paramScript, final String vizScript, final ExecutionMonitor monitor,
-      final File imageFile, final RunnerNodeSettings settings) throws RException,
-      CanceledExecutionException, InterruptedException, IOException, REXPMismatchException {
+  public static void runSnippet(final RController controller, final ConsoleLikeRExecutor executor,
+      final String modelScript, final String paramScript, final String vizScript,
+      final ExecutionMonitor monitor, final File imageFile, final RunnerNodeSettings settings)
+      throws RException, CanceledExecutionException, InterruptedException, IOException,
+      REXPMismatchException {
 
     monitor.setMessage("Setting up output capturing");
     executor.setupOutputCapturing(monitor);
 
     monitor.setMessage("Add paths to libraries");
-    LibRegistry libRegistry = LibRegistry.instance();
-    String cmd = String.format(".libPaths(c('%s', .libPaths()))",
-        FilenameUtils.separatorsToUnix(libRegistry.getInstallationPath().toString()));
-    final String[] newPaths = executor.execute(cmd, monitor).asStrings();
+    controller.addPackagePath(LibRegistry.instance().getInstallationPath());
 
     monitor.setMessage("Run parameters script");
     executor.executeIgnoreResult(paramScript, monitor);
@@ -106,10 +105,8 @@ public class NodeUtils {
       LOGGER.warn("Visualization script failed", exception);
     }
 
-    // Restore .libPaths() to the original library path which happens to be in the
-    // last position
     monitor.setMessage("Restore library paths");
-    executor.executeIgnoreResult(".libPaths()[" + newPaths.length + "]", monitor);
+    controller.restorePackagePath();
 
     monitor.setMessage("Collecting captured output");
     executor.finishOutputCapturing(monitor);

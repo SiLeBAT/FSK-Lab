@@ -50,8 +50,8 @@ import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeSettings;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
+import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
@@ -205,7 +205,7 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 
     final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
 
-    NodeUtils.runSnippet(executor, fskObj.model, fskObj.param, fskObj.viz, exec,
+    NodeUtils.runSnippet(controller, executor, fskObj.model, fskObj.param, fskObj.viz, exec,
         internalSettings.imageFile, settings);
 
     // Save workspace

@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.image.png.PNGImageContent;
@@ -201,10 +200,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     controller.setWorkingDirectory(workingDirectory);
 
     exec.setMessage("Add paths to libraries");
-    LibRegistry libRegistry = LibRegistry.instance();
-    String cmd = String.format(".libPaths(c('%s', .libPaths()))",
-        FilenameUtils.separatorsToUnix(libRegistry.getInstallationPath().toString()));
-    final String[] newPaths = executor.execute(cmd, exec).asStrings();
+    controller.addPackagePath(LibRegistry.instance().getInstallationPath());
 
     // If parameters are defined in metadata used the values from there, otherwise
     // stick to the parameters script
@@ -234,10 +230,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       LOGGER.warn("Visualization script failed", exception);
     }
 
-    // Restore .libPaths() to the original library path which happens to be in the
-    // last position
     exec.setMessage("Restore library paths");
-    executor.executeIgnoreResult(".libPaths()[" + newPaths.length + "]", exec);
+    controller.restorePackagePath();
 
     exec.setMessage("Collecting captured output");
     executor.finishOutputCapturing(exec);
