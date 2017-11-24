@@ -271,8 +271,21 @@ public interface IRController extends AutoCloseable {
    * @param exec For monitoring the progress.
    * @throws RException If an R related error occurred during execution.
    * @throws CanceledExecutionException If execution was cancelled.
+   * @deprecated Use {@link #saveWorkspace(Path, ExecutionMonitor)}
    */
+  @Deprecated
   void saveWorkspace(File workspaceFile, ExecutionMonitor exec)
+      throws RException, CanceledExecutionException;
+
+  /**
+   * Save the workspace in the current R session to the specified file.
+   *
+   * @param workspaceFile File to save the workspace to.
+   * @param exec For monitoring the progress.
+   * @throws RException If an R related error occurred during execution.
+   * @throws CanceledExecutionException If execution was cancelled.
+   */
+  void saveWorkspace(Path workspace, ExecutionMonitor exec)
       throws RException, CanceledExecutionException;
 
   /**

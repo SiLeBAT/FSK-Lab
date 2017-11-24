@@ -1473,6 +1473,18 @@ public class RController implements IRController {
     }
   }
 
+  @Override
+  public void saveWorkspace(final Path workspace, final ExecutionMonitor exec)
+      throws RException, CanceledExecutionException {
+    // save workspace to file
+    try {
+      String unixPath = FilenameUtils.separatorsToUnix(workspace.toString());
+      monitoredEval("save.image(\"" + unixPath + "\");", exec, false);
+    } catch (InterruptedException e) {
+      throw new RException("Interrupted while saving R workspace.", e);
+    }
+  }
+
   /**
    * A function call that loads all libraries in the argument but checking if they are not loaded
    * yet.

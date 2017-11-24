@@ -239,7 +239,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     if (fskObj.workspace == null) {
       fskObj.workspace = FileUtil.createTempFile("workspace", ".R").toPath();
     }
-    controller.saveWorkspace(fskObj.workspace.toFile(), exec);
+    controller.saveWorkspace(fskObj.workspace, exec);
 
     // process the return value of error capturing and update error and
     // output views accordingly
