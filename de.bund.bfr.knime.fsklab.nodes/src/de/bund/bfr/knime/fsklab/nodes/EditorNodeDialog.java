@@ -142,7 +142,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     addTab("Data background", dataBackgroundPanel, true);
     addTab("Model math", modelMathPanel, true);
     addTab("Simulation", simulationPanel, true);
-    addTab("Files", UIUtils.createResourcesPanel(getPanel(), listModel));
+    addTab("Resource files", UIUtils.createResourcesPanel(getPanel(), listModel));
 
     updatePanels();
   }
