@@ -48,5 +48,4 @@ public class EditorNodeFactory extends NodeFactory<EditorNodeModel> {
   protected NodeDialogPane createNodeDialogPane() {
     return new EditorNodeDialog();
   }
-
 }

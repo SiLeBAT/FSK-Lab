@@ -19,9 +19,7 @@
 package de.bund.bfr.knime.fsklab;
 
 import java.io.IOException;
-
 import javax.swing.JComponent;
-
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectSpecZipInputStream;
 import org.knime.core.node.port.PortObjectSpecZipOutputStream;
@@ -35,9 +33,7 @@ public class FskPortObjectSpec implements PortObjectSpec {
 
   public static final FskPortObjectSpec INSTANCE = new FskPortObjectSpec();
 
-  private FskPortObjectSpec() {
-    // empty
-  }
+  private FskPortObjectSpec() {}
 
   /** Serializer used to save this port object spec. */
   public static final class Serializer extends PortObjectSpecSerializer<FskPortObjectSpec> {
@@ -51,9 +47,7 @@ public class FskPortObjectSpec implements PortObjectSpec {
     /** {@inheritDoc} */
     @Override
     public void savePortObjectSpec(final FskPortObjectSpec portObjectSpec,
-        PortObjectSpecZipOutputStream out) throws IOException {
-      // empty
-    }
+        PortObjectSpecZipOutputStream out) throws IOException {}
   }
 
   /** {@inheritDoc} */

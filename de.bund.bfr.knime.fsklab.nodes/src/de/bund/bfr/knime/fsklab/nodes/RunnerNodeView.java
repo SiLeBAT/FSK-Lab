@@ -43,7 +43,6 @@ public class RunnerNodeView extends NodeView<RunnerNodeModel> {
   /** Updates the image to display. */
   @Override
   protected void modelChanged() {
-    // TODO Auto-generated method stub
     final RunnerNodeModel model = getNodeModel();
     final Image image = model.getResultImage();
     panel.update(image);

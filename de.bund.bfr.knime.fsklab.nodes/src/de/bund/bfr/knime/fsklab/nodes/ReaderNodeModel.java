@@ -62,8 +62,6 @@ public class ReaderNodeModel extends NoInternalsModel {
 
   private final SettingsModelString filename = new SettingsModelString("filename", "");
 
-
-
   public ReaderNodeModel() {
     super(IN_TYPES, OUT_TYPES);
   }
@@ -85,9 +83,7 @@ public class ReaderNodeModel extends NoInternalsModel {
   }
 
   @Override
-  protected void reset() {
-    // does nothing
-  }
+  protected void reset() {}
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {

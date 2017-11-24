@@ -94,9 +94,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
   /** {@inheritDoc} */
   @Override
-  protected void reset() {
-    // does nothing
-  }
+  protected void reset() {}
 
   /**
    * {@inheritDoc}

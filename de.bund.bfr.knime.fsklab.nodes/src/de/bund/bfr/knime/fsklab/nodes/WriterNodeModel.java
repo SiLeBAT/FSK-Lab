@@ -76,9 +76,7 @@ public class WriterNodeModel extends NoInternalsModel {
   }
 
   @Override
-  protected void reset() {
-    // does nothing
-  }
+  protected void reset() {}
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
