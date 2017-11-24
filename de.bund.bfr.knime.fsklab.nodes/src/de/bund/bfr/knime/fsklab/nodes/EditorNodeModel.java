@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -131,10 +130,7 @@ public class EditorNodeModel extends NoInternalsModel {
     }
 
     // Adds and installs libraries
-    final Path tempScript = Files.createTempFile("model", ".r");
-    FileUtils.writeStringToFile(tempScript.toFile(), outObj.model, "UTF-8");
-
-    final List<String> libraries = new RScript(tempScript.toFile()).getLibraries();
+    final List<String> libraries = new RScript(outObj.model).getLibraries();
     if (!libraries.isEmpty()) {
       try {
         // Install missing libraries
