@@ -206,8 +206,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     exec.setMessage("Add paths to libraries");
     LibRegistry libRegistry = LibRegistry.instance();
-    String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
-        + "', .libPaths()))";
+    String cmd = String.format(".libPaths(c('%s', .libPaths()))",
+        FilenameUtils.separatorsToUnix(libRegistry.getInstallationPath().toString()));
     final String[] newPaths = executor.execute(cmd, exec).asStrings();
 
     // If parameters are defined in metadata used the values from there, otherwise

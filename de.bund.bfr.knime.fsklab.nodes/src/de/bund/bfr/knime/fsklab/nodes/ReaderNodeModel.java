@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -177,7 +178,7 @@ public class ReaderNodeModel extends NoInternalsModel {
       // Add path
       final LibRegistry libRegistry = LibRegistry.instance();
       final String installationPath =
-          libRegistry.getInstallationPath().toString().replace("\\", "/");
+          FilenameUtils.separatorsToUnix(libRegistry.getInstallationPath().toString());
       final String cmd = String.format(".libPaths(c('%s', .libPaths()))", installationPath);
       final String[] newPaths = controller.eval(cmd, true).asStrings();
 

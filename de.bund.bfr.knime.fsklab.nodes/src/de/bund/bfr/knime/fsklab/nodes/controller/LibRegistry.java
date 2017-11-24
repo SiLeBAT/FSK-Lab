@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
@@ -172,8 +173,10 @@ public class LibRegistry {
      *      documentation</a>
      */
     void installPackages(final List<Path> pkgs, final Path lib) throws RException {
-      String pkgsAsString = pkgs.stream().map(pkg -> "'" + pkg.toString().replace("\\", "/") + "'")
-          .collect(Collectors.joining(", "));
+
+      String pkgsAsString = pkgs.stream().map(Path::toString).map(FilenameUtils::separatorsToUnix)
+          .map(str -> "'" + str + "'").collect(Collectors.joining(", "));
+
       String pkgList = "c(" + pkgsAsString + ")";
       String cmd = "install.packages(" + pkgList + ", repos = NULL, lib = '" + _path2String(lib)
           + "', type = '" + type + "')";
@@ -270,7 +273,7 @@ public class LibRegistry {
 
     // Utility method. Should not be used outside of RCommandBuilder.
     String _path2String(final Path path) {
-      return path.toString().replace("\\", "/");
+      return FilenameUtils.separatorsToUnix(path.toString());
     }
   }
 }

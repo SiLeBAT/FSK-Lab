@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
@@ -12,8 +13,8 @@ import org.rosuda.REngine.REXPMismatchException;
 import com.sun.jna.Platform;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 
 public class NodeUtils {
 
@@ -59,7 +60,7 @@ public class NodeUtils {
     }
 
     // Gets image path (with proper slashes)
-    final String path = imageFile.getAbsolutePath().replace("\\", "/");
+    final String path = FilenameUtils.separatorsToUnix(imageFile.getAbsolutePath());
 
     // Gets values
     int width = settings.widthModel.getIntValue();
@@ -88,8 +89,8 @@ public class NodeUtils {
 
     monitor.setMessage("Add paths to libraries");
     LibRegistry libRegistry = LibRegistry.instance();
-    String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
-        + "', .libPaths()))";
+    String cmd = String.format(".libPaths(c('%s', .libPaths()))",
+        FilenameUtils.separatorsToUnix(libRegistry.getInstallationPath().toString()));
     final String[] newPaths = executor.execute(cmd, monitor).asStrings();
 
     monitor.setMessage("Run parameters script");

@@ -46,6 +46,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -64,7 +65,8 @@ public class RBinUtil {
   /**
    * The temp directory used as a working directory for R.
    */
-  private static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/');
+  private static final String TEMP_PATH =
+      FilenameUtils.separatorsToUnix(KNIMEConstants.getKNIMETempDir());
 
   private final static NodeLogger LOGGER = NodeLogger.getLogger(RBinUtil.class);
 
@@ -119,9 +121,9 @@ public class RBinUtil {
       return new Properties();
     }
 
-    final String propertiesPath = propsFile.getAbsolutePath().replace('\\', '/');
-    final String script = "setwd('" + tmpPath.getAbsolutePath().replace('\\', '/') + "')\n"
-        + "foo <- paste(names(R.Version()), R.Version(), sep='=')\n"
+    final String propertiesPath = FilenameUtils.separatorsToUnix(propsFile.getAbsolutePath());
+    final String script = "setwd('" + FilenameUtils.separatorsToUnix(tmpPath.getAbsolutePath())
+        + "')\n" + "foo <- paste(names(R.Version()), R.Version(), sep='=')\n"
         + "foo <- append(foo, paste('memory.limit', memory.limit(), sep='='))\n"
         + "foo <- append(foo, paste('Rserve.path', find.package('Rserve', quiet=TRUE), sep='='))\n"
         + "foo <- append(foo, paste('miniCRAN.path', find.package('miniCRAN', quiet=TRUE), sep='='))\n"

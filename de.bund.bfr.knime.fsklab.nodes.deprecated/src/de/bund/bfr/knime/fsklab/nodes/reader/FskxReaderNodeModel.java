@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom2.JDOMException;
 import org.knime.core.node.ExecutionContext;
@@ -52,10 +53,10 @@ import org.sbml.jsbml.xml.stax.SBMLReader;
 import de.bund.bfr.fskml.OmexMetaDataHandler;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
-import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
+import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
@@ -192,8 +193,8 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 
       // Add path
       LibRegistry libRegistry = LibRegistry.instance();
-      String cmd = ".libPaths(c('" + libRegistry.getInstallationPath().toString().replace("\\", "/")
-          + "', .libPaths()))";
+      String cmd = String.format(".libPaths(c('%s', .libPaths()))",
+          FilenameUtils.separatorsToUnix(libRegistry.getInstallationPath().toString()));
       String[] newPaths = controller.eval(cmd, true).asStrings();
 
       // Validate model with parameter values from parameter script

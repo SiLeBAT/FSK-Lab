@@ -62,6 +62,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
@@ -625,8 +626,10 @@ public class RController implements IRController {
         exec.setMessage("Loading workspace from R input port");
         final RPortObject rPortObject = (RPortObject) port;
         final File portFile = rPortObject.getFile();
+
+        String unixPath = FilenameUtils.separatorsToUnix(portFile.getAbsolutePath());
         eval(
-            "load(\"" + portFile.getAbsolutePath().replace('\\', '/') + "\")\n"
+            "load(\"" + unixPath + "\")\n"
                 + RController.createLoadLibraryFunctionCall(rPortObject.getLibraries(), false),
             false);
       } else if (port instanceof BufferedDataTable) {
@@ -1050,8 +1053,8 @@ public class RController implements IRController {
     clearWorkspace(exec.createSubProgress(0.3));
     exec.setMessage("Loading workspace");
     try {
-      monitoredEval("load(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");",
-          exec.createSubProgress(0.7), false);
+      String unixPath = FilenameUtils.separatorsToUnix(workspaceFile.getAbsolutePath());
+      monitoredEval("load(\"" + unixPath + "\");", exec.createSubProgress(0.7), false);
     } catch (InterruptedException e) {
       throw new RException("Interrupted while loading R workspace.", e);
     }
@@ -1461,8 +1464,8 @@ public class RController implements IRController {
       throws RException, CanceledExecutionException {
     // save workspace to file
     try {
-      monitoredEval("save.image(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");",
-          exec, false);
+      String unixPath = FilenameUtils.separatorsToUnix(workspaceFile.getAbsolutePath());
+      monitoredEval("save.image(\"" + unixPath + "\");", exec, false);
     } catch (InterruptedException e) {
       throw new RException("Interrupted while saving R workspace.", e);
     }
