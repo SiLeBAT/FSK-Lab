@@ -94,6 +94,7 @@ public class ReaderNodeModel extends NoInternalsModel {
 
     final Map<String, File> entriesMap = new HashMap<>();
     final ArrayList<String> libNames = new ArrayList<>();
+    final Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
 
     final File file = FileUtil.getFileFromURL(FileUtil.toURL(filename.getStringValue()));
 
@@ -120,6 +121,20 @@ public class ReaderNodeModel extends NoInternalsModel {
           default:
             break;
         }
+      }
+
+      // Gets plain text resources (.txt)
+      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.plainText)) {
+        final Path targetPath = workingDirectory.resolve(entry.getFileName());
+        Files.createFile(targetPath);
+        entry.extractFile(targetPath.toFile());
+      }
+
+      // Gets R workspace resources (.rdata)
+      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.rData)) {
+        final Path targetPath = workingDirectory.resolve(entry.getFileName());
+        Files.createFile(targetPath);
+        entry.extractFile(targetPath.toFile());
       }
 
       // Gets metadata file
@@ -180,29 +195,7 @@ public class ReaderNodeModel extends NoInternalsModel {
     }
 
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
-        genericModel, workspaceFile, libFiles);
-
-    // Reads archive again to load resources
-    try (final CombineArchive archive = new CombineArchive(file)) {
-
-      // Gets plain text resources (.txt)
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.plainText)) {
-        final Path targetPath = fskObj.workingDirectory.resolve(entry.getFileName());
-        Files.createFile(targetPath);
-        entry.extractFile(targetPath.toFile());
-
-        fskObj.resources.add(targetPath);
-      }
-
-      // Gets R workspace resources (.rdata)
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.rData)) {
-        final Path targetPath = fskObj.workingDirectory.resolve(entry.getFileName());
-        Files.createFile(targetPath);
-        entry.extractFile(targetPath.toFile());
-
-        fskObj.resources.add(targetPath);
-      }
-    }
+        genericModel, workspaceFile, libFiles, workingDirectory);
 
     return new FskPortObject[] {fskObj};
   }

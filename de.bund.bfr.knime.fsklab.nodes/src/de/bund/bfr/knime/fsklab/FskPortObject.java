@@ -25,11 +25,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -47,6 +46,7 @@ import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -111,8 +111,6 @@ public class FskPortObject implements PortObject {
   public GenericModel genericModel;
 
   /** Paths to resources: plain text files and R workspace files (.rdata). */
-  public List<Path> resources;
-
   public final Path workingDirectory;
 
   /**
@@ -129,20 +127,19 @@ public class FskPortObject implements PortObject {
   public int objectNum;
 
   public FskPortObject(final String model, final String param, final String viz,
-      final GenericModel genericModel, final File workspace, final Set<File> libs)
-      throws IOException {
+      final GenericModel genericModel, final File workspace, final Set<File> libs,
+      final Path workingDirectory) throws IOException {
     this.model = model;
     this.param = param;
     this.viz = viz;
     this.genericModel = genericModel;
     this.workspace = workspace;
     this.libs = libs;
-    this.resources = new ArrayList<>();
+
+    this.workingDirectory = workingDirectory;
 
     objectNum = numOfInstances;
     numOfInstances += 1;
-
-    workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
   }
 
   @Override
@@ -214,15 +211,20 @@ public class FskPortObject implements PortObject {
         out.closeEntry();
       }
 
-      // resource files
-      if (!portObject.resources.isEmpty()) {
-        out.putNextEntry(new ZipEntry("resources.list"));
+      // Save plain text resources
+      final List<Path> resources =
+          Files.list(portObject.workingDirectory).collect(Collectors.toList());
+      for (final Path resource : resources) {
+        if (FilenameUtils.isExtension(resource.toString(), "txt")) {
 
-        List<String> lines =
-            portObject.resources.stream().map(Path::toString).collect(Collectors.toList());
-        IOUtils.writeLines(lines, "\n", out, StandardCharsets.UTF_8);
-        out.closeEntry();
+          final String filename = resource.getFileName().toString();
+          out.putNextEntry(new ZipEntry(filename));
+          Files.copy(resource, out);
+          out.closeEntry();
+        }
       }
+
+      // TODO: Save rdata resources
 
       out.close();
     }
@@ -231,8 +233,6 @@ public class FskPortObject implements PortObject {
     public FskPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
         ExecutionMonitor exec) throws IOException, CanceledExecutionException {
 
-      // FskPortObject portObj = new FskPortObject();
-
       String modelScript = "";
       String parametersScript = "";
       String visualizationScript = "";
@@ -240,6 +240,8 @@ public class FskPortObject implements PortObject {
       File workspaceFile = null;
       Set<File> libs = new HashSet<>();
       List<Path> resources = new ArrayList<>();
+
+      Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
 
       ZipEntry entry;
       while ((entry = in.getNextEntry()) != null) {
@@ -274,25 +276,30 @@ public class FskPortObject implements PortObject {
             if (!missingLibs.isEmpty()) {
               libRegistry.installLibs(missingLibs);
             }
-            // Adds to libs the Paths of the libraries converted to
-            // Files
+            // Adds to libs the Paths of the libraries converted to Files
             libRegistry.getPaths(libNames).forEach(p -> libs.add(p.toFile()));
           } catch (RException | REXPMismatchException error) {
             throw new IOException(error.getMessage());
           }
-        } else if (entryName.equals("resources.list")) {
-          List<String> lines = IOUtils.readLines(in, StandardCharsets.UTF_8);
-          lines.forEach(it -> resources.add(Paths.get(it)));
         }
+
+        // Load plain text resources
+        else if (FilenameUtils.isExtension(entryName, "txt")) {
+          // Creates path to resource: <workingDir>/resource.txt
+          Path resourcePath = workingDirectory.resolve(entryName);
+          Files.copy(in, resourcePath);
+        }
+
+        // TODO: Load rdata resources
       }
 
       in.close();
 
       final FskPortObject portObj = new FskPortObject(modelScript, parametersScript,
-          visualizationScript, genericModel, workspaceFile, libs);
-      portObj.resources.addAll(resources);
+          visualizationScript, genericModel, workspaceFile, libs, workingDirectory);
       return portObj;
     }
+
   }
 
   /** {Override} */
@@ -307,7 +314,7 @@ public class FskPortObject implements PortObject {
     metaDataPane.setName("Meta data");
 
     final JPanel librariesPanel = UIUtils.createLibrariesPanel(libs);
-    final JPanel resourcesPanel = createResourcesViewPanel(resources);
+    final JPanel resourcesPanel = createResourcesViewPanel(workingDirectory);
 
     return new JComponent[] {modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
         librariesPanel, resourcesPanel};
@@ -1017,13 +1024,19 @@ public class FskPortObject implements PortObject {
   }
 
   /** Creates a panel with a list of resource files. */
-  private static final JPanel createResourcesViewPanel(final Collection<Path> resources) {
+  private static final JPanel createResourcesViewPanel(final Path workingDirectory) {
 
     final JPanel panel = new JPanel(new BorderLayout());
     panel.setName("Resources list");
 
-    final String[] filenames =
-        resources.stream().map(it -> it.getFileName().toString()).toArray(String[]::new);
+    String[] filenames;
+    try {
+      filenames = Files.list(workingDirectory).map(Path::getFileName).map(Path::toString)
+          .toArray(String[]::new);
+    } catch (IOException e) {
+      filenames = new String[0];
+    }
+
     final JList<String> list = new JList<>(filenames);
     list.setLayoutOrientation(JList.VERTICAL);
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

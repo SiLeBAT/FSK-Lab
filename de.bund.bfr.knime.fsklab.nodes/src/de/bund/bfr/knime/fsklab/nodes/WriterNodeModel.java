@@ -22,7 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.ExecutionContext;
@@ -126,7 +129,8 @@ public class WriterNodeModel extends NoInternalsModel {
       }
 
       // Adds resources
-      for (final Path resourcePath : fskObj.resources) {
+      final List<Path> resources = Files.list(fskObj.workingDirectory).collect(Collectors.toList());
+      for (final Path resourcePath : resources) {
         final String filenameString = resourcePath.getFileName().toString();
 
         if (FilenameUtils.isExtension(filenameString, "txt")) {

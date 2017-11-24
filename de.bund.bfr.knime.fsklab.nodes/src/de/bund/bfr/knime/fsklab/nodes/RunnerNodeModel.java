@@ -22,8 +22,6 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -187,17 +185,16 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setMessage("Add resource files");
-    final Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
-    for (final Path resource : fskObj.resources) {
-      Path targetPath = workingDirectory.resolve(resource.getFileName());
-      Files.copy(resource, targetPath);
-    }
+    // final Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
+    // for (final Path resource : fskObj.resources) {
+    // Path targetPath = workingDirectory.resolve(resource.getFileName());
+    // Files.copy(resource, targetPath);
+    // }
+    controller.setWorkingDirectory(fskObj.workingDirectory);
 
     // START RUNNING MODEL
     exec.setMessage("Setting up output capturing");
     executor.setupOutputCapturing(exec);
-
-    controller.setWorkingDirectory(workingDirectory);
 
     exec.setMessage("Add paths to libraries");
     controller.addPackagePath(LibRegistry.instance().getInstallationPath());

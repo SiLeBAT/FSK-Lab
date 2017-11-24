@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -146,8 +147,15 @@ class CreatorNodeModel extends NoInternalsModel {
       throw new InvalidSettingsException("Invalid metadata");
     }
 
+    // Copy resources from settings to a working directory
+    Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
+    for (final Path resource : nodeSettings.resources) {
+      final Path targetPath = workingDirectory.resolve(resource.getFileName().toString());
+      Files.copy(resource, targetPath);
+    }
+
     final FskPortObject portObj = new FskPortObject(modelScript, paramScript, visualizationScript,
-        genericModel, null, new HashSet<>());
+        genericModel, null, new HashSet<>(), workingDirectory);
 
     // libraries
     List<String> libraries = modelRScript.getLibraries();
@@ -167,9 +175,6 @@ class CreatorNodeModel extends NoInternalsModel {
         LOGGER.error(e.getMessage());
       }
     }
-
-    // resource files
-    portObj.resources.addAll(nodeSettings.resources);
 
     return new PortObject[] {portObj};
   }

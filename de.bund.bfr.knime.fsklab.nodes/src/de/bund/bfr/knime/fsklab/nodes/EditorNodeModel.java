@@ -34,6 +34,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
@@ -116,17 +117,17 @@ public class EditorNodeModel extends NoInternalsModel {
     }
     /* If there is no input model then it will return the model created in the UI. */
     else {
-      outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedParametersScript,
-          settings.modifiedVisualizationScript, settings.genericModel, null, new HashSet<>());
-
+      // Copy resources from settings to a working directory
+      final Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
       for (final Path resource : settings.resources) {
-
         final String filename = resource.getFileName().toString();
-        final Path targetPath = outObj.workingDirectory.resolve(filename);
-
+        final Path targetPath = workingDirectory.resolve(filename);
         Files.copy(resource, targetPath);
-        outObj.resources.add(targetPath);
       }
+
+      outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedParametersScript,
+          settings.modifiedVisualizationScript, settings.genericModel, null, new HashSet<>(),
+          workingDirectory);
     }
 
     // Adds and installs libraries

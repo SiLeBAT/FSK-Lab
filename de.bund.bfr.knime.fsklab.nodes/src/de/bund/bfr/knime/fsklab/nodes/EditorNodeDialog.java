@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -199,7 +200,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       this.settings.genericModel = inObj.genericModel;
 
-      this.settings.resources = inObj.resources;
+      try {
+        Files.list(inObj.workingDirectory).forEach(this.settings.resources::add);
+      } catch (IOException exception) {
+        throw new NotConfigurableException(exception.getMessage(), exception);
+      }
     }
 
     updatePanels();
