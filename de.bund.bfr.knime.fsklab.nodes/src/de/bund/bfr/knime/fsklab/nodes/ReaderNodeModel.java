@@ -157,7 +157,7 @@ public class ReaderNodeModel extends NoInternalsModel {
     final String visualizationScript = entriesMap.containsKey("visualizationScript")
         ? loadScript(entriesMap.get("visualizationScript"))
         : "";
-    final File workspaceFile = entriesMap.get("workspace");
+    final Path workspace = entriesMap.get("workspace").toPath();
     if (!entriesMap.containsKey("metaData")) {
       throw new InvalidSettingsException("Missing model meta data");
     }
@@ -195,7 +195,7 @@ public class ReaderNodeModel extends NoInternalsModel {
     }
 
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
-        genericModel, workspaceFile, libFiles, workingDirectory);
+        genericModel, workspace, libFiles, workingDirectory);
 
     return new FskPortObject[] {fskObj};
   }

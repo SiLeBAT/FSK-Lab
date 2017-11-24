@@ -48,7 +48,8 @@ public class FskToRNodeFactory extends NodeFactory<NodeModel> {
 
       @Override
       protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) {
-        return new RPortObject[] {new RPortObject(((FskPortObject) inObjects[0]).workspace)};
+        FskPortObject fskObj = (FskPortObject) inObjects[0];
+        return new RPortObject[] {new RPortObject(fskObj.workspace.toFile())};
       }
     };
   }

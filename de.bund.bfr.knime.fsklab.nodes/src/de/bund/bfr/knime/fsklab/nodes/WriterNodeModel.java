@@ -113,7 +113,7 @@ public class WriterNodeModel extends NoInternalsModel {
       // Adds R workspace file
       if (fskObj.workspace != null) {
         final ArchiveEntry workspaceEntry =
-            archive.addEntry(fskObj.workspace, "workspace.r", URIS.r);
+            archive.addEntry(fskObj.workspace.toFile(), "workspace.r", URIS.r);
         workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
       }
 

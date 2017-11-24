@@ -20,15 +20,13 @@ package de.bund.bfr.knime.fsklab;
 
 import java.awt.BorderLayout;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -117,7 +115,7 @@ public class FskPortObject implements PortObject {
    * R workspace file with the results of running the model. It may be null if the model has not
    * been run.
    */
-  public File workspace;
+  public Path workspace;
 
   /** List of library files. Files of the libraries used by the model. */
   public final Set<File> libs;
@@ -127,7 +125,7 @@ public class FskPortObject implements PortObject {
   public int objectNum;
 
   public FskPortObject(final String model, final String param, final String viz,
-      final GenericModel genericModel, final File workspace, final Set<File> libs,
+      final GenericModel genericModel, final Path workspace, final Set<File> libs,
       final Path workingDirectory) throws IOException {
     this.model = model;
     this.param = param;
@@ -196,9 +194,7 @@ public class FskPortObject implements PortObject {
       // workspace entry
       if (portObject.workspace != null) {
         out.putNextEntry(new ZipEntry(WORKSPACE));
-        try (FileInputStream fis = new FileInputStream(portObject.workspace)) {
-          FileUtil.copy(fis, out);
-        }
+        Files.copy(portObject.workspace, out);
         out.closeEntry();
       }
 
@@ -237,9 +233,8 @@ public class FskPortObject implements PortObject {
       String parametersScript = "";
       String visualizationScript = "";
       GenericModel genericModel = null;
-      File workspaceFile = null;
+      Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
       Set<File> libs = new HashSet<>();
-      List<Path> resources = new ArrayList<>();
 
       Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
 
@@ -257,10 +252,7 @@ public class FskPortObject implements PortObject {
           final String metaDataAsString = IOUtils.toString(in, "UTF-8");
           genericModel = objectMapper.readValue(metaDataAsString, GenericModel.class);
         } else if (entryName.equals(WORKSPACE)) {
-          workspaceFile = FileUtil.createTempFile("workspace", ".r");
-          try (FileOutputStream fos = new FileOutputStream(workspaceFile)) {
-            FileUtil.copy(in, fos);
-          }
+          Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
         } else if (entryName.equals("library.list")) {
           List<String> libNames = IOUtils.readLines(in, "UTF-8");
 
@@ -296,7 +288,7 @@ public class FskPortObject implements PortObject {
       in.close();
 
       final FskPortObject portObj = new FskPortObject(modelScript, parametersScript,
-          visualizationScript, genericModel, workspaceFile, libs, workingDirectory);
+          visualizationScript, genericModel, workspacePath, libs, workingDirectory);
       return portObj;
     }
 
