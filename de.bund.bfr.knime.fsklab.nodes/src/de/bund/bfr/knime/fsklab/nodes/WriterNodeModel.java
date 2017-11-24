@@ -170,7 +170,6 @@ public class WriterNodeModel extends NoInternalsModel {
     final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
     objectMapper.writeValue(file, genericModel);
 
-    // TODO: JSON uri should be moved to fskml
     final ArchiveEntry entry = archive.addEntry(file, filename, URIS.json);
     file.delete();
 
