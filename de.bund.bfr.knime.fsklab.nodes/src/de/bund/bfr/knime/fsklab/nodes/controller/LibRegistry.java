@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +31,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
+import org.rosuda.REngine.REXPString;
 import com.sun.jna.Platform;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 
@@ -219,8 +221,13 @@ public class LibRegistry {
         throws REXPMismatchException, RException {
       String cmd = "checkVersions(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', type = '"
           + type + "', Rversion = '3.0')";
-      String[] pathsArray = controller.eval(cmd, true).asStrings();
-      return Arrays.stream(pathsArray).map(Paths::get).collect(Collectors.toList());
+
+      REXP rexp = controller.eval(cmd, true);
+      @SuppressWarnings("unchecked")
+      Collection<REXPString> values = rexp.asList().values();
+
+      return values.stream().map(it -> it.asStrings()[0]).map(Paths::get)
+          .collect(Collectors.toList());
     }
 
     /**
