@@ -140,10 +140,10 @@ public class EditorNodeModel extends NoInternalsModel {
             libraries.stream().filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
         if (!missingLibs.isEmpty()) {
           libReg.installLibs(missingLibs);
-        }
 
-        Set<Path> libPaths = libReg.getPaths(libraries);
-        libPaths.forEach(l -> outObj.libs.add(l.toFile()));
+          Set<Path> libPaths = libReg.getPaths(missingLibs);
+          libPaths.forEach(l -> outObj.libs.add(l.toFile()));
+        }
       } catch (RException | REXPMismatchException e) {
         LOGGER.error(e.getMessage());
       }
