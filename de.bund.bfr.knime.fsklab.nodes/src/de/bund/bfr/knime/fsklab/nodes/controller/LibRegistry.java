@@ -88,7 +88,20 @@ public class LibRegistry {
    * @return whether an R library is installed
    */
   public boolean isInstalled(final String libraryName) {
-    return installedLibs.contains(libraryName);
+
+    // Look in libraries installed within LibRegistry
+    if (installedLibs.contains(libraryName))
+      return true;
+
+    // Look for libraries installed in the R distribution.
+    // Make a library(<libname>) call. If an RException is return the library is missing.
+    try {
+      rWrapper.library(libraryName);
+      return true;
+    } catch (RException exception) {
+      // the library is not included in .Library or .Library.site
+      return false;
+    }
   }
 
   /**
