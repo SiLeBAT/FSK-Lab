@@ -185,11 +185,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setMessage("Add resource files");
-    // final Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
-    // for (final Path resource : fskObj.resources) {
-    // Path targetPath = workingDirectory.resolve(resource.getFileName());
-    // Files.copy(resource, targetPath);
-    // }
     controller.setWorkingDirectory(fskObj.workingDirectory);
 
     // START RUNNING MODEL
