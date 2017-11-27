@@ -236,11 +236,22 @@ public class LibRegistry {
           + type + "', Rversion = '3.0')";
 
       REXP rexp = controller.eval(cmd, true);
-      @SuppressWarnings("unchecked")
-      Collection<REXPString> values = rexp.asList().values();
 
-      return values.stream().map(it -> it.asStrings()[0]).map(Paths::get)
-          .collect(Collectors.toList());
+      // Sometimes checkVersions returns a list (specially on Mac)
+      if (rexp.isList()) {
+        @SuppressWarnings("unchecked")
+        Collection<REXPString> values = rexp.asList().values();
+
+        return values.stream().map(it -> it.asStrings()[0]).map(Paths::get)
+            .collect(Collectors.toList());
+      }
+
+      if (rexp.isString()) {
+        String[] pathsArray = rexp.asStrings();
+        return Arrays.stream(pathsArray).map(Paths::get).collect(Collectors.toList());
+      }
+
+      throw new REXPMismatchException(rexp, "Unsupported return type");
     }
 
     /**
