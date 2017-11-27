@@ -48,7 +48,6 @@ public class RunnerNodeInternalSettings {
       LOGGER.error("Cannot create temporary file.", e);
       throw new RuntimeException(e);
     }
-    imageFile.deleteOnExit();
   }
 
   /** Loads the saved image. */
