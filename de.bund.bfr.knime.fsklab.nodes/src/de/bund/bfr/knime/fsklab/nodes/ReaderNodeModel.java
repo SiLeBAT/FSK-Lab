@@ -123,16 +123,12 @@ public class ReaderNodeModel extends NoInternalsModel {
         }
       }
 
-      // Gets plain text resources (.txt)
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.plainText)) {
-        final Path targetPath = workingDirectory.resolve(entry.getFileName());
-        Files.createFile(targetPath);
-        entry.extractFile(targetPath.toFile());
-      }
+      // Gets resources: plain text (.txt) and workspaces (.rdata)
+      List<ArchiveEntry> resourceEntries = archive.getEntriesWithFormat(URIS.plainText);
+      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.rData));
 
-      // Gets R workspace resources (.rdata)
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.rData)) {
-        final Path targetPath = workingDirectory.resolve(entry.getFileName());
+      for (final ArchiveEntry entry : resourceEntries) {
+        Path targetPath = workingDirectory.resolve(entry.getFileName());
         Files.createFile(targetPath);
         entry.extractFile(targetPath.toFile());
       }
