@@ -24,13 +24,10 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -92,11 +89,16 @@ public class ReaderNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    final Map<String, File> entriesMap = new HashMap<>();
     final ArrayList<String> libNames = new ArrayList<>();
     final Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
 
     final File file = FileUtil.getFileFromURL(FileUtil.toURL(filename.getStringValue()));
+
+    String modelScript = "";
+    String paramScript = "";
+    String visualizationScript = "";
+    File workspace = null; // null if missing
+    GenericModel genericModel = null; // null if missing
 
     try (final CombineArchive archive = new CombineArchive(file)) {
       for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.r)) {
@@ -104,22 +106,15 @@ public class ReaderNodeModel extends NoInternalsModel {
         final FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
         final ResourceType resourceType = fmdo.getResourceType();
 
-        switch (resourceType) {
-          case modelScript:
-            entriesMap.put("modelScript", toTempFile(entry));
-            break;
-          case parametersScript:
-            entriesMap.put("paramScript", toTempFile(entry));
-            break;
-          case visualizationScript:
-            entriesMap.put("visualizationScript", toTempFile(entry));
-            break;
-          case workspace:
-            entriesMap.put("workspace", toTempFile(entry));
-            break;
-          // RAKIP JSON metadata is not supported currently by fskml.
-          default:
-            break;
+        if (resourceType.equals(ResourceType.modelScript)) {
+          modelScript = loadScript(entry);
+        } else if (resourceType.equals(ResourceType.parametersScript)) {
+          paramScript = loadScript(entry);
+        } else if (resourceType.equals(ResourceType.visualizationScript)) {
+          visualizationScript = loadScript(entry);
+        } else if (resourceType.equals(ResourceType.workspace)) {
+          workspace = FileUtil.createTempFile("workspace", ".r");
+          entry.extractFile(workspace);
         }
       }
 
@@ -133,8 +128,19 @@ public class ReaderNodeModel extends NoInternalsModel {
         entry.extractFile(targetPath.toFile());
       }
 
-      // Gets metadata file
-      entriesMap.put("metaData", toTempFile(archive.getEntriesWithFormat(URIS.json).get(0)));
+      // Gets metadata
+      {
+        // Create temporary file with metadata
+        Path temp = Files.createTempFile("metadata", ".json");
+        ArchiveEntry jsonEntry = archive.getEntriesWithFormat(URIS.json).get(0);
+        jsonEntry.extractFile(temp.toFile());
+
+        // Loads metadata from temporary file
+        ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+        genericModel = objectMapper.readValue(temp.toFile(), GenericModel.class);
+
+        Files.delete(temp); // Deletes temporary file
+      }
 
       // Gets library URI for the running platform
       final URI libUri = NodeUtils.getLibURI();
@@ -146,19 +152,9 @@ public class ReaderNodeModel extends NoInternalsModel {
       }
     }
 
-    final String modelScript =
-        entriesMap.containsKey("modelScript") ? loadScript(entriesMap.get("modelScript")) : "";
-    final String paramScript =
-        entriesMap.containsKey("paramScript") ? loadScript(entriesMap.get("paramScript")) : "";
-    final String visualizationScript = entriesMap.containsKey("visualizationScript")
-        ? loadScript(entriesMap.get("visualizationScript"))
-        : "";
-    final Path workspace = entriesMap.get("workspace").toPath();
-    if (!entriesMap.containsKey("metaData")) {
+    if (genericModel == null) {
       throw new InvalidSettingsException("Missing model meta data");
     }
-
-    final GenericModel genericModel = loadMetaData(entriesMap.get("metaData"));
 
     final Set<File> libFiles = new HashSet<>();
     if (!libNames.isEmpty()) {
@@ -190,27 +186,23 @@ public class ReaderNodeModel extends NoInternalsModel {
       controller.restorePackagePath();
     }
 
+    Path workspacePath = workspace == null ? null : workspace.toPath();
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
-        genericModel, workspace, libFiles, workingDirectory);
+        genericModel, workspacePath, libFiles, workingDirectory);
 
     return new FskPortObject[] {fskObj};
   }
 
-  private static File toTempFile(final ArchiveEntry archiveEntry) throws IOException {
-    final File file = FileUtil.createTempFile("temp", "");
-    archiveEntry.extractFile(file);
+  private static String loadScript(final ArchiveEntry entry) throws IOException {
 
-    return file;
-  }
+    // Create temporary file with script
+    Path temp = Files.createTempFile("temp", ".r");
+    entry.extractFile(temp.toFile());
 
-  private static String loadScript(final File file) throws IOException {
-    // Read script from temporary file and return script
-    return FileUtils.readFileToString(file, "UTF-8");
-  }
+    String script = new String(Files.readAllBytes(temp), "UTF-8"); // Read script
 
-  private static GenericModel loadMetaData(final File file) throws IOException {
-    final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    Files.delete(temp); // Delete temporary file
 
-    return objectMapper.readValue(file, GenericModel.class);
+    return script;
   }
 }
