@@ -20,11 +20,12 @@ package de.bund.bfr.knime.pmm.fskx.port;
 
 import java.awt.BorderLayout;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class FskPortObject implements PortObject {
   public FskMetaData template;
 
   /** R workspace file. */
-  public File workspace;
+  public Path workspace;
 
   /** R library files. */
   public final Set<File> libs;
@@ -98,7 +99,7 @@ public class FskPortObject implements PortObject {
   }
 
   public FskPortObject(final String model, final String param, final String viz,
-      final FskMetaData template, final File workspace, final Set<File> libs) {
+      final FskMetaData template, final Path workspace, final Set<File> libs) {
     this.model = model;
     this.param = param;
     this.viz = viz;
@@ -162,9 +163,7 @@ public class FskPortObject implements PortObject {
       // workspace entry
       if (portObject.workspace != null) {
         out.putNextEntry(new ZipEntry(WORKSPACE));
-        try (FileInputStream fis = new FileInputStream(portObject.workspace)) {
-          FileUtil.copy(fis, out);
-        }
+        Files.copy(portObject.workspace, out);
         out.closeEntry();
       }
 
@@ -202,10 +201,8 @@ public class FskPortObject implements PortObject {
           } catch (ClassNotFoundException e) {
           }
         } else if (entryName.equals(WORKSPACE)) {
-          portObj.workspace = FileUtil.createTempFile("workspace", ".r");
-          try (FileOutputStream fos = new FileOutputStream(portObj.workspace)) {
-            FileUtil.copy(in, fos);
-          }
+          portObj.workspace = FileUtil.createTempFile("workspace", ".r").toPath();
+          Files.copy(in, portObj.workspace, StandardCopyOption.REPLACE_EXISTING);
         } else if (entryName.equals("library.list")) {
           List<String> libNames = IOUtils.readLines(in, "UTF-8");
 

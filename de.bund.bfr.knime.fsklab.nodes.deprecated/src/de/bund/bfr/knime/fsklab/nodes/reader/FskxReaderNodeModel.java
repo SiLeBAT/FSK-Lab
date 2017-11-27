@@ -122,8 +122,8 @@ public class FskxReaderNodeModel extends NoInternalsModel {
       if (handler.getWorkspaceFile() != null) {
         ArchiveEntry entry = archive.getEntry(handler.getWorkspaceFile());
         try {
-          portObj.workspace = FileUtil.createTempFile("workspace", ".r");
-          entry.extractFile(portObj.workspace);
+          portObj.workspace = FileUtil.createTempFile("workspace", ".r").toPath();
+          entry.extractFile(portObj.workspace.toFile());
         } catch (IOException e) {
           LOGGER.warn("Workspace could not be restored. Please rerun model to obtain results.");
         }

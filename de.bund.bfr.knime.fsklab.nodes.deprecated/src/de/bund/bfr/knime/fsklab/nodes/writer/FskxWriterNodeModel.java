@@ -103,7 +103,7 @@ class FskxWriterNodeModel extends NoInternalsModel {
 
       // Adds R workspace file
       if (portObject.workspace != null) {
-        archive.addEntry(portObject.workspace, "workspace.r", URIS.r);
+        archive.addEntry(portObject.workspace.toFile(), "workspace.r", URIS.r);
         omexMd.setWorkspaceFile("workspace.r");
       }
 
