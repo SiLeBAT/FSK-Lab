@@ -25,10 +25,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -46,12 +44,14 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
+import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
+import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.rakip.GeneralInformation;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.ModelMath;
@@ -135,14 +135,31 @@ class CreatorNodeModel extends NoInternalsModel {
       genericModel.modelMath = getModelMath(sheet);
 
       // Set variable values and types from parameters script
-      if (genericModel.modelMath != null) {
-        Map<String, String> vars = getVariablesFromAssignments(paramScript);
-        for (final Parameter p : genericModel.modelMath.parameter) {
-          if (p.classification.equals(Parameter.Classification.input)) {
-            p.value = vars.get(p.name);
+      try (RController controller = new RController()) {
+        controller.eval(paramScript, false);
+
+        for (int i = 0; i < genericModel.modelMath.parameter.size(); i++) {
+          Parameter p = genericModel.modelMath.parameter.get(i);
+
+          if (p.classification != Parameter.Classification.input) {
+            continue;
+          }
+
+          try {
+            REXP rexp = controller.eval(p.name, true);
+            if (rexp.isNumeric()) {
+              p.value = Double.toString(rexp.asDouble());
+              p.dataType = "Double";
+            }
+          } catch (RException | REXPMismatchException exception) {
+            // does nothing. Just leave the value blank.
+            LOGGER.warn("Could not parse value of parameter " + p.name, exception);
           }
         }
+      } catch (RException e) {
+        // Does nothing
       }
+
     } catch (IOException | InvalidFormatException e) {
       throw new InvalidSettingsException("Invalid metadata");
     }
@@ -258,7 +275,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
     for (int i = 0; i < depNames.size(); i++) {
       final Parameter param = new Parameter();
-      param.id = "";
+      param.id = depNames.get(i);
       param.classification = Parameter.Classification.output;
       param.name = depNames.get(i);
       param.unit = depUnits.get(i);
@@ -275,7 +292,7 @@ class CreatorNodeModel extends NoInternalsModel {
         .map(String::trim).collect(Collectors.toList());
     for (int i = 0; i < indepNames.size(); i++) {
       final Parameter param = new Parameter();
-      param.id = "";
+      param.id = indepNames.get(i);
       param.classification = Parameter.Classification.input;
       param.name = indepNames.get(i);
       param.unit = indepUnits.get(i);
@@ -286,78 +303,5 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     return modelMath;
-  }
-
-  private static class Assignment {
-
-    enum Type {
-      /** R command with the = assignment operator. E.g. x = value */
-      equals,
-      /** R command with the <- assignment operator. E.g. x <- value */
-      left,
-      /**
-       * R command with the <<- scoping assignment operator. E.g. x <<- value
-       */
-      super_left,
-      /** R command with the -> assignment operator. E.g. value -> x */
-      right,
-      /** R command with the ->> assignment operator. E.g. value ->> x */
-      super_right
-    }
-
-    String variable;
-    String value;
-
-    public Assignment(String line, Assignment.Type type) {
-      if (type == Type.equals) {
-        String[] tokens = line.split("||");
-        variable = tokens[0].trim();
-        value = tokens[1].trim();
-      } else if (type == Type.left) {
-        String[] tokens = line.split("<-");
-        variable = tokens[0].trim();
-        value = tokens[1].trim();
-      } else if (type == Type.super_left) {
-        String[] tokens = line.split("<<-");
-        variable = tokens[0].trim();
-        value = tokens[1].trim();
-      } else if (type == Type.right) {
-        String[] tokens = line.split("->");
-        variable = tokens[1].trim();
-        value = tokens[0].trim();
-      } else if (type == Type.super_right) {
-        String[] tokens = line.split("->>");
-        variable = tokens[1].trim();
-        value = tokens[0].trim();
-      }
-    }
-  }
-
-  private static Map<String, String> getVariablesFromAssignments(String paramScript) {
-    Map<String, String> vars = new HashMap<>();
-    for (String line : paramScript.split("\\r?\\n")) {
-      line = line.trim();
-      if (line.startsWith("#"))
-        continue;
-
-      if (line.indexOf("=") != -1) {
-        Assignment a = new Assignment(line, Assignment.Type.equals);
-        vars.put(a.variable, a.value);
-      } else if (line.indexOf("<-") != -1) {
-        Assignment a = new Assignment(line, Assignment.Type.left);
-        vars.put(a.variable, a.value);
-      } else if (line.indexOf("<<-") != -1) {
-        Assignment a = new Assignment(line, Assignment.Type.super_left);
-        vars.put(a.variable, a.value);
-      } else if (line.indexOf("->>") != -1) {
-        Assignment a = new Assignment(line, Assignment.Type.right);
-        vars.put(a.variable, a.value);
-      } else if (line.indexOf("->") != -1) {
-        Assignment a = new Assignment(line, Assignment.Type.super_right);
-        vars.put(a.variable, a.value);
-      }
-    }
-
-    return vars;
   }
 }
