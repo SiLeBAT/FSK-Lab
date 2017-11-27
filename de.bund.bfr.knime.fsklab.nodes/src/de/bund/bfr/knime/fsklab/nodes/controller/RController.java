@@ -1462,18 +1462,6 @@ public class RController implements IRController {
   }
 
   @Override
-  public void saveWorkspace(final File workspaceFile, final ExecutionMonitor exec)
-      throws RException, CanceledExecutionException {
-    // save workspace to file
-    try {
-      String unixPath = FilenameUtils.separatorsToUnix(workspaceFile.getAbsolutePath());
-      monitoredEval("save.image(\"" + unixPath + "\");", exec, false);
-    } catch (InterruptedException e) {
-      throw new RException("Interrupted while saving R workspace.", e);
-    }
-  }
-
-  @Override
   public void saveWorkspace(final Path workspace, final ExecutionMonitor exec)
       throws RException, CanceledExecutionException {
     // save workspace to file
