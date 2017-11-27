@@ -136,7 +136,7 @@ public class WriterNodeModel extends NoInternalsModel {
         if (FilenameUtils.isExtension(filenameString, "txt")) {
           archive.addEntry(resourcePath.toFile(), resourcePath.getFileName().toString(),
               URIS.plainText);
-        } else if (FilenameUtils.isExtension(filenameString, ".rdata")) {
+        } else if (FilenameUtils.isExtension(filenameString, "RData")) {
           archive.addEntry(resourcePath.toFile(), resourcePath.getFileName().toString(),
               URIS.rData);
         }

@@ -96,6 +96,8 @@ public class FskPortObject implements PortObject {
   public static final PortType TYPE_OPTIONAL =
       PortTypeRegistry.getInstance().getPortType(FskPortObject.class, true);
 
+  public static final String[] RESOURCE_EXTENSIONS = new String[] {"txt", "RData"};
+
   /** Model script. */
   public String model;
 
@@ -207,20 +209,18 @@ public class FskPortObject implements PortObject {
         out.closeEntry();
       }
 
-      // Save plain text resources
+      // Save resources
       final List<Path> resources =
           Files.list(portObject.workingDirectory).collect(Collectors.toList());
       for (final Path resource : resources) {
-        if (FilenameUtils.isExtension(resource.toString(), "txt")) {
+        final String filename = resource.getFileName().toString();
 
-          final String filename = resource.getFileName().toString();
+        if (FilenameUtils.isExtension(filename, RESOURCE_EXTENSIONS)) {
           out.putNextEntry(new ZipEntry(filename));
           Files.copy(resource, out);
           out.closeEntry();
         }
       }
-
-      // TODO: Save rdata resources
 
       out.close();
     }
@@ -275,14 +275,12 @@ public class FskPortObject implements PortObject {
           }
         }
 
-        // Load plain text resources
-        else if (FilenameUtils.isExtension(entryName, "txt")) {
-          // Creates path to resource: <workingDir>/resource.txt
-          Path resourcePath = workingDirectory.resolve(entryName);
-          Files.copy(in, resourcePath);
+        // Load resources
+        else if (FilenameUtils.isExtension(entryName, RESOURCE_EXTENSIONS)) {
+          // Creates path to resource. E.g.: <workingDir>/resource.txt
+          Path resource = workingDirectory.resolve(entryName);
+          Files.copy(in, resource);
         }
-
-        // TODO: Load rdata resources
       }
 
       in.close();
