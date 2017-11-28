@@ -1645,12 +1645,13 @@ public class RController implements IRController {
   @Override
   public void addPackagePath(Path path) throws RException {
     String unixPath = FilenameUtils.separatorsToUnix(path.toString());
-    String cmd = ".libPaths('" + unixPath + "')";
+    String cmd = String.format(".libPaths(c('%s', .libPaths()))", unixPath);
     eval(cmd, false);
   }
 
   @Override
-  public void restorePackagePath() throws RException {
-    eval(".libPaths(.Library)", false);
+  public void restorePackagePath() throws RException, REXPMismatchException {
+    // Remove custom path which is in the first position
+    eval(".libPaths(.libPaths()[-1])", false);
   }
 }

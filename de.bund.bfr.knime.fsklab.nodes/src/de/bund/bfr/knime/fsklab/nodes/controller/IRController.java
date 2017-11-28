@@ -308,6 +308,10 @@ public interface IRController extends AutoCloseable {
    */
   void addPackagePath(final Path path) throws RException;
 
-  /** Restore library trees to the default library. */
-  void restorePackagePath() throws RException;
+  /**
+   * Restore library trees to the default library.
+   * 
+   * @throws REXPMismatchException
+   */
+  void restorePackagePath() throws RException, REXPMismatchException;
 }
