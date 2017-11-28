@@ -19,6 +19,7 @@
 package de.bund.bfr.knime.fsklab.nodes.controller;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
-import org.knime.core.util.FileUtil;
+import org.knime.core.node.KNIMEConstants;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REXPString;
@@ -45,10 +46,10 @@ public class LibRegistry {
   private static LibRegistry instance;
 
   /** Installation path. */
-  private final Path installPath = FileUtil.createTempDir("install.path").toPath();
+  private final Path installPath;
 
   /** miniCRAN repository path. */
-  private final Path repoPath = FileUtil.createTempDir("repo").toPath();
+  private final Path repoPath;
 
   /** Utility set to keep count of installed libraries. */
   private final Set<String> installedLibs = new HashSet<>();
@@ -68,6 +69,14 @@ public class LibRegistry {
     } else {
       type = "source";
     }
+
+    // Creates temporary folders
+    repoPath = Files.createTempDirectory(KNIMEConstants.getKNIMETempPath(), "repo");
+    installPath = Files.createTempDirectory(KNIMEConstants.getKNIMETempPath(), "install");
+
+    // Schedules temporary folders for deletion
+    installPath.toFile().deleteOnExit();
+    repoPath.toFile().deleteOnExit();
 
     rWrapper = new RWrapper();
     rWrapper.library("miniCRAN");
