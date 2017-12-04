@@ -2934,9 +2934,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       super(new BorderLayout());
 
       final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-      commentTextArea.setBorder(
-          BorderFactory.createTitledBorder(bundle.getString("GM.ScopePanel.commentLabel")));
-      commentTextArea.setToolTipText(bundle.getString("GM.ScopePanel.commentTooltip"));
+
+      JPanel commentPanel = UI.createTitledPanel(new JScrollPane(commentTextArea),
+          bundle.getString("GM.ScopePanel.commentLabel"));
+      commentPanel.setToolTipText(bundle.getString("GM.ScopePanel.commentTooltip"));
 
       // Build UI
       productButton.setToolTipText("Click me to add a product");
@@ -3002,7 +3003,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(commentTextArea));
+      northPanel.add(commentPanel);
       add(northPanel, BorderLayout.NORTH);
     }
 
