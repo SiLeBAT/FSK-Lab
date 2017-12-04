@@ -1748,7 +1748,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       advancedComponents = Arrays.asList(envDescriptionTextArea, productionMethodComboBox,
           packagingComboBox, productTreatmentComboBox, originCountryField, originAreaField,
-          fisheriesAreaField, productionDatePanel, expirationDatePanel);
+          fisheriesAreaField, productionDateChooser, expirationDateChooser);
 
       // If simple mode hides the advanced components
       if (!isAdvanced) {
