@@ -973,9 +973,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Wraps hazardDescriptionTextArea in a JScrollPane
       final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-      final JScrollPane hazardDescriptionPanel = new JScrollPane(hazardDescriptionTextArea);
-      hazardDescriptionPanel.setBorder(BorderFactory
-          .createTitledBorder(bundle.getString("GM.EditHazardPanel.hazardDescriptionLabel")));
+
+      JPanel hazardDescriptionPanel =
+          UI.createTitledPanel(new JScrollPane(hazardDescriptionTextArea),
+              bundle.getString("GM.EditHazardPanel.hazardDescriptionLabel"));
       hazardDescriptionPanel
           .setToolTipText(bundle.getString("GM.EditHazardPanel.hazardDescriptionTooltip"));
 
@@ -1001,16 +1002,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       add(northPanel, BorderLayout.NORTH);
 
-      advancedComponents = Arrays.asList(hazardDescriptionTextArea, adverseEffectTextField,
-          originTextField, bmdTextField, maxResidueLimitTextField, acceptableOperatorTextField,
-          noObservedAdverseTextField, acuteReferenceDoseTextField, acceptableDailyIntakeTextField,
-          indSumField, labNameTextField, labCountryField, detectionLimitTextField,
-          quantificationLimitTextField, leftCensoredDataTextField, contaminationRangeTextField);
+      advancedComponents = Arrays.asList(hazardDescriptionTextArea, hazardDescriptionPanel,
+          adverseEffectTextField, originTextField, bmdTextField, maxResidueLimitTextField,
+          acceptableOperatorTextField, noObservedAdverseTextField, acuteReferenceDoseTextField,
+          acceptableDailyIntakeTextField, indSumField, labNameTextField, labCountryField,
+          detectionLimitTextField, quantificationLimitTextField, leftCensoredDataTextField,
+          contaminationRangeTextField);
 
-      // If simple mode hide advanced components
-      if (!isAdvanced) {
-        getAdvancedComponents().forEach(it -> it.setEnabled(false));
-      }
+      // If advanced mode shows advanced components
+      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
@@ -1132,9 +1132,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       referencePanel = new ReferencePanel(isAdvanced);
 
       final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-      scriptTextArea.setBorder(BorderFactory
-          .createTitledBorder(bundle.getString("GM.EditModelEquationPanel.scriptLabel")));
-      scriptTextArea.setToolTipText(bundle.getString("GM.EditModelEquationPanel.scriptTooltip"));
+
+      // scriptTextArea.setBorder(BorderFactory
+      // .createTitledBorder(bundle.getString("GM.EditModelEquationPanel.scriptLabel")));
+      // scriptTextArea.setToolTipText(bundle.getString("GM.EditModelEquationPanel.scriptTooltip"));
+
+      JPanel scriptPanel = UI.createTitledPanel(new JScrollPane(scriptTextArea),
+          bundle.getString("GM.EditModelEquationPanel.scriptLabel"));
+      scriptPanel.setToolTipText(bundle.getString("GM.EditModelEquationPanel.scriptTooltip"));
 
       // formPanel
       final JPanel formPanel =
@@ -1146,15 +1151,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
       northPanel.add(referencePanel);
-      northPanel.add(new JScrollPane(scriptTextArea));
+      northPanel.add(scriptPanel);
       add(northPanel, BorderLayout.NORTH);
 
       advancedComponents = Arrays.asList(equationClassTextField, referencePanel);
 
-      // If simple mode hide advanced components
-      if (!isAdvanced) {
-        advancedComponents.forEach(it -> it.setEnabled(false));
-      }
+      // If advanced mode shows advanced components
+      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
