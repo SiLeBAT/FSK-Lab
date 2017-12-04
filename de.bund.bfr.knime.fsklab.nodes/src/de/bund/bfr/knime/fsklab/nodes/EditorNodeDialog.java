@@ -1133,10 +1133,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
-      // scriptTextArea.setBorder(BorderFactory
-      // .createTitledBorder(bundle.getString("GM.EditModelEquationPanel.scriptLabel")));
-      // scriptTextArea.setToolTipText(bundle.getString("GM.EditModelEquationPanel.scriptTooltip"));
-
       JPanel scriptPanel = UI.createTitledPanel(new JScrollPane(scriptTextArea),
           bundle.getString("GM.EditModelEquationPanel.scriptLabel"));
       scriptPanel.setToolTipText(bundle.getString("GM.EditModelEquationPanel.scriptTooltip"));
@@ -1228,8 +1224,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         GUIFactory.createAutoSuggestField(vocabs.get("Parameter distribution"));
     private final StringTextField valueTextField = new StringTextField(false, 30);
     private final StringTextField referenceTextField = new StringTextField(false, 30);
-    private final StringTextArea variabilitySubjectTextArea = new StringTextArea(false, 5, 30);
-    private final StringTextArea applicabilityTextArea = new StringTextArea(false, 5, 30);
+    private final StringTextArea variabilitySubjectTextArea = new StringTextArea(true, 5, 30);
+    private final StringTextArea applicabilityTextArea = new StringTextArea(true, 5, 30);
     private SpinnerNumberModel errorSpinnerModel = GUIFactory.createSpinnerDoubleModel();
 
     private final List<JComponent> advancedComponents;
@@ -1272,19 +1268,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
-      descriptionTextArea.setBorder(BorderFactory
-          .createTitledBorder(bundle.getString("GM.EditParameterPanel.descriptionLabel")));
-      descriptionTextArea
-          .setToolTipText(bundle.getString("GM.EditParameterPanel.descriptionTooltip"));
+      JPanel descriptionPanel = UI.createTitledPanel(new JScrollPane(descriptionTextArea),
+          bundle.getString("GM.EditParameterPanel.descriptionLabel"));
+      descriptionPanel.setToolTipText(bundle.getString("GM.EditParameterPanel.descriptionTooltip"));
 
-      variabilitySubjectTextArea.setBorder(BorderFactory
-          .createTitledBorder(bundle.getString("GM.EditParameterPanel.variabilitySubjectLabel")));
-      variabilitySubjectTextArea
+      JPanel variabilitySubjectPanel =
+          UI.createTitledPanel(new JScrollPane(variabilitySubjectTextArea),
+              bundle.getString("GM.EditParameterPanel.variabilitySubjectLabel"));
+      variabilitySubjectPanel
           .setToolTipText(bundle.getString("GM.EditParameterPanel.variabilitySubjectTooltip"));
 
-      applicabilityTextArea.setBorder(BorderFactory
-          .createTitledBorder(bundle.getString("GM.EditParameterPanel.applicabilityLabel")));
-      applicabilityTextArea
+      JPanel applicabilityPanel = UI.createTitledPanel(new JScrollPane(applicabilityTextArea),
+          bundle.getString("GM.EditParameterPanel.applicabilityLabel"));
+      applicabilityPanel
           .setToolTipText(bundle.getString("GM.EditParameterPanel.applicabilityTooltip"));
 
       // formPanel
@@ -1300,19 +1296,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(descriptionTextArea));
-      northPanel.add(new JScrollPane(variabilitySubjectTextArea));
-      northPanel.add(new JScrollPane(applicabilityTextArea));
+      northPanel.add(descriptionPanel);
+      northPanel.add(variabilitySubjectPanel);
+      northPanel.add(applicabilityPanel);
       add(northPanel, BorderLayout.NORTH);
 
-      advancedComponents = Arrays.asList(descriptionTextArea, typeField, sourceField, subjectField,
-          distributionField, valueTextField, referenceTextField, variabilitySubjectTextArea,
-          applicabilityTextArea, errorSpinner);
+      advancedComponents =
+          Arrays.asList(descriptionTextArea, descriptionPanel, typeField, sourceField, subjectField,
+              distributionField, valueTextField, referenceTextField, variabilitySubjectTextArea,
+              variabilitySubjectPanel, applicabilityTextArea, applicabilityPanel, errorSpinner);
 
-      // If simple mode hide advanced components
-      if (!isAdvanced) {
-        advancedComponents.forEach(it -> it.setEnabled(false));
-      }
+      // If advanced mode shows advanced components
+      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
