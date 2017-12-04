@@ -2456,20 +2456,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
-      objectiveTextArea.setBorder(BorderFactory
-          .createTitledBorder(bundle.getString("GM.GeneralInformationPanel.objectiveLabel")));
-      objectiveTextArea
+      JPanel objectivePanel = UI.createTitledPanel(new JScrollPane(objectiveTextArea),
+          bundle.getString("GM.GeneralInformationPanel.objectiveLabel"));
+      objectivePanel
           .setToolTipText(bundle.getString("GM.GeneralInformationPanel.objectiveTooltip"));
 
-      descriptionTextArea.setBorder(BorderFactory
-          .createTitledBorder(bundle.getString("GM.GeneralInformationPanel.descriptionLabel")));
-      descriptionTextArea
+      JPanel descriptionPanel = UI.createTitledPanel(new JScrollPane(descriptionTextArea),
+          bundle.getString("GM.GeneralInformationPanel.descriptionLabel"));
+      descriptionPanel
           .setToolTipText(bundle.getString("GM.GeneralInformationPanel.descriptionTooltip"));
 
       // Hide initially advanced components
-      final List<JComponent> advancedComponents =
-          Arrays.asList(sourceTextField, formatField, languageField, softwareField,
-              languageWrittenInField, statusField, objectiveTextArea, descriptionTextArea);
+      final List<JComponent> advancedComponents = Arrays.asList(sourceTextField, formatField,
+          languageField, softwareField, languageWrittenInField, statusField, objectiveTextArea,
+          objectivePanel, descriptionTextArea, descriptionPanel);
       advancedComponents.forEach(it -> it.setEnabled(false));
 
       // formPanel
@@ -2493,8 +2493,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(objectiveTextArea));
-      northPanel.add(new JScrollPane(descriptionTextArea));
+      northPanel.add(objectivePanel);
+      northPanel.add(descriptionPanel);
       northPanel.add(creatorPanel);
       northPanel.add(referencePanel);
       add(northPanel, BorderLayout.NORTH);
