@@ -583,28 +583,27 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel nameLabel = GUIFactory.createLabel("GM.EditAssayPanel.nameLabel",
           "GM.EditAssayPanel.nameTooltip", true);
 
-      // Wrap text area in JScrollPane
-      final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-      descriptionTextArea.setBorder(
-          BorderFactory.createTitledBorder(bundle.getString("GM.EditAssayPanel.descriptionLabel")));
-      descriptionTextArea.setToolTipText(bundle.getString("GM.EditAssayPanel.descriptionTooltip"));
-
+      // Name
       final JPanel formPanel =
           UI.createOptionsPanel(Arrays.asList(nameLabel), Arrays.asList(nameTextField));
+
+      // Description
+      final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
+      JPanel descriptionPanel = UI.createTitledPanel(new JScrollPane(descriptionTextArea),
+          bundle.getString("GM.EditAssayPanel.descriptionLabel"));
+      descriptionPanel.setToolTipText(bundle.getString("GM.EditAssayPanel.descriptionTooltip"));
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(descriptionTextArea));
+      northPanel.add(descriptionPanel);
       add(northPanel, BorderLayout.NORTH);
 
-      advancedComponents = Arrays.asList(descriptionTextArea);
+      advancedComponents = Arrays.asList(descriptionTextArea, descriptionPanel);
 
-      // If simple mode hide advanced components
-      if (!isAdvanced) {
-        advancedComponents.forEach(it -> it.setEnabled(false));
-      }
+      // If advanced mode shows advanced components
+      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
