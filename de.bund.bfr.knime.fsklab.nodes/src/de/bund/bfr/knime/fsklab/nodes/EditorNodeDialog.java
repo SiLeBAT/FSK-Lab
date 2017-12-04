@@ -1721,9 +1721,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Build UI
       final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-      envDescriptionTextArea.setBorder(BorderFactory
-          .createTitledBorder(bundle.getString("GM.EditProductPanel.envDescriptionLabel")));
-      envDescriptionTextArea
+
+      JPanel envDescriptionPanel = UI.createTitledPanel(new JScrollPane(envDescriptionTextArea),
+          bundle.getString("GM.EditProductPanel.envDescriptionLabel"));
+      envDescriptionPanel
           .setToolTipText(bundle.getString("GM.EditProductPanel.envDescriptionTooltip"));
 
       // formPanel
@@ -1741,17 +1742,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(envDescriptionTextArea));
+      northPanel.add(envDescriptionPanel);
       add(northPanel, BorderLayout.NORTH);
 
-      advancedComponents = Arrays.asList(envDescriptionTextArea, productionMethodComboBox,
-          packagingComboBox, productTreatmentComboBox, originCountryField, originAreaField,
-          fisheriesAreaField, productionDateChooser, expirationDateChooser);
+      advancedComponents = Arrays.asList(envDescriptionTextArea, envDescriptionPanel,
+          productionMethodComboBox, packagingComboBox, productTreatmentComboBox, originCountryField,
+          originAreaField, fisheriesAreaField, productionDateChooser, expirationDateChooser);
 
-      // If simple mode hides the advanced components
-      if (!isAdvanced) {
-        advancedComponents.forEach(it -> it.setEnabled(false));
-      }
+      // If advanced mode shows advanced components
+      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
