@@ -1508,9 +1508,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           "GM.EditPopulationGroupPanel.seasonTooltip");
 
       final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-      populationDescriptionTextArea.setBorder(BorderFactory.createTitledBorder(
-          bundle.getString("GM.EditPopulationGroupPanel.populationDescriptionLabel")));
-      populationDescriptionTextArea.setToolTipText(
+
+      JPanel populationDescriptionPanel =
+          UI.createTitledPanel(new JScrollPane(populationDescriptionTextArea),
+              bundle.getString("GM.EditPopulationGroupPanel.populationDescriptionLabel"));
+      populationDescriptionPanel.setToolTipText(
           bundle.getString("GM.EditPopulationGroupPanel.populationDescriptionTooltip"));
 
       // formPanel
@@ -1527,18 +1529,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(populationDescriptionTextArea));
+      northPanel.add(populationDescriptionPanel);
       add(northPanel, BorderLayout.NORTH);
 
       advancedComponents = Arrays.asList(targetPopulationTextField, populationSpanTextField,
-          populationDescriptionTextArea, populationAgeTextField, populationGenderTextField,
-          bmiTextField, specialDietGroupTextField, patternConsumptionTextField, regionComboBox,
-          countryComboBox, riskTextField, seasonTextField);
+          populationDescriptionTextArea, populationDescriptionPanel, populationAgeTextField,
+          populationGenderTextField, bmiTextField, specialDietGroupTextField,
+          patternConsumptionTextField, regionComboBox, countryComboBox, riskTextField,
+          seasonTextField);
 
-      // If simple mode hide advanced components
-      if (!isAdvanced) {
-        advancedComponents.forEach(it -> it.setEnabled(false));
-      }
+      // If advanced mode shows advanced components
+      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
