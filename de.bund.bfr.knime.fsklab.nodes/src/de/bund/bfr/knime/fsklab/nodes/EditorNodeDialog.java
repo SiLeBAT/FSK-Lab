@@ -1729,13 +1729,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           .setToolTipText(bundle.getString("GM.EditProductPanel.envDescriptionTooltip"));
 
       // formPanel
+      JPanel productionDatePanel = UI.createWestPanel(productionDateChooser);
+      JPanel expirationDatePanel = UI.createWestPanel(expirationDateChooser);
       final JPanel formPanel = UI.createOptionsPanel(
           Arrays.asList(envNameLabel, envUnitLabel, productionMethodLabel, packagingLabel,
               productTreatmentLabel, originCountryLabel, originAreaLabel, fisheriesAreaLabel,
               productionDateLabel, expirationDateLabel),
           Arrays.asList(envNameField, envUnitField, productionMethodComboBox, packagingComboBox,
               productTreatmentComboBox, originCountryField, originAreaField, fisheriesAreaField,
-              productionDateChooser, expirationDateChooser));
+              productionDatePanel, expirationDatePanel));
 
       // northPanel
       final JPanel northPanel = new JPanel();
@@ -1746,7 +1748,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       advancedComponents = Arrays.asList(envDescriptionTextArea, productionMethodComboBox,
           packagingComboBox, productTreatmentComboBox, originCountryField, originAreaField,
-          fisheriesAreaField, productionDateChooser, expirationDateChooser);
+          fisheriesAreaField, productionDatePanel, expirationDatePanel);
 
       // If simple mode hides the advanced components
       if (!isAdvanced) {
@@ -2005,10 +2007,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       isReferenceDescriptionPanel.add(isReferenceDescriptionCheckBox, BorderLayout.WEST);
 
       // formPanel
+      JPanel datePanel = UI.createWestPanel(dateChooser);
       final JPanel formPanel = UI.createOptionsPanel(
           Arrays.asList(typeLabel, dateLabel, pmidLabel, doiLabel, authorListLabel, titleLabel,
               journalLabel, volumeLabel, issueLabel, pageLabel, statusLabel, websiteLabel),
-          Arrays.asList(typeComboBox, dateChooser, pmidTextField, doiTextField, authorListTextField,
+          Arrays.asList(typeComboBox, datePanel, pmidTextField, doiTextField, authorListTextField,
               titleTextField, journalTextField, volumeSpinner, issueSpinner, pageTextField,
               statusTextField, websiteTextField));
 
@@ -2471,11 +2474,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       advancedComponents.forEach(it -> it.setEnabled(false));
 
       // formPanel
+      JPanel creationDatePanel = UI.createWestPanel(creationDateChooser);
       final JPanel formPanel = UI.createOptionsPanel(
           Arrays.asList(studyNameLabel, identifierLabel, creationDateLabel, rightsLabel,
               availabilityCheckBox, urlLabel, sourceLabel, formatLabel, languageLabel,
               softwareLabel, languageWrittenInLabel, statusLabel),
-          Arrays.asList(studyNameTextField, identifierTextField, creationDateChooser, rightsField,
+          Arrays.asList(studyNameTextField, identifierTextField, creationDatePanel, rightsField,
               new JLabel(), urlTextField, sourceTextField, formatField, languageField,
               softwareField, languageWrittenInField, statusField));
 
