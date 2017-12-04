@@ -2987,8 +2987,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JPanel formPanel = UI.createOptionsPanel(
           Arrays.asList(productLabel, hazardLabel, populationLabel, temporalInformationLabel,
               regionLabel, countryLabel),
-          Arrays.asList(productButton, hazardButton, populationButton, dateChooser, regionField,
-              countryField));
+          Arrays.asList(UI.createWestPanel(productButton), UI.createWestPanel(hazardButton),
+              UI.createWestPanel(populationButton), dateChooser, regionField, countryField));
 
       // Advanced checkbox
       final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
@@ -3134,8 +3134,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JPanel formPanel = UI.createOptionsPanel(
           Arrays.asList(studySampleLabel, dietaryAssessmentMethodLabel,
               laboratoryAccreditationLabel, assayLabel),
-          Arrays.asList(studySampleButton, dietaryAssessmentMethodButton,
-              laboratoryAccreditationField, assayButton));
+          Arrays.asList(UI.createWestPanel(studySampleButton),
+              UI.createWestPanel(dietaryAssessmentMethodButton), laboratoryAccreditationField,
+              UI.createWestPanel(assayButton)));
 
       // northPanel
       final JPanel northPanel = new JPanel();
