@@ -3240,9 +3240,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           .createLabel("GM.StudyPanel.componentsTypeLabel", "GM.StudyPanel.componentsTypeTooltip");
 
       final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-      studyDescriptionTextArea.setBorder(BorderFactory
-          .createTitledBorder(bundle.getString("GM.StudyPanel.studyDescriptionLabel")));
-      studyDescriptionTextArea
+
+      JPanel studyDescriptionPanel = UI.createTitledPanel(new JScrollPane(studyDescriptionTextArea),
+          bundle.getString("GM.StudyPanel.studyDescriptionLabel"));
+      studyDescriptionPanel
           .setToolTipText(bundle.getString("GM.StudyPanel.studyDescriptionTooltip"));
 
       // formPanel
@@ -3264,11 +3265,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(studyDescriptionTextArea));
+      northPanel.add(studyDescriptionPanel);
       add(northPanel, BorderLayout.NORTH);
 
-      advancedComponents = Arrays.asList(studyDescriptionTextArea, studyDesignTypeField,
-          studyAssayMeasurementsTypeField, studyAssayTechnologyTypeField,
+      advancedComponents = Arrays.asList(studyDescriptionTextArea, studyDescriptionPanel,
+          studyDesignTypeField, studyAssayMeasurementsTypeField, studyAssayTechnologyTypeField,
           studyAssayTechnologyPlatformTextField, accreditationProcedureField,
           studyProtocolNameTextField, studyProtocolTypeField, studyProtocolDescriptionTextField,
           studyProtocolURITextField, studyProtocolVersionTextField, studyProtocolParametersField,
