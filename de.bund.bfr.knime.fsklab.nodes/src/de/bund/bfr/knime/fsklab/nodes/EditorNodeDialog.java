@@ -1994,10 +1994,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JSpinner issueSpinner = GUIFactory.createSpinner(issueSpinnerModel);
 
       final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-      abstractTextArea.setBorder(BorderFactory
-          .createTitledBorder(bundle.getString("GM.EditReferencePanel.abstractLabel")));
-      commentTextArea.setBorder(
-          BorderFactory.createTitledBorder(bundle.getString("GM.EditReferencePanel.commentLabel")));
+
+      JPanel abstractPanel = UI.createTitledPanel(new JScrollPane(abstractTextArea),
+          bundle.getString("GM.EditReferencePanel.abstractLabel"));
+      JPanel commentPanel = UI.createTitledPanel(new JScrollPane(commentTextArea),
+          bundle.getString("GM.EditReferencePanel.commentLabel"));
 
       // isReferenceDescription panel
       final JPanel isReferenceDescriptionPanel = new JPanel(new BorderLayout());
@@ -2017,17 +2018,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(isReferenceDescriptionPanel);
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(abstractTextArea));
-      northPanel.add(new JScrollPane(commentTextArea));
+      northPanel.add(abstractPanel);
+      northPanel.add(commentPanel);
       add(northPanel, BorderLayout.NORTH);
 
       // If simple mode hide advanced components
-      advancedComponents = Arrays.asList(typeComboBox, dateChooser, pmidTextField,
-          authorListTextField, abstractTextArea, journalTextField, volumeSpinner, issueSpinner,
-          pageTextField, statusTextField, websiteTextField, commentTextArea);
-      if (!isAdvanced) {
-        getAdvancedComponents().forEach(it -> it.setEnabled(false));
-      }
+      advancedComponents =
+          Arrays.asList(typeComboBox, dateChooser, pmidTextField, authorListTextField,
+              abstractTextArea, abstractPanel, journalTextField, volumeSpinner, issueSpinner,
+              pageTextField, statusTextField, websiteTextField, commentTextArea, commentPanel);
+
+      // If advanced mode shows advanced components
+      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
