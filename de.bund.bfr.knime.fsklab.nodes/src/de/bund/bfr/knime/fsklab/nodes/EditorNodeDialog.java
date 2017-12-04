@@ -602,7 +602,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       advancedComponents = Arrays.asList(descriptionTextArea, descriptionPanel);
 
-      // If advanced mode shows advanced components
+      // If advanced mode, show advanced components
       advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
@@ -726,10 +726,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       advancedComponents = Arrays.asList(dietarySoftwareToolField, foodItemNumberField,
           recordTypeField, foodDescriptionField);
 
-      // If simple mode hides advanced components
-      if (!isAdvanced) {
-        advancedComponents.forEach(it -> it.setEnabled(false));
-      }
+      // If advanced mode, show advanced components
+      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
@@ -1009,7 +1007,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           detectionLimitTextField, quantificationLimitTextField, leftCensoredDataTextField,
           contaminationRangeTextField);
 
-      // If advanced mode shows advanced components
+      // If advanced mode, show advanced components
       advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
@@ -1152,7 +1150,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       advancedComponents = Arrays.asList(equationClassTextField, referencePanel);
 
-      // If advanced mode shows advanced components
+      // If advanced mode, show advanced components
       advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
@@ -1306,7 +1304,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
               distributionField, valueTextField, referenceTextField, variabilitySubjectTextArea,
               variabilitySubjectPanel, applicabilityTextArea, applicabilityPanel, errorSpinner);
 
-      // If advanced mode shows advanced components
+      // If advanced mode, show advanced components
       advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
@@ -1538,7 +1536,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           patternConsumptionTextField, regionComboBox, countryComboBox, riskTextField,
           seasonTextField);
 
-      // If advanced mode shows advanced components
+      // If advanced mode, show advanced components
       advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
@@ -1749,7 +1747,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           productionMethodComboBox, packagingComboBox, productTreatmentComboBox, originCountryField,
           originAreaField, fisheriesAreaField, productionDateChooser, expirationDateChooser);
 
-      // If advanced mode shows advanced components
+      // If advanced mode, show advanced components
       advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
@@ -2028,7 +2026,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
               abstractTextArea, abstractPanel, journalTextField, volumeSpinner, issueSpinner,
               pageTextField, statusTextField, websiteTextField, commentTextArea, commentPanel);
 
-      // If advanced mode shows advanced components
+      // If advanced mode, show advanced components
       advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
@@ -2281,13 +2279,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(formPanel);
       add(northPanel, BorderLayout.NORTH);
 
-      // If simple mode hide advanced components
+      // If advanced mode, show advanced components
       advancedComponents = Arrays.asList(moisturePercentageSpinner, fatPercentageSpinner,
           samplingStrategyField, samplingTypeField, samplingMethodField, samplingSizeTextField,
           lotSizeUnitField, samplingPointField);
-      if (!isAdvanced) {
-        getAdvancedComponents().forEach(it -> it.setEnabled(false));
-      }
+      getAdvancedComponents().forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
@@ -3653,22 +3649,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           UI.createOptionsPanel(Arrays.asList(algorithmLabel, modelLabel, scriptLabel),
               Arrays.asList(algorithmField, modelField, scriptField));
 
+      JPanel descriptionPanel = UI.createTitledPanel(new JScrollPane(descriptionField),
+          bundle.getString("Simulation.Description"));
+
       final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
       advancedCheckBox.addItemListener(event -> {
         final boolean isAdvanced = advancedCheckBox.isSelected();
         scriptField.setEnabled(isAdvanced);
         descriptionField.setEnabled(isAdvanced);
+        descriptionPanel.setEnabled(isAdvanced);
       });
 
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
       northPanel.add(formPanel);
-
-      // descriptionField
-      descriptionField
-          .setBorder(BorderFactory.createTitledBorder(bundle.getString("Simulation.Description")));
-      northPanel.add(new JScrollPane(descriptionField));
+      northPanel.add(descriptionPanel);
 
       add(northPanel, BorderLayout.NORTH);
 
@@ -3676,6 +3672,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // disabled
       scriptField.setEnabled(false);
       descriptionField.setEnabled(false);
+      descriptionPanel.setEnabled(false);
     }
 
     @Override
