@@ -52,14 +52,20 @@ public class ReaderNodeFactory extends NodeFactory<ReaderNodeModel> {
   @Override
   public NodeDialogPane createNodeDialogPane() {
 
+    // File dialog chooser
+    final String fileHistoryId = "filename-history";
+    final int dlgType = JFileChooser.OPEN_DIALOG;
+    final boolean directoryOnly = false;
+    final String validExtensions = ".fskx|.FSKX";
+
     SettingsModelString filename = new SettingsModelString("filename", "");
-    DialogComponentFileChooser filechooser = new DialogComponentFileChooser(filename,
-        "filename-history", JFileChooser.OPEN_DIALOG, ".fskx");
+    DialogComponentFileChooser fileDlg = new DialogComponentFileChooser(filename, fileHistoryId,
+        dlgType, directoryOnly, validExtensions);
+    fileDlg.setBorderTitle("Input file");
 
     // Add widget
     DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
-    pane.createNewGroup("Data source");
-    pane.addDialogComponent(filechooser);
+    pane.addDialogComponent(fileDlg);
 
     return pane;
   }
