@@ -21,9 +21,16 @@ package de.bund.bfr.knime.fsklab.nodes.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -32,9 +39,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableModel;
+import org.knime.core.util.FileUtil;
 import org.knime.core.util.SimpleFileFilter;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.swing.UI;
 
 public class UIUtils {
@@ -153,5 +164,112 @@ public class UIUtils {
     northPanel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
 
     return northPanel;
+  }
+
+  // BfR main colours
+  public static Color WHITE = Color.WHITE;
+  public static Color BLUE = new Color(3, 78, 162);
+  public static Color LIGHT_GRAY = new Color(204, 204, 204);
+  public static Color BLACK = Color.BLACK;
+
+  // BfR secondary colours
+  public static Color LIGHT_BLUE = new Color(140, 190, 218);
+  public static Color LIGHT_CYAN = new Color(209, 237, 244);
+  public static Color OCHER = new Color(241, 199, 83);
+  public static Color OCHER_LIGHT = new Color(246, 231, 187);
+  public static Color MINT_GREEN = new Color(52, 172, 159);
+  public static Color DARK_GRAY = new Color(102, 102, 102);
+
+  public static Font FONT = new Font(Font.DIALOG, Font.PLAIN, 12);
+  public static Font BOLD_FONT = new Font(Font.DIALOG, Font.BOLD, 12);
+
+  public static JButton createBrowseButton(String text, JTextField field, int dialogType,
+      FileFilter fileFilter) {
+
+    FBrowseButton button = new FBrowseButton(text);
+
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        JFileChooser fileChooser;
+        try {
+          File file = FileUtil.getFileFromURL(FileUtil.toURL(field.getText()));
+          fileChooser = new JFileChooser(file);
+        } catch (Exception ex) {
+          fileChooser = new JFileChooser();
+        }
+
+        fileChooser.setFileFilter(fileFilter);
+        fileChooser.setAcceptAllFileFilterUsed(false); // disable the All file filter
+        fileChooser.setDialogType(dialogType);
+
+        int response;
+        if (dialogType == JFileChooser.OPEN_DIALOG) {
+          response = fileChooser.showOpenDialog(button);
+        } else {
+          response = fileChooser.showSaveDialog(button);
+        }
+
+        if (response == JFileChooser.APPROVE_OPTION) {
+          field.setText(fileChooser.getSelectedFile().getAbsolutePath());
+        }
+      }
+    });
+
+    return button;
+  }
+
+  /**
+   * Create form panel for labels, fields and buttons.
+   * <p>
+   * Layout: | Label | Field | Button |
+   */
+  public static FPanel createFormPanel(List<FLabel> labels, List<JTextField> fields,
+      List<JButton> buttons) {
+    int n = labels.size();
+
+    FPanel leftPanel = new FPanel();
+    leftPanel.setLayout(new GridLayout(n, 1, 5, 5));
+    labels.forEach(leftPanel::add);
+
+    FPanel centerPanel = new FPanel();
+    centerPanel.setLayout(new GridLayout(n, 1, 5, 5));
+    fields.forEach(centerPanel::add);
+
+    FPanel rightPanel = new FPanel();
+    rightPanel.setLayout(new GridLayout(n, 1, 5, 5));
+    buttons.forEach(rightPanel::add);
+
+    FPanel formPanel = new FPanel();
+    formPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    formPanel.setLayout(new BorderLayout(5, 5));
+
+    formPanel.add(leftPanel, BorderLayout.WEST);
+    formPanel.add(centerPanel, BorderLayout.CENTER);
+    formPanel.add(rightPanel, BorderLayout.EAST);
+
+    return formPanel;
+  }
+
+  /**
+   * Return unicode string from property file.
+   * <p>
+   * If error return ISO-8559-1 string.
+   */
+  public static String getUnicodeString(String key) {
+
+    /*
+     * Resourcebundle is reading strings from property files with ISO-8559-1 encoding even though
+     * the files are saved with UTF-8. They need to be converted.
+     */
+    String latinString = FskPlugin.getDefault().MESSAGES_BUNDLE.getString(key);
+    try {
+      String unicodeString = new String(latinString.getBytes("ISO-8859-1"), "UTF-8");
+      return unicodeString;
+    } catch (UnsupportedEncodingException exception) {
+      exception.printStackTrace(System.err);
+      return latinString;
+    }
+
   }
 }

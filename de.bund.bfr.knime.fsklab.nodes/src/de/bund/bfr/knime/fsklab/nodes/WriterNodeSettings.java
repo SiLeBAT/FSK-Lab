@@ -18,35 +18,21 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeView;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
 
-public class WriterNodeFactory extends NodeFactory<WriterNodeModel> {
+class WriterNodeSettings {
 
-  @Override
-  public WriterNodeModel createNodeModel() {
-    return new WriterNodeModel();
+  private static final String CFG_FILE = "file";
+
+  String filePath = "";
+
+  void load(final NodeSettingsRO settings) throws InvalidSettingsException {
+    filePath = settings.getString(CFG_FILE);
   }
 
-  @Override
-  public int getNrNodeViews() {
-    return 0;
-  }
-
-  @Override
-  public NodeView<WriterNodeModel> createNodeView(final int viewIndex,
-      final WriterNodeModel nodeModel) {
-    return null;
-  }
-
-  @Override
-  public boolean hasDialog() {
-    return true;
-  }
-
-  @Override
-  public NodeDialogPane createNodeDialogPane() {
-    return new WriterNodeDialog();
+  void save(final NodeSettingsWO settings) {
+    settings.addString(CFG_FILE, filePath);
   }
 }

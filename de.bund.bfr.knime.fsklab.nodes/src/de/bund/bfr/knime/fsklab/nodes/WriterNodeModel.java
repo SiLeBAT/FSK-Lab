@@ -34,7 +34,6 @@ import org.knime.core.node.NoInternalsModel;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -49,14 +48,14 @@ import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 
-public class WriterNodeModel extends NoInternalsModel {
+class WriterNodeModel extends NoInternalsModel {
 
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {};
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Writer node");
 
-  private final SettingsModelString filename = new SettingsModelString("file", "");
+  private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
 
   public WriterNodeModel() {
     super(IN_TYPES, OUT_TYPES);
@@ -64,18 +63,18 @@ public class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    filename.saveSettingsTo(settings);
+    nodeSettings.save(settings);
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    filename.loadSettingsFrom(settings);
+    nodeSettings.load(settings);
   }
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    filename.validateSettings(settings);
+    // does nothing
   }
 
   @Override
@@ -91,7 +90,7 @@ public class WriterNodeModel extends NoInternalsModel {
 
     final FskPortObject fskObj = (FskPortObject) inObjects[0];
 
-    final File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(filename.getStringValue()));
+    final File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.filePath));
     archiveFile.delete();
 
     try (final CombineArchive archive = new CombineArchive(archiveFile)) {

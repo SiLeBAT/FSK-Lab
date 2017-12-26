@@ -18,13 +18,9 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import javax.swing.JFileChooser;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 public class ReaderNodeFactory extends NodeFactory<ReaderNodeModel> {
 
@@ -51,22 +47,6 @@ public class ReaderNodeFactory extends NodeFactory<ReaderNodeModel> {
 
   @Override
   public NodeDialogPane createNodeDialogPane() {
-
-    // File dialog chooser
-    final String fileHistoryId = "filename-history";
-    final int dlgType = JFileChooser.OPEN_DIALOG;
-    final boolean directoryOnly = false;
-    final String validExtensions = ".fskx|.FSKX";
-
-    SettingsModelString filename = new SettingsModelString("filename", "");
-    DialogComponentFileChooser fileDlg = new DialogComponentFileChooser(filename, fileHistoryId,
-        dlgType, directoryOnly, validExtensions);
-    fileDlg.setBorderTitle("Input file");
-
-    // Add widget
-    DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
-    pane.addDialogComponent(fileDlg);
-
-    return pane;
+    return new ReaderNodeDialog();
   }
 }

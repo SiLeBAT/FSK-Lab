@@ -18,26 +18,34 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.awt.GridLayout;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
-import de.bund.bfr.swing.FilePanel;
 import de.bund.bfr.swing.UI;
 
 public class CreatorNodeDialog extends NodeDialogPane {
 
-  private final FilePanel modelScriptChooser;
-  private final FilePanel paramScriptChooser;
-  private final FilePanel vizScriptChooser;
-  private final FilePanel metaDataChooser;
+  private final JTextField modelScriptField;
+  private final JTextField parametersScriptField;
+  private final JTextField visualizationScriptField;
+  private final JTextField spreadsheetField;
 
   private final DefaultListModel<Path> listModel = new DefaultListModel<>();
 
@@ -45,34 +53,60 @@ public class CreatorNodeDialog extends NodeDialogPane {
 
   public CreatorNodeDialog() {
 
-    modelScriptChooser = new FilePanel("Model script", FilePanel.OPEN_DIALOG, 50);
-    modelScriptChooser.setToolTipText("Script that calculates the values of the model (Mandatory)");
-    modelScriptChooser.setAcceptAllFiles(false);
-    modelScriptChooser.addFileFilter(".r", "R file (*.r)");
+    modelScriptField = new FTextField();
+    parametersScriptField = new FTextField();
+    visualizationScriptField = new FTextField();
+    spreadsheetField = new FTextField();
 
-    paramScriptChooser = new FilePanel("Parameters script", FilePanel.OPEN_DIALOG, 50);
-    paramScriptChooser.setToolTipText("Script with the parameter values of the model (Optional).");
-    paramScriptChooser.setAcceptAllFiles(false);
-    paramScriptChooser.addFileFilter(".r", "R file (*.r)");
+    FileFilter rFilter = new FileNameExtensionFilter("R script", "r");
+    FileFilter spreadsheetFilter = new FileNameExtensionFilter("Excel spreadsheet", "xlsx");
 
-    vizScriptChooser = new FilePanel("Visualization script", FilePanel.OPEN_DIALOG, 50);
-    vizScriptChooser.setToolTipText("Script with a number of commands to create plots or charts "
-        + "using the simulation results (Optional).");
-    vizScriptChooser.setAcceptAllFiles(false);
-    vizScriptChooser.addFileFilter(".r", "R file (*.r)");
+    // buttons
+    String buttonText = UIUtils.getUnicodeString("creator_browse_button");
 
-    metaDataChooser = new FilePanel("XLSX spreadsheet", FilePanel.OPEN_DIALOG, 50);
-    metaDataChooser.setToolTipText("XLSX file with model metadata");
-    metaDataChooser.setAcceptAllFiles(false);
-    metaDataChooser.addFileFilter(".xlsx", "XSLX spreadsheet (*.xslx)");
+    String modelScriptToolTip = UIUtils.getUnicodeString("creator_modelscript_tooltip");
+    String parameterScriptToolTip = UIUtils.getUnicodeString("creator_parameterscript_tooltip");
+    String visualizationScriptToolTip =
+        UIUtils.getUnicodeString("creator_visualizationscript_tooltip");
+    String spreadsheetScriptToolTip = UIUtils.getUnicodeString("creator_spreadsheet_tooltip");
 
-    JPanel gridPanel = new JPanel(new GridLayout(4, 1, 5, 5));
-    gridPanel.add(modelScriptChooser);
-    gridPanel.add(paramScriptChooser);
-    gridPanel.add(vizScriptChooser);
-    gridPanel.add(metaDataChooser);
+    JButton modelScriptButton =
+        UIUtils.createBrowseButton(buttonText, modelScriptField, JFileChooser.OPEN_DIALOG, rFilter);
+    JButton parametersScriptButton = UIUtils.createBrowseButton(buttonText, parametersScriptField,
+        JFileChooser.OPEN_DIALOG, rFilter);
+    JButton visualizationScriptButton = UIUtils.createBrowseButton(buttonText,
+        visualizationScriptField, JFileChooser.OPEN_DIALOG, rFilter);
+    JButton spreadsheetButton = UIUtils.createBrowseButton(buttonText, spreadsheetField,
+        JFileChooser.OPEN_DIALOG, spreadsheetFilter);
 
-    JPanel northPanel = UI.createNorthPanel(gridPanel);
+    modelScriptButton.setToolTipText(modelScriptToolTip);
+    parametersScriptButton.setToolTipText(parameterScriptToolTip);
+    visualizationScriptButton.setToolTipText(visualizationScriptToolTip);
+    spreadsheetButton.setToolTipText(spreadsheetScriptToolTip);
+
+    // labels
+    String modelScriptLabelText = UIUtils.getUnicodeString("creator_modelscript_label");
+    String paramScriptLabelText = UIUtils.getUnicodeString("creator_parameterscript_label");
+    String visualizationScriptLabelText =
+        UIUtils.getUnicodeString("creator_visualizationscript_label");
+    String spreadsheetLabelText = UIUtils.getUnicodeString("creator_spreadsheet_label");
+
+    FLabel modelScriptLabel = new FLabel(modelScriptLabelText);
+    FLabel parametersScriptLabel = new FLabel(paramScriptLabelText);
+    FLabel visualizationScriptLabel = new FLabel(visualizationScriptLabelText);
+    FLabel spreadsheetLabel = new FLabel(spreadsheetLabelText);
+
+    // formPanel
+    List<FLabel> labels = Arrays.asList(modelScriptLabel, parametersScriptLabel,
+        visualizationScriptLabel, spreadsheetLabel);
+    List<JTextField> fields = Arrays.asList(modelScriptField, parametersScriptField,
+        visualizationScriptField, spreadsheetField);
+    List<JButton> buttons = Arrays.asList(modelScriptButton, parametersScriptButton,
+        visualizationScriptButton, spreadsheetButton);
+
+    FPanel formPanel = UIUtils.createFormPanel(labels, fields, buttons);
+    JPanel northPanel = UI.createNorthPanel(formPanel);
+    northPanel.setBackground(UIUtils.WHITE);
 
     addTab("Options", northPanel);
     addTab("Files", UIUtils.createResourcesPanel(getPanel(), listModel));
@@ -84,10 +118,10 @@ public class CreatorNodeDialog extends NodeDialogPane {
     try {
       this.settings.load(settings);
 
-      modelScriptChooser.setFileName(this.settings.modelScript);
-      paramScriptChooser.setFileName(this.settings.parameterScript);
-      vizScriptChooser.setFileName(this.settings.visualizationScript);
-      metaDataChooser.setFileName(this.settings.spreadsheet);
+      modelScriptField.setText(this.settings.modelScript);
+      parametersScriptField.setText(this.settings.parameterScript);
+      visualizationScriptField.setText(this.settings.visualizationScript);
+      spreadsheetField.setText(this.settings.spreadsheet);
 
       // load resources
       listModel.clear();
@@ -101,10 +135,10 @@ public class CreatorNodeDialog extends NodeDialogPane {
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
 
-    this.settings.modelScript = modelScriptChooser.getFileName();
-    this.settings.parameterScript = paramScriptChooser.getFileName();
-    this.settings.visualizationScript = vizScriptChooser.getFileName();
-    this.settings.spreadsheet = metaDataChooser.getFileName();
+    this.settings.modelScript = modelScriptField.getText();
+    this.settings.parameterScript = parametersScriptField.getText();
+    this.settings.visualizationScript = visualizationScriptField.getText();
+    this.settings.spreadsheet = spreadsheetField.getText();
 
     // save resources
     this.settings.resources.clear();
