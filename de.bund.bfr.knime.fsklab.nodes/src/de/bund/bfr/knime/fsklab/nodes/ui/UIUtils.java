@@ -34,6 +34,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -249,6 +250,41 @@ public class UIUtils {
     formPanel.add(rightPanel, BorderLayout.EAST);
 
     return formPanel;
+  }
+
+  /**
+   * Create form panel for labels and fields.
+   * <p>
+   * Layout: | Label | Field |
+   */
+  public static FPanel createFormPanel(List<FLabel> labels, List<JComponent> components) {
+
+    int n = labels.size();
+
+    FPanel leftPanel = new FPanel();
+    leftPanel.setLayout(new GridLayout(n, 1, 5, 5));
+    labels.forEach(leftPanel::add);
+
+    FPanel rightPanel = new FPanel();
+    rightPanel.setLayout(new GridLayout(n, 1, 5, 5));
+    components.forEach(rightPanel::add);
+
+    FPanel formPanel = new FPanel();
+    formPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    formPanel.setLayout(new BorderLayout(5, 5));
+    formPanel.add(leftPanel, BorderLayout.WEST);
+    formPanel.add(rightPanel, BorderLayout.CENTER);
+
+    return formPanel;
+  }
+
+  public static FPanel createWestPanel(Component component) {
+    FPanel northPanel = new FPanel();
+
+    northPanel.setLayout(new BorderLayout());
+    northPanel.add(component, BorderLayout.WEST);
+
+    return northPanel;
   }
 
   /**

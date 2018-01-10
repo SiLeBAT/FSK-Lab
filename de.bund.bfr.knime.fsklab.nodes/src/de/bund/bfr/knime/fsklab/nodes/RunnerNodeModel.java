@@ -98,18 +98,18 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    nodeSettings.saveSettingsTo(settings);
+    nodeSettings.save(settings);
   }
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    nodeSettings.validateSettings(settings);
+    // does not validate anything
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    nodeSettings.loadValidatedSettingsFrom(settings);
+    nodeSettings.load(settings);
   }
 
   @Override

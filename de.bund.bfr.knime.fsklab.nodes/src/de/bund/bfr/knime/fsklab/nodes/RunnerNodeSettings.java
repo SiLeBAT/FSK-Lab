@@ -18,44 +18,43 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.awt.Color;
-import java.util.Arrays;
-import java.util.List;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModel;
-import org.knime.core.node.defaultnodesettings.SettingsModelColor;
-import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 public class RunnerNodeSettings {
 
-  // Setting models
-  public final SettingsModelInteger widthModel = new SettingsModelInteger("width", 640);
-  public final SettingsModelInteger heightModel = new SettingsModelInteger("height", 640);
-  public final SettingsModelString resolutionModel = new SettingsModelString("resolution", "NA");
-  public final SettingsModelColor colourModel = new SettingsModelColor("colour", Color.white);
-  public final SettingsModelInteger textPointSizeModel =
-      new SettingsModelInteger("textPointSize", 12);
+  private static final String CFG_WIDTH = "width";
+  private static final String CFG_HEIGHT = "height";
+  private static final String CFG_RESOLUTION = "resolution";
+  private static final String CFG_POINT_SIZE = "textPointSize";
 
-  private final List<SettingsModel> settingsModels =
-      Arrays.asList(widthModel, heightModel, resolutionModel, colourModel, textPointSizeModel);
+  /** Width of the plot. */
+  public int width = 640;
 
-  public void saveSettingsTo(final NodeSettingsWO settings) {
-    settingsModels.forEach(it -> it.saveSettingsTo(settings));
+  /** Height of the plot. */
+  public int height = 640;
+
+  /** Nominal resolution in ppi. */
+  public String res = "NA";
+
+  /**
+   * The default pointsize of plotted text, interpreted as big points (1/72 inch) at {@link res}
+   * ppi.
+   */
+  public int pointSize = 12;
+
+  public void load(final NodeSettingsRO settings) throws InvalidSettingsException {
+    width = settings.getInt(CFG_WIDTH);
+    height = settings.getInt(CFG_HEIGHT);
+    res = settings.getString(CFG_RESOLUTION);
+    pointSize = settings.getInt(CFG_POINT_SIZE);
   }
 
-  public void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-    for (SettingsModel settingsModel : settingsModels) {
-      settingsModel.validateSettings(settings);
-    }
-  }
-
-  public void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-      throws InvalidSettingsException {
-    for (SettingsModel settingsModel : settingsModels) {
-      settingsModel.loadSettingsFrom(settings);
-    }
+  public void save(final NodeSettingsWO settings) {
+    settings.addInt(CFG_WIDTH, width);
+    settings.addInt(CFG_HEIGHT, height);
+    settings.addString(CFG_RESOLUTION, res);
+    settings.addInt(CFG_POINT_SIZE, pointSize);
   }
 }

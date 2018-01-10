@@ -21,10 +21,6 @@ package de.bund.bfr.knime.fsklab.nodes;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import org.knime.core.node.defaultnodesettings.DialogComponentColorChooser;
-import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
-import org.knime.core.node.defaultnodesettings.DialogComponentString;
 
 public class RunnerNodeFactory extends NodeFactory<RunnerNodeModel> {
 
@@ -50,43 +46,6 @@ public class RunnerNodeFactory extends NodeFactory<RunnerNodeModel> {
 
   @Override
   protected NodeDialogPane createNodeDialogPane() {
-
-    RunnerNodeSettings settings = new RunnerNodeSettings();
-
-    // Width component
-    DialogComponentNumberEdit widthComp =
-        new DialogComponentNumberEdit(settings.widthModel, "Width");
-    widthComp.setToolTipText("Width of the plot");
-
-    // Height component
-    DialogComponentNumberEdit heightComp =
-        new DialogComponentNumberEdit(settings.heightModel, "Height");
-    heightComp.setToolTipText("Height of the plot");
-
-    // Resolution component
-    DialogComponentString resolutionComp =
-        new DialogComponentString(settings.resolutionModel, "Resolution");
-    resolutionComp.setToolTipText(
-        "Nominal resolution in ppi which will be recorded in the bitmap file, if a positive integer.");
-
-    // Background colour component
-    DialogComponentColorChooser colorComp =
-        new DialogComponentColorChooser(settings.colourModel, "Background colour", true);
-    colorComp.setToolTipText("Background colour");
-
-    // Text point size component
-    DialogComponentNumberEdit textPointSizeComp =
-        new DialogComponentNumberEdit(settings.textPointSizeModel, "Text point size");
-    textPointSizeComp.setToolTipText(
-        "Point size of plotted text, interpreted as big points (1/72 inch) at res ppi.");
-
-    // Create pane and add components
-    DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
-    pane.addDialogComponent(widthComp);
-    pane.addDialogComponent(heightComp);
-    pane.addDialogComponent(resolutionComp);
-    pane.addDialogComponent(colorComp);
-    pane.addDialogComponent(textPointSizeComp);
-    return pane;
+    return new RunnerNodeDialog();
   }
 }

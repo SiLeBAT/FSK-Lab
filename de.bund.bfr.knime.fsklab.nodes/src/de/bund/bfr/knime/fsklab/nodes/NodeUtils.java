@@ -1,6 +1,5 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -64,16 +63,8 @@ public class NodeUtils {
     final String path = FilenameUtils.separatorsToUnix(imageFile.getAbsolutePath());
 
     // Gets values
-    int width = settings.widthModel.getIntValue();
-    int height = settings.heightModel.getIntValue();
-    String res = settings.resolutionModel.getStringValue();
-    int textPointSize = settings.textPointSizeModel.getIntValue();
-    Color colour = settings.colourModel.getColorValue();
-    String hexColour =
-        String.format("#%02x%02x%02x", colour.getRed(), colour.getGreen(), colour.getBlue());
-
-    String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize="
-        + textPointSize + ", bg='" + hexColour + "', res='" + res + "')";
+    String pngCommand = "png('" + path + "', width=" + settings.width + ", height="
+        + settings.height + ", pointsize=" + settings.pointSize + ", res='" + settings.res + "')";
 
     executor.executeIgnoreResult(pngCommand, monitor);
     executor.executeIgnoreResult(vizScript, monitor);

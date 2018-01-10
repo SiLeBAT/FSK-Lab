@@ -56,7 +56,6 @@ import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 
-@Deprecated
 class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx Runner Node Model");
@@ -102,18 +101,18 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    this.settings.saveSettingsTo(settings);
+    this.settings.save(settings);
   }
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    this.settings.validateSettings(settings);
+    // does not validate anything
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    this.settings.loadValidatedSettingsFrom(settings);
+    this.settings.load(settings);
   }
 
   @Override
