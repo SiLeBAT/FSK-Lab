@@ -96,7 +96,7 @@ public class FskPortObject implements PortObject {
   public static final PortType TYPE_OPTIONAL =
       PortTypeRegistry.getInstance().getPortType(FskPortObject.class, true);
 
-  public static final String[] RESOURCE_EXTENSIONS = new String[] {"txt", "RData"};
+  public static final String[] RESOURCE_EXTENSIONS = new String[] {"txt", "RData", "csv"};
 
   /** Model script. */
   public String model;

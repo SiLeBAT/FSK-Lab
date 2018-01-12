@@ -25,7 +25,6 @@ Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .,
  libs/CombineArchive-1.1.jar,
- libs/fskml-1.0.9.jar,
  libs/jdom-2.0.1.jar,
  libs/jcalendar-1.4.jar,
  libs/rengine-1.8.4.jar,
@@ -34,7 +33,8 @@ Bundle-ClassPath: .,
  libs/freemarker-2.3.23.jar,
  libs/vinnie-2.0.0.jar,
  libs/jris-1.0.0.jar,
- libs/bfr-swing-1.0-SNAPSHOT.jar
+ libs/bfr-swing-1.0-SNAPSHOT.jar,
+ libs/fskml-1.0.10.jar
 Export-Package: com.toedter.calendar,
  de.bund.bfr.knime.fsklab,
  de.bund.bfr.knime.fsklab.nodes,

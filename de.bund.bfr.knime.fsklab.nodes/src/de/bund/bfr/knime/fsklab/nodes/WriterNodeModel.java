@@ -130,14 +130,16 @@ class WriterNodeModel extends NoInternalsModel {
       // Adds resources
       final List<Path> resources = Files.list(fskObj.workingDirectory).collect(Collectors.toList());
       for (final Path resourcePath : resources) {
+
         final String filenameString = resourcePath.getFileName().toString();
+        final File resourceFile = resourcePath.toFile();
 
         if (FilenameUtils.isExtension(filenameString, "txt")) {
-          archive.addEntry(resourcePath.toFile(), resourcePath.getFileName().toString(),
-              URIS.plainText);
+          archive.addEntry(resourceFile, filenameString, URIS.plainText);
         } else if (FilenameUtils.isExtension(filenameString, "RData")) {
-          archive.addEntry(resourcePath.toFile(), resourcePath.getFileName().toString(),
-              URIS.rData);
+          archive.addEntry(resourceFile, filenameString, URIS.rData);
+        } else if (FilenameUtils.isExtension(filenameString, "csv")) {
+          archive.addEntry(resourceFile, filenameString, URIS.csv);
         }
       }
 

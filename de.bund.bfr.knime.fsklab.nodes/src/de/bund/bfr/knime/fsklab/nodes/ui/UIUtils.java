@@ -142,6 +142,7 @@ public class UIUtils {
     fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
     fc.addChoosableFileFilter(new SimpleFileFilter("txt", "Plain text file"));
     fc.addChoosableFileFilter(new SimpleFileFilter("rdata", "R workspace file"));
+    fc.addChoosableFileFilter(new SimpleFileFilter("csv", "Comma-separated values file"));
     fc.setAcceptAllFileFilterUsed(false); // do not use the AcceptAll FileFilter
 
     addButton.addActionListener(event -> {

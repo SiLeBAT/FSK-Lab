@@ -14,6 +14,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/CombineArchive-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jdom-2.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jcalendar-1.4.jar"/>
-	<classpathentry kind="lib" path="libs/fskml-1.0.9.jar" sourcepath="libs/fskml-1.0.9-sources.jar"/>
+	<classpathentry kind="lib" path="libs/fskml-1.0.10.jar" sourcepath="libs/fskml-1.0.10-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

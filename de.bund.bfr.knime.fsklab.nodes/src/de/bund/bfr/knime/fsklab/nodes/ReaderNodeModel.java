@@ -117,8 +117,10 @@ class ReaderNodeModel extends NoInternalsModel {
         }
       }
 
-      // Gets resources: plain text (.txt) and workspaces (.rdata)
-      List<ArchiveEntry> resourceEntries = archive.getEntriesWithFormat(URIS.plainText);
+      // Gets resources
+      List<ArchiveEntry> resourceEntries = new ArrayList<>();
+      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.plainText));
+      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.csv));
       resourceEntries.addAll(archive.getEntriesWithFormat(URIS.rData));
 
       for (final ArchiveEntry entry : resourceEntries) {
