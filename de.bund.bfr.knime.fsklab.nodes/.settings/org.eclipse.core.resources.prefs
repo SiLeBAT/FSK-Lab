@@ -1,4 +1,10 @@
 eclipse.preferences.version=1
+encoding//resources/CreatorNodeBundle.properties=UTF-8
+encoding//resources/CreatorNodeBundle_de_DE.properties=UTF-8
+encoding//resources/CreatorNodeBundle_es_ES.properties=UTF-8
 encoding//resources/MessagesBundle.properties=UTF-8
 encoding//resources/MessagesBundle_de_DE.properties=UTF-8
 encoding//resources/MessagesBundle_es_ES.properties=UTF-8
+encoding//resources/ReaderNodeBundle.properties=UTF-8
+encoding//resources/ReaderNodeBundle_de_DE.properties=UTF-8
+encoding//resources/ReaderNodeBunldle_es_ES.properties=UTF-8

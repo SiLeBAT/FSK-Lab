@@ -19,6 +19,7 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.util.Arrays;
+import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -68,9 +69,11 @@ class ReaderNodeDialog extends NodeDialogPane {
   }
 
   private void createUI() {
-    String buttonText = UIUtils.getUnicodeString("reader_button");
-    String labelText = UIUtils.getUnicodeString("reader_label");
-    String toolTipText = UIUtils.getUnicodeString("reader_tooltip");
+
+    ResourceBundle bundle = ResourceBundle.getBundle("ReaderNodeBundle");
+    String buttonText = UIUtils.getUnicodeString(bundle, "button");
+    String labelText = UIUtils.getUnicodeString(bundle, "label");
+    String toolTipText = UIUtils.getUnicodeString(bundle, "tooltip");
 
     FileFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
     FLabel label = new FLabel(labelText);
