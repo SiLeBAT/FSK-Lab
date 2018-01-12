@@ -47,22 +47,7 @@ class WriterNodeDialog extends NodeDialogPane {
     field = new FTextField();
     nodeSettings = new WriterNodeSettings();
 
-    String labelText = UIUtils.getUnicodeString("writer_label");
-    String toolTipText = UIUtils.getUnicodeString("writer_tooltip");
-    String buttonText = UIUtils.getUnicodeString("writer_button");
-
-    FileFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
-    FLabel label = new FLabel(labelText);
-    JButton button =
-        UIUtils.createBrowseButton(buttonText, field, JFileChooser.SAVE_DIALOG, filter);
-    button.setToolTipText(toolTipText);
-
-    FPanel formPanel =
-        UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(field), Arrays.asList(button));
-    JPanel northPanel = UI.createNorthPanel(formPanel);
-    northPanel.setBackground(UIUtils.WHITE);
-
-    addTab("Options", northPanel);
+    createUI();
   }
 
   @Override
@@ -80,5 +65,24 @@ class WriterNodeDialog extends NodeDialogPane {
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
     nodeSettings.filePath = field.getText();
     nodeSettings.save(settings);
+  }
+
+  private void createUI() {
+    String labelText = UIUtils.getUnicodeString("writer_label");
+    String toolTipText = UIUtils.getUnicodeString("writer_tooltip");
+    String buttonText = UIUtils.getUnicodeString("writer_button");
+
+    FileFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
+    FLabel label = new FLabel(labelText);
+    JButton button =
+        UIUtils.createBrowseButton(buttonText, field, JFileChooser.SAVE_DIALOG, filter);
+    button.setToolTipText(toolTipText);
+
+    FPanel formPanel =
+        UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(field), Arrays.asList(button));
+    JPanel northPanel = UI.createNorthPanel(formPanel);
+    northPanel.setBackground(UIUtils.WHITE);
+
+    addTab("Options", northPanel);
   }
 }

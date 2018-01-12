@@ -47,9 +47,9 @@ public class CreatorNodeDialog extends NodeDialogPane {
   private final JTextField visualizationScriptField;
   private final JTextField spreadsheetField;
 
-  private final DefaultListModel<Path> listModel = new DefaultListModel<>();
+  private final DefaultListModel<Path> listModel;
 
-  private final CreatorNodeSettings settings = new CreatorNodeSettings();
+  private final CreatorNodeSettings settings;
 
   public CreatorNodeDialog() {
 
@@ -58,6 +58,50 @@ public class CreatorNodeDialog extends NodeDialogPane {
     visualizationScriptField = new FTextField();
     spreadsheetField = new FTextField();
 
+    listModel = new DefaultListModel<>();
+    settings = new CreatorNodeSettings();
+
+    createUI();
+  }
+
+  @Override
+  protected void loadSettingsFrom(NodeSettingsRO settings, DataTableSpec[] specs)
+      throws NotConfigurableException {
+    try {
+      this.settings.load(settings);
+
+      modelScriptField.setText(this.settings.modelScript);
+      parametersScriptField.setText(this.settings.parameterScript);
+      visualizationScriptField.setText(this.settings.visualizationScript);
+      spreadsheetField.setText(this.settings.spreadsheet);
+
+      // load resources
+      listModel.clear();
+      this.settings.resources.forEach(listModel::addElement);
+
+    } catch (InvalidSettingsException exception) {
+      throw new NotConfigurableException(exception.getMessage(), exception);
+    }
+  }
+
+  @Override
+  protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
+
+    this.settings.modelScript = modelScriptField.getText();
+    this.settings.parameterScript = parametersScriptField.getText();
+    this.settings.visualizationScript = visualizationScriptField.getText();
+    this.settings.spreadsheet = spreadsheetField.getText();
+
+    // save resources
+    this.settings.resources.clear();
+    for (int i = 0; i < listModel.size(); i++) {
+      this.settings.resources.add(listModel.get(i));
+    }
+
+    this.settings.save(settings);
+  }
+
+  private void createUI() {
     FileFilter rFilter = new FileNameExtensionFilter("R script", "r");
     FileFilter spreadsheetFilter = new FileNameExtensionFilter("Excel spreadsheet", "xlsx");
 
@@ -110,42 +154,5 @@ public class CreatorNodeDialog extends NodeDialogPane {
 
     addTab("Options", northPanel);
     addTab("Files", UIUtils.createResourcesPanel(getPanel(), listModel));
-  }
-
-  @Override
-  protected void loadSettingsFrom(NodeSettingsRO settings, DataTableSpec[] specs)
-      throws NotConfigurableException {
-    try {
-      this.settings.load(settings);
-
-      modelScriptField.setText(this.settings.modelScript);
-      parametersScriptField.setText(this.settings.parameterScript);
-      visualizationScriptField.setText(this.settings.visualizationScript);
-      spreadsheetField.setText(this.settings.spreadsheet);
-
-      // load resources
-      listModel.clear();
-      this.settings.resources.forEach(listModel::addElement);
-
-    } catch (InvalidSettingsException exception) {
-      throw new NotConfigurableException(exception.getMessage(), exception);
-    }
-  }
-
-  @Override
-  protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-
-    this.settings.modelScript = modelScriptField.getText();
-    this.settings.parameterScript = parametersScriptField.getText();
-    this.settings.visualizationScript = visualizationScriptField.getText();
-    this.settings.spreadsheet = spreadsheetField.getText();
-
-    // save resources
-    this.settings.resources.clear();
-    for (int i = 0; i < listModel.size(); i++) {
-      this.settings.resources.add(listModel.get(i));
-    }
-
-    this.settings.save(settings);
   }
 }
