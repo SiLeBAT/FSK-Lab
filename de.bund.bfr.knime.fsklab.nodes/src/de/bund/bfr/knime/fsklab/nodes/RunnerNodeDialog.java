@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -56,15 +57,16 @@ public class RunnerNodeDialog extends NodeDialogPane {
   }
 
   private void createUI() {
-    String widthLabelText = UIUtils.getUnicodeString("runner_width_label");
-    String heightLabelText = UIUtils.getUnicodeString("runner_height_label");
-    String resLabelText = UIUtils.getUnicodeString("runner_res_label");
-    String textSizeText = UIUtils.getUnicodeString("runner_textsize_label");
+    ResourceBundle bundle = ResourceBundle.getBundle("RunnerNodeBundle");
+    String widthLabelText = UIUtils.getUnicodeString(bundle, "width_label");
+    String heightLabelText = UIUtils.getUnicodeString(bundle, "height_label");
+    String resLabelText = UIUtils.getUnicodeString(bundle, "res_label");
+    String textSizeText = UIUtils.getUnicodeString(bundle, "textsize_label");
 
-    String widthTooltip = UIUtils.getUnicodeString("runner_width_tooltip");
-    String heightTooltip = UIUtils.getUnicodeString("runner_height_tooltip");
-    String resTooltip = UIUtils.getUnicodeString("runner_res_tooltip");
-    String textSizeTooltip = UIUtils.getUnicodeString("runner_textsize_tooltip");
+    String widthTooltip = UIUtils.getUnicodeString(bundle, "width_tooltip");
+    String heightTooltip = UIUtils.getUnicodeString(bundle, "height_tooltip");
+    String resTooltip = UIUtils.getUnicodeString(bundle, "res_tooltip");
+    String textSizeTooltip = UIUtils.getUnicodeString(bundle, "textsize_tooltip");
 
     FLabel widthLabel = new FLabel(widthLabelText);
     FLabel heightLabel = new FLabel(heightLabelText);
