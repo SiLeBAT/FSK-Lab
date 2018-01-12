@@ -21,6 +21,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -105,14 +106,16 @@ public class CreatorNodeDialog extends NodeDialogPane {
     FileFilter rFilter = new FileNameExtensionFilter("R script", "r");
     FileFilter spreadsheetFilter = new FileNameExtensionFilter("Excel spreadsheet", "xlsx");
 
-    // buttons
-    String buttonText = UIUtils.getUnicodeString("creator_browse_button");
+    ResourceBundle bundle = ResourceBundle.getBundle("CreatorNodeBundle");
 
-    String modelScriptToolTip = UIUtils.getUnicodeString("creator_modelscript_tooltip");
-    String parameterScriptToolTip = UIUtils.getUnicodeString("creator_parameterscript_tooltip");
+    // buttons
+    String buttonText = UIUtils.getUnicodeString(bundle, "browse_button");
+
+    String modelScriptToolTip = UIUtils.getUnicodeString(bundle, "modelscript_tooltip");
+    String parameterScriptToolTip = UIUtils.getUnicodeString(bundle, "parameterscript_tooltip");
     String visualizationScriptToolTip =
-        UIUtils.getUnicodeString("creator_visualizationscript_tooltip");
-    String spreadsheetScriptToolTip = UIUtils.getUnicodeString("creator_spreadsheet_tooltip");
+        UIUtils.getUnicodeString(bundle, "visualizationscript_tooltip");
+    String spreadsheetScriptToolTip = UIUtils.getUnicodeString(bundle, "spreadsheet_tooltip");
 
     JButton modelScriptButton =
         UIUtils.createBrowseButton(buttonText, modelScriptField, JFileChooser.OPEN_DIALOG, rFilter);
@@ -129,11 +132,11 @@ public class CreatorNodeDialog extends NodeDialogPane {
     spreadsheetButton.setToolTipText(spreadsheetScriptToolTip);
 
     // labels
-    String modelScriptLabelText = UIUtils.getUnicodeString("creator_modelscript_label");
-    String paramScriptLabelText = UIUtils.getUnicodeString("creator_parameterscript_label");
+    String modelScriptLabelText = UIUtils.getUnicodeString(bundle, "modelscript_label");
+    String paramScriptLabelText = UIUtils.getUnicodeString(bundle, "parameterscript_label");
     String visualizationScriptLabelText =
-        UIUtils.getUnicodeString("creator_visualizationscript_label");
-    String spreadsheetLabelText = UIUtils.getUnicodeString("creator_spreadsheet_label");
+        UIUtils.getUnicodeString(bundle, "visualizationscript_label");
+    String spreadsheetLabelText = UIUtils.getUnicodeString(bundle, "spreadsheet_label");
 
     FLabel modelScriptLabel = new FLabel(modelScriptLabelText);
     FLabel parametersScriptLabel = new FLabel(paramScriptLabelText);

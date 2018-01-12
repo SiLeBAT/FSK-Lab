@@ -30,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -307,6 +308,26 @@ public class UIUtils {
       exception.printStackTrace(System.err);
       return latinString;
     }
+  }
 
+  /**
+   * Return unicode string from property file.
+   * <p>
+   * If error return ISO-8559-1 string.
+   */
+  public static String getUnicodeString(ResourceBundle bundle, String key) {
+
+    /*
+     * Resourcebundle is reading strings from property files with ISO-8559-1 encoding even though
+     * the files are saved with UTF-8. They need to be converted.
+     */
+    String latinString = bundle.getString(key);
+    try {
+      String unicodeString = new String(latinString.getBytes("ISO-8859-1"), "UTF-8");
+      return unicodeString;
+    } catch (UnsupportedEncodingException exception) {
+      exception.printStackTrace(System.err);
+      return latinString;
+    }
   }
 }
