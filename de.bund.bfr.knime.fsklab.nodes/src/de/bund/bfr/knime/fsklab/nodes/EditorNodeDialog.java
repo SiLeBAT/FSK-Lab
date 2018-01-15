@@ -84,6 +84,9 @@ import com.gmail.gcolaianni5.jris.bean.Type;
 import com.gmail.gcolaianni5.jris.engine.JRis;
 import com.gmail.gcolaianni5.jris.exception.JRisException;
 import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.FixedDateChooser;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
@@ -491,6 +494,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       super((Frame) null, true);
 
       optionPane = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_OPTION);
+      optionPane.setBackground(UIUtils.WHITE);
       setTitle(dialogTitle);
 
       // Handle window closing properly
@@ -2309,28 +2313,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JCheckBox advancedCheckBox;
 
-    private final StringTextField studyNameTextField = new StringTextField(true, 30);
-    private final StringTextField sourceTextField = new StringTextField(true, 30);
-    private final StringTextField identifierTextField = new StringTextField(true, 30);
-    private final CreatorPanel creatorPanel = new CreatorPanel();
-    private final FixedDateChooser creationDateChooser = new FixedDateChooser();
-    private final AutoSuggestField rightsField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Rights"));
-    private final JCheckBox availabilityCheckBox = new JCheckBox();
-    private final StringTextField urlTextField = new StringTextField(true, 30);
-    private final AutoSuggestField formatField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Format"));
+    private final JTextField studyNameTextField;
+    private final JTextField sourceTextField;
+    private final JTextField identifierTextField;
+    private final CreatorPanel creatorPanel;
+    private final FixedDateChooser creationDateChooser;
+    private final AutoSuggestField rightsField;
+    private final JCheckBox availabilityCheckBox;
+    private final JTextField urlTextField;
+    private final AutoSuggestField formatField;
     private final ReferencePanel referencePanel;
-    private final AutoSuggestField languageField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Language"));
-    private final AutoSuggestField softwareField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Software"));
-    private final AutoSuggestField languageWrittenInField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Language written in"));
-    private final AutoSuggestField statusField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Status"));
-    private final StringTextArea objectiveTextArea = new StringTextArea(true, 5, 30);
-    private final StringTextArea descriptionTextArea = new StringTextArea(true, 5, 30);
+    private final AutoSuggestField languageField;
+    private final AutoSuggestField softwareField;
+    private final AutoSuggestField languageWrittenInField;
+    private final AutoSuggestField statusField;
+    private final StringTextArea objectiveTextArea;
+    private final StringTextArea descriptionTextArea;
 
     public GeneralInformationPanel() {
 
@@ -2338,31 +2336,45 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Create fields
       advancedCheckBox = new JCheckBox("Advanced");
-
-      String availabilityText =
-          bundle.getString("editor_GeneralInformationPanel_availabilityLabel");
-      String availabilityTooltip =
-          bundle.getString("editor_GeneralInformationPanel_availabilityTooltip");
-      availabilityCheckBox.setText(availabilityText);
-      availabilityCheckBox.setFont(UIUtils.FONT);
-      availabilityCheckBox.setToolTipText(availabilityTooltip);
-
+      studyNameTextField = new FTextField(true);
+      sourceTextField = new FTextField(true);
+      identifierTextField = new FTextField(true);
+      creatorPanel = new CreatorPanel();
+      creationDateChooser = new FixedDateChooser();
+      rightsField = GUIFactory.createAutoSuggestField(vocabs.get("Rights"));
+      availabilityCheckBox = new JCheckBox();
+      urlTextField = new FTextField(true);
+      formatField = GUIFactory.createAutoSuggestField(vocabs.get("Format"));
       referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
+      languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"));
+      softwareField = GUIFactory.createAutoSuggestField(vocabs.get("Software"));
+      languageWrittenInField = GUIFactory.createAutoSuggestField(vocabs.get("Language written in"));
+      statusField = GUIFactory.createAutoSuggestField(vocabs.get("status"));
+      objectiveTextArea = new StringTextArea(true, 5, 30);
+      descriptionTextArea = new StringTextArea(true, 5, 30);
+
+      createUI();
+    }
+
+    private void createUI() {
 
       // Create labels
       String prefix = "editor_GeneralInformationPanel_";
-      final JLabel studyNameLabel = GUIFactory.createLabelWithTooltip(prefix + "studyName");
-      final JLabel sourceLabel = GUIFactory.createLabelWithTooltip(prefix + "source");
-      final JLabel identifierLabel = GUIFactory.createLabelWithTooltip(prefix + "identifier");
-      final JLabel creationDateLabel = GUIFactory.createLabelWithTooltip(prefix + "creationDate");
-      final JLabel rightsLabel = GUIFactory.createLabelWithTooltip(prefix + "rights");
-      final JLabel urlLabel = GUIFactory.createLabelWithTooltip(prefix + "url");
-      final JLabel formatLabel = GUIFactory.createLabelWithTooltip(prefix + "format");
-      final JLabel languageLabel = GUIFactory.createLabelWithTooltip(prefix + "language");
-      final JLabel softwareLabel = GUIFactory.createLabelWithTooltip(prefix + "software");
-      final JLabel languageWrittenInLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "languageWrittenIn");
-      final JLabel statusLabel = GUIFactory.createLabelWithTooltip(prefix + "status");
+
+      FLabel studyNameLabel = createLabelWithToolTip(prefix + "studyName");
+      FLabel identifierLabel = createLabelWithToolTip(prefix + "identifier");
+      FLabel creationDateLabel = createLabelWithToolTip(prefix + "creationDate");
+      FLabel rightsLabel = createLabelWithToolTip(prefix + "rights");
+      FLabel availabilityLabel = createLabelWithToolTip(prefix + "availability");
+      FLabel sourceLabel = createLabelWithToolTip(prefix + "source");
+      FLabel urlLabel = createLabelWithToolTip(prefix + "creationDate");
+      FLabel formatLabel = createLabelWithToolTip(prefix + "format");
+      FLabel languageLabel = createLabelWithToolTip(prefix + "language");
+      FLabel softwareLabel = createLabelWithToolTip(prefix + "software");
+      FLabel languageWrittenInLabel = createLabelWithToolTip(prefix + "languageWrittenIn");
+      FLabel statusLabel = createLabelWithToolTip(prefix + "status");
+
+      availabilityCheckBox.setBackground(UIUtils.WHITE);
 
       String objectiveText = bundle.getString(prefix + "objectiveLabel");
       String objectiveTooltip = bundle.getString(prefix + "objectiveTooltip");
@@ -2381,13 +2393,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       advancedComponents.forEach(it -> it.setEnabled(false));
 
       // formPanel
-      JPanel creationDatePanel = UI.createWestPanel(creationDateChooser);
-      final JPanel formPanel = UI.createOptionsPanel(
+      JPanel creationDatePanel = UIUtils.createWestPanel(creationDateChooser);
+      JPanel availabilityPanel = UIUtils.createWestPanel(availabilityCheckBox);
+      final JPanel formPanel = UIUtils.createFormPanel(
           Arrays.asList(studyNameLabel, identifierLabel, creationDateLabel, rightsLabel,
-              availabilityCheckBox, urlLabel, sourceLabel, formatLabel, languageLabel,
-              softwareLabel, languageWrittenInLabel, statusLabel),
+              availabilityLabel, urlLabel, sourceLabel, formatLabel, languageLabel, softwareLabel,
+              languageWrittenInLabel, statusLabel),
           Arrays.asList(studyNameTextField, identifierTextField, creationDatePanel, rightsField,
-              new JLabel(), urlTextField, sourceTextField, formatField, languageField,
+              availabilityPanel, urlTextField, sourceTextField, formatField, languageField,
               softwareField, languageWrittenInField, statusField));
 
       advancedCheckBox.addItemListener(event -> {
@@ -2405,7 +2418,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(new JScrollPane(descriptionTextArea));
       northPanel.add(creatorPanel);
       northPanel.add(referencePanel);
+      northPanel.setBackground(UIUtils.WHITE);
+
       add(northPanel, BorderLayout.NORTH);
+    }
+
+    private FLabel createLabelWithToolTip(String key) {
+      String text = bundle.getString(key + "Label");
+      String toolTip = bundle.getString(key + "Tooltip");
+      return new FLabel(text, toolTip);
     }
 
     void init(final GeneralInformation generalInformation) {
@@ -2737,25 +2758,30 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = 3472281253338213542L;
 
-    private final StringTextField givenNameTextField = new StringTextField(false, 30);
-    private final StringTextField familyNameTextField = new StringTextField(false, 30);
-    private final StringTextField contactTextField = new StringTextField(false, 30);
+    private final FTextField givenNameTextField;
+    private final FTextField familyNameTextField;
+    private final FTextField contactTextField;
 
     public EditCreatorPanel() {
       super(new BorderLayout());
+      givenNameTextField = new FTextField(false);
+      familyNameTextField = new FTextField(false);
+      contactTextField = new FTextField(false);
 
+      createUI();
+    }
+
+    private void createUI() {
       // Create labels
       String prefix = "editor_EditCreatorPanel_";
-      final JLabel givenNameLabel = GUIFactory.createLabel(prefix + "givenNameLabel");
-      final JLabel familyNameLabel = GUIFactory.createLabel(prefix + "familyNameLabel");
-      final JLabel contactLabel = GUIFactory.createLabel(prefix + "contactLabel");
+      FLabel givenNameLabel = new FLabel(bundle.getString(prefix + "givenNameLabel"));
+      FLabel familyNameLabel = new FLabel(bundle.getString(prefix + "familyNameLabel"));
+      FLabel contactLabel = new FLabel(bundle.getString(prefix + "contactLabel"));
 
-      final JPanel formPanel =
-          UI.createOptionsPanel(Arrays.asList(givenNameLabel, familyNameLabel, contactLabel),
+      final FPanel formPanel =
+          UIUtils.createFormPanel(Arrays.asList(givenNameLabel, familyNameLabel, contactLabel),
               Arrays.asList(givenNameTextField, familyNameTextField, contactTextField));
-
-      final JPanel northPanel = UI.createNorthPanel(formPanel);
-
+      final FPanel northPanel = UIUtils.createNorthPanel(formPanel);
       add(northPanel);
     }
 
@@ -2800,13 +2826,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditCreatorPanel_";
 
       final List<String> errors = new ArrayList<>(3);
-      if (!givenNameTextField.isValueValid()) {
+      if (!givenNameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "givenNameLabel"));
       }
-      if (!familyNameTextField.isValueValid()) {
+      if (!familyNameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "familyNameLabel"));
       }
-      if (!contactTextField.isValueValid()) {
+      if (!contactTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "contactLabel"));
       }
 
