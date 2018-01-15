@@ -2784,9 +2784,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     public EditCreatorPanel() {
       super(new BorderLayout());
-      givenNameTextField = new FTextField(false);
-      familyNameTextField = new FTextField(false);
-      contactTextField = new FTextField(false);
+      givenNameTextField = new FTextField(true);
+      familyNameTextField = new FTextField(true);
+      contactTextField = new FTextField(true);
 
       createUI();
     }
