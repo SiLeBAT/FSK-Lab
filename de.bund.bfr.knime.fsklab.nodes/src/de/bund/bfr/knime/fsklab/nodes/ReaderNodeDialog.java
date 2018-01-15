@@ -36,6 +36,7 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
+import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
 import de.bund.bfr.swing.UI;
 
 class ReaderNodeDialog extends NodeDialogPane {
@@ -70,10 +71,10 @@ class ReaderNodeDialog extends NodeDialogPane {
 
   private void createUI() {
 
-    ResourceBundle bundle = ResourceBundle.getBundle("ReaderNodeBundle");
-    String buttonText = UIUtils.getUnicodeString(bundle, "button");
-    String labelText = UIUtils.getUnicodeString(bundle, "label");
-    String toolTipText = UIUtils.getUnicodeString(bundle, "tooltip");
+    ResourceBundle bundle = ResourceBundle.getBundle("ReaderNodeBundle", new UTF8Control());
+    String buttonText = bundle.getString("button");
+    String labelText = bundle.getString("label");
+    String toolTipText = bundle.getString("tooltip");
 
     FileFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
     FLabel label = new FLabel(labelText);

@@ -34,6 +34,7 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
+import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
 import de.bund.bfr.swing.UI;
 
 public class RunnerNodeDialog extends NodeDialogPane {
@@ -57,16 +58,16 @@ public class RunnerNodeDialog extends NodeDialogPane {
   }
 
   private void createUI() {
-    ResourceBundle bundle = ResourceBundle.getBundle("RunnerNodeBundle");
-    String widthLabelText = UIUtils.getUnicodeString(bundle, "width_label");
-    String heightLabelText = UIUtils.getUnicodeString(bundle, "height_label");
-    String resLabelText = UIUtils.getUnicodeString(bundle, "res_label");
-    String textSizeText = UIUtils.getUnicodeString(bundle, "textsize_label");
+    ResourceBundle bundle = ResourceBundle.getBundle("RunnerNodeBundle", new UTF8Control());
+    String widthLabelText = bundle.getString("width_label");
+    String heightLabelText = bundle.getString("height_label");
+    String resLabelText = bundle.getString("res_label");
+    String textSizeText = bundle.getString("textsize_label");
 
-    String widthTooltip = UIUtils.getUnicodeString(bundle, "width_tooltip");
-    String heightTooltip = UIUtils.getUnicodeString(bundle, "height_tooltip");
-    String resTooltip = UIUtils.getUnicodeString(bundle, "res_tooltip");
-    String textSizeTooltip = UIUtils.getUnicodeString(bundle, "textsize_tooltip");
+    String widthTooltip = bundle.getString("width_tooltip");
+    String heightTooltip = bundle.getString("height_tooltip");
+    String resTooltip = bundle.getString("res_tooltip");
+    String textSizeTooltip = bundle.getString("textsize_tooltip");
 
     FLabel widthLabel = new FLabel(widthLabelText);
     FLabel heightLabel = new FLabel(heightLabelText);
