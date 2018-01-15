@@ -349,6 +349,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
   private static class GUIFactory {
 
+    private static FLabel createLabelWithToolTip(String key) {
+      String text = bundle.getString(key + "Label");
+      String toolTip = bundle.getString(key + "Tooltip");
+      return new FLabel(text, toolTip);
+    }
+
     /**
      * Create a JLabel with no tooltip, retrieving its text from resource bundle. This is a
      * convenience method for {@link #createLabel(String, boolean)} where the property is not
@@ -1628,25 +1634,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -7400646603919832139L;
 
-    private final AutoSuggestField envNameField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix name"));
-    private final StringTextArea envDescriptionTextArea = new StringTextArea(true, 5, 30);
-    private final AutoSuggestField envUnitField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix unit"));
-    private final JComboBox<String> productionMethodComboBox =
-        GUIFactory.createComboBox(vocabs.get("Method of production"));
-    private final JComboBox<String> packagingComboBox =
-        GUIFactory.createComboBox(vocabs.get("Packaging"));
-    private final JComboBox<String> productTreatmentComboBox =
-        GUIFactory.createComboBox(vocabs.get("Product treatment"));
-    private final AutoSuggestField originCountryField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Country of origin"));
-    private final AutoSuggestField originAreaField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Area of origin"));
-    private final AutoSuggestField fisheriesAreaField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Fisheries area"));
-    private final FixedDateChooser productionDateChooser = new FixedDateChooser();
-    private final FixedDateChooser expirationDateChooser = new FixedDateChooser();
+    private final AutoSuggestField envNameField;
+    private final StringTextArea envDescriptionTextArea;
+    private final AutoSuggestField envUnitField;
+    private final JComboBox<String> productionMethodComboBox;
+    private final JComboBox<String> packagingComboBox;
+    private final JComboBox<String> productTreatmentComboBox;
+    private final AutoSuggestField originCountryField;
+    private final AutoSuggestField originAreaField;
+    private final AutoSuggestField fisheriesAreaField;
+    private final FixedDateChooser productionDateChooser;
+    private final FixedDateChooser expirationDateChooser;
 
     private final List<JComponent> advancedComponents;
 
@@ -1654,21 +1652,37 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
+      envNameField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix name"));
+      envDescriptionTextArea = new StringTextArea(true, 5, 30);
+      envUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix unit"));
+      productionMethodComboBox = GUIFactory.createComboBox(vocabs.get("Method of production"));
+      packagingComboBox = GUIFactory.createComboBox(vocabs.get("Packaging"));
+      productTreatmentComboBox = GUIFactory.createComboBox(vocabs.get("Product treatment"));
+      originCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Country of origin"));
+      originAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Area of origin"));
+      fisheriesAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Fisheries area"));
+      productionDateChooser = new FixedDateChooser();
+      expirationDateChooser = new FixedDateChooser();
+
+      advancedComponents = Arrays.asList(envDescriptionTextArea, productionMethodComboBox,
+          packagingComboBox, productTreatmentComboBox, originCountryField, originAreaField,
+          fisheriesAreaField, productionDateChooser, expirationDateChooser);
+
+      createUI(isAdvanced);
+    }
+
+    private void createUI(boolean isAdvanced) {
       String prefix = "editor_EditProductPanel_";
-      final JLabel envNameLabel = GUIFactory.createLabelWithTooltip(prefix + "envName", true);
-      final JLabel envUnitLabel = GUIFactory.createLabelWithTooltip(prefix + "envUnit", true);
-      final JLabel productionMethodLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "productionMethod");
-      final JLabel packagingLabel = GUIFactory.createLabelWithTooltip(prefix + "packaging");
-      final JLabel productTreatmentLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "productTreatment");
-      final JLabel originCountryLabel = GUIFactory.createLabelWithTooltip(prefix + "originCountry");
-      final JLabel originAreaLabel = GUIFactory.createLabelWithTooltip(prefix + "originArea");
-      final JLabel fisheriesAreaLabel = GUIFactory.createLabelWithTooltip(prefix + "fisheriesArea");
-      final JLabel productionDateLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "productionDate");
-      final JLabel expirationDateLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "expirationDate");
+      FLabel envNameLabel = GUIFactory.createLabelWithToolTip(prefix + "envName");
+      FLabel envUnitLabel = GUIFactory.createLabelWithToolTip(prefix + "envUnit");
+      FLabel productionMethodLabel = GUIFactory.createLabelWithToolTip(prefix + "productionMethod");
+      FLabel packagingLabel = GUIFactory.createLabelWithToolTip(prefix + "packaging");
+      FLabel productTreatmentLabel = GUIFactory.createLabelWithToolTip(prefix + "productTreatment");
+      FLabel originCountryLabel = GUIFactory.createLabelWithToolTip(prefix + "originCountry");
+      FLabel originAreaLabel = GUIFactory.createLabelWithToolTip(prefix + "originArea");
+      FLabel fisheriesAreaLabel = GUIFactory.createLabelWithToolTip(prefix + "fisheriesArea");
+      FLabel productionDateLabel = GUIFactory.createLabelWithToolTip(prefix + "productionDate");
+      FLabel expirationDateLabel = GUIFactory.createLabelWithToolTip(prefix + "expirationDate");
 
       // Build UI
       String envDescriptionText = bundle.getString(prefix + "envDescriptionLabel");
@@ -1677,7 +1691,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       envDescriptionTextArea.setToolTipText(envDescriptionTooltip);
 
       // formPanel
-      final JPanel formPanel = UI.createOptionsPanel(
+      final FPanel formPanel = UIUtils.createFormPanel(
           Arrays.asList(envNameLabel, envUnitLabel, productionMethodLabel, packagingLabel,
               productTreatmentLabel, originCountryLabel, originAreaLabel, fisheriesAreaLabel,
               productionDateLabel, expirationDateLabel),
@@ -1691,10 +1705,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(formPanel);
       northPanel.add(new JScrollPane(envDescriptionTextArea));
       add(northPanel, BorderLayout.NORTH);
-
-      advancedComponents = Arrays.asList(envDescriptionTextArea, productionMethodComboBox,
-          packagingComboBox, productTreatmentComboBox, originCountryField, originAreaField,
-          fisheriesAreaField, productionDateChooser, expirationDateChooser);
 
       // If advanced mode, show advanced components
       advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
@@ -2381,18 +2391,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Create labels
       String prefix = "editor_GeneralInformationPanel_";
 
-      FLabel studyNameLabel = createLabelWithToolTip(prefix + "studyName");
-      FLabel identifierLabel = createLabelWithToolTip(prefix + "identifier");
-      FLabel creationDateLabel = createLabelWithToolTip(prefix + "creationDate");
-      FLabel rightsLabel = createLabelWithToolTip(prefix + "rights");
-      FLabel availabilityLabel = createLabelWithToolTip(prefix + "availability");
-      FLabel sourceLabel = createLabelWithToolTip(prefix + "source");
-      FLabel urlLabel = createLabelWithToolTip(prefix + "creationDate");
-      FLabel formatLabel = createLabelWithToolTip(prefix + "format");
-      FLabel languageLabel = createLabelWithToolTip(prefix + "language");
-      FLabel softwareLabel = createLabelWithToolTip(prefix + "software");
-      FLabel languageWrittenInLabel = createLabelWithToolTip(prefix + "languageWrittenIn");
-      FLabel statusLabel = createLabelWithToolTip(prefix + "status");
+      FLabel studyNameLabel = GUIFactory.createLabelWithToolTip(prefix + "studyName");
+      FLabel identifierLabel = GUIFactory.createLabelWithToolTip(prefix + "identifier");
+      FLabel creationDateLabel = GUIFactory.createLabelWithToolTip(prefix + "creationDate");
+      FLabel rightsLabel = GUIFactory.createLabelWithToolTip(prefix + "rights");
+      FLabel availabilityLabel = GUIFactory.createLabelWithToolTip(prefix + "availability");
+      FLabel sourceLabel = GUIFactory.createLabelWithToolTip(prefix + "source");
+      FLabel urlLabel = GUIFactory.createLabelWithToolTip(prefix + "creationDate");
+      FLabel formatLabel = GUIFactory.createLabelWithToolTip(prefix + "format");
+      FLabel languageLabel = GUIFactory.createLabelWithToolTip(prefix + "language");
+      FLabel softwareLabel = GUIFactory.createLabelWithToolTip(prefix + "software");
+      FLabel languageWrittenInLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "languageWrittenIn");
+      FLabel statusLabel = GUIFactory.createLabelWithToolTip(prefix + "status");
 
       availabilityCheckBox.setBackground(UIUtils.WHITE);
 
@@ -2441,12 +2452,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.setBackground(UIUtils.WHITE);
 
       add(northPanel, BorderLayout.NORTH);
-    }
-
-    private FLabel createLabelWithToolTip(String key) {
-      String text = bundle.getString(key + "Label");
-      String toolTip = bundle.getString(key + "Tooltip");
-      return new FLabel(text, toolTip);
     }
 
     void init(final GeneralInformation generalInformation) {
