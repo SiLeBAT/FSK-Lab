@@ -17,4 +17,9 @@ public class FLabel extends JLabel {
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     setFont(UIUtils.BOLD_FONT);
   }
+
+  public FLabel(String text, String tooltip) {
+    this(text);
+    setToolTipText(tooltip);
+  }
 }

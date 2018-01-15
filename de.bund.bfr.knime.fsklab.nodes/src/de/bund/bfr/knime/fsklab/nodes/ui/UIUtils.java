@@ -117,6 +117,38 @@ public class UIUtils {
     return addButton;
   }
 
+  public static FPanel createNorthPanel(Component component) {
+    FPanel northPanel = new FPanel();
+    northPanel.setLayout(new BorderLayout());
+    northPanel.add(component, BorderLayout.NORTH);
+
+    return northPanel;
+  }
+
+  public static FPanel createSouthPanel(Component component) {
+    FPanel northPanel = new FPanel();
+    northPanel.setLayout(new BorderLayout());
+    northPanel.add(component, BorderLayout.SOUTH);
+
+    return northPanel;
+  }
+
+  public static FPanel createWestPanel(Component component) {
+    FPanel northPanel = new FPanel();
+    northPanel.setLayout(new BorderLayout());
+    northPanel.add(component, BorderLayout.WEST);
+
+    return northPanel;
+  }
+
+  public static FPanel createEastPanel(Component component) {
+    FPanel northPanel = new FPanel();
+    northPanel.setLayout(new BorderLayout());
+    northPanel.add(component, BorderLayout.EAST);
+
+    return northPanel;
+  }
+
 
   /**
    * Creates panel to add/remove resource files.
@@ -179,6 +211,7 @@ public class UIUtils {
   public static Color OCHER_LIGHT = new Color(246, 231, 187);
   public static Color MINT_GREEN = new Color(52, 172, 159);
   public static Color DARK_GRAY = new Color(102, 102, 102);
+  public static Color RED = new Color(254, 0, 0);
 
   public static Font FONT = new Font(Font.DIALOG, Font.PLAIN, 12);
   public static Font BOLD_FONT = new Font(Font.DIALOG, Font.BOLD, 12);
@@ -275,14 +308,5 @@ public class UIUtils {
     formPanel.add(rightPanel, BorderLayout.CENTER);
 
     return formPanel;
-  }
-
-  public static FPanel createWestPanel(Component component) {
-    FPanel northPanel = new FPanel();
-
-    northPanel.setLayout(new BorderLayout());
-    northPanel.add(component, BorderLayout.WEST);
-
-    return northPanel;
   }
 }

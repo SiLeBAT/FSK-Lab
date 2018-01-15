@@ -19,49 +19,44 @@
 package de.bund.bfr.knime.fsklab;
 
 import java.util.ResourceBundle;
-
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 
 public class FskPlugin extends AbstractUIPlugin {
 
-	private static FskPlugin plugin;
+  private static FskPlugin plugin;
 
-	public ResourceBundle MESSAGES_BUNDLE;
+  public ResourceBundle MESSAGES_BUNDLE;
 
-	/**
-	 * Jackson object mapper with {@link RakipModule}. Initialized with
-	 * {@link #start(BundleContext)} and assigned null with
-	 * {@link #stop(BundleContext)}.
-	 */
-	public ObjectMapper OBJECT_MAPPER;
+  /**
+   * Jackson object mapper with {@link RakipModule}. Initialized with {@link #start(BundleContext)}
+   * and assigned null with {@link #stop(BundleContext)}.
+   */
+  public ObjectMapper OBJECT_MAPPER;
 
-	public FskPlugin() {
-		plugin = this;
-	}
+  public FskPlugin() {
+    plugin = this;
+  }
 
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		MESSAGES_BUNDLE = ResourceBundle.getBundle("MessagesBundle");
-		OBJECT_MAPPER = new ObjectMapper().registerModule(new RakipModule());
-	}
+  @Override
+  public void start(BundleContext context) throws Exception {
+    super.start(context);
+    OBJECT_MAPPER = new ObjectMapper().registerModule(new RakipModule());
+  }
 
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		ResourceBundle.clearCache();
-		OBJECT_MAPPER = null;
+  @Override
+  public void stop(BundleContext context) throws Exception {
+    super.stop(context);
+    ResourceBundle.clearCache();
+    OBJECT_MAPPER = null;
 
-		plugin = null;
-	}
+    plugin = null;
+  }
 
-	/** @return Singleton instance of the plugin. */
-	public static FskPlugin getDefault() {
-		return plugin;
-	}
+  /** @return Singleton instance of the plugin. */
+  public static FskPlugin getDefault() {
+    return plugin;
+  }
 }
