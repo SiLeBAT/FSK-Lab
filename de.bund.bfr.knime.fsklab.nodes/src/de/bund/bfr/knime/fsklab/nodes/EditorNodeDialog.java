@@ -83,12 +83,11 @@ import com.gmail.gcolaianni5.jris.bean.Record;
 import com.gmail.gcolaianni5.jris.bean.Type;
 import com.gmail.gcolaianni5.jris.engine.JRis;
 import com.gmail.gcolaianni5.jris.exception.JRisException;
-// import de.bund.bfr.knime.UI;
-import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.FixedDateChooser;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
+import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
 import de.bund.bfr.knime.fsklab.rakip.Assay;
 import de.bund.bfr.knime.fsklab.rakip.DataBackground;
 import de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod;
@@ -123,6 +122,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
   /** List model for resource files. */
   private final DefaultListModel<Path> listModel = new DefaultListModel<>();
+
+  private static ResourceBundle bundle =
+      ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
 
   private EditorNodeSettings settings;
 
@@ -364,8 +366,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
      * @return JLabel
      */
     private static JLabel createLabel(final String textKey, final boolean isMandatory) {
-      String labelText = UIUtils.getUnicodeString(textKey);
-      return new JLabel(labelText + (isMandatory ? "*" : ""));
+      String labelText = bundle.getString(textKey);
+      JLabel label = new JLabel(labelText + (isMandatory ? "*" : ""));
+      label.setFont(UIUtils.FONT);
+      return label;
     }
 
     /**
@@ -403,10 +407,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private static JLabel createLabel(final String textKey, final String toolTipKey,
         final boolean isMandatory) {
 
-      String labelText = UIUtils.getUnicodeString(textKey);
-      String toolTipText = UIUtils.getUnicodeString(toolTipKey);
+      String labelText = bundle.getString(textKey);
+      String toolTipText = bundle.getString(toolTipKey);
       final JLabel label = new JLabel(labelText + (isMandatory ? "*" : ""));
       label.setToolTipText(toolTipText);
+      label.setFont(UIUtils.FONT);
 
       return label;
     }
@@ -598,8 +603,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel nameLabel = GUIFactory.createLabelWithTooltip(prefix + "name", true);
 
       // descriptionTextArea
-      String descriptionTitle = UIUtils.getUnicodeString(prefix + "descriptionLabel");
-      String descriptionToolTip = UIUtils.getUnicodeString(prefix + "descriptionTooltip");
+      String descriptionTitle = bundle.getString(prefix + "descriptionLabel");
+      String descriptionToolTip = bundle.getString(prefix + "descriptionTooltip");
       descriptionTextArea.setBorder(BorderFactory.createTitledBorder(descriptionTitle));
       descriptionTextArea.setToolTipText(descriptionToolTip);
 
@@ -642,7 +647,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final List<String> errors = new ArrayList<>(1);
       if (!nameTextField.isValueValid()) {
-        errors.add("Missing " + UIUtils.getUnicodeString("editor_EditAssayPanel_nameLabel"));
+        errors.add("Missing " + bundle.getString("editor_EditAssayPanel_nameLabel"));
       }
 
       return errors;
@@ -798,10 +803,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final List<String> errors = new ArrayList<>(2);
       if (!hasValidValue(dataCollectionToolField)) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "dataCollectionToolLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "dataCollectionToolLabel"));
       }
       if (!nonConsecutiveOneDayField.isValueValid()) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "nonConsecutiveOneDaysLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "nonConsecutiveOneDaysLabel"));
       }
 
       return errors;
@@ -961,10 +966,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Wraps hazardDescriptionTextArea in a JScrollPane
       final JScrollPane hazardDescriptionPanel = new JScrollPane(hazardDescriptionTextArea);
-      hazardDescriptionPanel.setBorder(BorderFactory
-          .createTitledBorder(UIUtils.getUnicodeString(prefix + "hazardDescriptionLabel")));
-      hazardDescriptionPanel
-          .setToolTipText(UIUtils.getUnicodeString(prefix + "hazardDescriptionTooltip"));
+      hazardDescriptionPanel.setBorder(
+          BorderFactory.createTitledBorder(bundle.getString(prefix + "hazardDescriptionLabel")));
+      hazardDescriptionPanel.setToolTipText(bundle.getString(prefix + "hazardDescriptionTooltip"));
 
       // formPanel
       final JPanel formPanel = UI.createOptionsPanel(
@@ -988,7 +992,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       add(northPanel, BorderLayout.NORTH);
 
-    advancedComponents = Arrays.asList(hazardDescriptionTextArea, adverseEffectTextField,
+      advancedComponents = Arrays.asList(hazardDescriptionTextArea, adverseEffectTextField,
           originTextField, bmdTextField, maxResidueLimitTextField, acceptableOperatorTextField,
           noObservedAdverseTextField, acuteReferenceDoseTextField, acceptableDailyIntakeTextField,
           indSumField, labNameTextField, labCountryField, detectionLimitTextField,
@@ -1056,13 +1060,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditHazardPanel_";
       final List<String> errors = new ArrayList<>();
       if (!hasValidValue(hazardTypeField)) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "hazardTypeLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "hazardTypeLabel"));
       }
       if (!hasValidValue(hazardNameField)) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "hazardNameLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "hazardNameLabel"));
       }
       if (!hasValidValue(hazardUnitField)) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "hazardUnitLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "hazardUnitLabel"));
       }
 
       return errors;
@@ -1114,9 +1118,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       referencePanel = new ReferencePanel(isAdvanced);
 
-      scriptTextArea.setBorder(
-          BorderFactory.createTitledBorder(UIUtils.getUnicodeString(prefix + "scriptLabel")));
-      scriptTextArea.setToolTipText(UIUtils.getUnicodeString(prefix + "scriptTooltip"));
+      scriptTextArea
+          .setBorder(BorderFactory.createTitledBorder(bundle.getString(prefix + "scriptLabel")));
+      scriptTextArea.setToolTipText(bundle.getString(prefix + "scriptTooltip"));
 
       // formPanel
       final JPanel formPanel =
@@ -1155,10 +1159,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final List<String> errors = new ArrayList<>();
       if (!equationNameTextField.isValueValid()) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "nameLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "nameLabel"));
       }
       if (!scriptTextArea.isValueValid()) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "scriptLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "scriptLabel"));
       }
       return errors;
     }
@@ -1235,26 +1239,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Build UI
       final JSpinner errorSpinner = GUIFactory.createSpinner(errorSpinnerModel);
 
-      final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-
-      String descriptionText = UIUtils.getUnicodeString(prefix + "descriptionLabel");
-      String descriptionToolTip = UIUtils.getUnicodeString(prefix + "descriptionTooltip");
+      String descriptionText = bundle.getString(prefix + "descriptionLabel");
+      String descriptionToolTip = bundle.getString(prefix + "descriptionTooltip");
       descriptionTextArea.setBorder(BorderFactory.createTitledBorder(descriptionText));
       descriptionTextArea.setToolTipText(descriptionToolTip);
 
-      String variabilitySubjectText = UIUtils.getUnicodeString(prefix + "variabilitySubjectLabel");
-      String variabilitySubjectToolTip =
-          UIUtils.getUnicodeString(prefix + "variabilitySubjectTooltip");
+      String variabilitySubjectText = bundle.getString(prefix + "variabilitySubjectLabel");
+      String variabilitySubjectToolTip = bundle.getString(prefix + "variabilitySubjectTooltip");
       variabilitySubjectTextArea
           .setBorder(BorderFactory.createTitledBorder(variabilitySubjectText));
       variabilitySubjectTextArea.setToolTipText(variabilitySubjectToolTip);
 
-      String applicabilityText = UIUtils.getUnicodeString(prefix + "applicabilityLabel");
-      String applicabilityToolTip = UIUtils.getUnicodeString(prefix + "applicabilityTooltip");
+      String applicabilityText = bundle.getString(prefix + "applicabilityLabel");
+      String applicabilityToolTip = bundle.getString(prefix + "applicabilityTooltip");
       applicabilityTextArea.setBorder(BorderFactory.createTitledBorder(applicabilityText));
       applicabilityTextArea.setToolTipText(applicabilityToolTip);
 
-         // formPanel
+      // formPanel
       final JPanel formPanel = UI.createOptionsPanel(
           Arrays.asList(idLabel, classificationLabel, nameLabel, typeLabel, unitLabel,
               unitCategoryLabel, dataTypeLabel, sourceLabel, subjectLabel, distributionLabel,
@@ -1329,31 +1330,25 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-
       final String prefix = "editor_EditParameterPanel_";
       final List<String> errors = new ArrayList<>();
       if (!idTextField.isValueValid()) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "idLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "idLabel"));
       }
       if (classificationComboBox.getSelectedIndex() == -1) {
-        errors.add(
-            "Missing " + UIUtils.getUnicodeString(prefix + "classificationLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "classificationLabel"));
       }
       if (!nameTextField.isValueValid()) {
-        errors.add(
-            "Missing " + UIUtils.getUnicodeString(prefix + "parameterNameLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "parameterNameLabel"));
       }
       if (!hasValidValue(unitField)) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "unitLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "unitLabel"));
       }
       if (!hasValidValue(unitCategoryField)) {
-        errors.add(
-            "Missing " + UIUtils.getUnicodeString(prefix + "unitCategoryLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "unitCategoryLabel"));
       }
       if (!hasValidValue(dataTypeField)) {
-        errors
-            .add("Missing " + UIUtils.getUnicodeString(prefix + "dataTypeLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "dataTypeLabel"));
       }
 
       return errors;
@@ -1469,10 +1464,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel riskLabel = GUIFactory.createLabelWithTooltip(prefix + "riskAndPopulation");
       final JLabel seasonLabel = GUIFactory.createLabelWithTooltip(prefix + "season");
 
-      String populationDescriptionText =
-          UIUtils.getUnicodeString(prefix + "populationDescriptionLabel");
+      String populationDescriptionText = bundle.getString(prefix + "populationDescriptionLabel");
       String populationDescriptionTooltip =
-          UIUtils.getUnicodeString(prefix + "populationDescriptionTooltip");
+          bundle.getString(prefix + "populationDescriptionTooltip");
       populationDescriptionTextArea
           .setBorder(BorderFactory.createTitledBorder(populationDescriptionText));
       populationDescriptionTextArea.setToolTipText(populationDescriptionTooltip);
@@ -1614,8 +1608,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final List<String> errors = new ArrayList<>(1);
       if (!populationNameTextField.isValueValid()) {
-        errors.add("Missing "
-            + UIUtils.getUnicodeString("editor_EditPopulationGroupPanel_populationNameLabel"));
+        errors.add(
+            "Missing " + bundle.getString("editor_EditPopulationGroupPanel_populationNameLabel"));
       }
       return errors;
     }
@@ -1656,7 +1650,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-        String prefix = "editor_EditProductPanel_";
+      String prefix = "editor_EditProductPanel_";
       final JLabel envNameLabel = GUIFactory.createLabelWithTooltip(prefix + "envName", true);
       final JLabel envUnitLabel = GUIFactory.createLabelWithTooltip(prefix + "envUnit", true);
       final JLabel productionMethodLabel =
@@ -1673,8 +1667,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           GUIFactory.createLabelWithTooltip(prefix + "expirationDate");
 
       // Build UI
-      String envDescriptionText = UIUtils.getUnicodeString(prefix + "envDescriptionLabel");
-      String envDescriptionTooltip = UIUtils.getUnicodeString(prefix + "envDescriptionTooltip");
+      String envDescriptionText = bundle.getString(prefix + "envDescriptionLabel");
+      String envDescriptionTooltip = bundle.getString(prefix + "envDescriptionTooltip");
       envDescriptionTextArea.setBorder(BorderFactory.createTitledBorder(envDescriptionText));
       envDescriptionTextArea.setToolTipText(envDescriptionTooltip);
 
@@ -1748,10 +1742,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditProductPanel_";
       final List<String> errors = new ArrayList<>(2);
       if (!hasValidValue(envNameField)) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "envNameLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "envNameLabel"));
       }
       if (!hasValidValue(envUnitField)) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "envUnitLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "envUnitLabel"));
       }
 
       return errors;
@@ -1923,7 +1917,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
 
       // Create labels
-         String prefix = "editor_EditReferencePanel_";
+      String prefix = "editor_EditReferencePanel_";
       final JLabel typeLabel = GUIFactory.createLabel(prefix + "typeLabel");
       final JLabel dateLabel = GUIFactory.createLabel(prefix + "dateLabel");
       final JLabel pmidLabel = GUIFactory.createLabel(prefix + "pmidLabel");
@@ -1941,10 +1935,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JSpinner volumeSpinner = GUIFactory.createSpinner(volumeSpinnerModel);
       final JSpinner issueSpinner = GUIFactory.createSpinner(issueSpinnerModel);
 
-      final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
-
-      String abstractText = UIUtils.getUnicodeString(prefix + "abstractLabel");
-      String commentText = UIUtils.getUnicodeString(prefix + "commentLabel");
+      String abstractText = bundle.getString(prefix + "abstractLabel");
+      String commentText = bundle.getString(prefix + "commentLabel");
       abstractTextArea.setBorder(BorderFactory.createTitledBorder(abstractText));
       commentTextArea.setBorder(BorderFactory.createTitledBorder(commentText));
 
@@ -2077,10 +2069,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditReferencePanel_";
       final List<String> errors = new ArrayList<>(2);
       if (!doiTextField.isValueValid()) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "doiLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "doiLabel"));
       }
       if (!titleTextField.isValueValid()) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "titleLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "titleLabel"));
       }
 
       return errors;
@@ -2169,7 +2161,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       super(new BorderLayout());
 
       // Create labels and fields
- String prefix = "editor_EditStudySamplePanel_";
+      String prefix = "editor_EditStudySamplePanel_";
       final JLabel sampleNameLabel = GUIFactory.createLabelWithTooltip(prefix + "sampleName", true);
       final JLabel moisturePercentageLabel =
           GUIFactory.createLabelWithTooltip(prefix + "moisturePercentage");
@@ -2268,24 +2260,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditStudySamplePanel_";
       final List<String> errors = new ArrayList<>(5);
       if (!sampleNameTextField.isValueValid()) {
-        errors.add(
-            "Missing " + UIUtils.getUnicodeString(prefix + "sampleNameLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "sampleNameLabel"));
       }
       if (!sampleProtocolTextField.isValueValid()) {
-        errors.add("Missing "
-            + UIUtils.getUnicodeString(prefix + "sampleProtocolLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "sampleProtocolLabel"));
       }
       if (!samplingPlanTextField.isValueValid()) {
-        errors.add(
-            "Missing " + UIUtils.getUnicodeString(prefix + "samplingPlanLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "samplingPlanLabel"));
       }
       if (!samplingWeightTextField.isValueValid()) {
-        errors.add("Missing "
-            + UIUtils.getUnicodeString(prefix + "samplingWeightLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "samplingWeightLabel"));
       }
       if (!samplingSizeTextField.isValueValid()) {
-        errors.add(
-            "Missing " + UIUtils.getUnicodeString(prefix + "samplingSizeLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "samplingSizeLabel"));
       }
 
       return errors;
@@ -2353,10 +2340,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       advancedCheckBox = new JCheckBox("Advanced");
 
       String availabilityText =
-          UIUtils.getUnicodeString("editor_GeneralInformationPanel_availabilityLabel");
+          bundle.getString("editor_GeneralInformationPanel_availabilityLabel");
       String availabilityTooltip =
-          UIUtils.getUnicodeString("editor_GeneralInformationPanel_availabilityTooltip");
+          bundle.getString("editor_GeneralInformationPanel_availabilityTooltip");
       availabilityCheckBox.setText(availabilityText);
+      availabilityCheckBox.setFont(UIUtils.FONT);
       availabilityCheckBox.setToolTipText(availabilityTooltip);
 
       referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
@@ -2376,17 +2364,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           GUIFactory.createLabelWithTooltip(prefix + "languageWrittenIn");
       final JLabel statusLabel = GUIFactory.createLabelWithTooltip(prefix + "status");
 
-      String objectiveText = UIUtils.getUnicodeString(prefix + "objectiveLabel");
-      String objectiveTooltip = UIUtils.getUnicodeString(prefix + "objectiveTooltip");
+      String objectiveText = bundle.getString(prefix + "objectiveLabel");
+      String objectiveTooltip = bundle.getString(prefix + "objectiveTooltip");
       objectiveTextArea.setBorder(BorderFactory.createTitledBorder(objectiveText));
       objectiveTextArea.setToolTipText(objectiveTooltip);
 
-      String descriptionText = UIUtils.getUnicodeString(prefix + "descriptionLabel");
-      String descriptionTooltip = UIUtils.getUnicodeString(prefix + "descriptionTooltip");
+      String descriptionText = bundle.getString(prefix + "descriptionLabel");
+      String descriptionTooltip = bundle.getString(prefix + "descriptionTooltip");
       descriptionTextArea.setBorder(BorderFactory.createTitledBorder(descriptionText));
       descriptionTextArea.setToolTipText(descriptionTooltip);
 
-        // Hide initially advanced components
+      // Hide initially advanced components
       final List<JComponent> advancedComponents =
           Arrays.asList(sourceTextField, formatField, languageField, softwareField,
               languageWrittenInField, statusField, objectiveTextArea, descriptionTextArea);
@@ -2813,13 +2801,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final List<String> errors = new ArrayList<>(3);
       if (!givenNameTextField.isValueValid()) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "givenNameLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "givenNameLabel"));
       }
       if (!familyNameTextField.isValueValid()) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "familyNameLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "familyNameLabel"));
       }
       if (!contactTextField.isValueValid()) {
-        errors.add("Missing " + UIUtils.getUnicodeString(prefix + "contactLabel"));
+        errors.add("Missing " + bundle.getString(prefix + "contactLabel"));
       }
 
       return errors;
@@ -2852,14 +2840,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     ScopePanel() {
 
-     super(new BorderLayout());
+      super(new BorderLayout());
 
       String prefix = "editor_ScopePanel_";
 
-      commentTextArea.setBorder(
-          BorderFactory.createTitledBorder(UIUtils.getUnicodeString(prefix + "commentLabel")));
-      commentTextArea.setToolTipText(UIUtils.getUnicodeString("editor_ScopePanel_commentTooltip"));
-      commentTextArea.setToolTipText(UIUtils.getUnicodeString(prefix + "commentTooltip"));
+      commentTextArea
+          .setBorder(BorderFactory.createTitledBorder(bundle.getString(prefix + "commentLabel")));
+      commentTextArea.setToolTipText(bundle.getString("editor_ScopePanel_commentTooltip"));
+      commentTextArea.setToolTipText(bundle.getString(prefix + "commentTooltip"));
 
       // Build UI
       productButton.setToolTipText("Click me to add a product");
@@ -3034,7 +3022,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
-         String prefix = "editor_DataBackgroundPanel_";
+      String prefix = "editor_DataBackgroundPanel_";
       final JLabel studySampleLabel = GUIFactory.createLabel(prefix + "studySampleLabel");
       final JLabel dietaryAssessmentMethodLabel =
           GUIFactory.createLabel(prefix + "dietaryAssessmentMethodLabel");
@@ -3051,7 +3039,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       // formPanel
-       final JPanel formPanel = UI.createOptionsPanel(
+      final JPanel formPanel = UI.createOptionsPanel(
           Arrays.asList(studySampleLabel, dietaryAssessmentMethodLabel,
               laboratoryAccreditationLabel, assayLabel),
           Arrays.asList(studySampleButton, dietaryAssessmentMethodButton,
@@ -3154,10 +3142,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JLabel studyProtocolComponentsTypeLabel =
           GUIFactory.createLabelWithTooltip(prefix + "componentsType");
 
-      studyDescriptionTextArea.setBorder(BorderFactory
-          .createTitledBorder(UIUtils.getUnicodeString(prefix + "studyDescriptionLabel")));
-      studyDescriptionTextArea
-          .setToolTipText(UIUtils.getUnicodeString(prefix + "studyDescriptionTooltip"));
+      studyDescriptionTextArea.setBorder(
+          BorderFactory.createTitledBorder(bundle.getString(prefix + "studyDescriptionLabel")));
+      studyDescriptionTextArea.setToolTipText(bundle.getString(prefix + "studyDescriptionTooltip"));
 
       // formPanel
       final JPanel formPanel = UI.createOptionsPanel(
@@ -3555,8 +3542,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     public SimulationPanel() {
 
       super(new BorderLayout());
-
-      final ResourceBundle bundle = FskPlugin.getDefault().MESSAGES_BUNDLE;
 
       String prefix = "editor_Simulation_";
       final JLabel algorithmLabel = new JLabel(bundle.getString(prefix + "Algorithm"));

@@ -26,7 +26,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -46,7 +45,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableModel;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.SimpleFileFilter;
-import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.swing.UI;
 
 public class UIUtils {
@@ -286,26 +284,5 @@ public class UIUtils {
     northPanel.add(component, BorderLayout.WEST);
 
     return northPanel;
-  }
-
-  /**
-   * Return unicode string from property file.
-   * <p>
-   * If error return ISO-8559-1 string.
-   */
-  public static String getUnicodeString(String key) {
-
-    /*
-     * Resourcebundle is reading strings from property files with ISO-8559-1 encoding even though
-     * the files are saved with UTF-8. They need to be converted.
-     */
-    String latinString = FskPlugin.getDefault().MESSAGES_BUNDLE.getString(key);
-    try {
-      String unicodeString = new String(latinString.getBytes("ISO-8859-1"), "UTF-8");
-      return unicodeString;
-    } catch (UnsupportedEncodingException exception) {
-      exception.printStackTrace(System.err);
-      return latinString;
-    }
   }
 }
