@@ -972,33 +972,84 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
       String prefix = "editor_EditHazardPanel_";
-      final FLabel hazardTypeLabel = GUIFactory.createLabelWithToolTip(prefix + "hazardType");
-      final FLabel hazardNameLabel = GUIFactory.createLabelWithToolTip(prefix + "hazardName");
-      final FLabel hazardUnitLabel = GUIFactory.createLabelWithToolTip(prefix + "hazardUnit");
-      final FLabel adverseEffectLabel = GUIFactory.createLabelWithToolTip(prefix + "adverseEffect");
-      final FLabel originLabel = GUIFactory.createLabelWithToolTip(prefix + "origin");
-      final FLabel bmdLabel = GUIFactory.createLabelWithToolTip(prefix + "bmd");
-      final FLabel maxResidueLimitLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "maxResidueLimit");
-      final FLabel noObservedAdverseLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "noObservedAdverse");
-      final FLabel acceptableOperatorLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "acceptableOperator");
-      final FLabel acuteReferenceDoseLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "acuteReferenceDose");
-      final FLabel indSumLabel = GUIFactory.createLabelWithToolTip(prefix + "indSum");
-      final FLabel acceptableDailyIntakeLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "acceptableDailyIntake");
-      final FLabel labNameLabel = GUIFactory.createLabelWithToolTip(prefix + "labName");
-      final FLabel labCountryLabel = GUIFactory.createLabelWithToolTip(prefix + "labCountry");
-      final FLabel detectionLimitLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "detectionLimit");
-      final FLabel quantificationLimitLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "quantificationLimit");
-      final FLabel leftCensoredDataLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "leftCensoredData");
-      final FLabel contaminationRangeLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "contaminationRange");
+
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+
+      // hazard type
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "hazardType"));
+      fields.add(hazardTypeField);
+
+      // hazard name
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "hazardName"));
+      fields.add(hazardNameField);
+
+      if (isAdvanced) {
+
+        // hazard unit
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "hazardUnit"));
+        fields.add(hazardUnitField);
+
+        // adverse effect
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "adverseEffect"));
+        fields.add(adverseEffectTextField);
+
+        // origin
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "origin"));
+        fields.add(originTextField);
+
+        // bmd
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "bmd"));
+        fields.add(bmdTextField);
+
+        // max residue limit
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "maxResidueLimit"));
+        fields.add(maxResidueLimitTextField);
+
+        // no observed adverse
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "noObservedAdverse"));
+        fields.add(noObservedAdverseTextField);
+
+        // acceptable opeartor
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "acceptableOperator"));
+        fields.add(acceptableOperatorTextField);
+
+        // acute reference dose
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "acuteReferenceDose"));
+        fields.add(acuteReferenceDoseTextField);
+
+        // ind sum
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "indSum"));
+        fields.add(indSumField);
+
+        // acceptable daily intake
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "acceptableDailyIntake"));
+        fields.add(acceptableDailyIntakeTextField);
+
+        // lab name
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "labName"));
+        fields.add(labNameTextField);
+
+        // lab country
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "labCountry"));
+        fields.add(labCountryField);
+
+        // detection limit
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "detectionLimit"));
+        fields.add(detectionLimitTextField);
+
+        // quantification limit
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "quantificationLimit"));
+        fields.add(quantificationLimitTextField);
+
+        // left censored data
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "leftCensoredData"));
+        fields.add(leftCensoredDataTextField);
+
+        // contamination range
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "contaminationRange"));
+        fields.add(contaminationRangeTextField);
+      }
 
       // Wraps hazardDescriptionTextArea in a JScrollPane
       final JScrollPane hazardDescriptionPanel = new JScrollPane(hazardDescriptionTextArea);
@@ -1006,19 +1057,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           BorderFactory.createTitledBorder(bundle.getString(prefix + "hazardDescriptionLabel")));
       hazardDescriptionPanel.setToolTipText(bundle.getString(prefix + "hazardDescriptionTooltip"));
 
-      // formPanel
-      final FPanel formPanel = UIUtils.createFormPanel(
-          Arrays.asList(hazardTypeLabel, hazardNameLabel, hazardUnitLabel, adverseEffectLabel,
-              originLabel, bmdLabel, maxResidueLimitLabel, noObservedAdverseLabel,
-              acceptableOperatorLabel, acuteReferenceDoseLabel, indSumLabel,
-              acceptableDailyIntakeLabel, labNameLabel, labCountryLabel, detectionLimitLabel,
-              quantificationLimitLabel, leftCensoredDataLabel, contaminationRangeLabel),
-          Arrays.asList(hazardTypeField, hazardNameField, hazardUnitField, adverseEffectTextField,
-              originTextField, bmdTextField, maxResidueLimitTextField, noObservedAdverseTextField,
-              acceptableOperatorTextField, acuteReferenceDoseTextField, indSumField,
-              acceptableDailyIntakeTextField, labNameTextField, labCountryField,
-              detectionLimitTextField, quantificationLimitTextField, leftCensoredDataTextField,
-              contaminationRangeTextField));
+      FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
@@ -1105,7 +1144,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return advancedComponents;
+      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -2925,7 +2964,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final AutoSuggestField regionField = GUIFactory.createAutoSuggestField(vocabs.get("Region"));
     final AutoSuggestField countryField = GUIFactory.createAutoSuggestField(vocabs.get("Country"));
 
-    private final EditHazardPanel editHazardPanel = new EditHazardPanel(false);
     private final EditPopulationGroupPanel editPopulationGroupPanel =
         new EditPopulationGroupPanel(false);
 
@@ -2963,11 +3001,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       hazardButton.setToolTipText("Click me to add a hazard");
       hazardButton.addActionListener(event -> {
+        EditHazardPanel editHazardPanel = new EditHazardPanel(advancedCheckBox.isSelected());
+        if (scope != null) {
+          editHazardPanel.init(scope.hazard);
+        }
         final ValidatableDialog dlg = new ValidatableDialog(editHazardPanel, "Create a hazard");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final Hazard hazard = editHazardPanel.get();
           hazardButton.setText(String.format("%s_%s", hazard.hazardName, hazard.hazardUnit));
+          scope.hazard = hazard;
         }
       });
 
@@ -3000,7 +3043,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Advanced checkbox
       advancedCheckBox.addItemListener(event -> {
-        editHazardPanel.toggleMode();
         editPopulationGroupPanel.toggleMode();
       });
 
@@ -3018,7 +3060,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         this.scope = scope;
 
-        editHazardPanel.init(scope.hazard);
         editPopulationGroupPanel.init(scope.populationGroup);
         if (StringUtils.isNotBlank(scope.temporalInformation)) {
           try {
@@ -3040,7 +3081,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     Scope get() {
       final Scope scope = new Scope();
       scope.product = this.scope.product;
-      scope.hazard = editHazardPanel.get();
+      scope.hazard = this.scope.hazard;
       scope.populationGroup = editPopulationGroupPanel.get();
 
       final Date date = dateChooser.getDate();
