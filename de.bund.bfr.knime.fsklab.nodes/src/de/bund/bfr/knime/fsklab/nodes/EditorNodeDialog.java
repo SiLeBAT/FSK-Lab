@@ -914,30 +914,25 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -1981279747311233487L;
 
-    private final AutoSuggestField hazardTypeField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Hazard type"));
-    private final AutoSuggestField hazardNameField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Hazard name"));
-    private final StringTextArea hazardDescriptionTextArea = new StringTextArea(true, 5, 30);
-    private final AutoSuggestField hazardUnitField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Hazard unit"));
-    private final StringTextField adverseEffectTextField = new StringTextField(true, 30);
-    private final StringTextField originTextField = new StringTextField(true, 30);
-    private final StringTextField bmdTextField = new StringTextField(true, 30);
-    private final StringTextField maxResidueLimitTextField = new StringTextField(true, 30);
-    private final StringTextField noObservedAdverseTextField = new StringTextField(true, 30);
-    private final StringTextField acceptableOperatorTextField = new StringTextField(true, 30);
-    private final StringTextField acuteReferenceDoseTextField = new StringTextField(true, 30);
-    private final StringTextField acceptableDailyIntakeTextField = new StringTextField(true, 30);
-    private final AutoSuggestField indSumField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind sum"));
-    private final StringTextField labNameTextField = new StringTextField(true, 30);
-    private final AutoSuggestField labCountryField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Laboratory country"));
-    private final StringTextField detectionLimitTextField = new StringTextField(true, 30);
-    private final StringTextField quantificationLimitTextField = new StringTextField(true, 30);
-    private final StringTextField leftCensoredDataTextField = new StringTextField(true, 30);
-    private final StringTextField contaminationRangeTextField = new StringTextField(true, 30);
+    private final AutoSuggestField hazardTypeField;
+    private final AutoSuggestField hazardNameField;
+    private final StringTextArea hazardDescriptionTextArea;
+    private final AutoSuggestField hazardUnitField;
+    private final FTextField adverseEffectTextField;
+    private final FTextField originTextField;
+    private final FTextField bmdTextField;
+    private final FTextField maxResidueLimitTextField;
+    private final FTextField noObservedAdverseTextField;
+    private final FTextField acceptableOperatorTextField;
+    private final FTextField acuteReferenceDoseTextField;
+    private final FTextField acceptableDailyIntakeTextField;
+    private final AutoSuggestField indSumField;
+    private final StringTextField labNameTextField;
+    private final AutoSuggestField labCountryField;
+    private final FTextField detectionLimitTextField;
+    private final FTextField quantificationLimitTextField;
+    private final FTextField leftCensoredDataTextField;
+    private final FTextField contaminationRangeTextField;
 
     private final List<JComponent> advancedComponents;
 
@@ -945,34 +940,65 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
+      hazardTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard type"));
+      hazardNameField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard name"));
+      hazardDescriptionTextArea = new StringTextArea(true, 5, 30);
+      hazardUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard unit"));
+      adverseEffectTextField = new FTextField();
+      originTextField = new FTextField();
+      bmdTextField = new FTextField();
+      maxResidueLimitTextField = new FTextField();
+      noObservedAdverseTextField = new FTextField();
+      acceptableOperatorTextField = new FTextField();
+      acuteReferenceDoseTextField = new FTextField();
+      acceptableDailyIntakeTextField = new FTextField();
+      indSumField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind sum"));
+      labNameTextField = new StringTextField(true, 30);
+      labCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Laboratory country"));
+      detectionLimitTextField = new FTextField();
+      quantificationLimitTextField = new FTextField();
+      leftCensoredDataTextField = new FTextField();
+      contaminationRangeTextField = new FTextField();
+
+      advancedComponents = Arrays.asList(hazardDescriptionTextArea, adverseEffectTextField,
+          originTextField, bmdTextField, maxResidueLimitTextField, acceptableOperatorTextField,
+          noObservedAdverseTextField, acuteReferenceDoseTextField, acceptableDailyIntakeTextField,
+          indSumField, labNameTextField, labCountryField, detectionLimitTextField,
+          quantificationLimitTextField, leftCensoredDataTextField, contaminationRangeTextField);
+
+
+      createUI(isAdvanced);
+    }
+
+    private void createUI(boolean isAdvanced) {
       String prefix = "editor_EditHazardPanel_";
-      final JLabel hazardTypeLabel = GUIFactory.createLabelWithTooltip(prefix + "hazardType", true);
-      final JLabel hazardNameLabel = GUIFactory.createLabelWithTooltip(prefix + "hazardName", true);
-      final JLabel hazardUnitLabel = GUIFactory.createLabelWithTooltip(prefix + "hazardUnit", true);
-      final JLabel adverseEffectLabel = GUIFactory.createLabelWithTooltip(prefix + "adverseEffect");
-      final JLabel originLabel = GUIFactory.createLabelWithTooltip(prefix + "origin");
-      final JLabel bmdLabel = GUIFactory.createLabelWithTooltip(prefix + "bmd");
-      final JLabel maxResidueLimitLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "maxResidueLimit");
-      final JLabel noObservedAdverseLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "noObservedAdverse");
-      final JLabel acceptableOperatorLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "acceptableOperator");
-      final JLabel acuteReferenceDoseLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "acuteReferenceDose");
-      final JLabel indSumLabel = GUIFactory.createLabelWithTooltip(prefix + "indSum");
-      final JLabel acceptableDailyIntakeLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "acceptableDailyIntake");
-      final JLabel labNameLabel = GUIFactory.createLabelWithTooltip(prefix + "labName");
-      final JLabel labCountryLabel = GUIFactory.createLabelWithTooltip(prefix + "labCountry");
-      final JLabel detectionLimitLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "detectionLimit");
-      final JLabel quantificationLimitLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "quantificationLimit");
-      final JLabel leftCensoredDataLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "leftCensoredData");
-      final JLabel contaminationRangeLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "contaminationRange");
+      final FLabel hazardTypeLabel = GUIFactory.createLabelWithToolTip(prefix + "hazardType");
+      final FLabel hazardNameLabel = GUIFactory.createLabelWithToolTip(prefix + "hazardName");
+      final FLabel hazardUnitLabel = GUIFactory.createLabelWithToolTip(prefix + "hazardUnit");
+      final FLabel adverseEffectLabel = GUIFactory.createLabelWithToolTip(prefix + "adverseEffect");
+      final FLabel originLabel = GUIFactory.createLabelWithToolTip(prefix + "origin");
+      final FLabel bmdLabel = GUIFactory.createLabelWithToolTip(prefix + "bmd");
+      final FLabel maxResidueLimitLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "maxResidueLimit");
+      final FLabel noObservedAdverseLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "noObservedAdverse");
+      final FLabel acceptableOperatorLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "acceptableOperator");
+      final FLabel acuteReferenceDoseLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "acuteReferenceDose");
+      final FLabel indSumLabel = GUIFactory.createLabelWithToolTip(prefix + "indSum");
+      final FLabel acceptableDailyIntakeLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "acceptableDailyIntake");
+      final FLabel labNameLabel = GUIFactory.createLabelWithToolTip(prefix + "labName");
+      final FLabel labCountryLabel = GUIFactory.createLabelWithToolTip(prefix + "labCountry");
+      final FLabel detectionLimitLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "detectionLimit");
+      final FLabel quantificationLimitLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "quantificationLimit");
+      final FLabel leftCensoredDataLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "leftCensoredData");
+      final FLabel contaminationRangeLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "contaminationRange");
 
       // Wraps hazardDescriptionTextArea in a JScrollPane
       final JScrollPane hazardDescriptionPanel = new JScrollPane(hazardDescriptionTextArea);
@@ -981,7 +1007,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       hazardDescriptionPanel.setToolTipText(bundle.getString(prefix + "hazardDescriptionTooltip"));
 
       // formPanel
-      final JPanel formPanel = UI.createOptionsPanel(
+      final FPanel formPanel = UIUtils.createFormPanel(
           Arrays.asList(hazardTypeLabel, hazardNameLabel, hazardUnitLabel, adverseEffectLabel,
               originLabel, bmdLabel, maxResidueLimitLabel, noObservedAdverseLabel,
               acceptableOperatorLabel, acuteReferenceDoseLabel, indSumLabel,
@@ -1002,11 +1028,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       add(northPanel, BorderLayout.NORTH);
 
-      advancedComponents = Arrays.asList(hazardDescriptionTextArea, adverseEffectTextField,
-          originTextField, bmdTextField, maxResidueLimitTextField, acceptableOperatorTextField,
-          noObservedAdverseTextField, acuteReferenceDoseTextField, acceptableDailyIntakeTextField,
-          indSumField, labNameTextField, labCountryField, detectionLimitTextField,
-          quantificationLimitTextField, leftCensoredDataTextField, contaminationRangeTextField);
 
       // If advanced mode, show advanced components
       advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
