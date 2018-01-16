@@ -1667,8 +1667,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FixedDateChooser productionDateChooser;
     private final FixedDateChooser expirationDateChooser;
 
-    private final List<JComponent> advancedComponents;
-
     public EditProductPanel(boolean isAdvanced) {
 
       super(new BorderLayout());
@@ -1685,25 +1683,57 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       productionDateChooser = new FixedDateChooser();
       expirationDateChooser = new FixedDateChooser();
 
-      advancedComponents = Arrays.asList(envDescriptionTextArea, productionMethodComboBox,
-          packagingComboBox, productTreatmentComboBox, originCountryField, originAreaField,
-          fisheriesAreaField, productionDateChooser, expirationDateChooser);
-
       createUI(isAdvanced);
     }
 
     private void createUI(boolean isAdvanced) {
       String prefix = "editor_EditProductPanel_";
-      FLabel envNameLabel = GUIFactory.createLabelWithToolTip(prefix + "envName");
-      FLabel envUnitLabel = GUIFactory.createLabelWithToolTip(prefix + "envUnit");
-      FLabel productionMethodLabel = GUIFactory.createLabelWithToolTip(prefix + "productionMethod");
-      FLabel packagingLabel = GUIFactory.createLabelWithToolTip(prefix + "packaging");
-      FLabel productTreatmentLabel = GUIFactory.createLabelWithToolTip(prefix + "productTreatment");
-      FLabel originCountryLabel = GUIFactory.createLabelWithToolTip(prefix + "originCountry");
-      FLabel originAreaLabel = GUIFactory.createLabelWithToolTip(prefix + "originArea");
-      FLabel fisheriesAreaLabel = GUIFactory.createLabelWithToolTip(prefix + "fisheriesArea");
-      FLabel productionDateLabel = GUIFactory.createLabelWithToolTip(prefix + "productionDate");
-      FLabel expirationDateLabel = GUIFactory.createLabelWithToolTip(prefix + "expirationDate");
+
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+
+      // environment name
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "envName"));
+      fields.add(envNameField);
+
+      // environment unit
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "envUnit"));
+      fields.add(envUnitField);
+
+      if (isAdvanced) {
+
+        // production method
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "productionMethod"));
+        fields.add(productionMethodComboBox);
+
+        // packaging
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "packaging"));
+        fields.add(packagingComboBox);
+
+        // product treatment
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "productTreatment"));
+        fields.add(productTreatmentComboBox);
+
+        // origin country
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "originCountry"));
+        fields.add(originCountryField);
+
+        // origin area
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "originArea"));
+        fields.add(originAreaField);
+
+        // fisheries area
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "fisheriesArea"));
+        fields.add(fisheriesAreaField);
+
+        // production date
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "productionDate"));
+        fields.add(productionDateChooser);
+
+        // expiration date
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "expirationDate"));
+        fields.add(expirationDateChooser);
+      }
 
       // Build UI
       String envDescriptionText = bundle.getString(prefix + "envDescriptionLabel");
@@ -1711,14 +1741,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       envDescriptionTextArea.setBorder(BorderFactory.createTitledBorder(envDescriptionText));
       envDescriptionTextArea.setToolTipText(envDescriptionTooltip);
 
-      // formPanel
-      final FPanel formPanel = UIUtils.createFormPanel(
-          Arrays.asList(envNameLabel, envUnitLabel, productionMethodLabel, packagingLabel,
-              productTreatmentLabel, originCountryLabel, originAreaLabel, fisheriesAreaLabel,
-              productionDateLabel, expirationDateLabel),
-          Arrays.asList(envNameField, envUnitField, productionMethodComboBox, packagingComboBox,
-              productTreatmentComboBox, originCountryField, originAreaField, fisheriesAreaField,
-              productionDateChooser, expirationDateChooser));
+      FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
@@ -1726,9 +1749,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(formPanel);
       northPanel.add(new JScrollPane(envDescriptionTextArea));
       add(northPanel, BorderLayout.NORTH);
-
-      // If advanced mode, show advanced components
-      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
@@ -1788,7 +1808,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return advancedComponents;
+      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -2905,14 +2925,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final AutoSuggestField regionField = GUIFactory.createAutoSuggestField(vocabs.get("Region"));
     final AutoSuggestField countryField = GUIFactory.createAutoSuggestField(vocabs.get("Country"));
 
-    private final EditProductPanel editProductPanel = new EditProductPanel(false);
     private final EditHazardPanel editHazardPanel = new EditHazardPanel(false);
     private final EditPopulationGroupPanel editPopulationGroupPanel =
         new EditPopulationGroupPanel(false);
 
+    private Scope scope = null;
+
     ScopePanel() {
 
       super(new BorderLayout());
+
+      final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
       String prefix = "editor_ScopePanel_";
 
@@ -2924,12 +2947,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Build UI
       productButton.setToolTipText("Click me to add a product");
       productButton.addActionListener(event -> {
+        EditProductPanel editProductPanel = new EditProductPanel(advancedCheckBox.isSelected());
+        if (scope != null) {
+          editProductPanel.init(scope.product);
+        }
         final ValidatableDialog dlg = new ValidatableDialog(editProductPanel, "Create a product");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final Product product = editProductPanel.get();
           productButton
               .setText(String.format("%s_%s", product.environmentName, product.environmentUnit));
+          scope.product = product;
         }
       });
 
@@ -2971,9 +2999,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
               countryField));
 
       // Advanced checkbox
-      final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
       advancedCheckBox.addItemListener(event -> {
-        editProductPanel.toggleMode();
         editHazardPanel.toggleMode();
         editPopulationGroupPanel.toggleMode();
       });
@@ -2989,7 +3015,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     void init(final Scope scope) {
       if (scope != null) {
-        editProductPanel.init(scope.product);
+
+        this.scope = scope;
+
         editHazardPanel.init(scope.hazard);
         editPopulationGroupPanel.init(scope.populationGroup);
         if (StringUtils.isNotBlank(scope.temporalInformation)) {
@@ -3011,7 +3039,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     Scope get() {
       final Scope scope = new Scope();
-      scope.product = editProductPanel.get();
+      scope.product = this.scope.product;
       scope.hazard = editHazardPanel.get();
       scope.populationGroup = editPopulationGroupPanel.get();
 
