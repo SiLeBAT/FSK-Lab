@@ -703,52 +703,74 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -931984426171199928L;
 
-    private final AutoSuggestField dataCollectionToolField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Method. tool to collect data"));
-    private final StringTextField nonConsecutiveOneDayField = new StringTextField(true, 30);
-    private final StringTextField dietarySoftwareToolField = new StringTextField(false, 30);
-    private final StringTextField foodItemNumberField = new StringTextField(false, 30);
-    private final StringTextField recordTypeField = new StringTextField(false, 30);
-    private final JComboBox<String> foodDescriptionField =
-        GUIFactory.createComboBox(vocabs.get("Food descriptors"));
-    private final List<JComponent> advancedComponents;
+    private final AutoSuggestField dataCollectionToolField;
+    private final StringTextField nonConsecutiveOneDayField;
+    private final StringTextField dietarySoftwareToolField;
+    private final StringTextField foodItemNumberField;
+    private final StringTextField recordTypeField;
+    private final JComboBox<String> foodDescriptionField;
 
     EditDietaryAssessmentMethodPanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
 
-      // Create labels
-      String prefix = "editor_EditDietaryAssessmentMethodPanel_";
-      final JLabel dataCollectionToolLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "dataCollectionTool", true);
-      final JLabel nonConsecutiveOneDayLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "nonConsecutiveOneDays", true);
-      final JLabel dietarySoftwareToolLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "dietarySoftwareTool");
-      final JLabel foodItemNumberLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "foodItemNumber");
-      final JLabel recordTypeLabel = GUIFactory.createLabelWithTooltip(prefix + "recordType");
-      final JLabel foodDescriptionLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "foodDescription");
+      dataCollectionToolField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Method. tool to collect data"));
+      nonConsecutiveOneDayField = new StringTextField(true, 30);
+      dietarySoftwareToolField = new StringTextField(false, 30);
+      foodItemNumberField = new StringTextField(false, 30);
+      recordTypeField = new StringTextField(false, 30);
+      foodDescriptionField = GUIFactory.createComboBox(vocabs.get("Food descriptors"));
 
-      final JPanel formPanel = UI.createOptionsPanel(
-          Arrays.asList(dataCollectionToolLabel, nonConsecutiveOneDayLabel,
-              dietarySoftwareToolLabel, foodItemNumberLabel, recordTypeLabel, foodDescriptionLabel),
-          Arrays.asList(dataCollectionToolField, nonConsecutiveOneDayField,
-              dietarySoftwareToolField, foodItemNumberField, recordTypeField,
-              foodDescriptionField));
+      createUI(isAdvanced);
+    }
+
+    private void createUI(boolean isAdvanced) {
+
+      String prefix = "editor_EditDietaryAssessmentMethodPanel_";
+
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+
+      // data collection tool
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "dataCollectionTool"));
+      fields.add(dataCollectionToolField);
+
+      // non consecutive one day
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "nonConsecutiveOneDays"));
+      fields.add(nonConsecutiveOneDayField);
+
+      // dietary software tool
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "dietarySoftwareTool"));
+        fields.add(dietarySoftwareToolField);
+      }
+
+      // food item number
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "foodItemNumber"));
+        fields.add(foodItemNumberField);
+      }
+
+      // record type
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "recordType"));
+        fields.add(recordTypeField);
+      }
+
+      // food description
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "foodDescription"));
+        fields.add(foodDescriptionField);
+      }
+
+      FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
       add(northPanel, BorderLayout.NORTH);
-
-      advancedComponents = Arrays.asList(dietarySoftwareToolField, foodItemNumberField,
-          recordTypeField, foodDescriptionField);
-
-      // If advanced mode, show advanced components
-      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
@@ -824,7 +846,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return advancedComponents;
+      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -3190,8 +3212,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final AutoSuggestField laboratoryAccreditationField =
         GUIFactory.createAutoSuggestField(vocabs.get("Laboratory accreditation"));
 
-    private final EditDietaryAssessmentMethodPanel editDietaryAssessmentMethodPanel =
-        new EditDietaryAssessmentMethodPanel(false);
     private final EditAssayPanel editAssayPanel = new EditAssayPanel(false);
 
     private final DataBackground dataBackground = new DataBackground();
@@ -3225,13 +3245,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JButton dietaryAssessmentMethodButton = new JButton();
       dietaryAssessmentMethodButton.setToolTipText("Click me to add Dietary assessment method");
       dietaryAssessmentMethodButton.addActionListener(event -> {
-        final ValidatableDialog dlg = new ValidatableDialog(editDietaryAssessmentMethodPanel,
-            "Create dietary assessment method");
+        EditDietaryAssessmentMethodPanel editPanel =
+            new EditDietaryAssessmentMethodPanel(advancedCheckBox.isSelected());
+        final ValidatableDialog dlg =
+            new ValidatableDialog(editPanel, "Create dietary assessment method");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-          final DietaryAssessmentMethod method = editDietaryAssessmentMethodPanel.get();
+          final DietaryAssessmentMethod method = editPanel.get();
           // Update button's text
           dietaryAssessmentMethodButton.setText(method.collectionTool);
+          dataBackground.dietaryAssessmentMethod = method;
         }
       });
 
@@ -3257,7 +3280,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Advanced `checkbox`
       advancedCheckBox.addItemListener(event -> {
         studyPanel.advancedComponents.forEach(it -> it.setEnabled(advancedCheckBox.isSelected()));
-        editDietaryAssessmentMethodPanel.toggleMode();
         editAssayPanel.toggleMode();
       });
 
@@ -3279,15 +3301,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     void init(final DataBackground dataBackground) {
       if (dataBackground != null) {
-        editDietaryAssessmentMethodPanel.init(dataBackground.dietaryAssessmentMethod);
         editAssayPanel.init(dataBackground.assay);
       }
     }
 
     DataBackground get() {
       final DataBackground dataBackground = new DataBackground();
-      dataBackground.studySample = dataBackground.studySample;
-      dataBackground.dietaryAssessmentMethod = editDietaryAssessmentMethodPanel.get();
+      dataBackground.studySample = this.dataBackground.studySample;
+      dataBackground.dietaryAssessmentMethod = this.dataBackground.dietaryAssessmentMethod;
       dataBackground.assay = editAssayPanel.get();
 
       return dataBackground;
