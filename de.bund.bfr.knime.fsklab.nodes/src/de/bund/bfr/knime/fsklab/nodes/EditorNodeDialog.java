@@ -1490,23 +1490,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
    */
   private class EditPopulationGroupPanel extends EditPanel<PopulationGroup> {
 
+    // TODO: #3 Replace StringTextFields with FTextFields
     private static final long serialVersionUID = -4520186348489618333L;
 
-    private final StringTextField populationNameTextField = new StringTextField(false, 30);
-    private final StringTextField targetPopulationTextField = new StringTextField(true, 30);
-    private final StringTextField populationSpanTextField = new StringTextField(true, 30);
-    private final StringTextArea populationDescriptionTextArea = new StringTextArea(true, 5, 30);
-    private final StringTextField populationAgeTextField = new StringTextField(true, 30);
-    private final StringTextField populationGenderTextField = new StringTextField(true, 30);
-    private final StringTextField bmiTextField = new StringTextField(true, 30);
-    private final StringTextField specialDietGroupTextField = new StringTextField(true, 30);
-    private final StringTextField patternConsumptionTextField = new StringTextField(true, 30);
-    private final JComboBox<String> regionComboBox =
-        GUIFactory.createComboBox(vocabs.get("Region"));
-    private final JComboBox<String> countryComboBox =
-        GUIFactory.createComboBox(vocabs.get("Country"));
-    private final StringTextField riskTextField = new StringTextField(true, 30);
-    private final StringTextField seasonTextField = new StringTextField(true, 30);
+    private final FTextField populationNameTextField;
+    private final FTextField targetPopulationTextField;
+    private final FTextField populationSpanTextField;
+    private final StringTextArea populationDescriptionTextArea;
+    private final FTextField populationAgeTextField;
+    private final FTextField populationGenderTextField;
+    private final FTextField bmiTextField;
+    private final FTextField specialDietGroupTextField;
+    private final FTextField patternConsumptionTextField;
+    private final JComboBox<String> regionComboBox;
+    private final JComboBox<String> countryComboBox;
+    private final FTextField riskTextField;
+    private final FTextField seasonTextField;
 
     private final List<JComponent> advancedComponents;
 
@@ -1514,25 +1513,84 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
+      populationNameTextField = new FTextField(true);
+      targetPopulationTextField = new FTextField();
+      populationSpanTextField = new FTextField();
+      populationDescriptionTextArea = new StringTextArea(true, 5, 30);
+      populationAgeTextField = new FTextField();
+      populationGenderTextField = new FTextField();
+      bmiTextField = new FTextField();
+      specialDietGroupTextField = new FTextField();
+      patternConsumptionTextField = new FTextField();
+      regionComboBox = GUIFactory.createComboBox(vocabs.get("Region"));
+      countryComboBox = GUIFactory.createComboBox(vocabs.get("Country"));
+      riskTextField = new FTextField();
+      seasonTextField = new FTextField();
+
+      advancedComponents = Arrays.asList(targetPopulationTextField, populationSpanTextField,
+          populationDescriptionTextArea, populationAgeTextField, populationGenderTextField,
+          bmiTextField, specialDietGroupTextField, patternConsumptionTextField, regionComboBox,
+          countryComboBox, riskTextField, seasonTextField);
+
+      createUI(isAdvanced);
+    }
+
+    private void createUI(boolean isAdvanced) {
       String prefix = "editor_EditPopulationGroupPanel_";
-      final JLabel populationNameLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "populationName", true);
-      final JLabel targetPopulationLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "targetPopulation");
-      final JLabel populationSpanLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "populationSpan");
-      final JLabel populationAgeLabel = GUIFactory.createLabelWithTooltip(prefix + "populationAge");
-      final JLabel populationGenderLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "populationGender");
-      final JLabel bmiLabel = GUIFactory.createLabelWithTooltip(prefix + "bmi");
-      final JLabel specialDietGroupLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "specialDietGroups");
-      final JLabel patternConsumptionLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "patternConsumption");
-      final JLabel regionLabel = GUIFactory.createLabelWithTooltip(prefix + "region");
-      final JLabel countryLabel = GUIFactory.createLabelWithTooltip(prefix + "country");
-      final JLabel riskLabel = GUIFactory.createLabelWithTooltip(prefix + "riskAndPopulation");
-      final JLabel seasonLabel = GUIFactory.createLabelWithTooltip(prefix + "season");
+
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+
+      // population name
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationName"));
+      fields.add(populationNameTextField);
+
+      if (isAdvanced) {
+
+        // target population
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "targetPopulation"));
+        fields.add(targetPopulationTextField);
+
+        // population span
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationSpan"));
+        fields.add(populationSpanTextField);
+
+        // population age
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationAge"));
+        fields.add(populationAgeTextField);
+
+        // population gender
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationGender"));
+        fields.add(populationGenderTextField);
+
+        // bmi
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "bmi"));
+        fields.add(bmiTextField);
+
+        // special diet group
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "specialDietGroups"));
+        fields.add(specialDietGroupTextField);
+
+        // pattern consumption
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "patternConsumption"));
+        fields.add(populationGenderTextField);
+
+        // region
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "region"));
+        fields.add(regionComboBox);
+
+        // country
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "country"));
+        fields.add(countryComboBox);
+
+        // risk
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "riskAndPopulation"));
+        fields.add(riskTextField);
+
+        // season
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "season"));
+        fields.add(seasonTextField);
+      }
 
       String populationDescriptionText = bundle.getString(prefix + "populationDescriptionLabel");
       String populationDescriptionTooltip =
@@ -1541,16 +1599,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           .setBorder(BorderFactory.createTitledBorder(populationDescriptionText));
       populationDescriptionTextArea.setToolTipText(populationDescriptionTooltip);
 
-      // formPanel
-      final JPanel formPanel = UI.createOptionsPanel(
-          Arrays.asList(populationNameLabel, targetPopulationLabel, populationSpanLabel,
-              populationAgeLabel, populationGenderLabel, bmiLabel, specialDietGroupLabel,
-              patternConsumptionLabel, regionLabel, countryLabel, riskLabel, seasonLabel),
-          Arrays.asList(populationNameTextField, targetPopulationTextField, populationSpanTextField,
-              populationAgeTextField, populationGenderTextField, bmiTextField,
-              specialDietGroupTextField, patternConsumptionTextField, regionComboBox,
-              countryComboBox, riskTextField, seasonTextField));
-
+      final FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
@@ -1558,11 +1607,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(formPanel);
       northPanel.add(new JScrollPane(populationDescriptionTextArea));
       add(northPanel, BorderLayout.NORTH);
-
-      advancedComponents = Arrays.asList(targetPopulationTextField, populationSpanTextField,
-          populationDescriptionTextArea, populationAgeTextField, populationGenderTextField,
-          bmiTextField, specialDietGroupTextField, patternConsumptionTextField, regionComboBox,
-          countryComboBox, riskTextField, seasonTextField);
 
       // If advanced mode, show advanced components
       advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
@@ -1677,7 +1721,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       final List<String> errors = new ArrayList<>(1);
-      if (!populationNameTextField.isValueValid()) {
+      if (!populationNameTextField.getText().isEmpty()) {
         errors.add(
             "Missing " + bundle.getString("editor_EditPopulationGroupPanel_populationNameLabel"));
       }
@@ -2964,9 +3008,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final AutoSuggestField regionField = GUIFactory.createAutoSuggestField(vocabs.get("Region"));
     final AutoSuggestField countryField = GUIFactory.createAutoSuggestField(vocabs.get("Country"));
 
-    private final EditPopulationGroupPanel editPopulationGroupPanel =
-        new EditPopulationGroupPanel(false);
-
     private Scope scope = null;
 
     ScopePanel() {
@@ -3016,12 +3057,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       populationButton.setToolTipText("Click me to add a Population group");
       populationButton.addActionListener(event -> {
+        EditPopulationGroupPanel editPopulationGroupPanel =
+            new EditPopulationGroupPanel(advancedCheckBox.isSelected());
+        if (scope != null) {
+          editPopulationGroupPanel.init(scope.populationGroup);
+        }
         final ValidatableDialog dlg =
             new ValidatableDialog(editPopulationGroupPanel, "Create a Population Group");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final PopulationGroup populationGroup = editPopulationGroupPanel.get();
           populationButton.setText(populationGroup.populationName);
+          scope.populationGroup = populationGroup;
         }
       });
 
@@ -3041,11 +3088,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           Arrays.asList(productButton, hazardButton, populationButton, dateChooser, regionField,
               countryField));
 
-      // Advanced checkbox
-      advancedCheckBox.addItemListener(event -> {
-        editPopulationGroupPanel.toggleMode();
-      });
-
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
@@ -3060,7 +3102,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         this.scope = scope;
 
-        editPopulationGroupPanel.init(scope.populationGroup);
         if (StringUtils.isNotBlank(scope.temporalInformation)) {
           try {
             dateChooser
@@ -3082,7 +3123,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final Scope scope = new Scope();
       scope.product = this.scope.product;
       scope.hazard = this.scope.hazard;
-      scope.populationGroup = editPopulationGroupPanel.get();
+      scope.populationGroup = this.scope.populationGroup;
 
       final Date date = dateChooser.getDate();
       if (date != null) {
