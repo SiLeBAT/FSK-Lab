@@ -599,18 +599,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -1195181696127795655L;
 
-    private final StringTextField nameTextField = new StringTextField(false, 30);
-    private final StringTextArea descriptionTextArea = new StringTextArea(true, 5, 30);
-
-    private final List<JComponent> advancedComponents;
+    private final FTextField nameTextField;
+    private final StringTextArea descriptionTextArea;
 
     EditAssayPanel(final boolean isAdvanced) {
       super(new BorderLayout());
 
+      nameTextField = new FTextField(true);
+      descriptionTextArea = new StringTextArea(true, 5, 30);
+
+      createUI(isAdvanced);
+    }
+
+    private void createUI(boolean isAdvanced) {
       String prefix = "editor_EditAssayPanel_";
 
-      // Create labels
-      final JLabel nameLabel = GUIFactory.createLabelWithTooltip(prefix + "name", true);
+      List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "name"));
+      List<JComponent> fields = Arrays.asList(nameTextField);
 
       // descriptionTextArea
       String descriptionTitle = bundle.getString(prefix + "descriptionLabel");
@@ -618,20 +623,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       descriptionTextArea.setBorder(BorderFactory.createTitledBorder(descriptionTitle));
       descriptionTextArea.setToolTipText(descriptionToolTip);
 
-      final JPanel formPanel =
-          UI.createOptionsPanel(Arrays.asList(nameLabel), Arrays.asList(nameTextField));
+      final FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(descriptionTextArea));
+      if (isAdvanced) {
+        northPanel.add(new JScrollPane(descriptionTextArea));
+      }
       add(northPanel, BorderLayout.NORTH);
 
-      advancedComponents = Arrays.asList(descriptionTextArea);
-
-      // If advanced mode, show advanced components
-      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
@@ -656,7 +658,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       final List<String> errors = new ArrayList<>(1);
-      if (!nameTextField.isValueValid()) {
+      if (!nameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString("editor_EditAssayPanel_nameLabel"));
       }
 
@@ -665,7 +667,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return advancedComponents;
+      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -3212,8 +3214,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final AutoSuggestField laboratoryAccreditationField =
         GUIFactory.createAutoSuggestField(vocabs.get("Laboratory accreditation"));
 
-    private final EditAssayPanel editAssayPanel = new EditAssayPanel(false);
-
     private final DataBackground dataBackground = new DataBackground();
 
     DataBackgroundPanel() {
@@ -3261,11 +3261,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JButton assayButton = new JButton();
       assayButton.setToolTipText("Click me to add Assay");
       assayButton.addActionListener(event -> {
-        final ValidatableDialog dlg = new ValidatableDialog(editAssayPanel, "Create assay");
+        EditAssayPanel editPanel = new EditAssayPanel(advancedCheckBox.isSelected());
+        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create assay");
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-          final Assay assay = editAssayPanel.get();
+          final Assay assay = editPanel.get();
           // Update button's text
           assayButton.setText(assay.name);
+          dataBackground.assay = assay;
         }
       });
 
@@ -3280,7 +3282,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Advanced `checkbox`
       advancedCheckBox.addItemListener(event -> {
         studyPanel.advancedComponents.forEach(it -> it.setEnabled(advancedCheckBox.isSelected()));
-        editAssayPanel.toggleMode();
       });
 
       // formPanel
@@ -3299,17 +3300,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       add(northPanel, BorderLayout.NORTH);
     }
 
-    void init(final DataBackground dataBackground) {
-      if (dataBackground != null) {
-        editAssayPanel.init(dataBackground.assay);
-      }
-    }
+    void init(final DataBackground dataBackground) {}
 
     DataBackground get() {
       final DataBackground dataBackground = new DataBackground();
       dataBackground.studySample = this.dataBackground.studySample;
       dataBackground.dietaryAssessmentMethod = this.dataBackground.dietaryAssessmentMethod;
-      dataBackground.assay = editAssayPanel.get();
+      dataBackground.assay = this.dataBackground.assay;
 
       return dataBackground;
     }
