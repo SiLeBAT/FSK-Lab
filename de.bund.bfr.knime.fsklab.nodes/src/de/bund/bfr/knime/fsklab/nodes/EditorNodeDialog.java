@@ -1490,7 +1490,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
    */
   private class EditPopulationGroupPanel extends EditPanel<PopulationGroup> {
 
-    // TODO: #3 Replace StringTextFields with FTextFields
     private static final long serialVersionUID = -4520186348489618333L;
 
     private final FTextField populationNameTextField;
@@ -2292,81 +2291,118 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -4740851101237646103L;
 
-    private final StringTextField sampleNameTextField = new StringTextField(false, 30);
-    private final SpinnerNumberModel moisturePercentageSpinnerModel =
-        GUIFactory.createSpinnerPercentageModel();
-    private final SpinnerNumberModel fatPercentageSpinnerModel =
-        GUIFactory.createSpinnerPercentageModel();
-    private final StringTextField sampleProtocolTextField = new StringTextField(false, 30);
-    private final AutoSuggestField samplingStrategyField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Sampling strategy"));
-    private final AutoSuggestField samplingTypeField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Type of sampling program"));
-    private final AutoSuggestField samplingMethodField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Sampling method"));
-    private final StringTextField samplingPlanTextField = new StringTextField(false, 30);
-    private final StringTextField samplingWeightTextField = new StringTextField(false, 30);
-    private final StringTextField samplingSizeTextField = new StringTextField(false, 30);
-    private final AutoSuggestField lotSizeUnitField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Lot size unit"));
-    private final AutoSuggestField samplingPointField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Sampling point"));
+    private final SpinnerNumberModel moisturePercentageSpinnerModel;
+    private final SpinnerNumberModel fatPercentageSpinnerModel;
 
-    private final List<JComponent> advancedComponents;
+    private final FTextField sampleNameTextField;
+    private final FTextField sampleProtocolTextField;
+    private final AutoSuggestField samplingStrategyField;
+    private final AutoSuggestField samplingTypeField;
+    private final AutoSuggestField samplingMethodField;
+    private final FTextField samplingPlanTextField;
+    private final FTextField samplingWeightTextField;
+    private final FTextField samplingSizeTextField;
+    private final AutoSuggestField lotSizeUnitField;
+    private final AutoSuggestField samplingPointField;
 
     public EditStudySamplePanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
 
-      // Create labels and fields
-      String prefix = "editor_EditStudySamplePanel_";
-      final JLabel sampleNameLabel = GUIFactory.createLabelWithTooltip(prefix + "sampleName", true);
-      final JLabel moisturePercentageLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "moisturePercentage");
-      final JLabel fatPercentageLabel = GUIFactory.createLabelWithTooltip(prefix + "fatPercentage");
-      final JLabel sampleProtocolLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "sampleProtocol", true);
-      final JLabel samplingStrategyLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "samplingStrategy");
-      final JLabel samplingTypeLabel = GUIFactory.createLabelWithTooltip(prefix + "samplingType");
-      final JLabel samplingMethodLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "samplingMethod");
-      final JLabel samplingPlanLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "samplingPlan", true);
-      final JLabel samplingWeightLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "samplingWeight", true);
-      final JLabel samplingSizeLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "samplingSize", true);
-      final JLabel lotSizeUnitLabel = GUIFactory.createLabelWithTooltip(prefix + "lotSizeUnit");
-      final JLabel samplingPointLabel = GUIFactory.createLabelWithTooltip(prefix + "samplingPoint");
+      moisturePercentageSpinnerModel = GUIFactory.createSpinnerPercentageModel();
+      fatPercentageSpinnerModel = GUIFactory.createSpinnerPercentageModel();
 
-      // Build UI
-      final JSpinner moisturePercentageSpinner =
-          GUIFactory.createSpinner(moisturePercentageSpinnerModel);
-      final JSpinner fatPercentageSpinner = GUIFactory.createSpinner(fatPercentageSpinnerModel);
+      sampleNameTextField = new FTextField(true);
+      sampleProtocolTextField = new FTextField(true);
+      samplingStrategyField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling strategy"));
+      samplingTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Type of sampling program"));
+      samplingMethodField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling method"));
+      samplingPlanTextField = new FTextField(true);
+      samplingWeightTextField = new FTextField(true);
+      samplingSizeTextField = new FTextField(true);
+      lotSizeUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Lot size unit"));
+      samplingPointField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling point"));
+
+      createUI(isAdvanced);
+    }
+
+    private void createUI(boolean isAdvanced) {
+
+      String prefix = "editor_EditStudySamplePanel_";
+
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+
+      // sample name
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "sampleName"));
+      fields.add(sampleNameTextField);
+
+      // moisture percentage
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "moisturePercentage"));
+        fields.add(GUIFactory.createSpinner(moisturePercentageSpinnerModel));
+      }
+
+      // fat percentage
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "fatPercentage"));
+        fields.add(GUIFactory.createSpinner(fatPercentageSpinnerModel));
+      }
+
+      // sample protocol label
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "sampleProtocol"));
+      fields.add(sampleProtocolTextField);
+
+      // sampling strategy label
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingStrategy"));
+        fields.add(samplingStrategyField);
+      }
+
+      // sampling type label
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingType"));
+        fields.add(samplingTypeField);
+      }
+
+      // sampling method label
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingMethod"));
+        fields.add(samplingMethodField);
+      }
+
+      // sampling plan
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingPlan"));
+      fields.add(samplingPlanTextField);
+
+      // sampling weight
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingWeight"));
+      fields.add(samplingWeightTextField);
+
+      // sampling size
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingSize"));
+      fields.add(samplingSizeTextField);
+
+      // lot size unit
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "lotSizeUnit"));
+        fields.add(lotSizeUnitField);
+      }
+
+      // sampling point
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingPoint"));
+        fields.add(samplingPointField);
+      }
 
       // formPanel
-      final JPanel formPanel = UI.createOptionsPanel(
-          Arrays.asList(sampleNameLabel, moisturePercentageLabel, fatPercentageLabel,
-              sampleProtocolLabel, samplingStrategyLabel, samplingTypeLabel, samplingMethodLabel,
-              samplingPlanLabel, samplingWeightLabel, samplingSizeLabel, lotSizeUnitLabel,
-              samplingPointLabel),
-          Arrays.asList(sampleNameTextField, moisturePercentageSpinner, fatPercentageSpinner,
-              sampleProtocolTextField, samplingStrategyField, samplingTypeField,
-              samplingMethodField, samplingPlanTextField, samplingWeightTextField,
-              samplingSizeTextField, lotSizeUnitField, samplingPointField));
+      final FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
       add(northPanel, BorderLayout.NORTH);
-
-      // If advanced mode, show advanced components
-      advancedComponents = Arrays.asList(moisturePercentageSpinner, fatPercentageSpinner,
-          samplingStrategyField, samplingTypeField, samplingMethodField, samplingSizeTextField,
-          lotSizeUnitField, samplingPointField);
-      getAdvancedComponents().forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
@@ -2417,19 +2453,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       String prefix = "editor_EditStudySamplePanel_";
       final List<String> errors = new ArrayList<>(5);
-      if (!sampleNameTextField.isValueValid()) {
+      if (!sampleNameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "sampleNameLabel"));
       }
-      if (!sampleProtocolTextField.isValueValid()) {
+      if (!sampleProtocolTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "sampleProtocolLabel"));
       }
-      if (!samplingPlanTextField.isValueValid()) {
+      if (!samplingPlanTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "samplingPlanLabel"));
       }
-      if (!samplingWeightTextField.isValueValid()) {
+      if (!samplingWeightTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "samplingWeightLabel"));
       }
-      if (!samplingSizeTextField.isValueValid()) {
+      if (!samplingSizeTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "samplingSizeLabel"));
       }
 
@@ -2438,7 +2474,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return advancedComponents;
+      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -3154,10 +3190,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final AutoSuggestField laboratoryAccreditationField =
         GUIFactory.createAutoSuggestField(vocabs.get("Laboratory accreditation"));
 
-    private final EditStudySamplePanel editStudySamplePanel = new EditStudySamplePanel(false);
     private final EditDietaryAssessmentMethodPanel editDietaryAssessmentMethodPanel =
         new EditDietaryAssessmentMethodPanel(false);
     private final EditAssayPanel editAssayPanel = new EditAssayPanel(false);
+
+    private final DataBackground dataBackground = new DataBackground();
 
     DataBackgroundPanel() {
 
@@ -3170,6 +3207,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       studySampleButton.setToolTipText("Click me to add Study Sample");
       studySampleButton.addActionListener(event -> {
 
+        EditStudySamplePanel editStudySamplePanel =
+            new EditStudySamplePanel(advancedCheckBox.isSelected());
+
         final ValidatableDialog dlg =
             new ValidatableDialog(editStudySamplePanel, "Create Study sample");
 
@@ -3177,6 +3217,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           final StudySample studySample = editStudySamplePanel.get();
           // Update button's text
           studySampleButton.setText(studySample.sample);
+
+          dataBackground.studySample = studySample;
         }
       });
 
@@ -3215,7 +3257,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // Advanced `checkbox`
       advancedCheckBox.addItemListener(event -> {
         studyPanel.advancedComponents.forEach(it -> it.setEnabled(advancedCheckBox.isSelected()));
-        editStudySamplePanel.toggleMode();
         editDietaryAssessmentMethodPanel.toggleMode();
         editAssayPanel.toggleMode();
       });
@@ -3238,7 +3279,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     void init(final DataBackground dataBackground) {
       if (dataBackground != null) {
-        editStudySamplePanel.init(dataBackground.studySample);
         editDietaryAssessmentMethodPanel.init(dataBackground.dietaryAssessmentMethod);
         editAssayPanel.init(dataBackground.assay);
       }
@@ -3246,7 +3286,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     DataBackground get() {
       final DataBackground dataBackground = new DataBackground();
-      dataBackground.studySample = editStudySamplePanel.get();
+      dataBackground.studySample = dataBackground.studySample;
       dataBackground.dietaryAssessmentMethod = editDietaryAssessmentMethodPanel.get();
       dataBackground.assay = editAssayPanel.get();
 
