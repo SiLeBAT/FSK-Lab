@@ -86,6 +86,7 @@ import com.gmail.gcolaianni5.jris.exception.JRisException;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FTextArea;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.FixedDateChooser;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
@@ -600,13 +601,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private static final long serialVersionUID = -1195181696127795655L;
 
     private final FTextField nameTextField;
-    private final StringTextArea descriptionTextArea;
+    private final FTextArea descriptionTextArea;
 
     EditAssayPanel(final boolean isAdvanced) {
       super(new BorderLayout());
 
       nameTextField = new FTextField(true);
-      descriptionTextArea = new StringTextArea(true, 5, 30);
+      descriptionTextArea = new FTextArea();
 
       createUI(isAdvanced);
     }
@@ -614,26 +615,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
       String prefix = "editor_EditAssayPanel_";
 
-      List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "name"));
-      List<JComponent> fields = Arrays.asList(nameTextField);
-
-      // descriptionTextArea
-      String descriptionTitle = bundle.getString(prefix + "descriptionLabel");
-      String descriptionToolTip = bundle.getString(prefix + "descriptionTooltip");
-      descriptionTextArea.setBorder(BorderFactory.createTitledBorder(descriptionTitle));
-      descriptionTextArea.setToolTipText(descriptionToolTip);
-
-      final FPanel formPanel = UIUtils.createFormPanel(labels, fields);
-
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
-      northPanel.add(formPanel);
-      if (isAdvanced) {
-        northPanel.add(new JScrollPane(descriptionTextArea));
-      }
-      add(northPanel, BorderLayout.NORTH);
 
+      // name
+      List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "name"));
+      List<JComponent> fields = Arrays.asList(nameTextField);
+      northPanel.add(UIUtils.createFormPanel(labels, fields));
+
+      // description
+      if (isAdvanced) {
+        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "description");
+        FPanel textAreaPanel =
+            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(descriptionTextArea));
+        northPanel.add(textAreaPanel);
+      }
+
+      add(northPanel, BorderLayout.NORTH);
     }
 
     @Override

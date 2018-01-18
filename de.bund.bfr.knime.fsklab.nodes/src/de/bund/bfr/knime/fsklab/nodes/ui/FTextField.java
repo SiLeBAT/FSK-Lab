@@ -17,7 +17,7 @@ public class FTextField extends JTextField {
     super(30);
 
     Color borderColor = mandatory ? UIUtils.RED : UIUtils.BLUE;
-    Border matteBorder = BorderFactory.createMatteBorder(0, 0, 1, 0, borderColor);
+    Border matteBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, borderColor);
     Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
     Border compoundBorder = BorderFactory.createCompoundBorder(matteBorder, emptyBorder);
     setBorder(compoundBorder);
