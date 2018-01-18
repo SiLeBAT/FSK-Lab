@@ -2574,8 +2574,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final AutoSuggestField softwareField;
     private final AutoSuggestField languageWrittenInField;
     private final AutoSuggestField statusField;
-    private final StringTextArea objectiveTextArea;
-    private final StringTextArea descriptionTextArea;
+    private final FTextArea objectiveTextArea;
+    private final FTextArea descriptionTextArea;
 
     public GeneralInformationPanel() {
 
@@ -2597,8 +2597,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       softwareField = GUIFactory.createAutoSuggestField(vocabs.get("Software"));
       languageWrittenInField = GUIFactory.createAutoSuggestField(vocabs.get("Language written in"));
       statusField = GUIFactory.createAutoSuggestField(vocabs.get("status"));
-      objectiveTextArea = new StringTextArea(true, 5, 30);
-      descriptionTextArea = new StringTextArea(true, 5, 30);
+      objectiveTextArea = new FTextArea();
+      descriptionTextArea = new FTextArea();
 
       createUI();
     }
@@ -2623,16 +2623,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       FLabel statusLabel = GUIFactory.createLabelWithToolTip(prefix + "status");
 
       availabilityCheckBox.setBackground(UIUtils.WHITE);
-
-      String objectiveText = bundle.getString(prefix + "objectiveLabel");
-      String objectiveTooltip = bundle.getString(prefix + "objectiveTooltip");
-      objectiveTextArea.setBorder(BorderFactory.createTitledBorder(objectiveText));
-      objectiveTextArea.setToolTipText(objectiveTooltip);
-
-      String descriptionText = bundle.getString(prefix + "descriptionLabel");
-      String descriptionTooltip = bundle.getString(prefix + "descriptionTooltip");
-      descriptionTextArea.setBorder(BorderFactory.createTitledBorder(descriptionText));
-      descriptionTextArea.setToolTipText(descriptionTooltip);
 
       // Hide initially advanced components
       final List<JComponent> advancedComponents =
@@ -2664,8 +2654,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(formPanel);
       northPanel.add(new JScrollPane(objectiveTextArea));
       northPanel.add(new JScrollPane(descriptionTextArea));
+
+      {
+        List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "objective"),
+            GUIFactory.createLabelWithToolTip(prefix + "description"));
+        List<JComponent> fields =
+            Arrays.asList(new JScrollPane(objectiveTextArea), new JScrollPane(descriptionTextArea));
+        FPanel textAreaPanel = UIUtils.createFormPanel(labels, fields);
+        northPanel.add(textAreaPanel);
+      }
       northPanel.add(creatorPanel);
       northPanel.add(referencePanel);
+
       northPanel.setBackground(UIUtils.WHITE);
 
       add(northPanel, BorderLayout.NORTH);
@@ -3095,7 +3095,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final JButton hazardButton = new JButton();
     final JButton populationButton = new JButton();
 
-    final StringTextArea commentTextArea = new StringTextArea(true, 5, 30);
+    final FTextArea commentTextArea = new FTextArea();
 
     final FixedDateChooser dateChooser = new FixedDateChooser();
     final AutoSuggestField regionField = GUIFactory.createAutoSuggestField(vocabs.get("Region"));
@@ -3110,11 +3110,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
       String prefix = "editor_ScopePanel_";
-
-      commentTextArea
-          .setBorder(BorderFactory.createTitledBorder(bundle.getString(prefix + "commentLabel")));
-      commentTextArea.setToolTipText(bundle.getString("editor_ScopePanel_commentTooltip"));
-      commentTextArea.setToolTipText(bundle.getString(prefix + "commentTooltip"));
 
       // Build UI
       productButton.setToolTipText("Click me to add a product");
@@ -3166,13 +3161,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       // Create labels
-      final JLabel productLabel = GUIFactory.createLabel(prefix + "productLabel");
-      final JLabel hazardLabel = GUIFactory.createLabel(prefix + "hazardLabel");
-      final JLabel populationLabel = GUIFactory.createLabel(prefix + "populationGroupLabel");
-      final JLabel temporalInformationLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "temporalInformation");
-      final JLabel regionLabel = GUIFactory.createLabelWithTooltip(prefix + "region");
-      final JLabel countryLabel = GUIFactory.createLabelWithTooltip(prefix + "country");
+      final FLabel productLabel = new FLabel(bundle.getString(prefix + "productLabel"));
+      final FLabel hazardLabel = new FLabel(bundle.getString(prefix + "hazardLabel"));
+      final FLabel populationLabel = new FLabel(bundle.getString(prefix + "populationGroupLabel"));
+      final FLabel temporalInformationLabel =
+          GUIFactory.createLabelWithToolTip(prefix + "temporalInformation");
+      final FLabel regionLabel = GUIFactory.createLabelWithToolTip(prefix + "region");
+      final FLabel countryLabel = GUIFactory.createLabelWithToolTip(prefix + "country");
 
       // formPanel
       final JPanel formPanel = UI.createOptionsPanel(
@@ -3186,7 +3181,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(commentTextArea));
+
+      {
+        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "comment");
+        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
+            Arrays.asList(new JScrollPane(commentTextArea)));
+        northPanel.add(textAreaPanel);
+      }
       add(northPanel, BorderLayout.NORTH);
     }
 
