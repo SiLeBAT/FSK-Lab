@@ -939,7 +939,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final AutoSuggestField hazardTypeField;
     private final AutoSuggestField hazardNameField;
-    private final StringTextArea hazardDescriptionTextArea;
+    private final FTextArea hazardDescriptionTextArea;
     private final AutoSuggestField hazardUnitField;
     private final FTextField adverseEffectTextField;
     private final FTextField originTextField;
@@ -965,7 +965,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       hazardTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard type"));
       hazardNameField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard name"));
-      hazardDescriptionTextArea = new StringTextArea(true, 5, 30);
+      hazardDescriptionTextArea = new FTextArea();
       hazardUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard unit"));
       adverseEffectTextField = new FTextField();
       originTextField = new FTextField();
@@ -1074,19 +1074,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         fields.add(contaminationRangeTextField);
       }
 
-      // Wraps hazardDescriptionTextArea in a JScrollPane
-      final JScrollPane hazardDescriptionPanel = new JScrollPane(hazardDescriptionTextArea);
-      hazardDescriptionPanel.setBorder(
-          BorderFactory.createTitledBorder(bundle.getString(prefix + "hazardDescriptionLabel")));
-      hazardDescriptionPanel.setToolTipText(bundle.getString(prefix + "hazardDescriptionTooltip"));
-
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(hazardDescriptionPanel);
+
+      if (isAdvanced) {
+        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "hazardDescription");
+        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
+            Arrays.asList(new JScrollPane(hazardDescriptionTextArea)));
+        northPanel.add(textAreaPanel);
+      }
 
       add(northPanel, BorderLayout.NORTH);
 
@@ -1518,7 +1518,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField populationNameTextField;
     private final FTextField targetPopulationTextField;
     private final FTextField populationSpanTextField;
-    private final StringTextArea populationDescriptionTextArea;
+    private final FTextArea populationDescriptionTextArea;
     private final FTextField populationAgeTextField;
     private final FTextField populationGenderTextField;
     private final FTextField bmiTextField;
@@ -1529,8 +1529,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField riskTextField;
     private final FTextField seasonTextField;
 
-    private final List<JComponent> advancedComponents;
-
     public EditPopulationGroupPanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
@@ -1538,7 +1536,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       populationNameTextField = new FTextField(true);
       targetPopulationTextField = new FTextField();
       populationSpanTextField = new FTextField();
-      populationDescriptionTextArea = new StringTextArea(true, 5, 30);
+      populationDescriptionTextArea = new FTextArea();
       populationAgeTextField = new FTextField();
       populationGenderTextField = new FTextField();
       bmiTextField = new FTextField();
@@ -1548,11 +1546,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       countryComboBox = GUIFactory.createComboBox(vocabs.get("Country"));
       riskTextField = new FTextField();
       seasonTextField = new FTextField();
-
-      advancedComponents = Arrays.asList(targetPopulationTextField, populationSpanTextField,
-          populationDescriptionTextArea, populationAgeTextField, populationGenderTextField,
-          bmiTextField, specialDietGroupTextField, patternConsumptionTextField, regionComboBox,
-          countryComboBox, riskTextField, seasonTextField);
 
       createUI(isAdvanced);
     }
@@ -1595,7 +1588,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         // pattern consumption
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "patternConsumption"));
-        fields.add(populationGenderTextField);
+        fields.add(patternConsumptionTextField);
 
         // region
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "region"));
@@ -1614,24 +1607,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         fields.add(seasonTextField);
       }
 
-      String populationDescriptionText = bundle.getString(prefix + "populationDescriptionLabel");
-      String populationDescriptionTooltip =
-          bundle.getString(prefix + "populationDescriptionTooltip");
-      populationDescriptionTextArea
-          .setBorder(BorderFactory.createTitledBorder(populationDescriptionText));
-      populationDescriptionTextArea.setToolTipText(populationDescriptionTooltip);
-
       final FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(populationDescriptionTextArea));
-      add(northPanel, BorderLayout.NORTH);
 
-      // If advanced mode, show advanced components
-      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
+      if (isAdvanced) {
+        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "populationDescription");
+        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
+            Arrays.asList(new JScrollPane(populationDescriptionTextArea)));
+        northPanel.add(textAreaPanel);
+      }
+
+      add(northPanel, BorderLayout.NORTH);
     }
 
     @Override
@@ -1752,7 +1742,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return advancedComponents;
+      throw new UnsupportedOperationException();
     }
   }
 
@@ -1761,7 +1751,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private static final long serialVersionUID = -7400646603919832139L;
 
     private final AutoSuggestField envNameField;
-    private final StringTextArea envDescriptionTextArea;
+    private final FTextArea envDescriptionTextArea;
     private final AutoSuggestField envUnitField;
     private final JComboBox<String> productionMethodComboBox;
     private final JComboBox<String> packagingComboBox;
@@ -1777,7 +1767,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       super(new BorderLayout());
 
       envNameField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix name"));
-      envDescriptionTextArea = new StringTextArea(true, 5, 30);
+      envDescriptionTextArea = new FTextArea();
       envUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix unit"));
       productionMethodComboBox = GUIFactory.createComboBox(vocabs.get("Method of production"));
       packagingComboBox = GUIFactory.createComboBox(vocabs.get("Packaging"));
@@ -1841,18 +1831,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       // Build UI
-      String envDescriptionText = bundle.getString(prefix + "envDescriptionLabel");
-      String envDescriptionTooltip = bundle.getString(prefix + "envDescriptionTooltip");
-      envDescriptionTextArea.setBorder(BorderFactory.createTitledBorder(envDescriptionText));
-      envDescriptionTextArea.setToolTipText(envDescriptionTooltip);
-
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(envDescriptionTextArea));
+
+      if (isAdvanced) {
+        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "envDescription");
+        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
+            Arrays.asList(new JScrollPane(envDescriptionTextArea)));
+        northPanel.add(textAreaPanel);
+      }
+
       add(northPanel, BorderLayout.NORTH);
     }
 
