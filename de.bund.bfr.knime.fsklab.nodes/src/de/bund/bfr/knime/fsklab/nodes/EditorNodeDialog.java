@@ -2060,16 +2060,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField doiTextField;
     private final FTextField authorListTextField;
     private final FTextField titleTextField;
-    private final FTextField abstractTextArea;
+    private final FTextArea abstractTextArea;
     private final FTextField journalTextField;
-    private final JSpinner volumeSpinner;
-    private final JSpinner issueSpinner;
     private final FTextField pageTextField;
     private final FTextField statusTextField;
     private final FTextField websiteTextField;
-    private final StringTextArea commentTextArea;
-
-    private final List<JComponent> advancedComponents;
+    private final FTextArea commentTextArea;
 
     EditReferencePanel(final boolean isAdvanced) {
 
@@ -2086,18 +2082,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       doiTextField = new FTextField(true);
       authorListTextField = new FTextField();
       titleTextField = new FTextField(true);
-      abstractTextArea = new FTextField();
+      abstractTextArea = new FTextArea();
       journalTextField = new FTextField();
-      volumeSpinner = new JSpinner(volumeSpinnerModel);
-      issueSpinner = new JSpinner(issueSpinnerModel);
       pageTextField = new FTextField();
       statusTextField = new FTextField();
       websiteTextField = new FTextField();
-      commentTextArea = new StringTextArea(true, 5, 30);
-
-      advancedComponents = Arrays.asList(typeComboBox, dateChooser, pmidTextField,
-          authorListTextField, abstractTextArea, journalTextField, volumeSpinner, issueSpinner,
-          pageTextField, statusTextField, websiteTextField, commentTextArea);
+      commentTextArea = new FTextArea();
 
       createUI(isAdvanced);
     }
@@ -2105,49 +2095,101 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
       // Create labels
       String prefix = "editor_EditReferencePanel_";
-      FLabel typeLabel = new FLabel(bundle.getString(prefix + "typeLabel"));
-      FLabel dateLabel = new FLabel(bundle.getString(prefix + "dateLabel"));
-      FLabel pmidLabel = new FLabel(bundle.getString(prefix + "pmidLabel"));
-      FLabel doiLabel = new FLabel(bundle.getString(prefix + "doiLabel"));
-      FLabel authorListLabel = new FLabel(bundle.getString(prefix + "authorListLabel"));
-      FLabel titleLabel = new FLabel(bundle.getString(prefix + "titleLabel"));
-      FLabel journalLabel = new FLabel(bundle.getString(prefix + "journalLabel"));
-      FLabel volumeLabel = new FLabel(bundle.getString(prefix + "volumeLabel"));
-      FLabel issueLabel = new FLabel(bundle.getString(prefix + "issueLabel"));
-      FLabel pageLabel = new FLabel(bundle.getString(prefix + "pageLabel"));
-      FLabel statusLabel = new FLabel(bundle.getString(prefix + "statusLabel"));
-      FLabel websiteLabel = new FLabel(bundle.getString(prefix + "websiteLabel"));
+
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+
+      // type
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "typeLabel")));
+        fields.add(typeComboBox);
+      }
+
+      // date
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "dateLabel")));
+        fields.add(dateChooser);
+      }
+
+      // pmid
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "pmidLabel")));
+        fields.add(pmidTextField);
+      }
+
+      // doi
+      labels.add(new FLabel(bundle.getString(prefix + "doiLabel")));
+      fields.add(doiTextField);
+
+      // author
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "authorListLabel")));
+        fields.add(authorListTextField);
+      }
+
+      // title
+      labels.add(new FLabel(bundle.getString(prefix + "titleLabel")));
+      fields.add(titleTextField);
+
+      // journal
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "journalLabel")));
+        fields.add(journalTextField);
+      }
+
+      // volume
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "volumeLabel")));
+        fields.add(GUIFactory.createSpinner(volumeSpinnerModel));
+      }
+
+      // issue
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "issueLabel")));
+        fields.add(GUIFactory.createSpinner(issueSpinnerModel));
+      }
+
+      // page
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "pageLabel")));
+        fields.add(pageTextField);
+      }
+
+      // status
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "statusLabel")));
+        fields.add(statusTextField);
+      }
+
+      // website
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "websiteLabel")));
+        fields.add(websiteTextField);
+      }
 
       // Build UI
       isReferenceDescriptionCheckBox.setBackground(UIUtils.WHITE);
 
-      String abstractText = bundle.getString(prefix + "abstractLabel");
-      String commentText = bundle.getString(prefix + "commentLabel");
-      abstractTextArea.setBorder(BorderFactory.createTitledBorder(abstractText));
-      commentTextArea.setBorder(BorderFactory.createTitledBorder(commentText));
-
       // isReferenceDescription panel
       FPanel isReferenceDescriptionPanel = UIUtils.createWestPanel(isReferenceDescriptionCheckBox);
 
-      // formPanel
-      FPanel datePanel = UIUtils.createWestPanel(dateChooser);
-      FPanel formPanel = UIUtils.createFormPanel(
-          Arrays.asList(typeLabel, dateLabel, pmidLabel, doiLabel, authorListLabel, titleLabel,
-              journalLabel, volumeLabel, issueLabel, pageLabel, statusLabel, websiteLabel),
-          Arrays.asList(typeComboBox, datePanel, pmidTextField, doiTextField, authorListTextField,
-              titleTextField, journalTextField, volumeSpinner, issueSpinner, pageTextField,
-              statusTextField, websiteTextField));
-
-      // If advanced mode, show advanced components
-      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
+      FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(isReferenceDescriptionPanel);
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(abstractTextArea));
-      northPanel.add(new JScrollPane(commentTextArea));
+
+      if (isAdvanced) {
+        List<FLabel> labels2 = Arrays.asList(new FLabel(bundle.getString(prefix + "abstractLabel")),
+            new FLabel(bundle.getString(prefix + "commentLabel")));
+        List<JComponent> fields2 =
+            Arrays.asList(new JScrollPane(abstractTextArea), new JScrollPane(commentTextArea));
+        FPanel textAreaPanel = UIUtils.createFormPanel(labels2, fields2);
+        northPanel.add(textAreaPanel);
+      }
+
       add(northPanel, BorderLayout.NORTH);
     }
 
@@ -2260,7 +2302,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return advancedComponents;
+      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
