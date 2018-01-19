@@ -3350,20 +3350,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -6572236073945735826L;
 
-    private final StringTextField studyIdentifierTextField = new StringTextField(true, 30);
-    private final StringTextField studyTitleTextField = new StringTextField(true, 30);
-    private final StringTextArea studyDescriptionTextArea = new StringTextArea(true, 5, 30);
+    private final FTextField studyIdentifierTextField = new FTextField(true);
+    private final FTextField studyTitleTextField = new FTextField(true);
+    private final FTextArea studyDescriptionTextArea = new FTextArea();
     private final AutoSuggestField studyDesignTypeField;
     private final AutoSuggestField studyAssayMeasurementsTypeField;
     private final AutoSuggestField studyAssayTechnologyTypeField;
-    private final StringTextField studyAssayTechnologyPlatformTextField =
-        new StringTextField(true, 30);
+    private final FTextField studyAssayTechnologyPlatformTextField = new FTextField();
     private final AutoSuggestField accreditationProcedureField;
-    private final StringTextField studyProtocolNameTextField = new StringTextField(true, 30);
+    private final FTextField studyProtocolNameTextField = new FTextField();
     private final AutoSuggestField studyProtocolTypeField;
-    private final StringTextField studyProtocolDescriptionTextField = new StringTextField(true, 30);
-    private final StringTextField studyProtocolURITextField = new StringTextField(true, 30);
-    private final StringTextField studyProtocolVersionTextField = new StringTextField(true, 30);
+    private final FTextField studyProtocolDescriptionTextField = new FTextField();
+    private final FTextField studyProtocolURITextField = new FTextField();
+    private final FTextField studyProtocolVersionTextField = new FTextField();
     private final AutoSuggestField studyProtocolParametersField;
     private final AutoSuggestField studyProtocolComponentsTypeField;
 
@@ -3386,60 +3385,76 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       studyProtocolComponentsTypeField =
           GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Components Type"));
 
-      // Create labels
-      String prefix = "editor_StudyPanel_";
-      final JLabel studyIdentifierLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "studyIdentifier", true);
-      final JLabel studyTitleLabel = GUIFactory.createLabelWithTooltip(prefix + "studyTitle", true);
-      final JLabel studyDesignTypeLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "studyDesignType");
-      final JLabel studyAssayMeasurementsTypeLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "studyAssayMeasurementsType");
-      final JLabel studyAssayTechnologyTypeLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "studyAssayTechnologyType");
-      final JLabel studyAssayTechnologyPlatformLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "studyAssayTechnologyPlatform");
-      final JLabel accreditationProcedureLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "accreditationProcedure");
-      final JLabel studyProtocolNameLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "protocolName");
-      final JLabel studyProtocolTypeLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "protocolType");
-      final JLabel studyProtocolDescriptionLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "protocolDescription");
-      final JLabel studyProtocolURILabel =
-          GUIFactory.createLabelWithTooltip(prefix + "protocolURI");
-      final JLabel studyProtocolVersionLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "protocolDescription");
-      final JLabel studyProtocolParametersLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "parameters");
-      final JLabel studyProtocolComponentsTypeLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "componentsType");
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+      final String prefix = "editor_StudyPanel_";
 
-      studyDescriptionTextArea.setBorder(
-          BorderFactory.createTitledBorder(bundle.getString(prefix + "studyDescriptionLabel")));
-      studyDescriptionTextArea.setToolTipText(bundle.getString(prefix + "studyDescriptionTooltip"));
+      // study identifier
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyIdentifier"));
+      fields.add(studyIdentifierTextField);
 
-      // formPanel
-      final JPanel formPanel = UI.createOptionsPanel(
-          Arrays.asList(studyIdentifierLabel, studyTitleLabel, studyDesignTypeLabel,
-              studyAssayTechnologyTypeLabel, studyAssayMeasurementsTypeLabel,
-              studyAssayTechnologyPlatformLabel, accreditationProcedureLabel,
-              studyProtocolNameLabel, studyProtocolTypeLabel, studyProtocolDescriptionLabel,
-              studyProtocolURILabel, studyProtocolVersionLabel, studyProtocolParametersLabel,
-              studyProtocolComponentsTypeLabel),
-          Arrays.asList(studyIdentifierTextField, studyTitleTextField, studyDesignTypeField,
-              studyAssayTechnologyTypeField, studyAssayMeasurementsTypeField,
-              studyAssayTechnologyPlatformTextField, accreditationProcedureField,
-              studyProtocolNameTextField, studyProtocolTypeField, studyProtocolDescriptionTextField,
-              studyProtocolURITextField, studyProtocolVersionTextField,
-              studyProtocolParametersField, studyProtocolComponentsTypeField));
+      // study title
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyTitle"));
+      fields.add(studyTitleTextField);
+
+      // study design type
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyDesignType"));
+      fields.add(studyDesignTypeField);
+
+      // study assay technology type
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayTechnologyType"));
+      fields.add(studyAssayTechnologyTypeField);
+
+      // study assay measurements type
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayMeasurementsType"));
+      fields.add(studyAssayMeasurementsTypeField);
+
+      // study assay technology platform
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayTechnologyPlatform"));
+      fields.add(studyAssayTechnologyPlatformTextField);
+
+      // accreditation procedure for the assay technology
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "accreditationProcedure"));
+      fields.add(accreditationProcedureField);
+
+      // study protocol name
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolName"));
+      fields.add(studyProtocolNameTextField);
+
+      // study protocol type
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolType"));
+      fields.add(studyProtocolTypeField);
+
+      // study protocol
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolDescription"));
+      fields.add(studyProtocolDescriptionTextField);
+
+      // study protocol URI
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolURI"));
+      fields.add(studyProtocolURITextField);
+
+      // study protocol parameters name
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "parameters"));
+      fields.add(studyProtocolParametersField);
+
+      // study protocol components
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "componentsType"));
+      fields.add(studyProtocolComponentsTypeField);
+
+      FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(studyDescriptionTextArea));
+
+      {
+        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "studyDescription");
+        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
+            Arrays.asList(new JScrollPane(studyDescriptionTextArea)));
+        northPanel.add(textAreaPanel);
+      }
+
       add(northPanel, BorderLayout.NORTH);
 
       advancedComponents = Arrays.asList(studyDescriptionTextArea, studyDesignTypeField,
