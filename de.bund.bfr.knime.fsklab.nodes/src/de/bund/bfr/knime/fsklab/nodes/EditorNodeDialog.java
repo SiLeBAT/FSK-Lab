@@ -2652,8 +2652,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(objectiveTextArea));
-      northPanel.add(new JScrollPane(descriptionTextArea));
 
       {
         List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "objective"),
