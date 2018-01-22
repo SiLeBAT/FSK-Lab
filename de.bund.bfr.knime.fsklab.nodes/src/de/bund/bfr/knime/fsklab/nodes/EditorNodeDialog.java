@@ -1070,6 +1070,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       hazard.laboratoryName = labNameTextField.getText();
       hazard.laboratoryCountry = (String) labCountryField.getSelectedItem();
       hazard.detectionLimit = detectionLimitTextField.getText();
+      hazard.quantificationLimit = quantificationLimitTextField.getText();
       hazard.leftCensoredData = leftCensoredDataTextField.getText();
       hazard.rangeOfContamination = contaminationRangeTextField.getText();
 
