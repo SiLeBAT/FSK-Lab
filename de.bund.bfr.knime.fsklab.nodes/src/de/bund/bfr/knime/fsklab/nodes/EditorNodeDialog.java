@@ -1736,7 +1736,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       final List<String> errors = new ArrayList<>(1);
-      if (!populationNameTextField.getText().isEmpty()) {
+      if (populationNameTextField.getText().isEmpty()) {
         errors.add(
             "Missing " + bundle.getString("editor_EditPopulationGroupPanel_populationNameLabel"));
       }
