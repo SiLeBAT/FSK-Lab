@@ -66,8 +66,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -558,14 +556,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -1195181696127795655L;
 
-    private final FTextField nameField;
-    private final FTextArea descriptionField;
+    private final FTextField nameTextField;
+    private final FTextArea descriptionTextArea;
 
     EditAssayPanel(final boolean isAdvanced) {
       super(new BorderLayout());
 
-      nameField = new FTextField(true);
-      descriptionField = new FTextArea();
+      nameTextField = new FTextField(true);
+      descriptionTextArea = new FTextArea();
 
       createUI(isAdvanced);
     }
@@ -578,15 +576,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 
       // name
-      List<Pair<FLabel, JComponent>> formPairs = Arrays.asList(
-          new ImmutablePair<>(GUIFactory.createLabelWithToolTip(prefix + "name"), nameField));
-      northPanel.add(UIUtils.createFormPanel(formPairs));
+      List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "name"));
+      List<JComponent> fields = Arrays.asList(nameTextField);
+      northPanel.add(UIUtils.createFormPanel(labels, fields));
 
       // description
       if (isAdvanced) {
-        List<Pair<FLabel, JComponent>> taPairs = Arrays.asList(new ImmutablePair<>(
-            GUIFactory.createLabelWithToolTip(prefix + "description"), descriptionField));
-        northPanel.add(UIUtils.createFormPanel(taPairs));
+        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "description");
+        FPanel textAreaPanel =
+            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(descriptionTextArea));
+        northPanel.add(textAreaPanel);
       }
 
       add(northPanel, BorderLayout.NORTH);
@@ -595,8 +594,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(final Assay assay) {
       if (assay != null) {
-        nameField.setText(assay.name);
-        descriptionField.setText(assay.description);
+        nameTextField.setText(assay.name);
+        descriptionTextArea.setText(assay.description);
       }
     }
 
@@ -604,8 +603,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     Assay get() {
 
       final Assay assay = new Assay();
-      assay.name = nameField.getText();
-      assay.description = descriptionField.getText();
+      assay.name = nameTextField.getText();
+      assay.description = descriptionTextArea.getText();
 
       return assay;
     }
@@ -614,7 +613,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       final List<String> errors = new ArrayList<>(1);
-      if (!nameField.getText().isEmpty()) {
+      if (!nameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString("editor_EditAssayPanel_nameLabel"));
       }
 

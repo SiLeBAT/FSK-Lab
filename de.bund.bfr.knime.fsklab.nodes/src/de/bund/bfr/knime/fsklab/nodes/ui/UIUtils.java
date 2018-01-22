@@ -43,7 +43,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableModel;
-import org.apache.commons.lang3.tuple.Pair;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.SimpleFileFilter;
 import de.bund.bfr.swing.UI;
@@ -301,35 +300,6 @@ public class UIUtils {
     FPanel rightPanel = new FPanel();
     rightPanel.setLayout(new GridLayout(n, 1, 5, 5));
     components.forEach(rightPanel::add);
-
-    FPanel formPanel = new FPanel();
-    formPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-    formPanel.setLayout(new BorderLayout(5, 5));
-    formPanel.add(leftPanel, BorderLayout.WEST);
-    formPanel.add(rightPanel, BorderLayout.CENTER);
-
-    return formPanel;
-  }
-
-  /**
-   * Create form panel for labels and fields.
-   * <p>
-   * Layout: | Label | Field |
-   */
-  public static FPanel createFormPanel(List<Pair<FLabel, JComponent>> pairs) {
-
-    int n = pairs.size();
-
-    FPanel leftPanel = new FPanel();
-    leftPanel.setLayout(new GridLayout(n, 1, 5, 5));
-
-    FPanel rightPanel = new FPanel();
-    rightPanel.setLayout(new GridLayout(n, 1, 5, 5));
-
-    pairs.forEach(it -> {
-      leftPanel.add(it.getLeft());
-      rightPanel.add(it.getRight());
-    });
 
     FPanel formPanel = new FPanel();
     formPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
