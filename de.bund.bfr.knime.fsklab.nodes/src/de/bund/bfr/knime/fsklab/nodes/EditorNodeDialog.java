@@ -798,7 +798,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
    * </tr>
    * <tr>
    * <td>Hazard unit</td>
-   * <td>Optional</td>
+   * <td>Mandatory</td>
    * </tr>
    * <tr>
    * <td>Adverse effect</td>
@@ -936,11 +936,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "hazardName"));
       fields.add(hazardNameField);
 
-      if (isAdvanced) {
+      // hazard unit
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "hazardUnit"));
+      fields.add(hazardUnitField);
 
-        // hazard unit
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "hazardUnit"));
-        fields.add(hazardUnitField);
+      if (isAdvanced) {
 
         // adverse effect
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "adverseEffect"));
