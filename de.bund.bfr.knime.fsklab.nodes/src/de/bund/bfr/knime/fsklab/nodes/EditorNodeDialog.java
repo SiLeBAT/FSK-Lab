@@ -3249,7 +3249,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final StudyPanel studyPanel;
 
-    private final DataBackground dataBackground = new DataBackground();
+    private DataBackground dataBackground = new DataBackground();
 
     DataBackgroundPanel() {
 
@@ -3264,6 +3264,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         EditStudySamplePanel editStudySamplePanel =
             new EditStudySamplePanel(advancedCheckBox.isSelected());
+        editStudySamplePanel.init(dataBackground.studySample);
 
         final ValidatableDialog dlg =
             new ValidatableDialog(editStudySamplePanel, "Create Study sample");
@@ -3336,6 +3337,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     void init(final DataBackground dataBackground) {
+
+      this.dataBackground = dataBackground;
 
       final Study study = dataBackground.study;
 
