@@ -107,7 +107,6 @@ import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.Simulation;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.swing.AutoSuggestField;
-import de.bund.bfr.swing.StringTextArea;
 import de.bund.bfr.swing.StringTextField;
 import de.bund.bfr.swing.UI;
 import ezvcard.Ezvcard;
@@ -1231,7 +1230,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField idTextField;
     private final JComboBox<Parameter.Classification> classificationComboBox;
     private final FTextField nameTextField;
-    private final StringTextArea descriptionTextArea;
+    private final FTextArea descriptionTextArea;
     private final AutoSuggestField typeField;
     private final AutoSuggestField unitField;
     private final AutoSuggestField unitCategoryField;
@@ -1241,8 +1240,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final AutoSuggestField distributionField;
     private final FTextField valueTextField;
     private final FTextField referenceTextField;
-    private final StringTextArea variabilitySubjectTextArea;
-    private final StringTextArea applicabilityTextArea;
+    private final FTextArea variabilitySubjectTextArea;
+    private final FTextArea applicabilityTextArea;
     private SpinnerNumberModel errorSpinnerModel;
 
     public EditParameterPanel(final boolean isAdvanced) {
@@ -1252,7 +1251,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       idTextField = new FTextField(true);
       classificationComboBox = new JComboBox<>(Parameter.Classification.values());
       nameTextField = new FTextField(true);
-      descriptionTextArea = new StringTextArea(true, 5, 30);
+      descriptionTextArea = new FTextArea();
       typeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter type"));
       unitField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit"));
       unitCategoryField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit category"));
@@ -1262,8 +1261,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       distributionField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter distribution"));
       valueTextField = new FTextField();
       referenceTextField = new FTextField();
-      variabilitySubjectTextArea = new StringTextArea(true, 5, 30);
-      applicabilityTextArea = new StringTextArea(true, 5, 30);
+      variabilitySubjectTextArea = new FTextArea();
+      applicabilityTextArea = new FTextArea();
       errorSpinnerModel = GUIFactory.createSpinnerDoubleModel();
 
       createUI(isAdvanced);
@@ -2600,7 +2599,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"));
       softwareField = GUIFactory.createAutoSuggestField(vocabs.get("Software"));
       languageWrittenInField = GUIFactory.createAutoSuggestField(vocabs.get("Language written in"));
-      statusField = GUIFactory.createAutoSuggestField(vocabs.get("status"));
+      statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"));
       objectiveTextArea = new FTextArea();
       descriptionTextArea = new FTextArea();
 
