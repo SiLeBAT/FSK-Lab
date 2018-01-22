@@ -586,7 +586,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       final List<String> errors = new ArrayList<>(1);
-      if (!nameTextField.getText().isEmpty()) {
+      if (nameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString("editor_EditAssayPanel_nameLabel"));
       }
 
