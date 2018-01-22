@@ -1281,97 +1281,154 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = 1826555468897327895L;
 
-    private final StringTextField idTextField = new StringTextField(false, 30);
-    private final JComboBox<Parameter.Classification> classificationComboBox =
-        new JComboBox<>(Parameter.Classification.values());
-    private final StringTextField nameTextField = new StringTextField(false, 30);
-    private final StringTextArea descriptionTextArea = new StringTextArea(true, 5, 30);
-    private final AutoSuggestField typeField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Parameter type"));
-    private final AutoSuggestField unitField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit"));
-    private final AutoSuggestField unitCategoryField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit category"));
-    private final AutoSuggestField dataTypeField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Parameter data type"));
-    private final AutoSuggestField sourceField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Parameter source"));
-    private final AutoSuggestField subjectField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Parameter subject"));
-    private final AutoSuggestField distributionField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Parameter distribution"));
-    private final StringTextField valueTextField = new StringTextField(false, 30);
-    private final StringTextField referenceTextField = new StringTextField(false, 30);
-    private final StringTextArea variabilitySubjectTextArea = new StringTextArea(true, 5, 30);
-    private final StringTextArea applicabilityTextArea = new StringTextArea(true, 5, 30);
-    private SpinnerNumberModel errorSpinnerModel = GUIFactory.createSpinnerDoubleModel();
-
-    private final List<JComponent> advancedComponents;
+    private final FTextField idTextField;
+    private final JComboBox<Parameter.Classification> classificationComboBox;
+    private final FTextField nameTextField;
+    private final StringTextArea descriptionTextArea;
+    private final AutoSuggestField typeField;
+    private final AutoSuggestField unitField;
+    private final AutoSuggestField unitCategoryField;
+    private final AutoSuggestField dataTypeField;
+    private final AutoSuggestField sourceField;
+    private final AutoSuggestField subjectField;
+    private final AutoSuggestField distributionField;
+    private final FTextField valueTextField;
+    private final FTextField referenceTextField;
+    private final StringTextArea variabilitySubjectTextArea;
+    private final StringTextArea applicabilityTextArea;
+    private SpinnerNumberModel errorSpinnerModel;
 
     public EditParameterPanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
 
+      idTextField = new FTextField(true);
+      classificationComboBox = new JComboBox<>(Parameter.Classification.values());
+      nameTextField = new FTextField(true);
+      descriptionTextArea = new StringTextArea(true, 5, 30);
+      typeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter type"));
+      unitField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit"));
+      unitCategoryField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit category"));
+      dataTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter data type"));
+      sourceField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter source"));
+      subjectField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter subject"));
+      distributionField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter distribution"));
+      valueTextField = new FTextField();
+      referenceTextField = new FTextField();
+      variabilitySubjectTextArea = new StringTextArea(true, 5, 30);
+      applicabilityTextArea = new StringTextArea(true, 5, 30);
+      errorSpinnerModel = GUIFactory.createSpinnerDoubleModel();
+
+      createUI(isAdvanced);
+    }
+
+    private void createUI(boolean isAdvanced) {
+
       String prefix = "editor_EditParameterPanel_";
-      final JLabel idLabel = GUIFactory.createLabelWithTooltip(prefix + "id", true);
-      final JLabel classificationLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "classification", true);
-      final JLabel nameLabel = GUIFactory.createLabelWithTooltip(prefix + "parameterName", true);
-      final JLabel typeLabel = GUIFactory.createLabelWithTooltip(prefix + "type");
-      final JLabel unitLabel = GUIFactory.createLabelWithTooltip(prefix + "unit", true);
-      final JLabel unitCategoryLabel =
-          GUIFactory.createLabelWithTooltip(prefix + "unitCategory", true);
-      final JLabel dataTypeLabel = GUIFactory.createLabelWithTooltip(prefix + "dataType", true);
-      final JLabel sourceLabel = GUIFactory.createLabelWithTooltip(prefix + "source");
-      final JLabel subjectLabel = GUIFactory.createLabelWithTooltip(prefix + "subject");
-      final JLabel distributionLabel = GUIFactory.createLabelWithTooltip(prefix + "distribution");
-      final JLabel valueLabel = GUIFactory.createLabelWithTooltip(prefix + "value");
-      final JLabel referenceLabel = GUIFactory.createLabelWithTooltip(prefix + "reference");
-      final JLabel errorLabel = GUIFactory.createLabelWithTooltip(prefix + "error");
+
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+
+      // id
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "id"));
+      fields.add(idTextField);
+
+      // classification
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "classification"));
+      fields.add(classificationComboBox);
+
+      // name
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "parameterName"));
+      fields.add(nameTextField);
+
+      // type
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "type"));
+        fields.add(typeField);
+      }
+
+      // unit
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "unit"));
+        fields.add(unitField);
+      }
+
+      // unit category
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "unitCategory"));
+        fields.add(unitCategoryField);
+      }
+
+      // data type
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "dataType"));
+        fields.add(dataTypeField);
+      }
+
+      // source
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "source"));
+        fields.add(sourceField);
+      }
+
+      // subject
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "subject"));
+        fields.add(subjectField);
+      }
+
+      // distribution
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "distribution"));
+        fields.add(distributionField);
+      }
+
+      // value
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "value"));
+        fields.add(valueTextField);
+      }
+
+      // reference
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "reference"));
+        fields.add(referenceTextField);
+      }
+
+      // error
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "error"));
+        fields.add(GUIFactory.createSpinner(errorSpinnerModel));
+      }
 
       // Build UI
-      final JSpinner errorSpinner = GUIFactory.createSpinner(errorSpinnerModel);
-
-      String descriptionText = bundle.getString(prefix + "descriptionLabel");
-      String descriptionToolTip = bundle.getString(prefix + "descriptionTooltip");
-      descriptionTextArea.setBorder(BorderFactory.createTitledBorder(descriptionText));
-      descriptionTextArea.setToolTipText(descriptionToolTip);
-
-      String variabilitySubjectText = bundle.getString(prefix + "variabilitySubjectLabel");
-      String variabilitySubjectToolTip = bundle.getString(prefix + "variabilitySubjectTooltip");
-      variabilitySubjectTextArea
-          .setBorder(BorderFactory.createTitledBorder(variabilitySubjectText));
-      variabilitySubjectTextArea.setToolTipText(variabilitySubjectToolTip);
-
-      String applicabilityText = bundle.getString(prefix + "applicabilityLabel");
-      String applicabilityToolTip = bundle.getString(prefix + "applicabilityTooltip");
-      applicabilityTextArea.setBorder(BorderFactory.createTitledBorder(applicabilityText));
-      applicabilityTextArea.setToolTipText(applicabilityToolTip);
-
-      // formPanel
-      final JPanel formPanel = UI.createOptionsPanel(
-          Arrays.asList(idLabel, classificationLabel, nameLabel, typeLabel, unitLabel,
-              unitCategoryLabel, dataTypeLabel, sourceLabel, subjectLabel, distributionLabel,
-              valueLabel, referenceLabel, errorLabel),
-          Arrays.asList(idTextField, classificationComboBox, nameTextField, typeField, unitField,
-              unitCategoryField, dataTypeField, sourceField, subjectField, distributionField,
-              valueTextField, referenceTextField, errorSpinner));
+      FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
-      northPanel.add(new JScrollPane(descriptionTextArea));
-      northPanel.add(new JScrollPane(variabilitySubjectTextArea));
-      northPanel.add(new JScrollPane(applicabilityTextArea));
+
+      if (isAdvanced) {
+        labels.clear();
+        fields.clear();
+
+        // description
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "description"));
+        fields.add(new JScrollPane(descriptionTextArea));
+
+        // variability
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "variabilitySubject"));
+        fields.add(new JScrollPane(variabilitySubjectTextArea));
+
+        // applicability
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "applicability"));
+        fields.add(new JScrollPane(applicabilityTextArea));
+
+        FPanel textAreaPanel = UIUtils.createFormPanel(labels, fields);
+        northPanel.add(textAreaPanel);
+      }
       add(northPanel, BorderLayout.NORTH);
-
-      advancedComponents = Arrays.asList(descriptionTextArea, typeField, sourceField, subjectField,
-          distributionField, valueTextField, referenceTextField, variabilitySubjectTextArea,
-          applicabilityTextArea, errorSpinner);
-
-      // If advanced mode, show advanced components
-      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
@@ -1425,13 +1482,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final String prefix = "editor_EditParameterPanel_";
       final List<String> errors = new ArrayList<>();
-      if (!idTextField.isValueValid()) {
+      if (!idTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "idLabel"));
       }
       if (classificationComboBox.getSelectedIndex() == -1) {
         errors.add("Missing " + bundle.getString(prefix + "classificationLabel"));
       }
-      if (!nameTextField.isValueValid()) {
+      if (!nameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "parameterNameLabel"));
       }
       if (!hasValidValue(unitField)) {
@@ -1449,7 +1506,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return advancedComponents;
+      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
