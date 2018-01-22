@@ -356,32 +356,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       return new FLabel(text, toolTip);
     }
 
-    /**
-     * Create a JLabel with no tooltip, retrieving its text from resource bundle. This is a
-     * convenience method for {@link #createLabel(String, boolean)} where the property is not
-     * mandatory.
-     * 
-     * @param textKey Key of the JLabel text in the resource bundle
-     * @return JLabel
-     */
-    private static JLabel createLabel(final String textKey) {
-      return createLabel(textKey, false);
-    }
-
-    /**
-     * Create a JLabel with no tooltip, retrieving its text from resource bundle.
-     * 
-     * @param textKey Key of the JLabel text in the resource bundle
-     * @param isMandatory Whether the property described by the JLabel is mandatory
-     * @return JLabel
-     */
-    private static JLabel createLabel(final String textKey, final boolean isMandatory) {
-      String labelText = bundle.getString(textKey);
-      JLabel label = new JLabel(labelText + (isMandatory ? "*" : ""));
-      label.setFont(UIUtils.FONT);
-      return label;
-    }
-
     private static JPanel createAdvancedPanel(final JCheckBox checkbox) {
 
       final JPanel panel = new JPanel();
@@ -661,10 +635,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private static final long serialVersionUID = -931984426171199928L;
 
     private final AutoSuggestField dataCollectionToolField;
-    private final StringTextField nonConsecutiveOneDayField;
-    private final StringTextField dietarySoftwareToolField;
-    private final StringTextField foodItemNumberField;
-    private final StringTextField recordTypeField;
+    private final FTextField nonConsecutiveOneDayField;
+    private final FTextField dietarySoftwareToolField;
+    private final FTextField foodItemNumberField;
+    private final FTextField recordTypeField;
     private final JComboBox<String> foodDescriptionField;
 
     EditDietaryAssessmentMethodPanel(final boolean isAdvanced) {
@@ -673,10 +647,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       dataCollectionToolField =
           GUIFactory.createAutoSuggestField(vocabs.get("Method. tool to collect data"));
-      nonConsecutiveOneDayField = new StringTextField(true, 30);
-      dietarySoftwareToolField = new StringTextField(false, 30);
-      foodItemNumberField = new StringTextField(false, 30);
-      recordTypeField = new StringTextField(false, 30);
+      nonConsecutiveOneDayField = new FTextField(true);
+      dietarySoftwareToolField = new FTextField();
+      foodItemNumberField = new FTextField();
+      recordTypeField = new FTextField();
       foodDescriptionField = GUIFactory.createComboBox(vocabs.get("Food descriptors"));
 
       createUI(isAdvanced);
@@ -794,7 +768,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (!hasValidValue(dataCollectionToolField)) {
         errors.add("Missing " + bundle.getString(prefix + "dataCollectionToolLabel"));
       }
-      if (!nonConsecutiveOneDayField.isValueValid()) {
+      if (!nonConsecutiveOneDayField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "nonConsecutiveOneDaysLabel"));
       }
 
