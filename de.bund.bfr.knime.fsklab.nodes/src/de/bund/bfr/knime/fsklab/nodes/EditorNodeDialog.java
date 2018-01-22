@@ -2285,10 +2285,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       String prefix = "editor_EditReferencePanel_";
       final List<String> errors = new ArrayList<>(2);
-      if (!doiTextField.getText().isEmpty()) {
+      if (doiTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "doiLabel"));
       }
-      if (!titleTextField.getText().isEmpty()) {
+      if (titleTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "titleLabel"));
       }
 
