@@ -3069,13 +3069,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditCreatorPanel_";
 
       final List<String> errors = new ArrayList<>(3);
-      if (!givenNameTextField.getText().isEmpty()) {
+      if (givenNameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "givenNameLabel"));
       }
-      if (!familyNameTextField.getText().isEmpty()) {
+      if (familyNameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "familyNameLabel"));
       }
-      if (!contactTextField.getText().isEmpty()) {
+      if (contactTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "contactLabel"));
       }
 
