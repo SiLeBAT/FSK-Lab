@@ -3283,6 +3283,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       dietaryAssessmentMethodButton.addActionListener(event -> {
         EditDietaryAssessmentMethodPanel editPanel =
             new EditDietaryAssessmentMethodPanel(advancedCheckBox.isSelected());
+        editPanel.init(dataBackground.dietaryAssessmentMethod);
         final ValidatableDialog dlg =
             new ValidatableDialog(editPanel, "Create dietary assessment method");
 
