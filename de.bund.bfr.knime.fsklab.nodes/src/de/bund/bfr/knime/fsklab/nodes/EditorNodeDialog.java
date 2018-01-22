@@ -2956,6 +2956,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         GUIFactory.createAutoSuggestField(vocabs.get("Laboratory accreditation"), false);
 
     private final StudyPanel studyPanel;
+    private final JButton studySampleButton;
+    private final JButton dietaryAssessmentMethodButton;
+    private final JButton assayButton;
 
     private DataBackground dataBackground = new DataBackground();
 
@@ -2966,7 +2969,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       studyPanel = new StudyPanel();
       studyPanel.setBorder(BorderFactory.createTitledBorder("Study"));
 
-      final JButton studySampleButton = new JButton();
+      studySampleButton = new JButton();
       studySampleButton.setToolTipText("Click me to add Study Sample");
       studySampleButton.addActionListener(event -> {
 
@@ -2986,7 +2989,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
-      final JButton dietaryAssessmentMethodButton = new JButton();
+      dietaryAssessmentMethodButton = new JButton();
       dietaryAssessmentMethodButton.setToolTipText("Click me to add Dietary assessment method");
       dietaryAssessmentMethodButton.addActionListener(event -> {
         EditDietaryAssessmentMethodPanel editPanel =
@@ -3003,7 +3006,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
-      final JButton assayButton = new JButton();
+      assayButton = new JButton();
       assayButton.setToolTipText("Click me to add Assay");
       assayButton.addActionListener(event -> {
         EditAssayPanel editPanel = new EditAssayPanel(advancedCheckBox.isSelected());
@@ -3068,6 +3071,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // TODO: study protocol parameters name
       // TODO: study protocol components
       studyPanel.studyDescriptionField.setText(dataBackground.study.description);
+
+      if (StringUtils.isNotEmpty(dataBackground.studySample.sample)) {
+        studySampleButton.setText(dataBackground.studySample.sample);
+      }
+
+      if (StringUtils.isNotEmpty(dataBackground.dietaryAssessmentMethod.collectionTool)) {
+        dietaryAssessmentMethodButton
+            .setText(dataBackground.dietaryAssessmentMethod.collectionTool);
+      }
+      if (StringUtils.isNotEmpty(dataBackground.assay.name)) {
+        assayButton.setText(dataBackground.assay.name);
+      }
     }
 
     DataBackground get() {
