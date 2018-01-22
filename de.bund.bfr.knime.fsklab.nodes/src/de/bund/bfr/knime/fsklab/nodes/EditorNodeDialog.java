@@ -2611,7 +2611,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       FLabel rightsLabel = GUIFactory.createLabelWithToolTip(prefix + "rights");
       FLabel availabilityLabel = GUIFactory.createLabelWithToolTip(prefix + "availability");
       FLabel sourceLabel = GUIFactory.createLabelWithToolTip(prefix + "source");
-      FLabel urlLabel = GUIFactory.createLabelWithToolTip(prefix + "creationDate");
+      FLabel urlLabel = GUIFactory.createLabelWithToolTip(prefix + "url");
       FLabel formatLabel = GUIFactory.createLabelWithToolTip(prefix + "format");
       FLabel languageLabel = GUIFactory.createLabelWithToolTip(prefix + "language");
       FLabel softwareLabel = GUIFactory.createLabelWithToolTip(prefix + "software");
