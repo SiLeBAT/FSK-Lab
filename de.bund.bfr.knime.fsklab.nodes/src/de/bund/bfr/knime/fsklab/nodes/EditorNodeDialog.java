@@ -3878,22 +3878,46 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -371214370549912535L;
 
-    private final StringTextField algorithmField = new StringTextField(false, 30);
-    private final StringTextField modelField = new StringTextField(false, 30);
-    private final StringTextField scriptField = new StringTextField(true, 30);
-    private final StringTextArea descriptionField = new StringTextArea(true, 5, 30);
+    private final FTextField algorithmField;
+    private final FTextField modelField;
+    private final FTextField scriptField;
+    private final FTextArea descriptionField;
 
     public SimulationPanel() {
 
       super(new BorderLayout());
 
-      String prefix = "editor_Simulation_";
-      final JLabel algorithmLabel = new JLabel(bundle.getString(prefix + "Algorithm"));
-      final JLabel modelLabel = new JLabel(bundle.getString(prefix + "Model"));
-      final JLabel scriptLabel = new JLabel(bundle.getString(prefix + "Script"));
+      algorithmField = new FTextField(true);
+      modelField = new FTextField(true);
+      scriptField = new FTextField();
+      descriptionField = new FTextArea();
 
-      final JPanel formPanel =
-          UI.createOptionsPanel(Arrays.asList(algorithmLabel, modelLabel, scriptLabel),
+      createUI();
+    }
+
+    private void createUI() {
+      String prefix = "editor_Simulation_";
+      final FLabel algorithmLabel = new FLabel(bundle.getString(prefix + "Algorithm"));
+      final FLabel modelLabel = new FLabel(bundle.getString(prefix + "Model"));
+      final FLabel scriptLabel = new FLabel(bundle.getString(prefix + "Script"));
+
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+
+      // algorithm
+      labels.add(new FLabel(bundle.getString(prefix + "Algorithm")));
+      fields.add(algorithmField);
+
+      // model
+      labels.add(new FLabel(bundle.getString(prefix + "Model")));
+      fields.add(modelField);
+
+      // script
+      labels.add(new FLabel(bundle.getString(prefix + "Script")));
+      fields.add(scriptField);
+
+      FPanel formPanel =
+          UIUtils.createFormPanel(Arrays.asList(algorithmLabel, modelLabel, scriptLabel),
               Arrays.asList(algorithmField, modelField, scriptField));
 
       final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
@@ -3908,10 +3932,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
       northPanel.add(formPanel);
 
-      // descriptionField
-      descriptionField.setBorder(
-          BorderFactory.createTitledBorder(bundle.getString("editor_Simulation_Description")));
-      northPanel.add(new JScrollPane(descriptionField));
+      {
+        FLabel label = new FLabel(bundle.getString("editor_Simulation_Description"));
+        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
+            Arrays.asList(new JScrollPane(descriptionField)));
+        northPanel.add(textAreaPanel);
+      }
 
       add(northPanel, BorderLayout.NORTH);
 
