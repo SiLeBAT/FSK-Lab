@@ -554,7 +554,7 @@ public class FskPortObject implements PortObject {
   private static void add(final DefaultMutableTreeNode node,
       final PopulationGroup populationGroup) {
 
-    final String prefix = "GM.EditPopulationGroupPanel.";
+    final String prefix = "editor_EditPopulationGroupPanel_";
 
     add(node, prefix + "populationNameLabel", populationGroup.populationName);
     add(node, prefix + "populationSpanLabel", populationGroup.populationSpan);

@@ -26,6 +26,8 @@ import java.awt.LayoutManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -105,6 +107,7 @@ import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
 import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.Simulation;
+import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.swing.AutoSuggestField;
 import de.bund.bfr.swing.StringTextField;
@@ -3244,13 +3247,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final AutoSuggestField laboratoryAccreditationField =
         GUIFactory.createAutoSuggestField(vocabs.get("Laboratory accreditation"));
 
+    private final StudyPanel studyPanel;
+
     private final DataBackground dataBackground = new DataBackground();
 
     DataBackgroundPanel() {
 
       super(new BorderLayout());
 
-      final StudyPanel studyPanel = new StudyPanel();
+      studyPanel = new StudyPanel();
       studyPanel.setBorder(BorderFactory.createTitledBorder("Study"));
 
       final JButton studySampleButton = new JButton();
@@ -3330,10 +3335,54 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       add(northPanel, BorderLayout.NORTH);
     }
 
-    void init(final DataBackground dataBackground) {}
+    void init(final DataBackground dataBackground) {
+
+      final Study study = dataBackground.study;
+
+      // TODO: init study id
+      studyPanel.studyTitleTextField.setText(study.title);
+      // TODO: studyDesignTypeField
+      // TODO: study assay technology type
+      // TODO: study assay measurements type
+      // TODO: study assay technology platform
+      studyPanel.studyAssayTechnologyPlatformTextField.setText(study.technologyPlatform);
+      // TODO: accreditation procedure for the assay technology
+      studyPanel.studyProtocolNameTextField.setText(study.protocolName);
+      // TODO: study protocol type
+      if (study.protocolUri != null) {
+        studyPanel.studyProtocolURITextField.setText(study.protocolUri.toString());
+      }
+      // TODO: study protocol parameters name
+      // TODO: study protocol components
+      studyPanel.studyDescriptionTextArea.setText(dataBackground.study.description);
+    }
 
     DataBackground get() {
       final DataBackground dataBackground = new DataBackground();
+
+      // TODO: study id
+      dataBackground.study.title = studyPanel.studyTitleTextField.getText();
+      // TODO: studyDesignTypeField
+      // TODO: study assay technology type
+      // TODO: study assay measurements type
+      // TODO: study assay technology platform
+      dataBackground.study.technologyPlatform =
+          studyPanel.studyAssayTechnologyPlatformTextField.getText();
+      // TODO: accreditation procedure for the assay technology
+      dataBackground.study.protocolName = studyPanel.studyProtocolNameTextField.getText();
+      // TODO: study protocol type
+      dataBackground.study.protocolDescription =
+          studyPanel.studyProtocolDescriptionTextField.getText();
+      try {
+        dataBackground.study.protocolUri = new URI(studyPanel.studyProtocolURITextField.getText());
+      } catch (URISyntaxException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      // TODO: study protocol parameters name
+      // TODO: study protocol components
+      dataBackground.study.description = studyPanel.studyDescriptionTextArea.getText();
+
       dataBackground.studySample = this.dataBackground.studySample;
       dataBackground.dietaryAssessmentMethod = this.dataBackground.dietaryAssessmentMethod;
       dataBackground.assay = this.dataBackground.assay;
@@ -3421,7 +3470,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolType"));
       fields.add(studyProtocolTypeField);
 
-      // study protocol
+      // study protocol description
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolDescription"));
       fields.add(studyProtocolDescriptionTextField);
 
