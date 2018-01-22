@@ -1193,45 +1193,62 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = 3586499490386620791L;
 
-    private final StringTextField equationNameTextField = new StringTextField(false, 30);
-    private final StringTextField equationClassTextField = new StringTextField(true, 30);
+    private final FTextField equationNameTextField;
+    private final FTextField equationClassTextField;
     private final ReferencePanel referencePanel;
-    private final StringTextArea scriptTextArea = new StringTextArea(false, 5, 30);
-
-    private final List<JComponent> advancedComponents;
+    private final FTextArea scriptTextArea;
 
     EditModelEquationPanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
 
+      equationNameTextField = new FTextField(true);
+      equationClassTextField = new FTextField(true);
+      referencePanel = new ReferencePanel(isAdvanced);
+      scriptTextArea = new FTextArea();
+
+      createUI(isAdvanced);
+    }
+
+    private void createUI(boolean isAdvanced) {
+
       // Create labels
       String prefix = "editor_EditModelEquationPanel_";
-      final JLabel equationNameLabel = GUIFactory.createLabelWithTooltip(prefix + "name", true);
-      final JLabel equationClassLabel = GUIFactory.createLabelWithTooltip(prefix + "class");
-
-      referencePanel = new ReferencePanel(isAdvanced);
-
-      scriptTextArea
-          .setBorder(BorderFactory.createTitledBorder(bundle.getString(prefix + "scriptLabel")));
-      scriptTextArea.setToolTipText(bundle.getString(prefix + "scriptTooltip"));
-
-      // formPanel
-      final JPanel formPanel =
-          UI.createOptionsPanel(Arrays.asList(equationNameLabel, equationClassLabel),
-              Arrays.asList(equationNameTextField, equationClassTextField));
 
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
-      northPanel.add(formPanel);
-      northPanel.add(referencePanel);
-      northPanel.add(new JScrollPane(scriptTextArea));
+
+      {
+        List<FLabel> labels = new ArrayList<>();
+        List<JComponent> fields = new ArrayList<>();
+
+        // equation name
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "name"));
+        fields.add(equationNameTextField);
+
+        // equation class
+        if (isAdvanced) {
+          labels.add(GUIFactory.createLabelWithToolTip(prefix + "class"));
+          fields.add(equationClassTextField);
+        }
+
+        northPanel.add(UIUtils.createFormPanel(labels, fields));
+      }
+
+      // reference panel
+      if (isAdvanced) {
+        northPanel.add(referencePanel);
+      }
+
+      // description
+      if (isAdvanced) {
+        FLabel label = new FLabel(bundle.getString(prefix + "scriptLabel"));
+        northPanel
+            .add(UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(scriptTextArea)));
+      }
+
       add(northPanel, BorderLayout.NORTH);
-
-      advancedComponents = Arrays.asList(equationClassTextField, referencePanel);
-
-      // If advanced mode, show advanced components
-      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
@@ -1251,10 +1268,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditModelEquationPanel_";
 
       final List<String> errors = new ArrayList<>();
-      if (!equationNameTextField.isValueValid()) {
+      if (!equationNameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "nameLabel"));
       }
-      if (!scriptTextArea.isValueValid()) {
+      if (!scriptTextArea.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "scriptLabel"));
       }
       return errors;
@@ -1273,7 +1290,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     List<JComponent> getAdvancedComponents() {
-      return advancedComponents;
+      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -3765,6 +3782,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     final TableModel tableModel = new TableModel();
 
+    boolean isAdvanced;
+
     class TableModel extends DefaultTableModel {
 
       private static final long serialVersionUID = 6615864381589787261L;
@@ -3806,11 +3825,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
     }
 
-    private final EditModelEquationPanel editPanel = new EditModelEquationPanel(false);
-
     ModelEquationsPanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
+
+      this.isAdvanced = isAdvanced;
 
       setBorder(BorderFactory.createTitledBorder("Model equation"));
 
@@ -3818,6 +3837,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final JButton addButton = UIUtils.createAddButton();
       addButton.addActionListener(event -> {
+
+        EditModelEquationPanel editPanel = new EditModelEquationPanel(this.isAdvanced);
+
         final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create equation");
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           tableModel.add(editPanel.get());
@@ -3829,6 +3851,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         final int rowToEdit = myTable.getSelectedRow();
         if (rowToEdit != -1) {
 
+          EditModelEquationPanel editPanel = new EditModelEquationPanel(this.isAdvanced);
           editPanel.init(tableModel.equations.get(rowToEdit));
 
           final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Modify equation");
@@ -3855,7 +3878,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     void toggleMode() {
-      editPanel.toggleMode();
+      this.isAdvanced = !this.isAdvanced;
     }
 
     void init(final List<ModelEquation> modelEquations) {
