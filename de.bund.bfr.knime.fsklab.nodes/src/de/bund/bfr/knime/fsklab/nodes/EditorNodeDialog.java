@@ -110,7 +110,6 @@ import de.bund.bfr.knime.fsklab.rakip.Simulation;
 import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.swing.AutoSuggestField;
-import de.bund.bfr.swing.StringTextField;
 import de.bund.bfr.swing.UI;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
@@ -383,10 +382,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
      * @param possibleValues Set
      * @return an AutoSuggestField with the passed possible values. The field has 10 columns.
      */
-    private static AutoSuggestField createAutoSuggestField(final Set<String> possibleValues) {
+    private static AutoSuggestField createAutoSuggestField(final Set<String> possibleValues,
+        boolean mandatory) {
       final AutoSuggestField field = new AutoSuggestField(10);
       field.setPossibleValues(possibleValues);
       field.setPreferredSize(new Dimension(100, field.getPreferredSize().height));
+
+      Color borderColor = mandatory ? UIUtils.RED : UIUtils.BLUE;
+      field.setBorder(BorderFactory.createLineBorder(borderColor));
       return field;
     }
 
@@ -604,7 +607,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       super(new BorderLayout());
 
       dataCollectionToolField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Method. tool to collect data"));
+          GUIFactory.createAutoSuggestField(vocabs.get("Method. tool to collect data"), true);
       nonConsecutiveOneDayField = new FTextField(true);
       dietarySoftwareToolField = new FTextField();
       foodItemNumberField = new FTextField();
@@ -756,7 +759,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField acuteReferenceDoseField; // optional
     private final FTextField acceptableDailyIntakeField; // optional
     private final AutoSuggestField indSumField; // optional
-    private final StringTextField labNameField; // optional
+    private final FTextField labNameField; // optional
     private final AutoSuggestField labCountryField; // optional
     private final FTextField detectionLimitField; // optional
     private final FTextField quantificationLimitField; // optional
@@ -769,10 +772,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      hazardTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard type"));
-      hazardNameField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard name"));
+      hazardTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard type"), true);
+      hazardNameField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard name"), true);
       hazardDescriptionField = new FTextArea();
-      hazardUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard unit"));
+      hazardUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard unit"), true);
       adverseEffectField = new FTextField();
       originField = new FTextField();
       bmdField = new FTextField();
@@ -781,9 +784,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       acceptableOperatorField = new FTextField();
       acuteReferenceDoseField = new FTextField();
       acceptableDailyIntakeField = new FTextField();
-      indSumField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind sum"));
-      labNameField = new StringTextField(true, 30);
-      labCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Laboratory country"));
+      indSumField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind sum"), false);
+      labNameField = new FTextField();
+      labCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Laboratory country"), false);
       detectionLimitField = new FTextField();
       quantificationLimitField = new FTextField();
       leftCensoredDataField = new FTextField();
@@ -1112,13 +1115,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       classificationField = new JComboBox<>(Parameter.Classification.values());
       nameField = new FTextField(true);
       descriptionField = new FTextArea();
-      typeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter type"));
-      unitField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit"));
-      unitCategoryField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit category"));
-      dataTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter data type"));
-      sourceField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter source"));
-      subjectField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter subject"));
-      distributionField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter distribution"));
+      typeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter type"), false);
+      unitField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit"), true);
+      unitCategoryField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit category"), true);
+      dataTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter data type"), true);
+      sourceField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter source"), false);
+      subjectField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter subject"), false);
+      distributionField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Parameter distribution"), false);
       valueField = new FTextField();
       referenceField = new FTextField();
       variabilitySubjectField = new FTextArea();
@@ -1565,15 +1570,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      envNameField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix name"));
+      envNameField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix name"), true);
       envDescriptionField = new FTextArea();
-      envUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix unit"));
+      envUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix unit"), true);
       productionMethodField = GUIFactory.createComboBox(vocabs.get("Method of production"));
       packagingField = GUIFactory.createComboBox(vocabs.get("Packaging"));
       productTreatmentField = GUIFactory.createComboBox(vocabs.get("Product treatment"));
-      originCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Country of origin"));
-      originAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Area of origin"));
-      fisheriesAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Fisheries area"));
+      originCountryField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Country of origin"), false);
+      originAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Area of origin"), false);
+      fisheriesAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Fisheries area"), false);
       productionField = new FixedDateChooser();
       expirationField = new FixedDateChooser();
 
@@ -2058,14 +2064,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       sampleNameField = new FTextField(true);
       sampleProtocolField = new FTextField(true);
-      samplingStrategyField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling strategy"));
-      samplingTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Type of sampling program"));
-      samplingMethodField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling method"));
+      samplingStrategyField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Sampling strategy"), false);
+      samplingTypeField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Type of sampling program"), false);
+      samplingMethodField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling method"), false);
       samplingPlanField = new FTextField(true);
       samplingWeightField = new FTextField(true);
       samplingSizeField = new FTextField(true);
-      lotSizeUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Lot size unit"));
-      samplingPointField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling point"));
+      lotSizeUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Lot size unit"), false);
+      samplingPointField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling point"), false);
 
       createUI(isAdvanced);
     }
@@ -2252,17 +2260,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final JTextField identifierField; // mandatory
     private final CreatorPanel creatorPanel;
     private final FixedDateChooser creationField;
-    private final AutoSuggestField rightsField;
+    private final AutoSuggestField rightsField; // mandatory
     private final JCheckBox availabilityField;
     private final JTextField urlField;
-    private final AutoSuggestField formatField;
+    private final AutoSuggestField formatField; // optional
     private final ReferencePanel referencePanel;
-    private final AutoSuggestField languageField;
-    private final AutoSuggestField softwareField;
-    private final AutoSuggestField languageWrittenInField;
-    private final AutoSuggestField statusField;
-    private final FTextArea objectiveField;
-    private final FTextArea descriptionField;
+    private final AutoSuggestField languageField; // optional
+    private final AutoSuggestField softwareField; // optional
+    private final AutoSuggestField languageWrittenInField; // optional
+    private final AutoSuggestField statusField; // optional
+    private final FTextArea objectiveField; // optional
+    private final FTextArea descriptionField; // optional
 
     public GeneralInformationPanel() {
 
@@ -2275,15 +2283,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       identifierField = new FTextField(true);
       creatorPanel = new CreatorPanel();
       creationField = new FixedDateChooser();
-      rightsField = GUIFactory.createAutoSuggestField(vocabs.get("Rights"));
+      rightsField = GUIFactory.createAutoSuggestField(vocabs.get("Rights"), true);
       availabilityField = new JCheckBox();
       urlField = new FTextField(true);
-      formatField = GUIFactory.createAutoSuggestField(vocabs.get("Format"));
+      formatField = GUIFactory.createAutoSuggestField(vocabs.get("Format"), false);
       referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
-      languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"));
-      softwareField = GUIFactory.createAutoSuggestField(vocabs.get("Software"));
-      languageWrittenInField = GUIFactory.createAutoSuggestField(vocabs.get("Language written in"));
-      statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"));
+      languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"), false);
+      softwareField = GUIFactory.createAutoSuggestField(vocabs.get("Software"), false);
+      languageWrittenInField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Language written in"), false);
+      statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"), false);
       objectiveField = new FTextArea();
       descriptionField = new FTextArea();
 
@@ -2783,8 +2792,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final FTextArea commentTextArea = new FTextArea();
 
     final FixedDateChooser dateChooser = new FixedDateChooser();
-    final AutoSuggestField regionField = GUIFactory.createAutoSuggestField(vocabs.get("Region"));
-    final AutoSuggestField countryField = GUIFactory.createAutoSuggestField(vocabs.get("Country"));
+    final AutoSuggestField regionField =
+        GUIFactory.createAutoSuggestField(vocabs.get("Region"), false);
+    final AutoSuggestField countryField =
+        GUIFactory.createAutoSuggestField(vocabs.get("Country"), false);
 
     private Scope scope = null;
 
@@ -2881,6 +2892,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         this.scope = scope;
 
+        if (StringUtils.isNoneEmpty(scope.product.environmentName, scope.product.environmentUnit)) {
+          productButton
+              .setText(scope.product.environmentName + "_" + scope.product.environmentUnit);
+        }
+        if (StringUtils.isNoneEmpty(scope.hazard.hazardName, scope.hazard.hazardUnit)) {
+          hazardButton.setText(scope.hazard.hazardName + "_" + scope.hazard.hazardUnit);
+        }
+        if (StringUtils.isNotEmpty(scope.populationGroup.populationName)) {
+          populationButton.setText(scope.populationGroup.populationName);
+        }
+
         if (StringUtils.isNotBlank(scope.temporalInformation)) {
           try {
             dateChooser
@@ -2931,7 +2953,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
     final AutoSuggestField laboratoryAccreditationField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Laboratory accreditation"));
+        GUIFactory.createAutoSuggestField(vocabs.get("Laboratory accreditation"), false);
 
     private final StudyPanel studyPanel;
 
@@ -3107,18 +3129,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      studyDesignTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Design Type"));
+      studyDesignTypeField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Study Design Type"), false);
       studyAssayMeasurementsTypeField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Assay Measurement Type"));
+          GUIFactory.createAutoSuggestField(vocabs.get("Study Assay Measurement Type"), false);
       studyAssayTechnologyTypeField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Assay Technology Type"));
+          GUIFactory.createAutoSuggestField(vocabs.get("Study Assay Technology Type"), false);
       accreditationProcedureField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Accreditation procedure Ass.Tec"));
-      studyProtocolTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Type"));
+          GUIFactory.createAutoSuggestField(vocabs.get("Accreditation procedure Ass.Tec"), false);
+      studyProtocolTypeField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Type"), false);
       studyProtocolParametersField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Parameters Name"));
+          GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Parameters Name"), false);
       studyProtocolComponentsTypeField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Components Type"));
+          GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Components Type"), false);
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
