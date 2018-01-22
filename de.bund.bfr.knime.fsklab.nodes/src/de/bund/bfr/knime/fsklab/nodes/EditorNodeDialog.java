@@ -2513,19 +2513,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       String prefix = "editor_EditStudySamplePanel_";
       final List<String> errors = new ArrayList<>(5);
-      if (!sampleNameTextField.getText().isEmpty()) {
+      if (sampleNameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "sampleNameLabel"));
       }
-      if (!sampleProtocolTextField.getText().isEmpty()) {
+      if (sampleProtocolTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "sampleProtocolLabel"));
       }
-      if (!samplingPlanTextField.getText().isEmpty()) {
+      if (samplingPlanTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "samplingPlanLabel"));
       }
-      if (!samplingWeightTextField.getText().isEmpty()) {
+      if (samplingWeightTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "samplingWeightLabel"));
       }
-      if (!samplingSizeTextField.getText().isEmpty()) {
+      if (samplingSizeTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "samplingSizeLabel"));
       }
 
