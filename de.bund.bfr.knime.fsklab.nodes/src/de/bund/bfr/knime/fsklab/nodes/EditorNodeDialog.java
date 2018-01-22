@@ -382,50 +382,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       return label;
     }
 
-    /**
-     * Create a label with tooltip. Convenience method for
-     * {@link #createLabel(String, String, boolean)}.
-     * 
-     * @param key prefix for the keys of the label and tooltip. These keys only differ at the end:
-     *        <key>Label or <key>Tooltip.
-     */
-    private static JLabel createLabelWithTooltip(final String key, final boolean isMandatory) {
-      String textKey = key + "Label";
-      String toolTipKey = key + "Tooltip";
-      return createLabel(textKey, toolTipKey, isMandatory);
-    }
-
-    /**
-     * Create a label with tooltip for an optional property. Convencience method for
-     * {@link #createLabel(String, boolean)}
-     * 
-     * @param key prefix for the keys of the label and tooltip. These keys only differ at the end:
-     *        <key>Label or <key>Tooltip.
-     */
-    private static JLabel createLabelWithTooltip(final String key) {
-      return createLabelWithTooltip(key, false);
-    }
-
-    /**
-     * Create a JLabel retrieving text and tool tip text from resource bundle.
-     * 
-     * @param textKey Key of the JLabel text in the resource bundle
-     * @param toolTipKey Key of the tool tip text in the resource bundle
-     * @param isMandatory Whether the property described by the JLabel is mandatory
-     * @return JLabel
-     */
-    private static JLabel createLabel(final String textKey, final String toolTipKey,
-        final boolean isMandatory) {
-
-      String labelText = bundle.getString(textKey);
-      String toolTipText = bundle.getString(toolTipKey);
-      final JLabel label = new JLabel(labelText + (isMandatory ? "*" : ""));
-      label.setToolTipText(toolTipText);
-      label.setFont(UIUtils.FONT);
-
-      return label;
-    }
-
     private static JPanel createAdvancedPanel(final JCheckBox checkbox) {
 
       final JPanel panel = new JPanel();
