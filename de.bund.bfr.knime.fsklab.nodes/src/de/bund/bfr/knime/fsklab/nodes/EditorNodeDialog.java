@@ -3334,12 +3334,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       String prefix = "editor_DataBackgroundPanel_";
-      final JLabel studySampleLabel = GUIFactory.createLabel(prefix + "studySampleLabel");
-      final JLabel dietaryAssessmentMethodLabel =
-          GUIFactory.createLabel(prefix + "dietaryAssessmentMethodLabel");
-      final JLabel laboratoryAccreditationLabel =
-          GUIFactory.createLabel(prefix + "laboratoryAccreditationLabel");
-      final JLabel assayLabel = GUIFactory.createLabel(prefix + "assayLabel");
+      FLabel studySampleLabel = new FLabel(bundle.getString(prefix + "studySampleLabel"));
+      FLabel dietaryAssessmentMethodLabel =
+          new FLabel(bundle.getString(prefix + "dietaryAssessmentMethodLabel"));
+      FLabel laboratoryAccreditationLabel =
+          new FLabel(bundle.getString(prefix + "laboratoryAccreditationLabel"));
+      FLabel assayLabel = new FLabel(bundle.getString(prefix + "assayLabel"));
 
       // Advanced `checkbox`
       advancedCheckBox.addItemListener(event -> {
