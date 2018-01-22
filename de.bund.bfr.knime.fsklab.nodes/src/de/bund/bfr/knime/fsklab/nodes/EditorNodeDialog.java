@@ -1122,10 +1122,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = 3586499490386620791L;
 
-    private final FTextField equationNameTextField;
-    private final FTextField equationClassTextField;
-    private final ReferencePanel referencePanel;
-    private final FTextArea scriptTextArea;
+    private final FTextField equationNameTextField; // mandatory
+    private final FTextField equationClassTextField; // optional
+    private final ReferencePanel referencePanel; // optional
+    private final FTextArea scriptTextArea; // mandatory
 
     EditModelEquationPanel(final boolean isAdvanced) {
 
@@ -1134,7 +1134,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       equationNameTextField = new FTextField(true);
       equationClassTextField = new FTextField(true);
       referencePanel = new ReferencePanel(isAdvanced);
-      scriptTextArea = new FTextArea();
+      scriptTextArea = new FTextArea(true);
 
       createUI(isAdvanced);
     }
@@ -1171,7 +1171,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       // description
-      if (isAdvanced) {
+      {
         FLabel label = new FLabel(bundle.getString(prefix + "scriptLabel"));
         northPanel
             .add(UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(scriptTextArea)));
@@ -1197,10 +1197,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditModelEquationPanel_";
 
       final List<String> errors = new ArrayList<>();
-      if (!equationNameTextField.getText().isEmpty()) {
+      if (equationNameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "nameLabel"));
       }
-      if (!scriptTextArea.getText().isEmpty()) {
+      if (scriptTextArea.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "scriptLabel"));
       }
       return errors;
