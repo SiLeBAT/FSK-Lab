@@ -514,32 +514,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  /**
-   * Panel to create/edit an assay.
-   * 
-   * <table summary="EditAssayPanel fields">
-   * <tr>
-   * <td>Name</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Description</td>
-   * <td>Optional</td>
-   * </tr>
-   * </table>
-   */
   private class EditAssayPanel extends EditPanel<Assay> {
 
     private static final long serialVersionUID = -1195181696127795655L;
 
-    private final FTextField nameTextField;
-    private final FTextArea descriptionTextArea;
+    private final FTextField nameField; // mandatory
+    private final FTextArea descriptionField; // optional
 
     EditAssayPanel(final boolean isAdvanced) {
       super(new BorderLayout());
 
-      nameTextField = new FTextField(true);
-      descriptionTextArea = new FTextArea();
+      nameField = new FTextField(true);
+      descriptionField = new FTextArea();
 
       createUI(isAdvanced);
     }
@@ -553,14 +539,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // name
       List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "name"));
-      List<JComponent> fields = Arrays.asList(nameTextField);
+      List<JComponent> fields = Arrays.asList(nameField);
       northPanel.add(UIUtils.createFormPanel(labels, fields));
 
       // description
       if (isAdvanced) {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "description");
         FPanel textAreaPanel =
-            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(descriptionTextArea));
+            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(descriptionField));
         northPanel.add(textAreaPanel);
       }
 
@@ -570,8 +556,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(final Assay assay) {
       if (assay != null) {
-        nameTextField.setText(assay.name);
-        descriptionTextArea.setText(assay.description);
+        nameField.setText(assay.name);
+        descriptionField.setText(assay.description);
       }
     }
 
@@ -579,8 +565,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     Assay get() {
 
       final Assay assay = new Assay();
-      assay.name = nameTextField.getText();
-      assay.description = descriptionTextArea.getText();
+      assay.name = nameField.getText();
+      assay.description = descriptionField.getText();
 
       return assay;
     }
@@ -589,7 +575,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       final List<String> errors = new ArrayList<>(1);
-      if (nameTextField.getText().isEmpty()) {
+      if (nameField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString("editor_EditAssayPanel_nameLabel"));
       }
 
@@ -602,46 +588,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  /**
-   * Panel to create/modify a {@link DietaryAssessmentMethod}.
-   * 
-   * <table summary="EditDietaryAssessmentMethodPanel fields">
-   * <tr>
-   * <td>Data collection tool</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Non consecutive one day</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Dietary software tool</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Food item number</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Record type</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Food description</td>
-   * <td>Optional</td>
-   * </tr>
-   * </table>
-   */
   private class EditDietaryAssessmentMethodPanel extends EditPanel<DietaryAssessmentMethod> {
 
     private static final long serialVersionUID = -931984426171199928L;
 
-    private final AutoSuggestField dataCollectionToolField;
-    private final FTextField nonConsecutiveOneDayField;
-    private final FTextField dietarySoftwareToolField;
-    private final FTextField foodItemNumberField;
-    private final FTextField recordTypeField;
-    private final JComboBox<String> foodDescriptionField;
+    private final AutoSuggestField dataCollectionToolField; // mandatory
+    private final FTextField nonConsecutiveOneDayField; // mandatory
+    private final FTextField dietarySoftwareToolField; // optional
+    private final FTextField foodItemNumberField; // optional
+    private final FTextField recordTypeField; // optional
+    private final JComboBox<String> foodDescriptionField; // optional
 
     EditDietaryAssessmentMethodPanel(final boolean isAdvanced) {
 
@@ -783,111 +739,29 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  /**
-   * Panel to create/edit an {@link Hazard}.
-   * 
-   * <table summary="EditHazardPanel fields">
-   * <tr>
-   * <td>Hazard type</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Hazard name</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Hazard description</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Hazard unit</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Adverse effect</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Origin</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>BMD</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Maximum residue limit</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>No observed adverse</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Acceptable operator</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Acute reference dose</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Acceptable daily intake</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Ind sum</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Laboratory name</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Laboratory country</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Detection limit</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Quantification limit</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Left censored data</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Contamination range</td>
-   * <td>Optional</td>
-   * </tr>
-   * </table>
-   */
   private class EditHazardPanel extends EditPanel<Hazard> {
 
     private static final long serialVersionUID = -1981279747311233487L;
 
-    private final AutoSuggestField hazardTypeField;
-    private final AutoSuggestField hazardNameField;
-    private final FTextArea hazardDescriptionTextArea;
-    private final AutoSuggestField hazardUnitField;
-    private final FTextField adverseEffectTextField;
-    private final FTextField originTextField;
-    private final FTextField bmdTextField;
-    private final FTextField maxResidueLimitTextField;
-    private final FTextField noObservedAdverseTextField;
-    private final FTextField acceptableOperatorTextField;
-    private final FTextField acuteReferenceDoseTextField;
-    private final FTextField acceptableDailyIntakeTextField;
-    private final AutoSuggestField indSumField;
-    private final StringTextField labNameTextField;
-    private final AutoSuggestField labCountryField;
-    private final FTextField detectionLimitTextField;
-    private final FTextField quantificationLimitTextField;
-    private final FTextField leftCensoredDataTextField;
-    private final FTextField contaminationRangeTextField;
+    private final AutoSuggestField hazardTypeField; // mandatory
+    private final AutoSuggestField hazardNameField; // mandatory
+    private final FTextArea hazardDescriptionField; // optional
+    private final AutoSuggestField hazardUnitField; // mandatory
+    private final FTextField adverseEffectField; // optional
+    private final FTextField originField; // optional
+    private final FTextField bmdField; // optional
+    private final FTextField maxResidueLimitField; // optional
+    private final FTextField noObservedAdverseField; // optional
+    private final FTextField acceptableOperatorField; // optional
+    private final FTextField acuteReferenceDoseField; // optional
+    private final FTextField acceptableDailyIntakeField; // optional
+    private final AutoSuggestField indSumField; // optional
+    private final StringTextField labNameField; // optional
+    private final AutoSuggestField labCountryField; // optional
+    private final FTextField detectionLimitField; // optional
+    private final FTextField quantificationLimitField; // optional
+    private final FTextField leftCensoredDataField; // optional
+    private final FTextField contaminationRangeField; // optional
 
     private final List<JComponent> advancedComponents;
 
@@ -897,29 +771,29 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       hazardTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard type"));
       hazardNameField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard name"));
-      hazardDescriptionTextArea = new FTextArea();
+      hazardDescriptionField = new FTextArea();
       hazardUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard unit"));
-      adverseEffectTextField = new FTextField();
-      originTextField = new FTextField();
-      bmdTextField = new FTextField();
-      maxResidueLimitTextField = new FTextField();
-      noObservedAdverseTextField = new FTextField();
-      acceptableOperatorTextField = new FTextField();
-      acuteReferenceDoseTextField = new FTextField();
-      acceptableDailyIntakeTextField = new FTextField();
+      adverseEffectField = new FTextField();
+      originField = new FTextField();
+      bmdField = new FTextField();
+      maxResidueLimitField = new FTextField();
+      noObservedAdverseField = new FTextField();
+      acceptableOperatorField = new FTextField();
+      acuteReferenceDoseField = new FTextField();
+      acceptableDailyIntakeField = new FTextField();
       indSumField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind sum"));
-      labNameTextField = new StringTextField(true, 30);
+      labNameField = new StringTextField(true, 30);
       labCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Laboratory country"));
-      detectionLimitTextField = new FTextField();
-      quantificationLimitTextField = new FTextField();
-      leftCensoredDataTextField = new FTextField();
-      contaminationRangeTextField = new FTextField();
+      detectionLimitField = new FTextField();
+      quantificationLimitField = new FTextField();
+      leftCensoredDataField = new FTextField();
+      contaminationRangeField = new FTextField();
 
-      advancedComponents = Arrays.asList(hazardDescriptionTextArea, adverseEffectTextField,
-          originTextField, bmdTextField, maxResidueLimitTextField, acceptableOperatorTextField,
-          noObservedAdverseTextField, acuteReferenceDoseTextField, acceptableDailyIntakeTextField,
-          indSumField, labNameTextField, labCountryField, detectionLimitTextField,
-          quantificationLimitTextField, leftCensoredDataTextField, contaminationRangeTextField);
+      advancedComponents = Arrays.asList(hazardDescriptionField, adverseEffectField, originField,
+          bmdField, maxResidueLimitField, acceptableOperatorField, noObservedAdverseField,
+          acuteReferenceDoseField, acceptableDailyIntakeField, indSumField, labNameField,
+          labCountryField, detectionLimitField, quantificationLimitField, leftCensoredDataField,
+          contaminationRangeField);
 
 
       createUI(isAdvanced);
@@ -947,31 +821,31 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         // adverse effect
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "adverseEffect"));
-        fields.add(adverseEffectTextField);
+        fields.add(adverseEffectField);
 
         // origin
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "origin"));
-        fields.add(originTextField);
+        fields.add(originField);
 
         // bmd
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "bmd"));
-        fields.add(bmdTextField);
+        fields.add(bmdField);
 
         // max residue limit
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "maxResidueLimit"));
-        fields.add(maxResidueLimitTextField);
+        fields.add(maxResidueLimitField);
 
         // no observed adverse
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "noObservedAdverse"));
-        fields.add(noObservedAdverseTextField);
+        fields.add(noObservedAdverseField);
 
         // acceptable opeartor
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "acceptableOperator"));
-        fields.add(acceptableOperatorTextField);
+        fields.add(acceptableOperatorField);
 
         // acute reference dose
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "acuteReferenceDose"));
-        fields.add(acuteReferenceDoseTextField);
+        fields.add(acuteReferenceDoseField);
 
         // ind sum
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "indSum"));
@@ -979,11 +853,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         // acceptable daily intake
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "acceptableDailyIntake"));
-        fields.add(acceptableDailyIntakeTextField);
+        fields.add(acceptableDailyIntakeField);
 
         // lab name
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "labName"));
-        fields.add(labNameTextField);
+        fields.add(labNameField);
 
         // lab country
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "labCountry"));
@@ -991,19 +865,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         // detection limit
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "detectionLimit"));
-        fields.add(detectionLimitTextField);
+        fields.add(detectionLimitField);
 
         // quantification limit
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "quantificationLimit"));
-        fields.add(quantificationLimitTextField);
+        fields.add(quantificationLimitField);
 
         // left censored data
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "leftCensoredData"));
-        fields.add(leftCensoredDataTextField);
+        fields.add(leftCensoredDataField);
 
         // contamination range
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "contaminationRange"));
-        fields.add(contaminationRangeTextField);
+        fields.add(contaminationRangeField);
       }
 
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
@@ -1016,7 +890,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (isAdvanced) {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "hazardDescription");
         FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
-            Arrays.asList(new JScrollPane(hazardDescriptionTextArea)));
+            Arrays.asList(new JScrollPane(hazardDescriptionField)));
         northPanel.add(textAreaPanel);
       }
 
@@ -1032,23 +906,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (hazard != null) {
         hazardTypeField.setSelectedItem(hazard.hazardType);
         hazardNameField.setSelectedItem(hazard.hazardName);
-        hazardDescriptionTextArea.setText(hazard.hazardDescription);
+        hazardDescriptionField.setText(hazard.hazardDescription);
         hazardUnitField.setSelectedItem(hazard.hazardUnit);
-        adverseEffectTextField.setText(hazard.adverseEffect);
-        originTextField.setText(hazard.origin);
-        bmdTextField.setText(hazard.benchmarkDose);
-        maxResidueLimitTextField.setText(hazard.maximumResidueLimit);
-        noObservedAdverseTextField.setText(hazard.noObservedAdverse);
-        acceptableOperatorTextField.setText(hazard.acceptableOperator);
-        acuteReferenceDoseTextField.setText(hazard.acuteReferenceDose);
+        adverseEffectField.setText(hazard.adverseEffect);
+        originField.setText(hazard.origin);
+        bmdField.setText(hazard.benchmarkDose);
+        maxResidueLimitField.setText(hazard.maximumResidueLimit);
+        noObservedAdverseField.setText(hazard.noObservedAdverse);
+        acceptableOperatorField.setText(hazard.acceptableOperator);
+        acuteReferenceDoseField.setText(hazard.acuteReferenceDose);
         indSumField.setSelectedItem(hazard.hazardIndSum);
-        acceptableDailyIntakeTextField.setText(hazard.acceptableDailyIntake);
-        labNameTextField.setText(hazard.laboratoryName);
+        acceptableDailyIntakeField.setText(hazard.acceptableDailyIntake);
+        labNameField.setText(hazard.laboratoryName);
         labCountryField.setSelectedItem(hazard.laboratoryCountry);
-        detectionLimitTextField.setText(hazard.detectionLimit);
-        quantificationLimitTextField.setText(hazard.quantificationLimit);
-        leftCensoredDataTextField.setText(hazard.leftCensoredData);
-        contaminationRangeTextField.setText(hazard.rangeOfContamination);
+        detectionLimitField.setText(hazard.detectionLimit);
+        quantificationLimitField.setText(hazard.quantificationLimit);
+        leftCensoredDataField.setText(hazard.leftCensoredData);
+        contaminationRangeField.setText(hazard.rangeOfContamination);
       }
     }
 
@@ -1060,22 +934,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       hazard.hazardName = (String) hazardNameField.getSelectedItem();
       hazard.hazardUnit = (String) hazardUnitField.getSelectedItem();
 
-      hazard.hazardDescription = hazardDescriptionTextArea.getText();
-      hazard.adverseEffect = adverseEffectTextField.getText();
-      hazard.origin = originTextField.getText();
-      hazard.benchmarkDose = bmdTextField.getText();
-      hazard.maximumResidueLimit = maxResidueLimitTextField.getText();
-      hazard.noObservedAdverse = noObservedAdverseTextField.getText();
-      hazard.acceptableOperator = acceptableOperatorTextField.getText();
-      hazard.acuteReferenceDose = acuteReferenceDoseTextField.getText();
-      hazard.acceptableDailyIntake = acceptableDailyIntakeTextField.getText();
+      hazard.hazardDescription = hazardDescriptionField.getText();
+      hazard.adverseEffect = adverseEffectField.getText();
+      hazard.origin = originField.getText();
+      hazard.benchmarkDose = bmdField.getText();
+      hazard.maximumResidueLimit = maxResidueLimitField.getText();
+      hazard.noObservedAdverse = noObservedAdverseField.getText();
+      hazard.acceptableOperator = acceptableOperatorField.getText();
+      hazard.acuteReferenceDose = acuteReferenceDoseField.getText();
+      hazard.acceptableDailyIntake = acceptableDailyIntakeField.getText();
       hazard.hazardIndSum = (String) indSumField.getSelectedItem();
-      hazard.laboratoryName = labNameTextField.getText();
+      hazard.laboratoryName = labNameField.getText();
       hazard.laboratoryCountry = (String) labCountryField.getSelectedItem();
-      hazard.detectionLimit = detectionLimitTextField.getText();
-      hazard.quantificationLimit = quantificationLimitTextField.getText();
-      hazard.leftCensoredData = leftCensoredDataTextField.getText();
-      hazard.rangeOfContamination = contaminationRangeTextField.getText();
+      hazard.detectionLimit = detectionLimitField.getText();
+      hazard.quantificationLimit = quantificationLimitField.getText();
+      hazard.leftCensoredData = leftCensoredDataField.getText();
+      hazard.rangeOfContamination = contaminationRangeField.getText();
 
       return hazard;
     }
@@ -1104,41 +978,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  /**
-   * Panel to create/edit a {@link ModelEquation}.
-   * 
-   * <table summary="EditModelEquationPanel fields">
-   * <tr>
-   * <td>Equation name</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Equation class</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Script</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * </table>
-   */
   private class EditModelEquationPanel extends EditPanel<ModelEquation> {
 
     private static final long serialVersionUID = 3586499490386620791L;
 
-    private final FTextField equationNameTextField; // mandatory
-    private final FTextField equationClassTextField; // optional
+    private final FTextField equationNameField; // mandatory
+    private final FTextField equationClassField; // optional
     private final ReferencePanel referencePanel; // optional
-    private final FTextArea scriptTextArea; // mandatory
+    private final FTextArea scriptField; // mandatory
 
     EditModelEquationPanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
 
-      equationNameTextField = new FTextField(true);
-      equationClassTextField = new FTextField(true);
+      equationNameField = new FTextField(true);
+      equationClassField = new FTextField(true);
       referencePanel = new ReferencePanel(isAdvanced);
-      scriptTextArea = new FTextArea(true);
+      scriptField = new FTextArea(true);
 
       createUI(isAdvanced);
     }
@@ -1158,12 +1014,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         // equation name
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "name"));
-        fields.add(equationNameTextField);
+        fields.add(equationNameField);
 
         // equation class
         if (isAdvanced) {
           labels.add(GUIFactory.createLabelWithToolTip(prefix + "class"));
-          fields.add(equationClassTextField);
+          fields.add(equationClassField);
         }
 
         northPanel.add(UIUtils.createFormPanel(labels, fields));
@@ -1177,8 +1033,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // description
       {
         FLabel label = new FLabel(bundle.getString(prefix + "scriptLabel"));
-        northPanel
-            .add(UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(scriptTextArea)));
+        northPanel.add(UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(scriptField)));
       }
 
       add(northPanel, BorderLayout.NORTH);
@@ -1188,10 +1043,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     void init(final ModelEquation modelEquation) {
 
       if (modelEquation != null) {
-        equationNameTextField.setText(modelEquation.equationName);
-        equationClassTextField.setText(modelEquation.equationClass);
+        equationNameField.setText(modelEquation.equationName);
+        equationClassField.setText(modelEquation.equationClass);
         referencePanel.init(modelEquation.equationReference);
-        scriptTextArea.setText(modelEquation.equation);
+        scriptField.setText(modelEquation.equation);
       }
     }
 
@@ -1201,10 +1056,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditModelEquationPanel_";
 
       final List<String> errors = new ArrayList<>();
-      if (equationNameTextField.getText().isEmpty()) {
+      if (equationNameField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "nameLabel"));
       }
-      if (scriptTextArea.getText().isEmpty()) {
+      if (scriptField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "scriptLabel"));
       }
       return errors;
@@ -1213,9 +1068,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     ModelEquation get() {
       final ModelEquation modelEquation = new ModelEquation();
-      modelEquation.equationName = equationNameTextField.getText();
-      modelEquation.equation = scriptTextArea.getText();
-      modelEquation.equationClass = equationClassTextField.getText();
+      modelEquation.equationName = equationNameField.getText();
+      modelEquation.equation = scriptField.getText();
+      modelEquation.equationClass = equationClassField.getText();
       modelEquation.equationReference.addAll(referencePanel.tableModel.records);
 
       return modelEquation;
@@ -1231,10 +1086,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = 1826555468897327895L;
 
-    private final FTextField idTextField; // mandatory
-    private final JComboBox<Parameter.Classification> classificationComboBox; // mandatory
-    private final FTextField nameTextField; // mandatory
-    private final FTextArea descriptionTextArea;
+    private final FTextField idField; // mandatory
+    private final JComboBox<Parameter.Classification> classificationField; // mandatory
+    private final FTextField nameField; // mandatory
+    private final FTextArea descriptionField;
     private final AutoSuggestField typeField;
     private final AutoSuggestField unitField; // mandatory
     private final AutoSuggestField unitCategoryField; // mandatory
@@ -1242,20 +1097,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final AutoSuggestField sourceField;
     private final AutoSuggestField subjectField;
     private final AutoSuggestField distributionField;
-    private final FTextField valueTextField;
-    private final FTextField referenceTextField;
-    private final FTextArea variabilitySubjectTextArea;
-    private final FTextArea applicabilityTextArea;
+    private final FTextField valueField;
+    private final FTextField referenceField;
+    private final FTextArea variabilitySubjectField;
+    private final FTextArea applicabilityField;
+
     private SpinnerNumberModel errorSpinnerModel;
 
     public EditParameterPanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
 
-      idTextField = new FTextField(true);
-      classificationComboBox = new JComboBox<>(Parameter.Classification.values());
-      nameTextField = new FTextField(true);
-      descriptionTextArea = new FTextArea();
+      idField = new FTextField(true);
+      classificationField = new JComboBox<>(Parameter.Classification.values());
+      nameField = new FTextField(true);
+      descriptionField = new FTextArea();
       typeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter type"));
       unitField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit"));
       unitCategoryField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit category"));
@@ -1263,10 +1119,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       sourceField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter source"));
       subjectField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter subject"));
       distributionField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter distribution"));
-      valueTextField = new FTextField();
-      referenceTextField = new FTextField();
-      variabilitySubjectTextArea = new FTextArea();
-      applicabilityTextArea = new FTextArea();
+      valueField = new FTextField();
+      referenceField = new FTextField();
+      variabilitySubjectField = new FTextArea();
+      applicabilityField = new FTextArea();
       errorSpinnerModel = GUIFactory.createSpinnerDoubleModel();
 
       createUI(isAdvanced);
@@ -1281,15 +1137,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // id
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "id"));
-      fields.add(idTextField);
+      fields.add(idField);
 
       // classification
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "classification"));
-      fields.add(classificationComboBox);
+      fields.add(classificationField);
 
       // name
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "parameterName"));
-      fields.add(nameTextField);
+      fields.add(nameField);
 
       // type
       if (isAdvanced) {
@@ -1330,13 +1186,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // value
       if (isAdvanced) {
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "value"));
-        fields.add(valueTextField);
+        fields.add(valueField);
       }
 
       // reference
       if (isAdvanced) {
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "reference"));
-        fields.add(referenceTextField);
+        fields.add(referenceField);
       }
 
       // error
@@ -1359,15 +1215,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         // description
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "description"));
-        fields.add(new JScrollPane(descriptionTextArea));
+        fields.add(new JScrollPane(descriptionField));
 
         // variability
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "variabilitySubject"));
-        fields.add(new JScrollPane(variabilitySubjectTextArea));
+        fields.add(new JScrollPane(variabilitySubjectField));
 
         // applicability
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "applicability"));
-        fields.add(new JScrollPane(applicabilityTextArea));
+        fields.add(new JScrollPane(applicabilityField));
 
         FPanel textAreaPanel = UIUtils.createFormPanel(labels, fields);
         northPanel.add(textAreaPanel);
@@ -1378,10 +1234,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(Parameter t) {
       if (t != null) {
-        idTextField.setText(t.id);
-        classificationComboBox.setSelectedItem(t.classification);
-        nameTextField.setText(t.name);
-        descriptionTextArea.setText(t.description);
+        idField.setText(t.id);
+        classificationField.setSelectedItem(t.classification);
+        nameField.setText(t.name);
+        descriptionField.setText(t.description);
         // TODO: typeField
         unitField.setSelectedItem(t.unit);
         unitCategoryField.setSelectedItem(t.unitCategory);
@@ -1389,9 +1245,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         sourceField.setSelectedItem(t.dataType);
         subjectField.setSelectedItem(t.subject);
         distributionField.setSelectedItem(t.distribution);
-        valueTextField.setText(t.value);
-        referenceTextField.setText(t.reference);
-        variabilitySubjectTextArea.setText(t.variabilitySubject);
+        valueField.setText(t.value);
+        referenceField.setText(t.reference);
+        variabilitySubjectField.setText(t.variabilitySubject);
         // TODO: fix model applicability
         errorSpinnerModel.setValue(t.error);
       }
@@ -1401,21 +1257,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     Parameter get() {
 
       final Parameter param = new Parameter();
-      param.id = idTextField.getText();
-      param.classification = (Parameter.Classification) classificationComboBox.getSelectedItem();
-      param.name = nameTextField.getText();
+      param.id = idField.getText();
+      param.classification = (Parameter.Classification) classificationField.getSelectedItem();
+      param.name = nameField.getText();
       param.unit = (String) unitField.getSelectedItem();
       param.unitCategory = (String) unitCategoryField.getSelectedItem();
       param.dataType = (String) dataTypeField.getSelectedItem();
       // TODO: model applicability
 
-      param.description = descriptionTextArea.getText();
+      param.description = descriptionField.getText();
       param.source = (String) sourceField.getSelectedItem();
       param.subject = (String) subjectField.getSelectedItem();
       param.distribution = (String) distributionField.getSelectedItem();
-      param.value = valueTextField.getText();
-      param.reference = referenceTextField.getText();
-      param.variabilitySubject = variabilitySubjectTextArea.getText();
+      param.value = valueField.getText();
+      param.reference = referenceField.getText();
+      param.variabilitySubject = variabilitySubjectField.getText();
       param.error = errorSpinnerModel.getNumber().doubleValue();
 
       return param;
@@ -1426,13 +1282,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final String prefix = "editor_EditParameterPanel_";
       final List<String> errors = new ArrayList<>();
-      if (idTextField.getText().isEmpty()) {
+      if (idField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "idLabel"));
       }
-      if (classificationComboBox.getSelectedIndex() == -1) {
+      if (classificationField.getSelectedIndex() == -1) {
         errors.add("Missing " + bundle.getString(prefix + "classificationLabel"));
       }
-      if (nameTextField.getText().isEmpty()) {
+      if (nameField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "parameterNameLabel"));
       }
       if (!hasValidValue(unitField)) {
@@ -1454,99 +1310,41 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  /**
-   * Panel to create/edit a {@link PopulationGroup}.
-   * 
-   * <table summary="EditPopulationGroupPanel fields">
-   * <tr>
-   * <td>Population name</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Target population</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Population span</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Population description</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Population age</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Population gender</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>BMI</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Special diet group</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Pattern consumption</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Region</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Country</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Risk</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Season</td>
-   * <td>Optional</td>
-   * </tr>
-   * </table>
-   */
   private class EditPopulationGroupPanel extends EditPanel<PopulationGroup> {
 
     private static final long serialVersionUID = -4520186348489618333L;
 
-    private final FTextField populationNameTextField;
-    private final FTextField targetPopulationTextField;
-    private final FTextField populationSpanTextField;
-    private final FTextArea populationDescriptionTextArea;
-    private final FTextField populationAgeTextField;
-    private final FTextField populationGenderTextField;
-    private final FTextField bmiTextField;
-    private final FTextField specialDietGroupTextField;
-    private final FTextField patternConsumptionTextField;
-    private final JComboBox<String> regionComboBox;
-    private final JComboBox<String> countryComboBox;
-    private final FTextField riskTextField;
-    private final FTextField seasonTextField;
+    private final FTextField populationNameField; // mandatory
+    private final FTextField targetPopulationField; // optional
+    private final FTextField populationSpanField; // optional
+    private final FTextArea populationDescriptionField; // optional
+    private final FTextField populationAgeField; // optional
+    private final FTextField populationGenderField; // optional
+    private final FTextField bmiField; // optional
+    private final FTextField specialDietGroupField; // optional
+    private final FTextField patternConsumptionField; // optional
+    private final JComboBox<String> regionField; // optional
+    private final JComboBox<String> countryField; // optional
+    private final FTextField riskField; // optional
+    private final FTextField seasonField; // optional
 
     public EditPopulationGroupPanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
 
-      populationNameTextField = new FTextField(true);
-      targetPopulationTextField = new FTextField();
-      populationSpanTextField = new FTextField();
-      populationDescriptionTextArea = new FTextArea();
-      populationAgeTextField = new FTextField();
-      populationGenderTextField = new FTextField();
-      bmiTextField = new FTextField();
-      specialDietGroupTextField = new FTextField();
-      patternConsumptionTextField = new FTextField();
-      regionComboBox = GUIFactory.createComboBox(vocabs.get("Region"));
-      countryComboBox = GUIFactory.createComboBox(vocabs.get("Country"));
-      riskTextField = new FTextField();
-      seasonTextField = new FTextField();
+      populationNameField = new FTextField(true);
+      targetPopulationField = new FTextField();
+      populationSpanField = new FTextField();
+      populationDescriptionField = new FTextArea();
+      populationAgeField = new FTextField();
+      populationGenderField = new FTextField();
+      bmiField = new FTextField();
+      specialDietGroupField = new FTextField();
+      patternConsumptionField = new FTextField();
+      regionField = GUIFactory.createComboBox(vocabs.get("Region"));
+      countryField = GUIFactory.createComboBox(vocabs.get("Country"));
+      riskField = new FTextField();
+      seasonField = new FTextField();
 
       createUI(isAdvanced);
     }
@@ -1559,53 +1357,53 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // population name
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationName"));
-      fields.add(populationNameTextField);
+      fields.add(populationNameField);
 
       if (isAdvanced) {
 
         // target population
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "targetPopulation"));
-        fields.add(targetPopulationTextField);
+        fields.add(targetPopulationField);
 
         // population span
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationSpan"));
-        fields.add(populationSpanTextField);
+        fields.add(populationSpanField);
 
         // population age
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationAge"));
-        fields.add(populationAgeTextField);
+        fields.add(populationAgeField);
 
         // population gender
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationGender"));
-        fields.add(populationGenderTextField);
+        fields.add(populationGenderField);
 
         // bmi
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "bmi"));
-        fields.add(bmiTextField);
+        fields.add(bmiField);
 
         // special diet group
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "specialDietGroups"));
-        fields.add(specialDietGroupTextField);
+        fields.add(specialDietGroupField);
 
         // pattern consumption
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "patternConsumption"));
-        fields.add(patternConsumptionTextField);
+        fields.add(patternConsumptionField);
 
         // region
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "region"));
-        fields.add(regionComboBox);
+        fields.add(regionField);
 
         // country
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "country"));
-        fields.add(countryComboBox);
+        fields.add(countryField);
 
         // risk
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "riskAndPopulation"));
-        fields.add(riskTextField);
+        fields.add(riskField);
 
         // season
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "season"));
-        fields.add(seasonTextField);
+        fields.add(seasonField);
       }
 
       final FPanel formPanel = UIUtils.createFormPanel(labels, fields);
@@ -1618,7 +1416,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (isAdvanced) {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "populationDescription");
         FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
-            Arrays.asList(new JScrollPane(populationDescriptionTextArea)));
+            Arrays.asList(new JScrollPane(populationDescriptionField)));
         northPanel.add(textAreaPanel);
       }
 
@@ -1628,45 +1426,45 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(final PopulationGroup t) {
       if (t != null) {
-        populationNameTextField.setText(t.populationName);
-        targetPopulationTextField.setText(t.targetPopulation);
+        populationNameField.setText(t.populationName);
+        targetPopulationField.setText(t.targetPopulation);
 
         if (!t.populationSpan.isEmpty()) {
-          populationSpanTextField.setText(t.populationSpan.get(0));
+          populationSpanField.setText(t.populationSpan.get(0));
         }
 
         if (!t.populationDescription.isEmpty()) {
-          populationDescriptionTextArea.setText(t.populationDescription.get(0));
+          populationDescriptionField.setText(t.populationDescription.get(0));
         }
 
         if (!t.populationAge.isEmpty()) {
-          populationAgeTextField.setText(t.populationAge.get(0));
+          populationAgeField.setText(t.populationAge.get(0));
         }
 
-        populationGenderTextField.setText(t.populationGender);
+        populationGenderField.setText(t.populationGender);
 
         if (!t.bmi.isEmpty()) {
-          bmiTextField.setText(t.bmi.get(0));
+          bmiField.setText(t.bmi.get(0));
         }
 
         if (!t.specialDietGroups.isEmpty()) {
-          specialDietGroupTextField.setText(t.specialDietGroups.get(0));
+          specialDietGroupField.setText(t.specialDietGroups.get(0));
         }
 
         if (!t.patternConsumption.isEmpty()) {
-          patternConsumptionTextField.setText(t.patternConsumption.get(0));
+          patternConsumptionField.setText(t.patternConsumption.get(0));
         }
 
-        regionComboBox.setSelectedItem(t.region);
+        regionField.setSelectedItem(t.region);
 
-        countryComboBox.setSelectedItem(t.country);
+        countryField.setSelectedItem(t.country);
 
         if (!t.populationRiskFactor.isEmpty()) {
-          riskTextField.setText(t.populationRiskFactor.get(0));
+          riskField.setText(t.populationRiskFactor.get(0));
         }
 
         if (!t.season.isEmpty()) {
-          seasonTextField.setText(t.season.get(0));
+          seasonField.setText(t.season.get(0));
         }
       }
     }
@@ -1674,55 +1472,55 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     PopulationGroup get() {
       final PopulationGroup populationGroup = new PopulationGroup();
-      populationGroup.populationName = populationNameTextField.getText();
-      populationGroup.targetPopulation = targetPopulationTextField.getText();
+      populationGroup.populationName = populationNameField.getText();
+      populationGroup.targetPopulation = targetPopulationField.getText();
 
-      final String populationSpan = populationSpanTextField.getText();
+      final String populationSpan = populationSpanField.getText();
       if (!populationSpan.isEmpty()) {
         populationGroup.populationSpan.add(populationSpan);
       }
 
-      final String populationDescription = populationDescriptionTextArea.getText();
+      final String populationDescription = populationDescriptionField.getText();
       if (!populationDescription.isEmpty()) {
         populationGroup.populationDescription.add(populationDescription);
       }
 
-      final String populationAge = populationAgeTextField.getText();
+      final String populationAge = populationAgeField.getText();
       if (!populationAge.isEmpty()) {
         populationGroup.populationAge.add(populationAge);
       }
 
-      populationGroup.populationGender = populationGenderTextField.getText();
+      populationGroup.populationGender = populationGenderField.getText();
 
-      final String bmi = bmiTextField.getText();
+      final String bmi = bmiField.getText();
       if (!bmi.isEmpty()) {
         populationGroup.bmi.add(bmi);
       }
 
-      final String specialDietGroup = specialDietGroupTextField.getText();
+      final String specialDietGroup = specialDietGroupField.getText();
       if (!specialDietGroup.isEmpty()) {
         populationGroup.specialDietGroups.add(specialDietGroup);
       }
 
-      final String patternConsumption = patternConsumptionTextField.getText();
+      final String patternConsumption = patternConsumptionField.getText();
       if (!patternConsumption.isEmpty()) {
         populationGroup.patternConsumption.add(patternConsumption);
       }
 
-      if (regionComboBox.getSelectedIndex() != -1) {
-        populationGroup.region.add((String) regionComboBox.getSelectedItem());
+      if (regionField.getSelectedIndex() != -1) {
+        populationGroup.region.add((String) regionField.getSelectedItem());
       }
 
-      if (countryComboBox.getSelectedIndex() != -1) {
-        populationGroup.country.add((String) countryComboBox.getSelectedItem());
+      if (countryField.getSelectedIndex() != -1) {
+        populationGroup.country.add((String) countryField.getSelectedItem());
       }
 
-      final String risk = riskTextField.getText();
+      final String risk = riskField.getText();
       if (!risk.isEmpty()) {
         populationGroup.populationRiskFactor.add(risk);
       }
 
-      final String season = seasonTextField.getText();
+      final String season = seasonField.getText();
       if (!season.isEmpty()) {
         populationGroup.season.add(season);
       }
@@ -1734,7 +1532,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       final List<String> errors = new ArrayList<>(1);
-      if (populationNameTextField.getText().isEmpty()) {
+      if (populationNameField.getText().isEmpty()) {
         errors.add(
             "Missing " + bundle.getString("editor_EditPopulationGroupPanel_populationNameLabel"));
       }
@@ -1751,33 +1549,33 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -7400646603919832139L;
 
-    private final AutoSuggestField envNameField;
-    private final FTextArea envDescriptionTextArea;
-    private final AutoSuggestField envUnitField;
-    private final JComboBox<String> productionMethodComboBox;
-    private final JComboBox<String> packagingComboBox;
-    private final JComboBox<String> productTreatmentComboBox;
-    private final AutoSuggestField originCountryField;
-    private final AutoSuggestField originAreaField;
-    private final AutoSuggestField fisheriesAreaField;
-    private final FixedDateChooser productionDateChooser;
-    private final FixedDateChooser expirationDateChooser;
+    private final AutoSuggestField envNameField; // mandatory
+    private final FTextArea envDescriptionField; // optional
+    private final AutoSuggestField envUnitField; // mandatory
+    private final JComboBox<String> productionMethodField; // optional
+    private final JComboBox<String> packagingField; // optional
+    private final JComboBox<String> productTreatmentField; // optional
+    private final AutoSuggestField originCountryField; // optional
+    private final AutoSuggestField originAreaField; // optional
+    private final AutoSuggestField fisheriesAreaField; // optional
+    private final FixedDateChooser productionField; // optional
+    private final FixedDateChooser expirationField; // optional
 
     public EditProductPanel(boolean isAdvanced) {
 
       super(new BorderLayout());
 
       envNameField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix name"));
-      envDescriptionTextArea = new FTextArea();
+      envDescriptionField = new FTextArea();
       envUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix unit"));
-      productionMethodComboBox = GUIFactory.createComboBox(vocabs.get("Method of production"));
-      packagingComboBox = GUIFactory.createComboBox(vocabs.get("Packaging"));
-      productTreatmentComboBox = GUIFactory.createComboBox(vocabs.get("Product treatment"));
+      productionMethodField = GUIFactory.createComboBox(vocabs.get("Method of production"));
+      packagingField = GUIFactory.createComboBox(vocabs.get("Packaging"));
+      productTreatmentField = GUIFactory.createComboBox(vocabs.get("Product treatment"));
       originCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Country of origin"));
       originAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Area of origin"));
       fisheriesAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Fisheries area"));
-      productionDateChooser = new FixedDateChooser();
-      expirationDateChooser = new FixedDateChooser();
+      productionField = new FixedDateChooser();
+      expirationField = new FixedDateChooser();
 
       createUI(isAdvanced);
     }
@@ -1800,15 +1598,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         // production method
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "productionMethod"));
-        fields.add(productionMethodComboBox);
+        fields.add(productionMethodField);
 
         // packaging
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "packaging"));
-        fields.add(packagingComboBox);
+        fields.add(packagingField);
 
         // product treatment
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "productTreatment"));
-        fields.add(productTreatmentComboBox);
+        fields.add(productTreatmentField);
 
         // origin country
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "originCountry"));
@@ -1824,11 +1622,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         // production date
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "productionDate"));
-        fields.add(productionDateChooser);
+        fields.add(productionField);
 
         // expiration date
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "expirationDate"));
-        fields.add(expirationDateChooser);
+        fields.add(expirationField);
       }
 
       // Build UI
@@ -1842,7 +1640,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (isAdvanced) {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "envDescription");
         FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
-            Arrays.asList(new JScrollPane(envDescriptionTextArea)));
+            Arrays.asList(new JScrollPane(envDescriptionField)));
         northPanel.add(textAreaPanel);
       }
 
@@ -1854,7 +1652,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       if (t != null) {
         envNameField.setSelectedItem(t.environmentName);
-        envDescriptionTextArea.setText(t.environmentDescription);
+        envDescriptionField.setText(t.environmentDescription);
         envUnitField.setSelectedItem(t.environmentUnit);
         // TODO: productonMethodComboBox
         // TODO: packagingComboBox
@@ -1862,8 +1660,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         originCountryField.setSelectedItem(t.originCountry);
         originAreaField.setSelectedItem(t.originArea);
         fisheriesAreaField.setSelectedItem(t.fisheriesArea);
-        productionDateChooser.setDate(t.productionDate);
-        expirationDateChooser.setDate(t.expirationDate);
+        productionField.setDate(t.productionDate);
+        expirationField.setDate(t.expirationDate);
       }
     }
 
@@ -1872,19 +1670,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final Product product = new Product();
       product.environmentName = (String) envNameField.getSelectedItem();
-      product.environmentDescription = envDescriptionTextArea.getText();
+      product.environmentDescription = envDescriptionField.getText();
       product.environmentUnit = (String) envUnitField.getSelectedItem();
-      Arrays.stream(productionMethodComboBox.getSelectedObjects()).map(it -> (String) it)
+      Arrays.stream(productionMethodField.getSelectedObjects()).map(it -> (String) it)
           .forEach(product.productionMethod::add);
-      Arrays.stream(packagingComboBox.getSelectedObjects()).map(it -> (String) it)
+      Arrays.stream(packagingField.getSelectedObjects()).map(it -> (String) it)
           .forEach(product.packaging::add);
-      Arrays.stream(productTreatmentComboBox.getSelectedObjects()).map(it -> (String) it)
+      Arrays.stream(productTreatmentField.getSelectedObjects()).map(it -> (String) it)
           .forEach(product.productTreatment::add);
       product.originCountry = (String) originCountryField.getSelectedItem();
       product.originArea = (String) originAreaField.getSelectedItem();
       product.fisheriesArea = (String) fisheriesAreaField.getSelectedItem();
-      product.productionDate = productionDateChooser.getDate();
-      product.expirationDate = expirationDateChooser.getDate();
+      product.productionDate = productionField.getDate();
+      product.expirationDate = expirationField.getDate();
 
       return product;
     }
@@ -1970,72 +1768,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     referenceTypeLabels.put(Type.VIDEO, "Video recording");
   }
 
-  /**
-   * Panel to create/edit a {@link Record}.
-   * 
-   * <table summary="EditReferencePanel fields">
-   * <tr>
-   * <td>Is reference description?</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Type</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Date</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>PMID</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>DOI</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Authors</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Title</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Abstract</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Journal</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Volume</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Issue</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Page</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Status</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Website</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Comment</td>
-   * <td>Optional</td>
-   * </tr>
-   * </table>
-   */
   private class EditReferencePanel extends EditPanel<Record> {
 
     private static final long serialVersionUID = -6874752919377124455L;
@@ -2043,22 +1775,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private static final String dateFormatStr = "yyyy-MM-dd";
 
     // Spinner models starting with 0 and taking positive ints only
-    private final SpinnerNumberModel volumeSpinnerModel;
-    private final SpinnerNumberModel issueSpinnerModel;
+    private final SpinnerNumberModel volumeSpinnerModel; // optional
+    private final SpinnerNumberModel issueSpinnerModel; // optional
 
-    private final JCheckBox isReferenceDescriptionCheckBox;
-    private final JComboBox<String> typeComboBox;
-    private final FixedDateChooser dateChooser;
-    private final FTextField pmidTextField;
-    private final FTextField doiTextField;
-    private final FTextField authorListTextField;
-    private final FTextField titleTextField;
-    private final FTextArea abstractTextArea;
-    private final FTextField journalTextField;
-    private final FTextField pageTextField;
-    private final FTextField statusTextField;
-    private final FTextField websiteTextField;
-    private final FTextArea commentTextArea;
+    private final JCheckBox isReferenceDescriptionField; // optional
+    private final JComboBox<String> typeField; // optional
+    private final FixedDateChooser dateField; // optional
+    private final FTextField pmidField; // optional
+    private final FTextField doiField; // mandatory
+    private final FTextField authorListField; // optional
+    private final FTextField titleField; // mandatory
+    private final FTextArea abstractField; // optional
+    private final FTextField journalField; // optional
+    private final FTextField pageField; // optional
+    private final FTextField statusField; // optional
+    private final FTextField websiteField; // optional
+    private final FTextArea commentField; // optional
 
     EditReferencePanel(final boolean isAdvanced) {
 
@@ -2068,19 +1800,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       volumeSpinnerModel = GUIFactory.createSpinnerIntegerModel();
       issueSpinnerModel = GUIFactory.createSpinnerIntegerModel();
 
-      isReferenceDescriptionCheckBox = new JCheckBox("Is reference description *");
-      typeComboBox = GUIFactory.createComboBox(referenceTypeLabels.values());
-      dateChooser = new FixedDateChooser();
-      pmidTextField = new FTextField();
-      doiTextField = new FTextField(true);
-      authorListTextField = new FTextField();
-      titleTextField = new FTextField(true);
-      abstractTextArea = new FTextArea();
-      journalTextField = new FTextField();
-      pageTextField = new FTextField();
-      statusTextField = new FTextField();
-      websiteTextField = new FTextField();
-      commentTextArea = new FTextArea();
+      isReferenceDescriptionField = new JCheckBox("Is reference description *");
+      typeField = GUIFactory.createComboBox(referenceTypeLabels.values());
+      dateField = new FixedDateChooser();
+      pmidField = new FTextField();
+      doiField = new FTextField(true);
+      authorListField = new FTextField();
+      titleField = new FTextField(true);
+      abstractField = new FTextArea();
+      journalField = new FTextField();
+      pageField = new FTextField();
+      statusField = new FTextField();
+      websiteField = new FTextField();
+      commentField = new FTextArea();
 
       createUI(isAdvanced);
     }
@@ -2095,39 +1827,39 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // type
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "typeLabel")));
-        fields.add(typeComboBox);
+        fields.add(typeField);
       }
 
       // date
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "dateLabel")));
-        fields.add(dateChooser);
+        fields.add(dateField);
       }
 
       // pmid
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "pmidLabel")));
-        fields.add(pmidTextField);
+        fields.add(pmidField);
       }
 
       // doi
       labels.add(new FLabel(bundle.getString(prefix + "doiLabel")));
-      fields.add(doiTextField);
+      fields.add(doiField);
 
       // author
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "authorListLabel")));
-        fields.add(authorListTextField);
+        fields.add(authorListField);
       }
 
       // title
       labels.add(new FLabel(bundle.getString(prefix + "titleLabel")));
-      fields.add(titleTextField);
+      fields.add(titleField);
 
       // journal
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "journalLabel")));
-        fields.add(journalTextField);
+        fields.add(journalField);
       }
 
       // volume
@@ -2145,26 +1877,26 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // page
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "pageLabel")));
-        fields.add(pageTextField);
+        fields.add(pageField);
       }
 
       // status
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "statusLabel")));
-        fields.add(statusTextField);
+        fields.add(statusField);
       }
 
       // website
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "websiteLabel")));
-        fields.add(websiteTextField);
+        fields.add(websiteField);
       }
 
       // Build UI
-      isReferenceDescriptionCheckBox.setBackground(UIUtils.WHITE);
+      isReferenceDescriptionField.setBackground(UIUtils.WHITE);
 
       // isReferenceDescription panel
-      FPanel isReferenceDescriptionPanel = UIUtils.createWestPanel(isReferenceDescriptionCheckBox);
+      FPanel isReferenceDescriptionPanel = UIUtils.createWestPanel(isReferenceDescriptionField);
 
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
@@ -2178,7 +1910,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         List<FLabel> labels2 = Arrays.asList(new FLabel(bundle.getString(prefix + "abstractLabel")),
             new FLabel(bundle.getString(prefix + "commentLabel")));
         List<JComponent> fields2 =
-            Arrays.asList(new JScrollPane(abstractTextArea), new JScrollPane(commentTextArea));
+            Arrays.asList(new JScrollPane(abstractField), new JScrollPane(commentField));
         FPanel textAreaPanel = UIUtils.createFormPanel(labels2, fields2);
         northPanel.add(textAreaPanel);
       }
@@ -2191,29 +1923,29 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (t != null) {
         final Type type = t.getType();
         if (type != null) {
-          typeComboBox.setSelectedItem(referenceTypeLabels.get(type));
+          typeField.setSelectedItem(referenceTypeLabels.get(type));
         }
 
         final String dateString = t.getDate();
         if (dateString != null) {
           try {
             final SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatStr);
-            dateChooser.setDate(dateFormat.parse(dateString));
+            dateField.setDate(dateFormat.parse(dateString));
           } catch (final ParseException exception) {
             LOGGER.warn("Invalid date", exception);
           }
         }
 
-        doiTextField.setText(t.getDoi());
+        doiField.setText(t.getDoi());
 
         final List<String> authors = t.getAuthors();
         if (authors != null) {
-          authorListTextField.setText(String.join(";", authors));
+          authorListField.setText(String.join(";", authors));
         }
 
-        titleTextField.setText(t.getTitle());
-        abstractTextArea.setText(t.getAbstr());
-        journalTextField.setText(t.getSecondaryTitle());
+        titleField.setText(t.getTitle());
+        abstractField.setText(t.getAbstr());
+        journalField.setText(t.getSecondaryTitle());
 
         final String volumeNumberString = t.getVolumeNumber();
         if (volumeNumberString != null) {
@@ -2228,7 +1960,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         if (issueNumber != null) {
           issueSpinnerModel.setValue(issueNumber);
         }
-        websiteTextField.setText(t.getWebsiteLink());
+        websiteField.setText(t.getWebsiteLink());
       }
     }
 
@@ -2238,28 +1970,28 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final Record record = new Record();
       // TODO: isReferenceDescriptionCheckBox
 
-      final int selectedTypeIndex = typeComboBox.getSelectedIndex();
+      final int selectedTypeIndex = typeField.getSelectedIndex();
       if (selectedTypeIndex != -1) {
         final Type type = referenceTypeLabels.keySet()
             .toArray(new Type[referenceTypeLabels.size()])[selectedTypeIndex];
         record.setType(type);
       }
 
-      final Date date = dateChooser.getDate();
+      final Date date = dateField.getDate();
       if (date != null) {
         record.setDate(new SimpleDateFormat(dateFormatStr).format(date));
       }
 
-      record.setDoi(doiTextField.getText());
+      record.setDoi(doiField.getText());
 
-      final String authors = authorListTextField.getText();
+      final String authors = authorListField.getText();
       if (authors != null) {
         Arrays.stream(authors.split(";")).forEach(record::addAuthor);
       }
 
-      record.setTitle(titleTextField.getText());
-      record.setAbstr(abstractTextArea.getText());
-      record.setSecondaryTitle(journalTextField.getText());
+      record.setTitle(titleField.getText());
+      record.setAbstr(abstractField.getText());
+      record.setSecondaryTitle(journalField.getText());
 
       final Number volumeNumber = volumeSpinnerModel.getNumber();
       if (volumeNumber != null) {
@@ -2272,7 +2004,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       // TODO: status
-      record.setWebsiteLink(websiteTextField.getText());
+      record.setWebsiteLink(websiteField.getText());
       // TODO: comment
 
       return record;
@@ -2283,10 +2015,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       String prefix = "editor_EditReferencePanel_";
       final List<String> errors = new ArrayList<>(2);
-      if (doiTextField.getText().isEmpty()) {
+      if (doiField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "doiLabel"));
       }
-      if (titleTextField.getText().isEmpty()) {
+      if (titleField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "titleLabel"));
       }
 
@@ -2299,69 +2031,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  /**
-   * Panel to create/edit a {@link StudySample}.
-   * 
-   * <table summary="EditStudySamplePanel fields">
-   * <tr>
-   * <td>Sample name</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Moisture percentage</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Fat percentage</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Sample protocol</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Sampling strategy</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Sampling type</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Sampling method</td>
-   * <td>Optional</td>
-   * </tr>
-   * <tr>
-   * <td>Sampling plan</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Sampling weight</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * <tr>
-   * <td>Sampling size</td>
-   * <td>Mandatory</td>
-   * </tr>
-   * </table>
-   */
   private class EditStudySamplePanel extends EditPanel<StudySample> {
 
     private static final long serialVersionUID = -4740851101237646103L;
 
-    private final SpinnerNumberModel moisturePercentageSpinnerModel;
-    private final SpinnerNumberModel fatPercentageSpinnerModel;
+    private final SpinnerNumberModel moisturePercentageSpinnerModel; // optional
+    private final SpinnerNumberModel fatPercentageSpinnerModel; // optional
 
-    private final FTextField sampleNameTextField;
-    private final FTextField sampleProtocolTextField;
-    private final AutoSuggestField samplingStrategyField;
-    private final AutoSuggestField samplingTypeField;
-    private final AutoSuggestField samplingMethodField;
-    private final FTextField samplingPlanTextField;
-    private final FTextField samplingWeightTextField;
-    private final FTextField samplingSizeTextField;
-    private final AutoSuggestField lotSizeUnitField;
-    private final AutoSuggestField samplingPointField;
+    private final FTextField sampleNameField; // mandatory
+    private final FTextField sampleProtocolField; // optional
+    private final AutoSuggestField samplingStrategyField; // optional
+    private final AutoSuggestField samplingTypeField; // optional
+    private final AutoSuggestField samplingMethodField; // optional
+    private final FTextField samplingPlanField; // mandatory
+    private final FTextField samplingWeightField; // mandatory
+    private final FTextField samplingSizeField; // mandatory
+    private final AutoSuggestField lotSizeUnitField; // optional
+    private final AutoSuggestField samplingPointField; // optional
 
     public EditStudySamplePanel(final boolean isAdvanced) {
 
@@ -2370,14 +2056,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       moisturePercentageSpinnerModel = GUIFactory.createSpinnerPercentageModel();
       fatPercentageSpinnerModel = GUIFactory.createSpinnerPercentageModel();
 
-      sampleNameTextField = new FTextField(true);
-      sampleProtocolTextField = new FTextField(true);
+      sampleNameField = new FTextField(true);
+      sampleProtocolField = new FTextField(true);
       samplingStrategyField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling strategy"));
       samplingTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Type of sampling program"));
       samplingMethodField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling method"));
-      samplingPlanTextField = new FTextField(true);
-      samplingWeightTextField = new FTextField(true);
-      samplingSizeTextField = new FTextField(true);
+      samplingPlanField = new FTextField(true);
+      samplingWeightField = new FTextField(true);
+      samplingSizeField = new FTextField(true);
       lotSizeUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Lot size unit"));
       samplingPointField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling point"));
 
@@ -2393,7 +2079,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // sample name
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "sampleName"));
-      fields.add(sampleNameTextField);
+      fields.add(sampleNameField);
 
       // moisture percentage
       if (isAdvanced) {
@@ -2409,7 +2095,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // sample protocol label
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "sampleProtocol"));
-      fields.add(sampleProtocolTextField);
+      fields.add(sampleProtocolField);
 
       // sampling strategy label
       if (isAdvanced) {
@@ -2431,15 +2117,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // sampling plan
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingPlan"));
-      fields.add(samplingPlanTextField);
+      fields.add(samplingPlanField);
 
       // sampling weight
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingWeight"));
-      fields.add(samplingWeightTextField);
+      fields.add(samplingWeightField);
 
       // sampling size
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingSize"));
-      fields.add(samplingSizeTextField);
+      fields.add(samplingSizeField);
 
       // lot size unit
       if (isAdvanced) {
@@ -2466,20 +2152,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(final StudySample t) {
       if (t != null) {
-        sampleNameTextField.setText(t.sample);
+        sampleNameField.setText(t.sample);
         if (t.moisturePercentage != null) {
           moisturePercentageSpinnerModel.setValue(t.moisturePercentage);
         }
         if (t.fatPercentage != null) {
           fatPercentageSpinnerModel.setValue(t.fatPercentage);
         }
-        sampleProtocolTextField.setText(t.collectionProtocol);
+        sampleProtocolField.setText(t.collectionProtocol);
         samplingStrategyField.setSelectedItem(t.samplingStrategy);
         samplingTypeField.setSelectedItem(t.samplingProgramType);
         samplingMethodField.setSelectedItem(t.samplingMethod);
-        samplingPlanTextField.setText(t.samplingPlan);
-        samplingWeightTextField.setText(t.samplingWeight);
-        samplingSizeTextField.setText(t.samplingSize);
+        samplingPlanField.setText(t.samplingPlan);
+        samplingWeightField.setText(t.samplingWeight);
+        samplingSizeField.setText(t.samplingSize);
         lotSizeUnitField.setSelectedItem(t.lotSizeUnit);
         samplingPointField.setSelectedItem(t.samplingPoint);
       }
@@ -2489,11 +2175,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     StudySample get() {
 
       final StudySample studySample = new StudySample();
-      studySample.sample = sampleNameTextField.getText();
-      studySample.collectionProtocol = sampleProtocolTextField.getText();
-      studySample.samplingPlan = samplingPlanTextField.getText();
-      studySample.samplingWeight = samplingWeightTextField.getText();
-      studySample.samplingSize = samplingSizeTextField.getText();
+      studySample.sample = sampleNameField.getText();
+      studySample.collectionProtocol = sampleProtocolField.getText();
+      studySample.samplingPlan = samplingPlanField.getText();
+      studySample.samplingWeight = samplingWeightField.getText();
+      studySample.samplingSize = samplingSizeField.getText();
 
       studySample.moisturePercentage = moisturePercentageSpinnerModel.getNumber().doubleValue();
       studySample.fatPercentage = fatPercentageSpinnerModel.getNumber().doubleValue();
@@ -2511,19 +2197,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       String prefix = "editor_EditStudySamplePanel_";
       final List<String> errors = new ArrayList<>(5);
-      if (sampleNameTextField.getText().isEmpty()) {
+      if (sampleNameField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "sampleNameLabel"));
       }
-      if (sampleProtocolTextField.getText().isEmpty()) {
+      if (sampleProtocolField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "sampleProtocolLabel"));
       }
-      if (samplingPlanTextField.getText().isEmpty()) {
+      if (samplingPlanField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "samplingPlanLabel"));
       }
-      if (samplingWeightTextField.getText().isEmpty()) {
+      if (samplingWeightField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "samplingWeightLabel"));
       }
-      if (samplingSizeTextField.getText().isEmpty()) {
+      if (samplingSizeField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "samplingSizeLabel"));
       }
 
@@ -2561,22 +2247,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final JCheckBox advancedCheckBox;
 
-    private final JTextField studyNameTextField;
-    private final JTextField sourceTextField;
-    private final JTextField identifierTextField;
+    private final JTextField studyNameField; // mandatory
+    private final JTextField sourceField; // optional
+    private final JTextField identifierField; // mandatory
     private final CreatorPanel creatorPanel;
-    private final FixedDateChooser creationDateChooser;
+    private final FixedDateChooser creationField;
     private final AutoSuggestField rightsField;
-    private final JCheckBox availabilityCheckBox;
-    private final JTextField urlTextField;
+    private final JCheckBox availabilityField;
+    private final JTextField urlField;
     private final AutoSuggestField formatField;
     private final ReferencePanel referencePanel;
     private final AutoSuggestField languageField;
     private final AutoSuggestField softwareField;
     private final AutoSuggestField languageWrittenInField;
     private final AutoSuggestField statusField;
-    private final FTextArea objectiveTextArea;
-    private final FTextArea descriptionTextArea;
+    private final FTextArea objectiveField;
+    private final FTextArea descriptionField;
 
     public GeneralInformationPanel() {
 
@@ -2584,22 +2270,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Create fields
       advancedCheckBox = new JCheckBox("Advanced");
-      studyNameTextField = new FTextField(true);
-      sourceTextField = new FTextField(true);
-      identifierTextField = new FTextField(true);
+      studyNameField = new FTextField(true);
+      sourceField = new FTextField(true);
+      identifierField = new FTextField(true);
       creatorPanel = new CreatorPanel();
-      creationDateChooser = new FixedDateChooser();
+      creationField = new FixedDateChooser();
       rightsField = GUIFactory.createAutoSuggestField(vocabs.get("Rights"));
-      availabilityCheckBox = new JCheckBox();
-      urlTextField = new FTextField(true);
+      availabilityField = new JCheckBox();
+      urlField = new FTextField(true);
       formatField = GUIFactory.createAutoSuggestField(vocabs.get("Format"));
       referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
       languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"));
       softwareField = GUIFactory.createAutoSuggestField(vocabs.get("Software"));
       languageWrittenInField = GUIFactory.createAutoSuggestField(vocabs.get("Language written in"));
       statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"));
-      objectiveTextArea = new FTextArea();
-      descriptionTextArea = new FTextArea();
+      objectiveField = new FTextArea();
+      descriptionField = new FTextArea();
 
       createUI();
     }
@@ -2623,24 +2309,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           GUIFactory.createLabelWithToolTip(prefix + "languageWrittenIn");
       FLabel statusLabel = GUIFactory.createLabelWithToolTip(prefix + "status");
 
-      availabilityCheckBox.setBackground(UIUtils.WHITE);
+      availabilityField.setBackground(UIUtils.WHITE);
 
       // Hide initially advanced components
       final List<JComponent> advancedComponents =
-          Arrays.asList(sourceTextField, formatField, languageField, softwareField,
-              languageWrittenInField, statusField, objectiveTextArea, descriptionTextArea);
+          Arrays.asList(sourceField, formatField, languageField, softwareField,
+              languageWrittenInField, statusField, objectiveField, descriptionField);
       advancedComponents.forEach(it -> it.setEnabled(false));
 
       // formPanel
-      JPanel creationDatePanel = UIUtils.createWestPanel(creationDateChooser);
-      JPanel availabilityPanel = UIUtils.createWestPanel(availabilityCheckBox);
+      JPanel creationDatePanel = UIUtils.createWestPanel(creationField);
+      JPanel availabilityPanel = UIUtils.createWestPanel(availabilityField);
       final JPanel formPanel = UIUtils.createFormPanel(
           Arrays.asList(studyNameLabel, identifierLabel, creationDateLabel, rightsLabel,
               availabilityLabel, urlLabel, sourceLabel, formatLabel, languageLabel, softwareLabel,
               languageWrittenInLabel, statusLabel),
-          Arrays.asList(studyNameTextField, identifierTextField, creationDatePanel, rightsField,
-              availabilityPanel, urlTextField, sourceTextField, formatField, languageField,
-              softwareField, languageWrittenInField, statusField));
+          Arrays.asList(studyNameField, identifierField, creationDatePanel, rightsField,
+              availabilityPanel, urlField, sourceField, formatField, languageField, softwareField,
+              languageWrittenInField, statusField));
 
       advancedCheckBox.addItemListener(event -> {
         final boolean showAdvanced = advancedCheckBox.isSelected();
@@ -2658,7 +2344,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "objective"),
             GUIFactory.createLabelWithToolTip(prefix + "description"));
         List<JComponent> fields =
-            Arrays.asList(new JScrollPane(objectiveTextArea), new JScrollPane(descriptionTextArea));
+            Arrays.asList(new JScrollPane(objectiveField), new JScrollPane(descriptionField));
         FPanel textAreaPanel = UIUtils.createFormPanel(labels, fields);
         northPanel.add(textAreaPanel);
       }
@@ -2673,15 +2359,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     void init(final GeneralInformation generalInformation) {
 
       if (generalInformation != null) {
-        studyNameTextField.setText(generalInformation.name);
-        sourceTextField.setText(generalInformation.source);
-        identifierTextField.setText(generalInformation.identifier);
+        studyNameField.setText(generalInformation.name);
+        sourceField.setText(generalInformation.source);
+        identifierField.setText(generalInformation.identifier);
         creatorPanel.init(generalInformation.creators);
-        creationDateChooser.setDate(generalInformation.creationDate);
+        creationField.setDate(generalInformation.creationDate);
         rightsField.setSelectedItem(generalInformation.rights);
-        availabilityCheckBox.setSelected(generalInformation.isAvailable);
+        availabilityField.setSelected(generalInformation.isAvailable);
         if (generalInformation.url != null) {
-          urlTextField.setText(generalInformation.url.toString());
+          urlField.setText(generalInformation.url.toString());
         }
         formatField.setSelectedItem(generalInformation.format);
         referencePanel.init(generalInformation.reference);
@@ -2689,22 +2375,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         softwareField.setSelectedItem(generalInformation.software);
         languageWrittenInField.setSelectedItem(generalInformation.languageWrittenIn);
         statusField.setSelectedItem(generalInformation.status);
-        objectiveTextArea.setText(generalInformation.objective);
-        descriptionTextArea.setText(generalInformation.description);
+        objectiveField.setText(generalInformation.objective);
+        descriptionField.setText(generalInformation.description);
       }
     }
 
     GeneralInformation get() {
 
       final GeneralInformation generalInformation = new GeneralInformation();
-      generalInformation.name = studyNameTextField.getText();
-      generalInformation.source = sourceTextField.getText();
-      generalInformation.identifier = identifierTextField.getText();
-      generalInformation.creationDate = creationDateChooser.getDate();
+      generalInformation.name = studyNameField.getText();
+      generalInformation.source = sourceField.getText();
+      generalInformation.identifier = identifierField.getText();
+      generalInformation.creationDate = creationField.getDate();
       generalInformation.rights = (String) rightsField.getSelectedItem();
-      generalInformation.isAvailable = availabilityCheckBox.isSelected();
+      generalInformation.isAvailable = availabilityField.isSelected();
 
-      final String urlText = urlTextField.getText();
+      final String urlText = urlField.getText();
       if (!urlText.isEmpty()) {
         try {
           generalInformation.url = new URL(urlText);
@@ -2722,8 +2408,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       generalInformation.software = (String) softwareField.getSelectedItem();
       generalInformation.languageWrittenIn = (String) languageWrittenInField.getSelectedItem();
       generalInformation.status = (String) statusField.getSelectedItem();
-      generalInformation.objective = objectiveTextArea.getText();
-      generalInformation.description = descriptionTextArea.getText();
+      generalInformation.objective = objectiveField.getText();
+      generalInformation.description = descriptionField.getText();
 
       return generalInformation;
     }
@@ -2999,15 +2685,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = 3472281253338213542L;
 
-    private final FTextField givenNameTextField;
-    private final FTextField familyNameTextField;
-    private final FTextField contactTextField;
+    private final FTextField givenNameField; // mandatory
+    private final FTextField familyNameField; // mandatory
+    private final FTextField contactField; // mandatory
 
     public EditCreatorPanel() {
       super(new BorderLayout());
-      givenNameTextField = new FTextField(true);
-      familyNameTextField = new FTextField(true);
-      contactTextField = new FTextField(true);
+      givenNameField = new FTextField(true);
+      familyNameField = new FTextField(true);
+      contactField = new FTextField(true);
 
       createUI();
     }
@@ -3021,7 +2707,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final FPanel formPanel =
           UIUtils.createFormPanel(Arrays.asList(givenNameLabel, familyNameLabel, contactLabel),
-              Arrays.asList(givenNameTextField, familyNameTextField, contactTextField));
+              Arrays.asList(givenNameField, familyNameField, contactField));
       final FPanel northPanel = UIUtils.createNorthPanel(formPanel);
       add(northPanel);
     }
@@ -3030,11 +2716,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       if (creator != null) {
         if (creator.getNickname() != null)
-          givenNameTextField.setText(creator.getNickname().getValues().get(0));
+          givenNameField.setText(creator.getNickname().getValues().get(0));
         if (creator.getFormattedName() != null)
-          familyNameTextField.setText(creator.getFormattedName().getValue());
+          familyNameField.setText(creator.getFormattedName().getValue());
         if (!creator.getEmails().isEmpty())
-          contactTextField.setText(creator.getEmails().get(0).getValue());
+          contactField.setText(creator.getEmails().get(0).getValue());
       }
     }
 
@@ -3043,17 +2729,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final VCard vCard = new VCard();
 
-      final String givenNameText = givenNameTextField.getText();
+      final String givenNameText = givenNameField.getText();
       if (StringUtils.isNotEmpty(givenNameText)) {
         vCard.setNickname(givenNameText);
       }
 
-      final String familyNameText = familyNameTextField.getText();
+      final String familyNameText = familyNameField.getText();
       if (StringUtils.isNotEmpty(familyNameText)) {
         vCard.setFormattedName(familyNameText);
       }
 
-      final String contactText = contactTextField.getText();
+      final String contactText = contactField.getText();
       if (StringUtils.isNotEmpty(contactText)) {
         vCard.addEmail(contactText);
       }
@@ -3067,13 +2753,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditCreatorPanel_";
 
       final List<String> errors = new ArrayList<>(3);
-      if (givenNameTextField.getText().isEmpty()) {
+      if (givenNameField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "givenNameLabel"));
       }
-      if (familyNameTextField.getText().isEmpty()) {
+      if (familyNameField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "familyNameLabel"));
       }
-      if (contactTextField.getText().isEmpty()) {
+      if (contactField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "contactLabel"));
       }
 
@@ -3345,48 +3031,47 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final Study study = dataBackground.study;
 
       // TODO: init study id
-      studyPanel.studyTitleTextField.setText(study.title);
+      studyPanel.studyTitleField.setText(study.title);
       // TODO: studyDesignTypeField
       // TODO: study assay technology type
       // TODO: study assay measurements type
       // TODO: study assay technology platform
-      studyPanel.studyAssayTechnologyPlatformTextField.setText(study.technologyPlatform);
+      studyPanel.studyAssayTechnologyPlatformField.setText(study.technologyPlatform);
       // TODO: accreditation procedure for the assay technology
-      studyPanel.studyProtocolNameTextField.setText(study.protocolName);
+      studyPanel.studyProtocolNameField.setText(study.protocolName);
       // TODO: study protocol type
       if (study.protocolUri != null) {
-        studyPanel.studyProtocolURITextField.setText(study.protocolUri.toString());
+        studyPanel.studyProtocolURIField.setText(study.protocolUri.toString());
       }
       // TODO: study protocol parameters name
       // TODO: study protocol components
-      studyPanel.studyDescriptionTextArea.setText(dataBackground.study.description);
+      studyPanel.studyDescriptionField.setText(dataBackground.study.description);
     }
 
     DataBackground get() {
       final DataBackground dataBackground = new DataBackground();
 
       // TODO: study id
-      dataBackground.study.title = studyPanel.studyTitleTextField.getText();
+      dataBackground.study.title = studyPanel.studyTitleField.getText();
       // TODO: studyDesignTypeField
       // TODO: study assay technology type
       // TODO: study assay measurements type
       // TODO: study assay technology platform
       dataBackground.study.technologyPlatform =
-          studyPanel.studyAssayTechnologyPlatformTextField.getText();
+          studyPanel.studyAssayTechnologyPlatformField.getText();
       // TODO: accreditation procedure for the assay technology
-      dataBackground.study.protocolName = studyPanel.studyProtocolNameTextField.getText();
+      dataBackground.study.protocolName = studyPanel.studyProtocolNameField.getText();
       // TODO: study protocol type
-      dataBackground.study.protocolDescription =
-          studyPanel.studyProtocolDescriptionTextField.getText();
+      dataBackground.study.protocolDescription = studyPanel.studyProtocolDescriptionField.getText();
       try {
-        dataBackground.study.protocolUri = new URI(studyPanel.studyProtocolURITextField.getText());
+        dataBackground.study.protocolUri = new URI(studyPanel.studyProtocolURIField.getText());
       } catch (URISyntaxException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
       // TODO: study protocol parameters name
       // TODO: study protocol components
-      dataBackground.study.description = studyPanel.studyDescriptionTextArea.getText();
+      dataBackground.study.description = studyPanel.studyDescriptionField.getText();
 
       dataBackground.studySample = this.dataBackground.studySample;
       dataBackground.dietaryAssessmentMethod = this.dataBackground.dietaryAssessmentMethod;
@@ -3400,21 +3085,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -6572236073945735826L;
 
-    private final FTextField studyIdentifierTextField = new FTextField(true);
-    private final FTextField studyTitleTextField = new FTextField(true);
-    private final FTextArea studyDescriptionTextArea = new FTextArea();
-    private final AutoSuggestField studyDesignTypeField;
-    private final AutoSuggestField studyAssayMeasurementsTypeField;
-    private final AutoSuggestField studyAssayTechnologyTypeField;
-    private final FTextField studyAssayTechnologyPlatformTextField = new FTextField();
-    private final AutoSuggestField accreditationProcedureField;
-    private final FTextField studyProtocolNameTextField = new FTextField();
-    private final AutoSuggestField studyProtocolTypeField;
-    private final FTextField studyProtocolDescriptionTextField = new FTextField();
-    private final FTextField studyProtocolURITextField = new FTextField();
-    private final FTextField studyProtocolVersionTextField = new FTextField();
-    private final AutoSuggestField studyProtocolParametersField;
-    private final AutoSuggestField studyProtocolComponentsTypeField;
+    private final FTextField studyIdentifierField = new FTextField(true); // mandatory
+    private final FTextField studyTitleField = new FTextField(true); // mandatory
+    private final FTextArea studyDescriptionField = new FTextArea(); // optional
+    private final AutoSuggestField studyDesignTypeField; // optional
+    private final AutoSuggestField studyAssayMeasurementsTypeField; // optional
+    private final AutoSuggestField studyAssayTechnologyTypeField; // optional
+    private final FTextField studyAssayTechnologyPlatformField = new FTextField(); // optional
+    private final AutoSuggestField accreditationProcedureField; // optional
+    private final FTextField studyProtocolNameField = new FTextField(); // optional
+    private final AutoSuggestField studyProtocolTypeField; // optional
+    private final FTextField studyProtocolDescriptionField = new FTextField(); // optional
+    private final FTextField studyProtocolURIField = new FTextField(); // optional
+    private final FTextField studyProtocolVersionField = new FTextField(); // optional
+    private final AutoSuggestField studyProtocolParametersField; // optional
+    private final AutoSuggestField studyProtocolComponentsTypeField; // optional
 
     private final List<JComponent> advancedComponents;
 
@@ -3441,11 +3126,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // study identifier
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyIdentifier"));
-      fields.add(studyIdentifierTextField);
+      fields.add(studyIdentifierField);
 
       // study title
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyTitle"));
-      fields.add(studyTitleTextField);
+      fields.add(studyTitleField);
 
       // study design type
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyDesignType"));
@@ -3461,7 +3146,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // study assay technology platform
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayTechnologyPlatform"));
-      fields.add(studyAssayTechnologyPlatformTextField);
+      fields.add(studyAssayTechnologyPlatformField);
 
       // accreditation procedure for the assay technology
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "accreditationProcedure"));
@@ -3469,7 +3154,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // study protocol name
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolName"));
-      fields.add(studyProtocolNameTextField);
+      fields.add(studyProtocolNameField);
 
       // study protocol type
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolType"));
@@ -3477,11 +3162,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // study protocol description
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolDescription"));
-      fields.add(studyProtocolDescriptionTextField);
+      fields.add(studyProtocolDescriptionField);
 
       // study protocol URI
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolURI"));
-      fields.add(studyProtocolURITextField);
+      fields.add(studyProtocolURIField);
 
       // study protocol parameters name
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "parameters"));
@@ -3501,17 +3186,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "studyDescription");
         FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
-            Arrays.asList(new JScrollPane(studyDescriptionTextArea)));
+            Arrays.asList(new JScrollPane(studyDescriptionField)));
         northPanel.add(textAreaPanel);
       }
 
       add(northPanel, BorderLayout.NORTH);
 
-      advancedComponents = Arrays.asList(studyDescriptionTextArea, studyDesignTypeField,
+      advancedComponents = Arrays.asList(studyDescriptionField, studyDesignTypeField,
           studyAssayMeasurementsTypeField, studyAssayTechnologyTypeField,
-          studyAssayTechnologyPlatformTextField, accreditationProcedureField,
-          studyProtocolNameTextField, studyProtocolTypeField, studyProtocolDescriptionTextField,
-          studyProtocolURITextField, studyProtocolVersionTextField, studyProtocolParametersField,
+          studyAssayTechnologyPlatformField, accreditationProcedureField, studyProtocolNameField,
+          studyProtocolTypeField, studyProtocolDescriptionField, studyProtocolURIField,
+          studyProtocolVersionField, studyProtocolParametersField,
           studyProtocolComponentsTypeField);
       advancedComponents.forEach(it -> it.setEnabled(false));
     }
