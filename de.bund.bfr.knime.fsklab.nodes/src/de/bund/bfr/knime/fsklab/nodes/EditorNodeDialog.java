@@ -56,7 +56,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -66,6 +65,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -394,10 +394,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     /** Creates a JSpinner with 5 columns. */
-    private static JSpinner createSpinner(final AbstractSpinnerModel model) {
+    private static JSpinner createSpinner(final AbstractSpinnerModel model, boolean mandatory) {
 
       final JSpinner spinner = new JSpinner(model);
       ((DefaultEditor) spinner.getEditor()).getTextField().setColumns(5);
+
+      Color borderColor = mandatory ? UIUtils.RED : UIUtils.BLUE;
+      Border lineBorder = BorderFactory.createLineBorder(borderColor);
+      Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+      Border compoundBorder = BorderFactory.createCompoundBorder(lineBorder, emptyBorder);
+      spinner.setBorder(compoundBorder);
 
       return spinner;
     }
@@ -502,19 +508,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     abstract void init(final T t);
 
     abstract T get();
-
-    /**
-     * @return list of JComponents related to optional properties
-     */
-    abstract List<JComponent> getAdvancedComponents();
-
-    /**
-     * Hide or show the JComponents related to optional properties.
-     */
-    void toggleMode() {
-      final List<JComponent> components = getAdvancedComponents();
-      components.forEach(it -> it.setEnabled(!it.isEnabled()));
-    }
   }
 
   private class EditAssayPanel extends EditPanel<Assay> {
@@ -583,11 +576,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       return errors;
-    }
-
-    @Override
-    List<JComponent> getAdvancedComponents() {
-      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -734,11 +722,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       return errors;
-    }
-
-    @Override
-    List<JComponent> getAdvancedComponents() {
-      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -974,11 +957,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       return errors;
     }
-
-    @Override
-    List<JComponent> getAdvancedComponents() {
-      throw new UnsupportedOperationException("Not implemented");
-    }
   }
 
   private class EditModelEquationPanel extends EditPanel<ModelEquation> {
@@ -1077,11 +1055,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       modelEquation.equationReference.addAll(referencePanel.tableModel.records);
 
       return modelEquation;
-    }
-
-    @Override
-    List<JComponent> getAdvancedComponents() {
-      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -1203,7 +1176,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // error
       if (isAdvanced) {
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "error"));
-        fields.add(GUIFactory.createSpinner(errorSpinnerModel));
+        fields.add(GUIFactory.createSpinner(errorSpinnerModel, false));
       }
 
       // Build UI
@@ -1307,11 +1280,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       return errors;
-    }
-
-    @Override
-    List<JComponent> getAdvancedComponents() {
-      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -1543,11 +1511,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
       return errors;
     }
-
-    @Override
-    List<JComponent> getAdvancedComponents() {
-      throw new UnsupportedOperationException();
-    }
   }
 
   private class EditProductPanel extends EditPanel<Product> {
@@ -1706,11 +1669,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       return errors;
-    }
-
-    @Override
-    List<JComponent> getAdvancedComponents() {
-      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -1871,13 +1829,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // volume
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "volumeLabel")));
-        fields.add(GUIFactory.createSpinner(volumeSpinnerModel));
+        fields.add(GUIFactory.createSpinner(volumeSpinnerModel, false));
       }
 
       // issue
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "issueLabel")));
-        fields.add(GUIFactory.createSpinner(issueSpinnerModel));
+        fields.add(GUIFactory.createSpinner(issueSpinnerModel, false));
       }
 
       // page
@@ -2030,11 +1988,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       return errors;
     }
-
-    @Override
-    List<JComponent> getAdvancedComponents() {
-      throw new UnsupportedOperationException("Not implemented");
-    }
   }
 
   private class EditStudySamplePanel extends EditPanel<StudySample> {
@@ -2092,13 +2045,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // moisture percentage
       if (isAdvanced) {
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "moisturePercentage"));
-        fields.add(GUIFactory.createSpinner(moisturePercentageSpinnerModel));
+        fields.add(GUIFactory.createSpinner(moisturePercentageSpinnerModel, false));
       }
 
       // fat percentage
       if (isAdvanced) {
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "fatPercentage"));
-        fields.add(GUIFactory.createSpinner(fatPercentageSpinnerModel));
+        fields.add(GUIFactory.createSpinner(fatPercentageSpinnerModel, false));
       }
 
       // sample protocol label
@@ -2222,11 +2175,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       return errors;
-    }
-
-    @Override
-    List<JComponent> getAdvancedComponents() {
-      throw new UnsupportedOperationException("Not implemented");
     }
   }
 
@@ -2424,7 +2372,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  private class ReferencePanel extends JPanel {
+  private class ReferencePanel extends FPanel {
 
     private static final long serialVersionUID = 7457092378015891750L;
 
@@ -2477,8 +2425,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     public ReferencePanel(final boolean isAdvanced) {
 
-      super(new BorderLayout());
-      setBorder(BorderFactory.createTitledBorder("References"));
+      setLayout(new BorderLayout());
+      setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(UIUtils.BLUE),
+          "References"));
 
       this.isAdvanced = isAdvanced;
 
@@ -2544,10 +2493,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       final JPanel panel = UI.createTablePanel(coolTable);
+      panel.setBackground(UIUtils.WHITE);
 
       final JPanel buttonsPanel =
           UI.createHorizontalPanel(addButton, fileUploadButton, editButton, removeButton);
-      panel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
+      buttonsPanel.setBackground(UIUtils.WHITE);
+
+      JPanel centeredPanel = UI.createCenterPanel(buttonsPanel);
+      centeredPanel.setBackground(UIUtils.WHITE);
+      panel.add(centeredPanel, BorderLayout.SOUTH);
 
       add(panel);
     }
@@ -2557,7 +2511,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  private class CreatorPanel extends JPanel {
+  private class CreatorPanel extends FPanel {
 
     private static final long serialVersionUID = 3543570665869685092L;
     TableModel tableModel = new TableModel();
@@ -2609,9 +2563,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     public CreatorPanel() {
 
-      super(new BorderLayout());
+      setLayout(new BorderLayout());
 
-      setBorder(BorderFactory.createTitledBorder("Creators"));
+      setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(UIUtils.BLUE),
+          "Creators"));
 
       final JButton fileUploadButton = UIUtils.createFileUploadButton();
       fileUploadButton.addActionListener(event -> {
@@ -2675,10 +2630,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       JPanel panel = UI.createTablePanel(myTable);
+      panel.setBackground(UIUtils.WHITE);
 
       JPanel buttonsPanel =
           UI.createHorizontalPanel(addButton, fileUploadButton, editButton, removeButton);
-      panel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
+      buttonsPanel.setBackground(UIUtils.WHITE);
+
+      JPanel centeredPanel = UI.createCenterPanel(buttonsPanel);
+      centeredPanel.setBackground(UIUtils.WHITE);
+      panel.add(centeredPanel, BorderLayout.SOUTH);
 
       add(panel);
     }
@@ -2773,11 +2733,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       return errors;
-    }
-
-    @Override
-    List<JComponent> getAdvancedComponents() {
-      return Collections.emptyList();
     }
   }
 
@@ -3379,7 +3334,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       this.isAdvanced = isAdvanced;
 
-      setBorder(BorderFactory.createTitledBorder("Parameters"));
+      setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(UIUtils.BLUE),
+          "Parameters"));
 
       final JTable myTable = UIUtils.createTable(tableModel);
 
@@ -3444,37 +3400,40 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      final JPanel ssePanel = new JPanel();
-      ssePanel.add(new JLabel("SSE"));
-      ssePanel.add(GUIFactory.createSpinner(sseSpinnerModel));
+      FPanel ssePanel = new FPanel();
+      ssePanel.add(new FLabel("SSE"));
+      ssePanel.add(GUIFactory.createSpinner(sseSpinnerModel, false));
 
-      final JPanel msePanel = new JPanel();
-      msePanel.add(new JLabel("MSE"));
-      msePanel.add(GUIFactory.createSpinner(mseSpinnerModel));
+      FPanel msePanel = new FPanel();
+      msePanel.add(new FLabel("MSE"));
+      msePanel.add(GUIFactory.createSpinner(mseSpinnerModel, false));
 
-      final JPanel rmsePanel = new JPanel();
-      rmsePanel.add(new JLabel("RMSE"));
-      rmsePanel.add(GUIFactory.createSpinner(rmseSpinnerModel));
+      FPanel rmsePanel = new FPanel();
+      rmsePanel.add(new FLabel("RMSE"));
+      rmsePanel.add(GUIFactory.createSpinner(rmseSpinnerModel, false));
 
-      final JPanel r2Panel = new JPanel();
-      r2Panel.add(new JLabel("r-Squared"));
-      r2Panel.add(GUIFactory.createSpinner(r2SpinnerModel));
+      FPanel r2Panel = new FPanel();
+      r2Panel.add(new FLabel("r-Squared"));
+      r2Panel.add(GUIFactory.createSpinner(r2SpinnerModel, false));
 
-      final JPanel aicPanel = new JPanel();
-      aicPanel.add(new JLabel("AIC"));
-      aicPanel.add(GUIFactory.createSpinner(aicSpinnerModel));
+      FPanel aicPanel = new FPanel();
+      aicPanel.add(new FLabel("AIC"));
+      aicPanel.add(GUIFactory.createSpinner(aicSpinnerModel, false));
 
-      final JPanel bicPanel = new JPanel();
-      bicPanel.add(new JLabel("BIC"));
-      bicPanel.add(GUIFactory.createSpinner(bicSpinnerModel));
+      FPanel bicPanel = new FPanel();
+      bicPanel.add(new FLabel("BIC"));
+      bicPanel.add(GUIFactory.createSpinner(bicSpinnerModel, false));
 
-      final JPanel horizontalPanel =
+      JPanel horizontalPanel =
           UI.createHorizontalPanel(ssePanel, msePanel, rmsePanel, r2Panel, aicPanel, bicPanel);
-      final JPanel centeredPanel = UI.createCenterPanel(horizontalPanel);
+      horizontalPanel.setBackground(UIUtils.WHITE);
+      JPanel centeredPanel = UI.createCenterPanel(horizontalPanel);
+      centeredPanel.setBackground(UIUtils.WHITE);
 
       add(centeredPanel);
 
-      setBorder(BorderFactory.createTitledBorder("Quality measures"));
+      setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(UIUtils.BLUE),
+          "Quality measures"));
     }
   }
 
@@ -3533,7 +3492,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       this.isAdvanced = isAdvanced;
 
-      setBorder(BorderFactory.createTitledBorder("Model equation"));
+      setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(UIUtils.BLUE),
+          "Model equation"));
 
       final JTable myTable = UIUtils.createTable(tableModel);
 
