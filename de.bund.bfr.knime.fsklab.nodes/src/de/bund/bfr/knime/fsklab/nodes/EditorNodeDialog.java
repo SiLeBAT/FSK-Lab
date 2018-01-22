@@ -3299,6 +3299,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       assayButton.setToolTipText("Click me to add Assay");
       assayButton.addActionListener(event -> {
         EditAssayPanel editPanel = new EditAssayPanel(advancedCheckBox.isSelected());
+        editPanel.init(dataBackground.assay);
         final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create assay");
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final Assay assay = editPanel.get();
