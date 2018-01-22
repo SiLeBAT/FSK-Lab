@@ -767,7 +767,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (!hasValidValue(dataCollectionToolField)) {
         errors.add("Missing " + bundle.getString(prefix + "dataCollectionToolLabel"));
       }
-      if (!nonConsecutiveOneDayField.getText().isEmpty()) {
+      if (nonConsecutiveOneDayField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "nonConsecutiveOneDaysLabel"));
       }
 
