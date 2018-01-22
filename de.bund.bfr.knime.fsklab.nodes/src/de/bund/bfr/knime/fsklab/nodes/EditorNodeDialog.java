@@ -1227,14 +1227,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = 1826555468897327895L;
 
-    private final FTextField idTextField;
-    private final JComboBox<Parameter.Classification> classificationComboBox;
-    private final FTextField nameTextField;
+    private final FTextField idTextField; // mandatory
+    private final JComboBox<Parameter.Classification> classificationComboBox; // mandatory
+    private final FTextField nameTextField; // mandatory
     private final FTextArea descriptionTextArea;
     private final AutoSuggestField typeField;
-    private final AutoSuggestField unitField;
-    private final AutoSuggestField unitCategoryField;
-    private final AutoSuggestField dataTypeField;
+    private final AutoSuggestField unitField; // mandatory
+    private final AutoSuggestField unitCategoryField; // mandatory
+    private final AutoSuggestField dataTypeField; // mandatory
     private final AutoSuggestField sourceField;
     private final AutoSuggestField subjectField;
     private final AutoSuggestField distributionField;
@@ -1294,22 +1294,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       // unit
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "unit"));
-        fields.add(unitField);
-      }
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "unit"));
+      fields.add(unitField);
 
       // unit category
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "unitCategory"));
-        fields.add(unitCategoryField);
-      }
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "unitCategory"));
+      fields.add(unitCategoryField);
 
       // data type
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "dataType"));
-        fields.add(dataTypeField);
-      }
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "dataType"));
+      fields.add(dataTypeField);
 
       // source
       if (isAdvanced) {
@@ -1428,13 +1422,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final String prefix = "editor_EditParameterPanel_";
       final List<String> errors = new ArrayList<>();
-      if (!idTextField.getText().isEmpty()) {
+      if (idTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "idLabel"));
       }
       if (classificationComboBox.getSelectedIndex() == -1) {
         errors.add("Missing " + bundle.getString(prefix + "classificationLabel"));
       }
-      if (!nameTextField.getText().isEmpty()) {
+      if (nameTextField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "parameterNameLabel"));
       }
       if (!hasValidValue(unitField)) {
