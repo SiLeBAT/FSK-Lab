@@ -523,8 +523,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // description
       if (isAdvanced) {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "description");
+
+        JScrollPane descriptionPane = new JScrollPane(descriptionField);
+        descriptionPane.setBorder(BorderFactory.createEmptyBorder());
+
         FPanel textAreaPanel =
-            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(descriptionField));
+            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(descriptionPane));
         northPanel.add(textAreaPanel);
       }
 
@@ -857,8 +861,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       if (isAdvanced) {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "hazardDescription");
-        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
-            Arrays.asList(new JScrollPane(hazardDescriptionField)));
+
+        JScrollPane hazardDescriptionPane = new JScrollPane(hazardDescriptionField);
+        hazardDescriptionPane.setBorder(BorderFactory.createEmptyBorder());
+        FPanel textAreaPanel =
+            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(hazardDescriptionPane));
         northPanel.add(textAreaPanel);
       }
 
@@ -996,7 +1003,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // description
       {
         FLabel label = new FLabel(bundle.getString(prefix + "scriptLabel"));
-        northPanel.add(UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(scriptField)));
+
+        JScrollPane scriptPane = new JScrollPane(scriptField);
+        scriptPane.setBorder(BorderFactory.createEmptyBorder());
+
+        northPanel.add(UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(scriptPane)));
       }
 
       add(northPanel, BorderLayout.NORTH);
@@ -1175,15 +1186,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         // description
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "description"));
-        fields.add(new JScrollPane(descriptionField));
+        JScrollPane descriptionPane = new JScrollPane(descriptionField);
+        descriptionPane.setBorder(BorderFactory.createEmptyBorder());
+        fields.add(descriptionPane);
 
         // variability
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "variabilitySubject"));
-        fields.add(new JScrollPane(variabilitySubjectField));
+        JScrollPane variabilitySubjectPane = new JScrollPane(variabilitySubjectField);
+        variabilitySubjectPane.setBorder(BorderFactory.createEmptyBorder());
+        fields.add(variabilitySubjectPane);
 
         // applicability
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "applicability"));
-        fields.add(new JScrollPane(applicabilityField));
+        JScrollPane applicabilityPane = new JScrollPane(applicabilityField);
+        applicabilityPane.setBorder(BorderFactory.createEmptyBorder());
+        fields.add(applicabilityPane);
 
         FPanel textAreaPanel = UIUtils.createFormPanel(labels, fields);
         northPanel.add(textAreaPanel);
@@ -1370,8 +1387,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       if (isAdvanced) {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "populationDescription");
-        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
-            Arrays.asList(new JScrollPane(populationDescriptionField)));
+
+        JScrollPane populationDescriptionPane = new JScrollPane(populationDescriptionField);
+        populationDescriptionPane.setBorder(BorderFactory.createEmptyBorder());
+
+        FPanel textAreaPanel =
+            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(populationDescriptionPane));
         northPanel.add(textAreaPanel);
       }
 
@@ -1590,8 +1611,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       if (isAdvanced) {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "envDescription");
-        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
-            Arrays.asList(new JScrollPane(envDescriptionField)));
+
+        JScrollPane envDescriptionPane = new JScrollPane(envDescriptionField);
+        envDescriptionPane.setBorder(BorderFactory.createEmptyBorder());
+        FPanel textAreaPanel =
+            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(envDescriptionPane));
         northPanel.add(textAreaPanel);
       }
 
@@ -2282,8 +2306,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       {
         List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "objective"),
             GUIFactory.createLabelWithToolTip(prefix + "description"));
-        List<JComponent> fields =
-            Arrays.asList(new JScrollPane(objectiveField), new JScrollPane(descriptionField));
+
+        JScrollPane objectivePane = new JScrollPane(objectiveField);
+        objectivePane.setBorder(BorderFactory.createEmptyBorder());
+
+        JScrollPane descriptionPane = new JScrollPane(descriptionField);
+        descriptionPane.setBorder(BorderFactory.createEmptyBorder());
+
+        List<JComponent> fields = Arrays.asList(objectivePane, descriptionPane);
         FPanel textAreaPanel = UIUtils.createFormPanel(labels, fields);
         northPanel.add(textAreaPanel);
       }
@@ -2817,8 +2847,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "comment");
-        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
-            Arrays.asList(new JScrollPane(commentTextArea)));
+
+        JScrollPane commentPane = new JScrollPane(commentTextArea);
+        commentPane.setBorder(BorderFactory.createEmptyBorder());
+
+        FPanel textAreaPanel =
+            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(commentPane));
         northPanel.add(textAreaPanel);
       }
       add(northPanel, BorderLayout.NORTH);
@@ -3161,8 +3195,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "studyDescription");
-        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
-            Arrays.asList(new JScrollPane(studyDescriptionField)));
+
+        JScrollPane studyDescriptionPane = new JScrollPane(studyDescriptionField);
+        studyDescriptionPane.setBorder(BorderFactory.createEmptyBorder());
+
+        FPanel textAreaPanel =
+            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(studyDescriptionPane));
         northPanel.add(textAreaPanel);
       }
 
