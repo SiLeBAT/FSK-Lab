@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
-import javax.swing.AbstractSpinnerModel;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -59,13 +58,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -88,6 +84,7 @@ import com.gmail.gcolaianni5.jris.exception.JRisException;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FSpinner;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextArea;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.FixedDateChooser;
@@ -391,21 +388,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       Color borderColor = mandatory ? UIUtils.RED : UIUtils.BLUE;
       field.setBorder(BorderFactory.createLineBorder(borderColor));
       return field;
-    }
-
-    /** Creates a JSpinner with 5 columns. */
-    private static JSpinner createSpinner(final AbstractSpinnerModel model, boolean mandatory) {
-
-      final JSpinner spinner = new JSpinner(model);
-      ((DefaultEditor) spinner.getEditor()).getTextField().setColumns(5);
-
-      Color borderColor = mandatory ? UIUtils.RED : UIUtils.BLUE;
-      Border lineBorder = BorderFactory.createLineBorder(borderColor);
-      Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-      Border compoundBorder = BorderFactory.createCompoundBorder(lineBorder, emptyBorder);
-      spinner.setBorder(compoundBorder);
-
-      return spinner;
     }
 
     /**
@@ -1176,7 +1158,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // error
       if (isAdvanced) {
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "error"));
-        fields.add(GUIFactory.createSpinner(errorSpinnerModel, false));
+        fields.add(new FSpinner(errorSpinnerModel, false));
       }
 
       // Build UI
@@ -1829,13 +1811,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // volume
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "volumeLabel")));
-        fields.add(GUIFactory.createSpinner(volumeSpinnerModel, false));
+        fields.add(new FSpinner(volumeSpinnerModel, false));
       }
 
       // issue
       if (isAdvanced) {
         labels.add(new FLabel(bundle.getString(prefix + "issueLabel")));
-        fields.add(GUIFactory.createSpinner(issueSpinnerModel, false));
+        fields.add(new FSpinner(issueSpinnerModel, false));
       }
 
       // page
@@ -2045,13 +2027,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // moisture percentage
       if (isAdvanced) {
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "moisturePercentage"));
-        fields.add(GUIFactory.createSpinner(moisturePercentageSpinnerModel, false));
+        fields.add(new FSpinner(moisturePercentageSpinnerModel, false));
       }
 
       // fat percentage
       if (isAdvanced) {
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "fatPercentage"));
-        fields.add(GUIFactory.createSpinner(fatPercentageSpinnerModel, false));
+        fields.add(new FSpinner(fatPercentageSpinnerModel, false));
       }
 
       // sample protocol label
@@ -3402,27 +3384,27 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       FPanel ssePanel = new FPanel();
       ssePanel.add(new FLabel("SSE"));
-      ssePanel.add(GUIFactory.createSpinner(sseSpinnerModel, false));
+      ssePanel.add(new FSpinner(sseSpinnerModel, false));
 
       FPanel msePanel = new FPanel();
       msePanel.add(new FLabel("MSE"));
-      msePanel.add(GUIFactory.createSpinner(mseSpinnerModel, false));
+      msePanel.add(new FSpinner(mseSpinnerModel, false));
 
       FPanel rmsePanel = new FPanel();
       rmsePanel.add(new FLabel("RMSE"));
-      rmsePanel.add(GUIFactory.createSpinner(rmseSpinnerModel, false));
+      rmsePanel.add(new FSpinner(rmseSpinnerModel, false));
 
       FPanel r2Panel = new FPanel();
       r2Panel.add(new FLabel("r-Squared"));
-      r2Panel.add(GUIFactory.createSpinner(r2SpinnerModel, false));
+      r2Panel.add(new FSpinner(r2SpinnerModel, false));
 
       FPanel aicPanel = new FPanel();
       aicPanel.add(new FLabel("AIC"));
-      aicPanel.add(GUIFactory.createSpinner(aicSpinnerModel, false));
+      aicPanel.add(new FSpinner(aicSpinnerModel, false));
 
       FPanel bicPanel = new FPanel();
       bicPanel.add(new FLabel("BIC"));
-      bicPanel.add(GUIFactory.createSpinner(bicSpinnerModel, false));
+      bicPanel.add(new FSpinner(bicSpinnerModel, false));
 
       JPanel horizontalPanel =
           UI.createHorizontalPanel(ssePanel, msePanel, rmsePanel, r2Panel, aicPanel, bicPanel);
