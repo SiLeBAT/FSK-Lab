@@ -107,7 +107,6 @@ import de.bund.bfr.knime.fsklab.rakip.Simulation;
 import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.swing.AutoSuggestField;
-import de.bund.bfr.swing.UI;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 
@@ -639,7 +638,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
-      final JPanel northPanel = new JPanel();
+      FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
       add(northPanel, BorderLayout.NORTH);
@@ -861,7 +860,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
-      final JPanel northPanel = new JPanel();
+      FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
 
@@ -980,7 +979,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       String prefix = "editor_EditModelEquationPanel_";
 
       // northPanel
-      final JPanel northPanel = new JPanel();
+      FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 
       {
@@ -1178,7 +1177,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
-      final JPanel northPanel = new JPanel();
+      FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
 
@@ -1376,7 +1375,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
-      final JPanel northPanel = new JPanel();
+      FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
 
@@ -1598,7 +1597,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
-      final JPanel northPanel = new JPanel();
+      FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
 
@@ -1862,7 +1861,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
-      final JPanel northPanel = new JPanel();
+      FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(isReferenceDescriptionPanel);
       northPanel.add(formPanel);
@@ -2100,7 +2099,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final FPanel formPanel = UIUtils.createFormPanel(labels, fields);
 
       // northPanel
-      final JPanel northPanel = new JPanel();
+      FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
       add(northPanel, BorderLayout.NORTH);
@@ -2271,8 +2270,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       advancedComponents.forEach(it -> it.setEnabled(false));
 
       // formPanel
-      JPanel creationDatePanel = UIUtils.createWestPanel(creationField);
-      JPanel availabilityPanel = UIUtils.createWestPanel(availabilityField);
+      FPanel creationDatePanel = UIUtils.createWestPanel(creationField);
+      FPanel availabilityPanel = UIUtils.createWestPanel(availabilityField);
       final JPanel formPanel = UIUtils.createFormPanel(
           Arrays.asList(studyNameLabel, identifierLabel, creationDateLabel, rightsLabel,
               availabilityLabel, urlLabel, sourceLabel, formatLabel, languageLabel, softwareLabel,
@@ -2288,7 +2287,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       // northPanel
-      final JPanel northPanel = new JPanel();
+      FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
       northPanel.add(formPanel);
@@ -2303,8 +2302,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
       northPanel.add(creatorPanel);
       northPanel.add(referencePanel);
-
-      northPanel.setBackground(UIUtils.WHITE);
 
       add(northPanel, BorderLayout.NORTH);
     }
@@ -2488,15 +2485,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
-      final JPanel panel = UI.createTablePanel(coolTable);
-      panel.setBackground(UIUtils.WHITE);
+      FPanel panel = UIUtils.createTablePanel(coolTable);
 
-      final JPanel buttonsPanel =
-          UI.createHorizontalPanel(addButton, fileUploadButton, editButton, removeButton);
-      buttonsPanel.setBackground(UIUtils.WHITE);
-
-      JPanel centeredPanel = UI.createCenterPanel(buttonsPanel);
-      centeredPanel.setBackground(UIUtils.WHITE);
+      FPanel buttonsPanel =
+          UIUtils.createHorizontalPanel(addButton, fileUploadButton, editButton, removeButton);
+      FPanel centeredPanel = UIUtils.createCenterPanel(buttonsPanel);
       panel.add(centeredPanel, BorderLayout.SOUTH);
 
       add(panel);
@@ -2625,15 +2618,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
-      JPanel panel = UI.createTablePanel(myTable);
-      panel.setBackground(UIUtils.WHITE);
+      FPanel panel = UIUtils.createTablePanel(myTable);
 
-      JPanel buttonsPanel =
-          UI.createHorizontalPanel(addButton, fileUploadButton, editButton, removeButton);
-      buttonsPanel.setBackground(UIUtils.WHITE);
+      FPanel buttonsPanel =
+          UIUtils.createHorizontalPanel(addButton, fileUploadButton, editButton, removeButton);
 
-      JPanel centeredPanel = UI.createCenterPanel(buttonsPanel);
-      centeredPanel.setBackground(UIUtils.WHITE);
+      FPanel centeredPanel = UIUtils.createCenterPanel(buttonsPanel);
       panel.add(centeredPanel, BorderLayout.SOUTH);
 
       add(panel);
@@ -2817,7 +2807,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final FLabel countryLabel = GUIFactory.createLabelWithToolTip(prefix + "country");
 
       // formPanel
-      final JPanel formPanel = UI.createOptionsPanel(
+      FPanel formPanel = UIUtils.createFormPanel(
           Arrays.asList(productLabel, hazardLabel, populationLabel, temporalInformationLabel,
               regionLabel, countryLabel),
           Arrays.asList(productButton, hazardButton, populationButton, dateChooser, regionField,
@@ -2984,14 +2974,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       // formPanel
-      final JPanel formPanel = UI.createOptionsPanel(
+      FPanel formPanel = UIUtils.createFormPanel(
           Arrays.asList(studySampleLabel, dietaryAssessmentMethodLabel,
               laboratoryAccreditationLabel, assayLabel),
           Arrays.asList(studySampleButton, dietaryAssessmentMethodButton,
               laboratoryAccreditationField, assayButton));
 
       // northPanel
-      final JPanel northPanel = new JPanel();
+      FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
       northPanel.add(studyPanel);
@@ -3367,10 +3357,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
-      final JPanel panel = UI.createTablePanel(myTable);
+      final FPanel panel = UIUtils.createTablePanel(myTable);
 
-      final JPanel buttonsPanel = UI.createHorizontalPanel(addButton, editButton, removeButton);
-      panel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
+      final FPanel buttonsPanel =
+          UIUtils.createHorizontalPanel(addButton, editButton, removeButton);
+      panel.add(UIUtils.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
 
       add(panel);
     }
@@ -3419,12 +3410,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       bicPanel.add(new FLabel("BIC"));
       bicPanel.add(new FSpinner(bicSpinnerModel, false));
 
-      JPanel horizontalPanel =
-          UI.createHorizontalPanel(ssePanel, msePanel, rmsePanel, r2Panel, aicPanel, bicPanel);
-      horizontalPanel.setBackground(UIUtils.WHITE);
-      JPanel centeredPanel = UI.createCenterPanel(horizontalPanel);
-      centeredPanel.setBackground(UIUtils.WHITE);
-
+      FPanel horizontalPanel =
+          UIUtils.createHorizontalPanel(ssePanel, msePanel, rmsePanel, r2Panel, aicPanel, bicPanel);
+      FPanel centeredPanel = UIUtils.createCenterPanel(horizontalPanel);
       add(centeredPanel);
 
       setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(UIUtils.BLUE),
@@ -3526,10 +3514,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
-      final JPanel panel = UI.createTablePanel(myTable);
-
-      final JPanel buttonsPanel = UI.createHorizontalPanel(addButton, editButton, removeButton);
-      panel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
+      final FPanel panel = UIUtils.createTablePanel(myTable);
+      final FPanel buttonsPanel =
+          UIUtils.createHorizontalPanel(addButton, editButton, removeButton);
+      panel.add(UIUtils.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
 
       add(panel);
     }

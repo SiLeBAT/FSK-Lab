@@ -22,7 +22,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -30,6 +33,8 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -196,6 +201,50 @@ public class UIUtils {
     northPanel.add(UI.createCenterPanel(buttonsPanel), BorderLayout.SOUTH);
 
     return northPanel;
+  }
+
+  public static FPanel createTablePanel(JTable table) {
+    FPanel panel = new FPanel();
+
+    panel.setBorder(BorderFactory.createLoweredBevelBorder());
+    panel.setLayout(new BorderLayout());
+    panel.add(table.getTableHeader(), BorderLayout.NORTH);
+    panel.add(table, BorderLayout.CENTER);
+
+    return panel;
+  }
+
+  public static FPanel createHorizontalPanel(boolean withBorder, Component... components) {
+    FPanel panel = new FPanel();
+
+    if (withBorder) {
+      panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+    }
+
+    panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+    for (Component button : components) {
+      panel.add(Box.createHorizontalStrut(5));
+      panel.add(button);
+    }
+
+    panel.remove(0);
+
+    return panel;
+  }
+
+  public static FPanel createHorizontalPanel(Component... components) {
+    return createHorizontalPanel(true, components);
+  }
+
+  public static FPanel createCenterPanel(Component comp) {
+    FPanel p = new FPanel();
+
+    p.setLayout(new GridBagLayout());
+    p.add(comp, new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.LINE_START,
+        GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+    return p;
   }
 
   // BfR main colours
