@@ -256,6 +256,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     this.settings.saveSettings(settings);
   }
 
+  private static NodeLogger LOGGER = NodeLogger.getLogger("EditNodeDialog");
+
   private static final Map<String, Set<String>> vocabs = new HashMap<>();
   static {
 
@@ -264,39 +266,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
             .getResourceAsStream("/FSKLab_Config_Controlled Vocabularies.xlsx");
         final XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
 
-      final List<String> sheets = Arrays.asList(
-
-          // GeneralInformation controlled vocabularies
-          "Rights", "Format", "Software", "Language", "Language written in", "Status",
-
-          // Product controlled vocabularies
-          "Product-matrix name", "Product-matrix unit", "Method of production", "Packaging",
-          "Product treatment", "Country of origin", "Area of origin", "Fisheries area",
-
-          // Hazard controlled vocabularies
-          "Hazard type", "Hazard name", "Hazard unit", "Hazard ind sum", "Laboratory country",
-
-          // PopulationGroup controlled vocabularies
-          "Region", "Country",
-
-          // DataBackground controlled vocabularies
-          "Laboratory accreditation",
-
-          // Study controlled vocabularies
-          "Study Design Type", "Study Assay Measurement Type", "Study Assay Technology Type",
-          "Accreditation procedure Ass.Tec", "Study Protocol Type",
-          "Study Protocol Parameters Name", "Study Protocol Components Type",
-
-          // StudySample controlled vocabularies
-          "Sampling strategy", "Type of sampling program", "Sampling method", "Lot size unit",
-          "Sampling point",
-
-          // DietaryAssessmentMethod controlled vocabularies
-          "Method. tool to collect data", "Food descriptors",
-
-          // Parameter controlled vocabularies
-          "Parameter classification", "Parameter unit", "Parameter type", "Parameter unit category",
-          "Parameter data type", "Parameter source", "Parameter subject", "Parameter distribution");
+      final List<String> sheets = Arrays.asList("Source", "Rights", "Format", "Publication Type",
+          "Publication Status", "Software", "Language", "Language written in", "Model Class",
+          "Model Sub-Class", "Source", "Rights", "Format", "Publication Type", "Publication Status",
+          "Software", "Language", "Language written in", "Model Class", "Model Sub-Class",
+          "Basic process", "Status", "Product-matrix name", "Product-matrix unit",
+          "Method of production", "Packaging", "Product treatment", "Country of origin",
+          "Area of origin", "Fisheries area", "Hazard type", "Hazard name", "Hazard unit",
+          "Hazard ind-sum", "Population name", "Laboratory country", "Region", "Country",
+          "Study Assay Technology Type", "Accreditation procedure Ass.Tec", "Sampling strategy",
+          "Type of sampling program", "Sampling method", "Lot size unit", "Sampling point",
+          "Method tool to collect data", "Type of records", "Food descriptors",
+          "Laboratory accreditation", "Parameter classification", "Parameter type",
+          "Parameter unit", "Parameter unit category", "Parameter data type", "Parameter source",
+          "Parameter subject", "Parameter distribution", "Model equation class-distr",
+          "Fitting procedure", "Type of exposure");
 
       for (final String sheet : sheets) {
         final Set<String> vocabulary = readVocabFromSheet(workbook, sheet);
@@ -307,8 +291,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       e.printStackTrace();
     }
   }
-
-  private static NodeLogger LOGGER = NodeLogger.getLogger("EditNodeDialog");
 
   /**
    * Read controlled vocabulary from spreadsheet.
@@ -336,9 +318,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         if (StringUtils.isNotBlank(cellValue))
           vocab.add(cellValue);
       } catch (Exception e) {
-        // FIXME: A NPE is produced here ...
-        // LOGGER.warning("Controlled vocabulary " + sheetname + ": wrong value " +
-        // cell);
+        LOGGER.warn("Controlled vocabulary " + sheetname + ": wrong value " + cell);
       }
     }
 
@@ -586,7 +566,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       super(new BorderLayout());
 
       dataCollectionToolField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Method. tool to collect data"), true);
+          GUIFactory.createAutoSuggestField(vocabs.get("Method tool to collect data"), true);
       nonConsecutiveOneDayField = new FTextField(true);
       dietarySoftwareToolField = new FTextField();
       foodItemNumberField = new FTextField();
@@ -758,7 +738,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       acceptableOperatorField = new FTextField();
       acuteReferenceDoseField = new FTextField();
       acceptableDailyIntakeField = new FTextField();
-      indSumField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind sum"), false);
+      indSumField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind-sum"), false);
       labNameField = new FTextField();
       labCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Laboratory country"), false);
       detectionLimitField = new FTextField();
@@ -957,7 +937,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private static final long serialVersionUID = 3586499490386620791L;
 
     private final FTextField equationNameField; // mandatory
-    private final FTextField equationClassField; // optional
+    private final AutoSuggestField equationClassField; // optional
     private final ReferencePanel referencePanel; // optional
     private final FTextArea scriptField; // mandatory
 
@@ -966,7 +946,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       super(new BorderLayout());
 
       equationNameField = new FTextField(true);
-      equationClassField = new FTextField(true);
+      equationClassField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Model equation class-distr"), false);
       referencePanel = new ReferencePanel(isAdvanced);
       scriptField = new FTextArea(true);
 
@@ -1019,7 +1000,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       if (modelEquation != null) {
         equationNameField.setText(modelEquation.equationName);
-        equationClassField.setText(modelEquation.equationClass);
+        equationClassField.setSelectedItem(modelEquation.equationClass);
         referencePanel.init(modelEquation.equationReference);
         scriptField.setText(modelEquation.equation);
       }
@@ -1045,7 +1026,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final ModelEquation modelEquation = new ModelEquation();
       modelEquation.equationName = equationNameField.getText();
       modelEquation.equation = scriptField.getText();
-      modelEquation.equationClass = equationClassField.getText();
+      modelEquation.equationClass = (String) equationClassField.getSelectedItem();
       modelEquation.equationReference.addAll(referencePanel.tableModel.records);
 
       return modelEquation;
@@ -3065,9 +3046,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField studyIdentifierField = new FTextField(true); // mandatory
     private final FTextField studyTitleField = new FTextField(true); // mandatory
     private final FTextArea studyDescriptionField = new FTextArea(); // optional
-    private final AutoSuggestField studyDesignTypeField; // optional
-    private final AutoSuggestField studyAssayMeasurementsTypeField; // optional
-    private final AutoSuggestField studyAssayTechnologyTypeField; // optional
+    private final FTextField studyDesignTypeField; // optional
+    private final FTextField studyAssayMeasurementsTypeField; // optional
+    private final FTextField studyAssayTechnologyTypeField; // optional
     private final FTextField studyAssayTechnologyPlatformField = new FTextField(); // optional
     private final AutoSuggestField accreditationProcedureField; // optional
     private final FTextField studyProtocolNameField = new FTextField(); // optional
@@ -3075,8 +3056,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField studyProtocolDescriptionField = new FTextField(); // optional
     private final FTextField studyProtocolURIField = new FTextField(); // optional
     private final FTextField studyProtocolVersionField = new FTextField(); // optional
-    private final AutoSuggestField studyProtocolParametersField; // optional
-    private final AutoSuggestField studyProtocolComponentsTypeField; // optional
+    private final FTextField studyProtocolParametersField; // optional
+    private final FTextField studyProtocolComponentsTypeField; // optional
 
     private final List<JComponent> advancedComponents;
 
@@ -3084,20 +3065,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      studyDesignTypeField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Design Type"), false);
-      studyAssayMeasurementsTypeField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Assay Measurement Type"), false);
-      studyAssayTechnologyTypeField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Assay Technology Type"), false);
+      studyDesignTypeField = new FTextField();
+      studyAssayMeasurementsTypeField = new FTextField();
+      studyAssayTechnologyTypeField = new FTextField();
       accreditationProcedureField =
           GUIFactory.createAutoSuggestField(vocabs.get("Accreditation procedure Ass.Tec"), false);
       studyProtocolTypeField =
           GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Type"), false);
-      studyProtocolParametersField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Parameters Name"), false);
-      studyProtocolComponentsTypeField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Components Type"), false);
+      studyProtocolParametersField = new FTextField();
+      studyProtocolComponentsTypeField = new FTextField();
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
