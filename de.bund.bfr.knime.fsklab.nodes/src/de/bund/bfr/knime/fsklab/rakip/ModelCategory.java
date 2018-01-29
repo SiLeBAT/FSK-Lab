@@ -30,15 +30,12 @@ public class ModelCategory {
 
   public String modelClassComment = "";
 
-  public final List<String> modelSubSubClass = new ArrayList<>();
-
   /** Impact of the specific process in the hazard. */
   public final List<String> basicProcess = new ArrayList<>();
 
   @Override
   public int hashCode() {
-    return Objects.hash(basicProcess, modelClass, modelClassComment, modelSubClass,
-        modelSubSubClass);
+    return Objects.hash(basicProcess, modelClass, modelClassComment, modelSubClass);
   }
 
   @Override
@@ -52,7 +49,6 @@ public class ModelCategory {
     return Objects.equals(basicProcess, other.basicProcess)
         && Objects.equals(modelClass, other.modelClass)
         && Objects.equals(modelClassComment, other.modelClassComment)
-        && Objects.equals(modelSubClass, other.modelSubClass)
-        && Objects.equals(modelSubSubClass, other.modelSubSubClass);
+        && Objects.equals(modelSubClass, other.modelSubClass);
   }
 }

@@ -525,21 +525,15 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "hazardDescriptionLabel", hazard.hazardDescription);
     add(node, prefix + "hazardUnitLabel", hazard.hazardUnit);
     add(node, prefix + "adverseEffectLabel", hazard.adverseEffect);
-    add(node, prefix + "originLabel", hazard.origin);
-    add(node, prefix + "bmdLabel", hazard.benchmarkDose);
-    add(node, prefix + "maxResidueLimitLabel", hazard.maximumResidueLimit);
-    add(node, prefix + "noObservedAdverseLabel", hazard.noObservedAdverse);
-    add(node, prefix + "lowestObserveLabel", hazard.lowestObservedAdverse);
+    add(node, prefix + "originLabel", hazard.sourceOfContamination);
+    add(node, prefix + "bmdLabel", hazard.bmd);
+    add(node, prefix + "maxResidueLimitLabel", hazard.mrl);
+    add(node, prefix + "noObservedAdverseLabel", hazard.noael);
+    add(node, prefix + "lowestObserveLabel", hazard.loael);
     add(node, prefix + "acceptableOperatorLabel", hazard.acceptableOperator);
     add(node, prefix + "acuteReferenceDoseLabel", hazard.acuteReferenceDose);
-    add(node, prefix + "acceptableDailyIntakeLabel", hazard.acceptableDailyIntake);
+    add(node, prefix + "acceptableDailyIntakeLabel", hazard.adi);
     add(node, prefix + "indSumLabel", hazard.hazardIndSum);
-    add(node, prefix + "labNameLabel", hazard.laboratoryName);
-    add(node, prefix + "labCountryLabel", hazard.laboratoryCountry);
-    add(node, prefix + "detectionLimitLabel", hazard.detectionLimit);
-    add(node, prefix + "quantificationLimitLabel", hazard.quantificationLimit);
-    add(node, prefix + "leftCensoredDataLabel", hazard.leftCensoredData);
-    add(node, prefix + "contaminationRangeLabel", hazard.rangeOfContamination);
   }
 
   /**

@@ -713,14 +713,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField acuteReferenceDoseField; // optional
     private final FTextField acceptableDailyIntakeField; // optional
     private final AutoSuggestField indSumField; // optional
-    private final FTextField labNameField; // optional
-    private final AutoSuggestField labCountryField; // optional
-    private final FTextField detectionLimitField; // optional
-    private final FTextField quantificationLimitField; // optional
-    private final FTextField leftCensoredDataField; // optional
-    private final FTextField contaminationRangeField; // optional
-
-    private final List<JComponent> advancedComponents;
 
     EditHazardPanel(final boolean isAdvanced) {
 
@@ -739,19 +731,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       acuteReferenceDoseField = new FTextField();
       acceptableDailyIntakeField = new FTextField();
       indSumField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind-sum"), false);
-      labNameField = new FTextField();
-      labCountryField = GUIFactory.createAutoSuggestField(vocabs.get("Laboratory country"), false);
-      detectionLimitField = new FTextField();
-      quantificationLimitField = new FTextField();
-      leftCensoredDataField = new FTextField();
-      contaminationRangeField = new FTextField();
-
-      advancedComponents = Arrays.asList(hazardDescriptionField, adverseEffectField, originField,
-          bmdField, maxResidueLimitField, acceptableOperatorField, noObservedAdverseField,
-          acuteReferenceDoseField, acceptableDailyIntakeField, indSumField, labNameField,
-          labCountryField, detectionLimitField, quantificationLimitField, leftCensoredDataField,
-          contaminationRangeField);
-
 
       createUI(isAdvanced);
     }
@@ -811,30 +790,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         // acceptable daily intake
         labels.add(GUIFactory.createLabelWithToolTip(prefix + "acceptableDailyIntake"));
         fields.add(acceptableDailyIntakeField);
-
-        // lab name
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "labName"));
-        fields.add(labNameField);
-
-        // lab country
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "labCountry"));
-        fields.add(labCountryField);
-
-        // detection limit
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "detectionLimit"));
-        fields.add(detectionLimitField);
-
-        // quantification limit
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "quantificationLimit"));
-        fields.add(quantificationLimitField);
-
-        // left censored data
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "leftCensoredData"));
-        fields.add(leftCensoredDataField);
-
-        // contamination range
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "contaminationRange"));
-        fields.add(contaminationRangeField);
       }
 
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
@@ -854,10 +809,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
 
       add(northPanel, BorderLayout.NORTH);
-
-
-      // If advanced mode, show advanced components
-      advancedComponents.forEach(it -> it.setEnabled(isAdvanced));
     }
 
     @Override
@@ -868,20 +819,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         hazardDescriptionField.setText(hazard.hazardDescription);
         hazardUnitField.setSelectedItem(hazard.hazardUnit);
         adverseEffectField.setText(hazard.adverseEffect);
-        originField.setText(hazard.origin);
-        bmdField.setText(hazard.benchmarkDose);
-        maxResidueLimitField.setText(hazard.maximumResidueLimit);
-        noObservedAdverseField.setText(hazard.noObservedAdverse);
+        originField.setText(hazard.sourceOfContamination);
+        bmdField.setText(hazard.bmd);
+        maxResidueLimitField.setText(hazard.mrl);
+        noObservedAdverseField.setText(hazard.noael);
         acceptableOperatorField.setText(hazard.acceptableOperator);
         acuteReferenceDoseField.setText(hazard.acuteReferenceDose);
         indSumField.setSelectedItem(hazard.hazardIndSum);
-        acceptableDailyIntakeField.setText(hazard.acceptableDailyIntake);
-        labNameField.setText(hazard.laboratoryName);
-        labCountryField.setSelectedItem(hazard.laboratoryCountry);
-        detectionLimitField.setText(hazard.detectionLimit);
-        quantificationLimitField.setText(hazard.quantificationLimit);
-        leftCensoredDataField.setText(hazard.leftCensoredData);
-        contaminationRangeField.setText(hazard.rangeOfContamination);
+        acceptableDailyIntakeField.setText(hazard.adi);
       }
     }
 
@@ -895,20 +840,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       hazard.hazardDescription = hazardDescriptionField.getText();
       hazard.adverseEffect = adverseEffectField.getText();
-      hazard.origin = originField.getText();
-      hazard.benchmarkDose = bmdField.getText();
-      hazard.maximumResidueLimit = maxResidueLimitField.getText();
-      hazard.noObservedAdverse = noObservedAdverseField.getText();
+      hazard.sourceOfContamination = originField.getText();
+      hazard.bmd = bmdField.getText();
+      hazard.mrl = maxResidueLimitField.getText();
+      hazard.noael = noObservedAdverseField.getText();
       hazard.acceptableOperator = acceptableOperatorField.getText();
       hazard.acuteReferenceDose = acuteReferenceDoseField.getText();
-      hazard.acceptableDailyIntake = acceptableDailyIntakeField.getText();
+      hazard.adi = acceptableDailyIntakeField.getText();
       hazard.hazardIndSum = (String) indSumField.getSelectedItem();
-      hazard.laboratoryName = labNameField.getText();
-      hazard.laboratoryCountry = (String) labCountryField.getSelectedItem();
-      hazard.detectionLimit = detectionLimitField.getText();
-      hazard.quantificationLimit = quantificationLimitField.getText();
-      hazard.leftCensoredData = leftCensoredDataField.getText();
-      hazard.rangeOfContamination = contaminationRangeField.getText();
 
       return hazard;
     }

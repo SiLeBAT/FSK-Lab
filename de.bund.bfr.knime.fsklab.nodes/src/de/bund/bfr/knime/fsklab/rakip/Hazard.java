@@ -30,43 +30,36 @@ public class Hazard {
 
   public String adverseEffect = "";
 
-  public String origin = "";
+  public String sourceOfContamination = "";
 
-  public String benchmarkDose = "";
+  /** Benchmark dose (BMD) */
+  public String bmd = "";
 
-  public String maximumResidueLimit = "";
+  /** Maximum residue limit (MRL). */
+  public String mrl = "";
 
-  public String noObservedAdverse = "";
+  /** No Observed Adverse Affect Level (NOAEL). */
+  public String noael = "";
 
-  public String lowestObservedAdverse = "";
+  /** Lowest Observed Adverse Effect Level (LOAEL). */
+  public String loael = "";
 
+  /** Acceptable Operator Adverse Effect Level (AOEL). */
   public String acceptableOperator = "";
 
+  /** Acute Reference Dose (ARfD). */
   public String acuteReferenceDose = "";
 
-  public String acceptableDailyIntake = "";
+  /** Acceptable Daily Intake (ADI). */
+  public String adi = "";
 
   public String hazardIndSum = "";
 
-  public String laboratoryName = "";
-
-  public String laboratoryCountry = "";
-
-  public String detectionLimit = "";
-
-  public String quantificationLimit = "";
-
-  public String leftCensoredData = "";
-
-  public String rangeOfContamination = "";
-
   @Override
   public int hashCode() {
-    return Objects.hash(acceptableDailyIntake, acceptableOperator, acuteReferenceDose,
-        adverseEffect, benchmarkDose, detectionLimit, hazardDescription, hazardIndSum, hazardName,
-        hazardType, hazardUnit, laboratoryCountry, laboratoryName, leftCensoredData,
-        lowestObservedAdverse, maximumResidueLimit, noObservedAdverse, origin, quantificationLimit,
-        rangeOfContamination);
+    return Objects.hash(adi, acceptableOperator, acuteReferenceDose, adverseEffect, bmd,
+        hazardDescription, hazardIndSum, hazardName, hazardType, hazardUnit, loael, mrl, noael,
+        sourceOfContamination);
   }
 
   @Override
@@ -78,26 +71,16 @@ public class Hazard {
 
     Hazard other = (Hazard) obj;
 
-    return Objects.equals(acceptableDailyIntake, other.acceptableDailyIntake)
+    return Objects.equals(adi, other.adi)
         && Objects.equals(acceptableOperator, other.acceptableOperator)
         && Objects.equals(acuteReferenceDose, other.acuteReferenceDose)
-        && Objects.equals(adverseEffect, other.adverseEffect)
-        && Objects.equals(benchmarkDose, other.benchmarkDose)
-        && Objects.equals(detectionLimit, other.detectionLimit)
+        && Objects.equals(adverseEffect, other.adverseEffect) && Objects.equals(bmd, other.bmd)
         && Objects.equals(hazardDescription, other.hazardDescription)
         && Objects.equals(hazardIndSum, other.hazardIndSum)
         && Objects.equals(hazardName, other.hazardName)
         && Objects.equals(hazardType, other.hazardType)
-        && Objects.equals(hazardUnit, other.hazardUnit)
-        && Objects.equals(laboratoryCountry, other.laboratoryCountry)
-        && Objects.equals(laboratoryName, other.laboratoryName)
-        && Objects.equals(leftCensoredData, other.leftCensoredData)
-        && Objects.equals(lowestObservedAdverse, other.lowestObservedAdverse)
-        && Objects.equals(maximumResidueLimit, other.maximumResidueLimit)
-        && Objects.equals(noObservedAdverse, other.noObservedAdverse)
-        && Objects.equals(origin, other.origin)
-        && Objects.equals(quantificationLimit, other.quantificationLimit)
-        && Objects.equals(rangeOfContamination, other.rangeOfContamination);
+        && Objects.equals(hazardUnit, other.hazardUnit) && Objects.equals(loael, other.loael)
+        && Objects.equals(mrl, other.mrl) && Objects.equals(noael, other.noael)
+        && Objects.equals(sourceOfContamination, other.sourceOfContamination);
   }
-
 }
