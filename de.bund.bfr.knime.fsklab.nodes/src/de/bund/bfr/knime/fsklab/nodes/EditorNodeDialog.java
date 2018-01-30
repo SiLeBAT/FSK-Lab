@@ -486,12 +486,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final FTextField nameField; // mandatory
     private final FTextArea descriptionField; // optional
+    private final FTextField moisturePercentageField; // optional
+    private final FTextField detectionLimitField; // optional
+    private final FTextField quantificationLimitField; // optional
+    private final FTextField leftCensoredDataField; // optional
+    private final FTextField contaminationRangeField; // optional
+    private final FTextField uncertaintyValueField; // optional
 
     EditAssayPanel(final boolean isAdvanced) {
       super(new BorderLayout());
 
       nameField = new FTextField(true);
       descriptionField = new FTextArea();
+      moisturePercentageField = new FTextField();
+      detectionLimitField = new FTextField();
+      quantificationLimitField = new FTextField();
+      leftCensoredDataField = new FTextField();
+      contaminationRangeField = new FTextField();
+      uncertaintyValueField = new FTextField();
 
       createUI(isAdvanced);
     }
@@ -499,13 +511,53 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
       String prefix = "editor_EditAssayPanel_";
 
-      // northPanel
-      final JPanel northPanel = new JPanel();
-      northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+      // name
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
 
       // name
-      List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "name"));
-      List<JComponent> fields = Arrays.asList(nameField);
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "name"));
+      fields.add(nameField);
+
+      // moisture percentage
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "moisturePercentage"));
+        fields.add(moisturePercentageField);
+      }
+
+      // detection limit
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "detectionLimit"));
+        fields.add(detectionLimitField);
+      }
+
+      // quantification limit
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "quantificationLimit"));
+        fields.add(quantificationLimitField);
+      }
+
+      // left censored data
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "leftCensoredData"));
+        fields.add(leftCensoredDataField);
+      }
+
+      // contamination range
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "contaminationRange"));
+        fields.add(contaminationRangeField);
+      }
+
+      // uncertainty value
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "uncertainty"));
+        fields.add(uncertaintyValueField);
+      }
+
+      // northPanel
+      final FPanel northPanel = new FPanel();
+      northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(UIUtils.createFormPanel(labels, fields));
 
       // description
@@ -526,6 +578,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (assay != null) {
         nameField.setText(assay.name);
         descriptionField.setText(assay.description);
+        moisturePercentageField.setText(assay.moisturePercentage);
+        detectionLimitField.setText(assay.detectionLimit);
+        quantificationLimitField.setText(assay.quantificationLimit);
+        leftCensoredDataField.setText(assay.leftCensoredData);
+        contaminationRangeField.setText(assay.contaminationRange);
+        uncertaintyValueField.setText(assay.uncertaintyValue);
       }
     }
 
@@ -535,6 +593,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final Assay assay = new Assay();
       assay.name = nameField.getText();
       assay.description = descriptionField.getText();
+      assay.moisturePercentage = moisturePercentageField.getText();
+      assay.detectionLimit = detectionLimitField.getText();
+      assay.quantificationLimit = quantificationLimitField.getText();
+      assay.leftCensoredData = leftCensoredDataField.getText();
+      assay.contaminationRange = contaminationRangeField.getText();
+      assay.uncertaintyValue = uncertaintyValueField.getText();
 
       return assay;
     }
@@ -553,7 +617,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
   private class EditLaboratoryPanel extends EditPanel<Laboratory> {
 
-    // serialVersionUID
+    private static final long serialVersionUID = -1483775354630337114L;
 
     private final AutoSuggestField accreditationField;
     private final FTextField nameField;

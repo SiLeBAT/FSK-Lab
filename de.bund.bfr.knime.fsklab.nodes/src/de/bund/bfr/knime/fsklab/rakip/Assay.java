@@ -22,10 +22,17 @@ public class Assay {
 
   public String name = "";
   public String description = "";
+  public String moisturePercentage = "";
+  public String detectionLimit = "";
+  public String quantificationLimit = "";
+  public String leftCensoredData = "";
+  public String contaminationRange = "";
+  public String uncertaintyValue = "";
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description);
+    return Objects.hash(name, description, moisturePercentage, detectionLimit, quantificationLimit,
+        leftCensoredData, contaminationRange, uncertaintyValue);
   }
 
   @Override
@@ -35,6 +42,12 @@ public class Assay {
     if (obj == null || getClass() != obj.getClass())
       return false;
     Assay other = (Assay) obj;
-    return Objects.equals(description, other.description) && Objects.equals(name, other.name);
+    return Objects.equals(name, other.name) && Objects.equals(description, other.description)
+        && Objects.equals(moisturePercentage, other.moisturePercentage)
+        && Objects.equals(detectionLimit, other.detectionLimit)
+        && Objects.equals(quantificationLimit, other.quantificationLimit)
+        && Objects.equals(leftCensoredData, other.leftCensoredData)
+        && Objects.equals(contaminationRange, other.contaminationRange)
+        && Objects.equals(uncertaintyValue, other.uncertaintyValue);
   }
 }
