@@ -21,6 +21,8 @@ import java.util.Objects;
 
 public class Study {
 
+  public String id;
+
   /** Study tile. */
   public String title = "";
 
@@ -56,7 +58,7 @@ public class Study {
 
   @Override
   public int hashCode() {
-    return Objects.hash(accreditationProcedure, componentsName, componentsType, description,
+    return Objects.hash(id, accreditationProcedure, componentsName, componentsType, description,
         designType, measurementType, parametersName, protocolDescription, protocolName,
         protocolType, protocolUri, protocolVersion, technologyPlatform, technologyType, title);
   }
@@ -69,7 +71,8 @@ public class Study {
       return false;
 
     Study other = (Study) obj;
-    return Objects.equals(accreditationProcedure, other.accreditationProcedure)
+    return Objects.equals(id, other.id)
+        && Objects.equals(accreditationProcedure, other.accreditationProcedure)
         && Objects.equals(componentsName, other.componentsName)
         && Objects.equals(componentsType, other.componentsType)
         && Objects.equals(description, other.description)

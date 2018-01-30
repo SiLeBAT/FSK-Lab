@@ -104,7 +104,6 @@ import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
 import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
-import de.bund.bfr.knime.fsklab.rakip.Simulation;
 import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.swing.AutoSuggestField;
@@ -120,7 +119,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   private final ScopePanel scopePanel = new ScopePanel();
   private final DataBackgroundPanel dataBackgroundPanel = new DataBackgroundPanel();
   private final ModelMathPanel modelMathPanel = new ModelMathPanel();
-  private final SimulationPanel simulationPanel = new SimulationPanel();
 
   /** List model for resource files. */
   private final DefaultListModel<Path> listModel = new DefaultListModel<>();
@@ -146,7 +144,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     addTab("Scope", scopePanel, true);
     addTab("Data background", dataBackgroundPanel, true);
     addTab("Model math", modelMathPanel, true);
-    addTab("Simulation", simulationPanel, true);
     addTab("Resource files", UIUtils.createResourcesPanel(getPanel(), listModel));
 
     updatePanels();
@@ -162,7 +159,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     scopePanel.init(settings.genericModel.scope);
     dataBackgroundPanel.init(settings.genericModel.dataBackground);
     modelMathPanel.init(settings.genericModel.modelMath);
-    simulationPanel.init(settings.genericModel.simulation);
 
     listModel.clear();
     settings.resources.forEach(listModel::addElement);
@@ -248,7 +244,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     this.settings.genericModel.scope = scopePanel.get();
     this.settings.genericModel.dataBackground = dataBackgroundPanel.get();
     this.settings.genericModel.modelMath = modelMathPanel.get();
-    this.settings.genericModel.simulation = simulationPanel.get();
 
     // Save resources
     this.settings.resources.clear();
@@ -608,7 +603,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final List<String> errors = new ArrayList<>(1);
       if (nameField.getText().isEmpty()) {
-        errors.add("Missing " + bundle.getString("editor_EditAssayPanel_nameLabel"));
+        errors.add("Missing " + bundle.getString("EditAssayPanel_nameLabel"));
       }
 
       return errors;
@@ -828,7 +823,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      String prefix = "editor_EditDietaryAssessmentMethodPanel_";
+      String prefix = "EditDietaryAssessmentMethodPanel_";
 
       final List<String> errors = new ArrayList<>(2);
       if (!hasValidValue(dataCollectionToolField)) {
@@ -836,6 +831,222 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       }
       if (nonConsecutiveOneDayField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "nonConsecutiveOneDaysLabel"));
+      }
+
+      return errors;
+    }
+  }
+
+  private class EditStudyPanel extends EditPanel<Study> {
+
+    private static final long serialVersionUID = 6346824373141232020L;
+
+    private final FTextField studyIdentifierField; // mandatory
+    private final FTextField studyTitleField; // mandatory
+    private final FTextArea studyDescriptionField; // optional
+    private final FTextField studyDesignTypeField; // optional
+    private final FTextField studyAssayMeasurementsTypeField; // optional
+    private final AutoSuggestField studyAssayTechnologyTypeField; // optional
+    private final FTextField studyAssayTechnologyPlatformField; // optional
+    private final AutoSuggestField accreditationProcedureField; // optional
+    private final FTextField studyProtocolNameField; // optional
+    private final FTextField studyProtocolTypeField; // optional
+    private final FTextField studyProtocolDescriptionField; // optional
+    private final FTextField studyProtocolURIField; // optional
+    private final FTextField studyProtocolVersionField; // optional
+    private final FTextField studyProtocolParametersField; // optional
+    private final FTextField studyProtocolComponentsTypeField; // optional
+
+    EditStudyPanel(final boolean isAdvanced) {
+
+      super(new BorderLayout());
+
+      studyIdentifierField = new FTextField(true);
+      studyTitleField = new FTextField(true);
+      studyDescriptionField = new FTextArea();
+      studyDesignTypeField = new FTextField();
+      studyAssayMeasurementsTypeField = new FTextField();
+      studyAssayTechnologyTypeField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Study Assay Technology Type"), false);
+      studyAssayTechnologyPlatformField = new FTextField();
+      accreditationProcedureField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Accreditation procedure Ass.Tec"), false);
+      studyProtocolNameField = new FTextField();
+      studyProtocolTypeField = new FTextField();
+      studyProtocolDescriptionField = new FTextField();
+      studyProtocolURIField = new FTextField();
+      studyProtocolVersionField = new FTextField();
+      studyProtocolParametersField = new FTextField();
+      studyProtocolComponentsTypeField = new FTextField();
+
+      createUI(isAdvanced);
+    }
+
+    private void createUI(boolean isAdvanced) {
+
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+      final String prefix = "StudyPanel_";
+
+      // study identifier
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyIdentifier"));
+      fields.add(studyIdentifierField);
+
+      // study title
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyTitle"));
+      fields.add(studyTitleField);
+
+      // study design type
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyDesignType"));
+        fields.add(studyDesignTypeField);
+      }
+
+      // study assay measurements type
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayMeasurementsType"));
+        fields.add(studyAssayMeasurementsTypeField);
+      }
+
+      // study assay technology type
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayTechnologyType"));
+        fields.add(studyAssayTechnologyTypeField);
+      }
+
+      // study assay technology platform
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayTechnologyPlatform"));
+        fields.add(studyAssayTechnologyPlatformField);
+      }
+
+      // accreditation procedure for the assay technology
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "accreditationProcedure"));
+        fields.add(accreditationProcedureField);
+      }
+
+      // study protocol name
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolName"));
+        fields.add(studyProtocolNameField);
+      }
+
+      // study protocol type
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolType"));
+        fields.add(studyProtocolTypeField);
+      }
+
+      // study protocol description
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolDescription"));
+        fields.add(studyProtocolDescriptionField);
+      }
+
+      // study protocol URI
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolURI"));
+        fields.add(studyProtocolURIField);
+      }
+
+      // study protocol version
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolVersion"));
+        fields.add(studyProtocolVersionField);
+      }
+
+      // study protocol parameters name
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "parameters"));
+        fields.add(studyProtocolParametersField);
+      }
+
+      // study protocol components
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "componentsType"));
+        fields.add(studyProtocolComponentsTypeField);
+      }
+
+      FPanel formPanel = UIUtils.createFormPanel(labels, fields);
+
+      // northPanel
+      final JPanel northPanel = new JPanel();
+      northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+      northPanel.add(formPanel);
+
+      {
+        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "studyDescription");
+        JScrollPane studyDescriptionPane = GUIFactory.createScrollPane(studyDescriptionField);
+        northPanel.add(
+            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(studyDescriptionPane)));
+      }
+
+      add(northPanel, BorderLayout.NORTH);
+    }
+
+    @Override
+    void init(Study study) {
+      // TODO Auto-generated method stub
+      if (study != null) {
+        studyIdentifierField.setText(study.id);
+        studyTitleField.setText(study.title);
+        studyDesignTypeField.setText(study.designType);
+        studyAssayTechnologyTypeField.setSelectedItem(study.technologyType);
+        studyAssayMeasurementsTypeField.setText(study.measurementType);
+        studyAssayTechnologyPlatformField.setText(study.technologyPlatform);
+        accreditationProcedureField.setSelectedItem(study.accreditationProcedure);
+        studyProtocolNameField.setText(study.protocolName);
+        studyProtocolTypeField.setText(study.protocolType);
+        if (study.protocolUri != null) {
+          studyProtocolURIField.setText(study.protocolUri.toString());
+        }
+        studyProtocolParametersField.setText(study.parametersName);
+        // TODO components name
+        studyProtocolComponentsTypeField.setText(study.componentsType);
+        studyDescriptionField.setText(study.description);
+      }
+    }
+
+    @Override
+    Study get() {
+
+      Study study = new Study();
+
+      study.id = studyIdentifierField.getText();
+      study.title = studyTitleField.getText();
+      study.designType = studyDesignTypeField.getText();
+      study.technologyType = (String) studyAssayTechnologyTypeField.getSelectedItem();
+      study.measurementType = studyAssayMeasurementsTypeField.getText();
+      study.technologyPlatform = studyAssayTechnologyPlatformField.getText();
+      study.accreditationProcedure = (String) accreditationProcedureField.getSelectedItem();
+      study.protocolName = studyProtocolNameField.getText();
+      study.protocolType = studyProtocolTypeField.getText();
+      study.protocolDescription = studyProtocolDescriptionField.getText();
+      try {
+        study.protocolUri = new URI(studyProtocolURIField.getText());
+      } catch (URISyntaxException e) {
+      }
+      study.parametersName = studyProtocolParametersField.getText();
+      // TODO: Components name
+      study.componentsType = studyProtocolComponentsTypeField.getText();
+      study.description = studyDescriptionField.getText();
+
+      return study;
+    }
+
+    @Override
+    List<String> validatePanel() {
+
+      String prefix = "StudyPanel_";
+
+      List<String> errors = new ArrayList<>();
+
+      if (studyIdentifierField.getText().isEmpty()) {
+        errors.add("Missing " + bundle.getString(prefix + "studyIdentifier"));
+      }
+      if (studyTitleField.getText().isEmpty()) {
+        errors.add("Missing " + bundle.getString(prefix + "studyTitle"));
       }
 
       return errors;
@@ -1001,7 +1212,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      String prefix = "editor_EditHazardPanel_";
+      String prefix = "EditHazardPanel_";
       final List<String> errors = new ArrayList<>();
       if (!hasValidValue(hazardTypeField)) {
         errors.add("Missing " + bundle.getString(prefix + "hazardTypeLabel"));
@@ -1094,7 +1305,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      String prefix = "editor_EditModelEquationPanel_";
+      String prefix = "EditModelEquationPanel_";
 
       final List<String> errors = new ArrayList<>();
       if (equationNameField.getText().isEmpty()) {
@@ -1168,7 +1379,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      String prefix = "editor_EditParameterPanel_";
+      String prefix = "EditParameterPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
@@ -1321,7 +1532,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      final String prefix = "editor_EditParameterPanel_";
+      final String prefix = "EditParameterPanel_";
       final List<String> errors = new ArrayList<>();
       if (idField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "idLabel"));
@@ -1571,8 +1782,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final List<String> errors = new ArrayList<>(1);
       if (populationNameField.getText().isEmpty()) {
-        errors.add(
-            "Missing " + bundle.getString("editor_EditPopulationGroupPanel_populationNameLabel"));
+        errors.add("Missing " + bundle.getString("EditPopulationGroupPanel_populationNameLabel"));
       }
       return errors;
     }
@@ -1725,7 +1935,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      String prefix = "editor_EditProductPanel_";
+      String prefix = "EditProductPanel_";
       final List<String> errors = new ArrayList<>(2);
       if (!hasValidValue(envNameField)) {
         errors.add("Missing " + bundle.getString(prefix + "envNameLabel"));
@@ -2054,7 +2264,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      String prefix = "editor_EditReferencePanel_";
+      String prefix = "EditReferencePanel_";
       final List<String> errors = new ArrayList<>(2);
       if (doiField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "doiLabel"));
@@ -2206,7 +2416,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      String prefix = "editor_EditStudySamplePanel_";
+      String prefix = "EditStudySamplePanel_";
       final List<String> errors = new ArrayList<>(5);
       if (sampleNameField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "sampleNameLabel"));
@@ -2759,7 +2969,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      String prefix = "editor_EditCreatorPanel_";
+      String prefix = "EditCreatorPanel_";
 
       final List<String> errors = new ArrayList<>(3);
       if (givenNameField.getText().isEmpty()) {
@@ -2946,7 +3156,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
-    private final StudyPanel studyPanel;
+    private final JButton studyButton;
     private final JButton studySampleButton;
     private final JButton dietaryAssessmentMethodButton;
     private final JButton laboratoryButton;
@@ -2958,8 +3168,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      studyPanel = new StudyPanel();
-      studyPanel.setBorder(BorderFactory.createTitledBorder("Study"));
+      studyButton = new JButton();
+      studyButton.setToolTipText("Click me to add Study");
+      studyButton.addActionListener(event -> {
+        EditStudyPanel editPanel = new EditStudyPanel(advancedCheckBox.isSelected());
+        editPanel.init(dataBackground.study);
+
+        final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create Study");
+
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          Study study = editPanel.get();
+          // Update button's text
+          studyButton.setText(study.title);
+          dataBackground.study = study;
+        }
+      });
 
       studySampleButton = new JButton();
       studySampleButton.setToolTipText("Click me to add Study Sample");
@@ -3028,6 +3251,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       String prefix = "DataBackgroundPanel_";
+      FLabel studyLabel = new FLabel(bundle.getString(prefix + "studyLabel"));
       FLabel studySampleLabel = new FLabel(bundle.getString(prefix + "studySampleLabel"));
       FLabel dietaryAssessmentMethodLabel =
           new FLabel(bundle.getString(prefix + "dietaryAssessmentMethodLabel"));
@@ -3035,23 +3259,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           new FLabel(bundle.getString(prefix + "laboratoryLabel"));
       FLabel assayLabel = new FLabel(bundle.getString(prefix + "assayLabel"));
 
-      // Advanced `checkbox`
-      advancedCheckBox.addItemListener(event -> {
-        studyPanel.advancedComponents.forEach(it -> it.setEnabled(advancedCheckBox.isSelected()));
-      });
-
       // formPanel
       FPanel formPanel = UIUtils.createFormPanel(
-          Arrays.asList(studySampleLabel, dietaryAssessmentMethodLabel,
+          Arrays.asList(studyLabel, studySampleLabel, dietaryAssessmentMethodLabel,
               laboratoryAccreditationLabel, assayLabel),
-          Arrays.asList(studySampleButton, dietaryAssessmentMethodButton, laboratoryButton,
-              assayButton));
+          Arrays.asList(studyButton, studySampleButton, dietaryAssessmentMethodButton,
+              laboratoryButton, assayButton));
 
       // northPanel
       FPanel northPanel = new FPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
-      northPanel.add(studyPanel);
       northPanel.add(formPanel);
       add(northPanel, BorderLayout.NORTH);
     }
@@ -3060,29 +3278,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       this.dataBackground = dataBackground;
 
-      final Study study = dataBackground.study;
-
-      // TODO: init study id
-      studyPanel.studyTitleField.setText(study.title);
-      // TODO: studyDesignTypeField
-      // TODO: study assay technology type
-      // TODO: study assay measurements type
-      // TODO: study assay technology platform
-      studyPanel.studyAssayTechnologyPlatformField.setText(study.technologyPlatform);
-      // TODO: accreditation procedure for the assay technology
-      studyPanel.studyProtocolNameField.setText(study.protocolName);
-      // TODO: study protocol type
-      if (study.protocolUri != null) {
-        studyPanel.studyProtocolURIField.setText(study.protocolUri.toString());
+      if (StringUtils.isNotEmpty(dataBackground.study.title)) {
+        studyButton.setText(dataBackground.study.title);
       }
-      // TODO: study protocol parameters name
-      // TODO: study protocol components
-      studyPanel.studyDescriptionField.setText(dataBackground.study.description);
-
       if (StringUtils.isNotEmpty(dataBackground.studySample.sample)) {
         studySampleButton.setText(dataBackground.studySample.sample);
       }
-
       if (StringUtils.isNotEmpty(dataBackground.dietaryAssessmentMethod.collectionTool)) {
         dietaryAssessmentMethodButton
             .setText(dataBackground.dietaryAssessmentMethod.collectionTool);
@@ -3098,152 +3299,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     DataBackground get() {
       final DataBackground dataBackground = new DataBackground();
 
-      // TODO: study id
-      dataBackground.study.title = studyPanel.studyTitleField.getText();
-      // TODO: studyDesignTypeField
-      // TODO: study assay technology type
-      // TODO: study assay measurements type
-      // TODO: study assay technology platform
-      dataBackground.study.technologyPlatform =
-          studyPanel.studyAssayTechnologyPlatformField.getText();
-      // TODO: accreditation procedure for the assay technology
-      dataBackground.study.protocolName = studyPanel.studyProtocolNameField.getText();
-      // TODO: study protocol type
-      dataBackground.study.protocolDescription = studyPanel.studyProtocolDescriptionField.getText();
-      try {
-        dataBackground.study.protocolUri = new URI(studyPanel.studyProtocolURIField.getText());
-      } catch (URISyntaxException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      // TODO: study protocol parameters name
-      // TODO: study protocol components
-      dataBackground.study.description = studyPanel.studyDescriptionField.getText();
-
+      dataBackground.study = this.dataBackground.study;
       dataBackground.studySample = this.dataBackground.studySample;
       dataBackground.dietaryAssessmentMethod = this.dataBackground.dietaryAssessmentMethod;
       dataBackground.laboratory = this.dataBackground.laboratory;
       dataBackground.assay = this.dataBackground.assay;
 
       return dataBackground;
-    }
-  }
-
-  private class StudyPanel extends JPanel {
-
-    private static final long serialVersionUID = -6572236073945735826L;
-
-    private final FTextField studyIdentifierField = new FTextField(true); // mandatory
-    private final FTextField studyTitleField = new FTextField(true); // mandatory
-    private final FTextArea studyDescriptionField = new FTextArea(); // optional
-    private final FTextField studyDesignTypeField; // optional
-    private final FTextField studyAssayMeasurementsTypeField; // optional
-    private final FTextField studyAssayTechnologyTypeField; // optional
-    private final FTextField studyAssayTechnologyPlatformField = new FTextField(); // optional
-    private final AutoSuggestField accreditationProcedureField; // optional
-    private final FTextField studyProtocolNameField = new FTextField(); // optional
-    private final AutoSuggestField studyProtocolTypeField; // optional
-    private final FTextField studyProtocolDescriptionField = new FTextField(); // optional
-    private final FTextField studyProtocolURIField = new FTextField(); // optional
-    private final FTextField studyProtocolVersionField = new FTextField(); // optional
-    private final FTextField studyProtocolParametersField; // optional
-    private final FTextField studyProtocolComponentsTypeField; // optional
-
-    private final List<JComponent> advancedComponents;
-
-    StudyPanel() {
-
-      super(new BorderLayout());
-
-      studyDesignTypeField = new FTextField();
-      studyAssayMeasurementsTypeField = new FTextField();
-      studyAssayTechnologyTypeField = new FTextField();
-      accreditationProcedureField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Accreditation procedure Ass.Tec"), false);
-      studyProtocolTypeField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Protocol Type"), false);
-      studyProtocolParametersField = new FTextField();
-      studyProtocolComponentsTypeField = new FTextField();
-
-      List<FLabel> labels = new ArrayList<>();
-      List<JComponent> fields = new ArrayList<>();
-      final String prefix = "StudyPanel_";
-
-      // study identifier
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyIdentifier"));
-      fields.add(studyIdentifierField);
-
-      // study title
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyTitle"));
-      fields.add(studyTitleField);
-
-      // study design type
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyDesignType"));
-      fields.add(studyDesignTypeField);
-
-      // study assay technology type
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayTechnologyType"));
-      fields.add(studyAssayTechnologyTypeField);
-
-      // study assay measurements type
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayMeasurementsType"));
-      fields.add(studyAssayMeasurementsTypeField);
-
-      // study assay technology platform
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayTechnologyPlatform"));
-      fields.add(studyAssayTechnologyPlatformField);
-
-      // accreditation procedure for the assay technology
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "accreditationProcedure"));
-      fields.add(accreditationProcedureField);
-
-      // study protocol name
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolName"));
-      fields.add(studyProtocolNameField);
-
-      // study protocol type
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolType"));
-      fields.add(studyProtocolTypeField);
-
-      // study protocol description
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolDescription"));
-      fields.add(studyProtocolDescriptionField);
-
-      // study protocol URI
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolURI"));
-      fields.add(studyProtocolURIField);
-
-      // study protocol parameters name
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "parameters"));
-      fields.add(studyProtocolParametersField);
-
-      // study protocol components
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "componentsType"));
-      fields.add(studyProtocolComponentsTypeField);
-
-      FPanel formPanel = UIUtils.createFormPanel(labels, fields);
-
-      // northPanel
-      final JPanel northPanel = new JPanel();
-      northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
-      northPanel.add(formPanel);
-
-      {
-        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "studyDescription");
-        JScrollPane studyDescriptionPane = GUIFactory.createScrollPane(studyDescriptionField);
-        northPanel.add(
-            UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(studyDescriptionPane)));
-      }
-
-      add(northPanel, BorderLayout.NORTH);
-
-      advancedComponents = Arrays.asList(studyDescriptionField, studyDesignTypeField,
-          studyAssayMeasurementsTypeField, studyAssayTechnologyTypeField,
-          studyAssayTechnologyPlatformField, accreditationProcedureField, studyProtocolNameField,
-          studyProtocolTypeField, studyProtocolDescriptionField, studyProtocolURIField,
-          studyProtocolVersionField, studyProtocolParametersField,
-          studyProtocolComponentsTypeField);
-      advancedComponents.forEach(it -> it.setEnabled(false));
     }
   }
 
@@ -3594,112 +3656,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     void init(final List<ModelEquation> modelEquations) {
       modelEquations.forEach(tableModel::add);
-    }
-  }
-
-  /**
-   * Panel to edit a {@link Simulation}.
-   * 
-   * Fields:
-   * <ul>
-   * <li>Simulation algorithm: Mandatory
-   * <li>Simulated model: Mandatory
-   * <li>Simulation description: Optional
-   * <li>Visualization script: Optional
-   * </ul>
-   */
-  private class SimulationPanel extends TopLevelPanel<Simulation> {
-
-    private static final long serialVersionUID = -371214370549912535L;
-
-    private final FTextField algorithmField;
-    private final FTextField modelField;
-    private final FTextField scriptField;
-    private final FTextArea descriptionField;
-
-    public SimulationPanel() {
-
-      super(new BorderLayout());
-
-      algorithmField = new FTextField(true);
-      modelField = new FTextField(true);
-      scriptField = new FTextField();
-      descriptionField = new FTextArea();
-
-      createUI();
-    }
-
-    private void createUI() {
-      String prefix = "editor_Simulation_";
-      final FLabel algorithmLabel = new FLabel(bundle.getString(prefix + "Algorithm"));
-      final FLabel modelLabel = new FLabel(bundle.getString(prefix + "Model"));
-      final FLabel scriptLabel = new FLabel(bundle.getString(prefix + "Script"));
-
-      List<FLabel> labels = new ArrayList<>();
-      List<JComponent> fields = new ArrayList<>();
-
-      // algorithm
-      labels.add(new FLabel(bundle.getString(prefix + "Algorithm")));
-      fields.add(algorithmField);
-
-      // model
-      labels.add(new FLabel(bundle.getString(prefix + "Model")));
-      fields.add(modelField);
-
-      // script
-      labels.add(new FLabel(bundle.getString(prefix + "Script")));
-      fields.add(scriptField);
-
-      FPanel formPanel =
-          UIUtils.createFormPanel(Arrays.asList(algorithmLabel, modelLabel, scriptLabel),
-              Arrays.asList(algorithmField, modelField, scriptField));
-
-      final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
-      advancedCheckBox.addItemListener(event -> {
-        final boolean isAdvanced = advancedCheckBox.isSelected();
-        scriptField.setEnabled(isAdvanced);
-        descriptionField.setEnabled(isAdvanced);
-      });
-
-      final JPanel northPanel = new JPanel();
-      northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
-      northPanel.add(GUIFactory.createAdvancedPanel(advancedCheckBox));
-      northPanel.add(formPanel);
-
-      {
-        FLabel label = new FLabel(bundle.getString("editor_Simulation_Description"));
-        FPanel textAreaPanel = UIUtils.createFormPanel(Arrays.asList(label),
-            Arrays.asList(GUIFactory.createScrollPane(descriptionField)));
-        northPanel.add(textAreaPanel);
-      }
-
-      add(northPanel, BorderLayout.NORTH);
-
-      // Initially the advanced mode is disabled, so advanced components must be
-      // disabled
-      scriptField.setEnabled(false);
-      descriptionField.setEnabled(false);
-    }
-
-    @Override
-    void init(final Simulation t) {
-      if (t != null) {
-        algorithmField.setText(t.algorithm);
-        modelField.setText(t.simulatedModel);
-        scriptField.setText(t.visualizationScript);
-        descriptionField.setText(t.description);
-      }
-    }
-
-    @Override
-    Simulation get() {
-      final Simulation simulation = new Simulation();
-      simulation.algorithm = algorithmField.getText();
-      simulation.simulatedModel = modelField.getText();
-      simulation.visualizationScript = scriptField.getText();
-      simulation.description = descriptionField.getText();
-
-      return simulation;
     }
   }
 }

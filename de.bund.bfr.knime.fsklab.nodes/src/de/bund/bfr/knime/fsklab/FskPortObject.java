@@ -78,7 +78,6 @@ import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
 import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
-import de.bund.bfr.knime.fsklab.rakip.Simulation;
 import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import ezvcard.VCard;
@@ -982,14 +981,6 @@ public class FskPortObject implements PortObject {
     }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final Simulation simulation) {
-    final String prefix = "editor_Simulation";
-    add(node, prefix + "Algorithm", simulation.algorithm);
-    add(node, prefix + "Model", simulation.simulatedModel);
-    add(node, prefix + "Description", simulation.description);
-    add(node, prefix + "Script", simulation.visualizationScript);
-  }
-
   private static JTree createTree(GenericModel genericModel) {
 
     final DefaultMutableTreeNode generalInformationNode =
@@ -1013,17 +1004,11 @@ public class FskPortObject implements PortObject {
       add(modelMathNode, genericModel.modelMath);
     }
 
-    final DefaultMutableTreeNode simulationNode = new DefaultMutableTreeNode("Simulation");
-    if (genericModel.simulation != null) {
-      add(simulationNode, genericModel.simulation);
-    }
-
     final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
     rootNode.add(generalInformationNode);
     rootNode.add(scopeNode);
     rootNode.add(dataBackgroundNode);
     rootNode.add(modelMathNode);
-    rootNode.add(simulationNode);
 
     final JTree tree = new JTree(rootNode);
     tree.setRootVisible(false);
