@@ -1275,17 +1275,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         classificationField.setSelectedItem(t.classification);
         nameField.setText(t.name);
         descriptionField.setText(t.description);
-        // TODO: typeField
+        typeField.setSelectedItem(t.type);
         unitField.setSelectedItem(t.unit);
         unitCategoryField.setSelectedItem(t.unitCategory);
         dataTypeField.setSelectedItem(t.dataType);
-        sourceField.setSelectedItem(t.dataType);
+        sourceField.setSelectedItem(t.source);
         subjectField.setSelectedItem(t.subject);
         distributionField.setSelectedItem(t.distribution);
         valueField.setText(t.value);
         referenceField.setText(t.reference);
+        if (!t.modelApplicability.isEmpty()) {
+          applicabilityField.setText(t.modelApplicability.get(0));
+        }
         variabilitySubjectField.setText(t.variabilitySubject);
-        // TODO: fix model applicability
         errorSpinnerModel.setValue(t.error);
       }
     }
@@ -1297,17 +1299,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       param.id = idField.getText();
       param.classification = (Parameter.Classification) classificationField.getSelectedItem();
       param.name = nameField.getText();
+      param.description = descriptionField.getText();
+      param.type = (String) typeField.getSelectedItem();
       param.unit = (String) unitField.getSelectedItem();
       param.unitCategory = (String) unitCategoryField.getSelectedItem();
       param.dataType = (String) dataTypeField.getSelectedItem();
-      // TODO: model applicability
-
-      param.description = descriptionField.getText();
       param.source = (String) sourceField.getSelectedItem();
       param.subject = (String) subjectField.getSelectedItem();
       param.distribution = (String) distributionField.getSelectedItem();
       param.value = valueField.getText();
       param.reference = referenceField.getText();
+      if (!applicabilityField.getText().isEmpty()) {
+        param.modelApplicability.add(applicabilityField.getText());
+      }
       param.variabilitySubject = variabilitySubjectField.getText();
       param.error = errorSpinnerModel.getNumber().doubleValue();
 

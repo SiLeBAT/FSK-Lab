@@ -34,6 +34,8 @@ public class Parameter {
 
   public String description = "";
 
+  public String type = "";
+
   public String unit = "";
 
   public String unitCategory = "";
@@ -50,7 +52,9 @@ public class Parameter {
 
   public String reference = "";
 
-  public String variabilitySubject;
+  public String variabilitySubject = "";
+
+  public String rangeOfApplicability = "";
 
   public final List<String> modelApplicability = new ArrayList<>();
 
@@ -58,9 +62,9 @@ public class Parameter {
 
   @Override
   public int hashCode() {
-    return Objects.hash(classification, dataType, description, distribution, error, id,
-        modelApplicability, name, reference, source, subject, unit, unitCategory, value,
-        variabilitySubject);
+    return Objects.hash(id, name, description, type, unit, unitCategory, dataType, source, subject,
+        distribution, value, reference, variabilitySubject, rangeOfApplicability,
+        modelApplicability, error);
   }
 
   @Override
@@ -71,14 +75,15 @@ public class Parameter {
       return false;
 
     Parameter other = (Parameter) obj;
-    return Objects.equals(id, other.id) && Objects.equals(classification, other.classification)
-        && Objects.equals(name, other.name) && Objects.equals(description, other.description)
+    return Objects.equals(id, other.id) && Objects.equals(name, other.name)
+        && Objects.equals(description, other.description) && Objects.equals(type, other.type)
         && Objects.equals(unit, other.unit) && Objects.equals(unitCategory, other.unitCategory)
         && Objects.equals(dataType, other.dataType) && Objects.equals(source, other.source)
         && Objects.equals(subject, other.subject)
         && Objects.equals(distribution, other.distribution) && Objects.equals(value, other.value)
         && Objects.equals(reference, other.reference)
         && Objects.equals(variabilitySubject, other.variabilitySubject)
+        && Objects.equals(rangeOfApplicability, other.rangeOfApplicability)
         && Objects.equals(modelApplicability, other.modelApplicability)
         && Objects.equals(error, other.error);
   }
