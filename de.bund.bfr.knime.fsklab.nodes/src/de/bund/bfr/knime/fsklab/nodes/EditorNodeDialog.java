@@ -968,14 +968,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         fields.add(studyProtocolComponentsTypeField);
       }
 
-      FPanel formPanel = UIUtils.createFormPanel(labels, fields);
-
       // northPanel
       final JPanel northPanel = new JPanel();
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
-      northPanel.add(formPanel);
+      northPanel.add(UIUtils.createFormPanel(labels, fields));
 
-      {
+      // text areas
+      if (isAdvanced) {
         FLabel label = GUIFactory.createLabelWithToolTip(prefix + "studyDescription");
         JScrollPane studyDescriptionPane = GUIFactory.createScrollPane(studyDescriptionField);
         northPanel.add(
@@ -987,7 +986,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     void init(Study study) {
-      // TODO Auto-generated method stub
       if (study != null) {
         studyIdentifierField.setText(study.id);
         studyTitleField.setText(study.title);
@@ -998,9 +996,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         accreditationProcedureField.setSelectedItem(study.accreditationProcedure);
         studyProtocolNameField.setText(study.protocolName);
         studyProtocolTypeField.setText(study.protocolType);
+        studyProtocolDescriptionField.setText(study.description);
         if (study.protocolUri != null) {
           studyProtocolURIField.setText(study.protocolUri.toString());
         }
+        studyProtocolVersionField.setText(study.protocolVersion);
         studyProtocolParametersField.setText(study.parametersName);
         // TODO components name
         studyProtocolComponentsTypeField.setText(study.componentsType);
@@ -1027,6 +1027,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         study.protocolUri = new URI(studyProtocolURIField.getText());
       } catch (URISyntaxException e) {
       }
+      study.protocolVersion = studyProtocolVersionField.getText();
       study.parametersName = studyProtocolParametersField.getText();
       // TODO: Components name
       study.componentsType = studyProtocolComponentsTypeField.getText();
@@ -1043,10 +1044,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       List<String> errors = new ArrayList<>();
 
       if (studyIdentifierField.getText().isEmpty()) {
-        errors.add("Missing " + bundle.getString(prefix + "studyIdentifier"));
+        errors.add("Missing " + bundle.getString(prefix + "studyIdentifierLabel"));
       }
       if (studyTitleField.getText().isEmpty()) {
-        errors.add("Missing " + bundle.getString(prefix + "studyTitle"));
+        errors.add("Missing " + bundle.getString(prefix + "studyTitleLabel"));
       }
 
       return errors;
