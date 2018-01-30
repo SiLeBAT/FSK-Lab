@@ -36,6 +36,8 @@ public class ModelMath {
 
   public double bic = .0;
 
+  public String sensitivityAnalysis = "";
+
   public List<ModelEquation> modelEquation = new ArrayList<>(0);
 
   public String fittingProcedure = "";
@@ -46,8 +48,8 @@ public class ModelMath {
 
   @Override
   public int hashCode() {
-    return Objects.hash(aic, bic, event, exposure, fittingProcedure, modelEquation, mse, parameter,
-        rSquared, rmse, sse);
+    return Objects.hash(parameter, sse, mse, rmse, rSquared, aic, bic, sensitivityAnalysis,
+        modelEquation, fittingProcedure, exposure, event);
   }
 
   @Override
@@ -58,12 +60,14 @@ public class ModelMath {
       return false;
 
     ModelMath other = (ModelMath) obj;
-    return Double.compare(aic, other.aic) == 0 && Double.compare(bic, other.bic) == 0
-        && Objects.equals(event, other.event) && Objects.equals(exposure, other.exposure)
+
+    return Objects.equals(parameter, other.parameter) && Double.compare(sse, other.sse) == 0
+        && Double.compare(mse, other.mse) == 0 && Double.compare(rmse, other.rmse) == 0
+        && Double.compare(rSquared, other.rSquared) == 0 && Double.compare(aic, other.aic) == 0
+        && Double.compare(bic, other.bic) == 0
+        && Objects.equals(sensitivityAnalysis, other.sensitivityAnalysis)
+        && Objects.equals(modelEquation, other.modelEquation)
         && Objects.equals(fittingProcedure, other.fittingProcedure)
-        && Objects.equals(modelEquation, other.modelEquation) && Double.compare(mse, other.mse) == 0
-        && Objects.equals(parameter, other.parameter)
-        && Double.compare(rSquared, other.rSquared) == 0 && Double.compare(rmse, other.rmse) == 0
-        && Double.compare(sse, other.sse) == 0;
+        && Objects.equals(exposure, other.exposure) && Objects.equals(event, other.event);
   }
 }
