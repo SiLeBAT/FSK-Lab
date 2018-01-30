@@ -398,7 +398,7 @@ public class FskPortObject implements PortObject {
 
   private static void add(final DefaultMutableTreeNode node, final Record record) {
 
-    final String prefix = "GM.EditReferencePanel.";
+    final String prefix = "EditReferencePanel_";
 
     // isReferenceDescription is not supported
 
@@ -463,7 +463,7 @@ public class FskPortObject implements PortObject {
    */
 
   private static void add(final DefaultMutableTreeNode node, final VCard vcard) {
-    final String prefix = "GM.EditCreatorPanel.";
+    final String prefix = "EditCreatorPanel_";
 
     final ezvcard.property.Nickname nickname = vcard.getNickname();
     if (nickname != null) {
@@ -491,7 +491,7 @@ public class FskPortObject implements PortObject {
 
   private static void add(final DefaultMutableTreeNode node, final Product product) {
 
-    final String prefix = "editor_EditProductPanel_";
+    final String prefix = "EditProductPanel_";
 
     add(node, prefix + "envNameLabel", product.environmentName);
     add(node, prefix + "envDescriptionLabel", product.environmentDescription);
@@ -519,7 +519,7 @@ public class FskPortObject implements PortObject {
 
   private static void add(final DefaultMutableTreeNode node, final Hazard hazard) {
 
-    final String prefix = "editor_EditHazardPanel_";
+    final String prefix = "EditHazardPanel_";
 
     add(node, prefix + "hazardTypeLabel", hazard.hazardType);
     add(node, prefix + "hazardNameLabel", hazard.hazardName);
@@ -549,7 +549,7 @@ public class FskPortObject implements PortObject {
   private static void add(final DefaultMutableTreeNode node,
       final PopulationGroup populationGroup) {
 
-    final String prefix = "editor_EditPopulationGroupPanel_";
+    final String prefix = "EditPopulationGroupPanel_";
 
     add(node, prefix + "populationNameLabel", populationGroup.populationName);
     add(node, prefix + "populationSpanLabel", populationGroup.populationSpan);
@@ -577,7 +577,7 @@ public class FskPortObject implements PortObject {
   private static void add(final DefaultMutableTreeNode node,
       final GeneralInformation generalInformation) {
 
-    final String prefix = "editor_GeneralInformationPanel_";
+    final String prefix = "GeneralInformationPanel_";
 
     add(node, prefix + "studyNameLabel", generalInformation.name);
     add(node, prefix + "sourceLabel", generalInformation.source);
@@ -651,7 +651,7 @@ public class FskPortObject implements PortObject {
 
   private static void add(final DefaultMutableTreeNode node, final Scope scope) {
 
-    final String prefix = "editor_ScopePanel_";
+    final String prefix = "ScopePanel_";
 
     {
       final String key = prefix + "productLabel";
@@ -706,7 +706,7 @@ public class FskPortObject implements PortObject {
 
   private static void add(final DefaultMutableTreeNode node, final DataBackground dataBackground) {
 
-    final String prefix = "editor_DataBackgroundPanel_";
+    final String prefix = "DataBackgroundPanel_";
 
     final Study study = dataBackground.study;
     if (study != null) {
@@ -765,7 +765,7 @@ public class FskPortObject implements PortObject {
 
   private static void add(final DefaultMutableTreeNode node, final Study study) {
 
-    final String prefix = "editor_StudyPanel_";
+    final String prefix = "StudyPanel_";
 
     add(node, prefix + "studyTitleLabel", study.title);
     add(node, prefix + "studyDescriptionLabel", study.description);
@@ -799,25 +799,19 @@ public class FskPortObject implements PortObject {
 
   private static void add(final DefaultMutableTreeNode node, final StudySample studySample) {
 
-    final String prefix = "editor_EditStudySamplePanel_";
+    final String prefix = "EditStudySamplePanel_";
 
     add(node, prefix + "sampleNameLabel", studySample.sample);
-    if (studySample.moisturePercentage != null) {
-      add(node, prefix + "moisturePercentageLabel", studySample.moisturePercentage.doubleValue());
-    }
-    if (studySample.fatPercentage != null) {
-      add(node, prefix + "fatPercentageLabel", studySample.fatPercentage.doubleValue());
-    }
     if (studySample.collectionProtocol != null) {
       add(node, prefix + "sampleProtocolLabel", studySample.collectionProtocol);
     }
     add(node, prefix + "samplingStrategyLabel", studySample.samplingStrategy);
+    add(node, prefix + "samplingTypeLabel", studySample.samplingProgramType);
     add(node, prefix + "samplingMethodLabel", studySample.samplingMethod);
     add(node, prefix + "samplingPlanLabel", studySample.samplingPlan);
     add(node, prefix + "samplingWeightLabel", studySample.samplingWeight);
     add(node, prefix + "samplingSizeLabel", studySample.samplingSize);
     add(node, prefix + "lotSizeUnitLabel", studySample.lotSizeUnit);
-    add(node, prefix + "samplingPointLabel", studySample.lotSizeUnit);
   }
 
   /**
@@ -832,7 +826,7 @@ public class FskPortObject implements PortObject {
   private static void add(final DefaultMutableTreeNode node, final DietaryAssessmentMethod method) {
 
     // Prefix in resource bundle
-    final String prefix = "editor_EditDietaryAssessmentMethodPanel_";
+    final String prefix = "EditDietaryAssessmentMethodPanel_";
 
     add(node, prefix + "dataCollectionToolLabel", method.collectionTool);
     add(node, prefix + "nonConsecutiveOneDaysLabel",
@@ -851,9 +845,15 @@ public class FskPortObject implements PortObject {
    * @param assay Cannot be {@code null}.
    */
   private static void add(final DefaultMutableTreeNode node, final Assay assay) {
-    final String prefix = "editor_EditAssayPanel_";
+    final String prefix = "EditAssayPanel_";
     add(node, prefix + "nameLabel", assay.name);
     add(node, prefix + "descriptionLabel", assay.description);
+    add(node, prefix + "moisturePercentageLabel", assay.moisturePercentage);
+    add(node, prefix + "detectionLimitLabel", assay.detectionLimit);
+    add(node, prefix + "quantificationLimitLabel", assay.quantificationLimit);
+    add(node, prefix + "leftCensoredDataLabel", assay.leftCensoredData);
+    add(node, prefix + "contaminationRangeLabel", assay.contaminationRange);
+    add(node, prefix + "uncertaintyLabel", assay.uncertaintyValue);
   }
 
   /**
@@ -879,7 +879,7 @@ public class FskPortObject implements PortObject {
    */
   private static void add(final DefaultMutableTreeNode node, final Parameter parameter) {
 
-    final String prefix = "editor_EditParameterPanel_";
+    final String prefix = "EditParameterPanel_";
 
     add(node, prefix + "idLabel", parameter.id);
     add(node, prefix + "classificationLabel", parameter.classification.toString());
@@ -910,7 +910,7 @@ public class FskPortObject implements PortObject {
 
   private static void add(final DefaultMutableTreeNode node, final ModelEquation modelEquation) {
 
-    final String prefix = "editor_EditModelEquationPanel_";
+    final String prefix = "EditModelEquationPanel_";
 
     add(node, prefix + "nameLabel", modelEquation.equationName);
     add(node, prefix + "classLabel", modelEquation.equationClass);

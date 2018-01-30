@@ -509,7 +509,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
-      String prefix = "editor_EditAssayPanel_";
+      String prefix = "EditAssayPanel_";
 
       // name
       List<FLabel> labels = new ArrayList<>();
@@ -724,7 +724,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      String prefix = "editor_EditDietaryAssessmentMethodPanel_";
+      String prefix = "EditDietaryAssessmentMethodPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
@@ -882,7 +882,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
-      String prefix = "editor_EditHazardPanel_";
+      String prefix = "EditHazardPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
@@ -1042,7 +1042,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       // Create labels
-      String prefix = "editor_EditModelEquationPanel_";
+      String prefix = "EditModelEquationPanel_";
 
       // northPanel
       FPanel northPanel = new FPanel();
@@ -1386,7 +1386,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
-      String prefix = "editor_EditPopulationGroupPanel_";
+      String prefix = "EditPopulationGroupPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
@@ -1615,7 +1615,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
-      String prefix = "editor_EditProductPanel_";
+      String prefix = "EditProductPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
@@ -1849,7 +1849,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
       // Create labels
-      String prefix = "editor_EditReferencePanel_";
+      String prefix = "EditReferencePanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
@@ -2059,9 +2059,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = -4740851101237646103L;
 
-    private final SpinnerNumberModel moisturePercentageSpinnerModel; // optional
-    private final SpinnerNumberModel fatPercentageSpinnerModel; // optional
-
     private final FTextField sampleNameField; // mandatory
     private final FTextField sampleProtocolField; // optional
     private final AutoSuggestField samplingStrategyField; // optional
@@ -2076,9 +2073,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     public EditStudySamplePanel(final boolean isAdvanced) {
 
       super(new BorderLayout());
-
-      moisturePercentageSpinnerModel = GUIFactory.createSpinnerPercentageModel();
-      fatPercentageSpinnerModel = GUIFactory.createSpinnerPercentageModel();
 
       sampleNameField = new FTextField(true);
       sampleProtocolField = new FTextField(true);
@@ -2098,7 +2092,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      String prefix = "editor_EditStudySamplePanel_";
+      String prefix = "EditStudySamplePanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
@@ -2106,18 +2100,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       // sample name
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "sampleName"));
       fields.add(sampleNameField);
-
-      // moisture percentage
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "moisturePercentage"));
-        fields.add(new FSpinner(moisturePercentageSpinnerModel, false));
-      }
-
-      // fat percentage
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "fatPercentage"));
-        fields.add(new FSpinner(fatPercentageSpinnerModel, false));
-      }
 
       // sample protocol label
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "sampleProtocol"));
@@ -2179,12 +2161,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     void init(final StudySample t) {
       if (t != null) {
         sampleNameField.setText(t.sample);
-        if (t.moisturePercentage != null) {
-          moisturePercentageSpinnerModel.setValue(t.moisturePercentage);
-        }
-        if (t.fatPercentage != null) {
-          fatPercentageSpinnerModel.setValue(t.fatPercentage);
-        }
         sampleProtocolField.setText(t.collectionProtocol);
         samplingStrategyField.setSelectedItem(t.samplingStrategy);
         samplingTypeField.setSelectedItem(t.samplingProgramType);
@@ -2206,9 +2182,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       studySample.samplingPlan = samplingPlanField.getText();
       studySample.samplingWeight = samplingWeightField.getText();
       studySample.samplingSize = samplingSizeField.getText();
-
-      studySample.moisturePercentage = moisturePercentageSpinnerModel.getNumber().doubleValue();
-      studySample.fatPercentage = fatPercentageSpinnerModel.getNumber().doubleValue();
       studySample.samplingStrategy = (String) samplingStrategyField.getSelectedItem();
       studySample.samplingProgramType = (String) samplingTypeField.getSelectedItem();
       studySample.samplingMethod = (String) samplingMethodField.getSelectedItem();
@@ -2315,7 +2288,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI() {
 
       // Create labels
-      String prefix = "editor_GeneralInformationPanel_";
+      String prefix = "GeneralInformationPanel_";
 
       FLabel studyNameLabel = GUIFactory.createLabelWithToolTip(prefix + "studyName");
       FLabel identifierLabel = GUIFactory.createLabelWithToolTip(prefix + "identifier");
@@ -2725,7 +2698,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI() {
       // Create labels
-      String prefix = "editor_EditCreatorPanel_";
+      String prefix = "EditCreatorPanel_";
       FLabel givenNameLabel = new FLabel(bundle.getString(prefix + "givenNameLabel"));
       FLabel familyNameLabel = new FLabel(bundle.getString(prefix + "familyNameLabel"));
       FLabel contactLabel = new FLabel(bundle.getString(prefix + "contactLabel"));
@@ -2816,7 +2789,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
-      String prefix = "editor_ScopePanel_";
+      String prefix = "ScopePanel_";
 
       // Build UI
       productButton.setToolTipText("Click me to add a product");
@@ -3043,7 +3016,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
-      String prefix = "editor_DataBackgroundPanel_";
+      String prefix = "DataBackgroundPanel_";
       FLabel studySampleLabel = new FLabel(bundle.getString(prefix + "studySampleLabel"));
       FLabel dietaryAssessmentMethodLabel =
           new FLabel(bundle.getString(prefix + "dietaryAssessmentMethodLabel"));
@@ -3183,7 +3156,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
-      final String prefix = "editor_StudyPanel_";
+      final String prefix = "StudyPanel_";
 
       // study identifier
       labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyIdentifier"));

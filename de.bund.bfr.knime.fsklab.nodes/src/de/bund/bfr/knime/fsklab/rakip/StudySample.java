@@ -21,8 +21,6 @@ import java.util.Objects;
 public class StudySample {
 
   public String sample = "";
-  public Double moisturePercentage = 0.0;
-  public Double fatPercentage = 0.0;
   public String collectionProtocol = "";
   public String samplingStrategy = "";
   public String samplingProgramType = "";
@@ -34,9 +32,8 @@ public class StudySample {
 
   @Override
   public int hashCode() {
-    return Objects.hash(collectionProtocol, fatPercentage, lotSizeUnit, moisturePercentage, sample,
-        samplingMethod, samplingPlan, samplingPoint, samplingProgramType, samplingSize,
-        samplingStrategy, samplingWeight);
+    return Objects.hash(collectionProtocol, lotSizeUnit, sample, samplingMethod, samplingPlan,
+        samplingPoint, samplingProgramType, samplingSize, samplingStrategy, samplingWeight);
   }
 
   @Override
@@ -48,10 +45,7 @@ public class StudySample {
 
     StudySample other = (StudySample) obj;
     return Objects.equals(collectionProtocol, other.collectionProtocol)
-        && Objects.equals(fatPercentage, other.fatPercentage)
-        && Objects.equals(lotSizeUnit, other.lotSizeUnit)
-        && Objects.equals(moisturePercentage, other.moisturePercentage)
-        && Objects.equals(sample, other.sample)
+        && Objects.equals(lotSizeUnit, other.lotSizeUnit) && Objects.equals(sample, other.sample)
         && Objects.equals(samplingMethod, other.samplingMethod)
         && Objects.equals(samplingPlan, other.samplingPlan)
         && Objects.equals(samplingPoint, other.samplingPoint)
