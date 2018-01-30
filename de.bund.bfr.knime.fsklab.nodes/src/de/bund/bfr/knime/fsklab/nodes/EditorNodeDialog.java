@@ -1965,6 +1965,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           }
         }
 
+        // TODO: PMID
         doiField.setText(t.getDoi());
 
         final List<String> authors = t.getAuthors();
@@ -1989,7 +1990,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         if (issueNumber != null) {
           issueSpinnerModel.setValue(issueNumber);
         }
+
+        // TODO: Page
+        // TODO: Status
+
         websiteField.setText(t.getWebsiteLink());
+
+        // TODO: Comment
       }
     }
 
@@ -2010,6 +2017,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (date != null) {
         record.setDate(new SimpleDateFormat(dateFormatStr).format(date));
       }
+
+      // TODO: PMID
 
       record.setDoi(doiField.getText());
 
@@ -2032,8 +2041,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         record.setIssueNumber(issueNumber.intValue());
       }
 
-      // TODO: status
+      // TODO: Page
+      // TODO: Status
+
       record.setWebsiteLink(websiteField.getText());
+
       // TODO: comment
 
       return record;
@@ -2307,9 +2319,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       availabilityField.setBackground(UIUtils.WHITE);
 
       // Hide initially advanced components
-      final List<JComponent> advancedComponents =
-          Arrays.asList(sourceField, formatField, languageField, softwareField,
-              languageWrittenInField, statusField, objectiveField, descriptionField);
+      final List<JComponent> advancedComponents = Arrays.asList(formatField, languageField,
+          softwareField, languageWrittenInField, statusField, objectiveField, descriptionField);
       advancedComponents.forEach(it -> it.setEnabled(false));
 
       // formPanel
