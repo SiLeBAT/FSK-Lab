@@ -16,8 +16,6 @@
  **************************************************************************************************/
 package de.bund.bfr.knime.fsklab.rakip;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class DataBackground {
@@ -25,13 +23,12 @@ public class DataBackground {
   public Study study = new Study();
   public StudySample studySample = new StudySample();
   public DietaryAssessmentMethod dietaryAssessmentMethod = new DietaryAssessmentMethod();
-  public final List<String> laboratoryAccreditation = new ArrayList<>();
+  public Laboratory laboratory = new Laboratory();
   public Assay assay = new Assay();
 
   @Override
   public int hashCode() {
-    return Objects.hash(assay, dietaryAssessmentMethod, laboratoryAccreditation, study,
-        studySample);
+    return Objects.hash(assay, dietaryAssessmentMethod, laboratory, study, studySample);
   }
 
   @Override
@@ -44,7 +41,7 @@ public class DataBackground {
     DataBackground other = (DataBackground) obj;
     return Objects.equals(assay, other.assay)
         && Objects.equals(dietaryAssessmentMethod, other.dietaryAssessmentMethod)
-        && Objects.equals(laboratoryAccreditation, other.laboratoryAccreditation)
-        && Objects.equals(study, other.study) && Objects.equals(studySample, other.studySample);
+        && Objects.equals(laboratory, other.laboratory) && Objects.equals(study, other.study)
+        && Objects.equals(studySample, other.studySample);
   }
 }

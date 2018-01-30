@@ -97,6 +97,7 @@ import de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod;
 import de.bund.bfr.knime.fsklab.rakip.GeneralInformation;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.Hazard;
+import de.bund.bfr.knime.fsklab.rakip.Laboratory;
 import de.bund.bfr.knime.fsklab.rakip.ModelEquation;
 import de.bund.bfr.knime.fsklab.rakip.ModelMath;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
@@ -544,6 +545,87 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final List<String> errors = new ArrayList<>(1);
       if (nameField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString("editor_EditAssayPanel_nameLabel"));
+      }
+
+      return errors;
+    }
+  }
+
+  private class EditLaboratoryPanel extends EditPanel<Laboratory> {
+
+    // serialVersionUID
+
+    private final AutoSuggestField accreditationField;
+    private final FTextField nameField;
+    private final FTextField countryField;
+
+    EditLaboratoryPanel(final boolean isAdvanced) {
+      super(new BorderLayout());
+
+      accreditationField =
+          GUIFactory.createAutoSuggestField(vocabs.get("Laboratory accreditation"), true);
+      nameField = new FTextField();
+      countryField = new FTextField();
+
+      createUI(isAdvanced);
+    }
+
+    private void createUI(boolean isAdvanced) {
+      String prefix = "EditLaboratoryPanel_";
+
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+
+      // accreditation
+      labels.add(GUIFactory.createLabelWithToolTip(prefix + "accreditation"));
+      fields.add(accreditationField);
+
+      // name
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "name"));
+        fields.add(nameField);
+      }
+
+      // country
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(prefix + "country"));
+        fields.add(countryField);
+      }
+
+      // northPanel
+      FPanel northPanel = new FPanel();
+      northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+      northPanel.add(UIUtils.createFormPanel(labels, fields));
+
+      add(northPanel, BorderLayout.NORTH);
+    }
+
+    @Override
+    void init(final Laboratory laboratory) {
+      if (laboratory != null) {
+        accreditationField.setSelectedItem(laboratory.accreditation);
+        nameField.setText(laboratory.name);
+        countryField.setText(laboratory.country);
+      }
+    }
+
+    @Override
+    Laboratory get() {
+
+      Laboratory laboratory = new Laboratory();
+      laboratory.accreditation = (String) accreditationField.getSelectedItem();
+      laboratory.name = nameField.getText();
+      laboratory.country = countryField.getText();
+
+      return laboratory;
+    }
+
+    @Override
+    List<String> validatePanel() {
+
+      List<String> errors = new ArrayList<>();
+      if (!hasValidValue(accreditationField)) {
+        errors.add("Missing " + bundle.getString("EditLaboratoryPanel_accreditationLabel"));
       }
 
       return errors;
@@ -2812,12 +2894,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
-    final AutoSuggestField laboratoryAccreditationField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Laboratory accreditation"), false);
-
     private final StudyPanel studyPanel;
     private final JButton studySampleButton;
     private final JButton dietaryAssessmentMethodButton;
+    private final JButton laboratoryButton;
     private final JButton assayButton;
 
     private DataBackground dataBackground = new DataBackground();
@@ -2866,6 +2946,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
+      laboratoryButton = new JButton();
+      laboratoryButton.setToolTipText("Click me to add Laboratory");
+      laboratoryButton.addActionListener(event -> {
+        EditLaboratoryPanel editPanel = new EditLaboratoryPanel(advancedCheckBox.isSelected());
+        editPanel.init(dataBackground.laboratory);
+        ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create laboratory");
+
+        if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
+          Laboratory lab = editPanel.get();
+          // Update button's text
+          laboratoryButton.setText(lab.accreditation);
+          dataBackground.laboratory = lab;
+        }
+      });
+
       assayButton = new JButton();
       assayButton.setToolTipText("Click me to add Assay");
       assayButton.addActionListener(event -> {
@@ -2885,7 +2980,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       FLabel dietaryAssessmentMethodLabel =
           new FLabel(bundle.getString(prefix + "dietaryAssessmentMethodLabel"));
       FLabel laboratoryAccreditationLabel =
-          new FLabel(bundle.getString(prefix + "laboratoryAccreditationLabel"));
+          new FLabel(bundle.getString(prefix + "laboratoryLabel"));
       FLabel assayLabel = new FLabel(bundle.getString(prefix + "assayLabel"));
 
       // Advanced `checkbox`
@@ -2897,8 +2992,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       FPanel formPanel = UIUtils.createFormPanel(
           Arrays.asList(studySampleLabel, dietaryAssessmentMethodLabel,
               laboratoryAccreditationLabel, assayLabel),
-          Arrays.asList(studySampleButton, dietaryAssessmentMethodButton,
-              laboratoryAccreditationField, assayButton));
+          Arrays.asList(studySampleButton, dietaryAssessmentMethodButton, laboratoryButton,
+              assayButton));
 
       // northPanel
       FPanel northPanel = new FPanel();
@@ -2940,6 +3035,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         dietaryAssessmentMethodButton
             .setText(dataBackground.dietaryAssessmentMethod.collectionTool);
       }
+      if (StringUtils.isNotEmpty(dataBackground.laboratory.accreditation)) {
+        laboratoryButton.setText(dataBackground.laboratory.accreditation);
+      }
       if (StringUtils.isNotEmpty(dataBackground.assay.name)) {
         assayButton.setText(dataBackground.assay.name);
       }
@@ -2972,6 +3070,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       dataBackground.studySample = this.dataBackground.studySample;
       dataBackground.dietaryAssessmentMethod = this.dataBackground.dietaryAssessmentMethod;
+      dataBackground.laboratory = this.dataBackground.laboratory;
       dataBackground.assay = this.dataBackground.assay;
 
       return dataBackground;

@@ -71,6 +71,7 @@ import de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod;
 import de.bund.bfr.knime.fsklab.rakip.GeneralInformation;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.Hazard;
+import de.bund.bfr.knime.fsklab.rakip.Laboratory;
 import de.bund.bfr.knime.fsklab.rakip.ModelEquation;
 import de.bund.bfr.knime.fsklab.rakip.ModelMath;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
@@ -734,7 +735,15 @@ public class FskPortObject implements PortObject {
       node.add(damNode);
     }
 
-    add(node, prefix + "laboratoryAccreditationLabel", dataBackground.laboratoryAccreditation);
+    final Laboratory lab = dataBackground.laboratory;
+    if (lab != null) {
+      final String key = prefix + "laboratoryLabel";
+      final String label = bundle.getString(key);
+
+      final DefaultMutableTreeNode labNode = new DefaultMutableTreeNode(label);
+      add(labNode, lab);
+      node.add(labNode);
+    }
 
     final Assay assay = dataBackground.assay;
     if (assay != null) {
@@ -841,11 +850,24 @@ public class FskPortObject implements PortObject {
    * @param node Existing node where the properties are added. Cannot be {@code null}.
    * @param assay Cannot be {@code null}.
    */
-
   private static void add(final DefaultMutableTreeNode node, final Assay assay) {
     final String prefix = "editor_EditAssayPanel_";
     add(node, prefix + "nameLabel", assay.name);
     add(node, prefix + "descriptionLabel", assay.description);
+  }
+
+  /**
+   * Creates tree nodes for the properties of a passed {@code Laboratory} and adds them to a passed
+   * tree node. If the passed {@code Laboratory} is {@code null} then no nodes are added.
+   * 
+   * @param node Existing node where the properties are added. Cannot be {@code null}.
+   * @param laboratory Cannot be {@code null}.
+   */
+  private static void add(final DefaultMutableTreeNode node, final Laboratory laboratory) {
+    final String prefix = "EditLaboratoryPanel_";
+    add(node, prefix + "accreditationLabel", laboratory.accreditation);
+    add(node, prefix + "nameLabel", laboratory.name);
+    add(node, prefix + "countryLabel", laboratory.country);
   }
 
   /**
@@ -855,7 +877,6 @@ public class FskPortObject implements PortObject {
    * @param node Existing node where the properties are added. Cannot be {@code null}.
    * @param parameter Cannot be {@code null}.
    */
-
   private static void add(final DefaultMutableTreeNode node, final Parameter parameter) {
 
     final String prefix = "editor_EditParameterPanel_";
