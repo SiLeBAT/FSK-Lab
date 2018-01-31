@@ -155,6 +155,14 @@ class CreatorNodeModel extends NoInternalsModel {
         genericModel.scope = RAKIPSheetImporter.retrieveScope(sheet);
         genericModel.dataBackground = RAKIPSheetImporter.retrieveDataBackground(sheet);
         // TODO: ModelMath
+        for (int i = 124; i < 130; i++) {
+          try {
+            Parameter param = RAKIPSheetImporter.retrieveParameter(sheet, i);
+            genericModel.modelMath.parameter.add(param);
+          } catch (Exception exception) {
+            exception.printStackTrace();
+          }
+        }
       } else {
         // Process legacy spreadsheet
         genericModel = new GenericModel();
@@ -500,7 +508,6 @@ class CreatorNodeModel extends NoInternalsModel {
           VCard vCard = retrieveCreator(sheet, numRow);
           gi.creators.add(vCard);
         } catch (Exception exception) {
-          exception.printStackTrace();
         }
       }
 
@@ -510,14 +517,12 @@ class CreatorNodeModel extends NoInternalsModel {
           Record record = retrieveReference(sheet, numRow);
           gi.reference.add(record);
         } catch (Exception exception) {
-          exception.printStackTrace();
         }
       }
 
       try {
         gi.modelCategory = retrieveModelCategory(sheet);
       } catch (Exception exception) {
-        exception.printStackTrace();
       }
 
       return gi;
@@ -841,28 +846,24 @@ class CreatorNodeModel extends NoInternalsModel {
         dataBackground.studySample = retrieveStudySample(sheet);
       } catch (Exception exception) {
         // ignore errors since StudySample is optional
-        exception.printStackTrace();
       }
 
       try {
         dataBackground.dietaryAssessmentMethod = retrieveDAM(sheet);
       } catch (Exception exception) {
         // ignore errors since DietaryAssessmentMethod is optional
-        exception.printStackTrace();
       }
 
       try {
         dataBackground.laboratory = retrieveLaboratory(sheet);
       } catch (Exception exception) {
         // ignore errors since Laboratory is optional
-        exception.printStackTrace();
       }
 
       try {
         dataBackground.assay = retrieveAssay(sheet);
       } catch (Exception exception) {
         // ignore errors since Assay is optional
-        exception.printStackTrace();
       }
 
       return dataBackground;
@@ -995,6 +996,55 @@ class CreatorNodeModel extends NoInternalsModel {
       assay.uncertaintyValue = getStringValue(sheet, AssayRow.UNCERTAINTY_VALUE.num, Column.H);
 
       return assay;
+    }
+
+    static Parameter retrieveParameter(XSSFSheet sheet, int row) {
+
+      // Check first mandatory properties
+      if (sheet.getRow(row).getCell(Column.K.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+        throw new IllegalArgumentException("Missing parameter id");
+      }
+      if (sheet.getRow(row).getCell(Column.L.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+        throw new IllegalArgumentException("Missing parameter classification");
+      }
+      if (sheet.getRow(row).getCell(Column.M.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+        throw new IllegalArgumentException("Missing parameter name");
+      }
+      if (sheet.getRow(row).getCell(Column.P.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+        throw new IllegalArgumentException("Missing parameter unit");
+      }
+      if (sheet.getRow(row).getCell(Column.Q.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+        throw new IllegalArgumentException("Missing unit category");
+      }
+      if (sheet.getRow(row).getCell(Column.R.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+        throw new IllegalArgumentException("Missing data type");
+      }
+
+      Parameter param = new Parameter();
+      param.id = getStringValue(sheet, row, Column.K);
+      try {
+        param.classification =
+            Parameter.Classification.valueOf(getStringValue(sheet, row, Column.L));
+      } catch (Exception exception) {
+        throw new IllegalArgumentException(
+            "Invalid parameter classification: " + getStringValue(sheet, row, Column.L));
+      }
+      param.name = getStringValue(sheet, row, Column.M);
+      param.description = getStringValue(sheet, row, Column.N);
+      param.type = getStringValue(sheet, row, Column.O);
+      param.unit = getStringValue(sheet, row, Column.P);
+      param.unitCategory = getStringValue(sheet, row, Column.Q);
+      param.dataType = getStringValue(sheet, row, Column.R);
+      param.source = getStringValue(sheet, row, Column.S);
+      param.subject = getStringValue(sheet, row, Column.T);
+      param.distribution = getStringValue(sheet, row, Column.U);
+      param.value = getStringValue(sheet, row, Column.V);
+      param.reference = getStringValue(sheet, row, Column.W);
+      param.variabilitySubject = getStringValue(sheet, row, Column.X);
+      param.modelApplicability.add(getStringValue(sheet, row, Column.Y));
+      param.error = getNumericValue(sheet, row, Column.Z);
+
+      return param;
     }
   }
 }
