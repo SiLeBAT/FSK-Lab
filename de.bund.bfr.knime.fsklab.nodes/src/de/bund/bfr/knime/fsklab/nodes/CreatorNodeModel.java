@@ -149,7 +149,7 @@ class CreatorNodeModel extends NoInternalsModel {
       final XSSFSheet sheet = workbook.getSheetAt(0);
 
       if (sheet.getPhysicalNumberOfRows() > 29) {
-        // TODO: Process new RAKIP spreadsheet
+        // Process new RAKIP spreadsheet
         genericModel = new GenericModel();
         genericModel.generalInformation = RAKIPSheetImporter.retrieveGeneralInformation(sheet);
         genericModel.scope = RAKIPSheetImporter.retrieveScope(sheet);
@@ -166,10 +166,10 @@ class CreatorNodeModel extends NoInternalsModel {
       } else {
         // Process legacy spreadsheet
         genericModel = new GenericModel();
-        genericModel.generalInformation = getGeneralInformation(sheet);
+        genericModel.generalInformation = LegacySheetImporter.getGeneralInformation(sheet);
         genericModel.generalInformation.software = "R";
-        genericModel.scope = getScope(sheet);
-        genericModel.modelMath = getModelMath(sheet);
+        genericModel.scope = LegacySheetImporter.getScope(sheet);
+        genericModel.modelMath = LegacySheetImporter.getModelMath(sheet);
 
         // Set variable values and types from parameters script
         try (RController controller = new RController()) {
@@ -261,85 +261,88 @@ class CreatorNodeModel extends NoInternalsModel {
     }
   }
 
-  private static String getString(final XSSFSheet sheet, final int rowNumber) {
-    final XSSFRow row = sheet.getRow(rowNumber);
-    if (row == null)
-      throw new IllegalArgumentException("Missing row: #" + rowNumber);
-    return row.getCell(5).getStringCellValue();
-  }
+  private static class LegacySheetImporter {
 
-  private static GeneralInformation getGeneralInformation(final XSSFSheet sheet)
-      throws MalformedURLException, InvalidSettingsException {
-
-    final GeneralInformation gi = new GeneralInformation();
-    gi.name = getString(sheet, 1);
-    gi.identifier = getString(sheet, 2);
-    gi.creationDate = sheet.getRow(9).getCell(5).getDateCellValue();
-    gi.rights = getString(sheet, 11);
-    gi.isAvailable = true;
-
-    final String urlString = getString(sheet, 16);
-    gi.url = new URL(StringUtils.defaultIfEmpty(urlString, "http://bfr.bund.de"));
-
-    gi.format = "";
-    gi.modificationDate.add(sheet.getRow(10).getCell(5).getDateCellValue());
-
-    return gi;
-  }
-
-  private static Scope getScope(final XSSFSheet sheet) throws InvalidSettingsException {
-
-    final Scope scope = new Scope();
-
-    scope.hazard.hazardName = getString(sheet, 3);
-    scope.hazard.hazardDescription = getString(sheet, 4);
-
-    scope.product.environmentName = getString(sheet, 5);
-    scope.product.environmentDescription = getString(sheet, 6);
-
-    return scope;
-  }
-
-  private static ModelMath getModelMath(final XSSFSheet sheet) throws InvalidSettingsException {
-
-    final ModelMath modelMath = new ModelMath();
-
-    // Dependent variables
-    final List<String> depNames = Arrays.stream(getString(sheet, 21).split("\\|\\|"))
-        .map(String::trim).collect(Collectors.toList());
-    final List<String> depUnits = Arrays.stream(getString(sheet, 22).split("\\|\\|"))
-        .map(String::trim).collect(Collectors.toList());
-
-    for (int i = 0; i < depNames.size(); i++) {
-      final Parameter param = new Parameter();
-      param.id = depNames.get(i);
-      param.classification = Parameter.Classification.output;
-      param.name = depNames.get(i);
-      param.unit = depUnits.get(i);
-      param.unitCategory = "";
-      param.dataType = "";
-
-      modelMath.parameter.add(param);
+    static String getString(final XSSFSheet sheet, final int rowNumber) {
+      final XSSFRow row = sheet.getRow(rowNumber);
+      if (row == null)
+        throw new IllegalArgumentException("Missing row: #" + rowNumber);
+      return row.getCell(5).getStringCellValue();
     }
 
-    // Independent variables
-    final List<String> indepNames = Arrays.stream(getString(sheet, 25).split("\\|\\|"))
-        .map(String::trim).collect(Collectors.toList());
-    final List<String> indepUnits = Arrays.stream(getString(sheet, 26).split("\\|\\|"))
-        .map(String::trim).collect(Collectors.toList());
-    for (int i = 0; i < indepNames.size(); i++) {
-      final Parameter param = new Parameter();
-      param.id = indepNames.get(i);
-      param.classification = Parameter.Classification.input;
-      param.name = indepNames.get(i);
-      param.unit = indepUnits.get(i);
-      param.unitCategory = "";
-      param.dataType = "";
+    static GeneralInformation getGeneralInformation(final XSSFSheet sheet)
+        throws MalformedURLException, InvalidSettingsException {
 
-      modelMath.parameter.add(param);
+      final GeneralInformation gi = new GeneralInformation();
+      gi.name = getString(sheet, 1);
+      gi.identifier = getString(sheet, 2);
+      gi.creationDate = sheet.getRow(9).getCell(5).getDateCellValue();
+      gi.rights = getString(sheet, 11);
+      gi.isAvailable = true;
+
+      final String urlString = getString(sheet, 16);
+      gi.url = new URL(StringUtils.defaultIfEmpty(urlString, "http://bfr.bund.de"));
+
+      gi.format = "";
+      gi.modificationDate.add(sheet.getRow(10).getCell(5).getDateCellValue());
+
+      return gi;
     }
 
-    return modelMath;
+    static Scope getScope(final XSSFSheet sheet) throws InvalidSettingsException {
+
+      final Scope scope = new Scope();
+
+      scope.hazard.hazardName = getString(sheet, 3);
+      scope.hazard.hazardDescription = getString(sheet, 4);
+
+      scope.product.environmentName = getString(sheet, 5);
+      scope.product.environmentDescription = getString(sheet, 6);
+
+      return scope;
+    }
+
+    static ModelMath getModelMath(final XSSFSheet sheet) throws InvalidSettingsException {
+
+      final ModelMath modelMath = new ModelMath();
+
+      // Dependent variables
+      final List<String> depNames = Arrays.stream(getString(sheet, 21).split("\\|\\|"))
+          .map(String::trim).collect(Collectors.toList());
+      final List<String> depUnits = Arrays.stream(getString(sheet, 22).split("\\|\\|"))
+          .map(String::trim).collect(Collectors.toList());
+
+      for (int i = 0; i < depNames.size(); i++) {
+        final Parameter param = new Parameter();
+        param.id = depNames.get(i);
+        param.classification = Parameter.Classification.output;
+        param.name = depNames.get(i);
+        param.unit = depUnits.get(i);
+        param.unitCategory = "";
+        param.dataType = "";
+
+        modelMath.parameter.add(param);
+      }
+
+      // Independent variables
+      final List<String> indepNames = Arrays.stream(getString(sheet, 25).split("\\|\\|"))
+          .map(String::trim).collect(Collectors.toList());
+      final List<String> indepUnits = Arrays.stream(getString(sheet, 26).split("\\|\\|"))
+          .map(String::trim).collect(Collectors.toList());
+      for (int i = 0; i < indepNames.size(); i++) {
+        final Parameter param = new Parameter();
+        param.id = indepNames.get(i);
+        param.classification = Parameter.Classification.input;
+        param.name = indepNames.get(i);
+        param.unit = indepUnits.get(i);
+        param.unitCategory = "";
+        param.dataType = "";
+
+        modelMath.parameter.add(param);
+      }
+
+      return modelMath;
+    }
   }
 
   private static class RAKIPSheetImporter {
