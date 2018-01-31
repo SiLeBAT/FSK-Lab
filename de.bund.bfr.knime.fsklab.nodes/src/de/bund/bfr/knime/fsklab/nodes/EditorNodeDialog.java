@@ -109,6 +109,7 @@ import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import de.bund.bfr.swing.AutoSuggestField;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
+import ezvcard.property.StructuredName;
 
 public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
@@ -2795,17 +2796,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
         vcards.add(vcard);
 
-        final String givenName = vcard.getNickname().getValues().get(0);
-        final String familyName = vcard.getFormattedName().getValue();
-        final String contact = vcard.getEmails().get(0).getValue();
+        StructuredName structuredName = vcard.getStructuredName();
+        String givenName = structuredName.getGiven();
+        String familyName = structuredName.getFamily();
+        String contact = vcard.getEmails().get(0).getValue();
         addRow(new String[] {givenName, familyName, contact});
       }
 
       void modify(final int rowNumber, final VCard vcard) {
         vcards.set(rowNumber, vcard);
 
-        setValueAt(vcard.getNickname().getValues().get(0), rowNumber, 0);
-        setValueAt(vcard.getFormattedName().getValue(), rowNumber, 1);
+
+        StructuredName structuredName = vcard.getStructuredName();
+        setValueAt(structuredName.getGiven(), rowNumber, 0);
+        setValueAt(structuredName.getFamily(), rowNumber, 1);
         setValueAt(vcard.getEmails().get(0).getValue(), rowNumber, 2);
       }
 
@@ -2935,10 +2939,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     void init(final VCard creator) {
 
       if (creator != null) {
-        if (creator.getNickname() != null)
-          givenNameField.setText(creator.getNickname().getValues().get(0));
-        if (creator.getFormattedName() != null)
-          familyNameField.setText(creator.getFormattedName().getValue());
+
+        StructuredName structuredName = creator.getStructuredName();
+        if (structuredName != null) {
+          givenNameField.setText(structuredName.getGiven());
+          familyNameField.setText(structuredName.getFamily());
+        }
         if (!creator.getEmails().isEmpty())
           contactField.setText(creator.getEmails().get(0).getValue());
       }
@@ -2949,15 +2955,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final VCard vCard = new VCard();
 
-      final String givenNameText = givenNameField.getText();
-      if (StringUtils.isNotEmpty(givenNameText)) {
-        vCard.setNickname(givenNameText);
-      }
-
-      final String familyNameText = familyNameField.getText();
-      if (StringUtils.isNotEmpty(familyNameText)) {
-        vCard.setFormattedName(familyNameText);
-      }
+      StructuredName structuredName = new StructuredName();
+      structuredName.setGiven(givenNameField.getText());
+      structuredName.setFamily(givenNameField.getText());
 
       final String contactText = contactField.getText();
       if (StringUtils.isNotEmpty(contactText)) {

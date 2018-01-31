@@ -81,6 +81,7 @@ import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
 import ezvcard.VCard;
+import ezvcard.property.StructuredName;
 
 /**
  * A port object for an FSK model port providing R scripts and model meta data.
@@ -464,14 +465,10 @@ public class FskPortObject implements PortObject {
   private static void add(final DefaultMutableTreeNode node, final VCard vcard) {
     final String prefix = "EditCreatorPanel_";
 
-    final ezvcard.property.Nickname nickname = vcard.getNickname();
-    if (nickname != null) {
-      add(node, prefix + "givenNameLabel", nickname.toString());
-    }
-
-    final ezvcard.property.FormattedName formattedName = vcard.getFormattedName();
-    if (formattedName != null) {
-      add(node, prefix + "familyNameLabel", formattedName.toString());
+    StructuredName structuredName = vcard.getStructuredName();
+    if (structuredName != null) {
+      add(node, prefix + "givenNameLabel", structuredName.getGiven());
+      add(node, prefix + "familyNameLabel", structuredName.getFamily());
     }
 
     if (!vcard.getEmails().isEmpty()) {
