@@ -527,8 +527,8 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "maxResidueLimitLabel", hazard.mrl);
     add(node, prefix + "noObservedAdverseLabel", hazard.noael);
     add(node, prefix + "lowestObserveLabel", hazard.loael);
-    add(node, prefix + "acceptableOperatorLabel", hazard.acceptableOperator);
-    add(node, prefix + "acuteReferenceDoseLabel", hazard.acuteReferenceDose);
+    add(node, prefix + "acceptableOperatorLabel", hazard.aoel);
+    add(node, prefix + "acuteReferenceDoseLabel", hazard.ard);
     add(node, prefix + "acceptableDailyIntakeLabel", hazard.adi);
     add(node, prefix + "indSumLabel", hazard.hazardIndSum);
   }

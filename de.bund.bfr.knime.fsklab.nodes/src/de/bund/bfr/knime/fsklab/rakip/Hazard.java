@@ -45,10 +45,10 @@ public class Hazard {
   public String loael = "";
 
   /** Acceptable Operator Adverse Effect Level (AOEL). */
-  public String acceptableOperator = "";
+  public String aoel = "";
 
   /** Acute Reference Dose (ARfD). */
-  public String acuteReferenceDose = "";
+  public String ard = "";
 
   /** Acceptable Daily Intake (ADI). */
   public String adi = "";
@@ -57,7 +57,7 @@ public class Hazard {
 
   @Override
   public int hashCode() {
-    return Objects.hash(adi, acceptableOperator, acuteReferenceDose, adverseEffect, bmd,
+    return Objects.hash(adi, aoel, ard, adverseEffect, bmd,
         hazardDescription, hazardIndSum, hazardName, hazardType, hazardUnit, loael, mrl, noael,
         sourceOfContamination);
   }
@@ -72,8 +72,8 @@ public class Hazard {
     Hazard other = (Hazard) obj;
 
     return Objects.equals(adi, other.adi)
-        && Objects.equals(acceptableOperator, other.acceptableOperator)
-        && Objects.equals(acuteReferenceDose, other.acuteReferenceDose)
+        && Objects.equals(aoel, other.aoel)
+        && Objects.equals(ard, other.ard)
         && Objects.equals(adverseEffect, other.adverseEffect) && Objects.equals(bmd, other.bmd)
         && Objects.equals(hazardDescription, other.hazardDescription)
         && Objects.equals(hazardIndSum, other.hazardIndSum)

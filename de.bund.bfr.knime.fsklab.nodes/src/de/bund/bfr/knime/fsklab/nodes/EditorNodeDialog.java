@@ -1182,8 +1182,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         bmdField.setText(hazard.bmd);
         maxResidueLimitField.setText(hazard.mrl);
         noObservedAdverseField.setText(hazard.noael);
-        acceptableOperatorField.setText(hazard.acceptableOperator);
-        acuteReferenceDoseField.setText(hazard.acuteReferenceDose);
+        acceptableOperatorField.setText(hazard.aoel);
+        acuteReferenceDoseField.setText(hazard.ard);
         indSumField.setSelectedItem(hazard.hazardIndSum);
         acceptableDailyIntakeField.setText(hazard.adi);
       }
@@ -1203,8 +1203,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       hazard.bmd = bmdField.getText();
       hazard.mrl = maxResidueLimitField.getText();
       hazard.noael = noObservedAdverseField.getText();
-      hazard.acceptableOperator = acceptableOperatorField.getText();
-      hazard.acuteReferenceDose = acuteReferenceDoseField.getText();
+      hazard.aoel = acceptableOperatorField.getText();
+      hazard.ard = acuteReferenceDoseField.getText();
       hazard.adi = acceptableDailyIntakeField.getText();
       hazard.hazardIndSum = (String) indSumField.getSelectedItem();
 
