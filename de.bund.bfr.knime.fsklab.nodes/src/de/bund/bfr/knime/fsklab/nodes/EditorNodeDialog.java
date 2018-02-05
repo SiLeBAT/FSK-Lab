@@ -681,7 +681,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField dietarySoftwareToolField; // optional
     private final FTextField foodItemNumberField; // optional
     private final FTextField recordTypeField; // optional
-    private final JComboBox<String> foodDescriptionField; // optional
+    private final JComboBox<String> foodDescriptorsField; // optional
 
     EditDietaryAssessmentMethodPanel(final boolean isAdvanced) {
 
@@ -695,7 +695,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       dietarySoftwareToolField = new FTextField();
       foodItemNumberField = new FTextField();
       recordTypeField = new FTextField();
-      foodDescriptionField = GUIFactory.createComboBox(foodDescriptorsVocabulary);
+      foodDescriptorsField = GUIFactory.createComboBox(foodDescriptorsVocabulary);
 
       createUI(isAdvanced);
     }
@@ -736,8 +736,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // food description
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "foodDescription"));
-        fields.add(foodDescriptionField);
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "foodDescriptors"));
+        fields.add(foodDescriptorsField);
       }
 
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
@@ -765,7 +765,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
 
         if (!method.foodDescriptors.isEmpty()) {
-          foodDescriptionField.setSelectedItem(method.foodDescriptors.get(0));
+          foodDescriptorsField.setSelectedItem(method.foodDescriptors.get(0));
         }
       }
     }
@@ -797,7 +797,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         method.recordTypes.add(recordType);
       }
 
-      for (final Object o : foodDescriptionField.getSelectedObjects()) {
+      for (final Object o : foodDescriptorsField.getSelectedObjects()) {
         method.foodDescriptors.add((String) o);
       }
 

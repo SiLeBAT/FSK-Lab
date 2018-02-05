@@ -830,7 +830,7 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "dietarySoftwareToolLabel", method.softwareTool);
     add(node, prefix + "foodItemNumberLabel", method.numberOfFoodItems);
     add(node, prefix + "recordTypeLabel", method.recordTypes);
-    add(node, prefix + "foodDescriptionLabel", method.foodDescriptors);
+    add(node, prefix + "foodDescriptorsLabel", method.foodDescriptors);
   }
 
   /**
