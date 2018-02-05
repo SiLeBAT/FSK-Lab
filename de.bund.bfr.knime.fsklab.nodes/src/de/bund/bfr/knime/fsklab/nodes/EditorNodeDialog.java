@@ -38,11 +38,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -252,71 +250,47 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
   private static NodeLogger LOGGER = NodeLogger.getLogger("EditNodeDialog");
 
-  private static final Map<String, Set<String>> vocabs = new HashMap<>();
-  static {
-
-    try (
-        final InputStream stream = EditorNodeDialog.class
-            .getResourceAsStream("/FSKLab_Config_Controlled Vocabularies.xlsx");
-        final XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-
-      final List<String> sheets = Arrays.asList("Source", "Rights", "Format", "Publication Type",
-          "Publication Status", "Software", "Language", "Language written in", "Model Class",
-          "Model Sub-Class", "Source", "Rights", "Format", "Publication Type", "Publication Status",
-          "Software", "Language", "Language written in", "Model Class", "Model Sub-Class",
-          "Basic process", "Status", "Product-matrix name", "Product-matrix unit",
-          "Method of production", "Packaging", "Product treatment", "Country of origin",
-          "Area of origin", "Fisheries area", "Hazard type", "Hazard name", "Hazard unit",
-          "Hazard ind-sum", "Population name", "Laboratory country", "Region", "Country",
-          "Study Assay Technology Type", "Accreditation procedure Ass.Tec", "Sampling strategy",
-          "Type of sampling program", "Sampling method", "Lot size unit", "Sampling point",
-          "Method tool to collect data", "Type of records", "Food descriptors",
-          "Laboratory accreditation", "Parameter classification", "Parameter type",
-          "Parameter unit", "Parameter unit category", "Parameter data type", "Parameter source",
-          "Parameter subject", "Parameter distribution", "Model equation class-distr",
-          "Fitting procedure", "Type of exposure");
-
-      for (final String sheet : sheets) {
-        final Set<String> vocabulary = readVocabFromSheet(workbook, sheet);
-        vocabs.put(sheet, vocabulary);
-      }
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-
   /**
    * Read controlled vocabulary from spreadsheet.
    * 
+   * @param sheetName Name of the spreadsheet with the .xlsx extension
    * @return Set with controlled vocabulary. If the sheet is not found returns empty set.
    */
-  private static Set<String> readVocabFromSheet(final XSSFWorkbook workbook,
-      final String sheetname) {
+  private static Set<String> loadVocabulary(final String sheetName) {
 
-    final XSSFSheet sheet = workbook.getSheet(sheetname);
-    if (sheet == null) {
-      LOGGER.warn("Spreadsheet not found: " + sheetname);
-      return Collections.emptySet();
-    }
+    Set<String> vocabulary = new HashSet<>();
 
-    final Set<String> vocab = new HashSet<>();
-    for (Row row : sheet) {
-      if (row.getRowNum() == 0)
-        continue;
-      final Cell cell = row.getCell(0);
-      if (cell == null)
-        continue;
-      try {
-        final String cellValue = cell.getStringCellValue();
-        if (StringUtils.isNotBlank(cellValue))
-          vocab.add(cellValue);
-      } catch (Exception e) {
-        LOGGER.warn("Controlled vocabulary " + sheetname + ": wrong value " + cell);
+    try (
+        InputStream stream =
+            EditorNodeDialog.class.getResourceAsStream("/vocabularies/" + sheetName);
+        XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
+
+      XSSFSheet sheet = workbook.getSheetAt(0);
+      if (sheet == null) {
+        LOGGER.warn("Spreadsheet not found");
+        return Collections.emptySet();
       }
+
+      for (Row row : sheet) {
+        if (row.getRowNum() == 0)
+          continue;
+        final Cell cell = row.getCell(0);
+        if (cell == null)
+          continue;
+        try {
+          final String cellValue = cell.getStringCellValue();
+          if (StringUtils.isNotBlank(cellValue))
+            vocabulary.add(cellValue);
+        } catch (Exception e) {
+          LOGGER.warn("Controlled vocabulary " + workbook + ": wrong value " + cell);
+        }
+      }
+    } catch (IOException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
     }
 
-    return vocab;
+    return vocabulary;
   }
 
   private static class GUIFactory {
@@ -621,8 +595,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     EditLaboratoryPanel(final boolean isAdvanced) {
       super(new BorderLayout());
 
+      Set<String> laboratoryAccreditationVocabulary =
+          loadVocabulary("Laboratory accreditation.xlsx");
+
       accreditationField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Laboratory accreditation"), true);
+          GUIFactory.createAutoSuggestField(laboratoryAccreditationVocabulary, true);
       nameField = new FTextField();
       countryField = new FTextField();
 
@@ -710,13 +687,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      dataCollectionToolField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Method tool to collect data"), true);
+      Set<String> methodToolVocabulary = loadVocabulary("Method tool to collect data.xlsx");
+      Set<String> foodDescriptorsVocabulary = loadVocabulary("Food descriptors.xlsx");
+
+      dataCollectionToolField = GUIFactory.createAutoSuggestField(methodToolVocabulary, true);
       nonConsecutiveOneDayField = new FTextField(true);
       dietarySoftwareToolField = new FTextField();
       foodItemNumberField = new FTextField();
       recordTypeField = new FTextField();
-      foodDescriptionField = GUIFactory.createComboBox(vocabs.get("Food descriptors"));
+      foodDescriptionField = GUIFactory.createComboBox(foodDescriptorsVocabulary);
 
       createUI(isAdvanced);
     }
@@ -867,16 +846,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
+      Set<String> studyAssayTechnologyTypeVocabulary =
+          loadVocabulary("Study Assay Technology Type.xlsx");
+      Set<String> accreditationProcedureVocabulary =
+          loadVocabulary("Accreditation procedure Ass.Tec.xlsx");
+
       studyIdentifierField = new FTextField(true);
       studyTitleField = new FTextField(true);
       studyDescriptionField = new FTextArea();
       studyDesignTypeField = new FTextField();
       studyAssayMeasurementsTypeField = new FTextField();
       studyAssayTechnologyTypeField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Study Assay Technology Type"), false);
+          GUIFactory.createAutoSuggestField(studyAssayTechnologyTypeVocabulary, false);
       studyAssayTechnologyPlatformField = new FTextField();
       accreditationProcedureField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Accreditation procedure Ass.Tec"), false);
+          GUIFactory.createAutoSuggestField(accreditationProcedureVocabulary, false);
       studyProtocolNameField = new FTextField();
       studyProtocolTypeField = new FTextField();
       studyProtocolDescriptionField = new FTextField();
@@ -1087,10 +1071,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      hazardTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard type"), true);
-      hazardNameField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard name"), true);
+      Set<String> hazardTypeVocabulary = loadVocabulary("Hazard type.xlsx");
+      Set<String> hazardNameVocabulary = loadVocabulary("Hazard name.xlsx");
+      Set<String> hazardUnitVocabulary = loadVocabulary("Hazard unit.xlsx");
+      Set<String> hazardIndSumVocabulary = loadVocabulary("Hazard ind-sum.xlsx");
+
+      hazardTypeField = GUIFactory.createAutoSuggestField(hazardTypeVocabulary, true);
+      hazardNameField = GUIFactory.createAutoSuggestField(hazardNameVocabulary, true);
       hazardDescriptionField = new FTextArea();
-      hazardUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard unit"), true);
+      hazardUnitField = GUIFactory.createAutoSuggestField(hazardUnitVocabulary, true);
       adverseEffectField = new FTextField();
       originField = new FTextField();
       bmdField = new FTextField();
@@ -1099,7 +1088,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       acceptableOperatorField = new FTextField();
       acuteReferenceDoseField = new FTextField();
       acceptableDailyIntakeField = new FTextField();
-      indSumField = GUIFactory.createAutoSuggestField(vocabs.get("Hazard ind-sum"), false);
+      indSumField = GUIFactory.createAutoSuggestField(hazardIndSumVocabulary, false);
 
       createUI(isAdvanced);
     }
@@ -1257,9 +1246,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
+      Set<String> equationClassVocabulary = loadVocabulary("Model equation class-distr.xlsx");
+
       equationNameField = new FTextField(true);
-      equationClassField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Model equation class-distr"), false);
+      equationClassField = GUIFactory.createAutoSuggestField(equationClassVocabulary, false);
       referencePanel = new ReferencePanel(isAdvanced);
       scriptField = new FTextArea(true);
 
@@ -1373,19 +1363,25 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
+      Set<String> parameterTypeVocabulary = loadVocabulary("Parameter type.xlsx");
+      Set<String> parameterUnitVocabulary = loadVocabulary("Parameter unit.xlsx");
+      Set<String> unitCategoryVocabulary = loadVocabulary("Parameter unit category.xlsx");
+      Set<String> dataTypeVocabulary = loadVocabulary("Parameter data type.xlsx");
+      Set<String> sourceVocabulary = loadVocabulary("Parameter source.xlsx");
+      Set<String> subjectVocabulary = loadVocabulary("Parameter subject.xlsx");
+      Set<String> distributionVocabulary = loadVocabulary("Parameter distribution.xlsx");
+
       idField = new FTextField(true);
       classificationField = new JComboBox<>(Parameter.Classification.values());
       nameField = new FTextField(true);
       descriptionField = new FTextArea();
-      typeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter type"), false);
-      unitField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit"), true);
-      unitCategoryField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Parameter unit category"), true);
-      dataTypeField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter data type"), true);
-      sourceField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter source"), false);
-      subjectField = GUIFactory.createAutoSuggestField(vocabs.get("Parameter subject"), false);
-      distributionField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Parameter distribution"), false);
+      typeField = GUIFactory.createAutoSuggestField(parameterTypeVocabulary, false);
+      unitField = GUIFactory.createAutoSuggestField(parameterUnitVocabulary, true);
+      unitCategoryField = GUIFactory.createAutoSuggestField(unitCategoryVocabulary, true);
+      dataTypeField = GUIFactory.createAutoSuggestField(dataTypeVocabulary, true);
+      sourceField = GUIFactory.createAutoSuggestField(sourceVocabulary, false);
+      subjectField = GUIFactory.createAutoSuggestField(subjectVocabulary, false);
+      distributionField = GUIFactory.createAutoSuggestField(distributionVocabulary, false);
       valueField = new FTextField();
       referenceField = new FTextField();
       variabilitySubjectField = new FTextArea();
@@ -1600,6 +1596,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
+      Set<String> regionVocabulary = loadVocabulary("Region.xlsx");
+      Set<String> countryVocabulary = loadVocabulary("Country.xlsx");
+
       populationNameField = new FTextField(true);
       targetPopulationField = new FTextField();
       populationSpanField = new FTextField();
@@ -1609,8 +1608,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       bmiField = new FTextField();
       specialDietGroupField = new FTextField();
       patternConsumptionField = new FTextField();
-      regionField = GUIFactory.createComboBox(vocabs.get("Region"));
-      countryField = GUIFactory.createComboBox(vocabs.get("Country"));
+      regionField = GUIFactory.createComboBox(regionVocabulary);
+      countryField = GUIFactory.createComboBox(countryVocabulary);
       riskField = new FTextField();
       seasonField = new FTextField();
 
@@ -1834,16 +1833,24 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      envNameField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix name"), true);
+      Set<String> envNameVocabulary = loadVocabulary("Product-matrix name.xlsx");
+      Set<String> envUnitVocabulary = loadVocabulary("Product-matrix unit.xlsx");
+      Set<String> productionMethodVocabulary = loadVocabulary("Method of production.xlsx");
+      Set<String> packagingVocabulary = loadVocabulary("Packaging.xlsx");
+      Set<String> productTreatmentVocabulary = loadVocabulary("Product treatment.xlsx");
+      Set<String> originCountryVocabulary = loadVocabulary("Country of origin.xlsx");
+      Set<String> originAreaVocabulary = loadVocabulary("Area of origin.xlsx");
+      Set<String> fisheriesAreaVocabulary = loadVocabulary("Fisheries area.xlsx");
+
+      envNameField = GUIFactory.createAutoSuggestField(envNameVocabulary, true);
       envDescriptionField = new FTextArea();
-      envUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Product-matrix unit"), true);
-      productionMethodField = GUIFactory.createComboBox(vocabs.get("Method of production"));
-      packagingField = GUIFactory.createComboBox(vocabs.get("Packaging"));
-      productTreatmentField = GUIFactory.createComboBox(vocabs.get("Product treatment"));
-      originCountryField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Country of origin"), false);
-      originAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Area of origin"), false);
-      fisheriesAreaField = GUIFactory.createAutoSuggestField(vocabs.get("Fisheries area"), false);
+      envUnitField = GUIFactory.createAutoSuggestField(envUnitVocabulary, true);
+      productionMethodField = GUIFactory.createComboBox(productionMethodVocabulary);
+      packagingField = GUIFactory.createComboBox(packagingVocabulary);
+      productTreatmentField = GUIFactory.createComboBox(productTreatmentVocabulary);
+      originCountryField = GUIFactory.createAutoSuggestField(originCountryVocabulary, false);
+      originAreaField = GUIFactory.createAutoSuggestField(originAreaVocabulary, false);
+      fisheriesAreaField = GUIFactory.createAutoSuggestField(fisheriesAreaVocabulary, false);
       productionField = new FixedDateChooser();
       expirationField = new FixedDateChooser();
 
@@ -2330,18 +2337,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
+      Set<String> samplingStrategyVocabulary = loadVocabulary("Sampling strategy.xlsx");
+      Set<String> samplingTypeVocabulary = loadVocabulary("Type of sampling program.xlsx");
+      Set<String> samplingMethodVocabulary = loadVocabulary("Sampling point.xlsx");
+      Set<String> lotSizeUnitVocabulary = loadVocabulary("Lot size unit.xlsx");
+      Set<String> samplingPointVocabulary = loadVocabulary("Sampling point.xlsx");
+
       sampleNameField = new FTextField(true);
       sampleProtocolField = new FTextField(true);
-      samplingStrategyField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Sampling strategy"), false);
-      samplingTypeField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Type of sampling program"), false);
-      samplingMethodField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling method"), false);
+      samplingStrategyField = GUIFactory.createAutoSuggestField(samplingStrategyVocabulary, false);
+      samplingTypeField = GUIFactory.createAutoSuggestField(samplingTypeVocabulary, false);
+      samplingMethodField = GUIFactory.createAutoSuggestField(samplingMethodVocabulary, false);
       samplingPlanField = new FTextField(true);
       samplingWeightField = new FTextField(true);
       samplingSizeField = new FTextField(true);
-      lotSizeUnitField = GUIFactory.createAutoSuggestField(vocabs.get("Lot size unit"), false);
-      samplingPointField = GUIFactory.createAutoSuggestField(vocabs.get("Sampling point"), false);
+      lotSizeUnitField = GUIFactory.createAutoSuggestField(lotSizeUnitVocabulary, false);
+      samplingPointField = GUIFactory.createAutoSuggestField(samplingPointVocabulary, false);
 
       createUI(isAdvanced);
     }
@@ -2521,6 +2532,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
+      Set<String> rightsVocabulary = loadVocabulary("Rights.xlsx");
+      Set<String> formatVocabulary = loadVocabulary("Format.xlsx");
+      Set<String> languageVocabulary = loadVocabulary("Language.xlsx");
+      Set<String> softwareVocabulary = loadVocabulary("Software.xlsx");
+      Set<String> languageWrittenInVocabulary = loadVocabulary("Language written in.xlsx");
+      Set<String> statusVocabulary = loadVocabulary("Status.xlsx");
+
       // Create fields
       advancedCheckBox = new JCheckBox("Advanced");
       studyNameField = new FTextField(true);
@@ -2528,16 +2546,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       identifierField = new FTextField(true);
       creatorPanel = new CreatorPanel();
       creationField = new FixedDateChooser();
-      rightsField = GUIFactory.createAutoSuggestField(vocabs.get("Rights"), true);
+      rightsField = GUIFactory.createAutoSuggestField(rightsVocabulary, true);
       availabilityField = new JCheckBox();
       urlField = new FTextField(true);
-      formatField = GUIFactory.createAutoSuggestField(vocabs.get("Format"), false);
+      formatField = GUIFactory.createAutoSuggestField(formatVocabulary, false);
       referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
-      languageField = GUIFactory.createAutoSuggestField(vocabs.get("Language"), false);
-      softwareField = GUIFactory.createAutoSuggestField(vocabs.get("Software"), false);
+      languageField = GUIFactory.createAutoSuggestField(languageVocabulary, false);
+      softwareField = GUIFactory.createAutoSuggestField(softwareVocabulary, false);
       languageWrittenInField =
-          GUIFactory.createAutoSuggestField(vocabs.get("Language written in"), false);
-      statusField = GUIFactory.createAutoSuggestField(vocabs.get("Status"), false);
+          GUIFactory.createAutoSuggestField(languageWrittenInVocabulary, false);
+      statusField = GUIFactory.createAutoSuggestField(statusVocabulary, false);
       objectiveField = new FTextArea();
       descriptionField = new FTextArea();
 
@@ -3039,16 +3057,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     final FTextArea commentTextArea = new FTextArea();
 
     final FixedDateChooser dateChooser = new FixedDateChooser();
-    final AutoSuggestField regionField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Region"), false);
-    final AutoSuggestField countryField =
-        GUIFactory.createAutoSuggestField(vocabs.get("Country"), false);
+    final AutoSuggestField regionField;
+    final AutoSuggestField countryField;
 
     private Scope scope = null;
 
     ScopePanel() {
 
       super(new BorderLayout());
+
+      Set<String> regionVocabulary = loadVocabulary("Region.xlsx");
+      Set<String> countryVocabulary = loadVocabulary("Country.xlsx");
+
+      regionField = GUIFactory.createAutoSuggestField(regionVocabulary, false);
+      countryField = GUIFactory.createAutoSuggestField(countryVocabulary, false);
 
       final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
