@@ -124,9 +124,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   /** List model for resource files. */
   private final DefaultListModel<Path> listModel = new DefaultListModel<>();
 
-  private static ResourceBundle bundle =
-      ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
-
   private EditorNodeSettings settings;
 
   EditorNodeDialog() {
@@ -324,7 +321,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
   private static class GUIFactory {
 
-    private static FLabel createLabelWithToolTip(String key) {
+    private static FLabel createLabelWithToolTip(ResourceBundle bundle, String key) {
       String text = bundle.getString(key + "Label");
       String toolTip = bundle.getString(key + "Tooltip");
       return new FLabel(text, toolTip);
@@ -505,6 +502,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditAssayPanel_";
 
       // name
@@ -512,42 +510,42 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       List<JComponent> fields = new ArrayList<>();
 
       // name
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "name"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "name"));
       fields.add(nameField);
 
       // moisture percentage
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "moisturePercentage"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "moisturePercentage"));
         fields.add(moisturePercentageField);
       }
 
       // detection limit
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "detectionLimit"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "detectionLimit"));
         fields.add(detectionLimitField);
       }
 
       // quantification limit
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "quantificationLimit"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "quantificationLimit"));
         fields.add(quantificationLimitField);
       }
 
       // left censored data
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "leftCensoredData"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "leftCensoredData"));
         fields.add(leftCensoredDataField);
       }
 
       // contamination range
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "contaminationRange"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "contaminationRange"));
         fields.add(contaminationRangeField);
       }
 
       // uncertainty value
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "uncertainty"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "uncertainty"));
         fields.add(uncertaintyValueField);
       }
 
@@ -558,7 +556,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // description
       if (isAdvanced) {
-        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "description");
+        FLabel label = GUIFactory.createLabelWithToolTip(bundle, prefix + "description");
         JScrollPane descriptionPane = GUIFactory.createScrollPane(descriptionField);
 
         FPanel textAreaPanel =
@@ -604,6 +602,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final List<String> errors = new ArrayList<>(1);
       if (nameField.getText().isEmpty()) {
+        ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
         errors.add("Missing " + bundle.getString("EditAssayPanel_nameLabel"));
       }
 
@@ -631,24 +630,26 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
+
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditLaboratoryPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
       // accreditation
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "accreditation"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "accreditation"));
       fields.add(accreditationField);
 
       // name
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "name"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "name"));
         fields.add(nameField);
       }
 
       // country
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "country"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "country"));
         fields.add(countryField);
       }
 
@@ -685,6 +686,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       List<String> errors = new ArrayList<>();
       if (!hasValidValue(accreditationField)) {
+
+        ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
         errors.add("Missing " + bundle.getString("EditLaboratoryPanel_accreditationLabel"));
       }
 
@@ -720,40 +723,41 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditDietaryAssessmentMethodPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
       // data collection tool
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "dataCollectionTool"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "dataCollectionTool"));
       fields.add(dataCollectionToolField);
 
       // non consecutive one day
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "nonConsecutiveOneDays"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "nonConsecutiveOneDays"));
       fields.add(nonConsecutiveOneDayField);
 
       // dietary software tool
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "dietarySoftwareTool"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "dietarySoftwareTool"));
         fields.add(dietarySoftwareToolField);
       }
 
       // food item number
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "foodItemNumber"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "foodItemNumber"));
         fields.add(foodItemNumberField);
       }
 
       // record type
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "recordType"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "recordType"));
         fields.add(recordTypeField);
       }
 
       // food description
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "foodDescription"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "foodDescription"));
         fields.add(foodDescriptionField);
       }
 
@@ -824,6 +828,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditDietaryAssessmentMethodPanel_";
 
       final List<String> errors = new ArrayList<>(2);
@@ -885,87 +890,91 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      List<FLabel> labels = new ArrayList<>();
-      List<JComponent> fields = new ArrayList<>();
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       final String prefix = "StudyPanel_";
 
+      List<FLabel> labels = new ArrayList<>();
+      List<JComponent> fields = new ArrayList<>();
+
       // study identifier
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyIdentifier"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "studyIdentifier"));
       fields.add(studyIdentifierField);
 
       // study title
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyTitle"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "studyTitle"));
       fields.add(studyTitleField);
 
       // study design type
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyDesignType"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "studyDesignType"));
         fields.add(studyDesignTypeField);
       }
 
       // study assay measurements type
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayMeasurementsType"));
+        labels
+            .add(GUIFactory.createLabelWithToolTip(bundle, prefix + "studyAssayMeasurementsType"));
         fields.add(studyAssayMeasurementsTypeField);
       }
 
       // study assay technology type
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayTechnologyType"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "studyAssayTechnologyType"));
         fields.add(studyAssayTechnologyTypeField);
       }
 
       // study assay technology platform
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "studyAssayTechnologyPlatform"));
+        labels.add(
+            GUIFactory.createLabelWithToolTip(bundle, prefix + "studyAssayTechnologyPlatform"));
         fields.add(studyAssayTechnologyPlatformField);
       }
 
       // accreditation procedure for the assay technology
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "accreditationProcedure"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "accreditationProcedure"));
         fields.add(accreditationProcedureField);
       }
 
       // study protocol name
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolName"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "protocolName"));
         fields.add(studyProtocolNameField);
       }
 
       // study protocol type
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolType"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "protocolType"));
         fields.add(studyProtocolTypeField);
       }
 
       // study protocol description
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolDescription"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "protocolDescription"));
         fields.add(studyProtocolDescriptionField);
       }
 
       // study protocol URI
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolURI"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "protocolURI"));
         fields.add(studyProtocolURIField);
       }
 
       // study protocol version
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "protocolVersion"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "protocolVersion"));
         fields.add(studyProtocolVersionField);
       }
 
       // study protocol parameters name
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "parameters"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "parameters"));
         fields.add(studyProtocolParametersField);
       }
 
       // study protocol components
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "componentsType"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "componentsType"));
         fields.add(studyProtocolComponentsTypeField);
       }
 
@@ -976,7 +985,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // text areas
       if (isAdvanced) {
-        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "studyDescription");
+        FLabel label = GUIFactory.createLabelWithToolTip(bundle, prefix + "studyDescription");
         JScrollPane studyDescriptionPane = GUIFactory.createScrollPane(studyDescriptionField);
         northPanel.add(
             UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(studyDescriptionPane)));
@@ -1040,6 +1049,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "StudyPanel_";
 
       List<String> errors = new ArrayList<>();
@@ -1095,59 +1105,61 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
+
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditHazardPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
       // hazard type
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "hazardType"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "hazardType"));
       fields.add(hazardTypeField);
 
       // hazard name
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "hazardName"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "hazardName"));
       fields.add(hazardNameField);
 
       // hazard unit
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "hazardUnit"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "hazardUnit"));
       fields.add(hazardUnitField);
 
       if (isAdvanced) {
 
         // adverse effect
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "adverseEffect"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "adverseEffect"));
         fields.add(adverseEffectField);
 
         // origin
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "origin"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "origin"));
         fields.add(originField);
 
         // bmd
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "bmd"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "bmd"));
         fields.add(bmdField);
 
         // max residue limit
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "maxResidueLimit"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "maxResidueLimit"));
         fields.add(maxResidueLimitField);
 
         // no observed adverse
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "noObservedAdverse"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "noObservedAdverse"));
         fields.add(noObservedAdverseField);
 
         // acceptable opeartor
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "acceptableOperator"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "acceptableOperator"));
         fields.add(acceptableOperatorField);
 
         // acute reference dose
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "acuteReferenceDose"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "acuteReferenceDose"));
         fields.add(acuteReferenceDoseField);
 
         // ind sum
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "indSum"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "indSum"));
         fields.add(indSumField);
 
         // acceptable daily intake
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "acceptableDailyIntake"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "acceptableDailyIntake"));
         fields.add(acceptableDailyIntakeField);
       }
 
@@ -1159,7 +1171,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(formPanel);
 
       if (isAdvanced) {
-        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "hazardDescription");
+        FLabel label = GUIFactory.createLabelWithToolTip(bundle, prefix + "hazardDescription");
         JScrollPane hazardDescriptionPane = GUIFactory.createScrollPane(hazardDescriptionField);
 
         FPanel textAreaPanel =
@@ -1214,7 +1226,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditHazardPanel_";
+
       final List<String> errors = new ArrayList<>();
       if (!hasValidValue(hazardTypeField)) {
         errors.add("Missing " + bundle.getString(prefix + "hazardTypeLabel"));
@@ -1255,6 +1269,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       // Create labels
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditModelEquationPanel_";
 
       // northPanel
@@ -1266,12 +1281,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         List<JComponent> fields = new ArrayList<>();
 
         // equation name
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "name"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "name"));
         fields.add(equationNameField);
 
         // equation class
         if (isAdvanced) {
-          labels.add(GUIFactory.createLabelWithToolTip(prefix + "class"));
+          labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "class"));
           fields.add(equationClassField);
         }
 
@@ -1307,6 +1322,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditModelEquationPanel_";
 
       final List<String> errors = new ArrayList<>();
@@ -1381,74 +1397,75 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditParameterPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
       // id
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "id"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "id"));
       fields.add(idField);
 
       // classification
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "classification"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "classification"));
       fields.add(classificationField);
 
       // name
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "parameterName"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "parameterName"));
       fields.add(nameField);
 
       // type
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "type"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "type"));
         fields.add(typeField);
       }
 
       // unit
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "unit"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "unit"));
       fields.add(unitField);
 
       // unit category
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "unitCategory"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "unitCategory"));
       fields.add(unitCategoryField);
 
       // data type
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "dataType"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "dataType"));
       fields.add(dataTypeField);
 
       // source
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "source"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "source"));
         fields.add(sourceField);
       }
 
       // subject
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "subject"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "subject"));
         fields.add(subjectField);
       }
 
       // distribution
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "distribution"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "distribution"));
         fields.add(distributionField);
       }
 
       // value
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "value"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "value"));
         fields.add(valueField);
       }
 
       // reference
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "reference"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "reference"));
         fields.add(referenceField);
       }
 
       // error
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "error"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "error"));
         fields.add(new FSpinner(errorSpinnerModel, false));
       }
 
@@ -1465,15 +1482,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         fields.clear();
 
         // description
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "description"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "description"));
         fields.add(GUIFactory.createScrollPane(descriptionField));
 
         // variability
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "variabilitySubject"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "variabilitySubject"));
         fields.add(GUIFactory.createScrollPane(variabilitySubjectField));
 
         // applicability
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "applicability"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "applicability"));
         fields.add(GUIFactory.createScrollPane(applicabilityField));
 
         northPanel.add(UIUtils.createFormPanel(labels, fields));
@@ -1534,7 +1551,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       final String prefix = "EditParameterPanel_";
+
       final List<String> errors = new ArrayList<>();
       if (idField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "idLabel"));
@@ -1599,59 +1618,61 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
+
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditPopulationGroupPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
       // population name
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationName"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "populationName"));
       fields.add(populationNameField);
 
       if (isAdvanced) {
 
         // target population
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "targetPopulation"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "targetPopulation"));
         fields.add(targetPopulationField);
 
         // population span
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationSpan"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "populationSpan"));
         fields.add(populationSpanField);
 
         // population age
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationAge"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "populationAge"));
         fields.add(populationAgeField);
 
         // population gender
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "populationGender"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "populationGender"));
         fields.add(populationGenderField);
 
         // bmi
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "bmi"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "bmi"));
         fields.add(bmiField);
 
         // special diet group
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "specialDietGroups"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "specialDietGroups"));
         fields.add(specialDietGroupField);
 
         // pattern consumption
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "patternConsumption"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "patternConsumption"));
         fields.add(patternConsumptionField);
 
         // region
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "region"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "region"));
         fields.add(regionField);
 
         // country
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "country"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "country"));
         fields.add(countryField);
 
         // risk
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "riskAndPopulation"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "riskAndPopulation"));
         fields.add(riskField);
 
         // season
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "season"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "season"));
         fields.add(seasonField);
       }
 
@@ -1663,7 +1684,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(formPanel);
 
       if (isAdvanced) {
-        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "populationDescription");
+        FLabel label = GUIFactory.createLabelWithToolTip(bundle, prefix + "populationDescription");
         JScrollPane populationDescriptionPane =
             GUIFactory.createScrollPane(populationDescriptionField);
 
@@ -1782,10 +1803,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       final List<String> errors = new ArrayList<>(1);
+
       if (populationNameField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString("EditPopulationGroupPanel_populationNameLabel"));
       }
+
       return errors;
     }
   }
@@ -1827,51 +1851,53 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
+
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditProductPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
       // environment name
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "envName"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "envName"));
       fields.add(envNameField);
 
       // environment unit
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "envUnit"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "envUnit"));
       fields.add(envUnitField);
 
       if (isAdvanced) {
 
         // production method
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "productionMethod"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "productionMethod"));
         fields.add(productionMethodField);
 
         // packaging
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "packaging"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "packaging"));
         fields.add(packagingField);
 
         // product treatment
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "productTreatment"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "productTreatment"));
         fields.add(productTreatmentField);
 
         // origin country
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "originCountry"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "originCountry"));
         fields.add(originCountryField);
 
         // origin area
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "originArea"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "originArea"));
         fields.add(originAreaField);
 
         // fisheries area
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "fisheriesArea"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "fisheriesArea"));
         fields.add(fisheriesAreaField);
 
         // production date
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "productionDate"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "productionDate"));
         fields.add(productionField);
 
         // expiration date
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "expirationDate"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "expirationDate"));
         fields.add(expirationField);
       }
 
@@ -1884,7 +1910,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(formPanel);
 
       if (isAdvanced) {
-        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "envDescription");
+        FLabel label = GUIFactory.createLabelWithToolTip(bundle, prefix + "envDescription");
         JScrollPane envDescriptionPane = GUIFactory.createScrollPane(envDescriptionField);
 
         northPanel
@@ -1937,7 +1963,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditProductPanel_";
+
       final List<String> errors = new ArrayList<>(2);
       if (!hasValidValue(envNameField)) {
         errors.add("Missing " + bundle.getString(prefix + "envNameLabel"));
@@ -2060,9 +2088,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
-      // Create labels
+
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditReferencePanel_";
 
+      // Create labels
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
@@ -2266,7 +2296,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditReferencePanel_";
+
       final List<String> errors = new ArrayList<>(2);
       if (doiField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "doiLabel"));
@@ -2316,58 +2348,59 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditStudySamplePanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
       // sample name
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "sampleName"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "sampleName"));
       fields.add(sampleNameField);
 
       // sample protocol label
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "sampleProtocol"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "sampleProtocol"));
       fields.add(sampleProtocolField);
 
       // sampling strategy label
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingStrategy"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingStrategy"));
         fields.add(samplingStrategyField);
       }
 
       // sampling type label
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingType"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingType"));
         fields.add(samplingTypeField);
       }
 
       // sampling method label
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingMethod"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingMethod"));
         fields.add(samplingMethodField);
       }
 
       // sampling plan
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingPlan"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingPlan"));
       fields.add(samplingPlanField);
 
       // sampling weight
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingWeight"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingWeight"));
       fields.add(samplingWeightField);
 
       // sampling size
-      labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingSize"));
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingSize"));
       fields.add(samplingSizeField);
 
       // lot size unit
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "lotSizeUnit"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "lotSizeUnit"));
         fields.add(lotSizeUnitField);
       }
 
       // sampling point
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(prefix + "samplingPoint"));
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingPoint"));
         fields.add(samplingPointField);
       }
 
@@ -2418,7 +2451,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditStudySamplePanel_";
+
       final List<String> errors = new ArrayList<>(5);
       if (sampleNameField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "sampleNameLabel"));
@@ -2512,21 +2547,22 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI() {
 
       // Create labels
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "GeneralInformationPanel_";
 
-      FLabel studyNameLabel = GUIFactory.createLabelWithToolTip(prefix + "studyName");
-      FLabel identifierLabel = GUIFactory.createLabelWithToolTip(prefix + "identifier");
-      FLabel creationDateLabel = GUIFactory.createLabelWithToolTip(prefix + "creationDate");
-      FLabel rightsLabel = GUIFactory.createLabelWithToolTip(prefix + "rights");
-      FLabel availabilityLabel = GUIFactory.createLabelWithToolTip(prefix + "availability");
-      FLabel sourceLabel = GUIFactory.createLabelWithToolTip(prefix + "source");
-      FLabel urlLabel = GUIFactory.createLabelWithToolTip(prefix + "url");
-      FLabel formatLabel = GUIFactory.createLabelWithToolTip(prefix + "format");
-      FLabel languageLabel = GUIFactory.createLabelWithToolTip(prefix + "language");
-      FLabel softwareLabel = GUIFactory.createLabelWithToolTip(prefix + "software");
+      FLabel studyNameLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "studyName");
+      FLabel identifierLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "identifier");
+      FLabel creationDateLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "creationDate");
+      FLabel rightsLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "rights");
+      FLabel availabilityLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "availability");
+      FLabel sourceLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "source");
+      FLabel urlLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "url");
+      FLabel formatLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "format");
+      FLabel languageLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "language");
+      FLabel softwareLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "software");
       FLabel languageWrittenInLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "languageWrittenIn");
-      FLabel statusLabel = GUIFactory.createLabelWithToolTip(prefix + "status");
+          GUIFactory.createLabelWithToolTip(bundle, prefix + "languageWrittenIn");
+      FLabel statusLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "status");
 
       availabilityField.setBackground(UIUtils.WHITE);
 
@@ -2559,8 +2595,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(formPanel);
 
       {
-        List<FLabel> labels = Arrays.asList(GUIFactory.createLabelWithToolTip(prefix + "objective"),
-            GUIFactory.createLabelWithToolTip(prefix + "description"));
+        List<FLabel> labels =
+            Arrays.asList(GUIFactory.createLabelWithToolTip(bundle, prefix + "objective"),
+                GUIFactory.createLabelWithToolTip(bundle, prefix + "description"));
         List<JComponent> fields = Arrays.asList(GUIFactory.createScrollPane(objectiveField),
             GUIFactory.createScrollPane(descriptionField));
 
@@ -2923,8 +2960,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI() {
-      // Create labels
+
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditCreatorPanel_";
+
+      // Create labels
       FLabel givenNameLabel = new FLabel(bundle.getString(prefix + "givenNameLabel"));
       FLabel familyNameLabel = new FLabel(bundle.getString(prefix + "familyNameLabel"));
       FLabel contactLabel = new FLabel(bundle.getString(prefix + "contactLabel"));
@@ -2970,6 +3010,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "EditCreatorPanel_";
 
       final List<String> errors = new ArrayList<>(3);
@@ -3063,13 +3104,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       // Create labels
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       final FLabel productLabel = new FLabel(bundle.getString(prefix + "productLabel"));
       final FLabel hazardLabel = new FLabel(bundle.getString(prefix + "hazardLabel"));
       final FLabel populationLabel = new FLabel(bundle.getString(prefix + "populationGroupLabel"));
       final FLabel temporalInformationLabel =
-          GUIFactory.createLabelWithToolTip(prefix + "temporalInformation");
-      final FLabel regionLabel = GUIFactory.createLabelWithToolTip(prefix + "region");
-      final FLabel countryLabel = GUIFactory.createLabelWithToolTip(prefix + "country");
+          GUIFactory.createLabelWithToolTip(bundle, prefix + "temporalInformation");
+      final FLabel regionLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "region");
+      final FLabel countryLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "country");
 
       // formPanel
       FPanel formPanel = UIUtils.createFormPanel(
@@ -3085,7 +3127,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.add(formPanel);
 
       {
-        FLabel label = GUIFactory.createLabelWithToolTip(prefix + "comment");
+        FLabel label = GUIFactory.createLabelWithToolTip(bundle, prefix + "comment");
         JScrollPane commentPane = GUIFactory.createScrollPane(commentTextArea);
         northPanel.add(UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(commentPane)));
       }
@@ -3251,6 +3293,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
       });
 
+      ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
       String prefix = "DataBackgroundPanel_";
       FLabel studyLabel = new FLabel(bundle.getString(prefix + "studyLabel"));
       FLabel studySampleLabel = new FLabel(bundle.getString(prefix + "studySampleLabel"));
