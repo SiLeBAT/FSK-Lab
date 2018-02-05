@@ -590,18 +590,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private final AutoSuggestField accreditationField;
     private final FTextField nameField;
-    private final FTextField countryField;
+    private final AutoSuggestField countryField;
 
     EditLaboratoryPanel(final boolean isAdvanced) {
       super(new BorderLayout());
 
       Set<String> laboratoryAccreditationVocabulary =
           loadVocabulary("Laboratory accreditation.xlsx");
+      Set<String> laboratoryCountryVocabulary = loadVocabulary("Laboratory country.xlsx");
 
       accreditationField =
           GUIFactory.createAutoSuggestField(laboratoryAccreditationVocabulary, true);
       nameField = new FTextField();
-      countryField = new FTextField();
+      countryField = GUIFactory.createAutoSuggestField(laboratoryCountryVocabulary, false);
 
       createUI(isAdvanced);
     }
@@ -643,7 +644,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (laboratory != null) {
         accreditationField.setSelectedItem(laboratory.accreditation);
         nameField.setText(laboratory.name);
-        countryField.setText(laboratory.country);
+        countryField.setSelectedItem(laboratory.country);
       }
     }
 
@@ -653,7 +654,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       Laboratory laboratory = new Laboratory();
       laboratory.accreditation = (String) accreditationField.getSelectedItem();
       laboratory.name = nameField.getText();
-      laboratory.country = countryField.getText();
+      laboratory.country = (String) countryField.getSelectedItem();
 
       return laboratory;
     }
