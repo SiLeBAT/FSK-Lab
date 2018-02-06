@@ -454,6 +454,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField nameField; // mandatory
     private final FTextArea descriptionField; // optional
     private final FTextField moisturePercentageField; // optional
+    private final FTextField fatPercentageField; // optional
     private final FTextField detectionLimitField; // optional
     private final FTextField quantificationLimitField; // optional
     private final FTextField leftCensoredDataField; // optional
@@ -466,6 +467,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       nameField = new FTextField(true);
       descriptionField = new FTextArea();
       moisturePercentageField = new FTextField();
+      fatPercentageField = new FTextField();
       detectionLimitField = new FTextField();
       quantificationLimitField = new FTextField();
       leftCensoredDataField = new FTextField();
@@ -491,6 +493,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (isAdvanced) {
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "moisturePercentage"));
         fields.add(moisturePercentageField);
+      }
+
+      // fat percentage
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "fatPercentage"));
+        fields.add(fatPercentageField);
       }
 
       // detection limit
@@ -547,6 +555,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         nameField.setText(assay.name);
         descriptionField.setText(assay.description);
         moisturePercentageField.setText(assay.moisturePercentage);
+        fatPercentageField.setText(assay.fatPercentage);
         detectionLimitField.setText(assay.detectionLimit);
         quantificationLimitField.setText(assay.quantificationLimit);
         leftCensoredDataField.setText(assay.leftCensoredData);
@@ -562,6 +571,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       assay.name = nameField.getText();
       assay.description = descriptionField.getText();
       assay.moisturePercentage = moisturePercentageField.getText();
+      assay.fatPercentage = fatPercentageField.getText();
       assay.detectionLimit = detectionLimitField.getText();
       assay.quantificationLimit = quantificationLimitField.getText();
       assay.leftCensoredData = leftCensoredDataField.getText();

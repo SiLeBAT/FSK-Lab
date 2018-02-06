@@ -23,6 +23,7 @@ public class Assay {
   public String name = "";
   public String description = "";
   public String moisturePercentage = "";
+  public String fatPercentage = "";
   public String detectionLimit = "";
   public String quantificationLimit = "";
   public String leftCensoredData = "";
