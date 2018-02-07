@@ -26,7 +26,6 @@ Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .,
  libs/CombineArchive-1.1.jar,
- libs/jdom-2.0.1.jar,
  libs/jcalendar-1.4.jar,
  libs/rengine-1.8.4.jar,
  libs/rserve-engine-1.8.4.jar,
