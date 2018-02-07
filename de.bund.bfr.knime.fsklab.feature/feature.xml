@@ -55,18 +55,4 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="de.bund.bfr.knime.fsklab.nodes.deprecated"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.bund.bfr.knime.fsklab.nodes.deprecated2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
 </feature>
