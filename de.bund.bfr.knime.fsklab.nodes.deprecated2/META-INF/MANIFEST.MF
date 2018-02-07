@@ -16,7 +16,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.base,
  org.knime.ext.r.type,
  org.knime.r,
- org.knime.workbench.repository
+ org.knime.workbench.repository,
+ org.jdom
 Bundle-ClassPath: libs/CombineArchive-1.1.jar,
  libs/fskml-0.0.1-SNAPSHOT.jar,
  libs/jdom-2.0.1.jar,
