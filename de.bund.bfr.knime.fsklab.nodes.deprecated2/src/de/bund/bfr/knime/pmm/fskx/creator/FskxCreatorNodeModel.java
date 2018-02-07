@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -295,23 +294,6 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
 			System.err.println(e.getMessage());
 			throw new IOException(trimmedPath + ": cannot be read");
 		}
-	}
-
-	private Set<Path> collectLibs() throws IOException, RException, REXPMismatchException {
-
-		List<String> libNames = Arrays.stream(m_selectedLibs.getStringArrayValue())
-				.map(libName -> libName.split("\\.")[0]).collect(Collectors.toList());
-
-		LibRegistry libRegistry = LibRegistry.instance();
-		// Out of all the libraries name only install those missing
-		List<String> missingLibs = libNames.stream().filter(lib -> !libRegistry.isInstalled(lib))
-				.collect(Collectors.toList());
-
-		if (!missingLibs.isEmpty()) {
-			libRegistry.installLibs(missingLibs);
-		}
-
-		return libRegistry.getPaths(libNames);
 	}
 
 	private static class SpreadsheetHandler {
