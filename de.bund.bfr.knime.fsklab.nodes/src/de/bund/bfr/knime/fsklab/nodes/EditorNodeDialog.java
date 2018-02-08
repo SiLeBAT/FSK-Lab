@@ -607,7 +607,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       Set<String> laboratoryAccreditationVocabulary =
           loadVocabulary("Laboratory accreditation.xlsx");
-      Set<String> laboratoryCountryVocabulary = loadVocabulary("Laboratory country.xlsx");
+      Set<String> laboratoryCountryVocabulary = loadVocabulary("Country.xlsx");
 
       accreditationField =
           GUIFactory.createAutoSuggestField(laboratoryAccreditationVocabulary, true);
@@ -1849,7 +1849,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       Set<String> productionMethodVocabulary = loadVocabulary("Method of production.xlsx");
       Set<String> packagingVocabulary = loadVocabulary("Packaging.xlsx");
       Set<String> productTreatmentVocabulary = loadVocabulary("Product treatment.xlsx");
-      Set<String> originCountryVocabulary = loadVocabulary("Country of origin.xlsx");
+      Set<String> originCountryVocabulary = loadVocabulary("Country.xlsx");
       Set<String> originAreaVocabulary = loadVocabulary("Area of origin.xlsx");
       Set<String> fisheriesAreaVocabulary = loadVocabulary("Fisheries area.xlsx");
 

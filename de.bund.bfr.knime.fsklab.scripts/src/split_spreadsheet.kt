@@ -27,7 +27,7 @@ import java.nio.file.Paths
 
 val SPREADSHEET_PATH = "/FSKLab_Config_Controlled Vocabularies.xlsx" // May change
 
-private class Splitter {
+class Splitter {
 
 	fun split() {
 

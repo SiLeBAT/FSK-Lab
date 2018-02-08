@@ -5,5 +5,7 @@
 	<classpathentry kind="con" path="org.jetbrains.kotlin.core.KOTLIN_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/de.bund.bfr.knime.fsklab.nodes"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="bin"/><classpathentry kind="src"
+		path="res">
+</classpathentry>
 </classpath>
