@@ -19,7 +19,11 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.js.core,
  org.knime.json,
  org.knime.workbench.repository,
- org.jdom
+ org.jdom2,
+ org.apache.commons.io,
+ org.apache.commons.lang,
+ org.slf4j.api,
+ org.jsbml
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
@@ -34,14 +38,44 @@ Bundle-ClassPath: .,
  libs/vinnie-2.0.0.jar,
  libs/jris-1.0.0.jar,
  libs/bfr-swing-1.0-SNAPSHOT.jar,
- libs/fskml-1.0.10.jar
-Export-Package: com.toedter.calendar,
- de.bund.bfr.knime.fsklab,
- de.bund.bfr.knime.fsklab.nodes,
- de.bund.bfr.knime.fsklab.nodes.controller,
- de.bund.bfr.knime.fsklab.nodes.ui,
- de.bund.bfr.knime.fsklab.rakip,
+ libs/fskml-1.0.11.jar,
+ sedml_libs/jaxen-1.1.6.jar,
+ sedml_libs/jdom-1.1.3.jar,
+ sedml_libs/jdom-contrib-1.1.3.jar,
+ sedml_libs/jlibsedml-2.2.3.jar,
+ sedml_libs/jmathml-2.2.1.jar,
+ sedml_libs/xom-1.2.5.jar
+Export-Package: com.toedter.calendar;
+  uses:="com.toedter.components,
+   javax.swing.table,
+   javax.swing.event,
+   javax.swing.text,
+   javax.swing",
+ de.bund.bfr.knime.fsklab;
+  uses:="org.osgi.framework,
+   de.bund.bfr.knime.fsklab.rakip,
+   com.fasterxml.jackson.databind,
+   org.knime.core.node,
+   org.eclipse.ui.plugin,
+   org.knime.core.node.port",
+ de.bund.bfr.knime.fsklab.nodes;
+  uses:="org.knime.base.node.util.exttool,
+   de.bund.bfr.knime.fsklab,
+   javax.swing.event,
+   de.bund.bfr.knime.fsklab.nodes.controller,
+   de.bund.bfr.knime.fsklab.rakip,
+   org.knime.core.node,
+   javax.swing",
+ de.bund.bfr.knime.fsklab.nodes.controller;uses:="org.rosuda.REngine.Rserve,org.rosuda.REngine,org.knime.core.node",
+ de.bund.bfr.knime.fsklab.nodes.rbin.preferences;uses:="org.eclipse.ui,org.eclipse.jface.preference,org.eclipse.core.runtime.preferences",
+ de.bund.bfr.knime.fsklab.nodes.ui;
+  uses:="javax.swing.table,
+   org.fife.ui.rsyntaxtextarea,
+   javax.swing.filechooser,
+   com.toedter.calendar,
+   javax.swing",
+ de.bund.bfr.knime.fsklab.rakip;uses:="com.fasterxml.jackson.databind.module",
  org.knime.core.node,
  org.rosuda.REngine,
- org.rosuda.REngine.Rserve,
- org.rosuda.REngine.Rserve.protocol
+ org.rosuda.REngine.Rserve;uses:="org.rosuda.REngine,org.rosuda.REngine.Rserve.protocol",
+ org.rosuda.REngine.Rserve.protocol;uses:="org.rosuda.REngine"

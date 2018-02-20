@@ -26,10 +26,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import javax.json.JsonNumber;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
+import org.knime.core.data.DataRow;
+import org.knime.core.data.def.StringCell;
 import org.knime.core.data.image.png.PNGImageContent;
+import org.knime.core.data.json.JSONCell;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -142,6 +149,33 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     }
 
     try (RController controller = new RController()) {
+
+      controller.eval(fskObj.param, false);
+
+      if (nodeSettings.simulation != null && !nodeSettings.simulation.isEmpty()) {
+
+        BufferedDataTable table = (BufferedDataTable) inData[1];
+
+        // Look for the JSONObject within the cell with the parameter values
+        JsonObject jsonObject = null;
+        for (DataRow row : table) {
+          String simulationName = ((StringCell) row.getCell(0)).getStringValue();
+          if (simulationName.equals(nodeSettings.simulation)) {
+            jsonObject = (JsonObject) ((JSONCell) row.getCell(1)).getJsonValue();
+            break;
+          }
+        }
+
+        if (jsonObject != null) {
+          // Assign value for every parameter defined in the jsonObject.
+          for (Map.Entry<String, JsonValue> entry : jsonObject.entrySet()) {
+            String parameterName = entry.getKey();
+            Double parameterValue = ((JsonNumber) entry.getValue()).doubleValue();
+            controller.assign(parameterName, parameterValue);
+          }
+        }
+      }
+
       fskObj = runSnippet(controller, fskObj, exec.createSubExecutionContext(1.0));
     }
 
@@ -193,24 +227,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     exec.setMessage("Add paths to libraries");
     controller.addPackagePath(LibRegistry.instance().getInstallationPath());
-
-    // If parameters are defined in metadata used the values from there, otherwise
-    // stick to the parameters script
-    exec.setMessage("Run parameters from metadata or script");
-    if (fskObj.genericModel.modelMath != null
-        && !fskObj.genericModel.modelMath.parameter.isEmpty()) {
-      for (final Parameter p : fskObj.genericModel.modelMath.parameter) {
-        if (p.classification.equals(Parameter.Classification.input)) {
-          if (p.dataType.equals("Integer")) {
-            controller.assign(p.name, Integer.parseInt(p.value));
-          } else if (p.dataType.equals("Double")) {
-            controller.assign(p.name, Double.parseDouble(p.value));
-          }
-        }
-      }
-    } else {
-      executor.executeIgnoreResult(fskObj.param, exec);
-    }
 
     exec.setMessage("Run models script");
     executor.executeIgnoreResult(fskObj.model, exec);

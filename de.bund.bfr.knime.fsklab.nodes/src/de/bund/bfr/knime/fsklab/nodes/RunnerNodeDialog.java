@@ -21,23 +21,29 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import org.knime.core.data.DataRow;
+import org.knime.core.data.def.StringCell;
+import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
 import de.bund.bfr.swing.UI;
 
-public class RunnerNodeDialog extends NodeDialogPane {
+public class RunnerNodeDialog extends DataAwareNodeDialogPane {
 
   private final RunnerNodeSettings settings;
 
@@ -45,6 +51,7 @@ public class RunnerNodeDialog extends NodeDialogPane {
   private final SpinnerNumberModel heightModel;
   private final JTextField resolutionField;
   private final SpinnerNumberModel textSizeModel;
+  private final DefaultComboBoxModel<String> simulationModel;
 
   public RunnerNodeDialog() {
     settings = new RunnerNodeSettings();
@@ -53,27 +60,22 @@ public class RunnerNodeDialog extends NodeDialogPane {
     heightModel = new SpinnerNumberModel(settings.height, null, null, 1);
     resolutionField = new JTextField(settings.res);
     textSizeModel = new SpinnerNumberModel(settings.pointSize, null, null, 1);
+    simulationModel = new DefaultComboBoxModel<String>();
 
     createUI();
   }
 
   private void createUI() {
+
     ResourceBundle bundle = ResourceBundle.getBundle("RunnerNodeBundle", new UTF8Control());
-    String widthLabelText = bundle.getString("width_label");
-    String heightLabelText = bundle.getString("height_label");
-    String resLabelText = bundle.getString("res_label");
-    String textSizeText = bundle.getString("textsize_label");
 
-    String widthTooltip = bundle.getString("width_tooltip");
-    String heightTooltip = bundle.getString("height_tooltip");
-    String resTooltip = bundle.getString("res_tooltip");
-    String textSizeTooltip = bundle.getString("textsize_tooltip");
-
-    FLabel widthLabel = new FLabel(widthLabelText);
-    FLabel heightLabel = new FLabel(heightLabelText);
-    FLabel resolutionLabel = new FLabel(resLabelText);
-    FLabel textSizeLabel = new FLabel(textSizeText);
-    List<FLabel> labels = Arrays.asList(widthLabel, heightLabel, resolutionLabel, textSizeLabel);
+    FLabel widthLabel = new FLabel(bundle.getString("width_label"));
+    FLabel heightLabel = new FLabel(bundle.getString("height_label"));
+    FLabel resolutionLabel = new FLabel(bundle.getString("res_label"));
+    FLabel textSizeLabel = new FLabel(bundle.getString("textsize_label"));
+    FLabel simulationLabel = new FLabel(bundle.getString("simulation_label"));
+    List<FLabel> labels =
+        Arrays.asList(widthLabel, heightLabel, resolutionLabel, textSizeLabel, simulationLabel);
 
     JSpinner widthSpinner = new JSpinner(widthModel);
     JSpinner heightSpinner = new JSpinner(heightModel);
@@ -81,14 +83,20 @@ public class RunnerNodeDialog extends NodeDialogPane {
     resolutionField.setColumns(5);
     resolutionField.setHorizontalAlignment(JTextField.RIGHT);
 
-    // Set tooltips
-    widthSpinner.setToolTipText(widthTooltip);
-    heightSpinner.setToolTipText(heightTooltip);
-    resolutionField.setToolTipText(resTooltip);
-    textSizeSpinner.setToolTipText(textSizeTooltip);
+    JComboBox<String> simulationField = new JComboBox<>(simulationModel);
+    // right align simulationField
+    ((JTextField) simulationField.getEditor().getEditorComponent())
+        .setHorizontalAlignment(JTextField.RIGHT);
 
-    List<JComponent> fields =
-        Arrays.asList(widthSpinner, heightSpinner, resolutionField, textSizeSpinner);
+    // Set tooltips
+    widthSpinner.setToolTipText(bundle.getString("width_tooltip"));
+    heightSpinner.setToolTipText(bundle.getString("height_tooltip"));
+    resolutionField.setToolTipText(bundle.getString("res_tooltip"));
+    textSizeSpinner.setToolTipText(bundle.getString("textsize_tooltip"));
+    simulationField.setToolTipText(bundle.getString("simulation_tooltip"));
+
+    List<JComponent> fields = Arrays.asList(widthSpinner, heightSpinner, resolutionField,
+        textSizeSpinner, simulationField);
 
     JPanel formPanel = UIUtils.createFormPanel(labels, fields);
     JPanel northPanel = UI.createNorthPanel(formPanel);
@@ -97,6 +105,7 @@ public class RunnerNodeDialog extends NodeDialogPane {
     addTab("Options", northPanel);
   }
 
+  /** Load settings from saved settings. */
   @Override
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
       throws NotConfigurableException {
@@ -108,8 +117,48 @@ public class RunnerNodeDialog extends NodeDialogPane {
       heightModel.setValue(this.settings.height);
       resolutionField.setText(this.settings.res);
       textSizeModel.setValue(this.settings.pointSize);
+
+      // Remove selected simulation if not contained in new list of simulations. Otherwise set value
+      // from settings as selected.
+      boolean isContained = false;
+      for (int i = 0; i < simulationModel.getSize(); i++) {
+        if (this.settings.simulation.equals(simulationModel.getElementAt(i))) {
+          isContained = true;
+          break;
+        }
+      }
+      simulationModel.setSelectedItem(isContained ? this.settings.simulation : null);
+
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
+    }
+  }
+
+  /** Load settings from input ports. */
+  @Override
+  protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] inputs)
+      throws NotConfigurableException {
+
+    simulationModel.removeAllElements();
+
+    if (inputs.length == 2 && inputs[1] != null) {
+      BufferedDataTable simulationsTable = (BufferedDataTable) inputs[1];
+
+      for (DataRow row : simulationsTable) {
+        StringCell stringCell = (StringCell) row.getCell(0);
+        simulationModel.addElement(stringCell.getStringValue());
+      }
+
+      // Remove selected simulation if not contained in new list of simulations. Otherwise set value
+      // from settings as selected.
+      boolean isContained = false;
+      for (int i = 0; i < simulationModel.getSize(); i++) {
+        if (this.settings.simulation.equals(simulationModel.getElementAt(i))) {
+          isContained = true;
+          break;
+        }
+      }
+      simulationModel.setSelectedItem(isContained ? this.settings.simulation : null);
     }
   }
 
@@ -120,6 +169,11 @@ public class RunnerNodeDialog extends NodeDialogPane {
     this.settings.height = heightModel.getNumber().intValue();
     this.settings.res = resolutionField.getText();
     this.settings.pointSize = textSizeModel.getNumber().intValue();
+
+    String selectedSimulation = (String) simulationModel.getSelectedItem();
+    if (selectedSimulation != null && !selectedSimulation.isEmpty()) {
+      this.settings.simulation = selectedSimulation;
+    }
 
     this.settings.save(settings);
   }

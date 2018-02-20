@@ -28,6 +28,7 @@ public class RunnerNodeSettings {
   private static final String CFG_HEIGHT = "height";
   private static final String CFG_RESOLUTION = "resolution";
   private static final String CFG_POINT_SIZE = "textPointSize";
+  private static final String CFG_SIMULATION = "simulation";
 
   /** Width of the plot. */
   public int width = 640;
@@ -37,6 +38,9 @@ public class RunnerNodeSettings {
 
   /** Nominal resolution in ppi. */
   public String res = "NA";
+
+  /** Selected simulation. */
+  public String simulation = "";
 
   /**
    * The default pointsize of plotted text, interpreted as big points (1/72 inch) at {@link res}
@@ -49,6 +53,12 @@ public class RunnerNodeSettings {
     height = settings.getInt(CFG_HEIGHT);
     res = settings.getString(CFG_RESOLUTION);
     pointSize = settings.getInt(CFG_POINT_SIZE);
+
+    /*
+     * If CFG_SIMULATION is missing (in case of old workflows) then restore to empty string (no
+     * simulation).
+     */
+    simulation = settings.getString(CFG_SIMULATION, "");
   }
 
   public void save(final NodeSettingsWO settings) {
@@ -56,5 +66,6 @@ public class RunnerNodeSettings {
     settings.addInt(CFG_HEIGHT, height);
     settings.addString(CFG_RESOLUTION, res);
     settings.addInt(CFG_POINT_SIZE, pointSize);
+    settings.addString(CFG_SIMULATION, simulation);
   }
 }

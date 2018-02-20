@@ -25,9 +25,29 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.jlibsedml.Algorithm;
+import org.jlibsedml.Annotation;
+import org.jlibsedml.ComputeChange;
+import org.jlibsedml.DataGenerator;
+import org.jlibsedml.Libsedml;
+import org.jlibsedml.Model;
+import org.jlibsedml.Plot2D;
+import org.jlibsedml.SEDMLDocument;
+import org.jlibsedml.SedML;
+import org.jlibsedml.SteadyState;
+import org.jlibsedml.Task;
+import org.jlibsedml.XPathTarget;
+import org.jmathml.ASTNode;
+import org.knime.core.data.DataRow;
+import org.knime.core.data.def.StringCell;
+import org.knime.core.data.json.JSONCell;
+import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -42,15 +62,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.URIS;
+import de.bund.bfr.fskml.sedml.SourceScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
+import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 
 class WriterNodeModel extends NoInternalsModel {
 
-  private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
+  private static final PortType[] IN_TYPES = {FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL};
   private static final PortType[] OUT_TYPES = {};
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Writer node");
@@ -143,6 +165,16 @@ class WriterNodeModel extends NoInternalsModel {
         }
       }
 
+      // Add simulations
+      if (inObjects.length == 2 && inObjects[1] != null) {
+        BufferedDataTable simulationsTable = (BufferedDataTable) inObjects[1];
+        SEDMLDocument sedmlDoc = createSedml(fskObj, simulationsTable);
+
+        File tempFile = FileUtil.createTempFile("sim", "");
+        sedmlDoc.writeDocument(tempFile);
+        archive.addEntry(tempFile, "sim.sedml", URIS.sedml);
+      }
+
       archive.pack();
     } catch (Exception e) {
       FileUtils.deleteQuietly(archiveFile);
@@ -177,5 +209,74 @@ class WriterNodeModel extends NoInternalsModel {
     file.delete();
 
     return entry;
+  }
+
+  private static SEDMLDocument createSedml(FskPortObject portObj,
+      BufferedDataTable simulationsTable) {
+
+    SEDMLDocument doc = Libsedml.createDocument();
+    SedML sedml = doc.getSedMLModel();
+
+    for (Parameter param : portObj.genericModel.modelMath.parameter) {
+      // Ignore not output paramters (inputs or constants)
+      if (!param.classification.equals(Parameter.Classification.output))
+        continue;
+
+      ASTNode node = Libsedml.parseFormulaString(param.id);
+      DataGenerator dg = new DataGenerator(param.id, "", node);
+      sedml.addDataGenerator(dg);
+    }
+
+    // Add simulation
+    SteadyState simulation = new SteadyState("steadyState", "", new Algorithm(" "));
+    {
+      SourceScript ss =
+          new SourceScript("https://iana.org/assignments/mediatypes/text/x-r", "./param.r");
+      simulation.addAnnotation(new Annotation(ss));
+    }
+    sedml.addSimulation(simulation);
+
+    for (DataRow row : simulationsTable) {
+      String simulationName = ((StringCell) row.getCell(0)).getStringValue();
+
+      JSONCell paramCell = (JSONCell) row.getCell(1);
+      JsonObject jsonObject = (JsonObject) paramCell.getJsonValue();
+
+      // Add model
+      Model model = new Model(simulationName, "",
+          "https://iana.org/assignments/mediatypes/text/x-r", "./model.r");
+      sedml.addModel(model);
+
+      // Add task
+      {
+        String taskId = "task" + sedml.getTasks().size();
+        String taskName = "";
+        Task task = new Task(taskId, taskName, model.getId(), simulation.getId());
+        sedml.addTask(task);
+      }
+
+      // Add changes to model
+      for (Map.Entry<String, JsonValue> entry : jsonObject.entrySet()) {
+
+        String parameterName = entry.getKey();
+        String parameterValue = entry.getValue().toString();
+
+        ComputeChange change = new ComputeChange(new XPathTarget(parameterName),
+            Libsedml.parseFormulaString(parameterValue));
+        model.addChange(change);
+      }
+    }
+
+    // Add plot
+    {
+      SourceScript ss =
+          new SourceScript("https://iana.org/assignments/mediatypes/text/x-r", "./visualization.r");
+
+      Plot2D plot = new Plot2D("plot1", "");
+      plot.addAnnotation(new Annotation(ss));
+      sedml.addOutput(plot);
+    }
+
+    return doc;
   }
 }

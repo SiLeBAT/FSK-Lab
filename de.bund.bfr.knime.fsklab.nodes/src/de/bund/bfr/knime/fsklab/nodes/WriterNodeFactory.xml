@@ -22,5 +22,6 @@
 
 	<ports>
 		<inPort name="FSK object" index="0">FSK object</inPort>
+		<inPort name="Simulations" index="1" optional="true"></inPort>
 	</ports>
 </knimeNode>

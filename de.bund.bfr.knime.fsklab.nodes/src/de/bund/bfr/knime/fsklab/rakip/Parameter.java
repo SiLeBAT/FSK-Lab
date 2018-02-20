@@ -60,6 +60,24 @@ public class Parameter {
 
   public Double error = .0;
 
+  public Parameter() {}
+
+  public Parameter(Parameter another) {
+    this.id = another.id; // you can access
+    this.classification = another.classification; // you can access
+    this.name = another.name; // you can access
+    this.description = another.description; // you can access
+    this.unit = another.unit; // you can access
+    this.unitCategory = another.unitCategory; // you can access
+    this.dataType = another.dataType; // you can access
+    this.source = another.source; // you can access
+    this.subject = another.subject; // you can access
+    this.distribution = another.distribution; // you can access
+    this.value = another.value; // you can access
+    this.reference = another.reference; // you can access
+    this.variabilitySubject = another.variabilitySubject; // you can access
+  }
+
   @Override
   public int hashCode() {
     return Objects.hash(id, name, description, type, unit, unitCategory, dataType, source, subject,

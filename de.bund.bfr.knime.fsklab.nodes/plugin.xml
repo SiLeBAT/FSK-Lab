@@ -54,5 +54,6 @@
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.EditorNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FSK2MetadataNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.SimulatorNodeFactory" />
    </extension>
 </plugin>

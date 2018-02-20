@@ -45,7 +45,9 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.js.core"/>
       <import plugin="org.knime.json" version="3.3.3" match="greaterOrEqual"/>
       <import plugin="org.knime.workbench.repository"/>
-      <import plugin="org.junit"/>
+      <import plugin="org.apache.commons.io"/>
+      <import plugin="org.apache.commons.lang"/>
+      <import plugin="org.slf4j.api"/>
    </requires>
 
    <plugin
@@ -56,15 +58,22 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          unpack="false"/>
 
    <plugin
-         id="org.jdom"
+         id="org.jsoup"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="org.jsoup"
+         id="org.jsbml"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.jdom2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
