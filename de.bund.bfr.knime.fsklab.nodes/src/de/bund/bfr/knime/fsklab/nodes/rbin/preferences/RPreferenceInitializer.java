@@ -19,6 +19,7 @@ package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import de.bund.bfr.knime.fsklab.FskPlugin;
+import de.bund.bfr.knime.fsklab.nodes.rbin.RPathUtil;
 
 /**
  * Initializes preference page with default paths to R2 and R3 environments.
@@ -35,7 +36,7 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
   @Override
   public void initializeDefaultPreferences() {
     IPreferenceStore store = FskPlugin.getDefault().getPreferenceStore();
-    store.setDefault(R3_PATH, "");
+    store.setDefault(R3_PATH, RPathUtil.getSystemRHome().getAbsolutePath());
   }
 
   /** @return provider to the path to the R3 executable. */
