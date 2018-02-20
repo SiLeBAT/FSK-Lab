@@ -7,14 +7,10 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.DataCell;
-import org.knime.core.data.DataColumnSpec;
-import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.DataTableSpecCreator;
 import org.knime.core.data.RowKey;
 import org.knime.core.data.def.DefaultRow;
 import org.knime.core.data.def.StringCell;
-import org.knime.core.data.json.JSONCell;
 import org.knime.core.data.json.JSONCellFactory;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
@@ -73,30 +69,12 @@ public class SimulatorNodeModel extends ExtToolOutputNodeModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-
-    // Column specs
-    DataColumnSpec nameSpec =
-        new DataColumnSpecCreator("Simulation name", StringCell.TYPE).createSpec();
-    DataColumnSpec paramSpec =
-        new DataColumnSpecCreator("Simulation parameters", JSONCell.TYPE).createSpec();
-
-    // Table spec
-    DataTableSpecCreator tableSpec = new DataTableSpecCreator().addColumns(nameSpec, paramSpec);
-    return new DataTableSpec[] {tableSpec.createSpec()};
+    return new DataTableSpec[] {NodeUtils.createSimulationTableSpec()};
   }
 
   @Override
   protected DataTableSpec[] configure(DataTableSpec[] inSpecs) throws InvalidSettingsException {
-
-    // Column specs
-    DataColumnSpec nameSpec =
-        new DataColumnSpecCreator("Simulation name", StringCell.TYPE).createSpec();
-    DataColumnSpec paramSpec =
-        new DataColumnSpecCreator("Simulation parameters", JSONCell.TYPE).createSpec();
-
-    // Table spec
-    DataTableSpecCreator tableSpec = new DataTableSpecCreator().addColumns(nameSpec, paramSpec);
-    return new DataTableSpec[] {tableSpec.createSpec()};
+    return new DataTableSpec[] {NodeUtils.createSimulationTableSpec()};
   }
 
   @Override
@@ -107,9 +85,8 @@ public class SimulatorNodeModel extends ExtToolOutputNodeModel {
     // Prepare object mapper to generate JSON strings from metadata elements
 
     // Build container
-    // Argument is not used in configure so null can be passed
-    final DataTableSpec tableSpec = configure(null)[0];
-    final BufferedDataContainer container = exec.createDataContainer(tableSpec);
+    final BufferedDataContainer container =
+        exec.createDataContainer(NodeUtils.createSimulationTableSpec());
 
     for (SimulationEntity se : listOfSimulation) {
 
