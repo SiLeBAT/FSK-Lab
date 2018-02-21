@@ -16,11 +16,19 @@
 		</intro>
 		<option name="Selected file">
 			Location to file. May be an absolute URL, a mount-point relative
-			URL or local path.
+			URL or local path. Examples:
+			<ul>
+			  <li>Absolute URL: knime://LOCAL/my_resource.txt</li>
+			  <li>Mount-point relative path: knime://knime.mountpoint/my_resource.txt</li>
+			  <li>Local path: C:/workspace/my_resource.txt</li>
+			</ul>
 		</option>
 	</fullDescription>
 	<ports>
 		<outPort name="FSK object" index="0">FSK object</outPort>
-		<outPort name="Simulations" index="1" >Simulations</outPort>
+		<outPort name="Simulations" index="1" >
+		  Table with simulations where every row describes a simulation name and its parameters.
+		  If the import FSKX file does not contains simulations this table will be empty.
+		</outPort>
 	</ports>
 </knimeNode>

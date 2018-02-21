@@ -8,23 +8,41 @@
 
 	<fullDescription>
 		<intro>
-			Runs the input model and updates its workspace with the model
-			results. A chart or plot is generated if a visualization script is
-			provided.
-			<p>
-				Visualization scripts with interactive output such as
-				<a href="https://plot.ly/">Plotly</a>
-				are not supported.
-			</p>
-		</intro>
+		  Runs the input model and updates its workspace with the model results.
+		  <p>
+		    Visualization scripts with interactive output such as
+		    <a href="https://plot.ly/">Plotly</a> are not supported.
+	      </p>
+	    </intro>
+		
+		<option name="Width">Width of the plot.</option>
+		<option name="Height">Height of the plot</option>
+		<option name="Resolution">Resolution of the plot in PPI.</option>
+		<option name="Text size">
+		  Default point-size of plotted text, interpreted as big points (1/72 inch) at the given
+		  resolution.
+		</option>
+		<option name="Simulation">
+		  Name of the selected simulation to run. If no simulation is selected then the parameters
+		  take the default values from the parameters script.
+		</option>
+		
 	</fullDescription>
+	
 	<ports>
-		<inPort name="FSK object" index="0">FSK object</inPort>
-		<inPort name="Parameters values" index="1" optional="true">Metadata
-			table</inPort>
-		<outPort name="FSK object" index="0">FSK object</outPort>
-		<outPort name="Image Output" index="1">View Image</outPort>
+		<inPort name="FSK object" index="0">Input FSK model</inPort>
+		<inPort name="Parameters values" index="1" optional="true">
+		  Table with simulation names and parameters.
+		</inPort>
+		<outPort name="FSK object" index="0">
+		  FSK model with results stored in an R workspace.
+		</outPort>
+		<outPort name="Image Output" index="1">
+		  Plot generated with the provided visualization script. If the input FSK model has no
+		  visualization script then this port will hold no image (optional).
+		</outPort>
 	</ports>
+	
 	<views>
 		<view name="R View" index="0"></view>
 	</views>
