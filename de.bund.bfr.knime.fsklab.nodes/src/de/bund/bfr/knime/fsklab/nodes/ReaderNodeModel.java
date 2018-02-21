@@ -220,7 +220,10 @@ class ReaderNodeModel extends NoInternalsModel {
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
         genericModel, workspacePath, libFiles, workingDirectory);
 
-    return new PortObject[] {fskObj, simContainer.getTable()};
+    simContainer.close();
+    BufferedDataTable simTable = simContainer.getTable();
+
+    return new PortObject[] {fskObj, simTable};
   }
 
   private static String loadScript(final ArchiveEntry entry) throws IOException {
@@ -260,7 +263,5 @@ class ReaderNodeModel extends NoInternalsModel {
 
       container.addRowToTable(new DefaultRow(rowKey, nameCell, paramsCell));
     }
-
-    container.close();
   }
 }
