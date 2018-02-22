@@ -129,23 +129,8 @@ class CreatorNodeModel extends NoInternalsModel {
     if (StringUtils.isNotEmpty(nodeSettings.parameterScript)) {
       paramScript = readScript(nodeSettings.parameterScript).getScript();
 
-      defaultSimulation = new FskSimulation("defaultSimulation");
-      Map<String, Double> params = defaultSimulation.getParameters();
-
-      for (String line : paramScript.split("\\r?\\n")) {
-        if (line.startsWith("#") || StringUtils.isBlank(line)) {
-          continue;
-        }
-
-        line = line.trim();
-
-        String[] tokens = line.split("<-");
-        String name = tokens[0];
-        Double value = Double.parseDouble(tokens[1]);
-
-        params.put(name, value);
-      }
-
+      // Create defaultSimulation out of the parameters script
+      defaultSimulation = NodeUtils.createDefaultSimulation(paramScript);
     } else {
       paramScript = "";
     }

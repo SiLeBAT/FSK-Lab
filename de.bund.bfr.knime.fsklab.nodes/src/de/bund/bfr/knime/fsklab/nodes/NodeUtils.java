@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
@@ -11,6 +12,7 @@ import org.knime.core.node.NodeLogger;
 import org.rosuda.REngine.REXPMismatchException;
 import com.sun.jna.Platform;
 import de.bund.bfr.fskml.URIS;
+import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
@@ -101,5 +103,25 @@ public class NodeUtils {
 
     monitor.setMessage("Collecting captured output");
     executor.finishOutputCapturing(monitor);
+  }
+
+  public static FskSimulation createDefaultSimulation(String parameterScript) {
+    FskSimulation defaultSimulation = new FskSimulation("defaultSimulation");
+
+    for (String line : parameterScript.split("\\r?\\n")) {
+      if (line.startsWith("#") || StringUtils.isBlank(line)) {
+        continue;
+      }
+
+      line = line.trim();
+
+      String[] tokens = line.split("<-");
+      String name = tokens[0];
+      Double value = Double.parseDouble(tokens[1]);
+
+      defaultSimulation.getParameters().put(name, value);
+    }
+
+    return defaultSimulation;
   }
 }
