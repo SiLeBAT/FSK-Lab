@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -39,6 +40,7 @@ import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 
@@ -128,6 +130,23 @@ public class EditorNodeModel extends NoInternalsModel {
       outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedParametersScript,
           settings.modifiedVisualizationScript, settings.genericModel, null, new HashSet<>(),
           workingDirectory);
+
+      // Create default simulation out of the parameters script
+      FskSimulation defaultSimulation = new FskSimulation("defaultSimulation");
+      for (String line : outObj.param.split("\\r?\\n")) {
+        if (line.startsWith("#") || StringUtils.isBlank(line)) {
+          continue;
+        }
+
+        line = line.trim();
+
+        String[] tokens = line.split("<-");
+        String name = tokens[0];
+        Double value = Double.parseDouble(tokens[1]);
+
+        defaultSimulation.getParameters().put(name, value);
+      }
+      outObj.simulations.add(defaultSimulation);
     }
 
     // Adds and installs libraries

@@ -9,9 +9,13 @@
 
 	<fullDescription>
 		<intro>
-			Edit the scripts in an FSK object: model, parameters and
-			visualization scripts. In case there is no input model connected
-			then it will create a new model from the user interface.
+			Edit the scripts in an FSK object: model, parameters and visualization scripts. In case
+			there is no input model connected then it will create a new model from the user
+			interface.
+			<p>
+			  When a new model is typed in a default simulation called <i>defaultSimulation</i>
+			  will be created with the variables defined in the parameter script.
+			</p>
 		</intro>
 	</fullDescription>
 	<ports>
