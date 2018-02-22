@@ -26,9 +26,5 @@
 	</fullDescription>
 	<ports>
 		<outPort name="FSK object" index="0">FSK object</outPort>
-		<outPort name="Simulations" index="1" >
-		  Table with simulations where every row describes a simulation name and its parameters.
-		  If the import FSKX file does not contains simulations this table will be empty.
-		</outPort>
 	</ports>
 </knimeNode>

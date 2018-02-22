@@ -2,18 +2,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
-import org.knime.core.data.DataCell;
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.RowKey;
-import org.knime.core.data.def.DefaultRow;
-import org.knime.core.data.def.StringCell;
-import org.knime.core.data.json.JSONCellFactory;
-import org.knime.core.node.BufferedDataContainer;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -24,6 +13,8 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.SimulationEntity;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
 
@@ -33,7 +24,7 @@ public class SimulatorNodeModel extends ExtToolOutputNodeModel {
 
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
-  private static PortType[] OUT_TYPES = {BufferedDataTable.TYPE};
+  private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
   public SimulatorNodeModel() {
     super(IN_TYPES, OUT_TYPES);
@@ -69,41 +60,26 @@ public class SimulatorNodeModel extends ExtToolOutputNodeModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    return new DataTableSpec[] {NodeUtils.createSimulationTableSpec()};
-  }
-
-  @Override
-  protected DataTableSpec[] configure(DataTableSpec[] inSpecs) throws InvalidSettingsException {
-    return new DataTableSpec[] {NodeUtils.createSimulationTableSpec()};
+    return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    List<SimulationEntity> listOfSimulation = nodeSettings.getListOfSimulation();
+    FskPortObject inObj = (FskPortObject) inObjects[0];
+    inObj.simulations.clear();
 
-    // Prepare object mapper to generate JSON strings from metadata elements
+    // Convert SimulationEntities from the settings to FskSimulation and add them to the port object
+    for (SimulationEntity simulationEntity : nodeSettings.getListOfSimulation()) {
+      FskSimulation fskSimulation = new FskSimulation(simulationEntity.getSimulationName());
 
-    // Build container
-    final BufferedDataContainer container =
-        exec.createDataContainer(NodeUtils.createSimulationTableSpec());
-
-    for (SimulationEntity se : listOfSimulation) {
-
-      JsonObjectBuilder builder = Json.createObjectBuilder();
-      for (Parameter param : se.getSimulationParameters()) {
-        builder.add(param.name, Double.parseDouble(param.value));
+      for (Parameter param : simulationEntity.getSimulationParameters()) {
+        fskSimulation.getParameters().put(param.name, Double.valueOf(param.value));
       }
 
-      RowKey rowKey = RowKey.createRowKey(container.size());
-      StringCell nameCell = new StringCell(se.getSimulationName());
-      DataCell paramCell = JSONCellFactory.create(builder.build());
-
-      container.addRowToTable(new DefaultRow(rowKey, nameCell, paramCell));
+      inObj.simulations.add(fskSimulation);
     }
 
-    container.close();
-
-    return new PortObject[] {container.getTable()};
+    return new PortObject[] {inObj};
   }
 }

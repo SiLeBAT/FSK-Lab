@@ -55,6 +55,7 @@ import com.gmail.gcolaianni5.jris.bean.Type;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
@@ -124,8 +125,27 @@ class CreatorNodeModel extends NoInternalsModel {
 
     // Reads parameters script
     final String paramScript;
+    FskSimulation defaultSimulation = null;
     if (StringUtils.isNotEmpty(nodeSettings.parameterScript)) {
       paramScript = readScript(nodeSettings.parameterScript).getScript();
+
+      defaultSimulation = new FskSimulation("defaultSimulation");
+      Map<String, Double> params = defaultSimulation.getParameters();
+
+      for (String line : paramScript.split("\\r?\\n")) {
+        if (line.startsWith("#") || StringUtils.isBlank(line)) {
+          continue;
+        }
+
+        line = line.trim();
+
+        String[] tokens = line.split("<-");
+        String name = tokens[0];
+        Double value = Double.parseDouble(tokens[1]);
+
+        params.put(name, value);
+      }
+
     } else {
       paramScript = "";
     }
@@ -210,6 +230,9 @@ class CreatorNodeModel extends NoInternalsModel {
 
     final FskPortObject portObj = new FskPortObject(modelScript, paramScript, visualizationScript,
         genericModel, null, new HashSet<>(), workingDirectory);
+    if (defaultSimulation != null) {
+      portObj.simulations.add(defaultSimulation);
+    }
 
     // libraries
     List<String> libraries = modelRScript.getLibraries();

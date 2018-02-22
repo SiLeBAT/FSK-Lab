@@ -28,16 +28,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
-import org.knime.core.data.DataRow;
-import org.knime.core.data.def.StringCell;
 import org.knime.core.data.image.png.PNGImageContent;
-import org.knime.core.data.json.JSONCell;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -53,6 +46,7 @@ import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
@@ -75,7 +69,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   private RunnerNodeSettings nodeSettings = new RunnerNodeSettings();
 
   // Input and output port types
-  private static final PortType[] IN_TYPES = {FskPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL};
+  private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
 
   public RunnerNodeModel() {
@@ -152,27 +146,14 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
       controller.eval(fskObj.param, false);
 
-      if (nodeSettings.simulation != null && !nodeSettings.simulation.isEmpty()) {
+      if (StringUtils.isNotEmpty(nodeSettings.simulation)) {
 
-        BufferedDataTable table = (BufferedDataTable) inData[1];
-
-        // Look for the JSONObject within the cell with the parameter values
-        JsonObject jsonObject = null;
-        for (DataRow row : table) {
-          String simulationName = ((StringCell) row.getCell(0)).getStringValue();
-          if (simulationName.equals(nodeSettings.simulation)) {
-            jsonObject = (JsonObject) ((JSONCell) row.getCell(1)).getJsonValue();
-            break;
-          }
-        }
-
-        if (jsonObject != null) {
-          // Assign value for every parameter defined in the jsonObject.
-          for (Map.Entry<String, JsonValue> entry : jsonObject.entrySet()) {
-            String parameterName = entry.getKey();
-            Double parameterValue = ((JsonNumber) entry.getValue()).doubleValue();
-            controller.assign(parameterName, parameterValue);
-          }
+        FskSimulation fskSimulation = fskObj.simulations.stream()
+            .filter(it -> it.getName().equals(nodeSettings.simulation)).findAny().get();
+        for (Map.Entry<String, Double> entry : fskSimulation.getParameters().entrySet()) {
+          String parameterName = entry.getKey();
+          Double parameterValue = entry.getValue();
+          controller.assign(parameterName, parameterValue);
         }
       }
 

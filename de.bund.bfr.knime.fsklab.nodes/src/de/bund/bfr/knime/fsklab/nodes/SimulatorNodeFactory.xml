@@ -30,10 +30,6 @@
 	
 	<ports>
 		<inPort name="FSK object" index="0">Input FSK model</inPort>
-		<outPort name="Simulations" index="0">
-		  Simulations table where every simulation is described by a row with columns for the
-		  simulation name and simulation parameters. The parameters are defined as a JSON object of
-		  key-value pairs with keys as the parameters names and values as the parameter values.
-		</outPort>
+		<outPort name="FSK object" index="0">Output FSK model</outPort>
 	</ports>
 </knimeNode>

@@ -21,12 +21,15 @@ package de.bund.bfr.knime.fsklab;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -128,6 +131,8 @@ public class FskPortObject implements PortObject {
 
   public int objectNum;
 
+  public final List<FskSimulation> simulations = new ArrayList<>();
+
   private static ResourceBundle bundle =
       ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
 
@@ -169,6 +174,7 @@ public class FskPortObject implements PortObject {
     private static final String VIZ = "viz.R";
     private static final String META_DATA = "metaData";
     private static final String WORKSPACE = "workspace";
+    private static final String SIMULATION = "simulation";
 
     private static final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
@@ -227,10 +233,24 @@ public class FskPortObject implements PortObject {
         }
       }
 
+      // Save simulations
+      if (!portObject.simulations.isEmpty()) {
+        out.putNextEntry(new ZipEntry(SIMULATION));
+
+        try {
+          ObjectOutputStream oos = new ObjectOutputStream(out);
+          oos.writeObject(portObject.simulations);
+        } catch (IOException exception) {
+          // TODO: deal with exception
+        }
+        out.closeEntry();
+      }
+
       out.close();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public FskPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
         ExecutionMonitor exec) throws IOException, CanceledExecutionException {
 
@@ -242,6 +262,8 @@ public class FskPortObject implements PortObject {
       Set<File> libs = new HashSet<>();
 
       Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
+
+      List<FskSimulation> simulations = new ArrayList<>();
 
       ZipEntry entry;
       while ((entry = in.getNextEntry()) != null) {
@@ -286,12 +308,26 @@ public class FskPortObject implements PortObject {
           Path resource = workingDirectory.resolve(entryName);
           Files.copy(in, resource);
         }
+
+        else if (entryName.equals(SIMULATION)) {
+          try {
+            ObjectInputStream ois = new ObjectInputStream(in);
+            simulations = ((List<FskSimulation>) ois.readObject());
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
+        }
       }
 
       in.close();
 
       final FskPortObject portObj = new FskPortObject(modelScript, parametersScript,
           visualizationScript, genericModel, workspacePath, libs, workingDirectory);
+
+      if (!simulations.isEmpty()) {
+        portObj.simulations.addAll(simulations);
+      }
+
       return portObj;
     }
 

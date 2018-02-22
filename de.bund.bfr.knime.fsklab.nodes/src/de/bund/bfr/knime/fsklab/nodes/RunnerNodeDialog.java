@@ -28,9 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import org.knime.core.data.DataRow;
-import org.knime.core.data.def.StringCell;
-import org.knime.core.node.BufferedDataTable;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -38,6 +36,8 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
+import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
@@ -141,12 +141,10 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
 
     simulationModel.removeAllElements();
 
-    if (inputs.length == 2 && inputs[1] != null) {
-      BufferedDataTable simulationsTable = (BufferedDataTable) inputs[1];
-
-      for (DataRow row : simulationsTable) {
-        StringCell stringCell = (StringCell) row.getCell(0);
-        simulationModel.addElement(stringCell.getStringValue());
+    if (inputs.length == 1 && inputs[0] != null) {
+      FskPortObject inObj = (FskPortObject) inputs[0];
+      for (FskSimulation fskSimulation : inObj.simulations) {
+        simulationModel.addElement(fskSimulation.getName());
       }
 
       // Remove selected simulation if not contained in new list of simulations. Otherwise set value
@@ -170,10 +168,11 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
     this.settings.res = resolutionField.getText();
     this.settings.pointSize = textSizeModel.getNumber().intValue();
 
+    // selectedSimulation may be null if there is no selection
     String selectedSimulation = (String) simulationModel.getSelectedItem();
-    if (selectedSimulation != null && !selectedSimulation.isEmpty()) {
-      this.settings.simulation = selectedSimulation;
-    }
+
+    // this.settings.simulation is set "" if selectedSimulation is null
+    this.settings.simulation = StringUtils.defaultString(selectedSimulation);
 
     this.settings.save(settings);
   }

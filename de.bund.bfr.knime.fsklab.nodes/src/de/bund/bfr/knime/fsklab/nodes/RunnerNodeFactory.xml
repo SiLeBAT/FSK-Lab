@@ -31,9 +31,6 @@
 	
 	<ports>
 		<inPort name="FSK object" index="0">Input FSK model</inPort>
-		<inPort name="Parameters values" index="1" optional="true">
-		  Table with simulation names and parameters.
-		</inPort>
 		<outPort name="FSK object" index="0">
 		  FSK model with results stored in an R workspace.
 		</outPort>

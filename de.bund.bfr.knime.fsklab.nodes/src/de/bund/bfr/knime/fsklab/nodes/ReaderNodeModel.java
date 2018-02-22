@@ -28,20 +28,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
 import org.jlibsedml.Change;
 import org.jlibsedml.ComputeChange;
 import org.jlibsedml.Libsedml;
 import org.jlibsedml.SEDMLTags;
 import org.jlibsedml.SedML;
-import org.knime.core.data.DataCell;
-import org.knime.core.data.RowKey;
-import org.knime.core.data.def.DefaultRow;
-import org.knime.core.data.def.StringCell;
-import org.knime.core.data.json.JSONCellFactory;
-import org.knime.core.node.BufferedDataContainer;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -58,6 +49,7 @@ import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
@@ -67,7 +59,7 @@ import de.unirostock.sems.cbarchive.CombineArchive;
 class ReaderNodeModel extends NoInternalsModel {
 
   private static final PortType[] IN_TYPES = {};
-  private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, BufferedDataTable.TYPE};
+  private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
   private final ReaderNodeSettings nodeSettings = new ReaderNodeSettings();
 
@@ -96,7 +88,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE, NodeUtils.createSimulationTableSpec()};
+    return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 
   @Override
@@ -112,10 +104,7 @@ class ReaderNodeModel extends NoInternalsModel {
     String visualizationScript = "";
     File workspace = null; // null if missing
     GenericModel genericModel = null; // null if missing
-
-    // Create container with simulations
-    BufferedDataContainer simContainer =
-        exec.createDataContainer(NodeUtils.createSimulationTableSpec());
+    List<FskSimulation> simulations = new ArrayList<>();
 
     try (final CombineArchive archive = new CombineArchive(file)) {
       for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.r)) {
@@ -178,7 +167,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
         // Loads simulations from temporary file
         SedML sedml = Libsedml.readDocument(simulationsFile).getSedMLModel();
-        loadSimulations(simContainer, sedml);
+        simulations.addAll(loadSimulations(sedml));
       }
     }
 
@@ -219,11 +208,9 @@ class ReaderNodeModel extends NoInternalsModel {
     Path workspacePath = workspace == null ? null : workspace.toPath();
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
         genericModel, workspacePath, libFiles, workingDirectory);
+    fskObj.simulations.addAll(simulations);
 
-    simContainer.close();
-    BufferedDataTable simTable = simContainer.getTable();
-
-    return new PortObject[] {fskObj, simTable};
+    return new PortObject[] {fskObj};
   }
 
   private static String loadScript(final ArchiveEntry entry) throws IOException {
@@ -242,26 +229,27 @@ class ReaderNodeModel extends NoInternalsModel {
   /**
    * Load simulations from SedML to a BufferedDataContainer.
    */
-  private void loadSimulations(BufferedDataContainer container, SedML sedml) {
+  private List<FskSimulation> loadSimulations(SedML sedml) {
+
+    List<FskSimulation> simulations = new ArrayList<>(sedml.getModels().size());
 
     for (org.jlibsedml.Model model : sedml.getModels()) {
 
-      JsonObjectBuilder builder = Json.createObjectBuilder();
+      FskSimulation fskSimulation = new FskSimulation(model.getId());
       for (Change change : model.getListOfChanges()) {
         if (change.getChangeKind().equals(SEDMLTags.COMPUTE_CHANGE_KIND)) {
           ComputeChange cc = (ComputeChange) change;
 
           String variable = cc.getTargetXPath().toString();
           Double value = Double.parseDouble(cc.getMath().firstChild().getString());
-          builder.add(variable, value);
+
+          fskSimulation.getParameters().put(variable, value);
         }
       }
 
-      RowKey rowKey = RowKey.createRowKey(container.size());
-      StringCell nameCell = new StringCell(model.getId());
-      DataCell paramsCell = JSONCellFactory.create(builder.build());
-
-      container.addRowToTable(new DefaultRow(rowKey, nameCell, paramsCell));
+      simulations.add(fskSimulation);
     }
+
+    return simulations;
   }
 }

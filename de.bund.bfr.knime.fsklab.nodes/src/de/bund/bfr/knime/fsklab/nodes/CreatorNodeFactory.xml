@@ -8,7 +8,9 @@
 
 	<fullDescription>
 		<intro>
-			Creates an FSK object with the script and metadata provided by the user.
+			Creates an FSK object with the script and metadata provided by the user. The variables
+			defined in the parameters script are ensembled in a default simulation called
+			<i>defaultSimulation</i>.
 		</intro>
 		<option name="R model script">
 			File path of the model script (mandatory)

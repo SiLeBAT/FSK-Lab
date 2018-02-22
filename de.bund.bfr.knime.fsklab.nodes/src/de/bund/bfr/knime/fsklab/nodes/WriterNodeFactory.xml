@@ -22,9 +22,5 @@
 
 	<ports>
 		<inPort name="FSK object" index="0">Input FSK model</inPort>
-		<inPort name="Simulations" index="1" optional="true">
-		  Table with simulations to add to the FSKX file. Every row must define a simulation name
-		  and parameters.
-		</inPort>
 	</ports>
 </knimeNode>

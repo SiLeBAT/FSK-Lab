@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
@@ -42,6 +43,7 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.sbml.jsbml.validator.SyntaxChecker;
 import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.SimulationEntity;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
@@ -76,9 +78,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
     list = new JList<>(simulation_listModel);
 
-    // addButton = new JButton(addString);
     addButton = UIUtils.createAddButton();
-    // removeButton = new JButton(removeString);
     removeButton = UIUtils.createRemoveButton();
 
     simulationName = new JTextField(10);
@@ -134,24 +134,27 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     removeButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        // This method can be called only if
-        // there's a valid selection
-        // so go ahead and remove whatever's selected.
+        // This method can be called only if there's a valid selection so go ahead and remove
+        // whatever's selected.
         int index = list.getSelectedIndex();
-        simulation_listModel.remove(index);
 
-        int size = simulation_listModel.getSize();
+        // Default simulation (at position 0) should be fixed (cannot be removed)
+        if (index != 0) {
+          simulation_listModel.remove(index);
 
-        if (size == 0) { // Nobody's left, disable firing.
-          removeButton.setEnabled(false);
-        } else { // Select an index.
-          if (index == simulation_listModel.getSize()) {
-            // removed item in last position
-            index--;
+          int size = simulation_listModel.getSize();
+
+          if (size == 0) { // Nobody's left, disable firing.
+            removeButton.setEnabled(false);
+          } else { // Select an index.
+            if (index == simulation_listModel.getSize()) {
+              // removed item in last position
+              index--;
+            }
+
+            list.setSelectedIndex(index);
+            list.ensureIndexIsVisible(index);
           }
-
-          list.setSelectedIndex(index);
-          list.ensureIndexIsVisible(index);
         }
       }
     });
@@ -372,7 +375,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     }
     final FskPortObject inObj = (FskPortObject) input[0];
 
-
+    // If connected to same FSK model (input) then load simulations from settings
     if (Objects.equals(simulationSettings.genericModel, inObj.genericModel)) {
       // Updates settings
       this.settings = simulationSettings;
@@ -391,28 +394,41 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       list.setSelectedIndex(0);
       currentSimulation = savedList.get(0);
       updatePanel();
-    } else {
-      // Discard settings and replace them with input model
+    }
+    // If different (or new) connected FSK model then load simulations from input model
+    else {
+
       this.settings.genericModel = inObj.genericModel;
       currentGenericModel = inObj.genericModel;
-      if (simulation_listModel.getSize() == 0) {
-        currentSimulation = new SimulationEntity();
-        currentSimulation.setSimulationName("simulation1");
-        List<Parameter> tempPimulationParameters = currentGenericModel.modelMath.parameter.stream()
-            .filter(o -> o.classification == Classification.input).collect(Collectors.toList());
-        List<Parameter> simulationParameters = new ArrayList<Parameter>();
-        for (Parameter param : tempPimulationParameters) {
-          simulationParameters.add(new Parameter(param));
-        }
-        currentSimulation.setSimulationParameters(simulationParameters);
 
-        simulation_listModel.addElement(currentSimulation);
-        list.setSelectedIndex(0);
-        list.ensureIndexIsVisible(0);
-        list.revalidate();
-        list.repaint();
-        updatePanel();
+      simulation_listModel.clear();
+
+      // Add simulations from input model
+      for (FskSimulation fskSimulation : inObj.simulations) {
+
+        List<Parameter> params = new ArrayList<>(fskSimulation.getParameters().size());
+        for (Map.Entry<String, Double> entry : fskSimulation.getParameters().entrySet()) {
+
+          Parameter p = new Parameter();
+          p.name = entry.getKey();
+          p.value = entry.getValue().toString();
+
+          params.add(p);
+        }
+
+        SimulationEntity se = new SimulationEntity();
+        se.setSimulationName(fskSimulation.getName());
+        se.setSimulationParameters(params);
+
+        simulation_listModel.addElement(se);
       }
+
+      currentSimulation = simulation_listModel.firstElement();
+      list.setSelectedIndex(0);
+      list.ensureIndexIsVisible(0);
+      list.revalidate();
+      list.repaint();
+      updatePanel();
     }
   }
 
