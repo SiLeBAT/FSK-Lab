@@ -4,12 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.commons.io.FilenameUtils;
-import org.knime.core.data.DataColumnSpec;
-import org.knime.core.data.DataColumnSpecCreator;
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.DataTableSpecCreator;
-import org.knime.core.data.def.StringCell;
-import org.knime.core.data.json.JSONCell;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
@@ -107,21 +101,5 @@ public class NodeUtils {
 
     monitor.setMessage("Collecting captured output");
     executor.finishOutputCapturing(monitor);
-  }
-
-  static DataTableSpec createSimulationTableSpec() {
-
-    // Columns specs
-    DataColumnSpec nameSpec =
-        new DataColumnSpecCreator("Simulation name", StringCell.TYPE).createSpec();
-    DataColumnSpec paramSpec =
-        new DataColumnSpecCreator("Simulation parameters", JSONCell.TYPE).createSpec();
-
-    // Table spec
-    DataTableSpecCreator tableSpecCreator =
-        new DataTableSpecCreator().addColumns(nameSpec, paramSpec);
-    DataTableSpec tableSpec = tableSpecCreator.createSpec();
-
-    return tableSpec;
   }
 }
