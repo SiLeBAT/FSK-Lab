@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -27,11 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -52,10 +48,9 @@ import de.bund.bfr.knime.fsklab.SimulationEntity;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
-import de.bund.bfr.knime.fsklab.rakip.Parameter.Classification;
 import de.bund.bfr.swing.UI;
 
-public class SimulatorNodeDialog extends DataAwareNodeDialogPane implements FocusListener{
+public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
   private JList<SimulationEntity> list;
   private DefaultListModel<SimulationEntity> simulation_listModel;
@@ -63,7 +58,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane implements Focu
   private JButton removeButton;
   private JTextField simulationName;
   private JPanel simulationSettingPanel;
-  private SimulationEntity defaultSimulation ;
+  private SimulationEntity defaultSimulation;
   private static final String addString = "Add";
   private static final String removeString = "Remove";
 
@@ -107,7 +102,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane implements Focu
     list.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-        
+
         if (e.getValueIsAdjusting() == false) {
 
           @SuppressWarnings("unchecked")
@@ -121,8 +116,9 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane implements Focu
           }
 
           // If selection enable the fire button
-          
-          removeButton.setEnabled((list.getSelectedIndex() != -1 && !currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION)));
+
+          removeButton.setEnabled((list.getSelectedIndex() != -1
+              && !currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION)));
 
           updatePanel();
         }
@@ -142,9 +138,9 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane implements Focu
         // This method can be called only if there's a valid selection so go ahead and remove
         // whatever's selected.
         int index = list.getSelectedIndex();
-        
+
         // Default simulation (at position 0) should be fixed (cannot be removed)
-        if (!list.getSelectedValue().getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION) ) {
+        if (!list.getSelectedValue().getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION)) {
           simulation_listModel.remove(index);
 
           int size = simulation_listModel.getSize();
@@ -173,11 +169,11 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane implements Focu
     contraints.fill = GridBagConstraints.BOTH;
     contraints.anchor = GridBagConstraints.NORTHWEST;
     JPanel centerPanel = new JPanel(new GridBagLayout());
-   //
+
     centerPanel.add(simulationSettingPanel, contraints);
     JScrollPane scroll = new JScrollPane();
-    scroll.setViewportView(centerPanel);
-    
+    scroll.setViewportView(simulationSettingPanel);
+
     JScrollPane listScrollPane = new JScrollPane(list);
     JPanel buttonPane = UI.createHorizontalPanel(removeButton, simulationName, addButton);
 
@@ -195,35 +191,65 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane implements Focu
     simulationSettingPanel.removeAll();
     simulationSettingPanel.revalidate();
     simulationSettingPanel.repaint();
+
+    // Remove titled border if no simulation is selected
     if (simulation_listModel.size() == 0) {
       simulationSettingPanel.setBorder(null);
       return;
     }
 
-    List<Parameter> simulationParameters = currentSimulation.getSimulationParameters();
-    Border border = new CompoundBorder(new TitledBorder(currentSimulation.getSimulationName()),
-        new EmptyBorder(40, 50, 40, 50));
-    simulationSettingPanel.setBorder(border);
-    simulationSettingPanel.setLayout(new SpringLayout());
+    Border titledBorder = BorderFactory.createTitledBorder(currentSimulation.getSimulationName());
+    Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+    Border compoundBorder = BorderFactory.createCompoundBorder(titledBorder, emptyBorder);
+    simulationSettingPanel.setBorder(compoundBorder);
 
-    for (Parameter param : simulationParameters) {
-      JLabel paramLable = new JLabel(param.name, JLabel.TRAILING);
-      simulationSettingPanel.add(paramLable);
+    List<Parameter> parameters = currentSimulation.getSimulationParameters();
+
+    List<JLabel> labels = new ArrayList<>(parameters.size());
+    List<JTextField> fields = new ArrayList<>(parameters.size());
+
+    // Listener for text fields holding parameter values
+    FocusListener focusListener = new FocusListener() {
+
+      @Override
+      public void focusLost(FocusEvent e) {
+        JTextField field = (JTextField) e.getComponent();
+        try {
+          Double.parseDouble(field.getText());
+        } catch (NumberFormatException exception) {
+          field.setText("0.0");
+          JOptionPane.showMessageDialog(simulationSettingPanel,
+              "Please provide numeric value only!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+
+      @Override
+      public void focusGained(FocusEvent e) {
+        // does nothing
+      }
+    };
+
+    for (Parameter param : parameters) {
+
+      JLabel paramLabel = new JLabel(param.name, JLabel.TRAILING);
+
       JTextField paramField = new JTextField(10);
-      
-      paramField.addFocusListener(this);
-      paramLable.setLabelFor(paramField);
       paramField.setText(param.value);
-      paramField.addKeyListener(new SimulationParameterValueListener());
       simulationSettingPanel.add(paramField);
       paramField.putClientProperty("id", param.name);
-      paramField.setEditable(!currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
-      
+      paramField
+          .setEditable(!currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
+      paramField.addFocusListener(focusListener);
+      paramField.addKeyListener(new SimulationParameterValueListener());
+
+      paramLabel.setLabelFor(paramField);
+
+      labels.add(paramLabel);
+      fields.add(paramField);
     }
 
-    SpringUtilities.makeCompactGrid(simulationSettingPanel, // parent
-        simulationParameters.size(), 2, 3, 3, // initX, initY
-        3, 3); // xPad, yPad
+    JPanel optionsPanel = UI.createOptionsPanel(labels, fields);
+    simulationSettingPanel.add(optionsPanel);
   }
 
   class SimulationParameterValueListener implements KeyListener {
@@ -307,12 +333,12 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane implements Focu
 
       SimulationEntity sE = new SimulationEntity();
       sE.setSimulationName(simulationName.getText());
-      if(defaultSimulation == null) {
+      if (defaultSimulation == null) {
         defaultSimulation = simulation_listModel.get(0);
       }
-      
+
       List<Parameter> tempPimulationParameters = defaultSimulation.getSimulationParameters();
-     
+
       List<Parameter> simulationParameters = new ArrayList<Parameter>();
       for (Parameter param : tempPimulationParameters) {
         simulationParameters.add(new Parameter(param));
@@ -478,23 +504,5 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane implements Focu
     List<SimulationEntity> simulationList = asList(simulation_listModel);
     this.settings.setListOfSimulation(simulationList);
     this.settings.saveSettings(settings);
-  }
-
-  @Override
-  public void focusGained(FocusEvent e) {
-    // TODO Auto-generated method stub
-   
-  }
-
-  @Override
-  public void focusLost(FocusEvent e) {
-    // TODO Auto-generated method stub
-    try {
-      Double.parseDouble(((JTextField)e.getComponent()).getText());
-    }catch(NumberFormatException exc) {
-      ((JTextField)e.getComponent()).setText("0.0");
-      JOptionPane.showMessageDialog(settingPanel,  "Please Provide Numeric Values Only!", "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    
   }
 }
