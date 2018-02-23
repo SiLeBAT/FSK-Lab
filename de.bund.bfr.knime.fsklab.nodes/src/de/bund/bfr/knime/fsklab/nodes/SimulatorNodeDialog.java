@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -103,7 +104,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     list.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-
+        
         if (e.getValueIsAdjusting() == false) {
 
           @SuppressWarnings("unchecked")
@@ -117,7 +118,8 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
           }
 
           // If selection enable the fire button
-          removeButton.setEnabled(list.getSelectedIndex() != -1);
+          
+          removeButton.setEnabled((list.getSelectedIndex() != -1 && !currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION)));
 
           updatePanel();
         }
@@ -137,9 +139,9 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         // This method can be called only if there's a valid selection so go ahead and remove
         // whatever's selected.
         int index = list.getSelectedIndex();
-
+        
         // Default simulation (at position 0) should be fixed (cannot be removed)
-        if (index != 0) {
+        if (!list.getSelectedValue().getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION) ) {
           simulation_listModel.remove(index);
 
           int size = simulation_listModel.getSize();
@@ -165,11 +167,14 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     GridBagConstraints contraints = new GridBagConstraints();
     contraints.weightx = 1.0;
     contraints.weighty = 1.0;
-    contraints.fill = GridBagConstraints.HORIZONTAL;
+    contraints.fill = GridBagConstraints.BOTH;
     contraints.anchor = GridBagConstraints.NORTHWEST;
     JPanel centerPanel = new JPanel(new GridBagLayout());
+   //
     centerPanel.add(simulationSettingPanel, contraints);
-
+    JScrollPane scroll = new JScrollPane();
+    scroll.setViewportView(centerPanel);
+    
     JScrollPane listScrollPane = new JScrollPane(list);
     JPanel buttonPane = UI.createHorizontalPanel(removeButton, simulationName, addButton);
 
@@ -177,9 +182,9 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     JPanel leftPane = new JPanel(new BorderLayout());
     leftPane.add(listScrollPane, BorderLayout.CENTER);
     leftPane.add(buttonPane, BorderLayout.SOUTH);
-
+    settingPanel.setPreferredSize(new Dimension(600, 400));
     settingPanel.setBackground(UIUtils.WHITE);
-    settingPanel.add(centerPanel, BorderLayout.CENTER);
+    settingPanel.add(scroll, BorderLayout.CENTER);
     settingPanel.add(leftPane, BorderLayout.WEST);
   }
 
@@ -207,6 +212,8 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       paramField.addKeyListener(new SimulationParameterValueListener());
       simulationSettingPanel.add(paramField);
       paramField.putClientProperty("id", param.name);
+      paramField.setEditable(!currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
+      
     }
 
     SpringUtilities.makeCompactGrid(simulationSettingPanel, // parent
