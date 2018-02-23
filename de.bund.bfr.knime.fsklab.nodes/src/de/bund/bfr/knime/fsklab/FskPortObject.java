@@ -34,17 +34,22 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import org.apache.commons.io.FilenameUtils;
@@ -83,6 +88,7 @@ import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
+import de.bund.bfr.swing.UI;
 import ezvcard.VCard;
 import ezvcard.property.StructuredName;
 
@@ -347,8 +353,10 @@ public class FskPortObject implements PortObject {
     final JPanel librariesPanel = UIUtils.createLibrariesPanel(libs);
     final JPanel resourcesPanel = createResourcesViewPanel(workingDirectory);
 
+    JPanel simulationsPanel = new SimulationsPanel();
+
     return new JComponent[] {modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
-        librariesPanel, resourcesPanel};
+        librariesPanel, resourcesPanel, simulationsPanel};
   }
 
   // Metadata pane stuff
@@ -1070,5 +1078,74 @@ public class FskPortObject implements PortObject {
     panel.add(new JScrollPane(list));
 
     return panel;
+  }
+
+  private class SimulationsPanel extends JPanel {
+
+    private static final long serialVersionUID = -4887698302872695689L;
+
+    private JPanel parametersPanel;
+
+    public SimulationsPanel() {
+
+      // Panel to show parameters (show initially the simulation 0)
+      FskSimulation defaultSimulation = simulations.get(0);
+      JPanel formPanel = createFormPane(defaultSimulation);
+      parametersPanel = UI.createNorthPanel(formPanel);
+
+      createUI();
+    }
+
+    private void createUI() {
+
+      // Panel to select simulation
+      String[] simulationNames =
+          simulations.stream().map(FskSimulation::getName).toArray(String[]::new);
+      JList<String> list = new JList<>(simulationNames);
+      list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      list.addListSelectionListener(new ListSelectionListener() {
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+
+          // Get selected simulation
+          int selectedIndex = list.getSelectedIndex();
+          if (selectedIndex != -1) {
+            remove(parametersPanel);
+
+            FskSimulation selectedSimulation = simulations.get(selectedIndex);
+            JPanel formPanel = createFormPane(selectedSimulation);
+
+            parametersPanel = UI.createNorthPanel(formPanel);
+            add(parametersPanel, BorderLayout.CENTER);
+
+            revalidate();
+            repaint();
+          }
+        }
+      });
+      list.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+      JScrollPane browsePanel = new JScrollPane(list);
+
+      // Build simulations panel
+      setLayout(new BorderLayout());
+      setName("Simulations");
+      add(browsePanel, BorderLayout.WEST);
+      add(parametersPanel, BorderLayout.CENTER);
+    }
+
+    /** Create panel with parameter names and values. */
+    private JPanel createFormPane(FskSimulation simulation) {
+
+      List<JLabel> nameLabels = new ArrayList<>(simulations.size());
+      List<JComponent> valueLabels = new ArrayList<>(simulations.size());
+      for (Map.Entry<String, Double> entry : simulation.getParameters().entrySet()) {
+        nameLabels.add(new JLabel(entry.getKey()));
+        valueLabels.add(new JLabel(entry.getValue().toString()));
+      }
+
+      JPanel formPane = UI.createOptionsPanel(nameLabels, valueLabels);
+
+      return formPane;
+    }
   }
 }
