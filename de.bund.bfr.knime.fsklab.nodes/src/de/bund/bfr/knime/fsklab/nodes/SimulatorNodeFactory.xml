@@ -8,8 +8,9 @@
 
 	<fullDescription>
 		<intro>
-			Generate simulations for a FSK model. Every simulation is described in a row
-			with the simulation name and parameters.
+			Generate simulations for a FSK model.
+			The <i>defaultSimulation</i> settings created by the FSK creator and Editor are disabled by default.
+						
 		</intro>
 			
 		<option name="Simulation names">

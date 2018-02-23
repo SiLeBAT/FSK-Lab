@@ -21,7 +21,7 @@ import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 public class NodeUtils {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger(NodeUtils.class);
-
+  public static final String DEFAULT_SIMULATION = "defaultSimulation";
   /**
    * @return the libraries URI for the running platform.
    * @throws InvalidSettingsException if the running platform is not supported.
@@ -106,7 +106,7 @@ public class NodeUtils {
   }
 
   public static FskSimulation createDefaultSimulation(String parameterScript) {
-    FskSimulation defaultSimulation = new FskSimulation("defaultSimulation");
+    FskSimulation defaultSimulation = new FskSimulation(DEFAULT_SIMULATION);
 
     for (String line : parameterScript.split("\\r?\\n")) {
       if (line.startsWith("#") || StringUtils.isBlank(line)) {

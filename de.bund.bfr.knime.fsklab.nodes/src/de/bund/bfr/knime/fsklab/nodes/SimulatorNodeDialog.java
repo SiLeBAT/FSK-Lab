@@ -2,11 +2,14 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.AbstractList;
@@ -19,6 +22,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -51,7 +55,7 @@ import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.bund.bfr.knime.fsklab.rakip.Parameter.Classification;
 import de.bund.bfr.swing.UI;
 
-public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
+public class SimulatorNodeDialog extends DataAwareNodeDialogPane implements FocusListener{
 
   private JList<SimulationEntity> list;
   private DefaultListModel<SimulationEntity> simulation_listModel;
@@ -59,7 +63,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   private JButton removeButton;
   private JTextField simulationName;
   private JPanel simulationSettingPanel;
-
+  private SimulationEntity defaultSimulation ;
   private static final String addString = "Add";
   private static final String removeString = "Remove";
 
@@ -103,7 +107,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     list.addListSelectionListener(new ListSelectionListener() {
       @Override
       public void valueChanged(ListSelectionEvent e) {
-
+        
         if (e.getValueIsAdjusting() == false) {
 
           @SuppressWarnings("unchecked")
@@ -117,7 +121,8 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
           }
 
           // If selection enable the fire button
-          removeButton.setEnabled(list.getSelectedIndex() != -1);
+          
+          removeButton.setEnabled((list.getSelectedIndex() != -1 && !currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION)));
 
           updatePanel();
         }
@@ -137,9 +142,9 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         // This method can be called only if there's a valid selection so go ahead and remove
         // whatever's selected.
         int index = list.getSelectedIndex();
-
+        
         // Default simulation (at position 0) should be fixed (cannot be removed)
-        if (index != 0) {
+        if (!list.getSelectedValue().getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION) ) {
           simulation_listModel.remove(index);
 
           int size = simulation_listModel.getSize();
@@ -165,11 +170,14 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     GridBagConstraints contraints = new GridBagConstraints();
     contraints.weightx = 1.0;
     contraints.weighty = 1.0;
-    contraints.fill = GridBagConstraints.HORIZONTAL;
+    contraints.fill = GridBagConstraints.BOTH;
     contraints.anchor = GridBagConstraints.NORTHWEST;
     JPanel centerPanel = new JPanel(new GridBagLayout());
+   //
     centerPanel.add(simulationSettingPanel, contraints);
-
+    JScrollPane scroll = new JScrollPane();
+    scroll.setViewportView(centerPanel);
+    
     JScrollPane listScrollPane = new JScrollPane(list);
     JPanel buttonPane = UI.createHorizontalPanel(removeButton, simulationName, addButton);
 
@@ -177,9 +185,9 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     JPanel leftPane = new JPanel(new BorderLayout());
     leftPane.add(listScrollPane, BorderLayout.CENTER);
     leftPane.add(buttonPane, BorderLayout.SOUTH);
-
+    settingPanel.setPreferredSize(new Dimension(600, 400));
     settingPanel.setBackground(UIUtils.WHITE);
-    settingPanel.add(centerPanel, BorderLayout.CENTER);
+    settingPanel.add(scroll, BorderLayout.CENTER);
     settingPanel.add(leftPane, BorderLayout.WEST);
   }
 
@@ -202,11 +210,15 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       JLabel paramLable = new JLabel(param.name, JLabel.TRAILING);
       simulationSettingPanel.add(paramLable);
       JTextField paramField = new JTextField(10);
+      
+      paramField.addFocusListener(this);
       paramLable.setLabelFor(paramField);
       paramField.setText(param.value);
       paramField.addKeyListener(new SimulationParameterValueListener());
       simulationSettingPanel.add(paramField);
       paramField.putClientProperty("id", param.name);
+      paramField.setEditable(!currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
+      
     }
 
     SpringUtilities.makeCompactGrid(simulationSettingPanel, // parent
@@ -225,7 +237,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
       for (Parameter param : currentSimulation.getSimulationParameters()) {
         if (param.name.equalsIgnoreCase((String) source.getClientProperty("id"))) {
-          System.out.println("param.value  " + source.getText());
 
           if (param.dataType.equals("Integer")) {
 
@@ -296,9 +307,12 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
       SimulationEntity sE = new SimulationEntity();
       sE.setSimulationName(simulationName.getText());
-
-      List<Parameter> tempPimulationParameters = currentGenericModel.modelMath.parameter.stream()
-          .filter(o -> o.classification == Classification.input).collect(Collectors.toList());
+      if(defaultSimulation == null) {
+        defaultSimulation = simulation_listModel.get(0);
+      }
+      
+      List<Parameter> tempPimulationParameters = defaultSimulation.getSimulationParameters();
+     
       List<Parameter> simulationParameters = new ArrayList<Parameter>();
       for (Parameter param : tempPimulationParameters) {
         simulationParameters.add(new Parameter(param));
@@ -464,5 +478,23 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     List<SimulationEntity> simulationList = asList(simulation_listModel);
     this.settings.setListOfSimulation(simulationList);
     this.settings.saveSettings(settings);
+  }
+
+  @Override
+  public void focusGained(FocusEvent e) {
+    // TODO Auto-generated method stub
+   
+  }
+
+  @Override
+  public void focusLost(FocusEvent e) {
+    // TODO Auto-generated method stub
+    try {
+      Double.parseDouble(((JTextField)e.getComponent()).getText());
+    }catch(NumberFormatException exc) {
+      ((JTextField)e.getComponent()).setText("0.0");
+      JOptionPane.showMessageDialog(settingPanel,  "Please Provide Numeric Values Only!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
   }
 }
