@@ -55,5 +55,9 @@
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.EditorNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FSK2MetadataNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.SimulatorNodeFactory" />
+     
+     <!-- Joiner node is marked deprecated while in development so users cannot use it. It will be
+     undeprecated once it is finished. -->
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory" deprecated="true" />
    </extension>
 </plugin>

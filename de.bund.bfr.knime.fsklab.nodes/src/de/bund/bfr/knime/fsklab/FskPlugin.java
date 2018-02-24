@@ -28,8 +28,6 @@ public class FskPlugin extends AbstractUIPlugin {
 
   private static FskPlugin plugin;
 
-  public ResourceBundle MESSAGES_BUNDLE;
-
   /**
    * Jackson object mapper with {@link RakipModule}. Initialized with {@link #start(BundleContext)}
    * and assigned null with {@link #stop(BundleContext)}.
