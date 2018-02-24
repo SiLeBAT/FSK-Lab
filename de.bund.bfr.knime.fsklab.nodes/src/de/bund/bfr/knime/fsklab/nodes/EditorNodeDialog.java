@@ -412,7 +412,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       setContentPane(optionPane);
-      setResizable(false);
+      setResizable(true);
       pack();
       setLocationRelativeTo(null); // center dialog
       setVisible(true);
