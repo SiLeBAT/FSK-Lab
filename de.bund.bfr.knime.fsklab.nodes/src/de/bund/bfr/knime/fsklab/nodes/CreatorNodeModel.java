@@ -488,7 +488,7 @@ class CreatorNodeModel extends NoInternalsModel {
        * @param num 1-based row number in spreadsheet. The actual number stored is 0-based.
        */
       Row(int num) {
-        this.num = num;
+        this.num = num - 1;
       }
     }
 
@@ -511,6 +511,9 @@ class CreatorNodeModel extends NoInternalsModel {
      */
     static String getStringValue(XSSFSheet sheet, int row, Column col) {
       XSSFCell cell = sheet.getRow(row).getCell(col.ordinal());
+      if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+        return Double.toString(cell.getNumericCellValue());
+      }
       return cell.getStringCellValue();
     }
 
@@ -909,8 +912,11 @@ class CreatorNodeModel extends NoInternalsModel {
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Hazard type is missing");
       }
+
+      XSSFCell nameCell = sheet.getRow(Row.HAZARD_NAME.num).getCell(Column.I.ordinal());
       if (sheet.getRow(Row.HAZARD_NAME.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
+        System.out.println(nameCell.getRawValue());
         throw new IllegalArgumentException("Hazard name is missing");
       }
       if (sheet.getRow(Row.HAZARD_UNIT.num).getCell(Column.I.ordinal())
@@ -1153,13 +1159,16 @@ class CreatorNodeModel extends NoInternalsModel {
 
       Parameter param = new Parameter();
       param.id = getStringValue(sheet, row, Column.L);
-      try {
-        param.classification =
-            Parameter.Classification.valueOf(getStringValue(sheet, row, Column.M));
-      } catch (Exception exception) {
-        throw new IllegalArgumentException(
-            "Invalid parameter classification: " + getStringValue(sheet, row, Column.M));
+
+      String classificationText = getStringValue(sheet, row, Column.M).toLowerCase();
+      if (classificationText.startsWith("input")) {
+        param.classification = Parameter.Classification.input;
+      } else if (classificationText.startsWith("constant")) {
+        param.classification = Parameter.Classification.constant;
+      } else if (classificationText.startsWith("output")) {
+        param.classification = Parameter.Classification.output;
       }
+
       param.name = getStringValue(sheet, row, Column.N);
       param.description = getStringValue(sheet, row, Column.O);
       param.type = getStringValue(sheet, row, Column.P);
