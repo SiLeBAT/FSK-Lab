@@ -21,14 +21,14 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -77,7 +77,6 @@ import ezvcard.VCard;
 import ezvcard.parameter.TelephoneType;
 import ezvcard.property.Address;
 import ezvcard.property.Email;
-import ezvcard.property.Organization;
 import ezvcard.property.StructuredName;
 
 class CreatorNodeModel extends NoInternalsModel {
@@ -160,7 +159,7 @@ class CreatorNodeModel extends NoInternalsModel {
         genericModel.scope = RAKIPSheetImporter.retrieveScope(sheet);
         genericModel.dataBackground = RAKIPSheetImporter.retrieveDataBackground(sheet);
         // TODO: ModelMath
-        for (int i = 124; i < 130; i++) {
+        for (int i = 132; i <= 152; i++) {
           try {
             Parameter param = RAKIPSheetImporter.retrieveParameter(sheet, i);
             genericModel.modelMath.parameter.add(param);
@@ -356,117 +355,139 @@ class CreatorNodeModel extends NoInternalsModel {
   private static class RAKIPSheetImporter {
 
     enum Column {
-      A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
+      A,
+      B,
+      C,
+      D,
+      E,
+      F,
+      G,
+      H,
+      I,
+      J,
+      K,
+      L,
+      M,
+      N,
+      O,
+      P,
+      Q,
+      R,
+      S,
+      T,
+      U,
+      V,
+      W,
+      X,
+      Y,
+      Z,
+      AA
     }
 
-    enum GeneralInformationRow {
+    private enum Row {
 
-      NAME(1), SOURCE(2), IDENTIFIER(3), RIGHTS(7), AVAILABILITY(8), LANGUAGE(23), SOFTWARE(
-          24), LANGUAGE_WRITTEN_IN(25), STATUS(33), OBJECTIVE(34), DESCRIPTION(35);
+      GENERAL_INFORMATION_NAME(2),
+      GENERAL_INFORMATION_SOURCE(3),
+      GENERAL_INFORMATION_IDENTIFIER(4),
+      GENERAL_INFORMATION_RIGHTS(8),
+      GENERAL_INFORMATION_AVAILABILITY(9),
+      GENERAL_INFORMATION_LANGUAGE(24),
+      GENERAL_INFORMATION_SOFTWARE(25),
+      GENERAL_INFORMATION_LANGUAGE_WRITTEN_IN(26),
+      GENERAL_INFORMATION_STATUS(32),
+      GENERAL_INFORMATION_OBJECTIVE(33),
+      GENERAL_INFORMATION_DESCRIPTION(34),
 
+      MODEL_CATEGORY_CLASS(27),
+      MODEL_CATEGORY_SUBCLASS(28),
+      MODEL_CATEGORY_COMMENT(29),
+      MODEL_CATEGORY_PROCESS(30),
+
+      HAZARD_TYPE(46),
+      HAZARD_NAME(47),
+      HAZARD_DESCRIPTION(48),
+      HAZARD_UNIT(49),
+      HAZARD_ADVERSE_EFFECT(50),
+      HAZARD_CONTAMINATION_SOURCE(51),
+      HAZARD_BMD(52), // benchmark dose
+      HAZARD_MRL(53), // maximum residue limit
+      HAZARD_NOAEL(54), // No Observed Adverse Affect Level
+      HAZARD_LOAEL(55), // Lowest Observed Adverse Effect Level
+      HAZARD_AOEL(56), // Acceptable Operator Exposure Level
+      HAZARD_ARFD(57), // Acute Reference Dose
+      HAZARD_ADI(58), // Acceptable Daily Intake
+      HAZARD_IND_SUM(59),
+
+      POPULATION_GROUP_NAME(60), // Population name
+      POPULATION_GROUP_TARGET(61), // Target population
+      POPULATION_GROUP_SPAN(62), // Population span (years)
+      POPULATION_GROUP_DESCRIPTION(63), // Population description
+      POPULATION_GROUP_AGE(64), // Population age
+      POPULATION_GROUP_GENDER(65), // Population gender
+      POPULATION_GROUP_BMI(66), // Body mass index
+      POPULATION_GROUP_DIET(67), // Special diet groups
+      POPULATION_GROUP_PATTERN_CONSUMPTION(68),
+      POPULATION_GROUP_REGION(69),
+      POPULATION_GROUP_COUNTRY(70),
+      POPULATION_GROUP_RISK(71), // Risk and population factors
+      POPULATION_GROUP_SEASON(72),
+
+      STUDY_ID(77),
+      STUDY_TITLE(78),
+      STUDY_DESCRIPTION(79),
+      STUDY_DESIGN_TYPE(80),
+      STUDY_ASSAY_MEASUREMENTS_TYPE(81),
+      STUDY_ASSAY_TECHNOLOGY_TYPE(82),
+      STUDY_ASSAY_TECHNOLOGY_PLATFORM(83),
+      STUDY_ACCREDITATION_PROCEDURE(84),
+      STUDY_PROTOCOL_NAME(85),
+      STUDY_PROTOCOL_TYPE(86),
+      STUDY_PROTOCOL_DESCRIPTION(87),
+      STUDY_PROTOCOL_URI(88),
+      STUDY_PROTOCOL_VERSION(89),
+      STUDY_PROTOCOL_PARAMETERS_NAME(90),
+      STUDY_PROTOCOL_COMPONENTS_NAME(91),
+      STUDY_PROTOCOL_COMPONENTS_TYPE(92),
+
+      STUDY_SAMPLE_NAME(93),
+      STUDY_SAMPLE_PROTOCOL(94), // Protocol of sample collection
+      STUDY_SAMPLE_STRATEGY(95), // Sampling strategy
+      STUDY_SAMPLE_TYPE(96), // Type of sampling program
+      STUDY_SAMPLE_METHOD(97), // Sampling method
+      STUDY_SAMPLE_PLAN(98), // Sampling plan
+      STUDY_SAMPLE_WEIGHT(99), // Sampling weight
+      STUDY_SAMPLE_SIZE(100), // Sampling size
+      STUDY_SAMPLE_SIZE_UNIT(101), // Lot size unit
+      STUDY_SAMPLE_POINT(102), // Sampling point
+
+      DIETARY_ASSESSMENT_METHOD_TOOL(103), // Methodological tool to collect data
+      DIETARY_ASSESSMENT_METHOD_1DAY(104), // Number of non-consecutive one-day
+      DIETARY_ASSESSMENT_METHOD_SOFTWARE_TOOL(105), // Dietary software tool
+      DIETARY_ASSESSMENT_METHOD_ITEMS(106), // Number of food items
+      DIETARY_ASSESSMENT_METHOD_RECORD_TYPE(107), // Type of records
+      DIETARY_ASSESSMENT_METHOD_DESCRIPTORS(108), // Food descriptors
+
+      LABORATORY_ACCREDITATION(109),
+      LABORATORY_NAME(110),
+      LABORATORY_COUNTRY(111),
+
+      ASSAY_NAME(112), // Assay name
+      ASSAY_DESCRIPTION(113), // Assay description
+      ASSAY_MOIST_PERC(114), // Percentage of moisture
+      ASSAY_FAT_PERC(115), // Percentage of fat
+      ASSAY_DETECTION_LIMIT(116), /// Limit of detection
+      ASSAY_QUANTIFICATION_LIMIT(117), // Limit of quantification
+      ASSAY_LEFT_CENSORED_DATA(118), // Left-censored data
+      ASSAY_CONTAMINATION_RANGE(119), // Range of contamination
+      ASSAY_UNCERTAINTY_VALUE(120); // Uncertainty value
+
+      /** Actual row number. 0-based. */
       final int num;
 
-      GeneralInformationRow(int num) {
-        this.num = num;
-      }
-    }
-
-    enum ModelCategoryRow {
-
-      MODEL_CLASS(26), MODEL_SUBCLASS(27), MODEL_CLASS_COMMENT(28), BASIC_PROCESS(31);
-
-      final int num;
-
-      ModelCategoryRow(int num) {
-        this.num = num;
-      }
-    }
-
-    enum HazardRow {
-
-      TYPE(47), NAME(48), DESCRIPTION(49), UNIT(50), ADVERSE_EFFECT(51), SOURCE_OF_CONTAMINATION(
-          52), BMD(53), MRL(54), NOAEL(55), LOAEL(56), AOEL(57), ARD(58), ADI(59), IND_SUM(60);
-
-      final int num;
-
-      HazardRow(int num) {
-        this.num = num;
-      }
-    }
-
-    enum PopulationGroupRow {
-
-      NAME(61), TARGET(62), SPAN(63), DESCRIPTION(64), AGE(65), GENDER(66), BMI(
-          67), SPECIAL_DIET_GROUPS(
-              68), PATTERN_CONSUMPTION(69), REGION(70), COUNTRY(71), RISK_FACTOR(72), SEASON(73);
-
-      final int num;
-
-      PopulationGroupRow(int num) {
-        this.num = num;
-      }
-    }
-
-    enum StudyRow {
-
-      ID(78), TITLE(79), DESCRIPTION(80), DESIGN_TYPE(81), ASSAY_MEASUREMENT_TYPE(
-          82), ASSAY_TECHNOLOGY_TYPE(83), ASSAY_TECHNOLOGY_PLATFORM(84), ACCREDITATION_PROCEDURE(
-              85), PROTOCOL_NAME(86), PROTOCOL_TYPE(87), PROTOCOL_DESCRIPTION(88), PROTOCOL_URI(
-                  89), PROTOCOL_VERSION(90), PROTOCOL_PARAMETERS_NAME(
-                      91), PROTOCOL_COMPONENTS_NAME(92), PROTOCOL_COMPONENTS_TYPE(93);
-
-      final int num;
-
-      StudyRow(int num) {
-        this.num = num;
-      }
-    }
-
-    enum StudySampleRow {
-
-      NAME(94), MOIST_PERC(95), SAMPLING_STRATEGY(96), SAMPLING_PROGRAM_TYPE(97), SAMPLING_METHOD(
-          98), SAMPLING_PLAN(99), SAMPLING_WEIGHT(
-              100), SAMPLING_SIZE(101), LOT_SIZE_UNIT(102), SAMPLING_POINT(103);
-
-      final int num;
-
-      StudySampleRow(int num) {
-        this.num = num;
-      }
-    }
-
-    enum DAMRow {
-
-      METHOD_TOOL(104), NON_CONSECUTIVE_1DAY(105), DIETARY_SOFTWARE_TOOL(106), FOOD_ITEMS(
-          107), RECORD_TYPE(108), FOOD_DESCRIPTORS(109);
-
-      final int num;
-
-      DAMRow(int num) {
-        this.num = num;
-      }
-    }
-
-    enum LaboratoryRow {
-
-      ACCREDITATION(110), NAME(111), COUNTRY(112);
-
-      final int num;
-
-      LaboratoryRow(int num) {
-        this.num = num;
-      }
-    }
-
-    enum AssayRow {
-
-      NAME(113), DESCRIPTION(114), MOIST_PERC(115), FAT_PERC(116), DETECTION_LIMIT(
-          117), QUANTIFICATION_LIMIT(
-              118), LEFT_CENSORED_DATA(119), CONTAMINATION_RANGE(120), UNCERTAINTY_VALUE(121);
-
-      final int num;
-
-      AssayRow(int num) {
+      /**
+       * @param num 1-based row number in spreadsheet. The actual number stored is 0-based.
+       */
+      Row(int num) {
         this.num = num;
       }
     }
@@ -480,6 +501,11 @@ class CreatorNodeModel extends NoInternalsModel {
       return cell.getNumericCellValue();
     }
 
+    static Double getNumericValue(XSSFSheet sheet, Row row, Column col) {
+      XSSFCell cell = sheet.getRow(row.num).getCell(col.ordinal());
+      return cell.getNumericCellValue();
+    }
+
     /**
      * @return empty string for blank cells.
      */
@@ -488,30 +514,32 @@ class CreatorNodeModel extends NoInternalsModel {
       return cell.getStringCellValue();
     }
 
-    /**
-     * Get strings from a cell with multiple values separated with commas.
-     */
-    static List<String> getStringListValue(XSSFSheet sheet, int row, Column col) {
-      XSSFCell cell = sheet.getRow(row).getCell(col.ordinal());
+    static String getStringValue(XSSFSheet sheet, Row row, Column col) {
+      XSSFCell cell = sheet.getRow(row.num).getCell(col.ordinal());
+      return cell.getStringCellValue();
+    }
+
+    static List<String> getStringListValue(XSSFSheet sheet, Row row, Column col) {
+      XSSFCell cell = sheet.getRow(row.num).getCell(col.ordinal());
       return Arrays.stream(cell.getStringCellValue().split(",")).collect(Collectors.toList());
     }
 
     static GeneralInformation retrieveGeneralInformation(XSSFSheet sheet) {
 
       GeneralInformation gi = new GeneralInformation();
-      gi.name = getStringValue(sheet, GeneralInformationRow.NAME.num, Column.H);
-      gi.source = getStringValue(sheet, GeneralInformationRow.SOURCE.num, Column.H);
-      gi.identifier = getStringValue(sheet, GeneralInformationRow.IDENTIFIER.num, Column.H);
-      gi.rights = getStringValue(sheet, GeneralInformationRow.RIGHTS.num, Column.H);
+      gi.name = getStringValue(sheet, Row.GENERAL_INFORMATION_NAME, Column.I);
+      gi.source = getStringValue(sheet, Row.GENERAL_INFORMATION_SOURCE, Column.I);
+      gi.identifier = getStringValue(sheet, Row.GENERAL_INFORMATION_IDENTIFIER, Column.I);
+      gi.rights = getStringValue(sheet, Row.GENERAL_INFORMATION_RIGHTS, Column.I);
       gi.isAvailable =
-          getStringValue(sheet, GeneralInformationRow.AVAILABILITY.num, Column.H) == "Yes";
-      gi.language = getStringValue(sheet, GeneralInformationRow.LANGUAGE.num, Column.H);
-      gi.software = getStringValue(sheet, GeneralInformationRow.SOFTWARE.num, Column.H);
+          getStringValue(sheet, Row.GENERAL_INFORMATION_AVAILABILITY, Column.I) == "Yes";
+      gi.language = getStringValue(sheet, Row.GENERAL_INFORMATION_LANGUAGE, Column.I);
+      gi.software = getStringValue(sheet, Row.GENERAL_INFORMATION_SOFTWARE, Column.I);
       gi.languageWrittenIn =
-          getStringValue(sheet, GeneralInformationRow.LANGUAGE_WRITTEN_IN.num, Column.H);
-      gi.status = getStringValue(sheet, GeneralInformationRow.STATUS.num, Column.H);
-      gi.objective = getStringValue(sheet, GeneralInformationRow.OBJECTIVE.num, Column.H);
-      gi.description = getStringValue(sheet, GeneralInformationRow.DESCRIPTION.num, Column.H);
+          getStringValue(sheet, Row.GENERAL_INFORMATION_LANGUAGE_WRITTEN_IN, Column.I);
+      gi.status = getStringValue(sheet, Row.GENERAL_INFORMATION_STATUS, Column.I);
+      gi.objective = getStringValue(sheet, Row.GENERAL_INFORMATION_OBJECTIVE, Column.I);
+      gi.description = getStringValue(sheet, Row.GENERAL_INFORMATION_DESCRIPTION, Column.I);
 
       // retrieve creators
       for (int numRow = 3; numRow < 7; numRow++) {
@@ -544,118 +572,197 @@ class CreatorNodeModel extends NoInternalsModel {
      */
     static VCard retrieveCreator(XSSFSheet sheet, int row) {
 
-      VCard vCard = new VCard();
 
-      String nameText = getStringValue(sheet, row, Column.K);
-      String organizationText = getStringValue(sheet, row, Column.L);
-      String telephoneText = getStringValue(sheet, row, Column.M);
-      String mailText = getStringValue(sheet, row, Column.N);
-      String countryText = getStringValue(sheet, row, Column.O);
-      String cityText = getStringValue(sheet, row, Column.P);
-      Integer postalCodeInt = getNumericValue(sheet, row, Column.Q).intValue();
+      /*
+       * Get values from spreadsheet
+       * 
+       * Note: name (column L) is redundant and not used. The structured name already contains given
+       * family name, given name and additional names.
+       */
+      String honorific = getStringValue(sheet, row, Column.K); // honorific prefix
+      String givenName = getStringValue(sheet, row, Column.M);
+      String additionalName = getStringValue(sheet, row, Column.N);
+      String familyName = getStringValue(sheet, row, Column.O);
+      String organization = getStringValue(sheet, row, Column.P);
+      String telephone = getStringValue(sheet, row, Column.Q);
+      String email = getStringValue(sheet, row, Column.R);
+      String country = getStringValue(sheet, row, Column.S);
+      String city = getStringValue(sheet, row, Column.T);
+      String zipCode = getStringValue(sheet, row, Column.U);
+      String postOfficeBox = getStringValue(sheet, row, Column.V);
+      String streetAddress = getStringValue(sheet, row, Column.W);
+      String extendedAddress = getStringValue(sheet, row, Column.X);
+      String region = getStringValue(sheet, row, Column.Y);
 
-      // throw exception if mail is missing
-      if (mailText.isEmpty()) {
+      // Check mandatory properties and throw exception if missing
+      if (email.isEmpty()) {
         throw new IllegalArgumentException("Missing mail");
       }
 
-      // name is optional. Ignore empty cell.
-      if (!nameText.isEmpty()) {
+      VCard vCard = new VCard();
+
+      // StructuredName <- family, given and additional names with prefixes
+      {
         StructuredName structuredName = new StructuredName();
-        structuredName.setFamily(nameText.split(",")[0]); // Assign family name
-        structuredName.setGiven(nameText.split(",")[1]); // Assign given name
+        structuredName.setFamily(familyName);
+        structuredName.setGiven(givenName);
+        structuredName.getAdditionalNames().add(additionalName);
+        structuredName.getPrefixes().add(honorific);
         vCard.setStructuredName(structuredName);
       }
 
       // organization is optional. Ignore empty cell.
-      if (!organizationText.isEmpty()) {
-        Organization organization = new Organization();
-        organization.getValues().add(organizationText);
+      if (!organization.isEmpty()) {
         vCard.setOrganization(organization);
       }
 
       // telephone is optional. Ignore empty cell.
-      if (!telephoneText.isEmpty()) {
-        vCard.addTelephoneNumber(telephoneText, TelephoneType.VOICE);
+      if (!telephone.isEmpty()) {
+        vCard.addTelephoneNumber(telephone, TelephoneType.VOICE);
       }
 
-      vCard.addEmail(new Email(mailText));
+      vCard.addEmail(new Email(email));
 
-      // import country, city and postal code
-      if (!countryText.isEmpty() && !cityText.isEmpty() && postalCodeInt != 0) {
+      // Address <- country, city and postal code
+      {
         Address address = new Address();
-        address.setCountry(countryText);
-        address.setLocality(cityText);
-        address.setPostalCode(postalCodeInt.toString());
+        address.setCountry(country);
+        address.setLocality(city);
+        address.setPostalCode(zipCode);
+        address.setPoBox(postOfficeBox);
+        address.setStreetAddress(streetAddress);
+        address.setExtendedAddress(extendedAddress);
+        address.setRegion(region);
+
         vCard.addAddress(address);
       }
 
       return vCard;
     }
 
-    static Map<String, com.gmail.gcolaianni5.jris.bean.Type> RIS_TYPES =
-        new HashMap<String, com.gmail.gcolaianni5.jris.bean.Type>() {
+    /**
+     * @param string Whole string with the type. E.g. "Abstract" or "Audiovisual material".
+     * @return the RIS type corresponding to the given string. If null, empty or non-valid string
+     *         return null.
+     */
+    private static com.gmail.gcolaianni5.jris.bean.Type getRisType(String string) {
 
-          private static final long serialVersionUID = 9216631877569612872L;
+      Type type = null;
 
-          {
-            put("Abstract", Type.ABST);
-            put("Audiovisual material", Type.ADVS);
-            put("Aggregated Database", Type.AGGR);
-            put("Ancient Text", Type.ANCIENT);
-            put("Art Work", Type.ART);
-            put("Bill", Type.BILL);
-            put("Blog", Type.BLOG);
-            put("Whole book", Type.BOOK);
-            put("Case", Type.CASE);
-            put("Book chapter", Type.CHAP);
-            put("Chart", Type.CHART);
-            put("Classical Work", Type.CLSWK);
-            put("Computer program", Type.COMP);
-            put("Conference proceeding", Type.CONF);
-            put("Conference paper", Type.CPAPER);
-            put("Catalog", Type.CTLG);
-            put("Data file", Type.DATA);
-            put("Online Database", Type.DBASE);
-            put("Dictionary", Type.DICT);
-            put("Electronic Book", Type.EBOOK);
-            put("Electronic Book Section", Type.ECHAP);
-            put("Edited Book", Type.EDBOOK);
-            put("Electronic Article", Type.EJOUR);
-            put("Web Page", Type.ELEC);
-            put("Encyclopedia", Type.ENCYC);
-            put("Equation", Type.EQUA);
-            put("Figure", Type.FIGURE);
-            put("Generic", Type.GEN);
-            put("Government Document", Type.GOVDOC);
-            put("Grant", Type.GRANT);
-            put("Hearing", Type.HEAR);
-            put("Internet Communication", Type.ICOMM);
-            put("In Press", Type.INPR);
-            put("Journal (full)", Type.JFULL);
-            put("Journal", Type.JOUR);
-            put("Legal Rule or Regulation", Type.LEGAL);
-            put("Manuscript", Type.MANSCPT);
-            put("Map", Type.MAP);
-            put("Magazine article", Type.MGZN);
-            put("Motion picture", Type.MPCT);
-            put("Online Multimedia", Type.MULTI);
-            put("Music score", Type.MUSIC);
-            put("Newspaper", Type.NEWS);
-            put("Pamphlet", Type.PAMP);
-            put("Patent", Type.PAT);
-            put("Personal communication", Type.PCOMM);
-            put("Report", Type.RPRT);
-            put("Serial publication", Type.SER);
-            put("Slide", Type.SLIDE);
-            put("Sound recording", Type.SOUND);
-            put("Standard", Type.STAND);
-            put("Statute", Type.STAT);
-            put("Thesis/Dissertation", Type.THES);
-            put("Unpublished work", Type.UNPB);
-            put("Video recording", Type.VIDEO);
-          }
-        };
+      if (string.equals("Abstract")) {
+        type = Type.ABST;
+      } else if (string.equals("Audiovisual material")) {
+        type = Type.ADVS;
+      } else if (string.equals("Aggregated Database")) {
+        type = Type.AGGR;
+      } else if (string.equals("Ancient Text")) {
+        type = Type.ANCIENT;
+      } else if (string.equals("Art Work")) {
+        type = Type.ART;
+      } else if (string.equals("Bill")) {
+        type = Type.BILL;
+      } else if (string.equals("Blog")) {
+        type = Type.BLOG;
+      } else if (string.equals("Whole book")) {
+        type = Type.BOOK;
+      } else if (string.equals("Case")) {
+        type = Type.CASE;
+      } else if (string.equals("Book chapter")) {
+        type = Type.CHAP;
+      } else if (string.equals("Chart")) {
+        type = Type.CHART;
+      } else if (string.equals("Classical work")) {
+        type = Type.CLSWK;
+      } else if (string.equals("Computer program")) {
+        type = Type.COMP;
+      } else if (string.equals("Conference proceeding")) {
+        type = Type.CONF;
+      } else if (string.equals("Conference paper")) {
+        type = Type.CPAPER;
+      } else if (string.equals("Catalog")) {
+        type = Type.CTLG;
+      } else if (string.equals("Data file")) {
+        type = Type.DATA;
+      } else if (string.equals("Online Database")) {
+        type = Type.DBASE;
+      } else if (string.equals("Dictionary")) {
+        type = Type.DICT;
+      } else if (string.equals("Electronic Book")) {
+        type = Type.EBOOK;
+      } else if (string.equals("Electronic Book Section")) {
+        type = Type.ECHAP;
+      } else if (string.equals("Edited Book")) {
+        type = Type.EDBOOK;
+      } else if (string.equals("Electronic Article")) {
+        type = Type.EJOUR;
+      } else if (string.equals("Web Page")) {
+        type = Type.ELEC;
+      } else if (string.equals("Encyclopedia")) {
+        type = Type.ENCYC;
+      } else if (string.equals("Equation")) {
+        type = Type.EQUA;
+      } else if (string.equals("Figure")) {
+        type = Type.FIGURE;
+      } else if (string.equals("Generic")) {
+        type = Type.GEN;
+      } else if (string.equals("Government Document")) {
+        type = Type.GOVDOC;
+      } else if (string.equals("Grant")) {
+        type = Type.GRANT;
+      } else if (string.equals("Hearing")) {
+        type = Type.HEAR;
+      } else if (string.equals("Internet Communication")) {
+        type = Type.ICOMM;
+      } else if (string.equals("In Press")) {
+        type = Type.INPR;
+      } else if (string.equals("Journal (full)")) {
+        type = Type.JFULL;
+      } else if (string.equals("Journal")) {
+        type = Type.JOUR;
+      } else if (string.equals("Legal Rule or Regulation")) {
+        type = Type.LEGAL;
+      } else if (string.equals("Manuscript")) {
+        type = Type.MANSCPT;
+      } else if (string.equals("Map")) {
+        type = Type.MAP;
+      } else if (string.equals("Magazine article")) {
+        type = Type.MGZN;
+      } else if (string.equals("Motion picture")) {
+        type = Type.MPCT;
+      } else if (string.equals("Online Multimedia")) {
+        type = Type.MULTI;
+      } else if (string.equals("Music score")) {
+        type = Type.MUSIC;
+      } else if (string.equals("Newspaper")) {
+        type = Type.NEWS;
+      } else if (string.equals("Pamphlet")) {
+        type = Type.PAMP;
+      } else if (string.equals("Patent")) {
+        type = Type.PAT;
+      } else if (string.equals("Personal communication")) {
+        type = Type.PCOMM;
+      } else if (string.equals("Report")) {
+        type = Type.RPRT;
+      } else if (string.equals("Serial publication")) {
+        type = Type.SER;
+      } else if (string.equals("Slide")) {
+        type = Type.SLIDE;
+      } else if (string.equals("Sound recording")) {
+        type = Type.SOUND;
+      } else if (string.equals("Standard")) {
+        type = Type.STAND;
+      } else if (string.equals("Statute")) {
+        type = Type.STAT;
+      } else if (string.equals("Thesis/Dissertation")) {
+        type = Type.THES;
+      } else if (string.equals("Unpublished work")) {
+        type = Type.UNPB;
+      } else if (string.equals("Video recording")) {
+        type = Type.VIDEO;
+      }
+
+      return type;
+    }
 
     /**
      * Import reference from Excel row.
@@ -702,51 +809,60 @@ class CreatorNodeModel extends NoInternalsModel {
      */
     static Record retrieveReference(XSSFSheet sheet, int row) {
 
-      String isReferenceDescriptionText = getStringValue(sheet, row, Column.K);
-      String typeText = getStringValue(sheet, row, Column.L);
-      Double dateText = getNumericValue(sheet, row, Column.M);
-      Double pmidText = getNumericValue(sheet, row, Column.N);
-      String doiText = getStringValue(sheet, row, Column.O);
-      String authorListText = getStringValue(sheet, row, Column.P);
-      String titleText = getStringValue(sheet, row, Column.Q);
-      String abstractText = getStringValue(sheet, row, Column.R);
-      String journalVolumeIssueText = getStringValue(sheet, row, Column.S);
-      String statusText = getStringValue(sheet, row, Column.T);
-      String websiteText = getStringValue(sheet, row, Column.U);
+      /*
+       * Journal, volume and issue cannot be parsed since there are encoded as free text in the S
+       * column.
+       * 
+       * The date format in Google Drive DD/MM/YYYY does not match the used in the local spreadsheet
+       * YYYY/MM/DD. Therefore it cannot be parsed. Column M.
+       * 
+       * The author list needs a explicitly defined splitter. The Google Drive spreadsheet does not
+       * define it and a comma is used in the local spreadsheet. What should we use to parse it?
+       */
 
-      // throw exception if isReferenceDescription or doi are missing
-      if (isReferenceDescriptionText.isEmpty()) {
+      String isReferenceDescription = getStringValue(sheet, row, Column.K);
+      String type = getStringValue(sheet, row, Column.L);
+      Double pmid = getNumericValue(sheet, row, Column.N);
+      String doi = getStringValue(sheet, row, Column.O);
+      String author = getStringValue(sheet, row, Column.P);
+      String title = getStringValue(sheet, row, Column.Q);
+      String abstractText = getStringValue(sheet, row, Column.R);
+      String status = getStringValue(sheet, row, Column.T);
+      String website = getStringValue(sheet, row, Column.U);
+
+      // Check mandatory properties and throw exception if missing
+      if (isReferenceDescription.isEmpty()) {
         throw new IllegalArgumentException("Missing Is reference description?");
       }
-      if (doiText.isEmpty()) {
+      if (doi.isEmpty()) {
         throw new IllegalArgumentException("Missing DOI");
       }
 
       Record record = new Record();
 
       // Save isReferenceDescription in U1 tag (user definable #1)
-      record.setUserDefinable1(isReferenceDescriptionText);
-      record.setType(RIS_TYPES.get(typeText));
+      record.setUserDefinable1(isReferenceDescription);
 
-      // TODO: save date
+      com.gmail.gcolaianni5.jris.bean.Type risType = getRisType(type);
+      if (risType != null) {
+        record.setType(risType);
+      }
 
       // Save PMID in U2 tag (user definable #2)
-      record.setUserDefinable2(pmidText.toString());
+      record.setUserDefinable2(pmid.toString());
 
-      record.setDoi(doiText);
+      record.setDoi(doi);
 
       // Save author list
-      Arrays.stream(authorListText.split(";")).forEach(record::addAuthor);
+      Arrays.stream(author.split(";")).forEach(record::addAuthor);
 
-      record.setTitle(titleText); // Save title in TI tag
+      record.setTitle(title); // Save title in TI tag
       record.setAbstr(abstractText); // Save abstract in AB tag
 
-      // TODO: save journal
-
       // Save status in U3 tag (user definable #3)
-      record.setUserDefinable3(statusText);
+      record.setUserDefinable3(status);
 
-      record.setUrl(websiteText);
+      record.setUrl(website);
 
       return record;
     }
@@ -761,19 +877,19 @@ class CreatorNodeModel extends NoInternalsModel {
      */
     static ModelCategory retrieveModelCategory(XSSFSheet sheet) {
 
-      if (sheet.getRow(ModelCategoryRow.MODEL_CLASS.num).getCell(Column.H.ordinal())
+      // Check mandatory properties and throw exception if missing
+      if (sheet.getRow(Row.MODEL_CATEGORY_CLASS.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing model class");
       }
 
       ModelCategory modelCategory = new ModelCategory();
-      modelCategory.modelClass = getStringValue(sheet, ModelCategoryRow.MODEL_CLASS.num, Column.H);
+      modelCategory.modelClass = getStringValue(sheet, Row.MODEL_CATEGORY_CLASS, Column.I);
       modelCategory.modelSubClass
-          .addAll(getStringListValue(sheet, ModelCategoryRow.MODEL_SUBCLASS.num, Column.H));
-      modelCategory.modelClassComment =
-          getStringValue(sheet, ModelCategoryRow.MODEL_CLASS_COMMENT.num, Column.H);
+          .addAll(getStringListValue(sheet, Row.MODEL_CATEGORY_SUBCLASS, Column.I));
+      modelCategory.modelClassComment = getStringValue(sheet, Row.MODEL_CATEGORY_COMMENT, Column.I);
       modelCategory.basicProcess
-          .addAll(getStringListValue(sheet, ModelCategoryRow.BASIC_PROCESS.num, Column.H));
+          .addAll(getStringListValue(sheet, Row.MODEL_CATEGORY_PROCESS, Column.I));
 
       return modelCategory;
     }
@@ -789,32 +905,34 @@ class CreatorNodeModel extends NoInternalsModel {
     static Hazard retrieveHazard(XSSFSheet sheet) {
 
       // Check mandatory properties
-      if (sheet.getRow(HazardRow.TYPE.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.HAZARD_TYPE.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Hazard type is missing");
       }
-      if (sheet.getRow(HazardRow.NAME.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.HAZARD_NAME.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Hazard name is missing");
       }
-      if (sheet.getRow(HazardRow.UNIT.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.HAZARD_UNIT.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Hazard unit is missing");
       }
 
       Hazard hazard = new Hazard();
-      hazard.hazardType = getStringValue(sheet, HazardRow.TYPE.num, Column.H);
-      hazard.hazardName = getStringValue(sheet, HazardRow.NAME.num, Column.H);
-      hazard.hazardDescription = getStringValue(sheet, HazardRow.DESCRIPTION.num, Column.H);
-      hazard.hazardUnit = getStringValue(sheet, HazardRow.UNIT.num, Column.H);
-      hazard.adverseEffect = getStringValue(sheet, HazardRow.ADVERSE_EFFECT.num, Column.H);
-      // TODO: source of contamination
-      hazard.bmd = getStringValue(sheet, HazardRow.BMD.num, Column.H);
-      hazard.noael = getStringValue(sheet, HazardRow.NOAEL.num, Column.H);
-      hazard.loael = getStringValue(sheet, HazardRow.LOAEL.num, Column.H);
-      hazard.aoel = getStringValue(sheet, HazardRow.AOEL.num, Column.H);
-      hazard.ard = getStringValue(sheet, HazardRow.ARD.num, Column.H);
-      hazard.hazardIndSum = getStringValue(sheet, HazardRow.IND_SUM.num, Column.H);
+      hazard.hazardType = getStringValue(sheet, Row.HAZARD_TYPE, Column.I);
+      hazard.hazardName = getStringValue(sheet, Row.HAZARD_NAME, Column.I);
+      hazard.hazardDescription = getStringValue(sheet, Row.HAZARD_DESCRIPTION, Column.I);
+      hazard.hazardUnit = getStringValue(sheet, Row.HAZARD_UNIT, Column.I);
+      hazard.adverseEffect = getStringValue(sheet, Row.HAZARD_ADVERSE_EFFECT, Column.I);
+      hazard.sourceOfContamination =
+          getStringValue(sheet, Row.HAZARD_CONTAMINATION_SOURCE, Column.I);
+      hazard.bmd = getStringValue(sheet, Row.HAZARD_BMD, Column.I);
+      hazard.mrl = getStringValue(sheet, Row.HAZARD_MRL, Column.I);
+      hazard.noael = getStringValue(sheet, Row.HAZARD_NOAEL, Column.I);
+      hazard.loael = getStringValue(sheet, Row.HAZARD_LOAEL, Column.I);
+      hazard.aoel = getStringValue(sheet, Row.HAZARD_AOEL, Column.I);
+      hazard.ard = getStringValue(sheet, Row.HAZARD_ARFD, Column.I);
+      hazard.hazardIndSum = getStringValue(sheet, Row.HAZARD_IND_SUM, Column.I);
 
       return hazard;
     }
@@ -822,29 +940,28 @@ class CreatorNodeModel extends NoInternalsModel {
     static PopulationGroup retrievePopulationGroup(XSSFSheet sheet) {
 
       // Check mandatory properties
-      if (sheet.getRow(PopulationGroupRow.NAME.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.POPULATION_GROUP_NAME.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing population name");
       }
 
       PopulationGroup pg = new PopulationGroup();
-      pg.populationName = getStringValue(sheet, PopulationGroupRow.NAME.num, Column.H);
-      pg.targetPopulation = getStringValue(sheet, PopulationGroupRow.TARGET.num, Column.H);
-      pg.populationSpan.addAll(getStringListValue(sheet, PopulationGroupRow.SPAN.num, Column.H));
+      pg.populationName = getStringValue(sheet, Row.POPULATION_GROUP_NAME, Column.I);
+      pg.targetPopulation = getStringValue(sheet, Row.POPULATION_GROUP_TARGET, Column.I);
+      pg.populationSpan.addAll(getStringListValue(sheet, Row.POPULATION_GROUP_SPAN, Column.I));
       pg.populationDescription
-          .addAll(getStringListValue(sheet, PopulationGroupRow.DESCRIPTION.num, Column.H));
-      pg.populationAge.addAll(getStringListValue(sheet, PopulationGroupRow.AGE.num, Column.H));
-      pg.populationGender = getStringValue(sheet, PopulationGroupRow.GENDER.num, Column.H);
-      pg.bmi.addAll(getStringListValue(sheet, PopulationGroupRow.BMI.num, Column.H));
-      pg.specialDietGroups
-          .addAll(getStringListValue(sheet, PopulationGroupRow.SPECIAL_DIET_GROUPS.num, Column.H));
+          .addAll(getStringListValue(sheet, Row.POPULATION_GROUP_DESCRIPTION, Column.I));
+      pg.populationAge.addAll(getStringListValue(sheet, Row.POPULATION_GROUP_AGE, Column.I));
+      pg.populationGender = getStringValue(sheet, Row.POPULATION_GROUP_GENDER, Column.I);
+      pg.bmi.addAll(getStringListValue(sheet, Row.POPULATION_GROUP_BMI, Column.I));
+      pg.specialDietGroups.addAll(getStringListValue(sheet, Row.POPULATION_GROUP_DIET, Column.I));
       pg.patternConsumption
-          .addAll(getStringListValue(sheet, PopulationGroupRow.PATTERN_CONSUMPTION.num, Column.H));
-      pg.region.addAll(getStringListValue(sheet, PopulationGroupRow.REGION.num, Column.H));
-      pg.country.addAll(getStringListValue(sheet, PopulationGroupRow.COUNTRY.num, Column.H));
+          .addAll(getStringListValue(sheet, Row.POPULATION_GROUP_PATTERN_CONSUMPTION, Column.I));
+      pg.region.addAll(getStringListValue(sheet, Row.POPULATION_GROUP_REGION, Column.I));
+      pg.country.addAll(getStringListValue(sheet, Row.POPULATION_GROUP_COUNTRY, Column.I));
       pg.populationRiskFactor
-          .addAll(getStringListValue(sheet, PopulationGroupRow.RISK_FACTOR.num, Column.H));
-      pg.season.addAll(getStringListValue(sheet, PopulationGroupRow.SEASON.num, Column.H));
+          .addAll(getStringListValue(sheet, Row.POPULATION_GROUP_RISK, Column.I));
+      pg.season.addAll(getStringListValue(sheet, Row.POPULATION_GROUP_SEASON, Column.I));
 
       return pg;
     }
@@ -883,32 +1000,37 @@ class CreatorNodeModel extends NoInternalsModel {
     static Study retrieveStudy(XSSFSheet sheet) {
 
       // Check first mandatory properties
-      if (sheet.getRow(StudyRow.ID.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.STUDY_ID.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing study identifier");
       }
-      if (sheet.getRow(StudyRow.TITLE.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.STUDY_TITLE.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing study title");
       }
 
       Study study = new Study();
-      study.id = getStringValue(sheet, StudyRow.ID.num, Column.H);
-      study.title = getStringValue(sheet, StudyRow.TITLE.num, Column.H);
-      study.description = getStringValue(sheet, StudyRow.DESCRIPTION.num, Column.H);
-      study.designType = getStringValue(sheet, StudyRow.DESIGN_TYPE.num, Column.H);
-      study.measurementType = getStringValue(sheet, StudyRow.ASSAY_MEASUREMENT_TYPE.num, Column.H);
-      study.technologyType = getStringValue(sheet, StudyRow.ASSAY_TECHNOLOGY_TYPE.num, Column.H);
+      study.id = getStringValue(sheet, Row.STUDY_ID, Column.I);
+      study.title = getStringValue(sheet, Row.STUDY_TITLE, Column.I);
+      study.description = getStringValue(sheet, Row.STUDY_DESCRIPTION, Column.I);
+      study.designType = getStringValue(sheet, Row.STUDY_DESIGN_TYPE, Column.I);
+      study.measurementType = getStringValue(sheet, Row.STUDY_ASSAY_MEASUREMENTS_TYPE, Column.I);
+      study.technologyType = getStringValue(sheet, Row.STUDY_ASSAY_TECHNOLOGY_TYPE, Column.I);
       study.technologyPlatform =
-          getStringValue(sheet, StudyRow.ASSAY_TECHNOLOGY_PLATFORM.num, Column.H);
+          getStringValue(sheet, Row.STUDY_ASSAY_TECHNOLOGY_PLATFORM, Column.I);
       study.accreditationProcedure =
-          getStringValue(sheet, StudyRow.ACCREDITATION_PROCEDURE.num, Column.H);
-      study.protocolName = getStringValue(sheet, StudyRow.PROTOCOL_NAME.num, Column.H);
-      study.protocolType = getStringValue(sheet, StudyRow.PROTOCOL_TYPE.num, Column.H);
-      study.protocolVersion = getStringValue(sheet, StudyRow.PROTOCOL_VERSION.num, Column.H);
-      study.parametersName = getStringValue(sheet, StudyRow.PROTOCOL_PARAMETERS_NAME.num, Column.H);
-      study.componentsName = getStringValue(sheet, StudyRow.PROTOCOL_COMPONENTS_NAME.num, Column.H);
-      study.componentsType = getStringValue(sheet, StudyRow.PROTOCOL_COMPONENTS_TYPE.num, Column.H);
+          getStringValue(sheet, Row.STUDY_ACCREDITATION_PROCEDURE, Column.I);
+      study.protocolName = getStringValue(sheet, Row.STUDY_PROTOCOL_NAME, Column.I);
+      study.protocolType = getStringValue(sheet, Row.STUDY_PROTOCOL_TYPE, Column.I);
+      study.protocolDescription = getStringValue(sheet, Row.STUDY_PROTOCOL_DESCRIPTION, Column.I);
+      try {
+        study.protocolUri = new URI(getStringValue(sheet, Row.STUDY_PROTOCOL_URI, Column.I));
+      } catch (URISyntaxException e) {
+      }
+      study.protocolVersion = getStringValue(sheet, Row.STUDY_PROTOCOL_VERSION, Column.I);
+      study.parametersName = getStringValue(sheet, Row.STUDY_PROTOCOL_PARAMETERS_NAME, Column.I);
+      study.componentsName = getStringValue(sheet, Row.STUDY_PROTOCOL_COMPONENTS_NAME, Column.I);
+      study.componentsType = getStringValue(sheet, Row.STUDY_PROTOCOL_COMPONENTS_TYPE, Column.I);
 
       return study;
     }
@@ -916,33 +1038,31 @@ class CreatorNodeModel extends NoInternalsModel {
     static StudySample retrieveStudySample(XSSFSheet sheet) {
 
       // Check first mandatory properties
-      if (sheet.getRow(StudySampleRow.NAME.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.STUDY_SAMPLE_NAME.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing sample name");
       }
-      if (sheet.getRow(StudySampleRow.SAMPLING_PLAN.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.STUDY_SAMPLE_PROTOCOL.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing sampling plan");
       }
-      if (sheet.getRow(StudySampleRow.SAMPLING_WEIGHT.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.STUDY_SAMPLE_STRATEGY.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing sampling weight");
       }
 
       StudySample studySample = new StudySample();
-      studySample.sample = getStringValue(sheet, StudySampleRow.NAME.num, Column.H);
-      studySample.samplingStrategy =
-          getStringValue(sheet, StudySampleRow.SAMPLING_STRATEGY.num, Column.H);
-      studySample.samplingProgramType =
-          getStringValue(sheet, StudySampleRow.SAMPLING_STRATEGY.num, Column.H);
-      studySample.samplingMethod =
-          getStringValue(sheet, StudySampleRow.SAMPLING_METHOD.num, Column.H);
-      studySample.samplingWeight =
-          getStringValue(sheet, StudySampleRow.SAMPLING_WEIGHT.num, Column.H);
-      studySample.samplingSize = getStringValue(sheet, StudySampleRow.SAMPLING_SIZE.num, Column.H);
-      studySample.lotSizeUnit = getStringValue(sheet, StudySampleRow.LOT_SIZE_UNIT.num, Column.H);
-      studySample.samplingPoint =
-          getStringValue(sheet, StudySampleRow.SAMPLING_POINT.num, Column.H);
+      studySample.sample = getStringValue(sheet, Row.STUDY_SAMPLE_NAME, Column.I);
+      studySample.collectionProtocol = getStringValue(sheet, Row.STUDY_SAMPLE_PROTOCOL, Column.I);
+      studySample.samplingStrategy = getStringValue(sheet, Row.STUDY_SAMPLE_STRATEGY, Column.I);
+      studySample.samplingProgramType = getStringValue(sheet, Row.STUDY_SAMPLE_TYPE, Column.I);
+      studySample.samplingMethod = getStringValue(sheet, Row.STUDY_SAMPLE_METHOD, Column.I);
+      studySample.samplingPlan = getStringValue(sheet, Row.STUDY_SAMPLE_PLAN, Column.I);
+      studySample.samplingWeight = getStringValue(sheet, Row.STUDY_SAMPLE_WEIGHT, Column.I);
+      studySample.samplingSize = getStringValue(sheet, Row.STUDY_SAMPLE_SIZE, Column.I);
+      studySample.lotSizeUnit = getStringValue(sheet, Row.STUDY_SAMPLE_SIZE_UNIT, Column.I);
+      studySample.samplingPoint = getStringValue(sheet, Row.STUDY_SAMPLE_POINT, Column.I);
+
 
       return studySample;
     }
@@ -950,23 +1070,27 @@ class CreatorNodeModel extends NoInternalsModel {
     static DietaryAssessmentMethod retrieveDAM(XSSFSheet sheet) {
 
       // Check first mandatory properties
-      if (sheet.getRow(DAMRow.METHOD_TOOL.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.DIETARY_ASSESSMENT_METHOD_TOOL.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing methodological tool");
       }
-      if (sheet.getRow(DAMRow.NON_CONSECUTIVE_1DAY.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.DIETARY_ASSESSMENT_METHOD_1DAY.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing non consecutive one day");
       }
 
       DietaryAssessmentMethod dam = new DietaryAssessmentMethod();
-      dam.collectionTool = getStringValue(sheet, DAMRow.METHOD_TOOL.num, Column.H);
+      dam.collectionTool = getStringValue(sheet, Row.DIETARY_ASSESSMENT_METHOD_TOOL, Column.I);
       dam.numberOfNonConsecutiveOneDay =
-          getNumericValue(sheet, DAMRow.NON_CONSECUTIVE_1DAY.num, Column.H).intValue();
-      dam.softwareTool = getStringValue(sheet, DAMRow.DIETARY_SOFTWARE_TOOL.num, Column.H);
-      dam.numberOfFoodItems.addAll(getStringListValue(sheet, DAMRow.FOOD_ITEMS.num, Column.H));
-      dam.recordTypes.addAll(getStringListValue(sheet, DAMRow.RECORD_TYPE.num, Column.H));
-      dam.foodDescriptors.addAll(getStringListValue(sheet, DAMRow.FOOD_DESCRIPTORS.num, Column.H));
+          getNumericValue(sheet, Row.DIETARY_ASSESSMENT_METHOD_1DAY, Column.I).intValue();
+      dam.softwareTool =
+          getStringValue(sheet, Row.DIETARY_ASSESSMENT_METHOD_SOFTWARE_TOOL, Column.I);
+      dam.numberOfFoodItems
+          .addAll(getStringListValue(sheet, Row.DIETARY_ASSESSMENT_METHOD_ITEMS, Column.I));
+      dam.recordTypes
+          .addAll(getStringListValue(sheet, Row.DIETARY_ASSESSMENT_METHOD_RECORD_TYPE, Column.I));
+      dam.foodDescriptors
+          .addAll(getStringListValue(sheet, Row.DIETARY_ASSESSMENT_METHOD_DESCRIPTORS, Column.I));
 
       return dam;
     }
@@ -974,15 +1098,15 @@ class CreatorNodeModel extends NoInternalsModel {
     static Laboratory retrieveLaboratory(XSSFSheet sheet) {
 
       // Check first mandatory properties
-      if (sheet.getRow(LaboratoryRow.ACCREDITATION.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.LABORATORY_ACCREDITATION.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing laboratory accreditation");
       }
 
       Laboratory laboratory = new Laboratory();
-      laboratory.accreditation = getStringValue(sheet, LaboratoryRow.ACCREDITATION.num, Column.H);
-      laboratory.name = getStringValue(sheet, LaboratoryRow.NAME.num, Column.H);
-      laboratory.country = getStringValue(sheet, LaboratoryRow.COUNTRY.num, Column.H);
+      laboratory.accreditation = getStringValue(sheet, Row.LABORATORY_ACCREDITATION, Column.I);
+      laboratory.name = getStringValue(sheet, Row.LABORATORY_NAME, Column.I);
+      laboratory.country = getStringValue(sheet, Row.LABORATORY_COUNTRY, Column.I);
 
       return laboratory;
     }
@@ -990,21 +1114,20 @@ class CreatorNodeModel extends NoInternalsModel {
     static Assay retrieveAssay(XSSFSheet sheet) {
 
       // Check first mandatory properties
-      if (sheet.getRow(AssayRow.NAME.num).getCell(Column.H.ordinal())
+      if (sheet.getRow(Row.ASSAY_NAME.num).getCell(Column.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing assay name");
       }
 
       Assay assay = new Assay();
-      assay.name = getStringValue(sheet, AssayRow.NAME.num, Column.H);
-      assay.description = getStringValue(sheet, AssayRow.DESCRIPTION.num, Column.H);
-      assay.moisturePercentage = getStringValue(sheet, AssayRow.MOIST_PERC.num, Column.H);
-      assay.detectionLimit = getStringValue(sheet, AssayRow.DETECTION_LIMIT.num, Column.H);
-      assay.quantificationLimit =
-          getStringValue(sheet, AssayRow.QUANTIFICATION_LIMIT.num, Column.H);
-      assay.leftCensoredData = getStringValue(sheet, AssayRow.LEFT_CENSORED_DATA.num, Column.H);
-      assay.contaminationRange = getStringValue(sheet, AssayRow.CONTAMINATION_RANGE.num, Column.H);
-      assay.uncertaintyValue = getStringValue(sheet, AssayRow.UNCERTAINTY_VALUE.num, Column.H);
+      assay.name = getStringValue(sheet, Row.ASSAY_NAME, Column.I);
+      assay.description = getStringValue(sheet, Row.ASSAY_DESCRIPTION, Column.I);
+      assay.moisturePercentage = getStringValue(sheet, Row.ASSAY_MOIST_PERC, Column.I);
+      assay.detectionLimit = getStringValue(sheet, Row.ASSAY_DETECTION_LIMIT, Column.I);
+      assay.quantificationLimit = getStringValue(sheet, Row.ASSAY_QUANTIFICATION_LIMIT, Column.I);
+      assay.leftCensoredData = getStringValue(sheet, Row.ASSAY_LEFT_CENSORED_DATA, Column.I);
+      assay.contaminationRange = getStringValue(sheet, Row.ASSAY_CONTAMINATION_RANGE, Column.I);
+      assay.uncertaintyValue = getStringValue(sheet, Row.ASSAY_UNCERTAINTY_VALUE, Column.I);
 
       return assay;
     }
@@ -1012,48 +1135,45 @@ class CreatorNodeModel extends NoInternalsModel {
     static Parameter retrieveParameter(XSSFSheet sheet, int row) {
 
       // Check first mandatory properties
-      if (sheet.getRow(row).getCell(Column.K.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+      if (sheet.getRow(row).getCell(Column.L.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing parameter id");
       }
-      if (sheet.getRow(row).getCell(Column.L.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+      if (sheet.getRow(row).getCell(Column.M.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing parameter classification");
       }
-      if (sheet.getRow(row).getCell(Column.M.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+      if (sheet.getRow(row).getCell(Column.N.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing parameter name");
       }
-      if (sheet.getRow(row).getCell(Column.P.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+      if (sheet.getRow(row).getCell(Column.Q.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing parameter unit");
       }
-      if (sheet.getRow(row).getCell(Column.Q.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
-        throw new IllegalArgumentException("Missing unit category");
-      }
-      if (sheet.getRow(row).getCell(Column.R.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
+      if (sheet.getRow(row).getCell(Column.S.ordinal()).getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing data type");
       }
 
       Parameter param = new Parameter();
-      param.id = getStringValue(sheet, row, Column.K);
+      param.id = getStringValue(sheet, row, Column.L);
       try {
         param.classification =
-            Parameter.Classification.valueOf(getStringValue(sheet, row, Column.L));
+            Parameter.Classification.valueOf(getStringValue(sheet, row, Column.M));
       } catch (Exception exception) {
         throw new IllegalArgumentException(
-            "Invalid parameter classification: " + getStringValue(sheet, row, Column.L));
+            "Invalid parameter classification: " + getStringValue(sheet, row, Column.M));
       }
-      param.name = getStringValue(sheet, row, Column.M);
-      param.description = getStringValue(sheet, row, Column.N);
-      param.type = getStringValue(sheet, row, Column.O);
-      param.unit = getStringValue(sheet, row, Column.P);
-      param.unitCategory = getStringValue(sheet, row, Column.Q);
-      param.dataType = getStringValue(sheet, row, Column.R);
-      param.source = getStringValue(sheet, row, Column.S);
-      param.subject = getStringValue(sheet, row, Column.T);
-      param.distribution = getStringValue(sheet, row, Column.U);
-      param.value = getStringValue(sheet, row, Column.V);
-      param.reference = getStringValue(sheet, row, Column.W);
-      param.variabilitySubject = getStringValue(sheet, row, Column.X);
-      param.modelApplicability.add(getStringValue(sheet, row, Column.Y));
-      param.error = getNumericValue(sheet, row, Column.Z);
+      param.name = getStringValue(sheet, row, Column.N);
+      param.description = getStringValue(sheet, row, Column.O);
+      param.type = getStringValue(sheet, row, Column.P);
+      param.unit = getStringValue(sheet, row, Column.Q);
+      param.unitCategory = getStringValue(sheet, row, Column.R);
+      param.dataType = getStringValue(sheet, row, Column.S);
+      param.source = getStringValue(sheet, row, Column.T);
+      param.subject = getStringValue(sheet, row, Column.U);
+      param.distribution = getStringValue(sheet, row, Column.V);
+      param.value = getStringValue(sheet, row, Column.W);
+      param.reference = getStringValue(sheet, row, Column.X);
+      param.variabilitySubject = getStringValue(sheet, row, Column.Y);
+      param.modelApplicability.add(getStringValue(sheet, row, Column.Z));
+      param.error = getNumericValue(sheet, row, Column.AA);
 
       return param;
     }
