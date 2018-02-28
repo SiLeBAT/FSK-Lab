@@ -21,11 +21,9 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import org.apache.commons.io.FileUtils;
 import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -73,15 +71,6 @@ public class RunnerNodeInternalSettings {
   /** Clear the contents of the image file. */
   public void reset() {
     plot = null;
-
-    if (imageFile != null) {
-      try (OutputStream erasor = new FileOutputStream(imageFile)) {
-        erasor.write((new String()).getBytes());
-      } catch (final FileNotFoundException e) {
-        LOGGER.error("Temporary file is removed.", e);
-      } catch (final IOException e) {
-        LOGGER.error("Cannot write temporary file.", e);
-      }
-    }
+    FileUtils.deleteQuietly(imageFile);
   }
 }
