@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -51,7 +52,6 @@ import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import com.gmail.gcolaianni5.jris.bean.Record;
-import com.gmail.gcolaianni5.jris.bean.Type;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
@@ -644,130 +644,6 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     /**
-     * @param string Whole string with the type. E.g. "Abstract" or "Audiovisual material".
-     * @return the RIS type corresponding to the given string. If null, empty or non-valid string
-     *         return null.
-     */
-    private static com.gmail.gcolaianni5.jris.bean.Type getRisType(String string) {
-
-      Type type = null;
-
-      if (string.equals("Abstract")) {
-        type = Type.ABST;
-      } else if (string.equals("Audiovisual material")) {
-        type = Type.ADVS;
-      } else if (string.equals("Aggregated Database")) {
-        type = Type.AGGR;
-      } else if (string.equals("Ancient Text")) {
-        type = Type.ANCIENT;
-      } else if (string.equals("Art Work")) {
-        type = Type.ART;
-      } else if (string.equals("Bill")) {
-        type = Type.BILL;
-      } else if (string.equals("Blog")) {
-        type = Type.BLOG;
-      } else if (string.equals("Whole book")) {
-        type = Type.BOOK;
-      } else if (string.equals("Case")) {
-        type = Type.CASE;
-      } else if (string.equals("Book chapter")) {
-        type = Type.CHAP;
-      } else if (string.equals("Chart")) {
-        type = Type.CHART;
-      } else if (string.equals("Classical work")) {
-        type = Type.CLSWK;
-      } else if (string.equals("Computer program")) {
-        type = Type.COMP;
-      } else if (string.equals("Conference proceeding")) {
-        type = Type.CONF;
-      } else if (string.equals("Conference paper")) {
-        type = Type.CPAPER;
-      } else if (string.equals("Catalog")) {
-        type = Type.CTLG;
-      } else if (string.equals("Data file")) {
-        type = Type.DATA;
-      } else if (string.equals("Online Database")) {
-        type = Type.DBASE;
-      } else if (string.equals("Dictionary")) {
-        type = Type.DICT;
-      } else if (string.equals("Electronic Book")) {
-        type = Type.EBOOK;
-      } else if (string.equals("Electronic Book Section")) {
-        type = Type.ECHAP;
-      } else if (string.equals("Edited Book")) {
-        type = Type.EDBOOK;
-      } else if (string.equals("Electronic Article")) {
-        type = Type.EJOUR;
-      } else if (string.equals("Web Page")) {
-        type = Type.ELEC;
-      } else if (string.equals("Encyclopedia")) {
-        type = Type.ENCYC;
-      } else if (string.equals("Equation")) {
-        type = Type.EQUA;
-      } else if (string.equals("Figure")) {
-        type = Type.FIGURE;
-      } else if (string.equals("Generic")) {
-        type = Type.GEN;
-      } else if (string.equals("Government Document")) {
-        type = Type.GOVDOC;
-      } else if (string.equals("Grant")) {
-        type = Type.GRANT;
-      } else if (string.equals("Hearing")) {
-        type = Type.HEAR;
-      } else if (string.equals("Internet Communication")) {
-        type = Type.ICOMM;
-      } else if (string.equals("In Press")) {
-        type = Type.INPR;
-      } else if (string.equals("Journal (full)")) {
-        type = Type.JFULL;
-      } else if (string.equals("Journal")) {
-        type = Type.JOUR;
-      } else if (string.equals("Legal Rule or Regulation")) {
-        type = Type.LEGAL;
-      } else if (string.equals("Manuscript")) {
-        type = Type.MANSCPT;
-      } else if (string.equals("Map")) {
-        type = Type.MAP;
-      } else if (string.equals("Magazine article")) {
-        type = Type.MGZN;
-      } else if (string.equals("Motion picture")) {
-        type = Type.MPCT;
-      } else if (string.equals("Online Multimedia")) {
-        type = Type.MULTI;
-      } else if (string.equals("Music score")) {
-        type = Type.MUSIC;
-      } else if (string.equals("Newspaper")) {
-        type = Type.NEWS;
-      } else if (string.equals("Pamphlet")) {
-        type = Type.PAMP;
-      } else if (string.equals("Patent")) {
-        type = Type.PAT;
-      } else if (string.equals("Personal communication")) {
-        type = Type.PCOMM;
-      } else if (string.equals("Report")) {
-        type = Type.RPRT;
-      } else if (string.equals("Serial publication")) {
-        type = Type.SER;
-      } else if (string.equals("Slide")) {
-        type = Type.SLIDE;
-      } else if (string.equals("Sound recording")) {
-        type = Type.SOUND;
-      } else if (string.equals("Standard")) {
-        type = Type.STAND;
-      } else if (string.equals("Statute")) {
-        type = Type.STAT;
-      } else if (string.equals("Thesis/Dissertation")) {
-        type = Type.THES;
-      } else if (string.equals("Unpublished work")) {
-        type = Type.UNPB;
-      } else if (string.equals("Video recording")) {
-        type = Type.VIDEO;
-      }
-
-      return type;
-    }
-
-    /**
      * Import reference from Excel row.
      *
      * @throws IllegalArgumentException if isReferenceDescription or DOI are missing
@@ -846,9 +722,15 @@ class CreatorNodeModel extends NoInternalsModel {
       // Save isReferenceDescription in U1 tag (user definable #1)
       record.setUserDefinable1(isReferenceDescription);
 
-      com.gmail.gcolaianni5.jris.bean.Type risType = getRisType(type);
-      if (risType != null) {
-        record.setType(risType);
+      // Look for RIS type (abbreviation) through the string value
+      ResourceBundle risBundle = ResourceBundle.getBundle("ris_types");
+      for (String abbreviation : risBundle.keySet()) {
+        if (abbreviation.equals(type)) {
+          com.gmail.gcolaianni5.jris.bean.Type risType =
+              com.gmail.gcolaianni5.jris.bean.Type.valueOf(abbreviation);
+          record.setType(risType);
+          break;
+        }
       }
 
       // Save PMID in U2 tag (user definable #2)

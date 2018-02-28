@@ -39,11 +39,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -1996,66 +1996,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  private static LinkedHashMap<Type, String> referenceTypeLabels;
-  static {
-    referenceTypeLabels = new LinkedHashMap<>();
-    referenceTypeLabels.put(Type.ABST, "Abstract");
-    referenceTypeLabels.put(Type.ADVS, "Audiovisual material");
-    referenceTypeLabels.put(Type.AGGR, "Aggregated Database");
-    referenceTypeLabels.put(Type.ANCIENT, "Ancient Text");
-    referenceTypeLabels.put(Type.ART, "Art Work");
-    referenceTypeLabels.put(Type.BILL, "Bill");
-    referenceTypeLabels.put(Type.BLOG, "Blog");
-    referenceTypeLabels.put(Type.BOOK, "Whole book");
-    referenceTypeLabels.put(Type.CASE, "Case");
-    referenceTypeLabels.put(Type.CHAP, "Book chapter");
-    referenceTypeLabels.put(Type.CHART, "Chart");
-    referenceTypeLabels.put(Type.CLSWK, "Classical Work");
-    referenceTypeLabels.put(Type.COMP, "Computer program");
-    referenceTypeLabels.put(Type.CONF, "Conference proceeding");
-    referenceTypeLabels.put(Type.CPAPER, "Conference paper");
-    referenceTypeLabels.put(Type.CTLG, "Catalog");
-    referenceTypeLabels.put(Type.DATA, "Data file");
-    referenceTypeLabels.put(Type.DBASE, "Online Database");
-    referenceTypeLabels.put(Type.DICT, "Dictionary");
-    referenceTypeLabels.put(Type.EBOOK, "Electronic Book");
-    referenceTypeLabels.put(Type.ECHAP, "Electronic Book Section");
-    referenceTypeLabels.put(Type.EDBOOK, "Edited Book");
-    referenceTypeLabels.put(Type.EJOUR, "Electronic Article");
-    referenceTypeLabels.put(Type.ELEC, "Web Page");
-    referenceTypeLabels.put(Type.ENCYC, "Encyclopedia");
-    referenceTypeLabels.put(Type.EQUA, "Equation");
-    referenceTypeLabels.put(Type.FIGURE, "Figure");
-    referenceTypeLabels.put(Type.GEN, "Generic");
-    referenceTypeLabels.put(Type.GOVDOC, "Government Document");
-    referenceTypeLabels.put(Type.GRANT, "Grant");
-    referenceTypeLabels.put(Type.HEAR, "Hearing");
-    referenceTypeLabels.put(Type.ICOMM, "Internet Communication");
-    referenceTypeLabels.put(Type.INPR, "In Press");
-    referenceTypeLabels.put(Type.JFULL, "Journal (full)");
-    referenceTypeLabels.put(Type.JOUR, "Journal");
-    referenceTypeLabels.put(Type.LEGAL, "Legal Rule or Regulation");
-    referenceTypeLabels.put(Type.MANSCPT, "Manuscript");
-    referenceTypeLabels.put(Type.MAP, "Map");
-    referenceTypeLabels.put(Type.MGZN, "Magazine article");
-    referenceTypeLabels.put(Type.MPCT, "Motion picture");
-    referenceTypeLabels.put(Type.MULTI, "Online Multimedia");
-    referenceTypeLabels.put(Type.MUSIC, "Music score");
-    referenceTypeLabels.put(Type.NEWS, "Newspaper");
-    referenceTypeLabels.put(Type.PAMP, "Pamphlet");
-    referenceTypeLabels.put(Type.PAT, "Patent");
-    referenceTypeLabels.put(Type.PCOMM, "Personal communication");
-    referenceTypeLabels.put(Type.RPRT, "Report");
-    referenceTypeLabels.put(Type.SER, "Serial publication");
-    referenceTypeLabels.put(Type.SLIDE, "Slide");
-    referenceTypeLabels.put(Type.SOUND, "Sound recording");
-    referenceTypeLabels.put(Type.STAND, "Standard");
-    referenceTypeLabels.put(Type.STAT, "Statute");
-    referenceTypeLabels.put(Type.THES, "Thesis/Dissertation");
-    referenceTypeLabels.put(Type.UNPB, "Unpublished work");
-    referenceTypeLabels.put(Type.VIDEO, "Video recording");
-  }
-
   private class EditReferencePanel extends EditPanel<Record> {
 
     private static final long serialVersionUID = -6874752919377124455L;
@@ -2089,7 +2029,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       issueSpinnerModel = GUIFactory.createSpinnerIntegerModel();
 
       isReferenceDescriptionField = new JCheckBox("Is reference description *");
-      typeField = GUIFactory.createComboBox(referenceTypeLabels.values());
+
+      // Load RIS reference types from resource bundle
+      ResourceBundle risTypes = ResourceBundle.getBundle("ris_types");
+      List<String> referenceTypes =
+          risTypes.keySet().stream().map(risTypes::getString).collect(Collectors.toList());
+      typeField = GUIFactory.createComboBox(referenceTypes);
+
       dateField = new FixedDateChooser();
       pmidField = new FTextField();
       doiField = new FTextField(true);
@@ -2212,7 +2158,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (t != null) {
         final Type type = t.getType();
         if (type != null) {
-          typeField.setSelectedItem(referenceTypeLabels.get(type));
+          // Load type from bundle
+          ResourceBundle risBundle = ResourceBundle.getBundle("ris_types");
+          typeField.setSelectedItem(risBundle.getString(type.name()));
         }
 
         final String dateString = t.getDate();
@@ -2268,9 +2216,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final int selectedTypeIndex = typeField.getSelectedIndex();
       if (selectedTypeIndex != -1) {
-        final Type type = referenceTypeLabels.keySet()
-            .toArray(new Type[referenceTypeLabels.size()])[selectedTypeIndex];
-        record.setType(type);
+
+        ResourceBundle risBundle = ResourceBundle.getBundle("ris_types");
+
+        int index = 0;
+        for (String risType : risBundle.keySet()) {
+          if (index == selectedTypeIndex) {
+            Type type = Type.valueOf(risType);
+            record.setType(type);
+            break;
+          }
+          index++;
+        }
       }
 
       final Date date = dateField.getDate();
