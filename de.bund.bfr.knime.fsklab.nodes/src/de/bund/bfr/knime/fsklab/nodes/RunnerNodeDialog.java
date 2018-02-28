@@ -24,7 +24,6 @@ import java.util.ResourceBundle;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -39,9 +38,9 @@ import org.knime.core.node.port.PortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
-import de.bund.bfr.swing.UI;
 
 public class RunnerNodeDialog extends DataAwareNodeDialogPane {
 
@@ -98,9 +97,8 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
     List<JComponent> fields = Arrays.asList(widthSpinner, heightSpinner, resolutionField,
         textSizeSpinner, simulationField);
 
-    JPanel formPanel = UIUtils.createFormPanel(labels, fields);
-    JPanel northPanel = UI.createNorthPanel(formPanel);
-    northPanel.setBackground(UIUtils.WHITE);
+    FPanel formPanel = UIUtils.createFormPanel(labels, fields);
+    FPanel northPanel = UIUtils.createNorthPanel(formPanel);
 
     addTab("Options", northPanel);
   }
