@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -37,7 +36,6 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
-import de.bund.bfr.swing.UI;
 
 class ReaderNodeDialog extends NodeDialogPane {
 
@@ -84,8 +82,7 @@ class ReaderNodeDialog extends NodeDialogPane {
 
     FPanel formPanel =
         UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(field), Arrays.asList(button));
-    JPanel northPanel = UI.createNorthPanel(formPanel);
-    northPanel.setBackground(UIUtils.WHITE);
+    FPanel northPanel = UIUtils.createNorthPanel(formPanel);
 
     addTab("Options", northPanel);
   }
