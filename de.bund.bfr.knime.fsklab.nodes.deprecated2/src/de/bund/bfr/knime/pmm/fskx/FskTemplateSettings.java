@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData.Software;
 import de.bund.bfr.knime.pmm.fskx.FskMetaDataTuple.Key;

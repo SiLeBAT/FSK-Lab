@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 
