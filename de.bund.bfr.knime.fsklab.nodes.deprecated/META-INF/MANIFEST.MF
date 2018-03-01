@@ -31,5 +31,6 @@ Bundle-ClassPath: libs/CombineArchive-1.1.jar,
  libs/pmfml-0.0.11.jar,
  .,
  libs/bfr-swing-1.0-SNAPSHOT.jar
-Export-Package: de.bund.bfr.knime.fsklab.nodes.ui,
+Export-Package: de.bund.bfr.knime.fsklab.nodes,
+ de.bund.bfr.knime.fsklab.nodes.ui,
  de.bund.bfr.knime.pmm.fskx.port
