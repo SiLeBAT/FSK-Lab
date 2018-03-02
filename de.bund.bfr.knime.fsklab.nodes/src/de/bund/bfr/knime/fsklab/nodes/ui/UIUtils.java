@@ -46,8 +46,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
+import org.apache.commons.io.FilenameUtils;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.SimpleFileFilter;
 import de.bund.bfr.swing.UI;
@@ -266,7 +267,7 @@ public class UIUtils {
   public static Font BOLD_FONT = new Font(Font.DIALOG, Font.BOLD, 12);
 
   public static JButton createBrowseButton(String text, JTextField field, int dialogType,
-      FileFilter fileFilter) {
+      FileNameExtensionFilter filter) {
 
     FBrowseButton button = new FBrowseButton(text);
 
@@ -281,7 +282,7 @@ public class UIUtils {
           fileChooser = new JFileChooser();
         }
 
-        fileChooser.setFileFilter(fileFilter);
+        fileChooser.setFileFilter(filter);
         fileChooser.setAcceptAllFileFilterUsed(false); // disable the All file filter
         fileChooser.setDialogType(dialogType);
 
@@ -293,7 +294,12 @@ public class UIUtils {
         }
 
         if (response == JFileChooser.APPROVE_OPTION) {
-          field.setText(fileChooser.getSelectedFile().getAbsolutePath());
+
+          String selectedFile = fileChooser.getSelectedFile().getAbsolutePath();
+          if (!FilenameUtils.isExtension(selectedFile, filter.getExtensions())) {
+            selectedFile = FilenameUtils.removeExtension(selectedFile); // remove faulty extension
+            field.setText(selectedFile + "." + filter.getExtensions()[0]);
+          }
         }
       }
     });

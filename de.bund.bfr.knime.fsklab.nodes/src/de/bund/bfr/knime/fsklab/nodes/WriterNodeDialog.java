@@ -24,7 +24,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
@@ -75,7 +74,7 @@ class WriterNodeDialog extends NodeDialogPane {
     String toolTipText = bundle.getString("tooltip");
     String buttonText = bundle.getString("button");
 
-    FileFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
     FLabel label = new FLabel(labelText);
     JButton button =
         UIUtils.createBrowseButton(buttonText, field, JFileChooser.SAVE_DIALOG, filter);

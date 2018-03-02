@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
@@ -74,7 +73,7 @@ class ReaderNodeDialog extends NodeDialogPane {
     String labelText = bundle.getString("label");
     String toolTipText = bundle.getString("tooltip");
 
-    FileFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
     FLabel label = new FLabel(labelText);
     JButton button =
         UIUtils.createBrowseButton(buttonText, field, JFileChooser.OPEN_DIALOG, filter);

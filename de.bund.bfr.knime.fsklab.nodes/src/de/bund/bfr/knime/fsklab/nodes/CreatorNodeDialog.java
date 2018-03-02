@@ -27,7 +27,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
@@ -104,8 +103,9 @@ public class CreatorNodeDialog extends NodeDialogPane {
   }
 
   private void createUI() {
-    FileFilter rFilter = new FileNameExtensionFilter("R script", "r");
-    FileFilter spreadsheetFilter = new FileNameExtensionFilter("Excel spreadsheet", "xlsx");
+    FileNameExtensionFilter rFilter = new FileNameExtensionFilter("R script", "r");
+    FileNameExtensionFilter spreadsheetFilter =
+        new FileNameExtensionFilter("Excel spreadsheet", "xlsx");
 
     ResourceBundle bundle = ResourceBundle.getBundle("CreatorNodeBundle", new UTF8Control());
 
