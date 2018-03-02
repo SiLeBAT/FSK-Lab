@@ -255,47 +255,40 @@ public class FskxReaderNodeModel extends NodeModel {
     }
   }
 
-  /** {@inheritDoc} */
   @Override
   protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
       throws InvalidSettingsException {
     return new PortObjectSpec[] {fskSpec, rSpec, metadataSpec};
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void saveSettingsTo(final NodeSettingsWO settings) {
     filename.saveSettingsTo(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
       throws InvalidSettingsException {
     filename.loadSettingsFrom(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     filename.validateSettings(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
     // nothing
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
     // nothing
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void reset() {
     // does nothing
