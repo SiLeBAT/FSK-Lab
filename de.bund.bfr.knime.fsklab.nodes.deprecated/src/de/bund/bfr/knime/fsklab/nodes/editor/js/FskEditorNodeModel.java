@@ -153,4 +153,7 @@ class FskEditorNodeModel
   public void setInternalPortObjects(PortObject[] portObjects) {
     m_port = (FskPortObject) portObjects[0];
   }
+
+  @Override
+  public void setHideInWizard(boolean hide) {}
 }

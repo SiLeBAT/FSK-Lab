@@ -31,7 +31,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.jlibsedml.Algorithm;
 import org.jlibsedml.Annotation;
-import org.jlibsedml.ComputeChange;
+import org.jlibsedml.ChangeAttribute;
 import org.jlibsedml.DataGenerator;
 import org.jlibsedml.Libsedml;
 import org.jlibsedml.Model;
@@ -245,13 +245,13 @@ class WriterNodeModel extends NoInternalsModel {
       }
 
       // Add changes to model
-      for (Map.Entry<String, Double> entry : fskSimulation.getParameters().entrySet()) {
+      for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
 
         String parameterName = entry.getKey();
         String parameterValue = entry.getValue().toString();
 
-        ComputeChange change = new ComputeChange(new XPathTarget(parameterName),
-            Libsedml.parseFormulaString(parameterValue));
+        ChangeAttribute change =
+            new ChangeAttribute(new XPathTarget(parameterName), parameterValue);
         model.addChange(change);
       }
     }

@@ -447,11 +447,11 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       for (FskSimulation fskSimulation : inObj.simulations) {
 
         List<Parameter> params = new ArrayList<>(fskSimulation.getParameters().size());
-        for (Map.Entry<String, Double> entry : fskSimulation.getParameters().entrySet()) {
+        for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
 
           Parameter p = new Parameter();
           p.name = entry.getKey();
-          p.value = entry.getValue().toString();
+          p.value = entry.getValue();
 
           params.add(p);
         }

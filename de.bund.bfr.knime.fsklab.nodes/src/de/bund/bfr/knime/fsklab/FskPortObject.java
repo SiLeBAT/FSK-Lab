@@ -1138,9 +1138,9 @@ public class FskPortObject implements PortObject {
 
       List<JLabel> nameLabels = new ArrayList<>(simulations.size());
       List<JComponent> valueLabels = new ArrayList<>(simulations.size());
-      for (Map.Entry<String, Double> entry : simulation.getParameters().entrySet()) {
+      for (Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
         nameLabels.add(new JLabel(entry.getKey()));
-        valueLabels.add(new JLabel(entry.getValue().toString()));
+        valueLabels.add(new JLabel(entry.getValue()));
       }
 
       JPanel formPane = UI.createOptionsPanel(nameLabels, valueLabels);

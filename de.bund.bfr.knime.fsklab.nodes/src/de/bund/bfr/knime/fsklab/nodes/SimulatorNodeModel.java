@@ -16,7 +16,6 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.SimulationEntity;
-import de.bund.bfr.knime.fsklab.rakip.Parameter;
 
 public class SimulatorNodeModel extends ExtToolOutputNodeModel {
 
@@ -73,9 +72,8 @@ public class SimulatorNodeModel extends ExtToolOutputNodeModel {
     for (SimulationEntity simulationEntity : nodeSettings.getListOfSimulation()) {
       FskSimulation fskSimulation = new FskSimulation(simulationEntity.getSimulationName());
 
-      for (Parameter param : simulationEntity.getSimulationParameters()) {
-        fskSimulation.getParameters().put(param.name, Double.valueOf(param.value));
-      }
+      simulationEntity.getSimulationParameters()
+          .forEach(it -> fskSimulation.getParameters().put(it.name, it.value));
 
       inObj.simulations.add(fskSimulation);
     }

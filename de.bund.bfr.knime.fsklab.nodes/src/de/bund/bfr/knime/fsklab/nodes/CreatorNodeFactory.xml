@@ -27,6 +27,7 @@
 		</option>
 	</fullDescription>
 	<ports>
+		<inPort name="Data Table" index="0" optional="true">Data table</inPort>
 		<outPort name="FSK object" index="0">FSK object</outPort>
 	</ports>
 </knimeNode>

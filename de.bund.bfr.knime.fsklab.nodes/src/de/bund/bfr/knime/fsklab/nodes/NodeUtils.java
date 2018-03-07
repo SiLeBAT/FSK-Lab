@@ -22,6 +22,7 @@ public class NodeUtils {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger(NodeUtils.class);
   public static final String DEFAULT_SIMULATION = "defaultSimulation";
+
   /**
    * @return the libraries URI for the running platform.
    * @throws InvalidSettingsException if the running platform is not supported.
@@ -116,8 +117,8 @@ public class NodeUtils {
       line = line.trim();
 
       String[] tokens = line.split("<-");
-      String name = tokens[0];
-      Double value = Double.parseDouble(tokens[1]);
+      String name = tokens[0].trim();
+      String value = tokens[1].trim();
 
       defaultSimulation.getParameters().put(name, value);
     }

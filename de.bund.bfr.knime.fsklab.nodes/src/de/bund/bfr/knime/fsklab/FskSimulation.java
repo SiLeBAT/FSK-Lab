@@ -10,7 +10,7 @@ public class FskSimulation implements Serializable {
 
   private String name;
 
-  private Map<String, Double> params;
+  private Map<String, String> params;
 
   public FskSimulation(String name) {
     this.name = name;
@@ -21,11 +21,11 @@ public class FskSimulation implements Serializable {
     return name;
   }
 
-  public void setSimulationName(String name) {
+  public void setName(String name) {
     this.name = name;
   }
 
-  public Map<String, Double> getParameters() {
+  public Map<String, String> getParameters() {
     return params;
   }
 

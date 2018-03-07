@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.jlibsedml.Change;
-import org.jlibsedml.ComputeChange;
+import org.jlibsedml.ChangeAttribute;
 import org.jlibsedml.Libsedml;
 import org.jlibsedml.SEDMLTags;
 import org.jlibsedml.SedML;
@@ -237,12 +237,11 @@ class ReaderNodeModel extends NoInternalsModel {
 
       FskSimulation fskSimulation = new FskSimulation(model.getId());
       for (Change change : model.getListOfChanges()) {
-        if (change.getChangeKind().equals(SEDMLTags.COMPUTE_CHANGE_KIND)) {
-          ComputeChange cc = (ComputeChange) change;
+        if (change.getChangeKind().equals(SEDMLTags.CHANGE_ATTRIBUTE_KIND)) {
+          ChangeAttribute ca = (ChangeAttribute) change;
 
-          String variable = cc.getTargetXPath().toString();
-          Double value = Double.parseDouble(cc.getMath().firstChild().getString());
-
+          String variable = ca.getTargetXPath().toString();
+          String value = ca.getNewValue();
           fskSimulation.getParameters().put(variable, value);
         }
       }

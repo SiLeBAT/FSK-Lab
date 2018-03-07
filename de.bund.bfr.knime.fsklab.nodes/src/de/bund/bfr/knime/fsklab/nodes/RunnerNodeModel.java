@@ -150,9 +150,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
         FskSimulation fskSimulation = fskObj.simulations.stream()
             .filter(it -> it.getName().equals(nodeSettings.simulation)).findAny().get();
-        for (Map.Entry<String, Double> entry : fskSimulation.getParameters().entrySet()) {
+        for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
           String parameterName = entry.getKey();
-          Double parameterValue = entry.getValue();
+          String parameterValue = entry.getValue();
           controller.assign(parameterName, parameterValue);
         }
       }

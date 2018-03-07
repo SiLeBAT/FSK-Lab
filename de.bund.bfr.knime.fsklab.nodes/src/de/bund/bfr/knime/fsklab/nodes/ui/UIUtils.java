@@ -299,6 +299,8 @@ public class UIUtils {
           if (!FilenameUtils.isExtension(selectedFile, filter.getExtensions())) {
             selectedFile = FilenameUtils.removeExtension(selectedFile); // remove faulty extension
             field.setText(selectedFile + "." + filter.getExtensions()[0]);
+          } else {
+            field.setText(selectedFile);
           }
         }
       }
