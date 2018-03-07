@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -63,7 +64,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   private static final String removeString = "Remove";
 
   private SimulatorNodeSettings settings;
-
+  Map<String,Parameter> parameterMap = new TreeMap<String,Parameter>();
   private static NodeLogger LOGGER = NodeLogger.getLogger("SimulatorNodeDialog");
 
   SimulationEntity currentSimulation;
@@ -263,7 +264,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
       for (Parameter param : currentSimulation.getSimulationParameters()) {
         if (param.name.equalsIgnoreCase((String) source.getClientProperty("id"))) {
-
+          System.out.print("param name ??? "+param.name+"  param.dataType = " + param.dataType);
           if (param.dataType.equals("Integer")) {
 
             boolean notInteger = false;
@@ -297,6 +298,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
               System.out.println("param.double  " + source.getText());
             }
           }
+          break;
         }
       }
     }
@@ -341,7 +343,9 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
       List<Parameter> simulationParameters = new ArrayList<Parameter>();
       for (Parameter param : tempPimulationParameters) {
-        simulationParameters.add(new Parameter(param));
+        System.out.print("param name ??? "+param.name+"  param.dataType = " + param.dataType);
+        
+        simulationParameters.add(new Parameter(parameterMap.get(param.name)));
       }
       sE.setSimulationParameters(simulationParameters);
 
@@ -470,6 +474,10 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       list.repaint();
       updatePanel();
     }
+    for(Parameter param:currentGenericModel.modelMath.parameter) {
+      parameterMap.put(param.name, param);
+    }
+    
   }
 
   @Override
