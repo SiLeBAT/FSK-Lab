@@ -23,12 +23,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.CanceledExecutionException;
@@ -51,8 +48,6 @@ import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
-import de.bund.bfr.knime.fsklab.rakip.ModelMath;
-import de.bund.bfr.knime.fsklab.rakip.Parameter;
 
 public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
@@ -123,39 +118,21 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     FskPortObject fskObj = (FskPortObject) inData[0];
 
-    final ModelMath modelMath = fskObj.genericModel.modelMath;
-
-    final List<Parameter> indepVars;
-    if (modelMath == null) {
-      indepVars = Collections.emptyList();
-    } else {
-      indepVars = modelMath.parameter.stream()
-          .filter(it -> it.classification == Parameter.Classification.input)
-          .collect(Collectors.toList());
-    }
-
-    if (!indepVars.isEmpty()) {
-      try {
-        fskObj.param = loadParameterScript(indepVars);
-      } catch (IllegalArgumentException exception) {
-        LOGGER.warn(exception.getMessage());
-      }
-    }
-
     try (RController controller = new RController()) {
 
       controller.eval(fskObj.param, false);
 
-      if (StringUtils.isNotEmpty(nodeSettings.simulation)) {
+      FskSimulation fskSimulation = fskObj.simulations.stream()
+          .filter(it -> it.getName().equals(nodeSettings.simulation)).findAny().get();
 
-        FskSimulation fskSimulation = fskObj.simulations.stream()
-            .filter(it -> it.getName().equals(nodeSettings.simulation)).findAny().get();
-        for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
-          String parameterName = entry.getKey();
-          String parameterValue = entry.getValue();
-          controller.assign(parameterName, parameterValue);
-        }
+      String paramScript = "";
+      for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
+        String parameterName = entry.getKey();
+        String parameterValue = entry.getValue();
+
+        paramScript += parameterName + " <- " + parameterValue + "\n";
       }
+      controller.eval(paramScript, false);
 
       fskObj = runSnippet(controller, fskObj, exec.createSubExecutionContext(1.0));
     }
@@ -169,28 +146,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       LOGGER.warn("There is no image created");
       return new PortObject[] {fskObj};
     }
-  }
-
-  /**
-   * Generate a parameter script with parameters names and values from the model metadata.
-   * 
-   * @param params non-empty list of input parameters.
-   * @throw IllegalArgumentException if a parameter is not valid
-   */
-  private static String loadParameterScript(final List<Parameter> params) {
-
-    String script = "";
-    for (final Parameter param : params) {
-      final String paramName = param.name;
-      final String paramValue = param.value;
-
-      if (StringUtils.isAnyEmpty(paramName, paramValue))
-        throw new IllegalArgumentException("Parameter from metadata is not valid: " + param);
-
-      script += paramName + " <- " + paramValue + "\n";
-    }
-
-    return script;
   }
 
   private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
