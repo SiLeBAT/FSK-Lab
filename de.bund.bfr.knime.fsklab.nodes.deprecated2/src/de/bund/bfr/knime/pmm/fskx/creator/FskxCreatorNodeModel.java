@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
+import org.sbml.jsbml.validator.SyntaxChecker;
 //
 import com.google.common.base.Strings;
 import de.bund.bfr.fskml.RScript;
@@ -321,31 +323,56 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
       }
     }
 
+    private static void validateId(String id) throws IllegalArgumentException {
+      if (!SyntaxChecker.isValidId(id, 3, 1)) {
+        throw new IllegalArgumentException("Invalid id: [" + id + "]");
+      }
+    }
+
+    private static void validateUnit(String unit) throws IllegalArgumentException {
+      if (!SyntaxChecker.isValidId(unit, 3, 1)) {
+        throw new IllegalArgumentException("Invalid unit: [" + unit + "]");
+      }
+    }
+
     static FskMetaData processSpreadsheet(final XSSFSheet sheet) {
 
+      final String modelId = getStringVal(sheet, Rows.id.row);
+      final String organism = getStringVal(sheet, Rows.organism.row);
+      final String matrix = getStringVal(sheet, Rows.matrix.row);
+      final String depVarUnit = getStringVal(sheet, Rows.depvar_unit.row);
+      final List<String> indepVars =
+          Arrays.stream(getStringVal(sheet, Rows.indepvar.row).split("\\|\\|")).map(String::trim)
+              .collect(Collectors.toList());
+      final List<String> indepVarUnits =
+          Arrays.stream(getStringVal(sheet, Rows.indepvar_unit.row).split("\\|\\|"))
+              .map(String::trim).collect(Collectors.toList());
+
+      // Validate organism, matrix, units and model id
+      validateId(modelId);
+      validateId(organism);
+      validateId(matrix);
+      validateUnit(depVarUnit);
+      indepVars.forEach(var -> validateId(var));
+      indepVarUnits.forEach(unit -> {
+        if (!unit.isEmpty()) {
+          validateUnit(unit);
+        }
+      });
+
       FskMetaData template = new FskMetaData();
-
-      template.modelId = getStringVal(sheet, Rows.id.row);
+      template.modelId = modelId;
       template.modelName = getStringVal(sheet, Rows.name.row);
-
-      // organism data
-      template.organism = getStringVal(sheet, Rows.organism.row);
+      template.organism = organism;
       template.organismDetails = getStringVal(sheet, Rows.organism_detail.row);
-
-      // matrix data
-      template.matrix = getStringVal(sheet, Rows.matrix.row);
+      template.matrix = matrix;
       template.matrixDetails = getStringVal(sheet, Rows.matrix_detail.row);
-
       template.creator = getStringVal(sheet, Rows.creator.row);
-
       // no family name in the spreadsheet
       // no contact in the spreadsheet
-
       template.referenceDescription = getStringVal(sheet, Rows.reference_description.row);
-
       template.createdDate = sheet.getRow(Rows.created_date.row).getCell(5).getDateCellValue();
       template.modifiedDate = sheet.getRow(Rows.modified_date.row).getCell(5).getDateCellValue();
-
       template.rights = getStringVal(sheet, Rows.rights.row);
 
       // model type
@@ -376,21 +403,19 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
 
       // dep var. Type is not in the spreadsheet.
       template.dependentVariable.name = getStringVal(sheet, Rows.depvar.row);
-      template.dependentVariable.unit = getStringVal(sheet, Rows.depvar_unit.row);
+      template.dependentVariable.unit = depVarUnit;
       template.dependentVariable.min = getStringVal(sheet, Rows.depvar_min.row);
       template.dependentVariable.max = getStringVal(sheet, Rows.depvar_max.row);
 
       // indep vars
       {
-        String[] names = getStringVal(sheet, Rows.indepvar.row).split("\\|\\|");
-        String[] units = getStringVal(sheet, Rows.indepvar_unit.row).split("\\|\\|");
         String[] mins = getStringVal(sheet, Rows.indepvar_min.row).split("\\|\\|");
         String[] maxs = getStringVal(sheet, Rows.indepvar_max.row).split("\\|\\|");
 
-        for (int i = 0; i < names.length; i++) {
+        for (int i = 0; i < mins.length; i++) {
           Variable v = new Variable();
-          v.name = names[i].trim();
-          v.unit = units[i].trim();
+          v.name = indepVars.get(i);
+          v.unit = indepVarUnits.get(i);
           v.min = mins[i].trim();
           v.max = maxs[i].trim();
           // no values or types in the spreadsheet

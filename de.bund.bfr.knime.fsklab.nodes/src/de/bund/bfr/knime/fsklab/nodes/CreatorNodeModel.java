@@ -172,13 +172,12 @@ class CreatorNodeModel extends NoInternalsModel {
           genericModel.generalInformation = RAKIPSheetImporter.retrieveGeneralInformation(sheet);
           genericModel.scope = RAKIPSheetImporter.retrieveScope(sheet);
           genericModel.dataBackground = RAKIPSheetImporter.retrieveDataBackground(sheet);
-          // TODO: ModelMath
           for (int i = 132; i <= 152; i++) {
             try {
               Parameter param = RAKIPSheetImporter.retrieveParameter(sheet, i);
               genericModel.modelMath.parameter.add(param);
             } catch (Exception exception) {
-              exception.printStackTrace();
+              // ignore exception since it is thrown by empty rows
             }
           }
         } else {
@@ -536,6 +535,9 @@ class CreatorNodeModel extends NoInternalsModel {
 
     static String getStringValue(XSSFSheet sheet, RakipRow row, RakipColumn col) {
       XSSFCell cell = sheet.getRow(row.num).getCell(col.ordinal());
+      if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+        return Double.toString(cell.getNumericCellValue());
+      }
       return cell.getStringCellValue();
     }
 
@@ -802,8 +804,17 @@ class CreatorNodeModel extends NoInternalsModel {
     static Scope retrieveScope(XSSFSheet sheet) {
 
       Scope scope = new Scope();
-      scope.hazard = retrieveHazard(sheet);
-      scope.populationGroup = retrievePopulationGroup(sheet);
+
+      try {
+        scope.hazard = retrieveHazard(sheet);
+      } catch (IllegalArgumentException exception) {
+        // ignore exception since the hazard is optional
+      }
+      try {
+        scope.populationGroup = retrievePopulationGroup(sheet);
+      } catch (IllegalArgumentException exception) {
+        // ignore exception since the population group is optional
+      }
       return scope;
     }
 
@@ -814,11 +825,8 @@ class CreatorNodeModel extends NoInternalsModel {
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Hazard type is missing");
       }
-
-      XSSFCell nameCell = sheet.getRow(RakipRow.HAZARD_NAME.num).getCell(RakipColumn.I.ordinal());
       if (sheet.getRow(RakipRow.HAZARD_NAME.num).getCell(RakipColumn.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
-        System.out.println(nameCell.getRawValue());
         throw new IllegalArgumentException("Hazard name is missing");
       }
       if (sheet.getRow(RakipRow.HAZARD_UNIT.num).getCell(RakipColumn.I.ordinal())
@@ -912,10 +920,6 @@ class CreatorNodeModel extends NoInternalsModel {
     static Study retrieveStudy(XSSFSheet sheet) {
 
       // Check first mandatory properties
-      if (sheet.getRow(RakipRow.STUDY_ID.num).getCell(RakipColumn.I.ordinal())
-          .getCellType() == Cell.CELL_TYPE_BLANK) {
-        throw new IllegalArgumentException("Missing study identifier");
-      }
       if (sheet.getRow(RakipRow.STUDY_TITLE.num).getCell(RakipColumn.I.ordinal())
           .getCellType() == Cell.CELL_TYPE_BLANK) {
         throw new IllegalArgumentException("Missing study title");

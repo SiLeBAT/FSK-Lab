@@ -53,7 +53,6 @@ import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData;
 import de.bund.bfr.knime.pmm.fskx.URIS;
 import de.bund.bfr.pmfml.ModelClass;
-import de.bund.bfr.pmfml.PMFUtil;
 import de.bund.bfr.pmfml.sbml.LimitsConstraint;
 import de.bund.bfr.pmfml.sbml.Metadata;
 import de.bund.bfr.pmfml.sbml.MetadataAnnotation;
@@ -249,7 +248,7 @@ public class FskxWriterNodeModel extends NodeModel {
     sbmlDocument.setAnnotation(new MetadataAnnotation(metaData).getAnnotation());
 
     // Creates model and names it
-    Model model = sbmlDocument.createModel(PMFUtil.createId(template.modelId));
+    Model model = sbmlDocument.createModel(template.modelId);
     if (template.modelName != null && !template.modelName.isEmpty()) {
       model.setName(template.modelName);
     }
@@ -265,32 +264,36 @@ public class FskxWriterNodeModel extends NodeModel {
     // }
 
     // Creates and adds compartment to the model
-    PMFCompartment compartment =
-        SBMLFactory.createPMFCompartment(PMFUtil.createId(template.matrix), template.matrix);
+    PMFCompartment compartment = SBMLFactory.createPMFCompartment(template.matrix, template.matrix);
     compartment.setDetail(template.matrixDetails);
     model.addCompartment(compartment.getCompartment());
 
     // Creates and adds species to the model
-    String speciesId = PMFUtil.createId(template.organism);
-    String speciesName = template.organism;
-    String speciesUnit = PMFUtil.createId(template.dependentVariable.unit);
-    PMFSpecies species =
-        SBMLFactory.createPMFSpecies(compartment.getId(), speciesId, speciesName, speciesUnit);
+    PMFSpecies species = SBMLFactory.createPMFSpecies(compartment.getId(), template.organism,
+        template.organism, template.dependentVariable.unit);
     model.addSpecies(species.getSpecies());
 
     // Add unit definitions here (before parameters)
     Set<String> unitsSet = new LinkedHashSet<>();
-    unitsSet.add(template.dependentVariable.unit.trim());
-    template.independentVariables.forEach(v -> unitsSet.add(v.unit.trim()));
+    unitsSet.add(template.dependentVariable.unit);
+    if (!template.dependentVariable.unit.isEmpty()) {
+      unitsSet.add(template.dependentVariable.unit);
+    }
+    for (Variable indepVar : template.independentVariables) {
+      if (!indepVar.unit.isEmpty()) {
+        unitsSet.add(indepVar.unit);
+      }
+    }
+
     for (String unit : unitsSet) {
-      UnitDefinition ud = model.createUnitDefinition(PMFUtil.createId(unit));
+      UnitDefinition ud = model.createUnitDefinition(unit);
       ud.setName(unit);
     }
 
     // Adds dep parameter
-    Parameter depParam = new Parameter(PMFUtil.createId(template.dependentVariable.name));
+    Parameter depParam = new Parameter(template.dependentVariable.name);
     depParam.setName(template.dependentVariable.name);
-    depParam.setUnits(PMFUtil.createId(template.dependentVariable.unit));
+    depParam.setUnits(template.dependentVariable.unit);
     model.addParameter(depParam);
 
     // Adds dep constraint
@@ -308,15 +311,9 @@ public class FskxWriterNodeModel extends NodeModel {
 
     // Adds independent parameters
     for (Variable v : template.independentVariables) {
-      String var = v.name;
-      Parameter param = model.createParameter(PMFUtil.createId(var));
-      param.setName(var);
-
-      try {
-        param.setUnits(PMFUtil.createId(v.unit));
-      } catch (IllegalArgumentException e) {
-        e.printStackTrace();
-      }
+      Parameter param = model.createParameter(v.name);
+      param.setName(v.name);
+      param.setUnits(!v.unit.isEmpty() ? v.unit : "dimensionless");
 
       try {
         double min = Double.parseDouble(v.min);
