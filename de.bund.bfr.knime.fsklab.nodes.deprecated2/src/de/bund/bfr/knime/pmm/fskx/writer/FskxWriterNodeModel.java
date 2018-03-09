@@ -171,46 +171,39 @@ public class FskxWriterNodeModel extends NodeModel {
     return f;
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void reset() {
     // does nothing
   }
 
-  /** {@inheritDoc} */
   @Override
   protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
       throws InvalidSettingsException {
     return new PortObjectSpec[] {};
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void saveSettingsTo(final NodeSettingsWO settings) {
     filePath.saveSettingsTo(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
       throws InvalidSettingsException {
     filePath.loadSettingsFrom(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     filePath.validateSettings(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void loadInternals(final File internDir, final ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
     // nothing
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void saveInternals(final File internDir, final ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {
