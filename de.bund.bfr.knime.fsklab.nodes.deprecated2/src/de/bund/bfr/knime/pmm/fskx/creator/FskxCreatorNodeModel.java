@@ -340,6 +340,7 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
       final String modelId = getStringVal(sheet, Rows.id.row);
       final String organism = getStringVal(sheet, Rows.organism.row);
       final String matrix = getStringVal(sheet, Rows.matrix.row);
+      final String depVar = getStringVal(sheet, Rows.depvar.row);
       final String depVarUnit = getStringVal(sheet, Rows.depvar_unit.row);
       final List<String> indepVars =
           Arrays.stream(getStringVal(sheet, Rows.indepvar.row).split("\\|\\|")).map(String::trim)
@@ -352,6 +353,7 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
       validateId(modelId);
       validateId(organism);
       validateId(matrix);
+      validateId(depVar);
       validateUnit(depVarUnit);
       indepVars.forEach(var -> validateId(var));
       indepVarUnits.forEach(unit -> {
@@ -402,7 +404,7 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
       template.notes = getStringVal(sheet, Rows.notes.row);
 
       // dep var. Type is not in the spreadsheet.
-      template.dependentVariable.name = getStringVal(sheet, Rows.depvar.row);
+      template.dependentVariable.name = depVar;
       template.dependentVariable.unit = depVarUnit;
       template.dependentVariable.min = getStringVal(sheet, Rows.depvar_min.row);
       template.dependentVariable.max = getStringVal(sheet, Rows.depvar_max.row);
