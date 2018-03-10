@@ -27,8 +27,9 @@ import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.rosuda.REngine.REXPMismatchException;
-import com.sun.jna.Platform;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
@@ -141,7 +142,7 @@ public class FsxkRunnerNodeModel extends NodeModel {
     }
 
     try (RController controller = new RController()) {
-      fskObj = runSnippet(controller, fskObj);
+      fskObj = runSnippet(controller, fskObj, exec);
     }
     RPortObject rObj = new RPortObject(fskObj.workspace);
 
@@ -156,8 +157,9 @@ public class FsxkRunnerNodeModel extends NodeModel {
     }
   }
 
-  private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj)
-      throws IOException, RException, REXPMismatchException {
+  private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
+      final ExecutionMonitor monitor) throws IOException, RException, REXPMismatchException,
+      CanceledExecutionException, InterruptedException {
 
     // Add path
     LibRegistry libRegistry = LibRegistry.instance();
@@ -175,24 +177,11 @@ public class FsxkRunnerNodeModel extends NodeModel {
     controller.eval("save.image('" + fskObj.workspace.getAbsolutePath().replace("\\", "/") + "')",
         false);
 
-    // Creates chart into m_imageFile
+    ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
     try {
-
-      // Initialize necessary R stuff to plot
-      if (Platform.isMac()) {
-        controller.eval("library(Cairo)", false);
-        controller.eval("options(device='png', bitmapType='cairo')", false);
-      } else {
-        controller.eval("options(device='png')", false);
-      }
-
-      String pngCmd = "png('" + internalSettings.imageFile.getAbsolutePath()
-          + "', width=640, height=640, pointsize=12, bg='#ffffff', res='NA')";
-      controller.eval(pngCmd, false);
-      controller.eval(fskObj.viz, false);
-      controller.eval("dev.off()", false);
-    } catch (RException e) {
-      LOGGER.warn("Visualization script failed");
+      NodeUtils.plot(internalSettings.imageFile, fskObj.viz, 640, 640, 12, "NA", executor, monitor);
+    } catch (final RException exception) {
+      LOGGER.warn("Visualization script failed", exception);
     }
 
     // Restore .libPaths() to the original library path which happens to be
