@@ -146,11 +146,6 @@ class CreatorNodeModel extends NoInternalsModel {
       visualizationScript = "";
     }
 
-    // Reads model meta data
-    if (StringUtils.isEmpty(nodeSettings.spreadsheet)) {
-      throw new InvalidSettingsException("Model metadata is not provided");
-    }
-
     final GenericModel genericModel;
 
     // If an input table is connected then parse the metadata
@@ -162,6 +157,11 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     else {
+      // Reads model meta data
+      if (StringUtils.isEmpty(nodeSettings.spreadsheet)) {
+        throw new InvalidSettingsException("Model metadata is not provided");
+      }
+
       final File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.spreadsheet));
       try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
         final XSSFSheet sheet = workbook.getSheetAt(0);
@@ -1132,6 +1132,13 @@ class CreatorNodeModel extends NoInternalsModel {
       return tokens;
     }
 
+    private static boolean isRowEmpty(DataRow row) {
+      for (DataCell cell : row)
+        if (!cell.isMissing())
+          return false;
+      return true;
+    }
+
     static GenericModel retrieveGenericModel(BufferedDataTable table) {
 
       GenericModel model = new GenericModel();
@@ -1139,9 +1146,11 @@ class CreatorNodeModel extends NoInternalsModel {
       String[][] values = new String[200][30];
       int i = 0;
       for (DataRow row : table) {
+        if (isRowEmpty(row))
+          break;
         int j = 0;
         for (DataCell cell : row) {
-          values[i][j] = ((StringCell) cell).getStringValue();
+          values[i][j] = !cell.isMissing() ? ((StringCell) cell).getStringValue() : "";
           j++;
         }
         i++;
@@ -1355,8 +1364,16 @@ class CreatorNodeModel extends NoInternalsModel {
 
     static Scope retrieveScope(String[][] values) {
       Scope scope = new Scope();
-      scope.hazard = retrieveHazard(values);
-      scope.populationGroup = retrievePopulationGroup(values);
+      try {
+        scope.hazard = retrieveHazard(values);
+      } catch (IllegalArgumentException exception) {
+        // Ignore since hazard is optional
+      }
+      try {
+        scope.populationGroup = retrievePopulationGroup(values);
+      } catch (IllegalArgumentException exception) {
+        // Ignore since population group is optional
+      }
 
       return scope;
     }
@@ -1429,12 +1446,33 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     static DataBackground retrieveDataBackground(String[][] values) {
+
       DataBackground dataBackground = new DataBackground();
       dataBackground.study = retrieveStudy(values);
-      dataBackground.studySample = retrieveStudySample(values);
-      dataBackground.dietaryAssessmentMethod = retrieveDAM(values);
-      dataBackground.laboratory = retrieveLaboratory(values);
-      dataBackground.assay = retrieveAssay(values);
+
+      try {
+        dataBackground.studySample = retrieveStudySample(values);
+      } catch (IllegalArgumentException exception) {
+        // Ignore exception since the study sample is optional
+      }
+
+      try {
+        dataBackground.dietaryAssessmentMethod = retrieveDAM(values);
+      } catch (IllegalArgumentException exception) {
+        // Ignore exception since the dietary assessment method is optional
+      }
+
+      try {
+        dataBackground.laboratory = retrieveLaboratory(values);
+      } catch (IllegalArgumentException exception) {
+        // Ignore exception since the laboratory is optional
+      }
+
+      try {
+        dataBackground.assay = retrieveAssay(values);
+      } catch (IllegalArgumentException exception) {
+        // Ignore exception since the assay is optional
+      }
 
       return dataBackground;
     }
@@ -1445,9 +1483,6 @@ class CreatorNodeModel extends NoInternalsModel {
       int columnI = RakipColumn.I.ordinal();
 
       // Check mandatory properties
-      if (values[RakipRow.STUDY_ID.num][RakipColumn.I.ordinal()].isEmpty()) {
-        throw new IllegalArgumentException("Missing study identifier");
-      }
       if (values[RakipRow.STUDY_TITLE.num][RakipColumn.I.ordinal()].isEmpty()) {
         throw new IllegalArgumentException("Missing study title");
       }
