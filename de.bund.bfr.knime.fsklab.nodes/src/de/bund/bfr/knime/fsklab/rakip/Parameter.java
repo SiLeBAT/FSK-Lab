@@ -49,7 +49,11 @@ public class Parameter {
   public String distribution = "";
 
   public String value = "";
-
+  
+  public String minValue = "";
+  
+  public String maxValue = "";
+  
   public String reference = "";
 
   public String variabilitySubject = "";
@@ -84,7 +88,21 @@ public class Parameter {
         distribution, value, reference, variabilitySubject, rangeOfApplicability,
         modelApplicability, error);
   }
-
+  public String getDescription() {
+    String description = "<html>";
+    description +="name : "+name+"<br>";
+    description +="classification : "+classification+"<br>";
+    description +="description : "+description+"<br>";
+    description +="unitCategory : "+unitCategory+"<br>";
+    description +="dataType : "+dataType+"<br>";
+    description +="source : "+source+"<br>";
+    description +="subject : "+subject+"<br>";
+    description +="distribution : "+distribution+"<br>";
+    description +="reference : "+reference+"<br>";
+    description +="variabilitySubject : "+variabilitySubject+"<br>";
+    description += "</html>";
+    return description;
+  }
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
