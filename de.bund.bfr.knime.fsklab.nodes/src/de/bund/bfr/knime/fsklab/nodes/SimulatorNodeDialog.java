@@ -245,18 +245,18 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
       FLabel paramLabel = new FLabel(param.name);
       Parameter fullParam = parameterMap.get(param.name);
-      //System.out.println("param.name = "+param.name+" ???????????????????????????????????????????? param.rangeOfApplicability llllll "+fullParam.rangeOfApplicability);
       SpinnerNumberModel SpinnerModel = null;
       if(fullParam.dataType!= null ) {
         if(fullParam.dataType.equals(INTEGER_DATA_TYPES)) {
-          int min = Integer.parseInt(fullParam.minValue == ""?"0":fullParam.minValue);
-          int max = Integer.parseInt(fullParam.maxValue == ""?fullParam.value:fullParam.maxValue);
+          
+          int min = (fullParam.minValue.equals("")?Integer.MIN_VALUE:Integer.parseInt(fullParam.minValue)); //Integer.parseInt(fullParam.minValue == ""?""+Integer.MIN_VALUE:fullParam.minValue);
+          int max = (fullParam.maxValue.equals("")?Integer.MAX_VALUE:Integer.parseInt(fullParam.maxValue));//Integer.parseInt(fullParam.maxValue == ""?""+Integer.MAX_VALUE:fullParam.maxValue);
           SpinnerModel = new SpinnerNumberModel(Integer.parseInt(fullParam.value), min, max, 1);
      
         }
         else if(fullParam.dataType.equals(DOUBLE_DATA_TYPES)){
-          double min = Double.parseDouble(fullParam.minValue == ""?"0.0":fullParam.minValue);
-          double max = Double.parseDouble(fullParam.maxValue == ""?fullParam.value:fullParam.maxValue);
+          double min = (fullParam.minValue.equals("")?Integer.MIN_VALUE:Double.parseDouble(fullParam.minValue)); // Double.parseDouble(fullParam.minValue == ""?""+Double.MIN_VALUE:fullParam.minValue);
+          double max = (fullParam.maxValue.equals("")?Integer.MAX_VALUE:Double.parseDouble(fullParam.maxValue));// Double.parseDouble(fullParam.maxValue == ""?""+Double.MAX_VALUE:fullParam.maxValue);
           SpinnerModel= new SpinnerNumberModel(Double.parseDouble(fullParam.value), min, max, 0.01);
         }
         FSpinner paramField =  new FSpinner(SpinnerModel, false);
@@ -316,7 +316,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
       for (Parameter param : currentSimulation.getSimulationParameters()) {
         if (param.name.equalsIgnoreCase((String) source.getClientProperty("id"))) {
-          System.out.print("param name ??? "+param.name+"  param.dataType = " + param.dataType);
           if (param.dataType.equals("Integer")) {
 
             boolean notInteger = false;
@@ -330,7 +329,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
             if (!notInteger) {
               param.value = source.getText();
-              System.out.println("param.int  " + source.getText());
             }
 
           } else if (param.dataType.equals("Double")) {
@@ -347,7 +345,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
             if (!notDouble) {
               param.value = source.getText();
-              System.out.println("param.double  " + source.getText());
             }
           }
           break;
@@ -395,7 +392,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
       List<Parameter> simulationParameters = new ArrayList<Parameter>();
       for (Parameter param : tempPimulationParameters) {
-        System.out.print("param name ??? "+param.name+"  param.dataType = " + param.dataType);
         
         simulationParameters.add(new Parameter(parameterMap.get(param.name)));
       }
