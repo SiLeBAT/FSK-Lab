@@ -46,6 +46,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -1133,14 +1134,16 @@ public class FskPortObject implements PortObject {
       add(parametersPanel, BorderLayout.CENTER);
     }
 
-    /** Create panel with parameter names and values. */
     private JPanel createFormPane(FskSimulation simulation) {
 
       List<JLabel> nameLabels = new ArrayList<>(simulations.size());
       List<JComponent> valueLabels = new ArrayList<>(simulations.size());
       for (Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
         nameLabels.add(new JLabel(entry.getKey()));
-        valueLabels.add(new JLabel(entry.getValue()));
+        JScrollPane scroll = new JScrollPane (new JTextArea(entry.getValue()), 
+            JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        valueLabels.add(scroll);
+        
       }
 
       JPanel formPane = UI.createOptionsPanel(nameLabels, valueLabels);
