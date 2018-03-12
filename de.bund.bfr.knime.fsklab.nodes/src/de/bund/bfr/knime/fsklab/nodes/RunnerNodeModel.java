@@ -169,7 +169,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     exec.setMessage("Run visualization script");
     try {
-      NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings, executor, exec);
+      NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings.width,
+          nodeSettings.height, nodeSettings.pointSize, nodeSettings.res, executor, exec);
     } catch (final RException exception) {
       LOGGER.warn("Visualization script failed", exception);
     }

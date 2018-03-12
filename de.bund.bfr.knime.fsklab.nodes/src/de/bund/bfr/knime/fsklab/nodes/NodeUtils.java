@@ -38,23 +38,23 @@ public class NodeUtils {
   }
 
   /**
-   * Plots models results and generates a chart using a visualization script.
+   * Plots model results and generates a chart using a visualization script.
    * 
-   * @param imageFile Chart file
+   * @param imgFile Chart file
    * @param vizScript Visualization script
-   * @param settings Visualization settings
    * @param executor R executor
    * @param monitor KNIME {@link ExecutionMonitor}
-   * @throws RException
-   * @throws CanceledExecutionException
    * @throws InterruptedException
+   * @throws CanceledExecutionException
+   * @throws RException
+   * 
    */
-  public static void plot(final File imageFile, final String vizScript,
-      final RunnerNodeSettings settings, final ConsoleLikeRExecutor executor,
+  public static void plot(final File imageFile, final String vizScript, final int width,
+      final int height, final int pointSize, final String res, final ConsoleLikeRExecutor executor,
       final ExecutionMonitor monitor)
       throws RException, CanceledExecutionException, InterruptedException {
 
-    // initialize necessary R stuff to plot
+    // Initialize necessary R stuff to plot
     if (Platform.isMac()) {
       executor.executeIgnoreResult("library('Cairo')", monitor);
       executor.executeIgnoreResult("options(device='png', bitmapType='cairo')", monitor);
@@ -62,12 +62,12 @@ public class NodeUtils {
       executor.executeIgnoreResult("options(device='png')", monitor);
     }
 
-    // Gets image path (with proper slashes)
+    // Get image path (with proper slashes)
     final String path = FilenameUtils.separatorsToUnix(imageFile.getAbsolutePath());
 
     // Gets values
-    String pngCommand = "png('" + path + "', width=" + settings.width + ", height="
-        + settings.height + ", pointsize=" + settings.pointSize + ", res='" + settings.res + "')";
+    String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize="
+        + pointSize + ", res='" + res + "')";
 
     executor.executeIgnoreResult(pngCommand, monitor);
     executor.executeIgnoreResult(vizScript, monitor);
@@ -94,7 +94,8 @@ public class NodeUtils {
 
     monitor.setMessage("Run visualization script");
     try {
-      NodeUtils.plot(imageFile, vizScript, settings, executor, monitor);
+      NodeUtils.plot(imageFile, vizScript, settings.width, settings.height, settings.pointSize,
+          settings.res, executor, monitor);
     } catch (final RException exception) {
       LOGGER.warn("Visualization script failed", exception);
     }

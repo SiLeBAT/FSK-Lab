@@ -29,6 +29,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.jdom2.DefaultJDOMFactory;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 import org.jlibsedml.Algorithm;
 import org.jlibsedml.Annotation;
 import org.jlibsedml.ChangeAttribute;
@@ -64,6 +67,8 @@ import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
+import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
+import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 
 class WriterNodeModel extends NoInternalsModel {
 
@@ -111,6 +116,21 @@ class WriterNodeModel extends NoInternalsModel {
     archiveFile.delete();
 
     try (final CombineArchive archive = new CombineArchive(archiveFile)) {
+
+      // Add version
+      {
+        DefaultJDOMFactory factory = new DefaultJDOMFactory();
+        Namespace dcTermsNamespace = Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/");
+
+        Element conformsToNode = factory.element("conformsTo", dcTermsNamespace);
+        conformsToNode.setText("2.0");
+
+        Element element = factory.element("element");
+        element.addContent(conformsToNode);
+
+        MetaDataObject metaDataObject = new DefaultMetaDataObject(element);
+        archive.addDescription(metaDataObject);
+      }
 
       // Adds model script
       final ArchiveEntry modelEntry = addRScript(archive, fskObj.model, "model.r");
