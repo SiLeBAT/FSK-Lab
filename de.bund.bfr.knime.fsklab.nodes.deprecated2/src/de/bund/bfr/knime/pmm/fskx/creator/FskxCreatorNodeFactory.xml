@@ -113,7 +113,7 @@
 			  <tr>
 			    <td>Rights-Accessibility</td>
 			    <td>F12</td>
-			    <td>Public</td>
+			    <td>String</td>
 			  </tr>
 			  <tr>
 			    <td>PMF-General-Notes</td>
