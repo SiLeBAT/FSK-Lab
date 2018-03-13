@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -17,10 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeMap;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -28,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -46,13 +50,17 @@ import org.sbml.jsbml.validator.SyntaxChecker;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.SimulationEntity;
+import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FSpinner;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.bund.bfr.swing.UI;
 
 public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
-
+  public static String INTEGER_DATA_TYPES = "Integer";
+  public static String DOUBLE_DATA_TYPES = "Double";
   private JList<SimulationEntity> list;
   private DefaultListModel<SimulationEntity> simulation_listModel;
   private JButton addButton;
@@ -66,14 +74,12 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   private SimulatorNodeSettings settings;
   Map<String,Parameter> parameterMap = new TreeMap<String,Parameter>();
   private static NodeLogger LOGGER = NodeLogger.getLogger("SimulatorNodeDialog");
-
   SimulationEntity currentSimulation;
   JPanel settingPanel;
 
   GenericModel currentGenericModel;
 
   public SimulatorNodeDialog() {
-
     simulation_listModel = new DefaultListModel<SimulationEntity>();
 
     list = new JList<>(simulation_listModel);
@@ -83,7 +89,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
     simulationName = new JTextField(10);
 
-    simulationSettingPanel = new JPanel();
+    simulationSettingPanel = new JPanel(new BorderLayout());
 
     settings = new SimulatorNodeSettings();
 
@@ -189,6 +195,11 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   }
 
   public void updatePanel() {
+    if(parameterMap.isEmpty()) {
+      for(Parameter param:currentGenericModel.modelMath.parameter) {
+        parameterMap.put(param.name, param);
+      }
+    }
     simulationSettingPanel.removeAll();
     simulationSettingPanel.revalidate();
     simulationSettingPanel.repaint();
@@ -206,8 +217,8 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
     List<Parameter> parameters = currentSimulation.getSimulationParameters();
 
-    List<JLabel> labels = new ArrayList<>(parameters.size());
-    List<JTextField> fields = new ArrayList<>(parameters.size());
+    List<FLabel> labels = new ArrayList<>(parameters.size());
+    List<JComponent> fields = new ArrayList<>(parameters.size());
 
     // Listener for text fields holding parameter values
     FocusListener focusListener = new FocusListener() {
@@ -229,30 +240,71 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         // does nothing
       }
     };
-
+  
     for (Parameter param : parameters) {
 
-      JLabel paramLabel = new JLabel(param.name, JLabel.TRAILING);
+      FLabel paramLabel = new FLabel(param.name);
+      Parameter fullParam = parameterMap.get(param.name);
+      SpinnerNumberModel SpinnerModel = null;
+      if(fullParam.dataType!= null ) {
+        if(fullParam.dataType.equals(INTEGER_DATA_TYPES)) {
+          
+          int min = (fullParam.minValue.equals("")?Integer.MIN_VALUE:Integer.parseInt(fullParam.minValue)); //Integer.parseInt(fullParam.minValue == ""?""+Integer.MIN_VALUE:fullParam.minValue);
+          int max = (fullParam.maxValue.equals("")?Integer.MAX_VALUE:Integer.parseInt(fullParam.maxValue));//Integer.parseInt(fullParam.maxValue == ""?""+Integer.MAX_VALUE:fullParam.maxValue);
+          SpinnerModel = new SpinnerNumberModel(Integer.parseInt(fullParam.value), min, max, 1);
+     
+        }
+        else if(fullParam.dataType.equals(DOUBLE_DATA_TYPES)){
+          double min = (fullParam.minValue.equals("")?Integer.MIN_VALUE:Double.parseDouble(fullParam.minValue)); // Double.parseDouble(fullParam.minValue == ""?""+Double.MIN_VALUE:fullParam.minValue);
+          double max = (fullParam.maxValue.equals("")?Integer.MAX_VALUE:Double.parseDouble(fullParam.maxValue));// Double.parseDouble(fullParam.maxValue == ""?""+Double.MAX_VALUE:fullParam.maxValue);
+          SpinnerModel= new SpinnerNumberModel(Double.parseDouble(fullParam.value), min, max, 0.01);
+        }
+        FSpinner paramField =  new FSpinner(SpinnerModel, false);
+       
+        //simulationSettingPanel.add(paramField);
+        paramField.putClientProperty("id", param.name);
+        paramField
+            .setEnabled(!currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
+        paramField.addFocusListener(focusListener);
+        paramField.addKeyListener(new SimulationParameterValueListener());
 
-      JTextField paramField = new JTextField(10);
-      paramField.setText(param.value);
-      simulationSettingPanel.add(paramField);
-      paramField.putClientProperty("id", param.name);
-      paramField
-          .setEditable(!currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
-      paramField.addFocusListener(focusListener);
-      paramField.addKeyListener(new SimulationParameterValueListener());
-
-      paramLabel.setLabelFor(paramField);
-
-      labels.add(paramLabel);
-      fields.add(paramField);
+        paramLabel.setLabelFor(paramField);
+        paramLabel.setToolTipText(fullParam.getDescription());
+        labels.add(paramLabel);
+        FPanel parameterFieldAndUnitArea = new FPanel();
+        parameterFieldAndUnitArea.setLayout(new FlowLayout(FlowLayout.LEFT));
+        parameterFieldAndUnitArea.add(paramField);
+        parameterFieldAndUnitArea.add(new JLabel(fullParam.unit));
+        fields.add(parameterFieldAndUnitArea);
+      }else {
+        JTextField paramField = new JTextField(10);
+        paramField.setText(param.value);
+       // simulationSettingPanel.add(paramField);
+        paramField.putClientProperty("id", param.name);
+        paramField
+            .setEditable(!currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
+        paramField.addFocusListener(focusListener);
+        paramField.addKeyListener(new SimulationParameterValueListener());
+  
+        paramLabel.setLabelFor(paramField);
+  
+        labels.add(paramLabel);
+        FPanel parameterFieldAndUnitArea = new FPanel();
+        parameterFieldAndUnitArea.setLayout(new FlowLayout(FlowLayout.LEFT));
+        parameterFieldAndUnitArea.add(paramField);
+        parameterFieldAndUnitArea.add(new JLabel(fullParam.unit));
+        fields.add(UIUtils.createHorizontalPanel(paramField));
+      }
     }
-
-    JPanel optionsPanel = UI.createOptionsPanel(labels, fields);
-    simulationSettingPanel.add(optionsPanel);
+    FPanel formPanel = UIUtils.createFormPanel(labels, fields);
+    FPanel northPanel = UIUtils.createNorthPanel(formPanel);
+  
+    simulationSettingPanel.add(northPanel,BorderLayout.CENTER);
   }
-
+  public boolean isNumeric(String dataType) {
+    
+    return dataType.equals(INTEGER_DATA_TYPES) || dataType.equals(DOUBLE_DATA_TYPES);
+  }
   class SimulationParameterValueListener implements KeyListener {
 
     @Override
@@ -264,7 +316,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
       for (Parameter param : currentSimulation.getSimulationParameters()) {
         if (param.name.equalsIgnoreCase((String) source.getClientProperty("id"))) {
-          System.out.print("param name ??? "+param.name+"  param.dataType = " + param.dataType);
           if (param.dataType.equals("Integer")) {
 
             boolean notInteger = false;
@@ -278,7 +329,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
             if (!notInteger) {
               param.value = source.getText();
-              System.out.println("param.int  " + source.getText());
             }
 
           } else if (param.dataType.equals("Double")) {
@@ -295,7 +345,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
             if (!notDouble) {
               param.value = source.getText();
-              System.out.println("param.double  " + source.getText());
             }
           }
           break;
@@ -343,7 +392,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
       List<Parameter> simulationParameters = new ArrayList<Parameter>();
       for (Parameter param : tempPimulationParameters) {
-        System.out.print("param name ??? "+param.name+"  param.dataType = " + param.dataType);
         
         simulationParameters.add(new Parameter(parameterMap.get(param.name)));
       }
@@ -474,9 +522,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       list.repaint();
       updatePanel();
     }
-    for(Parameter param:currentGenericModel.modelMath.parameter) {
-      parameterMap.put(param.name, param);
-    }
+    
     
   }
 
