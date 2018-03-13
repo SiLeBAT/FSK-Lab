@@ -115,19 +115,21 @@ public class NodeUtils {
         continue;
       }
 
-      line = line.trim();
+      if (line.contains("<-")) {
+        line = line.trim();
 
-      String[] tokens = line.split("<-");
-      String name = tokens[0].trim();
-      String value = tokens[1].trim();
+        String[] tokens = line.split("<-");
+        String name = tokens[0].trim();
+        String value = tokens[1].trim();
 
-      // Remove comments from values in the parameters script
-      int poundPos = value.indexOf("#");
-      if (poundPos != -1) {
-        value = value.substring(0, poundPos);
+        // Remove comments from values in the parameters script
+        int poundPos = value.indexOf("#");
+        if (poundPos != -1) {
+          value = value.substring(0, poundPos);
+        }
+
+        defaultSimulation.getParameters().put(name, value);
       }
-
-      defaultSimulation.getParameters().put(name, value);
     }
 
     return defaultSimulation;
