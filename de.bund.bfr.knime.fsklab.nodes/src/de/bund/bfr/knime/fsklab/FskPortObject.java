@@ -41,7 +41,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -1110,9 +1109,13 @@ public class FskPortObject implements PortObject {
 
     private void createUI() {
 
-      simulationPanel.setLayout(new BoxLayout(simulationPanel, BoxLayout.Y_AXIS));
-      simulationPanel.add(parametersPanel);
-      simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"));
+      // simulationPanel.setLayout(new BoxLayout(simulationPanel, BoxLayout.Y_AXIS));
+      // simulationPanel.add(parametersPanel);
+      // simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"));
+      simulationPanel.setLayout(new BorderLayout());
+      simulationPanel.add(parametersPanel, BorderLayout.NORTH);
+      simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"),
+          BorderLayout.CENTER);
 
       // Panel to select simulation
       String[] simulationNames =
@@ -1134,7 +1137,7 @@ public class FskPortObject implements PortObject {
             JPanel formPanel = createFormPane(selectedSimulation);
 
             parametersPanel = UIUtils.createNorthPanel(formPanel);
-            simulationPanel.add(parametersPanel, 0);
+            simulationPanel.add(parametersPanel, BorderLayout.NORTH);
 
             revalidate();
             repaint();
