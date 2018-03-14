@@ -18,13 +18,13 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -131,10 +131,9 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
 
       FPanel simulationPanel = new FPanel();
       simulationPanel.setBorder(BorderFactory.createTitledBorder("Simulation"));
-
-      simulationPanel.setLayout(new BorderLayout());
-      simulationPanel.add(simulationSelectionPanel, BorderLayout.NORTH);
-      simulationPanel.add(scriptPanel, BorderLayout.CENTER);
+      simulationPanel.setLayout(new BoxLayout(simulationPanel, BoxLayout.Y_AXIS));
+      simulationPanel.add(UIUtils.createNorthPanel(simulationSelectionPanel));
+      simulationPanel.add(scriptPanel);
 
       northPanel.add(simulationPanel);
     }

@@ -41,6 +41,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -1086,7 +1087,7 @@ public class FskPortObject implements PortObject {
 
     private static final long serialVersionUID = -4887698302872695689L;
 
-    private JPanel parametersPanel;
+    private JScrollPane parametersPane;
 
     private final ScriptPanel scriptPanel;
     private final FPanel simulationPanel;
@@ -1096,7 +1097,7 @@ public class FskPortObject implements PortObject {
       // Panel to show parameters (show initially the simulation 0)
       FskSimulation defaultSimulation = simulations.get(0);
       JPanel formPanel = createFormPane(defaultSimulation);
-      parametersPanel = UIUtils.createNorthPanel(formPanel);
+      parametersPane = new JScrollPane(formPanel);
 
       // Panel to show preview of generated script out of parameters
       String previewScript = NodeUtils.buildParameterScript(defaultSimulation);
@@ -1109,13 +1110,9 @@ public class FskPortObject implements PortObject {
 
     private void createUI() {
 
-      // simulationPanel.setLayout(new BoxLayout(simulationPanel, BoxLayout.Y_AXIS));
-      // simulationPanel.add(parametersPanel);
-      // simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"));
-      simulationPanel.setLayout(new BorderLayout());
-      simulationPanel.add(parametersPanel, BorderLayout.NORTH);
-      simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"),
-          BorderLayout.CENTER);
+      simulationPanel.setLayout(new BoxLayout(simulationPanel, BoxLayout.Y_AXIS));
+      simulationPanel.add(parametersPane);
+      simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"));
 
       // Panel to select simulation
       String[] simulationNames =
@@ -1131,13 +1128,13 @@ public class FskPortObject implements PortObject {
           if (selectedIndex != -1) {
 
             // Update parameters panel
-            simulationPanel.remove(parametersPanel);
+            simulationPanel.remove(parametersPane);
 
             FskSimulation selectedSimulation = simulations.get(selectedIndex);
             JPanel formPanel = createFormPane(selectedSimulation);
 
-            parametersPanel = UIUtils.createNorthPanel(formPanel);
-            simulationPanel.add(parametersPanel, BorderLayout.NORTH);
+            parametersPane = new JScrollPane(formPanel);
+            simulationPanel.add(parametersPane, 0);
 
             revalidate();
             repaint();
