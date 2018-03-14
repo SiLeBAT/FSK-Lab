@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.image.png.PNGImageContent;
@@ -124,14 +123,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
       FskSimulation fskSimulation = fskObj.simulations.stream()
           .filter(it -> it.getName().equals(nodeSettings.simulation)).findAny().get();
-
-      String paramScript = "";
-      for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
-        String parameterName = entry.getKey();
-        String parameterValue = entry.getValue();
-
-        paramScript += parameterName + " <- " + parameterValue + "\n";
-      }
+      String paramScript = NodeUtils.buildParameterScript(fskSimulation);
       controller.eval(paramScript, false);
 
       fskObj = runSnippet(controller, fskObj, exec.createSubExecutionContext(1.0));

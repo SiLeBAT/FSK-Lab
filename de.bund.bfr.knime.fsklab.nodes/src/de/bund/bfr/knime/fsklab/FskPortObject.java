@@ -41,12 +41,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -69,8 +68,12 @@ import org.rosuda.REngine.REXPMismatchException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.gcolaianni5.jris.bean.Record;
 import com.gmail.gcolaianni5.jris.bean.Type;
+import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
+import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
+import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
@@ -89,7 +92,6 @@ import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
-import de.bund.bfr.swing.UI;
 import ezvcard.VCard;
 import ezvcard.property.StructuredName;
 
@@ -1081,23 +1083,36 @@ public class FskPortObject implements PortObject {
     return panel;
   }
 
-  private class SimulationsPanel extends JPanel {
+  private class SimulationsPanel extends FPanel {
 
     private static final long serialVersionUID = -4887698302872695689L;
 
     private JPanel parametersPanel;
+
+    private final ScriptPanel scriptPanel;
+    private final FPanel simulationPanel;
 
     public SimulationsPanel() {
 
       // Panel to show parameters (show initially the simulation 0)
       FskSimulation defaultSimulation = simulations.get(0);
       JPanel formPanel = createFormPane(defaultSimulation);
-      parametersPanel = UI.createNorthPanel(formPanel);
+      parametersPanel = UIUtils.createNorthPanel(formPanel);
+
+      // Panel to show preview of generated script out of parameters
+      String previewScript = NodeUtils.buildParameterScript(defaultSimulation);
+      scriptPanel = new ScriptPanel("Preview", previewScript, false);
+
+      simulationPanel = new FPanel();
 
       createUI();
     }
 
     private void createUI() {
+
+      simulationPanel.setLayout(new BoxLayout(simulationPanel, BoxLayout.Y_AXIS));
+      simulationPanel.add(parametersPanel);
+      simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"));
 
       // Panel to select simulation
       String[] simulationNames =
@@ -1111,16 +1126,22 @@ public class FskPortObject implements PortObject {
           // Get selected simulation
           int selectedIndex = list.getSelectedIndex();
           if (selectedIndex != -1) {
-            remove(parametersPanel);
+
+            // Update parameters panel
+            simulationPanel.remove(parametersPanel);
 
             FskSimulation selectedSimulation = simulations.get(selectedIndex);
             JPanel formPanel = createFormPane(selectedSimulation);
 
-            parametersPanel = UI.createNorthPanel(formPanel);
-            add(parametersPanel, BorderLayout.CENTER);
+            parametersPanel = UIUtils.createNorthPanel(formPanel);
+            simulationPanel.add(parametersPanel, 0);
 
             revalidate();
             repaint();
+
+            // Update previewPanel
+            String previewScript = NodeUtils.buildParameterScript(selectedSimulation);
+            scriptPanel.setText(previewScript);
           }
         }
       });
@@ -1131,24 +1152,24 @@ public class FskPortObject implements PortObject {
       setLayout(new BorderLayout());
       setName("Simulations");
       add(browsePanel, BorderLayout.WEST);
-      add(parametersPanel, BorderLayout.CENTER);
+      add(simulationPanel, BorderLayout.CENTER);
     }
 
     private JPanel createFormPane(FskSimulation simulation) {
 
-      List<JLabel> nameLabels = new ArrayList<>(simulations.size());
+      List<FLabel> nameLabels = new ArrayList<>(simulations.size());
       List<JComponent> valueLabels = new ArrayList<>(simulations.size());
       for (Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
-        nameLabels.add(new JLabel(entry.getKey()));
-        JScrollPane scroll = new JScrollPane (new JTextArea(entry.getValue()), 
-            JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        valueLabels.add(scroll);
-        
+        nameLabels.add(new FLabel(entry.getKey()));
+
+        FTextField field = new FTextField();
+        field.setText(entry.getValue());
+        valueLabels.add(field);
       }
 
-      JPanel formPane = UI.createOptionsPanel(nameLabels, valueLabels);
+      FPanel formPanel = UIUtils.createFormPanel(nameLabels, valueLabels);
 
-      return formPane;
+      return formPanel;
     }
   }
 }

@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -133,5 +134,19 @@ public class NodeUtils {
     }
 
     return defaultSimulation;
+  }
+
+  /** Builds string with R parameters script out. */
+  public static String buildParameterScript(FskSimulation simulation) {
+
+    String paramScript = "";
+    for (Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
+      String parameterName = entry.getKey();
+      String parameterValue = entry.getValue();
+
+      paramScript += parameterName + " <- " + parameterValue + "\n";
+    }
+
+    return paramScript;
   }
 }

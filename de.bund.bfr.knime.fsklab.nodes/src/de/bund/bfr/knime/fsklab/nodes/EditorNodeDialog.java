@@ -147,9 +147,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
   // Update the scripts in the ScriptPanels
   private void updatePanels() {
-    modelScriptPanel.getTextArea().setText(settings.modifiedModelScript);
-    paramScriptPanel.getTextArea().setText(settings.modifiedParametersScript);
-    vizScriptPanel.getTextArea().setText(settings.modifiedVisualizationScript);
+    modelScriptPanel.setText(settings.modifiedModelScript);
+    paramScriptPanel.setText(settings.modifiedParametersScript);
+    vizScriptPanel.setText(settings.modifiedVisualizationScript);
 
     generalInformationPanel.init(settings.genericModel.generalInformation);
     scopePanel.init(settings.genericModel.scope);
@@ -224,9 +224,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
 
     // Save modified scripts to settings
-    this.settings.modifiedModelScript = modelScriptPanel.getTextArea().getText();
-    this.settings.modifiedParametersScript = paramScriptPanel.getTextArea().getText();
-    this.settings.modifiedVisualizationScript = vizScriptPanel.getTextArea().getText();
+    this.settings.modifiedModelScript = modelScriptPanel.getText();
+    this.settings.modifiedParametersScript = paramScriptPanel.getText();
+    this.settings.modifiedVisualizationScript = vizScriptPanel.getText();
 
     // Trim non-empty scripts
     this.settings.modifiedModelScript = StringUtils.trim(this.settings.modifiedModelScript);

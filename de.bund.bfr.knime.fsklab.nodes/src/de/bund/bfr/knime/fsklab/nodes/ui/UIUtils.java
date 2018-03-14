@@ -123,6 +123,16 @@ public class UIUtils {
     return addButton;
   }
 
+  public static FPanel createTitledPanel(Component comp, String title) {
+    FPanel p = new FPanel();
+
+    p.setBorder(BorderFactory.createTitledBorder(title));
+    p.setLayout(new BorderLayout());
+    p.add(comp, BorderLayout.CENTER);
+
+    return p;
+  }
+
   public static FPanel createNorthPanel(Component component) {
     FPanel northPanel = new FPanel();
     northPanel.setLayout(new BorderLayout());

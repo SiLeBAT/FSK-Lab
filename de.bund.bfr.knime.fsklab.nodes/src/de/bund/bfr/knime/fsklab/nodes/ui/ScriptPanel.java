@@ -39,7 +39,11 @@ public class ScriptPanel extends JPanel {
     add(new RTextScrollPane(textArea));
   }
 
-  public RSnippetTextArea getTextArea() {
-    return textArea;
+  public String getText() {
+    return textArea.getText();
+  }
+
+  public void setText(String text) {
+    textArea.setText(text);
   }
 }
