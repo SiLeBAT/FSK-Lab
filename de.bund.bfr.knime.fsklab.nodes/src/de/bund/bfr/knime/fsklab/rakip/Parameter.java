@@ -88,7 +88,7 @@ public class Parameter {
         distribution, value, reference, variabilitySubject, rangeOfApplicability,
         modelApplicability, error);
   }
-  public String getDescription() {
+  public String renderDescriptionText() {
     String description = "<html>";
     description +="name : "+name+"<br>";
     description +="classification : "+classification+"<br>";

@@ -269,7 +269,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         paramField.addKeyListener(new SimulationParameterValueListener());
 
         paramLabel.setLabelFor(paramField);
-        paramLabel.setToolTipText(fullParam.getDescription());
+        paramLabel.setToolTipText(fullParam.renderDescriptionText());
         labels.add(paramLabel);
         FPanel parameterFieldAndUnitArea = new FPanel();
         parameterFieldAndUnitArea.setLayout(new FlowLayout(FlowLayout.LEFT));
