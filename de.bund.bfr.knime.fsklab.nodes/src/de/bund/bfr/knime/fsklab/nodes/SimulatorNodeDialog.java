@@ -33,6 +33,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -240,9 +242,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         // does nothing
       }
     };
-  
     for (Parameter param : parameters) {
-
       FLabel paramLabel = new FLabel(param.name);
       Parameter fullParam = parameterMap.get(param.name);
       SpinnerNumberModel SpinnerModel = null;
@@ -251,13 +251,13 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
           
           int min = (fullParam.minValue.equals("")?Integer.MIN_VALUE:Integer.parseInt(fullParam.minValue)); //Integer.parseInt(fullParam.minValue == ""?""+Integer.MIN_VALUE:fullParam.minValue);
           int max = (fullParam.maxValue.equals("")?Integer.MAX_VALUE:Integer.parseInt(fullParam.maxValue));//Integer.parseInt(fullParam.maxValue == ""?""+Integer.MAX_VALUE:fullParam.maxValue);
-          SpinnerModel = new SpinnerNumberModel(Integer.parseInt(fullParam.value), min, max, 1);
+          SpinnerModel = new SpinnerNumberModel(Integer.parseInt(param.value), min, max, 1);
      
         }
         else if(fullParam.dataType.equals(DOUBLE_DATA_TYPES)){
           double min = (fullParam.minValue.equals("")?Integer.MIN_VALUE:Double.parseDouble(fullParam.minValue)); // Double.parseDouble(fullParam.minValue == ""?""+Double.MIN_VALUE:fullParam.minValue);
           double max = (fullParam.maxValue.equals("")?Integer.MAX_VALUE:Double.parseDouble(fullParam.maxValue));// Double.parseDouble(fullParam.maxValue == ""?""+Double.MAX_VALUE:fullParam.maxValue);
-          SpinnerModel= new SpinnerNumberModel(Double.parseDouble(fullParam.value), min, max, 0.01);
+          SpinnerModel= new SpinnerNumberModel(Double.parseDouble(param.value), min, max, 0.01);
         }
         FSpinner paramField =  new FSpinner(SpinnerModel, false);
        
@@ -267,7 +267,19 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
             .setEnabled(!currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
         paramField.addFocusListener(focusListener);
         paramField.addKeyListener(new SimulationParameterValueListener());
+        paramField.addChangeListener(new ChangeListener() {      
+          @Override
+          public void stateChanged(ChangeEvent e) {
+           
+            FSpinner source = ((FSpinner)e.getSource());
 
+            for (Parameter param : currentSimulation.getSimulationParameters()) {
+              if (param.name.equalsIgnoreCase((String) source.getClientProperty("id"))) {
+                param.value = ""+ source.getValue();
+              }
+            }
+          }
+        });
         paramLabel.setLabelFor(paramField);
         paramLabel.setToolTipText(fullParam.renderDescriptionText());
         labels.add(paramLabel);
