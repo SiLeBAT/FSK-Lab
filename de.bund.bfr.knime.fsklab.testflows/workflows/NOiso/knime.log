@@ -1,0 +1,1312 @@
+2018-03-07 15:39:51,365 : DEBUG : main : CopySingleNodeContainerPersistor : FSK Editor : 2:4 : Failed to copy settings into node target: com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized field "modelSubSubClass" (class de.bund.bfr.knime.fsklab.rakip.ModelCategory), not marked as ignorable (4 known properties: "modelClassComment", "modelSubClass", "modelClass", "basicProcess"])
+ at [Source: {"generalInformation":{"name":"cnmcnz\\m,ncm","source":"AFAFA","identifier":"FSFAFA","creators":[],"creationDate":1511287440176,"modificationDate":[],"rights":"KJFKSFJKS","isAvailable":true,"url":null,"format":"FAFA","reference":[],"language":"FAFA","software":"FAF","languageWrittenIn":"AFAFAFAF","modelCategory":{"modelClass":"","modelSubClass":[],"modelClassComment":"","modelSubSubClass":[],"basicProcess":[]},"status":"Other","objective":"FAFA","description":"FAFAF"},"scope":{"product":{"environmentName":"Fennel seed","environmentDescription":"fafaf","environmentUnit":"fs","productionMethod":["Under glass - protected growing condition"],"packaging":["Blister (film)"],"productTreatment":["Churning"],"originCountry":"Falkland Islands (Malvinas)","originArea":"Falkirk","fisheriesArea":"Faeroe Plateau - Part Of Neafc Regulatory Area","productionDate":1511218800000,"expirationDate":1511287440176},"hazard":{"hazardType":"fa","hazardName":"fa","hazardDescription":"fafaf","hazardUnit":"fafa","adverseEffect":"fafa","origin":"fafa","benchmarkDose":"fafa","maximumResidueLimit":"fafasfaf","noObservedAdverse":"fafa","lowestObservedAdverse":"","acceptableOperator":"fafa","acuteReferenceDose":"fafa","acceptableDailyIntake":"fafa","hazardIndSum":"Individual","laboratoryName":"fafa","laboratoryCountry":"Falkland Islands (Malvinas)","detectionLimit":"fafaf","quantificationLimit":"afasfas","leftCensoredData":"fafa","rangeOfContamination":"fafa"},"populationGroup":{"populationName":"fsafas","targetPopulation":"fasf","populationSpan":["asfafa"],"populationDescription":["fa"],"populationAge":["fasfas"],"populationGender":"fas","bmi":["faf"],"specialDietGroups":["afsaf"],"patternConsumption":["afsafas"],"region":["Extra-Regio (IEZZZ)"],"country":["Zambia"],"populationRiskFactor":["fafa"],"season":["faf"]},"generalComment":"","temporalInformation":"","region":[],"country":[]},"dataBackground":{"study":{"title":"dDDd","description":"","designType":"","measurementType":"","technologyType":"","technologyPlatform":"fafa","accreditationProcedure":"","protocolName":"","protocolType":"","protocolDescription":"","protocolUri":"ffsa","protocolVersion":"","parametersName":"","componentsName":"","componentsType":""},"studySample":{"sample":"sfafsaf","moisturePercentage":0.0,"fatPercentage":0.0,"collectionProtocol":"asfasf","samplingStrategy":"Objective sampling","samplingProgramType":"Diet study","samplingMethod":"According to Reg 152/2009","samplingPlan":"asfasf","samplingWeight":"fafa","samplingSize":"fa","lotSizeUnit":"% Activated","samplingPoint":"Bee hives"},"dietaryAssessmentMethod":{"collectionTool":"1","numberOfNonConsecutiveOneDay":1,"softwareTool":"1","numberOfFoodItems":["1"],"recordTypes":["1"],"foodDescriptors":["Manioc; [tapioca]; [cassava]"]},"laboratoryAccreditation":[],"assay":{"name":"fafaf","description":"afasfas"}},"modelMath":{"parameter":[{"id":"ff","classification":"input","name":"faf","description":"","unit":"fafa","unitCategory":"faafafa","dataType":"fafa","source":null,"subject":null,"distribution":null,"value":"","reference":"","variabilitySubject":"","modelApplicability":[],"error":0.0}],"sse":0.0,"mse":0.0,"rmse":0.0,"rSquared":0.0,"aic":0.0,"bic":0.0,"modelEquation":[{"equationName":"fafasfa","equationClass":"","equationReference":[],"equation":"fafaf"}],"fittingProcedure":"","exposure":{"treatment":"","contaminationLevel":"","exposureType":"","scenario":"","uncertaintyEstimation":""},"event":[]},"simulation":{"algorithm":"","simulatedModel":"","parameterSettings":[],"description":"","plotSettings":[],"visualizationScript":""}}; line: 1, column: 394] (through reference chain: de.bund.bfr.knime.fsklab.rakip.GenericModel["generalInformation"]->de.bund.bfr.knime.fsklab.rakip.GeneralInformation["modelCategory"]->de.bund.bfr.knime.fsklab.rakip.ModelCategory["modelSubSubClass"])
+org.knime.core.node.InvalidSettingsException: com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized field "modelSubSubClass" (class de.bund.bfr.knime.fsklab.rakip.ModelCategory), not marked as ignorable (4 known properties: "modelClassComment", "modelSubClass", "modelClass", "basicProcess"])
+ at [Source: {"generalInformation":{"name":"cnmcnz\\m,ncm","source":"AFAFA","identifier":"FSFAFA","creators":[],"creationDate":1511287440176,"modificationDate":[],"rights":"KJFKSFJKS","isAvailable":true,"url":null,"format":"FAFA","reference":[],"language":"FAFA","software":"FAF","languageWrittenIn":"AFAFAFAF","modelCategory":{"modelClass":"","modelSubClass":[],"modelClassComment":"","modelSubSubClass":[],"basicProcess":[]},"status":"Other","objective":"FAFA","description":"FAFAF"},"scope":{"product":{"environmentName":"Fennel seed","environmentDescription":"fafaf","environmentUnit":"fs","productionMethod":["Under glass - protected growing condition"],"packaging":["Blister (film)"],"productTreatment":["Churning"],"originCountry":"Falkland Islands (Malvinas)","originArea":"Falkirk","fisheriesArea":"Faeroe Plateau - Part Of Neafc Regulatory Area","productionDate":1511218800000,"expirationDate":1511287440176},"hazard":{"hazardType":"fa","hazardName":"fa","hazardDescription":"fafaf","hazardUnit":"fafa","adverseEffect":"fafa","origin":"fafa","benchmarkDose":"fafa","maximumResidueLimit":"fafasfaf","noObservedAdverse":"fafa","lowestObservedAdverse":"","acceptableOperator":"fafa","acuteReferenceDose":"fafa","acceptableDailyIntake":"fafa","hazardIndSum":"Individual","laboratoryName":"fafa","laboratoryCountry":"Falkland Islands (Malvinas)","detectionLimit":"fafaf","quantificationLimit":"afasfas","leftCensoredData":"fafa","rangeOfContamination":"fafa"},"populationGroup":{"populationName":"fsafas","targetPopulation":"fasf","populationSpan":["asfafa"],"populationDescription":["fa"],"populationAge":["fasfas"],"populationGender":"fas","bmi":["faf"],"specialDietGroups":["afsaf"],"patternConsumption":["afsafas"],"region":["Extra-Regio (IEZZZ)"],"country":["Zambia"],"populationRiskFactor":["fafa"],"season":["faf"]},"generalComment":"","temporalInformation":"","region":[],"country":[]},"dataBackground":{"study":{"title":"dDDd","description":"","designType":"","measurementType":"","technologyType":"","technologyPlatform":"fafa","accreditationProcedure":"","protocolName":"","protocolType":"","protocolDescription":"","protocolUri":"ffsa","protocolVersion":"","parametersName":"","componentsName":"","componentsType":""},"studySample":{"sample":"sfafsaf","moisturePercentage":0.0,"fatPercentage":0.0,"collectionProtocol":"asfasf","samplingStrategy":"Objective sampling","samplingProgramType":"Diet study","samplingMethod":"According to Reg 152/2009","samplingPlan":"asfasf","samplingWeight":"fafa","samplingSize":"fa","lotSizeUnit":"% Activated","samplingPoint":"Bee hives"},"dietaryAssessmentMethod":{"collectionTool":"1","numberOfNonConsecutiveOneDay":1,"softwareTool":"1","numberOfFoodItems":["1"],"recordTypes":["1"],"foodDescriptors":["Manioc; [tapioca]; [cassava]"]},"laboratoryAccreditation":[],"assay":{"name":"fafaf","description":"afasfas"}},"modelMath":{"parameter":[{"id":"ff","classification":"input","name":"faf","description":"","unit":"fafa","unitCategory":"faafafa","dataType":"fafa","source":null,"subject":null,"distribution":null,"value":"","reference":"","variabilitySubject":"","modelApplicability":[],"error":0.0}],"sse":0.0,"mse":0.0,"rmse":0.0,"rSquared":0.0,"aic":0.0,"bic":0.0,"modelEquation":[{"equationName":"fafasfa","equationClass":"","equationReference":[],"equation":"fafaf"}],"fittingProcedure":"","exposure":{"treatment":"","contaminationLevel":"","exposureType":"","scenario":"","uncertaintyEstimation":""},"event":[]},"simulation":{"algorithm":"","simulatedModel":"","parameterSettings":[],"description":"","plotSettings":[],"visualizationScript":""}}; line: 1, column: 394] (through reference chain: de.bund.bfr.knime.fsklab.rakip.GenericModel["generalInformation"]->de.bund.bfr.knime.fsklab.rakip.GeneralInformation["modelCategory"]->de.bund.bfr.knime.fsklab.rakip.ModelCategory["modelSubSubClass"])
+	at de.bund.bfr.knime.fsklab.nodes.EditorNodeSettings.loadSettings(EditorNodeSettings.java:124)
+	at de.bund.bfr.knime.fsklab.nodes.EditorNodeModel.validateSettings(EditorNodeModel.java:70)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:578)
+	at org.knime.core.node.workflow.CopyNativeNodeContainerPersistor.loadNodeContainer(CopyNativeNodeContainerPersistor.java:137)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7820)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7710)
+	at org.knime.core.node.workflow.WorkflowManager.paste(WorkflowManager.java:7352)
+	at org.knime.workbench.editor2.commands.PasteFromWorkflowPersistorCommand.execute(PasteFromWorkflowPersistorCommand.java:126)
+	at org.eclipse.gef.commands.CommandStack.execute(CommandStack.java:228)
+	at org.knime.workbench.editor2.actions.PasteAction.runOnNodes(PasteAction.java:130)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction.runInSWT(AbstractNodeAction.java:156)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction$1.run(AbstractNodeAction.java:142)
+	at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:233)
+	at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:145)
+	at org.eclipse.swt.widgets.Display.syncExec(Display.java:4813)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction.run(AbstractNodeAction.java:139)
+	at org.eclipse.jface.action.Action.runWithEvent(Action.java:473)
+	at org.eclipse.jface.commands.ActionHandler.execute(ActionHandler.java:118)
+	at org.eclipse.ui.internal.handlers.E4HandlerProxy.execute(E4HandlerProxy.java:90)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:55)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.invokeUsingClass(InjectorImpl.java:282)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.invoke(InjectorImpl.java:264)
+	at org.eclipse.e4.core.contexts.ContextInjectionFactory.invoke(ContextInjectionFactory.java:132)
+	at org.eclipse.e4.core.commands.internal.HandlerServiceHandler.execute(HandlerServiceHandler.java:152)
+	at org.eclipse.core.commands.Command.executeWithChecks(Command.java:494)
+	at org.eclipse.core.commands.ParameterizedCommand.executeWithChecks(ParameterizedCommand.java:488)
+	at org.eclipse.e4.core.commands.internal.HandlerServiceImpl.executeHandler(HandlerServiceImpl.java:210)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.executeCommand(KeyBindingDispatcher.java:286)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.press(KeyBindingDispatcher.java:507)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.processKeyEvent(KeyBindingDispatcher.java:558)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.filterKeySequenceBindings(KeyBindingDispatcher.java:378)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.access$0(KeyBindingDispatcher.java:324)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher$KeyDownFilter.handleEvent(KeyBindingDispatcher.java:86)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+	at org.eclipse.swt.widgets.Display.filterEvent(Display.java:1270)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1078)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1103)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1088)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1130)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1126)
+	at org.eclipse.swt.widgets.Widget.wmChar(Widget.java:1547)
+	at org.eclipse.swt.widgets.Control.WM_CHAR(Control.java:4910)
+	at org.eclipse.swt.widgets.Canvas.WM_CHAR(Canvas.java:364)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4791)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:359)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5102)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessageW(Native Method)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(OS.java:2552)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3814)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$4.run(PartRenderingEngine.java:1121)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:336)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1022)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:150)
+	at org.eclipse.ui.internal.Workbench$5.run(Workbench.java:687)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:336)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:604)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:148)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:140)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:134)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:388)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:243)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:673)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:610)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1519)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1492)
+Caused by: com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized field "modelSubSubClass" (class de.bund.bfr.knime.fsklab.rakip.ModelCategory), not marked as ignorable (4 known properties: "modelClassComment", "modelSubClass", "modelClass", "basicProcess"])
+ at [Source: {"generalInformation":{"name":"cnmcnz\\m,ncm","source":"AFAFA","identifier":"FSFAFA","creators":[],"creationDate":1511287440176,"modificationDate":[],"rights":"KJFKSFJKS","isAvailable":true,"url":null,"format":"FAFA","reference":[],"language":"FAFA","software":"FAF","languageWrittenIn":"AFAFAFAF","modelCategory":{"modelClass":"","modelSubClass":[],"modelClassComment":"","modelSubSubClass":[],"basicProcess":[]},"status":"Other","objective":"FAFA","description":"FAFAF"},"scope":{"product":{"environmentName":"Fennel seed","environmentDescription":"fafaf","environmentUnit":"fs","productionMethod":["Under glass - protected growing condition"],"packaging":["Blister (film)"],"productTreatment":["Churning"],"originCountry":"Falkland Islands (Malvinas)","originArea":"Falkirk","fisheriesArea":"Faeroe Plateau - Part Of Neafc Regulatory Area","productionDate":1511218800000,"expirationDate":1511287440176},"hazard":{"hazardType":"fa","hazardName":"fa","hazardDescription":"fafaf","hazardUnit":"fafa","adverseEffect":"fafa","origin":"fafa","benchmarkDose":"fafa","maximumResidueLimit":"fafasfaf","noObservedAdverse":"fafa","lowestObservedAdverse":"","acceptableOperator":"fafa","acuteReferenceDose":"fafa","acceptableDailyIntake":"fafa","hazardIndSum":"Individual","laboratoryName":"fafa","laboratoryCountry":"Falkland Islands (Malvinas)","detectionLimit":"fafaf","quantificationLimit":"afasfas","leftCensoredData":"fafa","rangeOfContamination":"fafa"},"populationGroup":{"populationName":"fsafas","targetPopulation":"fasf","populationSpan":["asfafa"],"populationDescription":["fa"],"populationAge":["fasfas"],"populationGender":"fas","bmi":["faf"],"specialDietGroups":["afsaf"],"patternConsumption":["afsafas"],"region":["Extra-Regio (IEZZZ)"],"country":["Zambia"],"populationRiskFactor":["fafa"],"season":["faf"]},"generalComment":"","temporalInformation":"","region":[],"country":[]},"dataBackground":{"study":{"title":"dDDd","description":"","designType":"","measurementType":"","technologyType":"","technologyPlatform":"fafa","accreditationProcedure":"","protocolName":"","protocolType":"","protocolDescription":"","protocolUri":"ffsa","protocolVersion":"","parametersName":"","componentsName":"","componentsType":""},"studySample":{"sample":"sfafsaf","moisturePercentage":0.0,"fatPercentage":0.0,"collectionProtocol":"asfasf","samplingStrategy":"Objective sampling","samplingProgramType":"Diet study","samplingMethod":"According to Reg 152/2009","samplingPlan":"asfasf","samplingWeight":"fafa","samplingSize":"fa","lotSizeUnit":"% Activated","samplingPoint":"Bee hives"},"dietaryAssessmentMethod":{"collectionTool":"1","numberOfNonConsecutiveOneDay":1,"softwareTool":"1","numberOfFoodItems":["1"],"recordTypes":["1"],"foodDescriptors":["Manioc; [tapioca]; [cassava]"]},"laboratoryAccreditation":[],"assay":{"name":"fafaf","description":"afasfas"}},"modelMath":{"parameter":[{"id":"ff","classification":"input","name":"faf","description":"","unit":"fafa","unitCategory":"faafafa","dataType":"fafa","source":null,"subject":null,"distribution":null,"value":"","reference":"","variabilitySubject":"","modelApplicability":[],"error":0.0}],"sse":0.0,"mse":0.0,"rmse":0.0,"rSquared":0.0,"aic":0.0,"bic":0.0,"modelEquation":[{"equationName":"fafasfa","equationClass":"","equationReference":[],"equation":"fafaf"}],"fittingProcedure":"","exposure":{"treatment":"","contaminationLevel":"","exposureType":"","scenario":"","uncertaintyEstimation":""},"event":[]},"simulation":{"algorithm":"","simulatedModel":"","parameterSettings":[],"description":"","plotSettings":[],"visualizationScript":""}}; line: 1, column: 394] (through reference chain: de.bund.bfr.knime.fsklab.rakip.GenericModel["generalInformation"]->de.bund.bfr.knime.fsklab.rakip.GeneralInformation["modelCategory"]->de.bund.bfr.knime.fsklab.rakip.ModelCategory["modelSubSubClass"])
+	at com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException.from(UnrecognizedPropertyException.java:62)
+	at com.fasterxml.jackson.databind.DeserializationContext.reportUnknownProperty(DeserializationContext.java:855)
+	at com.fasterxml.jackson.databind.deser.std.StdDeserializer.handleUnknownProperty(StdDeserializer.java:1083)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializerBase.handleUnknownProperty(BeanDeserializerBase.java:1389)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializerBase.handleUnknownVanilla(BeanDeserializerBase.java:1367)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:266)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:125)
+	at com.fasterxml.jackson.databind.deser.SettableBeanProperty.deserialize(SettableBeanProperty.java:490)
+	at com.fasterxml.jackson.databind.deser.impl.FieldProperty.deserializeAndSet(FieldProperty.java:101)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:260)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:125)
+	at com.fasterxml.jackson.databind.deser.SettableBeanProperty.deserialize(SettableBeanProperty.java:490)
+	at com.fasterxml.jackson.databind.deser.impl.FieldProperty.deserializeAndSet(FieldProperty.java:101)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.vanillaDeserialize(BeanDeserializer.java:260)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:125)
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:3788)
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:2779)
+	at de.bund.bfr.knime.fsklab.nodes.EditorNodeSettings.loadSettings(EditorNodeSettings.java:122)
+	... 74 more
+2018-03-07 15:41:51,601 : DEBUG : main : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: IDLE
+2018-03-07 15:41:51,601 : DEBUG : main : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: CONFIGURED
+2018-03-07 15:41:52,866 : DEBUG : main : NodeContainer :  :  : FSK Creator 2:13 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:41:52,866 : DEBUG : main : NodeContainer :  :  : FSK Creator 2:13 has new state: CONFIGURED_QUEUED
+2018-03-07 15:41:52,866 : DEBUG : main : NodeContainer :  :  : NOiso 2 has new state: EXECUTING
+2018-03-07 15:41:52,867 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-07 15:41:52,867 : DEBUG : KNIME-Worker-14 : WorkflowManager : FSK Creator : 2:13 : FSK Creator 2:13 doBeforePreExecution
+2018-03-07 15:41:52,867 : DEBUG : KNIME-Worker-14 : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: PREEXECUTE
+2018-03-07 15:41:52,867 : DEBUG : KNIME-Worker-14 : WorkflowManager : FSK Creator : 2:13 : FSK Creator 2:13 doBeforeExecution
+2018-03-07 15:41:52,867 : DEBUG : KNIME-Worker-14 : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: EXECUTING
+2018-03-07 15:41:52,868 : DEBUG : KNIME-Worker-14 : WorkflowFileStoreHandlerRepository : FSK Creator : 2:13 : Adding handler 38880e46-aa5f-4463-9fcf-21529ccb5b73 (FSK Creator 2:13: <no directory>) - 1 in total
+2018-03-07 15:41:52,868 : DEBUG : KNIME-Worker-14 : LocalNodeExecutionJob : FSK Creator : 2:13 : FSK Creator 2:13 Start execute
+2018-03-07 15:41:52,872 : ERROR : KNIME-Worker-14 : FSK Creator : FSK Creator : 2:13 : Execute failed: Model metadata is not provided
+2018-03-07 15:41:52,873 : DEBUG : KNIME-Worker-14 : WorkflowManager : FSK Creator : 2:13 : FSK Creator 2:13 doBeforePostExecution
+2018-03-07 15:41:52,873 : DEBUG : KNIME-Worker-14 : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: POSTEXECUTE
+2018-03-07 15:41:52,873 : DEBUG : KNIME-Worker-14 : WorkflowManager : FSK Creator : 2:13 : FSK Creator 2:13 doAfterExecute - failure
+2018-03-07 15:41:52,873 : DEBUG : KNIME-Worker-14 : WorkflowFileStoreHandlerRepository : FSK Creator : 2:13 : Removing handler 38880e46-aa5f-4463-9fcf-21529ccb5b73 (FSK Creator 2:13: <no directory>) - 0 remaining
+2018-03-07 15:41:52,873 : DEBUG : KNIME-Worker-14 : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: IDLE
+2018-03-07 15:41:52,873 : DEBUG : KNIME-Worker-14 : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: CONFIGURED
+2018-03-07 15:41:52,873 : DEBUG : KNIME-Worker-14 : NodeContainer : FSK Creator : 2:13 : NOiso 2 has new state: IDLE
+2018-03-07 15:41:52,873 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-07 15:43:53,016 : DEBUG : main : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: IDLE
+2018-03-07 15:43:53,016 : DEBUG : main : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: CONFIGURED
+2018-03-07 15:43:54,087 : DEBUG : main : NodeContainer :  :  : FSK Creator 2:13 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:43:54,087 : DEBUG : main : NodeContainer :  :  : FSK Creator 2:13 has new state: CONFIGURED_QUEUED
+2018-03-07 15:43:54,087 : DEBUG : main : NodeContainer :  :  : NOiso 2 has new state: EXECUTING
+2018-03-07 15:43:54,087 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-07 15:43:54,087 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSK Creator : 2:13 : FSK Creator 2:13 doBeforePreExecution
+2018-03-07 15:43:54,088 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: PREEXECUTE
+2018-03-07 15:43:54,088 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSK Creator : 2:13 : FSK Creator 2:13 doBeforeExecution
+2018-03-07 15:43:54,088 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: EXECUTING
+2018-03-07 15:43:54,088 : DEBUG : KNIME-Worker-15 : WorkflowFileStoreHandlerRepository : FSK Creator : 2:13 : Adding handler 349c6414-67c4-4272-b5bd-4ca393d4f2dd (FSK Creator 2:13: <no directory>) - 1 in total
+2018-03-07 15:43:54,088 : DEBUG : KNIME-Worker-15 : LocalNodeExecutionJob : FSK Creator : 2:13 : FSK Creator 2:13 Start execute
+2018-03-07 15:43:54,931 : ERROR : KNIME-Worker-15 : FSK Creator : FSK Creator : 2:13 : Execute failed: ("NullPointerException"): null
+2018-03-07 15:43:54,931 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSK Creator : 2:13 : FSK Creator 2:13 doBeforePostExecution
+2018-03-07 15:43:54,931 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: POSTEXECUTE
+2018-03-07 15:43:54,931 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSK Creator : 2:13 : FSK Creator 2:13 doAfterExecute - failure
+2018-03-07 15:43:54,931 : DEBUG : KNIME-Worker-15 : WorkflowFileStoreHandlerRepository : FSK Creator : 2:13 : Removing handler 349c6414-67c4-4272-b5bd-4ca393d4f2dd (FSK Creator 2:13: <no directory>) - 0 remaining
+2018-03-07 15:43:54,931 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: IDLE
+2018-03-07 15:43:54,931 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK Creator : 2:13 : FSK Creator 2:13 has new state: CONFIGURED
+2018-03-07 15:43:54,931 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK Creator : 2:13 : NOiso 2 has new state: IDLE
+2018-03-07 15:43:54,932 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-07 15:44:35,944 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK to R 2:12 has new state: IDLE
+2018-03-07 15:44:35,946 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK Runner 2:2 has new state: IDLE
+2018-03-07 15:44:35,946 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: IDLE
+2018-03-07 15:44:35,947 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: CONFIGURED
+2018-03-07 15:44:35,948 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK Runner 2:2 has new state: CONFIGURED
+2018-03-07 15:44:35,948 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK to R 2:12 has new state: CONFIGURED
+2018-03-07 15:44:37,448 : DEBUG : main : NodeContainer :  :  : FSK Editor 2:4 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:44:37,448 : DEBUG : main : NodeContainer :  :  : FSK Editor 2:4 has new state: CONFIGURED_QUEUED
+2018-03-07 15:44:37,449 : DEBUG : main : NodeContainer :  :  : NOiso 2 has new state: EXECUTING
+2018-03-07 15:44:37,449 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-07 15:44:37,449 : DEBUG : KNIME-Worker-16 : WorkflowManager : FSK Editor : 2:4 : FSK Editor 2:4 doBeforePreExecution
+2018-03-07 15:44:37,449 : DEBUG : KNIME-Worker-16 : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: PREEXECUTE
+2018-03-07 15:44:37,449 : DEBUG : KNIME-Worker-16 : WorkflowManager : FSK Editor : 2:4 : FSK Editor 2:4 doBeforeExecution
+2018-03-07 15:44:37,449 : DEBUG : KNIME-Worker-16 : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: EXECUTING
+2018-03-07 15:44:37,449 : DEBUG : KNIME-Worker-16 : WorkflowFileStoreHandlerRepository : FSK Editor : 2:4 : Adding handler 64100070-152d-450d-bfc6-f4b59848d819 (FSK Editor 2:4: <no directory>) - 1 in total
+2018-03-07 15:44:37,450 : DEBUG : KNIME-Worker-16 : LocalNodeExecutionJob : FSK Editor : 2:4 : FSK Editor 2:4 Start execute
+2018-03-07 15:44:37,536 : INFO  : KNIME-Worker-16 : LocalNodeExecutionJob : FSK Editor : 2:4 : FSK Editor 2:4 End execute (0 secs)
+2018-03-07 15:44:37,536 : DEBUG : KNIME-Worker-16 : WorkflowManager : FSK Editor : 2:4 : FSK Editor 2:4 doBeforePostExecution
+2018-03-07 15:44:37,536 : DEBUG : KNIME-Worker-16 : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: POSTEXECUTE
+2018-03-07 15:44:37,537 : DEBUG : KNIME-Worker-16 : WorkflowManager : FSK Editor : 2:4 : FSK Editor 2:4 doAfterExecute - success
+2018-03-07 15:44:37,537 : DEBUG : KNIME-Worker-16 : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: EXECUTED
+2018-03-07 15:44:37,537 : DEBUG : KNIME-Worker-16 : NodeContainer : FSK Editor : 2:4 : NOiso 2 has new state: IDLE
+2018-03-07 15:44:37,537 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-07 15:45:03,414 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK to R 2:12 has new state: IDLE
+2018-03-07 15:45:03,415 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK Runner 2:2 has new state: IDLE
+2018-03-07 15:45:03,415 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Editor : 2:4 : Removing handler 64100070-152d-450d-bfc6-f4b59848d819 (FSK Editor 2:4: <no directory>) - 0 remaining
+2018-03-07 15:45:03,416 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: IDLE
+2018-03-07 15:45:03,416 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: CONFIGURED
+2018-03-07 15:45:03,417 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK Runner 2:2 has new state: CONFIGURED
+2018-03-07 15:45:03,417 : DEBUG : main : NodeContainer : FSK Editor : 2:4 : FSK to R 2:12 has new state: CONFIGURED
+2018-03-07 15:45:04,880 : DEBUG : main : NodeContainer :  :  : FSK Editor 2:4 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:04,880 : DEBUG : main : NodeContainer :  :  : FSK Editor 2:4 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:04,881 : DEBUG : main : NodeContainer :  :  : NOiso 2 has new state: EXECUTING
+2018-03-07 15:45:04,881 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-07 15:45:04,881 : DEBUG : KNIME-Worker-17 : WorkflowManager : FSK Editor : 2:4 : FSK Editor 2:4 doBeforePreExecution
+2018-03-07 15:45:04,881 : DEBUG : KNIME-Worker-17 : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: PREEXECUTE
+2018-03-07 15:45:04,881 : DEBUG : KNIME-Worker-17 : WorkflowManager : FSK Editor : 2:4 : FSK Editor 2:4 doBeforeExecution
+2018-03-07 15:45:04,881 : DEBUG : KNIME-Worker-17 : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: EXECUTING
+2018-03-07 15:45:04,881 : DEBUG : KNIME-Worker-17 : WorkflowFileStoreHandlerRepository : FSK Editor : 2:4 : Adding handler cfd5a13d-6845-49e2-a1dc-83d62544728f (FSK Editor 2:4: <no directory>) - 1 in total
+2018-03-07 15:45:04,881 : DEBUG : KNIME-Worker-17 : LocalNodeExecutionJob : FSK Editor : 2:4 : FSK Editor 2:4 Start execute
+2018-03-07 15:45:04,895 : INFO  : KNIME-Worker-17 : LocalNodeExecutionJob : FSK Editor : 2:4 : FSK Editor 2:4 End execute (0 secs)
+2018-03-07 15:45:04,895 : DEBUG : KNIME-Worker-17 : WorkflowManager : FSK Editor : 2:4 : FSK Editor 2:4 doBeforePostExecution
+2018-03-07 15:45:04,895 : DEBUG : KNIME-Worker-17 : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: POSTEXECUTE
+2018-03-07 15:45:04,895 : DEBUG : KNIME-Worker-17 : WorkflowManager : FSK Editor : 2:4 : FSK Editor 2:4 doAfterExecute - success
+2018-03-07 15:45:04,895 : DEBUG : KNIME-Worker-17 : NodeContainer : FSK Editor : 2:4 : FSK Editor 2:4 has new state: EXECUTED
+2018-03-07 15:45:04,895 : DEBUG : KNIME-Worker-17 : NodeContainer : FSK Editor : 2:4 : NOiso 2 has new state: IDLE
+2018-03-07 15:45:04,896 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-07 15:45:06,752 : DEBUG : main : NodeContainer :  :  : FSK Runner 2:2 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:06,752 : DEBUG : main : NodeContainer :  :  : FSK Runner 2:2 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:06,752 : DEBUG : main : NodeContainer :  :  : NOiso 2 has new state: EXECUTING
+2018-03-07 15:45:06,752 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-07 15:45:06,753 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSK Runner : 2:2 : FSK Runner 2:2 doBeforePreExecution
+2018-03-07 15:45:06,753 : DEBUG : KNIME-Worker-18 : NodeContainer : FSK Runner : 2:2 : FSK Runner 2:2 has new state: PREEXECUTE
+2018-03-07 15:45:06,753 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSK Runner : 2:2 : FSK Runner 2:2 doBeforeExecution
+2018-03-07 15:45:06,753 : DEBUG : KNIME-Worker-18 : NodeContainer : FSK Runner : 2:2 : FSK Runner 2:2 has new state: EXECUTING
+2018-03-07 15:45:06,753 : DEBUG : KNIME-Worker-18 : WorkflowFileStoreHandlerRepository : FSK Runner : 2:2 : Adding handler b5363bb0-719d-4a12-8da4-b1c6d8cbe74a (FSK Runner 2:2: <no directory>) - 2 in total
+2018-03-07 15:45:06,753 : DEBUG : KNIME-Worker-18 : LocalNodeExecutionJob : FSK Runner : 2:2 : FSK Runner 2:2 Start execute
+2018-03-07 15:45:09,863 : INFO  : KNIME-Worker-18 : LocalNodeExecutionJob : FSK Runner : 2:2 : FSK Runner 2:2 End execute (3 secs)
+2018-03-07 15:45:09,863 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSK Runner : 2:2 : FSK Runner 2:2 doBeforePostExecution
+2018-03-07 15:45:09,863 : DEBUG : KNIME-Worker-18 : NodeContainer : FSK Runner : 2:2 : FSK Runner 2:2 has new state: POSTEXECUTE
+2018-03-07 15:45:09,863 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSK Runner : 2:2 : FSK Runner 2:2 doAfterExecute - success
+2018-03-07 15:45:09,864 : DEBUG : KNIME-Worker-18 : NodeContainer : FSK Runner : 2:2 : FSK Runner 2:2 has new state: EXECUTED
+2018-03-07 15:45:09,864 : DEBUG : KNIME-Worker-18 : NodeContainer : FSK Runner : 2:2 : NOiso 2 has new state: IDLE
+2018-03-07 15:45:09,864 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-07 15:45:11,935 : DEBUG : main : NodeContainer :  :  : FSK to R 2:12 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:11,935 : DEBUG : main : NodeContainer :  :  : FSK to R 2:12 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:11,935 : DEBUG : main : NodeContainer :  :  : NOiso 2 has new state: EXECUTING
+2018-03-07 15:45:11,935 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSK to R : 2:12 : FSK to R 2:12 doBeforePreExecution
+2018-03-07 15:45:11,935 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK to R : 2:12 : FSK to R 2:12 has new state: PREEXECUTE
+2018-03-07 15:45:11,935 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-07 15:45:11,935 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSK to R : 2:12 : FSK to R 2:12 doBeforeExecution
+2018-03-07 15:45:11,936 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK to R : 2:12 : FSK to R 2:12 has new state: EXECUTING
+2018-03-07 15:45:11,936 : DEBUG : KNIME-Worker-15 : WorkflowFileStoreHandlerRepository : FSK to R : 2:12 : Adding handler d90e5adc-7d7b-44b7-b88f-fb59d72f433d (FSK to R 2:12: <no directory>) - 3 in total
+2018-03-07 15:45:11,936 : DEBUG : KNIME-Worker-15 : LocalNodeExecutionJob : FSK to R : 2:12 : FSK to R 2:12 Start execute
+2018-03-07 15:45:11,959 : INFO  : KNIME-Worker-15 : LocalNodeExecutionJob : FSK to R : 2:12 : FSK to R 2:12 End execute (0 secs)
+2018-03-07 15:45:11,959 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSK to R : 2:12 : FSK to R 2:12 doBeforePostExecution
+2018-03-07 15:45:11,959 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK to R : 2:12 : FSK to R 2:12 has new state: POSTEXECUTE
+2018-03-07 15:45:11,959 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSK to R : 2:12 : FSK to R 2:12 doAfterExecute - success
+2018-03-07 15:45:11,960 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK to R : 2:12 : FSK to R 2:12 has new state: EXECUTED
+2018-03-07 15:45:11,960 : DEBUG : KNIME-Worker-15 : NodeContainer : FSK to R : 2:12 : NOiso 2 has new state: IDLE
+2018-03-07 15:45:11,960 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-07 15:45:15,576 : DEBUG : main : NodeContainer :  :  : Create file 2:10 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:15,576 : DEBUG : main : NodeContainer :  :  : Create file 2:10 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:15,576 : DEBUG : main : NodeContainer :  :  : NOiso 2 has new state: EXECUTING
+2018-03-07 15:45:15,576 : DEBUG : KNIME-Worker-16 : WorkflowManager : Create file : 2:10 : Create file 2:10 doBeforePreExecution
+2018-03-07 15:45:15,576 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : Create file 2:10 has new state: PREEXECUTE
+2018-03-07 15:45:15,576 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-07 15:45:15,576 : DEBUG : KNIME-Worker-16 : WorkflowManager : 2018-03-07 15:45:15,576 : DEBUG : KNIME-WFM-Parent-Notifier : Create file : 2:10 : NodeContainer : Create file 2:10 doBeforeExecution
+2018-03-07 15:45:15,576 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : Create file 2:10 has new state: EXECUTING
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-16 : LocalNodeExecutionJob : Create file : 2:10 : Create file 2:10 Start execute
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : Create Temp Dir 2:10:0:8 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : Create Temp Dir 2:10:0:8 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : Create File Name 2:10:0:9 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : WrappedNode Output 2:10:0:11 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : WrappedNode Input 2:10:0:10 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : WrappedNode Input 2:10:0:10 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : Create file 2:10:0 has new state: EXECUTING
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-17 : WorkflowManager : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 doBeforePreExecution
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-17 : NodeContainer : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 has new state: PREEXECUTE
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-17 : WorkflowManager : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 doBeforeExecution
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-17 : NodeContainer : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 has new state: EXECUTING
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-17 : WorkflowFileStoreHandlerRepository : Create Temp Dir : 2:10:0:8 : Adding handler b4eb6deb-666e-4bf7-b3f1-5dd37e12f2f7 (Create Temp Dir 2:10:0:8: <no directory>) - 4 in total
+2018-03-07 15:45:15,577 : DEBUG : KNIME-Worker-17 : LocalNodeExecutionJob : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 Start execute
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-18 : WorkflowManager : WrappedNode Input : 2:10:0:10 : WrappedNode Input 2:10:0:10 doBeforePreExecution
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-18 : NodeContainer : WrappedNode Input : 2:10:0:10 : WrappedNode Input 2:10:0:10 has new state: PREEXECUTE
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-18 : WorkflowManager : WrappedNode Input : 2:10:0:10 : WrappedNode Input 2:10:0:10 doBeforeExecution
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-18 : NodeContainer : WrappedNode Input : 2:10:0:10 : WrappedNode Input 2:10:0:10 has new state: EXECUTING
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-18 : WorkflowFileStoreHandlerRepository : WrappedNode Input : 2:10:0:10 : Adding handler 5cc377fb-1738-4669-a636-e1a123434f08 (WrappedNode Input 2:10:0:10: <no directory>) - 5 in total
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-18 : LocalNodeExecutionJob : WrappedNode Input : 2:10:0:10 : WrappedNode Input 2:10:0:10 Start execute
+2018-03-07 15:45:15,578 : INFO  : KNIME-Worker-17 : LocalNodeExecutionJob : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 End execute (0 secs)
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-17 : WorkflowManager : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 doBeforePostExecution
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-17 : WorkflowManager : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 doBeforePostExecution
+2018-03-07 15:45:15,578 : INFO  : KNIME-Worker-18 : LocalNodeExecutionJob : WrappedNode Input : 2:10:0:10 : WrappedNode Input 2:10:0:10 End execute (0 secs)
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-17 : NodeContainer : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 has new state: POSTEXECUTE
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-17 : WorkflowManager : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 doAfterExecute - success
+2018-03-07 15:45:15,578 : DEBUG : KNIME-Worker-17 : NodeContainer : Create Temp Dir : 2:10:0:8 : Create Temp Dir 2:10:0:8 has new state: EXECUTED
+2018-03-07 15:45:15,581 : DEBUG : KNIME-Worker-17 : NodeContainer : Create Temp Dir : 2:10:0:8 : Create File Name 2:10:0:9 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:15,581 : DEBUG : KNIME-Worker-17 : NodeContainer : Create Temp Dir : 2:10:0:8 : Create File Name 2:10:0:9 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:15,581 : DEBUG : KNIME-Worker-17 : NodeContainer : Create Temp Dir : 2:10:0:8 : WrappedNode Output 2:10:0:11 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:15,582 : DEBUG : KNIME-Worker-18 : WorkflowManager : WrappedNode Input : 2:10:0:10 : WrappedNode Input 2:10:0:10 doBeforePostExecution
+2018-03-07 15:45:15,582 : DEBUG : KNIME-Worker-18 : NodeContainer : WrappedNode Input : 2:10:0:10 : WrappedNode Input 2:10:0:10 has new state: POSTEXECUTE
+2018-03-07 15:45:15,582 : DEBUG : KNIME-Worker-18 : WorkflowManager : WrappedNode Input : 2:10:0:10 : WrappedNode Input 2:10:0:10 doAfterExecute - success
+2018-03-07 15:45:15,582 : DEBUG : KNIME-Worker-18 : NodeContainer : WrappedNode Input : 2:10:0:10 : WrappedNode Input 2:10:0:10 has new state: EXECUTED
+2018-03-07 15:45:15,582 : DEBUG : KNIME-Worker-15 : WorkflowManager : Create File Name : 2:10:0:9 : Create File Name 2:10:0:9 doBeforePreExecution
+2018-03-07 15:45:15,582 : DEBUG : KNIME-Worker-15 : NodeContainer : Create File Name : 2:10:0:9 : Create File Name 2:10:0:9 has new state: PREEXECUTE
+2018-03-07 15:45:15,582 : DEBUG : KNIME-Worker-15 : WorkflowManager : Create File Name : 2:10:0:9 : Create File Name 2:10:0:9 doBeforeExecution
+2018-03-07 15:45:15,582 : DEBUG : KNIME-Worker-15 : NodeContainer : Create File Name : 2:10:0:9 : Create File Name 2:10:0:9 has new state: EXECUTING
+2018-03-07 15:45:15,582 : DEBUG : KNIME-Worker-15 : WorkflowFileStoreHandlerRepository : Create File Name : 2:10:0:9 : Adding handler 44b4f8ab-d51a-4cdb-9635-ab78b5d13803 (Create File Name 2:10:0:9: <no directory>) - 6 in total
+2018-03-07 15:45:15,582 : DEBUG : KNIME-Worker-15 : LocalNodeExecutionJob : Create File Name : 2:10:0:9 : Create File Name 2:10:0:9 Start execute
+2018-03-07 15:45:15,582 : INFO  : KNIME-Worker-15 : LocalNodeExecutionJob : Create File Name : 2:10:0:9 : Create File Name 2:10:0:9 End execute (0 secs)
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-15 : WorkflowManager : Create File Name : 2:10:0:9 : Create File Name 2:10:0:9 doBeforePostExecution
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-15 : NodeContainer : Create File Name : 2:10:0:9 : Create File Name 2:10:0:9 has new state: POSTEXECUTE
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-15 : WorkflowManager : Create File Name : 2:10:0:9 : Create File Name 2:10:0:9 doAfterExecute - success
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-15 : NodeContainer : Create File Name : 2:10:0:9 : Create File Name 2:10:0:9 has new state: EXECUTED
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-15 : NodeContainer : Create File Name : 2:10:0:9 : WrappedNode Output 2:10:0:11 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-17 : WorkflowManager : WrappedNode Output : 2:10:0:11 : WrappedNode Output 2:10:0:11 doBeforePreExecution
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-17 : NodeContainer : WrappedNode Output : 2:10:0:11 : WrappedNode Output 2:10:0:11 has new state: PREEXECUTE
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-17 : WorkflowManager : WrappedNode Output : 2:10:0:11 : WrappedNode Output 2:10:0:11 doBeforeExecution
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-17 : NodeContainer : WrappedNode Output : 2:10:0:11 : WrappedNode Output 2:10:0:11 has new state: EXECUTING
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-17 : WorkflowFileStoreHandlerRepository : WrappedNode Output : 2:10:0:11 : Adding handler 97deae3d-24c5-430d-a636-4dc71a8d0053 (WrappedNode Output 2:10:0:11: <no directory>) - 7 in total
+2018-03-07 15:45:15,583 : DEBUG : KNIME-Worker-17 : LocalNodeExecutionJob : WrappedNode Output : 2:10:0:11 : WrappedNode Output 2:10:0:11 Start execute
+2018-03-07 15:45:15,584 : INFO  : KNIME-Worker-17 : LocalNodeExecutionJob : WrappedNode Output : 2:10:0:11 : WrappedNode Output 2:10:0:11 End execute (0 secs)
+2018-03-07 15:45:15,584 : DEBUG : KNIME-Worker-17 : WorkflowManager : WrappedNode Output : 2:10:0:11 : WrappedNode Output 2:10:0:11 doBeforePostExecution
+2018-03-07 15:45:15,585 : DEBUG : KNIME-Worker-17 : NodeContainer : WrappedNode Output : 2:10:0:11 : WrappedNode Output 2:10:0:11 has new state: POSTEXECUTE
+2018-03-07 15:45:15,585 : DEBUG : KNIME-Worker-17 : WorkflowManager : WrappedNode Output : 2:10:0:11 : WrappedNode Output 2:10:0:11 doAfterExecute - success
+2018-03-07 15:45:15,585 : DEBUG : KNIME-Worker-17 : NodeContainer : WrappedNode Output : 2:10:0:11 : WrappedNode Output 2:10:0:11 has new state: EXECUTED
+2018-03-07 15:45:15,585 : DEBUG : KNIME-Worker-17 : NodeContainer : WrappedNode Output : 2:10:0:11 : Create file 2:10:0 has new state: EXECUTED
+2018-03-07 15:45:15,585 : INFO  : KNIME-Worker-16 : LocalNodeExecutionJob : Create file : 2:10 : Create file 2:10 End execute (0 secs)
+2018-03-07 15:45:15,585 : DEBUG : KNIME-Worker-16 : WorkflowManager : Create file : 2:10 : Create file 2:10 doBeforePostExecution
+2018-03-07 15:45:15,585 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : Create file 2:10 has new state: POSTEXECUTE
+2018-03-07 15:45:15,585 : DEBUG : KNIME-Worker-16 : WorkflowManager : Create file : 2:10 : Create file 2:10 doAfterExecute - success
+2018-03-07 15:45:15,586 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : Create file 2:10 has new state: EXECUTED
+2018-03-07 15:45:15,586 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : FSKX Writer 2:5 has new state: CONFIGURED
+2018-03-07 15:45:15,586 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : FSKX Reader 2:6 has new state: CONFIGURED
+2018-03-07 15:45:15,586 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : FSK Runner 2:7 has new state: CONFIGURED
+2018-03-07 15:45:15,586 : DEBUG : KNIME-Worker-16 : NodeContainer : Create file : 2:10 : NOiso 2 has new state: CONFIGURED
+2018-03-07 15:45:15,586 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-07 15:45:17,535 : DEBUG : main : NodeContainer :  :  : FSKX Writer 2:5 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:17,535 : DEBUG : main : NodeContainer :  :  : FSKX Writer 2:5 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:17,536 : DEBUG : main : NodeContainer :  :  : FSKX Reader 2:6 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:17,536 : DEBUG : main : NodeContainer :  :  : FSK Runner 2:7 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-07 15:45:17,536 : DEBUG : main : NodeContainer :  :  : NOiso 2 has new state: EXECUTING
+2018-03-07 15:45:17,536 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-07 15:45:17,536 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-07 15:45:17,536 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSKX Writer : 2:5 : FSKX Writer 2:5 doBeforePreExecution
+2018-03-07 15:45:17,536 : DEBUG : KNIME-Worker-18 : NodeContainer : FSKX Writer : 2:5 : FSKX Writer 2:5 has new state: PREEXECUTE
+2018-03-07 15:45:17,536 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSKX Writer : 2:5 : FSKX Writer 2:5 doBeforeExecution
+2018-03-07 15:45:17,536 : DEBUG : KNIME-Worker-18 : NodeContainer : FSKX Writer : 2:5 : FSKX Writer 2:5 has new state: EXECUTING
+2018-03-07 15:45:17,536 : DEBUG : KNIME-Worker-18 : WorkflowFileStoreHandlerRepository : FSKX Writer : 2:5 : Adding handler 565e5e14-4894-4c90-8a75-72ebd196857f (FSKX Writer 2:5: <no directory>) - 8 in total
+2018-03-07 15:45:17,536 : DEBUG : KNIME-Worker-18 : LocalNodeExecutionJob : FSKX Writer : 2:5 : FSKX Writer 2:5 Start execute
+2018-03-07 15:45:17,594 : INFO  : KNIME-Worker-18 : LocalNodeExecutionJob : FSKX Writer : 2:5 : FSKX Writer 2:5 End execute (0 secs)
+2018-03-07 15:45:17,594 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSKX Writer : 2:5 : FSKX Writer 2:5 doBeforePostExecution
+2018-03-07 15:45:17,594 : DEBUG : KNIME-Worker-18 : NodeContainer : FSKX Writer : 2:5 : FSKX Writer 2:5 has new state: POSTEXECUTE
+2018-03-07 15:45:17,594 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSKX Writer : 2:5 : FSKX Writer 2:5 doAfterExecute - success
+2018-03-07 15:45:17,594 : DEBUG : KNIME-Worker-18 : NodeContainer : FSKX Writer : 2:5 : FSKX Writer 2:5 has new state: EXECUTED
+2018-03-07 15:45:17,595 : DEBUG : KNIME-Worker-18 : NodeContainer : FSKX Writer : 2:5 : FSKX Reader 2:6 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:17,595 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSKX Reader : 2:6 : FSKX Reader 2:6 doBeforePreExecution
+2018-03-07 15:45:17,595 : DEBUG : KNIME-Worker-15 : NodeContainer : FSKX Reader : 2:6 : FSKX Reader 2:6 has new state: PREEXECUTE
+2018-03-07 15:45:17,595 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSKX Reader : 2:6 : FSKX Reader 2:6 doBeforeExecution
+2018-03-07 15:45:17,595 : DEBUG : KNIME-Worker-15 : NodeContainer : FSKX Reader : 2:6 : FSKX Reader 2:6 has new state: EXECUTING
+2018-03-07 15:45:17,595 : DEBUG : KNIME-Worker-15 : WorkflowFileStoreHandlerRepository : FSKX Reader : 2:6 : Adding handler b71665bd-e7cb-43da-a3c4-9d177cfc51f1 (FSKX Reader 2:6: <no directory>) - 9 in total
+2018-03-07 15:45:17,595 : DEBUG : KNIME-Worker-15 : LocalNodeExecutionJob : FSKX Reader : 2:6 : FSKX Reader 2:6 Start execute
+2018-03-07 15:45:17,867 : INFO  : KNIME-Worker-15 : LocalNodeExecutionJob : FSKX Reader : 2:6 : FSKX Reader 2:6 End execute (0 secs)
+2018-03-07 15:45:17,867 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSKX Reader : 2:6 : FSKX Reader 2:6 doBeforePostExecution
+2018-03-07 15:45:17,867 : DEBUG : KNIME-Worker-15 : NodeContainer : FSKX Reader : 2:6 : FSKX Reader 2:6 has new state: POSTEXECUTE
+2018-03-07 15:45:17,867 : DEBUG : KNIME-Worker-15 : WorkflowManager : FSKX Reader : 2:6 : FSKX Reader 2:6 doAfterExecute - success
+2018-03-07 15:45:17,868 : DEBUG : KNIME-Worker-15 : NodeContainer : FSKX Reader : 2:6 : FSKX Reader 2:6 has new state: EXECUTED
+2018-03-07 15:45:17,868 : DEBUG : KNIME-Worker-15 : NodeContainer : FSKX Reader : 2:6 : FSK Runner 2:7 has new state: CONFIGURED_QUEUED
+2018-03-07 15:45:17,868 : DEBUG : KNIME-Worker-17 : WorkflowManager : FSK Runner : 2:7 : FSK Runner 2:7 doBeforePreExecution
+2018-03-07 15:45:17,868 : DEBUG : KNIME-Worker-17 : NodeContainer : FSK Runner : 2:7 : FSK Runner 2:7 has new state: PREEXECUTE
+2018-03-07 15:45:17,868 : DEBUG : KNIME-Worker-17 : WorkflowManager : FSK Runner : 2:7 : FSK Runner 2:7 doBeforeExecution
+2018-03-07 15:45:17,868 : DEBUG : KNIME-Worker-17 : NodeContainer : FSK Runner : 2:7 : FSK Runner 2:7 has new state: EXECUTING
+2018-03-07 15:45:17,868 : DEBUG : KNIME-Worker-17 : WorkflowFileStoreHandlerRepository : FSK Runner : 2:7 : Adding handler adfac5a1-da7c-471b-8a70-276eec78a4af (FSK Runner 2:7: <no directory>) - 10 in total
+2018-03-07 15:45:17,868 : DEBUG : KNIME-Worker-17 : LocalNodeExecutionJob : FSK Runner : 2:7 : FSK Runner 2:7 Start execute
+2018-03-07 15:45:20,634 : INFO  : KNIME-Worker-17 : LocalNodeExecutionJob : FSK Runner : 2:7 : FSK Runner 2:7 End execute (2 secs)
+2018-03-07 15:45:20,634 : DEBUG : KNIME-Worker-17 : WorkflowManager : FSK Runner : 2:7 : FSK Runner 2:7 doBeforePostExecution
+2018-03-07 15:45:20,634 : DEBUG : KNIME-Worker-17 : NodeContainer : FSK Runner : 2:7 : FSK Runner 2:7 has new state: POSTEXECUTE
+2018-03-07 15:45:20,634 : DEBUG : KNIME-Worker-17 : WorkflowManager : FSK Runner : 2:7 : FSK Runner 2:7 doAfterExecute - success
+2018-03-07 15:45:20,634 : DEBUG : KNIME-Worker-17 : NodeContainer : FSK Runner : 2:7 : FSK Runner 2:7 has new state: EXECUTED
+2018-03-07 15:45:20,635 : DEBUG : KNIME-Worker-17 : NodeContainer : FSK Runner : 2:7 : NOiso 2 has new state: EXECUTED
+2018-03-07 15:45:20,635 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-07 15:45:31,927 : DEBUG : ModalContext : WorkflowManager :  :  : Loading workflow from "D:\FSK-LabWS\RAKIP_20171129\yersinia" (version "V3010" with loader class "FileWorkflowPersistor")
+2018-03-07 15:45:31,929 : DEBUG : ModalContext : WorkflowManager :  :  : Created subworkflow 0
+2018-03-07 15:45:32,989 : DEBUG : ModalContext : WorkflowManager :  :  : Added new connection from node 0:4(1) to node 0:6(1)
+2018-03-07 15:45:32,989 : DEBUG : ModalContext : WorkflowManager :  :  : Added new connection from node 0:7(1) to node 0:5(1)
+2018-03-07 15:45:32,989 : DEBUG : ModalContext : WorkflowManager :  :  : Added new connection from node 0:1(1) to node 0:2(1)
+2018-03-07 15:45:32,989 : DEBUG : ModalContext : WorkflowManager :  :  : Added new connection from node 0:3(1) to node 0:4(1)
+2018-03-07 15:45:32,990 : DEBUG : ModalContext : NodeContainer :  :  : Setting dirty flag on FSK Editor 0:1
+2018-03-07 15:45:32,990 : DEBUG : ModalContext : NodeContainer :  :  : Setting dirty flag on yersinia 0
+2018-03-07 15:45:32,990 : DEBUG : ModalContext : NodeContainer :  :  : FSK Editor 0:1 has new state: IDLE
+2018-03-07 15:45:32,990 : DEBUG : ModalContext : NodeContainer :  :  : FSK Editor 0:1 has new state: CONFIGURED
+2018-03-07 15:45:33,008 : DEBUG : ModalContext : NodeContainer :  :  : Setting dirty flag on FSK Runner 0:2
+2018-03-07 15:45:33,009 : DEBUG : ModalContext : NodeContainer :  :  : FSK Runner 0:2 has new state: IDLE
+2018-03-07 15:45:33,009 : DEBUG : ModalContext : NodeContainer :  :  : FSK Runner 0:2 has new state: CONFIGURED
+2018-03-07 15:45:33,010 : DEBUG : ModalContext : WorkflowManager :  :  : Loaded workflow from "D:\FSK-LabWS\RAKIP_20171129\yersinia"  with errors
+2018-03-07 15:45:57,046 : DEBUG : main : NodeContainer :  :  : yersinia 0 has new state: CONFIGURED
+2018-03-07 15:46:08,678 : DEBUG : main : WorkflowManager :  :  : Added new connection from node 0:4(1) to node 0:6(1)
+2018-03-07 15:46:08,678 : DEBUG : main : WorkflowManager :  :  : Added new connection from node 0:3(1) to node 0:4(1)
+2018-03-07 15:46:08,679 : DEBUG : main : NodeContainer :  :  : yersinia 0 has new state: IDLE
+2018-03-07 15:48:57,306 : DEBUG : main : ProjectWorkflowMap : NOiso : 2 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (1 remaining)
+2018-03-07 15:48:57,306 : DEBUG : main : WorkflowManager : NOiso : 2 : Removing project "NOiso 2"
+2018-03-07 15:48:57,307 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Runner : 2:7 : Removing handler adfac5a1-da7c-471b-8a70-276eec78a4af (FSK Runner 2:7: <no directory>) - 9 remaining
+2018-03-07 15:48:57,308 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK to R : 2:12 : Removing handler d90e5adc-7d7b-44b7-b88f-fb59d72f433d (FSK to R 2:12: <no directory>) - 8 remaining
+2018-03-07 15:48:57,308 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSKX Reader : 2:6 : Removing handler b71665bd-e7cb-43da-a3c4-9d177cfc51f1 (FSKX Reader 2:6: <no directory>) - 7 remaining
+2018-03-07 15:48:57,308 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Runner : 2:2 : Removing handler b5363bb0-719d-4a12-8da4-b1c6d8cbe74a (FSK Runner 2:2: <no directory>) - 6 remaining
+2018-03-07 15:48:57,308 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSKX Writer : 2:5 : Removing handler 565e5e14-4894-4c90-8a75-72ebd196857f (FSKX Writer 2:5: <no directory>) - 5 remaining
+2018-03-07 15:48:57,308 : DEBUG : main : WorkflowFileStoreHandlerRepository : WrappedNode Output : 2:10:0:11 : Removing handler 97deae3d-24c5-430d-a636-4dc71a8d0053 (WrappedNode Output 2:10:0:11: <no directory>) - 4 remaining
+2018-03-07 15:48:57,308 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 2:10:0:11 : Removing all (0) views from model.
+2018-03-07 15:48:57,309 : DEBUG : main : WorkflowFileStoreHandlerRepository : Create File Name : 2:10:0:9 : Removing handler 44b4f8ab-d51a-4cdb-9635-ab78b5d13803 (Create File Name 2:10:0:9: <no directory>) - 3 remaining
+2018-03-07 15:48:57,309 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 2:10:0:9 : Removing all (0) views from model.
+2018-03-07 15:48:57,309 : DEBUG : main : WorkflowFileStoreHandlerRepository : WrappedNode Input : 2:10:0:10 : Removing handler 5cc377fb-1738-4669-a636-e1a123434f08 (WrappedNode Input 2:10:0:10: <no directory>) - 2 remaining
+2018-03-07 15:48:57,309 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 2:10:0:10 : Removing all (0) views from model.
+2018-03-07 15:48:57,309 : DEBUG : main : WorkflowFileStoreHandlerRepository : Create Temp Dir : 2:10:0:8 : Removing handler b4eb6deb-666e-4bf7-b3f1-5dd37e12f2f7 (Create Temp Dir 2:10:0:8: <no directory>) - 1 remaining
+2018-03-07 15:48:57,309 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 2:10:0:8 : Removing all (0) views from model.
+2018-03-07 15:48:57,310 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Editor : 2:4 : Removing handler cfd5a13d-6845-49e2-a1dc-83d62544728f (FSK Editor 2:4: <no directory>) - 0 remaining
+2018-03-07 15:48:57,311 : DEBUG : main : WorkflowManager : NOiso : 2 : Project "NOiso 2" removed (2 remaining)
+2018-03-07 15:48:57,346 : INFO  : KNIME-Worker-19 : WorkflowManager : NOiso : 2 : Could not delete temporary directory for workflow NOiso at C:\Users\de\AppData\Local\Temp\knime_Workflow Manage72550
+2018-03-07 15:57:37,652 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-07 15:57:37,779 : DEBUG : ModalContext : EditorNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-07 15:57:37,793 : DEBUG : ModalContext : WriterNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-07 15:57:37,821 : DEBUG : ModalContext : ReaderNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-07 15:57:37,828 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-07 15:57:37,852 : DEBUG : ModalContext : FskToRNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-07 15:57:38,077 : DEBUG : ModalContext : CreateTempDirectoryNodeFactory : Create file : 0:10 : Factory is already initialized. Nothing to do.
+2018-03-07 15:57:38,100 : DEBUG : ModalContext : CreateFilenameNodeFactory : Create file : 0:10 : Factory is already initialized. Nothing to do.
+2018-03-07 15:57:38,291 : WARN  : ModalContext : Node : Create Temp Dir : 0:10:0:8 : Did not restore content; consider to re-execute!
+2018-03-07 15:57:47,189 : DEBUG : Worker-2 : Node : Feature Selection Loop End : 1:5:2 : Configure succeeded. (Feature Selection Loop End)
+2018-03-07 15:57:47,234 : DEBUG : Worker-2 : Node : Feature Selection Loop End : 1:6:2 : Configure succeeded. (Feature Selection Loop End)
+2018-03-07 15:57:47,582 : DEBUG : Worker-2 : Node : String Input (legacy) (deprecated) : 1:11:6 : Configure succeeded. (String Input (legacy) (deprecated))
+2018-03-07 15:57:47,674 : DEBUG : Worker-2 : Node : String Input (legacy) (deprecated) : 1:12:6 : Configure succeeded. (String Input (legacy) (deprecated))
+2018-03-07 16:07:59,920 : DEBUG : main : ProjectWorkflowMap : NOiso : 0 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (0 remaining)
+2018-03-07 16:07:59,921 : DEBUG : main : WorkflowManager : NOiso : 0 : Removing project "NOiso 0"
+2018-03-07 16:07:59,923 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:7 : Removing all (0) views from model.
+2018-03-07 16:07:59,923 : DEBUG : main : Node : FSK Runner : 0:7 : clean output ports.
+2018-03-07 16:07:59,923 : DEBUG : main : FskToRNodeFactory$1 : FSK to R : 0:12 : Removing all (0) views from model.
+2018-03-07 16:07:59,923 : DEBUG : main : Node : FSK to R : 0:12 : clean output ports.
+2018-03-07 16:07:59,923 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:6 : Removing all (0) views from model.
+2018-03-07 16:07:59,923 : DEBUG : main : Node : FSKX Reader : 0:6 : clean output ports.
+2018-03-07 16:07:59,923 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:2 : Removing all (0) views from model.
+2018-03-07 16:07:59,923 : DEBUG : main : Node : FSK Runner : 0:2 : clean output ports.
+2018-03-07 16:07:59,923 : DEBUG : main : WriterNodeModel : FSKX Writer : 0:5 : Removing all (0) views from model.
+2018-03-07 16:07:59,923 : DEBUG : main : Node : FSKX Writer : 0:5 : clean output ports.
+2018-03-07 16:07:59,923 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 0:10:0:11 : Removing all (0) views from model.
+2018-03-07 16:07:59,923 : DEBUG : main : Node : WrappedNode Output : 0:10:0:11 : clean output ports.
+2018-03-07 16:07:59,923 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 0:10:0:9 : Removing all (0) views from model.
+2018-03-07 16:07:59,923 : DEBUG : main : Node : Create File Name : 0:10:0:9 : clean output ports.
+2018-03-07 16:07:59,923 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 0:10:0:10 : Removing all (0) views from model.
+2018-03-07 16:07:59,923 : DEBUG : main : Node : WrappedNode Input : 0:10:0:10 : clean output ports.
+2018-03-07 16:07:59,923 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 0:10:0:8 : Removing all (0) views from model.
+2018-03-07 16:07:59,923 : DEBUG : main : Node : Create Temp Dir : 0:10:0:8 : clean output ports.
+2018-03-07 16:07:59,924 : DEBUG : main : EditorNodeModel : FSK Editor : 0:4 : Removing all (0) views from model.
+2018-03-07 16:07:59,924 : DEBUG : main : Node : FSK Editor : 0:4 : clean output ports.
+2018-03-07 16:07:59,925 : DEBUG : main : WorkflowManager : NOiso : 0 : Project "NOiso 0" removed (1 remaining)
+2018-03-07 16:07:59,925 : DEBUG : main : NodeContainer : NOiso : 0 : ROOT  has new state: IDLE
+2018-03-08 09:15:27,615 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-08 09:15:27,624 : DEBUG : ModalContext : EditorNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-08 09:15:27,629 : DEBUG : ModalContext : WriterNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-08 09:15:27,634 : DEBUG : ModalContext : ReaderNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-08 09:15:27,640 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-08 09:15:27,654 : DEBUG : ModalContext : FskToRNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-08 09:15:27,689 : DEBUG : ModalContext : CreateTempDirectoryNodeFactory : Create file : 5:10 : Factory is already initialized. Nothing to do.
+2018-03-08 09:15:27,694 : DEBUG : ModalContext : CreateFilenameNodeFactory : Create file : 5:10 : Factory is already initialized. Nothing to do.
+2018-03-08 09:15:27,712 : WARN  : ModalContext : Node : Create Temp Dir : 5:10:0:8 : Did not restore content; consider to re-execute!
+2018-03-08 09:15:30,408 : DEBUG : main : Node : FSK Runner : 5:7 : reset
+2018-03-08 09:15:30,411 : DEBUG : main : Node : FSK Runner : 5:7 : clean output ports.
+2018-03-08 09:15:30,412 : DEBUG : main : Node : FSKX Reader : 5:6 : reset
+2018-03-08 09:15:30,412 : DEBUG : main : Node : FSKX Reader : 5:6 : clean output ports.
+2018-03-08 09:15:30,412 : DEBUG : main : Node : FSKX Writer : 5:5 : reset
+2018-03-08 09:15:30,412 : DEBUG : main : Node : FSKX Writer : 5:5 : clean output ports.
+2018-03-08 09:15:30,413 : DEBUG : main : Node : Create Temp Dir : 5:10:0:8 : reset
+2018-03-08 09:15:30,413 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 5:10:0:8 : Not deleting temp directory "C:\Users\de\AppData\Local\Temp\knime_NOiso31584\knime_tc_x4rma9csvwzp" according to user setting
+2018-03-08 09:15:30,413 : DEBUG : main : Node : Create Temp Dir : 5:10:0:8 : clean output ports.
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer : Create file : 5:10 : Setting dirty flag on Create Temp Dir 5:10:0:8
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer : Create file : 5:10 : Setting dirty flag on Create file 5:10:0
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer : Create file : 5:10 : Create Temp Dir 5:10:0:8 has new state: IDLE
+2018-03-08 09:15:30,413 : DEBUG : main : Node : Create File Name : 5:10:0:9 : reset
+2018-03-08 09:15:30,413 : DEBUG : main : Node : Create File Name : 5:10:0:9 : clean output ports.
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer : Create file : 5:10 : Setting dirty flag on Create File Name 5:10:0:9
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer : Create file : 5:10 : Create File Name 5:10:0:9 has new state: IDLE
+2018-03-08 09:15:30,413 : DEBUG : main : Node : WrappedNode Input : 5:10:0:10 : reset
+2018-03-08 09:15:30,413 : DEBUG : main : Node : WrappedNode Input : 5:10:0:10 : clean output ports.
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer : Create file : 5:10 : Setting dirty flag on WrappedNode Input 5:10:0:10
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer : Create file : 5:10 : WrappedNode Input 5:10:0:10 has new state: IDLE
+2018-03-08 09:15:30,413 : DEBUG : main : Node : WrappedNode Output : 5:10:0:11 : reset
+2018-03-08 09:15:30,413 : DEBUG : main : Node : WrappedNode Output : 5:10:0:11 : clean output ports.
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer : Create file : 5:10 : Setting dirty flag on WrappedNode Output 5:10:0:11
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer : Create file : 5:10 : WrappedNode Output 5:10:0:11 has new state: IDLE
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer : Create file : 5:10 : Create file 5:10:0 has new state: IDLE
+2018-03-08 09:15:30,413 : DEBUG : main : NodeContainer :  :  : Create file 5:10 has new state: IDLE
+2018-03-08 09:15:30,413 : DEBUG : main : Node : Create Temp Dir : 5:10:0:8 : Configure succeeded. (Create Temp Dir)
+2018-03-08 09:15:30,414 : DEBUG : main : NodeContainer : Create file : 5:10 : Create Temp Dir 5:10:0:8 has new state: CONFIGURED
+2018-03-08 09:15:30,414 : DEBUG : main : Node : WrappedNode Input : 5:10:0:10 : Configure succeeded. (WrappedNode Input)
+2018-03-08 09:15:30,414 : DEBUG : main : NodeContainer : Create file : 5:10 : WrappedNode Input 5:10:0:10 has new state: CONFIGURED
+2018-03-08 09:15:30,414 : WARN  : main : Node : Create File Name : 5:10:0:9 : Selected directory 'C:\Users\de\AppData\Local\Temp\knime_NOiso31584\knime_tc_bzdfqz7urdio' cannot be accessed!
+2018-03-08 09:15:30,414 : DEBUG : main : NodeContainer :  :  : NOiso 5 has new state: IDLE
+2018-03-08 09:15:32,719 : DEBUG : main : NodeContainer :  :  : Create file 5:10 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,719 : DEBUG : main : NodeContainer :  :  : Create file 5:10 has new state: CONFIGURED_QUEUED
+2018-03-08 09:15:32,719 : DEBUG : main : NodeContainer :  :  : FSKX Writer 5:5 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,719 : DEBUG : main : NodeContainer :  :  : FSKX Reader 5:6 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,720 : DEBUG : main : NodeContainer :  :  : FSK Runner 5:7 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,720 : DEBUG : main : NodeContainer :  :  : NOiso 5 has new state: EXECUTING
+2018-03-08 09:15:32,720 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-08 09:15:32,720 : DEBUG : KNIME-WFM-Parent-Notifier2018-03-08 09:15:32,720 :  : DEBUG : KNIME-Worker-6 : NodeContainer :  :  : ROOT  has new state: EXECUTING
+WorkflowManager : Create file : 5:10 : Create file 5:10 doBeforePreExecution
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : Create file 5:10 has new state: PREEXECUTE
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : WorkflowManager : Create file : 5:10 : Create file 5:10 doBeforeExecution
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : Create file 5:10 has new state: EXECUTING
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : LocalNodeExecutionJob : Create file : 5:10 : Create file 5:10 Start execute
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : Create Temp Dir 5:10:0:8 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : Create Temp Dir 5:10:0:8 has new state: CONFIGURED_QUEUED
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : Create File Name 5:10:0:9 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : WrappedNode Output 5:10:0:11 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : WrappedNode Input 5:10:0:10 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : WrappedNode Input 5:10:0:10 has new state: CONFIGURED_QUEUED
+2018-03-08 09:15:32,720 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : Create file 5:10:0 has new state: EXECUTING
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-0 : WorkflowManager : Create Temp Dir : 5:10:0:8 : Create Temp Dir 5:10:0:8 doBeforePreExecution
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 5:10:0:8 : Create Temp Dir 5:10:0:8 has new state: PREEXECUTE
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-0 : WorkflowManager : Create Temp Dir : 5:10:0:8 : Create Temp Dir 5:10:0:8 doBeforeExecution
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 5:10:0:8 : Create Temp Dir 5:10:0:8 has new state: EXECUTING
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-0 : WorkflowFileStoreHandlerRepository : Create Temp Dir : 5:10:0:8 : Adding handler c9f9659e-62af-42db-8a93-b1e70f46fb53 (Create Temp Dir 5:10:0:8: <no directory>) - 1 in total
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-0 : LocalNodeExecutionJob : Create Temp Dir : 5:10:0:8 : Create Temp Dir 5:10:0:8 Start execute
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-5 : WorkflowManager : WrappedNode Input : 5:10:0:10 : WrappedNode Input 5:10:0:10 doBeforePreExecution
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-5 : NodeContainer : WrappedNode Input : 5:10:0:10 : WrappedNode Input 5:10:0:10 has new state: PREEXECUTE
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-5 : WorkflowManager : WrappedNode Input : 5:10:0:10 : WrappedNode Input 5:10:0:10 doBeforeExecution
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-5 : NodeContainer : WrappedNode Input : 5:10:0:10 : WrappedNode Input 5:10:0:10 has new state: EXECUTING
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-5 : WorkflowFileStoreHandlerRepository : WrappedNode Input : 5:10:0:10 : Adding handler 9292f67f-21a8-4df5-965c-ca4172629c67 (WrappedNode Input 5:10:0:10: <no directory>) - 2 in total
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-5 : LocalNodeExecutionJob : WrappedNode Input : 5:10:0:10 : WrappedNode Input 5:10:0:10 Start execute
+2018-03-08 09:15:32,721 : INFO  : KNIME-Worker-5 : LocalNodeExecutionJob : WrappedNode Input : 5:10:0:10 : WrappedNode Input 5:10:0:10 End execute (0 secs)
+2018-03-08 09:15:32,721 : INFO  : KNIME-Worker-0 : LocalNodeExecutionJob : Create Temp Dir : 5:10:0:8 : Create Temp Dir 5:10:0:8 End execute (0 secs)
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-5 : WorkflowManager : WrappedNode Input : 5:10:0:10 : WrappedNode Input 5:10:0:10 doBeforePostExecution
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-5 : NodeContainer : WrappedNode Input : 5:10:0:10 : WrappedNode Input 5:10:0:10 has new state: POSTEXECUTE
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-5 : WorkflowManager : WrappedNode Input : 5:10:0:10 : WrappedNode Input 5:10:0:10 doAfterExecute - success
+2018-03-08 09:15:32,721 : DEBUG : KNIME-Worker-5 : NodeContainer : WrappedNode Input : 5:10:0:10 : WrappedNode Input 5:10:0:10 has new state: EXECUTED
+2018-03-08 09:15:32,722 : DEBUG : KNIME-Worker-0 : WorkflowManager : Create Temp Dir : 5:10:0:8 : Create Temp Dir 5:10:0:8 doBeforePostExecution
+2018-03-08 09:15:32,722 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 5:10:0:8 : Create Temp Dir 5:10:0:8 has new state: POSTEXECUTE
+2018-03-08 09:15:32,722 : DEBUG : KNIME-Worker-0 : WorkflowManager : Create Temp Dir : 5:10:0:8 : Create Temp Dir 5:10:0:8 doAfterExecute - success
+2018-03-08 09:15:32,722 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 5:10:0:8 : Create Temp Dir 5:10:0:8 has new state: EXECUTED
+2018-03-08 09:15:32,725 : DEBUG : KNIME-Worker-0 : Node : Create File Name : 5:10:0:9 : Configure succeeded. (Create File Name)
+2018-03-08 09:15:32,725 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 5:10:0:8 : Create File Name 5:10:0:9 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,726 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 5:10:0:8 : Create File Name 5:10:0:9 has new state: CONFIGURED_QUEUED
+2018-03-08 09:15:32,726 : DEBUG : KNIME-Worker-0 : Node : WrappedNode Output : 5:10:0:11 : Configure succeeded. (WrappedNode Output)
+2018-03-08 09:15:32,726 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 5:10:0:8 : WrappedNode Output 5:10:0:11 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,726 : DEBUG : KNIME-Worker-3 : WorkflowManager : Create File Name : 5:10:0:9 : Create File Name 5:10:0:9 doBeforePreExecution
+2018-03-08 09:15:32,726 : DEBUG : KNIME-Worker-3 : NodeContainer : Create File Name : 5:10:0:9 : Create File Name 5:10:0:9 has new state: PREEXECUTE
+2018-03-08 09:15:32,726 : DEBUG : KNIME-Worker-3 : WorkflowManager : Create File Name : 5:10:0:9 : Create File Name 5:10:0:9 doBeforeExecution
+2018-03-08 09:15:32,726 : DEBUG : KNIME-Worker-3 : NodeContainer : Create File Name : 5:10:0:9 : Create File Name 5:10:0:9 has new state: EXECUTING
+2018-03-08 09:15:32,726 : DEBUG : KNIME-Worker-3 : WorkflowFileStoreHandlerRepository : Create File Name : 5:10:0:9 : Adding handler 7d90d1b1-ec4c-47f7-bf5c-df1463a2b331 (Create File Name 5:10:0:9: <no directory>) - 3 in total
+2018-03-08 09:15:32,726 : DEBUG : KNIME-Worker-3 : LocalNodeExecutionJob : Create File Name : 5:10:0:9 : Create File Name 5:10:0:9 Start execute
+2018-03-08 09:15:32,726 : INFO  : KNIME-Worker-3 : LocalNodeExecutionJob : Create File Name : 5:10:0:9 : Create File Name 5:10:0:9 End execute (0 secs)
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-3 : WorkflowManager : Create File Name : 5:10:0:9 : Create File Name 5:10:0:9 doBeforePostExecution
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-3 : NodeContainer : Create File Name : 5:10:0:9 : Create File Name 5:10:0:9 has new state: POSTEXECUTE
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-3 : WorkflowManager : Create File Name : 5:10:0:9 : Create File Name 5:10:0:9 doAfterExecute - success
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-3 : NodeContainer : Create File Name : 5:10:0:9 : Create File Name 5:10:0:9 has new state: EXECUTED
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-3 : Node : WrappedNode Output : 5:10:0:11 : Configure succeeded. (WrappedNode Output)
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-3 : NodeContainer : Create File Name : 5:10:0:9 : WrappedNode Output 5:10:0:11 has new state: CONFIGURED_QUEUED
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-4 : WorkflowManager : WrappedNode Output : 5:10:0:11 : WrappedNode Output 5:10:0:11 doBeforePreExecution
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-4 : NodeContainer : WrappedNode Output : 5:10:0:11 : WrappedNode Output 5:10:0:11 has new state: PREEXECUTE
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-4 : WorkflowManager : WrappedNode Output : 5:10:0:11 : WrappedNode Output 5:10:0:11 doBeforeExecution
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-4 : NodeContainer : WrappedNode Output : 5:10:0:11 : WrappedNode Output 5:10:0:11 has new state: EXECUTING
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-4 : WorkflowFileStoreHandlerRepository : WrappedNode Output : 5:10:0:11 : Adding handler d474b215-85d4-4a87-a3b4-71e64cc3e2ea (WrappedNode Output 5:10:0:11: <no directory>) - 4 in total
+2018-03-08 09:15:32,727 : DEBUG : KNIME-Worker-4 : LocalNodeExecutionJob : WrappedNode Output : 5:10:0:11 : WrappedNode Output 5:10:0:11 Start execute
+2018-03-08 09:15:32,728 : INFO  : KNIME-Worker-4 : LocalNodeExecutionJob : WrappedNode Output : 5:10:0:11 : WrappedNode Output 5:10:0:11 End execute (0 secs)
+2018-03-08 09:15:32,728 : DEBUG : KNIME-Worker-4 : WorkflowManager : WrappedNode Output : 5:10:0:11 : WrappedNode Output 5:10:0:11 doBeforePostExecution
+2018-03-08 09:15:32,728 : DEBUG : KNIME-Worker-4 : NodeContainer : WrappedNode Output : 5:10:0:11 : WrappedNode Output 5:10:0:11 has new state: POSTEXECUTE
+2018-03-08 09:15:32,728 : DEBUG : KNIME-Worker-4 : WorkflowManager : WrappedNode Output : 5:10:0:11 : WrappedNode Output 5:10:0:11 doAfterExecute - success
+2018-03-08 09:15:32,728 : DEBUG : KNIME-Worker-4 : NodeContainer : WrappedNode Output : 5:10:0:11 : WrappedNode Output 5:10:0:11 has new state: EXECUTED
+2018-03-08 09:15:32,728 : DEBUG : KNIME-Worker-4 : NodeContainer : WrappedNode Output : 5:10:0:11 : Create file 5:10:0 has new state: EXECUTED
+2018-03-08 09:15:32,728 : INFO  : KNIME-Worker-6 : LocalNodeExecutionJob : Create file : 5:10 : Create file 5:10 End execute (0 secs)
+2018-03-08 09:15:32,728 : DEBUG : KNIME-Worker-6 : WorkflowManager : Create file : 5:10 : Create file 5:10 doBeforePostExecution
+2018-03-08 09:15:32,728 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : Create file 5:10 has new state: POSTEXECUTE
+2018-03-08 09:15:32,728 : DEBUG : KNIME-Worker-6 : WorkflowManager : Create file : 5:10 : Create file 5:10 doAfterExecute - success
+2018-03-08 09:15:32,728 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : Create file 5:10 has new state: EXECUTED
+2018-03-08 09:15:32,729 : DEBUG : KNIME-Worker-6 : Node : FSKX Writer : 5:5 : Configure succeeded. (FSKX Writer)
+2018-03-08 09:15:32,729 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : FSKX Writer 5:5 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,729 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : FSKX Writer 5:5 has new state: CONFIGURED_QUEUED
+2018-03-08 09:15:32,729 : DEBUG : KNIME-Worker-6 : Node : FSKX Reader : 5:6 : Configure succeeded. (FSKX Reader)
+2018-03-08 09:15:32,729 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : FSKX Reader 5:6 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,729 : DEBUG : KNIME-Worker-6 : Node : FSK Runner : 5:7 : Configure succeeded. (FSK Runner)
+2018-03-08 09:15:32,729 : DEBUG : KNIME-Worker-6 : NodeContainer : Create file : 5:10 : FSK Runner 5:7 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-08 09:15:32,729 : DEBUG : KNIME-Worker-5 : WorkflowManager : FSKX Writer : 5:5 : FSKX Writer 5:5 doBeforePreExecution
+2018-03-08 09:15:32,729 : DEBUG : KNIME-Worker-5 : NodeContainer : FSKX Writer : 5:5 : FSKX Writer 5:5 has new state: PREEXECUTE
+2018-03-08 09:15:32,729 : DEBUG : KNIME-Worker-5 : WorkflowManager : FSKX Writer : 5:5 : FSKX Writer 5:5 doBeforeExecution
+2018-03-08 09:15:32,730 : DEBUG : KNIME-Worker-5 : NodeContainer : FSKX Writer : 5:5 : FSKX Writer 5:5 has new state: EXECUTING
+2018-03-08 09:15:32,730 : DEBUG : KNIME-Worker-5 : WorkflowFileStoreHandlerRepository : FSKX Writer : 5:5 : Adding handler 08ef98b8-9b37-49f3-9868-b1fea511ac80 (FSKX Writer 5:5: <no directory>) - 5 in total
+2018-03-08 09:15:32,730 : DEBUG : KNIME-Worker-5 : LocalNodeExecutionJob : FSKX Writer : 5:5 : FSKX Writer 5:5 Start execute
+2018-03-08 09:15:32,830 : INFO  : KNIME-Worker-5 : LocalNodeExecutionJob : FSKX Writer : 5:5 : FSKX Writer 5:5 End execute (0 secs)
+2018-03-08 09:15:32,830 : DEBUG : KNIME-Worker-5 : WorkflowManager : FSKX Writer : 5:5 : FSKX Writer 5:5 doBeforePostExecution
+2018-03-08 09:15:32,830 : DEBUG : KNIME-Worker-5 : NodeContainer : FSKX Writer : 5:5 : FSKX Writer 5:5 has new state: POSTEXECUTE
+2018-03-08 09:15:32,831 : DEBUG : KNIME-Worker-5 : WorkflowManager : FSKX Writer : 5:5 : FSKX Writer 5:5 doAfterExecute - success
+2018-03-08 09:15:32,831 : DEBUG : KNIME-Worker-5 : NodeContainer : FSKX Writer : 5:5 : FSKX Writer 5:5 has new state: EXECUTED
+2018-03-08 09:15:32,831 : DEBUG : KNIME-Worker-5 : Node : FSKX Reader : 5:6 : Configure succeeded. (FSKX Reader)
+2018-03-08 09:15:32,831 : DEBUG : KNIME-Worker-5 : NodeContainer : FSKX Writer : 5:5 : FSKX Reader 5:6 has new state: CONFIGURED_QUEUED
+2018-03-08 09:15:32,831 : DEBUG : KNIME-Worker-0 : WorkflowManager : FSKX Reader : 5:6 : FSKX Reader 5:6 doBeforePreExecution
+2018-03-08 09:15:32,831 : DEBUG : KNIME-Worker-0 : NodeContainer : FSKX Reader : 5:6 : FSKX Reader 5:6 has new state: PREEXECUTE
+2018-03-08 09:15:32,831 : DEBUG : KNIME-Worker-0 : WorkflowManager : FSKX Reader : 5:6 : FSKX Reader 5:6 doBeforeExecution
+2018-03-08 09:15:32,832 : DEBUG : KNIME-Worker-0 : NodeContainer : FSKX Reader : 5:6 : FSKX Reader 5:6 has new state: EXECUTING
+2018-03-08 09:15:32,832 : DEBUG : KNIME-Worker-0 : WorkflowFileStoreHandlerRepository : FSKX Reader : 5:6 : Adding handler e8d823db-775d-4559-b3f2-01c964ecefe1 (FSKX Reader 5:6: <no directory>) - 6 in total
+2018-03-08 09:15:32,832 : DEBUG : KNIME-Worker-0 : LocalNodeExecutionJob : FSKX Reader : 5:6 : FSKX Reader 5:6 Start execute
+2018-03-08 09:15:33,129 : INFO  : KNIME-Worker-0 : LocalNodeExecutionJob : FSKX Reader : 5:6 : FSKX Reader 5:6 End execute (0 secs)
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-0 : WorkflowManager : FSKX Reader : 5:6 : FSKX Reader 5:6 doBeforePostExecution
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-0 : NodeContainer : FSKX Reader : 5:6 : FSKX Reader 5:6 has new state: POSTEXECUTE
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-0 : WorkflowManager : FSKX Reader : 5:6 : FSKX Reader 5:6 doAfterExecute - success
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-0 : NodeContainer : FSKX Reader : 5:6 : FSKX Reader 5:6 has new state: EXECUTED
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-0 : Node : FSK Runner : 5:7 : Configure succeeded. (FSK Runner)
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-0 : NodeContainer : FSKX Reader : 5:6 : FSK Runner 5:7 has new state: CONFIGURED_QUEUED
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 5:7 : FSK Runner 5:7 doBeforePreExecution
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 5:7 : FSK Runner 5:7 has new state: PREEXECUTE
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 5:7 : FSK Runner 5:7 doBeforeExecution
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 5:7 : FSK Runner 5:7 has new state: EXECUTING
+2018-03-08 09:15:33,129 : DEBUG : KNIME-Worker-3 : WorkflowFileStoreHandlerRepository : FSK Runner : 5:7 : Adding handler 18ff8e07-ec21-458a-b8d0-8af3b615d216 (FSK Runner 5:7: <no directory>) - 7 in total
+2018-03-08 09:15:33,130 : DEBUG : KNIME-Worker-3 : LocalNodeExecutionJob : FSK Runner : 5:7 : FSK Runner 5:7 Start execute
+2018-03-08 09:15:35,714 : INFO  : KNIME-Worker-3 : LocalNodeExecutionJob : FSK Runner : 5:7 : FSK Runner 5:7 End execute (2 secs)
+2018-03-08 09:15:35,714 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 5:7 : FSK Runner 5:7 doBeforePostExecution
+2018-03-08 09:15:35,714 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 5:7 : FSK Runner 5:7 has new state: POSTEXECUTE
+2018-03-08 09:15:35,714 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 5:7 : FSK Runner 5:7 doAfterExecute - success
+2018-03-08 09:15:35,714 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 5:7 : FSK Runner 5:7 has new state: EXECUTED
+2018-03-08 09:15:35,714 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 5:7 : NOiso 5 has new state: EXECUTED
+2018-03-08 09:15:35,715 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-08 09:15:55,170 : DEBUG : main : ProjectWorkflowMap : NOiso : 5 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (1 remaining)
+2018-03-08 09:15:55,170 : DEBUG : main : WorkflowManager : NOiso : 5 : Removing project "NOiso 5"
+2018-03-08 09:15:55,174 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Runner : 5:7 : Removing handler 18ff8e07-ec21-458a-b8d0-8af3b615d216 (FSK Runner 5:7: <no directory>) - 6 remaining
+2018-03-08 09:15:55,174 : DEBUG : main : RunnerNodeModel : FSK Runner : 5:7 : Removing all (0) views from model.
+2018-03-08 09:15:55,174 : DEBUG : main : Node : FSK Runner : 5:7 : clean output ports.
+2018-03-08 09:15:55,174 : DEBUG : main : FskToRNodeFactory$1 : FSK to R : 5:12 : Removing all (0) views from model.
+2018-03-08 09:15:55,174 : DEBUG : main : Node : FSK to R : 5:12 : clean output ports.
+2018-03-08 09:15:55,174 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSKX Reader : 5:6 : Removing handler e8d823db-775d-4559-b3f2-01c964ecefe1 (FSKX Reader 5:6: <no directory>) - 5 remaining
+2018-03-08 09:15:55,174 : DEBUG : main : ReaderNodeModel : FSKX Reader : 5:6 : Removing all (0) views from model.
+2018-03-08 09:15:55,174 : DEBUG : main : Node : FSKX Reader : 5:6 : clean output ports.
+2018-03-08 09:15:55,174 : DEBUG : main : RunnerNodeModel : FSK Runner : 5:2 : Removing all (0) views from model.
+2018-03-08 09:15:55,174 : DEBUG : main : Node : FSK Runner : 5:2 : clean output ports.
+2018-03-08 09:15:55,174 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSKX Writer : 5:5 : Removing handler 08ef98b8-9b37-49f3-9868-b1fea511ac80 (FSKX Writer 5:5: <no directory>) - 4 remaining
+2018-03-08 09:15:55,174 : DEBUG : main : WriterNodeModel : FSKX Writer : 5:5 : Removing all (0) views from model.
+2018-03-08 09:15:55,174 : DEBUG : main : Node : FSKX Writer : 5:5 : clean output ports.
+2018-03-08 09:15:55,174 : DEBUG : main : WorkflowFileStoreHandlerRepository : WrappedNode Output : 5:10:0:11 : Removing handler d474b215-85d4-4a87-a3b4-71e64cc3e2ea (WrappedNode Output 5:10:0:11: <no directory>) - 3 remaining
+2018-03-08 09:15:55,174 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 5:10:0:11 : Removing all (0) views from model.
+2018-03-08 09:15:55,174 : DEBUG : main : Node : WrappedNode Output : 5:10:0:11 : clean output ports.
+2018-03-08 09:15:55,174 : DEBUG : main : WorkflowFileStoreHandlerRepository : Create File Name : 5:10:0:9 : Removing handler 7d90d1b1-ec4c-47f7-bf5c-df1463a2b331 (Create File Name 5:10:0:9: <no directory>) - 2 remaining
+2018-03-08 09:15:55,175 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 5:10:0:9 : Removing all (0) views from model.
+2018-03-08 09:15:55,175 : DEBUG : main : Node : Create File Name : 5:10:0:9 : clean output ports.
+2018-03-08 09:15:55,175 : DEBUG : main : WorkflowFileStoreHandlerRepository : WrappedNode Input : 5:10:0:10 : Removing handler 9292f67f-21a8-4df5-965c-ca4172629c67 (WrappedNode Input 5:10:0:10: <no directory>) - 1 remaining
+2018-03-08 09:15:55,175 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 5:10:0:10 : Removing all (0) views from model.
+2018-03-08 09:15:55,175 : DEBUG : main : Node : WrappedNode Input : 5:10:0:10 : clean output ports.
+2018-03-08 09:15:55,175 : DEBUG : main : WorkflowFileStoreHandlerRepository : Create Temp Dir : 5:10:0:8 : Removing handler c9f9659e-62af-42db-8a93-b1e70f46fb53 (Create Temp Dir 5:10:0:8: <no directory>) - 0 remaining
+2018-03-08 09:15:55,175 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 5:10:0:8 : Removing all (0) views from model.
+2018-03-08 09:15:55,175 : DEBUG : main : Node : Create Temp Dir : 5:10:0:8 : clean output ports.
+2018-03-08 09:15:55,175 : DEBUG : main : EditorNodeModel : FSK Editor : 5:4 : Removing all (0) views from model.
+2018-03-08 09:15:55,175 : DEBUG : main : Node : FSK Editor : 5:4 : clean output ports.
+2018-03-08 09:15:55,175 : DEBUG : main : WorkflowManager : NOiso : 5 : Project "NOiso 5" removed (2 remaining)
+2018-03-08 09:15:55,378 : INFO  : KNIME-Worker-0 : WorkflowManager : NOiso : 5 : Could not delete temporary directory for workflow NOiso at C:\Users\de\AppData\Local\Temp\knime_NOiso31584
+2018-03-08 09:21:07,605 : DEBUG : Worker-7 : CreateTempDirectoryNodeFactory : Create file : 4:10 : Factory is already initialized. Nothing to do.
+2018-03-08 09:21:07,607 : DEBUG : Worker-7 : CreateFilenameNodeFactory : Create file : 4:10 : Factory is already initialized. Nothing to do.
+2018-03-08 09:21:07,834 : DEBUG : main : ProjectWorkflowMap : NOiso : 4 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (3 remaining)
+2018-03-08 09:21:07,834 : DEBUG : main : WorkflowManager : NOiso : 4 : Removing project "NOiso 4"
+2018-03-08 09:21:07,838 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 4:10:0:11 : Removing all (0) views from model.
+2018-03-08 09:21:07,838 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 4:10:0:9 : Removing all (0) views from model.
+2018-03-08 09:21:07,838 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 4:10:0:10 : Removing all (0) views from model.
+2018-03-08 09:21:07,838 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 4:10:0:8 : Removing all (0) views from model.
+2018-03-08 09:21:07,838 : DEBUG : main : WorkflowManager : NOiso : 4 : Project "NOiso 4" removed (4 remaining)
+2018-03-08 09:21:07,884 : DEBUG : Worker-7 : CreateTempDirectoryNodeFactory : Create file : 4:10 : Factory is already initialized. Nothing to do.
+2018-03-08 09:21:07,886 : DEBUG : Worker-7 : CreateFilenameNodeFactory : Create file : 4:10 : Factory is already initialized. Nothing to do.
+2018-03-08 09:21:08,306 : DEBUG : main : ProjectWorkflowMap : NOiso : 4 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (3 remaining)
+2018-03-08 09:21:08,307 : DEBUG : main : WorkflowManager : NOiso : 4 : Removing project "NOiso 4"
+2018-03-08 09:21:08,310 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 4:10:0:11 : Removing all (0) views from model.
+2018-03-08 09:21:08,310 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 4:10:0:9 : Removing all (0) views from model.
+2018-03-08 09:21:08,310 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 4:10:0:10 : Removing all (0) views from model.
+2018-03-08 09:21:08,310 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 4:10:0:8 : Removing all (0) views from model.
+2018-03-08 09:21:08,311 : DEBUG : main : WorkflowManager : NOiso : 4 : Project "NOiso 4" removed (4 remaining)
+2018-03-09 08:17:10,579 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 4 : Factory is already initialized. Nothing to do.
+2018-03-09 08:17:10,586 : DEBUG : ModalContext : EditorNodeFactory : NOiso : 4 : Factory is already initialized. Nothing to do.
+2018-03-09 08:17:10,590 : DEBUG : ModalContext : WriterNodeFactory : NOiso : 4 : Factory is already initialized. Nothing to do.
+2018-03-09 08:17:10,594 : DEBUG : ModalContext : ReaderNodeFactory : NOiso : 4 : Factory is already initialized. Nothing to do.
+2018-03-09 08:17:10,598 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 4 : Factory is already initialized. Nothing to do.
+2018-03-09 08:17:10,610 : DEBUG : ModalContext : FskToRNodeFactory : NOiso : 4 : Factory is already initialized. Nothing to do.
+2018-03-09 08:17:10,640 : DEBUG : ModalContext : CreateTempDirectoryNodeFactory : Create file : 4:10 : Factory is already initialized. Nothing to do.
+2018-03-09 08:17:10,645 : DEBUG : ModalContext : CreateFilenameNodeFactory : Create file : 4:10 : Factory is already initialized. Nothing to do.
+2018-03-09 08:17:10,662 : WARN  : ModalContext : Node : Create Temp Dir : 4:10:0:8 : Did not restore content; consider to re-execute!
+2018-03-09 08:20:32,346 : DEBUG : main : ProjectWorkflowMap : NOiso : 4 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (2 remaining)
+2018-03-09 08:20:32,346 : DEBUG : main : WorkflowManager : NOiso : 4 : Removing project "NOiso 4"
+2018-03-09 08:20:32,348 : DEBUG : main : RunnerNodeModel : FSK Runner : 4:7 : Removing all (0) views from model.
+2018-03-09 08:20:32,348 : DEBUG : main : Node : FSK Runner : 4:7 : clean output ports.
+2018-03-09 08:20:32,348 : DEBUG : main : FskToRNodeFactory$1 : FSK to R : 4:12 : Removing all (0) views from model.
+2018-03-09 08:20:32,348 : DEBUG : main : Node : FSK to R : 4:12 : clean output ports.
+2018-03-09 08:20:32,348 : DEBUG : main : ReaderNodeModel : FSKX Reader : 4:6 : Removing all (0) views from model.
+2018-03-09 08:20:32,348 : DEBUG : main : Node : FSKX Reader : 4:6 : clean output ports.
+2018-03-09 08:20:32,348 : DEBUG : main : RunnerNodeModel : FSK Runner : 4:2 : Removing all (0) views from model.
+2018-03-09 08:20:32,348 : DEBUG : main : Node : FSK Runner : 4:2 : clean output ports.
+2018-03-09 08:20:32,348 : DEBUG : main : WriterNodeModel : FSKX Writer : 4:5 : Removing all (0) views from model.
+2018-03-09 08:20:32,348 : DEBUG : main : Node : FSKX Writer : 4:5 : clean output ports.
+2018-03-09 08:20:32,348 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 4:10:0:11 : Removing all (0) views from model.
+2018-03-09 08:20:32,348 : DEBUG : main : Node : WrappedNode Output : 4:10:0:11 : clean output ports.
+2018-03-09 08:20:32,348 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 4:10:0:9 : Removing all (0) views from model.
+2018-03-09 08:20:32,348 : DEBUG : main : Node : Create File Name : 4:10:0:9 : clean output ports.
+2018-03-09 08:20:32,348 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 4:10:0:10 : Removing all (0) views from model.
+2018-03-09 08:20:32,348 : DEBUG : main : Node : WrappedNode Input : 4:10:0:10 : clean output ports.
+2018-03-09 08:20:32,348 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 4:10:0:8 : Removing all (0) views from model.
+2018-03-09 08:20:32,349 : DEBUG : main : Node : Create Temp Dir : 4:10:0:8 : clean output ports.
+2018-03-09 08:20:32,349 : DEBUG : main : EditorNodeModel : FSK Editor : 4:4 : Removing all (0) views from model.
+2018-03-09 08:20:32,349 : DEBUG : main : Node : FSK Editor : 4:4 : clean output ports.
+2018-03-09 08:20:32,349 : DEBUG : main : WorkflowManager : NOiso : 4 : Project "NOiso 4" removed (3 remaining)
+2018-03-09 08:23:10,474 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-09 08:23:10,476 : DEBUG : ModalContext : EditorNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-09 08:23:10,477 : DEBUG : ModalContext : WriterNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-09 08:23:10,478 : DEBUG : ModalContext : ReaderNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-09 08:23:10,480 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-09 08:23:10,483 : DEBUG : ModalContext : FskToRNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-09 08:23:10,495 : DEBUG : ModalContext : CreateTempDirectoryNodeFactory : Create file : 0:10 : Factory is already initialized. Nothing to do.
+2018-03-09 08:23:10,497 : DEBUG : ModalContext : CreateFilenameNodeFactory : Create file : 0:10 : Factory is already initialized. Nothing to do.
+2018-03-09 08:23:10,502 : WARN  : ModalContext : Node : Create Temp Dir : 0:10:0:8 : Did not restore content; consider to re-execute!
+2018-03-09 08:23:21,102 : DEBUG : main : Node : FSK Runner : 0:7 : reset
+2018-03-09 08:23:21,104 : DEBUG : main : Node : FSK Runner : 0:7 : clean output ports.
+2018-03-09 08:23:21,104 : DEBUG : main : Node : FSKX Reader : 0:6 : reset
+2018-03-09 08:23:21,104 : DEBUG : main : Node : FSKX Reader : 0:6 : clean output ports.
+2018-03-09 08:23:21,1042018-03-09 08:23:21,104 : DEBUG : main : Node : FSKX Writer :  : 0:5 : DEBUG : KNIME-Workflow-Notifier : reset
+2018-03-09 08:23:21,104 : DEBUG : main : Node : FSKX Writer : 0:5 : clean output ports.
+2018-03-09 08:23:21,104 : DEBUG : main : Node : FSK to R : 0:12 : reset
+2018-03-09 08:23:21,104 : DEBUG : main : Node : FSK to R : 0:12 : clean output ports.
+2018-03-09 08:23:21,104 : DEBUG : main : Node : FSK Runner : 0:2 : reset
+2018-03-09 08:23:21,105 : DEBUG : main : Node : FSK Runner : 0:2 : clean output ports.
+2018-03-09 08:23:21,105 : DEBUG : main : Node : FSK Editor : 0:4 : reset
+2018-03-09 08:23:21,106 : DEBUG : main : Node : FSK Editor : 0:4 : clean output ports.
+2018-03-09 08:23:21,106 : DEBUG : main : Node : FSK Editor : 0:4 : Configure succeeded. (FSK Editor)
+2018-03-09 08:23:21,106 : DEBUG : main : Node : FSKX Writer : 0:5 : Configure succeeded. (FSKX Writer)
+2018-03-09 08:23:21,106 : DEBUG : main : Node : FSK Runner : 0:2 : Configure succeeded. (FSK Runner)
+2018-03-09 08:23:21,106 : DEBUG : main : Node : FSKX Reader : 0:6 : Configure succeeded. (FSKX Reader)
+2018-03-09 08:23:21,106 : DEBUG : main : Node : FSK to R : 0:12 : Configure succeeded. (FSK to R)
+2018-03-09 08:23:21,106 : DEBUG : main : Node : FSK Runner : 0:7 : Configure succeeded. (FSK Runner)
+2018-03-09 08:23:29,651 : DEBUG : main : Node : FSK Runner : 0:7 : reset
+2018-03-09 08:23:29,652 : DEBUG : main : Node : FSK Runner : 0:7 : clean output ports.
+2018-03-09 08:23:29,652 : DEBUG : main : Node : FSKX Reader : 0:6 : reset
+2018-03-09 08:23:29,652 : DEBUG : main : Node : FSKX Reader : 0:6 : clean output ports.
+2018-03-09 08:23:29,652 : DEBUG : main : Node : FSKX Writer : 0:5 : reset
+2018-03-09 08:23:29,652 : DEBUG : main : Node : FSKX Writer : 0:5 : clean output ports.
+2018-03-09 08:23:29,652 : DEBUG : main : Node : Create Temp Dir : 0:10:0:8 : reset
+2018-03-09 08:23:29,652 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 0:10:0:8 : Not deleting temp directory "C:\Users\de\AppData\Local\Temp\knime_NOiso39456\knime_tc_bzdfqz7urdio" according to user setting
+2018-03-09 08:23:29,652 : DEBUG : main : Node : Create Temp Dir : 0:10:0:8 : clean output ports.
+2018-03-09 08:23:29,652 : DEBUG : main : NodeContainer : Create file : 0:10 : Setting dirty flag on Create Temp Dir 0:10:0:8
+2018-03-09 08:23:29,652 : DEBUG : main : NodeContainer : Create file : 0:10 : Setting dirty flag on Create file 0:10:0
+2018-03-09 08:23:29,652 : DEBUG : main : NodeContainer : Create file : 0:10 : Create Temp Dir 0:10:0:8 has new state: IDLE
+2018-03-09 08:23:29,652 : DEBUG : main : Node : Create File Name : 0:10:0:9 : reset
+2018-03-09 08:23:29,652 : DEBUG : main : Node : Create File Name : 0:10:0:9 : clean output ports.
+2018-03-09 08:23:29,652 : DEBUG : main : NodeContainer : Create file : 0:10 : Setting dirty flag on Create File Name 0:10:0:9
+2018-03-09 08:23:29,652 : DEBUG : main : NodeContainer : Create file : 0:10 : Create File Name 0:10:0:9 has new state: IDLE
+2018-03-09 08:23:29,652 : DEBUG : main : Node : WrappedNode Input : 0:10:0:10 : reset
+2018-03-09 08:23:29,652 : DEBUG : main : Node : WrappedNode Input : 0:10:0:10 : clean output ports.
+2018-03-09 08:23:29,652 : DEBUG : main : NodeContainer : Create file : 0:10 : Setting dirty flag on WrappedNode Input 0:10:0:10
+2018-03-09 08:23:29,652 : DEBUG : main : NodeContainer : Create file : 0:10 : WrappedNode Input 0:10:0:10 has new state: IDLE
+2018-03-09 08:23:29,652 : DEBUG : main : Node : WrappedNode Output : 0:10:0:11 : reset
+2018-03-09 08:23:29,652 : DEBUG : main : Node : WrappedNode Output : 0:10:0:11 : clean output ports.
+2018-03-09 08:23:29,652 : DEBUG : main : NodeContainer : Create file : 0:10 : Setting dirty flag on WrappedNode Output 0:10:0:11
+2018-03-09 08:23:29,652 : DEBUG : main : NodeContainer : Create file : 0:10 : WrappedNode Output 0:10:0:11 has new state: IDLE
+2018-03-09 08:23:29,652 : DEBUG : main : NodeContainer : Create file : 0:10 : Create file 0:10:0 has new state: IDLE
+2018-03-09 08:23:29,653 : DEBUG : main : NodeContainer :  :  : Create file 0:10 has new state: IDLE
+2018-03-09 08:23:29,653 : DEBUG : main : NodeContainer :  :  : NOiso 0 has new state: IDLE
+2018-03-09 08:23:31,678 : DEBUG : main : NodeContainer :  :  : FSK Editor 0:4 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,678 : DEBUG : main : NodeContainer :  :  : FSK Editor 0:4 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:31,678 : DEBUG : main : NodeContainer :  :  : Create file 0:10 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,678 : DEBUG : main : NodeContainer :  :  : FSKX Writer 0:5 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,678 : DEBUG : main : NodeContainer :  :  : FSKX Reader 0:6 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,678 : DEBUG : main : NodeContainer :  :  : FSK Runner 0:7 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,678 : DEBUG : main : NodeContainer :  :  : NOiso 0 has new state: EXECUTING
+2018-03-09 08:23:31,679 : DEBUG : KNIME-Worker-19 : WorkflowManager : FSK Editor : 0:4 : FSK Editor 0:4 doBeforePreExecution
+2018-03-09 08:23:31,679 : DEBUG : KNIME-Worker-19 : NodeContainer : FSK Editor : 0:4 : FSK Editor 0:4 has new state: PREEXECUTE
+2018-03-09 08:23:31,679 : DEBUG : KNIME-Worker-19 : WorkflowManager : FSK Editor : 0:4 : FSK Editor 0:4 doBeforeExecution
+2018-03-09 08:23:31,679 : DEBUG : KNIME-Worker-19 : NodeContainer : FSK Editor : 0:4 : FSK Editor 0:4 has new state: EXECUTING
+2018-03-09 08:23:31,679 : DEBUG : KNIME-Worker-19 : WorkflowFileStoreHandlerRepository : FSK Editor : 0:4 : Adding handler 2167adc6-2920-4b9b-8a0e-e14b9832fbdf (FSK Editor 0:4: <no directory>) - 1 in total
+2018-03-09 08:23:31,679 : DEBUG : KNIME-Worker-19 : LocalNodeExecutionJob : FSK Editor : 0:4 : FSK Editor 0:4 Start execute
+2018-03-09 08:23:31,679 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-09 08:23:31,765 : INFO  : KNIME-Worker-19 : LocalNodeExecutionJob : FSK Editor : 0:4 : FSK Editor 0:4 End execute (0 secs)
+2018-03-09 08:23:31,765 : DEBUG : KNIME-Worker-19 : WorkflowManager : FSK Editor : 0:4 : FSK Editor 0:4 doBeforePostExecution
+2018-03-09 08:23:31,765 : DEBUG : KNIME-Worker-19 : NodeContainer : FSK Editor : 0:4 : FSK Editor 0:4 has new state: POSTEXECUTE
+2018-03-09 08:23:31,765 : DEBUG : KNIME-Worker-19 : WorkflowManager : FSK Editor : 0:4 : FSK Editor 0:4 doAfterExecute - success
+2018-03-09 08:23:31,765 : DEBUG : KNIME-Worker-19 : NodeContainer : FSK Editor : 0:4 : FSK Editor 0:4 has new state: EXECUTED
+2018-03-09 08:23:31,766 : DEBUG : KNIME-Worker-19 : Node : FSK Runner : 0:2 : Configure succeeded. (FSK Runner)
+2018-03-09 08:23:31,766 : DEBUG : KNIME-Worker-19 : Node : Create Temp Dir : 0:10:0:8 : Configure succeeded. (Create Temp Dir)
+2018-03-09 08:23:31,766 : DEBUG : KNIME-Worker-19 : NodeContainer : Create file : 0:10 : Create Temp Dir 0:10:0:8 has new state: CONFIGURED
+2018-03-09 08:23:31,766 : DEBUG : KNIME-Worker-19 : Node : WrappedNode Input : 0:10:0:10 : Configure succeeded. (WrappedNode Input)
+2018-03-09 08:23:31,766 : DEBUG : KNIME-Worker-19 : NodeContainer : Create file : 0:10 : WrappedNode Input 0:10:0:10 has new state: CONFIGURED
+2018-03-09 08:23:31,767 : WARN  : KNIME-Worker-19 : Node : Create File Name : 0:10:0:9 : Selected directory 'C:\Users\de\AppData\Local\Temp\knime_NOiso39456\knime_tc_ryfnvbqkhlvp' cannot be accessed!
+2018-03-09 08:23:31,767 : DEBUG : KNIME-Worker-19 : NodeContainer : FSK Editor : 0:4 : Create file 0:10 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:31,767 : DEBUG : KNIME-Worker-22 : WorkflowManager : Create file : 0:10 : Create file 0:10 doBeforePreExecution
+2018-03-09 08:23:31,767 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : Create file 0:10 has new state: PREEXECUTE
+2018-03-09 08:23:31,767 : DEBUG : KNIME-Worker-22 : WorkflowManager : Create file : 0:10 : Create file 0:10 doBeforeExecution
+2018-03-09 08:23:31,767 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : Create file 0:10 has new state: EXECUTING
+2018-03-09 08:23:31,767 : DEBUG : KNIME-Worker-22 : LocalNodeExecutionJob : Create file : 0:10 : Create file 0:10 Start execute
+2018-03-09 08:23:31,767 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : WrappedNode Input 0:10:0:10 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,767 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : WrappedNode Input 0:10:0:10 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:31,767 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : Create Temp Dir 0:10:0:8 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : Create Temp Dir 0:10:0:8 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : Create File Name 0:10:0:9 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : WrappedNode Output 0:10:0:11 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : Create file 0:10:0 has new state: EXECUTING
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-20 : WorkflowManager : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 doBeforePreExecution
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-20 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 has new state: PREEXECUTE
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-20 : WorkflowManager : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 doBeforeExecution
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-20 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 has new state: EXECUTING
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-20 : WorkflowFileStoreHandlerRepository : Create Temp Dir : 0:10:0:8 : Adding handler bded5df0-2fee-47dc-a4f8-7e8f656f89b8 (Create Temp Dir 0:10:0:8: <no directory>) - 2 in total
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-20 : LocalNodeExecutionJob : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 Start execute
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-18 : WorkflowManager : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 doBeforePreExecution
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-18 : NodeContainer : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 has new state: PREEXECUTE
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-18 : WorkflowManager : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 doBeforeExecution
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-18 : NodeContainer : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 has new state: EXECUTING
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-18 : WorkflowFileStoreHandlerRepository : WrappedNode Input : 0:10:0:10 : Adding handler 8fe1f957-1f44-4080-9403-898eeb86571e (WrappedNode Input 0:10:0:10: <no directory>) - 3 in total
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-18 : LocalNodeExecutionJob : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 Start execute
+2018-03-09 08:23:31,768 : INFO  : KNIME-Worker-18 : LocalNodeExecutionJob : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 End execute (0 secs)
+2018-03-09 08:23:31,768 : INFO  : KNIME-Worker-20 : LocalNodeExecutionJob : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 End execute (0 secs)
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-18 : 2018-03-09 08:23:31,768 : INFO WorkflowManager : KNIME-Worker-20 :  : LocalNodeExecutionJob : Create Temp DirWrappedNode Input :  : 0:10:0:10 : 0:10:0:8 : Create Temp Dir 0:10:0:8 End execute (0 secs)
+WrappedNode Input 0:10:0:10 doBeforePostExecution
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-18 : NodeContainer : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 has new state: POSTEXECUTE
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-18 : WorkflowManager : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 doAfterExecute - success
+2018-03-09 08:23:31,768 : DEBUG : KNIME-Worker-18 : NodeContainer : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 has new state: EXECUTED
+2018-03-09 08:23:31,769 : DEBUG : KNIME-Worker-20 : WorkflowManager : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 doBeforePostExecution
+2018-03-09 08:23:31,769 : DEBUG : KNIME-Worker-20 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 has new state: POSTEXECUTE
+2018-03-09 08:23:31,769 : DEBUG : KNIME-Worker-20 : WorkflowManager : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 doAfterExecute - success
+2018-03-09 08:23:31,769 : DEBUG : KNIME-Worker-20 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 has new state: EXECUTED
+2018-03-09 08:23:31,771 : DEBUG : KNIME-Worker-20 : Node : Create File Name : 0:10:0:9 : Configure succeeded. (Create File Name)
+2018-03-09 08:23:31,771 : DEBUG : KNIME-Worker-20 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create File Name 0:10:0:9 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,771 : DEBUG : KNIME-Worker-20 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create File Name 0:10:0:9 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:31,771 : DEBUG : KNIME-Worker-20 : Node : WrappedNode Output : 0:10:0:11 : Configure succeeded. (WrappedNode Output)
+2018-03-09 08:23:31,771 : DEBUG : KNIME-Worker-20 : NodeContainer : Create Temp Dir : 0:10:0:8 : WrappedNode Output 0:10:0:11 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,771 : DEBUG : KNIME-Worker-21 : WorkflowManager : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 doBeforePreExecution
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : NodeContainer : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 has new state: PREEXECUTE
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : WorkflowManager : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 doBeforeExecution
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : NodeContainer : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 has new state: EXECUTING
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : WorkflowFileStoreHandlerRepository : Create File Name : 0:10:0:9 : Adding handler bf37facd-bb55-4a24-8982-8b39710f1d58 (Create File Name 0:10:0:9: <no directory>) - 4 in total
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : LocalNodeExecutionJob : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 Start execute
+2018-03-09 08:23:31,772 : INFO  : KNIME-Worker-21 : LocalNodeExecutionJob : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 End execute (0 secs)
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : WorkflowManager : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 doBeforePostExecution
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : NodeContainer : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 has new state: POSTEXECUTE
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : WorkflowManager : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 doAfterExecute - success
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : NodeContainer : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 has new state: EXECUTED
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : Node : WrappedNode Output : 0:10:0:11 : Configure succeeded. (WrappedNode Output)
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-21 : NodeContainer : Create File Name : 0:10:0:9 : WrappedNode Output 0:10:0:11 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-19 : WorkflowManager : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 doBeforePreExecution
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-19 : NodeContainer : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 has new state: PREEXECUTE
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-19 : WorkflowManager : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 doBeforeExecution
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-19 : NodeContainer : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 has new state: EXECUTING
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-19 : WorkflowFileStoreHandlerRepository : WrappedNode Output : 0:10:0:11 : Adding handler 1cb02969-3f23-490d-8418-6b62fba26328 (WrappedNode Output 0:10:0:11: <no directory>) - 5 in total
+2018-03-09 08:23:31,772 : DEBUG : KNIME-Worker-19 : LocalNodeExecutionJob : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 Start execute
+2018-03-09 08:23:31,773 : INFO  : KNIME-Worker-19 : LocalNodeExecutionJob : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 End execute (0 secs)
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-19 : WorkflowManager : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 doBeforePostExecution
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-19 : NodeContainer : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 has new state: POSTEXECUTE
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-19 : WorkflowManager : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 doAfterExecute - success
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-19 : NodeContainer : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 has new state: EXECUTED
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-19 : NodeContainer : WrappedNode Output : 0:10:0:11 : Create file 0:10:0 has new state: EXECUTED
+2018-03-09 08:23:31,773 : INFO  : KNIME-Worker-22 : LocalNodeExecutionJob : Create file : 0:10 : Create file 0:10 End execute (0 secs)
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-22 : WorkflowManager : Create file : 0:10 : Create file 0:10 doBeforePostExecution
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : Create file 0:10 has new state: POSTEXECUTE
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-22 : WorkflowManager : Create file : 0:10 : Create file 0:10 doAfterExecute - success
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : Create file 0:10 has new state: EXECUTED
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-22 : Node : FSKX Writer : 0:5 : Configure succeeded. (FSKX Writer)
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : FSKX Writer 0:5 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,773 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : FSKX Writer 0:5 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:31,774 : DEBUG : KNIME-Worker-22 : Node : FSKX Reader : 0:6 : Configure succeeded. (FSKX Reader)
+2018-03-09 08:23:31,774 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : FSKX Reader 0:6 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,774 : DEBUG : KNIME-Worker-22 : Node : FSK Runner : 0:7 : Configure succeeded. (FSK Runner)
+2018-03-09 08:23:31,774 : DEBUG : KNIME-Worker-22 : NodeContainer : Create file : 0:10 : FSK Runner 0:7 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:31,774 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSKX Writer : 0:5 : FSKX Writer 0:5 doBeforePreExecution
+2018-03-09 08:23:31,774 : DEBUG : KNIME-Worker-18 : NodeContainer : FSKX Writer : 0:5 : FSKX Writer 0:5 has new state: PREEXECUTE
+2018-03-09 08:23:31,774 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSKX Writer : 0:5 : FSKX Writer 0:5 doBeforeExecution
+2018-03-09 08:23:31,774 : DEBUG : KNIME-Worker-18 : NodeContainer : FSKX Writer : 0:5 : FSKX Writer 0:5 has new state: EXECUTING
+2018-03-09 08:23:31,774 : DEBUG : KNIME-Worker-18 : WorkflowFileStoreHandlerRepository : FSKX Writer : 0:5 : Adding handler 38c8c09d-4831-4300-9e07-3b4e22247257 (FSKX Writer 0:5: <no directory>) - 6 in total
+2018-03-09 08:23:31,774 : DEBUG : KNIME-Worker-18 : LocalNodeExecutionJob : FSKX Writer : 0:5 : FSKX Writer 0:5 Start execute
+2018-03-09 08:23:31,825 : INFO  : KNIME-Worker-18 : LocalNodeExecutionJob : FSKX Writer : 0:5 : FSKX Writer 0:5 End execute (0 secs)
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSKX Writer : 0:5 : FSKX Writer 0:5 doBeforePostExecution
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-18 : NodeContainer : FSKX Writer : 0:5 : FSKX Writer 0:5 has new state: POSTEXECUTE
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-18 : WorkflowManager : FSKX Writer : 0:5 : FSKX Writer 0:5 doAfterExecute - success
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-18 : NodeContainer : FSKX Writer : 0:5 : FSKX Writer 0:5 has new state: EXECUTED
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-18 : Node : FSKX Reader : 0:6 : Configure succeeded. (FSKX Reader)
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-18 : NodeContainer : FSKX Writer : 0:5 : FSKX Reader 0:6 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-20 : WorkflowManager : FSKX Reader : 0:6 : FSKX Reader 0:6 doBeforePreExecution
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-20 : NodeContainer : FSKX Reader : 0:6 : FSKX Reader 0:6 has new state: PREEXECUTE
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-20 : WorkflowManager : FSKX Reader : 0:6 : FSKX Reader 0:6 doBeforeExecution
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-20 : NodeContainer : FSKX Reader : 0:6 : FSKX Reader 0:6 has new state: EXECUTING
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-20 : WorkflowFileStoreHandlerRepository : FSKX Reader : 0:6 : Adding handler 40594df1-f67f-49f0-96ae-eb3295a5a6ac (FSKX Reader 0:6: <no directory>) - 7 in total
+2018-03-09 08:23:31,825 : DEBUG : KNIME-Worker-20 : LocalNodeExecutionJob : FSKX Reader : 0:6 : FSKX Reader 0:6 Start execute
+2018-03-09 08:23:32,064 : INFO  : KNIME-Worker-20 : LocalNodeExecutionJob : FSKX Reader : 0:6 : FSKX Reader 0:6 End execute (0 secs)
+2018-03-09 08:23:32,064 : DEBUG : KNIME-Worker-20 : WorkflowManager : FSKX Reader : 0:6 : FSKX Reader 0:6 doBeforePostExecution
+2018-03-09 08:23:32,064 : DEBUG : KNIME-Worker-20 : NodeContainer : FSKX Reader : 0:6 : FSKX Reader 0:6 has new state: POSTEXECUTE
+2018-03-09 08:23:32,064 : DEBUG : KNIME-Worker-20 : WorkflowManager : FSKX Reader : 0:6 : FSKX Reader 0:6 doAfterExecute - success
+2018-03-09 08:23:32,064 : DEBUG : KNIME-Worker-20 : NodeContainer : FSKX Reader : 0:6 : FSKX Reader 0:6 has new state: EXECUTED
+2018-03-09 08:23:32,064 : DEBUG : KNIME-Worker-20 : Node : FSK Runner : 0:7 : Configure succeeded. (FSK Runner)
+2018-03-09 08:23:32,065 : DEBUG : KNIME-Worker-20 : NodeContainer : FSKX Reader : 0:6 : FSK Runner 0:7 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:32,065 : DEBUG : KNIME-Worker-21 : WorkflowManager : FSK Runner : 0:7 : FSK Runner 0:7 doBeforePreExecution
+2018-03-09 08:23:32,065 : DEBUG : KNIME-Worker-21 : NodeContainer : FSK Runner : 0:7 : FSK Runner 0:7 has new state: PREEXECUTE
+2018-03-09 08:23:32,065 : DEBUG : KNIME-Worker-21 : WorkflowManager : FSK Runner : 0:7 : FSK Runner 0:7 doBeforeExecution
+2018-03-09 08:23:32,065 : DEBUG : KNIME-Worker-21 : NodeContainer : FSK Runner : 0:7 : FSK Runner 0:7 has new state: EXECUTING
+2018-03-09 08:23:32,065 : DEBUG : KNIME-Worker-21 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:7 : Adding handler 947a88ba-867d-4dfa-879d-89eaf9ffdd95 (FSK Runner 0:7: <no directory>) - 8 in total
+2018-03-09 08:23:32,065 : DEBUG : KNIME-Worker-21 : LocalNodeExecutionJob : FSK Runner : 0:7 : FSK Runner 0:7 Start execute
+2018-03-09 08:23:34,635 : INFO  : KNIME-Worker-21 : LocalNodeExecutionJob : FSK Runner : 0:7 : FSK Runner 0:7 End execute (2 secs)
+2018-03-09 08:23:34,635 : DEBUG : KNIME-Worker-21 : WorkflowManager : FSK Runner : 0:7 : FSK Runner 0:7 doBeforePostExecution
+2018-03-09 08:23:34,635 : DEBUG : KNIME-Worker-21 : NodeContainer : FSK Runner : 0:7 : FSK Runner 0:7 has new state: POSTEXECUTE
+2018-03-09 08:23:34,635 : DEBUG : KNIME-Worker-21 : WorkflowManager : FSK Runner : 0:7 : FSK Runner 0:7 doAfterExecute - success
+2018-03-09 08:23:34,635 : DEBUG : KNIME-Worker-21 : NodeContainer : FSK Runner : 0:7 : FSK Runner 0:7 has new state: EXECUTED
+2018-03-09 08:23:34,635 : DEBUG : KNIME-Worker-21 : NodeContainer : FSK Runner : 0:7 : NOiso 0 has new state: CONFIGURED
+2018-03-09 08:23:34,635 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-09 08:23:38,878 : DEBUG : main : NodeContainer :  :  : FSK Runner 0:2 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:38,878 : DEBUG : main : NodeContainer :  :  : FSK Runner 0:2 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:38,878 : DEBUG : main : NodeContainer :  :  : FSK to R 0:12 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-09 08:23:38,878 : DEBUG : main : NodeContainer :  :  : NOiso 0 has new state: EXECUTING
+2018-03-09 08:23:38,878 : DEBUG : KNIME-Worker-19 : WorkflowManager : FSK Runner : 0:2 : FSK Runner 0:2 doBeforePreExecution
+2018-03-09 08:23:38,879 : DEBUG : KNIME-Worker-19 : NodeContainer : FSK Runner : 0:2 : FSK Runner 0:2 has new state: PREEXECUTE
+2018-03-09 08:23:38,879 : DEBUG : KNIME-Worker-19 : WorkflowManager : FSK Runner : 0:2 : FSK Runner 0:2 doBeforeExecution
+2018-03-09 08:23:38,879 : DEBUG : KNIME-Worker-19 : NodeContainer : FSK Runner : 0:2 : FSK Runner 0:2 has new state: EXECUTING
+2018-03-09 08:23:38,879 : DEBUG : KNIME-Worker-19 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:2 : Adding handler d9b969ab-0207-4f01-b928-1dd19a70b1eb (FSK Runner 0:2: <no directory>) - 9 in total
+2018-03-09 08:23:38,879 : DEBUG : KNIME-Worker-19 : LocalNodeExecutionJob : FSK Runner : 0:2 : FSK Runner 0:2 Start execute
+2018-03-09 08:23:38,879 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-09 08:23:41,645 : INFO  : KNIME-Worker-19 : LocalNodeExecutionJob : FSK Runner : 0:2 : FSK Runner 0:2 End execute (2 secs)
+2018-03-09 08:23:41,645 : DEBUG : KNIME-Worker-19 : WorkflowManager : FSK Runner : 0:2 : FSK Runner 0:2 doBeforePostExecution
+2018-03-09 08:23:41,645 : DEBUG : KNIME-Worker-19 : NodeContainer : FSK Runner : 0:2 : FSK Runner 0:2 has new state: POSTEXECUTE
+2018-03-09 08:23:41,645 : DEBUG : KNIME-Worker-19 : WorkflowManager : FSK Runner : 0:2 : FSK Runner 0:2 doAfterExecute - success
+2018-03-09 08:23:41,645 : DEBUG : KNIME-Worker-19 : NodeContainer : FSK Runner : 0:2 : FSK Runner 0:2 has new state: EXECUTED
+2018-03-09 08:23:41,645 : DEBUG : KNIME-Worker-19 : Node : FSK to R : 0:12 : Configure succeeded. (FSK to R)
+2018-03-09 08:23:41,645 : DEBUG : KNIME-Worker-19 : NodeContainer : FSK Runner : 0:2 : FSK to R 0:12 has new state: CONFIGURED_QUEUED
+2018-03-09 08:23:41,645 : DEBUG : KNIME-Worker-22 : WorkflowManager : FSK to R : 0:12 : FSK to R 0:12 doBeforePreExecution
+2018-03-09 08:23:41,645 : DEBUG : KNIME-Worker-22 : NodeContainer : FSK to R : 0:12 : FSK to R 0:12 has new state: PREEXECUTE
+2018-03-09 08:23:41,646 : DEBUG : KNIME-Worker-22 : WorkflowManager : FSK to R : 0:12 : FSK to R 0:12 doBeforeExecution
+2018-03-09 08:23:41,646 : DEBUG : KNIME-Worker-22 : NodeContainer : FSK to R : 0:12 : FSK to R 0:12 has new state: EXECUTING
+2018-03-09 08:23:41,646 : DEBUG : KNIME-Worker-22 : WorkflowFileStoreHandlerRepository : FSK to R : 0:12 : Adding handler e04aba70-f6c8-443c-b46c-8e84b129ec89 (FSK to R 0:12: <no directory>) - 10 in total
+2018-03-09 08:23:41,646 : DEBUG : KNIME-Worker-22 : LocalNodeExecutionJob : FSK to R : 0:12 : FSK to R 0:12 Start execute
+2018-03-09 08:23:41,666 : INFO  : KNIME-Worker-22 : LocalNodeExecutionJob : FSK to R : 0:12 : FSK to R 0:12 End execute (0 secs)
+2018-03-09 08:23:41,666 : DEBUG : KNIME-Worker-22 : WorkflowManager : FSK to R : 0:12 : FSK to R 0:12 doBeforePostExecution
+2018-03-09 08:23:41,666 : DEBUG : KNIME-Worker-22 : NodeContainer : FSK to R : 0:12 : FSK to R 0:12 has new state: POSTEXECUTE
+2018-03-09 08:23:41,666 : DEBUG : KNIME-Worker-22 : WorkflowManager : FSK to R : 0:12 : FSK to R 0:12 doAfterExecute - success
+2018-03-09 08:23:41,666 : DEBUG : KNIME-Worker-22 : NodeContainer : FSK to R : 0:12 : FSK to R 0:12 has new state: EXECUTED
+2018-03-09 08:23:41,666 : DEBUG : KNIME-Worker-22 : NodeContainer : FSK to R : 0:12 : NOiso 0 has new state: EXECUTED
+2018-03-09 08:23:41,666 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: IDLE
+2018-03-09 08:24:11,379 : DEBUG : ModalContext : WorkflowManager :  :  : Loading workflow from "D:\FSK-LabWS\RAKIP_20171129\yersinia" (version "V3010" with loader class "FileWorkflowPersistor")
+2018-03-09 08:24:11,381 : DEBUG : ModalContext : WorkflowManager :  :  : Created subworkflow 3
+2018-03-09 08:24:11,498 : DEBUG : ModalContext : WorkflowManager :  :  : Added new connection from node 3:4(1) to node 3:6(1)
+2018-03-09 08:24:11,498 : DEBUG : ModalContext : WorkflowManager :  :  : Added new connection from node 3:7(1) to node 3:5(1)
+2018-03-09 08:24:11,498 : DEBUG : ModalContext : WorkflowManager :  :  : Added new connection from node 3:1(1) to node 3:2(1)
+2018-03-09 08:24:11,499 : DEBUG : ModalContext : WorkflowManager :  :  : Added new connection from node 3:3(1) to node 3:4(1)
+2018-03-09 08:24:11,504 : DEBUG : ModalContext : NodeContainer :  :  : Setting dirty flag on FSK Editor 3:1
+2018-03-09 08:24:11,504 : DEBUG : ModalContext : NodeContainer :  :  : Setting dirty flag on yersinia 3
+2018-03-09 08:24:11,504 : DEBUG : ModalContext : NodeContainer :  :  : FSK Editor 3:1 has new state: IDLE
+2018-03-09 08:24:11,504 : DEBUG : ModalContext : NodeContainer :  :  : FSK Editor 3:1 has new state: CONFIGURED
+2018-03-09 08:24:12,293 : DEBUG : ModalContext : NodeContainer :  :  : Setting dirty flag on Google Sheets Interactive Service Provider 3:3
+2018-03-09 08:24:12,293 : DEBUG : ModalContext : NodeContainer :  :  : Google Sheets Interactive Service Provider 3:3 has new state: CONFIGURED
+2018-03-09 08:24:12,307 : DEBUG : ModalContext : NodeContainer :  :  : Setting dirty flag on FSK Runner 3:2
+2018-03-09 08:24:12,307 : DEBUG : ModalContext : NodeContainer :  :  : FSK Runner 3:2 has new state: IDLE
+2018-03-09 08:24:12,308 : DEBUG : ModalContext : NodeContainer :  :  : FSK Runner 3:2 has new state: CONFIGURED
+2018-03-09 08:24:12,308 : DEBUG : ModalContext : NodeContainer :  :  : Setting dirty flag on Google Sheets Reader 3:4
+2018-03-09 08:24:12,308 : DEBUG : ModalContext : NodeContainer :  :  : Google Sheets Reader 3:4 has new state: CONFIGURED
+2018-03-09 08:24:12,309 : DEBUG : ModalContext : WorkflowManager :  :  : Loaded workflow from "D:\FSK-LabWS\RAKIP_20171129\yersinia"  with errors
+2018-03-09 08:24:17,787 : DEBUG : main : ProjectWorkflowMap : NOiso : 0 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (1 remaining)
+2018-03-09 08:24:17,788 : DEBUG : main : WorkflowManager : NOiso : 0 : Removing project "NOiso 0"
+2018-03-09 08:24:17,790 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Runner : 0:7 : Removing handler 947a88ba-867d-4dfa-879d-89eaf9ffdd95 (FSK Runner 0:7: <no directory>) - 9 remaining
+2018-03-09 08:24:17,790 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:7 : Removing all (0) views from model.
+2018-03-09 08:24:17,790 : DEBUG : main : Node : FSK Runner : 0:7 : clean output ports.
+2018-03-09 08:24:17,790 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSKX Reader : 0:6 : Removing handler 40594df1-f67f-49f0-96ae-eb3295a5a6ac (FSKX Reader 0:6: <no directory>) - 8 remaining
+2018-03-09 08:24:17,790 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:6 : Removing all (0) views from model.
+2018-03-09 08:24:17,790 : DEBUG : main : Node : FSKX Reader : 0:6 : clean output ports.
+2018-03-09 08:24:17,790 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSKX Writer : 0:5 : Removing handler 38c8c09d-4831-4300-9e07-3b4e22247257 (FSKX Writer 0:5: <no directory>) - 7 remaining
+2018-03-09 08:24:17,790 : DEBUG : main : WriterNodeModel : FSKX Writer : 0:5 : Removing all (0) views from model.
+2018-03-09 08:24:17,790 : DEBUG : main : Node : FSKX Writer : 0:5 : clean output ports.
+2018-03-09 08:24:17,792 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK to R : 0:12 : Removing handler e04aba70-f6c8-443c-b46c-8e84b129ec89 (FSK to R 0:12: <no directory>) - 6 remaining
+2018-03-09 08:24:17,792 : DEBUG : main : FskToRNodeFactory$1 : FSK to R : 0:12 : Removing all (0) views from model.
+2018-03-09 08:24:17,792 : DEBUG : main : Node : FSK to R : 0:12 : clean output ports.
+2018-03-09 08:24:17,792 : DEBUG : main : WorkflowFileStoreHandlerRepository : WrappedNode Output : 0:10:0:11 : Removing handler 1cb02969-3f23-490d-8418-6b62fba26328 (WrappedNode Output 0:10:0:11: <no directory>) - 5 remaining
+2018-03-09 08:24:17,792 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 0:10:0:11 : Removing all (0) views from model.
+2018-03-09 08:24:17,792 : DEBUG : main : Node : WrappedNode Output : 0:10:0:11 : clean output ports.
+2018-03-09 08:24:17,792 : DEBUG : main : WorkflowFileStoreHandlerRepository : Create File Name : 0:10:0:9 : Removing handler bf37facd-bb55-4a24-8982-8b39710f1d58 (Create File Name 0:10:0:9: <no directory>) - 4 remaining
+2018-03-09 08:24:17,792 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 0:10:0:9 : Removing all (0) views from model.
+2018-03-09 08:24:17,792 : DEBUG : main : Node : Create File Name : 0:10:0:9 : clean output ports.
+2018-03-09 08:24:17,792 : DEBUG : main : WorkflowFileStoreHandlerRepository : WrappedNode Input : 0:10:0:10 : Removing handler 8fe1f957-1f44-4080-9403-898eeb86571e (WrappedNode Input 0:10:0:10: <no directory>) - 3 remaining
+2018-03-09 08:24:17,792 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 0:10:0:10 : Removing all (0) views from model.
+2018-03-09 08:24:17,792 : DEBUG : main : Node : WrappedNode Input : 0:10:0:10 : clean output ports.
+2018-03-09 08:24:17,792 : DEBUG : main : WorkflowFileStoreHandlerRepository : Create Temp Dir : 0:10:0:8 : Removing handler bded5df0-2fee-47dc-a4f8-7e8f656f89b8 (Create Temp Dir 0:10:0:8: <no directory>) - 2 remaining
+2018-03-09 08:24:17,792 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 0:10:0:8 : Removing all (0) views from model.
+2018-03-09 08:24:17,792 : DEBUG : main : Node : Create Temp Dir : 0:10:0:8 : clean output ports.
+2018-03-09 08:24:17,792 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Runner : 0:2 : Removing handler d9b969ab-0207-4f01-b928-1dd19a70b1eb (FSK Runner 0:2: <no directory>) - 1 remaining
+2018-03-09 08:24:17,792 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:2 : Removing all (0) views from model.
+2018-03-09 08:24:17,792 : DEBUG : main : Node : FSK Runner : 0:2 : clean output ports.
+2018-03-09 08:24:17,792 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Editor : 0:4 : Removing handler 2167adc6-2920-4b9b-8a0e-e14b9832fbdf (FSK Editor 0:4: <no directory>) - 0 remaining
+2018-03-09 08:24:17,792 : DEBUG : main : EditorNodeModel : FSK Editor : 0:4 : Removing all (0) views from model.
+2018-03-09 08:24:17,792 : DEBUG : main : Node : FSK Editor : 0:4 : clean output ports.
+2018-03-09 08:24:17,792 : DEBUG : main : WorkflowManager : NOiso : 0 : Project "NOiso 0" removed (2 remaining)
+2018-03-09 08:24:17,843 : INFO  : KNIME-Worker-20 : WorkflowManager : NOiso : 0 : Could not delete temporary directory for workflow NOiso at C:\Users\de\AppData\Local\Temp\knime_NOiso39456
+2018-03-09 08:31:50,162 : DEBUG : Worker-7 : CreateTempDirectoryNodeFactory : Create file : 0:10 : Factory is already initialized. Nothing to do.
+2018-03-09 08:31:50,164 : DEBUG : Worker-7 : CreateFilenameNodeFactory : Create file : 0:10 : Factory is already initialized. Nothing to do.
+2018-03-09 08:31:50,446 : DEBUG : main : ProjectWorkflowMap : NOiso : 0 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (0 remaining)
+2018-03-09 08:31:50,447 : DEBUG : main : WorkflowManager : NOiso : 0 : Removing project "NOiso 0"
+2018-03-09 08:31:50,450 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 0:10:0:11 : Removing all (0) views from model.
+2018-03-09 08:31:50,451 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 0:10:0:9 : Removing all (0) views from model.
+2018-03-09 08:31:50,451 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 0:10:0:10 : Removing all (0) views from model.
+2018-03-09 08:31:50,451 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 0:10:0:8 : Removing all (0) views from model.
+2018-03-09 08:31:50,451 : DEBUG : main : WorkflowManager : NOiso : 0 : Project "NOiso 0" removed (1 remaining)
+2018-03-09 08:31:50,527 : DEBUG : Worker-7 : CreateTempDirectoryNodeFactory : Create file : 0:10 : Factory is already initialized. Nothing to do.
+2018-03-09 08:31:50,529 : DEBUG : Worker-7 : CreateFilenameNodeFactory : Create file : 0:10 : Factory is already initialized. Nothing to do.
+2018-03-09 08:31:50,940 : DEBUG : main : ProjectWorkflowMap : NOiso : 0 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (0 remaining)
+2018-03-09 08:31:50,940 : DEBUG : main : WorkflowManager : NOiso : 0 : Removing project "NOiso 0"
+2018-03-09 08:31:50,943 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 0:10:0:11 : Removing all (0) views from model.
+2018-03-09 08:31:50,943 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 0:10:0:9 : Removing all (0) views from model.
+2018-03-09 08:31:50,943 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 0:10:0:10 : Removing all (0) views from model.
+2018-03-09 08:31:50,943 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 0:10:0:8 : Removing all (0) views from model.
+2018-03-09 08:31:50,944 : DEBUG : main : WorkflowManager : NOiso : 0 : Project "NOiso 0" removed (1 remaining)
+2018-03-12 17:10:06,831 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 3 : Factory is already initialized. Nothing to do.
+2018-03-12 17:10:06,840 : DEBUG : ModalContext : EditorNodeFactory : NOiso : 3 : Factory is already initialized. Nothing to do.
+2018-03-12 17:10:06,845 : DEBUG : ModalContext : WriterNodeFactory : NOiso : 3 : Factory is already initialized. Nothing to do.
+2018-03-12 17:10:06,849 : DEBUG : ModalContext : ReaderNodeFactory : NOiso : 3 : Factory is already initialized. Nothing to do.
+2018-03-12 17:10:06,855 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 3 : Factory is already initialized. Nothing to do.
+2018-03-12 17:10:06,870 : DEBUG : ModalContext : FskToRNodeFactory : NOiso : 3 : Factory is already initialized. Nothing to do.
+2018-03-12 17:10:07,004 : DEBUG : ModalContext : CreateTempDirectoryNodeFactory : Create file : 3:10 : Factory is already initialized. Nothing to do.
+2018-03-12 17:10:07,010 : DEBUG : ModalContext : CreateFilenameNodeFactory : Create file : 3:10 : Factory is already initialized. Nothing to do.
+2018-03-12 17:10:07,027 : WARN  : ModalContext : Node : Create Temp Dir : 3:10:0:8 : Did not restore content; consider to re-execute!
+2018-03-12 17:11:33,389 : DEBUG : main : ProjectWorkflowMap : NOiso : 3 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (1 remaining)
+2018-03-12 17:11:33,389 : DEBUG : main : WorkflowManager : NOiso : 3 : Removing project "NOiso 3"
+2018-03-12 17:11:33,394 : DEBUG : main : RunnerNodeModel : FSK Runner : 3:7 : Removing all (0) views from model.
+2018-03-12 17:11:33,405 : DEBUG : main : Node : FSK Runner : 3:7 : clean output ports.
+2018-03-12 17:11:33,405 : DEBUG : main : ReaderNodeModel : FSKX Reader : 3:6 : Removing all (0) views from model.
+2018-03-12 17:11:33,405 : DEBUG : main : Node : FSKX Reader : 3:6 : clean output ports.
+2018-03-12 17:11:33,405 : DEBUG : main : WriterNodeModel : FSKX Writer : 3:5 : Removing all (0) views from model.
+2018-03-12 17:11:33,405 : DEBUG : main : Node : FSKX Writer : 3:5 : clean output ports.
+2018-03-12 17:11:33,405 : DEBUG : main : FskToRNodeFactory$1 : FSK to R : 3:12 : Removing all (0) views from model.
+2018-03-12 17:11:33,405 : DEBUG : main : Node : FSK to R : 3:12 : clean output ports.
+2018-03-12 17:11:33,405 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 3:10:0:11 : Removing all (0) views from model.
+2018-03-12 17:11:33,405 : DEBUG : main : Node : WrappedNode Output : 3:10:0:11 : clean output ports.
+2018-03-12 17:11:33,405 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 3:10:0:9 : Removing all (0) views from model.
+2018-03-12 17:11:33,405 : DEBUG : main : Node : Create File Name : 3:10:0:9 : clean output ports.
+2018-03-12 17:11:33,405 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 3:10:0:10 : Removing all (0) views from model.
+2018-03-12 17:11:33,405 : DEBUG : main : Node : WrappedNode Input : 3:10:0:10 : clean output ports.
+2018-03-12 17:11:33,406 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 3:10:0:8 : Removing all (0) views from model.
+2018-03-12 17:11:33,406 : DEBUG : main : Node : Create Temp Dir : 3:10:0:8 : clean output ports.
+2018-03-12 17:11:33,406 : DEBUG : main : RunnerNodeModel : FSK Runner : 3:2 : Removing all (0) views from model.
+2018-03-12 17:11:33,406 : DEBUG : main : Node : FSK Runner : 3:2 : clean output ports.
+2018-03-12 17:11:33,406 : DEBUG : main : EditorNodeModel : FSK Editor : 3:4 : Removing all (0) views from model.
+2018-03-12 17:11:33,406 : DEBUG : main : Node : FSK Editor : 3:4 : clean output ports.
+2018-03-12 17:11:33,406 : DEBUG : main : WorkflowManager : NOiso : 3 : Project "NOiso 3" removed (2 remaining)
+2018-03-12 17:11:33,431 : DEBUG : main : ProjectWorkflowMap :  :  : unregistering org.knime.workbench.editor2.WorkflowEditor@2b991034 from file:/D:/FSK-LabWS/RAKIP_20171129/yersinia/. 0 left.
+2018-03-16 17:38:42,053 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-16 17:38:42,062 : DEBUG : ModalContext : EditorNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-16 17:38:42,067 : DEBUG : ModalContext : WriterNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-16 17:38:42,072 : DEBUG : ModalContext : ReaderNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-16 17:38:42,077 : DEBUG : ModalContext : RunnerNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-16 17:38:42,093 : DEBUG : ModalContext : FskToRNodeFactory : NOiso : 5 : Factory is already initialized. Nothing to do.
+2018-03-16 17:38:42,200 : DEBUG : ModalContext : CreateTempDirectoryNodeFactory : Create file : 5:10 : Factory is already initialized. Nothing to do.
+2018-03-16 17:38:42,206 : DEBUG : ModalContext : CreateFilenameNodeFactory : Create file : 5:10 : Factory is already initialized. Nothing to do.
+2018-03-16 17:38:42,224 : WARN  : ModalContext : Node : Create Temp Dir : 5:10:0:8 : Did not restore content; consider to re-execute!
+2018-03-16 17:38:43,627 : DEBUG : main : Node : Testflow Configuration : 5:97 : Configure succeeded. (Testflow Configuration)
+2018-03-16 17:38:48,187 : DEBUG : main : Node : FSK Runner : 5:7 : reset
+2018-03-16 17:38:48,190 : DEBUG : main : Node : FSK Runner : 5:7 : clean output ports.
+2018-03-16 17:38:48,190 : DEBUG : main : Node : FSKX Reader : 5:6 : reset
+2018-03-16 17:38:48,190 : DEBUG : main : Node : FSKX Reader : 5:6 : clean output ports.
+2018-03-16 17:38:48,190 : DEBUG : main : Node : FSKX Writer : 5:5 : reset
+2018-03-16 17:38:48,190 : DEBUG : main : Node : FSKX Writer : 5:5 : clean output ports.
+2018-03-16 17:38:48,190 : DEBUG : main : Node : FSK to R : 5:12 : reset
+2018-03-16 17:38:48,190 : DEBUG : main : Node : FSK to R : 5:12 : clean output ports.
+2018-03-16 17:38:48,190 : DEBUG : main : Node : FSK Runner : 5:2 : reset
+2018-03-16 17:38:48,193 : DEBUG : main : Node : FSK Runner : 5:2 : clean output ports.
+2018-03-16 17:38:48,193 : DEBUG : main : Node : Create Temp Dir : 5:10:0:8 : reset
+2018-03-16 17:38:48,193 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 5:10:0:8 : Not deleting temp directory "C:\Users\de\AppData\Local\Temp\knime_NOiso40088\knime_tc_ryfnvbqkhlvp" according to user setting
+2018-03-16 17:38:48,193 : DEBUG : main : Node : Create Temp Dir : 5:10:0:8 : clean output ports.
+2018-03-16 17:38:48,193 : DEBUG : main : NodeContainer : Create file : 5:10 : Setting dirty flag on Create Temp Dir 5:10:0:8
+2018-03-16 17:38:48,193 : DEBUG : main : NodeContainer : Create file : 5:10 : Setting dirty flag on Create file 5:10:0
+2018-03-16 17:38:48,193 : DEBUG : main : NodeContainer : Create file : 5:10 : Create Temp Dir 5:10:0:8 has new state: IDLE
+2018-03-16 17:38:48,193 : DEBUG : main : Node : Create File Name : 5:10:0:9 : reset
+2018-03-16 17:38:48,193 : DEBUG : main : Node : Create File Name : 5:10:0:9 : clean output ports.
+2018-03-16 17:38:48,193 : DEBUG : main : NodeContainer : Create file : 5:10 : Setting dirty flag on Create File Name 5:10:0:9
+2018-03-16 17:38:48,194 : DEBUG : main : NodeContainer : Create file : 5:10 : Create File Name 5:10:0:9 has new state: IDLE
+2018-03-16 17:38:48,194 : DEBUG : main : Node : WrappedNode Input : 5:10:0:10 : reset
+2018-03-16 17:38:48,194 : DEBUG : main : Node : WrappedNode Input : 5:10:0:10 : clean output ports.
+2018-03-16 17:38:48,194 : DEBUG : main : NodeContainer : Create file : 5:10 : Setting dirty flag on WrappedNode Input 5:10:0:10
+2018-03-16 17:38:48,194 : DEBUG : main : NodeContainer : Create file : 5:10 : WrappedNode Input 5:10:0:10 has new state: IDLE
+2018-03-16 17:38:48,194 : DEBUG : main : Node : WrappedNode Output : 5:10:0:11 : reset
+2018-03-16 17:38:48,194 : DEBUG : main : Node : WrappedNode Output : 5:10:0:11 : clean output ports.
+2018-03-16 17:38:48,194 : DEBUG : main : NodeContainer : Create file : 5:10 : Setting dirty flag on WrappedNode Output 5:10:0:11
+2018-03-16 17:38:48,194 : DEBUG : main : NodeContainer : Create file : 5:10 : WrappedNode Output 5:10:0:11 has new state: IDLE
+2018-03-16 17:38:48,194 : DEBUG : main : NodeContainer : Create file : 5:10 : Create file 5:10:0 has new state: IDLE
+2018-03-16 17:38:48,194 : DEBUG : main : NodeContainer :  :  : Create file 5:10 has new state: IDLE
+2018-03-16 17:38:48,194 : DEBUG : main : Node : FSK Editor : 5:4 : reset
+2018-03-16 17:38:48,194 : DEBUG : main : Node : FSK Editor : 5:4 : clean output ports.
+2018-03-16 17:38:48,194 : DEBUG : main : NodeContainer :  :  : Setting dirty flag on FSK Editor 5:4
+2018-03-16 17:38:48,194 : DEBUG : main : NodeContainer :  :  : FSK Editor 5:4 has new state: IDLE
+2018-03-16 17:38:48,195 : DEBUG : main : Node : FSK Editor : 5:4 : Configure succeeded. (FSK Editor)
+2018-03-16 17:38:48,195 : DEBUG : main : NodeContainer :  :  : FSK Editor 5:4 has new state: CONFIGURED
+2018-03-16 17:38:48,195 : DEBUG : main : Node : FSK Runner : 5:2 : Configure succeeded. (FSK Runner)
+2018-03-16 17:38:48,195 : DEBUG : main : NodeContainer :  :  : FSK Runner 5:2 has new state: CONFIGURED
+2018-03-16 17:38:48,195 : DEBUG : main : Node : FSK to R : 5:12 : Configure succeeded. (FSK to R)
+2018-03-16 17:38:48,195 : DEBUG : main : NodeContainer :  :  : FSK to R 5:12 has new state: CONFIGURED
+2018-03-16 17:38:48,195 : DEBUG : main : NodeContainer :  :  : NOiso 5 has new state: IDLE
+2018-03-16 17:38:51,325 : DEBUG : main : NodeContainer :  :  : Setting dirty flag on yersinia 6
+2018-03-16 17:38:57,389 : DEBUG : main : NodeContainer :  :  : Setting dirty flag on FSK Runner 6:83
+2018-03-16 17:38:57,389 : DEBUG : main : NodeContainer :  :  : FSK Runner 6:83 has new state: IDLE
+2018-03-16 17:38:57,389 : DEBUG : main : NodeContainer :  :  : Setting dirty flag on FSKX Reader 6:6
+2018-03-16 17:38:57,389 : DEBUG : main : NodeContainer :  :  : FSKX Reader 6:6 has new state: IDLE
+2018-03-16 17:38:57,389 : DEBUG : main : NodeContainer :  :  : Setting dirty flag on FSKX Writer 6:5
+2018-03-16 17:38:57,389 : DEBUG : main : NodeContainer :  :  : FSKX Writer 6:5 has new state: IDLE
+2018-03-16 17:38:57,392 : DEBUG : main : NodeContainer :  :  : Create file name in temporary directory 6:82 has new state: IDLE
+2018-03-16 17:38:57,394 : DEBUG : main : NodeContainer :  :  : Setting dirty flag on R View (Workspace) 6:11
+2018-03-16 17:38:57,394 : DEBUG : main : NodeContainer :  :  : R View (Workspace) 6:11 has new state: IDLE
+2018-03-16 17:38:57,394 : DEBUG : main : NodeContainer :  :  : Setting dirty flag on FSK to R 6:10
+2018-03-16 17:38:57,394 : DEBUG : main : NodeContainer :  :  : FSK to R 6:10 has new state: IDLE
+2018-03-16 17:38:57,397 : DEBUG : main : NodeContainer :  :  : Setting dirty flag on FSK Runner 6:84
+2018-03-16 17:38:57,397 : DEBUG : main : NodeContainer :  :  : FSK Runner 6:84 has new state: IDLE
+2018-03-16 17:38:57,397 : DEBUG : main : NodeContainer :  :  : Setting dirty flag on FSK Creator 6:1
+2018-03-16 17:38:57,397 : DEBUG : main : NodeContainer :  :  : FSK Creator 6:1 has new state: IDLE
+2018-03-16 17:38:57,397 : DEBUG : main : NodeContainer :  :  : FSK Creator 6:1 has new state: CONFIGURED
+2018-03-16 17:38:57,398 : DEBUG : main : NodeContainer :  :  : FSK Runner 6:84 has new state: CONFIGURED
+2018-03-16 17:38:57,398 : DEBUG : main : NodeContainer :  :  : FSK to R 6:10 has new state: CONFIGURED
+2018-03-16 17:38:57,398 : DEBUG : main : NodeContainer :  :  : R View (Workspace) 6:11 has new state: CONFIGURED
+2018-03-16 17:38:57,399 : DEBUG : main : NodeContainer :  :  : yersinia 6 has new state: IDLE
+2018-03-16 17:39:01,839 : DEBUG : main : ProjectWorkflowMap : NOiso : 5 : Removing "file:/D:/FSK-LabWS/RAKIP_20171129/NOiso/" from project map (1 remaining)
+2018-03-16 17:39:01,839 : DEBUG : main : WorkflowManager : NOiso : 5 : Removing project "NOiso 5"
+2018-03-16 17:39:01,841 : DEBUG : main : RunnerNodeModel : FSK Runner : 5:7 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : FSK Runner : 5:7 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : ReaderNodeModel : FSKX Reader : 5:6 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : FSKX Reader : 5:6 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : WriterNodeModel : FSKX Writer : 5:5 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : FSKX Writer : 5:5 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : FskToRNodeFactory$1 : FSK to R : 5:12 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : FSK to R : 5:12 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 5:10:0:11 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : WrappedNode Output : 5:10:0:11 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 5:10:0:9 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : Create File Name : 5:10:0:9 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 5:10:0:10 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : WrappedNode Input : 5:10:0:10 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 5:10:0:8 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : Create Temp Dir : 5:10:0:8 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : RunnerNodeModel : FSK Runner : 5:2 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : FSK Runner : 5:2 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : EditorNodeModel : FSK Editor : 5:4 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : FSK Editor : 5:4 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : TestConfigNodeModel : Testflow Configuration : 5:97 : Removing all (0) views from model.
+2018-03-16 17:39:01,842 : DEBUG : main : Node : Testflow Configuration : 5:97 : clean output ports.
+2018-03-16 17:39:01,842 : DEBUG : main : WorkflowManager : NOiso : 5 : Project "NOiso 5" removed (2 remaining)
+2018-03-16 17:43:05,921 : DEBUG : main : RunnerNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-16 17:43:05,921 : DEBUG : main : EditorNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-16 17:43:05,937 : DEBUG : main : WriterNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-16 17:43:05,937 : DEBUG : main : ReaderNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-16 17:43:05,937 : DEBUG : main : RunnerNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-16 17:43:05,937 : DEBUG : main : FskToRNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-16 17:43:05,952 : DEBUG : main : TestConfigNodeFactory : NOiso : 0 : Factory is already initialized. Nothing to do.
+2018-03-16 17:43:05,952 : DEBUG : main : Node : Testflow Configuration : 0:97 : Configure succeeded. (Testflow Configuration)
+2018-03-16 17:43:05,952 : DEBUG : main : Node : FSK Editor : 0:4 : Configure succeeded. (FSK Editor)
+2018-03-16 17:43:05,952 : DEBUG : main : Node : FSK Runner : 0:2 : Configure succeeded. (FSK Runner)
+2018-03-16 17:43:05,952 : DEBUG : main : CreateTempDirectoryNodeFactory : Create file : 0:10 : Factory is already initialized. Nothing to do.
+2018-03-16 17:43:05,952 : DEBUG : main : CreateFilenameNodeFactory : Create file : 0:10 : Factory is already initialized. Nothing to do.
+2018-03-16 17:43:05,968 : DEBUG : main : Node : FSK to R : 0:12 : Configure succeeded. (FSK to R)
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : WorkflowManager : Testflow Configuration : 0:97 : Testflow Configuration 0:97 doBeforePreExecution
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : NodeContainer : Testflow Configuration : 0:97 : Testflow Configuration 0:97 has new state: PREEXECUTE
+2018-03-16 17:43:05,983 : DEBUG : KNIME-WFM-Parent-Notifier : NodeContainer :  :  : ROOT  has new state: EXECUTING
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : WorkflowManager : Testflow Configuration : 0:97 : Testflow Configuration 0:97 doBeforeExecution
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : NodeContainer : Testflow Configuration : 0:97 : Testflow Configuration 0:97 has new state: EXECUTING
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : Testflow Configuration : 0:97 : Adding handler 7fef5b87-c1c4-47ff-87d6-dd176abbb87e (Testflow Configuration 0:97: <no directory>) - 1 in total
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : Testflow Configuration : 0:97 : Testflow Configuration 0:97 Start execute
+2018-03-16 17:43:05,983 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : Testflow Configuration : 0:97 : Testflow Configuration 0:97 End execute (0 secs)
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : WorkflowManager : Testflow Configuration : 0:97 : Testflow Configuration 0:97 doBeforePostExecution
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : NodeContainer : Testflow Configuration : 0:97 : Testflow Configuration 0:97 has new state: POSTEXECUTE
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : WorkflowManager : Testflow Configuration : 0:97 : Testflow Configuration 0:97 doAfterExecute - success
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : NodeContainer : Testflow Configuration : 0:97 : Testflow Configuration 0:97 has new state: EXECUTED
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : Node : FSK Editor : 0:4 : Configure succeeded. (FSK Editor)
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-1 : NodeContainer : Testflow Configuration : 0:97 : FSK Editor 0:4 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Editor : 0:4 : FSK Editor 0:4 doBeforePreExecution
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Editor : 0:4 : FSK Editor 0:4 has new state: PREEXECUTE
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Editor : 0:4 : FSK Editor 0:4 doBeforeExecution
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Editor : 0:4 : FSK Editor 0:4 has new state: EXECUTING
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSK Editor : 0:4 : Adding handler e886aec0-2c32-489c-b9fa-60c930267476 (FSK Editor 0:4: <no directory>) - 2 in total
+2018-03-16 17:43:05,983 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Editor : 0:4 : FSK Editor 0:4 Start execute
+2018-03-16 17:43:05,999 : INFO  : KNIME-Worker-0 : WorkflowManager :  :  : Could not delete temporary directory for workflow Moez_Sanaa_Salmonella at C:\Users\de\AppData\Local\Temp\knime_Moez_Sanaa_Salm23312
+2018-03-16 17:43:10,726 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Editor : 0:4 : FSK Editor 0:4 End execute (4 secs)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Editor : 0:4 : FSK Editor 0:4 doBeforePostExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Editor : 0:4 : FSK Editor 0:4 has new state: POSTEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Editor : 0:4 : FSK Editor 0:4 doAfterExecute - success
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Editor : 0:4 : FSK Editor 0:4 has new state: EXECUTED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : Node : FSK Runner : 0:2 : Configure succeeded. (FSK Runner)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Editor : 0:4 : FSK Runner 0:2 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : Node : Create Temp Dir : 0:10:0:8 : Configure succeeded. (Create Temp Dir)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : Create file : 0:10 : Setting dirty flag on Create Temp Dir 0:10:0:8
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : Create file : 0:10 : Create Temp Dir 0:10:0:8 has new state: CONFIGURED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : Node : WrappedNode Input : 0:10:0:10 : Configure succeeded. (WrappedNode Input)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : Create file : 0:10 : Setting dirty flag on WrappedNode Input 0:10:0:10
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : Create file : 0:10 : WrappedNode Input 0:10:0:10 has new state: CONFIGURED
+2018-03-16 17:43:10,726 : WARN  : KNIME-Worker-2 : Node : Create File Name : 0:10:0:9 : Selected directory 'C:\Users\de\AppData\Local\Temp\knime_NOiso23320\knime_tc_dpwaslcrk1zd' cannot be accessed!
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Editor : 0:4 : Create file 0:10 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 0:2 : FSK Runner 0:2 doBeforePreExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 0:2 : FSK Runner 0:2 has new state: PREEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 0:2 : FSK Runner 0:2 doBeforeExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 0:2 : FSK Runner 0:2 has new state: EXECUTING
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-3 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:2 : Adding handler ba897d0a-395c-46ce-816f-dd583b10268a (FSK Runner 0:2: <no directory>) - 3 in total
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-3 : LocalNodeExecutionJob : FSK Runner : 0:2 : FSK Runner 0:2 Start execute
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : WorkflowManager : Create file : 0:10 : Create file 0:10 doBeforePreExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : Create file 0:10 has new state: PREEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : WorkflowManager : Create file : 0:10 : Create file 0:10 doBeforeExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : Create file 0:10 has new state: EXECUTING
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : LocalNodeExecutionJob : Create file : 0:10 : Create file 0:10 Start execute
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : WrappedNode Input 0:10:0:10 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : WrappedNode Input 0:10:0:10 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : Create Temp Dir 0:10:0:8 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : Create Temp Dir 0:10:0:8 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : Setting dirty flag on Create File Name 0:10:0:9
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : Create File Name 0:10:0:9 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : Setting dirty flag on WrappedNode Output 0:10:0:11
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : WrappedNode Output 0:10:0:11 has new state: UNCONFIGURED_MARKEDFOREXEC
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : Create file 0:10:0 has new state: EXECUTING
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : WorkflowManager : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 doBeforePreExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : NodeContainer : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 has new state: PREEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : WorkflowManager : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 doBeforeExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : NodeContainer : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 has new state: EXECUTING
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : WrappedNode Input : 0:10:0:10 : Adding handler c30b3b77-3c38-41bc-b3bb-cc42a9c1038f (WrappedNode Input 0:10:0:10: <no directory>) - 4 in total
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 Start execute
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : WorkflowManager : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 doBeforePreExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 has new state: PREEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : WorkflowManager : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 doBeforeExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 has new state: EXECUTING
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : WorkflowFileStoreHandlerRepository : Create Temp Dir : 0:10:0:8 : Adding handler 41a65c1b-e84a-4616-bed2-08e51f9f5b7d (Create Temp Dir 0:10:0:8: <no directory>) - 5 in total
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : LocalNodeExecutionJob : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 Start execute
+2018-03-16 17:43:10,726 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 End execute (0 secs)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : WorkflowManager : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 doBeforePostExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : NodeContainer : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 has new state: POSTEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : WorkflowManager : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 doAfterExecute - success
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : NodeContainer : WrappedNode Input : 0:10:0:10 : WrappedNode Input 0:10:0:10 has new state: EXECUTED
+2018-03-16 17:43:10,726 : INFO  : KNIME-Worker-0 : LocalNodeExecutionJob : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 End execute (0 secs)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : WorkflowManager : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 doBeforePostExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 has new state: POSTEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : WorkflowManager : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 doAfterExecute - success
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create Temp Dir 0:10:0:8 has new state: EXECUTED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : Node : Create File Name : 0:10:0:9 : Configure succeeded. (Create File Name)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create File Name 0:10:0:9 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 0:10:0:8 : Create File Name 0:10:0:9 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : Node : WrappedNode Output : 0:10:0:11 : Configure succeeded. (WrappedNode Output)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-0 : NodeContainer : Create Temp Dir : 0:10:0:8 : WrappedNode Output 0:10:0:11 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : WorkflowManager : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 doBeforePreExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 has new state: PREEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : WorkflowManager : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 doBeforeExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 has new state: EXECUTING
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : Create File Name : 0:10:0:9 : Adding handler af2825bd-33df-473f-b259-6e8456269f89 (Create File Name 0:10:0:9: <no directory>) - 6 in total
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 Start execute
+2018-03-16 17:43:10,726 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 End execute (0 secs)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : WorkflowManager : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 doBeforePostExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 has new state: POSTEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : WorkflowManager : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 doAfterExecute - success
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : Create File Name : 0:10:0:9 : Create File Name 0:10:0:9 has new state: EXECUTED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : Node : WrappedNode Output : 0:10:0:11 : Configure succeeded. (WrappedNode Output)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-2 : NodeContainer : Create File Name : 0:10:0:9 : WrappedNode Output 0:10:0:11 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : WorkflowManager : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 doBeforePreExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : NodeContainer : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 has new state: PREEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : WorkflowManager : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 doBeforeExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : NodeContainer : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 has new state: EXECUTING
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : WrappedNode Output : 0:10:0:11 : Adding handler 79ddab40-ae4f-4e32-bee4-8b86b405ac61 (WrappedNode Output 0:10:0:11: <no directory>) - 7 in total
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 Start execute
+2018-03-16 17:43:10,726 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 End execute (0 secs)
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : WorkflowManager : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 doBeforePostExecution
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : NodeContainer : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 has new state: POSTEXECUTE
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : WorkflowManager : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 doAfterExecute - success
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : NodeContainer : WrappedNode Output : 0:10:0:11 : WrappedNode Output 0:10:0:11 has new state: EXECUTED
+2018-03-16 17:43:10,726 : DEBUG : KNIME-Worker-1 : NodeContainer : WrappedNode Output : 0:10:0:11 : Create file 0:10:0 has new state: EXECUTED
+2018-03-16 17:43:10,741 : INFO  : KNIME-Worker-4 : LocalNodeExecutionJob : Create file : 0:10 : Create file 0:10 End execute (0 secs)
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : WorkflowManager : Create file : 0:10 : Create file 0:10 doBeforePostExecution
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : Create file 0:10 has new state: POSTEXECUTE
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : WorkflowManager : Create file : 0:10 : Create file 0:10 doAfterExecute - success
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : Create file 0:10 has new state: EXECUTED
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : Node : FSKX Writer : 0:5 : Configure succeeded. (FSKX Writer)
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : FSKX Writer 0:5 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : FSKX Writer 0:5 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : Node : FSKX Reader : 0:6 : Configure succeeded. (FSKX Reader)
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : FSKX Reader 0:6 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : Node : FSK Runner : 0:7 : Configure succeeded. (FSK Runner)
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-4 : NodeContainer : Create file : 0:10 : FSK Runner 0:7 has new state: CONFIGURED_MARKEDFOREXEC
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-0 : WorkflowManager : FSKX Writer : 0:5 : FSKX Writer 0:5 doBeforePreExecution
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-0 : NodeContainer : FSKX Writer : 0:5 : FSKX Writer 0:5 has new state: PREEXECUTE
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-0 : WorkflowManager : FSKX Writer : 0:5 : FSKX Writer 0:5 doBeforeExecution
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-0 : NodeContainer : FSKX Writer : 0:5 : FSKX Writer 0:5 has new state: EXECUTING
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-0 : WorkflowFileStoreHandlerRepository : FSKX Writer : 0:5 : Adding handler 2eb2db04-3728-452c-842c-09f8f8ead026 (FSKX Writer 0:5: <no directory>) - 8 in total
+2018-03-16 17:43:10,741 : DEBUG : KNIME-Worker-0 : LocalNodeExecutionJob : FSKX Writer : 0:5 : FSKX Writer 0:5 Start execute
+2018-03-16 17:43:11,616 : INFO  : KNIME-Worker-0 : LocalNodeExecutionJob : FSKX Writer : 0:5 : FSKX Writer 0:5 End execute (0 secs)
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-0 : WorkflowManager : FSKX Writer : 0:5 : FSKX Writer 0:5 doBeforePostExecution
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-0 : NodeContainer : FSKX Writer : 0:5 : FSKX Writer 0:5 has new state: POSTEXECUTE
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-0 : WorkflowManager : FSKX Writer : 0:5 : FSKX Writer 0:5 doAfterExecute - success
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-0 : NodeContainer : FSKX Writer : 0:5 : FSKX Writer 0:5 has new state: EXECUTED
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-0 : Node : FSKX Reader : 0:6 : Configure succeeded. (FSKX Reader)
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-0 : NodeContainer : FSKX Writer : 0:5 : FSKX Reader 0:6 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:6 : FSKX Reader 0:6 doBeforePreExecution
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:6 : FSKX Reader 0:6 has new state: PREEXECUTE
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:6 : FSKX Reader 0:6 doBeforeExecution
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:6 : FSKX Reader 0:6 has new state: EXECUTING
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSKX Reader : 0:6 : Adding handler e684717f-a02c-4b5e-b90b-268f2d5b93f1 (FSKX Reader 0:6: <no directory>) - 9 in total
+2018-03-16 17:43:11,616 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : FSKX Reader : 0:6 : FSKX Reader 0:6 Start execute
+2018-03-16 17:43:12,786 : DEBUG : KNIME-Worker-2 : RController : FSKX Reader : 0:6 : Connected to Rserve in 1 attempts.
+2018-03-16 17:43:12,817 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : FSKX Reader : 0:6 : FSKX Reader 0:6 End execute (1 sec)
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:6 : FSKX Reader 0:6 doBeforePostExecution
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:6 : FSKX Reader 0:6 has new state: POSTEXECUTE
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:6 : FSKX Reader 0:6 doAfterExecute - success
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:6 : FSKX Reader 0:6 has new state: EXECUTED
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-2 : Node : FSK Runner : 0:7 : Configure succeeded. (FSK Runner)
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:6 : FSK Runner 0:7 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:7 : FSK Runner 0:7 doBeforePreExecution
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:7 : FSK Runner 0:7 has new state: PREEXECUTE
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:7 : FSK Runner 0:7 doBeforeExecution
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:7 : FSK Runner 0:7 has new state: EXECUTING
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:7 : Adding handler db4f661b-7991-41af-b765-e0cefd5ea911 (FSK Runner 0:7: <no directory>) - 10 in total
+2018-03-16 17:43:12,817 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Runner : 0:7 : FSK Runner 0:7 Start execute
+2018-03-16 17:43:13,847 : INFO  : KNIME-Worker-3 : LocalNodeExecutionJob : FSK Runner : 0:2 : FSK Runner 0:2 End execute (3 secs)
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 0:2 : FSK Runner 0:2 doBeforePostExecution
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 0:2 : FSK Runner 0:2 has new state: POSTEXECUTE
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 0:2 : FSK Runner 0:2 doAfterExecute - success
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 0:2 : FSK Runner 0:2 has new state: EXECUTED
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-3 : Node : FSK to R : 0:12 : Configure succeeded. (FSK to R)
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 0:2 : FSK to R 0:12 has new state: CONFIGURED_QUEUED
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSK to R : 0:12 : FSK to R 0:12 doBeforePreExecution
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-4 : NodeContainer : FSK to R : 0:12 : FSK to R 0:12 has new state: PREEXECUTE
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSK to R : 0:12 : FSK to R 0:12 doBeforeExecution
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-4 : NodeContainer : FSK to R : 0:12 : FSK to R 0:12 has new state: EXECUTING
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-4 : WorkflowFileStoreHandlerRepository : FSK to R : 0:12 : Adding handler e8ff0f8a-f0da-4038-96a4-feefe81062a4 (FSK to R 0:12: <no directory>) - 11 in total
+2018-03-16 17:43:13,847 : DEBUG : KNIME-Worker-4 : LocalNodeExecutionJob : FSK to R : 0:12 : FSK to R 0:12 Start execute
+2018-03-16 17:43:14,284 : INFO  : KNIME-Worker-4 : LocalNodeExecutionJob : FSK to R : 0:12 : FSK to R 0:12 End execute (0 secs)
+2018-03-16 17:43:14,284 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSK to R : 0:12 : FSK to R 0:12 doBeforePostExecution
+2018-03-16 17:43:14,284 : DEBUG : KNIME-Worker-4 : NodeContainer : FSK to R : 0:12 : FSK to R 0:12 has new state: POSTEXECUTE
+2018-03-16 17:43:14,284 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSK to R : 0:12 : FSK to R 0:12 doAfterExecute - success
+2018-03-16 17:43:14,284 : DEBUG : KNIME-Worker-4 : NodeContainer : FSK to R : 0:12 : FSK to R 0:12 has new state: EXECUTED
+2018-03-16 17:43:15,594 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Runner : 0:7 : FSK Runner 0:7 End execute (2 secs)
+2018-03-16 17:43:15,594 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:7 : FSK Runner 0:7 doBeforePostExecution
+2018-03-16 17:43:15,594 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:7 : FSK Runner 0:7 has new state: POSTEXECUTE
+2018-03-16 17:43:15,594 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:7 : FSK Runner 0:7 doAfterExecute - success
+2018-03-16 17:43:15,594 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:7 : FSK Runner 0:7 has new state: EXECUTED
+2018-03-16 17:43:15,594 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:7 : NOiso 0 has new state: EXECUTED
+2018-03-16 17:43:15,594 : DEBUG : main : FullWorkflowTest :  :  : ROOT  has new state: EXECUTED
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Runner : 0:7 : Removing handler db4f661b-7991-41af-b765-e0cefd5ea911 (FSK Runner 0:7: <no directory>) - 10 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:7 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : FSK Runner : 0:7 : clean output ports.
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSKX Reader : 0:6 : Removing handler e684717f-a02c-4b5e-b90b-268f2d5b93f1 (FSKX Reader 0:6: <no directory>) - 9 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:6 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : FSKX Reader : 0:6 : clean output ports.
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSKX Writer : 0:5 : Removing handler 2eb2db04-3728-452c-842c-09f8f8ead026 (FSKX Writer 0:5: <no directory>) - 8 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : WriterNodeModel : FSKX Writer : 0:5 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : FSKX Writer : 0:5 : clean output ports.
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK to R : 0:12 : Removing handler e8ff0f8a-f0da-4038-96a4-feefe81062a4 (FSK to R 0:12: <no directory>) - 7 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : FskToRNodeFactory$1 : FSK to R : 0:12 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : FSK to R : 0:12 : clean output ports.
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : WrappedNode Output : 0:10:0:11 : Removing handler 79ddab40-ae4f-4e32-bee4-8b86b405ac61 (WrappedNode Output 0:10:0:11: <no directory>) - 6 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 0:10:0:11 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : WrappedNode Output : 0:10:0:11 : clean output ports.
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : Create File Name : 0:10:0:9 : Removing handler af2825bd-33df-473f-b259-6e8456269f89 (Create File Name 0:10:0:9: <no directory>) - 5 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 0:10:0:9 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : Create File Name : 0:10:0:9 : clean output ports.
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : WrappedNode Input : 0:10:0:10 : Removing handler c30b3b77-3c38-41bc-b3bb-cc42a9c1038f (WrappedNode Input 0:10:0:10: <no directory>) - 4 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 0:10:0:10 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : WrappedNode Input : 0:10:0:10 : clean output ports.
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : Create Temp Dir : 0:10:0:8 : Removing handler 41a65c1b-e84a-4616-bed2-08e51f9f5b7d (Create Temp Dir 0:10:0:8: <no directory>) - 3 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 0:10:0:8 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : Create Temp Dir : 0:10:0:8 : clean output ports.
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Runner : 0:2 : Removing handler ba897d0a-395c-46ce-816f-dd583b10268a (FSK Runner 0:2: <no directory>) - 2 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:2 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : FSK Runner : 0:2 : clean output ports.
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : FSK Editor : 0:4 : Removing handler e886aec0-2c32-489c-b9fa-60c930267476 (FSK Editor 0:4: <no directory>) - 1 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : EditorNodeModel : FSK Editor : 0:4 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : FSK Editor : 0:4 : clean output ports.
+2018-03-16 17:43:15,875 : DEBUG : main : WorkflowFileStoreHandlerRepository : Testflow Configuration : 0:97 : Removing handler 7fef5b87-c1c4-47ff-87d6-dd176abbb87e (Testflow Configuration 0:97: <no directory>) - 0 remaining
+2018-03-16 17:43:15,875 : DEBUG : main : TestConfigNodeModel : Testflow Configuration : 0:97 : Removing all (0) views from model.
+2018-03-16 17:43:15,875 : DEBUG : main : Node : Testflow Configuration : 0:97 : clean output ports.

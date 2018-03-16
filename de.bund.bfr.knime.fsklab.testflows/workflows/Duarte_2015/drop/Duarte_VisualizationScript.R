@@ -1,0 +1,1 @@
+plot(expected_temp)

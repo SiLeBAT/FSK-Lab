@@ -46,7 +46,6 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
-import org.knime.core.node.port.PortObjectSpec;
 import org.sbml.jsbml.validator.SyntaxChecker;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
@@ -543,17 +542,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       list.revalidate();
       list.repaint();
       updatePanel();
-    }
-  }
-
-  @Override
-  protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
-      throws NotConfigurableException {
-    try {
-      this.settings.loadSettings(settings);
-    } catch (InvalidSettingsException exception) {
-      // throw new NotConfigurableException("InvalidSettingsException", exception);
-      LOGGER.warn("Settings were not loaded", exception);
     }
   }
 
