@@ -66,18 +66,19 @@ public class SimulatorNodeModel extends ExtToolOutputNodeModel {
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
     FskPortObject inObj = (FskPortObject) inObjects[0];
-    inObj.simulations.clear();
-
-    // Convert SimulationEntities from the settings to FskSimulation and add them to the port object
-    for (SimulationEntity simulationEntity : nodeSettings.getListOfSimulation()) {
-      FskSimulation fskSimulation = new FskSimulation(simulationEntity.getSimulationName());
-
-      simulationEntity.getSimulationParameters()
-          .forEach(it -> fskSimulation.getParameters().put(it.name, it.value));
-
-      inObj.simulations.add(fskSimulation);
+    if(nodeSettings.getListOfSimulation() != null) {
+      inObj.simulations.clear();
+      
+      // Convert SimulationEntities from the settings to FskSimulation and add them to the port object
+      for (SimulationEntity simulationEntity : nodeSettings.getListOfSimulation()) {
+        FskSimulation fskSimulation = new FskSimulation(simulationEntity.getSimulationName());
+  
+        simulationEntity.getSimulationParameters()
+            .forEach(it -> fskSimulation.getParameters().put(it.name, it.value));
+  
+        inObj.simulations.add(fskSimulation);
+      }
     }
-
     return new PortObject[] {inObj};
   }
 }
