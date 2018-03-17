@@ -121,8 +121,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
       FskSimulation fskSimulation = fskObj.simulations.stream()
           .filter(it -> it.getName().equals(nodeSettings.simulation)).findAny().get();
+      ExecutionContext context = exec.createSubExecutionContext(1.0);
 
-      fskObj = runSnippet(controller, fskObj, fskSimulation, exec.createSubExecutionContext(1.0));
+      fskObj = runSnippet(controller, fskObj, fskSimulation, context);
     }
 
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {

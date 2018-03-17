@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -136,7 +137,10 @@ public class EditorNodeModel extends NoInternalsModel {
     }
 
     // Adds and installs libraries
-    final List<String> libraries = new RScript(outObj.model).getLibraries();
+    final List<String> libraries = new ArrayList<>();
+    libraries.addAll(new RScript(outObj.model).getLibraries());
+    libraries.addAll(new RScript(outObj.param).getLibraries());
+    libraries.addAll(new RScript(outObj.viz).getLibraries());
     if (!libraries.isEmpty()) {
       try {
         // Install missing libraries
