@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -119,31 +120,28 @@ class CreatorNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
       throws InvalidSettingsException, IOException {
+
     // Reads model script
     if (StringUtils.isEmpty(nodeSettings.modelScript)) {
       throw new InvalidSettingsException("Model script is not provided");
     }
-    final RScript modelRScript = readScript(nodeSettings.modelScript);
-    final String modelScript = modelRScript.getScript();
+    RScript modelRScript = readScript(nodeSettings.modelScript);
 
-    // Reads parameters script
-    final String paramScript;
-    FskSimulation defaultSimulation = null;
-    if (StringUtils.isNotEmpty(nodeSettings.parameterScript)) {
-      paramScript = readScript(nodeSettings.parameterScript).getScript();
-
-      // Create defaultSimulation out of the parameters script
-      defaultSimulation = NodeUtils.createDefaultSimulation(paramScript);
-    } else {
-      paramScript = "";
+    // Read parameters script
+    if (StringUtils.isEmpty(nodeSettings.parameterScript)) {
+      throw new InvalidSettingsException("Parameter script is not provided");
     }
+    RScript paramRScript = readScript(nodeSettings.parameterScript);
+
+    // Create defaultSimulation out of the parameters script
+    FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(paramRScript.getScript());
 
     // Reads visualization script
-    final String visualizationScript;
+    RScript vizRScript;
     if (StringUtils.isNotEmpty(nodeSettings.visualizationScript)) {
-      visualizationScript = readScript(nodeSettings.visualizationScript).getScript();
+      vizRScript = readScript(nodeSettings.visualizationScript);
     } else {
-      visualizationScript = "";
+      vizRScript = null;
     }
 
     final GenericModel genericModel;
@@ -190,7 +188,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
           // Set variable values and types from parameters script
           try (RController controller = new RController()) {
-            controller.eval(paramScript, false);
+            controller.eval(paramRScript.getScript(), false);
 
             for (int i = 0; i < genericModel.modelMath.parameter.size(); i++) {
               Parameter p = genericModel.modelMath.parameter.get(i);
@@ -226,14 +224,24 @@ class CreatorNodeModel extends NoInternalsModel {
       Files.copy(resource, targetPath);
     }
 
-    final FskPortObject portObj = new FskPortObject(modelScript, paramScript, visualizationScript,
+    String modelScript = modelRScript.getScript();
+    String paramScript = paramRScript.getScript();
+    String vizScript = vizRScript != null ? vizRScript.getScript() : "";
+
+    final FskPortObject portObj = new FskPortObject(modelScript, paramScript, vizScript,
         genericModel, null, new HashSet<>(), workingDirectory);
     if (defaultSimulation != null) {
       portObj.simulations.add(defaultSimulation);
     }
 
     // libraries
-    List<String> libraries = modelRScript.getLibraries();
+    List<String> libraries = new ArrayList<>();
+    libraries.addAll(modelRScript.getLibraries());
+    libraries.addAll(paramRScript.getLibraries());
+    if (vizRScript != null) {
+      libraries.addAll(vizRScript.getLibraries());
+    }
+
     if (!libraries.isEmpty()) {
       try {
         // Install missing libraries

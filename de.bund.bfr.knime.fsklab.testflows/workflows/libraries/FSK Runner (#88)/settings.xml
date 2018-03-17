@@ -27,37 +27,43 @@
 <config key="styles"/>
 </config>
 <entry key="customDescription" type="xstring" isnull="true" value=""/>
-<entry key="state" type="xstring" value="CONFIGURED"/>
-<config key="nodecontainer_message">
-<entry key="type" type="xstring" value="ERROR"/>
-<entry key="message" type="xstring" value="Execute failed: R evaluation failed: &quot;# library command to test automatic installation of libraries from the parameters script%%00010library(car)%%00010%%00010# Parameters for prevalence among ANIMALS (within one flock)%%00010# Npos:    number of positive flocks (i.e. flocks with at least one positive animal)%%00010# Ntotal:  overall number of flocks%%00010# elements: can be &quot;flocks&quot; or &quot;animals&quot; and is used in the model script to create file names which store the end results to be used in subsequent model steps%%00010%%00010n.iter &lt;- 200%%00010Npos &lt;- 20%%00010Ntotal &lt;- 100%%00010&quot;"/>
-</config>
+<entry key="state" type="xstring" value="EXECUTED"/>
 <entry key="factory" type="xstring" value="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory"/>
 <entry key="node-name" type="xstring" value="FSK Runner"/>
 <entry key="node-bundle-name" type="xstring" value="FSK nodes"/>
 <entry key="node-bundle-symbolic-name" type="xstring" value="de.bund.bfr.knime.fsklab.nodes"/>
 <entry key="node-bundle-vendor" type="xstring" value="BfR"/>
-<entry key="node-bundle-version" type="xstring" value="1.0.0.201803131542"/>
-<entry key="node-feature-name" type="xstring" value="FSK Lab Feature"/>
-<entry key="node-feature-symbolic-name" type="xstring" value="de.bund.bfr.knime.fsklab.feature.feature.group"/>
-<entry key="node-feature-vendor" type="xstring" value="BfR"/>
-<entry key="node-feature-version" type="xstring" value="1.0.0.201803131542"/>
+<entry key="node-bundle-version" type="xstring" value="1.0.0.qualifier"/>
+<entry key="node-feature-name" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-version" type="xstring" value="0.0.0"/>
 <config key="factory_settings"/>
 <entry key="name" type="xstring" value="FSK Runner"/>
-<entry key="hasContent" type="xboolean" value="false"/>
+<entry key="hasContent" type="xboolean" value="true"/>
 <entry key="isInactive" type="xboolean" value="false"/>
 <config key="ports">
 <config key="port_1">
 <entry key="index" type="xint" value="1"/>
-<entry key="port_dir_location" type="xstring" isnull="true" value=""/>
+<entry key="port_spec_class" type="xstring" value="de.bund.bfr.knime.fsklab.FskPortObjectSpec"/>
+<entry key="port_object_class" type="xstring" value="de.bund.bfr.knime.fsklab.FskPortObject"/>
+<entry key="port_object_summary" type="xstring" value="FSK Object"/>
+<entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+<entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+<entry key="port_dir_location" type="xstring" value="port_1"/>
 </config>
 <config key="port_2">
 <entry key="index" type="xint" value="2"/>
-<entry key="port_dir_location" type="xstring" isnull="true" value=""/>
+<entry key="port_spec_class" type="xstring" value="org.knime.core.node.port.image.ImagePortObjectSpec"/>
+<entry key="port_object_class" type="xstring" value="org.knime.core.node.port.image.ImagePortObject"/>
+<entry key="port_object_summary" type="xstring" value="PNG Image 640 x 640 with 5 KB"/>
+<entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+<entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+<entry key="port_dir_location" type="xstring" value="port_2"/>
 </config>
 </config>
 <config key="filestores">
 <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-<entry key="file_store_id" type="xstring" isnull="true" value=""/>
+<entry key="file_store_id" type="xstring" value="d8f12be5-b0e7-41ba-9a92-5da92cfdf3c6"/>
 </config>
 </config>

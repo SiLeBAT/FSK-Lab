@@ -119,14 +119,10 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     try (RController controller = new RController()) {
 
-      controller.eval(fskObj.param, false);
-
       FskSimulation fskSimulation = fskObj.simulations.stream()
           .filter(it -> it.getName().equals(nodeSettings.simulation)).findAny().get();
-      String paramScript = NodeUtils.buildParameterScript(fskSimulation);
-      controller.eval(paramScript, false);
 
-      fskObj = runSnippet(controller, fskObj, exec.createSubExecutionContext(1.0));
+      fskObj = runSnippet(controller, fskObj, fskSimulation, exec.createSubExecutionContext(1.0));
     }
 
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
@@ -141,7 +137,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   }
 
   private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
-      final ExecutionMonitor exec) throws Exception {
+      final FskSimulation simulation, final ExecutionMonitor exec) throws Exception {
 
     final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
 
@@ -155,6 +151,10 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     exec.setMessage("Add paths to libraries");
     controller.addPackagePath(LibRegistry.instance().getInstallationPath());
+
+    exec.setMessage("Set parameter values");
+    String paramScript = NodeUtils.buildParameterScript(simulation);
+    executor.execute(paramScript, exec);
 
     exec.setMessage("Run models script");
     executor.executeIgnoreResult(fskObj.model, exec);

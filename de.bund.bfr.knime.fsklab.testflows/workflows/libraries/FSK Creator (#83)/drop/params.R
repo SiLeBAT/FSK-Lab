@@ -1,5 +1,5 @@
 # library command to test automatic installation of libraries from the parameters script
-library(car)
+library(stringr)
 
 # Parameters for prevalence among ANIMALS (within one flock)
 # Npos:    number of positive flocks (i.e. flocks with at least one positive animal)
