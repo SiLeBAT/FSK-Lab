@@ -18,8 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.nodes.controller;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.KNIMEConstants;
+import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REXPString;
@@ -70,13 +71,10 @@ public class LibRegistry {
       type = "source";
     }
 
-    // Creates temporary folders
-    repoPath = Files.createTempDirectory(KNIMEConstants.getKNIMETempPath(), "repo");
-    installPath = Files.createTempDirectory(KNIMEConstants.getKNIMETempPath(), "install");
-
-    // Schedules temporary folders for deletion
-    installPath.toFile().deleteOnExit();
-    repoPath.toFile().deleteOnExit();
+    // Creates temporary folders and set them for deletion on shutdown
+    File knimeTempDir = KNIMEConstants.getKNIMETempPath().toFile();
+    repoPath = FileUtil.createTempDir("repo", knimeTempDir, true).toPath();
+    installPath = FileUtil.createTempDir("install", knimeTempDir, true).toPath();
 
     rWrapper = new RWrapper();
     rWrapper.library("miniCRAN");
