@@ -6300,3 +6300,32 @@ Testflow Configuration 0:98 doBeforePreExecution
 2018-03-16 17:41:02,182 : DEBUG : main : Node : FSK Creator : 0:83 : clean output ports.
 2018-03-16 17:41:02,182 : DEBUG : main : TestConfigNodeModel : Testflow Configuration : 0:98 : Removing all (0) views from model.
 2018-03-16 17:41:02,182 : DEBUG : main : Node : Testflow Configuration : 0:98 : clean output ports.
+2018-03-17 11:18:52,530 : DEBUG : main : CreatorNodeFactory : Initialize_parents_flocks : 0 : Factory is already initialized. Nothing to do.
+2018-03-17 11:18:52,536 : DEBUG : main : RunnerNodeFactory : Initialize_parents_flocks : 0 : Factory is already initialized. Nothing to do.
+2018-03-17 11:18:52,548 : DEBUG : main : WriterNodeFactory : Initialize_parents_flocks : 0 : Factory is already initialized. Nothing to do.
+2018-03-17 11:18:52,554 : DEBUG : main : ReaderNodeFactory : Initialize_parents_flocks : 0 : Factory is already initialized. Nothing to do.
+2018-03-17 11:18:52,562 : DEBUG : main : RunnerNodeFactory : Initialize_parents_flocks : 0 : Factory is already initialized. Nothing to do.
+2018-03-17 11:18:52,588 : DEBUG : main : TestConfigNodeFactory : Initialize_parents_flocks : 0 : Factory is already initialized. Nothing to do.
+2018-03-17 11:18:52,620 : DEBUG : main : CreateTempDirectoryNodeFactory : create file name : 0:96 : Factory is already initialized. Nothing to do.
+2018-03-17 11:18:52,626 : DEBUG : main : CreateFilenameNodeFactory : create file name : 0:96 : Factory is already initialized. Nothing to do.
+2018-03-17 11:18:52,668 : WARN  : main : Node : Create Temp Dir : 0:96:0:90 : Did not restore content; consider to re-execute!
+2018-03-17 11:18:53,096 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:87 : Removing all (0) views from model.
+2018-03-17 11:18:53,096 : DEBUG : main : Node : FSK Runner : 0:87 : clean output ports.
+2018-03-17 11:18:53,096 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:86 : Removing all (0) views from model.
+2018-03-17 11:18:53,096 : DEBUG : main : Node : FSKX Reader : 0:86 : clean output ports.
+2018-03-17 11:18:53,096 : DEBUG : main : WriterNodeModel : FSKX Writer : 0:85 : Removing all (0) views from model.
+2018-03-17 11:18:53,096 : DEBUG : main : Node : FSKX Writer : 0:85 : clean output ports.
+2018-03-17 11:18:53,096 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:84 : Removing all (0) views from model.
+2018-03-17 11:18:53,096 : DEBUG : main : Node : FSK Runner : 0:84 : clean output ports.
+2018-03-17 11:18:53,096 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 0:96:0:93 : Removing all (0) views from model.
+2018-03-17 11:18:53,096 : DEBUG : main : Node : WrappedNode Output : 0:96:0:93 : clean output ports.
+2018-03-17 11:18:53,096 : DEBUG : main : CreateFilenameNodeModel : Create File Name : 0:96:0:91 : Removing all (0) views from model.
+2018-03-17 11:18:53,096 : DEBUG : main : Node : Create File Name : 0:96:0:91 : clean output ports.
+2018-03-17 11:18:53,096 : DEBUG : main : CreateTempDirectoryNodeModel : Create Temp Dir : 0:96:0:90 : Removing all (0) views from model.
+2018-03-17 11:18:53,096 : DEBUG : main : Node : Create Temp Dir : 0:96:0:90 : clean output ports.
+2018-03-17 11:18:53,096 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 0:96:0:92 : Removing all (0) views from model.
+2018-03-17 11:18:53,096 : DEBUG : main : Node : WrappedNode Input : 0:96:0:92 : clean output ports.
+2018-03-17 11:18:53,097 : DEBUG : main : CreatorNodeModel : FSK Creator : 0:83 : Removing all (0) views from model.
+2018-03-17 11:18:53,097 : DEBUG : main : Node : FSK Creator : 0:83 : clean output ports.
+2018-03-17 11:18:53,097 : DEBUG : main : TestConfigNodeModel : Testflow Configuration : 0:98 : Removing all (0) views from model.
+2018-03-17 11:18:53,097 : DEBUG : main : Node : Testflow Configuration : 0:98 : clean output ports.
