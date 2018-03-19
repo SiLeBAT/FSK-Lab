@@ -38,11 +38,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -251,14 +251,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   private static NodeLogger LOGGER = NodeLogger.getLogger("EditNodeDialog");
 
   /**
-   * Read controlled vocabulary from spreadsheet.
+   * Read controlled vocabulary from spreadsheet. The vocabulary is sorted alphabetically.
    * 
    * @param sheetName Name of the spreadsheet with the .xlsx extension
    * @return Set with controlled vocabulary. If the sheet is not found returns empty set.
    */
-  private static Set<String> loadVocabulary(final String sheetName) {
+  private static TreeSet<String> loadVocabulary(final String sheetName) {
 
-    Set<String> vocabulary = new HashSet<>();
+    TreeSet<String> vocabulary = new TreeSet<>();
 
     try (
         InputStream stream =
@@ -268,7 +268,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       XSSFSheet sheet = workbook.getSheetAt(0);
       if (sheet == null) {
         LOGGER.warn("Spreadsheet not found");
-        return Collections.emptySet();
+        return vocabulary;
       }
 
       for (Row row : sheet) {
