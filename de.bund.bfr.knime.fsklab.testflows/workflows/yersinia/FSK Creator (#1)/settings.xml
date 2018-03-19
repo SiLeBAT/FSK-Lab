@@ -10,6 +10,7 @@
 <entry key="paramScript" type="xstring" value=""/>
 <entry key="visualizationScript" type="xstring" value=""/>
 <entry key="spreadsheet" type="xstring" value=""/>
+<entry key="sheet" type="xstring" value=""/>
 <config key="resources">
 <entry key="array-size" type="xint" value="0"/>
 </config>
@@ -48,16 +49,20 @@
 </config>
 <entry key="customDescription" type="xstring" isnull="true" value=""/>
 <entry key="state" type="xstring" value="CONFIGURED"/>
+<config key="nodecontainer_message">
+<entry key="type" type="xstring" value="ERROR"/>
+<entry key="message" type="xstring" value="Execute failed: (&quot;NullPointerException&quot;): null"/>
+</config>
 <entry key="factory" type="xstring" value="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory"/>
 <entry key="node-name" type="xstring" value="FSK Creator"/>
 <entry key="node-bundle-name" type="xstring" value="FSK nodes"/>
 <entry key="node-bundle-symbolic-name" type="xstring" value="de.bund.bfr.knime.fsklab.nodes"/>
 <entry key="node-bundle-vendor" type="xstring" value="BfR"/>
-<entry key="node-bundle-version" type="xstring" value="1.0.0.201803131542"/>
-<entry key="node-feature-name" type="xstring" value="FSK Lab Feature"/>
-<entry key="node-feature-symbolic-name" type="xstring" value="de.bund.bfr.knime.fsklab.feature.feature.group"/>
-<entry key="node-feature-vendor" type="xstring" value="BfR"/>
-<entry key="node-feature-version" type="xstring" value="1.0.0.201803131542"/>
+<entry key="node-bundle-version" type="xstring" value="1.0.0.qualifier"/>
+<entry key="node-feature-name" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-version" type="xstring" value="0.0.0"/>
 <config key="factory_settings"/>
 <entry key="name" type="xstring" value="FSK Creator"/>
 <entry key="hasContent" type="xboolean" value="false"/>

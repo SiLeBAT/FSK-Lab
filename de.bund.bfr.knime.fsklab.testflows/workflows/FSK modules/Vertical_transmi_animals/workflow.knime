@@ -8,10 +8,10 @@
 <entry key="authored-by" type="xstring" value="de"/>
 <entry key="authored-when" type="xstring" value="2018-03-07 09:48:05 +0100"/>
 <entry key="lastEdited-by" type="xstring" value="de"/>
-<entry key="lastEdited-when" type="xstring" value="2018-03-16 17:04:02 +0100"/>
+<entry key="lastEdited-when" type="xstring" value="2018-03-19 14:10:18 +0100"/>
 </config>
 <entry key="customDescription" type="xstring" isnull="true" value=""/>
-<entry key="state" type="xstring" value="IDLE"/>
+<entry key="state" type="xstring" value="EXECUTED"/>
 <config key="workflow_credentials"/>
 <config key="nodes">
 <config key="node_83">
@@ -23,7 +23,7 @@
 <config key="ui_settings">
 <config key="extrainfo.node.bounds">
 <entry key="array-size" type="xint" value="4"/>
-<entry key="0" type="xint" value="184"/>
+<entry key="0" type="xint" value="344"/>
 <entry key="1" type="xint" value="137"/>
 <entry key="2" type="xint" value="74"/>
 <entry key="3" type="xint" value="78"/>
@@ -39,7 +39,7 @@
 <config key="ui_settings">
 <config key="extrainfo.node.bounds">
 <entry key="array-size" type="xint" value="4"/>
-<entry key="0" type="xint" value="484"/>
+<entry key="0" type="xint" value="644"/>
 <entry key="1" type="xint" value="137"/>
 <entry key="2" type="xint" value="75"/>
 <entry key="3" type="xint" value="78"/>
@@ -55,7 +55,7 @@
 <config key="ui_settings">
 <config key="extrainfo.node.bounds">
 <entry key="array-size" type="xint" value="4"/>
-<entry key="0" type="xint" value="584"/>
+<entry key="0" type="xint" value="744"/>
 <entry key="1" type="xint" value="137"/>
 <entry key="2" type="xint" value="81"/>
 <entry key="3" type="xint" value="78"/>
@@ -71,7 +71,7 @@
 <config key="ui_settings">
 <config key="extrainfo.node.bounds">
 <entry key="array-size" type="xint" value="4"/>
-<entry key="0" type="xint" value="324"/>
+<entry key="0" type="xint" value="484"/>
 <entry key="1" type="xint" value="217"/>
 <entry key="2" type="xint" value="72"/>
 <entry key="3" type="xint" value="78"/>
@@ -87,7 +87,7 @@
 <config key="ui_settings">
 <config key="extrainfo.node.bounds">
 <entry key="array-size" type="xint" value="4"/>
-<entry key="0" type="xint" value="684"/>
+<entry key="0" type="xint" value="844"/>
 <entry key="1" type="xint" value="137"/>
 <entry key="2" type="xint" value="72"/>
 <entry key="3" type="xint" value="78"/>
@@ -103,7 +103,7 @@
 <config key="ui_settings">
 <config key="extrainfo.node.bounds">
 <entry key="array-size" type="xint" value="4"/>
-<entry key="0" type="xint" value="324"/>
+<entry key="0" type="xint" value="484"/>
 <entry key="1" type="xint" value="57"/>
 <entry key="2" type="xint" value="101"/>
 <entry key="3" type="xint" value="78"/>
@@ -123,6 +123,22 @@
 <entry key="1" type="xint" value="137"/>
 <entry key="2" type="xint" value="83"/>
 <entry key="3" type="xint" value="93"/>
+</config>
+</config>
+</config>
+<config key="node_99">
+<entry key="id" type="xint" value="99"/>
+<entry key="node_settings_file" type="xstring" value="String Input (#99)/settings.xml"/>
+<entry key="node_is_meta" type="xboolean" value="false"/>
+<entry key="node_type" type="xstring" value="NativeNode"/>
+<entry key="ui_classname" type="xstring" value="org.knime.core.node.workflow.NodeUIInformation"/>
+<config key="ui_settings">
+<config key="extrainfo.node.bounds">
+<entry key="array-size" type="xint" value="4"/>
+<entry key="0" type="xint" value="184"/>
+<entry key="1" type="xint" value="137"/>
+<entry key="2" type="xint" value="71"/>
+<entry key="3" type="xint" value="78"/>
 </config>
 </config>
 </config>
@@ -166,8 +182,14 @@
 </config>
 <config key="connection_6">
 <entry key="sourceID" type="xint" value="98"/>
-<entry key="destID" type="xint" value="83"/>
+<entry key="destID" type="xint" value="99"/>
 <entry key="sourcePort" type="xint" value="0"/>
+<entry key="destPort" type="xint" value="0"/>
+</config>
+<config key="connection_7">
+<entry key="sourceID" type="xint" value="99"/>
+<entry key="destID" type="xint" value="83"/>
+<entry key="sourcePort" type="xint" value="1"/>
 <entry key="destPort" type="xint" value="0"/>
 </config>
 </config>

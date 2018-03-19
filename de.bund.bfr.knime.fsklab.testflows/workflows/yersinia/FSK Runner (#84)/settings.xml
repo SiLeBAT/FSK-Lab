@@ -33,11 +33,11 @@
 <entry key="node-bundle-name" type="xstring" value="FSK nodes"/>
 <entry key="node-bundle-symbolic-name" type="xstring" value="de.bund.bfr.knime.fsklab.nodes"/>
 <entry key="node-bundle-vendor" type="xstring" value="BfR"/>
-<entry key="node-bundle-version" type="xstring" value="1.0.0.201803131542"/>
-<entry key="node-feature-name" type="xstring" value="FSK Lab Feature"/>
-<entry key="node-feature-symbolic-name" type="xstring" value="de.bund.bfr.knime.fsklab.feature.feature.group"/>
-<entry key="node-feature-vendor" type="xstring" value="BfR"/>
-<entry key="node-feature-version" type="xstring" value="1.0.0.201803131542"/>
+<entry key="node-bundle-version" type="xstring" value="1.0.0.qualifier"/>
+<entry key="node-feature-name" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-version" type="xstring" value="0.0.0"/>
 <config key="factory_settings"/>
 <entry key="name" type="xstring" value="FSK Runner"/>
 <entry key="hasContent" type="xboolean" value="false"/>

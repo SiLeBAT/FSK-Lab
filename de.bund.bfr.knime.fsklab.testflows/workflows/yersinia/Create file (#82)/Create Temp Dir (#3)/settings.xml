@@ -6,7 +6,7 @@
 <entry key="type" type="xstring" value="variable"/>
 <entry key="name" type="xstring" value="temp_path"/>
 <entry key="class" type="xstring" value="STRING"/>
-<entry key="value" type="xstring" value="C:\Users\de\AppData\Local\Temp\knime_yersinia20066\knime_tc_squlsra90v6i"/>
+<entry key="value" type="xstring" value="C:\Users\de\AppData\Local\Temp\knime_yersinia3584\knime_tc_ot9fczh8ze6v"/>
 </config>
 </config>
 <config key="internal_node_subsettings">
@@ -44,10 +44,10 @@
 <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.base"/>
 <entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
 <entry key="node-bundle-version" type="xstring" value="3.5.2.v201802051350"/>
-<entry key="node-feature-name" type="xstring" value="KNIME Core"/>
-<entry key="node-feature-symbolic-name" type="xstring" value="org.knime.features.base.feature.group"/>
-<entry key="node-feature-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
-<entry key="node-feature-version" type="xstring" value="3.5.2.v201802051426"/>
+<entry key="node-feature-name" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-version" type="xstring" value="0.0.0"/>
 <config key="factory_settings"/>
 <entry key="name" type="xstring" value="Create Temp Dir"/>
 <entry key="hasContent" type="xboolean" value="false"/>

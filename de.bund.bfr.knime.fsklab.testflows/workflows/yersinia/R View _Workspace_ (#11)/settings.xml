@@ -44,10 +44,10 @@
 <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.r"/>
 <entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
 <entry key="node-bundle-version" type="xstring" value="3.5.1.v201712211140"/>
-<entry key="node-feature-name" type="xstring" value="KNIME Interactive R Statistics Integration"/>
-<entry key="node-feature-symbolic-name" type="xstring" value="org.knime.features.r.feature.group"/>
-<entry key="node-feature-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
-<entry key="node-feature-version" type="xstring" value="3.5.1.v201712211140"/>
+<entry key="node-feature-name" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-symbolic-name" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-vendor" type="xstring" isnull="true" value=""/>
+<entry key="node-feature-version" type="xstring" value="0.0.0"/>
 <config key="factory_settings"/>
 <entry key="name" type="xstring" value="R View (Workspace)"/>
 <entry key="hasContent" type="xboolean" value="false"/>
