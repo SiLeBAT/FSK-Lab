@@ -149,7 +149,6 @@ public class CreatorNodeDialog extends NodeDialogPane {
     String modelScriptToolTip = bundle.getString("modelscript_tooltip");
     String parameterScriptToolTip = bundle.getString("parameterscript_tooltip");
     String visualizationScriptToolTip = bundle.getString("visualizationscript_tooltip");
-    String spreadsheetScriptToolTip = bundle.getString("spreadsheet_tooltip");
 
     JButton modelScriptButton =
         UIUtils.createBrowseButton(buttonText, modelScriptField, JFileChooser.OPEN_DIALOG, rFilter);
@@ -157,13 +156,10 @@ public class CreatorNodeDialog extends NodeDialogPane {
         JFileChooser.OPEN_DIALOG, rFilter);
     JButton visualizationScriptButton = UIUtils.createBrowseButton(buttonText,
         visualizationScriptField, JFileChooser.OPEN_DIALOG, rFilter);
-    JButton spreadsheetButton = UIUtils.createBrowseButton(buttonText, spreadsheetField,
-        JFileChooser.OPEN_DIALOG, spreadsheetFilter);
 
     modelScriptButton.setToolTipText(modelScriptToolTip);
     parametersScriptButton.setToolTipText(parameterScriptToolTip);
     visualizationScriptButton.setToolTipText(visualizationScriptToolTip);
-    spreadsheetButton.setToolTipText(spreadsheetScriptToolTip);
 
     // labels
     String modelScriptLabelText = bundle.getString("modelscript_label");
@@ -189,10 +185,16 @@ public class CreatorNodeDialog extends NodeDialogPane {
     // Metadata panel
     {
       String spreadsheetLabelText = bundle.getString("spreadsheet_label");
-      FLabel spreadsheetLabel = new FLabel(spreadsheetLabelText);
+      String spreadsheetScriptToolTip = bundle.getString("spreadsheet_tooltip");
 
-      FLabel sheetLabel = new FLabel("Sheet"); // TODO: Replace with string from bundle
+      FLabel spreadsheetLabel = new FLabel(spreadsheetLabelText);
+      JButton spreadsheetButton = UIUtils.createBrowseButton(buttonText, spreadsheetField,
+          JFileChooser.OPEN_DIALOG, spreadsheetFilter);
+      spreadsheetButton.setToolTipText(spreadsheetScriptToolTip);
+
+      FLabel sheetLabel = new FLabel(bundle.getString("sheet_label"));
       JComboBox<String> sheetField = new JComboBox<>(sheetModel);
+      sheetField.setToolTipText(bundle.getString("sheet_tooltip"));
 
       List<FLabel> labels2 = Arrays.asList(spreadsheetLabel, sheetLabel);
       List<JComponent> fields2 = Arrays.asList(spreadsheetField, sheetField);
@@ -200,8 +202,8 @@ public class CreatorNodeDialog extends NodeDialogPane {
 
       FPanel formPanel2 = UIUtils.createFormPanel(labels2, fields2, buttons2);
 
-      // TODO: Replace with string from bundle
-      FPanel metadataPanel = UIUtils.createTitledPanel(formPanel2, "Spreadsheet");
+      FPanel metadataPanel =
+          UIUtils.createTitledPanel(formPanel2, bundle.getString("metadata_title"));
       northPanel.add(UIUtils.createNorthPanel(metadataPanel));
     }
 
