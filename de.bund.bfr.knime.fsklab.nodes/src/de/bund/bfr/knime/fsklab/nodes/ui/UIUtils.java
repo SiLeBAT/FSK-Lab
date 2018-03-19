@@ -324,8 +324,8 @@ public class UIUtils {
    * <p>
    * Layout: | Label | Field | Button |
    */
-  public static FPanel createFormPanel(List<FLabel> labels, List<JTextField> fields,
-      List<JButton> buttons) {
+  public static FPanel createFormPanel(List<FLabel> labels, List<? extends Component> fields,
+      List<? extends Component> buttons) {
     int n = labels.size();
 
     FPanel leftPanel = new FPanel();

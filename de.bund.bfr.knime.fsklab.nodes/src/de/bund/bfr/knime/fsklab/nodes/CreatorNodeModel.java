@@ -162,7 +162,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
       final File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.spreadsheet));
       try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
-        final XSSFSheet sheet = workbook.getSheetAt(0);
+        final XSSFSheet sheet = workbook.getSheet(nodeSettings.sheet);
 
         if (sheet.getPhysicalNumberOfRows() > 29) {
           // Process new RAKIP spreadsheet

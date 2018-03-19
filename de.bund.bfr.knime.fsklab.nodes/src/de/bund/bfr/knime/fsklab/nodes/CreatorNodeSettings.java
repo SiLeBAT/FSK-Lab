@@ -32,6 +32,7 @@ public class CreatorNodeSettings {
   private static final String CFG_PARAMETERS_SCRIPT = "paramScript";
   private static final String CFG_VISUALIZATION_SCRIPT = "visualizationScript";
   private static final String CFG_SPREADSHEET = "spreadsheet";
+  private static final String CFG_SHEET = "sheet";
   private static final String CFG_RESOURCES = "resources";
 
   /** Path to model script. */
@@ -46,6 +47,9 @@ public class CreatorNodeSettings {
   /** Path to spreadsheet. */
   public String spreadsheet = "";
 
+  /** Name of the selected sheet in the spreadsheet. */
+  public String sheet = "";
+
   /** Paths to resources: plain text files and R workspace files (.rdata). */
   public List<Path> resources = new ArrayList<>();
 
@@ -54,6 +58,7 @@ public class CreatorNodeSettings {
     parameterScript = settings.getString(CFG_PARAMETERS_SCRIPT);
     visualizationScript = settings.getString(CFG_VISUALIZATION_SCRIPT);
     spreadsheet = settings.getString(CFG_SPREADSHEET);
+    sheet = settings.getString(CFG_SHEET, "");
 
     resources.clear();
     try {
@@ -72,6 +77,7 @@ public class CreatorNodeSettings {
     settings.addString(CFG_PARAMETERS_SCRIPT, parameterScript);
     settings.addString(CFG_VISUALIZATION_SCRIPT, visualizationScript);
     settings.addString(CFG_SPREADSHEET, spreadsheet);
+    settings.addString(CFG_SHEET, sheet);
 
     final String[] resourcesArray = resources.stream().map(Path::toString).toArray(String[]::new);
     settings.addStringArray(CFG_RESOURCES, resourcesArray);
