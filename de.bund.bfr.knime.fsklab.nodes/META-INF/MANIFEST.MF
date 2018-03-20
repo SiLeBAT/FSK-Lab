@@ -79,3 +79,4 @@ Export-Package: com.toedter.calendar;
  org.rosuda.REngine,
  org.rosuda.REngine.Rserve;uses:="org.rosuda.REngine,org.rosuda.REngine.Rserve.protocol",
  org.rosuda.REngine.Rserve.protocol;uses:="org.rosuda.REngine"
+Import-Package: org.junit.runners

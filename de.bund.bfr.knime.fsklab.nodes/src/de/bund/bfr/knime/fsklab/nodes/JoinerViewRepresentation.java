@@ -18,38 +18,44 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeView;
-import org.knime.core.node.wizard.WizardNodeFactoryExtension;
+import java.util.Random;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.js.core.JSONViewContent;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 
-public class JoinerNodeFactory extends NodeFactory<JoinerNodeModel> implements
-    WizardNodeFactoryExtension<JoinerNodeModel, JoinerViewRepresentation, JoinerViewValue> {
+@JsonAutoDetect
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+final class JoinerViewRepresentation extends JSONViewContent {
+
+  // no members to hash on
+  public final int pseudoIdentifier = (new Random()).nextInt();
 
   @Override
-  public JoinerNodeModel createNodeModel() {
-    return new JoinerNodeModel();
+  public void saveToNodeSettings(NodeSettingsWO settings) {}
+
+  @Override
+  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
+
+  @Override
+  public int hashCode() {
+    return pseudoIdentifier;
   }
 
   @Override
-  protected int getNrNodeViews() {
-    return 0;
-  }
-
-  @Override
-  public NodeView<JoinerNodeModel> createNodeView(int viewIndex,
-      JoinerNodeModel nodeModel) {
-    return null;
-  }
-
-  @Override
-  protected NodeDialogPane createNodeDialogPane() {
-    return null;
-  }
-
-  @Override
-  protected boolean hasDialog() {
-    return false;
+  public boolean equals(final Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (obj == this) {
+      return true;
+    }
+    if (obj.getClass() != getClass()) {
+      return false;
+    }
+    return false; // maybe add other criteria here
   }
 }
