@@ -1,12 +1,17 @@
 package de.bund.bfr.knime.fsklab;
 
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
+
 
 public class ParameterizedModel {
   private String modelID;
   private List<Parameter> listOfParameter ;
-  
+  public ParameterizedModel() {
+    super();
+    
+  }
   public ParameterizedModel(String modelID, List<Parameter> listOfParameter) {
     super();
     this.modelID = modelID;

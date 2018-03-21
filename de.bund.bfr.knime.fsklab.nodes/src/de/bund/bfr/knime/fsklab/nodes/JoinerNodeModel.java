@@ -18,6 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.util.HashSet;
+import java.util.List;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -27,25 +29,30 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
+import org.knime.core.util.FileUtil;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.ParameterizedModel;
 
 
 /**
- * Fsk meta data editor node model.
+ * Fsk Joiner node model.
  */
 
 final class JoinerNodeModel
     extends AbstractWizardNodeModel<JoinerViewRepresentation, JoinerViewValue>
     implements PortObjectHolder {
-
+  private final JoinerNodeSettings nodeSettings = new JoinerNodeSettings();
   private FskPortObject m_port;
-  JoinerViewValue joinerProxyValue = new JoinerViewValue();
+  //JoinerViewValue joinerProxyValue = new JoinerViewValue();
  
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE,FskPortObject.TYPE};
-  private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
+  private static final PortType[] OUT_TYPES = {CombinedFskPortObject.TYPE};
 
   private static final String VIEW_NAME =
       new JoinerNodeFactory().getInteractiveViewName();
@@ -62,7 +69,7 @@ final class JoinerNodeModel
   @Override
   public JoinerViewValue createEmptyViewValue() {
     
-    return joinerProxyValue;
+    return new JoinerViewValue();
   }
 
   @Override
@@ -98,23 +105,47 @@ final class JoinerNodeModel
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    return inSpecs;
+    return new PortObjectSpec[] { CombinedFskPortObjectSpec.INSTANCE };
   }
 
   @Override
-  protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) {
+  protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) throws Exception{
 
     FskPortObject inObj1 = (FskPortObject) inObjects[0];
     FskPortObject inObj2 = (FskPortObject) inObjects[1];
-    FskPortObject outObj = (FskPortObject) inObjects[0];
-    joinerProxyValue.setFirstModel(new ParameterizedModel(inObj1.genericModel.generalInformation.name, inObj1.genericModel.modelMath.parameter));
-    joinerProxyValue.setSecondModel(new ParameterizedModel(inObj2.genericModel.generalInformation.name, inObj2.genericModel.modelMath.parameter));
+    CombinedFskPortObject outObj = new CombinedFskPortObject(FileUtil.createTempDir("combined").toPath(),new HashSet<>(),inObj1,inObj2);
+    
     // Clone input object
    
 
     
 
-    exec.setProgress(1);
+    synchronized (getLock()) {
+      JoinerViewValue joinerProxyValue = getViewValue();
+
+      // If not executed
+      if (joinerProxyValue.getFirstModel() == null) {
+        joinerProxyValue.setFirstModel(new ParameterizedModel(inObj1.genericModel.generalInformation.name, inObj1.genericModel.modelMath.parameter));
+        joinerProxyValue.setSecondModel(new ParameterizedModel(inObj2.genericModel.generalInformation.name, inObj2.genericModel.modelMath.parameter));
+       //val.metadata = inObj.template;
+       // m_port = inObj;
+        if(nodeSettings.jsonRepresentation != null && !nodeSettings.jsonRepresentation.equals("")) {
+          joinerProxyValue.setJsonRepresentation(nodeSettings.jsonRepresentation);
+        }
+        exec.setProgress(1);
+      }
+
+      // Takes modified metadata from val
+      // outObj.template = val.metadata;
+      List <JoinRelation> joinerRelation = joinerProxyValue.getJoinRelations();
+      for(JoinRelation jr :joinerRelation) {
+        System.out.println(jr.getSourceParam().name);
+        System.out.println(jr.getTargetParam().name);
+      }
+      nodeSettings.jsonRepresentation = joinerProxyValue.getJsonRepresentation();
+    }
+    
+    
     return new PortObject[] {outObj};
   }
 
@@ -127,14 +158,20 @@ final class JoinerNodeModel
   protected void useCurrentValueAsDefault() {}
 
   @Override
-  protected void saveSettingsTo(NodeSettingsWO settings) {}
+  protected void saveSettingsTo(NodeSettingsWO settings) {
+    nodeSettings.save(settings);
+  }
+
+  @Override
+  protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
+      throws InvalidSettingsException {
+    nodeSettings.load(settings);
+  }
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
-  @Override
-  protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
-      throws InvalidSettingsException {}
+ 
 
   @Override
   public PortObject[] getInternalPortObjects() {

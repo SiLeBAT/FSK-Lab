@@ -39,7 +39,15 @@ class JoinerViewValue extends JSONViewContent {
   private ParameterizedModel firstModel;
   private ParameterizedModel secondModel;
   private List<JoinRelation> joinRelations = new ArrayList<JoinRelation>();
- 
+  private String jsonRepresentation;
+
+  public String getJsonRepresentation() {
+    return jsonRepresentation;
+  }
+
+  public void setJsonRepresentation(String jsonRepresentation) {
+    this.jsonRepresentation = jsonRepresentation;
+  }
 
   public ParameterizedModel getFirstModel() {
     return firstModel;

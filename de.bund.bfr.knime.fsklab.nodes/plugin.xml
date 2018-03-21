@@ -30,6 +30,15 @@
       specClass="de.bund.bfr.knime.fsklab.FskPortObjectSpec"
       specSerializer="de.bund.bfr.knime.fsklab.FskPortObjectSpec$Serializer">
     </portType>
+    <portType
+      color="FF4500"
+      hidden="false"
+      name="Combined FSK object"
+      objectClass="de.bund.bfr.knime.fsklab.CombinedFskPortObject"
+      objectSerializer="de.bund.bfr.knime.fsklab.CombinedFskPortObject$Serializer"
+      specClass="de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec"
+      specSerializer="de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec$Serializer">
+    </portType>
    </extension>
    
    <!-- Preference initializer for custom R -->

@@ -20,7 +20,9 @@ joiner = function() {
         create_body();
     };
 
-
+    joinerNode.getComponentValue = function() {
+        return _viewValue;
+    };
    
 
     return joinerNode;
@@ -37,6 +39,7 @@ joiner = function() {
     
     function drawWorkflow() {
     	 	var graph = new joint.dia.Graph;
+    	 	
 
     	    var paper = new joint.dia.Paper({
 
@@ -202,6 +205,7 @@ joiner = function() {
     	        	if(targetParameter != undefined){
     	        		
     	        		_viewValue.joinRelations.push({sourceParam:sourceParameter,targetParam:targetParameter});
+    	        		_viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
     	        	}
     	        	
     	        }
@@ -210,9 +214,13 @@ joiner = function() {
 
     	    
     	    
-    	  
-
-    	    graph.addCells([firstModelTojoin, secondModelToJoin]);
+    	    if(_viewValue.jsonRepresentation != undefined){
+    	    	
+    	    	graph.fromJSON(JSON.parse(_viewValue.jsonRepresentation));
+    	    }else{
+    	    	graph.addCells([firstModelTojoin, secondModelToJoin]);
+    	    }
+    	    
     	   
     	    
  

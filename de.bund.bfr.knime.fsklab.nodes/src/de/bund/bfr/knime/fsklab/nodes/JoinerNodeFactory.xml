@@ -2,21 +2,21 @@
 <knimeNode icon="joiner.png" type="Source" deprecated="false"
 	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
-	<name>Joiner JS</name>
+	<name>FSK Joiner</name>
 
-	<shortDescription>Edit the Joiner in an FSK object</shortDescription>
+	<shortDescription>Joiner of FSK objects</shortDescription>
 
 	<fullDescription>
 		<intro>
-			Enables the joining of two models.
+			Joins two FSK objects and produces Combined FSK Object which keeps both of the provided FSK Objects. 
 		</intro>
 	</fullDescription>
 	<interactiveView name="FSK Joiner">
-		JavaScript view to Join two models.
+			JavaScript view to join two models.
 	</interactiveView>
 	<ports>
-		<inPort name="FSK object" index="0">FSK object</inPort>
-		<inPort name="FSK object" index="0">FSK object</inPort>
-		<outPort name="FSK object" index="0">Joined FSK object</outPort>
+		<inPort name="FSK object" index="0">FSK object (required)</inPort>
+		<inPort name="FSK object" index="1">FSK object (required)</inPort>
+		<outPort name="Combined FSK object" index="0">Combined FSK object</outPort>
 	</ports>
 </knimeNode>

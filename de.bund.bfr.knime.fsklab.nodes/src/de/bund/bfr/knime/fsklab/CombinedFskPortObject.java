@@ -100,70 +100,49 @@ import ezvcard.property.StructuredName;
  * 
  * @author Miguel Alba, BfR, Berlin.
  */
-public class FskPortObject implements PortObject {
+public class CombinedFskPortObject extends FskPortObject {
+  
+  final FskPortObject firstFskPortObject ;
+  final FskPortObject secondFskPortObject ;
+  List<JoinRelation> joinerRelation ;
+ 
 
-  /**
-   * Convenience access member for <code>new PortType(FSKPortObject.class)</code>
-   */
+  public List<JoinRelation> getJoinerRelation() {
+    return joinerRelation;
+  }
+  public void setJoinerRelation(List<JoinRelation> joinerRelation) {
+    this.joinerRelation = joinerRelation;
+  }
+
   public static final PortType TYPE =
-      PortTypeRegistry.getInstance().getPortType(FskPortObject.class);
+      PortTypeRegistry.getInstance().getPortType(CombinedFskPortObject.class);
   public static final PortType TYPE_OPTIONAL =
-      PortTypeRegistry.getInstance().getPortType(FskPortObject.class, true);
+      PortTypeRegistry.getInstance().getPortType(CombinedFskPortObject.class, true);
 
   public static final String[] RESOURCE_EXTENSIONS = new String[] {"txt", "RData", "csv"};
 
-  /** Model script. */
-  public String model;
-
-  /** Parameters script. */
-  public String param;
-
-  /** Visualization script. */
-  public String viz;
-
-  /** Model meta data encoded as a RAKIP Generic model. */
-  public GenericModel genericModel;
-
-  /** Paths to resources: plain text files and R workspace files (.rdata). */
-  public final Path workingDirectory;
-
-  /**
-   * R workspace file with the results of running the model. It may be null if the model has not
-   * been run.
-   */
-  public Path workspace;
-
-  /** List of library files. Files of the libraries used by the model. */
-  public final Set<File> libs;
-
   private static int numOfInstances = 0;
-
-  public int objectNum;
-
-  public final List<FskSimulation> simulations = new ArrayList<>();
 
   private static ResourceBundle bundle =
       ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
 
-  public FskPortObject(final String model, final String param, final String viz,
+  public CombinedFskPortObject(final String model, final String param, final String viz,
       final GenericModel genericModel, final Path workspace, final Set<File> libs,
-      final Path workingDirectory) throws IOException {
-    this.model = model;
-    this.param = param;
-    this.viz = viz;
-    this.genericModel = genericModel;
-    this.workspace = workspace;
-    this.libs = libs;
-
-    this.workingDirectory = workingDirectory;
-
+      final Path workingDirectory, final FskPortObject firstFskPortObject,final FskPortObject secondFskPortObject) throws IOException {
+    super(model, param, viz, genericModel, workspace, libs, workingDirectory);
+    this.firstFskPortObject = firstFskPortObject;
+    this.secondFskPortObject = secondFskPortObject;
     objectNum = numOfInstances;
     numOfInstances += 1;
   }
-  public FskPortObject(final Path workingDirectory, final Set<File> libs) throws IOException {
-    this.workingDirectory = workingDirectory;
-    this.libs = libs;
+  public CombinedFskPortObject(final Path workingDirectory, final Set<File> libs, final FskPortObject firstFskPortObject,final FskPortObject secondFskPortObject) throws IOException {
+    super( workingDirectory, libs);
+    this.firstFskPortObject = firstFskPortObject;
+    this.secondFskPortObject = secondFskPortObject;
+    objectNum = numOfInstances;
+    numOfInstances += 1;
   }
+
   @Override
   public FskPortObjectSpec getSpec() {
     return FskPortObjectSpec.INSTANCE;
@@ -171,71 +150,93 @@ public class FskPortObject implements PortObject {
 
   @Override
   public String getSummary() {
-    return "FSK Object";
+    return "Combined FSK Object";
   }
 
   /**
    * Serializer used to save this port object.
    * 
-   * @return a {@link FskPortObject}.
+   * @return a {@link CombinedFskPortObject}.
    */
-  public static final class Serializer extends PortObjectSerializer<FskPortObject> {
+  public static final class Serializer extends PortObjectSerializer<CombinedFskPortObject> {
 
-    private static final String MODEL = "model.R";
-    private static final String PARAM = "param.R";
-    private static final String VIZ = "viz.R";
-    private static final String META_DATA = "metaData";
-    private static final String WORKSPACE = "workspace";
-    private static final String SIMULATION = "simulation";
-
+    private static final String MODEL1 = "model1.R";
+    private static final String PARAM1 = "param1.R";
+    private static final String VIZ1 = "viz1.R";
+    private static final String META_DATA1 = "metaData1";
+    private static final String WORKSPACE1 = "workspace1";
+    private static final String SIMULATION1 = "simulation1";
+    
+    private static final String MODEL2 = "model2.R";
+    private static final String PARAM2 = "param2.R";
+    private static final String VIZ2 = "viz2.R";
+    private static final String META_DATA2 = "metaData2";
+    private static final String WORKSPACE2 = "workspace2";
+    private static final String SIMULATION2 = "simulation2";
+    
+    private static final String JOINER_RELATION = "joinerRelation";
+    
     private static final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
     @Override
-    public void savePortObject(final FskPortObject portObject, final PortObjectZipOutputStream out,
+    public void savePortObject(final CombinedFskPortObject portObject, final PortObjectZipOutputStream out,
         final ExecutionMonitor exec) throws IOException, CanceledExecutionException {
+      if (!portObject.joinerRelation.isEmpty()) {
+        out.putNextEntry(new ZipEntry(JOINER_RELATION));
+
+        try {
+          ObjectOutputStream oos = new ObjectOutputStream(out);
+          oos.writeObject(portObject.joinerRelation);
+        } catch (IOException exception) {
+          // TODO: deal with exception
+        }
+        out.closeEntry();
+      }
+      
+      // First FSK Object
       // model entry (file with model script)
-      out.putNextEntry(new ZipEntry(MODEL));
-      IOUtils.write(portObject.model, out, "UTF-8");
+      out.putNextEntry(new ZipEntry(MODEL1));
+      IOUtils.write(portObject.firstFskPortObject.model, out, "UTF-8");
       out.closeEntry();
 
       // param entry (file with param script)
-      out.putNextEntry(new ZipEntry(PARAM));
-      IOUtils.write(portObject.param, out, "UTF-8");
+      out.putNextEntry(new ZipEntry(PARAM1));
+      IOUtils.write(portObject.firstFskPortObject.param, out, "UTF-8");
       out.closeEntry();
 
       // viz entry (file with visualization script)
-      out.putNextEntry(new ZipEntry(VIZ));
-      IOUtils.write(portObject.viz, out, "UTF-8");
+      out.putNextEntry(new ZipEntry(VIZ1));
+      IOUtils.write(portObject.firstFskPortObject.viz, out, "UTF-8");
       out.closeEntry();
 
       // template entry (file with model meta data)
-      if (portObject.genericModel != null) {
-        out.putNextEntry(new ZipEntry(META_DATA));
-        final String stringVal = objectMapper.writeValueAsString(portObject.genericModel);
+      if (portObject.firstFskPortObject.genericModel != null) {
+        out.putNextEntry(new ZipEntry(META_DATA1));
+        final String stringVal = objectMapper.writeValueAsString(portObject.firstFskPortObject.genericModel);
         IOUtils.write(stringVal, out, "UTF-8");
         out.closeEntry();
       }
 
       // workspace entry
-      if (portObject.workspace != null) {
-        out.putNextEntry(new ZipEntry(WORKSPACE));
-        Files.copy(portObject.workspace, out);
+      if (portObject.firstFskPortObject.workspace != null) {
+        out.putNextEntry(new ZipEntry(WORKSPACE1));
+        Files.copy(portObject.firstFskPortObject.workspace, out);
         out.closeEntry();
       }
 
       // libraries
-      if (!portObject.libs.isEmpty()) {
-        out.putNextEntry(new ZipEntry("library.list"));
-        List<String> libNames = portObject.libs.stream().map(f -> f.getName().split("\\_")[0])
+      if (!portObject.firstFskPortObject.libs.isEmpty()) {
+        out.putNextEntry(new ZipEntry("library1.list"));
+        List<String> libNames = portObject.firstFskPortObject.libs.stream().map(f -> f.getName().split("\\_")[0])
             .collect(Collectors.toList());
         IOUtils.writeLines(libNames, "\n", out, StandardCharsets.UTF_8);
         out.closeEntry();
       }
 
       // Save resources
-      final List<Path> resources =
-          Files.list(portObject.workingDirectory).collect(Collectors.toList());
-      for (final Path resource : resources) {
+      final List<Path> resources1 =
+          Files.list(portObject.firstFskPortObject.workingDirectory).collect(Collectors.toList());
+      for (final Path resource : resources1) {
         final String filename = resource.getFileName().toString();
 
         if (FilenameUtils.isExtension(filename, RESOURCE_EXTENSIONS)) {
@@ -246,12 +247,76 @@ public class FskPortObject implements PortObject {
       }
 
       // Save simulations
-      if (!portObject.simulations.isEmpty()) {
-        out.putNextEntry(new ZipEntry(SIMULATION));
+      if (!portObject.firstFskPortObject.simulations.isEmpty()) {
+        out.putNextEntry(new ZipEntry(SIMULATION1));
 
         try {
           ObjectOutputStream oos = new ObjectOutputStream(out);
-          oos.writeObject(portObject.simulations);
+          oos.writeObject(portObject.firstFskPortObject.simulations);
+        } catch (IOException exception) {
+          // TODO: deal with exception
+        }
+        out.closeEntry();
+      }
+      //Second FSK Object
+      out.putNextEntry(new ZipEntry(MODEL2));
+      IOUtils.write(portObject.secondFskPortObject.model, out, "UTF-8");
+      out.closeEntry();
+
+      // param entry (file with param script)
+      out.putNextEntry(new ZipEntry(PARAM2));
+      IOUtils.write(portObject.secondFskPortObject.param, out, "UTF-8");
+      out.closeEntry();
+
+      // viz entry (file with visualization script)
+      out.putNextEntry(new ZipEntry(VIZ2));
+      IOUtils.write(portObject.secondFskPortObject.viz, out, "UTF-8");
+      out.closeEntry();
+
+      // template entry (file with model meta data)
+      if (portObject.secondFskPortObject.genericModel != null) {
+        out.putNextEntry(new ZipEntry(META_DATA2));
+        final String stringVal = objectMapper.writeValueAsString(portObject.secondFskPortObject.genericModel);
+        IOUtils.write(stringVal, out, "UTF-8");
+        out.closeEntry();
+      }
+
+      // workspace entry
+      if (portObject.secondFskPortObject.workspace != null) {
+        out.putNextEntry(new ZipEntry(WORKSPACE2));
+        Files.copy(portObject.secondFskPortObject.workspace, out);
+        out.closeEntry();
+      }
+
+      // libraries
+      if (!portObject.secondFskPortObject.libs.isEmpty()) {
+        out.putNextEntry(new ZipEntry("library2.list"));
+        List<String> libNames = portObject.secondFskPortObject.libs.stream().map(f -> f.getName().split("\\_")[0])
+            .collect(Collectors.toList());
+        IOUtils.writeLines(libNames, "\n", out, StandardCharsets.UTF_8);
+        out.closeEntry();
+      }
+
+      // Save resources
+      final List<Path> resources2 =
+          Files.list(portObject.secondFskPortObject.workingDirectory).collect(Collectors.toList());
+      for (final Path resource : resources2) {
+        final String filename = resource.getFileName().toString();
+
+        if (FilenameUtils.isExtension(filename, RESOURCE_EXTENSIONS)) {
+          out.putNextEntry(new ZipEntry(filename));
+          Files.copy(resource, out);
+          out.closeEntry();
+        }
+      }
+
+      // Save simulations
+      if (!portObject.secondFskPortObject.simulations.isEmpty()) {
+        out.putNextEntry(new ZipEntry(SIMULATION2));
+
+        try {
+          ObjectOutputStream oos = new ObjectOutputStream(out);
+          oos.writeObject(portObject.secondFskPortObject.simulations);
         } catch (IOException exception) {
           // TODO: deal with exception
         }
@@ -263,36 +328,51 @@ public class FskPortObject implements PortObject {
 
     @Override
     @SuppressWarnings("unchecked")
-    public FskPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
+    public CombinedFskPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
         ExecutionMonitor exec) throws IOException, CanceledExecutionException {
+      List <JoinRelation> joinerRelation = new ArrayList<JoinRelation>();
+      // First FSK Object
+      String modelScript1 = "";
+      String parametersScript1 = "";
+      String visualizationScript1 = "";
+      GenericModel genericModel1 = null;
+      Path workspacePath1 = FileUtil.createTempFile("workspace", ".r").toPath();
+      Set<File> libs1 = new HashSet<>();
 
-      String modelScript = "";
-      String parametersScript = "";
-      String visualizationScript = "";
-      GenericModel genericModel = null;
-      Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
-      Set<File> libs = new HashSet<>();
+      Path workingDirectory1 = FileUtil.createTempDir("workingDirectory").toPath();
 
-      Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
+      List<FskSimulation> simulations1 = new ArrayList<>();
+      
+      
+      // Second FSK Object
+      String modelScript2 = "";
+      String parametersScript2 = "";
+      String visualizationScript2 = "";
+      GenericModel genericModel2 = null;
+      Path workspacePath2 = FileUtil.createTempFile("workspace", ".r").toPath();
+      Set<File> libs2 = new HashSet<>();
 
-      List<FskSimulation> simulations = new ArrayList<>();
+      Path workingDirectory2 = FileUtil.createTempDir("workingDirectory").toPath();
 
+      List<FskSimulation> simulations2 = new ArrayList<>();
+      
+      
       ZipEntry entry;
       while ((entry = in.getNextEntry()) != null) {
         String entryName = entry.getName();
-
-        if (entryName.equals(MODEL)) {
-          modelScript = IOUtils.toString(in, "UTF-8");
-        } else if (entryName.equals(PARAM)) {
-          parametersScript = IOUtils.toString(in, "UTF-8");
-        } else if (entryName.equals(VIZ)) {
-          visualizationScript = IOUtils.toString(in, "UTF-8");
-        } else if (entryName.equals(META_DATA)) {
+        // First FSK Object entries
+        if (entryName.equals(MODEL1)) {
+          modelScript1 = IOUtils.toString(in, "UTF-8");
+        } else if (entryName.equals(PARAM1)) {
+          parametersScript1 = IOUtils.toString(in, "UTF-8");
+        } else if (entryName.equals(VIZ1)) {
+          visualizationScript1 = IOUtils.toString(in, "UTF-8");
+        } else if (entryName.equals(META_DATA1)) {
           final String metaDataAsString = IOUtils.toString(in, "UTF-8");
-          genericModel = objectMapper.readValue(metaDataAsString, GenericModel.class);
-        } else if (entryName.equals(WORKSPACE)) {
-          Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
-        } else if (entryName.equals("library.list")) {
+          genericModel1 = objectMapper.readValue(metaDataAsString, GenericModel.class);
+        } else if (entryName.equals(WORKSPACE1)) {
+          Files.copy(in, workspacePath1, StandardCopyOption.REPLACE_EXISTING);
+        } else if (entryName.equals("library1.list")) {
           List<String> libNames = IOUtils.readLines(in, "UTF-8");
 
           try {
@@ -308,7 +388,7 @@ public class FskPortObject implements PortObject {
               libRegistry.installLibs(missingLibs);
             }
             // Adds to libs the Paths of the libraries converted to Files
-            libRegistry.getPaths(libNames).forEach(p -> libs.add(p.toFile()));
+            libRegistry.getPaths(libNames).forEach(p -> libs1.add(p.toFile()));
           } catch (RException | REXPMismatchException error) {
             throw new IOException(error.getMessage());
           }
@@ -317,14 +397,74 @@ public class FskPortObject implements PortObject {
         // Load resources
         else if (FilenameUtils.isExtension(entryName, RESOURCE_EXTENSIONS)) {
           // Creates path to resource. E.g.: <workingDir>/resource.txt
-          Path resource = workingDirectory.resolve(entryName);
+          Path resource = workingDirectory1.resolve(entryName);
           Files.copy(in, resource);
         }
 
-        else if (entryName.equals(SIMULATION)) {
+        else if (entryName.equals(SIMULATION1)) {
           try {
             ObjectInputStream ois = new ObjectInputStream(in);
-            simulations = ((List<FskSimulation>) ois.readObject());
+            simulations1 = ((List<FskSimulation>) ois.readObject());
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
+        }
+        
+        // Second FSK Object entries
+       
+
+        if (entryName.equals(MODEL2)) {
+          modelScript2 = IOUtils.toString(in, "UTF-8");
+        } else if (entryName.equals(PARAM2)) {
+          parametersScript2 = IOUtils.toString(in, "UTF-8");
+        } else if (entryName.equals(VIZ2)) {
+          visualizationScript2 = IOUtils.toString(in, "UTF-8");
+        } else if (entryName.equals(META_DATA2)) {
+          final String metaDataAsString = IOUtils.toString(in, "UTF-8");
+          genericModel2 = objectMapper.readValue(metaDataAsString, GenericModel.class);
+        } else if (entryName.equals(WORKSPACE2)) {
+          Files.copy(in, workspacePath2, StandardCopyOption.REPLACE_EXISTING);
+        } else if (entryName.equals("library2.list")) {
+          List<String> libNames = IOUtils.readLines(in, "UTF-8");
+
+          try {
+            LibRegistry libRegistry = LibRegistry.instance();
+            // Install missing libraries
+            List<String> missingLibs = new LinkedList<>();
+            for (String lib : libNames) {
+              if (!libRegistry.isInstalled(lib)) {
+                missingLibs.add(lib);
+              }
+            }
+            if (!missingLibs.isEmpty()) {
+              libRegistry.installLibs(missingLibs);
+            }
+            // Adds to libs the Paths of the libraries converted to Files
+            libRegistry.getPaths(libNames).forEach(p -> libs2.add(p.toFile()));
+          } catch (RException | REXPMismatchException error) {
+            throw new IOException(error.getMessage());
+          }
+        }
+
+        // Load resources
+        else if (FilenameUtils.isExtension(entryName, RESOURCE_EXTENSIONS)) {
+          // Creates path to resource. E.g.: <workingDir>/resource.txt
+          Path resource = workingDirectory2.resolve(entryName);
+          Files.copy(in, resource);
+        }
+
+        else if (entryName.equals(SIMULATION2)) {
+          try {
+            ObjectInputStream ois = new ObjectInputStream(in);
+            simulations2 = ((List<FskSimulation>) ois.readObject());
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
+        }
+        else if (entryName.equals(JOINER_RELATION)) {
+          try {
+            ObjectInputStream ois = new ObjectInputStream(in);
+            joinerRelation = ((List<JoinRelation>) ois.readObject());
           } catch (ClassNotFoundException e) {
             e.printStackTrace();
           }
@@ -332,14 +472,28 @@ public class FskPortObject implements PortObject {
       }
 
       in.close();
+      final FskPortObject fportObj = new FskPortObject(modelScript1, parametersScript1,
+          visualizationScript1, genericModel1, workspacePath1, libs1, workingDirectory1);
 
-      final FskPortObject portObj = new FskPortObject(modelScript, parametersScript,
-          visualizationScript, genericModel, workspacePath, libs, workingDirectory);
-
-      if (!simulations.isEmpty()) {
-        portObj.simulations.addAll(simulations);
+      if (!simulations1.isEmpty()) {
+        fportObj.simulations.addAll(simulations1);
       }
+      
+      
+      final FskPortObject sportObj = new FskPortObject(modelScript2, parametersScript2,
+          visualizationScript2, genericModel2, workspacePath2, libs2, workingDirectory2);
 
+      if (!simulations2.isEmpty()) {
+        sportObj.simulations.addAll(simulations2);
+      }
+      
+      
+      
+      final CombinedFskPortObject portObj = new CombinedFskPortObject(FileUtil.createTempDir("combined").toPath(),new HashSet<>(),fportObj,sportObj);
+      if (!joinerRelation.isEmpty()) {
+        portObj.setJoinerRelation(joinerRelation);
+      }
+     
       return portObj;
     }
 
@@ -348,21 +502,38 @@ public class FskPortObject implements PortObject {
   /** {Override} */
   @Override
   public JComponent[] getViews() {
-    JPanel modelScriptPanel = new ScriptPanel("Model script", model, false);
-    JPanel paramScriptPanel = new ScriptPanel("Param script", param, false);
-    JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false);
+    JPanel modelScriptPanel1 = new ScriptPanel("Model1 script", firstFskPortObject.model, false);
+    JPanel paramScriptPanel1 = new ScriptPanel("Param1 script", firstFskPortObject.param, false);
+    JPanel vizScriptPanel1 = new ScriptPanel("Visualization script", firstFskPortObject.viz, false);
 
-    final JScrollPane metaDataPane =
-        new JScrollPane(genericModel != null ? createTree(genericModel) : new JTree());
-    metaDataPane.setName("Meta data");
+    final JScrollPane metaDataPane1 =
+        new JScrollPane(firstFskPortObject.genericModel != null ? createTree(firstFskPortObject.genericModel) : new JTree());
+    metaDataPane1.setName("Meta1 data");
 
-    final JPanel librariesPanel = UIUtils.createLibrariesPanel(libs);
-    final JPanel resourcesPanel = createResourcesViewPanel(workingDirectory);
+    final JPanel librariesPanel1 = UIUtils.createLibrariesPanel(firstFskPortObject.libs);
+    final JPanel resourcesPanel1 = createResourcesViewPanel(firstFskPortObject.workingDirectory);
 
-    JPanel simulationsPanel = new SimulationsPanel();
+    JPanel simulationsPanel1 = new SimulationsPanel(firstFskPortObject,1);
+    
+    //
+    JPanel modelScriptPanel2 = new ScriptPanel("Model2 script", secondFskPortObject.model, false);
+    JPanel paramScriptPanel2 = new ScriptPanel("Param2 script", secondFskPortObject.param, false);
+    JPanel vizScriptPanel2 = new ScriptPanel("Visualization2 script", secondFskPortObject.viz, false);
 
-    return new JComponent[] {modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
-        librariesPanel, resourcesPanel, simulationsPanel};
+    final JScrollPane metaDataPane2 =
+        new JScrollPane(secondFskPortObject.genericModel != null ? createTree(secondFskPortObject.genericModel) : new JTree());
+    metaDataPane2.setName("Meta2 data");
+
+    final JPanel librariesPanel2 = UIUtils.createLibrariesPanel(secondFskPortObject.libs);
+    final JPanel resourcesPanel2 = createResourcesViewPanel(secondFskPortObject.workingDirectory);
+
+    JPanel simulationsPanel2 = new SimulationsPanel(secondFskPortObject,2);
+    
+    
+
+    return new JComponent[] {modelScriptPanel1, paramScriptPanel1, vizScriptPanel1, metaDataPane1,
+        librariesPanel1, resourcesPanel1, simulationsPanel1,modelScriptPanel2, paramScriptPanel2, vizScriptPanel2, metaDataPane2,
+        librariesPanel2, resourcesPanel2, simulationsPanel2};
   }
 
   // Metadata pane stuff
@@ -1095,10 +1266,10 @@ public class FskPortObject implements PortObject {
     private final ScriptPanel scriptPanel;
     private final FPanel simulationPanel;
 
-    public SimulationsPanel() {
+    public SimulationsPanel(FskPortObject portObject,int modelsimulation) {
 
       // Panel to show parameters (show initially the simulation 0)
-      FskSimulation defaultSimulation = simulations.get(0);
+      FskSimulation defaultSimulation = portObject.simulations.get(0);
       JPanel formPanel = createFormPane(defaultSimulation);
       parametersPane = new JScrollPane(formPanel);
 
@@ -1108,10 +1279,10 @@ public class FskPortObject implements PortObject {
 
       simulationPanel = new FPanel();
 
-      createUI();
+      createUI(portObject,modelsimulation);
     }
 
-    private void createUI() {
+    private void createUI(FskPortObject portObject,int modelsimulation) {
 
       simulationPanel.setLayout(new BoxLayout(simulationPanel, BoxLayout.Y_AXIS));
       simulationPanel.add(parametersPane);
@@ -1119,7 +1290,7 @@ public class FskPortObject implements PortObject {
 
       // Panel to select simulation
       String[] simulationNames =
-          simulations.stream().map(FskSimulation::getName).toArray(String[]::new);
+          portObject.simulations.stream().map(FskSimulation::getName).toArray(String[]::new);
       JList<String> list = new JList<>(simulationNames);
       list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       list.addListSelectionListener(new ListSelectionListener() {
@@ -1133,7 +1304,7 @@ public class FskPortObject implements PortObject {
             // Update parameters panel
             simulationPanel.remove(parametersPane);
 
-            FskSimulation selectedSimulation = simulations.get(selectedIndex);
+            FskSimulation selectedSimulation = portObject.simulations.get(selectedIndex);
             JPanel formPanel = createFormPane(selectedSimulation);
 
             parametersPane = new JScrollPane(formPanel);
@@ -1153,7 +1324,7 @@ public class FskPortObject implements PortObject {
 
       // Build simulations panel
       setLayout(new BorderLayout());
-      setName("Simulations");
+      setName("Simulations"+modelsimulation);
       add(browsePanel, BorderLayout.WEST);
       add(simulationPanel, BorderLayout.CENTER);
     }
