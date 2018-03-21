@@ -143,9 +143,10 @@ final class JoinerNodeModel
         System.out.println(jr.getTargetParam().name);
       }
       nodeSettings.jsonRepresentation = joinerProxyValue.getJsonRepresentation();
+      outObj.setJoinerRelation(joinerRelation);
     }
     
-    
+   
     return new PortObject[] {outObj};
   }
 

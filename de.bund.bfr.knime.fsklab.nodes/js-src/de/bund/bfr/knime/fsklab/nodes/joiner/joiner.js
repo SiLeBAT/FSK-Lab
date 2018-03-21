@@ -6,7 +6,7 @@ joiner = function() {
         version: '1.0.0'
     };
     joinerNode.name = 'FSK Joiner';
-    
+    var paper;
     var _firstModel;
     var _secondModel;
     var _viewValue;
@@ -21,6 +21,8 @@ joiner = function() {
     };
 
     joinerNode.getComponentValue = function() {
+    	console.log(paper.svg);
+    	
         return _viewValue;
     };
    
@@ -41,7 +43,7 @@ joiner = function() {
     	 	var graph = new joint.dia.Graph;
     	 	
 
-    	    var paper = new joint.dia.Paper({
+    	 	 paper = new joint.dia.Paper({
 
     	        el: document.getElementById('paper'),
     	        width: 1000,
@@ -206,6 +208,11 @@ joiner = function() {
     	        		
     	        		_viewValue.joinRelations.push({sourceParam:sourceParameter,targetParam:targetParameter});
     	        		_viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
+    	        		//_viewValue.svgRepresentation = paper.svg;
+    	        		
+    	        		var serializer = new XMLSerializer();
+    	        		var str = serializer.serializeToString(paper.svg);
+    	        		
     	        	}
     	        	
     	        }

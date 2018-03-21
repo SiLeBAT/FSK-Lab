@@ -29,7 +29,6 @@ import de.bund.bfr.knime.fsklab.ParameterizedModel;
 
 
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 class JoinerViewValue extends JSONViewContent {
   
  
