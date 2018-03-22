@@ -930,7 +930,7 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "descriptionLabel", parameter.description);
     add(node, prefix + "unitLabel", parameter.unit);
     add(node, prefix + "unitCategoryLabel", parameter.unitCategory);
-    add(node, prefix + "dataTypeLabel", parameter.dataType);
+    add(node, prefix + "dataTypeLabel", parameter.dataType.toString());
     add(node, prefix + "sourceLabel", parameter.source);
     add(node, prefix + "subjectLabel", parameter.subject);
     add(node, prefix + "distributionLabel", parameter.distribution);

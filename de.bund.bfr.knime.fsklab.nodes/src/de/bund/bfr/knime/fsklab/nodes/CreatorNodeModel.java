@@ -74,6 +74,7 @@ import de.bund.bfr.knime.fsklab.rakip.Laboratory;
 import de.bund.bfr.knime.fsklab.rakip.ModelCategory;
 import de.bund.bfr.knime.fsklab.rakip.ModelMath;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
+import de.bund.bfr.knime.fsklab.rakip.Parameter.DataTypes;
 import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.Study;
@@ -199,9 +200,33 @@ class CreatorNodeModel extends NoInternalsModel {
 
               try {
                 REXP rexp = controller.eval(p.name, true);
-                if (rexp.isNumeric()) {
+
+                // check the type for a Vector Or Matrix of String or number
+                if (rexp.isVector() && rexp.dim() != null) {
+
+                  int nrow = rexp.dim()[0];
+                  int ncol = rexp.dim()[1];
+
+                  if (rexp.isNumeric()) {
+                    p.dataType = Parameter.DataTypes.MatrixOfNumbers;
+                    p.value = buildRMatrix(rexp.asDoubleMatrix(), nrow, ncol);
+                  } else {
+                    p.dataType = Parameter.DataTypes.MatrixOfStrings;
+                    p.value = buildRMatrix(rexp.asStrings(), nrow, ncol);
+                  }
+
+                } else if (rexp.isVector() && rexp.length() > 1) {
+
+                  if (rexp.isNumeric()) {
+                    p.dataType = Parameter.DataTypes.VectorOfNumbers;
+                    p.value = buildRVector(rexp.asDoubles());
+                  } else {
+                    p.dataType = Parameter.DataTypes.VectorOfStrings;
+                    p.value = buildRVector(rexp.asStrings());
+                  }
+                } else if (rexp.isNumeric()) {
                   p.value = Double.toString(rexp.asDouble());
-                  p.dataType = "Double";
+                  p.dataType = Parameter.DataTypes.Double;
                 }
               } catch (RException | REXPMismatchException exception) {
                 // does nothing. Just leave the value blank.
@@ -260,6 +285,88 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     return new PortObject[] {portObj};
+  }
+
+  String buildRVector(final List<Object> ds, boolean isMatrix, Boolean isString, int length) {
+
+    if (!isMatrix) {
+
+      if (!isString) {
+        // We need Object::toString since the passed list is of doubles
+        return "c(" + ds.stream().map(Object::toString).collect(Collectors.joining(",")) + ")";
+      } else {
+        return "c(" + ds.stream().map(it -> "'" + it + "'").collect(Collectors.joining(",")) + ")";
+      }
+    } else {
+      if (!isString) {
+        StringBuilder rMatrix = new StringBuilder();
+        rMatrix.append("matrix(   c(");
+        for (Object o : ds) {
+          double[] row = (double[]) o;
+          for (double col : row) {
+            rMatrix.append(col + ",");
+          }
+        }
+        String subStringOfrMatrix = rMatrix.substring(0, rMatrix.length() - 1);
+        rMatrix = new StringBuilder(subStringOfrMatrix);
+        rMatrix.append("),   nrow=" + ds.size() + ",  ncol=" + ((double[]) ds.get(0)).length
+            + ",    byrow = TRUE) ");
+        return rMatrix.toString();
+      } else {
+        StringBuilder rMatrix = new StringBuilder();
+        rMatrix.append("matrix(   c(");
+        for (Object o : ds) {
+          rMatrix.append("'" + o + "',");
+        }
+        String subStringOfrMatrix = rMatrix.substring(0, rMatrix.length() - 1);
+        rMatrix = new StringBuilder(subStringOfrMatrix);
+        rMatrix.append(
+            "),   nrow=" + length + ",  ncol=" + ds.size() / length + ",    byrow = TRUE) ");
+        return rMatrix.toString();
+      }
+    }
+  }
+
+  private String buildRVector(double[] doubles) {
+    String stringRepresentation = Arrays.toString(doubles); // String representation: [a, b, c]
+
+    // Remove opening and closing brackets [].
+    stringRepresentation = stringRepresentation.substring(0, stringRepresentation.length() - 1);
+
+    // Build R vector
+    return "c(" + stringRepresentation + ")";
+  }
+
+  private String buildRVector(String[] strings) {
+    String stringRepresentation = Arrays.toString(strings); // String representation: ["a", "b"]
+
+    // Remove opening and closing brackets
+    stringRepresentation = stringRepresentation.substring(0, stringRepresentation.length() - 1);
+
+    // Build R vector
+    return "c(" + stringRepresentation + ")";
+  }
+
+  private String buildRMatrix(double[][] matrix, int nrow, int ncol) {
+
+    String stringRepresentation = Arrays.deepToString(matrix);
+    stringRepresentation.replace("[", "(");
+    stringRepresentation.replace("]", ")");
+
+    // Build R matrix
+    return "matrix(c" + stringRepresentation + ", nrow=" + nrow + ", ncol=" + ncol
+        + ", byrow=TRUE)";
+  }
+
+  private String buildRMatrix(String[] matrix, int nrow, int ncol) {
+
+    String stringRepresentation = Arrays.deepToString(matrix);
+    stringRepresentation.replace("[", "(");
+    stringRepresentation.replace("]", ")");
+
+    // Build R matrix
+    return "matrix(c" + stringRepresentation + ", nrow=" + nrow + ", ncol=" + ncol
+        + ", byrow=TRUE)";
   }
 
   @Override
@@ -348,7 +455,7 @@ class CreatorNodeModel extends NoInternalsModel {
         param.name = depNames.get(i);
         param.unit = depUnits.get(i);
         param.unitCategory = "";
-        param.dataType = "";
+        param.dataType = DataTypes.Other;
 
         modelMath.parameter.add(param);
       }
@@ -365,7 +472,7 @@ class CreatorNodeModel extends NoInternalsModel {
         param.name = indepNames.get(i);
         param.unit = indepUnits.get(i);
         param.unitCategory = "";
-        param.dataType = "";
+        param.dataType = DataTypes.Other;
 
         modelMath.parameter.add(param);
       }
@@ -698,7 +805,7 @@ class CreatorNodeModel extends NoInternalsModel {
      *         - Publication author list in the P column. Type
      *         [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING]. Optional. The authors are
      *         defined with last name, name and joined with semicolons. Example:
-     *         `Ungaretti-Haberbeck,L;Plaza-Rodríguez,C;Desvignes,V`
+     *         `Ungaretti-Haberbeck,L;Plaza-Rodrï¿½guez,C;Desvignes,V`
      *
      *         - Publication title in the Q column. Type
      *         [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING]. Optional.
@@ -1117,7 +1224,14 @@ class CreatorNodeModel extends NoInternalsModel {
       param.type = getStringValue(sheet, row, RakipColumn.P);
       param.unit = getStringValue(sheet, row, RakipColumn.Q);
       param.unitCategory = getStringValue(sheet, row, RakipColumn.R);
-      param.dataType = getStringValue(sheet, row, RakipColumn.S);
+
+      try {
+        String dataTypeAsString = getStringValue(sheet, row, RakipColumn.S);
+        param.dataType = DataTypes.valueOf(dataTypeAsString);
+      } catch (IllegalArgumentException ex) {
+        param.dataType = DataTypes.Other;
+      }
+
       param.source = getStringValue(sheet, row, RakipColumn.T);
       param.subject = getStringValue(sheet, row, RakipColumn.U);
       param.distribution = getStringValue(sheet, row, RakipColumn.V);
@@ -1657,7 +1771,14 @@ class CreatorNodeModel extends NoInternalsModel {
       param.type = values[row][RakipColumn.P.ordinal()];
       param.unit = values[row][RakipColumn.Q.ordinal()];
       param.unitCategory = values[row][RakipColumn.R.ordinal()];
-      param.dataType = values[row][RakipColumn.S.ordinal()];
+
+      try {
+        String dataTypeAsString = values[row][RakipColumn.S.ordinal()];
+        param.dataType = DataTypes.valueOf(dataTypeAsString);
+      } catch (IllegalArgumentException ex) {
+        param.dataType = DataTypes.Other;
+      }
+
       param.source = values[row][RakipColumn.T.ordinal()];
       param.subject = values[row][RakipColumn.U.ordinal()];
       param.distribution = values[row][RakipColumn.V.ordinal()];
