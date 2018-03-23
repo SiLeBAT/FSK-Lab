@@ -100,7 +100,6 @@
       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/lodash.min.js" type="JAVASCRIPT" />
       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/backbone.min.js" type="JAVASCRIPT" />
    
-   
    	  <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs.js" type="JAVASCRIPT" />
       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/jointjs.css" type="CSS"  />
       

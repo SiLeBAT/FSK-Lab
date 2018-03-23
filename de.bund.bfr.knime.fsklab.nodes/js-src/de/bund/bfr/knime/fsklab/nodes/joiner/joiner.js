@@ -21,7 +21,10 @@ joiner = function() {
     };
 
     joinerNode.getComponentValue = function() {
-    	console.log(paper.svg);
+    	
+    	var serializer = new XMLSerializer();
+    	var str = serializer.serializeToString(paper.svg);
+		_viewValue.svgRepresentation  = str
     	
         return _viewValue;
     };
@@ -48,10 +51,12 @@ joiner = function() {
     	        el: document.getElementById('paper'),
     	        width: 1000,
     	        height: 1000,
-    	        gridSize: 1,
+    	        drawGrid: 'mesh',
+    	        gridSize: 10,
     	        model: graph,
     	        snapLinks: true,
-    	        linkPinning: false,
+    	        linkPinning: true,
+    	        drawGrid : true,
     	        embeddingMode: true,
     	        highlighting: {
     	            'default': {
@@ -78,22 +83,10 @@ joiner = function() {
     	            return sourceMagnet != targetMagnet;
     	        }
     	    });
-
-    	    var connect = function(source, sourcePort, target, targetPort) {
-    	    		
-    	        var link = new joint.shapes.devs.Link({
-    	            source: {
-    	                id: source.id,
-    	                port: sourcePort
-    	            },
-    	            target: {
-    	                id: target.id,
-    	                port: targetPort
-    	            }
-    	        });
-
-    	        link.addTo(graph).reparent();
-    	    };
+    	 	 
+    	 	
+    	 	 
+    	 	
 
     	    var firstModelInputParameters = [];
     	    var firstModelOutputParameters= [];
@@ -148,7 +141,7 @@ joiner = function() {
     	        rect: {  rx: 5, ry: 5, 'stroke-width': 2, stroke: 'black' },
     	        text: {
     	            text: _firstModel.modelID, 
-    	            'font-size': 18, 'font-weight': 'bold', 'font-variant': 'small-caps', 'text-transform': 'capitalize',margin:'20px',padding: '40px'
+    	            'font-size': 12, 'font-weight': 'bold', 'font-variant': 'small-caps', 'text-transform': 'capitalize',margin:'20px',padding: '40px'
     	        }
     	    });
 
@@ -184,11 +177,41 @@ joiner = function() {
     	        rect: {  rx: 5, ry: 5, 'stroke-width': 2, stroke: 'black' },
     	        text: {
     	            text: _secondModel.modelID, 
-    	            'font-size': 18, 'font-weight': 'bold', 'font-variant': 'small-caps', 'text-transform': 'capitalize',margin:'20px',padding: '40px'
+    	            'font-size': 12, 'font-weight': 'bold', 'font-variant': 'small-caps', 'text-transform': 'capitalize',margin:'20px',padding: '40px'
     	        }
     	    });
-    	    
+    	    paper.on('cell:pointerdown', function(cellView, evt) {
+    	        if (cellView.model.isLink()) {
+    	        	/*link = cellView
+    	        	ink.labels = " [{ position: 0.5, attrs: { text: { text: 'fancy label', fill: '#f6f6f6', 'font-family': 'sans-serif' }, rect: { stroke: '#7c68fc', 'stroke-width': 20, rx: 5, ry: 5 } }}]"*/
+    	        }
+    	    })
+    	    var link7 = new joint.dia.Link({
+			    source: { x: 400, y: 200 },
+			    target: { x: 740, y: 200 },
+			    attrs: {
+			        '.marker-source': { fill: '#4b4a67', stroke: '#4b4a67', d: 'M 10 0 L 0 5 L 10 10 z' },
+			        '.marker-target': { fill: '#4b4a67', stroke: '#4b4a67', d: 'M 10 0 L 0 5 L 10 10 z' }
+			    },
+			    labels: [
+			        { position: 0.5, attrs: { text: { text: 'fancy label', fill: '#f6f6f6', 'font-family': 'sans-serif' }, rect: { stroke: '#7c68fc', 'stroke-width': 20, rx: 5, ry: 5 } }}
+			    ]
+			});
+    
     	    graph.on('change:source change:target', function(link) {
+    	    	
+    	    	link.label(0, { 
+    	    		position: 0.5, 
+    	    		attrs: 
+    	    		{ 
+	    	    		text: { text: 'fancy label', fill: '#f6f6f6', 'font-family': 'sans-serif' },
+	    	    		rect: { stroke: '#7c68fc', 'stroke-width': 20, rx: 5, ry: 5 } 
+    	    		}
+    	    	}
+    	    	);
+    	    	//link.renderLabels();
+	        	//link.attributes.labels.push();
+    	    	console.log(link);
     	        var sourcePort = link.get('source').port;
     	        var sourceId = link.get('source').id;
     	        var targetPort = link.get('target').port;
@@ -210,12 +233,13 @@ joiner = function() {
     	        		_viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
     	        		//_viewValue.svgRepresentation = paper.svg;
     	        		
-    	        		var serializer = new XMLSerializer();
-    	        		var str = serializer.serializeToString(paper.svg);
+    	        		
+    	        		
     	        		
     	        	}
     	        	
     	        }
+    	        console.log(link);
     	    
     	    });
 
@@ -227,7 +251,7 @@ joiner = function() {
     	    }else{
     	    	graph.addCells([firstModelTojoin, secondModelToJoin]);
     	    }
-    	    
+    	    console.log(link7);
     	   
     	    
  

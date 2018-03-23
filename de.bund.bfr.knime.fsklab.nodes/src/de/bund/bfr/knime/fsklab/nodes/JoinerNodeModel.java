@@ -18,8 +18,18 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.util.HashSet;
 import java.util.List;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
+import org.apache.batik.util.XMLResourceDescriptor;
+import org.knime.base.data.xml.SvgCell;
+import org.knime.base.data.xml.SvgImageContent;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -28,9 +38,13 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.image.ImagePortObject;
+import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.node.web.ValidationError;
 import org.knime.core.util.FileUtil;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskPortObject;
@@ -52,7 +66,7 @@ final class JoinerNodeModel
  
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE,FskPortObject.TYPE};
-  private static final PortType[] OUT_TYPES = {CombinedFskPortObject.TYPE};
+  private static final PortType[] OUT_TYPES = {CombinedFskPortObject.TYPE,ImagePortObject.TYPE};
 
   private static final String VIEW_NAME =
       new JoinerNodeFactory().getInteractiveViewName();
@@ -105,7 +119,8 @@ final class JoinerNodeModel
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    return new PortObjectSpec[] { CombinedFskPortObjectSpec.INSTANCE };
+    ImagePortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
+    return new PortObjectSpec[] { CombinedFskPortObjectSpec.INSTANCE ,imageSpec};
   }
 
   @Override
@@ -114,7 +129,7 @@ final class JoinerNodeModel
     FskPortObject inObj1 = (FskPortObject) inObjects[0];
     FskPortObject inObj2 = (FskPortObject) inObjects[1];
     CombinedFskPortObject outObj = new CombinedFskPortObject(FileUtil.createTempDir("combined").toPath(),new HashSet<>(),inObj1,inObj2);
-    
+    ImagePortObject imagePort = null;
     // Clone input object
    
 
@@ -142,14 +157,38 @@ final class JoinerNodeModel
         System.out.println(jr.getSourceParam().name);
         System.out.println(jr.getTargetParam().name);
       }
-      nodeSettings.jsonRepresentation = joinerProxyValue.getJsonRepresentation();
+      nodeSettings.jsonRepresentation = joinerProxyValue.getSvgRepresentation();
       outObj.setJoinerRelation(joinerRelation);
+      imagePort = createSVGImagePortObject(joinerProxyValue.getSvgRepresentation());
     }
     
    
-    return new PortObject[] {outObj};
+    return new PortObject[] {outObj,imagePort};
   }
 
+  public ImagePortObject createSVGImagePortObject(String svgString) {
+    
+      ImagePortObject imagePort = null;
+      if(svgString == null || svgString.equals("")) {
+        svgString = "<svg xmlns=\"http://www.w3.org/2000/svg\"/>";
+      }
+      String xmlPrimer = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+      String svgPrimer = xmlPrimer + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\" "
+          + "\"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">";
+      String xmlString = null;
+      xmlString = svgPrimer + svgString;
+      try {
+        InputStream is = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
+        ImagePortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
+        
+        imagePort = new ImagePortObject(new SvgImageContent(is), imageSpec);
+      } catch (IOException e) {
+        //LOGGER.error("Creating SVG port object failed: " + e.getMessage(), e);
+      }
+          
+    return imagePort;
+   
+  }
   @Override
   protected void performReset() {
     m_port = null;

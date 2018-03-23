@@ -18,5 +18,6 @@
 		<inPort name="FSK object" index="0">FSK object (required)</inPort>
 		<inPort name="FSK object" index="1">FSK object (required)</inPort>
 		<outPort name="Combined FSK object" index="0">Combined FSK object</outPort>
+		<outPort name="Joining Diagram" index="1">Joining Diagram</outPort>
 	</ports>
 </knimeNode>

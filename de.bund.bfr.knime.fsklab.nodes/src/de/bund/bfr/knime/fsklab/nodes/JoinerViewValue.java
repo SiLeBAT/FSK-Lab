@@ -39,7 +39,7 @@ class JoinerViewValue extends JSONViewContent {
   private ParameterizedModel secondModel;
   private List<JoinRelation> joinRelations = new ArrayList<JoinRelation>();
   private String jsonRepresentation;
-
+  private String svgRepresentation;
   public String getJsonRepresentation() {
     return jsonRepresentation;
   }
@@ -50,6 +50,14 @@ class JoinerViewValue extends JSONViewContent {
 
   public ParameterizedModel getFirstModel() {
     return firstModel;
+  }
+
+  public String getSvgRepresentation() {
+    return svgRepresentation;
+  }
+
+  public void setSvgRepresentation(String svgRepresentation) {
+    this.svgRepresentation = svgRepresentation;
   }
 
   public void setFirstModel(ParameterizedModel firstModel) {
