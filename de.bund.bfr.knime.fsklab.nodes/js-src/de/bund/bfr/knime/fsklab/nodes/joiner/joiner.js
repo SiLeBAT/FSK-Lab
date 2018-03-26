@@ -36,7 +36,15 @@ joiner = function() {
     
     function create_body() {
         document.createElement("body");
-        $('body').append("<div id='paper'></div>");
+        
+        $('body').append(   "<div class='container-fluid'>" +
+				        		"<div class='row'>" +
+					        		"<div id='paper' class='col-sm-10'></div>" +
+					        		"<div class='col-sm-2'><div id='details' class='container'></div></div>" +
+				        		"</div>" +
+			        		"</div>");
+
+        //$('body').append("<div id='paper'></div>");
         drawWorkflow();
       
     }
@@ -49,8 +57,6 @@ joiner = function() {
     	 	 paper = new joint.dia.Paper({
 
     	        el: document.getElementById('paper'),
-    	        width: 1000,
-    	        height: 1000,
     	        drawGrid: 'mesh',
     	        gridSize: 10,
     	        model: graph,
@@ -58,6 +64,7 @@ joiner = function() {
     	        linkPinning: true,
     	        drawGrid : true,
     	        embeddingMode: true,
+    	        
     	        highlighting: {
     	            'default': {
     	                name: 'stroke',
@@ -72,7 +79,13 @@ joiner = function() {
     	                }
     	            }
     	        },
-
+    	        interactive: function(cellView) {
+    	            if (cellView.model instanceof joint.dia.Link) {
+    	                // Disable the default vertex add functionality on pointerdown.
+    	                return { vertexAdd: false };
+    	            }
+    	            return true;
+    	        },
     	        validateEmbedding: function(childView, parentView) {
 
     	            return parentView.model instanceof joint.shapes.devs.Coupled;
@@ -83,12 +96,30 @@ joiner = function() {
     	            return sourceMagnet != targetMagnet;
     	        }
     	    });
-    	 	 
-    	 	
-    	 	 
-    	 	
-
-    	    var firstModelInputParameters = [];
+    	 	paper.on('cell:pointerdblclick', 
+    	 		    function(cellView, evt, x, y) { 
+    	 				if (cellView.model instanceof joint.dia.Link) {  
+    	 					link = cellView.model
+    	 					
+    	 					var sourcePort = link.get('source').port;
+    	 	    	        var sourceId = link.get('source').id;
+    	 	    	        var targetPort = link.get('target').port;
+    	 	    	        var targetId = link.get('target').id;
+    	 	    	      
+    	 					$('#details').html(
+    	 										'<div class="row">'+
+											    '<label class="col-sm-2"  for="Source">Source Port:</label>'+
+											    '<input type="Source" class="col-sm-10" id="Source" value = "'+sourcePort+'">'+
+											    '</div>'+
+											    '<div class="row">'+
+											    '<label class="col-sm-2" for="Target">Target Port:</label>'+
+											    '<input type="Target" class="col-sm-10" id="Target" value = "'+targetPort+'">'+
+											    '</div>');
+    	 					
+    	 				}
+    	 		    }
+    	 	);
+    	 	var firstModelInputParameters = [];
     	    var firstModelOutputParameters= [];
 
     	    _.each(_firstModel.listOfParameter, function(param) {
@@ -148,7 +179,7 @@ joiner = function() {
     	    var secondModelToJoin = new joint.shapes.devs.Atomic({
     	    	
     	        position: {
-    	            x: 600,
+    	            x: 500,
     	            y: 160
     	        },
     	        size: { width: 200, height: secondModelInputParameters.length*25 },
@@ -180,38 +211,14 @@ joiner = function() {
     	            'font-size': 12, 'font-weight': 'bold', 'font-variant': 'small-caps', 'text-transform': 'capitalize',margin:'20px',padding: '40px'
     	        }
     	    });
-    	    paper.on('cell:pointerdown', function(cellView, evt) {
-    	        if (cellView.model.isLink()) {
-    	        	/*link = cellView
-    	        	ink.labels = " [{ position: 0.5, attrs: { text: { text: 'fancy label', fill: '#f6f6f6', 'font-family': 'sans-serif' }, rect: { stroke: '#7c68fc', 'stroke-width': 20, rx: 5, ry: 5 } }}]"*/
-    	        }
-    	    })
-    	    var link7 = new joint.dia.Link({
-			    source: { x: 400, y: 200 },
-			    target: { x: 740, y: 200 },
-			    attrs: {
-			        '.marker-source': { fill: '#4b4a67', stroke: '#4b4a67', d: 'M 10 0 L 0 5 L 10 10 z' },
-			        '.marker-target': { fill: '#4b4a67', stroke: '#4b4a67', d: 'M 10 0 L 0 5 L 10 10 z' }
-			    },
-			    labels: [
-			        { position: 0.5, attrs: { text: { text: 'fancy label', fill: '#f6f6f6', 'font-family': 'sans-serif' }, rect: { stroke: '#7c68fc', 'stroke-width': 20, rx: 5, ry: 5 } }}
-			    ]
-			});
+    	  
+    	   
     
     	    graph.on('change:source change:target', function(link) {
-    	    	
-    	    	link.label(0, { 
-    	    		position: 0.5, 
-    	    		attrs: 
-    	    		{ 
-	    	    		text: { text: 'fancy label', fill: '#f6f6f6', 'font-family': 'sans-serif' },
-	    	    		rect: { stroke: '#7c68fc', 'stroke-width': 20, rx: 5, ry: 5 } 
-    	    		}
-    	    	}
-    	    	);
-    	    	//link.renderLabels();
-	        	//link.attributes.labels.push();
-    	    	console.log(link);
+    	    	var sourcePort = undefined;
+     	        var sourceId =  undefined;
+     	        var targetPort = undefined;
+     	        var targetId = undefined;
     	        var sourcePort = link.get('source').port;
     	        var sourceId = link.get('source').id;
     	        var targetPort = link.get('target').port;
@@ -232,26 +239,28 @@ joiner = function() {
     	        		_viewValue.joinRelations.push({sourceParam:sourceParameter,targetParam:targetParameter});
     	        		_viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
     	        		//_viewValue.svgRepresentation = paper.svg;
-    	        		
-    	        		
+    	        		//link.label(0, { position: 0.5, attrs: { text: { text: sourcePort+" = "+targetPort } } });
+    	        	    
     	        		
     	        		
     	        	}
+    	        	
     	        	
     	        }
     	        console.log(link);
     	    
     	    });
-
+    	    
     	    
     	    
     	    if(_viewValue.jsonRepresentation != undefined){
-    	    	
-    	    	graph.fromJSON(JSON.parse(_viewValue.jsonRepresentation));
+    	    	if(_viewValue && _viewValue.jsonRepresentation){
+    	    		graph.fromJSON(JSON.parse(_viewValue.jsonRepresentation));
+    	    	}
     	    }else{
     	    	graph.addCells([firstModelTojoin, secondModelToJoin]);
     	    }
-    	    console.log(link7);
+    	  
     	   
     	    
  
