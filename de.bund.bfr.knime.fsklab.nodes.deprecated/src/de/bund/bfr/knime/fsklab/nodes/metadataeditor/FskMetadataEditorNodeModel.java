@@ -158,6 +158,5 @@ final class FskMetadataEditorNodeModel
     m_port = (FskPortObject) portObjects[0];
   }
 
-
   public void setHideInWizard(boolean hide) {}
 }

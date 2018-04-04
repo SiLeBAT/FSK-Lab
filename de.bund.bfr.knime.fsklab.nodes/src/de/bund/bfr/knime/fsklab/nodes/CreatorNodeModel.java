@@ -194,7 +194,8 @@ class CreatorNodeModel extends NoInternalsModel {
             for (int i = 0; i < genericModel.modelMath.parameter.size(); i++) {
               Parameter p = genericModel.modelMath.parameter.get(i);
 
-              if (p.classification != Parameter.Classification.input) {
+              if (!p.classification.equals("Input-environmental factor")
+                  && !p.classification.equals("Input-hazard")) {
                 continue;
               }
 
@@ -451,7 +452,7 @@ class CreatorNodeModel extends NoInternalsModel {
       for (int i = 0; i < depNames.size(); i++) {
         final Parameter param = new Parameter();
         param.id = depNames.get(i);
-        param.classification = Parameter.Classification.output;
+        param.classification = "Output";
         param.name = depNames.get(i);
         param.unit = depUnits.get(i);
         param.unitCategory = "";
@@ -468,7 +469,7 @@ class CreatorNodeModel extends NoInternalsModel {
       for (int i = 0; i < indepNames.size(); i++) {
         final Parameter param = new Parameter();
         param.id = indepNames.get(i);
-        param.classification = Parameter.Classification.input;
+        param.classification = "Input-hazard";
         param.name = indepNames.get(i);
         param.unit = indepUnits.get(i);
         param.unitCategory = "";
@@ -1209,16 +1210,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
       Parameter param = new Parameter();
       param.id = getStringValue(sheet, row, RakipColumn.L);
-
-      String classificationText = getStringValue(sheet, row, RakipColumn.M).toLowerCase();
-      if (classificationText.startsWith("input")) {
-        param.classification = Parameter.Classification.input;
-      } else if (classificationText.startsWith("constant")) {
-        param.classification = Parameter.Classification.constant;
-      } else if (classificationText.startsWith("output")) {
-        param.classification = Parameter.Classification.output;
-      }
-
+      param.classification = getStringValue(sheet, row, RakipColumn.M);
       param.name = getStringValue(sheet, row, RakipColumn.N);
       param.description = getStringValue(sheet, row, RakipColumn.O);
       param.type = getStringValue(sheet, row, RakipColumn.P);
@@ -1756,16 +1748,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
       Parameter param = new Parameter();
       param.id = values[row][RakipColumn.L.ordinal()];
-
-      String classificationText = values[row][RakipColumn.M.ordinal()].toLowerCase();
-      if (classificationText.startsWith("input")) {
-        param.classification = Parameter.Classification.input;
-      } else if (classificationText.startsWith("constant")) {
-        param.classification = Parameter.Classification.constant;
-      } else if (classificationText.startsWith("output")) {
-        param.classification = Parameter.Classification.output;
-      }
-
+      param.classification = values[row][RakipColumn.M.ordinal()];
       param.name = values[row][RakipColumn.N.ordinal()];
       param.description = values[row][RakipColumn.O.ordinal()];
       param.type = values[row][RakipColumn.P.ordinal()];

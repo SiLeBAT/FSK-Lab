@@ -1354,7 +1354,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private static final long serialVersionUID = 1826555468897327895L;
 
     private final FTextField idField; // mandatory
-    private final JComboBox<Parameter.Classification> classificationField; // mandatory
+    private final JComboBox<String> classificationField; // mandatory
     private final FTextField nameField; // mandatory
     private final FTextArea descriptionField;
     private final AutoSuggestField typeField;
@@ -1375,6 +1375,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
+      Set<String> parameterClassification = loadVocabulary("Parameter classification.xlsx");
       Set<String> parameterTypeVocabulary = loadVocabulary("Parameter type.xlsx");
       Set<String> parameterUnitVocabulary = loadVocabulary("Parameter unit.xlsx");
       Set<String> unitCategoryVocabulary = loadVocabulary("Parameter unit category.xlsx");
@@ -1384,7 +1385,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       Set<String> distributionVocabulary = loadVocabulary("Parameter distribution.xlsx");
 
       idField = new FTextField(true);
-      classificationField = new JComboBox<>(Parameter.Classification.values());
+      classificationField = new JComboBox<>(
+          parameterClassification.toArray(new String[parameterClassification.size()]));
       nameField = new FTextField(true);
       descriptionField = new FTextArea();
       typeField = GUIFactory.createAutoSuggestField(parameterTypeVocabulary, false);
@@ -1535,7 +1537,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final Parameter param = new Parameter();
       param.id = idField.getText();
-      param.classification = (Parameter.Classification) classificationField.getSelectedItem();
+      param.classification = (String) classificationField.getSelectedItem();
       param.name = nameField.getText();
       param.description = descriptionField.getText();
       param.type = (String) typeField.getSelectedItem();

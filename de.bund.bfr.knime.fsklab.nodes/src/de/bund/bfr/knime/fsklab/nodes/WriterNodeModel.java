@@ -232,7 +232,7 @@ class WriterNodeModel extends NoInternalsModel {
 
     for (Parameter param : portObj.genericModel.modelMath.parameter) {
       // Ignore not output parameters (inputs or constants)
-      if (!param.classification.equals(Parameter.Classification.output))
+      if (!param.classification.equals("Constant"))
         continue;
 
       ASTNode node = Libsedml.parseFormulaString(param.id);
