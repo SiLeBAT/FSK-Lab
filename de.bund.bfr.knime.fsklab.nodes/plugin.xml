@@ -82,15 +82,20 @@
        version="0.0.1"
        webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle">
        
-       <!-- JS code -->
+       <!-- JS and CSS code -->
        <webResource
          relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.js"
          relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.js">
        </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.js" type="JAVASCRIPT" />
        
-       <importResource
-         relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.js"
-         type="JAVASCRIPT" />
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.css"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.css">
+       </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.css" type="CSS" />
+
+       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
      </webResourceBundle>
    </extension>
 </plugin>

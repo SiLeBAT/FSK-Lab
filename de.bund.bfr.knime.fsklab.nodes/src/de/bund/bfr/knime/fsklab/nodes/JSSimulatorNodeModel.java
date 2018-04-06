@@ -112,8 +112,7 @@ class JSSimulatorNodeModel
       if (rep.parameters == null && port != null) {
         // Take only input parameters from metadata
         rep.parameters = port.genericModel.modelMath.parameter.stream()
-            .filter(p -> p.classification.equals("Input-environmental factor")
-                || p.classification.equals("Input-hazard"))
+            .filter(p -> p.classification == Parameter.Classification.input)
             .collect(Collectors.toList());
       }
     }
@@ -207,9 +206,7 @@ class JSSimulatorNodeModel
   private JSSimulation toJSSimulation(FskSimulation fskSim, List<Parameter> params) {
     JSSimulation jsSim = new JSSimulation();
     jsSim.name = fskSim.getName();
-    jsSim.values = params.stream()
-        .filter(p -> p.classification.equals("Input-environmental factor")
-            || p.classification.equals("Input-hazard"))
+    jsSim.values = params.stream().filter(p -> p.classification == Parameter.Classification.input)
         .map(p -> fskSim.getParameters().get(p.id)).collect(Collectors.toList());
 
     return jsSim;

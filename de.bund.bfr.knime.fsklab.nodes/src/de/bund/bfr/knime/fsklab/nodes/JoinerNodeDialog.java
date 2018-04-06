@@ -121,9 +121,8 @@ public class JoinerNodeDialog extends DataAwareNodeDialogPane {
         List<Parameter> parameterForCombo =
             ((ModelMath) ((FskPortObject) current).genericModel.modelMath).parameter;
         Object[] items1 = parameterForCombo.stream()
-            .filter(o -> o.classification.equals("Input-environmental factor")
-                || o.classification.equals("Input-hazard"))
-            .map(sc -> sc.name).collect(Collectors.toList()).toArray();
+            .filter(o -> o.classification == Parameter.Classification.input).map(sc -> sc.name)
+            .collect(Collectors.toList()).toArray();
         JComboBox tempParameterComboBox = new JComboBox(items1);
         DefaultCellEditor dce1 = new DefaultCellEditor(tempParameterComboBox);
         editors.put(modelName, dce1);
@@ -340,8 +339,8 @@ public class JoinerNodeDialog extends DataAwareNodeDialogPane {
         tableModel.remove(i);
       }
       tableModel.parameters = new ArrayList<>();
-      parameters.stream().filter(o -> o.classification.equals("Input-environmental factor")
-          || o.classification.equals("Input-hazard")).forEach(tableModel::add);
+      parameters.stream().filter(o -> o.classification == Parameter.Classification.input)
+          .forEach(tableModel::add);
     }
   }
 }
