@@ -301,7 +301,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         parameterFieldAndUnitArea.setLayout(new FlowLayout(FlowLayout.LEFT));
         parameterFieldAndUnitArea.add(paramField);
         parameterFieldAndUnitArea.add(new JLabel(fullParam.unit));
-        fields.add(UIUtils.createHorizontalPanel(paramField));
+        fields.add(parameterFieldAndUnitArea);
       }
     }
 
