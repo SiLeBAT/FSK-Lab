@@ -75,6 +75,7 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.util.SimpleFileFilter;
+import org.sbml.jsbml.validator.SyntaxChecker;
 import com.gmail.gcolaianni5.jris.bean.Record;
 import com.gmail.gcolaianni5.jris.bean.Type;
 import com.gmail.gcolaianni5.jris.engine.JRis;
@@ -1516,7 +1517,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         typeField.setSelectedItem(t.type);
         unitField.setSelectedItem(t.unit);
         unitCategoryField.setSelectedItem(t.unitCategory);
-        dataTypeField.setSelectedItem(t.dataType);
+        dataTypeField.setSelectedItem(t.dataType.name());
         sourceField.setSelectedItem(t.source);
         subjectField.setSelectedItem(t.subject);
         distributionField.setSelectedItem(t.distribution);
@@ -1570,8 +1571,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final String prefix = "EditParameterPanel_";
 
       final List<String> errors = new ArrayList<>();
-      if (idField.getText().isEmpty()) {
+      
+      String candidateId = idField.getText();
+      if (candidateId.isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "idLabel"));
+      } else if (!SyntaxChecker.isValidId(candidateId, 3, 1)) {
+        errors.add("ID is not valid");
       }
       if (classificationField.getSelectedIndex() == -1) {
         errors.add("Missing " + bundle.getString(prefix + "classificationLabel"));
