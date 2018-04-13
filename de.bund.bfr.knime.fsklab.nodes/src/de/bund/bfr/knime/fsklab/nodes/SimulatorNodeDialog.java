@@ -52,6 +52,7 @@ import de.bund.bfr.knime.fsklab.SimulationEntity;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FSpinner;
+import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.Parameter;
@@ -244,12 +245,13 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     for (Parameter param : parameters) {
 
       Parameter fullParam = parameterMap.get(param.name);
-      SpinnerNumberModel spinnerModel = null;
 
       final DataTypes dataType = fullParam.dataType;
 
       if (dataType != null && (dataType == DataTypes.Integer || dataType == DataTypes.Double
           || dataType == DataTypes.Number)) {
+
+        SpinnerNumberModel spinnerModel = null;
 
         if (fullParam.dataType == DataTypes.Integer) {
 
@@ -269,21 +271,16 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         }
 
         FSpinner paramField = new FSpinner(spinnerModel, false);
-        paramField.putClientProperty("id", param.name);
-        paramField.setEnabled(
-            !currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
         paramField.addFocusListener(focusListener);
-        paramField.addKeyListener(new SimulationParameterValueListener());
+        prepareField(paramField, param.name, currentSimulation.getSimulationName());
 
         labels.add(createParameterLabel(paramField, param.name, fullParam.getDescription()));
         fields.add(createParameterPanel(paramField, fullParam.unit));
       } else {
-        JTextField paramField = new JTextField(10);
+        FTextField paramField = new FTextField();
+        paramField.setColumns(10);
         paramField.setText(param.value);
-        paramField.putClientProperty("id", param.name);
-        paramField.setEditable(
-            !currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
-        paramField.addKeyListener(new SimulationParameterValueListener());
+        prepareField(paramField, param.name, currentSimulation.getSimulationName());
 
         labels.add(createParameterLabel(paramField, param.name, ""));
         fields.add(createParameterPanel(paramField, fullParam.unit));
@@ -297,7 +294,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   }
 
   public boolean isNumeric(String dataType) {
-
     return dataType.equals(INTEGER_DATA_TYPES) || dataType.equals(DOUBLE_DATA_TYPES);
   }
 
@@ -333,6 +329,19 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     label.setToolTipText(toolTip);
 
     return label;
+  }
+
+  /**
+   * Helper function for {@link #updatePanel()}.
+   * 
+   * @param comp component with the parameter's value
+   * @param parameterName
+   * @param simulationName
+   */
+  private void prepareField(JComponent comp, String parameterName, String simulationName) {
+    comp.putClientProperty("id", parameterName);
+    comp.setEnabled(!simulationName.equals(NodeUtils.DEFAULT_SIMULATION));
+    comp.addKeyListener(new SimulationParameterValueListener());
   }
 
   class SimulationParameterValueListener implements KeyListener {
