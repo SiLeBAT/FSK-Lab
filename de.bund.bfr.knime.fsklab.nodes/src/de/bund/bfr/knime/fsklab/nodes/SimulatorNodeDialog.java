@@ -243,7 +243,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
     for (Parameter param : parameters) {
 
-      FLabel paramLabel = new FLabel(param.name);
       Parameter fullParam = parameterMap.get(param.name);
       SpinnerNumberModel spinnerModel = null;
 
@@ -276,16 +275,8 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         paramField.addFocusListener(focusListener);
         paramField.addKeyListener(new SimulationParameterValueListener());
 
-        paramLabel.setLabelFor(paramField);
-        paramLabel.setToolTipText(fullParam.getDescription());
-        labels.add(paramLabel);
-
-        FPanel parameterFieldAndUnitArea = new FPanel();
-        parameterFieldAndUnitArea.setLayout(new FlowLayout(FlowLayout.LEFT));
-        parameterFieldAndUnitArea.add(paramField);
-        parameterFieldAndUnitArea.add(new JLabel(fullParam.unit));
-        fields.add(parameterFieldAndUnitArea);
-
+        labels.add(createParameterLabel(paramField, param.name, fullParam.getDescription()));
+        fields.add(createParameterPanel(paramField, fullParam.unit));
       } else {
         JTextField paramField = new JTextField(10);
         paramField.setText(param.value);
@@ -294,14 +285,8 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
             !currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION));
         paramField.addKeyListener(new SimulationParameterValueListener());
 
-        paramLabel.setLabelFor(paramField);
-        labels.add(paramLabel);
-
-        FPanel parameterFieldAndUnitArea = new FPanel();
-        parameterFieldAndUnitArea.setLayout(new FlowLayout(FlowLayout.LEFT));
-        parameterFieldAndUnitArea.add(paramField);
-        parameterFieldAndUnitArea.add(new JLabel(fullParam.unit));
-        fields.add(parameterFieldAndUnitArea);
+        labels.add(createParameterLabel(paramField, param.name, ""));
+        fields.add(createParameterPanel(paramField, fullParam.unit));
       }
     }
 
@@ -314,6 +299,40 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   public boolean isNumeric(String dataType) {
 
     return dataType.equals(INTEGER_DATA_TYPES) || dataType.equals(DOUBLE_DATA_TYPES);
+  }
+
+  /**
+   * Helper function for {@link #updatePanel()}.
+   * 
+   * @param valueField JComponent with parameter's value
+   * @param unit Parameter's unit
+   * @return panel with parameter's value and unit.
+   */
+  private FPanel createParameterPanel(JComponent valueField, String unit) {
+
+    FPanel panel = new FPanel();
+    panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+    panel.add(valueField);
+    panel.add(new JLabel(unit));
+
+    return panel;
+  }
+
+  /**
+   * Helper function for {@link #updatePanel()}.
+   *
+   * @param comp component with the parameter's value
+   * @param name parameter name
+   * @param toolTip parameter description
+   * @return label with parameter name and its description as tooltip
+   */
+  private FLabel createParameterLabel(JComponent comp, String name, String toolTip) {
+
+    FLabel label = new FLabel(name);
+    label.setLabelFor(comp);
+    label.setToolTipText(toolTip);
+
+    return label;
   }
 
   class SimulationParameterValueListener implements KeyListener {
