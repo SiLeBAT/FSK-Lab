@@ -20,9 +20,12 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -42,10 +45,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -53,6 +57,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -74,6 +79,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.SimpleFileFilter;
 import org.sbml.jsbml.validator.SyntaxChecker;
 import com.gmail.gcolaianni5.jris.bean.Record;
@@ -256,11 +262,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
    * Read controlled vocabulary from spreadsheet. The vocabulary is sorted alphabetically.
    * 
    * @param sheetName Name of the spreadsheet with the .xlsx extension
-   * @return Set with controlled vocabulary. If the sheet is not found returns empty set.
+   * @return Tree map with controlled vocabulary. Keys are the vocabulary items and the values are
+   *         the comments or descriptions of each item. If the sheet is not found returns empty map.
    */
-  private static TreeSet<String> loadVocabulary(final String sheetName) {
+  private static TreeMap<String, String> loadVocabulary(final String sheetName) {
 
-    TreeSet<String> vocabulary = new TreeSet<>();
+    TreeMap<String, String> vocabulary = new TreeMap<>();
 
     try (
         InputStream stream =
@@ -276,16 +283,39 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       for (Row row : sheet) {
         if (row.getRowNum() == 0)
           continue;
-        final Cell cell = row.getCell(0);
-        if (cell == null)
+
+        final Cell valueCell = row.getCell(0);
+        final Cell commentCell = row.getCell(2);
+
+        if (valueCell == null)
           continue;
+
+        // Reads value. If error skip entry.
+        String itemValue;
         try {
-          final String cellValue = cell.getStringCellValue();
-          if (StringUtils.isNotBlank(cellValue))
-            vocabulary.add(cellValue);
-        } catch (Exception e) {
-          LOGGER.warn("Controlled vocabulary " + workbook + ": wrong value " + cell);
+          itemValue = valueCell.getStringCellValue();
+        } catch (Exception exception) {
+          LOGGER.warnWithFormat("Controlled vocabulary %s: wrong comment %s", sheetName,
+              valueCell.toString());
+          continue;
         }
+
+        // Reads description. If error assign empty string.
+        String itemDescription;
+        if (commentCell == null) {
+          itemDescription = "";
+        } else {
+          try {
+            itemDescription = commentCell.getStringCellValue();
+          } catch (Exception exception) {
+            LOGGER.warnWithFormat("Controlled vocabulary %s: wrong comment %s", sheetName,
+                commentCell.toString());
+            itemDescription = "";
+          }
+        }
+
+        if (StringUtils.isNotBlank(itemValue))
+          vocabulary.put(itemValue, itemDescription);
       }
     } catch (IOException e1) {
       // TODO Auto-generated catch block
@@ -317,9 +347,48 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
      * @return a JComboBox with the passed possible values
      */
     private static JComboBox<String> createComboBox(final Collection<String> possibleValues) {
-      final String[] array = possibleValues.stream().toArray(String[]::new);
-      final JComboBox<String> comboBox = new JComboBox<>(array);
+      
+      String[] values = possibleValues.toArray(new String[possibleValues.size()]);
+      
+      final JComboBox<String> comboBox = new JComboBox<>(values);
       comboBox.setSelectedIndex(-1);
+
+      comboBox.setRenderer(new ComboBoxToolTipRenderer(values));
+
+      comboBox.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          int selectedIndex = comboBox.getSelectedIndex();
+          if (selectedIndex > -1) {
+            comboBox.setToolTipText(values[selectedIndex]);
+          }
+        }
+      });
+
+      return comboBox;
+    }
+
+    /**
+     * @param possibleValues Set
+     * @return a JComboBox with the passed possible values
+     */
+    private static JComboBox<String> createComboBox(final TreeMap<String, String> possibleValues) {
+
+      String[] values = possibleValues.keySet().toArray(new String[possibleValues.size()]);
+
+      final JComboBox<String> comboBox = new JComboBox<>(values);
+      comboBox.setSelectedIndex(-1);
+      comboBox.setRenderer(new ComboBoxToolTipRenderer(values));
+
+      comboBox.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          int selectedIndex = comboBox.getSelectedIndex();
+          if (selectedIndex > -1) {
+            comboBox.setToolTipText(values[selectedIndex]);
+          }
+        }
+      });
 
       return comboBox;
     }
@@ -328,11 +397,27 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
      * @param possibleValues Set
      * @return an AutoSuggestField with the passed possible values. The field has 10 columns.
      */
-    private static AutoSuggestField createAutoSuggestField(final Set<String> possibleValues,
+    private static AutoSuggestField createAutoSuggestField(final TreeMap<String, String> vocabulary,
         boolean mandatory) {
+
+      Set<String> values = vocabulary.keySet();
+      String[] comments = vocabulary.values().toArray(new String[vocabulary.size()]);
+
       final AutoSuggestField field = new AutoSuggestField(10);
-      field.setPossibleValues(possibleValues);
+      field.setPossibleValues(values);
       field.setPreferredSize(new Dimension(100, field.getPreferredSize().height));
+
+      field.setRenderer(new ComboBoxToolTipRenderer(comments));
+
+      field.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          int selectedIndex = field.getSelectedIndex();
+          if (selectedIndex > -1) {
+            field.setToolTipText(comments[selectedIndex]);
+          }
+        }
+      });
 
       Color borderColor = mandatory ? UIUtils.RED : UIUtils.BLUE;
       field.setBorder(BorderFactory.createLineBorder(borderColor));
@@ -368,6 +453,33 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       pane.setBorder(BorderFactory.createEmptyBorder());
 
       return pane;
+    }
+  }
+
+  /**
+   * Custom ListCellRenderer that shows a different tool tip for every entry in the combo box.
+   */
+  private static class ComboBoxToolTipRenderer extends DefaultListCellRenderer {
+
+    private static final long serialVersionUID = -4586180696576409266L;
+    private String[] toolTips;
+
+    ComboBoxToolTipRenderer(String[] toolTips) {
+      CheckUtils.checkArgumentNotNull(toolTips);
+      this.toolTips = toolTips;
+    }
+
+    @Override
+    public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+        boolean isSelected, boolean cellHasFocus) {
+      JComponent comp = (JComponent) super.getListCellRendererComponent(list, value, index,
+          isSelected, cellHasFocus);
+
+      if (index > -1 && value != null) {
+        list.setToolTipText(toolTips[index]);
+      }
+
+      return comp;
     }
   }
 
@@ -607,9 +719,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     EditLaboratoryPanel(final boolean isAdvanced) {
       super(new BorderLayout());
 
-      Set<String> laboratoryAccreditationVocabulary =
+      TreeMap<String, String> laboratoryAccreditationVocabulary =
           loadVocabulary("Laboratory accreditation.xlsx");
-      Set<String> laboratoryCountryVocabulary = loadVocabulary("Country.xlsx");
+      TreeMap<String, String> laboratoryCountryVocabulary = loadVocabulary("Country.xlsx");
 
       accreditationField =
           GUIFactory.createAutoSuggestField(laboratoryAccreditationVocabulary, true);
@@ -700,8 +812,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      Set<String> methodToolVocabulary = loadVocabulary("Method tool to collect data.xlsx");
-      Set<String> foodDescriptorsVocabulary = loadVocabulary("Food descriptors.xlsx");
+      TreeMap<String, String> methodToolVocabulary =
+          loadVocabulary("Method tool to collect data.xlsx");
+      TreeMap<String, String> foodDescriptorsVocabulary = loadVocabulary("Food descriptors.xlsx");
 
       dataCollectionToolField = GUIFactory.createAutoSuggestField(methodToolVocabulary, true);
       nonConsecutiveOneDayField = new FTextField(true);
@@ -859,9 +972,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      Set<String> studyAssayTechnologyTypeVocabulary =
+      TreeMap<String, String> studyAssayTechnologyTypeVocabulary =
           loadVocabulary("Study Assay Technology Type.xlsx");
-      Set<String> accreditationProcedureVocabulary =
+      TreeMap<String, String> accreditationProcedureVocabulary =
           loadVocabulary("Accreditation procedure Ass.Tec.xlsx");
 
       studyIdentifierField = new FTextField(true);
@@ -1084,10 +1197,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      Set<String> hazardTypeVocabulary = loadVocabulary("Hazard type.xlsx");
-      Set<String> hazardNameVocabulary = loadVocabulary("Hazard name.xlsx");
-      Set<String> hazardUnitVocabulary = loadVocabulary("Hazard unit.xlsx");
-      Set<String> hazardIndSumVocabulary = loadVocabulary("Hazard ind-sum.xlsx");
+      TreeMap<String, String> hazardTypeVocabulary = loadVocabulary("Hazard type.xlsx");
+      TreeMap<String, String> hazardNameVocabulary = loadVocabulary("Hazard name.xlsx");
+      TreeMap<String, String> hazardUnitVocabulary = loadVocabulary("Hazard unit.xlsx");
+      TreeMap<String, String> hazardIndSumVocabulary = loadVocabulary("Hazard ind-sum.xlsx");
 
       hazardTypeField = GUIFactory.createAutoSuggestField(hazardTypeVocabulary, true);
       hazardNameField = GUIFactory.createAutoSuggestField(hazardNameVocabulary, true);
@@ -1259,7 +1372,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      Set<String> equationClassVocabulary = loadVocabulary("Model equation class-distr.xlsx");
+      TreeMap<String, String> equationClassVocabulary =
+          loadVocabulary("Model equation class-distr.xlsx");
 
       equationNameField = new FTextField(true);
       equationClassField = GUIFactory.createAutoSuggestField(equationClassVocabulary, false);
@@ -1376,13 +1490,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      Set<String> parameterTypeVocabulary = loadVocabulary("Parameter type.xlsx");
-      Set<String> parameterUnitVocabulary = loadVocabulary("Parameter unit.xlsx");
-      Set<String> unitCategoryVocabulary = loadVocabulary("Parameter unit category.xlsx");
-      Set<String> dataTypeVocabulary = loadVocabulary("Parameter data type.xlsx");
-      Set<String> sourceVocabulary = loadVocabulary("Parameter source.xlsx");
-      Set<String> subjectVocabulary = loadVocabulary("Parameter subject.xlsx");
-      Set<String> distributionVocabulary = loadVocabulary("Parameter distribution.xlsx");
+      TreeMap<String, String> parameterTypeVocabulary = loadVocabulary("Parameter type.xlsx");
+      TreeMap<String, String> parameterUnitVocabulary = loadVocabulary("Parameter unit.xlsx");
+      TreeMap<String, String> unitCategoryVocabulary =
+          loadVocabulary("Parameter unit category.xlsx");
+      TreeMap<String, String> dataTypeVocabulary = loadVocabulary("Parameter data type.xlsx");
+      TreeMap<String, String> sourceVocabulary = loadVocabulary("Parameter source.xlsx");
+      TreeMap<String, String> subjectVocabulary = loadVocabulary("Parameter subject.xlsx");
+      TreeMap<String, String> distributionVocabulary =
+          loadVocabulary("Parameter distribution.xlsx");
 
       idField = new FTextField(true);
       classificationField = new JComboBox<>(Parameter.Classification.values());
@@ -1571,7 +1687,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final String prefix = "EditParameterPanel_";
 
       final List<String> errors = new ArrayList<>();
-      
+
       String candidateId = idField.getText();
       if (candidateId.isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "idLabel"));
@@ -1620,8 +1736,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      Set<String> regionVocabulary = loadVocabulary("Region.xlsx");
-      Set<String> countryVocabulary = loadVocabulary("Country.xlsx");
+      TreeMap<String, String> regionVocabulary = loadVocabulary("Region.xlsx");
+      TreeMap<String, String> countryVocabulary = loadVocabulary("Country.xlsx");
 
       populationNameField = new FTextField(true);
       targetPopulationField = new FTextField();
@@ -1857,14 +1973,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      Set<String> envNameVocabulary = loadVocabulary("Product-matrix name.xlsx");
-      Set<String> envUnitVocabulary = loadVocabulary("Product-matrix unit.xlsx");
-      Set<String> productionMethodVocabulary = loadVocabulary("Method of production.xlsx");
-      Set<String> packagingVocabulary = loadVocabulary("Packaging.xlsx");
-      Set<String> productTreatmentVocabulary = loadVocabulary("Product treatment.xlsx");
-      Set<String> originCountryVocabulary = loadVocabulary("Country.xlsx");
-      Set<String> originAreaVocabulary = loadVocabulary("Area of origin.xlsx");
-      Set<String> fisheriesAreaVocabulary = loadVocabulary("Fisheries area.xlsx");
+      TreeMap<String, String> envNameVocabulary = loadVocabulary("Product-matrix name.xlsx");
+      TreeMap<String, String> envUnitVocabulary = loadVocabulary("Product-matrix unit.xlsx");
+      TreeMap<String, String> productionMethodVocabulary =
+          loadVocabulary("Method of production.xlsx");
+      TreeMap<String, String> packagingVocabulary = loadVocabulary("Packaging.xlsx");
+      TreeMap<String, String> productTreatmentVocabulary = loadVocabulary("Product treatment.xlsx");
+      TreeMap<String, String> originCountryVocabulary = loadVocabulary("Country.xlsx");
+      TreeMap<String, String> originAreaVocabulary = loadVocabulary("Area of origin.xlsx");
+      TreeMap<String, String> fisheriesAreaVocabulary = loadVocabulary("Fisheries area.xlsx");
 
       envNameField = GUIFactory.createAutoSuggestField(envNameVocabulary, true);
       envDescriptionField = new FTextArea();
@@ -2318,11 +2435,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      Set<String> samplingStrategyVocabulary = loadVocabulary("Sampling strategy.xlsx");
-      Set<String> samplingTypeVocabulary = loadVocabulary("Type of sampling program.xlsx");
-      Set<String> samplingMethodVocabulary = loadVocabulary("Sampling point.xlsx");
-      Set<String> lotSizeUnitVocabulary = loadVocabulary("Lot size unit.xlsx");
-      Set<String> samplingPointVocabulary = loadVocabulary("Sampling point.xlsx");
+      TreeMap<String, String> samplingStrategyVocabulary = loadVocabulary("Sampling strategy.xlsx");
+      TreeMap<String, String> samplingTypeVocabulary =
+          loadVocabulary("Type of sampling program.xlsx");
+      TreeMap<String, String> samplingMethodVocabulary = loadVocabulary("Sampling point.xlsx");
+      TreeMap<String, String> lotSizeUnitVocabulary = loadVocabulary("Lot size unit.xlsx");
+      TreeMap<String, String> samplingPointVocabulary = loadVocabulary("Sampling point.xlsx");
 
       sampleNameField = new FTextField(true);
       sampleProtocolField = new FTextField(true);
@@ -2513,12 +2631,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      Set<String> rightsVocabulary = loadVocabulary("Rights.xlsx");
-      Set<String> formatVocabulary = loadVocabulary("Format.xlsx");
-      Set<String> languageVocabulary = loadVocabulary("Language.xlsx");
-      Set<String> softwareVocabulary = loadVocabulary("Software.xlsx");
-      Set<String> languageWrittenInVocabulary = loadVocabulary("Language written in.xlsx");
-      Set<String> statusVocabulary = loadVocabulary("Status.xlsx");
+      TreeMap<String, String> rightsVocabulary = loadVocabulary("Rights.xlsx");
+      TreeMap<String, String> formatVocabulary = loadVocabulary("Format.xlsx");
+      TreeMap<String, String> languageVocabulary = loadVocabulary("Language.xlsx");
+      TreeMap<String, String> softwareVocabulary = loadVocabulary("Software.xlsx");
+      TreeMap<String, String> languageWrittenInVocabulary =
+          loadVocabulary("Language written in.xlsx");
+      TreeMap<String, String> statusVocabulary = loadVocabulary("Status.xlsx");
 
       // Create fields
       advancedCheckBox = new JCheckBox("Advanced");
@@ -3047,8 +3166,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       super(new BorderLayout());
 
-      Set<String> regionVocabulary = loadVocabulary("Region.xlsx");
-      Set<String> countryVocabulary = loadVocabulary("Country.xlsx");
+      TreeMap<String, String> regionVocabulary = loadVocabulary("Region.xlsx");
+      TreeMap<String, String> countryVocabulary = loadVocabulary("Country.xlsx");
 
       regionField = GUIFactory.createAutoSuggestField(regionVocabulary, false);
       countryField = GUIFactory.createAutoSuggestField(countryVocabulary, false);
