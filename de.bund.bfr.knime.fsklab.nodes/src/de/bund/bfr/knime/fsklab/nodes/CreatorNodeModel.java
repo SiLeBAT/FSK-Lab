@@ -287,47 +287,7 @@ class CreatorNodeModel extends NoInternalsModel {
     return new PortObject[] {portObj};
   }
 
-  String buildRVector(final List<Object> ds, boolean isMatrix, Boolean isString, int length) {
-
-    if (!isMatrix) {
-
-      if (!isString) {
-        // We need Object::toString since the passed list is of doubles
-        return "c(" + ds.stream().map(Object::toString).collect(Collectors.joining(",")) + ")";
-      } else {
-        return "c(" + ds.stream().map(it -> "'" + it + "'").collect(Collectors.joining(",")) + ")";
-      }
-    } else {
-      if (!isString) {
-        StringBuilder rMatrix = new StringBuilder();
-        rMatrix.append("matrix(   c(");
-        for (Object o : ds) {
-          double[] row = (double[]) o;
-          for (double col : row) {
-            rMatrix.append(col + ",");
-          }
-        }
-        String subStringOfrMatrix = rMatrix.substring(0, rMatrix.length() - 1);
-        rMatrix = new StringBuilder(subStringOfrMatrix);
-        rMatrix.append("),   nrow=" + ds.size() + ",  ncol=" + ((double[]) ds.get(0)).length
-            + ",    byrow = TRUE) ");
-        return rMatrix.toString();
-      } else {
-        StringBuilder rMatrix = new StringBuilder();
-        rMatrix.append("matrix(   c(");
-        for (Object o : ds) {
-          rMatrix.append("'" + o + "',");
-        }
-        String subStringOfrMatrix = rMatrix.substring(0, rMatrix.length() - 1);
-        rMatrix = new StringBuilder(subStringOfrMatrix);
-        rMatrix.append(
-            "),   nrow=" + length + ",  ncol=" + ds.size() / length + ",    byrow = TRUE) ");
-        return rMatrix.toString();
-      }
-    }
-  }
-
-  private String buildRVector(double[] doubles) {
+  private static String buildRVector(double[] doubles) {
     String stringRepresentation = Arrays.toString(doubles); // String representation: [a, b, c]
 
     // Remove opening and closing brackets [].
@@ -337,7 +297,7 @@ class CreatorNodeModel extends NoInternalsModel {
     return "c(" + stringRepresentation + ")";
   }
 
-  private String buildRVector(String[] strings) {
+  private static String buildRVector(String[] strings) {
     String stringRepresentation = Arrays.toString(strings); // String representation: ["a", "b"]
 
     // Remove opening and closing brackets
@@ -347,7 +307,7 @@ class CreatorNodeModel extends NoInternalsModel {
     return "c(" + stringRepresentation + ")";
   }
 
-  private String buildRMatrix(double[][] matrix, int nrow, int ncol) {
+  private static String buildRMatrix(double[][] matrix, int nrow, int ncol) {
 
     String stringRepresentation = Arrays.deepToString(matrix);
     stringRepresentation.replace("[", "(");
@@ -358,7 +318,7 @@ class CreatorNodeModel extends NoInternalsModel {
         + ", byrow=TRUE)";
   }
 
-  private String buildRMatrix(String[] matrix, int nrow, int ncol) {
+  private static String buildRMatrix(String[] matrix, int nrow, int ncol) {
 
     String stringRepresentation = Arrays.deepToString(matrix);
     stringRepresentation.replace("[", "(");

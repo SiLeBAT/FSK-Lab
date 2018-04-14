@@ -203,7 +203,7 @@ class JSSimulatorNodeModel
 
   public void setHideInWizard(boolean hide) {}
 
-  private JSSimulation toJSSimulation(FskSimulation fskSim, List<Parameter> params) {
+  private static JSSimulation toJSSimulation(FskSimulation fskSim, List<Parameter> params) {
     JSSimulation jsSim = new JSSimulation();
     jsSim.name = fskSim.getName();
     jsSim.values = params.stream().filter(p -> p.classification == Parameter.Classification.input)

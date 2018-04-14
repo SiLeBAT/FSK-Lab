@@ -229,7 +229,7 @@ class ReaderNodeModel extends NoInternalsModel {
   /**
    * Load simulations from SedML to a BufferedDataContainer.
    */
-  private List<FskSimulation> loadSimulations(SedML sedml) {
+  private static List<FskSimulation> loadSimulations(SedML sedml) {
 
     List<FskSimulation> simulations = new ArrayList<>(sedml.getModels().size());
 
