@@ -20,8 +20,6 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -44,12 +42,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -57,7 +53,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -79,7 +74,6 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.SimpleFileFilter;
 import org.sbml.jsbml.validator.SyntaxChecker;
 import com.gmail.gcolaianni5.jris.bean.Record;
@@ -87,6 +81,8 @@ import com.gmail.gcolaianni5.jris.bean.Type;
 import com.gmail.gcolaianni5.jris.engine.JRis;
 import com.gmail.gcolaianni5.jris.exception.JRisException;
 import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.nodes.ui.AutoSuggestField;
+import de.bund.bfr.knime.fsklab.nodes.ui.ComboBoxToolTipRenderer;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FSpinner;
@@ -112,7 +108,6 @@ import de.bund.bfr.knime.fsklab.rakip.Product;
 import de.bund.bfr.knime.fsklab.rakip.Scope;
 import de.bund.bfr.knime.fsklab.rakip.Study;
 import de.bund.bfr.knime.fsklab.rakip.StudySample;
-import de.bund.bfr.swing.AutoSuggestField;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import ezvcard.property.StructuredName;
@@ -348,9 +343,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
      */
     private static JComboBox<String> createComboBox(final Collection<String> possibleValues) {
       
-      String[] values = possibleValues.toArray(new String[possibleValues.size()]);
+      ArrayList<String> values = new ArrayList<>(possibleValues);
       
-      final JComboBox<String> comboBox = new JComboBox<>(values);
+      final JComboBox<String> comboBox = new JComboBox<>(values.toArray(new String[values.size()]));
       comboBox.setSelectedIndex(-1);
 
       comboBox.setRenderer(new ComboBoxToolTipRenderer(values));
@@ -360,7 +355,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         public void actionPerformed(ActionEvent e) {
           int selectedIndex = comboBox.getSelectedIndex();
           if (selectedIndex > -1) {
-            comboBox.setToolTipText(values[selectedIndex]);
+            comboBox.setToolTipText(values.get(selectedIndex));
           }
         }
       });
@@ -374,9 +369,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
      */
     private static JComboBox<String> createComboBox(final TreeMap<String, String> possibleValues) {
 
-      String[] values = possibleValues.keySet().toArray(new String[possibleValues.size()]);
+      ArrayList<String> values = new ArrayList<>(possibleValues.keySet());
 
-      final JComboBox<String> comboBox = new JComboBox<>(values);
+      final JComboBox<String> comboBox = new JComboBox<>(values.toArray(new String[values.size()]));
       comboBox.setSelectedIndex(-1);
       comboBox.setRenderer(new ComboBoxToolTipRenderer(values));
 
@@ -385,43 +380,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         public void actionPerformed(ActionEvent e) {
           int selectedIndex = comboBox.getSelectedIndex();
           if (selectedIndex > -1) {
-            comboBox.setToolTipText(values[selectedIndex]);
+            comboBox.setToolTipText(values.get(selectedIndex));
           }
         }
       });
 
       return comboBox;
-    }
-
-    /**
-     * @param possibleValues Set
-     * @return an AutoSuggestField with the passed possible values. The field has 10 columns.
-     */
-    private static AutoSuggestField createAutoSuggestField(final TreeMap<String, String> vocabulary,
-        boolean mandatory) {
-
-      Set<String> values = vocabulary.keySet();
-      String[] comments = vocabulary.values().toArray(new String[vocabulary.size()]);
-
-      final AutoSuggestField field = new AutoSuggestField(10);
-      field.setPossibleValues(values);
-      field.setPreferredSize(new Dimension(100, field.getPreferredSize().height));
-
-      field.setRenderer(new ComboBoxToolTipRenderer(comments));
-
-      field.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          int selectedIndex = field.getSelectedIndex();
-          if (selectedIndex > -1) {
-            field.setToolTipText(comments[selectedIndex]);
-          }
-        }
-      });
-
-      Color borderColor = mandatory ? UIUtils.RED : UIUtils.BLUE;
-      field.setBorder(BorderFactory.createLineBorder(borderColor));
-      return field;
     }
 
     /**
@@ -453,33 +417,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       pane.setBorder(BorderFactory.createEmptyBorder());
 
       return pane;
-    }
-  }
-
-  /**
-   * Custom ListCellRenderer that shows a different tool tip for every entry in the combo box.
-   */
-  private static class ComboBoxToolTipRenderer extends DefaultListCellRenderer {
-
-    private static final long serialVersionUID = -4586180696576409266L;
-    private String[] toolTips;
-
-    ComboBoxToolTipRenderer(String[] toolTips) {
-      CheckUtils.checkArgumentNotNull(toolTips);
-      this.toolTips = toolTips;
-    }
-
-    @Override
-    public Component getListCellRendererComponent(JList<?> list, Object value, int index,
-        boolean isSelected, boolean cellHasFocus) {
-      JComponent comp = (JComponent) super.getListCellRendererComponent(list, value, index,
-          isSelected, cellHasFocus);
-
-      if (index > -1 && value != null) {
-        list.setToolTipText(toolTips[index]);
-      }
-
-      return comp;
     }
   }
 
@@ -723,10 +660,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           loadVocabulary("Laboratory accreditation.xlsx");
       TreeMap<String, String> laboratoryCountryVocabulary = loadVocabulary("Country.xlsx");
 
+      List<String> accreditationValues =
+          new ArrayList<>(laboratoryAccreditationVocabulary.keySet());
+      List<String> accreditationComments =
+          new ArrayList<>(laboratoryAccreditationVocabulary.values());
       accreditationField =
-          GUIFactory.createAutoSuggestField(laboratoryAccreditationVocabulary, true);
+          new AutoSuggestField(10, accreditationValues, accreditationComments, true);
+
       nameField = new FTextField();
-      countryField = GUIFactory.createAutoSuggestField(laboratoryCountryVocabulary, false);
+
+      List<String> countryValues = new ArrayList<>(laboratoryCountryVocabulary.keySet());
+      List<String> countryComments = new ArrayList<>(laboratoryCountryVocabulary.values());
+      countryField = new AutoSuggestField(10, countryValues, countryComments, false);
 
       createUI(isAdvanced);
     }
@@ -816,11 +761,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           loadVocabulary("Method tool to collect data.xlsx");
       TreeMap<String, String> foodDescriptorsVocabulary = loadVocabulary("Food descriptors.xlsx");
 
-      dataCollectionToolField = GUIFactory.createAutoSuggestField(methodToolVocabulary, true);
+      List<String> methodToolValues = new ArrayList<>(methodToolVocabulary.keySet());
+      List<String> methodToolComments = new ArrayList<>(methodToolVocabulary.values());
+      dataCollectionToolField =
+          new AutoSuggestField(10, methodToolValues, methodToolComments, true);
+
       nonConsecutiveOneDayField = new FTextField(true);
       dietarySoftwareToolField = new FTextField();
       foodItemNumberField = new FTextField();
       recordTypeField = new FTextField();
+      
       foodDescriptorsField = GUIFactory.createComboBox(foodDescriptorsVocabulary);
 
       createUI(isAdvanced);
@@ -982,11 +932,23 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       studyDescriptionField = new FTextArea();
       studyDesignTypeField = new FTextField();
       studyAssayMeasurementsTypeField = new FTextField();
-      studyAssayTechnologyTypeField =
-          GUIFactory.createAutoSuggestField(studyAssayTechnologyTypeVocabulary, false);
+
+      List<String> studyAssayTechnologyTypeValues =
+          new ArrayList<>(studyAssayTechnologyTypeVocabulary.keySet());
+      List<String> studyAssayTechnologyTypeComments =
+          new ArrayList<>(studyAssayTechnologyTypeVocabulary.values());
+      studyAssayTechnologyTypeField = new AutoSuggestField(10, studyAssayTechnologyTypeValues,
+          studyAssayTechnologyTypeComments, false);
+
       studyAssayTechnologyPlatformField = new FTextField();
-      accreditationProcedureField =
-          GUIFactory.createAutoSuggestField(accreditationProcedureVocabulary, false);
+
+      List<String> accreditationProcedureValues =
+          new ArrayList<>(accreditationProcedureVocabulary.keySet());
+      List<String> accreditationProcedureComments =
+          new ArrayList<>(accreditationProcedureVocabulary.values());
+      accreditationProcedureField = new AutoSuggestField(10, accreditationProcedureValues,
+          accreditationProcedureComments, false);
+
       studyProtocolNameField = new FTextField();
       studyProtocolTypeField = new FTextField();
       studyProtocolDescriptionField = new FTextField();
@@ -1202,10 +1164,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       TreeMap<String, String> hazardUnitVocabulary = loadVocabulary("Hazard unit.xlsx");
       TreeMap<String, String> hazardIndSumVocabulary = loadVocabulary("Hazard ind-sum.xlsx");
 
-      hazardTypeField = GUIFactory.createAutoSuggestField(hazardTypeVocabulary, true);
-      hazardNameField = GUIFactory.createAutoSuggestField(hazardNameVocabulary, true);
+      List<String> hazardTypeValues = new ArrayList<>(hazardTypeVocabulary.keySet());
+      List<String> hazardTypeComments = new ArrayList<>(hazardTypeVocabulary.values());
+      hazardTypeField = new AutoSuggestField(10, hazardTypeValues, hazardTypeComments, true);
+
+      List<String> hazardNameValues = new ArrayList<>(hazardNameVocabulary.keySet());
+      List<String> hazardNameComments = new ArrayList<>(hazardNameVocabulary.values());
+      hazardNameField = new AutoSuggestField(10, hazardNameValues, hazardNameComments, true);
+
       hazardDescriptionField = new FTextArea();
-      hazardUnitField = GUIFactory.createAutoSuggestField(hazardUnitVocabulary, true);
+
+      List<String> hazardUnitValues = new ArrayList<>(hazardUnitVocabulary.keySet());
+      List<String> hazardUnitComments = new ArrayList<>(hazardUnitVocabulary.values());
+      hazardUnitField = new AutoSuggestField(10, hazardUnitValues, hazardUnitComments, true);
+
       adverseEffectField = new FTextField();
       originField = new FTextField();
       bmdField = new FTextField();
@@ -1214,7 +1186,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       acceptableOperatorField = new FTextField();
       acuteReferenceDoseField = new FTextField();
       acceptableDailyIntakeField = new FTextField();
-      indSumField = GUIFactory.createAutoSuggestField(hazardIndSumVocabulary, false);
+
+      List<String> indSumValues = new ArrayList<>(hazardIndSumVocabulary.keySet());
+      List<String> indSumComments = new ArrayList<>(hazardIndSumVocabulary.values());
+      indSumField = new AutoSuggestField(10, indSumValues, indSumComments, false);
 
       createUI(isAdvanced);
     }
@@ -1376,7 +1351,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           loadVocabulary("Model equation class-distr.xlsx");
 
       equationNameField = new FTextField(true);
-      equationClassField = GUIFactory.createAutoSuggestField(equationClassVocabulary, false);
+
+      List<String> equationClassValues = new ArrayList<>(equationClassVocabulary.keySet());
+      List<String> equationClassComments = new ArrayList<>(equationClassVocabulary.values());
+      equationClassField =
+          new AutoSuggestField(10, equationClassValues, equationClassComments, false);
+
       referencePanel = new ReferencePanel(isAdvanced);
       scriptField = new FTextArea(true);
 
@@ -1504,13 +1484,36 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       classificationField = new JComboBox<>(Parameter.Classification.values());
       nameField = new FTextField(true);
       descriptionField = new FTextArea();
-      typeField = GUIFactory.createAutoSuggestField(parameterTypeVocabulary, false);
-      unitField = GUIFactory.createAutoSuggestField(parameterUnitVocabulary, true);
-      unitCategoryField = GUIFactory.createAutoSuggestField(unitCategoryVocabulary, true);
-      dataTypeField = GUIFactory.createAutoSuggestField(dataTypeVocabulary, true);
-      sourceField = GUIFactory.createAutoSuggestField(sourceVocabulary, false);
-      subjectField = GUIFactory.createAutoSuggestField(subjectVocabulary, false);
-      distributionField = GUIFactory.createAutoSuggestField(distributionVocabulary, false);
+
+      List<String> typeValues = new ArrayList<>(parameterTypeVocabulary.keySet());
+      List<String> typeComments = new ArrayList<>(parameterTypeVocabulary.values());
+      typeField = new AutoSuggestField(10, typeValues, typeComments, false);
+
+      List<String> unitValues = new ArrayList<>(parameterUnitVocabulary.keySet());
+      List<String> unitComments = new ArrayList<>(parameterUnitVocabulary.values());
+      unitField = new AutoSuggestField(10, unitValues, unitComments, true);
+
+      List<String> unitCategoryValues = new ArrayList<>(unitCategoryVocabulary.keySet());
+      List<String> unitCategoryComments = new ArrayList<>(unitCategoryVocabulary.values());
+      unitCategoryField = new AutoSuggestField(10, unitCategoryValues, unitCategoryComments, true);
+
+      List<String> dataTypeValues = new ArrayList<>(dataTypeVocabulary.keySet());
+      List<String> dataTypeComments = new ArrayList<>(dataTypeVocabulary.values());
+      dataTypeField =
+          new AutoSuggestField(10, dataTypeValues, dataTypeComments, true);
+
+      List<String> sourceValues = new ArrayList<>(sourceVocabulary.keySet());
+      List<String> sourceComments = new ArrayList<>(sourceVocabulary.values());
+      sourceField = new AutoSuggestField(10, sourceValues, sourceComments, false);
+
+      List<String> subjectValues = new ArrayList<>(subjectVocabulary.keySet());
+      List<String> subjectComments = new ArrayList<>(subjectVocabulary.values());
+      subjectField = new AutoSuggestField(10, subjectValues, subjectComments, false);
+
+      List<String> distributionValues = new ArrayList<>(distributionVocabulary.keySet());
+      List<String> distributionComments = new ArrayList<>(distributionVocabulary.values());
+      distributionField = new AutoSuggestField(10, distributionValues, distributionComments, false);
+
       valueField = new FTextField();
       referenceField = new FTextField();
       variabilitySubjectField = new FTextArea();
@@ -1983,15 +1986,34 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       TreeMap<String, String> originAreaVocabulary = loadVocabulary("Area of origin.xlsx");
       TreeMap<String, String> fisheriesAreaVocabulary = loadVocabulary("Fisheries area.xlsx");
 
-      envNameField = GUIFactory.createAutoSuggestField(envNameVocabulary, true);
+      List<String> envNameValues = new ArrayList<>(envNameVocabulary.keySet());
+      List<String> envNameComments = new ArrayList<>(envNameVocabulary.values());
+      envNameField = new AutoSuggestField(10, envNameValues, envNameComments, true);
+
       envDescriptionField = new FTextArea();
-      envUnitField = GUIFactory.createAutoSuggestField(envUnitVocabulary, true);
+
+      List<String> envUnitValues = new ArrayList<>(envUnitVocabulary.keySet());
+      List<String> envUnitComments = new ArrayList<>(envUnitVocabulary.values());
+      envUnitField = new AutoSuggestField(10, envUnitValues, envUnitComments, true);
+
       productionMethodField = GUIFactory.createComboBox(productionMethodVocabulary);
       packagingField = GUIFactory.createComboBox(packagingVocabulary);
       productTreatmentField = GUIFactory.createComboBox(productTreatmentVocabulary);
-      originCountryField = GUIFactory.createAutoSuggestField(originCountryVocabulary, false);
-      originAreaField = GUIFactory.createAutoSuggestField(originAreaVocabulary, false);
-      fisheriesAreaField = GUIFactory.createAutoSuggestField(fisheriesAreaVocabulary, false);
+
+      List<String> originCountryValues = new ArrayList<>(originCountryVocabulary.keySet());
+      List<String> originCountryComments = new ArrayList<>(originCountryVocabulary.values());
+      originCountryField =
+          new AutoSuggestField(10, originCountryValues, originCountryComments, false);
+
+      List<String> originAreaValues = new ArrayList<>(originAreaVocabulary.keySet());
+      List<String> originAreaComments = new ArrayList<>(originAreaVocabulary.values());
+      originAreaField = new AutoSuggestField(10, originAreaValues, originAreaComments, false);
+
+      List<String> fisheriesAreaValues = new ArrayList<>(fisheriesAreaVocabulary.keySet());
+      List<String> fisheriesAreaComments = new ArrayList<>(fisheriesAreaVocabulary.values());
+      fisheriesAreaField =
+          new AutoSuggestField(10, fisheriesAreaValues, fisheriesAreaComments, false);
+
       productionField = new FixedDateChooser();
       expirationField = new FixedDateChooser();
 
@@ -2444,14 +2466,33 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       sampleNameField = new FTextField(true);
       sampleProtocolField = new FTextField(true);
-      samplingStrategyField = GUIFactory.createAutoSuggestField(samplingStrategyVocabulary, false);
-      samplingTypeField = GUIFactory.createAutoSuggestField(samplingTypeVocabulary, false);
-      samplingMethodField = GUIFactory.createAutoSuggestField(samplingMethodVocabulary, false);
+
+      List<String> samplingStrategyValues = new ArrayList<>(samplingStrategyVocabulary.keySet());
+      List<String> samplingStrategyComments = new ArrayList<>(samplingStrategyVocabulary.values());
+      samplingStrategyField =
+          new AutoSuggestField(10, samplingStrategyValues, samplingStrategyComments, false);
+
+      List<String> samplingTypeValues = new ArrayList<>(samplingTypeVocabulary.keySet());
+      List<String> samplingTypeComments = new ArrayList<>(samplingTypeVocabulary.values());
+      samplingTypeField = new AutoSuggestField(10, samplingTypeValues, samplingTypeComments, false);
+
+      List<String> samplingMethodValues = new ArrayList<>(samplingMethodVocabulary.keySet());
+      List<String> samplingMethodComments = new ArrayList<>(samplingMethodVocabulary.values());
+      samplingMethodField =
+          new AutoSuggestField(10, samplingMethodValues, samplingMethodComments, false);
+
       samplingPlanField = new FTextField(true);
       samplingWeightField = new FTextField(true);
       samplingSizeField = new FTextField(true);
-      lotSizeUnitField = GUIFactory.createAutoSuggestField(lotSizeUnitVocabulary, false);
-      samplingPointField = GUIFactory.createAutoSuggestField(samplingPointVocabulary, false);
+
+      List<String> lotSizeUnitValues = new ArrayList<>(lotSizeUnitVocabulary.keySet());
+      List<String> lotSizeUnitComments = new ArrayList<>(lotSizeUnitVocabulary.values());
+      lotSizeUnitField = new AutoSuggestField(10, lotSizeUnitValues, lotSizeUnitComments, false);
+
+      List<String> samplingPointValues = new ArrayList<>(samplingPointVocabulary.keySet());
+      List<String> samplingPointComments = new ArrayList<>(samplingPointVocabulary.values());
+      samplingPointField =
+          new AutoSuggestField(10, samplingPointValues, samplingPointComments, false);
 
       createUI(isAdvanced);
     }
@@ -2646,16 +2687,38 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       identifierField = new FTextField(true);
       creatorPanel = new CreatorPanel();
       creationField = new FixedDateChooser();
-      rightsField = GUIFactory.createAutoSuggestField(rightsVocabulary, true);
+
+      List<String> rightValues = new ArrayList<>(rightsVocabulary.keySet());
+      List<String> rightComments = new ArrayList<>(rightsVocabulary.values());
+      rightsField = new AutoSuggestField(10, rightValues, rightComments, true);
+
       availabilityField = new JCheckBox();
       urlField = new FTextField(true);
-      formatField = GUIFactory.createAutoSuggestField(formatVocabulary, false);
+
+      List<String> formatValues = new ArrayList<>(formatVocabulary.keySet());
+      List<String> formatComments = new ArrayList<>(formatVocabulary.values());
+      formatField = new AutoSuggestField(10, formatValues, formatComments, false);
+
       referencePanel = new ReferencePanel(advancedCheckBox.isSelected());
-      languageField = GUIFactory.createAutoSuggestField(languageVocabulary, false);
-      softwareField = GUIFactory.createAutoSuggestField(softwareVocabulary, false);
+
+      List<String> languageValues = new ArrayList<>(languageVocabulary.keySet());
+      List<String> languageComments = new ArrayList<>(languageVocabulary.values());
+      languageField = new AutoSuggestField(10, languageValues, languageComments, false);
+
+      List<String> softwareValues = new ArrayList<>(softwareVocabulary.keySet());
+      List<String> softwareComments = new ArrayList<>(softwareVocabulary.values());
+      softwareField = new AutoSuggestField(10, softwareValues, softwareComments, false);
+
+      List<String> languageWrittenInValues = new ArrayList<>(languageWrittenInVocabulary.keySet());
+      List<String> languageWrittenInComments =
+          new ArrayList<>(languageWrittenInVocabulary.values());
       languageWrittenInField =
-          GUIFactory.createAutoSuggestField(languageWrittenInVocabulary, false);
-      statusField = GUIFactory.createAutoSuggestField(statusVocabulary, false);
+          new AutoSuggestField(10, languageWrittenInValues, languageWrittenInComments, false);
+
+      List<String> statusValues = new ArrayList<>(statusVocabulary.keySet());
+      List<String> statusComments = new ArrayList<>(statusVocabulary.values());
+      statusField = new AutoSuggestField(10, statusValues, statusComments, false);
+
       objectiveField = new FTextArea();
       descriptionField = new FTextArea();
 
@@ -3169,8 +3232,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       TreeMap<String, String> regionVocabulary = loadVocabulary("Region.xlsx");
       TreeMap<String, String> countryVocabulary = loadVocabulary("Country.xlsx");
 
-      regionField = GUIFactory.createAutoSuggestField(regionVocabulary, false);
-      countryField = GUIFactory.createAutoSuggestField(countryVocabulary, false);
+      List<String> regionValues = new ArrayList<>(regionVocabulary.keySet());
+      List<String> regionComments = new ArrayList<>(regionVocabulary.values());
+      regionField = new AutoSuggestField(10, regionValues, regionComments, false);
+
+      List<String> countryValues = new ArrayList<>(countryVocabulary.keySet());
+      List<String> countryComments = new ArrayList<>(countryVocabulary.values());
+      countryField = new AutoSuggestField(10, countryValues, countryComments, false);
 
       final JCheckBox advancedCheckBox = new JCheckBox("Advanced");
 
