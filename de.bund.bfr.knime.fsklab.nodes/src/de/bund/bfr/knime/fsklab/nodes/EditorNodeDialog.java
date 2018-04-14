@@ -22,8 +22,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -36,7 +34,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -82,7 +79,7 @@ import com.gmail.gcolaianni5.jris.engine.JRis;
 import com.gmail.gcolaianni5.jris.exception.JRisException;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.AutoSuggestField;
-import de.bund.bfr.knime.fsklab.nodes.ui.ComboBoxToolTipRenderer;
+import de.bund.bfr.knime.fsklab.nodes.ui.FComboBox;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FSpinner;
@@ -335,57 +332,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       panel.add(checkbox);
 
       return panel;
-    }
-
-    /**
-     * @param possibleValues Set
-     * @return a JComboBox with the passed possible values
-     */
-    private static JComboBox<String> createComboBox(final Collection<String> possibleValues) {
-      
-      ArrayList<String> values = new ArrayList<>(possibleValues);
-      
-      final JComboBox<String> comboBox = new JComboBox<>(values.toArray(new String[values.size()]));
-      comboBox.setSelectedIndex(-1);
-
-      comboBox.setRenderer(new ComboBoxToolTipRenderer(values));
-
-      comboBox.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          int selectedIndex = comboBox.getSelectedIndex();
-          if (selectedIndex > -1) {
-            comboBox.setToolTipText(values.get(selectedIndex));
-          }
-        }
-      });
-
-      return comboBox;
-    }
-
-    /**
-     * @param possibleValues Set
-     * @return a JComboBox with the passed possible values
-     */
-    private static JComboBox<String> createComboBox(final TreeMap<String, String> possibleValues) {
-
-      ArrayList<String> values = new ArrayList<>(possibleValues.keySet());
-
-      final JComboBox<String> comboBox = new JComboBox<>(values.toArray(new String[values.size()]));
-      comboBox.setSelectedIndex(-1);
-      comboBox.setRenderer(new ComboBoxToolTipRenderer(values));
-
-      comboBox.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          int selectedIndex = comboBox.getSelectedIndex();
-          if (selectedIndex > -1) {
-            comboBox.setToolTipText(values.get(selectedIndex));
-          }
-        }
-      });
-
-      return comboBox;
     }
 
     /**
@@ -771,7 +717,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       foodItemNumberField = new FTextField();
       recordTypeField = new FTextField();
       
-      foodDescriptorsField = GUIFactory.createComboBox(foodDescriptorsVocabulary);
+      List<String> foodDescriptorValues = new ArrayList<>(foodDescriptorsVocabulary.keySet());
+      List<String> foodDescriptorComments = new ArrayList<>(foodDescriptorsVocabulary.values());
+      foodDescriptorsField = new FComboBox(foodDescriptorValues, foodDescriptorComments);
 
       createUI(isAdvanced);
     }
@@ -1751,8 +1699,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       bmiField = new FTextField();
       specialDietGroupField = new FTextField();
       patternConsumptionField = new FTextField();
-      regionField = GUIFactory.createComboBox(regionVocabulary);
-      countryField = GUIFactory.createComboBox(countryVocabulary);
+
+      List<String> regionValues = new ArrayList<>(regionVocabulary.keySet());
+      List<String> regionComments = new ArrayList<>(regionVocabulary.values());
+      regionField = new FComboBox(regionValues, regionComments);
+
+      List<String> countryValues = new ArrayList<>(countryVocabulary.keySet());
+      List<String> countryComments = new ArrayList<>(countryVocabulary.values());
+      countryField = new FComboBox(countryValues, countryComments);
+
       riskField = new FTextField();
       seasonField = new FTextField();
 
@@ -1996,9 +1951,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       List<String> envUnitComments = new ArrayList<>(envUnitVocabulary.values());
       envUnitField = new AutoSuggestField(10, envUnitValues, envUnitComments, true);
 
-      productionMethodField = GUIFactory.createComboBox(productionMethodVocabulary);
-      packagingField = GUIFactory.createComboBox(packagingVocabulary);
-      productTreatmentField = GUIFactory.createComboBox(productTreatmentVocabulary);
+      List<String> productionMethodValues = new ArrayList<>(productionMethodVocabulary.keySet());
+      List<String> productionMethodComments = new ArrayList<>(productionMethodVocabulary.values());
+      productionMethodField = new FComboBox(productionMethodValues, productionMethodComments);
+
+      List<String> packagingValues = new ArrayList<>(packagingVocabulary.keySet());
+      List<String> packaingComments = new ArrayList<>(packagingVocabulary.values());
+      packagingField = new FComboBox(packagingValues, packaingComments);
+
+      List<String> productTreatmentValues = new ArrayList<>(productTreatmentVocabulary.keySet());
+      List<String> productTreatmentComments = new ArrayList<>(productTreatmentVocabulary.values());
+      productTreatmentField = new FComboBox(productTreatmentValues, productTreatmentComments);
 
       List<String> originCountryValues = new ArrayList<>(originCountryVocabulary.keySet());
       List<String> originCountryComments = new ArrayList<>(originCountryVocabulary.values());
@@ -2186,7 +2149,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       ResourceBundle risTypes = ResourceBundle.getBundle("ris_types");
       List<String> referenceTypes =
           risTypes.keySet().stream().map(risTypes::getString).collect(Collectors.toList());
-      typeField = GUIFactory.createComboBox(referenceTypes);
+      typeField = new FComboBox(referenceTypes);
 
       dateField = new FixedDateChooser();
       pmidField = new FTextField();

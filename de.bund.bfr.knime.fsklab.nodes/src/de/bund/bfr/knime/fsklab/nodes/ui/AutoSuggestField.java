@@ -47,7 +47,7 @@ public class AutoSuggestField extends JComboBox<String> {
    * Creates an AutoSuggestField with the specified number of columns that contains the elements in
    * the specified Set.
    * 
-   * @param columns the number of columsn to use to calculate the preferred width; if columns is set
+   * @param columns the number of columns to use to calculate the preferred width; if columns is set
    *        to zero, the preferred width will be whatever naturally results from the component
    *        implementation
    * @param values a List of strings to insert into the field. Must have the same length as
