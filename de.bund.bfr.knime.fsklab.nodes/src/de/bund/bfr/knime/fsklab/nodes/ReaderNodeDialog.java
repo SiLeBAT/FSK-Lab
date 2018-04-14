@@ -68,7 +68,10 @@ class ReaderNodeDialog extends NodeDialogPane {
 
   private void createUI() {
 
-    ResourceBundle bundle = ResourceBundle.getBundle("ReaderNodeBundle", new UTF8Control());
+    // Build locale with the selected language in the preferences
+    ResourceBundle bundle =
+        ResourceBundle.getBundle("ReaderNodeBundle", NodeUtils.getLocale(), new UTF8Control());
+
     String buttonText = bundle.getString("button");
     String labelText = bundle.getString("label");
     String toolTipText = bundle.getString("tooltip");

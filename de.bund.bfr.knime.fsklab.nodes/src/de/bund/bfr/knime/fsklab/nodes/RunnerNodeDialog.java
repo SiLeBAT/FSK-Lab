@@ -73,7 +73,9 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
 
   private void createUI() {
 
-    ResourceBundle bundle = ResourceBundle.getBundle("RunnerNodeBundle", new UTF8Control());
+    // Build locale with the selected language in the preferences
+    ResourceBundle bundle =
+        ResourceBundle.getBundle("RunnerNodeBundle", NodeUtils.getLocale(), new UTF8Control());
 
     // Labels
     FLabel widthLabel = new FLabel(bundle.getString("width_label"));

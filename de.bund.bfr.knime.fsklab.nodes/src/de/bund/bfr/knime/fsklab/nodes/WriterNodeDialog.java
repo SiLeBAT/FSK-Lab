@@ -69,7 +69,11 @@ class WriterNodeDialog extends NodeDialogPane {
   }
 
   private void createUI() {
-    ResourceBundle bundle = ResourceBundle.getBundle("WriterNodeBundle", new UTF8Control());
+
+    // Build locale with the selected language in the preferences
+    ResourceBundle bundle =
+        ResourceBundle.getBundle("WriterNodeBundle", NodeUtils.getLocale(), new UTF8Control());
+
     String labelText = bundle.getString("label");
     String toolTipText = bundle.getString("tooltip");
     String buttonText = bundle.getString("button");

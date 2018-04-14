@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
@@ -44,7 +45,7 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
     super(GRID);
 
     setPreferenceStore(FskPlugin.getDefault().getPreferenceStore());
-    setDescription("BfR R nodes preferences");
+    setDescription("FSK-Lab preferences");
   }
 
   @Override
@@ -52,6 +53,9 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
     Composite parent = getFieldEditorParent();
     addField(new RHomeDirectoryFieldEditor(RPreferenceInitializer.R3_PATH,
         "R v3 environment location", parent));
+
+    String[][] namesAndValues = {{"English", "en"}, {"German", "de"}, {"Spanish", "es"}};
+    addField(new LanguageEditor(namesAndValues, parent));
   }
 
   @Override
@@ -125,6 +129,26 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
       } catch (InvalidRHomeException e) {
         setMessage(e.getMessage(), ERROR);
         return false;
+      }
+    }
+  }
+
+  private class LanguageEditor extends ComboFieldEditor {
+
+    public LanguageEditor(String[][] namesAndValues, Composite parent) {
+      super(LanguagePreferenceInitializer.LANGUAGE, "Language", namesAndValues, parent);
+    }
+
+    @Override
+    protected void doStore() {
+
+      String oldLanguage = LanguagePreferenceInitializer.getLanguageProvider().getLanguage();
+      super.doStore();
+      String newLanguage = LanguagePreferenceInitializer.getLanguageProvider().getLanguage();
+
+      if (!newLanguage.equals(oldLanguage)) {
+        setMessage("The language preferences were changed. Please restart KNIME to apply changes.",
+            WARNING);
       }
     }
   }

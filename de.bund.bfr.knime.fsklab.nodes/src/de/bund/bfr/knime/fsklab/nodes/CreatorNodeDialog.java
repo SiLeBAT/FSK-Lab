@@ -141,7 +141,9 @@ public class CreatorNodeDialog extends NodeDialogPane {
     FileNameExtensionFilter spreadsheetFilter =
         new FileNameExtensionFilter("Excel spreadsheet", "xlsx");
 
-    ResourceBundle bundle = ResourceBundle.getBundle("CreatorNodeBundle", new UTF8Control());
+    // Build locale with the selected language in the preferences
+    ResourceBundle bundle =
+        ResourceBundle.getBundle("CreatorNodeBundle", NodeUtils.getLocale(), new UTF8Control());
 
     // buttons
     String buttonText = bundle.getString("browse_button");

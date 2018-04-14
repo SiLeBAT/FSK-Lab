@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +19,7 @@ import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
+import de.bund.bfr.knime.fsklab.nodes.rbin.preferences.LanguagePreferenceInitializer;
 
 public class NodeUtils {
 
@@ -148,5 +150,23 @@ public class NodeUtils {
     }
 
     return paramScript;
+  }
+
+  /**
+   * @return Locale for the selected language in the preferences.
+   */
+  public static final Locale getLocale() {
+
+    String languageCode = LanguagePreferenceInitializer.getLanguageProvider().getLanguage();
+    Locale locale;
+    if (languageCode.equals("de")) {
+      locale = new Locale("de", "DE");
+    } else if (languageCode.equals("es")) {
+      locale = new Locale("es", "ES");
+    } else {
+      locale = Locale.getDefault(); // Assign English
+    }
+
+    return locale;
   }
 }
