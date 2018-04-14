@@ -31,6 +31,7 @@ import javax.swing.JComponent;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -90,12 +91,12 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
     JSpinner heightSpinner = new JSpinner(heightModel);
     JSpinner textSizeSpinner = new JSpinner(textSizeModel);
     resolutionField.setColumns(5);
-    resolutionField.setHorizontalAlignment(JTextField.RIGHT);
+    resolutionField.setHorizontalAlignment(SwingConstants.RIGHT);
 
     JComboBox<FskSimulation> simulationField = new JComboBox<>(simulationModel);
     // right align simulationField
     ((JTextField) simulationField.getEditor().getEditorComponent())
-        .setHorizontalAlignment(JTextField.RIGHT);
+        .setHorizontalAlignment(SwingConstants.RIGHT);
 
     simulationField.addItemListener(new ItemListener() {
 
