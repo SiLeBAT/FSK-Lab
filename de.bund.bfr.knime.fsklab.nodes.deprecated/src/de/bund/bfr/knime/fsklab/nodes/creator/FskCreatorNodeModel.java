@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,23 +98,29 @@ class FskCreatorNodeModel extends NoInternalsModel {
     try {
       FskPortObject portObj = new FskPortObject();
 
-      // Reads model script
-      if (StringUtils.isEmpty(settings.modelScript)) {
+      // Load scripts and collect libraries used
+      List<String> libraries = new ArrayList<>();
+
+      if (StringUtils.isNotEmpty(settings.modelScript)) {
+        RScript modelScript = readScript(settings.modelScript);
+        portObj.model = modelScript.getScript();
+        libraries.addAll(modelScript.getLibraries());
+      } else {
         throw new InvalidSettingsException("Model script is not provided");
       }
-      RScript modelScript = readScript(settings.modelScript);
-      portObj.model = modelScript.getScript();
 
-      // Reads parameters script
       if (StringUtils.isNotEmpty(settings.parameterScript)) {
-        portObj.param = readScript(settings.parameterScript).getScript();
+        RScript paramScript = readScript(settings.parameterScript);
+        portObj.param = paramScript.getScript();
+        libraries.addAll(paramScript.getLibraries());
       } else {
         portObj.param = "";
       }
 
-      // Reads visualization script
       if (StringUtils.isNotEmpty(settings.visualizationScript)) {
-        portObj.viz = readScript(settings.visualizationScript).getScript();
+        RScript visualizationScript = readScript(settings.visualizationScript);
+        portObj.viz = visualizationScript.getScript();
+        libraries.addAll(visualizationScript.getLibraries());
       } else {
         portObj.viz = "";
       }
@@ -146,18 +153,23 @@ class FskCreatorNodeModel extends NoInternalsModel {
         }
       }
 
-      if (!modelScript.getLibraries().isEmpty()) {
+      // Install missing libraries
+
+      if (!libraries.isEmpty()) {
         try {
-          // Install missing libraries
           LibRegistry libReg = LibRegistry.instance();
-          List<String> missingLibs = modelScript.getLibraries().stream()
+
+          // Get missing libraries (those that are not installed)
+          List<String> missingLibs = libraries.stream()
               .filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
+
           if (!missingLibs.isEmpty()) {
             libReg.installLibs(missingLibs);
-          }
 
-          Set<Path> libPaths = libReg.getPaths(modelScript.getLibraries());
-          libPaths.forEach(l -> portObj.libs.add(l.toFile()));
+            Set<Path> libPaths = libReg.getPaths(libraries);
+            List<File> libFiles = libPaths.stream().map(Path::toFile).collect(Collectors.toList());
+            portObj.libs.addAll(libFiles);
+          }
         } catch (RException | REXPMismatchException e) {
           LOGGER.error(e.getMessage());
         }
