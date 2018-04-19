@@ -25,6 +25,7 @@ import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -99,7 +100,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
       FskPortObject portObj = new FskPortObject();
 
       // Load scripts and collect libraries used
-      List<String> libraries = new ArrayList<>();
+      Set<String> libraries = new HashSet<>();
 
       if (StringUtils.isNotEmpty(settings.modelScript)) {
         RScript modelScript = readScript(settings.modelScript);
@@ -160,13 +161,13 @@ class FskCreatorNodeModel extends NoInternalsModel {
           LibRegistry libReg = LibRegistry.instance();
 
           // Get missing libraries (those that are not installed)
-          List<String> missingLibs = libraries.stream()
-              .filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
+          List<String> missingLibs = libraries.stream().filter(lib -> !libReg.isInstalled(lib))
+              .collect(Collectors.toList());
 
           if (!missingLibs.isEmpty()) {
             libReg.installLibs(missingLibs);
 
-            Set<Path> libPaths = libReg.getPaths(libraries);
+            Set<Path> libPaths = libReg.getPaths(new ArrayList<>(libraries));
             List<File> libFiles = libPaths.stream().map(Path::toFile).collect(Collectors.toList());
             portObj.libs.addAll(libFiles);
           }
