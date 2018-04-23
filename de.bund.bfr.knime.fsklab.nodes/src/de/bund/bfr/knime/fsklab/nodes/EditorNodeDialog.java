@@ -720,7 +720,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       dietarySoftwareToolField = new FTextField();
       foodItemNumberField = new FTextField();
       recordTypeField = new FTextField();
-      
+
       List<String> foodDescriptorValues = new ArrayList<>(foodDescriptorsVocabulary.keySet());
       List<String> foodDescriptorComments = new ArrayList<>(foodDescriptorsVocabulary.values());
       foodDescriptorsField = new FComboBox(foodDescriptorValues, foodDescriptorComments);
@@ -1459,8 +1459,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       List<String> dataTypeValues = new ArrayList<>(dataTypeVocabulary.keySet());
       List<String> dataTypeComments = new ArrayList<>(dataTypeVocabulary.values());
-      dataTypeField =
-          new AutoSuggestField(10, dataTypeValues, dataTypeComments, true);
+      dataTypeField = new AutoSuggestField(10, dataTypeValues, dataTypeComments, true);
 
       List<String> sourceValues = new ArrayList<>(sourceVocabulary.keySet());
       List<String> sourceComments = new ArrayList<>(sourceVocabulary.values());
@@ -3000,9 +2999,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
         vcards.add(vcard);
 
+        String givenName, familyName;
         StructuredName structuredName = vcard.getStructuredName();
-        String givenName = structuredName.getGiven();
-        String familyName = structuredName.getFamily();
+        if (structuredName != null) {
+          givenName = structuredName.getGiven();
+          familyName = structuredName.getFamily();
+        } else {
+          givenName = "";
+          familyName = "";
+        }
         String contact = vcard.getEmails().get(0).getValue();
         addRow(new String[] {givenName, familyName, contact});
       }
@@ -3010,10 +3015,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       void modify(final int rowNumber, final VCard vcard) {
         vcards.set(rowNumber, vcard);
 
-
         StructuredName structuredName = vcard.getStructuredName();
-        setValueAt(structuredName.getGiven(), rowNumber, 0);
-        setValueAt(structuredName.getFamily(), rowNumber, 1);
+
+        String givenName = "";
+        String familyName = "";
+
+        if (structuredName != null) {
+          givenName = StringUtils.defaultString(structuredName.getGiven());
+          familyName = StringUtils.defaultString(structuredName.getFamily());
+        }
+
+        setValueAt(givenName, rowNumber, 0);
+        setValueAt(familyName, rowNumber, 1);
         setValueAt(vcard.getEmails().get(0).getValue(), rowNumber, 2);
       }
 
@@ -3113,14 +3126,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private static final long serialVersionUID = 3472281253338213542L;
 
-    private final FTextField givenNameField; // mandatory
-    private final FTextField familyNameField; // mandatory
+    private final FTextField givenNameField; // optional
+    private final FTextField familyNameField; // optional
     private final FTextField contactField; // mandatory
 
     public EditCreatorPanel() {
       super(new BorderLayout());
-      givenNameField = new FTextField(true);
-      familyNameField = new FTextField(true);
+      givenNameField = new FTextField(false);
+      familyNameField = new FTextField(false);
       contactField = new FTextField(true);
 
       createUI();
@@ -3150,8 +3163,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         StructuredName structuredName = creator.getStructuredName();
         if (structuredName != null) {
-          givenNameField.setText(structuredName.getGiven());
-          familyNameField.setText(structuredName.getFamily());
+
+          String givenName = structuredName.getGiven();
+          if (givenName != null) {
+            givenNameField.setText(givenName);
+          }
+
+          String familyName = structuredName.getFamily();
+          if (familyName != null) {
+            familyNameField.setText(familyName);
+          }
         }
         if (!creator.getEmails().isEmpty())
           contactField.setText(creator.getEmails().get(0).getValue());
@@ -3163,9 +3184,21 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final VCard vCard = new VCard();
 
-      StructuredName structuredName = new StructuredName();
-      structuredName.setGiven(givenNameField.getText());
-      structuredName.setFamily(givenNameField.getText());
+      String givenName = givenNameField.getText();
+      String familyName = familyNameField.getText();
+      if (!givenName.isEmpty() || !familyName.isEmpty()) {
+
+        StructuredName structuredName = new StructuredName();
+        if (!givenName.isEmpty()) {
+          structuredName.setGiven(givenName);
+        }
+
+        if (!familyName.isEmpty()) {
+          structuredName.setFamily(familyName);
+        }
+
+        vCard.setStructuredName(structuredName);
+      }
 
       final String contactText = contactField.getText();
       if (StringUtils.isNotEmpty(contactText)) {
@@ -3182,13 +3215,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
       String prefix = "EditCreatorPanel_";
 
-      final List<String> errors = new ArrayList<>(3);
-      if (givenNameField.getText().isEmpty()) {
-        errors.add("Missing " + bundle.getString(prefix + "givenNameLabel"));
-      }
-      if (familyNameField.getText().isEmpty()) {
-        errors.add("Missing " + bundle.getString(prefix + "familyNameLabel"));
-      }
+      final List<String> errors = new ArrayList<>(1);
       if (contactField.getText().isEmpty()) {
         errors.add("Missing " + bundle.getString(prefix + "contactLabel"));
       }
