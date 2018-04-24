@@ -25,9 +25,9 @@ import org.knime.core.node.port.PortObjectSpecZipInputStream;
 import org.knime.core.node.port.PortObjectSpecZipOutputStream;
 
 /**
- * A port object spec for R model port.
+ * A port object spec for combined FSK object.
  * 
- * @author Miguel Alba, BfR, Berlin.
+ * @author Ahmad Swaid, BfR, Berlin.
  */
 public class CombinedFskPortObjectSpec implements PortObjectSpec {
 

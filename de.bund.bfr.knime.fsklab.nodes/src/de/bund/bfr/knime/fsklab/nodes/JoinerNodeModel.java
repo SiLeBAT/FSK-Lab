@@ -140,8 +140,12 @@ final class JoinerNodeModel
 
       // If not executed
       if (joinerProxyValue.getFirstModel() == null) {
-        joinerProxyValue.setFirstModel(new ParameterizedModel(inObj1.genericModel.generalInformation.name, inObj1.genericModel.modelMath.parameter));
-        joinerProxyValue.setSecondModel(new ParameterizedModel(inObj2.genericModel.generalInformation.name, inObj2.genericModel.modelMath.parameter));
+        joinerProxyValue.setFirstModel(inObj1.genericModel);
+        joinerProxyValue.setFirstModelScript(inObj1.model);
+        joinerProxyValue.setFirstModelViz(inObj1.viz);
+        joinerProxyValue.setSecondModel(inObj2.genericModel);
+        joinerProxyValue.setSecondModelScript(inObj2.model);
+        joinerProxyValue.setSecondModelViz(inObj2.viz);
        //val.metadata = inObj.template;
        // m_port = inObj;
         if(nodeSettings.jsonRepresentation != null && !nodeSettings.jsonRepresentation.equals("")) {
@@ -209,7 +213,8 @@ final class JoinerNodeModel
   }
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+  }
 
  
 

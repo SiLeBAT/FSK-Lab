@@ -96,9 +96,9 @@ import ezvcard.VCard;
 import ezvcard.property.StructuredName;
 
 /**
- * A port object for an FSK model port providing R scripts and model meta data.
+ * A port object for an combined FSK model port providing two FSK Models.
  * 
- * @author Miguel Alba, BfR, Berlin.
+ * @author Ahmad Swaid, BfR, Berlin.
  */
 public class CombinedFskPortObject extends FskPortObject {
   
@@ -801,7 +801,9 @@ public class CombinedFskPortObject extends FskPortObject {
     add(node, prefix + "identifierLabel", generalInformation.identifier);
 
     // Remove null values in list
-    final List<VCard> creators =
+    final List<VCard> creators = new ArrayList();
+
+   /* final List<VCard> creators =
         generalInformation.creators.stream().filter(Objects::nonNull).collect(Collectors.toList());
     if (!creators.isEmpty()) {
       // Parent node that holds all the creators
@@ -814,7 +816,7 @@ public class CombinedFskPortObject extends FskPortObject {
       }
 
       node.add(creatorsNode);
-    }
+    }*/
 
     if (generalInformation.creationDate != null) {
       add(node, prefix + "creationDateLabel", generalInformation.creationDate);

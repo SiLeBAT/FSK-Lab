@@ -26,6 +26,7 @@ import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.ParameterizedModel;
+import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 
 
 
@@ -35,8 +36,62 @@ class JoinerViewValue extends JSONViewContent {
   
   public final int pseudoIdentifier = (new Random()).nextInt();
   
-  private ParameterizedModel firstModel;
-  private ParameterizedModel secondModel;
+  private GenericModel firstModel;
+  private GenericModel secondModel;
+  
+  private String firstModelScript;
+  private String secondModelScript;
+  
+  private String firstModelViz;
+  private String secondModelViz;
+  public String getFirstModelScript() {
+    return firstModelScript;
+  }
+
+  public void setFirstModelScript(String firstModelScript) {
+    this.firstModelScript = firstModelScript;
+  }
+
+  public String getSecondModelScript() {
+    return secondModelScript;
+  }
+
+  public void setSecondModelScript(String secondModelScript) {
+    this.secondModelScript = secondModelScript;
+  }
+
+  public String getFirstModelViz() {
+    return firstModelViz;
+  }
+
+  public void setFirstModelViz(String firstModelViz) {
+    this.firstModelViz = firstModelViz;
+  }
+
+  public String getSecondModelViz() {
+    return secondModelViz;
+  }
+
+  public void setSecondModelViz(String secondModelViz) {
+    this.secondModelViz = secondModelViz;
+  }
+
+  public GenericModel getFirstModel() {
+    return firstModel;
+  }
+
+  public void setFirstModel(GenericModel firstModel) {
+    this.firstModel = firstModel;
+  }
+
+  public GenericModel getSecondModel() {
+    return secondModel;
+  }
+
+  public void setSecondModel(GenericModel secondModel) {
+    this.secondModel = secondModel;
+  }
+ 
   private List<JoinRelation> joinRelations = new ArrayList<JoinRelation>();
   private String jsonRepresentation;
   private String svgRepresentation;
@@ -48,9 +103,7 @@ class JoinerViewValue extends JSONViewContent {
     this.jsonRepresentation = jsonRepresentation;
   }
 
-  public ParameterizedModel getFirstModel() {
-    return firstModel;
-  }
+ 
 
   public String getSvgRepresentation() {
     return svgRepresentation;
@@ -60,17 +113,6 @@ class JoinerViewValue extends JSONViewContent {
     this.svgRepresentation = svgRepresentation;
   }
 
-  public void setFirstModel(ParameterizedModel firstModel) {
-    this.firstModel = firstModel;
-  }
-
-  public ParameterizedModel getSecondModel() {
-    return secondModel;
-  }
-
-  public void setSecondModel(ParameterizedModel secondModel) {
-    this.secondModel = secondModel;
-  }
 
   
   @Override
@@ -104,4 +146,5 @@ class JoinerViewValue extends JSONViewContent {
   public void addJoinRelation(JoinRelation jr) {
     joinRelations.add(jr);
   }
+
 }
