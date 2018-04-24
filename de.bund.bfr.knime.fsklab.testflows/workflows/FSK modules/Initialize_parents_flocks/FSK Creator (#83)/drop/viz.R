@@ -1,0 +1,1 @@
+hist(result, breaks=50, main="PREVALENCE AMONG FLOCKS IN PARENT GENERATION", xlab="Prevalence", col="32")

@@ -1,0 +1,12 @@
+
+{
+    "type":"object",
+    "properties":{
+        "string-input-98":{
+            "type":"string",
+            "default":"Metadata-Sheet",
+            "description":"- Legacy: Metadata-sheet\n- RAKIP: Generic Metadata Schema",
+            "example":"Metadata-Sheet"
+        }
+    }
+}
