@@ -143,7 +143,7 @@ public class FskPortObject implements PortObject {
   public final List<FskSimulation> simulations = new ArrayList<>();
 
   private static ResourceBundle bundle =
-      ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
+      ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
 
   public FskPortObject(final String model, final String param, final String viz,
       final GenericModel genericModel, final Path workspace, final Set<File> libs,
@@ -160,10 +160,7 @@ public class FskPortObject implements PortObject {
     objectNum = numOfInstances;
     numOfInstances += 1;
   }
-  public FskPortObject(final Path workingDirectory, final Set<File> libs) throws IOException {
-    this.workingDirectory = workingDirectory;
-    this.libs = libs;
-  }
+
   @Override
   public FskPortObjectSpec getSpec() {
     return FskPortObjectSpec.INSTANCE;
@@ -630,9 +627,7 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "identifierLabel", generalInformation.identifier);
 
     // Remove null values in list
-    final List<VCard> creators = new ArrayList();
-
-    /*final List<VCard> creators =
+    final List<VCard> creators =
         generalInformation.creators.stream().filter(Objects::nonNull).collect(Collectors.toList());
     if (!creators.isEmpty()) {
       // Parent node that holds all the creators
@@ -645,7 +640,7 @@ public class FskPortObject implements PortObject {
       }
 
       node.add(creatorsNode);
-    }*/
+    }
 
     if (generalInformation.creationDate != null) {
       add(node, prefix + "creationDateLabel", generalInformation.creationDate);
@@ -935,7 +930,7 @@ public class FskPortObject implements PortObject {
     add(node, prefix + "descriptionLabel", parameter.description);
     add(node, prefix + "unitLabel", parameter.unit);
     add(node, prefix + "unitCategoryLabel", parameter.unitCategory);
-    add(node, prefix + "dataTypeLabel", parameter.dataType);
+    add(node, prefix + "dataTypeLabel", parameter.dataType.toString());
     add(node, prefix + "sourceLabel", parameter.source);
     add(node, prefix + "subjectLabel", parameter.subject);
     add(node, prefix + "distributionLabel", parameter.distribution);

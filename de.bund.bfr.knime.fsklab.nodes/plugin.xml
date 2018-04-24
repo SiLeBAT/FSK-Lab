@@ -45,6 +45,7 @@
    <extension id="de.bund.bfr.knime.pmm.fskx.bin.preferences.RPreferenceInitializer"
      point="org.eclipse.core.runtime.preferences">
      <initializer class="de.bund.bfr.knime.fsklab.nodes.rbin.preferences.RPreferenceInitializer" />
+     <initializer class="de.bund.bfr.knime.fsklab.nodes.rbin.preferences.LanguagePreferenceInitializer" />
    </extension>
   
    <!-- Preference page for custom R -->
@@ -52,7 +53,7 @@
      <page category="org.knime.workbench.ui.preferences"
        class="de.bund.bfr.knime.fsklab.nodes.rbin.preferences.RPreferencePage"
        id="de.bund.bfr.knime.fsklab.nodes.bin.rbin.preferences.RPreferencePage"
-       name="BfR R settings" />
+       name="FSK-Lab settings" />
    </extension>
    
    <extension point="org.knime.workbench.repository.nodes">
@@ -62,10 +63,11 @@
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.ReaderNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.WriterNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.EditorNodeFactory" />
-     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FSK2MetadataNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.SimulatorNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory" />
-  
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JSSimulatorNodeFactory" />
+ 
 
    </extension>
     
@@ -208,7 +210,6 @@
         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap.min.js">
       </webResource>
       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/bootstrap.min.js" type="JAVASCRIPT" />
-      
       </webResourceBundle>
     
       
@@ -254,4 +255,41 @@
       
       
   </extension>
+   
+   <extension point="org.knime.js.core.javascriptComponents">
+     <!-- JavaScript component for the simulator node -->
+     <javascriptComponent
+       getComponentValue-method-name="getComponentValue"
+       implementationBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle"
+       init-method-name="init"
+       javascriptComponentID="de.bund.bfr.knime.fsklab.nodes.jssimulator"
+       name="JavaScript Simulation Configurator"
+       namespace="simulator">
+     </javascriptComponent>
+   </extension>
+   
+   <extension point="org.knime.js.core.webResources">
+     <webResourceBundle
+       debug="true"
+       name="JavaScript Simulation Configurator"
+       usesDefine="false"
+       version="0.0.1"
+       webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.jssimulator.bundle">
+       
+       <!-- JS and CSS code -->
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.js"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.js">
+       </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.js" type="JAVASCRIPT" />
+       
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.css"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.css">
+       </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.css" type="CSS" />
+
+       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
+     </webResourceBundle>
+   </extension>
 </plugin>
