@@ -161,6 +161,11 @@ public class FskPortObject implements PortObject {
     numOfInstances += 1;
   }
 
+  public FskPortObject(final Path workingDirectory, final Set<File> libs) throws IOException {
+    this.workingDirectory = workingDirectory;
+    this.libs = libs;
+  }
+
   @Override
   public FskPortObjectSpec getSpec() {
     return FskPortObjectSpec.INSTANCE;
