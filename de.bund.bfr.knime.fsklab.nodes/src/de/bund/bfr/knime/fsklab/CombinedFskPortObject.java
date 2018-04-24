@@ -57,7 +57,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
@@ -330,7 +329,7 @@ public class CombinedFskPortObject extends FskPortObject {
     @SuppressWarnings("unchecked")
     public CombinedFskPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
         ExecutionMonitor exec) throws IOException, CanceledExecutionException {
-      List <JoinRelation> joinerRelation = new ArrayList<JoinRelation>();
+      List<JoinRelation> joinerRelation = new ArrayList<>();
       // First FSK Object
       String modelScript1 = "";
       String parametersScript1 = "";
@@ -801,9 +800,9 @@ public class CombinedFskPortObject extends FskPortObject {
     add(node, prefix + "identifierLabel", generalInformation.identifier);
 
     // Remove null values in list
-    final List<VCard> creators = new ArrayList();
+    // final List<VCard> creators = new ArrayList<>();
 
-   /* final List<VCard> creators =
+    final List<VCard> creators =
         generalInformation.creators.stream().filter(Objects::nonNull).collect(Collectors.toList());
     if (!creators.isEmpty()) {
       // Parent node that holds all the creators
@@ -816,7 +815,7 @@ public class CombinedFskPortObject extends FskPortObject {
       }
 
       node.add(creatorsNode);
-    }*/
+    }
 
     if (generalInformation.creationDate != null) {
       add(node, prefix + "creationDateLabel", generalInformation.creationDate);

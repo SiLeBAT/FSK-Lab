@@ -34,7 +34,7 @@ public class GeneralInformation {
 
   /** Unambiguous ID given to the model or data. */
   public String identifier = "";
-  public final List creators = new ArrayList<>();
+  public final List<VCard> creators = new ArrayList<>();
 
 /*  public final List<VCard> creators = new ArrayList<>();
 */
