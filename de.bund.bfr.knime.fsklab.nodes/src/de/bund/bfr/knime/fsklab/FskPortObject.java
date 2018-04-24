@@ -143,7 +143,7 @@ public class FskPortObject implements PortObject {
   public final List<FskSimulation> simulations = new ArrayList<>();
 
   private static ResourceBundle bundle =
-      ResourceBundle.getBundle("MessagesBundle", new UTF8Control());
+      ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
 
   public FskPortObject(final String model, final String param, final String viz,
       final GenericModel genericModel, final Path workspace, final Set<File> libs,
