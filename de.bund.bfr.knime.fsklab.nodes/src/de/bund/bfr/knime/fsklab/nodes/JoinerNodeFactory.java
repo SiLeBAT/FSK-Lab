@@ -20,7 +20,7 @@ public class JoinerNodeFactory extends NodeFactory<NodeModel> {
 
   @Override
   protected NodeDialogPane createNodeDialogPane() {
-    return new JoinerNodeDialog();
+    return null;
   }
 
   @Override
