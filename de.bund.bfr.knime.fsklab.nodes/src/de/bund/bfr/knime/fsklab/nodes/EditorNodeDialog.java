@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
@@ -476,7 +477,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditAssayPanel_";
 
       // name
@@ -585,7 +586,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final List<String> errors = new ArrayList<>(1);
       if (nameField.getText().isEmpty()) {
         ResourceBundle bundle =
-            ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+            ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
         errors.add("Missing " + bundle.getString("EditAssayPanel_nameLabel"));
       }
 
@@ -627,7 +628,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditLaboratoryPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -684,7 +685,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       if (!hasValidValue(accreditationField)) {
 
         ResourceBundle bundle =
-            ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+            ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
         errors.add("Missing " + bundle.getString("EditLaboratoryPanel_accreditationLabel"));
       }
 
@@ -731,7 +732,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditDietaryAssessmentMethodPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -837,7 +838,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditDietaryAssessmentMethodPanel_";
 
       final List<String> errors = new ArrayList<>(2);
@@ -917,7 +918,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       final String prefix = "StudyPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -1077,7 +1078,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "StudyPanel_";
 
       List<String> errors = new ArrayList<>();
@@ -1153,7 +1154,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditHazardPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -1274,7 +1275,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditHazardPanel_";
 
       final List<String> errors = new ArrayList<>();
@@ -1325,7 +1326,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Create labels
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditModelEquationPanel_";
 
       // northPanel
@@ -1379,7 +1380,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditModelEquationPanel_";
 
       final List<String> errors = new ArrayList<>();
@@ -1485,7 +1486,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditParameterPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -1647,7 +1648,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       final String prefix = "EditParameterPanel_";
 
       final List<String> errors = new ArrayList<>();
@@ -1730,7 +1731,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditPopulationGroupPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -1915,7 +1916,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       final List<String> errors = new ArrayList<>(1);
 
       if (populationNameField.getText().isEmpty()) {
@@ -2001,7 +2002,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditProductPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -2113,7 +2114,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditProductPanel_";
 
       final List<String> errors = new ArrayList<>(2);
@@ -2186,7 +2187,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditReferencePanel_";
 
       // Create labels
@@ -2405,7 +2406,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditReferencePanel_";
 
       final List<String> errors = new ArrayList<>(2);
@@ -2482,7 +2483,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditStudySamplePanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -2586,7 +2587,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditStudySamplePanel_";
 
       final List<String> errors = new ArrayList<>(5);
@@ -2713,7 +2714,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Create labels
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "GeneralInformationPanel_";
 
       FLabel studyNameLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "studyName");
@@ -3142,7 +3143,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditCreatorPanel_";
 
       // Create labels
@@ -3212,7 +3213,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     List<String> validatePanel() {
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "EditCreatorPanel_";
 
       final List<String> errors = new ArrayList<>(1);
@@ -3310,7 +3311,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       // Create labels
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       final FLabel productLabel = new FLabel(bundle.getString(prefix + "productLabel"));
       final FLabel hazardLabel = new FLabel(bundle.getString(prefix + "hazardLabel"));
       final FLabel populationLabel = new FLabel(bundle.getString(prefix + "populationGroupLabel"));
@@ -3500,7 +3501,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       ResourceBundle bundle =
-          ResourceBundle.getBundle("MessagesBundle", NodeUtils.getLocale(), new UTF8Control());
+          ResourceBundle.getBundle("MessagesBundle", Locale.ENGLISH, new UTF8Control());
       String prefix = "DataBackgroundPanel_";
       FLabel studyLabel = new FLabel(bundle.getString(prefix + "studyLabel"));
       FLabel studySampleLabel = new FLabel(bundle.getString(prefix + "studySampleLabel"));

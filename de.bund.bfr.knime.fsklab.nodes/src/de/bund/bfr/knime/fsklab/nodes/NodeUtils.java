@@ -153,7 +153,7 @@ public class NodeUtils {
   }
 
   /**
-   * @return Locale for the selected language in the preferences.
+   * @return Locale for the selected language in the preferences or null if not set.
    */
   public static final Locale getLocale() {
 
@@ -163,8 +163,10 @@ public class NodeUtils {
       locale = new Locale("de", "DE");
     } else if (languageCode.equals("es")) {
       locale = new Locale("es", "ES");
+    } else if (languageCode.equals("en")) {
+      locale = new Locale("en", "EN");
     } else {
-      locale = Locale.getDefault(); // Assign English
+      throw new RuntimeException("[NodeUtils] Illegal locale");
     }
 
     return locale;
