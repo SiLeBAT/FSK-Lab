@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_tafacD5cEeil59hmTbDEuw" name="PopulationGroup" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://www.example.org/metadata#//PopulationGroup"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokYD5cEeil59hmTbDEuw" name="Control populationName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokYT5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/populationName"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokYj5cEeil59hmTbDEuw" name="Control targetPopulation">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokYz5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/targetPopulation"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokZD5cEeil59hmTbDEuw" name="Control populationSpan">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokZT5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/populationSpan"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokZj5cEeil59hmTbDEuw" name="Control populationDescription">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokZz5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/populationDescription"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokaD5cEeil59hmTbDEuw" name="Control populationAge">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokaT5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/populationAge"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokaj5cEeil59hmTbDEuw" name="Control populationGender">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokaz5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/populationGender"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokbD5cEeil59hmTbDEuw" name="Control bmi">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokbT5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/bmi"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokbj5cEeil59hmTbDEuw" name="Control specialDietGroups">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokbz5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/specialDietGroups"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokcD5cEeil59hmTbDEuw" name="Control patternConsumption">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokcT5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/patternConsumption"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokcj5cEeil59hmTbDEuw" name="Control region">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokcz5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/region"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokdD5cEeil59hmTbDEuw" name="Control country">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokdT5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/country"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokdj5cEeil59hmTbDEuw" name="Control populationRiskFactor">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokdz5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/populationRiskFactor"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_taokeD5cEeil59hmTbDEuw" name="Control season">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_taokeT5cEeil59hmTbDEuw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/season"/>
+    </domainModelReference>
+  </children>
+</org.eclipse.emf.ecp.view.model:View>

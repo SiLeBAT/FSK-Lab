@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "treatment": {
+      "type": "string"
+    },
+    "contaminationLevel": {
+      "type": "string"
+    },
+    "exposureType": {
+      "type": "string"
+    },
+    "scenario": {
+      "type": "string"
+    },
+    "uncertaintyEstimation": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

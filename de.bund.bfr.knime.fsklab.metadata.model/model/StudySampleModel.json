@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "properties": {
+    "sample": {
+      "type": "string"
+    },
+    "collectionProtocol": {
+      "type": "string"
+    },
+    "samplingStrategy": {
+      "type": "string"
+    },
+    "samplingProgramType": {
+      "type": "string"
+    },
+    "samplingMethod": {
+      "type": "string"
+    },
+    "samplingPlan": {
+      "type": "string"
+    },
+    "samplingWeight": {
+      "type": "string"
+    },
+    "samplingSize": {
+      "type": "string"
+    },
+    "lotSizeUnit": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

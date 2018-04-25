@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "designType": {
+      "type": "string"
+    },
+    "measurementType": {
+      "type": "string"
+    },
+    "technologyType": {
+      "type": "string"
+    },
+    "technologyPlatform": {
+      "type": "string"
+    },
+    "accreditationProcedure": {
+      "type": "string"
+    },
+    "protocolName": {
+      "type": "string"
+    },
+    "protocolType": {
+      "type": "string"
+    },
+    "protocolDescription": {
+      "type": "string"
+    },
+    "protocolUri": {
+      "type": "string"
+    },
+    "protocolVersion": {
+      "type": "string"
+    },
+    "parametersName": {
+      "type": "string"
+    },
+    "componentsName": {
+      "type": "string"
+    },
+    "componentsType": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

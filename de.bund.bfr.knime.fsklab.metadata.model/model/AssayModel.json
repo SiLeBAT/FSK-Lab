@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "moisturePercentage": {
+      "type": "string"
+    },
+    "fatPercentage": {
+      "type": "string"
+    },
+    "detectionLimit": {
+      "type": "string"
+    },
+    "quantificationLimit": {
+      "type": "string"
+    },
+    "leftCensoredData": {
+      "type": "string"
+    },
+    "contaminationRange": {
+      "type": "string"
+    },
+    "uncertaintyValue": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

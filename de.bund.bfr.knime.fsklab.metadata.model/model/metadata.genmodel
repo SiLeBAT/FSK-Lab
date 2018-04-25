@@ -6,18 +6,18 @@
     operationReflection="true" importOrganizing="true">
   <foreignModel>metadata.ecore</foreignModel>
   <genPackages prefix="Metadata" disposableProviderFactory="true" ecorePackage="metadata.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="metadata.ecore#//Classification">
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//Classification/constant"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//Classification/input"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//Classification/output"/>
+    </genEnums>
     <genDataTypes ecoreDataType="metadata.ecore#//VCard"/>
     <genDataTypes ecoreDataType="metadata.ecore#//URI"/>
-    <genDataTypes ecoreDataType="metadata.ecore#//Study.1"/>
-    <genDataTypes ecoreDataType="metadata.ecore#//StudySample.1"/>
-    <genDataTypes ecoreDataType="metadata.ecore#//DietaryAssessmentMethod.1"/>
-    <genDataTypes ecoreDataType="metadata.ecore#//Assay.1"/>
     <genClasses ecoreClass="metadata.ecore#//GeneralInformation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/source"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/identifier"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/creationDate"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/modificationDate"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/rights"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/available"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/format"/>
@@ -27,8 +27,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/objective"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/description"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/creators"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/modelcategory"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/creators"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/modelcategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/modificationdate"/>
       <genOperations ecoreOperation="metadata.ecore#//GeneralInformation/equals">
         <genParameters ecoreParameter="metadata.ecore#//GeneralInformation/equals/anotherGI"/>
       </genOperations>
@@ -65,6 +66,13 @@
     <genClasses ecoreClass="metadata.ecore#//Assay">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Assay/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Assay/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Assay/moisturePercentage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Assay/fatPercentage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Assay/detectionLimit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Assay/quantificationLimit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Assay/leftCensoredData"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Assay/contaminationRange"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Assay/uncertaintyValue"/>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//Study">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Study/title"/>
@@ -84,16 +92,14 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Study/componentsType"/>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//DataBackground">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//DataBackground/study"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//DataBackground/studySample"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//DataBackground/dietaryAssessmentMethod"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//DataBackground/laboratoryAccreditation"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//DataBackground/assay"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/study"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/studysample"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/dietaryassessmentmethod"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/laboratory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/assay"/>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//StudySample">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//StudySample/sample"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//StudySample/moisturePercentage"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//StudySample/fatPercentage"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//StudySample/collectionProtocol"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//StudySample/samplingStrategy"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//StudySample/samplingProgramType"/>
@@ -110,6 +116,126 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//DietaryAssessmentMethod/numberOfFoodItems"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//DietaryAssessmentMethod/recordTypes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//DietaryAssessmentMethod/foodDescriptors"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//ModificationDate">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModificationDate/modificationDate"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//Product">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/environmentName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/environmentDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/environmentUnit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/originCountry"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/fisheriesArea"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/productionDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/expirationDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/productionMethod"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/packaging"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/productTreatment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Product/originArea"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//Hazard">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/hazardType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/hazardName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/hazardDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/hazardUnit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/adverseEffect"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/sourceOfContamination"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/bmd"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/mrl"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/noael"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/loael"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/aoel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/ard"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/adi"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Hazard/hazardIndSum"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//PopulationGroup">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/targetPopulation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationSpan"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationAge"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationGender"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/bmi"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/specialDietGroups"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/patternConsumption"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/region"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/country"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationRiskFactor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/season"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//Scope">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Scope/generalComment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Scope/temporalInformation"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/product"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/hazard"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/populationgroup"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/country"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/region"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//Laboratory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Laboratory/accreditation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Laboratory/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Laboratory/country"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//Country">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Country/country"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//Region">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Region/region"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//Parameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/unit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/unitCategory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/dataType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/source"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/subject"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/distribution"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/minValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/maxValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/reference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/variabilitySubject"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/rangeOfApplicability"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/error"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//Parameter/modelapplicability"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Parameter/classification"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//modelApplicability">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//modelApplicability/modelApplicability"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//ModelMath">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//ModelMath/parameter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelMath/sse"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelMath/mse"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelMath/rmse"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelMath/rSquared"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelMath/aic"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelMath/bic"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelMath/sensitivityAnalysis"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelMath/fittingProcedure"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//ModelMath/modelequation"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//ModelMath/exposure"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//ModelMath/event"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//ModelEquation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelEquation/equationName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelEquation/equationClass"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelEquation/equation"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//Exposure">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Exposure/treatment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Exposure/contaminationLevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Exposure/exposureType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Exposure/scenario"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Exposure/uncertaintyEstimation"/>
+    </genClasses>
+    <genClasses ecoreClass="metadata.ecore#//Event">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Event/event"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

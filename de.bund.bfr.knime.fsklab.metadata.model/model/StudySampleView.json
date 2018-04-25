@@ -1,0 +1,50 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "sample",
+      "scope": "#/properties/sample"
+    },
+    {
+      "type": "Control",
+      "label": "collectionProtocol",
+      "scope": "#/properties/collectionProtocol"
+    },
+    {
+      "type": "Control",
+      "label": "samplingStrategy",
+      "scope": "#/properties/samplingStrategy"
+    },
+    {
+      "type": "Control",
+      "label": "samplingProgramType",
+      "scope": "#/properties/samplingProgramType"
+    },
+    {
+      "type": "Control",
+      "label": "samplingMethod",
+      "scope": "#/properties/samplingMethod"
+    },
+    {
+      "type": "Control",
+      "label": "samplingPlan",
+      "scope": "#/properties/samplingPlan"
+    },
+    {
+      "type": "Control",
+      "label": "samplingWeight",
+      "scope": "#/properties/samplingWeight"
+    },
+    {
+      "type": "Control",
+      "label": "samplingSize",
+      "scope": "#/properties/samplingSize"
+    },
+    {
+      "type": "Control",
+      "label": "lotSizeUnit",
+      "scope": "#/properties/lotSizeUnit"
+    }
+  ]
+}

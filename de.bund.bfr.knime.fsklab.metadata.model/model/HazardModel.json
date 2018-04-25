@@ -1,0 +1,48 @@
+{
+  "type": "object",
+  "properties": {
+    "hazardType": {
+      "type": "string"
+    },
+    "hazardName": {
+      "type": "string"
+    },
+    "hazardDescription": {
+      "type": "string"
+    },
+    "hazardUnit": {
+      "type": "string"
+    },
+    "adverseEffect": {
+      "type": "string"
+    },
+    "sourceOfContamination": {
+      "type": "string"
+    },
+    "bmd": {
+      "type": "string"
+    },
+    "mrl": {
+      "type": "string"
+    },
+    "noael": {
+      "type": "string"
+    },
+    "loael": {
+      "type": "string"
+    },
+    "aoel": {
+      "type": "string"
+    },
+    "ard": {
+      "type": "string"
+    },
+    "adi": {
+      "type": "string"
+    },
+    "hazardIndSum": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "modificationDate": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}
