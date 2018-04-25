@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_C62iUBMgEei9qLxjcu33wQ" name="Creator" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://www.example.org/metadata#//Creator"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6YBMgEei9qLxjcu33wQ" name="Control Title">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6YRMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/Title"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6YhMgEei9qLxjcu33wQ" name="Control familyName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6YxMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/familyName"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6ZBMgEei9qLxjcu33wQ" name="Control email">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6ZRMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/email"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6ZhMgEei9qLxjcu33wQ" name="Control telephone">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6ZxMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/telephone"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6aBMgEei9qLxjcu33wQ" name="Control streetAddress">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6aRMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/streetAddress"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6ahMgEei9qLxjcu33wQ" name="Control extendedAddress">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6axMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/extendedAddress"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6bBMgEei9qLxjcu33wQ" name="Control country">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6bRMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/country"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6bhMgEei9qLxjcu33wQ" name="Control city">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6bxMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/city"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6cBMgEei9qLxjcu33wQ" name="Control ZIPCode">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6cRMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/ZIPCode"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6chMgEei9qLxjcu33wQ" name="Control postOfficeBox">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6cxMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/postOfficeBox"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6dBMgEei9qLxjcu33wQ" name="Control region">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6dRMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/region"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6dhMgEei9qLxjcu33wQ" name="Control nickName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6dxMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/nickName"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6eBMgEei9qLxjcu33wQ" name="Control timeZone">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6eRMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/timeZone"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6ehMgEei9qLxjcu33wQ" name="Control gender">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6exMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/gender"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6fBMgEei9qLxjcu33wQ" name="Control name">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6fRMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/name"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6fhMgEei9qLxjcu33wQ" name="Control url">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6fxMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/url"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6gBMgEei9qLxjcu33wQ" name="Control note">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6gRMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/note"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6ghMgEei9qLxjcu33wQ" name="Control logo">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6gxMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/logo"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_C7A6hBMgEei9qLxjcu33wQ" name="Control organization">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_C7A6hRMgEei9qLxjcu33wQ">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Creator/organization"/>
+    </domainModelReference>
+  </children>
+</org.eclipse.emf.ecp.view.model:View>

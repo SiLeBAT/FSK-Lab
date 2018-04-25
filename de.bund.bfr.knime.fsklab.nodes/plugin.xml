@@ -180,6 +180,18 @@
         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js">
       </webResource>
       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js" type="JAVASCRIPT" />
+         <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/punycode.js"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/punycode.js">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/punycode.js" type="JAVASCRIPT" />
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/lodash.js"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/lodash.js">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/lodash.js" type="JAVASCRIPT" />
+      
        <webResource
         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/codemirror.js"
         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/codemirror.js">

@@ -268,7 +268,7 @@ joiner = function() {
     				codeMirrorContainer.CodeMirror.refresh();
     				
 		        } else {
-		        	 CodeMirror.fromTextArea(document.getElementById("secondModelScript"), {
+		        	 window.CodeMirror.fromTextArea(document.getElementById("secondModelScript"), {
 		          	  lineNumbers: true,
 		          	  extraKeys: {"Ctrl-Space": "autocomplete"},
 		          	  mode: {name: "R"}
@@ -282,7 +282,7 @@ joiner = function() {
     				codeMirrorContainerx.CodeMirror.refresh();
     				
 		        } else {
-		        	 CodeMirror.fromTextArea(document.getElementById("firstModelScript"), {
+		        	 window.CodeMirror.fromTextArea(document.getElementById("firstModelScript"), {
 		          	  lineNumbers: true,
 		          	  extraKeys: {"Ctrl-Space": "autocomplete"},
 		          	  mode: {name: "R"}
@@ -296,7 +296,7 @@ joiner = function() {
     				codeMirrorContainer.CodeMirror.refresh();
     				
 		        } else {
-		        	 CodeMirror.fromTextArea(document.getElementById("secondModelViz"), {
+		        	 window.CodeMirror.fromTextArea(document.getElementById("secondModelViz"), {
 		          	  lineNumbers: true,
 		          	  extraKeys: {"Ctrl-Space": "autocomplete"},
 		          	  mode: {name: "R"}
@@ -310,7 +310,7 @@ joiner = function() {
     				codeMirrorContainerx.CodeMirror.refresh();
     				
 		        } else {
-		        	 CodeMirror.fromTextArea(document.getElementById("firstModelViz"), {
+		        	 window.CodeMirror.fromTextArea(document.getElementById("firstModelViz"), {
 		          	  lineNumbers: true,
 		          	  extraKeys: {"Ctrl-Space": "autocomplete"},
 		          	  mode: {name: "R"}
