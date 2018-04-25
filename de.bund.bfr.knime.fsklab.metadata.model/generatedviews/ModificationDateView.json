@@ -1,0 +1,5 @@
+{
+  "type": "Control",
+  "label": "Modification Date",
+  "scope": "#/properties/modificationDate"
+}

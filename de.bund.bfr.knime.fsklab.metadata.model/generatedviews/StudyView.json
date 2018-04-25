@@ -1,0 +1,80 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Title",
+      "scope": "#/properties/title"
+    },
+    {
+      "type": "Control",
+      "label": "Description",
+      "scope": "#/properties/description"
+    },
+    {
+      "type": "Control",
+      "label": "Design Type",
+      "scope": "#/properties/designType"
+    },
+    {
+      "type": "Control",
+      "label": "Measurement Type",
+      "scope": "#/properties/measurementType"
+    },
+    {
+      "type": "Control",
+      "label": "Technology Type",
+      "scope": "#/properties/technologyType"
+    },
+    {
+      "type": "Control",
+      "label": "Technology Platform",
+      "scope": "#/properties/technologyPlatform"
+    },
+    {
+      "type": "Control",
+      "label": "Accreditation Procedure",
+      "scope": "#/properties/accreditationProcedure"
+    },
+    {
+      "type": "Control",
+      "label": "Protocol Name",
+      "scope": "#/properties/protocolName"
+    },
+    {
+      "type": "Control",
+      "label": "Protocol Type",
+      "scope": "#/properties/protocolType"
+    },
+    {
+      "type": "Control",
+      "label": "Protocol Description",
+      "scope": "#/properties/protocolDescription"
+    },
+    {
+      "type": "Control",
+      "label": "Protocol Uri",
+      "scope": "#/properties/protocolUri"
+    },
+    {
+      "type": "Control",
+      "label": "Protocol Version",
+      "scope": "#/properties/protocolVersion"
+    },
+    {
+      "type": "Control",
+      "label": "Parameters Name",
+      "scope": "#/properties/parametersName"
+    },
+    {
+      "type": "Control",
+      "label": "Components Name",
+      "scope": "#/properties/componentsName"
+    },
+    {
+      "type": "Control",
+      "label": "Components Type",
+      "scope": "#/properties/componentsType"
+    }
+  ]
+}

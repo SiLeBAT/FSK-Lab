@@ -1,0 +1,60 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Environment Name",
+      "scope": "#/properties/environmentName"
+    },
+    {
+      "type": "Control",
+      "label": "Environment Description",
+      "scope": "#/properties/environmentDescription"
+    },
+    {
+      "type": "Control",
+      "label": "Environment Unit",
+      "scope": "#/properties/environmentUnit"
+    },
+    {
+      "type": "Control",
+      "label": "Origin Country",
+      "scope": "#/properties/originCountry"
+    },
+    {
+      "type": "Control",
+      "label": "Fisheries Area",
+      "scope": "#/properties/fisheriesArea"
+    },
+    {
+      "type": "Control",
+      "label": "Production Date",
+      "scope": "#/properties/productionDate"
+    },
+    {
+      "type": "Control",
+      "label": "Expiration Date",
+      "scope": "#/properties/expirationDate"
+    },
+    {
+      "type": "Control",
+      "label": "Production Method",
+      "scope": "#/properties/productionMethod"
+    },
+    {
+      "type": "Control",
+      "label": "Packaging",
+      "scope": "#/properties/packaging"
+    },
+    {
+      "type": "Control",
+      "label": "Product Treatment",
+      "scope": "#/properties/productTreatment"
+    },
+    {
+      "type": "Control",
+      "label": "Origin Area",
+      "scope": "#/properties/originArea"
+    }
+  ]
+}
