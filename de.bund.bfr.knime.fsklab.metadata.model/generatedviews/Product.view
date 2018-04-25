@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_Qk2ucEh5EeiIoYnPwpYKNg" name="Product" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://www.example.org/metadata#//Product"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAfcEh5EeiIoYnPwpYKNg" name="Control environmentName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAfcUh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/environmentName"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAfckh5EeiIoYnPwpYKNg" name="Control environmentDescription">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAfc0h5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/environmentDescription"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAfdEh5EeiIoYnPwpYKNg" name="Control environmentUnit">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAfdUh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/environmentUnit"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAfdkh5EeiIoYnPwpYKNg" name="Control originCountry">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAfd0h5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/originCountry"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAfeEh5EeiIoYnPwpYKNg" name="Control fisheriesArea">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAfeUh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/fisheriesArea"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAfekh5EeiIoYnPwpYKNg" name="Control productionDate">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAfe0h5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/productionDate"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAffEh5EeiIoYnPwpYKNg" name="Control expirationDate">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAffUh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/expirationDate"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAffkh5EeiIoYnPwpYKNg" name="Control productionMethod">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAff0h5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/productionMethod"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAfgEh5EeiIoYnPwpYKNg" name="Control packaging">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAfgUh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/packaging"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAfgkh5EeiIoYnPwpYKNg" name="Control productTreatment">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAfg0h5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/productTreatment"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QlAfhEh5EeiIoYnPwpYKNg" name="Control originArea">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QlAfhUh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Product/originArea"/>
+    </domainModelReference>
+  </children>
+</org.eclipse.emf.ecp.view.model:View>

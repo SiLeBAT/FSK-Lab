@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_QYV8cEh5EeiIoYnPwpYKNg" name="Assay" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://www.example.org/metadata#//Assay"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QYV8cUh5EeiIoYnPwpYKNg" name="Control name">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QYV8ckh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Assay/name"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QYV8c0h5EeiIoYnPwpYKNg" name="Control description">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QYV8dEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Assay/description"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QYV8dUh5EeiIoYnPwpYKNg" name="Control moisturePercentage">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QYV8dkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Assay/moisturePercentage"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QYV8d0h5EeiIoYnPwpYKNg" name="Control fatPercentage">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QYV8eEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Assay/fatPercentage"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QYV8eUh5EeiIoYnPwpYKNg" name="Control detectionLimit">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QYV8ekh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Assay/detectionLimit"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QYV8e0h5EeiIoYnPwpYKNg" name="Control quantificationLimit">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QYV8fEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Assay/quantificationLimit"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QYV8fUh5EeiIoYnPwpYKNg" name="Control leftCensoredData">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QYV8fkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Assay/leftCensoredData"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QYV8f0h5EeiIoYnPwpYKNg" name="Control contaminationRange">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QYV8gEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Assay/contaminationRange"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QYV8gUh5EeiIoYnPwpYKNg" name="Control uncertaintyValue">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QYV8gkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Assay/uncertaintyValue"/>
+    </domainModelReference>
+  </children>
+</org.eclipse.emf.ecp.view.model:View>

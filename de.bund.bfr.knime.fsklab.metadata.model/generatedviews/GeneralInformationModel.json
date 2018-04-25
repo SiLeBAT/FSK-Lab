@@ -1,0 +1,163 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "identifier": {
+      "type": "string"
+    },
+    "creationDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rights": {
+      "type": "string"
+    },
+    "available": {
+      "type": "boolean"
+    },
+    "format": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "software": {
+      "type": "string"
+    },
+    "languageWrittenIn": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "creators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Title": {
+            "type": "string"
+          },
+          "familyName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "telephone": {
+            "type": "string"
+          },
+          "streetAddress": {
+            "type": "string"
+          },
+          "extendedAddress": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "ZIPCode": {
+            "type": "string"
+          },
+          "postOfficeBox": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "nickName": {
+            "type": "string"
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "organization": {
+            "type": "string"
+          },
+          "fn": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "email"
+        ]
+      }
+    },
+    "modelcategory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "modelClass": {
+            "type": "string"
+          },
+          "modelSubClass": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "modelClassComment": {
+            "type": "string"
+          },
+          "basicProcess": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "modelClass"
+        ]
+      }
+    },
+    "modificationdate": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "modificationDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "identifier",
+    "rights"
+  ]
+}

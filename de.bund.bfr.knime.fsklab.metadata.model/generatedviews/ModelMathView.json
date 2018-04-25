@@ -1,0 +1,65 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Parameter",
+      "scope": "#/properties/parameter"
+    },
+    {
+      "type": "Control",
+      "label": "Sse",
+      "scope": "#/properties/sse"
+    },
+    {
+      "type": "Control",
+      "label": "Mse",
+      "scope": "#/properties/mse"
+    },
+    {
+      "type": "Control",
+      "label": "Rmse",
+      "scope": "#/properties/rmse"
+    },
+    {
+      "type": "Control",
+      "label": "RSquared",
+      "scope": "#/properties/rSquared"
+    },
+    {
+      "type": "Control",
+      "label": "Aic",
+      "scope": "#/properties/aic"
+    },
+    {
+      "type": "Control",
+      "label": "Bic",
+      "scope": "#/properties/bic"
+    },
+    {
+      "type": "Control",
+      "label": "Sensitivity Analysis",
+      "scope": "#/properties/sensitivityAnalysis"
+    },
+    {
+      "type": "Control",
+      "label": "Fitting Procedure",
+      "scope": "#/properties/fittingProcedure"
+    },
+    {
+      "type": "Control",
+      "label": "Modelequation",
+      "scope": "#/properties/modelequation"
+    },
+    {
+      "type": "Control",
+      "label": "Exposure",
+      "scope": "#/properties/exposure"
+    },
+    {
+      "type": "Control",
+      "label": "Event",
+      "scope": "#/properties/event"
+    }
+  ]
+}

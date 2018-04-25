@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_Qt8ZAEh5EeiIoYnPwpYKNg" name="Laboratory" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://www.example.org/metadata#//Laboratory"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QuFi8Eh5EeiIoYnPwpYKNg" name="Control accreditation">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QuFi8Uh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Laboratory/accreditation"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QuFi8kh5EeiIoYnPwpYKNg" name="Control name">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QuFi80h5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Laboratory/name"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QuFi9Eh5EeiIoYnPwpYKNg" name="Control country">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QuFi9Uh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Laboratory/country"/>
+    </domainModelReference>
+  </children>
+</org.eclipse.emf.ecp.view.model:View>

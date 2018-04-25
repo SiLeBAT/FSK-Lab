@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_Q36NUEh5EeiIoYnPwpYKNg" name="ModelMath" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://www.example.org/metadata#//ModelMath"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NUUh5EeiIoYnPwpYKNg" name="Control parameter">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NUkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//ModelMath/parameter"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NU0h5EeiIoYnPwpYKNg" name="Control sse">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NVEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelMath/sse"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NVUh5EeiIoYnPwpYKNg" name="Control mse">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NVkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelMath/mse"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NV0h5EeiIoYnPwpYKNg" name="Control rmse">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NWEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelMath/rmse"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NWUh5EeiIoYnPwpYKNg" name="Control rSquared">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NWkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelMath/rSquared"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NW0h5EeiIoYnPwpYKNg" name="Control aic">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NXEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelMath/aic"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NXUh5EeiIoYnPwpYKNg" name="Control bic">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NXkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelMath/bic"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NX0h5EeiIoYnPwpYKNg" name="Control sensitivityAnalysis">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NYEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelMath/sensitivityAnalysis"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NYUh5EeiIoYnPwpYKNg" name="Control fittingProcedure">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NYkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelMath/fittingProcedure"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NY0h5EeiIoYnPwpYKNg" name="Control modelequation">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NZEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//ModelMath/modelequation"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NZUh5EeiIoYnPwpYKNg" name="Control exposure">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NZkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//ModelMath/exposure"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q36NZ0h5EeiIoYnPwpYKNg" name="Control event">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q36NaEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//ModelMath/event"/>
+    </domainModelReference>
+  </children>
+</org.eclipse.emf.ecp.view.model:View>

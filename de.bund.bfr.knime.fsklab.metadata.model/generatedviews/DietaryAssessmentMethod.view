@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_Qg-UAEh5EeiIoYnPwpYKNg" name="DietaryAssessmentMethod" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://www.example.org/metadata#//DietaryAssessmentMethod"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qg-UAUh5EeiIoYnPwpYKNg" name="Control collectionTool">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qg-UAkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/collectionTool"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qg-UA0h5EeiIoYnPwpYKNg" name="Control numberOfNonConsecutiveOneDay">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qg-UBEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/numberOfNonConsecutiveOneDay"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qg-UBUh5EeiIoYnPwpYKNg" name="Control softwareTool">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qg-UBkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/softwareTool"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qg-UB0h5EeiIoYnPwpYKNg" name="Control numberOfFoodItems">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qg-UCEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/numberOfFoodItems"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qg-UCUh5EeiIoYnPwpYKNg" name="Control recordTypes">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qg-UCkh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/recordTypes"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qg-UC0h5EeiIoYnPwpYKNg" name="Control foodDescriptors">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qg-UDEh5EeiIoYnPwpYKNg">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/foodDescriptors"/>
+    </domainModelReference>
+  </children>
+</org.eclipse.emf.ecp.view.model:View>

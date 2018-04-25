@@ -1,5 +1,0 @@
-{
-  "type": "Control",
-  "label": "country",
-  "scope": "#/properties/country"
-}

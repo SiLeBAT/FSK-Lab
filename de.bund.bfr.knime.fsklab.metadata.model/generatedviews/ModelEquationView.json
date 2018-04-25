@@ -1,0 +1,20 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Equation Name",
+      "scope": "#/properties/equationName"
+    },
+    {
+      "type": "Control",
+      "label": "Equation Class",
+      "scope": "#/properties/equationClass"
+    },
+    {
+      "type": "Control",
+      "label": "Equation",
+      "scope": "#/properties/equation"
+    }
+  ]
+}

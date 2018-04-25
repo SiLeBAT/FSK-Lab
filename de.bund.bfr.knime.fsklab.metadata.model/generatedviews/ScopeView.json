@@ -1,0 +1,40 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "General Comment",
+      "scope": "#/properties/generalComment"
+    },
+    {
+      "type": "Control",
+      "label": "Temporal Information",
+      "scope": "#/properties/temporalInformation"
+    },
+    {
+      "type": "Control",
+      "label": "Product",
+      "scope": "#/properties/product"
+    },
+    {
+      "type": "Control",
+      "label": "Hazard",
+      "scope": "#/properties/hazard"
+    },
+    {
+      "type": "Control",
+      "label": "Populationgroup",
+      "scope": "#/properties/populationgroup"
+    },
+    {
+      "type": "Control",
+      "label": "Country",
+      "scope": "#/properties/country"
+    },
+    {
+      "type": "Control",
+      "label": "Region",
+      "scope": "#/properties/region"
+    }
+  ]
+}

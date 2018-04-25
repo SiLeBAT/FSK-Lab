@@ -1,0 +1,50 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Name",
+      "scope": "#/properties/name"
+    },
+    {
+      "type": "Control",
+      "label": "Description",
+      "scope": "#/properties/description"
+    },
+    {
+      "type": "Control",
+      "label": "Moisture Percentage",
+      "scope": "#/properties/moisturePercentage"
+    },
+    {
+      "type": "Control",
+      "label": "Fat Percentage",
+      "scope": "#/properties/fatPercentage"
+    },
+    {
+      "type": "Control",
+      "label": "Detection Limit",
+      "scope": "#/properties/detectionLimit"
+    },
+    {
+      "type": "Control",
+      "label": "Quantification Limit",
+      "scope": "#/properties/quantificationLimit"
+    },
+    {
+      "type": "Control",
+      "label": "Left Censored Data",
+      "scope": "#/properties/leftCensoredData"
+    },
+    {
+      "type": "Control",
+      "label": "Contamination Range",
+      "scope": "#/properties/contaminationRange"
+    },
+    {
+      "type": "Control",
+      "label": "Uncertainty Value",
+      "scope": "#/properties/uncertaintyValue"
+    }
+  ]
+}
