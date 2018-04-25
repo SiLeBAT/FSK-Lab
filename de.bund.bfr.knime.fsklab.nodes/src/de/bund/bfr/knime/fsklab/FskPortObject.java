@@ -464,10 +464,8 @@ public class FskPortObject implements PortObject {
 
     // PubMedId is not supported
 
-    List<String> authors =
-        record.getAuthors().stream().filter(Objects::nonNull).collect(Collectors.toList());
-
-    if (authors != null) {
+    List<String> authors = record.getAuthors();
+    if (authors != null && !authors.isEmpty()) {
       add(node, prefix + "authorListLabel", authors);
     }
 
