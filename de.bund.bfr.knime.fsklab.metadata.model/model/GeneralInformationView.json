@@ -1,0 +1,85 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "name",
+      "scope": "#/properties/name"
+    },
+    {
+      "type": "Control",
+      "label": "source",
+      "scope": "#/properties/source"
+    },
+    {
+      "type": "Control",
+      "label": "identifier",
+      "scope": "#/properties/identifier"
+    },
+    {
+      "type": "Control",
+      "label": "creationDate",
+      "scope": "#/properties/creationDate"
+    },
+    {
+      "type": "Control",
+      "label": "rights",
+      "scope": "#/properties/rights"
+    },
+    {
+      "type": "Control",
+      "label": "available",
+      "scope": "#/properties/available"
+    },
+    {
+      "type": "Control",
+      "label": "format",
+      "scope": "#/properties/format"
+    },
+    {
+      "type": "Control",
+      "label": "language",
+      "scope": "#/properties/language"
+    },
+    {
+      "type": "Control",
+      "label": "software",
+      "scope": "#/properties/software"
+    },
+    {
+      "type": "Control",
+      "label": "languageWrittenIn",
+      "scope": "#/properties/languageWrittenIn"
+    },
+    {
+      "type": "Control",
+      "label": "status",
+      "scope": "#/properties/status"
+    },
+    {
+      "type": "Control",
+      "label": "objective",
+      "scope": "#/properties/objective"
+    },
+    {
+      "type": "Control",
+      "label": "description",
+      "scope": "#/properties/description"
+    },
+    {
+      "type": "Control",
+      "label": "creators",
+      "scope": "#/properties/creators"
+    },
+    {
+      "type": "Control",
+      "label": "modelcategory",
+      "scope": "#/properties/modelcategory"
+    },
+    {
+      "type": "Control",
+      "label": "modificationdates",
+      "scope": "#/properties/modificationdates"
+    }
+  ]
+}

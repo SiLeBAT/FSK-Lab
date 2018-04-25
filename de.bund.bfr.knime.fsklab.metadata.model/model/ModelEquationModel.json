@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "equationName": {
+      "type": "string"
+    },
+    "equationClass": {
+      "type": "string"
+    },
+    "equation": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

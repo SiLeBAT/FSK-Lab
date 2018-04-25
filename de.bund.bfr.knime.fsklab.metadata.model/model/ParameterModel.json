@@ -1,0 +1,77 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "unit": {
+      "type": "string"
+    },
+    "unitCategory": {
+      "type": "string"
+    },
+    "dataType": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "distribution": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    },
+    "minValue": {
+      "type": "string"
+    },
+    "maxValue": {
+      "type": "string"
+    },
+    "reference": {
+      "type": "string"
+    },
+    "variabilitySubject": {
+      "type": "string"
+    },
+    "rangeOfApplicability": {
+      "type": "string"
+    },
+    "error": {
+      "type": "number"
+    },
+    "modelapplicability": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "modelApplicability": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "constant",
+        "input",
+        "output"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

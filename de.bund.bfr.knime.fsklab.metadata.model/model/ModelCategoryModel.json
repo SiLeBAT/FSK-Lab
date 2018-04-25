@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "properties": {
+    "modelClass": {
+      "type": "string"
+    },
+    "modelSubClass": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "modelClassComment": {
+      "type": "string"
+    },
+    "basicProcess": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "modelClass"
+  ]
+}

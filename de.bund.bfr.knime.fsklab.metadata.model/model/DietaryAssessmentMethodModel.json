@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "properties": {
+    "collectionTool": {
+      "type": "string"
+    },
+    "numberOfNonConsecutiveOneDay": {
+      "type": "integer"
+    },
+    "softwareTool": {
+      "type": "string"
+    },
+    "numberOfFoodItems": {
+      "type": "string"
+    },
+    "recordTypes": {
+      "type": "string"
+    },
+    "foodDescriptors": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

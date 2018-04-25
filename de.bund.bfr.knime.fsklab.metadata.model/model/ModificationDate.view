@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_QHt44EIKEeiZM-pcRbUn0w" name="ModificationDate" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://www.example.org/metadata#//ModificationDate"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QHt44UIKEeiZM-pcRbUn0w" name="Control modificationDate">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QHt44kIKEeiZM-pcRbUn0w">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModificationDate/modificationDate"/>
+    </domainModelReference>
+  </children>
+</org.eclipse.emf.ecp.view.model:View>

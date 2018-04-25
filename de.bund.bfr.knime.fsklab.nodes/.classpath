@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/batik-svg-dom.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/batik-util-1.7.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/ez-vcard-0.10.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/freemarker-2.3.23.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/vinnie-2.0.0.jar"/>

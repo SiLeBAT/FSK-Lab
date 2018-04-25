@@ -1,0 +1,75 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "hazardType",
+      "scope": "#/properties/hazardType"
+    },
+    {
+      "type": "Control",
+      "label": "hazardName",
+      "scope": "#/properties/hazardName"
+    },
+    {
+      "type": "Control",
+      "label": "hazardDescription",
+      "scope": "#/properties/hazardDescription"
+    },
+    {
+      "type": "Control",
+      "label": "hazardUnit",
+      "scope": "#/properties/hazardUnit"
+    },
+    {
+      "type": "Control",
+      "label": "adverseEffect",
+      "scope": "#/properties/adverseEffect"
+    },
+    {
+      "type": "Control",
+      "label": "sourceOfContamination",
+      "scope": "#/properties/sourceOfContamination"
+    },
+    {
+      "type": "Control",
+      "label": "bmd",
+      "scope": "#/properties/bmd"
+    },
+    {
+      "type": "Control",
+      "label": "mrl",
+      "scope": "#/properties/mrl"
+    },
+    {
+      "type": "Control",
+      "label": "noael",
+      "scope": "#/properties/noael"
+    },
+    {
+      "type": "Control",
+      "label": "loael",
+      "scope": "#/properties/loael"
+    },
+    {
+      "type": "Control",
+      "label": "aoel",
+      "scope": "#/properties/aoel"
+    },
+    {
+      "type": "Control",
+      "label": "ard",
+      "scope": "#/properties/ard"
+    },
+    {
+      "type": "Control",
+      "label": "adi",
+      "scope": "#/properties/adi"
+    },
+    {
+      "type": "Control",
+      "label": "hazardIndSum",
+      "scope": "#/properties/hazardIndSum"
+    }
+  ]
+}

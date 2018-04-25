@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_QpmJQD8dEei0X9yAY1XiAQ" name="DataBackground" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://www.example.org/metadata#//DataBackground"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QqBnED8dEei0X9yAY1XiAQ" name="Control study">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QqBnET8dEei0X9yAY1XiAQ">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//DataBackground/study"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QqBnEj8dEei0X9yAY1XiAQ" name="Control studysample">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QqBnEz8dEei0X9yAY1XiAQ">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//DataBackground/studysample"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QqBnFD8dEei0X9yAY1XiAQ" name="Control dietaryassessmentmethod">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QqBnFT8dEei0X9yAY1XiAQ">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//DataBackground/dietaryassessmentmethod"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QqBnFj8dEei0X9yAY1XiAQ" name="Control laboratory">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QqBnFz8dEei0X9yAY1XiAQ">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//DataBackground/laboratory"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QqCOID8dEei0X9yAY1XiAQ" name="Control assay">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QqCOIT8dEei0X9yAY1XiAQ">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//DataBackground/assay"/>
+    </domainModelReference>
+  </children>
+</org.eclipse.emf.ecp.view.model:View>

@@ -1,0 +1,30 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "treatment",
+      "scope": "#/properties/treatment"
+    },
+    {
+      "type": "Control",
+      "label": "contaminationLevel",
+      "scope": "#/properties/contaminationLevel"
+    },
+    {
+      "type": "Control",
+      "label": "exposureType",
+      "scope": "#/properties/exposureType"
+    },
+    {
+      "type": "Control",
+      "label": "scenario",
+      "scope": "#/properties/scenario"
+    },
+    {
+      "type": "Control",
+      "label": "uncertaintyEstimation",
+      "scope": "#/properties/uncertaintyEstimation"
+    }
+  ]
+}

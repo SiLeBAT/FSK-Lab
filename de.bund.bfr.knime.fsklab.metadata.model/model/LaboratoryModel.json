@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "accreditation": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

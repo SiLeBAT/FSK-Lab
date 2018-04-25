@@ -1,0 +1,5 @@
+{
+  "type": "Control",
+  "label": "event",
+  "scope": "#/properties/event"
+}
