@@ -259,7 +259,15 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
               : Integer.parseInt(fullParam.minValue);
           int max = fullParam.maxValue.isEmpty() ? Integer.MAX_VALUE
               : Integer.parseInt(fullParam.maxValue);
-          spinnerModel = new SpinnerNumberModel(Integer.parseInt(param.value), min, max, 1);
+          if(param.value!=null&&!param.value.equals("")) {
+            try {
+              spinnerModel = new SpinnerNumberModel(Integer.parseInt(param.value), min, max, 1);
+            }catch(java.lang.NumberFormatException e) {
+              spinnerModel = new SpinnerNumberModel(Double.parseDouble(param.value), min, max, 1);
+            }
+          }else {
+            spinnerModel = new SpinnerNumberModel(0, min, max, 1);
+          }
         }
 
         else if (fullParam.dataType == DataTypes.Double) {
@@ -267,7 +275,12 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
               : Double.parseDouble(fullParam.minValue);
           double max = fullParam.maxValue.isEmpty() ? Integer.MAX_VALUE
               : Double.parseDouble(fullParam.maxValue);
-          spinnerModel = new SpinnerNumberModel(Double.parseDouble(param.value), min, max, 0.01);
+          if(param.value!=null&&!param.value.equals("")) {
+            spinnerModel = new SpinnerNumberModel(Double.parseDouble(param.value), min, max, 0.01);
+          }else {
+            spinnerModel = new SpinnerNumberModel(0.0, min, max, 1);
+
+          }
         }
 
         FSpinner paramField = new FSpinner(spinnerModel, false);
@@ -422,8 +435,15 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         defaultSimulation = simulation_listModel.get(0);
       }
 
-      List<Parameter> simulationParameters = defaultSimulation.getSimulationParameters().stream()
-          .map(it -> parameterMap.get(it.name)).collect(Collectors.toList());
+      List<Parameter> simulationParameters = new ArrayList<>();
+      for (Parameter entry :  defaultSimulation.getSimulationParameters()) {
+
+        Parameter p = new Parameter();
+        p.name = entry.name;
+        p.value = entry.value;
+
+        simulationParameters.add(p);
+      }
       sE.setSimulationParameters(simulationParameters);
 
       simulation_listModel.addElement(sE);
@@ -527,7 +547,12 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       currentGenericModel = inObj.genericModel;
 
       simulation_listModel.clear();
-
+      Map<String, Parameter> parameterIDMap = new TreeMap<String, Parameter>();
+      if (parameterIDMap.isEmpty()) {
+        for (Parameter param : currentGenericModel.modelMath.parameter) {
+          parameterIDMap.put(param.id.toLowerCase(), param);
+        }
+      }
       // Add simulations from input model
       for (FskSimulation fskSimulation : inObj.simulations) {
 
@@ -535,7 +560,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
 
           Parameter p = new Parameter();
-          p.name = entry.getKey();
+          p.name = parameterIDMap.get(entry.getKey().toLowerCase()).name;
           p.value = entry.getValue();
 
           params.add(p);
