@@ -11,6 +11,20 @@
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//Classification/input"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//Classification/output"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="metadata.ecore#//DataTypes">
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/Integer"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/Double"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/Number"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/Date"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/File"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/Boolean"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/VectorOfNumbers"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/VectorOfStrings"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/MatrixOfNumbers"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/MatrixOfStrings"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/Object"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//DataTypes/Other"/>
+    </genEnums>
     <genDataTypes ecoreDataType="metadata.ecore#//VCard"/>
     <genDataTypes ecoreDataType="metadata.ecore#//URI"/>
     <genClasses ecoreClass="metadata.ecore#//GeneralInformation">
