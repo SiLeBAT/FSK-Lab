@@ -29,10 +29,14 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -286,7 +290,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         FSpinner paramField = new FSpinner(spinnerModel, false);
         paramField.addFocusListener(focusListener);
         prepareField(paramField, param.name, currentSimulation.getSimulationName());
-
         labels.add(createParameterLabel(paramField, param.name, fullParam.getDescription()));
         fields.add(createParameterPanel(paramField, fullParam.unit));
       } else {
@@ -354,9 +357,27 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   private void prepareField(JComponent comp, String parameterName, String simulationName) {
     comp.putClientProperty("id", parameterName);
     comp.setEnabled(!simulationName.equals(NodeUtils.DEFAULT_SIMULATION));
+    if(comp instanceof JSpinner) {
+      ((JSpinner)comp).addChangeListener(new SpinnerListerner());
+    }
     comp.addKeyListener(new SimulationParameterValueListener());
   }
+  class SpinnerListerner implements ChangeListener{
 
+    @Override
+    public void stateChanged(ChangeEvent e) {
+      SpinnerModel model = ((JSpinner)e.getSource()).getModel();
+      System.out.println(model.getValue());
+      JSpinner source = ((JSpinner) e.getSource());
+      for (Parameter param : currentSimulation.getSimulationParameters()) {
+        if (param.name.equalsIgnoreCase((String) source.getClientProperty("id"))) {
+          param.value = ""+model.getValue();
+        }
+      }
+      
+    }
+    
+  }
   class SimulationParameterValueListener implements KeyListener {
 
     @Override
