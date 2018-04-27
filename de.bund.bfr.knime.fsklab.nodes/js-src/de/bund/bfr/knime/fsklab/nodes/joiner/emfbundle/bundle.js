@@ -2471,10 +2471,10 @@ function createEMFForm(){
 		  createStore= redux.createStore,
 		  Provider= react_redux.Provider,
 		  materialFields= material_renderers.materialFields,
-		  materialRenderers= material_renderers.materialRenderers,
+		  materialRenderers= material_renderers.materialRenderers
 		  
 
-		  store1 = createStore(
+		  window.store1 = createStore(
 		  combineReducers({ jsonforms: jsonformsReducer() }),  
 		  {
 		    jsonforms: {
@@ -2483,9 +2483,9 @@ function createEMFForm(){
 		    }
 		  }
 		);
-		store1.dispatch(Actions.init(window.generalInformation, schema, uischema));
+		window.store1.dispatch(Actions.init(window.generalInformation, schema, uischema));
 
-		  store2 = createStore(
+		window.store2 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
 				    jsonforms: {
@@ -2494,7 +2494,7 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store2.dispatch(Actions.init(window.scope, schema2, uischema2));
+		  window.store2.dispatch(Actions.init(window.scope, schema2, uischema2));
 
 		  store3 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -2533,7 +2533,7 @@ function createEMFForm(){
 
 
 		//databackground stores
-		  store6 = createStore(
+		window.store6 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
 				    jsonforms: {
@@ -2542,7 +2542,7 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store6.dispatch(Actions.init(window.dataBackground, schema6, uischema6));
+		  window.store6.dispatch(Actions.init(window.dataBackground, schema6, uischema6));
 		  store7 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -2653,7 +2653,7 @@ function createEMFForm(){
 		store16.dispatch(Actions.init({}, schema16, uischema16));
 
 
-		store17 = createStore(
+		window.store17 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
 				    jsonforms: {
@@ -2662,7 +2662,7 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store17.dispatch(Actions.init(window.modelMath, schema17, uischema17));
+		window.store17.dispatch(Actions.init(window.modelMath, schema17, uischema17));
 
 
 		store18 = createStore(

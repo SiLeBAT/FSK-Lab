@@ -326,7 +326,10 @@ joiner = function() {
         });
         drawWorkflow();
         createEMFForm();
-        
+        $(window).resize(function() {
+            var canvas = $('#paper');
+            paper.setDimensions(canvas.width(), canvas.height());
+        });
           
           
         $('.MuiFormLabel-root-100').css('font-size','2rem');
@@ -370,19 +373,12 @@ joiner = function() {
     	        snapLinks: true,
     	        linkPinning: true,
     	        drawGrid : true,
-    	        embeddingMode: true,
     	        
     	        highlighting: {
     	            'default': {
     	                name: 'stroke',
     	                options: {
     	                    padding: 6
-    	                }
-    	            },
-    	            'embedding': {
-    	                name: 'addClass',
-    	                options: {
-    	                    className: 'highlighted-parent'
     	                }
     	            }
     	        },
@@ -471,11 +467,12 @@ joiner = function() {
     	    		secondModelOutputParameters.push(param.name);
     	    	}
     	    });
+    	    var paperWidth = $('#paper').width();
     	    var firstModelTojoin = new joint.shapes.devs.Atomic({
     	    	
     	        position: {
-    	            x: 200,
-    	            y: 160
+    	            x: paperWidth-520,
+    	            y: 60
     	        },
     	        size: { width: 200, height: firstModelInputParameters.length*25 },
     	        inPorts: firstModelInputParameters,
@@ -509,8 +506,8 @@ joiner = function() {
     	    var secondModelToJoin = new joint.shapes.devs.Atomic({
     	    	
     	        position: {
-    	            x: 500,
-    	            y: 160
+    	            x: paperWidth-270,
+    	            y: 280
     	        },
     	        size: { width: 200, height: secondModelInputParameters.length*25 },
     	        inPorts: secondModelInputParameters,
