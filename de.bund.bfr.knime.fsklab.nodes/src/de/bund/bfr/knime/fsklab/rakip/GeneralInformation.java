@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gmail.gcolaianni5.jris.bean.Record;
 import ezvcard.VCard;
 
@@ -34,10 +35,10 @@ public class GeneralInformation {
 
   /** Unambiguous ID given to the model or data. */
   public String identifier = "";
+
+  @JsonIgnore
   public final List<VCard> creators = new ArrayList<>();
 
-/*  public final List<VCard> creators = new ArrayList<>();
-*/
   /** Model creation date. */
   public Date creationDate = new Date();
 
@@ -55,6 +56,7 @@ public class GeneralInformation {
   /** Form of data (file extension). */
   public String format = "";
 
+  @JsonIgnore
   public final List<Record> reference = new ArrayList<>();
 
   /** Language of the resource. */

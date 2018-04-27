@@ -19,6 +19,7 @@ package de.bund.bfr.knime.fsklab.rakip;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gmail.gcolaianni5.jris.bean.Record;
 
 public class ModelEquation {
@@ -30,6 +31,7 @@ public class ModelEquation {
   public String equationClass = "";
 
   /** Model equation references (RIS). */
+  @JsonIgnore
   public final List<Record> equationReference = new ArrayList<>();
 
   /** Model equation or script. */

@@ -41,7 +41,7 @@ public class FskPlugin extends AbstractUIPlugin {
   @Override
   public void start(BundleContext context) throws Exception {
     super.start(context);
-    OBJECT_MAPPER = new ObjectMapper().registerModule(new RakipModule());
+    OBJECT_MAPPER = new ObjectMapper();
   }
 
   @Override
