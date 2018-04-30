@@ -131,7 +131,7 @@ public interface GeneralInformation extends EObject {
 	 * @return the value of the '<em>Creation Date</em>' attribute.
 	 * @see #setCreationDate(Date)
 	 * @see metadata.MetadataPackage#getGeneralInformation_CreationDate()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	Date getCreationDate();

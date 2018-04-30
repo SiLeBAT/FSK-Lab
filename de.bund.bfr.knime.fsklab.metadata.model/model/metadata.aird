@@ -1594,8 +1594,8 @@
       <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_MgB-0BJaEei_2fkO3UU5tQ" name="creationDate : EDate" tooltipText="">
         <target xmi:type="ecore:EAttribute" href="metadata.ecore#//GeneralInformation/creationDate"/>
         <semanticElements xmi:type="ecore:EAttribute" href="metadata.ecore#//GeneralInformation/creationDate"/>
-        <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_cNfWMBJaEei_2fkO3UU5tQ" labelAlignment="LEFT">
-          <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
+        <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_kqMZ0ExPEeilPPDZXMgWrw" labelAlignment="LEFT" description="_eqBfcBMdEei9qLxjcu33wQ">
+          <labelFormat>bold</labelFormat>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
