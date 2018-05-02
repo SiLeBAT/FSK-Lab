@@ -2,8 +2,6 @@
  */
 package metadata.impl;
 
-import java.lang.reflect.InvocationTargetException;
-
 import java.util.Collection;
 import java.util.Date;
 
@@ -49,7 +47,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link metadata.impl.GeneralInformationImpl#getStatus <em>Status</em>}</li>
  *   <li>{@link metadata.impl.GeneralInformationImpl#getObjective <em>Objective</em>}</li>
  *   <li>{@link metadata.impl.GeneralInformationImpl#getDescription <em>Description</em>}</li>
- *   <li>{@link metadata.impl.GeneralInformationImpl#getModelcategory <em>Modelcategory</em>}</li>
+ *   <li>{@link metadata.impl.GeneralInformationImpl#getModelCategory <em>Model Category</em>}</li>
  *   <li>{@link metadata.impl.GeneralInformationImpl#getModificationdate <em>Modificationdate</em>}</li>
  *   <li>{@link metadata.impl.GeneralInformationImpl#getAuthor <em>Author</em>}</li>
  *   <li>{@link metadata.impl.GeneralInformationImpl#getCreators <em>Creators</em>}</li>
@@ -320,14 +318,14 @@ public class GeneralInformationImpl extends MinimalEObjectImpl.Container impleme
 	protected String description = DESCRIPTION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getModelcategory() <em>Modelcategory</em>}' containment reference list.
+	 * The cached value of the '{@link #getModelCategory() <em>Model Category</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getModelcategory()
+	 * @see #getModelCategory()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ModelCategory> modelcategory;
+	protected EList<ModelCategory> modelCategory;
 
 	/**
 	 * The cached value of the '{@link #getModificationdate() <em>Modificationdate</em>}' containment reference list.
@@ -666,11 +664,11 @@ public class GeneralInformationImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<ModelCategory> getModelcategory() {
-		if (modelcategory == null) {
-			modelcategory = new EObjectContainmentEList<ModelCategory>(ModelCategory.class, this, MetadataPackage.GENERAL_INFORMATION__MODELCATEGORY);
+	public EList<ModelCategory> getModelCategory() {
+		if (modelCategory == null) {
+			modelCategory = new EObjectContainmentEList<ModelCategory>(ModelCategory.class, this, MetadataPackage.GENERAL_INFORMATION__MODEL_CATEGORY);
 		}
-		return modelcategory;
+		return modelCategory;
 	}
 
 	/**
@@ -757,39 +755,11 @@ public class GeneralInformationImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean equals(final GeneralInformation anotherGI) {
-		if (this == anotherGI)
-						      return true;
-						    if (anotherGI == null || getClass() != anotherGI.getClass())
-						      return false;
-				
-						    GeneralInformation other = (GeneralInformation) anotherGI;
-				return java.util.Objects.equals(creationDate, other.getCreationDate())
-				&& java.util.Objects.equals(creators, other.getCreators())
-				&& java.util.Objects.equals(description, other.getDescription()) && java.util.Objects.equals(format, other.getFormat())
-				&& java.util.Objects.equals(identifier, other.getIdentifier()) && isAvailable() == other.isAvailable()
-				&& java.util.Objects.equals(language, other.getLanguage())
-				&& java.util.Objects.equals(languageWrittenIn, other.getLanguageWrittenIn())
-				&& java.util.Objects.equals(getModelcategory(), other.getModelcategory())
-				&& java.util.Objects.equals(modificationdate, other.getModificationdate())
-				&& java.util.Objects.equals(name, other.getName()) && java.util.Objects.equals(objective, other.getObjective())
-				//&& java.util.Objects.equals(reference, other.reference) 
-				&& java.util.Objects.equals(rights, other.getRights())
-				&& java.util.Objects.equals(software, other.getSoftware()) && java.util.Objects.equals(source, other.getSource())
-				&& java.util.Objects.equals(status, other.getStatus()) 
-				/*&& Objects.equals(url, other.url)*/;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case MetadataPackage.GENERAL_INFORMATION__MODELCATEGORY:
-				return ((InternalEList<?>)getModelcategory()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.GENERAL_INFORMATION__MODEL_CATEGORY:
+				return ((InternalEList<?>)getModelCategory()).basicRemove(otherEnd, msgs);
 			case MetadataPackage.GENERAL_INFORMATION__MODIFICATIONDATE:
 				return ((InternalEList<?>)getModificationdate()).basicRemove(otherEnd, msgs);
 			case MetadataPackage.GENERAL_INFORMATION__AUTHOR:
@@ -836,8 +806,8 @@ public class GeneralInformationImpl extends MinimalEObjectImpl.Container impleme
 				return getObjective();
 			case MetadataPackage.GENERAL_INFORMATION__DESCRIPTION:
 				return getDescription();
-			case MetadataPackage.GENERAL_INFORMATION__MODELCATEGORY:
-				return getModelcategory();
+			case MetadataPackage.GENERAL_INFORMATION__MODEL_CATEGORY:
+				return getModelCategory();
 			case MetadataPackage.GENERAL_INFORMATION__MODIFICATIONDATE:
 				return getModificationdate();
 			case MetadataPackage.GENERAL_INFORMATION__AUTHOR:
@@ -898,9 +868,9 @@ public class GeneralInformationImpl extends MinimalEObjectImpl.Container impleme
 			case MetadataPackage.GENERAL_INFORMATION__DESCRIPTION:
 				setDescription((String)newValue);
 				return;
-			case MetadataPackage.GENERAL_INFORMATION__MODELCATEGORY:
-				getModelcategory().clear();
-				getModelcategory().addAll((Collection<? extends ModelCategory>)newValue);
+			case MetadataPackage.GENERAL_INFORMATION__MODEL_CATEGORY:
+				getModelCategory().clear();
+				getModelCategory().addAll((Collection<? extends ModelCategory>)newValue);
 				return;
 			case MetadataPackage.GENERAL_INFORMATION__MODIFICATIONDATE:
 				getModificationdate().clear();
@@ -968,8 +938,8 @@ public class GeneralInformationImpl extends MinimalEObjectImpl.Container impleme
 			case MetadataPackage.GENERAL_INFORMATION__DESCRIPTION:
 				setDescription(DESCRIPTION_EDEFAULT);
 				return;
-			case MetadataPackage.GENERAL_INFORMATION__MODELCATEGORY:
-				getModelcategory().clear();
+			case MetadataPackage.GENERAL_INFORMATION__MODEL_CATEGORY:
+				getModelCategory().clear();
 				return;
 			case MetadataPackage.GENERAL_INFORMATION__MODIFICATIONDATE:
 				getModificationdate().clear();
@@ -1021,8 +991,8 @@ public class GeneralInformationImpl extends MinimalEObjectImpl.Container impleme
 				return OBJECTIVE_EDEFAULT == null ? objective != null : !OBJECTIVE_EDEFAULT.equals(objective);
 			case MetadataPackage.GENERAL_INFORMATION__DESCRIPTION:
 				return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
-			case MetadataPackage.GENERAL_INFORMATION__MODELCATEGORY:
-				return modelcategory != null && !modelcategory.isEmpty();
+			case MetadataPackage.GENERAL_INFORMATION__MODEL_CATEGORY:
+				return modelCategory != null && !modelCategory.isEmpty();
 			case MetadataPackage.GENERAL_INFORMATION__MODIFICATIONDATE:
 				return modificationdate != null && !modificationdate.isEmpty();
 			case MetadataPackage.GENERAL_INFORMATION__AUTHOR:
@@ -1033,20 +1003,6 @@ public class GeneralInformationImpl extends MinimalEObjectImpl.Container impleme
 				return reference != null && !reference.isEmpty();
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case MetadataPackage.GENERAL_INFORMATION___EQUALS__GENERALINFORMATION:
-				return equals((GeneralInformation)arguments.get(0));
-		}
-		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

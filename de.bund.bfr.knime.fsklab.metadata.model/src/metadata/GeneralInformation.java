@@ -30,7 +30,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link metadata.GeneralInformation#getStatus <em>Status</em>}</li>
  *   <li>{@link metadata.GeneralInformation#getObjective <em>Objective</em>}</li>
  *   <li>{@link metadata.GeneralInformation#getDescription <em>Description</em>}</li>
- *   <li>{@link metadata.GeneralInformation#getModelcategory <em>Modelcategory</em>}</li>
+ *   <li>{@link metadata.GeneralInformation#getModelCategory <em>Model Category</em>}</li>
  *   <li>{@link metadata.GeneralInformation#getModificationdate <em>Modificationdate</em>}</li>
  *   <li>{@link metadata.GeneralInformation#getAuthor <em>Author</em>}</li>
  *   <li>{@link metadata.GeneralInformation#getCreators <em>Creators</em>}</li>
@@ -381,20 +381,20 @@ public interface GeneralInformation extends EObject {
 	void setDescription(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Modelcategory</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Model Category</b></em>' containment reference list.
 	 * The list contents are of type {@link metadata.ModelCategory}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Modelcategory</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Model Category</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Modelcategory</em>' containment reference list.
-	 * @see metadata.MetadataPackage#getGeneralInformation_Modelcategory()
+	 * @return the value of the '<em>Model Category</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getGeneralInformation_ModelCategory()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ModelCategory> getModelcategory();
+	EList<ModelCategory> getModelCategory();
 
 	/**
 	 * Returns the value of the '<em><b>Modificationdate</b></em>' containment reference list.
@@ -469,13 +469,5 @@ public interface GeneralInformation extends EObject {
 	 * @generated
 	 */
 	EList<Reference> getReference();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model annotation="http://www.eclipse.org/emf/2002/GenModel body='if (this == anotherGI)\r\n\t\t\t\t      return true;\r\n\t\t\t\t    if (anotherGI == null || getClass() != anotherGI.getClass())\r\n\t\t\t\t      return false;\r\n\t\t\r\n\t\t\t\t    GeneralInformation other = (GeneralInformation) anotherGI;\r\n\t\treturn java.util.Objects.equals(creationDate, other.getCreationDate())\r\n\t\t&amp;&amp; java.util.Objects.equals(creators, other.getCreators())\r\n\t\t&amp;&amp; java.util.Objects.equals(description, other.getDescription()) &amp;&amp; java.util.Objects.equals(format, other.getFormat())\r\n\t\t&amp;&amp; java.util.Objects.equals(identifier, other.getIdentifier()) &amp;&amp; isAvailable() == other.isAvailable()\r\n\t\t&amp;&amp; java.util.Objects.equals(language, other.getLanguage())\r\n\t\t&amp;&amp; java.util.Objects.equals(languageWrittenIn, other.getLanguageWrittenIn())\r\n\t\t&amp;&amp; java.util.Objects.equals(getModelcategory(), other.getModelcategory())\r\n\t\t&amp;&amp; java.util.Objects.equals(modificationdate, other.getModificationdate())\r\n\t\t&amp;&amp; java.util.Objects.equals(name, other.getName()) &amp;&amp; java.util.Objects.equals(objective, other.getObjective())\r\n\t\t//&amp;&amp; java.util.Objects.equals(reference, other.reference) \r\n\t\t&amp;&amp; java.util.Objects.equals(rights, other.getRights())\r\n\t\t&amp;&amp; java.util.Objects.equals(software, other.getSoftware()) &amp;&amp; java.util.Objects.equals(source, other.getSource())\r\n\t\t&amp;&amp; java.util.Objects.equals(status, other.getStatus()) \r\n\t\t/*&amp;&amp; Objects.equals(url, other.url)\052/;'"
-	 * @generated
-	 */
-	boolean equals(GeneralInformation anotherGI);
 
 } // GeneralInformation

@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link metadata.Scope#getTemporalInformation <em>Temporal Information</em>}</li>
  *   <li>{@link metadata.Scope#getProduct <em>Product</em>}</li>
  *   <li>{@link metadata.Scope#getHazard <em>Hazard</em>}</li>
- *   <li>{@link metadata.Scope#getPopulationgroup <em>Populationgroup</em>}</li>
+ *   <li>{@link metadata.Scope#getPopulationGroup <em>Population Group</em>}</li>
  *   <li>{@link metadata.Scope#getSpatialInformation <em>Spatial Information</em>}</li>
  * </ul>
  *
@@ -113,30 +113,30 @@ public interface Scope extends EObject {
 	EList<Hazard> getHazard();
 
 	/**
-	 * Returns the value of the '<em><b>Populationgroup</b></em>' reference.
+	 * Returns the value of the '<em><b>Population Group</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Populationgroup</em>' reference isn't clear,
+	 * If the meaning of the '<em>Population Group</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Populationgroup</em>' reference.
-	 * @see #setPopulationgroup(PopulationGroup)
-	 * @see metadata.MetadataPackage#getScope_Populationgroup()
+	 * @return the value of the '<em>Population Group</em>' reference.
+	 * @see #setPopulationGroup(PopulationGroup)
+	 * @see metadata.MetadataPackage#getScope_PopulationGroup()
 	 * @model
 	 * @generated
 	 */
-	PopulationGroup getPopulationgroup();
+	PopulationGroup getPopulationGroup();
 
 	/**
-	 * Sets the value of the '{@link metadata.Scope#getPopulationgroup <em>Populationgroup</em>}' reference.
+	 * Sets the value of the '{@link metadata.Scope#getPopulationGroup <em>Population Group</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Populationgroup</em>' reference.
-	 * @see #getPopulationgroup()
+	 * @param value the new value of the '<em>Population Group</em>' reference.
+	 * @see #getPopulationGroup()
 	 * @generated
 	 */
-	void setPopulationgroup(PopulationGroup value);
+	void setPopulationGroup(PopulationGroup value);
 
 	/**
 	 * Returns the value of the '<em><b>Spatial Information</b></em>' containment reference.

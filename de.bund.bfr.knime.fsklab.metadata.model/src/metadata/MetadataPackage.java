@@ -6,7 +6,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -187,13 +186,13 @@ public interface MetadataPackage extends EPackage {
 	int GENERAL_INFORMATION__DESCRIPTION = 12;
 
 	/**
-	 * The feature id for the '<em><b>Modelcategory</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Model Category</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GENERAL_INFORMATION__MODELCATEGORY = 13;
+	int GENERAL_INFORMATION__MODEL_CATEGORY = 13;
 
 	/**
 	 * The feature id for the '<em><b>Modificationdate</b></em>' containment reference list.
@@ -241,22 +240,13 @@ public interface MetadataPackage extends EPackage {
 	int GENERAL_INFORMATION_FEATURE_COUNT = 18;
 
 	/**
-	 * The operation id for the '<em>Equals</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERAL_INFORMATION___EQUALS__GENERALINFORMATION = 0;
-
-	/**
 	 * The number of operations of the '<em>General Information</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GENERAL_INFORMATION_OPERATION_COUNT = 1;
+	int GENERAL_INFORMATION_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link metadata.impl.ModelCategoryImpl <em>Model Category</em>}' class.
@@ -1377,13 +1367,13 @@ public interface MetadataPackage extends EPackage {
 	int SCOPE__HAZARD = 3;
 
 	/**
-	 * The feature id for the '<em><b>Populationgroup</b></em>' reference.
+	 * The feature id for the '<em><b>Population Group</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCOPE__POPULATIONGROUP = 4;
+	int SCOPE__POPULATION_GROUP = 4;
 
 	/**
 	 * The feature id for the '<em><b>Spatial Information</b></em>' containment reference.
@@ -1987,13 +1977,13 @@ public interface MetadataPackage extends EPackage {
 	int MODEL_MATH__PARAMETER = 3;
 
 	/**
-	 * The feature id for the '<em><b>Modelequation</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Model Equation</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_MATH__MODELEQUATION = 4;
+	int MODEL_MATH__MODEL_EQUATION = 4;
 
 	/**
 	 * The feature id for the '<em><b>Exposure</b></em>' containment reference.
@@ -2544,15 +2534,15 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getGeneralInformation_Description();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link metadata.GeneralInformation#getModelcategory <em>Modelcategory</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.GeneralInformation#getModelCategory <em>Model Category</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Modelcategory</em>'.
-	 * @see metadata.GeneralInformation#getModelcategory()
+	 * @return the meta object for the containment reference list '<em>Model Category</em>'.
+	 * @see metadata.GeneralInformation#getModelCategory()
 	 * @see #getGeneralInformation()
 	 * @generated
 	 */
-	EReference getGeneralInformation_Modelcategory();
+	EReference getGeneralInformation_ModelCategory();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link metadata.GeneralInformation#getModificationdate <em>Modificationdate</em>}'.
@@ -2597,16 +2587,6 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getGeneralInformation_Reference();
-
-	/**
-	 * Returns the meta object for the '{@link metadata.GeneralInformation#equals(metadata.GeneralInformation) <em>Equals</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Equals</em>' operation.
-	 * @see metadata.GeneralInformation#equals(metadata.GeneralInformation)
-	 * @generated
-	 */
-	EOperation getGeneralInformation__Equals__GeneralInformation();
 
 	/**
 	 * Returns the meta object for class '{@link metadata.ModelCategory <em>Model Category</em>}'.
@@ -3731,15 +3711,15 @@ public interface MetadataPackage extends EPackage {
 	EReference getScope_Hazard();
 
 	/**
-	 * Returns the meta object for the reference '{@link metadata.Scope#getPopulationgroup <em>Populationgroup</em>}'.
+	 * Returns the meta object for the reference '{@link metadata.Scope#getPopulationGroup <em>Population Group</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Populationgroup</em>'.
-	 * @see metadata.Scope#getPopulationgroup()
+	 * @return the meta object for the reference '<em>Population Group</em>'.
+	 * @see metadata.Scope#getPopulationGroup()
 	 * @see #getScope()
 	 * @generated
 	 */
-	EReference getScope_Populationgroup();
+	EReference getScope_PopulationGroup();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link metadata.Scope#getSpatialInformation <em>Spatial Information</em>}'.
@@ -4307,15 +4287,15 @@ public interface MetadataPackage extends EPackage {
 	EReference getModelMath_Parameter();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link metadata.ModelMath#getModelequation <em>Modelequation</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.ModelMath#getModelEquation <em>Model Equation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Modelequation</em>'.
-	 * @see metadata.ModelMath#getModelequation()
+	 * @return the meta object for the containment reference list '<em>Model Equation</em>'.
+	 * @see metadata.ModelMath#getModelEquation()
 	 * @see #getModelMath()
 	 * @generated
 	 */
-	EReference getModelMath_Modelequation();
+	EReference getModelMath_ModelEquation();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link metadata.ModelMath#getExposure <em>Exposure</em>}'.
@@ -4834,12 +4814,12 @@ public interface MetadataPackage extends EPackage {
 		EAttribute GENERAL_INFORMATION__DESCRIPTION = eINSTANCE.getGeneralInformation_Description();
 
 		/**
-		 * The meta object literal for the '<em><b>Modelcategory</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Model Category</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference GENERAL_INFORMATION__MODELCATEGORY = eINSTANCE.getGeneralInformation_Modelcategory();
+		EReference GENERAL_INFORMATION__MODEL_CATEGORY = eINSTANCE.getGeneralInformation_ModelCategory();
 
 		/**
 		 * The meta object literal for the '<em><b>Modificationdate</b></em>' containment reference list feature.
@@ -4872,14 +4852,6 @@ public interface MetadataPackage extends EPackage {
 		 * @generated
 		 */
 		EReference GENERAL_INFORMATION__REFERENCE = eINSTANCE.getGeneralInformation_Reference();
-
-		/**
-		 * The meta object literal for the '<em><b>Equals</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation GENERAL_INFORMATION___EQUALS__GENERALINFORMATION = eINSTANCE.getGeneralInformation__Equals__GeneralInformation();
 
 		/**
 		 * The meta object literal for the '{@link metadata.impl.ModelCategoryImpl <em>Model Category</em>}' class.
@@ -5728,12 +5700,12 @@ public interface MetadataPackage extends EPackage {
 		EReference SCOPE__HAZARD = eINSTANCE.getScope_Hazard();
 
 		/**
-		 * The meta object literal for the '<em><b>Populationgroup</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Population Group</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference SCOPE__POPULATIONGROUP = eINSTANCE.getScope_Populationgroup();
+		EReference SCOPE__POPULATION_GROUP = eINSTANCE.getScope_PopulationGroup();
 
 		/**
 		 * The meta object literal for the '<em><b>Spatial Information</b></em>' containment reference feature.
@@ -6166,12 +6138,12 @@ public interface MetadataPackage extends EPackage {
 		EReference MODEL_MATH__PARAMETER = eINSTANCE.getModelMath_Parameter();
 
 		/**
-		 * The meta object literal for the '<em><b>Modelequation</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Model Equation</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MODEL_MATH__MODELEQUATION = eINSTANCE.getModelMath_Modelequation();
+		EReference MODEL_MATH__MODEL_EQUATION = eINSTANCE.getModelMath_ModelEquation();
 
 		/**
 		 * The meta object literal for the '<em><b>Exposure</b></em>' containment reference feature.

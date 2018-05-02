@@ -37,7 +37,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link metadata.impl.ModelMathImpl#getFittingProcedure <em>Fitting Procedure</em>}</li>
  *   <li>{@link metadata.impl.ModelMathImpl#getEvent <em>Event</em>}</li>
  *   <li>{@link metadata.impl.ModelMathImpl#getParameter <em>Parameter</em>}</li>
- *   <li>{@link metadata.impl.ModelMathImpl#getModelequation <em>Modelequation</em>}</li>
+ *   <li>{@link metadata.impl.ModelMathImpl#getModelEquation <em>Model Equation</em>}</li>
  *   <li>{@link metadata.impl.ModelMathImpl#getExposure <em>Exposure</em>}</li>
  * </ul>
  *
@@ -95,14 +95,14 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 	protected EList<Parameter> parameter;
 
 	/**
-	 * The cached value of the '{@link #getModelequation() <em>Modelequation</em>}' containment reference list.
+	 * The cached value of the '{@link #getModelEquation() <em>Model Equation</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getModelequation()
+	 * @see #getModelEquation()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ModelEquation> modelequation;
+	protected EList<ModelEquation> modelEquation;
 
 	/**
 	 * The cached value of the '{@link #getExposure() <em>Exposure</em>}' containment reference.
@@ -195,11 +195,11 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<ModelEquation> getModelequation() {
-		if (modelequation == null) {
-			modelequation = new EObjectContainmentEList<ModelEquation>(ModelEquation.class, this, MetadataPackage.MODEL_MATH__MODELEQUATION);
+	public EList<ModelEquation> getModelEquation() {
+		if (modelEquation == null) {
+			modelEquation = new EObjectContainmentEList<ModelEquation>(ModelEquation.class, this, MetadataPackage.MODEL_MATH__MODEL_EQUATION);
 		}
-		return modelequation;
+		return modelEquation;
 	}
 
 	/**
@@ -255,8 +255,8 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 		switch (featureID) {
 			case MetadataPackage.MODEL_MATH__PARAMETER:
 				return ((InternalEList<?>)getParameter()).basicRemove(otherEnd, msgs);
-			case MetadataPackage.MODEL_MATH__MODELEQUATION:
-				return ((InternalEList<?>)getModelequation()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
+				return ((InternalEList<?>)getModelEquation()).basicRemove(otherEnd, msgs);
 			case MetadataPackage.MODEL_MATH__EXPOSURE:
 				return basicSetExposure(null, msgs);
 		}
@@ -279,8 +279,8 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 				return getEvent();
 			case MetadataPackage.MODEL_MATH__PARAMETER:
 				return getParameter();
-			case MetadataPackage.MODEL_MATH__MODELEQUATION:
-				return getModelequation();
+			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
+				return getModelEquation();
 			case MetadataPackage.MODEL_MATH__EXPOSURE:
 				return getExposure();
 		}
@@ -311,9 +311,9 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 				getParameter().clear();
 				getParameter().addAll((Collection<? extends Parameter>)newValue);
 				return;
-			case MetadataPackage.MODEL_MATH__MODELEQUATION:
-				getModelequation().clear();
-				getModelequation().addAll((Collection<? extends ModelEquation>)newValue);
+			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
+				getModelEquation().clear();
+				getModelEquation().addAll((Collection<? extends ModelEquation>)newValue);
 				return;
 			case MetadataPackage.MODEL_MATH__EXPOSURE:
 				setExposure((Exposure)newValue);
@@ -342,8 +342,8 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 			case MetadataPackage.MODEL_MATH__PARAMETER:
 				getParameter().clear();
 				return;
-			case MetadataPackage.MODEL_MATH__MODELEQUATION:
-				getModelequation().clear();
+			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
+				getModelEquation().clear();
 				return;
 			case MetadataPackage.MODEL_MATH__EXPOSURE:
 				setExposure((Exposure)null);
@@ -368,8 +368,8 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 				return event != null && !event.isEmpty();
 			case MetadataPackage.MODEL_MATH__PARAMETER:
 				return parameter != null && !parameter.isEmpty();
-			case MetadataPackage.MODEL_MATH__MODELEQUATION:
-				return modelequation != null && !modelequation.isEmpty();
+			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
+				return modelEquation != null && !modelEquation.isEmpty();
 			case MetadataPackage.MODEL_MATH__EXPOSURE:
 				return exposure != null;
 		}

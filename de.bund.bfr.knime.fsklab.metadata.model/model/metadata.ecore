@@ -2,12 +2,6 @@
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="metadata" nsURI="http://www.example.org/metadata" nsPrefix="metadata">
   <eClassifiers xsi:type="ecore:EClass" name="GeneralInformation">
-    <eOperations name="equals" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="body" value="if (this == anotherGI)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;      return true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;    if (anotherGI == null || getClass() != anotherGI.getClass())&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;      return false;&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;    GeneralInformation other = (GeneralInformation) anotherGI;&#xD;&#xA;&#x9;&#x9;return java.util.Objects.equals(creationDate, other.getCreationDate())&#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(creators, other.getCreators())&#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(description, other.getDescription()) &amp;&amp; java.util.Objects.equals(format, other.getFormat())&#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(identifier, other.getIdentifier()) &amp;&amp; isAvailable() == other.isAvailable()&#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(language, other.getLanguage())&#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(languageWrittenIn, other.getLanguageWrittenIn())&#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(getModelcategory(), other.getModelcategory())&#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(modificationdate, other.getModificationdate())&#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(name, other.getName()) &amp;&amp; java.util.Objects.equals(objective, other.getObjective())&#xD;&#xA;&#x9;&#x9;//&amp;&amp; java.util.Objects.equals(reference, other.reference) &#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(rights, other.getRights())&#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(software, other.getSoftware()) &amp;&amp; java.util.Objects.equals(source, other.getSource())&#xD;&#xA;&#x9;&#x9;&amp;&amp; java.util.Objects.equals(status, other.getStatus()) &#xD;&#xA;&#x9;&#x9;/*&amp;&amp; Objects.equals(url, other.url)*/;"/>
-      </eAnnotations>
-      <eParameters name="anotherGI" eType="#//GeneralInformation"/>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="identifier" lowerBound="1"
@@ -24,7 +18,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="objective" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="modelcategory" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modelCategory" upperBound="-1"
         eType="#//ModelCategory" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="modificationdate" upperBound="-1"
         eType="#//ModificationDate" containment="true"/>
@@ -194,7 +188,7 @@
         eType="#//Product" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hazard" upperBound="-1"
         eType="#//Hazard"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="populationgroup" eType="#//PopulationGroup"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="populationGroup" eType="#//PopulationGroup"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="spatialInformation" eType="#//SpatialInformation"
         containment="true"/>
   </eClassifiers>
@@ -319,7 +313,7 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" lowerBound="1"
         upperBound="-1" eType="#//Parameter" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="modelequation" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modelEquation" upperBound="-1"
         eType="#//ModelEquation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="exposure" eType="#//Exposure"
         containment="true"/>
