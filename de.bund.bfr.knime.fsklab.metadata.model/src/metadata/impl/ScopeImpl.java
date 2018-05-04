@@ -38,7 +38,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link metadata.impl.ScopeImpl#getTemporalInformation <em>Temporal Information</em>}</li>
  *   <li>{@link metadata.impl.ScopeImpl#getProduct <em>Product</em>}</li>
  *   <li>{@link metadata.impl.ScopeImpl#getHazard <em>Hazard</em>}</li>
- *   <li>{@link metadata.impl.ScopeImpl#getPopulationgroup <em>Populationgroup</em>}</li>
+ *   <li>{@link metadata.impl.ScopeImpl#getPopulationGroup <em>Population Group</em>}</li>
  *   <li>{@link metadata.impl.ScopeImpl#getSpatialInformation <em>Spatial Information</em>}</li>
  * </ul>
  *
@@ -106,14 +106,14 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	protected EList<Hazard> hazard;
 
 	/**
-	 * The cached value of the '{@link #getPopulationgroup() <em>Populationgroup</em>}' reference.
+	 * The cached value of the '{@link #getPopulationGroup() <em>Population Group</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPopulationgroup()
+	 * @see #getPopulationGroup()
 	 * @generated
 	 * @ordered
 	 */
-	protected PopulationGroup populationgroup;
+	protected PopulationGroup populationGroup;
 
 	/**
 	 * The cached value of the '{@link #getSpatialInformation() <em>Spatial Information</em>}' containment reference.
@@ -215,16 +215,16 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PopulationGroup getPopulationgroup() {
-		if (populationgroup != null && populationgroup.eIsProxy()) {
-			InternalEObject oldPopulationgroup = (InternalEObject)populationgroup;
-			populationgroup = (PopulationGroup)eResolveProxy(oldPopulationgroup);
-			if (populationgroup != oldPopulationgroup) {
+	public PopulationGroup getPopulationGroup() {
+		if (populationGroup != null && populationGroup.eIsProxy()) {
+			InternalEObject oldPopulationGroup = (InternalEObject)populationGroup;
+			populationGroup = (PopulationGroup)eResolveProxy(oldPopulationGroup);
+			if (populationGroup != oldPopulationGroup) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MetadataPackage.SCOPE__POPULATIONGROUP, oldPopulationgroup, populationgroup));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MetadataPackage.SCOPE__POPULATION_GROUP, oldPopulationGroup, populationGroup));
 			}
 		}
-		return populationgroup;
+		return populationGroup;
 	}
 
 	/**
@@ -232,8 +232,8 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PopulationGroup basicGetPopulationgroup() {
-		return populationgroup;
+	public PopulationGroup basicGetPopulationGroup() {
+		return populationGroup;
 	}
 
 	/**
@@ -241,11 +241,11 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setPopulationgroup(PopulationGroup newPopulationgroup) {
-		PopulationGroup oldPopulationgroup = populationgroup;
-		populationgroup = newPopulationgroup;
+	public void setPopulationGroup(PopulationGroup newPopulationGroup) {
+		PopulationGroup oldPopulationGroup = populationGroup;
+		populationGroup = newPopulationGroup;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__POPULATIONGROUP, oldPopulationgroup, populationgroup));
+			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__POPULATION_GROUP, oldPopulationGroup, populationGroup));
 	}
 
 	/**
@@ -323,9 +323,9 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 				return getProduct();
 			case MetadataPackage.SCOPE__HAZARD:
 				return getHazard();
-			case MetadataPackage.SCOPE__POPULATIONGROUP:
-				if (resolve) return getPopulationgroup();
-				return basicGetPopulationgroup();
+			case MetadataPackage.SCOPE__POPULATION_GROUP:
+				if (resolve) return getPopulationGroup();
+				return basicGetPopulationGroup();
 			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
 				return getSpatialInformation();
 		}
@@ -355,8 +355,8 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 				getHazard().clear();
 				getHazard().addAll((Collection<? extends Hazard>)newValue);
 				return;
-			case MetadataPackage.SCOPE__POPULATIONGROUP:
-				setPopulationgroup((PopulationGroup)newValue);
+			case MetadataPackage.SCOPE__POPULATION_GROUP:
+				setPopulationGroup((PopulationGroup)newValue);
 				return;
 			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
 				setSpatialInformation((SpatialInformation)newValue);
@@ -385,8 +385,8 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 			case MetadataPackage.SCOPE__HAZARD:
 				getHazard().clear();
 				return;
-			case MetadataPackage.SCOPE__POPULATIONGROUP:
-				setPopulationgroup((PopulationGroup)null);
+			case MetadataPackage.SCOPE__POPULATION_GROUP:
+				setPopulationGroup((PopulationGroup)null);
 				return;
 			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
 				setSpatialInformation((SpatialInformation)null);
@@ -411,8 +411,8 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 				return product != null && !product.isEmpty();
 			case MetadataPackage.SCOPE__HAZARD:
 				return hazard != null && !hazard.isEmpty();
-			case MetadataPackage.SCOPE__POPULATIONGROUP:
-				return populationgroup != null;
+			case MetadataPackage.SCOPE__POPULATION_GROUP:
+				return populationGroup != null;
 			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
 				return spatialInformation != null;
 		}

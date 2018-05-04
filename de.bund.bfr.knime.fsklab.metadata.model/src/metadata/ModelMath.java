@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link metadata.ModelMath#getFittingProcedure <em>Fitting Procedure</em>}</li>
  *   <li>{@link metadata.ModelMath#getEvent <em>Event</em>}</li>
  *   <li>{@link metadata.ModelMath#getParameter <em>Parameter</em>}</li>
- *   <li>{@link metadata.ModelMath#getModelequation <em>Modelequation</em>}</li>
+ *   <li>{@link metadata.ModelMath#getModelEquation <em>Model Equation</em>}</li>
  *   <li>{@link metadata.ModelMath#getExposure <em>Exposure</em>}</li>
  * </ul>
  *
@@ -103,20 +103,20 @@ public interface ModelMath extends EObject {
 	EList<Parameter> getParameter();
 
 	/**
-	 * Returns the value of the '<em><b>Modelequation</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Model Equation</b></em>' containment reference list.
 	 * The list contents are of type {@link metadata.ModelEquation}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Modelequation</em>' containment reference list isn't clear,
+	 * If the meaning of the '<em>Model Equation</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Modelequation</em>' containment reference list.
-	 * @see metadata.MetadataPackage#getModelMath_Modelequation()
+	 * @return the value of the '<em>Model Equation</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getModelMath_ModelEquation()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ModelEquation> getModelequation();
+	EList<ModelEquation> getModelEquation();
 
 	/**
 	 * Returns the value of the '<em><b>Exposure</b></em>' containment reference.

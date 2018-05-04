@@ -96,14 +96,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/objective"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//GeneralInformation/description"/>
-      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/modelcategory"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/modelCategory"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/modificationdate"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/author"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/creators"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//GeneralInformation/reference"/>
-      <genOperations ecoreOperation="metadata.ecore#//GeneralInformation/equals">
-        <genParameters ecoreParameter="metadata.ecore#//GeneralInformation/equals/anotherGI"/>
-      </genOperations>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//ModelCategory">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelCategory/modelClass"/>
@@ -218,7 +215,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Scope/temporalInformation"/>
       <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/product"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/hazard"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/populationgroup"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/populationGroup"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/spatialInformation"/>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//Laboratory">
@@ -278,7 +275,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelMath/fittingProcedure"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//ModelMath/event"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//ModelMath/parameter"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//ModelMath/modelequation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//ModelMath/modelEquation"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//ModelMath/exposure"/>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//Parameter">

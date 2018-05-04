@@ -34,7 +34,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -421,7 +420,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getGeneralInformation_Modelcategory() {
+	public EReference getGeneralInformation_ModelCategory() {
 		return (EReference)generalInformationEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -459,15 +458,6 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 */
 	public EReference getGeneralInformation_Reference() {
 		return (EReference)generalInformationEClass.getEStructuralFeatures().get(17);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getGeneralInformation__Equals__GeneralInformation() {
-		return generalInformationEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -1402,7 +1392,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getScope_Populationgroup() {
+	public EReference getScope_PopulationGroup() {
 		return (EReference)scopeEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1879,7 +1869,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getModelMath_Modelequation() {
+	public EReference getModelMath_ModelEquation() {
 		return (EReference)modelMathEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -2240,12 +2230,11 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		createEAttribute(generalInformationEClass, GENERAL_INFORMATION__STATUS);
 		createEAttribute(generalInformationEClass, GENERAL_INFORMATION__OBJECTIVE);
 		createEAttribute(generalInformationEClass, GENERAL_INFORMATION__DESCRIPTION);
-		createEReference(generalInformationEClass, GENERAL_INFORMATION__MODELCATEGORY);
+		createEReference(generalInformationEClass, GENERAL_INFORMATION__MODEL_CATEGORY);
 		createEReference(generalInformationEClass, GENERAL_INFORMATION__MODIFICATIONDATE);
 		createEReference(generalInformationEClass, GENERAL_INFORMATION__AUTHOR);
 		createEReference(generalInformationEClass, GENERAL_INFORMATION__CREATORS);
 		createEReference(generalInformationEClass, GENERAL_INFORMATION__REFERENCE);
-		createEOperation(generalInformationEClass, GENERAL_INFORMATION___EQUALS__GENERALINFORMATION);
 
 		modelCategoryEClass = createEClass(MODEL_CATEGORY);
 		createEAttribute(modelCategoryEClass, MODEL_CATEGORY__MODEL_CLASS);
@@ -2360,7 +2349,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		createEAttribute(scopeEClass, SCOPE__TEMPORAL_INFORMATION);
 		createEReference(scopeEClass, SCOPE__PRODUCT);
 		createEReference(scopeEClass, SCOPE__HAZARD);
-		createEReference(scopeEClass, SCOPE__POPULATIONGROUP);
+		createEReference(scopeEClass, SCOPE__POPULATION_GROUP);
 		createEReference(scopeEClass, SCOPE__SPATIAL_INFORMATION);
 
 		laboratoryEClass = createEClass(LABORATORY);
@@ -2420,7 +2409,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		createEAttribute(modelMathEClass, MODEL_MATH__FITTING_PROCEDURE);
 		createEAttribute(modelMathEClass, MODEL_MATH__EVENT);
 		createEReference(modelMathEClass, MODEL_MATH__PARAMETER);
-		createEReference(modelMathEClass, MODEL_MATH__MODELEQUATION);
+		createEReference(modelMathEClass, MODEL_MATH__MODEL_EQUATION);
 		createEReference(modelMathEClass, MODEL_MATH__EXPOSURE);
 
 		parameterEClass = createEClass(PARAMETER);
@@ -2509,14 +2498,11 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		initEAttribute(getGeneralInformation_Status(), ecorePackage.getEString(), "status", null, 0, 1, GeneralInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getGeneralInformation_Objective(), ecorePackage.getEString(), "objective", null, 0, 1, GeneralInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getGeneralInformation_Description(), ecorePackage.getEString(), "description", null, 0, 1, GeneralInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getGeneralInformation_Modelcategory(), this.getModelCategory(), null, "modelcategory", null, 0, -1, GeneralInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getGeneralInformation_ModelCategory(), this.getModelCategory(), null, "modelCategory", null, 0, -1, GeneralInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getGeneralInformation_Modificationdate(), this.getModificationDate(), null, "modificationdate", null, 0, -1, GeneralInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getGeneralInformation_Author(), this.getContact(), null, "author", null, 1, 1, GeneralInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getGeneralInformation_Creators(), this.getContact(), null, "creators", null, 0, -1, GeneralInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getGeneralInformation_Reference(), this.getReference(), null, "reference", null, 1, -1, GeneralInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		EOperation op = initEOperation(getGeneralInformation__Equals__GeneralInformation(), ecorePackage.getEBoolean(), "equals", 0, 1, IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getGeneralInformation(), "anotherGI", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(modelCategoryEClass, ModelCategory.class, "ModelCategory", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModelCategory_ModelClass(), ecorePackage.getEString(), "modelClass", null, 1, 1, ModelCategory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2631,7 +2617,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		initEAttribute(getScope_TemporalInformation(), ecorePackage.getEString(), "temporalInformation", null, 0, 1, Scope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScope_Product(), this.getProduct(), null, "product", null, 0, -1, Scope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScope_Hazard(), this.getHazard(), null, "hazard", null, 0, -1, Scope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getScope_Populationgroup(), this.getPopulationGroup(), null, "populationgroup", null, 0, 1, Scope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getScope_PopulationGroup(), this.getPopulationGroup(), null, "populationGroup", null, 0, 1, Scope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScope_SpatialInformation(), this.getSpatialInformation(), null, "spatialInformation", null, 0, 1, Scope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(laboratoryEClass, Laboratory.class, "Laboratory", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2691,7 +2677,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		initEAttribute(getModelMath_FittingProcedure(), ecorePackage.getEString(), "fittingProcedure", null, 0, 1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModelMath_Event(), ecorePackage.getEString(), "event", null, 0, -1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getModelMath_Parameter(), this.getParameter(), null, "parameter", null, 1, -1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getModelMath_Modelequation(), this.getModelEquation(), null, "modelequation", null, 0, -1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelMath_ModelEquation(), this.getModelEquation(), null, "modelEquation", null, 0, -1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getModelMath_Exposure(), this.getExposure(), null, "exposure", null, 0, 1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(parameterEClass, Parameter.class, "Parameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
