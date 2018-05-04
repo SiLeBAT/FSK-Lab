@@ -117,9 +117,93 @@ joiner = function() {
     	window.scope =  _firstModel.scope;
     	window.modelMath =  _firstModel.modelMath;
     	window.dataBackground =  _firstModel.dataBackground;
+    	prepareData(_firstModel);
         create_body();
     };
-
+    function prepareData(_firstModel){
+		//prepare generalInformation
+		if(_firstModel.generalInformation.creationDate  === undefined){
+			_firstModel.generalInformation.creationDate = '';
+		}else{
+			_firstModel.generalInformation.creationDate = new Date(_firstModel.generalInformation.creationDate).toISOString();
+		}
+		//prepare scope
+		if(_firstModel.scope.product.productionDate  === undefined){
+			_firstModel.scope.product.productionDate = '';
+		}else{
+			_firstModel.scope.product.productionDate = new Date(_firstModel.scope.product.productionDate).toISOString()
+		}
+		
+		if(_firstModel.scope.product.expirationDate  === undefined){
+			_firstModel.scope.product.expirationDate = '';
+		}else{
+			_firstModel.scope.product.expirationDate = new Date(_firstModel.scope.product.expirationDate).toISOString();
+		}
+		if(_firstModel.scope.product.productionMethod.length == 0){
+			_firstModel.scope.product.productionMethod = '';
+		}else{
+			var methods = '';
+			$.each(_firstModel.scope.product.productionMethod, function( index, value ) {
+				  methods = methods + value +', ';
+			});
+			_firstModel.scope.product.productionMethod = methods;
+		}
+		
+		if(_firstModel.scope.product.packaging.length == 0){
+			_firstModel.scope.product.packaging = '';
+		}else{
+			var packaging = '';
+			$.each(_firstModel.scope.product.packaging, function( index, value ) {
+				packaging = packaging + value +', ';
+			});
+			_firstModel.scope.product.packaging = packaging;
+		}
+		
+		if(_firstModel.scope.product.productTreatment.length == 0){
+			_firstModel.scope.product.productTreatment = '';
+		}else{
+			var productTreatment = '';
+			$.each(_firstModel.scope.product.productTreatment, function( index, value ) {
+				productTreatment = productTreatment + value +', ';
+			});
+			_firstModel.scope.product.productTreatment = productTreatment;
+		}
+		console.log(_firstModel.dataBackground);
+		//prepare databackground
+		if(_firstModel.dataBackground.study.protocolUri == null){
+			_firstModel.dataBackground.study.protocolUri = '';
+		}
+		
+		if(_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems.length == 0){
+			_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems = '';
+		}else{
+			var numberOfFoodItems = '';
+			$.each(_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems, function( index, value ) {
+				numberOfFoodItems = numberOfFoodItems + value +', ';
+			});
+			_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems = numberOfFoodItems;
+		}
+		
+		if(_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors.length == 0){
+			_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors = '';
+		}else{
+			var foodDescriptors = '';
+			$.each(_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors, function( index, value ) {
+				foodDescriptors = foodDescriptors + value +', ';
+			});
+			_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors = foodDescriptors;
+		}
+		
+		if(_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes.length == 0){
+			_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes = '';
+		}else{
+			var recordTypes = '';
+			$.each(_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes, function( index, value ) {
+				recordTypes = recordTypes + value +', ';
+			});
+			_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes = recordTypes;
+		}
+	}
     joinerNode.getComponentValue = function() {
     	
     	var serializer = new XMLSerializer();
@@ -332,17 +416,42 @@ joiner = function() {
         });
           
           
-        $('.MuiFormLabel-root-100').css('font-size','2rem');
+        
+        $('.MuiFormLabel-root-100').css('font-size','1.5rem');
         $('.MuiDialog-paper-128').css('display','inline');
         $('.MuiDialog-paper-128').css('max-height','');
         $('.MuiDialog-paper-128').css('overflow-y','visible');
-        $('.MuiTable-root-222').css('table-layout','fixed');
-        $('.MuiTable-root-222 > t')
-       // $('.MuiTable-root-222').css('width','100%');
+
+        $(".MuiTable-root-222 thead").removeAttr('class');
+        $(".MuiTable-root-222 thead tr").removeAttr('class');
+        $(".MuiTable-root-222 thead tr th").removeAttr('class');
+        $(".MuiTable-root-222 thead tr th th").removeAttr('class');
+        $(".MuiTable-root-222 tbody").removeAttr('class');
+        $(".MuiTable-root-222 tbody tr").removeAttr('class');
+        $(".MuiTable-root-222 tbody tr td").removeAttr('class');
+        $(".MuiTable-root-222 tbody tr td div").removeAttr('class');
+        $(".MuiTable-root-222 tbody tr td div div").removeAttr('class');
+        $(".MuiTable-root-222 tbody tr td div div div").removeAttr('class');
+        
+        $(".MuiTable-root-222 tbody tr td div div div input").removeAttr('class');
+        
+        
+
+        
+	   
+	   $('.MuiTable-root-222').addClass('table'); 
+	   $('.MuiTable-root-222').parent().addClass('table-responsive');
+	   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
+        $('.MuiTable-root-222').removeClass('MuiTable-root-222'); 
+        //$(".MuiInput-input-113").prop("readonly", true);
+         
+        $('.MuiTable-root-222').addClass('table table-dark'); 
+        $('.MuiFormControl-root-90').addClass('form-group');
+       
+        
         $('.replaced').parent().addClass('panel'); 
         $('.replaced').parent().addClass('panel-default'); 
         $('.replaced').addClass('panel-body'); 
-        //$($("[aria-describedby*='tooltip-add']")[0]).off();
         function getLastWord(words) {
             var n = words.split(" ");
             return n[n.length - 1];

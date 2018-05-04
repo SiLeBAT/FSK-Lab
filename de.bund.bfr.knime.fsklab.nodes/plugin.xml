@@ -67,6 +67,7 @@
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.SimulatorNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JSSimulatorNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.JoinerNodeFactory" />
+     <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FSKEditorJSNodeFactory" />
    </extension>
    
    <extension point="org.knime.js.core.javascriptComponents">
@@ -88,6 +89,15 @@
        javascriptComponentID="de.bund.bfr.knime.fsklab.js.joiner"
        name="FSK Joiner"
        namespace="joiner">
+     </javascriptComponent>
+     <!-- Javascript component for Fsk Editor JS node -->
+     <javascriptComponent
+       getComponentValue-method-name="getComponentValue"
+       implementationBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle"
+       init-method-name="init"
+       javascriptComponentID="de.bund.bfr.knime.fsklab.js.FSKEditorJS"
+       name="FSK Editor JS"
+       namespace="fskeditorjs">
      </javascriptComponent>
    </extension>
    
@@ -137,6 +147,27 @@
        <webDependency webResourceBundleID="fskeditor" />
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjs"></webDependency>
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjscss"></webDependency>
+	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js" />
+	 </webResourceBundle>
+	 
+	 <!-- JS and CSS code for Fsk Editor JS node -->
+     <webResourceBundle
+       debug="true"
+       name="FSK Editor JS"
+       usesDefine="true"
+       version="1.0.0"
+       webResourceBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle">
+     
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/fskeditorjs/"
+         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/fskeditorjs/">
+       </webResource>
+       
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/fskeditorjs/fskeditorjs.css" type="CSS" />
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/fskeditorjs/fskeditorjs.js" type="JAVASCRIPT" />
+      
+       <!-- Dependencies -->
+       <webDependency webResourceBundleID="fskeditor" />
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js" />
 	 </webResourceBundle>
 	 

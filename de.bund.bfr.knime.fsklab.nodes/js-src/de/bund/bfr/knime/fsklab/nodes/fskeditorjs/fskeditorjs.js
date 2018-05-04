@@ -112,7 +112,6 @@ fskeditorjs = function() {
     	
     	_viewValue = value;
     	window.generalInformation = _firstModel.generalInformation;
-    	console.log(_firstModel.scope);
     	prepareData(_firstModel);
     	
     	window.scope =  _firstModel.scope;
@@ -372,65 +371,42 @@ fskeditorjs = function() {
         
           
           
-        //$('.MuiFormLabel-root-100').css('font-size','1.5rem');
+        $('.MuiFormLabel-root-100').css('font-size','1.5rem');
         $('.MuiDialog-paper-128').css('display','inline');
         $('.MuiDialog-paper-128').css('max-height','');
         $('.MuiDialog-paper-128').css('overflow-y','visible');
-        $('.MuiTable-root-222').addClass('table'); 
+
+        $(".MuiTable-root-222 thead").removeAttr('class');
+        $(".MuiTable-root-222 thead tr").removeAttr('class');
+        $(".MuiTable-root-222 thead tr th").removeAttr('class');
+        $(".MuiTable-root-222 thead tr th th").removeAttr('class');
+        $(".MuiTable-root-222 tbody").removeAttr('class');
+        $(".MuiTable-root-222 tbody tr").removeAttr('class');
+        $(".MuiTable-root-222 tbody tr td").removeAttr('class');
+        $(".MuiTable-root-222 tbody tr td div").removeAttr('class');
+        $(".MuiTable-root-222 tbody tr td div div").removeAttr('class');
+        $(".MuiTable-root-222 tbody tr td div div div").removeAttr('class');
         
+        $(".MuiTable-root-222 tbody tr td div div div input").removeAttr('class');
+        
+        
+
+        
+	   
+	   $('.MuiTable-root-222').addClass('table'); 
+	   $('.MuiTable-root-222').parent().addClass('table-responsive');
+	   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
+        $('.MuiTable-root-222').removeClass('MuiTable-root-222'); 
+        //$(".MuiInput-input-113").prop("readonly", true);
+         
+        $('.MuiTable-root-222').addClass('table table-dark'); 
         $('.MuiFormControl-root-90').addClass('form-group');
-        $('.MuiFormControl-root-90').addClass('row');
-        $('.MuiFormControl-root-90').removeClass('MuiFormControl-fullWidth-93'); 
-        
-        
-        $(".MuiFormControl-root-90 > label").attr('class', '');
-        $(".MuiFormControl-root-90 > label").removeAttr( "data-shrink" )
-        $('.MuiFormControl-root-90 > label').addClass('col-2');
-        $('.MuiFormControl-root-90 > label').addClass('col-form-label');
-        $('.MuiFormControl-root-90 > label').off();
-        
-        
-        
-        $(".MuiFormControl-root-90 > div").attr('class', '');
-        $('.MuiFormControl-root-90 > div').addClass('col-10');
-        
-        $(".MuiFormControl-root-90 > div > input").attr('class', '');
-        $('.MuiFormControl-root-90 > div > input').addClass('form-control');
-        $('.MuiFormControl-root-90 > div > input').off();
-        console.log($($('.MuiFormControl-root-90 > div > input')[0]));
-        
-        $('.MuiFormControl-root-90').removeClass('MuiFormControl-root-90');
-        /*
-        $('.MuiInput-input-113').addClass('form-control');
-        $('.MuiInput-input-113').removeClass('MuiInput-inputSingleline-116'); 
-        $('.MuiInput-input-113').removeClass('MuiInput-input-113'); 
- 
-        $('.MuiFormControl-root-90').addClass('form-group');
-        $('.MuiFormControl-root-90').removeClass('MuiFormControl-fullWidth-93'); 
-        $('.MuiFormControl-root-90').removeClass('MuiFormControl-root-90');
-        
-        $('.MuiFormLabel-root-100').addClass('control-label');
-        $('.MuiFormLabel-root-100').addClass('field_name2');
-        $('.MuiFormLabel-root-100').addClass('col-xs-2');
-        $('.MuiFormLabel-root-100').addClass('col-sm-2');
-        $('.MuiFormLabel-root-100').addClass('col-md-2');
-        $('.MuiFormLabel-root-100').removeClass('MuiInputLabel-root-94'); 
-        $('.MuiFormLabel-root-100').removeClass('MuiInputLabel-formControl-95');
-        $('.MuiFormLabel-root-100').removeClass('MuiInputLabel-animated-98');
-        $('.MuiFormLabel-root-100').removeClass('MuiInputLabel-shrink-97');
-        $('.MuiFormLabel-root-100').removeClass('MuiFormLabel-root-100');
-        
-       $('.MuiInput-root-104').addClass('col-xs-10 col-sm-10 col-md-10');
-        $('.MuiInput-root-104').addClass('col-sm-10');
-        $('.MuiInput-root-104').addClass('col-md-10');
-        $('.MuiInput-root-104').removeClass('MuiInput-fullWidth-112'); 
-        $('.MuiInput-root-104').removeClass('MuiInput-formControl-105');
-        $('.MuiInput-root-104').removeClass('MuiInput-inkbar-106');
-        $('.MuiInput-root-104').removeClass('validate');
-        $('.MuiInput-root-104').removeClass('valid');
-        $('.MuiInput-root-104').removeClass('MuiInput-underline-110');
-        $('.MuiInput-root-104').removeClass('MuiInput-root-104');*/
-        
+       
+        $(document.body).delegate('input:text', 'focusin', function(e) {
+        	e.preventDefault();
+        	console.log('hii');
+            
+        });
         $('.replaced').parent().addClass('panel'); 
         $('.replaced').parent().addClass('panel-default'); 
         $('.replaced').addClass('panel-body'); 
