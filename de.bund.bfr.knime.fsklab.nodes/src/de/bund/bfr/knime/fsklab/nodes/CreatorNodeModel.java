@@ -1397,13 +1397,6 @@ class CreatorNodeModel extends NoInternalsModel {
       return stringObjects;
     }
 
-    private static boolean isRowEmpty(DataRow row) {
-      for (DataCell cell : row)
-        if (!cell.isMissing())
-          return false;
-      return true;
-    }
-
     static GeneralInformation retrieveGeneralInformation(String[][] values) {
 
       GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
