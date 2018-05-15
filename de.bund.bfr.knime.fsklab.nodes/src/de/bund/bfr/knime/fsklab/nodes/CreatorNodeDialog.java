@@ -53,7 +53,7 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
-import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
+import de.bund.bfr.knime.fsklab.util.UTF8Control;
 import de.bund.bfr.swing.UI;
 
 public class CreatorNodeDialog extends NodeDialogPane {

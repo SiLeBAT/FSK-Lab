@@ -83,7 +83,7 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.FixedDateChooser;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
-import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
+import de.bund.bfr.knime.fsklab.util.UTF8Control;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;
