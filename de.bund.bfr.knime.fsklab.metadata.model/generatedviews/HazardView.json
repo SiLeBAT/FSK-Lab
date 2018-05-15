@@ -3,72 +3,72 @@
   "elements": [
     {
       "type": "Control",
-      "label": "hazardType",
+      "label": "Hazard Type",
       "scope": "#/properties/hazardType"
     },
     {
       "type": "Control",
-      "label": "hazardName",
+      "label": "Hazard Name",
       "scope": "#/properties/hazardName"
     },
     {
       "type": "Control",
-      "label": "hazardDescription",
+      "label": "Hazard Description",
       "scope": "#/properties/hazardDescription"
     },
     {
       "type": "Control",
-      "label": "hazardUnit",
+      "label": "Hazard Unit",
       "scope": "#/properties/hazardUnit"
     },
     {
       "type": "Control",
-      "label": "adverseEffect",
+      "label": "Adverse Effect",
       "scope": "#/properties/adverseEffect"
     },
     {
       "type": "Control",
-      "label": "sourceOfContamination",
+      "label": "Source Of Contamination",
       "scope": "#/properties/sourceOfContamination"
     },
     {
       "type": "Control",
-      "label": "benchmarkDose",
+      "label": "Benchmark Dose",
       "scope": "#/properties/benchmarkDose"
     },
     {
       "type": "Control",
-      "label": "maximumResidueLimit",
+      "label": "Maximum Residue Limit",
       "scope": "#/properties/maximumResidueLimit"
     },
     {
       "type": "Control",
-      "label": "noObservedAdverseAffectLevel",
+      "label": "No Observed Adverse Affect Level",
       "scope": "#/properties/noObservedAdverseAffectLevel"
     },
     {
       "type": "Control",
-      "label": "lowestObservedAdverseAffectLevel",
+      "label": "Lowest Observed Adverse Affect Level",
       "scope": "#/properties/lowestObservedAdverseAffectLevel"
     },
     {
       "type": "Control",
-      "label": "acceptableOperatorExposureLevel",
+      "label": "Acceptable Operator Exposure Level",
       "scope": "#/properties/acceptableOperatorExposureLevel"
     },
     {
       "type": "Control",
-      "label": "acuteReferenceDose",
+      "label": "Acute Reference Dose",
       "scope": "#/properties/acuteReferenceDose"
     },
     {
       "type": "Control",
-      "label": "acceptableDailyIntake",
+      "label": "Acceptable Daily Intake",
       "scope": "#/properties/acceptableDailyIntake"
     },
     {
       "type": "Control",
-      "label": "hazardIndSum",
+      "label": "Hazard Ind Sum",
       "scope": "#/properties/hazardIndSum"
     }
   ]

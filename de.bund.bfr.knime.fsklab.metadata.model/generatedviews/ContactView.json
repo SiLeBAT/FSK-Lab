@@ -3,72 +3,72 @@
   "elements": [
     {
       "type": "Control",
-      "label": "title",
+      "label": "Title",
       "scope": "#/properties/title"
     },
     {
       "type": "Control",
-      "label": "familyName",
+      "label": "Family Name",
       "scope": "#/properties/familyName"
     },
     {
       "type": "Control",
-      "label": "givenName",
+      "label": "Given Name",
       "scope": "#/properties/givenName"
     },
     {
       "type": "Control",
-      "label": "email",
+      "label": "Email",
       "scope": "#/properties/email"
     },
     {
       "type": "Control",
-      "label": "telephone",
+      "label": "Telephone",
       "scope": "#/properties/telephone"
     },
     {
       "type": "Control",
-      "label": "streetAddress",
+      "label": "Street Address",
       "scope": "#/properties/streetAddress"
     },
     {
       "type": "Control",
-      "label": "country",
+      "label": "Country",
       "scope": "#/properties/country"
     },
     {
       "type": "Control",
-      "label": "city",
+      "label": "City",
       "scope": "#/properties/city"
     },
     {
       "type": "Control",
-      "label": "zipCode",
+      "label": "Zip Code",
       "scope": "#/properties/zipCode"
     },
     {
       "type": "Control",
-      "label": "region",
+      "label": "Region",
       "scope": "#/properties/region"
     },
     {
       "type": "Control",
-      "label": "timeZone",
+      "label": "Time Zone",
       "scope": "#/properties/timeZone"
     },
     {
       "type": "Control",
-      "label": "gender",
+      "label": "Gender",
       "scope": "#/properties/gender"
     },
     {
       "type": "Control",
-      "label": "note",
+      "label": "Note",
       "scope": "#/properties/note"
     },
     {
       "type": "Control",
-      "label": "organization",
+      "label": "Organization",
       "scope": "#/properties/organization"
     }
   ]

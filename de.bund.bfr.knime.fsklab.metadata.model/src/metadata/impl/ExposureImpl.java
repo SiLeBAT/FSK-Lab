@@ -6,17 +6,21 @@ import java.util.Collection;
 
 import metadata.Exposure;
 import metadata.MetadataPackage;
+import metadata.StringObject;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -26,36 +30,16 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link metadata.impl.ExposureImpl#getTypeOfExposure <em>Type Of Exposure</em>}</li>
+ *   <li>{@link metadata.impl.ExposureImpl#getUncertaintyEstimation <em>Uncertainty Estimation</em>}</li>
  *   <li>{@link metadata.impl.ExposureImpl#getMethodologicalTreatmentOfLeftCensoredData <em>Methodological Treatment Of Left Censored Data</em>}</li>
  *   <li>{@link metadata.impl.ExposureImpl#getLevelOfContaminationAfterLeftCensoredDataTreatment <em>Level Of Contamination After Left Censored Data Treatment</em>}</li>
- *   <li>{@link metadata.impl.ExposureImpl#getTypeOfExposure <em>Type Of Exposure</em>}</li>
  *   <li>{@link metadata.impl.ExposureImpl#getScenario <em>Scenario</em>}</li>
- *   <li>{@link metadata.impl.ExposureImpl#getUncertaintyEstimation <em>Uncertainty Estimation</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class ExposureImpl extends MinimalEObjectImpl.Container implements Exposure {
-	/**
-	 * The cached value of the '{@link #getMethodologicalTreatmentOfLeftCensoredData() <em>Methodological Treatment Of Left Censored Data</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMethodologicalTreatmentOfLeftCensoredData()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> methodologicalTreatmentOfLeftCensoredData;
-
-	/**
-	 * The cached value of the '{@link #getLevelOfContaminationAfterLeftCensoredDataTreatment() <em>Level Of Contamination After Left Censored Data Treatment</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getLevelOfContaminationAfterLeftCensoredDataTreatment()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> levelOfContaminationAfterLeftCensoredDataTreatment;
-
 	/**
 	 * The default value of the '{@link #getTypeOfExposure() <em>Type Of Exposure</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -75,16 +59,6 @@ public class ExposureImpl extends MinimalEObjectImpl.Container implements Exposu
 	 * @ordered
 	 */
 	protected String typeOfExposure = TYPE_OF_EXPOSURE_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getScenario() <em>Scenario</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getScenario()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> scenario;
 
 	/**
 	 * The default value of the '{@link #getUncertaintyEstimation() <em>Uncertainty Estimation</em>}' attribute.
@@ -107,6 +81,36 @@ public class ExposureImpl extends MinimalEObjectImpl.Container implements Exposu
 	protected String uncertaintyEstimation = UNCERTAINTY_ESTIMATION_EDEFAULT;
 
 	/**
+	 * The cached value of the '{@link #getMethodologicalTreatmentOfLeftCensoredData() <em>Methodological Treatment Of Left Censored Data</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMethodologicalTreatmentOfLeftCensoredData()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> methodologicalTreatmentOfLeftCensoredData;
+
+	/**
+	 * The cached value of the '{@link #getLevelOfContaminationAfterLeftCensoredDataTreatment() <em>Level Of Contamination After Left Censored Data Treatment</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLevelOfContaminationAfterLeftCensoredDataTreatment()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> levelOfContaminationAfterLeftCensoredDataTreatment;
+
+	/**
+	 * The cached value of the '{@link #getScenario() <em>Scenario</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getScenario()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> scenario;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -123,30 +127,6 @@ public class ExposureImpl extends MinimalEObjectImpl.Container implements Exposu
 	@Override
 	protected EClass eStaticClass() {
 		return MetadataPackage.Literals.EXPOSURE;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getMethodologicalTreatmentOfLeftCensoredData() {
-		if (methodologicalTreatmentOfLeftCensoredData == null) {
-			methodologicalTreatmentOfLeftCensoredData = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA);
-		}
-		return methodologicalTreatmentOfLeftCensoredData;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getLevelOfContaminationAfterLeftCensoredDataTreatment() {
-		if (levelOfContaminationAfterLeftCensoredDataTreatment == null) {
-			levelOfContaminationAfterLeftCensoredDataTreatment = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT);
-		}
-		return levelOfContaminationAfterLeftCensoredDataTreatment;
 	}
 
 	/**
@@ -175,18 +155,6 @@ public class ExposureImpl extends MinimalEObjectImpl.Container implements Exposu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getScenario() {
-		if (scenario == null) {
-			scenario = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.EXPOSURE__SCENARIO);
-		}
-		return scenario;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String getUncertaintyEstimation() {
 		return uncertaintyEstimation;
 	}
@@ -208,19 +176,73 @@ public class ExposureImpl extends MinimalEObjectImpl.Container implements Exposu
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<StringObject> getMethodologicalTreatmentOfLeftCensoredData() {
+		if (methodologicalTreatmentOfLeftCensoredData == null) {
+			methodologicalTreatmentOfLeftCensoredData = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA);
+		}
+		return methodologicalTreatmentOfLeftCensoredData;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<StringObject> getLevelOfContaminationAfterLeftCensoredDataTreatment() {
+		if (levelOfContaminationAfterLeftCensoredDataTreatment == null) {
+			levelOfContaminationAfterLeftCensoredDataTreatment = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT);
+		}
+		return levelOfContaminationAfterLeftCensoredDataTreatment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<StringObject> getScenario() {
+		if (scenario == null) {
+			scenario = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.EXPOSURE__SCENARIO);
+		}
+		return scenario;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case MetadataPackage.EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA:
+				return ((InternalEList<?>)getMethodologicalTreatmentOfLeftCensoredData()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT:
+				return ((InternalEList<?>)getLevelOfContaminationAfterLeftCensoredDataTreatment()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.EXPOSURE__SCENARIO:
+				return ((InternalEList<?>)getScenario()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case MetadataPackage.EXPOSURE__TYPE_OF_EXPOSURE:
+				return getTypeOfExposure();
+			case MetadataPackage.EXPOSURE__UNCERTAINTY_ESTIMATION:
+				return getUncertaintyEstimation();
 			case MetadataPackage.EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA:
 				return getMethodologicalTreatmentOfLeftCensoredData();
 			case MetadataPackage.EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT:
 				return getLevelOfContaminationAfterLeftCensoredDataTreatment();
-			case MetadataPackage.EXPOSURE__TYPE_OF_EXPOSURE:
-				return getTypeOfExposure();
 			case MetadataPackage.EXPOSURE__SCENARIO:
 				return getScenario();
-			case MetadataPackage.EXPOSURE__UNCERTAINTY_ESTIMATION:
-				return getUncertaintyEstimation();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -234,23 +256,23 @@ public class ExposureImpl extends MinimalEObjectImpl.Container implements Exposu
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case MetadataPackage.EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA:
-				getMethodologicalTreatmentOfLeftCensoredData().clear();
-				getMethodologicalTreatmentOfLeftCensoredData().addAll((Collection<? extends String>)newValue);
-				return;
-			case MetadataPackage.EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT:
-				getLevelOfContaminationAfterLeftCensoredDataTreatment().clear();
-				getLevelOfContaminationAfterLeftCensoredDataTreatment().addAll((Collection<? extends String>)newValue);
-				return;
 			case MetadataPackage.EXPOSURE__TYPE_OF_EXPOSURE:
 				setTypeOfExposure((String)newValue);
 				return;
-			case MetadataPackage.EXPOSURE__SCENARIO:
-				getScenario().clear();
-				getScenario().addAll((Collection<? extends String>)newValue);
-				return;
 			case MetadataPackage.EXPOSURE__UNCERTAINTY_ESTIMATION:
 				setUncertaintyEstimation((String)newValue);
+				return;
+			case MetadataPackage.EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA:
+				getMethodologicalTreatmentOfLeftCensoredData().clear();
+				getMethodologicalTreatmentOfLeftCensoredData().addAll((Collection<? extends StringObject>)newValue);
+				return;
+			case MetadataPackage.EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT:
+				getLevelOfContaminationAfterLeftCensoredDataTreatment().clear();
+				getLevelOfContaminationAfterLeftCensoredDataTreatment().addAll((Collection<? extends StringObject>)newValue);
+				return;
+			case MetadataPackage.EXPOSURE__SCENARIO:
+				getScenario().clear();
+				getScenario().addAll((Collection<? extends StringObject>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -264,20 +286,20 @@ public class ExposureImpl extends MinimalEObjectImpl.Container implements Exposu
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case MetadataPackage.EXPOSURE__TYPE_OF_EXPOSURE:
+				setTypeOfExposure(TYPE_OF_EXPOSURE_EDEFAULT);
+				return;
+			case MetadataPackage.EXPOSURE__UNCERTAINTY_ESTIMATION:
+				setUncertaintyEstimation(UNCERTAINTY_ESTIMATION_EDEFAULT);
+				return;
 			case MetadataPackage.EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA:
 				getMethodologicalTreatmentOfLeftCensoredData().clear();
 				return;
 			case MetadataPackage.EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT:
 				getLevelOfContaminationAfterLeftCensoredDataTreatment().clear();
 				return;
-			case MetadataPackage.EXPOSURE__TYPE_OF_EXPOSURE:
-				setTypeOfExposure(TYPE_OF_EXPOSURE_EDEFAULT);
-				return;
 			case MetadataPackage.EXPOSURE__SCENARIO:
 				getScenario().clear();
-				return;
-			case MetadataPackage.EXPOSURE__UNCERTAINTY_ESTIMATION:
-				setUncertaintyEstimation(UNCERTAINTY_ESTIMATION_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -291,16 +313,16 @@ public class ExposureImpl extends MinimalEObjectImpl.Container implements Exposu
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case MetadataPackage.EXPOSURE__TYPE_OF_EXPOSURE:
+				return TYPE_OF_EXPOSURE_EDEFAULT == null ? typeOfExposure != null : !TYPE_OF_EXPOSURE_EDEFAULT.equals(typeOfExposure);
+			case MetadataPackage.EXPOSURE__UNCERTAINTY_ESTIMATION:
+				return UNCERTAINTY_ESTIMATION_EDEFAULT == null ? uncertaintyEstimation != null : !UNCERTAINTY_ESTIMATION_EDEFAULT.equals(uncertaintyEstimation);
 			case MetadataPackage.EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA:
 				return methodologicalTreatmentOfLeftCensoredData != null && !methodologicalTreatmentOfLeftCensoredData.isEmpty();
 			case MetadataPackage.EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT:
 				return levelOfContaminationAfterLeftCensoredDataTreatment != null && !levelOfContaminationAfterLeftCensoredDataTreatment.isEmpty();
-			case MetadataPackage.EXPOSURE__TYPE_OF_EXPOSURE:
-				return TYPE_OF_EXPOSURE_EDEFAULT == null ? typeOfExposure != null : !TYPE_OF_EXPOSURE_EDEFAULT.equals(typeOfExposure);
 			case MetadataPackage.EXPOSURE__SCENARIO:
 				return scenario != null && !scenario.isEmpty();
-			case MetadataPackage.EXPOSURE__UNCERTAINTY_ESTIMATION:
-				return UNCERTAINTY_ESTIMATION_EDEFAULT == null ? uncertaintyEstimation != null : !UNCERTAINTY_ESTIMATION_EDEFAULT.equals(uncertaintyEstimation);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -315,14 +337,8 @@ public class ExposureImpl extends MinimalEObjectImpl.Container implements Exposu
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (methodologicalTreatmentOfLeftCensoredData: ");
-		result.append(methodologicalTreatmentOfLeftCensoredData);
-		result.append(", levelOfContaminationAfterLeftCensoredDataTreatment: ");
-		result.append(levelOfContaminationAfterLeftCensoredDataTreatment);
-		result.append(", typeOfExposure: ");
+		result.append(" (typeOfExposure: ");
 		result.append(typeOfExposure);
-		result.append(", scenario: ");
-		result.append(scenario);
 		result.append(", uncertaintyEstimation: ");
 		result.append(uncertaintyEstimation);
 		result.append(')');

@@ -26,6 +26,7 @@ import metadata.PublicationType;
 import metadata.Reference;
 import metadata.Scope;
 import metadata.SpatialInformation;
+import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
 
@@ -37,6 +38,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
+import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -197,6 +200,13 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass stringObjectEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EEnum publicationTypeEEnum = null;
 
 	/**
@@ -265,6 +275,9 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		MetadataPackageImpl theMetadataPackage = (MetadataPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof MetadataPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new MetadataPackageImpl());
 
 		isInited = true;
+
+		// Initialize simple dependencies
+		XMLTypePackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theMetadataPackage.createPackageContents();
@@ -475,7 +488,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getModelCategory_ModelSubClass() {
+	public EAttribute getModelCategory_ModelClassComment() {
 		return (EAttribute)modelCategoryEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -484,7 +497,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getModelCategory_ModelClassComment() {
+	public EAttribute getModelCategory_BasicProcess() {
 		return (EAttribute)modelCategoryEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -493,8 +506,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getModelCategory_BasicProcess() {
-		return (EAttribute)modelCategoryEClass.getEStructuralFeatures().get(3);
+	public EReference getModelCategory_ModelSubClass() {
+		return (EReference)modelCategoryEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1249,8 +1262,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getPopulationGroup_PopulationSpan() {
-		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(2);
+	public EReference getPopulationGroup_PopulationSpan() {
+		return (EReference)populationGroupEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1258,8 +1271,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getPopulationGroup_PopulationDescription() {
-		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(3);
+	public EReference getPopulationGroup_PopulationDescription() {
+		return (EReference)populationGroupEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1267,8 +1280,53 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getPopulationGroup_PopulationAge() {
-		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(4);
+	public EReference getPopulationGroup_Bmi() {
+		return (EReference)populationGroupEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPopulationGroup_SpecialDietGroups() {
+		return (EReference)populationGroupEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPopulationGroup_Region() {
+		return (EReference)populationGroupEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPopulationGroup_Country() {
+		return (EReference)populationGroupEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPopulationGroup_PopulationRiskFactor() {
+		return (EReference)populationGroupEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPopulationGroup_Season() {
+		return (EReference)populationGroupEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -1277,51 +1335,6 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * @generated
 	 */
 	public EAttribute getPopulationGroup_PopulationGender() {
-		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getPopulationGroup_Bmi() {
-		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getPopulationGroup_SpecialDietGroups() {
-		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getPopulationGroup_PatternConsumption() {
-		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getPopulationGroup_Region() {
-		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getPopulationGroup_Country() {
 		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -1330,8 +1343,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getPopulationGroup_PopulationRiskFactor() {
-		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(11);
+	public EReference getPopulationGroup_PatternConsumption() {
+		return (EReference)populationGroupEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -1339,8 +1352,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getPopulationGroup_Season() {
-		return (EAttribute)populationGroupEClass.getEStructuralFeatures().get(12);
+	public EReference getPopulationGroup_PopulationAge() {
+		return (EReference)populationGroupEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
@@ -1420,7 +1433,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getLaboratory_LaboratoryAccreditation() {
+	public EAttribute getLaboratory_LaboratoryName() {
 		return (EAttribute)laboratoryEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1429,7 +1442,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getLaboratory_LaboratoryName() {
+	public EAttribute getLaboratory_LaboratoryCountry() {
 		return (EAttribute)laboratoryEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1438,8 +1451,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getLaboratory_LaboratoryCountry() {
-		return (EAttribute)laboratoryEClass.getEStructuralFeatures().get(2);
+	public EReference getLaboratory_LaboratoryAccreditation() {
+		return (EReference)laboratoryEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1456,8 +1469,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSpatialInformation_Region() {
-		return (EAttribute)spatialInformationEClass.getEStructuralFeatures().get(0);
+	public EReference getSpatialInformation_Region() {
+		return (EReference)spatialInformationEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1465,8 +1478,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSpatialInformation_Country() {
-		return (EAttribute)spatialInformationEClass.getEStructuralFeatures().get(1);
+	public EReference getSpatialInformation_Country() {
+		return (EReference)spatialInformationEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1771,7 +1784,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getModelMath_QualityMeasures() {
+	public EAttribute getModelMath_FittingProcedure() {
 		return (EAttribute)modelMathEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1780,26 +1793,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getModelMath_FittingProcedure() {
-		return (EAttribute)modelMathEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getModelMath_Event() {
-		return (EAttribute)modelMathEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getModelMath_Parameter() {
-		return (EReference)modelMathEClass.getEStructuralFeatures().get(3);
+		return (EReference)modelMathEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1808,7 +1803,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * @generated
 	 */
 	public EReference getModelMath_ModelEquation() {
-		return (EReference)modelMathEClass.getEStructuralFeatures().get(4);
+		return (EReference)modelMathEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1817,6 +1812,24 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * @generated
 	 */
 	public EReference getModelMath_Exposure() {
+		return (EReference)modelMathEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getModelMath_QualityMeasures() {
+		return (EReference)modelMathEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getModelMath_Event() {
 		return (EReference)modelMathEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -2023,8 +2036,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getModelEquation_HypothesisOfTheModel() {
-		return (EAttribute)modelEquationEClass.getEStructuralFeatures().get(3);
+	public EReference getModelEquation_Reference() {
+		return (EReference)modelEquationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2032,7 +2045,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getModelEquation_Reference() {
+	public EReference getModelEquation_HypothesisOfTheModel() {
 		return (EReference)modelEquationEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -2050,7 +2063,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getExposure_MethodologicalTreatmentOfLeftCensoredData() {
+	public EAttribute getExposure_TypeOfExposure() {
 		return (EAttribute)exposureEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2059,7 +2072,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment() {
+	public EAttribute getExposure_UncertaintyEstimation() {
 		return (EAttribute)exposureEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -2068,8 +2081,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getExposure_TypeOfExposure() {
-		return (EAttribute)exposureEClass.getEStructuralFeatures().get(2);
+	public EReference getExposure_MethodologicalTreatmentOfLeftCensoredData() {
+		return (EReference)exposureEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2077,8 +2090,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getExposure_Scenario() {
-		return (EAttribute)exposureEClass.getEStructuralFeatures().get(3);
+	public EReference getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment() {
+		return (EReference)exposureEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2086,8 +2099,26 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getExposure_UncertaintyEstimation() {
-		return (EAttribute)exposureEClass.getEStructuralFeatures().get(4);
+	public EReference getExposure_Scenario() {
+		return (EReference)exposureEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getStringObject() {
+		return stringObjectEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStringObject_Value() {
+		return (EAttribute)stringObjectEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2176,9 +2207,9 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 
 		modelCategoryEClass = createEClass(MODEL_CATEGORY);
 		createEAttribute(modelCategoryEClass, MODEL_CATEGORY__MODEL_CLASS);
-		createEAttribute(modelCategoryEClass, MODEL_CATEGORY__MODEL_SUB_CLASS);
 		createEAttribute(modelCategoryEClass, MODEL_CATEGORY__MODEL_CLASS_COMMENT);
 		createEAttribute(modelCategoryEClass, MODEL_CATEGORY__BASIC_PROCESS);
+		createEReference(modelCategoryEClass, MODEL_CATEGORY__MODEL_SUB_CLASS);
 
 		assayEClass = createEClass(ASSAY);
 		createEAttribute(assayEClass, ASSAY__ASSAY_NAME);
@@ -2271,17 +2302,17 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		populationGroupEClass = createEClass(POPULATION_GROUP);
 		createEAttribute(populationGroupEClass, POPULATION_GROUP__POPULATION_NAME);
 		createEAttribute(populationGroupEClass, POPULATION_GROUP__TARGET_POPULATION);
-		createEAttribute(populationGroupEClass, POPULATION_GROUP__POPULATION_SPAN);
-		createEAttribute(populationGroupEClass, POPULATION_GROUP__POPULATION_DESCRIPTION);
-		createEAttribute(populationGroupEClass, POPULATION_GROUP__POPULATION_AGE);
+		createEReference(populationGroupEClass, POPULATION_GROUP__POPULATION_SPAN);
+		createEReference(populationGroupEClass, POPULATION_GROUP__POPULATION_DESCRIPTION);
+		createEReference(populationGroupEClass, POPULATION_GROUP__BMI);
+		createEReference(populationGroupEClass, POPULATION_GROUP__SPECIAL_DIET_GROUPS);
+		createEReference(populationGroupEClass, POPULATION_GROUP__REGION);
+		createEReference(populationGroupEClass, POPULATION_GROUP__COUNTRY);
+		createEReference(populationGroupEClass, POPULATION_GROUP__POPULATION_RISK_FACTOR);
+		createEReference(populationGroupEClass, POPULATION_GROUP__SEASON);
 		createEAttribute(populationGroupEClass, POPULATION_GROUP__POPULATION_GENDER);
-		createEAttribute(populationGroupEClass, POPULATION_GROUP__BMI);
-		createEAttribute(populationGroupEClass, POPULATION_GROUP__SPECIAL_DIET_GROUPS);
-		createEAttribute(populationGroupEClass, POPULATION_GROUP__PATTERN_CONSUMPTION);
-		createEAttribute(populationGroupEClass, POPULATION_GROUP__REGION);
-		createEAttribute(populationGroupEClass, POPULATION_GROUP__COUNTRY);
-		createEAttribute(populationGroupEClass, POPULATION_GROUP__POPULATION_RISK_FACTOR);
-		createEAttribute(populationGroupEClass, POPULATION_GROUP__SEASON);
+		createEReference(populationGroupEClass, POPULATION_GROUP__PATTERN_CONSUMPTION);
+		createEReference(populationGroupEClass, POPULATION_GROUP__POPULATION_AGE);
 
 		scopeEClass = createEClass(SCOPE);
 		createEAttribute(scopeEClass, SCOPE__GENERAL_COMMENT);
@@ -2292,13 +2323,13 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		createEReference(scopeEClass, SCOPE__SPATIAL_INFORMATION);
 
 		laboratoryEClass = createEClass(LABORATORY);
-		createEAttribute(laboratoryEClass, LABORATORY__LABORATORY_ACCREDITATION);
 		createEAttribute(laboratoryEClass, LABORATORY__LABORATORY_NAME);
 		createEAttribute(laboratoryEClass, LABORATORY__LABORATORY_COUNTRY);
+		createEReference(laboratoryEClass, LABORATORY__LABORATORY_ACCREDITATION);
 
 		spatialInformationEClass = createEClass(SPATIAL_INFORMATION);
-		createEAttribute(spatialInformationEClass, SPATIAL_INFORMATION__REGION);
-		createEAttribute(spatialInformationEClass, SPATIAL_INFORMATION__COUNTRY);
+		createEReference(spatialInformationEClass, SPATIAL_INFORMATION__REGION);
+		createEReference(spatialInformationEClass, SPATIAL_INFORMATION__COUNTRY);
 
 		eventEClass = createEClass(EVENT);
 		createEAttribute(eventEClass, EVENT__EVENT);
@@ -2336,12 +2367,12 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		createEAttribute(referenceEClass, REFERENCE__COMMENT);
 
 		modelMathEClass = createEClass(MODEL_MATH);
-		createEAttribute(modelMathEClass, MODEL_MATH__QUALITY_MEASURES);
 		createEAttribute(modelMathEClass, MODEL_MATH__FITTING_PROCEDURE);
-		createEAttribute(modelMathEClass, MODEL_MATH__EVENT);
 		createEReference(modelMathEClass, MODEL_MATH__PARAMETER);
 		createEReference(modelMathEClass, MODEL_MATH__MODEL_EQUATION);
 		createEReference(modelMathEClass, MODEL_MATH__EXPOSURE);
+		createEReference(modelMathEClass, MODEL_MATH__QUALITY_MEASURES);
+		createEReference(modelMathEClass, MODEL_MATH__EVENT);
 
 		parameterEClass = createEClass(PARAMETER);
 		createEAttribute(parameterEClass, PARAMETER__PARAMETER_ID);
@@ -2366,15 +2397,18 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		createEAttribute(modelEquationEClass, MODEL_EQUATION__MODEL_EQUATION_NAME);
 		createEAttribute(modelEquationEClass, MODEL_EQUATION__MODEL_EQUATION_CLASS);
 		createEAttribute(modelEquationEClass, MODEL_EQUATION__MODEL_EQUATION);
-		createEAttribute(modelEquationEClass, MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL);
 		createEReference(modelEquationEClass, MODEL_EQUATION__REFERENCE);
+		createEReference(modelEquationEClass, MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL);
 
 		exposureEClass = createEClass(EXPOSURE);
-		createEAttribute(exposureEClass, EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA);
-		createEAttribute(exposureEClass, EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT);
 		createEAttribute(exposureEClass, EXPOSURE__TYPE_OF_EXPOSURE);
-		createEAttribute(exposureEClass, EXPOSURE__SCENARIO);
 		createEAttribute(exposureEClass, EXPOSURE__UNCERTAINTY_ESTIMATION);
+		createEReference(exposureEClass, EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA);
+		createEReference(exposureEClass, EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT);
+		createEReference(exposureEClass, EXPOSURE__SCENARIO);
+
+		stringObjectEClass = createEClass(STRING_OBJECT);
+		createEAttribute(stringObjectEClass, STRING_OBJECT__VALUE);
 
 		// Create enums
 		publicationTypeEEnum = createEEnum(PUBLICATION_TYPE);
@@ -2408,6 +2442,9 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		setNsPrefix(eNS_PREFIX);
 		setNsURI(eNS_URI);
 
+		// Obtain other dependent packages
+		XMLTypePackage theXMLTypePackage = (XMLTypePackage)EPackage.Registry.INSTANCE.getEPackage(XMLTypePackage.eNS_URI);
+
 		// Create type parameters
 
 		// Set bounds for type parameters
@@ -2437,9 +2474,9 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 
 		initEClass(modelCategoryEClass, ModelCategory.class, "ModelCategory", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModelCategory_ModelClass(), ecorePackage.getEString(), "modelClass", null, 1, 1, ModelCategory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getModelCategory_ModelSubClass(), ecorePackage.getEString(), "modelSubClass", null, 0, -1, ModelCategory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModelCategory_ModelClassComment(), ecorePackage.getEString(), "modelClassComment", null, 0, 1, ModelCategory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModelCategory_BasicProcess(), ecorePackage.getEString(), "basicProcess", null, 0, 1, ModelCategory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelCategory_ModelSubClass(), this.getStringObject(), null, "modelSubClass", null, 0, -1, ModelCategory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(assayEClass, Assay.class, "Assay", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getAssay_AssayName(), ecorePackage.getEString(), "assayName", null, 1, 1, Assay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2532,17 +2569,17 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		initEClass(populationGroupEClass, PopulationGroup.class, "PopulationGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPopulationGroup_PopulationName(), ecorePackage.getEString(), "populationName", null, 1, 1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getPopulationGroup_TargetPopulation(), ecorePackage.getEString(), "targetPopulation", null, 0, 1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_PopulationSpan(), ecorePackage.getEString(), "populationSpan", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_PopulationDescription(), ecorePackage.getEString(), "populationDescription", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_PopulationAge(), ecorePackage.getEString(), "populationAge", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_PopulationGender(), ecorePackage.getEString(), "populationGender", null, 0, 1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_Bmi(), ecorePackage.getEString(), "bmi", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_SpecialDietGroups(), ecorePackage.getEString(), "specialDietGroups", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_PatternConsumption(), ecorePackage.getEString(), "patternConsumption", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_Region(), ecorePackage.getEString(), "region", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_Country(), ecorePackage.getEString(), "country", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_PopulationRiskFactor(), ecorePackage.getEString(), "populationRiskFactor", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPopulationGroup_Season(), ecorePackage.getEString(), "season", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPopulationGroup_PopulationSpan(), this.getStringObject(), null, "populationSpan", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPopulationGroup_PopulationDescription(), this.getStringObject(), null, "populationDescription", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPopulationGroup_Bmi(), this.getStringObject(), null, "bmi", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPopulationGroup_SpecialDietGroups(), this.getStringObject(), null, "specialDietGroups", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPopulationGroup_Region(), this.getStringObject(), null, "region", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPopulationGroup_Country(), this.getStringObject(), null, "country", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPopulationGroup_PopulationRiskFactor(), this.getStringObject(), null, "populationRiskFactor", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPopulationGroup_Season(), this.getStringObject(), null, "season", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPopulationGroup_PopulationGender(), theXMLTypePackage.getString(), "populationGender", null, 0, 1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPopulationGroup_PatternConsumption(), this.getStringObject(), null, "patternConsumption", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPopulationGroup_PopulationAge(), this.getStringObject(), null, "populationAge", null, 0, -1, PopulationGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(scopeEClass, Scope.class, "Scope", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getScope_GeneralComment(), ecorePackage.getEString(), "generalComment", null, 0, 1, Scope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2553,13 +2590,13 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		initEReference(getScope_SpatialInformation(), this.getSpatialInformation(), null, "spatialInformation", null, 0, 1, Scope.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(laboratoryEClass, Laboratory.class, "Laboratory", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getLaboratory_LaboratoryAccreditation(), ecorePackage.getEString(), "laboratoryAccreditation", null, 1, -1, Laboratory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLaboratory_LaboratoryName(), ecorePackage.getEString(), "laboratoryName", null, 0, 1, Laboratory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getLaboratory_LaboratoryCountry(), ecorePackage.getEString(), "laboratoryCountry", null, 0, 1, Laboratory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getLaboratory_LaboratoryAccreditation(), this.getStringObject(), null, "laboratoryAccreditation", null, 0, -1, Laboratory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(spatialInformationEClass, SpatialInformation.class, "SpatialInformation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getSpatialInformation_Region(), ecorePackage.getEString(), "region", null, 0, -1, SpatialInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSpatialInformation_Country(), ecorePackage.getEString(), "country", null, 0, -1, SpatialInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSpatialInformation_Region(), this.getStringObject(), null, "region", null, 0, -1, SpatialInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSpatialInformation_Country(), this.getStringObject(), null, "country", null, 0, -1, SpatialInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eventEClass, Event.class, "Event", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getEvent_Event(), ecorePackage.getEString(), "event", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2597,12 +2634,12 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		initEAttribute(getReference_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(modelMathEClass, ModelMath.class, "ModelMath", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getModelMath_QualityMeasures(), ecorePackage.getEString(), "qualityMeasures", null, 0, -1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModelMath_FittingProcedure(), ecorePackage.getEString(), "fittingProcedure", null, 0, 1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getModelMath_Event(), ecorePackage.getEString(), "event", null, 0, -1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getModelMath_Parameter(), this.getParameter(), null, "parameter", null, 1, -1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getModelMath_ModelEquation(), this.getModelEquation(), null, "modelEquation", null, 0, -1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getModelMath_Exposure(), this.getExposure(), null, "exposure", null, 0, 1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelMath_QualityMeasures(), this.getStringObject(), null, "qualityMeasures", null, 0, -1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelMath_Event(), this.getStringObject(), null, "event", null, 0, -1, ModelMath.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(parameterEClass, Parameter.class, "Parameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getParameter_ParameterID(), ecorePackage.getEString(), "parameterID", null, 1, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2627,15 +2664,18 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		initEAttribute(getModelEquation_ModelEquationName(), ecorePackage.getEString(), "modelEquationName", null, 1, 1, ModelEquation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModelEquation_ModelEquationClass(), ecorePackage.getEString(), "modelEquationClass", null, 0, 1, ModelEquation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModelEquation_ModelEquation(), ecorePackage.getEString(), "modelEquation", null, 1, 1, ModelEquation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getModelEquation_HypothesisOfTheModel(), ecorePackage.getEString(), "hypothesisOfTheModel", null, 0, -1, ModelEquation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getModelEquation_Reference(), this.getReference(), null, "reference", null, 0, -1, ModelEquation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelEquation_HypothesisOfTheModel(), this.getStringObject(), null, "hypothesisOfTheModel", null, 0, -1, ModelEquation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(exposureEClass, Exposure.class, "Exposure", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getExposure_MethodologicalTreatmentOfLeftCensoredData(), ecorePackage.getEString(), "methodologicalTreatmentOfLeftCensoredData", null, 0, -1, Exposure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment(), ecorePackage.getEString(), "levelOfContaminationAfterLeftCensoredDataTreatment", null, 0, -1, Exposure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExposure_TypeOfExposure(), ecorePackage.getEString(), "typeOfExposure", null, 1, 1, Exposure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getExposure_Scenario(), ecorePackage.getEString(), "scenario", null, 0, -1, Exposure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExposure_UncertaintyEstimation(), ecorePackage.getEString(), "uncertaintyEstimation", null, 0, 1, Exposure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExposure_MethodologicalTreatmentOfLeftCensoredData(), this.getStringObject(), null, "methodologicalTreatmentOfLeftCensoredData", null, 0, -1, Exposure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment(), this.getStringObject(), null, "levelOfContaminationAfterLeftCensoredDataTreatment", null, 0, -1, Exposure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExposure_Scenario(), this.getStringObject(), null, "scenario", null, 0, -1, Exposure.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(stringObjectEClass, StringObject.class, "StringObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStringObject_Value(), ecorePackage.getEString(), "value", null, 0, 1, StringObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(publicationTypeEEnum, PublicationType.class, "PublicationType");

@@ -1,89 +1,89 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_528ZIFNaEeiq2ZPtzKZg8g" name="Parameter" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
-  <rootEClass href="http://www.example.org/metadata#//Parameter"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_ccFNaEeiq2ZPtzKZg8g" name="Control parameterID">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_ccVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterID"/>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_NFxiIFgUEeiWCrq4lBlUvw" name="Parameter" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://BfR/bund/de/knime/model/metadata#//Parameter"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TIFgUEeiWCrq4lBlUvw" name="Control parameterID">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TIVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterID"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_cclNaEeiq2ZPtzKZg8g" name="Control parameterClassification">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_cc1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterClassification"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TIlgUEeiWCrq4lBlUvw" name="Control parameterClassification">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TI1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterClassification"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_cdFNaEeiq2ZPtzKZg8g" name="Control parameterName">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_cdVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterName"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TJFgUEeiWCrq4lBlUvw" name="Control parameterName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TJVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterName"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_cdlNaEeiq2ZPtzKZg8g" name="Control parameterDescription">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_cd1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterDescription"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TJlgUEeiWCrq4lBlUvw" name="Control parameterDescription">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TJ1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterDescription"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_ceFNaEeiq2ZPtzKZg8g" name="Control parameterType">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_ceVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterType"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TKFgUEeiWCrq4lBlUvw" name="Control parameterType">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TKVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterType"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_celNaEeiq2ZPtzKZg8g" name="Control parameterUnit">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_ce1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterUnit"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TKlgUEeiWCrq4lBlUvw" name="Control parameterUnit">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TK1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterUnit"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_cfFNaEeiq2ZPtzKZg8g" name="Control parameterUnitCategory">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_cfVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterUnitCategory"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TLFgUEeiWCrq4lBlUvw" name="Control parameterUnitCategory">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TLVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterUnitCategory"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_cflNaEeiq2ZPtzKZg8g" name="Control parameterDataType">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_cf1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterDataType"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TLlgUEeiWCrq4lBlUvw" name="Control parameterDataType">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TL1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterDataType"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_cgFNaEeiq2ZPtzKZg8g" name="Control parameterSource">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_cgVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterSource"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TMFgUEeiWCrq4lBlUvw" name="Control parameterSource">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TMVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterSource"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_cglNaEeiq2ZPtzKZg8g" name="Control parameterSubject">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_cg1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterSubject"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TMlgUEeiWCrq4lBlUvw" name="Control parameterSubject">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TM1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterSubject"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_chFNaEeiq2ZPtzKZg8g" name="Control parameterDistribution">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_chVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterDistribution"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TNFgUEeiWCrq4lBlUvw" name="Control parameterDistribution">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TNVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterDistribution"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_chlNaEeiq2ZPtzKZg8g" name="Control parameterValue">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_ch1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterValue"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TNlgUEeiWCrq4lBlUvw" name="Control parameterValue">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TN1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterValue"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_ciFNaEeiq2ZPtzKZg8g" name="Control parameterVariabilitySubject">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_ciVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterVariabilitySubject"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TOFgUEeiWCrq4lBlUvw" name="Control parameterVariabilitySubject">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TOVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterVariabilitySubject"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_cilNaEeiq2ZPtzKZg8g" name="Control parameterValueMin">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_ci1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterValueMin"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TOlgUEeiWCrq4lBlUvw" name="Control parameterValueMin">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TO1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterValueMin"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_cjFNaEeiq2ZPtzKZg8g" name="Control parameterValueMax">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_cjVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterValueMax"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TPFgUEeiWCrq4lBlUvw" name="Control parameterValueMax">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TPVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterValueMax"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_cjlNaEeiq2ZPtzKZg8g" name="Control parameterError">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_cj1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Parameter/parameterError"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TPlgUEeiWCrq4lBlUvw" name="Control parameterError">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TP1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Parameter/parameterError"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_52_ckFNaEeiq2ZPtzKZg8g" name="Control reference">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_52_ckVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//Parameter/reference"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_NF7TQFgUEeiWCrq4lBlUvw" name="Control reference">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_NF7TQVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//Parameter/reference"/>
     </domainModelReference>
   </children>
 </org.eclipse.emf.ecp.view.model:View>

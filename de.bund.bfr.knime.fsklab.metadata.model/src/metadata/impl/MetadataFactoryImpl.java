@@ -80,6 +80,7 @@ public class MetadataFactoryImpl extends EFactoryImpl implements MetadataFactory
 			case MetadataPackage.PARAMETER: return createParameter();
 			case MetadataPackage.MODEL_EQUATION: return createModelEquation();
 			case MetadataPackage.EXPOSURE: return createExposure();
+			case MetadataPackage.STRING_OBJECT: return createStringObject();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -335,6 +336,16 @@ public class MetadataFactoryImpl extends EFactoryImpl implements MetadataFactory
 	public Exposure createExposure() {
 		ExposureImpl exposure = new ExposureImpl();
 		return exposure;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StringObject createStringObject() {
+		StringObjectImpl stringObject = new StringObjectImpl();
+		return stringObject;
 	}
 
 	/**

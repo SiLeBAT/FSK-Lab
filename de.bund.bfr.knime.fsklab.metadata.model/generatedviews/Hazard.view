@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_5mY0oFNaEeiq2ZPtzKZg8g" name="Hazard" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
-  <rootEClass href="http://www.example.org/metadata#//Hazard"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5map0FNaEeiq2ZPtzKZg8g" name="Control hazardType">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5map0VNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/hazardType"/>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_Mv4KoFgUEeiWCrq4lBlUvw" name="Hazard" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://BfR/bund/de/knime/model/metadata#//Hazard"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUkFgUEeiWCrq4lBlUvw" name="Control hazardType">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUkVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/hazardType"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5map0lNaEeiq2ZPtzKZg8g" name="Control hazardName">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5map01NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/hazardName"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUklgUEeiWCrq4lBlUvw" name="Control hazardName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUk1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/hazardName"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5map1FNaEeiq2ZPtzKZg8g" name="Control hazardDescription">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5map1VNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/hazardDescription"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUlFgUEeiWCrq4lBlUvw" name="Control hazardDescription">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUlVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/hazardDescription"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5map1lNaEeiq2ZPtzKZg8g" name="Control hazardUnit">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5map11NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/hazardUnit"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUllgUEeiWCrq4lBlUvw" name="Control hazardUnit">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUl1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/hazardUnit"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5mbQ4FNaEeiq2ZPtzKZg8g" name="Control adverseEffect">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5mbQ4VNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/adverseEffect"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUmFgUEeiWCrq4lBlUvw" name="Control adverseEffect">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUmVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/adverseEffect"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5mbQ4lNaEeiq2ZPtzKZg8g" name="Control sourceOfContamination">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5mbQ41NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/sourceOfContamination"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUmlgUEeiWCrq4lBlUvw" name="Control sourceOfContamination">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUm1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/sourceOfContamination"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5mbQ5FNaEeiq2ZPtzKZg8g" name="Control benchmarkDose">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5mbQ5VNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/benchmarkDose"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUnFgUEeiWCrq4lBlUvw" name="Control benchmarkDose">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUnVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/benchmarkDose"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5mbQ5lNaEeiq2ZPtzKZg8g" name="Control maximumResidueLimit">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5mbQ51NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/maximumResidueLimit"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUnlgUEeiWCrq4lBlUvw" name="Control maximumResidueLimit">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUn1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/maximumResidueLimit"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5mbQ6FNaEeiq2ZPtzKZg8g" name="Control noObservedAdverseAffectLevel">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5mbQ6VNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/noObservedAdverseAffectLevel"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUoFgUEeiWCrq4lBlUvw" name="Control noObservedAdverseAffectLevel">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUoVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/noObservedAdverseAffectLevel"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5mbQ6lNaEeiq2ZPtzKZg8g" name="Control lowestObservedAdverseAffectLevel">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5mbQ61NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/lowestObservedAdverseAffectLevel"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUolgUEeiWCrq4lBlUvw" name="Control lowestObservedAdverseAffectLevel">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUo1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/lowestObservedAdverseAffectLevel"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5mbQ7FNaEeiq2ZPtzKZg8g" name="Control acceptableOperatorExposureLevel">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5mbQ7VNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/acceptableOperatorExposureLevel"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUpFgUEeiWCrq4lBlUvw" name="Control acceptableOperatorExposureLevel">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUpVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/acceptableOperatorExposureLevel"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5mbQ7lNaEeiq2ZPtzKZg8g" name="Control acuteReferenceDose">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5mbQ71NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/acuteReferenceDose"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUplgUEeiWCrq4lBlUvw" name="Control acuteReferenceDose">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUp1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/acuteReferenceDose"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5mbQ8FNaEeiq2ZPtzKZg8g" name="Control acceptableDailyIntake">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5mbQ8VNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/acceptableDailyIntake"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUqFgUEeiWCrq4lBlUvw" name="Control acceptableDailyIntake">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUqVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/acceptableDailyIntake"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5mbQ8lNaEeiq2ZPtzKZg8g" name="Control hazardIndSum">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5mbQ81NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Hazard/hazardIndSum"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MwBUqlgUEeiWCrq4lBlUvw" name="Control hazardIndSum">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MwBUq1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//Hazard/hazardIndSum"/>
     </domainModelReference>
   </children>
 </org.eclipse.emf.ecp.view.model:View>

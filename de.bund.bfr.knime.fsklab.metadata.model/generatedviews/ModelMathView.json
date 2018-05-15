@@ -3,33 +3,33 @@
   "elements": [
     {
       "type": "Control",
-      "label": "qualityMeasures",
-      "scope": "#/properties/qualityMeasures"
-    },
-    {
-      "type": "Control",
-      "label": "fittingProcedure",
+      "label": "Fitting Procedure",
       "scope": "#/properties/fittingProcedure"
     },
     {
       "type": "Control",
-      "label": "event",
-      "scope": "#/properties/event"
-    },
-    {
-      "type": "Control",
-      "label": "parameter",
+      "label": "Parameter",
       "scope": "#/properties/parameter"
     },
     {
       "type": "Control",
-      "label": "modelEquation",
+      "label": "Model Equation",
       "scope": "#/properties/modelEquation"
     },
     {
       "type": "Control",
-      "label": "exposure",
+      "label": "Exposure",
       "scope": "#/properties/exposure"
+    },
+    {
+      "type": "Control",
+      "label": "Quality Measures",
+      "scope": "#/properties/qualityMeasures"
+    },
+    {
+      "type": "Control",
+      "label": "Event",
+      "scope": "#/properties/event"
     }
   ]
 }

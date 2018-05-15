@@ -3,82 +3,82 @@
   "elements": [
     {
       "type": "Control",
-      "label": "studyIdentifier",
+      "label": "Study Identifier",
       "scope": "#/properties/studyIdentifier"
     },
     {
       "type": "Control",
-      "label": "studyTitle",
+      "label": "Study Title",
       "scope": "#/properties/studyTitle"
     },
     {
       "type": "Control",
-      "label": "studyDescription",
+      "label": "Study Description",
       "scope": "#/properties/studyDescription"
     },
     {
       "type": "Control",
-      "label": "studyDesignType",
+      "label": "Study Design Type",
       "scope": "#/properties/studyDesignType"
     },
     {
       "type": "Control",
-      "label": "studyAssayMeasurementType",
+      "label": "Study Assay Measurement Type",
       "scope": "#/properties/studyAssayMeasurementType"
     },
     {
       "type": "Control",
-      "label": "studyAssayTechnologyType",
+      "label": "Study Assay Technology Type",
       "scope": "#/properties/studyAssayTechnologyType"
     },
     {
       "type": "Control",
-      "label": "studyAssayTechnologyPlatform",
+      "label": "Study Assay Technology Platform",
       "scope": "#/properties/studyAssayTechnologyPlatform"
     },
     {
       "type": "Control",
-      "label": "accreditationProcedureForTheAssayTechnology",
+      "label": "Accreditation Procedure For The Assay Technology",
       "scope": "#/properties/accreditationProcedureForTheAssayTechnology"
     },
     {
       "type": "Control",
-      "label": "studyProtocolName",
+      "label": "Study Protocol Name",
       "scope": "#/properties/studyProtocolName"
     },
     {
       "type": "Control",
-      "label": "studyProtocolType",
+      "label": "Study Protocol Type",
       "scope": "#/properties/studyProtocolType"
     },
     {
       "type": "Control",
-      "label": "studyProtocolDescription",
+      "label": "Study Protocol Description",
       "scope": "#/properties/studyProtocolDescription"
     },
     {
       "type": "Control",
-      "label": "studyProtocolURI",
+      "label": "Study Protocol URI",
       "scope": "#/properties/studyProtocolURI"
     },
     {
       "type": "Control",
-      "label": "studyProtocolVersion",
+      "label": "Study Protocol Version",
       "scope": "#/properties/studyProtocolVersion"
     },
     {
       "type": "Control",
-      "label": "studyProtocolParametersName",
+      "label": "Study Protocol Parameters Name",
       "scope": "#/properties/studyProtocolParametersName"
     },
     {
       "type": "Control",
-      "label": "studyProtocolComponentsName",
+      "label": "Study Protocol Components Name",
       "scope": "#/properties/studyProtocolComponentsName"
     },
     {
       "type": "Control",
-      "label": "studyProtocolComponentsType",
+      "label": "Study Protocol Components Type",
       "scope": "#/properties/studyProtocolComponentsType"
     }
   ]

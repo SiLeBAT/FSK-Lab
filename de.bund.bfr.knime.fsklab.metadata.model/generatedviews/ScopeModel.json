@@ -118,9 +118,6 @@
         "targetPopulation": {
           "type": "string"
         },
-        "populationGender": {
-          "type": "string"
-        },
         "populationSpan": {
           "type": "array",
           "items": {
@@ -132,6 +129,9 @@
             },
             "additionalProperties": false
           }
+        },
+        "populationGender": {
+          "type": "string"
         }
       },
       "additionalProperties": false,

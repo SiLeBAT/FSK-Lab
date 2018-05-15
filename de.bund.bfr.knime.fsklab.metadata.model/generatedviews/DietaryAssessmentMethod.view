@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_5hcDMFNaEeiq2ZPtzKZg8g" name="DietaryAssessmentMethod" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
-  <rootEClass href="http://www.example.org/metadata#//DietaryAssessmentMethod"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5hfGgFNaEeiq2ZPtzKZg8g" name="Control collectionTool">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5hfGgVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/collectionTool"/>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_MpnKkFgUEeiWCrq4lBlUvw" name="DietaryAssessmentMethod" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://BfR/bund/de/knime/model/metadata#//DietaryAssessmentMethod"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MpwUgFgUEeiWCrq4lBlUvw" name="Control collectionTool">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MpwUgVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//DietaryAssessmentMethod/collectionTool"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5hfGglNaEeiq2ZPtzKZg8g" name="Control numberOfNonConsecutiveOneDay">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5hfGg1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/numberOfNonConsecutiveOneDay"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MpwUglgUEeiWCrq4lBlUvw" name="Control numberOfNonConsecutiveOneDay">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MpwUg1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//DietaryAssessmentMethod/numberOfNonConsecutiveOneDay"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5hfGhFNaEeiq2ZPtzKZg8g" name="Control softwareTool">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5hfGhVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/softwareTool"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MpwUhFgUEeiWCrq4lBlUvw" name="Control softwareTool">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MpwUhVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//DietaryAssessmentMethod/softwareTool"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5hfGhlNaEeiq2ZPtzKZg8g" name="Control numberOfFoodItems">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5hfGh1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/numberOfFoodItems"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MpwUhlgUEeiWCrq4lBlUvw" name="Control numberOfFoodItems">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MpwUh1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//DietaryAssessmentMethod/numberOfFoodItems"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5hfGiFNaEeiq2ZPtzKZg8g" name="Control recordTypes">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5hfGiVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/recordTypes"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MpwUiFgUEeiWCrq4lBlUvw" name="Control recordTypes">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MpwUiVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//DietaryAssessmentMethod/recordTypes"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5hfGilNaEeiq2ZPtzKZg8g" name="Control foodDescriptors">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5hfGi1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//DietaryAssessmentMethod/foodDescriptors"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MpwUilgUEeiWCrq4lBlUvw" name="Control foodDescriptors">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MpwUi1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//DietaryAssessmentMethod/foodDescriptors"/>
     </domainModelReference>
   </children>
 </org.eclipse.emf.ecp.view.model:View>

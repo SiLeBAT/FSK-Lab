@@ -3,28 +3,28 @@
   "elements": [
     {
       "type": "Control",
-      "label": "methodologicalTreatmentOfLeftCensoredData",
-      "scope": "#/properties/methodologicalTreatmentOfLeftCensoredData"
-    },
-    {
-      "type": "Control",
-      "label": "levelOfContaminationAfterLeftCensoredDataTreatment",
-      "scope": "#/properties/levelOfContaminationAfterLeftCensoredDataTreatment"
-    },
-    {
-      "type": "Control",
-      "label": "typeOfExposure",
+      "label": "Type Of Exposure",
       "scope": "#/properties/typeOfExposure"
     },
     {
       "type": "Control",
-      "label": "scenario",
-      "scope": "#/properties/scenario"
+      "label": "Uncertainty Estimation",
+      "scope": "#/properties/uncertaintyEstimation"
     },
     {
       "type": "Control",
-      "label": "uncertaintyEstimation",
-      "scope": "#/properties/uncertaintyEstimation"
+      "label": "Methodological Treatment Of Left Censored Data",
+      "scope": "#/properties/methodologicalTreatmentOfLeftCensoredData"
+    },
+    {
+      "type": "Control",
+      "label": "Level Of Contamination After Left Censored Data Treatment",
+      "scope": "#/properties/levelOfContaminationAfterLeftCensoredDataTreatment"
+    },
+    {
+      "type": "Control",
+      "label": "Scenario",
+      "scope": "#/properties/scenario"
     }
   ]
 }

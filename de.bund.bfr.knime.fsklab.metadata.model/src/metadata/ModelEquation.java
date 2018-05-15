@@ -18,8 +18,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link metadata.ModelEquation#getModelEquationName <em>Model Equation Name</em>}</li>
  *   <li>{@link metadata.ModelEquation#getModelEquationClass <em>Model Equation Class</em>}</li>
  *   <li>{@link metadata.ModelEquation#getModelEquation <em>Model Equation</em>}</li>
- *   <li>{@link metadata.ModelEquation#getHypothesisOfTheModel <em>Hypothesis Of The Model</em>}</li>
  *   <li>{@link metadata.ModelEquation#getReference <em>Reference</em>}</li>
+ *   <li>{@link metadata.ModelEquation#getHypothesisOfTheModel <em>Hypothesis Of The Model</em>}</li>
  * </ul>
  *
  * @see metadata.MetadataPackage#getModelEquation()
@@ -106,22 +106,6 @@ public interface ModelEquation extends EObject {
 	void setModelEquation(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Hypothesis Of The Model</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Hypothesis Of The Model</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Hypothesis Of The Model</em>' attribute list.
-	 * @see metadata.MetadataPackage#getModelEquation_HypothesisOfTheModel()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getHypothesisOfTheModel();
-
-	/**
 	 * Returns the value of the '<em><b>Reference</b></em>' containment reference list.
 	 * The list contents are of type {@link metadata.Reference}.
 	 * <!-- begin-user-doc -->
@@ -136,5 +120,21 @@ public interface ModelEquation extends EObject {
 	 * @generated
 	 */
 	EList<Reference> getReference();
+
+	/**
+	 * Returns the value of the '<em><b>Hypothesis Of The Model</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Hypothesis Of The Model</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Hypothesis Of The Model</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getModelEquation_HypothesisOfTheModel()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getHypothesisOfTheModel();
 
 } // ModelEquation

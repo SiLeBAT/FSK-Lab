@@ -129,7 +129,7 @@ joiner = function() {
     	window.modelMath =  _firstModel.modelMath;
     	window.dataBackground =  _firstModel.dataBackground;
     	prepareData(_firstModel);
-        create_body();
+    create_body();
     };
     function prepareData(_firstModel){
 		//prepare generalInformation
@@ -139,7 +139,7 @@ joiner = function() {
 			_firstModel.generalInformation.creationDate = new Date(_firstModel.generalInformation.creationDate).toISOString();
 		}
 		//prepare scope
-		if(_firstModel.scope.product.productionDate  === undefined){
+		/*if(_firstModel.scope.product.productionDate  === undefined){
 			_firstModel.scope.product.productionDate = '';
 		}else{
 			_firstModel.scope.product.productionDate = new Date(_firstModel.scope.product.productionDate).toISOString()
@@ -213,7 +213,7 @@ joiner = function() {
 				recordTypes = recordTypes + value +', ';
 			});
 			_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes = recordTypes;
-		}
+		}*/
 	}
     joinerNode.getComponentValue = function() {
     	
@@ -420,7 +420,11 @@ joiner = function() {
            
         });
         drawWorkflow();
-        createEMFForm();
+        try{
+        		createEMFForm();
+        }catch(err){
+        	
+        }
 		 $.each(  $('html').find('style'), function( key, value ) {
         	
         	if($(value).attr('data-meta') == 'MuiInput'){

@@ -109,6 +109,7 @@ import metadata.PublicationType;
 import metadata.Reference;
 import metadata.Scope;
 import metadata.SpatialInformation;
+import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
 
@@ -754,7 +755,8 @@ public class FskPortObject implements PortObject {
       }
 
       if (deprecatedModelCategory.modelSubClass != null) {
-        modelCategory.getModelSubClass().addAll(deprecatedModelCategory.modelSubClass);
+        modelCategory.getModelSubClass()
+            .addAll(toStringObjectList(deprecatedModelCategory.modelSubClass));
       }
 
       if (StringUtils.isNotEmpty(deprecatedModelCategory.modelClassComment)) {
@@ -883,11 +885,11 @@ public class FskPortObject implements PortObject {
       SpatialInformation spatialInformation = MetadataFactory.eINSTANCE.createSpatialInformation();
 
       if (deprecatedScope.region != null && !deprecatedScope.region.isEmpty()) {
-        spatialInformation.getRegion().addAll(deprecatedScope.region);
+        spatialInformation.getRegion().addAll(toStringObjectList(deprecatedScope.region));
       }
 
       if (deprecatedScope.country != null && !deprecatedScope.country.isEmpty()) {
-        spatialInformation.getCountry().addAll(deprecatedScope.country);
+        spatialInformation.getCountry().addAll(toStringObjectList(deprecatedScope.country));
       }
 
       return scope;
@@ -1016,6 +1018,17 @@ public class FskPortObject implements PortObject {
       return hazard;
     }
 
+    static List<StringObject> toStringObjectList(List<String> input) {
+      List<StringObject> stringObjectList = new ArrayList<>();
+      for (String o : input) {
+        StringObject sO = MetadataFactory.eINSTANCE.createStringObject();
+        sO.setValue(o);
+        stringObjectList.add(sO);
+      }
+
+      return stringObjectList;
+    }
+
     /**
      * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.PopulationGroup} to an EMF
      * {@link metadata.PopulationGroup}.
@@ -1035,17 +1048,20 @@ public class FskPortObject implements PortObject {
 
       if (deprecatedPopulationGroup.populationSpan != null
           && !deprecatedPopulationGroup.populationSpan.isEmpty()) {
-        populationGroup.getPopulationSpan().addAll(deprecatedPopulationGroup.populationSpan);
+        populationGroup.getPopulationSpan()
+            .addAll(toStringObjectList(deprecatedPopulationGroup.populationSpan));
       }
 
       if (deprecatedPopulationGroup.populationDescription != null
           && !deprecatedPopulationGroup.populationDescription.isEmpty()) {
-        populationGroup.getPopulationDescription().addAll(deprecatedPopulationGroup.populationSpan);
+        populationGroup.getPopulationDescription()
+            .addAll(toStringObjectList(deprecatedPopulationGroup.populationSpan));
       }
 
       if (deprecatedPopulationGroup.populationAge != null
           && !deprecatedPopulationGroup.populationAge.isEmpty()) {
-        populationGroup.getPopulationAge().addAll(deprecatedPopulationGroup.populationAge);
+        populationGroup.getPopulationAge()
+            .addAll(toStringObjectList(deprecatedPopulationGroup.populationAge));
       }
 
       if (StringUtils.isNotEmpty(deprecatedPopulationGroup.populationGender)) {
@@ -1053,7 +1069,7 @@ public class FskPortObject implements PortObject {
       }
 
       if (deprecatedPopulationGroup.bmi != null && !deprecatedPopulationGroup.bmi.isEmpty()) {
-        populationGroup.getBmi().addAll(deprecatedPopulationGroup.bmi);
+        populationGroup.getBmi().addAll(toStringObjectList(deprecatedPopulationGroup.bmi));
       }
 
       if (deprecatedPopulationGroup.specialDietGroups != null
@@ -1067,22 +1083,22 @@ public class FskPortObject implements PortObject {
       }
 
       if (deprecatedPopulationGroup.region != null && !deprecatedPopulationGroup.region.isEmpty()) {
-        populationGroup.getRegion().addAll(deprecatedPopulationGroup.region);
+        populationGroup.getRegion().addAll(toStringObjectList(deprecatedPopulationGroup.region));
       }
 
       if (deprecatedPopulationGroup.country != null
           && !deprecatedPopulationGroup.country.isEmpty()) {
-        populationGroup.getCountry().addAll(deprecatedPopulationGroup.country);
+        populationGroup.getCountry().addAll(toStringObjectList(deprecatedPopulationGroup.country));
       }
 
       if (deprecatedPopulationGroup.populationRiskFactor != null
           && !deprecatedPopulationGroup.populationRiskFactor.isEmpty()) {
         populationGroup.getPopulationRiskFactor()
-            .addAll(deprecatedPopulationGroup.populationRiskFactor);
+            .addAll(toStringObjectList(deprecatedPopulationGroup.populationRiskFactor));
       }
 
       if (deprecatedPopulationGroup.season != null && !deprecatedPopulationGroup.season.isEmpty()) {
-        populationGroup.getSeason().addAll(deprecatedPopulationGroup.season);
+        populationGroup.getSeason().addAll(toStringObjectList(deprecatedPopulationGroup.season));
       }
 
       return populationGroup;
@@ -1268,7 +1284,9 @@ public class FskPortObject implements PortObject {
       Laboratory laboratory = MetadataFactory.eINSTANCE.createLaboratory();
 
       if (StringUtils.isNotEmpty(deprecatedLaboratory.accreditation)) {
-        laboratory.getLaboratoryAccreditation().add(deprecatedLaboratory.accreditation);
+        StringObject sO = MetadataFactory.eINSTANCE.createStringObject();
+        sO.setValue(deprecatedLaboratory.accreditation);
+        laboratory.getLaboratoryAccreditation().add(sO);
       }
 
       if (StringUtils.isNotEmpty(deprecatedLaboratory.name)) {
@@ -1382,7 +1400,7 @@ public class FskPortObject implements PortObject {
       }
 
       if (deprecatedModelMath.event != null && !deprecatedModelMath.event.isEmpty()) {
-        modelMath.getEvent().addAll(deprecatedModelMath.event);
+        modelMath.getEvent().addAll(toStringObjectList(deprecatedModelMath.event));
       }
 
       if (deprecatedModelMath.parameter != null) {
@@ -1569,12 +1587,15 @@ public class FskPortObject implements PortObject {
       Exposure exposure = MetadataFactory.eINSTANCE.createExposure();
 
       if (StringUtils.isNotEmpty(deprecatedExposure.treatment)) {
-        exposure.getMethodologicalTreatmentOfLeftCensoredData().add(deprecatedExposure.treatment);
+        StringObject stringObject = MetadataFactory.eINSTANCE.createStringObject();
+        stringObject.setValue(deprecatedExposure.treatment);
+        exposure.getMethodologicalTreatmentOfLeftCensoredData().add(stringObject);
       }
 
       if (StringUtils.isNotEmpty(deprecatedExposure.contaminationLevel)) {
-        exposure.getLevelOfContaminationAfterLeftCensoredDataTreatment()
-            .add(deprecatedExposure.contaminationLevel);
+        StringObject stringObject = MetadataFactory.eINSTANCE.createStringObject();
+        stringObject.setValue(deprecatedExposure.contaminationLevel);
+        exposure.getLevelOfContaminationAfterLeftCensoredDataTreatment().add(stringObject);
       }
 
       if (StringUtils.isNotEmpty(deprecatedExposure.exposureType)) {
@@ -1582,7 +1603,9 @@ public class FskPortObject implements PortObject {
       }
 
       if (StringUtils.isNotEmpty(deprecatedExposure.scenario)) {
-        exposure.getScenario().add(deprecatedExposure.scenario);
+        StringObject stringObject = MetadataFactory.eINSTANCE.createStringObject();
+        stringObject.setValue(deprecatedExposure.scenario);
+        exposure.getScenario().add(stringObject);
       }
 
       if (StringUtils.isNotEmpty(deprecatedExposure.uncertaintyEstimation)) {

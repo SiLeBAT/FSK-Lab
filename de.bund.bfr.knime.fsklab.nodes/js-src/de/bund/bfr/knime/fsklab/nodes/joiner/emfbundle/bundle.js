@@ -102,47 +102,47 @@ function createEMFForm(){
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "assayName",
+		      "label": "Assay Name",
 		      "scope": "#/properties/assayName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "assayDescription",
+		      "label": "Assay Description",
 		      "scope": "#/properties/assayDescription"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "percentageOfMoisture",
+		      "label": "Percentage Of Moisture",
 		      "scope": "#/properties/percentageOfMoisture"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "percentageOfFat",
+		      "label": "Percentage Of Fat",
 		      "scope": "#/properties/percentageOfFat"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "limitOfDetection",
+		      "label": "Limit Of Detection",
 		      "scope": "#/properties/limitOfDetection"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "limitOfQuantification",
+		      "label": "Limit Of Quantification",
 		      "scope": "#/properties/limitOfQuantification"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "leftCensoredData",
+		      "label": "Left Censored Data",
 		      "scope": "#/properties/leftCensoredData"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "rangeOfContamination",
+		      "label": "Range Of Contamination",
 		      "scope": "#/properties/rangeOfContamination"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "uncertaintyValue",
+		      "label": "Uncertainty Value",
 		      "scope": "#/properties/uncertaintyValue"
 		    }
 		  ]
@@ -205,72 +205,72 @@ function createEMFForm(){
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "title",
+		      "label": "Title",
 		      "scope": "#/properties/title"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "familyName",
+		      "label": "Family Name",
 		      "scope": "#/properties/familyName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "givenName",
+		      "label": "Given Name",
 		      "scope": "#/properties/givenName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "email",
+		      "label": "Email",
 		      "scope": "#/properties/email"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "telephone",
+		      "label": "Telephone",
 		      "scope": "#/properties/telephone"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "streetAddress",
+		      "label": "Street Address",
 		      "scope": "#/properties/streetAddress"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "country",
+		      "label": "Country",
 		      "scope": "#/properties/country"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "city",
+		      "label": "City",
 		      "scope": "#/properties/city"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "zipCode",
+		      "label": "Zip Code",
 		      "scope": "#/properties/zipCode"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "region",
+		      "label": "Region",
 		      "scope": "#/properties/region"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "timeZone",
+		      "label": "Time Zone",
 		      "scope": "#/properties/timeZone"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "gender",
+		      "label": "Gender",
 		      "scope": "#/properties/gender"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "note",
+		      "label": "Note",
 		      "scope": "#/properties/note"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "organization",
+		      "label": "Organization",
 		      "scope": "#/properties/organization"
 		    }
 		  ]
@@ -292,182 +292,6 @@ function createEMFForm(){
 		  "scope": "#/properties/country"
 		}
 		},{}],8:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "Title": {
-		      "type": "string"
-		    },
-		    "familyName": {
-		      "type": "string"
-		    },
-		    "email": {
-		      "type": "string"
-		    },
-		    "telephone": {
-		      "type": "string"
-		    },
-		    "streetAddress": {
-		      "type": "string"
-		    },
-		    "extendedAddress": {
-		      "type": "string"
-		    },
-		    "country": {
-		      "type": "string"
-		    },
-		    "city": {
-		      "type": "string"
-		    },
-		    "ZIPCode": {
-		      "type": "string"
-		    },
-		    "postOfficeBox": {
-		      "type": "string"
-		    },
-		    "region": {
-		      "type": "string"
-		    },
-		    "nickName": {
-		      "type": "string"
-		    },
-		    "timeZone": {
-		      "type": "string"
-		    },
-		    "gender": {
-		      "type": "string"
-		    },
-		    "name": {
-		      "type": "string"
-		    },
-		    "url": {
-		      "type": "string"
-		    },
-		    "note": {
-		      "type": "string"
-		    },
-		    "logo": {
-		      "type": "string"
-		    },
-		    "organization": {
-		      "type": "string"
-		    },
-		    "fn": {
-		      "type": "string"
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "email"
-		  ]
-		}
-		},{}],9:[function(require,module,exports){
-		module.exports={
-		  "type": "VerticalLayout",
-		  "elements": [
-		    {
-		      "type": "Control",
-		      "label": "Title",
-		      "scope": "#/properties/Title"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Family Name",
-		      "scope": "#/properties/familyName"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Email",
-		      "scope": "#/properties/email"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Telephone",
-		      "scope": "#/properties/telephone"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Street Address",
-		      "scope": "#/properties/streetAddress"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Extended Address",
-		      "scope": "#/properties/extendedAddress"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Country",
-		      "scope": "#/properties/country"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "City",
-		      "scope": "#/properties/city"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "ZIP Code",
-		      "scope": "#/properties/ZIPCode"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Post Office Box",
-		      "scope": "#/properties/postOfficeBox"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Region",
-		      "scope": "#/properties/region"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Nick Name",
-		      "scope": "#/properties/nickName"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Time Zone",
-		      "scope": "#/properties/timeZone"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Gender",
-		      "scope": "#/properties/gender"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Name",
-		      "scope": "#/properties/name"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Url",
-		      "scope": "#/properties/url"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Note",
-		      "scope": "#/properties/note"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Logo",
-		      "scope": "#/properties/logo"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Organization",
-		      "scope": "#/properties/organization"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "Fn",
-		      "scope": "#/properties/fn"
-		    }
-		  ]
-		}
-		},{}],10:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -601,23 +425,26 @@ function createEMFForm(){
 		    "laboratory": {
 		      "type": "object",
 		      "properties": {
-		        "laboratoryAccreditation": {
-		          "type": "array",
-		          "items": {
-		            "type": "string"
-		          }
-		        },
 		        "laboratoryName": {
 		          "type": "string"
 		        },
 		        "laboratoryCountry": {
 		          "type": "string"
+		        },
+		        "laboratoryAccreditation": {
+		          "type": "array",
+		          "items": {
+		            "type": "object",
+		            "properties": {
+		              "value": {
+		                "type": "string"
+		              }
+		            },
+		            "additionalProperties": false
+		          }
 		        }
 		      },
-		      "additionalProperties": false,
-		      "required": [
-		        "laboratoryAccreditation"
-		      ]
+		      "additionalProperties": false
 		    },
 		    "assay": {
 		      "type": "array",
@@ -664,38 +491,38 @@ function createEMFForm(){
 		    "study"
 		  ]
 		}
-		},{}],11:[function(require,module,exports){
+		},{}],9:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "study",
+		      "label": "Study",
 		      "scope": "#/properties/study"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studysample",
+		      "label": "Studysample",
 		      "scope": "#/properties/studysample"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "dietaryassessmentmethod",
+		      "label": "Dietaryassessmentmethod",
 		      "scope": "#/properties/dietaryassessmentmethod"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "laboratory",
+		      "label": "Laboratory",
 		      "scope": "#/properties/laboratory"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "assay",
+		      "label": "Assay",
 		      "scope": "#/properties/assay"
 		    }
 		  ]
 		}
-		},{}],12:[function(require,module,exports){
+		},{}],10:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -720,43 +547,43 @@ function createEMFForm(){
 		  },
 		  "additionalProperties": false
 		}
-		},{}],13:[function(require,module,exports){
+		},{}],11:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "collectionTool",
+		      "label": "Collection Tool",
 		      "scope": "#/properties/collectionTool"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "numberOfNonConsecutiveOneDay",
+		      "label": "Number Of Non Consecutive One Day",
 		      "scope": "#/properties/numberOfNonConsecutiveOneDay"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "softwareTool",
+		      "label": "Software Tool",
 		      "scope": "#/properties/softwareTool"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "numberOfFoodItems",
+		      "label": "Number Of Food Items",
 		      "scope": "#/properties/numberOfFoodItems"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "recordTypes",
+		      "label": "Record Types",
 		      "scope": "#/properties/recordTypes"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "foodDescriptors",
+		      "label": "Food Descriptors",
 		      "scope": "#/properties/foodDescriptors"
 		    }
 		  ]
 		}
-		},{}],14:[function(require,module,exports){
+		},{}],12:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -766,78 +593,46 @@ function createEMFForm(){
 		  },
 		  "additionalProperties": false
 		}
-		},{}],15:[function(require,module,exports){
+		},{}],13:[function(require,module,exports){
 		module.exports={
 		  "type": "Control",
-		  "label": "event",
+		  "label": "Event",
 		  "scope": "#/properties/event"
 		}
-		},{}],16:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "methodologicalTreatmentOfLeftCensoredData": {
-		      "type": "array",
-		      "items": {
-		        "type": "string"
-		      }
-		    },
-		    "levelOfContaminationAfterLeftCensoredDataTreatment": {
-		      "type": "array",
-		      "items": {
-		        "type": "string"
-		      }
-		    },
-		    "typeOfExposure": {
-		      "type": "string"
-		    },
-		    "scenario": {
-		      "type": "array",
-		      "items": {
-		        "type": "string"
-		      }
-		    },
-		    "uncertaintyEstimation": {
-		      "type": "string"
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "typeOfExposure"
-		  ]
-		}
-		},{}],17:[function(require,module,exports){
+		},{}],14:[function(require,module,exports){
+		module.exports={"additionalProperties":false,"type":"object","properties":{"levelOfContaminationAfterLeftCensoredDataTreatment":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"typeOfExposure":{"type":"string"},"scenario":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"uncertaintyEstimation":{"type":"string"},"methodologicalTreatmentOfLeftCensoredData":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["typeOfExposure"]}
+		},{}],15:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "methodologicalTreatmentOfLeftCensoredData",
-		      "scope": "#/properties/methodologicalTreatmentOfLeftCensoredData"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "levelOfContaminationAfterLeftCensoredDataTreatment",
-		      "scope": "#/properties/levelOfContaminationAfterLeftCensoredDataTreatment"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "typeOfExposure",
+		      "label": "Type Of Exposure",
 		      "scope": "#/properties/typeOfExposure"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "scenario",
-		      "scope": "#/properties/scenario"
+		      "label": "Uncertainty Estimation",
+		      "scope": "#/properties/uncertaintyEstimation"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "uncertaintyEstimation",
-		      "scope": "#/properties/uncertaintyEstimation"
+		      "label": "Methodological Treatment Of Left Censored Data",
+		      "scope": "#/properties/methodologicalTreatmentOfLeftCensoredData"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Level Of Contamination After Left Censored Data Treatment",
+		      "scope": "#/properties/levelOfContaminationAfterLeftCensoredDataTreatment"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Scenario",
+		      "scope": "#/properties/scenario"
 		    }
 		  ]
 		}
-		},{}],18:[function(require,module,exports){
+		},{}],16:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -889,17 +684,23 @@ function createEMFForm(){
 		          "modelClass": {
 		            "type": "string"
 		          },
-		          "modelSubClass": {
-		            "type": "array",
-		            "items": {
-		              "type": "string"
-		            }
-		          },
 		          "modelClassComment": {
 		            "type": "string"
 		          },
 		          "basicProcess": {
 		            "type": "string"
+		          },
+		          "modelSubClass": {
+		            "type": "array",
+		            "items": {
+		              "type": "object",
+		              "properties": {
+		                "value": {
+		                  "type": "string"
+		                }
+		              },
+		              "additionalProperties": false
+		            }
 		          }
 		        },
 		        "additionalProperties": false,
@@ -1095,103 +896,103 @@ function createEMFForm(){
 		    "reference"
 		  ]
 		}
-		},{}],19:[function(require,module,exports){
+		},{}],17:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "name",
+		      "label": "Name",
 		      "scope": "#/properties/name"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "source",
+		      "label": "Source",
 		      "scope": "#/properties/source"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "identifier",
+		      "label": "Identifier",
 		      "scope": "#/properties/identifier"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "creationDate",
+		      "label": "Creation Date",
 		      "scope": "#/properties/creationDate"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "rights",
+		      "label": "Rights",
 		      "scope": "#/properties/rights"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "available",
+		      "label": "Available",
 		      "scope": "#/properties/available"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "format",
+		      "label": "Format",
 		      "scope": "#/properties/format"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "language",
+		      "label": "Language",
 		      "scope": "#/properties/language"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "software",
+		      "label": "Software",
 		      "scope": "#/properties/software"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "languageWrittenIn",
+		      "label": "Language Written In",
 		      "scope": "#/properties/languageWrittenIn"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "status",
+		      "label": "Status",
 		      "scope": "#/properties/status"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "objective",
+		      "label": "Objective",
 		      "scope": "#/properties/objective"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "description",
+		      "label": "Description",
 		      "scope": "#/properties/description"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "modelCategory",
+		      "label": "Model Category",
 		      "scope": "#/properties/modelCategory"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "modificationdate",
+		      "label": "Modificationdate",
 		      "scope": "#/properties/modificationdate"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "author",
+		      "label": "Author",
 		      "scope": "#/properties/author"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "creators",
+		      "label": "Creators",
 		      "scope": "#/properties/creators"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "reference",
+		      "label": "Reference",
 		      "scope": "#/properties/reference"
 		    }
 		  ]
 		}
-		},{}],20:[function(require,module,exports){
+		},{}],18:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -1243,660 +1044,205 @@ function createEMFForm(){
 		    "hazardName"
 		  ]
 		}
+		},{}],19:[function(require,module,exports){
+		module.exports={
+		  "type": "VerticalLayout",
+		  "elements": [
+		    {
+		      "type": "Control",
+		      "label": "Hazard Type",
+		      "scope": "#/properties/hazardType"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Hazard Name",
+		      "scope": "#/properties/hazardName"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Hazard Description",
+		      "scope": "#/properties/hazardDescription"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Hazard Unit",
+		      "scope": "#/properties/hazardUnit"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Adverse Effect",
+		      "scope": "#/properties/adverseEffect"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Source Of Contamination",
+		      "scope": "#/properties/sourceOfContamination"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Benchmark Dose",
+		      "scope": "#/properties/benchmarkDose"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Maximum Residue Limit",
+		      "scope": "#/properties/maximumResidueLimit"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "No Observed Adverse Affect Level",
+		      "scope": "#/properties/noObservedAdverseAffectLevel"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Lowest Observed Adverse Affect Level",
+		      "scope": "#/properties/lowestObservedAdverseAffectLevel"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Acceptable Operator Exposure Level",
+		      "scope": "#/properties/acceptableOperatorExposureLevel"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Acute Reference Dose",
+		      "scope": "#/properties/acuteReferenceDose"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Acceptable Daily Intake",
+		      "scope": "#/properties/acceptableDailyIntake"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Hazard Ind Sum",
+		      "scope": "#/properties/hazardIndSum"
+		    }
+		  ]
+		}
+		},{}],20:[function(require,module,exports){
+		module.exports={"additionalProperties":false,"type":"object","properties":{"laboratoryCountry":{"type":"string"},"laboratoryName":{"type":"string"},"laboratoryAccreditation":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}}}
 		},{}],21:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "hazardType",
-		      "scope": "#/properties/hazardType"
+		      "label": "Laboratory Name",
+		      "scope": "#/properties/laboratoryName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "hazardName",
-		      "scope": "#/properties/hazardName"
+		      "label": "Laboratory Country",
+		      "scope": "#/properties/laboratoryCountry"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "hazardDescription",
-		      "scope": "#/properties/hazardDescription"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "hazardUnit",
-		      "scope": "#/properties/hazardUnit"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "adverseEffect",
-		      "scope": "#/properties/adverseEffect"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "sourceOfContamination",
-		      "scope": "#/properties/sourceOfContamination"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "benchmarkDose",
-		      "scope": "#/properties/benchmarkDose"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "maximumResidueLimit",
-		      "scope": "#/properties/maximumResidueLimit"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "noObservedAdverseAffectLevel",
-		      "scope": "#/properties/noObservedAdverseAffectLevel"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "lowestObservedAdverseAffectLevel",
-		      "scope": "#/properties/lowestObservedAdverseAffectLevel"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "acceptableOperatorExposureLevel",
-		      "scope": "#/properties/acceptableOperatorExposureLevel"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "acuteReferenceDose",
-		      "scope": "#/properties/acuteReferenceDose"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "acceptableDailyIntake",
-		      "scope": "#/properties/acceptableDailyIntake"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "hazardIndSum",
-		      "scope": "#/properties/hazardIndSum"
+		      "label": "Laboratory Accreditation",
+		      "scope": "#/properties/laboratoryAccreditation"
 		    }
 		  ]
 		}
 		},{}],22:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "laboratoryAccreditation": {
-		      "type": "array",
-		      "items": {
-		        "type": "string"
-		      }
-		    },
-		    "laboratoryName": {
-		      "type": "string"
-		    },
-		    "laboratoryCountry": {
-		      "type": "string"
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "laboratoryAccreditation"
-		  ]
-		}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"modelClassComment":{"type":"string"},"basicProcess":{"type":"string"},"modelClass":{"type":"string"},"modelSubClass":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelClass"]}
 		},{}],23:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "laboratoryAccreditation",
-		      "scope": "#/properties/laboratoryAccreditation"
+		      "label": "Model Class",
+		      "scope": "#/properties/modelClass"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "laboratoryName",
-		      "scope": "#/properties/laboratoryName"
+		      "label": "Model Class Comment",
+		      "scope": "#/properties/modelClassComment"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "laboratoryCountry",
-		      "scope": "#/properties/laboratoryCountry"
+		      "label": "Basic Process",
+		      "scope": "#/properties/basicProcess"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Model Sub Class",
+		      "scope": "#/properties/modelSubClass"
 		    }
 		  ]
 		}
 		},{}],24:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "modelClass": {
-		      "type": "string"
-		    },
-		    "modelSubClass": {
-		      "type": "array",
-		      "items": {
-		        "type": "string"
-		      }
-		    },
-		    "modelClassComment": {
-		      "type": "string"
-		    },
-		    "basicProcess": {
-		      "type": "string"
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "modelClass"
-		  ]
-		}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"reference":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]}},"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}
 		},{}],25:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "modelClass",
-		      "scope": "#/properties/modelClass"
+		      "label": "Model Equation Name",
+		      "scope": "#/properties/modelEquationName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "modelSubClass",
-		      "scope": "#/properties/modelSubClass"
+		      "label": "Model Equation Class",
+		      "scope": "#/properties/modelEquationClass"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "modelClassComment",
-		      "scope": "#/properties/modelClassComment"
+		      "label": "Model Equation",
+		      "scope": "#/properties/modelEquation"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "basicProcess",
-		      "scope": "#/properties/basicProcess"
+		      "label": "Reference",
+		      "scope": "#/properties/reference"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Hypothesis Of The Model",
+		      "scope": "#/properties/hypothesisOfTheModel"
 		    }
 		  ]
 		}
 		},{}],26:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "modelEquationName": {
-		      "type": "string"
-		    },
-		    "modelEquationClass": {
-		      "type": "string"
-		    },
-		    "modelEquation": {
-		      "type": "string"
-		    },
-		    "hypothesisOfTheModel": {
-		      "type": "array",
-		      "items": {
-		        "type": "string"
-		      }
-		    },
-		    "reference": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "isReferenceDescription": {
-		            "type": "boolean"
-		          },
-		          "publicationType": {
-		            "type": "string",
-		            "enum": [
-		              "ABST",
-		              "ADVS",
-		              "AGGR",
-		              "ANCIENT",
-		              "ART",
-		              "BILL",
-		              "BLOG",
-		              "BOOK",
-		              "CASE",
-		              "CHAP",
-		              "CHART",
-		              "CLSWK",
-		              "COMP",
-		              "CONF",
-		              "CPAPER",
-		              "CTLG",
-		              "DATA",
-		              "DBASE",
-		              "DICT",
-		              "EBOOK",
-		              "ECHAP",
-		              "EDBOOK",
-		              "EJOUR",
-		              "ELECT",
-		              "ENCYC",
-		              "EQUA",
-		              "FIGURE",
-		              "GEN",
-		              "GOVDOC",
-		              "GRANT",
-		              "HEAR",
-		              "ICOMM",
-		              "INPR",
-		              "JFULL",
-		              "LEGAL",
-		              "MANSCPT",
-		              "MAP",
-		              "MGZN",
-		              "MPCT",
-		              "MULTI",
-		              "MUSIC",
-		              "NEWS",
-		              "PAMP",
-		              "PAT",
-		              "PCOMM",
-		              "RPRT",
-		              "SER",
-		              "SLIDE",
-		              "SOUND",
-		              "STAND",
-		              "STAT",
-		              "THES",
-		              "UNPB",
-		              "VIDEO"
-		            ]
-		          },
-		          "publicationDate": {
-		            "type": "string",
-		            "format": "date-time"
-		          },
-		          "pmid": {
-		            "type": "string"
-		          },
-		          "doi": {
-		            "type": "string"
-		          },
-		          "authorList": {
-		            "type": "string"
-		          },
-		          "publicationTitle": {
-		            "type": "string"
-		          },
-		          "publicationAbstract": {
-		            "type": "string"
-		          },
-		          "publicationJournal": {
-		            "type": "string"
-		          },
-		          "publicationVolume": {
-		            "type": "integer"
-		          },
-		          "publicationIssue": {
-		            "type": "integer"
-		          },
-		          "publicationStatus": {
-		            "type": "string"
-		          },
-		          "publicationWebsite": {
-		            "type": "string"
-		          },
-		          "comment": {
-		            "type": "string"
-		          }
-		        },
-		        "additionalProperties": false,
-		        "required": [
-		          "isReferenceDescription",
-		          "publicationTitle"
-		        ]
-		      }
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "modelEquationName",
-		    "modelEquation"
-		  ]
-		}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"fittingProcedure":{"type":"string"},"modelEquation":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}},"exposure":{"additionalProperties":false,"type":"object","properties":{"typeOfExposure":{"type":"string"},"uncertaintyEstimation":{"type":"string"}},"required":["typeOfExposure"]},"parameter":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","VectorOfNumbers","VectorOfStrings","MatrixOfNumbers","MatrixOfStrings","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["constant","input","output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}},"qualityMeasures":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"event":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}}},"required":["parameter"]}
 		},{}],27:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "modelEquationName",
-		      "scope": "#/properties/modelEquationName"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "modelEquationClass",
-		      "scope": "#/properties/modelEquationClass"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "modelEquation",
-		      "scope": "#/properties/modelEquation"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "hypothesisOfTheModel",
-		      "scope": "#/properties/hypothesisOfTheModel"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "reference",
-		      "scope": "#/properties/reference"
-		    }
-		  ]
-		}
-		},{}],28:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "qualityMeasures": {
-		      "type": "array",
-		      "items": {
-		        "type": "string"
-		      }
-		    },
-		    "fittingProcedure": {
-		      "type": "string"
-		    },
-		    "event": {
-		      "type": "array",
-		      "items": {
-		        "type": "string"
-		      }
-		    },
-		    "parameter": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "parameterID": {
-		            "type": "string"
-		          },
-		          "parameterClassification": {
-		            "type": "string",
-		            "enum": [
-		              "constant",
-		              "input",
-		              "output"
-		            ]
-		          },
-		          "parameterName": {
-		            "type": "string"
-		          },
-		          "parameterDescription": {
-		            "type": "string"
-		          },
-		          "parameterType": {
-		            "type": "string"
-		          },
-		          "parameterUnit": {
-		            "type": "string"
-		          },
-		          "parameterUnitCategory": {
-		            "type": "string"
-		          },
-		          "parameterDataType": {
-		            "type": "string",
-		            "enum": [
-		              "Integer",
-		              "Double",
-		              "Number",
-		              "Date",
-		              "File",
-		              "Boolean",
-		              "VectorOfNumbers",
-		              "VectorOfStrings",
-		              "MatrixOfNumbers",
-		              "MatrixOfStrings",
-		              "Object",
-		              "Other"
-		            ]
-		          },
-		          "parameterSource": {
-		            "type": "string"
-		          },
-		          "parameterSubject": {
-		            "type": "string"
-		          },
-		          "parameterDistribution": {
-		            "type": "string"
-		          },
-		          "parameterValue": {
-		            "type": "string"
-		          },
-		          "parameterVariabilitySubject": {
-		            "type": "string"
-		          },
-		          "parameterValueMin": {
-		            "type": "string"
-		          },
-		          "parameterValueMax": {
-		            "type": "string"
-		          },
-		          "parameterError": {
-		            "type": "string"
-		          },
-		          "reference": {
-		            "type": "object",
-		            "properties": {
-		              "isReferenceDescription": {
-		                "type": "boolean"
-		              },
-		              "publicationType": {
-		                "type": "string",
-		                "enum": [
-		                  "ABST",
-		                  "ADVS",
-		                  "AGGR",
-		                  "ANCIENT",
-		                  "ART",
-		                  "BILL",
-		                  "BLOG",
-		                  "BOOK",
-		                  "CASE",
-		                  "CHAP",
-		                  "CHART",
-		                  "CLSWK",
-		                  "COMP",
-		                  "CONF",
-		                  "CPAPER",
-		                  "CTLG",
-		                  "DATA",
-		                  "DBASE",
-		                  "DICT",
-		                  "EBOOK",
-		                  "ECHAP",
-		                  "EDBOOK",
-		                  "EJOUR",
-		                  "ELECT",
-		                  "ENCYC",
-		                  "EQUA",
-		                  "FIGURE",
-		                  "GEN",
-		                  "GOVDOC",
-		                  "GRANT",
-		                  "HEAR",
-		                  "ICOMM",
-		                  "INPR",
-		                  "JFULL",
-		                  "LEGAL",
-		                  "MANSCPT",
-		                  "MAP",
-		                  "MGZN",
-		                  "MPCT",
-		                  "MULTI",
-		                  "MUSIC",
-		                  "NEWS",
-		                  "PAMP",
-		                  "PAT",
-		                  "PCOMM",
-		                  "RPRT",
-		                  "SER",
-		                  "SLIDE",
-		                  "SOUND",
-		                  "STAND",
-		                  "STAT",
-		                  "THES",
-		                  "UNPB",
-		                  "VIDEO"
-		                ]
-		              },
-		              "publicationDate": {
-		                "type": "string",
-		                "format": "date-time"
-		              },
-		              "pmid": {
-		                "type": "string"
-		              },
-		              "doi": {
-		                "type": "string"
-		              },
-		              "authorList": {
-		                "type": "string"
-		              },
-		              "publicationTitle": {
-		                "type": "string"
-		              },
-		              "publicationAbstract": {
-		                "type": "string"
-		              },
-		              "publicationJournal": {
-		                "type": "string"
-		              },
-		              "publicationVolume": {
-		                "type": "integer"
-		              },
-		              "publicationIssue": {
-		                "type": "integer"
-		              },
-		              "publicationStatus": {
-		                "type": "string"
-		              },
-		              "publicationWebsite": {
-		                "type": "string"
-		              },
-		              "comment": {
-		                "type": "string"
-		              }
-		            },
-		            "additionalProperties": false,
-		            "required": [
-		              "isReferenceDescription",
-		              "publicationTitle"
-		            ]
-		          }
-		        },
-		        "additionalProperties": false,
-		        "required": [
-		          "parameterID",
-		          "parameterClassification",
-		          "parameterName",
-		          "parameterUnit",
-		          "parameterDataType"
-		        ]
-		      }
-		    },
-		    "modelEquation": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "modelEquationName": {
-		            "type": "string"
-		          },
-		          "modelEquationClass": {
-		            "type": "string"
-		          },
-		          "modelEquation": {
-		            "type": "string"
-		          },
-		          "hypothesisOfTheModel": {
-		            "type": "array",
-		            "items": {
-		              "type": "string"
-		            }
-		          }
-		        },
-		        "additionalProperties": false,
-		        "required": [
-		          "modelEquationName",
-		          "modelEquation"
-		        ]
-		      }
-		    },
-		    "exposure": {
-		      "type": "object",
-		      "properties": {
-		        "methodologicalTreatmentOfLeftCensoredData": {
-		          "type": "array",
-		          "items": {
-		            "type": "string"
-		          }
-		        },
-		        "levelOfContaminationAfterLeftCensoredDataTreatment": {
-		          "type": "array",
-		          "items": {
-		            "type": "string"
-		          }
-		        },
-		        "typeOfExposure": {
-		          "type": "string"
-		        },
-		        "scenario": {
-		          "type": "array",
-		          "items": {
-		            "type": "string"
-		          }
-		        },
-		        "uncertaintyEstimation": {
-		          "type": "string"
-		        }
-		      },
-		      "additionalProperties": false,
-		      "required": [
-		        "typeOfExposure"
-		      ]
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "parameter"
-		  ]
-		}
-		},{}],29:[function(require,module,exports){
-		module.exports={
-		  "type": "VerticalLayout",
-		  "elements": [
-		    {
-		      "type": "Control",
-		      "label": "qualityMeasures",
-		      "scope": "#/properties/qualityMeasures"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "fittingProcedure",
+		      "label": "Fitting Procedure",
 		      "scope": "#/properties/fittingProcedure"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "event",
-		      "scope": "#/properties/event"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameter",
+		      "label": "Parameter",
 		      "scope": "#/properties/parameter"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "modelEquation",
+		      "label": "Model Equation",
 		      "scope": "#/properties/modelEquation"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "exposure",
+		      "label": "Exposure",
 		      "scope": "#/properties/exposure"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Quality Measures",
+		      "scope": "#/properties/qualityMeasures"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Event",
+		      "scope": "#/properties/event"
 		    }
 		  ]
 		}
-		},{}],30:[function(require,module,exports){
+		},{}],28:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -1907,13 +1253,13 @@ function createEMFForm(){
 		  },
 		  "additionalProperties": false
 		}
-		},{}],31:[function(require,module,exports){
+		},{}],29:[function(require,module,exports){
 		module.exports={
 		  "type": "Control",
-		  "label": "value",
+		  "label": "Value",
 		  "scope": "#/properties/value"
 		}
-		},{}],32:[function(require,module,exports){
+		},{}],30:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -2103,200 +1449,171 @@ function createEMFForm(){
 		    "parameterDataType"
 		  ]
 		}
+		},{}],31:[function(require,module,exports){
+		module.exports={
+		  "type": "VerticalLayout",
+		  "elements": [
+		    {
+		      "type": "Control",
+		      "label": "Parameter ID",
+		      "scope": "#/properties/parameterID"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Classification",
+		      "scope": "#/properties/parameterClassification"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Name",
+		      "scope": "#/properties/parameterName"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Description",
+		      "scope": "#/properties/parameterDescription"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Type",
+		      "scope": "#/properties/parameterType"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Unit",
+		      "scope": "#/properties/parameterUnit"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Unit Category",
+		      "scope": "#/properties/parameterUnitCategory"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Data Type",
+		      "scope": "#/properties/parameterDataType"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Source",
+		      "scope": "#/properties/parameterSource"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Subject",
+		      "scope": "#/properties/parameterSubject"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Distribution",
+		      "scope": "#/properties/parameterDistribution"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Value",
+		      "scope": "#/properties/parameterValue"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Variability Subject",
+		      "scope": "#/properties/parameterVariabilitySubject"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Value Min",
+		      "scope": "#/properties/parameterValueMin"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Value Max",
+		      "scope": "#/properties/parameterValueMax"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Parameter Error",
+		      "scope": "#/properties/parameterError"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Reference",
+		      "scope": "#/properties/reference"
+		    }
+		  ]
+		}
+		},{}],32:[function(require,module,exports){
+		module.exports={"additionalProperties":false,"type":"object","properties":{"populationRiskFactor":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"country":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"populationSpan":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}},"populationGender":{"type":"string"},"populationDescription":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"populationAge":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"populationName":{"type":"string"},"patternConsumption":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"season":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"region":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"targetPopulation":{"type":"string"},"bmi":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"specialDietGroups":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}}},"required":["populationName"]}
 		},{}],33:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "parameterID",
-		      "scope": "#/properties/parameterID"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterClassification",
-		      "scope": "#/properties/parameterClassification"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterName",
-		      "scope": "#/properties/parameterName"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterDescription",
-		      "scope": "#/properties/parameterDescription"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterType",
-		      "scope": "#/properties/parameterType"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterUnit",
-		      "scope": "#/properties/parameterUnit"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterUnitCategory",
-		      "scope": "#/properties/parameterUnitCategory"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterDataType",
-		      "scope": "#/properties/parameterDataType"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterSource",
-		      "scope": "#/properties/parameterSource"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterSubject",
-		      "scope": "#/properties/parameterSubject"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterDistribution",
-		      "scope": "#/properties/parameterDistribution"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterValue",
-		      "scope": "#/properties/parameterValue"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterVariabilitySubject",
-		      "scope": "#/properties/parameterVariabilitySubject"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterValueMin",
-		      "scope": "#/properties/parameterValueMin"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterValueMax",
-		      "scope": "#/properties/parameterValueMax"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "parameterError",
-		      "scope": "#/properties/parameterError"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "reference",
-		      "scope": "#/properties/reference"
-		    }
-		  ]
-		}
-		},{}],34:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "populationName": {
-		      "type": "string"
-		    },
-		    "targetPopulation": {
-		      "type": "string"
-		    },
-		    "populationGender": {
-		      "type": "string"
-		    },
-		    "populationSpan": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "value": {
-		            "type": "string"
-		          }
-		        },
-		        "additionalProperties": false
-		      }
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "populationName"
-		  ]
-		}
-		},{}],35:[function(require,module,exports){
-		module.exports={
-		  "type": "VerticalLayout",
-		  "elements": [
-		    {
-		      "type": "Control",
-		      "label": "populationName",
+		      "label": "Population Name",
 		      "scope": "#/properties/populationName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "targetPopulation",
+		      "label": "Target Population",
 		      "scope": "#/properties/targetPopulation"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "populationGender",
-		      "scope": "#/properties/populationGender"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "populationSpan",
+		      "label": "Population Span",
 		      "scope": "#/properties/populationSpan"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "populationDescription",
+		      "label": "Population Description",
 		      "scope": "#/properties/populationDescription"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "populationAge",
-		      "scope": "#/properties/populationAge"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "bmi",
+		      "label": "Bmi",
 		      "scope": "#/properties/bmi"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "specialDietGroups",
+		      "label": "Special Diet Groups",
 		      "scope": "#/properties/specialDietGroups"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "patternConsumption",
-		      "scope": "#/properties/patternConsumption"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "populationRiskFactor",
-		      "scope": "#/properties/populationRiskFactor"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "season",
-		      "scope": "#/properties/season"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "region",
+		      "label": "Region",
 		      "scope": "#/properties/region"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "country",
+		      "label": "Country",
 		      "scope": "#/properties/country"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Population Risk Factor",
+		      "scope": "#/properties/populationRiskFactor"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Season",
+		      "scope": "#/properties/season"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Population Gender",
+		      "scope": "#/properties/populationGender"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Pattern Consumption",
+		      "scope": "#/properties/patternConsumption"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Population Age",
+		      "scope": "#/properties/populationAge"
 		    }
 		  ]
 		}
-		},{}],36:[function(require,module,exports){
+		},{}],34:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -2342,68 +1659,68 @@ function createEMFForm(){
 		    "productUnit"
 		  ]
 		}
-		},{}],37:[function(require,module,exports){
+		},{}],35:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "productName",
+		      "label": "Product Name",
 		      "scope": "#/properties/productName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "productDescription",
+		      "label": "Product Description",
 		      "scope": "#/properties/productDescription"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "productUnit",
+		      "label": "Product Unit",
 		      "scope": "#/properties/productUnit"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "productionMethod",
+		      "label": "Production Method",
 		      "scope": "#/properties/productionMethod"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "packaging",
+		      "label": "Packaging",
 		      "scope": "#/properties/packaging"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "productTreatment",
+		      "label": "Product Treatment",
 		      "scope": "#/properties/productTreatment"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "originCountry",
+		      "label": "Origin Country",
 		      "scope": "#/properties/originCountry"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "originArea",
+		      "label": "Origin Area",
 		      "scope": "#/properties/originArea"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "fisheriesArea",
+		      "label": "Fisheries Area",
 		      "scope": "#/properties/fisheriesArea"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "productionDate",
+		      "label": "Production Date",
 		      "scope": "#/properties/productionDate"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "expiryDate",
+		      "label": "Expiry Date",
 		      "scope": "#/properties/expiryDate"
 		    }
 		  ]
 		}
-		},{}],38:[function(require,module,exports){
+		},{}],36:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -2513,83 +1830,83 @@ function createEMFForm(){
 		    "publicationTitle"
 		  ]
 		}
-		},{}],39:[function(require,module,exports){
+		},{}],37:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "isReferenceDescription",
+		      "label": "Is Reference Description",
 		      "scope": "#/properties/isReferenceDescription"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "publicationType",
+		      "label": "Publication Type",
 		      "scope": "#/properties/publicationType"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "publicationDate",
+		      "label": "Publication Date",
 		      "scope": "#/properties/publicationDate"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "pmid",
+		      "label": "Pmid",
 		      "scope": "#/properties/pmid"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "doi",
+		      "label": "Doi",
 		      "scope": "#/properties/doi"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "authorList",
+		      "label": "Author List",
 		      "scope": "#/properties/authorList"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "publicationTitle",
+		      "label": "Publication Title",
 		      "scope": "#/properties/publicationTitle"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "publicationAbstract",
+		      "label": "Publication Abstract",
 		      "scope": "#/properties/publicationAbstract"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "publicationJournal",
+		      "label": "Publication Journal",
 		      "scope": "#/properties/publicationJournal"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "publicationVolume",
+		      "label": "Publication Volume",
 		      "scope": "#/properties/publicationVolume"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "publicationIssue",
+		      "label": "Publication Issue",
 		      "scope": "#/properties/publicationIssue"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "publicationStatus",
+		      "label": "Publication Status",
 		      "scope": "#/properties/publicationStatus"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "publicationWebsite",
+		      "label": "Publication Website",
 		      "scope": "#/properties/publicationWebsite"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "comment",
+		      "label": "Comment",
 		      "scope": "#/properties/comment"
 		    }
 		  ]
 		}
-		},{}],40:[function(require,module,exports){
+		},{}],38:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -2599,13 +1916,13 @@ function createEMFForm(){
 		  },
 		  "additionalProperties": false
 		}
-		},{}],41:[function(require,module,exports){
+		},{}],39:[function(require,module,exports){
 		module.exports={
 		  "type": "Control",
 		  "label": "Region",
 		  "scope": "#/properties/region"
 		}
-		},{}],42:[function(require,module,exports){
+		},{}],40:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -2726,9 +2043,6 @@ function createEMFForm(){
 		        "targetPopulation": {
 		          "type": "string"
 		        },
-		        "populationGender": {
-		          "type": "string"
-		        },
 		        "populationSpan": {
 		          "type": "array",
 		          "items": {
@@ -2740,6 +2054,9 @@ function createEMFForm(){
 		            },
 		            "additionalProperties": false
 		          }
+		        },
+		        "populationGender": {
+		          "type": "string"
 		        }
 		      },
 		      "additionalProperties": false,
@@ -2755,39 +2072,57 @@ function createEMFForm(){
 		  },
 		  "additionalProperties": false
 		}
+		},{}],41:[function(require,module,exports){
+		module.exports={
+		  "type": "VerticalLayout",
+		  "elements": [
+		    {
+		      "type": "Control",
+		      "label": "General Comment",
+		      "scope": "#/properties/generalComment"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Temporal Information",
+		      "scope": "#/properties/temporalInformation"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Product",
+		      "scope": "#/properties/product"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Hazard",
+		      "scope": "#/properties/hazard"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Population Group",
+		      "scope": "#/properties/populationGroup"
+		    },
+		    {
+		      "type": "Control",
+		      "label": "Spatial Information",
+		      "scope": "#/properties/spatialInformation"
+		    }
+		  ]
+		}
+		},{}],42:[function(require,module,exports){
+		module.exports={"additionalProperties":false,"type":"object","properties":{"country":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"region":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}}}
 		},{}],43:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "generalComment",
-		      "scope": "#/properties/generalComment"
+		      "label": "Region",
+		      "scope": "#/properties/region"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "temporalInformation",
-		      "scope": "#/properties/temporalInformation"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "product",
-		      "scope": "#/properties/product"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "hazard",
-		      "scope": "#/properties/hazard"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "populationGroup",
-		      "scope": "#/properties/populationGroup"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "spatialInformation",
-		      "scope": "#/properties/spatialInformation"
+		      "label": "Country",
+		      "scope": "#/properties/country"
 		    }
 		  ]
 		}
@@ -2795,38 +2130,15 @@ function createEMFForm(){
 		module.exports={
 		  "type": "object",
 		  "properties": {
-		    "region": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "value": {
-		            "type": "string"
-		          }
-		        },
-		        "additionalProperties": false
-		      }
+		    "value": {
+		      "type": "string"
 		    }
 		  },
 		  "additionalProperties": false
 		}
 		},{}],45:[function(require,module,exports){
-		module.exports={
-		  "type": "VerticalLayout",
-		  "elements": [
-		    {
-		      "type": "Control",
-		      "label": "region",
-		      "scope": "#/properties/region"
-		    },
-		    {
-		      "type": "Control",
-		      "label": "country",
-		      "scope": "#/properties/country"
-		    }
-		  ]
-		}
-		},{}],46:[function(require,module,exports){
+		arguments[4][29][0].apply(exports,arguments)
+		},{"dup":29}],46:[function(require,module,exports){
 		module.exports={
 		  "type": "object",
 		  "properties": {
@@ -2934,52 +2246,52 @@ function createEMFForm(){
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "sampleName",
+		      "label": "Sample Name",
 		      "scope": "#/properties/sampleName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "protocolOfSampleCollection",
+		      "label": "Protocol Of Sample Collection",
 		      "scope": "#/properties/protocolOfSampleCollection"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "samplingStrategy",
+		      "label": "Sampling Strategy",
 		      "scope": "#/properties/samplingStrategy"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "typeOfSamplingProgram",
+		      "label": "Type Of Sampling Program",
 		      "scope": "#/properties/typeOfSamplingProgram"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "samplingMethod",
+		      "label": "Sampling Method",
 		      "scope": "#/properties/samplingMethod"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "samplingPlan",
+		      "label": "Sampling Plan",
 		      "scope": "#/properties/samplingPlan"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "samplingWeight",
+		      "label": "Sampling Weight",
 		      "scope": "#/properties/samplingWeight"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "samplingSize",
+		      "label": "Sampling Size",
 		      "scope": "#/properties/samplingSize"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "lotSizeUnit",
+		      "label": "Lot Size Unit",
 		      "scope": "#/properties/lotSizeUnit"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "samplingPoint",
+		      "label": "Sampling Point",
 		      "scope": "#/properties/samplingPoint"
 		    }
 		  ]
@@ -2990,87 +2302,88 @@ function createEMFForm(){
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "studyIdentifier",
+		      "label": "Study Identifier",
 		      "scope": "#/properties/studyIdentifier"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyTitle",
+		      "label": "Study Title",
 		      "scope": "#/properties/studyTitle"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyDescription",
+		      "label": "Study Description",
 		      "scope": "#/properties/studyDescription"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyDesignType",
+		      "label": "Study Design Type",
 		      "scope": "#/properties/studyDesignType"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyAssayMeasurementType",
+		      "label": "Study Assay Measurement Type",
 		      "scope": "#/properties/studyAssayMeasurementType"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyAssayTechnologyType",
+		      "label": "Study Assay Technology Type",
 		      "scope": "#/properties/studyAssayTechnologyType"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyAssayTechnologyPlatform",
+		      "label": "Study Assay Technology Platform",
 		      "scope": "#/properties/studyAssayTechnologyPlatform"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "accreditationProcedureForTheAssayTechnology",
+		      "label": "Accreditation Procedure For The Assay Technology",
 		      "scope": "#/properties/accreditationProcedureForTheAssayTechnology"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyProtocolName",
+		      "label": "Study Protocol Name",
 		      "scope": "#/properties/studyProtocolName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyProtocolType",
+		      "label": "Study Protocol Type",
 		      "scope": "#/properties/studyProtocolType"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyProtocolDescription",
+		      "label": "Study Protocol Description",
 		      "scope": "#/properties/studyProtocolDescription"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyProtocolURI",
+		      "label": "Study Protocol URI",
 		      "scope": "#/properties/studyProtocolURI"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyProtocolVersion",
+		      "label": "Study Protocol Version",
 		      "scope": "#/properties/studyProtocolVersion"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyProtocolParametersName",
+		      "label": "Study Protocol Parameters Name",
 		      "scope": "#/properties/studyProtocolParametersName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyProtocolComponentsName",
+		      "label": "Study Protocol Components Name",
 		      "scope": "#/properties/studyProtocolComponentsName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "studyProtocolComponentsType",
+		      "label": "Study Protocol Components Type",
 		      "scope": "#/properties/studyProtocolComponentsType"
 		    }
 		  ]
 		}
 		},{}],50:[function(require,module,exports){
+			var toBeReplacedMap = new Object();
 			var jsonformscore = require('@jsonforms/core');
 			var material_renderers = require('@jsonforms/material-renderers');
 
@@ -3122,8 +2435,8 @@ function createEMFForm(){
 		    
 		    
 		    // popup creators
-		    var schema12 = require('./CreatorModel.json');
-		    var uischema12 = require('./CreatorView.json');
+		   
+		    
 		    var schema13 = require('./ModelCategoryModel.json');
 		    var uischema13 = require('./ModelCategoryView.json');
 		    var schema14 = require('./ModificationDateModel.json');
@@ -3151,9 +2464,20 @@ function createEMFForm(){
 		    var schema23 = require('./ContactModel.json');
 		    var uischema23 = require('./ContactView.json');
 		    
+		    
 		    var schema25 = require('./SpatialInformationModel.json');
 		    var uischema25 = require('./SpatialInformationView.json');
 		    
+		    var schema26 = require('./EventModel.json');
+		    var uischema26 = require('./EventView.json');
+		    
+		    var schema27 = require('./ExposureModel.json');
+		    var uischema27 = require('./ExposureView.json');
+		    
+		    
+		    
+		    var schema28 = require('./StringObjectModel.json');
+		    var uischema28 = require('./StringObjectView.json');
 		    window.Actions= jsonformscore.Actions;
 		var Actions= jsonformscore.Actions,
 		  jsonformsReducer= jsonformscore.jsonformsReducer,
@@ -3219,6 +2543,7 @@ function createEMFForm(){
 				);
 		store5.dispatch(Actions.init(window.scope.populationgroup, schema5, uischema5));
 
+		toBeReplacedMap["Population Group"] = store5;
 
 
 
@@ -3242,7 +2567,9 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store7.dispatch(Actions.init(window.dataBackground.study, schema7, uischema7));
+		store7.dispatch(Actions.init(window.dataBackground.study!=null?window.dataBackground.study:{}, schema7, uischema7));
+		toBeReplacedMap["Study"] = store7;
+
 		  store8 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -3253,6 +2580,7 @@ function createEMFForm(){
 				  }
 				);
 		store8.dispatch(Actions.init(window.dataBackground.studySample, schema8, uischema8));
+
 		  store9 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -3262,7 +2590,9 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store9.dispatch(Actions.init(window.dataBackground.dietaryAssessmentMethod, schema9, uischema9));
+		store9.dispatch(Actions.init( window.dataBackground.dietaryAssessmentMethod!=null?window.dataBackground.dietaryAssessmentMethod:{}, schema9, uischema9));
+		toBeReplacedMap["Dietaryassessmentmethod"] = store9;
+
 		  store10 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -3272,7 +2602,10 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store10.dispatch(Actions.init(window.dataBackground.laboratory, schema10, uischema10));
+
+		store10.dispatch(Actions.init( window.dataBackground.laboratory!=null?window.dataBackground.laboratory:{}, schema10, uischema10));
+		toBeReplacedMap["Laboratory"] = store10;
+
 		  store11 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -3282,19 +2615,11 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store11.dispatch(Actions.init(window.dataBackground.assay, schema11, uischema11));
-
+		  
+		store11.dispatch(Actions.init( window.dataBackground.assay!=null?window.dataBackground.assay:{}, schema11, uischema11));
+		toBeReplacedMap["Assay"] = store11;
 		//popups creator
-		  store12 = createStore(
-				  combineReducers({ jsonforms: jsonformsReducer() }),  
-				  {
-				    jsonforms: {
-				      renderers: materialRenderers,
-				      fields: materialFields,
-				    }
-				  }
-				);
-		store12.dispatch(Actions.init({}, schema12, uischema12));
+
 
 		  store13 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -3305,7 +2630,7 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store13.dispatch(Actions.init(window.generalInformation.modelCategory, schema13, uischema13));
+		store13.dispatch(Actions.init({}, schema13, uischema13));
 
 
 		  store14 = createStore(
@@ -3422,8 +2747,8 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store23.dispatch(Actions.init(window.generalInformation.author, schema23, uischema23));
-
+		store23.dispatch(Actions.init(window.generalInformation.author!=null?window.generalInformation.author:{}, schema23, uischema23));
+		toBeReplacedMap["Author"] = store23;
 		store24 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -3433,8 +2758,8 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store24.dispatch(Actions.init(window.generalInformation.creators, schema23, uischema23));
-
+		store24.dispatch(Actions.init(window.generalInformation.creators!= null?window.generalInformation.creators:{}, schema23, uischema23));
+		toBeReplacedMap["Creators"] = store24;
 		store25 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -3444,7 +2769,43 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store25.dispatch(Actions.init(window.generalInformation.creators, schema25, uischema25));
+		store25.dispatch(Actions.init(window.generalInformation.spatialInformation!= null?window.generalInformation.spatialInformation:{region:[],country:[]}, schema25, uischema25));
+		toBeReplacedMap["Spatial Information"] = store25;
+
+		store26 = createStore(
+				  combineReducers({ jsonforms: jsonformsReducer() }),  
+				  {
+				    jsonforms: {
+				      renderers: materialRenderers,
+				      fields: materialFields,
+				    }
+				  }
+				);
+		store26.dispatch(Actions.init(window.modelMath.event, schema26, uischema26));
+		toBeReplacedMap["Event"] = store26;
+
+		store27 = createStore(
+				  combineReducers({ jsonforms: jsonformsReducer() }),  
+				  {
+				    jsonforms: {
+				      renderers: materialRenderers,
+				      fields: materialFields,
+				    }
+				  }
+				);
+		store27.dispatch(Actions.init( window.modelMath.exposure!= null?window.modelMath.exposure:{}, schema27, uischema27));
+		toBeReplacedMap["Exposure"] = store27;
+
+		store28 = createStore(
+				  combineReducers({ jsonforms: jsonformsReducer() }),  
+				  {
+				    jsonforms: {
+				      renderers: materialRenderers,
+				      fields: materialFields,
+				    }
+				  }
+				);
+		store28.dispatch(Actions.init({}, schema28, uischema28));
 		// Uncomment this line (and respective import) to register our custom renderer
 		//store.dispatch(Actions.registerRenderer(ratingControlTester, RatingControl));
 
@@ -3455,7 +2816,7 @@ function createEMFForm(){
 
 		//document.getElementsByClassName("MuiTable-root-222")[0].classList.add("secondTable");
 
-
+		try{
 		ReactDOM.render(React.createFactory(Provider)({store: store1},
 				App()
 		), document.getElementById('generalinformation'));
@@ -3470,96 +2831,42 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: store17},
 				App()
 		), document.getElementById('modelMath'));
+		}catch(err){console.log("modelMath " + err);
+			
+		}
+		notAProperDiv = $("div:contains('No applicable'):not(:has(div))");
 
-		notAProperDiv = $("div:contains('No applicable field found.'):not(:has(div))");
+		$.each(notAProperDiv, function( index, value ) {
+			try{
+				
+					parent = $(value).parent();
+					areaName = parent[0].children[0].textContent;
+					if(parent[0].children[0].textContent.indexOf('*') >= 0){
+						areaName = areaName.slice(0,-1);
+					}
+					if(areaName.indexOf('No applicable field found') < 0){
+						$(value).remove();
+						parent.append( "<div id ='"+areaName+"' class='replaced' ></div>" );
+						ReactDOM.render(React.createFactory(Provider)({store: toBeReplacedMap[areaName]},
+								App()
+						), document.getElementById(areaName));
+					}
+			}catch(err){
+				console.log("loop ",value, err);
+			}
+			
+		});
 
-		parent0 = $(notAProperDiv[0]).parent();
-		$(notAProperDiv[0]).remove();
-		parent0.append( "<div id ='test0' class='replaced' ></div>" );
-		ReactDOM.render(React.createFactory(Provider)({store: store23},
-				App()
-		), document.getElementById('test0'));
-
-		parent1 = $(notAProperDiv[1]).parent();
-		$(notAProperDiv[1]).remove();
-		parent1.append( "<div id ='test1' class='replaced' ></div>" );
-		ReactDOM.render(React.createFactory(Provider)({store: store24},
-				App()
-		), document.getElementById('test1'));
-
-		parent2 = $(notAProperDiv[2]).parent();
-		$(notAProperDiv[2]).remove();
-		parent2.append( "<div id ='test2' class='replaced'></div>" );
-		ReactDOM.render(React.createFactory(Provider)({store: store5},
-				App()
-		), document.getElementById('test2'));
-
-
-		parent3 = $(notAProperDiv[3]).parent();
-		$(notAProperDiv[3]).remove();
-		parent3.append( "<div id ='test3' class='replaced'></div>" );
-		ReactDOM.render(React.createFactory(Provider)({store: store25},
-				App()
-		), document.getElementById('test3'));
-
-		/*
-
-
-
-		/*
-		//data background
-		parent3 = $(notAProperDiv[1]).parent();
-		$(notAProperDiv[1]).remove();
-		parent3.append( "<div id ='test3' class='replaced'></div>" );
-		ReactDOM.render(React.createFactory(Provider)({store: store7},
-				App()
-		), document.getElementById('test3'));
-
-		parent4 = $(notAProperDiv[2]).parent();
-		$(notAProperDiv[2]).remove();
-		parent4.append( "<div id ='test4' class='replaced'></div>" );
-		ReactDOM.render(React.createFactory(Provider)({store: store8},
-				App()
-		), document.getElementById('test4'));
-
-		parent5 = $(notAProperDiv[3]).parent();
-		$(notAProperDiv[3]).remove();
-		parent5.append( "<div id ='test5' class='replaced'></div>" );
-		ReactDOM.render(React.createFactory(Provider)({store: store9},
-				App()
-		), document.getElementById('test5'));
-
-		parent6 = $(notAProperDiv[4]).parent();
-		$(notAProperDiv[4]).remove();
-		parent6.append( "<div id ='test6' class='replaced'></div>" );
-		ReactDOM.render(React.createFactory(Provider)({store: store10},
-				App()
-		), document.getElementById('test6'));
-
-		parent7 = $(notAProperDiv[5]).parent();
-		$(notAProperDiv[5]).remove();
-		parent7.append( "<div id ='test7' class='replaced'></div>" );
-		ReactDOM.render(React.createFactory(Provider)({store: store11},
-				App()
-		), document.getElementById('test7'));
-
-
-		parent8 = $(notAProperDiv[6]).parent();
-		$(notAProperDiv[6]).remove();
-		parent8.append( "<div id ='test8' class='replaced'></div>" );
-		ReactDOM.render(React.createFactory(Provider)({store: store21},
-				App()
-		), document.getElementById('test8'));*/
 
 		//popup creatror
 		window.savereference = function () {
 			
 			if(window.generalInformation.reference == undefined){
 				window.generalInformation.reference = [];
-				window.generalInformation.reference.push(store12.getState().jsonforms.core.data);
+				window.generalInformation.reference.push(store22.getState().jsonforms.core.data);
 				store1.dispatch(Actions.init(window.generalInformation, window.schema, window.uischema));
 			}else{
-				window.generalInformation.reference.push(store12.getState().jsonforms.core.data);
+				window.generalInformation.reference.push(store22.getState().jsonforms.core.data);
 				store1.dispatch(Actions.init(window.generalInformation, window.schema, window.uischema));
 			}
 		    
@@ -3593,7 +2900,7 @@ function createEMFForm(){
 		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
 		        "        <h4 id='titlereference' class='modal-title'>Modal Header</h4>\n" + 
 		        "      </div>\n" + 
-		        "      <div id='creatorModelContent' class='modal-body'>\n" + 
+		        "      <div id='referenceModelContent' class='modal-body'>\n" + 
 		        "      </div>\n" + 
 		        "      <div class='modal-footer'>\n" + 
 		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>\n" + 
@@ -3603,10 +2910,14 @@ function createEMFForm(){
 		        "\n" + 
 		        "  </div>\n" + 
 		        "</div>");
-		ReactDOM.render(React.createFactory(Provider)({store: store12},
-				App()
-		), document.getElementById('creatorModelContent'));
 
+		try{
+		ReactDOM.render(React.createFactory(Provider)({store: store22},
+				App()
+		), document.getElementById('referenceModelContent'));
+		}catch(err){console.log("reference " + err);
+			
+		}
 		//popup modelcategory
 		window.saveModelCategory = function () {
 			if(window.generalInformation.modelCategory == undefined){
@@ -3658,17 +2969,19 @@ function createEMFForm(){
 		        "      </div>\n" + 
 		        "      <div class='modal-footer'>\n" + 
 		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>\n" + 
-		        "   	 <button id='save' onclick='window.savemodelCategory()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "   	 <button id='save' onclick='window.saveModelCategory()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
 		        "      </div>\n" + 
 		        "    </div>\n" + 
 		        "\n" + 
 		        "  </div>\n" + 
 		        "</div>");
+		try{
 		ReactDOM.render(React.createFactory(Provider)({store: store13},
 				App()
 		), document.getElementById('modelCategoryModelContent'));
-
-
+		}catch(err){console.log("modelCategory " + err);
+			
+		}
 		//popup modificationdate
 		window.savemodificationdate = function () {
 			if(window.generalInformation.modificationdate == undefined){
@@ -3719,9 +3032,14 @@ function createEMFForm(){
 		        "\n" + 
 		        "  </div>\n" + 
 		        "</div>");
-		ReactDOM.render(React.createFactory(Provider)({store: store14},
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store14},
 				App()
 		), document.getElementById('modificationdateModelContent'));
+		}catch(err){console.log("modificationdate " + err);
+			
+		}
+
 		parent9 = document.getElementById('scope');
 		//popup country
 		window.saveCountry = function () {
@@ -3773,12 +3091,15 @@ function createEMFForm(){
 		        "\n" + 
 		        "  </div>\n" + 
 		        "</div>");
-		ReactDOM.render(React.createFactory(Provider)({store: store15},
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store15},
 				App()
 		), document.getElementById('countryModelContent'));
+		}catch(err){console.log("country " + err);
+			
+		}
 		//popup product
 		window.saveproduct = function () {
-			console.log(window.scope);
 			if(window.scope.product == undefined){
 				window.scope.product = [];
 				window.scope.product.push(store16.getState().jsonforms.core.data);
@@ -3828,11 +3149,14 @@ function createEMFForm(){
 		        "\n" + 
 		        "  </div>\n" + 
 		        "</div>");
-		ReactDOM.render(React.createFactory(Provider)({store: store3},
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store3},
 				App()
 		), document.getElementById('productModelContent'));
 		parent10 = document.getElementById('modelMath');
-
+		}catch(err){console.log("product " + err);
+			
+		}
 		//popup product
 		window.savehazard = function () {
 			if(window.scope.hazard == undefined){
@@ -3884,11 +3208,14 @@ function createEMFForm(){
 		        "\n" + 
 		        "  </div>\n" + 
 		        "</div>");
-		ReactDOM.render(React.createFactory(Provider)({store: store4},
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store4},
 				App()
 		), document.getElementById('hazardModelContent'));
 		parent10 = document.getElementById('modelMath');
-
+		}catch(err){console.log("hazard " + err);
+			
+		}
 
 
 
@@ -3942,10 +3269,13 @@ function createEMFForm(){
 		        "\n" + 
 		        "  </div>\n" + 
 		        "</div>");
+		try{
 		ReactDOM.render(React.createFactory(Provider)({store: store18},
 				App()
 		), document.getElementById('parameterModelContent'));
-
+		}catch(err){console.log("parameter " + err);
+			
+		}
 		window.saveModelequation = function () {
 			if(window.modelMath.modelequation == undefined){
 				window.modelMath.modelequation = [];
@@ -3995,10 +3325,13 @@ function createEMFForm(){
 		        "\n" + 
 		        "  </div>\n" + 
 		        "</div>");
-		ReactDOM.render(React.createFactory(Provider)({store: store19},
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store19},
 				App()
 		), document.getElementById('modelequationModelContent'));
-
+		}catch(err){console.log("modelequation " + err);
+			
+		}
 		window.saveEvent = function () {
 			if(window.modelMath.event == undefined){
 				window.modelMath.event = [];
@@ -4047,11 +3380,15 @@ function createEMFForm(){
 		        "\n" + 
 		        "  </div>\n" + 
 		        "</div>");
-		ReactDOM.render(React.createFactory(Provider)({store: store20},
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store20},
 				App()
 		), document.getElementById('eventModelContent'));
+		}catch(err){console.log("event " + err);
+			
+		}
 
-		},{"./App":1,"./AssayModel.json":2,"./AssayView.json":3,"./ContactModel.json":4,"./ContactView.json":5,"./CountryModel.json":6,"./CountryView.json":7,"./CreatorModel.json":8,"./CreatorView.json":9,"./DataBackgroundModel.json":10,"./DataBackgroundView.json":11,"./DietaryAssessmentMethodModel.json":12,"./DietaryAssessmentMethodView.json":13,"./EventModel.json":14,"./EventView.json":15,"./ExposureModel.json":16,"./ExposureView.json":17,"./GeneralInformationModel.json":18,"./GeneralInformationView.json":19,"./HazardModel.json":20,"./HazardView.json":21,"./LaboratoryModel.json":22,"./LaboratoryView.json":23,"./ModelCategoryModel.json":24,"./ModelCategoryView.json":25,"./ModelEquationModel.json":26,"./ModelEquationView.json":27,"./ModelMathModel.json":28,"./ModelMathView.json":29,"./ModificationDateModel.json":30,"./ModificationDateView.json":31,"./ParameterModel.json":32,"./ParameterView.json":33,"./PopulationGroupModel.json":34,"./PopulationGroupView.json":35,"./ProductModel.json":36,"./ProductView.json":37,"./ReferenceModel.json":38,"./ReferenceView.json":39,"./RegionModel.json":40,"./RegionView.json":41,"./ScopeModel.json":42,"./ScopeView.json":43,"./SpatialInformationModel.json":44,"./SpatialInformationView.json":45,"./StudyModel.json":46,"./StudySampleModel.json":47,"./StudySampleView.json":48,"./StudyView.json":49,"@jsonforms/core":56,"@jsonforms/material-renderers":95,"react-redux":955,"redux":993}],51:[function(require,module,exports){
+		},{"./App":1,"./AssayModel.json":2,"./AssayView.json":3,"./ContactModel.json":4,"./ContactView.json":5,"./CountryModel.json":6,"./CountryView.json":7,"./DataBackgroundModel.json":8,"./DataBackgroundView.json":9,"./DietaryAssessmentMethodModel.json":10,"./DietaryAssessmentMethodView.json":11,"./EventModel.json":12,"./EventView.json":13,"./ExposureModel.json":14,"./ExposureView.json":15,"./GeneralInformationModel.json":16,"./GeneralInformationView.json":17,"./HazardModel.json":18,"./HazardView.json":19,"./LaboratoryModel.json":20,"./LaboratoryView.json":21,"./ModelCategoryModel.json":22,"./ModelCategoryView.json":23,"./ModelEquationModel.json":24,"./ModelEquationView.json":25,"./ModelMathModel.json":26,"./ModelMathView.json":27,"./ModificationDateModel.json":28,"./ModificationDateView.json":29,"./ParameterModel.json":30,"./ParameterView.json":31,"./PopulationGroupModel.json":32,"./PopulationGroupView.json":33,"./ProductModel.json":34,"./ProductView.json":35,"./ReferenceModel.json":36,"./ReferenceView.json":37,"./RegionModel.json":38,"./RegionView.json":39,"./ScopeModel.json":40,"./ScopeView.json":41,"./SpatialInformationModel.json":42,"./SpatialInformationView.json":43,"./StringObjectModel.json":44,"./StringObjectView.json":45,"./StudyModel.json":46,"./StudySampleModel.json":47,"./StudySampleView.json":48,"./StudyView.json":49,"@jsonforms/core":56,"@jsonforms/material-renderers":95,"react-redux":955,"redux":993}],51:[function(require,module,exports){
 		"use strict";
 		Object.defineProperty(exports, "__esModule", { value: true });
 		var generators_1 = require("../generators");

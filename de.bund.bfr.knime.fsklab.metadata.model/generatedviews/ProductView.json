@@ -3,57 +3,57 @@
   "elements": [
     {
       "type": "Control",
-      "label": "productName",
+      "label": "Product Name",
       "scope": "#/properties/productName"
     },
     {
       "type": "Control",
-      "label": "productDescription",
+      "label": "Product Description",
       "scope": "#/properties/productDescription"
     },
     {
       "type": "Control",
-      "label": "productUnit",
+      "label": "Product Unit",
       "scope": "#/properties/productUnit"
     },
     {
       "type": "Control",
-      "label": "productionMethod",
+      "label": "Production Method",
       "scope": "#/properties/productionMethod"
     },
     {
       "type": "Control",
-      "label": "packaging",
+      "label": "Packaging",
       "scope": "#/properties/packaging"
     },
     {
       "type": "Control",
-      "label": "productTreatment",
+      "label": "Product Treatment",
       "scope": "#/properties/productTreatment"
     },
     {
       "type": "Control",
-      "label": "originCountry",
+      "label": "Origin Country",
       "scope": "#/properties/originCountry"
     },
     {
       "type": "Control",
-      "label": "originArea",
+      "label": "Origin Area",
       "scope": "#/properties/originArea"
     },
     {
       "type": "Control",
-      "label": "fisheriesArea",
+      "label": "Fisheries Area",
       "scope": "#/properties/fisheriesArea"
     },
     {
       "type": "Control",
-      "label": "productionDate",
+      "label": "Production Date",
       "scope": "#/properties/productionDate"
     },
     {
       "type": "Control",
-      "label": "expiryDate",
+      "label": "Expiry Date",
       "scope": "#/properties/expiryDate"
     }
   ]

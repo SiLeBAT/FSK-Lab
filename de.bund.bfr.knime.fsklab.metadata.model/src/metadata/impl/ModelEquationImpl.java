@@ -7,6 +7,7 @@ import java.util.Collection;
 import metadata.MetadataPackage;
 import metadata.ModelEquation;
 import metadata.Reference;
+import metadata.StringObject;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -19,7 +20,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -34,8 +34,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link metadata.impl.ModelEquationImpl#getModelEquationName <em>Model Equation Name</em>}</li>
  *   <li>{@link metadata.impl.ModelEquationImpl#getModelEquationClass <em>Model Equation Class</em>}</li>
  *   <li>{@link metadata.impl.ModelEquationImpl#getModelEquation <em>Model Equation</em>}</li>
- *   <li>{@link metadata.impl.ModelEquationImpl#getHypothesisOfTheModel <em>Hypothesis Of The Model</em>}</li>
  *   <li>{@link metadata.impl.ModelEquationImpl#getReference <em>Reference</em>}</li>
+ *   <li>{@link metadata.impl.ModelEquationImpl#getHypothesisOfTheModel <em>Hypothesis Of The Model</em>}</li>
  * </ul>
  *
  * @generated
@@ -102,16 +102,6 @@ public class ModelEquationImpl extends MinimalEObjectImpl.Container implements M
 	protected String modelEquation = MODEL_EQUATION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getHypothesisOfTheModel() <em>Hypothesis Of The Model</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getHypothesisOfTheModel()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> hypothesisOfTheModel;
-
-	/**
 	 * The cached value of the '{@link #getReference() <em>Reference</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -120,6 +110,16 @@ public class ModelEquationImpl extends MinimalEObjectImpl.Container implements M
 	 * @ordered
 	 */
 	protected EList<Reference> reference;
+
+	/**
+	 * The cached value of the '{@link #getHypothesisOfTheModel() <em>Hypothesis Of The Model</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getHypothesisOfTheModel()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> hypothesisOfTheModel;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -208,18 +208,6 @@ public class ModelEquationImpl extends MinimalEObjectImpl.Container implements M
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getHypothesisOfTheModel() {
-		if (hypothesisOfTheModel == null) {
-			hypothesisOfTheModel = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL);
-		}
-		return hypothesisOfTheModel;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EList<Reference> getReference() {
 		if (reference == null) {
 			reference = new EObjectContainmentEList<Reference>(Reference.class, this, MetadataPackage.MODEL_EQUATION__REFERENCE);
@@ -232,11 +220,25 @@ public class ModelEquationImpl extends MinimalEObjectImpl.Container implements M
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<StringObject> getHypothesisOfTheModel() {
+		if (hypothesisOfTheModel == null) {
+			hypothesisOfTheModel = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL);
+		}
+		return hypothesisOfTheModel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case MetadataPackage.MODEL_EQUATION__REFERENCE:
 				return ((InternalEList<?>)getReference()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL:
+				return ((InternalEList<?>)getHypothesisOfTheModel()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -255,10 +257,10 @@ public class ModelEquationImpl extends MinimalEObjectImpl.Container implements M
 				return getModelEquationClass();
 			case MetadataPackage.MODEL_EQUATION__MODEL_EQUATION:
 				return getModelEquation();
-			case MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL:
-				return getHypothesisOfTheModel();
 			case MetadataPackage.MODEL_EQUATION__REFERENCE:
 				return getReference();
+			case MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL:
+				return getHypothesisOfTheModel();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -281,13 +283,13 @@ public class ModelEquationImpl extends MinimalEObjectImpl.Container implements M
 			case MetadataPackage.MODEL_EQUATION__MODEL_EQUATION:
 				setModelEquation((String)newValue);
 				return;
-			case MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL:
-				getHypothesisOfTheModel().clear();
-				getHypothesisOfTheModel().addAll((Collection<? extends String>)newValue);
-				return;
 			case MetadataPackage.MODEL_EQUATION__REFERENCE:
 				getReference().clear();
 				getReference().addAll((Collection<? extends Reference>)newValue);
+				return;
+			case MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL:
+				getHypothesisOfTheModel().clear();
+				getHypothesisOfTheModel().addAll((Collection<? extends StringObject>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -310,11 +312,11 @@ public class ModelEquationImpl extends MinimalEObjectImpl.Container implements M
 			case MetadataPackage.MODEL_EQUATION__MODEL_EQUATION:
 				setModelEquation(MODEL_EQUATION_EDEFAULT);
 				return;
-			case MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL:
-				getHypothesisOfTheModel().clear();
-				return;
 			case MetadataPackage.MODEL_EQUATION__REFERENCE:
 				getReference().clear();
+				return;
+			case MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL:
+				getHypothesisOfTheModel().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -334,10 +336,10 @@ public class ModelEquationImpl extends MinimalEObjectImpl.Container implements M
 				return MODEL_EQUATION_CLASS_EDEFAULT == null ? modelEquationClass != null : !MODEL_EQUATION_CLASS_EDEFAULT.equals(modelEquationClass);
 			case MetadataPackage.MODEL_EQUATION__MODEL_EQUATION:
 				return MODEL_EQUATION_EDEFAULT == null ? modelEquation != null : !MODEL_EQUATION_EDEFAULT.equals(modelEquation);
-			case MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL:
-				return hypothesisOfTheModel != null && !hypothesisOfTheModel.isEmpty();
 			case MetadataPackage.MODEL_EQUATION__REFERENCE:
 				return reference != null && !reference.isEmpty();
+			case MetadataPackage.MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL:
+				return hypothesisOfTheModel != null && !hypothesisOfTheModel.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -358,8 +360,6 @@ public class ModelEquationImpl extends MinimalEObjectImpl.Container implements M
 		result.append(modelEquationClass);
 		result.append(", modelEquation: ");
 		result.append(modelEquation);
-		result.append(", hypothesisOfTheModel: ");
-		result.append(hypothesisOfTheModel);
 		result.append(')');
 		return result.toString();
 	}

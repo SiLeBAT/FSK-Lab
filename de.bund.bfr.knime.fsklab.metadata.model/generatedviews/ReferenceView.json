@@ -3,72 +3,72 @@
   "elements": [
     {
       "type": "Control",
-      "label": "isReferenceDescription",
+      "label": "Is Reference Description",
       "scope": "#/properties/isReferenceDescription"
     },
     {
       "type": "Control",
-      "label": "publicationType",
+      "label": "Publication Type",
       "scope": "#/properties/publicationType"
     },
     {
       "type": "Control",
-      "label": "publicationDate",
+      "label": "Publication Date",
       "scope": "#/properties/publicationDate"
     },
     {
       "type": "Control",
-      "label": "pmid",
+      "label": "Pmid",
       "scope": "#/properties/pmid"
     },
     {
       "type": "Control",
-      "label": "doi",
+      "label": "Doi",
       "scope": "#/properties/doi"
     },
     {
       "type": "Control",
-      "label": "authorList",
+      "label": "Author List",
       "scope": "#/properties/authorList"
     },
     {
       "type": "Control",
-      "label": "publicationTitle",
+      "label": "Publication Title",
       "scope": "#/properties/publicationTitle"
     },
     {
       "type": "Control",
-      "label": "publicationAbstract",
+      "label": "Publication Abstract",
       "scope": "#/properties/publicationAbstract"
     },
     {
       "type": "Control",
-      "label": "publicationJournal",
+      "label": "Publication Journal",
       "scope": "#/properties/publicationJournal"
     },
     {
       "type": "Control",
-      "label": "publicationVolume",
+      "label": "Publication Volume",
       "scope": "#/properties/publicationVolume"
     },
     {
       "type": "Control",
-      "label": "publicationIssue",
+      "label": "Publication Issue",
       "scope": "#/properties/publicationIssue"
     },
     {
       "type": "Control",
-      "label": "publicationStatus",
+      "label": "Publication Status",
       "scope": "#/properties/publicationStatus"
     },
     {
       "type": "Control",
-      "label": "publicationWebsite",
+      "label": "Publication Website",
       "scope": "#/properties/publicationWebsite"
     },
     {
       "type": "Control",
-      "label": "comment",
+      "label": "Comment",
       "scope": "#/properties/comment"
     }
   ]

@@ -1,29 +1,23 @@
 {
   "type": "object",
   "properties": {
-    "methodologicalTreatmentOfLeftCensoredData": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "levelOfContaminationAfterLeftCensoredDataTreatment": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
     "typeOfExposure": {
       "type": "string"
     },
-    "scenario": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
     "uncertaintyEstimation": {
       "type": "string"
+    },
+    "methodologicalTreatmentOfLeftCensoredData": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
     }
   },
   "additionalProperties": false,

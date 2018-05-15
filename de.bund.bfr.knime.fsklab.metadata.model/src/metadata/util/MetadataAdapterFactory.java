@@ -152,6 +152,10 @@ public class MetadataAdapterFactory extends AdapterFactoryImpl {
 				return createExposureAdapter();
 			}
 			@Override
+			public Adapter caseStringObject(StringObject object) {
+				return createStringObjectAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -462,6 +466,20 @@ public class MetadataAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createExposureAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link metadata.StringObject <em>String Object</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see metadata.StringObject
+	 * @generated
+	 */
+	public Adapter createStringObjectAdapter() {
 		return null;
 	}
 

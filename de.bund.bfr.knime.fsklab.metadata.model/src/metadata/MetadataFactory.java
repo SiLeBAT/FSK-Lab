@@ -211,6 +211,15 @@ public interface MetadataFactory extends EFactory {
 	Exposure createExposure();
 
 	/**
+	 * Returns a new object of class '<em>String Object</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>String Object</em>'.
+	 * @generated
+	 */
+	StringObject createStringObject();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

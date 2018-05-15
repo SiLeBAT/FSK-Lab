@@ -9,6 +9,7 @@ import metadata.MetadataPackage;
 import metadata.ModelEquation;
 import metadata.ModelMath;
 import metadata.Parameter;
+import metadata.StringObject;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -21,7 +22,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -33,27 +33,17 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link metadata.impl.ModelMathImpl#getQualityMeasures <em>Quality Measures</em>}</li>
  *   <li>{@link metadata.impl.ModelMathImpl#getFittingProcedure <em>Fitting Procedure</em>}</li>
- *   <li>{@link metadata.impl.ModelMathImpl#getEvent <em>Event</em>}</li>
  *   <li>{@link metadata.impl.ModelMathImpl#getParameter <em>Parameter</em>}</li>
  *   <li>{@link metadata.impl.ModelMathImpl#getModelEquation <em>Model Equation</em>}</li>
  *   <li>{@link metadata.impl.ModelMathImpl#getExposure <em>Exposure</em>}</li>
+ *   <li>{@link metadata.impl.ModelMathImpl#getQualityMeasures <em>Quality Measures</em>}</li>
+ *   <li>{@link metadata.impl.ModelMathImpl#getEvent <em>Event</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class ModelMathImpl extends MinimalEObjectImpl.Container implements ModelMath {
-	/**
-	 * The cached value of the '{@link #getQualityMeasures() <em>Quality Measures</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getQualityMeasures()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> qualityMeasures;
-
 	/**
 	 * The default value of the '{@link #getFittingProcedure() <em>Fitting Procedure</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -73,16 +63,6 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 	 * @ordered
 	 */
 	protected String fittingProcedure = FITTING_PROCEDURE_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getEvent() <em>Event</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getEvent()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> event;
 
 	/**
 	 * The cached value of the '{@link #getParameter() <em>Parameter</em>}' containment reference list.
@@ -115,6 +95,26 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 	protected Exposure exposure;
 
 	/**
+	 * The cached value of the '{@link #getQualityMeasures() <em>Quality Measures</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getQualityMeasures()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> qualityMeasures;
+
+	/**
+	 * The cached value of the '{@link #getEvent() <em>Event</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getEvent()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> event;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -138,18 +138,6 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getQualityMeasures() {
-		if (qualityMeasures == null) {
-			qualityMeasures = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.MODEL_MATH__QUALITY_MEASURES);
-		}
-		return qualityMeasures;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String getFittingProcedure() {
 		return fittingProcedure;
 	}
@@ -164,18 +152,6 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 		fittingProcedure = newFittingProcedure;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.MODEL_MATH__FITTING_PROCEDURE, oldFittingProcedure, fittingProcedure));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getEvent() {
-		if (event == null) {
-			event = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.MODEL_MATH__EVENT);
-		}
-		return event;
 	}
 
 	/**
@@ -250,6 +226,30 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<StringObject> getQualityMeasures() {
+		if (qualityMeasures == null) {
+			qualityMeasures = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.MODEL_MATH__QUALITY_MEASURES);
+		}
+		return qualityMeasures;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<StringObject> getEvent() {
+		if (event == null) {
+			event = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.MODEL_MATH__EVENT);
+		}
+		return event;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -259,6 +259,10 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 				return ((InternalEList<?>)getModelEquation()).basicRemove(otherEnd, msgs);
 			case MetadataPackage.MODEL_MATH__EXPOSURE:
 				return basicSetExposure(null, msgs);
+			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
+				return ((InternalEList<?>)getQualityMeasures()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.MODEL_MATH__EVENT:
+				return ((InternalEList<?>)getEvent()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -271,18 +275,18 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
-				return getQualityMeasures();
 			case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
 				return getFittingProcedure();
-			case MetadataPackage.MODEL_MATH__EVENT:
-				return getEvent();
 			case MetadataPackage.MODEL_MATH__PARAMETER:
 				return getParameter();
 			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
 				return getModelEquation();
 			case MetadataPackage.MODEL_MATH__EXPOSURE:
 				return getExposure();
+			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
+				return getQualityMeasures();
+			case MetadataPackage.MODEL_MATH__EVENT:
+				return getEvent();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -296,16 +300,8 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
-				getQualityMeasures().clear();
-				getQualityMeasures().addAll((Collection<? extends String>)newValue);
-				return;
 			case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
 				setFittingProcedure((String)newValue);
-				return;
-			case MetadataPackage.MODEL_MATH__EVENT:
-				getEvent().clear();
-				getEvent().addAll((Collection<? extends String>)newValue);
 				return;
 			case MetadataPackage.MODEL_MATH__PARAMETER:
 				getParameter().clear();
@@ -317,6 +313,14 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 				return;
 			case MetadataPackage.MODEL_MATH__EXPOSURE:
 				setExposure((Exposure)newValue);
+				return;
+			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
+				getQualityMeasures().clear();
+				getQualityMeasures().addAll((Collection<? extends StringObject>)newValue);
+				return;
+			case MetadataPackage.MODEL_MATH__EVENT:
+				getEvent().clear();
+				getEvent().addAll((Collection<? extends StringObject>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -330,14 +334,8 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
-				getQualityMeasures().clear();
-				return;
 			case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
 				setFittingProcedure(FITTING_PROCEDURE_EDEFAULT);
-				return;
-			case MetadataPackage.MODEL_MATH__EVENT:
-				getEvent().clear();
 				return;
 			case MetadataPackage.MODEL_MATH__PARAMETER:
 				getParameter().clear();
@@ -347,6 +345,12 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 				return;
 			case MetadataPackage.MODEL_MATH__EXPOSURE:
 				setExposure((Exposure)null);
+				return;
+			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
+				getQualityMeasures().clear();
+				return;
+			case MetadataPackage.MODEL_MATH__EVENT:
+				getEvent().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -360,18 +364,18 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
-				return qualityMeasures != null && !qualityMeasures.isEmpty();
 			case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
 				return FITTING_PROCEDURE_EDEFAULT == null ? fittingProcedure != null : !FITTING_PROCEDURE_EDEFAULT.equals(fittingProcedure);
-			case MetadataPackage.MODEL_MATH__EVENT:
-				return event != null && !event.isEmpty();
 			case MetadataPackage.MODEL_MATH__PARAMETER:
 				return parameter != null && !parameter.isEmpty();
 			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
 				return modelEquation != null && !modelEquation.isEmpty();
 			case MetadataPackage.MODEL_MATH__EXPOSURE:
 				return exposure != null;
+			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
+				return qualityMeasures != null && !qualityMeasures.isEmpty();
+			case MetadataPackage.MODEL_MATH__EVENT:
+				return event != null && !event.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -386,12 +390,8 @@ public class ModelMathImpl extends MinimalEObjectImpl.Container implements Model
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (qualityMeasures: ");
-		result.append(qualityMeasures);
-		result.append(", fittingProcedure: ");
+		result.append(" (fittingProcedure: ");
 		result.append(fittingProcedure);
-		result.append(", event: ");
-		result.append(event);
 		result.append(')');
 		return result.toString();
 	}

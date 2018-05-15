@@ -3,68 +3,68 @@
   "elements": [
     {
       "type": "Control",
-      "label": "populationName",
+      "label": "Population Name",
       "scope": "#/properties/populationName"
     },
     {
       "type": "Control",
-      "label": "targetPopulation",
+      "label": "Target Population",
       "scope": "#/properties/targetPopulation"
     },
     {
       "type": "Control",
-      "label": "populationGender",
-      "scope": "#/properties/populationGender"
-    },
-    {
-      "type": "Control",
-      "label": "populationSpan",
+      "label": "Population Span",
       "scope": "#/properties/populationSpan"
     },
     {
       "type": "Control",
-      "label": "populationDescription",
+      "label": "Population Description",
       "scope": "#/properties/populationDescription"
     },
     {
       "type": "Control",
-      "label": "populationAge",
-      "scope": "#/properties/populationAge"
-    },
-    {
-      "type": "Control",
-      "label": "bmi",
+      "label": "Bmi",
       "scope": "#/properties/bmi"
     },
     {
       "type": "Control",
-      "label": "specialDietGroups",
+      "label": "Special Diet Groups",
       "scope": "#/properties/specialDietGroups"
     },
     {
       "type": "Control",
-      "label": "patternConsumption",
-      "scope": "#/properties/patternConsumption"
-    },
-    {
-      "type": "Control",
-      "label": "populationRiskFactor",
-      "scope": "#/properties/populationRiskFactor"
-    },
-    {
-      "type": "Control",
-      "label": "season",
-      "scope": "#/properties/season"
-    },
-    {
-      "type": "Control",
-      "label": "region",
+      "label": "Region",
       "scope": "#/properties/region"
     },
     {
       "type": "Control",
-      "label": "country",
+      "label": "Country",
       "scope": "#/properties/country"
+    },
+    {
+      "type": "Control",
+      "label": "Population Risk Factor",
+      "scope": "#/properties/populationRiskFactor"
+    },
+    {
+      "type": "Control",
+      "label": "Season",
+      "scope": "#/properties/season"
+    },
+    {
+      "type": "Control",
+      "label": "Population Gender",
+      "scope": "#/properties/populationGender"
+    },
+    {
+      "type": "Control",
+      "label": "Pattern Consumption",
+      "scope": "#/properties/patternConsumption"
+    },
+    {
+      "type": "Control",
+      "label": "Population Age",
+      "scope": "#/properties/populationAge"
     }
   ]
 }

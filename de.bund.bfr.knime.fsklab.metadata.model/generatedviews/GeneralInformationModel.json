@@ -49,17 +49,23 @@
           "modelClass": {
             "type": "string"
           },
-          "modelSubClass": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "modelClassComment": {
             "type": "string"
           },
           "basicProcess": {
             "type": "string"
+          },
+          "modelSubClass": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
           }
         },
         "additionalProperties": false,

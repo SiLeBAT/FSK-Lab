@@ -16,9 +16,9 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link metadata.ModelCategory#getModelClass <em>Model Class</em>}</li>
- *   <li>{@link metadata.ModelCategory#getModelSubClass <em>Model Sub Class</em>}</li>
  *   <li>{@link metadata.ModelCategory#getModelClassComment <em>Model Class Comment</em>}</li>
  *   <li>{@link metadata.ModelCategory#getBasicProcess <em>Basic Process</em>}</li>
+ *   <li>{@link metadata.ModelCategory#getModelSubClass <em>Model Sub Class</em>}</li>
  * </ul>
  *
  * @see metadata.MetadataPackage#getModelCategory()
@@ -51,22 +51,6 @@ public interface ModelCategory extends EObject {
 	 * @generated
 	 */
 	void setModelClass(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Model Sub Class</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Model Sub Class</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Model Sub Class</em>' attribute list.
-	 * @see metadata.MetadataPackage#getModelCategory_ModelSubClass()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getModelSubClass();
 
 	/**
 	 * Returns the value of the '<em><b>Model Class Comment</b></em>' attribute.
@@ -119,5 +103,21 @@ public interface ModelCategory extends EObject {
 	 * @generated
 	 */
 	void setBasicProcess(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Model Sub Class</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Model Sub Class</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Model Sub Class</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getModelCategory_ModelSubClass()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getModelSubClass();
 
 } // ModelCategory

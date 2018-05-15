@@ -105,7 +105,7 @@ fskeditorjs = function() {
     var firstModelParameterMap = new Object();
     var secomndModelParameterMap = new Object();
     joinerNode.init = function(representation, value) {
-    	
+    	console.log(value.generalInformation);
     	_firstModel.generalInformation = value.generalInformation;
     	_firstModel.scope = value.scope;
     	_firstModel.modelMath = value.modelMath;
@@ -120,7 +120,7 @@ fskeditorjs = function() {
     	window.dataBackground =  _firstModel.dataBackground;
     	
     	prepareData(_firstModel);
-        create_body();
+    	create_body();
     };
 	function prepareData(_firstModel){
 		//prepare generalInformation
@@ -129,81 +129,24 @@ fskeditorjs = function() {
 		}else{
 			_firstModel.generalInformation.creationDate = new Date(_firstModel.generalInformation.creationDate).toISOString();
 		}
-		//prepare scope
-		if(_firstModel.scope.product.productionDate  === undefined){
-			_firstModel.scope.product.productionDate = '';
-		}else{
-			_firstModel.scope.product.productionDate = new Date(_firstModel.scope.product.productionDate).toISOString()
-		}
+		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ?_firstModel.generalInformation.description:"";
+		_firstModel.generalInformation.author = _firstModel.generalInformation.author != null ?_firstModel.generalInformation.author:{};
+		_firstModel.generalInformation.format = _firstModel.generalInformation.format != null ?_firstModel.generalInformation.format:"";
+		_firstModel.generalInformation.language = _firstModel.generalInformation.language != null ?_firstModel.generalInformation.language:"";
+		_firstModel.generalInformation.languageWrittenIn = _firstModel.generalInformation.languageWrittenIn != null ?_firstModel.generalInformation.languageWrittenIn:"";
+		_firstModel.generalInformation.software = _firstModel.generalInformation.software != null ?_firstModel.generalInformation.software:"";
+		_firstModel.generalInformation.source = _firstModel.generalInformation.source != null ?_firstModel.generalInformation.source:"";
+		_firstModel.generalInformation.status = _firstModel.generalInformation.status != null ?_firstModel.generalInformation.status:"";
+		_firstModel.generalInformation.objective = _firstModel.generalInformation.objective != null ?_firstModel.generalInformation.objective:"";
+
+		_firstModel.scope.generalComment = _firstModel.scope.generalComment != null ?_firstModel.scope.generalComment:"";
+		_firstModel.scope.temporalInformation = _firstModel.scope.temporalInformation != null ?_firstModel.scope.temporalInformation:"";
+		_firstModel.scope.populationGroup = _firstModel.scope.populationGroup != null ?_firstModel.scope.populationGroup:{};
 		
-		if(_firstModel.scope.product.expirationDate  === undefined){
-			_firstModel.scope.product.expirationDate = '';
-		}else{
-			_firstModel.scope.product.expirationDate = new Date(_firstModel.scope.product.expirationDate).toISOString();
-		}
-		if(_firstModel.scope.product.productionMethod.length == 0){
-			_firstModel.scope.product.productionMethod = '';
-		}else{
-			var methods = '';
-			$.each(_firstModel.scope.product.productionMethod, function( index, value ) {
-				  methods = methods + value +', ';
-			});
-			_firstModel.scope.product.productionMethod = methods;
-		}
-		
-		if(_firstModel.scope.product.packaging.length == 0){
-			_firstModel.scope.product.packaging = '';
-		}else{
-			var packaging = '';
-			$.each(_firstModel.scope.product.packaging, function( index, value ) {
-				packaging = packaging + value +', ';
-			});
-			_firstModel.scope.product.packaging = packaging;
-		}
-		
-		if(_firstModel.scope.product.productTreatment.length == 0){
-			_firstModel.scope.product.productTreatment = '';
-		}else{
-			var productTreatment = '';
-			$.each(_firstModel.scope.product.productTreatment, function( index, value ) {
-				productTreatment = productTreatment + value +', ';
-			});
-			_firstModel.scope.product.productTreatment = productTreatment;
-		}
-		//prepare databackground
-		if(_firstModel.dataBackground.study.protocolUri == null){
-			_firstModel.dataBackground.study.protocolUri = '';
-		}
-		
-		if(_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems.length == 0){
-			_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems = '';
-		}else{
-			var numberOfFoodItems = '';
-			$.each(_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems, function( index, value ) {
-				numberOfFoodItems = numberOfFoodItems + value +', ';
-			});
-			_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems = numberOfFoodItems;
-		}
-		
-		if(_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors.length == 0){
-			_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors = '';
-		}else{
-			var foodDescriptors = '';
-			$.each(_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors, function( index, value ) {
-				foodDescriptors = foodDescriptors + value +', ';
-			});
-			_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors = foodDescriptors;
-		}
-		
-		if(_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes.length == 0){
-			_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes = '';
-		}else{
-			var recordTypes = '';
-			$.each(_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes, function( index, value ) {
-				recordTypes = recordTypes + value +', ';
-			});
-			_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes = recordTypes;
-		}
+		_firstModel.dataBackground.study = _firstModel.dataBackground.study!=null?_firstModel.dataBackground.study:{};
+		_firstModel.dataBackground.dietaryassessmentmethod = _firstModel.dataBackground.dietaryassessmentmethod!=null?_firstModel.dataBackground.dietaryassessmentmethod:{};
+		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory!=null?_firstModel.dataBackground.laboratory:{};
+
 	}
     joinerNode.getComponentValue = function() {
     	_viewValue.generalInformation = window.store1.getState().jsonforms.core.data;
@@ -368,14 +311,19 @@ fskeditorjs = function() {
             
            
         });
-        createEMFForm();
+        try{
+        		createEMFForm();
+        }catch(err) {
+        		console.log(err);
+        }
         
           
         //$('html').find('style').remove();
         //data-meta MuiInputLabel
-       $.each(  $('html').find('style'), function( key, value ) {
-        	
+       $.each($('html').find('style'), function( key, value ) {
+        	console.log(key);
         	if($(value).attr('data-meta') == 'MuiInput'){
+        		console.log(' MuiInput');
         		value.remove();
         	}else if($(value).attr('data-meta') == 'MuiInputLabel'){
         		value.remove();

@@ -3,52 +3,52 @@
   "elements": [
     {
       "type": "Control",
-      "label": "sampleName",
+      "label": "Sample Name",
       "scope": "#/properties/sampleName"
     },
     {
       "type": "Control",
-      "label": "protocolOfSampleCollection",
+      "label": "Protocol Of Sample Collection",
       "scope": "#/properties/protocolOfSampleCollection"
     },
     {
       "type": "Control",
-      "label": "samplingStrategy",
+      "label": "Sampling Strategy",
       "scope": "#/properties/samplingStrategy"
     },
     {
       "type": "Control",
-      "label": "typeOfSamplingProgram",
+      "label": "Type Of Sampling Program",
       "scope": "#/properties/typeOfSamplingProgram"
     },
     {
       "type": "Control",
-      "label": "samplingMethod",
+      "label": "Sampling Method",
       "scope": "#/properties/samplingMethod"
     },
     {
       "type": "Control",
-      "label": "samplingPlan",
+      "label": "Sampling Plan",
       "scope": "#/properties/samplingPlan"
     },
     {
       "type": "Control",
-      "label": "samplingWeight",
+      "label": "Sampling Weight",
       "scope": "#/properties/samplingWeight"
     },
     {
       "type": "Control",
-      "label": "samplingSize",
+      "label": "Sampling Size",
       "scope": "#/properties/samplingSize"
     },
     {
       "type": "Control",
-      "label": "lotSizeUnit",
+      "label": "Lot Size Unit",
       "scope": "#/properties/lotSizeUnit"
     },
     {
       "type": "Control",
-      "label": "samplingPoint",
+      "label": "Sampling Point",
       "scope": "#/properties/samplingPoint"
     }
   ]

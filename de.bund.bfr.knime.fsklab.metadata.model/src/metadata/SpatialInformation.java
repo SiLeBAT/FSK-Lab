@@ -25,35 +25,35 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface SpatialInformation extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Region</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * Returns the value of the '<em><b>Region</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Region</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Region</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Region</em>' attribute list.
+	 * @return the value of the '<em>Region</em>' containment reference list.
 	 * @see metadata.MetadataPackage#getSpatialInformation_Region()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<String> getRegion();
+	EList<StringObject> getRegion();
 
 	/**
-	 * Returns the value of the '<em><b>Country</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * Returns the value of the '<em><b>Country</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Country</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Country</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Country</em>' attribute list.
+	 * @return the value of the '<em>Country</em>' containment reference list.
 	 * @see metadata.MetadataPackage#getSpatialInformation_Country()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<String> getCountry();
+	EList<StringObject> getCountry();
 
 } // SpatialInformation

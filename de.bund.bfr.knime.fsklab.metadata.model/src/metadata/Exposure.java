@@ -15,11 +15,11 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link metadata.Exposure#getTypeOfExposure <em>Type Of Exposure</em>}</li>
+ *   <li>{@link metadata.Exposure#getUncertaintyEstimation <em>Uncertainty Estimation</em>}</li>
  *   <li>{@link metadata.Exposure#getMethodologicalTreatmentOfLeftCensoredData <em>Methodological Treatment Of Left Censored Data</em>}</li>
  *   <li>{@link metadata.Exposure#getLevelOfContaminationAfterLeftCensoredDataTreatment <em>Level Of Contamination After Left Censored Data Treatment</em>}</li>
- *   <li>{@link metadata.Exposure#getTypeOfExposure <em>Type Of Exposure</em>}</li>
  *   <li>{@link metadata.Exposure#getScenario <em>Scenario</em>}</li>
- *   <li>{@link metadata.Exposure#getUncertaintyEstimation <em>Uncertainty Estimation</em>}</li>
  * </ul>
  *
  * @see metadata.MetadataPackage#getExposure()
@@ -27,38 +27,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Exposure extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Methodological Treatment Of Left Censored Data</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Methodological Treatment Of Left Censored Data</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Methodological Treatment Of Left Censored Data</em>' attribute list.
-	 * @see metadata.MetadataPackage#getExposure_MethodologicalTreatmentOfLeftCensoredData()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getMethodologicalTreatmentOfLeftCensoredData();
-
-	/**
-	 * Returns the value of the '<em><b>Level Of Contamination After Left Censored Data Treatment</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Level Of Contamination After Left Censored Data Treatment</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Level Of Contamination After Left Censored Data Treatment</em>' attribute list.
-	 * @see metadata.MetadataPackage#getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getLevelOfContaminationAfterLeftCensoredDataTreatment();
-
 	/**
 	 * Returns the value of the '<em><b>Type Of Exposure</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -86,22 +54,6 @@ public interface Exposure extends EObject {
 	void setTypeOfExposure(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Scenario</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Scenario</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Scenario</em>' attribute list.
-	 * @see metadata.MetadataPackage#getExposure_Scenario()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getScenario();
-
-	/**
 	 * Returns the value of the '<em><b>Uncertainty Estimation</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -126,5 +78,53 @@ public interface Exposure extends EObject {
 	 * @generated
 	 */
 	void setUncertaintyEstimation(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Methodological Treatment Of Left Censored Data</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Methodological Treatment Of Left Censored Data</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Methodological Treatment Of Left Censored Data</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getExposure_MethodologicalTreatmentOfLeftCensoredData()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getMethodologicalTreatmentOfLeftCensoredData();
+
+	/**
+	 * Returns the value of the '<em><b>Level Of Contamination After Left Censored Data Treatment</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Level Of Contamination After Left Censored Data Treatment</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Level Of Contamination After Left Censored Data Treatment</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getLevelOfContaminationAfterLeftCensoredDataTreatment();
+
+	/**
+	 * Returns the value of the '<em><b>Scenario</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Scenario</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Scenario</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getExposure_Scenario()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getScenario();
 
 } // Exposure

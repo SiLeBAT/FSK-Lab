@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_5oKWQFNaEeiq2ZPtzKZg8g" name="PopulationGroup" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
-  <rootEClass href="http://www.example.org/metadata#//PopulationGroup"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZkFNaEeiq2ZPtzKZg8g" name="Control populationName">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZkVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/populationName"/>
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_MyG_QFgUEeiWCrq4lBlUvw" name="PopulationGroup" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+  <rootEClass href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJMFgUEeiWCrq4lBlUvw" name="Control populationName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJMVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/populationName"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZklNaEeiq2ZPtzKZg8g" name="Control targetPopulation">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZk1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/targetPopulation"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJMlgUEeiWCrq4lBlUvw" name="Control targetPopulation">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJM1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/targetPopulation"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZlFNaEeiq2ZPtzKZg8g" name="Control populationGender">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZlVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//PopulationGroup/populationGender"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJNFgUEeiWCrq4lBlUvw" name="Control populationSpan">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJNVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/populationSpan"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZllNaEeiq2ZPtzKZg8g" name="Control populationSpan">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZl1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//PopulationGroup/populationSpan"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJNlgUEeiWCrq4lBlUvw" name="Control populationDescription">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJN1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/populationDescription"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZmFNaEeiq2ZPtzKZg8g" name="Control populationDescription">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZmVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//PopulationGroup/populationDescription"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJOFgUEeiWCrq4lBlUvw" name="Control bmi">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJOVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/bmi"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZmlNaEeiq2ZPtzKZg8g" name="Control populationAge">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZm1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//PopulationGroup/populationAge"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJOlgUEeiWCrq4lBlUvw" name="Control specialDietGroups">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJO1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/specialDietGroups"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZnFNaEeiq2ZPtzKZg8g" name="Control bmi">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZnVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//PopulationGroup/bmi"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJPFgUEeiWCrq4lBlUvw" name="Control region">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJPVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/region"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZnlNaEeiq2ZPtzKZg8g" name="Control specialDietGroups">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZn1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//PopulationGroup/specialDietGroups"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJPlgUEeiWCrq4lBlUvw" name="Control country">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJP1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/country"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZoFNaEeiq2ZPtzKZg8g" name="Control patternConsumption">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZoVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//PopulationGroup/patternConsumption"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJQFgUEeiWCrq4lBlUvw" name="Control populationRiskFactor">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJQVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/populationRiskFactor"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZolNaEeiq2ZPtzKZg8g" name="Control populationRiskFactor">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZo1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//PopulationGroup/populationRiskFactor"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJQlgUEeiWCrq4lBlUvw" name="Control season">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJQ1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/season"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZpFNaEeiq2ZPtzKZg8g" name="Control season">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZpVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//PopulationGroup/season"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJRFgUEeiWCrq4lBlUvw" name="Control populationGender">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJRVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/populationGender"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZplNaEeiq2ZPtzKZg8g" name="Control region">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZp1NaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//PopulationGroup/region"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJRlgUEeiWCrq4lBlUvw" name="Control patternConsumption">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJR1gUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/patternConsumption"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5oNZqFNaEeiq2ZPtzKZg8g" name="Control country">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5oNZqVNaEeiq2ZPtzKZg8g">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//PopulationGroup/country"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_MyQJSFgUEeiWCrq4lBlUvw" name="Control populationAge">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_MyQJSVgUEeiWCrq4lBlUvw">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://BfR/bund/de/knime/model/metadata#//PopulationGroup/populationAge"/>
     </domainModelReference>
   </children>
 </org.eclipse.emf.ecp.view.model:View>

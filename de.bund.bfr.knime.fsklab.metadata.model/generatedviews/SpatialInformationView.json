@@ -3,12 +3,12 @@
   "elements": [
     {
       "type": "Control",
-      "label": "region",
+      "label": "Region",
       "scope": "#/properties/region"
     },
     {
       "type": "Control",
-      "label": "country",
+      "label": "Country",
       "scope": "#/properties/country"
     }
   ]

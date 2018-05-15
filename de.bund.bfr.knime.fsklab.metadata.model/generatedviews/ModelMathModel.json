@@ -1,20 +1,8 @@
 {
   "type": "object",
   "properties": {
-    "qualityMeasures": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
     "fittingProcedure": {
       "type": "string"
-    },
-    "event": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
     },
     "parameter": {
       "type": "array",
@@ -225,7 +213,13 @@
           "hypothesisOfTheModel": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
             }
           }
         },
@@ -239,26 +233,8 @@
     "exposure": {
       "type": "object",
       "properties": {
-        "methodologicalTreatmentOfLeftCensoredData": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "levelOfContaminationAfterLeftCensoredDataTreatment": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
         "typeOfExposure": {
           "type": "string"
-        },
-        "scenario": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         },
         "uncertaintyEstimation": {
           "type": "string"

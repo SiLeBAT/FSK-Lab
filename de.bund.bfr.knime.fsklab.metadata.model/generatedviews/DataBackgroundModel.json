@@ -131,23 +131,26 @@
     "laboratory": {
       "type": "object",
       "properties": {
-        "laboratoryAccreditation": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
         "laboratoryName": {
           "type": "string"
         },
         "laboratoryCountry": {
           "type": "string"
+        },
+        "laboratoryAccreditation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
         }
       },
-      "additionalProperties": false,
-      "required": [
-        "laboratoryAccreditation"
-      ]
+      "additionalProperties": false
     },
     "assay": {
       "type": "array",

@@ -103,6 +103,7 @@ import metadata.Product;
 import metadata.PublicationType;
 import metadata.Reference;
 import metadata.Scope;
+import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
 
@@ -670,7 +671,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       Laboratory laboratory = MetadataFactory.eINSTANCE.createLaboratory();
 
       if (accreditationField.getSelectedIndex() != -1) {
-        laboratory.getLaboratoryAccreditation().add((String) accreditationField.getSelectedItem());
+        StringObject stringObject =
+            createStringObject((String) accreditationField.getSelectedItem());
+        laboratory.getLaboratoryAccreditation().add(stringObject);
       }
 
       laboratory.setLaboratoryName(nameField.getText());
@@ -1851,31 +1854,31 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
 
         if (t.eIsSet(pkg.getPopulationGroup_PopulationSpan())) {
-          populationSpanField.setText(t.getPopulationSpan().get(0));
+          populationSpanField.setText(t.getPopulationSpan().get(0).getValue());
         }
 
         if (t.eIsSet(pkg.getPopulationGroup_PopulationDescription())) {
-          populationDescriptionField.setText(t.getPopulationDescription().get(0));
+          populationDescriptionField.setText(t.getPopulationDescription().get(0).getValue());
         }
 
         if (t.eIsSet(pkg.getPopulationGroup_PopulationAge())) {
-          populationAgeField.setText(t.getPopulationAge().get(0));
+          populationAgeField.setText(t.getPopulationAge().get(0).getValue());
         }
 
         if (t.eIsSet(pkg.getPopulationGroup_PopulationGender())) {
           populationGenderField.setText(t.getPopulationGender());
         }
 
-        if (!t.getBmi().isEmpty()) {
-          bmiField.setText(t.getBmi().get(0));
+        if (t.eIsSet(pkg.getPopulationGroup_Bmi())) {
+          bmiField.setText(t.getBmi().get(0).getValue());
         }
 
-        if (!t.getSpecialDietGroups().isEmpty()) {
-          specialDietGroupField.setText(t.getSpecialDietGroups().get(0));
+        if (t.eIsSet(pkg.getPopulationGroup_SpecialDietGroups())) {
+          specialDietGroupField.setText(t.getSpecialDietGroups().get(0).getValue());
         }
 
-        if (!t.getPatternConsumption().isEmpty()) {
-          patternConsumptionField.setText(t.getPatternConsumption().get(0));
+        if (t.eIsSet(pkg.getPopulationGroup_PatternConsumption())) {
+          patternConsumptionField.setText(t.getPatternConsumption().get(0).getValue());
         }
 
         if (t.eIsSet(pkg.getPopulationGroup_Region())) {
@@ -1887,11 +1890,11 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
 
         if (t.eIsSet(pkg.getPopulationGroup_PopulationRiskFactor())) {
-          riskField.setText(t.getPopulationRiskFactor().get(0));
+          riskField.setText(t.getPopulationRiskFactor().get(0).getValue());
         }
 
         if (t.eIsSet(pkg.getPopulationGroup_Season())) {
-          seasonField.setText(t.getSeason().get(0));
+          seasonField.setText(t.getSeason().get(0).getValue());
         }
       }
     }
@@ -1906,52 +1909,62 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final String populationSpan = populationSpanField.getText();
       if (!populationSpan.isEmpty()) {
-        populationGroup.getPopulationSpan().add(populationSpan);
+        StringObject sO = createStringObject(populationSpan);
+        populationGroup.getPopulationSpan().add(sO);
       }
 
       final String populationDescription = populationDescriptionField.getText();
       if (!populationDescription.isEmpty()) {
-        populationGroup.getPopulationDescription().add(populationDescription);
+        StringObject sO = createStringObject(populationDescription);
+        populationGroup.getPopulationDescription().add(sO);
       }
 
       final String populationAge = populationAgeField.getText();
       if (!populationAge.isEmpty()) {
-        populationGroup.getPopulationAge().add(populationAge);
+        StringObject sO = createStringObject(populationAge);
+        populationGroup.getPopulationAge().add(sO);
       }
 
       populationGroup.setPopulationGender(populationGenderField.getText());
 
       final String bmi = bmiField.getText();
       if (!bmi.isEmpty()) {
-        populationGroup.getBmi().add(bmi);
+        StringObject sO = createStringObject(bmi);
+        populationGroup.getBmi().add(sO);
       }
 
       final String specialDietGroup = specialDietGroupField.getText();
       if (!specialDietGroup.isEmpty()) {
-        populationGroup.getSpecialDietGroups().add(specialDietGroup);
+        StringObject sO = createStringObject(specialDietGroup);
+        populationGroup.getSpecialDietGroups().add(sO);
       }
 
       final String patternConsumption = patternConsumptionField.getText();
       if (!patternConsumption.isEmpty()) {
-        populationGroup.getPatternConsumption().add(patternConsumption);
+        StringObject sO = createStringObject(patternConsumption);
+        populationGroup.getPatternConsumption().add(sO);
       }
 
       if (regionField.getSelectedIndex() != -1) {
-        populationGroup.getRegion().add((String) regionField.getSelectedItem());
+        StringObject sO = createStringObject((String) regionField.getSelectedItem());
+        populationGroup.getRegion().add(sO);
       }
 
       if (countryField.getSelectedIndex() != -1) {
-        populationGroup.getCountry().add((String) countryField.getSelectedItem());
+        StringObject sO = createStringObject((String) countryField.getSelectedItem());
+        populationGroup.getCountry().add(sO);
       }
 
       final String risk = riskField.getText();
       if (!risk.isEmpty()) {
-        populationGroup.getPopulationRiskFactor().add(risk);
+        StringObject sO = createStringObject(risk);
+        populationGroup.getPopulationRiskFactor().add(sO);
       }
 
       final String season = seasonField.getText();
       if (!season.isEmpty()) {
-        populationGroup.getSeason().add(season);
+        StringObject sO = createStringObject(season);
+        populationGroup.getSeason().add(sO);
       }
 
       return populationGroup;
@@ -3442,12 +3455,18 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         if (scope.eIsSet(pkg.getScope_Product())) {
           Product product = scope.getProduct().get(0);
-          productButton.setText(product.getProductName() + "_" + product.getProductUnit());
+          if (product.eIsSet(pkg.getProduct_ProductName())
+              && product.eIsSet(pkg.getProduct_ProductUnit())) {
+            productButton.setText(product.getProductName() + "_" + product.getProductUnit());
+          }
         }
 
         if (scope.eIsSet(pkg.getScope_Hazard())) {
           Hazard hazard = scope.getHazard().get(0);
-          hazardButton.setText(hazard.getHazardName() + "_" + hazard.getHazardUnit());
+          if (hazard.eIsSet(pkg.getHazard_HazardName())
+              && hazard.eIsSet(pkg.getHazard_HazardUnit())) {
+            hazardButton.setText(hazard.getHazardName() + "_" + hazard.getHazardUnit());
+          }
         }
 
         if (scope.eIsSet(pkg.getScope_PopulationGroup())) {
@@ -3587,7 +3606,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           Laboratory lab = editPanel.get();
           // Update button's text
-          laboratoryButton.setText(lab.getLaboratoryAccreditation().get(0));
+          laboratoryButton.setText(lab.getLaboratoryAccreditation().get(0).getValue());
           dataBackground.setLaboratory(lab);
         }
       });
@@ -3659,7 +3678,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         if (dataBackground.eIsSet(pkg.getDataBackground_Laboratory())
             && dataBackground.getLaboratory().eIsSet(pkg.getLaboratory_LaboratoryAccreditation())) {
           String laboratoryAccreditation =
-              dataBackground.getLaboratory().getLaboratoryAccreditation().get(0);
+              dataBackground.getLaboratory().getLaboratoryAccreditation().get(0).getValue();
           laboratoryButton.setText(laboratoryAccreditation);
         }
 
@@ -3721,7 +3740,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         MetadataPackage pkg = MetadataPackage.eINSTANCE;
         if (modelMath.eIsSet(pkg.getModelMath_QualityMeasures())) {
-          String qualityMeasuresString = modelMath.getQualityMeasures().get(0);
+          String qualityMeasuresString = modelMath.getQualityMeasures().get(0).getValue();
 
           JsonObject qualityMeasures =
               Json.createReader(new StringReader(qualityMeasuresString)).readObject();
@@ -3760,7 +3779,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           .add("Rsquared", qualityMeasuresPanel.r2SpinnerModel.getNumber().doubleValue())
           .add("AIC", qualityMeasuresPanel.aicSpinnerModel.getNumber().doubleValue())
           .add("BIC", qualityMeasuresPanel.bicSpinnerModel.getNumber().doubleValue()).build();
-      modelMath.getQualityMeasures().add(qualityMeasures.toString());
+      modelMath.getQualityMeasures().add(createStringObject(qualityMeasures.toString()));
 
       // Save model equations
       modelMath.getModelEquation().addAll(modelEquationsPanel.tableModel.equations);
@@ -4052,5 +4071,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     void init(final List<ModelEquation> modelEquations) {
       modelEquations.forEach(tableModel::add);
     }
+  }
+
+  private static StringObject createStringObject(String value) {
+    StringObject stringObject = MetadataFactory.eINSTANCE.createStringObject();
+    stringObject.setValue(value);
+
+    return stringObject;
   }
 }

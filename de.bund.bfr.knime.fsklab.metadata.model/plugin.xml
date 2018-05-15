@@ -9,11 +9,9 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated metadata -->
       <package
-            uri="http://www.example.org/metadata"
+            uri="http://BfR/bund/de/knime/model/metadata"
             class="metadata.MetadataPackage"
             genModel="model/metadata.genmodel"/>
    </extension>
-
-
 
 </plugin>

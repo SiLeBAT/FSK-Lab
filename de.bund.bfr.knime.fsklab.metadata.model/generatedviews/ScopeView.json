@@ -3,32 +3,32 @@
   "elements": [
     {
       "type": "Control",
-      "label": "generalComment",
+      "label": "General Comment",
       "scope": "#/properties/generalComment"
     },
     {
       "type": "Control",
-      "label": "temporalInformation",
+      "label": "Temporal Information",
       "scope": "#/properties/temporalInformation"
     },
     {
       "type": "Control",
-      "label": "product",
+      "label": "Product",
       "scope": "#/properties/product"
     },
     {
       "type": "Control",
-      "label": "hazard",
+      "label": "Hazard",
       "scope": "#/properties/hazard"
     },
     {
       "type": "Control",
-      "label": "populationGroup",
+      "label": "Population Group",
       "scope": "#/properties/populationGroup"
     },
     {
       "type": "Control",
-      "label": "spatialInformation",
+      "label": "Spatial Information",
       "scope": "#/properties/spatialInformation"
     }
   ]

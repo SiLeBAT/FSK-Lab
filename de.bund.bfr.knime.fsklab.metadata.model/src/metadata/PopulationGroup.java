@@ -19,15 +19,15 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link metadata.PopulationGroup#getTargetPopulation <em>Target Population</em>}</li>
  *   <li>{@link metadata.PopulationGroup#getPopulationSpan <em>Population Span</em>}</li>
  *   <li>{@link metadata.PopulationGroup#getPopulationDescription <em>Population Description</em>}</li>
- *   <li>{@link metadata.PopulationGroup#getPopulationAge <em>Population Age</em>}</li>
- *   <li>{@link metadata.PopulationGroup#getPopulationGender <em>Population Gender</em>}</li>
  *   <li>{@link metadata.PopulationGroup#getBmi <em>Bmi</em>}</li>
  *   <li>{@link metadata.PopulationGroup#getSpecialDietGroups <em>Special Diet Groups</em>}</li>
- *   <li>{@link metadata.PopulationGroup#getPatternConsumption <em>Pattern Consumption</em>}</li>
  *   <li>{@link metadata.PopulationGroup#getRegion <em>Region</em>}</li>
  *   <li>{@link metadata.PopulationGroup#getCountry <em>Country</em>}</li>
  *   <li>{@link metadata.PopulationGroup#getPopulationRiskFactor <em>Population Risk Factor</em>}</li>
  *   <li>{@link metadata.PopulationGroup#getSeason <em>Season</em>}</li>
+ *   <li>{@link metadata.PopulationGroup#getPopulationGender <em>Population Gender</em>}</li>
+ *   <li>{@link metadata.PopulationGroup#getPatternConsumption <em>Pattern Consumption</em>}</li>
+ *   <li>{@link metadata.PopulationGroup#getPopulationAge <em>Population Age</em>}</li>
  * </ul>
  *
  * @see metadata.MetadataPackage#getPopulationGroup()
@@ -88,52 +88,132 @@ public interface PopulationGroup extends EObject {
 	void setTargetPopulation(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Population Span</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * Returns the value of the '<em><b>Population Span</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Population Span</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Population Span</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Population Span</em>' attribute list.
+	 * @return the value of the '<em>Population Span</em>' containment reference list.
 	 * @see metadata.MetadataPackage#getPopulationGroup_PopulationSpan()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<String> getPopulationSpan();
+	EList<StringObject> getPopulationSpan();
 
 	/**
-	 * Returns the value of the '<em><b>Population Description</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * Returns the value of the '<em><b>Population Description</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Population Description</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Population Description</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Population Description</em>' attribute list.
+	 * @return the value of the '<em>Population Description</em>' containment reference list.
 	 * @see metadata.MetadataPackage#getPopulationGroup_PopulationDescription()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<String> getPopulationDescription();
+	EList<StringObject> getPopulationDescription();
 
 	/**
-	 * Returns the value of the '<em><b>Population Age</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * Returns the value of the '<em><b>Bmi</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Population Age</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Bmi</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Population Age</em>' attribute list.
-	 * @see metadata.MetadataPackage#getPopulationGroup_PopulationAge()
-	 * @model
+	 * @return the value of the '<em>Bmi</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getPopulationGroup_Bmi()
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<String> getPopulationAge();
+	EList<StringObject> getBmi();
+
+	/**
+	 * Returns the value of the '<em><b>Special Diet Groups</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Special Diet Groups</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Special Diet Groups</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getPopulationGroup_SpecialDietGroups()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getSpecialDietGroups();
+
+	/**
+	 * Returns the value of the '<em><b>Region</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Region</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Region</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getPopulationGroup_Region()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getRegion();
+
+	/**
+	 * Returns the value of the '<em><b>Country</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Country</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Country</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getPopulationGroup_Country()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getCountry();
+
+	/**
+	 * Returns the value of the '<em><b>Population Risk Factor</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Population Risk Factor</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Population Risk Factor</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getPopulationGroup_PopulationRiskFactor()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getPopulationRiskFactor();
+
+	/**
+	 * Returns the value of the '<em><b>Season</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Season</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Season</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getPopulationGroup_Season()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getSeason();
 
 	/**
 	 * Returns the value of the '<em><b>Population Gender</b></em>' attribute.
@@ -146,7 +226,7 @@ public interface PopulationGroup extends EObject {
 	 * @return the value of the '<em>Population Gender</em>' attribute.
 	 * @see #setPopulationGender(String)
 	 * @see metadata.MetadataPackage#getPopulationGroup_PopulationGender()
-	 * @model
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
 	 * @generated
 	 */
 	String getPopulationGender();
@@ -162,115 +242,35 @@ public interface PopulationGroup extends EObject {
 	void setPopulationGender(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Bmi</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * Returns the value of the '<em><b>Pattern Consumption</b></em>' reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Bmi</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Pattern Consumption</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Bmi</em>' attribute list.
-	 * @see metadata.MetadataPackage#getPopulationGroup_Bmi()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getBmi();
-
-	/**
-	 * Returns the value of the '<em><b>Special Diet Groups</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Special Diet Groups</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Special Diet Groups</em>' attribute list.
-	 * @see metadata.MetadataPackage#getPopulationGroup_SpecialDietGroups()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getSpecialDietGroups();
-
-	/**
-	 * Returns the value of the '<em><b>Pattern Consumption</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Pattern Consumption</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Pattern Consumption</em>' attribute list.
+	 * @return the value of the '<em>Pattern Consumption</em>' reference list.
 	 * @see metadata.MetadataPackage#getPopulationGroup_PatternConsumption()
 	 * @model
 	 * @generated
 	 */
-	EList<String> getPatternConsumption();
+	EList<StringObject> getPatternConsumption();
 
 	/**
-	 * Returns the value of the '<em><b>Region</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * Returns the value of the '<em><b>Population Age</b></em>' reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Region</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Population Age</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Region</em>' attribute list.
-	 * @see metadata.MetadataPackage#getPopulationGroup_Region()
+	 * @return the value of the '<em>Population Age</em>' reference list.
+	 * @see metadata.MetadataPackage#getPopulationGroup_PopulationAge()
 	 * @model
 	 * @generated
 	 */
-	EList<String> getRegion();
-
-	/**
-	 * Returns the value of the '<em><b>Country</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Country</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Country</em>' attribute list.
-	 * @see metadata.MetadataPackage#getPopulationGroup_Country()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getCountry();
-
-	/**
-	 * Returns the value of the '<em><b>Population Risk Factor</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Population Risk Factor</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Population Risk Factor</em>' attribute list.
-	 * @see metadata.MetadataPackage#getPopulationGroup_PopulationRiskFactor()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getPopulationRiskFactor();
-
-	/**
-	 * Returns the value of the '<em><b>Season</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Season</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Season</em>' attribute list.
-	 * @see metadata.MetadataPackage#getPopulationGroup_Season()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getSeason();
+	EList<StringObject> getPopulationAge();
 
 } // PopulationGroup

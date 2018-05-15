@@ -6,17 +6,22 @@ import java.util.Collection;
 
 import metadata.MetadataPackage;
 import metadata.PopulationGroup;
+import metadata.StringObject;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,15 +35,15 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  *   <li>{@link metadata.impl.PopulationGroupImpl#getTargetPopulation <em>Target Population</em>}</li>
  *   <li>{@link metadata.impl.PopulationGroupImpl#getPopulationSpan <em>Population Span</em>}</li>
  *   <li>{@link metadata.impl.PopulationGroupImpl#getPopulationDescription <em>Population Description</em>}</li>
- *   <li>{@link metadata.impl.PopulationGroupImpl#getPopulationAge <em>Population Age</em>}</li>
- *   <li>{@link metadata.impl.PopulationGroupImpl#getPopulationGender <em>Population Gender</em>}</li>
  *   <li>{@link metadata.impl.PopulationGroupImpl#getBmi <em>Bmi</em>}</li>
  *   <li>{@link metadata.impl.PopulationGroupImpl#getSpecialDietGroups <em>Special Diet Groups</em>}</li>
- *   <li>{@link metadata.impl.PopulationGroupImpl#getPatternConsumption <em>Pattern Consumption</em>}</li>
  *   <li>{@link metadata.impl.PopulationGroupImpl#getRegion <em>Region</em>}</li>
  *   <li>{@link metadata.impl.PopulationGroupImpl#getCountry <em>Country</em>}</li>
  *   <li>{@link metadata.impl.PopulationGroupImpl#getPopulationRiskFactor <em>Population Risk Factor</em>}</li>
  *   <li>{@link metadata.impl.PopulationGroupImpl#getSeason <em>Season</em>}</li>
+ *   <li>{@link metadata.impl.PopulationGroupImpl#getPopulationGender <em>Population Gender</em>}</li>
+ *   <li>{@link metadata.impl.PopulationGroupImpl#getPatternConsumption <em>Pattern Consumption</em>}</li>
+ *   <li>{@link metadata.impl.PopulationGroupImpl#getPopulationAge <em>Population Age</em>}</li>
  * </ul>
  *
  * @generated
@@ -85,34 +90,84 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 	protected String targetPopulation = TARGET_POPULATION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getPopulationSpan() <em>Population Span</em>}' attribute list.
+	 * The cached value of the '{@link #getPopulationSpan() <em>Population Span</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getPopulationSpan()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> populationSpan;
+	protected EList<StringObject> populationSpan;
 
 	/**
-	 * The cached value of the '{@link #getPopulationDescription() <em>Population Description</em>}' attribute list.
+	 * The cached value of the '{@link #getPopulationDescription() <em>Population Description</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getPopulationDescription()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> populationDescription;
+	protected EList<StringObject> populationDescription;
 
 	/**
-	 * The cached value of the '{@link #getPopulationAge() <em>Population Age</em>}' attribute list.
+	 * The cached value of the '{@link #getBmi() <em>Bmi</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getPopulationAge()
+	 * @see #getBmi()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> populationAge;
+	protected EList<StringObject> bmi;
+
+	/**
+	 * The cached value of the '{@link #getSpecialDietGroups() <em>Special Diet Groups</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSpecialDietGroups()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> specialDietGroups;
+
+	/**
+	 * The cached value of the '{@link #getRegion() <em>Region</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRegion()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> region;
+
+	/**
+	 * The cached value of the '{@link #getCountry() <em>Country</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getCountry()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> country;
+
+	/**
+	 * The cached value of the '{@link #getPopulationRiskFactor() <em>Population Risk Factor</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPopulationRiskFactor()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> populationRiskFactor;
+
+	/**
+	 * The cached value of the '{@link #getSeason() <em>Season</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSeason()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> season;
 
 	/**
 	 * The default value of the '{@link #getPopulationGender() <em>Population Gender</em>}' attribute.
@@ -135,74 +190,24 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 	protected String populationGender = POPULATION_GENDER_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getBmi() <em>Bmi</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getBmi()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> bmi;
-
-	/**
-	 * The cached value of the '{@link #getSpecialDietGroups() <em>Special Diet Groups</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSpecialDietGroups()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> specialDietGroups;
-
-	/**
-	 * The cached value of the '{@link #getPatternConsumption() <em>Pattern Consumption</em>}' attribute list.
+	 * The cached value of the '{@link #getPatternConsumption() <em>Pattern Consumption</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getPatternConsumption()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> patternConsumption;
+	protected EList<StringObject> patternConsumption;
 
 	/**
-	 * The cached value of the '{@link #getRegion() <em>Region</em>}' attribute list.
+	 * The cached value of the '{@link #getPopulationAge() <em>Population Age</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getRegion()
+	 * @see #getPopulationAge()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> region;
-
-	/**
-	 * The cached value of the '{@link #getCountry() <em>Country</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCountry()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> country;
-
-	/**
-	 * The cached value of the '{@link #getPopulationRiskFactor() <em>Population Risk Factor</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPopulationRiskFactor()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> populationRiskFactor;
-
-	/**
-	 * The cached value of the '{@link #getSeason() <em>Season</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSeason()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> season;
+	protected EList<StringObject> populationAge;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -270,9 +275,9 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getPopulationSpan() {
+	public EList<StringObject> getPopulationSpan() {
 		if (populationSpan == null) {
-			populationSpan = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.POPULATION_GROUP__POPULATION_SPAN);
+			populationSpan = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.POPULATION_GROUP__POPULATION_SPAN);
 		}
 		return populationSpan;
 	}
@@ -282,9 +287,9 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getPopulationDescription() {
+	public EList<StringObject> getPopulationDescription() {
 		if (populationDescription == null) {
-			populationDescription = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.POPULATION_GROUP__POPULATION_DESCRIPTION);
+			populationDescription = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.POPULATION_GROUP__POPULATION_DESCRIPTION);
 		}
 		return populationDescription;
 	}
@@ -294,11 +299,71 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getPopulationAge() {
-		if (populationAge == null) {
-			populationAge = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.POPULATION_GROUP__POPULATION_AGE);
+	public EList<StringObject> getBmi() {
+		if (bmi == null) {
+			bmi = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.POPULATION_GROUP__BMI);
 		}
-		return populationAge;
+		return bmi;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<StringObject> getSpecialDietGroups() {
+		if (specialDietGroups == null) {
+			specialDietGroups = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.POPULATION_GROUP__SPECIAL_DIET_GROUPS);
+		}
+		return specialDietGroups;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<StringObject> getRegion() {
+		if (region == null) {
+			region = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.POPULATION_GROUP__REGION);
+		}
+		return region;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<StringObject> getCountry() {
+		if (country == null) {
+			country = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.POPULATION_GROUP__COUNTRY);
+		}
+		return country;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<StringObject> getPopulationRiskFactor() {
+		if (populationRiskFactor == null) {
+			populationRiskFactor = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.POPULATION_GROUP__POPULATION_RISK_FACTOR);
+		}
+		return populationRiskFactor;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<StringObject> getSeason() {
+		if (season == null) {
+			season = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.POPULATION_GROUP__SEASON);
+		}
+		return season;
 	}
 
 	/**
@@ -327,33 +392,9 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getBmi() {
-		if (bmi == null) {
-			bmi = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.POPULATION_GROUP__BMI);
-		}
-		return bmi;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getSpecialDietGroups() {
-		if (specialDietGroups == null) {
-			specialDietGroups = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.POPULATION_GROUP__SPECIAL_DIET_GROUPS);
-		}
-		return specialDietGroups;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getPatternConsumption() {
+	public EList<StringObject> getPatternConsumption() {
 		if (patternConsumption == null) {
-			patternConsumption = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.POPULATION_GROUP__PATTERN_CONSUMPTION);
+			patternConsumption = new EObjectResolvingEList<StringObject>(StringObject.class, this, MetadataPackage.POPULATION_GROUP__PATTERN_CONSUMPTION);
 		}
 		return patternConsumption;
 	}
@@ -363,11 +404,11 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getRegion() {
-		if (region == null) {
-			region = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.POPULATION_GROUP__REGION);
+	public EList<StringObject> getPopulationAge() {
+		if (populationAge == null) {
+			populationAge = new EObjectResolvingEList<StringObject>(StringObject.class, this, MetadataPackage.POPULATION_GROUP__POPULATION_AGE);
 		}
-		return region;
+		return populationAge;
 	}
 
 	/**
@@ -375,35 +416,27 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getCountry() {
-		if (country == null) {
-			country = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.POPULATION_GROUP__COUNTRY);
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case MetadataPackage.POPULATION_GROUP__POPULATION_SPAN:
+				return ((InternalEList<?>)getPopulationSpan()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.POPULATION_GROUP__POPULATION_DESCRIPTION:
+				return ((InternalEList<?>)getPopulationDescription()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.POPULATION_GROUP__BMI:
+				return ((InternalEList<?>)getBmi()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.POPULATION_GROUP__SPECIAL_DIET_GROUPS:
+				return ((InternalEList<?>)getSpecialDietGroups()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.POPULATION_GROUP__REGION:
+				return ((InternalEList<?>)getRegion()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.POPULATION_GROUP__COUNTRY:
+				return ((InternalEList<?>)getCountry()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.POPULATION_GROUP__POPULATION_RISK_FACTOR:
+				return ((InternalEList<?>)getPopulationRiskFactor()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.POPULATION_GROUP__SEASON:
+				return ((InternalEList<?>)getSeason()).basicRemove(otherEnd, msgs);
 		}
-		return country;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getPopulationRiskFactor() {
-		if (populationRiskFactor == null) {
-			populationRiskFactor = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.POPULATION_GROUP__POPULATION_RISK_FACTOR);
-		}
-		return populationRiskFactor;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getSeason() {
-		if (season == null) {
-			season = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.POPULATION_GROUP__SEASON);
-		}
-		return season;
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -422,16 +455,10 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 				return getPopulationSpan();
 			case MetadataPackage.POPULATION_GROUP__POPULATION_DESCRIPTION:
 				return getPopulationDescription();
-			case MetadataPackage.POPULATION_GROUP__POPULATION_AGE:
-				return getPopulationAge();
-			case MetadataPackage.POPULATION_GROUP__POPULATION_GENDER:
-				return getPopulationGender();
 			case MetadataPackage.POPULATION_GROUP__BMI:
 				return getBmi();
 			case MetadataPackage.POPULATION_GROUP__SPECIAL_DIET_GROUPS:
 				return getSpecialDietGroups();
-			case MetadataPackage.POPULATION_GROUP__PATTERN_CONSUMPTION:
-				return getPatternConsumption();
 			case MetadataPackage.POPULATION_GROUP__REGION:
 				return getRegion();
 			case MetadataPackage.POPULATION_GROUP__COUNTRY:
@@ -440,6 +467,12 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 				return getPopulationRiskFactor();
 			case MetadataPackage.POPULATION_GROUP__SEASON:
 				return getSeason();
+			case MetadataPackage.POPULATION_GROUP__POPULATION_GENDER:
+				return getPopulationGender();
+			case MetadataPackage.POPULATION_GROUP__PATTERN_CONSUMPTION:
+				return getPatternConsumption();
+			case MetadataPackage.POPULATION_GROUP__POPULATION_AGE:
+				return getPopulationAge();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -461,46 +494,46 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 				return;
 			case MetadataPackage.POPULATION_GROUP__POPULATION_SPAN:
 				getPopulationSpan().clear();
-				getPopulationSpan().addAll((Collection<? extends String>)newValue);
+				getPopulationSpan().addAll((Collection<? extends StringObject>)newValue);
 				return;
 			case MetadataPackage.POPULATION_GROUP__POPULATION_DESCRIPTION:
 				getPopulationDescription().clear();
-				getPopulationDescription().addAll((Collection<? extends String>)newValue);
+				getPopulationDescription().addAll((Collection<? extends StringObject>)newValue);
 				return;
-			case MetadataPackage.POPULATION_GROUP__POPULATION_AGE:
-				getPopulationAge().clear();
-				getPopulationAge().addAll((Collection<? extends String>)newValue);
+			case MetadataPackage.POPULATION_GROUP__BMI:
+				getBmi().clear();
+				getBmi().addAll((Collection<? extends StringObject>)newValue);
+				return;
+			case MetadataPackage.POPULATION_GROUP__SPECIAL_DIET_GROUPS:
+				getSpecialDietGroups().clear();
+				getSpecialDietGroups().addAll((Collection<? extends StringObject>)newValue);
+				return;
+			case MetadataPackage.POPULATION_GROUP__REGION:
+				getRegion().clear();
+				getRegion().addAll((Collection<? extends StringObject>)newValue);
+				return;
+			case MetadataPackage.POPULATION_GROUP__COUNTRY:
+				getCountry().clear();
+				getCountry().addAll((Collection<? extends StringObject>)newValue);
+				return;
+			case MetadataPackage.POPULATION_GROUP__POPULATION_RISK_FACTOR:
+				getPopulationRiskFactor().clear();
+				getPopulationRiskFactor().addAll((Collection<? extends StringObject>)newValue);
+				return;
+			case MetadataPackage.POPULATION_GROUP__SEASON:
+				getSeason().clear();
+				getSeason().addAll((Collection<? extends StringObject>)newValue);
 				return;
 			case MetadataPackage.POPULATION_GROUP__POPULATION_GENDER:
 				setPopulationGender((String)newValue);
 				return;
-			case MetadataPackage.POPULATION_GROUP__BMI:
-				getBmi().clear();
-				getBmi().addAll((Collection<? extends String>)newValue);
-				return;
-			case MetadataPackage.POPULATION_GROUP__SPECIAL_DIET_GROUPS:
-				getSpecialDietGroups().clear();
-				getSpecialDietGroups().addAll((Collection<? extends String>)newValue);
-				return;
 			case MetadataPackage.POPULATION_GROUP__PATTERN_CONSUMPTION:
 				getPatternConsumption().clear();
-				getPatternConsumption().addAll((Collection<? extends String>)newValue);
+				getPatternConsumption().addAll((Collection<? extends StringObject>)newValue);
 				return;
-			case MetadataPackage.POPULATION_GROUP__REGION:
-				getRegion().clear();
-				getRegion().addAll((Collection<? extends String>)newValue);
-				return;
-			case MetadataPackage.POPULATION_GROUP__COUNTRY:
-				getCountry().clear();
-				getCountry().addAll((Collection<? extends String>)newValue);
-				return;
-			case MetadataPackage.POPULATION_GROUP__POPULATION_RISK_FACTOR:
-				getPopulationRiskFactor().clear();
-				getPopulationRiskFactor().addAll((Collection<? extends String>)newValue);
-				return;
-			case MetadataPackage.POPULATION_GROUP__SEASON:
-				getSeason().clear();
-				getSeason().addAll((Collection<? extends String>)newValue);
+			case MetadataPackage.POPULATION_GROUP__POPULATION_AGE:
+				getPopulationAge().clear();
+				getPopulationAge().addAll((Collection<? extends StringObject>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -526,20 +559,11 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 			case MetadataPackage.POPULATION_GROUP__POPULATION_DESCRIPTION:
 				getPopulationDescription().clear();
 				return;
-			case MetadataPackage.POPULATION_GROUP__POPULATION_AGE:
-				getPopulationAge().clear();
-				return;
-			case MetadataPackage.POPULATION_GROUP__POPULATION_GENDER:
-				setPopulationGender(POPULATION_GENDER_EDEFAULT);
-				return;
 			case MetadataPackage.POPULATION_GROUP__BMI:
 				getBmi().clear();
 				return;
 			case MetadataPackage.POPULATION_GROUP__SPECIAL_DIET_GROUPS:
 				getSpecialDietGroups().clear();
-				return;
-			case MetadataPackage.POPULATION_GROUP__PATTERN_CONSUMPTION:
-				getPatternConsumption().clear();
 				return;
 			case MetadataPackage.POPULATION_GROUP__REGION:
 				getRegion().clear();
@@ -552,6 +576,15 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 				return;
 			case MetadataPackage.POPULATION_GROUP__SEASON:
 				getSeason().clear();
+				return;
+			case MetadataPackage.POPULATION_GROUP__POPULATION_GENDER:
+				setPopulationGender(POPULATION_GENDER_EDEFAULT);
+				return;
+			case MetadataPackage.POPULATION_GROUP__PATTERN_CONSUMPTION:
+				getPatternConsumption().clear();
+				return;
+			case MetadataPackage.POPULATION_GROUP__POPULATION_AGE:
+				getPopulationAge().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -573,16 +606,10 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 				return populationSpan != null && !populationSpan.isEmpty();
 			case MetadataPackage.POPULATION_GROUP__POPULATION_DESCRIPTION:
 				return populationDescription != null && !populationDescription.isEmpty();
-			case MetadataPackage.POPULATION_GROUP__POPULATION_AGE:
-				return populationAge != null && !populationAge.isEmpty();
-			case MetadataPackage.POPULATION_GROUP__POPULATION_GENDER:
-				return POPULATION_GENDER_EDEFAULT == null ? populationGender != null : !POPULATION_GENDER_EDEFAULT.equals(populationGender);
 			case MetadataPackage.POPULATION_GROUP__BMI:
 				return bmi != null && !bmi.isEmpty();
 			case MetadataPackage.POPULATION_GROUP__SPECIAL_DIET_GROUPS:
 				return specialDietGroups != null && !specialDietGroups.isEmpty();
-			case MetadataPackage.POPULATION_GROUP__PATTERN_CONSUMPTION:
-				return patternConsumption != null && !patternConsumption.isEmpty();
 			case MetadataPackage.POPULATION_GROUP__REGION:
 				return region != null && !region.isEmpty();
 			case MetadataPackage.POPULATION_GROUP__COUNTRY:
@@ -591,6 +618,12 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 				return populationRiskFactor != null && !populationRiskFactor.isEmpty();
 			case MetadataPackage.POPULATION_GROUP__SEASON:
 				return season != null && !season.isEmpty();
+			case MetadataPackage.POPULATION_GROUP__POPULATION_GENDER:
+				return POPULATION_GENDER_EDEFAULT == null ? populationGender != null : !POPULATION_GENDER_EDEFAULT.equals(populationGender);
+			case MetadataPackage.POPULATION_GROUP__PATTERN_CONSUMPTION:
+				return patternConsumption != null && !patternConsumption.isEmpty();
+			case MetadataPackage.POPULATION_GROUP__POPULATION_AGE:
+				return populationAge != null && !populationAge.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -609,28 +642,8 @@ public class PopulationGroupImpl extends MinimalEObjectImpl.Container implements
 		result.append(populationName);
 		result.append(", targetPopulation: ");
 		result.append(targetPopulation);
-		result.append(", populationSpan: ");
-		result.append(populationSpan);
-		result.append(", populationDescription: ");
-		result.append(populationDescription);
-		result.append(", populationAge: ");
-		result.append(populationAge);
 		result.append(", populationGender: ");
 		result.append(populationGender);
-		result.append(", bmi: ");
-		result.append(bmi);
-		result.append(", specialDietGroups: ");
-		result.append(specialDietGroups);
-		result.append(", patternConsumption: ");
-		result.append(patternConsumption);
-		result.append(", region: ");
-		result.append(region);
-		result.append(", country: ");
-		result.append(country);
-		result.append(", populationRiskFactor: ");
-		result.append(populationRiskFactor);
-		result.append(", season: ");
-		result.append(season);
 		result.append(')');
 		return result.toString();
 	}

@@ -6,17 +6,21 @@ import java.util.Collection;
 
 import metadata.MetadataPackage;
 import metadata.ModelCategory;
+import metadata.StringObject;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,9 +31,9 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * </p>
  * <ul>
  *   <li>{@link metadata.impl.ModelCategoryImpl#getModelClass <em>Model Class</em>}</li>
- *   <li>{@link metadata.impl.ModelCategoryImpl#getModelSubClass <em>Model Sub Class</em>}</li>
  *   <li>{@link metadata.impl.ModelCategoryImpl#getModelClassComment <em>Model Class Comment</em>}</li>
  *   <li>{@link metadata.impl.ModelCategoryImpl#getBasicProcess <em>Basic Process</em>}</li>
+ *   <li>{@link metadata.impl.ModelCategoryImpl#getModelSubClass <em>Model Sub Class</em>}</li>
  * </ul>
  *
  * @generated
@@ -54,16 +58,6 @@ public class ModelCategoryImpl extends MinimalEObjectImpl.Container implements M
 	 * @ordered
 	 */
 	protected String modelClass = MODEL_CLASS_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getModelSubClass() <em>Model Sub Class</em>}' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getModelSubClass()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<String> modelSubClass;
 
 	/**
 	 * The default value of the '{@link #getModelClassComment() <em>Model Class Comment</em>}' attribute.
@@ -106,6 +100,16 @@ public class ModelCategoryImpl extends MinimalEObjectImpl.Container implements M
 	protected String basicProcess = BASIC_PROCESS_EDEFAULT;
 
 	/**
+	 * The cached value of the '{@link #getModelSubClass() <em>Model Sub Class</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModelSubClass()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<StringObject> modelSubClass;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -143,18 +147,6 @@ public class ModelCategoryImpl extends MinimalEObjectImpl.Container implements M
 		modelClass = newModelClass;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.MODEL_CATEGORY__MODEL_CLASS, oldModelClass, modelClass));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<String> getModelSubClass() {
-		if (modelSubClass == null) {
-			modelSubClass = new EDataTypeUniqueEList<String>(String.class, this, MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS);
-		}
-		return modelSubClass;
 	}
 
 	/**
@@ -204,17 +196,43 @@ public class ModelCategoryImpl extends MinimalEObjectImpl.Container implements M
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<StringObject> getModelSubClass() {
+		if (modelSubClass == null) {
+			modelSubClass = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS);
+		}
+		return modelSubClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS:
+				return ((InternalEList<?>)getModelSubClass()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MetadataPackage.MODEL_CATEGORY__MODEL_CLASS:
 				return getModelClass();
-			case MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS:
-				return getModelSubClass();
 			case MetadataPackage.MODEL_CATEGORY__MODEL_CLASS_COMMENT:
 				return getModelClassComment();
 			case MetadataPackage.MODEL_CATEGORY__BASIC_PROCESS:
 				return getBasicProcess();
+			case MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS:
+				return getModelSubClass();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -231,15 +249,15 @@ public class ModelCategoryImpl extends MinimalEObjectImpl.Container implements M
 			case MetadataPackage.MODEL_CATEGORY__MODEL_CLASS:
 				setModelClass((String)newValue);
 				return;
-			case MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS:
-				getModelSubClass().clear();
-				getModelSubClass().addAll((Collection<? extends String>)newValue);
-				return;
 			case MetadataPackage.MODEL_CATEGORY__MODEL_CLASS_COMMENT:
 				setModelClassComment((String)newValue);
 				return;
 			case MetadataPackage.MODEL_CATEGORY__BASIC_PROCESS:
 				setBasicProcess((String)newValue);
+				return;
+			case MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS:
+				getModelSubClass().clear();
+				getModelSubClass().addAll((Collection<? extends StringObject>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -256,14 +274,14 @@ public class ModelCategoryImpl extends MinimalEObjectImpl.Container implements M
 			case MetadataPackage.MODEL_CATEGORY__MODEL_CLASS:
 				setModelClass(MODEL_CLASS_EDEFAULT);
 				return;
-			case MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS:
-				getModelSubClass().clear();
-				return;
 			case MetadataPackage.MODEL_CATEGORY__MODEL_CLASS_COMMENT:
 				setModelClassComment(MODEL_CLASS_COMMENT_EDEFAULT);
 				return;
 			case MetadataPackage.MODEL_CATEGORY__BASIC_PROCESS:
 				setBasicProcess(BASIC_PROCESS_EDEFAULT);
+				return;
+			case MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS:
+				getModelSubClass().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -279,12 +297,12 @@ public class ModelCategoryImpl extends MinimalEObjectImpl.Container implements M
 		switch (featureID) {
 			case MetadataPackage.MODEL_CATEGORY__MODEL_CLASS:
 				return MODEL_CLASS_EDEFAULT == null ? modelClass != null : !MODEL_CLASS_EDEFAULT.equals(modelClass);
-			case MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS:
-				return modelSubClass != null && !modelSubClass.isEmpty();
 			case MetadataPackage.MODEL_CATEGORY__MODEL_CLASS_COMMENT:
 				return MODEL_CLASS_COMMENT_EDEFAULT == null ? modelClassComment != null : !MODEL_CLASS_COMMENT_EDEFAULT.equals(modelClassComment);
 			case MetadataPackage.MODEL_CATEGORY__BASIC_PROCESS:
 				return BASIC_PROCESS_EDEFAULT == null ? basicProcess != null : !BASIC_PROCESS_EDEFAULT.equals(basicProcess);
+			case MetadataPackage.MODEL_CATEGORY__MODEL_SUB_CLASS:
+				return modelSubClass != null && !modelSubClass.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -301,8 +319,6 @@ public class ModelCategoryImpl extends MinimalEObjectImpl.Container implements M
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (modelClass: ");
 		result.append(modelClass);
-		result.append(", modelSubClass: ");
-		result.append(modelSubClass);
 		result.append(", modelClassComment: ");
 		result.append(modelClassComment);
 		result.append(", basicProcess: ");

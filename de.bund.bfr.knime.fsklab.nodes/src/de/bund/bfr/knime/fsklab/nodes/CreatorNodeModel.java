@@ -81,6 +81,7 @@ import metadata.Product;
 import metadata.PublicationType;
 import metadata.Reference;
 import metadata.Scope;
+import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
 
@@ -170,7 +171,7 @@ class CreatorNodeModel extends NoInternalsModel {
       generalInformation = TableParser.retrieveGeneralInformation(values);
       scope = TableParser.retrieveScope(values);
       dataBackground = TableParser.retrieveDataBackground(values);
-      
+
       modelMath = MetadataFactory.eINSTANCE.createModelMath();
       for (i = 132; i <= 152; i++) {
         try {
@@ -674,15 +675,24 @@ class CreatorNodeModel extends NoInternalsModel {
       return cell.getStringCellValue();
     }
 
-    static List<String> getStringListValue(XSSFSheet sheet, RakipRow row, RakipColumn col) {
+    static List<StringObject> getStringObjectList(XSSFSheet sheet, RakipRow row, RakipColumn col) {
+
       XSSFCell cell = sheet.getRow(row.num).getCell(col.ordinal());
-      return Arrays.stream(cell.getStringCellValue().split(",")).collect(Collectors.toList());
+      String[] strings = cell.getStringCellValue().split(",");
+
+      List<StringObject> stringObjects = new ArrayList<>(strings.length);
+      for (String value : strings) {
+        StringObject so = MetadataFactory.eINSTANCE.createStringObject();
+        so.setValue(value);
+        stringObjects.add(so);
+      }
+
+      return stringObjects;
     }
 
     static GeneralInformation retrieveGeneralInformation(XSSFSheet sheet) {
 
-      metadata.GeneralInformation generalInformation =
-          metadata.MetadataFactory.eINSTANCE.createGeneralInformation();
+      GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
 
       // name
       final String name = getStringValue(sheet, RakipRow.GENERAL_INFORMATION_NAME, RakipColumn.I);
@@ -809,7 +819,7 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing mail");
       }
 
-      Contact contact = metadata.MetadataFactory.eINSTANCE.createContact();
+      Contact contact = MetadataFactory.eINSTANCE.createContact();
       contact.setTitle(getStringValue(sheet, row, RakipColumn.K));
       contact.setFamilyName(getStringValue(sheet, row, RakipColumn.O));
       contact.setGivenName(getStringValue(sheet, row, RakipColumn.M));
@@ -960,13 +970,15 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing model class");
       }
 
-      metadata.ModelCategory modelCategory =
-          metadata.MetadataFactory.eINSTANCE.createModelCategory();
+      ModelCategory modelCategory = MetadataFactory.eINSTANCE.createModelCategory();
 
       modelCategory
           .setModelClass(getStringValue(sheet, RakipRow.MODEL_CATEGORY_CLASS, RakipColumn.I));
-      modelCategory.getModelSubClass()
-          .addAll(getStringListValue(sheet, RakipRow.MODEL_CATEGORY_SUBCLASS, RakipColumn.I));
+
+      List<StringObject> modelCategorySubclass =
+          getStringObjectList(sheet, RakipRow.MODEL_CATEGORY_SUBCLASS, RakipColumn.I);
+      modelCategory.getModelSubClass().addAll(modelCategorySubclass);
+
       modelCategory.setModelClassComment(
           getStringValue(sheet, RakipRow.MODEL_CATEGORY_COMMENT, RakipColumn.I));
       modelCategory
@@ -1047,46 +1059,47 @@ class CreatorNodeModel extends NoInternalsModel {
       populationGroup.setTargetPopulation(
           getStringValue(sheet, RakipRow.POPULATION_GROUP_TARGET, RakipColumn.I));
 
-      List<String> populationSpan =
-          getStringListValue(sheet, RakipRow.POPULATION_GROUP_SPAN, RakipColumn.I);
+      List<StringObject> populationSpan =
+          getStringObjectList(sheet, RakipRow.POPULATION_GROUP_SPAN, RakipColumn.I);
       populationGroup.getPopulationSpan().addAll(populationSpan);
 
-      List<String> populationDescription =
-          getStringListValue(sheet, RakipRow.POPULATION_GROUP_DESCRIPTION, RakipColumn.I);
+      List<StringObject> populationDescription =
+          getStringObjectList(sheet, RakipRow.POPULATION_GROUP_DESCRIPTION, RakipColumn.I);
       populationGroup.getPopulationDescription().addAll(populationDescription);
 
-      List<String> populationAge =
-          getStringListValue(sheet, RakipRow.POPULATION_GROUP_AGE, RakipColumn.I);
+      List<StringObject> populationAge =
+          getStringObjectList(sheet, RakipRow.POPULATION_GROUP_AGE, RakipColumn.I);
       populationGroup.getPopulationAge().addAll(populationAge);
 
       populationGroup.setPopulationGender(
           getStringValue(sheet, RakipRow.POPULATION_GROUP_GENDER, RakipColumn.I));
 
-      List<String> bmi = getStringListValue(sheet, RakipRow.POPULATION_GROUP_BMI, RakipColumn.I);
+      List<StringObject> bmi =
+          getStringObjectList(sheet, RakipRow.POPULATION_GROUP_BMI, RakipColumn.I);
       populationGroup.getBmi().addAll(bmi);
 
-      List<String> specialDietGroups =
-          getStringListValue(sheet, RakipRow.POPULATION_GROUP_DIET, RakipColumn.I);
+      List<StringObject> specialDietGroups =
+          getStringObjectList(sheet, RakipRow.POPULATION_GROUP_DIET, RakipColumn.I);
       populationGroup.getSpecialDietGroups().addAll(specialDietGroups);
 
-      List<String> patternConsumption =
-          getStringListValue(sheet, RakipRow.POPULATION_GROUP_PATTERN_CONSUMPTION, RakipColumn.I);
+      List<StringObject> patternConsumption =
+          getStringObjectList(sheet, RakipRow.POPULATION_GROUP_PATTERN_CONSUMPTION, RakipColumn.I);
       populationGroup.getPatternConsumption().addAll(patternConsumption);
 
-      List<String> region =
-          getStringListValue(sheet, RakipRow.POPULATION_GROUP_REGION, RakipColumn.I);
+      List<StringObject> region =
+          getStringObjectList(sheet, RakipRow.POPULATION_GROUP_REGION, RakipColumn.I);
       populationGroup.getRegion().addAll(region);
 
-      List<String> country =
-          getStringListValue(sheet, RakipRow.POPULATION_GROUP_COUNTRY, RakipColumn.I);
+      List<StringObject> country =
+          getStringObjectList(sheet, RakipRow.POPULATION_GROUP_COUNTRY, RakipColumn.I);
       populationGroup.getCountry().addAll(country);
 
-      List<String> populationRiskFactor =
-          getStringListValue(sheet, RakipRow.POPULATION_GROUP_RISK, RakipColumn.I);
+      List<StringObject> populationRiskFactor =
+          getStringObjectList(sheet, RakipRow.POPULATION_GROUP_RISK, RakipColumn.I);
       populationGroup.getPopulationRiskFactor().addAll(populationRiskFactor);
 
-      List<String> season =
-          getStringListValue(sheet, RakipRow.POPULATION_GROUP_SEASON, RakipColumn.I);
+      List<StringObject> season =
+          getStringObjectList(sheet, RakipRow.POPULATION_GROUP_SEASON, RakipColumn.I);
       populationGroup.getSeason().addAll(season);
 
       return populationGroup;
@@ -1262,7 +1275,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
       Laboratory laboratory = MetadataFactory.eINSTANCE.createLaboratory();
       laboratory.getLaboratoryAccreditation()
-          .add(getStringValue(sheet, RakipRow.LABORATORY_ACCREDITATION, RakipColumn.I));
+          .addAll(getStringObjectList(sheet, RakipRow.LABORATORY_ACCREDITATION, RakipColumn.I));
       laboratory.setLaboratoryName(getStringValue(sheet, RakipRow.LABORATORY_NAME, RakipColumn.I));
       laboratory
           .setLaboratoryCountry(getStringValue(sheet, RakipRow.LABORATORY_COUNTRY, RakipColumn.I));
@@ -1369,6 +1382,21 @@ class CreatorNodeModel extends NoInternalsModel {
       return tokens;
     }
 
+    static List<StringObject> getStringObjectList(String[][] values, RakipRow row,
+        RakipColumn col) {
+
+      String[] strings = values[row.num][col.ordinal()].split(",");
+
+      List<StringObject> stringObjects = new ArrayList<>(strings.length);
+      for (String value : strings) {
+        StringObject so = MetadataFactory.eINSTANCE.createStringObject();
+        so.setValue(value);
+        stringObjects.add(so);
+      }
+
+      return stringObjects;
+    }
+
     private static boolean isRowEmpty(DataRow row) {
       for (DataCell cell : row)
         if (!cell.isMissing())
@@ -1444,7 +1472,7 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing mail");
       }
 
-      Contact contact = metadata.MetadataFactory.eINSTANCE.createContact();
+      Contact contact = MetadataFactory.eINSTANCE.createContact();
       contact.setTitle(values[row][RakipColumn.K.ordinal()]);
       contact.setFamilyName(values[row][RakipColumn.O.ordinal()]);
       contact.setGivenName(values[row][RakipColumn.M.ordinal()]);
@@ -1531,7 +1559,7 @@ class CreatorNodeModel extends NoInternalsModel {
       ModelCategory modelCategory = MetadataFactory.eINSTANCE.createModelCategory();
       modelCategory.setModelClass(values[RakipRow.MODEL_CATEGORY_CLASS.num][columnI]);
       modelCategory.getModelSubClass()
-          .addAll(getStringListValue(values, RakipRow.MODEL_CATEGORY_SUBCLASS, RakipColumn.I));
+          .addAll(getStringObjectList(values, RakipRow.MODEL_CATEGORY_SUBCLASS, RakipColumn.I));
       modelCategory.setModelClassComment(values[RakipRow.MODEL_CATEGORY_COMMENT.num][columnI]);
       modelCategory.setBasicProcess(values[RakipRow.MODEL_CATEGORY_PROCESS.num][columnI]);
 
@@ -1602,45 +1630,46 @@ class CreatorNodeModel extends NoInternalsModel {
       populationGroup.setPopulationName(values[RakipRow.POPULATION_GROUP_NAME.num][columnI]);
       populationGroup.setTargetPopulation(values[RakipRow.POPULATION_GROUP_TARGET.num][columnI]);
 
-      List<String> populationSpan =
-          getStringListValue(values, RakipRow.POPULATION_GROUP_SPAN, RakipColumn.I);
+      List<StringObject> populationSpan =
+          getStringObjectList(values, RakipRow.POPULATION_GROUP_SPAN, RakipColumn.I);
       populationGroup.getPopulationSpan().addAll(populationSpan);
 
-      List<String> populationDescription =
-          getStringListValue(values, RakipRow.POPULATION_GROUP_DESCRIPTION, RakipColumn.I);
+      List<StringObject> populationDescription =
+          getStringObjectList(values, RakipRow.POPULATION_GROUP_DESCRIPTION, RakipColumn.I);
       populationGroup.getPopulationDescription().addAll(populationDescription);
 
-      List<String> populationAge =
-          getStringListValue(values, RakipRow.POPULATION_GROUP_AGE, RakipColumn.I);
+      List<StringObject> populationAge =
+          getStringObjectList(values, RakipRow.POPULATION_GROUP_AGE, RakipColumn.I);
       populationGroup.getPopulationAge().addAll(populationAge);
 
       populationGroup.setPopulationGender(values[RakipRow.POPULATION_GROUP_GENDER.num][columnI]);
 
-      List<String> bmi = getStringListValue(values, RakipRow.POPULATION_GROUP_BMI, RakipColumn.I);
+      List<StringObject> bmi =
+          getStringObjectList(values, RakipRow.POPULATION_GROUP_BMI, RakipColumn.I);
       populationGroup.getBmi().addAll(bmi);
 
-      List<String> specialDietGroups =
-          getStringListValue(values, RakipRow.POPULATION_GROUP_DIET, RakipColumn.I);
+      List<StringObject> specialDietGroups =
+          getStringObjectList(values, RakipRow.POPULATION_GROUP_DIET, RakipColumn.I);
       populationGroup.getSpecialDietGroups().addAll(specialDietGroups);
 
-      List<String> patternConsumption =
-          getStringListValue(values, RakipRow.POPULATION_GROUP_PATTERN_CONSUMPTION, RakipColumn.I);
+      List<StringObject> patternConsumption =
+          getStringObjectList(values, RakipRow.POPULATION_GROUP_PATTERN_CONSUMPTION, RakipColumn.I);
       populationGroup.getPatternConsumption().addAll(patternConsumption);
 
-      List<String> region =
-          getStringListValue(values, RakipRow.POPULATION_GROUP_REGION, RakipColumn.I);
+      List<StringObject> region =
+          getStringObjectList(values, RakipRow.POPULATION_GROUP_REGION, RakipColumn.I);
       populationGroup.getRegion().addAll(region);
 
-      List<String> country =
-          getStringListValue(values, RakipRow.POPULATION_GROUP_COUNTRY, RakipColumn.I);
+      List<StringObject> country =
+          getStringObjectList(values, RakipRow.POPULATION_GROUP_COUNTRY, RakipColumn.I);
       populationGroup.getCountry().addAll(country);
 
-      List<String> populationRiskFactor =
-          getStringListValue(values, RakipRow.POPULATION_GROUP_RISK, RakipColumn.I);
+      List<StringObject> populationRiskFactor =
+          getStringObjectList(values, RakipRow.POPULATION_GROUP_RISK, RakipColumn.I);
       populationGroup.getPopulationRiskFactor().addAll(populationRiskFactor);
 
-      List<String> season =
-          getStringListValue(values, RakipRow.POPULATION_GROUP_SEASON, RakipColumn.I);
+      List<StringObject> season =
+          getStringObjectList(values, RakipRow.POPULATION_GROUP_SEASON, RakipColumn.I);
       populationGroup.getSeason().addAll(season);
 
       return populationGroup;
@@ -1808,7 +1837,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
       Laboratory laboratory = MetadataFactory.eINSTANCE.createLaboratory();
       laboratory.getLaboratoryAccreditation()
-          .add(values[RakipRow.LABORATORY_ACCREDITATION.num][columnI]);
+          .addAll(getStringObjectList(values, RakipRow.LABORATORY_ACCREDITATION, RakipColumn.I));
       laboratory.setLaboratoryName(values[RakipRow.LABORATORY_NAME.num][columnI]);
       laboratory.setLaboratoryCountry(values[RakipRow.LABORATORY_COUNTRY.num][columnI]);
 

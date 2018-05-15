@@ -15,12 +15,12 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link metadata.ModelMath#getQualityMeasures <em>Quality Measures</em>}</li>
  *   <li>{@link metadata.ModelMath#getFittingProcedure <em>Fitting Procedure</em>}</li>
- *   <li>{@link metadata.ModelMath#getEvent <em>Event</em>}</li>
  *   <li>{@link metadata.ModelMath#getParameter <em>Parameter</em>}</li>
  *   <li>{@link metadata.ModelMath#getModelEquation <em>Model Equation</em>}</li>
  *   <li>{@link metadata.ModelMath#getExposure <em>Exposure</em>}</li>
+ *   <li>{@link metadata.ModelMath#getQualityMeasures <em>Quality Measures</em>}</li>
+ *   <li>{@link metadata.ModelMath#getEvent <em>Event</em>}</li>
  * </ul>
  *
  * @see metadata.MetadataPackage#getModelMath()
@@ -28,22 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface ModelMath extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Quality Measures</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Quality Measures</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Quality Measures</em>' attribute list.
-	 * @see metadata.MetadataPackage#getModelMath_QualityMeasures()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getQualityMeasures();
-
 	/**
 	 * Returns the value of the '<em><b>Fitting Procedure</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -69,22 +53,6 @@ public interface ModelMath extends EObject {
 	 * @generated
 	 */
 	void setFittingProcedure(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Event</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Event</em>' attribute list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Event</em>' attribute list.
-	 * @see metadata.MetadataPackage#getModelMath_Event()
-	 * @model
-	 * @generated
-	 */
-	EList<String> getEvent();
 
 	/**
 	 * Returns the value of the '<em><b>Parameter</b></em>' containment reference list.
@@ -143,5 +111,37 @@ public interface ModelMath extends EObject {
 	 * @generated
 	 */
 	void setExposure(Exposure value);
+
+	/**
+	 * Returns the value of the '<em><b>Quality Measures</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Quality Measures</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Quality Measures</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getModelMath_QualityMeasures()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getQualityMeasures();
+
+	/**
+	 * Returns the value of the '<em><b>Event</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.StringObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Event</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Event</em>' containment reference list.
+	 * @see metadata.MetadataPackage#getModelMath_Event()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<StringObject> getEvent();
 
 } // ModelMath

@@ -10,12 +10,6 @@
     "modelEquation": {
       "type": "string"
     },
-    "hypothesisOfTheModel": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
     "reference": {
       "type": "array",
       "items": {
@@ -126,6 +120,18 @@
           "isReferenceDescription",
           "publicationTitle"
         ]
+      }
+    },
+    "hypothesisOfTheModel": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       }
     }
   },

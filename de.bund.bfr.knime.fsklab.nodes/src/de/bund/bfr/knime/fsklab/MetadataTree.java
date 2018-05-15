@@ -27,6 +27,7 @@ import metadata.Product;
 import metadata.Reference;
 import metadata.Scope;
 import metadata.SpatialInformation;
+import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
 
@@ -101,11 +102,13 @@ class MetadataTree {
   }
 
   private static void add(final DefaultMutableTreeNode node, final String key,
-      EList<String> value) {
+      EList<StringObject> value) {
 
-    String label = bundle.getString(key);
-    DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-    value.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+    if (value != null && !value.isEmpty()) {
+      String label = bundle.getString(key);
+      DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+      value.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+    }
   }
 
   private static void add(final DefaultMutableTreeNode node, final Contact contact) {
@@ -527,7 +530,8 @@ class MetadataTree {
     }
 
     if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationRiskFactor())) {
-      add(node, "PopulationGroup.populationRiskFactor", populationGroup.getPopulationRiskFactor());
+      add(node, "PopulationGroup.populationRiskFactor",
+          populationGroup.getPopulationRiskFactor());
     }
 
     if (populationGroup.eIsSet(pkg.getPopulationGroup_Season())) {

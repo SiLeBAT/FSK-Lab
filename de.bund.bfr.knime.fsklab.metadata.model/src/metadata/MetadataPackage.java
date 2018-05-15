@@ -40,7 +40,7 @@ public interface MetadataPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.example.org/metadata";
+	String eNS_URI = "http://BfR/bund/de/knime/model/metadata";
 
 	/**
 	 * The package namespace name.
@@ -268,22 +268,13 @@ public interface MetadataPackage extends EPackage {
 	int MODEL_CATEGORY__MODEL_CLASS = 0;
 
 	/**
-	 * The feature id for the '<em><b>Model Sub Class</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_CATEGORY__MODEL_SUB_CLASS = 1;
-
-	/**
 	 * The feature id for the '<em><b>Model Class Comment</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_CATEGORY__MODEL_CLASS_COMMENT = 2;
+	int MODEL_CATEGORY__MODEL_CLASS_COMMENT = 1;
 
 	/**
 	 * The feature id for the '<em><b>Basic Process</b></em>' attribute.
@@ -292,7 +283,16 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_CATEGORY__BASIC_PROCESS = 3;
+	int MODEL_CATEGORY__BASIC_PROCESS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Model Sub Class</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_CATEGORY__MODEL_SUB_CLASS = 3;
 
 	/**
 	 * The number of structural features of the '<em>Model Category</em>' class.
@@ -1213,7 +1213,7 @@ public interface MetadataPackage extends EPackage {
 	int POPULATION_GROUP__TARGET_POPULATION = 1;
 
 	/**
-	 * The feature id for the '<em><b>Population Span</b></em>' attribute list.
+	 * The feature id for the '<em><b>Population Span</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1222,7 +1222,7 @@ public interface MetadataPackage extends EPackage {
 	int POPULATION_GROUP__POPULATION_SPAN = 2;
 
 	/**
-	 * The feature id for the '<em><b>Population Description</b></em>' attribute list.
+	 * The feature id for the '<em><b>Population Description</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1231,13 +1231,58 @@ public interface MetadataPackage extends EPackage {
 	int POPULATION_GROUP__POPULATION_DESCRIPTION = 3;
 
 	/**
-	 * The feature id for the '<em><b>Population Age</b></em>' attribute list.
+	 * The feature id for the '<em><b>Bmi</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int POPULATION_GROUP__POPULATION_AGE = 4;
+	int POPULATION_GROUP__BMI = 4;
+
+	/**
+	 * The feature id for the '<em><b>Special Diet Groups</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POPULATION_GROUP__SPECIAL_DIET_GROUPS = 5;
+
+	/**
+	 * The feature id for the '<em><b>Region</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POPULATION_GROUP__REGION = 6;
+
+	/**
+	 * The feature id for the '<em><b>Country</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POPULATION_GROUP__COUNTRY = 7;
+
+	/**
+	 * The feature id for the '<em><b>Population Risk Factor</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POPULATION_GROUP__POPULATION_RISK_FACTOR = 8;
+
+	/**
+	 * The feature id for the '<em><b>Season</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POPULATION_GROUP__SEASON = 9;
 
 	/**
 	 * The feature id for the '<em><b>Population Gender</b></em>' attribute.
@@ -1246,70 +1291,25 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int POPULATION_GROUP__POPULATION_GENDER = 5;
+	int POPULATION_GROUP__POPULATION_GENDER = 10;
 
 	/**
-	 * The feature id for the '<em><b>Bmi</b></em>' attribute list.
+	 * The feature id for the '<em><b>Pattern Consumption</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int POPULATION_GROUP__BMI = 6;
+	int POPULATION_GROUP__PATTERN_CONSUMPTION = 11;
 
 	/**
-	 * The feature id for the '<em><b>Special Diet Groups</b></em>' attribute list.
+	 * The feature id for the '<em><b>Population Age</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int POPULATION_GROUP__SPECIAL_DIET_GROUPS = 7;
-
-	/**
-	 * The feature id for the '<em><b>Pattern Consumption</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POPULATION_GROUP__PATTERN_CONSUMPTION = 8;
-
-	/**
-	 * The feature id for the '<em><b>Region</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POPULATION_GROUP__REGION = 9;
-
-	/**
-	 * The feature id for the '<em><b>Country</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POPULATION_GROUP__COUNTRY = 10;
-
-	/**
-	 * The feature id for the '<em><b>Population Risk Factor</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POPULATION_GROUP__POPULATION_RISK_FACTOR = 11;
-
-	/**
-	 * The feature id for the '<em><b>Season</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int POPULATION_GROUP__SEASON = 12;
+	int POPULATION_GROUP__POPULATION_AGE = 12;
 
 	/**
 	 * The number of structural features of the '<em>Population Group</em>' class.
@@ -1422,22 +1422,13 @@ public interface MetadataPackage extends EPackage {
 	int LABORATORY = 12;
 
 	/**
-	 * The feature id for the '<em><b>Laboratory Accreditation</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int LABORATORY__LABORATORY_ACCREDITATION = 0;
-
-	/**
 	 * The feature id for the '<em><b>Laboratory Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LABORATORY__LABORATORY_NAME = 1;
+	int LABORATORY__LABORATORY_NAME = 0;
 
 	/**
 	 * The feature id for the '<em><b>Laboratory Country</b></em>' attribute.
@@ -1446,7 +1437,16 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LABORATORY__LABORATORY_COUNTRY = 2;
+	int LABORATORY__LABORATORY_COUNTRY = 1;
+
+	/**
+	 * The feature id for the '<em><b>Laboratory Accreditation</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LABORATORY__LABORATORY_ACCREDITATION = 2;
 
 	/**
 	 * The number of structural features of the '<em>Laboratory</em>' class.
@@ -1477,7 +1477,7 @@ public interface MetadataPackage extends EPackage {
 	int SPATIAL_INFORMATION = 13;
 
 	/**
-	 * The feature id for the '<em><b>Region</b></em>' attribute list.
+	 * The feature id for the '<em><b>Region</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1486,7 +1486,7 @@ public interface MetadataPackage extends EPackage {
 	int SPATIAL_INFORMATION__REGION = 0;
 
 	/**
-	 * The feature id for the '<em><b>Country</b></em>' attribute list.
+	 * The feature id for the '<em><b>Country</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1868,31 +1868,13 @@ public interface MetadataPackage extends EPackage {
 	int MODEL_MATH = 17;
 
 	/**
-	 * The feature id for the '<em><b>Quality Measures</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_MATH__QUALITY_MEASURES = 0;
-
-	/**
 	 * The feature id for the '<em><b>Fitting Procedure</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_MATH__FITTING_PROCEDURE = 1;
-
-	/**
-	 * The feature id for the '<em><b>Event</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_MATH__EVENT = 2;
+	int MODEL_MATH__FITTING_PROCEDURE = 0;
 
 	/**
 	 * The feature id for the '<em><b>Parameter</b></em>' containment reference list.
@@ -1901,7 +1883,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_MATH__PARAMETER = 3;
+	int MODEL_MATH__PARAMETER = 1;
 
 	/**
 	 * The feature id for the '<em><b>Model Equation</b></em>' containment reference list.
@@ -1910,7 +1892,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_MATH__MODEL_EQUATION = 4;
+	int MODEL_MATH__MODEL_EQUATION = 2;
 
 	/**
 	 * The feature id for the '<em><b>Exposure</b></em>' containment reference.
@@ -1919,7 +1901,25 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_MATH__EXPOSURE = 5;
+	int MODEL_MATH__EXPOSURE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Quality Measures</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_MATH__QUALITY_MEASURES = 4;
+
+	/**
+	 * The feature id for the '<em><b>Event</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_MATH__EVENT = 5;
 
 	/**
 	 * The number of structural features of the '<em>Model Math</em>' class.
@@ -2158,22 +2158,22 @@ public interface MetadataPackage extends EPackage {
 	int MODEL_EQUATION__MODEL_EQUATION = 2;
 
 	/**
-	 * The feature id for the '<em><b>Hypothesis Of The Model</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL = 3;
-
-	/**
 	 * The feature id for the '<em><b>Reference</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_EQUATION__REFERENCE = 4;
+	int MODEL_EQUATION__REFERENCE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Hypothesis Of The Model</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL = 4;
 
 	/**
 	 * The number of structural features of the '<em>Model Equation</em>' class.
@@ -2204,40 +2204,13 @@ public interface MetadataPackage extends EPackage {
 	int EXPOSURE = 20;
 
 	/**
-	 * The feature id for the '<em><b>Methodological Treatment Of Left Censored Data</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA = 0;
-
-	/**
-	 * The feature id for the '<em><b>Level Of Contamination After Left Censored Data Treatment</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT = 1;
-
-	/**
 	 * The feature id for the '<em><b>Type Of Exposure</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPOSURE__TYPE_OF_EXPOSURE = 2;
-
-	/**
-	 * The feature id for the '<em><b>Scenario</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPOSURE__SCENARIO = 3;
+	int EXPOSURE__TYPE_OF_EXPOSURE = 0;
 
 	/**
 	 * The feature id for the '<em><b>Uncertainty Estimation</b></em>' attribute.
@@ -2246,7 +2219,34 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPOSURE__UNCERTAINTY_ESTIMATION = 4;
+	int EXPOSURE__UNCERTAINTY_ESTIMATION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Methodological Treatment Of Left Censored Data</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA = 2;
+
+	/**
+	 * The feature id for the '<em><b>Level Of Contamination After Left Censored Data Treatment</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Scenario</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPOSURE__SCENARIO = 4;
 
 	/**
 	 * The number of structural features of the '<em>Exposure</em>' class.
@@ -2267,6 +2267,43 @@ public interface MetadataPackage extends EPackage {
 	int EXPOSURE_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link metadata.impl.StringObjectImpl <em>String Object</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see metadata.impl.StringObjectImpl
+	 * @see metadata.impl.MetadataPackageImpl#getStringObject()
+	 * @generated
+	 */
+	int STRING_OBJECT = 21;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_OBJECT__VALUE = 0;
+
+	/**
+	 * The number of structural features of the '<em>String Object</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_OBJECT_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>String Object</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_OBJECT_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link metadata.PublicationType <em>Publication Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2274,7 +2311,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getPublicationType()
 	 * @generated
 	 */
-	int PUBLICATION_TYPE = 21;
+	int PUBLICATION_TYPE = 22;
 
 	/**
 	 * The meta object id for the '{@link metadata.ParameterClassification <em>Parameter Classification</em>}' enum.
@@ -2284,7 +2321,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getParameterClassification()
 	 * @generated
 	 */
-	int PARAMETER_CLASSIFICATION = 22;
+	int PARAMETER_CLASSIFICATION = 23;
 
 	/**
 	 * The meta object id for the '{@link metadata.ParameterType <em>Parameter Type</em>}' enum.
@@ -2294,7 +2331,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getParameterType()
 	 * @generated
 	 */
-	int PARAMETER_TYPE = 23;
+	int PARAMETER_TYPE = 24;
 
 	/**
 	 * The meta object id for the '<em>URI</em>' data type.
@@ -2304,7 +2341,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getURI()
 	 * @generated
 	 */
-	int URI = 24;
+	int URI = 25;
 
 
 	/**
@@ -2537,17 +2574,6 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getModelCategory_ModelClass();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.ModelCategory#getModelSubClass <em>Model Sub Class</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Model Sub Class</em>'.
-	 * @see metadata.ModelCategory#getModelSubClass()
-	 * @see #getModelCategory()
-	 * @generated
-	 */
-	EAttribute getModelCategory_ModelSubClass();
-
-	/**
 	 * Returns the meta object for the attribute '{@link metadata.ModelCategory#getModelClassComment <em>Model Class Comment</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2568,6 +2594,17 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getModelCategory_BasicProcess();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.ModelCategory#getModelSubClass <em>Model Sub Class</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Model Sub Class</em>'.
+	 * @see metadata.ModelCategory#getModelSubClass()
+	 * @see #getModelCategory()
+	 * @generated
+	 */
+	EReference getModelCategory_ModelSubClass();
 
 	/**
 	 * Returns the meta object for class '{@link metadata.Assay <em>Assay</em>}'.
@@ -3474,37 +3511,92 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getPopulationGroup_TargetPopulation();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.PopulationGroup#getPopulationSpan <em>Population Span</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.PopulationGroup#getPopulationSpan <em>Population Span</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Population Span</em>'.
+	 * @return the meta object for the containment reference list '<em>Population Span</em>'.
 	 * @see metadata.PopulationGroup#getPopulationSpan()
 	 * @see #getPopulationGroup()
 	 * @generated
 	 */
-	EAttribute getPopulationGroup_PopulationSpan();
+	EReference getPopulationGroup_PopulationSpan();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.PopulationGroup#getPopulationDescription <em>Population Description</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.PopulationGroup#getPopulationDescription <em>Population Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Population Description</em>'.
+	 * @return the meta object for the containment reference list '<em>Population Description</em>'.
 	 * @see metadata.PopulationGroup#getPopulationDescription()
 	 * @see #getPopulationGroup()
 	 * @generated
 	 */
-	EAttribute getPopulationGroup_PopulationDescription();
+	EReference getPopulationGroup_PopulationDescription();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.PopulationGroup#getPopulationAge <em>Population Age</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.PopulationGroup#getBmi <em>Bmi</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Population Age</em>'.
-	 * @see metadata.PopulationGroup#getPopulationAge()
+	 * @return the meta object for the containment reference list '<em>Bmi</em>'.
+	 * @see metadata.PopulationGroup#getBmi()
 	 * @see #getPopulationGroup()
 	 * @generated
 	 */
-	EAttribute getPopulationGroup_PopulationAge();
+	EReference getPopulationGroup_Bmi();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.PopulationGroup#getSpecialDietGroups <em>Special Diet Groups</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Special Diet Groups</em>'.
+	 * @see metadata.PopulationGroup#getSpecialDietGroups()
+	 * @see #getPopulationGroup()
+	 * @generated
+	 */
+	EReference getPopulationGroup_SpecialDietGroups();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.PopulationGroup#getRegion <em>Region</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Region</em>'.
+	 * @see metadata.PopulationGroup#getRegion()
+	 * @see #getPopulationGroup()
+	 * @generated
+	 */
+	EReference getPopulationGroup_Region();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.PopulationGroup#getCountry <em>Country</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Country</em>'.
+	 * @see metadata.PopulationGroup#getCountry()
+	 * @see #getPopulationGroup()
+	 * @generated
+	 */
+	EReference getPopulationGroup_Country();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.PopulationGroup#getPopulationRiskFactor <em>Population Risk Factor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Population Risk Factor</em>'.
+	 * @see metadata.PopulationGroup#getPopulationRiskFactor()
+	 * @see #getPopulationGroup()
+	 * @generated
+	 */
+	EReference getPopulationGroup_PopulationRiskFactor();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.PopulationGroup#getSeason <em>Season</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Season</em>'.
+	 * @see metadata.PopulationGroup#getSeason()
+	 * @see #getPopulationGroup()
+	 * @generated
+	 */
+	EReference getPopulationGroup_Season();
 
 	/**
 	 * Returns the meta object for the attribute '{@link metadata.PopulationGroup#getPopulationGender <em>Population Gender</em>}'.
@@ -3518,81 +3610,26 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getPopulationGroup_PopulationGender();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.PopulationGroup#getBmi <em>Bmi</em>}'.
+	 * Returns the meta object for the reference list '{@link metadata.PopulationGroup#getPatternConsumption <em>Pattern Consumption</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Bmi</em>'.
-	 * @see metadata.PopulationGroup#getBmi()
-	 * @see #getPopulationGroup()
-	 * @generated
-	 */
-	EAttribute getPopulationGroup_Bmi();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link metadata.PopulationGroup#getSpecialDietGroups <em>Special Diet Groups</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Special Diet Groups</em>'.
-	 * @see metadata.PopulationGroup#getSpecialDietGroups()
-	 * @see #getPopulationGroup()
-	 * @generated
-	 */
-	EAttribute getPopulationGroup_SpecialDietGroups();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link metadata.PopulationGroup#getPatternConsumption <em>Pattern Consumption</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Pattern Consumption</em>'.
+	 * @return the meta object for the reference list '<em>Pattern Consumption</em>'.
 	 * @see metadata.PopulationGroup#getPatternConsumption()
 	 * @see #getPopulationGroup()
 	 * @generated
 	 */
-	EAttribute getPopulationGroup_PatternConsumption();
+	EReference getPopulationGroup_PatternConsumption();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.PopulationGroup#getRegion <em>Region</em>}'.
+	 * Returns the meta object for the reference list '{@link metadata.PopulationGroup#getPopulationAge <em>Population Age</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Region</em>'.
-	 * @see metadata.PopulationGroup#getRegion()
+	 * @return the meta object for the reference list '<em>Population Age</em>'.
+	 * @see metadata.PopulationGroup#getPopulationAge()
 	 * @see #getPopulationGroup()
 	 * @generated
 	 */
-	EAttribute getPopulationGroup_Region();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link metadata.PopulationGroup#getCountry <em>Country</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Country</em>'.
-	 * @see metadata.PopulationGroup#getCountry()
-	 * @see #getPopulationGroup()
-	 * @generated
-	 */
-	EAttribute getPopulationGroup_Country();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link metadata.PopulationGroup#getPopulationRiskFactor <em>Population Risk Factor</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Population Risk Factor</em>'.
-	 * @see metadata.PopulationGroup#getPopulationRiskFactor()
-	 * @see #getPopulationGroup()
-	 * @generated
-	 */
-	EAttribute getPopulationGroup_PopulationRiskFactor();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link metadata.PopulationGroup#getSeason <em>Season</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Season</em>'.
-	 * @see metadata.PopulationGroup#getSeason()
-	 * @see #getPopulationGroup()
-	 * @generated
-	 */
-	EAttribute getPopulationGroup_Season();
+	EReference getPopulationGroup_PopulationAge();
 
 	/**
 	 * Returns the meta object for class '{@link metadata.Scope <em>Scope</em>}'.
@@ -3681,17 +3718,6 @@ public interface MetadataPackage extends EPackage {
 	EClass getLaboratory();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.Laboratory#getLaboratoryAccreditation <em>Laboratory Accreditation</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Laboratory Accreditation</em>'.
-	 * @see metadata.Laboratory#getLaboratoryAccreditation()
-	 * @see #getLaboratory()
-	 * @generated
-	 */
-	EAttribute getLaboratory_LaboratoryAccreditation();
-
-	/**
 	 * Returns the meta object for the attribute '{@link metadata.Laboratory#getLaboratoryName <em>Laboratory Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3714,6 +3740,17 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getLaboratory_LaboratoryCountry();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.Laboratory#getLaboratoryAccreditation <em>Laboratory Accreditation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Laboratory Accreditation</em>'.
+	 * @see metadata.Laboratory#getLaboratoryAccreditation()
+	 * @see #getLaboratory()
+	 * @generated
+	 */
+	EReference getLaboratory_LaboratoryAccreditation();
+
+	/**
 	 * Returns the meta object for class '{@link metadata.SpatialInformation <em>Spatial Information</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3724,26 +3761,26 @@ public interface MetadataPackage extends EPackage {
 	EClass getSpatialInformation();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.SpatialInformation#getRegion <em>Region</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.SpatialInformation#getRegion <em>Region</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Region</em>'.
+	 * @return the meta object for the containment reference list '<em>Region</em>'.
 	 * @see metadata.SpatialInformation#getRegion()
 	 * @see #getSpatialInformation()
 	 * @generated
 	 */
-	EAttribute getSpatialInformation_Region();
+	EReference getSpatialInformation_Region();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.SpatialInformation#getCountry <em>Country</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.SpatialInformation#getCountry <em>Country</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Country</em>'.
+	 * @return the meta object for the containment reference list '<em>Country</em>'.
 	 * @see metadata.SpatialInformation#getCountry()
 	 * @see #getSpatialInformation()
 	 * @generated
 	 */
-	EAttribute getSpatialInformation_Country();
+	EReference getSpatialInformation_Country();
 
 	/**
 	 * Returns the meta object for class '{@link metadata.Event <em>Event</em>}'.
@@ -4105,17 +4142,6 @@ public interface MetadataPackage extends EPackage {
 	EClass getModelMath();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.ModelMath#getQualityMeasures <em>Quality Measures</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Quality Measures</em>'.
-	 * @see metadata.ModelMath#getQualityMeasures()
-	 * @see #getModelMath()
-	 * @generated
-	 */
-	EAttribute getModelMath_QualityMeasures();
-
-	/**
 	 * Returns the meta object for the attribute '{@link metadata.ModelMath#getFittingProcedure <em>Fitting Procedure</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4125,17 +4151,6 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getModelMath_FittingProcedure();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link metadata.ModelMath#getEvent <em>Event</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Event</em>'.
-	 * @see metadata.ModelMath#getEvent()
-	 * @see #getModelMath()
-	 * @generated
-	 */
-	EAttribute getModelMath_Event();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link metadata.ModelMath#getParameter <em>Parameter</em>}'.
@@ -4169,6 +4184,28 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getModelMath_Exposure();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.ModelMath#getQualityMeasures <em>Quality Measures</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Quality Measures</em>'.
+	 * @see metadata.ModelMath#getQualityMeasures()
+	 * @see #getModelMath()
+	 * @generated
+	 */
+	EReference getModelMath_QualityMeasures();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.ModelMath#getEvent <em>Event</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Event</em>'.
+	 * @see metadata.ModelMath#getEvent()
+	 * @see #getModelMath()
+	 * @generated
+	 */
+	EReference getModelMath_Event();
 
 	/**
 	 * Returns the meta object for class '{@link metadata.Parameter <em>Parameter</em>}'.
@@ -4411,17 +4448,6 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getModelEquation_ModelEquation();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.ModelEquation#getHypothesisOfTheModel <em>Hypothesis Of The Model</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Hypothesis Of The Model</em>'.
-	 * @see metadata.ModelEquation#getHypothesisOfTheModel()
-	 * @see #getModelEquation()
-	 * @generated
-	 */
-	EAttribute getModelEquation_HypothesisOfTheModel();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link metadata.ModelEquation#getReference <em>Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4433,6 +4459,17 @@ public interface MetadataPackage extends EPackage {
 	EReference getModelEquation_Reference();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.ModelEquation#getHypothesisOfTheModel <em>Hypothesis Of The Model</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Hypothesis Of The Model</em>'.
+	 * @see metadata.ModelEquation#getHypothesisOfTheModel()
+	 * @see #getModelEquation()
+	 * @generated
+	 */
+	EReference getModelEquation_HypothesisOfTheModel();
+
+	/**
 	 * Returns the meta object for class '{@link metadata.Exposure <em>Exposure</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4441,28 +4478,6 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getExposure();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link metadata.Exposure#getMethodologicalTreatmentOfLeftCensoredData <em>Methodological Treatment Of Left Censored Data</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Methodological Treatment Of Left Censored Data</em>'.
-	 * @see metadata.Exposure#getMethodologicalTreatmentOfLeftCensoredData()
-	 * @see #getExposure()
-	 * @generated
-	 */
-	EAttribute getExposure_MethodologicalTreatmentOfLeftCensoredData();
-
-	/**
-	 * Returns the meta object for the attribute list '{@link metadata.Exposure#getLevelOfContaminationAfterLeftCensoredDataTreatment <em>Level Of Contamination After Left Censored Data Treatment</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Level Of Contamination After Left Censored Data Treatment</em>'.
-	 * @see metadata.Exposure#getLevelOfContaminationAfterLeftCensoredDataTreatment()
-	 * @see #getExposure()
-	 * @generated
-	 */
-	EAttribute getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment();
 
 	/**
 	 * Returns the meta object for the attribute '{@link metadata.Exposure#getTypeOfExposure <em>Type Of Exposure</em>}'.
@@ -4476,17 +4491,6 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getExposure_TypeOfExposure();
 
 	/**
-	 * Returns the meta object for the attribute list '{@link metadata.Exposure#getScenario <em>Scenario</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Scenario</em>'.
-	 * @see metadata.Exposure#getScenario()
-	 * @see #getExposure()
-	 * @generated
-	 */
-	EAttribute getExposure_Scenario();
-
-	/**
 	 * Returns the meta object for the attribute '{@link metadata.Exposure#getUncertaintyEstimation <em>Uncertainty Estimation</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4496,6 +4500,60 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getExposure_UncertaintyEstimation();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.Exposure#getMethodologicalTreatmentOfLeftCensoredData <em>Methodological Treatment Of Left Censored Data</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Methodological Treatment Of Left Censored Data</em>'.
+	 * @see metadata.Exposure#getMethodologicalTreatmentOfLeftCensoredData()
+	 * @see #getExposure()
+	 * @generated
+	 */
+	EReference getExposure_MethodologicalTreatmentOfLeftCensoredData();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.Exposure#getLevelOfContaminationAfterLeftCensoredDataTreatment <em>Level Of Contamination After Left Censored Data Treatment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Level Of Contamination After Left Censored Data Treatment</em>'.
+	 * @see metadata.Exposure#getLevelOfContaminationAfterLeftCensoredDataTreatment()
+	 * @see #getExposure()
+	 * @generated
+	 */
+	EReference getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link metadata.Exposure#getScenario <em>Scenario</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Scenario</em>'.
+	 * @see metadata.Exposure#getScenario()
+	 * @see #getExposure()
+	 * @generated
+	 */
+	EReference getExposure_Scenario();
+
+	/**
+	 * Returns the meta object for class '{@link metadata.StringObject <em>String Object</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>String Object</em>'.
+	 * @see metadata.StringObject
+	 * @generated
+	 */
+	EClass getStringObject();
+
+	/**
+	 * Returns the meta object for the attribute '{@link metadata.StringObject#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see metadata.StringObject#getValue()
+	 * @see #getStringObject()
+	 * @generated
+	 */
+	EAttribute getStringObject_Value();
 
 	/**
 	 * Returns the meta object for enum '{@link metadata.PublicationType <em>Publication Type</em>}'.
@@ -4734,14 +4792,6 @@ public interface MetadataPackage extends EPackage {
 		EAttribute MODEL_CATEGORY__MODEL_CLASS = eINSTANCE.getModelCategory_ModelClass();
 
 		/**
-		 * The meta object literal for the '<em><b>Model Sub Class</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MODEL_CATEGORY__MODEL_SUB_CLASS = eINSTANCE.getModelCategory_ModelSubClass();
-
-		/**
 		 * The meta object literal for the '<em><b>Model Class Comment</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -4756,6 +4806,14 @@ public interface MetadataPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MODEL_CATEGORY__BASIC_PROCESS = eINSTANCE.getModelCategory_BasicProcess();
+
+		/**
+		 * The meta object literal for the '<em><b>Model Sub Class</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MODEL_CATEGORY__MODEL_SUB_CLASS = eINSTANCE.getModelCategory_ModelSubClass();
 
 		/**
 		 * The meta object literal for the '{@link metadata.impl.AssayImpl <em>Assay</em>}' class.
@@ -5440,28 +5498,68 @@ public interface MetadataPackage extends EPackage {
 		EAttribute POPULATION_GROUP__TARGET_POPULATION = eINSTANCE.getPopulationGroup_TargetPopulation();
 
 		/**
-		 * The meta object literal for the '<em><b>Population Span</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Population Span</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute POPULATION_GROUP__POPULATION_SPAN = eINSTANCE.getPopulationGroup_PopulationSpan();
+		EReference POPULATION_GROUP__POPULATION_SPAN = eINSTANCE.getPopulationGroup_PopulationSpan();
 
 		/**
-		 * The meta object literal for the '<em><b>Population Description</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Population Description</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute POPULATION_GROUP__POPULATION_DESCRIPTION = eINSTANCE.getPopulationGroup_PopulationDescription();
+		EReference POPULATION_GROUP__POPULATION_DESCRIPTION = eINSTANCE.getPopulationGroup_PopulationDescription();
 
 		/**
-		 * The meta object literal for the '<em><b>Population Age</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Bmi</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute POPULATION_GROUP__POPULATION_AGE = eINSTANCE.getPopulationGroup_PopulationAge();
+		EReference POPULATION_GROUP__BMI = eINSTANCE.getPopulationGroup_Bmi();
+
+		/**
+		 * The meta object literal for the '<em><b>Special Diet Groups</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference POPULATION_GROUP__SPECIAL_DIET_GROUPS = eINSTANCE.getPopulationGroup_SpecialDietGroups();
+
+		/**
+		 * The meta object literal for the '<em><b>Region</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference POPULATION_GROUP__REGION = eINSTANCE.getPopulationGroup_Region();
+
+		/**
+		 * The meta object literal for the '<em><b>Country</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference POPULATION_GROUP__COUNTRY = eINSTANCE.getPopulationGroup_Country();
+
+		/**
+		 * The meta object literal for the '<em><b>Population Risk Factor</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference POPULATION_GROUP__POPULATION_RISK_FACTOR = eINSTANCE.getPopulationGroup_PopulationRiskFactor();
+
+		/**
+		 * The meta object literal for the '<em><b>Season</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference POPULATION_GROUP__SEASON = eINSTANCE.getPopulationGroup_Season();
 
 		/**
 		 * The meta object literal for the '<em><b>Population Gender</b></em>' attribute feature.
@@ -5472,60 +5570,20 @@ public interface MetadataPackage extends EPackage {
 		EAttribute POPULATION_GROUP__POPULATION_GENDER = eINSTANCE.getPopulationGroup_PopulationGender();
 
 		/**
-		 * The meta object literal for the '<em><b>Bmi</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Pattern Consumption</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute POPULATION_GROUP__BMI = eINSTANCE.getPopulationGroup_Bmi();
+		EReference POPULATION_GROUP__PATTERN_CONSUMPTION = eINSTANCE.getPopulationGroup_PatternConsumption();
 
 		/**
-		 * The meta object literal for the '<em><b>Special Diet Groups</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Population Age</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute POPULATION_GROUP__SPECIAL_DIET_GROUPS = eINSTANCE.getPopulationGroup_SpecialDietGroups();
-
-		/**
-		 * The meta object literal for the '<em><b>Pattern Consumption</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute POPULATION_GROUP__PATTERN_CONSUMPTION = eINSTANCE.getPopulationGroup_PatternConsumption();
-
-		/**
-		 * The meta object literal for the '<em><b>Region</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute POPULATION_GROUP__REGION = eINSTANCE.getPopulationGroup_Region();
-
-		/**
-		 * The meta object literal for the '<em><b>Country</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute POPULATION_GROUP__COUNTRY = eINSTANCE.getPopulationGroup_Country();
-
-		/**
-		 * The meta object literal for the '<em><b>Population Risk Factor</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute POPULATION_GROUP__POPULATION_RISK_FACTOR = eINSTANCE.getPopulationGroup_PopulationRiskFactor();
-
-		/**
-		 * The meta object literal for the '<em><b>Season</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute POPULATION_GROUP__SEASON = eINSTANCE.getPopulationGroup_Season();
+		EReference POPULATION_GROUP__POPULATION_AGE = eINSTANCE.getPopulationGroup_PopulationAge();
 
 		/**
 		 * The meta object literal for the '{@link metadata.impl.ScopeImpl <em>Scope</em>}' class.
@@ -5596,14 +5654,6 @@ public interface MetadataPackage extends EPackage {
 		EClass LABORATORY = eINSTANCE.getLaboratory();
 
 		/**
-		 * The meta object literal for the '<em><b>Laboratory Accreditation</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute LABORATORY__LABORATORY_ACCREDITATION = eINSTANCE.getLaboratory_LaboratoryAccreditation();
-
-		/**
 		 * The meta object literal for the '<em><b>Laboratory Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5620,6 +5670,14 @@ public interface MetadataPackage extends EPackage {
 		EAttribute LABORATORY__LABORATORY_COUNTRY = eINSTANCE.getLaboratory_LaboratoryCountry();
 
 		/**
+		 * The meta object literal for the '<em><b>Laboratory Accreditation</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference LABORATORY__LABORATORY_ACCREDITATION = eINSTANCE.getLaboratory_LaboratoryAccreditation();
+
+		/**
 		 * The meta object literal for the '{@link metadata.impl.SpatialInformationImpl <em>Spatial Information</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5630,20 +5688,20 @@ public interface MetadataPackage extends EPackage {
 		EClass SPATIAL_INFORMATION = eINSTANCE.getSpatialInformation();
 
 		/**
-		 * The meta object literal for the '<em><b>Region</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Region</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute SPATIAL_INFORMATION__REGION = eINSTANCE.getSpatialInformation_Region();
+		EReference SPATIAL_INFORMATION__REGION = eINSTANCE.getSpatialInformation_Region();
 
 		/**
-		 * The meta object literal for the '<em><b>Country</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Country</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute SPATIAL_INFORMATION__COUNTRY = eINSTANCE.getSpatialInformation_Country();
+		EReference SPATIAL_INFORMATION__COUNTRY = eINSTANCE.getSpatialInformation_Country();
 
 		/**
 		 * The meta object literal for the '{@link metadata.impl.EventImpl <em>Event</em>}' class.
@@ -5918,28 +5976,12 @@ public interface MetadataPackage extends EPackage {
 		EClass MODEL_MATH = eINSTANCE.getModelMath();
 
 		/**
-		 * The meta object literal for the '<em><b>Quality Measures</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MODEL_MATH__QUALITY_MEASURES = eINSTANCE.getModelMath_QualityMeasures();
-
-		/**
 		 * The meta object literal for the '<em><b>Fitting Procedure</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute MODEL_MATH__FITTING_PROCEDURE = eINSTANCE.getModelMath_FittingProcedure();
-
-		/**
-		 * The meta object literal for the '<em><b>Event</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MODEL_MATH__EVENT = eINSTANCE.getModelMath_Event();
 
 		/**
 		 * The meta object literal for the '<em><b>Parameter</b></em>' containment reference list feature.
@@ -5964,6 +6006,22 @@ public interface MetadataPackage extends EPackage {
 		 * @generated
 		 */
 		EReference MODEL_MATH__EXPOSURE = eINSTANCE.getModelMath_Exposure();
+
+		/**
+		 * The meta object literal for the '<em><b>Quality Measures</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MODEL_MATH__QUALITY_MEASURES = eINSTANCE.getModelMath_QualityMeasures();
+
+		/**
+		 * The meta object literal for the '<em><b>Event</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MODEL_MATH__EVENT = eINSTANCE.getModelMath_Event();
 
 		/**
 		 * The meta object literal for the '{@link metadata.impl.ParameterImpl <em>Parameter</em>}' class.
@@ -6146,20 +6204,20 @@ public interface MetadataPackage extends EPackage {
 		EAttribute MODEL_EQUATION__MODEL_EQUATION = eINSTANCE.getModelEquation_ModelEquation();
 
 		/**
-		 * The meta object literal for the '<em><b>Hypothesis Of The Model</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL = eINSTANCE.getModelEquation_HypothesisOfTheModel();
-
-		/**
 		 * The meta object literal for the '<em><b>Reference</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference MODEL_EQUATION__REFERENCE = eINSTANCE.getModelEquation_Reference();
+
+		/**
+		 * The meta object literal for the '<em><b>Hypothesis Of The Model</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MODEL_EQUATION__HYPOTHESIS_OF_THE_MODEL = eINSTANCE.getModelEquation_HypothesisOfTheModel();
 
 		/**
 		 * The meta object literal for the '{@link metadata.impl.ExposureImpl <em>Exposure</em>}' class.
@@ -6172,22 +6230,6 @@ public interface MetadataPackage extends EPackage {
 		EClass EXPOSURE = eINSTANCE.getExposure();
 
 		/**
-		 * The meta object literal for the '<em><b>Methodological Treatment Of Left Censored Data</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA = eINSTANCE.getExposure_MethodologicalTreatmentOfLeftCensoredData();
-
-		/**
-		 * The meta object literal for the '<em><b>Level Of Contamination After Left Censored Data Treatment</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT = eINSTANCE.getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment();
-
-		/**
 		 * The meta object literal for the '<em><b>Type Of Exposure</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -6196,20 +6238,54 @@ public interface MetadataPackage extends EPackage {
 		EAttribute EXPOSURE__TYPE_OF_EXPOSURE = eINSTANCE.getExposure_TypeOfExposure();
 
 		/**
-		 * The meta object literal for the '<em><b>Scenario</b></em>' attribute list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute EXPOSURE__SCENARIO = eINSTANCE.getExposure_Scenario();
-
-		/**
 		 * The meta object literal for the '<em><b>Uncertainty Estimation</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute EXPOSURE__UNCERTAINTY_ESTIMATION = eINSTANCE.getExposure_UncertaintyEstimation();
+
+		/**
+		 * The meta object literal for the '<em><b>Methodological Treatment Of Left Censored Data</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXPOSURE__METHODOLOGICAL_TREATMENT_OF_LEFT_CENSORED_DATA = eINSTANCE.getExposure_MethodologicalTreatmentOfLeftCensoredData();
+
+		/**
+		 * The meta object literal for the '<em><b>Level Of Contamination After Left Censored Data Treatment</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXPOSURE__LEVEL_OF_CONTAMINATION_AFTER_LEFT_CENSORED_DATA_TREATMENT = eINSTANCE.getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment();
+
+		/**
+		 * The meta object literal for the '<em><b>Scenario</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXPOSURE__SCENARIO = eINSTANCE.getExposure_Scenario();
+
+		/**
+		 * The meta object literal for the '{@link metadata.impl.StringObjectImpl <em>String Object</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see metadata.impl.StringObjectImpl
+		 * @see metadata.impl.MetadataPackageImpl#getStringObject()
+		 * @generated
+		 */
+		EClass STRING_OBJECT = eINSTANCE.getStringObject();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STRING_OBJECT__VALUE = eINSTANCE.getStringObject_Value();
 
 		/**
 		 * The meta object literal for the '{@link metadata.PublicationType <em>Publication Type</em>}' enum.
