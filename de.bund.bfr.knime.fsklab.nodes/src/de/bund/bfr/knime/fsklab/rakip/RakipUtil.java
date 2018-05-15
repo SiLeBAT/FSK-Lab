@@ -7,15 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import ezvcard.VCard;
-import ezvcard.property.Address;
-import ezvcard.property.Email;
-import ezvcard.property.Gender;
-import ezvcard.property.Organization;
-import ezvcard.property.StructuredName;
-import ezvcard.property.Telephone;
-import ezvcard.property.Timezone;
-import metadata.Contact;
 import metadata.MetadataFactory;
 import metadata.ParameterClassification;
 import metadata.ParameterType;
@@ -95,104 +86,6 @@ public class RakipUtil {
     // TODO: modification date
 
     return emfGeneralInformation;
-  }
-
-  /**
-   * Convert VCard to an EMF {@link metadata.Contact}.
-   */
-  private static Contact convert(VCard vcard) {
-
-    Contact contact = MetadataFactory.eINSTANCE.createContact();
-
-    if (!vcard.getStructuredNames().isEmpty()) {
-
-      StructuredName structuredName = vcard.getStructuredName();
-
-      // title
-      if (!structuredName.getPrefixes().isEmpty()) {
-        contact.setTitle(structuredName.getPrefixes().get(0));
-      }
-
-      // family name
-      String family = structuredName.getFamily();
-      if (StringUtils.isNotEmpty(family)) {
-        contact.setFamilyName(family);
-      }
-
-      // given name
-      String givenName = structuredName.getGiven();
-      if (StringUtils.isNotEmpty(givenName)) {
-        contact.setGivenName(givenName);
-      }
-    }
-
-    // email
-    List<Email> emails = vcard.getEmails();
-    if (emails != null && !emails.isEmpty()) {
-      contact.setEmail(emails.get(0).getValue());
-    }
-
-    // telephone
-    List<Telephone> telephones = vcard.getTelephoneNumbers();
-    if (telephones != null && !telephones.isEmpty()) {
-      contact.setTelephone(telephones.get(0).getText());
-    }
-
-    if (!vcard.getAddresses().isEmpty()) {
-
-      Address address = vcard.getAddresses().get(0);
-
-      String streetAddress = address.getStreetAddress();
-      if (streetAddress != null) {
-        contact.setStreetAddress(streetAddress);
-      }
-
-      String country = address.getCountry();
-      if (country != null) {
-        contact.setCountry(country);
-      }
-
-      String city = address.getLocality();
-      if (city != null) {
-        contact.setCity(city);
-      }
-
-      String zipCode = address.getPostalCode();
-      if (zipCode != null) {
-        contact.setZipCode(zipCode);
-      }
-
-      String region = address.getRegion();
-      if (region != null) {
-        contact.setRegion(region);
-      }
-    }
-
-    // timezone
-    Timezone timezone = vcard.getTimezone();
-    if (timezone != null) {
-      contact.setTimeZone(timezone.getText());
-    }
-
-    // gender
-    Gender gender = vcard.getGender();
-    if (gender != null) {
-      contact.setGender(gender.getGender());
-    }
-
-    // note
-    if (!vcard.getNotes().isEmpty()) {
-      String note = vcard.getNotes().get(0).getValue();
-      contact.setNote(note);
-    }
-
-    // organization
-    Organization organization = vcard.getOrganization();
-    if (organization != null) {
-      contact.setOrganization(organization.getValues().get(0));
-    }
-
-    return contact;
   }
 
   /**
