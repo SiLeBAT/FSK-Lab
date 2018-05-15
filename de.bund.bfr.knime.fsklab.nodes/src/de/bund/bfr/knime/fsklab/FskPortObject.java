@@ -97,6 +97,7 @@ import metadata.Hazard;
 import metadata.Laboratory;
 import metadata.MetadataFactory;
 import metadata.MetadataPackage;
+import metadata.MetadataTree;
 import metadata.ModelCategory;
 import metadata.ModelEquation;
 import metadata.ModelMath;
@@ -437,7 +438,6 @@ public class FskPortObject implements PortObject {
     }
   }
 
-  /** {Override} */
   @Override
   public JComponent[] getViews() {
     JPanel modelScriptPanel = new ScriptPanel("Model script", model, false);

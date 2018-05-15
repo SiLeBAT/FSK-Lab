@@ -66,6 +66,7 @@ import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import metadata.DataBackground;
 import metadata.GeneralInformation;
 import metadata.MetadataFactory;
+import metadata.MetadataTree;
 import metadata.ModelMath;
 import metadata.Scope;
 

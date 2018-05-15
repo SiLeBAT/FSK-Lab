@@ -3,10 +3,7 @@ package metadata.serializers;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -28,11 +25,12 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import metadata.GeneralInformation;
-import metadata.MetadataFactory;
 import metadata.MetadataPackage;
 
 
 public class FSKEMFModule extends SimpleModule{
+
+	private static final long serialVersionUID = 1476306866950929955L;
 
 	public FSKEMFModule() {
 		super("FSKEMFModule", Version.unknownVersion());
