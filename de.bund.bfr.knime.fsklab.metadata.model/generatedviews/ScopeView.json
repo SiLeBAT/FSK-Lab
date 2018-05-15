@@ -3,38 +3,33 @@
   "elements": [
     {
       "type": "Control",
-      "label": "General Comment",
+      "label": "generalComment",
       "scope": "#/properties/generalComment"
     },
     {
       "type": "Control",
-      "label": "Temporal Information",
+      "label": "temporalInformation",
       "scope": "#/properties/temporalInformation"
     },
     {
       "type": "Control",
-      "label": "Product",
+      "label": "product",
       "scope": "#/properties/product"
     },
     {
       "type": "Control",
-      "label": "Hazard",
+      "label": "hazard",
       "scope": "#/properties/hazard"
     },
     {
       "type": "Control",
-      "label": "Populationgroup",
-      "scope": "#/properties/populationgroup"
+      "label": "populationGroup",
+      "scope": "#/properties/populationGroup"
     },
     {
       "type": "Control",
-      "label": "Country",
-      "scope": "#/properties/country"
-    },
-    {
-      "type": "Control",
-      "label": "Region",
-      "scope": "#/properties/region"
+      "label": "spatialInformation",
+      "scope": "#/properties/spatialInformation"
     }
   ]
 }

@@ -3,98 +3,88 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Id",
-      "scope": "#/properties/id"
+      "label": "parameterID",
+      "scope": "#/properties/parameterID"
     },
     {
       "type": "Control",
-      "label": "Name",
-      "scope": "#/properties/name"
+      "label": "parameterClassification",
+      "scope": "#/properties/parameterClassification"
     },
     {
       "type": "Control",
-      "label": "Description",
-      "scope": "#/properties/description"
+      "label": "parameterName",
+      "scope": "#/properties/parameterName"
     },
     {
       "type": "Control",
-      "label": "Type",
-      "scope": "#/properties/type"
+      "label": "parameterDescription",
+      "scope": "#/properties/parameterDescription"
     },
     {
       "type": "Control",
-      "label": "Unit",
-      "scope": "#/properties/unit"
+      "label": "parameterType",
+      "scope": "#/properties/parameterType"
     },
     {
       "type": "Control",
-      "label": "Unit Category",
-      "scope": "#/properties/unitCategory"
+      "label": "parameterUnit",
+      "scope": "#/properties/parameterUnit"
     },
     {
       "type": "Control",
-      "label": "Data Type",
-      "scope": "#/properties/dataType"
+      "label": "parameterUnitCategory",
+      "scope": "#/properties/parameterUnitCategory"
     },
     {
       "type": "Control",
-      "label": "Source",
-      "scope": "#/properties/source"
+      "label": "parameterDataType",
+      "scope": "#/properties/parameterDataType"
     },
     {
       "type": "Control",
-      "label": "Subject",
-      "scope": "#/properties/subject"
+      "label": "parameterSource",
+      "scope": "#/properties/parameterSource"
     },
     {
       "type": "Control",
-      "label": "Distribution",
-      "scope": "#/properties/distribution"
+      "label": "parameterSubject",
+      "scope": "#/properties/parameterSubject"
     },
     {
       "type": "Control",
-      "label": "Value",
-      "scope": "#/properties/value"
+      "label": "parameterDistribution",
+      "scope": "#/properties/parameterDistribution"
     },
     {
       "type": "Control",
-      "label": "Min Value",
-      "scope": "#/properties/minValue"
+      "label": "parameterValue",
+      "scope": "#/properties/parameterValue"
     },
     {
       "type": "Control",
-      "label": "Max Value",
-      "scope": "#/properties/maxValue"
+      "label": "parameterVariabilitySubject",
+      "scope": "#/properties/parameterVariabilitySubject"
     },
     {
       "type": "Control",
-      "label": "Reference",
+      "label": "parameterValueMin",
+      "scope": "#/properties/parameterValueMin"
+    },
+    {
+      "type": "Control",
+      "label": "parameterValueMax",
+      "scope": "#/properties/parameterValueMax"
+    },
+    {
+      "type": "Control",
+      "label": "parameterError",
+      "scope": "#/properties/parameterError"
+    },
+    {
+      "type": "Control",
+      "label": "reference",
       "scope": "#/properties/reference"
-    },
-    {
-      "type": "Control",
-      "label": "Variability Subject",
-      "scope": "#/properties/variabilitySubject"
-    },
-    {
-      "type": "Control",
-      "label": "Range Of Applicability",
-      "scope": "#/properties/rangeOfApplicability"
-    },
-    {
-      "type": "Control",
-      "label": "Error",
-      "scope": "#/properties/error"
-    },
-    {
-      "type": "Control",
-      "label": "Modelapplicability",
-      "scope": "#/properties/modelapplicability"
-    },
-    {
-      "type": "Control",
-      "label": "Classification",
-      "scope": "#/properties/classification"
     }
   ]
 }

@@ -73,7 +73,6 @@ public class MetadataFactoryImpl extends EFactoryImpl implements MetadataFactory
 			case MetadataPackage.SCOPE: return createScope();
 			case MetadataPackage.LABORATORY: return createLaboratory();
 			case MetadataPackage.SPATIAL_INFORMATION: return createSpatialInformation();
-			case MetadataPackage.MODEL_APPLICABILITY: return createmodelApplicability();
 			case MetadataPackage.EVENT: return createEvent();
 			case MetadataPackage.CONTACT: return createContact();
 			case MetadataPackage.REFERENCE: return createReference();
@@ -266,16 +265,6 @@ public class MetadataFactoryImpl extends EFactoryImpl implements MetadataFactory
 	public SpatialInformation createSpatialInformation() {
 		SpatialInformationImpl spatialInformation = new SpatialInformationImpl();
 		return spatialInformation;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public modelApplicability createmodelApplicability() {
-		modelApplicabilityImpl modelApplicability = new modelApplicabilityImpl();
-		return modelApplicability;
 	}
 
 	/**

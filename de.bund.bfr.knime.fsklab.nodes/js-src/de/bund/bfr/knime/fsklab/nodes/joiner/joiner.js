@@ -92,8 +92,8 @@ joiner = function() {
     };
     joinerNode.name = 'FSK Joiner';
     var paper;
-    var _firstModel;
-    var _secondModel;
+    var _firstModel = {generalInformation:{},scope:{},dataBackground:{},modelMath:{}};
+    var _secondModel = {generalInformation:{},scope:{},dataBackground:{},modelMath:{}};
     
     var _firstModelScript;
     var _secondModelScript;
@@ -105,13 +105,24 @@ joiner = function() {
     var firstModelParameterMap = new Object();
     var secomndModelParameterMap = new Object();
     joinerNode.init = function(representation, value) {
-     
-    	_firstModel = value.firstModel;
+    	
+    	_firstModel.generalInformation = value.firstGeneralInformation;
+    	_firstModel.scope = value.firstScope;
+    	_firstModel.modelMath = value.firstModelMath;
+    	_firstModel.dataBackground = value.firstDataBackground;
     	_firstModelScript = value.firstModelScript;
     	_firstModelViz = value.firstModelViz;
-    	_secondModel= value.secondModel;
+    	
+    	
+    	_secondModel.generalInformation = value.secondGeneralInformation;
+    	_secondModel.scope = value.secondScope;
+    	_secondModel.modelMath = value.secondModelMath;
+    	_secondModel.dataBackground = value.secondDataBackground;
     	_secondModelScript = value.secondModelScript;
     	_secondModelViz = value.secondModelViz;
+    	
+    	
+    	
     	_viewValue = value;
     	window.generalInformation = _firstModel.generalInformation;
     	window.scope =  _firstModel.scope;
@@ -410,6 +421,17 @@ joiner = function() {
         });
         drawWorkflow();
         createEMFForm();
+		 $.each(  $('html').find('style'), function( key, value ) {
+        	
+        	if($(value).attr('data-meta') == 'MuiInput'){
+        		value.remove();
+        	}else if($(value).attr('data-meta') == 'MuiInputLabel'){
+        		value.remove();
+        	}else if($(value).attr('data-meta') == 'MuiFormLabel'){
+        		value.remove();
+        	}
+        	
+    	});
         $(window).resize(function() {
             var canvas = $('#paper');
             paper.setDimensions(canvas.width(), canvas.height());
@@ -442,30 +464,29 @@ joiner = function() {
 	   $('.MuiTable-root-222').addClass('table'); 
 	   $('.MuiTable-root-222').parent().addClass('table-responsive');
 	   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
-        $('.MuiTable-root-222').removeClass('MuiTable-root-222'); 
-        //$(".MuiInput-input-113").prop("readonly", true);
+       $('.MuiTable-root-222').removeClass('MuiTable-root-222'); 
          
-        $('.MuiTable-root-222').addClass('table table-dark'); 
-        $('.MuiFormControl-root-90').addClass('form-group');
+       $('.MuiTable-root-222').addClass('table table-dark'); 
+       $('.MuiFormControl-root-90').addClass('form-group');
        
         
-        $('.replaced').parent().addClass('panel'); 
-        $('.replaced').parent().addClass('panel-default'); 
-        $('.replaced').addClass('panel-body'); 
-        function getLastWord(words) {
-            var n = words.split(" ");
-            return n[n.length - 1];
-
-        }
-        /*$($("[aria-describedby*='tooltip-add']")).attr('data-toggle','modal');
-        $($("[aria-describedby*='tooltip-add']")).attr('data-target','#myModal');*/
-        $($("[aria-describedby*='tooltip-add']")).click(function(event) {
-        	currentArea = getLastWord($(this).attr('aria-label'));
-        	event.preventDefault(); // Let's stop this event.
-            event.stopPropagation(); // Really this time.
-            $('#title'+currentArea).text(currentArea);
-            $('#'+currentArea).modal('show');
-        });
+       $('.replaced').parent().addClass('panel'); 
+       $('.replaced').parent().addClass('panel-default'); 
+       $('.replaced').addClass('panel-body'); 
+	   function getLastWord(words) {
+	        var n = words.split(" ");
+	        return n[n.length - 1];
+	
+	   }
+	    /*$($("[aria-describedby*='tooltip-add']")).attr('data-toggle','modal');
+	    $($("[aria-describedby*='tooltip-add']")).attr('data-target','#myModal');*/
+	   $($("[aria-describedby*='tooltip-add']")).click(function(event) {
+	    	currentArea = getLastWord($(this).attr('aria-label'));
+	    	event.preventDefault(); // Let's stop this event.
+	        event.stopPropagation(); // Really this time.
+	        $('#title'+currentArea).text(currentArea);
+	        $('#'+currentArea).modal('show');
+	   });
     }
     
     

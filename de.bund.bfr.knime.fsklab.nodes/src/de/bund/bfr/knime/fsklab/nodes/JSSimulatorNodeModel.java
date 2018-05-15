@@ -19,8 +19,10 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.eclipse.emf.common.util.EList;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -34,7 +36,7 @@ import org.knime.js.core.node.AbstractWizardNodeModel;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.JSSimulatorViewValue.JSSimulation;
-import de.bund.bfr.knime.fsklab.rakip.Parameter;
+import metadata.ParameterClassification;
 
 class JSSimulatorNodeModel
     extends AbstractWizardNodeModel<JSSimulatorViewRepresentation, JSSimulatorViewValue>
@@ -93,7 +95,7 @@ class JSSimulatorNodeModel
       if (val.simulations == null && port != null && port.simulations != null) {
         // Convert from FskSimulation(s) to JSSimulation(s)
         val.simulations = port.simulations.stream()
-            .map(it -> toJSSimulation(it, port.genericModel.modelMath.parameter))
+            .map(it -> toJSSimulation(it, port.modelMath.getParameter()))
             .collect(Collectors.toList());
       }
     }
@@ -111,8 +113,8 @@ class JSSimulatorNodeModel
       }
       if (rep.parameters == null && port != null) {
         // Take only input parameters from metadata
-        rep.parameters = port.genericModel.modelMath.parameter.stream()
-            .filter(p -> p.classification == Parameter.Classification.input)
+        rep.parameters = port.modelMath.getParameter().stream()
+            .filter(p -> p.getParameterClassification() == ParameterClassification.INPUT)
             .collect(Collectors.toList());
       }
     }
@@ -130,8 +132,9 @@ class JSSimulatorNodeModel
       throws IOException {
 
     FskPortObject inObj = (FskPortObject) inObjects[0];
-    FskPortObject outObj = new FskPortObject(inObj.model, inObj.param, inObj.viz,
-        inObj.genericModel, inObj.workspace, inObj.libs, inObj.workingDirectory);
+    FskPortObject outObj =  new FskPortObject(inObj.model, inObj.param, inObj.viz, inObj.generalInformation, inObj.scope,
+        inObj.dataBackground, inObj.modelMath, null, new HashSet<>(), inObj.workingDirectory);
+        
 
     synchronized (getLock()) {
 
@@ -142,7 +145,7 @@ class JSSimulatorNodeModel
 
         // Convert FskSimulation(s) to JSSimulation(s)
         val.simulations = inObj.simulations.stream()
-            .map(it -> toJSSimulation(it, inObj.genericModel.modelMath.parameter))
+            .map(it -> toJSSimulation(it, inObj.modelMath.getParameter()))
             .collect(Collectors.toList());
 
         port = inObj;
@@ -154,10 +157,10 @@ class JSSimulatorNodeModel
       for (JSSimulation jsSimulation : val.simulations) {
         FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
 
-        List<Parameter> inputParams = getViewRepresentation().parameters;
+        List<metadata.Parameter> inputParams = getViewRepresentation().parameters;
 
         for (int i = 0; i < inputParams.size(); i++) {
-          String paramName = inputParams.get(i).id;
+          String paramName = inputParams.get(i).getParameterID();
           String paramValue = jsSimulation.values.get(i);
 
           fskSimulation.getParameters().put(paramName, paramValue);
@@ -203,11 +206,11 @@ class JSSimulatorNodeModel
 
   public void setHideInWizard(boolean hide) {}
 
-  private static JSSimulation toJSSimulation(FskSimulation fskSim, List<Parameter> params) {
+  private static JSSimulation toJSSimulation(FskSimulation fskSim, EList<metadata.Parameter> eList) {
     JSSimulation jsSim = new JSSimulation();
     jsSim.name = fskSim.getName();
-    jsSim.values = params.stream().filter(p -> p.classification == Parameter.Classification.input)
-        .map(p -> fskSim.getParameters().get(p.id)).collect(Collectors.toList());
+    jsSim.values = eList.stream().filter(p -> p.getParameterClassification() == ParameterClassification.INPUT)
+        .map(p -> fskSim.getParameters().get(p.getParameterID())).collect(Collectors.toList());
 
     return jsSim;
   }

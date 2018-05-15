@@ -102,7 +102,11 @@ public class EditorNodeModel extends NoInternalsModel {
         outObj.model = settings.modifiedModelScript;
         outObj.param = settings.modifiedParametersScript;
         outObj.viz = settings.modifiedVisualizationScript;
-        outObj.genericModel = settings.genericModel;
+
+        outObj.generalInformation = settings.generalInformation;
+        outObj.scope = settings.scope;
+        outObj.dataBackground = settings.dataBackground;
+        outObj.modelMath = settings.modelMath;
       } else {
         settings.originalModelScript = inObj.model;
         settings.originalParametersScript = inObj.param;
@@ -112,7 +116,10 @@ public class EditorNodeModel extends NoInternalsModel {
         settings.modifiedParametersScript = inObj.param;
         settings.modifiedVisualizationScript = inObj.viz;
 
-        settings.genericModel = inObj.genericModel;
+        settings.generalInformation = inObj.generalInformation;
+        settings.scope = inObj.scope;
+        settings.dataBackground = inObj.dataBackground;
+        settings.modelMath = inObj.modelMath;
 
         outObj = inObj;
       }
@@ -128,7 +135,8 @@ public class EditorNodeModel extends NoInternalsModel {
       }
 
       outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedParametersScript,
-          settings.modifiedVisualizationScript, settings.genericModel, null, new HashSet<>(),
+          settings.modifiedVisualizationScript, settings.generalInformation, settings.scope,
+          settings.dataBackground, settings.modelMath, null, new HashSet<>(),
           workingDirectory);
 
       // Create default simulation out of the parameters script

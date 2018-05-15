@@ -5,6 +5,7 @@ package metadata.impl;
 import metadata.MetadataPackage;
 import metadata.Parameter;
 import metadata.ParameterClassification;
+import metadata.ParameterType;
 import metadata.Reference;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -193,7 +194,7 @@ public class ParameterImpl extends MinimalEObjectImpl.Container implements Param
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String PARAMETER_DATA_TYPE_EDEFAULT = null;
+	protected static final ParameterType PARAMETER_DATA_TYPE_EDEFAULT = ParameterType.INTEGER;
 
 	/**
 	 * The cached value of the '{@link #getParameterDataType() <em>Parameter Data Type</em>}' attribute.
@@ -203,7 +204,7 @@ public class ParameterImpl extends MinimalEObjectImpl.Container implements Param
 	 * @generated
 	 * @ordered
 	 */
-	protected String parameterDataType = PARAMETER_DATA_TYPE_EDEFAULT;
+	protected ParameterType parameterDataType = PARAMETER_DATA_TYPE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getParameterSource() <em>Parameter Source</em>}' attribute.
@@ -546,7 +547,7 @@ public class ParameterImpl extends MinimalEObjectImpl.Container implements Param
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getParameterDataType() {
+	public ParameterType getParameterDataType() {
 		return parameterDataType;
 	}
 
@@ -555,9 +556,9 @@ public class ParameterImpl extends MinimalEObjectImpl.Container implements Param
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setParameterDataType(String newParameterDataType) {
-		String oldParameterDataType = parameterDataType;
-		parameterDataType = newParameterDataType;
+	public void setParameterDataType(ParameterType newParameterDataType) {
+		ParameterType oldParameterDataType = parameterDataType;
+		parameterDataType = newParameterDataType == null ? PARAMETER_DATA_TYPE_EDEFAULT : newParameterDataType;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.PARAMETER__PARAMETER_DATA_TYPE, oldParameterDataType, parameterDataType));
 	}
@@ -845,7 +846,7 @@ public class ParameterImpl extends MinimalEObjectImpl.Container implements Param
 				setParameterUnitCategory((String)newValue);
 				return;
 			case MetadataPackage.PARAMETER__PARAMETER_DATA_TYPE:
-				setParameterDataType((String)newValue);
+				setParameterDataType((ParameterType)newValue);
 				return;
 			case MetadataPackage.PARAMETER__PARAMETER_SOURCE:
 				setParameterSource((String)newValue);
@@ -964,7 +965,7 @@ public class ParameterImpl extends MinimalEObjectImpl.Container implements Param
 			case MetadataPackage.PARAMETER__PARAMETER_UNIT_CATEGORY:
 				return PARAMETER_UNIT_CATEGORY_EDEFAULT == null ? parameterUnitCategory != null : !PARAMETER_UNIT_CATEGORY_EDEFAULT.equals(parameterUnitCategory);
 			case MetadataPackage.PARAMETER__PARAMETER_DATA_TYPE:
-				return PARAMETER_DATA_TYPE_EDEFAULT == null ? parameterDataType != null : !PARAMETER_DATA_TYPE_EDEFAULT.equals(parameterDataType);
+				return parameterDataType != PARAMETER_DATA_TYPE_EDEFAULT;
 			case MetadataPackage.PARAMETER__PARAMETER_SOURCE:
 				return PARAMETER_SOURCE_EDEFAULT == null ? parameterSource != null : !PARAMETER_SOURCE_EDEFAULT.equals(parameterSource);
 			case MetadataPackage.PARAMETER__PARAMETER_SUBJECT:

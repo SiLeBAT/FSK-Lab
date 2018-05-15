@@ -56,6 +56,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.URIS;
@@ -63,12 +64,16 @@ import de.bund.bfr.fskml.sedml.SourceScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import de.bund.bfr.knime.fsklab.rakip.Parameter;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
 import de.unirostock.sems.cbarchive.meta.MetaDataObject;
+import metadata.DataBackground;
+import metadata.GeneralInformation;
+import metadata.ModelMath;
+import metadata.Parameter;
+import metadata.ParameterClassification;
+import metadata.Scope;
 
 class WriterNodeModel extends NoInternalsModel {
 
@@ -154,7 +159,8 @@ class WriterNodeModel extends NoInternalsModel {
       }
 
       // Adds model metadata
-      addMetaData(archive, fskObj.genericModel, "metaData.json");
+      addMetaData(archive, fskObj.generalInformation, fskObj.scope, fskObj.dataBackground,
+          fskObj.modelMath, "metaData.json");
 
       // Gets library URI for the running platform
       final URI libUri = NodeUtils.getLibURI();
@@ -211,15 +217,22 @@ class WriterNodeModel extends NoInternalsModel {
     return entry;
   }
 
-  private static ArchiveEntry addMetaData(final CombineArchive archive,
-      final GenericModel genericModel, final String filename)
-      throws IOException, URISyntaxException {
+  private static ArchiveEntry addMetaData(CombineArchive archive,
+      GeneralInformation generalInformation, Scope scope, DataBackground dataBackground,
+      ModelMath modelMath, String filename) throws IOException {
+    
+    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    
+    ObjectNode modelNode = mapper.createObjectNode();
+    modelNode.set("generalInformation", mapper.valueToTree(generalInformation));
+    modelNode.set("scope", mapper.valueToTree(scope));
+    modelNode.set("dataBackground", mapper.valueToTree(dataBackground));
+    modelNode.set("modelMath", mapper.valueToTree(modelMath));
 
-    final File file = File.createTempFile("temp", ".json");
-    final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    objectMapper.writeValue(file, genericModel);
+    File file = File.createTempFile("temp", ".json");
+    mapper.writeValue(file, modelNode);
 
-    final ArchiveEntry entry = archive.addEntry(file, filename, URIS.json);
+    ArchiveEntry entry = archive.addEntry(file, filename, URIS.json);
     file.delete();
 
     return entry;
@@ -230,13 +243,14 @@ class WriterNodeModel extends NoInternalsModel {
     SEDMLDocument doc = Libsedml.createDocument();
     SedML sedml = doc.getSedMLModel();
 
-    for (Parameter param : portObj.genericModel.modelMath.parameter) {
+    for (Parameter param : portObj.modelMath.getParameter()) {
       // Ignore not output parameters (inputs or constants)
-      if (!param.classification.equals("Constant"))
+      if (param.getParameterClassification() != ParameterClassification.CONSTANT) {
         continue;
+      }
 
-      ASTNode node = Libsedml.parseFormulaString(param.id);
-      DataGenerator dg = new DataGenerator(param.id, "", node);
+      ASTNode node = Libsedml.parseFormulaString(param.getParameterID());
+      DataGenerator dg = new DataGenerator(param.getParameterID(), "", node);
       sedml.addDataGenerator(dg);
     }
 

@@ -41,79 +41,7 @@
     "description": {
       "type": "string"
     },
-    "creators": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "Title": {
-            "type": "string"
-          },
-          "familyName": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "telephone": {
-            "type": "string"
-          },
-          "streetAddress": {
-            "type": "string"
-          },
-          "extendedAddress": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "ZIPCode": {
-            "type": "string"
-          },
-          "postOfficeBox": {
-            "type": "string"
-          },
-          "region": {
-            "type": "string"
-          },
-          "nickName": {
-            "type": "string"
-          },
-          "timeZone": {
-            "type": "string"
-          },
-          "gender": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "url": {
-            "type": "string"
-          },
-          "note": {
-            "type": "string"
-          },
-          "logo": {
-            "type": "string"
-          },
-          "organization": {
-            "type": "string"
-          },
-          "fn": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false,
-        "required": [
-          "email"
-        ]
-      }
-    },
-    "modelcategory": {
+    "modelCategory": {
       "type": "array",
       "items": {
         "type": "object",
@@ -145,12 +73,175 @@
       "items": {
         "type": "object",
         "properties": {
-          "modificationDate": {
+          "value": {
             "type": "string",
             "format": "date-time"
           }
         },
         "additionalProperties": false
+      }
+    },
+    "author": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "familyName": {
+          "type": "string"
+        },
+        "givenName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "telephone": {
+          "type": "string"
+        },
+        "streetAddress": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "zipCode": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "organization": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "email"
+      ]
+    },
+    "reference": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "isReferenceDescription": {
+            "type": "boolean"
+          },
+          "publicationType": {
+            "type": "string",
+            "enum": [
+              "ABST",
+              "ADVS",
+              "AGGR",
+              "ANCIENT",
+              "ART",
+              "BILL",
+              "BLOG",
+              "BOOK",
+              "CASE",
+              "CHAP",
+              "CHART",
+              "CLSWK",
+              "COMP",
+              "CONF",
+              "CPAPER",
+              "CTLG",
+              "DATA",
+              "DBASE",
+              "DICT",
+              "EBOOK",
+              "ECHAP",
+              "EDBOOK",
+              "EJOUR",
+              "ELECT",
+              "ENCYC",
+              "EQUA",
+              "FIGURE",
+              "GEN",
+              "GOVDOC",
+              "GRANT",
+              "HEAR",
+              "ICOMM",
+              "INPR",
+              "JFULL",
+              "LEGAL",
+              "MANSCPT",
+              "MAP",
+              "MGZN",
+              "MPCT",
+              "MULTI",
+              "MUSIC",
+              "NEWS",
+              "PAMP",
+              "PAT",
+              "PCOMM",
+              "RPRT",
+              "SER",
+              "SLIDE",
+              "SOUND",
+              "STAND",
+              "STAT",
+              "THES",
+              "UNPB",
+              "VIDEO"
+            ]
+          },
+          "publicationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pmid": {
+            "type": "string"
+          },
+          "doi": {
+            "type": "string"
+          },
+          "authorList": {
+            "type": "string"
+          },
+          "publicationTitle": {
+            "type": "string"
+          },
+          "publicationAbstract": {
+            "type": "string"
+          },
+          "publicationJournal": {
+            "type": "string"
+          },
+          "publicationVolume": {
+            "type": "integer"
+          },
+          "publicationIssue": {
+            "type": "integer"
+          },
+          "publicationStatus": {
+            "type": "string"
+          },
+          "publicationWebsite": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "isReferenceDescription",
+          "publicationTitle"
+        ]
       }
     }
   },
@@ -158,6 +249,9 @@
   "required": [
     "name",
     "identifier",
-    "rights"
+    "creationDate",
+    "rights",
+    "author",
+    "reference"
   ]
 }

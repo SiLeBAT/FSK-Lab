@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_Q6b84Eh5EeiIoYnPwpYKNg" name="ModelEquation" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_54ssoFNaEeiq2ZPtzKZg8g" name="ModelEquation" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
   <rootEClass href="http://www.example.org/metadata#//ModelEquation"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q6b84Uh5EeiIoYnPwpYKNg" name="Control equationName">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q6b84kh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelEquation/equationName"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_54vv8FNaEeiq2ZPtzKZg8g" name="Control modelEquationName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_54vv8VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelEquation/modelEquationName"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q6b840h5EeiIoYnPwpYKNg" name="Control equationClass">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q6b85Eh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelEquation/equationClass"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_54vv8lNaEeiq2ZPtzKZg8g" name="Control modelEquationClass">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_54vv81NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelEquation/modelEquationClass"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q6b85Uh5EeiIoYnPwpYKNg" name="Control equation">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q6b85kh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelEquation/equation"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_54vv9FNaEeiq2ZPtzKZg8g" name="Control modelEquation">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_54vv9VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelEquation/modelEquation"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_54vv9lNaEeiq2ZPtzKZg8g" name="Control hypothesisOfTheModel">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_54vv91NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//ModelEquation/hypothesisOfTheModel"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_54vv-FNaEeiq2ZPtzKZg8g" name="Control reference">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_54vv-VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//ModelEquation/reference"/>
     </domainModelReference>
   </children>
 </org.eclipse.emf.ecp.view.model:View>

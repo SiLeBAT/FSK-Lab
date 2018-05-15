@@ -1,84 +1,94 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_QQwGsEh5EeiIoYnPwpYKNg" name="GeneralInformation" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_5OCmEFNaEeiq2ZPtzKZg8g" name="GeneralInformation" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
   <rootEClass href="http://www.example.org/metadata#//GeneralInformation"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGsUh5EeiIoYnPwpYKNg" name="Control name">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGskh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvIFNaEeiq2ZPtzKZg8g" name="Control name">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvIVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/name"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGs0h5EeiIoYnPwpYKNg" name="Control source">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGtEh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvIlNaEeiq2ZPtzKZg8g" name="Control source">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvI1NaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/source"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGtUh5EeiIoYnPwpYKNg" name="Control identifier">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGtkh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvJFNaEeiq2ZPtzKZg8g" name="Control identifier">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvJVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/identifier"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGt0h5EeiIoYnPwpYKNg" name="Control creationDate">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGuEh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvJlNaEeiq2ZPtzKZg8g" name="Control creationDate">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvJ1NaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/creationDate"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGuUh5EeiIoYnPwpYKNg" name="Control rights">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGukh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvKFNaEeiq2ZPtzKZg8g" name="Control rights">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvKVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/rights"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGu0h5EeiIoYnPwpYKNg" name="Control available">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGvEh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvKlNaEeiq2ZPtzKZg8g" name="Control available">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvK1NaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/available"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGvUh5EeiIoYnPwpYKNg" name="Control format">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGvkh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvLFNaEeiq2ZPtzKZg8g" name="Control format">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvLVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/format"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGv0h5EeiIoYnPwpYKNg" name="Control language">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGwEh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvLlNaEeiq2ZPtzKZg8g" name="Control language">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvL1NaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/language"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGwUh5EeiIoYnPwpYKNg" name="Control software">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGwkh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvMFNaEeiq2ZPtzKZg8g" name="Control software">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvMVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/software"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGw0h5EeiIoYnPwpYKNg" name="Control languageWrittenIn">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGxEh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvMlNaEeiq2ZPtzKZg8g" name="Control languageWrittenIn">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvM1NaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/languageWrittenIn"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGxUh5EeiIoYnPwpYKNg" name="Control status">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGxkh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvNFNaEeiq2ZPtzKZg8g" name="Control status">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvNVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/status"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGx0h5EeiIoYnPwpYKNg" name="Control objective">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGyEh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvNlNaEeiq2ZPtzKZg8g" name="Control objective">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvN1NaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/objective"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGyUh5EeiIoYnPwpYKNg" name="Control description">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGykh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvOFNaEeiq2ZPtzKZg8g" name="Control description">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvOVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//GeneralInformation/description"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGy0h5EeiIoYnPwpYKNg" name="Control creators">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGzEh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvOlNaEeiq2ZPtzKZg8g" name="Control modelCategory">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvO1NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//GeneralInformation/modelCategory"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvPFNaEeiq2ZPtzKZg8g" name="Control modificationdate">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvPVNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//GeneralInformation/modificationdate"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvPlNaEeiq2ZPtzKZg8g" name="Control author">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvP1NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//GeneralInformation/author"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvQFNaEeiq2ZPtzKZg8g" name="Control creators">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvQVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//GeneralInformation/creators"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGzUh5EeiIoYnPwpYKNg" name="Control modelcategory">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwGzkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//GeneralInformation/modelcategory"/>
-    </domainModelReference>
-  </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QQwGz0h5EeiIoYnPwpYKNg" name="Control modificationdate">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QQwG0Eh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//GeneralInformation/modificationdate"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5OWvQlNaEeiq2ZPtzKZg8g" name="Control reference">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5OWvQ1NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EReference" href="http://www.example.org/metadata#//GeneralInformation/reference"/>
     </domainModelReference>
   </children>
 </org.eclipse.emf.ecp.view.model:View>

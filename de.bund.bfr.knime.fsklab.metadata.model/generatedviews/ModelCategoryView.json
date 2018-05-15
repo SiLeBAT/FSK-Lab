@@ -3,22 +3,22 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Model Class",
+      "label": "modelClass",
       "scope": "#/properties/modelClass"
     },
     {
       "type": "Control",
-      "label": "Model Sub Class",
+      "label": "modelSubClass",
       "scope": "#/properties/modelSubClass"
     },
     {
       "type": "Control",
-      "label": "Model Class Comment",
+      "label": "modelClassComment",
       "scope": "#/properties/modelClassComment"
     },
     {
       "type": "Control",
-      "label": "Basic Process",
+      "label": "basicProcess",
       "scope": "#/properties/basicProcess"
     }
   ]

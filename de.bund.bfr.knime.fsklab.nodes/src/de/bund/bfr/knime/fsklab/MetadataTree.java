@@ -1,733 +1,67 @@
 package de.bund.bfr.knime.fsklab;
 
 import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.EList;
-import com.gmail.gcolaianni5.jris.bean.Record;
-import com.gmail.gcolaianni5.jris.bean.Type;
 import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
-import de.bund.bfr.knime.fsklab.rakip.Assay;
-import de.bund.bfr.knime.fsklab.rakip.DataBackground;
-import de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod;
-import de.bund.bfr.knime.fsklab.rakip.GeneralInformation;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import de.bund.bfr.knime.fsklab.rakip.Hazard;
-import de.bund.bfr.knime.fsklab.rakip.Laboratory;
-import de.bund.bfr.knime.fsklab.rakip.ModelEquation;
-import de.bund.bfr.knime.fsklab.rakip.ModelMath;
-import de.bund.bfr.knime.fsklab.rakip.Parameter;
-import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
-import de.bund.bfr.knime.fsklab.rakip.Product;
-import de.bund.bfr.knime.fsklab.rakip.Scope;
-import de.bund.bfr.knime.fsklab.rakip.Study;
-import de.bund.bfr.knime.fsklab.rakip.StudySample;
-import ezvcard.VCard;
-import ezvcard.property.StructuredName;
+import metadata.Assay;
 import metadata.Contact;
+import metadata.DataBackground;
+import metadata.DietaryAssessmentMethod;
+import metadata.Exposure;
+import metadata.GeneralInformation;
+import metadata.Hazard;
+import metadata.Laboratory;
+import metadata.MetadataPackage;
 import metadata.ModelCategory;
+import metadata.ModelEquation;
+import metadata.ModelMath;
 import metadata.ModificationDate;
-import metadata.PublicationType;
+import metadata.Parameter;
+import metadata.PopulationGroup;
+import metadata.Product;
 import metadata.Reference;
+import metadata.Scope;
+import metadata.SpatialInformation;
+import metadata.Study;
+import metadata.StudySample;
 
 class MetadataTree {
 
   private static ResourceBundle bundle =
-      ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
-  private static ResourceBundle bundle2 =
       ResourceBundle.getBundle("metadatatree", new UTF8Control());
 
-  /**
-   * Create a tree node for a string property and add it to a passed node. If the value is
-   * {@code null} or blank then no new node is added.
-   * 
-   * @param node Existing node where the new node is added. Cannot be {@code null}.
-   * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
-   *        or blank.
-   * @param value Can be {@code null} or blank.
-   */
-  private static void add(final DefaultMutableTreeNode node, final String key, final String value) {
-    if (StringUtils.isNotBlank(value)) {
-      final String label = bundle.getString(key);
-      node.add(new DefaultMutableTreeNode(label + ": " + value));
-    }
-  }
+  static JTree createTree(GeneralInformation generalInformation, Scope scope,
+      DataBackground dataBackground, ModelMath modelMath) {
 
-  /**
-   * Create a tree node for a date property and add it to a passed node. If the value is
-   * {@code null} then no new node is added. The date is formatted with the 'yyyy-MM-dd' format.
-   * 
-   * @param node Existing node where the new node is added. Cannot be {@code null}.
-   * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
-   *        or blank.
-   * @param date Cannnot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final String key, final Date date) {
-    final String label = bundle.getString(key);
-    final String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
-    node.add(new DefaultMutableTreeNode(label + ": " + dateStr));
-  }
-
-  /**
-   * Create a tree node for a Double property and add it to a passed node. If the value is
-   * {@code null} then no new node is added.
-   * 
-   * @param node Existing node where the new node is added. Cannot be {@code null}.
-   * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
-   *        or blank.
-   * @param value double
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final String key, final double value) {
-    final String label = bundle.getString(key);
-    node.add(new DefaultMutableTreeNode(label + ": " + value));
-  }
-
-  /**
-   * Create a tree node for a {@code List<String>} property and add it to a passed node. If the
-   * value is {@code null} or empty then no new node is added.
-   * 
-   * @param node Existing node where the new node is added. Cannot be {@code null}.
-   * @param key Key in resource bundle for the string label of the property. Cannot be {@code null}
-   *        or blank.
-   * @param value Can be null or empty.
-   */
-  private static void add(final DefaultMutableTreeNode node, final String key,
-      final List<String> value) {
-
-    if (value != null && !value.isEmpty()) {
-      final String label = bundle.getString(key);
-      final DefaultMutableTreeNode listNode = new DefaultMutableTreeNode(label);
-      value.stream().map(DefaultMutableTreeNode::new).forEach(listNode::add);
-      node.add(listNode);
-    }
-  }
-
-  /**
-   * Creates and adds a number of tree nodes with several properties of a passed Record object. If
-   * the passed record is null then no nodes are added.
-   * <p>
-   * The Record properties to be added are: type, date, authors, title, abstract, volume, issue and
-   * website.
-   * 
-   * @param node Existing node where the new nodes for the properties are added. Cannot be
-   *        {@code null}.
-   * @param record Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final Record record) {
-
-    final String prefix = "EditReferencePanel_";
-
-    // isReferenceDescription is not supported
-
-    final Type recordType = record.getType();
-    if (recordType != null) {
-      add(node, prefix + "typeLabel", recordType.toString());
+    DefaultMutableTreeNode generalInformationNode =
+        new DefaultMutableTreeNode(bundle.getString("GeneralInformation"));
+    if (generalInformation != null) {
+      add(generalInformationNode, generalInformation);
     }
 
-    final String date = record.getDate();
-    add(node, prefix + "dateLabel", date);
-
-    // PubMedId is not supported
-
-    List<String> authors = record.getAuthors();
-    if (authors != null && !authors.isEmpty()) {
-      add(node, prefix + "authorListLabel", authors);
+    DefaultMutableTreeNode scopeNode = new DefaultMutableTreeNode(bundle.getString("Scope"));
+    if (scope != null) {
+      add(scopeNode, scope);
     }
 
-    final String title = record.getTitle();
-    add(node, prefix + "titleLabel", title);
-
-    final String abstr = record.getAbstr();
-    add(node, prefix + "abstractLabel", abstr);
-
-    final String secondaryTitle = record.getSecondaryTitle();
-    add(node, prefix + "journalLabel", secondaryTitle);
-
-    final String volumeNumber = record.getVolumeNumber();
-    add(node, prefix + "volumeLabel", volumeNumber);
-
-    final Integer issueNumber = record.getIssueNumber();
-    if (issueNumber != null) {
-      add(node, prefix + "issueLabel", issueNumber.toString());
+    DefaultMutableTreeNode dataBackgroundNode =
+        new DefaultMutableTreeNode(bundle.getString("DataBackground"));
+    if (dataBackground != null) {
+      add(dataBackgroundNode, dataBackground);
     }
 
-    // page not supported
-
-    // status not supported
-
-    final String websiteLink = record.getWebsiteLink();
-    add(node, prefix + "websiteLabel", websiteLink);
-
-    // comment not supported
-  }
-
-  /**
-   * Create and add a number of tree nodes with several properties of a passed {@code VCard} object.
-   * If the passed {@code VCard} object is {@code null} the no nodes are added.
-   * <p>
-   * The {@code VCard} properties to be added are:
-   * <ul>
-   * <li>Nickname as given name
-   * <li>Formatted name as family name
-   * <li>First e-mail as contact information
-   * </ul>
-   * 
-   * @param node Existing node where the new nodes for the properties are added. Cannot be
-   *        {@code null}.
-   * @param vcard Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final VCard vcard) {
-    final String prefix = "EditCreatorPanel_";
-
-    StructuredName structuredName = vcard.getStructuredName();
-    if (structuredName != null) {
-      add(node, prefix + "givenNameLabel", structuredName.getGiven());
-      add(node, prefix + "familyNameLabel", structuredName.getFamily());
+    DefaultMutableTreeNode modelMathNode =
+        new DefaultMutableTreeNode(bundle.getString("ModelMath"));
+    if (modelMath != null) {
+      add(modelMathNode, modelMath);
     }
 
-    if (!vcard.getEmails().isEmpty()) {
-      final String value = vcard.getEmails().get(0).toString();
-      add(node, prefix + "contactLabel", value);
-    }
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code Product} and adds them to a passed
-   * tree node. If the passed {@code Product} is {@code null} then no nodes are added.
-   * 
-   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
-   * @param product Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final Product product) {
-
-    final String prefix = "EditProductPanel_";
-
-    add(node, prefix + "envNameLabel", product.environmentName);
-    add(node, prefix + "envDescriptionLabel", product.environmentDescription);
-    add(node, prefix + "envUnitLabel", product.environmentUnit);
-
-    add(node, prefix + "productionMethodLabel", product.productionMethod);
-    add(node, prefix + "originCountryLabel", product.originCountry);
-    add(node, prefix + "originAreaLabel", product.originArea);
-    add(node, prefix + "fisheriesAreaLabel", product.fisheriesArea);
-    if (product.productionDate != null) {
-      add(node, prefix + "productionDateLabel", product.productionDate);
-    }
-    if (product.expirationDate != null) {
-      add(node, prefix + "expirationDateLabel", product.expirationDate);
-    }
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code Hazard} and adds them to a passed tree
-   * node. If the passed {@code Hazard} is {@code null} then no nodes are added.
-   * 
-   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
-   * @param hazard Can be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final Hazard hazard) {
-
-    final String prefix = "EditHazardPanel_";
-
-    add(node, prefix + "hazardTypeLabel", hazard.hazardType);
-    add(node, prefix + "hazardNameLabel", hazard.hazardName);
-    add(node, prefix + "hazardDescriptionLabel", hazard.hazardDescription);
-    add(node, prefix + "hazardUnitLabel", hazard.hazardUnit);
-    add(node, prefix + "adverseEffectLabel", hazard.adverseEffect);
-    add(node, prefix + "originLabel", hazard.sourceOfContamination);
-    add(node, prefix + "bmdLabel", hazard.bmd);
-    add(node, prefix + "maxResidueLimitLabel", hazard.mrl);
-    add(node, prefix + "noObservedAdverseLabel", hazard.noael);
-    add(node, prefix + "lowestObserveLabel", hazard.loael);
-    add(node, prefix + "acceptableOperatorLabel", hazard.aoel);
-    add(node, prefix + "acuteReferenceDoseLabel", hazard.ard);
-    add(node, prefix + "acceptableDailyIntakeLabel", hazard.adi);
-    add(node, prefix + "indSumLabel", hazard.hazardIndSum);
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code PopulationGroup} and adds them to a
-   * passed tree node. If the passed {@code PopulationGroup} is {@code null} then no nodes are
-   * added.
-   * 
-   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
-   * @param populationGroup Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node,
-      final PopulationGroup populationGroup) {
-
-    final String prefix = "EditPopulationGroupPanel_";
-
-    add(node, prefix + "populationNameLabel", populationGroup.populationName);
-    add(node, prefix + "populationSpanLabel", populationGroup.populationSpan);
-    add(node, prefix + "populationDescriptionLabel", populationGroup.populationDescription);
-    add(node, prefix + "populationAgeLabel", populationGroup.populationAge);
-    add(node, prefix + "populationGenderLabel", populationGroup.populationGender);
-    add(node, prefix + "bmiLabel", populationGroup.bmi);
-    add(node, prefix + "specialDietGroupsLabel", populationGroup.specialDietGroups);
-    add(node, prefix + "patternConsumptionLabel", populationGroup.specialDietGroups);
-    add(node, prefix + "regionLabel", populationGroup.region);
-    add(node, prefix + "countryLabel", populationGroup.country);
-    add(node, prefix + "riskAndPopulationLabel", populationGroup.populationRiskFactor);
-    add(node, prefix + "seasonLabel", populationGroup.season);
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code GeneralInformation} and adds them to a
-   * passed tree node. If the passed {@code GeneralInformation} is {@code null} then no nodes are
-   * added.
-   * 
-   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
-   * @param generalInformation Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node,
-      final GeneralInformation generalInformation) {
-
-    final String prefix = "GeneralInformationPanel_";
-
-    add(node, prefix + "studyNameLabel", generalInformation.name);
-    add(node, prefix + "sourceLabel", generalInformation.source);
-    add(node, prefix + "identifierLabel", generalInformation.identifier);
-
-    // Remove null values in list
-    final List<VCard> creators =
-        generalInformation.creators.stream().filter(Objects::nonNull).collect(Collectors.toList());
-    if (!creators.isEmpty()) {
-      // Parent node that holds all the creators
-      final DefaultMutableTreeNode creatorsNode = new DefaultMutableTreeNode("Creators");
-
-      for (final VCard creator : creators) {
-        final DefaultMutableTreeNode creatorNode = new DefaultMutableTreeNode("Creator");
-        add(creatorNode, creator);
-        creatorsNode.add(creatorNode);
-      }
-
-      node.add(creatorsNode);
-    }
-
-    if (generalInformation.creationDate != null) {
-      add(node, prefix + "creationDateLabel", generalInformation.creationDate);
-    }
-
-    // Remove null values in list
-    final List<Date> modificationDate = generalInformation.modificationDate.stream()
-        .filter(Objects::nonNull).collect(Collectors.toList());
-    if (!modificationDate.isEmpty()) {
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Modification dates");
-      for (final Date date : modificationDate) {
-        add(parentNode, prefix + "modificationDateLabel", date);
-      }
-    }
-
-    add(node, prefix + "rightsLabel", generalInformation.rights);
-
-    // TODO: isAvailable
-
-    add(node, prefix + "urlLabel",
-        generalInformation.url != null ? generalInformation.url.toString() : "");
-
-    // Remove null values in list
-    final List<Record> reference =
-        generalInformation.reference.stream().filter(Objects::nonNull).collect(Collectors.toList());
-    if (!reference.isEmpty()) {
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("References");
-      for (final Record record : reference) {
-        final DefaultMutableTreeNode refNode = new DefaultMutableTreeNode("Reference");
-        add(refNode, record);
-        parentNode.add(refNode);
-      }
-      node.add(parentNode);
-    }
-
-    add(node, prefix + "languageLabel", generalInformation.language);
-    add(node, prefix + "softwareLabel", generalInformation.software);
-    add(node, prefix + "languageWrittenInLabel", generalInformation.languageWrittenIn);
-    add(node, prefix + "statusLabel", generalInformation.status);
-    add(node, prefix + "objectiveLabel", generalInformation.objective);
-    add(node, prefix + "descriptionLabel", generalInformation.description);
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed Scope. If the passed Scope is {@code null}
-   * then no nodes are added.
-   * 
-   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
-   * @param scope Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final Scope scope) {
-
-    final String prefix = "ScopePanel_";
-
-    {
-      final String key = prefix + "productLabel";
-      final String label = bundle.getString(key);
-
-      // Create productNode
-      final DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(label);
-      final Product product = scope.product;
-      if (product != null) {
-        add(productNode, product);
-      }
-
-      node.add(productNode);
-    }
-
-    {
-      final String key = prefix + "hazardLabel";
-      final String label = bundle.getString(key);
-
-      // Create hazardNode
-      final DefaultMutableTreeNode hazardNode = new DefaultMutableTreeNode(label);
-      final Hazard hazard = scope.hazard;
-      if (hazard != null) {
-        add(hazardNode, hazard);
-      }
-
-      node.add(hazardNode);
-    }
-
-    {
-      final DefaultMutableTreeNode pgNode = new DefaultMutableTreeNode("Population group");
-      final PopulationGroup populationGroup = scope.populationGroup;
-      if (populationGroup != null) {
-        add(pgNode, populationGroup);
-      }
-      node.add(pgNode);
-    }
-
-    add(node, prefix + "commentLabel", scope.generalComment);
-    add(node, prefix + "temporalInformationLabel", scope.temporalInformation);
-    add(node, prefix + "regionLabel", scope.region);
-    add(node, prefix + "countryLabel", scope.country);
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code DataBackground} and adds them to a
-   * passed tree node. If the passed {@code DataBackground} is {@code null} then no nodes are added.
-   * 
-   * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param dataBackground Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final DataBackground dataBackground) {
-
-    final String prefix = "DataBackgroundPanel_";
-
-    final Study study = dataBackground.study;
-    if (study != null) {
-      final DefaultMutableTreeNode studyNode = new DefaultMutableTreeNode("Study");
-      add(studyNode, study);
-      node.add(studyNode);
-    }
-
-    final StudySample studySample = dataBackground.studySample;
-    if (studySample != null) {
-      final String key = prefix + "studySampleLabel";
-      final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode sampleNode = new DefaultMutableTreeNode(label);
-      add(sampleNode, studySample);
-      node.add(sampleNode);
-    }
-
-    final DietaryAssessmentMethod dietaryAssessmentMethod = dataBackground.dietaryAssessmentMethod;
-    if (dietaryAssessmentMethod != null) {
-      final String key = prefix + "dietaryAssessmentMethodLabel";
-      final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode damNode = new DefaultMutableTreeNode(label);
-      add(damNode, dietaryAssessmentMethod);
-      node.add(damNode);
-    }
-
-    final Laboratory lab = dataBackground.laboratory;
-    if (lab != null) {
-      final String key = prefix + "laboratoryLabel";
-      final String label = bundle.getString(key);
-
-      final DefaultMutableTreeNode labNode = new DefaultMutableTreeNode(label);
-      add(labNode, lab);
-      node.add(labNode);
-    }
-
-    final Assay assay = dataBackground.assay;
-    if (assay != null) {
-      final String key = prefix + "assayLabel";
-      final String label = bundle.getString(key);
-      final DefaultMutableTreeNode assayNode = new DefaultMutableTreeNode(label);
-      add(assayNode, assay);
-      node.add(assayNode);
-    }
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code Study} and adds them to a passed tree
-   * node. If the passed {@code Study} is {@code null} then no nodes are added.
-   * 
-   * @param node Existing node where the properties nodes are added. Cannot be {@code null}.
-   * @param study Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final Study study) {
-
-    final String prefix = "StudyPanel_";
-
-    add(node, prefix + "studyTitleLabel", study.title);
-    add(node, prefix + "studyDescriptionLabel", study.description);
-    add(node, prefix + "studyDesignTypeLabel", study.designType);
-    add(node, prefix + "studyAssayMeasurementsTypeLabel", study.measurementType);
-    add(node, prefix + "studyAssayTechnologyTypeLabel", study.technologyType);
-    add(node, prefix + "studyAssayTechnologyPlatformLabel", study.technologyPlatform);
-    add(node, prefix + "accreditationProcedureLabel", study.accreditationProcedure);
-    add(node, prefix + "protocolNameLabel", study.protocolName);
-    add(node, prefix + "protocolTypeLabel", study.protocolType);
-    add(node, prefix + "protocolDescriptionLabel", study.protocolDescription);
-
-    final URI protocolUri = study.protocolUri;
-    if (protocolUri != null) {
-      final String value = protocolUri.toString();
-      add(node, prefix + "protocolURILabel", value);
-    }
-
-    add(node, prefix + "protocolVersionLabel", study.protocolVersion);
-    add(node, prefix + "parametersLabel", study.parametersName);
-    add(node, prefix + "componentsTypeLabel", study.componentsType);
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code StudySample} and adds them to a passed
-   * tree node. If the passed {@code StudySample} is {@code null} then no nodes are added.
-   * 
-   * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param studySample Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final StudySample studySample) {
-
-    final String prefix = "EditStudySamplePanel_";
-
-    add(node, prefix + "sampleNameLabel", studySample.sample);
-    if (studySample.collectionProtocol != null) {
-      add(node, prefix + "sampleProtocolLabel", studySample.collectionProtocol);
-    }
-    add(node, prefix + "samplingStrategyLabel", studySample.samplingStrategy);
-    add(node, prefix + "samplingTypeLabel", studySample.samplingProgramType);
-    add(node, prefix + "samplingMethodLabel", studySample.samplingMethod);
-    add(node, prefix + "samplingPlanLabel", studySample.samplingPlan);
-    add(node, prefix + "samplingWeightLabel", studySample.samplingWeight);
-    add(node, prefix + "samplingSizeLabel", studySample.samplingSize);
-    add(node, prefix + "lotSizeUnitLabel", studySample.lotSizeUnit);
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code DietaryAssessmentMethod} and adds them
-   * to a passed tree node. If the passed {@code DietaryAssessmentMethod} is {@code null} then no
-   * nodes are added.
-   * 
-   * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param method Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final DietaryAssessmentMethod method) {
-
-    // Prefix in resource bundle
-    final String prefix = "EditDietaryAssessmentMethodPanel_";
-
-    add(node, prefix + "dataCollectionToolLabel", method.collectionTool);
-    add(node, prefix + "nonConsecutiveOneDaysLabel",
-        Integer.toString(method.numberOfNonConsecutiveOneDay));
-    add(node, prefix + "dietarySoftwareToolLabel", method.softwareTool);
-    add(node, prefix + "foodItemNumberLabel", method.numberOfFoodItems);
-    add(node, prefix + "recordTypeLabel", method.recordTypes);
-    add(node, prefix + "foodDescriptorsLabel", method.foodDescriptors);
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code Assay} and adds them to a passed tree
-   * node. If the passed {@code Assay} is {@code null} then no nodes are added.
-   * 
-   * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param assay Cannot be {@code null}.
-   */
-  private static void add(final DefaultMutableTreeNode node, final Assay assay) {
-    final String prefix = "EditAssayPanel_";
-    add(node, prefix + "nameLabel", assay.name);
-    add(node, prefix + "descriptionLabel", assay.description);
-    add(node, prefix + "moisturePercentageLabel", assay.moisturePercentage);
-    add(node, prefix + "detectionLimitLabel", assay.detectionLimit);
-    add(node, prefix + "quantificationLimitLabel", assay.quantificationLimit);
-    add(node, prefix + "leftCensoredDataLabel", assay.leftCensoredData);
-    add(node, prefix + "contaminationRangeLabel", assay.contaminationRange);
-    add(node, prefix + "uncertaintyLabel", assay.uncertaintyValue);
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code Laboratory} and adds them to a passed
-   * tree node. If the passed {@code Laboratory} is {@code null} then no nodes are added.
-   * 
-   * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param laboratory Cannot be {@code null}.
-   */
-  private static void add(final DefaultMutableTreeNode node, final Laboratory laboratory) {
-    final String prefix = "EditLaboratoryPanel_";
-    add(node, prefix + "accreditationLabel", laboratory.accreditation);
-    add(node, prefix + "nameLabel", laboratory.name);
-    add(node, prefix + "countryLabel", laboratory.country);
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code Parameter} and adds them to a passed
-   * tree node. If the passed {@code Parameter} is {@code null} then no nodes are added.
-   * 
-   * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param parameter Cannot be {@code null}.
-   */
-  private static void add(final DefaultMutableTreeNode node, final Parameter parameter) {
-
-    final String prefix = "EditParameterPanel_";
-
-    add(node, prefix + "idLabel", parameter.id);
-    add(node, prefix + "classificationLabel", parameter.classification.toString());
-    add(node, prefix + "parameterNameLabel", parameter.name);
-    add(node, prefix + "descriptionLabel", parameter.description);
-    add(node, prefix + "unitLabel", parameter.unit);
-    add(node, prefix + "unitCategoryLabel", parameter.unitCategory);
-    add(node, prefix + "dataTypeLabel", parameter.dataType.toString());
-    add(node, prefix + "sourceLabel", parameter.source);
-    add(node, prefix + "subjectLabel", parameter.subject);
-    add(node, prefix + "distributionLabel", parameter.distribution);
-    add(node, prefix + "valueLabel", parameter.value);
-    add(node, prefix + "referenceLabel", parameter.reference);
-    add(node, prefix + "variabilitySubjectLabel", parameter.variabilitySubject);
-    add(node, prefix + "applicabilityLabel", parameter.modelApplicability);
-    if (parameter.error != null) {
-      add(node, prefix + "errorLabel", parameter.error.doubleValue());
-    }
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code ModelEquation} and adds them to a
-   * passed tree node. If the passed {@code ModelEquation} is {@code null} then no nodes are added.
-   * 
-   * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param modelEquation Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final ModelEquation modelEquation) {
-
-    final String prefix = "EditModelEquationPanel_";
-
-    add(node, prefix + "nameLabel", modelEquation.equationName);
-    add(node, prefix + "classLabel", modelEquation.equationClass);
-
-    final List<Record> equationReference = modelEquation.equationReference.stream()
-        .filter(Objects::nonNull).collect(Collectors.toList());
-    if (!equationReference.isEmpty()) {
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("References");
-      for (final Record ref : equationReference) {
-        final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode("Reference");
-        add(childNode, ref);
-        parentNode.add(childNode);
-      }
-      node.add(parentNode);
-    }
-
-    add(node, prefix + "scriptLabel", modelEquation.equation);
-  }
-
-  /**
-   * Creates tree nodes for the properties of a passed {@code ModelMath} and adds them to a passed
-   * tree node. If the passed {@code ModelMath} is {@code null} then no nodes are added.
-   * 
-   * @param node Existing node where the properties are added. Cannot be {@code null}.
-   * @param modelMath Cannot be {@code null}.
-   */
-
-  private static void add(final DefaultMutableTreeNode node, final ModelMath modelMath) {
-
-    final List<Parameter> parameter =
-        modelMath.parameter.stream().filter(Objects::nonNull).collect(Collectors.toList());
-    if (!parameter.isEmpty()) {
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Parameters");
-      for (Parameter param : parameter) {
-        final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode("Parameter");
-        add(childNode, param);
-        parentNode.add(childNode);
-      }
-      node.add(parentNode);
-    }
-
-    add(node, "ModelMath.SSE", modelMath.sse);
-    add(node, "ModelMath.MSE", modelMath.mse);
-    add(node, "ModelMath.RMSE", modelMath.rmse);
-    add(node, "ModelMath.R2", modelMath.rSquared);
-    add(node, "ModelMath.AIC", modelMath.aic);
-    add(node, "ModelMath.BIC", modelMath.bic);
-
-    if (modelMath.modelEquation != null && !modelMath.modelEquation.isEmpty()) {
-      final DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode("Model equations");
-      for (final ModelEquation equation : modelMath.modelEquation) {
-        final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode("Model equation");
-        add(childNode, equation);
-        parentNode.add(childNode);
-      }
-      node.add(parentNode);
-    }
-
-    // add(node, "Fitting procedure", modelMath.fittingProcedure);
-
-    // TODO: exposure
-
-    final List<String> event =
-        modelMath.event.stream().filter(Objects::nonNull).collect(Collectors.toList());
-    if (event != null && !event.isEmpty()) {
-      final DefaultMutableTreeNode listNode = new DefaultMutableTreeNode("Events");
-      event.stream().map(DefaultMutableTreeNode::new).forEach(listNode::add);
-      node.add(listNode);
-    }
-  }
-
-  static JTree createTree(GenericModel genericModel) {
-
-    final DefaultMutableTreeNode generalInformationNode =
-        new DefaultMutableTreeNode("General information");
-    if (genericModel.generalInformation != null) {
-      add(generalInformationNode, genericModel.generalInformation);
-    }
-
-    final DefaultMutableTreeNode scopeNode = new DefaultMutableTreeNode("Scope");
-    if (genericModel.scope != null) {
-      add(scopeNode, genericModel.scope);
-    }
-
-    final DefaultMutableTreeNode dataBackgroundNode = new DefaultMutableTreeNode("Data background");
-    if (genericModel.dataBackground != null) {
-      add(dataBackgroundNode, genericModel.dataBackground);
-    }
-
-    final DefaultMutableTreeNode modelMathNode = new DefaultMutableTreeNode("Model math");
-    if (genericModel.modelMath != null) {
-      add(modelMathNode, genericModel.modelMath);
-    }
-
-    final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
+    DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
     rootNode.add(generalInformationNode);
     rootNode.add(scopeNode);
     rootNode.add(dataBackgroundNode);
@@ -740,467 +74,956 @@ class MetadataTree {
     return tree;
   }
 
-  //
-
-  // TODO: To replace #add
-  private static void add2(final DefaultMutableTreeNode node, final String key,
+  private static void add(final DefaultMutableTreeNode node, final String key,
       final boolean value) {
-    final String label = bundle2.getString(key);
+    final String label = bundle.getString(key);
     node.add(new DefaultMutableTreeNode(label + ": " + value));
   }
 
-  private static void add2(final DefaultMutableTreeNode node, final String key, final int value) {
-    final String label = bundle2.getString(key);
+  private static void add(final DefaultMutableTreeNode node, final String key, final int value) {
+    final String label = bundle.getString(key);
     node.add(new DefaultMutableTreeNode(label + ": " + value));
   }
 
-  private static void add2(final DefaultMutableTreeNode node, final String key,
-      final String value) {
-    if (StringUtils.isNotBlank(value)) {
-      final String label = bundle2.getString(key);
-      node.add(new DefaultMutableTreeNode(label + ": " + value));
-    }
+  private static void add(final DefaultMutableTreeNode node, final String key, final String value) {
+    final String label = bundle.getString(key);
+    node.add(new DefaultMutableTreeNode(label + ": " + value));
   }
 
-  private static void add2(final DefaultMutableTreeNode node, final String key, final URI value) {
-    if (value != null) {
-      final String label = bundle2.getString(key);
-      node.add(new DefaultMutableTreeNode(label + ": " + value));
-    }
+  private static void add(final DefaultMutableTreeNode node, final String key, final URI value) {
+    final String label = bundle.getString(key);
+    node.add(new DefaultMutableTreeNode(label + ": " + value));
   }
 
-  private static void add2(final DefaultMutableTreeNode node, final String key, final Date value) {
-    if (value != null) {
-      final String label = bundle2.getString(key);
-      node.add(new DefaultMutableTreeNode(label + ": " + value));
-    }
+  private static void add(final DefaultMutableTreeNode node, final String key, final Date value) {
+    final String label = bundle.getString(key);
+    node.add(new DefaultMutableTreeNode(label + ": " + value));
   }
 
-  private static void add2(final DefaultMutableTreeNode node, final String key,
+  private static void add(final DefaultMutableTreeNode node, final String key,
       EList<String> value) {
 
-    if (value != null && !value.isEmpty()) {
-      String label = bundle2.getString(key);
-      DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-      value.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
-    }
+    String label = bundle.getString(key);
+    DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+    value.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
   }
 
   private static void add(final DefaultMutableTreeNode node, final Contact contact) {
 
-    add2(node, "Contact.title", contact.getTitle());
-    add2(node, "Contact.familyName", contact.getFamilyName());
-    add2(node, "Contact.email", contact.getEmail());
-    add2(node, "Contact.telephone", contact.getTelephone());
-    add2(node, "Contact.streetAddress", contact.getStreetAddress());
-    add2(node, "Contact.country", contact.getCountry());
-    add2(node, "Contact.city", contact.getCity());
-    add2(node, "Contact.zipCode", contact.getZipCode());
-    add2(node, "Contact.postOfficeBox", contact.getPostOfficeBox());
-    add2(node, "Contact.region", contact.getRegion());
-    add2(node, "Contact.nickname", contact.getNickname());
-    add2(node, "Contact.timeZone", contact.getTimeZone());
-    add2(node, "Contact.gender", contact.getGender());
-    add2(node, "Contact.name", contact.getName());
-    add2(node, "Contact.url", contact.getUrl());
-    add2(node, "Contact.note", contact.getNote());
-    add2(node, "Contact.logo", contact.getLogo());
-    add2(node, "Contact.organization", contact.getOrganization());
-    add2(node, "Contact.fullName", contact.getFn());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (contact.eIsSet(pkg.getContact_Title())) {
+      add(node, "Contact.title", contact.getTitle());
+    }
+
+    if (contact.eIsSet(pkg.getContact_FamilyName())) {
+      add(node, "Contact.familyName", contact.getFamilyName());
+    }
+
+    if (contact.eIsSet(pkg.getContact_GivenName())) {
+      add(node, "Contact.givenName", contact.getGivenName());
+    }
+
+    if (contact.eIsSet(pkg.getContact_Email())) {
+      add(node, "Contact.email", contact.getEmail());
+    }
+
+    if (contact.eIsSet(pkg.getContact_Telephone())) {
+      add(node, "Contact.telephone", contact.getTelephone());
+    }
+
+    if (contact.eIsSet(pkg.getContact_StreetAddress())) {
+      add(node, "Contact.streetAddress", contact.getStreetAddress());
+    }
+
+    if (contact.eIsSet(pkg.getContact_Country())) {
+      add(node, "Contact.country", contact.getCountry());
+    }
+
+    if (contact.eIsSet(pkg.getContact_City())) {
+      add(node, "Contact.city", contact.getCity());
+    }
+
+    if (contact.eIsSet(pkg.getContact_ZipCode())) {
+      add(node, "Contact.zipCode", contact.getZipCode());
+    }
+
+    if (contact.eIsSet(pkg.getContact_Region())) {
+      add(node, "Contact.region", contact.getRegion());
+    }
+
+    if (contact.eIsSet(pkg.getContact_TimeZone())) {
+      add(node, "Contact.timeZone", contact.getTimeZone());
+    }
+
+    if (contact.eIsSet(pkg.getContact_Gender())) {
+      add(node, "Contact.gender", contact.getGender());
+    }
+
+    if (contact.eIsSet(pkg.getContact_Note())) {
+      add(node, "Contact.note", contact.getNote());
+    }
+
+    if (contact.eIsSet(pkg.getContact_Organization())) {
+      add(node, "Contact.organization", contact.getOrganization());
+    }
   }
 
   private static void add(final DefaultMutableTreeNode node, final ModelCategory modelCategory) {
 
-    add2(node, "ModelCategory.modelClass", modelCategory.getModelClass());
-    add2(node, "ModelCategory.modelSubClass", modelCategory.getModelSubClass());
-    add2(node, "ModelCategory.modelClassComment", modelCategory.getModelClassComment());
-    add2(node, "ModelCategory.basicProcess", modelCategory.getBasicProcess());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (modelCategory.eIsSet(pkg.getModelCategory_ModelClass())) {
+      add(node, "ModelCategory.modelClass", modelCategory.getModelClass());
+    }
+
+    if (modelCategory.eIsSet(pkg.getModelCategory_ModelSubClass())) {
+      add(node, "ModelCategory.modelSubClass", modelCategory.getModelSubClass());
+    }
+
+    if (modelCategory.eIsSet(pkg.getModelCategory_ModelClassComment())) {
+      add(node, "ModelCategory.modelClassComment", modelCategory.getModelClassComment());
+    }
+
+    if (modelCategory.eIsSet(pkg.getModelCategory_BasicProcess())) {
+      add(node, "ModelCategory.basicProcess", modelCategory.getBasicProcess());
+    }
   }
 
   private static void add(final DefaultMutableTreeNode node, final Reference reference) {
 
-    add2(node, "Reference.isReferenceDescription", reference.isIsReferenceDescription());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
-    PublicationType publicationType = reference.getPublicationType();
-    if (publicationType != null) {
-      add2(node, "Reference.publicationType", publicationType.name());
+    if (reference.eIsSet(pkg.getReference_IsReferenceDescription())) {
+      add(node, "Reference.isReferenceDescription", reference.isIsReferenceDescription());
     }
 
-    add2(node, "Reference.publicationDate", reference.getPublicationDate());
-    add2(node, "Reference.pmid", reference.getPmid());
-    add2(node, "Reference.doi", reference.getDoi());
-    add2(node, "Reference.authorList", reference.getAuthorList());
-    add2(node, "Reference.publicationTitle", reference.getPublicationTitle());
-    add2(node, "Reference.publicationAbstract", reference.getPublicationAbstract());
-    add2(node, "Reference.publicationJournal", reference.getPublicationJournal());
-    add2(node, "Reference.publicationVolume", reference.getPublicationVolume());
-    add2(node, "Reference.publicationIssue", reference.getPublicationIssue());
-    add2(node, "Reference.publicationStatus", reference.getPublicationStatus());
-    add2(node, "Reference.publicationWebsite", reference.getPublicationWebsite());
-    add2(node, "Reference.comment", reference.getComment());
+    if (reference.eIsSet(pkg.getReference_PublicationType())) {
+      add(node, "Reference.publicationType", reference.getPublicationType().name());
+    }
+
+    if (reference.eIsSet(pkg.getReference_PublicationDate())) {
+      add(node, "Reference.publicationDate", reference.getPublicationDate());
+    }
+
+    if (reference.eIsSet(pkg.getReference_Pmid())) {
+      add(node, "Reference.pmid", reference.getPmid());
+    }
+
+    if (reference.eIsSet(pkg.getReference_Doi())) {
+      add(node, "Reference.doi", reference.getDoi());
+    }
+
+    if (reference.eIsSet(pkg.getReference_AuthorList())) {
+      add(node, "Reference.authorList", reference.getAuthorList());
+    }
+
+    if (reference.eIsSet(pkg.getReference_PublicationTitle())) {
+      add(node, "Reference.publicationTitle", reference.getPublicationTitle());
+    }
+
+    if (reference.eIsSet(pkg.getReference_PublicationAbstract())) {
+      add(node, "Reference.publicationAbstract", reference.getPublicationAbstract());
+    }
+
+    if (reference.eIsSet(pkg.getReference_PublicationJournal())) {
+      add(node, "Reference.publicationJournal", reference.getPublicationJournal());
+    }
+
+    if (reference.eIsSet(pkg.getReference_PublicationVolume())) {
+      add(node, "Reference.publicationVolume", reference.getPublicationVolume());
+    }
+
+    if (reference.eIsSet(pkg.getReference_PublicationIssue())) {
+      add(node, "Reference.publicationIssue", reference.getPublicationIssue());
+    }
+
+    if (reference.eIsSet(pkg.getReference_PublicationStatus())) {
+      add(node, "Reference.publicationStatus", reference.getPublicationStatus());
+    }
+
+    if (reference.eIsSet(pkg.getReference_PublicationWebsite())) {
+      add(node, "Reference.publicationWebsite", reference.getPublicationWebsite());
+    }
+
+    if (reference.eIsSet(pkg.getReference_Comment())) {
+      add(node, "Reference.comment", reference.getComment());
+    }
   }
 
   private static void add(final DefaultMutableTreeNode node,
-      final metadata.GeneralInformation generalInformation) {
+      final GeneralInformation generalInformation) {
 
-    add2(node, "GeneralInformation.name", generalInformation.getName());
-    add2(node, "GeneralInformation.source", generalInformation.getSource());
-    add2(node, "GeneralInformation.identifier", generalInformation.getIdentifier());
-    add2(node, "GeneralInformation.creationDate", generalInformation.getCreationDate());
-    add2(node, "GeneralInformation.rights", generalInformation.getRights());
-    add2(node, "GeneralInformation.available", generalInformation.isAvailable());
-    add2(node, "GeneralInformation.format", generalInformation.getFormat());
-    add2(node, "GeneralInformation.language", generalInformation.getLanguage());
-    add2(node, "GeneralInformation.software", generalInformation.getSoftware());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
-    add2(node, "GeneralInformation.languageWrittenIn", generalInformation.getLanguage());
-    add2(node, "GeneralInformation.status", generalInformation.getStatus());
-    add2(node, "GeneralInformation.objective", generalInformation.getObjective());
-    add2(node, "GeneralInformation.description", generalInformation.getDescription());
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Name())) {
+      add(node, "GeneralInformation.name", generalInformation.getName());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Source())) {
+      add(node, "GeneralInformation.source", generalInformation.getSource());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Identifier())) {
+      add(node, "GeneralInformation.identifier", generalInformation.getIdentifier());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_CreationDate())) {
+      add(node, "GeneralInformation.creationDate", generalInformation.getCreationDate());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Rights())) {
+      add(node, "GeneralInformation.rights", generalInformation.getRights());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Available())) {
+      add(node, "GeneralInformation.available", generalInformation.isAvailable());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Format())) {
+      add(node, "GeneralInformation.format", generalInformation.getFormat());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Language())) {
+      add(node, "GeneralInformation.language", generalInformation.getLanguage());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Software())) {
+      add(node, "GeneralInformation.software", generalInformation.getSoftware());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Language())) {
+      add(node, "GeneralInformation.languageWrittenIn", generalInformation.getLanguage());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Status())) {
+      add(node, "GeneralInformation.status", generalInformation.getStatus());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Objective())) {
+      add(node, "GeneralInformation.objective", generalInformation.getObjective());
+    }
+
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Description())) {
+      add(node, "GeneralInformation.description", generalInformation.getDescription());
+    }
 
     // author
-    Contact author = generalInformation.getAuthor();
-    if (author != null) {
-      String label = bundle2.getString("GeneralInformation.author");
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Author())) {
+      String label = bundle.getString("GeneralInformation.author");
       DefaultMutableTreeNode authorNode = new DefaultMutableTreeNode(label);
-      add(authorNode, author);
+      add(authorNode, generalInformation.getAuthor());
       node.add(authorNode);
     }
 
     // creators
-    List<Contact> creators = generalInformation.getCreators();
-    if (creators != null && !creators.isEmpty()) {
-      String label = bundle2.getString("GeneralInformation.creators");
-      DefaultMutableTreeNode creatorsNode = new DefaultMutableTreeNode(label);
-      creators.stream().map(DefaultMutableTreeNode::new).forEach(creatorsNode::add);
-      node.add(creatorsNode);
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Creators())) {
+      String label = bundle.getString("GeneralInformation.creators");
+      DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+
+      for (Contact creator : generalInformation.getCreators()) {
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
+        add(childNode, creator);
+        parentNode.add(childNode);
+      }
+
+      node.add(parentNode);
     }
 
     // model category
-    List<ModelCategory> modelCategories = generalInformation.getModelCategory();
-    if (modelCategories != null && !modelCategories.isEmpty()) {
-      String label = bundle2.getString("GeneralInformation.modelCategories");
-      DefaultMutableTreeNode modelCategoriesNode = new DefaultMutableTreeNode(label);
-      modelCategories.stream().map(DefaultMutableTreeNode::new).forEach(modelCategoriesNode::add);
-      node.add(modelCategoriesNode);
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_ModelCategory())) {
+
+      String label = bundle.getString("GeneralInformation.modelCategories");
+      DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+
+      for (ModelCategory modelCategory : generalInformation.getModelCategory()) {
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
+        add(childNode, modelCategory);
+        parentNode.add(childNode);
+      }
+
+      node.add(parentNode);
     }
 
     // reference
-    List<Reference> references = generalInformation.getReference();
-    if (references != null && !references.isEmpty()) {
-      String label = bundle2.getString("GeneralInformation.references");
-      DefaultMutableTreeNode referencesNode = new DefaultMutableTreeNode(label);
-      references.stream().map(DefaultMutableTreeNode::new).forEach(referencesNode::add);
-      node.add(referencesNode);
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Reference())) {
+
+      String label = bundle.getString("GeneralInformation.references");
+      DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+
+      for (Reference reference : generalInformation.getReference()) {
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
+        add(childNode, reference);
+        parentNode.add(childNode);
+      }
+
+      node.add(parentNode);
     }
 
     // modification date
-    List<ModificationDate> modificationDates = generalInformation.getModificationdate();
-    if (modificationDates != null && !modificationDates.isEmpty()) {
-      String label = bundle2.getString("GeneralInformation.modificationDates");
+    if (generalInformation.eIsSet(pkg.getGeneralInformation_Modificationdate())) {
+      String label = bundle.getString("GeneralInformation.modificationDates");
       DefaultMutableTreeNode modificationDatesNode = new DefaultMutableTreeNode(label);
-      modificationDates.stream().map(ModificationDate::getValue).map(DefaultMutableTreeNode::new)
-          .forEach(modificationDatesNode::add);
+      generalInformation.getModificationdate().stream().map(ModificationDate::getValue)
+          .map(DefaultMutableTreeNode::new).forEach(modificationDatesNode::add);
       node.add(modificationDatesNode);
     }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final metadata.Product product) {
+  private static void add(final DefaultMutableTreeNode node, final Product product) {
 
-    add2(node, "Product.productName", product.getProductName());
-    add2(node, "Product.productDescription", product.getProductDescription());
-    add2(node, "Product.productUnit", product.getProductUnit());
-    add2(node, "Product.productionMethod", product.getProductionMethod());
-    add2(node, "Product.packaging", product.getPackaging());
-    add2(node, "Product.productTreatment", product.getProductTreatment());
-    add2(node, "Product.originCountry", product.getOriginCountry());
-    add2(node, "Product.originArea", product.getOriginArea());
-    add2(node, "Product.fisheriesArea", product.getFisheriesArea());
-    add2(node, "Production.productionDate", product.getProductionDate());
-    add2(node, "Product.expiryDate", product.getExpiryDate());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (product.eIsSet(pkg.getProduct_ProductName())) {
+      add(node, "Product.productName", product.getProductName());
+    }
+
+    if (product.eIsSet(pkg.getProduct_ProductDescription())) {
+      add(node, "Product.productDescription", product.getProductDescription());
+    }
+
+    if (product.eIsSet(pkg.getProduct_ProductUnit())) {
+      add(node, "Product.productUnit", product.getProductUnit());
+    }
+
+    if (product.eIsSet(pkg.getProduct_ProductionMethod())) {
+      add(node, "Product.productionMethod", product.getProductionMethod());
+    }
+
+    if (product.eIsSet(pkg.getProduct_Packaging())) {
+      add(node, "Product.packaging", product.getPackaging());
+    }
+
+    if (product.eIsSet(pkg.getProduct_ProductTreatment())) {
+      add(node, "Product.productTreatment", product.getProductTreatment());
+    }
+
+    if (product.eIsSet(pkg.getProduct_OriginCountry())) {
+      add(node, "Product.originCountry", product.getOriginCountry());
+    }
+
+    if (product.eIsSet(pkg.getProduct_OriginArea())) {
+      add(node, "Product.originArea", product.getOriginArea());
+    }
+
+    if (product.eIsSet(pkg.getProduct_FisheriesArea())) {
+      add(node, "Product.fisheriesArea", product.getFisheriesArea());
+    }
+
+    if (product.eIsSet(pkg.getProduct_ProductionDate())) {
+      add(node, "Production.productionDate", product.getProductionDate());
+    }
+
+    if (product.eIsSet(pkg.getProduct_ExpiryDate())) {
+      add(node, "Product.expiryDate", product.getExpiryDate());
+    }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final metadata.Hazard hazard) {
+  private static void add(final DefaultMutableTreeNode node, final Hazard hazard) {
 
-    add2(node, "Hazard.hazardType", hazard.getHazardType());
-    add2(node, "Hazard.hazardName", hazard.getHazardName());
-    add2(node, "Hazard.hazardDescription", hazard.getHazardDescription());
-    add2(node, "Hazard.hazardUnit", hazard.getHazardUnit());
-    add2(node, "Hazard.adverseEffect", hazard.getAdverseEffect());
-    add2(node, "Hazard.sourceOfContamination", hazard.getSourceOfContamination());
-    add2(node, "Hazard.benchmarkDose", hazard.getBenchmarkDose());
-    add2(node, "Hazard.maximumResidueLimit", hazard.getMaximumResidueLimit());
-    add2(node, "Hazard.noObservedAdverseEffectLevel", hazard.getNoObservedAdverseAffectLevel());
-    add2(node, "Hazard.acceptableDailyIntake", hazard.getAcceptableDailyIntake());
-    add2(node, "Hazard.acuteReferenceDose", hazard.getAcuteReferenceDose());
-    add2(node, "Hazard.acceptableDailyIntake", hazard.getAcceptableDailyIntake());
-    add2(node, "Hazard.hazardIndSum", hazard.getHazardIndSum());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (hazard.eIsSet(pkg.getHazard_HazardType())) {
+      add(node, "Hazard.hazardType", hazard.getHazardType());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_HazardName())) {
+      add(node, "Hazard.hazardName", hazard.getHazardName());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_HazardDescription())) {
+      add(node, "Hazard.hazardDescription", hazard.getHazardDescription());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_HazardUnit())) {
+      add(node, "Hazard.hazardUnit", hazard.getHazardUnit());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_AdverseEffect())) {
+      add(node, "Hazard.adverseEffect", hazard.getAdverseEffect());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_SourceOfContamination())) {
+      add(node, "Hazard.sourceOfContamination", hazard.getSourceOfContamination());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_BenchmarkDose())) {
+      add(node, "Hazard.benchmarkDose", hazard.getBenchmarkDose());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_MaximumResidueLimit())) {
+      add(node, "Hazard.maximumResidueLimit", hazard.getMaximumResidueLimit());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_NoObservedAdverseAffectLevel())) {
+      add(node, "Hazard.noObservedAdverseEffectLevel", hazard.getNoObservedAdverseAffectLevel());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_AcceptableDailyIntake())) {
+      add(node, "Hazard.acceptableDailyIntake", hazard.getAcceptableDailyIntake());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_AcuteReferenceDose())) {
+      add(node, "Hazard.acuteReferenceDose", hazard.getAcuteReferenceDose());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_AcceptableDailyIntake())) {
+      add(node, "Hazard.acceptableDailyIntake", hazard.getAcceptableDailyIntake());
+    }
+
+    if (hazard.eIsSet(pkg.getHazard_HazardIndSum())) {
+      add(node, "Hazard.hazardIndSum", hazard.getHazardIndSum());
+    }
   }
 
   private static void add(final DefaultMutableTreeNode node,
-      final metadata.PopulationGroup populationGroup) {
+      final PopulationGroup populationGroup) {
 
-    add2(node, "PopulationGroup.populationName", populationGroup.getPopulationName());
-    add2(node, "PopulationGroup.targetPopulation", populationGroup.getTargetPopulation());
-    add2(node, "PopulationGroup.populationSpan", populationGroup.getPopulationSpan());
-    add2(node, "PopulationGroup.populationDescription", populationGroup.getPopulationDescription());
-    add2(node, "PopulationGroup.populationAge", populationGroup.getPopulationAge());
-    add2(node, "PopulationGroup.populationGender", populationGroup.getPopulationGender());
-    add2(node, "PopulationGroup.bmi", populationGroup.getBmi());
-    add2(node, "PopulationGroup.specialDietGroups", populationGroup.getSpecialDietGroups());
-    add2(node, "PopulationGroup.patternConsumption", populationGroup.getPatternConsumption());
-    add2(node, "PopulationGroup.region", populationGroup.getRegion());
-    add2(node, "PopulationGroup.country", populationGroup.getCountry());
-    add2(node, "PopulationGroup.populationRiskFactor", populationGroup.getPopulationRiskFactor());
-    add2(node, "PopulationGroup.season", populationGroup.getSeason());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationName())) {
+      add(node, "PopulationGroup.populationName", populationGroup.getPopulationName());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_TargetPopulation())) {
+      add(node, "PopulationGroup.targetPopulation", populationGroup.getTargetPopulation());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationSpan())) {
+      add(node, "PopulationGroup.populationSpan", populationGroup.getPopulationSpan());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationDescription())) {
+      add(node, "PopulationGroup.populationDescription",
+          populationGroup.getPopulationDescription());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationAge())) {
+      add(node, "PopulationGroup.populationAge", populationGroup.getPopulationAge());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationGender())) {
+      add(node, "PopulationGroup.populationGender", populationGroup.getPopulationGender());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_Bmi())) {
+      add(node, "PopulationGroup.bmi", populationGroup.getBmi());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_SpecialDietGroups())) {
+      add(node, "PopulationGroup.specialDietGroups", populationGroup.getSpecialDietGroups());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_PatternConsumption())) {
+      add(node, "PopulationGroup.patternConsumption", populationGroup.getPatternConsumption());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_Region())) {
+      add(node, "PopulationGroup.region", populationGroup.getRegion());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_Country())) {
+      add(node, "PopulationGroup.country", populationGroup.getCountry());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationRiskFactor())) {
+      add(node, "PopulationGroup.populationRiskFactor", populationGroup.getPopulationRiskFactor());
+    }
+
+    if (populationGroup.eIsSet(pkg.getPopulationGroup_Season())) {
+      add(node, "PopulationGroup.season", populationGroup.getSeason());
+    }
   }
 
   private static void add(final DefaultMutableTreeNode node,
-      final metadata.SpatialInformation spatialInformation) {
-    add2(node, "SpatialInformation.region", spatialInformation.getRegion());
-    add2(node, "SpatialInformation.country", spatialInformation.getCountry());
+      final SpatialInformation spatialInformation) {
+
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (spatialInformation.eIsSet(pkg.getSpatialInformation_Region())) {
+      add(node, "SpatialInformation.region", spatialInformation.getRegion());
+    }
+
+    if (spatialInformation.eIsSet(pkg.getSpatialInformation_Country())) {
+      add(node, "SpatialInformation.country", spatialInformation.getCountry());
+    }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final metadata.Scope scope) {
+  private static void add(final DefaultMutableTreeNode node, final Scope scope) {
 
-    add2(node, "Scope.generalComment", scope.getGeneralComment());
-    add2(node, "Scope.temporalInformation", scope.getTemporalInformation());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (scope.eIsSet(pkg.getScope_GeneralComment())) {
+      add(node, "Scope.generalComment", scope.getGeneralComment());
+    }
+
+    if (scope.eIsSet(pkg.getScope_TemporalInformation())) {
+      add(node, "Scope.temporalInformation", scope.getTemporalInformation());
+    }
 
     // product
-    List<metadata.Product> products = scope.getProduct();
-    if (products != null && !products.isEmpty()) {
-      String label = bundle2.getString("Scope.product");
+    if (scope.eIsSet(pkg.getScope_Product())) {
+      String label = bundle.getString("Scope.product");
       DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-      products.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+      for (Product product : scope.getProduct()) {
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
+        add(childNode, product);
+        parentNode.add(childNode);
+      }
       node.add(parentNode);
     }
 
     // hazard
-    List<metadata.Hazard> hazards = scope.getHazard();
-    if (hazards != null && !hazards.isEmpty()) {
-      String label = bundle2.getString("Scope.hazard");
+    if (scope.eIsSet(pkg.getScope_Hazard())) {
+      String label = bundle.getString("Scope.hazard");
       DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-      hazards.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+      for (Hazard hazard : scope.getHazard()) {
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
+        add(childNode, hazard);
+        parentNode.add(childNode);
+      }
       node.add(parentNode);
     }
 
     // population group
-    metadata.PopulationGroup populationGroup = scope.getPopulationGroup();
-    if (populationGroup != null) {
-      String label = bundle2.getString("Scope.populationGroup");
+    if (scope.eIsSet(pkg.getScope_PopulationGroup())) {
+      String label = bundle.getString("Scope.populationGroup");
       DefaultMutableTreeNode populationGroupNode = new DefaultMutableTreeNode(label);
-      add(populationGroupNode, populationGroup);
+      add(populationGroupNode, scope.getPopulationGroup());
       node.add(populationGroupNode);
     }
 
     // spatial information
-    metadata.SpatialInformation spatialInformation = scope.getSpatialInformation();
-    if (spatialInformation != null) {
-      String label = bundle2.getString("Scope.spatialInformation");
+    if (scope.eIsSet(pkg.getScope_SpatialInformation())) {
+      String label = bundle.getString("Scope.spatialInformation");
       DefaultMutableTreeNode spatialInformationNode = new DefaultMutableTreeNode(label);
-      add(spatialInformationNode, spatialInformation);
+      add(spatialInformationNode, scope.getSpatialInformation());
       node.add(spatialInformationNode);
     }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final metadata.Study study) {
+  private static void add(final DefaultMutableTreeNode node, final Study study) {
 
-    add2(node, "Study.studyIdentifier", study.getStudyIdentifier());
-    add2(node, "Study.studyTitle", study.getStudyTitle());
-    add2(node, "Study.studyDescription", study.getStudyDescription());
-    add2(node, "Study.studyDesignType", study.getStudyDesignType());
-    add2(node, "Study.studyAssayMeasurementType", study.getStudyAssayMeasurementType());
-    add2(node, "Study.studyAssayTechnologyType", study.getStudyAssayTechnologyType());
-    add2(node, "Study.studyAssayTechnologyPlatform", study.getStudyAssayTechnologyPlatform());
-    add2(node, "Study.accreditationProcedureForTheAssayTechnology",
-        study.getAccreditationProcedureForTheAssayTechnology());
-    add2(node, "Study.studyProtocolName", study.getStudyProtocolName());
-    add2(node, "Study.studyProtocolType", study.getStudyProtocolType());
-    add2(node, "Study.studyProtocolDescription", study.getStudyProtocolDescription());
-    add2(node, "Study.studyProtocolURI", study.getStudyProtocolURI());
-    add2(node, "Study.studyProtocolVersion", study.getStudyProtocolVersion());
-    add2(node, "Study.studyProtocolComponentsName", study.getStudyProtocolComponentsName());
-    add2(node, "Study.studyProtocolComponentsType", study.getStudyProtocolComponentsType());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (study.eIsSet(pkg.getStudy_StudyIdentifier())) {
+      add(node, "Study.studyIdentifier", study.getStudyIdentifier());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyTitle())) {
+      add(node, "Study.studyTitle", study.getStudyTitle());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyDescription())) {
+      add(node, "Study.studyDescription", study.getStudyDescription());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyDesignType())) {
+      add(node, "Study.studyDesignType", study.getStudyDesignType());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyAssayMeasurementType())) {
+      add(node, "Study.studyAssayMeasurementType", study.getStudyAssayMeasurementType());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyAssayTechnologyType())) {
+      add(node, "Study.studyAssayTechnologyType", study.getStudyAssayTechnologyType());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyAssayTechnologyPlatform())) {
+      add(node, "Study.studyAssayTechnologyPlatform", study.getStudyAssayTechnologyPlatform());
+    }
+
+    if (study.eIsSet(pkg.getStudy_AccreditationProcedureForTheAssayTechnology())) {
+      add(node, "Study.accreditationProcedureForTheAssayTechnology",
+          study.getAccreditationProcedureForTheAssayTechnology());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyProtocolName())) {
+      add(node, "Study.studyProtocolName", study.getStudyProtocolName());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyProtocolType())) {
+      add(node, "Study.studyProtocolType", study.getStudyProtocolType());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyProtocolDescription())) {
+      add(node, "Study.studyProtocolDescription", study.getStudyProtocolDescription());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyProtocolURI())) {
+      add(node, "Study.studyProtocolURI", study.getStudyProtocolURI());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyProtocolVersion())) {
+      add(node, "Study.studyProtocolVersion", study.getStudyProtocolVersion());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyProtocolComponentsName())) {
+      add(node, "Study.studyProtocolComponentsName", study.getStudyProtocolComponentsName());
+    }
+
+    if (study.eIsSet(pkg.getStudy_StudyProtocolComponentsType())) {
+      add(node, "Study.studyProtocolComponentsType", study.getStudyProtocolComponentsType());
+    }
+  }
+
+  private static void add(final DefaultMutableTreeNode node, final StudySample studySample) {
+
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (studySample.eIsSet(pkg.getStudySample_SampleName())) {
+      add(node, "StudySample.sampleName", studySample.getSampleName());
+    }
+
+    if (studySample.eIsSet(pkg.getStudySample_ProtocolOfSampleCollection())) {
+      add(node, "StudySample.protocolOfSampleCollection",
+          studySample.getProtocolOfSampleCollection());
+    }
+
+    if (studySample.eIsSet(pkg.getStudySample_SamplingStrategy())) {
+      add(node, "StudySample.samplingStrategy", studySample.getSamplingStrategy());
+    }
+
+    if (studySample.eIsSet(pkg.getStudySample_TypeOfSamplingProgram())) {
+      add(node, "StudySample.typeOfSamplingProgram", studySample.getTypeOfSamplingProgram());
+    }
+
+    if (studySample.eIsSet(pkg.getStudySample_SamplingMethod())) {
+      add(node, "StudySample.samplingMethod", studySample.getSamplingMethod());
+    }
+
+    if (studySample.eIsSet(pkg.getStudySample_SamplingPlan())) {
+      add(node, "StudySample.samplingPlan", studySample.getSamplingPlan());
+    }
+
+    if (studySample.eIsSet(pkg.getStudySample_SamplingWeight())) {
+      add(node, "StudySample.samplingWeight", studySample.getSamplingWeight());
+    }
+
+    if (studySample.eIsSet(pkg.getStudySample_SamplingSize())) {
+      add(node, "StudySample.samplingSize", studySample.getSamplingSize());
+    }
+
+    if (studySample.eIsSet(pkg.getStudySample_LotSizeUnit())) {
+      add(node, "StudySample.lotSizeUnit", studySample.getLotSizeUnit());
+    }
+
+    if (studySample.eIsSet(pkg.getStudySample_SamplingPoint())) {
+      add(node, "StudySample.samplingPoint", studySample.getSamplingPoint());
+    }
   }
 
   private static void add(final DefaultMutableTreeNode node,
-      final metadata.StudySample studySample) {
+      final DietaryAssessmentMethod dietaryAssessmentMethod) {
 
-    add2(node, "StudySample.sampleName", studySample.getSampleName());
-    add2(node, "StudySample.protocolOfSampleCollection",
-        studySample.getProtocolOfSampleCollection());
-    add2(node, "StudySample.samplingStrategy", studySample.getSamplingStrategy());
-    add2(node, "StudySample.typeOfSamplingProgram", studySample.getTypeOfSamplingProgram());
-    add2(node, "StudySample.samplingMethod", studySample.getSamplingMethod());
-    add2(node, "StudySample.samplingPlan", studySample.getSamplingPlan());
-    add2(node, "StudySample.samplingWeight", studySample.getSamplingWeight());
-    add2(node, "StudySample.samplingSize", studySample.getSamplingSize());
-    add2(node, "StudySample.lotSizeUnit", studySample.getLotSizeUnit());
-    add2(node, "StudySample.samplingPoint", studySample.getSamplingPoint());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_CollectionTool())) {
+      add(node, "DietaryAssessmentMethod.collectionTool",
+          dietaryAssessmentMethod.getCollectionTool());
+    }
+
+
+    if (dietaryAssessmentMethod
+        .eIsSet(pkg.getDietaryAssessmentMethod_NumberOfNonConsecutiveOneDay())) {
+      add(node, "DietaryAssessmentMethod.numberOfNonConsecutiveOneDay",
+          dietaryAssessmentMethod.getNumberOfNonConsecutiveOneDay());
+    }
+
+    if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_SoftwareTool())) {
+      add(node, "DietaryAssessmentMethod.softwareTool", dietaryAssessmentMethod.getSoftwareTool());
+    }
+
+    if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_NumberOfFoodItems())) {
+      add(node, "DietaryAssessmentMethod.numberOfItems",
+          dietaryAssessmentMethod.getNumberOfFoodItems());
+    }
+
+    if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_RecordTypes())) {
+      add(node, "DietaryAssessmentMethod.recordTypes", dietaryAssessmentMethod.getRecordTypes());
+    }
+
+    if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_FoodDescriptors())) {
+      add(node, "DietaryAssessmentMethod.foodDescriptors",
+          dietaryAssessmentMethod.getFoodDescriptors());
+    }
   }
 
-  private static void add(final DefaultMutableTreeNode node,
-      final metadata.DietaryAssessmentMethod dietaryAssessmentMethod) {
+  private static void add(final DefaultMutableTreeNode node, final Laboratory laboratory) {
 
-    add2(node, "DietaryAssessmentMethod.collectionTool",
-        dietaryAssessmentMethod.getCollectionTool());
-    add2(node, "DietaryAssessmentMethod.numberOfNonConsecutiveOneDay",
-        dietaryAssessmentMethod.getNumberOfNonConsecutiveOneDay());
-    add2(node, "DietaryAssessmentMethod.softwareTool", dietaryAssessmentMethod.getSoftwareTool());
-    add2(node, "DietaryAssessmentMethod.numberOfItems",
-        dietaryAssessmentMethod.getNumberOfFoodItems());
-    add2(node, "DietaryAssessmentMethod.recordTypes", dietaryAssessmentMethod.getRecordTypes());
-    add2(node, "DietaryAssessmentMethod.foodDescriptors",
-        dietaryAssessmentMethod.getFoodDescriptors());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (laboratory.eIsSet(pkg.getLaboratory_LaboratoryAccreditation())) {
+      add(node, "Laboratory.laboratoryAccreditation", laboratory.getLaboratoryAccreditation());
+    }
+
+    if (laboratory.eIsSet(pkg.getLaboratory_LaboratoryName())) {
+      add(node, "Laboratory.laboratoryName", laboratory.getLaboratoryName());
+    }
+
+    if (laboratory.eIsSet(pkg.getLaboratory_LaboratoryCountry())) {
+      add(node, "Laboratory.laboratoryCountry", laboratory.getLaboratoryCountry());
+    }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final metadata.Laboratory laboratory) {
+  private static void add(final DefaultMutableTreeNode node, final Assay assay) {
 
-    add2(node, "Laboratory.laboratoryAccreditation", laboratory.getLaboratoryAccreditation());
-    add2(node, "Laboratory.laboratoryName", laboratory.getLaboratoryName());
-    add2(node, "Laboratory.laboratoryCountry", laboratory.getLaboratoryCountry());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (assay.eIsSet(pkg.getAssay_AssayName())) {
+      add(node, "Assay.assayName", assay.getAssayName());
+    }
+
+    if (assay.eIsSet(pkg.getAssay_AssayDescription())) {
+      add(node, "Assay.assayDescription", assay.getAssayDescription());
+    }
+
+    if (assay.eIsSet(pkg.getAssay_PercentageOfMoisture())) {
+      add(node, "Assay.percentageOfMoisture", assay.getPercentageOfMoisture());
+    }
+
+    if (assay.eIsSet(pkg.getAssay_PercentageOfFat())) {
+      add(node, "Assay.percentageOfFat", assay.getPercentageOfFat());
+    }
+
+    if (assay.eIsSet(pkg.getAssay_LimitOfDetection())) {
+      add(node, "Assay.limitOfDetection", assay.getLimitOfDetection());
+    }
+
+    if (assay.eIsSet(pkg.getAssay_LimitOfQuantification())) {
+      add(node, "Assay.limitOfQuantification", assay.getLimitOfQuantification());
+    }
+
+    if (assay.eIsSet(pkg.getAssay_LeftCensoredData())) {
+      add(node, "Assay.leftCensoredData", assay.getLeftCensoredData());
+    }
+
+    if (assay.eIsSet(pkg.getAssay_RangeOfContamination())) {
+      add(node, "Assay.rangeOfContamination", assay.getRangeOfContamination());
+    }
+
+    if (assay.eIsSet(pkg.getAssay_UncertaintyValue())) {
+      add(node, "Asasy.uncertaintyValue", assay.getUncertaintyValue());
+    }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final metadata.Assay assay) {
+  private static void add(final DefaultMutableTreeNode node, final DataBackground dataBackground) {
 
-    add2(node, "Assay.assayName", assay.getAssayName());
-    add2(node, "Assay.assayDescription", assay.getAssayDescription());
-    add2(node, "Assay.percentageOfMoisture", assay.getPercentageOfMoisture());
-    add2(node, "Assay.percentageOfFat", assay.getPercentageOfFat());
-    add2(node, "Assay.limitOfDetection", assay.getLimitOfDetection());
-    add2(node, "Assay.limitOfQuantification", assay.getLimitOfQuantification());
-    add2(node, "Assay.leftCensoredData", assay.getLeftCensoredData());
-    add2(node, "Assay.rangeOfContamination", assay.getRangeOfContamination());
-    add2(node, "Asasy.uncertaintyValue", assay.getUncertaintyValue());
-  }
-
-  private static void add(final DefaultMutableTreeNode node,
-      final metadata.DataBackground dataBackground) {
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
     // study
-    metadata.Study study = dataBackground.getStudy();
-    if (study != null) {
-      String label = bundle2.getString("DataBackground.study");
+    if (dataBackground.eIsSet(pkg.getDataBackground_Study())) {
+      String label = bundle.getString("DataBackground.study");
       DefaultMutableTreeNode studyNode = new DefaultMutableTreeNode(label);
-      add(studyNode, study);
+      add(studyNode, dataBackground.getStudy());
       node.add(studyNode);
     }
 
     // study sample
-    List<metadata.StudySample> studySample = dataBackground.getStudysample();
-    if (studySample != null && !studySample.isEmpty()) {
-      String label = bundle2.getString("DataBackground.studySample");
-      DefaultMutableTreeNode studySampleNode = new DefaultMutableTreeNode(label);
-      studySample.stream().map(DefaultMutableTreeNode::new).forEach(studySampleNode::add);
-      node.add(studySampleNode);
+    if (dataBackground.eIsSet(pkg.getDataBackground_Studysample())) {
+      String label = bundle.getString("DataBackground.studySample");
+      DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+      for (StudySample studySample : dataBackground.getStudysample()) {
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
+        add(childNode, studySample);
+        parentNode.add(childNode);
+      }
+      node.add(parentNode);
     }
-    
+
     // dietary assessment method
-    metadata.DietaryAssessmentMethod dietaryAssessmentMethod =
-        dataBackground.getDietaryassessmentmethod();
-    if (dietaryAssessmentMethod != null) {
-      String label = bundle2.getString("DataBackground.dietaryAssessmentMethod");
+    if (dataBackground.eIsSet(pkg.getDataBackground_Dietaryassessmentmethod())) {
+      String label = bundle.getString("DataBackground.dietaryAssessmentMethod");
       DefaultMutableTreeNode dietaryAssessmentMethodNode = new DefaultMutableTreeNode(label);
-      add(dietaryAssessmentMethodNode, dietaryAssessmentMethod);
+      add(dietaryAssessmentMethodNode, dataBackground.getDietaryassessmentmethod());
       node.add(dietaryAssessmentMethodNode);
     }
 
     // laboratory
-    metadata.Laboratory laboratory = dataBackground.getLaboratory();
-    if (laboratory != null) {
-      String label = bundle2.getString("DataBackground.laboratory");
+    if (dataBackground.eIsSet(pkg.getDataBackground_Laboratory())) {
+      String label = bundle.getString("DataBackground.laboratory");
       DefaultMutableTreeNode laboratoryNode = new DefaultMutableTreeNode(label);
-      add(laboratoryNode, laboratory);
+      add(laboratoryNode, dataBackground.getLaboratory());
       node.add(laboratoryNode);
     }
 
     // assay
-    List<metadata.Assay> assay = dataBackground.getAssay();
-    if (assay != null && !assay.isEmpty()) {
-      String label = bundle2.getString("DataBackground.assay");
-      DefaultMutableTreeNode assayNode = new DefaultMutableTreeNode(label);
-      assay.stream().map(DefaultMutableTreeNode::new).forEach(assayNode::add);
-      node.add(assayNode);
+    if (dataBackground.eIsSet(pkg.getDataBackground_Assay())) {
+      String label = bundle.getString("DataBackground.assay");
+      DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+      for (Assay assay : dataBackground.getAssay()) {
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
+        add(childNode, assay);
+        parentNode.add(childNode);
+      }
+      node.add(parentNode);
     }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final metadata.Parameter parameter) {
-    
-    add2(node, "Parameter.parameterId", parameter.getParameterID());
+  private static void add(final DefaultMutableTreeNode node, final Parameter parameter) {
 
-    // parameter classification
-    metadata.ParameterClassification parameterClassification =
-        parameter.getParameterClassification();
-    if (parameterClassification != null) {
-      add2(node, "Parameter.parameterClassification", parameterClassification.name());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterID())) {
+      add(node, "Parameter.parameterId", parameter.getParameterID());
     }
-    
-    add2(node, "Parameter.parameterName", parameter.getParameterName());
-    add2(node, "Parameter.parameterDescription", parameter.getParameterDescription());
-    add2(node, "Parameter.parameterType", parameter.getParameterType());
-    add2(node, "Parameter.parameterUnit", parameter.getParameterUnit());
-    add2(node, "Parameter.parameterUnitCategory", parameter.getParameterUnitCategory());
-    add2(node, "Parameter.parameterDataType", parameter.getParameterDataType());
-    add2(node, "Parameter.parameterSource", parameter.getParameterSource());
-    add2(node, "Parameter.parameterSubject", parameter.getParameterSubject());
-    add2(node, "Parameter.parameterDistribution", parameter.getParameterDistribution());
-    add2(node, "Parameter.parameterValue", parameter.getParameterValue());
-    add2(node, "Parameter.parameterVariabilitySubject", parameter.getParameterVariabilitySubject());
-    add2(node, "Parameter.parameterValueMin", parameter.getParameterValueMin());
-    add2(node, "Parameter.parameterValueMax", parameter.getParameterValueMax());
-    add2(node, "Parameter.parameterError", parameter.getParameterError());
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterClassification())) {
+      add(node, "Parameter.parameterClassification", parameter.getParameterClassification().name());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterName())) {
+      add(node, "Parameter.parameterName", parameter.getParameterName());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterDescription())) {
+      add(node, "Parameter.parameterDescription", parameter.getParameterDescription());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterType())) {
+      add(node, "Parameter.parameterType", parameter.getParameterType());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterUnit())) {
+      add(node, "Parameter.parameterUnit", parameter.getParameterUnit());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterUnitCategory())) {
+      add(node, "Parameter.parameterUnitCategory", parameter.getParameterUnitCategory());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterDataType())) {
+      add(node, "Parameter.parameterDataType", parameter.getParameterDataType().name());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterSource())) {
+      add(node, "Parameter.parameterSource", parameter.getParameterSource());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterSubject())) {
+      add(node, "Parameter.parameterSubject", parameter.getParameterSubject());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterDistribution())) {
+      add(node, "Parameter.parameterDistribution", parameter.getParameterDistribution());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterValue())) {
+      add(node, "Parameter.parameterValue", parameter.getParameterValue());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterVariabilitySubject())) {
+      add(node, "Parameter.parameterVariabilitySubject",
+          parameter.getParameterVariabilitySubject());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterValueMin())) {
+      add(node, "Parameter.parameterValueMin", parameter.getParameterValueMin());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterValueMax())) {
+      add(node, "Parameter.parameterValueMax", parameter.getParameterValueMax());
+    }
+
+    if (parameter.eIsSet(pkg.getParameter_ParameterError())) {
+      add(node, "Parameter.parameterError", parameter.getParameterError());
+    }
   }
 
-  private static void add(final DefaultMutableTreeNode node,
-      final metadata.ModelEquation modelEquation) {
-    
-    add2(node, "ModelEquation.modelEquationName", modelEquation.getModelEquationName());
-    add2(node, "ModelEquation.modelEquationClass", modelEquation.getModelEquationClass());
-    add2(node, "ModelEquation.modelEquation", modelEquation.getModelEquation());
-    add2(node, "ModelEquation.hypothesisOfTheModel", modelEquation.getHypothesisOfTheModel());
+  private static void add(final DefaultMutableTreeNode node, final ModelEquation modelEquation) {
+
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (modelEquation.eIsSet(pkg.getModelEquation_ModelEquationName())) {
+      add(node, "ModelEquation.modelEquationName", modelEquation.getModelEquationName());
+    }
+
+    if (modelEquation.eIsSet(pkg.getModelEquation_ModelEquationClass())) {
+      add(node, "ModelEquation.modelEquationClass", modelEquation.getModelEquationClass());
+    }
+
+    if (modelEquation.eIsSet(pkg.getModelEquation_ModelEquation())) {
+      add(node, "ModelEquation.modelEquation", modelEquation.getModelEquation());
+    }
+
+    if (modelEquation.eIsSet(pkg.getModelEquation_HypothesisOfTheModel())) {
+      add(node, "ModelEquation.hypothesisOfTheModel", modelEquation.getHypothesisOfTheModel());
+    }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final metadata.Exposure exposure) {
+  private static void add(final DefaultMutableTreeNode node, final Exposure exposure) {
 
-    add2(node, "Exposure.methodologicalTreatmentOfLeftCensoredData",
-        exposure.getMethodologicalTreatmentOfLeftCensoredData());
-    add2(node, "Exposure.levelOfContaminationAfterLeftCensoredDataTreatment",
-        exposure.getLevelOfContaminationAfterLeftCensoredDataTreatment());
-    add2(node, "Exposure.typeOfExposure", exposure.getTypeOfExposure());
-    add2(node, "Exposure.scenario", exposure.getScenario());
-    add2(node, "Exposure.uncertaintyEstimation", exposure.getUncertaintyEstimation());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (exposure.eIsSet(pkg.getExposure_MethodologicalTreatmentOfLeftCensoredData())) {
+      add(node, "Exposure.methodologicalTreatmentOfLeftCensoredData",
+          exposure.getMethodologicalTreatmentOfLeftCensoredData());
+    }
+
+    if (exposure.eIsSet(pkg.getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment())) {
+      add(node, "Exposure.levelOfContaminationAfterLeftCensoredDataTreatment",
+          exposure.getLevelOfContaminationAfterLeftCensoredDataTreatment());
+    }
+
+    if (exposure.eIsSet(pkg.getExposure_TypeOfExposure())) {
+      add(node, "Exposure.typeOfExposure", exposure.getTypeOfExposure());
+    }
+
+    if (exposure.eIsSet(pkg.getExposure_Scenario())) {
+      add(node, "Exposure.scenario", exposure.getScenario());
+    }
+
+    if (exposure.eIsSet(pkg.getExposure_UncertaintyEstimation())) {
+      add(node, "Exposure.uncertaintyEstimation", exposure.getUncertaintyEstimation());
+    }
   }
 
-  private static void add(final DefaultMutableTreeNode node, final metadata.ModelMath modelMath) {
+  private static void add(final DefaultMutableTreeNode node, final ModelMath modelMath) {
 
-    add2(node, "ModelMath.qualityMeasures", modelMath.getQualityMeasures());
-    add2(node, "ModelMath.fittingProcedure", modelMath.getFittingProcedure());
-    add2(node, "ModelMath.event", modelMath.getEvent());
+    MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+    if (modelMath.eIsSet(pkg.getModelMath_QualityMeasures())) {
+      add(node, "ModelMath.qualityMeasures", modelMath.getQualityMeasures());
+    }
+
+    if (modelMath.eIsSet(pkg.getModelMath_FittingProcedure())) {
+      add(node, "ModelMath.fittingProcedure", modelMath.getFittingProcedure());
+    }
+
+    if (modelMath.eIsSet(pkg.getModelMath_Event())) {
+      add(node, "ModelMath.event", modelMath.getEvent());
+    }
 
     // parameter
-    List<metadata.Parameter> parameter = modelMath.getParameter();
-    if (parameter != null && !parameter.isEmpty()) {
-      String label = bundle2.getString("ModelMath.parameter");
-      DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode(label);
-      parameter.stream().map(DefaultMutableTreeNode::new).forEach(parameterNode::add);
-      node.add(parameterNode);
+    if (modelMath.eIsSet(pkg.getModelMath_Parameter())) {
+      String label = bundle.getString("ModelMath.parameter");
+      DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+      for (Parameter param : modelMath.getParameter()) {
+        DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode(label);
+        add(parameterNode, param);
+        parentNode.add(parameterNode);
+      }
+      node.add(parentNode);
     }
 
     // model equation
-    List<metadata.ModelEquation> modelEquation = modelMath.getModelEquation();
-    if (modelEquation != null && !modelEquation.isEmpty()) {
-      String label = bundle2.getString("ModelMath.modelEquation");
-      DefaultMutableTreeNode modelEquationNode = new DefaultMutableTreeNode(label);
-      modelEquation.stream().map(DefaultMutableTreeNode::new).forEach(modelEquationNode::add);
-      node.add(modelEquationNode);
+    if (modelMath.eIsSet(pkg.getModelMath_ModelEquation())) {
+      String label = bundle.getString("ModelMath.modelEquation");
+      DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+      for (ModelEquation modelEquation : modelMath.getModelEquation()) {
+        DefaultMutableTreeNode modelEquationNode = new DefaultMutableTreeNode(label);
+        add(modelEquationNode, modelEquation);
+        parentNode.add(modelEquationNode);
+      }
+      node.add(parentNode);
     }
 
     // exposure
-    metadata.Exposure exposure = modelMath.getExposure();
-    if (exposure != null) {
-      String label = bundle2.getString("ModelMath.exposure");
+    if (modelMath.eIsSet(pkg.getModelMath_Exposure())) {
+      String label = bundle.getString("ModelMath.exposure");
       DefaultMutableTreeNode exposureNode = new DefaultMutableTreeNode(label);
-      add(exposureNode, exposure);
+      add(exposureNode, modelMath.getExposure());
       node.add(exposureNode);
     }
   }

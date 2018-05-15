@@ -3,27 +3,27 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Study",
+      "label": "study",
       "scope": "#/properties/study"
     },
     {
       "type": "Control",
-      "label": "Studysample",
+      "label": "studysample",
       "scope": "#/properties/studysample"
     },
     {
       "type": "Control",
-      "label": "Dietaryassessmentmethod",
+      "label": "dietaryassessmentmethod",
       "scope": "#/properties/dietaryassessmentmethod"
     },
     {
       "type": "Control",
-      "label": "Laboratory",
+      "label": "laboratory",
       "scope": "#/properties/laboratory"
     },
     {
       "type": "Control",
-      "label": "Assay",
+      "label": "assay",
       "scope": "#/properties/assay"
     }
   ]

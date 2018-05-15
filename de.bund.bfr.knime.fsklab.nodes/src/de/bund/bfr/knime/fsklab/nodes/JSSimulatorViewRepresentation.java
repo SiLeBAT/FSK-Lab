@@ -35,7 +35,7 @@ import de.bund.bfr.knime.fsklab.rakip.Parameter;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 final class JSSimulatorViewRepresentation extends JSONViewContent {
 
-  List<Parameter> parameters;
+  List<metadata.Parameter> parameters;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {}

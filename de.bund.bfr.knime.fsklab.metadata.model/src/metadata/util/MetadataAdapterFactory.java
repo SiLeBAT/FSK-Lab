@@ -124,10 +124,6 @@ public class MetadataAdapterFactory extends AdapterFactoryImpl {
 				return createSpatialInformationAdapter();
 			}
 			@Override
-			public Adapter casemodelApplicability(modelApplicability object) {
-				return createmodelApplicabilityAdapter();
-			}
-			@Override
 			public Adapter caseEvent(Event object) {
 				return createEventAdapter();
 			}
@@ -368,20 +364,6 @@ public class MetadataAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createSpatialInformationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link metadata.modelApplicability <em>model Applicability</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see metadata.modelApplicability
-	 * @generated
-	 */
-	public Adapter createmodelApplicabilityAdapter() {
 		return null;
 	}
 

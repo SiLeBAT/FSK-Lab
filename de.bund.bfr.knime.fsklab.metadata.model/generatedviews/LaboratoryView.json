@@ -3,18 +3,18 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Accreditation",
-      "scope": "#/properties/accreditation"
+      "label": "laboratoryAccreditation",
+      "scope": "#/properties/laboratoryAccreditation"
     },
     {
       "type": "Control",
-      "label": "Name",
-      "scope": "#/properties/name"
+      "label": "laboratoryName",
+      "scope": "#/properties/laboratoryName"
     },
     {
       "type": "Control",
-      "label": "Country",
-      "scope": "#/properties/country"
+      "label": "laboratoryCountry",
+      "scope": "#/properties/laboratoryCountry"
     }
   ]
 }

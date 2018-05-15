@@ -114,7 +114,7 @@ final class FSKEditorJSNodeModel
 
     FskPortObject inObj1 = (FskPortObject) inObjects[0];
   
-    FskPortObject outObj =inObj1;
+    FskPortObject outObj = inObj1;
 
     // Clone input object
    
@@ -125,14 +125,20 @@ final class FSKEditorJSNodeModel
       FSKEditorJSViewValue fskEditorProxyValue = getViewValue();
 
       // If not executed
-      if (fskEditorProxyValue.getFirstModel() == null) {
-        fskEditorProxyValue.setFirstModel(inObj1.genericModel);
+      if (fskEditorProxyValue.getGeneralInformation() == null) {
+        fskEditorProxyValue.setGeneralInformation(inObj1.generalInformation);
+        fskEditorProxyValue.setScope(inObj1.scope);
+        fskEditorProxyValue.setDataBackground(inObj1.dataBackground);
+        fskEditorProxyValue.setModelMath(inObj1.modelMath);
         fskEditorProxyValue.setFirstModelScript(inObj1.model);
         fskEditorProxyValue.setFirstModelViz(inObj1.viz);
        
         exec.setProgress(1);
       }
-      outObj.genericModel = fskEditorProxyValue.getFirstModel();
+      outObj.generalInformation = fskEditorProxyValue.getGeneralInformation();
+      outObj.scope = fskEditorProxyValue.getScope();
+      outObj.dataBackground = fskEditorProxyValue.getDataBackground();
+      outObj.modelMath = fskEditorProxyValue.getModelMath();
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
       // Takes modified metadata from val

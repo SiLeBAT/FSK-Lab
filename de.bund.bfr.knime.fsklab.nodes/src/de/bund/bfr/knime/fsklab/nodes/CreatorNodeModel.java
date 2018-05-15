@@ -23,14 +23,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +55,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
-import com.gmail.gcolaianni5.jris.bean.Record;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
@@ -64,26 +62,27 @@ import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
-import de.bund.bfr.knime.fsklab.rakip.Assay;
-import de.bund.bfr.knime.fsklab.rakip.DataBackground;
-import de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod;
-import de.bund.bfr.knime.fsklab.rakip.GeneralInformation;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import de.bund.bfr.knime.fsklab.rakip.Hazard;
-import de.bund.bfr.knime.fsklab.rakip.Laboratory;
-import de.bund.bfr.knime.fsklab.rakip.ModelCategory;
-import de.bund.bfr.knime.fsklab.rakip.ModelMath;
-import de.bund.bfr.knime.fsklab.rakip.Parameter;
-import de.bund.bfr.knime.fsklab.rakip.Parameter.DataTypes;
-import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
-import de.bund.bfr.knime.fsklab.rakip.Scope;
-import de.bund.bfr.knime.fsklab.rakip.Study;
-import de.bund.bfr.knime.fsklab.rakip.StudySample;
-import ezvcard.VCard;
-import ezvcard.parameter.TelephoneType;
-import ezvcard.property.Address;
-import ezvcard.property.Email;
-import ezvcard.property.StructuredName;
+import metadata.Assay;
+import metadata.Contact;
+import metadata.DataBackground;
+import metadata.DietaryAssessmentMethod;
+import metadata.GeneralInformation;
+import metadata.Hazard;
+import metadata.Laboratory;
+import metadata.MetadataFactory;
+import metadata.ModelCategory;
+import metadata.ModelMath;
+import metadata.ModificationDate;
+import metadata.Parameter;
+import metadata.ParameterClassification;
+import metadata.ParameterType;
+import metadata.PopulationGroup;
+import metadata.Product;
+import metadata.PublicationType;
+import metadata.Reference;
+import metadata.Scope;
+import metadata.Study;
+import metadata.StudySample;
 
 class CreatorNodeModel extends NoInternalsModel {
 
@@ -145,14 +144,42 @@ class CreatorNodeModel extends NoInternalsModel {
       vizRScript = null;
     }
 
-    final GenericModel genericModel;
+    final GeneralInformation generalInformation;
+    final Scope scope;
+    final DataBackground dataBackground;
+    final ModelMath modelMath;
 
     // If an input table is connected then parse the metadata
     if (inData.length == 1 && inData[0] != null) {
       BufferedDataTable metadataTable = (BufferedDataTable) inData[0];
 
       // parse table
-      genericModel = TableParser.retrieveGenericModel(metadataTable);
+      String[][] values = new String[200][30];
+      int i = 0;
+      for (DataRow row : metadataTable) {
+        if (isRowEmpty(row))
+          break;
+        int j = 0;
+        for (DataCell cell : row) {
+          values[i][j] = !cell.isMissing() ? ((StringCell) cell).getStringValue() : "";
+          j++;
+        }
+        i++;
+      }
+
+      generalInformation = TableParser.retrieveGeneralInformation(values);
+      scope = TableParser.retrieveScope(values);
+      dataBackground = TableParser.retrieveDataBackground(values);
+      
+      modelMath = MetadataFactory.eINSTANCE.createModelMath();
+      for (i = 132; i <= 152; i++) {
+        try {
+          Parameter param = TableParser.retrieveParameter(values, i);
+          modelMath.getParameter().add(param);
+        } catch (Exception exception) {
+          exception.printStackTrace();
+        }
+      }
     }
 
     else {
@@ -167,39 +194,37 @@ class CreatorNodeModel extends NoInternalsModel {
 
         if (sheet.getPhysicalNumberOfRows() > 29) {
           // Process new RAKIP spreadsheet
-          genericModel = new GenericModel();
-          genericModel.generalInformation = RAKIPSheetImporter.retrieveGeneralInformation(sheet);
-          genericModel.scope = RAKIPSheetImporter.retrieveScope(sheet);
-          genericModel.dataBackground = RAKIPSheetImporter.retrieveDataBackground(sheet);
+          generalInformation = RAKIPSheetImporter.retrieveGeneralInformation(sheet);
+          scope = RAKIPSheetImporter.retrieveScope(sheet);
+          dataBackground = RAKIPSheetImporter.retrieveDataBackground(sheet);
+          modelMath = MetadataFactory.eINSTANCE.createModelMath();
           for (int i = 132; i <= 152; i++) {
             try {
               Parameter param = RAKIPSheetImporter.retrieveParameter(sheet, i);
-              genericModel.modelMath.parameter.add(param);
+              modelMath.getParameter().add(param);
             } catch (Exception exception) {
               // ignore exception since it is thrown by empty rows
             }
           }
         } else {
           // Process legacy spreadsheet
-          genericModel = new GenericModel();
-          genericModel.generalInformation = LegacySheetImporter.getGeneralInformation(sheet);
-          genericModel.generalInformation.software = "R";
-          genericModel.scope = LegacySheetImporter.getScope(sheet);
-          genericModel.modelMath = LegacySheetImporter.getModelMath(sheet);
+          generalInformation = LegacySheetImporter.getGeneralInformation(sheet);
+          scope = LegacySheetImporter.getScope(sheet);
+          dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
+          modelMath = LegacySheetImporter.getModelMath(sheet);
 
           // Set variable values and types from parameters script
           try (RController controller = new RController()) {
             controller.eval(paramRScript.getScript(), false);
 
-            for (int i = 0; i < genericModel.modelMath.parameter.size(); i++) {
-              Parameter p = genericModel.modelMath.parameter.get(i);
+            for (Parameter p : modelMath.getParameter()) {
 
-              if (p.classification != Parameter.Classification.input) {
+              if (p.getParameterClassification() == ParameterClassification.INPUT) {
                 continue;
               }
 
               try {
-                REXP rexp = controller.eval(p.name, true);
+                REXP rexp = controller.eval(p.getParameterName(), true);
 
                 // check the type for a Vector Or Matrix of String or number
                 if (rexp.isVector() && rexp.dim() != null) {
@@ -208,29 +233,30 @@ class CreatorNodeModel extends NoInternalsModel {
                   int ncol = rexp.dim()[1];
 
                   if (rexp.isNumeric()) {
-                    p.dataType = Parameter.DataTypes.MatrixOfNumbers;
-                    p.value = buildRMatrix(rexp.asDoubleMatrix(), nrow, ncol);
+                    p.setParameterDataType(ParameterType.MATRIX_OF_NUMBERS);
+                    p.setParameterValue(buildRMatrix(rexp.asDoubleMatrix(), nrow, ncol));
                   } else {
-                    p.dataType = Parameter.DataTypes.MatrixOfStrings;
-                    p.value = buildRMatrix(rexp.asStrings(), nrow, ncol);
+                    p.setParameterDataType(ParameterType.MATRIX_OF_STRINGS);
+                    p.setParameterValue(buildRMatrix(rexp.asStrings(), nrow, ncol));
                   }
 
                 } else if (rexp.isVector() && rexp.length() > 1) {
 
                   if (rexp.isNumeric()) {
-                    p.dataType = Parameter.DataTypes.VectorOfNumbers;
-                    p.value = buildRVector(rexp.asDoubles());
+                    p.setParameterDataType(ParameterType.VECTOR_OF_NUMBERS);
+                    p.setParameterValue(buildRVector(rexp.asDoubles()));
                   } else {
-                    p.dataType = Parameter.DataTypes.VectorOfStrings;
-                    p.value = buildRVector(rexp.asStrings());
+                    p.setParameterDataType(ParameterType.VECTOR_OF_STRINGS);
+                    p.setParameterValue(buildRVector(rexp.asStrings()));
                   }
                 } else if (rexp.isNumeric()) {
-                  p.value = Double.toString(rexp.asDouble());
-                  p.dataType = Parameter.DataTypes.Double;
+                  p.setParameterDataType(ParameterType.DOUBLE);
+                  p.setParameterValue(Double.toString(rexp.asDouble()));
                 }
               } catch (RException | REXPMismatchException exception) {
                 // does nothing. Just leave the value blank.
-                LOGGER.warn("Could not parse value of parameter " + p.name, exception);
+                LOGGER.warn("Could not parse value of parameter " + p.getParameterName(),
+                    exception);
               }
             }
           } catch (RException e) {
@@ -253,8 +279,9 @@ class CreatorNodeModel extends NoInternalsModel {
     String paramScript = paramRScript.getScript();
     String vizScript = vizRScript != null ? vizRScript.getScript() : "";
 
-    final FskPortObject portObj = new FskPortObject(modelScript, paramScript, vizScript,
-        genericModel, null, new HashSet<>(), workingDirectory);
+    final FskPortObject portObj =
+        new FskPortObject(modelScript, paramScript, vizScript, generalInformation, scope,
+            dataBackground, modelMath, null, new HashSet<>(), workingDirectory);
     if (defaultSimulation != null) {
       portObj.simulations.add(defaultSimulation);
     }
@@ -357,6 +384,13 @@ class CreatorNodeModel extends NoInternalsModel {
     }
   }
 
+  private static boolean isRowEmpty(DataRow row) {
+    for (DataCell cell : row)
+      if (!cell.isMissing())
+        return false;
+    return true;
+  }
+
   private static class LegacySheetImporter {
 
     static String getString(final XSSFSheet sheet, final int rowNumber) {
@@ -369,38 +403,61 @@ class CreatorNodeModel extends NoInternalsModel {
     static GeneralInformation getGeneralInformation(final XSSFSheet sheet)
         throws MalformedURLException, InvalidSettingsException {
 
-      final GeneralInformation gi = new GeneralInformation();
-      gi.name = getString(sheet, 1);
-      gi.identifier = getString(sheet, 2);
-      gi.creationDate = sheet.getRow(9).getCell(5).getDateCellValue();
-      gi.rights = getString(sheet, 11);
-      gi.isAvailable = true;
+      GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
 
-      final String urlString = getString(sheet, 16);
-      gi.url = new URL(StringUtils.defaultIfEmpty(urlString, "http://bfr.bund.de"));
+      final String name = getString(sheet, 1);
+      if (!name.isEmpty()) {
+        generalInformation.setName(name);
+      }
 
-      gi.format = "";
-      gi.modificationDate.add(sheet.getRow(10).getCell(5).getDateCellValue());
+      final String identifier = getString(sheet, 2);
+      if (!identifier.isEmpty()) {
+        generalInformation.setIdentifier(identifier);
+      }
 
-      return gi;
+      final Date creationDate = sheet.getRow(9).getCell(5).getDateCellValue();
+      if (creationDate != null) {
+        generalInformation.setCreationDate(creationDate);
+      }
+
+      final String rights = getString(sheet, 11);
+      if (!rights.isEmpty()) {
+        generalInformation.setRights(rights);
+      }
+
+      generalInformation.setAvailable(true);
+      generalInformation.setFormat("");
+
+      final Date modificationDate = sheet.getRow(10).getCell(5).getDateCellValue();
+      if (modificationDate != null) {
+        ModificationDate md = MetadataFactory.eINSTANCE.createModificationDate();
+        md.setValue(modificationDate);
+        generalInformation.getModificationdate().add(md);
+      }
+
+      return generalInformation;
     }
 
     static Scope getScope(final XSSFSheet sheet) throws InvalidSettingsException {
 
-      final Scope scope = new Scope();
+      final Scope scope = MetadataFactory.eINSTANCE.createScope();
 
-      scope.hazard.hazardName = getString(sheet, 3);
-      scope.hazard.hazardDescription = getString(sheet, 4);
+      Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
+      hazard.setHazardName(getString(sheet, 3));
+      hazard.setHazardDescription(getString(sheet, 4));
+      scope.getHazard().add(hazard);
 
-      scope.product.environmentName = getString(sheet, 5);
-      scope.product.environmentDescription = getString(sheet, 6);
+      Product product = MetadataFactory.eINSTANCE.createProduct();
+      product.setProductName(getString(sheet, 5));
+      product.setProductDescription(getString(sheet, 6));
+      scope.getProduct().add(product);
 
       return scope;
     }
 
     static ModelMath getModelMath(final XSSFSheet sheet) throws InvalidSettingsException {
 
-      final ModelMath modelMath = new ModelMath();
+      final ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
 
       // Dependent variables
       final List<String> depNames = Arrays.stream(getString(sheet, 21).split("\\|\\|"))
@@ -409,15 +466,15 @@ class CreatorNodeModel extends NoInternalsModel {
           .map(String::trim).collect(Collectors.toList());
 
       for (int i = 0; i < depNames.size(); i++) {
-        final Parameter param = new Parameter();
-        param.id = depNames.get(i);
-        param.classification = Parameter.Classification.output;
-        param.name = depNames.get(i);
-        param.unit = depUnits.get(i);
-        param.unitCategory = "";
-        param.dataType = DataTypes.Other;
+        final Parameter param = MetadataFactory.eINSTANCE.createParameter();
+        param.setParameterID(depNames.get(i));
+        param.setParameterClassification(ParameterClassification.OUTPUT);
+        param.setParameterName(depNames.get(i));
+        param.setParameterUnit(depUnits.get(i));
+        param.setParameterUnitCategory("");
+        param.setParameterDataType(ParameterType.OTHER);
 
-        modelMath.parameter.add(param);
+        modelMath.getParameter().add(param);
       }
 
       // Independent variables
@@ -425,16 +482,17 @@ class CreatorNodeModel extends NoInternalsModel {
           .map(String::trim).collect(Collectors.toList());
       final List<String> indepUnits = Arrays.stream(getString(sheet, 26).split("\\|\\|"))
           .map(String::trim).collect(Collectors.toList());
-      for (int i = 0; i < indepNames.size(); i++) {
-        final Parameter param = new Parameter();
-        param.id = indepNames.get(i);
-        param.classification = Parameter.Classification.input;
-        param.name = indepNames.get(i);
-        param.unit = indepUnits.get(i);
-        param.unitCategory = "";
-        param.dataType = DataTypes.Other;
 
-        modelMath.parameter.add(param);
+      for (int i = 0; i < indepNames.size(); i++) {
+        final Parameter param = MetadataFactory.eINSTANCE.createParameter();
+        param.setParameterID(indepNames.get(i));
+        param.setParameterClassification(ParameterClassification.INPUT);
+        param.setParameterName(indepNames.get(i));
+        param.setParameterUnit(indepUnits.get(i));
+        param.setParameterUnitCategory("");
+        param.setParameterDataType(ParameterType.OTHER);
+
+        modelMath.getParameter().add(param);
       }
 
       return modelMath;
@@ -623,165 +681,198 @@ class CreatorNodeModel extends NoInternalsModel {
 
     static GeneralInformation retrieveGeneralInformation(XSSFSheet sheet) {
 
-      GeneralInformation gi = new GeneralInformation();
-      gi.name = getStringValue(sheet, RakipRow.GENERAL_INFORMATION_NAME, RakipColumn.I);
-      gi.source = getStringValue(sheet, RakipRow.GENERAL_INFORMATION_SOURCE, RakipColumn.I);
-      gi.identifier = getStringValue(sheet, RakipRow.GENERAL_INFORMATION_IDENTIFIER, RakipColumn.I);
-      gi.rights = getStringValue(sheet, RakipRow.GENERAL_INFORMATION_RIGHTS, RakipColumn.I);
-      gi.isAvailable =
-          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_AVAILABILITY, RakipColumn.I) == "Yes";
-      gi.language = getStringValue(sheet, RakipRow.GENERAL_INFORMATION_LANGUAGE, RakipColumn.I);
-      gi.software = getStringValue(sheet, RakipRow.GENERAL_INFORMATION_SOFTWARE, RakipColumn.I);
-      gi.languageWrittenIn =
-          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_LANGUAGE_WRITTEN_IN, RakipColumn.I);
-      gi.status = getStringValue(sheet, RakipRow.GENERAL_INFORMATION_STATUS, RakipColumn.I);
-      gi.objective = getStringValue(sheet, RakipRow.GENERAL_INFORMATION_OBJECTIVE, RakipColumn.I);
-      gi.description =
-          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_DESCRIPTION, RakipColumn.I);
+      metadata.GeneralInformation generalInformation =
+          metadata.MetadataFactory.eINSTANCE.createGeneralInformation();
 
-      // retrieve creators
+      // name
+      final String name = getStringValue(sheet, RakipRow.GENERAL_INFORMATION_NAME, RakipColumn.I);
+      if (StringUtils.isNotEmpty(name)) {
+        generalInformation.setName(name);
+      }
+
+      // source
+      final String source =
+          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_SOURCE, RakipColumn.I);
+      if (StringUtils.isNotEmpty(source)) {
+        generalInformation.setSource(source);
+      }
+
+      // identifier
+      final String identifier =
+          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_IDENTIFIER, RakipColumn.I);
+      if (StringUtils.isNotEmpty(identifier)) {
+        generalInformation.setIdentifier(identifier);
+      }
+
+      // TODO: creation date
+
+      // rights
+      final String rights =
+          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_RIGHTS, RakipColumn.I);
+      if (StringUtils.isNotEmpty(rights)) {
+        generalInformation.setRights(rights);
+      }
+
+      // available
+      final String isAvailableString =
+          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_AVAILABILITY, RakipColumn.I);
+      if (StringUtils.isNotEmpty(isAvailableString)) {
+        boolean isAvailable = isAvailableString.equals("Yes");
+        generalInformation.setAvailable(isAvailable);
+      }
+
+      // TODO: format
+
+      // language
+      final String language =
+          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_LANGUAGE, RakipColumn.I);
+      if (StringUtils.isNotEmpty(language)) {
+        generalInformation.setLanguage(language);
+      }
+
+      // software
+      final String software =
+          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_SOFTWARE, RakipColumn.I);
+      if (StringUtils.isNotEmpty(software)) {
+        generalInformation.setSoftware(software);
+      }
+
+      // language written in
+      final String languageWrittenIn =
+          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_LANGUAGE_WRITTEN_IN, RakipColumn.I);
+      if (StringUtils.isNotEmpty(languageWrittenIn)) {
+        generalInformation.setLanguageWrittenIn(languageWrittenIn);
+      }
+
+      // status
+      final String status =
+          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_STATUS, RakipColumn.I);
+      if (StringUtils.isNotEmpty(status)) {
+        generalInformation.setStatus(status);
+      }
+
+      // objective
+      final String objective =
+          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_OBJECTIVE, RakipColumn.I);
+      if (StringUtils.isNotEmpty(objective)) {
+        generalInformation.setObjective(objective);
+      }
+
+      // description
+      final String description =
+          getStringValue(sheet, RakipRow.GENERAL_INFORMATION_DESCRIPTION, RakipColumn.I);
+      if (StringUtils.isNotEmpty(description)) {
+        generalInformation.setDescription(description);
+      }
+
+      // TODO: author (1..1)
+
+      // creator (0..n)
       for (int numRow = 3; numRow < 7; numRow++) {
         try {
-          VCard vCard = retrieveCreator(sheet, numRow);
-          gi.creators.add(vCard);
+          Contact contact = retrieveContact(sheet, numRow);
+          generalInformation.getCreators().add(contact);
         } catch (Exception exception) {
         }
       }
 
-      // retrieve references
-      for (int numRow = 14; numRow < 17; numRow++) {
-        try {
-          Record record = retrieveReference(sheet, numRow);
-          gi.reference.add(record);
-        } catch (Exception exception) {
-        }
-      }
-
+      // model category (0..n)
       try {
-        gi.modelCategory = retrieveModelCategory(sheet);
+        ModelCategory modelCategory = retrieveModelCategory(sheet);
+        generalInformation.getModelCategory().add(modelCategory);
       } catch (Exception exception) {
       }
 
-      return gi;
+      // reference (1..n)
+      for (int numRow = 14; numRow < 17; numRow++) {
+        try {
+          Reference reference = retrieveReference(sheet, numRow);
+          generalInformation.getReference().add(reference);
+        } catch (Exception exception) {
+        }
+      }
+
+      // TODO: modification date (0..n)
+
+      return generalInformation;
     }
 
     /**
-     * @throw IllegalArgumentException if mail is empty
+     * @throw IllegalArgumentException if mail is empty.
      */
-    static VCard retrieveCreator(XSSFSheet sheet, int row) {
+    static Contact retrieveContact(XSSFSheet sheet, int row) {
 
-
-      /*
-       * Get values from spreadsheet
-       * 
-       * Note: name (column L) is redundant and not used. The structured name already contains given
-       * family name, given name and additional names.
-       */
-      String honorific = getStringValue(sheet, row, RakipColumn.K); // honorific prefix
-      String givenName = getStringValue(sheet, row, RakipColumn.M);
-      String additionalName = getStringValue(sheet, row, RakipColumn.N);
-      String familyName = getStringValue(sheet, row, RakipColumn.O);
-      String organization = getStringValue(sheet, row, RakipColumn.P);
-      String telephone = getStringValue(sheet, row, RakipColumn.Q);
       String email = getStringValue(sheet, row, RakipColumn.R);
-      String country = getStringValue(sheet, row, RakipColumn.S);
-      String city = getStringValue(sheet, row, RakipColumn.T);
-      String zipCode = getStringValue(sheet, row, RakipColumn.U);
-      String postOfficeBox = getStringValue(sheet, row, RakipColumn.V);
-      String streetAddress = getStringValue(sheet, row, RakipColumn.W);
-      String extendedAddress = getStringValue(sheet, row, RakipColumn.X);
-      String region = getStringValue(sheet, row, RakipColumn.Y);
 
       // Check mandatory properties and throw exception if missing
       if (email.isEmpty()) {
         throw new IllegalArgumentException("Missing mail");
       }
 
-      VCard vCard = new VCard();
+      Contact contact = metadata.MetadataFactory.eINSTANCE.createContact();
+      contact.setTitle(getStringValue(sheet, row, RakipColumn.K));
+      contact.setFamilyName(getStringValue(sheet, row, RakipColumn.O));
+      contact.setGivenName(getStringValue(sheet, row, RakipColumn.M));
+      contact.setEmail(email);
+      contact.setTelephone(getStringValue(sheet, row, RakipColumn.Q));
+      contact.setStreetAddress(getStringValue(sheet, row, RakipColumn.W));
+      contact.setCountry(getStringValue(sheet, row, RakipColumn.S));
+      contact.setCity(getStringValue(sheet, row, RakipColumn.T));
+      contact.setZipCode(getStringValue(sheet, row, RakipColumn.U));
+      contact.setRegion(getStringValue(sheet, row, RakipColumn.Y));
+      // time zone not included in spreadsheet ?
+      // gender not included in spreadsheet ?
+      // note not included in spreadsheet ?
+      contact.setOrganization(getStringValue(sheet, row, RakipColumn.P));
 
-      // StructuredName <- family, given and additional names with prefixes
-      {
-        StructuredName structuredName = new StructuredName();
-        structuredName.setFamily(familyName);
-        structuredName.setGiven(givenName);
-        structuredName.getAdditionalNames().add(additionalName);
-        structuredName.getPrefixes().add(honorific);
-        vCard.setStructuredName(structuredName);
-      }
-
-      // organization is optional. Ignore empty cell.
-      if (!organization.isEmpty()) {
-        vCard.setOrganization(organization);
-      }
-
-      // telephone is optional. Ignore empty cell.
-      if (!telephone.isEmpty()) {
-        vCard.addTelephoneNumber(telephone, TelephoneType.VOICE);
-      }
-
-      vCard.addEmail(new Email(email));
-
-      // Address <- country, city and postal code
-      {
-        Address address = new Address();
-        address.setCountry(country);
-        address.setLocality(city);
-        address.setPostalCode(zipCode);
-        address.setPoBox(postOfficeBox);
-        address.setStreetAddress(streetAddress);
-        address.setExtendedAddress(extendedAddress);
-        address.setRegion(region);
-
-        vCard.addAddress(address);
-      }
-
-      return vCard;
+      return contact;
     }
 
     /**
      * Import reference from Excel row.
+     * 
+     * <ul>
+     * <li>Is_reference_description? in the K column. Type
+     * {@link org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING}. Mandatory. Takes "Yes" or "No".
+     * Other strings are discarded.
+     *
+     * <li>Publication type in the L column. Type
+     * {@link org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING}. Optional. Takes the full name of a
+     * RIS reference type.
+     *
+     * <li>Date in the M column. Type {@link org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING}.
+     * Optional. Format `YYYY/MM/DD/other info` where the fields are optional. Examples:
+     * `2017/11/16/noon`, `2017/11/16`, `2017/11`, `2017`.
+     *
+     * <li>PubMed Id in the N column. Type
+     * {@link org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC}. Optional. Unique unsigned
+     * integer. Example: 20069275
+     *
+     * <li>DOI in the O column. Type {@link org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING}.
+     * Mandatory. Example: 10.1056/NEJM199710303371801.
+     *
+     * <li>Publication author list in the P column. Type
+     * {@link org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING}. Optional. The authors are defined
+     * with last name, name and joined with semicolons. Example:
+     * `Ungaretti-Haberbeck,L;Plaza-Rodr�guez,C;Desvignes,V`
+     *
+     * <li>Publication title in the Q column. Type
+     * {@link org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING}. Optional.
+     *
+     * <li>Publication abstract in the R column. Type
+     * {@link org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING}. Optional.
+     *
+     * <li>Publication journal/vol/issue in the S column. Type
+     * {@link org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING}. Optional.
+     *
+     * <li>Publication status. // TODO: publication status
+     *
+     * <li>Publication website. Type {@link org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING}.
+     * Optional. Invalid urls are discarded.
      *
      * @throws IllegalArgumentException if isReferenceDescription or DOI are missing
-     *
-     *         - Is_reference_description? in the K column. Type
-     *         [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING]. Mandatory. Takes "Yes" or "No".
-     *         Other strings are discarded.
-     *
-     *         - Publication type in the L column. Type
-     *         [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING]. Optional. Takes the full name of
-     *         a RIS reference type.
-     *
-     *         - Date in the M column. Type [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING].
-     *         Optional. Format `YYYY/MM/DD/other info` where the fields are optional. Examples:
-     *         `2017/11/16/noon`, `2017/11/16`, `2017/11`, `2017`.
-     *
-     *         - PubMed Id in the N column. Type
-     *         [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC]. Optional. Unique unsigned
-     *         integer. Example: 20069275
-     *
-     *         - DOI in the O column. Type [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING].
-     *         Mandatory. Example: 10.1056/NEJM199710303371801.
-     *
-     *         - Publication author list in the P column. Type
-     *         [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING]. Optional. The authors are
-     *         defined with last name, name and joined with semicolons. Example:
-     *         `Ungaretti-Haberbeck,L;Plaza-Rodr�guez,C;Desvignes,V`
-     *
-     *         - Publication title in the Q column. Type
-     *         [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING]. Optional.
-     *
-     *         - Publication abstract in the R column. Type
-     *         [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING]. Optional.
-     *
-     *         - Publication journal/vol/issue in the S column. Type
-     *         [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING]. Optional.
-     *
-     *         - Publication status. // TODO: publication status
-     *
-     *         - Publication website. Type [org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING].
-     *         Optional. Invalid urls are discarded.
      */
-    static Record retrieveReference(XSSFSheet sheet, int row) {
+    static Reference retrieveReference(XSSFSheet sheet, int row) {
 
       /*
        * Journal, volume and issue cannot be parsed since there are encoded as free text in the S
@@ -794,64 +885,70 @@ class CreatorNodeModel extends NoInternalsModel {
        * define it and a comma is used in the local spreadsheet. What should we use to parse it?
        */
 
-      String isReferenceDescription = getStringValue(sheet, row, RakipColumn.K);
-      String type = getStringValue(sheet, row, RakipColumn.L);
-      Double pmid = getNumericValue(sheet, row, RakipColumn.N);
+      String isReferenceDescriptionString = getStringValue(sheet, row, RakipColumn.K);
       String doi = getStringValue(sheet, row, RakipColumn.O);
-      String author = getStringValue(sheet, row, RakipColumn.P);
-      String title = getStringValue(sheet, row, RakipColumn.Q);
-      String abstractText = getStringValue(sheet, row, RakipColumn.R);
-      String status = getStringValue(sheet, row, RakipColumn.T);
-      String website = getStringValue(sheet, row, RakipColumn.U);
 
       // Check mandatory properties and throw exception if missing
-      if (isReferenceDescription.isEmpty()) {
+      if (isReferenceDescriptionString.isEmpty()) {
         throw new IllegalArgumentException("Missing Is reference description?");
       }
       if (doi.isEmpty()) {
         throw new IllegalArgumentException("Missing DOI");
       }
 
-      Record record = new Record();
+      Reference reference = MetadataFactory.eINSTANCE.createReference();
 
-      // Save isReferenceDescription in U1 tag (user definable #1)
-      record.setUserDefinable1(isReferenceDescription);
-
-      // Look for RIS type (abbreviation) through the string value
-      ResourceBundle risBundle = ResourceBundle.getBundle("ris_types");
-      for (String abbreviation : risBundle.keySet()) {
-        if (abbreviation.equals(type)) {
-          com.gmail.gcolaianni5.jris.bean.Type risType =
-              com.gmail.gcolaianni5.jris.bean.Type.valueOf(abbreviation);
-          record.setType(risType);
-          break;
-        }
+      // Is reference description
+      if (StringUtils.isNotEmpty(isReferenceDescriptionString)) {
+        boolean isReferenceDescription = isReferenceDescriptionString.equals("Yes");
+        reference.setIsReferenceDescription(isReferenceDescription);
       }
 
-      // Save PMID in U2 tag (user definable #2)
-      record.setUserDefinable2(pmid.toString());
+      // Publication type
+      // Get publication type from literal. Get null if invalid literal.
+      String publicationTypeLiteral = getStringValue(sheet, row, RakipColumn.L);
+      PublicationType publicationType = PublicationType.get(publicationTypeLiteral);
+      if (publicationType != null) {
+        reference.setPublicationType(publicationType);
+      }
 
-      record.setDoi(doi);
+      // PMID
+      Double pmid = getNumericValue(sheet, row, RakipColumn.N);
+      if (pmid != null) {
+        reference.setPmid(Double.toString(pmid));
+      }
 
-      // Save author list
-      Arrays.stream(author.split(";")).forEach(record::addAuthor);
+      // DOI
+      if (StringUtils.isNotEmpty(doi)) {
+        reference.setDoi(doi);
+      }
 
-      record.setTitle(title); // Save title in TI tag
-      record.setAbstr(abstractText); // Save abstract in AB tag
+      reference.setAuthorList(getStringValue(sheet, row, RakipColumn.P));
+      reference.setPublicationTitle(getStringValue(sheet, row, RakipColumn.Q));
+      reference.setPublicationAbstract(getStringValue(sheet, row, RakipColumn.R));
 
-      // Save status in U3 tag (user definable #3)
-      record.setUserDefinable3(status);
+      // TODO: journal
+      // TODO: issue
 
-      record.setUrl(website);
+      reference.setPublicationStatus(getStringValue(sheet, row, RakipColumn.T));
 
-      return record;
+      // website
+      reference.setPublicationWebsite(getStringValue(sheet, row, RakipColumn.U));
+
+      // TODO: comment
+
+      return reference;
     }
 
     /**
      * Import [ModelCategory] from Excel sheet.
      *
-     * - Model class from H27. Mandatory. - Model sub class from H28. Optional. - Model class
-     * comment from H29. Optional. - Basic process from H32. Optional.
+     * <ul>
+     * <li>Model class from H27. Mandatory.
+     * <li>Model sub class from H28. Optional.
+     * <li>Model class comment from H29. Optional.
+     * <li>Basic process from H32. Optional.
+     * </ul>
      *
      * @throws IllegalArgumentException if modelClass is missing.
      */
@@ -863,30 +960,34 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing model class");
       }
 
-      ModelCategory modelCategory = new ModelCategory();
-      modelCategory.modelClass =
-          getStringValue(sheet, RakipRow.MODEL_CATEGORY_CLASS, RakipColumn.I);
-      modelCategory.modelSubClass
+      metadata.ModelCategory modelCategory =
+          metadata.MetadataFactory.eINSTANCE.createModelCategory();
+
+      modelCategory
+          .setModelClass(getStringValue(sheet, RakipRow.MODEL_CATEGORY_CLASS, RakipColumn.I));
+      modelCategory.getModelSubClass()
           .addAll(getStringListValue(sheet, RakipRow.MODEL_CATEGORY_SUBCLASS, RakipColumn.I));
-      modelCategory.modelClassComment =
-          getStringValue(sheet, RakipRow.MODEL_CATEGORY_COMMENT, RakipColumn.I);
-      modelCategory.basicProcess
-          .addAll(getStringListValue(sheet, RakipRow.MODEL_CATEGORY_PROCESS, RakipColumn.I));
+      modelCategory.setModelClassComment(
+          getStringValue(sheet, RakipRow.MODEL_CATEGORY_COMMENT, RakipColumn.I));
+      modelCategory
+          .setBasicProcess(getStringValue(sheet, RakipRow.MODEL_CATEGORY_PROCESS, RakipColumn.I));
 
       return modelCategory;
     }
 
     static Scope retrieveScope(XSSFSheet sheet) {
 
-      Scope scope = new Scope();
+      Scope scope = MetadataFactory.eINSTANCE.createScope();
 
       try {
-        scope.hazard = retrieveHazard(sheet);
+        Hazard hazard = retrieveHazard(sheet);
+        scope.getHazard().add(hazard);
       } catch (IllegalArgumentException exception) {
         // ignore exception since the hazard is optional
       }
       try {
-        scope.populationGroup = retrievePopulationGroup(sheet);
+        PopulationGroup populationGroup = retrievePopulationGroup(sheet);
+        scope.setPopulationGroup(populationGroup);
       } catch (IllegalArgumentException exception) {
         // ignore exception since the population group is optional
       }
@@ -909,21 +1010,25 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Hazard unit is missing");
       }
 
-      Hazard hazard = new Hazard();
-      hazard.hazardType = getStringValue(sheet, RakipRow.HAZARD_TYPE, RakipColumn.I);
-      hazard.hazardName = getStringValue(sheet, RakipRow.HAZARD_NAME, RakipColumn.I);
-      hazard.hazardDescription = getStringValue(sheet, RakipRow.HAZARD_DESCRIPTION, RakipColumn.I);
-      hazard.hazardUnit = getStringValue(sheet, RakipRow.HAZARD_UNIT, RakipColumn.I);
-      hazard.adverseEffect = getStringValue(sheet, RakipRow.HAZARD_ADVERSE_EFFECT, RakipColumn.I);
-      hazard.sourceOfContamination =
-          getStringValue(sheet, RakipRow.HAZARD_CONTAMINATION_SOURCE, RakipColumn.I);
-      hazard.bmd = getStringValue(sheet, RakipRow.HAZARD_BMD, RakipColumn.I);
-      hazard.mrl = getStringValue(sheet, RakipRow.HAZARD_MRL, RakipColumn.I);
-      hazard.noael = getStringValue(sheet, RakipRow.HAZARD_NOAEL, RakipColumn.I);
-      hazard.loael = getStringValue(sheet, RakipRow.HAZARD_LOAEL, RakipColumn.I);
-      hazard.aoel = getStringValue(sheet, RakipRow.HAZARD_AOEL, RakipColumn.I);
-      hazard.ard = getStringValue(sheet, RakipRow.HAZARD_ARFD, RakipColumn.I);
-      hazard.hazardIndSum = getStringValue(sheet, RakipRow.HAZARD_IND_SUM, RakipColumn.I);
+      Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
+      hazard.setHazardType(getStringValue(sheet, RakipRow.HAZARD_TYPE, RakipColumn.I));
+      hazard.setHazardName(getStringValue(sheet, RakipRow.HAZARD_NAME, RakipColumn.I));
+      hazard
+          .setHazardDescription(getStringValue(sheet, RakipRow.HAZARD_DESCRIPTION, RakipColumn.I));
+      hazard.setHazardUnit(getStringValue(sheet, RakipRow.HAZARD_UNIT, RakipColumn.I));
+      hazard.setAdverseEffect(getStringValue(sheet, RakipRow.HAZARD_ADVERSE_EFFECT, RakipColumn.I));
+      hazard.setSourceOfContamination(
+          getStringValue(sheet, RakipRow.HAZARD_CONTAMINATION_SOURCE, RakipColumn.I));
+      hazard.setBenchmarkDose(getStringValue(sheet, RakipRow.HAZARD_BMD, RakipColumn.I));
+      hazard.setMaximumResidueLimit(getStringValue(sheet, RakipRow.HAZARD_MRL, RakipColumn.I));
+      hazard.setNoObservedAdverseAffectLevel(
+          getStringValue(sheet, RakipRow.HAZARD_NOAEL, RakipColumn.I));
+      hazard.setLowestObservedAdverseAffectLevel(
+          getStringValue(sheet, RakipRow.HAZARD_LOAEL, RakipColumn.I));
+      hazard.setAcceptableOperatorExposureLevel(
+          getStringValue(sheet, RakipRow.HAZARD_AOEL, RakipColumn.I));
+      hazard.setAcuteReferenceDose(getStringValue(sheet, RakipRow.HAZARD_ARFD, RakipColumn.I));
+      hazard.setHazardIndSum(getStringValue(sheet, RakipRow.HAZARD_IND_SUM, RakipColumn.I));
 
       return hazard;
     }
@@ -936,55 +1041,87 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing population name");
       }
 
-      PopulationGroup pg = new PopulationGroup();
-      pg.populationName = getStringValue(sheet, RakipRow.POPULATION_GROUP_NAME, RakipColumn.I);
-      pg.targetPopulation = getStringValue(sheet, RakipRow.POPULATION_GROUP_TARGET, RakipColumn.I);
-      pg.populationSpan
-          .addAll(getStringListValue(sheet, RakipRow.POPULATION_GROUP_SPAN, RakipColumn.I));
-      pg.populationDescription
-          .addAll(getStringListValue(sheet, RakipRow.POPULATION_GROUP_DESCRIPTION, RakipColumn.I));
-      pg.populationAge
-          .addAll(getStringListValue(sheet, RakipRow.POPULATION_GROUP_AGE, RakipColumn.I));
-      pg.populationGender = getStringValue(sheet, RakipRow.POPULATION_GROUP_GENDER, RakipColumn.I);
-      pg.bmi.addAll(getStringListValue(sheet, RakipRow.POPULATION_GROUP_BMI, RakipColumn.I));
-      pg.specialDietGroups
-          .addAll(getStringListValue(sheet, RakipRow.POPULATION_GROUP_DIET, RakipColumn.I));
-      pg.patternConsumption.addAll(
-          getStringListValue(sheet, RakipRow.POPULATION_GROUP_PATTERN_CONSUMPTION, RakipColumn.I));
-      pg.region.addAll(getStringListValue(sheet, RakipRow.POPULATION_GROUP_REGION, RakipColumn.I));
-      pg.country
-          .addAll(getStringListValue(sheet, RakipRow.POPULATION_GROUP_COUNTRY, RakipColumn.I));
-      pg.populationRiskFactor
-          .addAll(getStringListValue(sheet, RakipRow.POPULATION_GROUP_RISK, RakipColumn.I));
-      pg.season.addAll(getStringListValue(sheet, RakipRow.POPULATION_GROUP_SEASON, RakipColumn.I));
+      PopulationGroup populationGroup = MetadataFactory.eINSTANCE.createPopulationGroup();
+      populationGroup
+          .setPopulationName(getStringValue(sheet, RakipRow.POPULATION_GROUP_NAME, RakipColumn.I));
+      populationGroup.setTargetPopulation(
+          getStringValue(sheet, RakipRow.POPULATION_GROUP_TARGET, RakipColumn.I));
 
-      return pg;
+      List<String> populationSpan =
+          getStringListValue(sheet, RakipRow.POPULATION_GROUP_SPAN, RakipColumn.I);
+      populationGroup.getPopulationSpan().addAll(populationSpan);
+
+      List<String> populationDescription =
+          getStringListValue(sheet, RakipRow.POPULATION_GROUP_DESCRIPTION, RakipColumn.I);
+      populationGroup.getPopulationDescription().addAll(populationDescription);
+
+      List<String> populationAge =
+          getStringListValue(sheet, RakipRow.POPULATION_GROUP_AGE, RakipColumn.I);
+      populationGroup.getPopulationAge().addAll(populationAge);
+
+      populationGroup.setPopulationGender(
+          getStringValue(sheet, RakipRow.POPULATION_GROUP_GENDER, RakipColumn.I));
+
+      List<String> bmi = getStringListValue(sheet, RakipRow.POPULATION_GROUP_BMI, RakipColumn.I);
+      populationGroup.getBmi().addAll(bmi);
+
+      List<String> specialDietGroups =
+          getStringListValue(sheet, RakipRow.POPULATION_GROUP_DIET, RakipColumn.I);
+      populationGroup.getSpecialDietGroups().addAll(specialDietGroups);
+
+      List<String> patternConsumption =
+          getStringListValue(sheet, RakipRow.POPULATION_GROUP_PATTERN_CONSUMPTION, RakipColumn.I);
+      populationGroup.getPatternConsumption().addAll(patternConsumption);
+
+      List<String> region =
+          getStringListValue(sheet, RakipRow.POPULATION_GROUP_REGION, RakipColumn.I);
+      populationGroup.getRegion().addAll(region);
+
+      List<String> country =
+          getStringListValue(sheet, RakipRow.POPULATION_GROUP_COUNTRY, RakipColumn.I);
+      populationGroup.getCountry().addAll(country);
+
+      List<String> populationRiskFactor =
+          getStringListValue(sheet, RakipRow.POPULATION_GROUP_RISK, RakipColumn.I);
+      populationGroup.getPopulationRiskFactor().addAll(populationRiskFactor);
+
+      List<String> season =
+          getStringListValue(sheet, RakipRow.POPULATION_GROUP_SEASON, RakipColumn.I);
+      populationGroup.getSeason().addAll(season);
+
+      return populationGroup;
     }
 
     static DataBackground retrieveDataBackground(XSSFSheet sheet) {
-      DataBackground dataBackground = new DataBackground();
-      dataBackground.study = retrieveStudy(sheet);
+
+      DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
+
+      dataBackground.setStudy(retrieveStudy(sheet));
 
       try {
-        dataBackground.studySample = retrieveStudySample(sheet);
+        StudySample studySample = retrieveStudySample(sheet);
+        dataBackground.getStudysample().add(studySample);
       } catch (Exception exception) {
         // ignore errors since StudySample is optional
       }
 
       try {
-        dataBackground.dietaryAssessmentMethod = retrieveDAM(sheet);
+        DietaryAssessmentMethod dietaryAssessmentMethod = retrieveDAM(sheet);
+        dataBackground.setDietaryassessmentmethod(dietaryAssessmentMethod);
       } catch (Exception exception) {
         // ignore errors since DietaryAssessmentMethod is optional
       }
 
       try {
-        dataBackground.laboratory = retrieveLaboratory(sheet);
+        Laboratory laboratory = retrieveLaboratory(sheet);
+        dataBackground.setLaboratory(laboratory);
       } catch (Exception exception) {
         // ignore errors since Laboratory is optional
       }
 
       try {
-        dataBackground.assay = retrieveAssay(sheet);
+        Assay assay = retrieveAssay(sheet);
+        dataBackground.getAssay().add(assay);
       } catch (Exception exception) {
         // ignore errors since Assay is optional
       }
@@ -1000,35 +1137,38 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing study title");
       }
 
-      Study study = new Study();
-      study.id = getStringValue(sheet, RakipRow.STUDY_ID, RakipColumn.I);
-      study.title = getStringValue(sheet, RakipRow.STUDY_TITLE, RakipColumn.I);
-      study.description = getStringValue(sheet, RakipRow.STUDY_DESCRIPTION, RakipColumn.I);
-      study.designType = getStringValue(sheet, RakipRow.STUDY_DESIGN_TYPE, RakipColumn.I);
-      study.measurementType =
-          getStringValue(sheet, RakipRow.STUDY_ASSAY_MEASUREMENTS_TYPE, RakipColumn.I);
-      study.technologyType =
-          getStringValue(sheet, RakipRow.STUDY_ASSAY_TECHNOLOGY_TYPE, RakipColumn.I);
-      study.technologyPlatform =
-          getStringValue(sheet, RakipRow.STUDY_ASSAY_TECHNOLOGY_PLATFORM, RakipColumn.I);
-      study.accreditationProcedure =
-          getStringValue(sheet, RakipRow.STUDY_ACCREDITATION_PROCEDURE, RakipColumn.I);
-      study.protocolName = getStringValue(sheet, RakipRow.STUDY_PROTOCOL_NAME, RakipColumn.I);
-      study.protocolType = getStringValue(sheet, RakipRow.STUDY_PROTOCOL_TYPE, RakipColumn.I);
-      study.protocolDescription =
-          getStringValue(sheet, RakipRow.STUDY_PROTOCOL_DESCRIPTION, RakipColumn.I);
+      Study study = MetadataFactory.eINSTANCE.createStudy();
+      study.setStudyIdentifier(getStringValue(sheet, RakipRow.STUDY_ID, RakipColumn.I));
+      study.setStudyTitle(getStringValue(sheet, RakipRow.STUDY_TITLE, RakipColumn.I));
+      study.setStudyDescription(getStringValue(sheet, RakipRow.STUDY_DESCRIPTION, RakipColumn.I));
+      study.setStudyDesignType(getStringValue(sheet, RakipRow.STUDY_DESIGN_TYPE, RakipColumn.I));
+      study.setStudyAssayMeasurementType(
+          getStringValue(sheet, RakipRow.STUDY_ASSAY_MEASUREMENTS_TYPE, RakipColumn.I));
+      study.setStudyAssayTechnologyType(
+          getStringValue(sheet, RakipRow.STUDY_ASSAY_TECHNOLOGY_TYPE, RakipColumn.I));
+      study.setStudyAssayTechnologyPlatform(
+          getStringValue(sheet, RakipRow.STUDY_ASSAY_TECHNOLOGY_PLATFORM, RakipColumn.I));
+      study.setAccreditationProcedureForTheAssayTechnology(
+          getStringValue(sheet, RakipRow.STUDY_ACCREDITATION_PROCEDURE, RakipColumn.I));
+      study
+          .setStudyProtocolName(getStringValue(sheet, RakipRow.STUDY_PROTOCOL_NAME, RakipColumn.I));
+      study
+          .setStudyProtocolType(getStringValue(sheet, RakipRow.STUDY_PROTOCOL_TYPE, RakipColumn.I));
+      study.setStudyProtocolDescription(
+          getStringValue(sheet, RakipRow.STUDY_PROTOCOL_DESCRIPTION, RakipColumn.I));
       try {
-        study.protocolUri =
-            new URI(getStringValue(sheet, RakipRow.STUDY_PROTOCOL_URI, RakipColumn.I));
+        study.setStudyProtocolURI(
+            new URI(getStringValue(sheet, RakipRow.STUDY_PROTOCOL_URI, RakipColumn.I)));
       } catch (URISyntaxException e) {
       }
-      study.protocolVersion = getStringValue(sheet, RakipRow.STUDY_PROTOCOL_VERSION, RakipColumn.I);
-      study.parametersName =
-          getStringValue(sheet, RakipRow.STUDY_PROTOCOL_PARAMETERS_NAME, RakipColumn.I);
-      study.componentsName =
-          getStringValue(sheet, RakipRow.STUDY_PROTOCOL_COMPONENTS_NAME, RakipColumn.I);
-      study.componentsType =
-          getStringValue(sheet, RakipRow.STUDY_PROTOCOL_COMPONENTS_TYPE, RakipColumn.I);
+      study.setStudyProtocolVersion(
+          getStringValue(sheet, RakipRow.STUDY_PROTOCOL_VERSION, RakipColumn.I));
+      study.setStudyProtocolParametersName(
+          getStringValue(sheet, RakipRow.STUDY_PROTOCOL_PARAMETERS_NAME, RakipColumn.I));
+      study.setStudyProtocolComponentsName(
+          getStringValue(sheet, RakipRow.STUDY_PROTOCOL_COMPONENTS_NAME, RakipColumn.I));
+      study.setStudyProtocolComponentsType(
+          getStringValue(sheet, RakipRow.STUDY_PROTOCOL_COMPONENTS_TYPE, RakipColumn.I));
 
       return study;
     }
@@ -1049,24 +1189,24 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing sampling weight");
       }
 
-      StudySample studySample = new StudySample();
-      studySample.sample = getStringValue(sheet, RakipRow.STUDY_SAMPLE_NAME, RakipColumn.I);
-      studySample.collectionProtocol =
-          getStringValue(sheet, RakipRow.STUDY_SAMPLE_PROTOCOL, RakipColumn.I);
-      studySample.samplingStrategy =
-          getStringValue(sheet, RakipRow.STUDY_SAMPLE_STRATEGY, RakipColumn.I);
-      studySample.samplingProgramType =
-          getStringValue(sheet, RakipRow.STUDY_SAMPLE_TYPE, RakipColumn.I);
-      studySample.samplingMethod =
-          getStringValue(sheet, RakipRow.STUDY_SAMPLE_METHOD, RakipColumn.I);
-      studySample.samplingPlan = getStringValue(sheet, RakipRow.STUDY_SAMPLE_PLAN, RakipColumn.I);
-      studySample.samplingWeight =
-          getStringValue(sheet, RakipRow.STUDY_SAMPLE_WEIGHT, RakipColumn.I);
-      studySample.samplingSize = getStringValue(sheet, RakipRow.STUDY_SAMPLE_SIZE, RakipColumn.I);
-      studySample.lotSizeUnit =
-          getStringValue(sheet, RakipRow.STUDY_SAMPLE_SIZE_UNIT, RakipColumn.I);
-      studySample.samplingPoint = getStringValue(sheet, RakipRow.STUDY_SAMPLE_POINT, RakipColumn.I);
-
+      StudySample studySample = MetadataFactory.eINSTANCE.createStudySample();
+      studySample.setSampleName(getStringValue(sheet, RakipRow.STUDY_SAMPLE_NAME, RakipColumn.I));
+      studySample.setProtocolOfSampleCollection(
+          getStringValue(sheet, RakipRow.STUDY_SAMPLE_PROTOCOL, RakipColumn.I));
+      studySample.setSamplingStrategy(
+          getStringValue(sheet, RakipRow.STUDY_SAMPLE_STRATEGY, RakipColumn.I));
+      studySample.setTypeOfSamplingProgram(
+          getStringValue(sheet, RakipRow.STUDY_SAMPLE_TYPE, RakipColumn.I));
+      studySample
+          .setSamplingMethod(getStringValue(sheet, RakipRow.STUDY_SAMPLE_METHOD, RakipColumn.I));
+      studySample.setSamplingPlan(getStringValue(sheet, RakipRow.STUDY_SAMPLE_PLAN, RakipColumn.I));
+      studySample
+          .setSamplingWeight(getStringValue(sheet, RakipRow.STUDY_SAMPLE_WEIGHT, RakipColumn.I));
+      studySample.setSamplingSize(getStringValue(sheet, RakipRow.STUDY_SAMPLE_SIZE, RakipColumn.I));
+      studySample
+          .setLotSizeUnit(getStringValue(sheet, RakipRow.STUDY_SAMPLE_SIZE_UNIT, RakipColumn.I));
+      studySample
+          .setSamplingPoint(getStringValue(sheet, RakipRow.STUDY_SAMPLE_POINT, RakipColumn.I));
 
       return studySample;
     }
@@ -1083,21 +1223,33 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing non consecutive one day");
       }
 
-      DietaryAssessmentMethod dam = new DietaryAssessmentMethod();
-      dam.collectionTool =
-          getStringValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_TOOL, RakipColumn.I);
-      dam.numberOfNonConsecutiveOneDay =
-          getNumericValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_1DAY, RakipColumn.I).intValue();
-      dam.softwareTool =
-          getStringValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_SOFTWARE_TOOL, RakipColumn.I);
-      dam.numberOfFoodItems.addAll(
-          getStringListValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_ITEMS, RakipColumn.I));
-      dam.recordTypes.addAll(
-          getStringListValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_RECORD_TYPE, RakipColumn.I));
-      dam.foodDescriptors.addAll(
-          getStringListValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_DESCRIPTORS, RakipColumn.I));
+      DietaryAssessmentMethod dietaryAssessmentMethod =
+          MetadataFactory.eINSTANCE.createDietaryAssessmentMethod();
 
-      return dam;
+      dietaryAssessmentMethod.setCollectionTool(
+          getStringValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_TOOL, RakipColumn.I));
+
+      int numberOfNonConsecutiveOneDay =
+          getNumericValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_1DAY, RakipColumn.I).intValue();
+      dietaryAssessmentMethod.setNumberOfNonConsecutiveOneDay(numberOfNonConsecutiveOneDay);
+
+      String softwareTool =
+          getStringValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_SOFTWARE_TOOL, RakipColumn.I);
+      dietaryAssessmentMethod.setSoftwareTool(softwareTool);
+
+      String numberOfFoodItems =
+          getStringValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_ITEMS, RakipColumn.I);
+      dietaryAssessmentMethod.setNumberOfFoodItems(numberOfFoodItems);
+
+      String recordTypes =
+          getStringValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_RECORD_TYPE, RakipColumn.I);
+      dietaryAssessmentMethod.setRecordTypes(recordTypes);
+
+      String foodDescriptors =
+          getStringValue(sheet, RakipRow.DIETARY_ASSESSMENT_METHOD_DESCRIPTORS, RakipColumn.I);
+      dietaryAssessmentMethod.setFoodDescriptors(foodDescriptors);
+
+      return dietaryAssessmentMethod;
     }
 
     static Laboratory retrieveLaboratory(XSSFSheet sheet) {
@@ -1108,11 +1260,12 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing laboratory accreditation");
       }
 
-      Laboratory laboratory = new Laboratory();
-      laboratory.accreditation =
-          getStringValue(sheet, RakipRow.LABORATORY_ACCREDITATION, RakipColumn.I);
-      laboratory.name = getStringValue(sheet, RakipRow.LABORATORY_NAME, RakipColumn.I);
-      laboratory.country = getStringValue(sheet, RakipRow.LABORATORY_COUNTRY, RakipColumn.I);
+      Laboratory laboratory = MetadataFactory.eINSTANCE.createLaboratory();
+      laboratory.getLaboratoryAccreditation()
+          .add(getStringValue(sheet, RakipRow.LABORATORY_ACCREDITATION, RakipColumn.I));
+      laboratory.setLaboratoryName(getStringValue(sheet, RakipRow.LABORATORY_NAME, RakipColumn.I));
+      laboratory
+          .setLaboratoryCountry(getStringValue(sheet, RakipRow.LABORATORY_COUNTRY, RakipColumn.I));
 
       return laboratory;
     }
@@ -1125,20 +1278,22 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing assay name");
       }
 
-      Assay assay = new Assay();
-      assay.name = getStringValue(sheet, RakipRow.ASSAY_NAME, RakipColumn.I);
-      assay.description = getStringValue(sheet, RakipRow.ASSAY_DESCRIPTION, RakipColumn.I);
-      assay.moisturePercentage = getStringValue(sheet, RakipRow.ASSAY_MOIST_PERC, RakipColumn.I);
-      assay.fatPercentage = getStringValue(sheet, RakipRow.ASSAY_FAT_PERC, RakipColumn.I);
-      assay.detectionLimit = getStringValue(sheet, RakipRow.ASSAY_DETECTION_LIMIT, RakipColumn.I);
-      assay.quantificationLimit =
-          getStringValue(sheet, RakipRow.ASSAY_QUANTIFICATION_LIMIT, RakipColumn.I);
-      assay.leftCensoredData =
-          getStringValue(sheet, RakipRow.ASSAY_LEFT_CENSORED_DATA, RakipColumn.I);
-      assay.contaminationRange =
-          getStringValue(sheet, RakipRow.ASSAY_CONTAMINATION_RANGE, RakipColumn.I);
-      assay.uncertaintyValue =
-          getStringValue(sheet, RakipRow.ASSAY_UNCERTAINTY_VALUE, RakipColumn.I);
+      Assay assay = MetadataFactory.eINSTANCE.createAssay();
+      assay.setAssayName(getStringValue(sheet, RakipRow.ASSAY_NAME, RakipColumn.I));
+      assay.setAssayDescription(getStringValue(sheet, RakipRow.ASSAY_DESCRIPTION, RakipColumn.I));
+      assay
+          .setPercentageOfMoisture(getStringValue(sheet, RakipRow.ASSAY_MOIST_PERC, RakipColumn.I));
+      assay.setPercentageOfFat(getStringValue(sheet, RakipRow.ASSAY_FAT_PERC, RakipColumn.I));
+      assay.setLimitOfDetection(
+          getStringValue(sheet, RakipRow.ASSAY_DETECTION_LIMIT, RakipColumn.I));
+      assay.setLimitOfQuantification(
+          getStringValue(sheet, RakipRow.ASSAY_QUANTIFICATION_LIMIT, RakipColumn.I));
+      assay.setLeftCensoredData(
+          getStringValue(sheet, RakipRow.ASSAY_LEFT_CENSORED_DATA, RakipColumn.I));
+      assay.setRangeOfContamination(
+          getStringValue(sheet, RakipRow.ASSAY_CONTAMINATION_RANGE, RakipColumn.I));
+      assay.setUncertaintyValue(
+          getStringValue(sheet, RakipRow.ASSAY_UNCERTAINTY_VALUE, RakipColumn.I));
 
       return assay;
     }
@@ -1167,39 +1322,39 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing data type");
       }
 
-      Parameter param = new Parameter();
-      param.id = getStringValue(sheet, row, RakipColumn.L);
+      Parameter param = MetadataFactory.eINSTANCE.createParameter();
+      param.setParameterID(getStringValue(sheet, row, RakipColumn.L));
 
       String classificationText = getStringValue(sheet, row, RakipColumn.M).toLowerCase();
       if (classificationText.startsWith("input")) {
-        param.classification = Parameter.Classification.input;
+        param.setParameterClassification(ParameterClassification.INPUT);
       } else if (classificationText.startsWith("constant")) {
-        param.classification = Parameter.Classification.constant;
+        param.setParameterClassification(ParameterClassification.CONSTANT);
       } else if (classificationText.startsWith("output")) {
-        param.classification = Parameter.Classification.output;
+        param.setParameterClassification(ParameterClassification.OUTPUT);
       }
 
-      param.name = getStringValue(sheet, row, RakipColumn.N);
-      param.description = getStringValue(sheet, row, RakipColumn.O);
-      param.type = getStringValue(sheet, row, RakipColumn.P);
-      param.unit = getStringValue(sheet, row, RakipColumn.Q);
-      param.unitCategory = getStringValue(sheet, row, RakipColumn.R);
+      param.setParameterName(getStringValue(sheet, row, RakipColumn.N));
+      param.setParameterDescription(getStringValue(sheet, row, RakipColumn.O));
+      param.setParameterType(getStringValue(sheet, row, RakipColumn.P));
+      param.setParameterUnit(getStringValue(sheet, row, RakipColumn.Q));
+      param.setParameterUnitCategory(getStringValue(sheet, row, RakipColumn.R));
 
       try {
         String dataTypeAsString = getStringValue(sheet, row, RakipColumn.S);
-        param.dataType = DataTypes.valueOf(dataTypeAsString);
+        param.setParameterDataType(ParameterType.valueOf(dataTypeAsString));
       } catch (IllegalArgumentException ex) {
-        param.dataType = DataTypes.Other;
+        param.setParameterDataType(ParameterType.OTHER);
       }
 
-      param.source = getStringValue(sheet, row, RakipColumn.T);
-      param.subject = getStringValue(sheet, row, RakipColumn.U);
-      param.distribution = getStringValue(sheet, row, RakipColumn.V);
-      param.value = getStringValue(sheet, row, RakipColumn.W);
-      param.reference = getStringValue(sheet, row, RakipColumn.X);
-      param.variabilitySubject = getStringValue(sheet, row, RakipColumn.Y);
-      param.modelApplicability.add(getStringValue(sheet, row, RakipColumn.Z));
-      param.error = getNumericValue(sheet, row, RakipColumn.AA);
+      param.setParameterSource(getStringValue(sheet, row, RakipColumn.T));
+      param.setParameterSubject(getStringValue(sheet, row, RakipColumn.U));
+      param.setParameterDistribution(getStringValue(sheet, row, RakipColumn.V));
+      param.setParameterValue(getStringValue(sheet, row, RakipColumn.W));
+      // reference
+      param.setParameterVariabilitySubject(getStringValue(sheet, row, RakipColumn.Y));
+      // applicability
+      param.setParameterError(getStringValue(sheet, row, RakipColumn.AA));
 
       return param;
     }
@@ -1221,204 +1376,144 @@ class CreatorNodeModel extends NoInternalsModel {
       return true;
     }
 
-    static GenericModel retrieveGenericModel(BufferedDataTable table) {
-
-      GenericModel model = new GenericModel();
-
-      String[][] values = new String[200][30];
-      int i = 0;
-      for (DataRow row : table) {
-        if (isRowEmpty(row))
-          break;
-        int j = 0;
-        for (DataCell cell : row) {
-          values[i][j] = !cell.isMissing() ? ((StringCell) cell).getStringValue() : "";
-          j++;
-        }
-        i++;
-      }
-
-      model.generalInformation = retrieveGeneralInformation(values);
-      model.scope = retrieveScope(values);
-      model.dataBackground = retrieveDataBackground(values);
-
-      for (i = 132; i <= 152; i++) {
-        try {
-          Parameter param = TableParser.retrieveParameter(values, i);
-          model.modelMath.parameter.add(param);
-        } catch (Exception exception) {
-          exception.printStackTrace();
-        }
-      }
-
-      return model;
-    }
-
     static GeneralInformation retrieveGeneralInformation(String[][] values) {
-      GeneralInformation gi = new GeneralInformation();
 
-      gi.name = values[RakipRow.GENERAL_INFORMATION_NAME.num][RakipColumn.I.ordinal()];
-      gi.source = values[RakipRow.GENERAL_INFORMATION_SOURCE.num][RakipColumn.I.ordinal()];
-      gi.identifier = values[RakipRow.GENERAL_INFORMATION_IDENTIFIER.num][RakipColumn.I.ordinal()];
-      gi.rights = values[RakipRow.GENERAL_INFORMATION_RIGHTS.num][RakipColumn.I.ordinal()];
-      gi.isAvailable =
+      GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
+
+      String name = values[RakipRow.GENERAL_INFORMATION_NAME.num][RakipColumn.I.ordinal()];
+      String source = values[RakipRow.GENERAL_INFORMATION_SOURCE.num][RakipColumn.I.ordinal()];
+      String identifier =
+          values[RakipRow.GENERAL_INFORMATION_IDENTIFIER.num][RakipColumn.I.ordinal()];
+      String rights = values[RakipRow.GENERAL_INFORMATION_RIGHTS.num][RakipColumn.I.ordinal()];
+      boolean isAvailable =
           values[RakipRow.GENERAL_INFORMATION_AVAILABILITY.num][RakipColumn.I.ordinal()]
               .equals("Yes");
-      gi.language = values[RakipRow.GENERAL_INFORMATION_LANGUAGE.num][RakipColumn.I.ordinal()];
-      gi.software = values[RakipRow.GENERAL_INFORMATION_SOFTWARE.num][RakipColumn.I.ordinal()];
-      gi.languageWrittenIn =
+      String language = values[RakipRow.GENERAL_INFORMATION_LANGUAGE.num][RakipColumn.I.ordinal()];
+      String software = values[RakipRow.GENERAL_INFORMATION_SOFTWARE.num][RakipColumn.I.ordinal()];
+      String languageWrittenIn =
           values[RakipRow.GENERAL_INFORMATION_LANGUAGE_WRITTEN_IN.num][RakipColumn.I.ordinal()];
-      gi.status = values[RakipRow.GENERAL_INFORMATION_STATUS.num][RakipColumn.I.ordinal()];
-      gi.objective = values[RakipRow.GENERAL_INFORMATION_OBJECTIVE.num][RakipColumn.I.ordinal()];
-      gi.description =
+      String status = values[RakipRow.GENERAL_INFORMATION_STATUS.num][RakipColumn.I.ordinal()];
+      String objective =
+          values[RakipRow.GENERAL_INFORMATION_OBJECTIVE.num][RakipColumn.I.ordinal()];
+      String description =
           values[RakipRow.GENERAL_INFORMATION_DESCRIPTION.num][RakipColumn.I.ordinal()];
+
+      generalInformation.setName(name);
+      generalInformation.setSource(source);
+      generalInformation.setIdentifier(identifier);
+      generalInformation.setRights(rights);
+      generalInformation.setAvailable(isAvailable);
+      generalInformation.setLanguage(language);
+      generalInformation.setSoftware(software);
+      generalInformation.setLanguageWrittenIn(languageWrittenIn);
+      generalInformation.setStatus(status);
+      generalInformation.setObjective(objective);
+      generalInformation.setDescription(description);
 
       for (int numRow = 3; numRow < 7; numRow++) {
         try {
-          VCard vCard = retrieveCreator(values, numRow);
-          gi.creators.add(vCard);
+          Contact contact = retrieveContact(values, numRow);
+          generalInformation.getCreators().add(contact);
         } catch (Exception exception) {
         }
       }
 
       for (int numRow = 14; numRow < 17; numRow++) {
         try {
-          Record record = retrieveReference(values, numRow);
-          gi.reference.add(record);
+          Reference reference = retrieveReference(values, numRow);
+          generalInformation.getReference().add(reference);
         } catch (Exception exception) {
         }
       }
 
       try {
-        gi.modelCategory = retrieveModelCategory(values);
+        ModelCategory modelCategory = retrieveModelCategory(values);
+        generalInformation.getModelCategory().add(modelCategory);
       } catch (Exception exception) {
       }
 
-      return gi;
+      return generalInformation;
     }
 
-    /**
-     * @throw IllegalArgumentException if mail is missing
-     */
-    static VCard retrieveCreator(String[][] values, int row) {
+    static Contact retrieveContact(String[][] values, int row) {
 
-      String honorific = values[row][RakipColumn.K.ordinal()]; // honorific prefix
-      String givenName = values[row][RakipColumn.M.ordinal()];
-      String additionalName = values[row][RakipColumn.N.ordinal()];
-      String familyName = values[row][RakipColumn.O.ordinal()];
-      String organization = values[row][RakipColumn.P.ordinal()];
-      String telephone = values[row][RakipColumn.Q.ordinal()];
       String email = values[row][RakipColumn.R.ordinal()];
-      String country = values[row][RakipColumn.S.ordinal()];
-      String city = values[row][RakipColumn.T.ordinal()];
-      String zipCode = values[row][RakipColumn.U.ordinal()];
-      String postOfficeBox = values[row][RakipColumn.V.ordinal()];
-      String streetAddress = values[row][RakipColumn.W.ordinal()];
-      String extendedAddress = values[row][RakipColumn.X.ordinal()];
-      String region = values[row][RakipColumn.Y.ordinal()];
 
       // Check mandatory properties and throw exception if missing
       if (email.isEmpty()) {
         throw new IllegalArgumentException("Missing mail");
       }
 
-      VCard vCard = new VCard();
+      Contact contact = metadata.MetadataFactory.eINSTANCE.createContact();
+      contact.setTitle(values[row][RakipColumn.K.ordinal()]);
+      contact.setFamilyName(values[row][RakipColumn.O.ordinal()]);
+      contact.setGivenName(values[row][RakipColumn.M.ordinal()]);
+      contact.setEmail(email);
+      contact.setTelephone(values[row][RakipColumn.Q.ordinal()]);
+      contact.setStreetAddress(values[row][RakipColumn.W.ordinal()]);
+      contact.setCountry(values[row][RakipColumn.S.ordinal()]);
+      contact.setCity(values[row][RakipColumn.T.ordinal()]);
+      contact.setZipCode(values[row][RakipColumn.U.ordinal()]);
+      contact.setRegion(values[row][RakipColumn.Y.ordinal()]);
+      // time zone not included in spreadsheet ?
+      // gender not included in spreadsheet ?
+      // note not included in spreadsheet ?
+      contact.setOrganization(values[row][RakipColumn.P.ordinal()]);
 
-      // StructuredName <- family, given and additional names with prefixes
-      {
-        StructuredName structuredName = new StructuredName();
-        structuredName.setFamily(familyName);
-        structuredName.setGiven(givenName);
-        structuredName.getAdditionalNames().add(additionalName);
-        structuredName.getPrefixes().add(honorific);
-        vCard.setStructuredName(structuredName);
-      }
-
-      // organization is optional. Ignore empty cell.
-      if (!organization.isEmpty()) {
-        vCard.setOrganization(organization);
-      }
-
-      // telephone is optional. Ignore empty cell.
-      if (!telephone.isEmpty()) {
-        vCard.addTelephoneNumber(telephone, TelephoneType.VOICE);
-      }
-
-      vCard.addEmail(new Email(email));
-
-      // Address <- country, city and postal code
-      {
-        Address address = new Address();
-        address.setCountry(country);
-        address.setLocality(city);
-        address.setPostalCode(zipCode);
-        address.setPoBox(postOfficeBox);
-        address.setStreetAddress(streetAddress);
-        address.setExtendedAddress(extendedAddress);
-        address.setRegion(region);
-
-        vCard.addAddress(address);
-      }
-
-      return vCard;
+      return contact;
     }
 
     /**
      * @throw IllegalArgumentException if a mandatory property is missing
      */
-    static Record retrieveReference(String[][] values, int row) {
+    static Reference retrieveReference(String[][] values, int row) {
 
-      String isReferenceDescription = values[row][RakipColumn.K.ordinal()];
-      String type = values[row][RakipColumn.L.ordinal()];
-      String pmid = values[row][RakipColumn.N.ordinal()];
-      String doi = values[row][RakipColumn.O.ordinal()];
-      String author = values[row][RakipColumn.P.ordinal()];
-      String title = values[row][RakipColumn.Q.ordinal()];
-      String abstractText = values[row][RakipColumn.R.ordinal()];
-      String status = values[row][RakipColumn.T.ordinal()];
-      String website = values[row][RakipColumn.U.ordinal()];
+      final String isReferenceDescriptionString = values[row][RakipColumn.K.ordinal()];
+      final String doi = values[row][RakipColumn.O.ordinal()];
 
       // Check mandatory properties and throw exception if missing
-      if (isReferenceDescription.isEmpty()) {
+      if (isReferenceDescriptionString.isEmpty()) {
         throw new IllegalArgumentException("Missing Is reference description?");
       }
       if (doi.isEmpty()) {
         throw new IllegalArgumentException("Missing DOI");
       }
 
-      Record record = new Record();
+      Reference reference = MetadataFactory.eINSTANCE.createReference();
 
-      // Save isReferenceDescription in U1 tag (user definable #1)
-      record.setUserDefinable1(isReferenceDescription);
+      // Is reference description
+      reference.setIsReferenceDescription(isReferenceDescriptionString.equals("Yes"));
 
-      // Look for RIS type (abbreviation) through the string value
-      ResourceBundle risBundle = ResourceBundle.getBundle("ris_types");
-      for (String abbreviation : risBundle.keySet()) {
-        if (abbreviation.equals(type)) {
-          com.gmail.gcolaianni5.jris.bean.Type risType =
-              com.gmail.gcolaianni5.jris.bean.Type.valueOf(abbreviation);
-          record.setType(risType);
-          break;
-        }
+      // Publication type
+      // Get publication type from literal. Get null if invalid literal.
+      String publicationTypeLiteral = values[row][RakipColumn.L.ordinal()];
+      PublicationType publicationType = PublicationType.get(publicationTypeLiteral);
+      if (publicationType != null) {
+        reference.setPublicationType(publicationType);
       }
 
-      // Save PMID in U2 tag (user definable #2)
-      record.setUserDefinable2(pmid);
+      // PMID
+      String pmid = values[row][RakipColumn.N.ordinal()];
+      if (!pmid.isEmpty()) {
+        reference.setPmid(pmid);
+      }
 
-      record.setDoi(doi);
+      // DOI
+      if (!doi.isEmpty()) {
+        reference.setDoi(doi);
+      }
 
-      // Save author list
-      Arrays.stream(author.split(";")).forEach(record::addAuthor);
+      reference.setAuthorList(values[row][RakipColumn.P.ordinal()]);
+      reference.setPublicationTitle(values[row][RakipColumn.Q.ordinal()]);
+      reference.setPublicationAbstract(values[row][RakipColumn.R.ordinal()]);
+      // TODO: journal
+      // TODO: issue
+      reference.setPublicationStatus(values[row][RakipColumn.T.ordinal()]);
+      // TODO: web site
+      reference.setPublicationWebsite(values[row][RakipColumn.U.ordinal()]);
+      // TODO: comment
 
-      record.setTitle(title); // Save title in TI tag
-      record.setAbstr(abstractText); // Save abstract in AB tag
-
-      // Save status in U3 tag (user definable #3)
-      record.setUserDefinable3(status);
-
-      record.setUrl(website);
-
-      return record;
+      return reference;
     }
 
     /**
@@ -1433,26 +1528,28 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing model class");
       }
 
-      ModelCategory modelCategory = new ModelCategory();
-      modelCategory.modelClass = values[RakipRow.MODEL_CATEGORY_CLASS.num][columnI];
-      modelCategory.modelSubClass
+      ModelCategory modelCategory = MetadataFactory.eINSTANCE.createModelCategory();
+      modelCategory.setModelClass(values[RakipRow.MODEL_CATEGORY_CLASS.num][columnI]);
+      modelCategory.getModelSubClass()
           .addAll(getStringListValue(values, RakipRow.MODEL_CATEGORY_SUBCLASS, RakipColumn.I));
-      modelCategory.modelClassComment = values[RakipRow.MODEL_CATEGORY_COMMENT.num][columnI];
-      modelCategory.basicProcess
-          .addAll(getStringListValue(values, RakipRow.MODEL_CATEGORY_PROCESS, RakipColumn.I));
+      modelCategory.setModelClassComment(values[RakipRow.MODEL_CATEGORY_COMMENT.num][columnI]);
+      modelCategory.setBasicProcess(values[RakipRow.MODEL_CATEGORY_PROCESS.num][columnI]);
 
       return modelCategory;
     }
 
     static Scope retrieveScope(String[][] values) {
-      Scope scope = new Scope();
+
+      Scope scope = MetadataFactory.eINSTANCE.createScope();
       try {
-        scope.hazard = retrieveHazard(values);
+        Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
+        scope.getHazard().add(hazard);
       } catch (IllegalArgumentException exception) {
         // Ignore since hazard is optional
       }
       try {
-        scope.populationGroup = retrievePopulationGroup(values);
+        PopulationGroup populationGroup = MetadataFactory.eINSTANCE.createPopulationGroup();
+        scope.setPopulationGroup(populationGroup);
       } catch (IllegalArgumentException exception) {
         // Ignore since population group is optional
       }
@@ -1472,19 +1569,20 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing hazard");
       }
 
-      Hazard hazard = new Hazard();
-      hazard.hazardType = values[RakipRow.HAZARD_TYPE.num][columnI];
-      hazard.hazardName = values[RakipRow.HAZARD_NAME.num][columnI];
-      hazard.hazardDescription = values[RakipRow.HAZARD_DESCRIPTION.num][columnI];
-      hazard.hazardUnit = values[RakipRow.HAZARD_UNIT.num][columnI];
-      hazard.adverseEffect = values[RakipRow.HAZARD_ADVERSE_EFFECT.num][columnI];
-      hazard.sourceOfContamination = values[RakipRow.HAZARD_CONTAMINATION_SOURCE.num][columnI];
-      hazard.bmd = values[RakipRow.HAZARD_BMD.num][columnI];
-      hazard.mrl = values[RakipRow.HAZARD_MRL.num][columnI];
-      hazard.noael = values[RakipRow.HAZARD_NOAEL.num][columnI];
-      hazard.loael = values[RakipRow.HAZARD_LOAEL.num][columnI];
-      hazard.ard = values[RakipRow.HAZARD_ARFD.num][columnI];
-      hazard.hazardIndSum = values[RakipRow.HAZARD_IND_SUM.num][columnI];
+      Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
+
+      hazard.setHazardType(values[RakipRow.HAZARD_TYPE.num][columnI]);
+      hazard.setHazardName(values[RakipRow.HAZARD_NAME.num][columnI]);
+      hazard.setHazardDescription(values[RakipRow.HAZARD_DESCRIPTION.num][columnI]);
+      hazard.setHazardUnit(values[RakipRow.HAZARD_UNIT.num][columnI]);
+      hazard.setAdverseEffect(values[RakipRow.HAZARD_ADVERSE_EFFECT.num][columnI]);
+      hazard.setSourceOfContamination(values[RakipRow.HAZARD_CONTAMINATION_SOURCE.num][columnI]);
+      hazard.setBenchmarkDose(values[RakipRow.HAZARD_BMD.num][columnI]);
+      hazard.setMaximumResidueLimit(values[RakipRow.HAZARD_MRL.num][columnI]);
+      hazard.setNoObservedAdverseAffectLevel(values[RakipRow.HAZARD_NOAEL.num][columnI]);
+      hazard.setLowestObservedAdverseAffectLevel(values[RakipRow.HAZARD_LOAEL.num][columnI]);
+      hazard.setAcuteReferenceDose(values[RakipRow.HAZARD_ARFD.num][columnI]);
+      hazard.setHazardIndSum(values[RakipRow.HAZARD_IND_SUM.num][columnI]);
 
       return hazard;
     }
@@ -1499,59 +1597,85 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing population name");
       }
 
-      PopulationGroup populationGroup = new PopulationGroup();
-      populationGroup.populationName = values[RakipRow.POPULATION_GROUP_NAME.num][columnI];
-      populationGroup.targetPopulation = values[RakipRow.POPULATION_GROUP_TARGET.num][columnI];
-      populationGroup.populationSpan
-          .addAll(getStringListValue(values, RakipRow.POPULATION_GROUP_SPAN, RakipColumn.I));
-      populationGroup.populationDescription
-          .addAll(getStringListValue(values, RakipRow.POPULATION_GROUP_DESCRIPTION, RakipColumn.I));
-      populationGroup.populationAge
-          .addAll(getStringListValue(values, RakipRow.POPULATION_GROUP_AGE, RakipColumn.I));
-      populationGroup.populationGender = values[RakipRow.POPULATION_GROUP_GENDER.num][columnI];
-      populationGroup.bmi
-          .addAll(getStringListValue(values, RakipRow.POPULATION_GROUP_BMI, RakipColumn.I));
-      populationGroup.specialDietGroups
-          .addAll(getStringListValue(values, RakipRow.POPULATION_GROUP_DIET, RakipColumn.I));
-      populationGroup.patternConsumption.addAll(
-          getStringListValue(values, RakipRow.POPULATION_GROUP_PATTERN_CONSUMPTION, RakipColumn.I));
-      populationGroup.region
-          .addAll(getStringListValue(values, RakipRow.POPULATION_GROUP_REGION, RakipColumn.I));
-      populationGroup.country
-          .addAll(getStringListValue(values, RakipRow.POPULATION_GROUP_COUNTRY, RakipColumn.I));
-      populationGroup.populationRiskFactor
-          .addAll(getStringListValue(values, RakipRow.POPULATION_GROUP_RISK, RakipColumn.I));
-      populationGroup.season
-          .addAll(getStringListValue(values, RakipRow.POPULATION_GROUP_SEASON, RakipColumn.I));
+
+      PopulationGroup populationGroup = MetadataFactory.eINSTANCE.createPopulationGroup();
+      populationGroup.setPopulationName(values[RakipRow.POPULATION_GROUP_NAME.num][columnI]);
+      populationGroup.setTargetPopulation(values[RakipRow.POPULATION_GROUP_TARGET.num][columnI]);
+
+      List<String> populationSpan =
+          getStringListValue(values, RakipRow.POPULATION_GROUP_SPAN, RakipColumn.I);
+      populationGroup.getPopulationSpan().addAll(populationSpan);
+
+      List<String> populationDescription =
+          getStringListValue(values, RakipRow.POPULATION_GROUP_DESCRIPTION, RakipColumn.I);
+      populationGroup.getPopulationDescription().addAll(populationDescription);
+
+      List<String> populationAge =
+          getStringListValue(values, RakipRow.POPULATION_GROUP_AGE, RakipColumn.I);
+      populationGroup.getPopulationAge().addAll(populationAge);
+
+      populationGroup.setPopulationGender(values[RakipRow.POPULATION_GROUP_GENDER.num][columnI]);
+
+      List<String> bmi = getStringListValue(values, RakipRow.POPULATION_GROUP_BMI, RakipColumn.I);
+      populationGroup.getBmi().addAll(bmi);
+
+      List<String> specialDietGroups =
+          getStringListValue(values, RakipRow.POPULATION_GROUP_DIET, RakipColumn.I);
+      populationGroup.getSpecialDietGroups().addAll(specialDietGroups);
+
+      List<String> patternConsumption =
+          getStringListValue(values, RakipRow.POPULATION_GROUP_PATTERN_CONSUMPTION, RakipColumn.I);
+      populationGroup.getPatternConsumption().addAll(patternConsumption);
+
+      List<String> region =
+          getStringListValue(values, RakipRow.POPULATION_GROUP_REGION, RakipColumn.I);
+      populationGroup.getRegion().addAll(region);
+
+      List<String> country =
+          getStringListValue(values, RakipRow.POPULATION_GROUP_COUNTRY, RakipColumn.I);
+      populationGroup.getCountry().addAll(country);
+
+      List<String> populationRiskFactor =
+          getStringListValue(values, RakipRow.POPULATION_GROUP_RISK, RakipColumn.I);
+      populationGroup.getPopulationRiskFactor().addAll(populationRiskFactor);
+
+      List<String> season =
+          getStringListValue(values, RakipRow.POPULATION_GROUP_SEASON, RakipColumn.I);
+      populationGroup.getSeason().addAll(season);
 
       return populationGroup;
     }
 
     static DataBackground retrieveDataBackground(String[][] values) {
 
-      DataBackground dataBackground = new DataBackground();
-      dataBackground.study = retrieveStudy(values);
+      DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
+
+      dataBackground.setStudy(retrieveStudy(values));
 
       try {
-        dataBackground.studySample = retrieveStudySample(values);
+        StudySample studySample = retrieveStudySample(values);
+        dataBackground.getStudysample().add(studySample);
       } catch (IllegalArgumentException exception) {
         // Ignore exception since the study sample is optional
       }
 
       try {
-        dataBackground.dietaryAssessmentMethod = retrieveDAM(values);
+        DietaryAssessmentMethod dietaryAssessmentMethod = retrieveDAM(values);
+        dataBackground.setDietaryassessmentmethod(dietaryAssessmentMethod);
       } catch (IllegalArgumentException exception) {
         // Ignore exception since the dietary assessment method is optional
       }
 
       try {
-        dataBackground.laboratory = retrieveLaboratory(values);
+        Laboratory laboratory = retrieveLaboratory(values);
+        dataBackground.setLaboratory(laboratory);
       } catch (IllegalArgumentException exception) {
         // Ignore exception since the laboratory is optional
       }
 
       try {
-        dataBackground.assay = retrieveAssay(values);
+        Assay assay = retrieveAssay(values);
+        dataBackground.getAssay().add(assay);
       } catch (IllegalArgumentException exception) {
         // Ignore exception since the assay is optional
       }
@@ -1569,27 +1693,35 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing study title");
       }
 
-      Study study = new Study();
-      study.id = values[RakipRow.STUDY_ID.num][columnI];
-      study.title = values[RakipRow.STUDY_TITLE.num][columnI];
-      study.description = values[RakipRow.STUDY_DESCRIPTION.num][columnI];
-      study.designType = values[RakipRow.STUDY_DESIGN_TYPE.num][columnI];
-      study.measurementType = values[RakipRow.STUDY_ASSAY_MEASUREMENTS_TYPE.num][columnI];
-      study.technologyType = values[RakipRow.STUDY_ASSAY_TECHNOLOGY_TYPE.num][columnI];
-      study.technologyPlatform = values[RakipRow.STUDY_ASSAY_TECHNOLOGY_PLATFORM.num][columnI];
-      study.accreditationProcedure = values[RakipRow.STUDY_ACCREDITATION_PROCEDURE.num][columnI];
-      study.protocolName = values[RakipRow.STUDY_PROTOCOL_NAME.num][columnI];
-      study.protocolType = values[RakipRow.STUDY_PROTOCOL_TYPE.num][columnI];
-      study.protocolDescription = values[RakipRow.STUDY_PROTOCOL_DESCRIPTION.num][columnI];
+      Study study = MetadataFactory.eINSTANCE.createStudy();
+      study.setStudyIdentifier(values[RakipRow.STUDY_ID.num][columnI]);
+      study.setStudyTitle(values[RakipRow.STUDY_TITLE.num][columnI]);
+      study.setStudyDescription(values[RakipRow.STUDY_DESCRIPTION.num][columnI]);
+      study.setStudyDesignType(values[RakipRow.STUDY_DESIGN_TYPE.num][columnI]);
+      study.setStudyAssayMeasurementType(
+          values[RakipRow.STUDY_ASSAY_MEASUREMENTS_TYPE.num][columnI]);
+      study.setStudyAssayTechnologyType(values[RakipRow.STUDY_ASSAY_TECHNOLOGY_TYPE.num][columnI]);
+      study.setStudyAssayTechnologyPlatform(
+          values[RakipRow.STUDY_ASSAY_TECHNOLOGY_PLATFORM.num][columnI]);
+      study.setAccreditationProcedureForTheAssayTechnology(
+          values[RakipRow.STUDY_ACCREDITATION_PROCEDURE.num][columnI]);
+      study.setStudyProtocolName(values[RakipRow.STUDY_PROTOCOL_COMPONENTS_NAME.num][columnI]);
+      study.setStudyProtocolType(values[RakipRow.STUDY_PROTOCOL_TYPE.num][columnI]);
+      study.setStudyProtocolDescription(values[RakipRow.STUDY_PROTOCOL_DESCRIPTION.num][columnI]);
+
       try {
-        study.protocolUri = new URI(values[RakipRow.STUDY_PROTOCOL_URI.num][columnI]);
+        study.setStudyProtocolURI(new URI(values[RakipRow.STUDY_PROTOCOL_URI.num][columnI]));
       } catch (URISyntaxException exception) {
         // does nothing
       }
-      study.protocolVersion = values[RakipRow.STUDY_PROTOCOL_VERSION.num][columnI];
-      study.parametersName = values[RakipRow.STUDY_PROTOCOL_PARAMETERS_NAME.num][columnI];
-      study.componentsName = values[RakipRow.STUDY_PROTOCOL_COMPONENTS_NAME.num][columnI];
-      study.componentsType = values[RakipRow.STUDY_PROTOCOL_COMPONENTS_TYPE.num][columnI];
+
+      study.setStudyProtocolVersion(values[RakipRow.STUDY_PROTOCOL_VERSION.num][columnI]);
+      study.setStudyProtocolParametersName(
+          values[RakipRow.STUDY_PROTOCOL_PARAMETERS_NAME.num][columnI]);
+      study.setStudyProtocolComponentsName(
+          values[RakipRow.STUDY_PROTOCOL_COMPONENTS_NAME.num][columnI]);
+      study.setStudyProtocolComponentsType(
+          values[RakipRow.STUDY_PROTOCOL_COMPONENTS_TYPE.num][columnI]);
 
       return study;
     }
@@ -1610,17 +1742,18 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing sampling weight");
       }
 
-      StudySample studySample = new StudySample();
-      studySample.sample = values[RakipRow.STUDY_SAMPLE_NAME.num][columnI];
-      studySample.collectionProtocol = values[RakipRow.STUDY_SAMPLE_PROTOCOL.num][columnI];
-      studySample.samplingStrategy = values[RakipRow.STUDY_SAMPLE_STRATEGY.num][columnI];
-      studySample.samplingProgramType = values[RakipRow.STUDY_SAMPLE_TYPE.num][columnI];
-      studySample.samplingMethod = values[RakipRow.STUDY_SAMPLE_METHOD.num][columnI];
-      studySample.samplingPlan = values[RakipRow.STUDY_SAMPLE_PLAN.num][columnI];
-      studySample.samplingWeight = values[RakipRow.STUDY_SAMPLE_WEIGHT.num][columnI];
-      studySample.samplingSize = values[RakipRow.STUDY_SAMPLE_SIZE.num][columnI];
-      studySample.lotSizeUnit = values[RakipRow.STUDY_SAMPLE_SIZE.num][columnI];
-      studySample.samplingPoint = values[RakipRow.STUDY_SAMPLE_POINT.num][columnI];
+      StudySample studySample = MetadataFactory.eINSTANCE.createStudySample();
+      studySample.setSampleName(values[RakipRow.STUDY_SAMPLE_NAME.num][columnI]);
+      studySample
+          .setProtocolOfSampleCollection(values[RakipRow.STUDY_SAMPLE_PROTOCOL.num][columnI]);
+      studySample.setSamplingStrategy(values[RakipRow.STUDY_SAMPLE_STRATEGY.num][columnI]);
+      studySample.setTypeOfSamplingProgram(values[RakipRow.STUDY_SAMPLE_TYPE.num][columnI]);
+      studySample.setSamplingMethod(values[RakipRow.STUDY_SAMPLE_METHOD.num][columnI]);
+      studySample.setSamplingPlan(values[RakipRow.STUDY_SAMPLE_PLAN.num][columnI]);
+      studySample.setSamplingWeight(values[RakipRow.STUDY_SAMPLE_WEIGHT.num][columnI]);
+      studySample.setSamplingSize(values[RakipRow.STUDY_SAMPLE_SIZE.num][columnI]);
+      studySample.setLotSizeUnit(values[RakipRow.STUDY_SAMPLE_SIZE.num][columnI]);
+      studySample.setSamplingPoint(values[RakipRow.STUDY_SAMPLE_POINT.num][columnI]);
 
       return studySample;
     }
@@ -1638,19 +1771,29 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing non consecutive one day");
       }
 
-      DietaryAssessmentMethod dam = new DietaryAssessmentMethod();
-      dam.collectionTool = values[RakipRow.DIETARY_ASSESSMENT_METHOD_TOOL.num][columnI];
-      dam.numberOfNonConsecutiveOneDay =
-          Integer.parseInt(values[RakipRow.DIETARY_ASSESSMENT_METHOD_1DAY.num][columnI]);
-      dam.softwareTool = values[RakipRow.DIETARY_ASSESSMENT_METHOD_SOFTWARE_TOOL.num][columnI];
-      dam.numberOfFoodItems.addAll(
-          getStringListValue(values, RakipRow.DIETARY_ASSESSMENT_METHOD_ITEMS, RakipColumn.I));
-      dam.recordTypes.addAll(getStringListValue(values,
-          RakipRow.DIETARY_ASSESSMENT_METHOD_RECORD_TYPE, RakipColumn.I));
-      dam.foodDescriptors.addAll(getStringListValue(values,
-          RakipRow.DIETARY_ASSESSMENT_METHOD_DESCRIPTORS, RakipColumn.I));
+      DietaryAssessmentMethod dietaryAssessmentMethod =
+          MetadataFactory.eINSTANCE.createDietaryAssessmentMethod();
 
-      return dam;
+      String collectionTool = values[RakipRow.DIETARY_ASSESSMENT_METHOD_TOOL.num][columnI];
+      dietaryAssessmentMethod.setCollectionTool(collectionTool);
+
+      int numberOfNonConsecutiveOneDay =
+          Integer.parseInt(values[RakipRow.DIETARY_ASSESSMENT_METHOD_1DAY.num][columnI]);
+      dietaryAssessmentMethod.setNumberOfNonConsecutiveOneDay(numberOfNonConsecutiveOneDay);
+
+      String softwareTool = values[RakipRow.DIETARY_ASSESSMENT_METHOD_SOFTWARE_TOOL.num][columnI];
+      dietaryAssessmentMethod.setSoftwareTool(softwareTool);
+
+      String numberOfFoodItems = values[RakipRow.DIETARY_ASSESSMENT_METHOD_ITEMS.num][columnI];
+      dietaryAssessmentMethod.setNumberOfFoodItems(numberOfFoodItems);
+
+      String recordTypes = values[RakipRow.DIETARY_ASSESSMENT_METHOD_RECORD_TYPE.num][columnI];
+      dietaryAssessmentMethod.setRecordTypes(recordTypes);
+
+      String foodDescriptors = values[RakipRow.DIETARY_ASSESSMENT_METHOD_DESCRIPTORS.num][columnI];
+      dietaryAssessmentMethod.setFoodDescriptors(foodDescriptors);
+
+      return dietaryAssessmentMethod;
     }
 
     /** @throws IllegalArgumentException if a mandatory property is missing. */
@@ -1663,10 +1806,11 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing laboratory accreditation");
       }
 
-      Laboratory laboratory = new Laboratory();
-      laboratory.accreditation = values[RakipRow.LABORATORY_ACCREDITATION.num][columnI];
-      laboratory.name = values[RakipRow.LABORATORY_ACCREDITATION.num][columnI];
-      laboratory.country = values[RakipRow.LABORATORY_COUNTRY.num][columnI];
+      Laboratory laboratory = MetadataFactory.eINSTANCE.createLaboratory();
+      laboratory.getLaboratoryAccreditation()
+          .add(values[RakipRow.LABORATORY_ACCREDITATION.num][columnI]);
+      laboratory.setLaboratoryName(values[RakipRow.LABORATORY_NAME.num][columnI]);
+      laboratory.setLaboratoryCountry(values[RakipRow.LABORATORY_COUNTRY.num][columnI]);
 
       return laboratory;
     }
@@ -1676,16 +1820,16 @@ class CreatorNodeModel extends NoInternalsModel {
 
       int columnI = RakipColumn.I.ordinal();
 
-      Assay assay = new Assay();
-      assay.name = values[RakipRow.ASSAY_NAME.num][columnI];
-      assay.description = values[RakipRow.ASSAY_DESCRIPTION.num][columnI];
-      assay.moisturePercentage = values[RakipRow.ASSAY_MOIST_PERC.num][columnI];
-      assay.fatPercentage = values[RakipRow.ASSAY_FAT_PERC.num][columnI];
-      assay.detectionLimit = values[RakipRow.ASSAY_DETECTION_LIMIT.num][columnI];
-      assay.quantificationLimit = values[RakipRow.ASSAY_QUANTIFICATION_LIMIT.num][columnI];
-      assay.leftCensoredData = values[RakipRow.ASSAY_LEFT_CENSORED_DATA.num][columnI];
-      assay.contaminationRange = values[RakipRow.ASSAY_CONTAMINATION_RANGE.num][columnI];
-      assay.uncertaintyValue = values[RakipRow.ASSAY_UNCERTAINTY_VALUE.num][columnI];
+      Assay assay = MetadataFactory.eINSTANCE.createAssay();
+      assay.setAssayName(values[RakipRow.ASSAY_NAME.num][columnI]);
+      assay.setAssayDescription(values[RakipRow.ASSAY_DESCRIPTION.num][columnI]);
+      assay.setPercentageOfMoisture(values[RakipRow.ASSAY_MOIST_PERC.num][columnI]);
+      assay.setPercentageOfFat(values[RakipRow.ASSAY_FAT_PERC.num][columnI]);
+      assay.setLimitOfDetection(values[RakipRow.ASSAY_DETECTION_LIMIT.num][columnI]);
+      assay.setLimitOfQuantification(values[RakipRow.ASSAY_QUANTIFICATION_LIMIT.num][columnI]);
+      assay.setLeftCensoredData(values[RakipRow.ASSAY_LEFT_CENSORED_DATA.num][columnI]);
+      assay.setRangeOfContamination(values[RakipRow.ASSAY_CONTAMINATION_RANGE.num][columnI]);
+      assay.setUncertaintyValue(values[RakipRow.ASSAY_UNCERTAINTY_VALUE.num][columnI]);
 
       return assay;
     }
@@ -1714,39 +1858,39 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing data type");
       }
 
-      Parameter param = new Parameter();
-      param.id = values[row][RakipColumn.L.ordinal()];
+      Parameter param = MetadataFactory.eINSTANCE.createParameter();
+      param.setParameterID(values[row][RakipColumn.L.ordinal()]);
 
       String classificationText = values[row][RakipColumn.M.ordinal()].toLowerCase();
       if (classificationText.startsWith("input")) {
-        param.classification = Parameter.Classification.input;
+        param.setParameterClassification(ParameterClassification.INPUT);
       } else if (classificationText.startsWith("constant")) {
-        param.classification = Parameter.Classification.constant;
+        param.setParameterClassification(ParameterClassification.CONSTANT);
       } else if (classificationText.startsWith("output")) {
-        param.classification = Parameter.Classification.output;
+        param.setParameterClassification(ParameterClassification.OUTPUT);
       }
 
-      param.name = values[row][RakipColumn.N.ordinal()];
-      param.description = values[row][RakipColumn.O.ordinal()];
-      param.type = values[row][RakipColumn.P.ordinal()];
-      param.unit = values[row][RakipColumn.Q.ordinal()];
-      param.unitCategory = values[row][RakipColumn.R.ordinal()];
+      param.setParameterName(values[row][RakipColumn.N.ordinal()]);
+      param.setParameterDescription(values[row][RakipColumn.O.ordinal()]);
+      param.setParameterType(values[row][RakipColumn.P.ordinal()]);
+      param.setParameterUnit(values[row][RakipColumn.Q.ordinal()]);
+      param.setParameterUnitCategory(values[row][RakipColumn.R.ordinal()]);
 
       try {
         String dataTypeAsString = values[row][RakipColumn.S.ordinal()];
-        param.dataType = DataTypes.valueOf(dataTypeAsString);
+        param.setParameterDataType(ParameterType.valueOf(dataTypeAsString));
       } catch (IllegalArgumentException ex) {
-        param.dataType = DataTypes.Other;
+        param.setParameterDataType(ParameterType.OTHER);
       }
 
-      param.source = values[row][RakipColumn.T.ordinal()];
-      param.subject = values[row][RakipColumn.U.ordinal()];
-      param.distribution = values[row][RakipColumn.V.ordinal()];
-      param.value = values[row][RakipColumn.W.ordinal()];
-      param.reference = values[row][RakipColumn.X.ordinal()];
-      param.variabilitySubject = values[row][RakipColumn.Y.ordinal()];
-      param.modelApplicability.add(values[row][RakipColumn.Z.ordinal()]);
-      param.error = Double.parseDouble(values[row][RakipColumn.AA.ordinal()]);
+      param.setParameterSource(values[row][RakipColumn.T.ordinal()]);
+      param.setParameterSubject(values[row][RakipColumn.U.ordinal()]);
+      param.setParameterDistribution(values[row][RakipColumn.V.ordinal()]);
+      param.setParameterValue(values[row][RakipColumn.W.ordinal()]);
+      // reference
+      param.setParameterVariabilitySubject(values[row][RakipColumn.Y.ordinal()]);
+      // model applicability
+      param.setParameterError(values[row][RakipColumn.AA.ordinal()]);
 
       return param;
     }

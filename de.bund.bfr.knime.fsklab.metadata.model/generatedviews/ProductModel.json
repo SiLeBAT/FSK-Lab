@@ -1,28 +1,14 @@
 {
   "type": "object",
   "properties": {
-    "environmentName": {
+    "productName": {
       "type": "string"
     },
-    "environmentDescription": {
+    "productDescription": {
       "type": "string"
     },
-    "environmentUnit": {
+    "productUnit": {
       "type": "string"
-    },
-    "originCountry": {
-      "type": "string"
-    },
-    "fisheriesArea": {
-      "type": "string"
-    },
-    "productionDate": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "expirationDate": {
-      "type": "string",
-      "format": "date-time"
     },
     "productionMethod": {
       "type": "string"
@@ -33,9 +19,27 @@
     "productTreatment": {
       "type": "string"
     },
+    "originCountry": {
+      "type": "string"
+    },
     "originArea": {
       "type": "string"
+    },
+    "fisheriesArea": {
+      "type": "string"
+    },
+    "productionDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiryDate": {
+      "type": "string",
+      "format": "date-time"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "productName",
+    "productUnit"
+  ]
 }

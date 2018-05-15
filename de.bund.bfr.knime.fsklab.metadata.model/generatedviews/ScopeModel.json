@@ -8,95 +8,108 @@
       "type": "string"
     },
     "product": {
-      "type": "object",
-      "properties": {
-        "environmentName": {
-          "type": "string"
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "productName": {
+            "type": "string"
+          },
+          "productDescription": {
+            "type": "string"
+          },
+          "productUnit": {
+            "type": "string"
+          },
+          "productionMethod": {
+            "type": "string"
+          },
+          "packaging": {
+            "type": "string"
+          },
+          "productTreatment": {
+            "type": "string"
+          },
+          "originCountry": {
+            "type": "string"
+          },
+          "originArea": {
+            "type": "string"
+          },
+          "fisheriesArea": {
+            "type": "string"
+          },
+          "productionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date-time"
+          }
         },
-        "environmentDescription": {
-          "type": "string"
-        },
-        "environmentUnit": {
-          "type": "string"
-        },
-        "originCountry": {
-          "type": "string"
-        },
-        "fisheriesArea": {
-          "type": "string"
-        },
-        "productionDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "expirationDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "productionMethod": {
-          "type": "string"
-        },
-        "packaging": {
-          "type": "string"
-        },
-        "productTreatment": {
-          "type": "string"
-        },
-        "originArea": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
+        "additionalProperties": false,
+        "required": [
+          "productName",
+          "productUnit"
+        ]
+      }
     },
     "hazard": {
-      "type": "object",
-      "properties": {
-        "hazardType": {
-          "type": "string"
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "hazardType": {
+            "type": "string"
+          },
+          "hazardName": {
+            "type": "string"
+          },
+          "hazardDescription": {
+            "type": "string"
+          },
+          "hazardUnit": {
+            "type": "string"
+          },
+          "adverseEffect": {
+            "type": "string"
+          },
+          "sourceOfContamination": {
+            "type": "string"
+          },
+          "benchmarkDose": {
+            "type": "string"
+          },
+          "maximumResidueLimit": {
+            "type": "string"
+          },
+          "noObservedAdverseAffectLevel": {
+            "type": "string"
+          },
+          "lowestObservedAdverseAffectLevel": {
+            "type": "string"
+          },
+          "acceptableOperatorExposureLevel": {
+            "type": "string"
+          },
+          "acuteReferenceDose": {
+            "type": "string"
+          },
+          "acceptableDailyIntake": {
+            "type": "string"
+          },
+          "hazardIndSum": {
+            "type": "string"
+          }
         },
-        "hazardName": {
-          "type": "string"
-        },
-        "hazardDescription": {
-          "type": "string"
-        },
-        "hazardUnit": {
-          "type": "string"
-        },
-        "adverseEffect": {
-          "type": "string"
-        },
-        "sourceOfContamination": {
-          "type": "string"
-        },
-        "bmd": {
-          "type": "string"
-        },
-        "mrl": {
-          "type": "string"
-        },
-        "noael": {
-          "type": "string"
-        },
-        "loael": {
-          "type": "string"
-        },
-        "aoel": {
-          "type": "string"
-        },
-        "ard": {
-          "type": "string"
-        },
-        "adi": {
-          "type": "string"
-        },
-        "hazardIndSum": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
+        "additionalProperties": false,
+        "required": [
+          "hazardName"
+        ]
+      }
     },
-    "populationgroup": {
+    "populationGroup": {
       "type": "object",
       "properties": {
         "populationName": {
@@ -105,65 +118,31 @@
         "targetPopulation": {
           "type": "string"
         },
-        "populationSpan": {
-          "type": "string"
-        },
-        "populationDescription": {
-          "type": "string"
-        },
-        "populationAge": {
-          "type": "string"
-        },
         "populationGender": {
           "type": "string"
         },
-        "bmi": {
-          "type": "string"
-        },
-        "specialDietGroups": {
-          "type": "string"
-        },
-        "patternConsumption": {
-          "type": "string"
-        },
-        "region": {
-          "type": "string"
-        },
-        "country": {
-          "type": "string"
-        },
-        "populationRiskFactor": {
-          "type": "string"
-        },
-        "season": {
-          "type": "string"
+        "populationSpan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
         }
       },
+      "additionalProperties": false,
+      "required": [
+        "populationName"
+      ]
+    },
+    "spatialInformation": {
+      "type": "object",
+      "properties": {},
       "additionalProperties": false
-    },
-    "country": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "country": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "region": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "region": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      }
     }
   },
   "additionalProperties": false

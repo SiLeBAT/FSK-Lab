@@ -74,7 +74,7 @@ public class SimulatorNodeModel extends ExtToolOutputNodeModel {
         FskSimulation fskSimulation = new FskSimulation(simulationEntity.getSimulationName());
   
         simulationEntity.getSimulationParameters()
-            .forEach(it -> fskSimulation.getParameters().put(it.name, it.value));
+            .forEach(it -> fskSimulation.getParameters().put(it.getParameterName(), it.getParameterValue()));
   
         inObj.simulations.add(fskSimulation);
       }

@@ -3,72 +3,72 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Hazard Type",
+      "label": "hazardType",
       "scope": "#/properties/hazardType"
     },
     {
       "type": "Control",
-      "label": "Hazard Name",
+      "label": "hazardName",
       "scope": "#/properties/hazardName"
     },
     {
       "type": "Control",
-      "label": "Hazard Description",
+      "label": "hazardDescription",
       "scope": "#/properties/hazardDescription"
     },
     {
       "type": "Control",
-      "label": "Hazard Unit",
+      "label": "hazardUnit",
       "scope": "#/properties/hazardUnit"
     },
     {
       "type": "Control",
-      "label": "Adverse Effect",
+      "label": "adverseEffect",
       "scope": "#/properties/adverseEffect"
     },
     {
       "type": "Control",
-      "label": "Source Of Contamination",
+      "label": "sourceOfContamination",
       "scope": "#/properties/sourceOfContamination"
     },
     {
       "type": "Control",
-      "label": "Bmd",
-      "scope": "#/properties/bmd"
+      "label": "benchmarkDose",
+      "scope": "#/properties/benchmarkDose"
     },
     {
       "type": "Control",
-      "label": "Mrl",
-      "scope": "#/properties/mrl"
+      "label": "maximumResidueLimit",
+      "scope": "#/properties/maximumResidueLimit"
     },
     {
       "type": "Control",
-      "label": "Noael",
-      "scope": "#/properties/noael"
+      "label": "noObservedAdverseAffectLevel",
+      "scope": "#/properties/noObservedAdverseAffectLevel"
     },
     {
       "type": "Control",
-      "label": "Loael",
-      "scope": "#/properties/loael"
+      "label": "lowestObservedAdverseAffectLevel",
+      "scope": "#/properties/lowestObservedAdverseAffectLevel"
     },
     {
       "type": "Control",
-      "label": "Aoel",
-      "scope": "#/properties/aoel"
+      "label": "acceptableOperatorExposureLevel",
+      "scope": "#/properties/acceptableOperatorExposureLevel"
     },
     {
       "type": "Control",
-      "label": "Ard",
-      "scope": "#/properties/ard"
+      "label": "acuteReferenceDose",
+      "scope": "#/properties/acuteReferenceDose"
     },
     {
       "type": "Control",
-      "label": "Adi",
-      "scope": "#/properties/adi"
+      "label": "acceptableDailyIntake",
+      "scope": "#/properties/acceptableDailyIntake"
     },
     {
       "type": "Control",
-      "label": "Hazard Ind Sum",
+      "label": "hazardIndSum",
       "scope": "#/properties/hazardIndSum"
     }
   ]

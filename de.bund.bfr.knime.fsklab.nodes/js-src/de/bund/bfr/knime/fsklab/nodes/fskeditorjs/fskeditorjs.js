@@ -8,6 +8,7 @@ fskeditorjs = function() {
 		    return this.indexOf(searchString, position) === position;
 		  };
 	}
+	
 	if (!Array.from) {
 		  Array.from = (function () {
 		    var toStr = Object.prototype.toString;
@@ -28,7 +29,6 @@ fskeditorjs = function() {
 
 		    // The length property of the from method is 1.
 		    return function from(arrayLike/*, mapFn, thisArg */) {
-		    	console.log(arrayLike);
 		      // 1. Let C be the this value.
 		      var C = this;
 
@@ -92,7 +92,7 @@ fskeditorjs = function() {
     };
     joinerNode.name = 'FSK Editor JS';
     var paper;
-    var _firstModel;
+    var _firstModel = {generalInformation:{},scope:{},dataBackground:{},modelMath:{}};
     
     
     var _firstModelScript;
@@ -105,18 +105,21 @@ fskeditorjs = function() {
     var firstModelParameterMap = new Object();
     var secomndModelParameterMap = new Object();
     joinerNode.init = function(representation, value) {
-     
-    	_firstModel = value.firstModel;
+    	
+    	_firstModel.generalInformation = value.generalInformation;
+    	_firstModel.scope = value.scope;
+    	_firstModel.modelMath = value.modelMath;
+    	_firstModel.dataBackground = value.dataBackground;
     	_firstModelScript = value.firstModelScript;
     	_firstModelViz = value.firstModelViz;
     	
     	_viewValue = value;
     	window.generalInformation = _firstModel.generalInformation;
-    	prepareData(_firstModel);
-    	
     	window.scope =  _firstModel.scope;
     	window.modelMath =  _firstModel.modelMath;
     	window.dataBackground =  _firstModel.dataBackground;
+    	
+    	prepareData(_firstModel);
         create_body();
     };
 	function prepareData(_firstModel){
@@ -167,7 +170,6 @@ fskeditorjs = function() {
 			});
 			_firstModel.scope.product.productTreatment = productTreatment;
 		}
-		console.log(_firstModel.dataBackground);
 		//prepare databackground
 		if(_firstModel.dataBackground.study.protocolUri == null){
 			_firstModel.dataBackground.study.protocolUri = '';
@@ -204,13 +206,12 @@ fskeditorjs = function() {
 		}
 	}
     joinerNode.getComponentValue = function() {
-    	_firstModel.generalInformation = window.store1.getState().jsonforms.core.data;
+    	_viewValue.generalInformation = window.store1.getState().jsonforms.core.data;
     	
-    	_firstModel.scope = window.store2.getState().jsonforms.core.data
-        _firstModel.modelMath =window.store17.getState().jsonforms.core.data
-        _firstModel.dataBackground =window.store6.getState().jsonforms.core.data
+    	_viewValue.scope = window.store2.getState().jsonforms.core.data
+    	_viewValue.modelMath =window.store17.getState().jsonforms.core.data
+    	_viewValue.dataBackground =window.store6.getState().jsonforms.core.data
         
-        _viewValue._firstModel  = _firstModel;
         return _viewValue;
     };
    
@@ -370,7 +371,57 @@ fskeditorjs = function() {
         createEMFForm();
         
           
-          
+        //$('html').find('style').remove();
+        //data-meta MuiInputLabel
+       $.each(  $('html').find('style'), function( key, value ) {
+        	
+        	if($(value).attr('data-meta') == 'MuiInput'){
+        		value.remove();
+        	}else if($(value).attr('data-meta') == 'MuiInputLabel'){
+        		value.remove();
+        	}else if($(value).attr('data-meta') == 'MuiFormLabel'){
+        		value.remove();
+        	}
+        	
+    	});
+        
+        /*$.each(  $('html').find('input'), function( key, value ) {
+        	
+        	$(value).removeAttr('class');
+        	$(value).addClass('form-control');
+        	$(value).parent().removeAttr('class');
+        	$(value).parent().addClass('col-sm-10');
+        	$(value).parent().parent().removeAttr('class');
+        	$(value).parent().parent().addClass('form-group');
+        	$(value).parent().parent().find('label').removeAttr('class');
+        	$(value).parent().parent().find('label').addClass('control-label col-sm-2');
+        	
+        	$(value).focusin(function(event) {
+        		event.preventDefault(); // Let's stop this event.
+                event.stopPropagation(); // Really this time.
+                $(value).parent().removeAttr('class');
+            	$(value).parent().addClass('col-sm-10');
+            	$(value).parent().parent().removeAttr('class');
+            	$(value).parent().parent().addClass('form-group');
+            	$(value).parent().parent().find('label').removeAttr('class');
+            	$(value).parent().parent().find('label').addClass('control-label col-sm-2');
+                
+             });
+        	$(value).blur(function(event) {
+        		event.preventDefault(); // Let's stop this event.
+                event.stopPropagation(); // Really this time.
+                $(value).parent().removeAttr('class');
+            	$(value).parent().addClass('col-sm-10');
+            	$(value).parent().parent().removeAttr('class');
+            	$(value).parent().parent().addClass('form-group');
+            	$(value).parent().parent().find('label').removeAttr('class');
+            	$(value).parent().parent().find('label').addClass('control-label col-sm-2');
+                
+             });
+    	});*/
+        
+        
+        
         $('.MuiFormLabel-root-100').css('font-size','1.5rem');
         $('.MuiDialog-paper-128').css('display','inline');
         $('.MuiDialog-paper-128').css('max-height','');
@@ -386,9 +437,8 @@ fskeditorjs = function() {
         $(".MuiTable-root-222 tbody tr td div").removeAttr('class');
         $(".MuiTable-root-222 tbody tr td div div").removeAttr('class');
         $(".MuiTable-root-222 tbody tr td div div div").removeAttr('class');
-        
+      
         $(".MuiTable-root-222 tbody tr td div div div input").removeAttr('class');
-        
         
 
         
@@ -396,17 +446,14 @@ fskeditorjs = function() {
 	   $('.MuiTable-root-222').addClass('table'); 
 	   $('.MuiTable-root-222').parent().addClass('table-responsive');
 	   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
-        $('.MuiTable-root-222').removeClass('MuiTable-root-222'); 
-        //$(".MuiInput-input-113").prop("readonly", true);
-         
-        $('.MuiTable-root-222').addClass('table table-dark'); 
-        $('.MuiFormControl-root-90').addClass('form-group');
+       $('.MuiTable-root-222').removeClass('MuiTable-root-222'); 
        
-        $(document.body).delegate('input:text', 'focusin', function(e) {
-        	e.preventDefault();
-        	console.log('hii');
+       $('.MuiFormControl-root-90').addClass('form-group');
+       
+     /*   $(document.body).delegate('input:text', 'focusin', function(e) {
+        	
             
-        });
+        });*/
         $('.replaced').parent().addClass('panel'); 
         $('.replaced').parent().addClass('panel-default'); 
         $('.replaced').addClass('panel-body'); 
@@ -419,7 +466,9 @@ fskeditorjs = function() {
         /*$($("[aria-describedby*='tooltip-add']")).attr('data-toggle','modal');
         $($("[aria-describedby*='tooltip-add']")).attr('data-target','#myModal');*/
         $($("[aria-describedby*='tooltip-add']")).click(function(event) {
+        	
         	currentArea = getLastWord($(this).attr('aria-label'));
+        	console.log(currentArea);
         	event.preventDefault(); // Let's stop this event.
             event.stopPropagation(); // Really this time.
             $('#title'+currentArea).text(currentArea);

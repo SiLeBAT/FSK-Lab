@@ -1,0 +1,75 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "isReferenceDescription",
+      "scope": "#/properties/isReferenceDescription"
+    },
+    {
+      "type": "Control",
+      "label": "publicationType",
+      "scope": "#/properties/publicationType"
+    },
+    {
+      "type": "Control",
+      "label": "publicationDate",
+      "scope": "#/properties/publicationDate"
+    },
+    {
+      "type": "Control",
+      "label": "pmid",
+      "scope": "#/properties/pmid"
+    },
+    {
+      "type": "Control",
+      "label": "doi",
+      "scope": "#/properties/doi"
+    },
+    {
+      "type": "Control",
+      "label": "authorList",
+      "scope": "#/properties/authorList"
+    },
+    {
+      "type": "Control",
+      "label": "publicationTitle",
+      "scope": "#/properties/publicationTitle"
+    },
+    {
+      "type": "Control",
+      "label": "publicationAbstract",
+      "scope": "#/properties/publicationAbstract"
+    },
+    {
+      "type": "Control",
+      "label": "publicationJournal",
+      "scope": "#/properties/publicationJournal"
+    },
+    {
+      "type": "Control",
+      "label": "publicationVolume",
+      "scope": "#/properties/publicationVolume"
+    },
+    {
+      "type": "Control",
+      "label": "publicationIssue",
+      "scope": "#/properties/publicationIssue"
+    },
+    {
+      "type": "Control",
+      "label": "publicationStatus",
+      "scope": "#/properties/publicationStatus"
+    },
+    {
+      "type": "Control",
+      "label": "publicationWebsite",
+      "scope": "#/properties/publicationWebsite"
+    },
+    {
+      "type": "Control",
+      "label": "comment",
+      "scope": "#/properties/comment"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "familyName": {
+      "type": "string"
+    },
+    "givenName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "telephone": {
+      "type": "string"
+    },
+    "streetAddress": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "zipCode": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "timeZone": {
+      "type": "string"
+    },
+    "gender": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    },
+    "organization": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "email"
+  ]
+}

@@ -3,32 +3,32 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Collection Tool",
+      "label": "collectionTool",
       "scope": "#/properties/collectionTool"
     },
     {
       "type": "Control",
-      "label": "Number Of Non Consecutive One Day",
+      "label": "numberOfNonConsecutiveOneDay",
       "scope": "#/properties/numberOfNonConsecutiveOneDay"
     },
     {
       "type": "Control",
-      "label": "Software Tool",
+      "label": "softwareTool",
       "scope": "#/properties/softwareTool"
     },
     {
       "type": "Control",
-      "label": "Number Of Food Items",
+      "label": "numberOfFoodItems",
       "scope": "#/properties/numberOfFoodItems"
     },
     {
       "type": "Control",
-      "label": "Record Types",
+      "label": "recordTypes",
       "scope": "#/properties/recordTypes"
     },
     {
       "type": "Control",
-      "label": "Food Descriptors",
+      "label": "foodDescriptors",
       "scope": "#/properties/foodDescriptors"
     }
   ]

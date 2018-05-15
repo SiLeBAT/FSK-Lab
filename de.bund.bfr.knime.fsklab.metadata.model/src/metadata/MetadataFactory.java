@@ -148,15 +148,6 @@ public interface MetadataFactory extends EFactory {
 	SpatialInformation createSpatialInformation();
 
 	/**
-	 * Returns a new object of class '<em>model Applicability</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>model Applicability</em>'.
-	 * @generated
-	 */
-	modelApplicability createmodelApplicability();
-
-	/**
 	 * Returns a new object of class '<em>Event</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

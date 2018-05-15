@@ -27,6 +27,11 @@ import org.knime.js.core.JSONViewContent;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
+import metadata.DataBackground;
+import metadata.GeneralInformation;
+import metadata.MetadataFactory;
+import metadata.ModelMath;
+import metadata.Scope;
 
 
 
@@ -36,12 +41,11 @@ class FSKEditorJSViewValue extends JSONViewContent {
   
   public final int pseudoIdentifier = (new Random()).nextInt();
   
-  private GenericModel firstModel;
-
-  
+  private GeneralInformation generalInformation ;
+  private Scope scope ;
+  private DataBackground dataBackground;
+  private ModelMath modelMath ;
   private String firstModelScript;
-
-  
   private String firstModelViz;
 
   public String getFirstModelScript() {
@@ -60,18 +64,38 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public void setFirstModelViz(String firstModelViz) {
     this.firstModelViz = firstModelViz;
   }
+  public GeneralInformation getGeneralInformation() {
+    return generalInformation;
+  }
 
+  public void setGeneralInformation(GeneralInformation generalInformation) {
+    this.generalInformation = generalInformation;
+  }
+
+  public Scope getScope() {
+    return scope;
+  }
+
+  public void setScope(Scope scope) {
+    this.scope = scope;
+  }
+
+  public DataBackground getDataBackground() {
+    return dataBackground;
+  }
+
+  public void setDataBackground(DataBackground dataBackground) {
+    this.dataBackground = dataBackground;
+  }
+
+  public ModelMath getModelMath() {
+    return modelMath;
+  }
+
+  public void setModelMath(ModelMath modelMath) {
+    this.modelMath = modelMath;
+  }
   
-
-  public GenericModel getFirstModel() {
-    return firstModel;
-  }
-
-  public void setFirstModel(GenericModel firstModel) {
-    this.firstModel = firstModel;
-  }
-
-
   
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {}

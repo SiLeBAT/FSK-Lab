@@ -7,39 +7,24 @@
     "targetPopulation": {
       "type": "string"
     },
-    "populationSpan": {
-      "type": "string"
-    },
-    "populationDescription": {
-      "type": "string"
-    },
-    "populationAge": {
-      "type": "string"
-    },
     "populationGender": {
       "type": "string"
     },
-    "bmi": {
-      "type": "string"
-    },
-    "specialDietGroups": {
-      "type": "string"
-    },
-    "patternConsumption": {
-      "type": "string"
-    },
-    "region": {
-      "type": "string"
-    },
-    "country": {
-      "type": "string"
-    },
-    "populationRiskFactor": {
-      "type": "string"
-    },
-    "season": {
-      "type": "string"
+    "populationSpan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "populationName"
+  ]
 }

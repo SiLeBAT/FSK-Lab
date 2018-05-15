@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_Q8hAgEh5EeiIoYnPwpYKNg" name="Exposure" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_56eOQFNaEeiq2ZPtzKZg8g" name="Exposure" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
   <rootEClass href="http://www.example.org/metadata#//Exposure"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q8hAgUh5EeiIoYnPwpYKNg" name="Control treatment">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q8hAgkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Exposure/treatment"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_56hRkFNaEeiq2ZPtzKZg8g" name="Control methodologicalTreatmentOfLeftCensoredData">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_56hRkVNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Exposure/methodologicalTreatmentOfLeftCensoredData"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q8hAg0h5EeiIoYnPwpYKNg" name="Control contaminationLevel">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q8hAhEh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Exposure/contaminationLevel"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_56hRklNaEeiq2ZPtzKZg8g" name="Control levelOfContaminationAfterLeftCensoredDataTreatment">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_56hRk1NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Exposure/levelOfContaminationAfterLeftCensoredDataTreatment"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q8hAhUh5EeiIoYnPwpYKNg" name="Control exposureType">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q8hAhkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Exposure/exposureType"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_56hRlFNaEeiq2ZPtzKZg8g" name="Control typeOfExposure">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_56hRlVNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Exposure/typeOfExposure"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q8hAh0h5EeiIoYnPwpYKNg" name="Control scenario">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q8hAiEh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_56hRllNaEeiq2ZPtzKZg8g" name="Control scenario">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_56hRl1NaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Exposure/scenario"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Q8hAiUh5EeiIoYnPwpYKNg" name="Control uncertaintyEstimation">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Q8hAikh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_56hRmFNaEeiq2ZPtzKZg8g" name="Control uncertaintyEstimation">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_56hRmVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Exposure/uncertaintyEstimation"/>
     </domainModelReference>
   </children>

@@ -4,86 +4,105 @@
     "study": {
       "type": "object",
       "properties": {
-        "title": {
+        "studyIdentifier": {
           "type": "string"
         },
-        "description": {
+        "studyTitle": {
           "type": "string"
         },
-        "designType": {
+        "studyDescription": {
           "type": "string"
         },
-        "measurementType": {
+        "studyDesignType": {
           "type": "string"
         },
-        "technologyType": {
+        "studyAssayMeasurementType": {
           "type": "string"
         },
-        "technologyPlatform": {
+        "studyAssayTechnologyType": {
           "type": "string"
         },
-        "accreditationProcedure": {
+        "studyAssayTechnologyPlatform": {
           "type": "string"
         },
-        "protocolName": {
+        "accreditationProcedureForTheAssayTechnology": {
           "type": "string"
         },
-        "protocolType": {
+        "studyProtocolName": {
           "type": "string"
         },
-        "protocolDescription": {
+        "studyProtocolType": {
           "type": "string"
         },
-        "protocolUri": {
+        "studyProtocolDescription": {
           "type": "string"
         },
-        "protocolVersion": {
+        "studyProtocolURI": {
           "type": "string"
         },
-        "parametersName": {
+        "studyProtocolVersion": {
           "type": "string"
         },
-        "componentsName": {
+        "studyProtocolParametersName": {
           "type": "string"
         },
-        "componentsType": {
+        "studyProtocolComponentsName": {
+          "type": "string"
+        },
+        "studyProtocolComponentsType": {
           "type": "string"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "required": [
+        "studyTitle"
+      ]
     },
     "studysample": {
-      "type": "object",
-      "properties": {
-        "sample": {
-          "type": "string"
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sampleName": {
+            "type": "string"
+          },
+          "protocolOfSampleCollection": {
+            "type": "string"
+          },
+          "samplingStrategy": {
+            "type": "string"
+          },
+          "typeOfSamplingProgram": {
+            "type": "string"
+          },
+          "samplingMethod": {
+            "type": "string"
+          },
+          "samplingPlan": {
+            "type": "string"
+          },
+          "samplingWeight": {
+            "type": "string"
+          },
+          "samplingSize": {
+            "type": "string"
+          },
+          "lotSizeUnit": {
+            "type": "string"
+          },
+          "samplingPoint": {
+            "type": "string"
+          }
         },
-        "collectionProtocol": {
-          "type": "string"
-        },
-        "samplingStrategy": {
-          "type": "string"
-        },
-        "samplingProgramType": {
-          "type": "string"
-        },
-        "samplingMethod": {
-          "type": "string"
-        },
-        "samplingPlan": {
-          "type": "string"
-        },
-        "samplingWeight": {
-          "type": "string"
-        },
-        "samplingSize": {
-          "type": "string"
-        },
-        "lotSizeUnit": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
+        "additionalProperties": false,
+        "required": [
+          "sampleName",
+          "protocolOfSampleCollection",
+          "samplingPlan",
+          "samplingWeight",
+          "samplingSize"
+        ]
+      }
     },
     "dietaryassessmentmethod": {
       "type": "object",
@@ -112,51 +131,66 @@
     "laboratory": {
       "type": "object",
       "properties": {
-        "accreditation": {
+        "laboratoryAccreditation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "laboratoryName": {
           "type": "string"
         },
-        "name": {
-          "type": "string"
-        },
-        "country": {
+        "laboratoryCountry": {
           "type": "string"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "required": [
+        "laboratoryAccreditation"
+      ]
     },
     "assay": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assayName": {
+            "type": "string"
+          },
+          "assayDescription": {
+            "type": "string"
+          },
+          "percentageOfMoisture": {
+            "type": "string"
+          },
+          "percentageOfFat": {
+            "type": "string"
+          },
+          "limitOfDetection": {
+            "type": "string"
+          },
+          "limitOfQuantification": {
+            "type": "string"
+          },
+          "leftCensoredData": {
+            "type": "string"
+          },
+          "rangeOfContamination": {
+            "type": "string"
+          },
+          "uncertaintyValue": {
+            "type": "string"
+          }
         },
-        "description": {
-          "type": "string"
-        },
-        "moisturePercentage": {
-          "type": "string"
-        },
-        "fatPercentage": {
-          "type": "string"
-        },
-        "detectionLimit": {
-          "type": "string"
-        },
-        "quantificationLimit": {
-          "type": "string"
-        },
-        "leftCensoredData": {
-          "type": "string"
-        },
-        "contaminationRange": {
-          "type": "string"
-        },
-        "uncertaintyValue": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false
+        "additionalProperties": false,
+        "required": [
+          "assayName"
+        ]
+      }
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "study"
+  ]
 }

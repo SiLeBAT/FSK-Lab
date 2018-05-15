@@ -27,6 +27,10 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.ParameterizedModel;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
+import metadata.DataBackground;
+import metadata.GeneralInformation;
+import metadata.ModelMath;
+import metadata.Scope;
 
 
 
@@ -36,8 +40,14 @@ class JoinerViewValue extends JSONViewContent {
   
   public final int pseudoIdentifier = (new Random()).nextInt();
   
-  private GenericModel firstModel;
-  private GenericModel secondModel;
+  private GeneralInformation firstGeneralInformation ;
+  private Scope firstScope ;
+  private DataBackground firstDataBackground;
+  private ModelMath firstModelMath ;
+  private GeneralInformation secondGeneralInformation ;
+  private Scope secondScope ;
+  private DataBackground secondDataBackground;
+  private ModelMath secondModelMath ;
   
   private String firstModelScript;
   private String secondModelScript;
@@ -76,22 +86,74 @@ class JoinerViewValue extends JSONViewContent {
     this.secondModelViz = secondModelViz;
   }
 
-  public GenericModel getFirstModel() {
-    return firstModel;
-  }
-
-  public void setFirstModel(GenericModel firstModel) {
-    this.firstModel = firstModel;
-  }
-
-  public GenericModel getSecondModel() {
-    return secondModel;
-  }
-
-  public void setSecondModel(GenericModel secondModel) {
-    this.secondModel = secondModel;
-  }
+  
  
+  public GeneralInformation getFirstGeneralInformation() {
+    return firstGeneralInformation;
+  }
+
+  public void setFirstGeneralInformation(GeneralInformation firstGeneralInformation) {
+    this.firstGeneralInformation = firstGeneralInformation;
+  }
+
+  public Scope getFirstScope() {
+    return firstScope;
+  }
+
+  public void setFirstScope(Scope firstScope) {
+    this.firstScope = firstScope;
+  }
+
+  public DataBackground getFirstDataBackground() {
+    return firstDataBackground;
+  }
+
+  public void setFirstDataBackground(DataBackground firstDataBackground) {
+    this.firstDataBackground = firstDataBackground;
+  }
+
+  public ModelMath getFirstModelMath() {
+    return firstModelMath;
+  }
+
+  public void setFirstModelMath(ModelMath firstModelMath) {
+    this.firstModelMath = firstModelMath;
+  }
+
+  public GeneralInformation getSecondGeneralInformation() {
+    return secondGeneralInformation;
+  }
+
+  public void setSecondGeneralInformation(GeneralInformation secondGeneralInformation) {
+    this.secondGeneralInformation = secondGeneralInformation;
+  }
+
+  public Scope getSecondScope() {
+    return secondScope;
+  }
+
+  public void setSecondScope(Scope secondScope) {
+    this.secondScope = secondScope;
+  }
+
+  public DataBackground getSecondDataBackground() {
+    return secondDataBackground;
+  }
+
+  public void setSecondDataBackground(DataBackground secondDataBackground) {
+    this.secondDataBackground = secondDataBackground;
+  }
+
+  public ModelMath getSecondModelMath() {
+    return secondModelMath;
+  }
+
+  public void setSecondModelMath(ModelMath secondModelMath) {
+    this.secondModelMath = secondModelMath;
+  }
+
+
+
   private List<JoinRelation> joinRelations = new ArrayList<JoinRelation>();
   private String jsonRepresentation;
   private String svgRepresentation;

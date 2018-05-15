@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link metadata.impl.StudyImpl#getStudyProtocolDescription <em>Study Protocol Description</em>}</li>
  *   <li>{@link metadata.impl.StudyImpl#getStudyProtocolURI <em>Study Protocol URI</em>}</li>
  *   <li>{@link metadata.impl.StudyImpl#getStudyProtocolVersion <em>Study Protocol Version</em>}</li>
+ *   <li>{@link metadata.impl.StudyImpl#getStudyProtocolParametersName <em>Study Protocol Parameters Name</em>}</li>
  *   <li>{@link metadata.impl.StudyImpl#getStudyProtocolComponentsName <em>Study Protocol Components Name</em>}</li>
  *   <li>{@link metadata.impl.StudyImpl#getStudyProtocolComponentsType <em>Study Protocol Components Type</em>}</li>
  * </ul>
@@ -301,6 +302,26 @@ public class StudyImpl extends MinimalEObjectImpl.Container implements Study {
 	 * @ordered
 	 */
 	protected String studyProtocolVersion = STUDY_PROTOCOL_VERSION_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getStudyProtocolParametersName() <em>Study Protocol Parameters Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStudyProtocolParametersName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String STUDY_PROTOCOL_PARAMETERS_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getStudyProtocolParametersName() <em>Study Protocol Parameters Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getStudyProtocolParametersName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String studyProtocolParametersName = STUDY_PROTOCOL_PARAMETERS_NAME_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getStudyProtocolComponentsName() <em>Study Protocol Components Name</em>}' attribute.
@@ -639,6 +660,27 @@ public class StudyImpl extends MinimalEObjectImpl.Container implements Study {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getStudyProtocolParametersName() {
+		return studyProtocolParametersName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setStudyProtocolParametersName(String newStudyProtocolParametersName) {
+		String oldStudyProtocolParametersName = studyProtocolParametersName;
+		studyProtocolParametersName = newStudyProtocolParametersName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.STUDY__STUDY_PROTOCOL_PARAMETERS_NAME, oldStudyProtocolParametersName, studyProtocolParametersName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getStudyProtocolComponentsName() {
 		return studyProtocolComponentsName;
 	}
@@ -710,6 +752,8 @@ public class StudyImpl extends MinimalEObjectImpl.Container implements Study {
 				return getStudyProtocolURI();
 			case MetadataPackage.STUDY__STUDY_PROTOCOL_VERSION:
 				return getStudyProtocolVersion();
+			case MetadataPackage.STUDY__STUDY_PROTOCOL_PARAMETERS_NAME:
+				return getStudyProtocolParametersName();
 			case MetadataPackage.STUDY__STUDY_PROTOCOL_COMPONENTS_NAME:
 				return getStudyProtocolComponentsName();
 			case MetadataPackage.STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE:
@@ -764,6 +808,9 @@ public class StudyImpl extends MinimalEObjectImpl.Container implements Study {
 				return;
 			case MetadataPackage.STUDY__STUDY_PROTOCOL_VERSION:
 				setStudyProtocolVersion((String)newValue);
+				return;
+			case MetadataPackage.STUDY__STUDY_PROTOCOL_PARAMETERS_NAME:
+				setStudyProtocolParametersName((String)newValue);
 				return;
 			case MetadataPackage.STUDY__STUDY_PROTOCOL_COMPONENTS_NAME:
 				setStudyProtocolComponentsName((String)newValue);
@@ -822,6 +869,9 @@ public class StudyImpl extends MinimalEObjectImpl.Container implements Study {
 			case MetadataPackage.STUDY__STUDY_PROTOCOL_VERSION:
 				setStudyProtocolVersion(STUDY_PROTOCOL_VERSION_EDEFAULT);
 				return;
+			case MetadataPackage.STUDY__STUDY_PROTOCOL_PARAMETERS_NAME:
+				setStudyProtocolParametersName(STUDY_PROTOCOL_PARAMETERS_NAME_EDEFAULT);
+				return;
 			case MetadataPackage.STUDY__STUDY_PROTOCOL_COMPONENTS_NAME:
 				setStudyProtocolComponentsName(STUDY_PROTOCOL_COMPONENTS_NAME_EDEFAULT);
 				return;
@@ -866,6 +916,8 @@ public class StudyImpl extends MinimalEObjectImpl.Container implements Study {
 				return STUDY_PROTOCOL_URI_EDEFAULT == null ? studyProtocolURI != null : !STUDY_PROTOCOL_URI_EDEFAULT.equals(studyProtocolURI);
 			case MetadataPackage.STUDY__STUDY_PROTOCOL_VERSION:
 				return STUDY_PROTOCOL_VERSION_EDEFAULT == null ? studyProtocolVersion != null : !STUDY_PROTOCOL_VERSION_EDEFAULT.equals(studyProtocolVersion);
+			case MetadataPackage.STUDY__STUDY_PROTOCOL_PARAMETERS_NAME:
+				return STUDY_PROTOCOL_PARAMETERS_NAME_EDEFAULT == null ? studyProtocolParametersName != null : !STUDY_PROTOCOL_PARAMETERS_NAME_EDEFAULT.equals(studyProtocolParametersName);
 			case MetadataPackage.STUDY__STUDY_PROTOCOL_COMPONENTS_NAME:
 				return STUDY_PROTOCOL_COMPONENTS_NAME_EDEFAULT == null ? studyProtocolComponentsName != null : !STUDY_PROTOCOL_COMPONENTS_NAME_EDEFAULT.equals(studyProtocolComponentsName);
 			case MetadataPackage.STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE:
@@ -910,6 +962,8 @@ public class StudyImpl extends MinimalEObjectImpl.Container implements Study {
 		result.append(studyProtocolURI);
 		result.append(", studyProtocolVersion: ");
 		result.append(studyProtocolVersion);
+		result.append(", studyProtocolParametersName: ");
+		result.append(studyProtocolParametersName);
 		result.append(", studyProtocolComponentsName: ");
 		result.append(studyProtocolComponentsName);
 		result.append(", studyProtocolComponentsType: ");

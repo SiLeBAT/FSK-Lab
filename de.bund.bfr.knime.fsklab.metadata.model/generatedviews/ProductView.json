@@ -3,58 +3,58 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Environment Name",
-      "scope": "#/properties/environmentName"
+      "label": "productName",
+      "scope": "#/properties/productName"
     },
     {
       "type": "Control",
-      "label": "Environment Description",
-      "scope": "#/properties/environmentDescription"
+      "label": "productDescription",
+      "scope": "#/properties/productDescription"
     },
     {
       "type": "Control",
-      "label": "Environment Unit",
-      "scope": "#/properties/environmentUnit"
+      "label": "productUnit",
+      "scope": "#/properties/productUnit"
     },
     {
       "type": "Control",
-      "label": "Origin Country",
-      "scope": "#/properties/originCountry"
-    },
-    {
-      "type": "Control",
-      "label": "Fisheries Area",
-      "scope": "#/properties/fisheriesArea"
-    },
-    {
-      "type": "Control",
-      "label": "Production Date",
-      "scope": "#/properties/productionDate"
-    },
-    {
-      "type": "Control",
-      "label": "Expiration Date",
-      "scope": "#/properties/expirationDate"
-    },
-    {
-      "type": "Control",
-      "label": "Production Method",
+      "label": "productionMethod",
       "scope": "#/properties/productionMethod"
     },
     {
       "type": "Control",
-      "label": "Packaging",
+      "label": "packaging",
       "scope": "#/properties/packaging"
     },
     {
       "type": "Control",
-      "label": "Product Treatment",
+      "label": "productTreatment",
       "scope": "#/properties/productTreatment"
     },
     {
       "type": "Control",
-      "label": "Origin Area",
+      "label": "originCountry",
+      "scope": "#/properties/originCountry"
+    },
+    {
+      "type": "Control",
+      "label": "originArea",
       "scope": "#/properties/originArea"
+    },
+    {
+      "type": "Control",
+      "label": "fisheriesArea",
+      "scope": "#/properties/fisheriesArea"
+    },
+    {
+      "type": "Control",
+      "label": "productionDate",
+      "scope": "#/properties/productionDate"
+    },
+    {
+      "type": "Control",
+      "label": "expiryDate",
+      "scope": "#/properties/expiryDate"
     }
   ]
 }

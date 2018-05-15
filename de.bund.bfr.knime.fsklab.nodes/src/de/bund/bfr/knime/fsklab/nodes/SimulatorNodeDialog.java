@@ -59,8 +59,11 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FSpinner;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import de.bund.bfr.knime.fsklab.rakip.Parameter;
-import de.bund.bfr.knime.fsklab.rakip.Parameter.DataTypes;
+import metadata.Parameter;
+import metadata.ParameterType;
+import metadata.MetadataFactory;
+import metadata.MetadataPackage;
+import metadata.ModelMath;
 
 public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   public static String INTEGER_DATA_TYPES = "Integer";
@@ -81,8 +84,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   SimulationEntity currentSimulation;
   JPanel settingPanel;
 
-  GenericModel currentGenericModel;
-
+  ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
   public SimulatorNodeDialog() {
     simulation_listModel = new DefaultListModel<SimulationEntity>();
 
@@ -100,7 +102,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
     settingPanel = new JPanel(new BorderLayout());
 
-    currentGenericModel = new GenericModel();
+    
 
     createUI();
 
@@ -200,9 +202,9 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   }
 
   public void updatePanel() {
-    if (parameterMap.isEmpty()) {
-      for (Parameter param : currentGenericModel.modelMath.parameter) {
-        parameterMap.put(param.name, param);
+    if (parameterMap.isEmpty()&& modelMath != null) {
+      for (Parameter param : modelMath.getParameter()) {
+        parameterMap.put(param.getParameterName(), param);
       }
     }
     simulationSettingPanel.removeAll();
@@ -248,39 +250,39 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
     for (Parameter param : parameters) {
 
-      Parameter fullParam = parameterMap.get(param.name);
+      Parameter fullParam = parameterMap.get(param.getParameterName());
 
-      final DataTypes dataType = fullParam.dataType;
+      final ParameterType dataType = fullParam.getParameterDataType();
 
-      if (dataType != null && (dataType == DataTypes.Integer || dataType == DataTypes.Double
-          || dataType == DataTypes.Number)) {
+      if (dataType != null && (dataType == ParameterType.INTEGER || dataType == ParameterType.DOUBLE
+          || dataType == ParameterType.NUMBER)) {
 
         SpinnerNumberModel spinnerModel = null;
 
-        if (fullParam.dataType == DataTypes.Integer) {
+        if (fullParam.getParameterDataType() == ParameterType.INTEGER) {
 
-          int min = fullParam.minValue.isEmpty() ? Integer.MIN_VALUE
-              : Integer.parseInt(fullParam.minValue);
-          int max = fullParam.maxValue.isEmpty() ? Integer.MAX_VALUE
-              : Integer.parseInt(fullParam.maxValue);
-          if(param.value!=null&&!param.value.equals("")) {
+          int min = fullParam.getParameterValueMin().isEmpty() ? Integer.MIN_VALUE
+              : Integer.parseInt(fullParam.getParameterValueMin());
+          int max = fullParam.getParameterValueMax().isEmpty() ? Integer.MAX_VALUE
+              : Integer.parseInt(fullParam.getParameterValueMax());
+          if(param.getParameterValue()!=null&&!param.getParameterValue().equals("")) {
             try {
-              spinnerModel = new SpinnerNumberModel(Integer.parseInt(param.value), min, max, 1);
+              spinnerModel = new SpinnerNumberModel(Integer.parseInt(param.getParameterValue()), min, max, 1);
             }catch(java.lang.NumberFormatException e) {
-              spinnerModel = new SpinnerNumberModel(Double.parseDouble(param.value), min, max, 1);
+              spinnerModel = new SpinnerNumberModel(Double.parseDouble(param.getParameterValue()), min, max, 1);
             }
           }else {
             spinnerModel = new SpinnerNumberModel(0, min, max, 1);
           }
         }
 
-        else if (fullParam.dataType == DataTypes.Double) {
-          double min = fullParam.minValue.isEmpty() ? Integer.MIN_VALUE
-              : Double.parseDouble(fullParam.minValue);
-          double max = fullParam.maxValue.isEmpty() ? Integer.MAX_VALUE
-              : Double.parseDouble(fullParam.maxValue);
-          if(param.value!=null&&!param.value.equals("")) {
-            spinnerModel = new SpinnerNumberModel(Double.parseDouble(param.value), min, max, 0.01);
+        else if (fullParam.getParameterDataType() == ParameterType.DOUBLE) {
+          double min = fullParam.getParameterValueMin().isEmpty() ? Integer.MIN_VALUE
+              : Double.parseDouble(fullParam.getParameterValueMin());
+          double max = fullParam.getParameterValueMax().isEmpty() ? Integer.MAX_VALUE
+              : Double.parseDouble(fullParam.getParameterValueMax());
+          if(param.getParameterValue()!=null&&!param.getParameterValue().equals("")) {
+            spinnerModel = new SpinnerNumberModel(Double.parseDouble(param.getParameterValue()), min, max, 0.01);
           }else {
             spinnerModel = new SpinnerNumberModel(0.0, min, max, 1);
 
@@ -289,17 +291,17 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
         FSpinner paramField = new FSpinner(spinnerModel, false);
         paramField.addFocusListener(focusListener);
-        prepareField(paramField, param.name, currentSimulation.getSimulationName());
-        labels.add(createParameterLabel(paramField, param.name, fullParam.getDescription()));
-        fields.add(createParameterPanel(paramField, fullParam.unit));
+        prepareField(paramField, param.getParameterName(), currentSimulation.getSimulationName());
+        labels.add(createParameterLabel(paramField, param.getParameterName(), fullParam.getParameterDescription()));
+        fields.add(createParameterPanel(paramField, fullParam.getParameterUnit()));
       } else {
         FTextField paramField = new FTextField();
         paramField.setColumns(10);
-        paramField.setText(param.value);
-        prepareField(paramField, param.name, currentSimulation.getSimulationName());
+        paramField.setText(param.getParameterName());
+        prepareField(paramField, param.getParameterName(), currentSimulation.getSimulationName());
 
-        labels.add(createParameterLabel(paramField, param.name, ""));
-        fields.add(createParameterPanel(paramField, fullParam.unit));
+        labels.add(createParameterLabel(paramField, param.getParameterName(), ""));
+        fields.add(createParameterPanel(paramField, fullParam.getParameterUnit()));
       }
     }
 
@@ -370,8 +372,8 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       System.out.println(model.getValue());
       JSpinner source = ((JSpinner) e.getSource());
       for (Parameter param : currentSimulation.getSimulationParameters()) {
-        if (param.name.equalsIgnoreCase((String) source.getClientProperty("id"))) {
-          param.value = ""+model.getValue();
+        if (param.getParameterName().equalsIgnoreCase((String) source.getClientProperty("id"))) {
+          param.setParameterValue(""+model.getValue());
         }
       }
       
@@ -389,26 +391,26 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       JTextField source = ((JTextField) arg0.getSource());
 
       for (Parameter param : currentSimulation.getSimulationParameters()) {
-        if (param.name.equalsIgnoreCase((String) source.getClientProperty("id"))) {
+        if (param.getParameterName().equalsIgnoreCase((String) source.getClientProperty("id"))) {
 
-          if (param.dataType == DataTypes.Integer) {
+          if (param.getParameterDataType() == ParameterType.INTEGER) {
 
             try {
               Integer.parseInt(source.getText());
               source.setBackground(Color.WHITE);
             } catch (Exception e) {
-              param.value = source.getText();
+              param.setParameterValue( source.getText());
               source.setBackground(Color.RED);
             }
           }
 
-          else if (param.dataType == DataTypes.Double) {
+          else if (param.getParameterDataType() == ParameterType.DOUBLE) {
 
             try {
               Double.parseDouble(source.getText());
               source.setBackground(Color.WHITE);
             } catch (Exception e) {
-              param.value = source.getText(); // Set text if not double
+              param.setParameterValue( source.getText()); // Set text if not double
               source.setBackground(Color.RED);
             }
           }
@@ -459,9 +461,10 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       List<Parameter> simulationParameters = new ArrayList<>();
       for (Parameter entry :  defaultSimulation.getSimulationParameters()) {
 
-        Parameter p = new Parameter();
-        p.name = entry.name;
-        p.value = entry.value;
+        Parameter p = MetadataFactory.eINSTANCE.createParameter();
+        
+        p.setParameterName(entry.getParameterName());
+        p.setParameterValue(entry.getParameterValue());
 
         simulationParameters.add(p);
       }
@@ -540,11 +543,14 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     final FskPortObject inObj = (FskPortObject) input[0];
 
     // If connected to same FSK model (input) then load simulations from settings
-    if (Objects.equals(simulationSettings.genericModel, inObj.genericModel)) {
+    if (Objects.equals(simulationSettings.generalInformation, inObj.generalInformation)) {
       // Updates settings
       this.settings = simulationSettings;
-      this.settings.genericModel = simulationSettings.genericModel;
-      currentGenericModel = simulationSettings.genericModel;
+      this.settings.generalInformation = simulationSettings.generalInformation;
+      this.settings.scope = simulationSettings.scope;
+      this.settings.dataBackground = simulationSettings.dataBackground;
+      this.settings.modelMath = simulationSettings.modelMath;
+      modelMath = simulationSettings.modelMath;
       simulation_listModel = new DefaultListModel<SimulationEntity>();
       list.removeAll();
       list.revalidate();
@@ -564,14 +570,17 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     // If different (or new) connected FSK model then load simulations from input model
     else {
 
-      this.settings.genericModel = inObj.genericModel;
-      currentGenericModel = inObj.genericModel;
+      this.settings.generalInformation = simulationSettings.generalInformation;
+      this.settings.scope = simulationSettings.scope;
+      this.settings.dataBackground = simulationSettings.dataBackground;
+      this.settings.modelMath = simulationSettings.modelMath;
+      modelMath = inObj.modelMath;
 
       simulation_listModel.clear();
       Map<String, Parameter> parameterIDMap = new TreeMap<String, Parameter>();
       if (parameterIDMap.isEmpty()) {
-        for (Parameter param : currentGenericModel.modelMath.parameter) {
-          parameterIDMap.put(param.id.toLowerCase(), param);
+        for (Parameter param : modelMath.getParameter()) {
+          parameterIDMap.put(param.getParameterID().toLowerCase(), param);
         }
       }
       // Add simulations from input model
@@ -579,10 +588,10 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
         List<Parameter> params = new ArrayList<>(fskSimulation.getParameters().size());
         for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
-
-          Parameter p = new Parameter();
-          p.name = parameterIDMap.get(entry.getKey().toLowerCase()).name;
-          p.value = entry.getValue();
+          Parameter p = MetadataFactory.eINSTANCE.createParameter();
+          
+          p.setParameterName(parameterIDMap.get(entry.getKey().toLowerCase()).getParameterName());
+          p.setParameterValue(entry.getValue());
 
           params.add(p);
         }

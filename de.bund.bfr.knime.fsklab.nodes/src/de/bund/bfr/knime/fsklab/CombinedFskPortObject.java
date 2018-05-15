@@ -41,7 +41,6 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -56,7 +55,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
@@ -65,7 +63,11 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
+import metadata.DataBackground;
+import metadata.GeneralInformation;
+import metadata.MetadataFactory;
+import metadata.ModelMath;
+import metadata.Scope;
 
 /**
  * A port object for an combined FSK model port providing two FSK Models.
@@ -97,10 +99,12 @@ public class CombinedFskPortObject extends FskPortObject {
   private static int numOfInstances = 0;
 
   public CombinedFskPortObject(final String model, final String param, final String viz,
-      final GenericModel genericModel, final Path workspace, final Set<File> libs,
-      final Path workingDirectory, final FskPortObject firstFskPortObject,
+      final GeneralInformation generalInformation, final Scope scope,
+      final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
+      final Set<File> libs, final Path workingDirectory, final FskPortObject firstFskPortObject,
       final FskPortObject secondFskPortObject) throws IOException {
-    super(model, param, viz, genericModel, workspace, libs, workingDirectory);
+    super(model, param, viz, generalInformation, scope, dataBackground, modelMath, workspace, libs,
+        workingDirectory);
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     objectNum = numOfInstances;
@@ -150,8 +154,6 @@ public class CombinedFskPortObject extends FskPortObject {
 
     private static final String JOINER_RELATION = "joinerRelation";
 
-    private static final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-
     @Override
     public void savePortObject(final CombinedFskPortObject portObject,
         final PortObjectZipOutputStream out, final ExecutionMonitor exec)
@@ -185,11 +187,33 @@ public class CombinedFskPortObject extends FskPortObject {
       out.closeEntry();
 
       // template entry (file with model meta data)
-      if (portObject.firstFskPortObject.genericModel != null) {
+      {
         out.putNextEntry(new ZipEntry(META_DATA1));
-        final String stringVal =
-            objectMapper.writeValueAsString(portObject.firstFskPortObject.genericModel);
-        IOUtils.write(stringVal, out, "UTF-8");
+
+        try {
+          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+          objectOutputStream.writeObject(portObject.firstFskPortObject.generalInformation);
+        } catch (Exception e) {
+        }
+
+        try {
+          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+          objectOutputStream.writeObject(portObject.firstFskPortObject.scope);
+        } catch (Exception e) {
+        }
+
+        try {
+          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+          objectOutputStream.writeObject(portObject.firstFskPortObject.dataBackground);
+        } catch (Exception e) {
+        }
+
+        try {
+          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+          objectOutputStream.writeObject(portObject.firstFskPortObject.modelMath);
+        } catch (Exception e) {
+        }
+
         out.closeEntry();
       }
 
@@ -250,11 +274,33 @@ public class CombinedFskPortObject extends FskPortObject {
       out.closeEntry();
 
       // template entry (file with model meta data)
-      if (portObject.secondFskPortObject.genericModel != null) {
-        out.putNextEntry(new ZipEntry(META_DATA2));
-        final String stringVal =
-            objectMapper.writeValueAsString(portObject.secondFskPortObject.genericModel);
-        IOUtils.write(stringVal, out, "UTF-8");
+      {
+        out.putNextEntry(new ZipEntry(META_DATA1));
+
+        try {
+          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+          objectOutputStream.writeObject(portObject.secondFskPortObject.generalInformation);
+        } catch (Exception e) {
+        }
+
+        try {
+          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+          objectOutputStream.writeObject(portObject.secondFskPortObject.scope);
+        } catch (Exception e) {
+        }
+
+        try {
+          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+          objectOutputStream.writeObject(portObject.secondFskPortObject.dataBackground);
+        } catch (Exception e) {
+        }
+
+        try {
+          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+          objectOutputStream.writeObject(portObject.secondFskPortObject.modelMath);
+        } catch (Exception e) {
+        }
+
         out.closeEntry();
       }
 
@@ -308,11 +354,17 @@ public class CombinedFskPortObject extends FskPortObject {
     public CombinedFskPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
         ExecutionMonitor exec) throws IOException, CanceledExecutionException {
       List<JoinRelation> joinerRelation = new ArrayList<>();
+
       // First FSK Object
       String modelScript1 = "";
       String parametersScript1 = "";
       String visualizationScript1 = "";
-      GenericModel genericModel1 = null;
+
+      GeneralInformation generalInformation1 = MetadataFactory.eINSTANCE.createGeneralInformation();
+      Scope scope1 = MetadataFactory.eINSTANCE.createScope();
+      DataBackground dataBackground1 = MetadataFactory.eINSTANCE.createDataBackground();
+      ModelMath modelMath1 = MetadataFactory.eINSTANCE.createModelMath();
+
       Path workspacePath1 = FileUtil.createTempFile("workspace", ".r").toPath();
       Set<File> libs1 = new HashSet<>();
 
@@ -325,7 +377,12 @@ public class CombinedFskPortObject extends FskPortObject {
       String modelScript2 = "";
       String parametersScript2 = "";
       String visualizationScript2 = "";
-      GenericModel genericModel2 = null;
+
+      GeneralInformation generalInformation2 = MetadataFactory.eINSTANCE.createGeneralInformation();
+      Scope scope2 = MetadataFactory.eINSTANCE.createScope();
+      DataBackground dataBackground2 = MetadataFactory.eINSTANCE.createDataBackground();
+      ModelMath modelMath2 = MetadataFactory.eINSTANCE.createModelMath();
+
       Path workspacePath2 = FileUtil.createTempFile("workspace", ".r").toPath();
       Set<File> libs2 = new HashSet<>();
 
@@ -345,8 +402,37 @@ public class CombinedFskPortObject extends FskPortObject {
         } else if (entryName.equals(VIZ1)) {
           visualizationScript1 = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(META_DATA1)) {
-          final String metaDataAsString = IOUtils.toString(in, "UTF-8");
-          genericModel1 = objectMapper.readValue(metaDataAsString, GenericModel.class);
+          // Load generalInformation
+          try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(in);
+            generalInformation1 = (GeneralInformation) objectInputStream.readObject();
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
+
+          // Load scope
+          try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(in);
+            scope1 = (Scope) objectInputStream.readObject();
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
+
+          // Load dataBackground
+          try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(in);
+            dataBackground1 = (DataBackground) objectInputStream.readObject();
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
+
+          // Load model math
+          try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(in);
+            modelMath1 = (ModelMath) objectInputStream.readObject();
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
         } else if (entryName.equals(WORKSPACE1)) {
           Files.copy(in, workspacePath1, StandardCopyOption.REPLACE_EXISTING);
         } else if (entryName.equals("library1.list")) {
@@ -397,8 +483,37 @@ public class CombinedFskPortObject extends FskPortObject {
         } else if (entryName.equals(VIZ2)) {
           visualizationScript2 = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(META_DATA2)) {
-          final String metaDataAsString = IOUtils.toString(in, "UTF-8");
-          genericModel2 = objectMapper.readValue(metaDataAsString, GenericModel.class);
+          // Load generalInformation
+          try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(in);
+            generalInformation2 = (GeneralInformation) objectInputStream.readObject();
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
+
+          // Load scope
+          try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(in);
+            scope2 = (Scope) objectInputStream.readObject();
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
+
+          // Load dataBackground
+          try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(in);
+            dataBackground2 = (DataBackground) objectInputStream.readObject();
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
+
+          // Load model math
+          try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(in);
+            modelMath2 = (ModelMath) objectInputStream.readObject();
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
         } else if (entryName.equals(WORKSPACE2)) {
           Files.copy(in, workspacePath2, StandardCopyOption.REPLACE_EXISTING);
         } else if (entryName.equals("library2.list")) {
@@ -449,7 +564,8 @@ public class CombinedFskPortObject extends FskPortObject {
 
       in.close();
       final FskPortObject fportObj = new FskPortObject(modelScript1, parametersScript1,
-          visualizationScript1, genericModel1, workspacePath1, libs1, workingDirectory1);
+          visualizationScript1, generalInformation1, scope1, dataBackground1, modelMath1,
+          workspacePath1, libs1, workingDirectory1);
 
       if (!simulations1.isEmpty()) {
         fportObj.simulations.addAll(simulations1);
@@ -457,7 +573,8 @@ public class CombinedFskPortObject extends FskPortObject {
 
 
       final FskPortObject sportObj = new FskPortObject(modelScript2, parametersScript2,
-          visualizationScript2, genericModel2, workspacePath2, libs2, workingDirectory2);
+          visualizationScript2, generalInformation2, scope2, dataBackground2, modelMath2,
+          workspacePath2, libs2, workingDirectory2);
 
       if (!simulations2.isEmpty()) {
         sportObj.simulations.addAll(simulations2);
@@ -483,9 +600,9 @@ public class CombinedFskPortObject extends FskPortObject {
     JPanel paramScriptPanel1 = new ScriptPanel("Param1 script", firstFskPortObject.param, false);
     JPanel vizScriptPanel1 = new ScriptPanel("Visualization script", firstFskPortObject.viz, false);
 
-    final JScrollPane metaDataPane1 = new JScrollPane(firstFskPortObject.genericModel != null
-        ? MetadataTree.createTree(firstFskPortObject.genericModel)
-        : new JTree());
+    final JScrollPane metaDataPane1 = new JScrollPane(
+        MetadataTree.createTree(firstFskPortObject.generalInformation, firstFskPortObject.scope,
+            firstFskPortObject.dataBackground, firstFskPortObject.modelMath));
     metaDataPane1.setName("Meta1 data");
 
     final JPanel librariesPanel1 = UIUtils.createLibrariesPanel(firstFskPortObject.libs);
@@ -499,9 +616,9 @@ public class CombinedFskPortObject extends FskPortObject {
     JPanel vizScriptPanel2 =
         new ScriptPanel("Visualization2 script", secondFskPortObject.viz, false);
 
-    final JScrollPane metaDataPane2 = new JScrollPane(secondFskPortObject.genericModel != null
-        ? MetadataTree.createTree(secondFskPortObject.genericModel)
-        : new JTree());
+    final JScrollPane metaDataPane2 = new JScrollPane(
+        MetadataTree.createTree(secondFskPortObject.generalInformation, secondFskPortObject.scope,
+            secondFskPortObject.dataBackground, secondFskPortObject.modelMath));
     metaDataPane2.setName("Meta2 data");
 
     final JPanel librariesPanel2 = UIUtils.createLibrariesPanel(secondFskPortObject.libs);

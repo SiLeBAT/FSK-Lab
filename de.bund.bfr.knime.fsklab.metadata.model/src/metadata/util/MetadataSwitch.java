@@ -150,12 +150,6 @@ public class MetadataSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case MetadataPackage.MODEL_APPLICABILITY: {
-				modelApplicability modelApplicability = (modelApplicability)theEObject;
-				T result = casemodelApplicability(modelApplicability);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case MetadataPackage.EVENT: {
 				Event event = (Event)theEObject;
 				T result = caseEvent(event);
@@ -409,21 +403,6 @@ public class MetadataSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseSpatialInformation(SpatialInformation object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>model Applicability</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>model Applicability</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T casemodelApplicability(modelApplicability object) {
 		return null;
 	}
 

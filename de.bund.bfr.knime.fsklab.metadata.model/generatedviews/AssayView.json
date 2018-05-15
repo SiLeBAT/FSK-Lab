@@ -3,47 +3,47 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Name",
-      "scope": "#/properties/name"
+      "label": "assayName",
+      "scope": "#/properties/assayName"
     },
     {
       "type": "Control",
-      "label": "Description",
-      "scope": "#/properties/description"
+      "label": "assayDescription",
+      "scope": "#/properties/assayDescription"
     },
     {
       "type": "Control",
-      "label": "Moisture Percentage",
-      "scope": "#/properties/moisturePercentage"
+      "label": "percentageOfMoisture",
+      "scope": "#/properties/percentageOfMoisture"
     },
     {
       "type": "Control",
-      "label": "Fat Percentage",
-      "scope": "#/properties/fatPercentage"
+      "label": "percentageOfFat",
+      "scope": "#/properties/percentageOfFat"
     },
     {
       "type": "Control",
-      "label": "Detection Limit",
-      "scope": "#/properties/detectionLimit"
+      "label": "limitOfDetection",
+      "scope": "#/properties/limitOfDetection"
     },
     {
       "type": "Control",
-      "label": "Quantification Limit",
-      "scope": "#/properties/quantificationLimit"
+      "label": "limitOfQuantification",
+      "scope": "#/properties/limitOfQuantification"
     },
     {
       "type": "Control",
-      "label": "Left Censored Data",
+      "label": "leftCensoredData",
       "scope": "#/properties/leftCensoredData"
     },
     {
       "type": "Control",
-      "label": "Contamination Range",
-      "scope": "#/properties/contaminationRange"
+      "label": "rangeOfContamination",
+      "scope": "#/properties/rangeOfContamination"
     },
     {
       "type": "Control",
-      "label": "Uncertainty Value",
+      "label": "uncertaintyValue",
       "scope": "#/properties/uncertaintyValue"
     }
   ]

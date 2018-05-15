@@ -24,6 +24,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.emfjson.jackson.databind.EMFContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -33,7 +39,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
+import metadata.DataBackground;
+import metadata.GeneralInformation;
+import metadata.ModelMath;
+import metadata.Scope;
 
 public class EditorNodeSettings {
 
@@ -48,7 +57,11 @@ public class EditorNodeSettings {
   private static final String CFG_MODIFIED_PARAMETERS_SCRIPT = "modifiedParametersScript";
   private static final String CFG_MODIFIED_VISUALIZATION_SCRIPT = "modifiedVisualizationScript";
 
-  private static final String CFG_METADATA = "metaData";
+  private static final String CFG_GENERAL_INFORMATION = "generalInformation";
+  private static final String CFG_SCOPE = "scope";
+  private static final String CFG_DATA_BACKGROUND = "dataBackground";
+  private static final String CFG_MODEL_MATH = "modelMath";
+
   private static final String CFG_RESOURCES = "resources";
 
   String originalModelScript;
@@ -59,7 +72,10 @@ public class EditorNodeSettings {
   String modifiedParametersScript;
   String modifiedVisualizationScript;
 
-  GenericModel genericModel;
+  GeneralInformation generalInformation;
+  Scope scope;
+  DataBackground dataBackground;
+  ModelMath modelMath;
 
   /** Paths to resources: plain text files and R workspace files (.rdata). */
   public List<Path> resources = new ArrayList<>();
@@ -80,15 +96,20 @@ public class EditorNodeSettings {
     settings.addString(CFG_MODIFIED_PARAMETERS_SCRIPT, modifiedParametersScript);
     settings.addString(CFG_MODIFIED_VISUALIZATION_SCRIPT, modifiedVisualizationScript);
 
-    // save meta data
-    if (genericModel != null) {
-      final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-      try {
-        String stringVal = objectMapper.writeValueAsString(genericModel);
-        settings.addString(CFG_METADATA, stringVal);
-      } catch (JsonProcessingException exception) {
-        LOGGER.warn("Error saving meta data", exception);
-      }
+    if (generalInformation != null) {
+      saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
+    }
+
+    if (scope != null) {
+      saveSettings(settings, CFG_SCOPE, scope);
+    }
+
+    if (dataBackground != null) {
+      saveSettings(settings, CFG_DATA_BACKGROUND, dataBackground);
+    }
+
+    if (modelMath != null) {
+      saveSettings(settings, CFG_MODEL_MATH, modelMath);
     }
 
     final String[] resourcesArray = resources.stream().map(Path::toString).toArray(String[]::new);
@@ -115,19 +136,56 @@ public class EditorNodeSettings {
     modifiedVisualizationScript = settings.getString(CFG_MODIFIED_VISUALIZATION_SCRIPT);
 
     // load meta data
-    if (settings.containsKey(CFG_METADATA)) {
-      final String stringVal = settings.getString("metaData");
-      final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-      try {
-        genericModel = objectMapper.readValue(stringVal, GenericModel.class);
-      } catch (IOException e) {
-        throw new InvalidSettingsException(e);
-      }
+    if (settings.containsKey(CFG_GENERAL_INFORMATION)) {
+      generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION, GeneralInformation.class);
+    }
+    if (settings.containsKey(CFG_SCOPE)) {
+      scope = getEObject(settings, CFG_SCOPE, Scope.class);
+    }
+    if (settings.containsKey(CFG_DATA_BACKGROUND)) {
+      dataBackground = getEObject(settings, CFG_DATA_BACKGROUND, DataBackground.class);
+    }
+    if (settings.containsKey(CFG_MODEL_MATH)) {
+      modelMath = getEObject(settings, CFG_MODEL_MATH, ModelMath.class);
     }
 
     // Uses empty array if CFG_RESOURCES is missing (in case of old nodes).
     resources.clear();
     Arrays.stream(settings.getStringArray(CFG_RESOURCES, new String[0])).map(Paths::get)
         .forEach(resources::add);
+  }
+
+  private static void saveSettings(final NodeSettingsWO settings, final String key,
+      final EObject eObject) {
+
+    try {
+      ResourceSet resourceSet = new ResourceSetImpl();
+      Resource resource = resourceSet.createResource(URI.createURI(key));
+      resource.getContents().add(eObject);
+
+      ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+      String jsonStr = objectMapper.writeValueAsString(eObject);
+      settings.addString(key, jsonStr);
+
+    } catch (JsonProcessingException exception) {
+      LOGGER.warn("Error saving " + key);
+    }
+  }
+
+  private static <T> T getEObject(NodeSettingsRO settings, String key, Class<T> valueType)
+      throws InvalidSettingsException {
+
+    String jsonStr = settings.getString(key);
+
+    ResourceSet resourceSet = new ResourceSetImpl();
+    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+
+    try {
+      return mapper.reader().withAttribute(EMFContext.Attributes.RESOURCE_SET, resourceSet)
+          .withAttribute(EMFContext.Attributes.RESOURCE_URI, key).forType(valueType)
+          .readValue(jsonStr);
+    } catch (IOException e) {
+      throw new InvalidSettingsException(e);
+    }
   }
 }

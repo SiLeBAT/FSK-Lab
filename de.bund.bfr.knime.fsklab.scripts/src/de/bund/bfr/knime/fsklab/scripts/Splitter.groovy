@@ -20,6 +20,7 @@
 package de.bund.bfr.knime.fsklab.scripts
 
 import java.nio.file.Paths
+
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.xssf.usermodel.XSSFCell
 import org.apache.poi.xssf.usermodel.XSSFRow
@@ -28,66 +29,67 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 class Splitter {
 
-  static SPREADSHEET_PATH = "/FSKLab_Config_Controlled Vocabularies.xlsx" // May change
+	static SPREADSHEET_PATH = "/FSKLab_Config_Controlled Vocabularies.xlsx" // May change
 
-  static void main(String[] args) {
+	static void main(String[] args) {
 
-    // Get vocabularies folder (output folder)
-    def outputFolder = new File("vocabularies")
-    outputFolder.mkdir()
+		// Get vocabularies folder (output folder)
+		def vocabulariesDir = new File("../de.bund.bfr.knime.fsklab.nodes/resources/vocabularies")
+		println "Deleting vocabularies directory ${vocabulariesDir.deleteDir()}"
+		vocabulariesDir.mkdir()
 
-    // Get file to resource
-    def resource = Splitter.class.getResource(SPREADSHEET_PATH)
-    def resourceFile = Paths.get(resource.toURI()).toFile()
+		// Get file to resource
+		def resource = Splitter.class.getResource(SPREADSHEET_PATH)
+		def resourceFile = Paths.get(resource.toURI()).toFile()
 
-    new XSSFWorkbook(resourceFile).withCloseable { workbook ->
+		new XSSFWorkbook(resourceFile).withCloseable { workbook ->
 
-      // Ignore first sheet. It is only a listing
-      1.upto(workbook.getNumberOfSheets() - 1, { numSheet ->
+			// Ignore first sheet. It is only a listing
+			1.upto(workbook.getNumberOfSheets() - 1, { numSheet ->
 
-        def originalSheet = workbook.getSheetAt(numSheet)
-        println "Copying sheet ${originalSheet.getSheetName()}"
+				def originalSheet = workbook.getSheetAt(numSheet)
+				println "Copying sheet ${originalSheet.getSheetName()}"
 
-        // Copy sheet
-        new XSSFWorkbook().withCloseable() { newWorkbook ->
-          def newSheet = copySheet(originalSheet, newWorkbook)
+				// Copy sheet
+				new XSSFWorkbook().withCloseable() { newWorkbook ->
+					def newSheet = copySheet(originalSheet, newWorkbook)
 
-          // Write xlsx file with the single new sheet
-          def outputFile = new File(outputFolder.absolutePath, originalSheet.getSheetName() + ".xlsx")
-          outputFile.withOutputStream { stream -> newWorkbook.write(stream) }
-        }
-      })
-    }
-  }
+					// Write xlsx file with the single new sheet
+					def outputFile = new File(vocabulariesDir.absolutePath, originalSheet.getSheetName() + ".xlsx")
+					outputFile.withOutputStream { stream -> newWorkbook.write(stream) }
+				}
+			})
+		}
+	}
 
-  /** Copy an original sheet to a new workbook. */
-  private static XSSFSheet copySheet(XSSFSheet originalSheet, XSSFWorkbook newWorkbook) {
+	/** Copy an original sheet to a new workbook. */
+	private static XSSFSheet copySheet(XSSFSheet originalSheet, XSSFWorkbook newWorkbook) {
 
-    def newSheet = newWorkbook.createSheet(originalSheet.getSheetName())
+		def newSheet = newWorkbook.createSheet(originalSheet.getSheetName())
 
-    originalSheet.forEach { row ->
-      def newRow = newSheet.createRow(row.getRowNum())
-      row.forEach { cell -> copyCell(cell, newRow) }
-    }
+		originalSheet.forEach { row ->
+			def newRow = newSheet.createRow(row.getRowNum())
+			row.forEach { cell -> copyCell(cell, newRow) }
+		}
 
-    return newSheet
-  }
+		return newSheet
+	}
 
-  /** Copy an original cell to a new row in the same column. */
-  private static XSSFCell copyCell(XSSFCell originalCell, XSSFRow row) {
+	/** Copy an original cell to a new row in the same column. */
+	private static XSSFCell copyCell(XSSFCell originalCell, XSSFRow row) {
 
-    def cellType = originalCell.getCellType()
+		def cellType = originalCell.getCellType()
 
-    def newCell = row.createCell(originalCell.getColumnIndex(), cellType)
+		def newCell = row.createCell(originalCell.getColumnIndex(), cellType)
 
-    if (cellType == Cell.CELL_TYPE_BOOLEAN) {
-      newCell.setCellValue(originalCell.getBooleanCellValue())
-    } else if (cellType == Cell.CELL_TYPE_NUMERIC) {
-      newCell.setCellValue(originalCell.getNumericCellValue())
-    } else if (cellType == Cell.CELL_TYPE_STRING) {
-      newCell.setCellValue(originalCell.getStringCellValue())
-    }
+		if (cellType == Cell.CELL_TYPE_BOOLEAN) {
+			newCell.setCellValue(originalCell.getBooleanCellValue())
+		} else if (cellType == Cell.CELL_TYPE_NUMERIC) {
+			newCell.setCellValue(originalCell.getNumericCellValue())
+		} else if (cellType == Cell.CELL_TYPE_STRING) {
+			newCell.setCellValue(originalCell.getStringCellValue())
+		}
 
-    return newCell
-  }
+		return newCell
+	}
 }

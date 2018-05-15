@@ -26,7 +26,7 @@ import de.bund.bfr.knime.fsklab.rakip.Parameter;
  */
 public class SimulationEntity {
   private String simulationName;
-  private List<Parameter> simulationParameters;
+  private List<metadata.Parameter> simulationParameters;
 
   public String getSimulationName() {
     return simulationName;
@@ -36,11 +36,11 @@ public class SimulationEntity {
     this.simulationName = simulationName;
   }
 
-  public List<Parameter> getSimulationParameters() {
+  public List<metadata.Parameter> getSimulationParameters() {
     return simulationParameters;
   }
 
-  public void setSimulationParameters(List<Parameter> simulationParameters) {
+  public void setSimulationParameters(List<metadata.Parameter> simulationParameters) {
     this.simulationParameters = simulationParameters;
   }
 

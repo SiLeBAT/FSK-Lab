@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link metadata.Study#getStudyProtocolDescription <em>Study Protocol Description</em>}</li>
  *   <li>{@link metadata.Study#getStudyProtocolURI <em>Study Protocol URI</em>}</li>
  *   <li>{@link metadata.Study#getStudyProtocolVersion <em>Study Protocol Version</em>}</li>
+ *   <li>{@link metadata.Study#getStudyProtocolParametersName <em>Study Protocol Parameters Name</em>}</li>
  *   <li>{@link metadata.Study#getStudyProtocolComponentsName <em>Study Protocol Components Name</em>}</li>
  *   <li>{@link metadata.Study#getStudyProtocolComponentsType <em>Study Protocol Components Type</em>}</li>
  * </ul>
@@ -374,6 +375,32 @@ public interface Study extends EObject {
 	 * @generated
 	 */
 	void setStudyProtocolVersion(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Study Protocol Parameters Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Study Protocol Parameters Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Study Protocol Parameters Name</em>' attribute.
+	 * @see #setStudyProtocolParametersName(String)
+	 * @see metadata.MetadataPackage#getStudy_StudyProtocolParametersName()
+	 * @model
+	 * @generated
+	 */
+	String getStudyProtocolParametersName();
+
+	/**
+	 * Sets the value of the '{@link metadata.Study#getStudyProtocolParametersName <em>Study Protocol Parameters Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Study Protocol Parameters Name</em>' attribute.
+	 * @see #getStudyProtocolParametersName()
+	 * @generated
+	 */
+	void setStudyProtocolParametersName(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Study Protocol Components Name</b></em>' attribute.

@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "modificationDate": {
+    "value": {
       "type": "string",
       "format": "date-time"
     }

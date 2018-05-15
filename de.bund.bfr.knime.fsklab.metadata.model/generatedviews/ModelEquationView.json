@@ -3,18 +3,28 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Equation Name",
-      "scope": "#/properties/equationName"
+      "label": "modelEquationName",
+      "scope": "#/properties/modelEquationName"
     },
     {
       "type": "Control",
-      "label": "Equation Class",
-      "scope": "#/properties/equationClass"
+      "label": "modelEquationClass",
+      "scope": "#/properties/modelEquationClass"
     },
     {
       "type": "Control",
-      "label": "Equation",
-      "scope": "#/properties/equation"
+      "label": "modelEquation",
+      "scope": "#/properties/modelEquation"
+    },
+    {
+      "type": "Control",
+      "label": "hypothesisOfTheModel",
+      "scope": "#/properties/hypothesisOfTheModel"
+    },
+    {
+      "type": "Control",
+      "label": "reference",
+      "scope": "#/properties/reference"
     }
   ]
 }

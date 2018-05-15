@@ -1,79 +1,84 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_QabnIEh5EeiIoYnPwpYKNg" name="Study" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_5bZFkFNaEeiq2ZPtzKZg8g" name="Study" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
   <rootEClass href="http://www.example.org/metadata#//Study"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnIUh5EeiIoYnPwpYKNg" name="Control title">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnIkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/title"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh0FNaEeiq2ZPtzKZg8g" name="Control studyIdentifier">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh0VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyIdentifier"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnI0h5EeiIoYnPwpYKNg" name="Control description">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnJEh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/description"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh0lNaEeiq2ZPtzKZg8g" name="Control studyTitle">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh01NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyTitle"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnJUh5EeiIoYnPwpYKNg" name="Control designType">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnJkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/designType"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh1FNaEeiq2ZPtzKZg8g" name="Control studyDescription">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh1VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyDescription"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnJ0h5EeiIoYnPwpYKNg" name="Control measurementType">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnKEh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/measurementType"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh1lNaEeiq2ZPtzKZg8g" name="Control studyDesignType">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh11NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyDesignType"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnKUh5EeiIoYnPwpYKNg" name="Control technologyType">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnKkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/technologyType"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh2FNaEeiq2ZPtzKZg8g" name="Control studyAssayMeasurementType">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh2VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyAssayMeasurementType"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnK0h5EeiIoYnPwpYKNg" name="Control technologyPlatform">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnLEh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/technologyPlatform"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh2lNaEeiq2ZPtzKZg8g" name="Control studyAssayTechnologyType">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh21NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyAssayTechnologyType"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnLUh5EeiIoYnPwpYKNg" name="Control accreditationProcedure">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnLkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/accreditationProcedure"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh3FNaEeiq2ZPtzKZg8g" name="Control studyAssayTechnologyPlatform">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh3VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyAssayTechnologyPlatform"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnL0h5EeiIoYnPwpYKNg" name="Control protocolName">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnMEh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/protocolName"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh3lNaEeiq2ZPtzKZg8g" name="Control accreditationProcedureForTheAssayTechnology">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh31NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/accreditationProcedureForTheAssayTechnology"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnMUh5EeiIoYnPwpYKNg" name="Control protocolType">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnMkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/protocolType"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh4FNaEeiq2ZPtzKZg8g" name="Control studyProtocolName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh4VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyProtocolName"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnM0h5EeiIoYnPwpYKNg" name="Control protocolDescription">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnNEh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/protocolDescription"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh4lNaEeiq2ZPtzKZg8g" name="Control studyProtocolType">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh41NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyProtocolType"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnNUh5EeiIoYnPwpYKNg" name="Control protocolUri">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnNkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/protocolUri"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh5FNaEeiq2ZPtzKZg8g" name="Control studyProtocolDescription">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh5VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyProtocolDescription"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnN0h5EeiIoYnPwpYKNg" name="Control protocolVersion">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnOEh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/protocolVersion"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh5lNaEeiq2ZPtzKZg8g" name="Control studyProtocolURI">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh51NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyProtocolURI"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnOUh5EeiIoYnPwpYKNg" name="Control parametersName">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnOkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/parametersName"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh6FNaEeiq2ZPtzKZg8g" name="Control studyProtocolVersion">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh6VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyProtocolVersion"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnO0h5EeiIoYnPwpYKNg" name="Control componentsName">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnPEh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/componentsName"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh6lNaEeiq2ZPtzKZg8g" name="Control studyProtocolParametersName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh61NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyProtocolParametersName"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_QabnPUh5EeiIoYnPwpYKNg" name="Control componentsType">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_QabnPkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/componentsType"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh7FNaEeiq2ZPtzKZg8g" name="Control studyProtocolComponentsName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh7VNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyProtocolComponentsName"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5bbh7lNaEeiq2ZPtzKZg8g" name="Control studyProtocolComponentsType">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5bbh71NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//Study/studyProtocolComponentsType"/>
     </domainModelReference>
   </children>
 </org.eclipse.emf.ecp.view.model:View>

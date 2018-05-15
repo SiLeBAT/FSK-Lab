@@ -38,9 +38,9 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.json.util.JSONUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 
 public class FSK2MetadataNodeModel extends StatelessModel {
 
@@ -58,10 +58,7 @@ public class FSK2MetadataNodeModel extends StatelessModel {
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
     // Get model metadata
-    final GenericModel model = ((FskPortObject) inObjects[0]).genericModel;
-
-    // Prepare object mapper to generate JSON strings from metadata elements
-
+    FskPortObject inObj = (FskPortObject) inObjects[0];
 
     // Build container
     // Argument is not used in configure so null can be passed
@@ -69,16 +66,16 @@ public class FSK2MetadataNodeModel extends StatelessModel {
     final BufferedDataContainer container = exec.createDataContainer(tableSpec);
 
     // Create general information cell
-    final DataCell giCell = createJSONCell(model.generalInformation);
+    final DataCell giCell = createJSONCell(inObj.generalInformation);
 
     // Create scope cell
-    final DataCell scopeCell = createJSONCell(model.scope);
+    final DataCell scopeCell = createJSONCell(inObj.scope);
 
     // Create data background cell
-    final DataCell dbCell = createJSONCell(model.dataBackground);
+    final DataCell dbCell = createJSONCell(inObj.dataBackground);
 
     // Create model math cell
-    final DataCell mathCell = createJSONCell(model.modelMath);
+    final DataCell mathCell = createJSONCell(inObj.modelMath);
 
     // Create and add row to container
     final DefaultRow row =
@@ -95,7 +92,8 @@ public class FSK2MetadataNodeModel extends StatelessModel {
 
     if (object != null) {
       try {
-        final String jsonStr = FskPlugin.getDefault().OBJECT_MAPPER.writeValueAsString(object);
+        ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+        final String jsonStr = mapper.writeValueAsString(object);
         jsonValue = JSONUtil.parseJSONValue(jsonStr);
       } catch (IOException e) {
       }

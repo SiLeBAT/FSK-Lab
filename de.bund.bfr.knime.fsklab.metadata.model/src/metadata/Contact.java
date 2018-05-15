@@ -15,23 +15,18 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link metadata.Contact#getTitle <em>Title</em>}</li>
  *   <li>{@link metadata.Contact#getFamilyName <em>Family Name</em>}</li>
+ *   <li>{@link metadata.Contact#getGivenName <em>Given Name</em>}</li>
  *   <li>{@link metadata.Contact#getEmail <em>Email</em>}</li>
  *   <li>{@link metadata.Contact#getTelephone <em>Telephone</em>}</li>
  *   <li>{@link metadata.Contact#getStreetAddress <em>Street Address</em>}</li>
  *   <li>{@link metadata.Contact#getCountry <em>Country</em>}</li>
  *   <li>{@link metadata.Contact#getCity <em>City</em>}</li>
  *   <li>{@link metadata.Contact#getZipCode <em>Zip Code</em>}</li>
- *   <li>{@link metadata.Contact#getPostOfficeBox <em>Post Office Box</em>}</li>
  *   <li>{@link metadata.Contact#getRegion <em>Region</em>}</li>
- *   <li>{@link metadata.Contact#getNickname <em>Nickname</em>}</li>
  *   <li>{@link metadata.Contact#getTimeZone <em>Time Zone</em>}</li>
  *   <li>{@link metadata.Contact#getGender <em>Gender</em>}</li>
- *   <li>{@link metadata.Contact#getName <em>Name</em>}</li>
- *   <li>{@link metadata.Contact#getUrl <em>Url</em>}</li>
  *   <li>{@link metadata.Contact#getNote <em>Note</em>}</li>
- *   <li>{@link metadata.Contact#getLogo <em>Logo</em>}</li>
  *   <li>{@link metadata.Contact#getOrganization <em>Organization</em>}</li>
- *   <li>{@link metadata.Contact#getFn <em>Fn</em>}</li>
  * </ul>
  *
  * @see metadata.MetadataPackage#getContact()
@@ -90,6 +85,32 @@ public interface Contact extends EObject {
 	 * @generated
 	 */
 	void setFamilyName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Given Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Given Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Given Name</em>' attribute.
+	 * @see #setGivenName(String)
+	 * @see metadata.MetadataPackage#getContact_GivenName()
+	 * @model
+	 * @generated
+	 */
+	String getGivenName();
+
+	/**
+	 * Sets the value of the '{@link metadata.Contact#getGivenName <em>Given Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Given Name</em>' attribute.
+	 * @see #getGivenName()
+	 * @generated
+	 */
+	void setGivenName(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Email</b></em>' attribute.
@@ -248,32 +269,6 @@ public interface Contact extends EObject {
 	void setZipCode(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Post Office Box</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Post Office Box</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Post Office Box</em>' attribute.
-	 * @see #setPostOfficeBox(String)
-	 * @see metadata.MetadataPackage#getContact_PostOfficeBox()
-	 * @model
-	 * @generated
-	 */
-	String getPostOfficeBox();
-
-	/**
-	 * Sets the value of the '{@link metadata.Contact#getPostOfficeBox <em>Post Office Box</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Post Office Box</em>' attribute.
-	 * @see #getPostOfficeBox()
-	 * @generated
-	 */
-	void setPostOfficeBox(String value);
-
-	/**
 	 * Returns the value of the '<em><b>Region</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -298,32 +293,6 @@ public interface Contact extends EObject {
 	 * @generated
 	 */
 	void setRegion(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Nickname</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Nickname</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Nickname</em>' attribute.
-	 * @see #setNickname(String)
-	 * @see metadata.MetadataPackage#getContact_Nickname()
-	 * @model
-	 * @generated
-	 */
-	String getNickname();
-
-	/**
-	 * Sets the value of the '{@link metadata.Contact#getNickname <em>Nickname</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Nickname</em>' attribute.
-	 * @see #getNickname()
-	 * @generated
-	 */
-	void setNickname(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Time Zone</b></em>' attribute.
@@ -378,58 +347,6 @@ public interface Contact extends EObject {
 	void setGender(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(String)
-	 * @see metadata.MetadataPackage#getContact_Name()
-	 * @model
-	 * @generated
-	 */
-	String getName();
-
-	/**
-	 * Sets the value of the '{@link metadata.Contact#getName <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
-	 * @see #getName()
-	 * @generated
-	 */
-	void setName(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Url</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Url</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Url</em>' attribute.
-	 * @see #setUrl(String)
-	 * @see metadata.MetadataPackage#getContact_Url()
-	 * @model
-	 * @generated
-	 */
-	String getUrl();
-
-	/**
-	 * Sets the value of the '{@link metadata.Contact#getUrl <em>Url</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Url</em>' attribute.
-	 * @see #getUrl()
-	 * @generated
-	 */
-	void setUrl(String value);
-
-	/**
 	 * Returns the value of the '<em><b>Note</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -456,32 +373,6 @@ public interface Contact extends EObject {
 	void setNote(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Logo</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Logo</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Logo</em>' attribute.
-	 * @see #setLogo(String)
-	 * @see metadata.MetadataPackage#getContact_Logo()
-	 * @model
-	 * @generated
-	 */
-	String getLogo();
-
-	/**
-	 * Sets the value of the '{@link metadata.Contact#getLogo <em>Logo</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Logo</em>' attribute.
-	 * @see #getLogo()
-	 * @generated
-	 */
-	void setLogo(String value);
-
-	/**
 	 * Returns the value of the '<em><b>Organization</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -506,31 +397,5 @@ public interface Contact extends EObject {
 	 * @generated
 	 */
 	void setOrganization(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Fn</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Fn</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Fn</em>' attribute.
-	 * @see #setFn(String)
-	 * @see metadata.MetadataPackage#getContact_Fn()
-	 * @model
-	 * @generated
-	 */
-	String getFn();
-
-	/**
-	 * Sets the value of the '{@link metadata.Contact#getFn <em>Fn</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Fn</em>' attribute.
-	 * @see #getFn()
-	 * @generated
-	 */
-	void setFn(String value);
 
 } // Contact

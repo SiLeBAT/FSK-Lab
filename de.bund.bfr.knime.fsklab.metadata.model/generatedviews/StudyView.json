@@ -3,78 +3,83 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Title",
-      "scope": "#/properties/title"
+      "label": "studyIdentifier",
+      "scope": "#/properties/studyIdentifier"
     },
     {
       "type": "Control",
-      "label": "Description",
-      "scope": "#/properties/description"
+      "label": "studyTitle",
+      "scope": "#/properties/studyTitle"
     },
     {
       "type": "Control",
-      "label": "Design Type",
-      "scope": "#/properties/designType"
+      "label": "studyDescription",
+      "scope": "#/properties/studyDescription"
     },
     {
       "type": "Control",
-      "label": "Measurement Type",
-      "scope": "#/properties/measurementType"
+      "label": "studyDesignType",
+      "scope": "#/properties/studyDesignType"
     },
     {
       "type": "Control",
-      "label": "Technology Type",
-      "scope": "#/properties/technologyType"
+      "label": "studyAssayMeasurementType",
+      "scope": "#/properties/studyAssayMeasurementType"
     },
     {
       "type": "Control",
-      "label": "Technology Platform",
-      "scope": "#/properties/technologyPlatform"
+      "label": "studyAssayTechnologyType",
+      "scope": "#/properties/studyAssayTechnologyType"
     },
     {
       "type": "Control",
-      "label": "Accreditation Procedure",
-      "scope": "#/properties/accreditationProcedure"
+      "label": "studyAssayTechnologyPlatform",
+      "scope": "#/properties/studyAssayTechnologyPlatform"
     },
     {
       "type": "Control",
-      "label": "Protocol Name",
-      "scope": "#/properties/protocolName"
+      "label": "accreditationProcedureForTheAssayTechnology",
+      "scope": "#/properties/accreditationProcedureForTheAssayTechnology"
     },
     {
       "type": "Control",
-      "label": "Protocol Type",
-      "scope": "#/properties/protocolType"
+      "label": "studyProtocolName",
+      "scope": "#/properties/studyProtocolName"
     },
     {
       "type": "Control",
-      "label": "Protocol Description",
-      "scope": "#/properties/protocolDescription"
+      "label": "studyProtocolType",
+      "scope": "#/properties/studyProtocolType"
     },
     {
       "type": "Control",
-      "label": "Protocol Uri",
-      "scope": "#/properties/protocolUri"
+      "label": "studyProtocolDescription",
+      "scope": "#/properties/studyProtocolDescription"
     },
     {
       "type": "Control",
-      "label": "Protocol Version",
-      "scope": "#/properties/protocolVersion"
+      "label": "studyProtocolURI",
+      "scope": "#/properties/studyProtocolURI"
     },
     {
       "type": "Control",
-      "label": "Parameters Name",
-      "scope": "#/properties/parametersName"
+      "label": "studyProtocolVersion",
+      "scope": "#/properties/studyProtocolVersion"
     },
     {
       "type": "Control",
-      "label": "Components Name",
-      "scope": "#/properties/componentsName"
+      "label": "studyProtocolParametersName",
+      "scope": "#/properties/studyProtocolParametersName"
     },
     {
       "type": "Control",
-      "label": "Components Type",
-      "scope": "#/properties/componentsType"
+      "label": "studyProtocolComponentsName",
+      "scope": "#/properties/studyProtocolComponentsName"
+    },
+    {
+      "type": "Control",
+      "label": "studyProtocolComponentsType",
+      "scope": "#/properties/studyProtocolComponentsType"
     }
   ]
 }

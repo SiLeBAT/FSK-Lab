@@ -549,13 +549,22 @@ public interface MetadataPackage extends EPackage {
 	int STUDY__STUDY_PROTOCOL_VERSION = 12;
 
 	/**
+	 * The feature id for the '<em><b>Study Protocol Parameters Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STUDY__STUDY_PROTOCOL_PARAMETERS_NAME = 13;
+
+	/**
 	 * The feature id for the '<em><b>Study Protocol Components Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STUDY__STUDY_PROTOCOL_COMPONENTS_NAME = 13;
+	int STUDY__STUDY_PROTOCOL_COMPONENTS_NAME = 14;
 
 	/**
 	 * The feature id for the '<em><b>Study Protocol Components Type</b></em>' attribute.
@@ -564,7 +573,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE = 14;
+	int STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE = 15;
 
 	/**
 	 * The number of structural features of the '<em>Study</em>' class.
@@ -573,7 +582,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STUDY_FEATURE_COUNT = 15;
+	int STUDY_FEATURE_COUNT = 16;
 
 	/**
 	 * The number of operations of the '<em>Study</em>' class.
@@ -1504,43 +1513,6 @@ public interface MetadataPackage extends EPackage {
 	int SPATIAL_INFORMATION_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link metadata.impl.modelApplicabilityImpl <em>model Applicability</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see metadata.impl.modelApplicabilityImpl
-	 * @see metadata.impl.MetadataPackageImpl#getmodelApplicability()
-	 * @generated
-	 */
-	int MODEL_APPLICABILITY = 14;
-
-	/**
-	 * The feature id for the '<em><b>Model Applicability</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_APPLICABILITY__MODEL_APPLICABILITY = 0;
-
-	/**
-	 * The number of structural features of the '<em>model Applicability</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_APPLICABILITY_FEATURE_COUNT = 1;
-
-	/**
-	 * The number of operations of the '<em>model Applicability</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_APPLICABILITY_OPERATION_COUNT = 0;
-
-	/**
 	 * The meta object id for the '{@link metadata.impl.EventImpl <em>Event</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1548,7 +1520,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getEvent()
 	 * @generated
 	 */
-	int EVENT = 15;
+	int EVENT = 14;
 
 	/**
 	 * The feature id for the '<em><b>Event</b></em>' attribute.
@@ -1585,7 +1557,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getContact()
 	 * @generated
 	 */
-	int CONTACT = 16;
+	int CONTACT = 15;
 
 	/**
 	 * The feature id for the '<em><b>Title</b></em>' attribute.
@@ -1606,13 +1578,22 @@ public interface MetadataPackage extends EPackage {
 	int CONTACT__FAMILY_NAME = 1;
 
 	/**
+	 * The feature id for the '<em><b>Given Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTACT__GIVEN_NAME = 2;
+
+	/**
 	 * The feature id for the '<em><b>Email</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT__EMAIL = 2;
+	int CONTACT__EMAIL = 3;
 
 	/**
 	 * The feature id for the '<em><b>Telephone</b></em>' attribute.
@@ -1621,7 +1602,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT__TELEPHONE = 3;
+	int CONTACT__TELEPHONE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Street Address</b></em>' attribute.
@@ -1630,7 +1611,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT__STREET_ADDRESS = 4;
+	int CONTACT__STREET_ADDRESS = 5;
 
 	/**
 	 * The feature id for the '<em><b>Country</b></em>' attribute.
@@ -1639,7 +1620,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT__COUNTRY = 5;
+	int CONTACT__COUNTRY = 6;
 
 	/**
 	 * The feature id for the '<em><b>City</b></em>' attribute.
@@ -1648,7 +1629,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT__CITY = 6;
+	int CONTACT__CITY = 7;
 
 	/**
 	 * The feature id for the '<em><b>Zip Code</b></em>' attribute.
@@ -1657,16 +1638,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT__ZIP_CODE = 7;
-
-	/**
-	 * The feature id for the '<em><b>Post Office Box</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONTACT__POST_OFFICE_BOX = 8;
+	int CONTACT__ZIP_CODE = 8;
 
 	/**
 	 * The feature id for the '<em><b>Region</b></em>' attribute.
@@ -1678,22 +1650,13 @@ public interface MetadataPackage extends EPackage {
 	int CONTACT__REGION = 9;
 
 	/**
-	 * The feature id for the '<em><b>Nickname</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONTACT__NICKNAME = 10;
-
-	/**
 	 * The feature id for the '<em><b>Time Zone</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT__TIME_ZONE = 11;
+	int CONTACT__TIME_ZONE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Gender</b></em>' attribute.
@@ -1702,25 +1665,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT__GENDER = 12;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONTACT__NAME = 13;
-
-	/**
-	 * The feature id for the '<em><b>Url</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONTACT__URL = 14;
+	int CONTACT__GENDER = 11;
 
 	/**
 	 * The feature id for the '<em><b>Note</b></em>' attribute.
@@ -1729,16 +1674,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT__NOTE = 15;
-
-	/**
-	 * The feature id for the '<em><b>Logo</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONTACT__LOGO = 16;
+	int CONTACT__NOTE = 12;
 
 	/**
 	 * The feature id for the '<em><b>Organization</b></em>' attribute.
@@ -1747,16 +1683,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT__ORGANIZATION = 17;
-
-	/**
-	 * The feature id for the '<em><b>Fn</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONTACT__FN = 18;
+	int CONTACT__ORGANIZATION = 13;
 
 	/**
 	 * The number of structural features of the '<em>Contact</em>' class.
@@ -1765,7 +1692,7 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTACT_FEATURE_COUNT = 19;
+	int CONTACT_FEATURE_COUNT = 14;
 
 	/**
 	 * The number of operations of the '<em>Contact</em>' class.
@@ -1784,7 +1711,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getReference()
 	 * @generated
 	 */
-	int REFERENCE = 17;
+	int REFERENCE = 16;
 
 	/**
 	 * The feature id for the '<em><b>Is Reference Description</b></em>' attribute.
@@ -1938,7 +1865,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getModelMath()
 	 * @generated
 	 */
-	int MODEL_MATH = 18;
+	int MODEL_MATH = 17;
 
 	/**
 	 * The feature id for the '<em><b>Quality Measures</b></em>' attribute list.
@@ -2020,7 +1947,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getParameter()
 	 * @generated
 	 */
-	int PARAMETER = 19;
+	int PARAMETER = 18;
 
 	/**
 	 * The feature id for the '<em><b>Parameter ID</b></em>' attribute.
@@ -2201,7 +2128,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getModelEquation()
 	 * @generated
 	 */
-	int MODEL_EQUATION = 20;
+	int MODEL_EQUATION = 19;
 
 	/**
 	 * The feature id for the '<em><b>Model Equation Name</b></em>' attribute.
@@ -2274,7 +2201,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getExposure()
 	 * @generated
 	 */
-	int EXPOSURE = 21;
+	int EXPOSURE = 20;
 
 	/**
 	 * The feature id for the '<em><b>Methodological Treatment Of Left Censored Data</b></em>' attribute list.
@@ -2347,7 +2274,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getPublicationType()
 	 * @generated
 	 */
-	int PUBLICATION_TYPE = 22;
+	int PUBLICATION_TYPE = 21;
 
 	/**
 	 * The meta object id for the '{@link metadata.ParameterClassification <em>Parameter Classification</em>}' enum.
@@ -2357,7 +2284,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getParameterClassification()
 	 * @generated
 	 */
-	int PARAMETER_CLASSIFICATION = 23;
+	int PARAMETER_CLASSIFICATION = 22;
 
 	/**
 	 * The meta object id for the '{@link metadata.ParameterType <em>Parameter Type</em>}' enum.
@@ -2367,7 +2294,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getParameterType()
 	 * @generated
 	 */
-	int PARAMETER_TYPE = 24;
+	int PARAMETER_TYPE = 23;
 
 	/**
 	 * The meta object id for the '<em>URI</em>' data type.
@@ -2377,7 +2304,7 @@ public interface MetadataPackage extends EPackage {
 	 * @see metadata.impl.MetadataPackageImpl#getURI()
 	 * @generated
 	 */
-	int URI = 25;
+	int URI = 24;
 
 
 	/**
@@ -2903,6 +2830,17 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getStudy_StudyProtocolVersion();
+
+	/**
+	 * Returns the meta object for the attribute '{@link metadata.Study#getStudyProtocolParametersName <em>Study Protocol Parameters Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Study Protocol Parameters Name</em>'.
+	 * @see metadata.Study#getStudyProtocolParametersName()
+	 * @see #getStudy()
+	 * @generated
+	 */
+	EAttribute getStudy_StudyProtocolParametersName();
 
 	/**
 	 * Returns the meta object for the attribute '{@link metadata.Study#getStudyProtocolComponentsName <em>Study Protocol Components Name</em>}'.
@@ -3808,27 +3746,6 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getSpatialInformation_Country();
 
 	/**
-	 * Returns the meta object for class '{@link metadata.modelApplicability <em>model Applicability</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>model Applicability</em>'.
-	 * @see metadata.modelApplicability
-	 * @generated
-	 */
-	EClass getmodelApplicability();
-
-	/**
-	 * Returns the meta object for the attribute '{@link metadata.modelApplicability#getModelApplicability <em>Model Applicability</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Model Applicability</em>'.
-	 * @see metadata.modelApplicability#getModelApplicability()
-	 * @see #getmodelApplicability()
-	 * @generated
-	 */
-	EAttribute getmodelApplicability_ModelApplicability();
-
-	/**
 	 * Returns the meta object for class '{@link metadata.Event <em>Event</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3880,6 +3797,17 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getContact_FamilyName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link metadata.Contact#getGivenName <em>Given Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Given Name</em>'.
+	 * @see metadata.Contact#getGivenName()
+	 * @see #getContact()
+	 * @generated
+	 */
+	EAttribute getContact_GivenName();
 
 	/**
 	 * Returns the meta object for the attribute '{@link metadata.Contact#getEmail <em>Email</em>}'.
@@ -3948,17 +3876,6 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getContact_ZipCode();
 
 	/**
-	 * Returns the meta object for the attribute '{@link metadata.Contact#getPostOfficeBox <em>Post Office Box</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Post Office Box</em>'.
-	 * @see metadata.Contact#getPostOfficeBox()
-	 * @see #getContact()
-	 * @generated
-	 */
-	EAttribute getContact_PostOfficeBox();
-
-	/**
 	 * Returns the meta object for the attribute '{@link metadata.Contact#getRegion <em>Region</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3968,17 +3885,6 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getContact_Region();
-
-	/**
-	 * Returns the meta object for the attribute '{@link metadata.Contact#getNickname <em>Nickname</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Nickname</em>'.
-	 * @see metadata.Contact#getNickname()
-	 * @see #getContact()
-	 * @generated
-	 */
-	EAttribute getContact_Nickname();
 
 	/**
 	 * Returns the meta object for the attribute '{@link metadata.Contact#getTimeZone <em>Time Zone</em>}'.
@@ -4003,28 +3909,6 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getContact_Gender();
 
 	/**
-	 * Returns the meta object for the attribute '{@link metadata.Contact#getName <em>Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see metadata.Contact#getName()
-	 * @see #getContact()
-	 * @generated
-	 */
-	EAttribute getContact_Name();
-
-	/**
-	 * Returns the meta object for the attribute '{@link metadata.Contact#getUrl <em>Url</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Url</em>'.
-	 * @see metadata.Contact#getUrl()
-	 * @see #getContact()
-	 * @generated
-	 */
-	EAttribute getContact_Url();
-
-	/**
 	 * Returns the meta object for the attribute '{@link metadata.Contact#getNote <em>Note</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4036,17 +3920,6 @@ public interface MetadataPackage extends EPackage {
 	EAttribute getContact_Note();
 
 	/**
-	 * Returns the meta object for the attribute '{@link metadata.Contact#getLogo <em>Logo</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Logo</em>'.
-	 * @see metadata.Contact#getLogo()
-	 * @see #getContact()
-	 * @generated
-	 */
-	EAttribute getContact_Logo();
-
-	/**
 	 * Returns the meta object for the attribute '{@link metadata.Contact#getOrganization <em>Organization</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4056,17 +3929,6 @@ public interface MetadataPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getContact_Organization();
-
-	/**
-	 * Returns the meta object for the attribute '{@link metadata.Contact#getFn <em>Fn</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Fn</em>'.
-	 * @see metadata.Contact#getFn()
-	 * @see #getContact()
-	 * @generated
-	 */
-	EAttribute getContact_Fn();
 
 	/**
 	 * Returns the meta object for class '{@link metadata.Reference <em>Reference</em>}'.
@@ -5092,6 +4954,14 @@ public interface MetadataPackage extends EPackage {
 		EAttribute STUDY__STUDY_PROTOCOL_VERSION = eINSTANCE.getStudy_StudyProtocolVersion();
 
 		/**
+		 * The meta object literal for the '<em><b>Study Protocol Parameters Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STUDY__STUDY_PROTOCOL_PARAMETERS_NAME = eINSTANCE.getStudy_StudyProtocolParametersName();
+
+		/**
 		 * The meta object literal for the '<em><b>Study Protocol Components Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5776,24 +5646,6 @@ public interface MetadataPackage extends EPackage {
 		EAttribute SPATIAL_INFORMATION__COUNTRY = eINSTANCE.getSpatialInformation_Country();
 
 		/**
-		 * The meta object literal for the '{@link metadata.impl.modelApplicabilityImpl <em>model Applicability</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see metadata.impl.modelApplicabilityImpl
-		 * @see metadata.impl.MetadataPackageImpl#getmodelApplicability()
-		 * @generated
-		 */
-		EClass MODEL_APPLICABILITY = eINSTANCE.getmodelApplicability();
-
-		/**
-		 * The meta object literal for the '<em><b>Model Applicability</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MODEL_APPLICABILITY__MODEL_APPLICABILITY = eINSTANCE.getmodelApplicability_ModelApplicability();
-
-		/**
 		 * The meta object literal for the '{@link metadata.impl.EventImpl <em>Event</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5836,6 +5688,14 @@ public interface MetadataPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CONTACT__FAMILY_NAME = eINSTANCE.getContact_FamilyName();
+
+		/**
+		 * The meta object literal for the '<em><b>Given Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONTACT__GIVEN_NAME = eINSTANCE.getContact_GivenName();
 
 		/**
 		 * The meta object literal for the '<em><b>Email</b></em>' attribute feature.
@@ -5886,28 +5746,12 @@ public interface MetadataPackage extends EPackage {
 		EAttribute CONTACT__ZIP_CODE = eINSTANCE.getContact_ZipCode();
 
 		/**
-		 * The meta object literal for the '<em><b>Post Office Box</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CONTACT__POST_OFFICE_BOX = eINSTANCE.getContact_PostOfficeBox();
-
-		/**
 		 * The meta object literal for the '<em><b>Region</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute CONTACT__REGION = eINSTANCE.getContact_Region();
-
-		/**
-		 * The meta object literal for the '<em><b>Nickname</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CONTACT__NICKNAME = eINSTANCE.getContact_Nickname();
 
 		/**
 		 * The meta object literal for the '<em><b>Time Zone</b></em>' attribute feature.
@@ -5926,22 +5770,6 @@ public interface MetadataPackage extends EPackage {
 		EAttribute CONTACT__GENDER = eINSTANCE.getContact_Gender();
 
 		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CONTACT__NAME = eINSTANCE.getContact_Name();
-
-		/**
-		 * The meta object literal for the '<em><b>Url</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CONTACT__URL = eINSTANCE.getContact_Url();
-
-		/**
 		 * The meta object literal for the '<em><b>Note</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5950,28 +5778,12 @@ public interface MetadataPackage extends EPackage {
 		EAttribute CONTACT__NOTE = eINSTANCE.getContact_Note();
 
 		/**
-		 * The meta object literal for the '<em><b>Logo</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CONTACT__LOGO = eINSTANCE.getContact_Logo();
-
-		/**
 		 * The meta object literal for the '<em><b>Organization</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute CONTACT__ORGANIZATION = eINSTANCE.getContact_Organization();
-
-		/**
-		 * The meta object literal for the '<em><b>Fn</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CONTACT__FN = eINSTANCE.getContact_Fn();
 
 		/**
 		 * The meta object literal for the '{@link metadata.impl.ReferenceImpl <em>Reference</em>}' class.

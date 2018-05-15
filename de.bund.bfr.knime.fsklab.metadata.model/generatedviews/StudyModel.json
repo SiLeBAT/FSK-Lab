@@ -1,51 +1,57 @@
 {
   "type": "object",
   "properties": {
-    "title": {
+    "studyIdentifier": {
       "type": "string"
     },
-    "description": {
+    "studyTitle": {
       "type": "string"
     },
-    "designType": {
+    "studyDescription": {
       "type": "string"
     },
-    "measurementType": {
+    "studyDesignType": {
       "type": "string"
     },
-    "technologyType": {
+    "studyAssayMeasurementType": {
       "type": "string"
     },
-    "technologyPlatform": {
+    "studyAssayTechnologyType": {
       "type": "string"
     },
-    "accreditationProcedure": {
+    "studyAssayTechnologyPlatform": {
       "type": "string"
     },
-    "protocolName": {
+    "accreditationProcedureForTheAssayTechnology": {
       "type": "string"
     },
-    "protocolType": {
+    "studyProtocolName": {
       "type": "string"
     },
-    "protocolDescription": {
+    "studyProtocolType": {
       "type": "string"
     },
-    "protocolUri": {
+    "studyProtocolDescription": {
       "type": "string"
     },
-    "protocolVersion": {
+    "studyProtocolURI": {
       "type": "string"
     },
-    "parametersName": {
+    "studyProtocolVersion": {
       "type": "string"
     },
-    "componentsName": {
+    "studyProtocolParametersName": {
       "type": "string"
     },
-    "componentsType": {
+    "studyProtocolComponentsName": {
+      "type": "string"
+    },
+    "studyProtocolComponentsType": {
       "type": "string"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "studyTitle"
+  ]
 }

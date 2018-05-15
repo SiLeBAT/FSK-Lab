@@ -3,83 +3,93 @@
   "elements": [
     {
       "type": "Control",
-      "label": "Name",
+      "label": "name",
       "scope": "#/properties/name"
     },
     {
       "type": "Control",
-      "label": "Source",
+      "label": "source",
       "scope": "#/properties/source"
     },
     {
       "type": "Control",
-      "label": "Identifier",
+      "label": "identifier",
       "scope": "#/properties/identifier"
     },
     {
       "type": "Control",
-      "label": "Creation Date",
+      "label": "creationDate",
       "scope": "#/properties/creationDate"
     },
     {
       "type": "Control",
-      "label": "Rights",
+      "label": "rights",
       "scope": "#/properties/rights"
     },
     {
       "type": "Control",
-      "label": "Available",
+      "label": "available",
       "scope": "#/properties/available"
     },
     {
       "type": "Control",
-      "label": "Format",
+      "label": "format",
       "scope": "#/properties/format"
     },
     {
       "type": "Control",
-      "label": "Language",
+      "label": "language",
       "scope": "#/properties/language"
     },
     {
       "type": "Control",
-      "label": "Software",
+      "label": "software",
       "scope": "#/properties/software"
     },
     {
       "type": "Control",
-      "label": "Language Written In",
+      "label": "languageWrittenIn",
       "scope": "#/properties/languageWrittenIn"
     },
     {
       "type": "Control",
-      "label": "Status",
+      "label": "status",
       "scope": "#/properties/status"
     },
     {
       "type": "Control",
-      "label": "Objective",
+      "label": "objective",
       "scope": "#/properties/objective"
     },
     {
       "type": "Control",
-      "label": "Description",
+      "label": "description",
       "scope": "#/properties/description"
     },
     {
       "type": "Control",
-      "label": "Creators",
+      "label": "modelCategory",
+      "scope": "#/properties/modelCategory"
+    },
+    {
+      "type": "Control",
+      "label": "modificationdate",
+      "scope": "#/properties/modificationdate"
+    },
+    {
+      "type": "Control",
+      "label": "author",
+      "scope": "#/properties/author"
+    },
+    {
+      "type": "Control",
+      "label": "creators",
       "scope": "#/properties/creators"
     },
     {
       "type": "Control",
-      "label": "Modelcategory",
-      "scope": "#/properties/modelcategory"
-    },
-    {
-      "type": "Control",
-      "label": "Modificationdate",
-      "scope": "#/properties/modificationdate"
+      "label": "reference",
+      "scope": "#/properties/reference"
     }
   ]
 }

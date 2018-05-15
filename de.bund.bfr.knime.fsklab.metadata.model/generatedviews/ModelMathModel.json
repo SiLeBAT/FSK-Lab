@@ -1,161 +1,277 @@
 {
   "type": "object",
   "properties": {
+    "qualityMeasures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "fittingProcedure": {
+      "type": "string"
+    },
+    "event": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "parameter": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "id": {
+          "parameterID": {
             "type": "string"
           },
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "unit": {
-            "type": "string"
-          },
-          "unitCategory": {
-            "type": "string"
-          },
-          "dataType": {
-            "type": "string"
-          },
-          "source": {
-            "type": "string"
-          },
-          "subject": {
-            "type": "string"
-          },
-          "distribution": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          },
-          "minValue": {
-            "type": "string"
-          },
-          "maxValue": {
-            "type": "string"
-          },
-          "reference": {
-            "type": "string"
-          },
-          "variabilitySubject": {
-            "type": "string"
-          },
-          "rangeOfApplicability": {
-            "type": "string"
-          },
-          "error": {
-            "type": "number"
-          },
-          "modelapplicability": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "modelApplicability": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
-            }
-          },
-          "classification": {
+          "parameterClassification": {
             "type": "string",
             "enum": [
               "constant",
               "input",
               "output"
             ]
+          },
+          "parameterName": {
+            "type": "string"
+          },
+          "parameterDescription": {
+            "type": "string"
+          },
+          "parameterType": {
+            "type": "string"
+          },
+          "parameterUnit": {
+            "type": "string"
+          },
+          "parameterUnitCategory": {
+            "type": "string"
+          },
+          "parameterDataType": {
+            "type": "string",
+            "enum": [
+              "Integer",
+              "Double",
+              "Number",
+              "Date",
+              "File",
+              "Boolean",
+              "VectorOfNumbers",
+              "VectorOfStrings",
+              "MatrixOfNumbers",
+              "MatrixOfStrings",
+              "Object",
+              "Other"
+            ]
+          },
+          "parameterSource": {
+            "type": "string"
+          },
+          "parameterSubject": {
+            "type": "string"
+          },
+          "parameterDistribution": {
+            "type": "string"
+          },
+          "parameterValue": {
+            "type": "string"
+          },
+          "parameterVariabilitySubject": {
+            "type": "string"
+          },
+          "parameterValueMin": {
+            "type": "string"
+          },
+          "parameterValueMax": {
+            "type": "string"
+          },
+          "parameterError": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "object",
+            "properties": {
+              "isReferenceDescription": {
+                "type": "boolean"
+              },
+              "publicationType": {
+                "type": "string",
+                "enum": [
+                  "ABST",
+                  "ADVS",
+                  "AGGR",
+                  "ANCIENT",
+                  "ART",
+                  "BILL",
+                  "BLOG",
+                  "BOOK",
+                  "CASE",
+                  "CHAP",
+                  "CHART",
+                  "CLSWK",
+                  "COMP",
+                  "CONF",
+                  "CPAPER",
+                  "CTLG",
+                  "DATA",
+                  "DBASE",
+                  "DICT",
+                  "EBOOK",
+                  "ECHAP",
+                  "EDBOOK",
+                  "EJOUR",
+                  "ELECT",
+                  "ENCYC",
+                  "EQUA",
+                  "FIGURE",
+                  "GEN",
+                  "GOVDOC",
+                  "GRANT",
+                  "HEAR",
+                  "ICOMM",
+                  "INPR",
+                  "JFULL",
+                  "LEGAL",
+                  "MANSCPT",
+                  "MAP",
+                  "MGZN",
+                  "MPCT",
+                  "MULTI",
+                  "MUSIC",
+                  "NEWS",
+                  "PAMP",
+                  "PAT",
+                  "PCOMM",
+                  "RPRT",
+                  "SER",
+                  "SLIDE",
+                  "SOUND",
+                  "STAND",
+                  "STAT",
+                  "THES",
+                  "UNPB",
+                  "VIDEO"
+                ]
+              },
+              "publicationDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "pmid": {
+                "type": "string"
+              },
+              "doi": {
+                "type": "string"
+              },
+              "authorList": {
+                "type": "string"
+              },
+              "publicationTitle": {
+                "type": "string"
+              },
+              "publicationAbstract": {
+                "type": "string"
+              },
+              "publicationJournal": {
+                "type": "string"
+              },
+              "publicationVolume": {
+                "type": "integer"
+              },
+              "publicationIssue": {
+                "type": "integer"
+              },
+              "publicationStatus": {
+                "type": "string"
+              },
+              "publicationWebsite": {
+                "type": "string"
+              },
+              "comment": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "isReferenceDescription",
+              "publicationTitle"
+            ]
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "required": [
+          "parameterID",
+          "parameterClassification",
+          "parameterName",
+          "parameterUnit",
+          "parameterDataType"
+        ]
       }
     },
-    "sse": {
-      "type": "number"
-    },
-    "mse": {
-      "type": "number"
-    },
-    "rmse": {
-      "type": "number"
-    },
-    "rSquared": {
-      "type": "number"
-    },
-    "aic": {
-      "type": "number"
-    },
-    "bic": {
-      "type": "number"
-    },
-    "sensitivityAnalysis": {
-      "type": "string"
-    },
-    "fittingProcedure": {
-      "type": "string"
-    },
-    "modelequation": {
+    "modelEquation": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "equationName": {
+          "modelEquationName": {
             "type": "string"
           },
-          "equationClass": {
+          "modelEquationClass": {
             "type": "string"
           },
-          "equation": {
+          "modelEquation": {
             "type": "string"
+          },
+          "hypothesisOfTheModel": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "required": [
+          "modelEquationName",
+          "modelEquation"
+        ]
       }
     },
     "exposure": {
       "type": "object",
       "properties": {
-        "treatment": {
-          "type": "string"
+        "methodologicalTreatmentOfLeftCensoredData": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
-        "contaminationLevel": {
-          "type": "string"
+        "levelOfContaminationAfterLeftCensoredDataTreatment": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
-        "exposureType": {
+        "typeOfExposure": {
           "type": "string"
         },
         "scenario": {
-          "type": "string"
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "uncertaintyEstimation": {
           "type": "string"
         }
       },
-      "additionalProperties": false
-    },
-    "event": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "event": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      }
+      "additionalProperties": false,
+      "required": [
+        "typeOfExposure"
+      ]
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "parameter"
+  ]
 }

@@ -139,11 +139,20 @@ final class JoinerNodeModel
       JoinerViewValue joinerProxyValue = getViewValue();
 
       // If not executed
-      if (joinerProxyValue.getFirstModel() == null) {
-        joinerProxyValue.setFirstModel(inObj1.genericModel);
+      if (joinerProxyValue.getFirstGeneralInformation() == null) {
+        joinerProxyValue.setFirstGeneralInformation(inObj1.generalInformation);
+        joinerProxyValue.setFirstScope(inObj1.scope);
+        joinerProxyValue.setFirstDataBackground(inObj1.dataBackground);
+        joinerProxyValue.setFirstModelMath(inObj1.modelMath);
         joinerProxyValue.setFirstModelScript(inObj1.model);
         joinerProxyValue.setFirstModelViz(inObj1.viz);
-        joinerProxyValue.setSecondModel(inObj2.genericModel);
+        
+        
+        
+        joinerProxyValue.setSecondGeneralInformation(inObj2.generalInformation);
+        joinerProxyValue.setSecondScope(inObj2.scope);
+        joinerProxyValue.setSecondDataBackground(inObj2.dataBackground);
+        joinerProxyValue.setSecondModelMath(inObj2.modelMath);
         joinerProxyValue.setSecondModelScript(inObj2.model);
         joinerProxyValue.setSecondModelViz(inObj2.viz);
        //val.metadata = inObj.template;

@@ -224,6 +224,7 @@ public interface Parameter extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Parameter Data Type</b></em>' attribute.
+	 * The literals are from the enumeration {@link metadata.ParameterType}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parameter Data Type</em>' attribute isn't clear,
@@ -231,22 +232,24 @@ public interface Parameter extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Parameter Data Type</em>' attribute.
-	 * @see #setParameterDataType(String)
+	 * @see metadata.ParameterType
+	 * @see #setParameterDataType(ParameterType)
 	 * @see metadata.MetadataPackage#getParameter_ParameterDataType()
 	 * @model required="true"
 	 * @generated
 	 */
-	String getParameterDataType();
+	ParameterType getParameterDataType();
 
 	/**
 	 * Sets the value of the '{@link metadata.Parameter#getParameterDataType <em>Parameter Data Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Parameter Data Type</em>' attribute.
+	 * @see metadata.ParameterType
 	 * @see #getParameterDataType()
 	 * @generated
 	 */
-	void setParameterDataType(String value);
+	void setParameterDataType(ParameterType value);
 
 	/**
 	 * Returns the value of the '<em><b>Parameter Source</b></em>' attribute.

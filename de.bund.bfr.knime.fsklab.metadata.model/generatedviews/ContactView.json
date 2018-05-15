@@ -1,0 +1,75 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "title",
+      "scope": "#/properties/title"
+    },
+    {
+      "type": "Control",
+      "label": "familyName",
+      "scope": "#/properties/familyName"
+    },
+    {
+      "type": "Control",
+      "label": "givenName",
+      "scope": "#/properties/givenName"
+    },
+    {
+      "type": "Control",
+      "label": "email",
+      "scope": "#/properties/email"
+    },
+    {
+      "type": "Control",
+      "label": "telephone",
+      "scope": "#/properties/telephone"
+    },
+    {
+      "type": "Control",
+      "label": "streetAddress",
+      "scope": "#/properties/streetAddress"
+    },
+    {
+      "type": "Control",
+      "label": "country",
+      "scope": "#/properties/country"
+    },
+    {
+      "type": "Control",
+      "label": "city",
+      "scope": "#/properties/city"
+    },
+    {
+      "type": "Control",
+      "label": "zipCode",
+      "scope": "#/properties/zipCode"
+    },
+    {
+      "type": "Control",
+      "label": "region",
+      "scope": "#/properties/region"
+    },
+    {
+      "type": "Control",
+      "label": "timeZone",
+      "scope": "#/properties/timeZone"
+    },
+    {
+      "type": "Control",
+      "label": "gender",
+      "scope": "#/properties/gender"
+    },
+    {
+      "type": "Control",
+      "label": "note",
+      "scope": "#/properties/note"
+    },
+    {
+      "type": "Control",
+      "label": "organization",
+      "scope": "#/properties/organization"
+    }
+  ]
+}

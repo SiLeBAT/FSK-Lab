@@ -19,30 +19,33 @@
     "sourceOfContamination": {
       "type": "string"
     },
-    "bmd": {
+    "benchmarkDose": {
       "type": "string"
     },
-    "mrl": {
+    "maximumResidueLimit": {
       "type": "string"
     },
-    "noael": {
+    "noObservedAdverseAffectLevel": {
       "type": "string"
     },
-    "loael": {
+    "lowestObservedAdverseAffectLevel": {
       "type": "string"
     },
-    "aoel": {
+    "acceptableOperatorExposureLevel": {
       "type": "string"
     },
-    "ard": {
+    "acuteReferenceDose": {
       "type": "string"
     },
-    "adi": {
+    "acceptableDailyIntake": {
       "type": "string"
     },
     "hazardIndSum": {
       "type": "string"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "hazardName"
+  ]
 }

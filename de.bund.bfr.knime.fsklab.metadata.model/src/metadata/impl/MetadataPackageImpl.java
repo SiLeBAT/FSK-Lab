@@ -28,7 +28,6 @@ import metadata.Scope;
 import metadata.SpatialInformation;
 import metadata.Study;
 import metadata.StudySample;
-import metadata.modelApplicability;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -143,13 +142,6 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * @generated
 	 */
 	private EClass spatialInformationEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass modelApplicabilityEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -726,7 +718,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getStudy_StudyProtocolComponentsName() {
+	public EAttribute getStudy_StudyProtocolParametersName() {
 		return (EAttribute)studyEClass.getEStructuralFeatures().get(13);
 	}
 
@@ -735,8 +727,17 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getStudy_StudyProtocolComponentsType() {
+	public EAttribute getStudy_StudyProtocolComponentsName() {
 		return (EAttribute)studyEClass.getEStructuralFeatures().get(14);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getStudy_StudyProtocolComponentsType() {
+		return (EAttribute)studyEClass.getEStructuralFeatures().get(15);
 	}
 
 	/**
@@ -1473,24 +1474,6 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getmodelApplicability() {
-		return modelApplicabilityEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getmodelApplicability_ModelApplicability() {
-		return (EAttribute)modelApplicabilityEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getEvent() {
 		return eventEClass;
 	}
@@ -1536,7 +1519,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_Email() {
+	public EAttribute getContact_GivenName() {
 		return (EAttribute)contactEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1545,7 +1528,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_Telephone() {
+	public EAttribute getContact_Email() {
 		return (EAttribute)contactEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1554,7 +1537,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_StreetAddress() {
+	public EAttribute getContact_Telephone() {
 		return (EAttribute)contactEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1563,7 +1546,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_Country() {
+	public EAttribute getContact_StreetAddress() {
 		return (EAttribute)contactEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1572,7 +1555,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_City() {
+	public EAttribute getContact_Country() {
 		return (EAttribute)contactEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1581,7 +1564,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_ZipCode() {
+	public EAttribute getContact_City() {
 		return (EAttribute)contactEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -1590,7 +1573,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_PostOfficeBox() {
+	public EAttribute getContact_ZipCode() {
 		return (EAttribute)contactEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -1608,7 +1591,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_Nickname() {
+	public EAttribute getContact_TimeZone() {
 		return (EAttribute)contactEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -1617,7 +1600,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_TimeZone() {
+	public EAttribute getContact_Gender() {
 		return (EAttribute)contactEClass.getEStructuralFeatures().get(11);
 	}
 
@@ -1626,7 +1609,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_Gender() {
+	public EAttribute getContact_Note() {
 		return (EAttribute)contactEClass.getEStructuralFeatures().get(12);
 	}
 
@@ -1635,53 +1618,8 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getContact_Name() {
-		return (EAttribute)contactEClass.getEStructuralFeatures().get(13);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getContact_Url() {
-		return (EAttribute)contactEClass.getEStructuralFeatures().get(14);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getContact_Note() {
-		return (EAttribute)contactEClass.getEStructuralFeatures().get(15);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getContact_Logo() {
-		return (EAttribute)contactEClass.getEStructuralFeatures().get(16);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getContact_Organization() {
-		return (EAttribute)contactEClass.getEStructuralFeatures().get(17);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getContact_Fn() {
-		return (EAttribute)contactEClass.getEStructuralFeatures().get(18);
+		return (EAttribute)contactEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
@@ -2267,6 +2205,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		createEAttribute(studyEClass, STUDY__STUDY_PROTOCOL_DESCRIPTION);
 		createEAttribute(studyEClass, STUDY__STUDY_PROTOCOL_URI);
 		createEAttribute(studyEClass, STUDY__STUDY_PROTOCOL_VERSION);
+		createEAttribute(studyEClass, STUDY__STUDY_PROTOCOL_PARAMETERS_NAME);
 		createEAttribute(studyEClass, STUDY__STUDY_PROTOCOL_COMPONENTS_NAME);
 		createEAttribute(studyEClass, STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE);
 
@@ -2361,32 +2300,24 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		createEAttribute(spatialInformationEClass, SPATIAL_INFORMATION__REGION);
 		createEAttribute(spatialInformationEClass, SPATIAL_INFORMATION__COUNTRY);
 
-		modelApplicabilityEClass = createEClass(MODEL_APPLICABILITY);
-		createEAttribute(modelApplicabilityEClass, MODEL_APPLICABILITY__MODEL_APPLICABILITY);
-
 		eventEClass = createEClass(EVENT);
 		createEAttribute(eventEClass, EVENT__EVENT);
 
 		contactEClass = createEClass(CONTACT);
 		createEAttribute(contactEClass, CONTACT__TITLE);
 		createEAttribute(contactEClass, CONTACT__FAMILY_NAME);
+		createEAttribute(contactEClass, CONTACT__GIVEN_NAME);
 		createEAttribute(contactEClass, CONTACT__EMAIL);
 		createEAttribute(contactEClass, CONTACT__TELEPHONE);
 		createEAttribute(contactEClass, CONTACT__STREET_ADDRESS);
 		createEAttribute(contactEClass, CONTACT__COUNTRY);
 		createEAttribute(contactEClass, CONTACT__CITY);
 		createEAttribute(contactEClass, CONTACT__ZIP_CODE);
-		createEAttribute(contactEClass, CONTACT__POST_OFFICE_BOX);
 		createEAttribute(contactEClass, CONTACT__REGION);
-		createEAttribute(contactEClass, CONTACT__NICKNAME);
 		createEAttribute(contactEClass, CONTACT__TIME_ZONE);
 		createEAttribute(contactEClass, CONTACT__GENDER);
-		createEAttribute(contactEClass, CONTACT__NAME);
-		createEAttribute(contactEClass, CONTACT__URL);
 		createEAttribute(contactEClass, CONTACT__NOTE);
-		createEAttribute(contactEClass, CONTACT__LOGO);
 		createEAttribute(contactEClass, CONTACT__ORGANIZATION);
-		createEAttribute(contactEClass, CONTACT__FN);
 
 		referenceEClass = createEClass(REFERENCE);
 		createEAttribute(referenceEClass, REFERENCE__IS_REFERENCE_DESCRIPTION);
@@ -2535,6 +2466,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		initEAttribute(getStudy_StudyProtocolDescription(), ecorePackage.getEString(), "studyProtocolDescription", null, 0, 1, Study.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStudy_StudyProtocolURI(), this.getURI(), "studyProtocolURI", null, 0, 1, Study.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStudy_StudyProtocolVersion(), ecorePackage.getEString(), "studyProtocolVersion", null, 0, 1, Study.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getStudy_StudyProtocolParametersName(), ecorePackage.getEString(), "studyProtocolParametersName", null, 0, 1, Study.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStudy_StudyProtocolComponentsName(), ecorePackage.getEString(), "studyProtocolComponentsName", null, 0, 1, Study.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStudy_StudyProtocolComponentsType(), ecorePackage.getEString(), "studyProtocolComponentsType", null, 0, 1, Study.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -2629,32 +2561,24 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		initEAttribute(getSpatialInformation_Region(), ecorePackage.getEString(), "region", null, 0, -1, SpatialInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSpatialInformation_Country(), ecorePackage.getEString(), "country", null, 0, -1, SpatialInformation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(modelApplicabilityEClass, modelApplicability.class, "modelApplicability", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getmodelApplicability_ModelApplicability(), ecorePackage.getEString(), "modelApplicability", null, 0, 1, modelApplicability.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(eventEClass, Event.class, "Event", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getEvent_Event(), ecorePackage.getEString(), "event", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(contactEClass, Contact.class, "Contact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getContact_Title(), ecorePackage.getEString(), "title", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_FamilyName(), ecorePackage.getEString(), "familyName", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getContact_GivenName(), ecorePackage.getEString(), "givenName", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_Email(), ecorePackage.getEString(), "email", null, 1, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_Telephone(), ecorePackage.getEString(), "telephone", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_StreetAddress(), ecorePackage.getEString(), "streetAddress", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_Country(), ecorePackage.getEString(), "country", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_City(), ecorePackage.getEString(), "city", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_ZipCode(), ecorePackage.getEString(), "zipCode", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getContact_PostOfficeBox(), ecorePackage.getEString(), "postOfficeBox", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_Region(), ecorePackage.getEString(), "region", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getContact_Nickname(), ecorePackage.getEString(), "nickname", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_TimeZone(), ecorePackage.getEString(), "timeZone", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_Gender(), ecorePackage.getEString(), "gender", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getContact_Name(), ecorePackage.getEString(), "name", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getContact_Url(), ecorePackage.getEString(), "url", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_Note(), ecorePackage.getEString(), "note", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getContact_Logo(), ecorePackage.getEString(), "logo", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getContact_Organization(), ecorePackage.getEString(), "organization", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getContact_Fn(), ecorePackage.getEString(), "fn", null, 0, 1, Contact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(referenceEClass, Reference.class, "Reference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getReference_IsReferenceDescription(), ecorePackage.getEBoolean(), "isReferenceDescription", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2688,7 +2612,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		initEAttribute(getParameter_ParameterType(), ecorePackage.getEString(), "parameterType", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameter_ParameterUnit(), ecorePackage.getEString(), "parameterUnit", null, 1, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameter_ParameterUnitCategory(), ecorePackage.getEString(), "parameterUnitCategory", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getParameter_ParameterDataType(), ecorePackage.getEString(), "parameterDataType", null, 1, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getParameter_ParameterDataType(), this.getParameterType(), "parameterDataType", null, 1, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameter_ParameterSource(), ecorePackage.getEString(), "parameterSource", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameter_ParameterSubject(), ecorePackage.getEString(), "parameterSubject", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameter_ParameterDistribution(), ecorePackage.getEString(), "parameterDistribution", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

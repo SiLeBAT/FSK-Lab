@@ -133,6 +133,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Study/studyProtocolDescription"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Study/studyProtocolURI"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Study/studyProtocolVersion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Study/studyProtocolParametersName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Study/studyProtocolComponentsName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Study/studyProtocolComponentsType"/>
     </genClasses>
@@ -198,17 +199,17 @@
     <genClasses ecoreClass="metadata.ecore#//PopulationGroup">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/targetPopulation"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationSpan"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationDescription"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationAge"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationSpan"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationDescription"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationAge"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationGender"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/bmi"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/specialDietGroups"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/patternConsumption"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/region"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/country"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationRiskFactor"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/season"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/bmi"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/specialDietGroups"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/patternConsumption"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/region"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/country"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/populationRiskFactor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//PopulationGroup/season"/>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//Scope">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Scope/generalComment"/>
@@ -224,11 +225,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Laboratory/laboratoryCountry"/>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//SpatialInformation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//SpatialInformation/region"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//SpatialInformation/country"/>
-    </genClasses>
-    <genClasses ecoreClass="metadata.ecore#//modelApplicability">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//modelApplicability/modelApplicability"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//SpatialInformation/region"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute metadata.ecore#//SpatialInformation/country"/>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//Event">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Event/event"/>
@@ -236,23 +234,18 @@
     <genClasses ecoreClass="metadata.ecore#//Contact">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/title"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/familyName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/givenName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/email"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/telephone"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/streetAddress"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/country"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/city"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/zipCode"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/postOfficeBox"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/region"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/nickname"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/timeZone"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/gender"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/url"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/note"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/logo"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/organization"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Contact/fn"/>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//Reference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Reference/isReferenceDescription"/>

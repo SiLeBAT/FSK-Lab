@@ -1,33 +1,36 @@
 {
   "type": "object",
   "properties": {
-    "name": {
+    "assayName": {
       "type": "string"
     },
-    "description": {
+    "assayDescription": {
       "type": "string"
     },
-    "moisturePercentage": {
+    "percentageOfMoisture": {
       "type": "string"
     },
-    "fatPercentage": {
+    "percentageOfFat": {
       "type": "string"
     },
-    "detectionLimit": {
+    "limitOfDetection": {
       "type": "string"
     },
-    "quantificationLimit": {
+    "limitOfQuantification": {
       "type": "string"
     },
     "leftCensoredData": {
       "type": "string"
     },
-    "contaminationRange": {
+    "rangeOfContamination": {
       "type": "string"
     },
     "uncertaintyValue": {
       "type": "string"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "assayName"
+  ]
 }

@@ -1,16 +1,16 @@
 {
   "type": "object",
   "properties": {
-    "sample": {
+    "sampleName": {
       "type": "string"
     },
-    "collectionProtocol": {
+    "protocolOfSampleCollection": {
       "type": "string"
     },
     "samplingStrategy": {
       "type": "string"
     },
-    "samplingProgramType": {
+    "typeOfSamplingProgram": {
       "type": "string"
     },
     "samplingMethod": {
@@ -27,7 +27,17 @@
     },
     "lotSizeUnit": {
       "type": "string"
+    },
+    "samplingPoint": {
+      "type": "string"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "sampleName",
+    "protocolOfSampleCollection",
+    "samplingPlan",
+    "samplingWeight",
+    "samplingSize"
+  ]
 }

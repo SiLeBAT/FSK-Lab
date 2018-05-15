@@ -24,10 +24,9 @@ import java.awt.Frame;
 import java.awt.LayoutManager;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
@@ -41,6 +40,8 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -49,7 +50,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -71,12 +71,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.util.SimpleFileFilter;
 import org.sbml.jsbml.validator.SyntaxChecker;
-import com.gmail.gcolaianni5.jris.bean.Record;
-import com.gmail.gcolaianni5.jris.bean.Type;
-import com.gmail.gcolaianni5.jris.engine.JRis;
-import com.gmail.gcolaianni5.jris.exception.JRisException;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.AutoSuggestField;
 import de.bund.bfr.knime.fsklab.nodes.ui.FComboBox;
@@ -89,25 +84,27 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FixedDateChooser;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.nodes.ui.UTF8Control;
-import de.bund.bfr.knime.fsklab.rakip.Assay;
-import de.bund.bfr.knime.fsklab.rakip.DataBackground;
-import de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod;
-import de.bund.bfr.knime.fsklab.rakip.GeneralInformation;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import de.bund.bfr.knime.fsklab.rakip.Hazard;
-import de.bund.bfr.knime.fsklab.rakip.Laboratory;
-import de.bund.bfr.knime.fsklab.rakip.ModelEquation;
-import de.bund.bfr.knime.fsklab.rakip.ModelMath;
-import de.bund.bfr.knime.fsklab.rakip.Parameter;
-import de.bund.bfr.knime.fsklab.rakip.Parameter.DataTypes;
-import de.bund.bfr.knime.fsklab.rakip.PopulationGroup;
-import de.bund.bfr.knime.fsklab.rakip.Product;
-import de.bund.bfr.knime.fsklab.rakip.Scope;
-import de.bund.bfr.knime.fsklab.rakip.Study;
-import de.bund.bfr.knime.fsklab.rakip.StudySample;
-import ezvcard.Ezvcard;
-import ezvcard.VCard;
-import ezvcard.property.StructuredName;
+import metadata.Assay;
+import metadata.Contact;
+import metadata.DataBackground;
+import metadata.DietaryAssessmentMethod;
+import metadata.GeneralInformation;
+import metadata.Hazard;
+import metadata.Laboratory;
+import metadata.MetadataFactory;
+import metadata.MetadataPackage;
+import metadata.ModelEquation;
+import metadata.ModelMath;
+import metadata.Parameter;
+import metadata.ParameterClassification;
+import metadata.ParameterType;
+import metadata.PopulationGroup;
+import metadata.Product;
+import metadata.PublicationType;
+import metadata.Reference;
+import metadata.Scope;
+import metadata.Study;
+import metadata.StudySample;
 
 public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
@@ -130,7 +127,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
      * Initialize settings (current values are garbage, need to be loaded from settings/input port).
      */
     settings = new EditorNodeSettings();
-    settings.genericModel = new GenericModel();
+    settings.generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
+    settings.scope = MetadataFactory.eINSTANCE.createScope();
+    settings.dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
+    settings.modelMath = MetadataFactory.eINSTANCE.createModelMath();
 
     // Add ScriptPanels
     addTab(modelScriptPanel.getName(), modelScriptPanel);
@@ -151,10 +151,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     paramScriptPanel.setText(settings.modifiedParametersScript);
     vizScriptPanel.setText(settings.modifiedVisualizationScript);
 
-    generalInformationPanel.init(settings.genericModel.generalInformation);
-    scopePanel.init(settings.genericModel.scope);
-    dataBackgroundPanel.init(settings.genericModel.dataBackground);
-    modelMathPanel.init(settings.genericModel.modelMath);
+    generalInformationPanel.init(settings.generalInformation);
+    scopePanel.init(settings.scope);
+    dataBackgroundPanel.init(settings.dataBackground);
+    modelMathPanel.init(settings.modelMath);
 
     listModel.clear();
     settings.resources.forEach(listModel::addElement);
@@ -194,7 +194,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       this.settings.modifiedParametersScript = inObj.param;
       this.settings.modifiedVisualizationScript = inObj.viz;
 
-      this.settings.genericModel = inObj.genericModel;
+      this.settings.generalInformation = inObj.generalInformation;
+      this.settings.scope = inObj.scope;
+      this.settings.dataBackground = inObj.dataBackground;
+      this.settings.modelMath = inObj.modelMath;
 
       try {
         Files.list(inObj.workingDirectory).forEach(this.settings.resources::add);
@@ -213,7 +216,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     try {
       this.settings.loadSettings(settings);
     } catch (InvalidSettingsException exception) {
-      // throw new NotConfigurableException("InvalidSettingsException", exception);
       LOGGER.warn("Settings were not loaded", exception);
     }
 
@@ -236,10 +238,10 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         StringUtils.trim(this.settings.modifiedVisualizationScript);
 
     // Save metadata
-    this.settings.genericModel.generalInformation = generalInformationPanel.get();
-    this.settings.genericModel.scope = scopePanel.get();
-    this.settings.genericModel.dataBackground = dataBackgroundPanel.get();
-    this.settings.genericModel.modelMath = modelMathPanel.get();
+    this.settings.generalInformation = generalInformationPanel.get();
+    this.settings.scope = scopePanel.get();
+    this.settings.dataBackground = dataBackgroundPanel.get();
+    this.settings.modelMath = modelMathPanel.get();
 
     // Save resources
     this.settings.resources.clear();
@@ -475,8 +477,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private void createUI(boolean isAdvanced) {
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditAssayPanel_";
 
       // name
@@ -487,44 +488,32 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "name"));
       fields.add(nameField);
 
-      // moisture percentage
       if (isAdvanced) {
+        // moisture percentage
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "moisturePercentage"));
         fields.add(moisturePercentageField);
-      }
 
-      // fat percentage
-      if (isAdvanced) {
+        // fat percentage
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "fatPercentage"));
         fields.add(fatPercentageField);
-      }
 
-      // detection limit
-      if (isAdvanced) {
+        // detection limit
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "detectionLimit"));
         fields.add(detectionLimitField);
-      }
 
-      // quantification limit
-      if (isAdvanced) {
+        // quantification limit
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "quantificationLimit"));
         fields.add(quantificationLimitField);
-      }
 
-      // left censored data
-      if (isAdvanced) {
+        // left censored data
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "leftCensoredData"));
         fields.add(leftCensoredDataField);
-      }
 
-      // contamination range
-      if (isAdvanced) {
+        // contamination range
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "contaminationRange"));
         fields.add(contaminationRangeField);
-      }
 
-      // uncertainty value
-      if (isAdvanced) {
+        // uncertainty value
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "uncertainty"));
         fields.add(uncertaintyValueField);
       }
@@ -550,31 +539,33 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(final Assay assay) {
       if (assay != null) {
-        nameField.setText(assay.name);
-        descriptionField.setText(assay.description);
-        moisturePercentageField.setText(assay.moisturePercentage);
-        fatPercentageField.setText(assay.fatPercentage);
-        detectionLimitField.setText(assay.detectionLimit);
-        quantificationLimitField.setText(assay.quantificationLimit);
-        leftCensoredDataField.setText(assay.leftCensoredData);
-        contaminationRangeField.setText(assay.contaminationRange);
-        uncertaintyValueField.setText(assay.uncertaintyValue);
+
+        nameField.setText(assay.getAssayName());
+        descriptionField.setText(assay.getAssayDescription());
+        moisturePercentageField.setText(assay.getPercentageOfMoisture());
+        fatPercentageField.setText(assay.getPercentageOfFat());
+        detectionLimitField.setText(assay.getLimitOfDetection());
+        quantificationLimitField.setText(assay.getLimitOfQuantification());
+        leftCensoredDataField.setText(assay.getLeftCensoredData());
+        contaminationRangeField.setText(assay.getRangeOfContamination());
+        uncertaintyValueField.setText(assay.getUncertaintyValue());
       }
     }
 
     @Override
     Assay get() {
 
-      final Assay assay = new Assay();
-      assay.name = nameField.getText();
-      assay.description = descriptionField.getText();
-      assay.moisturePercentage = moisturePercentageField.getText();
-      assay.fatPercentage = fatPercentageField.getText();
-      assay.detectionLimit = detectionLimitField.getText();
-      assay.quantificationLimit = quantificationLimitField.getText();
-      assay.leftCensoredData = leftCensoredDataField.getText();
-      assay.contaminationRange = contaminationRangeField.getText();
-      assay.uncertaintyValue = uncertaintyValueField.getText();
+      Assay assay = MetadataFactory.eINSTANCE.createAssay();
+
+      assay.setAssayName(nameField.getText());
+      assay.setAssayDescription(descriptionField.getText());
+      assay.setPercentageOfMoisture(moisturePercentageField.getText());
+      assay.setPercentageOfFat(fatPercentageField.getText());
+      assay.setLimitOfDetection(detectionLimitField.getText());
+      assay.setLimitOfQuantification(quantificationLimitField.getText());
+      assay.setLeftCensoredData(leftCensoredDataField.getText());
+      assay.setRangeOfContamination(contaminationRangeField.getText());
+      assay.setUncertaintyValue(uncertaintyValueField.getText());
 
       return assay;
     }
@@ -584,8 +575,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final List<String> errors = new ArrayList<>(1);
       if (nameField.getText().isEmpty()) {
-        ResourceBundle bundle =
-            ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+        ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
         errors.add("Missing " + bundle.getString("EditAssayPanel_nameLabel"));
       }
 
@@ -626,8 +616,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditLaboratoryPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -637,14 +626,12 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "accreditation"));
       fields.add(accreditationField);
 
-      // name
       if (isAdvanced) {
+        // name
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "name"));
         fields.add(nameField);
-      }
 
-      // country
-      if (isAdvanced) {
+        // country
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "country"));
         fields.add(countryField);
       }
@@ -660,19 +647,37 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(final Laboratory laboratory) {
       if (laboratory != null) {
-        accreditationField.setSelectedItem(laboratory.accreditation);
-        nameField.setText(laboratory.name);
-        countryField.setSelectedItem(laboratory.country);
+
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+        if (laboratory.eIsSet(pkg.getLaboratory_LaboratoryAccreditation())) {
+          accreditationField.setSelectedItem(laboratory.getLaboratoryAccreditation().get(0));
+        }
+
+        if (laboratory.eIsSet(pkg.getLaboratory_LaboratoryName())) {
+          nameField.setText(laboratory.getLaboratoryName());
+        }
+
+        if (laboratory.eIsSet(pkg.getLaboratory_LaboratoryCountry())) {
+          countryField.setSelectedItem(laboratory.getLaboratoryCountry());
+        }
       }
     }
 
     @Override
     Laboratory get() {
 
-      Laboratory laboratory = new Laboratory();
-      laboratory.accreditation = (String) accreditationField.getSelectedItem();
-      laboratory.name = nameField.getText();
-      laboratory.country = (String) countryField.getSelectedItem();
+      Laboratory laboratory = MetadataFactory.eINSTANCE.createLaboratory();
+
+      if (accreditationField.getSelectedIndex() != -1) {
+        laboratory.getLaboratoryAccreditation().add((String) accreditationField.getSelectedItem());
+      }
+
+      laboratory.setLaboratoryName(nameField.getText());
+
+      if (countryField.getSelectedIndex() != -1) {
+        laboratory.setLaboratoryCountry((String) countryField.getSelectedItem());
+      }
 
       return laboratory;
     }
@@ -683,8 +688,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       List<String> errors = new ArrayList<>();
       if (!hasValidValue(accreditationField)) {
 
-        ResourceBundle bundle =
-            ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+        ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
         errors.add("Missing " + bundle.getString("EditLaboratoryPanel_accreditationLabel"));
       }
 
@@ -730,8 +734,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditDietaryAssessmentMethodPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -745,26 +748,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "nonConsecutiveOneDays"));
       fields.add(nonConsecutiveOneDayField);
 
-      // dietary software tool
       if (isAdvanced) {
+        // dietary software tool
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "dietarySoftwareTool"));
         fields.add(dietarySoftwareToolField);
-      }
 
-      // food item number
-      if (isAdvanced) {
+        // food item number
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "foodItemNumber"));
         fields.add(foodItemNumberField);
-      }
 
-      // record type
-      if (isAdvanced) {
+        // record type
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "recordType"));
         fields.add(recordTypeField);
-      }
 
-      // food description
-      if (isAdvanced) {
+        // food description
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "foodDescriptors"));
         fields.add(foodDescriptorsField);
       }
@@ -781,20 +778,37 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(DietaryAssessmentMethod method) {
       if (method != null) {
-        dataCollectionToolField.setSelectedItem(method.collectionTool);
-        nonConsecutiveOneDayField.setText(Integer.toString(method.numberOfNonConsecutiveOneDay));
-        dietarySoftwareToolField.setText(method.softwareTool);
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
-        if (!method.numberOfFoodItems.isEmpty()) {
-          foodItemNumberField.setText(method.numberOfFoodItems.get(0));
+        // collection tool
+        if (method.eIsSet(pkg.getDietaryAssessmentMethod_CollectionTool())) {
+          dataCollectionToolField.setSelectedItem(method.getCollectionTool());
         }
 
-        if (!method.recordTypes.isEmpty()) {
-          recordTypeField.setText(method.recordTypes.get(0));
+        // number of non consecutive one day
+        if (method.eIsSet(pkg.getDietaryAssessmentMethod_NumberOfNonConsecutiveOneDay())) {
+          int numberOfNonConsecutiveOneDay = method.getNumberOfNonConsecutiveOneDay();
+          nonConsecutiveOneDayField.setText(Integer.toString(numberOfNonConsecutiveOneDay));
         }
 
-        if (!method.foodDescriptors.isEmpty()) {
-          foodDescriptorsField.setSelectedItem(method.foodDescriptors.get(0));
+        // software tool
+        if (method.eIsSet(pkg.getDietaryAssessmentMethod_SoftwareTool())) {
+          dietarySoftwareToolField.setText(method.getSoftwareTool());
+        }
+
+        // Number of food items
+        if (method.eIsSet(pkg.getDietaryAssessmentMethod_NumberOfFoodItems())) {
+          foodItemNumberField.setText(method.getNumberOfFoodItems());
+        }
+
+        // Record types
+        if (method.eIsSet(pkg.getDietaryAssessmentMethod_RecordTypes())) {
+          recordTypeField.setText(method.getRecordTypes());
+        }
+
+        // Food descriptors
+        if (method.eIsSet(pkg.getDietaryAssessmentMethod_FoodDescriptors())) {
+          foodDescriptorsField.setSelectedItem(method.getFoodDescriptors());
         }
       }
     }
@@ -802,32 +816,30 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     DietaryAssessmentMethod get() {
 
-      final DietaryAssessmentMethod method = new DietaryAssessmentMethod();
-      method.collectionTool = (String) dataCollectionToolField.getSelectedItem();
+      DietaryAssessmentMethod method = MetadataFactory.eINSTANCE.createDietaryAssessmentMethod();
 
-      final String nonConsecutiveOneDayTextFieldText = nonConsecutiveOneDayField.getText();
-      if (StringUtils.isNotBlank(nonConsecutiveOneDayTextFieldText)) {
+      // collection tool
+      if (dataCollectionToolField.getSelectedIndex() != -1) {
+        method.setCollectionTool((String) dataCollectionToolField.getSelectedItem());
+      }
+
+      // non consecutive one day
+      String nonConsecutiveOneDayFieldText = nonConsecutiveOneDayField.getText();
+      if (!nonConsecutiveOneDayFieldText.isEmpty()) {
         try {
-          method.numberOfNonConsecutiveOneDay = Integer.parseInt(nonConsecutiveOneDayTextFieldText);
+          method.setNumberOfNonConsecutiveOneDay(Integer.parseInt(nonConsecutiveOneDayFieldText));
         } catch (final NumberFormatException exception) {
           LOGGER.warn("numberOfNonConsecutiveOneDay", exception);
         }
       }
 
-      method.softwareTool = dietarySoftwareToolField.getText();
+      method.setSoftwareTool(dietarySoftwareToolField.getText());
+      method.setNumberOfFoodItems(foodItemNumberField.getText());
+      method.setRecordTypes(recordTypeField.getText());
 
-      final String foodItemNumber = foodItemNumberField.getText();
-      if (!foodItemNumber.isEmpty()) {
-        method.numberOfFoodItems.add(foodItemNumber);
-      }
-
-      final String recordType = recordTypeField.getText();
-      if (!recordType.isEmpty()) {
-        method.recordTypes.add(recordType);
-      }
-
-      for (final Object o : foodDescriptorsField.getSelectedObjects()) {
-        method.foodDescriptors.add((String) o);
+      // food descriptors
+      if (foodDescriptorsField.getSelectedIndex() != -1) {
+        method.setFoodDescriptors((String) foodDescriptorsField.getSelectedItem());
       }
 
       return method;
@@ -836,8 +848,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditDietaryAssessmentMethodPanel_";
 
       final List<String> errors = new ArrayList<>(2);
@@ -870,6 +881,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField studyProtocolURIField; // optional
     private final FTextField studyProtocolVersionField; // optional
     private final FTextField studyProtocolParametersField; // optional
+    private final FTextField studyProtocolComponentsNameField; // optional
     private final FTextField studyProtocolComponentsTypeField; // optional
 
     EditStudyPanel(final boolean isAdvanced) {
@@ -909,6 +921,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       studyProtocolURIField = new FTextField();
       studyProtocolVersionField = new FTextField();
       studyProtocolParametersField = new FTextField();
+      studyProtocolComponentsNameField = new FTextField();
       studyProtocolComponentsTypeField = new FTextField();
 
       createUI(isAdvanced);
@@ -916,8 +929,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       final String prefix = "StudyPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -931,76 +943,58 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "studyTitle"));
       fields.add(studyTitleField);
 
-      // study design type
       if (isAdvanced) {
+        // study design type
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "studyDesignType"));
         fields.add(studyDesignTypeField);
-      }
 
-      // study assay measurements type
-      if (isAdvanced) {
+        // study assay measurements type
         labels
             .add(GUIFactory.createLabelWithToolTip(bundle, prefix + "studyAssayMeasurementsType"));
         fields.add(studyAssayMeasurementsTypeField);
-      }
 
-      // study assay technology type
-      if (isAdvanced) {
+        // study assay technology type
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "studyAssayTechnologyType"));
         fields.add(studyAssayTechnologyTypeField);
-      }
 
-      // study assay technology platform
-      if (isAdvanced) {
+        // study assay technology platform
         labels.add(
             GUIFactory.createLabelWithToolTip(bundle, prefix + "studyAssayTechnologyPlatform"));
         fields.add(studyAssayTechnologyPlatformField);
-      }
 
-      // accreditation procedure for the assay technology
-      if (isAdvanced) {
+        // accreditation procedure for the assay technology
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "accreditationProcedure"));
         fields.add(accreditationProcedureField);
-      }
 
-      // study protocol name
-      if (isAdvanced) {
+        // study protocol name
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "protocolName"));
         fields.add(studyProtocolNameField);
-      }
 
-      // study protocol type
-      if (isAdvanced) {
+        // study protocol type
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "protocolType"));
         fields.add(studyProtocolTypeField);
-      }
 
-      // study protocol description
-      if (isAdvanced) {
+        // study protocol description
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "protocolDescription"));
         fields.add(studyProtocolDescriptionField);
-      }
 
-      // study protocol URI
-      if (isAdvanced) {
+        // study protocol URI
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "protocolURI"));
         fields.add(studyProtocolURIField);
-      }
 
-      // study protocol version
-      if (isAdvanced) {
+        // study protocol version
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "protocolVersion"));
         fields.add(studyProtocolVersionField);
-      }
 
-      // study protocol parameters name
-      if (isAdvanced) {
+        // study protocol parameters name
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "parameters"));
         fields.add(studyProtocolParametersField);
-      }
 
-      // study protocol components
-      if (isAdvanced) {
+        // study protocol commponents name
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "componentsName"));
+        fields.add(studyProtocolComponentsNameField);
+
+        // study protocol components type
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "componentsType"));
         fields.add(studyProtocolComponentsTypeField);
       }
@@ -1024,51 +1018,62 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(Study study) {
       if (study != null) {
-        studyIdentifierField.setText(study.id);
-        studyTitleField.setText(study.title);
-        studyDesignTypeField.setText(study.designType);
-        studyAssayTechnologyTypeField.setSelectedItem(study.technologyType);
-        studyAssayMeasurementsTypeField.setText(study.measurementType);
-        studyAssayTechnologyPlatformField.setText(study.technologyPlatform);
-        accreditationProcedureField.setSelectedItem(study.accreditationProcedure);
-        studyProtocolNameField.setText(study.protocolName);
-        studyProtocolTypeField.setText(study.protocolType);
-        studyProtocolDescriptionField.setText(study.description);
-        if (study.protocolUri != null) {
-          studyProtocolURIField.setText(study.protocolUri.toString());
+        studyIdentifierField.setText(study.getStudyIdentifier());
+        studyTitleField.setText(study.getStudyTitle());
+        studyDesignTypeField.setText(study.getStudyDesignType());
+        studyAssayTechnologyTypeField.setSelectedItem(study.getStudyAssayTechnologyType());
+        studyAssayMeasurementsTypeField.setText(study.getStudyAssayMeasurementType());
+        studyAssayTechnologyPlatformField.setText(study.getStudyAssayTechnologyPlatform());
+        accreditationProcedureField
+            .setSelectedItem(study.getAccreditationProcedureForTheAssayTechnology());
+        studyProtocolNameField.setText(study.getStudyProtocolName());
+        studyProtocolTypeField.setText(study.getStudyProtocolType());
+        studyProtocolDescriptionField.setText(study.getStudyDescription());
+        if (study.getStudyProtocolURI() != null) {
+          studyProtocolURIField.setText(study.getStudyProtocolURI().toString());
         }
-        studyProtocolVersionField.setText(study.protocolVersion);
-        studyProtocolParametersField.setText(study.parametersName);
-        // TODO components name
-        studyProtocolComponentsTypeField.setText(study.componentsType);
-        studyDescriptionField.setText(study.description);
+        studyProtocolVersionField.setText(study.getStudyProtocolVersion());
+        studyProtocolParametersField.setText(study.getStudyProtocolParametersName());
+        studyProtocolComponentsNameField.setText(study.getStudyProtocolComponentsName());
+        studyProtocolComponentsTypeField.setText(study.getStudyProtocolComponentsType());
       }
     }
 
     @Override
     Study get() {
 
-      Study study = new Study();
+      Study study = MetadataFactory.eINSTANCE.createStudy();
 
-      study.id = studyIdentifierField.getText();
-      study.title = studyTitleField.getText();
-      study.designType = studyDesignTypeField.getText();
-      study.technologyType = (String) studyAssayTechnologyTypeField.getSelectedItem();
-      study.measurementType = studyAssayMeasurementsTypeField.getText();
-      study.technologyPlatform = studyAssayTechnologyPlatformField.getText();
-      study.accreditationProcedure = (String) accreditationProcedureField.getSelectedItem();
-      study.protocolName = studyProtocolNameField.getText();
-      study.protocolType = studyProtocolTypeField.getText();
-      study.protocolDescription = studyProtocolDescriptionField.getText();
+      study.setStudyIdentifier(studyIdentifierField.getText());
+      study.setStudyTitle(studyTitleField.getText());
+      study.setStudyDescription(studyDescriptionField.getText());
+      study.setStudyDesignType(studyDesignTypeField.getText());
+
+      if (studyAssayTechnologyTypeField.getSelectedIndex() != -1) {
+        study.setStudyAssayTechnologyType((String) studyAssayTechnologyTypeField.getSelectedItem());
+      }
+
+      study.setStudyAssayMeasurementType(studyAssayMeasurementsTypeField.getText());
+      study.setStudyAssayTechnologyPlatform(studyAssayTechnologyPlatformField.getText());
+
+      if (accreditationProcedureField.getSelectedIndex() != -1) {
+        study.setAccreditationProcedureForTheAssayTechnology(
+            (String) accreditationProcedureField.getSelectedItem());
+      }
+
+      study.setStudyProtocolName(studyProtocolNameField.getText());
+      study.setStudyProtocolType(studyProtocolTypeField.getText());
+      study.setStudyProtocolDescription(studyProtocolDescriptionField.getText());
+
       try {
-        study.protocolUri = new URI(studyProtocolURIField.getText());
+        study.setStudyProtocolURI(new URI(studyProtocolURIField.getText()));
       } catch (URISyntaxException e) {
       }
-      study.protocolVersion = studyProtocolVersionField.getText();
-      study.parametersName = studyProtocolParametersField.getText();
-      // TODO: Components name
-      study.componentsType = studyProtocolComponentsTypeField.getText();
-      study.description = studyDescriptionField.getText();
+
+      study.setStudyProtocolVersion(studyProtocolVersionField.getText());
+      study.setStudyProtocolParametersName(studyProtocolParametersField.getText());
+      study.setStudyProtocolComponentsName(studyProtocolComponentsNameField.getText());
+      study.setStudyProtocolComponentsType(studyProtocolComponentsTypeField.getText());
 
       return study;
     }
@@ -1076,8 +1081,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "StudyPanel_";
 
       List<String> errors = new ArrayList<>();
@@ -1102,7 +1106,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextArea hazardDescriptionField; // optional
     private final AutoSuggestField hazardUnitField; // mandatory
     private final FTextField adverseEffectField; // optional
-    private final FTextField originField; // optional
+    private final FTextField sourceOfContaminationField; // optional
     private final FTextField bmdField; // optional
     private final FTextField maxResidueLimitField; // optional
     private final FTextField noObservedAdverseField; // optional
@@ -1135,7 +1139,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       hazardUnitField = new AutoSuggestField(10, hazardUnitValues, hazardUnitComments, true);
 
       adverseEffectField = new FTextField();
-      originField = new FTextField();
+      sourceOfContaminationField = new FTextField();
       bmdField = new FTextField();
       maxResidueLimitField = new FTextField();
       noObservedAdverseField = new FTextField();
@@ -1152,8 +1156,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditHazardPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -1179,7 +1182,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         // origin
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "origin"));
-        fields.add(originField);
+        fields.add(sourceOfContaminationField);
 
         // bmd
         labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "bmd"));
@@ -1232,40 +1235,93 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(Hazard hazard) {
       if (hazard != null) {
-        hazardTypeField.setSelectedItem(hazard.hazardType);
-        hazardNameField.setSelectedItem(hazard.hazardName);
-        hazardDescriptionField.setText(hazard.hazardDescription);
-        hazardUnitField.setSelectedItem(hazard.hazardUnit);
-        adverseEffectField.setText(hazard.adverseEffect);
-        originField.setText(hazard.sourceOfContamination);
-        bmdField.setText(hazard.bmd);
-        maxResidueLimitField.setText(hazard.mrl);
-        noObservedAdverseField.setText(hazard.noael);
-        acceptableOperatorField.setText(hazard.aoel);
-        acuteReferenceDoseField.setText(hazard.ard);
-        indSumField.setSelectedItem(hazard.hazardIndSum);
-        acceptableDailyIntakeField.setText(hazard.adi);
+
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+        if (hazard.eIsSet(pkg.getHazard_HazardType())) {
+          hazardTypeField.setSelectedItem(hazard.getHazardType());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_HazardName())) {
+          hazardNameField.setSelectedItem(hazard.getHazardName());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_HazardDescription())) {
+          hazardDescriptionField.setText(hazard.getHazardDescription());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_HazardUnit())) {
+          hazardUnitField.setSelectedItem(hazard.getHazardUnit());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_AdverseEffect())) {
+          adverseEffectField.setText(hazard.getAdverseEffect());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_SourceOfContamination())) {
+          sourceOfContaminationField.setText(hazard.getSourceOfContamination());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_BenchmarkDose())) {
+          bmdField.setText(hazard.getBenchmarkDose());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_MaximumResidueLimit())) {
+          maxResidueLimitField.setText(hazard.getMaximumResidueLimit());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_NoObservedAdverseAffectLevel())) {
+          noObservedAdverseField.setText(hazard.getNoObservedAdverseAffectLevel());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_AcceptableOperatorExposureLevel())) {
+          acceptableOperatorField.setText(hazard.getAcceptableOperatorExposureLevel());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_AcuteReferenceDose())) {
+          acuteReferenceDoseField.setText(hazard.getAcuteReferenceDose());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_HazardIndSum())) {
+          indSumField.setSelectedItem(hazard.getHazardIndSum());
+        }
+
+        if (hazard.eIsSet(pkg.getHazard_AcceptableDailyIntake())) {
+          acceptableDailyIntakeField.setText(hazard.getAcceptableDailyIntake());
+        }
       }
     }
 
     @Override
     Hazard get() {
 
-      final Hazard hazard = new Hazard();
-      hazard.hazardType = (String) hazardTypeField.getSelectedItem();
-      hazard.hazardName = (String) hazardNameField.getSelectedItem();
-      hazard.hazardUnit = (String) hazardUnitField.getSelectedItem();
+      final Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
 
-      hazard.hazardDescription = hazardDescriptionField.getText();
-      hazard.adverseEffect = adverseEffectField.getText();
-      hazard.sourceOfContamination = originField.getText();
-      hazard.bmd = bmdField.getText();
-      hazard.mrl = maxResidueLimitField.getText();
-      hazard.noael = noObservedAdverseField.getText();
-      hazard.aoel = acceptableOperatorField.getText();
-      hazard.ard = acuteReferenceDoseField.getText();
-      hazard.adi = acceptableDailyIntakeField.getText();
-      hazard.hazardIndSum = (String) indSumField.getSelectedItem();
+      if (hazardTypeField.getSelectedIndex() != -1) {
+        hazard.setHazardType((String) hazardTypeField.getSelectedItem());
+      }
+
+      if (hazardNameField.getSelectedIndex() != -1) {
+        hazard.setHazardName((String) hazardNameField.getSelectedItem());
+      }
+
+      if (hazardUnitField.getSelectedIndex() != -1) {
+        hazard.setHazardUnit((String) hazardUnitField.getSelectedItem());
+      }
+
+      hazard.setHazardDescription(hazardDescriptionField.getText());
+      hazard.setAdverseEffect(adverseEffectField.getText());
+      hazard.setSourceOfContamination(sourceOfContaminationField.getText());
+      hazard.setBenchmarkDose(bmdField.getText());
+      hazard.setMaximumResidueLimit(maxResidueLimitField.getText());
+      hazard.setNoObservedAdverseAffectLevel(noObservedAdverseField.getText());
+      hazard.setAcceptableOperatorExposureLevel(acceptableOperatorField.getText());
+      hazard.setAcuteReferenceDose(acuteReferenceDoseField.getText());
+      hazard.setAcceptableDailyIntake(acceptableDailyIntakeField.getText());
+
+      if (indSumField.getSelectedIndex() != -1) {
+        hazard.setHazardIndSum((String) indSumField.getSelectedItem());
+      }
 
       return hazard;
     }
@@ -1273,8 +1329,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditHazardPanel_";
 
       final List<String> errors = new ArrayList<>();
@@ -1324,8 +1379,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI(boolean isAdvanced) {
 
       // Create labels
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditModelEquationPanel_";
 
       // northPanel
@@ -1337,13 +1391,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         List<JComponent> fields = new ArrayList<>();
 
         // equation name
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "name"));
-        fields.add(equationNameField);
+        labels.add(0, GUIFactory.createLabelWithToolTip(bundle, prefix + "name"));
+        fields.add(0, equationNameField);
 
         // equation class
         if (isAdvanced) {
-          labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "class"));
-          fields.add(equationClassField);
+          labels.add(1, GUIFactory.createLabelWithToolTip(bundle, prefix + "class"));
+          fields.add(1, equationClassField);
         }
 
         northPanel.add(UIUtils.createFormPanel(labels, fields));
@@ -1368,18 +1422,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     void init(final ModelEquation modelEquation) {
 
       if (modelEquation != null) {
-        equationNameField.setText(modelEquation.equationName);
-        equationClassField.setSelectedItem(modelEquation.equationClass);
-        referencePanel.init(modelEquation.equationReference);
-        scriptField.setText(modelEquation.equation);
+        equationNameField.setText(modelEquation.getModelEquationName());
+        equationClassField.setSelectedItem(modelEquation.getModelEquationClass());
+        referencePanel.init(modelEquation.getReference());
+        scriptField.setText(modelEquation.getModelEquation());
       }
     }
 
     @Override
     List<String> validatePanel() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditModelEquationPanel_";
 
       final List<String> errors = new ArrayList<>();
@@ -1394,11 +1447,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     ModelEquation get() {
-      final ModelEquation modelEquation = new ModelEquation();
-      modelEquation.equationName = equationNameField.getText();
-      modelEquation.equation = scriptField.getText();
-      modelEquation.equationClass = (String) equationClassField.getSelectedItem();
-      modelEquation.equationReference.addAll(referencePanel.tableModel.records);
+      final ModelEquation modelEquation = MetadataFactory.eINSTANCE.createModelEquation();
+      modelEquation.setModelEquationName(equationNameField.getText());
+      modelEquation.setModelEquation(scriptField.getText());
+      if (equationClassField.getSelectedIndex() != -1) {
+        modelEquation.setModelEquationClass((String) equationClassField.getSelectedItem());
+      }
+      modelEquation.getReference().addAll(referencePanel.tableModel.references);
 
       return modelEquation;
     }
@@ -1409,20 +1464,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private static final long serialVersionUID = 1826555468897327895L;
 
     private final FTextField idField; // mandatory
-    private final JComboBox<Parameter.Classification> classificationField; // mandatory
+    private final JComboBox<ParameterClassification> classificationField; // mandatory
     private final FTextField nameField; // mandatory
     private final FTextArea descriptionField;
     private final AutoSuggestField typeField;
     private final AutoSuggestField unitField; // mandatory
-    private final AutoSuggestField unitCategoryField; // mandatory
+    private final AutoSuggestField unitCategoryField;
     private final AutoSuggestField dataTypeField; // mandatory
     private final AutoSuggestField sourceField;
     private final AutoSuggestField subjectField;
     private final AutoSuggestField distributionField;
     private final FTextField valueField;
-    private final FTextField referenceField;
     private final FTextArea variabilitySubjectField;
-    private final FTextArea applicabilityField;
+    private final FTextField valueMinField;
+    private final FTextField valueMaxField;
 
     private SpinnerNumberModel errorSpinnerModel;
 
@@ -1441,7 +1496,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           loadVocabulary("Parameter distribution.xlsx");
 
       idField = new FTextField(true);
-      classificationField = new JComboBox<>(Parameter.Classification.values());
+      classificationField = new JComboBox<>(ParameterClassification.values());
       nameField = new FTextField(true);
       descriptionField = new FTextArea();
 
@@ -1474,9 +1529,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       distributionField = new AutoSuggestField(10, distributionValues, distributionComments, false);
 
       valueField = new FTextField();
-      referenceField = new FTextField();
       variabilitySubjectField = new FTextArea();
-      applicabilityField = new FTextArea();
+      valueMinField = new FTextField();
+      valueMaxField = new FTextField();
       errorSpinnerModel = GUIFactory.createSpinnerDoubleModel();
 
       createUI(isAdvanced);
@@ -1484,77 +1539,78 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditParameterPanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
       // id
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "id"));
-      fields.add(idField);
+      labels.add(0, GUIFactory.createLabelWithToolTip(bundle, prefix + "id"));
+      fields.add(0, idField);
 
       // classification
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "classification"));
-      fields.add(classificationField);
+      labels.add(1, GUIFactory.createLabelWithToolTip(bundle, prefix + "classification"));
+      fields.add(1, classificationField);
 
       // name
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "parameterName"));
-      fields.add(nameField);
-
-      // type
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "type"));
-        fields.add(typeField);
-      }
+      labels.add(2, GUIFactory.createLabelWithToolTip(bundle, prefix + "parameterName"));
+      fields.add(2, nameField);
 
       // unit
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "unit"));
-      fields.add(unitField);
-
-      // unit category
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "unitCategory"));
-      fields.add(unitCategoryField);
+      labels.add(5, GUIFactory.createLabelWithToolTip(bundle, prefix + "unit"));
+      fields.add(5, unitField);
 
       // data type
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "dataType"));
-      fields.add(dataTypeField);
+      labels.add(7, GUIFactory.createLabelWithToolTip(bundle, prefix + "dataType"));
+      fields.add(7, dataTypeField);
 
-      // source
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "source"));
-        fields.add(sourceField);
-      }
+        // description
+        labels.add(3, GUIFactory.createLabelWithToolTip(bundle, prefix + "parameterDescription"));
+        fields.add(3, descriptionField);
 
-      // subject
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "subject"));
-        fields.add(subjectField);
-      }
+        // type
+        labels.add(4, GUIFactory.createLabelWithToolTip(bundle, prefix + "type"));
+        fields.add(4, typeField);
 
-      // distribution
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "distribution"));
-        fields.add(distributionField);
-      }
+        // unit category
+        labels.add(6, GUIFactory.createLabelWithToolTip(bundle, prefix + "unitCategory"));
+        fields.add(6, unitCategoryField);
 
-      // value
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "value"));
-        fields.add(valueField);
-      }
+        // source
+        labels.add(8, GUIFactory.createLabelWithToolTip(bundle, prefix + "source"));
+        fields.add(8, sourceField);
 
-      // reference
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "reference"));
-        fields.add(referenceField);
-      }
+        // subject
+        labels.add(9, GUIFactory.createLabelWithToolTip(bundle, prefix + "subject"));
+        fields.add(9, subjectField);
 
-      // error
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "error"));
-        fields.add(new FSpinner(errorSpinnerModel, false));
+        // distribution
+        labels.add(10, GUIFactory.createLabelWithToolTip(bundle, prefix + "distribution"));
+        fields.add(10, distributionField);
+
+        // value
+        labels.add(11, GUIFactory.createLabelWithToolTip(bundle, prefix + "value"));
+        fields.add(11, valueField);
+
+        // variability subject
+        labels.add(12, GUIFactory.createLabelWithToolTip(bundle, prefix + "variabilitySubject"));
+        fields.add(12, variabilitySubjectField);
+
+        // value min
+        labels.add(13, GUIFactory.createLabelWithToolTip(bundle, prefix + "valueMin"));
+        fields.add(13, valueMinField);
+
+        // value max
+        labels.add(14, GUIFactory.createLabelWithToolTip(bundle, prefix + "valueMax"));
+        fields.add(14, valueMaxField);
+
+        // error
+        labels.add(15, GUIFactory.createLabelWithToolTip(bundle, prefix + "error"));
+        fields.add(15, new FSpinner(errorSpinnerModel, false));
+
+        // TODO: reference
       }
 
       // Build UI
@@ -1565,80 +1621,57 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
       northPanel.add(formPanel);
 
-      if (isAdvanced) {
-        labels.clear();
-        fields.clear();
-
-        // description
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "description"));
-        fields.add(GUIFactory.createScrollPane(descriptionField));
-
-        // variability
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "variabilitySubject"));
-        fields.add(GUIFactory.createScrollPane(variabilitySubjectField));
-
-        // applicability
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "applicability"));
-        fields.add(GUIFactory.createScrollPane(applicabilityField));
-
-        northPanel.add(UIUtils.createFormPanel(labels, fields));
-      }
       add(northPanel, BorderLayout.NORTH);
     }
 
     @Override
     void init(Parameter t) {
       if (t != null) {
-        idField.setText(t.id);
-        classificationField.setSelectedItem(t.classification);
-        nameField.setText(t.name);
-        descriptionField.setText(t.description);
-        typeField.setSelectedItem(t.type);
-        unitField.setSelectedItem(t.unit);
-        unitCategoryField.setSelectedItem(t.unitCategory);
-        dataTypeField.setSelectedItem(t.dataType.name());
-        sourceField.setSelectedItem(t.source);
-        subjectField.setSelectedItem(t.subject);
-        distributionField.setSelectedItem(t.distribution);
-        valueField.setText(t.value);
-        referenceField.setText(t.reference);
-        if (!t.modelApplicability.isEmpty()) {
-          applicabilityField.setText(t.modelApplicability.get(0));
-        }
-        variabilitySubjectField.setText(t.variabilitySubject);
-        errorSpinnerModel.setValue(t.error);
+        idField.setText(t.getParameterID());
+        classificationField.setSelectedItem(t.getParameterClassification());
+        nameField.setText(t.getParameterName());
+        descriptionField.setText(t.getParameterDescription());
+        typeField.setSelectedItem(t.getParameterType());
+        unitField.setSelectedItem(t.getParameterUnit());
+        unitCategoryField.setSelectedItem(t.getParameterUnitCategory());
+        dataTypeField.setSelectedItem(t.getParameterDataType().name());
+        sourceField.setSelectedItem(t.getParameterSource());
+        subjectField.setSelectedItem(t.getParameterSubject());
+        distributionField.setSelectedItem(t.getParameterDistribution());
+        valueField.setText(t.getParameterValue());
+        variabilitySubjectField.setText(t.getParameterVariabilitySubject());
+        valueMinField.setText(t.getParameterValueMin());
+        valueMaxField.setText(t.getParameterValueMax());
+        errorSpinnerModel.setValue(t.getParameterError());
       }
     }
 
     @Override
     Parameter get() {
 
-      final Parameter param = new Parameter();
-      param.id = idField.getText();
-      param.classification = (Parameter.Classification) classificationField.getSelectedItem();
-      param.name = nameField.getText();
-      param.description = descriptionField.getText();
-      param.type = (String) typeField.getSelectedItem();
-      param.unit = (String) unitField.getSelectedItem();
-      param.unitCategory = (String) unitCategoryField.getSelectedItem();
+      final Parameter param = MetadataFactory.eINSTANCE.createParameter();
+      param.setParameterID(idField.getText());
+      param.setParameterClassification(
+          (ParameterClassification) classificationField.getSelectedItem());
+      param.setParameterName(nameField.getText());
+      param.setParameterDescription(descriptionField.getText());
+      param.setParameterType((String) typeField.getSelectedItem());
+      param.setParameterUnit((String) unitField.getSelectedItem());
+      param.setParameterUnitCategory((String) unitCategoryField.getSelectedItem());
 
       try {
         String dataTypeAsString = (String) dataTypeField.getSelectedItem();
-        param.dataType = DataTypes.valueOf(dataTypeAsString);
+        param.setParameterDataType(ParameterType.valueOf(dataTypeAsString));
       } catch (IllegalArgumentException ex) {
-        param.dataType = DataTypes.Other;
+        param.setParameterDataType(ParameterType.OTHER);
       }
 
-      param.source = (String) sourceField.getSelectedItem();
-      param.subject = (String) subjectField.getSelectedItem();
-      param.distribution = (String) distributionField.getSelectedItem();
-      param.value = valueField.getText();
-      param.reference = referenceField.getText();
-      if (!applicabilityField.getText().isEmpty()) {
-        param.modelApplicability.add(applicabilityField.getText());
-      }
-      param.variabilitySubject = variabilitySubjectField.getText();
-      param.error = errorSpinnerModel.getNumber().doubleValue();
+      param.setParameterSource((String) sourceField.getSelectedItem());
+      param.setParameterSubject((String) subjectField.getSelectedItem());
+      param.setParameterDistribution((String) distributionField.getSelectedItem());
+      param.setParameterValue(valueField.getText());
+      param.setParameterVariabilitySubject(variabilitySubjectField.getText());
+      param.setParameterError(Double.toString(errorSpinnerModel.getNumber().doubleValue()));
 
       return param;
     }
@@ -1646,8 +1679,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       final String prefix = "EditParameterPanel_";
 
       final List<String> errors = new ArrayList<>();
@@ -1729,8 +1761,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditPopulationGroupPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -1809,103 +1840,118 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(final PopulationGroup t) {
       if (t != null) {
-        populationNameField.setText(t.populationName);
-        targetPopulationField.setText(t.targetPopulation);
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
-        if (!t.populationSpan.isEmpty()) {
-          populationSpanField.setText(t.populationSpan.get(0));
+        if (t.eIsSet(pkg.getPopulationGroup_PopulationName())) {
+          populationNameField.setText(t.getPopulationName());
         }
 
-        if (!t.populationDescription.isEmpty()) {
-          populationDescriptionField.setText(t.populationDescription.get(0));
+        if (t.eIsSet(pkg.getPopulationGroup_TargetPopulation())) {
+          targetPopulationField.setText(t.getTargetPopulation());
         }
 
-        if (!t.populationAge.isEmpty()) {
-          populationAgeField.setText(t.populationAge.get(0));
+        if (t.eIsSet(pkg.getPopulationGroup_PopulationSpan())) {
+          populationSpanField.setText(t.getPopulationSpan().get(0));
         }
 
-        populationGenderField.setText(t.populationGender);
-
-        if (!t.bmi.isEmpty()) {
-          bmiField.setText(t.bmi.get(0));
+        if (t.eIsSet(pkg.getPopulationGroup_PopulationDescription())) {
+          populationDescriptionField.setText(t.getPopulationDescription().get(0));
         }
 
-        if (!t.specialDietGroups.isEmpty()) {
-          specialDietGroupField.setText(t.specialDietGroups.get(0));
+        if (t.eIsSet(pkg.getPopulationGroup_PopulationAge())) {
+          populationAgeField.setText(t.getPopulationAge().get(0));
         }
 
-        if (!t.patternConsumption.isEmpty()) {
-          patternConsumptionField.setText(t.patternConsumption.get(0));
+        if (t.eIsSet(pkg.getPopulationGroup_PopulationGender())) {
+          populationGenderField.setText(t.getPopulationGender());
         }
 
-        regionField.setSelectedItem(t.region);
-
-        countryField.setSelectedItem(t.country);
-
-        if (!t.populationRiskFactor.isEmpty()) {
-          riskField.setText(t.populationRiskFactor.get(0));
+        if (!t.getBmi().isEmpty()) {
+          bmiField.setText(t.getBmi().get(0));
         }
 
-        if (!t.season.isEmpty()) {
-          seasonField.setText(t.season.get(0));
+        if (!t.getSpecialDietGroups().isEmpty()) {
+          specialDietGroupField.setText(t.getSpecialDietGroups().get(0));
+        }
+
+        if (!t.getPatternConsumption().isEmpty()) {
+          patternConsumptionField.setText(t.getPatternConsumption().get(0));
+        }
+
+        if (t.eIsSet(pkg.getPopulationGroup_Region())) {
+          regionField.setSelectedItem(t.getRegion());
+        }
+
+        if (t.eIsSet(pkg.getPopulationGroup_Country())) {
+          countryField.setSelectedItem(t.getCountry());
+        }
+
+        if (t.eIsSet(pkg.getPopulationGroup_PopulationRiskFactor())) {
+          riskField.setText(t.getPopulationRiskFactor().get(0));
+        }
+
+        if (t.eIsSet(pkg.getPopulationGroup_Season())) {
+          seasonField.setText(t.getSeason().get(0));
         }
       }
     }
 
     @Override
     PopulationGroup get() {
-      final PopulationGroup populationGroup = new PopulationGroup();
-      populationGroup.populationName = populationNameField.getText();
-      populationGroup.targetPopulation = targetPopulationField.getText();
+
+      final PopulationGroup populationGroup = MetadataFactory.eINSTANCE.createPopulationGroup();
+
+      populationGroup.setPopulationName(populationNameField.getText());
+      populationGroup.setTargetPopulation(targetPopulationField.getText());
 
       final String populationSpan = populationSpanField.getText();
       if (!populationSpan.isEmpty()) {
-        populationGroup.populationSpan.add(populationSpan);
+        populationGroup.getPopulationSpan().add(populationSpan);
       }
 
       final String populationDescription = populationDescriptionField.getText();
       if (!populationDescription.isEmpty()) {
-        populationGroup.populationDescription.add(populationDescription);
+        populationGroup.getPopulationDescription().add(populationDescription);
       }
 
       final String populationAge = populationAgeField.getText();
       if (!populationAge.isEmpty()) {
-        populationGroup.populationAge.add(populationAge);
+        populationGroup.getPopulationAge().add(populationAge);
       }
 
-      populationGroup.populationGender = populationGenderField.getText();
+      populationGroup.setPopulationGender(populationGenderField.getText());
 
       final String bmi = bmiField.getText();
       if (!bmi.isEmpty()) {
-        populationGroup.bmi.add(bmi);
+        populationGroup.getBmi().add(bmi);
       }
 
       final String specialDietGroup = specialDietGroupField.getText();
       if (!specialDietGroup.isEmpty()) {
-        populationGroup.specialDietGroups.add(specialDietGroup);
+        populationGroup.getSpecialDietGroups().add(specialDietGroup);
       }
 
       final String patternConsumption = patternConsumptionField.getText();
       if (!patternConsumption.isEmpty()) {
-        populationGroup.patternConsumption.add(patternConsumption);
+        populationGroup.getPatternConsumption().add(patternConsumption);
       }
 
       if (regionField.getSelectedIndex() != -1) {
-        populationGroup.region.add((String) regionField.getSelectedItem());
+        populationGroup.getRegion().add((String) regionField.getSelectedItem());
       }
 
       if (countryField.getSelectedIndex() != -1) {
-        populationGroup.country.add((String) countryField.getSelectedItem());
+        populationGroup.getCountry().add((String) countryField.getSelectedItem());
       }
 
       final String risk = riskField.getText();
       if (!risk.isEmpty()) {
-        populationGroup.populationRiskFactor.add(risk);
+        populationGroup.getPopulationRiskFactor().add(risk);
       }
 
       final String season = seasonField.getText();
       if (!season.isEmpty()) {
-        populationGroup.season.add(season);
+        populationGroup.getSeason().add(season);
       }
 
       return populationGroup;
@@ -1914,8 +1960,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       final List<String> errors = new ArrayList<>(1);
 
       if (populationNameField.getText().isEmpty()) {
@@ -2000,8 +2045,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditProductPanel_";
 
       List<FLabel> labels = new ArrayList<>();
@@ -2073,38 +2117,102 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     void init(final Product t) {
 
       if (t != null) {
-        envNameField.setSelectedItem(t.environmentName);
-        envDescriptionField.setText(t.environmentDescription);
-        envUnitField.setSelectedItem(t.environmentUnit);
-        // TODO: productonMethodComboBox
-        // TODO: packagingComboBox
-        // TODO: productTreatmentComboBox
-        originCountryField.setSelectedItem(t.originCountry);
-        originAreaField.setSelectedItem(t.originArea);
-        fisheriesAreaField.setSelectedItem(t.fisheriesArea);
-        productionField.setDate(t.productionDate);
-        expirationField.setDate(t.expirationDate);
+
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+        if (t.eIsSet(pkg.getProduct_ProductName())) {
+          envNameField.setSelectedItem(t.getProductName());
+        }
+
+        envDescriptionField.setText(t.getProductDescription());
+
+        if (t.eIsSet(pkg.getProduct_ProductUnit())) {
+          envUnitField.setSelectedItem(t.getProductUnit());
+        }
+
+        if (t.eIsSet(pkg.getProduct_ProductionMethod())) {
+          productionMethodField.setSelectedItem(t.getProductionMethod());
+        }
+
+        if (t.eIsSet(pkg.getProduct_Packaging())) {
+          packagingField.setSelectedItem(t.getPackaging());
+        }
+
+        if (t.eIsSet(pkg.getProduct_ProductTreatment())) {
+          productTreatmentField.setSelectedItem(t.getProductTreatment());
+        }
+
+        if (t.eIsSet(pkg.getProduct_OriginCountry())) {
+          originCountryField.setSelectedItem(t.getOriginCountry());
+        }
+
+        if (t.eIsSet(pkg.getProduct_OriginArea())) {
+          originAreaField.setSelectedItem(t.getOriginArea());
+        }
+
+        if (t.eIsSet(pkg.getProduct_FisheriesArea())) {
+          fisheriesAreaField.setSelectedItem(t.getFisheriesArea());
+        }
+
+        if (t.eIsSet(pkg.getProduct_ProductionDate())) {
+          productionField.setDate(t.getProductionDate());
+        }
+
+        if (t.eIsSet(pkg.getProduct_ExpiryDate())) {
+          expirationField.setDate(t.getExpiryDate());
+        }
       }
     }
 
     @Override
     Product get() {
 
-      final Product product = new Product();
-      product.environmentName = (String) envNameField.getSelectedItem();
-      product.environmentDescription = envDescriptionField.getText();
-      product.environmentUnit = (String) envUnitField.getSelectedItem();
-      Arrays.stream(productionMethodField.getSelectedObjects()).map(it -> (String) it)
-          .forEach(product.productionMethod::add);
-      Arrays.stream(packagingField.getSelectedObjects()).map(it -> (String) it)
-          .forEach(product.packaging::add);
-      Arrays.stream(productTreatmentField.getSelectedObjects()).map(it -> (String) it)
-          .forEach(product.productTreatment::add);
-      product.originCountry = (String) originCountryField.getSelectedItem();
-      product.originArea = (String) originAreaField.getSelectedItem();
-      product.fisheriesArea = (String) fisheriesAreaField.getSelectedItem();
-      product.productionDate = productionField.getDate();
-      product.expirationDate = expirationField.getDate();
+      final Product product = MetadataFactory.eINSTANCE.createProduct();
+
+      if (envNameField.getSelectedIndex() != -1) {
+        String selectedName = (String) envNameField.getSelectedItem();
+        product.setProductName(selectedName);
+      }
+
+      product.setProductDescription(envDescriptionField.getText());
+
+      if (envUnitField.getSelectedIndex() != -1) {
+        String selectedUnit = (String) envUnitField.getSelectedItem();
+        product.setProductUnit(selectedUnit);
+      }
+
+      if (productionMethodField.getSelectedIndex() != -1) {
+        String selectedMethod = (String) productionMethodField.getSelectedItem();
+        product.setProductionMethod(selectedMethod);
+      }
+
+      if (packagingField.getSelectedIndex() != -1) {
+        String selectedPackaging = (String) packagingField.getSelectedItem();
+        packagingField.setSelectedItem(selectedPackaging);
+      }
+
+      if (productTreatmentField.getSelectedIndex() != -1) {
+        String selectedTreatment = (String) productTreatmentField.getSelectedItem();
+        productTreatmentField.setSelectedItem(selectedTreatment);
+      }
+
+      if (originCountryField.getSelectedIndex() != -1) {
+        String selectedCountry = (String) originCountryField.getSelectedItem();
+        product.setOriginCountry(selectedCountry);
+      }
+
+      if (originAreaField.getSelectedIndex() != -1) {
+        String selectedArea = (String) originAreaField.getSelectedItem();
+        product.setOriginArea(selectedArea);
+      }
+
+      if (fisheriesAreaField.getSelectedIndex() != -1) {
+        String selectedArea = (String) fisheriesAreaField.getSelectedItem();
+        product.setFisheriesArea(selectedArea);
+      }
+
+      product.setProductionDate(productionField.getDate());
+      product.setExpiryDate(expirationField.getDate());
 
       return product;
     }
@@ -2112,8 +2220,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditProductPanel_";
 
       final List<String> errors = new ArrayList<>(2);
@@ -2128,11 +2235,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
   }
 
-  private class EditReferencePanel extends EditPanel<Record> {
+  private class EditReferencePanel extends EditPanel<Reference> {
 
     private static final long serialVersionUID = -6874752919377124455L;
-
-    private static final String dateFormatStr = "yyyy-MM-dd";
 
     // Spinner models starting with 0 and taking positive ints only
     private final SpinnerNumberModel volumeSpinnerModel; // optional
@@ -2147,7 +2252,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final FTextField titleField; // mandatory
     private final FTextArea abstractField; // optional
     private final FTextField journalField; // optional
-    private final FTextField pageField; // optional
     private final FTextField statusField; // optional
     private final FTextField websiteField; // optional
     private final FTextArea commentField; // optional
@@ -2175,7 +2279,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       titleField = new FTextField(true);
       abstractField = new FTextArea();
       journalField = new FTextField();
-      pageField = new FTextField();
       statusField = new FTextField();
       websiteField = new FTextField();
       commentField = new FTextArea();
@@ -2185,80 +2288,65 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditReferencePanel_";
 
       // Create labels
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
-      // type
-      if (isAdvanced) {
-        labels.add(new FLabel(bundle.getString(prefix + "typeLabel")));
-        fields.add(typeField);
-      }
-
-      // date
-      if (isAdvanced) {
-        labels.add(new FLabel(bundle.getString(prefix + "dateLabel")));
-        fields.add(dateField);
-      }
-
-      // pmid
-      if (isAdvanced) {
-        labels.add(new FLabel(bundle.getString(prefix + "pmidLabel")));
-        fields.add(pmidField);
-      }
-
       // doi
-      labels.add(new FLabel(bundle.getString(prefix + "doiLabel")));
-      fields.add(doiField);
-
-      // author
-      if (isAdvanced) {
-        labels.add(new FLabel(bundle.getString(prefix + "authorListLabel")));
-        fields.add(authorListField);
-      }
+      labels.add(3, new FLabel(bundle.getString(prefix + "doiLabel")));
+      fields.add(3, doiField);
 
       // title
-      labels.add(new FLabel(bundle.getString(prefix + "titleLabel")));
-      fields.add(titleField);
+      labels.add(5, new FLabel(bundle.getString(prefix + "titleLabel")));
+      fields.add(5, titleField);
 
-      // journal
       if (isAdvanced) {
-        labels.add(new FLabel(bundle.getString(prefix + "journalLabel")));
-        fields.add(journalField);
-      }
+        // type
+        labels.add(0, new FLabel(bundle.getString(prefix + "typeLabel")));
+        fields.add(0, typeField);
 
-      // volume
-      if (isAdvanced) {
-        labels.add(new FLabel(bundle.getString(prefix + "volumeLabel")));
-        fields.add(new FSpinner(volumeSpinnerModel, false));
-      }
+        // date
+        labels.add(1, new FLabel(bundle.getString(prefix + "dateLabel")));
+        fields.add(1, dateField);
 
-      // issue
-      if (isAdvanced) {
-        labels.add(new FLabel(bundle.getString(prefix + "issueLabel")));
-        fields.add(new FSpinner(issueSpinnerModel, false));
-      }
+        // pmid
+        labels.add(2, new FLabel(bundle.getString(prefix + "pmidLabel")));
+        fields.add(2, pmidField);
 
-      // page
-      if (isAdvanced) {
-        labels.add(new FLabel(bundle.getString(prefix + "pageLabel")));
-        fields.add(pageField);
-      }
+        // author
+        labels.add(4, new FLabel(bundle.getString(prefix + "authorListLabel")));
+        fields.add(4, authorListField);
 
-      // status
-      if (isAdvanced) {
-        labels.add(new FLabel(bundle.getString(prefix + "statusLabel")));
-        fields.add(statusField);
-      }
+        // abstract
+        labels.add(6, new FLabel(bundle.getString(prefix + "abstractLabel")));
+        fields.add(6, abstractField);
 
-      // website
-      if (isAdvanced) {
-        labels.add(new FLabel(bundle.getString(prefix + "websiteLabel")));
-        fields.add(websiteField);
+        // journal
+        labels.add(7, new FLabel(bundle.getString(prefix + "journalLabel")));
+        fields.add(7, journalField);
+
+        // volume
+        labels.add(8, new FLabel(bundle.getString(prefix + "volumeLabel")));
+        fields.add(8, new FSpinner(volumeSpinnerModel, false));
+
+        // issue
+        labels.add(9, new FLabel(bundle.getString(prefix + "issueLabel")));
+        fields.add(9, new FSpinner(issueSpinnerModel, false));
+
+        // status
+        labels.add(10, new FLabel(bundle.getString(prefix + "statusLabel")));
+        fields.add(10, statusField);
+
+        // website
+        labels.add(11, new FLabel(bundle.getString(prefix + "websiteLabel")));
+        fields.add(11, websiteField);
+
+        // comment
+        labels.add(12, new FLabel(bundle.getString(prefix + "commentLabel")));
+        fields.add(12, commentField);
       }
 
       // Build UI
@@ -2287,125 +2375,96 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     }
 
     @Override
-    void init(final Record t) {
-      if (t != null) {
-        final Type type = t.getType();
-        if (type != null) {
-          // Load type from bundle
-          ResourceBundle risBundle = ResourceBundle.getBundle("ris_types");
-          typeField.setSelectedItem(risBundle.getString(type.name()));
+    void init(final Reference reference) {
+      if (reference != null) {
+
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+        if (reference.eIsSet(pkg.getReference_PublicationType())) {
+          typeField.setSelectedItem(reference.getPublicationType());
         }
 
-        final String dateString = t.getDate();
-        if (dateString != null) {
-          try {
-            final SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatStr);
-            dateField.setDate(dateFormat.parse(dateString));
-          } catch (final ParseException exception) {
-            LOGGER.warn("Invalid date", exception);
-          }
+        if (reference.eIsSet(pkg.getReference_PublicationDate())) {
+          dateField.setDate(reference.getPublicationDate());
         }
 
-        // TODO: PMID
-        doiField.setText(t.getDoi());
-
-        final List<String> authors = t.getAuthors();
-        if (authors != null) {
-          authorListField.setText(String.join(";", authors));
+        if (reference.eIsSet(pkg.getReference_Pmid())) {
+          pmidField.setText(reference.getPmid());
         }
 
-        titleField.setText(t.getTitle());
-        abstractField.setText(t.getAbstr());
-        journalField.setText(t.getSecondaryTitle());
-
-        final String volumeNumberString = t.getVolumeNumber();
-        if (volumeNumberString != null) {
-          try {
-            int volumeNumber = Integer.parseInt(volumeNumberString);
-            volumeSpinnerModel.setValue(volumeNumber);
-          } catch (final NumberFormatException exception) {
-          }
+        if (reference.eIsSet(pkg.getReference_Doi())) {
+          doiField.setText(reference.getDoi());
         }
 
-        final Integer issueNumber = t.getIssueNumber();
-        if (issueNumber != null) {
-          issueSpinnerModel.setValue(issueNumber);
+        if (reference.eIsSet(pkg.getReference_AuthorList())) {
+          authorListField.setText(reference.getAuthorList());
         }
 
-        // TODO: Page
-        // TODO: Status
+        if (reference.eIsSet(pkg.getReference_PublicationTitle())) {
+          titleField.setText(reference.getPublicationTitle());
+        }
 
-        websiteField.setText(t.getWebsiteLink());
+        if (reference.eIsSet(pkg.getReference_PublicationAbstract())) {
+          abstractField.setText(reference.getPublicationAbstract());
+        }
 
-        // TODO: Comment
+        if (reference.eIsSet(pkg.getReference_PublicationJournal())) {
+          journalField.setText(reference.getPublicationJournal());
+        }
+
+        if (reference.eIsSet(pkg.getReference_PublicationVolume())) {
+          volumeSpinnerModel.setValue(reference.getPublicationVolume());
+        }
+
+        if (reference.eIsSet(pkg.getReference_PublicationIssue())) {
+          issueSpinnerModel.setValue(reference.getPublicationIssue());
+        }
+
+        if (reference.eIsSet(pkg.getReference_PublicationStatus())) {
+          statusField.setText(reference.getPublicationStatus());
+        }
+
+        if (reference.eIsSet(pkg.getReference_Comment())) {
+          websiteField.setText(reference.getPublicationWebsite());
+        }
+
+        if (reference.eIsSet(pkg.getReference_Comment())) {
+          commentField.setText(reference.getComment());
+        }
       }
     }
 
     @Override
-    Record get() {
+    Reference get() {
 
-      final Record record = new Record();
-      // TODO: isReferenceDescriptionCheckBox
+      final Reference reference = MetadataFactory.eINSTANCE.createReference();
 
-      final int selectedTypeIndex = typeField.getSelectedIndex();
-      if (selectedTypeIndex != -1) {
+      reference.setIsReferenceDescription(isReferenceDescriptionField.isSelected());
 
-        ResourceBundle risBundle = ResourceBundle.getBundle("ris_types");
-
-        int index = 0;
-        for (String risType : risBundle.keySet()) {
-          if (index == selectedTypeIndex) {
-            Type type = Type.valueOf(risType);
-            record.setType(type);
-            break;
-          }
-          index++;
-        }
+      if (typeField.getSelectedIndex() != -1) {
+        reference.setPublicationType(PublicationType.get(typeField.getSelectedIndex()));
       }
 
-      final Date date = dateField.getDate();
-      if (date != null) {
-        record.setDate(new SimpleDateFormat(dateFormatStr).format(date));
-      }
+      reference.setPublicationDate(dateField.getDate());
+      reference.setPmid(pmidField.getText());
+      reference.setDoi(doiField.getText());
+      reference.setAuthorList(authorListField.getText());
+      reference.setPublicationTitle(titleField.getText());
+      reference.setPublicationAbstract(abstractField.getText());
+      reference.setPublicationJournal(journalField.getText());
+      reference.setPublicationVolume(volumeSpinnerModel.getNumber().intValue());
+      reference.setPublicationIssue(issueSpinnerModel.getNumber().intValue());
+      reference.setPublicationStatus(statusField.getText());
+      reference.setPublicationWebsite(websiteField.getText());
+      reference.setComment(commentField.getText());
 
-      // TODO: PMID
-
-      record.setDoi(doiField.getText());
-
-      final String authors = authorListField.getText();
-      if (authors != null) {
-        Arrays.stream(authors.split(";")).forEach(record::addAuthor);
-      }
-
-      record.setTitle(titleField.getText());
-      record.setAbstr(abstractField.getText());
-      record.setSecondaryTitle(journalField.getText());
-
-      final Number volumeNumber = volumeSpinnerModel.getNumber();
-      if (volumeNumber != null) {
-        record.setVolumeNumber(volumeNumber.toString());
-      }
-
-      final Number issueNumber = issueSpinnerModel.getNumber();
-      if (issueNumber != null) {
-        record.setIssueNumber(issueNumber.intValue());
-      }
-
-      // TODO: Page
-      // TODO: Status
-
-      record.setWebsiteLink(websiteField.getText());
-
-      // TODO: comment
-
-      return record;
+      return reference;
     }
 
     @Override
     List<String> validatePanel() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditReferencePanel_";
 
       final List<String> errors = new ArrayList<>(2);
@@ -2481,61 +2540,52 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI(boolean isAdvanced) {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditStudySamplePanel_";
 
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
       // sample name
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "sampleName"));
-      fields.add(sampleNameField);
+      labels.add(0, GUIFactory.createLabelWithToolTip(bundle, prefix + "sampleName"));
+      fields.add(0, sampleNameField);
 
       // sample protocol label
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "sampleProtocol"));
-      fields.add(sampleProtocolField);
-
-      // sampling strategy label
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingStrategy"));
-        fields.add(samplingStrategyField);
-      }
-
-      // sampling type label
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingType"));
-        fields.add(samplingTypeField);
-      }
-
-      // sampling method label
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingMethod"));
-        fields.add(samplingMethodField);
-      }
+      labels.add(1, GUIFactory.createLabelWithToolTip(bundle, prefix + "sampleProtocol"));
+      fields.add(1, sampleProtocolField);
 
       // sampling plan
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingPlan"));
-      fields.add(samplingPlanField);
+      labels.add(5, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingPlan"));
+      fields.add(5, samplingPlanField);
 
       // sampling weight
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingWeight"));
-      fields.add(samplingWeightField);
+      labels.add(6, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingWeight"));
+      fields.add(6, samplingWeightField);
 
       // sampling size
-      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingSize"));
-      fields.add(samplingSizeField);
+      labels.add(7, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingSize"));
+      fields.add(7, samplingSizeField);
 
-      // lot size unit
       if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "lotSizeUnit"));
-        fields.add(lotSizeUnitField);
-      }
+        // sampling strategy label
+        labels.add(2, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingStrategy"));
+        fields.add(2, samplingStrategyField);
 
-      // sampling point
-      if (isAdvanced) {
-        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingPoint"));
-        fields.add(samplingPointField);
+        // sampling type label
+        labels.add(3, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingType"));
+        fields.add(3, samplingTypeField);
+
+        // sampling method label
+        labels.add(4, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingMethod"));
+        fields.add(4, samplingMethodField);
+
+        // lot size unit
+        labels.add(8, GUIFactory.createLabelWithToolTip(bundle, prefix + "lotSizeUnit"));
+        fields.add(8, lotSizeUnitField);
+
+        // sampling point
+        labels.add(9, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingPoint"));
+        fields.add(9, samplingPointField);
       }
 
       // formPanel
@@ -2551,33 +2601,79 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(final StudySample t) {
       if (t != null) {
-        sampleNameField.setText(t.sample);
-        sampleProtocolField.setText(t.collectionProtocol);
-        samplingStrategyField.setSelectedItem(t.samplingStrategy);
-        samplingTypeField.setSelectedItem(t.samplingProgramType);
-        samplingMethodField.setSelectedItem(t.samplingMethod);
-        samplingPlanField.setText(t.samplingPlan);
-        samplingWeightField.setText(t.samplingWeight);
-        samplingSizeField.setText(t.samplingSize);
-        lotSizeUnitField.setSelectedItem(t.lotSizeUnit);
-        samplingPointField.setSelectedItem(t.samplingPoint);
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+        if (t.eIsSet(pkg.getStudySample_SampleName())) {
+          sampleNameField.setText(t.getSampleName());
+        }
+
+        if (t.eIsSet(pkg.getStudySample_ProtocolOfSampleCollection())) {
+          sampleProtocolField.setText(t.getProtocolOfSampleCollection());
+        }
+
+        if (t.eIsSet(pkg.getStudySample_SamplingStrategy())) {
+          samplingStrategyField.setSelectedItem(t.getSamplingStrategy());
+        }
+
+        if (t.eIsSet(pkg.getStudySample_TypeOfSamplingProgram())) {
+          samplingTypeField.setSelectedItem(t.getTypeOfSamplingProgram());
+        }
+
+        if (t.eIsSet(pkg.getStudySample_SamplingMethod())) {
+          samplingMethodField.setSelectedItem(t.getSamplingMethod());
+        }
+
+        if (t.eIsSet(pkg.getStudySample_SamplingPlan())) {
+          samplingPlanField.setText(t.getSamplingPlan());
+        }
+
+        if (t.eIsSet(pkg.getStudySample_SamplingWeight())) {
+          samplingWeightField.setText(t.getSamplingWeight());
+        }
+
+        if (t.eIsSet(pkg.getStudySample_SamplingSize())) {
+          samplingSizeField.setText(t.getSamplingSize());
+        }
+
+        if (t.eIsSet(pkg.getStudySample_LotSizeUnit())) {
+          lotSizeUnitField.setSelectedItem(t.getLotSizeUnit());
+        }
+
+        if (t.eIsSet(pkg.getStudySample_SamplingPoint())) {
+          samplingPointField.setSelectedItem(t.getSamplingPoint());
+        }
       }
     }
 
     @Override
     StudySample get() {
 
-      final StudySample studySample = new StudySample();
-      studySample.sample = sampleNameField.getText();
-      studySample.collectionProtocol = sampleProtocolField.getText();
-      studySample.samplingPlan = samplingPlanField.getText();
-      studySample.samplingWeight = samplingWeightField.getText();
-      studySample.samplingSize = samplingSizeField.getText();
-      studySample.samplingStrategy = (String) samplingStrategyField.getSelectedItem();
-      studySample.samplingProgramType = (String) samplingTypeField.getSelectedItem();
-      studySample.samplingMethod = (String) samplingMethodField.getSelectedItem();
-      studySample.lotSizeUnit = (String) lotSizeUnitField.getSelectedItem();
-      studySample.samplingPoint = (String) samplingPointField.getSelectedItem();
+      final StudySample studySample = MetadataFactory.eINSTANCE.createStudySample();
+      studySample.setSampleName(sampleNameField.getText());
+      studySample.setProtocolOfSampleCollection(sampleProtocolField.getText());
+      studySample.setSamplingPlan(samplingPlanField.getText());
+      studySample.setSamplingWeight(samplingWeightField.getText());
+      studySample.setSamplingSize(samplingSizeField.getText());
+
+      if (samplingStrategyField.getSelectedIndex() != -1) {
+        studySample.setSamplingStrategy((String) samplingStrategyField.getSelectedItem());
+      }
+
+      if (samplingTypeField.getSelectedIndex() != -1) {
+        studySample.setTypeOfSamplingProgram((String) samplingTypeField.getSelectedItem());
+      }
+
+      if (samplingMethodField.getSelectedIndex() != -1) {
+        studySample.setSamplingMethod((String) samplingMethodField.getSelectedItem());
+      }
+
+      if (lotSizeUnitField.getSelectedIndex() != -1) {
+        studySample.setLotSizeUnit((String) lotSizeUnitField.getSelectedItem());
+      }
+
+      if (samplingPointField.getSelectedIndex() != -1) {
+        studySample.setSamplingPoint((String) samplingPointField.getSelectedItem());
+      }
 
       return studySample;
     }
@@ -2585,8 +2681,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     List<String> validatePanel() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditStudySamplePanel_";
 
       final List<String> errors = new ArrayList<>(5);
@@ -2712,8 +2807,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private void createUI() {
 
       // Create labels
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "GeneralInformationPanel_";
 
       FLabel studyNameLabel = GUIFactory.createLabelWithToolTip(bundle, prefix + "studyName");
@@ -2778,57 +2872,105 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     void init(final GeneralInformation generalInformation) {
 
       if (generalInformation != null) {
-        studyNameField.setText(generalInformation.name);
-        sourceField.setText(generalInformation.source);
-        identifierField.setText(generalInformation.identifier);
-        creatorPanel.init(generalInformation.creators);
-        creationField.setDate(generalInformation.creationDate);
-        rightsField.setSelectedItem(generalInformation.rights);
-        availabilityField.setSelected(generalInformation.isAvailable);
-        if (generalInformation.url != null) {
-          urlField.setText(generalInformation.url.toString());
+
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Name())) {
+          studyNameField.setText(generalInformation.getName());
         }
-        formatField.setSelectedItem(generalInformation.format);
-        referencePanel.init(generalInformation.reference);
-        languageField.setSelectedItem(generalInformation.language);
-        softwareField.setSelectedItem(generalInformation.software);
-        languageWrittenInField.setSelectedItem(generalInformation.languageWrittenIn);
-        statusField.setSelectedItem(generalInformation.status);
-        objectiveField.setText(generalInformation.objective);
-        descriptionField.setText(generalInformation.description);
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Source())) {
+          sourceField.setText(generalInformation.getSource());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Identifier())) {
+          identifierField.setText(generalInformation.getIdentifier());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Creators())) {
+          creatorPanel.init(generalInformation.getCreators());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_CreationDate())) {
+          creationField.setDate(generalInformation.getCreationDate());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Rights())) {
+          rightsField.setSelectedItem(generalInformation.getRights());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Available())) {
+          availabilityField.setSelected(generalInformation.isAvailable());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Format())) {
+          formatField.setSelectedItem(generalInformation.getFormat());
+        }
+
+        referencePanel.init(generalInformation.getReference());
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Language())) {
+          languageField.setSelectedItem(generalInformation.getLanguage());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Software())) {
+          softwareField.setSelectedItem(generalInformation.getSoftware());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_LanguageWrittenIn())) {
+          languageWrittenInField.setSelectedItem(generalInformation.getLanguageWrittenIn());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Status())) {
+          statusField.setSelectedItem(generalInformation.getStatus());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Objective())) {
+          objectiveField.setText(generalInformation.getObjective());
+        }
+
+        if (generalInformation.eIsSet(pkg.getGeneralInformation_Description())) {
+          descriptionField.setText(generalInformation.getDescription());
+        }
       }
     }
 
     GeneralInformation get() {
 
-      final GeneralInformation generalInformation = new GeneralInformation();
-      generalInformation.name = studyNameField.getText();
-      generalInformation.source = sourceField.getText();
-      generalInformation.identifier = identifierField.getText();
-      generalInformation.creationDate = creationField.getDate();
-      generalInformation.rights = (String) rightsField.getSelectedItem();
-      generalInformation.isAvailable = availabilityField.isSelected();
+      final GeneralInformation generalInformation =
+          MetadataFactory.eINSTANCE.createGeneralInformation();
+      generalInformation.setName(studyNameField.getText());
+      generalInformation.setSource(sourceField.getText());
+      generalInformation.setIdentifier(identifierField.getText());
+      generalInformation.setCreationDate(creationField.getDate());
+      generalInformation.setRights((String) rightsField.getSelectedItem());
+      generalInformation.setAvailable(availabilityField.isSelected());
+      generalInformation.getCreators().addAll(creatorPanel.tableModel.contacts);
 
-      final String urlText = urlField.getText();
-      if (!urlText.isEmpty()) {
-        try {
-          generalInformation.url = new URL(urlText);
-        } catch (final MalformedURLException exception) {
-          LOGGER.error(urlText + " is not a valid URL");
-        }
+      if (formatField.getSelectedIndex() != -1) {
+        generalInformation.setFormat((String) formatField.getSelectedItem());
       }
 
-      generalInformation.creators.addAll(creatorPanel.tableModel.vcards);
+      generalInformation.getReference().addAll(referencePanel.tableModel.references);
 
-      generalInformation.format = (String) formatField.getSelectedItem();
-      generalInformation.reference.addAll(referencePanel.tableModel.records);
+      if (languageField.getSelectedIndex() != -1) {
+        generalInformation.setLanguage((String) languageField.getSelectedItem());
+      }
 
-      generalInformation.language = (String) languageField.getSelectedItem();
-      generalInformation.software = (String) softwareField.getSelectedItem();
-      generalInformation.languageWrittenIn = (String) languageWrittenInField.getSelectedItem();
-      generalInformation.status = (String) statusField.getSelectedItem();
-      generalInformation.objective = objectiveField.getText();
-      generalInformation.description = descriptionField.getText();
+      if (softwareField.getSelectedIndex() != -1) {
+        generalInformation.setSoftware((String) softwareField.getSelectedItem());
+      }
+
+      if (languageWrittenInField.getSelectedIndex() != -1) {
+        generalInformation.setLanguageWrittenIn((String) languageWrittenInField.getSelectedItem());
+      }
+
+      if (statusField.getSelectedIndex() != -1) {
+        generalInformation.setStatus((String) statusField.getSelectedItem());
+      }
+
+      generalInformation.setObjective(objectiveField.getText());
+      generalInformation.setDescription(descriptionField.getText());
 
       return generalInformation;
     }
@@ -2840,15 +2982,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     boolean isAdvanced;
 
-    RecordTableModel tableModel = new RecordTableModel();
+    ReferenceTableModel tableModel = new ReferenceTableModel();
 
     // Non modifiable table model with headers
-    class RecordTableModel extends DefaultTableModel {
+    class ReferenceTableModel extends DefaultTableModel {
 
       private static final long serialVersionUID = -3034772220080396221L;
-      final ArrayList<Record> records = new ArrayList<>();
+      final ArrayList<Reference> references = new ArrayList<>();
 
-      RecordTableModel() {
+      ReferenceTableModel() {
         super(new Object[0][0], new String[] {"DOI", "Publication title"});
       }
 
@@ -2857,30 +2999,28 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         return false;
       }
 
-      void add(final Record record) {
+      void add(final Reference reference) {
 
         // Skip if record is already in the table
-        for (final Record r : records) {
-          if (r.equals(record))
+        for (final Reference currentReference : references) {
+          if (currentReference.equals(reference)) {
             return;
+          }
         }
+        references.add(reference);
 
-        records.add(record);
-
-        final String doi = record.getDoi();
-        final String publicationTitle = record.getTitle();
-        addRow(new String[] {doi, publicationTitle});
+        addRow(new String[] {reference.getDoi(), reference.getPublicationTitle()});
       }
 
-      void modify(final int rowNumber, final Record newRecord) {
-        records.set(rowNumber, newRecord);
+      void modify(final int rowNumber, final Reference newReference) {
+        references.set(rowNumber, newReference);
 
-        setValueAt(newRecord.getDoi(), rowNumber, 0);
-        setValueAt(newRecord.getTitle(), rowNumber, 1);
+        setValueAt(newReference.getDoi(), rowNumber, 0);
+        setValueAt(newReference.getPublicationTitle(), rowNumber, 1);
       }
 
       void remove(final int rowNumber) {
-        records.remove(rowNumber);
+        references.remove(rowNumber);
         removeRow(rowNumber);
       }
     }
@@ -2903,30 +3043,32 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create reference");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-          final Record newRecord = editPanel.get();
-          tableModel.add(newRecord);
+          final Reference newReference = editPanel.get();
+          tableModel.add(newReference);
         }
       });
 
       final JButton fileUploadButton = UIUtils.createFileUploadButton();
-      fileUploadButton.addActionListener(event -> {
-
-        // Configure file chooser
-        final JFileChooser fc = new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.addChoosableFileFilter(new SimpleFileFilter("ris", "RIS"));
-
-        final int returnVal = fc.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-          try {
-            final List<Record> importedRecords = JRis.parse(fc.getSelectedFile());
-            importedRecords.forEach(tableModel::add);
-          } catch (final IOException | JRisException exception) {
-            LOGGER.warn("Error importing RIS references", exception);
-          }
-
-        }
-      });
+      // TODO: fileUploadButton listener
+      fileUploadButton.setEnabled(false);
+      // fileUploadButton.addActionListener(event -> {
+      //
+      // // Configure file chooser
+      // final JFileChooser fc = new JFileChooser();
+      // fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+      // fc.addChoosableFileFilter(new SimpleFileFilter("ris", "RIS"));
+      //
+      // final int returnVal = fc.showOpenDialog(this);
+      // if (returnVal == JFileChooser.APPROVE_OPTION) {
+      // try {
+      // final List<Record> importedRecords = JRis.parse(fc.getSelectedFile());
+      // importedRecords.forEach(tableModel::add);
+      // } catch (final IOException | JRisException exception) {
+      // LOGGER.warn("Error importing RIS references", exception);
+      // }
+      //
+      // }
+      // });
 
       final JButton editButton = UIUtils.createEditButton();
       editButton.addActionListener(event -> {
@@ -2934,7 +3076,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         final int rowToEdit = coolTable.getSelectedRow();
         if (rowToEdit != -1) {
 
-          final Record ref = tableModel.records.get(rowToEdit);
+          final Reference ref = tableModel.references.get(rowToEdit);
 
           final EditReferencePanel editPanel = new EditReferencePanel(this.isAdvanced);
           editPanel.init(ref);
@@ -2964,7 +3106,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       add(panel);
     }
 
-    void init(final List<Record> references) {
+    void init(final List<Reference> references) {
       references.forEach(tableModel::add);
     }
   }
@@ -2978,7 +3120,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     class TableModel extends DefaultTableModel {
 
       private static final long serialVersionUID = -2363056543695517576L;
-      final ArrayList<VCard> vcards = new ArrayList<>();
+      final ArrayList<Contact> contacts = new ArrayList<>();
 
       TableModel() {
         super(new Object[0][0], new String[] {"Given name", "Family name", "Contact"});
@@ -2989,49 +3131,29 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         return false;
       }
 
-      void add(final VCard vcard) {
+      void add(final Contact contact) {
 
-        // Skip if vcard is already in table
-        for (final VCard currentCard : vcards) {
-          if (currentCard.equals(vcard)) {
+        // Skip if contact is already in table
+        for (final Contact currentContact : contacts) {
+          if (currentContact.equals(contact)) {
             return;
           }
         }
-        vcards.add(vcard);
+        contacts.add(contact);
 
-        String givenName, familyName;
-        StructuredName structuredName = vcard.getStructuredName();
-        if (structuredName != null) {
-          givenName = structuredName.getGiven();
-          familyName = structuredName.getFamily();
-        } else {
-          givenName = "";
-          familyName = "";
-        }
-        String contact = vcard.getEmails().get(0).getValue();
-        addRow(new String[] {givenName, familyName, contact});
+        addRow(new String[] {contact.getGivenName(), contact.getFamilyName(), contact.getEmail()});
       }
 
-      void modify(final int rowNumber, final VCard vcard) {
-        vcards.set(rowNumber, vcard);
+      void modify(final int rowNumber, final Contact contact) {
+        contacts.set(rowNumber, contact);
 
-        StructuredName structuredName = vcard.getStructuredName();
-
-        String givenName = "";
-        String familyName = "";
-
-        if (structuredName != null) {
-          givenName = StringUtils.defaultString(structuredName.getGiven());
-          familyName = StringUtils.defaultString(structuredName.getFamily());
-        }
-
-        setValueAt(givenName, rowNumber, 0);
-        setValueAt(familyName, rowNumber, 1);
-        setValueAt(vcard.getEmails().get(0).getValue(), rowNumber, 2);
+        setValueAt(contact.getGivenName(), rowNumber, 0);
+        setValueAt(contact.getFamilyName(), rowNumber, 1);
+        setValueAt(contact.getEmail(), rowNumber, 2);
       }
 
       void remove(final int rowNumber) {
-        vcards.remove(rowNumber);
+        contacts.remove(rowNumber);
         removeRow(rowNumber);
       }
     }
@@ -3044,24 +3166,26 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           "Creators"));
 
       final JButton fileUploadButton = UIUtils.createFileUploadButton();
-      fileUploadButton.addActionListener(event -> {
-
-        // Configure file chooser
-        final JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.addChoosableFileFilter(new SimpleFileFilter(".vcf", ".VCF"));
-
-        // Read file
-        final int returnVal = fileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-          try {
-            final List<VCard> vcards = Ezvcard.parse(fileChooser.getSelectedFile()).all();
-            vcards.forEach(tableModel::add);
-          } catch (final IOException exception) {
-            LOGGER.warn("Error importing VCards", exception);
-          }
-        }
-      });
+      // TODO: fileUploadButton listener
+      fileUploadButton.setEnabled(false);
+      // fileUploadButton.addActionListener(event -> {
+      //
+      // // Configure file chooser
+      // final JFileChooser fileChooser = new JFileChooser();
+      // fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+      // fileChooser.addChoosableFileFilter(new SimpleFileFilter(".vcf", ".VCF"));
+      //
+      // // Read file
+      // final int returnVal = fileChooser.showOpenDialog(this);
+      // if (returnVal == JFileChooser.APPROVE_OPTION) {
+      // try {
+      // final List<VCard> vcards = Ezvcard.parse(fileChooser.getSelectedFile()).all();
+      // vcards.forEach(tableModel::add);
+      // } catch (final IOException exception) {
+      // LOGGER.warn("Error importing VCards", exception);
+      // }
+      // }
+      // });
 
       final JTable myTable = UIUtils.createTable(tableModel);
 
@@ -3073,8 +3197,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create creator");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
-          final VCard newCard = editPanel.get();
-          tableModel.add(newCard);
+          final Contact newContact = editPanel.get();
+          tableModel.add(newContact);
         }
       });
 
@@ -3084,7 +3208,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         final int rowToEdit = myTable.getSelectedRow();
         if (rowToEdit != -1) {
 
-          final VCard creator = tableModel.vcards.get(rowToEdit);
+          final Contact creator = tableModel.contacts.get(rowToEdit);
 
           final EditCreatorPanel editPanel = new EditCreatorPanel();
           editPanel.init(creator);
@@ -3115,14 +3239,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       add(panel);
     }
 
-    void init(final List<VCard> vcards) {
-      tableModel.vcards.clear();
+    void init(final List<Contact> contacts) {
+      tableModel.contacts.clear();
       tableModel.setRowCount(0);
-      vcards.forEach(tableModel::add);
+      contacts.forEach(tableModel::add);
     }
   }
 
-  private class EditCreatorPanel extends EditPanel<VCard> {
+  private class EditCreatorPanel extends EditPanel<Contact> {
 
     private static final long serialVersionUID = 3472281253338213542L;
 
@@ -3141,8 +3265,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     private void createUI() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditCreatorPanel_";
 
       // Create labels
@@ -3157,62 +3280,30 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       add(northPanel);
     }
 
-    void init(final VCard creator) {
+    void init(final Contact contact) {
 
-      if (creator != null) {
-
-        StructuredName structuredName = creator.getStructuredName();
-        if (structuredName != null) {
-
-          String givenName = structuredName.getGiven();
-          if (givenName != null) {
-            givenNameField.setText(givenName);
-          }
-
-          String familyName = structuredName.getFamily();
-          if (familyName != null) {
-            familyNameField.setText(familyName);
-          }
-        }
-        if (!creator.getEmails().isEmpty())
-          contactField.setText(creator.getEmails().get(0).getValue());
+      if (contact != null) {
+        givenNameField.setText(contact.getGivenName());
+        familyNameField.setText(contact.getFamilyName());
+        contactField.setText(contact.getEmail());
       }
     }
 
     @Override
-    VCard get() {
+    Contact get() {
 
-      final VCard vCard = new VCard();
+      final Contact contact = MetadataFactory.eINSTANCE.createContact();
+      contact.setGivenName(givenNameField.getText());
+      contact.setFamilyName(familyNameField.getText());
+      contact.setEmail(contactField.getText());
 
-      String givenName = givenNameField.getText();
-      String familyName = familyNameField.getText();
-      if (!givenName.isEmpty() || !familyName.isEmpty()) {
-
-        StructuredName structuredName = new StructuredName();
-        if (!givenName.isEmpty()) {
-          structuredName.setGiven(givenName);
-        }
-
-        if (!familyName.isEmpty()) {
-          structuredName.setFamily(familyName);
-        }
-
-        vCard.setStructuredName(structuredName);
-      }
-
-      final String contactText = contactField.getText();
-      if (StringUtils.isNotEmpty(contactText)) {
-        vCard.addEmail(contactText);
-      }
-
-      return vCard;
+      return contact;
     }
 
     @Override
     List<String> validatePanel() {
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "EditCreatorPanel_";
 
       final List<String> errors = new ArrayList<>(1);
@@ -3264,15 +3355,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       productButton.addActionListener(event -> {
         EditProductPanel editProductPanel = new EditProductPanel(advancedCheckBox.isSelected());
         if (scope != null) {
-          editProductPanel.init(scope.product);
+          editProductPanel.init(scope.getProduct().get(0));
         }
         final ValidatableDialog dlg = new ValidatableDialog(editProductPanel, "Create a product");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final Product product = editProductPanel.get();
           productButton
-              .setText(String.format("%s_%s", product.environmentName, product.environmentUnit));
-          scope.product = product;
+              .setText(String.format("%s_%s", product.getProductName(), product.getProductUnit()));
+          scope.getProduct().clear();
+          scope.getProduct().add(product);
         }
       });
 
@@ -3280,14 +3372,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       hazardButton.addActionListener(event -> {
         EditHazardPanel editHazardPanel = new EditHazardPanel(advancedCheckBox.isSelected());
         if (scope != null) {
-          editHazardPanel.init(scope.hazard);
+          editHazardPanel.init(scope.getHazard().get(0));
         }
         final ValidatableDialog dlg = new ValidatableDialog(editHazardPanel, "Create a hazard");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final Hazard hazard = editHazardPanel.get();
-          hazardButton.setText(String.format("%s_%s", hazard.hazardName, hazard.hazardUnit));
-          scope.hazard = hazard;
+          hazardButton
+              .setText(String.format("%s_%s", hazard.getHazardName(), hazard.getHazardUnit()));
+          scope.getHazard().clear();
+          scope.getHazard().add(hazard);
         }
       });
 
@@ -3296,21 +3390,20 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         EditPopulationGroupPanel editPopulationGroupPanel =
             new EditPopulationGroupPanel(advancedCheckBox.isSelected());
         if (scope != null) {
-          editPopulationGroupPanel.init(scope.populationGroup);
+          editPopulationGroupPanel.init(scope.getPopulationGroup());
         }
         final ValidatableDialog dlg =
             new ValidatableDialog(editPopulationGroupPanel, "Create a Population Group");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final PopulationGroup populationGroup = editPopulationGroupPanel.get();
-          populationButton.setText(populationGroup.populationName);
-          scope.populationGroup = populationGroup;
+          populationButton.setText(populationGroup.getPopulationName());
+          scope.setPopulationGroup(populationGroup);
         }
       });
 
       // Create labels
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       final FLabel productLabel = new FLabel(bundle.getString(prefix + "productLabel"));
       final FLabel hazardLabel = new FLabel(bundle.getString(prefix + "hazardLabel"));
       final FLabel populationLabel = new FLabel(bundle.getString(prefix + "populationGroupLabel"));
@@ -3345,55 +3438,70 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         this.scope = scope;
 
-        if (StringUtils.isNoneEmpty(scope.product.environmentName, scope.product.environmentUnit)) {
-          productButton
-              .setText(scope.product.environmentName + "_" + scope.product.environmentUnit);
-        }
-        if (StringUtils.isNoneEmpty(scope.hazard.hazardName, scope.hazard.hazardUnit)) {
-          hazardButton.setText(scope.hazard.hazardName + "_" + scope.hazard.hazardUnit);
-        }
-        if (StringUtils.isNotEmpty(scope.populationGroup.populationName)) {
-          populationButton.setText(scope.populationGroup.populationName);
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+        if (scope.eIsSet(pkg.getScope_Product())) {
+          Product product = scope.getProduct().get(0);
+          productButton.setText(product.getProductName() + "_" + product.getProductUnit());
         }
 
-        if (StringUtils.isNotBlank(scope.temporalInformation)) {
+        if (scope.eIsSet(pkg.getScope_Hazard())) {
+          Hazard hazard = scope.getHazard().get(0);
+          hazardButton.setText(hazard.getHazardName() + "_" + hazard.getHazardUnit());
+        }
+
+        if (scope.eIsSet(pkg.getScope_PopulationGroup())) {
+          populationButton.setText(scope.getPopulationGroup().getPopulationName());
+        }
+
+        if (scope.eIsSet(pkg.getScope_TemporalInformation())) {
           try {
             dateChooser
-                .setDate(new SimpleDateFormat("yyyy-MM-dd").parse(scope.temporalInformation));
+                .setDate(new SimpleDateFormat("yyyy-MM-dd").parse(scope.getTemporalInformation()));
           } catch (ParseException e) {
             e.printStackTrace();
           }
         }
-        if (!scope.region.isEmpty()) {
-          regionField.setSelectedItem(scope.region.get(0));
-        }
-        if (!scope.country.isEmpty()) {
-          countryField.setSelectedItem(scope.country.get(0));
-        }
+
+        // TODO: SpatialInformation
+        // if (!scope.region.isEmpty()) {
+        // regionField.setSelectedItem(scope.region.get(0));
+        // }
+        //
+        // if (!scope.country.isEmpty()) {
+        // countryField.setSelectedItem(scope.country.get(0));
+        // }
       }
     }
 
     Scope get() {
-      final Scope scope = new Scope();
-      scope.product = this.scope.product;
-      scope.hazard = this.scope.hazard;
-      scope.populationGroup = this.scope.populationGroup;
+
+      final Scope scope = MetadataFactory.eINSTANCE.createScope();
+
+      scope.getProduct().clear();
+      scope.getProduct().addAll(this.scope.getProduct());
+
+      scope.getHazard().clear();
+      scope.getHazard().addAll(this.scope.getHazard());
+
+      scope.setPopulationGroup(this.scope.getPopulationGroup());
 
       final Date date = dateChooser.getDate();
       if (date != null) {
-        scope.temporalInformation =
-            new SimpleDateFormat(dateChooser.getDateFormatString()).format(date);
+        scope.setTemporalInformation(
+            new SimpleDateFormat(dateChooser.getDateFormatString()).format(date));
       }
 
-      final Object region = regionField.getSelectedItem();
-      if (region != null) {
-        scope.region.add((String) region);
-      }
-
-      final Object country = countryField.getSelectedItem();
-      if (country != null) {
-        scope.country.add((String) country);
-      }
+      // TODO: SpatialInformation
+      // final Object region = regionField.getSelectedItem();
+      // if (region != null) {
+      // scope.region.add((String) region);
+      // }
+      //
+      // final Object country = countryField.getSelectedItem();
+      // if (country != null) {
+      // scope.country.add((String) country);
+      // }
 
       return scope;
     }
@@ -3411,7 +3519,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     private final JButton laboratoryButton;
     private final JButton assayButton;
 
-    private DataBackground dataBackground = new DataBackground();
+    private DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
 
     DataBackgroundPanel() {
 
@@ -3421,15 +3529,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       studyButton.setToolTipText("Click me to add Study");
       studyButton.addActionListener(event -> {
         EditStudyPanel editPanel = new EditStudyPanel(advancedCheckBox.isSelected());
-        editPanel.init(dataBackground.study);
+        editPanel.init(dataBackground.getStudy());
 
         final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create Study");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           Study study = editPanel.get();
           // Update button's text
-          studyButton.setText(study.title);
-          dataBackground.study = study;
+          studyButton.setText(study.getStudyTitle());
+          dataBackground.setStudy(study);
         }
       });
 
@@ -3439,7 +3547,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         EditStudySamplePanel editStudySamplePanel =
             new EditStudySamplePanel(advancedCheckBox.isSelected());
-        editStudySamplePanel.init(dataBackground.studySample);
+        editStudySamplePanel.init(dataBackground.getStudysample().get(0));
 
         final ValidatableDialog dlg =
             new ValidatableDialog(editStudySamplePanel, "Create Study sample");
@@ -3447,9 +3555,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final StudySample studySample = editStudySamplePanel.get();
           // Update button's text
-          studySampleButton.setText(studySample.sample);
-
-          dataBackground.studySample = studySample;
+          studySampleButton.setText(studySample.getSampleName());
+          dataBackground.getStudysample().add(studySample);
         }
       });
 
@@ -3458,15 +3565,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       dietaryAssessmentMethodButton.addActionListener(event -> {
         EditDietaryAssessmentMethodPanel editPanel =
             new EditDietaryAssessmentMethodPanel(advancedCheckBox.isSelected());
-        editPanel.init(dataBackground.dietaryAssessmentMethod);
+        editPanel.init(dataBackground.getDietaryassessmentmethod());
         final ValidatableDialog dlg =
             new ValidatableDialog(editPanel, "Create dietary assessment method");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final DietaryAssessmentMethod method = editPanel.get();
           // Update button's text
-          dietaryAssessmentMethodButton.setText(method.collectionTool);
-          dataBackground.dietaryAssessmentMethod = method;
+          dietaryAssessmentMethodButton.setText(method.getCollectionTool());
+          dataBackground.setDietaryassessmentmethod(method);
         }
       });
 
@@ -3474,14 +3581,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       laboratoryButton.setToolTipText("Click me to add Laboratory");
       laboratoryButton.addActionListener(event -> {
         EditLaboratoryPanel editPanel = new EditLaboratoryPanel(advancedCheckBox.isSelected());
-        editPanel.init(dataBackground.laboratory);
+        editPanel.init(dataBackground.getLaboratory());
         ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create laboratory");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           Laboratory lab = editPanel.get();
           // Update button's text
-          laboratoryButton.setText(lab.accreditation);
-          dataBackground.laboratory = lab;
+          laboratoryButton.setText(lab.getLaboratoryAccreditation().get(0));
+          dataBackground.setLaboratory(lab);
         }
       });
 
@@ -3489,18 +3596,17 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       assayButton.setToolTipText("Click me to add Assay");
       assayButton.addActionListener(event -> {
         EditAssayPanel editPanel = new EditAssayPanel(advancedCheckBox.isSelected());
-        editPanel.init(dataBackground.assay);
+        editPanel.init(dataBackground.getAssay().get(0));
         final ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create assay");
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final Assay assay = editPanel.get();
           // Update button's text
-          assayButton.setText(assay.name);
-          dataBackground.assay = assay;
+          assayButton.setText(assay.getAssayName());
+          dataBackground.getAssay().add(assay);
         }
       });
 
-      ResourceBundle bundle =
-          ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
+      ResourceBundle bundle = ResourceBundle.getBundle("EditorNodeBundle", new UTF8Control());
       String prefix = "DataBackgroundPanel_";
       FLabel studyLabel = new FLabel(bundle.getString(prefix + "studyLabel"));
       FLabel studySampleLabel = new FLabel(bundle.getString(prefix + "studySampleLabel"));
@@ -3527,34 +3633,52 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
     void init(final DataBackground dataBackground) {
 
-      this.dataBackground = dataBackground;
+      if (dataBackground != null) {
+        this.dataBackground = dataBackground;
 
-      if (StringUtils.isNotEmpty(dataBackground.study.title)) {
-        studyButton.setText(dataBackground.study.title);
-      }
-      if (StringUtils.isNotEmpty(dataBackground.studySample.sample)) {
-        studySampleButton.setText(dataBackground.studySample.sample);
-      }
-      if (StringUtils.isNotEmpty(dataBackground.dietaryAssessmentMethod.collectionTool)) {
-        dietaryAssessmentMethodButton
-            .setText(dataBackground.dietaryAssessmentMethod.collectionTool);
-      }
-      if (StringUtils.isNotEmpty(dataBackground.laboratory.accreditation)) {
-        laboratoryButton.setText(dataBackground.laboratory.accreditation);
-      }
-      if (StringUtils.isNotEmpty(dataBackground.assay.name)) {
-        assayButton.setText(dataBackground.assay.name);
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+        if (dataBackground.eIsSet(pkg.getDataBackground_Study())
+            && dataBackground.getStudy().eIsSet(pkg.getStudy_StudyTitle())) {
+          String studyTitle = dataBackground.getStudy().getStudyTitle();
+          studyButton.setText(studyTitle);
+        }
+
+        if (dataBackground.eIsSet(pkg.getDataBackground_Studysample())
+            && dataBackground.getStudysample().get(0).eIsSet(pkg.getStudySample_SampleName())) {
+          String sampleName = dataBackground.getStudysample().get(0).getSampleName();
+          studySampleButton.setText(sampleName);
+        }
+
+        if (dataBackground.eIsSet(pkg.getDataBackground_Dietaryassessmentmethod()) && dataBackground
+            .getDietaryassessmentmethod().eIsSet(pkg.getDietaryAssessmentMethod_CollectionTool())) {
+          String collectionTool = dataBackground.getDietaryassessmentmethod().getCollectionTool();
+          dietaryAssessmentMethodButton.setText(collectionTool);
+        }
+
+        if (dataBackground.eIsSet(pkg.getDataBackground_Laboratory())
+            && dataBackground.getLaboratory().eIsSet(pkg.getLaboratory_LaboratoryAccreditation())) {
+          String laboratoryAccreditation =
+              dataBackground.getLaboratory().getLaboratoryAccreditation().get(0);
+          laboratoryButton.setText(laboratoryAccreditation);
+        }
+
+        if (dataBackground.eIsSet(pkg.getDataBackground_Assay())
+            && dataBackground.getAssay().get(0).eIsSet(pkg.getAssay_AssayName())) {
+          String assayName = dataBackground.getAssay().get(0).getAssayName();
+          assayButton.setText(assayName);
+        }
       }
     }
 
     DataBackground get() {
-      final DataBackground dataBackground = new DataBackground();
 
-      dataBackground.study = this.dataBackground.study;
-      dataBackground.studySample = this.dataBackground.studySample;
-      dataBackground.dietaryAssessmentMethod = this.dataBackground.dietaryAssessmentMethod;
-      dataBackground.laboratory = this.dataBackground.laboratory;
-      dataBackground.assay = this.dataBackground.assay;
+      final DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
+      dataBackground.setStudy(this.dataBackground.getStudy());
+      dataBackground.getStudysample().addAll(this.dataBackground.getStudysample());
+      dataBackground.setDietaryassessmentmethod(this.dataBackground.getDietaryassessmentmethod());
+      dataBackground.setLaboratory(this.dataBackground.getLaboratory());
+      dataBackground.getAssay().addAll(this.dataBackground.getAssay());
 
       return dataBackground;
     }
@@ -3593,18 +3717,26 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       if (modelMath != null) {
 
-        parametersPanel.init(modelMath.parameter);
+        parametersPanel.init(modelMath.getParameter());
 
-        // Initialize SSE, MSE, R2, RMSE, AIC and BIC
-        qualityMeasuresPanel.sseSpinnerModel.setValue(modelMath.sse);
-        qualityMeasuresPanel.mseSpinnerModel.setValue(modelMath.mse);
-        qualityMeasuresPanel.r2SpinnerModel.setValue(modelMath.rSquared);
-        qualityMeasuresPanel.rmseSpinnerModel.setValue(modelMath.rmse);
-        qualityMeasuresPanel.aicSpinnerModel.setValue(modelMath.aic);
-        qualityMeasuresPanel.bicSpinnerModel.setValue(modelMath.bic);
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
+        if (modelMath.eIsSet(pkg.getModelMath_QualityMeasures())) {
+          String qualityMeasuresString = modelMath.getQualityMeasures().get(0);
+
+          JsonObject qualityMeasures =
+              Json.createReader(new StringReader(qualityMeasuresString)).readObject();
+
+          // Initialize SSE, MSE, R2, RMSE, AIC and BIC
+          qualityMeasuresPanel.sseSpinnerModel.setValue(getUncertainty(qualityMeasures, "SSE"));
+          qualityMeasuresPanel.mseSpinnerModel.setValue(getUncertainty(qualityMeasures, "MSE"));
+          qualityMeasuresPanel.rmseSpinnerModel.setValue(getUncertainty(qualityMeasures, "RMSE"));
+          qualityMeasuresPanel.r2SpinnerModel.setValue(getUncertainty(qualityMeasures, "Rsquared"));
+          qualityMeasuresPanel.aicSpinnerModel.setValue(getUncertainty(qualityMeasures, "AIC"));
+          qualityMeasuresPanel.bicSpinnerModel.setValue(getUncertainty(qualityMeasures, "BIC"));
+        }
 
         // Initialize model equations
-        modelEquationsPanel.init(modelMath.modelEquation);
+        modelEquationsPanel.init(modelMath.getModelEquation());
 
         // TODO: init fitting procedure
         // TODO: init exposure
@@ -3615,27 +3747,37 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     ModelMath get() {
 
-      final ModelMath modelMath = new ModelMath();
+      final ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
 
       // Save parameters
-      modelMath.parameter.addAll(parametersPanel.tableModel.parameters);
+      modelMath.getParameter().addAll(parametersPanel.tableModel.parameters);
 
       // Save SSE, MSE, R2, RMSE, AIC and BIC
-      modelMath.sse = qualityMeasuresPanel.sseSpinnerModel.getNumber().doubleValue();
-      modelMath.mse = qualityMeasuresPanel.mseSpinnerModel.getNumber().doubleValue();
-      modelMath.rSquared = qualityMeasuresPanel.r2SpinnerModel.getNumber().doubleValue();
-      modelMath.rmse = qualityMeasuresPanel.rmseSpinnerModel.getNumber().doubleValue();
-      modelMath.aic = qualityMeasuresPanel.aicSpinnerModel.getNumber().doubleValue();
-      modelMath.bic = qualityMeasuresPanel.bicSpinnerModel.getNumber().doubleValue();
+      JsonObject qualityMeasures = Json.createObjectBuilder()
+          .add("SSE", qualityMeasuresPanel.sseSpinnerModel.getNumber().doubleValue())
+          .add("MSE", qualityMeasuresPanel.mseSpinnerModel.getNumber().doubleValue())
+          .add("RMSE", qualityMeasuresPanel.rmseSpinnerModel.getNumber().doubleValue())
+          .add("Rsquared", qualityMeasuresPanel.r2SpinnerModel.getNumber().doubleValue())
+          .add("AIC", qualityMeasuresPanel.aicSpinnerModel.getNumber().doubleValue())
+          .add("BIC", qualityMeasuresPanel.bicSpinnerModel.getNumber().doubleValue()).build();
+      modelMath.getQualityMeasures().add(qualityMeasures.toString());
 
       // Save model equations
-      modelMath.modelEquation.addAll(modelEquationsPanel.tableModel.equations);
+      modelMath.getModelEquation().addAll(modelEquationsPanel.tableModel.equations);
 
       // TODO: Save fitting procedure
       // TODO: Save exposure
       // TODO: Save events
 
       return modelMath;
+    }
+
+    private double getUncertainty(JsonObject object, String key) {
+      try {
+        return object.getJsonNumber(key).doubleValue();
+      } catch (ClassCastException exception) {
+        return 0.0;
+      }
     }
   }
 
@@ -3671,18 +3813,19 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
         parameters.add(param);
 
-        addRow(new String[] {param.id, param.name, param.unit, param.unitCategory,
-            param.dataType.toString()});
+        addRow(new String[] {param.getParameterID(), param.getParameterName(),
+            param.getParameterUnit(), param.getParameterUnitCategory(),
+            param.getParameterDataType().name()});
       }
 
       void modify(final int rowNumber, final Parameter param) {
         parameters.set(rowNumber, param);
 
-        setValueAt(param.id, rowNumber, 0);
-        setValueAt(param.name, rowNumber, 1);
-        setValueAt(param.unit, rowNumber, 2);
-        setValueAt(param.unitCategory, rowNumber, 3);
-        setValueAt(param.dataType, rowNumber, 4);
+        setValueAt(param.getParameterID(), rowNumber, 0);
+        setValueAt(param.getParameterName(), rowNumber, 1);
+        setValueAt(param.getParameterUnit(), rowNumber, 2);
+        setValueAt(param.getParameterUnitCategory(), rowNumber, 3);
+        setValueAt(param.getParameterDataType(), rowNumber, 4);
       }
 
       void remove(final int rowNumber) {
@@ -3833,14 +3976,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
         equations.add(equation);
 
-        addRow(new String[] {equation.equationName, equation.equation});
+        addRow(new String[] {equation.getModelEquationName(), equation.getModelEquation()});
       }
 
       void modify(final int rowNumber, final ModelEquation equation) {
         equations.set(rowNumber, equation);
 
-        setValueAt(equation.equationName, rowNumber, 0);
-        setValueAt(equation.equation, rowNumber, 1);
+        setValueAt(equation.getModelEquationName(), rowNumber, 0);
+        setValueAt(equation.getModelEquation(), rowNumber, 1);
       }
 
       void remove(final int rowNumber) {

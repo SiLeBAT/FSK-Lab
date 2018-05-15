@@ -42,6 +42,7 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
@@ -52,9 +53,13 @@ import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
+import metadata.DataBackground;
+import metadata.GeneralInformation;
+import metadata.MetadataFactory;
+import metadata.ModelMath;
+import metadata.Scope;
 
 class ReaderNodeModel extends NoInternalsModel {
 
@@ -103,7 +108,12 @@ class ReaderNodeModel extends NoInternalsModel {
     String paramScript = "";
     String visualizationScript = "";
     File workspace = null; // null if missing
-    GenericModel genericModel = null; // null if missing
+
+    GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
+    Scope scope = MetadataFactory.eINSTANCE.createScope();
+    DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
+    ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
+
     List<FskSimulation> simulations = new ArrayList<>();
 
     try (final CombineArchive archive = new CombineArchive(file)) {
@@ -144,8 +154,13 @@ class ReaderNodeModel extends NoInternalsModel {
         jsonEntry.extractFile(temp.toFile());
 
         // Loads metadata from temporary file
-        ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-        genericModel = objectMapper.readValue(temp.toFile(), GenericModel.class);
+        ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+        JsonNode modelNode = mapper.readTree(temp.toFile());
+        generalInformation =
+            mapper.treeToValue(modelNode.get("generalInformation"), GeneralInformation.class);
+        scope = mapper.treeToValue(modelNode.get("scope"), Scope.class);
+        dataBackground = mapper.treeToValue(modelNode.get("dataBackground"), DataBackground.class);
+        modelMath = mapper.treeToValue(modelNode.get("modelMath"), ModelMath.class);
 
         Files.delete(temp); // Deletes temporary file
       }
@@ -169,10 +184,6 @@ class ReaderNodeModel extends NoInternalsModel {
         SedML sedml = Libsedml.readDocument(simulationsFile).getSedMLModel();
         simulations.addAll(loadSimulations(sedml));
       }
-    }
-
-    if (genericModel == null) {
-      throw new InvalidSettingsException("Missing model meta data");
     }
 
     final Set<File> libFiles = new HashSet<>();
@@ -207,7 +218,8 @@ class ReaderNodeModel extends NoInternalsModel {
 
     Path workspacePath = workspace == null ? null : workspace.toPath();
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
-        genericModel, workspacePath, libFiles, workingDirectory);
+        generalInformation, scope, dataBackground, modelMath, workspacePath, libFiles,
+        workingDirectory);
     fskObj.simulations.addAll(simulations);
 
     return new PortObject[] {fskObj};

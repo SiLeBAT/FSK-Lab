@@ -1,49 +1,54 @@
 <?xml version="1.0" encoding="ASCII"?>
-<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_Qe5QYEh5EeiIoYnPwpYKNg" name="StudySample" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
+<org.eclipse.emf.ecp.view.model:View xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.eclipse.emf.ecp.view.model="http://org/eclipse/emf/ecp/view/model/170" xmi:id="_5fydYFNaEeiq2ZPtzKZg8g" name="StudySample" ecorePath="/de.bund.bfr.knime.fsklab.metadata.model/model/metadata.ecore">
   <rootEClass href="http://www.example.org/metadata#//StudySample"/>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qe5QYUh5EeiIoYnPwpYKNg" name="Control sample">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qe5QYkh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/sample"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5f05oFNaEeiq2ZPtzKZg8g" name="Control sampleName">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5f05oVNaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/sampleName"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qe5QY0h5EeiIoYnPwpYKNg" name="Control collectionProtocol">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qe5QZEh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/collectionProtocol"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5f05olNaEeiq2ZPtzKZg8g" name="Control protocolOfSampleCollection">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5f05o1NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/protocolOfSampleCollection"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qe5QZUh5EeiIoYnPwpYKNg" name="Control samplingStrategy">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qe5QZkh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5f05pFNaEeiq2ZPtzKZg8g" name="Control samplingStrategy">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5f05pVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/samplingStrategy"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qe5QZ0h5EeiIoYnPwpYKNg" name="Control samplingProgramType">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qe5QaEh5EeiIoYnPwpYKNg">
-      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/samplingProgramType"/>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5f05plNaEeiq2ZPtzKZg8g" name="Control typeOfSamplingProgram">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5f05p1NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/typeOfSamplingProgram"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qe5QaUh5EeiIoYnPwpYKNg" name="Control samplingMethod">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qe5Qakh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5f05qFNaEeiq2ZPtzKZg8g" name="Control samplingMethod">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5f05qVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/samplingMethod"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qe5Qa0h5EeiIoYnPwpYKNg" name="Control samplingPlan">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qe5QbEh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5f05qlNaEeiq2ZPtzKZg8g" name="Control samplingPlan">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5f05q1NaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/samplingPlan"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qe5QbUh5EeiIoYnPwpYKNg" name="Control samplingWeight">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qe5Qbkh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5f05rFNaEeiq2ZPtzKZg8g" name="Control samplingWeight">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5f05rVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/samplingWeight"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qe5Qb0h5EeiIoYnPwpYKNg" name="Control samplingSize">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qe5QcEh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5f05rlNaEeiq2ZPtzKZg8g" name="Control samplingSize">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5f05r1NaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/samplingSize"/>
     </domainModelReference>
   </children>
-  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_Qe5QcUh5EeiIoYnPwpYKNg" name="Control lotSizeUnit">
-    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_Qe5Qckh5EeiIoYnPwpYKNg">
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5f05sFNaEeiq2ZPtzKZg8g" name="Control lotSizeUnit">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5f05sVNaEeiq2ZPtzKZg8g">
       <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/lotSizeUnit"/>
+    </domainModelReference>
+  </children>
+  <children xsi:type="org.eclipse.emf.ecp.view.model:Control" xmi:id="_5f05slNaEeiq2ZPtzKZg8g" name="Control samplingPoint">
+    <domainModelReference xsi:type="org.eclipse.emf.ecp.view.model:FeaturePathDomainModelReference" xmi:id="_5f05s1NaEeiq2ZPtzKZg8g">
+      <domainModelEFeature xsi:type="ecore:EAttribute" href="http://www.example.org/metadata#//StudySample/samplingPoint"/>
     </domainModelReference>
   </children>
 </org.eclipse.emf.ecp.view.model:View>
