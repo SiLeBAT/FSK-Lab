@@ -90,6 +90,8 @@ import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.knime.fsklab.util.UTF8Control;
+import ezvcard.Ezvcard;
+import ezvcard.VCard;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;
@@ -3235,26 +3237,29 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           "Creators"));
 
       final JButton fileUploadButton = UIUtils.createFileUploadButton();
-      // TODO: fileUploadButton listener
-      fileUploadButton.setEnabled(false);
-      // fileUploadButton.addActionListener(event -> {
-      //
-      // // Configure file chooser
-      // final JFileChooser fileChooser = new JFileChooser();
-      // fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-      // fileChooser.addChoosableFileFilter(new SimpleFileFilter(".vcf", ".VCF"));
-      //
-      // // Read file
-      // final int returnVal = fileChooser.showOpenDialog(this);
-      // if (returnVal == JFileChooser.APPROVE_OPTION) {
-      // try {
-      // final List<VCard> vcards = Ezvcard.parse(fileChooser.getSelectedFile()).all();
-      // vcards.forEach(tableModel::add);
-      // } catch (final IOException exception) {
-      // LOGGER.warn("Error importing VCards", exception);
-      // }
-      // }
-      // });
+      fileUploadButton.addActionListener(event -> {
+
+        // Configure file chooser
+        final JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.addChoosableFileFilter(new SimpleFileFilter(".vcf", ".VCF"));
+
+        // Read file
+        final int returnVal = fileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+          try {
+            // Import VCards from selected file
+            List<VCard> vcards = Ezvcard.parse(fileChooser.getSelectedFile()).all();
+            // Convert to Contact
+            List<Contact> contacts =
+                vcards.stream().map(RakipUtil::convert).collect(Collectors.toList());
+            // Add converted contacts
+            contacts.forEach(tableModel::add);
+          } catch (final IOException exception) {
+            LOGGER.warn("Error importing VCards", exception);
+          }
+        }
+      });
 
       final JTable myTable = UIUtils.createTable(tableModel);
 
