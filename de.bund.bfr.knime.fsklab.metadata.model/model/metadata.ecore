@@ -278,27 +278,28 @@
     <eLiterals name="HEAR" value="30" literal="Hearing"/>
     <eLiterals name="ICOMM" value="31" literal="Internet Communication"/>
     <eLiterals name="INPR" value="32" literal="In Press"/>
-    <eLiterals name="JFULL" value="33" literal="Journal (full)"/>
-    <eLiterals name="LEGAL" value="34" literal="Legal Rule or Regulation"/>
-    <eLiterals name="MANSCPT" value="35" literal="Manuscript"/>
-    <eLiterals name="MAP" value="36" literal="Map"/>
-    <eLiterals name="MGZN" value="37" literal="Magazine article"/>
-    <eLiterals name="MPCT" value="38" literal="Motion picture"/>
-    <eLiterals name="MULTI" value="39" literal="Online Multimedia"/>
-    <eLiterals name="MUSIC" value="40" literal="Music score"/>
-    <eLiterals name="NEWS" value="41" literal="Newspaper"/>
-    <eLiterals name="PAMP" value="42" literal="Pamphlet"/>
-    <eLiterals name="PAT" value="43" literal="Patent"/>
-    <eLiterals name="PCOMM" value="44" literal="Personal communication"/>
-    <eLiterals name="RPRT" value="45" literal="Report"/>
-    <eLiterals name="SER" value="46" literal="Serial publication"/>
-    <eLiterals name="SLIDE" value="47" literal="Slide"/>
-    <eLiterals name="SOUND" value="48" literal="Sound recording"/>
-    <eLiterals name="STAND" value="49" literal="Standard"/>
-    <eLiterals name="STAT" value="50" literal="Statute"/>
-    <eLiterals name="THES" value="51" literal="Thesis/Dissertation"/>
-    <eLiterals name="UNPB" value="52" literal="Unpublished work"/>
-    <eLiterals name="VIDEO" value="53" literal="Video recording"/>
+    <eLiterals name="JOUR" value="33" literal="Journal"/>
+    <eLiterals name="JFULL" value="34" literal="Journal (full)"/>
+    <eLiterals name="LEGAL" value="35" literal="Legal Rule or Regulation"/>
+    <eLiterals name="MANSCPT" value="36" literal="Manuscript"/>
+    <eLiterals name="MAP" value="37" literal="Map"/>
+    <eLiterals name="MGZN" value="38" literal="Magazine article"/>
+    <eLiterals name="MPCT" value="39" literal="Motion picture"/>
+    <eLiterals name="MULTI" value="40" literal="Online Multimedia"/>
+    <eLiterals name="MUSIC" value="41" literal="Music score"/>
+    <eLiterals name="NEWS" value="42" literal="Newspaper"/>
+    <eLiterals name="PAMP" value="43" literal="Pamphlet"/>
+    <eLiterals name="PAT" value="44" literal="Patent"/>
+    <eLiterals name="PCOMM" value="45" literal="Personal communication"/>
+    <eLiterals name="RPRT" value="46" literal="Report"/>
+    <eLiterals name="SER" value="47" literal="Serial publication"/>
+    <eLiterals name="SLIDE" value="48" literal="Slide"/>
+    <eLiterals name="SOUND" value="49" literal="Sound recording"/>
+    <eLiterals name="STAND" value="50" literal="Standard"/>
+    <eLiterals name="STAT" value="51" literal="Statute"/>
+    <eLiterals name="THES" value="52" literal="Thesis/Dissertation"/>
+    <eLiterals name="UNPB" value="53" literal="Unpublished work"/>
+    <eLiterals name="VIDEO" value="54" literal="Video recording"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelMath">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fittingProcedure" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

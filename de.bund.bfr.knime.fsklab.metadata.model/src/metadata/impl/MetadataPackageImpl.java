@@ -2712,6 +2712,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 		addEEnumLiteral(publicationTypeEEnum, PublicationType.HEAR);
 		addEEnumLiteral(publicationTypeEEnum, PublicationType.ICOMM);
 		addEEnumLiteral(publicationTypeEEnum, PublicationType.INPR);
+		addEEnumLiteral(publicationTypeEEnum, PublicationType.JOUR);
 		addEEnumLiteral(publicationTypeEEnum, PublicationType.JFULL);
 		addEEnumLiteral(publicationTypeEEnum, PublicationType.LEGAL);
 		addEEnumLiteral(publicationTypeEEnum, PublicationType.MANSCPT);

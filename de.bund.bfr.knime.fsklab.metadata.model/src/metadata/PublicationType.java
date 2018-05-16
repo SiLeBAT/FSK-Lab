@@ -349,6 +349,14 @@ public enum PublicationType implements Enumerator {
 	INPR(32, "INPR", "In Press"),
 
 	/**
+	 * The '<em><b>JOUR</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #JOUR_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	JOUR(33, "JOUR", "Journal"), /**
 	 * The '<em><b>JFULL</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -356,7 +364,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	JFULL(33, "JFULL", "Journal (full)"),
+	JFULL(34, "JFULL", "Journal (full)"),
 
 	/**
 	 * The '<em><b>LEGAL</b></em>' literal object.
@@ -366,7 +374,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	LEGAL(34, "LEGAL", "Legal Rule or Regulation"),
+	LEGAL(35, "LEGAL", "Legal Rule or Regulation"),
 
 	/**
 	 * The '<em><b>MANSCPT</b></em>' literal object.
@@ -376,7 +384,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	MANSCPT(35, "MANSCPT", "Manuscript"),
+	MANSCPT(36, "MANSCPT", "Manuscript"),
 
 	/**
 	 * The '<em><b>MAP</b></em>' literal object.
@@ -386,7 +394,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	MAP(36, "MAP", "Map"),
+	MAP(37, "MAP", "Map"),
 
 	/**
 	 * The '<em><b>MGZN</b></em>' literal object.
@@ -396,7 +404,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	MGZN(37, "MGZN", "Magazine article"),
+	MGZN(38, "MGZN", "Magazine article"),
 
 	/**
 	 * The '<em><b>MPCT</b></em>' literal object.
@@ -406,7 +414,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	MPCT(38, "MPCT", "Motion picture"),
+	MPCT(39, "MPCT", "Motion picture"),
 
 	/**
 	 * The '<em><b>MULTI</b></em>' literal object.
@@ -416,7 +424,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	MULTI(39, "MULTI", "Online Multimedia"),
+	MULTI(40, "MULTI", "Online Multimedia"),
 
 	/**
 	 * The '<em><b>MUSIC</b></em>' literal object.
@@ -426,7 +434,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	MUSIC(40, "MUSIC", "Music score"),
+	MUSIC(41, "MUSIC", "Music score"),
 
 	/**
 	 * The '<em><b>NEWS</b></em>' literal object.
@@ -436,7 +444,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	NEWS(41, "NEWS", "Newspaper"),
+	NEWS(42, "NEWS", "Newspaper"),
 
 	/**
 	 * The '<em><b>PAMP</b></em>' literal object.
@@ -446,7 +454,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	PAMP(42, "PAMP", "Pamphlet"),
+	PAMP(43, "PAMP", "Pamphlet"),
 
 	/**
 	 * The '<em><b>PAT</b></em>' literal object.
@@ -456,7 +464,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	PAT(43, "PAT", "Patent"),
+	PAT(44, "PAT", "Patent"),
 
 	/**
 	 * The '<em><b>PCOMM</b></em>' literal object.
@@ -466,7 +474,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	PCOMM(44, "PCOMM", "Personal communication"),
+	PCOMM(45, "PCOMM", "Personal communication"),
 
 	/**
 	 * The '<em><b>RPRT</b></em>' literal object.
@@ -476,7 +484,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	RPRT(45, "RPRT", "Report"),
+	RPRT(46, "RPRT", "Report"),
 
 	/**
 	 * The '<em><b>SER</b></em>' literal object.
@@ -486,7 +494,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	SER(46, "SER", "Serial publication"),
+	SER(47, "SER", "Serial publication"),
 
 	/**
 	 * The '<em><b>SLIDE</b></em>' literal object.
@@ -496,7 +504,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	SLIDE(47, "SLIDE", "Slide"),
+	SLIDE(48, "SLIDE", "Slide"),
 
 	/**
 	 * The '<em><b>SOUND</b></em>' literal object.
@@ -506,7 +514,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	SOUND(48, "SOUND", "Sound recording"),
+	SOUND(49, "SOUND", "Sound recording"),
 
 	/**
 	 * The '<em><b>STAND</b></em>' literal object.
@@ -516,7 +524,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	STAND(49, "STAND", "Standard"),
+	STAND(50, "STAND", "Standard"),
 
 	/**
 	 * The '<em><b>STAT</b></em>' literal object.
@@ -526,7 +534,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	STAT(50, "STAT", "Statute"),
+	STAT(51, "STAT", "Statute"),
 
 	/**
 	 * The '<em><b>THES</b></em>' literal object.
@@ -536,7 +544,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	THES(51, "THES", "Thesis/Dissertation"),
+	THES(52, "THES", "Thesis/Dissertation"),
 
 	/**
 	 * The '<em><b>UNPB</b></em>' literal object.
@@ -546,7 +554,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	UNPB(52, "UNPB", "Unpublished work"),
+	UNPB(53, "UNPB", "Unpublished work"),
 
 	/**
 	 * The '<em><b>VIDEO</b></em>' literal object.
@@ -556,7 +564,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	VIDEO(53, "VIDEO", "Video recording");
+	VIDEO(54, "VIDEO", "Video recording");
 
 	/**
 	 * The '<em><b>ABST</b></em>' literal value.
@@ -1054,6 +1062,21 @@ public enum PublicationType implements Enumerator {
 	public static final int INPR_VALUE = 32;
 
 	/**
+	 * The '<em><b>JOUR</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>JOUR</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #JOUR
+	 * @model literal="Journal"
+	 * @generated
+	 * @ordered
+	 */
+	public static final int JOUR_VALUE = 33;
+
+	/**
 	 * The '<em><b>JFULL</b></em>' literal value.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -1066,7 +1089,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int JFULL_VALUE = 33;
+	public static final int JFULL_VALUE = 34;
 
 	/**
 	 * The '<em><b>LEGAL</b></em>' literal value.
@@ -1081,7 +1104,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int LEGAL_VALUE = 34;
+	public static final int LEGAL_VALUE = 35;
 
 	/**
 	 * The '<em><b>MANSCPT</b></em>' literal value.
@@ -1096,7 +1119,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int MANSCPT_VALUE = 35;
+	public static final int MANSCPT_VALUE = 36;
 
 	/**
 	 * The '<em><b>MAP</b></em>' literal value.
@@ -1111,7 +1134,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int MAP_VALUE = 36;
+	public static final int MAP_VALUE = 37;
 
 	/**
 	 * The '<em><b>MGZN</b></em>' literal value.
@@ -1126,7 +1149,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int MGZN_VALUE = 37;
+	public static final int MGZN_VALUE = 38;
 
 	/**
 	 * The '<em><b>MPCT</b></em>' literal value.
@@ -1141,7 +1164,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int MPCT_VALUE = 38;
+	public static final int MPCT_VALUE = 39;
 
 	/**
 	 * The '<em><b>MULTI</b></em>' literal value.
@@ -1156,7 +1179,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int MULTI_VALUE = 39;
+	public static final int MULTI_VALUE = 40;
 
 	/**
 	 * The '<em><b>MUSIC</b></em>' literal value.
@@ -1171,7 +1194,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int MUSIC_VALUE = 40;
+	public static final int MUSIC_VALUE = 41;
 
 	/**
 	 * The '<em><b>NEWS</b></em>' literal value.
@@ -1186,7 +1209,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int NEWS_VALUE = 41;
+	public static final int NEWS_VALUE = 42;
 
 	/**
 	 * The '<em><b>PAMP</b></em>' literal value.
@@ -1201,7 +1224,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PAMP_VALUE = 42;
+	public static final int PAMP_VALUE = 43;
 
 	/**
 	 * The '<em><b>PAT</b></em>' literal value.
@@ -1216,7 +1239,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PAT_VALUE = 43;
+	public static final int PAT_VALUE = 44;
 
 	/**
 	 * The '<em><b>PCOMM</b></em>' literal value.
@@ -1231,7 +1254,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int PCOMM_VALUE = 44;
+	public static final int PCOMM_VALUE = 45;
 
 	/**
 	 * The '<em><b>RPRT</b></em>' literal value.
@@ -1246,7 +1269,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int RPRT_VALUE = 45;
+	public static final int RPRT_VALUE = 46;
 
 	/**
 	 * The '<em><b>SER</b></em>' literal value.
@@ -1261,7 +1284,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int SER_VALUE = 46;
+	public static final int SER_VALUE = 47;
 
 	/**
 	 * The '<em><b>SLIDE</b></em>' literal value.
@@ -1276,7 +1299,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int SLIDE_VALUE = 47;
+	public static final int SLIDE_VALUE = 48;
 
 	/**
 	 * The '<em><b>SOUND</b></em>' literal value.
@@ -1291,7 +1314,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int SOUND_VALUE = 48;
+	public static final int SOUND_VALUE = 49;
 
 	/**
 	 * The '<em><b>STAND</b></em>' literal value.
@@ -1306,7 +1329,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int STAND_VALUE = 49;
+	public static final int STAND_VALUE = 50;
 
 	/**
 	 * The '<em><b>STAT</b></em>' literal value.
@@ -1321,7 +1344,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int STAT_VALUE = 50;
+	public static final int STAT_VALUE = 51;
 
 	/**
 	 * The '<em><b>THES</b></em>' literal value.
@@ -1336,7 +1359,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int THES_VALUE = 51;
+	public static final int THES_VALUE = 52;
 
 	/**
 	 * The '<em><b>UNPB</b></em>' literal value.
@@ -1351,7 +1374,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int UNPB_VALUE = 52;
+	public static final int UNPB_VALUE = 53;
 
 	/**
 	 * The '<em><b>VIDEO</b></em>' literal value.
@@ -1366,7 +1389,7 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int VIDEO_VALUE = 53;
+	public static final int VIDEO_VALUE = 54;
 
 	/**
 	 * An array of all the '<em><b>Publication Type</b></em>' enumerators.
@@ -1409,6 +1432,7 @@ public enum PublicationType implements Enumerator {
 			HEAR,
 			ICOMM,
 			INPR,
+			JOUR,
 			JFULL,
 			LEGAL,
 			MANSCPT,
@@ -1519,6 +1543,7 @@ public enum PublicationType implements Enumerator {
 			case HEAR_VALUE: return HEAR;
 			case ICOMM_VALUE: return ICOMM;
 			case INPR_VALUE: return INPR;
+			case JOUR_VALUE: return JOUR;
 			case JFULL_VALUE: return JFULL;
 			case LEGAL_VALUE: return LEGAL;
 			case MANSCPT_VALUE: return MANSCPT;
