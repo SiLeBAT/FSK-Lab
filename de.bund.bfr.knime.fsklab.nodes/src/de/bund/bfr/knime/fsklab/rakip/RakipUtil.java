@@ -92,7 +92,7 @@ public class RakipUtil {
    * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.ModelCategory} to an EMF
    * {@link metadata.ModelCategory}.
    */
-  private static metadata.ModelCategory convert(ModelCategory deprecatedModelCategory) {
+  public static metadata.ModelCategory convert(ModelCategory deprecatedModelCategory) {
 
     metadata.ModelCategory modelCategory = MetadataFactory.eINSTANCE.createModelCategory();
 
@@ -122,7 +122,7 @@ public class RakipUtil {
    * Convert RIS reference, {@link com.gmail.gcolaianni5.jris.bean.Record} to an EMF
    * {@link metadata.Reference}.
    */
-  private static metadata.Reference convert(com.gmail.gcolaianni5.jris.bean.Record record) {
+  public static metadata.Reference convert(com.gmail.gcolaianni5.jris.bean.Record record) {
 
     metadata.Reference reference = MetadataFactory.eINSTANCE.createReference();
 
@@ -245,7 +245,7 @@ public class RakipUtil {
    * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.Product} to an EMF
    * {@link metadata.Product}.
    */
-  private static metadata.Product convert(Product deprecatedProduct) {
+  public static metadata.Product convert(Product deprecatedProduct) {
 
     metadata.Product product = MetadataFactory.eINSTANCE.createProduct();
 
@@ -305,7 +305,7 @@ public class RakipUtil {
    * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.Hazard} to an EMF
    * {@link metadata.Hazard}.
    */
-  private static metadata.Hazard convert(Hazard deprecatedHazard) {
+  public static metadata.Hazard convert(Hazard deprecatedHazard) {
 
     metadata.Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
 
@@ -368,7 +368,7 @@ public class RakipUtil {
    * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.PopulationGroup} to an EMF
    * {@link metadata.PopulationGroup}.
    */
-  private static metadata.PopulationGroup convert(PopulationGroup deprecatedPopulationGroup) {
+  public static metadata.PopulationGroup convert(PopulationGroup deprecatedPopulationGroup) {
 
     metadata.PopulationGroup populationGroup = MetadataFactory.eINSTANCE.createPopulationGroup();
 
@@ -441,7 +441,7 @@ public class RakipUtil {
    * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.Study} to an EMF
    * {@link metadata.Study}.
    */
-  private static metadata.Study convert(Study deprecatedStudy) {
+  public static metadata.Study convert(Study deprecatedStudy) {
 
     metadata.Study study = MetadataFactory.eINSTANCE.createStudy();
 
@@ -516,7 +516,7 @@ public class RakipUtil {
    * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.StudySample} to an EMF
    * {@link metadata.StudySample}.
    */
-  private static metadata.StudySample convert(StudySample deprecatedStudySample) {
+  public static metadata.StudySample convert(StudySample deprecatedStudySample) {
 
     metadata.StudySample studySample = MetadataFactory.eINSTANCE.createStudySample();
 
@@ -567,7 +567,7 @@ public class RakipUtil {
    * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod} to an
    * EMF {@link metadata.DietaryAssessmentMethod}.
    */
-  private static metadata.DietaryAssessmentMethod convert(
+  public static metadata.DietaryAssessmentMethod convert(
       DietaryAssessmentMethod deprecatedDietaryAssessmentMethod) {
 
     metadata.DietaryAssessmentMethod dietaryAssessmentMethod =
@@ -609,7 +609,7 @@ public class RakipUtil {
    * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.Laboratory} to an EMF
    * {@link metadata.Laboratory}.
    */
-  private static metadata.Laboratory convert(Laboratory deprecatedLaboratory) {
+  public static metadata.Laboratory convert(Laboratory deprecatedLaboratory) {
 
     metadata.Laboratory laboratory = MetadataFactory.eINSTANCE.createLaboratory();
 
@@ -634,7 +634,7 @@ public class RakipUtil {
    * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.Assay} to an EMF
    * {@link metadata.Assay}.
    */
-  private static metadata.Assay convert(Assay deprecatedAssay) {
+  public static metadata.Assay convert(Assay deprecatedAssay) {
 
     metadata.Assay assay = MetadataFactory.eINSTANCE.createAssay();
 
@@ -756,7 +756,7 @@ public class RakipUtil {
    * Convert deprecated RAKIP {@link de.bund.bfr.knime.fsklab.rakip.Parameter} to an EMF
    * {@link metadata.Parameter}.
    */
-  private static metadata.Parameter convert(Parameter deprecatedParameter) {
+  public static metadata.Parameter convert(Parameter deprecatedParameter) {
 
     metadata.Parameter parameter = MetadataFactory.eINSTANCE.createParameter();
 
@@ -882,7 +882,7 @@ public class RakipUtil {
     return parameter;
   }
 
-  private static metadata.ModelEquation convert(ModelEquation deprecatedModelEquation) {
+  public static metadata.ModelEquation convert(ModelEquation deprecatedModelEquation) {
 
     metadata.ModelEquation modelEquation = MetadataFactory.eINSTANCE.createModelEquation();
 
@@ -910,7 +910,7 @@ public class RakipUtil {
     return modelEquation;
   }
 
-  private static metadata.Exposure convert(Exposure deprecatedExposure) {
+  public static metadata.Exposure convert(Exposure deprecatedExposure) {
 
     metadata.Exposure exposure = MetadataFactory.eINSTANCE.createExposure();
 

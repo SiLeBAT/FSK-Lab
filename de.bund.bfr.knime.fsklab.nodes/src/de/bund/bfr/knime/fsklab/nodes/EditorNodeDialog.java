@@ -50,6 +50,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -71,7 +72,11 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.util.SimpleFileFilter;
 import org.sbml.jsbml.validator.SyntaxChecker;
+import com.gmail.gcolaianni5.jris.bean.Record;
+import com.gmail.gcolaianni5.jris.engine.JRis;
+import com.gmail.gcolaianni5.jris.exception.JRisException;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.ui.AutoSuggestField;
 import de.bund.bfr.knime.fsklab.nodes.ui.FComboBox;
@@ -83,6 +88,7 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.FixedDateChooser;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
+import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.knime.fsklab.util.UTF8Control;
 import metadata.Assay;
 import metadata.Contact;
@@ -3110,26 +3116,28 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       });
 
       final JButton fileUploadButton = UIUtils.createFileUploadButton();
-      // TODO: fileUploadButton listener
-      fileUploadButton.setEnabled(false);
-      // fileUploadButton.addActionListener(event -> {
-      //
-      // // Configure file chooser
-      // final JFileChooser fc = new JFileChooser();
-      // fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-      // fc.addChoosableFileFilter(new SimpleFileFilter("ris", "RIS"));
-      //
-      // final int returnVal = fc.showOpenDialog(this);
-      // if (returnVal == JFileChooser.APPROVE_OPTION) {
-      // try {
-      // final List<Record> importedRecords = JRis.parse(fc.getSelectedFile());
-      // importedRecords.forEach(tableModel::add);
-      // } catch (final IOException | JRisException exception) {
-      // LOGGER.warn("Error importing RIS references", exception);
-      // }
-      //
-      // }
-      // });
+      fileUploadButton.addActionListener(event -> {
+
+        // Configure file chooser
+        final JFileChooser fc = new JFileChooser();
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.addChoosableFileFilter(new SimpleFileFilter("ris", "RIS"));
+
+        final int returnVal = fc.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+          try {
+            // Import RIS reference items
+            List<Record> importedRecords = JRis.parse(fc.getSelectedFile());
+            // Convert to Reference
+            List<Reference> references =
+                importedRecords.stream().map(RakipUtil::convert).collect(Collectors.toList());
+            // Add converted references
+            references.forEach(tableModel::add);
+          } catch (final IOException | JRisException exception) {
+            LOGGER.warn("Error importing RIS references", exception);
+          }
+        }
+      });
 
       final JButton editButton = UIUtils.createEditButton();
       editButton.addActionListener(event -> {
