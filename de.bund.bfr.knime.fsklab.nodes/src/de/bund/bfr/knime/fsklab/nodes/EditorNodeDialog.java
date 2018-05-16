@@ -2031,7 +2031,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       super(new BorderLayout());
 
       TreeMap<String, String> envNameVocabulary = loadVocabulary("Product-matrix name.xlsx");
-      TreeMap<String, String> envUnitVocabulary = loadVocabulary("Product-matrix unit.xlsx");
+      TreeMap<String, String> envUnitVocabulary = loadVocabulary("Parameter unit.xlsx");
       TreeMap<String, String> productionMethodVocabulary =
           loadVocabulary("Method of production.xlsx");
       TreeMap<String, String> packagingVocabulary = loadVocabulary("Packaging.xlsx");
