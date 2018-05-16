@@ -18,7 +18,10 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emfjson.jackson.databind.EMFContext;
+import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -41,6 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import metadata.DataBackground;
 import metadata.GeneralInformation;
+import metadata.MetadataPackage;
 import metadata.ModelMath;
 import metadata.Scope;
 
@@ -159,10 +163,6 @@ public class EditorNodeSettings {
       final EObject eObject) {
 
     try {
-      ResourceSet resourceSet = new ResourceSetImpl();
-      Resource resource = resourceSet.createResource(URI.createURI(key));
-      resource.getContents().add(eObject);
-
       ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
       String jsonStr = objectMapper.writeValueAsString(eObject);
       settings.addString(key, jsonStr);
@@ -172,20 +172,27 @@ public class EditorNodeSettings {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private static <T> T getEObject(NodeSettingsRO settings, String key, Class<T> valueType)
       throws InvalidSettingsException {
 
     String jsonStr = settings.getString(key);
 
-    ResourceSet resourceSet = new ResourceSetImpl();
     ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
     try {
-      return mapper.reader().withAttribute(EMFContext.Attributes.RESOURCE_SET, resourceSet)
-          .withAttribute(EMFContext.Attributes.RESOURCE_URI, key).forType(valueType)
-          .readValue(jsonStr);
-    } catch (IOException e) {
-      throw new InvalidSettingsException(e);
+      ResourceSet resourceSet = new ResourceSetImpl();
+      resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+          .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
+      resourceSet.getPackageRegistry().put(MetadataPackage.eNS_URI, MetadataPackage.eINSTANCE);
+
+      Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
+      InputStream stream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
+      resource.load(stream, null);
+
+      return (T) resource.getContents().get(0);
+    } catch (IOException exception) {
+      throw new InvalidSettingsException(exception);
     }
   }
 }
