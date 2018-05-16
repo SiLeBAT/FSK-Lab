@@ -25,11 +25,12 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import de.bund.bfr.knime.fsklab.EMFJSONViewContent;
 
 
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-final class FSKEditorJSViewRepresentation extends JSONViewContent {
+final class FSKEditorJSViewRepresentation extends EMFJSONViewContent {
 
   // no members to hash on
   public final int pseudoIdentifier = (new Random()).nextInt();

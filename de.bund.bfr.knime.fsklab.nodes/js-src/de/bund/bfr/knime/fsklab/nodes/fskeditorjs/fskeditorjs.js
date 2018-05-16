@@ -105,11 +105,11 @@ fskeditorjs = function() {
     var firstModelParameterMap = new Object();
     var secomndModelParameterMap = new Object();
     joinerNode.init = function(representation, value) {
-    	console.log(value.generalInformation);
-    	_firstModel.generalInformation = value.generalInformation;
-    	_firstModel.scope = value.scope;
-    	_firstModel.modelMath = value.modelMath;
-    	_firstModel.dataBackground = value.dataBackground;
+    	console.log(value);
+    	_firstModel.generalInformation = JSON.parse(value.generalInformation.generalInformation);
+    	_firstModel.scope =  JSON.parse(value.scope.scope);
+    	_firstModel.modelMath =  JSON.parse(value.modelMath.modelMath);
+    	_firstModel.dataBackground =  JSON.parse(value.dataBackground.dataBackground);
     	_firstModelScript = value.firstModelScript;
     	_firstModelViz = value.firstModelViz;
     	
@@ -149,11 +149,11 @@ fskeditorjs = function() {
 
 	}
     joinerNode.getComponentValue = function() {
-    	_viewValue.generalInformation = window.store1.getState().jsonforms.core.data;
+    	_viewValue.generalInformation.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);
     	
-    	_viewValue.scope = window.store2.getState().jsonforms.core.data
-    	_viewValue.modelMath =window.store17.getState().jsonforms.core.data
-    	_viewValue.dataBackground =window.store6.getState().jsonforms.core.data
+    	_viewValue.scope.scope = JSON.stringify(window.store2.getState().jsonforms.core.data);
+    	_viewValue.modelMath.modelMath = JSON.stringify(window.store17.getState().jsonforms.core.data);
+    	_viewValue.dataBackground.dataBackground = JSON.stringify(window.store6.getState().jsonforms.core.data);
         
         return _viewValue;
     };
@@ -324,11 +324,11 @@ fskeditorjs = function() {
         	console.log(key);
         	if($(value).attr('data-meta') == 'MuiInput'){
         		console.log(' MuiInput');
-        		value.remove();
+        		$(value).remove();
         	}else if($(value).attr('data-meta') == 'MuiInputLabel'){
-        		value.remove();
+        		$(value).remove();
         	}else if($(value).attr('data-meta') == 'MuiFormLabel'){
-        		value.remove();
+        		$(value).remove();
         	}
         	
     	});

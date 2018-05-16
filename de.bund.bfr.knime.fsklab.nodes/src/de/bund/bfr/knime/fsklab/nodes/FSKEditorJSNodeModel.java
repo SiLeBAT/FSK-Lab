@@ -35,6 +35,7 @@ import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import de.bund.bfr.knime.fsklab.EMFAbstractWizardNodeModel;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 
@@ -45,7 +46,7 @@ import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
  */
 
 final class FSKEditorJSNodeModel
-    extends AbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
+    extends EMFAbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
     implements PortObjectHolder {
   private final FSKEditorJSNodeSettings nodeSettings = new FSKEditorJSNodeSettings();
   private FskPortObject m_port;
