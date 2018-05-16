@@ -1394,13 +1394,13 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         List<JComponent> fields = new ArrayList<>();
 
         // equation name
-        labels.add(0, GUIFactory.createLabelWithToolTip(bundle, prefix + "name"));
-        fields.add(0, equationNameField);
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "name"));
+        fields.add(equationNameField);
 
         // equation class
         if (isAdvanced) {
-          labels.add(1, GUIFactory.createLabelWithToolTip(bundle, prefix + "class"));
-          fields.add(1, equationClassField);
+          labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "class"));
+          fields.add(equationClassField);
         }
 
         northPanel.add(UIUtils.createFormPanel(labels, fields));
@@ -1549,72 +1549,92 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       List<JComponent> fields = new ArrayList<>();
 
       // id
-      labels.add(0, GUIFactory.createLabelWithToolTip(bundle, prefix + "id"));
-      fields.add(0, idField);
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "id"));
+      fields.add(idField);
 
       // classification
-      labels.add(1, GUIFactory.createLabelWithToolTip(bundle, prefix + "classification"));
-      fields.add(1, classificationField);
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "classification"));
+      fields.add(classificationField);
 
       // name
-      labels.add(2, GUIFactory.createLabelWithToolTip(bundle, prefix + "parameterName"));
-      fields.add(2, nameField);
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "parameterName"));
+      fields.add(nameField);
+
+      // description
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "parameterDescription"));
+        fields.add(descriptionField);
+      }
+
+      // type
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "type"));
+        fields.add(typeField);
+      }
 
       // unit
-      labels.add(5, GUIFactory.createLabelWithToolTip(bundle, prefix + "unit"));
-      fields.add(5, unitField);
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "unit"));
+      fields.add(unitField);
+
+      // unit category
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "unitCategory"));
+        fields.add(unitCategoryField);
+      }
 
       // data type
-      labels.add(7, GUIFactory.createLabelWithToolTip(bundle, prefix + "dataType"));
-      fields.add(7, dataTypeField);
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "dataType"));
+      fields.add(dataTypeField);
 
+      // source
       if (isAdvanced) {
-        // description
-        labels.add(3, GUIFactory.createLabelWithToolTip(bundle, prefix + "parameterDescription"));
-        fields.add(3, descriptionField);
-
-        // type
-        labels.add(4, GUIFactory.createLabelWithToolTip(bundle, prefix + "type"));
-        fields.add(4, typeField);
-
-        // unit category
-        labels.add(6, GUIFactory.createLabelWithToolTip(bundle, prefix + "unitCategory"));
-        fields.add(6, unitCategoryField);
-
-        // source
-        labels.add(8, GUIFactory.createLabelWithToolTip(bundle, prefix + "source"));
-        fields.add(8, sourceField);
-
-        // subject
-        labels.add(9, GUIFactory.createLabelWithToolTip(bundle, prefix + "subject"));
-        fields.add(9, subjectField);
-
-        // distribution
-        labels.add(10, GUIFactory.createLabelWithToolTip(bundle, prefix + "distribution"));
-        fields.add(10, distributionField);
-
-        // value
-        labels.add(11, GUIFactory.createLabelWithToolTip(bundle, prefix + "value"));
-        fields.add(11, valueField);
-
-        // variability subject
-        labels.add(12, GUIFactory.createLabelWithToolTip(bundle, prefix + "variabilitySubject"));
-        fields.add(12, variabilitySubjectField);
-
-        // value min
-        labels.add(13, GUIFactory.createLabelWithToolTip(bundle, prefix + "valueMin"));
-        fields.add(13, valueMinField);
-
-        // value max
-        labels.add(14, GUIFactory.createLabelWithToolTip(bundle, prefix + "valueMax"));
-        fields.add(14, valueMaxField);
-
-        // error
-        labels.add(15, GUIFactory.createLabelWithToolTip(bundle, prefix + "error"));
-        fields.add(15, new FSpinner(errorSpinnerModel, false));
-
-        // TODO: reference
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "source"));
+        fields.add(sourceField);
       }
+
+      // subject
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "subject"));
+        fields.add(subjectField);
+      }
+
+      // distribution
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "distribution"));
+        fields.add(distributionField);
+      }
+
+      // value
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "value"));
+        fields.add(valueField);
+      }
+
+      // variability subject
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "variabilitySubject"));
+        fields.add(variabilitySubjectField);
+      }
+
+      // value min
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "valueMin"));
+        fields.add(valueMinField);
+      }
+
+      // value max
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "valueMax"));
+        fields.add(valueMaxField);
+      }
+
+      // error
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "error"));
+        fields.add(new FSpinner(errorSpinnerModel, false));
+      }
+
+      // TODO: reference
 
       // Build UI
       FPanel formPanel = UIUtils.createFormPanel(labels, fields);
@@ -2308,58 +2328,78 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       List<FLabel> labels = new ArrayList<>();
       List<JComponent> fields = new ArrayList<>();
 
+      // type
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "typeLabel")));
+        fields.add(typeField);
+      }
+
+      // date
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "dateLabel")));
+        fields.add(dateField);
+      }
+
+      // pmid
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "pmidLabel")));
+        fields.add(pmidField);
+      }
+
       // doi
-      labels.add(3, new FLabel(bundle.getString(prefix + "doiLabel")));
-      fields.add(3, doiField);
+      labels.add(new FLabel(bundle.getString(prefix + "doiLabel")));
+      fields.add(doiField);
+
+      // author
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "authorListLabel")));
+        fields.add(authorListField);
+      }
 
       // title
-      labels.add(5, new FLabel(bundle.getString(prefix + "titleLabel")));
-      fields.add(5, titleField);
+      labels.add(new FLabel(bundle.getString(prefix + "titleLabel")));
+      fields.add(titleField);
 
+      // abstract
       if (isAdvanced) {
-        // type
-        labels.add(0, new FLabel(bundle.getString(prefix + "typeLabel")));
-        fields.add(0, typeField);
+        labels.add(new FLabel(bundle.getString(prefix + "abstractLabel")));
+        fields.add(abstractField);
+      }
 
-        // date
-        labels.add(1, new FLabel(bundle.getString(prefix + "dateLabel")));
-        fields.add(1, dateField);
+      // journal
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "journalLabel")));
+        fields.add(journalField);
+      }
 
-        // pmid
-        labels.add(2, new FLabel(bundle.getString(prefix + "pmidLabel")));
-        fields.add(2, pmidField);
+      // volume
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "volumeLabel")));
+        fields.add(new FSpinner(volumeSpinnerModel, false));
+      }
 
-        // author
-        labels.add(4, new FLabel(bundle.getString(prefix + "authorListLabel")));
-        fields.add(4, authorListField);
+      // issue
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "issueLabel")));
+        fields.add(new FSpinner(issueSpinnerModel, false));
+      }
 
-        // abstract
-        labels.add(6, new FLabel(bundle.getString(prefix + "abstractLabel")));
-        fields.add(6, abstractField);
+      // status
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "statusLabel")));
+        fields.add(statusField);
+      }
 
-        // journal
-        labels.add(7, new FLabel(bundle.getString(prefix + "journalLabel")));
-        fields.add(7, journalField);
+      // website
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "websiteLabel")));
+        fields.add(websiteField);
+      }
 
-        // volume
-        labels.add(8, new FLabel(bundle.getString(prefix + "volumeLabel")));
-        fields.add(8, new FSpinner(volumeSpinnerModel, false));
-
-        // issue
-        labels.add(9, new FLabel(bundle.getString(prefix + "issueLabel")));
-        fields.add(9, new FSpinner(issueSpinnerModel, false));
-
-        // status
-        labels.add(10, new FLabel(bundle.getString(prefix + "statusLabel")));
-        fields.add(10, statusField);
-
-        // website
-        labels.add(11, new FLabel(bundle.getString(prefix + "websiteLabel")));
-        fields.add(11, websiteField);
-
-        // comment
-        labels.add(12, new FLabel(bundle.getString(prefix + "commentLabel")));
-        fields.add(12, commentField);
+      // comment
+      if (isAdvanced) {
+        labels.add(new FLabel(bundle.getString(prefix + "commentLabel")));
+        fields.add(commentField);
       }
 
       // Build UI
@@ -2560,45 +2600,53 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       List<JComponent> fields = new ArrayList<>();
 
       // sample name
-      labels.add(0, GUIFactory.createLabelWithToolTip(bundle, prefix + "sampleName"));
-      fields.add(0, sampleNameField);
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "sampleName"));
+      fields.add(sampleNameField);
 
-      // sample protocol label
-      labels.add(1, GUIFactory.createLabelWithToolTip(bundle, prefix + "sampleProtocol"));
-      fields.add(1, sampleProtocolField);
+      // sample protocol
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "sampleProtocol"));
+      fields.add(sampleProtocolField);
+
+      // sampling strategy
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingStrategy"));
+        fields.add(samplingStrategyField);
+      }
+
+      // sampling type
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingType"));
+        fields.add(samplingTypeField);
+      }
+
+      // sampling method
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingMethod"));
+        fields.add(samplingMethodField);
+      }
 
       // sampling plan
-      labels.add(5, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingPlan"));
-      fields.add(5, samplingPlanField);
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingPlan"));
+      fields.add(samplingPlanField);
 
       // sampling weight
-      labels.add(6, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingWeight"));
-      fields.add(6, samplingWeightField);
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingWeight"));
+      fields.add(samplingWeightField);
 
       // sampling size
-      labels.add(7, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingSize"));
-      fields.add(7, samplingSizeField);
+      labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingSize"));
+      fields.add(samplingSizeField);
 
+      // lot size unit
       if (isAdvanced) {
-        // sampling strategy label
-        labels.add(2, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingStrategy"));
-        fields.add(2, samplingStrategyField);
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "lotSizeUnit"));
+        fields.add(lotSizeUnitField);
+      }
 
-        // sampling type label
-        labels.add(3, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingType"));
-        fields.add(3, samplingTypeField);
-
-        // sampling method label
-        labels.add(4, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingMethod"));
-        fields.add(4, samplingMethodField);
-
-        // lot size unit
-        labels.add(8, GUIFactory.createLabelWithToolTip(bundle, prefix + "lotSizeUnit"));
-        fields.add(8, lotSizeUnitField);
-
-        // sampling point
-        labels.add(9, GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingPoint"));
-        fields.add(9, samplingPointField);
+      // sampling point
+      if (isAdvanced) {
+        labels.add(GUIFactory.createLabelWithToolTip(bundle, prefix + "samplingPoint"));
+        fields.add(samplingPointField);
       }
 
       // formPanel
