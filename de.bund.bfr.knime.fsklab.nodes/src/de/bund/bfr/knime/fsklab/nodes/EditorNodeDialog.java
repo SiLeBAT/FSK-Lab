@@ -1130,7 +1130,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       TreeMap<String, String> hazardTypeVocabulary = loadVocabulary("Hazard type.xlsx");
       TreeMap<String, String> hazardNameVocabulary = loadVocabulary("Hazard name.xlsx");
-      TreeMap<String, String> hazardUnitVocabulary = loadVocabulary("Hazard unit.xlsx");
+      TreeMap<String, String> hazardUnitVocabulary = loadVocabulary("Parameter unit.xlsx");
       TreeMap<String, String> hazardIndSumVocabulary = loadVocabulary("Hazard ind-sum.xlsx");
 
       List<String> hazardTypeValues = new ArrayList<>(hazardTypeVocabulary.keySet());
