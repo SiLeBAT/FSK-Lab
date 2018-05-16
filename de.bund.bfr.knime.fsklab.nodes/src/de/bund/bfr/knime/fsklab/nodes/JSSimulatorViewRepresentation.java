@@ -25,7 +25,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import de.bund.bfr.knime.fsklab.rakip.Parameter;
+import metadata.Parameter;
 
 /**
  * Representation of the Javascript Simulator node.
@@ -35,7 +35,7 @@ import de.bund.bfr.knime.fsklab.rakip.Parameter;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 final class JSSimulatorViewRepresentation extends JSONViewContent {
 
-  List<metadata.Parameter> parameters;
+  List<Parameter> parameters;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {}
