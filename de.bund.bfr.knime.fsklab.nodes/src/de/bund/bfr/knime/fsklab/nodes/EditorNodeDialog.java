@@ -2555,7 +2555,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       TreeMap<String, String> samplingTypeVocabulary =
           loadVocabulary("Type of sampling program.xlsx");
       TreeMap<String, String> samplingMethodVocabulary = loadVocabulary("Sampling point.xlsx");
-      TreeMap<String, String> lotSizeUnitVocabulary = loadVocabulary("Lot size unit.xlsx");
+      TreeMap<String, String> lotSizeUnitVocabulary = loadVocabulary("Parameter unit.xlsx");
       TreeMap<String, String> samplingPointVocabulary = loadVocabulary("Sampling point.xlsx");
 
       sampleNameField = new FTextField(true);
