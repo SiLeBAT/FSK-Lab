@@ -123,7 +123,7 @@ public interface Scope extends EObject {
 	 * @return the value of the '<em>Population Group</em>' reference.
 	 * @see #setPopulationGroup(PopulationGroup)
 	 * @see metadata.MetadataPackage#getScope_PopulationGroup()
-	 * @model
+	 * @model required="true"
 	 * @generated
 	 */
 	PopulationGroup getPopulationGroup();

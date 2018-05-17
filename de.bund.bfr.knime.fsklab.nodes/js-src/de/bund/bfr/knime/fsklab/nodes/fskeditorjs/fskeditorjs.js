@@ -153,6 +153,7 @@ fskeditorjs = function() {
     	
     	window.store2.getState().jsonforms.core.data.populationGroup = window.store5.getState().jsonforms.core.data;
     	window.store1.getState().jsonforms.core.data.author = window.store23.getState().jsonforms.core.data;
+    	window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data;
     	_viewValue.generalInformation.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);
     	_viewValue.scope.scope = JSON.stringify(window.store2.getState().jsonforms.core.data);
     	_viewValue.modelMath.modelMath = JSON.stringify(window.store17.getState().jsonforms.core.data);

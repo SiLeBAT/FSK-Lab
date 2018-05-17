@@ -356,7 +356,9 @@ public enum PublicationType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	JOUR(33, "JOUR", "Journal"), /**
+	JOUR(33, "JOUR", "Journal"),
+
+	/**
 	 * The '<em><b>JFULL</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

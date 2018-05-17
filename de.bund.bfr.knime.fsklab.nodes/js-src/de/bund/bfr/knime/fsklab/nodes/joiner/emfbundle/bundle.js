@@ -2544,7 +2544,7 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		window.store5.dispatch(Actions.init( window.scope.populationGroup, schema5, uischema5));
+		window.store5.dispatch(Actions.init( window.scope.populationGroup != null? window.scope.populationGroup:{}, schema5, uischema5));
 
 		toBeReplacedMap["Population Group"] = window.store5;
 
@@ -2561,7 +2561,7 @@ function createEMFForm(){
 				  }
 				);
 		  window.store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
-		  store7 = createStore(
+		  window.store7 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
 				    jsonforms: {
@@ -2570,8 +2570,8 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store7.dispatch(Actions.init(window.dataBackground.study!=null?window.dataBackground.study:{}, schema7, uischema7));
-		toBeReplacedMap["Study"] = store7;
+		window.store7.dispatch(Actions.init(window.dataBackground.study!=null?window.dataBackground.study:{}, schema7, uischema7));
+		toBeReplacedMap["Study"] = window.store7;
 
 		  store8 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
