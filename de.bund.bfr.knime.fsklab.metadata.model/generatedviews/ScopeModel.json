@@ -145,5 +145,8 @@
       "additionalProperties": false
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "populationGroup"
+  ]
 }

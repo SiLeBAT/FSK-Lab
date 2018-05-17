@@ -29,7 +29,7 @@ import org.knime.js.core.node.AbstractWizardNodeModel;
 public abstract class EMFAbstractWizardNodeModel <REP extends EMFJSONViewContent, VAL extends EMFJSONViewContent>
 extends NodeModel implements WizardNode<REP, VAL> {
 
-private static final NodeLogger LOGGER = NodeLogger.getLogger(AbstractWizardNodeModel.class);
+private static final NodeLogger LOGGER = NodeLogger.getLogger(EMFAbstractWizardNodeModel.class);
 
 private final Object m_lock = new Object();
 

@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import org.emfjson.jackson.module.EMFModule;
 import org.knime.core.node.web.WebViewContent;
+import org.knime.core.node.wizard.AbstractWizardNodeView;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -20,7 +21,6 @@ import metadata.serializers.FSKEMFModule;
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class EMFJSONViewContent implements WebViewContent{
-
   /**
    * {@inheritDoc}
    * @throws IOException

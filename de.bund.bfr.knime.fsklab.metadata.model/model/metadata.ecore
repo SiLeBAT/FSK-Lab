@@ -191,7 +191,8 @@
         eType="#//Product" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hazard" upperBound="-1"
         eType="#//Hazard"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="populationGroup" eType="#//PopulationGroup"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="populationGroup" lowerBound="1"
+        eType="#//PopulationGroup"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="spatialInformation" eType="#//SpatialInformation"
         containment="true"/>
   </eClassifiers>

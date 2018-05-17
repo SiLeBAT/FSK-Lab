@@ -105,9 +105,10 @@ fskeditorjs = function() {
     var firstModelParameterMap = new Object();
     var secomndModelParameterMap = new Object();
     joinerNode.init = function(representation, value) {
-    	console.log(value);
+    	
     	_firstModel.generalInformation = JSON.parse(value.generalInformation.generalInformation);
     	_firstModel.scope =  JSON.parse(value.scope.scope);
+    	
     	_firstModel.modelMath =  JSON.parse(value.modelMath.modelMath);
     	_firstModel.dataBackground =  JSON.parse(value.dataBackground.dataBackground);
     	_firstModelScript = value.firstModelScript;
@@ -139,18 +140,20 @@ fskeditorjs = function() {
 		_firstModel.generalInformation.status = _firstModel.generalInformation.status != null ?_firstModel.generalInformation.status:"";
 		_firstModel.generalInformation.objective = _firstModel.generalInformation.objective != null ?_firstModel.generalInformation.objective:"";
 
-		_firstModel.scope.generalComment = _firstModel.scope.generalComment != null ?_firstModel.scope.generalComment:"";
-		_firstModel.scope.temporalInformation = _firstModel.scope.temporalInformation != null ?_firstModel.scope.temporalInformation:"";
+		window.scope.generalComment = _firstModel.scope.generalComment != null ?_firstModel.scope.generalComment:"";
+		window.scope.temporalInformation = _firstModel.scope.temporalInformation != null ?_firstModel.scope.temporalInformation:"";
 		_firstModel.scope.populationGroup = _firstModel.scope.populationGroup != null ?_firstModel.scope.populationGroup:{};
-		
+
 		_firstModel.dataBackground.study = _firstModel.dataBackground.study!=null?_firstModel.dataBackground.study:{};
 		_firstModel.dataBackground.dietaryassessmentmethod = _firstModel.dataBackground.dietaryassessmentmethod!=null?_firstModel.dataBackground.dietaryassessmentmethod:{};
 		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory!=null?_firstModel.dataBackground.laboratory:{};
 
 	}
     joinerNode.getComponentValue = function() {
-    	_viewValue.generalInformation.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);
     	
+    	window.store2.getState().jsonforms.core.data.populationGroup = window.store5.getState().jsonforms.core.data;
+    	window.store1.getState().jsonforms.core.data.author = window.store23.getState().jsonforms.core.data;
+    	_viewValue.generalInformation.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);
     	_viewValue.scope.scope = JSON.stringify(window.store2.getState().jsonforms.core.data);
     	_viewValue.modelMath.modelMath = JSON.stringify(window.store17.getState().jsonforms.core.data);
     	_viewValue.dataBackground.dataBackground = JSON.stringify(window.store6.getState().jsonforms.core.data);
@@ -406,16 +409,17 @@ fskeditorjs = function() {
         $('.replaced').parent().addClass('panel-default'); 
         $('.replaced').addClass('panel-body'); 
         //$($("[aria-describedby*='tooltip-add']")[0]).off();
-        function getLastWord(words) {
-            var n = words.split(" ");
-            return n[n.length - 1];
+        function makeId(words) {
+            var n = words.split("Add to ");
+            m = n[n.length - 1].replace(/\s/g, '');
+            return m[0].toLowerCase()+""+m.substring(1);
 
         }
         /*$($("[aria-describedby*='tooltip-add']")).attr('data-toggle','modal');
         $($("[aria-describedby*='tooltip-add']")).attr('data-target','#myModal');*/
         $($("[aria-describedby*='tooltip-add']")).click(function(event) {
         	
-        	currentArea = getLastWord($(this).attr('aria-label'));
+        	currentArea = makeId($(this).attr('aria-label'));
         	console.log(currentArea);
         	event.preventDefault(); // Let's stop this event.
             event.stopPropagation(); // Really this time.

@@ -2070,7 +2070,10 @@ function createEMFForm(){
 		      "additionalProperties": false
 		    }
 		  },
-		  "additionalProperties": false
+		  "additionalProperties": false,
+		  "required": [
+		    "populationGroup"
+		  ]
 		}
 		},{}],41:[function(require,module,exports){
 		module.exports={
@@ -2479,13 +2482,13 @@ function createEMFForm(){
 		    var schema28 = require('./StringObjectModel.json');
 		    var uischema28 = require('./StringObjectView.json');
 		    window.Actions= jsonformscore.Actions;
-		var Actions= jsonformscore.Actions,
-		  jsonformsReducer= jsonformscore.jsonformsReducer,
-		  combineReducers= redux.combineReducers,
-		  createStore= redux.createStore,
-		  Provider= react_redux.Provider,
-		  materialFields= material_renderers.materialFields,
-		  materialRenderers= material_renderers.materialRenderers
+		    var Actions= jsonformscore.Actions,
+			  jsonformsReducer= jsonformscore.jsonformsReducer,
+			  combineReducers= redux.combineReducers,
+			  createStore= redux.createStore,
+			  Provider= react_redux.Provider,
+			  materialFields= material_renderers.materialFields,
+			  materialRenderers= material_renderers.materialRenderers
 		  
 
 		  window.store1 = createStore(
@@ -2519,7 +2522,7 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store3.dispatch(Actions.init(window.scope.product, schema3, uischema3));
+		store3.dispatch(Actions.init({} , schema3, uischema3));
 
 		  store4 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -2530,9 +2533,9 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store4.dispatch(Actions.init(window.scope.hazard, schema4, uischema4));
+		store4.dispatch(Actions.init({}, schema4, uischema4));
 
-		  store5 = createStore(
+		window.store5 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
 				    jsonforms: {
@@ -2541,9 +2544,9 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store5.dispatch(Actions.init(window.scope.populationgroup, schema5, uischema5));
+		window.store5.dispatch(Actions.init( window.scope.populationGroup, schema5, uischema5));
 
-		toBeReplacedMap["Population Group"] = store5;
+		toBeReplacedMap["Population Group"] = window.store5;
 
 
 
@@ -2738,7 +2741,7 @@ function createEMFForm(){
 				);
 		store22.dispatch(Actions.init({}, schema22, uischema22));
 
-		store23 = createStore(
+		window.store23 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
 				    jsonforms: {
@@ -2747,8 +2750,8 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store23.dispatch(Actions.init(window.generalInformation.author!=null?window.generalInformation.author:{}, schema23, uischema23));
-		toBeReplacedMap["Author"] = store23;
+		window.store23.dispatch(Actions.init(window.generalInformation.author!=null?window.generalInformation.author:{}, schema23, uischema23));
+		toBeReplacedMap["Author"] = window.store23;
 		store24 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -2769,7 +2772,7 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store25.dispatch(Actions.init(window.generalInformation.spatialInformation!= null?window.generalInformation.spatialInformation:{region:[],country:[]}, schema25, uischema25));
+		store25.dispatch(Actions.init(window.scope.spatialInformation!= null?window.scope.spatialInformation:{region:[],country:[]}, schema25, uischema25));
 		toBeReplacedMap["Spatial Information"] = store25;
 
 		store26 = createStore(
@@ -2820,7 +2823,7 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: store1},
 				App()
 		), document.getElementById('generalinformation'));
-		ReactDOM.render(React.createFactory(Provider)({store: store2},
+		ReactDOM.render(React.createFactory(Provider)({store: window.store2},
 				App()
 		), document.getElementById('scope'));
 
@@ -2835,24 +2838,27 @@ function createEMFForm(){
 			
 		}
 		notAProperDiv = $("div:contains('No applicable'):not(:has(div))");
-
+		console.log('notAProperDiv '+notAProperDiv);
 		$.each(notAProperDiv, function( index, value ) {
+			var parentxc ;
+			var areaName;
 			try{
-				
-					parent = $(value).parent();
-					areaName = parent[0].children[0].textContent;
-					if(parent[0].children[0].textContent.indexOf('*') >= 0){
+					
+					parentxc = value.parentNode;
+					areaName =  parentxc.firstChild.textContent;
+					console.log(areaName);
+					if(parentxc.firstChild.textContent.indexOf('*') >= 0){
 						areaName = areaName.slice(0,-1);
 					}
 					if(areaName.indexOf('No applicable field found') < 0){
 						$(value).remove();
-						parent.append( "<div id ='"+areaName+"' class='replaced' ></div>" );
+						$(parentxc).append( "<div id ='"+areaName+"' class='replaced' ></div>" );
 						ReactDOM.render(React.createFactory(Provider)({store: toBeReplacedMap[areaName]},
 								App()
 						), document.getElementById(areaName));
 					}
 			}catch(err){
-				console.log("loop ",value, err);
+				console.log("loop ",parentxc, err);
 			}
 			
 		});
@@ -2992,6 +2998,7 @@ function createEMFForm(){
 				window.generalInformation.modificationdate.push(store14.getState().jsonforms.core.data);
 				store1.dispatch(Actions.init(window.generalInformation, window.schema, window.uischema));
 			}
+			console.log("date ",window.generalInformation.modificationdate);
 				$(".table tbody tr td div div div input").removeAttr('class');
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
@@ -3046,10 +3053,10 @@ function createEMFForm(){
 			if(window.scope.country == undefined){
 				window.scope.country = [];
 				window.scope.country.push(store15.getState().jsonforms.core.data);
-				store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
+				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}else{
 				window.scope.country.push(store15.getState().jsonforms.core.data);
-				store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
+				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}
 				$(".table tbody tr td div div div input").removeAttr('class');
 			    $(".table tbody tr td div div div").removeAttr('class');
@@ -3098,15 +3105,16 @@ function createEMFForm(){
 		}catch(err){console.log("country " + err);
 			
 		}
+
 		//popup product
-		window.saveproduct = function () {
+		window.saveProduct = function () {
 			if(window.scope.product == undefined){
 				window.scope.product = [];
-				window.scope.product.push(store16.getState().jsonforms.core.data);
-				store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
+				window.scope.product.push(store3.getState().jsonforms.core.data);
+				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}else{
-				window.scope.product.push(store16.getState().jsonforms.core.data);
-				store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
+				window.scope.product.push(store3.getState().jsonforms.core.data);
+				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
 			    $(".table tbody tr td div div div").removeAttr('class');
@@ -3143,7 +3151,7 @@ function createEMFForm(){
 		        "      </div>\n" + 
 		        "      <div class='modal-footer'>\n" + 
 		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
-		        "   	 <button id='save' onclick='window.saveproduct()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "   	 <button id='save' onclick='window.saveProduct()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
 		        "      </div>\n" + 
 		        "    </div>\n" + 
 		        "\n" + 
@@ -3153,19 +3161,21 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: store3},
 				App()
 		), document.getElementById('productModelContent'));
+			
+			
 		parent10 = document.getElementById('modelMath');
 		}catch(err){console.log("product " + err);
 			
 		}
-		//popup product
+		//popup hazard
 		window.savehazard = function () {
 			if(window.scope.hazard == undefined){
 				window.scope.hazard = [];
-				window.scope.hazard.push(store16.getState().jsonforms.core.data);
-				store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
+				window.scope.hazard.push(store4.getState().jsonforms.core.data);
+				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}else{
-				window.scope.hazard.push(store16.getState().jsonforms.core.data);
-				store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
+				window.scope.hazard.push(store4.getState().jsonforms.core.data);
+				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
 			    $(".table tbody tr td div div div").removeAttr('class');
@@ -3385,8 +3395,63 @@ function createEMFForm(){
 				App()
 		), document.getElementById('eventModelContent'));
 		}catch(err){console.log("event " + err);
-			
+
 		}
+		var StringObjectPopupsName = ['populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
+
+
+		window.popupFunctions = {};
+		window.popupschema = {};
+		window.popupuischema = {};
+		window.popupstore = {};
+		$.each(StringObjectPopupsName, function( index, value ) {
+			
+			window.popupschema[value]= require('./StringObjectModel.json');
+			window.popupuischema[value] = require('./StringObjectView.json');
+			window.popupstore[value] = createStore(
+					  combineReducers({ jsonforms: jsonformsReducer() }),  
+					  {
+					    jsonforms: {
+					      renderers: materialRenderers,
+					      fields: materialFields,
+					    }
+					  }
+					);
+			
+			window.popupstore[value].dispatch(Actions.init({}, window.popupschema[value], window.popupuischema[value]));
+			window.popupFunctions['save'+value]="window.scope.populationGroup."+value+".push(window.popupstore."+value+".getState().jsonforms.core.data);"+
+												"window.store5.dispatch(Actions.init(window.scope.populationGroup, window.schema5, window.uischema5));";
+			
+			
+			 
+			$(parent9).append(
+					"<div id='"+value+"' class='modal fade' role='dialog'>\n" + 
+			        "  <div class='modal-dialog'>\n" + 
+			        "\n" + 
+			        "    <!-- Modal content-->\n" + 
+			        "    <div class='modal-content'>\n" + 
+			        "      <div class='modal-header'>\n" + 
+			        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
+			        "        <h4 id='title"+value+"' class='modal-title'>Modal Header</h4>\n" + 
+			        "      </div>\n" + 
+			        "      <div id='"+value+"ModelContent' class='modal-body'>\n" + 
+			        "      </div>\n" + 
+			        "      <div class='modal-footer'>\n" + 
+			        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
+			        "   	 <button id='save"+value+"' onclick='"+window.popupFunctions['save'+value]+"' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+			        "      </div>\n" + 
+			        "    </div>\n" + 
+			        "\n" + 
+			        "  </div>\n" + 
+			        "</div>");
+			try{
+				ReactDOM.render(React.createFactory(Provider)({store: window.popupstore[value]},
+					App()
+			), document.getElementById(value+'ModelContent'));
+			}catch(err){console.log(value + err);
+		}});
+
+
 
 		},{"./App":1,"./AssayModel.json":2,"./AssayView.json":3,"./ContactModel.json":4,"./ContactView.json":5,"./CountryModel.json":6,"./CountryView.json":7,"./DataBackgroundModel.json":8,"./DataBackgroundView.json":9,"./DietaryAssessmentMethodModel.json":10,"./DietaryAssessmentMethodView.json":11,"./EventModel.json":12,"./EventView.json":13,"./ExposureModel.json":14,"./ExposureView.json":15,"./GeneralInformationModel.json":16,"./GeneralInformationView.json":17,"./HazardModel.json":18,"./HazardView.json":19,"./LaboratoryModel.json":20,"./LaboratoryView.json":21,"./ModelCategoryModel.json":22,"./ModelCategoryView.json":23,"./ModelEquationModel.json":24,"./ModelEquationView.json":25,"./ModelMathModel.json":26,"./ModelMathView.json":27,"./ModificationDateModel.json":28,"./ModificationDateView.json":29,"./ParameterModel.json":30,"./ParameterView.json":31,"./PopulationGroupModel.json":32,"./PopulationGroupView.json":33,"./ProductModel.json":34,"./ProductView.json":35,"./ReferenceModel.json":36,"./ReferenceView.json":37,"./RegionModel.json":38,"./RegionView.json":39,"./ScopeModel.json":40,"./ScopeView.json":41,"./SpatialInformationModel.json":42,"./SpatialInformationView.json":43,"./StringObjectModel.json":44,"./StringObjectView.json":45,"./StudyModel.json":46,"./StudySampleModel.json":47,"./StudySampleView.json":48,"./StudyView.json":49,"@jsonforms/core":56,"@jsonforms/material-renderers":95,"react-redux":955,"redux":993}],51:[function(require,module,exports){
 		"use strict";

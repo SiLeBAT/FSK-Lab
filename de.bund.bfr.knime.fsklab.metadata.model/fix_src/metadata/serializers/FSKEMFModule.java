@@ -33,6 +33,7 @@ import metadata.GeneralInformation;
 import metadata.MetadataFactory;
 import metadata.MetadataPackage;
 import metadata.ModelMath;
+import metadata.PopulationGroup;
 import metadata.Scope;
 
 public class FSKEMFModule extends SimpleModule {
@@ -47,10 +48,11 @@ public class FSKEMFModule extends SimpleModule {
 
 		        gen.writeStartObject();
 		        ObjectMapper mapper = EMFModule.setupDefaultMapper();
+		      
 		        String jsonStr = mapper.writeValueAsString(value);
-		        
+		        System.out.println(" GeneralInformation serializer  "+jsonStr);
 		        gen.writeStringField("generalInformation", jsonStr);
-		        
+		        //from java to javascript part
 		        gen.writeEndObject();
 		      }
 		    });
@@ -59,12 +61,13 @@ public class FSKEMFModule extends SimpleModule {
 	      @Override
 	      public GeneralInformation deserialize(JsonParser p, DeserializationContext ctxt)
 	          throws IOException, JsonProcessingException {
+	    	  //from javascript to javaObject
 	    	  final JsonNode node = p.readValueAsTree();
 		        final String gIString = node.get("generalInformation").textValue();
-		        
+		        System.out.println(" GeneralInformation deserialize  "+gIString);
 		        final ResourceSet resourceSet = new ResourceSetImpl();
 		        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-		          .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory());
+		          .put(Resource.Factory.Registry.DEFAULT_CONTENT_TYPE_IDENTIFIER, new JsonResourceFactory());
 			      resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
 			          MetadataPackage.eINSTANCE);
 			      Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
@@ -74,7 +77,6 @@ public class FSKEMFModule extends SimpleModule {
 			      return gi;
 	      }
 	    });
-	    
 	    addSerializer(Scope.class, new JsonSerializer<Scope>() {
 		      @Override
 		      public void serialize(Scope value, JsonGenerator gen, SerializerProvider serializers)
@@ -82,10 +84,11 @@ public class FSKEMFModule extends SimpleModule {
 
 		        gen.writeStartObject();
 		        ObjectMapper mapper = EMFModule.setupDefaultMapper();
+		      
 		        String jsonStr = mapper.writeValueAsString(value);
-		        
+		        System.out.println(" Scope serializer  "+jsonStr);
 		        gen.writeStringField("scope", jsonStr);
-		        
+		        //from java to javascript part
 		        gen.writeEndObject();
 		      }
 		    });
@@ -94,22 +97,26 @@ public class FSKEMFModule extends SimpleModule {
 	      @Override
 	      public Scope deserialize(JsonParser p, DeserializationContext ctxt)
 	          throws IOException, JsonProcessingException {
+	    	  //from javascript to javaObject
 	    	  final JsonNode node = p.readValueAsTree();
 		        final String gIString = node.get("scope").textValue();
-		        System.out.println(gIString);
+		        System.out.println(" Scope deserialize  "+gIString);
 		        
 		        final ResourceSet resourceSet = new ResourceSetImpl();
 		        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-		          .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory());
-			      resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
+		          .put(Resource.Factory.Registry.DEFAULT_CONTENT_TYPE_IDENTIFIER, new JsonResourceFactory());
+			    resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
 			          MetadataPackage.eINSTANCE);
-			      Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
+			    
+			    Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
 			      InputStream stream = new ByteArrayInputStream(gIString.getBytes(StandardCharsets.UTF_8));
 			      resource.load(stream, null);
+			      stream.close();
+			      
 			      Scope gi = (Scope) resource.getContents().get(0);
 			      return gi;
 	      }
-	    });
+	    });	    
 	    addSerializer(DataBackground.class, new JsonSerializer<DataBackground>() {
 		      @Override
 		      public void serialize(DataBackground value, JsonGenerator gen, SerializerProvider serializers)
@@ -131,7 +138,6 @@ public class FSKEMFModule extends SimpleModule {
 	          throws IOException, JsonProcessingException {
 	    	  final JsonNode node = p.readValueAsTree();
 		        final String gIString = node.get("dataBackground").textValue();
-		        System.out.println(gIString);
 		        
 		        final ResourceSet resourceSet = new ResourceSetImpl();
 		        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
@@ -166,7 +172,6 @@ public class FSKEMFModule extends SimpleModule {
 	          throws IOException, JsonProcessingException {
 	    	  final JsonNode node = p.readValueAsTree();
 		        final String gIString = node.get("modelMath").textValue();
-		        System.out.println(gIString);
 		        
 		        final ResourceSet resourceSet = new ResourceSetImpl();
 		        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()

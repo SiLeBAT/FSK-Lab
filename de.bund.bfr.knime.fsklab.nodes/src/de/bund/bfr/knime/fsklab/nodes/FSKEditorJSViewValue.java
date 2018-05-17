@@ -83,7 +83,7 @@ class FSKEditorJSViewValue extends EMFJSONViewContent {
   public final int pseudoIdentifier = (new Random()).nextInt();
   
   private GeneralInformation generalInformation ;
-  private Scope scope ;
+  private Scope scope;
   private DataBackground dataBackground;
   private ModelMath modelMath ;
   private String firstModelScript;

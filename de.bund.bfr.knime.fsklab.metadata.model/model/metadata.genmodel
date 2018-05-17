@@ -40,6 +40,7 @@
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/HEAR"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/ICOMM"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/INPR"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/JOUR"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/JFULL"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/LEGAL"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/MANSCPT"/>

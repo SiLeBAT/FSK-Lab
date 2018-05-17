@@ -38,6 +38,11 @@ import org.knime.js.core.node.AbstractWizardNodeModel;
 import de.bund.bfr.knime.fsklab.EMFAbstractWizardNodeModel;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import metadata.MetadataFactory;
+import metadata.MetadataPackage;
+import metadata.PopulationGroup;
+import metadata.StringObject;
+import metadata.impl.StringObjectImpl;
 
 
 
@@ -128,6 +133,11 @@ final class FSKEditorJSNodeModel
       // If not executed
       if (fskEditorProxyValue.getGeneralInformation() == null) {
         fskEditorProxyValue.setGeneralInformation(inObj1.generalInformation);
+       /* StringObject so = MetadataFactory.eINSTANCE.createStringObject();
+        so.setValue("asasa");
+        PopulationGroup pg = MetadataFactory.eINSTANCE.createPopulationGroup();
+        pg.getBmi().add(so);
+        inObj1.scope.setPopulationGroup(pg);*/
         fskEditorProxyValue.setScope(inObj1.scope);
         fskEditorProxyValue.setDataBackground(inObj1.dataBackground);
         fskEditorProxyValue.setModelMath(inObj1.modelMath);
