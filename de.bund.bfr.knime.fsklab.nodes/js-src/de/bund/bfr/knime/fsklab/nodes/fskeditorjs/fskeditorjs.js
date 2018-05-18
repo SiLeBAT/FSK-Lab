@@ -140,10 +140,16 @@ fskeditorjs = function() {
 		_firstModel.generalInformation.status = _firstModel.generalInformation.status != null ?_firstModel.generalInformation.status:"";
 		_firstModel.generalInformation.objective = _firstModel.generalInformation.objective != null ?_firstModel.generalInformation.objective:"";
 
-		window.scope.generalComment = _firstModel.scope.generalComment != null ?_firstModel.scope.generalComment:"";
-		window.scope.temporalInformation = _firstModel.scope.temporalInformation != null ?_firstModel.scope.temporalInformation:"";
-		_firstModel.scope.populationGroup = _firstModel.scope.populationGroup != null ?_firstModel.scope.populationGroup:{};
-
+		_firstModel.scope.generalComment = _firstModel.scope.generalComment != null ?_firstModel.scope.generalComment:"";
+		_firstModel.scope.temporalInformation = _firstModel.scope.temporalInformation != null ?_firstModel.scope.temporalInformation:"";
+		window.scope.populationGroup = window.scope.populationGroup != null ? window.scope.populationGroup:{};
+		window.scope.populationGroup.populationName = window.scope.populationGroup.populationName != null ?window.scope.populationGroup.populationName:"";
+		window.scope.populationGroup.targetPopulation = window.scope.populationGroup.targetPopulation != null ?window.scope.populationGroup.targetPopulation:"";
+		var StringObjectPopupsNamex = ['populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
+		$.each(StringObjectPopupsNamex, function( index, value ) {
+			window.scope.populationGroup[value] = window.scope.populationGroup[value] != null ?window.scope.populationGroup[value]:[];
+		});
+		
 		_firstModel.dataBackground.study = _firstModel.dataBackground.study!=null?_firstModel.dataBackground.study:{};
 		_firstModel.dataBackground.dietaryassessmentmethod = _firstModel.dataBackground.dietaryassessmentmethod!=null?_firstModel.dataBackground.dietaryassessmentmethod:{};
 		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory!=null?_firstModel.dataBackground.laboratory:{};
@@ -151,7 +157,7 @@ fskeditorjs = function() {
 	}
     joinerNode.getComponentValue = function() {
     	
-    	window.store2.getState().jsonforms.core.data.populationGroup = window.store5.getState().jsonforms.core.data;
+    	window.store2.getState().jsonforms.core.data.populationGroup = window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data;
     	window.store1.getState().jsonforms.core.data.author = window.store23.getState().jsonforms.core.data;
     	window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data;
     	_viewValue.generalInformation.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);

@@ -2386,7 +2386,7 @@ function createEMFForm(){
 		  ]
 		}
 		},{}],50:[function(require,module,exports){
-			var toBeReplacedMap = new Object();
+			window.toBeReplacedMap = new Object();
 			var jsonformscore = require('@jsonforms/core');
 			var material_renderers = require('@jsonforms/material-renderers');
 
@@ -2544,9 +2544,9 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		window.store5.dispatch(Actions.init( window.scope.populationGroup != null? window.scope.populationGroup:{}, schema5, uischema5));
+		window.store5.dispatch(Actions.init( window.scope.populationGroup , schema5, uischema5));
 
-		toBeReplacedMap["Population Group"] = window.store5;
+		window.toBeReplacedMap["Population Group"] = window.store5;
 
 
 
@@ -2571,7 +2571,7 @@ function createEMFForm(){
 				  }
 				);
 		window.store7.dispatch(Actions.init(window.dataBackground.study!=null?window.dataBackground.study:{}, schema7, uischema7));
-		toBeReplacedMap["Study"] = window.store7;
+		window.toBeReplacedMap["Study"] = window.store7;
 
 		  store8 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -2594,7 +2594,7 @@ function createEMFForm(){
 				  }
 				);
 		store9.dispatch(Actions.init( window.dataBackground.dietaryAssessmentMethod!=null?window.dataBackground.dietaryAssessmentMethod:{}, schema9, uischema9));
-		toBeReplacedMap["Dietaryassessmentmethod"] = store9;
+		window.toBeReplacedMap["Dietaryassessmentmethod"] = store9;
 
 		  store10 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -2607,7 +2607,7 @@ function createEMFForm(){
 				);
 
 		store10.dispatch(Actions.init( window.dataBackground.laboratory!=null?window.dataBackground.laboratory:{}, schema10, uischema10));
-		toBeReplacedMap["Laboratory"] = store10;
+		window.toBeReplacedMap["Laboratory"] = store10;
 
 		  store11 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -2620,7 +2620,7 @@ function createEMFForm(){
 				);
 		  
 		store11.dispatch(Actions.init( window.dataBackground.assay!=null?window.dataBackground.assay:{}, schema11, uischema11));
-		toBeReplacedMap["Assay"] = store11;
+		window.toBeReplacedMap["Assay"] = store11;
 		//popups creator
 
 
@@ -2751,7 +2751,7 @@ function createEMFForm(){
 				  }
 				);
 		window.store23.dispatch(Actions.init(window.generalInformation.author!=null?window.generalInformation.author:{}, schema23, uischema23));
-		toBeReplacedMap["Author"] = window.store23;
+		window.toBeReplacedMap["Author"] = window.store23;
 		store24 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -2762,7 +2762,7 @@ function createEMFForm(){
 				  }
 				);
 		store24.dispatch(Actions.init(window.generalInformation.creators!= null?window.generalInformation.creators:{}, schema23, uischema23));
-		toBeReplacedMap["Creators"] = store24;
+		window.toBeReplacedMap["Creators"] = store24;
 		store25 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -2773,7 +2773,7 @@ function createEMFForm(){
 				  }
 				);
 		store25.dispatch(Actions.init(window.scope.spatialInformation!= null?window.scope.spatialInformation:{region:[],country:[]}, schema25, uischema25));
-		toBeReplacedMap["Spatial Information"] = store25;
+		window.toBeReplacedMap["Spatial Information"] = store25;
 
 		store26 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -2785,7 +2785,7 @@ function createEMFForm(){
 				  }
 				);
 		store26.dispatch(Actions.init(window.modelMath.event, schema26, uischema26));
-		toBeReplacedMap["Event"] = store26;
+		window.toBeReplacedMap["Event"] = store26;
 
 		store27 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -2797,7 +2797,7 @@ function createEMFForm(){
 				  }
 				);
 		store27.dispatch(Actions.init( window.modelMath.exposure!= null?window.modelMath.exposure:{}, schema27, uischema27));
-		toBeReplacedMap["Exposure"] = store27;
+		window.toBeReplacedMap["Exposure"] = store27;
 
 		store28 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -2853,7 +2853,7 @@ function createEMFForm(){
 					if(areaName.indexOf('No applicable field found') < 0){
 						$(value).remove();
 						$(parentxc).append( "<div id ='"+areaName+"' class='replaced' ></div>" );
-						ReactDOM.render(React.createFactory(Provider)({store: toBeReplacedMap[areaName]},
+						ReactDOM.render(React.createFactory(Provider)({store: window.toBeReplacedMap[areaName]},
 								App()
 						), document.getElementById(areaName));
 					}
@@ -3397,7 +3397,80 @@ function createEMFForm(){
 		}catch(err){console.log("event " + err);
 
 		}
-		var StringObjectPopupsName = ['populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
+
+
+		///////////////////////
+		window.popupschemapopulationSpan= require('./StringObjectModel.json');
+		window.popupuischemapopulationSpan = require('./StringObjectView.json');
+		window.populationSpanstore = createStore(
+				  combineReducers({ jsonforms: jsonformsReducer() }),  
+				  {
+				    jsonforms: {
+				      renderers: materialRenderers,
+				      fields: materialFields,
+				    }
+				  }
+				);
+		window.populationSpanstore.dispatch(Actions.init({}, window.popupschemapopulationSpan, window.popupuischemapopulationSpan));
+		window.savepopulationSpan = function () {
+			
+				console.log(window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data);		
+				window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data.populationSpan.push(window.populationSpanstore.getState().jsonforms.core.data);
+				/*console.log(window.populationSpanstore.getState().jsonforms.core.data);
+				console.log(window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data);
+				console.log(window.store2.getState().jsonforms.core.data);*/
+				var parentxc ;
+				var areaName;
+				try{
+						value = document.getElementById("Population Group");
+						parentxc = value.parentNode;
+						
+						
+						$(value).remove();
+						$(parentxc).append( "<div id ='Population Group' class='replaced' ></div>" );
+						ReactDOM.render(React.createFactory(Provider)({store: window.toBeReplacedMap["Population Group"]},
+								App()
+						), document.getElementById("Population Group"));
+						
+				}catch(err){
+					console.log("loop ",parentxc, err);
+				}
+				
+				
+			
+		}
+		$(parent9).append(
+				"<div id='populationSpan' class='modal fade' role='dialog'>\n" + 
+		        "  <div class='modal-dialog'>\n" + 
+		        "\n" + 
+		        "    <!-- Modal content-->\n" + 
+		        "    <div class='modal-content'>\n" + 
+		        "      <div class='modal-header'>\n" + 
+		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
+		        "        <h4 id='titlepopulationSpan' class='modal-title'>Modal Header</h4>\n" + 
+		        "      </div>\n" + 
+		        "      <div id='populationSpanModelContent' class='modal-body'>\n" + 
+		        "      </div>\n" + 
+		        "      <div class='modal-footer'>\n" + 
+		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
+		        "   	 <button id='save' onclick='window.savepopulationSpan()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "      </div>\n" + 
+		        "    </div>\n" + 
+		        "\n" + 
+		        "  </div>\n" + 
+		        "</div>");
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: window.populationSpanstore},
+				App()
+		), document.getElementById('populationSpanModelContent'));
+		}catch(err){console.log("event " + err);
+
+		}
+
+
+
+		//////////////////////
+		/*var StringObjectPopupsName = ['populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
 
 
 		window.popupFunctions = {};
@@ -3420,7 +3493,7 @@ function createEMFForm(){
 			
 			window.popupstore[value].dispatch(Actions.init({}, window.popupschema[value], window.popupuischema[value]));
 			window.popupFunctions['save'+value]="window.scope.populationGroup."+value+".push(window.popupstore."+value+".getState().jsonforms.core.data);"+
-												"window.store5.dispatch(Actions.init(window.scope.populationGroup, window.schema5, window.uischema5));";
+												"window.store5.dispatch(Actions.init(window.scope.populationGroup, window.schema5, window.uischema5));console.log(window.store5.getState().jsonforms.core.data);";
 			
 			
 			 
@@ -3452,7 +3525,7 @@ function createEMFForm(){
 		}});
 
 
-
+		*/
 		},{"./App":1,"./AssayModel.json":2,"./AssayView.json":3,"./ContactModel.json":4,"./ContactView.json":5,"./CountryModel.json":6,"./CountryView.json":7,"./DataBackgroundModel.json":8,"./DataBackgroundView.json":9,"./DietaryAssessmentMethodModel.json":10,"./DietaryAssessmentMethodView.json":11,"./EventModel.json":12,"./EventView.json":13,"./ExposureModel.json":14,"./ExposureView.json":15,"./GeneralInformationModel.json":16,"./GeneralInformationView.json":17,"./HazardModel.json":18,"./HazardView.json":19,"./LaboratoryModel.json":20,"./LaboratoryView.json":21,"./ModelCategoryModel.json":22,"./ModelCategoryView.json":23,"./ModelEquationModel.json":24,"./ModelEquationView.json":25,"./ModelMathModel.json":26,"./ModelMathView.json":27,"./ModificationDateModel.json":28,"./ModificationDateView.json":29,"./ParameterModel.json":30,"./ParameterView.json":31,"./PopulationGroupModel.json":32,"./PopulationGroupView.json":33,"./ProductModel.json":34,"./ProductView.json":35,"./ReferenceModel.json":36,"./ReferenceView.json":37,"./RegionModel.json":38,"./RegionView.json":39,"./ScopeModel.json":40,"./ScopeView.json":41,"./SpatialInformationModel.json":42,"./SpatialInformationView.json":43,"./StringObjectModel.json":44,"./StringObjectView.json":45,"./StudyModel.json":46,"./StudySampleModel.json":47,"./StudySampleView.json":48,"./StudyView.json":49,"@jsonforms/core":56,"@jsonforms/material-renderers":95,"react-redux":955,"redux":993}],51:[function(require,module,exports){
 		"use strict";
 		Object.defineProperty(exports, "__esModule", { value: true });
