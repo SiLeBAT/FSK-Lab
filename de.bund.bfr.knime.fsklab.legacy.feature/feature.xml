@@ -42,12 +42,14 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.ext.r.type"/>
       <import plugin="org.knime.r"/>
       <import plugin="org.knime.workbench.repository"/>
-      <import plugin="org.jdom2" version="2.0.1" match="greaterOrEqual"/>
       <import plugin="com.sun.jna"/>
       <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.junit"/>
       <import plugin="org.knime.js.core"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.emfjson.jackson" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="de.bund.bfr.knime.fsklab.util"/>
    </requires>
 
    <plugin
