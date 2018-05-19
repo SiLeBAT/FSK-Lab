@@ -43,10 +43,10 @@ simulator = function() {
 			var input = $('<input type="' + inputType + '" class="form-control" value="">');
 			input.val(value);
 
-			input.on('input', function() {
+			
+			input.focusout(function() {
 				_val.simulations[_currentSimulation].values[parameterIndex] = $(this).val();
-			});
-
+			  })
 			var form = $('<div class="form-group">' +
 				'  <label class="col-sm-3 control-label">' + parameter.id + '</label>' +
 				'  <div class="col-sm-6 xxx"></div>' +
@@ -124,7 +124,11 @@ simulator = function() {
 			$('#nameInput').val('');
 
 			// Create and save new simulation (the values are taken from the default simulation)
-			var newSimulation = {'name': simulationName, 'values': _val.simulations[0].values }
+			valuesArray = [];
+			$.each(_val.simulations[0].values,function(index,value){
+				valuesArray.push(value);
+			})
+			var newSimulation = {'name': simulationName, 'values': valuesArray }
 			_val.simulations.push(newSimulation);
 		});
 
@@ -161,7 +165,7 @@ simulator = function() {
 					break;
 				}
 			}
-
+			_val.selectedSimulationIndex = _currentSimulation;
 			var newDisabledValue = simulationName === 'defaultSimulation';
 
 			// Disables the remove button for the default simulation which cannot be removed
@@ -175,11 +179,12 @@ simulator = function() {
 
 			// Update title
 			$('.parametersDiv h2').text(simulationName);
-
+			
 			// Update values for the selected simulation
 			$('.parametersDiv input').each(function(index) {
 				$(this).prop('disabled', newDisabledValue);
 				$(this).val(_val.simulations[_currentSimulation].values[index]);
+				
 			});
 		});
 

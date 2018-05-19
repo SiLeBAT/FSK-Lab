@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.EList;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -41,7 +42,7 @@ import metadata.ParameterClassification;
 class JSSimulatorNodeModel
     extends AbstractWizardNodeModel<JSSimulatorViewRepresentation, JSSimulatorViewValue>
     implements PortObjectHolder {
-
+  private static final NodeLogger LOGGER = NodeLogger.getLogger("JavaScript FSK Simulation Configurator");
   private FskPortObject port;
 
   // Input and output port types
@@ -160,13 +161,16 @@ class JSSimulatorNodeModel
         List<metadata.Parameter> inputParams = getViewRepresentation().parameters;
 
         for (int i = 0; i < inputParams.size(); i++) {
-          String paramName = inputParams.get(i).getParameterID();
+          String paramName = inputParams.get(i).getParameterName();
           String paramValue = jsSimulation.values.get(i);
 
           fskSimulation.getParameters().put(paramName, paramValue);
         }
         outObj.simulations.add(fskSimulation);
+        
       }
+      outObj.selectedSimulationIndex = val.selectedSimulationIndex;
+      LOGGER.info(" saving '"+val.selectedSimulationIndex+"' as the selected simulation index!");
 
       port = inObj;
     }

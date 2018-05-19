@@ -125,7 +125,7 @@ public class FskPortObject implements PortObject {
   private static int numOfInstances = 0;
 
   public int objectNum;
-
+  public int selectedSimulationIndex = 0;
   public final List<FskSimulation> simulations = new ArrayList<>();
 
   // EMF metadata
@@ -191,7 +191,7 @@ public class FskPortObject implements PortObject {
 
     private static final String WORKSPACE = "workspace";
     private static final String SIMULATION = "simulation";
-
+    private static final String SIMULATION_INDEX = "simulationIndex";
     final ResourceSet resourceSet = new ResourceSetImpl();
 
     @Override
@@ -260,7 +260,19 @@ public class FskPortObject implements PortObject {
         }
         out.closeEntry();
       }
+      
+      // Save selected simulation index
+      
+        out.putNextEntry(new ZipEntry(SIMULATION_INDEX));
 
+        try {
+          ObjectOutputStream oos = new ObjectOutputStream(out);
+          oos.writeObject(portObject.selectedSimulationIndex);
+        } catch (IOException exception) {
+          // TODO: deal with exception
+        }
+        out.closeEntry();
+  
       out.close();
     }
 
@@ -284,7 +296,7 @@ public class FskPortObject implements PortObject {
       Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
 
       List<FskSimulation> simulations = new ArrayList<>();
-
+      int selectedSimulationIndex = 0;
       ZipEntry entry;
       while ((entry = in.getNextEntry()) != null) {
         String entryName = entry.getName();
@@ -356,6 +368,16 @@ public class FskPortObject implements PortObject {
             e.printStackTrace();
           }
         }
+        
+        else if (entryName.equals(SIMULATION_INDEX)) {
+            ObjectInputStream ois = new ObjectInputStream(in);
+            try {
+              selectedSimulationIndex =  ((Integer) ois.readObject()).intValue();
+            } catch (ClassNotFoundException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+        }
       }
 
       in.close();
@@ -367,7 +389,7 @@ public class FskPortObject implements PortObject {
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);
       }
-
+      portObj.selectedSimulationIndex = selectedSimulationIndex;
       return portObj;
     }
 

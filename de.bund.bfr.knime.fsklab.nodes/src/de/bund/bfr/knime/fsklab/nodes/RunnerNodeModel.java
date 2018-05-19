@@ -116,11 +116,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
 
     FskPortObject fskObj = (FskPortObject) inData[0];
+    LOGGER.info(" recieving '"+fskObj.selectedSimulationIndex+"' as the selected simulation index!");
 
     try (RController controller = new RController()) {
-
-      FskSimulation fskSimulation = fskObj.simulations.stream()
-          .filter(it -> it.getName().equals(nodeSettings.simulation)).findAny().get();
+      // get the index of the selected simulation saved by the JavaScript FSK Simulation Configurator! the default value is 0 which is the the default simulation
+      FskSimulation fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
+      /*FskSimulation fskSimulation = fskObj.simulations.stream()
+          .filter(it -> it.getName().equals(nodeSettings.simulation)).findAny().get();*/
       ExecutionContext context = exec.createSubExecutionContext(1.0);
 
       fskObj = runSnippet(controller, fskObj, fskSimulation, context);
@@ -154,6 +156,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     controller.addPackagePath(LibRegistry.instance().getInstallationPath());
 
     exec.setMessage("Set parameter values");
+    LOGGER.info(" Running with '"+simulation.getName()+"' simulation!");
     String paramScript = NodeUtils.buildParameterScript(simulation);
     executor.execute(paramScript, exec);
 

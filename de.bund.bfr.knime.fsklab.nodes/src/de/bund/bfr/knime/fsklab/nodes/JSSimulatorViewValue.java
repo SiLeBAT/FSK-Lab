@@ -36,6 +36,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 class JSSimulatorViewValue extends JSONViewContent {
 
   List<JSSimulation> simulations;
+  int selectedSimulationIndex = 0;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {}
