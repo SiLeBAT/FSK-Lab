@@ -48,6 +48,10 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.apache.commons.io"/>
       <import plugin="org.apache.commons.lang"/>
       <import plugin="org.slf4j.api"/>
+      <import plugin="org.knime.ext.svg"/>
+      <import plugin="org.eclipse.emf.common"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="de.bund.bfr.knime.fsklab.metadata.model"/>
    </requires>
 
    <plugin
@@ -71,6 +75,13 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
 
    <plugin
          id="org.jdom2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.bund.bfr.knime.fsklab.util"
          download-size="0"
          install-size="0"
          version="0.0.0"

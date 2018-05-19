@@ -48,9 +48,9 @@ simulator = function() {
 				_val.simulations[_currentSimulation].values[parameterIndex] = $(this).val();
 			  })
 			var form = $('<div class="form-group">' +
-				'  <label class="col-sm-3 control-label">' + parameter.id + '</label>' +
+				'  <label class="col-sm-3 control-label">' + parameter.parameterName + '</label>' +
 				'  <div class="col-sm-6 xxx"></div>' +
-				'  <div class="col-sm-3"><label>' + parameter.unit + '</label></div>' +
+				'  <div class="col-sm-3"><label>' + parameter.parameterUnit + '</label></div>' +
 				'</div>');
 			$('.xxx', form).append(input);
 			form.input = input;
@@ -87,6 +87,7 @@ simulator = function() {
 			var simulationName = _val.simulations[i].name;
 			var button = createSimulationButton(simulationName);
 			$('#simulationNamesDiv').append(button);
+			
 		}
 
 		// Remove simulation event
@@ -119,7 +120,7 @@ simulator = function() {
 			var simulationName = $('#nameInput').val();
 			var button = createSimulationButton(simulationName);
 			$('#simulationNamesDiv').append(button);
-
+			
 			// Wipe out the name entry
 			$('#nameInput').val('');
 
@@ -130,6 +131,7 @@ simulator = function() {
 			})
 			var newSimulation = {'name': simulationName, 'values': valuesArray }
 			_val.simulations.push(newSimulation);
+			$(button).trigger( "click" );
 		});
 
 

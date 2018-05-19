@@ -4,19 +4,29 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: de.bund.bfr.knime.fsklab.metadata.model;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-ClassPath: .,
- libs/ez-vcard-0.10.2.jar
+ libs/emfjson-jackson-1.0.0-rc.1.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: metadata,
  metadata.impl,
  metadata.serializers,
- metadata.util
+ metadata.util,
+ org.emfjson.jackson.annotations,
+ org.emfjson.jackson.databind,
+ org.emfjson.jackson.databind.deser,
+ org.emfjson.jackson.databind.property,
+ org.emfjson.jackson.databind.ser,
+ org.emfjson.jackson.databind.type,
+ org.emfjson.jackson.errors,
+ org.emfjson.jackson.handlers,
+ org.emfjson.jackson.module,
+ org.emfjson.jackson.resource,
+ org.emfjson.jackson.utils
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-core,
  com.fasterxml.jackson.core.jackson-databind,
- org.emfjson.jackson;bundle-version="1.0.0",
  de.bund.bfr.knime.fsklab.util
 Bundle-ActivationPolicy: lazy

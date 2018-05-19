@@ -48,7 +48,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.junit"/>
       <import plugin="org.knime.js.core"/>
       <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.emfjson.jackson" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="de.bund.bfr.knime.fsklab.util"/>
    </requires>
 

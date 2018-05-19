@@ -1,6 +1,10 @@
 /* Add borders to main divs. */
-.simulationsDiv, .parametersDiv {
+.simulationsDiv{
 
-	border-style: dotted;	
-	border-color: blue;
+}
+
+.parametersDiv {
+
+	border-left: 1px solid;
+	
 }

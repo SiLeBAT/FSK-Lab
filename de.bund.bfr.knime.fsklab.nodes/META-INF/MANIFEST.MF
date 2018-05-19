@@ -28,7 +28,6 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.eclipse.emf.common,
  org.eclipse.emf.ecore;visibility:=reexport,
  de.bund.bfr.knime.fsklab.metadata.model,
- org.emfjson.jackson;bundle-version="1.0.0",
  de.bund.bfr.knime.fsklab.util
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
