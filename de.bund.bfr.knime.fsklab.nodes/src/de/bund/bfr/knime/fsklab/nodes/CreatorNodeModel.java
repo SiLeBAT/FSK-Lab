@@ -220,7 +220,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
             for (Parameter p : modelMath.getParameter()) {
 
-              if (p.getParameterClassification() == ParameterClassification.INPUT) {
+              if (p.getParameterClassification() == ParameterClassification.OUTPUT) {
                 continue;
               }
 
