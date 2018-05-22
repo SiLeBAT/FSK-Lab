@@ -105,12 +105,11 @@ fskeditorjs = function() {
     var firstModelParameterMap = new Object();
     var secomndModelParameterMap = new Object();
     joinerNode.init = function(representation, value) {
+    	_firstModel.generalInformation = JSON.parse(value.generalInformation);
+    	_firstModel.scope =  JSON.parse(value.scope);
     	
-    	_firstModel.generalInformation = JSON.parse(value.generalInformation.generalInformation);
-    	_firstModel.scope =  JSON.parse(value.scope.scope);
-    	
-    	_firstModel.modelMath =  JSON.parse(value.modelMath.modelMath);
-    	_firstModel.dataBackground =  JSON.parse(value.dataBackground.dataBackground);
+    	_firstModel.modelMath =  JSON.parse(value.modelMath);
+    	_firstModel.dataBackground =  JSON.parse(value.dataBackground);
     	_firstModelScript = value.firstModelScript;
     	_firstModelViz = value.firstModelViz;
     	
@@ -160,10 +159,10 @@ fskeditorjs = function() {
     	window.store2.getState().jsonforms.core.data.populationGroup = window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data;
     	window.store1.getState().jsonforms.core.data.author = window.store23.getState().jsonforms.core.data;
     	window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data;
-    	_viewValue.generalInformation.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);
-    	_viewValue.scope.scope = JSON.stringify(window.store2.getState().jsonforms.core.data);
-    	_viewValue.modelMath.modelMath = JSON.stringify(window.store17.getState().jsonforms.core.data);
-    	_viewValue.dataBackground.dataBackground = JSON.stringify(window.store6.getState().jsonforms.core.data);
+    	_viewValue.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);
+    	_viewValue.scope = JSON.stringify(window.store2.getState().jsonforms.core.data);
+    	_viewValue.modelMath = JSON.stringify(window.store17.getState().jsonforms.core.data);
+    	_viewValue.dataBackground = JSON.stringify(window.store6.getState().jsonforms.core.data);
         
         return _viewValue;
     };

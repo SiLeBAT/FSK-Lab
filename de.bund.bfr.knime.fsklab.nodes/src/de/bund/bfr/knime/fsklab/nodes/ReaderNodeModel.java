@@ -167,6 +167,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
       // Gets library URI for the running platform
       final URI libUri = NodeUtils.getLibURI();
+      
 
       // Gets library names
       for (final ArchiveEntry entry : archive.getEntriesWithFormat(libUri)) {

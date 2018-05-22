@@ -21,28 +21,34 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.knime.base.data.xml.SvgCell;
-import org.knime.base.data.xml.SvgImageContent;
+import java.nio.charset.StandardCharsets;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.knime.core.node.port.image.ImagePortObject;
-import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
-import de.bund.bfr.knime.fsklab.EMFAbstractWizardNodeModel;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
-import metadata.MetadataFactory;
+import metadata.DataBackground;
+import metadata.GeneralInformation;
 import metadata.MetadataPackage;
-import metadata.PopulationGroup;
-import metadata.StringObject;
-import metadata.impl.StringObjectImpl;
+import metadata.ModelMath;
+import metadata.Scope;
 
 
 
@@ -51,11 +57,13 @@ import metadata.impl.StringObjectImpl;
  */
 
 final class FSKEditorJSNodeModel
-    extends EMFAbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
+    extends AbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
     implements PortObjectHolder {
+  private static final NodeLogger LOGGER = NodeLogger.getLogger(FSKEditorJSViewValue.class);
+
   private final FSKEditorJSNodeSettings nodeSettings = new FSKEditorJSNodeSettings();
   private FskPortObject m_port;
- 
+  final static ResourceSet resourceSet = new ResourceSetImpl();
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
@@ -132,28 +140,21 @@ final class FSKEditorJSNodeModel
 
       // If not executed
       if (fskEditorProxyValue.getGeneralInformation() == null) {
-        fskEditorProxyValue.setGeneralInformation(inObj1.generalInformation);
-       /* StringObject so = MetadataFactory.eINSTANCE.createStringObject();
-        so.setValue("asasa");
-        PopulationGroup pg = MetadataFactory.eINSTANCE.createPopulationGroup();
-        pg.getBmi().add(so);
-        inObj1.scope.setPopulationGroup(pg);*/
-        fskEditorProxyValue.setScope(inObj1.scope);
-        fskEditorProxyValue.setDataBackground(inObj1.dataBackground);
-        fskEditorProxyValue.setModelMath(inObj1.modelMath);
+        fskEditorProxyValue.setGeneralInformation(FromEOjectToJSON(inObj1.generalInformation));
+        fskEditorProxyValue.setScope(FromEOjectToJSON(inObj1.scope));
+        fskEditorProxyValue.setDataBackground(FromEOjectToJSON(inObj1.dataBackground));
+        fskEditorProxyValue.setModelMath(FromEOjectToJSON(inObj1.modelMath));
         fskEditorProxyValue.setFirstModelScript(inObj1.model);
         fskEditorProxyValue.setFirstModelViz(inObj1.viz);
        
         exec.setProgress(1);
       }
-      outObj.generalInformation = fskEditorProxyValue.getGeneralInformation();
-      outObj.scope = fskEditorProxyValue.getScope();
-      outObj.dataBackground = fskEditorProxyValue.getDataBackground();
-      outObj.modelMath = fskEditorProxyValue.getModelMath();
+      outObj.generalInformation = getEObjectFromJson(fskEditorProxyValue.getGeneralInformation(),GeneralInformation.class);
+      outObj.scope = getEObjectFromJson(fskEditorProxyValue.getScope(),Scope.class);
+      outObj.dataBackground = getEObjectFromJson(fskEditorProxyValue.getDataBackground(),DataBackground.class);
+      outObj.modelMath = getEObjectFromJson(fskEditorProxyValue.getModelMath(),ModelMath.class);
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
-      // Takes modified metadata from val
-      // outObj.template = val.metadata;
       
     }
     
@@ -161,7 +162,35 @@ final class FSKEditorJSNodeModel
     return new PortObject[] {outObj};
   }
 
+  private static String FromEOjectToJSON(final EObject eObject) throws JsonProcessingException {
 
+    
+      ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+      String jsonStr = objectMapper.writeValueAsString(eObject);
+      return jsonStr;
+   
+  }
+
+  private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType)
+      throws InvalidSettingsException {
+
+    
+    try {
+      ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+      resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(objectMapper));
+      resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
+          MetadataPackage.eINSTANCE);
+      Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
+      InputStream stream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
+      resource.load(stream, null);
+      
+      return (T) resource.getContents().get(0);
+    } catch (IOException exception) {
+      throw new InvalidSettingsException(exception);
+    }
+    
+  }
+  
   @Override
   protected void performReset() {
     m_port = null;

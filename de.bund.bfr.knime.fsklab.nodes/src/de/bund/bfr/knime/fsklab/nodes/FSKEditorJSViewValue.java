@@ -18,49 +18,22 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import org.knime.core.node.*;
-import org.knime.js.core.JSONViewContent;
-import de.bund.bfr.knime.fsklab.EMFJSONViewContent;
-import de.bund.bfr.knime.fsklab.JoinRelation;
-
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import metadata.DataBackground;
-import metadata.GeneralInformation;
-import metadata.MetadataFactory;
-import metadata.MetadataPackage;
-import metadata.ModelMath;
-import metadata.Scope;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import com.fasterxml.jackson.core.JsonParseException;
+import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 
 
 
 
-class FSKEditorJSViewValue extends EMFJSONViewContent {
+class FSKEditorJSViewValue extends JSONViewContent {
   
   private static final NodeLogger LOGGER = NodeLogger.getLogger(FSKEditorJSViewValue.class);
   private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
@@ -82,10 +55,13 @@ class FSKEditorJSViewValue extends EMFJSONViewContent {
 
   public final int pseudoIdentifier = (new Random()).nextInt();
   
-  private GeneralInformation generalInformation ;
-  private Scope scope;
-  private DataBackground dataBackground;
-  private ModelMath modelMath ;
+  
+  private String generalInformation ;
+ 
+
+  private String scope;
+  private String dataBackground;
+  private String modelMath ;
   private String firstModelScript;
   private String firstModelViz;
 
@@ -105,37 +81,7 @@ class FSKEditorJSViewValue extends EMFJSONViewContent {
   public void setFirstModelViz(String firstModelViz) {
     this.firstModelViz = firstModelViz;
   }
-  public GeneralInformation getGeneralInformation() {
-    return generalInformation;
-  }
-
-  public void setGeneralInformation(GeneralInformation generalInformation) {
-    this.generalInformation = generalInformation;
-  }
-
-  public Scope getScope() {
-    return scope;
-  }
-
-  public void setScope(Scope scope) {
-    this.scope = scope;
-  }
-
-  public DataBackground getDataBackground() {
-    return dataBackground;
-  }
-
-  public void setDataBackground(DataBackground dataBackground) {
-    this.dataBackground = dataBackground;
-  }
-
-  public ModelMath getModelMath() {
-    return modelMath;
-  }
-
-  public void setModelMath(ModelMath modelMath) {
-    this.modelMath = modelMath;
-  }
+ 
   
   
   @Override
@@ -172,22 +118,22 @@ class FSKEditorJSViewValue extends EMFJSONViewContent {
 
     // load meta data
     if (settings.containsKey(CFG_GENERAL_INFORMATION)) {
-      generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION, GeneralInformation.class);
+      generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION);
     }
     if (settings.containsKey(CFG_SCOPE)) {
-      scope = getEObject(settings, CFG_SCOPE, Scope.class);
+      scope = getEObject(settings, CFG_SCOPE);
     }
     if (settings.containsKey(CFG_DATA_BACKGROUND)) {
-      dataBackground = getEObject(settings, CFG_DATA_BACKGROUND, DataBackground.class);
+      dataBackground = getEObject(settings, CFG_DATA_BACKGROUND);
     }
     if (settings.containsKey(CFG_MODEL_MATH)) {
-      modelMath = getEObject(settings, CFG_MODEL_MATH, ModelMath.class);
+      modelMath = getEObject(settings, CFG_MODEL_MATH);
     }
 
    
   }
   private static void saveSettings(final NodeSettingsWO settings, final String key,
-      final EObject eObject) {
+      final String eObject) {
 
     try {
       ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
@@ -198,23 +144,11 @@ class FSKEditorJSViewValue extends EMFJSONViewContent {
     }
   }
 
-  private static <T> T getEObject(NodeSettingsRO settings, String key, Class<T> valueType)
+  private static String getEObject(NodeSettingsRO settings, String key)
       throws InvalidSettingsException {
 
-    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
     String jsonStr = settings.getString(key);
-    try {
-      resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
-      resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
-          MetadataPackage.eINSTANCE);
-      Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
-      InputStream stream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
-      resource.load(stream, null);
-      
-      return (T) resource.getContents().get(0);
-    } catch (IOException exception) {
-      throw new InvalidSettingsException(exception);
-    }
+    return jsonStr;
     
   }
   @Override
@@ -231,6 +165,37 @@ class FSKEditorJSViewValue extends EMFJSONViewContent {
   @Override
   public int hashCode() {
     return pseudoIdentifier;
+  }
+  public String getGeneralInformation() {
+    return generalInformation;
+  }
+
+  public void setGeneralInformation(String generalInformation) {
+    this.generalInformation = generalInformation;
+  }
+
+  public String getScope() {
+    return scope;
+  }
+
+  public void setScope(String scope) {
+    this.scope = scope;
+  }
+
+  public String getDataBackground() {
+    return dataBackground;
+  }
+
+  public void setDataBackground(String dataBackground) {
+    this.dataBackground = dataBackground;
+  }
+
+  public String getModelMath() {
+    return modelMath;
+  }
+
+  public void setModelMath(String modelMath) {
+    this.modelMath = modelMath;
   }
  
 }

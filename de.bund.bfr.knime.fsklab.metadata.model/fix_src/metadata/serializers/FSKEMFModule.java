@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -35,6 +37,8 @@ import metadata.MetadataPackage;
 import metadata.ModelMath;
 import metadata.PopulationGroup;
 import metadata.Scope;
+import metadata.StringObject;
+import metadata.impl.PopulationGroupImpl;
 
 public class FSKEMFModule extends SimpleModule {
 
@@ -81,10 +85,10 @@ public class FSKEMFModule extends SimpleModule {
 		      @Override
 		      public void serialize(Scope value, JsonGenerator gen, SerializerProvider serializers)
 		          throws IOException, JsonProcessingException {
-
+		    	
 		        gen.writeStartObject();
 		        ObjectMapper mapper = EMFModule.setupDefaultMapper();
-		      
+		        
 		        String jsonStr = mapper.writeValueAsString(value);
 		        System.out.println(" Scope serializer  "+jsonStr);
 		        gen.writeStringField("scope", jsonStr);
