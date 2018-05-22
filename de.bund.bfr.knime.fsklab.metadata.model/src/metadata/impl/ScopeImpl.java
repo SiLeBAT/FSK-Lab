@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -96,7 +95,7 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	protected EList<Product> product;
 
 	/**
-	 * The cached value of the '{@link #getHazard() <em>Hazard</em>}' reference list.
+	 * The cached value of the '{@link #getHazard() <em>Hazard</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getHazard()
@@ -106,7 +105,7 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	protected EList<Hazard> hazard;
 
 	/**
-	 * The cached value of the '{@link #getPopulationGroup() <em>Population Group</em>}' reference.
+	 * The cached value of the '{@link #getPopulationGroup() <em>Population Group</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getPopulationGroup()
@@ -205,7 +204,7 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	 */
 	public EList<Hazard> getHazard() {
 		if (hazard == null) {
-			hazard = new EObjectResolvingEList<Hazard>(Hazard.class, this, MetadataPackage.SCOPE__HAZARD);
+			hazard = new EObjectContainmentEList<Hazard>(Hazard.class, this, MetadataPackage.SCOPE__HAZARD);
 		}
 		return hazard;
 	}
@@ -216,14 +215,6 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	 * @generated
 	 */
 	public PopulationGroup getPopulationGroup() {
-		if (populationGroup != null && populationGroup.eIsProxy()) {
-			InternalEObject oldPopulationGroup = (InternalEObject)populationGroup;
-			populationGroup = (PopulationGroup)eResolveProxy(oldPopulationGroup);
-			if (populationGroup != oldPopulationGroup) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MetadataPackage.SCOPE__POPULATION_GROUP, oldPopulationGroup, populationGroup));
-			}
-		}
 		return populationGroup;
 	}
 
@@ -232,8 +223,14 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PopulationGroup basicGetPopulationGroup() {
-		return populationGroup;
+	public NotificationChain basicSetPopulationGroup(PopulationGroup newPopulationGroup, NotificationChain msgs) {
+		PopulationGroup oldPopulationGroup = populationGroup;
+		populationGroup = newPopulationGroup;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__POPULATION_GROUP, oldPopulationGroup, newPopulationGroup);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -242,10 +239,17 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	 * @generated
 	 */
 	public void setPopulationGroup(PopulationGroup newPopulationGroup) {
-		PopulationGroup oldPopulationGroup = populationGroup;
-		populationGroup = newPopulationGroup;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__POPULATION_GROUP, oldPopulationGroup, populationGroup));
+		if (newPopulationGroup != populationGroup) {
+			NotificationChain msgs = null;
+			if (populationGroup != null)
+				msgs = ((InternalEObject)populationGroup).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.SCOPE__POPULATION_GROUP, null, msgs);
+			if (newPopulationGroup != null)
+				msgs = ((InternalEObject)newPopulationGroup).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.SCOPE__POPULATION_GROUP, null, msgs);
+			msgs = basicSetPopulationGroup(newPopulationGroup, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__POPULATION_GROUP, newPopulationGroup, newPopulationGroup));
 	}
 
 	/**
@@ -301,6 +305,10 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 		switch (featureID) {
 			case MetadataPackage.SCOPE__PRODUCT:
 				return ((InternalEList<?>)getProduct()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.SCOPE__HAZARD:
+				return ((InternalEList<?>)getHazard()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.SCOPE__POPULATION_GROUP:
+				return basicSetPopulationGroup(null, msgs);
 			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
 				return basicSetSpatialInformation(null, msgs);
 		}
@@ -324,8 +332,7 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 			case MetadataPackage.SCOPE__HAZARD:
 				return getHazard();
 			case MetadataPackage.SCOPE__POPULATION_GROUP:
-				if (resolve) return getPopulationGroup();
-				return basicGetPopulationGroup();
+				return getPopulationGroup();
 			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
 				return getSpatialInformation();
 		}

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="metadata" nsURI="http://BfR/bund/de/knime/model/metadata" nsPrefix="metadata">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="metadata" nsURI="http://BfR/bund/de/knime/model/metadata_V1.0.3"
+    nsPrefix="metadata">
   <eClassifiers xsi:type="ecore:EClass" name="GeneralInformation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -190,9 +191,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="product" upperBound="-1"
         eType="#//Product" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hazard" upperBound="-1"
-        eType="#//Hazard"/>
+        eType="#//Hazard" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="populationGroup" lowerBound="1"
-        eType="#//PopulationGroup"/>
+        eType="#//PopulationGroup" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="spatialInformation" eType="#//SpatialInformation"
         containment="true"/>
   </eClassifiers>

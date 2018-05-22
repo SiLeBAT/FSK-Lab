@@ -216,8 +216,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Scope/generalComment"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metadata.ecore#//Scope/temporalInformation"/>
       <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/product"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/hazard"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/populationGroup"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/hazard"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/populationGroup"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//Scope/spatialInformation"/>
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//Laboratory">

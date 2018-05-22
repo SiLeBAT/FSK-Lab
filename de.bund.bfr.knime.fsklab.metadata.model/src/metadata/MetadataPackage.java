@@ -40,7 +40,7 @@ public interface MetadataPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://BfR/bund/de/knime/model/metadata";
+	String eNS_URI = "http://BfR/bund/de/knime/model/metadata_V1.0.3";
 
 	/**
 	 * The package namespace name.
@@ -1367,7 +1367,7 @@ public interface MetadataPackage extends EPackage {
 	int SCOPE__PRODUCT = 2;
 
 	/**
-	 * The feature id for the '<em><b>Hazard</b></em>' reference list.
+	 * The feature id for the '<em><b>Hazard</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1376,7 +1376,7 @@ public interface MetadataPackage extends EPackage {
 	int SCOPE__HAZARD = 3;
 
 	/**
-	 * The feature id for the '<em><b>Population Group</b></em>' reference.
+	 * The feature id for the '<em><b>Population Group</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -3675,10 +3675,10 @@ public interface MetadataPackage extends EPackage {
 	EReference getScope_Product();
 
 	/**
-	 * Returns the meta object for the reference list '{@link metadata.Scope#getHazard <em>Hazard</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.Scope#getHazard <em>Hazard</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Hazard</em>'.
+	 * @return the meta object for the containment reference list '<em>Hazard</em>'.
 	 * @see metadata.Scope#getHazard()
 	 * @see #getScope()
 	 * @generated
@@ -3686,10 +3686,10 @@ public interface MetadataPackage extends EPackage {
 	EReference getScope_Hazard();
 
 	/**
-	 * Returns the meta object for the reference '{@link metadata.Scope#getPopulationGroup <em>Population Group</em>}'.
+	 * Returns the meta object for the containment reference '{@link metadata.Scope#getPopulationGroup <em>Population Group</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Population Group</em>'.
+	 * @return the meta object for the containment reference '<em>Population Group</em>'.
 	 * @see metadata.Scope#getPopulationGroup()
 	 * @see #getScope()
 	 * @generated
@@ -5620,7 +5620,7 @@ public interface MetadataPackage extends EPackage {
 		EReference SCOPE__PRODUCT = eINSTANCE.getScope_Product();
 
 		/**
-		 * The meta object literal for the '<em><b>Hazard</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Hazard</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -5628,7 +5628,7 @@ public interface MetadataPackage extends EPackage {
 		EReference SCOPE__HAZARD = eINSTANCE.getScope_Hazard();
 
 		/**
-		 * The meta object literal for the '<em><b>Population Group</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Population Group</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

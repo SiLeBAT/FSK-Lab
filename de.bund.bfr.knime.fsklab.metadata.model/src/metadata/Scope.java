@@ -97,7 +97,7 @@ public interface Scope extends EObject {
 	EList<Product> getProduct();
 
 	/**
-	 * Returns the value of the '<em><b>Hazard</b></em>' reference list.
+	 * Returns the value of the '<em><b>Hazard</b></em>' containment reference list.
 	 * The list contents are of type {@link metadata.Hazard}.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -105,34 +105,34 @@ public interface Scope extends EObject {
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Hazard</em>' reference list.
+	 * @return the value of the '<em>Hazard</em>' containment reference list.
 	 * @see metadata.MetadataPackage#getScope_Hazard()
-	 * @model
+	 * @model containment="true"
 	 * @generated
 	 */
 	EList<Hazard> getHazard();
 
 	/**
-	 * Returns the value of the '<em><b>Population Group</b></em>' reference.
+	 * Returns the value of the '<em><b>Population Group</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Population Group</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Population Group</em>' reference.
+	 * @return the value of the '<em>Population Group</em>' containment reference.
 	 * @see #setPopulationGroup(PopulationGroup)
 	 * @see metadata.MetadataPackage#getScope_PopulationGroup()
-	 * @model required="true"
+	 * @model containment="true" required="true"
 	 * @generated
 	 */
 	PopulationGroup getPopulationGroup();
 
 	/**
-	 * Sets the value of the '{@link metadata.Scope#getPopulationGroup <em>Population Group</em>}' reference.
+	 * Sets the value of the '{@link metadata.Scope#getPopulationGroup <em>Population Group</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Population Group</em>' reference.
+	 * @param value the new value of the '<em>Population Group</em>' containment reference.
 	 * @see #getPopulationGroup()
 	 * @generated
 	 */
