@@ -331,7 +331,7 @@ public class RakipUtil {
 
     if (deprecatedScope.populationGroup != null) {
       metadata.PopulationGroup populationGroup = convert(deprecatedScope.populationGroup);
-      scope.setPopulationGroup(populationGroup);
+      scope.getPopulationGroup().add(populationGroup);
     }
 
     SpatialInformation spatialInformation = MetadataFactory.eINSTANCE.createSpatialInformation();
@@ -804,12 +804,12 @@ public class RakipUtil {
     if (deprecatedDataBackground.dietaryAssessmentMethod != null) {
       metadata.DietaryAssessmentMethod dietaryAssessmentMethod =
           convert(deprecatedDataBackground.dietaryAssessmentMethod);
-      dataBackground.setDietaryassessmentmethod(dietaryAssessmentMethod);
+      dataBackground.getDietaryassessmentmethod().add(dietaryAssessmentMethod);
     }
 
     if (deprecatedDataBackground.laboratory != null) {
       metadata.Laboratory laboratory = convert(deprecatedDataBackground.laboratory);
-      dataBackground.setLaboratory(laboratory);
+      dataBackground.getLaboratory().add(laboratory);
     }
 
     if (deprecatedDataBackground.assay != null) {

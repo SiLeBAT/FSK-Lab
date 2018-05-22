@@ -101,7 +101,7 @@ public interface Scope extends EObject {
 	 * The list contents are of type {@link metadata.Hazard}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Hazard</em>' reference list isn't clear,
+	 * If the meaning of the '<em>Hazard</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
@@ -113,30 +113,20 @@ public interface Scope extends EObject {
 	EList<Hazard> getHazard();
 
 	/**
-	 * Returns the value of the '<em><b>Population Group</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Population Group</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.PopulationGroup}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Population Group</em>' reference isn't clear,
+	 * If the meaning of the '<em>Population Group</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Population Group</em>' containment reference.
-	 * @see #setPopulationGroup(PopulationGroup)
+	 * @return the value of the '<em>Population Group</em>' containment reference list.
 	 * @see metadata.MetadataPackage#getScope_PopulationGroup()
-	 * @model containment="true" required="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	PopulationGroup getPopulationGroup();
-
-	/**
-	 * Sets the value of the '{@link metadata.Scope#getPopulationGroup <em>Population Group</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Population Group</em>' containment reference.
-	 * @see #getPopulationGroup()
-	 * @generated
-	 */
-	void setPopulationGroup(PopulationGroup value);
+	EList<PopulationGroup> getPopulationGroup();
 
 	/**
 	 * Returns the value of the '<em><b>Spatial Information</b></em>' containment reference.

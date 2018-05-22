@@ -28,5 +28,9 @@ Require-Bundle: org.eclipse.core.runtime,
  com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-core,
  com.fasterxml.jackson.core.jackson-databind,
- de.bund.bfr.knime.fsklab.util
+ de.bund.bfr.knime.fsklab.util,
+ org.apache.servicemix.bundles.poi,
+ org.apache.commons.lang3,
+ org.junit,
+ org.glassfish.javax.json;bundle-version="1.0.4"
 Bundle-ActivationPolicy: lazy

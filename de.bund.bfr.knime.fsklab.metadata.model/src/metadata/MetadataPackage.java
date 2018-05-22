@@ -622,7 +622,7 @@ public interface MetadataPackage extends EPackage {
 	int DATA_BACKGROUND__STUDYSAMPLE = 1;
 
 	/**
-	 * The feature id for the '<em><b>Dietaryassessmentmethod</b></em>' containment reference.
+	 * The feature id for the '<em><b>Dietaryassessmentmethod</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -631,7 +631,7 @@ public interface MetadataPackage extends EPackage {
 	int DATA_BACKGROUND__DIETARYASSESSMENTMETHOD = 2;
 
 	/**
-	 * The feature id for the '<em><b>Laboratory</b></em>' containment reference.
+	 * The feature id for the '<em><b>Laboratory</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1376,7 +1376,7 @@ public interface MetadataPackage extends EPackage {
 	int SCOPE__HAZARD = 3;
 
 	/**
-	 * The feature id for the '<em><b>Population Group</b></em>' containment reference.
+	 * The feature id for the '<em><b>Population Group</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -2934,10 +2934,10 @@ public interface MetadataPackage extends EPackage {
 	EReference getDataBackground_Studysample();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link metadata.DataBackground#getDietaryassessmentmethod <em>Dietaryassessmentmethod</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.DataBackground#getDietaryassessmentmethod <em>Dietaryassessmentmethod</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Dietaryassessmentmethod</em>'.
+	 * @return the meta object for the containment reference list '<em>Dietaryassessmentmethod</em>'.
 	 * @see metadata.DataBackground#getDietaryassessmentmethod()
 	 * @see #getDataBackground()
 	 * @generated
@@ -2945,10 +2945,10 @@ public interface MetadataPackage extends EPackage {
 	EReference getDataBackground_Dietaryassessmentmethod();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link metadata.DataBackground#getLaboratory <em>Laboratory</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.DataBackground#getLaboratory <em>Laboratory</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Laboratory</em>'.
+	 * @return the meta object for the containment reference list '<em>Laboratory</em>'.
 	 * @see metadata.DataBackground#getLaboratory()
 	 * @see #getDataBackground()
 	 * @generated
@@ -3686,10 +3686,10 @@ public interface MetadataPackage extends EPackage {
 	EReference getScope_Hazard();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link metadata.Scope#getPopulationGroup <em>Population Group</em>}'.
+	 * Returns the meta object for the containment reference list '{@link metadata.Scope#getPopulationGroup <em>Population Group</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Population Group</em>'.
+	 * @return the meta object for the containment reference list '<em>Population Group</em>'.
 	 * @see metadata.Scope#getPopulationGroup()
 	 * @see #getScope()
 	 * @generated
@@ -5062,7 +5062,7 @@ public interface MetadataPackage extends EPackage {
 		EReference DATA_BACKGROUND__STUDYSAMPLE = eINSTANCE.getDataBackground_Studysample();
 
 		/**
-		 * The meta object literal for the '<em><b>Dietaryassessmentmethod</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Dietaryassessmentmethod</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -5070,7 +5070,7 @@ public interface MetadataPackage extends EPackage {
 		EReference DATA_BACKGROUND__DIETARYASSESSMENTMETHOD = eINSTANCE.getDataBackground_Dietaryassessmentmethod();
 
 		/**
-		 * The meta object literal for the '<em><b>Laboratory</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Laboratory</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -5628,7 +5628,7 @@ public interface MetadataPackage extends EPackage {
 		EReference SCOPE__HAZARD = eINSTANCE.getScope_Hazard();
 
 		/**
-		 * The meta object literal for the '<em><b>Population Group</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Population Group</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

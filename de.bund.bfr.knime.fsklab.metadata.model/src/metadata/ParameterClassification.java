@@ -26,7 +26,7 @@ public enum ParameterClassification implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	CONSTANT(0, "constant", "constant"),
+	CONSTANT(0, "Constant", "Constant"),
 
 	/**
 	 * The '<em><b>Input</b></em>' literal object.
@@ -36,7 +36,7 @@ public enum ParameterClassification implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	INPUT(1, "input", "input"),
+	INPUT(1, "Input", "Input"),
 
 	/**
 	 * The '<em><b>Output</b></em>' literal object.
@@ -46,7 +46,7 @@ public enum ParameterClassification implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	OUTPUT(2, "output", "output");
+	OUTPUT(2, "Output", "Output");
 
 	/**
 	 * The '<em><b>Constant</b></em>' literal value.
@@ -57,7 +57,7 @@ public enum ParameterClassification implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #CONSTANT
-	 * @model name="constant"
+	 * @model name="Constant"
 	 * @generated
 	 * @ordered
 	 */
@@ -72,7 +72,7 @@ public enum ParameterClassification implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #INPUT
-	 * @model name="input"
+	 * @model name="Input"
 	 * @generated
 	 * @ordered
 	 */
@@ -87,7 +87,7 @@ public enum ParameterClassification implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @see #OUTPUT
-	 * @model name="output"
+	 * @model name="Output"
 	 * @generated
 	 * @ordered
 	 */

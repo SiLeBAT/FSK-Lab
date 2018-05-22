@@ -564,9 +564,13 @@ public class MetadataTree {
 		// population group
 		if (scope.eIsSet(pkg.getScope_PopulationGroup())) {
 			String label = bundle.getString("Scope.populationGroup");
-			DefaultMutableTreeNode populationGroupNode = new DefaultMutableTreeNode(label);
-			add(populationGroupNode, scope.getPopulationGroup());
-			node.add(populationGroupNode);
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+			for (PopulationGroup populationGroup : scope.getPopulationGroup()) {
+				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
+				add(childNode, populationGroup);
+				parentNode.add(childNode);
+			}
+			node.add(parentNode);
 		}
 
 		// spatial information
@@ -802,19 +806,27 @@ public class MetadataTree {
 		}
 
 		// dietary assessment method
-		if (dataBackground.eIsSet(pkg.getDataBackground_Dietaryassessmentmethod())) {
+		if (dataBackground.eIsSet(pkg.getDataBackground_Dietaryassessmentmethod())) {	
 			String label = bundle.getString("DataBackground.dietaryAssessmentMethod");
-			DefaultMutableTreeNode dietaryAssessmentMethodNode = new DefaultMutableTreeNode(label);
-			add(dietaryAssessmentMethodNode, dataBackground.getDietaryassessmentmethod());
-			node.add(dietaryAssessmentMethodNode);
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+			for (DietaryAssessmentMethod method : dataBackground.getDietaryassessmentmethod()) {
+				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
+				add(childNode, method);
+				parentNode.add(childNode);
+			}
+			node.add(parentNode);
 		}
 
 		// laboratory
 		if (dataBackground.eIsSet(pkg.getDataBackground_Laboratory())) {
 			String label = bundle.getString("DataBackground.laboratory");
-			DefaultMutableTreeNode laboratoryNode = new DefaultMutableTreeNode(label);
-			add(laboratoryNode, dataBackground.getLaboratory());
-			node.add(laboratoryNode);
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
+			for (Laboratory laboratory : dataBackground.getLaboratory()) {
+				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
+				add(childNode, laboratory);
+				parentNode.add(childNode);
+			}
+			node.add(parentNode);
 		}
 
 		// assay

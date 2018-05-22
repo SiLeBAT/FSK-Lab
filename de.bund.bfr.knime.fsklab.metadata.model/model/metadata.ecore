@@ -85,9 +85,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="studysample" upperBound="-1"
         eType="#//StudySample" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dietaryassessmentmethod"
-        eType="#//DietaryAssessmentMethod" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="laboratory" eType="#//Laboratory"
-        containment="true"/>
+        upperBound="-1" eType="#//DietaryAssessmentMethod" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="laboratory" upperBound="-1"
+        eType="#//Laboratory" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assay" upperBound="-1"
         eType="#//Assay" containment="true"/>
   </eClassifiers>
@@ -192,7 +192,7 @@
         eType="#//Product" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hazard" upperBound="-1"
         eType="#//Hazard" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="populationGroup" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="populationGroup" upperBound="-1"
         eType="#//PopulationGroup" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="spatialInformation" eType="#//SpatialInformation"
         containment="true"/>
@@ -344,9 +344,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//Reference"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ParameterClassification">
-    <eLiterals name="constant"/>
-    <eLiterals name="input" value="1"/>
-    <eLiterals name="output" value="2"/>
+    <eLiterals name="Constant" literal="Constant"/>
+    <eLiterals name="Input" value="1" literal="Input"/>
+    <eLiterals name="Output" value="2" literal="Output"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ParameterType">
     <eLiterals name="Integer"/>

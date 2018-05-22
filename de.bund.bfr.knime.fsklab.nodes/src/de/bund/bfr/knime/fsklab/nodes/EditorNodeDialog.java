@@ -3458,13 +3458,16 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           scope.getHazard().add(hazard);
         }
       });
+      
+      MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
       populationButton.setToolTipText("Click me to add a Population group");
       populationButton.addActionListener(event -> {
         EditPopulationGroupPanel editPopulationGroupPanel =
             new EditPopulationGroupPanel(advancedCheckBox.isSelected());
-        if (scope != null) {
-          editPopulationGroupPanel.init(scope.getPopulationGroup());
+        if (scope != null && scope.eIsSet(pkg.getScope_PopulationGroup())) {
+          PopulationGroup pg0 = scope.getPopulationGroup().get(0);
+          editPopulationGroupPanel.init(pg0);
         }
         final ValidatableDialog dlg =
             new ValidatableDialog(editPopulationGroupPanel, "Create a Population Group");
@@ -3472,7 +3475,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           final PopulationGroup populationGroup = editPopulationGroupPanel.get();
           populationButton.setText(populationGroup.getPopulationName());
-          scope.setPopulationGroup(populationGroup);
+          scope.getPopulationGroup().add(populationGroup);
         }
       });
 
@@ -3531,7 +3534,8 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
         }
 
         if (scope.eIsSet(pkg.getScope_PopulationGroup())) {
-          populationButton.setText(scope.getPopulationGroup().getPopulationName());
+          PopulationGroup pg0 = scope.getPopulationGroup().get(0);
+          populationButton.setText(pg0.getPopulationName());
         }
 
         if (scope.eIsSet(pkg.getScope_TemporalInformation())) {
@@ -3557,14 +3561,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     Scope get() {
 
       final Scope scope = MetadataFactory.eINSTANCE.createScope();
-
-      scope.getProduct().clear();
       scope.getProduct().addAll(this.scope.getProduct());
-
-      scope.getHazard().clear();
       scope.getHazard().addAll(this.scope.getHazard());
-
-      scope.setPopulationGroup(this.scope.getPopulationGroup());
+      scope.getPopulationGroup().addAll(this.scope.getPopulationGroup());
 
       final Date date = dateChooser.getDate();
       if (date != null) {
@@ -3645,7 +3644,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       dietaryAssessmentMethodButton.addActionListener(event -> {
         EditDietaryAssessmentMethodPanel editPanel =
             new EditDietaryAssessmentMethodPanel(advancedCheckBox.isSelected());
-        editPanel.init(dataBackground.getDietaryassessmentmethod());
+        editPanel.init(dataBackground.getDietaryassessmentmethod().get(0));
         final ValidatableDialog dlg =
             new ValidatableDialog(editPanel, "Create dietary assessment method");
 
@@ -3653,7 +3652,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           final DietaryAssessmentMethod method = editPanel.get();
           // Update button's text
           dietaryAssessmentMethodButton.setText(method.getCollectionTool());
-          dataBackground.setDietaryassessmentmethod(method);
+          dataBackground.getDietaryassessmentmethod().add(method);
         }
       });
 
@@ -3661,14 +3660,14 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       laboratoryButton.setToolTipText("Click me to add Laboratory");
       laboratoryButton.addActionListener(event -> {
         EditLaboratoryPanel editPanel = new EditLaboratoryPanel(advancedCheckBox.isSelected());
-        editPanel.init(dataBackground.getLaboratory());
+        editPanel.init(dataBackground.getLaboratory().get(0));
         ValidatableDialog dlg = new ValidatableDialog(editPanel, "Create laboratory");
 
         if (dlg.getValue().equals(JOptionPane.OK_OPTION)) {
           Laboratory lab = editPanel.get();
           // Update button's text
           laboratoryButton.setText(lab.getLaboratoryAccreditation().get(0).getValue());
-          dataBackground.setLaboratory(lab);
+          dataBackground.getLaboratory().add(lab);
         }
       });
 
@@ -3730,18 +3729,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           studySampleButton.setText(sampleName);
         }
 
-        if (dataBackground.eIsSet(pkg.getDataBackground_Dietaryassessmentmethod()) && dataBackground
-            .getDietaryassessmentmethod().eIsSet(pkg.getDietaryAssessmentMethod_CollectionTool())) {
-          String collectionTool = dataBackground.getDietaryassessmentmethod().getCollectionTool();
-          dietaryAssessmentMethodButton.setText(collectionTool);
-        }
-
-        if (dataBackground.eIsSet(pkg.getDataBackground_Laboratory())
-            && dataBackground.getLaboratory().eIsSet(pkg.getLaboratory_LaboratoryAccreditation())) {
-          String laboratoryAccreditation =
-              dataBackground.getLaboratory().getLaboratoryAccreditation().get(0).getValue();
-          laboratoryButton.setText(laboratoryAccreditation);
-        }
+        // TODO: laboratory
 
         if (dataBackground.eIsSet(pkg.getDataBackground_Assay())
             && dataBackground.getAssay().get(0).eIsSet(pkg.getAssay_AssayName())) {
@@ -3756,8 +3744,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       final DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
       dataBackground.setStudy(this.dataBackground.getStudy());
       dataBackground.getStudysample().addAll(this.dataBackground.getStudysample());
-      dataBackground.setDietaryassessmentmethod(this.dataBackground.getDietaryassessmentmethod());
-      dataBackground.setLaboratory(this.dataBackground.getLaboratory());
+      // TODO: laboratory ...
       dataBackground.getAssay().addAll(this.dataBackground.getAssay());
 
       return dataBackground;

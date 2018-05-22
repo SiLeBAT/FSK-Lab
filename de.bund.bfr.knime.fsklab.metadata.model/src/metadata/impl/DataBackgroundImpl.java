@@ -65,24 +65,24 @@ public class DataBackgroundImpl extends MinimalEObjectImpl.Container implements 
 	protected EList<StudySample> studysample;
 
 	/**
-	 * The cached value of the '{@link #getDietaryassessmentmethod() <em>Dietaryassessmentmethod</em>}' containment reference.
+	 * The cached value of the '{@link #getDietaryassessmentmethod() <em>Dietaryassessmentmethod</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getDietaryassessmentmethod()
 	 * @generated
 	 * @ordered
 	 */
-	protected DietaryAssessmentMethod dietaryassessmentmethod;
+	protected EList<DietaryAssessmentMethod> dietaryassessmentmethod;
 
 	/**
-	 * The cached value of the '{@link #getLaboratory() <em>Laboratory</em>}' containment reference.
+	 * The cached value of the '{@link #getLaboratory() <em>Laboratory</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getLaboratory()
 	 * @generated
 	 * @ordered
 	 */
-	protected Laboratory laboratory;
+	protected EList<Laboratory> laboratory;
 
 	/**
 	 * The cached value of the '{@link #getAssay() <em>Assay</em>}' containment reference list.
@@ -173,7 +173,10 @@ public class DataBackgroundImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DietaryAssessmentMethod getDietaryassessmentmethod() {
+	public EList<DietaryAssessmentMethod> getDietaryassessmentmethod() {
+		if (dietaryassessmentmethod == null) {
+			dietaryassessmentmethod = new EObjectContainmentEList<DietaryAssessmentMethod>(DietaryAssessmentMethod.class, this, MetadataPackage.DATA_BACKGROUND__DIETARYASSESSMENTMETHOD);
+		}
 		return dietaryassessmentmethod;
 	}
 
@@ -182,76 +185,11 @@ public class DataBackgroundImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetDietaryassessmentmethod(DietaryAssessmentMethod newDietaryassessmentmethod, NotificationChain msgs) {
-		DietaryAssessmentMethod oldDietaryassessmentmethod = dietaryassessmentmethod;
-		dietaryassessmentmethod = newDietaryassessmentmethod;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MetadataPackage.DATA_BACKGROUND__DIETARYASSESSMENTMETHOD, oldDietaryassessmentmethod, newDietaryassessmentmethod);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
+	public EList<Laboratory> getLaboratory() {
+		if (laboratory == null) {
+			laboratory = new EObjectContainmentEList<Laboratory>(Laboratory.class, this, MetadataPackage.DATA_BACKGROUND__LABORATORY);
 		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setDietaryassessmentmethod(DietaryAssessmentMethod newDietaryassessmentmethod) {
-		if (newDietaryassessmentmethod != dietaryassessmentmethod) {
-			NotificationChain msgs = null;
-			if (dietaryassessmentmethod != null)
-				msgs = ((InternalEObject)dietaryassessmentmethod).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.DATA_BACKGROUND__DIETARYASSESSMENTMETHOD, null, msgs);
-			if (newDietaryassessmentmethod != null)
-				msgs = ((InternalEObject)newDietaryassessmentmethod).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.DATA_BACKGROUND__DIETARYASSESSMENTMETHOD, null, msgs);
-			msgs = basicSetDietaryassessmentmethod(newDietaryassessmentmethod, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.DATA_BACKGROUND__DIETARYASSESSMENTMETHOD, newDietaryassessmentmethod, newDietaryassessmentmethod));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Laboratory getLaboratory() {
 		return laboratory;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetLaboratory(Laboratory newLaboratory, NotificationChain msgs) {
-		Laboratory oldLaboratory = laboratory;
-		laboratory = newLaboratory;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MetadataPackage.DATA_BACKGROUND__LABORATORY, oldLaboratory, newLaboratory);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLaboratory(Laboratory newLaboratory) {
-		if (newLaboratory != laboratory) {
-			NotificationChain msgs = null;
-			if (laboratory != null)
-				msgs = ((InternalEObject)laboratory).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.DATA_BACKGROUND__LABORATORY, null, msgs);
-			if (newLaboratory != null)
-				msgs = ((InternalEObject)newLaboratory).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.DATA_BACKGROUND__LABORATORY, null, msgs);
-			msgs = basicSetLaboratory(newLaboratory, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.DATA_BACKGROUND__LABORATORY, newLaboratory, newLaboratory));
 	}
 
 	/**
@@ -279,9 +217,9 @@ public class DataBackgroundImpl extends MinimalEObjectImpl.Container implements 
 			case MetadataPackage.DATA_BACKGROUND__STUDYSAMPLE:
 				return ((InternalEList<?>)getStudysample()).basicRemove(otherEnd, msgs);
 			case MetadataPackage.DATA_BACKGROUND__DIETARYASSESSMENTMETHOD:
-				return basicSetDietaryassessmentmethod(null, msgs);
+				return ((InternalEList<?>)getDietaryassessmentmethod()).basicRemove(otherEnd, msgs);
 			case MetadataPackage.DATA_BACKGROUND__LABORATORY:
-				return basicSetLaboratory(null, msgs);
+				return ((InternalEList<?>)getLaboratory()).basicRemove(otherEnd, msgs);
 			case MetadataPackage.DATA_BACKGROUND__ASSAY:
 				return ((InternalEList<?>)getAssay()).basicRemove(otherEnd, msgs);
 		}
@@ -327,10 +265,12 @@ public class DataBackgroundImpl extends MinimalEObjectImpl.Container implements 
 				getStudysample().addAll((Collection<? extends StudySample>)newValue);
 				return;
 			case MetadataPackage.DATA_BACKGROUND__DIETARYASSESSMENTMETHOD:
-				setDietaryassessmentmethod((DietaryAssessmentMethod)newValue);
+				getDietaryassessmentmethod().clear();
+				getDietaryassessmentmethod().addAll((Collection<? extends DietaryAssessmentMethod>)newValue);
 				return;
 			case MetadataPackage.DATA_BACKGROUND__LABORATORY:
-				setLaboratory((Laboratory)newValue);
+				getLaboratory().clear();
+				getLaboratory().addAll((Collection<? extends Laboratory>)newValue);
 				return;
 			case MetadataPackage.DATA_BACKGROUND__ASSAY:
 				getAssay().clear();
@@ -355,10 +295,10 @@ public class DataBackgroundImpl extends MinimalEObjectImpl.Container implements 
 				getStudysample().clear();
 				return;
 			case MetadataPackage.DATA_BACKGROUND__DIETARYASSESSMENTMETHOD:
-				setDietaryassessmentmethod((DietaryAssessmentMethod)null);
+				getDietaryassessmentmethod().clear();
 				return;
 			case MetadataPackage.DATA_BACKGROUND__LABORATORY:
-				setLaboratory((Laboratory)null);
+				getLaboratory().clear();
 				return;
 			case MetadataPackage.DATA_BACKGROUND__ASSAY:
 				getAssay().clear();
@@ -380,9 +320,9 @@ public class DataBackgroundImpl extends MinimalEObjectImpl.Container implements 
 			case MetadataPackage.DATA_BACKGROUND__STUDYSAMPLE:
 				return studysample != null && !studysample.isEmpty();
 			case MetadataPackage.DATA_BACKGROUND__DIETARYASSESSMENTMETHOD:
-				return dietaryassessmentmethod != null;
+				return dietaryassessmentmethod != null && !dietaryassessmentmethod.isEmpty();
 			case MetadataPackage.DATA_BACKGROUND__LABORATORY:
-				return laboratory != null;
+				return laboratory != null && !laboratory.isEmpty();
 			case MetadataPackage.DATA_BACKGROUND__ASSAY:
 				return assay != null && !assay.isEmpty();
 		}

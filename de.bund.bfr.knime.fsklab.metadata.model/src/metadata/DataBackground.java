@@ -70,56 +70,36 @@ public interface DataBackground extends EObject {
 	EList<StudySample> getStudysample();
 
 	/**
-	 * Returns the value of the '<em><b>Dietaryassessmentmethod</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Dietaryassessmentmethod</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.DietaryAssessmentMethod}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Dietaryassessmentmethod</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Dietaryassessmentmethod</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Dietaryassessmentmethod</em>' containment reference.
-	 * @see #setDietaryassessmentmethod(DietaryAssessmentMethod)
+	 * @return the value of the '<em>Dietaryassessmentmethod</em>' containment reference list.
 	 * @see metadata.MetadataPackage#getDataBackground_Dietaryassessmentmethod()
 	 * @model containment="true"
 	 * @generated
 	 */
-	DietaryAssessmentMethod getDietaryassessmentmethod();
+	EList<DietaryAssessmentMethod> getDietaryassessmentmethod();
 
 	/**
-	 * Sets the value of the '{@link metadata.DataBackground#getDietaryassessmentmethod <em>Dietaryassessmentmethod</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Dietaryassessmentmethod</em>' containment reference.
-	 * @see #getDietaryassessmentmethod()
-	 * @generated
-	 */
-	void setDietaryassessmentmethod(DietaryAssessmentMethod value);
-
-	/**
-	 * Returns the value of the '<em><b>Laboratory</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Laboratory</b></em>' containment reference list.
+	 * The list contents are of type {@link metadata.Laboratory}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Laboratory</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Laboratory</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Laboratory</em>' containment reference.
-	 * @see #setLaboratory(Laboratory)
+	 * @return the value of the '<em>Laboratory</em>' containment reference list.
 	 * @see metadata.MetadataPackage#getDataBackground_Laboratory()
 	 * @model containment="true"
 	 * @generated
 	 */
-	Laboratory getLaboratory();
-
-	/**
-	 * Sets the value of the '{@link metadata.DataBackground#getLaboratory <em>Laboratory</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Laboratory</em>' containment reference.
-	 * @see #getLaboratory()
-	 * @generated
-	 */
-	void setLaboratory(Laboratory value);
+	EList<Laboratory> getLaboratory();
 
 	/**
 	 * Returns the value of the '<em><b>Assay</b></em>' containment reference list.

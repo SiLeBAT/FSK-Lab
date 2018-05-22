@@ -105,14 +105,14 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	protected EList<Hazard> hazard;
 
 	/**
-	 * The cached value of the '{@link #getPopulationGroup() <em>Population Group</em>}' containment reference.
+	 * The cached value of the '{@link #getPopulationGroup() <em>Population Group</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getPopulationGroup()
 	 * @generated
 	 * @ordered
 	 */
-	protected PopulationGroup populationGroup;
+	protected EList<PopulationGroup> populationGroup;
 
 	/**
 	 * The cached value of the '{@link #getSpatialInformation() <em>Spatial Information</em>}' containment reference.
@@ -214,42 +214,11 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public PopulationGroup getPopulationGroup() {
+	public EList<PopulationGroup> getPopulationGroup() {
+		if (populationGroup == null) {
+			populationGroup = new EObjectContainmentEList<PopulationGroup>(PopulationGroup.class, this, MetadataPackage.SCOPE__POPULATION_GROUP);
+		}
 		return populationGroup;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetPopulationGroup(PopulationGroup newPopulationGroup, NotificationChain msgs) {
-		PopulationGroup oldPopulationGroup = populationGroup;
-		populationGroup = newPopulationGroup;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__POPULATION_GROUP, oldPopulationGroup, newPopulationGroup);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setPopulationGroup(PopulationGroup newPopulationGroup) {
-		if (newPopulationGroup != populationGroup) {
-			NotificationChain msgs = null;
-			if (populationGroup != null)
-				msgs = ((InternalEObject)populationGroup).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.SCOPE__POPULATION_GROUP, null, msgs);
-			if (newPopulationGroup != null)
-				msgs = ((InternalEObject)newPopulationGroup).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.SCOPE__POPULATION_GROUP, null, msgs);
-			msgs = basicSetPopulationGroup(newPopulationGroup, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__POPULATION_GROUP, newPopulationGroup, newPopulationGroup));
 	}
 
 	/**
@@ -308,7 +277,7 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 			case MetadataPackage.SCOPE__HAZARD:
 				return ((InternalEList<?>)getHazard()).basicRemove(otherEnd, msgs);
 			case MetadataPackage.SCOPE__POPULATION_GROUP:
-				return basicSetPopulationGroup(null, msgs);
+				return ((InternalEList<?>)getPopulationGroup()).basicRemove(otherEnd, msgs);
 			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
 				return basicSetSpatialInformation(null, msgs);
 		}
@@ -363,7 +332,8 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 				getHazard().addAll((Collection<? extends Hazard>)newValue);
 				return;
 			case MetadataPackage.SCOPE__POPULATION_GROUP:
-				setPopulationGroup((PopulationGroup)newValue);
+				getPopulationGroup().clear();
+				getPopulationGroup().addAll((Collection<? extends PopulationGroup>)newValue);
 				return;
 			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
 				setSpatialInformation((SpatialInformation)newValue);
@@ -393,7 +363,7 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 				getHazard().clear();
 				return;
 			case MetadataPackage.SCOPE__POPULATION_GROUP:
-				setPopulationGroup((PopulationGroup)null);
+				getPopulationGroup().clear();
 				return;
 			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
 				setSpatialInformation((SpatialInformation)null);
@@ -419,7 +389,7 @@ public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 			case MetadataPackage.SCOPE__HAZARD:
 				return hazard != null && !hazard.isEmpty();
 			case MetadataPackage.SCOPE__POPULATION_GROUP:
-				return populationGroup != null;
+				return populationGroup != null && !populationGroup.isEmpty();
 			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
 				return spatialInformation != null;
 		}
