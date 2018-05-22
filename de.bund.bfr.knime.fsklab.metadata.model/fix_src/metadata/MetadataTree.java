@@ -312,7 +312,7 @@ public class MetadataTree {
 		// model category
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_ModelCategory())) {
 
-			String label = bundle.getString("GeneralInformation.modelCategories");
+			String label = bundle.getString("GeneralInformation.modelCategory");
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 
 			for (ModelCategory modelCategory : generalInformation.getModelCategory()) {
@@ -390,7 +390,7 @@ public class MetadataTree {
 		}
 
 		if (product.eIsSet(pkg.getProduct_ProductionDate())) {
-			add(node, "Production.productionDate", product.getProductionDate());
+			add(node, "Product.productionDate", product.getProductionDate());
 		}
 
 		if (product.eIsSet(pkg.getProduct_ExpiryDate())) {
@@ -435,7 +435,7 @@ public class MetadataTree {
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_NoObservedAdverseAffectLevel())) {
-			add(node, "Hazard.noObservedAdverseEffectLevel", hazard.getNoObservedAdverseAffectLevel());
+			add(node, "Hazard.noObservedAdverseAffectLevel", hazard.getNoObservedAdverseAffectLevel());
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_AcceptableDailyIntake())) {
@@ -711,7 +711,7 @@ public class MetadataTree {
 		}
 
 		if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_NumberOfFoodItems())) {
-			add(node, "DietaryAssessmentMethod.numberOfItems", dietaryAssessmentMethod.getNumberOfFoodItems());
+			add(node, "DietaryAssessmentMethod.numberOfFoodItems", dietaryAssessmentMethod.getNumberOfFoodItems());
 		}
 
 		if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_RecordTypes())) {
@@ -777,7 +777,7 @@ public class MetadataTree {
 		}
 
 		if (assay.eIsSet(pkg.getAssay_UncertaintyValue())) {
-			add(node, "Asasy.uncertaintyValue", assay.getUncertaintyValue());
+			add(node, "Assay.uncertaintyValue", assay.getUncertaintyValue());
 		}
 	}
 
