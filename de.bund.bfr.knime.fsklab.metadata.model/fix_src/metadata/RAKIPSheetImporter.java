@@ -499,7 +499,11 @@ public class RAKIPSheetImporter {
 
 		DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
 
-		dataBackground.setStudy(retrieveStudy(sheet));
+		try {
+			Study study = retrieveStudy(sheet);
+			dataBackground.setStudy(study);
+		} catch (Exception exception) {
+		}
 
 		for (int numrow = 96; numrow < 99; numrow++) {
 			try {
