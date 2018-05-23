@@ -35,6 +35,7 @@ public class FskPlugin extends AbstractUIPlugin {
    * and assigned null with {@link #stop(BundleContext)}.
    */
   public ObjectMapper OBJECT_MAPPER;
+  public ObjectMapper OLD_OBJECT_MAPPER ;
   public JsonResourceFactory FACTORY;
 
   public FskPlugin() {
@@ -47,6 +48,7 @@ public class FskPlugin extends AbstractUIPlugin {
 
     OBJECT_MAPPER = EMFModule.setupDefaultMapper();
     FACTORY = new JsonResourceFactory(OBJECT_MAPPER);
+    OLD_OBJECT_MAPPER = new ObjectMapper().registerModule(new RakipModule());
   }
 
   @Override
