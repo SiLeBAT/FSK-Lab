@@ -192,7 +192,7 @@ public class FskPortObject implements PortObject {
     private static final String WORKSPACE = "workspace";
     private static final String SIMULATION = "simulation";
     private static final String SIMULATION_INDEX = "simulationIndex";
-    final ResourceSet resourceSet = new ResourceSetImpl();
+    
 
     @Override
     public void savePortObject(final FskPortObject portObject, final PortObjectZipOutputStream out,
@@ -396,7 +396,7 @@ public class FskPortObject implements PortObject {
     @SuppressWarnings("unchecked")
     private <T> T readEObject(PortObjectZipInputStream zipStream, Class<T> valueType)
         throws IOException {
-
+      final ResourceSet resourceSet = new ResourceSetImpl();
       String jsonStr = IOUtils.toString(zipStream, "UTF-8");
 
       ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;

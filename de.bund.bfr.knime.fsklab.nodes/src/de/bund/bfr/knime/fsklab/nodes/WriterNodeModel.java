@@ -70,6 +70,7 @@ import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
 import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 import metadata.DataBackground;
 import metadata.GeneralInformation;
+import metadata.MetadataPackage;
 import metadata.ModelMath;
 import metadata.Parameter;
 import metadata.ParameterClassification;
@@ -224,6 +225,7 @@ class WriterNodeModel extends NoInternalsModel {
     ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
     
     ObjectNode modelNode = mapper.createObjectNode();
+    modelNode.set("version",mapper.valueToTree(MetadataPackage.eNS_URI));
     modelNode.set("generalInformation", mapper.valueToTree(generalInformation));
     modelNode.set("scope", mapper.valueToTree(scope));
     modelNode.set("dataBackground", mapper.valueToTree(dataBackground));

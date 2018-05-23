@@ -53,6 +53,8 @@ import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
+import de.bund.bfr.knime.fsklab.rakip.GenericModel;
+import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import metadata.DataBackground;
@@ -156,11 +158,23 @@ class ReaderNodeModel extends NoInternalsModel {
         // Loads metadata from temporary file
         ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
         JsonNode modelNode = mapper.readTree(temp.toFile());
-        generalInformation =
-            mapper.treeToValue(modelNode.get("generalInformation"), GeneralInformation.class);
-        scope = mapper.treeToValue(modelNode.get("scope"), Scope.class);
-        dataBackground = mapper.treeToValue(modelNode.get("dataBackground"), DataBackground.class);
-        modelMath = mapper.treeToValue(modelNode.get("modelMath"), ModelMath.class);
+        Object version = modelNode.get("version");
+        if(version != null) {
+          generalInformation =
+              mapper.treeToValue(modelNode.get("generalInformation"), GeneralInformation.class);
+          scope = mapper.treeToValue(modelNode.get("scope"), Scope.class);
+          dataBackground = mapper.treeToValue(modelNode.get("dataBackground"), DataBackground.class);
+          modelMath = mapper.treeToValue(modelNode.get("modelMath"), ModelMath.class);
+        }else {
+          mapper = FskPlugin.getDefault().OLD_OBJECT_MAPPER;
+          modelNode = mapper.readTree(temp.toFile());
+          GenericModel genericModel = mapper.readValue(temp.toFile(), GenericModel.class);
+          generalInformation = RakipUtil.convert(genericModel.generalInformation);
+          scope = RakipUtil.convert(genericModel.scope);
+          dataBackground = RakipUtil.convert(genericModel.dataBackground);
+          modelMath = RakipUtil.convert(genericModel.modelMath);
+        }
+        
 
         Files.delete(temp); // Deletes temporary file
       }
@@ -200,9 +214,13 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       // Converts and return set of Paths returned from plugin to set
+      try {
       Set<File> libs =
           libRegistry.getPaths(libNames).stream().map(Path::toFile).collect(Collectors.toSet());
       libFiles.addAll(libs);
+      }catch(Exception e) {
+        e.printStackTrace();
+      }
     }
 
     // validate model
