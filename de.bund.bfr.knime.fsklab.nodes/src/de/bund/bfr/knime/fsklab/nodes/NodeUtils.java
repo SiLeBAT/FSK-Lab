@@ -3,10 +3,10 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
@@ -111,9 +111,29 @@ public class NodeUtils {
   }
 
   public static FskSimulation createDefaultSimulation(String parameterScript) {
-    Map<String, String> parameterValues = getVariablesFromAssignments(parameterScript);
     FskSimulation defaultSimulation = new FskSimulation(DEFAULT_SIMULATION);
-    defaultSimulation.getParameters().putAll(parameterValues);
+
+    for (String line : parameterScript.split("\\r?\\n")) {
+      if (line.startsWith("#") || StringUtils.isBlank(line)) {
+        continue;
+      }
+
+      if (line.contains("<-")) {
+        line = line.trim();
+
+        String[] tokens = line.split("<-");
+        String name = tokens[0].trim();
+        String value = tokens[1].trim();
+
+        // Remove comments from values in the parameters script
+        int poundPos = value.indexOf("#");
+        if (poundPos != -1) {
+          value = value.substring(0, poundPos);
+        }
+
+        defaultSimulation.getParameters().put(name, value);
+      }
+    }
 
     return defaultSimulation;
   }
@@ -150,82 +170,5 @@ public class NodeUtils {
     }
 
     return locale;
-  }
-
-  private static class Assignment {
-
-    enum Type {
-      /** R command with the = assignment operator. E.g. x = value */
-      equals,
-      /** R command with the <- assignment operator. E.g. x <- value */
-      left,
-      /** R command with the <<- scoping assignment operator. E.g. x <<- value */
-      super_left,
-      /** R command with the -> assignment operator. E.g. value -> x */
-      right,
-      /** R command with the ->> assignment operator. E.g. value ->> x */
-      super_right
-    }
-
-    String variable;
-    String value;
-
-    public Assignment(String line, Assignment.Type type) {
-      if (type == Type.equals) {
-        String[] tokens = line.split("||");
-        variable = tokens[0].trim();
-        value = tokens[1].trim();
-      } else if (type == Type.left) {
-        String[] tokens = line.split("<-");
-        variable = tokens[0].trim();
-        value = tokens[1].trim();
-      } else if (type == Type.super_left) {
-        String[] tokens = line.split("<<-");
-        variable = tokens[0].trim();
-        value = tokens[1].trim();
-      } else if (type == Type.right) {
-        String[] tokens = line.split("->");
-        variable = tokens[1].trim();
-        value = tokens[0].trim();
-      } else if (type == Type.super_right) {
-        String[] tokens = line.split("->>");
-        variable = tokens[1].trim();
-        value = tokens[0].trim();
-      }
-
-      // Remove comment from value
-      int poundPos = value.indexOf("#");
-      if (poundPos != -1) {
-        value = value.substring(0, poundPos);
-      }
-    }
-  }
-
-  public static Map<String, String> getVariablesFromAssignments(String paramScript) {
-    Map<String, String> vars = new HashMap<>();
-    for (String line : paramScript.split("\\r?\\n")) {
-      line = line.trim();
-      if (line.startsWith("#"))
-        continue;
-
-      if (line.indexOf("=") != -1) {
-        Assignment a = new Assignment(line, Assignment.Type.equals);
-        vars.put(a.variable, a.value);
-      } else if (line.indexOf("<-") != -1) {
-        Assignment a = new Assignment(line, Assignment.Type.left);
-        vars.put(a.variable, a.value);
-      } else if (line.indexOf("<<-") != -1) {
-        Assignment a = new Assignment(line, Assignment.Type.super_left);
-        vars.put(a.variable, a.value);
-      } else if (line.indexOf("->>") != -1) {
-        Assignment a = new Assignment(line, Assignment.Type.right);
-        vars.put(a.variable, a.value);
-      } else if (line.indexOf("->") != -1) {
-        Assignment a = new Assignment(line, Assignment.Type.super_right);
-        vars.put(a.variable, a.value);
-      }
-    }
-
-    return vars;
   }
 }
