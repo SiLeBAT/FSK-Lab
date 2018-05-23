@@ -64,6 +64,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
@@ -3873,8 +3874,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       void add(final Parameter param) {
 
         // Skip if param is already in table
+        EqualityHelper equalHelper = new EqualityHelper();
         for (final Parameter currentParam : parameters) {
-          if (currentParam.equals(param)) {
+          if (equalHelper.equals(currentParam, param)) {
             return;
           }
         }
