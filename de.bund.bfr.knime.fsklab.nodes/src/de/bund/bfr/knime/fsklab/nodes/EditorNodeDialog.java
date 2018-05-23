@@ -1659,22 +1659,72 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     @Override
     void init(Parameter t) {
       if (t != null) {
-        idField.setText(t.getParameterID());
-        classificationField.setSelectedItem(t.getParameterClassification());
-        nameField.setText(t.getParameterName());
-        descriptionField.setText(t.getParameterDescription());
-        typeField.setSelectedItem(t.getParameterType());
-        unitField.setSelectedItem(t.getParameterUnit());
-        unitCategoryField.setSelectedItem(t.getParameterUnitCategory());
-        dataTypeField.setSelectedItem(t.getParameterDataType().name());
-        sourceField.setSelectedItem(t.getParameterSource());
-        subjectField.setSelectedItem(t.getParameterSubject());
-        distributionField.setSelectedItem(t.getParameterDistribution());
-        valueField.setText(t.getParameterValue());
-        variabilitySubjectField.setText(t.getParameterVariabilitySubject());
-        valueMinField.setText(t.getParameterValueMin());
-        valueMaxField.setText(t.getParameterValueMax());
-        errorSpinnerModel.setValue(t.getParameterError());
+
+        MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+        if (t.eIsSet(pkg.getParameter_ParameterID())) {
+          idField.setText(t.getParameterID());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterClassification())) {
+          classificationField.setSelectedItem(t.getParameterClassification());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterName())) {
+          nameField.setText(t.getParameterName());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterDescription())) {
+          descriptionField.setText(t.getParameterDescription());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterType())) {
+          typeField.setSelectedItem(t.getParameterType());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterUnit())) {
+          unitField.setSelectedItem(t.getParameterUnit());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterUnitCategory())) {
+          unitCategoryField.setSelectedItem(t.getParameterUnitCategory());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterDataType())) {
+          dataTypeField.setSelectedItem(t.getParameterDataType().name());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterSource())) {
+          sourceField.setSelectedItem(t.getParameterSource());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterSubject())) {
+          subjectField.setSelectedItem(t.getParameterSubject());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterDistribution())) {
+          distributionField.setSelectedItem(t.getParameterDistribution());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterValue())) {
+          valueField.setText(t.getParameterValue());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterVariabilitySubject())) {
+          variabilitySubjectField.setText(t.getParameterVariabilitySubject());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterValueMin())) {
+          valueMinField.setText(t.getParameterValueMin());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterValueMax())) {
+          valueMaxField.setText(t.getParameterValueMax());
+        }
+
+        if (t.eIsSet(pkg.getParameter_ParameterError())) {
+          errorSpinnerModel.setValue(t.getParameterError());
+        }
       }
     }
 
