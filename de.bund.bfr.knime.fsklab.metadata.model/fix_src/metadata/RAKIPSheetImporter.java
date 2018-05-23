@@ -1175,7 +1175,7 @@ public class RAKIPSheetImporter {
 
 		RAKIPSheetImporter importer = new RAKIPSheetImporter();
 
-		for (int rownum = 132; rownum < 161; rownum++) {
+		for (int rownum = 132; rownum < sheet.getLastRowNum(); rownum++) {
 			try {
 				XSSFRow row = sheet.getRow(rownum);
 				Parameter param = importer.retrieveParameter(row);
