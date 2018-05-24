@@ -710,15 +710,15 @@ public class RAKIPSheetImporter {
 		}
 
 		Parameter param = MetadataFactory.eINSTANCE.createParameter();
-		param.setParameterID(row.getCell(L).getStringCellValue());
+		param.setParameterID(getString(row.getCell(L)));
 
-		String clasifLiteral = row.getCell(M).getStringCellValue();
+		String clasifLiteral = getString(row.getCell(M));
 		ParameterClassification clasif = ParameterClassification.get(clasifLiteral);
 		if (clasif != null) {
 			param.setParameterClassification(clasif);
 		}
 
-		param.setParameterName(row.getCell(N).getStringCellValue());
+		param.setParameterName(getString(row.getCell(N)));
 
 		XSSFCell descriptionCell = row.getCell(O);
 		if (descriptionCell.getCellType() != Cell.CELL_TYPE_BLANK) {
@@ -730,14 +730,14 @@ public class RAKIPSheetImporter {
 			param.setParameterType(getString(typeCell));
 		}
 
-		param.setParameterUnit(row.getCell(Q).getStringCellValue());
+		param.setParameterUnit(getString(row.getCell(Q)));
 
 		XSSFCell unitCategoryCell = row.getCell(R);
 		if (unitCategoryCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterUnitCategory(getString(unitCategoryCell));
 		}
 
-		String dataTypeLiteral = row.getCell(S).getStringCellValue();
+		String dataTypeLiteral = getString(row.getCell(S));
 		ParameterType parameterType = ParameterType.get(dataTypeLiteral);
 		if (parameterType != null) {
 			param.setParameterDataType(parameterType);
@@ -1211,12 +1211,12 @@ public class RAKIPSheetImporter {
 		return stringObjects;
 	}
 
-	private String getString(XSSFCell cell) {
+	private static String getString(XSSFCell cell) {
 
 		int cellType = cell.getCellType();
 
 		if (cellType == Cell.CELL_TYPE_STRING) {
-			return cell.getStringCellValue();
+			return cell.getStringCellValue().trim();
 		}
 
 		if (cellType == Cell.CELL_TYPE_NUMERIC) {
