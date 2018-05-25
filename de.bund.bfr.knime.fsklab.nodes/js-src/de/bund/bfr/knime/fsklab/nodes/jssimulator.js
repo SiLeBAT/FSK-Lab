@@ -48,7 +48,7 @@ simulator = function() {
 				_val.simulations[_currentSimulation].values[parameterIndex] = $(this).val();
 			  })
 			var form = $('<div class="form-group">' +
-				'  <label class="col-sm-3 control-label">' + parameter.parameterName + '</label>' +
+				'  <label class="col-sm-3 control-label">' + parameter.parameterID + '</label>' +
 				'  <div class="col-sm-6 xxx"></div>' +
 				'  <div class="col-sm-3"><label>' + parameter.parameterUnit + '</label></div>' +
 				'</div>');

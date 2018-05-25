@@ -141,22 +141,15 @@ fskeditorjs = function() {
 
 		_firstModel.scope.generalComment = _firstModel.scope.generalComment != null ?_firstModel.scope.generalComment:"";
 		_firstModel.scope.temporalInformation = _firstModel.scope.temporalInformation != null ?_firstModel.scope.temporalInformation:"";
-		window.scope.populationGroup = window.scope.populationGroup != null ? window.scope.populationGroup:{};
-		window.scope.populationGroup.populationName = window.scope.populationGroup.populationName != null ?window.scope.populationGroup.populationName:"";
-		window.scope.populationGroup.targetPopulation = window.scope.populationGroup.targetPopulation != null ?window.scope.populationGroup.targetPopulation:"";
-		var StringObjectPopupsNamex = ['populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
-		$.each(StringObjectPopupsNamex, function( index, value ) {
-			window.scope.populationGroup[value] = window.scope.populationGroup[value] != null ?window.scope.populationGroup[value]:[];
-		});
 		
 		_firstModel.dataBackground.study = _firstModel.dataBackground.study!=null?_firstModel.dataBackground.study:{};
-		_firstModel.dataBackground.dietaryassessmentmethod = _firstModel.dataBackground.dietaryassessmentmethod!=null?_firstModel.dataBackground.dietaryassessmentmethod:{};
-		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory!=null?_firstModel.dataBackground.laboratory:{};
+		_firstModel.dataBackground.dietaryassessmentmethod = _firstModel.dataBackground.dietaryassessmentmethod!=null?_firstModel.dataBackground.dietaryassessmentmethod:[];
+		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory!=null?_firstModel.dataBackground.laboratory:[];
 
 	}
     joinerNode.getComponentValue = function() {
     	
-    	window.store2.getState().jsonforms.core.data.populationGroup = window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data;
+    	//window.store2.getState().jsonforms.core.data.populationGroup = window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data;
     	window.store1.getState().jsonforms.core.data.author = window.store23.getState().jsonforms.core.data;
     	window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data;
     	_viewValue.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);
@@ -323,16 +316,14 @@ fskeditorjs = function() {
         try{
         		createEMFForm();
         }catch(err) {
-        		console.log(err);
+        		//console.log(err);
         }
         
           
         //$('html').find('style').remove();
         //data-meta MuiInputLabel
        $.each($('html').find('style'), function( key, value ) {
-        	console.log(key);
         	if($(value).attr('data-meta') == 'MuiInput'){
-        		console.log(' MuiInput');
         		$(value).remove();
         	}else if($(value).attr('data-meta') == 'MuiInputLabel'){
         		$(value).remove();
@@ -415,7 +406,7 @@ fskeditorjs = function() {
         $('.replaced').parent().addClass('panel-default'); 
         $('.replaced').addClass('panel-body'); 
         //$($("[aria-describedby*='tooltip-add']")[0]).off();
-        function makeId(words) {
+        window.makeId = function (words) {
             var n = words.split("Add to ");
             m = n[n.length - 1].replace(/\s/g, '');
             return m[0].toLowerCase()+""+m.substring(1);
@@ -423,9 +414,9 @@ fskeditorjs = function() {
         }
         /*$($("[aria-describedby*='tooltip-add']")).attr('data-toggle','modal');
         $($("[aria-describedby*='tooltip-add']")).attr('data-target','#myModal');*/
-        $($("[aria-describedby*='tooltip-add']")).click(function(event) {
+        $("[aria-describedby*='tooltip-add']").click(function(event) {
         	
-        	currentArea = makeId($(this).attr('aria-label'));
+        	currentArea = window.makeId($(this).attr('aria-label'));
         	console.log(currentArea);
         	event.preventDefault(); // Let's stop this event.
             event.stopPropagation(); // Really this time.

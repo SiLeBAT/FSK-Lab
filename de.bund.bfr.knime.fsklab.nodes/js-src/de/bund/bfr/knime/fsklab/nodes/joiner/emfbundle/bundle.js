@@ -399,52 +399,58 @@ function createEMFForm(){
 		      }
 		    },
 		    "dietaryassessmentmethod": {
-		      "type": "object",
-		      "properties": {
-		        "collectionTool": {
-		          "type": "string"
+		      "type": "array",
+		      "items": {
+		        "type": "object",
+		        "properties": {
+		          "collectionTool": {
+		            "type": "string"
+		          },
+		          "numberOfNonConsecutiveOneDay": {
+		            "type": "integer"
+		          },
+		          "softwareTool": {
+		            "type": "string"
+		          },
+		          "numberOfFoodItems": {
+		            "type": "string"
+		          },
+		          "recordTypes": {
+		            "type": "string"
+		          },
+		          "foodDescriptors": {
+		            "type": "string"
+		          }
 		        },
-		        "numberOfNonConsecutiveOneDay": {
-		          "type": "integer"
-		        },
-		        "softwareTool": {
-		          "type": "string"
-		        },
-		        "numberOfFoodItems": {
-		          "type": "string"
-		        },
-		        "recordTypes": {
-		          "type": "string"
-		        },
-		        "foodDescriptors": {
-		          "type": "string"
-		        }
-		      },
-		      "additionalProperties": false
+		        "additionalProperties": false
+		      }
 		    },
 		    "laboratory": {
-		      "type": "object",
-		      "properties": {
-		        "laboratoryName": {
-		          "type": "string"
-		        },
-		        "laboratoryCountry": {
-		          "type": "string"
-		        },
-		        "laboratoryAccreditation": {
-		          "type": "array",
-		          "items": {
-		            "type": "object",
-		            "properties": {
-		              "value": {
-		                "type": "string"
-		              }
-		            },
-		            "additionalProperties": false
+		      "type": "array",
+		      "items": {
+		        "type": "object",
+		        "properties": {
+		          "laboratoryName": {
+		            "type": "string"
+		          },
+		          "laboratoryCountry": {
+		            "type": "string"
+		          },
+		          "laboratoryAccreditation": {
+		            "type": "array",
+		            "items": {
+		              "type": "object",
+		              "properties": {
+		                "value": {
+		                  "type": "string"
+		                }
+		              },
+		              "additionalProperties": false
+		            }
 		          }
-		        }
-		      },
-		      "additionalProperties": false
+		        },
+		        "additionalProperties": false
+		      }
 		    },
 		    "assay": {
 		      "type": "array",
@@ -817,6 +823,7 @@ function createEMFForm(){
 		              "HEAR",
 		              "ICOMM",
 		              "INPR",
+		              "JOUR",
 		              "JFULL",
 		              "LEGAL",
 		              "MANSCPT",
@@ -1172,7 +1179,7 @@ function createEMFForm(){
 		  ]
 		}
 		},{}],24:[function(require,module,exports){
-		module.exports={"additionalProperties":false,"type":"object","properties":{"reference":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]}},"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"reference":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]}},"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}
 		},{}],25:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
@@ -1205,7 +1212,7 @@ function createEMFForm(){
 		  ]
 		}
 		},{}],26:[function(require,module,exports){
-		module.exports={"additionalProperties":false,"type":"object","properties":{"fittingProcedure":{"type":"string"},"modelEquation":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}},"exposure":{"additionalProperties":false,"type":"object","properties":{"typeOfExposure":{"type":"string"},"uncertaintyEstimation":{"type":"string"}},"required":["typeOfExposure"]},"parameter":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","VectorOfNumbers","VectorOfStrings","MatrixOfNumbers","MatrixOfStrings","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["constant","input","output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}},"qualityMeasures":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"event":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}}},"required":["parameter"]}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"fittingProcedure":{"type":"string"},"modelEquation":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}},"exposure":{"additionalProperties":false,"type":"object","properties":{"typeOfExposure":{"type":"string"},"uncertaintyEstimation":{"type":"string"}},"required":["typeOfExposure"]},"parameter":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","VectorOfNumbers","VectorOfStrings","MatrixOfNumbers","MatrixOfStrings","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}},"qualityMeasures":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"event":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}}},"required":["parameter"]}
 		},{}],27:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
@@ -1269,9 +1276,9 @@ function createEMFForm(){
 		    "parameterClassification": {
 		      "type": "string",
 		      "enum": [
-		        "constant",
-		        "input",
-		        "output"
+		        "Constant",
+		        "Input",
+		        "Output"
 		      ]
 		    },
 		    "parameterName": {
@@ -1372,6 +1379,7 @@ function createEMFForm(){
 		            "HEAR",
 		            "ICOMM",
 		            "INPR",
+		            "JOUR",
 		            "JFULL",
 		            "LEGAL",
 		            "MANSCPT",
@@ -1763,6 +1771,7 @@ function createEMFForm(){
 		        "HEAR",
 		        "ICOMM",
 		        "INPR",
+		        "JOUR",
 		        "JFULL",
 		        "LEGAL",
 		        "MANSCPT",
@@ -2035,34 +2044,37 @@ function createEMFForm(){
 		      }
 		    },
 		    "populationGroup": {
-		      "type": "object",
-		      "properties": {
-		        "populationName": {
-		          "type": "string"
-		        },
-		        "targetPopulation": {
-		          "type": "string"
-		        },
-		        "populationSpan": {
-		          "type": "array",
-		          "items": {
-		            "type": "object",
-		            "properties": {
-		              "value": {
-		                "type": "string"
-		              }
-		            },
-		            "additionalProperties": false
+		      "type": "array",
+		      "items": {
+		        "type": "object",
+		        "properties": {
+		          "populationName": {
+		            "type": "string"
+		          },
+		          "targetPopulation": {
+		            "type": "string"
+		          },
+		          "populationSpan": {
+		            "type": "array",
+		            "items": {
+		              "type": "object",
+		              "properties": {
+		                "value": {
+		                  "type": "string"
+		                }
+		              },
+		              "additionalProperties": false
+		            }
+		          },
+		          "populationGender": {
+		            "type": "string"
 		          }
 		        },
-		        "populationGender": {
-		          "type": "string"
-		        }
-		      },
-		      "additionalProperties": false,
-		      "required": [
-		        "populationName"
-		      ]
+		        "additionalProperties": false,
+		        "required": [
+		          "populationName"
+		        ]
+		      }
 		    },
 		    "spatialInformation": {
 		      "type": "object",
@@ -2070,10 +2082,7 @@ function createEMFForm(){
 		      "additionalProperties": false
 		    }
 		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "populationGroup"
-		  ]
+		  "additionalProperties": false
 		}
 		},{}],41:[function(require,module,exports){
 		module.exports={
@@ -2393,7 +2402,7 @@ function createEMFForm(){
 			var redux = require('redux');
 			var react_redux = require('react-redux');
 			var App = React.createFactory(require('./App'));
-		   
+			window.App = App;
 		    window.schema = require('./GeneralInformationModel.json');
 		    window.uischema = require('./GeneralInformationView.json');
 		    
@@ -2429,12 +2438,6 @@ function createEMFForm(){
 		    
 		    var schema11 = require('./AssayModel.json');
 		    var uischema11 = require('./AssayView.json');
-		    
-		    
-		    
-		    
-		    
-		    
 		    
 		    
 		    // popup creators
@@ -2490,7 +2493,7 @@ function createEMFForm(){
 			  materialFields= material_renderers.materialFields,
 			  materialRenderers= material_renderers.materialRenderers
 		  
-
+			  window.Provider = Provider;
 		  window.store1 = createStore(
 		  combineReducers({ jsonforms: jsonformsReducer() }),  
 		  {
@@ -2535,18 +2538,9 @@ function createEMFForm(){
 				);
 		store4.dispatch(Actions.init({}, schema4, uischema4));
 
-		window.store5 = createStore(
-				  combineReducers({ jsonforms: jsonformsReducer() }),  
-				  {
-				    jsonforms: {
-				      renderers: materialRenderers,
-				      fields: materialFields,
-				    }
-				  }
-				);
-		window.store5.dispatch(Actions.init( window.scope.populationGroup , schema5, uischema5));
 
-		window.toBeReplacedMap["Population Group"] = window.store5;
+
+
 
 
 
@@ -2621,7 +2615,8 @@ function createEMFForm(){
 		  
 		store11.dispatch(Actions.init( window.dataBackground.assay!=null?window.dataBackground.assay:{}, schema11, uischema11));
 		window.toBeReplacedMap["Assay"] = store11;
-		//popups creator
+		//popups
+
 
 
 		  store13 = createStore(
@@ -2834,11 +2829,11 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: store17},
 				App()
 		), document.getElementById('modelMath'));
-		}catch(err){console.log("modelMath " + err);
+		}catch(err){//console.log("modelMath " + err);
 			
 		}
 		notAProperDiv = $("div:contains('No applicable'):not(:has(div))");
-		console.log('notAProperDiv '+notAProperDiv);
+		//console.log('notAProperDiv '+notAProperDiv);
 		$.each(notAProperDiv, function( index, value ) {
 			var parentxc ;
 			var areaName;
@@ -2846,7 +2841,7 @@ function createEMFForm(){
 					
 					parentxc = value.parentNode;
 					areaName =  parentxc.firstChild.textContent;
-					console.log(areaName);
+					//console.log(areaName);
 					if(parentxc.firstChild.textContent.indexOf('*') >= 0){
 						areaName = areaName.slice(0,-1);
 					}
@@ -2858,7 +2853,7 @@ function createEMFForm(){
 						), document.getElementById(areaName));
 					}
 			}catch(err){
-				console.log("loop ",parentxc, err);
+				//console.log("loop ",parentxc, err);
 			}
 			
 		});
@@ -2921,9 +2916,12 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: store22},
 				App()
 		), document.getElementById('referenceModelContent'));
-		}catch(err){console.log("reference " + err);
+		}catch(err){//console.log("reference " + err);
 			
 		}
+
+		parent9 = document.getElementById('scope');
+
 		//popup modelcategory
 		window.saveModelCategory = function () {
 			if(window.generalInformation.modelCategory == undefined){
@@ -2985,7 +2983,7 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: store13},
 				App()
 		), document.getElementById('modelCategoryModelContent'));
-		}catch(err){console.log("modelCategory " + err);
+		}catch(err){//console.log("modelCategory " + err);
 			
 		}
 		//popup modificationdate
@@ -2998,7 +2996,7 @@ function createEMFForm(){
 				window.generalInformation.modificationdate.push(store14.getState().jsonforms.core.data);
 				store1.dispatch(Actions.init(window.generalInformation, window.schema, window.uischema));
 			}
-			console.log("date ",window.generalInformation.modificationdate);
+			//console.log("date ",window.generalInformation.modificationdate);
 				$(".table tbody tr td div div div input").removeAttr('class');
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
@@ -3043,11 +3041,11 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: store14},
 				App()
 		), document.getElementById('modificationdateModelContent'));
-		}catch(err){console.log("modificationdate " + err);
+		}catch(err){//console.log("modificationdate " + err);
 			
 		}
 
-		parent9 = document.getElementById('scope');
+
 		//popup country
 		window.saveCountry = function () {
 			if(window.scope.country == undefined){
@@ -3102,7 +3100,7 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: store15},
 				App()
 		), document.getElementById('countryModelContent'));
-		}catch(err){console.log("country " + err);
+		}catch(err){//console.log("country " + err);
 			
 		}
 
@@ -3164,7 +3162,7 @@ function createEMFForm(){
 			
 			
 		parent10 = document.getElementById('modelMath');
-		}catch(err){console.log("product " + err);
+		}catch(err){//console.log("product " + err);
 			
 		}
 		//popup hazard
@@ -3223,7 +3221,7 @@ function createEMFForm(){
 				App()
 		), document.getElementById('hazardModelContent'));
 		parent10 = document.getElementById('modelMath');
-		}catch(err){console.log("hazard " + err);
+		}catch(err){//console.log("hazard " + err);
 			
 		}
 
@@ -3283,7 +3281,7 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: store18},
 				App()
 		), document.getElementById('parameterModelContent'));
-		}catch(err){console.log("parameter " + err);
+		}catch(err){//console.log("parameter " + err);
 			
 		}
 		window.saveModelequation = function () {
@@ -3339,7 +3337,7 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: store19},
 				App()
 		), document.getElementById('modelequationModelContent'));
-		}catch(err){console.log("modelequation " + err);
+		}catch(err){//console.log("modelequation " + err);
 			
 		}
 		window.saveEvent = function () {
@@ -3394,13 +3392,13 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: store20},
 				App()
 		), document.getElementById('eventModelContent'));
-		}catch(err){console.log("event " + err);
+		}catch(err){//console.log("event " + err);
 
 		}
 
 
 		///////////////////////
-		window.popupschemapopulationSpan= require('./StringObjectModel.json');
+		/*window.popupschemapopulationSpan= require('./StringObjectModel.json');
 		window.popupuischemapopulationSpan = require('./StringObjectView.json');
 		window.populationSpanstore = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -3414,11 +3412,8 @@ function createEMFForm(){
 		window.populationSpanstore.dispatch(Actions.init({}, window.popupschemapopulationSpan, window.popupuischemapopulationSpan));
 		window.savepopulationSpan = function () {
 			
-				console.log(window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data);		
+				//console.log(window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data);		
 				window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data.populationSpan.push(window.populationSpanstore.getState().jsonforms.core.data);
-				/*console.log(window.populationSpanstore.getState().jsonforms.core.data);
-				console.log(window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data);
-				console.log(window.store2.getState().jsonforms.core.data);*/
 				var parentxc ;
 				var areaName;
 				try{
@@ -3433,11 +3428,8 @@ function createEMFForm(){
 						), document.getElementById("Population Group"));
 						
 				}catch(err){
-					console.log("loop ",parentxc, err);
+					//console.log("loop ",parentxc, err);
 				}
-				
-				
-			
 		}
 		$(parent9).append(
 				"<div id='populationSpan' class='modal fade' role='dialog'>\n" + 
@@ -3463,22 +3455,95 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: window.populationSpanstore},
 				App()
 		), document.getElementById('populationSpanModelContent'));
-		}catch(err){console.log("event " + err);
+		}catch(err){//console.log("event " + err);
 
-		}
+		}*/
 
 
 
 		//////////////////////
-		/*var StringObjectPopupsName = ['populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
+		var StringObjectPopupsName = ['populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
+		//popup populationGroup
+		window.store5 = createStore(
+				  combineReducers({ jsonforms: jsonformsReducer() }),  
+				  {
+				    jsonforms: {
+				      renderers: materialRenderers,
+				      fields: materialFields,
+				    }
+				  }
+				);
+		window.store5.dispatch(Actions.init({}, schema5, uischema5));
+		window.store5.getState().jsonforms.core.data.populationName = window.store5.getState().jsonforms.core.data.populationName != null ?window.store5.getState().jsonforms.core.data.populationName:"";
+		window.store5.getState().jsonforms.core.data.targetPopulation = window.store5.getState().jsonforms.core.data.targetPopulation != null ?window.store5.getState().jsonforms.core.data.targetPopulation:"";
 
+		$.each(StringObjectPopupsName, function( index, value ) {
+			window.store5.getState().jsonforms.core.data[value] = window.store5.getState().jsonforms.core.data[value] != null ?window.store5.getState().jsonforms.core.data[value]:[];
+		});
+		console.log(window.store5.getState().jsonforms.core.data);
+		window.savepopulationGroup = function () {
+			
+			if(window.scope.populationGroup == undefined){
+				window.scope.populationGroup = [];
+				window.scope.populationGroup.push(window.store5.getState().jsonforms.core.data);
+				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
+			}else{
+				window.scope.populationGroup.push(window.store5.getState().jsonforms.core.data);
+				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
+			}
+		    
+		    $(".table tbody tr td div div div input").removeAttr('class');
+		    $(".table tbody tr td div div div").removeAttr('class');
+		    $(".table tbody tr td div div").removeAttr('class');
+		    $(".table tbody tr td div").removeAttr('class');
+		    $(".table tbody tr td").removeAttr('class');
+		    $(".table tbody tr").removeAttr('class');
+		    $(".table tbody").removeAttr('class');
+		    $(".table thead tr th th").removeAttr('class');
+		    $(".table thead tr th").removeAttr('class');
+		    $(".table thead tr").removeAttr('class');
+			$(".table thead").removeAttr('class');
 
+		    
+		   $('.MuiTable-root-222').addClass('table'); 
+		   $('.MuiTable-root-222').parent().addClass('table-responsive');
+		   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
+		   $('.MuiTable-root-222').removeClass('MuiTable-root-222');
+		}
+
+		$(parent9).append(
+				"<div id='populationGroup' class='modal fade' role='dialog'>\n" + 
+		        "  <div class='modal-dialog'>\n" + 
+		        "\n" + 
+		        "    <!-- Modal content-->\n" + 
+		        "    <div class='modal-content'>\n" + 
+		        "      <div class='modal-header'>\n" + 
+		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
+		        "        <h4 id='titlepopulationGroup' class='modal-title'>Modal Header</h4>\n" + 
+		        "      </div>\n" + 
+		        "      <div id='populationGroupModelContent' class='modal-body'>\n" + 
+		        "      </div>\n" + 
+		        "      <div class='modal-footer'>\n" + 
+		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>\n" + 
+		        "   	 <button id='save' onclick='window.savepopulationGroup()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "      </div>\n" + 
+		        "    </div>\n" + 
+		        "\n" + 
+		        "  </div>\n" + 
+		        "</div>");
+
+		try{
+		ReactDOM.render(React.createFactory(Provider)({store: window.store5},
+				App()
+		), document.getElementById('populationGroupModelContent'));
+		}catch(err){console.log("reference " + err);
+			
+		}
 		window.popupFunctions = {};
 		window.popupschema = {};
 		window.popupuischema = {};
 		window.popupstore = {};
-		$.each(StringObjectPopupsName, function( index, value ) {
-			
+		$.each(StringObjectPopupsName, function( index, value ) {	
 			window.popupschema[value]= require('./StringObjectModel.json');
 			window.popupuischema[value] = require('./StringObjectView.json');
 			window.popupstore[value] = createStore(
@@ -3492,9 +3557,32 @@ function createEMFForm(){
 					);
 			
 			window.popupstore[value].dispatch(Actions.init({}, window.popupschema[value], window.popupuischema[value]));
-			window.popupFunctions['save'+value]="window.scope.populationGroup."+value+".push(window.popupstore."+value+".getState().jsonforms.core.data);"+
-												"window.store5.dispatch(Actions.init(window.scope.populationGroup, window.schema5, window.uischema5));console.log(window.store5.getState().jsonforms.core.data);";
-			
+			window.popupFunctions['save'+value]=
+												"window.store5.getState().jsonforms.core.data."+value+".push(window.popupstore."+value+".getState().jsonforms.core.data);"+
+												"var parentxc ;"+
+												"var areaName;"+
+												
+												"cdiv = document.getElementById(\"populationGroupModelContent\");" +
+												"console.log(cdiv);"+
+												"parentxc = cdiv.parentNode;"+
+												
+												
+												"$(cdiv).remove();"+
+												"$(parentxc).append(\" <div id=&#39;populationGroupModelContent&#39; class=&#39;modal-body&#39;>\" );"+
+												"ReactDOM.render(React.createFactory( window.Provider)({store: window.store5},"+
+												"		window.App()"+
+												"), document.getElementById(\"populationGroupModelContent\"));"+
+												"$(\"[aria-describedby*=&#39;tooltip-add&#39;]\").click(function(event) {"+
+		        	
+										        	"currentArea = window.makeId($(this).attr(&#39;aria-label&#39;));"+
+										        	"console.log(currentArea);"+
+										        	"event.preventDefault(); "+
+										            "event.stopPropagation();"+
+										            "$(&#39;#title&#39;+currentArea).text(currentArea);"+
+										            "$(&#39;#&#39;+currentArea).modal(&#39;show&#39;);"+
+										        "});";
+														
+												
 			
 			 
 			$(parent9).append(
@@ -3525,7 +3613,7 @@ function createEMFForm(){
 		}});
 
 
-		*/
+
 		},{"./App":1,"./AssayModel.json":2,"./AssayView.json":3,"./ContactModel.json":4,"./ContactView.json":5,"./CountryModel.json":6,"./CountryView.json":7,"./DataBackgroundModel.json":8,"./DataBackgroundView.json":9,"./DietaryAssessmentMethodModel.json":10,"./DietaryAssessmentMethodView.json":11,"./EventModel.json":12,"./EventView.json":13,"./ExposureModel.json":14,"./ExposureView.json":15,"./GeneralInformationModel.json":16,"./GeneralInformationView.json":17,"./HazardModel.json":18,"./HazardView.json":19,"./LaboratoryModel.json":20,"./LaboratoryView.json":21,"./ModelCategoryModel.json":22,"./ModelCategoryView.json":23,"./ModelEquationModel.json":24,"./ModelEquationView.json":25,"./ModelMathModel.json":26,"./ModelMathView.json":27,"./ModificationDateModel.json":28,"./ModificationDateView.json":29,"./ParameterModel.json":30,"./ParameterView.json":31,"./PopulationGroupModel.json":32,"./PopulationGroupView.json":33,"./ProductModel.json":34,"./ProductView.json":35,"./ReferenceModel.json":36,"./ReferenceView.json":37,"./RegionModel.json":38,"./RegionView.json":39,"./ScopeModel.json":40,"./ScopeView.json":41,"./SpatialInformationModel.json":42,"./SpatialInformationView.json":43,"./StringObjectModel.json":44,"./StringObjectView.json":45,"./StudyModel.json":46,"./StudySampleModel.json":47,"./StudySampleView.json":48,"./StudyView.json":49,"@jsonforms/core":56,"@jsonforms/material-renderers":95,"react-redux":955,"redux":993}],51:[function(require,module,exports){
 		"use strict";
 		Object.defineProperty(exports, "__esModule", { value: true });
@@ -89156,7 +89244,7 @@ function createEMFForm(){
 		          return args[argIndex++];
 		        });
 		      if (typeof console !== 'undefined') {
-		        console.error(message);
+		        //console.error(message);
 		      }
 		      try {
 		        // This error was thrown as a convenience so that you can use this stack

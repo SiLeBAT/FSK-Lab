@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -63,7 +64,6 @@ final class FSKEditorJSNodeModel
 
   private final FSKEditorJSNodeSettings nodeSettings = new FSKEditorJSNodeSettings();
   private FskPortObject m_port;
-  final static ResourceSet resourceSet = new ResourceSetImpl();
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
@@ -173,21 +173,24 @@ final class FSKEditorJSNodeModel
 
   private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType)
       throws InvalidSettingsException {
+    final ResourceSet resourceSet = new ResourceSetImpl();
+    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+        .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
+    resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
+        MetadataPackage.eINSTANCE);
 
-    
+    Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
+    InputStream inStream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
     try {
-      ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-      resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(objectMapper));
-      resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
-          MetadataPackage.eINSTANCE);
-      Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
-      InputStream stream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
-      resource.load(stream, null);
-      
-      return (T) resource.getContents().get(0);
-    } catch (IOException exception) {
-      throw new InvalidSettingsException(exception);
+      resource.load(inStream, null);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+
+    return (T) resource.getContents().get(0);
+    
+    
     
   }
   
