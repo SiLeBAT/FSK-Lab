@@ -214,7 +214,7 @@ class JSSimulatorNodeModel
     JSSimulation jsSim = new JSSimulation();
     jsSim.name = fskSim.getName();
     jsSim.values = eList.stream().filter(p -> p.getParameterClassification() == ParameterClassification.INPUT)
-        .map(p -> fskSim.getParameters().get(p.getParameterID())).collect(Collectors.toList());
+        .map(p -> fskSim.getParameters().get(p.getParameterID().trim())).collect(Collectors.toList());
 
     return jsSim;
   }
