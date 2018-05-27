@@ -133,8 +133,10 @@ class JSSimulatorNodeModel
       throws IOException {
 
     FskPortObject inObj = (FskPortObject) inObjects[0];
+    
+    String workingDirectory = inObj.getWorkingDirectory();
     FskPortObject outObj =  new FskPortObject(inObj.model, inObj.param, inObj.viz, inObj.generalInformation, inObj.scope,
-        inObj.dataBackground, inObj.modelMath, null, new HashSet<>(), inObj.workingDirectory);
+        inObj.dataBackground, inObj.modelMath, null, new HashSet<>(), workingDirectory);
         
 
     synchronized (getLock()) {

@@ -47,7 +47,6 @@ import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -99,8 +98,6 @@ public class FskPortObject implements PortObject {
   public static final PortType TYPE_OPTIONAL =
       PortTypeRegistry.getInstance().getPortType(FskPortObject.class, true);
 
-  public static final String[] RESOURCE_EXTENSIONS = new String[] {"txt", "RData", "csv"};
-
   /** Model script. */
   public String model;
 
@@ -111,7 +108,7 @@ public class FskPortObject implements PortObject {
   public String viz;
 
   /** Paths to resources: plain text files and R workspace files (.rdata). */
-  public final Path workingDirectory;
+  private String workingDirectory;
 
   /**
    * R workspace file with the results of running the model. It may be null if the model has not
@@ -138,7 +135,7 @@ public class FskPortObject implements PortObject {
   public FskPortObject(final String model, final String param, final String viz,
       final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
-      final Set<File> libs, final Path workingDirectory) throws IOException {
+      final Set<File> libs, final String workingDirectory) throws IOException {
     this.model = model;
     this.param = param;
     this.viz = viz;
@@ -157,7 +154,7 @@ public class FskPortObject implements PortObject {
     numOfInstances += 1;
   }
 
-  public FskPortObject(final Path workingDirectory, final Set<File> libs) throws IOException {
+  public FskPortObject(final String workingDirectory, final Set<File> libs) throws IOException {
     this.workingDirectory = workingDirectory;
     this.libs = libs;
   }
@@ -170,6 +167,13 @@ public class FskPortObject implements PortObject {
   @Override
   public String getSummary() {
     return "FSK Object";
+  }
+
+  /**
+   * @return string empty if not set.
+   */
+  public String getWorkingDirectory() {
+    return workingDirectory != null ? workingDirectory : "";
   }
 
   /**
@@ -192,7 +196,8 @@ public class FskPortObject implements PortObject {
     private static final String WORKSPACE = "workspace";
     private static final String SIMULATION = "simulation";
     private static final String SIMULATION_INDEX = "simulationIndex";
-    
+
+    private static final String WORKING_DIRECTORY = "workingDirectory";
 
     @Override
     public void savePortObject(final FskPortObject portObject, final PortObjectZipOutputStream out,
@@ -235,17 +240,11 @@ public class FskPortObject implements PortObject {
         out.closeEntry();
       }
 
-      // Save resources
-      final List<Path> resources =
-          Files.list(portObject.workingDirectory).collect(Collectors.toList());
-      for (final Path resource : resources) {
-        final String filename = resource.getFileName().toString();
-
-        if (FilenameUtils.isExtension(filename, RESOURCE_EXTENSIONS)) {
-          out.putNextEntry(new ZipEntry(filename));
-          Files.copy(resource, out);
-          out.closeEntry();
-        }
+      // Save working directory
+      if (portObject.workingDirectory != null && !portObject.workingDirectory.isEmpty()) {
+        out.putNextEntry(new ZipEntry(WORKING_DIRECTORY));
+        IOUtils.write(portObject.workingDirectory, out, "UTF-8");
+        out.closeEntry();
       }
 
       // Save simulations
@@ -260,19 +259,18 @@ public class FskPortObject implements PortObject {
         }
         out.closeEntry();
       }
-      
-      // Save selected simulation index
-      
-        out.putNextEntry(new ZipEntry(SIMULATION_INDEX));
 
-        try {
-          ObjectOutputStream oos = new ObjectOutputStream(out);
-          oos.writeObject(portObject.selectedSimulationIndex);
-        } catch (IOException exception) {
-          // TODO: deal with exception
-        }
-        out.closeEntry();
-  
+      // Save selected simulation index
+      out.putNextEntry(new ZipEntry(SIMULATION_INDEX));
+
+      try {
+        ObjectOutputStream oos = new ObjectOutputStream(out);
+        oos.writeObject(portObject.selectedSimulationIndex);
+      } catch (IOException exception) {
+        // TODO: deal with exception
+      }
+      out.closeEntry();
+
       out.close();
     }
 
@@ -293,10 +291,11 @@ public class FskPortObject implements PortObject {
       Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
       Set<File> libs = new HashSet<>();
 
-      Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
+      String workingDirectory = ""; // Empty string if not set
 
       List<FskSimulation> simulations = new ArrayList<>();
       int selectedSimulationIndex = 0;
+
       ZipEntry entry;
       while ((entry = in.getNextEntry()) != null) {
         String entryName = entry.getName();
@@ -308,6 +307,7 @@ public class FskPortObject implements PortObject {
         } else if (entryName.equals(VIZ)) {
           visualizationScript = IOUtils.toString(in, "UTF-8");
         }
+
         // If found old deprecated metadata, restore it and convert it to new EMF metadata
         else if (entryName.equals(META_DATA)) {
 
@@ -351,13 +351,8 @@ public class FskPortObject implements PortObject {
           } catch (RException | REXPMismatchException error) {
             throw new IOException(error.getMessage());
           }
-        }
-
-        // Load resources
-        else if (FilenameUtils.isExtension(entryName, RESOURCE_EXTENSIONS)) {
-          // Creates path to resource. E.g.: <workingDir>/resource.txt
-          Path resource = workingDirectory.resolve(entryName);
-          Files.copy(in, resource);
+        } else if (entryName.equals(WORKING_DIRECTORY)) {
+          workingDirectory = IOUtils.toString(in, "UTF-8");
         }
 
         else if (entryName.equals(SIMULATION)) {
@@ -368,15 +363,15 @@ public class FskPortObject implements PortObject {
             e.printStackTrace();
           }
         }
-        
+
         else if (entryName.equals(SIMULATION_INDEX)) {
-            ObjectInputStream ois = new ObjectInputStream(in);
-            try {
-              selectedSimulationIndex =  ((Integer) ois.readObject()).intValue();
-            } catch (ClassNotFoundException e) {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
+          ObjectInputStream ois = new ObjectInputStream(in);
+          try {
+            selectedSimulationIndex = ((Integer) ois.readObject()).intValue();
+          } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
         }
       }
 
@@ -441,34 +436,11 @@ public class FskPortObject implements PortObject {
     metaDataPane.setName("Meta data");
 
     final JPanel librariesPanel = UIUtils.createLibrariesPanel(libs);
-    final JPanel resourcesPanel = createResourcesViewPanel(workingDirectory);
 
     JPanel simulationsPanel = new SimulationsPanel();
 
     return new JComponent[] {modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
-        librariesPanel, resourcesPanel, simulationsPanel};
-  }
-
-  /** Creates a panel with a list of resource files. */
-  private static final JPanel createResourcesViewPanel(final Path workingDirectory) {
-
-    final JPanel panel = new JPanel(new BorderLayout());
-    panel.setName("Resources list");
-
-    String[] filenames;
-    try {
-      filenames = Files.list(workingDirectory).map(Path::getFileName).map(Path::toString)
-          .toArray(String[]::new);
-    } catch (IOException e) {
-      filenames = new String[0];
-    }
-
-    final JList<String> list = new JList<>(filenames);
-    list.setLayoutOrientation(JList.VERTICAL);
-    list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    panel.add(new JScrollPane(list));
-
-    return panel;
+        librariesPanel, simulationsPanel};
   }
 
   private class SimulationsPanel extends FPanel {

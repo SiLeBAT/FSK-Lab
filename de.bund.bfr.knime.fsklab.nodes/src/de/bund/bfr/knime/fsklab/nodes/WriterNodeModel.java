@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -172,7 +173,8 @@ class WriterNodeModel extends NoInternalsModel {
       }
 
       // Adds resources
-      final List<Path> resources = Files.list(fskObj.workingDirectory).collect(Collectors.toList());
+      Path workingDirectory = Paths.get(fskObj.getWorkingDirectory());
+      final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
       for (final Path resourcePath : resources) {
 
         final String filenameString = resourcePath.getFileName().toString();

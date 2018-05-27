@@ -22,6 +22,7 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
@@ -116,13 +117,17 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
 
     FskPortObject fskObj = (FskPortObject) inData[0];
-    LOGGER.info(" recieving '"+fskObj.selectedSimulationIndex+"' as the selected simulation index!");
+    LOGGER.info(
+        " recieving '" + fskObj.selectedSimulationIndex + "' as the selected simulation index!");
 
     try (RController controller = new RController()) {
-      // get the index of the selected simulation saved by the JavaScript FSK Simulation Configurator! the default value is 0 which is the the default simulation
+      // get the index of the selected simulation saved by the JavaScript FSK Simulation
+      // Configurator! the default value is 0 which is the the default simulation
       FskSimulation fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
-      /*FskSimulation fskSimulation = fskObj.simulations.stream()
-          .filter(it -> it.getName().equals(nodeSettings.simulation)).findAny().get();*/
+      /*
+       * FskSimulation fskSimulation = fskObj.simulations.stream() .filter(it ->
+       * it.getName().equals(nodeSettings.simulation)).findAny().get();
+       */
       ExecutionContext context = exec.createSubExecutionContext(1.0);
 
       fskObj = runSnippet(controller, fskObj, fskSimulation, context);
@@ -146,7 +151,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setMessage("Add resource files");
-    controller.setWorkingDirectory(fskObj.workingDirectory);
+    {
+      String workingDirectoryString = fskObj.getWorkingDirectory();
+      if (!workingDirectoryString.isEmpty()) {
+        Path workingDirectory = FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
+        controller.setWorkingDirectory(workingDirectory);  
+      }
+    }
 
     // START RUNNING MODEL
     exec.setMessage("Setting up output capturing");
@@ -156,7 +167,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     controller.addPackagePath(LibRegistry.instance().getInstallationPath());
 
     exec.setMessage("Set parameter values");
-    LOGGER.info(" Running with '"+simulation.getName()+"' simulation!");
+    LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
     String paramScript = NodeUtils.buildParameterScript(simulation);
     executor.execute(paramScript, exec);
 

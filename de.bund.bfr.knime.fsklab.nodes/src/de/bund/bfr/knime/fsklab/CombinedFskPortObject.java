@@ -44,7 +44,6 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
@@ -102,7 +101,7 @@ public class CombinedFskPortObject extends FskPortObject {
   public CombinedFskPortObject(final String model, final String param, final String viz,
       final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
-      final Set<File> libs, final Path workingDirectory, final FskPortObject firstFskPortObject,
+      final Set<File> libs, final String workingDirectory, final FskPortObject firstFskPortObject,
       final FskPortObject secondFskPortObject) throws IOException {
     super(model, param, viz, generalInformation, scope, dataBackground, modelMath, workspace, libs,
         workingDirectory);
@@ -112,7 +111,7 @@ public class CombinedFskPortObject extends FskPortObject {
     numOfInstances += 1;
   }
 
-  public CombinedFskPortObject(final Path workingDirectory, final Set<File> libs,
+  public CombinedFskPortObject(final String workingDirectory, final Set<File> libs,
       final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
       throws IOException {
     super(workingDirectory, libs);
@@ -145,6 +144,7 @@ public class CombinedFskPortObject extends FskPortObject {
     private static final String META_DATA1 = "metaData1";
     private static final String WORKSPACE1 = "workspace1";
     private static final String SIMULATION1 = "simulation1";
+    private static final String WORKING_DIRECTORY1 = "workingDirectory1";
 
     private static final String MODEL2 = "model2.R";
     private static final String PARAM2 = "param2.R";
@@ -152,6 +152,7 @@ public class CombinedFskPortObject extends FskPortObject {
     private static final String META_DATA2 = "metaData2";
     private static final String WORKSPACE2 = "workspace2";
     private static final String SIMULATION2 = "simulation2";
+    private static final String WORKING_DIRECTORY2 = "workingDirectory2";
 
     private static final String JOINER_RELATION = "joinerRelation";
 
@@ -234,17 +235,12 @@ public class CombinedFskPortObject extends FskPortObject {
         out.closeEntry();
       }
 
-      // Save resources
-      final List<Path> resources1 =
-          Files.list(portObject.firstFskPortObject.workingDirectory).collect(Collectors.toList());
-      for (final Path resource : resources1) {
-        final String filename = resource.getFileName().toString();
-
-        if (FilenameUtils.isExtension(filename, RESOURCE_EXTENSIONS)) {
-          out.putNextEntry(new ZipEntry(filename));
-          Files.copy(resource, out);
-          out.closeEntry();
-        }
+      // Save working directory
+      String workingDirectory1 = portObject.firstFskPortObject.getWorkingDirectory();
+      if (!workingDirectory1.isEmpty()) {
+        out.putNextEntry(new ZipEntry(WORKING_DIRECTORY1));
+        IOUtils.write(workingDirectory1, out, "UTF-8");
+        out.closeEntry();
       }
 
       // Save simulations
@@ -259,6 +255,7 @@ public class CombinedFskPortObject extends FskPortObject {
         }
         out.closeEntry();
       }
+
       // Second FSK Object
       out.putNextEntry(new ZipEntry(MODEL2));
       IOUtils.write(portObject.secondFskPortObject.model, out, "UTF-8");
@@ -321,17 +318,12 @@ public class CombinedFskPortObject extends FskPortObject {
         out.closeEntry();
       }
 
-      // Save resources
-      final List<Path> resources2 =
-          Files.list(portObject.secondFskPortObject.workingDirectory).collect(Collectors.toList());
-      for (final Path resource : resources2) {
-        final String filename = resource.getFileName().toString();
-
-        if (FilenameUtils.isExtension(filename, RESOURCE_EXTENSIONS)) {
-          out.putNextEntry(new ZipEntry(filename));
-          Files.copy(resource, out);
-          out.closeEntry();
-        }
+      // Save working directory
+      String workingDirectory2 = portObject.secondFskPortObject.getWorkingDirectory();
+      if (!workingDirectory2.isEmpty()) {
+        out.putNextEntry(new ZipEntry(WORKING_DIRECTORY1));
+        IOUtils.write(workingDirectory2, out, "UTF-8");
+        out.closeEntry();
       }
 
       // Save simulations
@@ -368,11 +360,9 @@ public class CombinedFskPortObject extends FskPortObject {
 
       Path workspacePath1 = FileUtil.createTempFile("workspace", ".r").toPath();
       Set<File> libs1 = new HashSet<>();
-
-      Path workingDirectory1 = FileUtil.createTempDir("workingDirectory").toPath();
+      String workingDirectory1 = ""; // Empty string if not set
 
       List<FskSimulation> simulations1 = new ArrayList<>();
-
 
       // Second FSK Object
       String modelScript2 = "";
@@ -386,11 +376,9 @@ public class CombinedFskPortObject extends FskPortObject {
 
       Path workspacePath2 = FileUtil.createTempFile("workspace", ".r").toPath();
       Set<File> libs2 = new HashSet<>();
-
-      Path workingDirectory2 = FileUtil.createTempDir("workingDirectory").toPath();
+      String workingDirectory2 = ""; // Empty string if not set
 
       List<FskSimulation> simulations2 = new ArrayList<>();
-
 
       ZipEntry entry;
       while ((entry = in.getNextEntry()) != null) {
@@ -457,12 +445,9 @@ public class CombinedFskPortObject extends FskPortObject {
             throw new IOException(error.getMessage());
           }
         }
-
-        // Load resources
-        else if (FilenameUtils.isExtension(entryName, RESOURCE_EXTENSIONS)) {
-          // Creates path to resource. E.g.: <workingDir>/resource.txt
-          Path resource = workingDirectory1.resolve(entryName);
-          Files.copy(in, resource);
+        // Load working directory
+        else if (entryName.equals(WORKING_DIRECTORY1)) {
+          workingDirectory1 = IOUtils.toString(in, "UTF-8");
         }
 
         else if (entryName.equals(SIMULATION1)) {
@@ -475,8 +460,6 @@ public class CombinedFskPortObject extends FskPortObject {
         }
 
         // Second FSK Object entries
-
-
         if (entryName.equals(MODEL2)) {
           modelScript2 = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(PARAM2)) {
@@ -539,11 +522,9 @@ public class CombinedFskPortObject extends FskPortObject {
           }
         }
 
-        // Load resources
-        else if (FilenameUtils.isExtension(entryName, RESOURCE_EXTENSIONS)) {
-          // Creates path to resource. E.g.: <workingDir>/resource.txt
-          Path resource = workingDirectory2.resolve(entryName);
-          Files.copy(in, resource);
+        // Load working directory
+        else if (entryName.equals(WORKING_DIRECTORY2)) {
+          workingDirectory2 = IOUtils.toString(in, "UTF-8");
         }
 
         else if (entryName.equals(SIMULATION2)) {
@@ -564,6 +545,7 @@ public class CombinedFskPortObject extends FskPortObject {
       }
 
       in.close();
+
       final FskPortObject fportObj = new FskPortObject(modelScript1, parametersScript1,
           visualizationScript1, generalInformation1, scope1, dataBackground1, modelMath1,
           workspacePath1, libs1, workingDirectory1);
@@ -571,7 +553,6 @@ public class CombinedFskPortObject extends FskPortObject {
       if (!simulations1.isEmpty()) {
         fportObj.simulations.addAll(simulations1);
       }
-
 
       final FskPortObject sportObj = new FskPortObject(modelScript2, parametersScript2,
           visualizationScript2, generalInformation2, scope2, dataBackground2, modelMath2,
@@ -581,10 +562,8 @@ public class CombinedFskPortObject extends FskPortObject {
         sportObj.simulations.addAll(simulations2);
       }
 
-
-
       final CombinedFskPortObject portObj = new CombinedFskPortObject(
-          FileUtil.createTempDir("combined").toPath(), new HashSet<>(), fportObj, sportObj);
+          FileUtil.createTempDir("combined").getAbsolutePath(), new HashSet<>(), fportObj, sportObj);
       if (!joinerRelation.isEmpty()) {
         portObj.setJoinerRelation(joinerRelation);
       }
@@ -607,7 +586,6 @@ public class CombinedFskPortObject extends FskPortObject {
     metaDataPane1.setName("Meta1 data");
 
     final JPanel librariesPanel1 = UIUtils.createLibrariesPanel(firstFskPortObject.libs);
-    final JPanel resourcesPanel1 = createResourcesViewPanel(firstFskPortObject.workingDirectory);
 
     JPanel simulationsPanel1 = new SimulationsPanel(firstFskPortObject, 1);
 
@@ -623,35 +601,12 @@ public class CombinedFskPortObject extends FskPortObject {
     metaDataPane2.setName("Meta2 data");
 
     final JPanel librariesPanel2 = UIUtils.createLibrariesPanel(secondFskPortObject.libs);
-    final JPanel resourcesPanel2 = createResourcesViewPanel(secondFskPortObject.workingDirectory);
 
     JPanel simulationsPanel2 = new SimulationsPanel(secondFskPortObject, 2);
 
     return new JComponent[] {modelScriptPanel1, paramScriptPanel1, vizScriptPanel1, metaDataPane1,
-        librariesPanel1, resourcesPanel1, simulationsPanel1, modelScriptPanel2, paramScriptPanel2,
-        vizScriptPanel2, metaDataPane2, librariesPanel2, resourcesPanel2, simulationsPanel2};
-  }
-
-  /** Creates a panel with a list of resource files. */
-  private static final JPanel createResourcesViewPanel(final Path workingDirectory) {
-
-    final JPanel panel = new JPanel(new BorderLayout());
-    panel.setName("Resources list");
-
-    String[] filenames;
-    try {
-      filenames = Files.list(workingDirectory).map(Path::getFileName).map(Path::toString)
-          .toArray(String[]::new);
-    } catch (IOException e) {
-      filenames = new String[0];
-    }
-
-    final JList<String> list = new JList<>(filenames);
-    list.setLayoutOrientation(JList.VERTICAL);
-    list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    panel.add(new JScrollPane(list));
-
-    return panel;
+        librariesPanel1, simulationsPanel1, modelScriptPanel2, paramScriptPanel2, vizScriptPanel2,
+        metaDataPane2, librariesPanel2, simulationsPanel2};
   }
 
   private class SimulationsPanel extends FPanel {

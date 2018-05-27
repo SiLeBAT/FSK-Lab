@@ -18,17 +18,17 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -49,6 +49,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.knime.fsklab.nodes.ui.FBrowseButton;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
@@ -63,12 +64,10 @@ public class CreatorNodeDialog extends NodeDialogPane {
   private final JTextField modelScriptField;
   private final JTextField parametersScriptField;
   private final JTextField visualizationScriptField;
+  private final JTextField workingDirectoryField;
+  
   private final JTextField spreadsheetField;
-
   private final DefaultComboBoxModel<String> sheetModel;
-
-  private final DefaultListModel<Path> listModel;
-
 
   public CreatorNodeDialog() {
 
@@ -77,11 +76,10 @@ public class CreatorNodeDialog extends NodeDialogPane {
     modelScriptField = new FTextField();
     parametersScriptField = new FTextField();
     visualizationScriptField = new FTextField();
+    workingDirectoryField = new FTextField();
+    
     spreadsheetField = new FTextField();
-
     sheetModel = new DefaultComboBoxModel<>();
-
-    listModel = new DefaultListModel<>();
 
     createUI();
   }
@@ -95,18 +93,15 @@ public class CreatorNodeDialog extends NodeDialogPane {
       modelScriptField.setText(this.settings.modelScript);
       parametersScriptField.setText(this.settings.parameterScript);
       visualizationScriptField.setText(this.settings.visualizationScript);
+      workingDirectoryField.setText(this.settings.getWorkingDirectory());
+
       spreadsheetField.setText(this.settings.spreadsheet);
 
       // Populate sheetField with sheet names from the spreadsheet in settings
       sheetModel.removeAllElements();
       new SheetFieldTask(this.settings.spreadsheet).execute();
-
       // Set selected sheet from settings
       sheetModel.setSelectedItem(this.settings.sheet);
-
-      // load resources
-      listModel.clear();
-      this.settings.resources.forEach(listModel::addElement);
 
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
@@ -119,16 +114,11 @@ public class CreatorNodeDialog extends NodeDialogPane {
     this.settings.modelScript = modelScriptField.getText();
     this.settings.parameterScript = parametersScriptField.getText();
     this.settings.visualizationScript = visualizationScriptField.getText();
+    this.settings.setWorkingDirectory(workingDirectoryField.getText());
+    
     this.settings.spreadsheet = spreadsheetField.getText();
-
     // selected sheet may be null if there is no selection
     this.settings.sheet = (String) sheetModel.getSelectedItem();
-
-    // save resources
-    this.settings.resources.clear();
-    for (int i = 0; i < listModel.size(); i++) {
-      this.settings.resources.add(listModel.get(i));
-    }
 
     this.settings.save(settings);
   }
@@ -158,6 +148,32 @@ public class CreatorNodeDialog extends NodeDialogPane {
         JFileChooser.OPEN_DIALOG, rFilter);
     JButton visualizationScriptButton = UIUtils.createBrowseButton(buttonText,
         visualizationScriptField, JFileChooser.OPEN_DIALOG, rFilter);
+    
+    FBrowseButton workingDirectoryButton = new FBrowseButton("Browse");
+    workingDirectoryButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        
+        JFileChooser fc;
+        try {
+          File file = FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryField.getText()));
+          fc = new JFileChooser(file);
+        } catch (Exception ex) {
+          fc = new JFileChooser();
+        }
+        
+        fc.setDialogType(JFileChooser.OPEN_DIALOG);
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fc.setMultiSelectionEnabled(false);
+        
+        int response = fc.showOpenDialog(workingDirectoryButton);
+        if (response == JFileChooser.APPROVE_OPTION) {
+          
+          String selectedDirectory = fc.getSelectedFile().getAbsolutePath();
+          workingDirectoryField.setText(selectedDirectory);
+        }
+      }
+    });
 
     modelScriptButton.setToolTipText(modelScriptToolTip);
     parametersScriptButton.setToolTipText(parameterScriptToolTip);
@@ -171,14 +187,15 @@ public class CreatorNodeDialog extends NodeDialogPane {
     FLabel modelScriptLabel = new FLabel(modelScriptLabelText);
     FLabel parametersScriptLabel = new FLabel(paramScriptLabelText);
     FLabel visualizationScriptLabel = new FLabel(visualizationScriptLabelText);
+    FLabel workingDirectoryLabel = new FLabel("Working directory");  // TODO: resource bundle
 
     // formPanel
     List<FLabel> labels =
-        Arrays.asList(modelScriptLabel, parametersScriptLabel, visualizationScriptLabel);
+        Arrays.asList(modelScriptLabel, parametersScriptLabel, visualizationScriptLabel, workingDirectoryLabel);
     List<JTextField> fields =
-        Arrays.asList(modelScriptField, parametersScriptField, visualizationScriptField);
+        Arrays.asList(modelScriptField, parametersScriptField, visualizationScriptField, workingDirectoryField);
     List<JButton> buttons =
-        Arrays.asList(modelScriptButton, parametersScriptButton, visualizationScriptButton);
+        Arrays.asList(modelScriptButton, parametersScriptButton, visualizationScriptButton, workingDirectoryButton);
 
     FPanel formPanel = UIUtils.createFormPanel(labels, fields, buttons);
     JPanel northPanel = UI.createNorthPanel(formPanel);
@@ -210,7 +227,6 @@ public class CreatorNodeDialog extends NodeDialogPane {
     }
 
     addTab("Options", northPanel);
-    addTab("Files", UIUtils.createResourcesPanel(getPanel(), listModel));
   }
 
   private class SpreadsheetFieldListener implements DocumentListener {

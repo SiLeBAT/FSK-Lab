@@ -21,13 +21,8 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.HashSet;
 import java.util.List;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.util.XMLResourceDescriptor;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
 import org.knime.core.node.ExecutionContext;
@@ -43,33 +38,27 @@ import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.node.web.ValidationError;
 import org.knime.core.util.FileUtil;
 import org.knime.js.core.node.AbstractWizardNodeModel;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskPortObject;
-import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.JoinRelation;
-import de.bund.bfr.knime.fsklab.ParameterizedModel;
 
 
 /**
  * Fsk Joiner node model.
  */
 
-final class JoinerNodeModel
-    extends AbstractWizardNodeModel<JoinerViewRepresentation, JoinerViewValue>
-    implements PortObjectHolder {
+final class JoinerNodeModel extends
+    AbstractWizardNodeModel<JoinerViewRepresentation, JoinerViewValue> implements PortObjectHolder {
   private final JoinerNodeSettings nodeSettings = new JoinerNodeSettings();
   private FskPortObject m_port;
-  //JoinerViewValue joinerProxyValue = new JoinerViewValue();
- 
-  // Input and output port types
-  private static final PortType[] IN_TYPES = {FskPortObject.TYPE,FskPortObject.TYPE};
-  private static final PortType[] OUT_TYPES = {CombinedFskPortObject.TYPE,ImagePortObject.TYPE};
+  // JoinerViewValue joinerProxyValue = new JoinerViewValue();
 
-  private static final String VIEW_NAME =
-      new JoinerNodeFactory().getInteractiveViewName();
+  // Input and output port types
+  private static final PortType[] IN_TYPES = {FskPortObject.TYPE, FskPortObject.TYPE};
+  private static final PortType[] OUT_TYPES = {CombinedFskPortObject.TYPE, ImagePortObject.TYPE};
+
+  private static final String VIEW_NAME = new JoinerNodeFactory().getInteractiveViewName();
 
   public JoinerNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
@@ -82,7 +71,7 @@ final class JoinerNodeModel
 
   @Override
   public JoinerViewValue createEmptyViewValue() {
-    
+
     return new JoinerViewValue();
   }
 
@@ -112,7 +101,7 @@ final class JoinerNodeModel
       if (val == null) {
         val = createEmptyViewValue();
       }
-      
+
     }
     return val;
   }
@@ -120,21 +109,20 @@ final class JoinerNodeModel
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
     ImagePortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
-    return new PortObjectSpec[] { CombinedFskPortObjectSpec.INSTANCE ,imageSpec};
+    return new PortObjectSpec[] {CombinedFskPortObjectSpec.INSTANCE, imageSpec};
   }
 
   @Override
-  protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) throws Exception{
+  protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
+      throws Exception {
 
     FskPortObject inObj1 = (FskPortObject) inObjects[0];
     FskPortObject inObj2 = (FskPortObject) inObjects[1];
-    CombinedFskPortObject outObj = new CombinedFskPortObject(FileUtil.createTempDir("combined").toPath(),new HashSet<>(),inObj1,inObj2);
+    CombinedFskPortObject outObj = new CombinedFskPortObject(
+        FileUtil.createTempDir("combined").getAbsolutePath(), new HashSet<>(), inObj1, inObj2);
     ImagePortObject imagePort = null;
+
     // Clone input object
-   
-
-    
-
     synchronized (getLock()) {
       JoinerViewValue joinerProxyValue = getViewValue();
 
@@ -146,18 +134,17 @@ final class JoinerNodeModel
         joinerProxyValue.setFirstModelMath(inObj1.modelMath);
         joinerProxyValue.setFirstModelScript(inObj1.model);
         joinerProxyValue.setFirstModelViz(inObj1.viz);
-        
-        
-        
+
         joinerProxyValue.setSecondGeneralInformation(inObj2.generalInformation);
         joinerProxyValue.setSecondScope(inObj2.scope);
         joinerProxyValue.setSecondDataBackground(inObj2.dataBackground);
         joinerProxyValue.setSecondModelMath(inObj2.modelMath);
         joinerProxyValue.setSecondModelScript(inObj2.model);
         joinerProxyValue.setSecondModelViz(inObj2.viz);
-       //val.metadata = inObj.template;
-       // m_port = inObj;
-        if(nodeSettings.jsonRepresentation != null && !nodeSettings.jsonRepresentation.equals("")) {
+        // val.metadata = inObj.template;
+        // m_port = inObj;
+        if (nodeSettings.jsonRepresentation != null
+            && !nodeSettings.jsonRepresentation.equals("")) {
           joinerProxyValue.setJsonRepresentation(nodeSettings.jsonRepresentation);
         }
         exec.setProgress(1);
@@ -165,8 +152,8 @@ final class JoinerNodeModel
 
       // Takes modified metadata from val
       // outObj.template = val.metadata;
-      List <JoinRelation> joinerRelation = joinerProxyValue.getJoinRelations();
-      for(JoinRelation jr :joinerRelation) {
+      List<JoinRelation> joinerRelation = joinerProxyValue.getJoinRelations();
+      for (JoinRelation jr : joinerRelation) {
         System.out.println(jr.getSourceParam().name);
         System.out.println(jr.getTargetParam().name);
       }
@@ -174,34 +161,35 @@ final class JoinerNodeModel
       outObj.setJoinerRelation(joinerRelation);
       imagePort = createSVGImagePortObject(joinerProxyValue.getSvgRepresentation());
     }
-    
-   
-    return new PortObject[] {outObj,imagePort};
+
+
+    return new PortObject[] {outObj, imagePort};
   }
 
   public ImagePortObject createSVGImagePortObject(String svgString) {
-    
-      ImagePortObject imagePort = null;
-      if(svgString == null || svgString.equals("")) {
-        svgString = "<svg xmlns=\"http://www.w3.org/2000/svg\"/>";
-      }
-      String xmlPrimer = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
-      String svgPrimer = xmlPrimer + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\" "
-          + "\"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">";
-      String xmlString = null;
-      xmlString = svgPrimer + svgString;
-      try {
-        InputStream is = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
-        ImagePortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
-        
-        imagePort = new ImagePortObject(new SvgImageContent(is), imageSpec);
-      } catch (IOException e) {
-        //LOGGER.error("Creating SVG port object failed: " + e.getMessage(), e);
-      }
-          
+
+    ImagePortObject imagePort = null;
+    if (svgString == null || svgString.equals("")) {
+      svgString = "<svg xmlns=\"http://www.w3.org/2000/svg\"/>";
+    }
+    String xmlPrimer = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+    String svgPrimer = xmlPrimer + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.0//EN\" "
+        + "\"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">";
+    String xmlString = null;
+    xmlString = svgPrimer + svgString;
+    try {
+      InputStream is = new ByteArrayInputStream(xmlString.getBytes("UTF-8"));
+      ImagePortObjectSpec imageSpec = new ImagePortObjectSpec(SvgCell.TYPE);
+
+      imagePort = new ImagePortObject(new SvgImageContent(is), imageSpec);
+    } catch (IOException e) {
+      // LOGGER.error("Creating SVG port object failed: " + e.getMessage(), e);
+    }
+
     return imagePort;
-   
+
   }
+
   @Override
   protected void performReset() {
     m_port = null;
@@ -222,10 +210,7 @@ final class JoinerNodeModel
   }
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-  }
-
- 
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
   @Override
   public PortObject[] getInternalPortObjects() {
@@ -236,7 +221,6 @@ final class JoinerNodeModel
   public void setInternalPortObjects(PortObject[] portObjects) {
     m_port = (FskPortObject) portObjects[0];
   }
-
 
   public void setHideInWizard(boolean hide) {}
 }

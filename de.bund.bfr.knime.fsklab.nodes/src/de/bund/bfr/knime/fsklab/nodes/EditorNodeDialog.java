@@ -27,13 +27,10 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +41,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -126,9 +122,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
   private final DataBackgroundPanel dataBackgroundPanel = new DataBackgroundPanel();
   private final ModelMathPanel modelMathPanel = new ModelMathPanel();
 
-  /** List model for resource files. */
-  private final DefaultListModel<Path> listModel = new DefaultListModel<>();
-
   private EditorNodeSettings settings;
 
   EditorNodeDialog() {
@@ -150,7 +143,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     addTab("Scope", scopePanel, true);
     addTab("Data background", dataBackgroundPanel, true);
     addTab("Model math", modelMathPanel, true);
-    addTab("Resource files", UIUtils.createResourcesPanel(getPanel(), listModel));
 
     updatePanels();
   }
@@ -165,9 +157,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     scopePanel.init(settings.scope);
     dataBackgroundPanel.init(settings.dataBackground);
     modelMathPanel.init(settings.modelMath);
-
-    listModel.clear();
-    settings.resources.forEach(listModel::addElement);
   }
 
   // --- settings methods ---
@@ -208,12 +197,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       this.settings.scope = inObj.scope;
       this.settings.dataBackground = inObj.dataBackground;
       this.settings.modelMath = inObj.modelMath;
-
-      try {
-        Files.list(inObj.workingDirectory).forEach(this.settings.resources::add);
-      } catch (IOException exception) {
-        throw new NotConfigurableException(exception.getMessage(), exception);
-      }
     }
 
     updatePanels();
@@ -252,10 +235,6 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
     this.settings.scope = scopePanel.get();
     this.settings.dataBackground = dataBackgroundPanel.get();
     this.settings.modelMath = modelMathPanel.get();
-
-    // Save resources
-    this.settings.resources.clear();
-    this.settings.resources.addAll(Collections.list(listModel.elements()));
 
     this.settings.saveSettings(settings);
   }

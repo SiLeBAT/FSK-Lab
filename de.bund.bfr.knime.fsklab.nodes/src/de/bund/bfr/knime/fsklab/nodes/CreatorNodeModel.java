@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -263,17 +262,11 @@ class CreatorNodeModel extends NoInternalsModel {
       }
     }
 
-    // Copy resources from settings to a working directory
-    Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
-    for (final Path resource : nodeSettings.resources) {
-      final Path targetPath = workingDirectory.resolve(resource.getFileName().toString());
-      Files.copy(resource, targetPath);
-    }
-
     String modelScript = modelRScript.getScript();
     String paramScript = paramRScript.getScript();
     String vizScript = vizRScript != null ? vizRScript.getScript() : "";
 
+    String workingDirectory = nodeSettings.getWorkingDirectory();
     final FskPortObject portObj =
         new FskPortObject(modelScript, paramScript, vizScript, generalInformation, scope,
             dataBackground, modelMath, null, new HashSet<>(), workingDirectory);

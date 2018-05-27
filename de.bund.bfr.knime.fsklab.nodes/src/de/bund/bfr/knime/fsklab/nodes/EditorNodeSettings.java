@@ -66,8 +66,6 @@ public class EditorNodeSettings {
   private static final String CFG_DATA_BACKGROUND = "dataBackground";
   private static final String CFG_MODEL_MATH = "modelMath";
 
-  private static final String CFG_RESOURCES = "resources";
-
   String originalModelScript;
   String originalParametersScript;
   String originalVisualizationScript;
@@ -80,9 +78,6 @@ public class EditorNodeSettings {
   Scope scope;
   DataBackground dataBackground;
   ModelMath modelMath;
-
-  /** Paths to resources: plain text files and R workspace files (.rdata). */
-  public List<Path> resources = new ArrayList<>();
 
   /**
    * Saves the settings into the given node settings object.
@@ -115,9 +110,6 @@ public class EditorNodeSettings {
     if (modelMath != null) {
       saveSettings(settings, CFG_MODEL_MATH, modelMath);
     }
-
-    final String[] resourcesArray = resources.stream().map(Path::toString).toArray(String[]::new);
-    settings.addStringArray(CFG_RESOURCES, resourcesArray);
   }
 
   /**
@@ -152,11 +144,6 @@ public class EditorNodeSettings {
     if (settings.containsKey(CFG_MODEL_MATH)) {
       modelMath = getEObject(settings, CFG_MODEL_MATH, ModelMath.class);
     }
-
-    // Uses empty array if CFG_RESOURCES is missing (in case of old nodes).
-    resources.clear();
-    Arrays.stream(settings.getStringArray(CFG_RESOURCES, new String[0])).map(Paths::get)
-        .forEach(resources::add);
   }
 
   private static void saveSettings(final NodeSettingsWO settings, final String key,

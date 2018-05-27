@@ -21,6 +21,9 @@
 		<option name="Selected R visualization script">
 			File path of the visualization script (optional)
 		</option>
+		<option name="Working directory">
+			Directory with resource files: plaintext, CSV and R workspaces (optional).
+		</option>
 		<option name="Selected XLSX spreadsheet">
 			File path of the XLSX spreadsheet with meta data (optional).
 			If unspecified or error occurs the table will be empty.
