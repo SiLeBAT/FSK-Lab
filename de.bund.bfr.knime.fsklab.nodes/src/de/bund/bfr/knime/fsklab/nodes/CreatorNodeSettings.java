@@ -55,7 +55,7 @@ public class CreatorNodeSettings {
   }
   
   public void setWorkingDirectory(String workingDirectory) {
-    if (workingDirectory == null) {
+    if (workingDirectory != null) {
       this.workingDirectory = workingDirectory;
     }
   }
