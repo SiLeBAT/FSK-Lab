@@ -172,8 +172,12 @@ class WriterNodeModel extends NoInternalsModel {
         archive.addEntry(libFile, libFile.getName(), libUri);
       }
 
+      // The working directory from fskObj (as a string) can be a KNIME relative path
+      // and needs to be converted to a Path
+      String workingDirectoryString = fskObj.getWorkingDirectory();
+      Path workingDirectory = FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
+
       // Adds resources
-      Path workingDirectory = Paths.get(fskObj.getWorkingDirectory());
       final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
       for (final Path resourcePath : resources) {
 
