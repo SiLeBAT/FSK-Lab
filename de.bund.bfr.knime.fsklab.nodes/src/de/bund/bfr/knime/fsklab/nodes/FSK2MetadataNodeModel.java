@@ -107,12 +107,12 @@ public class FSK2MetadataNodeModel extends StatelessModel {
 
     // Column specs
     final DataColumnSpec generalInformationSpec =
-        new DataColumnSpecCreator("General information", JSONCell.TYPE).createSpec();
-    final DataColumnSpec scopeSpec = new DataColumnSpecCreator("Scope", JSONCell.TYPE).createSpec();
+        new DataColumnSpecCreator("generalInformation", JSONCell.TYPE).createSpec();
+    final DataColumnSpec scopeSpec = new DataColumnSpecCreator("scope", JSONCell.TYPE).createSpec();
     final DataColumnSpec dataBackgroundSpec =
-        new DataColumnSpecCreator("Data background", JSONCell.TYPE).createSpec();
+        new DataColumnSpecCreator("dataBackground", JSONCell.TYPE).createSpec();
     final DataColumnSpec modelMathSpec =
-        new DataColumnSpecCreator("Model math", JSONCell.TYPE).createSpec();
+        new DataColumnSpecCreator("modelMath", JSONCell.TYPE).createSpec();
 
     // table spec
     final DataTableSpecCreator tableSpec = new DataTableSpecCreator()
@@ -125,12 +125,12 @@ public class FSK2MetadataNodeModel extends StatelessModel {
 
     // Column specs
     final DataColumnSpec generalInformationSpec =
-        new DataColumnSpecCreator("General information", JSONCell.TYPE).createSpec();
-    final DataColumnSpec scopeSpec = new DataColumnSpecCreator("Scope", JSONCell.TYPE).createSpec();
+        new DataColumnSpecCreator("generalInformation", JSONCell.TYPE).createSpec();
+    final DataColumnSpec scopeSpec = new DataColumnSpecCreator("scope", JSONCell.TYPE).createSpec();
     final DataColumnSpec dataBackgroundSpec =
-        new DataColumnSpecCreator("Data background", JSONCell.TYPE).createSpec();
+        new DataColumnSpecCreator("dataBackground", JSONCell.TYPE).createSpec();
     final DataColumnSpec modelMathSpec =
-        new DataColumnSpecCreator("Model math", JSONCell.TYPE).createSpec();
+        new DataColumnSpecCreator("modelMath", JSONCell.TYPE).createSpec();
 
     // table spec
     final DataTableSpecCreator tableSpec = new DataTableSpecCreator()
