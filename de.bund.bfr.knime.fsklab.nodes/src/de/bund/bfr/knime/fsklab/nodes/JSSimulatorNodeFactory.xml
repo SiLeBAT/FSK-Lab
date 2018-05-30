@@ -10,7 +10,7 @@
 		<intro>
 			Generate simulations for a FSK model.
 			The <i>defaultSimulation</i> settings created by the FSK creator and Editor are disabled by default.
-						
+			The simulation selected in the view is set as simulation to run in the runner node.
 		</intro>
 			
 		<option name="Simulation names">

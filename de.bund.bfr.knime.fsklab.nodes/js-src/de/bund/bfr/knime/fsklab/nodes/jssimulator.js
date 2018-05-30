@@ -70,7 +70,7 @@ simulator = function() {
 			'      <div id="buttonsDiv" class="form-group">' +
 			// The remove button is disabled initially for the default simulation
 			'        <button type="button" class="btn btn-default btn-warning" disabled>Remove</button>' +
-			'        <input id="nameInput" type="text" class="btn btn-default" placeholder="Enter new simulation">' +
+			'        <input id="nameInput" type="text" placeholder="Enter new simulation">' +
 			// The add button is disabled initially (#nameInput is empty)
 			'        <button type="button" class="btn btn-default btn-success" disabled>Add</button>' +
 			'      </div>' +

@@ -37,6 +37,7 @@ import org.knime.js.core.node.AbstractWizardNodeModel;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.JSSimulatorViewValue.JSSimulation;
+import metadata.Parameter;
 import metadata.ParameterClassification;
 
 class JSSimulatorNodeModel
@@ -157,10 +158,11 @@ class JSSimulatorNodeModel
       // Takes modified simulations from val
 
       // Converts JSSimulation(s) back to FskSimulation(s)
+      port = inObj; // Needed by getViewRepresentation
       for (JSSimulation jsSimulation : val.simulations) {
         FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
 
-        List<metadata.Parameter> inputParams = getViewRepresentation().parameters;
+        List<Parameter> inputParams = getViewRepresentation().parameters;
 
         for (int i = 0; i < inputParams.size(); i++) {
           String paramName = inputParams.get(i).getParameterName();
@@ -169,12 +171,10 @@ class JSSimulatorNodeModel
           fskSimulation.getParameters().put(paramName, paramValue);
         }
         outObj.simulations.add(fskSimulation);
-        
       }
+      
       outObj.selectedSimulationIndex = val.selectedSimulationIndex;
       LOGGER.info(" saving '"+val.selectedSimulationIndex+"' as the selected simulation index!");
-
-      port = inObj;
     }
 
     exec.setProgress(1);
