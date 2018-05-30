@@ -57,12 +57,13 @@ class JSSimulatorViewValue extends JSONViewContent {
     }
 
     JSSimulatorViewValue other = (JSSimulatorViewValue) obj;
-    return simulations.equals(other.simulations);
+    return simulations.equals(other.simulations)
+        && selectedSimulationIndex == other.selectedSimulationIndex;
   }
 
   @Override
   public int hashCode() {
-    return simulations.hashCode();
+    return simulations.hashCode() + selectedSimulationIndex;
   }
 
   @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
