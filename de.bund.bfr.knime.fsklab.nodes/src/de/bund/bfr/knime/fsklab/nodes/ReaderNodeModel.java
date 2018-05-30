@@ -52,7 +52,6 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
-import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
@@ -221,18 +220,6 @@ class ReaderNodeModel extends NoInternalsModel {
       }catch(Exception e) {
         e.printStackTrace();
       }
-    }
-
-    // validate model
-    try (final RController controller = new RController()) {
-
-      // Add path
-      final LibRegistry libRegistry = LibRegistry.instance();
-      controller.addPackagePath(libRegistry.getInstallationPath());
-
-      // TODO: validate model with parameter values from parameter script
-
-      controller.restorePackagePath();
     }
 
     Path workspacePath = workspace == null ? null : workspace.toPath();
