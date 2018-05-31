@@ -285,7 +285,14 @@ public class RController implements IRController {
    */
   private void initR() throws RException {
     try {
-      final String rHome = RPreferenceInitializer.getR3Provider().getRHome();
+      String rHome = RPreferenceInitializer.getR3Provider().getRHome();
+      
+      // FIXME: Workaround for Linux server in BfR. If R home is not configure then
+      // defaults to /usr/lib/R/
+      if (StringUtils.isEmpty(rHome) && Platform.isLinux()) {
+        rHome = "/usr/lib/R/";
+      }
+      
       RBinUtil.checkRHome(rHome);
 
       m_rProps = RBinUtil.retrieveRProperties();
