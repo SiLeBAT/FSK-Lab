@@ -70,7 +70,7 @@ simulator = function() {
 			// The remove button is disabled initially for the default simulation
 			'      <button type="button" class="btn btn-default btn-warning" disabled>Remove</button>' +
 			'      <div id="buttonsDiv" class="form-group">' +	
-			'        <input id="nameInput" class="form-control" type="text" placeholder="Enter new simulation">' +
+			'        <input id="nameInput"  type="text" placeholder="Enter new simulation">' +
 			// The add button is disabled initially (#nameInput is empty)
 			'      </div>' +
 			'      <button type="button" class="btn btn-default btn-success" disabled>Add</button>' +
@@ -89,7 +89,15 @@ simulator = function() {
 			$('#simulationNamesDiv').append(button);
 			
 		}
+		$('#nameInput').keypress(function(event){
+			
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keycode == '13'){
+				event.preventDefault(); // Let's stop this event.
+                event.stopPropagation(); // Really this time.	
+			}
 
+		});
 		// Remove simulation event
 		$('.btn-warning').click(function() {
 			var index = $('#simulationNamesDiv button.btn-primary').index();
@@ -99,7 +107,6 @@ simulator = function() {
 
 		// Enables the add button for valid simulation names
 		$('#nameInput').on('input', function() {
-
 			var name = $(this).val();
 
 			if (!name) {
