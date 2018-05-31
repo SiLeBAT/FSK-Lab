@@ -24,7 +24,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -172,24 +171,30 @@ class WriterNodeModel extends NoInternalsModel {
         archive.addEntry(libFile, libFile.getName(), libUri);
       }
 
-      // The working directory from fskObj (as a string) can be a KNIME relative path
-      // and needs to be converted to a Path
+      // If the model has an associated working directory with resources these resources
+      // need to be saved into the archive.
       String workingDirectoryString = fskObj.getWorkingDirectory();
-      Path workingDirectory = FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
+      if (!workingDirectoryString.isEmpty()) {
 
-      // Adds resources
-      final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
-      for (final Path resourcePath : resources) {
+        // The working directory from fskObj (as a string) can be a KNIME relative path
+        // and needs to be converted to a Path
+        Path workingDirectory =
+            FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
 
-        final String filenameString = resourcePath.getFileName().toString();
-        final File resourceFile = resourcePath.toFile();
+        // Adds resources
+        final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
+        for (final Path resourcePath : resources) {
 
-        if (FilenameUtils.isExtension(filenameString, "txt")) {
-          archive.addEntry(resourceFile, filenameString, URIS.plainText);
-        } else if (FilenameUtils.isExtension(filenameString, "RData")) {
-          archive.addEntry(resourceFile, filenameString, URIS.rData);
-        } else if (FilenameUtils.isExtension(filenameString, "csv")) {
-          archive.addEntry(resourceFile, filenameString, URIS.csv);
+          final String filenameString = resourcePath.getFileName().toString();
+          final File resourceFile = resourcePath.toFile();
+
+          if (FilenameUtils.isExtension(filenameString, "txt")) {
+            archive.addEntry(resourceFile, filenameString, URIS.plainText);
+          } else if (FilenameUtils.isExtension(filenameString, "RData")) {
+            archive.addEntry(resourceFile, filenameString, URIS.rData);
+          } else if (FilenameUtils.isExtension(filenameString, "csv")) {
+            archive.addEntry(resourceFile, filenameString, URIS.csv);
+          }
         }
       }
 
@@ -227,11 +232,11 @@ class WriterNodeModel extends NoInternalsModel {
   private static ArchiveEntry addMetaData(CombineArchive archive,
       GeneralInformation generalInformation, Scope scope, DataBackground dataBackground,
       ModelMath modelMath, String filename) throws IOException {
-    
+
     ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    
+
     ObjectNode modelNode = mapper.createObjectNode();
-    modelNode.set("version",mapper.valueToTree(MetadataPackage.eNS_URI));
+    modelNode.set("version", mapper.valueToTree(MetadataPackage.eNS_URI));
     modelNode.set("generalInformation", mapper.valueToTree(generalInformation));
     modelNode.set("scope", mapper.valueToTree(scope));
     modelNode.set("dataBackground", mapper.valueToTree(dataBackground));
