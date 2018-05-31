@@ -66,14 +66,14 @@ simulator = function() {
 			'  <div class="col-md-4 simulationsDiv">'+
 			'    <h2>Simulations</h2>' +
 			'    <div id="simulationNamesDiv"></div>' +
-			'    <form class="form-horizontal">' +
-			'      <div id="buttonsDiv" class="form-group">' +
+			'    <form class="form-inline">' +
 			// The remove button is disabled initially for the default simulation
-			'        <button type="button" class="btn btn-default btn-warning" disabled>Remove</button>' +
-			'        <input id="nameInput" type="text" placeholder="Enter new simulation">' +
+			'      <button type="button" class="btn btn-default btn-warning" disabled>Remove</button>' +
+			'      <div id="buttonsDiv" class="form-group">' +	
+			'        <input id="nameInput" class="form-control" type="text" placeholder="Enter new simulation">' +
 			// The add button is disabled initially (#nameInput is empty)
-			'        <button type="button" class="btn btn-default btn-success" disabled>Add</button>' +
 			'      </div>' +
+			'      <button type="button" class="btn btn-default btn-success" disabled>Add</button>' +
 			'    </form>' +
 			'  </div>' +
 			'  <div class="col-md-8 parametersDiv">' +
@@ -117,21 +117,27 @@ simulator = function() {
 
 		// Add button event
 		$('.btn-success').click(function() {
-			var simulationName = $('#nameInput').val();
-			var button = createSimulationButton(simulationName);
-			$('#simulationNamesDiv').append(button);
-			
-			// Wipe out the name entry
-			$('#nameInput').val('');
 
-			// Create and save new simulation (the values are taken from the default simulation)
-			valuesArray = [];
-			$.each(_val.simulations[0].values,function(index,value){
-				valuesArray.push(value);
-			})
-			var newSimulation = {'name': simulationName, 'values': valuesArray }
-			_val.simulations.push(newSimulation);
-			$(button).trigger( "click" );
+			// Take name of simulation from nameInput
+			var simulationName = $('#nameInput').val();
+
+			// If simulation name is not empty
+			if (simulationName) {
+				var button = createSimulationButton(simulationName);
+				$('#simulationNamesDiv').append(button);
+				
+				// Wipe out the name entry
+				$('#nameInput').val('');
+	
+				// Create and save new simulation (the values are taken from the default simulation)
+				valuesArray = [];
+				$.each(_val.simulations[0].values,function(index,value){
+					valuesArray.push(value);
+				})
+				var newSimulation = {'name': simulationName, 'values': valuesArray }
+				_val.simulations.push(newSimulation);
+				$(button).trigger( "click" );
+			}
 		});
 
 
