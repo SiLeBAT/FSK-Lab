@@ -87,17 +87,16 @@ simulator = function() {
 			var simulationName = _val.simulations[i].name;
 			var button = createSimulationButton(simulationName);
 			$('#simulationNamesDiv').append(button);
-			
 		}
+
 		$('#nameInput').keypress(function(event){
-			
 			var keycode = (event.keyCode ? event.keyCode : event.which);
 			if(keycode == '13'){
 				event.preventDefault(); // Let's stop this event.
                 event.stopPropagation(); // Really this time.	
 			}
-
 		});
+
 		// Remove simulation event
 		$('.btn-warning').click(function() {
 			var index = $('#simulationNamesDiv button.btn-primary').index();
@@ -199,7 +198,6 @@ simulator = function() {
 			$('.parametersDiv input').each(function(index) {
 				$(this).prop('disabled', newDisabledValue);
 				$(this).val(_val.simulations[_currentSimulation].values[index]);
-				
 			});
 		});
 
