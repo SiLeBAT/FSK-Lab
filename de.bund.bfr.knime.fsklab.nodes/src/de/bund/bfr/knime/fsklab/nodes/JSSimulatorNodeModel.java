@@ -165,7 +165,7 @@ class JSSimulatorNodeModel
         List<Parameter> inputParams = getViewRepresentation().parameters;
 
         for (int i = 0; i < inputParams.size(); i++) {
-          String paramName = inputParams.get(i).getParameterName();
+          String paramName = inputParams.get(i).getParameterID();
           String paramValue = jsSimulation.values.get(i);
 
           fskSimulation.getParameters().put(paramName, paramValue);
