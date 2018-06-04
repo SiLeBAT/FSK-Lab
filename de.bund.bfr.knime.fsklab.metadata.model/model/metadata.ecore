@@ -355,10 +355,10 @@
     <eLiterals name="Date" value="3"/>
     <eLiterals name="File" value="4"/>
     <eLiterals name="Boolean" value="5"/>
-    <eLiterals name="VectorOfNumbers" value="6"/>
-    <eLiterals name="VectorOfStrings" value="7"/>
-    <eLiterals name="MatrixOfNumbers" value="8"/>
-    <eLiterals name="MatrixOfStrings" value="9"/>
+    <eLiterals name="VectorOfNumbers" value="6" literal="Vector[number]"/>
+    <eLiterals name="VectorOfStrings" value="7" literal="Vector[string]"/>
+    <eLiterals name="MatrixOfNumbers" value="8" literal="Matrix[number,number]"/>
+    <eLiterals name="MatrixOfStrings" value="9" literal="Matrix[string,string]"/>
     <eLiterals name="Object" value="10"/>
     <eLiterals name="Other" value="11"/>
   </eClassifiers>
