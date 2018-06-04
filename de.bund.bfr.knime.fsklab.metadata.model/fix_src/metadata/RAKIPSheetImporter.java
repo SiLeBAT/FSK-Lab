@@ -459,7 +459,7 @@ public class RAKIPSheetImporter {
 
 		for (int numrow = 38; numrow <= 49; numrow++) {
 
-			XSSFRow row = sheet.getRow(38);
+			XSSFRow row = sheet.getRow(numrow);
 
 			try {
 				scope.getProduct().add(retrieveProduct(row));
