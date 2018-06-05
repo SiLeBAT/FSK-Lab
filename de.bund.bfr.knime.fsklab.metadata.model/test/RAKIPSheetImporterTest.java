@@ -144,9 +144,9 @@ public class RAKIPSheetImporterTest {
 
 		ModelCategory modelCategory = importer.retrieveModelCategory(sheet0);
 		assertEquals("Dose-response model", modelCategory.getModelClass());
-		assertTrue(modelCategory.eIsSet(pkg.getModelCategory_ModelSubClass()));
-		assertTrue(modelCategory.eIsSet(pkg.getModelCategory_ModelClassComment()));
-		assertTrue(modelCategory.eIsSet(pkg.getModelCategory_BasicProcess()));
+		assertFalse(modelCategory.eIsSet(pkg.getModelCategory_ModelSubClass()));
+		assertFalse(modelCategory.eIsSet(pkg.getModelCategory_ModelClassComment()));
+		assertFalse(modelCategory.eIsSet(pkg.getModelCategory_BasicProcess()));
 	}
 
 	@Test
