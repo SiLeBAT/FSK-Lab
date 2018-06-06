@@ -871,20 +871,17 @@ public class RAKIPSheetImporter {
 	public Hazard retrieveHazard(XSSFRow row) {
 
 		// Check mandatory properties
-		if (row.getCell(V).getCellType() != Cell.CELL_TYPE_STRING) {
-			throw new IllegalArgumentException("Hazard type is missing");
-		}
 		if (row.getCell(W).getCellType() != Cell.CELL_TYPE_STRING) {
 			throw new IllegalArgumentException("Hazard name is missing");
 		}
-		if (row.getCell(Y).getCellType() != Cell.CELL_TYPE_STRING) {
-			throw new IllegalArgumentException("Hazard unit is missing");
-		}
 
 		Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
-		hazard.setHazardType(row.getCell(V).getStringCellValue());
 		hazard.setHazardName(row.getCell(W).getStringCellValue());
-		hazard.setHazardUnit(row.getCell(Y).getStringCellValue());
+
+		XSSFCell typeCell = row.getCell(V);
+		if (typeCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			hazard.setHazardType(typeCell.getStringCellValue());
+		}
 
 		XSSFCell hazardDescriptionCell = row.getCell(X);
 		if (hazardDescriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
