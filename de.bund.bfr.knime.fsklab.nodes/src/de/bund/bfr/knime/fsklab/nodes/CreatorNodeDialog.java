@@ -62,10 +62,9 @@ public class CreatorNodeDialog extends NodeDialogPane {
   private final CreatorNodeSettings settings;
 
   private final JTextField modelScriptField;
-  private final JTextField parametersScriptField;
   private final JTextField visualizationScriptField;
   private final JTextField workingDirectoryField;
-  
+
   private final JTextField spreadsheetField;
   private final DefaultComboBoxModel<String> sheetModel;
 
@@ -74,10 +73,9 @@ public class CreatorNodeDialog extends NodeDialogPane {
     settings = new CreatorNodeSettings();
 
     modelScriptField = new FTextField();
-    parametersScriptField = new FTextField();
     visualizationScriptField = new FTextField();
     workingDirectoryField = new FTextField();
-    
+
     spreadsheetField = new FTextField();
     sheetModel = new DefaultComboBoxModel<>();
 
@@ -91,7 +89,6 @@ public class CreatorNodeDialog extends NodeDialogPane {
       this.settings.load(settings);
 
       modelScriptField.setText(this.settings.modelScript);
-      parametersScriptField.setText(this.settings.parameterScript);
       visualizationScriptField.setText(this.settings.visualizationScript);
       workingDirectoryField.setText(this.settings.getWorkingDirectory());
 
@@ -112,10 +109,9 @@ public class CreatorNodeDialog extends NodeDialogPane {
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
 
     this.settings.modelScript = modelScriptField.getText();
-    this.settings.parameterScript = parametersScriptField.getText();
     this.settings.visualizationScript = visualizationScriptField.getText();
     this.settings.setWorkingDirectory(workingDirectoryField.getText());
-    
+
     this.settings.spreadsheet = spreadsheetField.getText();
     // selected sheet may be null if there is no selection
     this.settings.sheet = (String) sheetModel.getSelectedItem();
@@ -139,21 +135,18 @@ public class CreatorNodeDialog extends NodeDialogPane {
     String buttonText = bundle.getString("browse_button");
 
     String modelScriptToolTip = bundle.getString("modelscript_tooltip");
-    String parameterScriptToolTip = bundle.getString("parameterscript_tooltip");
     String visualizationScriptToolTip = bundle.getString("visualizationscript_tooltip");
 
     JButton modelScriptButton =
         UIUtils.createBrowseButton(buttonText, modelScriptField, JFileChooser.OPEN_DIALOG, rFilter);
-    JButton parametersScriptButton = UIUtils.createBrowseButton(buttonText, parametersScriptField,
-        JFileChooser.OPEN_DIALOG, rFilter);
     JButton visualizationScriptButton = UIUtils.createBrowseButton(buttonText,
         visualizationScriptField, JFileChooser.OPEN_DIALOG, rFilter);
-    
+
     FBrowseButton workingDirectoryButton = new FBrowseButton("Browse");
     workingDirectoryButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        
+
         JFileChooser fc;
         try {
           File file = FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryField.getText()));
@@ -161,14 +154,14 @@ public class CreatorNodeDialog extends NodeDialogPane {
         } catch (Exception ex) {
           fc = new JFileChooser();
         }
-        
+
         fc.setDialogType(JFileChooser.OPEN_DIALOG);
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fc.setMultiSelectionEnabled(false);
-        
+
         int response = fc.showOpenDialog(workingDirectoryButton);
         if (response == JFileChooser.APPROVE_OPTION) {
-          
+
           String selectedDirectory = fc.getSelectedFile().getAbsolutePath();
           workingDirectoryField.setText(selectedDirectory);
         }
@@ -176,26 +169,23 @@ public class CreatorNodeDialog extends NodeDialogPane {
     });
 
     modelScriptButton.setToolTipText(modelScriptToolTip);
-    parametersScriptButton.setToolTipText(parameterScriptToolTip);
     visualizationScriptButton.setToolTipText(visualizationScriptToolTip);
 
     // labels
     String modelScriptLabelText = bundle.getString("modelscript_label");
-    String paramScriptLabelText = bundle.getString("parameterscript_label");
     String visualizationScriptLabelText = bundle.getString("visualizationscript_label");
 
     FLabel modelScriptLabel = new FLabel(modelScriptLabelText);
-    FLabel parametersScriptLabel = new FLabel(paramScriptLabelText);
     FLabel visualizationScriptLabel = new FLabel(visualizationScriptLabelText);
-    FLabel workingDirectoryLabel = new FLabel("Working directory");  // TODO: resource bundle
+    FLabel workingDirectoryLabel = new FLabel("Working directory"); // TODO: resource bundle
 
     // formPanel
     List<FLabel> labels =
-        Arrays.asList(modelScriptLabel, parametersScriptLabel, visualizationScriptLabel, workingDirectoryLabel);
+        Arrays.asList(modelScriptLabel, visualizationScriptLabel, workingDirectoryLabel);
     List<JTextField> fields =
-        Arrays.asList(modelScriptField, parametersScriptField, visualizationScriptField, workingDirectoryField);
+        Arrays.asList(modelScriptField, visualizationScriptField, workingDirectoryField);
     List<JButton> buttons =
-        Arrays.asList(modelScriptButton, parametersScriptButton, visualizationScriptButton, workingDirectoryButton);
+        Arrays.asList(modelScriptButton, visualizationScriptButton, workingDirectoryButton);
 
     FPanel formPanel = UIUtils.createFormPanel(labels, fields, buttons);
     JPanel northPanel = UI.createNorthPanel(formPanel);

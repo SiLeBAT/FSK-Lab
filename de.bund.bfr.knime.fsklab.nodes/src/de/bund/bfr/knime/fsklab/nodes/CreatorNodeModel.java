@@ -50,15 +50,12 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
-import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
-import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
-import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;
@@ -127,15 +124,6 @@ class CreatorNodeModel extends NoInternalsModel {
       throw new InvalidSettingsException("Model script is not provided");
     }
     RScript modelRScript = readScript(nodeSettings.modelScript);
-
-    // Read parameters script
-    if (StringUtils.isEmpty(nodeSettings.parameterScript)) {
-      throw new InvalidSettingsException("Parameter script is not provided");
-    }
-    RScript paramRScript = readScript(nodeSettings.parameterScript);
-
-    // Create defaultSimulation out of the parameters script
-    FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(paramRScript.getScript());
 
     // Reads visualization script
     RScript vizRScript;
@@ -206,56 +194,6 @@ class CreatorNodeModel extends NoInternalsModel {
           scope = LegacySheetImporter.getScope(sheet);
           dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
           modelMath = LegacySheetImporter.getModelMath(sheet);
-
-          // Set variable values and types from parameters script
-          try (RController controller = new RController()) {
-            controller.eval(paramRScript.getScript(), false);
-
-            for (Parameter p : modelMath.getParameter()) {
-
-              if (p.getParameterClassification() == ParameterClassification.INPUT) {
-                continue;
-              }
-
-              try {
-                REXP rexp = controller.eval(p.getParameterName(), true);
-
-                // check the type for a Vector Or Matrix of String or number
-                if (rexp.isVector() && rexp.dim() != null) {
-
-                  int nrow = rexp.dim()[0];
-                  int ncol = rexp.dim()[1];
-
-                  if (rexp.isNumeric()) {
-                    p.setParameterDataType(ParameterType.MATRIX_OF_NUMBERS);
-                    p.setParameterValue(buildRMatrix(rexp.asDoubleMatrix(), nrow, ncol));
-                  } else {
-                    p.setParameterDataType(ParameterType.MATRIX_OF_STRINGS);
-                    p.setParameterValue(buildRMatrix(rexp.asStrings(), nrow, ncol));
-                  }
-
-                } else if (rexp.isVector() && rexp.length() > 1) {
-
-                  if (rexp.isNumeric()) {
-                    p.setParameterDataType(ParameterType.VECTOR_OF_NUMBERS);
-                    p.setParameterValue(buildRVector(rexp.asDoubles()));
-                  } else {
-                    p.setParameterDataType(ParameterType.VECTOR_OF_STRINGS);
-                    p.setParameterValue(buildRVector(rexp.asStrings()));
-                  }
-                } else if (rexp.isNumeric()) {
-                  p.setParameterDataType(ParameterType.DOUBLE);
-                  p.setParameterValue(Double.toString(rexp.asDouble()));
-                }
-              } catch (RException | REXPMismatchException exception) {
-                // does nothing. Just leave the value blank.
-                LOGGER.warn("Could not parse value of parameter " + p.getParameterName(),
-                    exception);
-              }
-            }
-          } catch (RException e) {
-            // Does nothing
-          }
         }
       } catch (IOException | InvalidFormatException e) {
         throw new InvalidSettingsException("Invalid metadata");
@@ -263,21 +201,19 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     String modelScript = modelRScript.getScript();
-    String paramScript = paramRScript.getScript();
     String vizScript = vizRScript != null ? vizRScript.getScript() : "";
 
     String workingDirectory = nodeSettings.getWorkingDirectory();
     final FskPortObject portObj =
-        new FskPortObject(modelScript, paramScript, vizScript, generalInformation, scope,
+        new FskPortObject(modelScript, "", vizScript, generalInformation, scope,
             dataBackground, modelMath, null, new HashSet<>(), workingDirectory);
-    if (defaultSimulation != null) {
-      portObj.simulations.add(defaultSimulation);
+    if (modelMath != null) {
+      portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
     }
 
     // libraries
     List<String> libraries = new ArrayList<>();
     libraries.addAll(modelRScript.getLibraries());
-    libraries.addAll(paramRScript.getLibraries());
     if (vizRScript != null) {
       libraries.addAll(vizRScript.getLibraries());
     }
@@ -300,48 +236,6 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     return new PortObject[] {portObj};
-  }
-
-  private static String buildRVector(double[] doubles) {
-    String stringRepresentation = Arrays.toString(doubles); // String representation: [a, b, c]
-
-    // Remove opening and closing brackets [].
-    stringRepresentation = stringRepresentation.substring(0, stringRepresentation.length() - 1);
-
-    // Build R vector
-    return "c(" + stringRepresentation + ")";
-  }
-
-  private static String buildRVector(String[] strings) {
-    String stringRepresentation = Arrays.toString(strings); // String representation: ["a", "b"]
-
-    // Remove opening and closing brackets
-    stringRepresentation = stringRepresentation.substring(0, stringRepresentation.length() - 1);
-
-    // Build R vector
-    return "c(" + stringRepresentation + ")";
-  }
-
-  private static String buildRMatrix(double[][] matrix, int nrow, int ncol) {
-
-    String stringRepresentation = Arrays.deepToString(matrix);
-    stringRepresentation.replace("[", "(");
-    stringRepresentation.replace("]", ")");
-
-    // Build R matrix
-    return "matrix(c" + stringRepresentation + ", nrow=" + nrow + ", ncol=" + ncol
-        + ", byrow=TRUE)";
-  }
-
-  private static String buildRMatrix(String[] matrix, int nrow, int ncol) {
-
-    String stringRepresentation = Arrays.deepToString(matrix);
-    stringRepresentation.replace("[", "(");
-    stringRepresentation.replace("]", ")");
-
-    // Build R matrix
-    return "matrix(c" + stringRepresentation + ", nrow=" + nrow + ", ncol=" + ncol
-        + ", byrow=TRUE)";
   }
 
   @Override

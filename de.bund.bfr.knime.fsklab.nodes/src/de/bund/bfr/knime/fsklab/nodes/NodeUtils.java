@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
@@ -20,6 +21,8 @@ import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.nodes.rbin.preferences.LanguagePreferenceInitializer;
+import metadata.Parameter;
+import metadata.ParameterClassification;
 
 public class NodeUtils {
 
@@ -147,6 +150,22 @@ public class NodeUtils {
 
         defaultSimulation.getParameters().put(name, value);
       }
+    }
+
+    return defaultSimulation;
+  }
+
+  public static FskSimulation createDefaultSimulation(List<Parameter> parameters) {
+
+    FskSimulation defaultSimulation = new FskSimulation(DEFAULT_SIMULATION);
+
+    for (Parameter param : parameters) {
+
+      if (param.getParameterClassification() == ParameterClassification.OUTPUT) {
+        continue;
+      }
+
+      defaultSimulation.getParameters().put(param.getParameterID(), param.getParameterValue());
     }
 
     return defaultSimulation;
