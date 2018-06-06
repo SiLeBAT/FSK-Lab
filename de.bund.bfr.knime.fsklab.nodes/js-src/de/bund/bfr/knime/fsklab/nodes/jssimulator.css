@@ -8,3 +8,41 @@
 	border-left: 1px solid;
 	
 }
+
+.tip {
+    position: relative;
+    float: left;
+    left: 20px;
+    z-index: 3000;
+}
+
+.help {
+    text-align: right;
+    display: block;
+}
+.tip-txt {
+    width: 300px;
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    background: #333;
+    padding: 10px;
+    font-size: 12px;
+    border-radius: 3px;
+    color: #fff;
+    transition: .5s ease-in-out;
+    box-sizing: border-box;
+    text-align: left;
+    transition: opacity .3s;
+    z-index: 100000;
+}
+.fa {
+    font-size: 16px;
+    transition: .5s ease-in-out;
+    opacity: 0.5;
+}
+.fa-question-circle:hover + .tip-txt { 
+    visibility: visible;
+    color: white;
+    opacity: 0.8;
+}

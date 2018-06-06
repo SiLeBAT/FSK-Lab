@@ -28,10 +28,10 @@ simulator = function() {
 	function create_body() {
 
 		function create_form(parameterIndex) {
-
+			
 			var parameter = _rep.parameters[parameterIndex];
 			var value = _val.simulations[_currentSimulation].values[parameterIndex];
-
+			console.log(_rep.parameters[parameterIndex]);
 			var inputType;
 			if (parameter.dataType === "Integer" || parameter.dataType === "Double" ||
 				parameter.dataType === "Number") {
@@ -40,7 +40,7 @@ simulator = function() {
 				inputType = "text";
 			}
 
-			var input = $('<input type="' + inputType + '" class="form-control" value="">');
+			var input = $('<input  type="' + inputType + '" class="form-control" value=""></input>');
 			input.val(value);
 
 			
@@ -49,7 +49,26 @@ simulator = function() {
 			  })
 			var form = $('<div class="form-group">' +
 				'  <label class="col-sm-3 control-label">' + parameter.parameterID + '</label>' +
-				'  <div class="col-sm-6 xxx"></div>' +
+				'  <div class="col-sm-6 "><div class="col-sm-2"><span class="help"><i class="fa fa-question-circle"></i><span class="tip-txt">'+
+				' parameterClassification='+_rep.parameters[parameterIndex].parameterClassification+
+				' parameterDescription='+_rep.parameters[parameterIndex].parameterDescription+
+				' parameterDistribution='+_rep.parameters[parameterIndex].parameterDistribution+
+				' parameterError='+_rep.parameters[parameterIndex].parameterError+
+				' parameterID='+_rep.parameters[parameterIndex].parameterID+
+				' parameterName='+_rep.parameters[parameterIndex].parameterName+
+				' parameterSource='+_rep.parameters[parameterIndex].parameterSource+
+				' parameterSubject='+_rep.parameters[parameterIndex].parameterSubject+
+				' parameterType='+_rep.parameters[parameterIndex].parameterType+
+				' parameterDataType='+_rep.parameters[parameterIndex].parameterDataType+
+				' parameterUnit='+_rep.parameters[parameterIndex].parameterUnit+
+				' parameterUnitCategory='+_rep.parameters[parameterIndex].parameterUnitCategory+
+				' parameterValue='+_rep.parameters[parameterIndex].parameterValue+
+				' parameterValueMax='+_rep.parameters[parameterIndex].parameterValueMax+
+				' parameterValueMin='+_rep.parameters[parameterIndex].parameterValueMin+
+				' parameterVariabilitySubject='+_rep.parameters[parameterIndex].parameterVariabilitySubject+
+				' reference='+_rep.parameters[parameterIndex].reference+
+				
+				'</span></div><div class="col-sm-10 xxx"></div></div>' +
 				'  <div class="col-sm-3"><label>' + parameter.parameterUnit + '</label></div>' +
 				'</div>');
 			$('.xxx', form).append(input);
@@ -64,7 +83,7 @@ simulator = function() {
 		$('body').html(
 			'<div class="row">' +
 			'  <div class="col-md-4 simulationsDiv">'+
-			'    <h2>Simulations</h2>' +
+			'   <h2>Simulations</h2>  ' +
 			'    <div id="simulationNamesDiv"></div>' +
 			'    <form class="form-inline">' +
 			// The remove button is disabled initially for the default simulation
@@ -102,6 +121,10 @@ simulator = function() {
 			var index = $('#simulationNamesDiv button.btn-primary').index();
 			_val.simulations.splice(index, 1);  // Remove selected simulation
 			$('.btn-primary').remove();
+			var firstSimulation = $('#simulationNamesDiv button:first');
+			firstSimulation.removeClass('btn-default');
+			firstSimulation.addClass('btn-primary');
+			firstSimulation.trigger( "click" );
 		})
 
 		// Enables the add button for valid simulation names
