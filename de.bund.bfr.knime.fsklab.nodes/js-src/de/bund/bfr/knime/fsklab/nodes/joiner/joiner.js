@@ -28,7 +28,7 @@ joiner = function() {
 
 		    // The length property of the from method is 1.
 		    return function from(arrayLike/*, mapFn, thisArg */) {
-		    	console.log(arrayLike);
+		    	//console.log(arrayLike);
 		      // 1. Let C be the this value.
 		      var C = this;
 
@@ -438,6 +438,7 @@ joiner = function() {
     	});
         $(window).resize(function() {
             var canvas = $('#paper');
+            
             paper.setDimensions(canvas.width(), canvas.height());
         });
           
@@ -568,7 +569,7 @@ joiner = function() {
 	    	 	    	    	  $.each( _viewValue.joinRelations, function( i, relation ) {
 	    	 	    	    		 fParam = firstModelParameterMap[sourcePort];
 	    	 	    	    		 sParam = secomndModelParameterMap[targetPort];
-	    	 	    	    		  if(relation.sourceParam.name == fParam.name && relation.targetParam.name == sParam.name){
+	    	 	    	    		  if(relation.sourceParam.parameterID == fParam.parameterID && relation.targetParam.parameterID == sParam.parameterID){
 	    	 	    	    			 relation.command = $("textarea#Command").val();
 	    	 	    	    			 
 	    	 	    	    		  }
@@ -583,24 +584,36 @@ joiner = function() {
     	    var firstModelOutputParameters= [];
 
     	    _.each(_firstModel.modelMath.parameter, function(param) {
-    	    	firstModelParameterMap[param.name] = param
-    	    	if(param.classification == 'input'){
-    	    		firstModelInputParameters.push(param.name);
+    	    	console.log(param);
+    	    	firstModelParameterMap[param.parameterID] = param
+    	    	if(param.parameterClassification == 'INPUT'){
+    	    		firstModelInputParameters.push(param.parameterID);
     	    	}else{
-    	    		firstModelOutputParameters.push(param.name);
+    	    		firstModelOutputParameters.push(param.parameterID);
     	    	}
     	        
     	    });
     	    var secondModelInputParameters = [];
     	    var secondModelOutputParameters= [];
     	    _.each(_secondModel.modelMath.parameter, function(param) {
-    	    	secomndModelParameterMap[param.name] = param
-    	    	if(param.classification == 'input'){
-    	    		secondModelInputParameters.push(param.name);
+    	    	secomndModelParameterMap[param.parameterID] = param
+    	    	if(param.parameterClassification == 'INPUT'){
+    	    		secondModelInputParameters.push(param.parameterID);
     	    	}else{
-    	    		secondModelOutputParameters.push(param.name);
+    	    		secondModelOutputParameters.push(param.parameterID);
     	    	}
     	    });
+    	    console.log(firstModelInputParameters.length,secondModelInputParameters.length);
+    	    var canvasheight = 500;
+    	    if(firstModelInputParameters.length>secondModelInputParameters.length){
+    	    		canvasheight = firstModelInputParameters.length
+    	    }else {
+	    		canvasheight = secondModelInputParameters.length
+    	    }
+    	    var canvas = $('#paper');
+    	    
+    	    $('#paper').css('height', ''+((canvasheight*25)+100));
+    	    paper.setDimensions(canvas.width(), canvas.height());
     	    var paperWidth = $('#paper').width();
     	    var firstModelTojoin = new joint.shapes.devs.Atomic({
     	    	
@@ -640,7 +653,7 @@ joiner = function() {
     	    var secondModelToJoin = new joint.shapes.devs.Atomic({
     	    	
     	        position: {
-    	            x: paperWidth-270,
+    	            x: paperWidth-230,
     	            y: 280
     	        },
     	        size: { width: 200, height: secondModelInputParameters.length*25 },
