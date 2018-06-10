@@ -1,41 +1,32 @@
 package metadata;
 
-import java.net.URI;
-import java.util.Date;
-import java.util.ResourceBundle;
-
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.eclipse.emf.common.util.EList;
-
-import de.bund.bfr.knime.fsklab.util.UTF8Control;
-
 public class MetadataTree {
 
-	private static ResourceBundle bundle = ResourceBundle.getBundle("metadatatree", new UTF8Control());
+	private static MetadataTreeBundle bundle = new MetadataTreeBundle();
 
 	public static JTree createTree(GeneralInformation generalInformation, Scope scope, DataBackground dataBackground,
 			ModelMath modelMath) {
 
-		DefaultMutableTreeNode generalInformationNode = new DefaultMutableTreeNode(
-				bundle.getString("GeneralInformation"));
+		DefaultMutableTreeNode generalInformationNode = new DefaultMutableTreeNode(bundle.getGeneralInformation());
 		if (generalInformation != null) {
 			add(generalInformationNode, generalInformation);
 		}
 
-		DefaultMutableTreeNode scopeNode = new DefaultMutableTreeNode(bundle.getString("Scope"));
+		DefaultMutableTreeNode scopeNode = new DefaultMutableTreeNode(bundle.getScope());
 		if (scope != null) {
 			add(scopeNode, scope);
 		}
 
-		DefaultMutableTreeNode dataBackgroundNode = new DefaultMutableTreeNode(bundle.getString("DataBackground"));
+		DefaultMutableTreeNode dataBackgroundNode = new DefaultMutableTreeNode(bundle.getDataBackground());
 		if (dataBackground != null) {
 			add(dataBackgroundNode, dataBackground);
 		}
 
-		DefaultMutableTreeNode modelMathNode = new DefaultMutableTreeNode(bundle.getString("ModelMath"));
+		DefaultMutableTreeNode modelMathNode = new DefaultMutableTreeNode(bundle.getModelMath());
 		if (modelMath != null) {
 			add(modelMathNode, modelMath);
 		}
@@ -53,99 +44,78 @@ public class MetadataTree {
 		return tree;
 	}
 
-	private static void add(final DefaultMutableTreeNode node, final String key, final boolean value) {
-		final String label = bundle.getString(key);
-		node.add(new DefaultMutableTreeNode(label + ": " + value));
-	}
-
-	private static void add(final DefaultMutableTreeNode node, final String key, final int value) {
-		final String label = bundle.getString(key);
-		node.add(new DefaultMutableTreeNode(label + ": " + value));
-	}
-
-	private static void add(final DefaultMutableTreeNode node, final String key, final String value) {
-		final String label = bundle.getString(key);
-		node.add(new DefaultMutableTreeNode(label + ": " + value));
-	}
-
-	private static void add(final DefaultMutableTreeNode node, final String key, final URI value) {
-		final String label = bundle.getString(key);
-		node.add(new DefaultMutableTreeNode(label + ": " + value));
-	}
-
-	private static void add(final DefaultMutableTreeNode node, final String key, final Date value) {
-		final String label = bundle.getString(key);
-		node.add(new DefaultMutableTreeNode(label + ": " + value));
-	}
-
-	/**
-	 * Create a tree node for a {@code List<StringObject>} property and add it to a
-	 * passed node. The passed value cannot be null or empty.
-	 */
-	private static void add(final DefaultMutableTreeNode node, final String key, EList<StringObject> value) {
-		String label = bundle.getString(key);
-		DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-		value.stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
-	}
-
 	private static void add(final DefaultMutableTreeNode node, final Contact contact) {
 
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (contact.eIsSet(pkg.getContact_Title())) {
-			add(node, "Contact.title", contact.getTitle());
+			String msg = bundle.getContact_title() + ": " + contact.getTitle();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_FamilyName())) {
-			add(node, "Contact.familyName", contact.getFamilyName());
+			String msg = bundle.getContact_familyName() + ": " + contact.getFamilyName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_GivenName())) {
-			add(node, "Contact.givenName", contact.getGivenName());
+			String msg = bundle.getContact_givenName() + ": " + contact.getGivenName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_Email())) {
-			add(node, "Contact.email", contact.getEmail());
+			String msg = bundle.getContact_email() + ": " + contact.getEmail();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_Telephone())) {
-			add(node, "Contact.telephone", contact.getTelephone());
+			String msg = bundle.getContact_telephone();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_StreetAddress())) {
-			add(node, "Contact.streetAddress", contact.getStreetAddress());
+			String msg = bundle.getContact_streetAddress() + ": " + contact.getStreetAddress();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_Country())) {
-			add(node, "Contact.country", contact.getCountry());
+			String msg = bundle.getContact_country() + ": " + contact.getCountry();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_City())) {
-			add(node, "Contact.city", contact.getCity());
+			String msg = bundle.getContact_city() + ": " + contact.getCity();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_ZipCode())) {
-			add(node, "Contact.zipCode", contact.getZipCode());
+			String msg = bundle.getContact_zipCode() + ": " + contact.getZipCode();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_Region())) {
-			add(node, "Contact.region", contact.getRegion());
+			String msg = bundle.getContact_region() + ": " + contact.getRegion();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_TimeZone())) {
-			add(node, "Contact.timeZone", contact.getTimeZone());
+			String msg = bundle.getContact_timeZone() + ": " + contact.getTimeZone();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_Gender())) {
-			add(node, "Contact.gender", contact.getGender());
+			String msg = bundle.getContact_gender() + ": " + contact.getGender();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_Note())) {
-			add(node, "Contact.note", contact.getNote());
+			String msg = bundle.getContact_note() + ": " + contact.getNote();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (contact.eIsSet(pkg.getContact_Organization())) {
-			add(node, "Contact.organization", contact.getOrganization());
+			String msg = bundle.getContact_organization() + ": " + contact.getOrganization();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -154,19 +124,23 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (modelCategory.eIsSet(pkg.getModelCategory_ModelClass())) {
-			add(node, "ModelCategory.modelClass", modelCategory.getModelClass());
+			String msg = bundle.getModelCategory_modelClass() + ": " + modelCategory.getModelClass();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (modelCategory.eIsSet(pkg.getModelCategory_ModelSubClass())) {
-			add(node, "ModelCategory.modelSubClass", modelCategory.getModelSubClass());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getModelCategory_modelSubClass());
+			modelCategory.getModelSubClass().stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
 		}
 
 		if (modelCategory.eIsSet(pkg.getModelCategory_ModelClassComment())) {
-			add(node, "ModelCategory.modelClassComment", modelCategory.getModelClassComment());
+			String msg = bundle.getModelCategory_modelClassComment() + ": " + modelCategory.getModelClassComment();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (modelCategory.eIsSet(pkg.getModelCategory_BasicProcess())) {
-			add(node, "ModelCategory.basicProcess", modelCategory.getBasicProcess());
+			String msg = bundle.getModelCategory_basicProcess() + ": " + modelCategory.getBasicProcess();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -175,59 +149,73 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (reference.eIsSet(pkg.getReference_IsReferenceDescription())) {
-			add(node, "Reference.isReferenceDescription", reference.isIsReferenceDescription());
+			String msg = bundle.getReference_isReferenceDescription() + ": " + reference.isIsReferenceDescription();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_PublicationType())) {
-			add(node, "Reference.publicationType", reference.getPublicationType().name());
+			String msg = bundle.getReference_publicationType() + ": " + reference.getPublicationType();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_PublicationDate())) {
-			add(node, "Reference.publicationDate", reference.getPublicationDate());
+			String msg = bundle.getReference_publicationDate() + ": " + reference.getPublicationDate();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_Pmid())) {
-			add(node, "Reference.pmid", reference.getPmid());
+			String msg = bundle.getReference_pmid() + ": " + reference.getPmid();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_Doi())) {
-			add(node, "Reference.doi", reference.getDoi());
+			String msg = bundle.getReference_doi() + ": " + reference.getDoi();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_AuthorList())) {
-			add(node, "Reference.authorList", reference.getAuthorList());
+			String msg = bundle.getReference_authorList() + ": " + reference.getAuthorList();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_PublicationTitle())) {
-			add(node, "Reference.publicationTitle", reference.getPublicationTitle());
+			String msg = bundle.getReference_publicationTitle() + ": " + reference.getPublicationTitle();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_PublicationAbstract())) {
-			add(node, "Reference.publicationAbstract", reference.getPublicationAbstract());
+			String msg = bundle.getReference_publicationAbstract() + ": " + reference.getPublicationAbstract();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_PublicationJournal())) {
-			add(node, "Reference.publicationJournal", reference.getPublicationJournal());
+			String msg = bundle.getReference_publicationJournal() + ": " + reference.getPublicationJournal();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_PublicationVolume())) {
-			add(node, "Reference.publicationVolume", reference.getPublicationVolume());
+			String msg = bundle.getReference_publicationVolume() + ": " + reference.getPublicationVolume();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_PublicationIssue())) {
-			add(node, "Reference.publicationIssue", reference.getPublicationIssue());
+			String msg = bundle.getReference_publicationIssue() + ": " + reference.getPublicationIssue();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_PublicationStatus())) {
-			add(node, "Reference.publicationStatus", reference.getPublicationStatus());
+			String msg = bundle.getReference_publicationStatus() + ": " + reference.getPublicationStatus();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_PublicationWebsite())) {
-			add(node, "Reference.publicationWebsite", reference.getPublicationWebsite());
+			String msg = bundle.getReference_publicationWebsite() + ": " + reference.getPublicationWebsite();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (reference.eIsSet(pkg.getReference_Comment())) {
-			add(node, "Reference.comment", reference.getComment());
+			String msg = bundle.getReference_comment() + ": " + reference.getComment();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -236,68 +224,81 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Name())) {
-			add(node, "GeneralInformation.name", generalInformation.getName());
+			String msg = bundle.getGeneralInformation_name() + ": " + generalInformation.getName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Source())) {
-			add(node, "GeneralInformation.source", generalInformation.getSource());
+			String msg = bundle.getGeneralInformation_source() + ": " + generalInformation.getSource();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Identifier())) {
-			add(node, "GeneralInformation.identifier", generalInformation.getIdentifier());
+			String msg = bundle.getGeneralInformation_identifier() + ": " + generalInformation.getIdentifier();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_CreationDate())) {
-			add(node, "GeneralInformation.creationDate", generalInformation.getCreationDate());
+			String msg = bundle.getGeneralInformation_creationDate() + ": " + generalInformation.getCreationDate();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Rights())) {
-			add(node, "GeneralInformation.rights", generalInformation.getRights());
+			String msg = bundle.getGeneralInformation_rights() + ": " + generalInformation.getRights();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Available())) {
-			add(node, "GeneralInformation.available", generalInformation.isAvailable());
+			String msg = bundle.getGeneralInformation_available() + ": " + generalInformation.isAvailable();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Format())) {
-			add(node, "GeneralInformation.format", generalInformation.getFormat());
+			String msg = bundle.getGeneralInformation_format() + ": " + generalInformation.getFormat();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Language())) {
-			add(node, "GeneralInformation.language", generalInformation.getLanguage());
+			String msg = bundle.getGeneralInformation_language() + ": " + generalInformation.getLanguage();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Software())) {
-			add(node, "GeneralInformation.software", generalInformation.getSoftware());
+			String msg = bundle.getGeneralInformation_software() + ": " + generalInformation.getSoftware();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
-		if (generalInformation.eIsSet(pkg.getGeneralInformation_Language())) {
-			add(node, "GeneralInformation.languageWrittenIn", generalInformation.getLanguage());
+		if (generalInformation.eIsSet(pkg.getGeneralInformation_LanguageWrittenIn())) {
+			String msg = bundle.getGeneralInformation_languageWrittenIn() + ": "
+					+ generalInformation.getLanguageWrittenIn();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Status())) {
-			add(node, "GeneralInformation.status", generalInformation.getStatus());
+			String msg = bundle.getGeneralInformation_status() + ": " + generalInformation.getStatus();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Objective())) {
-			add(node, "GeneralInformation.objective", generalInformation.getObjective());
+			String msg = bundle.getGeneralInformation_objective() + ": " + generalInformation.getObjective();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Description())) {
-			add(node, "GeneralInformation.description", generalInformation.getDescription());
+			String msg = bundle.getGeneralInformation_description() + ": " + generalInformation.getDescription();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		// author
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Author())) {
-			String label = bundle.getString("GeneralInformation.author");
-			DefaultMutableTreeNode authorNode = new DefaultMutableTreeNode(label);
+			DefaultMutableTreeNode authorNode = new DefaultMutableTreeNode(bundle.getGeneralInformation_author());
 			add(authorNode, generalInformation.getAuthor());
 			node.add(authorNode);
 		}
 
 		// creators
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Creators())) {
-			String label = bundle.getString("GeneralInformation.creators");
+			String label = bundle.getGeneralInformation_creators();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 
 			for (Contact creator : generalInformation.getCreators()) {
@@ -312,7 +313,7 @@ public class MetadataTree {
 		// model category
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_ModelCategory())) {
 
-			String label = bundle.getString("GeneralInformation.modelCategory");
+			String label = bundle.getGeneralInformation_modelCategory();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 
 			for (ModelCategory modelCategory : generalInformation.getModelCategory()) {
@@ -327,7 +328,7 @@ public class MetadataTree {
 		// reference
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Reference())) {
 
-			String label = bundle.getString("GeneralInformation.references");
+			String label = bundle.getGeneralInformation_references();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 
 			for (Reference reference : generalInformation.getReference()) {
@@ -341,7 +342,7 @@ public class MetadataTree {
 
 		// modification date
 		if (generalInformation.eIsSet(pkg.getGeneralInformation_Modificationdate())) {
-			String label = bundle.getString("GeneralInformation.modificationDates");
+			String label = bundle.getGeneralInformation_modificationDates();
 			DefaultMutableTreeNode modificationDatesNode = new DefaultMutableTreeNode(label);
 			generalInformation.getModificationdate().stream().map(ModificationDate::getValue)
 					.map(DefaultMutableTreeNode::new).forEach(modificationDatesNode::add);
@@ -354,47 +355,58 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (product.eIsSet(pkg.getProduct_ProductName())) {
-			add(node, "Product.productName", product.getProductName());
+			String msg = bundle.getProduct_productName() + ": " + product.getProductName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (product.eIsSet(pkg.getProduct_ProductDescription())) {
-			add(node, "Product.productDescription", product.getProductDescription());
+			String msg = bundle.getProduct_productDescription() + ": " + product.getProductDescription();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (product.eIsSet(pkg.getProduct_ProductUnit())) {
-			add(node, "Product.productUnit", product.getProductUnit());
+			String msg = bundle.getProduct_productUnit() + ": " + product.getProductUnit();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (product.eIsSet(pkg.getProduct_ProductionMethod())) {
-			add(node, "Product.productionMethod", product.getProductionMethod());
+			String msg = bundle.getProduct_productionMethod() + ": " + product.getProductionMethod();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (product.eIsSet(pkg.getProduct_Packaging())) {
-			add(node, "Product.packaging", product.getPackaging());
+			String msg = bundle.getProduct_packaging() + ": " + product.getPackaging();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (product.eIsSet(pkg.getProduct_ProductTreatment())) {
-			add(node, "Product.productTreatment", product.getProductTreatment());
+			String msg = bundle.getProduct_productTreatment() + ": " + product.getProductTreatment();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (product.eIsSet(pkg.getProduct_OriginCountry())) {
-			add(node, "Product.originCountry", product.getOriginCountry());
+			String msg = bundle.getProduct_originCountry() + ": " + product.getOriginCountry();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (product.eIsSet(pkg.getProduct_OriginArea())) {
-			add(node, "Product.originArea", product.getOriginArea());
+			String msg = bundle.getProduct_originArea() + ": " + product.getOriginArea();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (product.eIsSet(pkg.getProduct_FisheriesArea())) {
-			add(node, "Product.fisheriesArea", product.getFisheriesArea());
+			String msg = bundle.getProduct_fisheriesArea() + ": " + product.getFisheriesArea();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (product.eIsSet(pkg.getProduct_ProductionDate())) {
-			add(node, "Product.productionDate", product.getProductionDate());
+			String msg = bundle.getProduct_productionDate() + ": " + product.getProductionDate();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (product.eIsSet(pkg.getProduct_ExpiryDate())) {
-			add(node, "Product.expiryDate", product.getExpiryDate());
+			String msg = bundle.getProduct_expiryDate() + ": " + product.getExpiryDate();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -403,55 +415,64 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (hazard.eIsSet(pkg.getHazard_HazardType())) {
-			add(node, "Hazard.hazardType", hazard.getHazardType());
+			String msg = bundle.getHazard_hazardType() + ": " + hazard.getHazardType();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_HazardName())) {
-			add(node, "Hazard.hazardName", hazard.getHazardName());
+			String msg = bundle.getHazard_hazardName() + ": " + hazard.getHazardName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_HazardDescription())) {
-			add(node, "Hazard.hazardDescription", hazard.getHazardDescription());
+			String msg = bundle.getHazard_hazardDescription() + ": " + hazard.getHazardDescription();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_HazardUnit())) {
-			add(node, "Hazard.hazardUnit", hazard.getHazardUnit());
+			String msg = bundle.getHazard_hazardUnit() + ": " + hazard.getHazardUnit();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_AdverseEffect())) {
-			add(node, "Hazard.adverseEffect", hazard.getAdverseEffect());
+			String msg = bundle.getHazard_adverseEffect() + ": " + hazard.getAdverseEffect();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_SourceOfContamination())) {
-			add(node, "Hazard.sourceOfContamination", hazard.getSourceOfContamination());
+			String msg = bundle.getHazard_sourceOfContamination() + ": " + hazard.getSourceOfContamination();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_BenchmarkDose())) {
-			add(node, "Hazard.benchmarkDose", hazard.getBenchmarkDose());
+			String msg = bundle.getHazard_benchmarkDose() + ": " + hazard.getBenchmarkDose();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_MaximumResidueLimit())) {
-			add(node, "Hazard.maximumResidueLimit", hazard.getMaximumResidueLimit());
+			String msg = bundle.getHazard_maximumResidueLimit() + ": " + hazard.getMaximumResidueLimit();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_NoObservedAdverseAffectLevel())) {
-			add(node, "Hazard.noObservedAdverseAffectLevel", hazard.getNoObservedAdverseAffectLevel());
+			String msg = bundle.getHazard_noObservedAdverseAffectLevel() + ": "
+					+ hazard.getNoObservedAdverseAffectLevel();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_AcceptableDailyIntake())) {
-			add(node, "Hazard.acceptableDailyIntake", hazard.getAcceptableDailyIntake());
+			String msg = bundle.getHazard_acceptableDailyIntake() + ": " + hazard.getAcceptableDailyIntake();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_AcuteReferenceDose())) {
-			add(node, "Hazard.acuteReferenceDose", hazard.getAcuteReferenceDose());
-		}
-
-		if (hazard.eIsSet(pkg.getHazard_AcceptableDailyIntake())) {
-			add(node, "Hazard.acceptableDailyIntake", hazard.getAcceptableDailyIntake());
+			String msg = bundle.getHazard_acuteReferenceDose() + ": " + hazard.getAcuteReferenceDose();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (hazard.eIsSet(pkg.getHazard_HazardIndSum())) {
-			add(node, "Hazard.hazardIndSum", hazard.getHazardIndSum());
+			String msg = bundle.getHazard_hazardIndSum() + ": " + hazard.getHazardIndSum();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -460,55 +481,83 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationName())) {
-			add(node, "PopulationGroup.populationName", populationGroup.getPopulationName());
+			String msg = bundle.getPopulationGroup_populationName() + ": " + populationGroup.getPopulationName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_TargetPopulation())) {
-			add(node, "PopulationGroup.targetPopulation", populationGroup.getTargetPopulation());
+			String msg = bundle.getPopulationGroup_targetPopulation() + ": " + populationGroup.getTargetPopulation();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationSpan())) {
-			add(node, "PopulationGroup.populationSpan", populationGroup.getPopulationSpan());
+			String msg = bundle.getPopulationGroup_populationSpan() + ": " + populationGroup.getPopulationSpan();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationDescription())) {
-			add(node, "PopulationGroup.populationDescription", populationGroup.getPopulationDescription());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(
+					bundle.getPopulationGroup_populationDescription());
+			populationGroup.getPopulationDescription().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new)
+					.forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationAge())) {
-			add(node, "PopulationGroup.populationAge", populationGroup.getPopulationAge());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getPopulationGroup_populationAge());
+			populationGroup.getPopulationAge().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationGender())) {
-			add(node, "PopulationGroup.populationGender", populationGroup.getPopulationGender());
+			String msg = bundle.getPopulationGroup_populationGender() + ": " + populationGroup.getPopulationGender();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_Bmi())) {
-			add(node, "PopulationGroup.bmi", populationGroup.getBmi());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getPopulationGroup_bmi());
+			populationGroup.getBmi().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_SpecialDietGroups())) {
-			add(node, "PopulationGroup.specialDietGroups", populationGroup.getSpecialDietGroups());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(
+					bundle.getPopulationGroup_specialDietGroups());
+			populationGroup.getSpecialDietGroups().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_PatternConsumption())) {
-			add(node, "PopulationGroup.patternConsumption", populationGroup.getPatternConsumption());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(
+					bundle.getPopulationGroup_patternConsumption());
+			populationGroup.getPatternConsumption().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_Region())) {
-			add(node, "PopulationGroup.region", populationGroup.getRegion());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getPopulationGroup_region());
+			populationGroup.getRegion().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_Country())) {
-			add(node, "PopulationGroup.country", populationGroup.getCountry());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getPopulationGroup_country());
+			populationGroup.getCountry().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_PopulationRiskFactor())) {
-			add(node, "PopulationGroup.populationRiskFactor", populationGroup.getPopulationRiskFactor());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(
+					bundle.getPopulationGroup_populationRiskFactor());
+			populationGroup.getPopulationRiskFactor().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new)
+					.forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 
 		if (populationGroup.eIsSet(pkg.getPopulationGroup_Season())) {
-			add(node, "PopulationGroup.season", populationGroup.getSeason());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getPopulationGroup_season());
+			populationGroup.getSeason().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 	}
 
@@ -517,11 +566,15 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (spatialInformation.eIsSet(pkg.getSpatialInformation_Region())) {
-			add(node, "SpatialInformation.region", spatialInformation.getRegion());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getSpatialInformation_region());
+			spatialInformation.getRegion().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 
 		if (spatialInformation.eIsSet(pkg.getSpatialInformation_Country())) {
-			add(node, "SpatialInformation.country", spatialInformation.getCountry());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getSpatialInformation_country());
+			spatialInformation.getCountry().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 	}
 
@@ -530,16 +583,18 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (scope.eIsSet(pkg.getScope_GeneralComment())) {
-			add(node, "Scope.generalComment", scope.getGeneralComment());
+			String msg = bundle.getScope_generalComment() + ": " + scope.getGeneralComment();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (scope.eIsSet(pkg.getScope_TemporalInformation())) {
-			add(node, "Scope.temporalInformation", scope.getTemporalInformation());
+			String msg = bundle.getScope_temporalInformation() + ": " + scope.getTemporalInformation();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		// product
 		if (scope.eIsSet(pkg.getScope_Product())) {
-			String label = bundle.getString("Scope.product");
+			String label = bundle.getScope_product();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 			for (Product product : scope.getProduct()) {
 				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
@@ -551,7 +606,7 @@ public class MetadataTree {
 
 		// hazard
 		if (scope.eIsSet(pkg.getScope_Hazard())) {
-			String label = bundle.getString("Scope.hazard");
+			String label = bundle.getScope_hazard();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 			for (Hazard hazard : scope.getHazard()) {
 				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
@@ -563,7 +618,7 @@ public class MetadataTree {
 
 		// population group
 		if (scope.eIsSet(pkg.getScope_PopulationGroup())) {
-			String label = bundle.getString("Scope.populationGroup");
+			String label = bundle.getScope_populationGroup();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 			for (PopulationGroup populationGroup : scope.getPopulationGroup()) {
 				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
@@ -575,8 +630,8 @@ public class MetadataTree {
 
 		// spatial information
 		if (scope.eIsSet(pkg.getScope_SpatialInformation())) {
-			String label = bundle.getString("Scope.spatialInformation");
-			DefaultMutableTreeNode spatialInformationNode = new DefaultMutableTreeNode(label);
+			DefaultMutableTreeNode spatialInformationNode = new DefaultMutableTreeNode(
+					bundle.getScope_spatialInformation());
 			add(spatialInformationNode, scope.getSpatialInformation());
 			node.add(spatialInformationNode);
 		}
@@ -587,64 +642,80 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (study.eIsSet(pkg.getStudy_StudyIdentifier())) {
-			add(node, "Study.studyIdentifier", study.getStudyIdentifier());
+			String msg = bundle.getStudy_studyIdentifier() + ": " + study.getStudyIdentifier();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyTitle())) {
-			add(node, "Study.studyTitle", study.getStudyTitle());
+			String msg = bundle.getStudy_studyTitle() + ": " + study.getStudyTitle();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyDescription())) {
-			add(node, "Study.studyDescription", study.getStudyDescription());
+			String msg = bundle.getStudy_studyDescription() + ": " + study.getStudyDescription();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyDesignType())) {
-			add(node, "Study.studyDesignType", study.getStudyDesignType());
+			String msg = bundle.getStudy_studyDesignType() + ": " + study.getStudyDesignType();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyAssayMeasurementType())) {
-			add(node, "Study.studyAssayMeasurementType", study.getStudyAssayMeasurementType());
+			String msg = bundle.getStudy_studyAssayMeasurementType() + ": " + study.getStudyAssayMeasurementType();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyAssayTechnologyType())) {
-			add(node, "Study.studyAssayTechnologyType", study.getStudyAssayTechnologyType());
+			String msg = bundle.getStudy_studyAssayTechnologyType() + ": " + study.getStudyAssayTechnologyType();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyAssayTechnologyPlatform())) {
-			add(node, "Study.studyAssayTechnologyPlatform", study.getStudyAssayTechnologyPlatform());
+			String msg = bundle.getStudy_studyAssayTechnologyPlatform() + ": "
+					+ study.getStudyAssayTechnologyPlatform();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_AccreditationProcedureForTheAssayTechnology())) {
-			add(node, "Study.accreditationProcedureForTheAssayTechnology",
-					study.getAccreditationProcedureForTheAssayTechnology());
+			String msg = bundle.getStudy_accreditationProcedureForTheAssayTechnology() + ": "
+					+ study.getAccreditationProcedureForTheAssayTechnology();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyProtocolName())) {
-			add(node, "Study.studyProtocolName", study.getStudyProtocolName());
+			String msg = bundle.getStudy_studyProtocolName() + ": " + study.getStudyProtocolName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyProtocolType())) {
-			add(node, "Study.studyProtocolType", study.getStudyProtocolType());
+			String msg = bundle.getStudy_studyProtocolType() + ": " + study.getStudyProtocolName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyProtocolDescription())) {
-			add(node, "Study.studyProtocolDescription", study.getStudyProtocolDescription());
+			String msg = bundle.getStudy_studyProtocolDescription() + ": " + study.getStudyProtocolDescription();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyProtocolURI())) {
-			add(node, "Study.studyProtocolURI", study.getStudyProtocolURI());
+			String msg = bundle.getStudy_studyProtocolURI() + ": " + study.getStudyProtocolURI();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyProtocolVersion())) {
-			add(node, "Study.studyProtocolVersion", study.getStudyProtocolVersion());
+			String msg = bundle.getStudy_studyProtocolVersion() + ": " + study.getStudyProtocolVersion();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyProtocolComponentsName())) {
-			add(node, "Study.studyProtocolComponentsName", study.getStudyProtocolComponentsName());
+			String msg = bundle.getStudy_studyProtocolComponentsName() + ": " + study.getStudyProtocolComponentsName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (study.eIsSet(pkg.getStudy_StudyProtocolComponentsType())) {
-			add(node, "Study.studyProtocolComponentsType", study.getStudyProtocolComponentsType());
+			String msg = bundle.getStudy_studyProtocolComponentsType() + ": " + study.getStudyProtocolComponentsType();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -653,73 +724,90 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (studySample.eIsSet(pkg.getStudySample_SampleName())) {
-			add(node, "StudySample.sampleName", studySample.getSampleName());
+			String msg = bundle.getStudySample_sampleName() + ": " + studySample.getSampleName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (studySample.eIsSet(pkg.getStudySample_ProtocolOfSampleCollection())) {
-			add(node, "StudySample.protocolOfSampleCollection", studySample.getProtocolOfSampleCollection());
+			String msg = bundle.getStudySample_protocolOfSampleCollection() + ": "
+					+ studySample.getProtocolOfSampleCollection();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (studySample.eIsSet(pkg.getStudySample_SamplingStrategy())) {
-			add(node, "StudySample.samplingStrategy", studySample.getSamplingStrategy());
+			String msg = bundle.getStudySample_samplingStrategy() + ": " + studySample.getSamplingStrategy();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (studySample.eIsSet(pkg.getStudySample_TypeOfSamplingProgram())) {
-			add(node, "StudySample.typeOfSamplingProgram", studySample.getTypeOfSamplingProgram());
+			String msg = bundle.getStudySample_typeOfSamplingProgram() + ": " + studySample.getTypeOfSamplingProgram();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (studySample.eIsSet(pkg.getStudySample_SamplingMethod())) {
-			add(node, "StudySample.samplingMethod", studySample.getSamplingMethod());
+			String msg = bundle.getStudySample_samplingMethod() + ": " + studySample.getSamplingMethod();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (studySample.eIsSet(pkg.getStudySample_SamplingPlan())) {
-			add(node, "StudySample.samplingPlan", studySample.getSamplingPlan());
+			String msg = bundle.getStudySample_samplingPlan() + ": " + studySample.getSamplingPlan();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (studySample.eIsSet(pkg.getStudySample_SamplingWeight())) {
-			add(node, "StudySample.samplingWeight", studySample.getSamplingWeight());
+			String msg = bundle.getStudySample_samplingWeight() + ": " + studySample.getSamplingWeight();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (studySample.eIsSet(pkg.getStudySample_SamplingSize())) {
-			add(node, "StudySample.samplingSize", studySample.getSamplingSize());
+			String msg = bundle.getStudySample_samplingSize() + ": " + studySample.getSamplingSize();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (studySample.eIsSet(pkg.getStudySample_LotSizeUnit())) {
-			add(node, "StudySample.lotSizeUnit", studySample.getLotSizeUnit());
+			String msg = bundle.getStudySample_lotSizeUnit() + ": " + studySample.getLotSizeUnit();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (studySample.eIsSet(pkg.getStudySample_SamplingPoint())) {
-			add(node, "StudySample.samplingPoint", studySample.getSamplingPoint());
+			String msg = bundle.getStudySample_samplingPoint() + ": " + studySample.getSamplingPoint();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
-	private static void add(final DefaultMutableTreeNode node, final DietaryAssessmentMethod dietaryAssessmentMethod) {
+	private static void add(final DefaultMutableTreeNode node, final DietaryAssessmentMethod method) {
 
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
-		if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_CollectionTool())) {
-			add(node, "DietaryAssessmentMethod.collectionTool", dietaryAssessmentMethod.getCollectionTool());
+		if (method.eIsSet(pkg.getDietaryAssessmentMethod_CollectionTool())) {
+			String msg = bundle.getDietaryAssessmentMethod_collectionTool() + ": " + method.getCollectionTool();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
-		if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_NumberOfNonConsecutiveOneDay())) {
-			add(node, "DietaryAssessmentMethod.numberOfNonConsecutiveOneDay",
-					dietaryAssessmentMethod.getNumberOfNonConsecutiveOneDay());
+		if (method.eIsSet(pkg.getDietaryAssessmentMethod_NumberOfNonConsecutiveOneDay())) {
+			String msg = bundle.getDietaryAssessmentMethod_numberOfNonConsecutiveOneDay() + ": "
+					+ method.getNumberOfNonConsecutiveOneDay();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
-		if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_SoftwareTool())) {
-			add(node, "DietaryAssessmentMethod.softwareTool", dietaryAssessmentMethod.getSoftwareTool());
+		if (method.eIsSet(pkg.getDietaryAssessmentMethod_SoftwareTool())) {
+			String msg = bundle.getDietaryAssessmentMethod_softwareTool() + ": " + method.getSoftwareTool();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
-		if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_NumberOfFoodItems())) {
-			add(node, "DietaryAssessmentMethod.numberOfFoodItems", dietaryAssessmentMethod.getNumberOfFoodItems());
+		if (method.eIsSet(pkg.getDietaryAssessmentMethod_NumberOfFoodItems())) {
+			String msg = bundle.getDietaryAssessmentMethod_numberOfFoodItems() + ": " + method.getNumberOfFoodItems();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
-		if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_RecordTypes())) {
-			add(node, "DietaryAssessmentMethod.recordTypes", dietaryAssessmentMethod.getRecordTypes());
+		if (method.eIsSet(pkg.getDietaryAssessmentMethod_RecordTypes())) {
+			String msg = bundle.getDietaryAssessmentMethod_recordTypes() + ": " + method.getRecordTypes();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
-		if (dietaryAssessmentMethod.eIsSet(pkg.getDietaryAssessmentMethod_FoodDescriptors())) {
-			add(node, "DietaryAssessmentMethod.foodDescriptors", dietaryAssessmentMethod.getFoodDescriptors());
+		if (method.eIsSet(pkg.getDietaryAssessmentMethod_FoodDescriptors())) {
+			String msg = bundle.getDietaryAssessmentMethod_foodDescriptors() + ": " + method.getFoodDescriptors();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -728,15 +816,20 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (laboratory.eIsSet(pkg.getLaboratory_LaboratoryAccreditation())) {
-			add(node, "Laboratory.laboratoryAccreditation", laboratory.getLaboratoryAccreditation());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(
+					bundle.getLaboratory_laboratoryAccreditation());
+			laboratory.getLaboratoryAccreditation().stream().map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(new DefaultMutableTreeNode(parentNode));
 		}
 
 		if (laboratory.eIsSet(pkg.getLaboratory_LaboratoryName())) {
-			add(node, "Laboratory.laboratoryName", laboratory.getLaboratoryName());
+			String msg = bundle.getLaboratory_laboratoryName() + ": " + laboratory.getLaboratoryName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (laboratory.eIsSet(pkg.getLaboratory_LaboratoryCountry())) {
-			add(node, "Laboratory.laboratoryCountry", laboratory.getLaboratoryCountry());
+			String msg = bundle.getLaboratory_laboratoryCountry() + ": " + laboratory.getLaboratoryCountry();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -745,39 +838,48 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (assay.eIsSet(pkg.getAssay_AssayName())) {
-			add(node, "Assay.assayName", assay.getAssayName());
+			String msg = bundle.getAssay_assayName() + ": " + assay.getAssayName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (assay.eIsSet(pkg.getAssay_AssayDescription())) {
-			add(node, "Assay.assayDescription", assay.getAssayDescription());
+			String msg = bundle.getAssay_assayDescription() + ": " + assay.getAssayDescription();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (assay.eIsSet(pkg.getAssay_PercentageOfMoisture())) {
-			add(node, "Assay.percentageOfMoisture", assay.getPercentageOfMoisture());
+			String msg = bundle.getAssay_percentageOfMoisture() + ": " + assay.getPercentageOfMoisture();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (assay.eIsSet(pkg.getAssay_PercentageOfFat())) {
-			add(node, "Assay.percentageOfFat", assay.getPercentageOfFat());
+			String msg = bundle.getAssay_percentageOfFat() + ": " + assay.getPercentageOfFat();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (assay.eIsSet(pkg.getAssay_LimitOfDetection())) {
-			add(node, "Assay.limitOfDetection", assay.getLimitOfDetection());
+			String msg = bundle.getAssay_limitOfDetection() + ": " + assay.getLimitOfDetection();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (assay.eIsSet(pkg.getAssay_LimitOfQuantification())) {
-			add(node, "Assay.limitOfQuantification", assay.getLimitOfQuantification());
+			String msg = bundle.getAssay_limitOfQuantification() + ": " + assay.getLimitOfQuantification();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (assay.eIsSet(pkg.getAssay_LeftCensoredData())) {
-			add(node, "Assay.leftCensoredData", assay.getLeftCensoredData());
+			String msg = bundle.getAssay_leftCensoredData() + ": " + assay.getLeftCensoredData();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (assay.eIsSet(pkg.getAssay_RangeOfContamination())) {
-			add(node, "Assay.rangeOfContamination", assay.getRangeOfContamination());
+			String msg = bundle.getAssay_rangeOfContamination() + ": " + assay.getRangeOfContamination();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (assay.eIsSet(pkg.getAssay_UncertaintyValue())) {
-			add(node, "Assay.uncertaintyValue", assay.getUncertaintyValue());
+			String msg = bundle.getAssay_uncertaintyValue() + ": " + assay.getUncertaintyValue();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -787,15 +889,14 @@ public class MetadataTree {
 
 		// study
 		if (dataBackground.eIsSet(pkg.getDataBackground_Study())) {
-			String label = bundle.getString("DataBackground.study");
-			DefaultMutableTreeNode studyNode = new DefaultMutableTreeNode(label);
+			DefaultMutableTreeNode studyNode = new DefaultMutableTreeNode(bundle.getDataBackground_study());
 			add(studyNode, dataBackground.getStudy());
 			node.add(studyNode);
 		}
 
 		// study sample
 		if (dataBackground.eIsSet(pkg.getDataBackground_Studysample())) {
-			String label = bundle.getString("DataBackground.studySample");
+			String label = bundle.getDataBackground_studySample();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 			for (StudySample studySample : dataBackground.getStudysample()) {
 				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
@@ -806,8 +907,8 @@ public class MetadataTree {
 		}
 
 		// dietary assessment method
-		if (dataBackground.eIsSet(pkg.getDataBackground_Dietaryassessmentmethod())) {	
-			String label = bundle.getString("DataBackground.dietaryAssessmentMethod");
+		if (dataBackground.eIsSet(pkg.getDataBackground_Dietaryassessmentmethod())) {
+			String label = bundle.getDataBackground_dietaryAssessmentMethod();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 			for (DietaryAssessmentMethod method : dataBackground.getDietaryassessmentmethod()) {
 				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
@@ -819,7 +920,7 @@ public class MetadataTree {
 
 		// laboratory
 		if (dataBackground.eIsSet(pkg.getDataBackground_Laboratory())) {
-			String label = bundle.getString("DataBackground.laboratory");
+			String label = bundle.getDataBackground_laboratory();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 			for (Laboratory laboratory : dataBackground.getLaboratory()) {
 				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
@@ -831,7 +932,7 @@ public class MetadataTree {
 
 		// assay
 		if (dataBackground.eIsSet(pkg.getDataBackground_Assay())) {
-			String label = bundle.getString("DataBackground.assay");
+			String label = bundle.getDataBackground_assay();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 			for (Assay assay : dataBackground.getAssay()) {
 				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
@@ -847,67 +948,85 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterID())) {
-			add(node, "Parameter.parameterId", parameter.getParameterID());
+			String msg = bundle.getParameter_parameterId() + ": " + parameter.getParameterID();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterClassification())) {
-			add(node, "Parameter.parameterClassification", parameter.getParameterClassification().name());
+			String msg = bundle.getParameter_parameterClassification() + ": "
+					+ parameter.getParameterClassification().name();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterName())) {
-			add(node, "Parameter.parameterName", parameter.getParameterName());
+			String msg = bundle.getParameter_parameterName() + ": " + parameter.getParameterName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterDescription())) {
-			add(node, "Parameter.parameterDescription", parameter.getParameterDescription());
+			String msg = bundle.getParameter_parameterDescription() + ": " + parameter.getParameterDescription();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterType())) {
-			add(node, "Parameter.parameterType", parameter.getParameterType());
+			String msg = bundle.getParameter_parameterType() + ": " + parameter.getParameterType();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterUnit())) {
-			add(node, "Parameter.parameterUnit", parameter.getParameterUnit());
+			String msg = bundle.getParameter_parameterUnit() + ": " + parameter.getParameterUnit();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterUnitCategory())) {
-			add(node, "Parameter.parameterUnitCategory", parameter.getParameterUnitCategory());
+			String msg = bundle.getParameter_parameterUnitCategory() + ": " + parameter.getParameterUnitCategory();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterDataType())) {
-			add(node, "Parameter.parameterDataType", parameter.getParameterDataType().name());
+			String msg = bundle.getParameter_parameterDataType() + ": " + parameter.getParameterDataType().name();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterSource())) {
-			add(node, "Parameter.parameterSource", parameter.getParameterSource());
+			String msg = bundle.getParameter_parameterSource() + ": " + parameter.getParameterSource();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterSubject())) {
-			add(node, "Parameter.parameterSubject", parameter.getParameterSubject());
+			String msg = bundle.getParameter_parameterSubject() + ": " + parameter.getParameterSubject();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterDistribution())) {
-			add(node, "Parameter.parameterDistribution", parameter.getParameterDistribution());
+			String msg = bundle.getParameter_parameterDistribution() + ": " + parameter.getParameterDistribution();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterValue())) {
-			add(node, "Parameter.parameterValue", parameter.getParameterValue());
+			String msg = bundle.getParameter_parameterDistribution() + ": " + parameter.getParameterDistribution();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterVariabilitySubject())) {
-			add(node, "Parameter.parameterVariabilitySubject", parameter.getParameterVariabilitySubject());
+			String msg = bundle.getParameter_parameterVariabilitySubject() + ": "
+					+ parameter.getParameterVariabilitySubject();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterValueMin())) {
-			add(node, "Parameter.parameterValueMin", parameter.getParameterValueMin());
+			String msg = bundle.getParameter_parameterValueMin() + ": " + parameter.getParameterValueMin();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterValueMax())) {
-			add(node, "Parameter.parameterValueMax", parameter.getParameterValueMax());
+			String msg = bundle.getParameter_parameterValueMax() + ": " + parameter.getParameterValueMax();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterError())) {
-			add(node, "Parameter.parameterError", parameter.getParameterError());
+			String msg = bundle.getParameter_parameterError() + ": " + parameter.getParameterError();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -916,19 +1035,26 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (modelEquation.eIsSet(pkg.getModelEquation_ModelEquationName())) {
-			add(node, "ModelEquation.modelEquationName", modelEquation.getModelEquationName());
+			String msg = bundle.getModelEquation_modelEquationName() + ": " + modelEquation.getModelEquationName();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (modelEquation.eIsSet(pkg.getModelEquation_ModelEquationClass())) {
-			add(node, "ModelEquation.modelEquationClass", modelEquation.getModelEquationClass());
+			String msg = bundle.getModelEquation_modelEquationClass() + ": " + modelEquation.getModelEquationClass();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (modelEquation.eIsSet(pkg.getModelEquation_ModelEquation())) {
-			add(node, "ModelEquation.modelEquation", modelEquation.getModelEquation());
+			String msg = bundle.getModelEquation_modelEquation() + ": " + modelEquation.getModelEquation();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (modelEquation.eIsSet(pkg.getModelEquation_HypothesisOfTheModel())) {
-			add(node, "ModelEquation.hypothesisOfTheModel", modelEquation.getHypothesisOfTheModel());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(
+					bundle.getModelEquation_hypothesisOfTheModel());
+			modelEquation.getHypothesisOfTheModel().stream().map(StringObject::getValue)
+					.map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(parentNode);
 		}
 	}
 
@@ -937,25 +1063,36 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (exposure.eIsSet(pkg.getExposure_MethodologicalTreatmentOfLeftCensoredData())) {
-			add(node, "Exposure.methodologicalTreatmentOfLeftCensoredData",
-					exposure.getMethodologicalTreatmentOfLeftCensoredData());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(
+					bundle.getExposure_methodologicalTreatmentOfLeftCensoredData());
+			exposure.getMethodologicalTreatmentOfLeftCensoredData().stream().map(StringObject::getValue)
+					.map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(parentNode);
 		}
 
 		if (exposure.eIsSet(pkg.getExposure_LevelOfContaminationAfterLeftCensoredDataTreatment())) {
-			add(node, "Exposure.levelOfContaminationAfterLeftCensoredDataTreatment",
-					exposure.getLevelOfContaminationAfterLeftCensoredDataTreatment());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(
+					bundle.getExposure_levelOfContaminationAfterLeftCensoredDataTreatment());
+			exposure.getLevelOfContaminationAfterLeftCensoredDataTreatment().stream().map(StringObject::getValue)
+					.map(DefaultMutableTreeNode::new).forEach(parentNode::add);
+			node.add(parentNode);
 		}
 
 		if (exposure.eIsSet(pkg.getExposure_TypeOfExposure())) {
-			add(node, "Exposure.typeOfExposure", exposure.getTypeOfExposure());
+			String msg = bundle.getExposure_typeOfExposure() + ": " + exposure.getTypeOfExposure();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (exposure.eIsSet(pkg.getExposure_Scenario())) {
-			add(node, "Exposure.scenario", exposure.getScenario());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getExposure_scenario());
+			exposure.getScenario().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new)
+					.forEach(parentNode::add);
+			node.add(parentNode);
 		}
 
 		if (exposure.eIsSet(pkg.getExposure_UncertaintyEstimation())) {
-			add(node, "Exposure.uncertaintyEstimation", exposure.getUncertaintyEstimation());
+			String msg = bundle.getExposure_uncertaintyEstimation() + ": " + exposure.getUncertaintyEstimation();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 	}
 
@@ -964,20 +1101,27 @@ public class MetadataTree {
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		if (modelMath.eIsSet(pkg.getModelMath_QualityMeasures())) {
-			add(node, "ModelMath.qualityMeasures", modelMath.getQualityMeasures());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getModelMath_qualityMeasures());
+			modelMath.getQualityMeasures().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new)
+					.forEach(parentNode::add);
+			node.add(parentNode);
 		}
 
 		if (modelMath.eIsSet(pkg.getModelMath_FittingProcedure())) {
-			add(node, "ModelMath.fittingProcedure", modelMath.getFittingProcedure());
+			String msg = bundle.getModelMath_fittingProcedure() + ": " + modelMath.getFittingProcedure();
+			node.add(new DefaultMutableTreeNode(msg));
 		}
 
 		if (modelMath.eIsSet(pkg.getModelMath_Event())) {
-			add(node, "ModelMath.event", modelMath.getEvent());
+			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(bundle.getModelMath_event());
+			modelMath.getEvent().stream().map(StringObject::getValue).map(DefaultMutableTreeNode::new)
+					.forEach(parentNode::add);
+			node.add(parentNode);
 		}
 
 		// parameter
 		if (modelMath.eIsSet(pkg.getModelMath_Parameter())) {
-			String label = bundle.getString("ModelMath.parameter");
+			String label = bundle.getModelMath_parameter();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 			for (Parameter param : modelMath.getParameter()) {
 				DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode(label);
@@ -989,7 +1133,7 @@ public class MetadataTree {
 
 		// model equation
 		if (modelMath.eIsSet(pkg.getModelMath_ModelEquation())) {
-			String label = bundle.getString("ModelMath.modelEquation");
+			String label = bundle.getModelMath_modelEquation();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
 			for (ModelEquation modelEquation : modelMath.getModelEquation()) {
 				DefaultMutableTreeNode modelEquationNode = new DefaultMutableTreeNode(label);
@@ -1001,8 +1145,7 @@ public class MetadataTree {
 
 		// exposure
 		if (modelMath.eIsSet(pkg.getModelMath_Exposure())) {
-			String label = bundle.getString("ModelMath.exposure");
-			DefaultMutableTreeNode exposureNode = new DefaultMutableTreeNode(label);
+			DefaultMutableTreeNode exposureNode = new DefaultMutableTreeNode(bundle.getModelMath_exposure());
 			add(exposureNode, modelMath.getExposure());
 			node.add(exposureNode);
 		}

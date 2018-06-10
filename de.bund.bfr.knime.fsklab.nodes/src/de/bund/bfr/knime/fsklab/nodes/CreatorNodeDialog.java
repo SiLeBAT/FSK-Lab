@@ -26,7 +26,6 @@ import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -54,7 +53,6 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
-import de.bund.bfr.knime.fsklab.util.UTF8Control;
 import de.bund.bfr.swing.UI;
 
 public class CreatorNodeDialog extends NodeDialogPane {
@@ -128,21 +126,17 @@ public class CreatorNodeDialog extends NodeDialogPane {
         new FileNameExtensionFilter("Excel spreadsheet", "xlsx");
 
     // Build locale with the selected language in the preferences
-    ResourceBundle bundle =
-        ResourceBundle.getBundle("CreatorNodeBundle", NodeUtils.getLocale(), new UTF8Control());
+    CreatorNodeBundle bundle = new CreatorNodeBundle(NodeUtils.getLocale());
 
     // buttons
-    String buttonText = bundle.getString("browse_button");
-
-    String modelScriptToolTip = bundle.getString("modelscript_tooltip");
-    String visualizationScriptToolTip = bundle.getString("visualizationscript_tooltip");
+    String buttonText = bundle.getBrowseButton();
 
     JButton modelScriptButton =
         UIUtils.createBrowseButton(buttonText, modelScriptField, JFileChooser.OPEN_DIALOG, rFilter);
     JButton visualizationScriptButton = UIUtils.createBrowseButton(buttonText,
         visualizationScriptField, JFileChooser.OPEN_DIALOG, rFilter);
 
-    FBrowseButton workingDirectoryButton = new FBrowseButton("Browse");
+    FBrowseButton workingDirectoryButton = new FBrowseButton(buttonText);
     workingDirectoryButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -168,15 +162,12 @@ public class CreatorNodeDialog extends NodeDialogPane {
       }
     });
 
-    modelScriptButton.setToolTipText(modelScriptToolTip);
-    visualizationScriptButton.setToolTipText(visualizationScriptToolTip);
+    modelScriptButton.setToolTipText(bundle.getModelScriptTooltip());
+    visualizationScriptButton.setToolTipText(bundle.getVisualizationScriptLabel());
 
     // labels
-    String modelScriptLabelText = bundle.getString("modelscript_label");
-    String visualizationScriptLabelText = bundle.getString("visualizationscript_label");
-
-    FLabel modelScriptLabel = new FLabel(modelScriptLabelText);
-    FLabel visualizationScriptLabel = new FLabel(visualizationScriptLabelText);
+    FLabel modelScriptLabel = new FLabel(bundle.getModelScriptLabel());
+    FLabel visualizationScriptLabel = new FLabel(bundle.getVisualizationScriptLabel());
     FLabel workingDirectoryLabel = new FLabel("Working directory"); // TODO: resource bundle
 
     // formPanel
@@ -193,17 +184,17 @@ public class CreatorNodeDialog extends NodeDialogPane {
 
     // Metadata panel
     {
-      String spreadsheetLabelText = bundle.getString("spreadsheet_label");
-      String spreadsheetScriptToolTip = bundle.getString("spreadsheet_tooltip");
+      String spreadsheetLabelText = bundle.getSpreadsheetLabel();
+      String spreadsheetScriptToolTip = bundle.getSpreadsheetTooltip();
 
       FLabel spreadsheetLabel = new FLabel(spreadsheetLabelText);
       JButton spreadsheetButton = UIUtils.createBrowseButton(buttonText, spreadsheetField,
           JFileChooser.OPEN_DIALOG, spreadsheetFilter);
       spreadsheetButton.setToolTipText(spreadsheetScriptToolTip);
 
-      FLabel sheetLabel = new FLabel(bundle.getString("sheet_label"));
+      FLabel sheetLabel = new FLabel(bundle.getSheetLabel());
       JComboBox<String> sheetField = new JComboBox<>(sheetModel);
-      sheetField.setToolTipText(bundle.getString("sheet_tooltip"));
+      sheetField.setToolTipText(bundle.getSheetTooltip());
 
       List<FLabel> labels2 = Arrays.asList(spreadsheetLabel, sheetLabel);
       List<JComponent> fields2 = Arrays.asList(spreadsheetField, sheetField);
@@ -212,7 +203,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
       FPanel formPanel2 = UIUtils.createFormPanel(labels2, fields2, buttons2);
 
       FPanel metadataPanel =
-          UIUtils.createTitledPanel(formPanel2, bundle.getString("metadata_title"));
+          UIUtils.createTitledPanel(formPanel2, bundle.getMetadataTitle());
       northPanel.add(UIUtils.createNorthPanel(metadataPanel));
     }
 

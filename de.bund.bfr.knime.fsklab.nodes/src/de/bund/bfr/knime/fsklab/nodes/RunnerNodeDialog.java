@@ -22,7 +22,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -44,7 +43,6 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
-import de.bund.bfr.knime.fsklab.util.UTF8Control;
 
 public class RunnerNodeDialog extends DataAwareNodeDialogPane {
 
@@ -75,15 +73,14 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
   private void createUI() {
 
     // Build locale with the selected language in the preferences
-    ResourceBundle bundle =
-        ResourceBundle.getBundle("RunnerNodeBundle", NodeUtils.getLocale(), new UTF8Control());
+    RunnerNodeBundle bundle = new RunnerNodeBundle(NodeUtils.getLocale());
 
     // Labels
-    FLabel widthLabel = new FLabel(bundle.getString("width_label"));
-    FLabel heightLabel = new FLabel(bundle.getString("height_label"));
-    FLabel resolutionLabel = new FLabel(bundle.getString("res_label"));
-    FLabel textSizeLabel = new FLabel(bundle.getString("textsize_label"));
-    FLabel simulationLabel = new FLabel(bundle.getString("simulation_label"));
+    FLabel widthLabel = new FLabel(bundle.getWidthLabel());
+    FLabel heightLabel = new FLabel(bundle.getHeightLabel());
+    FLabel resolutionLabel = new FLabel(bundle.getResolutionLabel());
+    FLabel textSizeLabel = new FLabel(bundle.getTextSizeLabel());
+    FLabel simulationLabel = new FLabel(bundle.getSimulationLabel());
     List<FLabel> labels = Arrays.asList(widthLabel, heightLabel, resolutionLabel, textSizeLabel);
 
     // Fields
@@ -114,11 +111,11 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
     });
 
     // Set tooltips
-    widthSpinner.setToolTipText(bundle.getString("width_tooltip"));
-    heightSpinner.setToolTipText(bundle.getString("height_tooltip"));
-    resolutionField.setToolTipText(bundle.getString("res_tooltip"));
-    textSizeSpinner.setToolTipText(bundle.getString("textsize_tooltip"));
-    simulationField.setToolTipText(bundle.getString("simulation_tooltip"));
+    widthSpinner.setToolTipText(bundle.getWidthTooltip());
+    heightSpinner.setToolTipText(bundle.getHeightTooltip());
+    resolutionField.setToolTipText(bundle.getResolutionTooltip());
+    textSizeSpinner.setToolTipText(bundle.getTextSizeTooltip());
+    simulationField.setToolTipText(bundle.getSimulationTooltip());
 
     List<JComponent> fields =
         Arrays.asList(widthSpinner, heightSpinner, resolutionField, textSizeSpinner);

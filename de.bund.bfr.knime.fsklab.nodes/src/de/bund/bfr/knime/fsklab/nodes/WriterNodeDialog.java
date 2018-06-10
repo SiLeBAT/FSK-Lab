@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.util.Arrays;
-import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -35,7 +34,6 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
-import de.bund.bfr.knime.fsklab.util.UTF8Control;
 import de.bund.bfr.swing.UI;
 
 class WriterNodeDialog extends NodeDialogPane {
@@ -71,12 +69,11 @@ class WriterNodeDialog extends NodeDialogPane {
   private void createUI() {
 
     // Build locale with the selected language in the preferences
-    ResourceBundle bundle =
-        ResourceBundle.getBundle("WriterNodeBundle", NodeUtils.getLocale(), new UTF8Control());
+    WriterNodeBundle bundle = new WriterNodeBundle(NodeUtils.getLocale());
 
-    String labelText = bundle.getString("label");
-    String toolTipText = bundle.getString("tooltip");
-    String buttonText = bundle.getString("button");
+    String labelText = bundle.getLabel();
+    String toolTipText = bundle.getTooltip();
+    String buttonText = bundle.getButton();
 
     FileNameExtensionFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
     FLabel label = new FLabel(labelText);
