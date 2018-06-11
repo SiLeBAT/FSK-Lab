@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -58,12 +57,10 @@ import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FSpinner;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
+import metadata.MetadataFactory;
+import metadata.ModelMath;
 import metadata.Parameter;
 import metadata.ParameterType;
-import metadata.MetadataFactory;
-import metadata.MetadataPackage;
-import metadata.ModelMath;
 
 public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   public static String INTEGER_DATA_TYPES = "Integer";
@@ -79,14 +76,14 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   private static final String removeString = "Remove";
 
   private SimulatorNodeSettings settings;
-  Map<String, Parameter> parameterMap = new TreeMap<String, Parameter>();
+  Map<String, Parameter> parameterMap = new TreeMap<>();
   private static NodeLogger LOGGER = NodeLogger.getLogger("SimulatorNodeDialog");
   SimulationEntity currentSimulation;
   JPanel settingPanel;
 
   ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
   public SimulatorNodeDialog() {
-    simulation_listModel = new DefaultListModel<SimulationEntity>();
+    simulation_listModel = new DefaultListModel<>();
 
     list = new JList<>(simulation_listModel);
 
@@ -551,7 +548,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       this.settings.dataBackground = simulationSettings.dataBackground;
       this.settings.modelMath = simulationSettings.modelMath;
       modelMath = simulationSettings.modelMath;
-      simulation_listModel = new DefaultListModel<SimulationEntity>();
+      simulation_listModel = new DefaultListModel<>();
       list.removeAll();
       list.revalidate();
       list.repaint();
@@ -577,7 +574,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       modelMath = inObj.modelMath;
 
       simulation_listModel.clear();
-      Map<String, Parameter> parameterIDMap = new TreeMap<String, Parameter>();
+      Map<String, Parameter> parameterIDMap = new TreeMap<>();
       if (parameterIDMap.isEmpty()) {
         for (Parameter param : modelMath.getParameter()) {
           parameterIDMap.put(param.getParameterID().toLowerCase(), param);
