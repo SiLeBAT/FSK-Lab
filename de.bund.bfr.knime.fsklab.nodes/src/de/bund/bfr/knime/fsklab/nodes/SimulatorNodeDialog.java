@@ -63,28 +63,49 @@ import metadata.Parameter;
 import metadata.ParameterType;
 
 public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
+
+  /*
+   * TODO: Could INTEGER_DATA_TYPES and DOUBLE_DATA_TYPES be replaced with ParameterType#INTEGER and
+   * ParameterType#Double?
+   */
   public static String INTEGER_DATA_TYPES = "Integer";
   public static String DOUBLE_DATA_TYPES = "Double";
-  private JList<SimulationEntity> list;
-  private DefaultListModel<SimulationEntity> simulation_listModel;
-  private JButton addButton;
-  private JButton removeButton;
-  private JTextField simulationName;
-  private FPanel simulationSettingPanel;
-  private SimulationEntity defaultSimulation;
+
+  /*
+   * TODO: addString and removeString should be replaced with ResourceBundle.
+   */
   private static final String addString = "Add";
   private static final String removeString = "Remove";
 
-  private SimulatorNodeSettings settings;
-  Map<String, Parameter> parameterMap = new TreeMap<>();
   private static NodeLogger LOGGER = NodeLogger.getLogger("SimulatorNodeDialog");
-  SimulationEntity currentSimulation;
-  JPanel settingPanel;
 
-  ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
+  private JList<SimulationEntity> list;
+
+  private DefaultListModel<SimulationEntity> simulation_listModel;
+
+  private JButton addButton;
+
+  private JButton removeButton;
+
+  private JTextField simulationName;
+
+  private FPanel simulationSettingPanel;
+
+  private SimulationEntity defaultSimulation;
+
+  private SimulatorNodeSettings settings;
+
+  private Map<String, Parameter> parameterMap;
+
+  private SimulationEntity currentSimulation;
+
+  private JPanel settingPanel;
+
+  private ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
+
   public SimulatorNodeDialog() {
-    simulation_listModel = new DefaultListModel<>();
 
+    simulation_listModel = new DefaultListModel<>();
     list = new JList<>(simulation_listModel);
 
     addButton = UIUtils.createAddButton();
@@ -95,14 +116,19 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     simulationSettingPanel = new FPanel();
     simulationSettingPanel.setLayout(new BorderLayout());
 
+    // TODO: defaultSimulation should be initialized here
+
     settings = new SimulatorNodeSettings();
+
+    parameterMap = new TreeMap<>();
+
+    // TODO: currentSimulation should be initialized here
 
     settingPanel = new JPanel(new BorderLayout());
 
-    
+    modelMath = MetadataFactory.eINSTANCE.createModelMath();
 
     createUI();
-
     addTab("Options", settingPanel);
   }
 
