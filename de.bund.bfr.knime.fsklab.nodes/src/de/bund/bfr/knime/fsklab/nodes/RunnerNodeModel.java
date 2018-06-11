@@ -178,6 +178,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     try {
       NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings.width,
           nodeSettings.height, nodeSettings.pointSize, nodeSettings.res, executor, exec);
+
+      // Save path of generated plot
+      fskObj.setPlot(internalSettings.imageFile.getAbsolutePath());
     } catch (final RException exception) {
       LOGGER.warn("Visualization script failed", exception);
     }

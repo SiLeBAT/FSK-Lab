@@ -137,9 +137,9 @@ class JSSimulatorNodeModel
     
     String workingDirectory = inObj.getWorkingDirectory();
     FskPortObject outObj =  new FskPortObject(inObj.model, inObj.param, inObj.viz, inObj.generalInformation, inObj.scope,
-        inObj.dataBackground, inObj.modelMath, null, new HashSet<>(), workingDirectory);
+        inObj.dataBackground, inObj.modelMath, null, new HashSet<>(), workingDirectory,
+        inObj.getPlot());
         
-
     synchronized (getLock()) {
 
       JSSimulatorViewValue val = getViewValue();

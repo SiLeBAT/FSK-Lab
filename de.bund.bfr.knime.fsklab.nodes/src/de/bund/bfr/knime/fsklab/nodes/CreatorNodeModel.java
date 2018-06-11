@@ -204,9 +204,13 @@ class CreatorNodeModel extends NoInternalsModel {
     String vizScript = vizRScript != null ? vizRScript.getScript() : "";
 
     String workingDirectory = nodeSettings.getWorkingDirectory();
-    final FskPortObject portObj =
-        new FskPortObject(modelScript, "", vizScript, generalInformation, scope,
-            dataBackground, modelMath, null, new HashSet<>(), workingDirectory);
+
+    // The creator imports a non-execute model without plot, thus the path to
+    // the plot is an empty string.
+    String plotPath = "";
+
+    final FskPortObject portObj = new FskPortObject(modelScript, "", vizScript, generalInformation,
+        scope, dataBackground, modelMath, null, new HashSet<>(), workingDirectory, plotPath);
     if (modelMath != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
     }
@@ -559,9 +563,10 @@ class CreatorNodeModel extends NoInternalsModel {
 
       ModelCategory modelCategory = MetadataFactory.eINSTANCE.createModelCategory();
       modelCategory.setModelClass(values[RakipRow.MODEL_CATEGORY__MODEL_CLASS.num][columnI]);
-      modelCategory.getModelSubClass()
-          .addAll(getStringObjectList(values, RakipRow.MODEL_CATEGORY__MODEL_SUB_CLASS, RakipColumn.I));
-      modelCategory.setModelClassComment(values[RakipRow.MODEL_CATEGORY__MODEL_CLASS_COMMENT.num][columnI]);
+      modelCategory.getModelSubClass().addAll(
+          getStringObjectList(values, RakipRow.MODEL_CATEGORY__MODEL_SUB_CLASS, RakipColumn.I));
+      modelCategory
+          .setModelClassComment(values[RakipRow.MODEL_CATEGORY__MODEL_CLASS_COMMENT.num][columnI]);
       modelCategory.setBasicProcess(values[RakipRow.MODEL_CATEGORY__BASIC_PROCESS.num][columnI]);
 
       return modelCategory;
