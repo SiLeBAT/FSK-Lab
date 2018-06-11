@@ -67,6 +67,7 @@ public class RAKIPSheetImporter {
 	private final int GENERAL_INFORMATION__NAME = 1;
 	private final int GENERAL_INFORMATION__SOURCE = 2;
 	private final int GENERAL_INFORMATION__IDENTIFIER = 3;
+	private final int GENERAL_INFORMATION_CREATION_DATE = 6;
 	private final int GENERAL_INFORMATION__RIGHTS = 8;
 	private final int GENERAL_INFORMATION__AVAILABLE = 9;
 	private final int GENERAL_INFORMATION__FORMAT = 11;
@@ -128,7 +129,10 @@ public class RAKIPSheetImporter {
 			generalInformation.setIdentifier(identifierCell.getStringCellValue());
 		}
 
-		// TODO: creation date
+		XSSFCell creationDateCell = sheet.getRow(GENERAL_INFORMATION_CREATION_DATE).getCell(I);
+		if (creationDateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+			generalInformation.setCreationDate(creationDateCell.getDateCellValue());
+		}
 
 		XSSFCell rightsCell = sheet.getRow(GENERAL_INFORMATION__RIGHTS).getCell(I);
 		if (rightsCell.getCellType() == Cell.CELL_TYPE_STRING) {
