@@ -110,6 +110,9 @@ public class FskPortObject implements PortObject {
   /** Paths to resources: plain text files and R workspace files (.rdata). */
   private String workingDirectory;
 
+  /** Path to plot. */
+  private String plot;
+
   /**
    * R workspace file with the results of running the model. It may be null if the model has not
    * been run.
@@ -135,7 +138,7 @@ public class FskPortObject implements PortObject {
   public FskPortObject(final String model, final String param, final String viz,
       final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
-      final Set<File> libs, final String workingDirectory) throws IOException {
+      final Set<File> libs, final String workingDirectory, final String plot) throws IOException {
     this.model = model;
     this.param = param;
     this.viz = viz;
@@ -149,6 +152,8 @@ public class FskPortObject implements PortObject {
     this.libs = libs;
 
     this.workingDirectory = workingDirectory;
+
+    this.plot = plot;
 
     objectNum = numOfInstances;
     numOfInstances += 1;
@@ -170,10 +175,23 @@ public class FskPortObject implements PortObject {
   }
 
   /**
-   * @return string empty if not set.
+   * @return empty string if not set.
    */
   public String getWorkingDirectory() {
     return workingDirectory != null ? workingDirectory : "";
+  }
+
+  /**
+   * @return empty string if not set.
+   */
+  public String getPlot() {
+    return plot != null ? plot : "";
+  }
+
+  public void setPlot(final String plot) {
+    if (plot != null && !plot.isEmpty()) {
+      this.plot = plot;
+    }
   }
 
   /**
@@ -198,6 +216,8 @@ public class FskPortObject implements PortObject {
     private static final String SIMULATION_INDEX = "simulationIndex";
 
     private static final String WORKING_DIRECTORY = "workingDirectory";
+
+    private static final String PLOT = "plot";
 
     @Override
     public void savePortObject(final FskPortObject portObject, final PortObjectZipOutputStream out,
@@ -247,6 +267,13 @@ public class FskPortObject implements PortObject {
         out.closeEntry();
       }
 
+      // Save plot
+      if (portObject.plot != null && !portObject.plot.isEmpty()) {
+        out.putNextEntry(new ZipEntry(PLOT));
+        IOUtils.write(portObject.plot, out, "UTF-8");
+        out.closeEntry();
+      }
+
       // Save simulations
       if (!portObject.simulations.isEmpty()) {
         out.putNextEntry(new ZipEntry(SIMULATION));
@@ -292,6 +319,8 @@ public class FskPortObject implements PortObject {
       Set<File> libs = new HashSet<>();
 
       String workingDirectory = ""; // Empty string if not set
+
+      String plot = ""; // Empty string if not set
 
       List<FskSimulation> simulations = new ArrayList<>();
       int selectedSimulationIndex = 0;
@@ -353,6 +382,8 @@ public class FskPortObject implements PortObject {
           }
         } else if (entryName.equals(WORKING_DIRECTORY)) {
           workingDirectory = IOUtils.toString(in, "UTF-8");
+        } else if (entryName.equals(PLOT)) {
+          plot = IOUtils.toString(in, "UTF-8");
         }
 
         else if (entryName.equals(SIMULATION)) {
@@ -379,7 +410,7 @@ public class FskPortObject implements PortObject {
 
       final FskPortObject portObj =
           new FskPortObject(modelScript, parametersScript, visualizationScript, generalInformation,
-              scope, dataBackground, modelMath, workspacePath, libs, workingDirectory);
+              scope, dataBackground, modelMath, workspacePath, libs, workingDirectory, plot);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);

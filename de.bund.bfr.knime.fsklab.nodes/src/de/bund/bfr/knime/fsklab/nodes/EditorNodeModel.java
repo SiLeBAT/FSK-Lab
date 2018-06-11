@@ -124,10 +124,14 @@ public class EditorNodeModel extends NoInternalsModel {
     }
     /* If there is no input model then it will return the model created in the UI. */
     else {
+
+      // The new model created in the UI is not executed, thus the path to
+      // the plot is an empty string.
+      String plotPath = "";
+
       outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedParametersScript,
           settings.modifiedVisualizationScript, settings.generalInformation, settings.scope,
-          settings.dataBackground, settings.modelMath, null, new HashSet<>(),
-          "");
+          settings.dataBackground, settings.modelMath, null, new HashSet<>(), "", plotPath);
 
       // Create default simulation out of the parameters script
       FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(outObj.param);

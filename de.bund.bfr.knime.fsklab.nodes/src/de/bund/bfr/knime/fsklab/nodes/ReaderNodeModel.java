@@ -223,9 +223,14 @@ class ReaderNodeModel extends NoInternalsModel {
     }
 
     Path workspacePath = workspace == null ? null : workspace.toPath();
+
+    // The reader node is not using currently the plot, if present. Therefore an
+    // empty string is used.
+    String plotPath = "";
+
     final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
         generalInformation, scope, dataBackground, modelMath, workspacePath, libFiles,
-        workingDirectory.toString());
+        workingDirectory.toString(), plotPath);
     fskObj.simulations.addAll(simulations);
 
     return new PortObject[] {fskObj};
