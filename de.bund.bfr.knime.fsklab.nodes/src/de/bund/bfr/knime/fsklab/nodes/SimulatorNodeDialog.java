@@ -310,6 +310,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         FSpinner paramField = new FSpinner(spinnerModel, false);
         paramField.addFocusListener(focusListener);
         prepareField(paramField, param.getParameterName(), currentSimulation.getSimulationName());
+
         labels.add(createParameterLabel(paramField, param.getParameterName(), fullParam.getParameterDescription()));
         fields.add(createParameterPanel(paramField, fullParam.getParameterUnit()));
       } else {
@@ -329,10 +330,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     simulationSettingPanel.add(northPanel, BorderLayout.CENTER);
   }
 
-  public boolean isNumeric(String dataType) {
-    return dataType.equals(INTEGER_DATA_TYPES) || dataType.equals(DOUBLE_DATA_TYPES);
-  }
-
   /**
    * Helper function for {@link #updatePanel()}.
    * 
@@ -340,7 +337,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
    * @param unit Parameter's unit
    * @return panel with parameter's value and unit.
    */
-  private FPanel createParameterPanel(JComponent valueField, String unit) {
+  private static FPanel createParameterPanel(JComponent valueField, String unit) {
 
     FPanel panel = new FPanel();
     panel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -358,7 +355,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
    * @param toolTip parameter description
    * @return label with parameter name and its description as tooltip
    */
-  private FLabel createParameterLabel(JComponent comp, String name, String toolTip) {
+  private static FLabel createParameterLabel(JComponent comp, String name, String toolTip) {
 
     FLabel label = new FLabel(name);
     label.setLabelFor(comp);
@@ -382,6 +379,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     }
     comp.addKeyListener(new SimulationParameterValueListener());
   }
+
   class SpinnerListerner implements ChangeListener{
 
     @Override
