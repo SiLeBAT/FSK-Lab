@@ -83,10 +83,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
   private DefaultListModel<SimulationEntity> simulation_listModel;
 
-  private JButton addButton;
-
-  private JButton removeButton;
-
   private JTextField simulationName;
 
   private FPanel simulationSettingPanel;
@@ -107,9 +103,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
     simulation_listModel = new DefaultListModel<>();
     list = new JList<>(simulation_listModel);
-
-    addButton = UIUtils.createAddButton();
-    removeButton = UIUtils.createRemoveButton();
 
     simulationName = new JTextField(10);
 
@@ -134,6 +127,9 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
   private void createUI() {
 
+    JButton addButton = UIUtils.createAddButton();
+    JButton removeButton = UIUtils.createRemoveButton();
+
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     list.setSelectedIndex(0);
     list.addListSelectionListener(new ListSelectionListener() {
@@ -153,7 +149,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
           }
 
           // If selection enable the fire button
-
           removeButton.setEnabled((list.getSelectedIndex() != -1
               && !currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION)));
 
