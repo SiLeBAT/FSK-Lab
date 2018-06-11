@@ -207,11 +207,12 @@ class WriterNodeModel extends NoInternalsModel {
         archive.addEntry(tempFile, "sim.sedml", URIS.sedml);
       }
 
-      // Add PNG plot
-      String plot = fskObj.getPlot();
-      if (!plot.isEmpty()) {
+      // Add PNG plot. If file is not set (empty string) or does not exist then skip\
+      // this step.
+      File plotFile = new File(fskObj.getPlot());
+      if (plotFile.exists()) {
         URI uri = URI.create("http://purl.org/NET/mediatypes/image/png");
-        archive.addEntry(new File(plot), "plot.png", uri);
+        archive.addEntry(plotFile, "plot.png", uri);
       }
 
       archive.pack();
