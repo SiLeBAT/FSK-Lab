@@ -9,40 +9,11 @@
 	
 }
 
-.tip {
-    position: relative;
-    float: left;
-    left: 20px;
-    z-index: 3000;
+.tooltip-inner {
+    max-width: 350px;
+    /* If max-width does not work, try using width instead */
+    width: 350px; 
 }
-
-.help {
-    text-align: right;
-    display: block;
-}
-.tip-txt {
-    width: 300px;
-    position: absolute;
-    visibility: hidden;
-    opacity: 0;
-    background: #333;
-    padding: 10px;
-    font-size: 12px;
-    border-radius: 3px;
-    color: #fff;
-    transition: .5s ease-in-out;
-    box-sizing: border-box;
-    text-align: left;
-    transition: opacity .3s;
-    z-index: 100000;
-}
-.fa {
-    font-size: 16px;
-    transition: .5s ease-in-out;
-    opacity: 0.5;
-}
-.fa-question-circle:hover + .tip-txt { 
-    visibility: visible;
-    color: white;
-    opacity: 0.8;
+.contentA {
+    left: 0px;
 }

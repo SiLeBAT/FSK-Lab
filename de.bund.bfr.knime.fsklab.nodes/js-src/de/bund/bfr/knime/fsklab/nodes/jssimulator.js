@@ -1,5 +1,5 @@
 simulator = function() {
-
+	
 	var view = { version: "0.0.1" };
 	view.name = "JavaScript Simulation Configurator"
 
@@ -17,6 +17,9 @@ simulator = function() {
 		_val = value;
 
 		create_body();
+		$('.form-group').tooltip({
+			  selector: "a[rel=tooltip]"
+			})
 	};
 
 	view.getComponentValue = function() {
@@ -42,33 +45,56 @@ simulator = function() {
 
 			var input = $('<input  type="' + inputType + '" class="form-control" value=""></input>');
 			input.val(value);
-
+			function prepeare(valueToprepeare){
+				return valueToprepeare!=null?valueToprepeare.replace(/"/g, ""):"";
+			}
 			
 			input.focusout(function() {
 				_val.simulations[_currentSimulation].values[parameterIndex] = $(this).val();
 			  })
 			var form = $('<div class="form-group">' +
 				'  <label class="col-sm-3 control-label">' + parameter.parameterID + '</label>' +
-				'  <div class="col-sm-6 "><div class="col-sm-2"><span class="help"><i class="fa fa-question-circle"></i><span class="tip-txt">'+
-				' parameterClassification='+_rep.parameters[parameterIndex].parameterClassification+
-				' parameterDescription='+_rep.parameters[parameterIndex].parameterDescription+
-				' parameterDistribution='+_rep.parameters[parameterIndex].parameterDistribution+
-				' parameterError='+_rep.parameters[parameterIndex].parameterError+
-				' parameterID='+_rep.parameters[parameterIndex].parameterID+
-				' parameterName='+_rep.parameters[parameterIndex].parameterName+
-				' parameterSource='+_rep.parameters[parameterIndex].parameterSource+
-				' parameterSubject='+_rep.parameters[parameterIndex].parameterSubject+
-				' parameterType='+_rep.parameters[parameterIndex].parameterType+
-				' parameterDataType='+_rep.parameters[parameterIndex].parameterDataType+
-				' parameterUnit='+_rep.parameters[parameterIndex].parameterUnit+
-				' parameterUnitCategory='+_rep.parameters[parameterIndex].parameterUnitCategory+
-				' parameterValue='+_rep.parameters[parameterIndex].parameterValue+
-				' parameterValueMax='+_rep.parameters[parameterIndex].parameterValueMax+
-				' parameterValueMin='+_rep.parameters[parameterIndex].parameterValueMin+
-				' parameterVariabilitySubject='+_rep.parameters[parameterIndex].parameterVariabilitySubject+
-				' reference='+_rep.parameters[parameterIndex].reference+
+				' <div class="col-sm-6">'+
+				'<a title="'+
+				'<div><b>parameterClassification</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterClassification)+'</div>'+
+				'<div><b>parameterDescription</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDescription)+'</div>'+
+				'<div><b>parameterDistribution</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDistribution)+'</div>'+
+				'<div><b>parameterError</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterError)+'</div>'+
+				'<div><b>parameterID</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterID)+'</div>'+
+				'<div><b>parameterName</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterName)+'</div>'+
+				'<div><b>parameterSource</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterSource)+'</div>'+
+				'<div><b>parameterSubject</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterSubject)+'</div>'+
+				'<div><b>parameterType</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterType)+'</div>'+
+				'<div><b>parameterDataType</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDataType)+'</div>'+
+				'<div><b>parameterUnit</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterUnit)+'</div>'+
+				'<div><b>parameterUnitCategory</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterUnitCategory)+'</div>'+
+				'<div><b>parameterValue</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValue)+'</div>'+
+				'<div><b>parameterValueMax</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValueMax)+'</div>'+
+				'<div><b>parameterValueMin</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValueMin)+'</div>'+
+				'<div><b>parameterVariabilitySubject</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterVariabilitySubject)+'</div>'+
+				'<div><b>reference</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].reference)+'</div>"'+
 				
-				'</span></div><div class="col-sm-10 xxx"></div></div>' +
+				'data-html="true" rel="tooltip" data-placement="right" href="#">info</a>'+
+				/*' parameterClassification='++
+				' ='+_rep.parameters[parameterIndex].+
+				' ='+_rep.parameters[parameterIndex].+
+				' ='+_rep.parameters[parameterIndex].+
+				' ='+_rep.parameters[parameterIndex].parameterID+
+				' ='+_rep.parameters[parameterIndex].parameterName+
+				' ='+_rep.parameters[parameterIndex].parameterSource+
+				' ='+_rep.parameters[parameterIndex].parameterSubject+
+				' ='+_rep.parameters[parameterIndex].parameterType+
+				' ='+_rep.parameters[parameterIndex].parameterDataType+
+				' ='+_rep.parameters[parameterIndex].parameterUnit+
+				' ='+_rep.parameters[parameterIndex].parameterUnitCategory+
+				' ='+_rep.parameters[parameterIndex].parameterValue+
+				' ='+_rep.parameters[parameterIndex].parameterValueMax+
+				' ='+_rep.parameters[parameterIndex].parameterValueMin+
+				' ='+_rep.parameters[parameterIndex].parameterVariabilitySubject+
+				' ='+_rep.parameters[parameterIndex].reference+
+				
+				'</span></span>'+*/
+				'<div class="col-sm-10 xxx"></div></div>' +
 				'  <div class="col-sm-3"><label>' + parameter.parameterUnit + '</label></div>' +
 				'</div>');
 			$('.xxx', form).append(input);
@@ -99,8 +125,8 @@ simulator = function() {
 			'    <h2>defaultSimulation</h2>' +
 			'    <form class="form-horizontal"></form>' +
 			'  </div>' +
-			'</div>');
-
+			'</div> ');
+		
 		// Add simulation names to simulationsDiv
 		for (var i = 0; i < _val.simulations.length; i++) {
 			var simulationName = _val.simulations[i].name;
