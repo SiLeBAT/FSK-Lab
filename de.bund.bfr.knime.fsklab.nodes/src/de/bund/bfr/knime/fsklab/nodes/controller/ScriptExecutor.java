@@ -53,7 +53,7 @@ import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
  * @see RCommandQueue
  * @see RSnippetNodeModel
  */
-public class ConsoleLikeRExecutor {
+public class ScriptExecutor {
 
   /** Prefix to prepend to errors in R */
   public static final String ERROR_PREFIX = "Error:";
@@ -85,27 +85,40 @@ public class ConsoleLikeRExecutor {
    * <code>
    * knime.tmp.ret <- NULL # avoids "knime.tmp.ret not found" in cleanup, if an error occurred in execution.
    *
-   * # e would be something like "Error in withVisible(...", which does not look nice.
-   * # By only printing the condition message, we can avoid that prefix (and the RException thrown by Rserve otherwise).
-   * printError <- function(e) message(paste('Error:',conditionMessage(e)))
+   * # e would be something like "Error in withVisible(...", which does not look
+   * # nice. By only printing the condition message, we can avoid that prefix (and
+   * # the RException thrown by Rserve otherwise).
+   * printError <- function(e) message(paste('Error:', conditionMessage(e)))
    *
    * # we need to be able to print the results of every R command individually.
-   * for(exp in tryCatch(parse(text=knime.tmp.script), error=printError)) {
-   * 	tryCatch( # for custom error output
-   * 		# returns the result with an visibility flag which signals the R console whether the value should be printed.
-   * 		knime.tmp.ret <- withVisible(
-   * 			# parsing the script ourselves enables us to catch syntax errors
-   * 			eval(exp)
-   * 		),
-   * 		error=printError
-   * 	)
-   * 	# $visible is only useful, if there is actually a return value
-   * 	if(!is.null(knime.tmp.ret)) {
-   * 		# print for example would return an invisible value, which would not be printed again.
-   * 		if(knime.tmp.ret$visible) print(knime.tmp.ret$value)
-   * 	}
+   * exps <- tryCatch(parse(text = knime.tmp.script), error=printError)
+   * for(expNum in seq(exps)) {
+   * 
+   *   exp <- exps[expNum];
+   * 
+   *   # For custom error output
+   *   tryCatch(
+   *     # withVisible evaluates and expression and returns a list of two values:
+   *     # $value and $visible which is a flag showing whether the value should be
+   *     # printed.
+   *     knime.tmp.ret <- withVisible(
+   *       # parsing the script ourselves enables us to catch syntax errors
+   *       eval(exp)
+   *     ),
+   *     error = function(e) {
+   *       message(c('Error: ', conditionMessage(e)))
+   *       message(c(' Expr #', exprNum, ': ', exp))
+   *     }
+   *   )
+   *   
+   *   # $visible is only useful, if there is actually a return value
+   *   if(!is.null(knime.tmp.ret)) {
+   *     # print for example would return an invisible value, which would not be printed again.
+   *     if(knime.tmp.ret$visible) print(knime.tmp.ret$value)
+   *   }
    * }
-   * rm(knime.tmp.script,exp,printError) # remove temporary script variable
+   * 
+   * rm(knime.tmp.script, exp, expNum, printError) # remove temporary script variable
    * knime.tmp.ret$value # return the value of the evaluation
    * </code>
    * 
@@ -113,8 +126,10 @@ public class ConsoleLikeRExecutor {
    */
   public static final String CODE_EXECUTION = //
       "knime.tmp.ret<-NULL;printError<-function(e) message(paste('" + ERROR_PREFIX
-          + "',conditionMessage(e)));for(exp in tryCatch(parse(text=knime.tmp.script),error=printError)){tryCatch(knime.tmp.ret<-withVisible(eval(exp)),error=printError)\n"
-          + "if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}};rm(knime.tmp.script,exp,printError);knime.tmp.ret$value";
+          + "',conditionMessage(e)));exps <- tryCatch(parse(text = knime.tmp.script), error=printError);"
+          + "for(expNum in seq(exps)){exp <- exps[expNum];tryCatch(knime.tmp.ret<-withVisible(eval(exp)),error=function(e){message(c('"
+          + ERROR_PREFIX + " expr # ', expNum, ' \"', exp, '\": ', conditionMessage(e)))})\n"
+          + "if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}};rm(knime.tmp.script,expNum,exp,printError);knime.tmp.ret$value";
 
   /**
    * R Code to finish up capturing output and error messages of R code after execution of the code
@@ -167,7 +182,7 @@ public class ConsoleLikeRExecutor {
    *
    * @param controller to use for evaluating R code
    */
-  public ConsoleLikeRExecutor(final RController controller) {
+  public ScriptExecutor(final RController controller) {
     m_controller = controller;
   }
 

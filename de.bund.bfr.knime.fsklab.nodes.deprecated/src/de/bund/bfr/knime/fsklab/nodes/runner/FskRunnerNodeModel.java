@@ -50,9 +50,9 @@ import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeSettings;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
-import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
+import de.bund.bfr.knime.fsklab.nodes.controller.ScriptExecutor;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec;
 
@@ -198,7 +198,7 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
   private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
       final ExecutionContext exec) throws Exception {
 
-    final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
+    final ScriptExecutor executor = new ScriptExecutor(controller);
 
     NodeUtils.runSnippet(controller, executor, fskObj.model, fskObj.param, fskObj.viz, exec,
         internalSettings.imageFile, settings);
@@ -220,7 +220,7 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
       setExternalErrorOutput(output);
 
       for (final String line : output) {
-        if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
+        if (line.startsWith(ScriptExecutor.ERROR_PREFIX)) {
           throw new RException("Error in R code: \"" + line + "\"", null);
         }
       }

@@ -16,10 +16,10 @@ import org.rosuda.REngine.REXPMismatchException;
 import com.sun.jna.Platform;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
+import de.bund.bfr.knime.fsklab.nodes.controller.ScriptExecutor;
 import de.bund.bfr.knime.fsklab.nodes.rbin.preferences.LanguagePreferenceInitializer;
 import metadata.Parameter;
 import metadata.ParameterClassification;
@@ -56,7 +56,7 @@ public class NodeUtils {
    * 
    */
   public static void plot(final File imageFile, final String vizScript, final int width,
-      final int height, final int pointSize, final String res, final ConsoleLikeRExecutor executor,
+      final int height, final int pointSize, final String res, final ScriptExecutor executor,
       final ExecutionMonitor monitor)
       throws RException, CanceledExecutionException, InterruptedException {
 
@@ -80,7 +80,7 @@ public class NodeUtils {
     executor.executeIgnoreResult("dev.off()", monitor);
   }
 
-  public static void runSnippet(final RController controller, final ConsoleLikeRExecutor executor,
+  public static void runSnippet(final RController controller, final ScriptExecutor executor,
       final String modelScript, final String paramScript, final String vizScript,
       final ExecutionMonitor monitor, final File imageFile, final RunnerNodeSettings settings)
       throws RException, CanceledExecutionException, InterruptedException, IOException,

@@ -44,10 +44,10 @@ import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.nodes.controller.ConsoleLikeRExecutor;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
+import de.bund.bfr.knime.fsklab.nodes.controller.ScriptExecutor;
 
 public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
@@ -147,7 +147,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
       final FskSimulation simulation, final ExecutionMonitor exec) throws Exception {
 
-    final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
+    final ScriptExecutor executor = new ScriptExecutor(controller);
 
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setMessage("Add resource files");
@@ -210,8 +210,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       setExternalErrorOutput(output);
 
       for (final String line : output) {
-        if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
-          throw new RException("Error in R code: \"" + line + "\"", null);
+        if (line.startsWith(ScriptExecutor.ERROR_PREFIX)) {
+          throw new RException(line, null);
         }
       }
     }
