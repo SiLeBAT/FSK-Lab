@@ -17,7 +17,6 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -41,6 +40,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
@@ -63,14 +63,12 @@ import metadata.Parameter;
 import metadata.ParameterType;
 
 public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
-
+  private static NodeLogger LOGGER = NodeLogger.getLogger("SimulatorNodeDialog");
   /*
    * TODO: addString and removeString should be replaced with ResourceBundle.
    */
   private static final String addString = "Add";
   private static final String removeString = "Remove";
-
-  private static NodeLogger LOGGER = NodeLogger.getLogger("SimulatorNodeDialog");
 
   private JList<SimulationEntity> list;
 
@@ -93,7 +91,11 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   private JPanel settingPanel;
 
   private ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
-
+  
+  EqualityHelper equalHelper = new EqualityHelper();
+  
+  private FskPortObject inObj;
+  
   public SimulatorNodeDialog() {
 
     simulation_listModel = new DefaultListModel<>();
@@ -104,6 +106,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     simulationName = new JTextField(10);
 
     simulationSettingPanel = new FPanel();
+    
     simulationSettingPanel.setLayout(new BorderLayout());
 
     // TODO: defaultSimulation should be initialized here
@@ -220,7 +223,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   public void updatePanel() {
     if (parameterMap.isEmpty() && modelMath != null) {
       for (Parameter param : modelMath.getParameter()) {
-        parameterMap.put(param.getParameterName(), param);
+        parameterMap.put(param.getParameterID().toLowerCase().trim(), param);
       }
     }
 
@@ -264,10 +267,10 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         // does nothing
       }
     };
-
+  
     for (Parameter param : parameters) {
-
-      Parameter fullParam = parameterMap.get(param.getParameterName());
+      try {
+      Parameter fullParam = parameterMap.get(param.getParameterID().toLowerCase().trim());
 
       final ParameterType dataType = fullParam.getParameterDataType();
 
@@ -279,11 +282,11 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         final String minValue = fullParam.getParameterValueMin();
         final String maxValue = fullParam.getParameterValueMax();
         final String value = param.getParameterValue();
-
+        System.out.println(fullParam.getParameterID()+" "+value+" "+fullParam.getParameterDataType()+" "+minValue+" "+maxValue);
         if (fullParam.getParameterDataType() == ParameterType.INTEGER) {
-
-          int min = minValue.isEmpty() ? Integer.MIN_VALUE : Integer.parseInt(minValue);
-          int max = maxValue.isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(maxValue);
+         
+          int min = minValue !=null ? minValue.isEmpty() ? Integer.MIN_VALUE : Integer.parseInt(minValue):Integer.MIN_VALUE ;
+          int max = maxValue !=null ? maxValue.isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(maxValue):Integer.MAX_VALUE ;  
 
           if (value != null && !value.isEmpty()) {
             try {
@@ -298,33 +301,39 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
         else if (fullParam.getParameterDataType() == ParameterType.DOUBLE) {
 
-          double min = minValue.isEmpty() ? Integer.MIN_VALUE : Double.parseDouble(minValue);
-          double max = maxValue.isEmpty() ? Integer.MAX_VALUE : Double.parseDouble(maxValue);
+          double min = minValue !=null ?minValue.isEmpty() ? Integer.MIN_VALUE : Double.parseDouble(minValue):Double.MIN_VALUE ;
+          double max = maxValue !=null ?maxValue.isEmpty() ? Integer.MAX_VALUE : Double.parseDouble(maxValue):Double.MAX_VALUE ;
 
           if (value != null && !value.isEmpty()) {
-            spinnerModel = new SpinnerNumberModel(Double.parseDouble(value), min, max, 0.01);
+            Double doubleValue = Double.parseDouble(value);
+            spinnerModel = new SpinnerNumberModel(doubleValue.doubleValue()<0?doubleValue.doubleValue()*-1:doubleValue.doubleValue(), min, max, 0.1);
+            spinnerModel.setValue(doubleValue.doubleValue());
           } else {
-            spinnerModel = new SpinnerNumberModel(0.0, min, max, 1);
+            spinnerModel = new SpinnerNumberModel(0.0, min, max, 0.1);
           }
         }
 
         FSpinner paramField = new FSpinner(spinnerModel, false);
         paramField.addFocusListener(focusListener);
-        prepareField(paramField, param.getParameterName(), currentSimulation.getSimulationName());
+        prepareField(paramField, param.getParameterID(), currentSimulation.getSimulationName());
 
-        labels.add(createParameterLabel(paramField, param.getParameterName(),
+        labels.add(createParameterLabel(paramField, param.getParameterID(),
             fullParam.getParameterDescription()));
         fields.add(createParameterPanel(paramField, fullParam.getParameterUnit()));
       } else {
         FTextField paramField = new FTextField();
         paramField.setColumns(10);
-        paramField.setText(param.getParameterName());
-        prepareField(paramField, param.getParameterName(), currentSimulation.getSimulationName());
+        paramField.setText(param.getParameterID());
+        prepareField(paramField, param.getParameterID(), currentSimulation.getSimulationName());
 
-        labels.add(createParameterLabel(paramField, param.getParameterName(), ""));
+        labels.add(createParameterLabel(paramField, param.getParameterID(), ""));
         fields.add(createParameterPanel(paramField, fullParam.getParameterUnit()));
       }
+      }catch(Exception ex ) {
+        ex.printStackTrace();
+      }
     }
+    
 
     FPanel formPanel = UIUtils.createFormPanel(labels, fields);
     FPanel northPanel = UIUtils.createNorthPanel(formPanel);
@@ -389,7 +398,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       SpinnerModel model = ((JSpinner) e.getSource()).getModel();
       JSpinner source = ((JSpinner) e.getSource());
       for (Parameter param : currentSimulation.getSimulationParameters()) {
-        if (param.getParameterName().equalsIgnoreCase((String) source.getClientProperty("id"))) {
+        if (param.getParameterID().equalsIgnoreCase((String) source.getClientProperty("id"))) {
           param.setParameterValue("" + model.getValue());
         }
       }
@@ -406,7 +415,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
       JTextField source = ((JTextField) arg0.getSource());
 
       for (Parameter param : currentSimulation.getSimulationParameters()) {
-        if (param.getParameterName().equalsIgnoreCase((String) source.getClientProperty("id"))) {
+        if (param.getParameterID().equalsIgnoreCase((String) source.getClientProperty("id"))) {
 
           try {
             // Try to parse the value as integer or double. If no error set the background
@@ -465,7 +474,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
         Parameter p = MetadataFactory.eINSTANCE.createParameter();
 
-        p.setParameterName(entry.getParameterName());
+        p.setParameterID(entry.getParameterID().toLowerCase().trim());
         p.setParameterValue(entry.getParameterValue());
 
         simulationParameters.add(p);
@@ -542,18 +551,16 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException("InvalidSettingsException", exception);
     }
-    final FskPortObject inObj = (FskPortObject) input[0];
+    inObj = (FskPortObject) input[0];
 
     // If connected to same FSK model (input) then load simulations from settings
-    if (Objects.equals(simulationSettings.generalInformation, inObj.generalInformation)) {
+    
+    if (simulationSettings.getModelStript() != null && simulationSettings.getModelStript().equals(inObj.model)) {
 
       // Updates settings
       this.settings = simulationSettings;
-      this.settings.generalInformation = simulationSettings.generalInformation;
-      this.settings.scope = simulationSettings.scope;
-      this.settings.dataBackground = simulationSettings.dataBackground;
-      this.settings.modelMath = simulationSettings.modelMath;
-      modelMath = simulationSettings.modelMath;
+      this.settings.setModelStript(simulationSettings.getModelStript());
+      modelMath = inObj.modelMath;
 
       simulation_listModel = new DefaultListModel<>();
 
@@ -574,19 +581,15 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
     // If different (or new) connected FSK model then load simulations from input model
     else {
-
-      this.settings.generalInformation = simulationSettings.generalInformation;
-      this.settings.scope = simulationSettings.scope;
-      this.settings.dataBackground = simulationSettings.dataBackground;
-      this.settings.modelMath = simulationSettings.modelMath;
+      this.settings.setModelStript(simulationSettings.getModelStript());
       modelMath = inObj.modelMath;
 
       simulation_listModel.clear();
 
-      Map<String, Parameter> parameterIDMap = new TreeMap<>();
-      if (parameterIDMap.isEmpty()) {
+      
+      if (parameterMap.isEmpty()) {
         for (Parameter param : modelMath.getParameter()) {
-          parameterIDMap.put(param.getParameterID().toLowerCase(), param);
+          parameterMap.put(param.getParameterID().toLowerCase().trim(), param);
         }
       }
 
@@ -597,7 +600,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
           Parameter p = MetadataFactory.eINSTANCE.createParameter();
 
-          p.setParameterName(parameterIDMap.get(entry.getKey().toLowerCase()).getParameterID());
+          p.setParameterID(parameterMap.get(entry.getKey().toLowerCase().trim()).getParameterID().toLowerCase().trim());
           p.setParameterValue(entry.getValue());
 
           params.add(p);
@@ -637,6 +640,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
     List<SimulationEntity> simulationList = asList(simulation_listModel);
+    this.settings.setModelStript( inObj.model);
     this.settings.setListOfSimulation(simulationList);
     this.settings.saveSettings(settings);
   }

@@ -27,39 +27,21 @@ public class SimulatorNodeSettings {
 
   // Setting models
   private static NodeLogger LOGGER = NodeLogger.getLogger("SimulatorNodeSettings");
+
+  private static final String CFG_Model_Script = "ModelScript";
+  
+
+  private String modelStript;
   private List<SimulationEntity> listOfSimulation;
 
-  private static final String CFG_GENERAL_INFORMATION = "generalInformation";
-  private static final String CFG_SCOPE = "scope";
-  private static final String CFG_DATA_BACKGROUND = "dataBackground";
-  private static final String CFG_MODEL_MATH = "modelMath";
-
-  
-  GeneralInformation generalInformation;
-  Scope scope;
-  DataBackground dataBackground;
-  ModelMath modelMath;
   void saveSettings(final NodeSettingsWO settings) {
 
     final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
-    // save meta data
-    if (generalInformation != null) {
-      saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
+    // save model Script
+    if (modelStript != null) {
+      settings.addString( CFG_Model_Script, modelStript);
     }
-
-    if (scope != null) {
-      saveSettings(settings, CFG_SCOPE, scope);
-    }
-
-    if (dataBackground != null) {
-      saveSettings(settings, CFG_DATA_BACKGROUND, dataBackground);
-    }
-
-    if (modelMath != null) {
-      saveSettings(settings, CFG_MODEL_MATH, modelMath);
-    }
-
     if (listOfSimulation != null && listOfSimulation.size() > 0) {
       try {
         String stringVal = objectMapper.writeValueAsString(listOfSimulation);
@@ -83,18 +65,10 @@ public class SimulatorNodeSettings {
     final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
  // load meta data
-    if (settings.containsKey(CFG_GENERAL_INFORMATION)) {
-      generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION, GeneralInformation.class);
+    if (settings.containsKey(CFG_Model_Script)) {
+      modelStript = settings.getString(CFG_Model_Script);
     }
-    if (settings.containsKey(CFG_SCOPE)) {
-      scope = getEObject(settings, CFG_SCOPE, Scope.class);
-    }
-    if (settings.containsKey(CFG_DATA_BACKGROUND)) {
-      dataBackground = getEObject(settings, CFG_DATA_BACKGROUND, DataBackground.class);
-    }
-    if (settings.containsKey(CFG_MODEL_MATH)) {
-      modelMath = getEObject(settings, CFG_MODEL_MATH, ModelMath.class);
-    }
+    
 
     if (settings.containsKey(CFG_SIMULATION_LIST)) {
       final String stringVal = settings.getString(CFG_SIMULATION_LIST);
@@ -109,28 +83,7 @@ public class SimulatorNodeSettings {
 
     // Uses empty array if CFG_RESOURCES is missing (in case of old nodes).
   }
-  private static void saveSettings(final NodeSettingsWO settings, final String key,
-      final EObject eObject) {
-
-    try {
-      ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-      String jsonStr = objectMapper.writeValueAsString(eObject);
-      settings.addString(key, jsonStr);
-    } catch (JsonProcessingException exception) {
-      LOGGER.warn("Error saving " + key);
-    }
-  }
-  private static <T> T getEObject(NodeSettingsRO settings, String key, Class<T> valueType)
-      throws InvalidSettingsException {
-
-    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    String jsonStr = settings.getString(key);
-    try {
-      return mapper.readValue(jsonStr, valueType);
-    } catch (IOException exception) {
-      throw new InvalidSettingsException(exception);
-    }
-  }
+ 
 
   public List<SimulationEntity> getListOfSimulation() {
     return listOfSimulation;
@@ -139,4 +92,13 @@ public class SimulatorNodeSettings {
   public void setListOfSimulation(List<SimulationEntity> listOfSimulation) {
     this.listOfSimulation = listOfSimulation;
   }
+  
+  public String getModelStript() {
+    return modelStript;
+  }
+
+  public void setModelStript(String modelStript) {
+    this.modelStript = modelStript;
+  }
+
 }
