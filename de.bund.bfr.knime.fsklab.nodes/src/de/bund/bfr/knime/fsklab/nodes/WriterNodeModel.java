@@ -154,9 +154,25 @@ class WriterNodeModel extends NoInternalsModel {
 
       // Adds R workspace file
       if (fskObj.workspace != null) {
-        final ArchiveEntry workspaceEntry =
-            archive.addEntry(fskObj.workspace.toFile(), "workspace.r", URIS.r);
-        workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
+
+        // Get length of file in bytes
+        long fileSizeInBytes = Files.size(fskObj.workspace);
+
+        // Convert the bytes to Kylobytes (1 KB = 1024 Bytes)
+        long fileSizeInKB = fileSizeInBytes / 1024;
+
+        // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+        long fileSizeInMB = fileSizeInKB / 1024;
+
+        // Only save R workspace smaller than 100 MB
+        if (fileSizeInMB < 100) {
+          final ArchiveEntry workspaceEntry =
+              archive.addEntry(fskObj.workspace.toFile(), "workspace.r", URIS.r);
+          workspaceEntry
+              .addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
+        } else {
+          LOGGER.warn("Results file larger than 100 MB -> Skipping file");
+        }
       }
 
       // Adds model metadata
