@@ -459,7 +459,6 @@ public class FskPortObject implements PortObject {
   @Override
   public JComponent[] getViews() {
     JPanel modelScriptPanel = new ScriptPanel("Model script", model, false);
-    JPanel paramScriptPanel = new ScriptPanel("Param script", param, false);
     JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false);
 
     JTree tree = MetadataTree.createTree(generalInformation, scope, dataBackground, modelMath);
@@ -470,7 +469,7 @@ public class FskPortObject implements PortObject {
 
     JPanel simulationsPanel = new SimulationsPanel();
 
-    return new JComponent[] {modelScriptPanel, paramScriptPanel, vizScriptPanel, metaDataPane,
+    return new JComponent[] {modelScriptPanel, vizScriptPanel, metaDataPane,
         librariesPanel, simulationsPanel};
   }
 
