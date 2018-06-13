@@ -20,7 +20,6 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -36,21 +35,25 @@ import org.jlibsedml.SedML;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
+import org.rosuda.REngine.REXPMismatchException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
+import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
@@ -63,6 +66,8 @@ import metadata.ModelMath;
 import metadata.Scope;
 
 class ReaderNodeModel extends NoInternalsModel {
+
+  private static final NodeLogger LOGGER = NodeLogger.getLogger(ReaderNodeModel.class);
 
   private static final PortType[] IN_TYPES = {};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
@@ -100,7 +105,6 @@ class ReaderNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    final ArrayList<String> libNames = new ArrayList<>();
     final Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
 
     final File file = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.filePath));
@@ -178,16 +182,6 @@ class ReaderNodeModel extends NoInternalsModel {
         Files.delete(temp); // Deletes temporary file
       }
 
-      // Gets library URI for the running platform
-      final URI libUri = NodeUtils.getLibURI();
-      
-
-      // Gets library names
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(libUri)) {
-        final String name = entry.getFileName().split("\\_")[0];
-        libNames.add(name);
-      }
-
       // Get simulations
       if (archive.getNumEntriesWithFormat(URIS.sedml) > 0) {
         File simulationsFile = FileUtil.createTempFile("sim", ".sedml");
@@ -200,25 +194,30 @@ class ReaderNodeModel extends NoInternalsModel {
       }
     }
 
-    final Set<File> libFiles = new HashSet<>();
-    if (!libNames.isEmpty()) {
+    // Retrieve missing libraries from CRAN
+    List<String> libraries = new ArrayList<>();
+    if (!modelScript.isEmpty()) {
+      libraries.addAll(new RScript(modelScript).getLibraries());
+    }
+    if (!visualizationScript.isEmpty()) {
+      libraries.addAll(new RScript(visualizationScript).getLibraries());
+    }
+    
+    Set<File> libFiles = new HashSet<>();
 
-      LibRegistry libRegistry = LibRegistry.instance();
-
-      // Filters and installs missing libraries
-      List<String> missingLibs = libNames.stream().filter(lib -> !libRegistry.isInstalled(lib))
-          .collect(Collectors.toList());
-      if (!missingLibs.isEmpty()) {
-        libRegistry.installLibs(missingLibs);
-      }
-
-      // Converts and return set of Paths returned from plugin to set
+    if (!libraries.isEmpty()) {
       try {
-      Set<File> libs =
-          libRegistry.getPaths(libNames).stream().map(Path::toFile).collect(Collectors.toSet());
-      libFiles.addAll(libs);
-      }catch(Exception e) {
-        e.printStackTrace();
+        // Install missing libraries
+        LibRegistry libReg = LibRegistry.instance();
+        List<String> missingLibs = libraries.stream().filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
+
+        if (!missingLibs.isEmpty()) {
+          libReg.installLibs(missingLibs);
+        }
+
+        libReg.getPaths(libraries).forEach(l -> libFiles.add(l.toFile()));
+      } catch (RException | REXPMismatchException e) {
+        LOGGER.error(e.getMessage());
       }
     }
 

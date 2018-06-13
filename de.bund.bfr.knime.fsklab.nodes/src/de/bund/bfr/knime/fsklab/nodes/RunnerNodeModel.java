@@ -121,13 +121,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         " recieving '" + fskObj.selectedSimulationIndex + "' as the selected simulation index!");
 
     try (RController controller = new RController()) {
+
       // get the index of the selected simulation saved by the JavaScript FSK Simulation
-      // Configurator! the default value is 0 which is the the default simulation
+      // Configurator the default value is 0 which is the the default simulation
       FskSimulation fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
-      /*
-       * FskSimulation fskSimulation = fskObj.simulations.stream() .filter(it ->
-       * it.getName().equals(nodeSettings.simulation)).findAny().get();
-       */
+
       ExecutionContext context = exec.createSubExecutionContext(1.0);
 
       fskObj = runSnippet(controller, fskObj, fskSimulation, context);

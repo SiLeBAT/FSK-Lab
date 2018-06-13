@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -224,16 +225,23 @@ class CreatorNodeModel extends NoInternalsModel {
 
     if (!libraries.isEmpty()) {
       try {
-        // Install missing libraries
-        final LibRegistry libReg = LibRegistry.instance();
-        List<String> missingLibs =
-            libraries.stream().filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
-        if (!missingLibs.isEmpty()) {
-          libReg.installLibs(missingLibs);
 
-          Set<Path> libPaths = libReg.getPaths(libraries);
-          libPaths.forEach(l -> portObj.libs.add(l.toFile()));
+        // Install missing libraries
+        LibRegistry libRegistry = LibRegistry.instance();
+
+        List<String> missingLibs = new LinkedList<>();
+        for (String lib : libraries) {
+          if (!libRegistry.isInstalled(lib)) {
+            missingLibs.add(lib);
+          }
         }
+
+        if (!missingLibs.isEmpty()) {
+          libRegistry.installLibs(missingLibs);
+        }
+
+        Set<Path> libPaths = libRegistry.getPaths(libraries);
+        libPaths.forEach(p -> portObj.libs.add(p.toFile()));
       } catch (RException | REXPMismatchException e) {
         LOGGER.error(e.getMessage());
       }

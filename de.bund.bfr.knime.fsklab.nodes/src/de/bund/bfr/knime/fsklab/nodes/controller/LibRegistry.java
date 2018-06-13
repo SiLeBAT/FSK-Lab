@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +32,7 @@ import org.knime.core.node.KNIMEConstants;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.REXPString;
+import org.rosuda.REngine.RList;
 import com.sun.jna.Platform;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 
@@ -221,7 +220,7 @@ public class LibRegistry {
     void addPackage(final List<String> pkgs, final Path path, final String repos)
         throws RException {
       String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '"
-          + repos + "', type = '" + type + "', Rversion = '3.0')";
+          + repos + "', type = '" + type + "', Rversion = '3.0', quiet = TRUE)";
       controller.eval(cmd, false);
     }
 
@@ -246,11 +245,11 @@ public class LibRegistry {
 
       // Sometimes checkVersions returns a list (specially on Mac)
       if (rexp.isList()) {
-        @SuppressWarnings("unchecked")
-        Collection<REXPString> values = rexp.asList().values();
-
-        return values.stream().map(it -> it.asStrings()[0]).map(Paths::get)
-            .collect(Collectors.toList());
+        RList list = rexp.asList();
+        REXP element0 = list.at(0);
+        String[] values = element0.asStrings();
+        
+        return Arrays.stream(values).map(Paths::get).collect(Collectors.toList());
       }
 
       if (rexp.isString()) {
