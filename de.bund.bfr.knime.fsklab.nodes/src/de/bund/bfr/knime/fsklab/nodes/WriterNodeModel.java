@@ -227,9 +227,6 @@ class WriterNodeModel extends NoInternalsModel {
       }
 
       archive.pack();
-    } catch (Exception e) {
-      FileUtils.deleteQuietly(archiveFile);
-      LOGGER.error("File could not be created", e);
     }
 
     return new PortObject[] {};
