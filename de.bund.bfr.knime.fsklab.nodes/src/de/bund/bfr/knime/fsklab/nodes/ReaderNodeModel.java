@@ -110,7 +110,6 @@ class ReaderNodeModel extends NoInternalsModel {
     final File file = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.filePath));
 
     String modelScript = "";
-    String paramScript = "";
     String visualizationScript = "";
     File workspace = null; // null if missing
 
@@ -129,8 +128,6 @@ class ReaderNodeModel extends NoInternalsModel {
 
         if (resourceType.equals(ResourceType.modelScript)) {
           modelScript = loadScript(entry);
-        } else if (resourceType.equals(ResourceType.parametersScript)) {
-          paramScript = loadScript(entry);
         } else if (resourceType.equals(ResourceType.visualizationScript)) {
           visualizationScript = loadScript(entry);
         } else if (resourceType.equals(ResourceType.workspace)) {
@@ -162,13 +159,14 @@ class ReaderNodeModel extends NoInternalsModel {
         ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
         JsonNode modelNode = mapper.readTree(temp.toFile());
         Object version = modelNode.get("version");
-        if(version != null) {
+        if (version != null) {
           generalInformation =
               mapper.treeToValue(modelNode.get("generalInformation"), GeneralInformation.class);
           scope = mapper.treeToValue(modelNode.get("scope"), Scope.class);
-          dataBackground = mapper.treeToValue(modelNode.get("dataBackground"), DataBackground.class);
+          dataBackground =
+              mapper.treeToValue(modelNode.get("dataBackground"), DataBackground.class);
           modelMath = mapper.treeToValue(modelNode.get("modelMath"), ModelMath.class);
-        }else {
+        } else {
           mapper = FskPlugin.getDefault().OLD_OBJECT_MAPPER;
           modelNode = mapper.readTree(temp.toFile());
           GenericModel genericModel = mapper.readValue(temp.toFile(), GenericModel.class);
@@ -177,7 +175,7 @@ class ReaderNodeModel extends NoInternalsModel {
           dataBackground = RakipUtil.convert(genericModel.dataBackground);
           modelMath = RakipUtil.convert(genericModel.modelMath);
         }
-        
+
 
         Files.delete(temp); // Deletes temporary file
       }
@@ -202,14 +200,15 @@ class ReaderNodeModel extends NoInternalsModel {
     if (!visualizationScript.isEmpty()) {
       libraries.addAll(new RScript(visualizationScript).getLibraries());
     }
-    
+
     Set<File> libFiles = new HashSet<>();
 
     if (!libraries.isEmpty()) {
       try {
         // Install missing libraries
         LibRegistry libReg = LibRegistry.instance();
-        List<String> missingLibs = libraries.stream().filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
+        List<String> missingLibs =
+            libraries.stream().filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
 
         if (!missingLibs.isEmpty()) {
           libReg.installLibs(missingLibs);
@@ -227,7 +226,7 @@ class ReaderNodeModel extends NoInternalsModel {
     // empty string is used.
     String plotPath = "";
 
-    final FskPortObject fskObj = new FskPortObject(modelScript, paramScript, visualizationScript,
+    final FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript,
         generalInformation, scope, dataBackground, modelMath, workspacePath, libFiles,
         workingDirectory.toString(), plotPath);
     fskObj.simulations.addAll(simulations);

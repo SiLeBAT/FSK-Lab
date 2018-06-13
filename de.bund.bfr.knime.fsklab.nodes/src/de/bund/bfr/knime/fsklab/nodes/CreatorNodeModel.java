@@ -210,7 +210,7 @@ class CreatorNodeModel extends NoInternalsModel {
     // the plot is an empty string.
     String plotPath = "";
 
-    final FskPortObject portObj = new FskPortObject(modelScript, "", vizScript, generalInformation,
+    final FskPortObject portObj = new FskPortObject(modelScript, vizScript, generalInformation,
         scope, dataBackground, modelMath, null, new HashSet<>(), workingDirectory, plotPath);
     if (modelMath != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));

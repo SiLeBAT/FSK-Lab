@@ -102,9 +102,9 @@ public class CombinedFskPortObject extends FskPortObject {
       final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
       final Set<File> libs, final String workingDirectory, final String plot,
-      final FskPortObject firstFskPortObject,
-      final FskPortObject secondFskPortObject) throws IOException {
-    super(model, param, viz, generalInformation, scope, dataBackground, modelMath, workspace, libs,
+      final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
+      throws IOException {
+    super(model, viz, generalInformation, scope, dataBackground, modelMath, workspace, libs,
         workingDirectory, plot);
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
@@ -140,7 +140,6 @@ public class CombinedFskPortObject extends FskPortObject {
   public static final class Serializer extends PortObjectSerializer<CombinedFskPortObject> {
 
     private static final String MODEL1 = "model1.R";
-    private static final String PARAM1 = "param1.R";
     private static final String VIZ1 = "viz1.R";
     private static final String META_DATA1 = "metaData1";
     private static final String WORKSPACE1 = "workspace1";
@@ -148,7 +147,6 @@ public class CombinedFskPortObject extends FskPortObject {
     private static final String WORKING_DIRECTORY1 = "workingDirectory1";
 
     private static final String MODEL2 = "model2.R";
-    private static final String PARAM2 = "param2.R";
     private static final String VIZ2 = "viz2.R";
     private static final String META_DATA2 = "metaData2";
     private static final String WORKSPACE2 = "workspace2";
@@ -177,11 +175,6 @@ public class CombinedFskPortObject extends FskPortObject {
       // model entry (file with model script)
       out.putNextEntry(new ZipEntry(MODEL1));
       IOUtils.write(portObject.firstFskPortObject.model, out, "UTF-8");
-      out.closeEntry();
-
-      // param entry (file with param script)
-      out.putNextEntry(new ZipEntry(PARAM1));
-      IOUtils.write(portObject.firstFskPortObject.param, out, "UTF-8");
       out.closeEntry();
 
       // viz entry (file with visualization script)
@@ -260,11 +253,6 @@ public class CombinedFskPortObject extends FskPortObject {
       // Second FSK Object
       out.putNextEntry(new ZipEntry(MODEL2));
       IOUtils.write(portObject.secondFskPortObject.model, out, "UTF-8");
-      out.closeEntry();
-
-      // param entry (file with param script)
-      out.putNextEntry(new ZipEntry(PARAM2));
-      IOUtils.write(portObject.secondFskPortObject.param, out, "UTF-8");
       out.closeEntry();
 
       // viz entry (file with visualization script)
@@ -351,7 +339,6 @@ public class CombinedFskPortObject extends FskPortObject {
 
       // First FSK Object
       String modelScript1 = "";
-      String parametersScript1 = "";
       String visualizationScript1 = "";
 
       GeneralInformation generalInformation1 = MetadataFactory.eINSTANCE.createGeneralInformation();
@@ -367,7 +354,6 @@ public class CombinedFskPortObject extends FskPortObject {
 
       // Second FSK Object
       String modelScript2 = "";
-      String parametersScript2 = "";
       String visualizationScript2 = "";
 
       GeneralInformation generalInformation2 = MetadataFactory.eINSTANCE.createGeneralInformation();
@@ -387,8 +373,6 @@ public class CombinedFskPortObject extends FskPortObject {
         // First FSK Object entries
         if (entryName.equals(MODEL1)) {
           modelScript1 = IOUtils.toString(in, "UTF-8");
-        } else if (entryName.equals(PARAM1)) {
-          parametersScript1 = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(VIZ1)) {
           visualizationScript1 = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(META_DATA1)) {
@@ -463,8 +447,6 @@ public class CombinedFskPortObject extends FskPortObject {
         // Second FSK Object entries
         if (entryName.equals(MODEL2)) {
           modelScript2 = IOUtils.toString(in, "UTF-8");
-        } else if (entryName.equals(PARAM2)) {
-          parametersScript2 = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(VIZ2)) {
           visualizationScript2 = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(META_DATA2)) {
@@ -547,24 +529,25 @@ public class CombinedFskPortObject extends FskPortObject {
 
       in.close();
 
-      final FskPortObject fportObj = new FskPortObject(modelScript1, parametersScript1,
-          visualizationScript1, generalInformation1, scope1, dataBackground1, modelMath1,
-          workspacePath1, libs1, workingDirectory1, "");
+      final FskPortObject fportObj =
+          new FskPortObject(modelScript1, visualizationScript1, generalInformation1, scope1,
+              dataBackground1, modelMath1, workspacePath1, libs1, workingDirectory1, "");
 
       if (!simulations1.isEmpty()) {
         fportObj.simulations.addAll(simulations1);
       }
 
-      final FskPortObject sportObj = new FskPortObject(modelScript2, parametersScript2,
-          visualizationScript2, generalInformation2, scope2, dataBackground2, modelMath2,
-          workspacePath2, libs2, workingDirectory2, "");
+      final FskPortObject sportObj =
+          new FskPortObject(modelScript2, visualizationScript2, generalInformation2, scope2,
+              dataBackground2, modelMath2, workspacePath2, libs2, workingDirectory2, "");
 
       if (!simulations2.isEmpty()) {
         sportObj.simulations.addAll(simulations2);
       }
 
-      final CombinedFskPortObject portObj = new CombinedFskPortObject(
-          FileUtil.createTempDir("combined").getAbsolutePath(), new HashSet<>(), fportObj, sportObj);
+      final CombinedFskPortObject portObj =
+          new CombinedFskPortObject(FileUtil.createTempDir("combined").getAbsolutePath(),
+              new HashSet<>(), fportObj, sportObj);
       if (!joinerRelation.isEmpty()) {
         portObj.setJoinerRelation(joinerRelation);
       }
@@ -578,7 +561,6 @@ public class CombinedFskPortObject extends FskPortObject {
   @Override
   public JComponent[] getViews() {
     JPanel modelScriptPanel1 = new ScriptPanel("Model1 script", firstFskPortObject.model, false);
-    JPanel paramScriptPanel1 = new ScriptPanel("Param1 script", firstFskPortObject.param, false);
     JPanel vizScriptPanel1 = new ScriptPanel("Visualization script", firstFskPortObject.viz, false);
 
     final JScrollPane metaDataPane1 = new JScrollPane(
@@ -592,7 +574,6 @@ public class CombinedFskPortObject extends FskPortObject {
 
     //
     JPanel modelScriptPanel2 = new ScriptPanel("Model2 script", secondFskPortObject.model, false);
-    JPanel paramScriptPanel2 = new ScriptPanel("Param2 script", secondFskPortObject.param, false);
     JPanel vizScriptPanel2 =
         new ScriptPanel("Visualization2 script", secondFskPortObject.viz, false);
 
@@ -605,9 +586,9 @@ public class CombinedFskPortObject extends FskPortObject {
 
     JPanel simulationsPanel2 = new SimulationsPanel(secondFskPortObject, 2);
 
-    return new JComponent[] {modelScriptPanel1, paramScriptPanel1, vizScriptPanel1, metaDataPane1,
-        librariesPanel1, simulationsPanel1, modelScriptPanel2, paramScriptPanel2, vizScriptPanel2,
-        metaDataPane2, librariesPanel2, simulationsPanel2};
+    return new JComponent[] {modelScriptPanel1, vizScriptPanel1, metaDataPane1, librariesPanel1,
+        simulationsPanel1, modelScriptPanel2, vizScriptPanel2, metaDataPane2, librariesPanel2,
+        simulationsPanel2};
   }
 
   private class SimulationsPanel extends FPanel {

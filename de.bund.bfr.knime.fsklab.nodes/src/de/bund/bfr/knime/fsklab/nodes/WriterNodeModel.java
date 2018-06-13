@@ -142,11 +142,6 @@ class WriterNodeModel extends NoInternalsModel {
       final ArchiveEntry modelEntry = addRScript(archive, fskObj.model, "model.r");
       modelEntry.addDescription(new FskMetaDataObject(ResourceType.modelScript).metaDataObject);
 
-      // Adds parameter script
-      final ArchiveEntry paramEntry = addRScript(archive, fskObj.param, "param.r");
-      paramEntry
-          .addDescription(new FskMetaDataObject(ResourceType.parametersScript).metaDataObject);
-
       // Adds visualization script
       final ArchiveEntry vizEntry = addRScript(archive, fskObj.viz, "visualization.r");
       vizEntry

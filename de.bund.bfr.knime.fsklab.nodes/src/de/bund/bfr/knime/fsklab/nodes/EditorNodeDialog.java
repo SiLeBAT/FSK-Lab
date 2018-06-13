@@ -179,18 +179,15 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
      * model).
      */
     if (Objects.equals(editorSettings.originalModelScript, inObj.model)
-        && Objects.equals(editorSettings.originalParametersScript, inObj.param)
         && Objects.equals(editorSettings.originalVisualizationScript, inObj.viz)) {
       // Updates settings
       this.settings = editorSettings;
     } else {
       // Discard settings and replace them with input model
       this.settings.originalModelScript = inObj.model;
-      this.settings.originalParametersScript = inObj.param;
       this.settings.originalVisualizationScript = inObj.viz;
 
       this.settings.modifiedModelScript = inObj.model;
-      this.settings.modifiedParametersScript = inObj.param;
       this.settings.modifiedVisualizationScript = inObj.viz;
 
       this.settings.generalInformation = inObj.generalInformation;
@@ -3488,7 +3485,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           scope.getHazard().add(hazard);
         }
       });
-      
+
       MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
       populationButton.setToolTipText("Click me to add a Population group");

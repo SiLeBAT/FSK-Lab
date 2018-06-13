@@ -101,9 +101,6 @@ public class FskPortObject implements PortObject {
   /** Model script. */
   public String model;
 
-  /** Parameters script. */
-  public String param;
-
   /** Visualization script. */
   public String viz;
 
@@ -135,12 +132,11 @@ public class FskPortObject implements PortObject {
   public DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
   public ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
 
-  public FskPortObject(final String model, final String param, final String viz,
+  public FskPortObject(final String model, final String viz,
       final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
       final Set<File> libs, final String workingDirectory, final String plot) throws IOException {
     this.model = model;
-    this.param = param;
     this.viz = viz;
 
     this.generalInformation = generalInformation;
@@ -202,7 +198,6 @@ public class FskPortObject implements PortObject {
   public static final class Serializer extends PortObjectSerializer<FskPortObject> {
 
     private static final String MODEL = "model.R";
-    private static final String PARAM = "param.R";
     private static final String VIZ = "viz.R";
     private static final String META_DATA = "metaData";
 
@@ -226,12 +221,6 @@ public class FskPortObject implements PortObject {
       // model entry (file with model script)
       out.putNextEntry(new ZipEntry(MODEL));
       IOUtils.write(portObject.model, out, "UTF-8");
-      out.closeEntry();
-
-      // param entry (file with param script)
-      out.putNextEntry(new ZipEntry(PARAM));
-      IOUtils.write(portObject.param, out, "UTF-8");
-
       out.closeEntry();
 
       // viz entry (file with visualization script)
@@ -307,7 +296,6 @@ public class FskPortObject implements PortObject {
         ExecutionMonitor exec) throws IOException, CanceledExecutionException {
 
       String modelScript = "";
-      String parametersScript = "";
       String visualizationScript = "";
 
       GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
@@ -331,8 +319,6 @@ public class FskPortObject implements PortObject {
 
         if (entryName.equals(MODEL)) {
           modelScript = IOUtils.toString(in, "UTF-8");
-        } else if (entryName.equals(PARAM)) {
-          parametersScript = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(VIZ)) {
           visualizationScript = IOUtils.toString(in, "UTF-8");
         }
@@ -409,8 +395,8 @@ public class FskPortObject implements PortObject {
       in.close();
 
       final FskPortObject portObj =
-          new FskPortObject(modelScript, parametersScript, visualizationScript, generalInformation,
-              scope, dataBackground, modelMath, workspacePath, libs, workingDirectory, plot);
+          new FskPortObject(modelScript, visualizationScript, generalInformation, scope,
+              dataBackground, modelMath, workspacePath, libs, workingDirectory, plot);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);
@@ -469,8 +455,8 @@ public class FskPortObject implements PortObject {
 
     JPanel simulationsPanel = new SimulationsPanel();
 
-    return new JComponent[] {modelScriptPanel, vizScriptPanel, metaDataPane,
-        librariesPanel, simulationsPanel};
+    return new JComponent[] {modelScriptPanel, vizScriptPanel, metaDataPane, librariesPanel,
+        simulationsPanel};
   }
 
   private class SimulationsPanel extends FPanel {

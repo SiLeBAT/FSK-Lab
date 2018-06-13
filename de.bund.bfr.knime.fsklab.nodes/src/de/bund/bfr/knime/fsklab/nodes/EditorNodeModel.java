@@ -38,7 +38,6 @@ import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
-import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 
@@ -94,11 +93,9 @@ public class EditorNodeModel extends NoInternalsModel {
       // if input model has not changed (the original script stored in
       // settings match the input model)
       if (Objects.equals(settings.originalModelScript, inObj.model)
-          && Objects.equals(settings.originalParametersScript, inObj.param)
           && Objects.equals(settings.originalVisualizationScript, inObj.viz)) {
         outObj = inObj;
         outObj.model = settings.modifiedModelScript;
-        outObj.param = settings.modifiedParametersScript;
         outObj.viz = settings.modifiedVisualizationScript;
 
         outObj.generalInformation = settings.generalInformation;
@@ -107,11 +104,9 @@ public class EditorNodeModel extends NoInternalsModel {
         outObj.modelMath = settings.modelMath;
       } else {
         settings.originalModelScript = inObj.model;
-        settings.originalParametersScript = inObj.param;
         settings.originalVisualizationScript = inObj.viz;
 
         settings.modifiedModelScript = inObj.model;
-        settings.modifiedParametersScript = inObj.param;
         settings.modifiedVisualizationScript = inObj.viz;
 
         settings.generalInformation = inObj.generalInformation;
@@ -129,19 +124,14 @@ public class EditorNodeModel extends NoInternalsModel {
       // the plot is an empty string.
       String plotPath = "";
 
-      outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedParametersScript,
-          settings.modifiedVisualizationScript, settings.generalInformation, settings.scope,
-          settings.dataBackground, settings.modelMath, null, new HashSet<>(), "", plotPath);
-
-      // Create default simulation out of the parameters script
-      FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(outObj.param);
-      outObj.simulations.add(defaultSimulation);
+      outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedVisualizationScript,
+          settings.generalInformation, settings.scope, settings.dataBackground, settings.modelMath,
+          null, new HashSet<>(), "", plotPath);
     }
 
     // Adds and installs libraries
     final List<String> libraries = new ArrayList<>();
     libraries.addAll(new RScript(outObj.model).getLibraries());
-    libraries.addAll(new RScript(outObj.param).getLibraries());
     libraries.addAll(new RScript(outObj.viz).getLibraries());
     if (!libraries.isEmpty()) {
       try {

@@ -43,7 +43,8 @@ import metadata.ParameterClassification;
 class JSSimulatorNodeModel
     extends AbstractWizardNodeModel<JSSimulatorViewRepresentation, JSSimulatorViewValue>
     implements PortObjectHolder {
-  private static final NodeLogger LOGGER = NodeLogger.getLogger("JavaScript FSK Simulation Configurator");
+  private static final NodeLogger LOGGER =
+      NodeLogger.getLogger("JavaScript FSK Simulation Configurator");
   private FskPortObject port;
 
   // Input and output port types
@@ -96,9 +97,9 @@ class JSSimulatorNodeModel
 
       if (val.simulations == null && port != null && port.simulations != null) {
         // Convert from FskSimulation(s) to JSSimulation(s)
-        val.simulations = port.simulations.stream()
-            .map(it -> toJSSimulation(it, port.modelMath.getParameter()))
-            .collect(Collectors.toList());
+        val.simulations =
+            port.simulations.stream().map(it -> toJSSimulation(it, port.modelMath.getParameter()))
+                .collect(Collectors.toList());
       }
     }
 
@@ -134,12 +135,12 @@ class JSSimulatorNodeModel
       throws IOException {
 
     FskPortObject inObj = (FskPortObject) inObjects[0];
-    
+
     String workingDirectory = inObj.getWorkingDirectory();
-    FskPortObject outObj =  new FskPortObject(inObj.model, inObj.param, inObj.viz, inObj.generalInformation, inObj.scope,
-        inObj.dataBackground, inObj.modelMath, null, new HashSet<>(), workingDirectory,
+    FskPortObject outObj = new FskPortObject(inObj.model, inObj.viz, inObj.generalInformation,
+        inObj.scope, inObj.dataBackground, inObj.modelMath, null, new HashSet<>(), workingDirectory,
         inObj.getPlot());
-        
+
     synchronized (getLock()) {
 
       JSSimulatorViewValue val = getViewValue();
@@ -148,9 +149,9 @@ class JSSimulatorNodeModel
       if (val.simulations == null) {
 
         // Convert FskSimulation(s) to JSSimulation(s)
-        val.simulations = inObj.simulations.stream()
-            .map(it -> toJSSimulation(it, inObj.modelMath.getParameter()))
-            .collect(Collectors.toList());
+        val.simulations =
+            inObj.simulations.stream().map(it -> toJSSimulation(it, inObj.modelMath.getParameter()))
+                .collect(Collectors.toList());
 
         port = inObj;
       }
@@ -172,9 +173,10 @@ class JSSimulatorNodeModel
         }
         outObj.simulations.add(fskSimulation);
       }
-      
+
       outObj.selectedSimulationIndex = val.selectedSimulationIndex;
-      LOGGER.info(" saving '"+val.selectedSimulationIndex+"' as the selected simulation index!");
+      LOGGER
+          .info(" saving '" + val.selectedSimulationIndex + "' as the selected simulation index!");
     }
 
     exec.setProgress(1);
@@ -212,11 +214,14 @@ class JSSimulatorNodeModel
 
   public void setHideInWizard(boolean hide) {}
 
-  private static JSSimulation toJSSimulation(FskSimulation fskSim, EList<metadata.Parameter> eList) {
+  private static JSSimulation toJSSimulation(FskSimulation fskSim,
+      EList<metadata.Parameter> eList) {
     JSSimulation jsSim = new JSSimulation();
     jsSim.name = fskSim.getName();
-    jsSim.values = eList.stream().filter(p -> p.getParameterClassification() == ParameterClassification.INPUT)
-        .map(p -> fskSim.getParameters().get(p.getParameterID().trim())).collect(Collectors.toList());
+    jsSim.values =
+        eList.stream().filter(p -> p.getParameterClassification() == ParameterClassification.INPUT)
+            .map(p -> fskSim.getParameters().get(p.getParameterID().trim()))
+            .collect(Collectors.toList());
 
     return jsSim;
   }
