@@ -540,6 +540,7 @@ public class FskPortObject implements PortObject {
 
         FTextField field = new FTextField();
         field.setText(entry.getValue());
+        field.setEditable(false);
         valueLabels.add(field);
       }
 
