@@ -64,6 +64,7 @@ import de.bund.bfr.fskml.sedml.SourceScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
@@ -178,8 +179,10 @@ class WriterNodeModel extends NoInternalsModel {
       final URI libUri = NodeUtils.getLibURI();
 
       // Adds R libraries
-      for (final File libFile : fskObj.libs) {
-        archive.addEntry(libFile, libFile.getName(), libUri);
+      for (String pkg : fskObj.packages) {
+        Path path = LibRegistry.instance().getPath(pkg);
+        File file = path.toFile();
+        archive.addEntry(file, file.getName(), libUri);
       }
 
       // If the model has an associated working directory with resources these resources

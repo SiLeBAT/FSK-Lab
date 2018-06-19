@@ -23,12 +23,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,12 +49,9 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
-import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;
@@ -210,41 +205,19 @@ class CreatorNodeModel extends NoInternalsModel {
     // the plot is an empty string.
     String plotPath = "";
 
+    // Retrieve used libraries in scripts. A set is used to avoid duplication.
+    Set<String> librariesSet = new HashSet<>();
+    librariesSet.addAll(modelRScript.getLibraries());
+    if (vizRScript != null) {
+      librariesSet.addAll(vizRScript.getLibraries());
+    }
+    List<String> librariesList = new ArrayList<>(librariesSet);
+    
     final FskPortObject portObj = new FskPortObject(modelScript, vizScript, generalInformation,
-        scope, dataBackground, modelMath, null, new HashSet<>(), workingDirectory, plotPath);
+        scope, dataBackground, modelMath, null, librariesList, workingDirectory, plotPath);
+    
     if (modelMath != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
-    }
-
-    // libraries
-    List<String> libraries = new ArrayList<>();
-    libraries.addAll(modelRScript.getLibraries());
-    if (vizRScript != null) {
-      libraries.addAll(vizRScript.getLibraries());
-    }
-
-    if (!libraries.isEmpty()) {
-      try {
-
-        // Install missing libraries
-        LibRegistry libRegistry = LibRegistry.instance();
-
-        List<String> missingLibs = new LinkedList<>();
-        for (String lib : libraries) {
-          if (!libRegistry.isInstalled(lib)) {
-            missingLibs.add(lib);
-          }
-        }
-
-        if (!missingLibs.isEmpty()) {
-          libRegistry.installLibs(missingLibs);
-        }
-
-        Set<Path> libPaths = libRegistry.getPaths(libraries);
-        libPaths.forEach(p -> portObj.libs.add(p.toFile()));
-      } catch (RException | REXPMismatchException e) {
-        LOGGER.error(e.getMessage());
-      }
     }
 
     return new PortObject[] {portObj};

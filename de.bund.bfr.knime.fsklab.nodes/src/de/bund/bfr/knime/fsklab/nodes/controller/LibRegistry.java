@@ -155,6 +155,15 @@ public class LibRegistry {
     List<Path> paths = rWrapper.checkVersions(deps, repoPath);
     return new HashSet<>(paths);
   }
+  
+  /**
+   * @return Path of a single R package.
+   * @throws RException 
+   * @throws REXPMismatchException 
+   */
+  public Path getPath(String lib) throws REXPMismatchException, RException {
+    return rWrapper.checkVersions(Arrays.asList(lib), repoPath).get(0);
+  }
 
   public Path getInstallationPath() {
     return installPath;

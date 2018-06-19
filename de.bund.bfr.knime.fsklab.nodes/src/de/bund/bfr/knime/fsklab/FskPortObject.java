@@ -20,7 +20,6 @@ package de.bund.bfr.knime.fsklab;
 
 import java.awt.BorderLayout;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -30,12 +29,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -63,11 +58,8 @@ import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
-import org.rosuda.REngine.REXPMismatchException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
@@ -116,8 +108,8 @@ public class FskPortObject implements PortObject {
    */
   public Path workspace;
 
-  /** List of library files. Files of the libraries used by the model. */
-  public final Set<File> libs;
+  /** List of R packages. */
+  public final List<String> packages;
 
   private static int numOfInstances = 0;
 
@@ -135,7 +127,7 @@ public class FskPortObject implements PortObject {
   public FskPortObject(final String model, final String viz,
       final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
-      final Set<File> libs, final String workingDirectory, final String plot) throws IOException {
+      final List<String> packages, final String workingDirectory, final String plot) throws IOException {
     this.model = model;
     this.viz = viz;
 
@@ -145,7 +137,7 @@ public class FskPortObject implements PortObject {
     this.modelMath = modelMath;
 
     this.workspace = workspace;
-    this.libs = libs;
+    this.packages = packages;
 
     this.workingDirectory = workingDirectory;
 
@@ -155,9 +147,9 @@ public class FskPortObject implements PortObject {
     numOfInstances += 1;
   }
 
-  public FskPortObject(final String workingDirectory, final Set<File> libs) throws IOException {
+  public FskPortObject(final String workingDirectory, final List<String> packages) throws IOException {
     this.workingDirectory = workingDirectory;
-    this.libs = libs;
+    this.packages = packages;
   }
 
   @Override
@@ -241,11 +233,9 @@ public class FskPortObject implements PortObject {
       }
 
       // libraries
-      if (!portObject.libs.isEmpty()) {
-        out.putNextEntry(new ZipEntry("library.list"));
-        List<String> libNames = portObject.libs.stream().map(f -> f.getName().split("\\_")[0])
-            .collect(Collectors.toList());
-        IOUtils.writeLines(libNames, "\n", out, StandardCharsets.UTF_8);
+      if (!portObject.packages.isEmpty()) {
+        out.putNextEntry(new ZipEntry("library.list"));        
+        IOUtils.writeLines(portObject.packages, "\n", out, StandardCharsets.UTF_8);
         out.closeEntry();
       }
 
@@ -304,7 +294,7 @@ public class FskPortObject implements PortObject {
       ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
 
       Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
-      Set<File> libs = new HashSet<>();
+      List<String> packages = new ArrayList<>();
 
       String workingDirectory = ""; // Empty string if not set
 
@@ -347,25 +337,7 @@ public class FskPortObject implements PortObject {
         } else if (entryName.equals(WORKSPACE)) {
           Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
         } else if (entryName.equals("library.list")) {
-          List<String> libNames = IOUtils.readLines(in, "UTF-8");
-
-          try {
-            LibRegistry libRegistry = LibRegistry.instance();
-            // Install missing libraries
-            List<String> missingLibs = new LinkedList<>();
-            for (String lib : libNames) {
-              if (!libRegistry.isInstalled(lib)) {
-                missingLibs.add(lib);
-              }
-            }
-            if (!missingLibs.isEmpty()) {
-              libRegistry.installLibs(missingLibs);
-            }
-            // Adds to libs the Paths of the libraries converted to Files
-            libRegistry.getPaths(libNames).forEach(p -> libs.add(p.toFile()));
-          } catch (RException | REXPMismatchException error) {
-            throw new IOException(error.getMessage());
-          }
+          packages = IOUtils.readLines(in, "UTF-8");
         } else if (entryName.equals(WORKING_DIRECTORY)) {
           workingDirectory = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(PLOT)) {
@@ -396,7 +368,7 @@ public class FskPortObject implements PortObject {
 
       final FskPortObject portObj =
           new FskPortObject(modelScript, visualizationScript, generalInformation, scope,
-              dataBackground, modelMath, workspacePath, libs, workingDirectory, plot);
+              dataBackground, modelMath, workspacePath, packages, workingDirectory, plot);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);
@@ -451,7 +423,7 @@ public class FskPortObject implements PortObject {
     final JScrollPane metaDataPane = new JScrollPane(tree);
     metaDataPane.setName("Meta data");
 
-    final JPanel librariesPanel = UIUtils.createLibrariesPanel(libs);
+    final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
 
     JPanel simulationsPanel = new SimulationsPanel();
 

@@ -25,8 +25,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.jlibsedml.Change;
 import org.jlibsedml.ChangeAttribute;
 import org.jlibsedml.Libsedml;
@@ -35,14 +33,12 @@ import org.jlibsedml.SedML;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
-import org.rosuda.REngine.REXPMismatchException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.FskMetaDataObject;
@@ -53,8 +49,6 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
@@ -66,8 +60,6 @@ import metadata.ModelMath;
 import metadata.Scope;
 
 class ReaderNodeModel extends NoInternalsModel {
-
-  private static final NodeLogger LOGGER = NodeLogger.getLogger(ReaderNodeModel.class);
 
   private static final PortType[] IN_TYPES = {};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
@@ -193,32 +185,15 @@ class ReaderNodeModel extends NoInternalsModel {
     }
 
     // Retrieve missing libraries from CRAN
-    List<String> libraries = new ArrayList<>();
+    HashSet<String> packagesSet = new HashSet<>();
     if (!modelScript.isEmpty()) {
-      libraries.addAll(new RScript(modelScript).getLibraries());
+      packagesSet.addAll(new RScript(modelScript).getLibraries());
     }
     if (!visualizationScript.isEmpty()) {
-      libraries.addAll(new RScript(visualizationScript).getLibraries());
+      packagesSet.addAll(new RScript(visualizationScript).getLibraries());
     }
+    List<String> packagesList = new ArrayList<>(packagesSet);
 
-    Set<File> libFiles = new HashSet<>();
-
-    if (!libraries.isEmpty()) {
-      try {
-        // Install missing libraries
-        LibRegistry libReg = LibRegistry.instance();
-        List<String> missingLibs =
-            libraries.stream().filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
-
-        if (!missingLibs.isEmpty()) {
-          libReg.installLibs(missingLibs);
-        }
-
-        libReg.getPaths(libraries).forEach(l -> libFiles.add(l.toFile()));
-      } catch (RException | REXPMismatchException e) {
-        LOGGER.error(e.getMessage());
-      }
-    }
 
     Path workspacePath = workspace == null ? null : workspace.toPath();
 
@@ -227,7 +202,7 @@ class ReaderNodeModel extends NoInternalsModel {
     String plotPath = "";
 
     final FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript,
-        generalInformation, scope, dataBackground, modelMath, workspacePath, libFiles,
+        generalInformation, scope, dataBackground, modelMath, workspacePath, packagesList,
         workingDirectory.toString(), plotPath);
     fskObj.simulations.addAll(simulations);
 

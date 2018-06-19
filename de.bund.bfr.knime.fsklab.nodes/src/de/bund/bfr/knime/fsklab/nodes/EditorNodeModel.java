@@ -18,32 +18,24 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 
 public class EditorNodeModel extends NoInternalsModel {
-
-  private static final NodeLogger LOGGER = NodeLogger.getLogger(EditorNodeModel.class);
 
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE_OPTIONAL};
@@ -126,29 +118,19 @@ public class EditorNodeModel extends NoInternalsModel {
 
       outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedVisualizationScript,
           settings.generalInformation, settings.scope, settings.dataBackground, settings.modelMath,
-          null, new HashSet<>(), "", plotPath);
+          null, new ArrayList<>(), "", plotPath);
     }
 
     // Adds and installs libraries
+    final Set<String> librariesSet = new HashSet<>();
+    librariesSet.addAll(new RScript(outObj.model).getLibraries());
+    librariesSet.addAll(new RScript(outObj.viz).getLibraries());
+    outObj.packages.addAll(new ArrayList<>(librariesSet));
+    
+    // Retrieve used packages in scripts
     final List<String> libraries = new ArrayList<>();
     libraries.addAll(new RScript(outObj.model).getLibraries());
     libraries.addAll(new RScript(outObj.viz).getLibraries());
-    if (!libraries.isEmpty()) {
-      try {
-        // Install missing libraries
-        final LibRegistry libReg = LibRegistry.instance();
-        List<String> missingLibs =
-            libraries.stream().filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
-        if (!missingLibs.isEmpty()) {
-          libReg.installLibs(missingLibs);
-
-          Set<Path> libPaths = libReg.getPaths(missingLibs);
-          libPaths.forEach(l -> outObj.libs.add(l.toFile()));
-        }
-      } catch (RException | REXPMismatchException e) {
-        LOGGER.error(e.getMessage());
-      }
-    }
 
     return new PortObject[] {outObj};
   }

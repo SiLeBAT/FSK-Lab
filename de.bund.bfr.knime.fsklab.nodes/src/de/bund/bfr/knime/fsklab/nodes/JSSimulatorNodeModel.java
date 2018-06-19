@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.EList;
@@ -138,7 +137,7 @@ class JSSimulatorNodeModel
 
     String workingDirectory = inObj.getWorkingDirectory();
     FskPortObject outObj = new FskPortObject(inObj.model, inObj.viz, inObj.generalInformation,
-        inObj.scope, inObj.dataBackground, inObj.modelMath, null, new HashSet<>(), workingDirectory,
+        inObj.scope, inObj.dataBackground, inObj.modelMath, null, inObj.packages, workingDirectory,
         inObj.getPlot());
 
     synchronized (getLock()) {

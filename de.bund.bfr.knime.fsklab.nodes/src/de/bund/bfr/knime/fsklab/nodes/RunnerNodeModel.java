@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.image.png.PNGImageContent;
@@ -41,6 +42,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
+import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
@@ -152,14 +154,31 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     {
       String workingDirectoryString = fskObj.getWorkingDirectory();
       if (!workingDirectoryString.isEmpty()) {
-        Path workingDirectory = FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
-        controller.setWorkingDirectory(workingDirectory);  
+        Path workingDirectory =
+            FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
+        controller.setWorkingDirectory(workingDirectory);
       }
     }
 
     // START RUNNING MODEL
     exec.setMessage("Setting up output capturing");
     executor.setupOutputCapturing(exec);
+
+    // Install needed libraries
+    if (!fskObj.packages.isEmpty()) {
+      try {
+        // Install missing libraries
+        LibRegistry libReg = LibRegistry.instance();
+        List<String> missingLibs = fskObj.packages.stream().filter(lib -> !libReg.isInstalled(lib))
+            .collect(Collectors.toList());
+
+        if (!missingLibs.isEmpty()) {
+          libReg.installLibs(missingLibs);
+        }
+      } catch (RException | REXPMismatchException e) {
+        LOGGER.error(e.getMessage());
+      }
+    }
 
     exec.setMessage("Add paths to libraries");
     controller.addPackagePath(LibRegistry.instance().getInstallationPath());

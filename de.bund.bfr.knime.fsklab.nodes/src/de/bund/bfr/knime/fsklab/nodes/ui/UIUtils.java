@@ -58,12 +58,12 @@ public class UIUtils {
   private UIUtils() {}
 
   /** Creates a panel with the names of a number of libraries. */
-  public static JPanel createLibrariesPanel(final Collection<File> libs) {
+  public static JPanel createLibrariesPanel(final Collection<String> libs) {
 
     final JPanel panel = new JPanel(new BorderLayout());
     panel.setName("Libraries list");
 
-    final String[] libNames = libs.stream().map(File::getName).toArray(String[]::new);
+    final String[] libNames = libs.toArray(new String[libs.size()]);
     final JList<String> list = new JList<>(libNames);
     list.setLayoutOrientation(JList.VERTICAL);
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

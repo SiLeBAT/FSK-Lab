@@ -21,7 +21,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
@@ -119,7 +119,7 @@ final class JoinerNodeModel extends
     FskPortObject inObj1 = (FskPortObject) inObjects[0];
     FskPortObject inObj2 = (FskPortObject) inObjects[1];
     CombinedFskPortObject outObj = new CombinedFskPortObject(
-        FileUtil.createTempDir("combined").getAbsolutePath(), new HashSet<>(), inObj1, inObj2);
+        FileUtil.createTempDir("combined").getAbsolutePath(), new ArrayList<>(), inObj1, inObj2);
     ImagePortObject imagePort = null;
 
     // Clone input object

@@ -239,8 +239,11 @@ public class FskPortObject implements PortObject {
     JPanel paramScriptPanel = new ScriptPanel("Param script", param, false);
     JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false);
 
+    // To support change to createLibrariesPanel.
+    List<String> fileNames = libs.stream().map(File::getName).collect(Collectors.toList());
+    
     return new JComponent[] {modelScriptPanel, paramScriptPanel, vizScriptPanel,
-        createMetaDataPanel(template), UIUtils.createLibrariesPanel(libs)};
+        createMetaDataPanel(template), UIUtils.createLibrariesPanel(fileNames)};
   }
 
   /**

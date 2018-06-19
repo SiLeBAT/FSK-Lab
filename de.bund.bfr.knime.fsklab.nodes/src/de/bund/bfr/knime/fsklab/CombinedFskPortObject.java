@@ -19,7 +19,6 @@
 package de.bund.bfr.knime.fsklab;
 
 import java.awt.BorderLayout;
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -28,12 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -53,10 +48,7 @@ import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
-import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
@@ -101,10 +93,10 @@ public class CombinedFskPortObject extends FskPortObject {
   public CombinedFskPortObject(final String model, final String param, final String viz,
       final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
-      final Set<File> libs, final String workingDirectory, final String plot,
+      final List<String> packages, final String workingDirectory, final String plot,
       final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
       throws IOException {
-    super(model, viz, generalInformation, scope, dataBackground, modelMath, workspace, libs,
+    super(model, viz, generalInformation, scope, dataBackground, modelMath, workspace, packages,
         workingDirectory, plot);
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
@@ -112,10 +104,10 @@ public class CombinedFskPortObject extends FskPortObject {
     numOfInstances += 1;
   }
 
-  public CombinedFskPortObject(final String workingDirectory, final Set<File> libs,
+  public CombinedFskPortObject(final String workingDirectory, final List<String> packages,
       final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
       throws IOException {
-    super(workingDirectory, libs);
+    super(workingDirectory, packages);
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     objectNum = numOfInstances;
@@ -221,11 +213,9 @@ public class CombinedFskPortObject extends FskPortObject {
       }
 
       // libraries
-      if (!portObject.firstFskPortObject.libs.isEmpty()) {
+      if (!portObject.firstFskPortObject.packages.isEmpty()) {
         out.putNextEntry(new ZipEntry("library1.list"));
-        List<String> libNames = portObject.firstFskPortObject.libs.stream()
-            .map(f -> f.getName().split("\\_")[0]).collect(Collectors.toList());
-        IOUtils.writeLines(libNames, "\n", out, StandardCharsets.UTF_8);
+        IOUtils.writeLines(portObject.firstFskPortObject.packages, "\n", out, StandardCharsets.UTF_8);
         out.closeEntry();
       }
 
@@ -299,11 +289,9 @@ public class CombinedFskPortObject extends FskPortObject {
       }
 
       // libraries
-      if (!portObject.secondFskPortObject.libs.isEmpty()) {
+      if (!portObject.secondFskPortObject.packages.isEmpty()) {
         out.putNextEntry(new ZipEntry("library2.list"));
-        List<String> libNames = portObject.secondFskPortObject.libs.stream()
-            .map(f -> f.getName().split("\\_")[0]).collect(Collectors.toList());
-        IOUtils.writeLines(libNames, "\n", out, StandardCharsets.UTF_8);
+        IOUtils.writeLines(portObject.secondFskPortObject.packages, "\n", out, StandardCharsets.UTF_8);
         out.closeEntry();
       }
 
@@ -347,7 +335,7 @@ public class CombinedFskPortObject extends FskPortObject {
       ModelMath modelMath1 = MetadataFactory.eINSTANCE.createModelMath();
 
       Path workspacePath1 = FileUtil.createTempFile("workspace", ".r").toPath();
-      Set<File> libs1 = new HashSet<>();
+      List<String> libs1 = new ArrayList<>();
       String workingDirectory1 = ""; // Empty string if not set
 
       List<FskSimulation> simulations1 = new ArrayList<>();
@@ -362,7 +350,7 @@ public class CombinedFskPortObject extends FskPortObject {
       ModelMath modelMath2 = MetadataFactory.eINSTANCE.createModelMath();
 
       Path workspacePath2 = FileUtil.createTempFile("workspace", ".r").toPath();
-      Set<File> libs2 = new HashSet<>();
+      List<String> libs2 = new ArrayList<>();
       String workingDirectory2 = ""; // Empty string if not set
 
       List<FskSimulation> simulations2 = new ArrayList<>();
@@ -410,25 +398,7 @@ public class CombinedFskPortObject extends FskPortObject {
         } else if (entryName.equals(WORKSPACE1)) {
           Files.copy(in, workspacePath1, StandardCopyOption.REPLACE_EXISTING);
         } else if (entryName.equals("library1.list")) {
-          List<String> libNames = IOUtils.readLines(in, "UTF-8");
-
-          try {
-            LibRegistry libRegistry = LibRegistry.instance();
-            // Install missing libraries
-            List<String> missingLibs = new LinkedList<>();
-            for (String lib : libNames) {
-              if (!libRegistry.isInstalled(lib)) {
-                missingLibs.add(lib);
-              }
-            }
-            if (!missingLibs.isEmpty()) {
-              libRegistry.installLibs(missingLibs);
-            }
-            // Adds to libs the Paths of the libraries converted to Files
-            libRegistry.getPaths(libNames).forEach(p -> libs1.add(p.toFile()));
-          } catch (RException | REXPMismatchException error) {
-            throw new IOException(error.getMessage());
-          }
+          libs1 = IOUtils.readLines(in, "UTF-8");
         }
         // Load working directory
         else if (entryName.equals(WORKING_DIRECTORY1)) {
@@ -484,25 +454,7 @@ public class CombinedFskPortObject extends FskPortObject {
         } else if (entryName.equals(WORKSPACE2)) {
           Files.copy(in, workspacePath2, StandardCopyOption.REPLACE_EXISTING);
         } else if (entryName.equals("library2.list")) {
-          List<String> libNames = IOUtils.readLines(in, "UTF-8");
-
-          try {
-            LibRegistry libRegistry = LibRegistry.instance();
-            // Install missing libraries
-            List<String> missingLibs = new LinkedList<>();
-            for (String lib : libNames) {
-              if (!libRegistry.isInstalled(lib)) {
-                missingLibs.add(lib);
-              }
-            }
-            if (!missingLibs.isEmpty()) {
-              libRegistry.installLibs(missingLibs);
-            }
-            // Adds to libs the Paths of the libraries converted to Files
-            libRegistry.getPaths(libNames).forEach(p -> libs2.add(p.toFile()));
-          } catch (RException | REXPMismatchException error) {
-            throw new IOException(error.getMessage());
-          }
+          libs2 = IOUtils.readLines(in, "UTF-8");
         }
 
         // Load working directory
@@ -547,7 +499,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
       final CombinedFskPortObject portObj =
           new CombinedFskPortObject(FileUtil.createTempDir("combined").getAbsolutePath(),
-              new HashSet<>(), fportObj, sportObj);
+              new ArrayList<>(), fportObj, sportObj);
       if (!joinerRelation.isEmpty()) {
         portObj.setJoinerRelation(joinerRelation);
       }
@@ -568,7 +520,7 @@ public class CombinedFskPortObject extends FskPortObject {
             firstFskPortObject.dataBackground, firstFskPortObject.modelMath));
     metaDataPane1.setName("Meta1 data");
 
-    final JPanel librariesPanel1 = UIUtils.createLibrariesPanel(firstFskPortObject.libs);
+    final JPanel librariesPanel1 = UIUtils.createLibrariesPanel(firstFskPortObject.packages);
 
     JPanel simulationsPanel1 = new SimulationsPanel(firstFskPortObject, 1);
 
@@ -582,7 +534,7 @@ public class CombinedFskPortObject extends FskPortObject {
             secondFskPortObject.dataBackground, secondFskPortObject.modelMath));
     metaDataPane2.setName("Meta2 data");
 
-    final JPanel librariesPanel2 = UIUtils.createLibrariesPanel(secondFskPortObject.libs);
+    final JPanel librariesPanel2 = UIUtils.createLibrariesPanel(secondFskPortObject.packages);
 
     JPanel simulationsPanel2 = new SimulationsPanel(secondFskPortObject, 2);
 
