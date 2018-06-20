@@ -282,7 +282,6 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         final String minValue = fullParam.getParameterValueMin();
         final String maxValue = fullParam.getParameterValueMax();
         final String value = param.getParameterValue();
-        System.out.println(fullParam.getParameterID()+" "+value+" "+fullParam.getParameterDataType()+" "+minValue+" "+maxValue);
         if (fullParam.getParameterDataType() == ParameterType.INTEGER) {
          
           int min = minValue !=null ? minValue.isEmpty() ? Integer.MIN_VALUE : Integer.parseInt(minValue):Integer.MIN_VALUE ;

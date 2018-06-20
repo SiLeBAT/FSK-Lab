@@ -639,270 +639,7 @@ function createEMFForm(){
 		  ]
 		}
 		},{}],16:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "name": {
-		      "type": "string"
-		    },
-		    "source": {
-		      "type": "string"
-		    },
-		    "identifier": {
-		      "type": "string"
-		    },
-		    "creationDate": {
-		      "type": "string",
-		      "format": "date-time"
-		    },
-		    "rights": {
-		      "type": "string"
-		    },
-		    "available": {
-		      "type": "boolean"
-		    },
-		    "format": {
-		      "type": "string"
-		    },
-		    "language": {
-		      "type": "string"
-		    },
-		    "software": {
-		      "type": "string"
-		    },
-		    "languageWrittenIn": {
-		      "type": "string"
-		    },
-		    "status": {
-		      "type": "string"
-		    },
-		    "objective": {
-		      "type": "string"
-		    },
-		    "description": {
-		      "type": "string"
-		    },
-		    "modelCategory": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "modelClass": {
-		            "type": "string"
-		          },
-		          "modelClassComment": {
-		            "type": "string"
-		          },
-		          "basicProcess": {
-		            "type": "string"
-		          },
-		          "modelSubClass": {
-		            "type": "array",
-		            "items": {
-		              "type": "object",
-		              "properties": {
-		                "value": {
-		                  "type": "string"
-		                }
-		              },
-		              "additionalProperties": false
-		            }
-		          }
-		        },
-		        "additionalProperties": false,
-		        "required": [
-		          "modelClass"
-		        ]
-		      }
-		    },
-		    "modificationdate": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "value": {
-		            "type": "string",
-		            "format": "date-time"
-		          }
-		        },
-		        "additionalProperties": false
-		      }
-		    },
-		    "author": {
-		      "type": "object",
-		      "properties": {
-		        "title": {
-		          "type": "string"
-		        },
-		        "familyName": {
-		          "type": "string"
-		        },
-		        "givenName": {
-		          "type": "string"
-		        },
-		        "email": {
-		          "type": "string"
-		        },
-		        "telephone": {
-		          "type": "string"
-		        },
-		        "streetAddress": {
-		          "type": "string"
-		        },
-		        "country": {
-		          "type": "string"
-		        },
-		        "city": {
-		          "type": "string"
-		        },
-		        "zipCode": {
-		          "type": "string"
-		        },
-		        "region": {
-		          "type": "string"
-		        },
-		        "timeZone": {
-		          "type": "string"
-		        },
-		        "gender": {
-		          "type": "string"
-		        },
-		        "note": {
-		          "type": "string"
-		        },
-		        "organization": {
-		          "type": "string"
-		        }
-		      },
-		      "additionalProperties": false,
-		      "required": [
-		        "email"
-		      ]
-		    },
-		    "reference": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "isReferenceDescription": {
-		            "type": "boolean"
-		          },
-		          "publicationType": {
-		            "type": "string",
-		            "enum": [
-		              "ABST",
-		              "ADVS",
-		              "AGGR",
-		              "ANCIENT",
-		              "ART",
-		              "BILL",
-		              "BLOG",
-		              "BOOK",
-		              "CASE",
-		              "CHAP",
-		              "CHART",
-		              "CLSWK",
-		              "COMP",
-		              "CONF",
-		              "CPAPER",
-		              "CTLG",
-		              "DATA",
-		              "DBASE",
-		              "DICT",
-		              "EBOOK",
-		              "ECHAP",
-		              "EDBOOK",
-		              "EJOUR",
-		              "ELECT",
-		              "ENCYC",
-		              "EQUA",
-		              "FIGURE",
-		              "GEN",
-		              "GOVDOC",
-		              "GRANT",
-		              "HEAR",
-		              "ICOMM",
-		              "INPR",
-		              "JOUR",
-		              "JFULL",
-		              "LEGAL",
-		              "MANSCPT",
-		              "MAP",
-		              "MGZN",
-		              "MPCT",
-		              "MULTI",
-		              "MUSIC",
-		              "NEWS",
-		              "PAMP",
-		              "PAT",
-		              "PCOMM",
-		              "RPRT",
-		              "SER",
-		              "SLIDE",
-		              "SOUND",
-		              "STAND",
-		              "STAT",
-		              "THES",
-		              "UNPB",
-		              "VIDEO"
-		            ]
-		          },
-		          "publicationDate": {
-		            "type": "string",
-		            "format": "date-time"
-		          },
-		          "pmid": {
-		            "type": "string"
-		          },
-		          "doi": {
-		            "type": "string"
-		          },
-		          "authorList": {
-		            "type": "string"
-		          },
-		          "publicationTitle": {
-		            "type": "string"
-		          },
-		          "publicationAbstract": {
-		            "type": "string"
-		          },
-		          "publicationJournal": {
-		            "type": "string"
-		          },
-		          "publicationVolume": {
-		            "type": "integer"
-		          },
-		          "publicationIssue": {
-		            "type": "integer"
-		          },
-		          "publicationStatus": {
-		            "type": "string"
-		          },
-		          "publicationWebsite": {
-		            "type": "string"
-		          },
-		          "comment": {
-		            "type": "string"
-		          }
-		        },
-		        "additionalProperties": false,
-		        "required": [
-		          "isReferenceDescription",
-		          "publicationTitle"
-		        ]
-		      }
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "name",
-		    "identifier",
-		    "creationDate",
-		    "rights",
-		    "author",
-		    "reference"
-		  ]
-		}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"identifier":{"type":"string"},"software":{"type":"string"},"author":{"additionalProperties":false,"type":"object","properties":{"country":{"type":"string"},"zipCode":{"type":"string"},"note":{"type":"string"},"gender":{"type":"string"},"city":{"type":"string"},"givenName":{"type":"string"},"timeZone":{"type":"string"},"telephone":{"type":"string"},"title":{"type":"string"},"streetAddress":{"type":"string"},"familyName":{"type":"string"},"organization":{"type":"string"},"region":{"type":"string"},"email":{"type":"string"}},"required":["email"]},"creators":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"country":{"type":"string"},"zipCode":{"type":"string"},"note":{"type":"string"},"gender":{"type":"string"},"city":{"type":"string"},"givenName":{"type":"string"},"timeZone":{"type":"string"},"telephone":{"type":"string"},"title":{"type":"string"},"streetAddress":{"type":"string"},"familyName":{"type":"string"},"organization":{"type":"string"},"region":{"type":"string"},"email":{"type":"string"}},"required":["email"]}},"available":{"type":"boolean"},"format":{"type":"string"},"description":{"type":"string"},"language":{"type":"string"},"source":{"type":"string"},"creationDate":{"format":"date-time","type":"string"},"modificationdate":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"format":"date-time","type":"string"}}}},"objective":{"type":"string"},"reference":{"publicationType":{"type":"string","enum":["Abstract","Audiovisual material","Aggregated Database","Ancient Text","Art Work","Bill","Blog","Whole book","Case","Book chapter","Chart","Classical Work","Computer Program","Conference proceeding","Conference paper","Catalog","Data file","Online Database","Dictionary","Electronic Book","Electronic Book Section","Edited Book","Electronic Article","Web Page","Encyclopedia","Equation","Figure","Generic","Government Document","Grant","Hearing","Internet Communication","In Press","Journal","Journal (full)","Legal Rule or Regulation","Manuscript","Map","Magazine article","Motion picture","Online Multimedia","Music score","Newspaper","Pamphlet","Patent","Personal communication","Report","Serial publication","Slide","Sound recording","Standard","Statute","Thesis/Dissertation","Unpublished work","Video recording"]},"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]}},"rights":{"type":"string"},"name":{"type":"string"},"languageWrittenIn":{"type":"string"},"modelCategory":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelClassComment":{"type":"string"},"basicProcess":{"type":"string"},"modelClass":{"type":"string"},"modelSubClass":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelClass"]}},"status":{"type":"string"}},"required":["name","identifier","creationDate","rights","author","reference"]}
 		},{}],17:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
@@ -1212,7 +949,7 @@ function createEMFForm(){
 		  ]
 		}
 		},{}],26:[function(require,module,exports){
-		module.exports={"additionalProperties":false,"type":"object","properties":{"fittingProcedure":{"type":"string"},"modelEquation":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}},"exposure":{"additionalProperties":false,"type":"object","properties":{"typeOfExposure":{"type":"string"},"uncertaintyEstimation":{"type":"string"}},"required":["typeOfExposure"]},"parameter":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","VectorOfNumbers","VectorOfStrings","MatrixOfNumbers","MatrixOfStrings","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}},"qualityMeasures":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"event":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}}},"required":["parameter"]}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"fittingProcedure":{"type":"string"},"modelEquation":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}},"exposure":{"additionalProperties":false,"type":"object","properties":{"typeOfExposure":{"type":"string"},"uncertaintyEstimation":{"type":"string"}},"required":["typeOfExposure"]},"parameter":{"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","Vector Of Numbers","Vector Of Strings","Matrix Of Numbers","Matrix Of Strings","Object","Other"]},"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","VectorOfNumbers","VectorOfStrings","MatrixOfNumbers","MatrixOfStrings","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}},"qualityMeasures":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"event":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}}},"required":["parameter"]}
 		},{}],27:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
@@ -1267,196 +1004,7 @@ function createEMFForm(){
 		  "scope": "#/properties/value"
 		}
 		},{}],30:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "parameterID": {
-		      "type": "string"
-		    },
-		    "parameterClassification": {
-		      "type": "string",
-		      "enum": [
-		        "Constant",
-		        "Input",
-		        "Output"
-		      ]
-		    },
-		    "parameterName": {
-		      "type": "string"
-		    },
-		    "parameterDescription": {
-		      "type": "string"
-		    },
-		    "parameterType": {
-		      "type": "string"
-		    },
-		    "parameterUnit": {
-		      "type": "string"
-		    },
-		    "parameterUnitCategory": {
-		      "type": "string"
-		    },
-		    "parameterDataType": {
-		      "type": "string",
-		      "enum": [
-		        "Integer",
-		        "Double",
-		        "Number",
-		        "Date",
-		        "File",
-		        "Boolean",
-		        "VectorOfNumbers",
-		        "VectorOfStrings",
-		        "MatrixOfNumbers",
-		        "MatrixOfStrings",
-		        "Object",
-		        "Other"
-		      ]
-		    },
-		    "parameterSource": {
-		      "type": "string"
-		    },
-		    "parameterSubject": {
-		      "type": "string"
-		    },
-		    "parameterDistribution": {
-		      "type": "string"
-		    },
-		    "parameterValue": {
-		      "type": "string"
-		    },
-		    "parameterVariabilitySubject": {
-		      "type": "string"
-		    },
-		    "parameterValueMin": {
-		      "type": "string"
-		    },
-		    "parameterValueMax": {
-		      "type": "string"
-		    },
-		    "parameterError": {
-		      "type": "string"
-		    },
-		    "reference": {
-		      "type": "object",
-		      "properties": {
-		        "isReferenceDescription": {
-		          "type": "boolean"
-		        },
-		        "publicationType": {
-		          "type": "string",
-		          "enum": [
-		            "ABST",
-		            "ADVS",
-		            "AGGR",
-		            "ANCIENT",
-		            "ART",
-		            "BILL",
-		            "BLOG",
-		            "BOOK",
-		            "CASE",
-		            "CHAP",
-		            "CHART",
-		            "CLSWK",
-		            "COMP",
-		            "CONF",
-		            "CPAPER",
-		            "CTLG",
-		            "DATA",
-		            "DBASE",
-		            "DICT",
-		            "EBOOK",
-		            "ECHAP",
-		            "EDBOOK",
-		            "EJOUR",
-		            "ELECT",
-		            "ENCYC",
-		            "EQUA",
-		            "FIGURE",
-		            "GEN",
-		            "GOVDOC",
-		            "GRANT",
-		            "HEAR",
-		            "ICOMM",
-		            "INPR",
-		            "JOUR",
-		            "JFULL",
-		            "LEGAL",
-		            "MANSCPT",
-		            "MAP",
-		            "MGZN",
-		            "MPCT",
-		            "MULTI",
-		            "MUSIC",
-		            "NEWS",
-		            "PAMP",
-		            "PAT",
-		            "PCOMM",
-		            "RPRT",
-		            "SER",
-		            "SLIDE",
-		            "SOUND",
-		            "STAND",
-		            "STAT",
-		            "THES",
-		            "UNPB",
-		            "VIDEO"
-		          ]
-		        },
-		        "publicationDate": {
-		          "type": "string",
-		          "format": "date-time"
-		        },
-		        "pmid": {
-		          "type": "string"
-		        },
-		        "doi": {
-		          "type": "string"
-		        },
-		        "authorList": {
-		          "type": "string"
-		        },
-		        "publicationTitle": {
-		          "type": "string"
-		        },
-		        "publicationAbstract": {
-		          "type": "string"
-		        },
-		        "publicationJournal": {
-		          "type": "string"
-		        },
-		        "publicationVolume": {
-		          "type": "integer"
-		        },
-		        "publicationIssue": {
-		          "type": "integer"
-		        },
-		        "publicationStatus": {
-		          "type": "string"
-		        },
-		        "publicationWebsite": {
-		          "type": "string"
-		        },
-		        "comment": {
-		          "type": "string"
-		        }
-		      },
-		      "additionalProperties": false,
-		      "required": [
-		        "isReferenceDescription",
-		        "publicationTitle"
-		      ]
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "parameterID",
-		    "parameterClassification",
-		    "parameterName",
-		    "parameterUnit",
-		    "parameterDataType"
-		  ]
-		}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","Vector Of Numbers","Vector Of Strings","Matrix Of Numbers","Matrix Of Strings","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}
 		},{}],31:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
@@ -1729,116 +1277,7 @@ function createEMFForm(){
 		  ]
 		}
 		},{}],36:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "isReferenceDescription": {
-		      "type": "boolean"
-		    },
-		    "publicationType": {
-		      "type": "string",
-		      "enum": [
-		        "ABST",
-		        "ADVS",
-		        "AGGR",
-		        "ANCIENT",
-		        "ART",
-		        "BILL",
-		        "BLOG",
-		        "BOOK",
-		        "CASE",
-		        "CHAP",
-		        "CHART",
-		        "CLSWK",
-		        "COMP",
-		        "CONF",
-		        "CPAPER",
-		        "CTLG",
-		        "DATA",
-		        "DBASE",
-		        "DICT",
-		        "EBOOK",
-		        "ECHAP",
-		        "EDBOOK",
-		        "EJOUR",
-		        "ELECT",
-		        "ENCYC",
-		        "EQUA",
-		        "FIGURE",
-		        "GEN",
-		        "GOVDOC",
-		        "GRANT",
-		        "HEAR",
-		        "ICOMM",
-		        "INPR",
-		        "JOUR",
-		        "JFULL",
-		        "LEGAL",
-		        "MANSCPT",
-		        "MAP",
-		        "MGZN",
-		        "MPCT",
-		        "MULTI",
-		        "MUSIC",
-		        "NEWS",
-		        "PAMP",
-		        "PAT",
-		        "PCOMM",
-		        "RPRT",
-		        "SER",
-		        "SLIDE",
-		        "SOUND",
-		        "STAND",
-		        "STAT",
-		        "THES",
-		        "UNPB",
-		        "VIDEO"
-		      ]
-		    },
-		    "publicationDate": {
-		      "type": "string",
-		      "format": "date-time"
-		    },
-		    "pmid": {
-		      "type": "string"
-		    },
-		    "doi": {
-		      "type": "string"
-		    },
-		    "authorList": {
-		      "type": "string"
-		    },
-		    "publicationTitle": {
-		      "type": "string"
-		    },
-		    "publicationAbstract": {
-		      "type": "string"
-		    },
-		    "publicationJournal": {
-		      "type": "string"
-		    },
-		    "publicationVolume": {
-		      "type": "integer"
-		    },
-		    "publicationIssue": {
-		      "type": "integer"
-		    },
-		    "publicationStatus": {
-		      "type": "string"
-		    },
-		    "publicationWebsite": {
-		      "type": "string"
-		    },
-		    "comment": {
-		      "type": "string"
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "isReferenceDescription",
-		    "publicationTitle"
-		  ]
-		}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["Abstract","Audiovisual material","Aggregated Database","Ancient Text","Art Work","Bill","Blog","Whole book","Case","Book chapter","Chart","Classical Work","Computer Program","Conference proceeding","Conference paper","Catalog","Data file","Online Database","Dictionary","Electronic Book","Electronic Book Section","Edited Book","Electronic Article","Web Page","Encyclopedia","Equation","Figure","Generic","Government Document","Grant","Hearing","Internet Communication","In Press","Journal","Journal (full)","Legal Rule or Regulation","Manuscript","Map","Magazine article","Motion picture","Online Multimedia","Music score","Newspaper","Pamphlet","Patent","Personal communication","Report","Serial publication","Slide","Sound recording","Standard","Statute","Thesis/Dissertation","Unpublished work","Video recording"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]}
 		},{}],37:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
@@ -2482,8 +1921,8 @@ function createEMFForm(){
 		    
 		    
 		    
-		    var schema28 = require('./StringObjectModel.json');
-		    var uischema28 = require('./StringObjectView.json');
+		    window.schema28 = require('./StringObjectModel.json');
+		    windowuischema28 = require('./StringObjectView.json');
 		    window.Actions= jsonformscore.Actions;
 		    var Actions= jsonformscore.Actions,
 			  jsonformsReducer= jsonformscore.jsonformsReducer,
@@ -2757,7 +2196,7 @@ function createEMFForm(){
 				  }
 				);
 		store24.dispatch(Actions.init(window.generalInformation.creators!= null?window.generalInformation.creators:{}, schema23, uischema23));
-		window.toBeReplacedMap["Creators"] = store24;
+		//window.toBeReplacedMap["Creators"] = store24;
 		store25 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -2803,7 +2242,7 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store28.dispatch(Actions.init({}, schema28, uischema28));
+		store28.dispatch(Actions.init({}, window.schema28, window.uischema28));
 		// Uncomment this line (and respective import) to register our custom renderer
 		//store.dispatch(Actions.registerRenderer(ratingControlTester, RatingControl));
 
@@ -2848,6 +2287,7 @@ function createEMFForm(){
 					if(areaName.indexOf('No applicable field found') < 0){
 						$(value).remove();
 						$(parentxc).append( "<div id ='"+areaName+"' class='replaced' ></div>" );
+						console.log(areaName, window.toBeReplacedMap[areaName]);
 						ReactDOM.render(React.createFactory(Provider)({store: window.toBeReplacedMap[areaName]},
 								App()
 						), document.getElementById(areaName));
@@ -3044,6 +2484,63 @@ function createEMFForm(){
 		}catch(err){//console.log("modificationdate " + err);
 			
 		}
+		window.saveCreators = function () {
+			if(window.generalInformation.creators == undefined){
+				window.generalInformation.creators = [];
+				window.generalInformation.creators.push(store24.getState().jsonforms.core.data);
+				store1.dispatch(Actions.init(window.generalInformation, window.schema23, window.uischema23));
+			}else{
+				window.generalInformation.modificationdate.push(store24.getState().jsonforms.core.data);
+				store1.dispatch(Actions.init(window.generalInformation, window.schema23, window.uischema23));
+			}
+			//console.log("date ",window.generalInformation.modificationdate);
+				$(".table tbody tr td div div div input").removeAttr('class');
+			    $(".table tbody tr td div div div").removeAttr('class');
+			    $(".table tbody tr td div div").removeAttr('class');
+			    $(".table tbody tr td div").removeAttr('class');
+			    $(".table tbody tr td").removeAttr('class');
+			    $(".table tbody tr").removeAttr('class');
+			    $(".table tbody").removeAttr('class');
+			    $(".table thead tr th th").removeAttr('class');
+			    $(".table thead tr th").removeAttr('class');
+			    $(".table thead tr").removeAttr('class');
+				$(".table thead").removeAttr('class');
+
+			    
+			   $('.MuiTable-root-222').addClass('table'); 
+			   $('.MuiTable-root-222').parent().addClass('table-responsive');
+			   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
+			   $('.MuiTable-root-222').removeClass('MuiTable-root-222');
+			//$('#modificationdate').modal('toggle');
+		}
+
+		$(parent8).append(
+				"<div id='creators' class='modal fade' role='dialog'>\n" + 
+		        "  <div class='modal-dialog'>\n" + 
+		        "\n" + 
+		        "    <!-- Modal content-->\n" + 
+		        "    <div class='modal-content'>\n" + 
+		        "      <div class='modal-header'>\n" + 
+		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
+		        "        <h4 id='titlecreators' class='modal-title'>Modal Header</h4>\n" + 
+		        "      </div>\n" + 
+		        "      <div id='creatorsModelContent' class='modal-body'>\n" + 
+		        "      </div>\n" + 
+		        "      <div class='modal-footer'>\n" + 
+		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
+		        "   	 <button id='save' onclick='window.saveCreators()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "      </div>\n" + 
+		        "    </div>\n" + 
+		        "\n" + 
+		        "  </div>\n" + 
+		        "</div>");
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store24},
+				App()
+		), document.getElementById('creatorsModelContent'));
+		}catch(err){//console.log("modificationdate " + err);
+			
+		}
 
 
 		//popup country
@@ -3077,7 +2574,7 @@ function createEMFForm(){
 		}
 
 		$(parent9).append(
-				"<div id='Country' class='modal fade' role='dialog'>\n" + 
+				"<div id='country' class='modal fade' role='dialog'>\n" + 
 		        "  <div class='modal-dialog'>\n" + 
 		        "\n" + 
 		        "    <!-- Modal content-->\n" + 
@@ -3258,7 +2755,7 @@ function createEMFForm(){
 			
 		}
 		$(parent10).append(
-				"<div id='Parameter' class='modal fade' role='dialog'>\n" + 
+				"<div id='parameter' class='modal fade' role='dialog'>\n" + 
 		        "  <div class='modal-dialog'>\n" + 
 		        "\n" + 
 		        "    <!-- Modal content-->\n" + 
@@ -3314,7 +2811,7 @@ function createEMFForm(){
 			
 		}
 		$(parent10).append(
-				"<div id='Modelequation' class='modal fade' role='dialog'>\n" + 
+				"<div id='modelEquation' class='modal fade' role='dialog'>\n" + 
 		        "  <div class='modal-dialog'>\n" + 
 		        "\n" + 
 		        "    <!-- Modal content-->\n" + 
@@ -3340,6 +2837,64 @@ function createEMFForm(){
 		}catch(err){//console.log("modelequation " + err);
 			
 		}
+
+		window.saveQualityMeasures = function () {
+			if(window.modelMath.qualityMeasures == undefined){
+				window.modelMath.qualityMeasures = [];
+				window.modelMath.qualityMeasures.push(store28.getState().jsonforms.core.data);
+				store17.dispatch(Actions.init(window.modelMath, window.schema28, window.uischema28));
+			}else{
+				window.modelMath.qualityMeasures.push(store28.getState().jsonforms.core.data);
+				store17.dispatch(Actions.init(window.modelMath, window.schema28, window.uischema28));
+			}
+			    $(".table tbody tr td div div div input").removeAttr('class');
+			    $(".table tbody tr td div div div").removeAttr('class');
+			    $(".table tbody tr td div div").removeAttr('class');
+			    $(".table tbody tr td div").removeAttr('class');
+			    $(".table tbody tr td").removeAttr('class');
+			    $(".table tbody tr").removeAttr('class');
+			    $(".table tbody").removeAttr('class');
+			    $(".table thead tr th th").removeAttr('class');
+			    $(".table thead tr th").removeAttr('class');
+			    $(".table thead tr").removeAttr('class');
+				$(".table thead").removeAttr('class');
+
+			    
+			   $('.MuiTable-root-222').addClass('table'); 
+			   $('.MuiTable-root-222').parent().addClass('table-responsive');
+			   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
+			   $('.MuiTable-root-222').removeClass('MuiTable-root-222');
+			
+			
+		}
+		$(parent10).append(
+				"<div id='qualityMeasures' class='modal fade' role='dialog'>\n" + 
+		        "  <div class='modal-dialog'>\n" + 
+		        "\n" + 
+		        "    <!-- Modal content-->\n" + 
+		        "    <div class='modal-content'>\n" + 
+		        "      <div class='modal-header'>\n" + 
+		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
+		        "        <h4 id='titlequalityMeasures' class='modal-title'>Modal Header</h4>\n" + 
+		        "      </div>\n" + 
+		        "      <div id='qualityMeasuresModelContent' class='modal-body'>\n" + 
+		        "      </div>\n" + 
+		        "      <div class='modal-footer'>\n" + 
+		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
+		        "   	 <button id='save' onclick='window.saveQualityMeasures()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "      </div>\n" + 
+		        "    </div>\n" + 
+		        "\n" + 
+		        "  </div>\n" + 
+		        "</div>");
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store28},
+				App()
+		), document.getElementById('qualityMeasuresModelContent'));
+		}catch(err){//console.log("modelequation " + err);
+			
+		}
+
 		window.saveEvent = function () {
 			if(window.modelMath.event == undefined){
 				window.modelMath.event = [];
@@ -3369,7 +2924,7 @@ function createEMFForm(){
 			
 		}
 		$(parent10).append(
-				"<div id='Event' class='modal fade' role='dialog'>\n" + 
+				"<div id='event' class='modal fade' role='dialog'>\n" + 
 		        "  <div class='modal-dialog'>\n" + 
 		        "\n" + 
 		        "    <!-- Modal content-->\n" + 

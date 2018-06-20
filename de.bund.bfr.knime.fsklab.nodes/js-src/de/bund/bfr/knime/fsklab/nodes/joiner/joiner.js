@@ -428,11 +428,11 @@ joiner = function() {
 		 $.each(  $('html').find('style'), function( key, value ) {
         	
         	if($(value).attr('data-meta') == 'MuiInput'){
-        		value.remove();
+        		$(value).remove();
         	}else if($(value).attr('data-meta') == 'MuiInputLabel'){
-        		value.remove();
+        		$(value).remove();
         	}else if($(value).attr('data-meta') == 'MuiFormLabel'){
-        		value.remove();
+        		$(value).remove();
         	}
         	
     	});
@@ -612,7 +612,7 @@ joiner = function() {
     	    }
     	    var canvas = $('#paper');
     	    
-    	    $('#paper').css('height', ''+((canvasheight*25)+100));
+    	    $('#paper').height((canvasheight*25)+300);
     	    paper.setDimensions(canvas.width(), canvas.height());
     	    var paperWidth = $('#paper').width();
     	    var firstModelTojoin = new joint.shapes.devs.Atomic({
