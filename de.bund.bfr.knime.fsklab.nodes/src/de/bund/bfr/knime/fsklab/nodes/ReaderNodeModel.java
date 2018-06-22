@@ -163,9 +163,11 @@ class ReaderNodeModel extends NoInternalsModel {
         jsonEntry.extractFile(temp.toFile());
 
         // Loads metadata from temporary file
-        ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+        final ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+        
         JsonNode modelNode = mapper.readTree(temp.toFile());
         Object version = modelNode.get("version");
+        
         if (version != null) {
           generalInformation =
               mapper.treeToValue(modelNode.get("generalInformation"), GeneralInformation.class);
@@ -174,7 +176,6 @@ class ReaderNodeModel extends NoInternalsModel {
               mapper.treeToValue(modelNode.get("dataBackground"), DataBackground.class);
           modelMath = mapper.treeToValue(modelNode.get("modelMath"), ModelMath.class);
         } else {
-          mapper = FskPlugin.getDefault().OLD_OBJECT_MAPPER;
           modelNode = mapper.readTree(temp.toFile());
           GenericModel genericModel = mapper.readValue(temp.toFile(), GenericModel.class);
           generalInformation = RakipUtil.convert(genericModel.generalInformation);
@@ -182,7 +183,6 @@ class ReaderNodeModel extends NoInternalsModel {
           dataBackground = RakipUtil.convert(genericModel.dataBackground);
           modelMath = RakipUtil.convert(genericModel.modelMath);
         }
-
 
         Files.delete(temp); // Deletes temporary file
       }
