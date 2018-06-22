@@ -678,14 +678,14 @@ class CreatorNodeModel extends NoInternalsModel {
 
       try {
         StudySample studySample = retrieveStudySample(values);
-        dataBackground.getStudysample().add(studySample);
+        dataBackground.getStudySample().add(studySample);
       } catch (IllegalArgumentException exception) {
         // Ignore exception since the study sample is optional
       }
 
       try {
         DietaryAssessmentMethod method = retrieveDAM(values);
-        dataBackground.getDietaryassessmentmethod().add(method);
+        dataBackground.getDietaryAssessmentMethod().add(method);
       } catch (IllegalArgumentException exception) {
         // Ignore exception since the dietary assessment method is optional
       }

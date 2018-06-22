@@ -352,7 +352,7 @@ function createEMFForm(){
 		        "studyTitle"
 		      ]
 		    },
-		    "studysample": {
+		    "studySample": {
 		      "type": "array",
 		      "items": {
 		        "type": "object",
@@ -398,7 +398,7 @@ function createEMFForm(){
 		        ]
 		      }
 		    },
-		    "dietaryassessmentmethod": {
+		    "dietaryAssessmentMethod": {
 		      "type": "array",
 		      "items": {
 		        "type": "object",
@@ -508,13 +508,13 @@ function createEMFForm(){
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Studysample",
-		      "scope": "#/properties/studysample"
+		      "label": "Study Sample",
+		      "scope": "#/properties/studySample"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Dietaryassessmentmethod",
-		      "scope": "#/properties/dietaryassessmentmethod"
+		      "label": "Dietary Assessment Method",
+		      "scope": "#/properties/dietaryAssessmentMethod"
 		    },
 		    {
 		      "type": "Control",
@@ -639,270 +639,7 @@ function createEMFForm(){
 		  ]
 		}
 		},{}],16:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "name": {
-		      "type": "string"
-		    },
-		    "source": {
-		      "type": "string"
-		    },
-		    "identifier": {
-		      "type": "string"
-		    },
-		    "creationDate": {
-		      "type": "string",
-		      "format": "date-time"
-		    },
-		    "rights": {
-		      "type": "string"
-		    },
-		    "available": {
-		      "type": "boolean"
-		    },
-		    "format": {
-		      "type": "string"
-		    },
-		    "language": {
-		      "type": "string"
-		    },
-		    "software": {
-		      "type": "string"
-		    },
-		    "languageWrittenIn": {
-		      "type": "string"
-		    },
-		    "status": {
-		      "type": "string"
-		    },
-		    "objective": {
-		      "type": "string"
-		    },
-		    "description": {
-		      "type": "string"
-		    },
-		    "modelCategory": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "modelClass": {
-		            "type": "string"
-		          },
-		          "modelClassComment": {
-		            "type": "string"
-		          },
-		          "basicProcess": {
-		            "type": "string"
-		          },
-		          "modelSubClass": {
-		            "type": "array",
-		            "items": {
-		              "type": "object",
-		              "properties": {
-		                "value": {
-		                  "type": "string"
-		                }
-		              },
-		              "additionalProperties": false
-		            }
-		          }
-		        },
-		        "additionalProperties": false,
-		        "required": [
-		          "modelClass"
-		        ]
-		      }
-		    },
-		    "modificationdate": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "value": {
-		            "type": "string",
-		            "format": "date-time"
-		          }
-		        },
-		        "additionalProperties": false
-		      }
-		    },
-		    "author": {
-		      "type": "object",
-		      "properties": {
-		        "title": {
-		          "type": "string"
-		        },
-		        "familyName": {
-		          "type": "string"
-		        },
-		        "givenName": {
-		          "type": "string"
-		        },
-		        "email": {
-		          "type": "string"
-		        },
-		        "telephone": {
-		          "type": "string"
-		        },
-		        "streetAddress": {
-		          "type": "string"
-		        },
-		        "country": {
-		          "type": "string"
-		        },
-		        "city": {
-		          "type": "string"
-		        },
-		        "zipCode": {
-		          "type": "string"
-		        },
-		        "region": {
-		          "type": "string"
-		        },
-		        "timeZone": {
-		          "type": "string"
-		        },
-		        "gender": {
-		          "type": "string"
-		        },
-		        "note": {
-		          "type": "string"
-		        },
-		        "organization": {
-		          "type": "string"
-		        }
-		      },
-		      "additionalProperties": false,
-		      "required": [
-		        "email"
-		      ]
-		    },
-		    "reference": {
-		      "type": "array",
-		      "items": {
-		        "type": "object",
-		        "properties": {
-		          "isReferenceDescription": {
-		            "type": "boolean"
-		          },
-		          "publicationType": {
-		            "type": "string",
-		            "enum": [
-		              "ABST",
-		              "ADVS",
-		              "AGGR",
-		              "ANCIENT",
-		              "ART",
-		              "BILL",
-		              "BLOG",
-		              "BOOK",
-		              "CASE",
-		              "CHAP",
-		              "CHART",
-		              "CLSWK",
-		              "COMP",
-		              "CONF",
-		              "CPAPER",
-		              "CTLG",
-		              "DATA",
-		              "DBASE",
-		              "DICT",
-		              "EBOOK",
-		              "ECHAP",
-		              "EDBOOK",
-		              "EJOUR",
-		              "ELECT",
-		              "ENCYC",
-		              "EQUA",
-		              "FIGURE",
-		              "GEN",
-		              "GOVDOC",
-		              "GRANT",
-		              "HEAR",
-		              "ICOMM",
-		              "INPR",
-		              "JOUR",
-		              "JFULL",
-		              "LEGAL",
-		              "MANSCPT",
-		              "MAP",
-		              "MGZN",
-		              "MPCT",
-		              "MULTI",
-		              "MUSIC",
-		              "NEWS",
-		              "PAMP",
-		              "PAT",
-		              "PCOMM",
-		              "RPRT",
-		              "SER",
-		              "SLIDE",
-		              "SOUND",
-		              "STAND",
-		              "STAT",
-		              "THES",
-		              "UNPB",
-		              "VIDEO"
-		            ]
-		          },
-		          "publicationDate": {
-		            "type": "string",
-		            "format": "date-time"
-		          },
-		          "pmid": {
-		            "type": "string"
-		          },
-		          "doi": {
-		            "type": "string"
-		          },
-		          "authorList": {
-		            "type": "string"
-		          },
-		          "publicationTitle": {
-		            "type": "string"
-		          },
-		          "publicationAbstract": {
-		            "type": "string"
-		          },
-		          "publicationJournal": {
-		            "type": "string"
-		          },
-		          "publicationVolume": {
-		            "type": "integer"
-		          },
-		          "publicationIssue": {
-		            "type": "integer"
-		          },
-		          "publicationStatus": {
-		            "type": "string"
-		          },
-		          "publicationWebsite": {
-		            "type": "string"
-		          },
-		          "comment": {
-		            "type": "string"
-		          }
-		        },
-		        "additionalProperties": false,
-		        "required": [
-		          "isReferenceDescription",
-		          "publicationTitle"
-		        ]
-		      }
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "name",
-		    "identifier",
-		    "creationDate",
-		    "rights",
-		    "author",
-		    "reference"
-		  ]
-		}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"identifier":{"type":"string"},"software":{"type":"string"},"author":{"additionalProperties":false,"type":"object","properties":{"country":{"type":"string"},"zipCode":{"type":"string"},"note":{"type":"string"},"gender":{"type":"string"},"city":{"type":"string"},"givenName":{"type":"string"},"timeZone":{"type":"string"},"telephone":{"type":"string"},"title":{"type":"string"},"streetAddress":{"type":"string"},"familyName":{"type":"string"},"organization":{"type":"string"},"region":{"type":"string"},"email":{"type":"string"}},"required":["email"]},"creators":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"country":{"type":"string"},"zipCode":{"type":"string"},"note":{"type":"string"},"gender":{"type":"string"},"city":{"type":"string"},"givenName":{"type":"string"},"timeZone":{"type":"string"},"telephone":{"type":"string"},"title":{"type":"string"},"streetAddress":{"type":"string"},"familyName":{"type":"string"},"organization":{"type":"string"},"region":{"type":"string"},"email":{"type":"string"}},"required":["email"]}},"available":{"type":"boolean"},"format":{"type":"string"},"description":{"type":"string"},"language":{"type":"string"},"source":{"type":"string"},"creationDate":{"format":"date-time","type":"string"},"modificationdate":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"format":"date-time","type":"string"}}}},"objective":{"type":"string"},"reference":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["Abstract","Audiovisual material","Aggregated Database","Ancient Text","Art Work","Bill","Blog","Whole book","Case","Book chapter","Chart","Classical Work","Computer Program","Conference proceeding","Conference paper","Catalog","Data file","Online Database","Dictionary","Electronic Book","Electronic Book Section","Edited Book","Electronic Article","Web Page","Encyclopedia","Equation","Figure","Generic","Government Document","Grant","Hearing","Internet Communication","In Press","Journal","Journal (full)","Legal Rule or Regulation","Manuscript","Map","Magazine article","Motion picture","Online Multimedia","Music score","Newspaper","Pamphlet","Patent","Personal communication","Report","Serial publication","Slide","Sound recording","Standard","Statute","Thesis/Dissertation","Unpublished work","Video recording"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]}},"rights":{"type":"string"},"name":{"type":"string"},"languageWrittenIn":{"type":"string"},"modelCategory":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelClassComment":{"type":"string"},"basicProcess":{"type":"string"},"modelClass":{"type":"string"},"modelSubClass":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelClass"]}},"status":{"type":"string"}},"required":["name","identifier","creationDate","rights","author","reference"]}
 		},{}],17:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
@@ -1212,7 +949,7 @@ function createEMFForm(){
 		  ]
 		}
 		},{}],26:[function(require,module,exports){
-		module.exports={"additionalProperties":false,"type":"object","properties":{"fittingProcedure":{"type":"string"},"modelEquation":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}},"exposure":{"additionalProperties":false,"type":"object","properties":{"typeOfExposure":{"type":"string"},"uncertaintyEstimation":{"type":"string"}},"required":["typeOfExposure"]},"parameter":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","VectorOfNumbers","VectorOfStrings","MatrixOfNumbers","MatrixOfStrings","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}},"qualityMeasures":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"event":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}}},"required":["parameter"]}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"fittingProcedure":{"type":"string"},"modelEquation":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}},"exposure":{"additionalProperties":false,"type":"object","properties":{"typeOfExposure":{"type":"string"},"uncertaintyEstimation":{"type":"string"}},"required":["typeOfExposure"]},"parameter":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","Vector[number]","Vector[string]","Matrix[number,number]","Matrix[string,string]","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}},"qualityMeasures":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"event":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}}},"required":["parameter"]}
 		},{}],27:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
@@ -1267,196 +1004,7 @@ function createEMFForm(){
 		  "scope": "#/properties/value"
 		}
 		},{}],30:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "parameterID": {
-		      "type": "string"
-		    },
-		    "parameterClassification": {
-		      "type": "string",
-		      "enum": [
-		        "Constant",
-		        "Input",
-		        "Output"
-		      ]
-		    },
-		    "parameterName": {
-		      "type": "string"
-		    },
-		    "parameterDescription": {
-		      "type": "string"
-		    },
-		    "parameterType": {
-		      "type": "string"
-		    },
-		    "parameterUnit": {
-		      "type": "string"
-		    },
-		    "parameterUnitCategory": {
-		      "type": "string"
-		    },
-		    "parameterDataType": {
-		      "type": "string",
-		      "enum": [
-		        "Integer",
-		        "Double",
-		        "Number",
-		        "Date",
-		        "File",
-		        "Boolean",
-		        "VectorOfNumbers",
-		        "VectorOfStrings",
-		        "MatrixOfNumbers",
-		        "MatrixOfStrings",
-		        "Object",
-		        "Other"
-		      ]
-		    },
-		    "parameterSource": {
-		      "type": "string"
-		    },
-		    "parameterSubject": {
-		      "type": "string"
-		    },
-		    "parameterDistribution": {
-		      "type": "string"
-		    },
-		    "parameterValue": {
-		      "type": "string"
-		    },
-		    "parameterVariabilitySubject": {
-		      "type": "string"
-		    },
-		    "parameterValueMin": {
-		      "type": "string"
-		    },
-		    "parameterValueMax": {
-		      "type": "string"
-		    },
-		    "parameterError": {
-		      "type": "string"
-		    },
-		    "reference": {
-		      "type": "object",
-		      "properties": {
-		        "isReferenceDescription": {
-		          "type": "boolean"
-		        },
-		        "publicationType": {
-		          "type": "string",
-		          "enum": [
-		            "ABST",
-		            "ADVS",
-		            "AGGR",
-		            "ANCIENT",
-		            "ART",
-		            "BILL",
-		            "BLOG",
-		            "BOOK",
-		            "CASE",
-		            "CHAP",
-		            "CHART",
-		            "CLSWK",
-		            "COMP",
-		            "CONF",
-		            "CPAPER",
-		            "CTLG",
-		            "DATA",
-		            "DBASE",
-		            "DICT",
-		            "EBOOK",
-		            "ECHAP",
-		            "EDBOOK",
-		            "EJOUR",
-		            "ELECT",
-		            "ENCYC",
-		            "EQUA",
-		            "FIGURE",
-		            "GEN",
-		            "GOVDOC",
-		            "GRANT",
-		            "HEAR",
-		            "ICOMM",
-		            "INPR",
-		            "JOUR",
-		            "JFULL",
-		            "LEGAL",
-		            "MANSCPT",
-		            "MAP",
-		            "MGZN",
-		            "MPCT",
-		            "MULTI",
-		            "MUSIC",
-		            "NEWS",
-		            "PAMP",
-		            "PAT",
-		            "PCOMM",
-		            "RPRT",
-		            "SER",
-		            "SLIDE",
-		            "SOUND",
-		            "STAND",
-		            "STAT",
-		            "THES",
-		            "UNPB",
-		            "VIDEO"
-		          ]
-		        },
-		        "publicationDate": {
-		          "type": "string",
-		          "format": "date-time"
-		        },
-		        "pmid": {
-		          "type": "string"
-		        },
-		        "doi": {
-		          "type": "string"
-		        },
-		        "authorList": {
-		          "type": "string"
-		        },
-		        "publicationTitle": {
-		          "type": "string"
-		        },
-		        "publicationAbstract": {
-		          "type": "string"
-		        },
-		        "publicationJournal": {
-		          "type": "string"
-		        },
-		        "publicationVolume": {
-		          "type": "integer"
-		        },
-		        "publicationIssue": {
-		          "type": "integer"
-		        },
-		        "publicationStatus": {
-		          "type": "string"
-		        },
-		        "publicationWebsite": {
-		          "type": "string"
-		        },
-		        "comment": {
-		          "type": "string"
-		        }
-		      },
-		      "additionalProperties": false,
-		      "required": [
-		        "isReferenceDescription",
-		        "publicationTitle"
-		      ]
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "parameterID",
-		    "parameterClassification",
-		    "parameterName",
-		    "parameterUnit",
-		    "parameterDataType"
-		  ]
-		}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","Vector[number]","Vector[string]","Matrix[number,number]","Matrix[string,string]","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}
 		},{}],31:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
@@ -1729,116 +1277,7 @@ function createEMFForm(){
 		  ]
 		}
 		},{}],36:[function(require,module,exports){
-		module.exports={
-		  "type": "object",
-		  "properties": {
-		    "isReferenceDescription": {
-		      "type": "boolean"
-		    },
-		    "publicationType": {
-		      "type": "string",
-		      "enum": [
-		        "ABST",
-		        "ADVS",
-		        "AGGR",
-		        "ANCIENT",
-		        "ART",
-		        "BILL",
-		        "BLOG",
-		        "BOOK",
-		        "CASE",
-		        "CHAP",
-		        "CHART",
-		        "CLSWK",
-		        "COMP",
-		        "CONF",
-		        "CPAPER",
-		        "CTLG",
-		        "DATA",
-		        "DBASE",
-		        "DICT",
-		        "EBOOK",
-		        "ECHAP",
-		        "EDBOOK",
-		        "EJOUR",
-		        "ELECT",
-		        "ENCYC",
-		        "EQUA",
-		        "FIGURE",
-		        "GEN",
-		        "GOVDOC",
-		        "GRANT",
-		        "HEAR",
-		        "ICOMM",
-		        "INPR",
-		        "JOUR",
-		        "JFULL",
-		        "LEGAL",
-		        "MANSCPT",
-		        "MAP",
-		        "MGZN",
-		        "MPCT",
-		        "MULTI",
-		        "MUSIC",
-		        "NEWS",
-		        "PAMP",
-		        "PAT",
-		        "PCOMM",
-		        "RPRT",
-		        "SER",
-		        "SLIDE",
-		        "SOUND",
-		        "STAND",
-		        "STAT",
-		        "THES",
-		        "UNPB",
-		        "VIDEO"
-		      ]
-		    },
-		    "publicationDate": {
-		      "type": "string",
-		      "format": "date-time"
-		    },
-		    "pmid": {
-		      "type": "string"
-		    },
-		    "doi": {
-		      "type": "string"
-		    },
-		    "authorList": {
-		      "type": "string"
-		    },
-		    "publicationTitle": {
-		      "type": "string"
-		    },
-		    "publicationAbstract": {
-		      "type": "string"
-		    },
-		    "publicationJournal": {
-		      "type": "string"
-		    },
-		    "publicationVolume": {
-		      "type": "integer"
-		    },
-		    "publicationIssue": {
-		      "type": "integer"
-		    },
-		    "publicationStatus": {
-		      "type": "string"
-		    },
-		    "publicationWebsite": {
-		      "type": "string"
-		    },
-		    "comment": {
-		      "type": "string"
-		    }
-		  },
-		  "additionalProperties": false,
-		  "required": [
-		    "isReferenceDescription",
-		    "publicationTitle"
-		  ]
-		}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["Abstract","Audiovisual material","Aggregated Database","Ancient Text","Art Work","Bill","Blog","Whole book","Case","Book chapter","Chart","Classical Work","Computer Program","Conference proceeding","Conference paper","Catalog","Data file","Online Database","Dictionary","Electronic Book","Electronic Book Section","Edited Book","Electronic Article","Web Page","Encyclopedia","Equation","Figure","Generic","Government Document","Grant","Hearing","Internet Communication","In Press","Journal","Journal (full)","Legal Rule or Regulation","Manuscript","Map","Magazine article","Motion picture","Online Multimedia","Music score","Newspaper","Pamphlet","Patent","Personal communication","Report","Serial publication","Slide","Sound recording","Standard","Statute","Thesis/Dissertation","Unpublished work","Video recording"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]}
 		},{}],37:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
@@ -2456,8 +1895,11 @@ function createEMFForm(){
 		    var schema19 = require('./ModelEquationModel.json');
 		    var uischema19 = require('./ModelEquationView.json');
 		    var schema20 = require('./EventModel.json');
-		    var uischema20 = require('./EventView.json')
-
+		    var uischema20 = require('./EventView.json');
+		   
+		    
+		    var schema29 = require('./StudySampleModel.json');
+		    var uischema29 = require('./StudySampleView.json');
 		    //Model Math
 		    window.schema17 = require('./ModelMathModel.json');
 		    window.uischema17 = require('./ModelMathView.json');
@@ -2482,8 +1924,8 @@ function createEMFForm(){
 		    
 		    
 		    
-		    var schema28 = require('./StringObjectModel.json');
-		    var uischema28 = require('./StringObjectView.json');
+		    window.schema28 = require('./StringObjectModel.json');
+		    windowuischema28 = require('./StringObjectView.json');
 		    window.Actions= jsonformscore.Actions;
 		    var Actions= jsonformscore.Actions,
 			  jsonformsReducer= jsonformscore.jsonformsReducer,
@@ -2577,7 +2019,6 @@ function createEMFForm(){
 				  }
 				);
 		store8.dispatch(Actions.init(window.dataBackground.studySample, schema8, uischema8));
-
 		  store9 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -2587,8 +2028,7 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store9.dispatch(Actions.init( window.dataBackground.dietaryAssessmentMethod!=null?window.dataBackground.dietaryAssessmentMethod:{}, schema9, uischema9));
-		window.toBeReplacedMap["Dietaryassessmentmethod"] = store9;
+		store9.dispatch(Actions.init({}, schema9, uischema9));
 
 		  store10 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -2600,8 +2040,7 @@ function createEMFForm(){
 				  }
 				);
 
-		store10.dispatch(Actions.init( window.dataBackground.laboratory!=null?window.dataBackground.laboratory:{}, schema10, uischema10));
-		window.toBeReplacedMap["Laboratory"] = store10;
+		store10.dispatch(Actions.init( {}, schema10, uischema10));
 
 		  store11 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
@@ -2613,8 +2052,7 @@ function createEMFForm(){
 				  }
 				);
 		  
-		store11.dispatch(Actions.init( window.dataBackground.assay!=null?window.dataBackground.assay:{}, schema11, uischema11));
-		window.toBeReplacedMap["Assay"] = store11;
+		store11.dispatch(Actions.init({}, schema11, uischema11));
 		//popups
 
 
@@ -2713,6 +2151,17 @@ function createEMFForm(){
 				);
 		store20.dispatch(Actions.init({}, schema20, uischema20));
 
+		store29 = createStore(
+				  combineReducers({ jsonforms: jsonformsReducer() }),  
+				  {
+				    jsonforms: {
+				      renderers: materialRenderers,
+				      fields: materialFields,
+				    }
+				  }
+				);
+		store29.dispatch(Actions.init({}, schema29, uischema29));
+
 		store21 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -2756,8 +2205,8 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store24.dispatch(Actions.init(window.generalInformation.creators!= null?window.generalInformation.creators:{}, schema23, uischema23));
-		window.toBeReplacedMap["Creators"] = store24;
+		store24.dispatch(Actions.init({}, schema23, uischema23));
+		//window.toBeReplacedMap["Creators"] = store24;
 		store25 = createStore(
 				  combineReducers({ jsonforms: jsonformsReducer() }),  
 				  {
@@ -2803,7 +2252,7 @@ function createEMFForm(){
 				    }
 				  }
 				);
-		store28.dispatch(Actions.init({}, schema28, uischema28));
+		store28.dispatch(Actions.init({}, window.schema28, window.uischema28));
 		// Uncomment this line (and respective import) to register our custom renderer
 		//store.dispatch(Actions.registerRenderer(ratingControlTester, RatingControl));
 
@@ -2847,7 +2296,12 @@ function createEMFForm(){
 					}
 					if(areaName.indexOf('No applicable field found') < 0){
 						$(value).remove();
-						$(parentxc).append( "<div id ='"+areaName+"' class='replaced' ></div>" );
+						if(areaName !='Spatial Information' && areaName !='Exposure'){
+							$(parentxc).append( "<div id ='"+areaName+"' class='replaced' ></div>" );
+						}else{
+							$(parentxc).append( "<div id ='"+areaName+"' class='notReplace' ></div>" );
+						}
+						console.log(areaName, window.toBeReplacedMap[areaName]);
 						ReactDOM.render(React.createFactory(Provider)({store: window.toBeReplacedMap[areaName]},
 								App()
 						), document.getElementById(areaName));
@@ -2858,7 +2312,34 @@ function createEMFForm(){
 			
 		});
 
-
+		var tablePopups = [
+				{popId : "modelCategory",storeID : window.generalInformation,parent : document.getElementById('generalinformation')},
+				{popId : "modificationdate",storeID : window.generalInformation,parent : document.getElementById('generalinformation')},
+				{popId : "creators",storeID : window.generalInformation,parent : document.getElementById('generalinformation')},
+				{popId : "reference",storeID : window.generalInformation,parent : document.getElementById('generalinformation')},
+				
+				{popId : "product",storeID : window.scope,parent: document.getElementById('scope')},
+				{popId : "hazard",storeID : window.scope,parent: document.getElementById('scope')},
+				{popId : "populationGroup",storeID : window.scope,parent: document.getElementById('scope')},
+				{popId : "region",storeID : window.scope,parent: document.getElementById('scope')},
+				{popId : "country",storeID : window.scope,parent: document.getElementById('scope')},
+				
+				{popId : "studysample",storeID : window.dataBackground},
+				{popId : "dietaryassessmentmethod",storeID : window.dataBackground},
+				{popId : "laboratory",storeID : window.dataBackground},
+				{popId : "studysample",storeID : window.dataBackground},
+				
+				{popId : "parameter",storeID : window.modelMath,parent: document.getElementById('modelMath')},
+				{popId : "modelEquation",storeID : window.modelMath,parent: document.getElementById('modelMath')},
+				{popId : "methodologicalTreatmentOfLeftCensoredData",storeID : window.modelMath,parent: document.getElementById('modelMath')},
+				{popId : "levelOfContaminationAfterLeftCensoredDataTreatment",storeID : window.modelMath,parent: document.getElementById('modelMath')},
+				{popId : "scenario",storeID : window.modelMath,parent: document.getElementById('modelMath')},
+				{popId : "qualityMeasures",storeID : window.modelMath,parent: document.getElementById('modelMath')},
+				{popId : "event",storeID : window.modelMath,parent: document.getElementById('modelMath')}
+			]
+		$.each(tablePopups,function(index,value){
+			
+		});
 		//popup creatror
 		window.savereference = function () {
 			
@@ -3044,16 +2525,79 @@ function createEMFForm(){
 		}catch(err){//console.log("modificationdate " + err);
 			
 		}
+		window.saveCreators = function () {
+			console.log(store24.getState().jsonforms.core.data);
+			if(window.generalInformation.creators == undefined){
+				window.generalInformation.creators = [];
+				window.generalInformation.creators.push(store24.getState().jsonforms.core.data);
+				store1.dispatch(Actions.init(window.generalInformation, window.schema, window.uischema));
+			}else{
+				window.generalInformation.creators.push(store24.getState().jsonforms.core.data);
+				store1.dispatch(Actions.init(window.generalInformation, window.schema, window.uischema));
+			}
+			//console.log("date ",window.generalInformation.modificationdate);
+				$(".table tbody tr td div div div input").removeAttr('class');
+			    $(".table tbody tr td div div div").removeAttr('class');
+			    $(".table tbody tr td div div").removeAttr('class');
+			    $(".table tbody tr td div").removeAttr('class');
+			    $(".table tbody tr td").removeAttr('class');
+			    $(".table tbody tr").removeAttr('class');
+			    $(".table tbody").removeAttr('class');
+			    $(".table thead tr th th").removeAttr('class');
+			    $(".table thead tr th").removeAttr('class');
+			    $(".table thead tr").removeAttr('class');
+				$(".table thead").removeAttr('class');
+
+			    
+			   $('.MuiTable-root-222').addClass('table'); 
+			   $('.MuiTable-root-222').parent().addClass('table-responsive');
+			   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
+			   $('.MuiTable-root-222').removeClass('MuiTable-root-222');
+			//$('#modificationdate').modal('toggle');
+		}
+
+		$(parent8).append(
+				"<div id='creators' class='modal fade' role='dialog'>\n" + 
+		        "  <div class='modal-dialog'>\n" + 
+		        "\n" + 
+		        "    <!-- Modal content-->\n" + 
+		        "    <div class='modal-content'>\n" + 
+		        "      <div class='modal-header'>\n" + 
+		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
+		        "        <h4 id='titlecreators' class='modal-title'>Modal Header</h4>\n" + 
+		        "      </div>\n" + 
+		        "      <div id='creatorsModelContent' class='modal-body'>\n" + 
+		        "      </div>\n" + 
+		        "      <div class='modal-footer'>\n" + 
+		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
+		        "   	 <button id='save' onclick='window.saveCreators()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "      </div>\n" + 
+		        "    </div>\n" + 
+		        "\n" + 
+		        "  </div>\n" + 
+		        "</div>");
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store24},
+				App()
+		), document.getElementById('creatorsModelContent'));
+		}catch(err){//console.log("modificationdate " + err);
+			
+		}
 
 
 		//popup country
-		window.saveCountry = function () {
-			if(window.scope.country == undefined){
-				window.scope.country = [];
-				window.scope.country.push(store15.getState().jsonforms.core.data);
+		/*window.saveCountry = function () {
+			if(window.scope.spatialInformation == undefined){
+				window.scope.spatialInformation = {}
+			}
+			if(window.scope.spatialInformation.country == undefined){
+				window.scope.spatialInformation.country = [];
+				console.log(store15.getState().jsonforms.core.data);
+				window.scope.spatialInformation.country.push(store15.getState().jsonforms.core.data);
 				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}else{
-				window.scope.country.push(store15.getState().jsonforms.core.data);
+				console.log(store15.getState().jsonforms.core.data);
+				window.scope.spatialInformation.country.push(store15.getState().jsonforms.core.data);
 				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}
 				$(".table tbody tr td div div div input").removeAttr('class');
@@ -3077,14 +2621,14 @@ function createEMFForm(){
 		}
 
 		$(parent9).append(
-				"<div id='Country' class='modal fade' role='dialog'>\n" + 
+				"<div id='country' class='modal fade' role='dialog'>\n" + 
 		        "  <div class='modal-dialog'>\n" + 
 		        "\n" + 
 		        "    <!-- Modal content-->\n" + 
 		        "    <div class='modal-content'>\n" + 
 		        "      <div class='modal-header'>\n" + 
 		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
-		        "        <h4 id='titleCountry' class='modal-title'>Modal Header</h4>\n" + 
+		        "        <h4 id='titlecountry' class='modal-title'>Modal Header</h4>\n" + 
 		        "      </div>\n" + 
 		        "      <div id='countryModelContent' class='modal-body'>\n" + 
 		        "      </div>\n" + 
@@ -3103,6 +2647,67 @@ function createEMFForm(){
 		}catch(err){//console.log("country " + err);
 			
 		}
+
+		//popup region
+		window.saveRegion = function () {
+			if(window.scope.spatialInformation == undefined){
+				window.scope.spatialInformation = {}
+			}
+			if(window.scope.spatialInformation.region == undefined){
+				window.scope.spatialInformation.region = [];
+				window.scope.spatialInformation.region.push(store16.getState().jsonforms.core.data);
+				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
+			}else{
+				window.scope.spatialInformation.region.push(store16.getState().jsonforms.core.data);
+				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
+			}
+				$(".table tbody tr td div div div input").removeAttr('class');
+			    $(".table tbody tr td div div div").removeAttr('class');
+			    $(".table tbody tr td div div").removeAttr('class');
+			    $(".table tbody tr td div").removeAttr('class');
+			    $(".table tbody tr td").removeAttr('class');
+			    $(".table tbody tr").removeAttr('class');
+			    $(".table tbody").removeAttr('class');
+			    $(".table thead tr th th").removeAttr('class');
+			    $(".table thead tr th").removeAttr('class');
+			    $(".table thead tr").removeAttr('class');
+				$(".table thead").removeAttr('class');
+
+			    
+			   $('.MuiTable-root-222').addClass('table'); 
+			   $('.MuiTable-root-222').parent().addClass('table-responsive');
+			   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
+			   $('.MuiTable-root-222').removeClass('MuiTable-root-222');
+			
+		}
+
+		$(parent9).append(
+				"<div id='region' class='modal fade' role='dialog'>\n" + 
+		      "  <div class='modal-dialog'>\n" + 
+		      "\n" + 
+		      "    <!-- Modal content-->\n" + 
+		      "    <div class='modal-content'>\n" + 
+		      "      <div class='modal-header'>\n" + 
+		      "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
+		      "        <h4 id='titleregion' class='modal-title'>Modal Header</h4>\n" + 
+		      "      </div>\n" + 
+		      "      <div id='regionModelContent' class='modal-body'>\n" + 
+		      "      </div>\n" + 
+		      "      <div class='modal-footer'>\n" + 
+		      "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
+		      "   	 <button id='save' onclick='window.saveRegion()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		      "      </div>\n" + 
+		      "    </div>\n" + 
+		      "\n" + 
+		      "  </div>\n" + 
+		      "</div>");
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store16},
+				App()
+		), document.getElementById('regionModelContent'));
+		}catch(err){//console.log("country " + err);
+			
+		}*/
 
 		//popup product
 		window.saveProduct = function () {
@@ -3258,7 +2863,7 @@ function createEMFForm(){
 			
 		}
 		$(parent10).append(
-				"<div id='Parameter' class='modal fade' role='dialog'>\n" + 
+				"<div id='parameter' class='modal fade' role='dialog'>\n" + 
 		        "  <div class='modal-dialog'>\n" + 
 		        "\n" + 
 		        "    <!-- Modal content-->\n" + 
@@ -3314,7 +2919,7 @@ function createEMFForm(){
 			
 		}
 		$(parent10).append(
-				"<div id='Modelequation' class='modal fade' role='dialog'>\n" + 
+				"<div id='modelEquation' class='modal fade' role='dialog'>\n" + 
 		        "  <div class='modal-dialog'>\n" + 
 		        "\n" + 
 		        "    <!-- Modal content-->\n" + 
@@ -3340,14 +2945,19 @@ function createEMFForm(){
 		}catch(err){//console.log("modelequation " + err);
 			
 		}
-		window.saveEvent = function () {
-			if(window.modelMath.event == undefined){
-				window.modelMath.event = [];
-				window.modelMath.event.push(store20.getState().jsonforms.core.data);
-				store17.dispatch(Actions.init(window.modelMath, window.schema17, window.uischema17));
+
+
+		//dataBackground
+		parent11 = document.getElementById('databackground');
+
+		window.saveStudySample = function () {
+			if(window.dataBackground.studySample == undefined){
+				window.dataBackground.studySample = [];
+				window.dataBackground.studySample.push(store29.getState().jsonforms.core.data);
+				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
 			}else{
-				window.modelMath.event.push(store20.getState().jsonforms.core.data);
-				store17.dispatch(Actions.init(window.modelMath, window.schema17, window.uischema17));
+				window.dataBackground.studySample.push(store29.getState().jsonforms.core.data);
+				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
 			    $(".table tbody tr td div div div").removeAttr('class');
@@ -3368,35 +2978,212 @@ function createEMFForm(){
 			   $('.MuiTable-root-222').removeClass('MuiTable-root-222');
 			
 		}
-		$(parent10).append(
-				"<div id='Event' class='modal fade' role='dialog'>\n" + 
+		$(parent11).append(
+				"<div id='studySample' class='modal fade' role='dialog'>\n" + 
 		        "  <div class='modal-dialog'>\n" + 
 		        "\n" + 
 		        "    <!-- Modal content-->\n" + 
 		        "    <div class='modal-content'>\n" + 
 		        "      <div class='modal-header'>\n" + 
 		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
-		        "        <h4 id='titleEvent' class='modal-title'>Modal Header</h4>\n" + 
+		        "        <h4 id='titlestudySample' class='modal-title'>Modal Header</h4>\n" + 
 		        "      </div>\n" + 
-		        "      <div id='eventModelContent' class='modal-body'>\n" + 
+		        "      <div id='studySampleModelContent' class='modal-body'>\n" + 
 		        "      </div>\n" + 
 		        "      <div class='modal-footer'>\n" + 
 		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
-		        "   	 <button id='save' onclick='window.saveEvent()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "   	 <button id='save' onclick='window.saveStudySample()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
 		        "      </div>\n" + 
 		        "    </div>\n" + 
 		        "\n" + 
 		        "  </div>\n" + 
 		        "</div>");
 		try{
-			ReactDOM.render(React.createFactory(Provider)({store: store20},
+			ReactDOM.render(React.createFactory(Provider)({store: store29},
 				App()
-		), document.getElementById('eventModelContent'));
+		), document.getElementById('studySampleModelContent'));
 		}catch(err){//console.log("event " + err);
-
+			console.log("studySampleModelContent " + err);
 		}
 
 
+
+
+
+		window.saveDietaryAssessmentMethod = function () {
+			if(window.dataBackground.dietaryAssessmentMethod == undefined){
+				window.dataBackground.dietaryAssessmentMethod = [];
+				window.dataBackground.dietaryAssessmentMethod.push(store9.getState().jsonforms.core.data);
+				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
+			}else{
+				window.dataBackground.dietaryAssessmentMethod.push(store9.getState().jsonforms.core.data);
+				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
+			}
+			    $(".table tbody tr td div div div input").removeAttr('class');
+			    $(".table tbody tr td div div div").removeAttr('class');
+			    $(".table tbody tr td div div").removeAttr('class');
+			    $(".table tbody tr td div").removeAttr('class');
+			    $(".table tbody tr td").removeAttr('class');
+			    $(".table tbody tr").removeAttr('class');
+			    $(".table tbody").removeAttr('class');
+			    $(".table thead tr th th").removeAttr('class');
+			    $(".table thead tr th").removeAttr('class');
+			    $(".table thead tr").removeAttr('class');
+				$(".table thead").removeAttr('class');
+
+			    
+			   $('.MuiTable-root-222').addClass('table'); 
+			   $('.MuiTable-root-222').parent().addClass('table-responsive');
+			   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
+			   $('.MuiTable-root-222').removeClass('MuiTable-root-222');
+			
+		}
+		$(parent11).append(
+				"<div id='dietaryAssessmentMethod' class='modal fade' role='dialog'>\n" + 
+		        "  <div class='modal-dialog'>\n" + 
+		        "\n" + 
+		        "    <!-- Modal content-->\n" + 
+		        "    <div class='modal-content'>\n" + 
+		        "      <div class='modal-header'>\n" + 
+		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
+		        "        <h4 id='titledietaryAssessmentMethod' class='modal-title'>Modal Header</h4>\n" + 
+		        "      </div>\n" + 
+		        "      <div id='dietaryAssessmentMethodModelContent' class='modal-body'>\n" + 
+		        "      </div>\n" + 
+		        "      <div class='modal-footer'>\n" + 
+		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
+		        "   	 <button id='save' onclick='window.saveDietaryAssessmentMethod()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "      </div>\n" + 
+		        "    </div>\n" + 
+		        "\n" + 
+		        "  </div>\n" + 
+		        "</div>");
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store9},
+				App()
+		), document.getElementById('dietaryAssessmentMethodModelContent'));
+		}catch(err){//
+			console.log("dietaryAssessmentMethodModelContent " + err);
+		}
+
+
+
+
+
+		window.saveLaboratory = function () {
+			if(window.dataBackground.laboratory == undefined){
+				window.dataBackground.laboratory = [];
+				window.dataBackground.laboratory.push(store10.getState().jsonforms.core.data);
+				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
+			}else{
+				window.dataBackground.laboratory.push(store10.getState().jsonforms.core.data);
+				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
+			}
+			    $(".table tbody tr td div div div input").removeAttr('class');
+			    $(".table tbody tr td div div div").removeAttr('class');
+			    $(".table tbody tr td div div").removeAttr('class');
+			    $(".table tbody tr td div").removeAttr('class');
+			    $(".table tbody tr td").removeAttr('class');
+			    $(".table tbody tr").removeAttr('class');
+			    $(".table tbody").removeAttr('class');
+			    $(".table thead tr th th").removeAttr('class');
+			    $(".table thead tr th").removeAttr('class');
+			    $(".table thead tr").removeAttr('class');
+				$(".table thead").removeAttr('class');
+
+			    
+			   $('.MuiTable-root-222').addClass('table'); 
+			   $('.MuiTable-root-222').parent().addClass('table-responsive');
+			   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
+			   $('.MuiTable-root-222').removeClass('MuiTable-root-222');
+			
+		}
+		$(parent11).append(
+				"<div id='laboratory' class='modal fade' role='dialog'>\n" + 
+		        "  <div class='modal-dialog'>\n" + 
+		        "\n" + 
+		        "    <!-- Modal content-->\n" + 
+		        "    <div class='modal-content'>\n" + 
+		        "      <div class='modal-header'>\n" + 
+		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
+		        "        <h4 id='titlelaboratory' class='modal-title'>Modal Header</h4>\n" + 
+		        "      </div>\n" + 
+		        "      <div id='laboratoryModelContent' class='modal-body'>\n" + 
+		        "      </div>\n" + 
+		        "      <div class='modal-footer'>\n" + 
+		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
+		        "   	 <button id='save' onclick='window.saveLaboratory()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "      </div>\n" + 
+		        "    </div>\n" + 
+		        "\n" + 
+		        "  </div>\n" + 
+		        "</div>");
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store10},
+				App()
+		), document.getElementById('laboratoryModelContent'));
+		}catch(err){
+			console.log("laboratoryModelContent" + err);
+		}
+
+
+
+
+		window.saveAssay = function () {
+			if(window.dataBackground.assay == undefined){
+				window.dataBackground.assay = [];
+				window.dataBackground.assay.push(store11.getState().jsonforms.core.data);
+				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
+			}else{
+				window.dataBackground.assay.push(store11.getState().jsonforms.core.data);
+				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
+			}
+			    $(".table tbody tr td div div div input").removeAttr('class');
+			    $(".table tbody tr td div div div").removeAttr('class');
+			    $(".table tbody tr td div div").removeAttr('class');
+			    $(".table tbody tr td div").removeAttr('class');
+			    $(".table tbody tr td").removeAttr('class');
+			    $(".table tbody tr").removeAttr('class');
+			    $(".table tbody").removeAttr('class');
+			    $(".table thead tr th th").removeAttr('class');
+			    $(".table thead tr th").removeAttr('class');
+			    $(".table thead tr").removeAttr('class');
+				$(".table thead").removeAttr('class');
+
+			    
+			   $('.MuiTable-root-222').addClass('table'); 
+			   $('.MuiTable-root-222').parent().addClass('table-responsive');
+			   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
+			   $('.MuiTable-root-222').removeClass('MuiTable-root-222');
+			
+		}
+		$(parent11).append(
+				"<div id='assay' class='modal fade' role='dialog'>\n" + 
+		        "  <div class='modal-dialog'>\n" + 
+		        "\n" + 
+		        "    <!-- Modal content-->\n" + 
+		        "    <div class='modal-content'>\n" + 
+		        "      <div class='modal-header'>\n" + 
+		        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
+		        "        <h4 id='titleassay' class='modal-title'>Modal Header</h4>\n" + 
+		        "      </div>\n" + 
+		        "      <div id='assayModelContent' class='modal-body'>\n" + 
+		        "      </div>\n" + 
+		        "      <div class='modal-footer'>\n" + 
+		        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
+		        "   	 <button id='save' onclick='window.saveAssay()' class='btn btn-width bkgrnd-cyan save-details' data-dismiss='modal' type='button' name='save-details'>Save</button>" + 
+		        "      </div>\n" + 
+		        "    </div>\n" + 
+		        "\n" + 
+		        "  </div>\n" + 
+		        "</div>");
+		try{
+			ReactDOM.render(React.createFactory(Provider)({store: store11},
+				App()
+		), document.getElementById('assayModelContent'));
+		}catch(err){
+			console.log("assayModelContent" + err);
+		}
 		///////////////////////
 		/*window.popupschemapopulationSpan= require('./StringObjectModel.json');
 		window.popupuischemapopulationSpan = require('./StringObjectView.json');
@@ -3536,9 +3323,18 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: window.store5},
 				App()
 		), document.getElementById('populationGroupModelContent'));
-		}catch(err){console.log("reference " + err);
-			
+		}catch(err){
+			console.log("reference " + err);
 		}
+		/*$("#populationGroupModelContent button[aria-describedby*='tooltip-add']").click(function(event) {
+			
+			currentArea = window.makeId($(this).attr('aria-label'));
+			console.log(currentArea);
+			event.preventDefault(); // Let's stop this event.
+		    event.stopPropagation(); // Really this time.
+		    $('#ptitle'+currentArea).text(currentArea);
+		    $('#p'+currentArea).modal('show');
+		});
 		window.popupFunctions = {};
 		window.popupschema = {};
 		window.popupuischema = {};
@@ -3586,16 +3382,16 @@ function createEMFForm(){
 			
 			 
 			$(parent9).append(
-					"<div id='"+value+"' class='modal fade' role='dialog'>\n" + 
+					"<div id='p"+value+"' class='modal fade' role='dialog'>\n" + 
 			        "  <div class='modal-dialog'>\n" + 
 			        "\n" + 
 			        "    <!-- Modal content-->\n" + 
 			        "    <div class='modal-content'>\n" + 
 			        "      <div class='modal-header'>\n" + 
 			        "        <button type='button' class='close' data-dismiss='modal'>&times;</button>\n" + 
-			        "        <h4 id='title"+value+"' class='modal-title'>Modal Header</h4>\n" + 
+			        "        <h4 id='ptitle"+value+"' class='modal-title'>Modal Header</h4>\n" + 
 			        "      </div>\n" + 
-			        "      <div id='"+value+"ModelContent' class='modal-body'>\n" + 
+			        "      <div id='p"+value+"ModelContent' class='modal-body'>\n" + 
 			        "      </div>\n" + 
 			        "      <div class='modal-footer'>\n" + 
 			        "        <button type='button' class='btn btn-default' data-dismiss='modal'>cancle</button>\n" + 
@@ -3608,9 +3404,12 @@ function createEMFForm(){
 			try{
 				ReactDOM.render(React.createFactory(Provider)({store: window.popupstore[value]},
 					App()
-			), document.getElementById(value+'ModelContent'));
-			}catch(err){console.log(value + err);
-		}});
+			), document.getElementById('p'+value+'ModelContent'));		
+			console.log(value);
+			}catch(err){
+				console.log(value + err);
+			}
+		});*/
 
 
 

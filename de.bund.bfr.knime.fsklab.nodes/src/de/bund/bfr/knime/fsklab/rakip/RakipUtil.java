@@ -798,13 +798,13 @@ public class RakipUtil {
 
     if (deprecatedDataBackground.studySample != null) {
       metadata.StudySample studySample = convert(deprecatedDataBackground.studySample);
-      dataBackground.getStudysample().add(studySample);
+      dataBackground.getStudySample().add(studySample);
     }
 
     if (deprecatedDataBackground.dietaryAssessmentMethod != null) {
       metadata.DietaryAssessmentMethod dietaryAssessmentMethod =
           convert(deprecatedDataBackground.dietaryAssessmentMethod);
-      dataBackground.getDietaryassessmentmethod().add(dietaryAssessmentMethod);
+      dataBackground.getDietaryAssessmentMethod().add(dietaryAssessmentMethod);
     }
 
     if (deprecatedDataBackground.laboratory != null) {

@@ -64,9 +64,9 @@
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/VIDEO"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="metadata.ecore#//ParameterClassification">
-      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterClassification/constant"/>
-      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterClassification/input"/>
-      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterClassification/output"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterClassification/Constant"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterClassification/Input"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterClassification/Output"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="metadata.ecore#//ParameterType">
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterType/Integer"/>
@@ -140,8 +140,8 @@
     </genClasses>
     <genClasses ecoreClass="metadata.ecore#//DataBackground">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/study"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/studysample"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/dietaryassessmentmethod"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/studySample"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/dietaryAssessmentMethod"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/laboratory"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metadata.ecore#//DataBackground/assay"/>
     </genClasses>

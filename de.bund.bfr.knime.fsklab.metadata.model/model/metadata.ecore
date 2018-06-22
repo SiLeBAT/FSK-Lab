@@ -82,9 +82,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="DataBackground">
     <eStructuralFeatures xsi:type="ecore:EReference" name="study" lowerBound="1" eType="#//Study"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="studysample" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="studySample" upperBound="-1"
         eType="#//StudySample" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dietaryassessmentmethod"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dietaryAssessmentMethod"
         upperBound="-1" eType="#//DietaryAssessmentMethod" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="laboratory" upperBound="-1"
         eType="#//Laboratory" containment="true"/>
@@ -349,18 +349,18 @@
     <eLiterals name="Output" value="2" literal="Output"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ParameterType">
-    <eLiterals name="Integer"/>
-    <eLiterals name="Double" value="1"/>
-    <eLiterals name="Number" value="2"/>
-    <eLiterals name="Date" value="3"/>
-    <eLiterals name="File" value="4"/>
-    <eLiterals name="Boolean" value="5"/>
+    <eLiterals name="Integer" literal="Integer"/>
+    <eLiterals name="Double" value="1" literal="Double"/>
+    <eLiterals name="Number" value="2" literal="Number"/>
+    <eLiterals name="Date" value="3" literal="Date"/>
+    <eLiterals name="File" value="4" literal="File"/>
+    <eLiterals name="Boolean" value="5" literal="Boolean"/>
     <eLiterals name="VectorOfNumbers" value="6" literal="Vector[number]"/>
     <eLiterals name="VectorOfStrings" value="7" literal="Vector[string]"/>
     <eLiterals name="MatrixOfNumbers" value="8" literal="Matrix[number,number]"/>
     <eLiterals name="MatrixOfStrings" value="9" literal="Matrix[string,string]"/>
-    <eLiterals name="Object" value="10"/>
-    <eLiterals name="Other" value="11"/>
+    <eLiterals name="Object" value="10" literal="Object"/>
+    <eLiterals name="Other" value="11" literal="Other"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelEquation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="modelEquationName" lowerBound="1"

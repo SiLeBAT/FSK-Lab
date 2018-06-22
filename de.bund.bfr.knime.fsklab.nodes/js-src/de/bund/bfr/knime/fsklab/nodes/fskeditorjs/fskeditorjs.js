@@ -124,10 +124,14 @@ fskeditorjs = function() {
     };
 	function prepareData(_firstModel){
 		//prepare generalInformation
-		if(_firstModel.generalInformation.creationDate  === undefined){
-			_firstModel.generalInformation.creationDate = '';
-		}else{
-			_firstModel.generalInformation.creationDate = new Date(_firstModel.generalInformation.creationDate).toISOString();
+		try{
+			if(_firstModel.generalInformation.creationDate  === undefined){
+				_firstModel.generalInformation.creationDate = '';
+			}else{
+				_firstModel.generalInformation.creationDate = new Date(_firstModel.generalInformation.creationDate).toISOString();
+			}
+		}catch(err){
+			console.log(err);
 		}
 		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ?_firstModel.generalInformation.description:"";
 		_firstModel.generalInformation.author = _firstModel.generalInformation.author != null ?_firstModel.generalInformation.author:{};
@@ -414,14 +418,27 @@ fskeditorjs = function() {
         }
         /*$($("[aria-describedby*='tooltip-add']")).attr('data-toggle','modal');
         $($("[aria-describedby*='tooltip-add']")).attr('data-target','#myModal');*/
+        var StringObjectPopupsName = ['qualityMeasures','event','laboratoryAccreditation','populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
         $("[aria-describedby*='tooltip-add']").click(function(event) {
         	
         	currentArea = window.makeId($(this).attr('aria-label'));
         	console.log(currentArea);
-        	event.preventDefault(); // Let's stop this event.
-            event.stopPropagation(); // Really this time.
-            $('#title'+currentArea).text(currentArea);
-            $('#'+currentArea).modal('show');
+
+        	if($.inArray(currentArea, StringObjectPopupsName)<0){
+        		event.preventDefault(); // Let's stop this event.
+	            event.stopPropagation(); // Really this time.
+	            $('#title'+currentArea).text(currentArea);
+	            $('#'+currentArea).modal('show');
+        	}else{
+        		console.log($.inArray(currentArea, StringObjectPopupsName))
+        	}
+        });
+        $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
+        $(".notReplace button[aria-describedby*='tooltip-add']").click(function(event) {
+        	
+        	currentArea = window.makeId($(this).attr('aria-label'));
+        	console.log('asasa '+currentArea);
+        	
         });
     }
     

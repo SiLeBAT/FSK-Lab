@@ -17,9 +17,10 @@ simulator = function() {
 		_val = value;
 
 		create_body();
-		$('.form-group').tooltip({
-			  selector: "a[rel=tooltip]"
-			})
+		$('[data-toggle="popover"]').popover()
+		$('.popover-dismiss').popover({
+		  trigger: 'focus'
+		})
 	};
 
 	view.getComponentValue = function() {
@@ -53,28 +54,28 @@ simulator = function() {
 				_val.simulations[_currentSimulation].values[parameterIndex] = $(this).val();
 			  })
 			var form = $('<div class="form-group">' +
-				'  <label class="col-sm-3 control-label">' + parameter.parameterID + '</label>' +
-				' <div class="col-sm-6">'+
-				'<a title="'+
-				'<div><b>parameterClassification</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterClassification)+'</div>'+
-				'<div><b>parameterDescription</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDescription)+'</div>'+
-				'<div><b>parameterDistribution</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDistribution)+'</div>'+
-				'<div><b>parameterError</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterError)+'</div>'+
-				'<div><b>parameterID</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterID)+'</div>'+
-				'<div><b>parameterName</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterName)+'</div>'+
-				'<div><b>parameterSource</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterSource)+'</div>'+
-				'<div><b>parameterSubject</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterSubject)+'</div>'+
-				'<div><b>parameterType</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterType)+'</div>'+
-				'<div><b>parameterDataType</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDataType)+'</div>'+
-				'<div><b>parameterUnit</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterUnit)+'</div>'+
-				'<div><b>parameterUnitCategory</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterUnitCategory)+'</div>'+
-				'<div><b>parameterValue</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValue)+'</div>'+
-				'<div><b>parameterValueMax</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValueMax)+'</div>'+
-				'<div><b>parameterValueMin</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValueMin)+'</div>'+
-				'<div><b>parameterVariabilitySubject</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterVariabilitySubject)+'</div>'+
-				'<div><b>reference</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].reference)+'</div>"'+
+				'<label class="col-sm-3 control-label">' + parameter.parameterID + '</label>' +
+				'<div class="col-sm-6">'+
+				'<a data-content="'+
+				'<div><b>Parameter&nbsp;Classification</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterClassification)+'</div>'+
+				'<div><b>Parameter&nbsp;Description</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDescription)+'</div>'+
+				'<div><b>Parameter&nbsp;Distribution</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDistribution)+'</div>'+
+				'<div><b>Parameter&nbsp;Error</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterError)+'</div>'+
+				'<div><b>Parameter&nbsp;ID</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterID)+'</div>'+
+				'<div><b>Parameter&nbsp;Name</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterName)+'</div>'+
+				'<div><b>Parameter&nbsp;Source</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterSource)+'</div>'+
+				'<div><b>Parameter&nbsp;Subject</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterSubject)+'</div>'+
+				'<div><b>Parameter&nbsp;Type</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterType)+'</div>'+
+				'<div><b>Parameter&nbsp;DataType</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDataType)+'</div>'+
+				'<div><b>Parameter&nbsp;Unit</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterUnit)+'</div>'+
+				'<div><b>Parameter&nbsp;UnitCategory</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterUnitCategory)+'</div>'+
+				'<div><b>Parameter&nbsp;Value</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValue)+'</div>'+
+				'<div><b>Parameter&nbsp;Max Value</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValueMax)+'</div>'+
+				'<div><b>Parameter&nbsp;Min Value</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValueMin)+'</div>'+
+				'<div><b>Parameter&nbsp;Variability Subject</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterVariabilitySubject)+'</div>'+
+				'<div><b>Parameter&nbsp;Reference</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].reference)+'</div>"'+
 				
-				'data-html="true" rel="tooltip" data-placement="right" href="#">info</a>'+
+				'tabindex="0" title="'+prepeare(_rep.parameters[parameterIndex].parameterID)+'" data-html="true" data-toggle="popover" data-trigger="focus" href="#"><i class="fa fa-info-circle" aria-hidden="true"></i></a>'+
 				/*' parameterClassification='++
 				' ='+_rep.parameters[parameterIndex].+
 				' ='+_rep.parameters[parameterIndex].+

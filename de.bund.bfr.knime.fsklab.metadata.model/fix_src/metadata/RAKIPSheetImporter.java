@@ -512,7 +512,7 @@ public class RAKIPSheetImporter {
 		for (int numrow = 96; numrow < 99; numrow++) {
 			try {
 				StudySample studySample = retrieveStudySample(sheet.getRow(numrow));
-				dataBackground.getStudysample().add(studySample);
+				dataBackground.getStudySample().add(studySample);
 			} catch (Exception exception) {
 			}
 		}
@@ -520,7 +520,7 @@ public class RAKIPSheetImporter {
 		for (int numrow = 103; numrow < 106; numrow++) {
 			try {
 				DietaryAssessmentMethod method = retrieveDietaryAssessmentMethod(sheet.getRow(numrow));
-				dataBackground.getDietaryassessmentmethod().add(method);
+				dataBackground.getDietaryAssessmentMethod().add(method);
 			} catch (Exception exception) {
 			}
 		}

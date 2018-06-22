@@ -27,137 +27,137 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  */
 public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	/**
-	 * The default value of the '{@link #getEvent() <em>Event</em>}' attribute.
-	 * <!-- begin-user-doc -->
+   * The default value of the '{@link #getEvent() <em>Event</em>}' attribute.
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEvent()
-	 * @generated
-	 * @ordered
-	 */
+   * @see #getEvent()
+   * @generated
+   * @ordered
+   */
 	protected static final String EVENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getEvent() <em>Event</em>}' attribute.
-	 * <!-- begin-user-doc -->
+   * The cached value of the '{@link #getEvent() <em>Event</em>}' attribute.
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getEvent()
-	 * @generated
-	 * @ordered
-	 */
+   * @see #getEvent()
+   * @generated
+   * @ordered
+   */
 	protected String event = EVENT_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+   * @generated
+   */
 	protected EventImpl() {
-		super();
-	}
+    super();
+  }
 
 	/**
-	 * <!-- begin-user-doc -->
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+   * @generated
+   */
 	@Override
 	protected EClass eStaticClass() {
-		return MetadataPackage.Literals.EVENT;
-	}
+    return MetadataPackage.Literals.EVENT;
+  }
 
 	/**
-	 * <!-- begin-user-doc -->
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+   * @generated
+   */
 	public String getEvent() {
-		return event;
-	}
+    return event;
+  }
 
 	/**
-	 * <!-- begin-user-doc -->
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+   * @generated
+   */
 	public void setEvent(String newEvent) {
-		String oldEvent = event;
-		event = newEvent;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.EVENT__EVENT, oldEvent, event));
-	}
+    String oldEvent = event;
+    event = newEvent;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.EVENT__EVENT, oldEvent, event));
+  }
 
 	/**
-	 * <!-- begin-user-doc -->
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+   * @generated
+   */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case MetadataPackage.EVENT__EVENT:
-				return getEvent();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+    switch (featureID) {
+      case MetadataPackage.EVENT__EVENT:
+        return getEvent();
+    }
+    return super.eGet(featureID, resolve, coreType);
+  }
 
 	/**
-	 * <!-- begin-user-doc -->
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+   * @generated
+   */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case MetadataPackage.EVENT__EVENT:
-				setEvent((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+    switch (featureID) {
+      case MetadataPackage.EVENT__EVENT:
+        setEvent((String)newValue);
+        return;
+    }
+    super.eSet(featureID, newValue);
+  }
 
 	/**
-	 * <!-- begin-user-doc -->
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+   * @generated
+   */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case MetadataPackage.EVENT__EVENT:
-				setEvent(EVENT_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+    switch (featureID) {
+      case MetadataPackage.EVENT__EVENT:
+        setEvent(EVENT_EDEFAULT);
+        return;
+    }
+    super.eUnset(featureID);
+  }
 
 	/**
-	 * <!-- begin-user-doc -->
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+   * @generated
+   */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case MetadataPackage.EVENT__EVENT:
-				return EVENT_EDEFAULT == null ? event != null : !EVENT_EDEFAULT.equals(event);
-		}
-		return super.eIsSet(featureID);
-	}
+    switch (featureID) {
+      case MetadataPackage.EVENT__EVENT:
+        return EVENT_EDEFAULT == null ? event != null : !EVENT_EDEFAULT.equals(event);
+    }
+    return super.eIsSet(featureID);
+  }
 
 	/**
-	 * <!-- begin-user-doc -->
+   * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+   * @generated
+   */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+    if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (event: ");
-		result.append(event);
-		result.append(')');
-		return result.toString();
-	}
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (event: ");
+    result.append(event);
+    result.append(')');
+    return result.toString();
+  }
 
 } //EventImpl

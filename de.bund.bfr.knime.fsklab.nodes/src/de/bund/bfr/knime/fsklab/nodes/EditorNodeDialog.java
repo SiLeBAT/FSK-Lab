@@ -3653,7 +3653,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
         EditStudySamplePanel editStudySamplePanel =
             new EditStudySamplePanel(advancedCheckBox.isSelected());
-        editStudySamplePanel.init(dataBackground.getStudysample().get(0));
+        editStudySamplePanel.init(dataBackground.getStudySample().get(0));
 
         final ValidatableDialog dlg =
             new ValidatableDialog(editStudySamplePanel, "Create Study sample");
@@ -3662,7 +3662,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           final StudySample studySample = editStudySamplePanel.get();
           // Update button's text
           studySampleButton.setText(studySample.getSampleName());
-          dataBackground.getStudysample().add(studySample);
+          dataBackground.getStudySample().add(studySample);
         }
       });
 
@@ -3671,7 +3671,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
       dietaryAssessmentMethodButton.addActionListener(event -> {
         EditDietaryAssessmentMethodPanel editPanel =
             new EditDietaryAssessmentMethodPanel(advancedCheckBox.isSelected());
-        editPanel.init(dataBackground.getDietaryassessmentmethod().get(0));
+        editPanel.init(dataBackground.getDietaryAssessmentMethod().get(0));
         final ValidatableDialog dlg =
             new ValidatableDialog(editPanel, "Create dietary assessment method");
 
@@ -3679,7 +3679,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           final DietaryAssessmentMethod method = editPanel.get();
           // Update button's text
           dietaryAssessmentMethodButton.setText(method.getCollectionTool());
-          dataBackground.getDietaryassessmentmethod().add(method);
+          dataBackground.getDietaryAssessmentMethod().add(method);
         }
       });
 
@@ -3750,9 +3750,9 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
           studyButton.setText(studyTitle);
         }
 
-        if (dataBackground.eIsSet(pkg.getDataBackground_Studysample())
-            && dataBackground.getStudysample().get(0).eIsSet(pkg.getStudySample_SampleName())) {
-          String sampleName = dataBackground.getStudysample().get(0).getSampleName();
+        if (dataBackground.eIsSet(pkg.getDataBackground_StudySample())
+            && dataBackground.getStudySample().get(0).eIsSet(pkg.getStudySample_SampleName())) {
+          String sampleName = dataBackground.getStudySample().get(0).getSampleName();
           studySampleButton.setText(sampleName);
         }
 
@@ -3770,7 +3770,7 @@ public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
       final DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
       dataBackground.setStudy(this.dataBackground.getStudy());
-      dataBackground.getStudysample().addAll(this.dataBackground.getStudysample());
+      dataBackground.getStudySample().addAll(this.dataBackground.getStudySample());
       // TODO: laboratory ...
       dataBackground.getAssay().addAll(this.dataBackground.getAssay());
 
