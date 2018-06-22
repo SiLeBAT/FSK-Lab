@@ -47,9 +47,9 @@
     <semanticResources>../generatedviews/SpatialInformation.view</semanticResources>
     <semanticResources>../generatedviews/Exposure.view</semanticResources>
     <semanticResources>../generatedviews/ModelEquation.view</semanticResources>
-    <semanticResources>../generatedviews/Parameter.view</semanticResources>
     <semanticResources>../generatedviews/StringObject.view</semanticResources>
     <semanticResources>../generatedviews/DataBackground.view</semanticResources>
+    <semanticResources>../generatedviews/Parameter.view</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" xmi:id="_9Vf1sBJWEei_2fkO3UU5tQ">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" xmi:id="_9VywpRJWEei_2fkO3UU5tQ" name="metadata" repPath="#_9Vo_oBJWEei_2fkO3UU5tQ">

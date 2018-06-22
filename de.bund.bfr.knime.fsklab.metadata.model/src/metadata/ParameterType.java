@@ -86,7 +86,7 @@ public enum ParameterType implements Enumerator {
    * @generated
    * @ordered
    */
-	VECTOR_OF_NUMBERS(6, "VectorOfNumbers", "Vector Of Numbers"),
+	VECTOR_OF_NUMBERS(6, "VectorOfNumbers", "Vector[number]"),
 
 	/**
    * The '<em><b>Vector Of Strings</b></em>' literal object.
@@ -96,7 +96,7 @@ public enum ParameterType implements Enumerator {
    * @generated
    * @ordered
    */
-	VECTOR_OF_STRINGS(7, "VectorOfStrings", "Vector Of Strings"),
+	VECTOR_OF_STRINGS(7, "VectorOfStrings", "Vector[string]"),
 
 	/**
    * The '<em><b>Matrix Of Numbers</b></em>' literal object.
@@ -106,7 +106,7 @@ public enum ParameterType implements Enumerator {
    * @generated
    * @ordered
    */
-	MATRIX_OF_NUMBERS(8, "MatrixOfNumbers", "Matrix Of Numbers"),
+	MATRIX_OF_NUMBERS(8, "MatrixOfNumbers", "Matrix[number,number]"),
 
 	/**
    * The '<em><b>Matrix Of Strings</b></em>' literal object.
@@ -116,7 +116,7 @@ public enum ParameterType implements Enumerator {
    * @generated
    * @ordered
    */
-	MATRIX_OF_STRINGS(9, "MatrixOfStrings", "Matrix Of Strings"),
+	MATRIX_OF_STRINGS(9, "MatrixOfStrings", "Matrix[string,string]"),
 
 	/**
    * The '<em><b>Object</b></em>' literal object.
@@ -237,7 +237,7 @@ public enum ParameterType implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
    * @see #VECTOR_OF_NUMBERS
-   * @model name="VectorOfNumbers" literal="Vector Of Numbers"
+   * @model name="VectorOfNumbers" literal="Vector[number]"
    * @generated
    * @ordered
    */
@@ -252,7 +252,7 @@ public enum ParameterType implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
    * @see #VECTOR_OF_STRINGS
-   * @model name="VectorOfStrings" literal="Vector Of Strings"
+   * @model name="VectorOfStrings" literal="Vector[string]"
    * @generated
    * @ordered
    */
@@ -267,7 +267,7 @@ public enum ParameterType implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
    * @see #MATRIX_OF_NUMBERS
-   * @model name="MatrixOfNumbers" literal="Matrix Of Numbers"
+   * @model name="MatrixOfNumbers" literal="Matrix[number,number]"
    * @generated
    * @ordered
    */
@@ -282,7 +282,7 @@ public enum ParameterType implements Enumerator {
 	 * </p>
 	 * <!-- end-user-doc -->
    * @see #MATRIX_OF_STRINGS
-   * @model name="MatrixOfStrings" literal="Matrix Of Strings"
+   * @model name="MatrixOfStrings" literal="Matrix[string,string]"
    * @generated
    * @ordered
    */
