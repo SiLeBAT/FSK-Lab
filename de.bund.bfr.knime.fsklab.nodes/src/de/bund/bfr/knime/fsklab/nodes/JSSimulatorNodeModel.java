@@ -139,6 +139,8 @@ class JSSimulatorNodeModel
     FskPortObject outObj = new FskPortObject(inObj.model, inObj.viz, inObj.generalInformation,
         inObj.scope, inObj.dataBackground, inObj.modelMath, null, inObj.packages, workingDirectory,
         inObj.getPlot());
+    
+    outObj.setReadme(inObj.getReadme());
 
     synchronized (getLock()) {
 

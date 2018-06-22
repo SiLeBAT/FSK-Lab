@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.jlibsedml.Change;
 import org.jlibsedml.ChangeAttribute;
 import org.jlibsedml.Libsedml;
@@ -112,6 +113,8 @@ class ReaderNodeModel extends NoInternalsModel {
 
     List<FskSimulation> simulations = new ArrayList<>();
 
+    String readme = "";
+
     try (final CombineArchive archive = new CombineArchive(file)) {
       for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.r)) {
 
@@ -130,7 +133,28 @@ class ReaderNodeModel extends NoInternalsModel {
 
       // Gets resources
       List<ArchiveEntry> resourceEntries = new ArrayList<>();
-      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.plainText));
+
+      // Take README.txt and leave other txt as resources.
+      List<ArchiveEntry> txtEntries = archive.getEntriesWithFormat(URIS.plainText);
+      for (ArchiveEntry entry : txtEntries) {
+
+        // If a txt entry has a description then it must be a README.
+        if (entry.getDescriptions().size() > 0) {
+
+          // Create temporary file with script
+          File temp = File.createTempFile("README", ".txt");
+          entry.extractFile(temp);
+
+          // Read README
+          readme = FileUtils.readFileToString(temp, "UTF-8");
+
+          // Delete temporary file
+          temp.delete();
+        } else {
+          resourceEntries.add(entry);
+        }
+      }
+
       resourceEntries.addAll(archive.getEntriesWithFormat(URIS.csv));
       resourceEntries.addAll(archive.getEntriesWithFormat(URIS.rData));
 
@@ -205,6 +229,7 @@ class ReaderNodeModel extends NoInternalsModel {
         generalInformation, scope, dataBackground, modelMath, workspacePath, packagesList,
         workingDirectory.toString(), plotPath);
     fskObj.simulations.addAll(simulations);
+    fskObj.setReadme(readme);
 
     return new PortObject[] {fskObj};
   }

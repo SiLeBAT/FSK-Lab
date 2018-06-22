@@ -62,6 +62,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
   private final JTextField modelScriptField;
   private final JTextField visualizationScriptField;
   private final JTextField workingDirectoryField;
+  private final JTextField readmeField;
 
   private final JTextField spreadsheetField;
   private final DefaultComboBoxModel<String> sheetModel;
@@ -73,6 +74,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
     modelScriptField = new FTextField();
     visualizationScriptField = new FTextField();
     workingDirectoryField = new FTextField();
+    readmeField = new FTextField();
 
     spreadsheetField = new FTextField();
     sheetModel = new DefaultComboBoxModel<>();
@@ -89,6 +91,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
       modelScriptField.setText(this.settings.modelScript);
       visualizationScriptField.setText(this.settings.visualizationScript);
       workingDirectoryField.setText(this.settings.getWorkingDirectory());
+      readmeField.setText(this.settings.getReadme());
 
       spreadsheetField.setText(this.settings.spreadsheet);
 
@@ -109,6 +112,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
     this.settings.modelScript = modelScriptField.getText();
     this.settings.visualizationScript = visualizationScriptField.getText();
     this.settings.setWorkingDirectory(workingDirectoryField.getText());
+    this.settings.setReadme(readmeField.getText());
 
     this.settings.spreadsheet = spreadsheetField.getText();
     // selected sheet may be null if there is no selection
@@ -124,6 +128,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
     FileNameExtensionFilter rFilter = new FileNameExtensionFilter("R script", "r");
     FileNameExtensionFilter spreadsheetFilter =
         new FileNameExtensionFilter("Excel spreadsheet", "xlsx");
+    FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Plain text", "txt");
 
     // Build locale with the selected language in the preferences
     CreatorNodeBundle bundle = new CreatorNodeBundle(NodeUtils.getLocale());
@@ -135,6 +140,8 @@ public class CreatorNodeDialog extends NodeDialogPane {
         UIUtils.createBrowseButton(buttonText, modelScriptField, JFileChooser.OPEN_DIALOG, rFilter);
     JButton visualizationScriptButton = UIUtils.createBrowseButton(buttonText,
         visualizationScriptField, JFileChooser.OPEN_DIALOG, rFilter);
+    JButton readmeButton =
+        UIUtils.createBrowseButton(buttonText, readmeField, JFileChooser.OPEN_DIALOG, txtFilter);
 
     FBrowseButton workingDirectoryButton = new FBrowseButton(buttonText);
     workingDirectoryButton.addActionListener(new ActionListener() {
@@ -169,14 +176,15 @@ public class CreatorNodeDialog extends NodeDialogPane {
     FLabel modelScriptLabel = new FLabel(bundle.getModelScriptLabel());
     FLabel visualizationScriptLabel = new FLabel(bundle.getVisualizationScriptLabel());
     FLabel workingDirectoryLabel = new FLabel("Working directory"); // TODO: resource bundle
+    FLabel readmeLabel = new FLabel("Readme"); // TODO: resource bundle
 
     // formPanel
-    List<FLabel> labels =
-        Arrays.asList(modelScriptLabel, visualizationScriptLabel, workingDirectoryLabel);
-    List<JTextField> fields =
-        Arrays.asList(modelScriptField, visualizationScriptField, workingDirectoryField);
-    List<JButton> buttons =
-        Arrays.asList(modelScriptButton, visualizationScriptButton, workingDirectoryButton);
+    List<FLabel> labels = Arrays.asList(modelScriptLabel, visualizationScriptLabel, readmeLabel,
+        workingDirectoryLabel);
+    List<JTextField> fields = Arrays.asList(modelScriptField, visualizationScriptField, readmeField,
+        workingDirectoryField);
+    List<JButton> buttons = Arrays.asList(modelScriptButton, visualizationScriptButton,
+        readmeButton, workingDirectoryButton);
 
     FPanel formPanel = UIUtils.createFormPanel(labels, fields, buttons);
     JPanel northPanel = UI.createNorthPanel(formPanel);
@@ -202,8 +210,7 @@ public class CreatorNodeDialog extends NodeDialogPane {
 
       FPanel formPanel2 = UIUtils.createFormPanel(labels2, fields2, buttons2);
 
-      FPanel metadataPanel =
-          UIUtils.createTitledPanel(formPanel2, bundle.getMetadataTitle());
+      FPanel metadataPanel = UIUtils.createTitledPanel(formPanel2, bundle.getMetadataTitle());
       northPanel.add(UIUtils.createNorthPanel(metadataPanel));
     }
 

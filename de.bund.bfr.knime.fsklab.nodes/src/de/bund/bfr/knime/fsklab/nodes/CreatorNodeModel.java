@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -218,6 +219,13 @@ class CreatorNodeModel extends NoInternalsModel {
     
     if (modelMath != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
+    }
+    
+    String readmePath = nodeSettings.getReadme();
+    if (!readmePath.isEmpty()) {
+      File readmeFile = FileUtil.getFileFromURL(FileUtil.toURL(readmePath));
+      String readme = FileUtils.readFileToString(readmeFile, "UTF-8");
+      portObj.setReadme(readme);
     }
 
     return new PortObject[] {portObj};

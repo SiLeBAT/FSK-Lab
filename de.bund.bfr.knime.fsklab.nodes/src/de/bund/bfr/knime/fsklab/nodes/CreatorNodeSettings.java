@@ -27,6 +27,7 @@ public class CreatorNodeSettings {
   private static final String CFG_MODEL_SCRIPT = "modelScript";
   private static final String CFG_PARAMETERS_SCRIPT = "paramScript";
   private static final String CFG_VISUALIZATION_SCRIPT = "visualizationScript";
+  private static final String CFG_README = "readme";
   private static final String CFG_SPREADSHEET = "spreadsheet";
   private static final String CFG_SHEET = "sheet";
   private static final String CFG_WORKING_DIRECTORY = "workingDirectory";
@@ -49,6 +50,9 @@ public class CreatorNodeSettings {
   /** Paths to resources: plain text files and R workspace files (.rdata). */
   private String workingDirectory = "";
   
+  /** README. */
+  private String readme = "";
+  
   /** @return empty string if not set. */
   public String getWorkingDirectory() {
     return workingDirectory != null ? workingDirectory : "";
@@ -57,6 +61,17 @@ public class CreatorNodeSettings {
   public void setWorkingDirectory(String workingDirectory) {
     if (workingDirectory != null) {
       this.workingDirectory = workingDirectory;
+    }
+  }
+  
+  /** @return empty string if not set. */
+  public String getReadme() {
+    return readme != null ? readme : "";
+  }
+  
+  public void setReadme(String readme) {
+    if (readme != null) {
+      this.readme = readme;
     }
   }
 
@@ -69,6 +84,8 @@ public class CreatorNodeSettings {
     // An empty string means a working directory is not set.
     workingDirectory = settings.getString(CFG_WORKING_DIRECTORY, "");
     
+    readme = settings.getString(CFG_README, "");
+    
     spreadsheet = settings.getString(CFG_SPREADSHEET);
     sheet = settings.getString(CFG_SHEET, "");
   }
@@ -78,6 +95,7 @@ public class CreatorNodeSettings {
     settings.addString(CFG_PARAMETERS_SCRIPT, parameterScript);
     settings.addString(CFG_VISUALIZATION_SCRIPT, visualizationScript);
     settings.addString(CFG_WORKING_DIRECTORY, workingDirectory);
+    settings.addString(CFG_README, readme);
     settings.addString(CFG_SPREADSHEET, spreadsheet);
     settings.addString(CFG_SHEET, sheet);
   }

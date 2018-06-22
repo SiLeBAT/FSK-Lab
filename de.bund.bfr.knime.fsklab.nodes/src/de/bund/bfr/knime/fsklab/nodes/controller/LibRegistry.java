@@ -157,12 +157,14 @@ public class LibRegistry {
   }
   
   /**
-   * @return Path of a single R package.
+   * @return Path of a single R package or null if lib cannot be found.
    * @throws RException 
    * @throws REXPMismatchException 
    */
   public Path getPath(String lib) throws REXPMismatchException, RException {
-    return rWrapper.checkVersions(Arrays.asList(lib), repoPath).get(0);
+    List<String> libs = Arrays.asList(lib);
+    List<Path> paths = rWrapper.checkVersions(libs, repoPath);
+    return paths.isEmpty() ? null : paths.get(0);
   }
 
   public Path getInstallationPath() {

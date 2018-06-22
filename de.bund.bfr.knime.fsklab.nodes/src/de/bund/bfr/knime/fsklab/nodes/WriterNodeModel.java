@@ -181,8 +181,11 @@ class WriterNodeModel extends NoInternalsModel {
       // Adds R libraries
       for (String pkg : fskObj.packages) {
         Path path = LibRegistry.instance().getPath(pkg);
-        File file = path.toFile();
-        archive.addEntry(file, file.getName(), libUri);
+
+        if (path != null) {
+          File file = path.toFile();
+          archive.addEntry(file, file.getName(), libUri);
+        }
       }
 
       // If the model has an associated working directory with resources these resources
@@ -227,6 +230,23 @@ class WriterNodeModel extends NoInternalsModel {
       if (plotFile.exists()) {
         URI uri = URI.create("http://purl.org/NET/mediatypes/image/png");
         archive.addEntry(plotFile, "plot.png", uri);
+      }
+
+      // Add readme. Entry has a README annotation to distinguish of other
+      // plain text files
+      String readme = fskObj.getReadme();
+      if (!readme.isEmpty()) {
+        File readmeFile = File.createTempFile("README", ".txt");
+        FileUtils.writeStringToFile(readmeFile, readme, "UTF-8");
+
+        ArchiveEntry readmeEntry = archive.addEntry(readmeFile, "README.txt", URIS.plainText);
+
+        readmeFile.delete();
+
+        // Add annotation to readmeEntry
+        DefaultJDOMFactory factory = new DefaultJDOMFactory();
+        Element element = factory.element("readme");
+        readmeEntry.addDescription(new DefaultMetaDataObject(element));
       }
 
       archive.pack();

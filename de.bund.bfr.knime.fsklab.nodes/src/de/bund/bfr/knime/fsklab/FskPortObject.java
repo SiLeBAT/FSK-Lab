@@ -38,6 +38,7 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -101,6 +102,9 @@ public class FskPortObject implements PortObject {
 
   /** Path to plot. */
   private String plot;
+
+  /** README. */
+  private String readme;
 
   /**
    * R workspace file with the results of running the model. It may be null if the model has not
@@ -176,6 +180,19 @@ public class FskPortObject implements PortObject {
     return plot != null ? plot : "";
   }
 
+  /**
+   * @return empty string if not set.
+   */
+  public String getReadme() {
+    return readme != null ? readme : "";
+  }
+
+  public void setReadme(String readme) {
+    if (readme != null) {
+      this.readme = readme;
+    }
+  }
+
   public void setPlot(final String plot) {
     if (plot != null && !plot.isEmpty()) {
       this.plot = plot;
@@ -205,6 +222,8 @@ public class FskPortObject implements PortObject {
     private static final String WORKING_DIRECTORY = "workingDirectory";
 
     private static final String PLOT = "plot";
+
+    private static final String README = "readme";
 
     @Override
     public void savePortObject(final FskPortObject portObject, final PortObjectZipOutputStream out,
@@ -250,6 +269,13 @@ public class FskPortObject implements PortObject {
       if (portObject.plot != null && !portObject.plot.isEmpty()) {
         out.putNextEntry(new ZipEntry(PLOT));
         IOUtils.write(portObject.plot, out, "UTF-8");
+        out.closeEntry();
+      }
+
+      // Save README
+      if (portObject.readme != null && !portObject.readme.isEmpty()) {
+        out.putNextEntry(new ZipEntry(README));
+        IOUtils.write(portObject.readme, out, "UTF-8");
         out.closeEntry();
       }
 
@@ -299,6 +325,7 @@ public class FskPortObject implements PortObject {
       String workingDirectory = ""; // Empty string if not set
 
       String plot = ""; // Empty string if not set
+      String readme = ""; // Empty string if not set
 
       List<FskSimulation> simulations = new ArrayList<>();
       int selectedSimulationIndex = 0;
@@ -342,9 +369,9 @@ public class FskPortObject implements PortObject {
           workingDirectory = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(PLOT)) {
           plot = IOUtils.toString(in, "UTF-8");
-        }
-
-        else if (entryName.equals(SIMULATION)) {
+        } else if (entryName.equals(README)) {
+          readme = IOUtils.toString(in, "UTF-8");
+        } else if (entryName.equals(SIMULATION)) {
           try {
             ObjectInputStream ois = new ObjectInputStream(in);
             simulations = ((List<FskSimulation>) ois.readObject());
@@ -369,6 +396,8 @@ public class FskPortObject implements PortObject {
       final FskPortObject portObj =
           new FskPortObject(modelScript, visualizationScript, generalInformation, scope,
               dataBackground, modelMath, workspacePath, packages, workingDirectory, plot);
+
+      portObj.setReadme(readme);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);
@@ -426,9 +455,13 @@ public class FskPortObject implements PortObject {
     final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
 
     JPanel simulationsPanel = new SimulationsPanel();
+    
+    JPanel readmePanel = new JPanel(new BorderLayout());
+    readmePanel.setName("README");
+    readmePanel.add(new JScrollPane(new JTextArea(readme)));
 
     return new JComponent[] {modelScriptPanel, vizScriptPanel, metaDataPane, librariesPanel,
-        simulationsPanel};
+        simulationsPanel, readmePanel};
   }
 
   private class SimulationsPanel extends FPanel {
