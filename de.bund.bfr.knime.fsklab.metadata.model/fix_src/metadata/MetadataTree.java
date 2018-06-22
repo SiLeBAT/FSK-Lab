@@ -895,10 +895,10 @@ public class MetadataTree {
 		}
 
 		// study sample
-		if (dataBackground.eIsSet(pkg.getDataBackground_Studysample())) {
+		if (dataBackground.eIsSet(pkg.getDataBackground_StudySample())) {
 			String label = bundle.getDataBackground_studySample();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-			for (StudySample studySample : dataBackground.getStudysample()) {
+			for (StudySample studySample : dataBackground.getStudySample()) {
 				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
 				add(childNode, studySample);
 				parentNode.add(childNode);
@@ -907,10 +907,10 @@ public class MetadataTree {
 		}
 
 		// dietary assessment method
-		if (dataBackground.eIsSet(pkg.getDataBackground_Dietaryassessmentmethod())) {
+		if (dataBackground.eIsSet(pkg.getDataBackground_DietaryAssessmentMethod())) {
 			String label = bundle.getDataBackground_dietaryAssessmentMethod();
 			DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(label);
-			for (DietaryAssessmentMethod method : dataBackground.getDietaryassessmentmethod()) {
+			for (DietaryAssessmentMethod method : dataBackground.getDietaryAssessmentMethod()) {
 				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(label);
 				add(childNode, method);
 				parentNode.add(childNode);
