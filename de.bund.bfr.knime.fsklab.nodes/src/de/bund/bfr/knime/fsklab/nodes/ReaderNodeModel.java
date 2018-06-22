@@ -122,9 +122,9 @@ class ReaderNodeModel extends NoInternalsModel {
         final ResourceType resourceType = fmdo.getResourceType();
 
         if (resourceType.equals(ResourceType.modelScript)) {
-          modelScript = loadScript(entry);
+          modelScript = loadTextEntry(entry);
         } else if (resourceType.equals(ResourceType.visualizationScript)) {
-          visualizationScript = loadScript(entry);
+          visualizationScript = loadTextEntry(entry);
         } else if (resourceType.equals(ResourceType.workspace)) {
           workspace = FileUtil.createTempFile("workspace", ".r");
           entry.extractFile(workspace);
@@ -140,16 +140,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
         // If a txt entry has a description then it must be a README.
         if (entry.getDescriptions().size() > 0) {
-
-          // Create temporary file with script
-          File temp = File.createTempFile("README", ".txt");
-          entry.extractFile(temp);
-
-          // Read README
-          readme = FileUtils.readFileToString(temp, "UTF-8");
-
-          // Delete temporary file
-          temp.delete();
+          readme = loadTextEntry(entry);
         } else {
           resourceEntries.add(entry);
         }
@@ -234,17 +225,19 @@ class ReaderNodeModel extends NoInternalsModel {
     return new PortObject[] {fskObj};
   }
 
-  private static String loadScript(final ArchiveEntry entry) throws IOException {
-
+  private static String loadTextEntry(final ArchiveEntry entry) throws IOException {
+    
     // Create temporary file with script
-    Path temp = Files.createTempFile("temp", ".r");
-    entry.extractFile(temp.toFile());
+    File temp = File.createTempFile("temp", null);
+    entry.extractFile(temp);
 
-    String script = new String(Files.readAllBytes(temp), "UTF-8"); // Read script
+    // Read contents
+    String contents = FileUtils.readFileToString(temp, "UTF-8");
 
-    Files.delete(temp); // Delete temporary file
-
-    return script;
+    // Delete temporary file
+    temp.delete();
+    
+    return contents;
   }
 
   /**
