@@ -244,9 +244,7 @@ class WriterNodeModel extends NoInternalsModel {
         readmeFile.delete();
 
         // Add annotation to readmeEntry
-        DefaultJDOMFactory factory = new DefaultJDOMFactory();
-        Element element = factory.element("readme");
-        readmeEntry.addDescription(new DefaultMetaDataObject(element));
+        readmeEntry.addDescription(new FskMetaDataObject(ResourceType.readme).metaDataObject);
       }
 
       archive.pack();
