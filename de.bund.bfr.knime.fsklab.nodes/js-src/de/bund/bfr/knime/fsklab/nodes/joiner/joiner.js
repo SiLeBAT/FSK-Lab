@@ -345,7 +345,9 @@ joiner = function() {
             $('.nav-tabs a').click(function(e) {
                 e.preventDefault();
                 $(this).tab('show');
+                var canvas = $('#paper');
                 
+                paper.setDimensions(canvas.width(), canvas.height());
                 
             });
             
@@ -358,6 +360,9 @@ joiner = function() {
                 }, 500);
             });
             $('.nav-tabs a').on('shown.bs.tab', function(e){
+            	var canvas = $('#paper');
+                
+                paper.setDimensions(canvas.width(), canvas.height());
             	var codeMirrorContainer = $('#sub25').find(".CodeMirror")[0];
                 if (codeMirrorContainer && codeMirrorContainer.CodeMirror) {
     				codeMirrorContainer.CodeMirror.refresh();
