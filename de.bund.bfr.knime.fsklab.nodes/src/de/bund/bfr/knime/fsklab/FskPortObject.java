@@ -456,9 +456,13 @@ public class FskPortObject implements PortObject {
 
     JPanel simulationsPanel = new SimulationsPanel();
     
+    // Readme
+    JTextArea readmeArea = new JTextArea(readme);
+    readmeArea.setEnabled(false);
+
     JPanel readmePanel = new JPanel(new BorderLayout());
     readmePanel.setName("README");
-    readmePanel.add(new JScrollPane(new JTextArea(readme)));
+    readmePanel.add(new JScrollPane(readmeArea));
 
     return new JComponent[] {modelScriptPanel, vizScriptPanel, metaDataPane, librariesPanel,
         simulationsPanel, readmePanel};
