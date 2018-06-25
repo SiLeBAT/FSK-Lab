@@ -405,16 +405,19 @@ fskeditorjs = function() {
 	        		event.preventDefault(); // Let's stop this event.
 		        event.stopPropagation(); // Really this time.
 	            $('#title'+currentArea).text(currentArea);
-	            $('#'+currentArea).on('show', function () {
-			                $(this).find('.modal-body').css({
-			                    width:'auto', //probably not needed
-			                    height:'auto', //probably not needed 
-			                    'max-height':'100%'
-			             });
-			      });
+	            
 		        $('#'+currentArea).modal('show');
-		        
-		        
+		        $('.modal-content').resizable({
+		            //alsoResize: ".modal-dialog",
+		            //minHeight: 150
+		        });
+		        $('.modal-dialog').draggable();
+		        $('#'+currentArea).on('show.bs.modal', function () {
+		            $(this).find('.modal-body').css({
+		                'max-height':'100%'
+		            });
+		        });
+		        window.scrollTo(0, 0);
 	        	}
         });
        /* $("input[type='text']").removeAttr('class');
