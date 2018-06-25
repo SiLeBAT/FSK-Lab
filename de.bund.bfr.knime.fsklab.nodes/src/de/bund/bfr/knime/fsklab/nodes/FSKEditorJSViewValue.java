@@ -19,6 +19,7 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.util.Random;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.knime.core.node.InvalidSettingsException;
@@ -92,6 +93,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   
 
     if (generalInformation != null) {
+      System.out.println(generalInformation);
       saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
     }
 
@@ -104,6 +106,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     }
 
     if (modelMath != null) {
+      System.out.println(modelMath);
       saveSettings(settings, CFG_MODEL_MATH, modelMath);
     }
 
@@ -138,6 +141,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     try {
       ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
       String jsonStr = objectMapper.writeValueAsString(eObject);
+      System.out.println(jsonStr);
       settings.addString(key, jsonStr);
     } catch (JsonProcessingException exception) {
       LOGGER.warn("Error saving " + key);
@@ -148,6 +152,8 @@ class FSKEditorJSViewValue extends JSONViewContent {
       throws InvalidSettingsException {
 
     String jsonStr = settings.getString(key);
+    jsonStr = StringEscapeUtils.unescapeJson(jsonStr);
+    jsonStr = jsonStr.substring(1, jsonStr.length()-1);
     return jsonStr;
     
   }

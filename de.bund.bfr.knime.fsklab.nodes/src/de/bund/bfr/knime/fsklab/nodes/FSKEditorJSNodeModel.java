@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -45,6 +46,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.FskSimulation;
 import metadata.DataBackground;
 import metadata.GeneralInformation;
 import metadata.MetadataPackage;
@@ -65,7 +67,7 @@ final class FSKEditorJSNodeModel
   private final FSKEditorJSNodeSettings nodeSettings = new FSKEditorJSNodeSettings();
   private FskPortObject m_port;
   // Input and output port types
-  private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
+  private static final PortType[] IN_TYPES = {FskPortObject.TYPE_OPTIONAL};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
   private static final String VIEW_NAME =
@@ -126,10 +128,19 @@ final class FSKEditorJSNodeModel
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) throws Exception{
 
-    FskPortObject inObj1 = (FskPortObject) inObjects[0];
-  
-    FskPortObject outObj = inObj1;
-
+    
+    FskPortObject inObj1;
+    FskPortObject outObj;
+    if (inObjects.length > 0 && inObjects[0] != null) {
+      inObj1 = (FskPortObject) inObjects[0];
+    }else {
+       inObj1 = new FskPortObject("", new ArrayList<>());
+       inObj1.model = "";
+       inObj1.viz = "";
+       
+       
+       
+    }
     // Clone input object
    
 
@@ -137,9 +148,10 @@ final class FSKEditorJSNodeModel
 
     synchronized (getLock()) {
       FSKEditorJSViewValue fskEditorProxyValue = getViewValue();
-
+     
       // If not executed
       if (fskEditorProxyValue.getGeneralInformation() == null) {
+        
         fskEditorProxyValue.setGeneralInformation(FromEOjectToJSON(inObj1.generalInformation));
         fskEditorProxyValue.setScope(FromEOjectToJSON(inObj1.scope));
         fskEditorProxyValue.setDataBackground(FromEOjectToJSON(inObj1.dataBackground));
@@ -149,6 +161,9 @@ final class FSKEditorJSNodeModel
        
         exec.setProgress(1);
       }
+      outObj =  inObj1;
+      FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation("");
+      outObj.simulations.add(defaultSimulation);
       outObj.generalInformation = getEObjectFromJson(fskEditorProxyValue.getGeneralInformation(),GeneralInformation.class);
       outObj.scope = getEObjectFromJson(fskEditorProxyValue.getScope(),Scope.class);
       outObj.dataBackground = getEObjectFromJson(fskEditorProxyValue.getDataBackground(),DataBackground.class);
