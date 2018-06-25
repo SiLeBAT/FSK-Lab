@@ -105,6 +105,7 @@ fskeditorjs = function() {
     var firstModelParameterMap = new Object();
     var secomndModelParameterMap = new Object();
     joinerNode.init = function(representation, value) {
+    console.log('value ',value);
     	_firstModel.generalInformation = JSON.parse(value.generalInformation);
     	_firstModel.scope =  JSON.parse(value.scope);
     	
@@ -160,7 +161,6 @@ fskeditorjs = function() {
     	_viewValue.scope = JSON.stringify(window.store2.getState().jsonforms.core.data);
     	_viewValue.modelMath = JSON.stringify(window.store17.getState().jsonforms.core.data);
     	_viewValue.dataBackground = JSON.stringify(window.store6.getState().jsonforms.core.data);
-        
         return _viewValue;
     };
    
@@ -337,41 +337,19 @@ fskeditorjs = function() {
         	
     	});
         
-        /*$.each(  $('html').find('input'), function( key, value ) {
+        $.each(  $('html').find('input'), function( key, value ) {
         	
         	$(value).removeAttr('class');
         	$(value).addClass('form-control');
         	$(value).parent().removeAttr('class');
-        	$(value).parent().addClass('col-sm-10');
+        	$(value).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
         	$(value).parent().parent().removeAttr('class');
         	$(value).parent().parent().addClass('form-group');
         	$(value).parent().parent().find('label').removeAttr('class');
-        	$(value).parent().parent().find('label').addClass('control-label col-sm-2');
+        	$(value).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
         	
-        	$(value).focusin(function(event) {
-        		event.preventDefault(); // Let's stop this event.
-                event.stopPropagation(); // Really this time.
-                $(value).parent().removeAttr('class');
-            	$(value).parent().addClass('col-sm-10');
-            	$(value).parent().parent().removeAttr('class');
-            	$(value).parent().parent().addClass('form-group');
-            	$(value).parent().parent().find('label').removeAttr('class');
-            	$(value).parent().parent().find('label').addClass('control-label col-sm-2');
-                
-             });
-        	$(value).blur(function(event) {
-        		event.preventDefault(); // Let's stop this event.
-                event.stopPropagation(); // Really this time.
-                $(value).parent().removeAttr('class');
-            	$(value).parent().addClass('col-sm-10');
-            	$(value).parent().parent().removeAttr('class');
-            	$(value).parent().parent().addClass('form-group');
-            	$(value).parent().parent().find('label').removeAttr('class');
-            	$(value).parent().parent().find('label').addClass('control-label col-sm-2');
-                
-             });
-    	});*/
-        
+    	});
+       
         
         
         $('.MuiFormLabel-root-100').css('font-size','1.5rem');
@@ -420,19 +398,81 @@ fskeditorjs = function() {
         $($("[aria-describedby*='tooltip-add']")).attr('data-target','#myModal');*/
         var StringObjectPopupsName = ['qualityMeasures','event','laboratoryAccreditation','populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
         $("[aria-describedby*='tooltip-add']").click(function(event) {
-        	
-        	currentArea = window.makeId($(this).attr('aria-label'));
-        	console.log(currentArea);
-
-        	if($.inArray(currentArea, StringObjectPopupsName)<0){
-        		event.preventDefault(); // Let's stop this event.
-	            event.stopPropagation(); // Really this time.
+	        	currentArea = window.makeId($(this).attr('aria-label'));
+	        	console.log(currentArea);
+	
+	        	if($.inArray(currentArea, StringObjectPopupsName)<0){
+	        		event.preventDefault(); // Let's stop this event.
+		        event.stopPropagation(); // Really this time.
 	            $('#title'+currentArea).text(currentArea);
-	            $('#'+currentArea).modal('show');
-        	}else{
-        		console.log($.inArray(currentArea, StringObjectPopupsName))
-        	}
+	            $('#'+currentArea).on('show', function () {
+			                $(this).find('.modal-body').css({
+			                    width:'auto', //probably not needed
+			                    height:'auto', //probably not needed 
+			                    'max-height':'100%'
+			             });
+			      });
+		        $('#'+currentArea).modal('show');
+		        
+		        
+	        	}
         });
+       /* $("input[type='text']").removeAttr('class');
+        $("input[type='text']").attr('class','form-control nobefore');
+        $('.MuiInput-underline-110').removeAttr('class');*/
+        $("input[type='text']").focus(function(event) {
+           console.log($( event.target ).parent());
+           
+           event.preventDefault(); // Let's stop this event.
+           event.stopPropagation(); // Really this time.
+           
+           $( event.target ).parent().removeAttr('class');
+           $( event.target ).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
+           $( event.target ).parent().parent().find('label').removeAttr('class');
+           $( event.target ).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
+           
+        });
+        $("input[type='text']").click(function(event) {
+	        	
+            console.log($( event.target ).parent());
+            var source = $( event.target );
+            
+           
+            setTimeout(function(){
+            	 $( event.target ).parent().removeAttr('class');
+            	 source.parent().addClass('col-xs-6 col-sm-8 col-lg-9');
+            	 source.parent().parent().find('label').removeAttr('class');
+            	 source.parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
+            	 $(".MuiButtonBase-root-156").click(function(event) {
+ 	        		$.each($("input[readonly]"),function(index, dim){
+ 	        			
+ 	        			 setTimeout(function(){
+	 	        			$(dim).parent().removeAttr('class');
+	 	 	        		$(dim).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
+	 	 	        		$(dim).parent().parent().find('label').removeAttr('class');
+	 	 	        		$(dim).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
+ 	        			 },50);
+ 	        		});
+ 	        		
+ 	            
+ 	         });
+            }, 10);
+            
+         });
+        
+        
+        $("input[type='text']").blur(function(event) {
+            console.log('hjkhkj ',$( event.target ).parent());
+            
+            event.preventDefault(); // Let's stop this event.
+            event.stopPropagation(); // Really this time.
+            
+            $( event.target ).parent().removeAttr('class');
+            $( event.target ).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
+            $( event.target ).parent().parent().find('label').removeAttr('class');
+            $( event.target ).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
+         });
+        
         $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
         $(".notReplace button[aria-describedby*='tooltip-add']").click(function(event) {
         	
