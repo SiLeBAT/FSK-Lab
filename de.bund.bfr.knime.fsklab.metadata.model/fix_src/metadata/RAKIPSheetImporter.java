@@ -3,7 +3,9 @@ package metadata;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -181,6 +183,11 @@ public class RAKIPSheetImporter {
 		}
 
 		// TODO: author (1..1)
+		try {
+			Contact author = retrieveAuthor(sheet.getRow(3));
+			generalInformation.setAuthor(author);
+		} catch (Exception exception) {
+		}
 
 		// creator (0..n)
 		for (int numRow = 3; numRow < 7; numRow++) {
@@ -215,57 +222,57 @@ public class RAKIPSheetImporter {
 	/**
 	 * @throw IllegalArgumentException if mail is empty.
 	 */
-	public Contact retrieveContact(XSSFRow row) {
+	private Contact retrieveContact(XSSFRow row, Map<String, Integer> columns) {
 
 		// Check mandatory properties and throw exception if missing
-		if (row.getCell(R).getCellType() == Cell.CELL_TYPE_BLANK) {
+		if (row.getCell(columns.get("mail")).getCellType() == Cell.CELL_TYPE_BLANK) {
 			throw new IllegalArgumentException("Missing mail");
 		}
 
 		Contact contact = MetadataFactory.eINSTANCE.createContact();
-		contact.setEmail(row.getCell(R).getStringCellValue());
+		contact.setEmail(row.getCell(columns.get("mail")).getStringCellValue());
 
-		XSSFCell titleCell = row.getCell(K);
+		XSSFCell titleCell = row.getCell(columns.get("title"));
 		if (titleCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setTitle(titleCell.getStringCellValue());
 		}
 
-		XSSFCell familyNameCell = row.getCell(O);
+		XSSFCell familyNameCell = row.getCell(columns.get("familyName"));
 		if (familyNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setFamilyName(familyNameCell.getStringCellValue());
 		}
 
-		XSSFCell givenNameCell = row.getCell(M);
+		XSSFCell givenNameCell = row.getCell(columns.get("givenName"));
 		if (givenNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setGivenName(givenNameCell.getStringCellValue());
 		}
 
-		XSSFCell telephoneCell = row.getCell(Q);
+		XSSFCell telephoneCell = row.getCell(columns.get("telephone"));
 		if (telephoneCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setTelephone(telephoneCell.getStringCellValue());
 		}
 
-		XSSFCell streetAddressCell = row.getCell(W);
+		XSSFCell streetAddressCell = row.getCell(columns.get("streetAddress"));
 		if (streetAddressCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setStreetAddress(streetAddressCell.getStringCellValue());
 		}
 
-		XSSFCell countryCell = row.getCell(S);
+		XSSFCell countryCell = row.getCell(columns.get("country"));
 		if (countryCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setCountry(countryCell.getStringCellValue());
 		}
 
-		XSSFCell cityCell = row.getCell(T);
+		XSSFCell cityCell = row.getCell(columns.get("city"));
 		if (cityCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setCity(cityCell.getStringCellValue());
 		}
 
-		XSSFCell zipCodeCell = row.getCell(U);
+		XSSFCell zipCodeCell = row.getCell(columns.get("zipCode"));
 		if (zipCodeCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setZipCode(zipCodeCell.getStringCellValue());
 		}
 
-		XSSFCell regionCell = row.getCell(Y);
+		XSSFCell regionCell = row.getCell(columns.get("region"));
 		if (regionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setRegion(regionCell.getStringCellValue());
 		}
@@ -274,12 +281,57 @@ public class RAKIPSheetImporter {
 		// gender not included in spreadsheet ?
 		// note not included in spreadsheet ?
 
-		XSSFCell organizationCell = row.getCell(P);
+		XSSFCell organizationCell = row.getCell(columns.get("organization"));
 		if (organizationCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setOrganization(organizationCell.getStringCellValue());
 		}
 
 		return contact;
+	}
+
+	/**
+	 * @throw IllegalArgumentException if mail is empty.
+	 */
+	public Contact retrieveContact(XSSFRow row) {
+
+		@SuppressWarnings("serial")
+		HashMap<String, Integer> columns = new HashMap<String, Integer>() {
+			{
+				put("mail", R);
+				put("title", K);
+				put("familyName", O);
+				put("givenName", M);
+				put("telephone", Q);
+				put("streetAddress", W);
+				put("country", S);
+				put("city", T);
+				put("zipCode", U);
+				put("region", Y);
+				put("organization", P);
+			}
+		};
+		return retrieveContact(row, columns);
+	}
+
+	public Contact retrieveAuthor(XSSFRow row) {
+
+		@SuppressWarnings("serial")
+		HashMap<String, Integer> columns = new HashMap<String, Integer>() {
+			{
+				put("mail", AH);
+				put("title", AA);
+				put("familyName", AE);
+				put("givenName", AC);
+				put("telephone", AG);
+				put("streetAddress", AM);
+				put("country", AI);
+				put("city", AJ);
+				put("zipCode", AK);
+				put("region", AO);
+				put("organization", AF);
+			}
+		};
+		return retrieveContact(row, columns);
 	}
 
 	/**
@@ -1188,7 +1240,7 @@ public class RAKIPSheetImporter {
 
 		try {
 			JsonObject measures = retrieveQualityMeasures(sheet);
-			
+
 			StringObject so = MetadataFactory.eINSTANCE.createStringObject();
 			so.setValue(measures.toString());
 			modelMath.getQualityMeasures().add(so);

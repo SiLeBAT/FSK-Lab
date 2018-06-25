@@ -71,7 +71,7 @@ public class RAKIPSheetImporterTest {
 	}
 
 	@Test
-	public void testAuthor() throws IOException {
+	public void testCreator() throws IOException {
 
 		XSSFSheet sheet0;
 		try (InputStream stream = RAKIPSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
@@ -95,6 +95,32 @@ public class RAKIPSheetImporterTest {
 		assertFalse(contact.eIsSet(pkg.getContact_ZipCode()));
 		assertFalse(contact.eIsSet(pkg.getContact_Region()));
 		assertEquals("BfR", contact.getOrganization());
+	}
+
+	@Test
+	public void testAuthor() throws IOException {
+
+		XSSFSheet sheet0;
+		try (InputStream stream = RAKIPSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
+				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
+			sheet0 = workbook.getSheetAt(0);
+		}
+
+		MetadataPackage pkg = MetadataPackage.eINSTANCE;
+
+		RAKIPSheetImporter importer = new RAKIPSheetImporter();
+		Contact contact = importer.retrieveAuthor(sheet0.getRow(3));
+		assertEquals("Prof", contact.getTitle());
+		assertEquals("Mosley", contact.getFamilyName());
+		assertEquals("Steve", contact.getGivenName());
+		assertEquals("mosley@nyu.org", contact.getEmail());
+		assertEquals("080 12345566", contact.getTelephone());
+		assertEquals("Berliner Strasse 2", contact.getStreetAddress());
+		assertEquals("Saint Vincent and the Grenadines", contact.getCountry());
+		assertEquals("Berlin", contact.getCity());
+		assertEquals("12345", contact.getZipCode());
+		assertEquals("Greater New Yorker Area", contact.getRegion());
+		assertEquals("NYU", contact.getOrganization());
 	}
 
 	@Test
