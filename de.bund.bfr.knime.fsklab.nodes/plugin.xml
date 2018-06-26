@@ -228,7 +228,21 @@
         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js">
       </webResource>
       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js" type="JAVASCRIPT" />
-      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/JQueryUI.js"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/JQueryUI.js">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/JQueryUI.js" type="JAVASCRIPT" />
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery-ui.css"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery-ui.css">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery-ui.css" type="CSS" />
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/jquery.min.js" type="JAVASCRIPT" />
       <webResource
         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/punycode.js"
         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/punycode.js">

@@ -2340,6 +2340,11 @@ function createEMFForm(){
 		$.each(tablePopups,function(index,value){
 			
 		});
+		function tableInputBootstraping(elements){
+			$.each(elements,function (index, value){
+				$(value).addClass("form-control");
+			})
+		}
 		//popup creatror
 		window.savereference = function () {
 			
@@ -2353,6 +2358,7 @@ function createEMFForm(){
 			}
 		    
 		    $(".table tbody tr td div div div input").removeAttr('class');
+		    window.tableInputBootstraping($(".table tbody tr td div div div input"));
 		    $(".table tbody tr td div div div").removeAttr('class');
 		    $(".table tbody tr td div div").removeAttr('class');
 		    $(".table tbody tr td div").removeAttr('class');
@@ -2414,6 +2420,7 @@ function createEMFForm(){
 				store1.dispatch(Actions.init(window.generalInformation, window.schema, window.uischema));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
+			    tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -2479,6 +2486,7 @@ function createEMFForm(){
 			}
 			//console.log("date ",window.generalInformation.modificationdate);
 				$(".table tbody tr td div div div input").removeAttr('class');
+				tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -2537,6 +2545,7 @@ function createEMFForm(){
 			}
 			//console.log("date ",window.generalInformation.modificationdate);
 				$(".table tbody tr td div div div input").removeAttr('class');
+				tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -2720,6 +2729,7 @@ function createEMFForm(){
 				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
+			    tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -2781,6 +2791,7 @@ function createEMFForm(){
 				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
+			    tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -2844,6 +2855,7 @@ function createEMFForm(){
 				store17.dispatch(Actions.init(window.modelMath, window.schema17, window.uischema17));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
+			    tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -2899,6 +2911,7 @@ function createEMFForm(){
 				store17.dispatch(Actions.init(window.modelMath, window.schema17, window.uischema17));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
+			    tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -2960,6 +2973,7 @@ function createEMFForm(){
 				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
+			    tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -3020,6 +3034,7 @@ function createEMFForm(){
 				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
+			    tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -3080,6 +3095,7 @@ function createEMFForm(){
 				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
+			    tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -3139,6 +3155,7 @@ function createEMFForm(){
 				store6.dispatch(Actions.init(window.dataBackground, window.schema6, window.uischema6));
 			}
 			    $(".table tbody tr td div div div input").removeAttr('class');
+			    tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
 			    $(".table tbody tr td div div").removeAttr('class');
 			    $(".table tbody tr td div").removeAttr('class');
@@ -3280,6 +3297,7 @@ function createEMFForm(){
 			}
 		    
 		    $(".table tbody tr td div div div input").removeAttr('class');
+		    tableInputBootstraping($(".table tbody tr td div div div input"));
 		    $(".table tbody tr td div div div").removeAttr('class');
 		    $(".table tbody tr td div div").removeAttr('class');
 		    $(".table tbody tr td div").removeAttr('class');

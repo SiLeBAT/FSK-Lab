@@ -66,10 +66,12 @@ body {padding:3%;background:#fff}
 
 
 .control-labelal{
-    text-align: left;
+    float: left;
 }
 
-
+.demoform input {
+    min-width: 320px;   /* depends how much minimum width you require */
+}
 .nobefore:before{
    content: none;
 }
