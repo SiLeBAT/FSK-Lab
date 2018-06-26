@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -162,8 +161,12 @@ final class FSKEditorJSNodeModel
         exec.setProgress(1);
       }
       outObj =  inObj1;
-      FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation("");
-      outObj.simulations.add(defaultSimulation);
+
+      if (inObj1.simulations.size() == 0) {
+        FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation("");
+        outObj.simulations.add(defaultSimulation);
+      }
+
       outObj.generalInformation = getEObjectFromJson(fskEditorProxyValue.getGeneralInformation(),GeneralInformation.class);
       outObj.scope = getEObjectFromJson(fskEditorProxyValue.getScope(),Scope.class);
       outObj.dataBackground = getEObjectFromJson(fskEditorProxyValue.getDataBackground(),DataBackground.class);
