@@ -105,7 +105,7 @@ fskeditorjs = function() {
     var firstModelParameterMap = new Object();
     var secomndModelParameterMap = new Object();
     joinerNode.init = function(representation, value) {
-    console.log('value ',value);
+    //console.log('value ',value);
     	_firstModel.generalInformation = JSON.parse(value.generalInformation);
     	_firstModel.scope =  JSON.parse(value.scope);
     	
@@ -248,9 +248,18 @@ fskeditorjs = function() {
         	  e.preventDefault()
         	  $(this).tab('show')
         	})
-       
+        function fixInputCSS(source){
+    		source.parent().removeAttr('class');
+    		source.parent().parent().find('label').removeAttr('class');
+    		source.parent().parent().find('label').addClass('control-labelal');
+	    }
+        window.tableInputBootstraping = function (elements){
+        	$.each(elements,function (index, value){
+        		$(value).addClass("form-control");
+        	})
+        }
         $(document).ready(function() {
-
+        	
             // DEPENDENCY: https://github.com/flatlogic/bootstrap-tabcollapse
 
 
@@ -366,7 +375,7 @@ fskeditorjs = function() {
         $(".MuiTable-root-222 tbody tr td div div div").removeAttr('class');
       
         $(".MuiTable-root-222 tbody tr td div div div input").removeAttr('class');
-        
+        window.tableInputBootstraping($(".MuiTable-root-222 tbody tr td div div div input"));
 
         
 	   
@@ -376,23 +385,21 @@ fskeditorjs = function() {
        $('.MuiTable-root-222').removeClass('MuiTable-root-222'); 
        
        $('.MuiFormControl-root-90').addClass('form-group');
-       
-     /*   $(document.body).delegate('input:text', 'focusin', function(e) {
-        	
-            
-        });*/
+       $.each($('.MuiToolbar-root-196').find('h2'),function(index, value){
+    	   text = $(value).text();
+    	  
+    	   $(value).replaceWith( $('<label class="control-labelal">'+text+'</label>') );
+       })
         $('.replaced').parent().addClass('panel'); 
         $('.replaced').parent().addClass('panel-default'); 
         $('.replaced').addClass('panel-body'); 
-        //$($("[aria-describedby*='tooltip-add']")[0]).off();
         window.makeId = function (words) {
             var n = words.split("Add to ");
             m = n[n.length - 1].replace(/\s/g, '');
             return m[0].toLowerCase()+""+m.substring(1);
 
         }
-        /*$($("[aria-describedby*='tooltip-add']")).attr('data-toggle','modal');
-        $($("[aria-describedby*='tooltip-add']")).attr('data-target','#myModal');*/
+       
         var StringObjectPopupsName = ['qualityMeasures','event','laboratoryAccreditation','populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
         $("[aria-describedby*='tooltip-add']").click(function(event) {
 	        	currentArea = window.makeId($(this).attr('aria-label'));
@@ -417,15 +424,8 @@ fskeditorjs = function() {
 		        window.scrollTo(0, 0);
 	        	}
         });
-       /* $("input[type='text']").removeAttr('class');
-        $("input[type='text']").attr('class','form-control nobefore');
-        $('.MuiInput-underline-110').removeAttr('class');*/
-        function fixInputCSS(source){
-        		source.parent().removeAttr('class');
-        		//source.parent().addClass('col-xs-6 col-sm-8 col-m-9 col-lg-9');
-        		source.parent().parent().find('label').removeAttr('class');
-        		source.parent().parent().find('label').addClass('control-labelal');
-        }
+       
+        
         $("input[type='text']").focus(function(event) {
            console.log($( event.target ).parent());
            
@@ -466,17 +466,17 @@ fskeditorjs = function() {
             fixInputCSS($( event.target ));
             
          });
-        $.each(  $(".demoform"), function( key, value ) {
+        /*$.each(  $(".demoform"), function( key, value ) {
         	
 	        	
-	        	$(value).addClass('well');
+	        	$(value).addClass('card');
 	        	
-	    	});
+	    	});*/
         $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
         $(".notReplace button[aria-describedby*='tooltip-add']").click(function(event) {
         	
         	currentArea = window.makeId($(this).attr('aria-label'));
-        	console.log('asasa '+currentArea);
+        	//console.log('asasa '+currentArea);
         	
         });
     }
