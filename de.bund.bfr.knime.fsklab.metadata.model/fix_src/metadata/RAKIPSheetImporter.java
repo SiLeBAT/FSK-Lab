@@ -816,7 +816,18 @@ public class RAKIPSheetImporter {
 
 		XSSFCell parameterValueCell = row.getCell(W);
 		if (parameterValueCell.getCellType() != Cell.CELL_TYPE_BLANK) {
-			param.setParameterValue(getString(parameterValueCell));
+
+			if (parameterValueCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+				Double doubleValue = parameterValueCell.getNumericCellValue();
+				if (parameterType == ParameterType.INTEGER) {
+					int intValue = doubleValue.intValue();
+					param.setParameterValue(Integer.toString(intValue));
+				} else if (parameterType == ParameterType.DOUBLE) {
+					param.setParameterValue(Double.toString(doubleValue));
+				}
+			} else {
+				param.setParameterValue(getString(parameterValueCell));
+			}
 		}
 
 		// TODO: reference
