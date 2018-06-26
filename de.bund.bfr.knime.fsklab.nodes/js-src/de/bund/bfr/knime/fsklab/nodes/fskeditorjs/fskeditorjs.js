@@ -337,19 +337,16 @@ fskeditorjs = function() {
         	
     	});
         
-        $.each(  $('html').find('input'), function( key, value ) {
+        $.each( $("input[type='text']"), function( key, value ) {
         	
-        	$(value).removeAttr('class');
-        	$(value).addClass('form-control');
-        	$(value).parent().removeAttr('class');
-        	$(value).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
-        	$(value).parent().parent().removeAttr('class');
-        	$(value).parent().parent().addClass('form-group');
-        	$(value).parent().parent().find('label').removeAttr('class');
-        	$(value).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
-        	
-    	});
-       
+	        	$(value).removeAttr('class');
+	        	$(value).addClass('form-control');
+	        	$(value).parent().parent().removeAttr('class');
+	        	$(value).parent().parent().addClass('form-group');
+	        	fixInputCSS($(value));
+	    	});
+        
+        
         
         
         $('.MuiFormLabel-root-100').css('font-size','1.5rem');
@@ -423,16 +420,19 @@ fskeditorjs = function() {
        /* $("input[type='text']").removeAttr('class');
         $("input[type='text']").attr('class','form-control nobefore');
         $('.MuiInput-underline-110').removeAttr('class');*/
+        function fixInputCSS(source){
+        		source.parent().removeAttr('class');
+        		//source.parent().addClass('col-xs-6 col-sm-8 col-m-9 col-lg-9');
+        		source.parent().parent().find('label').removeAttr('class');
+        		source.parent().parent().find('label').addClass('control-labelal');
+        }
         $("input[type='text']").focus(function(event) {
            console.log($( event.target ).parent());
            
            event.preventDefault(); // Let's stop this event.
            event.stopPropagation(); // Really this time.
            
-           $( event.target ).parent().removeAttr('class');
-           $( event.target ).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
-           $( event.target ).parent().parent().find('label').removeAttr('class');
-           $( event.target ).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
+           fixInputCSS($( event.target ));
            
         });
         $("input[type='text']").click(function(event) {
@@ -442,18 +442,12 @@ fskeditorjs = function() {
             
            
             setTimeout(function(){
-            	 $( event.target ).parent().removeAttr('class');
-            	 source.parent().addClass('col-xs-6 col-sm-8 col-lg-9');
-            	 source.parent().parent().find('label').removeAttr('class');
-            	 source.parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
+            	 fixInputCSS(source);
             	 $(".MuiButtonBase-root-156").click(function(event) {
  	        		$.each($("input[readonly]"),function(index, dim){
  	        			
  	        			 setTimeout(function(){
-	 	        			$(dim).parent().removeAttr('class');
-	 	 	        		$(dim).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
-	 	 	        		$(dim).parent().parent().find('label').removeAttr('class');
-	 	 	        		$(dim).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
+ 	        				fixInputCSS($(dim));
  	        			 },50);
  	        		});
  	        		
@@ -469,13 +463,15 @@ fskeditorjs = function() {
             
             event.preventDefault(); // Let's stop this event.
             event.stopPropagation(); // Really this time.
+            fixInputCSS($( event.target ));
             
-            $( event.target ).parent().removeAttr('class');
-            $( event.target ).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
-            $( event.target ).parent().parent().find('label').removeAttr('class');
-            $( event.target ).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
          });
-        
+        $.each(  $(".demoform"), function( key, value ) {
+        	
+	        	
+	        	$(value).addClass('well');
+	        	
+	    	});
         $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
         $(".notReplace button[aria-describedby*='tooltip-add']").click(function(event) {
         	
