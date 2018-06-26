@@ -252,7 +252,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
       // template entry (file with model meta data)
       {
-        out.putNextEntry(new ZipEntry(META_DATA1));
+        out.putNextEntry(new ZipEntry(META_DATA2));
 
         try {
           ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
