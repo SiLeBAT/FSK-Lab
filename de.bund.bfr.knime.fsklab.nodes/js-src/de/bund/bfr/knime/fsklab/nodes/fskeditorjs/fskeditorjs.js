@@ -389,7 +389,9 @@ fskeditorjs = function() {
     	   text = $(value).text();
     	  
     	   $(value).replaceWith( $('<label class="control-labelal">'+text+'</label>') );
-       })
+       });
+
+       $(".MuiTooltip-tooltip-201:contains('should NOT have additional properties')").parent().parent().parent().remove();
         $('.replaced').parent().addClass('panel'); 
         $('.replaced').parent().addClass('panel-default'); 
         $('.replaced').addClass('panel-body'); 
