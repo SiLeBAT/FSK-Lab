@@ -58,6 +58,9 @@ public class LibRegistry {
   private final RController controller = new RController();
 
   private String type;
+
+  private final String rVersion;
+
   private RWrapper rWrapper;
 
   private LibRegistry() throws IOException, RException {
@@ -69,6 +72,9 @@ public class LibRegistry {
     } else {
       type = "source";
     }
+
+    // Uses R version 3.4 for Windows and 3.0 for Mac and Linux.
+    rVersion = Platform.isWindows() ? "3.4" : "3.0";
 
     // Creates temporary folders and set them for deletion on shutdown
     File knimeTempDir = KNIMEConstants.getKNIMETempPath().toFile();
@@ -155,11 +161,11 @@ public class LibRegistry {
     List<Path> paths = rWrapper.checkVersions(deps, repoPath);
     return new HashSet<>(paths);
   }
-  
+
   /**
    * @return Path of a single R package or null if lib cannot be found.
-   * @throws RException 
-   * @throws REXPMismatchException 
+   * @throws RException
+   * @throws REXPMismatchException
    */
   public Path getPath(String lib) throws REXPMismatchException, RException {
     List<String> libs = Arrays.asList(lib);
@@ -231,7 +237,7 @@ public class LibRegistry {
     void addPackage(final List<String> pkgs, final Path path, final String repos)
         throws RException {
       String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '"
-          + repos + "', type = '" + type + "', Rversion = '3.0', quiet = TRUE)";
+          + repos + "', type = '" + type + "', Rversion = '" + rVersion + "', quiet = TRUE)";
       controller.eval(cmd, false);
     }
 
@@ -250,7 +256,7 @@ public class LibRegistry {
     List<Path> checkVersions(final List<String> pkgs, final Path path)
         throws REXPMismatchException, RException {
       String cmd = "checkVersions(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', type = '"
-          + type + "', Rversion = '3.0')";
+          + type + "', Rversion = '" + rVersion + "')";
 
       REXP rexp = controller.eval(cmd, true);
 
@@ -259,7 +265,7 @@ public class LibRegistry {
         RList list = rexp.asList();
         REXP element0 = list.at(0);
         String[] values = element0.asStrings();
-        
+
         return Arrays.stream(values).map(Paths::get).collect(Collectors.toList());
       }
 
@@ -308,7 +314,8 @@ public class LibRegistry {
      */
     List<String> pkgDep(final List<String> pkgs) throws RException, REXPMismatchException {
       String cmd =
-          "pkgDep(" + _pkgList(pkgs) + ", availPkgs = cranJuly2014, type = '" + type + "')";
+          "pkgDep(" + _pkgList(pkgs) + ", type = '" + type
+          + "', Rversion = '" + rVersion + "')";
       REXP rexp = controller.eval(cmd, true);
       return Arrays.asList(rexp.asStrings());
     }
