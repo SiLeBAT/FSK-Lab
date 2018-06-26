@@ -475,7 +475,10 @@ fskeditorjs = function() {
 	        	
 	    	});*/
         $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
-        $(".notReplace button[aria-describedby*='tooltip-add']").click(function(event) {
+        $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
+        $("div[role*='tooltip']:contains('should match format')").parent().parent().remove();
+        
+        $("div[role*='tooltip']").click(function(event) {
         	
         	currentArea = window.makeId($(this).attr('aria-label'));
         	//console.log('asasa '+currentArea);
