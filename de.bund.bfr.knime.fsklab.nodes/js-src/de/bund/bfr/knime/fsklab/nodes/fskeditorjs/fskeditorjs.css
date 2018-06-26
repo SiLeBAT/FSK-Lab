@@ -69,7 +69,7 @@ body {padding:3%;background:#fff}
     float: left;
 }
 
-.demoform input {
+.demoform input:not([type=checkbox]) {
     min-width: 320px;   /* depends how much minimum width you require */
 }
 .nobefore:before{
