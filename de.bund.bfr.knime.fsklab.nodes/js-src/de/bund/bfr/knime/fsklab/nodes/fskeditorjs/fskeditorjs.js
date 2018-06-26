@@ -105,7 +105,7 @@ fskeditorjs = function() {
     var firstModelParameterMap = new Object();
     var secomndModelParameterMap = new Object();
     joinerNode.init = function(representation, value) {
-    console.log('value ',value);
+    //console.log('value ',value);
     	_firstModel.generalInformation = JSON.parse(value.generalInformation);
     	_firstModel.scope =  JSON.parse(value.scope);
     	
@@ -248,9 +248,18 @@ fskeditorjs = function() {
         	  e.preventDefault()
         	  $(this).tab('show')
         	})
-       
+        function fixInputCSS(source){
+    		source.parent().removeAttr('class');
+    		source.parent().parent().find('label').removeAttr('class');
+    		source.parent().parent().find('label').addClass('control-labelal');
+	    }
+        window.tableInputBootstraping = function (elements){
+        	$.each(elements,function (index, value){
+        		$(value).addClass("form-control");
+        	})
+        }
         $(document).ready(function() {
-
+        	
             // DEPENDENCY: https://github.com/flatlogic/bootstrap-tabcollapse
 
 
@@ -337,19 +346,16 @@ fskeditorjs = function() {
         	
     	});
         
-        $.each(  $('html').find('input'), function( key, value ) {
+        $.each( $("input[type='text']"), function( key, value ) {
         	
-        	$(value).removeAttr('class');
-        	$(value).addClass('form-control');
-        	$(value).parent().removeAttr('class');
-        	$(value).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
-        	$(value).parent().parent().removeAttr('class');
-        	$(value).parent().parent().addClass('form-group');
-        	$(value).parent().parent().find('label').removeAttr('class');
-        	$(value).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
-        	
-    	});
-       
+	        	$(value).removeAttr('class');
+	        	$(value).addClass('form-control');
+	        	$(value).parent().parent().removeAttr('class');
+	        	$(value).parent().parent().addClass('form-group');
+	        	fixInputCSS($(value));
+	    	});
+        
+        
         
         
         $('.MuiFormLabel-root-100').css('font-size','1.5rem');
@@ -369,7 +375,7 @@ fskeditorjs = function() {
         $(".MuiTable-root-222 tbody tr td div div div").removeAttr('class');
       
         $(".MuiTable-root-222 tbody tr td div div div input").removeAttr('class');
-        
+        window.tableInputBootstraping($(".MuiTable-root-222 tbody tr td div div div input"));
 
         
 	   
@@ -379,23 +385,23 @@ fskeditorjs = function() {
        $('.MuiTable-root-222').removeClass('MuiTable-root-222'); 
        
        $('.MuiFormControl-root-90').addClass('form-group');
-       
-     /*   $(document.body).delegate('input:text', 'focusin', function(e) {
-        	
-            
-        });*/
+       $.each($('.MuiToolbar-root-196').find('h2'),function(index, value){
+    	   text = $(value).text();
+    	  
+    	   $(value).replaceWith( $('<label class="control-labelal">'+text+'</label>') );
+       });
+
+       $(".MuiTooltip-tooltip-201:contains('should NOT have additional properties')").parent().parent().parent().remove();
         $('.replaced').parent().addClass('panel'); 
         $('.replaced').parent().addClass('panel-default'); 
         $('.replaced').addClass('panel-body'); 
-        //$($("[aria-describedby*='tooltip-add']")[0]).off();
         window.makeId = function (words) {
             var n = words.split("Add to ");
             m = n[n.length - 1].replace(/\s/g, '');
             return m[0].toLowerCase()+""+m.substring(1);
 
         }
-        /*$($("[aria-describedby*='tooltip-add']")).attr('data-toggle','modal');
-        $($("[aria-describedby*='tooltip-add']")).attr('data-target','#myModal');*/
+       
         var StringObjectPopupsName = ['qualityMeasures','event','laboratoryAccreditation','populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
         $("[aria-describedby*='tooltip-add']").click(function(event) {
 	        	currentArea = window.makeId($(this).attr('aria-label'));
@@ -405,31 +411,30 @@ fskeditorjs = function() {
 	        		event.preventDefault(); // Let's stop this event.
 		        event.stopPropagation(); // Really this time.
 	            $('#title'+currentArea).text(currentArea);
-	            $('#'+currentArea).on('show', function () {
-			                $(this).find('.modal-body').css({
-			                    width:'auto', //probably not needed
-			                    height:'auto', //probably not needed 
-			                    'max-height':'100%'
-			             });
-			      });
+	            
 		        $('#'+currentArea).modal('show');
-		        
-		        
+		        $('.modal-content').resizable({
+		            //alsoResize: ".modal-dialog",
+		            //minHeight: 150
+		        });
+		        $('.modal-dialog').draggable();
+		        $('#'+currentArea).on('show.bs.modal', function () {
+		            $(this).find('.modal-body').css({
+		                'max-height':'100%'
+		            });
+		        });
+		        window.scrollTo(0, 0);
 	        	}
         });
-       /* $("input[type='text']").removeAttr('class');
-        $("input[type='text']").attr('class','form-control nobefore');
-        $('.MuiInput-underline-110').removeAttr('class');*/
+       
+        
         $("input[type='text']").focus(function(event) {
            console.log($( event.target ).parent());
            
            event.preventDefault(); // Let's stop this event.
            event.stopPropagation(); // Really this time.
            
-           $( event.target ).parent().removeAttr('class');
-           $( event.target ).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
-           $( event.target ).parent().parent().find('label').removeAttr('class');
-           $( event.target ).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
+           fixInputCSS($( event.target ));
            
         });
         $("input[type='text']").click(function(event) {
@@ -439,18 +444,12 @@ fskeditorjs = function() {
             
            
             setTimeout(function(){
-            	 $( event.target ).parent().removeAttr('class');
-            	 source.parent().addClass('col-xs-6 col-sm-8 col-lg-9');
-            	 source.parent().parent().find('label').removeAttr('class');
-            	 source.parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
+            	 fixInputCSS(source);
             	 $(".MuiButtonBase-root-156").click(function(event) {
  	        		$.each($("input[readonly]"),function(index, dim){
  	        			
  	        			 setTimeout(function(){
-	 	        			$(dim).parent().removeAttr('class');
-	 	 	        		$(dim).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
-	 	 	        		$(dim).parent().parent().find('label').removeAttr('class');
-	 	 	        		$(dim).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
+ 	        				fixInputCSS($(dim));
  	        			 },50);
  	        		});
  	        		
@@ -466,18 +465,23 @@ fskeditorjs = function() {
             
             event.preventDefault(); // Let's stop this event.
             event.stopPropagation(); // Really this time.
+            fixInputCSS($( event.target ));
             
-            $( event.target ).parent().removeAttr('class');
-            $( event.target ).parent().addClass('col-xs-6 col-sm-8 col-lg-9');
-            $( event.target ).parent().parent().find('label').removeAttr('class');
-            $( event.target ).parent().parent().find('label').addClass('col-xs-6 col-sm-4 col-lg-3 control-labelal');
          });
-        
+        /*$.each(  $(".demoform"), function( key, value ) {
+        	
+	        	
+	        	$(value).addClass('card');
+	        	
+	    	});*/
         $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
-        $(".notReplace button[aria-describedby*='tooltip-add']").click(function(event) {
+        $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
+        $("div[role*='tooltip']:contains('should match format')").parent().parent().remove();
+        
+        $("div[role*='tooltip']").click(function(event) {
         	
         	currentArea = window.makeId($(this).attr('aria-label'));
-        	console.log('asasa '+currentArea);
+        	//console.log('asasa '+currentArea);
         	
         });
     }
