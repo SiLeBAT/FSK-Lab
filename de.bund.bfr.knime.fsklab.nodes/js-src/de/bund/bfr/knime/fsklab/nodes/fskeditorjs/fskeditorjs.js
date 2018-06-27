@@ -153,14 +153,20 @@ fskeditorjs = function() {
 
 	}
     joinerNode.getComponentValue = function() {
-    	
-    	//window.store2.getState().jsonforms.core.data.populationGroup = window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data;
     	window.store1.getState().jsonforms.core.data.author = window.store23.getState().jsonforms.core.data;
     	window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data;
     	_viewValue.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);
     	_viewValue.scope = JSON.stringify(window.store2.getState().jsonforms.core.data);
     	_viewValue.modelMath = JSON.stringify(window.store17.getState().jsonforms.core.data);
     	_viewValue.dataBackground = JSON.stringify(window.store6.getState().jsonforms.core.data);
+    	if(window.firstModelScript){
+    		window.firstModelScript.save();
+    	}
+    	if(window.firstModelViz){
+    		window.firstModelViz.save();
+    	}
+    	_viewValue.firstModelScript = $('#firstModelScript').val();
+    	_viewValue.firstModelViz    = $('#firstModelViz').val();
         return _viewValue;
     };
    
@@ -294,7 +300,7 @@ fskeditorjs = function() {
     				codeMirrorContainer.CodeMirror.refresh();
     				
 		        } else {
-		        	 window.CodeMirror.fromTextArea(document.getElementById("firstModelScript"), {
+		        	 window.firstModelScript = window.CodeMirror.fromTextArea(document.getElementById("firstModelScript"), {
 		          	  lineNumbers: true,
 		          	  extraKeys: {"Ctrl-Space": "autocomplete"},
 		          	  mode: {name: "R"}
@@ -310,7 +316,7 @@ fskeditorjs = function() {
     				codeMirrorContainer.CodeMirror.refresh();
     				
 		        } else {
-		        	 window.CodeMirror.fromTextArea(document.getElementById("firstModelViz"), {
+		        	window.firstModelViz = window.CodeMirror.fromTextArea(document.getElementById("firstModelViz"), {
 		          	  lineNumbers: true,
 		          	  extraKeys: {"Ctrl-Space": "autocomplete"},
 		          	  mode: {name: "R"}

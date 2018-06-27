@@ -21,9 +21,13 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.knime.core.node.*;
 import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.ParameterizedModel;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
@@ -36,14 +40,22 @@ import metadata.Scope;
 
 class JoinerViewValue extends JSONViewContent {
   
- 
-  
+  private static final NodeLogger LOGGER = NodeLogger.getLogger(JoinerViewValue.class);
+  private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
+  private static final String CFG_ORIGINAL_PARAMETERS_SCRIPT = "originalParametersScript";
+  private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
   public final int pseudoIdentifier = (new Random()).nextInt();
+  private static final String CFG_GENERAL_INFORMATION = "generalInformation";
+  private static final String CFG_SCOPE = "scope";
+  private static final String CFG_DATA_BACKGROUND = "dataBackground";
+  private static final String CFG_MODEL_MATH = "modelMath";
+  
   
   private GeneralInformation firstGeneralInformation ;
   private Scope firstScope ;
   private DataBackground firstDataBackground;
   private ModelMath firstModelMath ;
+  
   private GeneralInformation secondGeneralInformation ;
   private Scope secondScope ;
   private DataBackground secondDataBackground;
@@ -54,6 +66,133 @@ class JoinerViewValue extends JSONViewContent {
   
   private String firstModelViz;
   private String secondModelViz;
+  
+  private String generalInformation ;
+  private String scope;
+  private String dataBackground;
+  private String modelMath ;
+  
+  private List<JoinRelation> joinRelations = new ArrayList<JoinRelation>();
+  private String jsonRepresentation;
+  private String svgRepresentation;
+  public String getJsonRepresentation() {
+    return jsonRepresentation;
+  }
+
+  public void setJsonRepresentation(String jsonRepresentation) {
+    this.jsonRepresentation = jsonRepresentation;
+  }
+
+ 
+
+  public String getSvgRepresentation() {
+    return svgRepresentation;
+  }
+
+  public void setSvgRepresentation(String svgRepresentation) {
+    this.svgRepresentation = svgRepresentation;
+  }
+
+
+
+  @Override
+  public void saveToNodeSettings(NodeSettingsWO settings) {
+    settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
+    settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
+
+  
+
+    if (firstGeneralInformation != null) {
+      System.out.println(generalInformation);
+      saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
+    }
+
+    if (scope != null) {
+      saveSettings(settings, CFG_SCOPE, scope);
+    }
+
+    if (dataBackground != null) {
+      saveSettings(settings, CFG_DATA_BACKGROUND, dataBackground);
+    }
+
+    if (modelMath != null) {
+      System.out.println(modelMath);
+      saveSettings(settings, CFG_MODEL_MATH, modelMath);
+    }
+
+   
+  }
+
+  @Override
+  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+    firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
+    firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
+
+
+    // load meta data
+    if (settings.containsKey(CFG_GENERAL_INFORMATION)) {
+      generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION);
+    }
+    if (settings.containsKey(CFG_SCOPE)) {
+      scope = getEObject(settings, CFG_SCOPE);
+    }
+    if (settings.containsKey(CFG_DATA_BACKGROUND)) {
+      dataBackground = getEObject(settings, CFG_DATA_BACKGROUND);
+    }
+    if (settings.containsKey(CFG_MODEL_MATH)) {
+      modelMath = getEObject(settings, CFG_MODEL_MATH);
+    }
+
+   
+  }
+  private static void saveSettings(final NodeSettingsWO settings, final String key,
+      final String eObject) {
+
+    try {
+      ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+      String jsonStr = objectMapper.writeValueAsString(eObject);
+      System.out.println(jsonStr);
+      settings.addString(key, jsonStr);
+    } catch (JsonProcessingException exception) {
+      LOGGER.warn("Error saving " + key);
+    }
+  }
+
+  private static String getEObject(NodeSettingsRO settings, String key)
+      throws InvalidSettingsException {
+
+    String jsonStr = settings.getString(key);
+    jsonStr = StringEscapeUtils.unescapeJson(jsonStr);
+    jsonStr = jsonStr.substring(1, jsonStr.length()-1);
+    return jsonStr;
+    
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return pseudoIdentifier;
+  }
+  public List<JoinRelation> getJoinRelations() {
+    return joinRelations;
+  }
+
+  public void setJoinRelations(List<JoinRelation> joinRelations) {
+    this.joinRelations = joinRelations;
+  }
+  public void addJoinRelation(JoinRelation jr) {
+    joinRelations.add(jr);
+  }
   public String getFirstModelScript() {
     return firstModelScript;
   }
@@ -153,60 +292,5 @@ class JoinerViewValue extends JSONViewContent {
   }
 
 
-
-  private List<JoinRelation> joinRelations = new ArrayList<JoinRelation>();
-  private String jsonRepresentation;
-  private String svgRepresentation;
-  public String getJsonRepresentation() {
-    return jsonRepresentation;
-  }
-
-  public void setJsonRepresentation(String jsonRepresentation) {
-    this.jsonRepresentation = jsonRepresentation;
-  }
-
- 
-
-  public String getSvgRepresentation() {
-    return svgRepresentation;
-  }
-
-  public void setSvgRepresentation(String svgRepresentation) {
-    this.svgRepresentation = svgRepresentation;
-  }
-
-
-  
-  @Override
-  public void saveToNodeSettings(NodeSettingsWO settings) {}
-
-  @Override
-  public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return pseudoIdentifier;
-  }
-  public List<JoinRelation> getJoinRelations() {
-    return joinRelations;
-  }
-
-  public void setJoinRelations(List<JoinRelation> joinRelations) {
-    this.joinRelations = joinRelations;
-  }
-  public void addJoinRelation(JoinRelation jr) {
-    joinRelations.add(jr);
-  }
 
 }

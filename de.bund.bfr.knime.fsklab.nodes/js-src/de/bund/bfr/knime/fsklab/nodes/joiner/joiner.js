@@ -8,6 +8,7 @@ joiner = function() {
 		    return this.indexOf(searchString, position) === position;
 		  };
 	}
+	
 	if (!Array.from) {
 		  Array.from = (function () {
 		    var toStr = Object.prototype.toString;
@@ -28,7 +29,6 @@ joiner = function() {
 
 		    // The length property of the from method is 1.
 		    return function from(arrayLike/*, mapFn, thisArg */) {
-		    	//console.log(arrayLike);
 		      // 1. Let C be the this value.
 		      var C = this;
 
@@ -129,91 +129,36 @@ joiner = function() {
     	window.modelMath =  _firstModel.modelMath;
     	window.dataBackground =  _firstModel.dataBackground;
     	prepareData(_firstModel);
-    create_body();
+    	create_body();
     };
-    function prepareData(_firstModel){
+	function prepareData(_firstModel){
 		//prepare generalInformation
-		if(_firstModel.generalInformation.creationDate  === undefined){
-			_firstModel.generalInformation.creationDate = '';
-		}else{
-			_firstModel.generalInformation.creationDate = new Date(_firstModel.generalInformation.creationDate).toISOString();
+		try{
+			if(_firstModel.generalInformation.creationDate  === undefined){
+				_firstModel.generalInformation.creationDate = '';
+			}else{
+				_firstModel.generalInformation.creationDate = new Date(_firstModel.generalInformation.creationDate).toISOString();
+			}
+		}catch(err){
+			console.log(err);
 		}
-		//prepare scope
-		/*if(_firstModel.scope.product.productionDate  === undefined){
-			_firstModel.scope.product.productionDate = '';
-		}else{
-			_firstModel.scope.product.productionDate = new Date(_firstModel.scope.product.productionDate).toISOString()
-		}
+		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ?_firstModel.generalInformation.description:"";
+		_firstModel.generalInformation.author = _firstModel.generalInformation.author != null ?_firstModel.generalInformation.author:{};
+		_firstModel.generalInformation.format = _firstModel.generalInformation.format != null ?_firstModel.generalInformation.format:"";
+		_firstModel.generalInformation.language = _firstModel.generalInformation.language != null ?_firstModel.generalInformation.language:"";
+		_firstModel.generalInformation.languageWrittenIn = _firstModel.generalInformation.languageWrittenIn != null ?_firstModel.generalInformation.languageWrittenIn:"";
+		_firstModel.generalInformation.software = _firstModel.generalInformation.software != null ?_firstModel.generalInformation.software:"";
+		_firstModel.generalInformation.source = _firstModel.generalInformation.source != null ?_firstModel.generalInformation.source:"";
+		_firstModel.generalInformation.status = _firstModel.generalInformation.status != null ?_firstModel.generalInformation.status:"";
+		_firstModel.generalInformation.objective = _firstModel.generalInformation.objective != null ?_firstModel.generalInformation.objective:"";
+
+		_firstModel.scope.generalComment = _firstModel.scope.generalComment != null ?_firstModel.scope.generalComment:"";
+		_firstModel.scope.temporalInformation = _firstModel.scope.temporalInformation != null ?_firstModel.scope.temporalInformation:"";
 		
-		if(_firstModel.scope.product.expirationDate  === undefined){
-			_firstModel.scope.product.expirationDate = '';
-		}else{
-			_firstModel.scope.product.expirationDate = new Date(_firstModel.scope.product.expirationDate).toISOString();
-		}
-		if(_firstModel.scope.product.productionMethod.length == 0){
-			_firstModel.scope.product.productionMethod = '';
-		}else{
-			var methods = '';
-			$.each(_firstModel.scope.product.productionMethod, function( index, value ) {
-				  methods = methods + value +', ';
-			});
-			_firstModel.scope.product.productionMethod = methods;
-		}
-		
-		if(_firstModel.scope.product.packaging.length == 0){
-			_firstModel.scope.product.packaging = '';
-		}else{
-			var packaging = '';
-			$.each(_firstModel.scope.product.packaging, function( index, value ) {
-				packaging = packaging + value +', ';
-			});
-			_firstModel.scope.product.packaging = packaging;
-		}
-		
-		if(_firstModel.scope.product.productTreatment.length == 0){
-			_firstModel.scope.product.productTreatment = '';
-		}else{
-			var productTreatment = '';
-			$.each(_firstModel.scope.product.productTreatment, function( index, value ) {
-				productTreatment = productTreatment + value +', ';
-			});
-			_firstModel.scope.product.productTreatment = productTreatment;
-		}
-		console.log(_firstModel.dataBackground);
-		//prepare databackground
-		if(_firstModel.dataBackground.study.protocolUri == null){
-			_firstModel.dataBackground.study.protocolUri = '';
-		}
-		
-		if(_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems.length == 0){
-			_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems = '';
-		}else{
-			var numberOfFoodItems = '';
-			$.each(_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems, function( index, value ) {
-				numberOfFoodItems = numberOfFoodItems + value +', ';
-			});
-			_firstModel.dataBackground.dietaryAssessmentMethod.numberOfFoodItems = numberOfFoodItems;
-		}
-		
-		if(_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors.length == 0){
-			_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors = '';
-		}else{
-			var foodDescriptors = '';
-			$.each(_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors, function( index, value ) {
-				foodDescriptors = foodDescriptors + value +', ';
-			});
-			_firstModel.dataBackground.dietaryAssessmentMethod.foodDescriptors = foodDescriptors;
-		}
-		
-		if(_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes.length == 0){
-			_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes = '';
-		}else{
-			var recordTypes = '';
-			$.each(_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes, function( index, value ) {
-				recordTypes = recordTypes + value +', ';
-			});
-			_firstModel.dataBackground.dietaryAssessmentMethod.recordTypes = recordTypes;
-		}*/
+		_firstModel.dataBackground.study = _firstModel.dataBackground.study!=null?_firstModel.dataBackground.study:{};
+		_firstModel.dataBackground.dietaryassessmentmethod = _firstModel.dataBackground.dietaryassessmentmethod!=null?_firstModel.dataBackground.dietaryassessmentmethod:[];
+		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory!=null?_firstModel.dataBackground.laboratory:[];
+
 	}
     joinerNode.getComponentValue = function() {
     	
@@ -326,7 +271,16 @@ joiner = function() {
         	  e.preventDefault()
         	  $(this).tab('show')
         	})
-       
+        function fixInputCSS(source){
+    		source.parent().removeAttr('class');
+    		source.parent().parent().find('label').removeAttr('class');
+    		source.parent().parent().find('label').addClass('control-labelal');
+	    }
+        window.tableInputBootstraping = function (elements){
+        	$.each(elements,function (index, value){
+        		$(value).addClass("form-control");
+        	})
+        }
         $(document).ready(function() {
 
             // DEPENDENCY: https://github.com/flatlogic/bootstrap-tabcollapse
@@ -426,12 +380,15 @@ joiner = function() {
         });
         drawWorkflow();
         try{
-        		createEMFForm();
+        	createEMFForm();
         }catch(err){
         	
         }
-		 $.each(  $('html').find('style'), function( key, value ) {
-        	
+        
+          
+        //$('html').find('style').remove();
+        //data-meta MuiInputLabel
+       $.each($('html').find('style'), function( key, value ) {
         	if($(value).attr('data-meta') == 'MuiInput'){
         		$(value).remove();
         	}else if($(value).attr('data-meta') == 'MuiInputLabel'){
@@ -449,6 +406,18 @@ joiner = function() {
           
           
         
+        $.each( $("input[type='text']"), function( key, value ) {
+        	
+	        	$(value).removeAttr('class');
+	        	$(value).addClass('form-control');
+	        	$(value).parent().parent().removeAttr('class');
+	        	$(value).parent().parent().addClass('form-group');
+	        	fixInputCSS($(value));
+	    	});
+        
+        
+        
+        
         $('.MuiFormLabel-root-100').css('font-size','1.5rem');
         $('.MuiDialog-paper-128').css('display','inline');
         $('.MuiDialog-paper-128').css('max-height','');
@@ -464,10 +433,9 @@ joiner = function() {
         $(".MuiTable-root-222 tbody tr td div").removeAttr('class');
         $(".MuiTable-root-222 tbody tr td div div").removeAttr('class');
         $(".MuiTable-root-222 tbody tr td div div div").removeAttr('class');
-        
+      
         $(".MuiTable-root-222 tbody tr td div div div input").removeAttr('class');
-        
-        
+        window.tableInputBootstraping($(".MuiTable-root-222 tbody tr td div div div input"));
 
         
 	   
@@ -475,28 +443,110 @@ joiner = function() {
 	   $('.MuiTable-root-222').parent().addClass('table-responsive');
 	   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
        $('.MuiTable-root-222').removeClass('MuiTable-root-222'); 
-         
-       $('.MuiTable-root-222').addClass('table table-dark'); 
+       
        $('.MuiFormControl-root-90').addClass('form-group');
+       $.each($('.MuiToolbar-root-196').find('h2'),function(index, value){
+    	   text = $(value).text();
+    	  
+    	   $(value).replaceWith( $('<label class="control-labelal">'+text+'</label>') );
+       });
+
+       $(".MuiTooltip-tooltip-201:contains('should NOT have additional properties')").parent().parent().parent().remove();
+        $('.replaced').parent().addClass('panel'); 
+        $('.replaced').parent().addClass('panel-default'); 
+        $('.replaced').addClass('panel-body'); 
+        window.makeId = function (words) {
+            var n = words.split("Add to ");
+            m = n[n.length - 1].replace(/\s/g, '');
+            return m[0].toLowerCase()+""+m.substring(1);
+
+        }
+       
+        var StringObjectPopupsName = ['qualityMeasures','event','laboratoryAccreditation','populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
+        $("[aria-describedby*='tooltip-add']").click(function(event) {
+	        	currentArea = window.makeId($(this).attr('aria-label'));
+	        	console.log(currentArea);
+	
+	        	if($.inArray(currentArea, StringObjectPopupsName)<0){
+	        		event.preventDefault(); // Let's stop this event.
+		        event.stopPropagation(); // Really this time.
+	            $('#title'+currentArea).text(currentArea);
+	            
+		        $('#'+currentArea).modal('show');
+		        $('.modal-content').resizable({
+		            //alsoResize: ".modal-dialog",
+		            //minHeight: 150
+		        });
+		        $('.modal-dialog').draggable();
+		        $('#'+currentArea).on('show.bs.modal', function () {
+		            $(this).find('.modal-body').css({
+		                'max-height':'100%'
+		            });
+		        });
+		        window.scrollTo(0, 0);
+	        	}
+        });
        
         
-       $('.replaced').parent().addClass('panel'); 
-       $('.replaced').parent().addClass('panel-default'); 
-       $('.replaced').addClass('panel-body'); 
-	   function getLastWord(words) {
-	        var n = words.split(" ");
-	        return n[n.length - 1];
-	
-	   }
-	    /*$($("[aria-describedby*='tooltip-add']")).attr('data-toggle','modal');
-	    $($("[aria-describedby*='tooltip-add']")).attr('data-target','#myModal');*/
-	   $($("[aria-describedby*='tooltip-add']")).click(function(event) {
-	    	currentArea = getLastWord($(this).attr('aria-label'));
-	    	event.preventDefault(); // Let's stop this event.
-	        event.stopPropagation(); // Really this time.
-	        $('#title'+currentArea).text(currentArea);
-	        $('#'+currentArea).modal('show');
-	   });
+        $("input[type='text']").focus(function(event) {
+           console.log($( event.target ).parent());
+           
+           event.preventDefault(); // Let's stop this event.
+           event.stopPropagation(); // Really this time.
+           
+           fixInputCSS($( event.target ));
+           
+        });
+        $("input[type='text']").click(function(event) {
+	        	
+            console.log($( event.target ).parent());
+            var source = $( event.target );
+            
+           
+            setTimeout(function(){
+            	 fixInputCSS(source);
+            	 $(".MuiButtonBase-root-156").click(function(event) {
+ 	        		$.each($("input[readonly]"),function(index, dim){
+ 	        			
+ 	        			 setTimeout(function(){
+ 	        				fixInputCSS($(dim));
+ 	        			 },50);
+ 	        		});
+ 	        		
+ 	            
+ 	         });
+            }, 10);
+            
+         });
+        
+        
+        $("input[type='text']").blur(function(event) {
+            console.log('hjkhkj ',$( event.target ).parent());
+            
+            event.preventDefault(); // Let's stop this event.
+            event.stopPropagation(); // Really this time.
+            fixInputCSS($( event.target ));
+            
+         });
+        /*$.each(  $(".demoform"), function( key, value ) {
+        	
+	        	
+	        	$(value).addClass('card');
+	        	
+	    	});*/
+        $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
+        $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
+        $("div[role*='tooltip']:contains('should match format')").parent().parent().remove();
+        $("div[role*='tooltip']:contains('should be')").parent().parent().remove();
+        
+        
+        
+        $("div[role*='tooltip']").click(function(event) {
+        	
+        	currentArea = window.makeId($(this).attr('aria-label'));
+        	//console.log('asasa '+currentArea);
+        	
+        });
     }
     
     
