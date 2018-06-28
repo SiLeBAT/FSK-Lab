@@ -600,18 +600,18 @@ public class RAKIPSheetImporter {
 	public Study retrieveStudy(XSSFSheet sheet) {
 
 		// Check first mandatory properties
-		if (sheet.getRow(STUDY__STUDY_IDENTIFIER).getCell(I).getCellType() != Cell.CELL_TYPE_STRING) {
+		if (sheet.getRow(STUDY__STUDY_TITLE).getCell(I).getCellType() != Cell.CELL_TYPE_STRING) {
 			throw new IllegalArgumentException("Missing study title");
 		}
 
 		Study study = MetadataFactory.eINSTANCE.createStudy();
 
-		study.setStudyIdentifier(sheet.getRow(STUDY__STUDY_IDENTIFIER).getCell(I).getStringCellValue());
-
-		XSSFCell titleCell = sheet.getRow(STUDY__STUDY_TITLE).getCell(I);
-		if (titleCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			study.setStudyTitle(titleCell.getStringCellValue());
+		XSSFCell identifierCell = sheet.getRow(STUDY__STUDY_IDENTIFIER).getCell(I);
+		if (identifierCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			study.setStudyIdentifier(identifierCell.getStringCellValue());
 		}
+
+		study.setStudyTitle(sheet.getRow(STUDY__STUDY_TITLE).getCell(I).getStringCellValue());
 
 		XSSFCell descriptionCell = sheet.getRow(STUDY__STUDY_DESCRIPTION).getCell(I);
 		if (descriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
