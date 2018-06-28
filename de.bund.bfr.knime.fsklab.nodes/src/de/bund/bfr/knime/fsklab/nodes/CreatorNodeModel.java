@@ -220,6 +220,7 @@ class CreatorNodeModel extends NoInternalsModel {
     if (modelMath != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
     }
+    portObj.setSpreadsheet(nodeSettings.spreadsheet);
     
     String readmePath = nodeSettings.getReadme();
     if (!readmePath.isEmpty()) {

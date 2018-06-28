@@ -81,10 +81,10 @@ public class CombinedFskPortObject extends FskPortObject {
   }
 
   public static final PortType TYPE =
-      PortTypeRegistry.getInstance().getPortType(CombinedFskPortObject.class);
+      PortTypeRegistry.getInstance().getPortType(FskPortObject.class);
 
   public static final PortType TYPE_OPTIONAL =
-      PortTypeRegistry.getInstance().getPortType(CombinedFskPortObject.class, true);
+      PortTypeRegistry.getInstance().getPortType(FskPortObject.class, true);
 
   public static final String[] RESOURCE_EXTENSIONS = new String[] {"txt", "RData", "csv"};
 

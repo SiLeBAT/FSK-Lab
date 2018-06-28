@@ -112,6 +112,9 @@ public class FskPortObject implements PortObject {
    */
   public Path workspace;
 
+  /** Path to spreadsheet. */
+  private String spreadsheet;
+
   /** List of R packages. */
   public final List<String> packages;
 
@@ -180,6 +183,12 @@ public class FskPortObject implements PortObject {
     return plot != null ? plot : "";
   }
 
+  public void setPlot(final String plot) {
+    if (plot != null && !plot.isEmpty()) {
+      this.plot = plot;
+    }
+  }
+
   /**
    * @return empty string if not set.
    */
@@ -193,9 +202,16 @@ public class FskPortObject implements PortObject {
     }
   }
 
-  public void setPlot(final String plot) {
-    if (plot != null && !plot.isEmpty()) {
-      this.plot = plot;
+  /**
+   * @return empty string if not set.
+   */
+  public String getSpreadsheet() {
+    return spreadsheet != null ? spreadsheet : "";
+  }
+
+  public void setSpreadsheet(String spreadsheet) {
+    if (spreadsheet != null) {
+      this.spreadsheet = spreadsheet;
     }
   }
 
@@ -224,6 +240,8 @@ public class FskPortObject implements PortObject {
     private static final String PLOT = "plot";
 
     private static final String README = "readme";
+
+    private static final String SPREADSHEET = "spreadsheet";
 
     @Override
     public void savePortObject(final FskPortObject portObject, final PortObjectZipOutputStream out,
@@ -279,6 +297,13 @@ public class FskPortObject implements PortObject {
         out.closeEntry();
       }
 
+      // Save spreadsheet
+      if (portObject.spreadsheet != null && !portObject.spreadsheet.isEmpty()) {
+        out.putNextEntry(new ZipEntry(SPREADSHEET));
+        IOUtils.write(portObject.spreadsheet, out, "UTF-8");
+        out.closeEntry();
+      }
+
       // Save simulations
       if (!portObject.simulations.isEmpty()) {
         out.putNextEntry(new ZipEntry(SIMULATION));
@@ -326,6 +351,7 @@ public class FskPortObject implements PortObject {
 
       String plot = ""; // Empty string if not set
       String readme = ""; // Empty string if not set
+      String spreadsheet = ""; // Empty string if not set
 
       List<FskSimulation> simulations = new ArrayList<>();
       int selectedSimulationIndex = 0;
@@ -371,6 +397,8 @@ public class FskPortObject implements PortObject {
           plot = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(README)) {
           readme = IOUtils.toString(in, "UTF-8");
+        } else if (entryName.equals(SPREADSHEET)) {
+          spreadsheet = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(SIMULATION)) {
           try {
             ObjectInputStream ois = new ObjectInputStream(in);
@@ -398,6 +426,7 @@ public class FskPortObject implements PortObject {
               dataBackground, modelMath, workspacePath, packages, workingDirectory, plot);
 
       portObj.setReadme(readme);
+      portObj.setSpreadsheet(spreadsheet);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);

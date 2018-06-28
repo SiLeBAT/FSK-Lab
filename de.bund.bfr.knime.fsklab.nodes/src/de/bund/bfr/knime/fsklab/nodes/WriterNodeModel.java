@@ -84,6 +84,10 @@ class WriterNodeModel extends NoInternalsModel {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Writer node");
 
+  // TODO: Move to FSKML
+  static final String EXCEL_URI =
+      "https://www.iana.org/assignments/media-types/application/vnd.ms-excel";
+
   private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
 
   public WriterNodeModel() {
@@ -247,10 +251,21 @@ class WriterNodeModel extends NoInternalsModel {
         readmeEntry.addDescription(new FskMetaDataObject(ResourceType.readme).metaDataObject);
       }
 
+      // Add metadata spreadsheet
+      if (!fskObj.getSpreadsheet().isEmpty()) {
+        File spreadsheetFile = FileUtil.getFileFromURL(FileUtil.toURL(fskObj.getSpreadsheet()));
+
+        if (spreadsheetFile.exists()) {
+          URI uri = URI.create(EXCEL_URI);
+          archive.addEntry(spreadsheetFile, "metadata.xlsx", uri);
+        }
+      }
+
       archive.pack();
     }
 
     return new PortObject[] {};
+
   }
 
 

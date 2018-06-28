@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -105,6 +106,8 @@ class ReaderNodeModel extends NoInternalsModel {
     String modelScript = "";
     String visualizationScript = "";
     File workspace = null; // null if missing
+
+    String spreadsheetPath = "";
 
     GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
     Scope scope = MetadataFactory.eINSTANCE.createScope();
@@ -197,6 +200,17 @@ class ReaderNodeModel extends NoInternalsModel {
         SedML sedml = Libsedml.readDocument(simulationsFile).getSedMLModel();
         simulations.addAll(loadSimulations(sedml));
       }
+
+      // Get metadata spreadsheet
+      URI xlsxURI = URI.create(WriterNodeModel.EXCEL_URI);
+      if (archive.getNumEntriesWithFormat(xlsxURI) > 0) {
+        File excelFile = FileUtil.createTempFile("metadata", ".xlsx");
+
+        ArchiveEntry excelEntry = archive.getEntriesWithFormat(xlsxURI).get(0);
+        excelEntry.extractFile(excelFile);
+
+        spreadsheetPath = excelFile.getAbsolutePath();
+      }
     }
 
     // Retrieve missing libraries from CRAN
@@ -221,6 +235,7 @@ class ReaderNodeModel extends NoInternalsModel {
         workingDirectory.toString(), plotPath);
     fskObj.simulations.addAll(simulations);
     fskObj.setReadme(readme);
+    fskObj.setSpreadsheet(spreadsheetPath);
 
     return new PortObject[] {fskObj};
   }

@@ -141,6 +141,7 @@ class JSSimulatorNodeModel
         inObj.getPlot());
     
     outObj.setReadme(inObj.getReadme());
+    outObj.setSpreadsheet(inObj.getSpreadsheet());
 
     synchronized (getLock()) {
 
