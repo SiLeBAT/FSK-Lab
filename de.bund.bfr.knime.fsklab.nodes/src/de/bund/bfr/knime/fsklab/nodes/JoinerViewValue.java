@@ -22,19 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.knime.core.node.*;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.JoinRelation;
-import de.bund.bfr.knime.fsklab.ParameterizedModel;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
-import metadata.DataBackground;
-import metadata.GeneralInformation;
-import metadata.ModelMath;
-import metadata.Scope;
 
 
 
@@ -42,7 +38,6 @@ class JoinerViewValue extends JSONViewContent {
   
   private static final NodeLogger LOGGER = NodeLogger.getLogger(JoinerViewValue.class);
   private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
-  private static final String CFG_ORIGINAL_PARAMETERS_SCRIPT = "originalParametersScript";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
   public final int pseudoIdentifier = (new Random()).nextInt();
   private static final String CFG_GENERAL_INFORMATION = "generalInformation";
@@ -50,16 +45,12 @@ class JoinerViewValue extends JSONViewContent {
   private static final String CFG_DATA_BACKGROUND = "dataBackground";
   private static final String CFG_MODEL_MATH = "modelMath";
   
+  private static final String CFG_MODEL_MATH1 = "modelMath1";
+  private static final String CFG_MODEL_MATH2 = "modelMath2";
+
+  private static final String CFG_JOINER_RELATION= "joinRelation";
   
-  private GeneralInformation firstGeneralInformation ;
-  private Scope firstScope ;
-  private DataBackground firstDataBackground;
-  private ModelMath firstModelMath ;
-  
-  private GeneralInformation secondGeneralInformation ;
-  private Scope secondScope ;
-  private DataBackground secondDataBackground;
-  private ModelMath secondModelMath ;
+  private static final String CFG_JSON_REPRESENTATION= "JSONRepresentation";
   
   private String firstModelScript;
   private String secondModelScript;
@@ -67,43 +58,30 @@ class JoinerViewValue extends JSONViewContent {
   private String firstModelViz;
   private String secondModelViz;
   
+ 
+
   private String generalInformation ;
   private String scope;
   private String dataBackground;
   private String modelMath ;
   
-  private List<JoinRelation> joinRelations = new ArrayList<JoinRelation>();
+  private String modelMath1 ;
+  
+
+  private String modelMath2 ;
+  
+  private String joinRelations;
   private String jsonRepresentation;
   private String svgRepresentation;
-  public String getJsonRepresentation() {
-    return jsonRepresentation;
-  }
-
-  public void setJsonRepresentation(String jsonRepresentation) {
-    this.jsonRepresentation = jsonRepresentation;
-  }
-
- 
-
-  public String getSvgRepresentation() {
-    return svgRepresentation;
-  }
-
-  public void setSvgRepresentation(String svgRepresentation) {
-    this.svgRepresentation = svgRepresentation;
-  }
-
-
-
+  
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
+    settings.addString(CFG_JOINER_RELATION, joinRelations);
+    settings.addString(CFG_JSON_REPRESENTATION, jsonRepresentation);
 
-  
-
-    if (firstGeneralInformation != null) {
-      System.out.println(generalInformation);
+    if (generalInformation != null) {
       saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
     }
 
@@ -116,9 +94,15 @@ class JoinerViewValue extends JSONViewContent {
     }
 
     if (modelMath != null) {
-      System.out.println(modelMath);
       saveSettings(settings, CFG_MODEL_MATH, modelMath);
     }
+    if (modelMath1 != null) {
+      saveSettings(settings, CFG_MODEL_MATH1, modelMath1);
+    }
+    if (modelMath2 != null) {
+      saveSettings(settings, CFG_MODEL_MATH2, modelMath2);
+    }
+    
 
    
   }
@@ -127,8 +111,8 @@ class JoinerViewValue extends JSONViewContent {
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
     firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
     firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
-
-
+    joinRelations = settings.getString(CFG_JOINER_RELATION);
+    jsonRepresentation = settings.getString(CFG_JSON_REPRESENTATION);
     // load meta data
     if (settings.containsKey(CFG_GENERAL_INFORMATION)) {
       generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION);
@@ -141,6 +125,12 @@ class JoinerViewValue extends JSONViewContent {
     }
     if (settings.containsKey(CFG_MODEL_MATH)) {
       modelMath = getEObject(settings, CFG_MODEL_MATH);
+    }
+    if (settings.containsKey(CFG_MODEL_MATH1)) {
+      modelMath1 = getEObject(settings, CFG_MODEL_MATH1);
+    }
+    if (settings.containsKey(CFG_MODEL_MATH2)) {
+      modelMath2 = getEObject(settings, CFG_MODEL_MATH2);
     }
 
    
@@ -183,16 +173,7 @@ class JoinerViewValue extends JSONViewContent {
   public int hashCode() {
     return pseudoIdentifier;
   }
-  public List<JoinRelation> getJoinRelations() {
-    return joinRelations;
-  }
-
-  public void setJoinRelations(List<JoinRelation> joinRelations) {
-    this.joinRelations = joinRelations;
-  }
-  public void addJoinRelation(JoinRelation jr) {
-    joinRelations.add(jr);
-  }
+ 
   public String getFirstModelScript() {
     return firstModelScript;
   }
@@ -226,70 +207,78 @@ class JoinerViewValue extends JSONViewContent {
   }
 
   
+  public String getGeneralInformation() {
+    return generalInformation;
+  }
+
+  public void setGeneralInformation(String generalInformation) {
+    this.generalInformation = generalInformation;
+  }
+
+  public String getScope() {
+    return scope;
+  }
+
+  public void setScope(String scope) {
+    this.scope = scope;
+  }
+
+  public String getDataBackground() {
+    return dataBackground;
+  }
+
+  public void setDataBackground(String dataBackground) {
+    this.dataBackground = dataBackground;
+  }
+
+  public String getModelMath() {
+    return modelMath;
+  }
+
+  public void setModelMath(String modelMath) {
+    this.modelMath = modelMath;
+  }
+  public String getModelMath1() {
+    return modelMath1;
+  }
+
+  public void setModelMath1(String modelMath1) {
+    this.modelMath1 = modelMath1;
+  }
+
+  public String getModelMath2() {
+    return modelMath2;
+  }
+
+  public void setModelMath2(String modelMath2) {
+    this.modelMath2 = modelMath2;
+  }
+  public String getJsonRepresentation() {
+    return jsonRepresentation;
+  }
+
+  public String getJoinRelations() {
+    return joinRelations;
+  }
+
+  public void setJoinRelations(String joinRelations) {
+    this.joinRelations = joinRelations;
+  }
+
+  public void setJsonRepresentation(String jsonRepresentation) {
+    this.jsonRepresentation = jsonRepresentation;
+  }
+
  
-  public GeneralInformation getFirstGeneralInformation() {
-    return firstGeneralInformation;
+
+  public String getSvgRepresentation() {
+    return svgRepresentation;
   }
 
-  public void setFirstGeneralInformation(GeneralInformation firstGeneralInformation) {
-    this.firstGeneralInformation = firstGeneralInformation;
+  public void setSvgRepresentation(String svgRepresentation) {
+    this.svgRepresentation = svgRepresentation;
   }
 
-  public Scope getFirstScope() {
-    return firstScope;
-  }
-
-  public void setFirstScope(Scope firstScope) {
-    this.firstScope = firstScope;
-  }
-
-  public DataBackground getFirstDataBackground() {
-    return firstDataBackground;
-  }
-
-  public void setFirstDataBackground(DataBackground firstDataBackground) {
-    this.firstDataBackground = firstDataBackground;
-  }
-
-  public ModelMath getFirstModelMath() {
-    return firstModelMath;
-  }
-
-  public void setFirstModelMath(ModelMath firstModelMath) {
-    this.firstModelMath = firstModelMath;
-  }
-
-  public GeneralInformation getSecondGeneralInformation() {
-    return secondGeneralInformation;
-  }
-
-  public void setSecondGeneralInformation(GeneralInformation secondGeneralInformation) {
-    this.secondGeneralInformation = secondGeneralInformation;
-  }
-
-  public Scope getSecondScope() {
-    return secondScope;
-  }
-
-  public void setSecondScope(Scope secondScope) {
-    this.secondScope = secondScope;
-  }
-
-  public DataBackground getSecondDataBackground() {
-    return secondDataBackground;
-  }
-
-  public void setSecondDataBackground(DataBackground secondDataBackground) {
-    this.secondDataBackground = secondDataBackground;
-  }
-
-  public ModelMath getSecondModelMath() {
-    return secondModelMath;
-  }
-
-  public void setSecondModelMath(ModelMath secondModelMath) {
-    this.secondModelMath = secondModelMath;
-  }
 
 
 

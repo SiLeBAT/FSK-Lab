@@ -94,7 +94,8 @@ joiner = function() {
     var paper;
     var _firstModel = {generalInformation:{},scope:{},dataBackground:{},modelMath:{}};
     var _secondModel = {generalInformation:{},scope:{},dataBackground:{},modelMath:{}};
-    
+    var _firstModelMath;
+    var _secondModelMath;
     var _firstModelScript;
     var _secondModelScript;
     
@@ -105,25 +106,34 @@ joiner = function() {
     var firstModelParameterMap = new Object();
     var secomndModelParameterMap = new Object();
     joinerNode.init = function(representation, value) {
+    	_firstModel.generalInformation = JSON.parse(value.generalInformation);
+    	_firstModel.scope =  JSON.parse(value.scope);
     	
-    	_firstModel.generalInformation = value.firstGeneralInformation;
-    	_firstModel.scope = value.firstScope;
-    	_firstModel.modelMath = value.firstModelMath;
-    	_firstModel.dataBackground = value.firstDataBackground;
+    	_firstModel.modelMath =  JSON.parse(value.modelMath);
+    	_firstModel.dataBackground =  JSON.parse(value.dataBackground);
+    	
     	_firstModelScript = value.firstModelScript;
     	_firstModelViz = value.firstModelViz;
-    	
-    	
+    	_firstModelMath = JSON.parse(value.modelMath1);
+        _secondModelMath = JSON.parse(value.modelMath2);
+    	/*
     	_secondModel.generalInformation = value.secondGeneralInformation;
     	_secondModel.scope = value.secondScope;
     	_secondModel.modelMath = value.secondModelMath;
-    	_secondModel.dataBackground = value.secondDataBackground;
+    	_secondModel.dataBackground = value.secondDataBackground;*/
     	_secondModelScript = value.secondModelScript;
     	_secondModelViz = value.secondModelViz;
     	
     	
     	
     	_viewValue = value;
+    	
+    	if(_viewValue.joinRelations &&_viewValue.joinRelations != "")
+    		_viewValue.joinRelations = JSON.parse(_viewValue.joinRelations);
+    	else
+    		_viewValue.joinRelations = [];
+    	
+    	console.log(_viewValue.joinRelations)
     	window.generalInformation = _firstModel.generalInformation;
     	window.scope =  _firstModel.scope;
     	window.modelMath =  _firstModel.modelMath;
@@ -161,7 +171,15 @@ joiner = function() {
 
 	}
     joinerNode.getComponentValue = function() {
+    	window.store1.getState().jsonforms.core.data.author = window.store23.getState().jsonforms.core.data;
+    	window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data;
+    	_viewValue.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);
+    	_viewValue.scope = JSON.stringify(window.store2.getState().jsonforms.core.data);
+    	_viewValue.modelMath = JSON.stringify(window.store17.getState().jsonforms.core.data);
+    	_viewValue.dataBackground = JSON.stringify(window.store6.getState().jsonforms.core.data);
     	
+    	_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
+    	console.log(_viewValue.joinRelations);
     	var serializer = new XMLSerializer();
     	var str = serializer.serializeToString(paper.svg);
 		_viewValue.svgRepresentation  = str
@@ -611,7 +629,7 @@ joiner = function() {
 			    	 	    	      '</div>'+
 			    	 	    	     '<div class="form-group row">'+
 			    	 	    	       ' <label class="col-6 col-form-label" for="Command">Conversion Command:</label>'+
-			    	 	    	        '<div class="col-6"><textarea class="form-control" rows="3" id="Command" > '+targetPort+' = '+sourcePort +'</textarea> </div>'+
+			    	 	    	        '<div class="col-6"><textarea class="form-control" rows="3" id="Command" >'+targetPort+' = '+sourcePort +'</textarea> </div>'+
 			    	 	    	      '</div>'+
 			    	 	    	      '<div class="form-group">'+
 	    	 	    	    		    '<div class="col-sm-offset-2 col-sm-10">'+
@@ -622,8 +640,10 @@ joiner = function() {
 	    	 	    	      $('#save').click(function() {
 	    	 	    	    	  
 	    	 	    	    	  $.each( _viewValue.joinRelations, function( i, relation ) {
+	    	 	    	    		  
 	    	 	    	    		 fParam = firstModelParameterMap[sourcePort];
 	    	 	    	    		 sParam = secomndModelParameterMap[targetPort];
+	    	 	    	    		console.log(fParam,sParam);
 	    	 	    	    		  if(relation.sourceParam.parameterID == fParam.parameterID && relation.targetParam.parameterID == sParam.parameterID){
 	    	 	    	    			 relation.command = $("textarea#Command").val();
 	    	 	    	    			 
@@ -637,11 +657,9 @@ joiner = function() {
     	 	);
     	 	var firstModelInputParameters = [];
     	    var firstModelOutputParameters= [];
-
-    	    _.each(_firstModel.modelMath.parameter, function(param) {
-    	    	console.log(param);
+    	    _.each(_firstModelMath.parameter, function(param) {
     	    	firstModelParameterMap[param.parameterID] = param
-    	    	if(param.parameterClassification == 'INPUT'){
+    	    	if(param.parameterClassification == 'Input'){
     	    		firstModelInputParameters.push(param.parameterID);
     	    	}else{
     	    		firstModelOutputParameters.push(param.parameterID);
@@ -650,9 +668,9 @@ joiner = function() {
     	    });
     	    var secondModelInputParameters = [];
     	    var secondModelOutputParameters= [];
-    	    _.each(_secondModel.modelMath.parameter, function(param) {
+    	    _.each(_secondModelMath.parameter, function(param) {
     	    	secomndModelParameterMap[param.parameterID] = param
-    	    	if(param.parameterClassification == 'INPUT'){
+    	    	if(param.parameterClassification == 'Input'){
     	    		secondModelInputParameters.push(param.parameterID);
     	    	}else{
     	    		secondModelOutputParameters.push(param.parameterID);
@@ -741,9 +759,53 @@ joiner = function() {
     	        }
     	    });
     	  
-    	   
+    	    paper.on('link:connect', function(evt, cellView, magnet, arrowhead) {
+    	    	sourcePort = evt.model.attributes.source.port;
+    	    	targetPort = evt.model.attributes.target.port;
+    	    	console.log(sourcePort,targetPort)
+    	    	//console.log(link);
+	        	sourceParameter = firstModelParameterMap[sourcePort];
+	        	if(sourceParameter == undefined){
+	        		sourceParameter = secomndModelParameterMap[sourcePort];
+	        	}
+	        	targetParameter = secomndModelParameterMap[targetPort];
+	        	if(targetParameter == undefined){
+	        		targetParameter = firstModelParameterMap[targetPort];
+	        	}
+	        	if(targetParameter != undefined){
+	        		
+	        		_viewValue.joinRelations.push({sourceParam:sourceParameter,targetParam:targetParameter});
+	        		console.log(_viewValue.joinRelations);
+	        		_viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
+	        	}
+    	    });
+    	    
+    	    graph.on('remove', function(link) {
+    	    	console.log(link);
+    	    	sourcePort = link.attributes.source.port;
+    	    	targetPort = link.attributes.target.port;
+    	    	console.log(sourcePort,targetPort)
+    	    	
+	        	sourceParameter = firstModelParameterMap[sourcePort];
+	        	if(sourceParameter == undefined){
+	        		sourceParameter = secomndModelParameterMap[sourcePort];
+	        	}
+	        	targetParameter = secomndModelParameterMap[targetPort];
+	        	if(targetParameter == undefined){
+	        		targetParameter = firstModelParameterMap[targetPort];
+	        	}
+	        	if(targetParameter != undefined){
+	        		$.each(_viewValue.joinRelations,function(index,value){
+	        			if(value.sourceParam === sourceParameter && value.targetParam === targetParameter){
+	        				_viewValue.joinRelations.splice(index, 1);
+	        			}
+	        		})
+	        		console.log(_viewValue.joinRelations);
+	        		_viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
+	        	}
+    	    })
     
-    	    graph.on('change:source change:target', function(link) {
+    	   /* graph.on('change:source change:target', function(link) {
     	    	var sourcePort = undefined;
      	        var sourceId =  undefined;
      	        var targetPort = undefined;
@@ -755,6 +817,7 @@ joiner = function() {
     	        var sourceParameter;
     	        var targetParameter;
     	        if(targetPort != undefined && targetId != undefined ){
+    	        	//console.log(link);
     	        	sourceParameter = firstModelParameterMap[sourcePort];
     	        	if(sourceParameter == undefined){
     	        		sourceParameter = secomndModelParameterMap[sourcePort];
@@ -766,6 +829,7 @@ joiner = function() {
     	        	if(targetParameter != undefined){
     	        		
     	        		_viewValue.joinRelations.push({sourceParam:sourceParameter,targetParam:targetParameter});
+    	        		//console.log(_viewValue.joinRelations);
     	        		_viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
     	        		//_viewValue.svgRepresentation = paper.svg;
     	        		//link.label(0, { position: 0.5, attrs: { text: { text: sourcePort+" = "+targetPort } } });
@@ -777,7 +841,7 @@ joiner = function() {
     	        	
     	        }
     	    
-    	    });
+    	    });*/
     	    
     	    
     	    

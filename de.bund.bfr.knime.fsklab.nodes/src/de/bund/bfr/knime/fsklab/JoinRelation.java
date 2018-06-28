@@ -18,7 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab;
 
-import de.bund.bfr.knime.fsklab.rakip.Parameter;
+import metadata.Parameter;
+
 /**
  * An object that describe the relation between two FSK Objects.
  * 
@@ -47,6 +48,4 @@ public class JoinRelation {
   public void setTargetParam(Parameter targetParam) {
     this.targetParam = targetParam;
   }
-  
-  
 }
