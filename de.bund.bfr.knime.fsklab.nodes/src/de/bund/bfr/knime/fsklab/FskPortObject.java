@@ -44,6 +44,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -193,7 +194,7 @@ public class FskPortObject implements PortObject {
    * @return empty string if not set.
    */
   public String getReadme() {
-    return readme != null ? readme : "";
+    return StringUtils.defaultString(readme);
   }
 
   public void setReadme(String readme) {
@@ -206,7 +207,7 @@ public class FskPortObject implements PortObject {
    * @return empty string if not set.
    */
   public String getSpreadsheet() {
-    return spreadsheet != null ? spreadsheet : "";
+    return StringUtils.defaultString(spreadsheet);
   }
 
   public void setSpreadsheet(String spreadsheet) {
@@ -277,28 +278,28 @@ public class FskPortObject implements PortObject {
       }
 
       // Save working directory
-      if (portObject.workingDirectory != null && !portObject.workingDirectory.isEmpty()) {
+      if (StringUtils.isNotEmpty(portObject.workingDirectory)) {
         out.putNextEntry(new ZipEntry(WORKING_DIRECTORY));
         IOUtils.write(portObject.workingDirectory, out, "UTF-8");
         out.closeEntry();
       }
 
       // Save plot
-      if (portObject.plot != null && !portObject.plot.isEmpty()) {
+      if (StringUtils.isNotEmpty(portObject.plot)) {
         out.putNextEntry(new ZipEntry(PLOT));
         IOUtils.write(portObject.plot, out, "UTF-8");
         out.closeEntry();
       }
 
       // Save README
-      if (portObject.readme != null && !portObject.readme.isEmpty()) {
+      if (StringUtils.isNotEmpty(portObject.readme)) {
         out.putNextEntry(new ZipEntry(README));
         IOUtils.write(portObject.readme, out, "UTF-8");
         out.closeEntry();
       }
 
       // Save spreadsheet
-      if (portObject.spreadsheet != null && !portObject.spreadsheet.isEmpty()) {
+      if (StringUtils.isNotEmpty(portObject.spreadsheet)) {
         out.putNextEntry(new ZipEntry(SPREADSHEET));
         IOUtils.write(portObject.spreadsheet, out, "UTF-8");
         out.closeEntry();
