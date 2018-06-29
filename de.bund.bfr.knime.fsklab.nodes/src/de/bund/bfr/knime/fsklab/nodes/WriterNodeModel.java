@@ -128,20 +128,7 @@ class WriterNodeModel extends NoInternalsModel {
 
     try (final CombineArchive archive = new CombineArchive(archiveFile)) {
 
-      // Add version
-      {
-        DefaultJDOMFactory factory = new DefaultJDOMFactory();
-        Namespace dcTermsNamespace = Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/");
-
-        Element conformsToNode = factory.element("conformsTo", dcTermsNamespace);
-        conformsToNode.setText("2.0");
-
-        Element element = factory.element("element");
-        element.addContent(conformsToNode);
-
-        MetaDataObject metaDataObject = new DefaultMetaDataObject(element);
-        archive.addDescription(metaDataObject);
-      }
+      addVersion(archive);
 
       // Adds model script
       final ArchiveEntry modelEntry = addRScript(archive, fskObj.model, "model.r");
@@ -154,25 +141,7 @@ class WriterNodeModel extends NoInternalsModel {
 
       // Adds R workspace file
       if (fskObj.workspace != null) {
-
-        // Get length of file in bytes
-        long fileSizeInBytes = Files.size(fskObj.workspace);
-
-        // Convert the bytes to Kylobytes (1 KB = 1024 Bytes)
-        long fileSizeInKB = fileSizeInBytes / 1024;
-
-        // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
-        long fileSizeInMB = fileSizeInKB / 1024;
-
-        // Only save R workspace smaller than 100 MB
-        if (fileSizeInMB < 100) {
-          final ArchiveEntry workspaceEntry =
-              archive.addEntry(fskObj.workspace.toFile(), "workspace.r", URIS.r);
-          workspaceEntry
-              .addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
-        } else {
-          LOGGER.warn("Results file larger than 100 MB -> Skipping file");
-        }
+        addWorkspace(archive, fskObj.workspace);
       }
 
       // Adds model metadata
@@ -230,16 +199,7 @@ class WriterNodeModel extends NoInternalsModel {
 
       // Add simulations as parameter scripts
       for (FskSimulation sim : fskObj.simulations) {
-
-        String script = NodeUtils.buildParameterScript(sim);
-
-        File tempFile = File.createTempFile("temp", ".R");
-        FileUtils.writeStringToFile(tempFile, script, "UTF-8");
-
-        String targetName = "simulations/" + sim.getName() + ".R";
-        archive.addEntry(tempFile, targetName, URIS.r);
-
-        tempFile.delete();
+        addParameterScript(archive, sim);
       }
 
       // Add PNG plot. If file is not set (empty string) or does not exist then skip\
@@ -254,15 +214,7 @@ class WriterNodeModel extends NoInternalsModel {
       // plain text files
       String readme = fskObj.getReadme();
       if (!readme.isEmpty()) {
-        File readmeFile = File.createTempFile("README", ".txt");
-        FileUtils.writeStringToFile(readmeFile, readme, "UTF-8");
-
-        ArchiveEntry readmeEntry = archive.addEntry(readmeFile, "README.txt", URIS.plainText);
-
-        readmeFile.delete();
-
-        // Add annotation to readmeEntry
-        readmeEntry.addDescription(new FskMetaDataObject(ResourceType.readme).metaDataObject);
+        addReadme(archive, readme);
       }
 
       // Add metadata spreadsheet
@@ -380,5 +332,68 @@ class WriterNodeModel extends NoInternalsModel {
     }
 
     return doc;
+  }
+
+  private static void addVersion(CombineArchive archive) {
+
+    DefaultJDOMFactory factory = new DefaultJDOMFactory();
+    Namespace dcTermsNamespace = Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/");
+
+    Element conformsToNode = factory.element("conformsTo", dcTermsNamespace);
+    conformsToNode.setText("2.0");
+
+    Element element = factory.element("element");
+    element.addContent(conformsToNode);
+
+    MetaDataObject metaDataObject = new DefaultMetaDataObject(element);
+    archive.addDescription(metaDataObject);
+  }
+
+  private static void addWorkspace(CombineArchive archive, Path workspace) throws IOException {
+
+    // Get length of file in bytes
+    long fileSizeInBytes = Files.size(workspace);
+
+    // Convert the bytes to Kylobytes (1 KB = 1024 Bytes)
+    long fileSizeInKB = fileSizeInBytes / 1024;
+
+    // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+    long fileSizeInMB = fileSizeInKB / 1024;
+
+    // Only save R workspace smaller than 100 MB
+    if (fileSizeInMB < 100) {
+      final ArchiveEntry workspaceEntry =
+          archive.addEntry(workspace.toFile(), "workspace.r", URIS.r);
+      workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
+    } else {
+      LOGGER.warn("Results file larger than 100 MB -> Skipping file");
+    }
+  }
+
+  private static void addParameterScript(CombineArchive archive, FskSimulation simulation)
+      throws IOException {
+
+    String script = NodeUtils.buildParameterScript(simulation);
+
+    File tempFile = File.createTempFile("temp", ".R");
+    FileUtils.writeStringToFile(tempFile, script, "UTF-8");
+
+    String targetName = "simulations/" + simulation.getName() + ".R";
+    archive.addEntry(tempFile, targetName, URIS.r);
+
+    tempFile.delete();
+  }
+
+  private static void addReadme(CombineArchive archive, String readme) throws IOException {
+
+    File readmeFile = File.createTempFile("README", ".txt");
+    FileUtils.writeStringToFile(readmeFile, readme, "UTF-8");
+
+    ArchiveEntry readmeEntry = archive.addEntry(readmeFile, "README.txt", URIS.plainText);
+
+    readmeFile.delete();
+
+    // Add annotation to readmeEntry
+    readmeEntry.addDescription(new FskMetaDataObject(ResourceType.readme).metaDataObject);
   }
 }
