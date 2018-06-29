@@ -26,7 +26,7 @@ public enum ParameterType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	NULL(0, "null", "null"), /**
+	NULL(-1, "null", "null"), /**
 	 * The '<em><b>Integer</b></em>' literal object.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -34,7 +34,7 @@ public enum ParameterType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	INTEGER(13, "Integer", "Integer"),
+	INTEGER(0, "Integer", "Integer"),
 
 	/**
 	 * The '<em><b>Double</b></em>' literal object.
@@ -167,7 +167,7 @@ public enum ParameterType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int NULL_VALUE = 0;
+	public static final int NULL_VALUE = -1;
 
 	/**
 	 * The '<em><b>Integer</b></em>' literal value.
@@ -182,7 +182,7 @@ public enum ParameterType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int INTEGER_VALUE = 13;
+	public static final int INTEGER_VALUE = 0;
 
 	/**
 	 * The '<em><b>Double</b></em>' literal value.

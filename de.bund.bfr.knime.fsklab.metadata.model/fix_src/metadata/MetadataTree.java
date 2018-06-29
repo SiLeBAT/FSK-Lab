@@ -984,7 +984,7 @@ public class MetadataTree {
 		}
 
 		if (parameter.eIsSet(pkg.getParameter_ParameterDataType())) {
-			String msg = bundle.getParameter_parameterDataType() + ": " + parameter.getParameterDataType().name();
+			String msg = bundle.getParameter_parameterDataType() + ": " + parameter.getParameterDataType().getLiteral();
 			node.add(new DefaultMutableTreeNode(msg));
 		}
 
