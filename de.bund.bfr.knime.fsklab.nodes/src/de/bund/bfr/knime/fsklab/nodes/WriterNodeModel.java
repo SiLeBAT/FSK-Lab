@@ -228,6 +228,20 @@ class WriterNodeModel extends NoInternalsModel {
         archive.addEntry(tempFile, "sim.sedml", URIS.sedml);
       }
 
+      // Add simulations as parameter scripts
+      for (FskSimulation sim : fskObj.simulations) {
+
+        String script = NodeUtils.buildParameterScript(sim);
+
+        File tempFile = File.createTempFile("temp", ".R");
+        FileUtils.writeStringToFile(tempFile, script, "UTF-8");
+
+        String targetName = "simulations/" + sim.getName() + ".R";
+        archive.addEntry(tempFile, targetName, URIS.r);
+
+        tempFile.delete();
+      }
+
       // Add PNG plot. If file is not set (empty string) or does not exist then skip\
       // this step.
       File plotFile = new File(fskObj.getPlot());

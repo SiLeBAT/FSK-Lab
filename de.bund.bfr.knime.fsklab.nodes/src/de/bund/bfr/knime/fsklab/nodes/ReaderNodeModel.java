@@ -55,6 +55,7 @@ import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
+import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 import metadata.DataBackground;
 import metadata.GeneralInformation;
 import metadata.MetadataFactory;
@@ -121,16 +122,20 @@ class ReaderNodeModel extends NoInternalsModel {
     try (final CombineArchive archive = new CombineArchive(file)) {
       for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.r)) {
 
-        final FskMetaDataObject fmdo = new FskMetaDataObject(entry.getDescriptions().get(0));
-        final ResourceType resourceType = fmdo.getResourceType();
+        List<MetaDataObject> descriptions = entry.getDescriptions();
 
-        if (resourceType.equals(ResourceType.modelScript)) {
-          modelScript = loadTextEntry(entry);
-        } else if (resourceType.equals(ResourceType.visualizationScript)) {
-          visualizationScript = loadTextEntry(entry);
-        } else if (resourceType.equals(ResourceType.workspace)) {
-          workspace = FileUtil.createTempFile("workspace", ".r");
-          entry.extractFile(workspace);
+        if (descriptions.size() > 0) {
+          final FskMetaDataObject fmdo = new FskMetaDataObject(descriptions.get(0));
+          final ResourceType resourceType = fmdo.getResourceType();
+
+          if (resourceType.equals(ResourceType.modelScript)) {
+            modelScript = loadTextEntry(entry);
+          } else if (resourceType.equals(ResourceType.visualizationScript)) {
+            visualizationScript = loadTextEntry(entry);
+          } else if (resourceType.equals(ResourceType.workspace)) {
+            workspace = FileUtil.createTempFile("workspace", ".r");
+            entry.extractFile(workspace);
+          }
         }
       }
 
