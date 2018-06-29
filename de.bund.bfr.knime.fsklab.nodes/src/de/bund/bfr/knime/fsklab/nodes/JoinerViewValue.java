@@ -141,7 +141,6 @@ class JoinerViewValue extends JSONViewContent {
     try {
       ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
       String jsonStr = objectMapper.writeValueAsString(eObject);
-      System.out.println(jsonStr);
       settings.addString(key, jsonStr);
     } catch (JsonProcessingException exception) {
       LOGGER.warn("Error saving " + key);

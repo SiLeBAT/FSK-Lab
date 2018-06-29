@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,6 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -42,6 +48,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -50,6 +57,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
@@ -69,6 +77,7 @@ import metadata.MetadataFactory;
 import metadata.MetadataPackage;
 import metadata.MetadataTree;
 import metadata.ModelMath;
+import metadata.Parameter;
 import metadata.Scope;
 
 /**
@@ -386,7 +395,12 @@ public class CombinedFskPortObject extends FskPortObject {
             e.printStackTrace();
           }
         } else if (entryName.equals(JOINER_RELATION)) {            
-            joinerRelation = ((List<JoinRelation>) readEObjectList(in, JoinRelation.class));
+            try {
+              joinerRelation = ((List<JoinRelation>) readEObjectList(in, JoinRelation.class));
+            } catch (InvalidSettingsException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
           
         }
       }
@@ -436,23 +450,55 @@ public class CombinedFskPortObject extends FskPortObject {
 
       return (T) resource.getContents().get(0);
     }
-    @SuppressWarnings("unchecked")
-    private <T> List<T> readEObjectList(PortObjectZipInputStream zipStream, Class<T> valueType)
-        throws IOException {
+    private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType)
+        throws InvalidSettingsException {
       final ResourceSet resourceSet = new ResourceSetImpl();
-      String jsonStr = IOUtils.toString(zipStream, "UTF-8");
-
       ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
       resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
           .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
       resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
           MetadataPackage.eINSTANCE);
-
+    
       Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
       InputStream inStream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
-      resource.load(inStream, null);
-
-      return (List<T>) resource.getContents().get(0);
+      try {
+        resource.load(inStream, null);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    
+      return (T) resource.getContents().get(0);
+    }
+    @SuppressWarnings("unchecked")
+    private <T> List<T> readEObjectList(PortObjectZipInputStream zipStream, Class<T> valueType)
+        throws IOException, InvalidSettingsException {
+      List<JoinRelation> joinerRelation = new ArrayList<>();
+      String jsonStr = IOUtils.toString(zipStream, "UTF-8");
+      
+      if(jsonStr !=null) {
+       
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonStr));
+        JsonArray relationJsonArray = jsonReader.readArray();
+        jsonReader.close();
+        for(JsonValue element: relationJsonArray) {
+          JsonObject sourceTargetRelation = ((JsonObject) element);
+          JoinRelation jR = new JoinRelation();
+          if(sourceTargetRelation.containsKey("command")) {
+            jR.setCommand(sourceTargetRelation.getString("command"));
+          }
+          if(sourceTargetRelation.containsKey("sourceParam")) {
+            jR.setSourceParam(getEObjectFromJson(sourceTargetRelation.get("sourceParam").toString(), Parameter.class));
+          }
+          if(sourceTargetRelation.containsKey("targetParam")) {
+            jR.setTargetParam(getEObjectFromJson(sourceTargetRelation.get("targetParam").toString(), Parameter.class));
+          }
+          joinerRelation.add(jR);
+         
+        }
+         
+      }
+      
+      return (List<T>) joinerRelation;
     }
 
     /**
@@ -475,9 +521,17 @@ public class CombinedFskPortObject extends FskPortObject {
         PortObjectZipOutputStream out) throws IOException {
 
       out.putNextEntry(new ZipEntry(entryName));
-
-      ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
-      String jsonStr = mapper.writeValueAsString(value);
+      String jsonStr = "[";
+      for(Object o :value) {
+        JoinRelation jR = ((JoinRelation)o);
+        String repre = jR.getJsonReresentaion();
+        jsonStr += repre+",";
+      }
+      if(jsonStr.length()>1) {
+        jsonStr = jsonStr.substring(0,jsonStr.length()-1) + "]";
+      }else {
+        jsonStr +=  "]";
+      }      
       IOUtils.write(jsonStr, out, "UTF-8");
 
       out.closeEntry();

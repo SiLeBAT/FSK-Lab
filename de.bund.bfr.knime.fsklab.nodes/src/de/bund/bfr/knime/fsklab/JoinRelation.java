@@ -18,6 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import metadata.Parameter;
 
 /**
@@ -47,5 +49,18 @@ public class JoinRelation {
   }
   public void setTargetParam(Parameter targetParam) {
     this.targetParam = targetParam;
+  }
+  public String getJsonReresentaion() {
+    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    String out = "";
+    try {
+      String sourceParamAsJSONString = mapper.writeValueAsString(sourceParam);
+      String targetParamAsJSONString = mapper.writeValueAsString(targetParam);
+      out = "{\"sourceParam\" :"+sourceParamAsJSONString+",\"targetParam\" :"+targetParamAsJSONString+",\"command\" :\""+command+"\"}";
+    } catch (JsonProcessingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return out; 
   }
 }
