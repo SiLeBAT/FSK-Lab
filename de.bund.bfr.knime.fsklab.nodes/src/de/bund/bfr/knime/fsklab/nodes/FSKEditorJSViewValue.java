@@ -58,11 +58,10 @@ class FSKEditorJSViewValue extends JSONViewContent {
   
   
   private String generalInformation ;
- 
-
   private String scope;
   private String dataBackground;
   private String modelMath ;
+  
   private String firstModelScript;
   private String firstModelViz;
 

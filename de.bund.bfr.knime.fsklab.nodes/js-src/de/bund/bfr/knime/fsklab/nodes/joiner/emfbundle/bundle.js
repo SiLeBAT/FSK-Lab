@@ -949,39 +949,39 @@ function createEMFForm(){
 		  ]
 		}
 		},{}],26:[function(require,module,exports){
-		module.exports={"additionalProperties":false,"type":"object","properties":{"fittingProcedure":{"type":"string"},"modelEquation":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}},"exposure":{"additionalProperties":false,"type":"object","properties":{"typeOfExposure":{"type":"string"},"uncertaintyEstimation":{"type":"string"}},"required":["typeOfExposure"]},"parameter":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","Vector[number]","Vector[string]","Matrix[number,number]","Matrix[string,string]","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}},"qualityMeasures":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"event":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}}},"required":["parameter"]}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"fittingProcedure":{"type":"string"},"modelEquation":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"modelEquation":{"type":"string"},"modelEquationName":{"type":"string"},"modelEquationClass":{"type":"string"},"hypothesisOfTheModel":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"value":{"type":"string"}}}}},"required":["modelEquationName","modelEquation"]}},"exposure":{"additionalProperties":false,"type":"object","properties":{"typeOfExposure":{"type":"string"},"uncertaintyEstimation":{"type":"string"}},"required":["typeOfExposure"]},"parameter":{"type":"array","items":{"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["null","Integer","Double","Number","Date","File","Boolean","Vector[number]","Vector[string]","Matrix[number,number]","Matrix[string,string]","Object","Other","String"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}},"qualityMeasures":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}},"event":{"additionalProperties":false,"type":"array","items":{"type":"object","properties":{"value":{"type":"string"}}}}},"required":["parameter"]}
 		},{}],27:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "Fitting Procedure",
+		      "label": "fittingProcedure",
 		      "scope": "#/properties/fittingProcedure"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter",
+		      "label": "parameter",
 		      "scope": "#/properties/parameter"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Model Equation",
+		      "label": "modelEquation",
 		      "scope": "#/properties/modelEquation"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Exposure",
+		      "label": "exposure",
 		      "scope": "#/properties/exposure"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Quality Measures",
+		      "label": "qualityMeasures",
 		      "scope": "#/properties/qualityMeasures"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Event",
+		      "label": "event",
 		      "scope": "#/properties/event"
 		    }
 		  ]
@@ -1004,94 +1004,94 @@ function createEMFForm(){
 		  "scope": "#/properties/value"
 		}
 		},{}],30:[function(require,module,exports){
-		module.exports={"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["Integer","Double","Number","Date","File","Boolean","Vector[number]","Vector[string]","Matrix[number,number]","Matrix[string,string]","Object","Other"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}
+		module.exports={"additionalProperties":false,"type":"object","properties":{"parameterType":{"type":"string"},"parameterError":{"type":"string"},"parameterUnitCategory":{"type":"string"},"parameterID":{"type":"string"},"parameterSubject":{"type":"string"},"parameterValueMax":{"type":"string"},"parameterName":{"type":"string"},"parameterDataType":{"type":"string","enum":["null","Integer","Double","Number","Date","File","Boolean","Vector[number]","Vector[string]","Matrix[number,number]","Matrix[string,string]","Object","Other","String"]},"parameterVariabilitySubject":{"type":"string"},"parameterValue":{"type":"string"},"parameterUnit":{"type":"string"},"parameterDistribution":{"type":"string"},"reference":{"additionalProperties":false,"type":"object","properties":{"publicationStatus":{"type":"string"},"publicationIssue":{"type":"integer"},"publicationType":{"type":"string","enum":["ABST","ADVS","AGGR","ANCIENT","ART","BILL","BLOG","BOOK","CASE","CHAP","CHART","CLSWK","COMP","CONF","CPAPER","CTLG","DATA","DBASE","DICT","EBOOK","ECHAP","EDBOOK","EJOUR","ELECT","ENCYC","EQUA","FIGURE","GEN","GOVDOC","GRANT","HEAR","ICOMM","INPR","JOUR","JFULL","LEGAL","MANSCPT","MAP","MGZN","MPCT","MULTI","MUSIC","NEWS","PAMP","PAT","PCOMM","RPRT","SER","SLIDE","SOUND","STAND","STAT","THES","UNPB","VIDEO"]},"isReferenceDescription":{"type":"boolean"},"pmid":{"type":"string"},"publicationTitle":{"type":"string"},"publicationAbstract":{"type":"string"},"publicationJournal":{"type":"string"},"authorList":{"type":"string"},"publicationVolume":{"type":"integer"},"comment":{"type":"string"},"publicationDate":{"format":"date-time","type":"string"},"doi":{"type":"string"},"publicationWebsite":{"type":"string"}},"required":["isReferenceDescription","publicationTitle"]},"parameterSource":{"type":"string"},"parameterDescription":{"type":"string"},"parameterClassification":{"type":"string","enum":["Constant","Input","Output"]},"parameterValueMin":{"type":"string"}},"required":["parameterID","parameterClassification","parameterName","parameterUnit","parameterDataType"]}
 		},{}],31:[function(require,module,exports){
 		module.exports={
 		  "type": "VerticalLayout",
 		  "elements": [
 		    {
 		      "type": "Control",
-		      "label": "Parameter ID",
+		      "label": "parameterID",
 		      "scope": "#/properties/parameterID"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Classification",
+		      "label": "parameterClassification",
 		      "scope": "#/properties/parameterClassification"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Name",
+		      "label": "parameterName",
 		      "scope": "#/properties/parameterName"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Description",
+		      "label": "parameterDescription",
 		      "scope": "#/properties/parameterDescription"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Type",
+		      "label": "parameterType",
 		      "scope": "#/properties/parameterType"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Unit",
+		      "label": "parameterUnit",
 		      "scope": "#/properties/parameterUnit"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Unit Category",
+		      "label": "parameterUnitCategory",
 		      "scope": "#/properties/parameterUnitCategory"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Data Type",
+		      "label": "parameterDataType",
 		      "scope": "#/properties/parameterDataType"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Source",
+		      "label": "parameterSource",
 		      "scope": "#/properties/parameterSource"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Subject",
+		      "label": "parameterSubject",
 		      "scope": "#/properties/parameterSubject"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Distribution",
+		      "label": "parameterDistribution",
 		      "scope": "#/properties/parameterDistribution"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Value",
+		      "label": "parameterValue",
 		      "scope": "#/properties/parameterValue"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Variability Subject",
+		      "label": "parameterVariabilitySubject",
 		      "scope": "#/properties/parameterVariabilitySubject"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Value Min",
+		      "label": "parameterValueMin",
 		      "scope": "#/properties/parameterValueMin"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Value Max",
+		      "label": "parameterValueMax",
 		      "scope": "#/properties/parameterValueMax"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Parameter Error",
+		      "label": "parameterError",
 		      "scope": "#/properties/parameterError"
 		    },
 		    {
 		      "type": "Control",
-		      "label": "Reference",
+		      "label": "reference",
 		      "scope": "#/properties/reference"
 		    }
 		  ]

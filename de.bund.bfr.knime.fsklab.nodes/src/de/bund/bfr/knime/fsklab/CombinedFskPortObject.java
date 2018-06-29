@@ -19,9 +19,12 @@
 package de.bund.bfr.knime.fsklab;
 
 import java.awt.BorderLayout;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -40,14 +48,23 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
@@ -57,8 +74,10 @@ import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
 import metadata.DataBackground;
 import metadata.GeneralInformation;
 import metadata.MetadataFactory;
+import metadata.MetadataPackage;
 import metadata.MetadataTree;
 import metadata.ModelMath;
+import metadata.Parameter;
 import metadata.Scope;
 
 /**
@@ -133,14 +152,20 @@ public class CombinedFskPortObject extends FskPortObject {
 
     private static final String MODEL1 = "model1.R";
     private static final String VIZ1 = "viz1.R";
-    private static final String META_DATA1 = "metaData1";
+    private static final String CFG_GENERAL_INFORMATION1 = "generalInformation1";
+    private static final String CFG_SCOPE1 = "scope1";
+    private static final String CFG_DATA_BACKGROUND1 = "dataBackground1";
+    private static final String CFG_MODEL_MATH1 = "modelMath1";
     private static final String WORKSPACE1 = "workspace1";
     private static final String SIMULATION1 = "simulation1";
     private static final String WORKING_DIRECTORY1 = "workingDirectory1";
 
     private static final String MODEL2 = "model2.R";
     private static final String VIZ2 = "viz2.R";
-    private static final String META_DATA2 = "metaData2";
+    private static final String CFG_GENERAL_INFORMATION2 = "generalInformation2";
+    private static final String CFG_SCOPE2 = "scope2";
+    private static final String CFG_DATA_BACKGROUND2 = "dataBackground2";
+    private static final String CFG_MODEL_MATH2 = "modelMath2";
     private static final String WORKSPACE2 = "workspace2";
     private static final String SIMULATION2 = "simulation2";
     private static final String WORKING_DIRECTORY2 = "workingDirectory2";
@@ -151,16 +176,8 @@ public class CombinedFskPortObject extends FskPortObject {
     public void savePortObject(final CombinedFskPortObject portObject,
         final PortObjectZipOutputStream out, final ExecutionMonitor exec)
         throws IOException, CanceledExecutionException {
-      if (!portObject.joinerRelation.isEmpty()) {
-        out.putNextEntry(new ZipEntry(JOINER_RELATION));
-
-        try {
-          ObjectOutputStream oos = new ObjectOutputStream(out);
-          oos.writeObject(portObject.joinerRelation);
-        } catch (IOException exception) {
-          // TODO: deal with exception
-        }
-        out.closeEntry();
+      if (portObject.joinerRelation!= null && !portObject.joinerRelation.isEmpty()) {
+        writeEObjectList(JOINER_RELATION,  portObject.joinerRelation, out);
       }
 
       // First FSK Object
@@ -176,33 +193,11 @@ public class CombinedFskPortObject extends FskPortObject {
 
       // template entry (file with model meta data)
       {
-        out.putNextEntry(new ZipEntry(META_DATA1));
-
-        try {
-          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-          objectOutputStream.writeObject(portObject.firstFskPortObject.generalInformation);
-        } catch (Exception e) {
-        }
-
-        try {
-          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-          objectOutputStream.writeObject(portObject.firstFskPortObject.scope);
-        } catch (Exception e) {
-        }
-
-        try {
-          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-          objectOutputStream.writeObject(portObject.firstFskPortObject.dataBackground);
-        } catch (Exception e) {
-        }
-
-        try {
-          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-          objectOutputStream.writeObject(portObject.firstFskPortObject.modelMath);
-        } catch (Exception e) {
-        }
-
-        out.closeEntry();
+        writeEObject(CFG_GENERAL_INFORMATION1, portObject.firstFskPortObject.generalInformation, out);
+        writeEObject(CFG_SCOPE1, portObject.firstFskPortObject.scope, out);
+        writeEObject(CFG_DATA_BACKGROUND1, portObject.firstFskPortObject.dataBackground, out);
+        writeEObject(CFG_MODEL_MATH1, portObject.firstFskPortObject.modelMath, out);
+  
       }
 
       // workspace entry
@@ -252,33 +247,11 @@ public class CombinedFskPortObject extends FskPortObject {
 
       // template entry (file with model meta data)
       {
-        out.putNextEntry(new ZipEntry(META_DATA2));
-
-        try {
-          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-          objectOutputStream.writeObject(portObject.secondFskPortObject.generalInformation);
-        } catch (Exception e) {
-        }
-
-        try {
-          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-          objectOutputStream.writeObject(portObject.secondFskPortObject.scope);
-        } catch (Exception e) {
-        }
-
-        try {
-          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-          objectOutputStream.writeObject(portObject.secondFskPortObject.dataBackground);
-        } catch (Exception e) {
-        }
-
-        try {
-          ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-          objectOutputStream.writeObject(portObject.secondFskPortObject.modelMath);
-        } catch (Exception e) {
-        }
-
-        out.closeEntry();
+        writeEObject(CFG_GENERAL_INFORMATION2, portObject.secondFskPortObject.generalInformation, out);
+        writeEObject(CFG_SCOPE2, portObject.secondFskPortObject.scope, out);
+        writeEObject(CFG_DATA_BACKGROUND2, portObject.secondFskPortObject.dataBackground, out);
+        writeEObject(CFG_MODEL_MATH2, portObject.secondFskPortObject.modelMath, out);
+  
       }
 
       // workspace entry
@@ -363,38 +336,14 @@ public class CombinedFskPortObject extends FskPortObject {
           modelScript1 = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(VIZ1)) {
           visualizationScript1 = IOUtils.toString(in, "UTF-8");
-        } else if (entryName.equals(META_DATA1)) {
-          // Load generalInformation
-          try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(in);
-            generalInformation1 = (GeneralInformation) objectInputStream.readObject();
-          } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-          }
-
-          // Load scope
-          try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(in);
-            scope1 = (Scope) objectInputStream.readObject();
-          } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-          }
-
-          // Load dataBackground
-          try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(in);
-            dataBackground1 = (DataBackground) objectInputStream.readObject();
-          } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-          }
-
-          // Load model math
-          try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(in);
-            modelMath1 = (ModelMath) objectInputStream.readObject();
-          } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-          }
+        } else if (entryName.equals(CFG_GENERAL_INFORMATION1)) {
+          generalInformation1 = readEObject(in, GeneralInformation.class);
+        } else if (entryName.equals(CFG_SCOPE1)) {
+          scope1 = readEObject(in, Scope.class);
+        } else if (entryName.equals(CFG_DATA_BACKGROUND1)) {
+          dataBackground1 = readEObject(in, DataBackground.class);
+        } else if (entryName.equals(CFG_MODEL_MATH1)) {
+          modelMath1 = readEObject(in, ModelMath.class);
         } else if (entryName.equals(WORKSPACE1)) {
           Files.copy(in, workspacePath1, StandardCopyOption.REPLACE_EXISTING);
         } else if (entryName.equals("library1.list")) {
@@ -419,38 +368,14 @@ public class CombinedFskPortObject extends FskPortObject {
           modelScript2 = IOUtils.toString(in, "UTF-8");
         } else if (entryName.equals(VIZ2)) {
           visualizationScript2 = IOUtils.toString(in, "UTF-8");
-        } else if (entryName.equals(META_DATA2)) {
-          // Load generalInformation
-          try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(in);
-            generalInformation2 = (GeneralInformation) objectInputStream.readObject();
-          } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-          }
-
-          // Load scope
-          try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(in);
-            scope2 = (Scope) objectInputStream.readObject();
-          } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-          }
-
-          // Load dataBackground
-          try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(in);
-            dataBackground2 = (DataBackground) objectInputStream.readObject();
-          } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-          }
-
-          // Load model math
-          try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(in);
-            modelMath2 = (ModelMath) objectInputStream.readObject();
-          } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-          }
+        } else if (entryName.equals(CFG_GENERAL_INFORMATION2)) {
+          generalInformation2 = readEObject(in, GeneralInformation.class);
+        } else if (entryName.equals(CFG_SCOPE2)) {
+          scope2 = readEObject(in, Scope.class);
+        } else if (entryName.equals(CFG_DATA_BACKGROUND2)) {
+          dataBackground2 = readEObject(in, DataBackground.class);
+        } else if (entryName.equals(CFG_MODEL_MATH2)) {
+          modelMath2 = readEObject(in, ModelMath.class);
         } else if (entryName.equals(WORKSPACE2)) {
           Files.copy(in, workspacePath2, StandardCopyOption.REPLACE_EXISTING);
         } else if (entryName.equals("library2.list")) {
@@ -469,13 +394,14 @@ public class CombinedFskPortObject extends FskPortObject {
           } catch (ClassNotFoundException e) {
             e.printStackTrace();
           }
-        } else if (entryName.equals(JOINER_RELATION)) {
-          try {
-            ObjectInputStream ois = new ObjectInputStream(in);
-            joinerRelation = ((List<JoinRelation>) ois.readObject());
-          } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-          }
+        } else if (entryName.equals(JOINER_RELATION)) {            
+            try {
+              joinerRelation = ((List<JoinRelation>) readEObjectList(in, JoinRelation.class));
+            } catch (InvalidSettingsException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+          
         }
       }
 
@@ -505,6 +431,110 @@ public class CombinedFskPortObject extends FskPortObject {
       }
 
       return portObj;
+    }
+    @SuppressWarnings("unchecked")
+    private <T> T readEObject(PortObjectZipInputStream zipStream, Class<T> valueType)
+        throws IOException {
+      final ResourceSet resourceSet = new ResourceSetImpl();
+      String jsonStr = IOUtils.toString(zipStream, "UTF-8");
+
+      ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+      resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+          .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
+      resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
+          MetadataPackage.eINSTANCE);
+
+      Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
+      InputStream inStream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
+      resource.load(inStream, null);
+
+      return (T) resource.getContents().get(0);
+    }
+    private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType)
+        throws InvalidSettingsException {
+      final ResourceSet resourceSet = new ResourceSetImpl();
+      ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+      resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+          .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
+      resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
+          MetadataPackage.eINSTANCE);
+    
+      Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
+      InputStream inStream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
+      try {
+        resource.load(inStream, null);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    
+      return (T) resource.getContents().get(0);
+    }
+    @SuppressWarnings("unchecked")
+    private <T> List<T> readEObjectList(PortObjectZipInputStream zipStream, Class<T> valueType)
+        throws IOException, InvalidSettingsException {
+      List<JoinRelation> joinerRelation = new ArrayList<>();
+      String jsonStr = IOUtils.toString(zipStream, "UTF-8");
+      
+      if(jsonStr !=null) {
+       
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonStr));
+        JsonArray relationJsonArray = jsonReader.readArray();
+        jsonReader.close();
+        for(JsonValue element: relationJsonArray) {
+          JsonObject sourceTargetRelation = ((JsonObject) element);
+          JoinRelation jR = new JoinRelation();
+          if(sourceTargetRelation.containsKey("command")) {
+            jR.setCommand(sourceTargetRelation.getString("command"));
+          }
+          if(sourceTargetRelation.containsKey("sourceParam")) {
+            jR.setSourceParam(getEObjectFromJson(sourceTargetRelation.get("sourceParam").toString(), Parameter.class));
+          }
+          if(sourceTargetRelation.containsKey("targetParam")) {
+            jR.setTargetParam(getEObjectFromJson(sourceTargetRelation.get("targetParam").toString(), Parameter.class));
+          }
+          joinerRelation.add(jR);
+         
+        }
+         
+      }
+      
+      return (List<T>) joinerRelation;
+    }
+
+    /**
+     * Create {@link ZipEntry} with Json string representing a metadata class.
+     * 
+     * @throws IOException
+     */
+    private static <T extends EObject> void writeEObject(String entryName, T value,
+        PortObjectZipOutputStream out) throws IOException {
+
+      out.putNextEntry(new ZipEntry(entryName));
+
+      ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+      String jsonStr = mapper.writeValueAsString(value);
+      IOUtils.write(jsonStr, out, "UTF-8");
+
+      out.closeEntry();
+    }
+    private static <T extends List> void writeEObjectList(String entryName, T value,
+        PortObjectZipOutputStream out) throws IOException {
+
+      out.putNextEntry(new ZipEntry(entryName));
+      String jsonStr = "[";
+      for(Object o :value) {
+        JoinRelation jR = ((JoinRelation)o);
+        String repre = jR.getJsonReresentaion();
+        jsonStr += repre+",";
+      }
+      if(jsonStr.length()>1) {
+        jsonStr = jsonStr.substring(0,jsonStr.length()-1) + "]";
+      }else {
+        jsonStr +=  "]";
+      }      
+      IOUtils.write(jsonStr, out, "UTF-8");
+
+      out.closeEntry();
     }
 
   }
