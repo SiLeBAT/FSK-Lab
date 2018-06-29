@@ -271,6 +271,7 @@ final class JoinerNodeModel extends
 
   @Override
   protected void performReset() {
+    createEmptyViewValue();
     m_port = null;
   }
 
