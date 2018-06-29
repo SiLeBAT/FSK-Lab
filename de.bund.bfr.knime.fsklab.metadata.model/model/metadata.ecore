@@ -349,6 +349,7 @@
     <eLiterals name="Output" value="2" literal="Output"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ParameterType">
+    <eLiterals name="null" value="-1" literal="null"/>
     <eLiterals name="Integer" literal="Integer"/>
     <eLiterals name="Double" value="1" literal="Double"/>
     <eLiterals name="Number" value="2" literal="Number"/>
@@ -361,6 +362,7 @@
     <eLiterals name="MatrixOfStrings" value="9" literal="Matrix[string,string]"/>
     <eLiterals name="Object" value="10" literal="Object"/>
     <eLiterals name="Other" value="11" literal="Other"/>
+    <eLiterals name="String" value="12" literal="String"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelEquation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="modelEquationName" lowerBound="1"
