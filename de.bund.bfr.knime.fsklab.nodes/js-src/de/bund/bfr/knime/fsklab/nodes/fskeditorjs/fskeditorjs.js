@@ -87,6 +87,107 @@ fskeditorjs = function() {
 		    };
 		  }());
 		}
+	function autocomplete(inp, arr,store,schema,uischema,fieldName) {
+		  /*the autocomplete function takes two arguments,
+		  the text field element and an array of possible autocompleted values:*/
+		  var currentFocus;
+		  $(inp).addClass('domdsdsd');
+		  /*execute a function when someone writes in the text field:*/
+		  inp.addEventListener("input", function(e) {
+		      var a, b, i, val = this.value;
+		      /*close any already open lists of autocompleted values*/
+		      closeAllLists();
+		      if (!val) { return false;}
+		      currentFocus = -1;
+		      /*create a DIV element that will contain the items (values):*/
+		      a = document.createElement("DIV");
+		      a.setAttribute("id", this.id + "autocomplete-list");
+		      a.setAttribute("class", "autocomplete-items");
+		      /*append the DIV element as a child of the autocomplete container:*/
+		      this.parentNode.appendChild(a);
+		      /*for each item in the array...*/
+		      for (i = 0; i < arr.length; i++) {
+		        /*check if the item starts with the same letters as the text field value:*/
+		        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+		          /*create a DIV element for each matching element:*/
+		          b = document.createElement("DIV");
+		          /*make the matching letters bold:*/
+		          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+		          b.innerHTML += arr[i].substr(val.length);
+		          /*insert a input field that will hold the current array item's value:*/
+		          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+		          /*execute a function when someone clicks on the item value (DIV element):*/
+		              b.addEventListener("click", function(e) {
+		              /*insert the value for the autocomplete text field:*/
+		     
+		             
+		              store.getState().jsonforms.core.data[fieldName] = this.getElementsByTagName("input")[0].value;
+		              
+		              store.dispatch(Actions.init(store.getState().jsonforms.core.data, schema, uischema));		              
+		              /*close the list of autocompleted values,
+		              (or any other open lists of autocompleted values:*/
+		              closeAllLists();
+		          });
+		          a.appendChild(b);
+		        }
+		      }
+		  });
+		  /*execute a function presses a key on the keyboard:*/
+		  inp.addEventListener("keydown", function(e) {
+		      var x = document.getElementById(this.id + "autocomplete-list");
+		      if (x) x = x.getElementsByTagName("div");
+		      if (e.keyCode == 40) {
+		        /*If the arrow DOWN key is pressed,
+		        increase the currentFocus variable:*/
+		        currentFocus++;
+		        /*and and make the current item more visible:*/
+		        addActive(x);
+		      } else if (e.keyCode == 38) { //up
+		        /*If the arrow UP key is pressed,
+		        decrease the currentFocus variable:*/
+		        currentFocus--;
+		        /*and and make the current item more visible:*/
+		        addActive(x);
+		      } else if (e.keyCode == 13) {
+		        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+		        e.preventDefault();
+		        if (currentFocus > -1) {
+		          /*and simulate a click on the "active" item:*/
+		          if (x) x[currentFocus].click();
+		        }
+		      }
+		  });
+		  function addActive(x) {
+		    /*a function to classify an item as "active":*/
+		    if (!x) return false;
+		    /*start by removing the "active" class on all items:*/
+		    removeActive(x);
+		    if (currentFocus >= x.length) currentFocus = 0;
+		    if (currentFocus < 0) currentFocus = (x.length - 1);
+		    /*add class "autocomplete-active":*/
+		    x[currentFocus].classList.add("autocomplete-active");
+		  }
+		  function removeActive(x) {
+		    /*a function to remove the "active" class from all autocomplete items:*/
+		    for (var i = 0; i < x.length; i++) {
+		      x[i].classList.remove("autocomplete-active");
+		    }
+		  }
+		  function closeAllLists(elmnt) {
+		    /*close all autocomplete lists in the document,
+		    except the one passed as an argument:*/
+		    var x = document.getElementsByClassName("autocomplete-items");
+		    for (var i = 0; i < x.length; i++) {
+		      if (elmnt != x[i] && elmnt != inp) {
+		      x[i].parentNode.removeChild(x[i]);
+		    }
+		  }
+		}
+		/*execute a function when someone clicks in the document:*/
+		document.addEventListener("click", function (e) {
+		    closeAllLists(e.target);
+		});
+		}
     var joinerNode = {
         version: '1.0.0'
     };
@@ -159,10 +260,10 @@ fskeditorjs = function() {
     	_viewValue.scope = JSON.stringify(window.store2.getState().jsonforms.core.data);
     	_viewValue.modelMath = JSON.stringify(window.store17.getState().jsonforms.core.data);
     	_viewValue.dataBackground = JSON.stringify(window.store6.getState().jsonforms.core.data);
-    	if(window.firstModelScript){
+    	if(window.firstModelScript && window.firstModelScript.save){
     		window.firstModelScript.save();
     	}
-    	if(window.firstModelViz){
+    	if(window.firstModelViz && window.firstModelViz.save){
     		window.firstModelViz.save();
     	}
     	_viewValue.firstModelScript = $('#firstModelScript').val();
@@ -261,6 +362,8 @@ fskeditorjs = function() {
 	    }
         window.tableInputBootstraping = function (elements){
         	$.each(elements,function (index, value){
+        		id = $(value).attr("id");
+        		$(value).attr("id",id+'table');
         		$(value).addClass("form-control");
         	})
         }
@@ -432,10 +535,27 @@ fskeditorjs = function() {
 		        window.scrollTo(0, 0);
 	        	}
         });
-       
+        
+        autoCompleteCB = ['country','language','source','rights','format','software','languageWrittenIn','modelClass','basicProcess','status','productName','productUnit','productionMethod','packaging','productTreatment','originArea','originCountry','fisheriesArea','hazardType','hazardName','hazardUnit','hazardIndSum','populationName','studyAssayTechnologyType','accreditationProcedureForTheAssayTechnology','samplingStrategy','typeOfSamplingProgram','samplingMethod','lotSizeUnit','samplingPoint','collectionTool','recordTypes','foodDescriptors','laboratoryCountry',
+        					'parameterType','parameterUnit','parameterUnitCategory','parameterSource','parameterSubject','parameterDistribution','modelEquationClass','typeOfExposure'];
+        autoCompleteArray = [window.Country,window.Language,window.Source,window.Rights,window.Format,window.Software,window.Language_written_in,window.Model_Class,window.Basic_process,window.Status,window.Product_matrix_name,window.Parameter_unit,window.Method_of_production,window.Packaging,window.Product_treatment,window.Area_of_origin,window.Country,window.Fisheries_area,window.Hazard_type,window.Hazard_name,window.Parameter_unit,window.Hazard_ind_sum,window.Population_name,window.Study_Assay_Technology_Type,window.Accreditation_procedure_Ass_Tec,window.Sampling_strategy,window.Type_of_sampling_program,window.Sampling_method,window.Parameter_unit,window.Sampling_point,window.Method_tool_to_collect_data,window.Type_of_records,window.Food_descriptors,window.Country,
+        					window.Parameter_type,window.Parameter_unit,window.Parameter_unit_category,window.Parameter_source,window.Parameter_subject,window.Parameter_distribution,window.Model_equation_class_distr,window.Type_of_exposure];
+        autoCompleteStores = [window.store23,window.store1,window.store1,window.store1,window.store1,window.store1,window.store1,window.store13,window.store13,window.store1,window.store3,window.store3,window.store3,window.store3,window.store3,window.store3,window.store3,window.store3,window.store4,window.store4,window.store4,window.store4,window.store5,window.store7,window.store7,window.store29,window.store29,window.store29,window.store29,window.store29,window.store9,window.store9,window.store9,window.store10,
+        					window.store18,window.store18,window.store18,window.store18,window.store18,window.store18,window.store19,window.store21];
+        autoCompleteSchemas = [window.schema23,window.schema,window.schema,window.schema,window.schema,window.schema,window.schema,window.schema13,window.schema13,window.schema,window.schema3,window.schema3,window.schema3,window.schema3,window.schema3,window.schema3,window.schema3,window.schema3,window.schema4,window.schema4,window.schema4,window.schema4,window.schema5,window.schema7,window.schema7,window.schema29,window.schema29,window.schema29,window.schema29,window.schema29,window.schema9,window.schema9,window.schema9,window.schema10,
+        					window.schema18,window.schema18,window.schema18,window.schema18,window.schema18,window.schema18,window.schema19,window.schema21];
+        autoCompleteUischema = [window.uischema23,window.uischema,window.uischema,window.uischema,window.uischema,window.uischema,window.uischema,window.uischema13,window.uischema13,window.uischema,window.uischema3,window.uischema3,window.uischema3,window.uischema3,window.uischema3,window.uischema3,window.uischema3,window.uischema3,window.uischema4,window.uischema4,window.uischema4,window.uischema4,window.uischema5,window.uischema7,window.uischema7,window.uischema29,window.uischema29,window.uischema29,window.uischema29,window.uischema29,window.uischema9,window.uischema9,window.uischema9,window.uischema10,
+        					window.uischema18,window.uischema18,window.uischema18,window.uischema18,window.uischema18,window.uischema18,window.uischema19,window.uischema21];
+        window.autocomplete = autocomplete;
+        $.each(autoCompleteCB,function(index,value){
+        	var ID = '#/properties/'+value;
+        	console.log(document.getElementById(ID));
+        	
+            autocomplete(document.getElementById(ID), autoCompleteArray[index],autoCompleteStores[index],autoCompleteSchemas[index],autoCompleteUischema[index],autoCompleteCB[index]);
+        	
+        })
         
         $("input[type='text']").focus(function(event) {
-           console.log($( event.target ).parent());
            
            event.preventDefault(); // Let's stop this event.
            event.stopPropagation(); // Really this time.
@@ -466,9 +586,7 @@ fskeditorjs = function() {
          });
         
         
-        $("input[type='text']").blur(function(event) {
-            console.log('hjkhkj ',$( event.target ).parent());
-            
+        $("input[type='text']").blur(function(event) {            
             event.preventDefault(); // Let's stop this event.
             event.stopPropagation(); // Really this time.
             fixInputCSS($( event.target ));
