@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: R3 Binaries Windows
+Bundle-SymbolicName: de.bund.bfr.binary.r.win32.x86_64
+Bundle-Version: 3.5.1
+Bundle-Vendor: BfR
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Eclipse-PlatformFilter: (& (osgi.os=win32) (osgi.arch=x86_64))

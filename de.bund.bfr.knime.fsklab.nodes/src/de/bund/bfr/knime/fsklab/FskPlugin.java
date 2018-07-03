@@ -19,9 +19,12 @@
 package de.bund.bfr.knime.fsklab;
 
 import java.util.ResourceBundle;
+import javax.swing.JOptionPane;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.emfjson.jackson.module.EMFModule;
 import org.emfjson.jackson.resource.JsonResourceFactory;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
@@ -45,6 +48,9 @@ public class FskPlugin extends AbstractUIPlugin {
   @Override
   public void start(BundleContext context) throws Exception {
     super.start(context);
+
+    Bundle bundle = Platform.getBundle("de.bund.bfr.binary.r.win32.x86_64");
+    JOptionPane.showMessageDialog(null, bundle.getLocation());
 
     OBJECT_MAPPER = EMFModule.setupDefaultMapper();
     FACTORY = new JsonResourceFactory(OBJECT_MAPPER);

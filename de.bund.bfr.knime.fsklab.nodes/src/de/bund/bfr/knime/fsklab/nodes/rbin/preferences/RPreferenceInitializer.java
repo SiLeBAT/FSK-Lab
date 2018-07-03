@@ -16,7 +16,6 @@
  **************************************************************************************************/
 package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
 
-import java.io.File;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import de.bund.bfr.knime.fsklab.FskPlugin;
@@ -37,9 +36,16 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
   @Override
   public void initializeDefaultPreferences() {
     IPreferenceStore store = FskPlugin.getDefault().getPreferenceStore();
+    
+    String rHome = "";
 
-    File systemRHome = RPathUtil.getSystemRHome();
-    store.setDefault(R3_PATH, systemRHome == null ? "" : systemRHome.getAbsolutePath());
+    if (RPathUtil.getPackagedRHome() != null) {
+      rHome = RPathUtil.getPackagedRHome().getAbsolutePath();
+    } else if (RPathUtil.getSystemRHome() != null) {
+      rHome = RPathUtil.getSystemRHome().getAbsolutePath();
+    }
+
+    store.setDefault(R3_PATH, rHome);
   }
 
   /** @return provider to the path to the R3 executable. */

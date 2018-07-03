@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.NodeLogger;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
 
 /**
  * Utility class for getting various R installation paths.
@@ -75,28 +74,49 @@ public final class RPathUtil {
 
 
   private static void findPackagedR() {
-    Bundle bundle = FrameworkUtil.getBundle(RPathUtil.class);
-    Enumeration<URL> e = bundle.findEntries("/R-Inst/bin", "R.exe", false);
-    URL url = null;
-    if ((e != null) && e.hasMoreElements()) {
-      url = e.nextElement();
+
+    String os = Platform.getOS();
+    String arch = Platform.getOSArch();
+
+    if (os.equals(Platform.OS_LINUX) || os.equals(Platform.OS_MACOSX))
+      return;
+
+    if (!arch.equals(Platform.ARCH_X86_64))
+      return;
+
+    // On 64-bit Windows machines look for the optional plugin with packaged R.
+    Bundle bundle = Platform.getBundle("de.bund.bfr.binary.r.win32.x86_64");
+    if (bundle == null)
+      return;
+
+    // Look for the R.exe first in the /R-Inst/bin folder. If not found it
+    // look for the it recursively.
+    Enumeration<URL> enumeration = bundle.findEntries("/R-Inst/bin", "R.exe", false);
+    URL rExe = null;
+    if ((enumeration != null) && enumeration.hasMoreElements()) {
+      rExe = enumeration.nextElement();
     } else {
-      e = bundle.findEntries("/R-Inst/bin", "R", true);
-      if ((e != null) && e.hasMoreElements()) {
-        url = e.nextElement();
+      enumeration = bundle.findEntries("/R-Inst/bin", "R", true);
+      if ((enumeration != null) && enumeration.hasMoreElements()) {
+        rExe = enumeration.nextElement();
       }
     }
-    if (url != null) {
-      try {
-        packagedRExecutable = new File(FileLocator.toFileURL(url).getFile());
-        File RInstDir = packagedRExecutable.getParentFile(); // parent is either /bin or /i386
-        do {
-          RInstDir = RInstDir.getParentFile();
-        } while (!"R-Inst".equals(RInstDir.getName()));
-        packagedRHome = RInstDir;
-      } catch (IOException ex) {
-        NodeLogger.getLogger(RPathUtil.class).info("Could not locate packaged R executable", ex);
-      }
+
+    if (rExe == null)
+      return;
+
+    try {
+
+      // Look for R home directory included in the packaged installation which is
+      // named `R-Inst`. It travels up from packagedExecutable.
+      packagedRExecutable = new File(FileLocator.toFileURL(rExe).getFile());
+      File RInstDir = packagedRExecutable.getParentFile(); // parent is either /bin or /x64
+      do {
+        RInstDir = RInstDir.getParentFile();
+      } while (!"R-Inst".equals(RInstDir.getName()));
+      packagedRHome = RInstDir;
+    } catch (IOException ex) {
+      NodeLogger.getLogger(RPathUtil.class).info("Could not locate packaged R executable", ex);
     }
   }
 
