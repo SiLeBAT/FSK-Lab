@@ -50,6 +50,7 @@ import org.osgi.framework.Bundle;
  * Utility class for getting various R installation paths.
  *
  * @author Thorsten Meinl, KNIME.com, Zurich, Switzerland
+ * @author Miguel de Alba, BfR, Berlin.
  */
 public final class RPathUtil {
   private RPathUtil() {}
