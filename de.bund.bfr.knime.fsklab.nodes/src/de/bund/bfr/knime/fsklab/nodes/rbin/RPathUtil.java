@@ -75,13 +75,10 @@ public final class RPathUtil {
 
   private static void findPackagedR() {
 
-    String os = Platform.getOS();
-    String arch = Platform.getOSArch();
-
-    if (os.equals(Platform.OS_LINUX) || os.equals(Platform.OS_MACOSX))
+    if (!Platform.OS_WIN32.equals(Platform.getOS()))
       return;
 
-    if (!arch.equals(Platform.ARCH_X86_64))
+    if (!Platform.ARCH_X86_64.equals(Platform.getOSArch()))
       return;
 
     // On 64-bit Windows machines look for the optional plugin with packaged R.
