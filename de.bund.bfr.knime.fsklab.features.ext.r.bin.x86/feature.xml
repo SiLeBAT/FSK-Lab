@@ -27,8 +27,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
 
    <plugin
          id="de.bund.bfr.binary.r.win32.x86"
-         os="win32"
-         arch="x86"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
