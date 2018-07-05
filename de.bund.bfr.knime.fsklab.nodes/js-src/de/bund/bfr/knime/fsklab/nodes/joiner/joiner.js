@@ -1,860 +1,1227 @@
 /*jshint esversion: 6 */
 /* global $ */
 joiner = function() {
-	$('head').append('<meta http-equiv="X-UA-Compatible" content="IE=8,IE=edge" />');
+	$('head').append(
+			'<meta http-equiv="X-UA-Compatible" content="IE=8,IE=edge" />');
 	if (!String.prototype.startsWith) {
-		  String.prototype.startsWith = function(searchString, position) {
-		    position = position || 0;
-		    return this.indexOf(searchString, position) === position;
-		  };
+		String.prototype.startsWith = function(searchString, position) {
+			position = position || 0;
+			return this.indexOf(searchString, position) === position;
+		};
 	}
-	
+
 	if (!Array.from) {
-		  Array.from = (function () {
-		    var toStr = Object.prototype.toString;
-		    var isCallable = function (fn) {
-		      return typeof fn === 'function' || toStr.call(fn) === '[object Function]';
-		    };
-		    var toInteger = function (value) {
-		      var number = Number(value);
-		      if (isNaN(number)) { return 0; }
-		      if (number === 0 || !isFinite(number)) { return number; }
-		      return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
-		    };
-		    var maxSafeInteger = Math.pow(2, 53) - 1;
-		    var toLength = function (value) {
-		      var len = toInteger(value);
-		      return Math.min(Math.max(len, 0), maxSafeInteger);
-		    };
+		Array.from = (function() {
+			var toStr = Object.prototype.toString;
+			var isCallable = function(fn) {
+				return typeof fn === 'function'
+						|| toStr.call(fn) === '[object Function]';
+			};
+			var toInteger = function(value) {
+				var number = Number(value);
+				if (isNaN(number)) {
+					return 0;
+				}
+				if (number === 0 || !isFinite(number)) {
+					return number;
+				}
+				return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
+			};
+			var maxSafeInteger = Math.pow(2, 53) - 1;
+			var toLength = function(value) {
+				var len = toInteger(value);
+				return Math.min(Math.max(len, 0), maxSafeInteger);
+			};
 
-		    // The length property of the from method is 1.
-		    return function from(arrayLike/*, mapFn, thisArg */) {
-		      // 1. Let C be the this value.
-		      var C = this;
+			// The length property of the from method is 1.
+			return function from(arrayLike/* , mapFn, thisArg */) {
+				// 1. Let C be the this value.
+				var C = this;
 
-		      // 2. Let items be ToObject(arrayLike).
-		      var items = Object(arrayLike);
+				// 2. Let items be ToObject(arrayLike).
+				var items = Object(arrayLike);
 
-		      // 3. ReturnIfAbrupt(items).
-		      if (arrayLike == null) {
-		        throw new TypeError('Array.from requires an array-like object - not null or undefined');
-		      }
+				// 3. ReturnIfAbrupt(items).
+				if (arrayLike == null) {
+					throw new TypeError(
+							'Array.from requires an array-like object - not null or undefined');
+				}
 
-		      // 4. If mapfn is undefined, then let mapping be false.
-		      var mapFn = arguments.length > 1 ? arguments[1] : void undefined;
-		      var T;
-		      if (typeof mapFn !== 'undefined') {
-		        // 5. else
-		        // 5. a If IsCallable(mapfn) is false, throw a TypeError exception.
-		        if (!isCallable(mapFn)) {
-		          throw new TypeError('Array.from: when provided, the second argument must be a function');
-		        }
+				// 4. If mapfn is undefined, then let mapping be false.
+				var mapFn = arguments.length > 1 ? arguments[1]
+						: void undefined;
+				var T;
+				if (typeof mapFn !== 'undefined') {
+					// 5. else
+					// 5. a If IsCallable(mapfn) is false, throw a TypeError
+					// exception.
+					if (!isCallable(mapFn)) {
+						throw new TypeError(
+								'Array.from: when provided, the second argument must be a function');
+					}
 
-		        // 5. b. If thisArg was supplied, let T be thisArg; else let T be undefined.
-		        if (arguments.length > 2) {
-		          T = arguments[2];
-		        }
-		      }
+					// 5. b. If thisArg was supplied, let T be thisArg; else let
+					// T be undefined.
+					if (arguments.length > 2) {
+						T = arguments[2];
+					}
+				}
 
-		      // 10. Let lenValue be Get(items, "length").
-		      // 11. Let len be ToLength(lenValue).
-		      var len = toLength(items.length);
+				// 10. Let lenValue be Get(items, "length").
+				// 11. Let len be ToLength(lenValue).
+				var len = toLength(items.length);
 
-		      // 13. If IsConstructor(C) is true, then
-		      // 13. a. Let A be the result of calling the [[Construct]] internal method 
-		      // of C with an argument list containing the single item len.
-		      // 14. a. Else, Let A be ArrayCreate(len).
-		      var A = isCallable(C) ? Object(new C(len)) : new Array(len);
+				// 13. If IsConstructor(C) is true, then
+				// 13. a. Let A be the result of calling the [[Construct]]
+				// internal method
+				// of C with an argument list containing the single item len.
+				// 14. a. Else, Let A be ArrayCreate(len).
+				var A = isCallable(C) ? Object(new C(len)) : new Array(len);
 
-		      // 16. Let k be 0.
-		      var k = 0;
-		      // 17. Repeat, while k < len… (also steps a - h)
-		      var kValue;
-		      while (k < len) {
-		        kValue = items[k];
-		        if (mapFn) {
-		          A[k] = typeof T === 'undefined' ? mapFn(kValue, k) : mapFn.call(T, kValue, k);
-		        } else {
-		          A[k] = kValue;
-		        }
-		        k += 1;
-		      }
-		      // 18. Let putStatus be Put(A, "length", len, true).
-		      A.length = len;
-		      // 20. Return A
-		      ;
-		      return A;
-		    };
-		  }());
-		}
-    var joinerNode = {
-        version: '1.0.0'
-    };
-    joinerNode.name = 'FSK Joiner';
-    var paper;
-    var _firstModel = {generalInformation:{},scope:{},dataBackground:{},modelMath:{}};
-    var _secondModel = {generalInformation:{},scope:{},dataBackground:{},modelMath:{}};
-    var _firstModelMath;
-    var _secondModelMath;
-    var _firstModelScript;
-    var _secondModelScript;
-    
-    var _firstModelViz;
-    var _secondModelViz;
-    var _viewValue;
-    //new ParameterizedModel(inObj2.genericModel.generalInformation.name, inObj2.genericModel.modelMath.parameter)
-    var firstModelParameterMap = new Object();
-    var secomndModelParameterMap = new Object();
-    joinerNode.init = function(representation, value) {
-    	_firstModel.generalInformation = JSON.parse(value.generalInformation);
-    	_firstModel.scope =  JSON.parse(value.scope);
-    	
-    	_firstModel.modelMath =  JSON.parse(value.modelMath);
-    	_firstModel.dataBackground =  JSON.parse(value.dataBackground);
-    	
-    	_firstModelScript = value.firstModelScript;
-    	_firstModelViz = value.firstModelViz;
-    	_firstModelMath = JSON.parse(value.modelMath1);
-        _secondModelMath = JSON.parse(value.modelMath2);
-    	/*
-    	_secondModel.generalInformation = value.secondGeneralInformation;
-    	_secondModel.scope = value.secondScope;
-    	_secondModel.modelMath = value.secondModelMath;
-    	_secondModel.dataBackground = value.secondDataBackground;*/
-    	_secondModelScript = value.secondModelScript;
-    	_secondModelViz = value.secondModelViz;
-    	
-    	
-    	
-    	_viewValue = value;
-    	
-    	if(_viewValue.joinRelations &&_viewValue.joinRelations != "")
-    		_viewValue.joinRelations = JSON.parse(_viewValue.joinRelations);
-    	else
-    		_viewValue.joinRelations = [];
-    	
-    	console.log(_viewValue.joinRelations)
-    	window.generalInformation = _firstModel.generalInformation;
-    	window.scope =  _firstModel.scope;
-    	window.modelMath =  _firstModel.modelMath;
-    	window.dataBackground =  _firstModel.dataBackground;
-    	prepareData(_firstModel);
-    	create_body();
-    };
-	function prepareData(_firstModel){
-		//prepare generalInformation
-		try{
-			if(_firstModel.generalInformation.creationDate  === undefined){
-				_firstModel.generalInformation.creationDate = '';
-			}else{
-				_firstModel.generalInformation.creationDate = new Date(_firstModel.generalInformation.creationDate).toISOString();
+				// 16. Let k be 0.
+				var k = 0;
+				// 17. Repeat, while k < len… (also steps a - h)
+				var kValue;
+				while (k < len) {
+					kValue = items[k];
+					if (mapFn) {
+						A[k] = typeof T === 'undefined' ? mapFn(kValue, k)
+								: mapFn.call(T, kValue, k);
+					} else {
+						A[k] = kValue;
+					}
+					k += 1;
+				}
+				// 18. Let putStatus be Put(A, "length", len, true).
+				A.length = len;
+				// 20. Return A
+				;
+				return A;
+			};
+		}());
+	}
+	function autocomplete(inp, arr, store, schema, uischema, fieldName) {
+		/*
+		 * the autocomplete function takes two arguments, the text field element
+		 * and an array of possible autocompleted values:
+		 */
+		var currentFocus;
+		$(inp).addClass('domdsdsd');
+		/* execute a function when someone writes in the text field: */
+		inp.addEventListener("input", function(e) {
+			var a, b, i, val = this.value;
+			/* close any already open lists of autocompleted values */
+			closeAllLists();
+			if (!val) {
+				return false;
 			}
-		}catch(err){
+			currentFocus = -1;
+			/* create a DIV element that will contain the items (values): */
+			a = document.createElement("DIV");
+			a.setAttribute("id", this.id + "autocomplete-list");
+			a.setAttribute("class", "autocomplete-items");
+			/* append the DIV element as a child of the autocomplete container: */
+			this.parentNode.appendChild(a);
+			/* for each item in the array... */
+			for (i = 0; i < arr.length; i++) {
+				/*
+				 * check if the item starts with the same letters as the text
+				 * field value:
+				 */
+				if (arr[i].substr(0, val.length).toUpperCase() == val
+						.toUpperCase()) {
+					/* create a DIV element for each matching element: */
+					b = document.createElement("DIV");
+					/* make the matching letters bold: */
+					b.innerHTML = "<strong>" + arr[i].substr(0, val.length)
+							+ "</strong>";
+					b.innerHTML += arr[i].substr(val.length);
+					/*
+					 * insert a input field that will hold the current array
+					 * item's value:
+					 */
+					b.innerHTML += "<input type='hidden' value='" + arr[i]
+							+ "'>";
+					/*
+					 * execute a function when someone clicks on the item value
+					 * (DIV element):
+					 */
+					b.addEventListener("click", function(e) {
+						/* insert the value for the autocomplete text field: */
+
+						store.getState().jsonforms.core.data[fieldName] = this
+								.getElementsByTagName("input")[0].value;
+
+						store.dispatch(Actions.init(
+								store.getState().jsonforms.core.data, schema,
+								uischema));
+						/*
+						 * close the list of autocompleted values, (or any other
+						 * open lists of autocompleted values:
+						 */
+						closeAllLists();
+					});
+					a.appendChild(b);
+				}
+			}
+		});
+		/* execute a function presses a key on the keyboard: */
+		inp.addEventListener("keydown", function(e) {
+			var x = document.getElementById(this.id + "autocomplete-list");
+			if (x)
+				x = x.getElementsByTagName("div");
+			if (e.keyCode == 40) {
+				/*
+				 * If the arrow DOWN key is pressed, increase the currentFocus
+				 * variable:
+				 */
+				currentFocus++;
+				/* and and make the current item more visible: */
+				addActive(x);
+			} else if (e.keyCode == 38) { // up
+				/*
+				 * If the arrow UP key is pressed, decrease the currentFocus
+				 * variable:
+				 */
+				currentFocus--;
+				/* and and make the current item more visible: */
+				addActive(x);
+			} else if (e.keyCode == 13) {
+				/*
+				 * If the ENTER key is pressed, prevent the form from being
+				 * submitted,
+				 */
+				e.preventDefault();
+				if (currentFocus > -1) {
+					/* and simulate a click on the "active" item: */
+					if (x)
+						x[currentFocus].click();
+				}
+			}
+		});
+		function addActive(x) {
+			/* a function to classify an item as "active": */
+			if (!x)
+				return false;
+			/* start by removing the "active" class on all items: */
+			removeActive(x);
+			if (currentFocus >= x.length)
+				currentFocus = 0;
+			if (currentFocus < 0)
+				currentFocus = (x.length - 1);
+			/* add class "autocomplete-active": */
+			x[currentFocus].classList.add("autocomplete-active");
+		}
+		function removeActive(x) {
+			/*
+			 * a function to remove the "active" class from all autocomplete
+			 * items:
+			 */
+			for (var i = 0; i < x.length; i++) {
+				x[i].classList.remove("autocomplete-active");
+			}
+		}
+		function closeAllLists(elmnt) {
+			/*
+			 * close all autocomplete lists in the document, except the one
+			 * passed as an argument:
+			 */
+			var x = document.getElementsByClassName("autocomplete-items");
+			for (var i = 0; i < x.length; i++) {
+				if (elmnt != x[i] && elmnt != inp) {
+					x[i].parentNode.removeChild(x[i]);
+				}
+			}
+		}
+		/* execute a function when someone clicks in the document: */
+		document.addEventListener("click", function(e) {
+			closeAllLists(e.target);
+		});
+	}
+	var joinerNode = {
+		version : '1.0.0'
+	};
+	joinerNode.name = 'FSK Joiner';
+	var paper;
+	var _firstModel = {
+		generalInformation : {},
+		scope : {},
+		dataBackground : {},
+		modelMath : {}
+	};
+	var _secondModel = {
+		generalInformation : {},
+		scope : {},
+		dataBackground : {},
+		modelMath : {}
+	};
+	var _firstModelMath;
+	var _secondModelMath;
+	var _firstModelScript;
+	var _secondModelScript;
+
+	var _firstModelViz;
+	var _secondModelViz;
+	var _viewValue;
+	// new ParameterizedModel(inObj2.genericModel.generalInformation.name,
+	// inObj2.genericModel.modelMath.parameter)
+	var firstModelParameterMap = new Object();
+	var secomndModelParameterMap = new Object();
+	joinerNode.init = function(representation, value) {
+		_firstModel.generalInformation = JSON.parse(value.generalInformation);
+		_firstModel.scope = JSON.parse(value.scope);
+
+		_firstModel.modelMath = JSON.parse(value.modelMath);
+		_firstModel.dataBackground = JSON.parse(value.dataBackground);
+
+		_firstModelScript = value.firstModelScript;
+		_firstModelViz = value.firstModelViz;
+		_firstModelMath = JSON.parse(value.modelMath1);
+		_secondModelMath = JSON.parse(value.modelMath2);
+		/*
+		 * _secondModel.generalInformation = value.secondGeneralInformation;
+		 * _secondModel.scope = value.secondScope; _secondModel.modelMath =
+		 * value.secondModelMath; _secondModel.dataBackground =
+		 * value.secondDataBackground;
+		 */
+		_secondModelScript = value.secondModelScript;
+		_secondModelViz = value.secondModelViz;
+
+		_viewValue = value;
+
+		if (_viewValue.joinRelations && _viewValue.joinRelations != "")
+			_viewValue.joinRelations = JSON.parse(_viewValue.joinRelations);
+		else
+			_viewValue.joinRelations = [];
+
+		console.log(_viewValue.joinRelations)
+		window.generalInformation = _firstModel.generalInformation;
+		window.scope = _firstModel.scope;
+		window.modelMath = _firstModel.modelMath;
+		window.dataBackground = _firstModel.dataBackground;
+		prepareData(_firstModel);
+		create_body();
+	};
+	function prepareData(_firstModel) {
+		// prepare generalInformation
+		try {
+			if (_firstModel.generalInformation.creationDate === undefined) {
+				_firstModel.generalInformation.creationDate = '';
+			} else {
+				_firstModel.generalInformation.creationDate = new Date(
+						_firstModel.generalInformation.creationDate)
+						.toISOString();
+			}
+		} catch (err) {
 			console.log(err);
 		}
-		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ?_firstModel.generalInformation.description:"";
-		_firstModel.generalInformation.author = _firstModel.generalInformation.author != null ?_firstModel.generalInformation.author:{};
-		_firstModel.generalInformation.format = _firstModel.generalInformation.format != null ?_firstModel.generalInformation.format:"";
-		_firstModel.generalInformation.language = _firstModel.generalInformation.language != null ?_firstModel.generalInformation.language:"";
-		_firstModel.generalInformation.languageWrittenIn = _firstModel.generalInformation.languageWrittenIn != null ?_firstModel.generalInformation.languageWrittenIn:"";
-		_firstModel.generalInformation.software = _firstModel.generalInformation.software != null ?_firstModel.generalInformation.software:"";
-		_firstModel.generalInformation.source = _firstModel.generalInformation.source != null ?_firstModel.generalInformation.source:"";
-		_firstModel.generalInformation.status = _firstModel.generalInformation.status != null ?_firstModel.generalInformation.status:"";
-		_firstModel.generalInformation.objective = _firstModel.generalInformation.objective != null ?_firstModel.generalInformation.objective:"";
+		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ? _firstModel.generalInformation.description
+				: "";
+		_firstModel.generalInformation.author = _firstModel.generalInformation.author != null ? _firstModel.generalInformation.author
+				: {};
+		_firstModel.generalInformation.format = _firstModel.generalInformation.format != null ? _firstModel.generalInformation.format
+				: "";
+		_firstModel.generalInformation.language = _firstModel.generalInformation.language != null ? _firstModel.generalInformation.language
+				: "";
+		_firstModel.generalInformation.languageWrittenIn = _firstModel.generalInformation.languageWrittenIn != null ? _firstModel.generalInformation.languageWrittenIn
+				: "";
+		_firstModel.generalInformation.software = _firstModel.generalInformation.software != null ? _firstModel.generalInformation.software
+				: "";
+		_firstModel.generalInformation.source = _firstModel.generalInformation.source != null ? _firstModel.generalInformation.source
+				: "";
+		_firstModel.generalInformation.status = _firstModel.generalInformation.status != null ? _firstModel.generalInformation.status
+				: "";
+		_firstModel.generalInformation.objective = _firstModel.generalInformation.objective != null ? _firstModel.generalInformation.objective
+				: "";
 
-		_firstModel.scope.generalComment = _firstModel.scope.generalComment != null ?_firstModel.scope.generalComment:"";
-		_firstModel.scope.temporalInformation = _firstModel.scope.temporalInformation != null ?_firstModel.scope.temporalInformation:"";
-		
-		_firstModel.dataBackground.study = _firstModel.dataBackground.study!=null?_firstModel.dataBackground.study:{};
-		_firstModel.dataBackground.dietaryassessmentmethod = _firstModel.dataBackground.dietaryassessmentmethod!=null?_firstModel.dataBackground.dietaryassessmentmethod:[];
-		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory!=null?_firstModel.dataBackground.laboratory:[];
+		_firstModel.scope.generalComment = _firstModel.scope.generalComment != null ? _firstModel.scope.generalComment
+				: "";
+		_firstModel.scope.temporalInformation = _firstModel.scope.temporalInformation != null ? _firstModel.scope.temporalInformation
+				: "";
+
+		_firstModel.dataBackground.study = _firstModel.dataBackground.study != null ? _firstModel.dataBackground.study
+				: {};
+		_firstModel.dataBackground.dietaryassessmentmethod = _firstModel.dataBackground.dietaryassessmentmethod != null ? _firstModel.dataBackground.dietaryassessmentmethod
+				: [];
+		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory != null ? _firstModel.dataBackground.laboratory
+				: [];
 
 	}
-    joinerNode.getComponentValue = function() {
-    	window.store1.getState().jsonforms.core.data.author = window.store23.getState().jsonforms.core.data;
-    	window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data;
-    	_viewValue.generalInformation = JSON.stringify(window.store1.getState().jsonforms.core.data);
-    	_viewValue.scope = JSON.stringify(window.store2.getState().jsonforms.core.data);
-    	_viewValue.modelMath = JSON.stringify(window.store17.getState().jsonforms.core.data);
-    	_viewValue.dataBackground = JSON.stringify(window.store6.getState().jsonforms.core.data);
-    	
-    	_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
-    	console.log(_viewValue.joinRelations);
-    	var serializer = new XMLSerializer();
-    	var str = serializer.serializeToString(paper.svg);
-		_viewValue.svgRepresentation  = str
-    	
-        return _viewValue;
-    };
-   
-    
-    return joinerNode;
+	joinerNode.getComponentValue = function() {
+		window.store1.getState().jsonforms.core.data.author = window.store23
+				.getState().jsonforms.core.data;
+		window.store6.getState().jsonforms.core.data.study = window.store7
+				.getState().jsonforms.core.data;
+		_viewValue.generalInformation = JSON
+				.stringify(window.store1.getState().jsonforms.core.data);
+		_viewValue.scope = JSON
+				.stringify(window.store2.getState().jsonforms.core.data);
+		_viewValue.modelMath = JSON
+				.stringify(window.store17.getState().jsonforms.core.data);
+		_viewValue.dataBackground = JSON
+				.stringify(window.store6.getState().jsonforms.core.data);
 
-    // --- utility functions ---
-    
-    function create_body() {
-    	$.ajaxSetup({
-    		  cache: true
-    		});
-    	document.createElement("body");
-    	bodyContent = "<meta http-equiv='X-UA-Compatible' content='IE=edge'>" +
-    			"<h3>Combined FSK Object </h3>" +
-    	"        <div class='tabbable boxed parentTabs'>\n" + 
-        "        <ul class='nav nav-tabs'>\n" + 
-        "            <li class='active'><a href='#set1'>Join Panel</a>\n" + 
-        "            </li>\n" + 
-        "            <li><a href='#set2'>Combined Model</a>\n" + 
-        "            </li>\n" + 
-        "        </ul>\n" + 
-        "        <div class='tab-content'>\n" + 
-        "            <div class='tab-pane fade active in' id='set1'>\n" + 
-        "					<div class='container-fluid'><div class='row content'><div id='paper' class='col-sm-9 sidenav'></div><div id='details' class='col-sm-3'></div></div> </div>"+
-        "            </div>\n" + 
-        "            <div class='tab-pane fade' id='set2'>\n" + 
-        "                <div class='tabbable'>\n" + 
-        "                    <ul class='nav nav-tabs'>\n" + 
-        
-        "                        <li class='active'><a href='#sub21'>General Information</a>\n" + 
-        "                        </li>\n" + 
-        "                        <li><a href='#sub22'>Scope</a>\n" + 
-        "                        </li>\n" + 
-        "                        <li><a href='#sub23'>Data Background</a>\n" + 
-        "                        </li>\n" +
-        "                        <li><a href='#sub24'>Model Math</a>\n" + 
-        "                        </li>\n" +
-        "                        <li ><a href='#sub25'>Model Script</a>\n" + 
-        "                        </li>\n" + 
-        "                        <li ><a href='#sub26'>Visualization Script</a>\n" + 
-        "                        </li>\n" + 
-        "                    </ul>\n" + 
-        "                    <div class='tab-content'>\n" + 
-        "                        <div class='tab-pane fade active in' id='sub21'>\n" + 
-        "                     		<div id=\"generalinformation\" class=\"App\">"+
-		"								<div class=\"demoform\">"+
-		"								</div>"+
-		"					  		</div>" +
-        "                        </div>\n" + 
-        "                        <div class='tab-pane fade' id='sub22'>\n" + 
-        "                    		 <div id=\"scope\" class=\"App\">"+
-		"								<div class=\"demoform\">"+
-		"								</div>"+
-		"					 		 </div>" +
-		"                        </div>\n" + 
-		"                        <div class='tab-pane fade' id='sub23'>\n" + 
-        "                    		 <div id=\"databackground\" class=\"App\">"+
-		"								<div class=\"demoform\">"+
-		"								</div>"+
-		"					 		 </div>" +
-		"                        </div>\n" + 
-		"                        <div class='tab-pane fade' id='sub24'>\n" + 
-        "                    		 <div id=\"modelMath\" class=\"App\">"+
-		"								<div class=\"demoform\">"+
-		"								</div>"+
-		"					 		 </div>" +
-		"                        </div>\n" + 
-		"                        <div class='tab-pane fade' id='sub25'>\n" + 
-        "                    		 <div  >" +
-        "								<h4>First Model Script</h4>"+
-        "								<textarea id='firstModelScript' name='firstModelScript'>" +
-        									_firstModelScript+
-		"								</textarea>"+
-		"								<h4>Second Model Script</h4>"+
-		"								<textarea id='secondModelScript' name='secondModelScript'>" +
-											_secondModelScript+
-		"								</textarea>"+
-		"					 		 </div>" +
-		"                        </div>\n" + 
-		"                        <div class='tab-pane fade' id='sub26'>\n" + 
-        "                    		 <div >"+
-        "								<h4>First Model Visualization Script</h4>"+
-        "								<textarea id='firstModelViz' name='firstModelViz'>" +
-        									_firstModelViz+
-		"								</textarea>"+
-		"								<h4>Second Model Visualization Script</h4>"+
-		"								<textarea id='secondModelViz' name='secondModelViz'>" +
-											_secondModelViz+
-		"								</textarea>"+
-		"					 		 </div>" +
-		"                        </div>\n" + 
-        "                    </div>\n" + 
-        "                </div>\n" + 
-        "            </div>\n" + 
-        "        </div>\n" + 
-        "    </div>" 
-        
-        $('body').append(bodyContent);
-       
-        $('body').append(' <div id="root"></div>');
-        $('#Metadata a').on('click', function (e) {
-        	  e.preventDefault()
-        	  $(this).tab('show')
-        	})
-        function fixInputCSS(source){
-    		source.parent().removeAttr('class');
-    		source.parent().parent().find('label').removeAttr('class');
-    		source.parent().parent().find('label').addClass('control-labelal');
-	    }
-        window.tableInputBootstraping = function (elements){
-        	$.each(elements,function (index, value){
-        		$(value).addClass("form-control");
-        	})
-        }
-        $(document).ready(function() {
+		_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
+		console.log(_viewValue.joinRelations);
+		var serializer = new XMLSerializer();
+		var str = serializer.serializeToString(paper.svg);
+		_viewValue.svgRepresentation = str
 
-            // DEPENDENCY: https://github.com/flatlogic/bootstrap-tabcollapse
+		return _viewValue;
+	};
 
+	return joinerNode;
 
-            // if the tabs are in a narrow column in a larger viewport
-            $('.sidebar-tabs').tabCollapse({
-                tabsClass: 'visible-tabs',
-                accordionClass: 'hidden-tabs'
-            });
+	// --- utility functions ---
 
-            // if the tabs are in wide columns on larger viewports
-            $('.content-tabs').tabCollapse();
+	function create_body() {
+		$.ajaxSetup({
+			cache : true
+		});
+		document.createElement("body");
+		bodyContent = "<meta http-equiv='X-UA-Compatible' content='IE=edge'>"
+				+ "<h3>Combined FSK Object </h3>"
+				+ "        <div class='tabbable boxed parentTabs'>\n"
+				+ "        <ul class='nav nav-tabs'>\n"
+				+ "            <li class='active'><a href='#set1'>Join Panel</a>\n"
+				+ "            </li>\n"
+				+ "            <li><a href='#set2'>Combined Model</a>\n"
+				+ "            </li>\n"
+				+ "        </ul>\n"
+				+ "        <div class='tab-content'>\n"
+				+ "            <div class='tab-pane fade active in' id='set1'>\n"
+				+ "					<div class='container-fluid'><div class='row content'><div id='paper' class='col-sm-9 sidenav'></div><div id='details' class='col-sm-3'></div></div> </div>"
+				+ "            </div>\n"
+				+ "            <div class='tab-pane fade' id='set2'>\n"
+				+ "                <div class='tabbable'>\n"
+				+ "                    <ul class='nav nav-tabs'>\n"
+				+
 
-            // initialize tab function
-            $('.nav-tabs a').click(function(e) {
-                e.preventDefault();
-                $(this).tab('show');
-                var canvas = $('#paper');
-                
-                paper.setDimensions(canvas.width(), canvas.height());
-                
-            });
-            
+				"                        <li class='active'><a href='#sub21'>General Information</a>\n"
+				+ "                        </li>\n"
+				+ "                        <li><a href='#sub22'>Scope</a>\n"
+				+ "                        </li>\n"
+				+ "                        <li><a href='#sub23'>Data Background</a>\n"
+				+ "                        </li>\n"
+				+ "                        <li><a href='#sub24'>Model Math</a>\n"
+				+ "                        </li>\n"
+				+ "                        <li ><a href='#sub25'>Model Script</a>\n"
+				+ "                        </li>\n"
+				+ "                        <li ><a href='#sub26'>Visualization Script</a>\n"
+				+ "                        </li>\n"
+				+ "                    </ul>\n"
+				+ "                    <div class='tab-content'>\n"
+				+ "                        <div class='tab-pane fade active in' id='sub21'>\n"
+				+ "                     		<div id=\"generalinformation\" class=\"App\">"
+				+ "								<div class=\"demoform\">"
+				+ "								</div>"
+				+ "					  		</div>"
+				+ "                        </div>\n"
+				+ "                        <div class='tab-pane fade' id='sub22'>\n"
+				+ "                    		 <div id=\"scope\" class=\"App\">"
+				+ "								<div class=\"demoform\">"
+				+ "								</div>"
+				+ "					 		 </div>"
+				+ "                        </div>\n"
+				+ "                        <div class='tab-pane fade' id='sub23'>\n"
+				+ "                    		 <div id=\"databackground\" class=\"App\">"
+				+ "								<div class=\"demoform\">"
+				+ "								</div>"
+				+ "					 		 </div>"
+				+ "                        </div>\n"
+				+ "                        <div class='tab-pane fade' id='sub24'>\n"
+				+ "                    		 <div id=\"modelMath\" class=\"App\">"
+				+ "								<div class=\"demoform\">"
+				+ "								</div>"
+				+ "					 		 </div>"
+				+ "                        </div>\n"
+				+ "                        <div class='tab-pane fade' id='sub25'>\n"
+				+ "                    		 <div  >"
+				+ "								<h4>First Model Script</h4>"
+				+ "								<textarea id='firstModelScript' name='firstModelScript'>"
+				+ _firstModelScript
+				+ "								</textarea>"
+				+ "								<h4>Second Model Script</h4>"
+				+ "								<textarea id='secondModelScript' name='secondModelScript'>"
+				+ _secondModelScript
+				+ "								</textarea>"
+				+ "					 		 </div>"
+				+ "                        </div>\n"
+				+ "                        <div class='tab-pane fade' id='sub26'>\n"
+				+ "                    		 <div >"
+				+ "								<h4>First Model Visualization Script</h4>"
+				+ "								<textarea id='firstModelViz' name='firstModelViz'>"
+				+ _firstModelViz
+				+ "								</textarea>"
+				+ "								<h4>Second Model Visualization Script</h4>"
+				+ "								<textarea id='secondModelViz' name='secondModelViz'>"
+				+ _secondModelViz
+				+ "								</textarea>"
+				+ "					 		 </div>"
+				+ "                        </div>\n"
+				+ "                    </div>\n"
+				+ "                </div>\n"
+				+ "            </div>\n" + "        </div>\n" + "    </div>"
 
-            // slide to top of panel-group accordion
-            $('.panel-group').on('shown.bs.collapse', function() {
-                var panel = $(this).find('.in');
-                $('html, body').animate({
-                    scrollTop: panel.offset().top + (-60)
-                }, 500);
-            });
-            $('.nav-tabs a').on('shown.bs.tab', function(e){
-            	var canvas = $('#paper');
-                
-                paper.setDimensions(canvas.width(), canvas.height());
-            	var codeMirrorContainer = $('#sub25').find(".CodeMirror")[0];
-                if (codeMirrorContainer && codeMirrorContainer.CodeMirror) {
-    				codeMirrorContainer.CodeMirror.refresh();
-    				
-		        } else {
-		        	 window.CodeMirror.fromTextArea(document.getElementById("secondModelScript"), {
-		          	  lineNumbers: true,
-		          	  extraKeys: {"Ctrl-Space": "autocomplete"},
-		          	  mode: {name: "R"}
-		          	});
-		        	
-		            
-		        }
-            	
-                var codeMirrorContainerx = $('#sub25').find(".CodeMirror")[1];
-                if (codeMirrorContainerx && codeMirrorContainerx.CodeMirror) {
-    				codeMirrorContainerx.CodeMirror.refresh();
-    				
-		        } else {
-		        	 window.CodeMirror.fromTextArea(document.getElementById("firstModelScript"), {
-		          	  lineNumbers: true,
-		          	  extraKeys: {"Ctrl-Space": "autocomplete"},
-		          	  mode: {name: "R"}
-		          	});
-		        	
-		            
-		        }
-                
-                var codeMirrorContainer = $('#sub26').find(".CodeMirror")[0];
-                if (codeMirrorContainer && codeMirrorContainer.CodeMirror) {
-    				codeMirrorContainer.CodeMirror.refresh();
-    				
-		        } else {
-		        	 window.CodeMirror.fromTextArea(document.getElementById("secondModelViz"), {
-		          	  lineNumbers: true,
-		          	  extraKeys: {"Ctrl-Space": "autocomplete"},
-		          	  mode: {name: "R"}
-		          	});
-		        	
-		            
-		        }
-            	
-                var codeMirrorContainerx = $('#sub26').find(".CodeMirror")[1];
-                if (codeMirrorContainerx && codeMirrorContainerx.CodeMirror) {
-    				codeMirrorContainerx.CodeMirror.refresh();
-    				
-		        } else {
-		        	 window.CodeMirror.fromTextArea(document.getElementById("firstModelViz"), {
-		          	  lineNumbers: true,
-		          	  extraKeys: {"Ctrl-Space": "autocomplete"},
-		          	  mode: {name: "R"}
-		          	});
-		        	
-		            
-		        }
-                
-              });
-            
-            
-           
-        });
-        drawWorkflow();
-        try{
-        	createEMFForm();
-        }catch(err){
-        	
-        }
-        
-          
-        //$('html').find('style').remove();
-        //data-meta MuiInputLabel
-       $.each($('html').find('style'), function( key, value ) {
-        	if($(value).attr('data-meta') == 'MuiInput'){
-        		$(value).remove();
-        	}else if($(value).attr('data-meta') == 'MuiInputLabel'){
-        		$(value).remove();
-        	}else if($(value).attr('data-meta') == 'MuiFormLabel'){
-        		$(value).remove();
-        	}
-        	
-    	});
-        $(window).resize(function() {
-            var canvas = $('#paper');
-            
-            paper.setDimensions(canvas.width(), canvas.height());
-        });
-          
-          
-        
-        $.each( $("input[type='text']"), function( key, value ) {
-        	
-	        	$(value).removeAttr('class');
-	        	$(value).addClass('form-control');
-	        	$(value).parent().parent().removeAttr('class');
-	        	$(value).parent().parent().addClass('form-group');
-	        	fixInputCSS($(value));
-	    	});
-        
-        
-        
-        
-        $('.MuiFormLabel-root-100').css('font-size','1.5rem');
-        $('.MuiDialog-paper-128').css('display','inline');
-        $('.MuiDialog-paper-128').css('max-height','');
-        $('.MuiDialog-paper-128').css('overflow-y','visible');
+		$('body').append(bodyContent);
 
-        $(".MuiTable-root-222 thead").removeAttr('class');
-        $(".MuiTable-root-222 thead tr").removeAttr('class');
-        $(".MuiTable-root-222 thead tr th").removeAttr('class');
-        $(".MuiTable-root-222 thead tr th th").removeAttr('class');
-        $(".MuiTable-root-222 tbody").removeAttr('class');
-        $(".MuiTable-root-222 tbody tr").removeAttr('class');
-        $(".MuiTable-root-222 tbody tr td").removeAttr('class');
-        $(".MuiTable-root-222 tbody tr td div").removeAttr('class');
-        $(".MuiTable-root-222 tbody tr td div div").removeAttr('class');
-        $(".MuiTable-root-222 tbody tr td div div div").removeAttr('class');
-      
-        $(".MuiTable-root-222 tbody tr td div div div input").removeAttr('class');
-        window.tableInputBootstraping($(".MuiTable-root-222 tbody tr td div div div input"));
+		$('body').append(' <div id="root"></div>');
+		$('#Metadata a').on('click', function(e) {
+			e.preventDefault()
+			$(this).tab('show')
+		})
+		function fixInputCSS(source) {
+			source.parent().removeAttr('class');
+			source.parent().parent().find('label').removeAttr('class');
+			source.parent().parent().find('label').addClass('control-labelal');
+		}
+		window.tableInputBootstraping = function(elements) {
+			$.each(elements, function(index, value) {
+				id = $(value).attr("id");
+				$(value).attr("id", id + 'table');
+				$(value).addClass("form-control");
+			})
+		}
+		$(document)
+				.ready(
+						function() {
 
-        
-	   
-	   $('.MuiTable-root-222').addClass('table'); 
-	   $('.MuiTable-root-222').parent().addClass('table-responsive');
-	   $('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2'); 
-       $('.MuiTable-root-222').removeClass('MuiTable-root-222'); 
-       
-       $('.MuiFormControl-root-90').addClass('form-group');
-       $.each($('.MuiToolbar-root-196').find('h2'),function(index, value){
-    	   text = $(value).text();
-    	  
-    	   $(value).replaceWith( $('<label class="control-labelal">'+text+'</label>') );
-       });
+							// DEPENDENCY:
+							// https://github.com/flatlogic/bootstrap-tabcollapse
 
-       $(".MuiTooltip-tooltip-201:contains('should NOT have additional properties')").parent().parent().parent().remove();
-        $('.replaced').parent().addClass('panel'); 
-        $('.replaced').parent().addClass('panel-default'); 
-        $('.replaced').addClass('panel-body'); 
-        window.makeId = function (words) {
-            var n = words.split("Add to ");
-            m = n[n.length - 1].replace(/\s/g, '');
-            return m[0].toLowerCase()+""+m.substring(1);
+							// if the tabs are in a narrow column in a larger
+							// viewport
+							$('.sidebar-tabs').tabCollapse({
+								tabsClass : 'visible-tabs',
+								accordionClass : 'hidden-tabs'
+							});
 
-        }
-       
-        var StringObjectPopupsName = ['qualityMeasures','event','laboratoryAccreditation','populationSpan','populationDescription','bmi','specialDietGroups','region','country','populationRiskFactor','season','patternConsumption','populationAge'];
-        $("[aria-describedby*='tooltip-add']").click(function(event) {
-	        	currentArea = window.makeId($(this).attr('aria-label'));
-	        	console.log(currentArea);
-	
-	        	if($.inArray(currentArea, StringObjectPopupsName)<0){
-	        		event.preventDefault(); // Let's stop this event.
-		        event.stopPropagation(); // Really this time.
-	            $('#title'+currentArea).text(currentArea);
-	            
-		        $('#'+currentArea).modal('show');
-		        $('.modal-content').resizable({
-		            //alsoResize: ".modal-dialog",
-		            //minHeight: 150
-		        });
-		        $('.modal-dialog').draggable();
-		        $('#'+currentArea).on('show.bs.modal', function () {
-		            $(this).find('.modal-body').css({
-		                'max-height':'100%'
-		            });
-		        });
-		        window.scrollTo(0, 0);
-	        	}
-        });
-       
-        
-        $("input[type='text']").focus(function(event) {
-           console.log($( event.target ).parent());
-           
-           event.preventDefault(); // Let's stop this event.
-           event.stopPropagation(); // Really this time.
-           
-           fixInputCSS($( event.target ));
-           
-        });
-        $("input[type='text']").click(function(event) {
-	        	
-            console.log($( event.target ).parent());
-            var source = $( event.target );
-            
-           
-            setTimeout(function(){
-            	 fixInputCSS(source);
-            	 $(".MuiButtonBase-root-156").click(function(event) {
- 	        		$.each($("input[readonly]"),function(index, dim){
- 	        			
- 	        			 setTimeout(function(){
- 	        				fixInputCSS($(dim));
- 	        			 },50);
- 	        		});
- 	        		
- 	            
- 	         });
-            }, 10);
-            
-         });
-        
-        
-        $("input[type='text']").blur(function(event) {
-            console.log('hjkhkj ',$( event.target ).parent());
-            
-            event.preventDefault(); // Let's stop this event.
-            event.stopPropagation(); // Really this time.
-            fixInputCSS($( event.target ));
-            
-         });
-        /*$.each(  $(".demoform"), function( key, value ) {
-        	
-	        	
-	        	$(value).addClass('card');
-	        	
-	    	});*/
-        $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
-        $(".notReplace button[aria-describedby*='tooltip-add']").off("click");
-        $("div[role*='tooltip']:contains('should match format')").parent().parent().remove();
-        $("div[role*='tooltip']:contains('should be')").parent().parent().remove();
-        
-        
-        
-        $("div[role*='tooltip']").click(function(event) {
-        	
-        	currentArea = window.makeId($(this).attr('aria-label'));
-        	//console.log('asasa '+currentArea);
-        	
-        });
-    }
-    
-    
-    function drawWorkflow() {
-    	 	var graph = new joint.dia.Graph;
-    	 	
+							// if the tabs are in wide columns on larger
+							// viewports
+							$('.content-tabs').tabCollapse();
 
-    	 	 paper = new joint.dia.Paper({
+							// initialize tab function
+							$('.nav-tabs a').click(
+									function(e) {
+										e.preventDefault();
+										$(this).tab('show');
+										var canvas = $('#paper');
 
-    	        el: document.getElementById('paper'),
-    	        drawGrid: 'mesh',
-    	        gridSize: 10,
-    	        model: graph,
-    	        snapLinks: true,
-    	        linkPinning: true,
-    	        drawGrid : true,
-    	        
-    	        highlighting: {
-    	            'default': {
-    	                name: 'stroke',
-    	                options: {
-    	                    padding: 6
-    	                }
-    	            }
-    	        },
-    	        interactive: function(cellView) {
-    	            if (cellView.model instanceof joint.dia.Link) {
-    	                // Disable the default vertex add functionality on pointerdown.
-    	                return { vertexAdd: false };
-    	            }
-    	            return true;
-    	        },
-    	        validateEmbedding: function(childView, parentView) {
+										paper.setDimensions(canvas.width(),
+												canvas.height());
 
-    	            return parentView.model instanceof joint.shapes.devs.Coupled;
-    	        },
+									});
 
-    	        validateConnection: function(sourceView, sourceMagnet, targetView, targetMagnet) {
-    	        	
-    	            return sourceMagnet != targetMagnet;
-    	        }
-    	    });
-    	 	paper.on('cell:pointerdblclick', 
-    	 		    function(cellView, evt, x, y) { 
-    	 				if (cellView.model instanceof joint.dia.Link) {  
-    	 					link = cellView.model
-    	 					
-    	 					var sourcePort = link.get('source').port;
-    	 	    	        var sourceId = link.get('source').id;
-    	 	    	        var targetPort = link.get('target').port;
-    	 	    	        var targetId = link.get('target').id;
-    	 	    	      
-    	 	    	      $('#details').html(
-    	 	    	    		  '<form action="">'+
-    	 	    	    		  	  '<div class="form-group row">'+
-			    	 	    	        '<label class="col-6 col-form-label" for="source">Source Port:</label>'+
-			    	 	    	        '<div class="col-6"><input type="text" class="form-control" id="source" value="'+sourcePort+'"  ></div>'+
-			    	 	    	      '</div>'+
-			    	 	    	      '<div class="form-group row">'+
-			    	 	    	       ' <label class="col-6 col-form-label" for="target">Target Port:</label>'+
-			    	 	    	        '<div class="col-6"><input  type="text" class="form-control" id="target" value = "'+targetPort+'" ></div>'+
-			    	 	    	      '</div>'+
-			    	 	    	     '<div class="form-group row">'+
-			    	 	    	       ' <label class="col-6 col-form-label" for="Command">Conversion Command:</label>'+
-			    	 	    	        '<div class="col-6"><textarea class="form-control" rows="3" id="Command" >'+targetPort+' = '+sourcePort +'</textarea> </div>'+
-			    	 	    	      '</div>'+
-			    	 	    	      '<div class="form-group">'+
-	    	 	    	    		    '<div class="col-sm-offset-2 col-sm-10">'+
-	    	 	    	    		      '<button type="button" id="save" class="btn btn-default">Save</button>'+
-	    	 	    	    		    '</div>'+
-	    	 	    	    		  '</div>'+
-			    	 	    	   '</form>');
-	    	 	    	      $('#save').click(function() {
-	    	 	    	    	  
-	    	 	    	    	  $.each( _viewValue.joinRelations, function( i, relation ) {
-	    	 	    	    		  
-	    	 	    	    		 fParam = firstModelParameterMap[sourcePort];
-	    	 	    	    		 sParam = secomndModelParameterMap[targetPort];
-	    	 	    	    		console.log(fParam,sParam);
-	    	 	    	    		  if(relation.sourceParam.parameterID == fParam.parameterID && relation.targetParam.parameterID == sParam.parameterID){
-	    	 	    	    			 relation.command = $("textarea#Command").val();
-	    	 	    	    			 
-	    	 	    	    		  }
-	    	 	    	    	  });
-	    	 	    	     });
-    	 					
-    	 					
-    	 				}
-    	 		    }
-    	 	);
-    	 	var firstModelInputParameters = [];
-    	    var firstModelOutputParameters= [];
-    	    _.each(_firstModelMath.parameter, function(param) {
-    	    	firstModelParameterMap[param.parameterID] = param
-    	    	if(param.parameterClassification == 'Input'){
-    	    		firstModelInputParameters.push(param.parameterID);
-    	    	}else{
-    	    		firstModelOutputParameters.push(param.parameterID);
-    	    	}
-    	        
-    	    });
-    	    var secondModelInputParameters = [];
-    	    var secondModelOutputParameters= [];
-    	    _.each(_secondModelMath.parameter, function(param) {
-    	    	secomndModelParameterMap[param.parameterID] = param
-    	    	if(param.parameterClassification == 'Input'){
-    	    		secondModelInputParameters.push(param.parameterID);
-    	    	}else{
-    	    		secondModelOutputParameters.push(param.parameterID);
-    	    	}
-    	    });
-    	    console.log(firstModelInputParameters.length,secondModelInputParameters.length);
-    	    var canvasheight = 500;
-    	    if(firstModelInputParameters.length>secondModelInputParameters.length){
-    	    		canvasheight = firstModelInputParameters.length
-    	    }else {
-	    		canvasheight = secondModelInputParameters.length
-    	    }
-    	    var canvas = $('#paper');
-    	    
-    	    $('#paper').height((canvasheight*25)+300);
-    	    paper.setDimensions(canvas.width(), canvas.height());
-    	    var paperWidth = $('#paper').width();
-    	    var firstModelTojoin = new joint.shapes.devs.Atomic({
-    	    	
-    	        position: {
-    	            x: paperWidth-520,
-    	            y: 60
-    	        },
-    	        size: { width: 200, height: firstModelInputParameters.length*25 },
-    	        inPorts: firstModelInputParameters,
-    	        outPorts: firstModelOutputParameters,ports: {
-    	            groups: {
-    	                'in': {
-    	                    attrs: {
-    	                        '.port-body': {
-    	                            fill: '#16A085'
-    	                        }
-    	                    }
-    	                },
-    	                'out': {
-    	                    attrs: {
-    	                        '.port-body': {
-    	                            fill: '#E74C3C'
-    	                        }
-    	                    }
-    	                }
-    	            }
-    	        }
-    	    });
-    	    firstModelTojoin.attr({
-    	        rect: {  rx: 5, ry: 5, 'stroke-width': 2, stroke: 'black' },
-    	        text: {
-    	            text: _firstModel.generalInformation.name, 
-    	            'font-size': 12, 'font-weight': 'bold', 'font-variant': 'small-caps', 'text-transform': 'capitalize',margin:'20px',padding: '40px'
-    	        }
-    	    });
+							// slide to top of panel-group accordion
+							$('.panel-group')
+									.on(
+											'shown.bs.collapse',
+											function() {
+												var panel = $(this).find('.in');
+												$('html, body')
+														.animate(
+																{
+																	scrollTop : panel
+																			.offset().top
+																			+ (-60)
+																}, 500);
+											});
+							$('.nav-tabs a')
+									.on(
+											'shown.bs.tab',
+											function(e) {
+												var canvas = $('#paper');
 
-    	    var secondModelToJoin = new joint.shapes.devs.Atomic({
-    	    	
-    	        position: {
-    	            x: paperWidth-230,
-    	            y: 280
-    	        },
-    	        size: { width: 200, height: secondModelInputParameters.length*25 },
-    	        inPorts: secondModelInputParameters,
-    	        outPorts: secondModelOutputParameters,
-    	        ports: {
-    	            groups: {
-    	                'in': {
-    	                    attrs: {
-    	                        '.port-body': {
-    	                            fill: '#16A085'
-    	                        }
-    	                    }
-    	                },
-    	                'out': {
-    	                    attrs: {
-    	                        '.port-body': {
-    	                            fill: '#E74C3C'
-    	                        }
-    	                    }
-    	                }
-    	            }
-    	        }
-    	    });
-    	    secondModelToJoin.attr({
-    	        rect: {  rx: 5, ry: 5, 'stroke-width': 2, stroke: 'black' },
-    	        text: {
-    	            text: _secondModel.generalInformation.name, 
-    	            'font-size': 12, 'font-weight': 'bold', 'font-variant': 'small-caps', 'text-transform': 'capitalize',margin:'20px',padding: '40px'
-    	        }
-    	    });
-    	  
-    	    paper.on('link:connect', function(evt, cellView, magnet, arrowhead) {
-    	    	sourcePort = evt.model.attributes.source.port;
-    	    	targetPort = evt.model.attributes.target.port;
-    	    	console.log(sourcePort,targetPort)
-    	    	//console.log(link);
-	        	sourceParameter = firstModelParameterMap[sourcePort];
-	        	if(sourceParameter == undefined){
-	        		sourceParameter = secomndModelParameterMap[sourcePort];
-	        	}
-	        	targetParameter = secomndModelParameterMap[targetPort];
-	        	if(targetParameter == undefined){
-	        		targetParameter = firstModelParameterMap[targetPort];
-	        	}
-	        	if(targetParameter != undefined){
-	        		
-	        		_viewValue.joinRelations.push({sourceParam:sourceParameter,targetParam:targetParameter});
-	        		console.log(_viewValue.joinRelations);
-	        		_viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
-	        	}
-    	    });
-    	    
-    	    graph.on('remove', function(link) {
-    	    	console.log(link);
-    	    	sourcePort = link.attributes.source.port;
-    	    	targetPort = link.attributes.target.port;
-    	    	console.log(sourcePort,targetPort)
-    	    	
-	        	sourceParameter = firstModelParameterMap[sourcePort];
-	        	if(sourceParameter == undefined){
-	        		sourceParameter = secomndModelParameterMap[sourcePort];
-	        	}
-	        	targetParameter = secomndModelParameterMap[targetPort];
-	        	if(targetParameter == undefined){
-	        		targetParameter = firstModelParameterMap[targetPort];
-	        	}
-	        	if(targetParameter != undefined){
-	        		$.each(_viewValue.joinRelations,function(index,value){
-	        			if(value.sourceParam === sourceParameter && value.targetParam === targetParameter){
-	        				_viewValue.joinRelations.splice(index, 1);
-	        			}
-	        		})
-	        		console.log(_viewValue.joinRelations);
-	        		_viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
-	        	}
-    	    })
-    
-    	   /* graph.on('change:source change:target', function(link) {
-    	    	var sourcePort = undefined;
-     	        var sourceId =  undefined;
-     	        var targetPort = undefined;
-     	        var targetId = undefined;
-    	        var sourcePort = link.get('source').port;
-    	        var sourceId = link.get('source').id;
-    	        var targetPort = link.get('target').port;
-    	        var targetId = link.get('target').id;
-    	        var sourceParameter;
-    	        var targetParameter;
-    	        if(targetPort != undefined && targetId != undefined ){
-    	        	//console.log(link);
-    	        	sourceParameter = firstModelParameterMap[sourcePort];
-    	        	if(sourceParameter == undefined){
-    	        		sourceParameter = secomndModelParameterMap[sourcePort];
-    	        	}
-    	        	targetParameter = secomndModelParameterMap[targetPort];
-    	        	if(targetParameter == undefined){
-    	        		targetParameter = firstModelParameterMap[targetPort];
-    	        	}
-    	        	if(targetParameter != undefined){
-    	        		
-    	        		_viewValue.joinRelations.push({sourceParam:sourceParameter,targetParam:targetParameter});
-    	        		//console.log(_viewValue.joinRelations);
-    	        		_viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
-    	        		//_viewValue.svgRepresentation = paper.svg;
-    	        		//link.label(0, { position: 0.5, attrs: { text: { text: sourcePort+" = "+targetPort } } });
-    	        	    
-    	        		
-    	        		
-    	        	}
-    	        	
-    	        	
-    	        }
-    	    
-    	    });*/
-    	    
-    	    
-    	    
-    	    if(_viewValue.jsonRepresentation != undefined){
-    	    	if(_viewValue && _viewValue.jsonRepresentation){
-    	    		graph.fromJSON(JSON.parse(_viewValue.jsonRepresentation));
-    	    	}
-    	    }else{
-    	    	graph.addCells([firstModelTojoin, secondModelToJoin]);
-    	    }
-    	  
-    	   
-    	    
- 
-    }
+												paper.setDimensions(canvas
+														.width(), canvas
+														.height());
+												var codeMirrorContainer = $(
+														'#sub25').find(
+														".CodeMirror")[0];
+												if (codeMirrorContainer
+														&& codeMirrorContainer.CodeMirror) {
+													codeMirrorContainer.CodeMirror
+															.refresh();
+
+												} else {
+													window.CodeMirror
+															.fromTextArea(
+																	document
+																			.getElementById("secondModelScript"),
+																	{
+																		lineNumbers : true,
+																		extraKeys : {
+																			"Ctrl-Space" : "autocomplete"
+																		},
+																		mode : {
+																			name : "R"
+																		}
+																	});
+
+												}
+
+												var codeMirrorContainerx = $(
+														'#sub25').find(
+														".CodeMirror")[1];
+												if (codeMirrorContainerx
+														&& codeMirrorContainerx.CodeMirror) {
+													codeMirrorContainerx.CodeMirror
+															.refresh();
+
+												} else {
+													window.CodeMirror
+															.fromTextArea(
+																	document
+																			.getElementById("firstModelScript"),
+																	{
+																		lineNumbers : true,
+																		extraKeys : {
+																			"Ctrl-Space" : "autocomplete"
+																		},
+																		mode : {
+																			name : "R"
+																		}
+																	});
+
+												}
+
+												var codeMirrorContainer = $(
+														'#sub26').find(
+														".CodeMirror")[0];
+												if (codeMirrorContainer
+														&& codeMirrorContainer.CodeMirror) {
+													codeMirrorContainer.CodeMirror
+															.refresh();
+
+												} else {
+													window.CodeMirror
+															.fromTextArea(
+																	document
+																			.getElementById("secondModelViz"),
+																	{
+																		lineNumbers : true,
+																		extraKeys : {
+																			"Ctrl-Space" : "autocomplete"
+																		},
+																		mode : {
+																			name : "R"
+																		}
+																	});
+
+												}
+
+												var codeMirrorContainerx = $(
+														'#sub26').find(
+														".CodeMirror")[1];
+												if (codeMirrorContainerx
+														&& codeMirrorContainerx.CodeMirror) {
+													codeMirrorContainerx.CodeMirror
+															.refresh();
+
+												} else {
+													window.CodeMirror
+															.fromTextArea(
+																	document
+																			.getElementById("firstModelViz"),
+																	{
+																		lineNumbers : true,
+																		extraKeys : {
+																			"Ctrl-Space" : "autocomplete"
+																		},
+																		mode : {
+																			name : "R"
+																		}
+																	});
+
+												}
+
+											});
+
+						});
+		drawWorkflow();
+		try {
+			createEMFForm();
+		} catch (err) {
+
+		}
+
+		// $('html').find('style').remove();
+		// data-meta MuiInputLabel
+		$.each($('html').find('style'), function(key, value) {
+			if ($(value).attr('data-meta') == 'MuiInput') {
+				$(value).remove();
+			} else if ($(value).attr('data-meta') == 'MuiInputLabel') {
+				$(value).remove();
+			} else if ($(value).attr('data-meta') == 'MuiFormLabel') {
+				$(value).remove();
+			}
+
+		});
+		$(window).resize(function() {
+			var canvas = $('#paper');
+
+			paper.setDimensions(canvas.width(), canvas.height());
+		});
+
+		$.each($("input[type='text']"), function(key, value) {
+
+			$(value).removeAttr('class');
+			$(value).addClass('form-control');
+			$(value).parent().parent().removeAttr('class');
+			$(value).parent().parent().addClass('form-group');
+			fixInputCSS($(value));
+		});
+
+		$('.MuiFormLabel-root-100').css('font-size', '1.5rem');
+		$('.MuiDialog-paper-128').css('display', 'inline');
+		$('.MuiDialog-paper-128').css('max-height', '');
+		$('.MuiDialog-paper-128').css('overflow-y', 'visible');
+
+		$(".MuiTable-root-222 thead").removeAttr('class');
+		$(".MuiTable-root-222 thead tr").removeAttr('class');
+		$(".MuiTable-root-222 thead tr th").removeAttr('class');
+		$(".MuiTable-root-222 thead tr th th").removeAttr('class');
+		$(".MuiTable-root-222 tbody").removeAttr('class');
+		$(".MuiTable-root-222 tbody tr").removeAttr('class');
+		$(".MuiTable-root-222 tbody tr td").removeAttr('class');
+		$(".MuiTable-root-222 tbody tr td div").removeAttr('class');
+		$(".MuiTable-root-222 tbody tr td div div").removeAttr('class');
+		$(".MuiTable-root-222 tbody tr td div div div").removeAttr('class');
+
+		$(".MuiTable-root-222 tbody tr td div div div input").removeAttr(
+				'class');
+		window
+				.tableInputBootstraping($(".MuiTable-root-222 tbody tr td div div div input"));
+
+		$('.MuiTable-root-222').addClass('table');
+		$('.MuiTable-root-222').parent().addClass('table-responsive');
+		$('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2');
+		$('.MuiTable-root-222').removeClass('MuiTable-root-222');
+
+		$('.MuiFormControl-root-90').addClass('form-group');
+		$.each($('.MuiToolbar-root-196').find('h2'), function(index, value) {
+			text = $(value).text();
+
+			$(value).replaceWith(
+					$('<label class="control-labelal">' + text + '</label>'));
+		});
+
+		$(
+				".MuiTooltip-tooltip-201:contains('should NOT have additional properties')")
+				.parent().parent().parent().remove();
+		$('.replaced').parent().addClass('panel');
+		$('.replaced').parent().addClass('panel-default');
+		$('.replaced').addClass('panel-body');
+		window.makeId = function(words) {
+			var n = words.split("Add to ");
+			m = n[n.length - 1].replace(/\s/g, '');
+			return m[0].toLowerCase() + "" + m.substring(1);
+
+		}
+
+		var StringObjectPopupsName = [ 'qualityMeasures', 'event',
+				'laboratoryAccreditation', 'populationSpan',
+				'populationDescription', 'bmi', 'specialDietGroups', 'region',
+				'country', 'populationRiskFactor', 'season',
+				'patternConsumption', 'populationAge' ];
+		$("[aria-describedby*='tooltip-add']").click(function(event) {
+			currentArea = window.makeId($(this).attr('aria-label'));
+			console.log(currentArea);
+
+			if ($.inArray(currentArea, StringObjectPopupsName) < 0) {
+				event.preventDefault(); // Let's stop this event.
+				event.stopPropagation(); // Really this time.
+				$('#title' + currentArea).text(currentArea);
+
+				$('#' + currentArea).modal('show');
+				$('.modal-content').resizable({
+				// alsoResize: ".modal-dialog",
+				// minHeight: 150
+				});
+				$('.modal-dialog').draggable();
+				$('#' + currentArea).on('show.bs.modal', function() {
+					$(this).find('.modal-body').css({
+						'max-height' : '100%'
+					});
+				});
+				window.scrollTo(0, 0);
+			}
+		});
+		autoCompleteCB = [ 'country', 'language', 'source', 'rights', 'format',
+				'software', 'languageWrittenIn', 'modelClass', 'basicProcess',
+				'status', 'productName', 'productUnit', 'productionMethod',
+				'packaging', 'productTreatment', 'originArea', 'originCountry',
+				'fisheriesArea', 'hazardType', 'hazardName', 'hazardUnit',
+				'hazardIndSum', 'populationName', 'studyAssayTechnologyType',
+				'accreditationProcedureForTheAssayTechnology',
+				'samplingStrategy', 'typeOfSamplingProgram', 'samplingMethod',
+				'lotSizeUnit', 'samplingPoint', 'collectionTool',
+				'recordTypes', 'foodDescriptors', 'laboratoryCountry',
+				'parameterType', 'parameterUnit', 'parameterUnitCategory',
+				'parameterSource', 'parameterSubject', 'parameterDistribution',
+				'modelEquationClass', 'typeOfExposure' ];
+		autoCompleteArray = [ window.Country, window.Language, window.Source,
+				window.Rights, window.Format, window.Software,
+				window.Language_written_in, window.Model_Class,
+				window.Basic_process, window.Status,
+				window.Product_matrix_name, window.Parameter_unit,
+				window.Method_of_production, window.Packaging,
+				window.Product_treatment, window.Area_of_origin,
+				window.Country, window.Fisheries_area, window.Hazard_type,
+				window.Hazard_name, window.Parameter_unit,
+				window.Hazard_ind_sum, window.Population_name,
+				window.Study_Assay_Technology_Type,
+				window.Accreditation_procedure_Ass_Tec,
+				window.Sampling_strategy, window.Type_of_sampling_program,
+				window.Sampling_method, window.Parameter_unit,
+				window.Sampling_point, window.Method_tool_to_collect_data,
+				window.Type_of_records, window.Food_descriptors,
+				window.Country, window.Parameter_type, window.Parameter_unit,
+				window.Parameter_unit_category, window.Parameter_source,
+				window.Parameter_subject, window.Parameter_distribution,
+				window.Model_equation_class_distr, window.Type_of_exposure ];
+		autoCompleteStores = [ window.store23, window.store1, window.store1,
+				window.store1, window.store1, window.store1, window.store1,
+				window.store13, window.store13, window.store1, window.store3,
+				window.store3, window.store3, window.store3, window.store3,
+				window.store3, window.store3, window.store3, window.store4,
+				window.store4, window.store4, window.store4, window.store5,
+				window.store7, window.store7, window.store29, window.store29,
+				window.store29, window.store29, window.store29, window.store9,
+				window.store9, window.store9, window.store10, window.store18,
+				window.store18, window.store18, window.store18, window.store18,
+				window.store18, window.store19, window.store21 ];
+		autoCompleteSchemas = [ window.schema23, window.schema, window.schema,
+				window.schema, window.schema, window.schema, window.schema,
+				window.schema13, window.schema13, window.schema,
+				window.schema3, window.schema3, window.schema3, window.schema3,
+				window.schema3, window.schema3, window.schema3, window.schema3,
+				window.schema4, window.schema4, window.schema4, window.schema4,
+				window.schema5, window.schema7, window.schema7,
+				window.schema29, window.schema29, window.schema29,
+				window.schema29, window.schema29, window.schema9,
+				window.schema9, window.schema9, window.schema10,
+				window.schema18, window.schema18, window.schema18,
+				window.schema18, window.schema18, window.schema18,
+				window.schema19, window.schema21 ];
+		autoCompleteUischema = [ window.uischema23, window.uischema,
+				window.uischema, window.uischema, window.uischema,
+				window.uischema, window.uischema, window.uischema13,
+				window.uischema13, window.uischema, window.uischema3,
+				window.uischema3, window.uischema3, window.uischema3,
+				window.uischema3, window.uischema3, window.uischema3,
+				window.uischema3, window.uischema4, window.uischema4,
+				window.uischema4, window.uischema4, window.uischema5,
+				window.uischema7, window.uischema7, window.uischema29,
+				window.uischema29, window.uischema29, window.uischema29,
+				window.uischema29, window.uischema9, window.uischema9,
+				window.uischema9, window.uischema10, window.uischema18,
+				window.uischema18, window.uischema18, window.uischema18,
+				window.uischema18, window.uischema18, window.uischema19,
+				window.uischema21 ];
+		window.autocomplete = autocomplete;
+		$.each(autoCompleteCB, function(index, value) {
+			var ID = '#/properties/' + value;
+			console.log(document.getElementById(ID));
+
+			autocomplete(document.getElementById(ID), autoCompleteArray[index],
+					autoCompleteStores[index], autoCompleteSchemas[index],
+					autoCompleteUischema[index], autoCompleteCB[index]);
+
+		})
+		$("input[type='text']").focus(function(event) {
+			console.log($(event.target).parent());
+
+			event.preventDefault(); // Let's stop this event.
+			event.stopPropagation(); // Really this time.
+
+			fixInputCSS($(event.target));
+
+		});
+		$("input[type='text']").click(function(event) {
+
+			console.log($(event.target).parent());
+			var source = $(event.target);
+
+			setTimeout(function() {
+				fixInputCSS(source);
+				$(".MuiButtonBase-root-156").click(function(event) {
+					$.each($("input[readonly]"), function(index, dim) {
+
+						setTimeout(function() {
+							fixInputCSS($(dim));
+						}, 50);
+					});
+
+				});
+			}, 10);
+
+		});
+
+		$("input[type='text']").blur(function(event) {
+			console.log('hjkhkj ', $(event.target).parent());
+
+			event.preventDefault(); // Let's stop this event.
+			event.stopPropagation(); // Really this time.
+			fixInputCSS($(event.target));
+
+		});
+		/*
+		 * $.each( $(".demoform"), function( key, value ) {
+		 * 
+		 * 
+		 * $(value).addClass('card');
+		 * 
+		 * });
+		 */
+		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
+		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
+		$("div[role*='tooltip']:contains('should match format')").parent()
+				.parent().remove();
+		$("div[role*='tooltip']:contains('should be')").parent().parent()
+				.remove();
+
+		$("div[role*='tooltip']").click(function(event) {
+
+			currentArea = window.makeId($(this).attr('aria-label'));
+			// console.log('asasa '+currentArea);
+
+		});
+	}
+
+	function drawWorkflow() {
+		var graph = new joint.dia.Graph;
+
+		paper = new joint.dia.Paper({
+
+			el : document.getElementById('paper'),
+			drawGrid : 'mesh',
+			gridSize : 10,
+			model : graph,
+			snapLinks : true,
+			linkPinning : true,
+			drawGrid : true,
+
+			highlighting : {
+				'default' : {
+					name : 'stroke',
+					options : {
+						padding : 6
+					}
+				}
+			},
+			interactive : function(cellView) {
+				if (cellView.model instanceof joint.dia.Link) {
+					// Disable the default vertex add functionality on
+					// pointerdown.
+					return {
+						vertexAdd : false
+					};
+				}
+				return true;
+			},
+			validateEmbedding : function(childView, parentView) {
+
+				return parentView.model instanceof joint.shapes.devs.Coupled;
+			},
+
+			validateConnection : function(sourceView, sourceMagnet, targetView,
+					targetMagnet) {
+
+				return sourceMagnet != targetMagnet;
+			}
+		});
+		paper
+				.on(
+						'cell:pointerdblclick',
+						function(cellView, evt, x, y) {
+							if (cellView.model instanceof joint.dia.Link) {
+								link = cellView.model
+
+								var sourcePort = link.get('source').port;
+								var sourceId = link.get('source').id;
+								var targetPort = link.get('target').port;
+								var targetId = link.get('target').id;
+
+								$('#details')
+										.html(
+												'<form action="">'
+														+ '<div class="form-group row">'
+														+ '<label class="col-6 col-form-label" for="source">Source Port:</label>'
+														+ '<div class="col-6"><input type="text" class="form-control" id="source" value="'
+														+ sourcePort
+														+ '"  ></div>'
+														+ '</div>'
+														+ '<div class="form-group row">'
+														+ ' <label class="col-6 col-form-label" for="target">Target Port:</label>'
+														+ '<div class="col-6"><input  type="text" class="form-control" id="target" value = "'
+														+ targetPort
+														+ '" ></div>'
+														+ '</div>'
+														+ '<div class="form-group row">'
+														+ ' <label class="col-6 col-form-label" for="Command">Conversion Command:</label>'
+														+ '<div class="col-6"><textarea class="form-control" rows="3" id="Command" >'
+														+ targetPort
+														+ ' = '
+														+ sourcePort
+														+ '</textarea> </div>'
+														+ '</div>'
+														+ '<div class="form-group">'
+														+ '<div class="col-sm-offset-2 col-sm-10">'
+														+ '<button type="button" id="save" class="btn btn-default">Save</button>'
+														+ '</div>'
+														+ '</div>'
+														+ '</form>');
+								$('#save')
+										.click(
+												function() {
+
+													$
+															.each(
+																	_viewValue.joinRelations,
+																	function(i,
+																			relation) {
+
+																		fParam = firstModelParameterMap[sourcePort];
+																		sParam = secomndModelParameterMap[targetPort];
+																		console
+																				.log(
+																						fParam,
+																						sParam);
+																		if (relation.sourceParam.parameterID == fParam.parameterID
+																				&& relation.targetParam.parameterID == sParam.parameterID) {
+																			relation.command = $(
+																					"textarea#Command")
+																					.val();
+
+																		}
+																	});
+												});
+
+							}
+						});
+		var firstModelInputParameters = [];
+		var firstModelOutputParameters = [];
+		_.each(_firstModelMath.parameter, function(param) {
+			firstModelParameterMap[param.parameterID] = param
+			if (param.parameterClassification == 'Input') {
+				firstModelInputParameters.push(param.parameterID);
+			} else {
+				firstModelOutputParameters.push(param.parameterID);
+			}
+
+		});
+		var secondModelInputParameters = [];
+		var secondModelOutputParameters = [];
+		_.each(_secondModelMath.parameter, function(param) {
+			secomndModelParameterMap[param.parameterID] = param
+			if (param.parameterClassification == 'Input') {
+				secondModelInputParameters.push(param.parameterID);
+			} else {
+				secondModelOutputParameters.push(param.parameterID);
+			}
+		});
+		console.log(firstModelInputParameters.length,
+				secondModelInputParameters.length);
+		var canvasheight = 500;
+		if (firstModelInputParameters.length > secondModelInputParameters.length) {
+			canvasheight = firstModelInputParameters.length
+		} else {
+			canvasheight = secondModelInputParameters.length
+		}
+		var canvas = $('#paper');
+
+		$('#paper').height((canvasheight * 25) + 300);
+		paper.setDimensions(canvas.width(), canvas.height());
+		var paperWidth = $('#paper').width();
+		var firstModelTojoin = new joint.shapes.devs.Atomic({
+
+			position : {
+				x : paperWidth - 520,
+				y : 60
+			},
+			size : {
+				width : 200,
+				height : firstModelInputParameters.length * 25
+			},
+			inPorts : firstModelInputParameters,
+			outPorts : firstModelOutputParameters,
+			ports : {
+				groups : {
+					'in' : {
+						attrs : {
+							'.port-body' : {
+								fill : '#16A085'
+							}
+						}
+					},
+					'out' : {
+						attrs : {
+							'.port-body' : {
+								fill : '#E74C3C'
+							}
+						}
+					}
+				}
+			}
+		});
+		firstModelTojoin.attr({
+			rect : {
+				rx : 5,
+				ry : 5,
+				'stroke-width' : 2,
+				stroke : 'black'
+			},
+			text : {
+				text : _firstModel.generalInformation.name,
+				'font-size' : 12,
+				'font-weight' : 'bold',
+				'font-variant' : 'small-caps',
+				'text-transform' : 'capitalize',
+				margin : '20px',
+				padding : '40px'
+			}
+		});
+
+		var secondModelToJoin = new joint.shapes.devs.Atomic({
+
+			position : {
+				x : paperWidth - 230,
+				y : 280
+			},
+			size : {
+				width : 200,
+				height : secondModelInputParameters.length * 25
+			},
+			inPorts : secondModelInputParameters,
+			outPorts : secondModelOutputParameters,
+			ports : {
+				groups : {
+					'in' : {
+						attrs : {
+							'.port-body' : {
+								fill : '#16A085'
+							}
+						}
+					},
+					'out' : {
+						attrs : {
+							'.port-body' : {
+								fill : '#E74C3C'
+							}
+						}
+					}
+				}
+			}
+		});
+		secondModelToJoin.attr({
+			rect : {
+				rx : 5,
+				ry : 5,
+				'stroke-width' : 2,
+				stroke : 'black'
+			},
+			text : {
+				text : _secondModel.generalInformation.name,
+				'font-size' : 12,
+				'font-weight' : 'bold',
+				'font-variant' : 'small-caps',
+				'text-transform' : 'capitalize',
+				margin : '20px',
+				padding : '40px'
+			}
+		});
+
+		paper.on('link:connect', function(evt, cellView, magnet, arrowhead) {
+			sourcePort = evt.model.attributes.source.port;
+			targetPort = evt.model.attributes.target.port;
+			console.log(sourcePort, targetPort)
+			// console.log(link);
+			sourceParameter = firstModelParameterMap[sourcePort];
+			if (sourceParameter == undefined) {
+				sourceParameter = secomndModelParameterMap[sourcePort];
+			}
+			targetParameter = secomndModelParameterMap[targetPort];
+			if (targetParameter == undefined) {
+				targetParameter = firstModelParameterMap[targetPort];
+			}
+			if (targetParameter != undefined) {
+
+				_viewValue.joinRelations.push({
+					sourceParam : sourceParameter,
+					targetParam : targetParameter
+				});
+				console.log(_viewValue.joinRelations);
+				_viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
+			}
+		});
+
+		graph.on('remove', function(link) {
+			console.log(link);
+			sourcePort = link.attributes.source.port;
+			targetPort = link.attributes.target.port;
+			console.log(sourcePort, targetPort)
+
+			sourceParameter = firstModelParameterMap[sourcePort];
+			if (sourceParameter == undefined) {
+				sourceParameter = secomndModelParameterMap[sourcePort];
+			}
+			targetParameter = secomndModelParameterMap[targetPort];
+			if (targetParameter == undefined) {
+				targetParameter = firstModelParameterMap[targetPort];
+			}
+			if (targetParameter != undefined) {
+				$.each(_viewValue.joinRelations, function(index, value) {
+					if (value.sourceParam === sourceParameter
+							&& value.targetParam === targetParameter) {
+						_viewValue.joinRelations.splice(index, 1);
+					}
+				})
+				console.log(_viewValue.joinRelations);
+				_viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
+			}
+		})
+
+		/*
+		 * graph.on('change:source change:target', function(link) { var
+		 * sourcePort = undefined; var sourceId = undefined; var targetPort =
+		 * undefined; var targetId = undefined; var sourcePort =
+		 * link.get('source').port; var sourceId = link.get('source').id; var
+		 * targetPort = link.get('target').port; var targetId =
+		 * link.get('target').id; var sourceParameter; var targetParameter;
+		 * if(targetPort != undefined && targetId != undefined ){
+		 * //console.log(link); sourceParameter =
+		 * firstModelParameterMap[sourcePort]; if(sourceParameter == undefined){
+		 * sourceParameter = secomndModelParameterMap[sourcePort]; }
+		 * targetParameter = secomndModelParameterMap[targetPort];
+		 * if(targetParameter == undefined){ targetParameter =
+		 * firstModelParameterMap[targetPort]; } if(targetParameter !=
+		 * undefined){
+		 * 
+		 * _viewValue.joinRelations.push({sourceParam:sourceParameter,targetParam:targetParameter});
+		 * //console.log(_viewValue.joinRelations);
+		 * _viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
+		 * //_viewValue.svgRepresentation = paper.svg; //link.label(0, {
+		 * position: 0.5, attrs: { text: { text: sourcePort+" = "+targetPort } }
+		 * });
+		 * 
+		 *  }
+		 *  }
+		 * 
+		 * });
+		 */
+
+		if (_viewValue.jsonRepresentation != undefined) {
+			if (_viewValue && _viewValue.jsonRepresentation && _viewValue.jsonRepresentation!="") {
+				try{
+					graph.fromJSON(JSON.parse(_viewValue.jsonRepresentation));
+				}catch(err){
+					
+				}
+			}
+		} else {
+			graph.addCells([ firstModelTojoin, secondModelToJoin ]);
+		}
+
+	}
 }();

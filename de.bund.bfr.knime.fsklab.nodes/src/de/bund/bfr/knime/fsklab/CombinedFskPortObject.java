@@ -88,6 +88,14 @@ import metadata.Scope;
 public class CombinedFskPortObject extends FskPortObject {
 
   final FskPortObject firstFskPortObject;
+  public FskPortObject getFirstFskPortObject() {
+    return firstFskPortObject;
+  }
+
+  public FskPortObject getSecondFskPortObject() {
+    return secondFskPortObject;
+  }
+
   final FskPortObject secondFskPortObject;
   List<JoinRelation> joinerRelation;
 
@@ -271,7 +279,7 @@ public class CombinedFskPortObject extends FskPortObject {
       // Save working directory
       String workingDirectory2 = portObject.secondFskPortObject.getWorkingDirectory();
       if (!workingDirectory2.isEmpty()) {
-        out.putNextEntry(new ZipEntry(WORKING_DIRECTORY1));
+        out.putNextEntry(new ZipEntry(WORKING_DIRECTORY2));
         IOUtils.write(workingDirectory2, out, "UTF-8");
         out.closeEntry();
       }

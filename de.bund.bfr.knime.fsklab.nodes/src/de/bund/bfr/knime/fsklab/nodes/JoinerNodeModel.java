@@ -165,14 +165,10 @@ final class JoinerNodeModel extends
         
         joinerProxyValue.setSecondModelScript(inObj2.model);
         joinerProxyValue.setSecondModelViz(inObj2.viz);
-        if (nodeSettings.jsonRepresentation != null
-            && !nodeSettings.jsonRepresentation.equals("")) {
-          joinerProxyValue.setJsonRepresentation(nodeSettings.jsonRepresentation);
-        }
+       
         exec.setProgress(1);
       }
      
-      nodeSettings.jsonRepresentation = joinerProxyValue.getSvgRepresentation();
       if(joinerProxyValue.getJoinRelations() !=null) {
         String relation = StringEscapeUtils.unescapeJson(joinerProxyValue.getJoinRelations());
         relation = StringEscapeUtils.unescapeJson(relation);

@@ -26,7 +26,9 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.jlibsedml.Parameter;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.CanceledExecutionException;
@@ -42,11 +44,15 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
+import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
+import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+import metadata.ParameterClassification;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.nodes.controller.ScriptExecutor;
@@ -119,28 +125,83 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
 
     FskPortObject fskObj = (FskPortObject) inData[0];
-    LOGGER.info(
-        " recieving '" + fskObj.selectedSimulationIndex + "' as the selected simulation index!");
+    if (fskObj instanceof CombinedFskPortObject) {
+      CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
+      FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
+      FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
+      LOGGER.info(" recieving '" + firstFskObj.selectedSimulationIndex
+          + "' as the selected simulation index!");
 
-    try (RController controller = new RController()) {
+      try (RController controller = new RController()) {
 
-      // get the index of the selected simulation saved by the JavaScript FSK Simulation
-      // Configurator the default value is 0 which is the the default simulation
-      FskSimulation fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
+        // get the index of the selected simulation saved by the JavaScript FSK Simulation
+        // Configurator the default value is 0 which is the the default simulation
+        FskSimulation fskSimulation =
+            firstFskObj.simulations.get(firstFskObj.selectedSimulationIndex);
 
-      ExecutionContext context = exec.createSubExecutionContext(1.0);
+        ExecutionContext context = exec.createSubExecutionContext(1.0);
 
-      fskObj = runSnippet(controller, fskObj, fskSimulation, context);
-    }
+        firstFskObj = runSnippet(controller, firstFskObj, fskSimulation, context);
 
-    try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
-      final PNGImageContent content = new PNGImageContent(fis);
-      internalSettings.plot = content.getImage();
-      ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
-      return new PortObject[] {fskObj, imgObj};
-    } catch (IOException e) {
-      LOGGER.warn("There is no image created");
-      return new PortObject[] {fskObj};
+        List<JoinRelation> joinRelations = comFskObj.getJoinerRelation();
+        for (JoinRelation joinRelation : joinRelations) {
+          for (metadata.Parameter sourceParameter : firstFskObj.modelMath.getParameter()) {
+            if (joinRelation.getSourceParam().getParameterID()
+                .equals(sourceParameter.getParameterID())) {
+              for (FskSimulation sim : secondFskObj.simulations) {
+                sim.getParameters().put(joinRelation.getTargetParam().getParameterID(),
+                    sourceParameter.getParameterValue());
+              }
+            }
+          }
+        }
+
+      }
+      try (RController controller = new RController()) {
+
+        // get the index of the selected simulation saved by the JavaScript FSK Simulation
+        // Configurator the default value is 0 which is the the default simulation
+        FskSimulation fskSimulation =
+            secondFskObj.simulations.get(secondFskObj.selectedSimulationIndex);
+
+        ExecutionContext context = exec.createSubExecutionContext(1.0);
+
+        secondFskObj = runSnippet(controller, secondFskObj, fskSimulation, context);
+
+      }
+      try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
+        final PNGImageContent content = new PNGImageContent(fis);
+        internalSettings.plot = content.getImage();
+        ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
+        return new PortObject[] {secondFskObj, imgObj};
+      } catch (IOException e) {
+        LOGGER.warn("There is no image created");
+        return new PortObject[] {secondFskObj};
+      }
+    } else {
+      LOGGER.info(
+          " recieving '" + fskObj.selectedSimulationIndex + "' as the selected simulation index!");
+
+      try (RController controller = new RController()) {
+
+        // get the index of the selected simulation saved by the JavaScript FSK Simulation
+        // Configurator the default value is 0 which is the the default simulation
+        FskSimulation fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
+
+        ExecutionContext context = exec.createSubExecutionContext(1.0);
+
+        fskObj = runSnippet(controller, fskObj, fskSimulation, context);
+      }
+
+      try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
+        final PNGImageContent content = new PNGImageContent(fis);
+        internalSettings.plot = content.getImage();
+        ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
+        return new PortObject[] {fskObj, imgObj};
+      } catch (IOException e) {
+        LOGGER.warn("There is no image created");
+        return new PortObject[] {fskObj};
+      }
     }
   }
 
@@ -235,6 +296,98 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     // cleanup temporary variables of output capturing and consoleLikeCommand stuff
     exec.setMessage("Cleaning up");
+    try {
+      List<metadata.Parameter> outPutParameters = fskObj.modelMath.getParameter().stream()
+          .filter(p -> p.getParameterClassification() == ParameterClassification.OUTPUT)
+          .collect(Collectors.toList());
+      for (metadata.Parameter outputParam : outPutParameters) {
+        String outputParamId = outputParam.getParameterID();
+
+        REXP expression = controller.eval(outputParamId, true);
+        // check if parameter is MATRIX
+        if (expression.dim() != null) {
+          // check if parameter is Numeric MATRIX
+          if (expression.isNumeric()) {
+            double[] elements = expression.asDoubles();
+            String outValue = Arrays.toString(elements);
+            REXP dimExpr = controller.eval("dim(" + outputParamId + ")", true);
+            int[] dims = dimExpr.asIntegers();
+            String output = String.format(" matrix( c(%s) , nrow= %d , ncol= %d, byrow = TRUE)",
+                outValue.substring(1, outValue.length() - 1), dims[0], dims[1]);
+            outputParam.setParameterValue(output);
+          }
+          // check if parameter is String MATRIX
+          else {
+            String[] elements = expression.asStrings();
+            String preValue  = "";
+            for(String el : elements) {
+              preValue += String.format("\"%s\",",el);
+            }
+            String outValue = String.format("c(%s)", preValue.substring(0,preValue.length()-1));
+            REXP dimExpr = controller.eval("dim(" + outputParamId + ")", true);
+            int[] dims = dimExpr.asIntegers();
+            String output = String.format(" matrix( %s , nrow= %d , ncol= %d, byrow = TRUE)",
+                outValue, dims[0], dims[1]);
+            outputParam.setParameterValue(output);
+          }
+
+        } 
+        // check if parameter is Numeric
+        else if (expression.isNumeric()) {
+          // check if parameter is Numeric Vector
+          if (expression.length() > 1) {
+            // check if parameter is Double Vector
+            if (!expression.isInteger()) {
+              double[] elements = expression.asDoubles();
+              String preValue = Arrays.toString(elements);
+              String output = String.format("c(%s)", preValue.substring(1,preValue.length()-1));
+              outputParam.setParameterValue(output);
+            } 
+            // check if parameter is Integer Vector
+            else {
+              int[] elements = expression.asIntegers();
+              String preValue = Arrays.toString(elements);
+              String output = String.format("c(%s)", preValue.substring(1,preValue.length()-1));
+              outputParam.setParameterValue(output);
+            }
+          } 
+          // check if parameter is Double Value
+          else if (!expression.isInteger()) {
+            Double outputParamVal = expression.asDouble();
+            String value = outputParamVal.toString();
+            outputParam.setParameterValue(value);
+          } 
+          // check if parameter is Integer Value
+          else {
+            Integer outputParamVal = expression.asInteger();
+            String value = outputParamVal.toString();
+            outputParam.setParameterValue(value);
+          }
+
+        } 
+        // check if parameter is String
+        else if (expression.isString()) {
+          // check if parameter is String Vector
+          if (expression.length() > 1) {
+            String[] elements = expression.asStrings();
+            String preValue  = "";
+            for(String el : elements) {
+              preValue += String.format("\"%s\",",el);
+            }
+            String output = String.format("c(%s)", preValue.substring(0,preValue.length()-1));
+            outputParam.setParameterValue(output);
+          }
+          // check if parameter is String or Boolean Value
+          else {
+            String outputParamVal = expression.asString();
+            outputParam.setParameterValue(outputParamVal.toString());
+          }
+
+        }
+      }
+    } catch (Exception ex) {
+      LOGGER.error(ex);
+    }
     executor.cleanup(exec);
 
     return fskObj;
