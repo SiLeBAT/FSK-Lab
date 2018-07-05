@@ -116,7 +116,7 @@ class JSSimulatorNodeModel
       if (rep.parameters == null && port != null) {
         // Take only input parameters from metadata
         rep.parameters = port.modelMath.getParameter().stream()
-            .filter(p -> p.getParameterClassification() == ParameterClassification.INPUT)
+            .filter(p ->(p.getParameterClassification() == ParameterClassification.INPUT || p.getParameterClassification() == ParameterClassification.CONSTANT))
             .collect(Collectors.toList());
       }
     }
@@ -221,7 +221,7 @@ class JSSimulatorNodeModel
     JSSimulation jsSim = new JSSimulation();
     jsSim.name = fskSim.getName();
     jsSim.values =
-        eList.stream().filter(p -> p.getParameterClassification() == ParameterClassification.INPUT)
+        eList.stream().filter(p -> (p.getParameterClassification() == ParameterClassification.INPUT || p.getParameterClassification() == ParameterClassification.CONSTANT))
             .map(p -> fskSim.getParameters().get(p.getParameterID().trim()))
             .collect(Collectors.toList());
 
