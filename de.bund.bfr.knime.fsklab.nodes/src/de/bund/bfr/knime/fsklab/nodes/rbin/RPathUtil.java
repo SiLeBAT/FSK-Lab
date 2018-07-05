@@ -81,9 +81,18 @@ public final class RPathUtil {
 
     if (!Platform.ARCH_X86_64.equals(Platform.getOSArch()))
       return;
-
-    // On 64-bit Windows machines look for the optional plugin with packaged R.
-    Bundle bundle = Platform.getBundle("de.bund.bfr.binary.r.win32.x86_64");
+    
+    // On Windows (32 or 64 bit) look  for the optional plugin with packaged R.
+    final String bundleName;
+    if (Platform.ARCH_X86_64.equals(Platform.getOSArch())) {
+      bundleName = "de.bund.bfr.binary.r.win32.x86_64";
+    } else if (Platform.ARCH_X86.equals(Platform.getOSArch())) {
+      bundleName = "de.bund.bfr.binary.r.win32.x86";
+    } else {
+      return;
+    }
+    
+    Bundle bundle = Platform.getBundle(bundleName);
     if (bundle == null)
       return;
 
@@ -108,7 +117,8 @@ public final class RPathUtil {
       // Look for R home directory included in the packaged installation which is
       // named `R-Inst`. It travels up from packagedExecutable.
       packagedRExecutable = new File(FileLocator.toFileURL(rExe).getFile());
-      File RInstDir = packagedRExecutable.getParentFile(); // parent is either /bin or /x64
+      // parent is either /bin, /x64 (64-bit) or /i386 (32-bit)
+      File RInstDir = packagedRExecutable.getParentFile();
       do {
         RInstDir = RInstDir.getParentFile();
       } while (!"R-Inst".equals(RInstDir.getName()));
