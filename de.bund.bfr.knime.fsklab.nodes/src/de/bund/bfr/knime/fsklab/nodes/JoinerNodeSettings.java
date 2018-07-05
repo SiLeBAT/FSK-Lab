@@ -26,13 +26,10 @@ class JoinerNodeSettings {
 
     private static final String JSON_REPRESENTATION = "jsonRepresentation";
 
-    String jsonRepresentation = "";
 
     void load(final NodeSettingsRO settings) throws InvalidSettingsException {
-      jsonRepresentation = settings.getString(JSON_REPRESENTATION);
     }
 
     void save(final NodeSettingsWO settings) {
-      settings.addString(JSON_REPRESENTATION, jsonRepresentation);
     }
   }

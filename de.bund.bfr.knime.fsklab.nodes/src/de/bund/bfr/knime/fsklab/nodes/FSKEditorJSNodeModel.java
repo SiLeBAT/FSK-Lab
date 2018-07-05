@@ -162,15 +162,16 @@ final class FSKEditorJSNodeModel
       }
       outObj =  inObj1;
 
-      if (inObj1.simulations.size() == 0) {
-        FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation("");
-        outObj.simulations.add(defaultSimulation);
-      }
+      
 
       outObj.generalInformation = getEObjectFromJson(fskEditorProxyValue.getGeneralInformation(),GeneralInformation.class);
       outObj.scope = getEObjectFromJson(fskEditorProxyValue.getScope(),Scope.class);
       outObj.dataBackground = getEObjectFromJson(fskEditorProxyValue.getDataBackground(),DataBackground.class);
       outObj.modelMath = getEObjectFromJson(fskEditorProxyValue.getModelMath(),ModelMath.class);
+      if (outObj.modelMath.getParameter() != null && outObj.modelMath.getParameter().size() > 0 && outObj.simulations.size() == 0) {
+        FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter());
+        outObj.simulations.add(defaultSimulation);
+      }
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
       
