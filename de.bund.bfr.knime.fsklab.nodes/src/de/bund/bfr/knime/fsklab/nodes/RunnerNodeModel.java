@@ -314,7 +314,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
             int[] dims = dimExpr.asIntegers();
             String output = String.format(" matrix( c(%s) , nrow= %d , ncol= %d, byrow = TRUE)",
                 outValue.substring(1, outValue.length() - 1), dims[0], dims[1]);
-            System.out.println(output);
             outputParam.setParameterValue(output);
           }
           // check if parameter is String MATRIX
@@ -329,7 +328,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
             int[] dims = dimExpr.asIntegers();
             String output = String.format(" matrix( %s , nrow= %d , ncol= %d, byrow = TRUE)",
                 outValue, dims[0], dims[1]);
-            System.out.println(output);
             outputParam.setParameterValue(output);
           }
 
