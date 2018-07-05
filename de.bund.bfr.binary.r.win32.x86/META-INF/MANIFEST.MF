@@ -6,4 +6,3 @@ Bundle-Version: 3.4.4
 Bundle-Vendor: BfR
 Automatic-Module-Name: de.bund.bfr.binary.r.win32.x86
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Eclipse-PlatformFilter: (& (osgi.os=win32) (osgi.arch=x86))

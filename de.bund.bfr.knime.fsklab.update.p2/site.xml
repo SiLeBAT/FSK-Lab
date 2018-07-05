@@ -6,5 +6,11 @@
    <feature url="features/de.bund.bfr.knime.fsklab.legacy.feature_1.0.0.qualifier.jar" id="de.bund.bfr.knime.fsklab.legacy.feature" version="1.0.0.qualifier">
       <category name="FSK-Lab"/>
    </feature>
+   <feature url="features/de.bund.bfr.knime.fsklab.features.ext.r.bin.x64_1.0.0.qualifier.jar" id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64" version="1.0.0.qualifier">
+      <category name="FSK-Lab"/>
+   </feature>
+   <feature url="features/de.bund.bfr.knime.fsklab.features.ext.r.bin.x86_1.0.0.qualifier.jar" id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x86" version="1.0.0.qualifier">
+      <category name="FSK-Lab"/>
+   </feature>
    <category-def name="FSK-Lab" label="FSK-Lab"/>
 </site>
