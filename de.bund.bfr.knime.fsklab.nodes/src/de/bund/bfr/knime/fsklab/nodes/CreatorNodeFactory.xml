@@ -15,11 +15,11 @@
 		<option name="R model script">
 			File path of the model script (mandatory)
 		</option>
-		<option name="Selected R parameters script">
-			File path of the parameters script (optional)
-		</option>
 		<option name="Selected R visualization script">
 			File path of the visualization script (optional)
+		</option>
+		<option name="README">
+			README file (optional)
 		</option>
 		<option name="Working directory">
 			Directory with resource files: plaintext, CSV and R workspaces (optional).
