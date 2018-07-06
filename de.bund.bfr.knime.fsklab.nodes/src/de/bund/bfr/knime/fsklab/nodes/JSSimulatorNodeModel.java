@@ -140,10 +140,8 @@ class JSSimulatorNodeModel
 
     FskPortObject outObj = new FskPortObject(inObj.model, inObj.viz, inObj.generalInformation,
         inObj.scope, inObj.dataBackground, inObj.modelMath, null, inObj.packages, workingDirectory,
-        inObj.getPlot(), readme);
+        inObj.getPlot(), readme, inObj.getSpreadsheet());
     
-    outObj.setSpreadsheet(inObj.getSpreadsheet());
-
     synchronized (getLock()) {
 
       JSSimulatorViewValue val = getViewValue();

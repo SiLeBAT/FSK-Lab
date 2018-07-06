@@ -114,7 +114,7 @@ public class FskPortObject implements PortObject {
   public Path workspace;
 
   /** Path to spreadsheet. */
-  private String spreadsheet;
+  private final String spreadsheet;
 
   /** List of R packages. */
   public final List<String> packages;
@@ -136,7 +136,7 @@ public class FskPortObject implements PortObject {
       final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
       final List<String> packages, final String workingDirectory, final String plot,
-      final String readme) throws IOException {
+      final String readme, final String spreadsheet) throws IOException {
 
     this.model = model;
     this.viz = viz;
@@ -154,6 +154,7 @@ public class FskPortObject implements PortObject {
     this.plot = plot;
 
     this.readme = StringUtils.defaultString(readme);
+    this.spreadsheet = StringUtils.defaultString(spreadsheet);
 
     objectNum = numOfInstances;
     numOfInstances += 1;
@@ -164,6 +165,7 @@ public class FskPortObject implements PortObject {
     this.packages = packages;
 
     this.readme = "";
+    this.spreadsheet = "";
   }
 
   @Override
@@ -208,12 +210,6 @@ public class FskPortObject implements PortObject {
    */
   public String getSpreadsheet() {
     return StringUtils.defaultString(spreadsheet);
-  }
-
-  public void setSpreadsheet(String spreadsheet) {
-    if (spreadsheet != null) {
-      this.spreadsheet = spreadsheet;
-    }
   }
 
   /**
@@ -424,9 +420,8 @@ public class FskPortObject implements PortObject {
 
       final FskPortObject portObj =
           new FskPortObject(modelScript, visualizationScript, generalInformation, scope,
-              dataBackground, modelMath, workspacePath, packages, workingDirectory, plot, readme);
-
-      portObj.setSpreadsheet(spreadsheet);
+              dataBackground, modelMath, workspacePath, packages, workingDirectory, plot, readme,
+              spreadsheet);
 
       if (!simulations.isEmpty()) {
         portObj.simulations.addAll(simulations);

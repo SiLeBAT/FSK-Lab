@@ -226,12 +226,12 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     final FskPortObject portObj = new FskPortObject(modelScript, vizScript, generalInformation,
-        scope, dataBackground, modelMath, null, librariesList, workingDirectory, plotPath, readme);
+        scope, dataBackground, modelMath, null, librariesList, workingDirectory, plotPath, readme,
+        nodeSettings.spreadsheet);
     
     if (modelMath != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
     }
-    portObj.setSpreadsheet(nodeSettings.spreadsheet);
     
     return new PortObject[] {portObj};
   }

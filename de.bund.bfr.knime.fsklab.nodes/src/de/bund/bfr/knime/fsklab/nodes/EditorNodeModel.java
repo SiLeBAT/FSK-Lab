@@ -118,7 +118,7 @@ public class EditorNodeModel extends NoInternalsModel {
 
       outObj = new FskPortObject(settings.modifiedModelScript, settings.modifiedVisualizationScript,
           settings.generalInformation, settings.scope, settings.dataBackground, settings.modelMath,
-          null, new ArrayList<>(), "", plotPath, "");
+          null, new ArrayList<>(), "", plotPath, "", "");
     }
 
     // Adds and installs libraries

@@ -237,9 +237,8 @@ class ReaderNodeModel extends NoInternalsModel {
 
     final FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript,
         generalInformation, scope, dataBackground, modelMath, workspacePath, packagesList,
-        workingDirectory.toString(), plotPath, readme);
+        workingDirectory.toString(), plotPath, readme, spreadsheetPath);
     fskObj.simulations.addAll(simulations);
-    fskObj.setSpreadsheet(spreadsheetPath);
 
     return new PortObject[] {fskObj};
   }

@@ -123,7 +123,7 @@ public class CombinedFskPortObject extends FskPortObject {
       final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
       throws IOException {
     super(model, viz, generalInformation, scope, dataBackground, modelMath, workspace, packages,
-        workingDirectory, plot, "");
+        workingDirectory, plot, "", "");
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     objectNum = numOfInstances;
@@ -416,7 +416,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
       final FskPortObject fportObj =
           new FskPortObject(modelScript1, visualizationScript1, generalInformation1, scope1,
-              dataBackground1, modelMath1, workspacePath1, libs1, workingDirectory1, "", "");
+              dataBackground1, modelMath1, workspacePath1, libs1, workingDirectory1, "", "", "");
 
       if (!simulations1.isEmpty()) {
         fportObj.simulations.addAll(simulations1);
@@ -424,7 +424,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
       final FskPortObject sportObj =
           new FskPortObject(modelScript2, visualizationScript2, generalInformation2, scope2,
-              dataBackground2, modelMath2, workspacePath2, libs2, workingDirectory2, "", "");
+              dataBackground2, modelMath2, workspacePath2, libs2, workingDirectory2, "", "", "");
 
       if (!simulations2.isEmpty()) {
         sportObj.simulations.addAll(simulations2);
