@@ -214,21 +214,25 @@ class CreatorNodeModel extends NoInternalsModel {
     }
     List<String> librariesList = new ArrayList<>(librariesSet);
     
+    String readmePath = nodeSettings.getReadme();
+
+    // Import readme
+    String readme;
+    if (readmePath.isEmpty()) {
+      readme = "";
+    } else {
+      File readmeFile = FileUtil.getFileFromURL(FileUtil.toURL(readmePath));
+      readme = FileUtils.readFileToString(readmeFile, "UTF-8");
+    }
+
     final FskPortObject portObj = new FskPortObject(modelScript, vizScript, generalInformation,
-        scope, dataBackground, modelMath, null, librariesList, workingDirectory, plotPath);
+        scope, dataBackground, modelMath, null, librariesList, workingDirectory, plotPath, readme);
     
     if (modelMath != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
     }
     portObj.setSpreadsheet(nodeSettings.spreadsheet);
     
-    String readmePath = nodeSettings.getReadme();
-    if (!readmePath.isEmpty()) {
-      File readmeFile = FileUtil.getFileFromURL(FileUtil.toURL(readmePath));
-      String readme = FileUtils.readFileToString(readmeFile, "UTF-8");
-      portObj.setReadme(readme);
-    }
-
     return new PortObject[] {portObj};
   }
 

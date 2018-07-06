@@ -136,11 +136,12 @@ class JSSimulatorNodeModel
     FskPortObject inObj = (FskPortObject) inObjects[0];
 
     String workingDirectory = inObj.getWorkingDirectory();
+    String readme = inObj.getReadme();
+
     FskPortObject outObj = new FskPortObject(inObj.model, inObj.viz, inObj.generalInformation,
         inObj.scope, inObj.dataBackground, inObj.modelMath, null, inObj.packages, workingDirectory,
-        inObj.getPlot());
+        inObj.getPlot(), readme);
     
-    outObj.setReadme(inObj.getReadme());
     outObj.setSpreadsheet(inObj.getSpreadsheet());
 
     synchronized (getLock()) {

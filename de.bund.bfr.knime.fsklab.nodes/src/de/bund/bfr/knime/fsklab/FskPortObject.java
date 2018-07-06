@@ -105,7 +105,7 @@ public class FskPortObject implements PortObject {
   private String plot;
 
   /** README. */
-  private String readme;
+  private final String readme;
 
   /**
    * R workspace file with the results of running the model. It may be null if the model has not
@@ -135,7 +135,9 @@ public class FskPortObject implements PortObject {
   public FskPortObject(final String model, final String viz,
       final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
-      final List<String> packages, final String workingDirectory, final String plot) throws IOException {
+      final List<String> packages, final String workingDirectory, final String plot,
+      final String readme) throws IOException {
+
     this.model = model;
     this.viz = viz;
 
@@ -151,6 +153,8 @@ public class FskPortObject implements PortObject {
 
     this.plot = plot;
 
+    this.readme = StringUtils.defaultString(readme);
+
     objectNum = numOfInstances;
     numOfInstances += 1;
   }
@@ -158,6 +162,8 @@ public class FskPortObject implements PortObject {
   public FskPortObject(final String workingDirectory, final List<String> packages) throws IOException {
     this.workingDirectory = workingDirectory;
     this.packages = packages;
+
+    this.readme = "";
   }
 
   @Override
@@ -194,13 +200,7 @@ public class FskPortObject implements PortObject {
    * @return empty string if not set.
    */
   public String getReadme() {
-    return StringUtils.defaultString(readme);
-  }
-
-  public void setReadme(String readme) {
-    if (readme != null) {
-      this.readme = readme;
-    }
+    return readme;
   }
 
   /**
@@ -424,9 +424,8 @@ public class FskPortObject implements PortObject {
 
       final FskPortObject portObj =
           new FskPortObject(modelScript, visualizationScript, generalInformation, scope,
-              dataBackground, modelMath, workspacePath, packages, workingDirectory, plot);
+              dataBackground, modelMath, workspacePath, packages, workingDirectory, plot, readme);
 
-      portObj.setReadme(readme);
       portObj.setSpreadsheet(spreadsheet);
 
       if (!simulations.isEmpty()) {
