@@ -27,8 +27,13 @@ FSK-Lab may be installed throught the update site <https://dl.bintray.com/sileba
 - ![](de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/editor/js/FskEditor.png) FSK Editor JS
 
 ## Eclipse plugin projects:
+- *de.bund.bfr.binary.r.win32.x86*: Packaged 32-bit Windows R
+- *de.bund.bfr.binary.r.win32.x86_64*: Packaged 64-bit Windows R
 - *de.bund.bfr.knime.fsklab.feature*: Eclipse Feature project.
+- *de.bund.bfr.knime.fsklab.features.ext.r.bin.x64*: Feature with 32-bit Windows R
+- *de.bund.bfr.knime.fsklab.features.ext.r.bin.x86*: Feature with 64-bit Windows R
 - *de.bund.bfr.knime.fsklab.legacy.feature*: Eclipse feature with legacy nodes.
+- *de.bund.bfr.knime.fsklab.metadata.model*: EMF metadata model
 - *de.bund.bfr.knime.fsklab.nodes.deprecated*: Deprecated extension FSK nodes.
 - *de.bund.bfr.knime.fsklab.nodes.deprecated2*: Legacy extension FSK nodes.
 - *de.bund.bfr.knime.fsklab.nodes*: Extension nodes.
