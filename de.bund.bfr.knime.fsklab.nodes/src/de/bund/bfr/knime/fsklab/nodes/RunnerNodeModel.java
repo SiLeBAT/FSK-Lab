@@ -294,7 +294,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     // cleanup temporary variables of output capturing and consoleLikeCommand stuff
     exec.setMessage("Cleaning up");
-    try {
+    /*try {
       List<metadata.Parameter> outPutParameters = fskObj.modelMath.getParameter().stream()
           .filter(p -> p.getParameterClassification() == ParameterClassification.OUTPUT)
           .collect(Collectors.toList());
@@ -385,7 +385,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       }
     } catch (Exception ex) {
       LOGGER.error(ex);
-    }
+    }*/
     executor.cleanup(exec);
 
     return fskObj;
