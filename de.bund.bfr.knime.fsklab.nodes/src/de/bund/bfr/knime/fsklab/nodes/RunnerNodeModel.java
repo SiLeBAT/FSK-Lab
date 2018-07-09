@@ -139,7 +139,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
         ExecutionContext context = exec.createSubExecutionContext(1.0);
 
-        firstFskObj = runSnippet(controller, firstFskObj, fskSimulation, context);
+        firstFskObj = runSnippet(controller, firstFskObj, fskSimulation, context,true);
 
         List<JoinRelation> joinRelations = comFskObj.getJoinerRelation();
         for (JoinRelation joinRelation : joinRelations) {
@@ -164,7 +164,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
         ExecutionContext context = exec.createSubExecutionContext(1.0);
 
-        secondFskObj = runSnippet(controller, secondFskObj, fskSimulation, context);
+        secondFskObj = runSnippet(controller, secondFskObj, fskSimulation, context,false);
 
       }
       try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
@@ -188,7 +188,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
         ExecutionContext context = exec.createSubExecutionContext(1.0);
 
-        fskObj = runSnippet(controller, fskObj, fskSimulation, context);
+        fskObj = runSnippet(controller, fskObj, fskSimulation, context,false);
       }
 
       try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
@@ -204,7 +204,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   }
 
   private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
-      final FskSimulation simulation, final ExecutionMonitor exec) throws Exception {
+      final FskSimulation simulation, final ExecutionMonitor exec, boolean isOutputForEval)
+      throws Exception {
 
     final ScriptExecutor executor = new ScriptExecutor(controller);
 
@@ -294,98 +295,103 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     // cleanup temporary variables of output capturing and consoleLikeCommand stuff
     exec.setMessage("Cleaning up");
-    /*try {
-      List<metadata.Parameter> outPutParameters = fskObj.modelMath.getParameter().stream()
-          .filter(p -> p.getParameterClassification() == ParameterClassification.OUTPUT)
-          .collect(Collectors.toList());
-      for (metadata.Parameter outputParam : outPutParameters) {
-        String outputParamId = outputParam.getParameterID();
+    if (isOutputForEval) {
+      try {
+        List<metadata.Parameter> outPutParameters = fskObj.modelMath.getParameter().stream()
+            .filter(p -> p.getParameterClassification() == ParameterClassification.OUTPUT)
+            .collect(Collectors.toList());
+        for (metadata.Parameter outputParam : outPutParameters) {
+          String outputParamId = outputParam.getParameterID();
 
-        REXP expression = controller.eval(outputParamId, true);
-        // check if parameter is MATRIX
-        if (expression.dim() != null) {
-          // check if parameter is Numeric MATRIX
-          if (expression.isNumeric()) {
-            double[] elements = expression.asDoubles();
-            String outValue = Arrays.toString(elements);
-            REXP dimExpr = controller.eval("dim(" + outputParamId + ")", true);
-            int[] dims = dimExpr.asIntegers();
-            String output = String.format(" matrix( c(%s) , nrow= %d , ncol= %d, byrow = TRUE)",
-                outValue.substring(1, outValue.length() - 1), dims[0], dims[1]);
-            outputParam.setParameterValue(output);
-          }
-          // check if parameter is String MATRIX
-          else {
-            String[] elements = expression.asStrings();
-            String preValue  = "";
-            for(String el : elements) {
-              preValue += String.format("\"%s\",",el);
-            }
-            String outValue = String.format("c(%s)", preValue.substring(0,preValue.length()-1));
-            REXP dimExpr = controller.eval("dim(" + outputParamId + ")", true);
-            int[] dims = dimExpr.asIntegers();
-            String output = String.format(" matrix( %s , nrow= %d , ncol= %d, byrow = TRUE)",
-                outValue, dims[0], dims[1]);
-            outputParam.setParameterValue(output);
-          }
-
-        } 
-        // check if parameter is Numeric
-        else if (expression.isNumeric()) {
-          // check if parameter is Numeric Vector
-          if (expression.length() > 1) {
-            // check if parameter is Double Vector
-            if (!expression.isInteger()) {
+          REXP expression = controller.eval(outputParamId, true);
+          // check if parameter is MATRIX
+          if (expression.dim() != null) {
+            // check if parameter is Numeric MATRIX
+            if (expression.isNumeric()) {
               double[] elements = expression.asDoubles();
-              String preValue = Arrays.toString(elements);
-              String output = String.format("c(%s)", preValue.substring(1,preValue.length()-1));
+              String outValue = Arrays.toString(elements);
+              REXP dimExpr = controller.eval("dim(" + outputParamId + ")", true);
+              int[] dims = dimExpr.asIntegers();
+              String output = String.format(" matrix( c(%s) , nrow= %d , ncol= %d, byrow = TRUE)",
+                  outValue.substring(1, outValue.length() - 1), dims[0], dims[1]);
               outputParam.setParameterValue(output);
-            } 
-            // check if parameter is Integer Vector
+            }
+            // check if parameter is String MATRIX
             else {
-              int[] elements = expression.asIntegers();
-              String preValue = Arrays.toString(elements);
-              String output = String.format("c(%s)", preValue.substring(1,preValue.length()-1));
+              String[] elements = expression.asStrings();
+              String preValue = "";
+              for (String el : elements) {
+                preValue += String.format("\"%s\",", el);
+              }
+              String outValue =
+                  String.format("c(%s)", preValue.substring(0, preValue.length() - 1));
+              REXP dimExpr = controller.eval("dim(" + outputParamId + ")", true);
+              int[] dims = dimExpr.asIntegers();
+              String output = String.format(" matrix( %s , nrow= %d , ncol= %d, byrow = TRUE)",
+                  outValue, dims[0], dims[1]);
               outputParam.setParameterValue(output);
             }
-          } 
-          // check if parameter is Double Value
-          else if (!expression.isInteger()) {
-            Double outputParamVal = expression.asDouble();
-            String value = outputParamVal.toString();
-            outputParam.setParameterValue(value);
-          } 
-          // check if parameter is Integer Value
-          else {
-            Integer outputParamVal = expression.asInteger();
-            String value = outputParamVal.toString();
-            outputParam.setParameterValue(value);
-          }
 
-        } 
-        // check if parameter is String
-        else if (expression.isString()) {
-          // check if parameter is String Vector
-          if (expression.length() > 1) {
-            String[] elements = expression.asStrings();
-            String preValue  = "";
-            for(String el : elements) {
-              preValue += String.format("\"%s\",",el);
+          }
+          // check if parameter is Numeric
+          else if (expression.isNumeric()) {
+            // check if parameter is Numeric Vector
+            if (expression.length() > 1) {
+              // check if parameter is Double Vector
+              if (!expression.isInteger()) {
+                double[] elements = expression.asDoubles();
+                String preValue = Arrays.toString(elements);
+                String output =
+                    String.format("c(%s)", preValue.substring(1, preValue.length() - 1));
+                outputParam.setParameterValue(output);
+              }
+              // check if parameter is Integer Vector
+              else {
+                int[] elements = expression.asIntegers();
+                String preValue = Arrays.toString(elements);
+                String output =
+                    String.format("c(%s)", preValue.substring(1, preValue.length() - 1));
+                outputParam.setParameterValue(output);
+              }
             }
-            String output = String.format("c(%s)", preValue.substring(0,preValue.length()-1));
-            outputParam.setParameterValue(output);
-          }
-          // check if parameter is String or Boolean Value
-          else {
-            String outputParamVal = expression.asString();
-            outputParam.setParameterValue(outputParamVal.toString());
-          }
+            // check if parameter is Double Value
+            else if (!expression.isInteger()) {
+              Double outputParamVal = expression.asDouble();
+              String value = outputParamVal.toString();
+              outputParam.setParameterValue(value);
+            }
+            // check if parameter is Integer Value
+            else {
+              Integer outputParamVal = expression.asInteger();
+              String value = outputParamVal.toString();
+              outputParam.setParameterValue(value);
+            }
 
+          }
+          // check if parameter is String
+          else if (expression.isString()) {
+            // check if parameter is String Vector
+            if (expression.length() > 1) {
+              String[] elements = expression.asStrings();
+              String preValue = "";
+              for (String el : elements) {
+                preValue += String.format("\"%s\",", el);
+              }
+              String output = String.format("c(%s)", preValue.substring(0, preValue.length() - 1));
+              outputParam.setParameterValue(output);
+            }
+            // check if parameter is String or Boolean Value
+            else {
+              String outputParamVal = expression.asString();
+              outputParam.setParameterValue(outputParamVal.toString());
+            }
+
+          }
         }
+      } catch (Exception ex) {
+        LOGGER.error(ex);
       }
-    } catch (Exception ex) {
-      LOGGER.error(ex);
-    }*/
+    }
     executor.cleanup(exec);
 
     return fskObj;
