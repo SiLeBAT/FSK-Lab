@@ -247,6 +247,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="PublicationType">
+    <eLiterals name="null" value="-1" literal="null"/>
     <eLiterals name="ABST" literal="Abstract"/>
     <eLiterals name="ADVS" value="1" literal="Audiovisual material"/>
     <eLiterals name="AGGR" value="2" literal="Aggregated Database"/>
@@ -344,6 +345,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//Reference"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ParameterClassification">
+    <eLiterals name="null" value="-1" literal="null"/>
     <eLiterals name="Constant" literal="Constant"/>
     <eLiterals name="Input" value="1" literal="Input"/>
     <eLiterals name="Output" value="2" literal="Output"/>

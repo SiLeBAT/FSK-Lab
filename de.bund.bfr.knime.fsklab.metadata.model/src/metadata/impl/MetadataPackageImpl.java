@@ -2679,6 +2679,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
 
     // Initialize enums and add enum literals
     initEEnum(publicationTypeEEnum, PublicationType.class, "PublicationType");
+    addEEnumLiteral(publicationTypeEEnum, PublicationType.NULL);
     addEEnumLiteral(publicationTypeEEnum, PublicationType.ABST);
     addEEnumLiteral(publicationTypeEEnum, PublicationType.ADVS);
     addEEnumLiteral(publicationTypeEEnum, PublicationType.AGGR);
@@ -2736,11 +2737,13 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
     addEEnumLiteral(publicationTypeEEnum, PublicationType.VIDEO);
 
     initEEnum(parameterClassificationEEnum, ParameterClassification.class, "ParameterClassification");
+    addEEnumLiteral(parameterClassificationEEnum, ParameterClassification.NULL);
     addEEnumLiteral(parameterClassificationEEnum, ParameterClassification.CONSTANT);
     addEEnumLiteral(parameterClassificationEEnum, ParameterClassification.INPUT);
     addEEnumLiteral(parameterClassificationEEnum, ParameterClassification.OUTPUT);
 
     initEEnum(parameterTypeEEnum, ParameterType.class, "ParameterType");
+    addEEnumLiteral(parameterTypeEEnum, ParameterType.NULL);
     addEEnumLiteral(parameterTypeEEnum, ParameterType.INTEGER);
     addEEnumLiteral(parameterTypeEEnum, ParameterType.DOUBLE);
     addEEnumLiteral(parameterTypeEEnum, ParameterType.NUMBER);
@@ -2753,6 +2756,7 @@ public class MetadataPackageImpl extends EPackageImpl implements MetadataPackage
     addEEnumLiteral(parameterTypeEEnum, ParameterType.MATRIX_OF_STRINGS);
     addEEnumLiteral(parameterTypeEEnum, ParameterType.OBJECT);
     addEEnumLiteral(parameterTypeEEnum, ParameterType.OTHER);
+    addEEnumLiteral(parameterTypeEEnum, ParameterType.STRING);
 
     // Initialize data types
     initEDataType(uriEDataType, java.net.URI.class, "URI", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

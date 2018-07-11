@@ -19,6 +19,14 @@ import org.eclipse.emf.common.util.Enumerator;
  */
 public enum ParameterClassification implements Enumerator {
 	/**
+   * The '<em><b>Null</b></em>' literal object.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #NULL_VALUE
+   * @generated
+   * @ordered
+   */
+  NULL(-1, "null", "null"), /**
    * The '<em><b>Constant</b></em>' literal object.
    * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -26,9 +34,7 @@ public enum ParameterClassification implements Enumerator {
    * @generated
    * @ordered
    */
-	CONSTANT(0, "Constant", "Constant"),
-
-	/**
+	CONSTANT(0, "Constant", "Constant"), /**
    * The '<em><b>Input</b></em>' literal object.
    * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -36,9 +42,7 @@ public enum ParameterClassification implements Enumerator {
    * @generated
    * @ordered
    */
-	INPUT(1, "Input", "Input"),
-
-	/**
+	INPUT(1, "Input", "Input"), /**
    * The '<em><b>Output</b></em>' literal object.
    * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -49,6 +53,21 @@ public enum ParameterClassification implements Enumerator {
 	OUTPUT(2, "Output", "Output");
 
 	/**
+   * The '<em><b>Null</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of '<em><b>Null</b></em>' literal object isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @see #NULL
+   * @model name="null"
+   * @generated
+   * @ordered
+   */
+  public static final int NULL_VALUE = -1;
+
+  /**
    * The '<em><b>Constant</b></em>' literal value.
    * <!-- begin-user-doc -->
 	 * <p>
@@ -63,7 +82,7 @@ public enum ParameterClassification implements Enumerator {
    */
 	public static final int CONSTANT_VALUE = 0;
 
-	/**
+  /**
    * The '<em><b>Input</b></em>' literal value.
    * <!-- begin-user-doc -->
 	 * <p>
@@ -78,7 +97,7 @@ public enum ParameterClassification implements Enumerator {
    */
 	public static final int INPUT_VALUE = 1;
 
-	/**
+  /**
    * The '<em><b>Output</b></em>' literal value.
    * <!-- begin-user-doc -->
 	 * <p>
@@ -93,7 +112,7 @@ public enum ParameterClassification implements Enumerator {
    */
 	public static final int OUTPUT_VALUE = 2;
 
-	/**
+  /**
    * An array of all the '<em><b>Parameter Classification</b></em>' enumerators.
    * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -101,6 +120,7 @@ public enum ParameterClassification implements Enumerator {
    */
 	private static final ParameterClassification[] VALUES_ARRAY =
 		new ParameterClassification[] {
+      NULL,
       CONSTANT,
       INPUT,
       OUTPUT,
@@ -160,6 +180,7 @@ public enum ParameterClassification implements Enumerator {
    */
 	public static ParameterClassification get(int value) {
     switch (value) {
+      case NULL_VALUE: return NULL;
       case CONSTANT_VALUE: return CONSTANT;
       case INPUT_VALUE: return INPUT;
       case OUTPUT_VALUE: return OUTPUT;

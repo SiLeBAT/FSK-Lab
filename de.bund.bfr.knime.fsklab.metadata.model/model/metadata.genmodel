@@ -7,6 +7,7 @@
   <foreignModel>metadata.ecore</foreignModel>
   <genPackages prefix="Metadata" disposableProviderFactory="true" ecorePackage="metadata.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="metadata.ecore#//PublicationType">
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/null"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/ABST"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/ADVS"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/AGGR"/>
@@ -64,11 +65,13 @@
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//PublicationType/VIDEO"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="metadata.ecore#//ParameterClassification">
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterClassification/null"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterClassification/Constant"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterClassification/Input"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterClassification/Output"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="metadata.ecore#//ParameterType">
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterType/null"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterType/Integer"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterType/Double"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterType/Number"/>
@@ -81,6 +84,7 @@
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterType/MatrixOfStrings"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterType/Object"/>
       <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterType/Other"/>
+      <genEnumLiterals ecoreEnumLiteral="metadata.ecore#//ParameterType/String"/>
     </genEnums>
     <genDataTypes ecoreDataType="metadata.ecore#//URI"/>
     <genClasses ecoreClass="metadata.ecore#//GeneralInformation">

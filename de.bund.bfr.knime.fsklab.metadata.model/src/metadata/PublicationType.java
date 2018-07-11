@@ -19,6 +19,14 @@ import org.eclipse.emf.common.util.Enumerator;
  */
 public enum PublicationType implements Enumerator {
 	/**
+   * The '<em><b>Null</b></em>' literal object.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #NULL_VALUE
+   * @generated
+   * @ordered
+   */
+  NULL(-1, "null", "null"), /**
    * The '<em><b>ABST</b></em>' literal object.
    * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -569,6 +577,21 @@ public enum PublicationType implements Enumerator {
 	VIDEO(54, "VIDEO", "Video recording");
 
 	/**
+   * The '<em><b>Null</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of '<em><b>Null</b></em>' literal object isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @see #NULL
+   * @model name="null"
+   * @generated
+   * @ordered
+   */
+  public static final int NULL_VALUE = -1;
+
+  /**
    * The '<em><b>ABST</b></em>' literal value.
    * <!-- begin-user-doc -->
 	 * <p>
@@ -1401,6 +1424,7 @@ public enum PublicationType implements Enumerator {
    */
 	private static final PublicationType[] VALUES_ARRAY =
 		new PublicationType[] {
+      NULL,
       ABST,
       ADVS,
       AGGR,
@@ -1512,6 +1536,7 @@ public enum PublicationType implements Enumerator {
    */
 	public static PublicationType get(int value) {
     switch (value) {
+      case NULL_VALUE: return NULL;
       case ABST_VALUE: return ABST;
       case ADVS_VALUE: return ADVS;
       case AGGR_VALUE: return AGGR;

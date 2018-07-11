@@ -70,7 +70,7 @@ public class ReferenceImpl extends MinimalEObjectImpl.Container implements Refer
    * @generated
    * @ordered
    */
-	protected static final PublicationType PUBLICATION_TYPE_EDEFAULT = PublicationType.ABST;
+	protected static final PublicationType PUBLICATION_TYPE_EDEFAULT = PublicationType.NULL;
 
 	/**
    * The cached value of the '{@link #getPublicationType() <em>Publication Type</em>}' attribute.
