@@ -38,9 +38,7 @@ package de.bund.bfr.knime.fsklab.nodes.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -97,7 +95,6 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.workflow.FlowVariable;
-import org.knime.core.util.FileUtil;
 import org.knime.core.util.ThreadPool;
 import org.knime.core.util.ThreadUtils;
 import org.knime.ext.r.node.local.port.RPortObject;
@@ -286,13 +283,13 @@ public class RController implements IRController {
   private void initR() throws RException {
     try {
       String rHome = RPreferenceInitializer.getR3Provider().getRHome();
-      
+
       // FIXME: Workaround for Linux server in BfR. If R home is not configure then
       // defaults to /usr/lib/R/
       if (StringUtils.isEmpty(rHome) && Platform.isLinux()) {
         rHome = "/usr/lib/R/";
       }
-      
+
       RBinUtil.checkRHome(rHome);
 
       m_rProps = RBinUtil.retrieveRProperties();
@@ -302,32 +299,16 @@ public class RController implements IRController {
             + "Please check the R installation defined in the KNIME preferences.", null);
       }
 
-      final String rserveProp = m_rProps.getProperty("Rserve.path");
       // Check rserveProp is not null or empty
+      final String rserveProp = m_rProps.getProperty("Rserve.path");
       if (StringUtils.isEmpty(rserveProp)) {
-        try {
-          installRserve();
-          m_rProps = RBinUtil.retrieveRProperties();
-        } catch (IOException e) {
-          RPreferenceInitializer.invalidateProviderCache();
-          throw new RException("Could not find and install Rserve package. "
-              + "Please install it manually in your R installation by "
-              + "running \"install.packages('Rserve')\".", null);
-        }
+        throw new RException("Missing required package: Rserve", null);
       }
 
-      final String miniCranProp = m_rProps.getProperty("miniCRAN.path");
       // Check miniCranProp is not null or empty
+      final String miniCranProp = m_rProps.getProperty("miniCRAN.path");
       if (StringUtils.isEmpty(miniCranProp)) {
-        try {
-          installMiniCran();
-          m_rProps = RBinUtil.retrieveRProperties();
-        } catch (IOException e) {
-          RPreferenceInitializer.invalidateProviderCache();
-          throw new RException("Could not find and install miniCRAN package. "
-              + "Please install it manually in your R installation by "
-              + "running \"install.packages('miniCRAN')\".", null);
-        }
+        throw new RException("Missing required package: miniCRAN", null);
       }
 
       m_connection = initRConnection();
@@ -415,77 +396,6 @@ public class RController implements IRController {
     if (!quartzFound) {
       throw new RException("XQuartz is required for the Cairo library on MacOS. Please download "
           + "and install XQuartz from http://www.xquartz.org/.", null);
-    }
-  }
-
-  /**
-   * Install Rserve just in case the R environment provided by the user does not have it installed.
-   * 
-   * @throws IOException
-   */
-  private void installRserve() throws IOException {
-    if (Platform.isWindows()) {
-      installLib("/Rserve_1.7-3.zip", "Rserve_1.7-3", ".zip");
-    } else if (Platform.isMac()) {
-      installLib("/Rserve_1.7-3.tgz", "Rserve_1.7-3", ".tgz");
-    } else if (Platform.isLinux()) {
-      installLib("/Rserve_1.7-3.tar.gz", "Rserve_1.7-3", ".tar.gz");
-    } else {
-      throw new RuntimeException("Non suppported platform, sorry." + System.getProperty("os.name"));
-    }
-  }
-
-  /**
-   * Install miniCRAN just in case the R environment provided by the user does not have it
-   * installed.
-   * 
-   * @throws IOException
-   * @throws RException
-   */
-  private void installMiniCran() throws IOException, RException {
-
-    if (Platform.isWindows()) {
-      installLib("/miniCRAN_0.2.9.zip", "miniCRAN_0.2.9", ".zip");
-    } else if (Platform.isMac()) {
-      installLib("/miniCRAN_0.2.9.tgz", "miniCRAN_0.2.9", ".tgz");
-    } else if (Platform.isLinux()) {
-      eval("install.packages('miniCRAN', repos = 'http://cran.us.r-project.org')", false);
-    } else {
-      throw new RuntimeException("Non suppported platform, sorry." + System.getProperty("os.name"));
-    }
-  }
-
-  /**
-   * Installs an R library.
-   * 
-   * @param path Path to resource
-   * @param name Library name, such as "triangle", "maps", etc. May include version numbers.
-   * @param ext Library extension. Includes dot. E.g. ".zip", ".tgz" or ".tar.gz".
-   */
-  private void installLib(String path, String name, String ext) throws IOException {
-
-    // Get input stream into the embedded library in the FSK-Lab binary and copy
-    // it to the temporary file. The input stream is closed in the try-with.
-    try (InputStream is = getClass().getResourceAsStream(path)) {
-
-      // temporary file that holds a copy of the library
-      File tempFile = FileUtil.createTempFile(name, ext);
-      try (FileOutputStream os = new FileOutputStream(tempFile)) {
-        FileUtil.copy(is, os);
-      }
-
-      // String path to library file
-      String tempPath = tempFile.getAbsolutePath();
-
-      // Full path to R binary
-      String rBinPath = RPreferenceInitializer.getR3Provider().getRBinPath("R").toString();
-
-      // R command to install R library (using full path).
-      // See https://stat.ethz.ch/R-manual/R-devel/library/utils/html/INSTALL.html
-      String cmd = rBinPath + " CMD INSTALL " + tempPath;
-
-      // Execute command
-      Runtime.getRuntime().exec(cmd);
     }
   }
 
