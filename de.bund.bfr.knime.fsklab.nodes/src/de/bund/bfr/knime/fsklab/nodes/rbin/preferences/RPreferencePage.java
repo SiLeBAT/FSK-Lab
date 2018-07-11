@@ -142,9 +142,9 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
     @Override
     protected void doStore() {
 
-      String oldLanguage = LanguagePreferenceInitializer.getLanguageProvider().getLanguage();
+      String oldLanguage = LanguagePreferenceInitializer.getProvider().getLanguage();
       super.doStore();
-      String newLanguage = LanguagePreferenceInitializer.getLanguageProvider().getLanguage();
+      String newLanguage = LanguagePreferenceInitializer.getProvider().getLanguage();
 
       if (!newLanguage.equals(oldLanguage)) {
         setMessage("The language preferences were changed. Please restart KNIME to apply changes.",

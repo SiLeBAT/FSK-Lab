@@ -26,7 +26,7 @@ public class LanguagePreferenceInitializer extends AbstractPreferenceInitializer
 
   static final String LANGUAGE = "language";
 
-  private static LanguagePreferenceProvider cachedPreferenceProvider = null;
+  private static LanguagePreferenceProvider cachedProvider = null;
 
   @Override
   public void initializeDefaultPreferences() {
@@ -36,21 +36,21 @@ public class LanguagePreferenceInitializer extends AbstractPreferenceInitializer
   }
 
   /** @return language provider. */
-  public static final LanguagePreferenceProvider getLanguageProvider() {
+  public static final LanguagePreferenceProvider getProvider() {
 
     IPreferenceStore store = FskPlugin.getDefault().getPreferenceStore();
     String language = store.getString(LANGUAGE);
 
-    if (cachedPreferenceProvider == null
-        || !cachedPreferenceProvider.getLanguage().equals(language)) {
-      cachedPreferenceProvider = new DefaultLanguagePreferenceProvider(language);
+    if (cachedProvider == null
+        || !cachedProvider.getLanguage().equals(language)) {
+      cachedProvider = new DefaultLanguagePreferenceProvider(language);
     }
 
-    return cachedPreferenceProvider;
+    return cachedProvider;
   }
   
-  /** Invalidate the cached language provider returned by {@link #getLanguageProvider()}. */
-  public static final void invalidateLanguagePreferenceProviderCache() {
-    cachedPreferenceProvider = null;
+  /** Invalidate the cached language provider returned by {@link #getProvider()}. */
+  public static final void invalidateProviderCache() {
+    cachedProvider = null;
   }
 }

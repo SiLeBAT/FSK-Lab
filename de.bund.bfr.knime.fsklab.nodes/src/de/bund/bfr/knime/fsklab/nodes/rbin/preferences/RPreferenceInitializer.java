@@ -31,12 +31,12 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
   /** Path to R v.3 */
   static final String R3_PATH = "r3.path";
 
-  private static RPreferenceProvider m_cachedR3PreferenceProvider = null;
+  private static RPreferenceProvider cachedProvider = null;
 
   @Override
   public void initializeDefaultPreferences() {
     IPreferenceStore store = FskPlugin.getDefault().getPreferenceStore();
-    
+
     String rHome = "";
 
     if (RPathUtil.getPackagedRHome() != null) {
@@ -51,19 +51,18 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
   /** @return provider to the path to the R3 executable. */
   public static final RPreferenceProvider getR3Provider() {
     final String r3Home = FskPlugin.getDefault().getPreferenceStore().getString(R3_PATH);
-    if (m_cachedR3PreferenceProvider == null
-        || !m_cachedR3PreferenceProvider.getRHome().equals(r3Home)) {
-      m_cachedR3PreferenceProvider = new DefaultRPreferenceProvider(r3Home);
+    if (cachedProvider == null || !cachedProvider.getRHome().equals(r3Home)) {
+      cachedProvider = new DefaultRPreferenceProvider(r3Home);
     }
 
-    return m_cachedR3PreferenceProvider;
+    return cachedProvider;
   }
 
   /**
    * Invalidate the cached R3 preference provider returned by {@link #getR3Provider()}, to refetch R
    * properties (which launches an external R command).
    */
-  public static final void invalidateR3PreferenceProviderCache() {
-    m_cachedR3PreferenceProvider = null;
+  public static final void invalidateProviderCache() {
+    cachedProvider = null;
   }
 }

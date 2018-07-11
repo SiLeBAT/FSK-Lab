@@ -190,7 +190,7 @@ public class NodeUtils {
    */
   public static final Locale getLocale() {
 
-    String languageCode = LanguagePreferenceInitializer.getLanguageProvider().getLanguage();
+    String languageCode = LanguagePreferenceInitializer.getProvider().getLanguage();
     Locale locale;
     if (languageCode.equals("de")) {
       locale = new Locale("de", "DE");

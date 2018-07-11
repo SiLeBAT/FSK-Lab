@@ -309,7 +309,7 @@ public class RController implements IRController {
           installRserve();
           m_rProps = RBinUtil.retrieveRProperties();
         } catch (IOException e) {
-          RPreferenceInitializer.invalidateR3PreferenceProviderCache();
+          RPreferenceInitializer.invalidateProviderCache();
           throw new RException("Could not find and install Rserve package. "
               + "Please install it manually in your R installation by "
               + "running \"install.packages('Rserve')\".", null);
@@ -323,7 +323,7 @@ public class RController implements IRController {
           installMiniCran();
           m_rProps = RBinUtil.retrieveRProperties();
         } catch (IOException e) {
-          RPreferenceInitializer.invalidateR3PreferenceProviderCache();
+          RPreferenceInitializer.invalidateProviderCache();
           throw new RException("Could not find and install miniCRAN package. "
               + "Please install it manually in your R installation by "
               + "running \"install.packages('miniCRAN')\".", null);
