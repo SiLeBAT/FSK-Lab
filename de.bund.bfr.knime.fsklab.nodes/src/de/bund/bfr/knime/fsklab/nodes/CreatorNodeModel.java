@@ -140,7 +140,7 @@ class CreatorNodeModel extends NoInternalsModel {
       BufferedDataTable metadataTable = (BufferedDataTable) inData[0];
 
       // parse table
-      String[][] values = new String[200][30];
+      String[][] values = new String[200][50];
       int i = 0;
       for (DataRow row : metadataTable) {
         if (isRowEmpty(row))
