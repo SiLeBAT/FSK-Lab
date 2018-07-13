@@ -10,7 +10,6 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-databind,
  com.fifesoft.rsyntaxtextarea,
  com.google.guava,
- com.sun.jna,
  org.knime.workbench.repository,
  de.bund.bfr.knime.fsklab.nodes,
  org.apache.commons.lang3,
@@ -35,3 +34,4 @@ Bundle-ClassPath: libs/CombineArchive-1.1.jar,
 Export-Package: de.bund.bfr.knime.fsklab.nodes,
  de.bund.bfr.knime.fsklab.nodes.ui,
  de.bund.bfr.knime.pmm.fskx.port
+Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated
