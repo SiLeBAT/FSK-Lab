@@ -54,9 +54,9 @@ import org.knime.core.util.KNIMETimer;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 import com.sun.jna.Platform;
-import de.bund.bfr.knime.fsklab.nodes.controller.RController;
-import de.bund.bfr.knime.fsklab.nodes.rbin.preferences.RPreferenceInitializer;
 import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+import de.bund.bfr.knime.fsklab.nodes.controller.RController;
+import de.bund.bfr.knime.fsklab.preferences.RPreferenceInitializer;
 
 /**
  * RConnectionFactory

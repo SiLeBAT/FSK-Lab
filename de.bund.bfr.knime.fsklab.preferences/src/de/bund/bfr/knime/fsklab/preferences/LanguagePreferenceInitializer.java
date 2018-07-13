@@ -16,41 +16,41 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
+package de.bund.bfr.knime.fsklab.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import de.bund.bfr.knime.fsklab.FskPlugin;
 
 public class LanguagePreferenceInitializer extends AbstractPreferenceInitializer {
 
-  static final String LANGUAGE = "language";
+	static final String LANGUAGE = "language";
 
-  private static LanguagePreferenceProvider cachedProvider = null;
+	private static LanguagePreferenceProvider cachedProvider = null;
 
-  @Override
-  public void initializeDefaultPreferences() {
-    // Set language initially to English (en)
-    IPreferenceStore store = FskPlugin.getDefault().getPreferenceStore();
-    store.setDefault(LANGUAGE, "en");
-  }
+	@Override
+	public void initializeDefaultPreferences() {
+		// Set language initially to English (en)
+		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+		store.setDefault(LANGUAGE, "en");
+	}
 
-  /** @return language provider. */
-  public static final LanguagePreferenceProvider getProvider() {
+	/** @return language provider. */
+	public static final LanguagePreferenceProvider getProvider() {
 
-    IPreferenceStore store = FskPlugin.getDefault().getPreferenceStore();
-    String language = store.getString(LANGUAGE);
+		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
+		String language = store.getString(LANGUAGE);
 
-    if (cachedProvider == null
-        || !cachedProvider.getLanguage().equals(language)) {
-      cachedProvider = new DefaultLanguagePreferenceProvider(language);
-    }
+		if (cachedProvider == null || !cachedProvider.getLanguage().equals(language)) {
+			cachedProvider = new DefaultLanguagePreferenceProvider(language);
+		}
 
-    return cachedProvider;
-  }
-  
-  /** Invalidate the cached language provider returned by {@link #getProvider()}. */
-  public static final void invalidateProviderCache() {
-    cachedProvider = null;
-  }
+		return cachedProvider;
+	}
+
+	/**
+	 * Invalidate the cached language provider returned by {@link #getProvider()}.
+	 */
+	public static final void invalidateProviderCache() {
+		cachedProvider = null;
+	}
 }

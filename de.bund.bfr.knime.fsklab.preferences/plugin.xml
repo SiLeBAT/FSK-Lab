@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <!-- Preference initializer for custom R -->
+   <extension id="de.bund.bfr.knime.pmm.fskx.bin.preferences.RPreferenceInitializer"
+     point="org.eclipse.core.runtime.preferences">
+     <initializer class="de.bund.bfr.knime.fsklab.preferences.RPreferenceInitializer" />
+     <initializer class="de.bund.bfr.knime.fsklab.preferences.LanguagePreferenceInitializer" />
+   </extension>
+  
+   <!-- Preference page for custom R -->
+   <extension point="org.eclipse.ui.preferencePages">
+     <page category="org.knime.workbench.ui.preferences"
+       class="de.bund.bfr.knime.fsklab.preferences.RPreferencePage"
+       id="de.bund.bfr.knime.fsklab.nodes.preferences.RPreferencePage"
+       name="FSK-Lab settings" />
+   </extension>
+   
+</plugin>

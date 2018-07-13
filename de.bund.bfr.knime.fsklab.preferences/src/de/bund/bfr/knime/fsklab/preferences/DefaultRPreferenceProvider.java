@@ -34,104 +34,104 @@
  *
  * History 17.09.2007 (thiel): created
  */
-package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
+package de.bund.bfr.knime.fsklab.preferences;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-import org.knime.core.node.NodeLogger;
-import com.sun.jna.Platform;
-import de.bund.bfr.knime.fsklab.nodes.rbin.RBinUtil;
 
+import org.eclipse.core.runtime.Platform;
+import org.knime.core.node.NodeLogger;
 
 /**
- * Default provider for R preferences. It determines the R binary path based on the R home given in
- * the constructor.
+ * Default provider for R preferences. It determines the R binary path based on
+ * the R home given in the constructor.
  *
  * @author Thorsten Meinl, KNIME.com, Zurich, Switzerland
  * @author Jonathan Hale
  */
 public class DefaultRPreferenceProvider implements RPreferenceProvider {
 
-  private final String m_rHome;
+	private final String m_rHome;
 
-  private Properties m_properties = null;
+	private Properties m_properties = null;
 
-  private static final NodeLogger LOGGER = NodeLogger.getLogger("DefaultRPreferenceProvider");
+	private static final NodeLogger LOGGER = NodeLogger.getLogger("DefaultRPreferenceProvider");
 
-  /**
-   * Creates a new preference provider based on the given R home directory.
-   *
-   * @param rHome R's home directory
-   */
-  public DefaultRPreferenceProvider(final String rHome) {
-    m_rHome = rHome;
-  }
+	/**
+	 * Creates a new preference provider based on the given R home directory.
+	 *
+	 * @param rHome
+	 *            R's home directory
+	 */
+	public DefaultRPreferenceProvider(final String rHome) {
+		m_rHome = rHome;
+	}
 
-  @Override
-  public String getRHome() {
-    return m_rHome;
-  }
+	@Override
+	public String getRHome() {
+		return m_rHome;
+	}
 
-  @Override
-  public Path getRBinPath(final String command) {
-    Path binPath = Paths.get(getRHome(), "bin");
+	@Override
+	public Path getRBinPath(final String command) {
+		Path binPath = Paths.get(getRHome(), "bin");
 
-    if (Platform.isWindows()) {
+		if (Platform.getOS().equals(Platform.OS_WIN32)) {
 
-      final Path x64Path = binPath.resolve("x64"); // 64 bit binaries
-      final Path i386Path = binPath.resolve("i386"); // 32 bit binaries
+			final Path x64Path = binPath.resolve("x64"); // 64 bit binaries
+			final Path i386Path = binPath.resolve("i386"); // 32 bit binaries
 
-      if (Platform.is64Bit()) {
-        if (Files.exists(x64Path)) {
-          return x64Path.resolve(command + ".exe");
-        }
+			if (Platform.getOSArch().equals(Platform.ARCH_X86_64)) {
+				if (Files.exists(x64Path)) {
+					return x64Path.resolve(command + ".exe");
+				}
 
-        // No 64 bits binaries were found. Then 32 bit binaries will be used.
-        LOGGER.warn("Using 32 bit R on 64 bit. Please consider using 64 bit R");
-        return i386Path.resolve(command + ".exe");
-      }
+				// No 64 bits binaries were found. Then 32 bit binaries will be used.
+				LOGGER.warn("Using 32 bit R on 64 bit. Please consider using 64 bit R");
+				return i386Path.resolve(command + ".exe");
+			}
 
-      return i386Path.resolve(command + ".exe");
-    }
+			return i386Path.resolve(command + ".exe");
+		}
 
-    return binPath.resolve(command);
-  }
+		return binPath.resolve(command);
+	}
 
-  @Override
-  public Path getRServeBinPath() {
-    if (m_properties == null) {
-      m_properties = RBinUtil.retrieveRProperties(this);
-    }
+	@Override
+	public Path getRServeBinPath() {
+		if (m_properties == null) {
+			m_properties = RBinUtil.retrieveRProperties(this);
+		}
 
-    final Path rservePath = Paths.get(m_properties.getProperty("Rserve.path"));
-    final Path rserveLibs = rservePath.resolve("libs");
+		final Path rservePath = Paths.get(m_properties.getProperty("Rserve.path"));
+		final Path rserveLibs = rservePath.resolve("libs");
 
-    if (Platform.isWindows()) {
-      // archProperty is "i386" for 32 bit or "x86_64" for 64 bit
-      final String archProperty = m_properties.getProperty("arch");
+		if (Platform.getOS().equals(Platform.OS_WIN32)) {
+			// archProperty is "i386" for 32 bit or "x86_64" for 64 bit
+			final String archProperty = m_properties.getProperty("arch");
 
-      // "x64" for 64 bit and "i386" for 32 bit.
-      final String arch = archProperty.equals("x86_64") ? "x64" : "i386";
+			// "x64" for 64 bit and "i386" for 32 bit.
+			final String arch = archProperty.equals("x86_64") ? "x64" : "i386";
 
-      return rserveLibs.resolve(arch + "/Rserve.exe");
-    }
-    return rserveLibs.resolve("Rserve.dbg");
-  }
+			return rserveLibs.resolve(arch + "/Rserve.exe");
+		}
+		return rserveLibs.resolve("Rserve.dbg");
+	}
 
-  /**
-   * Get the properties for this provider. Use this method to avoid calling
-   * {@link RBinUtil#retrieveRProperties()}, which launches an external R process to retrieve R
-   * properties.
-   *
-   * @return The properties for this provider
-   */
-  public Properties getProperties() {
-    if (m_properties == null) {
-      m_properties = RBinUtil.retrieveRProperties(this);
-    }
+	/**
+	 * Get the properties for this provider. Use this method to avoid calling
+	 * {@link RBinUtil#retrieveRProperties()}, which launches an external R process
+	 * to retrieve R properties.
+	 *
+	 * @return The properties for this provider
+	 */
+	public Properties getProperties() {
+		if (m_properties == null) {
+			m_properties = RBinUtil.retrieveRProperties(this);
+		}
 
-    return m_properties;
-  }
+		return m_properties;
+	}
 }

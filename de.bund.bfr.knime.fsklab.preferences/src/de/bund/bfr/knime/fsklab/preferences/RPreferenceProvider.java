@@ -34,7 +34,7 @@
  *
  * History 17.09.2007 (thiel): created
  */
-package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
+package de.bund.bfr.knime.fsklab.preferences;
 
 import java.nio.file.Path;
 import java.util.Properties;

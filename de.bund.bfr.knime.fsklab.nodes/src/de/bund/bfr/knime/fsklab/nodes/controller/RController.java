@@ -114,11 +114,11 @@ import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 import com.sun.jna.Platform;
-import de.bund.bfr.knime.fsklab.nodes.rbin.RBinUtil;
-import de.bund.bfr.knime.fsklab.nodes.rbin.RBinUtil.InvalidRHomeException;
-import de.bund.bfr.knime.fsklab.nodes.rbin.preferences.RPreferenceInitializer;
 import de.bund.bfr.knime.fsklab.nodes.rserve.RConnectionFactory;
 import de.bund.bfr.knime.fsklab.nodes.rserve.RConnectionFactory.RConnectionResource;
+import de.bund.bfr.knime.fsklab.preferences.RBinUtil;
+import de.bund.bfr.knime.fsklab.preferences.RBinUtil.InvalidRHomeException;
+import de.bund.bfr.knime.fsklab.preferences.RPreferenceInitializer;
 
 /**
  * RController.

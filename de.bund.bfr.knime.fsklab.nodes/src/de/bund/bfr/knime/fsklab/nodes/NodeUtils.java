@@ -20,7 +20,7 @@ import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
 import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
 import de.bund.bfr.knime.fsklab.nodes.controller.RController;
 import de.bund.bfr.knime.fsklab.nodes.controller.ScriptExecutor;
-import de.bund.bfr.knime.fsklab.nodes.rbin.preferences.LanguagePreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.LanguagePreferenceInitializer;
 import metadata.Parameter;
 import metadata.ParameterClassification;
 

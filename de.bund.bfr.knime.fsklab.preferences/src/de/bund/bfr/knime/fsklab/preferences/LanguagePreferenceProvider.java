@@ -16,18 +16,15 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.rbin.preferences;
+package de.bund.bfr.knime.fsklab.preferences;
 
-public class DefaultLanguagePreferenceProvider implements LanguagePreferenceProvider {
+/**
+ * Class that provides the user language to display FSK-Lab.
+ * 
+ * @author Miguel de Alba
+ */
+public interface LanguagePreferenceProvider {
 
-  private final String language;
-
-  public DefaultLanguagePreferenceProvider(final String language) {
-    this.language = language;
-  }
-
-  @Override
-  public String getLanguage() {
-    return language;
-  }
+  /** @return lowercase language code for english (en), german (de) or spanish (es). */
+  public String getLanguage();
 }

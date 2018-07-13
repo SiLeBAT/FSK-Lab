@@ -34,7 +34,7 @@
  *
  * History 15.07.2013 (thor): created
  */
-package de.bund.bfr.knime.fsklab.nodes.rbin;
+package de.bund.bfr.knime.fsklab.preferences;
 
 import java.io.File;
 import java.io.FileFilter;
