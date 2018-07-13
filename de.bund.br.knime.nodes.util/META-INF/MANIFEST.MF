@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Util
+Bundle-SymbolicName: de.bund.br.knime.nodes.util
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: de.bund.br.knime.nodes.util.Activator
+Bundle-Vendor: BfR
+Require-Bundle: org.eclipse.core.runtime,
+ org.knime.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: de.bund.br.knime.nodes.util
+Bundle-ActivationPolicy: lazy
+Export-Package: org.knime.core.node

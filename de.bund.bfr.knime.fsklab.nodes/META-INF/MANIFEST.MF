@@ -29,7 +29,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.eclipse.emf.ecore;visibility:=reexport,
  de.bund.bfr.knime.fsklab.metadata.model,
  de.bund.bfr.knime.fsklab.util,
- de.bund.bfr.knime.fsklab.preferences
+ de.bund.bfr.knime.fsklab.preferences,
+ de.bund.br.knime.nodes.util
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
@@ -64,7 +65,6 @@ Export-Package: com.toedter.calendar;
   uses:="org.osgi.framework,
    de.bund.bfr.knime.fsklab.rakip,
    com.fasterxml.jackson.databind,
-   org.knime.core.node,
    org.eclipse.ui.plugin,
    org.knime.core.node.port",
  de.bund.bfr.knime.fsklab.nodes;
@@ -73,7 +73,6 @@ Export-Package: com.toedter.calendar;
    javax.swing.event,
    de.bund.bfr.knime.fsklab.nodes.controller,
    de.bund.bfr.knime.fsklab.rakip,
-   org.knime.core.node,
    javax.swing",
  de.bund.bfr.knime.fsklab.nodes.controller;uses:="org.rosuda.REngine.Rserve,org.rosuda.REngine,org.knime.core.node",
  de.bund.bfr.knime.fsklab.nodes.ui;
@@ -83,7 +82,6 @@ Export-Package: com.toedter.calendar;
    com.toedter.calendar,
    javax.swing",
  de.bund.bfr.knime.fsklab.rakip;uses:="com.fasterxml.jackson.databind.module",
- org.knime.core.node,
  org.rosuda.REngine,
  org.rosuda.REngine.Rserve;uses:="org.rosuda.REngine,org.rosuda.REngine.Rserve.protocol",
  org.rosuda.REngine.Rserve.protocol;uses:="org.rosuda.REngine"
