@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -176,6 +177,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
       final File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.spreadsheet));
       try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
+        workbook.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
         final XSSFSheet sheet = workbook.getSheet(nodeSettings.sheet);
 
         if (sheet.getPhysicalNumberOfRows() > 29) {
