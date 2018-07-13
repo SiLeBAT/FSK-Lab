@@ -34,12 +34,12 @@ import org.rosuda.REngine.REXPMismatchException;
 
 import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
-import de.bund.bfr.knime.fsklab.nodes.controller.LibRegistry;
-import de.bund.bfr.knime.fsklab.nodes.controller.RController;
-import de.bund.bfr.knime.fsklab.nodes.controller.ScriptExecutor;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.r.client.RController;
+import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.knime.pmm.fskx.FskMetaDataTuple;
 
 public class FsxkRunnerNodeModel extends ExtToolOutputNodeModel {

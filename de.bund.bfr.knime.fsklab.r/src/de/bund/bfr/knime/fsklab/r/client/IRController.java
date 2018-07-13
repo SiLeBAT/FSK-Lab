@@ -15,7 +15,7 @@
  * Contributors: Department Biological Safety - BfR
  **************************************************************************************************/
 
-package de.bund.bfr.knime.fsklab.nodes.controller;
+package de.bund.bfr.knime.fsklab.r.client;
 
 import java.io.File;
 import java.nio.file.Path;

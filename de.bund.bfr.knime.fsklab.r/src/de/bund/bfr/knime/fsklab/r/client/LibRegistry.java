@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.controller;
+package de.bund.bfr.knime.fsklab.r.client;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,8 @@ import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.RList;
 import com.sun.jna.Platform;
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 
 /**
  * Singleton!! There can only be one.

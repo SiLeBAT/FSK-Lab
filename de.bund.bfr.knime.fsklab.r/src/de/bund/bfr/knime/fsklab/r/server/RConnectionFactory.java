@@ -34,7 +34,7 @@
  *
  * History 17.09.2007 (thiel): created
  */
-package de.bund.bfr.knime.fsklab.nodes.rserve;
+package de.bund.bfr.knime.fsklab.r.server;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,16 +47,19 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.KNIMETimer;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
+
 import com.sun.jna.Platform;
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
-import de.bund.bfr.knime.fsklab.nodes.controller.RController;
+
 import de.bund.bfr.knime.fsklab.preferences.RPreferenceInitializer;
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.client.RController;
 
 /**
  * RConnectionFactory

@@ -34,7 +34,7 @@
  *
  * History 17.09.2007 (thiel): created
  */
-package de.bund.bfr.knime.fsklab.nodes.controller;
+package de.bund.bfr.knime.fsklab.r.client;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -114,10 +114,11 @@ import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 import com.sun.jna.Platform;
-import de.bund.bfr.knime.fsklab.nodes.rserve.RConnectionFactory;
-import de.bund.bfr.knime.fsklab.nodes.rserve.RConnectionFactory.RConnectionResource;
+
 import de.bund.bfr.knime.fsklab.preferences.RBinUtil;
 import de.bund.bfr.knime.fsklab.preferences.RBinUtil.InvalidRHomeException;
+import de.bund.bfr.knime.fsklab.r.server.RConnectionFactory;
+import de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.RConnectionResource;
 import de.bund.bfr.knime.fsklab.preferences.RPreferenceInitializer;
 
 /**

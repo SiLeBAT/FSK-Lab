@@ -22,7 +22,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.js.core,
  org.jsoup,
  org.jdom2,
- de.bund.br.knime.nodes.util
+ de.bund.br.knime.nodes.util,
+ de.bund.bfr.knime.fsklab.r
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: libs/CombineArchive-1.1.jar,

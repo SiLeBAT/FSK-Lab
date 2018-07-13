@@ -5,8 +5,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/ez-vcard-0.10.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/freemarker-2.3.23.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/vinnie-2.0.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/rengine-1.8.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/rserve-engine-1.8.4.jar"/>
 	<classpathentry kind="lib" path="libs/jris-1.0.0.jar"/>
 	<classpathentry kind="lib" path="libs/bfr-swing-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="libs/fskml-1.0.11.jar" sourcepath="libs/fskml-1.0.11-sources.jar"/>

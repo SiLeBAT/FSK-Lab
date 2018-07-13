@@ -36,14 +36,15 @@
  *
  * History 19.11.2015 (Jonathan Hale): created
  */
-package de.bund.bfr.knime.fsklab.nodes.controller;
+package de.bund.bfr.knime.fsklab.r.client;
 
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REXPString;
-import de.bund.bfr.knime.fsklab.nodes.controller.IRController.RException;
+
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 
 /**
  * Class which wraps all R and Java code necessary to execute R code with correct errors (inkl.
