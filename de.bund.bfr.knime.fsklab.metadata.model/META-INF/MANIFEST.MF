@@ -33,6 +33,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.lang3,
  org.junit,
  org.glassfish.javax.json;bundle-version="1.0.4",
- com.github.mangstadt.ez-vcard
+ com.github.mangstadt.ez-vcard,
+ com.github.fastluca.jris
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.metadata.model
