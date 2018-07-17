@@ -6,7 +6,10 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.bfr.knime.fsklab.nodes.common.Activator
 Require-Bundle: com.fifesoft.rsyntaxtextarea,
  org.eclipse.core.runtime,
- org.knime.core
+ org.knime.core,
+ de.bund.bfr.knime.fsklab.metadata.model;bundle-version="0.1.0",
+ de.bund.bfr.pmfml,
+ com.google.guava
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.common
 Bundle-ActivationPolicy: lazy

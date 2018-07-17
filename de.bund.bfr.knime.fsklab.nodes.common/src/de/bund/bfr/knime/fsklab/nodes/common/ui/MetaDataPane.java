@@ -1,4 +1,4 @@
-package de.bund.bfr.knime.pmm.fskx.ui;
+package de.bund.bfr.knime.fsklab.nodes.common.ui;
 
 import java.text.ParseException;
 import java.util.Arrays;
