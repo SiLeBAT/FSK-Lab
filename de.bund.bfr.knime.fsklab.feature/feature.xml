@@ -52,6 +52,10 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="de.bund.bfr.knime.fsklab.metadata.model"/>
+      <import plugin="de.bund.bfr.knime.fsklab.preferences"/>
+      <import plugin="de.bund.br.knime.nodes.util"/>
+      <import plugin="de.bund.bfr.knime.fsklab.r"/>
+      <import plugin="de.bund.bfr.knime.fsklab.nodes.common"/>
    </requires>
 
    <plugin
@@ -86,5 +90,17 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="com.github.fastluca.jris"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.github.mangstadt.ez-vcard"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
