@@ -42,13 +42,18 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.ext.r.type"/>
       <import plugin="org.knime.r"/>
       <import plugin="org.knime.workbench.repository"/>
-      <import plugin="com.sun.jna"/>
       <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.junit"/>
       <import plugin="org.knime.js.core"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="de.bund.bfr.knime.fsklab.util"/>
+      <import plugin="de.bund.bfr.knime.fsklab.r"/>
+      <import plugin="de.bund.bfr.knime.fsklab.nodes.common"/>
+      <import plugin="de.bund.br.knime.nodes.util"/>
+      <import plugin="org.glassfish.javax.json" version="1.0.4" match="greaterOrEqual"/>
+      <import plugin="com.github.mangstadt.ez-vcard"/>
+      <import plugin="com.github.fastluca.jris"/>
    </requires>
 
    <plugin
@@ -80,6 +85,66 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
 
    <plugin
          id="de.bund.bfr.knime.fsklab.metadata.model"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.uni-rostock.sbi.CombineArchive"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.jsbml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="de.bund.bfr.knime.fsklab.preferences"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.bund.bfr.knime.fsklab.r"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.bund.bfr.knime.fsklab.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.bund.br.knime.nodes.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.github.fastluca.jris"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="com.github.mangstadt.ez-vcard"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="de.bund.bfr.knime.fsklab.nodes.common"
          download-size="0"
          install-size="0"
          version="0.0.0"

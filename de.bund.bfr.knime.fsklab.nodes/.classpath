@@ -17,6 +17,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry exported="true" kind="lib" path="libs/CombineArchive-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

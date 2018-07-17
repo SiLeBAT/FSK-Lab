@@ -51,11 +51,9 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.ext.svg"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="de.bund.bfr.knime.fsklab.metadata.model"/>
-      <import plugin="de.bund.br.knime.nodes.util"/>
-      <import plugin="de.bund.bfr.knime.fsklab.r"/>
-      <import plugin="de.bund.bfr.knime.fsklab.nodes.common"/>
       <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.glassfish.javax.json" version="1.0.4" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -133,6 +131,13 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
 
    <plugin
          id="de.bund.bfr.knime.fsklab.nodes.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.uni-rostock.sbi.CombineArchive"
          download-size="0"
          install-size="0"
          version="0.0.0"
