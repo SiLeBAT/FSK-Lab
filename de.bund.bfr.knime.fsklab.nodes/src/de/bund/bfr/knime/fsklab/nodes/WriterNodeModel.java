@@ -26,7 +26,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.jdom2.DefaultJDOMFactory;
@@ -55,15 +57,30 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
+import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.SBMLException;
+import org.sbml.jsbml.SBMLWriter;
+import org.sbml.jsbml.ext.comp.CompConstants;
+import org.sbml.jsbml.ext.comp.CompModelPlugin;
+import org.sbml.jsbml.ext.comp.CompSBMLDocumentPlugin;
+import org.sbml.jsbml.ext.comp.CompSBasePlugin;
+import org.sbml.jsbml.ext.comp.ExternalModelDefinition;
+import org.sbml.jsbml.ext.comp.ReplacedBy;
+import org.sbml.jsbml.ext.comp.Submodel;
+import org.sbml.jsbml.xml.XMLAttributes;
+import org.sbml.jsbml.xml.XMLNode;
+import org.sbml.jsbml.xml.XMLTriple;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.fskml.sedml.SourceScript;
+import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
@@ -87,7 +104,8 @@ class WriterNodeModel extends NoInternalsModel {
   // TODO: Move to FSKML
   static final String EXCEL_URI =
       "https://www.iana.org/assignments/media-types/application/vnd.ms-excel";
-
+  private static final String METADATA_TAG = "parameter";
+  private static final String METADATA_NS = "fsk";
   private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
 
   public WriterNodeModel() {
@@ -188,6 +206,15 @@ class WriterNodeModel extends NoInternalsModel {
         }
       }
 
+      // add SBML document
+      {
+        SBMLDocument sbmlModelDoc = createSBML(fskObj, archive);
+
+        File tempFile = FileUtil.createTempFile("sbml", "");
+        new SBMLWriter().write(sbmlModelDoc, tempFile);
+
+        archive.addEntry(tempFile, sbmlModelDoc.getModel().getId() + ".sbml", URIS.sbml);
+      }
       // Add simulations
       {
         SEDMLDocument sedmlDoc = createSedml(fskObj);
@@ -267,6 +294,111 @@ class WriterNodeModel extends NoInternalsModel {
     file.delete();
 
     return entry;
+  }
+
+  public static String writeSBMLFile(SBMLDocument doc, CombineArchive archive)
+      throws IOException, SBMLException, XMLStreamException {
+
+    File tempFile = FileUtil.createTempFile("sbml", "");
+    String fileName = doc.getModel().getId() + ".sbml";
+    new SBMLWriter().write(doc, tempFile);
+    archive.addEntry(tempFile, fileName, URIS.sbml);
+    return fileName;
+
+  }
+
+  public static ExternalModelDefinition createExtSubModel(SBMLDocument doc, String externalFileName,
+      CompSBMLDocumentPlugin compDoc, CompModelPlugin compMainModel, String subModelName)
+      throws IOException, SBMLException, XMLStreamException {
+
+
+    ExternalModelDefinition externalModel =
+        compDoc.createExternalModelDefinition(doc.getModel().getId());
+    externalModel.setSource(externalFileName);
+    Submodel submodel = compMainModel.createSubmodel(subModelName);
+    submodel.setModelRef(doc.getModel().getId());
+
+
+    return externalModel;
+
+  }
+
+  private static SBMLDocument createSBML(FskPortObject fskObj, CombineArchive archive)
+      throws IOException {
+
+    SBMLDocument doc = new SBMLDocument(3, 1);
+
+    if (fskObj instanceof CombinedFskPortObject) {
+      CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
+      try {
+        String sbmlModelID =
+            fskObj.generalInformation.getName() + ThreadLocalRandom.current().nextInt(1, 100);
+        sbmlModelID = sbmlModelID.replaceAll("\\W", "_");
+        org.sbml.jsbml.Model fskmodel = doc.createModel();
+        CompSBMLDocumentPlugin compDoc = (CompSBMLDocumentPlugin) doc.createPlugin("comp");
+        CompModelPlugin compMainModel = (CompModelPlugin) fskmodel.getPlugin("comp");
+
+        FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
+        SBMLDocument doc1 = createSBML(firstFskObj, archive);
+        String doc1FileName = writeSBMLFile(doc1, archive);
+        createExtSubModel(doc1, doc1FileName, compDoc, compMainModel, "submodel1");
+
+        FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
+        SBMLDocument doc2 = createSBML(secondFskObj, archive);
+        String doc2FileName = writeSBMLFile(doc2, archive);
+        createExtSubModel(doc2, doc2FileName, compDoc, compMainModel, "submodel2");
+
+
+        fskmodel.setId(doc1.getModel().getId() + "_joinwith_" + doc2.getModel().getId());
+
+
+        List<JoinRelation> relations = comFskObj.getJoinerRelation();
+        for (JoinRelation joinRelarion : relations) {
+          org.sbml.jsbml.Parameter overridedParameter =
+              fskmodel.createParameter(joinRelarion.getTargetParam().getParameterID());
+
+          overridedParameter.setConstant(false);
+
+          CompSBasePlugin plugin =
+              (CompSBasePlugin) overridedParameter.getPlugin(CompConstants.shortLabel);
+          ReplacedBy replacedBy = plugin.createReplacedBy();
+          replacedBy.setIdRef(joinRelarion.getSourceParam().getParameterID());
+          replacedBy.setSubmodelRef("submodel1");
+        }
+
+
+      } catch (SBMLException | XMLStreamException e) {
+        e.printStackTrace();
+      }
+
+    } else {
+      String sbmlModelID =
+          fskObj.generalInformation.getName() + ThreadLocalRandom.current().nextInt(1, 100);
+      sbmlModelID = sbmlModelID.replaceAll("\\W", "_");
+      org.sbml.jsbml.Model fskmodel = doc.createModel(sbmlModelID);
+      for (Parameter param : fskObj.modelMath.getParameter()) {
+        org.sbml.jsbml.Parameter sbmlParameter = fskmodel.createParameter();
+        sbmlParameter.setName(param.getParameterName());
+        sbmlParameter.setId(param.getParameterID());
+        sbmlParameter.setConstant(
+            param.getParameterClassification().equals(ParameterClassification.CONSTANT));
+        if (param.getParameterValue() != null && !param.getParameterValue().equals("")) {
+          org.sbml.jsbml.Annotation annot = sbmlParameter.getAnnotation();
+          XMLAttributes attrs = new XMLAttributes();
+          attrs.add("value", param.getParameterValue());
+          XMLNode parameterNode =
+              new XMLNode(new XMLTriple(METADATA_TAG, null, METADATA_NS), attrs);
+          annot.appendNonRDFAnnotation(parameterNode);
+        }
+
+      }
+
+
+
+    }
+
+    return doc;
+
   }
 
   private static SEDMLDocument createSedml(FskPortObject portObj) {
