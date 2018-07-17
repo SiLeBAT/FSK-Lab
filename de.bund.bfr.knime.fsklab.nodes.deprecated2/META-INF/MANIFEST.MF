@@ -22,7 +22,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  de.bund.bfr.knime.fsklab.nodes.common,
  org.jsbml,
  de.uni-rostock.sbi.CombineArchive,
- de.bund.bfr.pmfml
+ de.bund.bfr.pmfml,
+ de.bund.bfr.knime.fsklab.metadata.model
 Bundle-ClassPath: .,
  libs/fskml-0.0.1-SNAPSHOT.jar
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated2

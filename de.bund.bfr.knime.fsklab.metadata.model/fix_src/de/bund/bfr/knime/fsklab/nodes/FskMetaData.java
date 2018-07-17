@@ -1,3 +1,4 @@
+package de.bund.bfr.knime.fsklab.nodes;
 /*
  ***************************************************************************************************
  * Copyright (c) 2017 Federal Institute for Risk Assessment (BfR), Germany
@@ -16,7 +17,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes;
+
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
