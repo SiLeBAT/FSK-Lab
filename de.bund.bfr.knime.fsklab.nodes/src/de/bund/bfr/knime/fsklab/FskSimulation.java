@@ -1,20 +1,22 @@
 package de.bund.bfr.knime.fsklab;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
+/**
+ * Simulation name and parameters. The parameters are ordered by insertion order.
+ */
 public class FskSimulation implements Serializable {
 
   private static final long serialVersionUID = -8847610348622517532L;
 
   private String name;
 
-  private Map<String, String> params;
+  private LinkedHashMap<String, String> params;
 
   public FskSimulation(String name) {
     this.name = name;
-    params = new HashMap<>();
+    params = new LinkedHashMap<>();
   }
 
   public String getName() {
@@ -25,7 +27,7 @@ public class FskSimulation implements Serializable {
     this.name = name;
   }
 
-  public Map<String, String> getParameters() {
+  public LinkedHashMap<String, String> getParameters() {
     return params;
   }
 
