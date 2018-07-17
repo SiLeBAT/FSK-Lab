@@ -333,7 +333,6 @@ class WriterNodeModel extends NoInternalsModel {
       try {
         String sbmlModelID =
             fskObj.generalInformation.getName() + ThreadLocalRandom.current().nextInt(1, 100);
-        System.out.println(sbmlModelID);
         sbmlModelID = sbmlModelID.replaceAll("\\W", "_");
         org.sbml.jsbml.Model fskmodel = doc.createModel();
         CompSBMLDocumentPlugin compDoc = (CompSBMLDocumentPlugin) doc.createPlugin("comp");
