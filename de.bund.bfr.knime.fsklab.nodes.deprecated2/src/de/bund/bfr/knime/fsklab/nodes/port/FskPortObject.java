@@ -51,7 +51,7 @@ import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 
-import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData;

@@ -29,10 +29,10 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObjectSpec;
-import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
-import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
-import de.bund.bfr.knime.fsklab.nodes.ui.FTextField;
-import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.FTextField;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 
 class ReaderNodeDialog extends NodeDialogPane {
 

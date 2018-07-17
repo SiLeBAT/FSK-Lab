@@ -16,41 +16,34 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes;
+package de.bund.bfr.knime.fsklab.nodes.common.ui;
 
-import java.awt.Image;
-import javax.swing.JScrollPane;
-import org.knime.core.node.NodeView;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.RPlotterViewPanel;
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
-/**
- * View of the runner node with image output.
- * 
- * @author Miguel de Alba
- */
-public class RunnerNodeView extends NodeView<RunnerNodeModel> {
+/** JPanel with an R script */
+public class ScriptPanel extends JPanel {
 
-  private final RPlotterViewPanel panel = new RPlotterViewPanel();
+  private static final long serialVersionUID = -4493061426461816058L;
+  private final RSnippetTextArea textArea;
 
-  /**
-   * @param nodeModel the model associated with this view.
-   */
-  public RunnerNodeView(final RunnerNodeModel nodeModel) {
-    super(nodeModel);
-    setComponent(new JScrollPane(panel));
+  public ScriptPanel(final String title, final String script, final boolean editable) {
+    super(new BorderLayout());
+    setName(title);
+
+    textArea = new RSnippetTextArea();
+    textArea.setLineWrap(true);
+    textArea.setText(script);
+    textArea.setEditable(editable);
+    add(new RTextScrollPane(textArea));
   }
 
-  /** Updates the image to display. */
-  @Override
-  protected void modelChanged() {
-    final RunnerNodeModel model = getNodeModel();
-    final Image image = model.getResultImage();
-    panel.update(image);
+  public String getText() {
+    return textArea.getText();
   }
 
-  @Override
-  protected void onClose() {}
-
-  @Override
-  protected void onOpen() {}
+  public void setText(String text) {
+    textArea.setText(text);
+  }
 }

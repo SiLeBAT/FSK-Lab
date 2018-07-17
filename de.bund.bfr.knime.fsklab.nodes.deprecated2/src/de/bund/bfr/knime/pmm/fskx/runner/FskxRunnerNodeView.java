@@ -53,7 +53,7 @@ import javax.swing.JScrollPane;
 
 import org.knime.core.node.NodeView;
 
-import de.bund.bfr.knime.fsklab.nodes.ui.RPlotterViewPanel;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.RPlotterViewPanel;
 
 /**
  * The view of the for the r nodes with image output.

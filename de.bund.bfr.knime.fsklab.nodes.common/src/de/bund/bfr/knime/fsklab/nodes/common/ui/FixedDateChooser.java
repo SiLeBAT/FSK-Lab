@@ -16,41 +16,24 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes;
+package de.bund.bfr.knime.fsklab.nodes.common.ui;
 
-import java.awt.Image;
-import javax.swing.JScrollPane;
-import org.knime.core.node.NodeView;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.RPlotterViewPanel;
+import com.toedter.calendar.JDateChooser;
 
-/**
- * View of the runner node with image output.
- * 
- * @author Miguel de Alba
- */
-public class RunnerNodeView extends NodeView<RunnerNodeModel> {
+/** Fixes JDateChooser and disables the text field. */
+public class FixedDateChooser extends JDateChooser {
 
-  private final RPlotterViewPanel panel = new RPlotterViewPanel();
+  private static final long serialVersionUID = 2475793638936369100L;
 
-  /**
-   * @param nodeModel the model associated with this view.
-   */
-  public RunnerNodeView(final RunnerNodeModel nodeModel) {
-    super(nodeModel);
-    setComponent(new JScrollPane(panel));
+  public FixedDateChooser() {
+
+    // Fixes bug AP-5865
+    popup.setFocusable(false);
+
+    /*
+     * Text field is disabled so that the dates are only chooseable through the calendar widget.
+     * Then there is no need to validate the dates.
+     */
+    dateEditor.setEnabled(true);
   }
-
-  /** Updates the image to display. */
-  @Override
-  protected void modelChanged() {
-    final RunnerNodeModel model = getNodeModel();
-    final Image image = model.getResultImage();
-    panel.update(image);
-  }
-
-  @Override
-  protected void onClose() {}
-
-  @Override
-  protected void onOpen() {}
 }

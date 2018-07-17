@@ -39,10 +39,10 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.nodes.ui.FLabel;
-import de.bund.bfr.knime.fsklab.nodes.ui.FPanel;
-import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
-import de.bund.bfr.knime.fsklab.nodes.ui.UIUtils;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 
 public class RunnerNodeDialog extends DataAwareNodeDialogPane {
 

@@ -33,14 +33,14 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  de.bund.br.knime.nodes.util,
  de.bund.bfr.knime.fsklab.r,
  com.github.mangstadt.ez-vcard,
- com.github.fastluca.jris
+ com.github.fastluca.jris,
+ de.bund.bfr.knime.fsklab.nodes.common
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .,
  libs/CombineArchive-1.1.jar,
- libs/jcalendar-1.4.jar,
  libs/freemarker-2.3.23.jar,
  libs/bfr-swing-1.0-SNAPSHOT.jar,
  libs/fskml-1.0.11.jar,
@@ -53,13 +53,7 @@ Bundle-ClassPath: .,
  libs/batik-svg-dom.jar,
  libs/batik-util-1.7.jar,
  libs/BFLog-1.3.3.jar
-Export-Package: com.toedter.calendar;
-  uses:="com.toedter.components,
-   javax.swing.table,
-   javax.swing.event,
-   javax.swing.text,
-   javax.swing",
- de.bund.bfr.knime.fsklab;
+Export-Package: de.bund.bfr.knime.fsklab;
   uses:="org.osgi.framework,
    de.bund.bfr.knime.fsklab.rakip,
    com.fasterxml.jackson.databind,
@@ -71,12 +65,5 @@ Export-Package: com.toedter.calendar;
    javax.swing.event,
    de.bund.bfr.knime.fsklab.nodes.controller,
    de.bund.bfr.knime.fsklab.rakip,
-   javax.swing",
- de.bund.bfr.knime.fsklab.nodes.ui;
-  uses:="javax.swing.table,
-   org.fife.ui.rsyntaxtextarea,
-   javax.swing.filechooser,
-   com.toedter.calendar,
-   javax.swing",
- de.bund.bfr.knime.fsklab.rakip;uses:="com.fasterxml.jackson.databind.module"
+   javax.swing"
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes

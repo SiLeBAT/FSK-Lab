@@ -18,7 +18,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.r,
  org.knime.workbench.repository,
  org.jdom2,
- de.bund.bfr.knime.fsklab.r
+ de.bund.bfr.knime.fsklab.r,
+ de.bund.bfr.knime.fsklab.nodes.common
 Bundle-ClassPath: .,
  libs/CombineArchive-1.1.jar,
  libs/fskml-0.0.1-SNAPSHOT.jar,

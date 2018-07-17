@@ -2,6 +2,7 @@ package de.bund.bfr.knime.pmm.fskx.editor;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -10,8 +11,9 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.SettingsModelInteger;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
+
+import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
-import de.bund.bfr.knime.fsklab.nodes.ui.ScriptPanel;
 import de.bund.bfr.knime.pmm.fskx.FskTemplateSettings;
 import de.bund.bfr.knime.pmm.fskx.ui.MetaDataPane;
 
