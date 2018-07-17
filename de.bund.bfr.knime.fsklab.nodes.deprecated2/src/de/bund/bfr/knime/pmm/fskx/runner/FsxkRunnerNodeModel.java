@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
+import org.eclipse.core.runtime.Platform;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.container.CloseableRowIterator;
@@ -32,8 +34,7 @@ import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.knime.r.controller.ConsoleLikeRExecutor;
 import org.rosuda.REngine.REXPMismatchException;
 
-import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.nodes.common.RunnerNodeInternalSettings;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
@@ -180,7 +181,7 @@ public class FsxkRunnerNodeModel extends ExtToolOutputNodeModel {
 
 		monitor.setMessage("Run visualization script");
 		try {
-			NodeUtils.plot(imageFile, fskObj.viz, 640, 640, 12, "NA", executor, monitor);
+			plot(imageFile, fskObj.viz, 640, 640, 12, "NA", executor, monitor);
 		} catch (final RException exception) {
 			LOGGER.warn("Visualization script failed", exception);
 		}
@@ -227,5 +228,45 @@ public class FsxkRunnerNodeModel extends ExtToolOutputNodeModel {
 
 	Image getResultImage() {
 		return internalSettings.plot;
+	}
+
+	/**
+	 * Plots model results and generates a chart using a visualization script.
+	 * 
+	 * @param imgFile
+	 *            Chart file
+	 * @param vizScript
+	 *            Visualization script
+	 * @param executor
+	 *            R executor
+	 * @param monitor
+	 *            KNIME {@link ExecutionMonitor}
+	 * @throws InterruptedException
+	 * @throws CanceledExecutionException
+	 * @throws RException
+	 * 
+	 */
+	private static void plot(final File imageFile, final String vizScript, final int width, final int height,
+			final int pointSize, final String res, final ScriptExecutor executor, final ExecutionMonitor monitor)
+			throws RException, CanceledExecutionException, InterruptedException {
+
+		// Initialize necessary R stuff to plot
+		if (Platform.getOS().equals(Platform.OS_MACOSX)) {
+			executor.executeIgnoreResult("library('Cairo')", monitor);
+			executor.executeIgnoreResult("options(device='png', bitmapType='cairo')", monitor);
+		} else {
+			executor.executeIgnoreResult("options(device='png')", monitor);
+		}
+
+		// Get image path (with proper slashes)
+		final String path = FilenameUtils.separatorsToUnix(imageFile.getAbsolutePath());
+
+		// Gets values
+		String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize=" + pointSize
+				+ ", res='" + res + "')";
+
+		executor.executeIgnoreResult(pngCommand, monitor);
+		executor.executeIgnoreResult(vizScript, monitor);
+		executor.executeIgnoreResult("dev.off()", monitor);
 	}
 }
