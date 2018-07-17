@@ -215,6 +215,7 @@ class WriterNodeModel extends NoInternalsModel {
 
         archive.addEntry(tempFile, sbmlModelDoc.getModel().getId() + ".sbml", URIS.sbml);
       }
+
       // Add simulations
       {
         SEDMLDocument sedmlDoc = createSedml(fskObj);
@@ -258,7 +259,6 @@ class WriterNodeModel extends NoInternalsModel {
     }
 
     return new PortObject[] {};
-
   }
 
 
@@ -304,13 +304,11 @@ class WriterNodeModel extends NoInternalsModel {
     new SBMLWriter().write(doc, tempFile);
     archive.addEntry(tempFile, fileName, URIS.sbml);
     return fileName;
-
   }
 
   public static ExternalModelDefinition createExtSubModel(SBMLDocument doc, String externalFileName,
       CompSBMLDocumentPlugin compDoc, CompModelPlugin compMainModel, String subModelName)
       throws IOException, SBMLException, XMLStreamException {
-
 
     ExternalModelDefinition externalModel =
         compDoc.createExternalModelDefinition(doc.getModel().getId());
@@ -318,9 +316,7 @@ class WriterNodeModel extends NoInternalsModel {
     Submodel submodel = compMainModel.createSubmodel(subModelName);
     submodel.setModelRef(doc.getModel().getId());
 
-
     return externalModel;
-
   }
 
   private static SBMLDocument createSBML(FskPortObject fskObj, CombineArchive archive)
@@ -348,9 +344,7 @@ class WriterNodeModel extends NoInternalsModel {
         String doc2FileName = writeSBMLFile(doc2, archive);
         createExtSubModel(doc2, doc2FileName, compDoc, compMainModel, "submodel2");
 
-
         fskmodel.setId(doc1.getModel().getId() + "_joinwith_" + doc2.getModel().getId());
-
 
         List<JoinRelation> relations = comFskObj.getJoinerRelation();
         for (JoinRelation joinRelarion : relations) {
@@ -390,15 +384,10 @@ class WriterNodeModel extends NoInternalsModel {
               new XMLNode(new XMLTriple(METADATA_TAG, null, METADATA_NS), attrs);
           annot.appendNonRDFAnnotation(parameterNode);
         }
-
       }
-
-
-
     }
 
     return doc;
-
   }
 
   private static SEDMLDocument createSedml(FskPortObject portObj) {
