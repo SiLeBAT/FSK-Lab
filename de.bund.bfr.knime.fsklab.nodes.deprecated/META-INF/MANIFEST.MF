@@ -34,6 +34,5 @@ Bundle-ClassPath: libs/fskml-1.0.5.jar,
  .,
  libs/bfr-swing-1.0-SNAPSHOT.jar
 Export-Package: de.bund.bfr.knime.fsklab.nodes,
- de.bund.bfr.knime.fsklab.nodes.ui,
  de.bund.bfr.knime.pmm.fskx.port
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated

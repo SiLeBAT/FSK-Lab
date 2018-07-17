@@ -46,9 +46,9 @@ import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
+import de.bund.bfr.knime.fsklab.nodes.common.ui.MetaDataPane2;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
-import de.bund.bfr.knime.fsklab.nodes.ui.MetaDataPane;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 
@@ -252,7 +252,7 @@ public class FskPortObject implements PortObject {
   private static JPanel createMetaDataPanel(final FskMetaData template) {
     final JPanel panel = new JPanel(new BorderLayout());
     panel.setName("Meta data");
-    panel.add(new MetaDataPane(template, false));
+    panel.add(new MetaDataPane2(template, false));
 
     return panel;
   }

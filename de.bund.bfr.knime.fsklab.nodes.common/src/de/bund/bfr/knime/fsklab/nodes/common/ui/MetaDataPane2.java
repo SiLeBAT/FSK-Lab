@@ -16,7 +16,7 @@
  * Contributors: Department Biological Safety - BfR
  *************************************************************************************************
  */
-package de.bund.bfr.knime.fsklab.nodes.ui;
+package de.bund.bfr.knime.fsklab.nodes.common.ui;
 
 import java.awt.Component;
 import java.text.ParseException;
@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
@@ -32,7 +33,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
+
 import org.knime.core.node.NodeLogger;
+
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData.Software;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
@@ -40,11 +43,12 @@ import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 
-public class MetaDataPane extends JScrollPane {
+/** Pane for deprecated FSK nodes. */
+public class MetaDataPane2 extends JScrollPane {
 
   private static final long serialVersionUID = -3455056721681075796L;
 
-  private static final NodeLogger LOGGER = NodeLogger.getLogger(MetaDataPane.class);
+  private static final NodeLogger LOGGER = NodeLogger.getLogger(MetaDataPane2.class);
 
   private final static Map<ModelType, String> modelTypeStrings;
 
@@ -64,7 +68,7 @@ public class MetaDataPane extends JScrollPane {
 
   public final FskMetaData template;
 
-  public MetaDataPane(FskMetaData template, boolean editable) {
+  public MetaDataPane2(FskMetaData template, boolean editable) {
     super(new TransposedTable(template, editable));
     this.template = template;
   }

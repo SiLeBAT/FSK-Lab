@@ -5,19 +5,24 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+
 import org.knime.core.node.NodeLogger;
+
 import com.google.common.base.Strings;
+
 import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData.Software;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 
+/** Pane for legacy FSK nodes. */
 public class MetaDataPane extends JScrollPane {
 
   private static final long serialVersionUID = -3455056721681075796L;
