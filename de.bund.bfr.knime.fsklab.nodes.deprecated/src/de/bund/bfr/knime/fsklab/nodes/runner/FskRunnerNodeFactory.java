@@ -21,7 +21,7 @@ package de.bund.bfr.knime.fsklab.nodes.runner;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import de.bund.bfr.knime.fsklab.nodes.RunnerNodeDialog;
+import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 
 @Deprecated
 public class FskRunnerNodeFactory extends NodeFactory<FskRunnerNodeModel> {
@@ -48,6 +48,6 @@ public class FskRunnerNodeFactory extends NodeFactory<FskRunnerNodeModel> {
 
   @Override
   protected NodeDialogPane createNodeDialogPane() {
-    return new RunnerNodeDialog();
+    return new DefaultNodeSettingsPane();
   }
 }

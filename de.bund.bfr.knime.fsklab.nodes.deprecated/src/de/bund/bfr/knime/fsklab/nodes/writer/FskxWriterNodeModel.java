@@ -25,6 +25,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.Platform;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -41,7 +42,6 @@ import org.sbml.jsbml.xml.stax.SBMLWriter;
 import de.bund.bfr.fskml.OmexMetaDataHandler;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
-import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
@@ -125,7 +125,7 @@ class FskxWriterNodeModel extends NoInternalsModel {
       }
 
       // Gets library URI for the running platform
-      final URI libUri = NodeUtils.getLibURI();
+      final URI libUri = getLibURI();
 
       // Adds R libraries
       for (File lib : portObject.libs) {
@@ -174,5 +174,22 @@ class FskxWriterNodeModel extends NoInternalsModel {
   @Override
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     filePath.validateSettings(settings);
+  }
+
+  /**
+   * @return the libraries URI for the running platform.
+   * @throws InvalidSettingsException if the running platform is not supported.
+   */
+  private static URI getLibURI() throws InvalidSettingsException {
+    switch (Platform.getOS()) {
+      case Platform.OS_WIN32:
+        return URIS.zip;
+      case Platform.OS_MACOSX:
+        return URIS.tgz;
+      case Platform.OS_LINUX:
+        return URIS.tar_gz;
+      default:
+        throw new InvalidSettingsException("Unsupported platform");
+    }
   }
 }

@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.Platform;
 import org.jdom2.JDOMException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -50,7 +51,6 @@ import de.bund.bfr.fskml.OmexMetaDataHandler;
 import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaData;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument;
-import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.fsklab.nodes.Variable.DataType;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
@@ -150,7 +150,7 @@ public class FskxReaderNodeModel extends NoInternalsModel {
       // Gets R libraries
 
       // Gets library URI for the running platform
-      final URI libUri = NodeUtils.getLibURI();
+      final URI libUri = getLibURI();
 
       // Gets library names from the zip entries in the CombineArchive
       List<String> libNames = archive.getEntriesWithFormat(libUri).stream()
@@ -255,4 +255,21 @@ public class FskxReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected void reset() {}
+
+  /**
+   * @return the libraries URI for the running platform.
+   * @throws InvalidSettingsException if the running platform is not supported.
+   */
+  private static URI getLibURI() throws InvalidSettingsException {
+    switch (Platform.getOS()) {
+      case Platform.OS_WIN32:
+        return URIS.zip;
+      case Platform.OS_MACOSX:
+        return URIS.tgz;
+      case Platform.OS_LINUX:
+        return URIS.tar_gz;
+      default:
+        throw new InvalidSettingsException("Unsupported platform");
+    }
+  }
 }

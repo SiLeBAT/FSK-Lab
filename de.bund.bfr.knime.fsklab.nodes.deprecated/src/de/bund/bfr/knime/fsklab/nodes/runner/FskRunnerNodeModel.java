@@ -25,7 +25,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.Platform;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.container.CloseableRowIterator;
@@ -45,12 +47,13 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
+import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.nodes.FskMetaDataFields;
-import de.bund.bfr.knime.fsklab.nodes.NodeUtils;
-import de.bund.bfr.knime.fsklab.nodes.RunnerNodeInternalSettings;
-import de.bund.bfr.knime.fsklab.nodes.RunnerNodeSettings;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
+import de.bund.bfr.knime.fsklab.nodes.common.RunnerNodeInternalSettings;
+import de.bund.bfr.knime.fsklab.nodes.common.RunnerNodeSettings;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.bund.bfr.knime.pmm.fskx.port.FskPortObject;
@@ -200,7 +203,7 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
 
     final ScriptExecutor executor = new ScriptExecutor(controller);
 
-    NodeUtils.runSnippet(controller, executor, fskObj.model, fskObj.param, fskObj.viz, exec,
+    runSnippet(controller, executor, fskObj.model, fskObj.param, fskObj.viz, exec,
         internalSettings.imageFile, settings);
 
     // Save workspace
@@ -231,6 +234,76 @@ class FskRunnerNodeModel extends ExtToolOutputNodeModel {
     executor.cleanup(exec);
 
     return fskObj;
+  }
+
+  private static void runSnippet(final RController controller, final ScriptExecutor executor,
+      final String modelScript, final String paramScript, final String vizScript,
+      final ExecutionMonitor monitor, final File imageFile, final RunnerNodeSettings settings)
+      throws RException, CanceledExecutionException, InterruptedException, IOException,
+      REXPMismatchException {
+
+    monitor.setMessage("Setting up output capturing");
+    executor.setupOutputCapturing(monitor);
+
+    monitor.setMessage("Add paths to libraries");
+    controller.addPackagePath(LibRegistry.instance().getInstallationPath());
+
+    monitor.setMessage("Run parameters script");
+    executor.executeIgnoreResult(paramScript, monitor);
+
+    monitor.setMessage("Run model script");
+    executor.executeIgnoreResult(modelScript, monitor);
+
+    monitor.setMessage("Run visualization script");
+    try {
+      plot(imageFile, vizScript, settings.width, settings.height, settings.pointSize,
+          settings.res, executor, monitor);
+    } catch (final RException exception) {
+      LOGGER.warn("Visualization script failed", exception);
+    }
+
+    monitor.setMessage("Restore library paths");
+    controller.restorePackagePath();
+
+    monitor.setMessage("Collecting captured output");
+    executor.finishOutputCapturing(monitor);
+  }
+
+  /**
+   * Plots model results and generates a chart using a visualization script.
+   * 
+   * @param imgFile Chart file
+   * @param vizScript Visualization script
+   * @param executor R executor
+   * @param monitor KNIME {@link ExecutionMonitor}
+   * @throws InterruptedException
+   * @throws CanceledExecutionException
+   * @throws RException
+   * 
+   */
+  private static void plot(final File imageFile, final String vizScript, final int width,
+      final int height, final int pointSize, final String res, final ScriptExecutor executor,
+      final ExecutionMonitor monitor)
+      throws RException, CanceledExecutionException, InterruptedException {
+
+    // Initialize necessary R stuff to plot
+    if (Platform.getOS().equals(Platform.OS_MACOSX)) {
+      executor.executeIgnoreResult("library('Cairo')", monitor);
+      executor.executeIgnoreResult("options(device='png', bitmapType='cairo')", monitor);
+    } else {
+      executor.executeIgnoreResult("options(device='png')", monitor);
+    }
+
+    // Get image path (with proper slashes)
+    final String path = FilenameUtils.separatorsToUnix(imageFile.getAbsolutePath());
+
+    // Gets values
+    String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize="
+        + pointSize + ", res='" + res + "')";
+
+    executor.executeIgnoreResult(pngCommand, monitor);
+    executor.executeIgnoreResult(vizScript, monitor);
+    executor.executeIgnoreResult("dev.off()", monitor);
   }
 
   private static final LinkedList<String> getLinkedListFromOutput(final String output) {

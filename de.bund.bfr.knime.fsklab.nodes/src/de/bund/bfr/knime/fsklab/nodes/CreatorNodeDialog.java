@@ -48,6 +48,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.knime.fsklab.nodes.common.CreatorNodeSettings;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
