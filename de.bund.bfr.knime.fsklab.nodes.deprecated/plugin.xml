@@ -13,20 +13,8 @@
     <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.editor.js.FskEditorNodeFactory" />
     <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.runner.FskRunnerNodeFactory" />
   </extension>
-  
-  <extension point="org.knime.core.PortType">      
-	<!-- Deprecated: FSK port object for deprecated nodes-->
-    <portType
-      color="588C7E"
-      hidden="false"
-      name="FSK object"
-	  objectClass="de.bund.bfr.knime.pmm.fskx.port.FskPortObject"
-	  objectSerializer="de.bund.bfr.knime.pmm.fskx.port.FskPortObject$Serializer"
-	  specClass="de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec"
-	  specSerializer="de.bund.bfr.knime.pmm.fskx.port.FskPortObjectSpec$Serializer" />
-   </extension>
    
-   <extension point="org.knime.js.core.javascriptComponents">
+  <extension point="org.knime.js.core.javascriptComponents">
     <!-- Javascript component for Fsk Metadata Editor node -->
     <javascriptComponent
       getComponentValue-method-name="getComponentValue"

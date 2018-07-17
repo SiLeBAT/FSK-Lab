@@ -20,28 +20,7 @@
     </splashExtension>
   </extension>
 
-  <extension point="org.knime.core.PortType">
-    <portType
-      color="000000"
-      hidden="false"
-      name="FSK object"
-      objectClass="de.bund.bfr.knime.fsklab.FskPortObject"
-      objectSerializer="de.bund.bfr.knime.fsklab.FskPortObject$Serializer"
-      specClass="de.bund.bfr.knime.fsklab.FskPortObjectSpec"
-      specSerializer="de.bund.bfr.knime.fsklab.FskPortObjectSpec$Serializer">
-    </portType>
-    <portType
-      color="FF4500"
-      hidden="false"
-      name="Combined FSK object"
-      objectClass="de.bund.bfr.knime.fsklab.CombinedFskPortObject"
-      objectSerializer="de.bund.bfr.knime.fsklab.CombinedFskPortObject$Serializer"
-      specClass="de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec"
-      specSerializer="de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec$Serializer">
-    </portType>
-   </extension>
-   
-   <extension point="org.knime.workbench.repository.nodes">
+  <extension point="org.knime.workbench.repository.nodes">
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.RunnerNodeFactory" />
      <node category-path="/fsklab" factory-class="de.bund.bfr.knime.fsklab.nodes.FskToRNodeFactory" />

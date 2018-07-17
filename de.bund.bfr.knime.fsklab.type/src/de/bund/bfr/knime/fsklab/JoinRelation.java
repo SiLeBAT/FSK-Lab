@@ -18,8 +18,11 @@
  */
 package de.bund.bfr.knime.fsklab;
 
+import org.emfjson.jackson.module.EMFModule;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import metadata.Parameter;
 
 /**
@@ -28,39 +31,46 @@ import metadata.Parameter;
  * @author Ahmad Swaid, BfR, Berlin.
  */
 public class JoinRelation {
-  private Parameter sourceParam;
-  private Parameter targetParam;
-  private String command;
-  
-  public String getCommand() {
-    return command;
-  }
-  public void setCommand(String command) {
-    this.command = command;
-  }
-  public Parameter getSourceParam() {
-    return sourceParam;
-  }
-  public void setSourceParam(Parameter sourceParam) {
-    this.sourceParam = sourceParam;
-  }
-  public Parameter getTargetParam() {
-    return targetParam;
-  }
-  public void setTargetParam(Parameter targetParam) {
-    this.targetParam = targetParam;
-  }
-  public String getJsonReresentaion() {
-    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    String out = "";
-    try {
-      String sourceParamAsJSONString = mapper.writeValueAsString(sourceParam);
-      String targetParamAsJSONString = mapper.writeValueAsString(targetParam);
-      out = "{\"sourceParam\" :"+sourceParamAsJSONString+",\"targetParam\" :"+targetParamAsJSONString+",\"command\" :\""+command+"\"}";
-    } catch (JsonProcessingException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return out; 
-  }
+	private Parameter sourceParam;
+	private Parameter targetParam;
+	private String command;
+
+	public String getCommand() {
+		return command;
+	}
+
+	public void setCommand(String command) {
+		this.command = command;
+	}
+
+	public Parameter getSourceParam() {
+		return sourceParam;
+	}
+
+	public void setSourceParam(Parameter sourceParam) {
+		this.sourceParam = sourceParam;
+	}
+
+	public Parameter getTargetParam() {
+		return targetParam;
+	}
+
+	public void setTargetParam(Parameter targetParam) {
+		this.targetParam = targetParam;
+	}
+
+	public String getJsonReresentaion() {
+		ObjectMapper mapper = EMFModule.setupDefaultMapper();
+		String out = "";
+		try {
+			String sourceParamAsJSONString = mapper.writeValueAsString(sourceParam);
+			String targetParamAsJSONString = mapper.writeValueAsString(targetParam);
+			out = "{\"sourceParam\" :" + sourceParamAsJSONString + ",\"targetParam\" :" + targetParamAsJSONString
+					+ ",\"command\" :\"" + command + "\"}";
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return out;
+	}
 }
