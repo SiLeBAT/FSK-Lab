@@ -26,11 +26,11 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  de.bund.bfr.knime.fsklab.r,
  de.bund.bfr.knime.fsklab.nodes.common,
  org.jsbml,
- de.uni-rostock.sbi.CombineArchive
+ de.uni-rostock.sbi.CombineArchive,
+ de.bund.bfr.pmfml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: libs/fskml-1.0.5.jar,
- libs/pmfml-0.0.11.jar,
  .,
  libs/bfr-swing-1.0-SNAPSHOT.jar
 Export-Package: de.bund.bfr.knime.fsklab.nodes,
