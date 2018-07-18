@@ -197,3 +197,10 @@ Export-Package: com.ctc.wstx.api,
  org.sbml.jsbml.xml.xstream.converter,
  org.w3c.util
 Require-Bundle: org.jdom2;bundle-version="2.0.1"
+Bundle-ClassPath: BFLog-1.3.3.jar,
+ CombineArchive-1.1.jar,
+ ez-vcard-0.10.2.jar,
+ jris-1.0.0.jar,
+ jsbml-1.2-SNAPSHOT-with-dependencies.jar,
+ pmfml-0.0.11.jar,
+ vinnie-2.0.0.jar
