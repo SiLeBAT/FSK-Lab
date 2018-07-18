@@ -51,9 +51,10 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.ext.svg"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.junit"/>
+      <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.glassfish.javax.json" version="1.0.4" match="greaterOrEqual"/>
+      <import plugin="de.bund.bfr.knime.fsklab.type"/>
    </requires>
 
    <plugin
@@ -65,12 +66,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
 
    <plugin
          id="org.jsoup"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.jsbml"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -88,18 +83,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="com.github.fastluca.jris"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.github.mangstadt.ez-vcard"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="de.bund.bfr.knime.fsklab.preferences"
@@ -137,14 +120,7 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          unpack="false"/>
 
    <plugin
-         id="de.uni-rostock.sbi.CombineArchive"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="de.bund.bfr.pmfml"
+         id="de.bund.bfr.formats"
          download-size="0"
          install-size="0"
          version="0.0.0"
