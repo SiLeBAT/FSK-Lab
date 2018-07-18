@@ -21,3 +21,4 @@ Export-Package: org.jdom2,
  org.jdom2.xpath,
  org.jdom2.xpath.jaxen,
  org.jdom2.xpath.util
+Automatic-Module-Name: org.jdom2

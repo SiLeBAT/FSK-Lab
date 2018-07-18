@@ -196,3 +196,4 @@ Export-Package: com.ctc.wstx.api,
  org.sbml.jsbml.xml.test,
  org.sbml.jsbml.xml.xstream.converter,
  org.w3c.util
+Require-Bundle: org.jdom2;bundle-version="2.0.1"
