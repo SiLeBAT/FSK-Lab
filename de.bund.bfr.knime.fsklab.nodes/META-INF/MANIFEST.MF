@@ -23,7 +23,6 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.apache.commons.io,
  org.apache.commons.lang,
  org.slf4j.api,
- org.jsbml,
  org.knime.ext.svg,
  org.eclipse.emf.common,
  org.eclipse.emf.ecore;visibility:=reexport,
@@ -32,12 +31,10 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  de.bund.bfr.knime.fsklab.preferences,
  de.bund.br.knime.nodes.util,
  de.bund.bfr.knime.fsklab.r,
- com.github.mangstadt.ez-vcard,
- com.github.fastluca.jris,
  de.bund.bfr.knime.fsklab.nodes.common,
  org.junit,
- de.uni-rostock.sbi.CombineArchive,
- de.bund.bfr.knime.fsklab.type
+ de.bund.bfr.knime.fsklab.type,
+ de.bund.bfr.formats
 Bundle-Vendor: BfR
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
