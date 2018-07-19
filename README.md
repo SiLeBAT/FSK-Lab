@@ -26,22 +26,5 @@ FSK-Lab may be installed throught the update site <https://dl.bintray.com/sileba
 - ![](de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/editor/FskEditor.png) FSK Editor
 - ![](de.bund.bfr.knime.fsklab.nodes.deprecated/src/de/bund/bfr/knime/fsklab/nodes/editor/js/FskEditor.png) FSK Editor JS
 
-## Eclipse plugin projects:
-- *de.bund.bfr.binary.r.win32.x86*: Packaged 32-bit Windows R
-- *de.bund.bfr.binary.r.win32.x86_64*: Packaged 64-bit Windows R
-- *de.bund.bfr.knime.fsklab.feature*: Eclipse Feature project.
-- *de.bund.bfr.knime.fsklab.features.ext.r.bin.x64*: Feature with 32-bit Windows R
-- *de.bund.bfr.knime.fsklab.features.ext.r.bin.x86*: Feature with 64-bit Windows R
-- *de.bund.bfr.knime.fsklab.legacy.feature*: Eclipse feature with legacy nodes.
-- *de.bund.bfr.knime.fsklab.metadata.model*: EMF metadata model
-- *de.bund.bfr.knime.fsklab.nodes.deprecated*: Deprecated extension FSK nodes.
-- *de.bund.bfr.knime.fsklab.nodes.deprecated2*: Legacy extension FSK nodes.
-- *de.bund.bfr.knime.fsklab.nodes*: Extension nodes.
-- *de.bund.bfr.knime.fsklab.scripts*: Scripts for development.
-- *de.bund.bfr.knime.fsklab.target*: KNIME .target file.
-- *de.bund.bfr.knime.fsklab.testflows*: Test workflows.
-- *de.bund.bfr.knime.fsklab.update.p2.deploy*: Deployment script.
-- *de.bund.bfr.knime.fsklab.update.p2*: Update site.
-- *org.jdom2*: Binaries for jdom 2.0.1.
-- *org.jsbml*: Binaries for JSBML 1.2.
-- *org.jsoup*: Binaries for Jsoup 1.9.2.
+## Project hierarchy
+The project hierarchy is described in the [wiki](https://github.com/SiLeBAT/FSK-Lab/wiki/Project-hierarchy).
