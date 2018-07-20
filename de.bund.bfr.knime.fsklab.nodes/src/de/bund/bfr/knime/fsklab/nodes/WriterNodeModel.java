@@ -104,6 +104,11 @@ class WriterNodeModel extends NoInternalsModel {
   // TODO: Move to FSKML
   static final String EXCEL_URI =
       "https://www.iana.org/assignments/media-types/application/vnd.ms-excel";
+  static final String BMP_URI = "https://www.iana.org/assignments/media-types/image/bmp";
+  static final String JPEG_URI = "https://www.iana.org/assignments/media-types/image/jpeg";
+  static final String TIFF_URI = "https://www.iana.org/assignments/media-types/image/tiff";
+  static final String PNG_URI = "http://purl.org/NET/mediatypes/image/png";
+
   private static final String METADATA_TAG = "parameter";
   private static final String METADATA_NS = "fsk";
   private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
@@ -189,6 +194,12 @@ class WriterNodeModel extends NoInternalsModel {
         Path workingDirectory =
             FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
 
+        // Create uris
+        URI bmpURI = URI.create(BMP_URI);
+        URI jpegURI = URI.create(JPEG_URI);
+        URI pngURI = URI.create(PNG_URI);
+        URI tiffURI = URI.create(TIFF_URI);
+
         // Adds resources
         final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
         for (final Path resourcePath : resources) {
@@ -202,6 +213,14 @@ class WriterNodeModel extends NoInternalsModel {
             archive.addEntry(resourceFile, filenameString, URIS.rData);
           } else if (FilenameUtils.isExtension(filenameString, "csv")) {
             archive.addEntry(resourceFile, filenameString, URIS.csv);
+          } else if (FilenameUtils.isExtension(filenameString, "jpeg")) {
+            archive.addEntry(resourceFile, filenameString, jpegURI);
+          } else if (FilenameUtils.isExtension(filenameString, "bmp")) {
+            archive.addEntry(resourceFile, filenameString, bmpURI);
+          } else if (FilenameUtils.isExtension(filenameString, "png")) {
+            archive.addEntry(resourceFile, filenameString, pngURI);
+          } else if (FilenameUtils.isExtension(filenameString, "tiff")) {
+            archive.addEntry(resourceFile, filenameString, tiffURI);
           }
         }
       }
