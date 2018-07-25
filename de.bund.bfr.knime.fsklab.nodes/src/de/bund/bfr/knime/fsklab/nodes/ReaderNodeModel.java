@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.jlibsedml.Change;
 import org.jlibsedml.ChangeAttribute;
@@ -43,10 +44,10 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.RScript;
-import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
@@ -119,8 +120,10 @@ class ReaderNodeModel extends NoInternalsModel {
 
     String readme = "";
 
+    Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
+
     try (final CombineArchive archive = new CombineArchive(file)) {
-      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.r)) {
+      for (final ArchiveEntry entry : archive.getEntriesWithFormat(URIS.get("r"))) {
 
         List<MetaDataObject> descriptions = entry.getDescriptions();
 
@@ -143,7 +146,7 @@ class ReaderNodeModel extends NoInternalsModel {
       List<ArchiveEntry> resourceEntries = new ArrayList<>();
 
       // Take README.txt and leave other txt as resources.
-      List<ArchiveEntry> txtEntries = archive.getEntriesWithFormat(URIS.plainText);
+      List<ArchiveEntry> txtEntries = archive.getEntriesWithFormat(URIS.get("plain"));
       for (ArchiveEntry entry : txtEntries) {
 
         // If a txt entry has a description then it must be a README.
@@ -154,8 +157,8 @@ class ReaderNodeModel extends NoInternalsModel {
         }
       }
 
-      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.csv));
-      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.rData));
+      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("csv")));
+      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("rdata")));
 
       for (final ArchiveEntry entry : resourceEntries) {
         Path targetPath = workingDirectory.resolve(entry.getFileName());
@@ -167,7 +170,7 @@ class ReaderNodeModel extends NoInternalsModel {
       {
         // Create temporary file with metadata
         Path temp = Files.createTempFile("metadata", ".json");
-        ArchiveEntry jsonEntry = archive.getEntriesWithFormat(URIS.json).get(0);
+        ArchiveEntry jsonEntry = archive.getEntriesWithFormat(URIS.get("json")).get(0);
         jsonEntry.extractFile(temp.toFile());
 
         // Loads metadata from temporary file
@@ -196,9 +199,9 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       // Get simulations
-      if (archive.getNumEntriesWithFormat(URIS.sedml) > 0) {
+      if (archive.getNumEntriesWithFormat(URIS.get("sedml")) > 0) {
         File simulationsFile = FileUtil.createTempFile("sim", ".sedml");
-        ArchiveEntry simEntry = archive.getEntriesWithFormat(URIS.sedml).get(0);
+        ArchiveEntry simEntry = archive.getEntriesWithFormat(URIS.get("sedml")).get(0);
         simEntry.extractFile(simulationsFile);
 
         // Loads simulations from temporary file
@@ -207,7 +210,7 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       // Get metadata spreadsheet
-      URI xlsxURI = URI.create(WriterNodeModel.EXCEL_URI);
+      URI xlsxURI = URIS.get("xlsx");
       if (archive.getNumEntriesWithFormat(xlsxURI) > 0) {
         File excelFile = FileUtil.createTempFile("metadata", ".xlsx");
 

@@ -14,7 +14,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.rosuda.REngine.REXPMismatchException;
 import com.sun.jna.Platform;
-import de.bund.bfr.fskml.URIS;
+import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.preferences.LanguagePreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
@@ -35,11 +35,11 @@ public class NodeUtils {
    */
   public static URI getLibURI() throws InvalidSettingsException {
     if (Platform.isWindows())
-      return URIS.zip;
+      return FSKML.getURIS(1, 0, 12).get("zip");
     if (Platform.isMac())
-      return URIS.tgz;
+      return FSKML.getURIS(1, 0, 12).get("tgz");
     if (Platform.isLinux())
-      return URIS.tar_gz;
+      return FSKML.getURIS(1, 0, 12).get("tar_gz");
     throw new InvalidSettingsException("Unsupported platform");
   }
 

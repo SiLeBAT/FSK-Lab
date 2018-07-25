@@ -72,9 +72,9 @@ import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
-import de.bund.bfr.fskml.URIS;
 import de.bund.bfr.fskml.sedml.SourceScript;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPlugin;
@@ -101,16 +101,9 @@ class WriterNodeModel extends NoInternalsModel {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Writer node");
 
-  // TODO: Move to FSKML
-  static final String EXCEL_URI =
-      "https://www.iana.org/assignments/media-types/application/vnd.ms-excel";
-  static final String BMP_URI = "https://www.iana.org/assignments/media-types/image/bmp";
-  static final String JPEG_URI = "https://www.iana.org/assignments/media-types/image/jpeg";
-  static final String TIFF_URI = "https://www.iana.org/assignments/media-types/image/tiff";
-  static final String PNG_URI = "http://purl.org/NET/mediatypes/image/png";
-
   private static final String METADATA_TAG = "parameter";
   private static final String METADATA_NS = "fsk";
+
   private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
 
   public WriterNodeModel() {
@@ -148,6 +141,8 @@ class WriterNodeModel extends NoInternalsModel {
 
     final File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.filePath));
     archiveFile.delete();
+
+    Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
 
     try (final CombineArchive archive = new CombineArchive(archiveFile)) {
 
@@ -194,12 +189,6 @@ class WriterNodeModel extends NoInternalsModel {
         Path workingDirectory =
             FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
 
-        // Create uris
-        URI bmpURI = URI.create(BMP_URI);
-        URI jpegURI = URI.create(JPEG_URI);
-        URI pngURI = URI.create(PNG_URI);
-        URI tiffURI = URI.create(TIFF_URI);
-
         // Adds resources
         final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
         for (final Path resourcePath : resources) {
@@ -208,19 +197,19 @@ class WriterNodeModel extends NoInternalsModel {
           final File resourceFile = resourcePath.toFile();
 
           if (FilenameUtils.isExtension(filenameString, "txt")) {
-            archive.addEntry(resourceFile, filenameString, URIS.plainText);
+            archive.addEntry(resourceFile, filenameString, URIS.get("plain"));
           } else if (FilenameUtils.isExtension(filenameString, "RData")) {
-            archive.addEntry(resourceFile, filenameString, URIS.rData);
+            archive.addEntry(resourceFile, filenameString, URIS.get("rdata"));
           } else if (FilenameUtils.isExtension(filenameString, "csv")) {
-            archive.addEntry(resourceFile, filenameString, URIS.csv);
+            archive.addEntry(resourceFile, filenameString, URIS.get("csv"));
           } else if (FilenameUtils.isExtension(filenameString, "jpeg")) {
-            archive.addEntry(resourceFile, filenameString, jpegURI);
+            archive.addEntry(resourceFile, filenameString, URIS.get("jpeg"));
           } else if (FilenameUtils.isExtension(filenameString, "bmp")) {
-            archive.addEntry(resourceFile, filenameString, bmpURI);
+            archive.addEntry(resourceFile, filenameString, URIS.get("bmp"));
           } else if (FilenameUtils.isExtension(filenameString, "png")) {
-            archive.addEntry(resourceFile, filenameString, pngURI);
+            archive.addEntry(resourceFile, filenameString, URIS.get("png"));
           } else if (FilenameUtils.isExtension(filenameString, "tiff")) {
-            archive.addEntry(resourceFile, filenameString, tiffURI);
+            archive.addEntry(resourceFile, filenameString, URIS.get("tiff"));
           }
         }
       }
@@ -232,7 +221,7 @@ class WriterNodeModel extends NoInternalsModel {
         File tempFile = FileUtil.createTempFile("sbml", "");
         new SBMLWriter().write(sbmlModelDoc, tempFile);
 
-        archive.addEntry(tempFile, sbmlModelDoc.getModel().getId() + ".sbml", URIS.sbml);
+        archive.addEntry(tempFile, sbmlModelDoc.getModel().getId() + ".sbml", URIS.get("sbml"));
       }
 
       // Add simulations
@@ -241,7 +230,7 @@ class WriterNodeModel extends NoInternalsModel {
 
         File tempFile = FileUtil.createTempFile("sim", "");
         sedmlDoc.writeDocument(tempFile);
-        archive.addEntry(tempFile, "sim.sedml", URIS.sedml);
+        archive.addEntry(tempFile, "sim.sedml", URIS.get("sedml"));
       }
 
       // Add simulations as parameter scripts
@@ -253,8 +242,7 @@ class WriterNodeModel extends NoInternalsModel {
       // this step.
       File plotFile = new File(fskObj.getPlot());
       if (plotFile.exists()) {
-        URI uri = URI.create("http://purl.org/NET/mediatypes/image/png");
-        archive.addEntry(plotFile, "plot.png", uri);
+        archive.addEntry(plotFile, "plot.png", URIS.get("png"));
       }
 
       // Add readme. Entry has a README annotation to distinguish of other
@@ -269,8 +257,7 @@ class WriterNodeModel extends NoInternalsModel {
         File spreadsheetFile = FileUtil.getFileFromURL(FileUtil.toURL(fskObj.getSpreadsheet()));
 
         if (spreadsheetFile.exists()) {
-          URI uri = URI.create(EXCEL_URI);
-          archive.addEntry(spreadsheetFile, "metadata.xlsx", uri);
+          archive.addEntry(spreadsheetFile, "metadata.xlsx", URIS.get("xlsx"));
         }
       }
 
@@ -287,7 +274,7 @@ class WriterNodeModel extends NoInternalsModel {
     final File file = File.createTempFile("temp", ".r");
     FileUtils.writeStringToFile(file, script, "UTF-8");
 
-    final ArchiveEntry entry = archive.addEntry(file, filename, URIS.r);
+    final ArchiveEntry entry = archive.addEntry(file, filename, FSKML.getURIS(1, 0, 12).get("r"));
     file.delete();
 
     return entry;
@@ -309,7 +296,7 @@ class WriterNodeModel extends NoInternalsModel {
     File file = File.createTempFile("temp", ".json");
     mapper.writeValue(file, modelNode);
 
-    ArchiveEntry entry = archive.addEntry(file, filename, URIS.json);
+    ArchiveEntry entry = archive.addEntry(file, filename, FSKML.getURIS(1, 0, 12).get("json"));
     file.delete();
 
     return entry;
@@ -321,7 +308,7 @@ class WriterNodeModel extends NoInternalsModel {
     File tempFile = FileUtil.createTempFile("sbml", "");
     String fileName = doc.getModel().getId() + ".sbml";
     new SBMLWriter().write(doc, tempFile);
-    archive.addEntry(tempFile, fileName, URIS.sbml);
+    archive.addEntry(tempFile, fileName, FSKML.getURIS(1, 0, 12).get("sbml"));
     return fileName;
   }
 
@@ -503,7 +490,7 @@ class WriterNodeModel extends NoInternalsModel {
     // Only save R workspace smaller than 100 MB
     if (fileSizeInMB < 100) {
       final ArchiveEntry workspaceEntry =
-          archive.addEntry(workspace.toFile(), "workspace.r", URIS.r);
+          archive.addEntry(workspace.toFile(), "workspace.r", FSKML.getURIS(1, 0, 12).get("r"));
       workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
     } else {
       LOGGER.warn("Results file larger than 100 MB -> Skipping file");
@@ -519,7 +506,7 @@ class WriterNodeModel extends NoInternalsModel {
     FileUtils.writeStringToFile(tempFile, script, "UTF-8");
 
     String targetName = "simulations/" + simulation.getName() + ".R";
-    archive.addEntry(tempFile, targetName, URIS.r);
+    archive.addEntry(tempFile, targetName, FSKML.getURIS(1, 0, 12).get("r"));
 
     tempFile.delete();
   }
@@ -529,7 +516,8 @@ class WriterNodeModel extends NoInternalsModel {
     File readmeFile = File.createTempFile("README", ".txt");
     FileUtils.writeStringToFile(readmeFile, readme, "UTF-8");
 
-    ArchiveEntry readmeEntry = archive.addEntry(readmeFile, "README.txt", URIS.plainText);
+    ArchiveEntry readmeEntry =
+        archive.addEntry(readmeFile, "README.txt", FSKML.getURIS(1, 0, 12).get("plain"));
 
     readmeFile.delete();
 
