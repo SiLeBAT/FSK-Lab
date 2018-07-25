@@ -54,7 +54,6 @@ import org.knime.core.util.FileUtil;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
-import de.bund.bfr.knime.fsklab.nodes.common.CreatorNodeSettings;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;

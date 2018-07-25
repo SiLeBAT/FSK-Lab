@@ -28,7 +28,6 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NodeView;
 import org.knime.core.node.NotConfigurableException;
-import de.bund.bfr.knime.fsklab.nodes.common.CreatorNodeSettings;
 import de.bund.bfr.swing.FilePanel;
 import de.bund.bfr.swing.UI;
 
