@@ -24,7 +24,9 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -204,7 +206,12 @@ final class JoinerNodeModel extends
       outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(),ModelMath.class);
       outObj.model = joinerProxyValue.getFirstModelScript();
       outObj.viz = joinerProxyValue.getFirstModelViz();
+      Set <String> packageSet = new HashSet<>();
+      packageSet.addAll(inObj1.packages);
+      packageSet.addAll(inObj2.packages);
+      outObj.packages.addAll(packageSet);
       
+
       outObj.setJoinerRelation(joinerRelation);
       imagePort = createSVGImagePortObject(joinerProxyValue.getSvgRepresentation());
     }

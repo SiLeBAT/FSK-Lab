@@ -101,6 +101,17 @@ class WriterNodeModel extends NoInternalsModel {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Writer node");
 
+  // used in SBML joining annotation
+  public static String FIRST_MODEL = "firstModel";
+  public static String SECOND_MODEL = "secondModel";
+  public static String SUB_MODEL1 = "submodel1";
+  public static String SUB_MODEL2 = "submodel2";
+
+  public static final String METADATA_TAG = "parameter";
+  public static final String METADATA_NS = "fsk";
+  public static final String METADATA_COMMAND = "command";
+  public static final String METADATA_COMMAND_VALUE = "commandValue";
+
   // TODO: Move to FSKML
   static final String EXCEL_URI =
       "https://www.iana.org/assignments/media-types/application/vnd.ms-excel";
@@ -109,8 +120,8 @@ class WriterNodeModel extends NoInternalsModel {
   static final String TIFF_URI = "https://www.iana.org/assignments/media-types/image/tiff";
   static final String PNG_URI = "http://purl.org/NET/mediatypes/image/png";
 
-  private static final String METADATA_TAG = "parameter";
-  private static final String METADATA_NS = "fsk";
+
+
   private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
 
   public WriterNodeModel() {
@@ -141,6 +152,7 @@ class WriterNodeModel extends NoInternalsModel {
     return new PortObjectSpec[] {};
   }
 
+
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
@@ -148,32 +160,21 @@ class WriterNodeModel extends NoInternalsModel {
 
     final File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.filePath));
     archiveFile.delete();
-
     try (final CombineArchive archive = new CombineArchive(archiveFile)) {
-
-      addVersion(archive);
-
-      // Adds model script
-      final ArchiveEntry modelEntry = addRScript(archive, fskObj.model, "model.r");
-      modelEntry.addDescription(new FskMetaDataObject(ResourceType.modelScript).metaDataObject);
-
-      // Adds visualization script
-      final ArchiveEntry vizEntry = addRScript(archive, fskObj.viz, "visualization.r");
-      vizEntry
-          .addDescription(new FskMetaDataObject(ResourceType.visualizationScript).metaDataObject);
-
-      // Adds R workspace file
-      if (fskObj.workspace != null) {
-        addWorkspace(archive, fskObj.workspace);
+      if (fskObj instanceof CombinedFskPortObject) {
+        writeFSKObject(((CombinedFskPortObject) fskObj).getFirstFskPortObject(), archive,
+            FIRST_MODEL + System.getProperty("file.separator"));
+        writeFSKObject(((CombinedFskPortObject) fskObj).getSecondFskPortObject(), archive,
+            SECOND_MODEL + System.getProperty("file.separator"));
+        // Adds model metadata of combined model
+        addMetaData(archive, fskObj.generalInformation, fskObj.scope, fskObj.dataBackground,
+            fskObj.modelMath, "metaData.json");
+      } else {
+        writeFSKObject(fskObj, archive, "");
       }
-
-      // Adds model metadata
-      addMetaData(archive, fskObj.generalInformation, fskObj.scope, fskObj.dataBackground,
-          fskObj.modelMath, "metaData.json");
 
       // Gets library URI for the running platform
       final URI libUri = NodeUtils.getLibURI();
-
       // Adds R libraries
       for (String pkg : fskObj.packages) {
         Path path = LibRegistry.instance().getPath(pkg);
@@ -183,51 +184,9 @@ class WriterNodeModel extends NoInternalsModel {
           archive.addEntry(file, file.getName(), libUri);
         }
       }
-
-      // If the model has an associated working directory with resources these resources
-      // need to be saved into the archive.
-      String workingDirectoryString = fskObj.getWorkingDirectory();
-      if (!workingDirectoryString.isEmpty()) {
-
-        // The working directory from fskObj (as a string) can be a KNIME relative path
-        // and needs to be converted to a Path
-        Path workingDirectory =
-            FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
-
-        // Create uris
-        URI bmpURI = URI.create(BMP_URI);
-        URI jpegURI = URI.create(JPEG_URI);
-        URI pngURI = URI.create(PNG_URI);
-        URI tiffURI = URI.create(TIFF_URI);
-
-        // Adds resources
-        final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
-        for (final Path resourcePath : resources) {
-
-          final String filenameString = resourcePath.getFileName().toString();
-          final File resourceFile = resourcePath.toFile();
-
-          if (FilenameUtils.isExtension(filenameString, "txt")) {
-            archive.addEntry(resourceFile, filenameString, URIS.plainText);
-          } else if (FilenameUtils.isExtension(filenameString, "RData")) {
-            archive.addEntry(resourceFile, filenameString, URIS.rData);
-          } else if (FilenameUtils.isExtension(filenameString, "csv")) {
-            archive.addEntry(resourceFile, filenameString, URIS.csv);
-          } else if (FilenameUtils.isExtension(filenameString, "jpeg")) {
-            archive.addEntry(resourceFile, filenameString, jpegURI);
-          } else if (FilenameUtils.isExtension(filenameString, "bmp")) {
-            archive.addEntry(resourceFile, filenameString, bmpURI);
-          } else if (FilenameUtils.isExtension(filenameString, "png")) {
-            archive.addEntry(resourceFile, filenameString, pngURI);
-          } else if (FilenameUtils.isExtension(filenameString, "tiff")) {
-            archive.addEntry(resourceFile, filenameString, tiffURI);
-          }
-        }
-      }
-
       // add SBML document
       {
-        SBMLDocument sbmlModelDoc = createSBML(fskObj, archive);
+        SBMLDocument sbmlModelDoc = createSBML(fskObj, archive, "model");
 
         File tempFile = FileUtil.createTempFile("sbml", "");
         new SBMLWriter().write(sbmlModelDoc, tempFile);
@@ -235,51 +194,120 @@ class WriterNodeModel extends NoInternalsModel {
         archive.addEntry(tempFile, sbmlModelDoc.getModel().getId() + ".sbml", URIS.sbml);
       }
 
-      // Add simulations
-      {
-        SEDMLDocument sedmlDoc = createSedml(fskObj);
-
-        File tempFile = FileUtil.createTempFile("sim", "");
-        sedmlDoc.writeDocument(tempFile);
-        archive.addEntry(tempFile, "sim.sedml", URIS.sedml);
-      }
-
-      // Add simulations as parameter scripts
-      for (FskSimulation sim : fskObj.simulations) {
-        addParameterScript(archive, sim);
-      }
-
-      // Add PNG plot. If file is not set (empty string) or does not exist then skip\
-      // this step.
-      File plotFile = new File(fskObj.getPlot());
-      if (plotFile.exists()) {
-        URI uri = URI.create("http://purl.org/NET/mediatypes/image/png");
-        archive.addEntry(plotFile, "plot.png", uri);
-      }
-
-      // Add readme. Entry has a README annotation to distinguish of other
-      // plain text files
-      String readme = fskObj.getReadme();
-      if (!readme.isEmpty()) {
-        addReadme(archive, readme);
-      }
-
-      // Add metadata spreadsheet
-      if (!fskObj.getSpreadsheet().isEmpty()) {
-        File spreadsheetFile = FileUtil.getFileFromURL(FileUtil.toURL(fskObj.getSpreadsheet()));
-
-        if (spreadsheetFile.exists()) {
-          URI uri = URI.create(EXCEL_URI);
-          archive.addEntry(spreadsheetFile, "metadata.xlsx", uri);
-        }
-      }
-
       archive.pack();
     }
-
     return new PortObject[] {};
   }
 
+  public static void writeFSKObject(FskPortObject fskObj, CombineArchive archive, String filePrefix)
+      throws Exception {
+
+
+    addVersion(archive);
+
+    // Adds model script
+    final ArchiveEntry modelEntry = addRScript(archive, fskObj.model, filePrefix + "model.r");
+    modelEntry.addDescription(new FskMetaDataObject(ResourceType.modelScript).metaDataObject);
+
+    // Adds visualization script
+    final ArchiveEntry vizEntry = addRScript(archive, fskObj.viz, filePrefix + "visualization.r");
+    vizEntry.addDescription(new FskMetaDataObject(ResourceType.visualizationScript).metaDataObject);
+
+    // Adds R workspace file
+    if (fskObj.workspace != null) {
+      addWorkspace(archive, fskObj.workspace, filePrefix);
+    }
+
+    // Adds model metadata
+    addMetaData(archive, fskObj.generalInformation, fskObj.scope, fskObj.dataBackground,
+        fskObj.modelMath, filePrefix + "metaData.json");
+
+
+
+    // If the model has an associated working directory with resources these resources
+    // need to be saved into the archive.
+    String workingDirectoryString = fskObj.getWorkingDirectory();
+    if (!workingDirectoryString.isEmpty()) {
+
+      // The working directory from fskObj (as a string) can be a KNIME relative path
+      // and needs to be converted to a Path
+      Path workingDirectory =
+          FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
+
+      // Create uris
+      URI bmpURI = URI.create(BMP_URI);
+      URI jpegURI = URI.create(JPEG_URI);
+      URI pngURI = URI.create(PNG_URI);
+      URI tiffURI = URI.create(TIFF_URI);
+
+      // Adds resources
+      final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
+      for (final Path resourcePath : resources) {
+
+        final String filenameString = filePrefix + resourcePath.getFileName().toString();
+        final File resourceFile = resourcePath.toFile();
+
+        if (FilenameUtils.isExtension(filenameString, "txt")) {
+          archive.addEntry(resourceFile, filenameString, URIS.plainText);
+        } else if (FilenameUtils.isExtension(filenameString, "RData")) {
+          archive.addEntry(resourceFile, filenameString, URIS.rData);
+        } else if (FilenameUtils.isExtension(filenameString, "csv")) {
+          archive.addEntry(resourceFile, filenameString, URIS.csv);
+        } else if (FilenameUtils.isExtension(filenameString, "jpeg")) {
+          archive.addEntry(resourceFile, filenameString, jpegURI);
+        } else if (FilenameUtils.isExtension(filenameString, "bmp")) {
+          archive.addEntry(resourceFile, filenameString, bmpURI);
+        } else if (FilenameUtils.isExtension(filenameString, "png")) {
+          archive.addEntry(resourceFile, filenameString, pngURI);
+        } else if (FilenameUtils.isExtension(filenameString, "tiff")) {
+          archive.addEntry(resourceFile, filenameString, tiffURI);
+        }
+      }
+    }
+
+
+
+    // Add simulations
+    {
+      SEDMLDocument sedmlDoc = createSedml(fskObj);
+
+      File tempFile = FileUtil.createTempFile("sim", "");
+      sedmlDoc.writeDocument(tempFile);
+      archive.addEntry(tempFile, filePrefix + "sim.sedml", URIS.sedml);
+    }
+
+    // Add simulations as parameter scripts
+    for (FskSimulation sim : fskObj.simulations) {
+      addParameterScript(archive, sim, filePrefix);
+    }
+
+    // Add PNG plot. If file is not set (empty string) or does not exist then skip\
+    // this step.
+    File plotFile = new File(fskObj.getPlot());
+    if (plotFile.exists()) {
+      URI uri = URI.create("http://purl.org/NET/mediatypes/image/png");
+      archive.addEntry(plotFile, filePrefix + "plot.png", uri);
+    }
+
+    // Add readme. Entry has a README annotation to distinguish of other
+    // plain text files
+    String readme = fskObj.getReadme();
+    if (!readme.isEmpty()) {
+      addReadme(archive, readme, filePrefix);
+    }
+
+    // Add metadata spreadsheet
+    if (!fskObj.getSpreadsheet().isEmpty()) {
+      File spreadsheetFile = FileUtil.getFileFromURL(FileUtil.toURL(fskObj.getSpreadsheet()));
+
+      if (spreadsheetFile.exists()) {
+        URI uri = URI.create(EXCEL_URI);
+        archive.addEntry(spreadsheetFile, filePrefix + "metadata.xlsx", uri);
+      }
+    }
+
+
+  }
 
   private static ArchiveEntry addRScript(final CombineArchive archive, final String script,
       final String filename) throws IOException, URISyntaxException {
@@ -315,19 +343,19 @@ class WriterNodeModel extends NoInternalsModel {
     return entry;
   }
 
-  public static String writeSBMLFile(SBMLDocument doc, CombineArchive archive)
+  public static String writeSBMLFile(SBMLDocument doc, CombineArchive archive, String filePrefix)
       throws IOException, SBMLException, XMLStreamException {
 
     File tempFile = FileUtil.createTempFile("sbml", "");
-    String fileName = doc.getModel().getId() + ".sbml";
+    String fileName = filePrefix + doc.getModel().getId() + ".sbml";
     new SBMLWriter().write(doc, tempFile);
     archive.addEntry(tempFile, fileName, URIS.sbml);
     return fileName;
   }
 
   public static ExternalModelDefinition createExtSubModel(SBMLDocument doc, String externalFileName,
-      CompSBMLDocumentPlugin compDoc, CompModelPlugin compMainModel, String subModelName)
-      throws IOException, SBMLException, XMLStreamException {
+      String filePrefix, CompSBMLDocumentPlugin compDoc, CompModelPlugin compMainModel,
+      String subModelName) throws IOException, SBMLException, XMLStreamException {
 
     ExternalModelDefinition externalModel =
         compDoc.createExternalModelDefinition(doc.getModel().getId());
@@ -338,32 +366,35 @@ class WriterNodeModel extends NoInternalsModel {
     return externalModel;
   }
 
-  private static SBMLDocument createSBML(FskPortObject fskObj, CombineArchive archive)
-      throws IOException {
+  private static SBMLDocument createSBML(FskPortObject fskObj, CombineArchive archive,
+      String ModelId) throws IOException {
 
     SBMLDocument doc = new SBMLDocument(3, 1);
+    doc.addDeclaredNamespace("xmlns:fsk",
+        "https://foodrisklabs.bfr.bund.de/wp-content/uploads/2017/01/FSK-ML_guidance_document_021216.pdf");
 
     if (fskObj instanceof CombinedFskPortObject) {
       CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
       try {
-        String sbmlModelID =
-            fskObj.generalInformation.getName() + ThreadLocalRandom.current().nextInt(1, 100);
+        String sbmlModelID = FIRST_MODEL;
         sbmlModelID = sbmlModelID.replaceAll("\\W", "_");
         org.sbml.jsbml.Model fskmodel = doc.createModel();
         CompSBMLDocumentPlugin compDoc = (CompSBMLDocumentPlugin) doc.createPlugin("comp");
         CompModelPlugin compMainModel = (CompModelPlugin) fskmodel.getPlugin("comp");
 
         FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
-        SBMLDocument doc1 = createSBML(firstFskObj, archive);
-        String doc1FileName = writeSBMLFile(doc1, archive);
-        createExtSubModel(doc1, doc1FileName, compDoc, compMainModel, "submodel1");
+        SBMLDocument doc1 = createSBML(firstFskObj, archive, FIRST_MODEL);
+        String doc1FileName = writeSBMLFile(doc1, archive, "./" + FIRST_MODEL + "/");
+        createExtSubModel(doc1, doc1FileName, "./" + FIRST_MODEL + "/", compDoc, compMainModel,
+            SUB_MODEL1);
 
         FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
-        SBMLDocument doc2 = createSBML(secondFskObj, archive);
-        String doc2FileName = writeSBMLFile(doc2, archive);
-        createExtSubModel(doc2, doc2FileName, compDoc, compMainModel, "submodel2");
+        SBMLDocument doc2 = createSBML(secondFskObj, archive, SECOND_MODEL);
+        String doc2FileName = writeSBMLFile(doc2, archive, "./" + SECOND_MODEL + "/");
+        createExtSubModel(doc2, doc2FileName, "./" + SECOND_MODEL + "/", compDoc, compMainModel,
+            SUB_MODEL2);
 
-        fskmodel.setId(doc1.getModel().getId() + "_joinwith_" + doc2.getModel().getId());
+        fskmodel.setId(FIRST_MODEL + "_joinwith_" + SECOND_MODEL);
 
         List<JoinRelation> relations = comFskObj.getJoinerRelation();
         for (JoinRelation joinRelarion : relations) {
@@ -376,7 +407,14 @@ class WriterNodeModel extends NoInternalsModel {
               (CompSBasePlugin) overridedParameter.getPlugin(CompConstants.shortLabel);
           ReplacedBy replacedBy = plugin.createReplacedBy();
           replacedBy.setIdRef(joinRelarion.getSourceParam().getParameterID());
-          replacedBy.setSubmodelRef("submodel1");
+          replacedBy.setSubmodelRef(SUB_MODEL1);
+          // annotate the conversion command
+          org.sbml.jsbml.Annotation annot = overridedParameter.getAnnotation();
+          XMLAttributes attrs = new XMLAttributes();
+          attrs.add(METADATA_COMMAND_VALUE, joinRelarion.getCommand());
+          XMLNode parameterNode =
+              new XMLNode(new XMLTriple(METADATA_COMMAND, null, METADATA_NS), attrs);
+          annot.appendNonRDFAnnotation(parameterNode);
         }
 
 
@@ -385,10 +423,8 @@ class WriterNodeModel extends NoInternalsModel {
       }
 
     } else {
-      String sbmlModelID =
-          fskObj.generalInformation.getName() + ThreadLocalRandom.current().nextInt(1, 100);
-      sbmlModelID = sbmlModelID.replaceAll("\\W", "_");
-      org.sbml.jsbml.Model fskmodel = doc.createModel(sbmlModelID);
+
+      org.sbml.jsbml.Model fskmodel = doc.createModel(ModelId);
       for (Parameter param : fskObj.modelMath.getParameter()) {
         org.sbml.jsbml.Parameter sbmlParameter = fskmodel.createParameter();
         sbmlParameter.setName(param.getParameterName());
@@ -489,7 +525,8 @@ class WriterNodeModel extends NoInternalsModel {
     archive.addDescription(metaDataObject);
   }
 
-  private static void addWorkspace(CombineArchive archive, Path workspace) throws IOException {
+  private static void addWorkspace(CombineArchive archive, Path workspace, String filePrefix)
+      throws IOException {
 
     // Get length of file in bytes
     long fileSizeInBytes = Files.size(workspace);
@@ -503,33 +540,35 @@ class WriterNodeModel extends NoInternalsModel {
     // Only save R workspace smaller than 100 MB
     if (fileSizeInMB < 100) {
       final ArchiveEntry workspaceEntry =
-          archive.addEntry(workspace.toFile(), "workspace.r", URIS.r);
+          archive.addEntry(workspace.toFile(), filePrefix + "workspace.r", URIS.r);
       workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
     } else {
       LOGGER.warn("Results file larger than 100 MB -> Skipping file");
     }
   }
 
-  private static void addParameterScript(CombineArchive archive, FskSimulation simulation)
-      throws IOException {
+  private static void addParameterScript(CombineArchive archive, FskSimulation simulation,
+      String filePrefix) throws IOException {
 
     String script = NodeUtils.buildParameterScript(simulation);
 
     File tempFile = File.createTempFile("temp", ".R");
     FileUtils.writeStringToFile(tempFile, script, "UTF-8");
 
-    String targetName = "simulations/" + simulation.getName() + ".R";
+    String targetName = filePrefix + "simulations/" + simulation.getName() + ".R";
     archive.addEntry(tempFile, targetName, URIS.r);
 
     tempFile.delete();
   }
 
-  private static void addReadme(CombineArchive archive, String readme) throws IOException {
+  private static void addReadme(CombineArchive archive, String readme, String filePrefix)
+      throws IOException {
 
     File readmeFile = File.createTempFile("README", ".txt");
     FileUtils.writeStringToFile(readmeFile, readme, "UTF-8");
 
-    ArchiveEntry readmeEntry = archive.addEntry(readmeFile, "README.txt", URIS.plainText);
+    ArchiveEntry readmeEntry =
+        archive.addEntry(readmeFile, filePrefix + "README.txt", URIS.plainText);
 
     readmeFile.delete();
 
