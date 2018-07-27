@@ -19,10 +19,8 @@
 package de.bund.bfr.knime.fsklab;
 
 import org.emfjson.jackson.module.EMFModule;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import metadata.Parameter;
 
 /**
@@ -31,46 +29,53 @@ import metadata.Parameter;
  * @author Ahmad Swaid, BfR, Berlin.
  */
 public class JoinRelation {
-	private Parameter sourceParam;
-	private Parameter targetParam;
-	private String command;
-
-	public String getCommand() {
-		return command;
-	}
-
-	public void setCommand(String command) {
-		this.command = command;
-	}
-
-	public Parameter getSourceParam() {
-		return sourceParam;
-	}
-
-	public void setSourceParam(Parameter sourceParam) {
-		this.sourceParam = sourceParam;
-	}
-
-	public Parameter getTargetParam() {
-		return targetParam;
-	}
-
-	public void setTargetParam(Parameter targetParam) {
-		this.targetParam = targetParam;
-	}
-
-	public String getJsonReresentaion() {
-		ObjectMapper mapper = EMFModule.setupDefaultMapper();
-		String out = "";
-		try {
-			String sourceParamAsJSONString = mapper.writeValueAsString(sourceParam);
-			String targetParamAsJSONString = mapper.writeValueAsString(targetParam);
-			out = "{\"sourceParam\" :" + sourceParamAsJSONString + ",\"targetParam\" :" + targetParamAsJSONString
-					+ ",\"command\" :\"" + command + "\"}";
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return out;
-	}
+  private Parameter sourceParam;
+  private Parameter targetParam;
+  private String command;
+  private String language_written_in;
+  private String Id ;
+  
+ 
+  public String getId() {
+    return Id;
+  }
+  public void setId(String id) {
+    Id = id;
+  }
+  public String getLanguage_written_in() {
+    return language_written_in;
+  }
+  public void setLanguage_written_in(String language_written_in) {
+    this.language_written_in = language_written_in;
+  }
+  public String getCommand() {
+    return command;
+  }
+  public void setCommand(String command) {
+    this.command = command;
+  }
+  public Parameter getSourceParam() {
+    return sourceParam;
+  }
+  public void setSourceParam(Parameter sourceParam) {
+    this.sourceParam = sourceParam;
+  }
+  public Parameter getTargetParam() {
+    return targetParam;
+  }
+  public void setTargetParam(Parameter targetParam) {
+    this.targetParam = targetParam;
+  }
+  public String getJsonReresentaion() {
+    ObjectMapper mapper = EMFModule.setupDefaultMapper();
+    String out = "";
+    try {
+      String sourceParamAsJSONString = mapper.writeValueAsString(sourceParam);
+      String targetParamAsJSONString = mapper.writeValueAsString(targetParam);
+      out = "{\"sourceParam\" :"+sourceParamAsJSONString+",\"targetParam\" :"+targetParamAsJSONString+",\"command\" :\""+command+"\"}";
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
+    return out; 
+  }
 }
