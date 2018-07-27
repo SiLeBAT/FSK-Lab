@@ -191,6 +191,9 @@ final class JoinerNodeModel extends
           if(sourceTargetRelation.containsKey("command")) {
             jR.setCommand(sourceTargetRelation.getString("command"));
           }
+          if(sourceTargetRelation.containsKey("language_written_in")) {
+            jR.setLanguage_written_in(sourceTargetRelation.getString("language_written_in"));
+          }
           if(sourceTargetRelation.containsKey("sourceParam")) {
             jR.setSourceParam(getEObjectFromJson(sourceTargetRelation.get("sourceParam").toString(), Parameter.class));
           }

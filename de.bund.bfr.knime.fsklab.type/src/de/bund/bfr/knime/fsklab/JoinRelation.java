@@ -33,15 +33,9 @@ public class JoinRelation {
   private Parameter targetParam;
   private String command;
   private String language_written_in;
-  private String Id ;
   
  
-  public String getId() {
-    return Id;
-  }
-  public void setId(String id) {
-    Id = id;
-  }
+ 
   public String getLanguage_written_in() {
     return language_written_in;
   }
@@ -72,7 +66,7 @@ public class JoinRelation {
     try {
       String sourceParamAsJSONString = mapper.writeValueAsString(sourceParam);
       String targetParamAsJSONString = mapper.writeValueAsString(targetParam);
-      out = "{\"sourceParam\" :"+sourceParamAsJSONString+",\"targetParam\" :"+targetParamAsJSONString+",\"command\" :\""+command+"\"}";
+      out = "{\"sourceParam\" :"+sourceParamAsJSONString+",\"targetParam\" :"+targetParamAsJSONString+",\"language_written_in\" :\""+language_written_in+"\",\"command\" :\""+command+"\"}";
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     }
