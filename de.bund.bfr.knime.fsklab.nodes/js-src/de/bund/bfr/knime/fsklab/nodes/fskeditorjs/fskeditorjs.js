@@ -105,6 +105,7 @@ fskeditorjs = function() {
 		 * the autocomplete function takes two arguments, the text field element
 		 * and an array of possible autocompleted values:
 		 */
+		
 		var currentFocus;
 		$(inp).addClass('domdsdsd');
 		/* execute a function when someone writes in the text field: */
@@ -112,9 +113,8 @@ fskeditorjs = function() {
 			var a, b, i, val = this.value;
 			/* close any already open lists of autocompleted values */
 			closeAllLists();
-			if (!val) {
-				return false;
-			}
+			
+			
 			currentFocus = -1;
 			/* create a DIV element that will contain the items (values): */
 			a = document.createElement("DIV");
@@ -123,19 +123,14 @@ fskeditorjs = function() {
 			/* append the DIV element as a child of the autocomplete container: */
 			this.parentNode.appendChild(a);
 			/* for each item in the array... */
-			for (i = 0; i < arr.length; i++) {
-				/*
-				 * check if the item starts with the same letters as the text
-				 * field value:
-				 */
-				if (arr[i].substr(0, val.length).toUpperCase() == val
-						.toUpperCase()) {
+			if (!val) {
+				for (i = 0; i < arr.length; i++) {
 					/* create a DIV element for each matching element: */
 					b = document.createElement("DIV");
 					/* make the matching letters bold: */
-					b.innerHTML = "<strong>" + arr[i].substr(0, val.length)
+					b.innerHTML = "<strong>" + arr[i].substr(0, 0)
 							+ "</strong>";
-					b.innerHTML += arr[i].substr(val.length);
+					b.innerHTML += arr[i].substr(0);
 					/*
 					 * insert a input field that will hold the current array
 					 * item's value:
@@ -162,6 +157,48 @@ fskeditorjs = function() {
 						closeAllLists();
 					});
 					a.appendChild(b);
+				}
+			}else{
+				for (i = 0; i < arr.length; i++) {
+					/*
+					 * check if the item starts with the same letters as the text
+					 * field value:
+					 */
+					if (arr[i].substr(0, val.length).toUpperCase() == val
+							.toUpperCase()) {
+						/* create a DIV element for each matching element: */
+						b = document.createElement("DIV");
+						/* make the matching letters bold: */
+						b.innerHTML = "<strong>" + arr[i].substr(0, val.length)
+								+ "</strong>";
+						b.innerHTML += arr[i].substr(val.length);
+						/*
+						 * insert a input field that will hold the current array
+						 * item's value:
+						 */
+						b.innerHTML += "<input type='hidden' value='" + arr[i]
+								+ "'>";
+						/*
+						 * execute a function when someone clicks on the item value
+						 * (DIV element):
+						 */
+						b.addEventListener("click", function(e) {
+							/* insert the value for the autocomplete text field: */
+	
+							store.getState().jsonforms.core.data[fieldName] = this
+									.getElementsByTagName("input")[0].value;
+	
+							store.dispatch(Actions.init(
+									store.getState().jsonforms.core.data, schema,
+									uischema));
+							/*
+							 * close the list of autocompleted values, (or any other
+							 * open lists of autocompleted values:
+							 */
+							closeAllLists();
+						});
+						a.appendChild(b);
+					}
 				}
 			}
 		});
@@ -715,8 +752,6 @@ fskeditorjs = function() {
 		window.autocomplete = autocomplete;
 		$.each(autoCompleteCB, function(index, value) {
 			var ID = '#/properties/' + value;
-			console.log(document.getElementById(ID));
-
 			autocomplete(document.getElementById(ID), autoCompleteArray[index],
 					autoCompleteStores[index], autoCompleteSchemas[index],
 					autoCompleteUischema[index], autoCompleteCB[index]);

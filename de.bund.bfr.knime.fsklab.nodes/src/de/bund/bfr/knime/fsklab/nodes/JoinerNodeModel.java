@@ -25,6 +25,7 @@ import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import javax.json.Json;
@@ -79,7 +80,7 @@ final class JoinerNodeModel extends
     AbstractWizardNodeModel<JoinerViewRepresentation, JoinerViewValue> implements PortObjectHolder {
   private final JoinerNodeSettings nodeSettings = new JoinerNodeSettings();
   private FskPortObject m_port;
-  // JoinerViewValue joinerProxyValue = new JoinerViewValue();
+  public final String suffix = "_temp_Name_For_Joiner";
 
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE, FskPortObject.TYPE};
@@ -145,6 +146,7 @@ final class JoinerNodeModel extends
 
     FskPortObject inObj1 = (FskPortObject) inObjects[0];
     FskPortObject inObj2 = (FskPortObject) inObjects[1];
+    resolveParameterNamesConflict(inObj1, inObj2);
     CombinedFskPortObject outObj = new CombinedFskPortObject(
         FileUtil.createTempDir("combined").getAbsolutePath(), new ArrayList<>(), inObj1, inObj2);
     ImagePortObject imagePort = null;
@@ -157,10 +159,13 @@ final class JoinerNodeModel extends
       if (joinerProxyValue.getGeneralInformation() == null) {
         joinerProxyValue.setModelMath1(FromEOjectToJSON(inObj1.modelMath));
         joinerProxyValue.setModelMath2(FromEOjectToJSON(inObj2.modelMath));
-        joinerProxyValue.setGeneralInformation(FromEOjectToJSON(combineGeneralInformation(inObj1.generalInformation,inObj2.generalInformation)));
+        joinerProxyValue.setGeneralInformation(FromEOjectToJSON(
+                       combineGeneralInformation(inObj1.generalInformation, inObj2.generalInformation)));       
         joinerProxyValue.setScope(FromEOjectToJSON(inObj1.scope));
-        joinerProxyValue.setDataBackground(FromEOjectToJSON(combineDataBackground(inObj1.dataBackground,inObj2.dataBackground)));
-        joinerProxyValue.setModelMath(FromEOjectToJSON(combineModelMath(inObj1.modelMath, inObj2.modelMath) ));
+        joinerProxyValue.setDataBackground(
+                       FromEOjectToJSON(combineDataBackground(inObj1.dataBackground, inObj2.dataBackground)));
+                    joinerProxyValue
+                        .setModelMath(FromEOjectToJSON(combineModelMath(inObj1.modelMath, inObj2.modelMath)));
         
         joinerProxyValue.setFirstModelScript(inObj1.model);
         joinerProxyValue.setFirstModelViz(inObj1.viz);
@@ -186,6 +191,9 @@ final class JoinerNodeModel extends
           if(sourceTargetRelation.containsKey("command")) {
             jR.setCommand(sourceTargetRelation.getString("command"));
           }
+          if(sourceTargetRelation.containsKey("language_written_in")) {
+            jR.setLanguage_written_in(sourceTargetRelation.getString("language_written_in"));
+          }
           if(sourceTargetRelation.containsKey("sourceParam")) {
             jR.setSourceParam(getEObjectFromJson(sourceTargetRelation.get("sourceParam").toString(), Parameter.class));
           }
@@ -200,17 +208,19 @@ final class JoinerNodeModel extends
          
       }
       
-      outObj.generalInformation = getEObjectFromJson(joinerProxyValue.getGeneralInformation(),GeneralInformation.class);
-      outObj.scope = getEObjectFromJson(joinerProxyValue.getScope(),Scope.class);
-      outObj.dataBackground = getEObjectFromJson(joinerProxyValue.getDataBackground(),DataBackground.class);
-      outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(),ModelMath.class);
+      outObj.generalInformation =
+                   getEObjectFromJson(joinerProxyValue.getGeneralInformation(), GeneralInformation.class);
+                outObj.scope = getEObjectFromJson(joinerProxyValue.getScope(), Scope.class);
+                outObj.dataBackground =
+                    getEObjectFromJson(joinerProxyValue.getDataBackground(), DataBackground.class);
+                outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(), ModelMath.class);
       outObj.model = joinerProxyValue.getFirstModelScript();
       outObj.viz = joinerProxyValue.getFirstModelViz();
       Set <String> packageSet = new HashSet<>();
       packageSet.addAll(inObj1.packages);
       packageSet.addAll(inObj2.packages);
       outObj.packages.addAll(packageSet);
-      
+      resolveParameters(joinerRelation, outObj);
 
       outObj.setJoinerRelation(joinerRelation);
       imagePort = createSVGImagePortObject(joinerProxyValue.getSvgRepresentation());
@@ -307,7 +317,44 @@ final class JoinerNodeModel extends
 
   public void setHideInWizard(boolean hide) {}
   
-  
+  public void resolveParameterNamesConflict(FskPortObject fskPort1, FskPortObject fskPort2) {
+    for (Parameter firstParam : fskPort1.modelMath.getParameter()) {
+      for (Parameter secondParam : fskPort2.modelMath.getParameter()) {
+        if (secondParam.getParameterID().equals(firstParam.getParameterID())) {
+          firstParam
+              .setParameterName(firstParam.getParameterID() );
+          firstParam
+              .setParameterID(firstParam.getParameterID() + suffix);
+          
+        }
+      }
+    }
+
+  }
+  public void resolveParameters(List<JoinRelation> relations,FskPortObject outfskPort) {
+
+    if(relations != null)
+      for(JoinRelation relation : relations)
+      {
+
+        Iterator<Parameter> iter = outfskPort.modelMath.getParameter().iterator();
+        while(iter.hasNext())
+        {
+          Parameter p = iter.next();
+          //remove output from first model          
+          Boolean b1 = p.getParameterID().equals(relation.getSourceParam().getParameterID()) ;
+
+          //remove input from second model
+          Boolean b2 = p.getParameterID().equals(relation.getTargetParam().getParameterID()) ;
+
+          
+          if( b1 || b2 )
+          {
+            iter.remove();
+          }
+        }//while
+      }//for
+  }// resolveParameters
   public GeneralInformation combineGeneralInformation(GeneralInformation firstGeneralInformation,GeneralInformation secondGeneralInformation)
   {
     // GeneralInformation --------------
