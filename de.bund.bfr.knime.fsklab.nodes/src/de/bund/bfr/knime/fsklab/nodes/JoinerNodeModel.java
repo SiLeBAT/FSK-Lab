@@ -40,7 +40,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emfjson.jackson.resource.JsonResourceFactory;
-
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
 import org.knime.core.node.ExecutionContext;
@@ -80,7 +79,7 @@ final class JoinerNodeModel extends
     AbstractWizardNodeModel<JoinerViewRepresentation, JoinerViewValue> implements PortObjectHolder {
   private final JoinerNodeSettings nodeSettings = new JoinerNodeSettings();
   private FskPortObject m_port;
-  public final String suffix = "_temp_Name_For_Joiner";
+  public final static String suffix = "_alternative_parameter";
 
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE, FskPortObject.TYPE};
@@ -160,63 +159,65 @@ final class JoinerNodeModel extends
         joinerProxyValue.setModelMath1(FromEOjectToJSON(inObj1.modelMath));
         joinerProxyValue.setModelMath2(FromEOjectToJSON(inObj2.modelMath));
         joinerProxyValue.setGeneralInformation(FromEOjectToJSON(
-                       combineGeneralInformation(inObj1.generalInformation, inObj2.generalInformation)));       
+            combineGeneralInformation(inObj1.generalInformation, inObj2.generalInformation)));
         joinerProxyValue.setScope(FromEOjectToJSON(inObj1.scope));
         joinerProxyValue.setDataBackground(
-                       FromEOjectToJSON(combineDataBackground(inObj1.dataBackground, inObj2.dataBackground)));
-                    joinerProxyValue
-                        .setModelMath(FromEOjectToJSON(combineModelMath(inObj1.modelMath, inObj2.modelMath)));
-        
+            FromEOjectToJSON(combineDataBackground(inObj1.dataBackground, inObj2.dataBackground)));
+        joinerProxyValue
+            .setModelMath(FromEOjectToJSON(combineModelMath(inObj1.modelMath, inObj2.modelMath)));
+
         joinerProxyValue.setFirstModelScript(inObj1.model);
         joinerProxyValue.setFirstModelViz(inObj1.viz);
-        
+
         joinerProxyValue.setSecondModelScript(inObj2.model);
         joinerProxyValue.setSecondModelViz(inObj2.viz);
-       
+
         exec.setProgress(1);
       }
-     
-      if(joinerProxyValue.getJoinRelations() !=null) {
+
+      if (joinerProxyValue.getJoinRelations() != null) {
         String relation = StringEscapeUtils.unescapeJson(joinerProxyValue.getJoinRelations());
         relation = StringEscapeUtils.unescapeJson(relation);
 
-        relation = relation.substring(2, relation.length()-2);
+        relation = relation.substring(2, relation.length() - 2);
         joinerProxyValue.setJoinRelations(relation);
         JsonReader jsonReader = Json.createReader(new StringReader(relation));
         JsonArray relationJsonArray = jsonReader.readArray();
         jsonReader.close();
-        for(JsonValue element: relationJsonArray) {
+        for (JsonValue element : relationJsonArray) {
           JsonObject sourceTargetRelation = ((JsonObject) element);
           JoinRelation jR = new JoinRelation();
-          if(sourceTargetRelation.containsKey("command")) {
+          if (sourceTargetRelation.containsKey("command")) {
             jR.setCommand(sourceTargetRelation.getString("command"));
           }
-          if(sourceTargetRelation.containsKey("language_written_in")) {
+          if (sourceTargetRelation.containsKey("language_written_in")) {
             jR.setLanguage_written_in(sourceTargetRelation.getString("language_written_in"));
           }
-          if(sourceTargetRelation.containsKey("sourceParam")) {
-            jR.setSourceParam(getEObjectFromJson(sourceTargetRelation.get("sourceParam").toString(), Parameter.class));
+          if (sourceTargetRelation.containsKey("sourceParam")) {
+            jR.setSourceParam(getEObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
+                Parameter.class));
           }
-          if(sourceTargetRelation.containsKey("targetParam")) {
-            jR.setTargetParam(getEObjectFromJson(sourceTargetRelation.get("targetParam").toString(), Parameter.class));
+          if (sourceTargetRelation.containsKey("targetParam")) {
+            jR.setTargetParam(getEObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
+                Parameter.class));
           }
-         
-          
+
+
           joinerRelation.add(jR);
-         
+
         }
-         
+
       }
-      
+
       outObj.generalInformation =
-                   getEObjectFromJson(joinerProxyValue.getGeneralInformation(), GeneralInformation.class);
-                outObj.scope = getEObjectFromJson(joinerProxyValue.getScope(), Scope.class);
-                outObj.dataBackground =
-                    getEObjectFromJson(joinerProxyValue.getDataBackground(), DataBackground.class);
-                outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(), ModelMath.class);
+          getEObjectFromJson(joinerProxyValue.getGeneralInformation(), GeneralInformation.class);
+      outObj.scope = getEObjectFromJson(joinerProxyValue.getScope(), Scope.class);
+      outObj.dataBackground =
+          getEObjectFromJson(joinerProxyValue.getDataBackground(), DataBackground.class);
+      outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(), ModelMath.class);
       outObj.model = joinerProxyValue.getFirstModelScript();
       outObj.viz = joinerProxyValue.getFirstModelViz();
-      Set <String> packageSet = new HashSet<>();
+      Set<String> packageSet = new HashSet<>();
       packageSet.addAll(inObj1.packages);
       packageSet.addAll(inObj2.packages);
       outObj.packages.addAll(packageSet);
@@ -229,7 +230,7 @@ final class JoinerNodeModel extends
 
     return new PortObject[] {outObj, imagePort};
   }
-  
+
   public ImagePortObject createSVGImagePortObject(String svgString) {
 
     ImagePortObject imagePort = null;
@@ -253,15 +254,16 @@ final class JoinerNodeModel extends
     return imagePort;
 
   }
+
   private static String FromEOjectToJSON(final EObject eObject) throws JsonProcessingException {
 
-    
-      ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-      String jsonStr = objectMapper.writeValueAsString(eObject);
-      return jsonStr;
-   
+
+    ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    String jsonStr = objectMapper.writeValueAsString(eObject);
+    return jsonStr;
+
   }
-  
+
   private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType)
       throws InvalidSettingsException {
     final ResourceSet resourceSet = new ResourceSetImpl();
@@ -270,7 +272,7 @@ final class JoinerNodeModel extends
         .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
     resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
         MetadataPackage.eINSTANCE);
-  
+
     Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
     InputStream inStream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
     try {
@@ -278,7 +280,7 @@ final class JoinerNodeModel extends
     } catch (IOException e) {
       e.printStackTrace();
     }
-  
+
     return (T) resource.getContents().get(0);
   }
 
@@ -316,132 +318,138 @@ final class JoinerNodeModel extends
   }
 
   public void setHideInWizard(boolean hide) {}
-  
+
   public void resolveParameterNamesConflict(FskPortObject fskPort1, FskPortObject fskPort2) {
     for (Parameter firstParam : fskPort1.modelMath.getParameter()) {
       for (Parameter secondParam : fskPort2.modelMath.getParameter()) {
         if (secondParam.getParameterID().equals(firstParam.getParameterID())) {
-          firstParam
-              .setParameterName(firstParam.getParameterID() );
-          firstParam
-              .setParameterID(firstParam.getParameterID() + suffix);
-          
+          firstParam.setParameterName(firstParam.getParameterID() + suffix);
+          firstParam.setParameterID(firstParam.getParameterID() + suffix);
         }
       }
     }
-
   }
-  public void resolveParameters(List<JoinRelation> relations,FskPortObject outfskPort) {
 
-    if(relations != null)
-      for(JoinRelation relation : relations)
-      {
+  public void resolveParameters(List<JoinRelation> relations, FskPortObject outfskPort) {
+
+    if (relations != null)
+      for (JoinRelation relation : relations) {
 
         Iterator<Parameter> iter = outfskPort.modelMath.getParameter().iterator();
-        while(iter.hasNext())
-        {
+        while (iter.hasNext()) {
           Parameter p = iter.next();
-          //remove output from first model          
-          Boolean b1 = p.getParameterID().equals(relation.getSourceParam().getParameterID()) ;
+          // remove output from first model
+          Boolean b1 = p.getParameterID().equals(relation.getSourceParam().getParameterID());
 
-          //remove input from second model
-          Boolean b2 = p.getParameterID().equals(relation.getTargetParam().getParameterID()) ;
+          // remove input from second model
+          Boolean b2 = p.getParameterID().equals(relation.getTargetParam().getParameterID());
 
-          
-          if( b1 || b2 )
-          {
+
+          if (b1 || b2) {
             iter.remove();
           }
-        }//while
-      }//for
+        } // while
+      } // for
   }// resolveParameters
-  public GeneralInformation combineGeneralInformation(GeneralInformation firstGeneralInformation,GeneralInformation secondGeneralInformation)
-  {
+
+  public GeneralInformation combineGeneralInformation(GeneralInformation firstGeneralInformation,
+      GeneralInformation secondGeneralInformation) {
     // GeneralInformation --------------
-    GeneralInformation combinedGeneralInformation = MetadataFactoryImpl.eINSTANCE.createGeneralInformation();
-    //TODO: Who is author?
+    GeneralInformation combinedGeneralInformation =
+        MetadataFactoryImpl.eINSTANCE.createGeneralInformation();
+    // TODO: Who is author?
     combinedGeneralInformation.setAuthor(firstGeneralInformation.getAuthor());
-    //TODO: different Availabilities?
+    // TODO: different Availabilities?
     combinedGeneralInformation.setAvailable(firstGeneralInformation.isAvailable());
-    
-    combinedGeneralInformation.setDescription(firstGeneralInformation.getDescription() +"\n"+ secondGeneralInformation.getDescription());
+
+    combinedGeneralInformation.setDescription(firstGeneralInformation.getDescription() + "\n"
+        + secondGeneralInformation.getDescription());
     combinedGeneralInformation.setFormat(firstGeneralInformation.getFormat());
-    combinedGeneralInformation.setIdentifier(firstGeneralInformation.getIdentifier()+" | "+ secondGeneralInformation.getIdentifier());
+    combinedGeneralInformation.setIdentifier(
+        firstGeneralInformation.getIdentifier() + " | " + secondGeneralInformation.getIdentifier());
 
-    //TODO: different Languages?
+    // TODO: different Languages?
     combinedGeneralInformation.setLanguage(firstGeneralInformation.getLanguage());
-    
-    //TODO: Language written in?
-    combinedGeneralInformation.setLanguageWrittenIn(firstGeneralInformation.getLanguageWrittenIn());
-    
-    combinedGeneralInformation.setName(firstGeneralInformation.getName() + " | "+ secondGeneralInformation.getName());
-    combinedGeneralInformation.setObjective(firstGeneralInformation.getObjective() + " | " + firstGeneralInformation.getObjective());
 
-    //TODO: different Rights?
+    // TODO: Language written in?
+    combinedGeneralInformation.setLanguageWrittenIn(firstGeneralInformation.getLanguageWrittenIn());
+
+    combinedGeneralInformation
+        .setName(firstGeneralInformation.getName() + " | " + secondGeneralInformation.getName());
+    combinedGeneralInformation.setObjective(
+        firstGeneralInformation.getObjective() + " | " + firstGeneralInformation.getObjective());
+
+    // TODO: different Rights?
     combinedGeneralInformation.setRights(firstGeneralInformation.getRights());
-    
-    //TODO: different Software?
+
+    // TODO: different Software?
     combinedGeneralInformation.setSoftware(firstGeneralInformation.getSoftware());
-    
-    //TODO: different Sources?
+
+    // TODO: different Sources?
     combinedGeneralInformation.setSource(firstGeneralInformation.getSource());
-    
-    //TODO: different Status?
+
+    // TODO: different Status?
     combinedGeneralInformation.setStatus(firstGeneralInformation.getStatus());
-    
-    //creators
+
+    // creators
     combinedGeneralInformation.getCreators().addAll(firstGeneralInformation.getCreators());
     combinedGeneralInformation.getCreators().addAll(secondGeneralInformation.getCreators());
-    
-    //references
+
+    // references
     combinedGeneralInformation.getReference().addAll(firstGeneralInformation.getReference());
     combinedGeneralInformation.getReference().addAll(secondGeneralInformation.getReference());
-    
-    //TODO: different modelCategories?
-    combinedGeneralInformation.getModelCategory().addAll(firstGeneralInformation.getModelCategory());
+
+    // TODO: different modelCategories?
+    combinedGeneralInformation.getModelCategory()
+        .addAll(firstGeneralInformation.getModelCategory());
     return combinedGeneralInformation;
   }
-  public Scope combineScope(Scope firstScope,Scope secondScope)
-  {
+
+  public Scope combineScope(Scope firstScope, Scope secondScope) {
     // Scope --------------
     Scope combinedScope = MetadataFactoryImpl.eINSTANCE.createScope();
 
-    combinedScope.setGeneralComment(firstScope.getGeneralComment() + " | "+ secondScope.getGeneralComment());
-    
-    //TODO: different spatial information(region/country)?
+    combinedScope.setGeneralComment(
+        firstScope.getGeneralComment() + " | " + secondScope.getGeneralComment());
+
+    // TODO: different spatial information(region/country)?
     combinedScope.setSpatialInformation(firstScope.getSpatialInformation());
-    
-    combinedScope.setTemporalInformation(firstScope.getTemporalInformation()+ " | "+ secondScope.getTemporalInformation());
-    
-    //products
+
+    combinedScope.setTemporalInformation(
+        firstScope.getTemporalInformation() + " | " + secondScope.getTemporalInformation());
+
+    // products
     combinedScope.getProduct().addAll(firstScope.getProduct());
     combinedScope.getProduct().addAll(secondScope.getProduct());
-    
-    
-    //hazards
+
+
+    // hazards
     combinedScope.getHazard().addAll(firstScope.getHazard());
     combinedScope.getHazard().addAll(secondScope.getHazard());
 
-    //population groups
+    // population groups
     combinedScope.getPopulationGroup().addAll(firstScope.getPopulationGroup());
     combinedScope.getPopulationGroup().addAll(secondScope.getPopulationGroup());
-    
+
     return combinedScope;
   }
-  public DataBackground combineDataBackground(DataBackground firstDataBackground,DataBackground secondDataBackground)
-  {
+
+  public DataBackground combineDataBackground(DataBackground firstDataBackground,
+      DataBackground secondDataBackground) {
     // DataBackground --------------
     DataBackground combinedDataBackground = MetadataFactoryImpl.eINSTANCE.createDataBackground();
-    // TODO: different studies?   
+    // TODO: different studies?
     combinedDataBackground.setStudy(firstDataBackground.getStudy());
-    
-    //study samples
+
+    // study samples
     combinedDataBackground.getStudySample().addAll(firstDataBackground.getStudySample());
     combinedDataBackground.getStudySample().addAll(secondDataBackground.getStudySample());
-    //dietary assessment methods 
-    combinedDataBackground.getDietaryAssessmentMethod().addAll(firstDataBackground.getDietaryAssessmentMethod());
-    combinedDataBackground.getDietaryAssessmentMethod().addAll(secondDataBackground.getDietaryAssessmentMethod());
-    //laboratories
+    // dietary assessment methods
+    combinedDataBackground.getDietaryAssessmentMethod()
+        .addAll(firstDataBackground.getDietaryAssessmentMethod());
+    combinedDataBackground.getDietaryAssessmentMethod()
+        .addAll(secondDataBackground.getDietaryAssessmentMethod());
+    // laboratories
     combinedDataBackground.getLaboratory().addAll(firstDataBackground.getLaboratory());
     combinedDataBackground.getLaboratory().addAll(secondDataBackground.getLaboratory());
     // assay
@@ -450,33 +458,33 @@ final class JoinerNodeModel extends
 
     return combinedDataBackground;
   }
-  public ModelMath combineModelMath(ModelMath firstModelMath,ModelMath secondModelMath)
-  {
+
+  public ModelMath combineModelMath(ModelMath firstModelMath, ModelMath secondModelMath) {
     // DataBackground --------------
     ModelMath combinedModelMath = MetadataFactoryImpl.eINSTANCE.createModelMath();
     // ModelMath ------------
-    
-    //TODO: different Exposures?
+
+    // TODO: different Exposures?
     combinedModelMath.setExposure(firstModelMath.getExposure());
-    //TODO: different fitting procedures?
-    combinedModelMath.setFittingProcedure(firstModelMath.getFittingProcedure() );
-    //model Equations
+    // TODO: different fitting procedures?
+    combinedModelMath.setFittingProcedure(firstModelMath.getFittingProcedure());
+    // model Equations
     combinedModelMath.getModelEquation().addAll(firstModelMath.getModelEquation());
     combinedModelMath.getModelEquation().addAll(secondModelMath.getModelEquation());
-    
-    //parameters
+
+    // parameters
     combinedModelMath.getParameter().addAll(firstModelMath.getParameter());
     combinedModelMath.getParameter().addAll(secondModelMath.getParameter());
-    
-    //quality measures
+
+    // quality measures
     combinedModelMath.getQualityMeasures().addAll(firstModelMath.getQualityMeasures());
     combinedModelMath.getQualityMeasures().addAll(secondModelMath.getQualityMeasures());
-    
-    //events
+
+    // events
     combinedModelMath.getEvent().addAll(firstModelMath.getEvent());
     combinedModelMath.getEvent().addAll(secondModelMath.getEvent());
     return combinedModelMath;
-    
+
   }
 
 }
