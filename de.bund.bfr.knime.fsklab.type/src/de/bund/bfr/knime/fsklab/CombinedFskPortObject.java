@@ -663,7 +663,8 @@ public class CombinedFskPortObject extends FskPortObject {
 
       @Override
       public void valueChanged(TreeSelectionEvent e) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) modelTree.getLastSelectedPathComponent();
+        DefaultMutableTreeNode node =
+            (DefaultMutableTreeNode) modelTree.getLastSelectedPathComponent();
 
         if (node == null)
           return;
@@ -679,9 +680,8 @@ public class CombinedFskPortObject extends FskPortObject {
     modelTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     modelTree.setVisible(true);
     ((ScriptPanel) modelScriptPanel).setScriptTree(modelTree);
-    
-    
-    
+
+
 
     JPanel vizScriptPanel = new ScriptPanel("Visualization script");
     DefaultMutableTreeNode visTop = new DefaultMutableTreeNode("Visualization Scripts");
@@ -691,7 +691,8 @@ public class CombinedFskPortObject extends FskPortObject {
 
       @Override
       public void valueChanged(TreeSelectionEvent e) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) visTree.getLastSelectedPathComponent();
+        DefaultMutableTreeNode node =
+            (DefaultMutableTreeNode) visTree.getLastSelectedPathComponent();
 
         if (node == null)
           return;
@@ -707,8 +708,8 @@ public class CombinedFskPortObject extends FskPortObject {
     visTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     visTree.setVisible(true);
     ((ScriptPanel) vizScriptPanel).setScriptTree(visTree);
-    
-    
+
+
     JTree tree = MetadataTree.createTree(generalInformation, scope, dataBackground, modelMath);
     final JScrollPane metaDataPane = new JScrollPane(tree);
     metaDataPane.setName("Meta data");
@@ -730,7 +731,8 @@ public class CombinedFskPortObject extends FskPortObject {
 
       @Override
       public void valueChanged(TreeSelectionEvent e) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) readmeTree.getLastSelectedPathComponent();
+        DefaultMutableTreeNode node =
+            (DefaultMutableTreeNode) readmeTree.getLastSelectedPathComponent();
 
         if (node == null)
           return;
@@ -746,9 +748,8 @@ public class CombinedFskPortObject extends FskPortObject {
     readmeTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     readmeTree.setVisible(true);
     ((ScriptPanel) readmePanel).setScriptTree(readmeTree);
-    
-    
-    
+
+
 
     return new JComponent[] {modelScriptPanel, vizScriptPanel, metaDataPane, librariesPanel,
         simulationsPanel, readmePanel};

@@ -54,6 +54,7 @@ class JSSimulatorNodeModel
 
   private static final String VIEW_NAME = new JSSimulatorNodeFactory().getInteractiveViewName();
   int index = 0;
+
   public JSSimulatorNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
   }
@@ -154,11 +155,11 @@ class JSSimulatorNodeModel
       }
 
       // Takes modified simulations from val
-     
+
       // Converts JSSimulation(s) back to FskSimulation(s)
       port = inObj; // Needed by getViewRepresentation
       createSimulation(inObj, val);
-      
+
       LOGGER
           .info(" saving '" + val.selectedSimulationIndex + "' as the selected simulation index!");
     }
@@ -167,11 +168,12 @@ class JSSimulatorNodeModel
 
     return new PortObject[] {inObj};
   }
-  private void createSimulation(FskPortObject inObj,JSSimulatorViewValue val) {
-    
-    if(inObj instanceof CombinedFskPortObject) {
-      createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject(),val);
-      createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject(),val);
+
+  private void createSimulation(FskPortObject inObj, JSSimulatorViewValue val) {
+
+    if (inObj instanceof CombinedFskPortObject) {
+      createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject(), val);
+      createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject(), val);
       inObj.simulations.clear();
       List<Parameter> inputParams = getViewRepresentation().parameters;
       for (JSSimulation jsSimulation : val.simulations) {
@@ -183,12 +185,10 @@ class JSSimulatorNodeModel
         }
         inObj.simulations.add(fskSimulation);
       }
-    }else {
+    } else {
       inObj.simulations.clear();
-      List<String> modelMathParameter = 
-          inObj.modelMath.getParameter().stream()
-                    .map(Parameter::getParameterID)
-                    .collect(Collectors.toList());
+      List<String> modelMathParameter = inObj.modelMath.getParameter().stream()
+          .map(Parameter::getParameterID).collect(Collectors.toList());
       List<Integer> indexes = new ArrayList<Integer>();
       List<Parameter> properInputParam = new ArrayList<Parameter>();
       for (JSSimulation jsSimulation : val.simulations) {
@@ -196,15 +196,16 @@ class JSSimulatorNodeModel
         List<Parameter> inputParams = getViewRepresentation().parameters;
         index = 0;
         inputParams.stream().forEach(param -> {
-          if(modelMathParameter.contains(param.getParameterID())) {
+          if (modelMathParameter.contains(param.getParameterID())) {
             properInputParam.add(param);
             indexes.add(index);
           }
           index++;
-          
+
         });
-        inputParams.stream().filter(param -> modelMathParameter.contains(param.getParameterID())).collect(Collectors.toList());
-        
+        inputParams.stream().filter(param -> modelMathParameter.contains(param.getParameterID()))
+            .collect(Collectors.toList());
+
         for (int i = 0; i < properInputParam.size(); i++) {
           String paramName = properInputParam.get(i).getParameterID();
           String paramValue = jsSimulation.values.get(indexes.get(i));
@@ -215,8 +216,9 @@ class JSSimulatorNodeModel
 
       inObj.selectedSimulationIndex = val.selectedSimulationIndex;
     }
-    
+
   }
+
   @Override
   protected void performReset() {
     port = null;

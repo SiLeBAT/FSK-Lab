@@ -215,7 +215,7 @@ final class JoinerNodeModel extends
       outObj.dataBackground =
           getEObjectFromJson(joinerProxyValue.getDataBackground(), DataBackground.class);
       outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(), ModelMath.class);
-      
+
       outObj.model = joinerProxyValue.getFirstModelScript();
       outObj.viz = joinerProxyValue.getFirstModelViz();
       Set<String> packageSet = new HashSet<>();
