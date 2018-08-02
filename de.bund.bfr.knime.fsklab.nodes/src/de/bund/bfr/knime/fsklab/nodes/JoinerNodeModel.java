@@ -215,6 +215,7 @@ final class JoinerNodeModel extends
       outObj.dataBackground =
           getEObjectFromJson(joinerProxyValue.getDataBackground(), DataBackground.class);
       outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(), ModelMath.class);
+      
       outObj.model = joinerProxyValue.getFirstModelScript();
       outObj.viz = joinerProxyValue.getFirstModelViz();
       Set<String> packageSet = new HashSet<>();
@@ -223,6 +224,9 @@ final class JoinerNodeModel extends
       outObj.packages.addAll(packageSet);
       resolveParameters(joinerRelation, outObj);
 
+      if (outObj.modelMath != null) {
+        outObj.simulations.add(NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter()));
+      }
       outObj.setJoinerRelation(joinerRelation);
       imagePort = createSVGImagePortObject(joinerProxyValue.getSvgRepresentation());
     }

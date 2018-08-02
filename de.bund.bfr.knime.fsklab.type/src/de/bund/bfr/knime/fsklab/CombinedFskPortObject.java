@@ -44,9 +44,15 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeSelectionModel;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.URI;
@@ -189,6 +195,7 @@ public class CombinedFskPortObject extends FskPortObject {
     private static final String JOINED_SCOPE = "joinedScope";
     private static final String JOINED_DATA_BACKGROUND = "joinedDataBackground";
     private static final String JOINED_MODEL_MATH = "joinedModelMath";
+    private static final String JOINED_SIMULATION = "joinedsimulation";
 
     private static final String WORKSPACE = "workspace";
     private static final String SIMULATION = "simulation";
@@ -230,11 +237,24 @@ public class CombinedFskPortObject extends FskPortObject {
         if (joinedPortObject.joinerRelation != null && !joinedPortObject.joinerRelation.isEmpty()) {
           writeEObjectList(JOINER_RELATION, joinedPortObject.joinerRelation, out);
         }
+        // Save simulations
+        if (!portObject.simulations.isEmpty()) {
+          out.putNextEntry(new ZipEntry(JOINED_SIMULATION));
+
+          try {
+            ObjectOutputStream oos = new ObjectOutputStream(out);
+            oos.writeObject(portObject.simulations);
+          } catch (IOException exception) {
+            exception.printStackTrace();
+          }
+          out.closeEntry();
+        }
         // Write Joined Object Meta data
         writeEObject(JOINED_GENERAL_INFORMATION, portObject.generalInformation, out);
         writeEObject(JOINED_SCOPE, portObject.scope, out);
         writeEObject(JOINED_DATA_BACKGROUND, portObject.dataBackground, out);
         writeEObject(JOINED_MODEL_MATH, portObject.modelMath, out);
+
 
         saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec, ++level);
         saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec, ++level);
@@ -372,6 +392,16 @@ public class CombinedFskPortObject extends FskPortObject {
           }
           entry = in.getNextEntry();
           entryName = entry.getName();
+          if (entryName.startsWith(JOINED_SIMULATION)) {
+            try {
+              ObjectInputStream ois = new ObjectInputStream(in);
+              simulations = ((List<FskSimulation>) ois.readObject());
+            } catch (ClassNotFoundException e) {
+              e.printStackTrace();
+            }
+          }
+          entry = in.getNextEntry();
+          entryName = entry.getName();
           if (entryName.startsWith(JOINED_GENERAL_INFORMATION)) {
             generalInformation = readEObject(in, GeneralInformation.class);
           }
@@ -392,6 +422,7 @@ public class CombinedFskPortObject extends FskPortObject {
           }
 
 
+
           // read first FSKObject
           FskPortObject firstFSKObject = loadFSKPortObject(in, spec, exec);
           // read second FSKObject
@@ -406,7 +437,9 @@ public class CombinedFskPortObject extends FskPortObject {
           if (!joinerRelation.isEmpty()) {
             portObj.setJoinerRelation(joinerRelation);
           }
-
+          if (!simulations.isEmpty()) {
+            portObj.simulations.addAll(simulations);
+          }
           return portObj;
 
         } else {
@@ -605,38 +638,120 @@ public class CombinedFskPortObject extends FskPortObject {
 
   }
 
+  public void buildScriptNodes(DefaultMutableTreeNode top, FskPortObject currentPortObject) {
+    if (currentPortObject instanceof CombinedFskPortObject) {
+      DefaultMutableTreeNode anotherJoinedModel = new DefaultMutableTreeNode("joined");
+      buildScriptNodes(anotherJoinedModel,
+          ((CombinedFskPortObject) currentPortObject).getFirstFskPortObject());
+      buildScriptNodes(anotherJoinedModel,
+          ((CombinedFskPortObject) currentPortObject).getSecondFskPortObject());
+      top.add(anotherJoinedModel);
+    } else {
+      DefaultMutableTreeNode childModel = new DefaultMutableTreeNode(currentPortObject);
+      top.add(childModel);
+    }
+  }
+
   /** {Override} */
   @Override
   public JComponent[] getViews() {
-    JPanel modelScriptPanel1 = new ScriptPanel("Model1 script", firstFskPortObject.model, false);
-    JPanel vizScriptPanel1 = new ScriptPanel("Visualization script", firstFskPortObject.viz, false);
+    JPanel modelScriptPanel = new ScriptPanel("Model script");
+    DefaultMutableTreeNode top = new DefaultMutableTreeNode("Model Scripts");
+    buildScriptNodes(top, this);
+    JTree modelTree = new JTree(top);
+    modelTree.addTreeSelectionListener(new TreeSelectionListener() {
 
-    final JScrollPane metaDataPane1 = new JScrollPane(
-        MetadataTree.createTree(firstFskPortObject.generalInformation, firstFskPortObject.scope,
-            firstFskPortObject.dataBackground, firstFskPortObject.modelMath));
-    metaDataPane1.setName("Meta1 data");
+      @Override
+      public void valueChanged(TreeSelectionEvent e) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) modelTree.getLastSelectedPathComponent();
 
-    final JPanel librariesPanel1 = UIUtils.createLibrariesPanel(firstFskPortObject.packages);
+        if (node == null)
+          return;
 
-    JPanel simulationsPanel1 = new SimulationsPanel(firstFskPortObject, 1);
+        Object script = node.getUserObject();
+        if (node.isLeaf()) {
+          FskPortObject selectedFSK = (FskPortObject) script;
+          ((ScriptPanel) modelScriptPanel).setText(selectedFSK.model);
+        }
 
-    //
-    JPanel modelScriptPanel2 = new ScriptPanel("Model2 script", secondFskPortObject.model, false);
-    JPanel vizScriptPanel2 =
-        new ScriptPanel("Visualization2 script", secondFskPortObject.viz, false);
+      }
+    });
+    modelTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    modelTree.setVisible(true);
+    ((ScriptPanel) modelScriptPanel).setScriptTree(modelTree);
+    
+    
+    
 
-    final JScrollPane metaDataPane2 = new JScrollPane(
-        MetadataTree.createTree(secondFskPortObject.generalInformation, secondFskPortObject.scope,
-            secondFskPortObject.dataBackground, secondFskPortObject.modelMath));
-    metaDataPane2.setName("Meta2 data");
+    JPanel vizScriptPanel = new ScriptPanel("Visualization script");
+    DefaultMutableTreeNode visTop = new DefaultMutableTreeNode("Visualization Scripts");
+    buildScriptNodes(visTop, this);
+    JTree visTree = new JTree(visTop);
+    visTree.addTreeSelectionListener(new TreeSelectionListener() {
 
-    final JPanel librariesPanel2 = UIUtils.createLibrariesPanel(secondFskPortObject.packages);
+      @Override
+      public void valueChanged(TreeSelectionEvent e) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) visTree.getLastSelectedPathComponent();
 
-    JPanel simulationsPanel2 = new SimulationsPanel(secondFskPortObject, 2);
+        if (node == null)
+          return;
 
-    return new JComponent[] {modelScriptPanel1, vizScriptPanel1, metaDataPane1, librariesPanel1,
-        simulationsPanel1, modelScriptPanel2, vizScriptPanel2, metaDataPane2, librariesPanel2,
-        simulationsPanel2};
+        Object script = node.getUserObject();
+        if (node.isLeaf()) {
+          FskPortObject selectedFSK = (FskPortObject) script;
+          ((ScriptPanel) vizScriptPanel).setText(selectedFSK.viz);
+        }
+
+      }
+    });
+    visTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    visTree.setVisible(true);
+    ((ScriptPanel) vizScriptPanel).setScriptTree(visTree);
+    
+    
+    JTree tree = MetadataTree.createTree(generalInformation, scope, dataBackground, modelMath);
+    final JScrollPane metaDataPane = new JScrollPane(tree);
+    metaDataPane.setName("Meta data");
+
+
+    final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
+
+    JPanel simulationsPanel = new SimulationsPanel();
+
+    // Readme
+    JTextArea readmeArea = new JTextArea("");
+    readmeArea.setEnabled(false);
+
+    JPanel readmePanel = new ScriptPanel("README");
+    DefaultMutableTreeNode readmetop = new DefaultMutableTreeNode("Readme");
+    buildScriptNodes(readmetop, this);
+    JTree readmeTree = new JTree(readmetop);
+    readmeTree.addTreeSelectionListener(new TreeSelectionListener() {
+
+      @Override
+      public void valueChanged(TreeSelectionEvent e) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) readmeTree.getLastSelectedPathComponent();
+
+        if (node == null)
+          return;
+
+        Object script = node.getUserObject();
+        if (node.isLeaf()) {
+          FskPortObject selectedFSK = (FskPortObject) script;
+          ((ScriptPanel) readmePanel).setText(selectedFSK.getReadme());
+        }
+
+      }
+    });
+    readmeTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    readmeTree.setVisible(true);
+    ((ScriptPanel) readmePanel).setScriptTree(readmeTree);
+    
+    
+    
+
+    return new JComponent[] {modelScriptPanel, vizScriptPanel, metaDataPane, librariesPanel,
+        simulationsPanel, readmePanel};
   }
 
   private class SimulationsPanel extends FPanel {
@@ -648,10 +763,10 @@ public class CombinedFskPortObject extends FskPortObject {
     private final ScriptPanel scriptPanel;
     private final FPanel simulationPanel;
 
-    public SimulationsPanel(FskPortObject portObject, int modelsimulation) {
+    public SimulationsPanel() {
 
       // Panel to show parameters (show initially the simulation 0)
-      FskSimulation defaultSimulation = portObject.simulations.get(0);
+      FskSimulation defaultSimulation = simulations.get(0);
       JPanel formPanel = createFormPane(defaultSimulation);
       parametersPane = new JScrollPane(formPanel);
 
@@ -661,10 +776,10 @@ public class CombinedFskPortObject extends FskPortObject {
 
       simulationPanel = new FPanel();
 
-      createUI(portObject, modelsimulation);
+      createUI();
     }
 
-    private void createUI(FskPortObject portObject, int modelsimulation) {
+    private void createUI() {
 
       simulationPanel.setLayout(new BoxLayout(simulationPanel, BoxLayout.Y_AXIS));
       simulationPanel.add(parametersPane);
@@ -672,7 +787,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
       // Panel to select simulation
       String[] simulationNames =
-          portObject.simulations.stream().map(FskSimulation::getName).toArray(String[]::new);
+          simulations.stream().map(FskSimulation::getName).toArray(String[]::new);
       JList<String> list = new JList<>(simulationNames);
       list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       list.addListSelectionListener(new ListSelectionListener() {
@@ -686,7 +801,7 @@ public class CombinedFskPortObject extends FskPortObject {
             // Update parameters panel
             simulationPanel.remove(parametersPane);
 
-            FskSimulation selectedSimulation = portObject.simulations.get(selectedIndex);
+            FskSimulation selectedSimulation = simulations.get(selectedIndex);
             JPanel formPanel = createFormPane(selectedSimulation);
 
             parametersPane = new JScrollPane(formPanel);
@@ -706,7 +821,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
       // Build simulations panel
       setLayout(new BorderLayout());
-      setName("Simulations" + modelsimulation);
+      setName("Simulations");
       add(browsePanel, BorderLayout.WEST);
       add(simulationPanel, BorderLayout.CENTER);
     }
@@ -720,6 +835,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
         FTextField field = new FTextField();
         field.setText(entry.getValue());
+        field.setEditable(false);
         valueLabels.add(field);
       }
 

@@ -593,4 +593,8 @@ public class FskPortObject implements PortObject {
 
 		return paramScript;
 	}
+	@Override
+	public String toString() {
+	  return generalInformation!=null && generalInformation.getName() != null ? generalInformation.getName() : "";
+	}
 }
