@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab.nodes.common.ui;
 
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
+import javax.swing.JTree;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 /** JPanel with an R script */
@@ -27,11 +28,20 @@ public class ScriptPanel extends JPanel {
 
   private static final long serialVersionUID = -4493061426461816058L;
   private final RSnippetTextArea textArea;
+  private JTree scriptTree;
+
+  public ScriptPanel(final String title) {
+    super(new BorderLayout());
+    setName(title);
+    textArea = new RSnippetTextArea();
+    textArea.setLineWrap(true);
+    add(new RTextScrollPane(textArea), BorderLayout.CENTER);
+
+  }
 
   public ScriptPanel(final String title, final String script, final boolean editable) {
     super(new BorderLayout());
     setName(title);
-
     textArea = new RSnippetTextArea();
     textArea.setLineWrap(true);
     textArea.setText(script);
@@ -43,7 +53,20 @@ public class ScriptPanel extends JPanel {
     return textArea.getText();
   }
 
+
   public void setText(String text) {
     textArea.setText(text);
   }
+
+  public JTree getScriptTree() {
+    return scriptTree;
+  }
+
+  public void setScriptTree(JTree scriptTree) {
+    this.scriptTree = scriptTree;
+    add(scriptTree, BorderLayout.WEST);
+  }
+
+
+
 }
