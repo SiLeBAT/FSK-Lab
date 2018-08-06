@@ -48,7 +48,7 @@ public class SingletonFeatureManagerProvider implements FeatureManagerProvider {
     public FeatureUser getCurrentUser() {
       String userName = System.getProperty("user.name");
 
-      if (userName.equals("thomas")) {
+      if (userName.equals("de")) {
         return new SimpleFeatureUser("admin", true);
       }
       return new SimpleFeatureUser("endUser", false);
