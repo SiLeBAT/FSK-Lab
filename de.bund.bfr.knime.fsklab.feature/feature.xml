@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="de.bund.bfr.knime.fsklab.feature"
-      label="FSK Lab Feature"
-      version="1.0.0.qualifier"
-      provider-name="BfR">
+      label="BfR FSK-Lab"
+      version="0.0.1.qualifier"
+      provider-name="German Federal Institute for Risk Assessment (BfR)">
 
    <description url="http://www.example.com/description">
       FSK Lab nodes
@@ -92,7 +92,7 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          unpack="false"/>
 
    <plugin
-         id="de.bund.br.knime.nodes.util"
+         id="de.bund.bfr.knime.nodes.util"
          download-size="0"
          install-size="0"
          version="0.0.0"

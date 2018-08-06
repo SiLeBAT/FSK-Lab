@@ -28,3 +28,6 @@ FSK-Lab may be installed throught the update site <https://dl.bintray.com/sileba
 
 ## Project hierarchy
 The project hierarchy is described in the [wiki](https://github.com/SiLeBAT/FSK-Lab/wiki/Project-hierarchy).
+
+## Changelog
+Changelog is available at [changelog.md](changelog.md).
