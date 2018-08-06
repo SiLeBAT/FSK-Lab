@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Link to *Unreleased* in changelog
+
 ## 0.0.1 - 2018-08-06
 
 ### Added
@@ -15,4 +18,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Modified
 - README to link to this changelog.
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.0.1...HEAD
+[Unreleased]: https://github.com/SiLeBAT/FSK-Lab/compare/0.0.1...HEAD
