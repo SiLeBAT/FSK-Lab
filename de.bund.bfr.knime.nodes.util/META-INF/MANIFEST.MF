@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Util
-Bundle-SymbolicName: de.bund.br.knime.nodes.util
+Bundle-SymbolicName: de.bund.bfr.knime.nodes.util
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.br.knime.nodes.util.Activator
 Bundle-Vendor: BfR
