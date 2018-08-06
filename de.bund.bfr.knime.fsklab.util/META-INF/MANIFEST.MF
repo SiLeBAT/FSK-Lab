@@ -9,3 +9,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.util
 Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.fsklab.util
+Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)

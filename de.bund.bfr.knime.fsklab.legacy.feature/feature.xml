@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="de.bund.bfr.knime.fsklab.legacy.feature"
-      label="Legacy FSK-Lab nodes"
+      label="BfR legacy FSK-Lab"
       version="1.0.0.qualifier"
-      provider-name="BfR">
+      provider-name="German Federal Institute for Risk Assessment (BfR)">
 
    <description url="http://www.example.com/description">
       Legacy FSK-Lab nodes
@@ -111,7 +111,7 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          unpack="false"/>
 
    <plugin
-         id="de.bund.br.knime.nodes.util"
+         id="de.bund.bfr.knime.nodes.util"
          download-size="0"
          install-size="0"
          version="0.0.0"

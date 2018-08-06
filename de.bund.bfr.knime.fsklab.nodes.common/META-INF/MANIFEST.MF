@@ -19,3 +19,4 @@ Export-Package: com.toedter.calendar,
 Bundle-ClassPath: .,
  libs/bfr-swing-1.0-SNAPSHOT.jar,
  libs/jcalendar-1.4.jar
+Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)

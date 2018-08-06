@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Link to *Unreleased* in changelog
 
+### Changed
+- *de.bund.bfr.formats* metadata
+- *de.bund.bfr.knime.fsklab.legacy.feature* metadata
+- *de.bund.bfr.knime.fsklab.nodes.common* metadata
+- *de.bund.bfr.knime.fsklab.nodes.deprecated* metadata
+- *de.bund.bfr.knime.fsklab.nodes* metadata
+- *de.bund.bfr.knime.fsklab.preferences* metadata
+- *de.bund.bfr.knime.fsklab.r* metadata
+- *de.bund.bfr.knime.fsklab.scripts* metadata
+- *de.bund.bfr.knime.fsklab.type* metadata
+- *de.bund.bfr.knime.fsklab.util* metadata
+- *org.jdom2* metadata
+
 ## 0.0.1 - 2018-08-06
 
 ### Added

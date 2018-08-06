@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Preferences
+Bundle-Name: FSK-Lab preferences
 Bundle-SymbolicName: de.bund.bfr.knime.fsklab.preferences;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: BfR
+Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.preferences
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.apache.commons.io,

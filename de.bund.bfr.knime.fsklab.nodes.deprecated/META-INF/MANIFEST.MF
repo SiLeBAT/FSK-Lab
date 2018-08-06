@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Deprecated reader and writer FSK nodes
+Bundle-Name: BfR deprecated FSK-Lab nodes
 Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes.deprecated;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.bfr.knime.fsklab.nodes.fsk.Activator
-Bundle-Vendor: BfR
+Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-core,
  com.fasterxml.jackson.core.jackson-databind,

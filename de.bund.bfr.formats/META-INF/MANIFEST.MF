@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Exchange formats
 Bundle-SymbolicName: de.bund.bfr.formats
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: BfR
+Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: de.bund.bfr.formats
 Export-Package: com.ctc.wstx.api,

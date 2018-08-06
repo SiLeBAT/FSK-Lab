@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Jdom2
+Bundle-Name: JDOM2
 Bundle-SymbolicName: org.jdom2
 Bundle-Version: 2.0.1
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -22,3 +22,4 @@ Export-Package: org.jdom2,
  org.jdom2.xpath.jaxen,
  org.jdom2.xpath.util
 Automatic-Module-Name: org.jdom2
+Bundle-Vendor: http://jdom.org/

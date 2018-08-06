@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: FSK nodes
+Bundle-Name: BfR FSK-Lab extension nodes
 Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
@@ -32,7 +32,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.json,
  org.knime.workbench.repository,
  org.slf4j.api
-Bundle-Vendor: BfR
+Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
