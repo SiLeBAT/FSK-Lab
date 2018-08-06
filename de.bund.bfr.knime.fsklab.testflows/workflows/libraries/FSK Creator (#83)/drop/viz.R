@@ -1,2 +1,0 @@
-library(labeling)
-hist(result, breaks=50, main="PREVALENCE WITHIN A FLOCK IN PARENT GENERATION", xlab="Prevalence", col="32")

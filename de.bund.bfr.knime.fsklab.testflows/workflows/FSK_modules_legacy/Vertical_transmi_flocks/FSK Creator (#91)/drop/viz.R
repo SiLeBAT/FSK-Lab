@@ -1,1 +1,0 @@
-hist(result, breaks=50, main="PREVALENCE AMONG FLOCKS AFTER VERTI.TRANSMI.", xlab="Prevalence", col="32")

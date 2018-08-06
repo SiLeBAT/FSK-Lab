@@ -9,7 +9,6 @@
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.knime.features.js.views.feature.group" version="3.4.3.v201802091252"/>
 <unit id="org.knime.features.r.feature.group" version="3.4.3.v201802091254"/>
-<unit id="org.knime.features.testingapplication.feature.group" version="3.4.0.v201709070951"/>
 <unit id="org.knime.product.desktop" version="3.4.2.v201802091252"/>
 <repository location="http://update.knime.org/analytics-platform/3.4/"/>
 </location>
