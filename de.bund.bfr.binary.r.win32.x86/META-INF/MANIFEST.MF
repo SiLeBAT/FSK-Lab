@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: R3 Binaries Windows
-Bundle-SymbolicName: de.bund.bfr.binary.r.win32.x86
-Bundle-Version: 3.4.4
-Bundle-Vendor: BfR
-Automatic-Module-Name: de.bund.bfr.binary.r.win32.x86
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
