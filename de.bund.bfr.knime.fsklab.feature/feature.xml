@@ -2,7 +2,7 @@
 <feature
       id="de.bund.bfr.knime.fsklab.feature"
       label="BfR FSK-Lab"
-      version="0.0.1.qualifier"
+      version="1.0.2.qualifier"
       provider-name="German Federal Institute for Risk Assessment (BfR)">
 
    <description url="http://www.example.com/description">
@@ -35,26 +35,25 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="com.fifesoft.rsyntaxtextarea"/>
       <import plugin="com.google.guava" version="19.0.0" match="greaterOrEqual"/>
       <import plugin="com.sun.jna"/>
+      <import plugin="org.apache.commons.io"/>
+      <import plugin="org.apache.commons.lang"/>
       <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.apache.servicemix.bundles.poi"/>
-      <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui"/>
+      <import plugin="org.junit"/>
       <import plugin="org.knime.base" version="3.2.0" match="greaterOrEqual"/>
       <import plugin="org.knime.core"/>
       <import plugin="org.knime.ext.r.type"/>
+      <import plugin="org.knime.ext.svg"/>
       <import plugin="org.knime.js.core"/>
       <import plugin="org.knime.json" version="3.3.3" match="greaterOrEqual"/>
       <import plugin="org.knime.workbench.repository"/>
-      <import plugin="org.apache.commons.io"/>
-      <import plugin="org.apache.commons.lang"/>
       <import plugin="org.slf4j.api"/>
-      <import plugin="org.knime.ext.svg"/>
-      <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.glassfish.javax.json" version="1.0.4" match="greaterOrEqual"/>
-      <import plugin="de.bund.bfr.knime.fsklab.type"/>
+      <import plugin="org.jdom2" version="2.0.1" match="greaterOrEqual"/>
    </requires>
 
    <plugin
