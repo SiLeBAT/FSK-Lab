@@ -12,6 +12,7 @@
     <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.editor.FskEditorNodeFactory" />
     <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.editor.js.FskEditorNodeFactory" />
     <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.runner.FskRunnerNodeFactory" />
+    <node category-path="/fsklab" deprecated="true" factory-class="de.bund.bfr.knime.fsklab.nodes.SimulatorNodeFactory" />
   </extension>
    
   <extension point="org.knime.js.core.javascriptComponents">

@@ -149,7 +149,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
 
           // If selection enable the fire button
           removeButton.setEnabled((list.getSelectedIndex() != -1
-              && !currentSimulation.getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION)));
+              && !currentSimulation.getSimulationName().equals("defaultSimulation")));
 
           updatePanel();
         }
@@ -171,7 +171,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
         int index = list.getSelectedIndex();
 
         // Default simulation (at position 0) should be fixed (cannot be removed)
-        if (!list.getSelectedValue().getSimulationName().equals(NodeUtils.DEFAULT_SIMULATION)) {
+        if (!list.getSelectedValue().getSimulationName().equals("defaultSimulation")) {
           simulation_listModel.remove(index);
 
           int size = simulation_listModel.getSize();
@@ -383,7 +383,7 @@ public class SimulatorNodeDialog extends DataAwareNodeDialogPane {
    */
   private void prepareField(JComponent comp, String parameterName, String simulationName) {
     comp.putClientProperty("id", parameterName);
-    comp.setEnabled(!simulationName.equals(NodeUtils.DEFAULT_SIMULATION));
+    comp.setEnabled(!simulationName.equals("defaultSimulation"));
     if (comp instanceof JSpinner) {
       ((JSpinner) comp).addChangeListener(new SpinnerListerner());
     }

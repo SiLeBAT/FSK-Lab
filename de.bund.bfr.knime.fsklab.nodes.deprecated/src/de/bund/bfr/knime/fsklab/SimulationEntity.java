@@ -24,7 +24,9 @@ import java.util.List;
  * @author Ahmad Swaid, BfR, Berlin.
  */
 public class SimulationEntity {
+
   private String simulationName;
+
   private List<metadata.Parameter> simulationParameters;
 
   public String getSimulationName() {

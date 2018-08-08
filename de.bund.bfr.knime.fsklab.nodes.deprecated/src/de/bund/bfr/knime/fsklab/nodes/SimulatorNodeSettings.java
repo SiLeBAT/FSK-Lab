@@ -2,7 +2,6 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.IOException;
 import java.util.List;
-import org.eclipse.emf.ecore.EObject;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -12,12 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.SimulationEntity;
-import metadata.DataBackground;
-import metadata.GeneralInformation;
-import metadata.ModelMath;
-import metadata.Scope;
 
 public class SimulatorNodeSettings {
 
@@ -36,7 +30,7 @@ public class SimulatorNodeSettings {
 
   void saveSettings(final NodeSettingsWO settings) {
 
-    final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    final ObjectMapper objectMapper = new ObjectMapper();
 
     // save model Script
     if (modelStript != null) {
@@ -62,14 +56,14 @@ public class SimulatorNodeSettings {
    * @throws JsonParseException
    */
   void loadSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-    final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
- // load meta data
+    final ObjectMapper objectMapper = new ObjectMapper();
+
+    // load meta data
     if (settings.containsKey(CFG_Model_Script)) {
       modelStript = settings.getString(CFG_Model_Script);
     }
     
-
     if (settings.containsKey(CFG_SIMULATION_LIST)) {
       final String stringVal = settings.getString(CFG_SIMULATION_LIST);
 
@@ -100,5 +94,4 @@ public class SimulatorNodeSettings {
   public void setModelStript(String modelStript) {
     this.modelStript = modelStript;
   }
-
 }
