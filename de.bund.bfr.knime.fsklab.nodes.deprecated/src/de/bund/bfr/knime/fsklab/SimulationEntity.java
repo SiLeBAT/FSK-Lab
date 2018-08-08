@@ -17,6 +17,7 @@
 package de.bund.bfr.knime.fsklab;
 
 import java.util.List;
+import metadata.Parameter;
 
 /**
  * An Object holds the basic information of a simulation configuration.
@@ -27,7 +28,7 @@ public class SimulationEntity {
 
   private String simulationName;
 
-  private List<metadata.Parameter> simulationParameters;
+  private List<Parameter> simulationParameters;
 
   public String getSimulationName() {
     return simulationName;
@@ -37,11 +38,11 @@ public class SimulationEntity {
     this.simulationName = simulationName;
   }
 
-  public List<metadata.Parameter> getSimulationParameters() {
+  public List<Parameter> getSimulationParameters() {
     return simulationParameters;
   }
 
-  public void setSimulationParameters(List<metadata.Parameter> simulationParameters) {
+  public void setSimulationParameters(List<Parameter> simulationParameters) {
     this.simulationParameters = simulationParameters;
   }
 
