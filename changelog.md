@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Add copyright notices to the classes of the deprecated simulator node.
+
 ### Deprecated
 - Old Java simulation configurator node. The node is moved to de.bund.bfr.knime.fsklab.nodes.deprecated2.
 
