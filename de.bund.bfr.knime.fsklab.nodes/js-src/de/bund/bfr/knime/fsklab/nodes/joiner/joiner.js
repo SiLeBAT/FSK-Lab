@@ -112,9 +112,7 @@ joiner = function() {
 			var a, b, i, val = this.value;
 			/* close any already open lists of autocompleted values */
 			closeAllLists();
-			if (!val) {
-				return false;
-			}
+			console.log('val'+val+'val');
 			currentFocus = -1;
 			/* create a DIV element that will contain the items (values): */
 			a = document.createElement("DIV");
@@ -123,13 +121,14 @@ joiner = function() {
 			/* append the DIV element as a child of the autocomplete container: */
 			this.parentNode.appendChild(a);
 			/* for each item in the array... */
+			
 			for (i = 0; i < arr.length; i++) {
 				/*
 				 * check if the item starts with the same letters as the text
 				 * field value:
 				 */
 				if (arr[i].substr(0, val.length).toUpperCase() == val
-						.toUpperCase()) {
+						.toUpperCase() || val == '' || val == undefined) {
 					/* create a DIV element for each matching element: */
 					b = document.createElement("DIV");
 					/* make the matching letters bold: */
@@ -148,17 +147,20 @@ joiner = function() {
 					 */
 					b.addEventListener("click", function(e) {
 						/* insert the value for the autocomplete text field: */
-
-						store.getState().jsonforms.core.data[fieldName] = this
-								.getElementsByTagName("input")[0].value;
-
-						store.dispatch(Actions.init(
-								store.getState().jsonforms.core.data, schema,
-								uischema));
+						if(store){
+							store.getState().jsonforms.core.data[fieldName] = this
+									.getElementsByTagName("input")[0].value;
+	
+							store.dispatch(Actions.init(
+									store.getState().jsonforms.core.data, schema,
+									uischema));
 						/*
 						 * close the list of autocompleted values, (or any other
 						 * open lists of autocompleted values:
 						 */
+						}else{
+							$("#commandLanguage").val(this.getElementsByTagName("input")[0].value);
+						}
 						closeAllLists();
 					});
 					a.appendChild(b);
@@ -167,17 +169,22 @@ joiner = function() {
 		});
 		/* execute a function presses a key on the keyboard: */
 		inp.addEventListener("keydown", function(e) {
+			
 			var x = document.getElementById(this.id + "autocomplete-list");
 			if (x)
 				x = x.getElementsByTagName("div");
 			if (e.keyCode == 40) {
+				
 				/*
 				 * If the arrow DOWN key is pressed, increase the currentFocus
 				 * variable:
 				 */
 				currentFocus++;
+				
 				/* and and make the current item more visible: */
-				addActive(x);
+				addActive(x);	
+				
+				
 			} else if (e.keyCode == 38) { // up
 				/*
 				 * If the arrow UP key is pressed, decrease the currentFocus
@@ -242,7 +249,10 @@ joiner = function() {
 		version : '1.0.0'
 	};
 	joinerNode.name = 'FSK Joiner';
+	var firstModelName  = '';
+	var secondmodelName = '';
 	var paper;
+	var graph;
 	var _firstModel = {
 		generalInformation : {},
 		scope : {},
@@ -263,14 +273,15 @@ joiner = function() {
 	var _firstModelViz;
 	var _secondModelViz;
 	var _viewValue;
-	// new ParameterizedModel(inObj2.genericModel.generalInformation.name,
-	// inObj2.genericModel.modelMath.parameter)
+	
+	window.joinRelationsMap = {};
 	var firstModelParameterMap = new Object();
 	var secomndModelParameterMap = new Object();
 	joinerNode.init = function(representation, value) {
 		_firstModel.generalInformation = JSON.parse(value.generalInformation);
 		_firstModel.scope = JSON.parse(value.scope);
-
+		firstModelName = _firstModel.generalInformation.name.split(" | ")[0];
+		secondModelName = _firstModel.generalInformation.name.split(" | ")[1];
 		_firstModel.modelMath = JSON.parse(value.modelMath);
 		_firstModel.dataBackground = JSON.parse(value.dataBackground);
 
@@ -289,12 +300,19 @@ joiner = function() {
 
 		_viewValue = value;
 
-		if (_viewValue.joinRelations && _viewValue.joinRelations != "")
+		if (_viewValue.joinRelations && _viewValue.joinRelations != ""){
 			_viewValue.joinRelations = JSON.parse(_viewValue.joinRelations);
+			$.each(_viewValue.joinRelations,function(index,value){
+				if(value ){
+					window.joinRelationsMap[value.sourceParam.parameterID+value.targetParam.parameterID] = value ;	
+				}
+				 
+			})
+			
+		}
 		else
 			_viewValue.joinRelations = [];
 
-		console.log(_viewValue.joinRelations)
 		window.generalInformation = _firstModel.generalInformation;
 		window.scope = _firstModel.scope;
 		window.modelMath = _firstModel.modelMath;
@@ -362,11 +380,10 @@ joiner = function() {
 				.stringify(window.store6.getState().jsonforms.core.data);
 
 		_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
-		console.log(_viewValue.joinRelations);
 		var serializer = new XMLSerializer();
 		var str = serializer.serializeToString(paper.svg);
 		_viewValue.svgRepresentation = str
-
+		console.log(_viewValue);
 		return _viewValue;
 	};
 
@@ -395,9 +412,7 @@ joiner = function() {
 				+ "            <div class='tab-pane fade' id='set2'>\n"
 				+ "                <div class='tabbable'>\n"
 				+ "                    <ul class='nav nav-tabs'>\n"
-				+
-
-				"                        <li class='active'><a href='#sub21'>General Information</a>\n"
+				+ "                        <li class='active'><a href='#sub21'>General Information</a>\n"
 				+ "                        </li>\n"
 				+ "                        <li><a href='#sub22'>Scope</a>\n"
 				+ "                        </li>\n"
@@ -661,6 +676,7 @@ joiner = function() {
 			var canvas = $('#paper');
 
 			paper.setDimensions(canvas.width(), canvas.height());
+			_viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
 		});
 
 		$.each($("input[type='text']"), function(key, value) {
@@ -726,7 +742,6 @@ joiner = function() {
 				'patternConsumption', 'populationAge' ];
 		$("[aria-describedby*='tooltip-add']").click(function(event) {
 			currentArea = window.makeId($(this).attr('aria-label'));
-			console.log(currentArea);
 
 			if ($.inArray(currentArea, StringObjectPopupsName) < 0) {
 				event.preventDefault(); // Let's stop this event.
@@ -822,16 +837,12 @@ joiner = function() {
 		window.autocomplete = autocomplete;
 		$.each(autoCompleteCB, function(index, value) {
 			var ID = '#/properties/' + value;
-			console.log(document.getElementById(ID));
-
 			autocomplete(document.getElementById(ID), autoCompleteArray[index],
 					autoCompleteStores[index], autoCompleteSchemas[index],
 					autoCompleteUischema[index], autoCompleteCB[index]);
 
 		})
 		$("input[type='text']").focus(function(event) {
-			console.log($(event.target).parent());
-
 			event.preventDefault(); // Let's stop this event.
 			event.stopPropagation(); // Really this time.
 
@@ -840,7 +851,6 @@ joiner = function() {
 		});
 		$("input[type='text']").click(function(event) {
 
-			console.log($(event.target).parent());
 			var source = $(event.target);
 
 			setTimeout(function() {
@@ -859,7 +869,6 @@ joiner = function() {
 		});
 
 		$("input[type='text']").blur(function(event) {
-			console.log('hjkhkj ', $(event.target).parent());
 
 			event.preventDefault(); // Let's stop this event.
 			event.stopPropagation(); // Really this time.
@@ -884,13 +893,12 @@ joiner = function() {
 		$("div[role*='tooltip']").click(function(event) {
 
 			currentArea = window.makeId($(this).attr('aria-label'));
-			// console.log('asasa '+currentArea);
 
 		});
 	}
 
 	function drawWorkflow() {
-		var graph = new joint.dia.Graph;
+		graph = new joint.dia.Graph;
 
 		paper = new joint.dia.Paper({
 
@@ -920,6 +928,10 @@ joiner = function() {
 				}
 				return true;
 			},
+			//only connection from first mode are allowed
+			validateMagnet : function(cellView, magnet){
+				return cellView.id != "j_2";
+			},
 			validateEmbedding : function(childView, parentView) {
 
 				return parentView.model instanceof joint.shapes.devs.Coupled;
@@ -927,9 +939,17 @@ joiner = function() {
 
 			validateConnection : function(sourceView, sourceMagnet, targetView,
 					targetMagnet) {
-
-				return sourceMagnet != targetMagnet;
+				
+				return (sourceMagnet != targetMagnet);
 			}
+		});
+		var previousOne;
+		paper.on('cell:pointerclick', function(cellView) {
+			if(previousOne){
+				previousOne.unhighlight();
+			}
+			previousOne = cellView;
+		    cellView.highlight();
 		});
 		paper
 				.on(
@@ -942,62 +962,42 @@ joiner = function() {
 								var sourceId = link.get('source').id;
 								var targetPort = link.get('target').port;
 								var targetId = link.get('target').id;
-
-								$('#details')
-										.html(
-												'<form action="">'
-														+ '<div class="form-group row">'
-														+ '<label class="col-6 col-form-label" for="source">Source Port:</label>'
-														+ '<div class="col-6"><input type="text" class="form-control" id="source" value="'
-														+ sourcePort
-														+ '"  ></div>'
-														+ '</div>'
-														+ '<div class="form-group row">'
-														+ ' <label class="col-6 col-form-label" for="target">Target Port:</label>'
-														+ '<div class="col-6"><input  type="text" class="form-control" id="target" value = "'
-														+ targetPort
-														+ '" ></div>'
-														+ '</div>'
-														+ '<div class="form-group row">'
-														+ ' <label class="col-6 col-form-label" for="Command">Conversion Command:</label>'
-														+ '<div class="col-6"><textarea class="form-control" rows="3" id="Command" >'
-														+ targetPort
-														+ ' = '
-														+ sourcePort
-														+ '</textarea> </div>'
-														+ '</div>'
-														+ '<div class="form-group">'
-														+ '<div class="col-sm-offset-2 col-sm-10">'
-														+ '<button type="button" id="save" class="btn btn-default">Save</button>'
-														+ '</div>'
-														+ '</div>'
-														+ '</form>');
-								$('#save')
-										.click(
-												function() {
-
-													$
-															.each(
-																	_viewValue.joinRelations,
-																	function(i,
-																			relation) {
-
-																		fParam = firstModelParameterMap[sourcePort];
-																		sParam = secomndModelParameterMap[targetPort];
-																		console
-																				.log(
-																						fParam,
-																						sParam);
-																		if (relation.sourceParam.parameterID == fParam.parameterID
-																				&& relation.targetParam.parameterID == sParam.parameterID) {
-																			relation.command = $(
-																					"textarea#Command")
-																					.val();
-
-																		}
-																	});
-												});
-
+								window.sJoinRealtion = window.joinRelationsMap[sourcePort+targetPort]; 
+								if(!(document.getElementById("commandLanguage"))){
+									$('#details')
+									.html(
+											'<form action="">'
+													+ '<div class="form-group row">'
+													+ '<label class="col-6 col-form-label" for="source">Source Port:</label>'
+													+ '<div class="col-6"><input type="text" class="form-control" id="source" value="'
+													+ sourcePort
+													+ '"  ></div>'
+													+ '</div>'
+													+ '<div class="form-group row">'
+													+ ' <label class="col-6 col-form-label" for="target">Target Port:</label>'
+													+ '<div class="col-6"><input  type="text" class="form-control" id="target" value = "'
+													+ targetPort
+													+ '" ></div>'
+													+ '</div>'
+													+ '<div class="form-group row">'
+													+ ' <label class="col-6 col-form-label" for="target">Command Language:</label>'
+													+ '<div class="col-6"><input  type="text" class="form-control" id="commandLanguage" ></div>'
+													+ '</div>'
+													+ '<div class="form-group row">'
+													+ ' <label class="col-6 col-form-label" for="Command">Conversion Command:</label>'
+													+ '<div class="col-6"><textarea class="form-control" rows="3" id="Command" >'
+													+ sourcePort
+													+ '</textarea> </div>'
+													+ '</div>'
+													+ '<div class="form-group">'
+													+ '</div>' + '</form>');
+								}
+								
+								$('#source').val(sourcePort);
+								$('#target').val(targetPort);
+								$('#commandLanguage').val(sJoinRealtion.language_written_in);
+								$('#Command').val(sJoinRealtion.command);
+							
 							}
 						});
 		var firstModelInputParameters = [];
@@ -1021,8 +1021,7 @@ joiner = function() {
 				secondModelOutputParameters.push(param.parameterID);
 			}
 		});
-		console.log(firstModelInputParameters.length,
-				secondModelInputParameters.length);
+		
 		var canvasheight = 500;
 		if (firstModelInputParameters.length > secondModelInputParameters.length) {
 			canvasheight = firstModelInputParameters.length
@@ -1073,7 +1072,7 @@ joiner = function() {
 				stroke : 'black'
 			},
 			text : {
-				text : _firstModel.generalInformation.name,
+				text : firstModelName,
 				'font-size' : 12,
 				'font-weight' : 'bold',
 				'font-variant' : 'small-caps',
@@ -1122,7 +1121,7 @@ joiner = function() {
 				stroke : 'black'
 			},
 			text : {
-				text : _secondModel.generalInformation.name,
+				text : secondModelName,
 				'font-size' : 12,
 				'font-weight' : 'bold',
 				'font-variant' : 'small-caps',
@@ -1135,8 +1134,46 @@ joiner = function() {
 		paper.on('link:connect', function(evt, cellView, magnet, arrowhead) {
 			sourcePort = evt.model.attributes.source.port;
 			targetPort = evt.model.attributes.target.port;
-			console.log(sourcePort, targetPort)
-			// console.log(link);
+			if(!targetPort){
+				return;
+			}
+			
+				$('#details')
+						.html(
+								'<form action="">'
+										+ '<div class="form-group row">'
+										+ '<label class="col-6 col-form-label" for="source">Source Port:</label>'
+										+ '<div class="col-6"><input type="text" class="form-control" id="source" value="'
+										+ sourcePort
+										+ '"  ></div>'
+										+ '</div>'
+										+ '<div class="form-group row">'
+										+ ' <label class="col-6 col-form-label" for="target">Target Port:</label>'
+										+ '<div class="col-6"><input  type="text" class="form-control" id="target" value = "'
+										+ targetPort
+										+ '" ></div>'
+										+ '</div>'
+										+ '<div class="form-group row">'
+										+ ' <label class="col-6 col-form-label" for="target">Command Language:</label>'
+										+ '<div class="col-6"><input  type="text" class="form-control" id="commandLanguage" ></div>'
+										+ '</div>'
+										+ '<div class="form-group row">'
+										+ ' <label class="col-6 col-form-label" for="Command">Conversion Command:</label>'
+										+ '<div class="col-6"><textarea class="form-control" rows="3" id="Command" >'
+										+ sourcePort
+										+ '</textarea> </div>'
+										+ '</div>'
+										+ '<div class="form-group">'
+										+ '</div>' + '</form>');
+			autocomplete(document.getElementById('commandLanguage'), window.Language_written_in,undefined,undefined,undefined);
+			$('#Command').change(function() {
+				window.sJoinRealtion.command = $('#Command').val();
+							
+			});
+			$('#commandLanguage').change(function() {
+				window.sJoinRealtion.language_written_in = $('#commandLanguage').val();
+			});
+			
 			sourceParameter = firstModelParameterMap[sourcePort];
 			if (sourceParameter == undefined) {
 				sourceParameter = secomndModelParameterMap[sourcePort];
@@ -1146,21 +1183,25 @@ joiner = function() {
 				targetParameter = firstModelParameterMap[targetPort];
 			}
 			if (targetParameter != undefined) {
-
-				_viewValue.joinRelations.push({
-					sourceParam : sourceParameter,
-					targetParam : targetParameter
-				});
-				console.log(_viewValue.joinRelations);
+				window.sJoinRealtion = {
+						sourceParam : sourceParameter,
+						targetParam : targetParameter,
+						command: sourcePort
+					};
+				
+				if(_viewValue.joinRelations){
+					_viewValue.joinRelations = []
+				}
+				_viewValue.joinRelations.push(sJoinRealtion);
+				window.joinRelationsMap[sourcePort+targetPort] = sJoinRealtion 
 				_viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
 			}
+			
 		});
 
 		graph.on('remove', function(link) {
-			console.log(link);
 			sourcePort = link.attributes.source.port;
 			targetPort = link.attributes.target.port;
-			console.log(sourcePort, targetPort)
 
 			sourceParameter = firstModelParameterMap[sourcePort];
 			if (sourceParameter == undefined) {
@@ -1172,12 +1213,11 @@ joiner = function() {
 			}
 			if (targetParameter != undefined) {
 				$.each(_viewValue.joinRelations, function(index, value) {
-					if (value.sourceParam === sourceParameter
+					if (value!= undefined && value.sourceParam === sourceParameter
 							&& value.targetParam === targetParameter) {
 						_viewValue.joinRelations.splice(index, 1);
 					}
 				})
-				console.log(_viewValue.joinRelations);
 				_viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
 			}
 		})
@@ -1203,20 +1243,18 @@ joiner = function() {
 		 * _viewValue.jsonRepresentation =JSON.stringify(graph.toJSON());
 		 * //_viewValue.svgRepresentation = paper.svg; //link.label(0, {
 		 * position: 0.5, attrs: { text: { text: sourcePort+" = "+targetPort } }
-		 * });
-		 * 
-		 *  }
-		 *  }
+		 * }); } }
 		 * 
 		 * });
 		 */
 
 		if (_viewValue.jsonRepresentation != undefined) {
-			if (_viewValue && _viewValue.jsonRepresentation && _viewValue.jsonRepresentation!="") {
-				try{
+			if (_viewValue && _viewValue.jsonRepresentation
+					&& _viewValue.jsonRepresentation != "") {
+				try {
 					graph.fromJSON(JSON.parse(_viewValue.jsonRepresentation));
-				}catch(err){
-					
+				} catch (err) {
+
 				}
 			}
 		} else {
