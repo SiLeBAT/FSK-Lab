@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Icons used in the Java editor and simulator nodes. They were placed in the wrong project and could not be found in the classpath.
+
 ## [1.0.2] - 2018-08-07
 
 ### Fixed
