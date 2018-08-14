@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.0] - 2018-08-14
+
 ### Changed
 - Add copyright notices to the classes of the deprecated simulator node.
 
@@ -14,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Icons used in the Java editor and simulator nodes. They were placed in the wrong project and could not be found in the classpath.
+- Metadata from old files is restored. The JSON URI used to import/export metadata was wrong. Fixed in the [fskml library](https://github.com/SiLeBAT/fskml/commit/fdcc4d3a4916231edff683931159457552efc7fb).
 
 ## [1.0.2] - 2018-08-07
 
@@ -43,5 +46,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Modified
 - README to link to this changelog.
 
-[Unreleased]: https://github.com/SiLeBAT/FSK-Lab/compare/1.0.2...HEAD
+[Unreleased]: https://github.com/SiLeBAT/FSK-Lab/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/SiLeBAT/FSK-Lab/compare/0.0.2...1.1.0
 [1.0.2]: https://github.com/SiLeBAT/FSK-Lab/compare/0.0.1...1.0.2
