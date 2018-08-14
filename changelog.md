@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Fix link in changelog with comparison between 1.0.2 and 1.1.0.
+
 ## [1.1.0] - 2018-08-14
 
 ### Changed
@@ -47,5 +50,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - README to link to this changelog.
 
 [Unreleased]: https://github.com/SiLeBAT/FSK-Lab/compare/1.1.0...HEAD
-[1.1.0]: https://github.com/SiLeBAT/FSK-Lab/compare/0.0.2...1.1.0
+[1.1.0]: https://github.com/SiLeBAT/FSK-Lab/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/SiLeBAT/FSK-Lab/compare/0.0.1...1.0.2
