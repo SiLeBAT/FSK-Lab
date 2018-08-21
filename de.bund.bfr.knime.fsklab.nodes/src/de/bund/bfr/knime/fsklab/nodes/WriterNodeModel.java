@@ -262,6 +262,14 @@ class WriterNodeModel extends NoInternalsModel {
         // Adds model metadata of combined model
         addMetaData(archive, fskObj.generalInformation, fskObj.scope, fskObj.dataBackground,
             fskObj.modelMath, "metaData.json");
+        // Add combined simulations
+        {
+          SEDMLDocument sedmlDoc = createSedml(fskObj);
+
+          File tempFile = FileUtil.createTempFile("sim", "");
+          sedmlDoc.writeDocument(tempFile);
+          archive.addEntry(tempFile,  "sim.sedml", URIS.get("sedml"));
+        }
       } else {
         writeFSKObject(fskObj, archive, "",URIS);
       }

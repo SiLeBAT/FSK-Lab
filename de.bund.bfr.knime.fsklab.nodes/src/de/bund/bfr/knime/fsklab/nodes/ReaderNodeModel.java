@@ -270,10 +270,24 @@ class ReaderNodeModel extends NoInternalsModel {
         }
 
       }
+      // Get simulations for combined FSKObject
+      List<FskSimulation> simulations = new ArrayList<>();
+      List<ArchiveEntry> sedmlEntries = archive.getEntriesWithFormat(URIS.get("sedml"));
+      for (ArchiveEntry simEntry : sedmlEntries) {
+        String path = simEntry.getEntityPath();
+        if (path.indexOf("/sim.sedml") == 0) {
+          File simulationsFile = FileUtil.createTempFile("sim", ".sedml");
+          simEntry.extractFile(simulationsFile);
 
+          // Loads simulations from temporary file
+          SedML sedml = Libsedml.readDocument(simulationsFile).getSedMLModel();
+          simulations.addAll(loadSimulations(sedml));
+        }
+      }
       CombinedFskPortObject topfskObj = new CombinedFskPortObject(generalInformation, scope,
           dataBackground, modelMath, workingDirectory.toString(), new ArrayList<>(),
           firstFskPortObject, secondFskPortObject);
+      topfskObj.simulations.addAll(simulations);
       topfskObj.setJoinerRelation(joinerRelation);
       return topfskObj;
     } else {
