@@ -34,7 +34,7 @@ public class FskPortObjectSpec implements PortObjectSpec {
 
   public static final FskPortObjectSpec INSTANCE = new FskPortObjectSpec();
 
-  private FskPortObjectSpec() {}
+  protected FskPortObjectSpec() {}
 
   /** Serializer used to save this port object spec. */
   public static final class Serializer extends PortObjectSpecSerializer<FskPortObjectSpec> {

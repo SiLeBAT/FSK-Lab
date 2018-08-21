@@ -29,11 +29,13 @@ import org.knime.core.node.port.PortObjectSpecZipOutputStream;
  * 
  * @author Ahmad Swaid, BfR, Berlin.
  */
-public class CombinedFskPortObjectSpec implements PortObjectSpec {
+public class CombinedFskPortObjectSpec extends FskPortObjectSpec {
 
   public static final CombinedFskPortObjectSpec INSTANCE = new CombinedFskPortObjectSpec();
 
-  private CombinedFskPortObjectSpec() {}
+  private CombinedFskPortObjectSpec() {
+	  super();
+  }
 
   /** Serializer used to save this port object spec. */
   public static final class Serializer extends PortObjectSpecSerializer<CombinedFskPortObjectSpec> {
