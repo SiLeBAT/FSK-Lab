@@ -74,6 +74,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
   private RunnerNodeSettings nodeSettings = new RunnerNodeSettings();
 
+
+  private RController currentController;
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
@@ -98,6 +100,16 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
   @Override
   protected void reset() {
+    if (currentController != null) {
+      if (currentController.isInitialized()) {
+        try {
+          currentController.killSession();
+        } catch (RException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
     internalSettings.reset();
   }
 
@@ -135,6 +147,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       LOGGER.info(" recieving '" + firstFskObj.selectedSimulationIndex
           + "' as the selected simulation index!");
       try (RController controller = new RController()) {
+        currentController = controller;
         // get the index of the selected simulation saved by the JavaScript FSK Simulation
         // Configurator the default value is 0 which is the the default simulation
         FskSimulation fskSimulation =
@@ -245,7 +258,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           " recieving '" + fskObj.selectedSimulationIndex + "' as the selected simulation index!");
 
       try (RController controller = new RController()) {
-
+        currentController = controller;
         // get the index of the selected simulation saved by the JavaScript FSK Simulation
         // Configurator the default value is 0 which is the the default simulation
         FskSimulation fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
