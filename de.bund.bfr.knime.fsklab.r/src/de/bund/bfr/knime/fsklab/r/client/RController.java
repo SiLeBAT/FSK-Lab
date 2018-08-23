@@ -152,7 +152,6 @@ public class RController implements IRController {
 
   private static boolean cairoFound;
   
-  private Integer PID;
 
   /**
    * Constructor. Calls {@link #initialize()}. To avoid initialization, use
@@ -189,21 +188,8 @@ public class RController implements IRController {
   @Override
   public void initialize() throws RException {
     initR();
-    assignPID();
   }
-  public void assignPID() {
-		try {
-			PID = eval("Sys.getpid()", true).asInteger();
-		} catch (REXPMismatchException e) {
-			e.printStackTrace();
-		} catch (RException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void killSession() throws RException {
-		eval("tools::pskill(" + PID + ")", true);
-	}
+  
   /**
    * Check if the RController is initialized and throws {@link RControllerNotInitializedException}
    * if not.
@@ -1587,12 +1573,4 @@ public class RController implements IRController {
     // Remove custom path which is in the first position
     eval(".libPaths(.libPaths()[-1])", false);
   }
-
-	public Integer getPID() {
-		return PID;
-	}
-
-	public void setPID(Integer pID) {
-		PID = pID;
-	}
 }
