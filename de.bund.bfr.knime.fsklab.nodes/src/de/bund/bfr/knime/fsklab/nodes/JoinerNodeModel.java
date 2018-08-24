@@ -177,9 +177,6 @@ final class JoinerNodeModel extends
 
       if (joinerProxyValue.getJoinRelations() != null) {
         String relation = StringEscapeUtils.unescapeJson(joinerProxyValue.getJoinRelations());
-        relation = StringEscapeUtils.unescapeJson(relation);
-
-        relation = relation.substring(2, relation.length() - 2);
         joinerProxyValue.setJoinRelations(relation);
         JsonReader jsonReader = Json.createReader(new StringReader(relation));
         JsonArray relationJsonArray = jsonReader.readArray();

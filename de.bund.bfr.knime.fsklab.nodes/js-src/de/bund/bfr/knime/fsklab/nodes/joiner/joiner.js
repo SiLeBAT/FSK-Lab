@@ -365,7 +365,9 @@ joiner = function() {
 				: [];
 
 	}
+	window.getComponentValueIsCalled = false;
 	joinerNode.getComponentValue = function() {
+		
 		window.store1.getState().jsonforms.core.data.author = window.store23
 				.getState().jsonforms.core.data;
 		window.store6.getState().jsonforms.core.data.study = window.store7
@@ -379,7 +381,10 @@ joiner = function() {
 		_viewValue.dataBackground = JSON
 				.stringify(window.store6.getState().jsonforms.core.data);
 
-		_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
+		if(!window.getComponentValueIsCalled){
+			_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
+			window.getComponentValueIsCalled = true;
+		}
 		var serializer = new XMLSerializer();
 		var str = serializer.serializeToString(paper.svg);
 		_viewValue.svgRepresentation = str
