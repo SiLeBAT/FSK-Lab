@@ -79,7 +79,7 @@ final class JoinerNodeModel extends
     AbstractWizardNodeModel<JoinerViewRepresentation, JoinerViewValue> implements PortObjectHolder {
   private final JoinerNodeSettings nodeSettings = new JoinerNodeSettings();
   private FskPortObject m_port;
-  public final static String suffix = "_alternative_parameter";
+  public final static String suffix = "_dup";
 
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE, FskPortObject.TYPE};
@@ -340,13 +340,13 @@ final class JoinerNodeModel extends
         while (iter.hasNext()) {
           Parameter p = iter.next();
           // remove output from first model
-          Boolean b1 = p.getParameterID().equals(relation.getSourceParam().getParameterID());
+          //Boolean b1 = p.getParameterID().equals(relation.getSourceParam().getParameterID());
 
           // remove input from second model
           Boolean b2 = p.getParameterID().equals(relation.getTargetParam().getParameterID());
 
 
-          if (b1 || b2) {
+          if (  b2) {
             iter.remove();
           }
         } // while

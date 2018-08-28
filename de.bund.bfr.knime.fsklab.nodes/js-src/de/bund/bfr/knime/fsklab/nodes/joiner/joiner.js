@@ -365,7 +365,7 @@ joiner = function() {
 				: [];
 
 	}
-	window.getComponentValueIsCalled = false;
+	
 	joinerNode.getComponentValue = function() {
 		
 		window.store1.getState().jsonforms.core.data.author = window.store23
@@ -380,15 +380,15 @@ joiner = function() {
 				.stringify(window.store17.getState().jsonforms.core.data);
 		_viewValue.dataBackground = JSON
 				.stringify(window.store6.getState().jsonforms.core.data);
-
-		if(!window.getComponentValueIsCalled){
+		if(_viewValue.joinRelations.push){
 			_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
-			window.getComponentValueIsCalled = true;
 		}
+		
+		
 		var serializer = new XMLSerializer();
 		var str = serializer.serializeToString(paper.svg);
 		_viewValue.svgRepresentation = str
-		console.log(_viewValue);
+		console.log(_viewValue.joinRelations);
 		return _viewValue;
 	};
 
@@ -935,6 +935,7 @@ joiner = function() {
 			},
 			//only connection from first mode are allowed
 			validateMagnet : function(cellView, magnet){
+				console.log(cellView, magnet);
 				return cellView.id != "j_2";
 			},
 			validateEmbedding : function(childView, parentView) {
@@ -944,8 +945,7 @@ joiner = function() {
 
 			validateConnection : function(sourceView, sourceMagnet, targetView,
 					targetMagnet) {
-				
-				return (sourceMagnet != targetMagnet);
+				return targetView.id == "j_2";
 			}
 		});
 		var previousOne;
@@ -1194,7 +1194,7 @@ joiner = function() {
 						command: sourcePort
 					};
 				
-				if(_viewValue.joinRelations){
+				if(!(_viewValue.joinRelations.push)){
 					_viewValue.joinRelations = []
 				}
 				_viewValue.joinRelations.push(sJoinRealtion);
