@@ -196,6 +196,8 @@ public class CombinedFskPortObject extends FskPortObject {
     private static final String JOINED_DATA_BACKGROUND = "joinedDataBackground";
     private static final String JOINED_MODEL_MATH = "joinedModelMath";
     private static final String JOINED_SIMULATION = "joinedsimulation";
+    private static final String JOINED_WORKSPACE = "joinedworkspace";
+
 
     private static final String WORKSPACE = "workspace";
     private static final String SIMULATION = "simulation";
@@ -237,6 +239,12 @@ public class CombinedFskPortObject extends FskPortObject {
         if (joinedPortObject.joinerRelation != null && !joinedPortObject.joinerRelation.isEmpty()) {
           writeEObjectList(JOINER_RELATION, joinedPortObject.joinerRelation, out);
         }
+        // workspace entry
+        if (portObject.workspace != null) {
+          out.putNextEntry(new ZipEntry(JOINED_WORKSPACE ));
+          Files.copy(portObject.workspace, out);
+          out.closeEntry();
+        }
         // Save simulations
         if (!portObject.simulations.isEmpty()) {
           out.putNextEntry(new ZipEntry(JOINED_SIMULATION));
@@ -249,12 +257,13 @@ public class CombinedFskPortObject extends FskPortObject {
           }
           out.closeEntry();
         }
+     
         // Write Joined Object Meta data
         writeEObject(JOINED_GENERAL_INFORMATION, portObject.generalInformation, out);
         writeEObject(JOINED_SCOPE, portObject.scope, out);
         writeEObject(JOINED_DATA_BACKGROUND, portObject.dataBackground, out);
         writeEObject(JOINED_MODEL_MATH, portObject.modelMath, out);
-
+    
 
         saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec, ++level);
         saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec, ++level);
@@ -392,14 +401,30 @@ public class CombinedFskPortObject extends FskPortObject {
           }
           entry = in.getNextEntry();
           entryName = entry.getName();
-          if (entryName.startsWith(JOINED_SIMULATION)) {
-            try {
-              ObjectInputStream ois = new ObjectInputStream(in);
-              simulations = ((List<FskSimulation>) ois.readObject());
-            } catch (ClassNotFoundException e) {
-              e.printStackTrace();
-            }
-          }
+          
+			if (entryName.startsWith(JOINED_WORKSPACE)) {
+				Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
+				entry = in.getNextEntry();
+				entryName = entry.getName();
+				if (entryName.startsWith(JOINED_SIMULATION)) {
+					try {
+						ObjectInputStream ois = new ObjectInputStream(in);
+						simulations = ((List<FskSimulation>) ois.readObject());
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+			} else if (entryName.startsWith(JOINED_SIMULATION)) {
+				try {
+					ObjectInputStream ois = new ObjectInputStream(in);
+					simulations = ((List<FskSimulation>) ois.readObject());
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+	      
+         
+          
           entry = in.getNextEntry();
           entryName = entry.getName();
           if (entryName.startsWith(JOINED_GENERAL_INFORMATION)) {
@@ -420,7 +445,7 @@ public class CombinedFskPortObject extends FskPortObject {
           if (entryName.startsWith(JOINED_MODEL_MATH)) {
             modelMath = readEObject(in, ModelMath.class);
           }
-
+          
 
 
           // read first FSKObject
@@ -430,10 +455,10 @@ public class CombinedFskPortObject extends FskPortObject {
 
           in.close();
           // build combined object out of the previous objects
-
           final CombinedFskPortObject portObj = new CombinedFskPortObject(generalInformation, scope,
               dataBackground, modelMath, FileUtil.createTempDir("combined").getAbsolutePath(),
               new ArrayList<>(), firstFSKObject, secondFSKObject);
+          portObj.workspace =  workspacePath;
           if (!joinerRelation.isEmpty()) {
             portObj.setJoinerRelation(joinerRelation);
           }

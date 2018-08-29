@@ -242,6 +242,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         FskSimulation secondfskSimulation =
             secondFskObj.simulations.get(secondFskObj.selectedSimulationIndex);
         secondFskObj = runSnippet(controller, secondFskObj, secondfskSimulation, context);
+        fskObj.workspace = secondFskObj.workspace;
       }
       try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
         final PNGImageContent content = new PNGImageContent(fis);
