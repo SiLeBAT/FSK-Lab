@@ -22,7 +22,7 @@
 			README file (optional)
 		</option>
 		<option name="Working directory">
-			Directory with resource files: plaintext, CSV and R workspaces (optional).
+			Directory with resource files used by the model: plaintext, CSV and R workspaces (optional).
 		</option>
 		<option name="Selected XLSX spreadsheet">
 			File path of the XLSX spreadsheet with meta data (optional).

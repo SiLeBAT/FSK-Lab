@@ -11,7 +11,7 @@
 
 	<fullDescription>
 		<intro>
-			Creates an FSK object with the scripts, metadata and libraries in
+			Creates an FSK object with the scripts, meta data, simulations, resources and libraries in
 			the referred FSKX file.
 		</intro>
 		<option name="Selected file">

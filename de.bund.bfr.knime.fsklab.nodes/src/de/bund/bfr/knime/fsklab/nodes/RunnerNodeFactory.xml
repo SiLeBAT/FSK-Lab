@@ -23,8 +23,8 @@
 		  resolution.
 		</option>
 		<option name="Simulation">
-		  Name of the selected simulation to run. If no simulation is selected then the parameters
-		  take the default values from the parameters script.
+		  Name of the selected simulation to run. 
+		  If no simulation is selected then the default simulation will be selected.
 		</option>
 		
 	</fullDescription>

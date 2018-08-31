@@ -11,7 +11,7 @@
 
 	<fullDescription>
 		<intro>
-			Creates an FSKX file with the scripts, metadata and libraries in
+			Creates an FSKX file with the scripts, meta data, model encoded in SBML, workspace, working directory, simulations (SEDML) and the libraries in
 			the FSKX object.
 			
 			<h3>Supported images</h3>
