@@ -144,82 +144,82 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         // Configurator the default value is 0 which is the the default simulation
         ExecutionContext context = exec.createSubExecutionContext(1.0);
         List<JoinRelation> joinRelations = comFskObj.getJoinerRelation();
-        if (joinRelations != null) {
-          FskSimulation fskSimulation =
-              firstFskObj.simulations.get(firstFskObj.selectedSimulationIndex);
-          PID = controller.eval("Sys.getpid()", true).asInteger();
-          // recreate the INPUT or CONSTANT parameters which cause parameterId conflicts
-          List<Parameter> alternativeParams = firstFskObj.modelMath.getParameter().stream()
-              .filter(p -> p.getParameterID().endsWith(JoinerNodeModel.suffix))
-              .collect(Collectors.toList());
-          for (Parameter param : alternativeParams) {
-            if (param.getParameterClassification().equals(ParameterClassification.INPUT)
-                || param.getParameterClassification().equals(ParameterClassification.CONSTANT)) {
-              // cut out the old Parameter ID
-              String oldId = param.getParameterID().substring(0,
-                  param.getParameterID().indexOf(JoinerNodeModel.suffix));
-              // make the old parameter available for the Model script
-              controller.eval(oldId + " <- " + param.getParameterValue(), false);
-            }
-          }
-
-          // make a map of file name and its last modification date to observe any changes which
-          // mean
-          // file overwriting or generating new one
-          String wd1 = firstFskObj.getWorkingDirectory();
-          String wd2 = secondFskObj.getWorkingDirectory();
-          Map<String, Long> fileModifacationMap = new HashMap<String, Long>();
-          if (!wd1.equals(wd1)) {
-            try (Stream<Path> paths =
-                Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
-              paths.filter(Files::isRegularFile).forEach(currentFile -> {
-                fileModifacationMap.put(currentFile.toFile().getName(),
-                    currentFile.toFile().lastModified());
-              });
-            }
-          }
-
-          // run the first model!
-
-          firstFskObj = runSnippet(controller, firstFskObj, fskSimulation, context);
-
-          // move the generated files to the working
-          // directory of the second model
-          if (!wd1.equals(wd1)) {
-            Path targetDirectory = FileUtil.getFileFromURL(FileUtil.toURL(wd2)).toPath();
-            try (Stream<Path> paths =
-                Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
-              paths.filter(Files::isRegularFile).forEach(currentFile -> {
-                // move new and modified files
-                Long fileLastModified = fileModifacationMap.get(currentFile.toFile().getName());
-                if (fileLastModified == null
-                    || currentFile.toFile().lastModified() != fileLastModified) {
-                  try {
-                    FileUtils.copyFileToDirectory(currentFile.toFile(), targetDirectory.toFile());
-                  } catch (IOException e) {
-                    e.printStackTrace();
-                  }
-                }
-              });
-            }
-          }
-
-
-          // assign the value of parameters which are causing parameterId conflicts to alternative
-          // Parameter which is (maybe) used later in the joining
-
-          for (Parameter param : alternativeParams) {
-            // if (!(param.getParameterClassification().equals(ParameterClassification.INPUT)
-            // || param.getParameterClassification().equals(ParameterClassification.CONSTANT))) {
-            String alternativeId = param.getParameterID();
+        FskSimulation fskSimulation =
+            firstFskObj.simulations.get(firstFskObj.selectedSimulationIndex);
+        PID = controller.eval("Sys.getpid()", true).asInteger();
+        // recreate the INPUT or CONSTANT parameters which cause parameterId conflicts
+        List<Parameter> alternativeParams = firstFskObj.modelMath.getParameter().stream()
+            .filter(p -> p.getParameterID().endsWith(JoinerNodeModel.suffix))
+            .collect(Collectors.toList());
+        for (Parameter param : alternativeParams) {
+          if (param.getParameterClassification().equals(ParameterClassification.INPUT)
+              || param.getParameterClassification().equals(ParameterClassification.CONSTANT)) {
+            // cut out the old Parameter ID
             String oldId = param.getParameterID().substring(0,
                 param.getParameterID().indexOf(JoinerNodeModel.suffix));
-            controller.eval(alternativeId + " <- " + oldId, false);
-            controller.eval("rm(" + oldId + ")", false);
-            // }
+            // make the old parameter available for the Model script
+            controller.eval(oldId + " <- " + param.getParameterValue(), false);
           }
+        }
 
-          // apply join command
+        // make a map of file name and its last modification date to observe any changes which
+        // mean
+        // file overwriting or generating new one
+        String wd1 = firstFskObj.getWorkingDirectory();
+        String wd2 = secondFskObj.getWorkingDirectory();
+        Map<String, Long> fileModifacationMap = new HashMap<String, Long>();
+        if (!wd1.equals(wd1)) {
+          try (Stream<Path> paths =
+              Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
+            paths.filter(Files::isRegularFile).forEach(currentFile -> {
+              fileModifacationMap.put(currentFile.toFile().getName(),
+                  currentFile.toFile().lastModified());
+            });
+          }
+        }
+
+        // run the first model!
+
+        firstFskObj = runSnippet(controller, firstFskObj, fskSimulation, context);
+
+        // move the generated files to the working
+        // directory of the second model
+        if (!wd1.equals(wd1)) {
+          Path targetDirectory = FileUtil.getFileFromURL(FileUtil.toURL(wd2)).toPath();
+          try (Stream<Path> paths =
+              Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
+            paths.filter(Files::isRegularFile).forEach(currentFile -> {
+              // move new and modified files
+              Long fileLastModified = fileModifacationMap.get(currentFile.toFile().getName());
+              if (fileLastModified == null
+                  || currentFile.toFile().lastModified() != fileLastModified) {
+                try {
+                  FileUtils.copyFileToDirectory(currentFile.toFile(), targetDirectory.toFile());
+                } catch (IOException e) {
+                  e.printStackTrace();
+                }
+              }
+            });
+          }
+        }
+
+
+        // assign the value of parameters which are causing parameterId conflicts to alternative
+        // Parameter which is (maybe) used later in the joining
+
+        for (Parameter param : alternativeParams) {
+          // if (!(param.getParameterClassification().equals(ParameterClassification.INPUT)
+          // || param.getParameterClassification().equals(ParameterClassification.CONSTANT))) {
+          String alternativeId = param.getParameterID();
+          String oldId = param.getParameterID().substring(0,
+              param.getParameterID().indexOf(JoinerNodeModel.suffix));
+          controller.eval(alternativeId + " <- " + oldId, false);
+          controller.eval("rm(" + oldId + ")", false);
+          // }
+        }
+
+        // apply join command
+        if (joinRelations != null) {
 
           for (JoinRelation joinRelation : joinRelations) {
             for (metadata.Parameter sourceParameter : firstFskObj.modelMath.getParameter()) {
@@ -237,6 +237,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
             }
           }
         }
+
         // get the index of the selected simulation saved by the JavaScript FSK Simulation
         // Configurater the default value is 0 which is the the default simulation
         FskSimulation secondfskSimulation =

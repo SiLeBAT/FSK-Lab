@@ -236,9 +236,11 @@ public class CombinedFskPortObject extends FskPortObject {
         out.closeEntry();
 
         CombinedFskPortObject joinedPortObject = (CombinedFskPortObject) portObject;
-        if (joinedPortObject.joinerRelation != null && !joinedPortObject.joinerRelation.isEmpty()) {
-          writeEObjectList(JOINER_RELATION, joinedPortObject.joinerRelation, out);
+        
+        if (joinedPortObject.joinerRelation == null) {
+        	joinedPortObject.joinerRelation = new ArrayList<>();
         }
+        writeEObjectList(JOINER_RELATION, joinedPortObject.joinerRelation, out);
         // workspace entry
         if (portObject.workspace != null) {
           out.putNextEntry(new ZipEntry(JOINED_WORKSPACE ));
