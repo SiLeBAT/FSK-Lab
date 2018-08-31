@@ -1002,7 +1002,13 @@ joiner = function() {
 								$('#target').val(targetPort);
 								$('#commandLanguage').val(sJoinRealtion.language_written_in);
 								$('#Command').val(sJoinRealtion.command);
-							
+								$('#Command').keyup(function() {
+									window.sJoinRealtion.command = $('#Command').val();									
+								});
+								$('#commandLanguage').change(function() {
+									window.sJoinRealtion.language_written_in = $('#commandLanguage').val();
+								});
+								
 							}
 						});
 		var firstModelInputParameters = [];
@@ -1171,9 +1177,9 @@ joiner = function() {
 										+ '<div class="form-group">'
 										+ '</div>' + '</form>');
 			autocomplete(document.getElementById('commandLanguage'), window.Language_written_in,undefined,undefined,undefined);
-			$('#Command').change(function() {
+			$('#Command').keyup(function() {
 				window.sJoinRealtion.command = $('#Command').val();
-							
+				
 			});
 			$('#commandLanguage').change(function() {
 				window.sJoinRealtion.language_written_in = $('#commandLanguage').val();
