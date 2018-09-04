@@ -111,7 +111,7 @@ class WriterNodeModel extends NoInternalsModel {
   public static final String METADATA_NS = "fsk";
   public static final String METADATA_COMMAND = "command";
   public static final String METADATA_COMMAND_VALUE = "commandValue";
-  
+
 
   private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
 
@@ -142,8 +142,9 @@ class WriterNodeModel extends NoInternalsModel {
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
     return new PortObjectSpec[] {};
   }
-  public static void writeFSKObject(FskPortObject fskObj, CombineArchive archive, String filePrefix, Map<String, URI> URIS)
-      throws Exception {
+
+  public static void writeFSKObject(FskPortObject fskObj, CombineArchive archive, String filePrefix,
+      Map<String, URI> URIS) throws Exception {
 
     addVersion(archive);
     // Adds model script
@@ -175,13 +176,13 @@ class WriterNodeModel extends NoInternalsModel {
       Path workingDirectory =
           FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
 
-      
+
 
       // Adds resources
       final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
       for (final Path resourcePath : resources) {
 
-        final String filenameString = filePrefix +resourcePath.getFileName().toString();
+        final String filenameString = filePrefix + resourcePath.getFileName().toString();
         final File resourceFile = resourcePath.toFile();
 
         if (FilenameUtils.isExtension(filenameString, "txt")) {
@@ -238,43 +239,46 @@ class WriterNodeModel extends NoInternalsModel {
       File spreadsheetFile = FileUtil.getFileFromURL(FileUtil.toURL(fskObj.getSpreadsheet()));
 
       if (spreadsheetFile.exists()) {
-        archive.addEntry(spreadsheetFile, filePrefix +"metadata.xlsx", URIS.get("xlsx"));
+        archive.addEntry(spreadsheetFile, filePrefix + "metadata.xlsx", URIS.get("xlsx"));
       }
     }
 
 
   }
-  public void writeCombinedObject(CombinedFskPortObject fskObj,CombineArchive archive,Map<String, URI> URIS,String filePrefix) throws Exception {
-    filePrefix = filePrefix +  normalizeName(fskObj) +System.getProperty("file.separator");
-    FskPortObject ffskObj = fskObj.getFirstFskPortObject();
-      if(ffskObj instanceof CombinedFskPortObject) {
-        writeCombinedObject((CombinedFskPortObject)ffskObj, archive, URIS,filePrefix);
-      }else {
-        writeFSKObject(ffskObj, archive,
-            filePrefix + normalizeName(ffskObj)  + System.getProperty("file.separator"),URIS);
-      }
-      
-      FskPortObject sfskObj = fskObj.getSecondFskPortObject();
-      if(sfskObj instanceof CombinedFskPortObject) {
-        writeCombinedObject((CombinedFskPortObject)sfskObj, archive, URIS,filePrefix);
-      }else {
-        writeFSKObject(sfskObj, archive,
-            filePrefix + normalizeName(sfskObj) + System.getProperty("file.separator"),URIS);
-      }
-     
-      // Adds model metadata of combined model
-      addMetaData(archive, fskObj.generalInformation, fskObj.scope, fskObj.dataBackground,
-          fskObj.modelMath, filePrefix +"metaData.json");
-      // Add combined simulations
-      {
-        SEDMLDocument sedmlDoc = createSedml(fskObj);
 
-        File tempFile = FileUtil.createTempFile("sim", "");
-        sedmlDoc.writeDocument(tempFile);
-        archive.addEntry(tempFile, filePrefix + "sim.sedml", URIS.get("sedml"));
-      }
-   
+  public void writeCombinedObject(CombinedFskPortObject fskObj, CombineArchive archive,
+      Map<String, URI> URIS, String filePrefix) throws Exception {
+    filePrefix = filePrefix + normalizeName(fskObj) + System.getProperty("file.separator");
+    FskPortObject ffskObj = fskObj.getFirstFskPortObject();
+    if (ffskObj instanceof CombinedFskPortObject) {
+      writeCombinedObject((CombinedFskPortObject) ffskObj, archive, URIS, filePrefix);
+    } else {
+      writeFSKObject(ffskObj, archive,
+          filePrefix + normalizeName(ffskObj) + System.getProperty("file.separator"), URIS);
+    }
+
+    FskPortObject sfskObj = fskObj.getSecondFskPortObject();
+    if (sfskObj instanceof CombinedFskPortObject) {
+      writeCombinedObject((CombinedFskPortObject) sfskObj, archive, URIS, filePrefix);
+    } else {
+      writeFSKObject(sfskObj, archive,
+          filePrefix + normalizeName(sfskObj) + System.getProperty("file.separator"), URIS);
+    }
+
+    // Adds model metadata of combined model
+    addMetaData(archive, fskObj.generalInformation, fskObj.scope, fskObj.dataBackground,
+        fskObj.modelMath, filePrefix + "metaData.json");
+    // Add combined simulations
+    {
+      SEDMLDocument sedmlDoc = createSedml(fskObj);
+
+      File tempFile = FileUtil.createTempFile("sim", "");
+      sedmlDoc.writeDocument(tempFile);
+      archive.addEntry(tempFile, filePrefix + "sim.sedml", URIS.get("sedml"));
+    }
+
   }
+
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
@@ -284,19 +288,20 @@ class WriterNodeModel extends NoInternalsModel {
     archiveFile.delete();
     try (final CombineArchive archive = new CombineArchive(archiveFile)) {
       if (fskObj instanceof CombinedFskPortObject) {
-        writeCombinedObject((CombinedFskPortObject)fskObj, archive, URIS,"");
+        writeCombinedObject((CombinedFskPortObject) fskObj, archive, URIS, "");
       } else {
-        writeFSKObject(fskObj, archive, "",URIS);
+        writeFSKObject(fskObj, archive, "", URIS);
       }
       // add SBML document
       {
-        SBMLDocument sbmlModelDoc = createSBML(fskObj, archive, "model",URIS,"");
+        SBMLDocument sbmlModelDoc = createSBML(fskObj, archive, "model", URIS, "");
 
         File tempFile = FileUtil.createTempFile("sbml", "");
         new SBMLWriter().write(sbmlModelDoc, tempFile);
-        if(fskObj instanceof CombinedFskPortObject){
-          archive.addEntry(tempFile,normalizeName(fskObj) +System.getProperty("file.separator")+sbmlModelDoc.getModel().getId() + ".sbml", URIS.get("sbml"));
-        }else {
+        if (fskObj instanceof CombinedFskPortObject) {
+          archive.addEntry(tempFile, normalizeName(fskObj) + System.getProperty("file.separator")
+              + sbmlModelDoc.getModel().getId() + ".sbml", URIS.get("sbml"));
+        } else {
           archive.addEntry(tempFile, sbmlModelDoc.getModel().getId() + ".sbml", URIS.get("sbml"));
         }
       }
@@ -311,18 +316,20 @@ class WriterNodeModel extends NoInternalsModel {
           archive.addEntry(file, file.getName(), libUri);
         }
       }
-      
+
 
       archive.pack();
     }
     return new PortObject[] {};
   }
+
   public static String normalizeName(FskPortObject fskObj) {
     return fskObj.generalInformation.getName().replaceAll("\\W", "").replace(" ", "");
   }
+
   private static SBMLDocument createSBML(FskPortObject fskObj, CombineArchive archive,
-      String ModelId,Map<String, URI> URIS, String filePrefix) throws IOException {
-    filePrefix = filePrefix +  normalizeName(fskObj) +System.getProperty("file.separator");
+      String ModelId, Map<String, URI> URIS, String filePrefix) throws IOException {
+    filePrefix = filePrefix + normalizeName(fskObj) + System.getProperty("file.separator");
     SBMLDocument doc = new SBMLDocument(3, 1);
     doc.addDeclaredNamespace("xmlns:fsk",
         "https://foodrisklabs.bfr.bund.de/wp-content/uploads/2017/01/FSK-ML_guidance_document_021216.pdf");
@@ -335,18 +342,23 @@ class WriterNodeModel extends NoInternalsModel {
         CompModelPlugin compMainModel = (CompModelPlugin) fskmodel.getPlugin("comp");
 
         FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
-        SBMLDocument doc1 = createSBML(firstFskObj, archive, normalizeName(firstFskObj) ,URIS,filePrefix);
-        String doc1FileName = writeSBMLFile(doc1, archive, filePrefix + normalizeName(firstFskObj) +System.getProperty("file.separator") ,URIS);
-        createExtSubModel(doc1, doc1FileName, filePrefix + firstFskObj.generalInformation.getName(), compDoc, compMainModel,
-            SUB_MODEL1);
+        SBMLDocument doc1 =
+            createSBML(firstFskObj, archive, normalizeName(firstFskObj), URIS, filePrefix);
+        String doc1FileName = writeSBMLFile(doc1, archive,
+            filePrefix + normalizeName(firstFskObj) + System.getProperty("file.separator"), URIS);
+        createExtSubModel(doc1, doc1FileName, filePrefix + firstFskObj.generalInformation.getName(),
+            compDoc, compMainModel, SUB_MODEL1);
 
         FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
-        SBMLDocument doc2 = createSBML(secondFskObj, archive,normalizeName(secondFskObj),URIS,filePrefix);
-        String doc2FileName = writeSBMLFile(doc2, archive, filePrefix + normalizeName(secondFskObj)+System.getProperty("file.separator"),URIS);
-        createExtSubModel(doc2, doc2FileName,filePrefix + secondFskObj.generalInformation.getName(), compDoc, compMainModel,
+        SBMLDocument doc2 =
+            createSBML(secondFskObj, archive, normalizeName(secondFskObj), URIS, filePrefix);
+        String doc2FileName = writeSBMLFile(doc2, archive,
+            filePrefix + normalizeName(secondFskObj) + System.getProperty("file.separator"), URIS);
+        createExtSubModel(doc2, doc2FileName,
+            filePrefix + secondFskObj.generalInformation.getName(), compDoc, compMainModel,
             SUB_MODEL2);
 
-        fskmodel.setId(normalizeName(fskObj) );
+        fskmodel.setId(normalizeName(fskObj));
 
         List<JoinRelation> relations = comFskObj.getJoinerRelation();
         for (JoinRelation joinRelarion : relations) {
@@ -396,15 +408,16 @@ class WriterNodeModel extends NoInternalsModel {
 
     return doc;
   }
-  public static String writeSBMLFile(SBMLDocument doc, CombineArchive archive, String filePrefix,Map<String, URI> URIS)
-      throws IOException, SBMLException, XMLStreamException {
-    System.out.println(filePrefix);
+
+  public static String writeSBMLFile(SBMLDocument doc, CombineArchive archive, String filePrefix,
+      Map<String, URI> URIS) throws IOException, SBMLException, XMLStreamException {
     File tempFile = FileUtil.createTempFile("sbml", "");
     String fileName = filePrefix + doc.getModel().getId() + ".sbml";
     new SBMLWriter().write(doc, tempFile);
     archive.addEntry(tempFile, fileName, FSKML.getURIS(1, 0, 12).get("sbml"));
     return fileName;
   }
+
   public static ExternalModelDefinition createExtSubModel(SBMLDocument doc, String externalFileName,
       String filePrefix, CompSBMLDocumentPlugin compDoc, CompModelPlugin compMainModel,
       String subModelName) throws IOException, SBMLException, XMLStreamException {
@@ -417,6 +430,7 @@ class WriterNodeModel extends NoInternalsModel {
 
     return externalModel;
   }
+
   private static ArchiveEntry addRScript(final CombineArchive archive, final String script,
       final String filename) throws IOException, URISyntaxException {
 
@@ -451,7 +465,7 @@ class WriterNodeModel extends NoInternalsModel {
     return entry;
   }
 
-  
+
   public static ExternalModelDefinition createExtSubModel(SBMLDocument doc, String externalFileName,
       CompSBMLDocumentPlugin compDoc, CompModelPlugin compMainModel, String subModelName)
       throws IOException, SBMLException, XMLStreamException {
@@ -465,7 +479,7 @@ class WriterNodeModel extends NoInternalsModel {
     return externalModel;
   }
 
-  
+
 
   private static SEDMLDocument createSedml(FskPortObject portObj) {
 
@@ -561,8 +575,8 @@ class WriterNodeModel extends NoInternalsModel {
 
     // Only save R workspace smaller than 100 MB
     if (fileSizeInMB < 100) {
-      final ArchiveEntry workspaceEntry =
-          archive.addEntry(workspace.toFile(), filePrefix + "workspace.r",  FSKML.getURIS(1, 0, 12).get("r"));
+      final ArchiveEntry workspaceEntry = archive.addEntry(workspace.toFile(),
+          filePrefix + "workspace.r", FSKML.getURIS(1, 0, 12).get("r"));
       workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
     } else {
       LOGGER.warn("Results file larger than 100 MB -> Skipping file");
@@ -590,8 +604,8 @@ class WriterNodeModel extends NoInternalsModel {
     File readmeFile = File.createTempFile("README", ".txt");
     FileUtils.writeStringToFile(readmeFile, readme, "UTF-8");
 
-    ArchiveEntry readmeEntry =
-        archive.addEntry(readmeFile, filePrefix+"README.txt", FSKML.getURIS(1, 0, 12).get("plain"));
+    ArchiveEntry readmeEntry = archive.addEntry(readmeFile, filePrefix + "README.txt",
+        FSKML.getURIS(1, 0, 12).get("plain"));
 
     readmeFile.delete();
 
