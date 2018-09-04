@@ -222,7 +222,8 @@ public class CombinedFskPortObject extends FskPortObject {
     public void savePortObject(final CombinedFskPortObject portObject,
         final PortObjectZipOutputStream out, final ExecutionMonitor exec)
         throws IOException, CanceledExecutionException {
-      saveFSKPortObject(portObject, out, exec, 1);
+      saveFSKPortObject(portObject, out, exec, 0);
+      out.close();
     }
 
     public void saveFSKPortObject(FskPortObject portObject, final PortObjectZipOutputStream out,
@@ -231,8 +232,9 @@ public class CombinedFskPortObject extends FskPortObject {
       // model entry (file with model script)
       if (portObject instanceof CombinedFskPortObject) {
         // write tag value to check the type of the fsk port object when read it back
-        out.putNextEntry(new ZipEntry(COMBINED));
-        IOUtils.write(COMBINED, out, "UTF-8");
+    	level++;
+        out.putNextEntry(new ZipEntry(COMBINED+level));
+        IOUtils.write(COMBINED+level, out, "UTF-8");
         out.closeEntry();
 
         CombinedFskPortObject joinedPortObject = (CombinedFskPortObject) portObject;
@@ -240,16 +242,16 @@ public class CombinedFskPortObject extends FskPortObject {
         if (joinedPortObject.joinerRelation == null) {
         	joinedPortObject.joinerRelation = new ArrayList<>();
         }
-        writeEObjectList(JOINER_RELATION, joinedPortObject.joinerRelation, out);
+        writeEObjectList(JOINER_RELATION+level, joinedPortObject.joinerRelation, out);
         // workspace entry
         if (portObject.workspace != null) {
-          out.putNextEntry(new ZipEntry(JOINED_WORKSPACE ));
+          out.putNextEntry(new ZipEntry(JOINED_WORKSPACE+level ));
           Files.copy(portObject.workspace, out);
           out.closeEntry();
         }
         // Save simulations
         if (!portObject.simulations.isEmpty()) {
-          out.putNextEntry(new ZipEntry(JOINED_SIMULATION));
+          out.putNextEntry(new ZipEntry(JOINED_SIMULATION+level));
 
           try {
             ObjectOutputStream oos = new ObjectOutputStream(out);
@@ -261,16 +263,16 @@ public class CombinedFskPortObject extends FskPortObject {
         }
      
         // Write Joined Object Meta data
-        writeEObject(JOINED_GENERAL_INFORMATION, portObject.generalInformation, out);
-        writeEObject(JOINED_SCOPE, portObject.scope, out);
-        writeEObject(JOINED_DATA_BACKGROUND, portObject.dataBackground, out);
-        writeEObject(JOINED_MODEL_MATH, portObject.modelMath, out);
+        writeEObject(JOINED_GENERAL_INFORMATION+level, portObject.generalInformation, out);
+        writeEObject(JOINED_SCOPE+level, portObject.scope, out);
+        writeEObject(JOINED_DATA_BACKGROUND+level, portObject.dataBackground, out);
+        writeEObject(JOINED_MODEL_MATH+level, portObject.modelMath, out);
     
 
         saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec, ++level);
         saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec, ++level);
 
-        out.close();
+       
       } else {
         // model entry (file with model script)
         out.putNextEntry(new ZipEntry(MODEL + level));
@@ -389,11 +391,12 @@ public class CombinedFskPortObject extends FskPortObject {
         String entryName = entry.getName();
         // check if the entry contains combined FSK object
         if (entryName.startsWith(COMBINED)) {
+        	String level = entryName.substring(COMBINED.length(),entryName.length());
           // read relations
           // jump one step since we know it has relation in the next part
           entry = in.getNextEntry();
           entryName = entry.getName();
-          if (entryName.startsWith(JOINER_RELATION)) {
+          if (entryName.startsWith(JOINER_RELATION+level)) {
             try {
               joinerRelation = ((List<JoinRelation>) readEObjectList(in, JoinRelation.class));
             } catch (InvalidSettingsException e) {
@@ -404,11 +407,11 @@ public class CombinedFskPortObject extends FskPortObject {
           entry = in.getNextEntry();
           entryName = entry.getName();
           
-			if (entryName.startsWith(JOINED_WORKSPACE)) {
+			if (entryName.startsWith(JOINED_WORKSPACE+level)) {
 				Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
 				entry = in.getNextEntry();
 				entryName = entry.getName();
-				if (entryName.startsWith(JOINED_SIMULATION)) {
+				if (entryName.startsWith(JOINED_SIMULATION+level)) {
 					try {
 						ObjectInputStream ois = new ObjectInputStream(in);
 						simulations = ((List<FskSimulation>) ois.readObject());
@@ -416,7 +419,7 @@ public class CombinedFskPortObject extends FskPortObject {
 						e.printStackTrace();
 					}
 				}
-			} else if (entryName.startsWith(JOINED_SIMULATION)) {
+			} else if (entryName.startsWith(JOINED_SIMULATION+level)) {
 				try {
 					ObjectInputStream ois = new ObjectInputStream(in);
 					simulations = ((List<FskSimulation>) ois.readObject());
@@ -429,22 +432,22 @@ public class CombinedFskPortObject extends FskPortObject {
           
           entry = in.getNextEntry();
           entryName = entry.getName();
-          if (entryName.startsWith(JOINED_GENERAL_INFORMATION)) {
+          if (entryName.startsWith(JOINED_GENERAL_INFORMATION+level)) {
             generalInformation = readEObject(in, GeneralInformation.class);
           }
           entry = in.getNextEntry();
           entryName = entry.getName();
-          if (entryName.startsWith(JOINED_SCOPE)) {
+          if (entryName.startsWith(JOINED_SCOPE+level)) {
             scope = readEObject(in, Scope.class);
           }
           entry = in.getNextEntry();
           entryName = entry.getName();
-          if (entryName.startsWith(JOINED_DATA_BACKGROUND)) {
+          if (entryName.startsWith(JOINED_DATA_BACKGROUND+level)) {
             dataBackground = readEObject(in, DataBackground.class);
           }
           entry = in.getNextEntry();
           entryName = entry.getName();
-          if (entryName.startsWith(JOINED_MODEL_MATH)) {
+          if (entryName.startsWith(JOINED_MODEL_MATH+level)) {
             modelMath = readEObject(in, ModelMath.class);
           }
           
@@ -455,7 +458,7 @@ public class CombinedFskPortObject extends FskPortObject {
           // read second FSKObject
           FskPortObject secondFSKObject = loadFSKPortObject(in, spec, exec);
 
-          in.close();
+          
           // build combined object out of the previous objects
           final CombinedFskPortObject portObj = new CombinedFskPortObject(generalInformation, scope,
               dataBackground, modelMath, FileUtil.createTempDir("combined").getAbsolutePath(),
@@ -528,7 +531,6 @@ public class CombinedFskPortObject extends FskPortObject {
               e.printStackTrace();
             }
           } else if (entryName.startsWith(BREAK)) {
-            System.out.println(IOUtils.toString(in, "UTF-8"));
             break;
           }
 
@@ -549,7 +551,7 @@ public class CombinedFskPortObject extends FskPortObject {
     public CombinedFskPortObject loadPortObject(PortObjectZipInputStream in, PortObjectSpec spec,
         ExecutionMonitor exec) throws IOException, CanceledExecutionException {
       CombinedFskPortObject portObj = (CombinedFskPortObject) loadFSKPortObject(in, spec, exec);
-
+      in.close();
       return portObj;
     }
 

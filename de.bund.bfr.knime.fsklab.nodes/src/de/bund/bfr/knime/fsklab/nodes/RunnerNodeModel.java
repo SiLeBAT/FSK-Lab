@@ -57,6 +57,7 @@ import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
+import freemarker.log.Logger;
 import metadata.Parameter;
 import metadata.ParameterClassification;
 
@@ -133,13 +134,34 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
 
     FskPortObject fskObj = (FskPortObject) inData[0];
+    try (RController controller = new RController()) {
+      fskObj = runFskPortObject(fskObj, exec,controller);
+    }
+    try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
+      final PNGImageContent content = new PNGImageContent(fis);
+      internalSettings.plot = content.getImage();
+      ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
+      return new PortObject[] {fskObj, imgObj};
+    } catch (IOException e) {
+      LOGGER.warn("There is no image created");
+      return new PortObject[] {fskObj};
+    }
+  }
+  public FskPortObject runFskPortObject(FskPortObject fskObj, ExecutionContext exec,RController controller) throws Exception {
+    LOGGER.info("Running Model: "+fskObj);
     if (fskObj instanceof CombinedFskPortObject) {
       CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
       FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
+      if(firstFskObj instanceof CombinedFskPortObject) {
+        firstFskObj = runFskPortObject(firstFskObj, exec,controller);
+      }
       FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
+      if(secondFskObj instanceof CombinedFskPortObject) {
+        secondFskObj = runFskPortObject(secondFskObj, exec,controller);
+      }
       LOGGER.info(" recieving '" + firstFskObj.selectedSimulationIndex
           + "' as the selected simulation index!");
-      try (RController controller = new RController()) {
+      
         // get the index of the selected simulation saved by the JavaScript FSK Simulation
         // Configurator the default value is 0 which is the the default simulation
         ExecutionContext context = exec.createSubExecutionContext(1.0);
@@ -179,7 +201,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         }
 
         // run the first model!
-
+        LOGGER.info("Running Snippet of first Model: "+firstFskObj);
         firstFskObj = runSnippet(controller, firstFskObj, fskSimulation, context);
 
         // move the generated files to the working
@@ -214,7 +236,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           String oldId = param.getParameterID().substring(0,
               param.getParameterID().indexOf(JoinerNodeModel.suffix));
           controller.eval(alternativeId + " <- " + oldId, false);
-          controller.eval("rm(" + oldId + ")", false);
+          //controller.eval("rm(" + oldId + ")", false);
           // }
         }
 
@@ -242,23 +264,16 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         // Configurater the default value is 0 which is the the default simulation
         FskSimulation secondfskSimulation =
             secondFskObj.simulations.get(secondFskObj.selectedSimulationIndex);
+        LOGGER.info("Running Snippet of second Model: "+secondFskObj);
         secondFskObj = runSnippet(controller, secondFskObj, secondfskSimulation, context);
         fskObj.workspace = secondFskObj.workspace;
-      }
-      try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
-        final PNGImageContent content = new PNGImageContent(fis);
-        internalSettings.plot = content.getImage();
-        ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
-        return new PortObject[] {comFskObj, imgObj};
-      } catch (IOException e) {
-        LOGGER.warn("There is no image created");
-        return new PortObject[] {comFskObj};
-      }
+      
+      return comFskObj;
     } else {
       LOGGER.info(
           " recieving '" + fskObj.selectedSimulationIndex + "' as the selected simulation index!");
 
-      try (RController controller = new RController()) {
+   
         // get the index of the selected simulation saved by the JavaScript FSK Simulation
         // Configurator the default value is 0 which is the the default simulation
         FskSimulation fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
@@ -267,20 +282,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         ExecutionContext context = exec.createSubExecutionContext(1.0);
 
         fskObj = runSnippet(controller, fskObj, fskSimulation, context);
-      }
+     
 
-      try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
-        final PNGImageContent content = new PNGImageContent(fis);
-        internalSettings.plot = content.getImage();
-        ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
-        return new PortObject[] {fskObj, imgObj};
-      } catch (IOException e) {
-        LOGGER.warn("There is no image created");
-        return new PortObject[] {fskObj};
-      }
+      return fskObj;
     }
   }
-
   private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
       final FskSimulation simulation, final ExecutionMonitor exec) throws Exception {
 
