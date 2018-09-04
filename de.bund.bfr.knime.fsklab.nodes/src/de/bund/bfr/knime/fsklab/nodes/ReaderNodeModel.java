@@ -37,6 +37,7 @@ import javax.swing.tree.TreeNode;
 import javax.xml.stream.XMLStreamException;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jlibsedml.Change;
 import org.jlibsedml.ChangeAttribute;
 import org.jlibsedml.Libsedml;
@@ -130,14 +131,14 @@ class ReaderNodeModel extends NoInternalsModel {
     final File file = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.filePath));
     FskPortObject fskObj = null;
     try (final CombineArchive archive = new CombineArchive(file)) {
-
       Collection<ArchiveEntry> entries = archive.getEntries();
       // Get the directories inside the archive without duplication
       Set<String> entriesSet = new HashSet<>();
       for (ArchiveEntry sEntry : entries) {
         String path = sEntry.getFilePath().substring(0, sEntry.getFilePath().lastIndexOf("/") + 1);
-        if (!path.equals("/") && (path.endsWith(WriterNodeModel.FIRST_MODEL + "/")
-            || path.endsWith(WriterNodeModel.SECOND_MODEL + "/"))) {
+        
+        int depth = StringUtils.countMatches(path, "/");
+        if(depth > 2 && !path.endsWith("simulations/")) {
           entriesSet.add(path);
         }
       }
@@ -148,19 +149,19 @@ class ReaderNodeModel extends NoInternalsModel {
       // joining if they are more than one.
       int sbmlFilesNumber = archive.getNumEntriesWithFormat(FSKML.getURIS(1, 0, 12).get("sbml"));
       if (sbmlFilesNumber > 1) {
-        fskObj = readFskPortObject(archive, sortedList);
+        fskObj = readFskPortObject(archive, sortedList,0);
       } else {
         ArrayList<String> rootList = new ArrayList<>();
         // No Joining, just normal Fsk Object
         rootList.add("/");
-        fskObj = readFskPortObject(archive, rootList);
+        fskObj = readFskPortObject(archive, rootList,0);
       }
 
     }
     return new PortObject[] {fskObj};
   }
 
-  public FskPortObject readFskPortObject(CombineArchive archive, List<String> ListOfPaths)
+  public FskPortObject readFskPortObject(CombineArchive archive, List<String> ListOfPaths, int readLevel)
       throws Exception {
     // each sub Model has it's own working directory to avoid resource conflict.
     Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
@@ -174,27 +175,29 @@ class ReaderNodeModel extends NoInternalsModel {
 
     // more one than one element means this model is joined one
     if (ListOfPaths != null && ListOfPaths.size() > 1) {
-      String firstelement = ListOfPaths.get(0);
+      String firstelement = ListOfPaths.get(ListOfPaths.size()%2);
       // classify the pathes into two groups, each belongs to sub model
-      List<String> firstGroup = ListOfPaths.stream().filter(line -> line.startsWith(firstelement))
+      List<String> firstGroup = ListOfPaths.stream().filter(line -> line.startsWith(firstelement) )
           .collect(Collectors.toList());
-      String secondElement = ListOfPaths.get(1);
+      String secondElement = ListOfPaths.get(ListOfPaths.size()-1);
       List<String> secondGroup = ListOfPaths.stream().filter(line -> line.startsWith(secondElement))
           .collect(Collectors.toList());
 
       // invoke this mothod recursively to get the sub model using the corresponding path group
-      FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup);
-      FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup);
-
+      FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup,++readLevel);
+      FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup,++readLevel);
+      String tempString = firstelement.substring(0,firstelement.length()-2);
+      String parentPath = tempString.substring(0,tempString.lastIndexOf('/'));
       // Gets metadata
       {
 
         // Create temporary file with metadata
         Path temp = Files.createTempFile("metadata", ".json");
         List<ArchiveEntry> jsonEntries = archive.getEntriesWithFormat(URIS.get("json"));
+        
         for (ArchiveEntry jsonEntry : jsonEntries) {
           String path = jsonEntry.getEntityPath();
-          if (!(path.contains(firstelement) || path.contains(secondElement))) {
+          if (path.startsWith(parentPath)&&(StringUtils.countMatches(path, "/") == (StringUtils.countMatches(parentPath, "/")+1))) {
             jsonEntry.extractFile(temp.toFile());
 
             // Loads metadata from temporary file
@@ -223,7 +226,7 @@ class ReaderNodeModel extends NoInternalsModel {
         List<ArchiveEntry> sbmlEntries = archive.getEntriesWithFormat(URIS.get("sbml"));
         for (ArchiveEntry sbmlEntry : sbmlEntries) {
           String path = sbmlEntry.getEntityPath();
-          if (!(path.contains(firstelement) || path.contains(secondElement))) {
+          if (path.startsWith(parentPath)&&(StringUtils.countMatches(path, "/") == (StringUtils.countMatches(parentPath, "/")+1))) {
             Path parentFile = Files.createTempFile("Model", ".sbml");
             sbmlEntry.extractFile(parentFile.toFile());
             try {
@@ -275,7 +278,7 @@ class ReaderNodeModel extends NoInternalsModel {
       List<ArchiveEntry> sedmlEntries = archive.getEntriesWithFormat(URIS.get("sedml"));
       for (ArchiveEntry simEntry : sedmlEntries) {
         String path = simEntry.getEntityPath();
-        if (path.indexOf("/sim.sedml") == 0) {
+        if (path.startsWith(parentPath)&&(StringUtils.countMatches(path, "/") == (StringUtils.countMatches(parentPath, "/")+1))) {
           File simulationsFile = FileUtil.createTempFile("sim", ".sedml");
           simEntry.extractFile(simulationsFile);
 
