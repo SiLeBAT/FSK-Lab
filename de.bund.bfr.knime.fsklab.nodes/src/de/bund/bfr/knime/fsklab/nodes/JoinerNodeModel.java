@@ -33,7 +33,6 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -176,7 +175,7 @@ final class JoinerNodeModel extends
       }
 
       if (joinerProxyValue.getJoinRelations() != null) {
-        String relation = StringEscapeUtils.unescapeJson(joinerProxyValue.getJoinRelations());
+        String relation = joinerProxyValue.getJoinRelations();
         joinerProxyValue.setJoinRelations(relation);
         JsonReader jsonReader = Json.createReader(new StringReader(relation));
         JsonArray relationJsonArray = jsonReader.readArray();

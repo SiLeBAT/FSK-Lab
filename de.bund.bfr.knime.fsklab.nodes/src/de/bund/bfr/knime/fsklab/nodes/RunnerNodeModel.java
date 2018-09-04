@@ -185,12 +185,12 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         }
 
         // make a map of file name and its last modification date to observe any changes which
-        // mean
+        // means
         // file overwriting or generating new one
         String wd1 = firstFskObj.getWorkingDirectory();
         String wd2 = secondFskObj.getWorkingDirectory();
         Map<String, Long> fileModifacationMap = new HashMap<String, Long>();
-        if (!wd1.equals(wd1)) {
+        if (!wd1.equals(wd2)) {
           try (Stream<Path> paths =
               Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
             paths.filter(Files::isRegularFile).forEach(currentFile -> {
@@ -206,7 +206,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
         // move the generated files to the working
         // directory of the second model
-        if (!wd1.equals(wd1)) {
+        if (!wd1.equals(wd2)) {
           Path targetDirectory = FileUtil.getFileFromURL(FileUtil.toURL(wd2)).toPath();
           try (Stream<Path> paths =
               Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
