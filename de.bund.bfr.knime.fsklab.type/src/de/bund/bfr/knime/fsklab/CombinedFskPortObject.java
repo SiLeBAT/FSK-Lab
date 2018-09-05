@@ -151,11 +151,13 @@ public class CombinedFskPortObject extends FskPortObject {
     numOfInstances += 1;
   }
 
-  public CombinedFskPortObject(final GeneralInformation generalInformation, final Scope scope,
+  public CombinedFskPortObject(final String model, final String viz,final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final String workingDirectory,
       final List<String> packages, final FskPortObject firstFskPortObject,
       final FskPortObject secondFskPortObject) throws IOException {
     super(workingDirectory, packages);
+    this.model = model;
+    this.viz = viz;
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     this.generalInformation = generalInformation;
@@ -197,8 +199,8 @@ public class CombinedFskPortObject extends FskPortObject {
     private static final String JOINED_MODEL_MATH = "joinedModelMath";
     private static final String JOINED_SIMULATION = "joinedsimulation";
     private static final String JOINED_WORKSPACE = "joinedworkspace";
-
-
+    private static final String JOINED_VIZ = "joinedviz.R";
+    
     private static final String WORKSPACE = "workspace";
     private static final String SIMULATION = "simulation";
     private static final String SIMULATION_INDEX = "xSimulationIndex";
@@ -215,24 +217,24 @@ public class CombinedFskPortObject extends FskPortObject {
 
     private static final String LIBRARY_LIST = "library.list";
     private static final String BREAK = "break";
-
-
+    private int level = 0;
 
     @Override
     public void savePortObject(final CombinedFskPortObject portObject,
         final PortObjectZipOutputStream out, final ExecutionMonitor exec)
         throws IOException, CanceledExecutionException {
-      saveFSKPortObject(portObject, out, exec, 0);
+      saveFSKPortObject(portObject, out, exec);
       out.close();
     }
 
     public void saveFSKPortObject(FskPortObject portObject, final PortObjectZipOutputStream out,
-        final ExecutionMonitor exec, int level) throws IOException {
+        final ExecutionMonitor exec) throws IOException {
+    	level++;
       // First FSK Object
       // model entry (file with model script)
       if (portObject instanceof CombinedFskPortObject) {
         // write tag value to check the type of the fsk port object when read it back
-    	level++;
+    	
         out.putNextEntry(new ZipEntry(COMBINED+level));
         IOUtils.write(COMBINED+level, out, "UTF-8");
         out.closeEntry();
@@ -267,10 +269,15 @@ public class CombinedFskPortObject extends FskPortObject {
         writeEObject(JOINED_SCOPE+level, portObject.scope, out);
         writeEObject(JOINED_DATA_BACKGROUND+level, portObject.dataBackground, out);
         writeEObject(JOINED_MODEL_MATH+level, portObject.modelMath, out);
-    
+      
 
-        saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec, ++level);
-        saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec, ++level);
+        // joined viz entry (file with visualization script)
+        out.putNextEntry(new ZipEntry(JOINED_VIZ + level));
+        IOUtils.write(portObject.viz, out, "UTF-8");
+        out.closeEntry();
+
+        saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec);
+        saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec);
 
        
       } else {
@@ -451,6 +458,11 @@ public class CombinedFskPortObject extends FskPortObject {
             modelMath = readEObject(in, ModelMath.class);
           }
           
+          entry = in.getNextEntry();
+          entryName = entry.getName();
+          if (entryName.startsWith(JOINED_VIZ+level)) {
+        	  visualizationScript = IOUtils.toString(in, "UTF-8");
+          }
 
 
           // read first FSKObject
@@ -460,7 +472,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
           
           // build combined object out of the previous objects
-          final CombinedFskPortObject portObj = new CombinedFskPortObject(generalInformation, scope,
+          final CombinedFskPortObject portObj = new CombinedFskPortObject(modelScript,visualizationScript,generalInformation, scope,
               dataBackground, modelMath, FileUtil.createTempDir("combined").getAbsolutePath(),
               new ArrayList<>(), firstFSKObject, secondFSKObject);
           portObj.workspace =  workspacePath;

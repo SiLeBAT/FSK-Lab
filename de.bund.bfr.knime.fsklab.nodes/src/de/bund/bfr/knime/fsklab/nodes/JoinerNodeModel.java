@@ -212,8 +212,8 @@ final class JoinerNodeModel extends
           getEObjectFromJson(joinerProxyValue.getDataBackground(), DataBackground.class);
       outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(), ModelMath.class);
 
-      outObj.model = joinerProxyValue.getFirstModelScript();
-      outObj.viz = joinerProxyValue.getFirstModelViz();
+      //outObj.model = joinerProxyValue.getSecondModelScript();
+      outObj.viz = joinerProxyValue.getSecondModelViz();
       Set<String> packageSet = new HashSet<>();
       packageSet.addAll(inObj1.packages);
       packageSet.addAll(inObj2.packages);
@@ -320,6 +320,14 @@ final class JoinerNodeModel extends
   public void setHideInWizard(boolean hide) {}
 
   public void resolveParameterNamesConflict(FskPortObject fskPort1, FskPortObject fskPort2) {
+    for (Parameter firstParam : fskPort1.modelMath.getParameter()) {
+      for (Parameter secondParam : fskPort2.modelMath.getParameter()) {
+        if (secondParam.getParameterID().equals(firstParam.getParameterID())) {
+          firstParam.setParameterName(firstParam.getParameterID() + suffix);
+          firstParam.setParameterID(firstParam.getParameterID() + suffix);
+        }
+      }
+    }
     for (Parameter firstParam : fskPort1.modelMath.getParameter()) {
       for (Parameter secondParam : fskPort2.modelMath.getParameter()) {
         if (secondParam.getParameterID().equals(firstParam.getParameterID())) {

@@ -160,7 +160,13 @@ class ReaderNodeModel extends NoInternalsModel {
     }
     return new PortObject[] {fskObj};
   }
-
+  public FskPortObject getEmbedSecondFSKObject( CombinedFskPortObject comFskObj) {
+    FskPortObject embedFSKObject = comFskObj.getSecondFskPortObject();
+    if(embedFSKObject instanceof CombinedFskPortObject) {
+       embedFSKObject = getEmbedSecondFSKObject((CombinedFskPortObject) embedFSKObject);
+    }
+    return embedFSKObject;
+  }
   public FskPortObject readFskPortObject(CombineArchive archive, List<String> ListOfPaths, int readLevel)
       throws Exception {
     // each sub Model has it's own working directory to avoid resource conflict.
@@ -177,11 +183,13 @@ class ReaderNodeModel extends NoInternalsModel {
     if (ListOfPaths != null && ListOfPaths.size() > 1) {
       String firstelement = ListOfPaths.get(ListOfPaths.size()%2);
       // classify the pathes into two groups, each belongs to sub model
-      List<String> firstGroup = ListOfPaths.stream().filter(line -> line.startsWith(firstelement) )
+      List<String> firstGroup = ListOfPaths.stream().filter(line -> line.startsWith(firstelement))
           .collect(Collectors.toList());
-      String secondElement = ListOfPaths.get(ListOfPaths.size()-1);
-      List<String> secondGroup = ListOfPaths.stream().filter(line -> line.startsWith(secondElement))
+      List<String> secondGroup = ListOfPaths.stream().filter(line -> !firstGroup.contains(line))
           .collect(Collectors.toList());
+      if(secondGroup.size() == 2) {
+        secondGroup.remove(0);
+      }
 
       // invoke this mothod recursively to get the sub model using the corresponding path group
       FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup,++readLevel);
@@ -241,9 +249,13 @@ class ReaderNodeModel extends NoInternalsModel {
           ListOf<Parameter> params = parentSBMLDoc.getModel().getListOfParameters();
           for (Parameter param : params) {
             JoinRelation jR = new JoinRelation();
-            metadata.Parameter targetParam = secondFskPortObject.modelMath.getParameter().stream()
+            List<metadata.Parameter> coll = secondFskPortObject.modelMath.getParameter().stream()
                 .filter(cp -> cp.getParameterID().equals(param.getId()))
-                .collect(Collectors.toList()).get(0);
+                .collect(Collectors.toList());
+            if(coll.size() == 0) {
+              continue;
+            }
+            metadata.Parameter targetParam = coll.get(0);
             jR.setTargetParam(targetParam);
             CompSBasePlugin a = (CompSBasePlugin) param.getExtension("comp");
             String replacmentLement = a.getReplacedBy().getIdRef();
@@ -287,9 +299,12 @@ class ReaderNodeModel extends NoInternalsModel {
           simulations.addAll(loadSimulations(sedml));
         }
       }
-      CombinedFskPortObject topfskObj = new CombinedFskPortObject(generalInformation, scope,
+      
+      // TODO read the model, vis script for the combined Object
+      CombinedFskPortObject topfskObj = new CombinedFskPortObject("","",generalInformation, scope,
           dataBackground, modelMath, workingDirectory.toString(), new ArrayList<>(),
           firstFskPortObject, secondFskPortObject);
+      topfskObj.viz = getEmbedSecondFSKObject(topfskObj).viz;
       topfskObj.simulations.addAll(simulations);
       topfskObj.setJoinerRelation(joinerRelation);
       return topfskObj;
