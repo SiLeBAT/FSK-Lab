@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  PMM-Lab Â© 2012-2014, Federal Institute for Risk Assessment (BfR), Germany
+  
+  PMM-Lab is a set of KNIME-Nodes and KNIME workflows running within the KNIME software plattform (http://www.knime.org.).
+  
+  PMM-Lab Â© 2012-2014, Federal Institute for Risk Assessment (BfR), Germany
+  Contact: armin.weiser@bfr.bund.de or matthias.filter@bfr.bund.de 
+  
+  Developers and contributors to the PMM-Lab project are 
+  Christian ThÃ¶ns (BfR)
+  Matthias Filter (BfR)
+  Armin A. Weiser (BfR)
+  Alexander Falenski (BfR)
+  JÃ¶rgen Brandt (BfR)
+  Annemarie KÃ¤sbohrer (BfR)
+  Bernd Appel (BfR)
+  
+  PMM-Lab is a project under development. Contributions are welcome.
+  
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./ModelFormulaWriter.png" type="Sink">
+    <name>Formula Writer</name>
+    
+     <shortDescription>Saves model formulas to the internal database</shortDescription>
+    
+    <fullDescription>
+        <intro>Saves primary or secondary model formulas to the internal PMM-Lab database.</intro>
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Model formulas">Model formulas (e.g. from the Formula Creator node)</inPort>
+    </ports>    
+</knimeNode>

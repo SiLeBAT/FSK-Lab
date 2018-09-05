@@ -1,0 +1,112 @@
+JFDML JFormDesigner: "5.1.1.0.120" Java: "1.7.0_07" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "default:grow"
+			"$rowSpecs": "default, linegap, fill:default, linegap, fill:default, linegap, fill:default, linegap, fill:default:grow"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "withoutData"
+				"text": "Load models without associated microbial data"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 1
+				"gridY": 1
+			} )
+			add( new FormComponent( "de.bund.bfr.knime.pmm.common.ui.ModelReaderUi" ) {
+				name: "modelReaderUi"
+				auxiliary() {
+					"JavaCodeGenerator.customCreateCode": "new ModelReaderUi(true);"
+				}
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 1
+				"gridY": 3
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default:grow"
+				"$rowSpecs": "default"
+			} ) {
+				name: "qualityPanel"
+				"border": new javax.swing.border.TitledBorder( "Estimation Quality" )
+				add( new FormComponent( "javax.swing.JRadioButton" ) {
+					name: "qualityButtonNone"
+					"text": "Do not filter"
+					"$buttonGroup": new FormReference( "buttonGroup1" )
+					"selected": true
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "qualityButtonActionPerformed", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) )
+				add( new FormComponent( "javax.swing.JRadioButton" ) {
+					name: "qualityButtonRms"
+					"text": "Filter by RMS"
+					"$buttonGroup": new FormReference( "buttonGroup1" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "qualityButtonActionPerformed", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JRadioButton" ) {
+					name: "qualityButtonR2"
+					"text": "Filter by R squared"
+					"$buttonGroup": new FormReference( "buttonGroup1" )
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "qualityButtonActionPerformed", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label3"
+					"text": "Quality threshold:"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 7
+				} )
+				add( new FormComponent( "de.bund.bfr.knime.pmm.common.ui.DoubleTextField" ) {
+					name: "qualityField"
+					"value": 0.8
+					"enabled": false
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 9
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 1
+				"gridY": 5
+			} )
+			add( new FormComponent( "de.bund.bfr.knime.pmm.timeseriesreader.MdReaderUi" ) {
+				name: "mdReaderUi"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 1
+				"gridY": 7
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow"
+				"$rowSpecs": "default, linegap, default"
+			} ) {
+				name: "panel6"
+				"border": new javax.swing.border.TitledBorder( "Results" )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "doFilter"
+					"text": "Select Models"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "doFilterActionPerformed", true ) )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "selectedFilterResults"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 1
+				"gridY": 9
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 630, 535 )
+		} )
+		add( new FormNonVisual( "javax.swing.ButtonGroup" ) {
+			name: "buttonGroup1"
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 590 )
+		} )
+	}
+}

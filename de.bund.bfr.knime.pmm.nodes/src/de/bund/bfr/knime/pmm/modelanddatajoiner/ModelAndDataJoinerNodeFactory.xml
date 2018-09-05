@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./PMMJoiner.png" type="Manipulator">
+    <name>PMM Joiner</name>
+    
+    <shortDescription>Joins model formulas and data and assigns parameter symbols in formulas to parameter names in preparation for a model estimation</shortDescription>
+    
+    <fullDescription>
+        <intro>Joins model formulas and data in one table so that every microbial data set is assigned to all models. Furthermore, the node assigns parameter symbols in formulas (e.g. 't') to parameter names (in this case 'time') in preparation for a model estimation. 'Data' could be time series of bacterial concentrations from laboratory experiments, needed for a primary estimation, or primary models needed for a secondary estimation.<br></br><br></br>
+        Available joining options depend on the input. For example, if a formula and bacterial concentrations are used as input only the 'Primary Join' is possible.</intro>
+        
+        
+        <option name="Primary Join">'Value' (e.g. bacterial concentrations) and 'Time' are assigned automatically to the equation. For primary model estimation these two are the only options.</option>
+        <option name="Secondary Join">Joins secondary model parameters with test conditions from data used in the fitting of primary models.</option>
+        <option name="Combined Join">Joins an omnibus model / a combined formula of one primary and one or more secondary formulas to data. Dependent on the amount of data sets the execution of the node may take longer than two minutes.</option>
+        <option name="Join Options">Assign data to model parameters (primary model) or model parameters to secondary model formulas (secondary model). For example, if an estimated primary model contains the parameter 'k' you can choose from the dropdown menu a model formula for estimating the change of 'k' in dependence on one or more environmental conditions (e.g. temperature, pH, a<sub>W</sub>).</option>     
+   </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Models">The upper port requires models. These may come from the following PMM-Lab nodes: Model Reader, Formula Reader, XLS Model Reader, Primary Model Selection, Model Creator or Formula Creator.</inPort>
+        <inPort index="1" name="Data">For a primary model estimation the lower port requires data (e.g. time series of bacterial concentrations). These can be obtained from the nodes ComBase Reader, Data Reader or XLS Data Reader.<br></br><br></br>
+        For a secondary model estimation fitted primary models are needed as input (e.g. from the nodes Model Reader, XLS Model Reader or Primary Model Selection).</inPort>
+        <outPort index="0" name="Data and models">A combined table with models and data</outPort>
+    </ports>    
+</knimeNode>

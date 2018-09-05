@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./ModelSelectionTertiary.png" type="Manipulator">
+    <name>Tertiary Model Selection</name>
+    
+    <shortDescription>
+        View and select estimated primary or secondary models or combined models
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>View and select estimated primary or secondary models or combined models.</intro>
+        
+        
+       	<option name="Graph">Visualizes primary and secondary estimations and the original data values (e.g. microbial concentrations) over time.<br></br><br></br>
+        <b>Mouse zoom:</b> To view a part of the graph in detail left click and simultaneously drag the mouse right and down. Another way is to use the zoom options in the context menu.<br></br><br></br>
+        <b>Context Menu</b> (Right click in the graph):<br></br>
+        <u>Properties:</u> Change font (type, size, color) and labels as well as the appearance of the graph. These changes are lost as soon as the options dialog is closed. To save a graph with changed properties (e.g. for a publication) use the "Save as..." option in the context menu.<br></br>
+        <u>Copy:</u> Copies the graph to the clipboard enabling you to paste it in a graphical editor.<br></br>
+        <u>Save as...:</u> Saves the graph as PNG (a bitmap image) or as SVG (a vector image). Compared to the PNG image in the outport (which has a resolution of 640x480 pixels) this PNG is saved with the same size as on the screen.<br></br>
+        <u>Print:</u> Print the graph directly from Knime PMM-Lab.<br></br>
+        <u>Zoom:</u> Zoom in and out or auto range the view for one or both axes.</option>
+        
+        <option name="Display Options">
+        <u>Draw Lines:</u> Connect data points with lines which helps to distinguish between different sets of data.<br></br> 
+        <u>Display Highlighted Row:</u> If checked, only the highlighted row in the table on the right is displayed. A comfortable way to select sets of data is to highlight a row and then navigate with the arrow keys (up/down). The space bar selects/unselects a set of data.
+        <u>Show Legend:</u> Display the model name and the data set ID together with symbol and color.<br></br>
+        <u>Add Info in Legend:</u> Adds the formula to the legend. This option only available when the legend is displayed.<br></br>
+        <u>Export as SVG:</u> If checked, the graph outport contains a SVG file and not a PNG file after execution of the node.</option>
+        
+        <option name="Range">Set the minimum and maximum values for the x and y axes.</option>
+        
+        <option name="Parameters"><u>X and Y:</u> The units of the x-axis (time) and of the y-axis (value, e.g. bacterial concentrations) can be changed.<br></br>
+        <u>Y Transform:</u> Transforms the data on the Y axis (square root, ln, log10, basis e, basis 10). This is useful if a display of data other than the PMM-Lab default (log10) is wished for (e.g. as actual cell counts -> 10^).</option>
+        
+        <option name="Filter">Filter the rows in the table to be displayed for model formula name, model estimation status and microbial data ID. Possible status of the model estimation:<br></br> 
+        <u>'OK'</u> means the model could be fitted to the parameter values.<br></br> 
+        <u>'Coeff Out Of Limit' (yellow)</u> says that to fit the model to the parameter values the given minimum or maximum value of the parameters had to be extended. If this is not an option (e.g. because it is biologically not sensible) check 'Enforce Limits' in the Model Fitting node.<br></br>
+		<u>'No Covariance Matrix' (yellow)</u> means that no errors could be calculated for the parameters. This also means that confidence intervals cannot be shown.<br></br> 
+        <u>'Failed' (red)</u> means that the model could not be fitted to the parameter values.<br></br><br></br></option>
+        
+        <option name="Select">Either select all sets of data, deselect chosen data sets or invert the current selection.</option>
+        
+        <option name="Columns">Click on "Customize" to select the columns to be displayed, e.g. model name, quality criteria (R<sup>2</sup>, AIC) and environmental conditions (temperature, pH, a<sub>W</sub>).</option>
+        
+        <option name="Table"> The table shows the available sets of data, whether they are currently being displayed (selected), the color and shape of the symbol and other information (see "Columns"). Clicking on a column header sorts the table.</option>
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Models/microbial data">Primary and secondary models as well as microbial data (e.g. from the Model Fitting node or the Model Reader node)</inPort>
+        <outPort index="0" name="Selected models">Selected models and corresponding data</outPort>
+        <outPort index="1" name="Selected models graph">Graph with selected models and corresponding data; the image is a PNG file (default) or a SVG file (see section 'Display Options')</outPort>
+    </ports>    
+</knimeNode>

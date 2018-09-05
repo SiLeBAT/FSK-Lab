@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./NuMLReader.png" type="Source"
+	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>NuML Reader</name>
+
+	<shortDescription>
+		This nodes reads data from a single NuML document.
+	</shortDescription>
+
+	<fullDescription>
+		<intro>
+			This node reads in a single NuMLDocument and retrieves the data.
+		</intro>
+
+		<option name="Selected File">
+			Path of the file to read.
+		</option>
+	</fullDescription>
+
+	<ports>
+		<outPort index="0" name="Models">Read data</outPort>
+	</ports>
+</knimeNode>

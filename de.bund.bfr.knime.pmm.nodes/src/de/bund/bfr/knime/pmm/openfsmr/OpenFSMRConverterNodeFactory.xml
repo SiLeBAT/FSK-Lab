@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./OpenFSMRConverter.png" type="Source"
+	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.10 http://knime.org/node/v2.10.xsd">
+	<name>OpenFSMR Converter</name>
+
+	<shortDescription>This node creates a OpenFSMR template from a PMF file
+	</shortDescription>
+
+	<fullDescription>
+		<intro>
+			Creates a table with the format of OpenFSMR from a PMF file.
+			The columns are:
+			<ul>
+				<li>Model name</li>
+				<li>Model ID</li>
+				<li>Model link</li>
+				<li>PMF organism</li>
+				<li>PMF organism detail</li>
+				<li>PMF environment</li>
+				<li>PMF environment detail</li>
+				<li>Model creator</li>
+				<li>Model reference description</li>
+				<li>Model reference description link</li>
+				<li>Model created</li>
+				<li>Model modified</li>
+				<li>Model rights</li>
+				<li>Model notes</li>
+				<li>Model curation status</li>
+				<li>Model type</li>
+				<li>Model subject</li>
+				<li>Model food process</li>
+				<li>Model dependent variable</li>
+				<li>Model dependent variable unit</li>
+				<li>Model dependent variable min</li>
+				<li>Model dependent variable max</li>
+				<li>Model independent variable</li>
+				<li>Software</li>
+				<li>Software link</li>
+				<li>Software accessibility</li>
+				<li>Software stochastic modeling?</li>
+				<li>Software prediction conditions</li>
+			</ul>
+		</intro>
+
+		<option name="Selected File">
+			Path of the file to read.
+		</option>
+	</fullDescription>
+
+	<ports>
+		<outPort index="0" name="Templates">Templates</outPort>
+	</ports>
+</knimeNode>

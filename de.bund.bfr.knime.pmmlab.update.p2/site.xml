@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/de.bund.bfr.knime.pmm.base_1.0.9.qualifier.jar" id="de.bund.bfr.knime.pmm.base" version="1.0.9.qualifier">
+      <category name="PMM-Lab"/>
+   </feature>
+   <category-def name="PMM-Lab" label="PMM-Lab"/>
+</site>

@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+  <extension point="org.knime.workbench.repository.nodes">
+    <!-- PdfKeeper -->
+    <node category-path="/pmmlab"
+      factory-class="de.bund.bfr.knime.pmm.pdfkeeper.PdfKeeperNodeFactory"/>
+      
+    <!-- Converters -->
+    <!-- XML To Table -->
+    <node category-path="/pmmlab/converters"
+      factory-class="de.bund.bfr.knime.pmm.xml2table.XML2TableNodeFactory"/>
+    
+    <!-- Editors -->
+    <!-- DB Data Deleter -->
+    <node category-path="/pmmlab/editors"
+      factory-class="de.bund.bfr.knime.pmm.dbdelete.DatabaseDeleteNodeFactory"/>
+    <!-- Model Creator -->
+    <node category-path="/pmmlab/editors"
+      factory-class="de.bund.bfr.knime.pmm.manualmodelconf.ManualModelConfNodeFactory"/>
+    <!-- Model Editor -->
+    <node category-path="/pmmlab/editors"
+      factory-class="de.bund.bfr.knime.pmm.manualmodelconf.ManualModelEditorNodeFactory"/>
+    <!-- Formula Creator -->
+    <node category-path="/pmmlab/editors"
+      factory-class="de.bund.bfr.knime.pmm.manualmodelconf.ManualFormulaCreatorNodeFactory"/>
+    <!-- Data Editor -->
+    <node category-path="/pmmlab/editors"
+      factory-class="de.bund.bfr.knime.pmm.microbialdataedit.MicrobialDataEditNodeFactory"/>
+    <!-- Data Creator -->
+    <node category-path="/pmmlab/editors"
+      factory-class="de.bund.bfr.knime.pmm.timeseriescreator.TimeSeriesCreatorNodeFactory" />
+    <!-- JavaScript Editor -->
+    <node category-path="/pmmlab/editors"
+      factory-class="de.bund.bfr.knime.pmm.editor.ModelEditorNodeFactory"/>
+
+    <!-- Model Fitting -->
+    <!-- PMM Joiner -->
+    <node category-path="/pmmlab/fitting"
+      factory-class="de.bund.bfr.knime.pmm.modelanddatajoiner.ModelAndDataJoinerNodeFactory"/>
+    <!-- Model Fitting -->
+    <node category-path="/pmmlab/fitting"
+      factory-class="de.bund.bfr.knime.pmm.modelestimation.ModelEstimationNodeFactory"/>
+    
+    <!-- Readers -->
+    <!-- ComBase Reader -->
+    <node category-path="/pmmlab/reader"
+      factory-class="de.bund.bfr.knime.pmm.combaseio.CombaseReaderNodeFactory"/>
+    <!-- Model Reader -->
+    <node category-path="/pmmlab/reader"
+      factory-class="de.bund.bfr.knime.pmm.estimatedmodelreader.EstimatedModelReaderNodeFactory"/>
+    <!-- Formula Reader -->
+    <node category-path="/pmmlab/reader"
+      factory-class="de.bund.bfr.knime.pmm.modelcatalogreader.ModelCatalogReaderNodeFactory"/>
+    <!-- Data Reader -->
+    <node category-path="/pmmlab/reader"
+      factory-class="de.bund.bfr.knime.pmm.timeseriesreader.TimeSeriesReaderNodeFactory" />
+    <!-- XLS Model Reader -->
+    <node category-path="/pmmlab/reader"
+      factory-class="de.bund.bfr.knime.pmm.xlsmodelreader.XLSModelReaderNodeFactory" />
+    <!-- XLS Data Reader -->
+    <node category-path="/pmmlab/reader"
+      factory-class="de.bund.bfr.knime.pmm.xlstimeseriesreader.XLSTimeSeriesReaderNodeFactory" />
+    <!-- NuML Reader -->
+    <node category-path="/pmmlab/reader"
+      factory-class="de.bund.bfr.knime.pmm.numl.NuMLReaderNodeFactory"/>
+    <!-- OpenFSMR Converter -->
+    <node category-path="/pmmlab/reader"
+      factory-class="de.bund.bfr.knime.pmm.openfsmr.OpenFSMRConverterNodeFactory"/>
+    <!-- SBML Reader -->
+    <node category-path="/pmmlab/reader"
+      factory-class="de.bund.bfr.knime.pmm.sbmlreader.SBMLReaderNodeFactory"/>
+    <node category-path="/pmmlab/reader" deprecated="true"
+      factory-class="de.bund.bfr.knime.pmm.pmfreader.PMFXReaderNodeFactory"/>
+  	<node category-path="/pmmlab/reader" deprecated="true"
+  	  factory-class="de.bund.bfr.knime.pmm.pmfreader.PMFReaderNodeFactory"/>
+  	<node category-path="/pmmlab/reader" deprecated="true"
+  	  factory-class="de.bund.bfr.knime.pmm.pmfxreader.PMFXReaderNodeFactory" />
+  	<node category-path="/pmmlab/reader" deprecated="false"
+  	  factory-class="de.bund.bfr.knime.pmm.pmfreader.fsk.NodeFactory" />
+
+    <!-- Selectors & Viewers -->
+    <node category-path="/pmmlab/views"
+      factory-class="de.bund.bfr.knime.pmm.dataviewandselect.DataViewAndSelectNodeFactory"/>
+    <!-- Fitted Parameter View -->
+    <node category-path="/pmmlab/views"
+      factory-class="de.bund.bfr.knime.pmm.fittedparameterview.FittedParameterViewNodeFactory"/>
+    <!-- Tertiary Model Selection -->
+    <node category-path="/pmmlab/views"
+      factory-class="de.bund.bfr.knime.pmm.modelselectiontertiary.ModelSelectionTertiaryNodeFactory"/>
+    <!-- Predictor View -->
+    <node category-path="/pmmlab/views"
+      factory-class="de.bund.bfr.knime.pmm.predictorview.PredictorViewNodeFactory"/>
+    <!-- Predictor View JS -->
+    <node category-path="/pmmlab/views"
+      factory-class="de.bund.bfr.knime.pmm.js.modelplotter.modern.ModelPlotterNodeFactory"/>
+    <!-- Predictor View JS (deprecated) -->
+    <node category-path="/pmmlab/views"
+      factory-class="de.bund.bfr.knime.pmm.js.modelplotter.ModelPlotterNodeFactory"/>
+    <!-- Secondary Predictor View -->
+    <node category-path="/pmmlab/views"
+      factory-class="de.bund.bfr.knime.pmm.secondarypredictorview.SecondaryPredictorViewNodeFactory" />
+    <!-- Primary model selection -->
+    <node category-path="/pmmlab/views"
+      factory-class="de.bund.bfr.knime.pmm.primarymodelviewandselect.PrimaryModelViewAndSelectNodeFactory" />
+    <!-- Secondary Model View -->
+    <node category-path="/pmmlab/views"
+      factory-class="de.bund.bfr.knime.pmm.secondarymodelanddataview.SecondaryModelAndDataViewNodeFactory" />
+
+    <!-- Writers -->
+    <node category-path="/pmmlab/writer"
+      factory-class="de.bund.bfr.knime.pmm.combaseio.CombaseWriterNodeFactory"/>
+    <!-- Formula Writer -->
+    <node category-path="/pmmlab/writer"
+      factory-class="de.bund.bfr.knime.pmm.modelcatalogwriter.ModelCatalogWriterNodeFactory"/>
+    <!-- Model Writer -->
+    <node category-path="/pmmlab/writer"
+      factory-class="de.bund.bfr.knime.pmm.estimatedmodelwriter.EstimatedModelWriterNodeFactory"/>
+    <!-- Data Writer -->
+    <node category-path="/pmmlab/writer"
+      factory-class="de.bund.bfr.knime.pmm.timeserieswriter.TimeSeriesWriterNodeFactory" />
+    <!-- SBML Writer -->
+    <node category-path="/pmmlab/writer" deprecated="true"
+      factory-class="de.bund.bfr.knime.pmm.sbmlwriter.SBMLWriterNodeFactory" />
+    <node category-path="/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfwriter.PMFXWriterNodeFactory"/>
+  	<node category-path="/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfwriter.PMFWriterNodeFactory"/>
+  	<node category-path="/pmmlab/writer" deprecated="true" factory-class="de.bund.bfr.knime.pmm.pmfxwriter.PMFXWriterNodeFactory"/>
+  	<node category-path="/pmmlab/writer" deprecated="false" factory-class="de.bund.bfr.knime.pmm.pmfwriter.fsk.NodeFactory" />
+  </extension>
+  
+  <extension point="org.knime.workbench.repository.metanode">
+    <PersistedMetaNode
+      category-path="/pmmlab/reader"
+      expert-flag="false"
+      icon="metanode_templates/Variable Data Reader.png"
+      id="de.bund.bfr.knime.pmm.xlstimeseriesreader.variabledatareader"
+      name="Variable Data Reader"
+      workflowDir="metanode_templates/Variable Data Reader/">
+    </PersistedMetaNode>
+  </extension>
+  
+
+  <extension point="org.knime.js.core.javascriptComponents">
+    <javascriptComponent
+      getComponentValue-method-name="getComponentValue"
+      implementationBundleID="de.bund.bfr.knime.pmm.js.modelplotter.modern.bundle"
+      init-method-name="init"
+      javascriptComponentID="de.bund.bfr.knime.pmm.js.modelplotter.modern"
+      name="Model Plotter"
+      namespace="pmm_plotter"
+      setValidationError-method-name="setValidationError"
+      validate-method-name="validate" />
+
+    <javascriptComponent
+      getComponentValue-method-name="getComponentValue"
+      implementationBundleID="de.bund.bfr.knime.pmm.js.modelplotter.bundle"
+      init-method-name="init"
+      javascriptComponentID="de.bund.bfr.knime.pmm.js.modelplotter"
+      name="Model Plotter (deprecated)"
+      namespace="bfr_model_plotter"
+      setValidationError-method-name="setValidationError"
+      validate-method-name="validate" />
+      
+    <javascriptComponent
+      getComponentValue-method-name="value"
+      implementationBundleID="de.bund.bfr.knime.pmm.editor.bundle"
+      init-method-name="init"
+      javascriptComponentID="de.bund.bfr.knime.pmm.editor"
+      name="JavaScript Editor"
+      namespace="js_editor">
+    </javascriptComponent>
+  </extension>
+  
+  
+  <extension point="org.knime.js.core.webResources">
+    
+    <webResourceBundle debug="true" name="Function Plot" version="1.0.0"
+      webResourceBundleID="de.bund.bfr.knime.pmm.js.modelplotter.function-plot">
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/pmm/js/modelplotter/function-plot.js"
+        relativePathTarget="de/bund/bfr/knime/pmm/js/modelplotter/function-plot.js">
+      </webResource>
+      <importResource
+        relativePath="de/bund/bfr/knime/pmm/js/modelplotter/function-plot.js"
+        type="JAVASCRIPT" />
+      <webDependency webResourceBundleID="D3_3.5.5" />
+      <webDependency webResourceBundleID="mathjs_3.10.0" />
+    </webResourceBundle>
+    
+    <!-- TODO:
+      - Replace jQuery UI resource with dependency from org.knime.js.core
+      - Keep resources for: jquery-ui.structure.css, jquery-ui.theme.css??, images
+        (maybe jquery-ui.theme.css is already included in the dependency -> need to check)
+    -->
+    <webResourceBundle debug="true" name="jQuery UI" version="1.0.0"
+      webResourceBundleID="de.bund.bfr.knime.pmm.js.modelplotter.jquery-ui">
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.js"
+        relativePathTarget="de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.js">
+      </webResource>
+      <importResource
+        relativePath="de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.css"
+        relativePathTarget="de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.css">
+      </webResource>
+      <importResource
+        relativePath="de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.css"
+        type="CSS">
+      </importResource>
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.structure.css"
+        relativePathTarget="de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.structure.css">
+      </webResource>
+      <importResource
+        relativePath="de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.structure.css"
+        type="CSS">
+      </importResource>
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.theme.css"
+        relativePathTarget="de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.theme.css">
+      </webResource>
+      <importResource
+        relativePath="de/bund/bfr/knime/pmm/js/modelplotter/jquery-ui.theme.css"
+        type="CSS">
+      </importResource>
+      <webDependency webResourceBundleID="jQuery_1.11.0" />
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/pmm/js/modelplotter/images/"
+        relativePathTarget="de/bund/bfr/knime/pmm/js/modelplotter/images/">
+      </webResource>
+    </webResourceBundle>
+    
+    <webResourceBundle debug="true" name="PMM Plotter" version="1.0.0"
+      webResourceBundleID="de.bund.bfr.knime.pmm.js.modelplotter.modern.bundle">
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/pmm/js/modelplotter/pmm-plotter.js"
+        relativePathTarget="de/bund/bfr/knime/pmm/js/modelplotter/pmm-plotter.js">
+      </webResource>
+      <webDependency webResourceBundleID="de.bund.bfr.knime.pmm.js.modelplotter.function-plot" />
+      <webDependency webResourceBundleID="de.bund.bfr.knime.pmm.js.modelplotter.jquery-ui" />
+      <importResource
+        relativePath="de/bund/bfr/knime/pmm/js/modelplotter/pmm-plotter.js"
+        type="JAVASCRIPT">
+      </importResource>
+    </webResourceBundle>
+    
+    <!-- for depricated node -->
+    <webResourceBundle debug="true" name="Model Plotter" version="1.0.0"
+      webResourceBundleID="de.bund.bfr.knime.pmm.js.modelplotter.bundle">
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/pmm/js/modelplotter/knime-model-plotter.js"
+        relativePathTarget="de/bund/bfr/knime/pmm/js/modelplotter/knime-model-plotter.js">
+      </webResource>
+      <webDependency webResourceBundleID="jsxgraph_0.99.3" />
+      <importResource
+        relativePath="de/bund/bfr/knime/pmm/js/modelplotter/knime-model-plotter.js"
+        type="JAVASCRIPT">
+      </importResource>
+    </webResourceBundle>
+   
+    <webResourceBundle
+      debug="true"
+      name="JavaScript Editor"
+      usesDefine="false"
+      version="1.0.0"
+      webResourceBundleID="de.bund.bfr.knime.pmm.editor.bundle">
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/pmm/editor/"
+        relativePathTarget="de/bund/bfr/knime/pmm/editor/">
+      </webResource>
+      <importResource
+        relativePath="de/bund/bfr/knime/pmm/editor/editor.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <importResource
+        relativePath="de/bund/bfr/knime/pmm/editor/editor.css"
+        type="CSS">
+      </importResource>
+      <webDependency webResourceBundleID="select2_4.0.3" />
+	  <webDependency webResourceBundleID="toastr_2.1.3" />
+      <webDependency webResourceBundleID="jsep_0.3.1" />
+	  <webDependency webResourceBundleID="jQuery_2.1.4" />
+      <webDependency webResourceBundleID="bootstrap_3.3.6" />
+	  <webDependency webResourceBundleID="bootstrap-table_1.11.1" />
+	  <webDependency webResourceBundleID="bootstrap-editable_1.5.1" />
+    </webResourceBundle>
+    
+    <!-- bootstrap-editable (DEBUG) -->
+    <webResourceBundle
+      debug="true"
+      name="bootstrap-editable 1.5.1"
+      usesDefine="false"
+      version="1.5.1"
+      webResourceBundleID="bootstrap-editable_1.5.1_Debug">
+      <webResource relativePathSource="js-lib/bootstrap-editable/1_5_1/debug/" />
+      <webResource relativePathSource="js-lib/bootstrap-editable/1_5_1/img" />
+      <importResource
+        relativePath="js-lib/bootstrap-editable/1_5_1/debug/bootstrap-editable.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-lib/bootstrap-editable/1_5_1/debug/bootstrap-editable.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="bootstrap_3.3.6_Debug" />
+    </webResourceBundle>
+      
+    <!-- bootstrap-editable (MIN) -->
+    <webResourceBundle
+      debug="false"
+      name="bootstrap-editable 1.5.1"
+      usesDefine="false"
+      version="1.5.1"
+      webResourceBundleID="bootstrap-editable_1.5.1">
+      <webResource relativePathSource="js-lib/bootstrap-editable/1_5_1/min" />
+      <webResource relativePathSource="js-lib/bootstrap-editable/1_5_1/img" />
+      <importResource
+        relativePath="js-lib/bootstrap-editable/1_5_1/min/bootstrap-editable.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-lib/bootstrap-editable/1_5_1/min/bootstrap-editable.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="bootstrap_3.3.6" />
+    </webResourceBundle>
+      
+    <!-- bootstrap-table (DEBUG) -->
+    <webResourceBundle
+      debug="true"
+      name="bootstrap-table 1.11.1"
+      usesDefine="false"
+      version="1.11.1"
+      webResourceBundleID="bootstrap-table_1.11.1_Debug">
+      <webResource relativePathSource="js-lib/bootstrap-table/1_11_1/debug" />
+      <importResource
+        relativePath="js-lib/bootstrap-table/1_11_1/debug/css/bootstrap-table.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-lib/bootstrap-table/1_11_1/debug/js/bootstrap-table.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="bootstrap_3.3.6_Debug" />
+    </webResourceBundle>
+      
+    <!-- bootstrap-table (MIN) -->
+    <webResourceBundle
+      debug="false"
+      name="bootstrap-table 1.11.1"
+      usesDefine="false"
+      version="1.11.1"
+      webResourceBundleID="bootstrap-table_1.11.1">
+      <webResource relativePathSource="js-lib/bootstrap-table/1_11_1/min" />
+      <importResource
+        relativePath="js-lib/bootstrap-table/1_11_1/min/css/bootstrap-table.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-lib/bootstrap-table/1_11_1/min/js/bootstrap-table.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="bootstrap_3.3.6" />
+    </webResourceBundle>
+    
+    <!-- jsep (DEBUG) -->
+    <webResourceBundle
+      debug="true"
+      name="jsep 0.3.1"
+      usesDefine="false"
+      version="0.3.1"
+      webResourceBundleID="jsep_0.3.1_Debug">
+      <webResource relativePathSource="js-lib/jsep/0_3_1/debug" />
+      <importResource
+        relativePath="js-lib/jsep/0_3_1/debug/js/jsep.js"
+        type="JAVASCRIPT">
+      </importResource>
+    </webResourceBundle>
+    
+    <!-- jsep (MIN) -->
+    <webResourceBundle
+      debug="false"
+      name="jsep 0.3.1"
+      usesDefine="false"
+      version="0.3.1"
+      webResourceBundleID="jsep_0.3.1">
+      <webResource relativePathSource="js-lib/jsep/0_3_1/min" />
+      <importResource
+        relativePath="js-lib/jsep/0_3_1/min/js/jsep.js"
+        type="JAVASCRIPT">
+      </importResource>
+    </webResourceBundle>
+
+    <!-- select2 (DEBUG) -->
+    <webResourceBundle
+      debug="true"
+      name="select2 4.0.3"
+      usesDefine="false"
+      version="4.0.3"
+      webResourceBundleID="select2_4.0.3_Debug">
+      <webResource relativePathSource="js-lib/select2/4_0_3/debug/" />
+      <importResource
+        relativePath="js-lib/select2/4_0_3/debug/css/select2.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-lib/select2/4_0_3/debug/js/select2.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="jQuery_2.1.4_Debug" />
+    </webResourceBundle>
+    
+    <!-- select2 (MIN) -->
+    <webResourceBundle
+      debug="false"
+      name="select2 4.0.3"
+      usesDefine="false"
+      version="4.0.3"
+      webResourceBundleID="select2_4.0.3">
+      <webResource relativePathSource="js-lib/select2/4_0_3/min/" />
+      <importResource
+        relativePath="js-lib/select2/4_0_3/min/css/select2.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-lib/select2/4_0_3/min/js/select2.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="jQuery_2.1.4" />
+    </webResourceBundle>
+    
+    <!-- toastr (DEBUG) -->
+    <webResourceBundle
+      debug="true"
+      name="toastr 2.1.3"
+      usesDefine="false"
+      version="2.1.3"
+      webResourceBundleID="toastr_2.1.3_Debug">
+      <webResource relativePathSource="js-lib/toastr/2_1_3/debug/" />
+      <importResource
+        relativePath="js-lib/toastr/2_1_3/debug/css/toastr.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-lib/toastr/2_1_3/debug/js/toastr.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="jQuery_2.1.4_Debug" />
+    </webResourceBundle>
+    
+    <!-- toastr (MIN) -->
+    <webResourceBundle
+      debug="false"
+      name="toastr 2.1.3"
+      usesDefine="false"
+      version="2.1.3"
+      webResourceBundleID="toastr_2.1.3">
+      <webResource relativePathSource="js-lib/toastr/2_1_3/min/" />
+      <importResource
+        relativePath="js-lib/toastr/2_1_3/min/css/toastr.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-lib/toastr/2_1_3/min/js/toastr.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="jQuery_2.1.4" />
+    </webResourceBundle>
+
+    <!-- mathjs (debug) -->
+    <webResourceBundle
+      debug="true"
+      name="Math JS"
+      version="3.10.0"
+      webResourceBundleID="mathjs_3.10.0_Debug">
+      <webResource
+        relativePathSource="js-lib/mathjs/3_10_0/debug/"
+        relativePathTarget="js-lib/mathjs/3_10_0/debug/">
+      </webResource>
+      <importResource
+        relativePath="js-lib/mathjs/3_10_0/debug/js/math.js"
+        type="JAVASCRIPT">
+      </importResource>
+    </webResourceBundle>
+
+    <!-- mathjs (min) -->
+    <webResourceBundle
+      debug="false"
+      name="Math JS"
+      version="3.10.0"
+      webResourceBundleID="mathjs_3.10.0">
+      <webResource
+        relativePathSource="js-lib/mathjs/3_10_0/min/"
+        relativePathTarget="js-lib/mathjs/3_10_0/min/">
+      </webResource>
+      <importResource
+        relativePath="js-lib/mathjs/3_10_0/min/js/math.js"
+        type="JAVASCRIPT">
+      </importResource>
+    </webResourceBundle>
+    
+    <!-- jsxgraph (min) -->
+    <webResourceBundle
+      debug="false"
+      name="jsxgraph 0.99.3"
+      usesDefine="false"
+      version="0.99.3"
+      webResourceBundleID="jsxgraph_0.99.3">
+      <webResource relativePathSource="js-lib/jsxgraph/0_99_3/min/" />
+      <importResource
+        relativePath="js-lib/jsxgraph/0_99_3/min/css/jsxgraph.css"
+        type="CSS">
+      </importResource>
+      <importResource
+        relativePath="js-lib/jsxgraph/0_99_3/min/js/jsxgraphcore.js"
+        type="JAVASCRIPT">
+      </importResource>
+      <webDependency webResourceBundleID="mathjs_3.10.0" />
+    </webResourceBundle>
+  </extension>
+</plugin>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./MicrobialDataCreator.png" type="Source">
+    <name>Data Creator</name>
+    
+    <shortDescription>
+        Define a new data set with organism, matrix, assay conditions and references
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Define a new data set with organism, matrix, assay conditions and references. There are three ways to enter your own laboratory data:<br></br><br></br>
+        1) Time series and concentrations can be copied (e.g. from CSV files) and pasted into the table,<br></br>
+        2) they can be imported via an XLS file or <br></br>
+        3) they can be entered manually. In the latter case the setting of equidistant time steps accelerates entering a time series.</intro>
+        
+        
+        <option name="Options">
+        <b>References</b><br></br>
+        Click on the '+' symbol to choose one or more references from the internal database. To add new a reference to the database, exit this node dialog, go to the Knime menu 'PMM-Lab', select 'Open DB GUI...' and select the references table.<br></br>
+        References can be either imported as *.ris or *.txt file via the table import (Ctrl+F1) or they can be entered manually by clicking the green '+' button in the database.<br></br><br></br>
+        <b>Experimental conditions</b><br></br>
+        <u>Organism and Matrix:</u> Click the 'Select' button to get to the correspondent database tables and assign the appropriate entries.<br></br>
+        <u>ID:</u> The ID can be a number or a character or a combination (e.g. 'Table A.1'). If no ID is given, PMM-Lab will create a negative 10-digit number as ID.<br></br>
+        <u>Comment:</u> Any string as comment to the experimental conditions.<br></br>
+        <u>Time:</u> Choose the time unit for the time series. These are d (day), wk (week), s (second), min (minute), h (hour), mo (month) and a (year).<br></br>
+        <u>Value:</u> Assign the unit to your values. In case of bacterial concentrations this might be 'count/g' (cfu/g); for other datasets '%' or 'ppm' might be more appropriate.<br></br>
+        <u>Temperature:</u> Type in the temperature value of your time series and define in which temperature scale it was measured.<br></br>
+        <u>pH and aw:</u> pH and water activity do not have a unit.<br></br>
+        <u>Additional experimental conditions:</u> For more experimental conditions click the '+' buttton and choose other parameters from the database (e.g. 'acetic acid' or 'pressure').<br></br></option>
+        <option name="Table: Time and Value">There are <u>three ways</u> to enter microbial data:<br></br><br></br>
+        	1) <u>Type</u> time and concentration <u>manually</u>. To navigate use Tab and Enter or the arrow keys.<br></br>
+        	If the time steps always have the same step size the button <u>'Set equidistant time steps'</u> can help. Define the 'number of time steps' and the 'step size'. Example: If the number of time steps is 4 and the step size is 15 you will create the time series '15, 30, 45, 60'.<br></br><br></br>  
+        	2) <u>Copy and paste:</u> Open a spreadsheet, copy the appropriate columns and paste them in the Microbial Data Creator by clicking one cell in the time column and pressing Ctrl+V. This is especially useful if an experiment was done in replicates and the time series starts several times anew from 0.<br></br><br></br>
+        	3) <u>Read from XLS file:</u> Import microbial data from a Microsoft Excel spreadsheet.The table should at least have olumns for ID, time and value (value: e.g. log10(cfu/g)). Without an ID no time series can be imported. Every Excel column needs a headline (the first row). Rows with the same ID belong to one time series.<br></br>
+        	   Open the path to the XLS file, select the Excel sheet and assign columns to ID, time and value. If the spreadsheet also contains columns for temperature, pH, aw and a comment, these can also be assigned, here. Otherwise, they can be assigned as stated under 'Experimental conditions'.<br></br><br></br>
+        	To delete the whole table click <u>'Clear'</u>.</option>
+    </fullDescription>
+    
+    <ports>
+        <outPort index="0" name="Data">Created data</outPort>
+    </ports>    
+</knimeNode>
+	

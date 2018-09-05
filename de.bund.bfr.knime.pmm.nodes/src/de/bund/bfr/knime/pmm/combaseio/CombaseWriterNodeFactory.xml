@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./ComBaseWriter.png" type="Sink">
+    <name>ComBase Writer</name>
+    
+    <shortDescription>
+        Writes ComBase CSV files
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Save microbial data from the workflow as ComBase CSV file. The structure is identical to the <a href="http://www.combase.cc">ComBase</a> data structure.</intro>
+        
+        
+        <option name="Selected File">Define a folder and the file name to save microbial data as ComBase CSV file. If '<u>Overwrite OK</u>' is selected the defined file name will be used every time the node is executed and the older file will be replaced.</option>
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Data">Data (e.g. from the nodes ComBase Reader, Data Creator, Data Editor, Data Reader, Data Selection, XLS Data Reader)</inPort>
+    </ports>        
+</knimeNode>

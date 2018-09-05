@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="./SBMLWriter.png" type="Sink" deprecated="true"
+	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	<name>SBML Writer</name>
+
+	<shortDescription>
+     	This node writes primary and tertiary models to SBML files
+    </shortDescription>
+
+	<fullDescription>
+		<intro>This node writes primary and tertiary models to SBML files.
+			Each model is saved in a separate XML file.
+		</intro>
+
+		<option name="Output Path">
+			Path where SBML files are written to.
+		</option>
+		<option name="Model Name">
+			Specifies the name of the models in SBML and the
+			filename. If you choose "Test" as model name, the models
+			are named
+			"Test_1", "Test_2", ...
+		</option>
+		<option name="Initial Concentration Parameter">
+			If there is a parameter for the initial
+			concentration (e.g. LOG10N0), name it here.
+		</option>
+	</fullDescription>
+
+	<ports>
+		<inPort index="0" name="Models">Primary or tertiary models (e.g. from
+			the nodes Model Fitting, Primary Model Selection, Tertiary Model
+			Selection)
+		</inPort>
+	</ports>
+</knimeNode>

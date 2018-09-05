@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./ModelFitting.png" type="Manipulator">
+    <name>Model Fitting</name>
+    
+    <shortDescription>Uses mathematical model formulas and estimates their parameters in order to fit a curve to data (e.g. to a time series of bacterial concentrations or to growth rates changing with temperature)</shortDescription>
+    
+    <fullDescription>
+        <intro>The Model Fitting node uses mathematical formulas (e.g. primary or secondary models) and estimates parameters in order to fit a curve to data (e.g. microbial concentrations). In predictive microbiology, important parameters are the maximum growth / inactivation rate (Âµmax / kmax), the lag phase duration as well as the initial and maximum cell concentration.</intro>              
+        
+        <option name="Fitting">
+        <u>Primary Fitting</u> Fits a primary model formula to a time series of data points. For example, a curve will be fitted to time/concentration data on microbial growth. According to the chosen mathematical model formula, parameters are estimated (e.g. for maximum growth rate and lag phase duration).<br></br><br></br>
+        <u>Secondary Fitting</u> Fits a secondary model formula to parameters of primary models. For example, if primary models for microbial growth have been estimated for different temperatures, it is possible to fit a secondary model to the different maximum growth rates. This enables the user to predict the maximum growth rate for any temperature between the minimum and maximum temperatures of the primary model.<br></br><br></br>
+        <u>One-Step Fitting</u> Fits an omnibus model / a combined formula of one primary and one or more secondary formulas to data. Dependent on the amount of data sets the execution of the node may take longer than two minutes.</option>
+        
+        <option name="Enforce Limits of Formula Definition">Force model fitting within the given parameter limits (min/max). If not checked the fitting may also use parameter values lower than min or higher than max.</option>
+        
+        <option name="Expert Settings">Tick this option if you would like to have more control over the fitting options or if the fitting failed.<br></br><br></br>
+        <u>Nonlinear Regression Parameters:</u><br></br>Edit the number of <u>Maximal Evaluations to Find Start Values</u> (default is 10000) or the <u>Maximal Executions of the Levenberg Algorithm</u> (default is 10) to find a balance between precision and the speed of fitting. With the default values the Levenberg algorithm will be performed for the 10 best start values. For faster but less precise results tick <u>Stop When Regression Successful</u>. In this case the first successful fit will be used.<br></br><br></br>
+        <u>Specific Start Values for Fitting Procedure - Optional:</u><br></br>For every model used in the Fitting Node minimum and maximum values can be set. This is especially useful if the automatic fitting is not successful. Default values are those saved with the model formula. If the values were changed the button <u>Use Range from Formula Definition</u> can restore the default values. Empty all cells with <u>Clear</u> or auto fill-in ranges from -1 million to +1 million with <u>Fill Empty Fields</u>. 
+        </option>
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="In-Port">Needs models and data from the PMM Joiner</inPort>
+        <outPort index="0" name="Fitted models">Fitted models (models, goodness of fit, estimated parameters) and data</outPort>
+    </ports>    
+</knimeNode>

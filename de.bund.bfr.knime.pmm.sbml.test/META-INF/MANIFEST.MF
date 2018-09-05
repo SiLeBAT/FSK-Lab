@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SBML Test
+Bundle-SymbolicName: de.bund.bfr.knime.pmm.sbml.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.knime.core,
+ de.bund.bfr.formats,
+ de.bund.bfr.knime.pmm.nodes;bundle-version="1.0.0"
+Import-Package: org.junit;version="4.12.0",
+ org.junit.runner;version="4.12.0",
+ org.junit.runners;version="4.12.0"

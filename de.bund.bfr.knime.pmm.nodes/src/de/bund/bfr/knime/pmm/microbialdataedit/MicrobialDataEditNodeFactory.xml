@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./MicrobialDataEditor.png" type="Manipulator">
+    <name>Data Editor</name>
+    
+   <shortDescription>
+        Correct data sets or add information
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>This node is designed to add information to previously loaded microbial data or to correct details. For example, not all available information in the <a href="http://www.combase.cc">ComBase</a> can be exported to a CSV file (e.g. the references). Also data from the database or from an XLS file may not contain all necessary information.</intro>
+        
+        
+        <option name="Conditions to add">Click 'Add' to enter the database and choose one or more additional environmental conditions. By clicking on the '+' button new conditions can be added to the database. For each selected environmental condition (e.g. sucrose concentration) two new columns are added at the end of the Data Editor table: One column for values and one in which the unit should be defined.<br></br><br></br>
+        To delete an assay condition highlight its name in the white box above the table and click 'Remove'.</option>
+        <option name="Table">The available data sets can be viewed in the table. Except for the ID and the time series (column 'MD_Data') all cells can be changed.</option>
+    </fullDescription>
+    
+    <ports>
+        <inPort index="0" name="Data">Data from spreadsheets (e.g. from the nodes ComBase Reader or XLS Data Reader) or from a database (via Data Reader)</inPort>       
+        <outPort index="0" name="Edited Data">Edited data sets</outPort>  
+    </ports>    
+</knimeNode>

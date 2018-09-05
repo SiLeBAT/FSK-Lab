@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./ComBaseReader.png" type="Source">
+    <name>ComBase Reader</name>
+    
+    <shortDescription>Reads ComBase CSV files</shortDescription>
+    
+    <fullDescription>
+        <intro>
+        	The <a href="http://www.combase.cc">ComBase</a> database provides sets of data about growth / survival / inactivation of different organisms (mostly bacteria) in various food matrices. Microbial data with time series (log10(cfu/g) over time (hours)) and D values can be exported to CSV files.
+			The ComBase Reader is a CSV reader parsing the semistructured spreadsheet file and providing microbial data in a structured way so that they can be used for predictive microbial modelling in PMM-Lab.
+       	</intro>
+        
+        
+        <option name="Load ComBase CSV file">Select a ComBase CSV file downloaded from <a href="http://www.combase.cc">www.combase.cc</a></option>
+    </fullDescription>
+    
+    <ports>
+        <outPort index="0" name="Data">Imported data</outPort>
+        <outPort index="1" name="Models">Imported models</outPort>
+    </ports>        
+</knimeNode>
