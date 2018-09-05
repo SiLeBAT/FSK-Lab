@@ -196,7 +196,8 @@ Export-Package: com.ctc.wstx.api,
  org.sbml.jsbml.xml.test,
  org.sbml.jsbml.xml.xstream.converter,
  org.w3c.util
-Require-Bundle: org.jdom2;bundle-version="2.0.1"
+Require-Bundle: org.jdom2,
+ org.apache.commons.lang3
 Bundle-ClassPath: BFLog-1.3.3.jar,
  CombineArchive-1.1.jar,
  ez-vcard-0.10.2.jar,

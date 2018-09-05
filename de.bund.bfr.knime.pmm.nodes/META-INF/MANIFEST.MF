@@ -25,7 +25,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  com.google.guava,
  org.junit,
  org.apache.commons.lang3,
- de.bund.bfr.pmm.formats
+ de.bund.bfr.formats
 Export-Package: de.bund.bfr.knime.pmm.combaseio,
  de.bund.bfr.knime.pmm.dataviewandselect,
  de.bund.bfr.knime.pmm.dbdelete,
@@ -57,6 +57,7 @@ Bundle-ClassPath: library.jar,
  jsoup-1.9.2.jar,
  bfr-swing-1.0-SNAPSHOT.jar,
  jcalendar-1.4.jar,
- nashorn.jar
+ nashorn.jar,
+ fskml-0.0.1-SNAPSHOT.jar
 Bundle-Activator: de.bund.bfr.knime.pmm.nodes.Plugin
 Import-Package: org.apache.poi.xssf.usermodel

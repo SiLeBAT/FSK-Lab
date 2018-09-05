@@ -55,6 +55,8 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.junit"/>
       <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.apache.servicemix.bundles.poi"/>
+      <import plugin="de.bund.bfr.formats"/>
+      <import plugin="org.eclipse.osgi"/>
    </requires>
 
    <plugin
@@ -124,14 +126,14 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
          version="0.0.0"/>
 
    <plugin
-         id="de.bund.bfr.pmm.formats"
+         id="javax.xml"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="javax.xml"
+         id="de.bund.bfr.formats"
          download-size="0"
          install-size="0"
          version="0.0.0"
