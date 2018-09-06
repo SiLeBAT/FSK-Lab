@@ -249,9 +249,18 @@ class ReaderNodeModel extends NoInternalsModel {
           ListOf<Parameter> params = parentSBMLDoc.getModel().getListOfParameters();
           for (Parameter param : params) {
             JoinRelation jR = new JoinRelation();
-            List<metadata.Parameter> coll = secondFskPortObject.modelMath.getParameter().stream()
-                .filter(cp -> cp.getParameterID().equals(param.getId()))
-                .collect(Collectors.toList());
+            
+            List<metadata.Parameter> coll = secondFskPortObject.modelMath.getParameter().stream().filter(cp ->{
+              String paramId = cp.getParameterID();
+              String compareTo = param.getId();
+              if(paramId.replaceAll(JoinerNodeModel.suffix,"").equals(compareTo.replaceAll(JoinerNodeModel.suffix,""))) {
+                cp.setParameterID(param.getId());
+                return true;  
+              }else {
+                return false;
+              }
+              
+            }).collect(Collectors.toList());
             if(coll.size() == 0) {
               continue;
             }
@@ -259,7 +268,16 @@ class ReaderNodeModel extends NoInternalsModel {
             jR.setTargetParam(targetParam);
             CompSBasePlugin a = (CompSBasePlugin) param.getExtension("comp");
             String replacmentLement = a.getReplacedBy().getIdRef();
-            metadata.Parameter sourceParam = firstFskPortObject.modelMath.getParameter().stream()
+            metadata.Parameter sourceParam = firstFskPortObject.modelMath.getParameter().stream().filter(cp ->{
+              String paramId = cp.getParameterID();
+              if(paramId.replaceAll(JoinerNodeModel.suffix,"").equals(replacmentLement.replaceAll(JoinerNodeModel.suffix,""))) {
+                cp.setParameterID(a.getReplacedBy().getIdRef());
+                return true;  
+              }else {
+                return false;
+              }
+              
+            })
                 .filter(cp -> cp.getParameterID().equals(replacmentLement))
                 .collect(Collectors.toList()).get(0);
             jR.setSourceParam(sourceParam);
@@ -279,7 +297,7 @@ class ReaderNodeModel extends NoInternalsModel {
                 }
               }
             }
-
+            System.out.println(jR);
             joinerRelation.add(jR);
           }
         }

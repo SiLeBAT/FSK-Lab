@@ -199,7 +199,10 @@ class JSSimulatorNodeModel
         List<Parameter> inputParams = getViewRepresentation().parameters;
         index = 0;
         inputParams.stream().forEach(param -> {
-          if (modelMathParameter.contains(param.getParameterID())) {
+          String paramWithSuffix = param.getParameterID();
+          paramWithSuffix = paramWithSuffix.replaceAll(JoinerNodeModel.suffix, "");
+          if (modelMathParameter.contains(paramWithSuffix)) {
+            param.setParameterID(paramWithSuffix);
             properInputParam.add(param);
             indexes.add(index);
           }
