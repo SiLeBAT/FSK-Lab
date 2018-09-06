@@ -136,9 +136,9 @@ class ReaderNodeModel extends NoInternalsModel {
       Set<String> entriesSet = new HashSet<>();
       for (ArchiveEntry sEntry : entries) {
         String path = sEntry.getFilePath().substring(0, sEntry.getFilePath().lastIndexOf("/") + 1);
-        
+
         int depth = StringUtils.countMatches(path, "/");
-        if(depth > 2 && !path.endsWith("simulations/")) {
+        if (depth > 2 && !path.endsWith("simulations/")) {
           entriesSet.add(path);
         }
       }
@@ -149,26 +149,28 @@ class ReaderNodeModel extends NoInternalsModel {
       // joining if they are more than one.
       int sbmlFilesNumber = archive.getNumEntriesWithFormat(FSKML.getURIS(1, 0, 12).get("sbml"));
       if (sbmlFilesNumber > 1) {
-        fskObj = readFskPortObject(archive, sortedList,0);
+        fskObj = readFskPortObject(archive, sortedList, 0);
       } else {
         ArrayList<String> rootList = new ArrayList<>();
         // No Joining, just normal Fsk Object
         rootList.add("/");
-        fskObj = readFskPortObject(archive, rootList,0);
+        fskObj = readFskPortObject(archive, rootList, 0);
       }
 
     }
     return new PortObject[] {fskObj};
   }
-  public FskPortObject getEmbedSecondFSKObject( CombinedFskPortObject comFskObj) {
+
+  public FskPortObject getEmbedSecondFSKObject(CombinedFskPortObject comFskObj) {
     FskPortObject embedFSKObject = comFskObj.getSecondFskPortObject();
-    if(embedFSKObject instanceof CombinedFskPortObject) {
-       embedFSKObject = getEmbedSecondFSKObject((CombinedFskPortObject) embedFSKObject);
+    if (embedFSKObject instanceof CombinedFskPortObject) {
+      embedFSKObject = getEmbedSecondFSKObject((CombinedFskPortObject) embedFSKObject);
     }
     return embedFSKObject;
   }
-  public FskPortObject readFskPortObject(CombineArchive archive, List<String> ListOfPaths, int readLevel)
-      throws Exception {
+
+  public FskPortObject readFskPortObject(CombineArchive archive, List<String> ListOfPaths,
+      int readLevel) throws Exception {
     // each sub Model has it's own working directory to avoid resource conflict.
     Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
     final Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
@@ -181,31 +183,32 @@ class ReaderNodeModel extends NoInternalsModel {
 
     // more one than one element means this model is joined one
     if (ListOfPaths != null && ListOfPaths.size() > 1) {
-      String firstelement = ListOfPaths.get(ListOfPaths.size()%2);
+      String firstelement = ListOfPaths.get(ListOfPaths.size() % 2);
       // classify the pathes into two groups, each belongs to sub model
       List<String> firstGroup = ListOfPaths.stream().filter(line -> line.startsWith(firstelement))
           .collect(Collectors.toList());
       List<String> secondGroup = ListOfPaths.stream().filter(line -> !firstGroup.contains(line))
           .collect(Collectors.toList());
-      if(secondGroup.size() == 2) {
+      if (secondGroup.size() == 2) {
         secondGroup.remove(0);
       }
 
       // invoke this mothod recursively to get the sub model using the corresponding path group
-      FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup,++readLevel);
-      FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup,++readLevel);
-      String tempString = firstelement.substring(0,firstelement.length()-2);
-      String parentPath = tempString.substring(0,tempString.lastIndexOf('/'));
+      FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup, ++readLevel);
+      FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup, ++readLevel);
+      String tempString = firstelement.substring(0, firstelement.length() - 2);
+      String parentPath = tempString.substring(0, tempString.lastIndexOf('/'));
       // Gets metadata
       {
 
         // Create temporary file with metadata
         Path temp = Files.createTempFile("metadata", ".json");
         List<ArchiveEntry> jsonEntries = archive.getEntriesWithFormat(URIS.get("json"));
-        
+
         for (ArchiveEntry jsonEntry : jsonEntries) {
           String path = jsonEntry.getEntityPath();
-          if (path.startsWith(parentPath)&&(StringUtils.countMatches(path, "/") == (StringUtils.countMatches(parentPath, "/")+1))) {
+          if (path.startsWith(parentPath) && (StringUtils.countMatches(path,
+              "/") == (StringUtils.countMatches(parentPath, "/") + 1))) {
             jsonEntry.extractFile(temp.toFile());
 
             // Loads metadata from temporary file
@@ -234,7 +237,8 @@ class ReaderNodeModel extends NoInternalsModel {
         List<ArchiveEntry> sbmlEntries = archive.getEntriesWithFormat(URIS.get("sbml"));
         for (ArchiveEntry sbmlEntry : sbmlEntries) {
           String path = sbmlEntry.getEntityPath();
-          if (path.startsWith(parentPath)&&(StringUtils.countMatches(path, "/") == (StringUtils.countMatches(parentPath, "/")+1))) {
+          if (path.startsWith(parentPath) && (StringUtils.countMatches(path,
+              "/") == (StringUtils.countMatches(parentPath, "/") + 1))) {
             Path parentFile = Files.createTempFile("Model", ".sbml");
             sbmlEntry.extractFile(parentFile.toFile());
             try {
@@ -249,37 +253,40 @@ class ReaderNodeModel extends NoInternalsModel {
           ListOf<Parameter> params = parentSBMLDoc.getModel().getListOfParameters();
           for (Parameter param : params) {
             JoinRelation jR = new JoinRelation();
-            
-            List<metadata.Parameter> coll = secondFskPortObject.modelMath.getParameter().stream().filter(cp ->{
-              String paramId = cp.getParameterID();
-              String compareTo = param.getId();
-              if(paramId.replaceAll(JoinerNodeModel.suffix,"").equals(compareTo.replaceAll(JoinerNodeModel.suffix,""))) {
-                cp.setParameterID(param.getId());
-                return true;  
-              }else {
-                return false;
-              }
-              
-            }).collect(Collectors.toList());
-            if(coll.size() == 0) {
+
+            List<metadata.Parameter> coll =
+                secondFskPortObject.modelMath.getParameter().stream().filter(cp -> {
+                  String paramId = cp.getParameterID();
+                  String compareTo = param.getId();
+                  if (paramId.replaceAll(JoinerNodeModel.suffix, "")
+                      .equals(compareTo.replaceAll(JoinerNodeModel.suffix, ""))) {
+                    cp.setParameterID(param.getId());
+                    return true;
+                  } else {
+                    return false;
+                  }
+
+                }).collect(Collectors.toList());
+            if (coll.size() == 0) {
               continue;
             }
             metadata.Parameter targetParam = coll.get(0);
             jR.setTargetParam(targetParam);
             CompSBasePlugin a = (CompSBasePlugin) param.getExtension("comp");
             String replacmentLement = a.getReplacedBy().getIdRef();
-            metadata.Parameter sourceParam = firstFskPortObject.modelMath.getParameter().stream().filter(cp ->{
-              String paramId = cp.getParameterID();
-              if(paramId.replaceAll(JoinerNodeModel.suffix,"").equals(replacmentLement.replaceAll(JoinerNodeModel.suffix,""))) {
-                cp.setParameterID(a.getReplacedBy().getIdRef());
-                return true;  
-              }else {
-                return false;
-              }
-              
-            })
-                .filter(cp -> cp.getParameterID().equals(replacmentLement))
-                .collect(Collectors.toList()).get(0);
+            metadata.Parameter sourceParam =
+                firstFskPortObject.modelMath.getParameter().stream().filter(cp -> {
+                  String paramId = cp.getParameterID();
+                  if (paramId.replaceAll(JoinerNodeModel.suffix, "")
+                      .equals(replacmentLement.replaceAll(JoinerNodeModel.suffix, ""))) {
+                    cp.setParameterID(a.getReplacedBy().getIdRef());
+                    return true;
+                  } else {
+                    return false;
+                  }
+
+                }).filter(cp -> cp.getParameterID().equals(replacmentLement))
+                    .collect(Collectors.toList()).get(0);
             jR.setSourceParam(sourceParam);
             Annotation annotation = param.getAnnotation();
             if (annotation != null) {
@@ -297,7 +304,7 @@ class ReaderNodeModel extends NoInternalsModel {
                 }
               }
             }
-            System.out.println(jR);
+
             joinerRelation.add(jR);
           }
         }
@@ -308,7 +315,8 @@ class ReaderNodeModel extends NoInternalsModel {
       List<ArchiveEntry> sedmlEntries = archive.getEntriesWithFormat(URIS.get("sedml"));
       for (ArchiveEntry simEntry : sedmlEntries) {
         String path = simEntry.getEntityPath();
-        if (path.startsWith(parentPath)&&(StringUtils.countMatches(path, "/") == (StringUtils.countMatches(parentPath, "/")+1))) {
+        if (path.startsWith(parentPath) && (StringUtils.countMatches(path,
+            "/") == (StringUtils.countMatches(parentPath, "/") + 1))) {
           File simulationsFile = FileUtil.createTempFile("sim", ".sedml");
           simEntry.extractFile(simulationsFile);
 
@@ -317,9 +325,9 @@ class ReaderNodeModel extends NoInternalsModel {
           simulations.addAll(loadSimulations(sedml));
         }
       }
-      
+
       // TODO read the model, vis script for the combined Object
-      CombinedFskPortObject topfskObj = new CombinedFskPortObject("","",generalInformation, scope,
+      CombinedFskPortObject topfskObj = new CombinedFskPortObject("", "", generalInformation, scope,
           dataBackground, modelMath, workingDirectory.toString(), new ArrayList<>(),
           firstFskPortObject, secondFskPortObject);
       topfskObj.viz = getEmbedSecondFSKObject(topfskObj).viz;
