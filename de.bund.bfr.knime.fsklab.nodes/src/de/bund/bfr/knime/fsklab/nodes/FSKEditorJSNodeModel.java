@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -42,6 +45,7 @@ import org.knime.core.node.web.ValidationError;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
@@ -174,6 +178,14 @@ final class FSKEditorJSNodeModel
       }
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
+      
+      final Set<String> librariesSet = new HashSet<>();
+      librariesSet.addAll(new RScript(outObj.model).getLibraries());
+      librariesSet.addAll(new RScript(outObj.viz).getLibraries());
+      outObj.packages.addAll(new ArrayList<>(librariesSet));
+      
+   
+
       
     }
     
