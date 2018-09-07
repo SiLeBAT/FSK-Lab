@@ -57,7 +57,6 @@ import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
-import freemarker.log.Logger;
 import metadata.Parameter;
 import metadata.ParameterClassification;
 
@@ -368,7 +367,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
             .collect(Collectors.toList());
 
         if (!missingLibs.isEmpty()) {
-          libReg.installLibs(missingLibs);
+          libReg.installLibs(missingLibs, exec,LOGGER);
         }
       } catch (RException | REXPMismatchException e) {
         LOGGER.error(e.getMessage());

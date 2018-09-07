@@ -22,13 +22,16 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
+import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.KNIMEConstants;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
@@ -63,6 +66,8 @@ public class LibRegistry {
   private final String rVersion;
 
   private RWrapper rWrapper;
+  
+  
 
   private LibRegistry() throws IOException, RException {
 
@@ -145,7 +150,27 @@ public class LibRegistry {
     // Adds names of installed libraries to utility set
     installedLibs.addAll(deps);
   }
+  public void installLibs(final List<String> libs,final ExecutionMonitor exec,NodeLogger LOGGER) throws RException, REXPMismatchException {
 
+	    /*
+	     * Gets list of R dependencies of libs. pkgDep returns dependencies for the required libs of
+	     * which some may already be installed.
+	     */
+	    final List<String> deps =
+	        rWrapper.pkgDep(libs).stream().filter(it -> !isInstalled(it)).collect(Collectors.toList());
+
+	    // Adds the dependencies to the miniCRAN repository
+	    rWrapper.addPackage(deps, repoPath, "http://cran.us.r-project.org",exec,LOGGER);
+
+	    // Gets the paths to the binaries of these dependencies
+	    List<Path> paths = rWrapper.checkVersions(deps, repoPath);
+
+	    // Install binaries
+	    rWrapper.installPackages(paths, installPath);
+
+	    // Adds names of installed libraries to utility set
+	    installedLibs.addAll(deps);
+	  }
   /**
    * Gets list of paths to the binaries of the desired libraries.
    * 
@@ -242,6 +267,25 @@ public class LibRegistry {
       controller.eval(cmd, false);
     }
 
+    void addPackage(final List<String> pkgs, final Path path, final String repos,final ExecutionMonitor exec,NodeLogger LOGGER)
+            throws RException {
+    		for (int packageNumber = 0; packageNumber < pkgs.size(); packageNumber++) {
+    			String currentLib = pkgs.get(packageNumber);
+    			String cmd = "addPackage(" + _pkg(currentLib) + ", '" + _path2String(path) + "', repos = '"
+      		          + repos + "', type = '" + type + "', Rversion = '" + rVersion + "', quiet = TRUE)";
+    			
+    			String infoMessage = "Installing package("+(packageNumber+1)+" of "+pkgs.size()+"): "+currentLib;
+	      		exec.setMessage(infoMessage);
+	      		LOGGER.info(infoMessage);
+	      		try {
+	  				controller.eval(cmd, false);
+	  			} catch (RException e) {
+	  				e.printStackTrace();
+	  			}
+			}
+        	
+        	
+        }
     /**
      * Returns the file paths for the specified packages.
      * 
@@ -326,6 +370,9 @@ public class LibRegistry {
       return "c(" + pkgs.stream().map(pkg -> "'" + pkg + "'").collect(Collectors.joining(", "))
           + ")";
     }
+    String _pkg(final String pkg) {
+        return "c('" + pkg + "')";
+      }
 
     // Utility method. Should not be used outside of RCommandBuilder.
     String _path2String(final Path path) {
