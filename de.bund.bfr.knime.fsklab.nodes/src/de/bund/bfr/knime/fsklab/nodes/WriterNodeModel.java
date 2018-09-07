@@ -361,6 +361,7 @@ class WriterNodeModel extends NoInternalsModel {
         fskmodel.setId(normalizeName(fskObj));
 
         List<JoinRelation> relations = comFskObj.getJoinerRelation();
+        if(relations!=null) {
         for (JoinRelation joinRelarion : relations) {
           org.sbml.jsbml.Parameter overridedParameter =
               fskmodel.createParameter(joinRelarion.getTargetParam().getParameterID());
@@ -380,7 +381,7 @@ class WriterNodeModel extends NoInternalsModel {
               new XMLNode(new XMLTriple(METADATA_COMMAND, null, METADATA_NS), attrs);
           annot.appendNonRDFAnnotation(parameterNode);
         }
-
+        }
 
       } catch (SBMLException | XMLStreamException e) {
         e.printStackTrace();
