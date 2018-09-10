@@ -57,7 +57,9 @@ import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLReader;
+import org.sbml.jsbml.ext.comp.CompModelPlugin;
 import org.sbml.jsbml.ext.comp.CompSBasePlugin;
+import org.sbml.jsbml.ext.comp.Submodel;
 import org.sbml.jsbml.xml.XMLAttributes;
 import org.sbml.jsbml.xml.XMLNode;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -228,7 +230,7 @@ class ReaderNodeModel extends NoInternalsModel {
         Files.delete(temp); // Deletes temporary file
       }
 
-
+      String firstModelId = "";
       // get Joiner Relations
       List<JoinRelation> joinerRelation = new ArrayList<>();
       {
@@ -249,8 +251,15 @@ class ReaderNodeModel extends NoInternalsModel {
             Files.delete(parentFile); // Deletes temporary file
           }
         }
+        
         if (parentSBMLDoc != null) {
           ListOf<Parameter> params = parentSBMLDoc.getModel().getListOfParameters();
+          CompModelPlugin subModels = (CompModelPlugin) parentSBMLDoc.getModel().getExtension("comp");
+          List<Submodel> listOfSubModels = subModels.getListOfSubmodels();
+          if(listOfSubModels.size()>0) {
+            firstModelId = listOfSubModels.get(0).getModelRef();
+          }
+          //String s  = subModels.getReplacedBy().getIdRef();
           for (Parameter param : params) {
             JoinRelation jR = new JoinRelation();
 
@@ -325,11 +334,18 @@ class ReaderNodeModel extends NoInternalsModel {
           simulations.addAll(loadSimulations(sedml));
         }
       }
-
-      // TODO read the model, vis script for the combined Object
-      CombinedFskPortObject topfskObj = new CombinedFskPortObject("", "", generalInformation, scope,
-          dataBackground, modelMath, workingDirectory.toString(), new ArrayList<>(),
-          firstFskPortObject, secondFskPortObject);
+      CombinedFskPortObject topfskObj;
+      String currentModelID = firstFskPortObject.generalInformation.getName().replaceAll("\\W", "");
+      if(currentModelID.equals(firstModelId)) {
+        topfskObj = new CombinedFskPortObject("", "", generalInformation, scope,
+            dataBackground, modelMath, workingDirectory.toString(), new ArrayList<>(),
+            firstFskPortObject, secondFskPortObject);
+      }else {
+        topfskObj = new CombinedFskPortObject("", "", generalInformation, scope,
+            dataBackground, modelMath, workingDirectory.toString(), new ArrayList<>(),
+             secondFskPortObject,firstFskPortObject);
+      }
+      
       topfskObj.viz = getEmbedSecondFSKObject(topfskObj).viz;
       topfskObj.simulations.addAll(simulations);
       topfskObj.setJoinerRelation(joinerRelation);
