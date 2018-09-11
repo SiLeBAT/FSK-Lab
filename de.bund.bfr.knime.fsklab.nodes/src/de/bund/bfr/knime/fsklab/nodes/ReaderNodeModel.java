@@ -28,14 +28,16 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import javax.swing.tree.TreeNode;
 import javax.xml.stream.XMLStreamException;
-import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jlibsedml.Change;
@@ -51,6 +53,9 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.workflow.NodeContext;
+import org.knime.core.node.workflow.WorkflowContext;
+import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import org.sbml.jsbml.Annotation;
 import org.sbml.jsbml.ListOf;
@@ -92,6 +97,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
   private final ReaderNodeSettings nodeSettings = new ReaderNodeSettings();
   private static final SBMLReader READER = new SBMLReader();
+  private static final AtomicLong TEMP_DIR_UNIFIER = new AtomicLong((int) (100000 * Math.random()));
 
   public ReaderNodeModel() {
     super(IN_TYPES, OUT_TYPES);
@@ -114,7 +120,22 @@ class ReaderNodeModel extends NoInternalsModel {
   }
 
   @Override
-  protected void reset() {}
+  protected void reset() {
+    NodeContext nodeContext = NodeContext.getContext();
+    WorkflowManager wfm = nodeContext.getWorkflowManager();
+    WorkflowContext workflowContext = wfm.getContext();
+    try {
+      Files.walk(workflowContext.getCurrentLocation().toPath())
+          .filter(path -> path.toString()
+              .contains(nodeContext.getNodeContainer().getNameWithID().toString()
+                  .replaceAll("\\W", "").replace(" ", "") + "_" + "workingDirectory"))
+          .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
@@ -173,9 +194,23 @@ class ReaderNodeModel extends NoInternalsModel {
 
   public FskPortObject readFskPortObject(CombineArchive archive, List<String> ListOfPaths,
       int readLevel) throws Exception {
-    // each sub Model has it's own working directory to avoid resource conflict.
     Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
-    final Path workingDirectory = FileUtil.createTempDir("workingDirectory").toPath();
+    // each sub Model has it's own working directory to avoid resource conflict.
+    // get current node's and workflow's context
+    NodeContext nodeContext = NodeContext.getContext();
+    WorkflowManager wfm = nodeContext.getWorkflowManager();
+    WorkflowContext workflowContext = wfm.getContext();
+
+    // get the location of the current Workflow to create the working directory in it and use the
+    // name with current reader node id for the prefix of the working directory name
+    File currentWorkingDirectory = new File(workflowContext.getCurrentLocation(),
+        nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "").replace(" ",
+            "") + "_" + "workingDirectory" + TEMP_DIR_UNIFIER.getAndIncrement());
+    if (!currentWorkingDirectory.exists()) {
+      currentWorkingDirectory.mkdir();
+    }
+
+    final Path workingDirectory = currentWorkingDirectory.toPath();
 
     GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
     Scope scope = MetadataFactory.eINSTANCE.createScope();
@@ -251,15 +286,16 @@ class ReaderNodeModel extends NoInternalsModel {
             Files.delete(parentFile); // Deletes temporary file
           }
         }
-        
+
         if (parentSBMLDoc != null) {
           ListOf<Parameter> params = parentSBMLDoc.getModel().getListOfParameters();
-          CompModelPlugin subModels = (CompModelPlugin) parentSBMLDoc.getModel().getExtension("comp");
+          CompModelPlugin subModels =
+              (CompModelPlugin) parentSBMLDoc.getModel().getExtension("comp");
           List<Submodel> listOfSubModels = subModels.getListOfSubmodels();
-          if(listOfSubModels.size()>0) {
+          if (listOfSubModels.size() > 0) {
             firstModelId = listOfSubModels.get(0).getModelRef();
           }
-          //String s  = subModels.getReplacedBy().getIdRef();
+          // String s = subModels.getReplacedBy().getIdRef();
           for (Parameter param : params) {
             JoinRelation jR = new JoinRelation();
 
@@ -336,16 +372,16 @@ class ReaderNodeModel extends NoInternalsModel {
       }
       CombinedFskPortObject topfskObj;
       String currentModelID = firstFskPortObject.generalInformation.getName().replaceAll("\\W", "");
-      if(currentModelID.equals(firstModelId)) {
-        topfskObj = new CombinedFskPortObject("", "", generalInformation, scope,
-            dataBackground, modelMath, workingDirectory.toString(), new ArrayList<>(),
-            firstFskPortObject, secondFskPortObject);
-      }else {
-        topfskObj = new CombinedFskPortObject("", "", generalInformation, scope,
-            dataBackground, modelMath, workingDirectory.toString(), new ArrayList<>(),
-             secondFskPortObject,firstFskPortObject);
+      if (currentModelID.equals(firstModelId)) {
+        topfskObj = new CombinedFskPortObject("", "", generalInformation, scope, dataBackground,
+            modelMath, workingDirectory.toString(), new ArrayList<>(), firstFskPortObject,
+            secondFskPortObject);
+      } else {
+        topfskObj = new CombinedFskPortObject("", "", generalInformation, scope, dataBackground,
+            modelMath, workingDirectory.toString(), new ArrayList<>(), secondFskPortObject,
+            firstFskPortObject);
       }
-      
+
       topfskObj.viz = getEmbedSecondFSKObject(topfskObj).viz;
       topfskObj.simulations.addAll(simulations);
       topfskObj.setJoinerRelation(joinerRelation);
