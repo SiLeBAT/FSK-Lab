@@ -20,13 +20,14 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
@@ -56,6 +57,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
@@ -246,7 +248,7 @@ class WriterNodeModel extends NoInternalsModel {
 
   }
 
-  public void writeCombinedObject(CombinedFskPortObject fskObj, CombineArchive archive,
+  private static void writeCombinedObject(CombinedFskPortObject fskObj, CombineArchive archive,
       Map<String, URI> URIS, String filePrefix) throws Exception {
     filePrefix = filePrefix + normalizeName(fskObj) + System.getProperty("file.separator");
     FskPortObject ffskObj = fskObj.getFirstFskPortObject();
@@ -282,33 +284,70 @@ class WriterNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    final FskPortObject fskObj = (FskPortObject) inObjects[0];
-    Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
-    final File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.filePath));
-    archiveFile.delete();
-    try (final CombineArchive archive = new CombineArchive(archiveFile)) {
-      if (fskObj instanceof CombinedFskPortObject) {
-        writeCombinedObject((CombinedFskPortObject) fskObj, archive, URIS, "");
-      } else {
-        writeFSKObject(fskObj, archive, "", URIS);
+    CheckUtils.checkDestinationFile(nodeSettings.filePath, true);
+
+    FskPortObject in = (FskPortObject) inObjects[0];
+
+    URL url = FileUtil.toURL(nodeSettings.filePath);
+    Path localPath = FileUtil.resolveToPath(url);
+
+    if (localPath != null) {
+      Files.deleteIfExists(localPath);
+      writeArchive(localPath.toFile(), in);
+    } else {
+
+      // Creates archive in temporary archive file
+      File archiveFile = FileUtil.createTempFile("model", "fskx");
+
+      // The file is deleted since we need the path only for the COMBINE archive
+      archiveFile.delete();
+
+      // Writes COMBINE archive
+      writeArchive(archiveFile, in);
+
+      // Copies temporary file to output stream
+      try (OutputStream os = FileUtil.openOutputConnection(url, "PUT").getOutputStream()) {
+        Files.copy(archiveFile.toPath(), os);
       }
+
+      // Deletes temporary file
+      archiveFile.delete();
+    }
+
+    return new PortObject[] {};
+  }
+
+  private static void writeArchive(File archiveFile, FskPortObject portObject) throws Exception {
+
+    Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
+
+    try (final CombineArchive archive = new CombineArchive(archiveFile)) {
+
+      if (portObject instanceof CombinedFskPortObject) {
+        writeCombinedObject((CombinedFskPortObject) portObject, archive, URIS, "");
+      } else {
+        writeFSKObject(portObject, archive, "", URIS);
+      }
+
       // add SBML document
       {
-        SBMLDocument sbmlModelDoc = createSBML(fskObj, archive, "model", URIS, "");
+        SBMLDocument sbmlModelDoc = createSBML(portObject, archive, "model", URIS, "");
 
         File tempFile = FileUtil.createTempFile("sbml", "");
         new SBMLWriter().write(sbmlModelDoc, tempFile);
-        if (fskObj instanceof CombinedFskPortObject) {
-          archive.addEntry(tempFile, normalizeName(fskObj) + System.getProperty("file.separator")
-              + sbmlModelDoc.getModel().getId() + ".sbml", URIS.get("sbml"));
+        if (portObject instanceof CombinedFskPortObject) {
+          archive.addEntry(tempFile, normalizeName(portObject)
+              + System.getProperty("file.separator") + sbmlModelDoc.getModel().getId() + ".sbml",
+              URIS.get("sbml"));
         } else {
           archive.addEntry(tempFile, sbmlModelDoc.getModel().getId() + ".sbml", URIS.get("sbml"));
         }
       }
+
       // Gets library URI for the running platform
       final URI libUri = NodeUtils.getLibURI();
       // Adds R libraries
-      for (String pkg : fskObj.packages) {
+      for (String pkg : portObject.packages) {
         Path path = LibRegistry.instance().getPath(pkg);
 
         if (path != null) {
@@ -317,10 +356,8 @@ class WriterNodeModel extends NoInternalsModel {
         }
       }
 
-
       archive.pack();
     }
-    return new PortObject[] {};
   }
 
   public static String normalizeName(FskPortObject fskObj) {
@@ -361,26 +398,26 @@ class WriterNodeModel extends NoInternalsModel {
         fskmodel.setId(normalizeName(fskObj));
 
         List<JoinRelation> relations = comFskObj.getJoinerRelation();
-        if(relations!=null) {
-        for (JoinRelation joinRelarion : relations) {
-          org.sbml.jsbml.Parameter overridedParameter =
-              fskmodel.createParameter(joinRelarion.getTargetParam().getParameterID());
+        if (relations != null) {
+          for (JoinRelation joinRelarion : relations) {
+            org.sbml.jsbml.Parameter overridedParameter =
+                fskmodel.createParameter(joinRelarion.getTargetParam().getParameterID());
 
-          overridedParameter.setConstant(false);
+            overridedParameter.setConstant(false);
 
-          CompSBasePlugin plugin =
-              (CompSBasePlugin) overridedParameter.getPlugin(CompConstants.shortLabel);
-          ReplacedBy replacedBy = plugin.createReplacedBy();
-          replacedBy.setIdRef(joinRelarion.getSourceParam().getParameterID());
-          replacedBy.setSubmodelRef(SUB_MODEL1);
-          // annotate the conversion command
-          org.sbml.jsbml.Annotation annot = overridedParameter.getAnnotation();
-          XMLAttributes attrs = new XMLAttributes();
-          attrs.add(METADATA_COMMAND_VALUE, joinRelarion.getCommand());
-          XMLNode parameterNode =
-              new XMLNode(new XMLTriple(METADATA_COMMAND, null, METADATA_NS), attrs);
-          annot.appendNonRDFAnnotation(parameterNode);
-        }
+            CompSBasePlugin plugin =
+                (CompSBasePlugin) overridedParameter.getPlugin(CompConstants.shortLabel);
+            ReplacedBy replacedBy = plugin.createReplacedBy();
+            replacedBy.setIdRef(joinRelarion.getSourceParam().getParameterID());
+            replacedBy.setSubmodelRef(SUB_MODEL1);
+            // annotate the conversion command
+            org.sbml.jsbml.Annotation annot = overridedParameter.getAnnotation();
+            XMLAttributes attrs = new XMLAttributes();
+            attrs.add(METADATA_COMMAND_VALUE, joinRelarion.getCommand());
+            XMLNode parameterNode =
+                new XMLNode(new XMLTriple(METADATA_COMMAND, null, METADATA_NS), attrs);
+            annot.appendNonRDFAnnotation(parameterNode);
+          }
         }
 
       } catch (SBMLException | XMLStreamException e) {
