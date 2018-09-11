@@ -344,7 +344,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     final ScriptExecutor executor = new ScriptExecutor(controller);
 
     // Sets up working directory with resource files. This directory needs to be deleted.
-    exec.setMessage("Add resource files");
+    exec.setProgress(0.05,"Add resource files");
     {
       String workingDirectoryString = fskObj.getWorkingDirectory();
       if (!workingDirectoryString.isEmpty()) {
@@ -353,9 +353,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         controller.setWorkingDirectory(workingDirectory);
       }
     }
-
+   
     // START RUNNING MODEL
-    exec.setMessage("Setting up output capturing");
+    exec.setProgress(0.1,"Setting up output capturing");
     executor.setupOutputCapturing(exec);
 
     // Install needed libraries
@@ -374,18 +374,18 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       }
     }
 
-    exec.setMessage("Add paths to libraries");
+    exec.setProgress(0.71,"Add paths to libraries");
     controller.addPackagePath(LibRegistry.instance().getInstallationPath());
 
-    exec.setMessage("Set parameter values");
+    exec.setProgress(0.72,"Set parameter values");
     LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
     String paramScript = NodeUtils.buildParameterScript(simulation);
     executor.execute(paramScript, exec);
 
-    exec.setMessage("Run models script");
+    exec.setProgress(0.75,"Run models script");
     executor.executeIgnoreResult(fskObj.model, exec);
 
-    exec.setMessage("Run visualization script");
+    exec.setProgress(0.9,"Run visualization script");
     try {
       NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings.width,
           nodeSettings.height, nodeSettings.pointSize, nodeSettings.res, executor, exec);
@@ -396,10 +396,10 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       LOGGER.warn("Visualization script failed", exception);
     }
 
-    exec.setMessage("Restore library paths");
+    exec.setProgress(0.96,"Restore library paths");
     controller.restorePackagePath();
 
-    exec.setMessage("Collecting captured output");
+    exec.setProgress(0.98,"Collecting captured output");
     executor.finishOutputCapturing(exec);
 
     // END RUNNING MODEL
@@ -428,7 +428,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     }
 
     // cleanup temporary variables of output capturing and consoleLikeCommand stuff
-    exec.setMessage("Cleaning up");
+    exec.setProgress(0.99,"Cleaning up");
     executor.cleanup(exec);
     return fskObj;
   }
