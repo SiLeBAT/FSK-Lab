@@ -1,0 +1,30 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Type Of Exposure",
+      "scope": "#/properties/typeOfExposure"
+    },
+    {
+      "type": "Control",
+      "label": "Uncertainty Estimation",
+      "scope": "#/properties/uncertaintyEstimation"
+    },
+    {
+      "type": "Control",
+      "label": "Methodological Treatment Of Left Censored Data",
+      "scope": "#/properties/methodologicalTreatmentOfLeftCensoredData"
+    },
+    {
+      "type": "Control",
+      "label": "Level Of Contamination After Left Censored Data Treatment",
+      "scope": "#/properties/levelOfContaminationAfterLeftCensoredDataTreatment"
+    },
+    {
+      "type": "Control",
+      "label": "Scenario",
+      "scope": "#/properties/scenario"
+    }
+  ]
+}

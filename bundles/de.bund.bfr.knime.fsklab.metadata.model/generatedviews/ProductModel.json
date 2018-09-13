@@ -1,0 +1,45 @@
+{
+  "type": "object",
+  "properties": {
+    "productName": {
+      "type": "string"
+    },
+    "productDescription": {
+      "type": "string"
+    },
+    "productUnit": {
+      "type": "string"
+    },
+    "productionMethod": {
+      "type": "string"
+    },
+    "packaging": {
+      "type": "string"
+    },
+    "productTreatment": {
+      "type": "string"
+    },
+    "originCountry": {
+      "type": "string"
+    },
+    "originArea": {
+      "type": "string"
+    },
+    "fisheriesArea": {
+      "type": "string"
+    },
+    "productionDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiryDate": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "productName",
+    "productUnit"
+  ]
+}

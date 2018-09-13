@@ -1,14 +1,7 @@
-# Ignore all the binaries except the packaged R (R-Inst/bin)
-de.bund.bfr.knime.fsklab.nodes/bin
-de.bund.bfr.knime.fsklab.nodes.deprecated/bin
-de.bund.bfr.knime.fsklab.nodes.deprecated2/bin
-de.bund.bfr.knime.fsklab.scripts/bin
-de.bund.bfr.knime.fsklab.target/bin
-de.bund.bfr.knime.fsklab.update.p2.deploy/bin
-de.bund.bfr.knime.fsklab.util/bin
-de.bund.bfr.knime.fsklab.metadata.model/bin
-.metadata
+# IntelliJ IDEA config folder
+.idea
 
-# Ignore .DS_Store on Mac
-.DS_Store
-/.recommenders/
+# Maven target folder
+target
+
+bin

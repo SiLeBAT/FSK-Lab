@@ -1,0 +1,20 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Laboratory Name",
+      "scope": "#/properties/laboratoryName"
+    },
+    {
+      "type": "Control",
+      "label": "Laboratory Country",
+      "scope": "#/properties/laboratoryCountry"
+    },
+    {
+      "type": "Control",
+      "label": "Laboratory Accreditation",
+      "scope": "#/properties/laboratoryAccreditation"
+    }
+  ]
+}

@@ -1,9 +1,0 @@
-{
-  "type": "object",
-  "properties": {
-    "region": {
-      "type": "string"
-    }
-  },
-  "additionalProperties": false
-}

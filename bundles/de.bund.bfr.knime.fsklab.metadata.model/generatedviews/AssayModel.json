@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "assayName": {
+      "type": "string"
+    },
+    "assayDescription": {
+      "type": "string"
+    },
+    "percentageOfMoisture": {
+      "type": "string"
+    },
+    "percentageOfFat": {
+      "type": "string"
+    },
+    "limitOfDetection": {
+      "type": "string"
+    },
+    "limitOfQuantification": {
+      "type": "string"
+    },
+    "leftCensoredData": {
+      "type": "string"
+    },
+    "rangeOfContamination": {
+      "type": "string"
+    },
+    "uncertaintyValue": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "assayName"
+  ]
+}

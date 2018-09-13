@@ -1,0 +1,105 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Title",
+      "scope": "#/properties/Title"
+    },
+    {
+      "type": "Control",
+      "label": "Family Name",
+      "scope": "#/properties/familyName"
+    },
+    {
+      "type": "Control",
+      "label": "Email",
+      "scope": "#/properties/email"
+    },
+    {
+      "type": "Control",
+      "label": "Telephone",
+      "scope": "#/properties/telephone"
+    },
+    {
+      "type": "Control",
+      "label": "Street Address",
+      "scope": "#/properties/streetAddress"
+    },
+    {
+      "type": "Control",
+      "label": "Extended Address",
+      "scope": "#/properties/extendedAddress"
+    },
+    {
+      "type": "Control",
+      "label": "Country",
+      "scope": "#/properties/country"
+    },
+    {
+      "type": "Control",
+      "label": "City",
+      "scope": "#/properties/city"
+    },
+    {
+      "type": "Control",
+      "label": "ZIP Code",
+      "scope": "#/properties/ZIPCode"
+    },
+    {
+      "type": "Control",
+      "label": "Post Office Box",
+      "scope": "#/properties/postOfficeBox"
+    },
+    {
+      "type": "Control",
+      "label": "Region",
+      "scope": "#/properties/region"
+    },
+    {
+      "type": "Control",
+      "label": "Nick Name",
+      "scope": "#/properties/nickName"
+    },
+    {
+      "type": "Control",
+      "label": "Time Zone",
+      "scope": "#/properties/timeZone"
+    },
+    {
+      "type": "Control",
+      "label": "Gender",
+      "scope": "#/properties/gender"
+    },
+    {
+      "type": "Control",
+      "label": "Name",
+      "scope": "#/properties/name"
+    },
+    {
+      "type": "Control",
+      "label": "Url",
+      "scope": "#/properties/url"
+    },
+    {
+      "type": "Control",
+      "label": "Note",
+      "scope": "#/properties/note"
+    },
+    {
+      "type": "Control",
+      "label": "Logo",
+      "scope": "#/properties/logo"
+    },
+    {
+      "type": "Control",
+      "label": "Organization",
+      "scope": "#/properties/organization"
+    },
+    {
+      "type": "Control",
+      "label": "Fn",
+      "scope": "#/properties/fn"
+    }
+  ]
+}

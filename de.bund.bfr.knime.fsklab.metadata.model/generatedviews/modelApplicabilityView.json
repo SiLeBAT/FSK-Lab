@@ -1,5 +1,0 @@
-{
-  "type": "Control",
-  "label": "Model Applicability",
-  "scope": "#/properties/modelApplicability"
-}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="Runner.png" type="Manipulator" deprecated="false"
+	xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	<name>FSK Runner</name>
+
+	<shortDescription>This node runs an FSK model</shortDescription>
+
+	<fullDescription>
+		<intro>
+		  Runs the input model and updates its workspace with the model results.
+		  <p>
+		    Visualization scripts with interactive output such as
+		    <a href="https://plot.ly/">Plotly</a> are not supported.
+	      </p>
+	    </intro>
+		
+		<option name="Width">Width of the plot.</option>
+		<option name="Height">Height of the plot</option>
+		<option name="Resolution">Resolution of the plot in PPI.</option>
+		<option name="Text size">
+		  Default point-size of plotted text, interpreted as big points (1/72 inch) at the given
+		  resolution.
+		</option>
+		<option name="Simulation">
+		  Name of the selected simulation to run. 
+		  If no simulation is selected then the default simulation will be selected.
+		</option>
+		
+	</fullDescription>
+	
+	<ports>
+		<inPort name="FSK object" index="0">Input FSK model</inPort>
+		<outPort name="FSK object" index="0">
+		  FSK model with results stored in an R workspace.
+		</outPort>
+		<outPort name="Image Output" index="1">
+		  Plot generated with the provided visualization script. If the input FSK model has no
+		  visualization script then this port will hold no image (optional).
+		</outPort>
+	</ports>
+	
+	<views>
+		<view name="R View" index="0"></view>
+	</views>
+</knimeNode>

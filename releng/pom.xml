@@ -1,0 +1,18 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.bund.bfr.knime</groupId>
+    <artifactId>de.bund.bfr.knime.releng</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>de.bund.bfr.knime</groupId>
+        <artifactId>de.bund.bfr.knime.root</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modules>
+        <module>de.bund.bfr.knime.update</module>
+       	<module>de.bund.bfr.knime.target</module> 
+    </modules>
+</project>

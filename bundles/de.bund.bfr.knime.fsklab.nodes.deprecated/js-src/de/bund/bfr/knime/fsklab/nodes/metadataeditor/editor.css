@@ -1,0 +1,10 @@
+/* Align labels in form-horizonal to the left. */
+.form-horizontal .control-label{
+	text-align:left;
+}
+
+/* Removes border and shadow. Used for customized form-control. */
+.no-border {
+    border: 0;
+    box-shadow: none; /* You may want to include this as bootstrap applies these styles too */
+}

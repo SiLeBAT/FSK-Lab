@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="fsk2r.png" type="Manipulator" deprecated="false"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	<name>FSK to R</name>
+
+	<shortDescription>
+		Extracts the R workspace out of an FSK object. The R workspace may be
+		used with KNIME R nodes.
+    </shortDescription>
+
+	<fullDescription>
+		<intro>
+			Extracts the R workspace out of an FSK object and places it into
+			the output RPortObject. If the R workspace is null or non-existent
+			(as when the model has not been run), the generated RPortObject
+			would be null.
+		</intro>
+	</fullDescription>
+	<ports>
+		<inPort name="FSK object" index="0">FSK object</inPort>
+		<outPort name="R workspace" index="0">R workspace</outPort>
+	</ports>
+</knimeNode>

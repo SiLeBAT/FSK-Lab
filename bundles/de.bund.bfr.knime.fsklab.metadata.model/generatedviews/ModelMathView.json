@@ -1,0 +1,35 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Fitting Procedure",
+      "scope": "#/properties/fittingProcedure"
+    },
+    {
+      "type": "Control",
+      "label": "Parameter",
+      "scope": "#/properties/parameter"
+    },
+    {
+      "type": "Control",
+      "label": "Model Equation",
+      "scope": "#/properties/modelEquation"
+    },
+    {
+      "type": "Control",
+      "label": "Exposure",
+      "scope": "#/properties/exposure"
+    },
+    {
+      "type": "Control",
+      "label": "Quality Measures",
+      "scope": "#/properties/qualityMeasures"
+    },
+    {
+      "type": "Control",
+      "label": "Event",
+      "scope": "#/properties/event"
+    }
+  ]
+}

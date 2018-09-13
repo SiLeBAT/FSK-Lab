@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "properties": {
+    "hazardType": {
+      "type": "string"
+    },
+    "hazardName": {
+      "type": "string"
+    },
+    "hazardDescription": {
+      "type": "string"
+    },
+    "hazardUnit": {
+      "type": "string"
+    },
+    "adverseEffect": {
+      "type": "string"
+    },
+    "sourceOfContamination": {
+      "type": "string"
+    },
+    "benchmarkDose": {
+      "type": "string"
+    },
+    "maximumResidueLimit": {
+      "type": "string"
+    },
+    "noObservedAdverseAffectLevel": {
+      "type": "string"
+    },
+    "lowestObservedAdverseAffectLevel": {
+      "type": "string"
+    },
+    "acceptableOperatorExposureLevel": {
+      "type": "string"
+    },
+    "acuteReferenceDose": {
+      "type": "string"
+    },
+    "acceptableDailyIntake": {
+      "type": "string"
+    },
+    "hazardIndSum": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "hazardName"
+  ]
+}

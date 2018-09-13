@@ -1,0 +1,50 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Assay Name",
+      "scope": "#/properties/assayName"
+    },
+    {
+      "type": "Control",
+      "label": "Assay Description",
+      "scope": "#/properties/assayDescription"
+    },
+    {
+      "type": "Control",
+      "label": "Percentage Of Moisture",
+      "scope": "#/properties/percentageOfMoisture"
+    },
+    {
+      "type": "Control",
+      "label": "Percentage Of Fat",
+      "scope": "#/properties/percentageOfFat"
+    },
+    {
+      "type": "Control",
+      "label": "Limit Of Detection",
+      "scope": "#/properties/limitOfDetection"
+    },
+    {
+      "type": "Control",
+      "label": "Limit Of Quantification",
+      "scope": "#/properties/limitOfQuantification"
+    },
+    {
+      "type": "Control",
+      "label": "Left Censored Data",
+      "scope": "#/properties/leftCensoredData"
+    },
+    {
+      "type": "Control",
+      "label": "Range Of Contamination",
+      "scope": "#/properties/rangeOfContamination"
+    },
+    {
+      "type": "Control",
+      "label": "Uncertainty Value",
+      "scope": "#/properties/uncertaintyValue"
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="FskxReader.png" type="Source" deprecated="false"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	<name>FSKX Reader</name>
+
+	<shortDescription>
+		This node reads an FSK object from an FSKX file. The R workspace is also
+		provided on a second port for compatibility with KNIME R nodes.
+    </shortDescription>
+
+	<fullDescription>
+		<intro>
+			The contents of the FSKX object are:
+			<ul>
+				<li>Model script: Calculates the results of the script
+					(mandatory)</li>
+				<li>Parameters script: Used in some models to initialize
+					parameters in the model (currently optional)</li>
+				<li>Visualization script: Generates some form of visualization
+					for the results of the model (optional)</li>
+				<li>Model meta data encoded using the OpenFSMR template.</li>
+				<li>Set of libraries used.</li>
+			</ul>
+
+			<h3>Model metadata</h3>
+
+			One row table with metadata of the model read from the file. Every column
+			describes a different property.
+
+			<table>
+				<tr>
+					<th>Column name</th>
+					<th>Data type</th>
+				</tr>
+				<tr>
+					<td>Model name</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Model id</td>
+					<td>SId</td>
+				</tr>
+				<tr>
+					<td>Model link</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Organism</td>
+					<td>SId</td>
+				</tr>
+				<tr>
+					<td>Organism details</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Environment</td>
+					<td>SId</td>
+				</tr>
+				<tr>
+					<td>Environment details</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Model creator</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Model family name</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Model contact</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Model reference description</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Model reference description link</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Created date</td>
+					<td>Date</td>
+				</tr>
+				<tr>
+					<td>Modified date</td>
+					<td>Date</td>
+				</tr>
+				<tr>
+					<td>Rights</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Notes</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Curation status</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Model type</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Subject</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Food process</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Dependent variable</td>
+					<td>SId</td>
+				</tr>
+				<tr>
+					<td>Dependent variable unit</td>
+					<td>SId</td>
+				</tr>
+				<tr>
+					<td>Dependent variable type</td>
+					<td>String</td>
+				</tr>
+				<tr>
+					<td>Dependent variable min</td>
+					<td>Number</td>
+				</tr>
+				<tr>
+					<td>Dependent variable max</td>
+					<td>Number</td>
+				</tr>
+				<tr>
+					<td>Independent variables</td>
+					<td>SId (multiple values)</td>
+				</tr>
+				<tr>
+					<td>Independent variable units</td>
+					<td>SId (multiple values)</td>
+				</tr>
+				<tr>
+					<td>Independent variable types</td>
+					<td>String (multiple values)</td>
+				</tr>
+				<tr>
+					<td>Independent variable mins</td>
+					<td>Number (multiple values)</td>
+				</tr>
+				<tr>
+					<td>Independent variable maxs</td>
+					<td>Number (multiple values)</td>
+				</tr>
+				<tr>
+					<td>Independent variable values</td>
+					<td>Number (multiple values)</td>
+				</tr>
+				<tr>
+					<td>Has data?</td>
+					<td>String</td>
+				</tr>
+			</table>
+
+			<h4>Type SId</h4>
+			<p>
+				Some properties are taking unique identifiers of type <b>SId</b>. The
+				<b>SId</b> type follows the pattern:
+				
+				<ul>
+					<li>letter ::= ’a’..’z’,’A’..’Z’</li>
+					<li>digit  ::= ’0’..’9’</li>
+					<li>nameChar ::= letter | digit | ’_’</li>
+					<li>name ::= ( letter | ’_’ ) nameChar*</li>
+				</ul>
+			</p>
+
+			<p>Examples of valid <b>SId</b>: <i>escherichia_coli10</i>, <i>_eColi</i>.</p>
+			<p>Examples of invalid <b>SId</b>: <i>0escherichia_coli</i>, <i></i>, <i>0</i>.</p>
+
+			<h4>Properties with multiple values</h4>
+			<p>
+				Properties taking multiple values are encoded using the two characters
+				|| as splitter. For example two variable units grams and liters would
+				be encoded as gram || liter. If a variable has no unit then a 
+				whitespace is used instead, e.g. gram || .
+			</p>
+			<p>
+				Related properties like the independent variables have the same number of values
+				across the properties. Therefore, the independent variable names, units, minimum and
+				maximum values must have the same number of values to describe <i>N</i> variables.
+				If a value is missing like a variable without unit then a whitespace must be used
+				instead.
+			</p>
+		</intro>
+		<option name="Selected file">
+			File path of the selected FSKX file.
+		</option>
+	</fullDescription>
+	<ports>
+		<outPort name="FSK object" index="0">FSK object</outPort>
+		<outPort name="R workspace" index="1">R workspace</outPort>
+		<outPort name="Model metadata" index="2">Model metadata</outPort>
+	</ports>
+</knimeNode>

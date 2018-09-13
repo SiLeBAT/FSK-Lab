@@ -1,0 +1,60 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Product Name",
+      "scope": "#/properties/productName"
+    },
+    {
+      "type": "Control",
+      "label": "Product Description",
+      "scope": "#/properties/productDescription"
+    },
+    {
+      "type": "Control",
+      "label": "Product Unit",
+      "scope": "#/properties/productUnit"
+    },
+    {
+      "type": "Control",
+      "label": "Production Method",
+      "scope": "#/properties/productionMethod"
+    },
+    {
+      "type": "Control",
+      "label": "Packaging",
+      "scope": "#/properties/packaging"
+    },
+    {
+      "type": "Control",
+      "label": "Product Treatment",
+      "scope": "#/properties/productTreatment"
+    },
+    {
+      "type": "Control",
+      "label": "Origin Country",
+      "scope": "#/properties/originCountry"
+    },
+    {
+      "type": "Control",
+      "label": "Origin Area",
+      "scope": "#/properties/originArea"
+    },
+    {
+      "type": "Control",
+      "label": "Fisheries Area",
+      "scope": "#/properties/fisheriesArea"
+    },
+    {
+      "type": "Control",
+      "label": "Production Date",
+      "scope": "#/properties/productionDate"
+    },
+    {
+      "type": "Control",
+      "label": "Expiry Date",
+      "scope": "#/properties/expiryDate"
+    }
+  ]
+}

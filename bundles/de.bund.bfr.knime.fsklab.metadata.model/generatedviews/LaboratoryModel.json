@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "properties": {
+    "laboratoryName": {
+      "type": "string"
+    },
+    "laboratoryCountry": {
+      "type": "string"
+    },
+    "laboratoryAccreditation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

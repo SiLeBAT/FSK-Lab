@@ -1,9 +1,0 @@
-{
-  "type": "object",
-  "properties": {
-    "modelApplicability": {
-      "type": "string"
-    }
-  },
-  "additionalProperties": false
-}

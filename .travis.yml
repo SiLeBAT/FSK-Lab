@@ -1,0 +1,9 @@
+language: java
+script: mvn clean verify
+# Cache maven repository to speed up build
+cache:
+   directories:
+      - $HOME/.m2
+notifications:
+   # Email notifications are disabled
+   email: false

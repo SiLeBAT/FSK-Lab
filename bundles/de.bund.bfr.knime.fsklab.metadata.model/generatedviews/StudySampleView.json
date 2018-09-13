@@ -1,0 +1,55 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Sample Name",
+      "scope": "#/properties/sampleName"
+    },
+    {
+      "type": "Control",
+      "label": "Protocol Of Sample Collection",
+      "scope": "#/properties/protocolOfSampleCollection"
+    },
+    {
+      "type": "Control",
+      "label": "Sampling Strategy",
+      "scope": "#/properties/samplingStrategy"
+    },
+    {
+      "type": "Control",
+      "label": "Type Of Sampling Program",
+      "scope": "#/properties/typeOfSamplingProgram"
+    },
+    {
+      "type": "Control",
+      "label": "Sampling Method",
+      "scope": "#/properties/samplingMethod"
+    },
+    {
+      "type": "Control",
+      "label": "Sampling Plan",
+      "scope": "#/properties/samplingPlan"
+    },
+    {
+      "type": "Control",
+      "label": "Sampling Weight",
+      "scope": "#/properties/samplingWeight"
+    },
+    {
+      "type": "Control",
+      "label": "Sampling Size",
+      "scope": "#/properties/samplingSize"
+    },
+    {
+      "type": "Control",
+      "label": "Lot Size Unit",
+      "scope": "#/properties/lotSizeUnit"
+    },
+    {
+      "type": "Control",
+      "label": "Sampling Point",
+      "scope": "#/properties/samplingPoint"
+    }
+  ]
+}

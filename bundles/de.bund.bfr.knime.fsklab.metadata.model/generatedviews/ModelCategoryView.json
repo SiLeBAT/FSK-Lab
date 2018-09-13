@@ -1,0 +1,25 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Control",
+      "label": "Model Class",
+      "scope": "#/properties/modelClass"
+    },
+    {
+      "type": "Control",
+      "label": "Model Class Comment",
+      "scope": "#/properties/modelClassComment"
+    },
+    {
+      "type": "Control",
+      "label": "Basic Process",
+      "scope": "#/properties/basicProcess"
+    },
+    {
+      "type": "Control",
+      "label": "Model Sub Class",
+      "scope": "#/properties/modelSubClass"
+    }
+  ]
+}

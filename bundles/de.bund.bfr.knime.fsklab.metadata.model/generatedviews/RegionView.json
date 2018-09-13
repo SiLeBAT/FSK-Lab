@@ -1,0 +1,5 @@
+{
+  "type": "Control",
+  "label": "Region",
+  "scope": "#/properties/region"
+}
