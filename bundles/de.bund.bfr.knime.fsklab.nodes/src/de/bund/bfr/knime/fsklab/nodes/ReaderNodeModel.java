@@ -19,9 +19,12 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -39,6 +42,7 @@ import java.util.stream.Collectors;
 import javax.swing.tree.TreeNode;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jlibsedml.Change;
 import org.jlibsedml.ChangeAttribute;
@@ -53,6 +57,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.node.workflow.WorkflowManager;
@@ -151,9 +156,38 @@ class ReaderNodeModel extends NoInternalsModel {
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
-    final File file = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.filePath));
+    CheckUtils.checkSourceFile(nodeSettings.filePath);
+
+    URL url = FileUtil.toURL(nodeSettings.filePath);
+    Path localPath = FileUtil.resolveToPath(url);
+
+    FskPortObject inObject;
+
+    if (localPath != null) {
+      inObject = readArchive(localPath.toFile());
+    }
+    // if path is an external URL the archive is downloaded to a temporary file
+    else {
+      File temporaryFile = FileUtil.createTempFile("model", "fskx");
+      temporaryFile.delete();
+
+      try (InputStream inStream = FileUtil.openInputStream(nodeSettings.filePath);
+          OutputStream outStream = new FileOutputStream(temporaryFile)) {
+        IOUtils.copy(inStream, outStream);
+      }
+
+      inObject = readArchive(temporaryFile);
+
+      temporaryFile.delete();
+    }
+
+    return new PortObject[] {inObject};
+  }
+
+  private FskPortObject readArchive(File in) throws Exception {
     FskPortObject fskObj = null;
-    try (final CombineArchive archive = new CombineArchive(file)) {
+
+    try (final CombineArchive archive = new CombineArchive(in)) {
       Collection<ArchiveEntry> entries = archive.getEntries();
       // Get the directories inside the archive without duplication
       Set<String> entriesSet = new HashSet<>();
@@ -165,7 +199,8 @@ class ReaderNodeModel extends NoInternalsModel {
           entriesSet.add(path);
         }
       }
-      List<String> sortedList = new ArrayList<String>(entriesSet);
+
+      List<String> sortedList = new ArrayList<>(entriesSet);
       // Sort to have the related directories(Joiner One) after each other
       Collections.sort(sortedList);
       // Get the number of the .sbml file which are available in this archive to be used as Tag of
@@ -179,9 +214,9 @@ class ReaderNodeModel extends NoInternalsModel {
         rootList.add("/");
         fskObj = readFskPortObject(archive, rootList, 0);
       }
-
     }
-    return new PortObject[] {fskObj};
+
+    return fskObj;
   }
 
   public FskPortObject getEmbedSecondFSKObject(CombinedFskPortObject comFskObj) {
