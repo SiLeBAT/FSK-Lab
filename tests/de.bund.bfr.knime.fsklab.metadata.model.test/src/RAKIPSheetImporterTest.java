@@ -32,6 +32,7 @@ import metadata.Reference;
 import metadata.Study;
 import metadata.StudySample;
 
+@SuppressWarnings("static-method")
 public class RAKIPSheetImporterTest {
 
 	@Test
