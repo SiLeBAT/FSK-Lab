@@ -19,8 +19,10 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
+@SuppressWarnings("static-method")
 public class FskMetaDataFieldsTest {
 
   @Test

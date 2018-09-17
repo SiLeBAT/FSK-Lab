@@ -20,13 +20,17 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
 import java.util.Date;
+
 import org.junit.Test;
+
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument.MetadataAnnotation;
 import de.bund.bfr.knime.fsklab.nodes.MetadataDocument.RuleAnnotation;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 
+@SuppressWarnings("static-method")
 public class MetadataDocumentTest {
 
   @Test
