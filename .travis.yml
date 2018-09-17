@@ -7,3 +7,9 @@ cache:
 notifications:
    # Email notifications are disabled
    email: false
+deploy:
+   provider: script
+   skip_cleanup: true # to upload artifacts created during the build
+   script: bash bintray.sh
+   on:
+        branch: release
