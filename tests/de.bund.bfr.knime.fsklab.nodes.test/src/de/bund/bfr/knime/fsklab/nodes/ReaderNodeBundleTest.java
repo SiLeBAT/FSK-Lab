@@ -1,10 +1,11 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+
 import static org.junit.Assert.assertFalse;
 import java.util.Locale;
 import org.junit.Test;
 
-public class WriterNodeBundleTest {
+public class ReaderNodeBundleTest {
 
   private static void testBundle(Locale locale) {
 

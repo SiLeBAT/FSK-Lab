@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: FSK nodes tests
+Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes.test
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.test
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: de.bund.bfr.knime.fsklab.nodes,
+ org.junit

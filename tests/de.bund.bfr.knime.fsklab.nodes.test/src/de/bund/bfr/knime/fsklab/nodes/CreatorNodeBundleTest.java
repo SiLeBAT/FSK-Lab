@@ -1,5 +1,6 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+
 import static org.junit.Assert.assertFalse;
 import java.util.Locale;
 import org.junit.Test;
