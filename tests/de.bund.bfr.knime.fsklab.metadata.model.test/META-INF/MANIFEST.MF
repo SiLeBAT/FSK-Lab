@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: de.bund.bfr.knime.fsklab.metadata.model,
  org.apache.servicemix.bundles.poi,
  org.glassfish.javax.json,
- org.junit
+ org.junit,
+ de.bund.bfr.formats
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.metadata.model.test
 Bundle-ActivationPolicy: lazy
