@@ -1,5 +1,5 @@
-API="https://api.bintray.com/content/silebat/fsklab_test"
-PROPS=";bt_package=pkg;bt_version=version;publish=1;override=1"
+API="https://api.bintray.com/content/silebat/fsklab_icpmf"
+PROPS=";bt_package=update;bt_version=version;publish=1;override=1"
 FOLDER="$TRAVIS_BUILD_DIR/releng/de.bund.bfr.knime.update/target/repository"
 
 curl -u $BINTRAY_USER:$BINTRAY_KEY -T $FOLDER/artifacts.jar $API/artifacts.jar$PROPS
