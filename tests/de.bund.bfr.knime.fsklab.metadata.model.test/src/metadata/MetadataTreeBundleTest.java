@@ -1,8 +1,8 @@
+package metadata;
+
 import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
-
-import metadata.MetadataTreeBundle;
 
 @SuppressWarnings("static-method")
 public class MetadataTreeBundleTest {
@@ -236,22 +236,22 @@ public class MetadataTreeBundleTest {
 		assertFalse(bundle.getAssay_rangeOfContamination().isEmpty());
 		assertFalse(bundle.getAssay_uncertaintyValue().isEmpty());
 	}
-	
+
 	@Test
 	public void testDataBackground() {
 		MetadataTreeBundle bundle = new MetadataTreeBundle();
-		
+
 		assertFalse(bundle.getDataBackground_study().isEmpty());
 		assertFalse(bundle.getDataBackground_studySample().isEmpty());
 		assertFalse(bundle.getDataBackground_dietaryAssessmentMethod().isEmpty());
 		assertFalse(bundle.getDataBackground_laboratory().isEmpty());
 		assertFalse(bundle.getDataBackground_assay().isEmpty());
 	}
-	
+
 	@Test
 	public void testParameter() {
 		MetadataTreeBundle bundle = new MetadataTreeBundle();
-		
+
 		assertFalse(bundle.getParameter_parameterId().isEmpty());
 		assertFalse(bundle.getParameter_parameterClassification().isEmpty());
 		assertFalse(bundle.getParameter_parameterName().isEmpty());
@@ -269,32 +269,32 @@ public class MetadataTreeBundleTest {
 		assertFalse(bundle.getParameter_parameterValueMax().isEmpty());
 		assertFalse(bundle.getParameter_parameterError().isEmpty());
 	}
-	
+
 	@Test
 	public void testModelEquation() {
 		MetadataTreeBundle bundle = new MetadataTreeBundle();
-		
+
 		assertFalse(bundle.getModelEquation_modelEquationName().isEmpty());
 		assertFalse(bundle.getModelEquation_modelEquationClass().isEmpty());
 		assertFalse(bundle.getModelEquation_modelEquation().isEmpty());
 		assertFalse(bundle.getModelEquation_hypothesisOfTheModel().isEmpty());
 	}
-	
+
 	@Test
 	public void testExposure() {
 		MetadataTreeBundle bundle = new MetadataTreeBundle();
-		
+
 		assertFalse(bundle.getExposure_methodologicalTreatmentOfLeftCensoredData().isEmpty());
-		assertFalse(bundle.getExposure_levelOfContaminationAfterLeftCensoredDataTreatment().isEmpty());	
+		assertFalse(bundle.getExposure_levelOfContaminationAfterLeftCensoredDataTreatment().isEmpty());
 		assertFalse(bundle.getExposure_typeOfExposure().isEmpty());
 		assertFalse(bundle.getExposure_scenario().isEmpty());
 		assertFalse(bundle.getExposure_uncertaintyEstimation().isEmpty());
 	}
-	
+
 	@Test
 	public void testModelMath() {
 		MetadataTreeBundle bundle = new MetadataTreeBundle();
-		
+
 		assertFalse(bundle.getModelMath_qualityMeasures().isEmpty());
 		assertFalse(bundle.getModelMath_fittingProcedure().isEmpty());
 		assertFalse(bundle.getModelMath_event().isEmpty());

@@ -1,3 +1,5 @@
+package metadata;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -12,25 +14,6 @@ import javax.json.JsonObject;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
-
-import metadata.Assay;
-import metadata.Contact;
-import metadata.DietaryAssessmentMethod;
-import metadata.GeneralInformation;
-import metadata.Hazard;
-import metadata.Laboratory;
-import metadata.MetadataPackage;
-import metadata.ModelCategory;
-import metadata.Parameter;
-import metadata.ParameterClassification;
-import metadata.ParameterType;
-import metadata.PopulationGroup;
-import metadata.Product;
-import metadata.PublicationType;
-import metadata.RAKIPSheetImporter;
-import metadata.Reference;
-import metadata.Study;
-import metadata.StudySample;
 
 @SuppressWarnings("static-method")
 public class RAKIPSheetImporterTest {
