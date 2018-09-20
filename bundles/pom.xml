@@ -14,6 +14,8 @@
 	<modules>
 		<module>com.jgoodies</module>
 		<module>com.thoughtworks.xstream</module>
+		<module>de.bund.bfr.binary.r.win32.x86</module>
+		<module>de.bund.bfr.binary.r.win32.x86_64</module>
 		<module>de.bund.bfr.formats</module>
 		<module>de.bund.bfr.knime.fsklab.metadata.model</module>
 		<module>de.bund.bfr.knime.fsklab.nodes</module>
@@ -36,4 +38,5 @@
 		<module>org.jsoup</module>
 		<module>quick.dbtable</module>
 	</modules>
+
 </project>
