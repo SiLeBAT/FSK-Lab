@@ -27,8 +27,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.junit,
  org.apache.commons.lang3,
  de.bund.bfr.formats,
- org.jsoup,
- org.sbml.jsbml;bundle-version="1.2.0"
+ org.jsoup
 Export-Package: de.bund.bfr.knime.pmm.combaseio,
  de.bund.bfr.knime.pmm.dataviewandselect,
  de.bund.bfr.knime.pmm.dbdelete,

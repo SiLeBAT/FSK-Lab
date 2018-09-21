@@ -20,8 +20,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.workbench.repository,
  org.jdom2,
  de.bund.bfr.knime.fsklab.type;bundle-version="1.0.0",
- de.bund.bfr.formats,
- org.sbml.jsbml
+ de.bund.bfr.formats
 Bundle-ClassPath: .,
  libs/fskml-0.0.1-SNAPSHOT.jar
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated2
