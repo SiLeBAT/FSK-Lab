@@ -5,18 +5,18 @@ Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes.common
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.bund.bfr.knime.fsklab.nodes.common.Activator
 Require-Bundle: com.fifesoft.rsyntaxtextarea,
- org.eclipse.core.runtime,
- org.knime.core,
- de.bund.bfr.knime.fsklab.metadata.model,
  com.google.guava,
- de.bund.bfr.formats
+ com.toedter.jcalendar,
+ de.bund.bfr.formats,
+ de.bund.bfr.knime.fsklab.metadata.model,
+ org.eclipse.core.runtime,
+ org.knime.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.common
 Bundle-ActivationPolicy: lazy
-Export-Package: com.toedter.calendar,
+Export-Package: 
  de.bund.bfr.knime.fsklab.nodes.common,
  de.bund.bfr.knime.fsklab.nodes.common.ui
 Bundle-ClassPath: .,
- libs/bfr-swing-1.0-SNAPSHOT.jar,
- libs/jcalendar-1.4.jar
+ libs/bfr-swing-1.0-SNAPSHOT.jar
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
