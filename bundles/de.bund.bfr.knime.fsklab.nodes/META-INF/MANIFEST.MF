@@ -10,7 +10,6 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  com.google.guava,
  com.sun.jna,
  com.toedter.jcalendar,
- de.bund.bfr.formats,
  de.bund.bfr.knime.fsklab.metadata.model,
  de.bund.bfr.knime.fsklab.nodes.common,
  de.bund.bfr.knime.fsklab.preferences,
@@ -32,7 +31,9 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.js.core,
  org.knime.json,
  org.knime.workbench.repository,
- org.slf4j.api
+ org.slf4j.api,
+ org.sbml.jsbml,
+ de.bund.bfr.formats
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
