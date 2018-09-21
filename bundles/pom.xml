@@ -34,6 +34,8 @@
 		<module>org.freixas.jcalendar</module>
 		<module>org.hsh.bfr.db</module>
 		<module>org.javers</module>
+		<module>org.jdom2</module>
+		<module>org.jsoup</module>
 		<module>quick.dbtable</module>
 	</modules>
 
