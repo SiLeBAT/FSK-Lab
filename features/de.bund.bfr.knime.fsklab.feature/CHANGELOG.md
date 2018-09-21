@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Remove plugins for JDOM and Jsoup.
 
 ### Fixed
 - Fix link in changelog with comparison between 1.0.2 and 1.1.0.
