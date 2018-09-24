@@ -9,10 +9,10 @@
    <feature url="features/de.bund.bfr.knime.fsklab.feature_1.1.0.qualifier.jar" id="de.bund.bfr.knime.fsklab.feature" version="1.1.0.qualifier">
       <category name="FSK-Lab"/>
    </feature>
-   <feature url="features/de.bund.bfr.knime.fsklab.features.ext.r.bin.x64_3.4.4.jar" id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64" version="3.4.4">
+   <feature url="features/de.bund.bfr.knime.fsklab.features.ext.r.bin.x64_3.4.4.201808071522.jar" id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64" version="3.4.4.201808071522">
       <category name="FSK-Lab"/>
    </feature>
-   <feature url="features/de.bund.bfr.knime.fsklab.features.ext.r.bin.x86_3.4.4.jar" id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x86" version="3.4.4">
+   <feature url="features/de.bund.bfr.knime.fsklab.features.ext.r.bin.x86_3.4.4.201808071522.jar" id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x86" version="3.4.4.201808071522">
       <category name="FSK-Lab"/>
    </feature>
    <category-def name="FSK-Lab" label="FSK-Lab">
@@ -20,4 +20,5 @@
          KNIME extension nodes for FSK-Lab. Includes FSK-Lab and PMM-Lab.
       </description>
    </category-def>
+   <repository-reference location="http://dl.bintray.com/silebat/RBundles" enabled="true" />
 </site>

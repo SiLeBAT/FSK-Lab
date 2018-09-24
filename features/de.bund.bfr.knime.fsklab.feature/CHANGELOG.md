@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Removed
+- R bundles. Bundles are now referenced to external update site.
+
 ## [1.1.1] - 2018-09-24
 
 ### Fixed
