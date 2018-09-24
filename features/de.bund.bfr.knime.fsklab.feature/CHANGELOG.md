@@ -6,11 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.1] - 2018-09-24
+
 ### Fixed
+- Missing JDOM in FSK-Lab feature.
 - Fix link in changelog with comparison between 1.0.2 and 1.1.0.
 
 ### Removed
 - Binaries included in the *de.bund.bfr.knime.fsklab.nodes.common* project. A *.gitignore* is included in the project to ignore the bin folder. 
+
 
 ## [1.1.0] - 2018-08-14
 

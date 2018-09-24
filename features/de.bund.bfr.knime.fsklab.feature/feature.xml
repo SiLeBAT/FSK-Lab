@@ -53,6 +53,7 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.knime.json"/>
       <import plugin="org.knime.workbench.repository"/>
       <import plugin="org.slf4j.api"/>
+      <import plugin="com.toedter.jcalendar"/>
    </requires>
 
    <plugin
