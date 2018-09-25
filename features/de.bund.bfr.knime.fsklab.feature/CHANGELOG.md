@@ -6,8 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.2.0] - 2018-09-25
+
 ### Removed
 - R bundles. Bundles are now referenced to external update site.
+
+### Deprecated
+- Old Java-based editor node.
 
 ## [1.1.1] - 2018-09-24
 
@@ -59,6 +64,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Modified
 - README to link to this changelog.
 
-[Unreleased]: https://github.com/SiLeBAT/FSK-Lab/compare/1.1.0...HEAD
+[Unreleased]: https://github.com/SiLeBAT/FSK-Lab/compare/1.2.0...HEAD
+[1.2.0]: https://github.com/SiLeBAT/FSK-Lab/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/SiLeBAT/FSK-Lab/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/SiLeBAT/FSK-Lab/compare/0.0.1...1.0.2
