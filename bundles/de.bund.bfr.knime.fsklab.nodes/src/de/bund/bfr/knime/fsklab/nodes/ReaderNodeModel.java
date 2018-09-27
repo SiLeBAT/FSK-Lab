@@ -467,9 +467,8 @@ class ReaderNodeModel extends NoInternalsModel {
           }
         }
       }
-
       resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("csv")));
-      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("rData")));
+      resourceEntries.addAll(archive.getEntriesWithFormat(URIS.get("rdata")));
 
       for (final ArchiveEntry entry : resourceEntries) {
         String path = entry.getEntityPath();
