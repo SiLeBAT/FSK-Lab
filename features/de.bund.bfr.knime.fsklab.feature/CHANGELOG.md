@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.2.1] - 2018-09-27
+
+### Fixed
+- URI for RData files (R workspaces).
+
 ## [1.2.0] - 2018-09-25
 
 ### Removed
