@@ -35,6 +35,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
@@ -70,13 +71,7 @@ class FskxWriterNodeModel extends NoInternalsModel {
     FskPortObject portObject = (FskPortObject) inData[0];
 
     File archiveFile = FileUtil.getFileFromURL(FileUtil.toURL(filePath.getStringValue()));
-
-    try {
-      Files.deleteIfExists(archiveFile.toPath());
-    } catch (IOException e) {
-      e.printStackTrace();
-      throw new Exception("Previous file with same name could not be overwritten");
-    }
+    Files.deleteIfExists(archiveFile.toPath());
 
     // try to create CombineArchive
     try (CombineArchive archive = new CombineArchive(archiveFile)) {
@@ -157,6 +152,7 @@ class FskxWriterNodeModel extends NoInternalsModel {
   @Override
   protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
       throws InvalidSettingsException {
+    CheckUtils.checkDestinationFile(filePath.getStringValue(), true);
     return new PortObjectSpec[] {};
   }
 

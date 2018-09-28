@@ -44,6 +44,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.xml.stax.SBMLReader;
@@ -234,6 +235,7 @@ public class FskxReaderNodeModel extends NoInternalsModel {
   @Override
   protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
       throws InvalidSettingsException {
+    CheckUtils.checkSourceFile(filename.getStringValue());
     return new PortObjectSpec[] {fskSpec};
   }
 

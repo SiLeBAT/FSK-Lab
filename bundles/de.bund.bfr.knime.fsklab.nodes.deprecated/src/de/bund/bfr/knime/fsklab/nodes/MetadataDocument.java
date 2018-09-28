@@ -131,6 +131,8 @@ public class MetadataDocument {
     Set<String> unitsSet = new LinkedHashSet<>();
     template.dependentVariables.forEach(v -> unitsSet.add(v.unit.trim()));
     template.independentVariables.forEach(v -> unitsSet.add(v.unit.trim()));
+    unitsSet.remove("dimensionless");  // `dimensionless` cannot be added in SBML
+    
     for (String unit : unitsSet) {
       UnitDefinition ud = model.createUnitDefinition(PMFUtil.createId(unit));
       ud.setName(unit);

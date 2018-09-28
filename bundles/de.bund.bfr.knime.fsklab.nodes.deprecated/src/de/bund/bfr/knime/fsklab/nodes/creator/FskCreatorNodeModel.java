@@ -42,6 +42,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.fskml.RScript;
@@ -92,14 +93,11 @@ class FskCreatorNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
-      throws InvalidSettingsException, IOException {
+      throws Exception {
     try {
       FskPortObject portObj = new FskPortObject();
 
       // Reads model script
-      if (StringUtils.isEmpty(settings.modelScript)) {
-        throw new InvalidSettingsException("Model script is not provided");
-      }
       RScript modelScript = readScript(settings.modelScript);
       portObj.model = modelScript.getScript();
 
@@ -175,6 +173,11 @@ class FskCreatorNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+    
+    // Check model script
+    CheckUtils.checkArgument(settings.modelScript != null && !settings.modelScript.isEmpty(), "No model script provided!");
+    CheckUtils.checkSourceFile(settings.modelScript);
+    
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 
