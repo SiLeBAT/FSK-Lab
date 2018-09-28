@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Meaningful errors during configuration of reader, writer and creator nodes due to missing files.
+
 ## [1.2.1] - 2018-09-27
 
 ### Fixed
