@@ -142,6 +142,7 @@ class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+    CheckUtils.checkDestinationFile(nodeSettings.filePath, true);
     return new PortObjectSpec[] {};
   }
 
@@ -166,8 +167,6 @@ class WriterNodeModel extends NoInternalsModel {
     addMetaData(archive, fskObj.generalInformation, fskObj.scope, fskObj.dataBackground,
         fskObj.modelMath, filePrefix + "metaData.json");
 
-
-
     // If the model has an associated working directory with resources these resources
     // need to be saved into the archive.
     String workingDirectoryString = fskObj.getWorkingDirectory();
@@ -177,8 +176,6 @@ class WriterNodeModel extends NoInternalsModel {
       // and needs to be converted to a Path
       Path workingDirectory =
           FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
-
-
 
       // Adds resources
       final List<Path> resources = Files.list(workingDirectory).collect(Collectors.toList());
@@ -204,8 +201,6 @@ class WriterNodeModel extends NoInternalsModel {
         }
       }
     }
-
-
 
     // Add simulations
     {
@@ -244,8 +239,6 @@ class WriterNodeModel extends NoInternalsModel {
         archive.addEntry(spreadsheetFile, filePrefix + "metadata.xlsx", URIS.get("xlsx"));
       }
     }
-
-
   }
 
   private static void writeCombinedObject(CombinedFskPortObject fskObj, CombineArchive archive,
@@ -283,8 +276,6 @@ class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
-
-    CheckUtils.checkDestinationFile(nodeSettings.filePath, true);
 
     FskPortObject in = (FskPortObject) inObjects[0];
 

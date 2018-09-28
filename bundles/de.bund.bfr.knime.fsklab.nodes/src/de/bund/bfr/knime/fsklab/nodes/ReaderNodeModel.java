@@ -144,6 +144,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+    CheckUtils.checkSourceFile(nodeSettings.filePath);
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 
@@ -155,8 +156,6 @@ class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
-
-    CheckUtils.checkSourceFile(nodeSettings.filePath);
 
     URL url = FileUtil.toURL(nodeSettings.filePath);
     Path localPath = FileUtil.resolveToPath(url);

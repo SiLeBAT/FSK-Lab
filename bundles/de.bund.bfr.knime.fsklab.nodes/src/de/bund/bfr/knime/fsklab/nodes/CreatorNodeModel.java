@@ -50,6 +50,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
@@ -100,9 +101,7 @@ class CreatorNodeModel extends NoInternalsModel {
   }
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    // does not validate anything
-  }
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
@@ -118,9 +117,6 @@ class CreatorNodeModel extends NoInternalsModel {
       throws InvalidSettingsException, IOException {
 
     // Reads model script
-    if (StringUtils.isEmpty(nodeSettings.modelScript)) {
-      throw new InvalidSettingsException("Model script is not provided");
-    }
     RScript modelRScript = readScript(nodeSettings.modelScript);
 
     // Reads visualization script
@@ -171,10 +167,6 @@ class CreatorNodeModel extends NoInternalsModel {
 
     else {
       // Reads model meta data
-      if (StringUtils.isEmpty(nodeSettings.spreadsheet)) {
-        throw new InvalidSettingsException("Model metadata is not provided");
-      }
-
       final File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.spreadsheet));
       try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
         workbook.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
@@ -215,7 +207,7 @@ class CreatorNodeModel extends NoInternalsModel {
       librariesSet.addAll(vizRScript.getLibraries());
     }
     List<String> librariesList = new ArrayList<>(librariesSet);
-    
+
     String readmePath = nodeSettings.getReadme();
 
     // Import readme
@@ -230,16 +222,33 @@ class CreatorNodeModel extends NoInternalsModel {
     final FskPortObject portObj = new FskPortObject(modelScript, vizScript, generalInformation,
         scope, dataBackground, modelMath, null, librariesList, workingDirectory, plotPath, readme,
         nodeSettings.spreadsheet);
-    
+
     if (modelMath != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
     }
-    
+
     return new PortObject[] {portObj};
   }
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+
+    // Check model script
+    CheckUtils.checkArgument(
+        nodeSettings.modelScript != null && !nodeSettings.modelScript.isEmpty(),
+        "No model script provided! Please enter a valid location.");
+    CheckUtils.checkSourceFile(nodeSettings.modelScript);
+
+    // Check spreadsheet and sheet in no input table is connected
+    if (inSpecs.length == 1 && inSpecs[0] == null) {
+      CheckUtils.checkArgument(
+          nodeSettings.spreadsheet != null && !nodeSettings.spreadsheet.isEmpty(),
+          "No spreadsheet provided! Please enter a valid location.");
+      CheckUtils.checkSourceFile(nodeSettings.spreadsheet);
+      CheckUtils.checkArgument(nodeSettings.sheet != null && !nodeSettings.sheet.isEmpty(),
+          "No sheet provided");
+    }
+
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 
