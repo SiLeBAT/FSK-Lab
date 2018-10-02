@@ -18,6 +18,7 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.File;
 import java.util.Random;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -27,6 +28,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
@@ -64,6 +66,16 @@ class FSKEditorJSViewValue extends JSONViewContent {
   
   private String firstModelScript;
   private String firstModelViz;
+  private String[] fileNames;
+  public String[] getFileNames() {
+    return fileNames;
+  }
+
+  public void setFileNames(String[] fileNames) {
+    this.fileNames = fileNames;
+  }
+
+  
 
   public String getFirstModelScript() {
     return firstModelScript;

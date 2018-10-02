@@ -45,11 +45,11 @@ public class FSKEditorJSNodeFactory extends NodeFactory<FSKEditorJSNodeModel> im
 
   @Override
   protected NodeDialogPane createNodeDialogPane() {
-    return null;
+    return new FSKEditorJSNodeDialog();
   }
 
   @Override
   protected boolean hasDialog() {
-    return false;
+    return true;
   }
 }
