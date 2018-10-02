@@ -9,7 +9,13 @@ fskeditorjs = function() {
 			return this.indexOf(searchString, position) === position;
 		};
 	}
-
+	function bin2String(array) {
+	  var result = "";
+	  for (var i = 0; i < array.length; i++) {
+	    result += String.fromCharCode(parseInt(array[i], 2));
+	  }
+	  return result;
+	}
 	if (!Array.from) {
 		Array.from = (function() {
 			var toStr = Object.prototype.toString;
@@ -279,6 +285,9 @@ fskeditorjs = function() {
 		version : '1.0.0'
 	};
 	joinerNode.name = 'FSK Editor JS';
+	let files = [];
+	let newFilesNames = [];
+	
 	var paper;
 	var _firstModel = {
 		generalInformation : {},
@@ -307,6 +316,7 @@ fskeditorjs = function() {
 		_firstModelViz = value.firstModelViz;
 
 		_viewValue = value;
+		
 		window.generalInformation = _firstModel.generalInformation;
 		window.scope = _firstModel.scope;
 		window.modelMath = _firstModel.modelMath;
@@ -381,6 +391,9 @@ fskeditorjs = function() {
 		}
 		_viewValue.firstModelScript = $('#firstModelScript').val();
 		_viewValue.firstModelViz = $('#firstModelViz').val();
+		
+		_viewValue.files = files;
+		_viewValue.fileNames = newFilesNames;
 		return _viewValue;
 	};
 
@@ -413,6 +426,8 @@ fskeditorjs = function() {
 				+ "                        </li>\n"
 				+ "                        <li ><a href='#sub26'>Visualization Script</a>\n"
 				+ "                        </li>\n"
+				/*+ "                        <li ><a href='#sub27'>Resources</a>\n"*/
+				+ "                        </li>\n"
 				+ "                    </ul>\n"
 				+ "                    <div class='tab-content'>\n"
 				+ "                        <div class='tab-pane fade active in' id='sub21'>\n"
@@ -439,27 +454,103 @@ fskeditorjs = function() {
 				+ "								</div>"
 				+ "					 		 </div>"
 				+ "                        </div>\n"
+				/*
+				+ "                        <div class='tab-pane fade' id='sub27'>\n"
+				+ "                    		 <div>"
+				+ "								<h4>resources</h4>"
+				+ "						   		<input id='filesInput' type='file' multiple style='display:none' />"
+				+ "				   				<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>+ Add Files</button>"
+				+ "				   				<button id='uploadButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>Upload Files</button>"				    
+				+ "				  				<div id='filesArea'></div>"
+				+ "					 		 </div>"
+				+ "                        </div>
+*/				
 				+ "                        <div class='tab-pane fade' id='sub25'>\n"
 				+ "                    		 <div  >"
 				+ "								<h4>Model Script</h4>"
 				+ "								<textarea id='firstModelScript' name='firstModelScript'>"
-				+ _firstModelScript
+				+ 									_firstModelScript
 				+ "								</textarea>"
-				+
-
-				"					 		 </div>"
+				+ "					 		 </div>"
 				+ "                        </div>\n"
 				+ "                        <div class='tab-pane fade' id='sub26'>\n"
 				+ "                    		 <div >"
 				+ "								<h4>Model Visualization Script</h4>"
 				+ "								<textarea id='firstModelViz' name='firstModelViz'>"
-				+ _firstModelViz + "								</textarea>" +
-
-				"					 		 </div>" + "                        </div>\n"
+				+ 									_firstModelViz 
+				+ "								</textarea>" 
+				+ "					 		 </div>" + "                        </div>\n"
 				+ "                    </div>\n" + "                </div>\n"
 
 		$('body').append(bodyContent);
+		 /* let inputFile = $('#filesInput');
+		  let button = $('#filesButton');
+		  let buttonSubmit = $('#uploadButton');
+		  let filesContainer = $('#filesArea');
+		  
+		  function readURL(input) {
+			  var reader = new FileReader();
+			  reader.onload = function(e) {
+				  console.log(e.target);
+				  path = e.target.result;
+				  files.push(path);
+			   }
+			  reader.readAsDataURL(input);
+			  
+			}
+		 inputFile.change(function() {
+			 let newFiles = [];
+		    for(let index = 0; index < inputFile[0].files.length; index++) {
+		      let file = inputFile[0].files[index];
+		      newFiles.push(file);
+		      newFilesNames.push(file.name);
 
+		      readURL(file);
+		      
+		      
+		    }
+		    
+		    newFiles.forEach(file => {
+		      let fileElement = $(`<p>${file.name}</p>`);
+		      fileElement.data('fileData', file);
+		      filesContainer.append(fileElement);
+		      
+		      fileElement.click(function(event) {
+		        let fileElement = $(event.target);
+		        let indexToRemove = files.indexOf(fileElement.data('fileData'));
+		        fileElement.remove();
+		        files.splice(indexToRemove, 1);
+		      });
+		    });
+		  });
+		  
+		  button.click(function() {
+		    inputFile.click();
+		  });
+		  
+		  buttonSubmit.click(function() {
+		    let formData = new FormData();
+		    
+		    files.forEach(file => {
+		      formData.append('file', file);
+		    });
+		    
+		    
+		    $.ajax({
+		      url: 'https://this_is_the_url_to_upload_to',
+		      data: formData,
+		      type: 'POST',
+		      success: function(data) { console.log('SUCCESS !!!'); },
+		      error: function(data) { console.log('ERROR !!!'); },
+		      cache: false,
+		      processData: false,
+		      contentType: false
+		    });
+		  });
+		  
+		  
+		  */
+		  
 		$('body').append(' <div id="root"></div>');
 		$('#Metadata a').on('click', function(e) {
 			e.preventDefault()
@@ -792,14 +883,7 @@ fskeditorjs = function() {
 			fixInputCSS($(event.target));
 
 		});
-		/*
-		 * $.each( $(".demoform"), function( key, value ) {
-		 * 
-		 * 
-		 * $(value).addClass('card');
-		 * 
-		 * });
-		 */
+		
 		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
 		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
 		$("div[role*='tooltip']:contains('should match format')").parent()
@@ -808,9 +892,8 @@ fskeditorjs = function() {
 		$("div[role*='tooltip']").click(function(event) {
 
 			currentArea = window.makeId($(this).attr('aria-label'));
-			// console.log('asasa '+currentArea);
 
 		});
 	}
-
+	
 }();
