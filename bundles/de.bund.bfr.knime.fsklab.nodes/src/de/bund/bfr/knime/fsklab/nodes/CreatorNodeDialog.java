@@ -18,65 +18,72 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingWorker;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.FlowVariableModel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.util.FilesHistoryPanel;
+import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
+import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.FileUtil;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FTextField;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
-import de.bund.bfr.swing.UI;
 
 public class CreatorNodeDialog extends NodeDialogPane {
 
   private final CreatorNodeSettings settings;
 
-  private final JTextField modelScriptField;
-  private final JTextField visualizationScriptField;
-  private final JTextField workingDirectoryField;
-  private final JTextField readmeField;
-
-  private final JTextField spreadsheetField;
+  private final FilesHistoryPanel m_modelScriptPanel;
+  private final FilesHistoryPanel m_visualizationScriptPanel;
+  private final FilesHistoryPanel m_readmePanel;
+  private final FilesHistoryPanel m_workingDirectoryPanel;
+  private final FilesHistoryPanel m_spreadsheetPanel;
   private final DefaultComboBoxModel<String> sheetModel;
+
+  private FlowVariableModel m_spreadsheetVariable;
 
   public CreatorNodeDialog() {
 
+    FlowVariableModel modelScriptVariable =
+        createFlowVariableModel("modelScript", FlowVariable.Type.STRING);
+    FlowVariableModel visualizationScriptVariable =
+        createFlowVariableModel("visualizationScript", FlowVariable.Type.STRING);
+    FlowVariableModel readmeVariable = createFlowVariableModel("readme", FlowVariable.Type.STRING);
+    m_spreadsheetVariable = createFlowVariableModel("spreadsheet", FlowVariable.Type.STRING);
+    FlowVariableModel directoryVariable =
+        createFlowVariableModel("workingDirectory", FlowVariable.Type.STRING);
+
     settings = new CreatorNodeSettings();
 
-    modelScriptField = new FTextField();
-    visualizationScriptField = new FTextField();
-    workingDirectoryField = new FTextField();
-    readmeField = new FTextField();
-
-    spreadsheetField = new FTextField();
+    m_modelScriptPanel = new FilesHistoryPanel(modelScriptVariable, "modelScript",
+        LocationValidation.FileInput, ".r");
+    m_visualizationScriptPanel = new FilesHistoryPanel(visualizationScriptVariable,
+        "visualizationScript", LocationValidation.FileInput, ".r");
+    m_readmePanel =
+        new FilesHistoryPanel(readmeVariable, "readme", LocationValidation.None, ".txt");
+    m_workingDirectoryPanel =
+        new FilesHistoryPanel(directoryVariable, "directory", LocationValidation.None);
+    m_spreadsheetPanel = new FilesHistoryPanel(m_spreadsheetVariable, "spreadsheet",
+        LocationValidation.FileInput, ".xlsx");
     sheetModel = new DefaultComboBoxModel<>();
 
     createUI();
@@ -88,12 +95,20 @@ public class CreatorNodeDialog extends NodeDialogPane {
     try {
       this.settings.load(settings);
 
-      modelScriptField.setText(this.settings.modelScript);
-      visualizationScriptField.setText(this.settings.visualizationScript);
-      workingDirectoryField.setText(this.settings.getWorkingDirectory());
-      readmeField.setText(this.settings.getReadme());
+      m_modelScriptPanel.updateHistory();
+      m_modelScriptPanel.setSelectedFile(this.settings.modelScript);
 
-      spreadsheetField.setText(this.settings.spreadsheet);
+      m_visualizationScriptPanel.updateHistory();
+      m_visualizationScriptPanel.setSelectedFile(this.settings.visualizationScript);
+
+      m_readmePanel.updateHistory();
+      m_readmePanel.setSelectedFile(this.settings.getReadme());
+
+      m_workingDirectoryPanel.updateHistory();
+      m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
+
+      m_spreadsheetPanel.updateHistory();
+      m_spreadsheetPanel.setSelectedFile(this.settings.spreadsheet);
 
       // Populate sheetField with sheet names from the spreadsheet in settings
       sheetModel.removeAllElements();
@@ -109,12 +124,21 @@ public class CreatorNodeDialog extends NodeDialogPane {
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
 
-    this.settings.modelScript = modelScriptField.getText();
-    this.settings.visualizationScript = visualizationScriptField.getText();
-    this.settings.setWorkingDirectory(workingDirectoryField.getText());
-    this.settings.setReadme(readmeField.getText());
+    this.settings.modelScript = m_modelScriptPanel.getSelectedFile().trim();
+    m_modelScriptPanel.addToHistory();
 
-    this.settings.spreadsheet = spreadsheetField.getText();
+    this.settings.visualizationScript = m_visualizationScriptPanel.getSelectedFile().trim();
+    m_visualizationScriptPanel.addToHistory();
+
+    this.settings.setReadme(m_readmePanel.getSelectedFile().trim());
+    m_readmePanel.addToHistory();
+
+    this.settings.setWorkingDirectory(m_workingDirectoryPanel.getSelectedFile().trim());
+    m_workingDirectoryPanel.addToHistory();
+
+    this.settings.spreadsheet = m_spreadsheetPanel.getSelectedFile().trim();
+    m_spreadsheetPanel.addToHistory();
+
     // selected sheet may be null if there is no selection
     this.settings.sheet = (String) sheetModel.getSelectedItem();
 
@@ -123,119 +147,61 @@ public class CreatorNodeDialog extends NodeDialogPane {
 
   private void createUI() {
 
-    spreadsheetField.getDocument().addDocumentListener(new SpreadsheetFieldListener());
-
-    FileNameExtensionFilter rFilter = new FileNameExtensionFilter("R script", "r");
-    FileNameExtensionFilter spreadsheetFilter =
-        new FileNameExtensionFilter("Excel spreadsheet", "xlsx");
-    FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Plain text", "txt");
-
-    // Build locale with the selected language in the preferences
-    CreatorNodeBundle bundle = new CreatorNodeBundle(NodeUtils.getLocale());
-
-    // buttons
-    String buttonText = bundle.getBrowseButton();
-
-    JButton modelScriptButton =
-        UIUtils.createBrowseButton(buttonText, modelScriptField, JFileChooser.OPEN_DIALOG, rFilter);
-    JButton visualizationScriptButton = UIUtils.createBrowseButton(buttonText,
-        visualizationScriptField, JFileChooser.OPEN_DIALOG, rFilter);
-    JButton readmeButton =
-        UIUtils.createBrowseButton(buttonText, readmeField, JFileChooser.OPEN_DIALOG, txtFilter);
-
-    FBrowseButton workingDirectoryButton = new FBrowseButton(buttonText);
-    workingDirectoryButton.addActionListener(new ActionListener() {
+    m_spreadsheetVariable.addChangeListener(new ChangeListener() {
+      
       @Override
-      public void actionPerformed(ActionEvent e) {
-
-        JFileChooser fc;
-        try {
-          File file = FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryField.getText()));
-          fc = new JFileChooser(file);
-        } catch (Exception ex) {
-          fc = new JFileChooser();
-        }
-
-        fc.setDialogType(JFileChooser.OPEN_DIALOG);
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fc.setMultiSelectionEnabled(false);
-
-        int response = fc.showOpenDialog(workingDirectoryButton);
-        if (response == JFileChooser.APPROVE_OPTION) {
-
-          String selectedDirectory = fc.getSelectedFile().getAbsolutePath();
-          workingDirectoryField.setText(selectedDirectory);
-        }
+      public void stateChanged(ChangeEvent e) {
+        sheetModel.removeAllElements();
+        new SheetFieldTask(m_spreadsheetVariable.getVariableValue().get().getStringValue()).execute();
       }
     });
 
-    modelScriptButton.setToolTipText(bundle.getModelScriptTooltip());
-    visualizationScriptButton.setToolTipText(bundle.getVisualizationScriptLabel());
+    final JPanel modelScriptPanel = new JPanel(new BorderLayout());
+    modelScriptPanel.setBorder(
+        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Model script:"));
+    modelScriptPanel.add(m_modelScriptPanel, BorderLayout.NORTH);
+    modelScriptPanel.add(Box.createHorizontalGlue());
 
-    // labels
-    FLabel modelScriptLabel = new FLabel(bundle.getModelScriptLabel());
-    FLabel visualizationScriptLabel = new FLabel(bundle.getVisualizationScriptLabel());
-    FLabel workingDirectoryLabel = new FLabel("Working directory"); // TODO: resource bundle
-    FLabel readmeLabel = new FLabel("Readme"); // TODO: resource bundle
+    final JPanel visualizationScriptPanel = new JPanel(new BorderLayout());
+    visualizationScriptPanel.setBorder(BorderFactory
+        .createTitledBorder(BorderFactory.createEtchedBorder(), "Visualization script:"));
+    visualizationScriptPanel.add(m_visualizationScriptPanel, BorderLayout.NORTH);
+    visualizationScriptPanel.add(Box.createHorizontalGlue());
 
-    // formPanel
-    List<FLabel> labels = Arrays.asList(modelScriptLabel, visualizationScriptLabel, readmeLabel,
-        workingDirectoryLabel);
-    List<JTextField> fields = Arrays.asList(modelScriptField, visualizationScriptField, readmeField,
-        workingDirectoryField);
-    List<JButton> buttons = Arrays.asList(modelScriptButton, visualizationScriptButton,
-        readmeButton, workingDirectoryButton);
+    final JPanel readmePanel = new JPanel(new BorderLayout());
+    readmePanel
+        .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Readme:"));
+    readmePanel.add(m_readmePanel, BorderLayout.NORTH);
+    readmePanel.add(Box.createHorizontalGlue());
 
-    FPanel formPanel = UIUtils.createFormPanel(labels, fields, buttons);
-    JPanel northPanel = UI.createNorthPanel(formPanel);
-    northPanel.setBackground(UIUtils.WHITE);
+    final JPanel workingDirectoryPanel = new JPanel(new BorderLayout());
+    workingDirectoryPanel.setBorder(
+        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Working directory:"));
+    workingDirectoryPanel.add(m_workingDirectoryPanel, BorderLayout.NORTH);
+    workingDirectoryPanel.add(Box.createHorizontalGlue());
 
-    // Metadata panel
-    {
-      String spreadsheetLabelText = bundle.getSpreadsheetLabel();
-      String spreadsheetScriptToolTip = bundle.getSpreadsheetTooltip();
+    final JPanel spreadsheetPanel = new JPanel(new BorderLayout());
+    spreadsheetPanel.setBorder(
+        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Spreadsheet:"));
+    spreadsheetPanel.add(m_spreadsheetPanel, BorderLayout.NORTH);
+    spreadsheetPanel.add(Box.createHorizontalGlue());
+    
+    final JPanel sheetPanel = new JPanel(new BorderLayout());
+    sheetPanel.setBorder(
+        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Sheet:"));
+    sheetPanel.add(new JComboBox<>(sheetModel), BorderLayout.NORTH);
+    sheetPanel.add(Box.createHorizontalGlue());
+    
+    final JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    panel.add(modelScriptPanel);
+    panel.add(visualizationScriptPanel);
+    panel.add(readmePanel);
+    panel.add(workingDirectoryPanel);
+    panel.add(spreadsheetPanel);
+    panel.add(sheetPanel);
 
-      FLabel spreadsheetLabel = new FLabel(spreadsheetLabelText);
-      JButton spreadsheetButton = UIUtils.createBrowseButton(buttonText, spreadsheetField,
-          JFileChooser.OPEN_DIALOG, spreadsheetFilter);
-      spreadsheetButton.setToolTipText(spreadsheetScriptToolTip);
-
-      FLabel sheetLabel = new FLabel(bundle.getSheetLabel());
-      JComboBox<String> sheetField = new JComboBox<>(sheetModel);
-      sheetField.setToolTipText(bundle.getSheetTooltip());
-
-      List<FLabel> labels2 = Arrays.asList(spreadsheetLabel, sheetLabel);
-      List<JComponent> fields2 = Arrays.asList(spreadsheetField, sheetField);
-      List<JComponent> buttons2 = Arrays.asList(spreadsheetButton, new JLabel(""));
-
-      FPanel formPanel2 = UIUtils.createFormPanel(labels2, fields2, buttons2);
-
-      FPanel metadataPanel = UIUtils.createTitledPanel(formPanel2, bundle.getMetadataTitle());
-      northPanel.add(UIUtils.createNorthPanel(metadataPanel));
-    }
-
-    addTab("Options", northPanel);
-  }
-
-  private class SpreadsheetFieldListener implements DocumentListener {
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-      sheetModel.removeAllElements();
-      new SheetFieldTask(spreadsheetField.getText()).execute();
-    }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-      sheetModel.removeAllElements();
-      new SheetFieldTask(spreadsheetField.getText()).execute();
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-      sheetModel.removeAllElements();
-      new SheetFieldTask(spreadsheetField.getText()).execute();
-    }
+    addTab("Options", panel);
   }
 
   private final Object LOCK = new Object();
