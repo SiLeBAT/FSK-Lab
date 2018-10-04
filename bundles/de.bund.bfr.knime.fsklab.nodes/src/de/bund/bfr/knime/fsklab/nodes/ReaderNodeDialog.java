@@ -18,33 +18,34 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.util.Arrays;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JTextField;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.BorderLayout;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObjectSpec;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FTextField;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
+import org.knime.core.node.util.FilesHistoryPanel;
+import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
+import org.knime.core.node.workflow.FlowVariable;
 
 class ReaderNodeDialog extends NodeDialogPane {
 
-  private final JTextField field;
-
   private final ReaderNodeSettings nodeSettings;
 
-  ReaderNodeDialog() {
-    field = new FTextField();
-    nodeSettings = new ReaderNodeSettings();
+  private final FilesHistoryPanel m_filePanel;
 
-    createUI();
+  ReaderNodeDialog() {
+    nodeSettings = new ReaderNodeSettings();
+    m_filePanel =
+        new FilesHistoryPanel(createFlowVariableModel("filename", FlowVariable.Type.STRING),
+            "fskx_reader", LocationValidation.FileInput, ".fskx");
+
+    addTab("Options", initLayout());
   }
 
   @Override
@@ -52,7 +53,9 @@ class ReaderNodeDialog extends NodeDialogPane {
       throws NotConfigurableException {
     try {
       nodeSettings.load(settings);
-      field.setText(nodeSettings.filePath);
+
+      m_filePanel.updateHistory();
+      m_filePanel.setSelectedFile(nodeSettings.filePath);
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
     }
@@ -60,29 +63,24 @@ class ReaderNodeDialog extends NodeDialogPane {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-    nodeSettings.filePath = field.getText();
+    nodeSettings.filePath = m_filePanel.getSelectedFile().trim();
+    m_filePanel.addToHistory();
+
     nodeSettings.save(settings);
   }
 
-  private void createUI() {
+  private JPanel initLayout() {
 
-    // Build locale with the selected language in the preferences
-    ReaderNodeBundle bundle = new ReaderNodeBundle(NodeUtils.getLocale());
+    final JPanel filePanel = new JPanel(new BorderLayout());
+    filePanel.setBorder(
+        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Input location:"));
+    filePanel.add(m_filePanel, BorderLayout.NORTH);
+    filePanel.add(Box.createHorizontalGlue());
 
-    String buttonText = bundle.getButton();
-    String labelText = bundle.getLabel();
-    String toolTipText = bundle.getTooltip();
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    panel.add(filePanel);
 
-    FileNameExtensionFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
-    FLabel label = new FLabel(labelText);
-    JButton button =
-        UIUtils.createBrowseButton(buttonText, field, JFileChooser.OPEN_DIALOG, filter);
-    button.setToolTipText(toolTipText);
-
-    FPanel formPanel =
-        UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(field), Arrays.asList(button));
-    FPanel northPanel = UIUtils.createNorthPanel(formPanel);
-
-    addTab("Options", northPanel);
+    return panel;
   }
 }
