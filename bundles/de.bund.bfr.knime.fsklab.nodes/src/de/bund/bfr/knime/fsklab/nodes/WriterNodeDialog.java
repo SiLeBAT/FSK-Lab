@@ -18,35 +18,34 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.util.Arrays;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
+import java.awt.BorderLayout;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObjectSpec;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FTextField;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
-import de.bund.bfr.swing.UI;
+import org.knime.core.node.util.FilesHistoryPanel;
+import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
+import org.knime.core.node.workflow.FlowVariable;
 
 class WriterNodeDialog extends NodeDialogPane {
 
-  private final JTextField field;
-
   private final WriterNodeSettings nodeSettings;
 
+  private final FilesHistoryPanel m_filePanel;
+
   public WriterNodeDialog() {
-    field = new FTextField();
     nodeSettings = new WriterNodeSettings();
 
-    createUI();
+    m_filePanel = new FilesHistoryPanel(createFlowVariableModel("file", FlowVariable.Type.STRING),
+        "fskx_writer", LocationValidation.FileOutput, ".fskx");
+
+    addTab("Options", initLayout());
   }
 
   @Override
@@ -54,7 +53,10 @@ class WriterNodeDialog extends NodeDialogPane {
       throws NotConfigurableException {
     try {
       nodeSettings.load(settings);
-      field.setText(nodeSettings.filePath);
+
+      m_filePanel.updateHistory();
+      m_filePanel.setSelectedFile(nodeSettings.filePath);
+
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
     }
@@ -62,30 +64,24 @@ class WriterNodeDialog extends NodeDialogPane {
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
-    nodeSettings.filePath = field.getText();
+    nodeSettings.filePath = m_filePanel.getSelectedFile().trim();
+    m_filePanel.addToHistory();
+    
     nodeSettings.save(settings);
   }
+  
+  private JPanel initLayout() {
 
-  private void createUI() {
+    final JPanel filePanel = new JPanel(new BorderLayout());
+    filePanel.setBorder(
+        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Output location:"));
+    filePanel.add(m_filePanel, BorderLayout.NORTH);
+    filePanel.add(Box.createHorizontalGlue());
 
-    // Build locale with the selected language in the preferences
-    WriterNodeBundle bundle = new WriterNodeBundle(NodeUtils.getLocale());
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    panel.add(filePanel);
 
-    String labelText = bundle.getLabel();
-    String toolTipText = bundle.getTooltip();
-    String buttonText = bundle.getButton();
-
-    FileNameExtensionFilter filter = new FileNameExtensionFilter("FSKX file", "fskx");
-    FLabel label = new FLabel(labelText);
-    JButton button =
-        UIUtils.createBrowseButton(buttonText, field, JFileChooser.SAVE_DIALOG, filter);
-    button.setToolTipText(toolTipText);
-
-    FPanel formPanel =
-        UIUtils.createFormPanel(Arrays.asList(label), Arrays.asList(field), Arrays.asList(button));
-    JPanel northPanel = UI.createNorthPanel(formPanel);
-    northPanel.setBackground(UIUtils.WHITE);
-
-    addTab("Options", northPanel);
+    return panel;
   }
 }
