@@ -25,14 +25,67 @@ import org.knime.core.node.NodeSettingsWO;
 class FSKEditorJSNodeSettings {
 
     private static final String JSON_REPRESENTATION = "jsonRepresentation";
+    private static final String CFG_README = "readme";
+    private static final String CFG_RESOURCES= "resources";
+    private static final String CFG_WORKING_DIRECTORY = "workingDirectory";
+   
+    /** Paths to resources: plain text files and R workspace files (.rdata). */
+    private String workingDirectory = "";
+    /** Resources that will be load into the working directory */
+    private String resources = "";
 
+    /** README. */
+    private String readme = "";
+
+    /** @return empty string if not set. */
+    public String getResources() {
+      return resources != null ? resources : "";
+    }
+
+    public void setResources(String resources) {
+      if (resources != null) {
+        this.resources = resources;
+      }
+    }
+
+    /** @return empty string if not set. */
+    public String getReadme() {
+      return readme != null ? readme : "";
+    }
+
+    public void setReadme(String readme) {
+      if (readme != null) {
+        this.readme = readme;
+      }
+    }
+    /** @return empty string if not set. */
+    public String getWorkingDirectory() {
+      return workingDirectory != null ? workingDirectory : "";
+    }
+
+    public void setWorkingDirectory(String workingDirectory) {
+      if (workingDirectory != null) {
+        this.workingDirectory = workingDirectory;
+      }
+    }
+   
+
+    
     String jsonRepresentation = "";
 
     void load(final NodeSettingsRO settings) throws InvalidSettingsException {
       jsonRepresentation = settings.getString(JSON_REPRESENTATION);
+      resources = settings.getString(CFG_RESOURCES);
+      readme = settings.getString(CFG_README, "");
+      workingDirectory = settings.getString(CFG_WORKING_DIRECTORY);
+
     }
 
     void save(final NodeSettingsWO settings) {
       settings.addString(JSON_REPRESENTATION, jsonRepresentation);
+      settings.addString(CFG_RESOURCES, resources);
+      settings.addString(CFG_README, readme);
+      settings.addString(CFG_WORKING_DIRECTORY, workingDirectory);
+
     }
   }
