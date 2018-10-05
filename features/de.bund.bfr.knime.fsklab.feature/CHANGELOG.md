@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Fixed
-- Meaningful errors during configuration of reader, writer and creator nodes due to missing files.
-- *knime.workflow* keyword in paths used in the Reader and Writer nodes.
+## [1.2.2] - 2018-10-28
+
+## Added
+- *knime.workflow* keyword supported in reader, writer and creator nodes.
+
+## Fixed
+- Meaningful errors during configuration of reader, writer and creator nodes due to missing or invalid files.
 
 ## [1.2.1] - 2018-09-27
 
