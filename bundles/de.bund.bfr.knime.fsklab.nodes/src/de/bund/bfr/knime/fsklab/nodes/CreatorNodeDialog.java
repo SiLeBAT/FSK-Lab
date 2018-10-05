@@ -18,25 +18,25 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.InvalidPathException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.FlowVariableModel;
@@ -49,7 +49,6 @@ import org.knime.core.node.util.FilesHistoryPanel;
 import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.FileUtil;
-import de.bund.bfr.swing.UI;
 
 public class CreatorNodeDialog extends NodeDialogPane {
 
@@ -79,14 +78,24 @@ public class CreatorNodeDialog extends NodeDialogPane {
 
     m_modelScriptPanel = new FilesHistoryPanel(modelScriptVariable, "modelScript",
         LocationValidation.FileInput, ".r");
+    m_modelScriptPanel.setSelectMode(JFileChooser.FILES_ONLY);
+
     m_visualizationScriptPanel = new FilesHistoryPanel(visualizationScriptVariable,
         "visualizationScript", LocationValidation.FileInput, ".r");
+    m_visualizationScriptPanel.setSelectMode(JFileChooser.FILES_ONLY);
+
     m_readmePanel =
-        new FilesHistoryPanel(readmeVariable, "readme", LocationValidation.None, ".txt");
+        new FilesHistoryPanel(readmeVariable, "readme", LocationValidation.FileInput, ".txt");
+    m_readmePanel.setSelectMode(JFileChooser.FILES_ONLY);
+
     m_workingDirectoryPanel =
-        new FilesHistoryPanel(directoryVariable, "directory", LocationValidation.None);
+        new FilesHistoryPanel(directoryVariable, "directory", LocationValidation.DirectoryInput);
+    m_workingDirectoryPanel.setSelectMode(JFileChooser.DIRECTORIES_ONLY);
+
     m_spreadsheetPanel = new FilesHistoryPanel(m_spreadsheetVariable, "spreadsheet",
         LocationValidation.FileInput, ".xlsx");
+    m_spreadsheetPanel.setSelectMode(JFileChooser.FILES_ONLY);
+
     sheetModel = new DefaultComboBoxModel<>();
 
     createUI();
@@ -113,9 +122,6 @@ public class CreatorNodeDialog extends NodeDialogPane {
       m_spreadsheetPanel.updateHistory();
       m_spreadsheetPanel.setSelectedFile(this.settings.spreadsheet);
 
-      // Populate sheetField with sheet names from the spreadsheet in settings
-      sheetModel.removeAllElements();
-      new SheetFieldTask(this.settings.spreadsheet).execute();
       // Set selected sheet from settings
       sheetModel.setSelectedItem(this.settings.sheet);
 
@@ -150,78 +156,87 @@ public class CreatorNodeDialog extends NodeDialogPane {
 
   private void createUI() {
 
-    m_spreadsheetVariable.addChangeListener(new ChangeListener() {
-      
+    m_spreadsheetPanel.addChangeListener(new ChangeListener() {
+
       @Override
       public void stateChanged(ChangeEvent e) {
         sheetModel.removeAllElements();
-        
-        Optional<FlowVariable> var = m_spreadsheetVariable.getVariableValue();
-        if (var.isPresent()) {
-          String spreadsheetPath = var.get().getStringValue();
-          new SheetFieldTask(spreadsheetPath).execute();
+
+        String stringPath = m_spreadsheetPanel.getSelectedFile();
+        if (StringUtils.isNotEmpty(stringPath)) {
+
+          try {
+            URL url = FileUtil.toURL(stringPath);
+            Path path = FileUtil.resolveToPath(url);
+            if (Files.exists(path)) {
+              new SheetFieldTask(path.toFile()).execute();
+            }
+          } catch (Exception exception) {
+          }
         }
       }
     });
-    
-    List<JComponent> labels = new ArrayList<>(4);
-    List<JComponent> panels = new ArrayList<>(4);
-    
-    // model script
-    labels.add(new JLabel("Model script:"));
-    panels.add(m_modelScriptPanel);
 
-    // visualization script
-    labels.add(new JLabel("Visualization script:"));
-    panels.add(m_visualizationScriptPanel);
+    JPanel panel = new JPanel(new GridBagLayout());
+    GridBagConstraints g = new GridBagConstraints();
 
-    // readme
-    labels.add(new JLabel("Readme:"));
-    panels.add(m_readmePanel);
-    
-    // working directory
-    labels.add(new JLabel("Working directory:"));
-    panels.add(m_workingDirectoryPanel);
-    
-    JPanel filesPanel = UI.createOptionsPanel("Input files", labels, panels);
+    g.gridx = 0;
+    g.gridy = 0;
+    g.insets = new Insets(0, 5, 22, 5);
+    g.anchor = GridBagConstraints.EAST;
+    panel.add(new JLabel("Model script:"), g);
 
-    final JPanel spreadsheetPanel = new JPanel(new BorderLayout());
-    spreadsheetPanel.setBorder(
-        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Spreadsheet:"));
-    spreadsheetPanel.add(m_spreadsheetPanel, BorderLayout.NORTH);
-    spreadsheetPanel.add(Box.createHorizontalGlue());
-    
-    final JPanel sheetPanel = new JPanel(new BorderLayout());
-    sheetPanel.setBorder(
-        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Sheet:"));
-    sheetPanel.add(new JComboBox<>(sheetModel), BorderLayout.NORTH);
-    sheetPanel.add(Box.createHorizontalGlue());
-    
-    labels.clear();
-    panels.clear();
-    
-    labels.add(new JLabel("Spreadsheet:"));
-    panels.add(m_spreadsheetPanel);
-    
-    labels.add(new JLabel("Sheet:"));
-    panels.add(new JComboBox<>(sheetModel));
-    
-    JPanel metadataForm = UI.createOptionsPanel("Metadata", labels, panels);
-    
-    JPanel northPanel = UI.createNorthPanel(filesPanel);
-    northPanel.add(UI.createNorthPanel(metadataForm));
+    g.gridy++;
+    panel.add(new JLabel("Visualization script:"), g);
 
-    addTab("Options", northPanel);
+    g.gridy++;
+    panel.add(new JLabel("Readme:"), g);
+
+    g.gridy++;
+    panel.add(new JLabel("Working directory:"), g);
+
+    g.gridy++;
+    panel.add(new JLabel("Spreadsheet:"), g);
+
+    g.gridy++;
+    g.insets = new Insets(5, 5, 5, 5);
+    panel.add(new JLabel("Sheet:"), g);
+
+    g.gridy = 0;
+    g.gridx++;
+    g.insets = new Insets(5, 0, 5, 0);
+    g.anchor = GridBagConstraints.WEST;
+    g.fill = GridBagConstraints.HORIZONTAL;
+    g.weightx = 1.0;
+    panel.add(m_modelScriptPanel, g);
+
+    g.gridy++;
+    panel.add(m_visualizationScriptPanel, g);
+
+    g.gridy++;
+    panel.add(m_readmePanel, g);
+
+    g.gridy++;
+    panel.add(m_workingDirectoryPanel, g);
+
+    g.gridy++;
+    panel.add(m_spreadsheetPanel, g);
+
+    g.gridy++;
+    g.insets = new Insets(5, 5, 5, 5);
+    panel.add(new JComboBox<>(sheetModel), g);
+
+    addTab("Options", panel);
   }
 
   private final Object LOCK = new Object();
 
   private class SheetFieldTask extends SwingWorker<List<String>, Void> {
 
-    private final String path;
+    private final File file;
 
-    public SheetFieldTask(String path) {
-      this.path = path;
+    public SheetFieldTask(File file) {
+      this.file = file;
     }
 
     @Override
@@ -230,19 +245,9 @@ public class CreatorNodeDialog extends NodeDialogPane {
       List<String> names = new ArrayList<>();
 
       synchronized (LOCK) {
-
-        if (!path.isEmpty()) {
-          try {
-            File file = FileUtil.getFileFromURL(FileUtil.toURL(path));
-            if (file.exists()) {
-              try (XSSFWorkbook workbook = new XSSFWorkbook(file)) {
-                for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-                  names.add(workbook.getSheetName(i));
-                }
-              }
-            }
-          } catch (InvalidPathException | InvalidFormatException | IOException exception) {
-            exception.printStackTrace();
+        try (XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+          for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+            names.add(workbook.getSheetName(i));
           }
         }
       }

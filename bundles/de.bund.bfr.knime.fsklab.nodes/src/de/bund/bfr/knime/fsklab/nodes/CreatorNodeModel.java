@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.StrSubstitutor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -104,20 +103,9 @@ class CreatorNodeModel extends NoInternalsModel {
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
     
-    // Model script
-    String modelScriptFile = settings.getString("modelScript");
-    modelScriptFile = StrSubstitutor.replaceSystemProperties(modelScriptFile);
-    CheckUtils.checkSourceFile(modelScriptFile);
-    
-    // Visualization script
-    String visualizationScriptFile = settings.getString("visualizationScript");
-    visualizationScriptFile = StrSubstitutor.replaceSystemProperties(visualizationScriptFile);
-    CheckUtils.checkSourceFile(visualizationScriptFile);
-    
-    // Metadata
-    String spreadsheetFile = settings.getString("spreadsheet");
-    spreadsheetFile = StrSubstitutor.replaceSystemProperties(spreadsheetFile);
-    CheckUtils.checkSourceFile(spreadsheetFile);
+    CheckUtils.checkSourceFile(settings.getString("modelScript"));
+    CheckUtils.checkSourceFile(settings.getString("visualizationScript"));
+    CheckUtils.checkSourceFile(settings.getString("spreadsheet"));
     
     // Sheet
     CheckUtils.checkArgument(StringUtils.isNotEmpty(settings.getString("sheet")), "Missing sheet");
