@@ -24,12 +24,14 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
@@ -47,6 +49,7 @@ import org.knime.core.node.util.FilesHistoryPanel;
 import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.swing.UI;
 
 public class CreatorNodeDialog extends NodeDialogPane {
 
@@ -152,33 +155,35 @@ public class CreatorNodeDialog extends NodeDialogPane {
       @Override
       public void stateChanged(ChangeEvent e) {
         sheetModel.removeAllElements();
-        new SheetFieldTask(m_spreadsheetVariable.getVariableValue().get().getStringValue()).execute();
+        
+        Optional<FlowVariable> var = m_spreadsheetVariable.getVariableValue();
+        if (var.isPresent()) {
+          String spreadsheetPath = var.get().getStringValue();
+          new SheetFieldTask(spreadsheetPath).execute();
+        }
       }
     });
+    
+    List<JComponent> labels = new ArrayList<>(4);
+    List<JComponent> panels = new ArrayList<>(4);
+    
+    // model script
+    labels.add(new JLabel("Model script:"));
+    panels.add(m_modelScriptPanel);
 
-    final JPanel modelScriptPanel = new JPanel(new BorderLayout());
-    modelScriptPanel.setBorder(
-        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Model script:"));
-    modelScriptPanel.add(m_modelScriptPanel, BorderLayout.NORTH);
-    modelScriptPanel.add(Box.createHorizontalGlue());
+    // visualization script
+    labels.add(new JLabel("Visualization script:"));
+    panels.add(m_visualizationScriptPanel);
 
-    final JPanel visualizationScriptPanel = new JPanel(new BorderLayout());
-    visualizationScriptPanel.setBorder(BorderFactory
-        .createTitledBorder(BorderFactory.createEtchedBorder(), "Visualization script:"));
-    visualizationScriptPanel.add(m_visualizationScriptPanel, BorderLayout.NORTH);
-    visualizationScriptPanel.add(Box.createHorizontalGlue());
-
-    final JPanel readmePanel = new JPanel(new BorderLayout());
-    readmePanel
-        .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Readme:"));
-    readmePanel.add(m_readmePanel, BorderLayout.NORTH);
-    readmePanel.add(Box.createHorizontalGlue());
-
-    final JPanel workingDirectoryPanel = new JPanel(new BorderLayout());
-    workingDirectoryPanel.setBorder(
-        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Working directory:"));
-    workingDirectoryPanel.add(m_workingDirectoryPanel, BorderLayout.NORTH);
-    workingDirectoryPanel.add(Box.createHorizontalGlue());
+    // readme
+    labels.add(new JLabel("Readme:"));
+    panels.add(m_readmePanel);
+    
+    // working directory
+    labels.add(new JLabel("Working directory:"));
+    panels.add(m_workingDirectoryPanel);
+    
+    JPanel filesPanel = UI.createOptionsPanel("Input files", labels, panels);
 
     final JPanel spreadsheetPanel = new JPanel(new BorderLayout());
     spreadsheetPanel.setBorder(
@@ -192,16 +197,21 @@ public class CreatorNodeDialog extends NodeDialogPane {
     sheetPanel.add(new JComboBox<>(sheetModel), BorderLayout.NORTH);
     sheetPanel.add(Box.createHorizontalGlue());
     
-    final JPanel panel = new JPanel();
-    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-    panel.add(modelScriptPanel);
-    panel.add(visualizationScriptPanel);
-    panel.add(readmePanel);
-    panel.add(workingDirectoryPanel);
-    panel.add(spreadsheetPanel);
-    panel.add(sheetPanel);
+    labels.clear();
+    panels.clear();
+    
+    labels.add(new JLabel("Spreadsheet:"));
+    panels.add(m_spreadsheetPanel);
+    
+    labels.add(new JLabel("Sheet:"));
+    panels.add(new JComboBox<>(sheetModel));
+    
+    JPanel metadataForm = UI.createOptionsPanel("Metadata", labels, panels);
+    
+    JPanel northPanel = UI.createNorthPanel(filesPanel);
+    northPanel.add(UI.createNorthPanel(metadataForm));
 
-    addTab("Options", panel);
+    addTab("Options", northPanel);
   }
 
   private final Object LOCK = new Object();
