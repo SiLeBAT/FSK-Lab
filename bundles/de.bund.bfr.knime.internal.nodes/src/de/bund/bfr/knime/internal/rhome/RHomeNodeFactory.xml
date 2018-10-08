@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<knimeNode icon="./rhome.png" type="Source"
+	xmlns="http://knime.org/node/v3.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v3.1 http://knime.org/node/v3.1.xsd">
+	<name>RHome</name>
+	<shortDescription>Displays R settings in table</shortDescription>
+	<fullDescription>
+		<intro>
+			Displays R settings in table:
+			<ul>
+				<li>R home</li>
+				<li>R bin</li>
+				<li>Rserve</li>
+			</ul>
+		</intro>
+	</fullDescription>
+	<ports>
+		<outPort index="0" name="R home"></outPort>
+	</ports>
+</knimeNode>

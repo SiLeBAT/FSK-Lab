@@ -12,7 +12,8 @@
     </parent>
 
     <modules>
+    	<module>de.bund.bfr.knime.internal.update</module>
         <module>de.bund.bfr.knime.update</module>
-       	<module>de.bund.bfr.knime.target</module> 
+       	<module>de.bund.bfr.knime.target</module>
     </modules>
 </project>
