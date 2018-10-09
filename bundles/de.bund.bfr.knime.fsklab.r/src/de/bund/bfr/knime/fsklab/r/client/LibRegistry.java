@@ -22,12 +22,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.KNIMEConstants;
@@ -36,6 +36,7 @@ import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.RList;
+
 import com.sun.jna.Platform;
 
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
@@ -282,24 +283,25 @@ public class LibRegistry {
 
 		void addPackage(final List<String> pkgs, final Path path, final String repos, final ExecutionMonitor exec,
 				NodeLogger LOGGER) throws RException {
-			double currentProgress = exec.getProgressMonitor().getProgress();
-			for (int packageNumber = 0; packageNumber < pkgs.size(); packageNumber++) {
-				String currentLib = pkgs.get(packageNumber);
+
+			final double step = pkgs.size() * 0.6;
+			double currentProgress = 0;
+			int packageNumber = 0;
+
+			for (String currentLib : pkgs) {
+
+				currentProgress += step;
+				packageNumber++;
+
+				exec.setProgress(currentProgress);
+
+				String infoMsg = "Installing package [" + packageNumber + "/" + pkgs.size() + "]: " + currentLib;
+				LOGGER.info(infoMsg);
+
 				String cmd = "addPackage(" + _pkg(currentLib) + ", '" + _path2String(path) + "', repos = '" + repos
 						+ "', type = '" + type + "', Rversion = '" + rVersion + "', quiet = TRUE)";
-				String infoMessage = "Installing package(" + (packageNumber + 1) + " of " + pkgs.size() + "): "
-						+ currentLib;
-				double step = (60.0 / pkgs.size()) / 100.0;
-				currentProgress += step;
-				exec.setProgress(currentProgress, infoMessage);
-				LOGGER.info(infoMessage);
-				try {
-					controller.eval(cmd, false);
-				} catch (RException e) {
-					e.printStackTrace();
-				}
+				controller.eval(cmd, false);
 			}
-
 		}
 
 		/**
