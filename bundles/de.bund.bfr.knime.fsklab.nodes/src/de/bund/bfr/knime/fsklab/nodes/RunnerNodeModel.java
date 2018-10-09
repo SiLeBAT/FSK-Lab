@@ -235,12 +235,12 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       }
 
       // make a map of file name and its last modification date to observe any changes which
-      // means
-      // file overwriting or generating new one
+      // means file overwriting or generating new one
       String wd1 = firstFskObj.getWorkingDirectory();
       String wd2 = secondFskObj.getWorkingDirectory();
-      Map<String, Long> fileModifacationMap = new HashMap<String, Long>();
-      if (wd1 != null && wd2 != null && !wd1.equals("") && !wd2.equals("") && !wd1.equals(wd2)) {
+
+      Map<String, Long> fileModifacationMap = new HashMap<>();
+      if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
         try (Stream<Path> paths =
             Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
           paths.filter(Files::isRegularFile).forEach(currentFile -> {
@@ -256,7 +256,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
       // move the generated files to the working
       // directory of the second model
-      if (wd1 != null && wd2 != null && !wd1.equals("") && !wd2.equals("") && !wd1.equals(wd2)) {
+      if (!wd1.isEmpty() && !wd2.isEmpty() && !wd1.equals(wd2)) {
         Path targetDirectory = FileUtil.getFileFromURL(FileUtil.toURL(wd2)).toPath();
         try (Stream<Path> paths =
             Files.walk(FileUtil.getFileFromURL(FileUtil.toURL(wd1)).toPath())) {
@@ -304,7 +304,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
                 sim.getParameters().put(joinRelation.getTargetParam().getParameterID(),
                     joinRelation.getCommand());
               }
-
             }
           }
         }
@@ -333,7 +332,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
       fskObj = runSnippet(controller, fskObj, fskSimulation, context);
 
-
       return fskObj;
     }
   }
@@ -344,7 +342,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     final ScriptExecutor executor = new ScriptExecutor(controller);
 
     // Sets up working directory with resource files. This directory needs to be deleted.
-    exec.setProgress(0.05,"Add resource files");
+    exec.setProgress(0.05, "Add resource files");
     {
       String workingDirectoryString = fskObj.getWorkingDirectory();
       if (!workingDirectoryString.isEmpty()) {
@@ -353,9 +351,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         controller.setWorkingDirectory(workingDirectory);
       }
     }
-   
+
     // START RUNNING MODEL
-    exec.setProgress(0.1,"Setting up output capturing");
+    exec.setProgress(0.1, "Setting up output capturing");
     executor.setupOutputCapturing(exec);
 
     // Install needed libraries
@@ -367,25 +365,25 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
             .collect(Collectors.toList());
 
         if (!missingLibs.isEmpty()) {
-          libReg.installLibs(missingLibs, exec,LOGGER);
+          libReg.installLibs(missingLibs, exec, LOGGER);
         }
       } catch (RException | REXPMismatchException e) {
         LOGGER.error(e.getMessage());
       }
     }
 
-    exec.setProgress(0.71,"Add paths to libraries");
+    exec.setProgress(0.71, "Add paths to libraries");
     controller.addPackagePath(LibRegistry.instance().getInstallationPath());
 
-    exec.setProgress(0.72,"Set parameter values");
+    exec.setProgress(0.72, "Set parameter values");
     LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
     String paramScript = NodeUtils.buildParameterScript(simulation);
     executor.execute(paramScript, exec);
 
-    exec.setProgress(0.75,"Run models script");
+    exec.setProgress(0.75, "Run models script");
     executor.executeIgnoreResult(fskObj.model, exec);
 
-    exec.setProgress(0.9,"Run visualization script");
+    exec.setProgress(0.9, "Run visualization script");
     try {
       NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings.width,
           nodeSettings.height, nodeSettings.pointSize, nodeSettings.res, executor, exec);
@@ -396,10 +394,10 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       LOGGER.warn("Visualization script failed", exception);
     }
 
-    exec.setProgress(0.96,"Restore library paths");
+    exec.setProgress(0.96, "Restore library paths");
     controller.restorePackagePath();
 
-    exec.setProgress(0.98,"Collecting captured output");
+    exec.setProgress(0.98, "Collecting captured output");
     executor.finishOutputCapturing(exec);
 
     // END RUNNING MODEL
@@ -428,7 +426,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     }
 
     // cleanup temporary variables of output capturing and consoleLikeCommand stuff
-    exec.setProgress(0.99,"Cleaning up");
+    exec.setProgress(0.99, "Cleaning up");
     executor.cleanup(exec);
     return fskObj;
   }
