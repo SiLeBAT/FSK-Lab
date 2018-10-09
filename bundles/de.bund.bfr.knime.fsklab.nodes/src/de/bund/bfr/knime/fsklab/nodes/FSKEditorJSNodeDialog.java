@@ -28,73 +28,90 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.swing.JButton;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ProgressMonitorInputStream;
 import javax.swing.SwingWorker;
 import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
-import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.DataAwareNodeDialogPane;
+import org.knime.core.node.FlowVariableModel;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.util.FilesHistoryPanel;
+import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
+import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
+import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FTextField;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
-import de.bund.bfr.swing.UI;
 
-class FSKEditorJSNodeDialog extends NodeDialogPane {
+class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
-  private final FSKEditorJSNodeSettings settings;
+  private FSKEditorJSNodeSettings settings;
 
 
-  private final JTextField readmeField;
-  private final JTextField workingDirectoryField;
+  private final FilesHistoryPanel m_readmePanel;
+  private final FilesHistoryPanel m_workingDirectoryPanel;
+  private final FlowVariableModel directoryVariable;
   private FileTableModel fileModel = new FileTableModel();
   JTable fileTable = new JTable(fileModel);
   JScrollPane centerPane;
-  JPanel container;
+  JPanel container = new JPanel();
   File currentWorkingDirectory;
 
   public FSKEditorJSNodeDialog() {
     settings = new FSKEditorJSNodeSettings();
-    readmeField = new FTextField();
-    workingDirectoryField = new FTextField();
+    FlowVariableModel readmeVariable = createFlowVariableModel("readme", FlowVariable.Type.STRING);
+    m_readmePanel =
+        new FilesHistoryPanel(readmeVariable, "readme", LocationValidation.None, ".txt");
+    directoryVariable = createFlowVariableModel("workingDirectory", FlowVariable.Type.STRING);
+    m_workingDirectoryPanel =
+        new FilesHistoryPanel(directoryVariable, "directory", LocationValidation.None);
     createUI();
   }
 
+  /** Loads settings from saved settings. */
+
   @Override
-  protected void loadSettingsFrom(NodeSettingsRO settings, DataTableSpec[] specs)
+  protected void loadSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
       throws NotConfigurableException {
     try {
       this.settings.load(settings);
 
 
-      readmeField.setText(this.settings.getReadme());
-      workingDirectoryField.setText(this.settings.getWorkingDirectory());
+      // m_readmePanel.updateHistory();
+      m_readmePanel.setSelectedFile(this.settings.getReadme());
+
+      // m_workingDirectoryPanel.updateHistory();
+      m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
 
       String fileHolder = this.settings.getResources();
       List<String> fileback = new LinkedList<String>(Arrays.asList(fileHolder.split(";", -1)));
@@ -109,11 +126,59 @@ class FSKEditorJSNodeDialog extends NodeDialogPane {
     }
   }
 
+  /** Loads settings from input port. */
+  @Override
+  protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] input)
+      throws NotConfigurableException {
+
+    final FSKEditorJSNodeSettings editorSettings = new FSKEditorJSNodeSettings();
+    try {
+      editorSettings.load(settings);
+    } catch (InvalidSettingsException exception) {
+      throw new NotConfigurableException("InvalidSettingsException", exception);
+    }
+
+    final FskPortObject inObj = (FskPortObject) input[0];
+
+    /*
+     * If input model has not changed (the original scripts stored in settings match the input
+     * model).
+     */
+    if (Objects.equals(editorSettings.getWorkingDirectory(), inObj.getWorkingDirectory())) {
+      // Updates settings
+      this.settings = editorSettings;
+    } else {
+      // Discard settings and replace them with input model
+      this.settings.setReadme(inObj.getReadme());
+      this.settings.setWorkingDirectory(inObj.getWorkingDirectory());
+     
+    }
+    if(!Objects.equals("",inObj.getReadme() )) {
+      m_readmePanel.getParent().setVisible(false);
+    }
+    m_readmePanel.updateHistory();
+    m_readmePanel.setSelectedFile(this.settings.getReadme());
+
+    m_workingDirectoryPanel.updateHistory();
+    m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
+    
+    String fileHolder = "";
+    for (String oneFile : fileModel.filenames) {
+      fileHolder = fileHolder + ";" + oneFile;
+    }
+    editorSettings.setResources(fileHolder);
+    this.settings = editorSettings;
+    // updatePanels();
+  }
+
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
+    this.settings.setReadme(m_readmePanel.getSelectedFile().trim());
+    m_readmePanel.addToHistory();
 
-    this.settings.setReadme(readmeField.getText());
-    this.settings.setWorkingDirectory(workingDirectoryField.getText());
+    this.settings.setWorkingDirectory(m_workingDirectoryPanel.getSelectedFile().trim());
+    m_workingDirectoryPanel.addToHistory();
+
     String fileHolder = "";
     for (String oneFile : fileModel.filenames) {
       fileHolder = fileHolder + ";" + oneFile;
@@ -123,116 +188,112 @@ class FSKEditorJSNodeDialog extends NodeDialogPane {
     this.settings.save(settings);
   }
 
+  /*
+   * // Update the scripts in the ScriptPanels private void updatePanels() { //
+   * readmeField.setText(settings.getReadme());
+   * workingDirectoryField.setText(settings.getWorkingDirectory()); try { List<String> files =
+   * Files.list(Paths.get(settings.getWorkingDirectory()))
+   * .filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
+   * fileModel.filenames.addAll(files);
+   * 
+   * fileTable.revalidate(); } catch (IOException e) { e.printStackTrace(); }
+   * 
+   * 
+   * }
+   */
+
   private void createUI() {
 
     final NodeContext nodeContext = NodeContext.getContext();
     final WorkflowManager wfm = nodeContext.getWorkflowManager();
     final WorkflowContext workflowContext = wfm.getContext();
 
-    FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Plain text", "txt");
-
-    // Build locale with the selected language in the preferences
-    CreatorNodeBundle bundle = new CreatorNodeBundle(NodeUtils.getLocale());
-
-    // buttons
-    String buttonText = bundle.getBrowseButton();
+    final JPanel readmePanel = new JPanel(new BorderLayout());
+    readmePanel
+        .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Readme:"));
+    readmePanel.add(m_readmePanel, BorderLayout.NORTH);
+    readmePanel.add(Box.createHorizontalGlue());
 
 
-    JButton readmeButton =
-        UIUtils.createBrowseButton(buttonText, readmeField, JFileChooser.OPEN_DIALOG, txtFilter);
+    final JPanel workingDirectoryPanel = new JPanel(new BorderLayout());
+    workingDirectoryPanel.setBorder(
+        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Working directory:"));
+    workingDirectoryPanel.add(m_workingDirectoryPanel, BorderLayout.NORTH);
+    workingDirectoryPanel.add(Box.createHorizontalGlue());
 
-    FBrowseButton workingDirectoryButton = new FBrowseButton(buttonText);
-    workingDirectoryButton.addActionListener(new ActionListener() {
+    m_workingDirectoryPanel.addChangeListener(new ChangeListener() {
+
       @Override
-      public void actionPerformed(ActionEvent e) {
+      public void stateChanged(ChangeEvent e) {
 
-        JFileChooser fc;
+        String selectedFile = m_workingDirectoryPanel.getSelectedFile();
         try {
-          File file = FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryField.getText()));
-          fc = new JFileChooser(file);
-        } catch (Exception ex) {
-          fc = new JFileChooser();
-        }
+          if (selectedFile != null && !selectedFile.equals("")) {
+            String modifiedSelectedDirectory =
+                FileUtil.getFileFromURL(FileUtil.toURL(selectedFile)).toString();
+            File sfile = new File(modifiedSelectedDirectory);
+            if (!sfile.exists()) {
+              sfile.mkdir();
+            }
 
-        fc.setDialogType(JFileChooser.OPEN_DIALOG);
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fc.setMultiSelectionEnabled(false);
 
-        int response = fc.showOpenDialog(workingDirectoryButton);
-        if (response == JFileChooser.APPROVE_OPTION) {
+            if (currentWorkingDirectory != null
+                && !modifiedSelectedDirectory.equals(currentWorkingDirectory.toString())) {
+              changeWorkingDirectory(modifiedSelectedDirectory);
+              currentWorkingDirectory = sfile;
+            }
+            List<String> files;
+            try {
 
-          String selectedDirectory = fc.getSelectedFile().getAbsolutePath();
-          if (currentWorkingDirectory == null) {
-            workingDirectoryField.setText(selectedDirectory);
-          } else {
-            int choise = JOptionPane.showConfirmDialog(null, "Working directory is already set to "
-                + currentWorkingDirectory + " \n Are you sure you want to change?");
-            switch (choise) {
-              case 0:
-                try {
-
-                  // moving the file to the new working directory
-                  Files
-                      .walk(NodeContext.getContext().getWorkflowManager().getContext()
-                          .getCurrentLocation().toPath())
-                      .filter(path -> path.toString()
-                          .contains(nodeContext.getNodeContainer().getNameWithID().toString()
-                              .replaceAll("\\W", "").replace(" ", "") + "_" + "workingDirectory"))
-                      .sorted(Comparator.comparing(Path::toString).reversed()).map(Path::toFile).forEach(file -> {
-                        System.out.println("looping over this File : "+file);
-                        SwingWorker worker = new SwingWorker() {
-                          @Override
-                          protected Object doInBackground() throws Exception {
-
-                            String toPath = selectedDirectory + File.separator + file.getName();
-                            if(file.isFile()) {
-                              copyFile(file, toPath);
-                              
-                            }else {
-                              System.out.println(file);
-                            }
-                            return null;
-                          }
-
-                          @Override
-                          protected void done() {
-                            file.delete();
-                            //try to delete parent folder
-                            boolean b  = file.getParentFile().delete();
-                          }
-
-                        };
-
-                        worker.execute();
-
-                      });
-                  workingDirectoryField.setText(selectedDirectory);
-
-                
-                } catch (IOException e1) {
-
-                  e1.printStackTrace();
-                }
-                break;
-              default:
-                break;
-
+              files = Files.walk(Paths.get(modifiedSelectedDirectory)).filter(Files::isRegularFile)
+                  .map(Path::toString).collect(Collectors.toList());
+              fileModel.filenames.clear();
+              fileModel.filenames.addAll(files);
+              fileTable.revalidate();
+              currentWorkingDirectory = sfile;
+            } catch (IOException e1) {
+              e1.printStackTrace();
             }
           }
+        } catch (InvalidPathException | MalformedURLException e1) {
+          e1.printStackTrace();
         }
+
       }
     });
 
+    /*
+     * directoryVariable.addChangeListener(new ChangeListener() {
+     * 
+     * @Override public void stateChanged(ChangeEvent e) { if
+     * (directoryVariable.getVariableValue().isPresent()) { final String selectedDirectory =
+     * directoryVariable.getVariableValue().get().getStringValue(); if (currentWorkingDirectory !=
+     * null && !selectedDirectory.equals(currentWorkingDirectory.toString())) {
+     * 
+     * changeWorkingDirectory(selectedDirectory); stateViaFlowVariables = true; } else {
+     * List<String> files; try { String pathToFolder = FileUtil
+     * .getFileFromURL(FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile().trim()))
+     * .toString();
+     * 
+     * files = Files.walk(Paths.get(pathToFolder)).filter(Files::isRegularFile)
+     * .map(Path::toString).collect(Collectors.toList()); fileModel.filenames.clear();
+     * fileModel.filenames.addAll(files); fileTable.revalidate(); currentWorkingDirectory = new
+     * File(selectedDirectory); } catch (IOException e1) { e1.printStackTrace(); }
+     * 
+     * 
+     * 
+     * } }
+     * 
+     * } });
+     */
 
 
-    FBrowseButton resourcesButton = new FBrowseButton(buttonText);
+    FBrowseButton resourcesButton = new FBrowseButton("Browse");
     resourcesButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
 
-        JFileChooser fc;
-
-        fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser();
 
         fc.setMultiSelectionEnabled(true);
         fc.setDialogType(JFileChooser.OPEN_DIALOG);
@@ -243,17 +304,21 @@ class FSKEditorJSNodeDialog extends NodeDialogPane {
 
           File[] files = fc.getSelectedFiles();
 
-          if (workingDirectoryField.getText() != null
-              && !workingDirectoryField.getText().equals("")) {
-            currentWorkingDirectory = new File(workingDirectoryField.getText());
+          if (m_workingDirectoryPanel.getSelectedFile().trim() != null
+              && !m_workingDirectoryPanel.getSelectedFile().trim().equals("")) {
+            try {
+              currentWorkingDirectory = FileUtil
+                  .getFileFromURL(FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile().trim()));
+            } catch (InvalidPathException | MalformedURLException e1) {
+              e1.printStackTrace();
+            }
           } else {
             currentWorkingDirectory = new File(workflowContext.getCurrentLocation(),
                 nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "")
                     .replace(" ", "") + "_" + "workingDirectory"
                     + FSKEditorJSNodeModel.TEMP_DIR_UNIFIER.getAndIncrement());
             currentWorkingDirectory.mkdir();
-            workingDirectoryField.setText(currentWorkingDirectory.toString());
-
+            m_workingDirectoryPanel.setSelectedFile(currentWorkingDirectory.toString());
           }
           for (File oneFile : files) {
             SwingWorker worker = new SwingWorker() {
@@ -287,20 +352,10 @@ class FSKEditorJSNodeDialog extends NodeDialogPane {
     });
 
 
-    // labels
-    FLabel workingDirectoryLabel = new FLabel("Working directory");
-    FLabel readmeLabel = new FLabel("Readme");
 
-    // formPanel
-    List<FLabel> labels = Arrays.asList(readmeLabel, workingDirectoryLabel);
-    List<JTextField> fields = Arrays.asList(readmeField, workingDirectoryField);
-    List<JButton> buttons = Arrays.asList(readmeButton, workingDirectoryButton);
-
-    FPanel formPanel = UIUtils.createFormPanel(labels, fields, buttons);
-    JPanel northPanel = UI.createNorthPanel(formPanel);
-    northPanel.setBackground(UIUtils.WHITE);
-    container = new JPanel(new BorderLayout());
-    container.add(northPanel, BorderLayout.NORTH);
+    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+    container.add(readmePanel);
+    container.add(workingDirectoryPanel);
     JPanel fileSelector = new JPanel(new BorderLayout());
 
     TitledBorder border = new TitledBorder("Select Resource(s) - to move to the working directory");
@@ -313,9 +368,57 @@ class FSKEditorJSNodeDialog extends NodeDialogPane {
 
     fileSelector.setBorder(border);
 
-    container.add(fileSelector, BorderLayout.CENTER);
+    container.add(fileSelector);
 
     addTab("Options", container);
+  }
+
+  public void changeWorkingDirectory(String selectedDirectory) {
+
+    int choise = JOptionPane.showConfirmDialog(null, "Working directory is already set to "
+        + currentWorkingDirectory + " \n Are you sure you want to change?");
+    switch (choise) {
+      case 0:
+        try {
+
+          // moving the file to the new working directory
+
+          Files
+              .walk(Paths.get(FileUtil.getFileFromURL(FileUtil.toURL(currentWorkingDirectory
+                  .toString().replace("\\", "/").replace("knime:/", "knime://"))).toString()))
+              .sorted(Comparator.comparing(Path::toString).reversed()).map(Path::toFile)
+              .forEach(file -> {
+                SwingWorker worker = new SwingWorker() {
+                  @Override
+                  protected Object doInBackground() throws Exception {
+                    String toPath = selectedDirectory + File.separator + file.getName();
+                    if (file.isFile()) {
+                      copyFile(file, toPath);
+
+                    }
+                    return null;
+                  }
+
+                  @Override
+                  protected void done() {
+                    file.delete();
+                    // try to delete parent folder
+                    // file.getParentFile().delete();
+                  }
+                };
+                worker.execute();
+
+              });
+
+        } catch (IOException e1) {
+
+          e1.printStackTrace();
+        }
+        break;
+      default:
+        break;
+
+    }
   }
 
   private void copyFile(File file, String toPath) {
@@ -341,10 +444,8 @@ class FSKEditorJSNodeDialog extends NodeDialogPane {
       baos.flush();
       baos.close();
     } catch (FileNotFoundException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }

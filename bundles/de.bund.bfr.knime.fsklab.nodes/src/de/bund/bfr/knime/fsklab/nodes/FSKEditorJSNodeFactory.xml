@@ -16,6 +16,22 @@
 			  will be created with the variables defined in the parameter script.
 			</p>
 		</intro>
+		<option name="README">
+			README file (optional).
+			if the input FSK object has README already set then this field will not be available for edit, but the text of the README can be changed using the JS view   
+			KNIME-URL like "knime://knime.workflow/" is accepted
+		</option>
+		<option name="Working directory">
+			Directory with resource files used by the model: plaintext, CSV and R workspaces (optional).
+			If the working Directory is not exist then it will be created First in the workflow folder in Knime workspace. 
+			KNIME-URL like "knime://knime.workflow/" is accepted
+		</option>
+		<option name="Resources">
+			List of resource Files used by this model (optional)..
+			All chosen Files will be added automatically to the working directory!
+			If the working Directory is not exist then it will be created First in the workflow folder in Knime workspace. 
+		</option>
+		
 	</fullDescription>
 	<interactiveView name="FSK Editor JS">
 			JavaScript view to edit FSK object.

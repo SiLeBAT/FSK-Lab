@@ -75,9 +75,9 @@ class FSKEditorJSNodeSettings {
 
     void load(final NodeSettingsRO settings) throws InvalidSettingsException {
       jsonRepresentation = settings.getString(JSON_REPRESENTATION);
-      resources = settings.getString(CFG_RESOURCES);
+      resources = settings.getString(CFG_RESOURCES, "");
       readme = settings.getString(CFG_README, "");
-      workingDirectory = settings.getString(CFG_WORKING_DIRECTORY);
+      workingDirectory = settings.getString(CFG_WORKING_DIRECTORY, "");
 
     }
 
