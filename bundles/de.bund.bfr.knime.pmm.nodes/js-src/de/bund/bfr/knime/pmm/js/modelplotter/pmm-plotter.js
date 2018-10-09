@@ -2097,9 +2097,9 @@ pmm_plotter = function() {
 	 */
 	function show(obj)
 	{
-		if(alert){
+		/*if(alert){
 			alert(JSON.stringify(obj, null, 4));
-		}
+		}*/
 	}
 	
 	/**
