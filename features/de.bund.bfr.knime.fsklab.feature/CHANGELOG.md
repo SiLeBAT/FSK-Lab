@@ -6,12 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Support adding resources via the editor JS dialog!
+
 ## [1.2.2] - 2018-10-28
 
-## Added
+### Added
 - *knime.workflow* keyword supported in reader, writer and creator nodes.
 
-## Fixed
+### Fixed
 - Meaningful errors during configuration of reader, writer and creator nodes due to missing or invalid files.
 
 ## [1.2.1] - 2018-09-27
