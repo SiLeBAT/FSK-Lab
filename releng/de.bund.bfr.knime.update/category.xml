@@ -15,6 +15,9 @@
    <feature url="features/de.bund.bfr.knime.fsklab.feature_1.2.2.qualifier.jar" id="de.bund.bfr.knime.fsklab.feature" version="1.2.2.qualifier">
       <category name="FSK-Lab"/>
    </feature>
+   <feature url="features/de.bund.bfr.knime.internal.feature_0.0.1.qualifier.jar" id="de.bund.bfr.knime.internal.feature" version="0.0.1.qualifier">
+      <category name="FSK-Lab"/>
+   </feature>
    <category-def name="FSK-Lab" label="FSK-Lab">
       <description>
          KNIME extension nodes for FSK-Lab. Includes FSK-Lab and PMM-Lab.
