@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <feature url="features/de.bund.bfr.knime.internal.feature_0.0.1.jar" id="de.bund.bfr.knime.internal.feature" version="0.0.1">
-      <category name="bfr_internal"/>
-   </feature>
-   <category-def name="bfr_internal" label="BfR Internal Nodes"/>
-</site>

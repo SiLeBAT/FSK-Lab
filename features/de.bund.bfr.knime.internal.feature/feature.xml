@@ -2,7 +2,7 @@
 <feature
       id="de.bund.bfr.knime.internal.feature"
       label="BfR Internal nodes feature"
-      version="0.0.1"
+      version="0.0.1.qualifier"
       provider-name="German Federal Institute for Risk Assessment (BfR)">
 
    <description url="http://www.example.com/description">
