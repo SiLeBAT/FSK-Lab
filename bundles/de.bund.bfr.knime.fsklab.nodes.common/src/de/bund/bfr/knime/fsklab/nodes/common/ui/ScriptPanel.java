@@ -46,6 +46,7 @@ public class ScriptPanel extends JPanel {
     textArea.setLineWrap(true);
     textArea.setText(script);
     textArea.setEditable(editable);
+    textArea.setEnabled(editable);
     add(new RTextScrollPane(textArea));
   }
 

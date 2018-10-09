@@ -18,15 +18,18 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Arrays;
-import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -39,10 +42,8 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
+import de.bund.bfr.swing.UI;
 
 public class RunnerNodeDialog extends DataAwareNodeDialogPane {
 
@@ -65,30 +66,16 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
     simulationModel = new DefaultComboBoxModel<>();
 
     scriptPanel = new ScriptPanel("Preview", "", false);
-    scriptPanel.setBackground(UIUtils.WHITE);
 
     createUI();
   }
 
   private void createUI() {
 
-    // Build locale with the selected language in the preferences
-    RunnerNodeBundle bundle = new RunnerNodeBundle(NodeUtils.getLocale());
-
-    // Labels
-    FLabel widthLabel = new FLabel(bundle.getWidthLabel());
-    FLabel heightLabel = new FLabel(bundle.getHeightLabel());
-    FLabel resolutionLabel = new FLabel(bundle.getResolutionLabel());
-    FLabel textSizeLabel = new FLabel(bundle.getTextSizeLabel());
-    FLabel simulationLabel = new FLabel(bundle.getSimulationLabel());
-    List<FLabel> labels = Arrays.asList(widthLabel, heightLabel, resolutionLabel, textSizeLabel);
-
     // Fields
-    JSpinner widthSpinner = new JSpinner(widthModel);
-    JSpinner heightSpinner = new JSpinner(heightModel);
-    JSpinner textSizeSpinner = new JSpinner(textSizeModel);
     resolutionField.setColumns(5);
     resolutionField.setHorizontalAlignment(SwingConstants.RIGHT);
+    resolutionField.setToolTipText("Nominal resolution in ppi");
 
     JComboBox<FskSimulation> simulationField = new JComboBox<>(simulationModel);
     // right align simulationField
@@ -109,36 +96,63 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
         scriptPanel.repaint();
       }
     });
+    simulationField.setToolTipText("Selected simulation");
 
-    // Set tooltips
-    widthSpinner.setToolTipText(bundle.getWidthTooltip());
-    heightSpinner.setToolTipText(bundle.getHeightTooltip());
-    resolutionField.setToolTipText(bundle.getResolutionTooltip());
-    textSizeSpinner.setToolTipText(bundle.getTextSizeTooltip());
-    simulationField.setToolTipText(bundle.getSimulationTooltip());
+    scriptPanel.setBorder(BorderFactory.createTitledBorder("Preview"));
 
-    List<JComponent> fields =
-        Arrays.asList(widthSpinner, heightSpinner, resolutionField, textSizeSpinner);
+    JPanel simulationSelectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    simulationSelectionPanel.add(new JLabel("Simulation:"));
+    simulationSelectionPanel.add(simulationField);
 
-    FPanel formPanel = UIUtils.createFormPanel(labels, fields);
-    FPanel northPanel = UIUtils.createNorthPanel(formPanel);
+    JPanel simulationSettingsPanel = new JPanel();
+    simulationSettingsPanel.setLayout(new BoxLayout(simulationSettingsPanel, BoxLayout.Y_AXIS));
+    simulationSettingsPanel.add(simulationSelectionPanel);
+    simulationSettingsPanel.add(scriptPanel);
 
-    // Simulation panel
-    {
-      FPanel simulationSelectionPanel =
-          UIUtils.createFormPanel(Arrays.asList(simulationLabel), Arrays.asList(simulationField));
-      scriptPanel.setBorder(BorderFactory.createTitledBorder("Preview"));
+    addTab("Simulation settings", simulationSettingsPanel);
 
-      FPanel simulationPanel = new FPanel();
-      simulationPanel.setBorder(BorderFactory.createTitledBorder("Simulation"));
-      simulationPanel.setLayout(new BoxLayout(simulationPanel, BoxLayout.Y_AXIS));
-      simulationPanel.add(UIUtils.createNorthPanel(simulationSelectionPanel));
-      simulationPanel.add(scriptPanel);
+    JPanel plotSettingsPanel = new JPanel(new GridBagLayout());
 
-      northPanel.add(simulationPanel);
-    }
+    // Prepare constraints for the first column
+    GridBagConstraints constraints = new GridBagConstraints();
+    constraints.insets = new Insets(5, 5, 5, 5);
+    constraints.gridx = 0;
+    constraints.gridy = 0;
+    constraints.anchor = GridBagConstraints.EAST;
+    plotSettingsPanel.add(new JLabel("Width:"), constraints);
 
-    addTab("Options", northPanel);
+    constraints.gridy++;
+    plotSettingsPanel.add(new JLabel("Height:"), constraints);
+
+    constraints.gridy++;
+    plotSettingsPanel.add(new JLabel("Resolution:"), constraints);
+
+    constraints.gridy++;
+    plotSettingsPanel.add(new JLabel("Text size:"), constraints);
+
+    // Prepare constraints for the second column
+    constraints.gridx++;
+    constraints.gridy = 0;
+    constraints.anchor = GridBagConstraints.WEST;
+    constraints.weightx = 1.0;
+    JSpinner heightSpinner = new JSpinner(heightModel);
+    heightSpinner.setToolTipText("Height of the plot");
+    plotSettingsPanel.add(heightSpinner, constraints);
+
+    constraints.gridy++;
+    JSpinner widthSpinner = new JSpinner(widthModel);
+    widthSpinner.setToolTipText("Width of the plot");
+    plotSettingsPanel.add(widthSpinner, constraints);
+
+    constraints.gridy++;
+    plotSettingsPanel.add(resolutionField, constraints);
+
+    constraints.gridy++;
+    JSpinner textSizeSpinner = new JSpinner(textSizeModel);
+    textSizeSpinner.setToolTipText("Text size");
+    plotSettingsPanel.add(textSizeSpinner, constraints);
+
+    addTab("Plot settings", UI.createNorthPanel(plotSettingsPanel));
   }
 
   /** Load settings from input ports. */

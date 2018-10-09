@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Support adding resources via the editor JS dialog!
-### Added
-- add READDME tab to the JS Editor View!
+- Add READDME tab to the JS Editor View!
+
+### Changed
+- Improved UI of runner node described in https://github.com/SiLeBAT/FSK-Lab/issues/264.
 
 ## [1.2.2] - 2018-10-28
 
