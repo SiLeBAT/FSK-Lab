@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Utility nodes
+Bundle-SymbolicName: de.bund.bfr.knime.internal.nodes;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: de.bund.bfr.knime.internal.nodes
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
+ com.fasterxml.jackson.core.jackson-core,
+ com.fasterxml.jackson.core.jackson-databind,
+ de.bund.bfr.knime.fsklab.preferences,
+ de.bund.bfr.knime.nodes.util;bundle-version="1.0.0",
+ org.apache.commons.codec,
+ org.knime.base,
+ org.knime.core,
+ org.knime.ext.svg,
+ org.knime.js.core
+Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
+Bundle-Activator: de.bund.bfr.knime.internal.nodes.Activator
