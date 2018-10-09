@@ -153,6 +153,14 @@ final class FSKEditorJSNodeModel
       inObj1 = (FskPortObject) inObjects[0];
     } else {
       String workingDirectory = "";
+      String readme = "";
+      if (nodeSettings.getReadme() != null && !nodeSettings.getReadme().isEmpty()) {
+
+        // Import readme
+        File readmeFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.getReadme()));
+        readme = FileUtils.readFileToString(readmeFile, "UTF-8");
+
+      }
       if (nodeSettings.getWorkingDirectory() != null
           && !nodeSettings.getWorkingDirectory().equals("")) {
         workingDirectory = nodeSettings.getWorkingDirectory();
@@ -170,7 +178,7 @@ final class FSKEditorJSNodeModel
         currentWorkingDirectory.mkdir();
         workingDirectory = currentWorkingDirectory.getPath();
       }
-      inObj1 = new FskPortObject(workingDirectory, new ArrayList<>());
+      inObj1 = new FskPortObject(workingDirectory,readme, new ArrayList<>());
       inObj1.model = "";
       inObj1.viz = "";
     }
@@ -190,6 +198,8 @@ final class FSKEditorJSNodeModel
         fskEditorProxyValue.setModelMath(FromEOjectToJSON(inObj1.modelMath));
         fskEditorProxyValue.setFirstModelScript(inObj1.model);
         fskEditorProxyValue.setFirstModelViz(inObj1.viz);
+        fskEditorProxyValue.setREADME(inObj1.getReadme());
+
 
         exec.setProgress(1);
       }
@@ -211,7 +221,6 @@ final class FSKEditorJSNodeModel
       }
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
-
       final Set<String> librariesSet = new HashSet<>();
       librariesSet.addAll(new RScript(outObj.model).getLibraries());
       librariesSet.addAll(new RScript(outObj.viz).getLibraries());

@@ -167,8 +167,8 @@ fskeditorjs = function() {
 			}else{
 				for (i = 0; i < arr.length; i++) {
 					/*
-					 * check if the item starts with the same letters as the text
-					 * field value:
+					 * check if the item starts with the same letters as the
+					 * text field value:
 					 */
 					if (arr[i].substr(0, val.length).toUpperCase() == val
 							.toUpperCase()) {
@@ -185,8 +185,8 @@ fskeditorjs = function() {
 						b.innerHTML += "<input type='hidden' value='" + arr[i]
 								+ "'>";
 						/*
-						 * execute a function when someone clicks on the item value
-						 * (DIV element):
+						 * execute a function when someone clicks on the item
+						 * value (DIV element):
 						 */
 						b.addEventListener("click", function(e) {
 							/* insert the value for the autocomplete text field: */
@@ -198,8 +198,8 @@ fskeditorjs = function() {
 									store.getState().jsonforms.core.data, schema,
 									uischema));
 							/*
-							 * close the list of autocompleted values, (or any other
-							 * open lists of autocompleted values:
+							 * close the list of autocompleted values, (or any
+							 * other open lists of autocompleted values:
 							 */
 							closeAllLists();
 						});
@@ -297,7 +297,7 @@ fskeditorjs = function() {
 	};
 
 	var _firstModelScript;
-
+	var _README;
 	var _firstModelViz;
 
 	var _viewValue;
@@ -313,6 +313,7 @@ fskeditorjs = function() {
 		_firstModel.modelMath = JSON.parse(value.modelMath);
 		_firstModel.dataBackground = JSON.parse(value.dataBackground);
 		_firstModelScript = value.firstModelScript;
+		_README =  value.readme != undefined ? value.readme :"";
 		_firstModelViz = value.firstModelViz;
 
 		_viewValue = value;
@@ -389,9 +390,9 @@ fskeditorjs = function() {
 		if (window.firstModelViz && window.firstModelViz.save) {
 			window.firstModelViz.save();
 		}
+	
 		_viewValue.firstModelScript = $('#firstModelScript').val();
 		_viewValue.firstModelViz = $('#firstModelViz').val();
-		
 		_viewValue.files = files;
 		_viewValue.fileNames = newFilesNames;
 		return _viewValue;
@@ -426,7 +427,7 @@ fskeditorjs = function() {
 				+ "                        </li>\n"
 				+ "                        <li ><a href='#sub26'>Visualization Script</a>\n"
 				+ "                        </li>\n"
-				/*+ "                        <li ><a href='#sub27'>Resources</a>\n"*/
+				+ "                        <li ><a href='#sub27'>README</a>\n"
 				+ "                        </li>\n"
 				+ "                    </ul>\n"
 				+ "                    <div class='tab-content'>\n"
@@ -454,17 +455,16 @@ fskeditorjs = function() {
 				+ "								</div>"
 				+ "					 		 </div>"
 				+ "                        </div>\n"
-				/*
+				
 				+ "                        <div class='tab-pane fade' id='sub27'>\n"
-				+ "                    		 <div>"
-				+ "								<h4>resources</h4>"
-				+ "						   		<input id='filesInput' type='file' multiple style='display:none' />"
-				+ "				   				<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>+ Add Files</button>"
-				+ "				   				<button id='uploadButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>Upload Files</button>"				    
-				+ "				  				<div id='filesArea'></div>"
+				+ "                    		 <div  >"
+				+ "								<h4>README</h4>"
+				+ "								<textarea disabled id='READMEArea' name='READMEArea'>"
+				+ 									_README
+				+ "								</textarea>"
 				+ "					 		 </div>"
-				+ "                        </div>
-*/				
+				+ "                        </div>"
+			
 				+ "                        <div class='tab-pane fade' id='sub25'>\n"
 				+ "                    		 <div  >"
 				+ "								<h4>Model Script</h4>"
@@ -483,73 +483,47 @@ fskeditorjs = function() {
 				+ "                    </div>\n" + "                </div>\n"
 
 		$('body').append(bodyContent);
-		 /* let inputFile = $('#filesInput');
-		  let button = $('#filesButton');
-		  let buttonSubmit = $('#uploadButton');
-		  let filesContainer = $('#filesArea');
-		  
-		  function readURL(input) {
-			  var reader = new FileReader();
-			  reader.onload = function(e) {
-				  console.log(e.target);
-				  path = e.target.result;
-				  files.push(path);
-			   }
-			  reader.readAsDataURL(input);
-			  
-			}
-		 inputFile.change(function() {
-			 let newFiles = [];
-		    for(let index = 0; index < inputFile[0].files.length; index++) {
-		      let file = inputFile[0].files[index];
-		      newFiles.push(file);
-		      newFilesNames.push(file.name);
-
-		      readURL(file);
-		      
-		      
-		    }
-		    
-		    newFiles.forEach(file => {
-		      let fileElement = $(`<p>${file.name}</p>`);
-		      fileElement.data('fileData', file);
-		      filesContainer.append(fileElement);
-		      
-		      fileElement.click(function(event) {
-		        let fileElement = $(event.target);
-		        let indexToRemove = files.indexOf(fileElement.data('fileData'));
-		        fileElement.remove();
-		        files.splice(indexToRemove, 1);
-		      });
-		    });
-		  });
-		  
-		  button.click(function() {
-		    inputFile.click();
-		  });
-		  
-		  buttonSubmit.click(function() {
-		    let formData = new FormData();
-		    
-		    files.forEach(file => {
-		      formData.append('file', file);
-		    });
-		    
-		    
-		    $.ajax({
-		      url: 'https://this_is_the_url_to_upload_to',
-		      data: formData,
-		      type: 'POST',
-		      success: function(data) { console.log('SUCCESS !!!'); },
-		      error: function(data) { console.log('ERROR !!!'); },
-		      cache: false,
-		      processData: false,
-		      contentType: false
-		    });
-		  });
-		  
-		  
-		  */
+		 /*
+			 * let inputFile = $('#filesInput'); let button = $('#filesButton');
+			 * let buttonSubmit = $('#uploadButton'); let filesContainer =
+			 * $('#filesArea');
+			 * 
+			 * function readURL(input) { var reader = new FileReader();
+			 * reader.onload = function(e) { console.log(e.target); path =
+			 * e.target.result; files.push(path); } reader.readAsDataURL(input);
+			 *  } inputFile.change(function() { let newFiles = []; for(let index =
+			 * 0; index < inputFile[0].files.length; index++) { let file =
+			 * inputFile[0].files[index]; newFiles.push(file);
+			 * newFilesNames.push(file.name);
+			 * 
+			 * readURL(file);
+			 * 
+			 *  }
+			 * 
+			 * newFiles.forEach(file => { let fileElement = $(`<p>${file.name}</p>`);
+			 * fileElement.data('fileData', file);
+			 * filesContainer.append(fileElement);
+			 * 
+			 * fileElement.click(function(event) { let fileElement =
+			 * $(event.target); let indexToRemove =
+			 * files.indexOf(fileElement.data('fileData'));
+			 * fileElement.remove(); files.splice(indexToRemove, 1); }); }); });
+			 * 
+			 * button.click(function() { inputFile.click(); });
+			 * 
+			 * buttonSubmit.click(function() { let formData = new FormData();
+			 * 
+			 * files.forEach(file => { formData.append('file', file); });
+			 * 
+			 * 
+			 * $.ajax({ url: 'https://this_is_the_url_to_upload_to', data:
+			 * formData, type: 'POST', success: function(data) {
+			 * console.log('SUCCESS !!!'); }, error: function(data) {
+			 * console.log('ERROR !!!'); }, cache: false, processData: false,
+			 * contentType: false }); });
+			 * 
+			 * 
+			 */
 		  
 		$('body').append(' <div id="root"></div>');
 		$('#Metadata a').on('click', function(e) {
@@ -635,7 +609,31 @@ fskeditorjs = function() {
 																	});
 
 												}
-
+												var codeMirrorContainer = $(
+														'#sub27').find(
+														".CodeMirror")[0];
+												if (codeMirrorContainer
+														&& codeMirrorContainer.CodeMirror) {
+													codeMirrorContainer.CodeMirror
+															.refresh();
+		
+												} else {
+													window.readme = window.CodeMirror
+															.fromTextArea(
+																	document
+																			.getElementById("READMEArea"),
+																	{
+																		readOnly:true,
+																		lineNumbers : true,
+																		extraKeys : {
+																			"Ctrl-Space" : "autocomplete"
+																		},
+																		mode : {
+																			name : "htmlmixed"
+																		}
+																	});
+		
+												}
 												var codeMirrorContainer = $(
 														'#sub26').find(
 														".CodeMirror")[0];

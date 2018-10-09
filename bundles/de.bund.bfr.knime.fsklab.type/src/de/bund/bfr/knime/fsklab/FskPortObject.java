@@ -161,12 +161,12 @@ public class FskPortObject implements PortObject {
     numOfInstances += 1;
   }
 
-  public FskPortObject(final String workingDirectory, final List<String> packages)
+  public FskPortObject(final String workingDirectory,String readme, final List<String> packages)
       throws IOException {
     this.workingDirectory = workingDirectory;
     this.packages = packages;
 
-    this.readme = "";
+    this.readme = readme;
     this.spreadsheet = "";
   }
 

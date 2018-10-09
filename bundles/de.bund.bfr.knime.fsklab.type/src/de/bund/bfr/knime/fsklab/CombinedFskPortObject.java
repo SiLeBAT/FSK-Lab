@@ -144,7 +144,7 @@ public class CombinedFskPortObject extends FskPortObject {
   public CombinedFskPortObject(final String workingDirectory, final List<String> packages,
       final FskPortObject firstFskPortObject, final FskPortObject secondFskPortObject)
       throws IOException {
-    super(workingDirectory, packages);
+    super(workingDirectory,"", packages);
     this.firstFskPortObject = firstFskPortObject;
     this.secondFskPortObject = secondFskPortObject;
     objectNum = numOfInstances;
@@ -155,7 +155,7 @@ public class CombinedFskPortObject extends FskPortObject {
       final DataBackground dataBackground, final ModelMath modelMath, final String workingDirectory,
       final List<String> packages, final FskPortObject firstFskPortObject,
       final FskPortObject secondFskPortObject) throws IOException {
-    super(workingDirectory, packages);
+    super(workingDirectory,"", packages);
     this.model = model;
     this.viz = viz;
     this.firstFskPortObject = firstFskPortObject;

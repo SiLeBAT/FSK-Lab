@@ -18,7 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.io.File;
 import java.util.Random;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -28,7 +27,6 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
@@ -40,19 +38,15 @@ class FSKEditorJSViewValue extends JSONViewContent {
   
   private static final NodeLogger LOGGER = NodeLogger.getLogger(FSKEditorJSViewValue.class);
   private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
-  private static final String CFG_ORIGINAL_PARAMETERS_SCRIPT = "originalParametersScript";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
+  private static final String CFG_ORIGINAL_README = "README";
 
-  private static final String CFG_MODIFIED_MODEL_SCRIPT = "modifiedModelScript";
-  private static final String CFG_MODIFIED_PARAMETERS_SCRIPT = "modifiedParametersScript";
-  private static final String CFG_MODIFIED_VISUALIZATION_SCRIPT = "modifiedVisualizationScript";
 
   private static final String CFG_GENERAL_INFORMATION = "generalInformation";
   private static final String CFG_SCOPE = "scope";
   private static final String CFG_DATA_BACKGROUND = "dataBackground";
   private static final String CFG_MODEL_MATH = "modelMath";
 
-  private static final String CFG_RESOURCES = "resources";
 
   final static ResourceSet resourceSet = new ResourceSetImpl();
 
@@ -66,6 +60,15 @@ class FSKEditorJSViewValue extends JSONViewContent {
   
   private String firstModelScript;
   private String firstModelViz;
+  private String README;
+  public String getREADME() {
+    return README;
+  }
+
+  public void setREADME(String rEADME) {
+    README = rEADME;
+  }
+
   private String[] fileNames;
   public String[] getFileNames() {
     return fileNames;
@@ -100,6 +103,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public void saveToNodeSettings(NodeSettingsWO settings) {
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
+    settings.addString(CFG_ORIGINAL_README, README);
 
   
 
@@ -128,6 +132,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
     firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
     firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
+    README = settings.getString(CFG_ORIGINAL_README); 
 
 
     // load meta data

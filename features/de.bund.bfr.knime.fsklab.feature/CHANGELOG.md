@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Support adding resources via the editor JS dialog!
+### Added
+- add READDME tab to the JS Editor View!
 
 ## [1.2.2] - 2018-10-28
 
