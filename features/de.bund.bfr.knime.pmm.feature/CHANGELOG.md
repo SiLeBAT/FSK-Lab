@@ -6,4 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Generated PMFX files with the writer node are added a README file.
+
 [Unreleased]: https://github.com/SiLeBAT/FSK-Lab/compare/v1.0.0...HEAD
