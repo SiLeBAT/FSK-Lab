@@ -1,6 +1,6 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-class WriterNodeUtils {
+public class WriterNodeUtils {
   
   private WriterNodeUtils() {}
 
@@ -23,7 +23,7 @@ class WriterNodeUtils {
    * <li>If user's readme already contains the instructions then add it as it is. Unmodified.
    * </ul>
    */
-  static String prepareReadme(String userReadme) {
+  public static String prepareReadme(String userReadme) {
 
     String instructions =
         "## FSK-Lab\n" + "This model is made available in the FSK-ML format, i.e. as .fskx"
