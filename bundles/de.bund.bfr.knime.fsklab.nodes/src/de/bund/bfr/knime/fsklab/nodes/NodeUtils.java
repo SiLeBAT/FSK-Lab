@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +15,6 @@ import org.rosuda.REngine.REXPMismatchException;
 import com.sun.jna.Platform;
 import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.preferences.LanguagePreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
@@ -183,25 +181,5 @@ public class NodeUtils {
     }
 
     return paramScript;
-  }
-
-  /**
-   * @return Locale for the selected language in the preferences or null if not set.
-   */
-  public static final Locale getLocale() {
-
-    String languageCode = LanguagePreferenceInitializer.getProvider().getLanguage();
-    Locale locale;
-    if (languageCode.equals("de")) {
-      locale = new Locale("de", "DE");
-    } else if (languageCode.equals("es")) {
-      locale = new Locale("es", "ES");
-    } else if (languageCode.equals("en")) {
-      locale = new Locale("en", "EN");
-    } else {
-      throw new RuntimeException("[NodeUtils] Illegal locale");
-    }
-
-    return locale;
   }
 }
