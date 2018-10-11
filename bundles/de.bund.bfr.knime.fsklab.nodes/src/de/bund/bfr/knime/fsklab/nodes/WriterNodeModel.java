@@ -226,10 +226,9 @@ class WriterNodeModel extends NoInternalsModel {
 
     // Add readme. Entry has a README annotation to distinguish of other
     // plain text files
-    String readme = fskObj.getReadme();
-    if (!readme.isEmpty()) {
-      addReadme(archive, readme, filePrefix);
-    }
+    String userReadme = fskObj.getReadme();
+    String finalReadme = WriterNodeUtils.prepareReadme(userReadme);
+    addReadme(archive, finalReadme, filePrefix);
 
     // Add metadata spreadsheet
     if (!fskObj.getSpreadsheet().isEmpty()) {
