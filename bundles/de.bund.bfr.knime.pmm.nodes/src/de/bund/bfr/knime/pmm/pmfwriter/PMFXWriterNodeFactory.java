@@ -25,41 +25,26 @@ import org.knime.core.node.NodeView;
 
 public class PMFXWriterNodeFactory extends NodeFactory<PMFWriterNodeModel> {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public PMFWriterNodeModel createNodeModel() {
 		return new PMFWriterNodeModel(true);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int getNrNodeViews() {
 		return 0;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public NodeView<PMFWriterNodeModel> createNodeView(final int viewIndex, final PMFWriterNodeModel nodeModel) {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean hasDialog() {
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public NodeDialogPane createNodeDialogPane() {
 		return new PMFWriterNodeDialog();
