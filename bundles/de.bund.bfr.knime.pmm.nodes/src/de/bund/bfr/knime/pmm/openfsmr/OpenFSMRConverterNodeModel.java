@@ -160,25 +160,21 @@ public class OpenFSMRConverterNodeModel extends NodeModel {
     return new BufferedDataTable[] {container.getTable()};
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void reset() {}
 
-  /** {@inheritDoc} */
   @Override
   protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
       throws InvalidSettingsException {
     return new DataTableSpec[] {TABLE_SPEC};
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void saveSettingsTo(final NodeSettingsWO settings) {
     selectedDirectory.saveSettingsTo(settings);
     selectedFiles.saveSettingsTo(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
       throws InvalidSettingsException {
@@ -186,19 +182,16 @@ public class OpenFSMRConverterNodeModel extends NodeModel {
     selectedFiles.loadSettingsFrom(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
     selectedDirectory.validateSettings(settings);
     selectedFiles.validateSettings(settings);
   }
 
-  /** {@inheritDoc} */
   @Override
   protected void loadInternals(final File internDir, final ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {}
 
-  /** {@inheritDoc} */
   @Override
   protected void saveInternals(final File internDir, final ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {}
