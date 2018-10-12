@@ -7,3 +7,4 @@ Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.test
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: de.bund.bfr.knime.fsklab.nodes,
  org.junit
+Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
