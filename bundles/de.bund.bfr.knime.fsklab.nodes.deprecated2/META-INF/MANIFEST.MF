@@ -24,3 +24,5 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
 Bundle-ClassPath: .,
  libs/fskml-0.0.1-SNAPSHOT.jar
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.deprecated2
+Export-Package: de.bund.bfr.knime.pmm.fskx.creator
+Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)

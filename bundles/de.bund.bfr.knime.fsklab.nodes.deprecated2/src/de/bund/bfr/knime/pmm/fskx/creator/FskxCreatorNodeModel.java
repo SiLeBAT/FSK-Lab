@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +29,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
@@ -49,7 +46,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXPMismatchException;
-import org.sbml.jsbml.validator.SyntaxChecker;
 
 //
 import com.google.common.base.Strings;
@@ -62,8 +58,6 @@ import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData;
-import de.bund.bfr.pmfml.ModelClass;
-import de.bund.bfr.pmfml.ModelType;
 
 public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
 
@@ -200,7 +194,8 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
     // Reads model meta data
     File metadataFile = FileUtil.getFileFromURL(FileUtil.toURL(m_metaDataDoc.getStringValue()));
     try (XSSFWorkbook workbook = new XSSFWorkbook(metadataFile)) {
-      portObj.template = SpreadsheetHandler.processSpreadsheet(workbook.getSheetAt(0));
+    	XSSFSheet sheet = workbook.getSheetAt(0);
+    	portObj.template = new MetadataImporter().processSpreadsheet(sheet);
     }
     portObj.template.software = FskMetaData.Software.R;
 
@@ -289,160 +284,6 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
     } catch (IOException e) {
       System.err.println(e.getMessage());
       throw new IOException(trimmedPath + ": cannot be read");
-    }
-  }
-
-  private static class SpreadsheetHandler {
-
-    private enum Rows {
-      id((byte) 2),
-      name((byte) 1),
-      organism((byte) 3),
-      organism_detail((byte) 4),
-      matrix((byte) 5),
-      matrix_detail((byte) 6),
-      creator((byte) 7),
-      reference_description((byte) 8),
-      created_date((byte) 9),
-      modified_date((byte) 10),
-      rights((byte) 11),
-      type((byte) 13),
-      subject((byte) 14),
-      notes((byte) 12),
-      depvar((byte) 21),
-      depvar_unit((byte) 22),
-      depvar_min((byte) 23),
-      depvar_max((byte) 24),
-      indepvar((byte) 25),
-      indepvar_unit((byte) 26),
-      indepvar_min((byte) 27),
-      indepvar_max((byte) 28);
-      // values??
-
-      private final byte row;
-
-      Rows(byte row) {
-        this.row = row;
-      }
-    }
-
-    private static void validateId(String id) throws IllegalArgumentException {
-      if (!SyntaxChecker.isValidId(id, 3, 1)) {
-        throw new IllegalArgumentException("Invalid id: [" + id + "]");
-      }
-    }
-
-    private static void validateUnit(String unit) throws IllegalArgumentException {
-      if (!SyntaxChecker.isValidId(unit, 3, 1)) {
-        throw new IllegalArgumentException("Invalid unit: [" + unit + "]");
-      }
-    }
-
-    static FskMetaData processSpreadsheet(final XSSFSheet sheet) {
-
-      final String modelId = getStringVal(sheet, Rows.id.row);
-      final String organism = getStringVal(sheet, Rows.organism.row);
-      final String matrix = getStringVal(sheet, Rows.matrix.row);
-      final String depVar = getStringVal(sheet, Rows.depvar.row);
-      final String depVarUnit = getStringVal(sheet, Rows.depvar_unit.row);
-      final List<String> indepVars =
-          Arrays.stream(getStringVal(sheet, Rows.indepvar.row).split("\\|\\|")).map(String::trim)
-              .collect(Collectors.toList());
-      final List<String> indepVarUnits =
-          Arrays.stream(getStringVal(sheet, Rows.indepvar_unit.row).split("\\|\\|"))
-              .map(String::trim).collect(Collectors.toList());
-
-      // Validate organism, matrix, units and model id
-      validateId(modelId);
-      validateId(organism);
-      validateId(matrix);
-      validateId(depVar);
-      validateUnit(depVarUnit);
-      indepVars.forEach(var -> validateId(var));
-      indepVarUnits.forEach(unit -> {
-        if (!unit.isEmpty()) {
-          validateUnit(unit);
-        }
-      });
-
-      FskMetaData template = new FskMetaData();
-      template.modelId = modelId;
-      template.modelName = getStringVal(sheet, Rows.name.row);
-      template.organism = organism;
-      template.organismDetails = getStringVal(sheet, Rows.organism_detail.row);
-      template.matrix = matrix;
-      template.matrixDetails = getStringVal(sheet, Rows.matrix_detail.row);
-      template.creator = getStringVal(sheet, Rows.creator.row);
-      // no family name in the spreadsheet
-      // no contact in the spreadsheet
-      template.referenceDescription = getStringVal(sheet, Rows.reference_description.row);
-      template.createdDate = sheet.getRow(Rows.created_date.row).getCell(5).getDateCellValue();
-      template.modifiedDate = sheet.getRow(Rows.modified_date.row).getCell(5).getDateCellValue();
-      template.rights = getStringVal(sheet, Rows.rights.row);
-
-      // model type
-      {
-        try {
-          String modelType = getStringVal(sheet, Rows.type.row);
-          template.type = ModelType.valueOf(modelType);
-        }
-        // if modelTypeAsString is not a valid ModelType
-        catch (IllegalArgumentException e) {
-          e.printStackTrace();
-        }
-      }
-
-      // model subject
-      {
-        String subject = getStringVal(sheet, Rows.subject.row);
-        try {
-          template.subject = ModelClass.valueOf(subject);
-        } catch (IllegalArgumentException e) {
-          template.subject = ModelClass.UNKNOWN;
-          e.printStackTrace();
-        }
-      }
-
-      // model notes
-      template.notes = getStringVal(sheet, Rows.notes.row);
-
-      // dep var. Type is not in the spreadsheet.
-      template.dependentVariable.name = depVar;
-      template.dependentVariable.unit = depVarUnit;
-      template.dependentVariable.min = getStringVal(sheet, Rows.depvar_min.row);
-      template.dependentVariable.max = getStringVal(sheet, Rows.depvar_max.row);
-
-      // indep vars
-      {
-        String[] mins = getStringVal(sheet, Rows.indepvar_min.row).split("\\|\\|");
-        String[] maxs = getStringVal(sheet, Rows.indepvar_max.row).split("\\|\\|");
-
-        for (int i = 0; i < mins.length; i++) {
-          Variable v = new Variable();
-          v.name = indepVars.get(i);
-          v.unit = indepVarUnits.get(i);
-          v.min = mins[i].trim();
-          v.max = maxs[i].trim();
-          // no values or types in the spreadsheet
-          v.value = "";
-          template.independentVariables.add(v);
-        }
-      }
-
-      template.hasData = false;
-
-      return template;
-    }
-
-    /**
-     * Gets the string value for the fifth column which holds the value for that row.
-     */
-    private static String getStringVal(final XSSFSheet sheet, final byte rownum) {
-      XSSFCell cell = sheet.getRow(rownum).getCell(5);
-
-      if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC)
-        return Double.toString(cell.getNumericCellValue());
-      return cell.getStringCellValue();
     }
   }
 
