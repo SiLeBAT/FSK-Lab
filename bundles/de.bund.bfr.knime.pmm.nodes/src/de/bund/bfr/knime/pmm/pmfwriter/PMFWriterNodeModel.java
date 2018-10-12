@@ -185,16 +185,10 @@ public class PMFWriterNodeModel extends NodeModel {
 		return new BufferedDataTable[] {};
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void reset() {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected DataTableSpec[] configure(final DataTableSpec[] inSpecs) throws InvalidSettingsException {
 
@@ -212,41 +206,26 @@ public class PMFWriterNodeModel extends NodeModel {
 		return new DataTableSpec[] {};
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void saveSettingsTo(final NodeSettingsWO settings) {
 		this.settings.save(settings);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
 		this.settings.load(settings);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 		// does nothing
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void loadInternals(final File internDir, final ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void saveInternals(final File internDir, final ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
