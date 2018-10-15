@@ -9,4 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Generated PMFX files with the writer node are added a README file.
 
+### Changed
+- Proper validation in PMF Writer. Users are prompted to fix faulty settings before closing the dialog.
+
 [Unreleased]: https://github.com/SiLeBAT/FSK-Lab/compare/v1.0.0...HEAD

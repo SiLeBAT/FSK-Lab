@@ -31,6 +31,7 @@ import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.util.CheckUtils;
 
 import com.google.common.base.Strings;
 
@@ -76,6 +77,10 @@ class NodeModel extends org.knime.core.node.NodeModel {
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
     // does nothing
+	  CheckUtils.checkDestinationDirectory(settings.getString("outPath"));
+	  
+	  String modelName = settings.getString("modelName");
+	  CheckUtils.checkArgument(modelName != null && !modelName.isEmpty(), "Missing model name");
   }
 
   @Override
@@ -218,18 +223,6 @@ class NodeModel extends org.knime.core.node.NodeModel {
    */
   @Override
   protected DataTableSpec[] configure(final DataTableSpec[] inSpecs) throws InvalidSettingsException {
-
-      if (settings.outPath == null || settings.modelName == null) {
-          throw new InvalidSettingsException("Node must be configured");
-      }
-
-      if (settings.outPath.isEmpty()) {
-          throw new InvalidSettingsException("Missing outpath");
-      }
-
-      if (settings.modelName.isEmpty()) {
-          throw new InvalidSettingsException("Missing model name");
-      }
       return new DataTableSpec[] {};
   }
 
