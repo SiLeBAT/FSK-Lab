@@ -240,12 +240,6 @@ class CreatorNodeModel extends NoInternalsModel {
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 
-    // Check model script
-    CheckUtils.checkArgument(
-        nodeSettings.modelScript != null && !nodeSettings.modelScript.isEmpty(),
-        "No model script provided! Please enter a valid location.");
-    CheckUtils.checkSourceFile(nodeSettings.modelScript);
-
     // Check spreadsheet and sheet in no input table is connected
     if (inSpecs.length == 1 && inSpecs[0] == null) {
       CheckUtils.checkArgument(
