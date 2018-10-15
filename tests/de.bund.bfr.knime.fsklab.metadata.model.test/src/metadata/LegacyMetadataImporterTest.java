@@ -1,4 +1,4 @@
-package de.bund.bfr.knime.pmm.fskx.creator;
+package metadata;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -14,17 +14,17 @@ import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData;
 import de.bund.bfr.pmfml.ModelClass;
 
-public class MetadataImporterTest {
+public class LegacyMetadataImporterTest {
 	
 	@Test
 	public void test() throws Exception {
 		XSSFSheet sheet0;
-		try (InputStream stream = MetadataImporterTest.class.getResourceAsStream("Duarte_MetaData.xlsx");
+		try (InputStream stream = LegacyMetadataImporterTest.class.getResourceAsStream("Duarte_MetaData.xlsx");
 				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
 			sheet0 = workbook.getSheetAt(0);
 		}
 
-		MetadataImporter importer = new MetadataImporter();
+		LegacyMetadataImporter importer = new LegacyMetadataImporter();
 		FskMetaData metadata = importer.processSpreadsheet(sheet0);
 
 		assertEquals("Duarte_R", metadata.modelId);

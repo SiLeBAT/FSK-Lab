@@ -15,7 +15,6 @@
 	<modules>
 		<module>de.bund.bfr.knime.fsklab.metadata.model.test</module>
 		<module>de.bund.bfr.knime.fsklab.nodes.deprecated.test</module>
-		<module>de.bund.bfr.knime.fsklab.nodes.deprecated2.test</module>
 		<module>de.bund.bfr.knime.fsklab.nodes.test</module>
 	</modules>
 </project>

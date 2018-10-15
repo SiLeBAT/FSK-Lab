@@ -58,6 +58,7 @@ import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData;
+import metadata.LegacyMetadataImporter;
 
 public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
 
@@ -195,7 +196,7 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
     File metadataFile = FileUtil.getFileFromURL(FileUtil.toURL(m_metaDataDoc.getStringValue()));
     try (XSSFWorkbook workbook = new XSSFWorkbook(metadataFile)) {
     	XSSFSheet sheet = workbook.getSheetAt(0);
-    	portObj.template = new MetadataImporter().processSpreadsheet(sheet);
+    	portObj.template = new LegacyMetadataImporter().processSpreadsheet(sheet);
     }
     portObj.template.software = FskMetaData.Software.R;
 

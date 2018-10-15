@@ -1,4 +1,4 @@
-package de.bund.bfr.knime.pmm.fskx.creator;
+package metadata;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -9,7 +9,7 @@ import de.bund.bfr.knime.pmm.fskx.FskMetaData;
 import de.bund.bfr.pmfml.ModelClass;
 import de.bund.bfr.pmfml.ModelType;
 
-public class MetadataImporter {
+public class LegacyMetadataImporter {
 
 	// Rows
 	private final int ID = 2;
