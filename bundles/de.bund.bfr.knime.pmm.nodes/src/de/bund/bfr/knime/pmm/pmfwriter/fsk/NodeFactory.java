@@ -26,33 +26,21 @@ public class NodeFactory extends org.knime.core.node.NodeFactory<NodeModel> {
     return new NodeModel();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public int getNrNodeViews() {
     return 0;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public NodeView<NodeModel> createNodeView(final int viewIndex, final NodeModel nodeModel) {
     return null;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean hasDialog() {
     return true;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public NodeDialogPane createNodeDialogPane() {
     return new NodeDialog();
