@@ -292,15 +292,3 @@ public class SBMLReaderNodeModel extends NodeModel {
     return tuple;
   }
 }
-
-// Maybe useful in the future
-//class TertiaryModelHandler extends DocumentHandler {
-//
-//  protected DataTableSpec createSpec() {
-//    return SchemaFactory.createM1DataSchema().createSpec();
-//  }
-//
-//  protected KnimeTuple readModel(SBMLDocument doc) {
-//    return Util.mergeTuples(new DataTuple(doc).getTuple(), new Model1Tuple(doc).getTuple());
-//  }
-//}
