@@ -20,12 +20,10 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +32,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.knime.core.data.DataCell;
@@ -62,6 +59,7 @@ import metadata.DietaryAssessmentMethod;
 import metadata.GeneralInformation;
 import metadata.Hazard;
 import metadata.Laboratory;
+import metadata.LegacyMetadataImporter;
 import metadata.MetadataFactory;
 import metadata.ModelCategory;
 import metadata.ModelMath;
@@ -189,10 +187,11 @@ class CreatorNodeModel extends NoInternalsModel {
           modelMath = importer.retrieveModelMath(sheet);
         } else {
           // Process legacy spreadsheet
-          generalInformation = LegacySheetImporter.getGeneralInformation(sheet);
-          scope = LegacySheetImporter.getScope(sheet);
+          LegacySheetImporter importer = new LegacySheetImporter(sheet);
+          generalInformation = importer.getGeneralInformation();
+          scope = importer.getScope();
           dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
-          modelMath = LegacySheetImporter.getModelMath(sheet);
+          modelMath = importer.getModelMath();
         }
       } catch (IOException | InvalidFormatException e) {
         throw new InvalidSettingsException("Invalid metadata");
@@ -291,113 +290,92 @@ class CreatorNodeModel extends NoInternalsModel {
   }
 
   private static class LegacySheetImporter {
-
-    static String getString(final XSSFSheet sheet, final int rowNumber) {
-      final XSSFRow row = sheet.getRow(rowNumber);
-      if (row == null)
-        throw new IllegalArgumentException("Missing row: #" + rowNumber);
-      return row.getCell(5).getStringCellValue();
+    
+    private final de.bund.bfr.knime.pmm.fskx.FskMetaData legacyMetadata;
+    
+    public LegacySheetImporter(XSSFSheet sheet) {
+      legacyMetadata = new LegacyMetadataImporter().processSpreadsheet(sheet);
     }
-
-    static GeneralInformation getGeneralInformation(final XSSFSheet sheet)
-        throws MalformedURLException, InvalidSettingsException {
+    
+    GeneralInformation getGeneralInformation() {
 
       GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
-
-      final String name = getString(sheet, 1);
-      if (!name.isEmpty()) {
-        generalInformation.setName(name);
+      
+      if (!legacyMetadata.modelName.isEmpty()) {
+        generalInformation.setName(legacyMetadata.modelName);
       }
-
-      final String identifier = getString(sheet, 2);
-      if (!identifier.isEmpty()) {
-        generalInformation.setIdentifier(identifier);
+      
+      if (!legacyMetadata.modelId.isEmpty()) {
+        generalInformation.setIdentifier(legacyMetadata.modelId);
       }
-
-      final Date creationDate = sheet.getRow(9).getCell(5).getDateCellValue();
-      if (creationDate != null) {
-        generalInformation.setCreationDate(creationDate);
+      
+      if (legacyMetadata.createdDate != null) {
+        generalInformation.setCreationDate(legacyMetadata.createdDate);
       }
-
-      final String rights = getString(sheet, 11);
-      if (!rights.isEmpty()) {
-        generalInformation.setRights(rights);
+      
+      if (!legacyMetadata.rights.isEmpty()) {
+        generalInformation.setRights(legacyMetadata.rights);
       }
-
+      
       generalInformation.setAvailable(true);
       generalInformation.setFormat("");
-
-      final Date modificationDate = sheet.getRow(10).getCell(5).getDateCellValue();
-      if (modificationDate != null) {
+      
+      if (legacyMetadata.modifiedDate != null) {
         ModificationDate md = MetadataFactory.eINSTANCE.createModificationDate();
-        md.setValue(modificationDate);
+        md.setValue(legacyMetadata.modifiedDate);
         generalInformation.getModificationdate().add(md);
       }
-
+      
       return generalInformation;
     }
-
-    static Scope getScope(final XSSFSheet sheet) throws InvalidSettingsException {
-
-      final Scope scope = MetadataFactory.eINSTANCE.createScope();
-
+    
+    Scope getScope() {
+     
+      Scope scope = MetadataFactory.eINSTANCE.createScope();
+      
       Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
-      hazard.setHazardName(getString(sheet, 3));
-      hazard.setHazardDescription(getString(sheet, 4));
-      scope.getHazard().add(hazard);
-
+      hazard.setHazardName(legacyMetadata.organism);
+      hazard.setHazardDescription(legacyMetadata.organismDetails);
+      
       Product product = MetadataFactory.eINSTANCE.createProduct();
-      product.setProductName(getString(sheet, 5));
-      product.setProductDescription(getString(sheet, 6));
+      product.setProductName(legacyMetadata.matrix);
+      product.setProductDescription(legacyMetadata.matrixDetails);
       scope.getProduct().add(product);
 
-      return scope;
+      return scope; 
     }
-
-    static ModelMath getModelMath(final XSSFSheet sheet) throws InvalidSettingsException {
-
-      final ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
-
-      // Dependent variables
-      final List<String> depNames = Arrays.stream(getString(sheet, 21).split("\\|\\|"))
-          .map(String::trim).collect(Collectors.toList());
-      final List<String> depUnits = Arrays.stream(getString(sheet, 22).split("\\|\\|"))
-          .map(String::trim).collect(Collectors.toList());
-
-      for (int i = 0; i < depNames.size(); i++) {
-        final Parameter param = MetadataFactory.eINSTANCE.createParameter();
-        param.setParameterID(depNames.get(i));
-        param.setParameterClassification(ParameterClassification.OUTPUT);
-        param.setParameterName(depNames.get(i));
-        param.setParameterUnit(depUnits.get(i));
-        param.setParameterUnitCategory("");
-        param.setParameterDataType(ParameterType.OTHER);
-
-        modelMath.getParameter().add(param);
-      }
-
+    
+    ModelMath getModelMath() {
+      
+      ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
+      
+      Parameter depParam = MetadataFactory.eINSTANCE.createParameter();
+      depParam.setParameterID(legacyMetadata.dependentVariable.name);
+      depParam.setParameterClassification(ParameterClassification.OUTPUT);
+      depParam.setParameterName(legacyMetadata.dependentVariable.name);
+      depParam.setParameterUnit(legacyMetadata.dependentVariable.unit);
+      depParam.setParameterUnitCategory("");
+      depParam.setParameterDataType(ParameterType.OTHER);
+      
+      modelMath.getParameter().add(depParam);
+      
       // Independent variables
-      final List<String> indepNames = Arrays.stream(getString(sheet, 25).split("\\|\\|"))
-          .map(String::trim).collect(Collectors.toList());
-      final List<String> indepUnits = Arrays.stream(getString(sheet, 26).split("\\|\\|"))
-          .map(String::trim).collect(Collectors.toList());
-
-      for (int i = 0; i < indepNames.size(); i++) {
-        final Parameter param = MetadataFactory.eINSTANCE.createParameter();
-        param.setParameterID(indepNames.get(i));
-        param.setParameterClassification(ParameterClassification.INPUT);
-        param.setParameterName(indepNames.get(i));
-        param.setParameterUnit(indepUnits.get(i));
-        param.setParameterUnitCategory("");
-        param.setParameterDataType(ParameterType.OTHER);
-
-        modelMath.getParameter().add(param);
+      for (Variable indepVar : legacyMetadata.independentVariables) {
+        final Parameter indepParam = MetadataFactory.eINSTANCE.createParameter();
+        indepParam.setParameterID(indepVar.name);
+        indepParam.setParameterClassification(ParameterClassification.INPUT);
+        indepParam.setParameterName(indepVar.name);
+        indepParam.setParameterUnit(indepVar.unit);
+        indepParam.setParameterUnitCategory("");
+        indepParam.setParameterDataType(ParameterType.OTHER);
+        
+        modelMath.getParameter().add(indepParam);
       }
-
+      
       return modelMath;
     }
   }
-
+  
   /** Parses metadata-filled tables imported from a Google Drive spreadsheet. */
   static class TableParser {
 
