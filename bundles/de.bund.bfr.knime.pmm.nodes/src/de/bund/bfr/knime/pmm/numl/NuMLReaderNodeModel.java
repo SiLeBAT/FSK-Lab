@@ -61,9 +61,6 @@ public class NuMLReaderNodeModel extends NodeModel {
 		super(0, 1);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected BufferedDataTable[] execute(final BufferedDataTable[] inData, final ExecutionContext exec)
 			throws Exception {
@@ -80,56 +77,35 @@ public class NuMLReaderNodeModel extends NodeModel {
 		return table;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected DataTableSpec[] configure(final DataTableSpec[] inSpecs) throws InvalidSettingsException {
 		return new DataTableSpec[] { TABLE_SPEC };
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void saveSettingsTo(final NodeSettingsWO settings) {
 		filename.saveSettingsTo(settings);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
 		filename.loadSettingsFrom(settings);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 		filename.validateSettings(settings);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void loadInternals(final File internDir, final ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void reset() {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void saveInternals(final File internDir, final ExecutionMonitor exec)
 			throws IOException, CanceledExecutionException {
