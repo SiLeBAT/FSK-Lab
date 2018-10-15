@@ -68,9 +68,6 @@ public class SBMLReaderNodeModel extends NodeModel {
     super(0, 1);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
       final ExecutionContext exec) throws Exception {
@@ -101,9 +98,6 @@ public class SBMLReaderNodeModel extends NodeModel {
     return new BufferedDataTable[] {container.getTable()};
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
       throws InvalidSettingsException {
@@ -128,26 +122,17 @@ public class SBMLReaderNodeModel extends NodeModel {
     return new DataTableSpec[] {tableSpec};
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected void saveSettingsTo(final NodeSettingsWO settings) {
     filename.saveSettingsTo(settings);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
       throws InvalidSettingsException {
     filename.loadSettingsFrom(settings);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 
@@ -181,22 +166,13 @@ public class SBMLReaderNodeModel extends NodeModel {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected void loadInternals(final File internDir, final ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {}
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected void reset() {}
 
-  /**
-   * {@inheritDoc}
-   */
   protected void saveInternals(final File internDir, final ExecutionMonitor exec)
       throws IOException, CanceledExecutionException {}
 
