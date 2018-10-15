@@ -1,9 +1,5 @@
 package de.bund.bfr.knime.pmm.fskx.creator;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -41,89 +37,162 @@ public class MetadataImporter {
 
 	public FskMetaData processSpreadsheet(final XSSFSheet sheet) {
 
-		final String modelId = getStringVal(sheet, ID);
-		final String organism = getStringVal(sheet, ORGANISM);
-		final String matrix = getStringVal(sheet, MATRIX);
-		final String depVar = getStringVal(sheet, DEPVAR);
-		final String depVarUnit = getStringVal(sheet, DEPVAR_UNIT);
-		final List<String> indepVars = Arrays.stream(getStringVal(sheet, INDEPVAR).split("\\|\\|")).map(String::trim)
-				.collect(Collectors.toList());
-		final List<String> indepVarUnits = Arrays.stream(getStringVal(sheet, INDEPVAR_UNIT).split("\\|\\|"))
-				.map(String::trim).collect(Collectors.toList());
-
 		FskMetaData template = new FskMetaData();
-		template.modelId = modelId;
-		template.modelName = getStringVal(sheet, NAME);
-		template.organism = organism;
-		template.organismDetails = getStringVal(sheet, ORGANISM_DETAIL);
-		template.matrix = matrix;
-		template.matrixDetails = getStringVal(sheet, MATRIX_DETAIL);
-		template.creator = getStringVal(sheet, CREATOR);
-		// no family name in the spreadsheet
-		// no contact in the spreadsheet
-		template.referenceDescription = getStringVal(sheet, REFERENCE_DESCRIPTION);
-		
-		template.createdDate = sheet.getRow(CREATED_DATE).getCell(5).getDateCellValue();
-		template.createdDate.setYear(template.createdDate.getYear() + 1900);
-		
-		template.modifiedDate = sheet.getRow(MODIFIED_DATE).getCell(5).getDateCellValue();
-		template.modifiedDate.setYear(template.modifiedDate.getYear() + 1900);
-		
-		template.rights = getStringVal(sheet, RIGHTS);
+
+		XSSFCell modelNameCell = sheet.getRow(NAME).getCell(5);
+		if (modelNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.modelName = modelNameCell.getStringCellValue();
+		}
+
+		XSSFCell modelIdCell = sheet.getRow(ID).getCell(5);
+		if (modelIdCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.modelId = modelIdCell.getStringCellValue();
+		}
+
+		// model link
+
+		XSSFCell organismCell = sheet.getRow(ORGANISM).getCell(5);
+		if (organismCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.organism = organismCell.getStringCellValue();
+		}
+
+		XSSFCell organismDetailCell = sheet.getRow(ORGANISM_DETAIL).getCell(5);
+		if (organismDetailCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.organismDetails = organismDetailCell.getStringCellValue();
+		}
+
+		XSSFCell matrixCell = sheet.getRow(MATRIX).getCell(5);
+		if (matrixCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.matrix = matrixCell.getStringCellValue();
+		}
+
+		XSSFCell matrixDetailCell = sheet.getRow(MATRIX_DETAIL).getCell(5);
+		if (matrixDetailCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.matrixDetails = matrixDetailCell.getStringCellValue();
+		}
+
+		XSSFCell creatorCell = sheet.getRow(CREATOR).getCell(5);
+		if (creatorCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.creator = creatorCell.getStringCellValue();
+		}
+
+		// There is no family name, contact or software in the spreadsheet.
+
+		XSSFCell referenceDescriptionCell = sheet.getRow(REFERENCE_DESCRIPTION).getCell(5);
+		if (referenceDescriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.referenceDescription = referenceDescriptionCell.getStringCellValue();
+		}
+
+		// reference description link
+
+		XSSFCell creationDateCell = sheet.getRow(CREATED_DATE).getCell(5);
+		if (creationDateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+			template.createdDate = creationDateCell.getDateCellValue();
+			template.createdDate.setYear(template.createdDate.getYear() + 1900);
+		}
+
+		XSSFCell modificationCell = sheet.getRow(MODIFIED_DATE).getCell(5);
+		if (modificationCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+			template.modifiedDate = modificationCell.getDateCellValue();
+			template.modifiedDate.setYear(template.modifiedDate.getYear() + 1900);
+		}
+
+		XSSFCell rightsCell = sheet.getRow(RIGHTS).getCell(5);
+		if (rightsCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.rights = rightsCell.getStringCellValue();
+		}
+
+		XSSFCell notesCell = sheet.getRow(NOTES).getCell(5);
+		if (notesCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.notes = notesCell.getStringCellValue();
+		}
+
+		// curated
 
 		try {
-			String modelType = getStringVal(sheet, TYPE);
-			template.type = ModelType.valueOf(modelType);
+			XSSFCell typeCell = sheet.getRow(TYPE).getCell(5);
+			if (typeCell.getCellType() == Cell.CELL_TYPE_STRING) {
+				template.type = ModelType.valueOf(typeCell.getStringCellValue());
+			}
 		} catch (IllegalArgumentException e) {
 		}
 
 		try {
-			String subject = getStringVal(sheet, SUBJECT);
-			template.subject = ModelClass.valueOf(subject);
+			XSSFCell subjectCell = sheet.getRow(SUBJECT).getCell(5);
+			if (subjectCell.getCellType() == Cell.CELL_TYPE_STRING) {
+				template.subject = ModelClass.valueOf(subjectCell.getStringCellValue());
+			}
 		} catch (IllegalArgumentException e) {
 			template.subject = ModelClass.UNKNOWN;
 		}
 
-		// model notes
-		template.notes = getStringVal(sheet, NOTES);
+		// food process
 
-		// dep var. Type is not in the spreadsheet.
-		template.dependentVariable.name = depVar;
-		template.dependentVariable.unit = depVarUnit;
-		template.dependentVariable.min = getStringVal(sheet, DEPVAR_MIN);
-		template.dependentVariable.max = getStringVal(sheet, DEPVAR_MAX);
+		// dependent variable
+		XSSFCell depVarNameCell = sheet.getRow(DEPVAR).getCell(5);
+		if (depVarNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.dependentVariable.name = depVarNameCell.getStringCellValue();
+		}
 
-		// indep vars
-		{
-			String[] mins = getStringVal(sheet, INDEPVAR_MIN).split("\\|\\|");
-			String[] maxs = getStringVal(sheet, INDEPVAR_MAX).split("\\|\\|");
+		XSSFCell depVarUnitCell = sheet.getRow(DEPVAR_UNIT).getCell(5);
+		if (depVarUnitCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.dependentVariable.unit = depVarUnitCell.getStringCellValue();
+		}
 
-			for (int i = 0; i < mins.length; i++) {
-				Variable v = new Variable();
-				v.name = indepVars.get(i);
-				v.unit = indepVarUnits.get(i);
-				v.min = mins[i].trim();
-				v.max = maxs[i].trim();
+		XSSFCell depVarMinCell = sheet.getRow(DEPVAR_MIN).getCell(5);
+		if (depVarMinCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.dependentVariable.min = depVarMinCell.getStringCellValue();
+		} else if (depVarMinCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+			template.dependentVariable.min = Double.toString(depVarMinCell.getNumericCellValue());
+		}
+
+		XSSFCell depVarMaxCell = sheet.getRow(DEPVAR_MAX).getCell(5);
+		if (depVarMaxCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			template.dependentVariable.max = depVarMaxCell.getStringCellValue();
+		} else if (depVarMaxCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+			template.dependentVariable.max = Double.toString(depVarMaxCell.getNumericCellValue());
+		}
+
+		// independent variables *
+		String[] indepVars = null;
+		XSSFCell indepVarCell = sheet.getRow(INDEPVAR).getCell(5);
+		if (indepVarCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			indepVars = indepVarCell.getStringCellValue().split("\\|\\|");
+		}
+
+		String[] indepVarUnits = null;
+		XSSFCell indepVarUnitCell = sheet.getRow(INDEPVAR_UNIT).getCell(5);
+		if (indepVarUnitCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			indepVarUnits = indepVarUnitCell.getStringCellValue().split("\\|\\|");
+		}
+
+		String[] mins = null;
+		XSSFCell indepVarMinCell = sheet.getRow(INDEPVAR_MIN).getCell(5);
+		if (indepVarMinCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			mins = indepVarMinCell.getStringCellValue().split("\\|\\|");
+		}
+
+		String[] maxs = null;
+		XSSFCell indepVarMaxCell = sheet.getRow(INDEPVAR_MAX).getCell(5);
+		if (indepVarMaxCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			maxs = indepVarMaxCell.getStringCellValue().split("\\|\\|");
+		}
+
+		if (indepVars != null && indepVarUnits != null && mins != null && maxs != null) {
+			for (int i = 0; i < indepVars.length; i++) {
+				Variable variable = new Variable();
+				variable.name = indepVars[i].trim();
+				variable.unit = indepVarUnits[i].trim();
+				variable.min = mins[i].trim();
+				variable.max = maxs[i].trim();
 				// no values or types in the spreadsheet
-				v.value = "";
-				template.independentVariables.add(v);
+				variable.value = "";
+				template.independentVariables.add(variable);
 			}
 		}
 
 		template.hasData = false;
 
 		return template;
-	}
-
-	/**
-	 * Gets the string value for the fifth column which holds the value for that
-	 * row.
-	 */
-	private static String getStringVal(final XSSFSheet sheet, final int rownum) {
-		XSSFCell cell = sheet.getRow(rownum).getCell(5);
-
-		if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC)
-			return Double.toString(cell.getNumericCellValue());
-		return cell.getStringCellValue();
 	}
 }

@@ -3,7 +3,6 @@ package de.bund.bfr.knime.pmm.fskx.creator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 
@@ -31,7 +30,7 @@ public class MetadataImporterTest {
 		assertEquals("Duarte_R", metadata.modelId);
 		assertEquals("Duarte_FittingDistributionToMicrobialCounts", metadata.modelName);
 		assertEquals("generic_broth", metadata.organism);
-		assertTrue(metadata.organismDetails.isEmpty());
+		assertNull(metadata.organismDetails);
 		assertEquals("lab experiment", metadata.matrix);
 		assertEquals("This method fits a zero-inflated Poisson", metadata.matrixDetails);
 		assertEquals("Duarte, A.S.R.; Filter, M.", metadata.creator);
