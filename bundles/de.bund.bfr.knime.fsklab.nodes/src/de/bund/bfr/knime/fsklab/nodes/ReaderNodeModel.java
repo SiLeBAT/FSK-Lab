@@ -121,7 +121,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    // does nothing
+    CheckUtils.checkDestinationFile(settings.getString("filename"), true);
   }
 
   @Override
@@ -144,7 +144,6 @@ class ReaderNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    CheckUtils.checkSourceFile(nodeSettings.filePath);
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 

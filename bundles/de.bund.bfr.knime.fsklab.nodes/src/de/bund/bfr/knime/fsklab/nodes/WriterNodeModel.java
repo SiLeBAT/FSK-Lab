@@ -134,7 +134,7 @@ class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    // does nothing
+    CheckUtils.checkDestinationFile(settings.getString("file"), true);
   }
 
   @Override
@@ -142,7 +142,6 @@ class WriterNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    CheckUtils.checkDestinationFile(nodeSettings.filePath, true);
     return new PortObjectSpec[] {};
   }
 

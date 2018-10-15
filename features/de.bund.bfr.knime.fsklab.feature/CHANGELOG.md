@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improved UI of runner node described in https://github.com/SiLeBAT/FSK-Lab/issues/264.
 
+### Fixed
+- Proper validation of paths in writer and reader node. See https://github.com/SiLeBAT/FSK-Lab/issues/272
+
 ## [1.2.2] - 2018-10-28
 
 ### Added
