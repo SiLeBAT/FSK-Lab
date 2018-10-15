@@ -23,15 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.io.FileUtils;
@@ -43,7 +36,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -70,18 +62,16 @@ import metadata.ModelMath;
 import metadata.Scope;
 
 
-
 /**
  * Fsk Editor JS node model.
  */
-
 final class FSKEditorJSNodeModel
     extends AbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
     implements PortObjectHolder {
-  private static final NodeLogger LOGGER = NodeLogger.getLogger(FSKEditorJSViewValue.class);
 
   private final FSKEditorJSNodeSettings nodeSettings = new FSKEditorJSNodeSettings();
   private FskPortObject m_port;
+
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE_OPTIONAL};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
@@ -146,23 +136,23 @@ final class FSKEditorJSNodeModel
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
 
-
     FskPortObject inObj1;
     FskPortObject outObj;
+
     if (inObjects.length > 0 && inObjects[0] != null) {
       inObj1 = (FskPortObject) inObjects[0];
     } else {
       String workingDirectory = "";
       String readme = "";
-      if (nodeSettings.getReadme() != null && !nodeSettings.getReadme().isEmpty()) {
 
-        // Import readme
+      // Import readme
+      if (!nodeSettings.getReadme().isEmpty()) {
         File readmeFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.getReadme()));
         readme = FileUtils.readFileToString(readmeFile, "UTF-8");
-
       }
-      if (nodeSettings.getWorkingDirectory() != null
-          && !nodeSettings.getWorkingDirectory().equals("")) {
+
+
+      if (!nodeSettings.getWorkingDirectory().isEmpty()) {
         workingDirectory = nodeSettings.getWorkingDirectory();
       } else {
         // each sub Model has it's own working directory to avoid resource conflict.
@@ -178,14 +168,12 @@ final class FSKEditorJSNodeModel
         currentWorkingDirectory.mkdir();
         workingDirectory = currentWorkingDirectory.getPath();
       }
-      inObj1 = new FskPortObject(workingDirectory,readme, new ArrayList<>());
+      inObj1 = new FskPortObject(workingDirectory, readme, new ArrayList<>());
       inObj1.model = "";
       inObj1.viz = "";
     }
+
     // Clone input object
-
-
-
     synchronized (getLock()) {
       FSKEditorJSViewValue fskEditorProxyValue = getViewValue();
 
@@ -200,12 +188,9 @@ final class FSKEditorJSNodeModel
         fskEditorProxyValue.setFirstModelViz(inObj1.viz);
         fskEditorProxyValue.setREADME(inObj1.getReadme());
 
-
         exec.setProgress(1);
       }
       outObj = inObj1;
-
-
 
       outObj.generalInformation =
           getEObjectFromJson(fskEditorProxyValue.getGeneralInformation(), GeneralInformation.class);
@@ -213,21 +198,23 @@ final class FSKEditorJSNodeModel
       outObj.dataBackground =
           getEObjectFromJson(fskEditorProxyValue.getDataBackground(), DataBackground.class);
       outObj.modelMath = getEObjectFromJson(fskEditorProxyValue.getModelMath(), ModelMath.class);
+
+      // Create simulation
       if (outObj.modelMath.getParameter() != null && outObj.modelMath.getParameter().size() > 0
           && outObj.simulations.size() == 0) {
         FskSimulation defaultSimulation =
             NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter());
         outObj.simulations.add(defaultSimulation);
       }
+
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
+
+      // Collect R packages
       final Set<String> librariesSet = new HashSet<>();
       librariesSet.addAll(new RScript(outObj.model).getLibraries());
       librariesSet.addAll(new RScript(outObj.viz).getLibraries());
       outObj.packages.addAll(new ArrayList<>(librariesSet));
-
-
-
     }
 
 
@@ -261,9 +248,6 @@ final class FSKEditorJSNodeModel
     }
 
     return (T) resource.getContents().get(0);
-
-
-
   }
 
   @Override
@@ -288,8 +272,6 @@ final class FSKEditorJSNodeModel
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
-
-
   @Override
   public PortObject[] getInternalPortObjects() {
     return new PortObject[] {m_port};
@@ -299,7 +281,6 @@ final class FSKEditorJSNodeModel
   public void setInternalPortObjects(PortObject[] portObjects) {
     m_port = (FskPortObject) portObjects[0];
   }
-
 
   public void setHideInWizard(boolean hide) {}
 }
