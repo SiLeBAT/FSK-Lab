@@ -218,9 +218,6 @@ class NodeModel extends org.knime.core.node.NodeModel {
     return new BufferedDataTable[] {};
   }
   
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected DataTableSpec[] configure(final DataTableSpec[] inSpecs) throws InvalidSettingsException {
       return new DataTableSpec[] {};
