@@ -324,13 +324,16 @@ class WriterNodeModel extends NoInternalsModel {
 
         File tempFile = FileUtil.createTempFile("sbml", "");
         new SBMLWriter().write(sbmlModelDoc, tempFile);
+        
+        String targetName;
         if (portObject instanceof CombinedFskPortObject) {
-          archive.addEntry(tempFile, normalizeName(portObject)
-              + System.getProperty("file.separator") + sbmlModelDoc.getModel().getId() + ".sbml",
-              URIS.get("sbml"));
+          targetName =
+              normalizeName(portObject) + "/" + sbmlModelDoc.getModel().getId() + ".sbml";
         } else {
-          archive.addEntry(tempFile, sbmlModelDoc.getModel().getId() + ".sbml", URIS.get("sbml"));
+          targetName = sbmlModelDoc.getModel().getId() + ".sbml";
         }
+        
+        archive.addEntry(tempFile, targetName, URIS.get("sbml"));
       }
 
       // Gets library URI for the running platform
