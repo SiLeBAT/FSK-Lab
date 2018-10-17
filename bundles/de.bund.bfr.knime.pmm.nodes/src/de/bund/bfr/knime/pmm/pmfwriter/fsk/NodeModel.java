@@ -50,197 +50,189 @@ import de.bund.bfr.pmfml.sbml.SBMLFactory;
 
 class NodeModel extends org.knime.core.node.NodeModel {
 
-  private NodeSettings settings = new NodeSettings();
+	private NodeSettings settings = new NodeSettings();
 
-  protected NodeModel() {
-    super(1, 0);
+	protected NodeModel() {
+		super(1, 0);
 
-    // Sets current date in the dialog components
-    long currentDate = Calendar.getInstance().getTimeInMillis();
-    settings.createdDate = currentDate;
-    settings.modifiedDate = currentDate;
-  }
+		// Sets current date in the dialog components
+		long currentDate = Calendar.getInstance().getTimeInMillis();
+		settings.createdDate = currentDate;
+		settings.modifiedDate = currentDate;
+	}
 
-  @Override
-  protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
-      throws IOException, CanceledExecutionException {}
+	@Override
+	protected void loadInternals(File nodeInternDir, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
+	}
 
-  @Override
-  protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
-      throws IOException, CanceledExecutionException {}
+	@Override
+	protected void saveInternals(File nodeInternDir, ExecutionMonitor exec)
+			throws IOException, CanceledExecutionException {
+	}
 
-  @Override
-  protected void saveSettingsTo(NodeSettingsWO settings) {
-    this.settings.save(settings);
-  }
+	@Override
+	protected void saveSettingsTo(NodeSettingsWO settings) {
+		this.settings.save(settings);
+	}
 
-  @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    // does nothing
-	  CheckUtils.checkDestinationDirectory(settings.getString("outPath"));
-	  
-	  String modelName = settings.getString("modelName");
-	  CheckUtils.checkArgument(modelName != null && !modelName.isEmpty(), "Missing model name");
-  }
+	@Override
+	protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+		// does nothing
+		CheckUtils.checkDestinationDirectory(settings.getString("outPath"));
 
-  @Override
-  protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
-      throws InvalidSettingsException {
-    this.settings.load(settings);
-  }
+		String modelName = settings.getString("modelName");
+		CheckUtils.checkArgument(modelName != null && !modelName.isEmpty(), "Missing model name");
+	}
 
-  @Override
-  protected void reset() {}
+	@Override
+	protected void loadValidatedSettingsFrom(NodeSettingsRO settings) throws InvalidSettingsException {
+		this.settings.load(settings);
+	}
 
-  @Override
-  protected BufferedDataTable[] execute(BufferedDataTable[] inData, ExecutionContext exec)
-      throws Exception {
+	@Override
+	protected void reset() {
+	}
 
-    KnimeSchema schema = null;
-    ModelType modelType = null;
-    List<KnimeTuple> tuples;
+	@Override
+	protected BufferedDataTable[] execute(BufferedDataTable[] inData, ExecutionContext exec) throws Exception {
 
-    DataTableSpec spec = inData[0].getSpec();
+		KnimeSchema schema = null;
+		ModelType modelType = null;
+		List<KnimeTuple> tuples;
 
-    // Table has the structure Model1 + Model2 + Data
-    if (SchemaFactory.conformsM12DataSchema(spec)) {
-      schema = SchemaFactory.createM12DataSchema();
-      tuples = PmmUtilities.getTuples(inData[0], schema);
+		DataTableSpec spec = inData[0].getSpec();
 
-      if (hasData(tuples)) {
-        boolean identical = identicalEstModels(tuples);
-        if (settings.isSecondary) {
-          if (identical) {
-            modelType = ModelType.ONE_STEP_SECONDARY_MODEL;
-          } else {
-            modelType = ModelType.TWO_STEP_SECONDARY_MODEL;
-          }
-        } else {
-          if (identical) {
-            modelType = ModelType.ONE_STEP_TERTIARY_MODEL;
-          } else {
-            modelType = ModelType.TWO_STEP_TERTIARY_MODEL;
-          }
-        }
-      } else {
-        modelType = ModelType.MANUAL_TERTIARY_MODEL;
-      }
-    }
+		// Table has the structure Model1 + Model2 + Data
+		if (SchemaFactory.conformsM12DataSchema(spec)) {
+			schema = SchemaFactory.createM12DataSchema();
+			tuples = PmmUtilities.getTuples(inData[0], schema);
 
-    // Table has Model1 + Data
-    else if (SchemaFactory.conformsM1DataSchema(spec)) {
-      schema = SchemaFactory.createM1DataSchema();
-      tuples = PmmUtilities.getTuples(inData[0], schema);
+			if (hasData(tuples)) {
+				boolean identical = identicalEstModels(tuples);
+				if (settings.isSecondary) {
+					modelType = identical ? ModelType.ONE_STEP_SECONDARY_MODEL : ModelType.TWO_STEP_SECONDARY_MODEL;
+				} else {
+					modelType = identical ? ModelType.ONE_STEP_TERTIARY_MODEL : ModelType.TWO_STEP_TERTIARY_MODEL;
+				}
+			} else {
+				modelType = ModelType.MANUAL_TERTIARY_MODEL;
+			}
+		}
 
-      // Check every tuple. If any tuple has data (number of data points > 0)
-      // then assigns PRIMARY_MODEL_WDATA. Otherwise it assigns
-      // PRIMARY_MODEL_WODATA
-      modelType = ModelType.PRIMARY_MODEL_WODATA;
-      for (KnimeTuple tuple : tuples) {
-        PmmXmlDoc mdData = tuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
-        if (mdData.size() > 0) {
-          modelType = ModelType.PRIMARY_MODEL_WDATA;
-          break;
-        }
-      }
-    }
+		// Table has Model1 + Data
+		else if (SchemaFactory.conformsM1DataSchema(spec)) {
+			schema = SchemaFactory.createM1DataSchema();
+			tuples = PmmUtilities.getTuples(inData[0], schema);
 
-    // Table only has data
-    else if (SchemaFactory.conformsDataSchema(spec)) {
-      schema = SchemaFactory.createDataSchema();
-      tuples = PmmUtilities.getTuples(inData[0], schema);
-      modelType = ModelType.EXPERIMENTAL_DATA;
-    }
+			// Check every tuple. If any tuple has data (number of data points > 0)
+			// then assigns PRIMARY_MODEL_WDATA. Otherwise it assigns
+			// PRIMARY_MODEL_WODATA
+			modelType = ModelType.PRIMARY_MODEL_WODATA;
+			for (KnimeTuple tuple : tuples) {
+				PmmXmlDoc mdData = tuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
+				if (mdData.size() > 0) {
+					modelType = ModelType.PRIMARY_MODEL_WDATA;
+					break;
+				}
+			}
+		}
 
-    // Table only has secondary model cells
-    else if (SchemaFactory.conformsM2Schema(spec)) {
-      schema = SchemaFactory.createM2Schema();
-      tuples = PmmUtilities.getTuples(inData[0], schema);
-      modelType = ModelType.MANUAL_SECONDARY_MODEL;
-    } else {
-      throw new Exception();
-    }
+		// Table only has data
+		else if (SchemaFactory.conformsDataSchema(spec)) {
+			schema = SchemaFactory.createDataSchema();
+			tuples = PmmUtilities.getTuples(inData[0], schema);
+			modelType = ModelType.EXPERIMENTAL_DATA;
+		}
 
-    // Retrieve info from dialog
-    Metadata metadata = SBMLFactory.createMetadata();
+		// Table only has secondary model cells
+		else if (SchemaFactory.conformsM2Schema(spec)) {
+			schema = SchemaFactory.createM2Schema();
+			tuples = PmmUtilities.getTuples(inData[0], schema);
+			modelType = ModelType.MANUAL_SECONDARY_MODEL;
+		} else {
+			throw new Exception();
+		}
 
-    if (settings.creatorGivenName.isEmpty()) {
-      setWarningMessage("Given name missing");
-    } else {
-      metadata.setGivenName(settings.creatorGivenName);
-    }
+		// Retrieve info from dialog
+		Metadata metadata = SBMLFactory.createMetadata();
 
-    if (settings.creatorFamilyName.isEmpty()) {
-      setWarningMessage("Creator family name missing");
-    } else {
-      metadata.setFamilyName(settings.creatorFamilyName);
-    }
+		if (settings.creatorGivenName.isEmpty()) {
+			setWarningMessage("Given name missing");
+		} else {
+			metadata.setGivenName(settings.creatorGivenName);
+		}
 
-    if (settings.creatorContact.isEmpty()) {
-      setWarningMessage("Creator contact missing");
-    } else {
-      metadata.setContact(settings.creatorContact);
-    }
+		if (settings.creatorFamilyName.isEmpty()) {
+			setWarningMessage("Creator family name missing");
+		} else {
+			metadata.setFamilyName(settings.creatorFamilyName);
+		}
 
-    // TODO: setCreatedDate. There is no status in NodeSettings
-//    if (settings.createdDate.getSelectedFields() == 1) {
-//      metadata.setCreatedDate(settings.createdDate.getDate().toString());
-//    } else {
-//      setWarningMessage("Created date missing");
-//    }
+		if (settings.creatorContact.isEmpty()) {
+			setWarningMessage("Creator contact missing");
+		} else {
+			metadata.setContact(settings.creatorContact);
+		}
 
-    // TODO: setModifiedDate. There is no status in NodeSettings
-//    if (settings.modifiedDate.getSelectedFields() == 1) {
-//      metadata.setModifiedDate(settings.modifiedDate.getDate().toString());
-//    } else {
-//      setWarningMessage("Modified date missing");
-//    }
-    metadata.setType(modelType);
-    metadata.setRights(Strings.emptyToNull(settings.license));
-    metadata.setReferenceLink(Strings.emptyToNull(settings.referenceDescriptionLink));
-    String modelNotes = Strings.emptyToNull(settings.notes);
+		// TODO: setCreatedDate. There is no status in NodeSettings
+		// if (settings.createdDate.getSelectedFields() == 1) {
+		// metadata.setCreatedDate(settings.createdDate.getDate().toString());
+		// } else {
+		// setWarningMessage("Created date missing");
+		// }
 
-    String dir = settings.outPath;
-    String mdName = settings.modelName;
+		// TODO: setModifiedDate. There is no status in NodeSettings
+		// if (settings.modifiedDate.getSelectedFields() == 1) {
+		// metadata.setModifiedDate(settings.modifiedDate.getDate().toString());
+		// } else {
+		// setWarningMessage("Modified date missing");
+		// }
+		metadata.setType(modelType);
+		metadata.setRights(Strings.emptyToNull(settings.license));
+		metadata.setReferenceLink(Strings.emptyToNull(settings.referenceDescriptionLink));
+		String modelNotes = Strings.emptyToNull(settings.notes);
 
-    // Check for existing file -> shows warning if despite overwrite being
-    // false the user still executes the nod
-    String filepath = String.format("%s/%s.fskx", dir, mdName);
-    File f = new File(filepath);
-    if (f.exists() && !f.isDirectory() && !settings.overwrite) {
-      setWarningMessage(filepath + " was not overwritten");
-      return new BufferedDataTable[] {};
-    }
+		String dir = settings.outPath;
+		String mdName = settings.modelName;
 
-    WriterUtils.write(tuples, true, dir, mdName, metadata, settings.splitModels,
-        modelNotes, exec, modelType);
+		// Check for existing file -> shows warning if despite overwrite being
+		// false the user still executes the nod
+		String filepath = String.format("%s/%s.fskx", dir, mdName);
+		File f = new File(filepath);
+		if (f.exists() && !f.isDirectory() && !settings.overwrite) {
+			setWarningMessage(filepath + " was not overwritten");
+			return new BufferedDataTable[] {};
+		}
 
-    return new BufferedDataTable[] {};
-  }
-  
-  @Override
-  protected DataTableSpec[] configure(final DataTableSpec[] inSpecs) throws InvalidSettingsException {
-      return new DataTableSpec[] {};
-  }
+		WriterUtils.write(tuples, true, dir, mdName, metadata, settings.splitModels, modelNotes, exec, modelType);
 
-  private static boolean identicalEstModels(List<KnimeTuple> tuples) {
-    int id = ((EstModelXml) tuples.get(0).getPmmXml(Model1Schema.ATT_ESTMODEL).get(0)).getId();
-    for (KnimeTuple tuple : tuples.subList(1, tuples.size())) {
-      EstModelXml estModel = (EstModelXml) tuple.getPmmXml(Model1Schema.ATT_ESTMODEL).get(0);
-      if (id != estModel.getId()) {
-        return false;
-      }
-    }
-    return true;
-  }
+		return new BufferedDataTable[] {};
+	}
 
-  private static boolean hasData(List<KnimeTuple> tuples) {
-    for (KnimeTuple tuple : tuples) {
-      PmmXmlDoc mdData = tuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
-      if (mdData != null && mdData.size() > 0) {
-        return true;
-      }
-    }
-    return false;
-  }
+	@Override
+	protected DataTableSpec[] configure(final DataTableSpec[] inSpecs) throws InvalidSettingsException {
+		return new DataTableSpec[] {};
+	}
+
+	private static boolean identicalEstModels(List<KnimeTuple> tuples) {
+		int id = ((EstModelXml) tuples.get(0).getPmmXml(Model1Schema.ATT_ESTMODEL).get(0)).getId();
+		for (KnimeTuple tuple : tuples.subList(1, tuples.size())) {
+			EstModelXml estModel = (EstModelXml) tuple.getPmmXml(Model1Schema.ATT_ESTMODEL).get(0);
+			if (id != estModel.getId()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static boolean hasData(List<KnimeTuple> tuples) {
+		for (KnimeTuple tuple : tuples) {
+			PmmXmlDoc mdData = tuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
+			if (mdData != null && mdData.size() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
