@@ -483,14 +483,11 @@ fskeditorjs = function() {
 
 		_viewValue.firstModelScript = $('#firstModelScript').val();
 		_viewValue.firstModelViz = $('#firstModelViz').val();
-		// TODO remove afterword
-		resourcesFiles
-				.push(server
-						+ "/knime/rest/v4/repository"
-						+ "/testing/Ahmad_testing/myTestfolder1539933801095.5/20180626182826Example_6_18_Exposure_model_Virus_water_shellfish.fskx")
+		
 		_viewValue.resourcesFiles = resourcesFiles;
 		_viewValue.serverName = server;
 		if (parent.KnimePageLoader) {
+			console.log("resources ",_viewValue.resourcesFiles);
 			runningOnKnimeServer = true;
 		}
 		return _viewValue;
