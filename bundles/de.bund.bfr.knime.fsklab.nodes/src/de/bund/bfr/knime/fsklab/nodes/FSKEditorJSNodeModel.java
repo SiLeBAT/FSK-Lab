@@ -321,8 +321,9 @@ final class FSKEditorJSNodeModel
 
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
-      LOGGER.info("JS EDITOR  " + fskEditorProxyValue.getRunningOnKnimeServer());
-      if (fskEditorProxyValue.getRunningOnKnimeServer() != null ) {
+      LOGGER.info("JS EDITOR  " + fskEditorProxyValue.getResourcesFiles());
+      //resources will only be available via online mode of the editor
+      if (fskEditorProxyValue.getResourcesFiles()!=null && fskEditorProxyValue.getResourcesFiles().length != 0 ) {
         
         connectAndDownloadFilesOnServer(fskEditorProxyValue.getServerName(),
             fskEditorProxyValue.getResourcesFiles(), outObj.getWorkingDirectory());

@@ -367,7 +367,7 @@ fskeditorjs = function() {
 	joinerNode.init = function(representation, value) {
 		console.log("parent ", parent.KnimePageLoader);
 
-		if (parent.KnimePageLoader) {
+		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
 			// send AJAX request to acquire the JWT for the currently logged in
 			// user. Subsequent requests need to carry the token in the
 			// “Authorization” header
@@ -486,11 +486,7 @@ fskeditorjs = function() {
 		
 		_viewValue.resourcesFiles = resourcesFiles;
 		_viewValue.serverName = server;
-		if (parent.KnimePageLoader) {
-			console.log("resources ",_viewValue.resourcesFiles);
-			_viewValue.runningOnKnimeServer = "true";
-		}
-		console.log(_viewValue);
+		
 		return _viewValue;
 	};
 
@@ -523,7 +519,7 @@ fskeditorjs = function() {
 				+ "                        </li>\n"
 				+ "                        <li ><a href='#sub27'>README</a>\n"
 				+ "                        </li>\n"
-		if (parent.KnimePageLoader) {
+		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
 			bodyContent += "                        <li ><a href='#sub28'>Resources</a>\n"
 					+ "                        </li>\n";
 		}
@@ -551,7 +547,7 @@ fskeditorjs = function() {
 				+ "                    		 <div id=\"modelMath\" class=\"App\">"
 				+ "								<div class=\"demoform\">" + "								</div>"
 				+ "					 		 </div>" + "                        </div>\n"
-		if (parent.KnimePageLoader) {
+		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
 			bodyContent += "                        <div class='tab-pane fade' id='sub28'>\n"
 					+ "                    		 <div>"
 					+ "								<h4>resources</h4>"
