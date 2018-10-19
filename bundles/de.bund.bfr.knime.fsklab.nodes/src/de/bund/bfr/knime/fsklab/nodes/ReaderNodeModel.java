@@ -570,17 +570,25 @@ class ReaderNodeModel extends NoInternalsModel {
     }
   }
 
+  /** @return text content out of an {@link ArchiveEntry}. */
   private static String loadTextEntry(final ArchiveEntry entry) throws IOException {
 
     // Create temporary file with script
     File temp = File.createTempFile("temp", null);
-    entry.extractFile(temp);
+    String contents;
 
-    // Read contents
-    String contents = FileUtils.readFileToString(temp, "UTF-8");
-
-    // Delete temporary file
-    temp.delete();
+    try {
+      // extractFile throws IOException if the file does not exist (was deleted manually) or is
+      // not writable.
+      entry.extractFile(temp);
+      
+      // readFileToString throws IOException if the file was deleted manually
+      contents = FileUtils.readFileToString(temp, "UTF-8");
+    } catch (IOException exception) {
+      throw exception;
+    } finally {
+      temp.delete();
+    }
 
     return contents;
   }
@@ -588,11 +596,12 @@ class ReaderNodeModel extends NoInternalsModel {
   /**
    * @return list of simulations from a SedML document.
    * 
-   * <p>
-   * In SedML every simulation is encoded as a {@link org.jlibsedml.Model} with the parameter values
-   * defined as a {@link org.jlibsedml.ChangeAttribute}.
+   *         <p>
+   *         In SedML every simulation is encoded as a {@link org.jlibsedml.Model} with the
+   *         parameter values defined as a {@link org.jlibsedml.ChangeAttribute}.
    * 
-   * <pre>{@code
+   *         <pre>
+   * {@code
    * <model id="simulation1">
    *   <listOfChanges>
    *     <changeAttribute newValue="1" target="a" />
@@ -606,7 +615,7 @@ class ReaderNodeModel extends NoInternalsModel {
    *   </listOfChanges>
    * </model> 
    * }
-   * </pre>
+   *         </pre>
    */
   private static List<FskSimulation> loadSimulations(SedML sedml) {
 
@@ -615,7 +624,7 @@ class ReaderNodeModel extends NoInternalsModel {
     for (org.jlibsedml.Model model : sedml.getModels()) {
 
       FskSimulation fskSimulation = new FskSimulation(model.getId());
-      
+
       for (Change change : model.getListOfChanges()) {
         if (change.getChangeKind().equals(SEDMLTags.CHANGE_ATTRIBUTE_KIND)) {
           ChangeAttribute ca = (ChangeAttribute) change;
