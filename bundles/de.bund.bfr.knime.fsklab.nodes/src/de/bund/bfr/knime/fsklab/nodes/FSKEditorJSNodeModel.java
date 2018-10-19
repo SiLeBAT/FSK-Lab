@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -74,6 +75,7 @@ import metadata.Scope;
 final class FSKEditorJSNodeModel
     extends AbstractWizardNodeModel<FSKEditorJSViewRepresentation, FSKEditorJSViewValue>
     implements PortObjectHolder {
+  private static final NodeLogger LOGGER = NodeLogger.getLogger("Fskx JS Editor Model");
 
   private final FSKEditorJSNodeSettings nodeSettings = new FSKEditorJSNodeSettings();
   private FskPortObject m_port;
@@ -226,6 +228,8 @@ final class FSKEditorJSNodeModel
       }
       conn.disconnect();
       for (String fileRequestString : resources) {
+        LOGGER.info("JS EDITOR  " + serverName+">>>>>>"+
+            fileRequestString+">>>>>>"+workingDir);
         downloadFileToWorkingDir(fileRequestString, workingDir, JWT);
       }
       // TODO remove the temp folder on the server
@@ -318,6 +322,7 @@ final class FSKEditorJSNodeModel
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
       if (fskEditorProxyValue.isRunningOnKnimeServer()) {
+        
         connectAndDownloadFilesOnServer(fskEditorProxyValue.getServerName(),
             fskEditorProxyValue.getResourcesFiles(), outObj.getWorkingDirectory());
       }
