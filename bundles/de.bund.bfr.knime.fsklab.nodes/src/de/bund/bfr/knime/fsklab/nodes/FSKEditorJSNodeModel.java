@@ -208,14 +208,15 @@ final class FSKEditorJSNodeModel
       String workingDir) {
     try {
       String JWT = "";
-      String requestString = serverName + "knime/rest/session";
+      String requestString = serverName + "/knime/rest/session";
       URL url = new URL(requestString);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Accept", "application/json");
 
       if (conn.getResponseCode() != 200) {
-        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+        
+        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()+" >>>>>>> "+requestString);
       }
 
       BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
