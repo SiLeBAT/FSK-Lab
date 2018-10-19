@@ -18,10 +18,16 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -79,6 +85,7 @@ final class FSKEditorJSNodeModel
   private static final String VIEW_NAME = new FSKEditorJSNodeFactory().getInteractiveViewName();
 
   static final AtomicLong TEMP_DIR_UNIFIER = new AtomicLong((int) (100000 * Math.random()));
+  private static final int BUFFER_SIZE = 4096;
 
   public FSKEditorJSNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
@@ -130,6 +137,107 @@ final class FSKEditorJSNodeModel
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
 
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
+  }
+
+
+  /**
+   * Downloads a file from a URL
+   * 
+   * @param fileURL HTTP URL of the file to be downloaded
+   * @param workingDir path of the directory to save the file
+   * @throws IOException
+   */
+  public void downloadFileToWorkingDir(String fileURL, String workingDir, String JWT)
+      throws IOException {
+    URL url = new URL(fileURL);
+    HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+    httpConn.setRequestProperty("Authorization", "Bearer" + JWT);
+    int responseCode = httpConn.getResponseCode();
+
+    // always check HTTP response code first
+    if (responseCode == HttpURLConnection.HTTP_OK) {
+      String fileName = "";
+      String disposition = httpConn.getHeaderField("Content-Disposition");
+      String contentType = httpConn.getContentType();
+      int contentLength = httpConn.getContentLength();
+
+      if (disposition != null) {
+        // extracts file name from header field
+        int index = disposition.indexOf("filename=");
+        if (index > 0) {
+          fileName = disposition.substring(index + 10, disposition.length() - 1);
+        }
+      } else {
+        // extracts file name from URL
+        fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
+      }
+
+      // opens input stream from the HTTP connection
+      InputStream inputStream = httpConn.getInputStream();
+      String saveFilePath = workingDir + File.separator + fileName;
+
+      // opens an output stream to save into file
+      FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+
+      int bytesRead = -1;
+      byte[] buffer = new byte[BUFFER_SIZE];
+      while ((bytesRead = inputStream.read(buffer)) != -1) {
+        outputStream.write(buffer, 0, bytesRead);
+      }
+
+      outputStream.close();
+      inputStream.close();
+
+      System.out.println("File downloaded");
+    } else {
+      System.out.println("No file to download. Server replied HTTP code: " + responseCode);
+    }
+    httpConn.disconnect();
+  }
+
+  /**
+   * Connect to get JWT token and Downloads files
+   * 
+   * @param serverName that host the resources
+   * @param resources array of resource URL on the server
+   * @param workingDir path of the directory to save the file
+   */
+  public void connectAndDownloadFilesOnServer(String serverName, String[] resources,
+      String workingDir) {
+    try {
+      String JWT = "";
+      String requestString = serverName + "knime/rest/session";
+      URL url = new URL(requestString);
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod("GET");
+      conn.setRequestProperty("Accept", "application/json");
+
+      if (conn.getResponseCode() != 200) {
+        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+      }
+
+      BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+
+      String output;
+      System.out.println("Output from Server .... \n");
+
+      while ((output = br.readLine()) != null) {
+        JWT += output;
+      }
+      conn.disconnect();
+      for (String fileRequestString : resources) {
+        downloadFileToWorkingDir(fileRequestString, workingDir, JWT);
+      }
+      // TODO remove the temp folder on the server
+    } catch (MalformedURLException e) {
+
+      e.printStackTrace();
+
+    } catch (IOException e) {
+
+      e.printStackTrace();
+
+    }
   }
 
   @Override
@@ -209,7 +317,10 @@ final class FSKEditorJSNodeModel
 
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
-
+      if (fskEditorProxyValue.isRunningOnKnimeServer()) {
+        connectAndDownloadFilesOnServer(fskEditorProxyValue.getServerName(),
+            fskEditorProxyValue.getResourcesFiles(), outObj.getWorkingDirectory());
+      }
       // Collect R packages
       final Set<String> librariesSet = new HashSet<>();
       librariesSet.addAll(new RScript(outObj.model).getLibraries());

@@ -5,10 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-
+### Added
+- Add upload resource feature to the JS editor during the online mode(This feature work only online)!
 ### Added
 - Support adding resources via the editor JS dialog!
-- Add READDME tab to the JS Editor View!
+- Add README tab to the JS Editor View!
 - Add generated README (FSK-Lab instructions) by the writer node. Only if the user's readme is empty or misses the instructions.
 
 ### Changed

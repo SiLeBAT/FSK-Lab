@@ -129,6 +129,12 @@ class ReaderNodeModel extends NoInternalsModel {
     NodeContext nodeContext = NodeContext.getContext();
     WorkflowManager wfm = nodeContext.getWorkflowManager();
     WorkflowContext workflowContext = wfm.getContext();
+    /*
+     * find and delete only the working directory folder related to current reader node in the mean
+     * that, we are not deleting folders which are representing the working directory of other
+     * reader nodes which maybe exist in the same workflow
+     */
+
     try {
       Files.walk(workflowContext.getCurrentLocation().toPath())
           .filter(path -> path.toString()
@@ -136,7 +142,6 @@ class ReaderNodeModel extends NoInternalsModel {
                   .replaceAll("\\W", "").replace(" ", "") + "_" + "workingDirectory"))
           .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }

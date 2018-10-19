@@ -33,9 +33,8 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 
 
 
-
 class FSKEditorJSViewValue extends JSONViewContent {
-  
+
   private static final NodeLogger LOGGER = NodeLogger.getLogger(FSKEditorJSViewValue.class);
   private static final String CFG_ORIGINAL_MODEL_SCRIPT = "originalModelScript";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
@@ -51,16 +50,39 @@ class FSKEditorJSViewValue extends JSONViewContent {
   final static ResourceSet resourceSet = new ResourceSetImpl();
 
   public final int pseudoIdentifier = (new Random()).nextInt();
-  
-  
-  private String generalInformation ;
+
+
+  private String generalInformation;
   private String scope;
   private String dataBackground;
-  private String modelMath ;
-  
+  private String modelMath;
+
   private String firstModelScript;
   private String firstModelViz;
   private String README;
+  private String[] resourcesFiles;
+  private String serverName;
+
+  public String getServerName() {
+    return serverName;
+  }
+
+  public void setServerName(String serverName) {
+    this.serverName = serverName;
+  }
+
+  public String[] getResourcesFiles() {
+    return resourcesFiles;
+  }
+
+  public void setResourcesFiles(String[] resourcesFiles) {
+    this.resourcesFiles = resourcesFiles;
+  }
+
+  private boolean runningOnKnimeServer;
+
+
+
   public String getREADME() {
     return README;
   }
@@ -69,16 +91,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     README = rEADME;
   }
 
-  private String[] fileNames;
-  public String[] getFileNames() {
-    return fileNames;
-  }
 
-  public void setFileNames(String[] fileNames) {
-    this.fileNames = fileNames;
-  }
-
-  
 
   public String getFirstModelScript() {
     return firstModelScript;
@@ -88,7 +101,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     this.firstModelScript = firstModelScript;
   }
 
- 
+
   public String getFirstModelViz() {
     return firstModelViz;
   }
@@ -96,16 +109,16 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public void setFirstModelViz(String firstModelViz) {
     this.firstModelViz = firstModelViz;
   }
- 
-  
-  
+
+
+
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
     settings.addString(CFG_ORIGINAL_README, README);
 
-  
+
 
     if (generalInformation != null) {
       System.out.println(generalInformation);
@@ -125,14 +138,14 @@ class FSKEditorJSViewValue extends JSONViewContent {
       saveSettings(settings, CFG_MODEL_MATH, modelMath);
     }
 
-   
+
   }
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
     firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
     firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
-    README = settings.getString(CFG_ORIGINAL_README); 
+    README = settings.getString(CFG_ORIGINAL_README);
 
 
     // load meta data
@@ -149,8 +162,9 @@ class FSKEditorJSViewValue extends JSONViewContent {
       modelMath = getEObject(settings, CFG_MODEL_MATH);
     }
 
-   
+
   }
+
   private static void saveSettings(final NodeSettingsWO settings, final String key,
       final String eObject) {
 
@@ -169,10 +183,11 @@ class FSKEditorJSViewValue extends JSONViewContent {
 
     String jsonStr = settings.getString(key);
     jsonStr = StringEscapeUtils.unescapeJson(jsonStr);
-    jsonStr = jsonStr.substring(1, jsonStr.length()-1);
+    jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
     return jsonStr;
-    
+
   }
+
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -188,6 +203,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public int hashCode() {
     return pseudoIdentifier;
   }
+
   public String getGeneralInformation() {
     return generalInformation;
   }
@@ -219,5 +235,12 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public void setModelMath(String modelMath) {
     this.modelMath = modelMath;
   }
- 
+
+  public boolean isRunningOnKnimeServer() {
+    return runningOnKnimeServer;
+  }
+
+  public void setRunningOnKnimeServer(boolean runningOnKnimeServer) {
+    this.runningOnKnimeServer = runningOnKnimeServer;
+  }
 }

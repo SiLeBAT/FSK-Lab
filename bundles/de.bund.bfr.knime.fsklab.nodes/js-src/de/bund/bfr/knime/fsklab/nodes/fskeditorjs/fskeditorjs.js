@@ -10,11 +10,11 @@ fskeditorjs = function() {
 		};
 	}
 	function bin2String(array) {
-	  var result = "";
-	  for (var i = 0; i < array.length; i++) {
-	    result += String.fromCharCode(parseInt(array[i], 2));
-	  }
-	  return result;
+		var result = "";
+		for (var i = 0; i < array.length; i++) {
+			result += String.fromCharCode(parseInt(array[i], 2));
+		}
+		return result;
 	}
 	if (!Array.from) {
 		Array.from = (function() {
@@ -111,103 +111,153 @@ fskeditorjs = function() {
 		 * the autocomplete function takes two arguments, the text field element
 		 * and an array of possible autocompleted values:
 		 */
-		
+
 		var currentFocus;
 		$(inp).addClass('domdsdsd');
 		/* execute a function when someone writes in the text field: */
-		inp.addEventListener("input", function(e) {
-			var a, b, i, val = this.value;
-			/* close any already open lists of autocompleted values */
-			closeAllLists();
-			
-			
-			currentFocus = -1;
-			/* create a DIV element that will contain the items (values): */
-			a = document.createElement("DIV");
-			a.setAttribute("id", this.id + "autocomplete-list");
-			a.setAttribute("class", "autocomplete-items");
-			/* append the DIV element as a child of the autocomplete container: */
-			this.parentNode.appendChild(a);
-			/* for each item in the array... */
-			if (!val) {
-				for (i = 0; i < arr.length; i++) {
-					/* create a DIV element for each matching element: */
-					b = document.createElement("DIV");
-					/* make the matching letters bold: */
-					b.innerHTML = "<strong>" + arr[i].substr(0, 0)
-							+ "</strong>";
-					b.innerHTML += arr[i].substr(0);
-					/*
-					 * insert a input field that will hold the current array
-					 * item's value:
-					 */
-					b.innerHTML += "<input type='hidden' value='" + arr[i]
-							+ "'>";
-					/*
-					 * execute a function when someone clicks on the item value
-					 * (DIV element):
-					 */
-					b.addEventListener("click", function(e) {
-						/* insert the value for the autocomplete text field: */
-
-						store.getState().jsonforms.core.data[fieldName] = this
-								.getElementsByTagName("input")[0].value;
-
-						store.dispatch(Actions.init(
-								store.getState().jsonforms.core.data, schema,
-								uischema));
-						/*
-						 * close the list of autocompleted values, (or any other
-						 * open lists of autocompleted values:
-						 */
-						closeAllLists();
-					});
-					a.appendChild(b);
-				}
-			}else{
-				for (i = 0; i < arr.length; i++) {
-					/*
-					 * check if the item starts with the same letters as the
-					 * text field value:
-					 */
-					if (arr[i].substr(0, val.length).toUpperCase() == val
-							.toUpperCase()) {
-						/* create a DIV element for each matching element: */
-						b = document.createElement("DIV");
-						/* make the matching letters bold: */
-						b.innerHTML = "<strong>" + arr[i].substr(0, val.length)
-								+ "</strong>";
-						b.innerHTML += arr[i].substr(val.length);
-						/*
-						 * insert a input field that will hold the current array
-						 * item's value:
-						 */
-						b.innerHTML += "<input type='hidden' value='" + arr[i]
-								+ "'>";
-						/*
-						 * execute a function when someone clicks on the item
-						 * value (DIV element):
-						 */
-						b.addEventListener("click", function(e) {
-							/* insert the value for the autocomplete text field: */
-	
-							store.getState().jsonforms.core.data[fieldName] = this
-									.getElementsByTagName("input")[0].value;
-	
-							store.dispatch(Actions.init(
-									store.getState().jsonforms.core.data, schema,
-									uischema));
+		inp
+				.addEventListener(
+						"input",
+						function(e) {
+							var a, b, i, val = this.value;
 							/*
-							 * close the list of autocompleted values, (or any
-							 * other open lists of autocompleted values:
+							 * close any already open lists of autocompleted
+							 * values
 							 */
 							closeAllLists();
+
+							currentFocus = -1;
+							/*
+							 * create a DIV element that will contain the items
+							 * (values):
+							 */
+							a = document.createElement("DIV");
+							a.setAttribute("id", this.id + "autocomplete-list");
+							a.setAttribute("class", "autocomplete-items");
+							/*
+							 * append the DIV element as a child of the
+							 * autocomplete container:
+							 */
+							this.parentNode.appendChild(a);
+							/* for each item in the array... */
+							if (!val) {
+								for (i = 0; i < arr.length; i++) {
+									/*
+									 * create a DIV element for each matching
+									 * element:
+									 */
+									b = document.createElement("DIV");
+									/* make the matching letters bold: */
+									b.innerHTML = "<strong>"
+											+ arr[i].substr(0, 0) + "</strong>";
+									b.innerHTML += arr[i].substr(0);
+									/*
+									 * insert a input field that will hold the
+									 * current array item's value:
+									 */
+									b.innerHTML += "<input type='hidden' value='"
+											+ arr[i] + "'>";
+									/*
+									 * execute a function when someone clicks on
+									 * the item value (DIV element):
+									 */
+									b
+											.addEventListener(
+													"click",
+													function(e) {
+														/*
+														 * insert the value for
+														 * the autocomplete text
+														 * field:
+														 */
+
+														store.getState().jsonforms.core.data[fieldName] = this
+																.getElementsByTagName("input")[0].value;
+
+														store
+																.dispatch(Actions
+																		.init(
+																				store
+																						.getState().jsonforms.core.data,
+																				schema,
+																				uischema));
+														/*
+														 * close the list of
+														 * autocompleted values,
+														 * (or any other open
+														 * lists of
+														 * autocompleted values:
+														 */
+														closeAllLists();
+													});
+									a.appendChild(b);
+								}
+							} else {
+								for (i = 0; i < arr.length; i++) {
+									/*
+									 * check if the item starts with the same
+									 * letters as the text field value:
+									 */
+									if (arr[i].substr(0, val.length)
+											.toUpperCase() == val.toUpperCase()) {
+										/*
+										 * create a DIV element for each
+										 * matching element:
+										 */
+										b = document.createElement("DIV");
+										/* make the matching letters bold: */
+										b.innerHTML = "<strong>"
+												+ arr[i].substr(0, val.length)
+												+ "</strong>";
+										b.innerHTML += arr[i]
+												.substr(val.length);
+										/*
+										 * insert a input field that will hold
+										 * the current array item's value:
+										 */
+										b.innerHTML += "<input type='hidden' value='"
+												+ arr[i] + "'>";
+										/*
+										 * execute a function when someone
+										 * clicks on the item value (DIV
+										 * element):
+										 */
+										b
+												.addEventListener(
+														"click",
+														function(e) {
+															/*
+															 * insert the value
+															 * for the
+															 * autocomplete text
+															 * field:
+															 */
+
+															store.getState().jsonforms.core.data[fieldName] = this
+																	.getElementsByTagName("input")[0].value;
+
+															store
+																	.dispatch(Actions
+																			.init(
+																					store
+																							.getState().jsonforms.core.data,
+																					schema,
+																					uischema));
+															/*
+															 * close the list of
+															 * autocompleted
+															 * values, (or any
+															 * other open lists
+															 * of autocompleted
+															 * values:
+															 */
+															closeAllLists();
+														});
+										a.appendChild(b);
+									}
+								}
+							}
 						});
-						a.appendChild(b);
-					}
-				}
-			}
-		});
 		/* execute a function presses a key on the keyboard: */
 		inp.addEventListener("keydown", function(e) {
 			var x = document.getElementById(this.id + "autocomplete-list");
@@ -285,9 +335,9 @@ fskeditorjs = function() {
 		version : '1.0.0'
 	};
 	joinerNode.name = 'FSK Editor JS';
-	let files = [];
-	let newFilesNames = [];
-	
+
+	var resourcesFiles = [];
+
 	var paper;
 	var _firstModel = {
 		generalInformation : {},
@@ -305,19 +355,58 @@ fskeditorjs = function() {
 	// inObj2.genericModel.modelMath.parameter)
 	var firstModelParameterMap = new Object();
 	var secomndModelParameterMap = new Object();
+
+	// only value is available when we run this code in knime server
+	var JWT;
+	var server;
+	var timeStampInMs = window.performance && window.performance.now
+			&& window.performance.timing
+			&& window.performance.timing.navigationStart ? window.performance
+			.now()
+			+ window.performance.timing.navigationStart : Date.now();
 	joinerNode.init = function(representation, value) {
-		// console.log('value ',value);
+		console.log("parent ", parent.KnimePageLoader);
+
+		if (parent.KnimePageLoader) {
+			// send AJAX request to acquire the JWT for the currently logged in
+			// user. Subsequent requests need to carry the token in the
+			// “Authorization” header
+			server = window.location.protocol + "//" + window.location.host
+			console.log(server);
+			var xhttp = new XMLHttpRequest();
+
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+
+					JWT = this.responseText;
+
+				}
+			};
+			xhttp.open("GET", server + "/knime/rest/session", true);
+			xhttp.send();
+			// create temp folder for the current running instance of the
+			// worklflow on the server
+			// this folder will be removed after coping all the content inside
+			// to the fsk object working directory.
+			var anotherxhttp = new XMLHttpRequest();
+
+			anotherxhttp.open("put", server
+					+ "/knime/rest/v4/repository/jsEditorTempFolder"
+					+ timeStampInMs, true);
+			anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
+			anotherxhttp.send();
+		}
 		_firstModel.generalInformation = JSON.parse(value.generalInformation);
 		_firstModel.scope = JSON.parse(value.scope);
 
 		_firstModel.modelMath = JSON.parse(value.modelMath);
 		_firstModel.dataBackground = JSON.parse(value.dataBackground);
 		_firstModelScript = value.firstModelScript;
-		_README =  value.readme != undefined ? value.readme :"";
+		_README = value.readme != undefined ? value.readme : "";
 		_firstModelViz = value.firstModelViz;
 
 		_viewValue = value;
-		
+
 		window.generalInformation = _firstModel.generalInformation;
 		window.scope = _firstModel.scope;
 		window.modelMath = _firstModel.modelMath;
@@ -325,6 +414,7 @@ fskeditorjs = function() {
 
 		prepareData(_firstModel);
 		create_body();
+
 	};
 	function prepareData(_firstModel) {
 		// prepare generalInformation
@@ -390,11 +480,19 @@ fskeditorjs = function() {
 		if (window.firstModelViz && window.firstModelViz.save) {
 			window.firstModelViz.save();
 		}
-	
+
 		_viewValue.firstModelScript = $('#firstModelScript').val();
 		_viewValue.firstModelViz = $('#firstModelViz').val();
-		_viewValue.files = files;
-		_viewValue.fileNames = newFilesNames;
+		// TODO remove afterword
+		resourcesFiles
+				.push(server
+						+ "/knime/rest/v4/repository"
+						+ "/testing/Ahmad_testing/myTestfolder1539933801095.5/20180626182826Example_6_18_Exposure_model_Virus_water_shellfish.fskx")
+		_viewValue.resourcesFiles = resourcesFiles;
+		_viewValue.serverName = server;
+		if (parent.KnimePageLoader) {
+			runningOnKnimeServer = true;
+		}
 		return _viewValue;
 	};
 
@@ -413,9 +511,7 @@ fskeditorjs = function() {
 
 				"                <div class='tabbable'>\n"
 				+ "                    <ul class='nav nav-tabs'>\n"
-				+
-
-				"                        <li class='active'><a href='#sub21'>General Information</a>\n"
+				+ "                        <li class='active'><a href='#sub21'>General Information</a>\n"
 				+ "                        </li>\n"
 				+ "                        <li><a href='#sub22'>Scope</a>\n"
 				+ "                        </li>\n"
@@ -429,7 +525,11 @@ fskeditorjs = function() {
 				+ "                        </li>\n"
 				+ "                        <li ><a href='#sub27'>README</a>\n"
 				+ "                        </li>\n"
-				+ "                    </ul>\n"
+		if (parent.KnimePageLoader) {
+			bodyContent += "                        <li ><a href='#sub28'>Resources</a>\n"
+					+ "                        </li>\n";
+		}
+		bodyContent += "                    </ul>\n"
 				+ "                    <div class='tab-content'>\n"
 				+ "                        <div class='tab-pane fade active in' id='sub21'>\n"
 				+ "                     		<div id=\"generalinformation\" class=\"App\">"
@@ -451,25 +551,32 @@ fskeditorjs = function() {
 				+ "                        </div>\n"
 				+ "                        <div class='tab-pane fade' id='sub24'>\n"
 				+ "                    		 <div id=\"modelMath\" class=\"App\">"
-				+ "								<div class=\"demoform\">"
-				+ "								</div>"
-				+ "					 		 </div>"
-				+ "                        </div>\n"
-				
-				+ "                        <div class='tab-pane fade' id='sub27'>\n"
+				+ "								<div class=\"demoform\">" + "								</div>"
+				+ "					 		 </div>" + "                        </div>\n"
+		if (parent.KnimePageLoader) {
+			bodyContent += "                        <div class='tab-pane fade' id='sub28'>\n"
+					+ "                    		 <div>"
+					+ "								<h4>resources</h4>"
+					+ "						   		<input id='filesInput' type='file' multiple style='display:none' />"
+					+ "				   				<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>+ Add Files</button>"
+					+ "				  				<div id='filesArea'></div>"
+					+ "					 		 </div>" + "                        </div>"
+
+		}
+		bodyContent += "                        <div class='tab-pane fade' id='sub27'>\n"
 				+ "                    		 <div  >"
 				+ "								<h4>README</h4>"
 				+ "								<textarea disabled id='READMEArea' name='READMEArea'>"
-				+ 									_README
+				+ _README
 				+ "								</textarea>"
 				+ "					 		 </div>"
 				+ "                        </div>"
-			
+
 				+ "                        <div class='tab-pane fade' id='sub25'>\n"
 				+ "                    		 <div  >"
 				+ "								<h4>Model Script</h4>"
 				+ "								<textarea id='firstModelScript' name='firstModelScript'>"
-				+ 									_firstModelScript
+				+ _firstModelScript
 				+ "								</textarea>"
 				+ "					 		 </div>"
 				+ "                        </div>\n"
@@ -477,54 +584,136 @@ fskeditorjs = function() {
 				+ "                    		 <div >"
 				+ "								<h4>Model Visualization Script</h4>"
 				+ "								<textarea id='firstModelViz' name='firstModelViz'>"
-				+ 									_firstModelViz 
-				+ "								</textarea>" 
-				+ "					 		 </div>" + "                        </div>\n"
+				+ _firstModelViz
+				+ "								</textarea>"
+				+ "					 		 </div>"
+				+ "                        </div>\n"
 				+ "                    </div>\n" + "                </div>\n"
 
 		$('body').append(bodyContent);
-		 /*
-			 * let inputFile = $('#filesInput'); let button = $('#filesButton');
-			 * let buttonSubmit = $('#uploadButton'); let filesContainer =
-			 * $('#filesArea');
-			 * 
-			 * function readURL(input) { var reader = new FileReader();
-			 * reader.onload = function(e) { console.log(e.target); path =
-			 * e.target.result; files.push(path); } reader.readAsDataURL(input);
-			 *  } inputFile.change(function() { let newFiles = []; for(let index =
-			 * 0; index < inputFile[0].files.length; index++) { let file =
-			 * inputFile[0].files[index]; newFiles.push(file);
-			 * newFilesNames.push(file.name);
-			 * 
-			 * readURL(file);
-			 * 
-			 *  }
-			 * 
-			 * newFiles.forEach(file => { let fileElement = $(`<p>${file.name}</p>`);
-			 * fileElement.data('fileData', file);
-			 * filesContainer.append(fileElement);
-			 * 
-			 * fileElement.click(function(event) { let fileElement =
-			 * $(event.target); let indexToRemove =
-			 * files.indexOf(fileElement.data('fileData'));
-			 * fileElement.remove(); files.splice(indexToRemove, 1); }); }); });
-			 * 
-			 * button.click(function() { inputFile.click(); });
-			 * 
-			 * buttonSubmit.click(function() { let formData = new FormData();
-			 * 
-			 * files.forEach(file => { formData.append('file', file); });
-			 * 
-			 * 
-			 * $.ajax({ url: 'https://this_is_the_url_to_upload_to', data:
-			 * formData, type: 'POST', success: function(data) {
-			 * console.log('SUCCESS !!!'); }, error: function(data) {
-			 * console.log('ERROR !!!'); }, cache: false, processData: false,
-			 * contentType: false }); });
-			 * 
-			 * 
-			 */
-		  
+
+		$(function() {
+			let inputFile = $('#filesInput');
+			let button = $('#filesButton');
+			let buttonSubmit = $('#uploadButton');
+			let filesContainer = $('#filesArea');
+			let files = [];
+			let fileIDMap = {}
+			let fileUploadAJAXMap = {}
+
+			inputFile
+					.change(function() {
+						let newFiles = [];
+						for (let index = 0; index < inputFile[0].files.length; index++) {
+							let file = inputFile[0].files[index];
+							newFiles.push(file);
+							files.push(file);
+						}
+						for (let index = 0; index < newFiles.length; index++) {
+							let file = newFiles[index];
+							var ID = function() {
+								return '_'
+										+ Math.random().toString(36).substr(2,
+												9);
+							}();
+							let fileElement = $("<p>"
+									+ file.name
+									+ "</p><progress id='"
+									+ ID
+									+ "' value='0' max='100' style='width:300px;'>");
+
+							fileElement.data('fileData', file);
+							filesContainer.append(fileElement);
+							fileIDMap[file.name] = ID
+							fileElement.click(function(event) {
+								let fileElement = $(event.target);
+								let indexToRemove = files.indexOf(fileElement
+										.data('fileData'));
+								fileElement.remove();
+								$("#" + fileIDMap[fileElement.html()]).remove()
+								files.splice(indexToRemove, 1);
+								console.log(fileElement.html());
+								fileUploadAJAXMap[fileElement.html()].abort();
+							});
+							fileUploadAJAXMap[file.name] = $
+									.ajax({
+										url : server
+												+ "/knime/rest/v4/repository/jsEditorTempFolder"
+												+ timeStampInMs + "/"
+												+ file.name + ":data",
+										xhr : function() {
+											var myXhr = $.ajaxSettings.xhr();
+											if (myXhr.upload) {
+												myXhr.upload
+														.addEventListener(
+																'progress',
+																function(e) {
+
+																	if (e.lengthComputable) {
+																		var max = e.total;
+																		var current = e.loaded;
+
+																		var Percentage = (current * 100)
+																				/ max;
+																		console
+																				.log($("#"
+																						+ file.name));
+																		$(
+																				"#"
+																						+ fileIDMap[file.name])
+																				.attr(
+																						'value',
+																						Percentage);
+
+																		if (Percentage >= 100) {
+																			// process
+																			// completed
+																		}
+																	}
+																}, false);
+											}
+											return myXhr;
+										},
+										headers : {
+											Authorization : "Bearer" + JWT
+										},
+										data : file,
+										type : 'put',
+										success : function(data) {
+											console.log('SUCCESS !!!', data);
+											resourcesFiles
+													.push(server
+															+ "/knime/rest/v4/repository"
+															+ data.path);
+										},
+										error : function(data) {
+											console.log('ERROR !!!', data);
+										},
+										cache : false,
+										processData : false,
+										contentType : false
+									});
+						}
+
+					});
+
+			button.click(function() {
+				inputFile.click();
+			});
+
+			buttonSubmit.click(function() {
+				let formData = new FormData();
+				for (let index = 0; index < files.length; index++) {
+					let file = files[index];
+					formData.append('file', file);
+
+					console.log('Sending...');
+
+				}
+
+			});
+		});
+
 		$('body').append(' <div id="root"></div>');
 		$('#Metadata a').on('click', function(e) {
 			e.preventDefault()
@@ -616,14 +805,14 @@ fskeditorjs = function() {
 														&& codeMirrorContainer.CodeMirror) {
 													codeMirrorContainer.CodeMirror
 															.refresh();
-		
+
 												} else {
 													window.readme = window.CodeMirror
 															.fromTextArea(
 																	document
 																			.getElementById("READMEArea"),
 																	{
-																		readOnly:true,
+																		readOnly : true,
 																		lineNumbers : true,
 																		extraKeys : {
 																			"Ctrl-Space" : "autocomplete"
@@ -632,7 +821,7 @@ fskeditorjs = function() {
 																			name : "htmlmixed"
 																		}
 																	});
-		
+
 												}
 												var codeMirrorContainer = $(
 														'#sub26').find(
@@ -881,7 +1070,7 @@ fskeditorjs = function() {
 			fixInputCSS($(event.target));
 
 		});
-		
+
 		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
 		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
 		$("div[role*='tooltip']:contains('should match format')").parent()
@@ -893,5 +1082,8 @@ fskeditorjs = function() {
 
 		});
 	}
-	
+
+	if (parent !== undefined && parent.KnimePageLoader !== undefined) {
+		parent.KnimePageLoader.autoResize(window, frameElement.id)
+	}
 }();
