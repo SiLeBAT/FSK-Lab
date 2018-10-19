@@ -84,7 +84,7 @@ public class PMFWriterNodeModel extends NodeModel {
 		if (SchemaFactory.conformsM12DataSchema(spec)) {
 			schema = SchemaFactory.createM12DataSchema();
 			tuples = PmmUtilities.getTuples(inData[0], schema);
-			if (hasData(tuples)) {
+			if (WriterUtils.hasData(tuples)) {
 				boolean identical = identicalEstModels(tuples);
 				if (settings.isSecondary) {
 					if (identical) {
@@ -240,15 +240,5 @@ public class PMFWriterNodeModel extends NodeModel {
 			}
 		}
 		return true;
-	}
-
-	private static boolean hasData(List<KnimeTuple> tuples) {
-		for (KnimeTuple tuple : tuples) {
-			PmmXmlDoc mdData = tuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
-			if (mdData != null && mdData.size() > 0) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

@@ -108,7 +108,7 @@ class NodeModel extends org.knime.core.node.NodeModel {
 			schema = SchemaFactory.createM12DataSchema();
 			tuples = PmmUtilities.getTuples(inData[0], schema);
 
-			if (hasData(tuples)) {
+			if (WriterUtils.hasData(tuples)) {
 				boolean identical = identicalEstModels(tuples);
 				if (settings.isSecondary) {
 					modelType = identical ? ModelType.ONE_STEP_SECONDARY_MODEL : ModelType.TWO_STEP_SECONDARY_MODEL;
@@ -224,15 +224,5 @@ class NodeModel extends org.knime.core.node.NodeModel {
 			}
 		}
 		return true;
-	}
-
-	private static boolean hasData(List<KnimeTuple> tuples) {
-		for (KnimeTuple tuple : tuples) {
-			PmmXmlDoc mdData = tuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
-			if (mdData != null && mdData.size() > 0) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

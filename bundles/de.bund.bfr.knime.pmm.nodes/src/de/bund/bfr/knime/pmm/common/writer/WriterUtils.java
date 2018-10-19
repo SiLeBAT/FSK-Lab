@@ -327,6 +327,17 @@ public class WriterUtils {
 		ModelRule rule = new ModelRule(variable, formula, formulaName, modelClass, catModelId, references);
 		return rule;
 	}
+	
+	/** @return true if any tuple has a time series. */
+	public static boolean hasData(List<KnimeTuple> tuples) {
+		for (KnimeTuple tuple : tuples) {
+			PmmXmlDoc mdData = tuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
+			if (mdData != null && mdData.size() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public static void write(List<KnimeTuple> tuples, boolean isPMFX, String dir, String mdName, Metadata metadata,
 			boolean splitModels, String notes, ExecutionContext exec, ModelType modelType) throws Exception {
