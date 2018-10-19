@@ -152,7 +152,7 @@ class ReaderNodeModel extends NoInternalsModel {
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
 
-  static SBMLDocument readModel(Path path) throws IOException, XMLStreamException {
+  private static SBMLDocument readModel(Path path) throws IOException, XMLStreamException {
     try (InputStream stream = Files.newInputStream(path, StandardOpenOption.READ)) {
       return READER.readSBMLFromStream(stream);
     }
@@ -222,7 +222,7 @@ class ReaderNodeModel extends NoInternalsModel {
     return fskObj;
   }
 
-  public FskPortObject getEmbedSecondFSKObject(CombinedFskPortObject comFskObj) {
+  private FskPortObject getEmbedSecondFSKObject(CombinedFskPortObject comFskObj) {
     FskPortObject embedFSKObject = comFskObj.getSecondFskPortObject();
     if (embedFSKObject instanceof CombinedFskPortObject) {
       embedFSKObject = getEmbedSecondFSKObject((CombinedFskPortObject) embedFSKObject);
@@ -230,7 +230,7 @@ class ReaderNodeModel extends NoInternalsModel {
     return embedFSKObject;
   }
 
-  public FskPortObject readFskPortObject(CombineArchive archive, List<String> ListOfPaths,
+  private FskPortObject readFskPortObject(CombineArchive archive, List<String> ListOfPaths,
       int readLevel) throws Exception {
     Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
     // each sub Model has it's own working directory to avoid resource conflict.
