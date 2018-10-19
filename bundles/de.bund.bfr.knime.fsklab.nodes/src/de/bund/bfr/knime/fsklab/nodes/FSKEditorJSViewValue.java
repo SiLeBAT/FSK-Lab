@@ -79,8 +79,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     this.resourcesFiles = resourcesFiles;
   }
 
-  private boolean runningOnKnimeServer;
-
 
 
   public String getREADME() {
@@ -236,11 +234,5 @@ class FSKEditorJSViewValue extends JSONViewContent {
     this.modelMath = modelMath;
   }
 
-  public boolean isRunningOnKnimeServer() {
-    return runningOnKnimeServer;
-  }
 
-  public void setRunningOnKnimeServer(boolean runningOnKnimeServer) {
-    this.runningOnKnimeServer = runningOnKnimeServer;
-  }
 }
