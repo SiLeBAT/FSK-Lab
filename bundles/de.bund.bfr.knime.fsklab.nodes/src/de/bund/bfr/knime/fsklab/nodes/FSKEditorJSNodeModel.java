@@ -321,6 +321,7 @@ final class FSKEditorJSNodeModel
 
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
+      LOGGER.info("JS EDITOR  " + fskEditorProxyValue.isRunningOnKnimeServer());
       if (fskEditorProxyValue.isRunningOnKnimeServer()) {
         
         connectAndDownloadFilesOnServer(fskEditorProxyValue.getServerName(),

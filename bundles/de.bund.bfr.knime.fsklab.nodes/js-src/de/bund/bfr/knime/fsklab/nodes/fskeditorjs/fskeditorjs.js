@@ -488,7 +488,7 @@ fskeditorjs = function() {
 		_viewValue.serverName = server;
 		if (parent.KnimePageLoader) {
 			console.log("resources ",_viewValue.resourcesFiles);
-			runningOnKnimeServer = true;
+			_viewValue.runningOnKnimeServer = true;
 		}
 		return _viewValue;
 	};
