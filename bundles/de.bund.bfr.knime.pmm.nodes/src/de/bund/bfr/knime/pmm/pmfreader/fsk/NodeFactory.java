@@ -183,7 +183,6 @@ public class NodeFactory extends org.knime.core.node.NodeFactory<NodeModel> {
 
     // Add widgets
     DefaultNodeSettingsPane pane = new DefaultNodeSettingsPane();
-    pane.createNewGroup("Data source");
     pane.addDialogComponent(fileChooser);
 
     return pane;

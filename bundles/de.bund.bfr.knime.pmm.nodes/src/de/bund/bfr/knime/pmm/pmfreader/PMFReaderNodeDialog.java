@@ -54,7 +54,6 @@ public class PMFReaderNodeDialog extends DefaultNodeSettingsPane {
             fileExtension);
 
     // Add widgets
-    createNewGroup("Data Source");
     addDialogComponent(fileChooser);
 
     // start showing fileChooser
