@@ -60,7 +60,7 @@ public class PMFWriterNodeModel extends NodeModel {
 	private final PMFWriterNodeSettings settings = new PMFWriterNodeSettings();
 
 	private final boolean isPmfx;
-	
+
 	public PMFWriterNodeModel(final boolean isPmfx) {
 		super(1, 0);
 
@@ -68,7 +68,7 @@ public class PMFWriterNodeModel extends NodeModel {
 		long currentDate = Calendar.getInstance().getTimeInMillis();
 		this.settings.createdDate = currentDate;
 		this.settings.modifiedDate = currentDate;
-		
+
 		this.isPmfx = isPmfx;
 	}
 
@@ -87,17 +87,9 @@ public class PMFWriterNodeModel extends NodeModel {
 			if (WriterUtils.hasData(tuples)) {
 				boolean identical = identicalEstModels(tuples);
 				if (settings.isSecondary) {
-					if (identical) {
-						modelType = ModelType.ONE_STEP_SECONDARY_MODEL;
-					} else {
-						modelType = ModelType.TWO_STEP_SECONDARY_MODEL;
-					}
+					modelType = identical ? ModelType.ONE_STEP_SECONDARY_MODEL : ModelType.TWO_STEP_SECONDARY_MODEL;
 				} else {
-					if (identical) {
-						modelType = ModelType.ONE_STEP_TERTIARY_MODEL;
-					} else {
-						modelType = ModelType.TWO_STEP_TERTIARY_MODEL;
-					}
+					modelType = identical ? ModelType.ONE_STEP_TERTIARY_MODEL : ModelType.TWO_STEP_TERTIARY_MODEL;
 				}
 			} else {
 				modelType = ModelType.MANUAL_TERTIARY_MODEL;
@@ -161,11 +153,11 @@ public class PMFWriterNodeModel extends NodeModel {
 
 		metadata.setCreatedDate(new Date(settings.createdDate).toString());
 		metadata.setModifiedDate(new Date(settings.modifiedDate).toString());
-		
+
 		metadata.setType(modelType);
 		metadata.setRights(Strings.emptyToNull(settings.license));
 		metadata.setReferenceLink(Strings.emptyToNull(settings.referenceDescriptionLink));
-		
+
 		String modelNotes = Strings.emptyToNull(settings.notes);
 
 		String dir = settings.outPath;
@@ -184,7 +176,7 @@ public class PMFWriterNodeModel extends NodeModel {
 
 		return new BufferedDataTable[] {};
 	}
-	
+
 	@Override
 	protected void reset() {
 	}
