@@ -586,7 +586,27 @@ class ReaderNodeModel extends NoInternalsModel {
   }
 
   /**
-   * Load simulations from SedML to a BufferedDataContainer.
+   * @return list of simulations from a SedML document.
+   * 
+   * <p>
+   * In SedML every simulation is encoded as a {@link org.jlibsedml.Model} with the parameter values
+   * defined as a {@link org.jlibsedml.ChangeAttribute}.
+   * 
+   * <pre>{@code
+   * <model id="simulation1">
+   *   <listOfChanges>
+   *     <changeAttribute newValue="1" target="a" />
+   *     <changeAttribute newValue="2" target="b" />
+   *   </listOfChanges>
+   * </model>
+   * <model id="simulation2">
+   *   <listOfChanges>
+   *     <changeAttribute newValue="3" target="c" />
+   *     <changeAttribute newValue="4" target="d" />
+   *   </listOfChanges>
+   * </model> 
+   * }
+   * </pre>
    */
   private static List<FskSimulation> loadSimulations(SedML sedml) {
 
@@ -595,6 +615,7 @@ class ReaderNodeModel extends NoInternalsModel {
     for (org.jlibsedml.Model model : sedml.getModels()) {
 
       FskSimulation fskSimulation = new FskSimulation(model.getId());
+      
       for (Change change : model.getListOfChanges()) {
         if (change.getChangeKind().equals(SEDMLTags.CHANGE_ATTRIBUTE_KIND)) {
           ChangeAttribute ca = (ChangeAttribute) change;
