@@ -3,7 +3,7 @@
       id="de.bund.bfr.knime.pmm.feature"
       label="PMM Nodes"
       version="1.0.0.qualifier"
-      provider-name="BfR">
+      provider-name="German Federal Institute for Risk Assessment (BfR)">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
