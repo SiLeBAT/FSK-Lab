@@ -55,9 +55,6 @@ public class NodeFactory extends org.knime.core.node.NodeFactory<NodeModel> {
 
   private SettingsModelString modelString = new SettingsModelString("filename", "");
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public NodeModel createNodeModel() {
     return new NodeModel(0, 2) {
@@ -149,33 +146,21 @@ public class NodeFactory extends org.knime.core.node.NodeFactory<NodeModel> {
     };
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public int getNrNodeViews() {
     return 0;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public NodeView<NodeModel> createNodeView(final int viewIndex, final NodeModel nodeModel) {
     return null;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean hasDialog() {
     return true;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public NodeDialogPane createNodeDialogPane() {
     DialogComponentFileChooser fileChooser = new DialogComponentFileChooser(modelString,
