@@ -130,7 +130,6 @@ final class FSKEditorJSNodeModel
       if (val == null) {
         val = createEmptyViewValue();
       }
-
     }
     return val;
   }
@@ -140,7 +139,6 @@ final class FSKEditorJSNodeModel
 
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
   }
-
 
   /**
    * Downloads a file from a URL
@@ -215,8 +213,9 @@ final class FSKEditorJSNodeModel
       conn.setRequestProperty("Accept", "application/json");
 
       if (conn.getResponseCode() != 200) {
-        
-        throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode()+" >>>>>>> "+requestString);
+
+        throw new RuntimeException(
+            "Failed : HTTP error code : " + conn.getResponseCode() + " >>>>>>> " + requestString);
       }
 
       BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
@@ -229,19 +228,15 @@ final class FSKEditorJSNodeModel
       }
       conn.disconnect();
       for (String fileRequestString : resources) {
-        LOGGER.info("JS EDITOR  " + serverName+">>>>>>"+
-            fileRequestString+">>>>>>"+workingDir);
+        LOGGER.info(
+            "JS EDITOR  " + serverName + ">>>>>>" + fileRequestString + ">>>>>>" + workingDir);
         downloadFileToWorkingDir(fileRequestString, workingDir, JWT);
       }
       // TODO remove the temp folder on the server
     } catch (MalformedURLException e) {
-
       e.printStackTrace();
-
     } catch (IOException e) {
-
       e.printStackTrace();
-
     }
   }
 
@@ -263,7 +258,6 @@ final class FSKEditorJSNodeModel
         File readmeFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.getReadme()));
         readme = FileUtils.readFileToString(readmeFile, "UTF-8");
       }
-
 
       if (!nodeSettings.getWorkingDirectory().isEmpty()) {
         workingDirectory = nodeSettings.getWorkingDirectory();
@@ -323,9 +317,10 @@ final class FSKEditorJSNodeModel
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
       LOGGER.info("JS EDITOR  " + fskEditorProxyValue.getResourcesFiles());
-      //resources will only be available via online mode of the editor
-      if (fskEditorProxyValue.getResourcesFiles()!=null && fskEditorProxyValue.getResourcesFiles().length != 0 ) {
-        
+      // resources will only be available via online mode of the editor
+      if (fskEditorProxyValue.getResourcesFiles() != null
+          && fskEditorProxyValue.getResourcesFiles().length != 0) {
+
         connectAndDownloadFilesOnServer(fskEditorProxyValue.getServerName(),
             fskEditorProxyValue.getResourcesFiles(), outObj.getWorkingDirectory());
       }
@@ -336,17 +331,13 @@ final class FSKEditorJSNodeModel
       outObj.packages.addAll(new ArrayList<>(librariesSet));
     }
 
-
     return new PortObject[] {outObj};
   }
 
   private static String FromEOjectToJSON(final EObject eObject) throws JsonProcessingException {
-
-
     ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
     String jsonStr = objectMapper.writeValueAsString(eObject);
     return jsonStr;
-
   }
 
   private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType)
