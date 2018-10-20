@@ -220,7 +220,7 @@ public class XLSReader {
 			}
 
 			if (hasData(agentDetailsCell)) {
-				((AgentXml) agentXml.get(0)).setDetail(getData(agentDetailsCell));
+				((AgentXml) agentXml.get(0)).detail = getData(agentDetailsCell);
 			}
 
 			if (hasData(matrixDetailsCell)) {
@@ -497,7 +497,7 @@ public class XLSReader {
 			}
 
 			if (hasData(agentDetailsCell)) {
-				((AgentXml) agentXml.get(0)).setDetail(getData(agentDetailsCell));
+				((AgentXml) agentXml.get(0)).detail = getData(agentDetailsCell);
 			}
 
 			if (hasData(matrixDetailsCell)) {

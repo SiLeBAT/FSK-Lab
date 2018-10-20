@@ -237,8 +237,7 @@ public class PrimaryEstimationThread implements Runnable {
 
 		String dataName = combaseId != null ? combaseId : String
 				.valueOf(condId);
-		String agentName = agent.getName() != null ? agent.getName() : agent
-				.getDetail();
+		String agentName = agent.name != null ? agent.name : agent.detail;
 		String matrixName = matrix.getName() != null ? matrix.getName()
 				: matrix.getDetail();
 		String modelName = ((CatalogModelXml) tuple.getPmmXml(

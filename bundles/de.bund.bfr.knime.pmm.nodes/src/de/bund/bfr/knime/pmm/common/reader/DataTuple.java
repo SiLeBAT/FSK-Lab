@@ -58,11 +58,11 @@ public class DataTuple {
 
 		PMFSpecies species = doc.getConcentrationOntologyTerm().getSpecies();
 		AgentXml originalAgentXml = new AgentXml();
-		originalAgentXml.setName(species.getName());
+		originalAgentXml.name = species.getName();
 		MDAgentXml agentXml = new MDAgentXml();
 		agentXml.setName(species.getName());
 		if (species.isSetDetail()) {
-			originalAgentXml.setDetail(species.getDetail());
+			originalAgentXml.detail = species.getDetail();
 			agentXml.setDetail(species.getDetail());
 		}
 

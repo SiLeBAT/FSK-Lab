@@ -259,7 +259,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 			if (set.getAgentDetails().containsKey(id)) {
 				agentDetailList.add(set.getAgentDetails().get(id));
 			} else {
-				agentDetailList.add(((AgentXml) tuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0)).getDetail());
+				agentDetailList.add(((AgentXml) tuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0)).detail);
 			}
 
 			if (set.getMatrices().containsKey(id)) {
@@ -1065,7 +1065,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 			AgentXml agent = (AgentXml) value;
 
 			if (agent != null) {
-				label.setText(agent.getName());
+				label.setText(agent.name);
 			} else {
 				label.setText("");
 			}
@@ -1105,7 +1105,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 			Integer id;
 
 			if (agent != null) {
-				id = DBKernel.openAgentDBWindow(button, agent.getId());
+				id = DBKernel.openAgentDBWindow(button, agent.id);
 			} else {
 				id = DBKernel.openAgentDBWindow(button, null);
 			}

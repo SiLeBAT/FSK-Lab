@@ -175,10 +175,10 @@ public class Agent implements ViewValue {
 	 */
 	public static Agent toAgent(AgentXml agentXml) {
 		Agent agent = new Agent();
-		agent.setId(agentXml.getId());
-		agent.setName(agentXml.getName());
-		agent.setDetail(agentXml.getDetail());
-		agent.setDbuuid(agentXml.getDbuuid());
+		agent.setId(agentXml.id);
+		agent.setName(agentXml.name);
+		agent.setDetail(agentXml.detail);
+		agent.setDbuuid(agentXml.dbuuid);
 		
 		return agent;
 	}

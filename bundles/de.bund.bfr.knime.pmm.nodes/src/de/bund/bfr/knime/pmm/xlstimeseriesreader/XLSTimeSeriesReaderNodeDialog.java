@@ -362,7 +362,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 			Integer id;
 
 			if (set.getAgent() != null) {
-				id = DBKernel.openAgentDBWindow(agentButton, set.getAgent().getId());
+				id = DBKernel.openAgentDBWindow(agentButton, set.getAgent().id);
 			} else {
 				id = DBKernel.openAgentDBWindow(agentButton, null);
 			}
@@ -421,7 +421,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 
 					if (set.getAgentMappings().get(value) != null) {
 						id = DBKernel.openAgentDBWindow(agentButtons.get(value),
-								set.getAgentMappings().get(value).getId());
+								set.getAgentMappings().get(value).id);
 					} else {
 						id = DBKernel.openAgentDBWindow(agentButtons.get(value), null);
 					}
@@ -627,7 +627,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 		UI.select(agentBox, set.getAgentColumn(), DO_NOT_USE);
 
 		if (set.getAgent() != null) {
-			agentButton.setText(set.getAgent().getName());
+			agentButton.setText(set.getAgent().name);
 		} else {
 			agentButton.setText(OTHER_PARAMETER);
 		}
@@ -661,7 +661,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 				JButton button = new JButton();
 
 				if (set.getAgentMappings().get(value) != null) {
-					button.setText(set.getAgentMappings().get(value).getName());
+					button.setText(set.getAgentMappings().get(value).name);
 				} else {
 					button.setText(OTHER_PARAMETER);
 				}

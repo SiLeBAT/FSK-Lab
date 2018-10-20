@@ -298,9 +298,9 @@ public class ModelCombiner {
 				comments.put(id, new LinkedHashSet<String>());
 			}
 
-			String organism = ((AgentXml) tuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0)).getName();
+			String organism = ((AgentXml) tuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0)).name;
 			String matrix = ((MatrixXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0)).getName();
-			String organismDetail = ((AgentXml) tuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0)).getDetail();
+			String organismDetail = ((AgentXml) tuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0)).detail;
 			String matrixDetail = ((MatrixXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0)).getDetail();
 			String comment = ((MdInfoXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MDINFO).get(0)).getComment();
 
@@ -377,8 +377,8 @@ public class ModelCombiner {
 			MatrixXml matrixXml = new MatrixXml();
 			MdInfoXml infoXml = new MdInfoXml(null, null, comment, null, null);
 
-			organismXml.setName(organism);
-			organismXml.setDetail(organismDetail);
+			organismXml.name = organism;
+			organismXml.detail = organismDetail;
 			matrixXml.setName(matrix);
 			matrixXml.setDetail(matrixDetail);
 

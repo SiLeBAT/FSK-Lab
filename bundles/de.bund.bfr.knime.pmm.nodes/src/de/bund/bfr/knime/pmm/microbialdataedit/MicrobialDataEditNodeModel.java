@@ -109,8 +109,7 @@ public class MicrobialDataEditNodeModel extends NodeModel {
 				PmmXmlDoc agentXml = tuple
 						.getPmmXml(TimeSeriesSchema.ATT_AGENT);
 
-				((AgentXml) agentXml.get(0)).setDetail(set.getAgentDetails()
-						.get(id));
+				((AgentXml) agentXml.get(0)).detail = set.getAgentDetails().get(id);
 
 				tuple.setValue(TimeSeriesSchema.ATT_AGENT, agentXml);
 			}

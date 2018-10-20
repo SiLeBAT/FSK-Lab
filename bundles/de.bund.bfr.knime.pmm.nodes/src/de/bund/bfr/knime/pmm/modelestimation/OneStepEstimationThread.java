@@ -498,8 +498,7 @@ public class OneStepEstimationThread implements Runnable {
 		MatrixXml matrix = (MatrixXml) tuple.getPmmXml(
 				TimeSeriesSchema.ATT_MATRIX).get(0);
 
-		String agentName = agent.getName() != null ? agent.getName() : agent
-				.getDetail();
+		String agentName = agent.name != null ? agent.name : agent.detail;
 		String matrixName = matrix.getName() != null ? matrix.getName()
 				: matrix.getDetail();
 		String modelName = ((CatalogModelXml) tuple.getPmmXml(

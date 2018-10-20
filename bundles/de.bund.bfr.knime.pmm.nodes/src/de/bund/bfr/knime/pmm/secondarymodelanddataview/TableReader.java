@@ -305,7 +305,7 @@ public class TableReader {
 						TimeSeriesSchema.ATT_MATRIX).get(0);
 
 				if (agent != null) {
-					agentMap.get(id).add(agent.getName());
+					agentMap.get(id).add(agent.name);
 				}
 
 				if (matrix != null) {

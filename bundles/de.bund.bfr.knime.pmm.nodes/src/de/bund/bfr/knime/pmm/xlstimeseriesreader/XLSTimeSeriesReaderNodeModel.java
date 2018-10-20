@@ -84,9 +84,9 @@ public class XLSTimeSeriesReaderNodeModel extends NodeModel {
 			for (KnimeTuple tuple : tuples) {
 				PmmXmlDoc agentXml = tuple.getPmmXml(TimeSeriesSchema.ATT_AGENT);
 
-				((AgentXml) agentXml.get(0)).setId(set.getAgent().getId());
-				((AgentXml) agentXml.get(0)).setName(set.getAgent().getName());
-				((AgentXml) agentXml.get(0)).setDbuuid(set.getAgent().getDbuuid());
+				((AgentXml) agentXml.get(0)).id = set.getAgent().id;
+				((AgentXml) agentXml.get(0)).name = set.getAgent().name;
+				((AgentXml) agentXml.get(0)).dbuuid = set.getAgent().dbuuid;
 				tuple.setValue(TimeSeriesSchema.ATT_AGENT, agentXml);
 			}
 		}

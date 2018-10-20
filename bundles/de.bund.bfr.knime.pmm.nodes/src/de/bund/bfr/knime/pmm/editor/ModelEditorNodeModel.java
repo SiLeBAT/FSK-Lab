@@ -217,10 +217,10 @@ public final class ModelEditorNodeModel
 		if(agentXml != null)
 		{
 			Agent agent = new Agent();
-			agent.setId(agentXml.getId());
-			agent.setName(agentXml.getName());
-			agent.setDetail(agentXml.getDetail());
-			agent.setDbuuid(agentXml.getDbuuid());
+			agent.setId(agentXml.id);
+			agent.setName(agentXml.name);
+			agent.setDetail(agentXml.detail);
+			agent.setDbuuid(agentXml.dbuuid);
 			outTuple.setAgent(agent);
 		}
 

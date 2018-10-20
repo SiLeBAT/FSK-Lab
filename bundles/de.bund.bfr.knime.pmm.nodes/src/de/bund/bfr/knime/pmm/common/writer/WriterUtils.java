@@ -194,17 +194,17 @@ public class WriterUtils {
 
 	public static PMFSpecies createSpecies(AgentXml agentXml, String unit, String compartmentId) {
 		// Creates species and adds it to the model
-		String speciesId = PMFUtil.createId("species" + agentXml.getId());
+		String speciesId = PMFUtil.createId("species" + agentXml.id);
 		String speciesUnit = (unit == null) ? "dimensionless" : PMFUtil.createId(unit);
-		String speciesName = (String) DBKernel.getValue("Agenzien", "ID", agentXml.getId().toString(), "Agensname");
+		String speciesName = (String) DBKernel.getValue("Agenzien", "ID", agentXml.id.toString(), "Agensname");
 		String casNumber;
 		if (speciesName == null) {
-			speciesName = agentXml.getName();
+			speciesName = agentXml.name;
 			casNumber = null;
 		} else {
-			casNumber = (String) DBKernel.getValue("Agenzien", "ID", agentXml.getId().toString(), "Cas_Nummer");
+			casNumber = (String) DBKernel.getValue("Agenzien", "ID", agentXml.id.toString(), "Cas_Nummer");
 		}
-		String speciesDetail = agentXml.getDetail();
+		String speciesDetail = agentXml.detail;
 
 		PMFSpecies species = SBMLFactory.createPMFSpecies(compartmentId, speciesId, speciesName, speciesUnit, casNumber,
 				speciesDetail, null);

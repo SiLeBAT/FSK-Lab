@@ -342,9 +342,9 @@ public class TableReader {
 						.put(id, modelName + " (" + dataName + ") " + formula);
 				stringColumns.get(AttributeUtilities.DATAID).add(dataName);
 				stringColumns.get(TimeSeriesSchema.ATT_AGENT).add(
-						agent.getName());
+						agent.name);
 				stringColumns.get(AttributeUtilities.AGENT_DETAILS).add(
-						agent.getDetail());
+						agent.detail);
 				stringColumns.get(TimeSeriesSchema.ATT_MATRIX).add(
 						matrix.getName());
 				stringColumns.get(AttributeUtilities.MATRIX_DETAILS).add(

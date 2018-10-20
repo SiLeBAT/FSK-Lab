@@ -532,7 +532,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 			Integer id;
 
 			if (set.getAgent() != null) {
-				id = DBKernel.openAgentDBWindow(agentButton, set.getAgent().getId());
+				id = DBKernel.openAgentDBWindow(agentButton, set.getAgent().id);
 			} else {
 				id = DBKernel.openAgentDBWindow(agentButton, null);
 			}
@@ -601,7 +601,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 
 					if (set.getAgentMappings().get(value) != null) {
 						id = DBKernel.openAgentDBWindow(agentButtons.get(value),
-								set.getAgentMappings().get(value).getId());
+								set.getAgentMappings().get(value).id);
 					} else {
 						id = DBKernel.openAgentDBWindow(agentButtons.get(value), null);
 					}
@@ -1029,7 +1029,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 		UI.select(agentBox, set.getAgentColumn(), SettingsHelper.DO_NOT_USE);
 
 		if (set.getAgent() != null) {
-			agentButton.setText(set.getAgent().getName());
+			agentButton.setText(set.getAgent().name);
 		} else {
 			agentButton.setText(SettingsHelper.OTHER_PARAMETER);
 		}
@@ -1063,7 +1063,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 				JButton button = new JButton();
 
 				if (set.getAgentMappings().get(value) != null) {
-					button.setText(set.getAgentMappings().get(value).getName());
+					button.setText(set.getAgentMappings().get(value).name);
 				} else {
 					button.setText(SettingsHelper.OTHER_PARAMETER);
 				}

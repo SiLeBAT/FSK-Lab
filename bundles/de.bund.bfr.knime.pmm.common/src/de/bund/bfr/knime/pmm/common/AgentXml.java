@@ -32,10 +32,10 @@ public class AgentXml implements PmmXmlElementConvertable {
 	private static final String ATT_DETAIL = "detail";
 	private static final String ATT_DBUUID = "dbuuid";
 
-	private Integer id;
-	private String name;
-	private String detail;
-	private String dbuuid;
+	public Integer id;
+	public String name;
+	public String detail;
+	public String dbuuid;
 
 	public AgentXml() {
 		this(MathUtilities.getRandomNegativeInt(), null, null, null);
@@ -46,8 +46,7 @@ public class AgentXml implements PmmXmlElementConvertable {
 	}
 
 	public AgentXml(AgentXml agent) {
-		this(agent.getId(), agent.getName(), agent.getDetail(), agent
-				.getDbuuid());
+		this(agent.id, agent.name, agent.detail, agent.dbuuid);
 	}
 
 	public AgentXml(Integer id, String name, String detail, String dbuuid) {
@@ -58,9 +57,8 @@ public class AgentXml implements PmmXmlElementConvertable {
 	}
 
 	public AgentXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME),
-				XmlHelper.getString(el, ATT_DETAIL), XmlHelper.getString(el,
-						ATT_DBUUID));
+		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_DETAIL),
+				XmlHelper.getString(el, ATT_DBUUID));
 	}
 
 	@Override
@@ -73,37 +71,5 @@ public class AgentXml implements PmmXmlElementConvertable {
 		ret.setAttribute(ATT_DBUUID, XmlHelper.getNonNull(dbuuid));
 
 		return ret;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDetail() {
-		return detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	public void setDbuuid(String dbuuid) {
-		this.dbuuid = dbuuid;
 	}
 }

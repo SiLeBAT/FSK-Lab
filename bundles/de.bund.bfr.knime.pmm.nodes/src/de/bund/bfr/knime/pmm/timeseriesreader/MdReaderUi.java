@@ -306,12 +306,12 @@ public class MdReaderUi extends JPanel {
         		if (el instanceof AgentXml) {
         			AgentXml ax = (AgentXml) el;
         			if (agentID > 0) {
-        				int id = ax.getId();
+        				int id = ax.id;
         				if (agentID != id) return false;
         			}
         			else {
-            			String s = ax.getName();
-            			String sd = ax.getDetail();
+            			String s = ax.name;
+            			String sd = ax.detail;
             			if (s == null) s = ""; else s = s.toLowerCase();
             			if (sd == null) sd = ""; else sd = sd.toLowerCase();
             			if (!s.contains(agentString.toLowerCase()) && !sd.contains(agentString.toLowerCase())) return false;

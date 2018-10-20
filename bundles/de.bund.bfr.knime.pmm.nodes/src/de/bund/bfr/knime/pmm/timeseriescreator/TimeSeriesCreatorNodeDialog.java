@@ -88,8 +88,7 @@ import de.bund.bfr.knime.pmm.common.units.Category;
  * 
  * @author Christian Thoens
  */
-public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
-		ActionListener {
+public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements ActionListener {
 
 	private static final int ROW_COUNT = 1000;
 	private static final int DEFAULT_TIMESTEPNUMBER = 10;
@@ -168,67 +167,39 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 		idField = new StringTextField();
 		commentField = new StringTextField(true);
 		temperatureField = new DoubleTextField(true);
-		temperatureField.setPreferredSize(new Dimension(100, temperatureField
-				.getPreferredSize().height));
-		phField = new DoubleTextField(PmmConstants.MIN_PH, PmmConstants.MAX_PH,
-				true);
-		phField.setPreferredSize(new Dimension(100,
-				phField.getPreferredSize().height));
-		waterActivityField = new DoubleTextField(
-				PmmConstants.MIN_WATERACTIVITY, PmmConstants.MAX_WATERACTIVITY,
-				true);
-		waterActivityField.setPreferredSize(new Dimension(100,
-				waterActivityField.getPreferredSize().height));
-		timeBox = new JComboBox<>(Categories.getTimeCategory().getAllUnits()
-				.toArray(new String[0]));
-		logcBox = new JComboBox<>(Categories.getUnitsFromCategories(
-				Categories.getConcentrationCategories()).toArray(new String[0]));
-		tempBox = new JComboBox<>(Categories.getTempCategory().getAllUnits()
-				.toArray(new String[0]));
-		phBox = new JComboBox<>(Categories.getPhCategory().getAllUnits()
-				.toArray(new String[0]));
-		awBox = new JComboBox<>(Categories.getAwCategory().getAllUnits()
-				.toArray(new String[0]));
+		temperatureField.setPreferredSize(new Dimension(100, temperatureField.getPreferredSize().height));
+		phField = new DoubleTextField(PmmConstants.MIN_PH, PmmConstants.MAX_PH, true);
+		phField.setPreferredSize(new Dimension(100, phField.getPreferredSize().height));
+		waterActivityField = new DoubleTextField(PmmConstants.MIN_WATERACTIVITY, PmmConstants.MAX_WATERACTIVITY, true);
+		waterActivityField.setPreferredSize(new Dimension(100, waterActivityField.getPreferredSize().height));
+		timeBox = new JComboBox<>(Categories.getTimeCategory().getAllUnits().toArray(new String[0]));
+		logcBox = new JComboBox<>(
+				Categories.getUnitsFromCategories(Categories.getConcentrationCategories()).toArray(new String[0]));
+		tempBox = new JComboBox<>(Categories.getTempCategory().getAllUnits().toArray(new String[0]));
+		phBox = new JComboBox<>(Categories.getPhCategory().getAllUnits().toArray(new String[0]));
+		awBox = new JComboBox<>(Categories.getAwCategory().getAllUnits().toArray(new String[0]));
 
-		settingsPanel.add(
-				new JLabel(AttributeUtilities
-						.getName(TimeSeriesSchema.ATT_LITMD) + ":"),
+		settingsPanel.add(new JLabel(AttributeUtilities.getName(TimeSeriesSchema.ATT_LITMD) + ":"),
 				createConstraints(0, 0));
-		settingsPanel.add(
-				new JLabel(AttributeUtilities
-						.getName(TimeSeriesSchema.ATT_AGENT) + ":"),
+		settingsPanel.add(new JLabel(AttributeUtilities.getName(TimeSeriesSchema.ATT_AGENT) + ":"),
 				createConstraints(0, 2));
-		settingsPanel.add(
-				new JLabel(AttributeUtilities
-						.getName(TimeSeriesSchema.ATT_MATRIX) + ":"),
+		settingsPanel.add(new JLabel(AttributeUtilities.getName(TimeSeriesSchema.ATT_MATRIX) + ":"),
 				createConstraints(0, 3));
 		settingsPanel.add(new JLabel("ID:"), createConstraints(0, 4));
-		settingsPanel.add(new JLabel(MdInfoXml.ATT_COMMENT + ":"),
-				createConstraints(0, 5));
-		settingsPanel.add(
-				new JLabel(AttributeUtilities.getName(AttributeUtilities.TIME)
-						+ ":"), createConstraints(0, 6));
-		settingsPanel.add(
-				new JLabel(AttributeUtilities
-						.getName(AttributeUtilities.CONCENTRATION) + ":"),
+		settingsPanel.add(new JLabel(MdInfoXml.ATT_COMMENT + ":"), createConstraints(0, 5));
+		settingsPanel.add(new JLabel(AttributeUtilities.getName(AttributeUtilities.TIME) + ":"),
+				createConstraints(0, 6));
+		settingsPanel.add(new JLabel(AttributeUtilities.getName(AttributeUtilities.CONCENTRATION) + ":"),
 				createConstraints(0, 7));
-		settingsPanel.add(
-				new JLabel(AttributeUtilities
-						.getName(AttributeUtilities.ATT_TEMPERATURE) + ":"),
+		settingsPanel.add(new JLabel(AttributeUtilities.getName(AttributeUtilities.ATT_TEMPERATURE) + ":"),
 				createConstraints(0, 8));
-		settingsPanel.add(
-				new JLabel(AttributeUtilities
-						.getName(AttributeUtilities.ATT_PH) + ":"),
+		settingsPanel.add(new JLabel(AttributeUtilities.getName(AttributeUtilities.ATT_PH) + ":"),
 				createConstraints(0, 9));
-		settingsPanel.add(
-				new JLabel(AttributeUtilities
-						.getName(AttributeUtilities.ATT_AW) + ":"),
+		settingsPanel.add(new JLabel(AttributeUtilities.getName(AttributeUtilities.ATT_AW) + ":"),
 				createConstraints(0, 10));
 
-		settingsPanel.add(new JScrollPane(literatureList),
-				new GridBagConstraints(1, 0, 2, 2, 0, 2,
-						GridBagConstraints.LINE_START, GridBagConstraints.BOTH,
-						new Insets(3, 3, 3, 3), 0, 0));
+		settingsPanel.add(new JScrollPane(literatureList), new GridBagConstraints(1, 0, 2, 2, 0, 2,
+				GridBagConstraints.LINE_START, GridBagConstraints.BOTH, new Insets(3, 3, 3, 3), 0, 0));
 		settingsPanel.add(agentButton, createConstraints(1, 2));
 		settingsPanel.add(matrixButton, createConstraints(1, 3));
 		settingsPanel.add(idField, createConstraints(1, 4));
@@ -271,19 +242,18 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 	}
 
 	@Override
-	protected void loadSettingsFrom(final NodeSettingsRO settings,
-			final DataTableSpec[] specs) throws NotConfigurableException {
+	protected void loadSettingsFrom(final NodeSettingsRO settings, final DataTableSpec[] specs)
+			throws NotConfigurableException {
 		set = new SettingsHelper();
 		set.loadSettings(settings);
 
-		literatureList.setListData(set.getLiterature().toArray(
-				new LiteratureItem[0]));
+		literatureList.setListData(set.getLiterature().toArray(new LiteratureItem[0]));
 
 		timeBox.setSelectedItem(set.getTimeUnit());
 		logcBox.setSelectedItem(set.getLogcUnit());
 
 		if (set.getAgent() != null) {
-			agentButton.setText(set.getAgent().getName());
+			agentButton.setText(set.getAgent().name);
 		}
 
 		if (set.getMatrix() != null) {
@@ -330,8 +300,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 				condValueFields.get(0).setValue(misc.getValue());
 
 				for (String category : misc.getCategories()) {
-					for (String u : Categories.getCategory(category)
-							.getAllUnits()) {
+					for (String u : Categories.getCategory(category).getAllUnits()) {
 						condUnitFields.get(0).addItem(u);
 					}
 				}
@@ -342,8 +311,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 	}
 
 	@Override
-	protected void saveSettingsTo(NodeSettingsWO settings)
-			throws InvalidSettingsException {
+	protected void saveSettingsTo(NodeSettingsWO settings) throws InvalidSettingsException {
 		if (!temperatureField.isValueValid()) {
 			throw new InvalidSettingsException("Invalid Value");
 		}
@@ -374,26 +342,21 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 		List<MiscXml> miscValues = new ArrayList<>();
 
 		if (temperatureField.getValue() != null) {
-			miscValues.add(new MiscXml(AttributeUtilities.ATT_TEMPERATURE_ID,
-					AttributeUtilities.ATT_TEMPERATURE, null, temperatureField
-							.getValue(), Arrays.asList(Categories
-							.getTempCategory().getName()), (String) tempBox
-							.getSelectedItem()));
+			miscValues.add(new MiscXml(AttributeUtilities.ATT_TEMPERATURE_ID, AttributeUtilities.ATT_TEMPERATURE, null,
+					temperatureField.getValue(), Arrays.asList(Categories.getTempCategory().getName()),
+					(String) tempBox.getSelectedItem()));
 		}
 
 		if (phField.getValue() != null) {
-			miscValues.add(new MiscXml(AttributeUtilities.ATT_PH_ID,
-					AttributeUtilities.ATT_PH, null, phField.getValue(), Arrays
-							.asList(Categories.getPhCategory().getName()),
-					(String) phBox.getSelectedItem()));
+			miscValues
+					.add(new MiscXml(AttributeUtilities.ATT_PH_ID, AttributeUtilities.ATT_PH, null, phField.getValue(),
+							Arrays.asList(Categories.getPhCategory().getName()), (String) phBox.getSelectedItem()));
 		}
 
 		if (waterActivityField.getValue() != null) {
-			miscValues.add(new MiscXml(AttributeUtilities.ATT_AW_ID,
-					AttributeUtilities.ATT_AW, null, waterActivityField
-							.getValue(), Arrays.asList(Categories
-							.getAwCategory().getName()), (String) awBox
-							.getSelectedItem()));
+			miscValues.add(new MiscXml(AttributeUtilities.ATT_AW_ID, AttributeUtilities.ATT_AW, null,
+					waterActivityField.getValue(), Arrays.asList(Categories.getAwCategory().getName()),
+					(String) awBox.getSelectedItem()));
 		}
 
 		for (int i = 0; i < conditions.size(); i++) {
@@ -413,8 +376,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 			Double logc = table.getLogc(i);
 
 			if (time != null || logc != null) {
-				timeSeries.add(new TimeSeriesXml(null, time, timeUnit, logc,
-						concentrationUnit, null, null));
+				timeSeries.add(new TimeSeriesXml(null, time, timeUnit, logc, concentrationUnit, null, null));
 			}
 		}
 
@@ -477,8 +439,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 				table.repaint();
 			}
 		} else if (event.getSource() == addLiteratureButton) {
-			Integer id = DBKernel.openLiteratureDBWindow(addLiteratureButton,
-					null);
+			Integer id = DBKernel.openLiteratureDBWindow(addLiteratureButton, null);
 			Set<Integer> ids = new LinkedHashSet<>();
 
 			for (LiteratureItem item : set.getLiterature()) {
@@ -489,8 +450,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 				LiteratureItem l = DBUtilities.getLiteratureItem(id);
 
 				set.getLiterature().add(l);
-				literatureList.setListData(set.getLiterature().toArray(
-						new LiteratureItem[0]));
+				literatureList.setListData(set.getLiterature().toArray(new LiteratureItem[0]));
 			}
 		} else if (event.getSource() == removeLiteratureButton) {
 			if (literatureList.getSelectedIndices().length > 0) {
@@ -502,43 +462,36 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 					set.getLiterature().remove(indices[i]);
 				}
 
-				literatureList.setListData(set.getLiterature().toArray(
-						new LiteratureItem[0]));
+				literatureList.setListData(set.getLiterature().toArray(new LiteratureItem[0]));
 			}
 		} else if (event.getSource() == agentButton) {
 			Integer id;
 
 			if (set.getAgent() != null) {
-				id = DBKernel.openAgentDBWindow(agentButton, set.getAgent()
-						.getId());
+				id = DBKernel.openAgentDBWindow(agentButton, set.getAgent().id);
 			} else {
 				id = DBKernel.openAgentDBWindow(agentButton, null);
 			}
 
 			if (id != null) {
-				String name = DBKernel.getValue("Agenzien", "ID", id + "",
-						"Agensname") + "";
+				String name = DBKernel.getValue("Agenzien", "ID", id + "", "Agensname") + "";
 
-				set.setAgent(new AgentXml(id, name, null, DBKernel
-						.getLocalDBUUID()));
+				set.setAgent(new AgentXml(id, name, null, DBKernel.getLocalDBUUID()));
 				agentButton.setText(name);
 			}
 		} else if (event.getSource() == matrixButton) {
 			Integer id;
 
 			if (set.getMatrix() != null) {
-				id = DBKernel.openMatrixDBWindow(matrixButton, set.getMatrix()
-						.getId());
+				id = DBKernel.openMatrixDBWindow(matrixButton, set.getMatrix().getId());
 			} else {
 				id = DBKernel.openMatrixDBWindow(matrixButton, null);
 			}
 
 			if (id != null) {
-				String name = DBKernel.getValue("Matrices", "ID", id + "",
-						"Matrixname") + "";
+				String name = DBKernel.getValue("Matrices", "ID", id + "", "Matrixname") + "";
 
-				set.setMatrix(new MatrixXml(id, name, null, DBKernel
-						.getLocalDBUUID()));
+				set.setMatrix(new MatrixXml(id, name, null, DBKernel.getLocalDBUUID()));
 				matrixButton.setText(name);
 			}
 		} else if (addButtons.contains(event.getSource())) {
@@ -552,25 +505,20 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 			Integer id;
 
 			if (conditions.get(i) != null) {
-				id = DBKernel.openMiscDBWindow(condButtons.get(i), conditions
-						.get(i).getId());
+				id = DBKernel.openMiscDBWindow(condButtons.get(i), conditions.get(i).getId());
 			} else {
 				id = DBKernel.openMiscDBWindow(condButtons.get(i), null);
 			}
 
 			if (id != null) {
-				String name = DBKernel.getValue("SonstigeParameter", "ID", id
-						+ "", "Parameter")
-						+ "";
-				String description = DBKernel.getValue("SonstigeParameter",
-						"ID", id + "", "Beschreibung") + "";
-				List<String> categoryIDs = Arrays.asList(DBKernel
-						.getValue("SonstigeParameter", "ID", id + "",
-								"Kategorie").toString().split(","));
+				String name = DBKernel.getValue("SonstigeParameter", "ID", id + "", "Parameter") + "";
+				String description = DBKernel.getValue("SonstigeParameter", "ID", id + "", "Beschreibung") + "";
+				List<String> categoryIDs = Arrays.asList(
+						DBKernel.getValue("SonstigeParameter", "ID", id + "", "Kategorie").toString().split(","));
 
 				condButtons.get(i).setText(name);
-				conditions.set(i, new MiscXml(id, name, description, null,
-						categoryIDs, null, DBKernel.getLocalDBUUID()));
+				conditions.set(i,
+						new MiscXml(id, name, description, null, categoryIDs, null, DBKernel.getLocalDBUUID()));
 				condUnitFields.get(i).removeAllItems();
 
 				for (String categoryID : categoryIDs) {
@@ -580,8 +528,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 						condUnitFields.get(i).addItem(u);
 					}
 
-					condUnitFields.get(i).setSelectedItem(
-							category.getStandardUnit());
+					condUnitFields.get(i).setSelectedItem(category.getStandardUnit());
 				}
 			}
 		}
@@ -594,8 +541,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 			addButton.addActionListener(this);
 
 			addButtons.add(0, addButton);
-			settingsPanel.add(addButton,
-					createConstraints(3, settingsPanelRows));
+			settingsPanel.add(addButton, createConstraints(3, settingsPanelRows));
 		} else {
 			JButton addButton = new JButton("+");
 			JButton removeButton = new JButton("-");
@@ -606,8 +552,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 			addButton.addActionListener(this);
 			removeButton.addActionListener(this);
 			button.addActionListener(this);
-			valueField.setPreferredSize(new Dimension(100, valueField
-					.getPreferredSize().height));
+			valueField.setPreferredSize(new Dimension(100, valueField.getPreferredSize().height));
 
 			for (JButton c : addButtons) {
 				settingsPanel.remove(c);
@@ -637,28 +582,23 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 			condUnitFields.add(i, unitBox);
 
 			for (int j = 0; j < addButtons.size(); j++) {
-				settingsPanel.add(addButtons.get(j),
-						createConstraints(3, settingsPanelRows + j));
+				settingsPanel.add(addButtons.get(j), createConstraints(3, settingsPanelRows + j));
 			}
 
 			for (int j = 0; j < removeButtons.size(); j++) {
-				settingsPanel.add(removeButtons.get(j),
-						createConstraints(4, settingsPanelRows + j));
+				settingsPanel.add(removeButtons.get(j), createConstraints(4, settingsPanelRows + j));
 			}
 
 			for (int j = 0; j < condButtons.size(); j++) {
-				settingsPanel.add(condButtons.get(j),
-						createConstraints(0, settingsPanelRows + j));
+				settingsPanel.add(condButtons.get(j), createConstraints(0, settingsPanelRows + j));
 			}
 
 			for (int j = 0; j < condValueFields.size(); j++) {
-				settingsPanel.add(condValueFields.get(j),
-						createConstraints(1, settingsPanelRows + j));
+				settingsPanel.add(condValueFields.get(j), createConstraints(1, settingsPanelRows + j));
 			}
 
 			for (int j = 0; j < condUnitFields.size(); j++) {
-				settingsPanel.add(condUnitFields.get(j),
-						createConstraints(2, settingsPanelRows + j));
+				settingsPanel.add(condUnitFields.get(j), createConstraints(2, settingsPanelRows + j));
 			}
 
 			settingsPanel.revalidate();
@@ -685,8 +625,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 
 			@Override
 			public boolean accept(File f) {
-				return f.isDirectory()
-						|| f.getName().toLowerCase().endsWith(".xls");
+				return f.isDirectory() || f.getName().toLowerCase().endsWith(".xls");
 			}
 		};
 
@@ -695,13 +634,10 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 
 		if (fileChooser.showOpenDialog(panel) == JFileChooser.APPROVE_OPTION) {
 			try {
-				Object[] sheets = xlsReader.getSheets(
-						fileChooser.getSelectedFile()).toArray();
-				Object sheet = JOptionPane.showInputDialog(panel,
-						"Select Sheet", "Input", JOptionPane.QUESTION_MESSAGE,
+				Object[] sheets = xlsReader.getSheets(fileChooser.getSelectedFile()).toArray();
+				Object sheet = JOptionPane.showInputDialog(panel, "Select Sheet", "Input", JOptionPane.QUESTION_MESSAGE,
 						null, sheets, sheets[0]);
-				XLSDialog dialog = new XLSDialog(panel,
-						fileChooser.getSelectedFile(), (String) sheet);
+				XLSDialog dialog = new XLSDialog(panel, fileChooser.getSelectedFile(), (String) sheet);
 
 				dialog.setVisible(true);
 
@@ -712,25 +648,20 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 				Map<String, KnimeTuple> tuples = null;
 
 				try {
-					tuples = xlsReader.getTimeSeriesTuples(
-							fileChooser.getSelectedFile(), (String) sheet,
-							dialog.getMappings(), dialog.getTimeUnit(),
-							dialog.getConcentrationUnit(), null, null, null,
+					tuples = xlsReader.getTimeSeriesTuples(fileChooser.getSelectedFile(), (String) sheet,
+							dialog.getMappings(), dialog.getTimeUnit(), dialog.getConcentrationUnit(), null, null, null,
 							null, false, new ArrayList<Integer>());
 
 					if (!xlsReader.getWarnings().isEmpty()) {
-						JOptionPane.showMessageDialog(panel, xlsReader
-								.getWarnings().get(0), "Warning",
+						JOptionPane.showMessageDialog(panel, xlsReader.getWarnings().get(0), "Warning",
 								JOptionPane.WARNING_MESSAGE);
 					}
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(panel, e.getMessage(),
-							"Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(panel, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 
 				Object[] values = tuples.keySet().toArray();
-				Object selection = JOptionPane.showInputDialog(panel,
-						"Select Time Series", "Input",
+				Object selection = JOptionPane.showInputDialog(panel, "Select Time Series", "Input",
 						JOptionPane.QUESTION_MESSAGE, null, values, values[0]);
 				KnimeTuple tuple = tuples.get(selection);
 
@@ -738,10 +669,8 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 				set.setAgent(null);
 				matrixButton.setText(SELECT);
 				set.setMatrix(null);
-				idField.setValue(tuple
-						.getString(TimeSeriesSchema.ATT_COMBASEID));
-				commentField.setValue(((MdInfoXml) tuple.getPmmXml(
-						TimeSeriesSchema.ATT_MDINFO).get(0)).getComment());
+				idField.setValue(tuple.getString(TimeSeriesSchema.ATT_COMBASEID));
+				commentField.setValue(((MdInfoXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MDINFO).get(0)).getComment());
 
 				PmmXmlDoc miscXML = tuple.getPmmXml(TimeSeriesSchema.ATT_MISC);
 				int n = removeButtons.size();
@@ -781,8 +710,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 						condValueFields.get(0).setValue(value);
 						condUnitFields.get(0).removeAllItems();
 
-						for (String u : Categories.getUnitsFromCategories(misc
-								.getCategories())) {
+						for (String u : Categories.getUnitsFromCategories(misc.getCategories())) {
 							condUnitFields.get(0).addItem(u);
 						}
 
@@ -790,15 +718,13 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 					}
 				}
 
-				PmmXmlDoc timeSeriesXml = tuple
-						.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
+				PmmXmlDoc timeSeriesXml = tuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
 				int count = timeSeriesXml.getElementSet().size();
 
 				if (count > ROW_COUNT) {
 					JOptionPane.showMessageDialog(panel,
-							"Number of measured points XLS-file exceeds maximum number of rows ("
-									+ ROW_COUNT + ")", "Warning",
-							JOptionPane.WARNING_MESSAGE);
+							"Number of measured points XLS-file exceeds maximum number of rows (" + ROW_COUNT + ")",
+							"Warning", JOptionPane.WARNING_MESSAGE);
 				}
 
 				for (int i = 0; i < ROW_COUNT; i++) {
@@ -807,12 +733,9 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 
 					if (i < count) {
 						time = ((TimeSeriesXml) timeSeriesXml.get(i)).getTime();
-						logc = ((TimeSeriesXml) timeSeriesXml.get(i))
-								.getConcentration();
-						timeBox.setSelectedItem(((TimeSeriesXml) timeSeriesXml
-								.get(i)).getTimeUnit());
-						logcBox.setSelectedItem(((TimeSeriesXml) timeSeriesXml
-								.get(i)).getConcentrationUnit());
+						logc = ((TimeSeriesXml) timeSeriesXml.get(i)).getConcentration();
+						timeBox.setSelectedItem(((TimeSeriesXml) timeSeriesXml.get(i)).getTimeUnit());
+						logcBox.setSelectedItem(((TimeSeriesXml) timeSeriesXml.get(i)).getConcentrationUnit());
 					}
 
 					table.setTime(i, time);
@@ -828,13 +751,11 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 	}
 
 	private static GridBagConstraints createConstraints(int x, int y) {
-		return new GridBagConstraints(x, y, 1, 1, 0, 0,
-				GridBagConstraints.LINE_START, GridBagConstraints.BOTH,
+		return new GridBagConstraints(x, y, 1, 1, 0, 0, GridBagConstraints.LINE_START, GridBagConstraints.BOTH,
 				new Insets(3, 3, 3, 3), 0, 0);
 	}
 
-	private class XLSDialog extends JDialog implements ActionListener,
-			ItemListener {
+	private class XLSDialog extends JDialog implements ActionListener, ItemListener {
 
 		private static final long serialVersionUID = 1L;
 
@@ -850,10 +771,8 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 		private JButton okButton;
 		private JButton cancelButton;
 
-		public XLSDialog(Component owner, File file, String sheet)
-				throws Exception {
-			super(SwingUtilities.getWindowAncestor(owner), "XLS File",
-					DEFAULT_MODALITY_TYPE);
+		public XLSDialog(Component owner, File file, String sheet) throws Exception {
+			super(SwingUtilities.getWindowAncestor(owner), "XLS File", DEFAULT_MODALITY_TYPE);
 
 			approved = false;
 
@@ -877,13 +796,9 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 			northPanel.setLayout(new GridBagLayout());
 
 			for (String column : columnList) {
-				JComboBox<String> box = new JComboBox<>(new String[] {
-						XLSReader.ID_COLUMN, MdInfoXml.ATT_COMMENT,
-						AttributeUtilities.TIME,
-						AttributeUtilities.CONCENTRATION,
-						AttributeUtilities.ATT_TEMPERATURE,
-						AttributeUtilities.ATT_PH, AttributeUtilities.ATT_AW,
-						OTHER_PARAMETER, NO_PARAMETER });
+				JComboBox<String> box = new JComboBox<>(new String[] { XLSReader.ID_COLUMN, MdInfoXml.ATT_COMMENT,
+						AttributeUtilities.TIME, AttributeUtilities.CONCENTRATION, AttributeUtilities.ATT_TEMPERATURE,
+						AttributeUtilities.ATT_PH, AttributeUtilities.ATT_AW, OTHER_PARAMETER, NO_PARAMETER });
 				JButton button = new JButton();
 				JComboBox<String> unitBox = new JComboBox<>();
 
@@ -899,8 +814,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 				mappingButtons.put(column, button);
 				unitBoxes.put(column, unitBox);
 
-				northPanel.add(new JLabel(column + ":"),
-						createConstraints(0, row));
+				northPanel.add(new JLabel(column + ":"), createConstraints(0, row));
 				northPanel.add(box, createConstraints(1, row));
 				northPanel.add(button, createConstraints(2, row));
 				northPanel.add(unitBox, createConstraints(3, row));
@@ -948,8 +862,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 						JButton button = mappingButtons.get(column);
 						String selected = (String) box.getSelectedItem();
 
-						if (selected.equals(XLSReader.ID_COLUMN)
-								|| selected.equals(MdInfoXml.ATT_COMMENT)) {
+						if (selected.equals(XLSReader.ID_COLUMN) || selected.equals(MdInfoXml.ATT_COMMENT)) {
 							button.setEnabled(false);
 							button.setText(OTHER_PARAMETER);
 							mappings.put(column, selected);
@@ -959,45 +872,34 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 							mappings.put(column, selected);
 							unitBoxes.get(column).removeAllItems();
 
-							for (String unit : Categories.getTimeCategory()
-									.getAllUnits()) {
+							for (String unit : Categories.getTimeCategory().getAllUnits()) {
 								unitBoxes.get(column).addItem(unit);
 							}
 
 							pack();
-						} else if (selected
-								.equals(AttributeUtilities.CONCENTRATION)) {
+						} else if (selected.equals(AttributeUtilities.CONCENTRATION)) {
 							button.setEnabled(false);
 							button.setText(OTHER_PARAMETER);
 							mappings.put(column, selected);
 							unitBoxes.get(column).removeAllItems();
 
 							for (String unit : Categories
-									.getUnitsFromCategories(Categories
-											.getConcentrationCategories())) {
+									.getUnitsFromCategories(Categories.getConcentrationCategories())) {
 								unitBoxes.get(column).addItem(unit);
 							}
 
 							pack();
-						} else if (selected
-								.equals(AttributeUtilities.ATT_TEMPERATURE)) {
+						} else if (selected.equals(AttributeUtilities.ATT_TEMPERATURE)) {
 							button.setEnabled(false);
 							button.setText(OTHER_PARAMETER);
-							mappings.put(
-									column,
-									new MiscXml(
-											AttributeUtilities.ATT_TEMPERATURE_ID,
-											AttributeUtilities.ATT_TEMPERATURE,
-											null, null, Arrays
-													.asList(Categories
-															.getTempCategory()
-															.getName()),
-											Categories.getTempCategory()
-													.getStandardUnit()));
+							mappings.put(column,
+									new MiscXml(AttributeUtilities.ATT_TEMPERATURE_ID,
+											AttributeUtilities.ATT_TEMPERATURE, null, null,
+											Arrays.asList(Categories.getTempCategory().getName()),
+											Categories.getTempCategory().getStandardUnit()));
 							unitBoxes.get(column).removeAllItems();
 
-							for (String unit : Categories.getTempCategory()
-									.getAllUnits()) {
+							for (String unit : Categories.getTempCategory().getAllUnits()) {
 								unitBoxes.get(column).addItem(unit);
 							}
 
@@ -1005,20 +907,13 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 						} else if (selected.equals(AttributeUtilities.ATT_PH)) {
 							button.setEnabled(false);
 							button.setText(OTHER_PARAMETER);
-							mappings.put(
-									column,
-									new MiscXml(
-											AttributeUtilities.ATT_PH_ID,
-											AttributeUtilities.ATT_PH,
-											null,
-											null,
-											Arrays.asList(Categories
-													.getPhCategory().getName()),
+							mappings.put(column,
+									new MiscXml(AttributeUtilities.ATT_PH_ID, AttributeUtilities.ATT_PH, null, null,
+											Arrays.asList(Categories.getPhCategory().getName()),
 											Categories.getPhUnit()));
 							unitBoxes.get(column).removeAllItems();
 
-							for (String unit : Categories.getPhCategory()
-									.getAllUnits()) {
+							for (String unit : Categories.getPhCategory().getAllUnits()) {
 								unitBoxes.get(column).addItem(unit);
 							}
 
@@ -1026,20 +921,13 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 						} else if (selected.equals(AttributeUtilities.ATT_AW)) {
 							button.setEnabled(false);
 							button.setText(OTHER_PARAMETER);
-							mappings.put(
-									column,
-									new MiscXml(
-											AttributeUtilities.ATT_AW_ID,
-											AttributeUtilities.ATT_AW,
-											null,
-											null,
-											Arrays.asList(Categories
-													.getAwCategory().getName()),
+							mappings.put(column,
+									new MiscXml(AttributeUtilities.ATT_AW_ID, AttributeUtilities.ATT_AW, null, null,
+											Arrays.asList(Categories.getAwCategory().getName()),
 											Categories.getAwUnit()));
 							unitBoxes.get(column).removeAllItems();
 
-							for (String unit : Categories.getAwCategory()
-									.getAllUnits()) {
+							for (String unit : Categories.getAwCategory().getAllUnits()) {
 								unitBoxes.get(column).addItem(unit);
 							}
 
@@ -1060,8 +948,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 
 				for (String column : unitBoxes.keySet()) {
 					if (e.getSource() == unitBoxes.get(column)) {
-						String unit = (String) unitBoxes.get(column)
-								.getSelectedItem();
+						String unit = (String) unitBoxes.get(column).getSelectedItem();
 
 						if (mappings.get(column) instanceof MiscXml) {
 							MiscXml condition = (MiscXml) mappings.get(column);
@@ -1072,8 +959,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 
 							if (mapping.equals(AttributeUtilities.TIME)) {
 								timeUnit = unit;
-							} else if (mapping
-									.equals(AttributeUtilities.CONCENTRATION)) {
+							} else if (mapping.equals(AttributeUtilities.CONCENTRATION)) {
 								concentrationUnit = unit;
 							}
 						}
@@ -1089,8 +975,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 			if (e.getSource() == okButton) {
 				for (Object value : mappings.values()) {
 					if (value == null) {
-						JOptionPane.showMessageDialog(this,
-								"All Columns must be assigned", "Error",
+						JOptionPane.showMessageDialog(this, "All Columns must be assigned", "Error",
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -1109,30 +994,21 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 							oldID = ((MiscXml) mappings.get(column)).getId();
 						}
 
-						Integer id = DBKernel.openMiscDBWindow(
-								mappingButtons.get(column), oldID);
+						Integer id = DBKernel.openMiscDBWindow(mappingButtons.get(column), oldID);
 
 						if (id != null) {
-							String name = DBKernel.getValue(
-									"SonstigeParameter", "ID", id + "",
-									"Parameter")
-									+ "";
-							String description = DBKernel.getValue(
-									"SonstigeParameter", "ID", id + "",
-									"Beschreibung")
+							String name = DBKernel.getValue("SonstigeParameter", "ID", id + "", "Parameter") + "";
+							String description = DBKernel.getValue("SonstigeParameter", "ID", id + "", "Beschreibung")
 									+ "";
 							List<String> categoryIDs = Arrays.asList(DBKernel
-									.getValue("SonstigeParameter", "ID",
-											id + "", "Kategorie").toString()
-									.split(","));
+									.getValue("SonstigeParameter", "ID", id + "", "Kategorie").toString().split(","));
 
 							unitBoxes.get(column).removeAllItems();
 
 							String unit = null;
 
 							for (String categoryID : categoryIDs) {
-								Category category = Categories
-										.getCategory(categoryID);
+								Category category = Categories.getCategory(categoryID);
 
 								for (String u : category.getAllUnits()) {
 									unitBoxes.get(column).addItem(u);
@@ -1144,8 +1020,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 								mappingButtons.get(column).setText(name);
 							}
 
-							mappings.put(column, new MiscXml(id, name,
-									description, null, categoryIDs, unit));
+							mappings.put(column, new MiscXml(id, name, description, null, categoryIDs, unit));
 							pack();
 						}
 
@@ -1156,8 +1031,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 		}
 	}
 
-	private class TimeStepDialog extends JDialog implements ActionListener,
-			TextListener {
+	private class TimeStepDialog extends JDialog implements ActionListener, TextListener {
 
 		private static final long serialVersionUID = 1L;
 
@@ -1172,8 +1046,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 		private JButton cancelButton;
 
 		public TimeStepDialog(Component owner) {
-			super(SwingUtilities.getWindowAncestor(owner), "Time Steps",
-					DEFAULT_MODALITY_TYPE);
+			super(SwingUtilities.getWindowAncestor(owner), "Time Steps", DEFAULT_MODALITY_TYPE);
 
 			approved = false;
 			numberOfSteps = 0;
@@ -1181,12 +1054,10 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements
 
 			numberField = new IntTextField(1, ROW_COUNT);
 			numberField.setValue(DEFAULT_TIMESTEPNUMBER);
-			numberField.setPreferredSize(new Dimension(150, numberField
-					.getPreferredSize().height));
+			numberField.setPreferredSize(new Dimension(150, numberField.getPreferredSize().height));
 			numberField.addTextListener(this);
 			sizeField = new DoubleTextField(0.0, Double.POSITIVE_INFINITY);
-			sizeField.setPreferredSize(new Dimension(150, sizeField
-					.getPreferredSize().height));
+			sizeField.setPreferredSize(new Dimension(150, sizeField.getPreferredSize().height));
 			sizeField.setValue(DEFAULT_TIMESTEPSIZE);
 			sizeField.addTextListener(this);
 			okButton = new JButton("OK");

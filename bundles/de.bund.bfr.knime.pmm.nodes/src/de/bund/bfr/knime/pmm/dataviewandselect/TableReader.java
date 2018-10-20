@@ -152,9 +152,9 @@ public class TableReader {
 			}
 
 			stringColumns.get(AttributeUtilities.DATAID).add(dataName);
-			stringColumns.get(TimeSeriesSchema.ATT_AGENT).add(agent.getName());
+			stringColumns.get(TimeSeriesSchema.ATT_AGENT).add(agent.name);
 			stringColumns.get(AttributeUtilities.AGENT_DETAILS).add(
-					agent.getDetail());
+					agent.detail);
 			stringColumns.get(TimeSeriesSchema.ATT_MATRIX)
 					.add(matrix.getName());
 			stringColumns.get(AttributeUtilities.MATRIX_DETAILS).add(
@@ -165,7 +165,7 @@ public class TableReader {
 			stringColumns.get(TimeSeriesSchema.ATT_LITMD).add(literature);
 			data.add(dataPoints);
 			shortLegend.put(id, dataName);
-			longLegend.put(id, dataName + " " + agent.getName());
+			longLegend.put(id, dataName + " " + agent.name);
 
 			PmmXmlDoc misc = tuple.getPmmXml(TimeSeriesSchema.ATT_MISC);
 

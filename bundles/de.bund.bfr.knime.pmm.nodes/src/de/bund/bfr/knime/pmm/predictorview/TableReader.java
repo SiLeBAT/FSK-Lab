@@ -501,11 +501,11 @@ public class TableReader {
 						TimeSeriesSchema.ATT_MATRIX).get(0);
 
 				stringColumns.get(TimeSeriesSchema.ATT_AGENT).add(
-						agent.getName());
+						agent.name);
 				stringColumns.get(TimeSeriesSchema.ATT_MATRIX).add(
 						matrix.getName());
 				stringColumns.get(AttributeUtilities.AGENT_DETAILS).add(
-						agent.getDetail());
+						agent.detail);
 				stringColumns.get(AttributeUtilities.MATRIX_DETAILS).add(
 						matrix.getDetail());
 				stringColumns.get(MdInfoXml.ATT_COMMENT).add(

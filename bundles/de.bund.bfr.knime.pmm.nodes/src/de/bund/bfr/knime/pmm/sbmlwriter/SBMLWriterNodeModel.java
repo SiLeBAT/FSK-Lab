@@ -252,9 +252,9 @@ public class SBMLWriterNodeModel extends NodeModel {
 					c.setName(COMPARTMENT_MISSING);
 				}
 
-				if (organismXml.getName() != null) {
-					s = model.createSpecies(createId(organismXml.getName()), c);
-					s.setName(organismXml.getName());
+				if (organismXml.name != null) {
+					s = model.createSpecies(createId(organismXml.name), c);
+					s.setName(organismXml.name);
 				} else {
 					s = model.createSpecies(SPECIES_MISSING, c);
 					s.setName(SPECIES_MISSING);

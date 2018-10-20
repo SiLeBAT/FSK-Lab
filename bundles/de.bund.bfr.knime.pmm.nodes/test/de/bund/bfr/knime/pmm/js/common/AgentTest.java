@@ -106,9 +106,9 @@ public class AgentTest {
 		agent.setDbuuid(dbuuid);
 		AgentXml agentXml = agent.toAgentXml();
 		
-		assertTrue(id == agentXml.getId());
-		assertEquals(name, agentXml.getName());
-		assertEquals(detail, agentXml.getDetail());
-		assertEquals(dbuuid, agentXml.getDbuuid());
+		assertTrue(id == agentXml.id);
+		assertEquals(name, agentXml.name);
+		assertEquals(detail, agentXml.detail);
+		assertEquals(dbuuid, agentXml.dbuuid);
 	}
 }
