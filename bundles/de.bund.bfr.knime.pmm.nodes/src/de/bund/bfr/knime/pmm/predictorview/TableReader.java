@@ -138,10 +138,10 @@ public class TableReader {
 					if (!usedTuples.isEmpty()) {
 						String oldID = ((CatalogModelXml) usedTuples.get(0)
 								.getPmmXml(Model1Schema.ATT_MODELCATALOG)
-								.get(0)).getId()
+								.get(0)).id
 								+ "";
 						String newID = ((CatalogModelXml) tuple.getPmmXml(
-								Model1Schema.ATT_MODELCATALOG).get(0)).getId()
+								Model1Schema.ATT_MODELCATALOG).get(0)).id
 								+ "";
 
 						if (initParams.containsKey(oldID)) {
@@ -325,10 +325,10 @@ public class TableReader {
 			if (isTertiaryModel) {
 				primId = ((CatalogModelXml) combined.get(tuple).get(0)
 						.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0))
-						.getId() + "";
+						.id + "";
 			} else {
 				primId = ((CatalogModelXml) tuple.getPmmXml(
-						Model1Schema.ATT_MODELCATALOG).get(0)).getId()
+						Model1Schema.ATT_MODELCATALOG).get(0)).id
 						+ "";
 			}
 
@@ -339,10 +339,10 @@ public class TableReader {
 					Model1Schema.ATT_MODELCATALOG).get(0);
 			DepXml depXml = (DepXml) tuple
 					.getPmmXml(Model1Schema.ATT_DEPENDENT).get(0);
-			String modelName = modelXml.getName();
-			String dbuuid = modelXml.getDbuuid();
+			String modelName = modelXml.name;
+			String dbuuid = modelXml.dbuuid;
 			String formula = MathUtilities.getAllButBoundaryCondition(modelXml
-					.getFormula());
+					.formula);
 			String depVar = depXml.getName();
 			PmmXmlDoc indepXml = tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 			PmmXmlDoc paramXml = tuple.getPmmXml(Model1Schema.ATT_PARAMETER);
@@ -481,7 +481,7 @@ public class TableReader {
 
 				for (KnimeTuple t : combined.get(tuple)) {
 					secModels.add(((CatalogModelXml) t.getPmmXml(
-							Model2Schema.ATT_MODELCATALOG).get(0)).getName());
+							Model2Schema.ATT_MODELCATALOG).get(0)).name);
 				}
 
 				String secString = "";
@@ -526,7 +526,7 @@ public class TableReader {
 			doubleColumns.get(Model1Schema.AIC).add(
 					((EstModelXml) estModelXml.get(0)).getAic());
 
-			plotable.setFunction(modelXml.getFormula());
+			plotable.setFunction(modelXml.formula);
 			plotable.setFunctionValue(depVar);
 			plotable.setFunctionArguments(variables);
 			plotable.setMinValue(depXml.getMin());
@@ -773,13 +773,13 @@ public class TableReader {
 			List<KnimeTuple> all) {
 		List<KnimeTuple> tuples = new ArrayList<>();
 		Integer primId = ((CatalogModelXml) current.getPmmXml(
-				Model1Schema.ATT_MODELCATALOG).get(0)).getId();
+				Model1Schema.ATT_MODELCATALOG).get(0)).id;
 		Integer secEstId = ((EstModelXml) current.getPmmXml(
 				Model2Schema.ATT_ESTMODEL).get(0)).getId();
 
 		for (KnimeTuple tuple : all) {
 			Integer pId = ((CatalogModelXml) tuple.getPmmXml(
-					Model1Schema.ATT_MODELCATALOG).get(0)).getId();
+					Model1Schema.ATT_MODELCATALOG).get(0)).id;
 			Integer sId = ((EstModelXml) tuple.getPmmXml(
 					Model2Schema.ATT_ESTMODEL).get(0)).getId();
 

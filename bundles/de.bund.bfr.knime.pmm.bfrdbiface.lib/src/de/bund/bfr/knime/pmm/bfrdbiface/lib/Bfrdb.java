@@ -290,8 +290,8 @@ public class Bfrdb {
 
 					PmmXmlDoc doc = new PmmXmlDoc();
 					CatalogModelXml cm = new CatalogModelXml(result.getInt(Bfrdb.ATT_MODELID), result.getString(Bfrdb.ATT_NAME), formula, null);
-					cm.setModelClass(result.getInt("Klasse"));
-					cm.setDbuuid(dbuuid);
+					cm.modelClass = result.getInt("Klasse");
+					cm.dbuuid = dbuuid;
 					doc.add(cm);
 					tuple.setValue(Model1Schema.ATT_MODELCATALOG, doc);
 
@@ -345,8 +345,8 @@ public class Bfrdb {
 
 					PmmXmlDoc doc = new PmmXmlDoc();
 					CatalogModelXml cm = new CatalogModelXml(result.getInt(Bfrdb.ATT_MODELID), result.getString(Bfrdb.ATT_NAME), formula, null);
-					cm.setModelClass(result.getInt("Klasse"));
-					cm.setDbuuid(dbuuid);
+					cm.modelClass = result.getInt("Klasse");
+					cm.dbuuid = dbuuid;
 					doc.add(cm);
 					tuple.setValue(Model2Schema.ATT_MODELCATALOG, doc);
 

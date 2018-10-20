@@ -497,7 +497,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 			if (set.getModelTuple() != null) {
 				id = DBKernel.openPrimModelDBWindow(modelButton,
 						((CatalogModelXml) set.getModelTuple().getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0))
-								.getId());
+								.id);
 			} else {
 				id = DBKernel.openPrimModelDBWindow(modelButton, null);
 			}
@@ -515,7 +515,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 			}
 		} else if (e.getSource() == modelReloadButton) {
 			Integer id = ((CatalogModelXml) set.getModelTuple().getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0))
-					.getId();
+					.id;
 
 			if (id != null) {
 				Bfrdb db = new Bfrdb(DBKernel.getLocalConn(true));
@@ -864,7 +864,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 
 		if (set.getModelTuple() != null) {
 			modelButton = new JButton(
-					((CatalogModelXml) set.getModelTuple().getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0)).getName());
+					((CatalogModelXml) set.getModelTuple().getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0)).name);
 			modelReloadButton = new JButton(SettingsHelper.RELOAD);
 			modelReloadButton.setEnabled(true);
 		} else {

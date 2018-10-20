@@ -196,7 +196,7 @@ public class TableReader {
 		for (int nr = 0; nr < tuples.size(); nr++) {
 			KnimeTuple tuple = tuples.get(nr);
 			Integer catID = ((CatalogModelXml) tuple.getPmmXml(
-					Model1Schema.ATT_MODELCATALOG).get(0)).getId();
+					Model1Schema.ATT_MODELCATALOG).get(0)).id;
 			Integer estID = ((EstModelXml) tuple.getPmmXml(
 					Model1Schema.ATT_ESTMODEL).get(0)).getId();
 			String id = "";
@@ -225,9 +225,9 @@ public class TableReader {
 			PmmXmlDoc estModelXml = tuple.getPmmXml(Model1Schema.ATT_ESTMODEL);
 			DepXml depXml = (DepXml) tuple
 					.getPmmXml(Model1Schema.ATT_DEPENDENT).get(0);
-			String modelName = modelXml.getName();
+			String modelName = modelXml.name;
 			String formula = MathUtilities.getAllButBoundaryCondition(modelXml
-					.getFormula());
+					.formula);
 			String depVar = depXml.getName();
 			PmmXmlDoc indepXml = tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 			List<String> indepVars = CellIO.getNameList(indepXml);
@@ -426,7 +426,7 @@ public class TableReader {
 			units.put(AttributeUtilities.TIME, timeUnit);
 			units.put(AttributeUtilities.CONCENTRATION, concentrationUnit);
 
-			plotable.setFunction(modelXml.getFormula());
+			plotable.setFunction(modelXml.formula);
 			plotable.setFunctionParameters(parameters);
 			plotable.setFunctionArguments(variables);
 			plotable.setMinValue(depXml.getMin());

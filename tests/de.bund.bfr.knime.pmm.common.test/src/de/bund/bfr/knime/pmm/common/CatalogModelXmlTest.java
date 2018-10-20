@@ -12,21 +12,21 @@ public class CatalogModelXmlTest {
 	
 		// test constructor with id, name, formula and model class
 		CatalogModelXml catalog0 = new CatalogModelXml(0, "name", "formula", 0);
-		assertTrue(0 == catalog0.getId());
-		assertEquals("name", catalog0.getName());
-		assertEquals("formula", catalog0.getFormula());
-		assertTrue(0 == catalog0.getModelClass());
-		assertNull(catalog0.getComment());
-		assertNull(catalog0.getDbuuid());
+		assertTrue(0 == catalog0.id);
+		assertEquals("name", catalog0.name);
+		assertEquals("formula", catalog0.formula);
+		assertTrue(0 == catalog0.modelClass);
+		assertNull(catalog0.comment);
+		assertNull(catalog0.dbuuid);
 		
 		// test constructor with id, name, formula, model class and dbuuid
 		CatalogModelXml catalog1 = new CatalogModelXml(0, "name", "formula", 0, "dbuuid");
-		assertTrue(0 == catalog1.getId());
-		assertEquals("name", catalog1.getName());
-		assertEquals("formula", catalog1.getFormula());
-		assertTrue(0 == catalog1.getModelClass());
-		assertNull(catalog1.getComment());
-		assertEquals("dbuuid", catalog1.getDbuuid());
+		assertTrue(0 == catalog1.id);
+		assertEquals("name", catalog1.name);
+		assertEquals("formula", catalog1.formula);
+		assertTrue(0 == catalog1.modelClass);
+		assertNull(catalog1.comment);
+		assertEquals("dbuuid", catalog1.dbuuid);
 		
 		// test copy constructor
 		Element element = new Element(CatalogModelXml.ELEMENT_CATALOGMODEL);
@@ -38,18 +38,18 @@ public class CatalogModelXmlTest {
 		element.setAttribute("dbuuid", "dbuuid");
 		
 		CatalogModelXml catalog2 = new CatalogModelXml(element);
-		assertTrue(0 == catalog2.getId());
-		assertEquals("name", catalog2.getName());
-		assertEquals("formula", catalog2.getFormula());
-		assertTrue(0 == catalog2.getModelClass());
-		assertEquals("comment", catalog2.getComment());
-		assertEquals("dbuuid", catalog2.getDbuuid());
+		assertTrue(0 == catalog2.id);
+		assertEquals("name", catalog2.name);
+		assertEquals("formula", catalog2.formula);
+		assertTrue(0 == catalog2.modelClass);
+		assertEquals("comment", catalog2.comment);
+		assertEquals("dbuuid", catalog2.dbuuid);
 	}
 	
 	@Test
 	public void testToXmlElement() throws Exception {
 		CatalogModelXml catalog = new CatalogModelXml(0, "name", "formula", 0, "dbuuid");
-		catalog.setComment("comment");
+		catalog.comment = "comment";
 		Element element = catalog.toXmlElement();
 		
 		assertTrue(0 == element.getAttribute("id").getIntValue());

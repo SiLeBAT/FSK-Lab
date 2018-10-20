@@ -200,7 +200,7 @@ public class ModelEstimationNodeModel extends NodeModel {
 			KnimeTuple tuple = reader.nextElement();
 			String id = PRIMARY
 					+ ((CatalogModelXml) tuple.getPmmXml(
-							Model1Schema.ATT_MODELCATALOG).get(0)).getId();
+							Model1Schema.ATT_MODELCATALOG).get(0)).id;
 
 			if (!parameterLimits.containsKey(id)) {
 				Map<String, Point2D.Double> limits = new LinkedHashMap<>();
@@ -237,7 +237,7 @@ public class ModelEstimationNodeModel extends NodeModel {
 			KnimeTuple tuple = reader.nextElement();
 			String id = SECONDARY
 					+ ((CatalogModelXml) tuple.getPmmXml(
-							Model2Schema.ATT_MODELCATALOG).get(0)).getId();
+							Model2Schema.ATT_MODELCATALOG).get(0)).id;
 
 			if (!parameterLimits.containsKey(id)) {
 				Map<String, Point2D.Double> limits = new LinkedHashMap<>();

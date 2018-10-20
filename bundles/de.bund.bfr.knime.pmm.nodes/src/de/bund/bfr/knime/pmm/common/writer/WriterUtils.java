@@ -279,8 +279,8 @@ public class WriterUtils {
 	public static ModelRule createM1Rule(CatalogModelXml catModel, String variable, Reference[] references) {
 
 		// Trims out the "Value=" from the formula
-		int pos = catModel.getFormula().indexOf("=");
-		String formula = catModel.getFormula().substring(pos + 1);
+		int pos = catModel.formula.indexOf("=");
+		String formula = catModel.formula.substring(pos + 1);
 
 		// Removes boundary conditions
 		formula = MathUtilities.getAllButBoundaryCondition(formula);
@@ -288,15 +288,15 @@ public class WriterUtils {
 		formula = formula.replace("Time", "time");
 
 		ModelClass modelClass;
-		if (catModel.getModelClass() == null) {
+		if (catModel.modelClass == null) {
 			modelClass = ModelClass.UNKNOWN;
 		} else {
-			modelClass = ModelClass.fromValue(catModel.getModelClass());
+			modelClass = ModelClass.fromValue(catModel.modelClass);
 		}
 
-		String formulaName = StringUtils.defaultIfEmpty(catModel.getName(), "Missing formula name");
+		String formulaName = StringUtils.defaultIfEmpty(catModel.name, "Missing formula name");
 
-		int catModelId = catModel.getId();
+		int catModelId = catModel.id;
 
 		ModelRule rule = new ModelRule(variable, formula, formulaName, modelClass, catModelId, references);
 		return rule;
@@ -304,25 +304,25 @@ public class WriterUtils {
 
 	public static ModelRule createM2Rule(CatalogModelXml catModel, Reference[] references) {
 		// Parses variable from the formula
-		int pos = catModel.getFormula().indexOf("=");
-		String variable = catModel.getFormula().substring(0, pos);
+		int pos = catModel.formula.indexOf("=");
+		String variable = catModel.formula.substring(0, pos);
 
 		// The remaining chunk contains the actual formula
-		String formula = catModel.getFormula().substring(pos + 1);
+		String formula = catModel.formula.substring(pos + 1);
 
 		// Removes boundary conditions
 		formula = MathUtilities.getAllButBoundaryCondition(formula);
 
 		ModelClass modelClass;
-		if (catModel.getModelClass() == null) {
+		if (catModel.modelClass == null) {
 			modelClass = ModelClass.UNKNOWN;
 		} else {
-			modelClass = ModelClass.fromValue(catModel.getModelClass());
+			modelClass = ModelClass.fromValue(catModel.modelClass);
 		}
 
-		String formulaName = StringUtils.defaultIfEmpty("Missing formula name", catModel.getName());
+		String formulaName = StringUtils.defaultIfEmpty("Missing formula name", catModel.name);
 
-		int catModelId = catModel.getId();
+		int catModelId = catModel.id;
 
 		ModelRule rule = new ModelRule(variable, formula, formulaName, modelClass, catModelId, references);
 		return rule;

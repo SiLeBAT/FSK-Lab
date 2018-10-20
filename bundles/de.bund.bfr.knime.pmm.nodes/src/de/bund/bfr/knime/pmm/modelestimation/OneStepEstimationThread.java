@@ -98,7 +98,7 @@ public class OneStepEstimationThread implements Runnable {
 			for (KnimeTuple tuple : seiTuples) {
 				PmmXmlDoc params = tuple.getPmmXml(Model1Schema.ATT_PARAMETER);
 				String primID = ((CatalogModelXml) tuple.getPmmXml(
-						Model1Schema.ATT_MODELCATALOG).get(0)).getId()
+						Model1Schema.ATT_MODELCATALOG).get(0)).id
 						+ "";
 				Map<String, Point2D.Double> primaryGuesses = parameterGuesses
 						.get(ModelEstimationNodeModel.PRIMARY + primID);
@@ -132,7 +132,7 @@ public class OneStepEstimationThread implements Runnable {
 				}
 
 				String secID = ((CatalogModelXml) tuple.getPmmXml(
-						Model2Schema.ATT_MODELCATALOG).get(0)).getId()
+						Model2Schema.ATT_MODELCATALOG).get(0)).id
 						+ "";
 				PmmXmlDoc secParams = tuple
 						.getPmmXml(Model2Schema.ATT_PARAMETER);
@@ -182,7 +182,7 @@ public class OneStepEstimationThread implements Runnable {
 
 			for (KnimeTuple tuple : tuples) {
 				int id = ((CatalogModelXml) tuple.getPmmXml(
-						Model1Schema.ATT_MODELCATALOG).get(0)).getId();
+						Model1Schema.ATT_MODELCATALOG).get(0)).id;
 				PmmXmlDoc indepXml = tuple
 						.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 				List<String> arguments = CellIO.getNameList(indepXml);
@@ -240,11 +240,11 @@ public class OneStepEstimationThread implements Runnable {
 				KnimeTuple tuple = tuples.get(i);
 				PmmXmlDoc modelXml = tuple
 						.getPmmXml(Model1Schema.ATT_MODELCATALOG);
-				int id = ((CatalogModelXml) modelXml.get(0)).getId();
+				int id = ((CatalogModelXml) modelXml.get(0)).id;
 
 				if (!paramMap.containsKey(id)) {
 					String formula = ((CatalogModelXml) modelXml.get(0))
-							.getFormula();
+							.formula;
 					PmmXmlDoc paramXml = tuple
 							.getPmmXml(Model1Schema.ATT_PARAMETER);
 					PmmXmlDoc indepXml = tuple
@@ -502,7 +502,7 @@ public class OneStepEstimationThread implements Runnable {
 		String matrixName = matrix.getName() != null ? matrix.getName()
 				: matrix.getDetail();
 		String modelName = ((CatalogModelXml) tuple.getPmmXml(
-				Model1Schema.ATT_MODELCATALOG).get(0)).getName();
+				Model1Schema.ATT_MODELCATALOG).get(0)).name;
 
 		return agentName + "_" + matrixName + "_" + modelName;
 	}

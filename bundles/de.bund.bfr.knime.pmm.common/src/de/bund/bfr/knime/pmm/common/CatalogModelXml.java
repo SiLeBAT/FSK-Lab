@@ -34,12 +34,12 @@ public class CatalogModelXml implements PmmXmlElementConvertable {
 	private static final String ATT_COMMENT = "comment";
 	private static final String ATT_DBUUID = "dbuuid";
 
-	private Integer id;
-	private String name;
-	private String formula;
-	private Integer modelClass;
-	private String comment;
-	private String dbuuid;
+	public Integer id;
+	public String name;
+	public String formula;
+	public Integer modelClass;
+	public String comment;
+	public String dbuuid;
 
 	public CatalogModelXml(Integer id, String name, String formula,
 			Integer modelClass) {
@@ -48,18 +48,18 @@ public class CatalogModelXml implements PmmXmlElementConvertable {
 
 	public CatalogModelXml(Integer id, String name, String formula,
 			Integer modelClass, String dbuuid) {
-		setId(id == null ? MathUtilities.getRandomNegativeInt() : id);
-		setName(name);
-		setFormula(formula);
-		setModelClass(modelClass);
-		setDbuuid(dbuuid);
+		this.id = id == null ? MathUtilities.getRandomNegativeInt() : id;
+		this.name = name;
+		this.formula = formula;
+		this.modelClass = modelClass;
+		this.dbuuid = dbuuid;
 	}
 
 	public CatalogModelXml(Element el) {
 		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME),
 				XmlHelper.getString(el, ATT_FORMULA), XmlHelper.getInt(el,
 						ATT_MODEL_CLASS), XmlHelper.getString(el, ATT_DBUUID));
-		this.setComment(XmlHelper.getString(el, ATT_COMMENT));
+		this.comment = XmlHelper.getString(el, ATT_COMMENT);
 	}
 
 	@Override
@@ -75,53 +75,5 @@ public class CatalogModelXml implements PmmXmlElementConvertable {
 		modelElement.setAttribute(ATT_DBUUID, XmlHelper.getNonNull(dbuuid));
 
 		return modelElement;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getFormula() {
-		return formula;
-	}
-
-	public void setFormula(String formula) {
-		this.formula = formula;
-	}
-
-	public Integer getModelClass() {
-		return modelClass;
-	}
-
-	public void setModelClass(Integer modelClass) {
-		this.modelClass = modelClass;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	public void setDbuuid(String dbuuid) {
-		this.dbuuid = dbuuid;
 	}
 }

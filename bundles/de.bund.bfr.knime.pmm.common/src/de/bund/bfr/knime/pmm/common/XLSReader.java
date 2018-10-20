@@ -548,7 +548,7 @@ public class XLSReader {
 
 			if (modelDepUnit != null && !modelDepUnit.equals(((DepXml) depXml.get(0)).getUnit())) {
 				((DepXml) depXml.get(0)).setUnit(modelDepUnit);
-				((CatalogModelXml) modelXml.get(0)).setId(MathUtilities.getRandomNegativeInt());
+				((CatalogModelXml) modelXml.get(0)).id = MathUtilities.getRandomNegativeInt();
 			}
 
 			if (hasData(depMinCell)) {
@@ -597,7 +597,7 @@ public class XLSReader {
 
 			if (modelIndepUnit != null && !modelIndepUnit.equals(((IndepXml) indepXml.get(0)).getUnit())) {
 				((IndepXml) indepXml.get(0)).setUnit(modelIndepUnit);
-				((CatalogModelXml) modelXml.get(0)).setId(MathUtilities.getRandomNegativeInt());
+				((CatalogModelXml) modelXml.get(0)).id = MathUtilities.getRandomNegativeInt();
 			}
 
 			((EstModelXml) estXml.get(0)).setId(primId);
@@ -698,7 +698,7 @@ public class XLSReader {
 					PmmXmlDoc secEstXml = secTuple.getPmmXml(Model2Schema.ATT_ESTMODEL);
 					PmmXmlDoc secModelXml = secTuple.getPmmXml(Model2Schema.ATT_MODELCATALOG);
 					PmmXmlDoc secIndepXml = secTuple.getPmmXml(Model2Schema.ATT_INDEPENDENT);
-					String formula = ((CatalogModelXml) secModelXml.get(0)).getFormula();
+					String formula = ((CatalogModelXml) secModelXml.get(0)).formula;
 					int secID;
 
 					if (preserveIds && secUsedIds.containsKey(param) && !secUsedIds.get(param).isEmpty()) {
@@ -713,7 +713,7 @@ public class XLSReader {
 
 					newSecIds.get(param).add(secID);
 					formula = MathUtilities.replaceVariable(formula, ((DepXml) secDepXml.get(0)).getName(), param);
-					((CatalogModelXml) secModelXml.get(0)).setFormula(formula);
+					((CatalogModelXml) secModelXml.get(0)).formula = formula;
 					((DepXml) secDepXml.get(0)).setName(param);
 					((EstModelXml) secEstXml.get(0)).setId(secID);
 
@@ -764,12 +764,12 @@ public class XLSReader {
 
 						if (!category.equals(element.getCategory())) {
 							element.setCategory(category);
-							((CatalogModelXml) secModelXml.get(0)).setId(MathUtilities.getRandomNegativeInt());
+							((CatalogModelXml) secModelXml.get(0)).id = MathUtilities.getRandomNegativeInt();
 						}
 
 						if (!unit.equals(element.getUnit())) {
 							element.setUnit(unit);
-							((CatalogModelXml) secModelXml.get(0)).setId(MathUtilities.getRandomNegativeInt());
+							((CatalogModelXml) secModelXml.get(0)).id = MathUtilities.getRandomNegativeInt();
 						}
 
 						String minColumn = secModelIndepMins.get(param).get(element.getName());

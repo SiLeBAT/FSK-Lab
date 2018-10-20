@@ -198,7 +198,7 @@ public class PredictorViewNodeDialog extends DataAwareNodeDialogPane implements
 					if(((ParamXml)pxml).isStartParam()) {
 						set.setSelectedIDs(new ArrayList<String>());
 						set.getConcentrationParameters().put(((CatalogModelXml) tuple.getPmmXml(
-								Model1Schema.ATT_MODELCATALOG).get(0)).getId()
+								Model1Schema.ATT_MODELCATALOG).get(0)).id
 								+ "", ((ParamXml)pxml).getName());
 						set.setNewConcentrationParameters(set.getConcentrationParameters());
 						
@@ -738,7 +738,7 @@ public class PredictorViewNodeDialog extends DataAwareNodeDialogPane implements
 			for (KnimeTuple tuple : tuples) {
 				PmmXmlDoc modelXml = tuple
 						.getPmmXml(Model1Schema.ATT_MODELCATALOG);
-				String id = ((CatalogModelXml) modelXml.get(0)).getId() + "";
+				String id = ((CatalogModelXml) modelXml.get(0)).id + "";
 
 				if (!idSet.add(id)) {
 					continue;
@@ -752,9 +752,9 @@ public class PredictorViewNodeDialog extends DataAwareNodeDialogPane implements
 
 				ids.add(id);
 				modelNames.put(id,
-						((CatalogModelXml) modelXml.get(0)).getName());
+						((CatalogModelXml) modelXml.get(0)).name);
 				formulas.put(id,
-						((CatalogModelXml) modelXml.get(0)).getFormula());
+						((CatalogModelXml) modelXml.get(0)).formula);
 				availableParams.put(id, params);
 			}
 		}

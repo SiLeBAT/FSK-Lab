@@ -260,7 +260,7 @@ public class ModelEstimationNodeDialog extends DataAwareNodeDialogPane
 			KnimeTuple tuple = reader.nextElement();
 			PmmXmlDoc modelXml = tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG);
 			String id = ModelEstimationNodeModel.PRIMARY
-					+ ((CatalogModelXml) modelXml.get(0)).getId();
+					+ ((CatalogModelXml) modelXml.get(0)).id;
 
 			if (!modelNames.containsKey(id)) {
 				PmmXmlDoc params = tuple.getPmmXml(Model1Schema.ATT_PARAMETER);
@@ -277,7 +277,7 @@ public class ModelEstimationNodeDialog extends DataAwareNodeDialogPane
 				}
 
 				modelNames.put(id,
-						((CatalogModelXml) modelXml.get(0)).getName());
+						((CatalogModelXml) modelXml.get(0)).name);
 				parameters.put(id, paramNames);
 				minValues.put(id, min);
 				maxValues.put(id, max);
@@ -295,7 +295,7 @@ public class ModelEstimationNodeDialog extends DataAwareNodeDialogPane
 			KnimeTuple tuple = reader.nextElement();
 			PmmXmlDoc modelXml = tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG);
 			String id = ModelEstimationNodeModel.SECONDARY
-					+ ((CatalogModelXml) modelXml.get(0)).getId();
+					+ ((CatalogModelXml) modelXml.get(0)).id;
 
 			if (!modelNames.containsKey(id)) {
 				PmmXmlDoc params = tuple.getPmmXml(Model2Schema.ATT_PARAMETER);
@@ -312,7 +312,7 @@ public class ModelEstimationNodeDialog extends DataAwareNodeDialogPane
 				}
 
 				modelNames.put(id,
-						((CatalogModelXml) modelXml.get(0)).getName());
+						((CatalogModelXml) modelXml.get(0)).name);
 				parameters.put(id, paramNames);
 				minValues.put(id, min);
 				maxValues.put(id, max);

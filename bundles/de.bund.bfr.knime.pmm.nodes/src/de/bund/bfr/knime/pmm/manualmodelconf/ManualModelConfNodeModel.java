@@ -194,7 +194,7 @@ public class ManualModelConfNodeModel extends NodeModel {
     	if (tupleM1 != null) {
     		// Set primary variable names to TimeSeriesSchema.TIME and TimeSeriesSchema.LOGC
     		PmmXmlDoc modelXml = tupleM1.getPmmXml(Model1Schema.ATT_MODELCATALOG);
-    		String formula = ((CatalogModelXml) modelXml.get(0)).getFormula();
+    		String formula = ((CatalogModelXml) modelXml.get(0)).formula;
     		PmmXmlDoc depVar = tupleM1.getPmmXml(Model1Schema.ATT_DEPENDENT);
     		PmmXmlDoc indepVar = tupleM1.getPmmXml(Model1Schema.ATT_INDEPENDENT);        		
     		
@@ -210,11 +210,11 @@ public class ManualModelConfNodeModel extends NodeModel {
     			((IndepXml) indepVar.get(0)).setOrigName(AttributeUtilities.TIME);
     		}
     		
-    		((CatalogModelXml) modelXml.get(0)).setFormula(formula);
+    		((CatalogModelXml) modelXml.get(0)).formula = formula;
     		if (formulaCreator) {
         		PmmXmlDoc estXml = tupleM1.getPmmXml(Model1Schema.ATT_ESTMODEL);
         		EstModelXml exl =  (EstModelXml) estXml.get(0);    
-        		((CatalogModelXml) modelXml.get(0)).setComment(exl.getComment());
+        		((CatalogModelXml) modelXml.get(0)).comment = exl.getComment();
         		exl.setComment("");
         		tupleM1.setValue(Model1Schema.ATT_ESTMODEL, estXml);
         		

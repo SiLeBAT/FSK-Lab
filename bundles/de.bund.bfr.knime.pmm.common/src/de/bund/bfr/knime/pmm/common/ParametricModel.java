@@ -173,10 +173,10 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			for (PmmXmlElementConvertable el : x.getElementSet()) {
 				if (el instanceof CatalogModelXml) {
 					CatalogModelXml cmx = (CatalogModelXml) el;
-					this.modelId = cmx.getId();
-					this.modelName = cmx.getName();
-					this.m_dbuuid = cmx.getDbuuid();
-					setFormula(cmx.getFormula());
+					this.modelId = cmx.id;
+					this.modelName = cmx.name;
+					this.m_dbuuid = cmx.dbuuid;
+					setFormula(cmx.formula);
 					break;
 				}
 			}

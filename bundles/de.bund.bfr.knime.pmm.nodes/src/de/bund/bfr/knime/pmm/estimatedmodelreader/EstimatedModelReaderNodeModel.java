@@ -298,7 +298,7 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
 				cmDoc = new PmmXmlDoc();
 				cmx = new CatalogModelXml(result.getInt(Bfrdb.ATT_MODELID), result.getString(Bfrdb.ATT_NAME), formula, null, dbuuid); 
 	    		cls = DBKernel.getValue(conn,"Modellkatalog", "ID", result.getInt(Bfrdb.ATT_MODELID)+"", "Klasse");
-	    		cmx.setModelClass((Integer) cls);
+	    		cmx.modelClass = (Integer) cls;
 				cmDoc.add(cmx);
 				tuple.setValue(Model1Schema.ATT_MODELCATALOG, cmDoc);
 
@@ -317,7 +317,7 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
 				if (da != null && da[0] != null) dx.setDescription(da[0].toString());
 	    		depDoc.add(dx);
 	    		tuple.setValue(Model1Schema.ATT_DEPENDENT, depDoc);
-				if (emrnm != null && (dx.getUnit() == null || dx.getUnit().isEmpty())) addWarningMsg += "\nUnit not defined for dependant variable '" + dx.getName() + "' in model with ID " + cmx.getId() + "!";
+				if (emrnm != null && (dx.getUnit() == null || dx.getUnit().isEmpty())) addWarningMsg += "\nUnit not defined for dependant variable '" + dx.getName() + "' in model with ID " + cmx.id + "!";
 	    		
 	    		emid = result.getInt(Bfrdb.ATT_ESTMODELID);
 				emDoc = new PmmXmlDoc();
@@ -343,11 +343,11 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
 	    				result.getArray(Bfrdb.ATT_MININDEP), result.getArray(Bfrdb.ATT_MAXINDEP), result.getArray("IndepCategory"),
 	    				result.getArray("IndepUnit"), result.getArray("IndepDescription"), true);
 	    		tuple.setValue(Model1Schema.ATT_INDEPENDENT, ixml);
-				if (emrnm != null && !ixml.getWarning().isEmpty()) addWarningMsg += "\n" + ixml.getWarning() + "in model with ID " + cmx.getId() + "!";
+				if (emrnm != null && !ixml.getWarning().isEmpty()) addWarningMsg += "\n" + ixml.getWarning() + "in model with ID " + cmx.id + "!";
 
 				tuple.setValue(Model1Schema.ATT_PARAMETER, DbIo.convertArrays2ParamXmlDoc(varMap, result.getArray(Bfrdb.ATT_PARAMNAME),
 	    				result.getArray(Bfrdb.ATT_VALUE), result.getArray("ZeitEinheit"), null, result.getArray("Einheiten"), result.getArray("StandardError"), result.getArray(Bfrdb.ATT_MIN),
-	    				result.getArray(Bfrdb.ATT_MAX), result.getArray("ParamDescription"), result.getArray(Bfrdb.ATT_PARAMTYPE), result.getArray("ParamP"), result.getArray("Paramt"), cmx.getId(), emid));
+	    				result.getArray(Bfrdb.ATT_MAX), result.getArray("ParamDescription"), result.getArray(Bfrdb.ATT_PARAMTYPE), result.getArray("ParamP"), result.getArray("Paramt"), cmx.id, emid));
 	    		
 	    		s = result.getString("LitMID");
 	    		if (s != null) tuple.setValue(Model1Schema.ATT_MLIT, getLiterature(conn, s, dbuuid));
@@ -372,7 +372,7 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
     			cmDoc = new PmmXmlDoc();
     			cmx = new CatalogModelXml(result.getInt(Bfrdb.ATT_MODELID+"2"), result.getString(Bfrdb.ATT_NAME+"2"), formula, null, dbuuid); 
         		cls = DBKernel.getValue(conn,"Modellkatalog", "ID", result.getInt(Bfrdb.ATT_MODELID+"2")+"", "Klasse");
-        		cmx.setModelClass((Integer) cls);
+        		cmx.modelClass = (Integer) cls;
     			   			
 	    		emid = result.getInt(Bfrdb.ATT_ESTMODELID+"2");
 	    		depDoc = new PmmXmlDoc();
@@ -390,7 +390,7 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
 		    			Object pname = DBKernel.getValue("ModellkatalogParameter", "ID", ""+responseId, "Parametername");
 		    			if (pname != null) {
 	    					formula = MathUtilities.replaceVariable(formula, dep, pname.toString());
-	    					cmx.setFormula(formula);
+	    					cmx.formula = formula;
 		    				dx.setName(pname.toString());
 		    			}
 		    		}
@@ -437,7 +437,7 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
 	    				result.getArray("IndepUnit2"), result.getArray("IndepDescription2"), false));
 	    		tuple.setValue(Model2Schema.ATT_PARAMETER, DbIo.convertArrays2ParamXmlDoc(varMap, result.getArray(Bfrdb.ATT_PARAMNAME+"2"),
 	    				result.getArray(Bfrdb.ATT_VALUE+"2"), result.getArray("ZeitEinheit2"), null, result.getArray("Einheiten2"), result.getArray("StandardError2"), result.getArray(Bfrdb.ATT_MIN+"2"),
-	    				result.getArray(Bfrdb.ATT_MAX+"2"), result.getArray("ParamDescription2"), result.getArray(Bfrdb.ATT_PARAMTYPE+"2"), result.getArray("ParamP2"), result.getArray("Paramt2"), cmx.getId(), emid));
+	    				result.getArray(Bfrdb.ATT_MAX+"2"), result.getArray("ParamDescription2"), result.getArray(Bfrdb.ATT_PARAMTYPE+"2"), result.getArray("ParamP2"), result.getArray("Paramt2"), cmx.id, emid));
 
 	    		s = result.getString("LitMID2");
 	    		if (s != null) tuple.setValue(Model2Schema.ATT_MLIT, getLiterature(conn, s, dbuuid));

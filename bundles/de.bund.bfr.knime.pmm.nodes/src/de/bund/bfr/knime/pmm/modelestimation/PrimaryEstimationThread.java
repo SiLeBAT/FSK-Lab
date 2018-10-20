@@ -78,8 +78,8 @@ public class PrimaryEstimationThread implements Runnable {
 	public void run() {
 		try {
 			PmmXmlDoc modelXml = tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG);
-			String modelID = ((CatalogModelXml) modelXml.get(0)).getId() + "";
-			String formula = ((CatalogModelXml) modelXml.get(0)).getFormula();
+			String modelID = ((CatalogModelXml) modelXml.get(0)).id + "";
+			String formula = ((CatalogModelXml) modelXml.get(0)).formula;
 			PmmXmlDoc paramXml = tuple.getPmmXml(Model1Schema.ATT_PARAMETER);
 			List<String> parameters = new ArrayList<>();
 			List<Double> minParameterValues = new ArrayList<>();
@@ -241,7 +241,7 @@ public class PrimaryEstimationThread implements Runnable {
 		String matrixName = matrix.getName() != null ? matrix.getName()
 				: matrix.getDetail();
 		String modelName = ((CatalogModelXml) tuple.getPmmXml(
-				Model1Schema.ATT_MODELCATALOG).get(0)).getName();
+				Model1Schema.ATT_MODELCATALOG).get(0)).name;
 
 		return dataName + "_" + agentName + "_" + matrixName + "_" + modelName;
 	}

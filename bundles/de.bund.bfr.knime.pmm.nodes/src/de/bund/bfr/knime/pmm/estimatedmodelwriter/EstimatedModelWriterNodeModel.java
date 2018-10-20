@@ -216,9 +216,9 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						}
 					}
 
-					Integer rowMcID = cmx.getId();//row.getInt(Model1Schema.ATT_MODELID);
-					String modelName = cmx.getName();//row.getString(Model1Schema.ATT_MODELNAME);
-					String formula = cmx.getFormula();//row.getString(Model1Schema.ATT_FORMULA);
+					Integer rowMcID = cmx.id;//row.getInt(Model1Schema.ATT_MODELID);
+					String modelName = cmx.name;//row.getString(Model1Schema.ATT_MODELNAME);
+					String formula = cmx.formula;//row.getString(Model1Schema.ATT_FORMULA);
 					PmmXmlDoc depXml = row.getPmmXml(Model1Schema.ATT_DEPENDENT);
 					DepXml dx = (DepXml) depXml.getElementSet().get(0);
 
@@ -238,7 +238,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						ppm = alreadyInsertedModel.get(rowMcID);
 					} else {
 						ppm = new ParametricModel(modelName, formula, dx, 1, rowMcID); // , rowEstM1ID == null ? MathUtilities.getRandomNegativeInt() : rowEstM1ID
-						ppm.setModelClass(cmx.getModelClass());
+						ppm.setModelClass(cmx.modelClass);
 						ppm.setParameter(paramXml);
 						ppm.setIndependent(indepXml);
 						ppm.setFormula(ppm.revertFormula());
@@ -249,7 +249,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 
 						boolean checkAnywayDueToNegativeId = (rowMcID < 0);
 						String rowuuid = row.getString(Model1Schema.ATT_DBUUID);
-						if (rowuuid == null) rowuuid = cmx.getDbuuid();
+						if (rowuuid == null) rowuuid = cmx.dbuuid;
 						
 						foreignDbIds = checkIDs(conn, true, dbuuid, row, ppm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 						db.insertM(ppm);
@@ -403,9 +403,9 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 				}
 			}
 		}
-		Integer rowMcID = cmx.getId();//row.getInt(Model2Schema.ATT_MODELID);
-		String modelName = cmx.getName();//row.getString(Model2Schema.ATT_MODELNAME);
-		String formula = cmx.getFormula();//row.getString(Model2Schema.ATT_FORMULA);
+		Integer rowMcID = cmx.id;//row.getInt(Model2Schema.ATT_MODELID);
+		String modelName = cmx.name;//row.getString(Model2Schema.ATT_MODELNAME);
+		String formula = cmx.formula;//row.getString(Model2Schema.ATT_FORMULA);
 		PmmXmlDoc depXml = row.getPmmXml(Model2Schema.ATT_DEPENDENT);
 		DepXml dx = (DepXml) depXml.getElementSet().get(0);
 
@@ -425,7 +425,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 			spm = alreadyInsertedModel.get(rowMcID);
 		} else {
 			spm = new ParametricModel(modelName, formula, dx, 2, rowMcID, rowEstM2ID == null ? MathUtilities.getRandomNegativeInt() : rowEstM2ID);
-			spm.setModelClass(cmx.getModelClass());
+			spm.setModelClass(cmx.modelClass);
 			spm.setParameter(paramXml);
 			spm.setIndependent(indepXml);
 			spm.setFormula(spm.revertFormula());
@@ -436,7 +436,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 
 			boolean checkAnywayDueToNegativeId = (rowMcID < 0);
 			String rowuuid = row.getString(Model2Schema.ATT_DBUUID);
-			if (rowuuid == null) rowuuid = cmx.getDbuuid();
+			if (rowuuid == null) rowuuid = cmx.dbuuid;
 			
 			foreignDbIds = checkIDs(conn, true, dbuuid, row, spm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 			db.insertM(spm);

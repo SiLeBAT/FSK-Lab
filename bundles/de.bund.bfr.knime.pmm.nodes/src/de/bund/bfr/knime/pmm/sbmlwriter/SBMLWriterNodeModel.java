@@ -282,7 +282,7 @@ public class SBMLWriterNodeModel extends NodeModel {
 					}
 				}
 
-				String formula = modelXml.getFormula().substring(modelXml.getFormula().indexOf("=") + 1);
+				String formula = modelXml.formula.substring(modelXml.formula.indexOf("=") + 1);
 
 				try {
 					rules.add(new AssignmentRule(parse(formula), depParam));
@@ -374,7 +374,7 @@ public class SBMLWriterNodeModel extends NodeModel {
 			PmmXmlDoc modelXml = tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG);
 			CatalogModelXml model = (CatalogModelXml) modelXml.get(0);
 
-			model.setFormula(MathUtilities.replaceVariable(model.getFormula(), "log", "log10"));
+			model.formula = MathUtilities.replaceVariable(model.formula, "log", "log10");
 			tuple.setValue(Model1Schema.ATT_MODELCATALOG, modelXml);
 		}
 
@@ -395,8 +395,8 @@ public class SBMLWriterNodeModel extends NodeModel {
 					try {
 						String replacement = "(" + temp.getConversionString(indep.getName(), KELVIN, CELSIUS) + ")";
 
-						model.setFormula(
-								MathUtilities.replaceVariable(model.getFormula(), indep.getName(), replacement));
+						model.formula =
+								MathUtilities.replaceVariable(model.formula, indep.getName(), replacement);
 						indep.setUnit(KELVIN);
 						indep.setMin(temp.convert(indep.getMin(), CELSIUS, KELVIN));
 						indep.setMax(temp.convert(indep.getMax(), CELSIUS, KELVIN));
@@ -407,8 +407,8 @@ public class SBMLWriterNodeModel extends NodeModel {
 					try {
 						String replacement = "(" + temp.getConversionString(indep.getName(), KELVIN, FAHRENHEIT) + ")";
 
-						model.setFormula(
-								MathUtilities.replaceVariable(model.getFormula(), indep.getName(), replacement));
+						model.formula = 
+								MathUtilities.replaceVariable(model.formula, indep.getName(), replacement);
 						indep.setUnit(FAHRENHEIT);
 						indep.setMin(temp.convert(indep.getMin(), FAHRENHEIT, KELVIN));
 						indep.setMax(temp.convert(indep.getMax(), FAHRENHEIT, KELVIN));

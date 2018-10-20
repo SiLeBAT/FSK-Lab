@@ -159,7 +159,7 @@ public class SecondaryModelDialog extends JDialog implements ActionListener, Ite
 
 			if (tuple != null) {
 				id = DBKernel.openSecModelDBWindow(modelButton,
-						((CatalogModelXml) tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG).get(0)).getId());
+						((CatalogModelXml) tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG).get(0)).id);
 			} else {
 				id = DBKernel.openSecModelDBWindow(modelButton, null);
 			}
@@ -176,7 +176,7 @@ public class SecondaryModelDialog extends JDialog implements ActionListener, Ite
 				updateConfigPanel();
 			}
 		} else if (e.getSource() == reloadButton) {
-			Integer id = ((CatalogModelXml) tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG).get(0)).getId();
+			Integer id = ((CatalogModelXml) tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG).get(0)).id;
 
 			if (id != null) {
 				Bfrdb db = new Bfrdb(DBKernel.getLocalConn(true));
@@ -267,7 +267,7 @@ public class SecondaryModelDialog extends JDialog implements ActionListener, Ite
 
 		if (tuple != null) {
 			modelButton = new JButton(
-					((CatalogModelXml) tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG).get(0)).getName());
+					((CatalogModelXml) tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG).get(0)).name);
 			reloadButton = new JButton(SettingsHelper.RELOAD);
 			reloadButton.setEnabled(true);
 		} else {

@@ -106,11 +106,11 @@ public class SecondaryEstimationThread implements Runnable {
 						Model2Schema.ATT_DEPENDENT).get(0);
 				CatalogModelXml primModelXml = (CatalogModelXml) tuple
 						.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0);
-				String id = depXml.getName() + " (" + primModelXml.getId()
+				String id = depXml.getName() + " (" + primModelXml.id
 						+ ")";
 
-				if (!globalIds.containsKey(primModelXml.getId())) {
-					globalIds.put(primModelXml.getId(),
+				if (!globalIds.containsKey(primModelXml.id)) {
+					globalIds.put(primModelXml.id,
 							MathUtilities.getRandomNegativeInt());
 				}
 
@@ -182,7 +182,7 @@ public class SecondaryEstimationThread implements Runnable {
 						Model2Schema.ATT_DEPENDENT).get(0);
 				CatalogModelXml primModelXml = (CatalogModelXml) tuple
 						.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0);
-				String id = depXml.getName() + " (" + primModelXml.getId()
+				String id = depXml.getName() + " (" + primModelXml.id
 						+ ")";
 
 				if (!paramMap.containsKey(id)) {
@@ -193,7 +193,7 @@ public class SecondaryEstimationThread implements Runnable {
 					PmmXmlDoc indepXml = tuple
 							.getPmmXml(Model2Schema.ATT_INDEPENDENT);
 					String formula = ((CatalogModelXml) modelXml.get(0))
-							.getFormula();
+							.formula;
 					List<String> parameters = new ArrayList<>();
 					List<Double> minParameterValues = new ArrayList<>();
 					List<Double> maxParameterValues = new ArrayList<>();
@@ -203,7 +203,7 @@ public class SecondaryEstimationThread implements Runnable {
 					List<String> arguments = CellIO.getNameList(indepXml);
 					List<List<Double>> argumentValues = new ArrayList<>();
 					String modelID = ((CatalogModelXml) modelXml.get(0))
-							.getId() + "";
+							.id + "";
 					Map<String, Point2D.Double> modelGuesses = parameterGuesses
 							.get(ModelEstimationNodeModel.SECONDARY + modelID);
 
@@ -354,7 +354,7 @@ public class SecondaryEstimationThread implements Runnable {
 				tuple.setValue(Model2Schema.ATT_DATABASEWRITABLE,
 						Model2Schema.WRITABLE);
 				tuple.setValue(Model2Schema.ATT_GLOBAL_MODEL_ID,
-						globalIds.get(primModelXml.getId()));
+						globalIds.get(primModelXml.id));
 
 				container.addRowToTable(tuple);
 			}
@@ -377,7 +377,7 @@ public class SecondaryEstimationThread implements Runnable {
 		String matrixName = matrix.getName() != null ? matrix.getName()
 				: matrix.getDetail();
 		String modelName = ((CatalogModelXml) tuple.getPmmXml(
-				Model2Schema.ATT_MODELCATALOG).get(0)).getName();
+				Model2Schema.ATT_MODELCATALOG).get(0)).name;
 
 		return depVar + "_" + agentName + "_" + matrixName + "_" + modelName;
 	}

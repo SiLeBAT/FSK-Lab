@@ -154,7 +154,7 @@ public class QualityMeasurementComputation {
 
 			DJep parser = MathUtilities.createParser();
 			String formula = ((CatalogModelXml) tuple.getPmmXml(
-					Model1Schema.ATT_MODELCATALOG).get(0)).getFormula();
+					Model1Schema.ATT_MODELCATALOG).get(0)).formula;
 			Node function = null;
 
 			try {
@@ -287,13 +287,12 @@ public class QualityMeasurementComputation {
 					.getPmmXml(Model2Schema.ATT_DEPENDENT).get(0);
 			CatalogModelXml primModelXml = (CatalogModelXml) tuple.getPmmXml(
 					Model1Schema.ATT_MODELCATALOG).get(0);
-			String id = depXml.getName() + " (" + primModelXml.getId() + ")";
+			String id = depXml.getName() + " (" + primModelXml.id + ")";
 
 			if (!idSet.contains(id)) {
 				PmmXmlDoc modelXmlSec = tuple
 						.getPmmXml(Model2Schema.ATT_MODELCATALOG);
-				String formulaSec = ((CatalogModelXml) modelXmlSec.get(0))
-						.getFormula();
+				String formulaSec = ((CatalogModelXml) modelXmlSec.get(0)).formula;
 				String depVarSec = ((DepXml) tuple.getPmmXml(
 						Model2Schema.ATT_DEPENDENT).get(0)).getName();
 				PmmXmlDoc paramXmlSec = tuple
@@ -435,7 +434,7 @@ public class QualityMeasurementComputation {
 					.getPmmXml(Model2Schema.ATT_DEPENDENT).get(0);
 			CatalogModelXml primModelXml = (CatalogModelXml) tuple.getPmmXml(
 					Model1Schema.ATT_MODELCATALOG).get(0);
-			String id = depXml.getName() + " (" + primModelXml.getId() + ")";
+			String id = depXml.getName() + " (" + primModelXml.id + ")";
 
 			if (rmsMap.containsKey(id)) {
 				PmmXmlDoc estModelXml = newTuple

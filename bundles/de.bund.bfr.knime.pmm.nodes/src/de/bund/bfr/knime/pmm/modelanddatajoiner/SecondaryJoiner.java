@@ -262,7 +262,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 					PmmXmlDoc modelXmlSec = modelTuple
 							.getPmmXml(Model2Schema.ATT_MODELCATALOG);
 					String modelIDSec = ((CatalogModelXml) modelXmlSec.get(0))
-							.getId() + "";
+							.id + "";
 					Integer estIDSec = ((EstModelXml) modelTuple.getPmmXml(
 							Model2Schema.ATT_ESTMODEL).get(0)).getId();
 
@@ -271,7 +271,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 					}
 
 					String formulaSec = ((CatalogModelXml) modelXmlSec.get(0))
-							.getFormula();
+							.formula;
 					PmmXmlDoc depVarSec = modelTuple
 							.getPmmXml(Model2Schema.ATT_DEPENDENT);
 					String depVarSecName = ((DepXml) depVarSec.get(0))
@@ -324,8 +324,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 						continue;
 					}
 
-					((CatalogModelXml) modelXmlSec.get(0))
-							.setFormula(formulaSec);
+					((CatalogModelXml) modelXmlSec.get(0)).formula = formulaSec;
 
 					List<KnimeTuple> dataTuples = PmmUtilities.getTuples(
 							dataTable, SchemaFactory.createM1DataSchema());
@@ -337,12 +336,12 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 								.getPmmXml(Model1Schema.ATT_MODELCATALOG)
 								.get(0);
 
-						if (!tuplesByPrimID.containsKey(modelXml.getId())) {
-							tuplesByPrimID.put(modelXml.getId(),
+						if (!tuplesByPrimID.containsKey(modelXml.id)) {
+							tuplesByPrimID.put(modelXml.id,
 									new ArrayList<KnimeTuple>());
 						}
 
-						tuplesByPrimID.get(modelXml.getId()).add(dataTuple);
+						tuplesByPrimID.get(modelXml.id).add(dataTuple);
 					}
 
 					for (int primID : tuplesByPrimID.keySet()) {
@@ -352,7 +351,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 
 					for (KnimeTuple dataTuple : dataTuples) {
 						int id = ((CatalogModelXml) dataTuple.getPmmXml(
-								Model1Schema.ATT_MODELCATALOG).get(0)).getId();
+								Model1Schema.ATT_MODELCATALOG).get(0)).id;
 
 						if (id != modelID) {
 							continue;
@@ -456,7 +455,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 			PmmXmlDoc modelXml = row.getPmmXml(Model2Schema.ATT_MODELCATALOG);
 			DepXml depXml = (DepXml) row.getPmmXml(Model2Schema.ATT_DEPENDENT)
 					.get(0);
-			String modelID = ((CatalogModelXml) modelXml.get(0)).getId() + "";
+			String modelID = ((CatalogModelXml) modelXml.get(0)).id + "";
 
 			if (dependentVariables.containsKey(modelID)) {
 				continue;
@@ -464,9 +463,9 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 
 			models.add(modelID);
 			modelNames.put(modelID,
-					((CatalogModelXml) modelXml.get(0)).getName());
+					((CatalogModelXml) modelXml.get(0)).name);
 			modelFormulas.put(modelID,
-					((CatalogModelXml) modelXml.get(0)).getFormula());
+					((CatalogModelXml) modelXml.get(0)).formula);
 			dependentVariables.put(modelID, depXml.getName());
 
 			Map<String, String> indepCategories = new LinkedHashMap<>();
@@ -498,7 +497,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 			CatalogModelXml modelXml = (CatalogModelXml) row.getPmmXml(
 					Model1Schema.ATT_MODELCATALOG).get(0);
 
-			if (!primaryModelNames.containsKey(modelXml.getId())) {
+			if (!primaryModelNames.containsKey(modelXml.id)) {
 				List<String> params = new ArrayList<>();
 
 				for (PmmXmlElementConvertable el : row.getPmmXml(
@@ -508,8 +507,8 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 					params.add(element.getName());
 				}
 
-				primaryModelNames.put(modelXml.getId(), modelXml.getName());
-				dependentParameters.put(modelXml.getId(), params);
+				primaryModelNames.put(modelXml.id, modelXml.name);
+				dependentParameters.put(modelXml.id, params);
 			}
 
 			for (PmmXmlElementConvertable el : row.getPmmXml(

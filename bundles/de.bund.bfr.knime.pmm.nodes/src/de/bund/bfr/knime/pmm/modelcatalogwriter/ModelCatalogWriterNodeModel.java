@@ -123,10 +123,10 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 						}
 					}
 				}
-				if (cmx.getId() != null && !alreadySaved.contains(cmx.getId())) {
-					alreadySaved.add(cmx.getId());
-					String modelName = cmx.getName();//row.getString(Model1Schema.ATT_MODELNAME);
-					String formula = cmx.getFormula();//row.getString(Model1Schema.ATT_FORMULA);
+				if (cmx.id != null && !alreadySaved.contains(cmx.id)) {
+					alreadySaved.add(cmx.id);
+					String modelName = cmx.name;//row.getString(Model1Schema.ATT_MODELNAME);
+					String formula = cmx.formula;//row.getString(Model1Schema.ATT_FORMULA);
 					PmmXmlDoc depXml = row.getPmmXml(Model1Schema.ATT_DEPENDENT);
 					DepXml dx = (DepXml) depXml.getElementSet().get(0);
 					PmmXmlDoc paramXml = row.getPmmXml(Model1Schema.ATT_PARAMETER);
@@ -135,9 +135,9 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 					PmmXmlDoc mLitXmlDoc = row.getPmmXml(Model1Schema.ATT_MLIT);
 					PmmXmlDoc emLitXmlDoc = row.getPmmXml(Model1Schema.ATT_EMLIT);
 
-					ParametricModel pm = new ParametricModel(modelName, formula, dx, 1, cmx.getId());
-					pm.setModelClass(cmx.getModelClass());
-					pm.setComment(cmx.getComment());
+					ParametricModel pm = new ParametricModel(modelName, formula, dx, 1, cmx.id);
+					pm.setModelClass(cmx.modelClass);
+					pm.setComment(cmx.comment);
 					pm.setParameter(paramXml);
 					pm.setIndependent(indepXml);
 					pm.setFormula(pm.revertFormula());
@@ -149,7 +149,7 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 
 					boolean checkAnywayDueToNegativeId = (pm.getModelId() < 0);
 					String rowuuid = row.getString(Model1Schema.ATT_DBUUID);
-					if (rowuuid == null) rowuuid = cmx.getDbuuid();
+					if (rowuuid == null) rowuuid = cmx.dbuuid;
 					foreignDbIds = checkIDs(conn, true, dbuuid, row, pm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 					db.insertM(pm);
 					foreignDbIds = checkIDs(conn, false, dbuuid, row, pm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
@@ -168,10 +168,10 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 						}
 					}
 				}
-				if (cmx.getId() != null && !alreadySaved.contains(cmx.getId())) {
-					alreadySaved.add(cmx.getId());
-					String modelName = cmx.getName();//row.getString(Model2Schema.ATT_MODELNAME);
-					String formula = cmx.getFormula();//row.getString(Model2Schema.ATT_FORMULA);
+				if (cmx.id != null && !alreadySaved.contains(cmx.id)) {
+					alreadySaved.add(cmx.id);
+					String modelName = cmx.name;//row.getString(Model2Schema.ATT_MODELNAME);
+					String formula = cmx.formula;//row.getString(Model2Schema.ATT_FORMULA);
 					PmmXmlDoc depXml = row.getPmmXml(Model2Schema.ATT_DEPENDENT);
 					DepXml dx = (DepXml) depXml.getElementSet().get(0);
 
@@ -181,9 +181,9 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 					PmmXmlDoc mLitXmlDoc = row.getPmmXml(Model2Schema.ATT_MLIT);
 					PmmXmlDoc emLitXmlDoc = row.getPmmXml(Model2Schema.ATT_EMLIT);
 
-					ParametricModel pm = new ParametricModel(modelName, formula, dx, 2, cmx.getId());
-					pm.setModelClass(cmx.getModelClass());
-					pm.setComment(cmx.getComment());
+					ParametricModel pm = new ParametricModel(modelName, formula, dx, 2, cmx.id);
+					pm.setModelClass(cmx.modelClass);
+					pm.setComment(cmx.comment);
 					pm.setParameter(paramXml);
 					pm.setIndependent(indepXml);
 					pm.setFormula(pm.revertFormula());
@@ -195,7 +195,7 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 
 					boolean checkAnywayDueToNegativeId = (pm.getModelId() < 0);
 					String rowuuid = row.getString(Model2Schema.ATT_DBUUID);
-					if (rowuuid == null) rowuuid = cmx.getDbuuid();
+					if (rowuuid == null) rowuuid = cmx.dbuuid;
 					foreignDbIds = checkIDs(conn, true, dbuuid, row, pm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 					db.insertM(pm);
 					foreignDbIds = checkIDs(conn, false, dbuuid, row, pm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);

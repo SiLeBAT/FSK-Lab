@@ -267,7 +267,7 @@ public class ModelReaderUi extends JPanel implements ActionListener {
 				for (PmmXmlElementConvertable el : x.getElementSet()) {
 					if (el instanceof CatalogModelXml) {
 						CatalogModelXml cmx = (CatalogModelXml) el;
-						if (modelNameEnabled(cmx.getName())) return true;
+						if (modelNameEnabled(cmx.name)) return true;
 						break;
 					}
 				}
@@ -393,7 +393,7 @@ public class ModelReaderUi extends JPanel implements ActionListener {
 			for (PmmXmlElementConvertable el : x.getElementSet()) {
 				if (el instanceof CatalogModelXml) {
 					CatalogModelXml cmx = (CatalogModelXml) el;
-					id = cmx.getId();
+					id = cmx.id;
 					break;
 				}
 			}

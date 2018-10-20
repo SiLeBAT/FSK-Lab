@@ -89,7 +89,7 @@ public class XLSModelReaderNodeModel extends NodeModel {
 		}
 
 		PmmXmlDoc modelXml = modelTuple.getPmmXml(Model1Schema.ATT_MODELCATALOG);
-		String formula = ((CatalogModelXml) modelXml.get(0)).getFormula();
+		String formula = ((CatalogModelXml) modelXml.get(0)).formula;
 		PmmXmlDoc depVar = modelTuple.getPmmXml(Model1Schema.ATT_DEPENDENT);
 		PmmXmlDoc indepVar = modelTuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 
@@ -105,7 +105,7 @@ public class XLSModelReaderNodeModel extends NodeModel {
 			((IndepXml) indepVar.get(0)).setName(AttributeUtilities.TIME);
 		}
 
-		((CatalogModelXml) modelXml.get(0)).setFormula(formula);
+		((CatalogModelXml) modelXml.get(0)).formula = formula;
 		modelTuple.setValue(Model1Schema.ATT_MODELCATALOG, modelXml);
 		modelTuple.setValue(Model1Schema.ATT_DEPENDENT, depVar);
 		modelTuple.setValue(Model1Schema.ATT_INDEPENDENT, indepVar);

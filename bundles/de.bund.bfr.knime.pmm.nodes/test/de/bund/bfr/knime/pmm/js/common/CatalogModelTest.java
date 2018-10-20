@@ -115,7 +115,7 @@ public class CatalogModelTest {
 	@Test
 	public void testToCatalogModel() {
 		CatalogModelXml catalogModelXml = new CatalogModelXml(id, name, formula, modelClass, dbuuid);
-		catalogModelXml.setComment(comment);
+		catalogModelXml.comment = comment;
 		CatalogModel catalogModel = CatalogModel.toCatalogModel(catalogModelXml);
 		
 		assertTrue(id == catalogModel.getId());
@@ -137,11 +137,11 @@ public class CatalogModelTest {
 		catalogModel.setDbuuid(dbuuid);
 		CatalogModelXml catalogModelXml = catalogModel.toCatalogModelXml();
 		
-		assertTrue(id == catalogModelXml.getId());
-		assertEquals(name, catalogModelXml.getName());
-		assertEquals(formula, catalogModelXml.getFormula());
-		assertTrue(modelClass == catalogModelXml.getModelClass());
-		assertEquals(comment, catalogModelXml.getComment());
-		assertEquals(dbuuid, catalogModelXml.getDbuuid());
+		assertTrue(id == catalogModelXml.id);
+		assertEquals(name, catalogModelXml.name);
+		assertEquals(formula, catalogModelXml.formula);
+		assertTrue(modelClass == catalogModelXml.modelClass);
+		assertEquals(comment, catalogModelXml.comment);
+		assertEquals(dbuuid, catalogModelXml.dbuuid);
 	}
 }

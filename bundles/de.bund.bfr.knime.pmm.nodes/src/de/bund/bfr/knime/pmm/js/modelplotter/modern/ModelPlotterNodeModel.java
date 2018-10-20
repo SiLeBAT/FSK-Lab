@@ -525,7 +525,7 @@ public final class ModelPlotterNodeModel
 			LOGGER.warn("DATA PROBLEM: No dbuuid given. Random ID will be generated.");
 			int seed;
 			if (tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG) != null)
-				seed = ((CatalogModelXml) tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0)).getFormula()
+				seed = ((CatalogModelXml) tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0)).formula
 						.hashCode();
 			else
 				seed = tuple.hashCode();

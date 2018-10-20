@@ -312,12 +312,12 @@ public final class ModelEditorNodeModel
 		if(catalogModelXml != null)
 		{
 			CatalogModel catalogModel = new CatalogModel();
-			catalogModel.setId(catalogModelXml.getId());
-			catalogModel.setName(catalogModelXml.getName());
-			catalogModel.setFormula(catalogModelXml.getFormula());
-			catalogModel.setModelClass(catalogModelXml.getModelClass());
-			catalogModel.setComment(catalogModelXml.getComment());
-			catalogModel.setDbuuid(catalogModelXml.getDbuuid());
+			catalogModel.setId(catalogModelXml.id);
+			catalogModel.setName(catalogModelXml.name);
+			catalogModel.setFormula(catalogModelXml.formula);
+			catalogModel.setModelClass(catalogModelXml.modelClass);
+			catalogModel.setComment(catalogModelXml.comment);
+			catalogModel.setDbuuid(catalogModelXml.dbuuid);
 			outTuple.setCatModel(catalogModel);
 		}
 		
@@ -329,12 +329,12 @@ public final class ModelEditorNodeModel
 		if(catalogModelSecXml != null)
 		{
 			CatalogModel catalogModelSec = new CatalogModel();
-			catalogModelSec.setId(catalogModelSecXml.getId());
-			catalogModelSec.setName(catalogModelSecXml.getName());
-			catalogModelSec.setFormula(catalogModelSecXml.getFormula());
-			catalogModelSec.setModelClass(catalogModelSecXml.getModelClass());
-			catalogModelSec.setComment(catalogModelSecXml.getComment());
-			catalogModelSec.setDbuuid(catalogModelSecXml.getDbuuid());
+			catalogModelSec.setId(catalogModelSecXml.id);
+			catalogModelSec.setName(catalogModelSecXml.name);
+			catalogModelSec.setFormula(catalogModelSecXml.formula);
+			catalogModelSec.setModelClass(catalogModelSecXml.modelClass);
+			catalogModelSec.setComment(catalogModelSecXml.comment);
+			catalogModelSec.setDbuuid(catalogModelSecXml.dbuuid);
 			outTuple.setCatModelSec(catalogModelSec);
 		}
 
@@ -624,7 +624,7 @@ public final class ModelEditorNodeModel
 		CatalogModel catalogModel = m1DataTuple.getCatModel();
 		CatalogModelXml catalogModelXml = new CatalogModelXml(catalogModel.getId(), catalogModel.getName(),
 				catalogModel.getFormula(), catalogModel.getModelClass(), catalogModel.getDbuuid());
-		catalogModelXml.setComment(catalogModel.getComment());
+		catalogModelXml.comment = catalogModel.getComment();
 		PmmXmlDoc catalogModelDoc = new PmmXmlDoc(catalogModelXml);
 		outTuple.setValue(Model1Schema.ATT_MODELCATALOG, catalogModelDoc);
 

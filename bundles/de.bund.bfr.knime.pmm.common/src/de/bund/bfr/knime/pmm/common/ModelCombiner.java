@@ -63,7 +63,7 @@ public class ModelCombiner {
 			for (KnimeTuple tuple : usedTuples) {
 				rename.put(tuple, new LinkedHashMap<String, String>());
 
-				String modelID = ((CatalogModelXml) tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0)).getId() + "";
+				String modelID = ((CatalogModelXml) tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0)).id + "";
 				String depVarSec = ((DepXml) tuple.getPmmXml(Model2Schema.ATT_DEPENDENT).get(0)).getName();
 
 				if (depVarSec.equals(initParams.get(modelID)) || depVarSec.equals(lagParams.get(modelID))) {
@@ -71,7 +71,7 @@ public class ModelCombiner {
 				}
 
 				String formulaSec = ((CatalogModelXml) tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG).get(0))
-						.getFormula();
+						.formula;
 				PmmXmlDoc indepVarsSec = tuple.getPmmXml(Model2Schema.ATT_INDEPENDENT);
 				PmmXmlDoc paramsSec = tuple.getPmmXml(Model2Schema.ATT_PARAMETER);
 
@@ -98,7 +98,7 @@ public class ModelCombiner {
 
 				String replacement = "(" + formulaSec.replace(depVarSec + "=", "") + ")";
 				String formula = ((CatalogModelXml) newTuple.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0))
-						.getFormula();
+						.formula;
 				PmmXmlDoc newParams = newTuple.getPmmXml(Model1Schema.ATT_PARAMETER);
 				PmmXmlDoc newIndepVars = newTuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 
@@ -159,17 +159,18 @@ public class ModelCombiner {
 				PmmXmlDoc modelXml = tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG);
 
 				((CatalogModelXml) modelXml.get(0))
-						.setFormula(MathUtilities.replaceVariable(formula, depVarSec, replacement));
+						.formula = MathUtilities.replaceVariable(formula, depVarSec, replacement);
+				
 
 				newTuple.setValue(Model1Schema.ATT_MODELCATALOG, modelXml);
 				newTuple.setValue(Model1Schema.ATT_INDEPENDENT, newIndepVars);
 				newTuple.setValue(Model1Schema.ATT_PARAMETER, newParams);
 			}
 
-			int newID = ((CatalogModelXml) newTuple.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0)).getId();
+			int newID = ((CatalogModelXml) newTuple.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0)).id;
 
 			for (KnimeTuple tuple : usedTuples) {
-				newID += ((CatalogModelXml) tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG).get(0)).getId();
+				newID += ((CatalogModelXml) tuple.getPmmXml(Model2Schema.ATT_MODELCATALOG).get(0)).id;
 			}
 
 			newID = MathUtilities.generateID(newID);
@@ -177,7 +178,7 @@ public class ModelCombiner {
 			PmmXmlDoc modelXml = newTuple.getPmmXml(Model1Schema.ATT_MODELCATALOG);
 			PmmXmlDoc estModelXml = newTuple.getPmmXml(Model1Schema.ATT_ESTMODEL);
 
-			((CatalogModelXml) modelXml.get(0)).setId(newID);
+			((CatalogModelXml) modelXml.get(0)).id = newID;
 			((EstModelXml) estModelXml.get(0)).setId(usedTuples.get(0).getInt(Model2Schema.ATT_GLOBAL_MODEL_ID));
 			((EstModelXml) estModelXml.get(0)).setSse(null);
 			((EstModelXml) estModelXml.get(0)).setRms(null);

@@ -210,12 +210,12 @@ public class CatalogModel implements ViewValue {
 	 */
 	public static CatalogModel toCatalogModel(CatalogModelXml catalogModelXml) {
 		CatalogModel catalogModel = new CatalogModel();
-			catalogModel.setId(catalogModelXml.getId());
-		catalogModel.setName(catalogModelXml.getName());
-		catalogModel.setFormula(catalogModelXml.getFormula());
-			catalogModel.setModelClass(catalogModelXml.getModelClass());
-		catalogModel.setComment(catalogModelXml.getComment());
-		catalogModel.setDbuuid(catalogModelXml.getDbuuid());
+			catalogModel.setId(catalogModelXml.id);
+		catalogModel.setName(catalogModelXml.name);
+		catalogModel.setFormula(catalogModelXml.formula);
+		catalogModel.setModelClass(catalogModelXml.modelClass);
+		catalogModel.setComment(catalogModelXml.comment);
+		catalogModel.setDbuuid(catalogModelXml.dbuuid);
 
 		return catalogModel;
 	}
@@ -227,7 +227,7 @@ public class CatalogModel implements ViewValue {
 	 */
 	public CatalogModelXml toCatalogModelXml() {
 		CatalogModelXml catalogModelXml = new CatalogModelXml(id, name, formula, modelClass, dbuuid);
-		catalogModelXml.setComment(comment);
+		catalogModelXml.comment = comment;
 
 		return catalogModelXml;
 	}
