@@ -33,7 +33,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.io.FileUtils;
@@ -58,7 +60,11 @@ import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
+import org.knime.core.util.IRemoteFileUtilsService;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.RScript;
@@ -261,6 +267,19 @@ final class FSKEditorJSNodeModel
         LOGGER.info("JS EDITOR folder: " + parentFolderPath);
         LOGGER.info("JS EDITOR URL: " + new URL(parentFolderPath));
         LOGGER.info("JS EDITOR localPath: " + localPath);
+        BundleContext ctx = FrameworkUtil.getBundle(IRemoteFileUtilsService.class).getBundleContext();
+        LOGGER.info("JS EDITOR ctx: " + ctx);
+        ServiceReference<IRemoteFileUtilsService> ref =
+            ctx.getServiceReference(IRemoteFileUtilsService.class);
+        LOGGER.info("JS EDITOR ref: " + ref);
+        if (ref != null) {
+            try {
+                 ctx.getService(ref).delete(new URL(parentFolderPath));
+                 LOGGER.info("JS EDITOR IRemoteFileUtilsService after delete: " + ref);
+            } finally {
+                ctx.ungetService(ref);
+            }
+        } 
         try {
 
           URL url = new URL("https://localhost/knime/rest/session");
@@ -294,7 +313,7 @@ final class FSKEditorJSNodeModel
           e.printStackTrace();
 
         }
-        try{
+        /*try{
           File dir = localPath.toFile();
           LOGGER.info("JS EDITOR dir: " + dir);
           boolean isDeleted = FileUtil.deleteRecursively(dir);
@@ -302,7 +321,7 @@ final class FSKEditorJSNodeModel
         }catch (Exception e) {
           
           e.printStackTrace();
-        }
+        }*/
 
         
         
