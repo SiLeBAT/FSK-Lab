@@ -32,7 +32,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -257,11 +256,24 @@ final class FSKEditorJSNodeModel
          * Experimental code!!!!!
          */
         String firstFile = fskEditorProxyValue.getResourcesFiles()[0];
-        String parentFolderPath = firstFile.substring(0,firstFile.lastIndexOf("/"));
+        String parentFolderPath = firstFile.substring(0,firstFile.lastIndexOf("/")-1);
         Path localPath = FileUtil.resolveToPath(new URL(parentFolderPath));
-        File dir = localPath.toFile();
-        boolean isDeleted = FileUtil.deleteRecursively(dir);
-        LOGGER.info("JS EDITOR folder: " + dir +" Deleted "+isDeleted);
+        LOGGER.info("JS EDITOR folder: " + parentFolderPath);
+        LOGGER.info("JS EDITOR URL: " + new URL(parentFolderPath));
+        LOGGER.info("JS EDITOR localPath: " + localPath);
+
+        try{
+          File dir = localPath.toFile();
+          LOGGER.info("JS EDITOR dir: " + dir);
+          boolean isDeleted = FileUtil.deleteRecursively(dir);
+          LOGGER.info("JS EDITOR isDeleted: " + isDeleted);
+        }catch (Exception e) {
+          
+          e.printStackTrace();
+        }
+
+        
+        
 
         /*
          * End of the Experimental code!!!!!

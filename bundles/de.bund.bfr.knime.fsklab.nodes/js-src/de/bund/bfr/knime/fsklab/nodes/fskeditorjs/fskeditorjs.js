@@ -365,14 +365,12 @@ fskeditorjs = function() {
 			.now()
 			+ window.performance.timing.navigationStart : Date.now();
 	joinerNode.init = function(representation, value) {
-		console.log("parent ", parent.KnimePageLoader);
 
 		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
 			// send AJAX request to acquire the JWT for the currently logged in
 			// user. Subsequent requests need to carry the token in the
 			// “Authorization” header
 			server = window.location.protocol + "//" + window.location.host
-			console.log(server);
 			var xhttp = new XMLHttpRequest();
 
 			xhttp.onreadystatechange = function() {
@@ -427,7 +425,7 @@ fskeditorjs = function() {
 						.toISOString();
 			}
 		} catch (err) {
-			console.log(err);
+			//console.log(err);
 		}
 		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ? _firstModel.generalInformation.description
 				: "";
@@ -626,7 +624,6 @@ fskeditorjs = function() {
 								fileElement.remove();
 								$("#" + fileIDMap[fileElement.html()]).remove()
 								files.splice(indexToRemove, 1);
-								console.log(fileElement.html());
 								fileUploadAJAXMap[fileElement.html()].abort();
 							});
 							fileUploadAJAXMap[file.name] = $
@@ -649,9 +646,7 @@ fskeditorjs = function() {
 
 																		var Percentage = (current * 100)
 																				/ max;
-																		console
-																				.log($("#"
-																						+ file.name));
+																		
 																		$(
 																				"#"
 																						+ fileIDMap[file.name])
@@ -699,9 +694,6 @@ fskeditorjs = function() {
 				for (let index = 0; index < files.length; index++) {
 					let file = files[index];
 					formData.append('file', file);
-
-					console.log('Sending...');
-
 				}
 
 			});
