@@ -261,7 +261,39 @@ final class FSKEditorJSNodeModel
         LOGGER.info("JS EDITOR folder: " + parentFolderPath);
         LOGGER.info("JS EDITOR URL: " + new URL(parentFolderPath));
         LOGGER.info("JS EDITOR localPath: " + localPath);
+        try {
 
+          URL url = new URL("https://localhost/knime/rest/session");
+          HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+          conn.setRequestMethod("GET");
+          conn.setRequestProperty("Accept", "application/json");
+
+          if (conn.getResponseCode() != 200) {
+              throw new RuntimeException("Failed : HTTP error code : "
+                      + conn.getResponseCode());
+          }
+
+          BufferedReader br = new BufferedReader(new InputStreamReader(
+              (conn.getInputStream())));
+
+          String output;
+          String general= "";
+          System.out.println("Output from Server .... \n");
+          while ((output = br.readLine()) != null) {
+              general+=output;
+          }
+          LOGGER.info("JS EDITOR general: " + general);
+          conn.disconnect();
+
+        } catch (MalformedURLException e) {
+
+          e.printStackTrace();
+
+        } catch (IOException e) {
+
+          e.printStackTrace();
+
+        }
         try{
           File dir = localPath.toFile();
           LOGGER.info("JS EDITOR dir: " + dir);
