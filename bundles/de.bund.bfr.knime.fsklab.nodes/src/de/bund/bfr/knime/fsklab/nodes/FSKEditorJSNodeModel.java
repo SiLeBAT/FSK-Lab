@@ -256,7 +256,7 @@ final class FSKEditorJSNodeModel
          * Experimental code!!!!!
          */
         String firstFile = fskEditorProxyValue.getResourcesFiles()[0];
-        String parentFolderPath = firstFile.substring(0,firstFile.lastIndexOf("/")-1);
+        String parentFolderPath = firstFile.substring(0,firstFile.lastIndexOf("/"));
         Path localPath = FileUtil.resolveToPath(new URL(parentFolderPath));
         LOGGER.info("JS EDITOR folder: " + parentFolderPath);
         LOGGER.info("JS EDITOR URL: " + new URL(parentFolderPath));
