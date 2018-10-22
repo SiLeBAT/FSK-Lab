@@ -25,8 +25,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -146,99 +149,22 @@ final class FSKEditorJSNodeModel
    * @param fileURL HTTP URL of the file to be downloaded
    * @param workingDir path of the directory to save the file
    * @throws IOException
+   * @throws URISyntaxException
+   * @throws InvalidSettingsException
    */
-  public void downloadFileToWorkingDir(String fileURL, String workingDir, String JWT)
-      throws IOException {
-    URL url = new URL(fileURL);
-    HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-    httpConn.setRequestProperty("Authorization", "Bearer" + JWT);
-    int responseCode = httpConn.getResponseCode();
-
-    // always check HTTP response code first
-    if (responseCode == HttpURLConnection.HTTP_OK) {
-      String fileName = "";
-      String disposition = httpConn.getHeaderField("Content-Disposition");
-      String contentType = httpConn.getContentType();
-      int contentLength = httpConn.getContentLength();
-
-      if (disposition != null) {
-        // extracts file name from header field
-        int index = disposition.indexOf("filename=");
-        if (index > 0) {
-          fileName = disposition.substring(index + 10, disposition.length() - 1);
-        }
-      } else {
-        // extracts file name from URL
-        fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
-      }
-
-      // opens input stream from the HTTP connection
-      InputStream inputStream = httpConn.getInputStream();
-      String saveFilePath = workingDir + File.separator + fileName;
-
-      // opens an output stream to save into file
-      FileOutputStream outputStream = new FileOutputStream(saveFilePath);
-
-      int bytesRead = -1;
-      byte[] buffer = new byte[BUFFER_SIZE];
-      while ((bytesRead = inputStream.read(buffer)) != -1) {
-        outputStream.write(buffer, 0, bytesRead);
-      }
-
-      outputStream.close();
-      inputStream.close();
-
-      System.out.println("File downloaded");
-    } else {
-      System.out.println("No file to download. Server replied HTTP code: " + responseCode);
-    }
-    httpConn.disconnect();
-  }
-
-  /**
-   * Connect to get JWT token and Downloads files
-   * 
-   * @param serverName that host the resources
-   * @param resources array of resource URL on the server
-   * @param workingDir path of the directory to save the file
-   */
-  public void connectAndDownloadFilesOnServer(String serverName, String[] resources,
-      String workingDir) {
-    try {
-      String JWT = "";
-      String requestString = serverName + "/knime/rest/session";
-      URL url = new URL(requestString);
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod("GET");
-      conn.setRequestProperty("Accept", "application/json");
-
-      if (conn.getResponseCode() != 200) {
-
-        throw new RuntimeException(
-            "Failed : HTTP error code : " + conn.getResponseCode() + " >>>>>>> " + requestString);
-      }
-
-      BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-
-      String output;
-      System.out.println("Output from Server .... \n");
-
-      while ((output = br.readLine()) != null) {
-        JWT += output;
-      }
-      conn.disconnect();
-      for (String fileRequestString : resources) {
-        LOGGER.info(
-            "JS EDITOR  " + serverName + ">>>>>>" + fileRequestString + ">>>>>>" + workingDir);
-        downloadFileToWorkingDir(fileRequestString, workingDir, JWT);
-      }
-      // TODO remove the temp folder on the server
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+  public void downloadFileToWorkingDir(String fileURL, String workingDir)
+      throws IOException, URISyntaxException, InvalidSettingsException {
+    String fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1, fileURL.length());
+    String destinationPath = workingDir + File.separator + fileName;
+    File fileTodownload = new File(destinationPath);
+    LOGGER.info("JS EDITOR  path to write to: " + destinationPath);
+    try (InputStream inStream = FileUtil.openInputStream(fileURL);
+        OutputStream outStream = new FileOutputStream(fileTodownload)) {
+      IOUtils.copy(inStream, outStream);
     }
   }
+
+
 
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
@@ -320,9 +246,10 @@ final class FSKEditorJSNodeModel
       // resources will only be available via online mode of the editor
       if (fskEditorProxyValue.getResourcesFiles() != null
           && fskEditorProxyValue.getResourcesFiles().length != 0) {
-
-        connectAndDownloadFilesOnServer(fskEditorProxyValue.getServerName(),
-            fskEditorProxyValue.getResourcesFiles(), outObj.getWorkingDirectory());
+        for (String fileRequestString : fskEditorProxyValue.getResourcesFiles()) {
+          LOGGER.info("JS EDITOR  " + fileRequestString + ">>>>>>" + outObj.getWorkingDirectory());
+          downloadFileToWorkingDir(fileRequestString, outObj.getWorkingDirectory());
+        }
       }
       // Collect R packages
       final Set<String> librariesSet = new HashSet<>();

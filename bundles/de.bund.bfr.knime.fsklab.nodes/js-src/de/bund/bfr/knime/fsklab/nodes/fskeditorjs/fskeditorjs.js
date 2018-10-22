@@ -676,9 +676,8 @@ fskeditorjs = function() {
 										success : function(data) {
 											console.log('SUCCESS !!!', data);
 											resourcesFiles
-													.push(server
-															+ "/knime/rest/v4/repository"
-															+ data.path);
+											.push("knime://knime.mountpoint"
+													+ data.path);
 										},
 										error : function(data) {
 											console.log('ERROR !!!', data);
