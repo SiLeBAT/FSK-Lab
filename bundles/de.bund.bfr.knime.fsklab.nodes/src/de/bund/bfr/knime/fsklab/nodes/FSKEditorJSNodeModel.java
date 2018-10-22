@@ -31,6 +31,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -256,10 +258,11 @@ final class FSKEditorJSNodeModel
          */
         String firstFile = fskEditorProxyValue.getResourcesFiles()[0];
         String parentFolderPath = firstFile.substring(0,firstFile.lastIndexOf("/"));
-        File dir = new File(parentFolderPath);
-        LOGGER.info("JS EDITOR  " + dir );
+        Path localPath = FileUtil.resolveToPath(new URL(parentFolderPath));
+        File dir = localPath.toFile();
+        boolean isDeleted = FileUtil.deleteRecursively(dir);
+        LOGGER.info("JS EDITOR folder: " + dir +" Deleted "+isDeleted);
 
-        FileUtil.deleteRecursively(dir);
         /*
          * End of the Experimental code!!!!!
          */
