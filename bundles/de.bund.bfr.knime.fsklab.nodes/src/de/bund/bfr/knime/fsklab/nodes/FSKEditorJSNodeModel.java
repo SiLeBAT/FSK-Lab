@@ -151,8 +151,8 @@ final class FSKEditorJSNodeModel
   }
 
   /**
-   * Downloads a file from a URL.The code here is considering that the fileURL is using 
-   * KNIME Protocol
+   * Downloads a file from a URL.The code here is considering that the fileURL is using KNIME
+   * Protocol
    * 
    * @param fileURL HTTP URL of the file to be downloaded
    * @param workingDir path of the directory to save the file
@@ -258,77 +258,21 @@ final class FSKEditorJSNodeModel
           LOGGER.info("JS EDITOR  " + fileRequestString + ">>>>>>" + outObj.getWorkingDirectory());
           downloadFileToWorkingDir(fileRequestString, outObj.getWorkingDirectory());
         }
-        /*
-         * Experimental code!!!!!
-         */
+        // delete the parent folder of the uploaded files moving them to the working directory
         String firstFile = fskEditorProxyValue.getResourcesFiles()[0];
-        String parentFolderPath = firstFile.substring(0,firstFile.lastIndexOf("/"));
-        Path localPath = FileUtil.resolveToPath(new URL(parentFolderPath));
-        LOGGER.info("JS EDITOR folder: " + parentFolderPath);
-        LOGGER.info("JS EDITOR URL: " + new URL(parentFolderPath));
-        LOGGER.info("JS EDITOR localPath: " + localPath);
-        BundleContext ctx = FrameworkUtil.getBundle(IRemoteFileUtilsService.class).getBundleContext();
-        LOGGER.info("JS EDITOR ctx: " + ctx);
+        String parentFolderPath = firstFile.substring(0, firstFile.lastIndexOf("/"));
+        BundleContext ctx =
+            FrameworkUtil.getBundle(IRemoteFileUtilsService.class).getBundleContext();
         ServiceReference<IRemoteFileUtilsService> ref =
             ctx.getServiceReference(IRemoteFileUtilsService.class);
-        LOGGER.info("JS EDITOR ref: " + ref);
         if (ref != null) {
-            try {
-                 ctx.getService(ref).delete(new URL(parentFolderPath));
-                 LOGGER.info("JS EDITOR IRemoteFileUtilsService after delete: " + ref);
-            } finally {
-                ctx.ungetService(ref);
-            }
-        } 
-        try {
-
-          URL url = new URL("https://localhost/knime/rest/session");
-          HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-          conn.setRequestMethod("GET");
-          conn.setRequestProperty("Accept", "application/json");
-
-          if (conn.getResponseCode() != 200) {
-              throw new RuntimeException("Failed : HTTP error code : "
-                      + conn.getResponseCode());
+          try {
+            ctx.getService(ref).delete(new URL(parentFolderPath));
+          } finally {
+            ctx.ungetService(ref);
           }
-
-          BufferedReader br = new BufferedReader(new InputStreamReader(
-              (conn.getInputStream())));
-
-          String output;
-          String general= "";
-          System.out.println("Output from Server .... \n");
-          while ((output = br.readLine()) != null) {
-              general+=output;
-          }
-          LOGGER.info("JS EDITOR general: " + general);
-          conn.disconnect();
-
-        } catch (MalformedURLException e) {
-
-          e.printStackTrace();
-
-        } catch (IOException e) {
-
-          e.printStackTrace();
-
         }
-        /*try{
-          File dir = localPath.toFile();
-          LOGGER.info("JS EDITOR dir: " + dir);
-          boolean isDeleted = FileUtil.deleteRecursively(dir);
-          LOGGER.info("JS EDITOR isDeleted: " + isDeleted);
-        }catch (Exception e) {
-          
-          e.printStackTrace();
-        }*/
 
-        
-        
-
-        /*
-         * End of the Experimental code!!!!!
-         */
       }
       // Collect R packages
       final Set<String> librariesSet = new HashSet<>();
