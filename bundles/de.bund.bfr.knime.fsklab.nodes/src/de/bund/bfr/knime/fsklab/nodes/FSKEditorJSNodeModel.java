@@ -144,7 +144,8 @@ final class FSKEditorJSNodeModel
   }
 
   /**
-   * Downloads a file from a URL
+   * Downloads a file from a URL.The code here is considering that the fileURL is using 
+   * KNIME Protocol
    * 
    * @param fileURL HTTP URL of the file to be downloaded
    * @param workingDir path of the directory to save the file
@@ -250,6 +251,18 @@ final class FSKEditorJSNodeModel
           LOGGER.info("JS EDITOR  " + fileRequestString + ">>>>>>" + outObj.getWorkingDirectory());
           downloadFileToWorkingDir(fileRequestString, outObj.getWorkingDirectory());
         }
+        /*
+         * Experimental code!!!!!
+         */
+        String firstFile = fskEditorProxyValue.getResourcesFiles()[0];
+        String parentFolderPath = firstFile.substring(0,firstFile.lastIndexOf("/"));
+        File dir = new File(parentFolderPath);
+        LOGGER.info("JS EDITOR  " + dir );
+
+        FileUtil.deleteRecursively(dir);
+        /*
+         * End of the Experimental code!!!!!
+         */
       }
       // Collect R packages
       final Set<String> librariesSet = new HashSet<>();
