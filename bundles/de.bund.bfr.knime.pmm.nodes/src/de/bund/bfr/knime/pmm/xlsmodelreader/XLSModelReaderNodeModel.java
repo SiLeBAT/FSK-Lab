@@ -94,9 +94,9 @@ public class XLSModelReaderNodeModel extends NodeModel {
 		PmmXmlDoc indepVar = modelTuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 
 		if (depVar.size() == 1) {
-			formula = MathUtilities.replaceVariable(formula, ((DepXml) depVar.get(0)).getName(),
+			formula = MathUtilities.replaceVariable(formula, ((DepXml) depVar.get(0)).name,
 					AttributeUtilities.CONCENTRATION);
-			((DepXml) depVar.get(0)).setName(AttributeUtilities.CONCENTRATION);
+			((DepXml) depVar.get(0)).name = AttributeUtilities.CONCENTRATION;
 		}
 
 		if (indepVar.size() == 1) {

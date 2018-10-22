@@ -68,7 +68,7 @@ public class Model2Parser {
 		}
 
 		// Creates model and names it
-		Model model = sbmlDocument.createModel("model_" + dep.getName());
+		Model model = sbmlDocument.createModel("model_" + dep.name);
 		if (estModel.getName() != null) {
 			model.setName(estModel.getName());
 		}
@@ -102,9 +102,9 @@ public class Model2Parser {
 		}
 
 		// Adds dep
-		Parameter depParam = new SecDep(dep.getName(), dep.getDescription(), dep.getUnit()).getParam();
+		Parameter depParam = new SecDep(dep.name, dep.description, dep.unit).getParam();
 		// Adds dep constraint
-		LimitsConstraint depLc = new LimitsConstraint(dep.getName(), dep.getMin(), dep.getMax());
+		LimitsConstraint depLc = new LimitsConstraint(dep.name, dep.min, dep.max);
 		if (depLc.getConstraint() != null) {
 			model.addConstraint(depLc.getConstraint());
 		}

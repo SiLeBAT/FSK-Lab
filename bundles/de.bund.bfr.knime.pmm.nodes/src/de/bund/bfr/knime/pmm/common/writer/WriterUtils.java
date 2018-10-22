@@ -734,7 +734,7 @@ public class WriterUtils {
 			TableReader.addNamespaces(doc);
 
 			// Create model definition
-			String modelId = "model_" + dep.getName();
+			String modelId = "model_" + dep.name;
 			Model model = doc.createModel(modelId);
 			if (estModel.getName() != null) {
 				model.setName(estModel.getName());
@@ -756,9 +756,9 @@ public class WriterUtils {
 			}
 
 			// Adds dep
-			Parameter depParam = new SecDep(dep.getName(), dep.getDescription(), dep.getUnit()).getParam();
+			Parameter depParam = new SecDep(dep.name, dep.description, dep.unit).getParam();
 			// Adds dep constraint
-			LimitsConstraint depLc = new LimitsConstraint(dep.getName(), dep.getMin(), dep.getMax());
+			LimitsConstraint depLc = new LimitsConstraint(dep.name, dep.min, dep.max);
 			if (depLc.getConstraint() != null) {
 				model.addConstraint(depLc.getConstraint());
 			}

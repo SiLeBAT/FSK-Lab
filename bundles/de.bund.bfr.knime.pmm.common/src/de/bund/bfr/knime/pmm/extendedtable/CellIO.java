@@ -285,7 +285,7 @@ public class CellIO {
 			} else if (element instanceof IndepXml) {
 				names.add(((IndepXml) element).getName());
 			} else if (element instanceof DepXml) {
-				names.add(((DepXml) element).getName());
+				names.add(((DepXml) element).name);
 			} else {
 				throw new RuntimeException();
 			}

@@ -158,8 +158,8 @@ public class ModelTableModel extends JTable {
         	if (rowIndex == 0) {
         		DepXml dx = thePM.getDepXml();
         		if (columnIndex < 2) return thePM.getDepVar();
-        		else if (columnIndex == 5 && dx != null) return dx.getMin();
-        		else if (columnIndex == 6 && dx != null) return dx.getMax();
+        		else if (columnIndex == 5 && dx != null) return dx.min;
+        		else if (columnIndex == 6 && dx != null) return dx.max;
         		else if (columnIndex > 6) return thePM.getDepDescription();
         		else return null;
         	}
@@ -195,13 +195,13 @@ public class ModelTableModel extends JTable {
             		repaintAgain = true;
         		}
         		else if (columnIndex == 5 && dx != null && (o == null || o instanceof Double)) {
-        			dx.setMin((Double) o);
+        			dx.min = (Double) o;
         			rowHasChanged.put(thePM.getDepVar(), true);
             		hasChanged = true;
             		repaintAgain = true;
         		}
         		else if (columnIndex == 6 && dx != null && (o == null || o instanceof Double)) {
-        			dx.setMax((Double) o);
+        			dx.max = (Double) o;
         			rowHasChanged.put(thePM.getDepVar(), true);
             		hasChanged = true;
             		repaintAgain = true;

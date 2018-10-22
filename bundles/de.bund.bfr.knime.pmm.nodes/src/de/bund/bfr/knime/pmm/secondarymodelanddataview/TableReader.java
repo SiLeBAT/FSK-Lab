@@ -174,7 +174,7 @@ public class TableReader {
 					.getPmmXml(Model2Schema.ATT_DEPENDENT).get(0);
 			EstModelXml estXml = (EstModelXml) tuple.getPmmXml(
 					Model2Schema.ATT_ESTMODEL).get(0);
-			String id = depXml.getName() + estXml.getId();
+			String id = depXml.name + estXml.getId();
 
 			if (schemaContainsData) {
 				CatalogModelXml primModelXml = (CatalogModelXml) tuple
@@ -208,7 +208,7 @@ public class TableReader {
 							element.getP());
 				}
 
-				String depVarSecDesc = depVarSec.getName();
+				String depVarSecDesc = depVarSec.name;
 
 				if (schemaContainsData) {
 					CatalogModelXml primModelXml = (CatalogModelXml) tuple
@@ -239,8 +239,8 @@ public class TableReader {
 				stringColumns.get(Model2Schema.ATT_EMLIT).add(literature);
 				formulas.add(formulaSec);
 				parameterData.add(paramData);
-				shortLegend.put(id, depVarSec.getName());
-				longLegend.put(id, depVarSec.getName() + " (" + modelNameSec
+				shortLegend.put(id, depVarSec.name);
+				longLegend.put(id, depVarSec.name + " (" + modelNameSec
 						+ ")");
 
 				formulaMap.put(id, modelXmlSec.formula);
@@ -275,7 +275,7 @@ public class TableReader {
 						.getPmmXml(Model1Schema.ATT_PARAMETER);
 				DepXml depVar = depVarMap.get(id);
 				int depVarIndex = CellIO.getNameList(paramXml).indexOf(
-						depVar.getName());
+						depVar.name);
 				Double depVarValue = ((ParamXml) paramXml.get(depVarIndex))
 						.getValue();
 
@@ -333,9 +333,9 @@ public class TableReader {
 				plotable = new Plotable(Plotable.FUNCTION);
 			}
 
-			categories.put(depVar.getName(),
-					Arrays.asList(depVar.getCategory()));
-			units.put(depVar.getName(), depVar.getUnit());
+			categories.put(depVar.name,
+					Arrays.asList(depVar.category));
+			units.put(depVar.name, depVar.unit);
 
 			for (PmmXmlElementConvertable el : indepVarMap.get(id)
 					.getElementSet()) {
@@ -367,7 +367,7 @@ public class TableReader {
 			}
 
 			plotable.setFunction(formulaMap.get(id));
-			plotable.setFunctionValue(depVar.getName());
+			plotable.setFunctionValue(depVar.name);
 			plotable.setFunctionArguments(arguments);
 			plotable.setMinArguments(minArg);
 			plotable.setMaxArguments(maxArg);
@@ -401,7 +401,7 @@ public class TableReader {
 					}
 				}
 
-				plotable.addValueList(depVar.getName(), depVarData);
+				plotable.addValueList(depVar.name, depVarData);
 
 				for (String param : miscParams) {
 					plotable.addValueList(param, miscs.get(param));

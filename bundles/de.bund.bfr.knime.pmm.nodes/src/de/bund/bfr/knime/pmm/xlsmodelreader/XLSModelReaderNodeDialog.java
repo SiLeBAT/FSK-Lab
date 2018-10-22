@@ -946,7 +946,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 
 			depMinBox = new JComboBox<>(options.toArray(new String[0]));
 			depMaxBox = new JComboBox<>(options.toArray(new String[0]));
-			depUnitBox = new JComboBox<>(new String[] { depXml.getUnit() });
+			depUnitBox = new JComboBox<>(new String[] { depXml.unit });
 			indepMinBox = new JComboBox<>(options.toArray(new String[0]));
 			indepMaxBox = new JComboBox<>(options.toArray(new String[0]));
 			indepUnitBox = new JComboBox<>(new String[] { indepXml.getUnit() });
@@ -978,13 +978,13 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 			aicBox.addItemListener(this);
 			dataPointsBox.addItemListener(this);
 
-			panel.add(new JLabel(depXml.getName() + " Min:"), createConstraints(0, row));
+			panel.add(new JLabel(depXml.name + " Min:"), createConstraints(0, row));
 			panel.add(depMinBox, createConstraints(1, row));
 			row++;
-			panel.add(new JLabel(depXml.getName() + " Max:"), createConstraints(0, row));
+			panel.add(new JLabel(depXml.name + " Max:"), createConstraints(0, row));
 			panel.add(depMaxBox, createConstraints(1, row));
 			row++;
-			panel.add(new JLabel(depXml.getName() + " Unit:"), createConstraints(0, row));
+			panel.add(new JLabel(depXml.name + " Unit:"), createConstraints(0, row));
 			panel.add(depUnitBox, createConstraints(1, row));
 			row++;
 			panel.add(new JLabel(indepXml.getName() + " Min:"), createConstraints(0, row));

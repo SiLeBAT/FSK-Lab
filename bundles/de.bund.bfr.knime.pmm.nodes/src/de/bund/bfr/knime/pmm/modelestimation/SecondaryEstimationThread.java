@@ -106,7 +106,7 @@ public class SecondaryEstimationThread implements Runnable {
 						Model2Schema.ATT_DEPENDENT).get(0);
 				CatalogModelXml primModelXml = (CatalogModelXml) tuple
 						.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0);
-				String id = depXml.getName() + " (" + primModelXml.id
+				String id = depXml.name + " (" + primModelXml.id
 						+ ")";
 
 				if (!globalIds.containsKey(primModelXml.id)) {
@@ -131,7 +131,7 @@ public class SecondaryEstimationThread implements Runnable {
 
 				for (PmmXmlElementConvertable el : params.getElementSet()) {
 					ParamXml element = (ParamXml) el;
-					String depVarSec = depXml.getName();
+					String depVarSec = depXml.name;
 
 					if (element.getName().equals(depVarSec)) {
 						if (element.getValue() == null) {
@@ -182,7 +182,7 @@ public class SecondaryEstimationThread implements Runnable {
 						Model2Schema.ATT_DEPENDENT).get(0);
 				CatalogModelXml primModelXml = (CatalogModelXml) tuple
 						.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0);
-				String id = depXml.getName() + " (" + primModelXml.id
+				String id = depXml.name + " (" + primModelXml.id
 						+ ")";
 
 				if (!paramMap.containsKey(id)) {
@@ -372,7 +372,7 @@ public class SecondaryEstimationThread implements Runnable {
 				TimeSeriesSchema.ATT_MATRIX).get(0);
 
 		String depVar = ((DepXml) tuple.getPmmXml(Model2Schema.ATT_DEPENDENT)
-				.get(0)).getName();
+				.get(0)).name;
 		String agentName = agent.name != null ? agent.name : agent.detail;
 		String matrixName = matrix.getName() != null ? matrix.getName()
 				: matrix.getDetail();

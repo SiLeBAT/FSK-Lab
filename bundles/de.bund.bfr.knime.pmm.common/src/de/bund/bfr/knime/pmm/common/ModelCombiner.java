@@ -64,7 +64,7 @@ public class ModelCombiner {
 				rename.put(tuple, new LinkedHashMap<String, String>());
 
 				String modelID = ((CatalogModelXml) tuple.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0)).id + "";
-				String depVarSec = ((DepXml) tuple.getPmmXml(Model2Schema.ATT_DEPENDENT).get(0)).getName();
+				String depVarSec = ((DepXml) tuple.getPmmXml(Model2Schema.ATT_DEPENDENT).get(0)).name;
 
 				if (depVarSec.equals(initParams.get(modelID)) || depVarSec.equals(lagParams.get(modelID))) {
 					continue;
@@ -259,7 +259,7 @@ public class ModelCombiner {
 				replacements.put(id, new LinkedHashSet<String>());
 			}
 
-			String depVarSec = ((DepXml) tuple.getPmmXml(Model2Schema.ATT_DEPENDENT).get(0)).getName();
+			String depVarSec = ((DepXml) tuple.getPmmXml(Model2Schema.ATT_DEPENDENT).get(0)).name;
 
 			if (replacements.get(id).add(depVarSec)) {
 				usedTupleLists.get(id).add(tuple);

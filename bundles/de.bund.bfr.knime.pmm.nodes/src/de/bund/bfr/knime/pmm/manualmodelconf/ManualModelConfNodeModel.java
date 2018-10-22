@@ -159,8 +159,8 @@ public class ManualModelConfNodeModel extends NodeModel {
 	    			else {
 	    	    		// SecondaryModel
 	    				//if (model.getIndepVarSet().size() > 0) {
-	    				if (model.getDepXml().getOrigName() == null) {
-	    					model.getDepXml().setOrigName(model.getDepXml().getName());
+	    				if (model.getDepXml().origName == null) {
+	    					model.getDepXml().origName = model.getDepXml().name;
 	    				}
 	    					KnimeTuple tupleM2 = model.getKnimeTuple();
 	    					
@@ -199,9 +199,9 @@ public class ManualModelConfNodeModel extends NodeModel {
     		PmmXmlDoc indepVar = tupleM1.getPmmXml(Model1Schema.ATT_INDEPENDENT);        		
     		
     		if (depVar.size() == 1) {
-    			formula = MathUtilities.replaceVariable(formula, ((DepXml) depVar.get(0)).getName(), AttributeUtilities.CONCENTRATION);
-    			((DepXml) depVar.get(0)).setName(AttributeUtilities.CONCENTRATION);        			
-    			((DepXml) depVar.get(0)).setOrigName(AttributeUtilities.CONCENTRATION);        			
+    			formula = MathUtilities.replaceVariable(formula, ((DepXml) depVar.get(0)).name, AttributeUtilities.CONCENTRATION);
+    			((DepXml) depVar.get(0)).name = AttributeUtilities.CONCENTRATION;        			
+    			((DepXml) depVar.get(0)).origName = AttributeUtilities.CONCENTRATION;        			
     		}
     		
     		if (indepVar.size() == 1) {

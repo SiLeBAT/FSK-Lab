@@ -163,10 +163,10 @@ public class ModelCatalogReaderNodeModel extends NodeModel {
 
 					PmmXmlDoc depDoc = new PmmXmlDoc();
 					DepXml dx = new DepXml(result.getString(Bfrdb.ATT_DEP), result.getString("DepCategory"), result.getString("DepUnit"));
-					dx.setDescription(result.getString("DepDescription"));
+					dx.description = result.getString("DepDescription");
 					depDoc.add(dx);
 					tuple.setValue(Model1Schema.ATT_DEPENDENT, depDoc);
-					if (dx.getUnit() == null || dx.getUnit().isEmpty()) addWarningMsg += "\nUnit not defined for dependant variable '" + dx.getName() + "' in model with ID "
+					if (dx.unit == null || dx.unit.isEmpty()) addWarningMsg += "\nUnit not defined for dependant variable '" + dx.name + "' in model with ID "
 							+ cmx.id + "!";
 
 					PmmXmlDoc ixml = DbIo.convertArrays2IndepXmlDoc(null, result.getArray(Bfrdb.ATT_INDEP), null, null, result.getArray("IndepCategory"),
@@ -247,10 +247,10 @@ public class ModelCatalogReaderNodeModel extends NodeModel {
 					//tuple.setValue( Model2Schema.ATT_DEPVAR, result.getString( Bfrdb.ATT_DEP ) );
 					PmmXmlDoc depDoc = new PmmXmlDoc();
 					DepXml dx = new DepXml(result.getString(Bfrdb.ATT_DEP), result.getString("DepCategory"), result.getString("DepUnit"));
-					dx.setDescription(result.getString("DepDescription"));
+					dx.description = result.getString("DepDescription");
 					depDoc.add(dx);
 					tuple.setValue(Model2Schema.ATT_DEPENDENT, depDoc);
-					if (dx.getUnit() == null || dx.getUnit().isEmpty()) addWarningMsg += "\nUnit not defined for dependant variable '" + dx.getName() + "' in model with ID "
+					if (dx.unit == null || dx.unit.isEmpty()) addWarningMsg += "\nUnit not defined for dependant variable '" + dx.name + "' in model with ID "
 							+ cmx.id + "!";
 					//tuple.setValue( Model2Schema.ATT_INDEPVAR, DbIo.convertArray2String(result.getArray( Bfrdb.ATT_INDEP ) ));
 					//tuple.setValue( Model2Schema.ATT_MODELNAME, result.getString( Bfrdb.ATT_NAME ) );

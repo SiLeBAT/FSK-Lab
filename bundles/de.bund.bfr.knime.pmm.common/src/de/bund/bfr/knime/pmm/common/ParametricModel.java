@@ -344,8 +344,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		}
 		for (String name : rMap.keySet()) {
 			String origName = rMap.get(name);
-			if (depXml.getOrigName().equals(origName)) {
-				depXml.setName(name);
+			if (depXml.origName.equals(origName)) {
+				depXml.name = name;
 			}
 			else {
 				for (PmmXmlElementConvertable el : parameter.getElementSet()) {
@@ -657,8 +657,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	public void setDepVar(final String depVar, boolean origNameAlso) {
 		if (depXml == null) depXml = new DepXml(depVar);
 		else {
-			depXml.setName(depVar);
-			if (origNameAlso) depXml.setOrigName(depVar);
+			depXml.name = depVar;
+			if (origNameAlso) depXml.origName = depVar;
 		}
 	}
 	public void setRms( final Double rms ) throws PmmException {		
@@ -936,22 +936,22 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		return null;
 	}
 	public void setDepDescription(String description) {
-		if (depXml != null) depXml.setDescription(description);
+		if (depXml != null) depXml.description = description;
 	}
 	public String getDepDescription() {
-		return depXml == null ? null : depXml.getDescription();
+		return depXml == null ? null : depXml.description;
 	}
 	public String getDepCategory() {
-		return depXml == null ? null : depXml.getCategory();
+		return depXml == null ? null : depXml.category;
 	}
 	public String getDepUnit() {
-		return depXml == null ? null : depXml.getUnit();
+		return depXml == null ? null : depXml.unit;
 	}
 	public void setDepUnit(String unit) {
-		if (depXml != null) depXml.setUnit(unit);
+		if (depXml != null) depXml.unit = unit;
 	}
 	public void setDepCategory(String category) {
-		if (depXml != null) depXml.setCategory(category);
+		if (depXml != null) depXml.category = category;
 	}
 	
 	public SortedMap<String, Boolean> getAllParVars(){
@@ -976,8 +976,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	}
 	public String revertFormula() {
 		String result = formula;
-		if (depXml != null && !depXml.getName().equals(depXml.getOrigName())) {
-			result = MathUtilities.replaceVariable(result, depXml.getName(), depXml.getOrigName());			
+		if (depXml != null && !depXml.name.equals(depXml.origName)) {
+			result = MathUtilities.replaceVariable(result, depXml.name, depXml.origName);			
 		}
 		if (parameter != null && parameter.getElementSet() != null) {
 			for (PmmXmlElementConvertable el : parameter.getElementSet()) {
@@ -1032,7 +1032,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	public String getMDbUuid() { return m_dbuuid; }
 	public String getEMDbUuid() { return em_dbuuid; }
 	
-	public String getDepVar() {return depXml == null ? null : depXml.getName();}
+	public String getDepVar() {return depXml == null ? null : depXml.name;}
 	
 	@Override
 	public Element toXmlElement() {

@@ -546,14 +546,14 @@ public class XLSReader {
 
 			newIds.add(primId);
 
-			if (modelDepUnit != null && !modelDepUnit.equals(((DepXml) depXml.get(0)).getUnit())) {
-				((DepXml) depXml.get(0)).setUnit(modelDepUnit);
+			if (modelDepUnit != null && !modelDepUnit.equals(((DepXml) depXml.get(0)).unit)) {
+				((DepXml) depXml.get(0)).unit = modelDepUnit;
 				((CatalogModelXml) modelXml.get(0)).id = MathUtilities.getRandomNegativeInt();
 			}
 
 			if (hasData(depMinCell)) {
 				try {
-					((DepXml) depXml.get(0)).setMin(Double.parseDouble(getData(depMinCell).replace(",", ".")));
+					((DepXml) depXml.get(0)).min = Double.parseDouble(getData(depMinCell).replace(",", "."));
 				} catch (NumberFormatException e) {
 					warnings.add(modelDepMin + " value in row " + (rowNumber + 1) + " is not valid ("
 							+ getData(depMinCell) + ")");
@@ -564,7 +564,7 @@ public class XLSReader {
 
 			if (hasData(depMaxCell)) {
 				try {
-					((DepXml) depXml.get(0)).setMax(Double.parseDouble(getData(depMaxCell).replace(",", ".")));
+					((DepXml) depXml.get(0)).max = Double.parseDouble(getData(depMaxCell).replace(",", "."));
 				} catch (NumberFormatException e) {
 					warnings.add(modelDepMax + " value in row " + (rowNumber + 1) + " is not valid ("
 							+ getData(depMaxCell) + ")");
@@ -712,9 +712,9 @@ public class XLSReader {
 					}
 
 					newSecIds.get(param).add(secID);
-					formula = MathUtilities.replaceVariable(formula, ((DepXml) secDepXml.get(0)).getName(), param);
+					formula = MathUtilities.replaceVariable(formula, ((DepXml) secDepXml.get(0)).name, param);
 					((CatalogModelXml) secModelXml.get(0)).formula = formula;
-					((DepXml) secDepXml.get(0)).setName(param);
+					((DepXml) secDepXml.get(0)).name = param;
 					((EstModelXml) secEstXml.get(0)).setId(secID);
 
 					for (PmmXmlElementConvertable el : secParamXml.getElementSet()) {

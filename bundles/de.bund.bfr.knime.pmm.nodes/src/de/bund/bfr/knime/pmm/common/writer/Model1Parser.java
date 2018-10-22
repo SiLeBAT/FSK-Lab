@@ -108,11 +108,11 @@ public class Model1Parser {
 		model.addCompartment(compartment.getCompartment());
 
 		// Creates species and adds it to the model
-		PMFSpecies species = WriterUtils.createSpecies(agentXml, dep.getUnit(), compartment.getId());
+		PMFSpecies species = WriterUtils.createSpecies(agentXml, dep.unit, compartment.getId());
 		model.addSpecies(species.getSpecies());
 
 		// Adds dep constraint
-		LimitsConstraint depLc = new LimitsConstraint(species.getId(), dep.getMin(), dep.getMax());
+		LimitsConstraint depLc = new LimitsConstraint(species.getId(), dep.min, dep.max);
 		if (depLc.getConstraint() != null) {
 			model.addConstraint(depLc.getConstraint());
 		}

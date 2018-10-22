@@ -176,7 +176,7 @@ public class PrimaryJoiner implements Joiner {
 			int id = ((CatalogModelXml) modelXml.get(0)).id;
 			String formula = ((CatalogModelXml) modelXml.get(0)).formula;
 			PmmXmlDoc depVar = modelTuple.getPmmXml(Model1Schema.ATT_DEPENDENT);
-			String depVarName = ((DepXml) depVar.get(0)).getName();
+			String depVarName = ((DepXml) depVar.get(0)).name;
 			PmmXmlDoc oldIndepVar = modelTuple
 					.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 			PmmXmlDoc newIndepVar = new PmmXmlDoc();
@@ -199,7 +199,7 @@ public class PrimaryJoiner implements Joiner {
 			formula = MathUtilities.replaceVariable(formula, depVarName,
 					assign.get(depVarName));
 			depVarName = assign.get(depVarName);
-			((DepXml) depVar.get(0)).setName(depVarName);
+			((DepXml) depVar.get(0)).name = depVarName;
 
 			boolean error = false;
 
@@ -361,8 +361,8 @@ public class PrimaryJoiner implements Joiner {
 			DepXml dep = (DepXml) tuple.getPmmXml(Model1Schema.ATT_DEPENDENT)
 					.get(0);
 
-			categories.put(dep.getName(), dep.getCategory());
-			units.put(dep.getName(), dep.getUnit());
+			categories.put(dep.name, dep.category);
+			units.put(dep.name, dep.unit);
 
 			for (PmmXmlElementConvertable el : tuple.getPmmXml(
 					Model1Schema.ATT_INDEPENDENT).getElementSet()) {

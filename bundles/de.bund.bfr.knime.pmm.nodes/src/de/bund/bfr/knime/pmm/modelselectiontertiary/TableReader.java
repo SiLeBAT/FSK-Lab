@@ -243,7 +243,7 @@ public class TableReader {
 			String modelName = modelXml.name;
 			String formula = MathUtilities.getAllButBoundaryCondition(modelXml
 					.formula);
-			String depVar = depXml.getName();
+			String depVar = depXml.name;
 			PmmXmlDoc indepXml = tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 			List<String> indepVars = CellIO.getNameList(indepXml);
 			PmmXmlDoc paramXml = tuple.getPmmXml(Model1Schema.ATT_PARAMETER);
@@ -255,7 +255,7 @@ public class TableReader {
 			Map<String, Double> varMin = new LinkedHashMap<>();
 			Map<String, Double> varMax = new LinkedHashMap<>();
 			String timeUnit = Categories.getTimeCategory().getStandardUnit();
-			String concentrationUnit = depXml.getUnit();
+			String concentrationUnit = depXml.unit;
 
 			for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 				IndepXml element = (IndepXml) el;
@@ -443,8 +443,8 @@ public class TableReader {
 			units.put(AttributeUtilities.TIME, timeUnit);
 			units.put(AttributeUtilities.CONCENTRATION, concentrationUnit);
 
-			plotable.setMinValue(depXml.getMin());
-			plotable.setMaxValue(depXml.getMax());
+			plotable.setMinValue(depXml.min);
+			plotable.setMaxValue(depXml.max);
 			plotable.setFunction(modelXml.formula);
 			plotable.setFunctionParameters(parameters);
 			plotable.setFunctionArguments(variables);

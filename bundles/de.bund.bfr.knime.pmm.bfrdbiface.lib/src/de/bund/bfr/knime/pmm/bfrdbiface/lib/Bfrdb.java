@@ -297,7 +297,7 @@ public class Bfrdb {
 
 					doc = new PmmXmlDoc();
 					DepXml dx = new DepXml(result.getString(Bfrdb.ATT_DEP), result.getString("DepCategory"), result.getString("DepUnit"));
-					dx.setDescription(result.getString("DepDescription"));
+					dx.description = result.getString("DepDescription");
 					doc.add(dx);
 					tuple.setValue(Model1Schema.ATT_DEPENDENT, doc);
 
@@ -352,7 +352,7 @@ public class Bfrdb {
 
 					doc = new PmmXmlDoc();
 					DepXml dx = new DepXml(result.getString(Bfrdb.ATT_DEP), result.getString("DepCategory"), result.getString("DepUnit"));
-					dx.setDescription(result.getString("DepDescription"));
+					dx.description = result.getString("DepDescription");
 					doc.add(dx);
 					tuple.setValue(Model2Schema.ATT_DEPENDENT, doc);
 
@@ -812,12 +812,12 @@ public class Bfrdb {
 		String fittedModelName = pm.getFittedModelName();
 
 		HashMap<String, Integer> hmi = new HashMap<>();
-		int responseId = queryParamId(modelId, pm.getDepXml().getOrigName(), PARAMTYPE_DEP);
-		if (!pm.getDepXml().getOrigName().equals(pm.getDepXml().getName())) hmi.put(pm.getDepXml().getName(), responseId);
+		int responseId = queryParamId(modelId, pm.getDepXml().origName, PARAMTYPE_DEP);
+		if (!pm.getDepXml().origName.equals(pm.getDepXml().name)) hmi.put(pm.getDepXml().name, responseId);
 
 		if (responseId < 0) {
-			if (ppm != null) responseId = queryParamId(ppm.getModelId(), pm.getDepXml().getOrigName(), PARAMTYPE_PARAM);
-			if (responseId < 0) System.err.println("responseId < 0..." + pm.getDepVar() + "\t" + pm.getDepXml().getOrigName());
+			if (ppm != null) responseId = queryParamId(ppm.getModelId(), pm.getDepXml().origName, PARAMTYPE_PARAM);
+			if (responseId < 0) System.err.println("responseId < 0..." + pm.getDepVar() + "\t" + pm.getDepXml().origName);
 		}
 
 		if (isObjectPresent(REL_ESTMODEL, estModelId)) {
@@ -1409,9 +1409,9 @@ public class Bfrdb {
 			
 			// insert dependent variable
 			DepXml depXml = m.getDepXml();
-			insertParam(modelId, depXml.getOrigName(), PARAMTYPE_DEP, null, null, depXml.getCategory(), depXml.getUnit(), depXml.getDescription());
-			if (depXml.getUnit() == null || depXml.getUnit().isEmpty()) {
-				m.setWarning(m.getWarning() + "\nUnit not defined for dependant variable '" + depXml.getName() + "' in model with ID " + m.getModelId() + "!");
+			insertParam(modelId, depXml.origName, PARAMTYPE_DEP, null, null, depXml.category, depXml.unit, depXml.description);
+			if (depXml.unit == null || depXml.unit.isEmpty()) {
+				m.setWarning(m.getWarning() + "\nUnit not defined for dependant variable '" + depXml.name + "' in model with ID " + m.getModelId() + "!");
 			}
 
 			// insert independent variable set

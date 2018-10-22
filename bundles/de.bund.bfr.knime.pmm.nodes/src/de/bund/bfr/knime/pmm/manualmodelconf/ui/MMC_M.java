@@ -1054,7 +1054,7 @@ public class MMC_M extends JPanel {
 					String depDesc = result.getString("DepDescription");
 
 					DepXml dx = new DepXml(result.getString(Bfrdb.ATT_DEP), result.getString("DepCategory"), result.getString("DepUnit"));
-					dx.setDescription(depDesc);
+					dx.description = depDesc;
 					pm = new ParametricModel(modelName, formula, dx, level, modelID);
 					pm.setMDbUuid(db.getDBUUID());
 					pm.setModelClass(result.getInt("Klasse"));

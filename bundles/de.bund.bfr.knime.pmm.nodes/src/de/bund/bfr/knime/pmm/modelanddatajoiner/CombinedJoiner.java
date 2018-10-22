@@ -229,12 +229,12 @@ public class CombinedJoiner implements Joiner {
 			PmmXmlDoc modelXml = modelTuple
 					.getPmmXml(Model1Schema.ATT_MODELCATALOG);
 			String depVarSecName = ((DepXml) modelTuple.getPmmXml(
-					Model2Schema.ATT_DEPENDENT).get(0)).getName();
+					Model2Schema.ATT_DEPENDENT).get(0)).name;
 			String modelID = ((CatalogModelXml) modelXml.get(0)).id + "";
 			String modelIDSec = depVarSecName + " (" + modelID + ")";
 			String formula = ((CatalogModelXml) modelXml.get(0)).formula;
 			PmmXmlDoc depVar = modelTuple.getPmmXml(Model1Schema.ATT_DEPENDENT);
-			String depVarName = ((DepXml) depVar.get(0)).getName();
+			String depVarName = ((DepXml) depVar.get(0)).name;
 			PmmXmlDoc indepVar = modelTuple
 					.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 			PmmXmlDoc newIndepVar = new PmmXmlDoc();
@@ -261,7 +261,7 @@ public class CombinedJoiner implements Joiner {
 			formula = MathUtilities.replaceVariable(formula, depVarName,
 					primAssign.get(depVarName));
 			depVarName = primAssign.get(depVarName);
-			((DepXml) depVar.get(0)).setName(depVarName);
+			((DepXml) depVar.get(0)).name = depVarName;
 
 			for (PmmXmlElementConvertable el : indepVar.getElementSet()) {
 				IndepXml iv = (IndepXml) el;
@@ -469,7 +469,7 @@ public class CombinedJoiner implements Joiner {
 			CatalogModelXml modelXml = (CatalogModelXml) tuple.getPmmXml(
 					Model1Schema.ATT_MODELCATALOG).get(0);
 			String depVarSec = ((DepXml) tuple.getPmmXml(
-					Model2Schema.ATT_DEPENDENT).get(0)).getName();
+					Model2Schema.ATT_DEPENDENT).get(0)).name;
 			String modelID = modelXml.id + "";
 			String modelIDSec = depVarSec + " (" + modelXml.id + ")";
 
@@ -479,8 +479,8 @@ public class CombinedJoiner implements Joiner {
 				DepXml depXml = (DepXml) tuple.getPmmXml(
 						Model1Schema.ATT_DEPENDENT).get(0);
 
-				categories.put(depXml.getName(), depXml.getCategory());
-				units.put(depXml.getName(), depXml.getUnit());
+				categories.put(depXml.name, depXml.category);
+				units.put(depXml.name, depXml.unit);
 
 				for (PmmXmlElementConvertable el : tuple.getPmmXml(
 						Model1Schema.ATT_INDEPENDENT).getElementSet()) {

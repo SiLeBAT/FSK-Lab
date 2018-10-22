@@ -343,7 +343,7 @@ public class TableReader {
 			String dbuuid = modelXml.dbuuid;
 			String formula = MathUtilities.getAllButBoundaryCondition(modelXml
 					.formula);
-			String depVar = depXml.getName();
+			String depVar = depXml.name;
 			PmmXmlDoc indepXml = tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 			PmmXmlDoc paramXml = tuple.getPmmXml(Model1Schema.ATT_PARAMETER);
 			Map<String, List<Double>> variables = new LinkedHashMap<>();
@@ -358,9 +358,9 @@ public class TableReader {
 			Map<String, String> units = new LinkedHashMap<>();
 			Plotable plotable = new Plotable(Plotable.FUNCTION_SAMPLE);
 
-			categories.put(depXml.getName(),
-					Arrays.asList(depXml.getCategory()));
-			units.put(depXml.getName(), depXml.getUnit());
+			categories.put(depXml.name,
+					Arrays.asList(depXml.category));
+			units.put(depXml.name, depXml.unit);
 
 			for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 				IndepXml element = (IndepXml) el;
@@ -529,8 +529,8 @@ public class TableReader {
 			plotable.setFunction(modelXml.formula);
 			plotable.setFunctionValue(depVar);
 			plotable.setFunctionArguments(variables);
-			plotable.setMinValue(depXml.getMin());
-			plotable.setMaxValue(depXml.getMax());
+			plotable.setMinValue(depXml.min);
+			plotable.setMaxValue(depXml.max);
 			plotable.setMinArguments(varMin);
 			plotable.setMaxArguments(varMax);
 			plotable.setFunctionParameters(parameters);

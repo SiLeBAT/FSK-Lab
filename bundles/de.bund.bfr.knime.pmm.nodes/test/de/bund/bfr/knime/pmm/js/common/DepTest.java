@@ -129,8 +129,8 @@ public class DepTest {
 	@Test
 	public void testToDep() {
 		DepXml depXml = new DepXml(name, origname, category, unit, description);
-		depXml.setMin(min);
-		depXml.setMax(max);
+		depXml.min = min;
+		depXml.max = max;
 		
 		Dep dep = Dep.toDep(depXml);
 		assertEquals(name, dep.getName());
@@ -154,12 +154,12 @@ public class DepTest {
 		dep.setDescription(description);
 		
 		DepXml depXml = dep.toDepXml();
-		assertEquals(name, depXml.getName());
-		assertEquals(origname, depXml.getOrigName());
-		assertEquals(min, depXml.getMin(), 0.0);
-		assertEquals(max, depXml.getMax(), 0.0);
-		assertEquals(category, depXml.getCategory());
-		assertEquals(unit, depXml.getUnit());
-		assertEquals(description, depXml.getDescription());
+		assertEquals(name, depXml.name);
+		assertEquals(origname, depXml.origName);
+		assertEquals(min, depXml.min, 0.0);
+		assertEquals(max, depXml.max, 0.0);
+		assertEquals(category, depXml.category);
+		assertEquals(unit, depXml.unit);
+		assertEquals(description, depXml.description);
 	}
 }

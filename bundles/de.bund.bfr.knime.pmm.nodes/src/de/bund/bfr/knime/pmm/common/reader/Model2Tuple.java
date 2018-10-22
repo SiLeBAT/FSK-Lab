@@ -58,25 +58,25 @@ public class Model2Tuple {
 
     SecDep secDep = new SecDep(model.getParameter(depName));
     DepXml depXml = new DepXml(secDep.getParam().getId());
-    depXml.setDescription(secDep.getDescription());
+    depXml.description = secDep.getDescription();
     if (secDep.getParam().isSetUnits()) {
       // Adds unit
       String unitID = secDep.getParam().getUnits();
       String unitName = model.getUnitDefinition(unitID).getName();
-      depXml.setUnit(unitName);
+      depXml.unit = unitName;
 
       // Adds unit category
       Map<String, UnitsFromDB> dbUnits = DBUnits.getDBUnits();
       if (dbUnits.containsKey(unitName)) {
         UnitsFromDB dbUnit = dbUnits.get(unitName);
-        depXml.setCategory(dbUnit.getKind_of_property_quantity());
+        depXml.category = dbUnit.getKind_of_property_quantity();
       }
 
       // Adds limits
       if (limits.containsKey(secDep.getParam().getId())) {
         Limits depLimits = limits.get(secDep.getParam().getId());
-        depXml.setMax(depLimits.getMax());
-        depXml.setMin(depLimits.getMin());
+        depXml.max = depLimits.getMax();
+        depXml.min = depLimits.getMin();
       }
     }
 

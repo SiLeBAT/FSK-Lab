@@ -262,8 +262,8 @@ public class SBMLWriterNodeModel extends NodeModel {
 
 				ListOf<Rule> rules = new ListOf<>(2, 4);
 				ListOf<Constraint> constraints = new ListOf<>(2, 4);
-				Parameter depParam = model.createParameter(depXml.getName());
-				String depSbmlUnit = Categories.getCategoryByUnit(depXml.getUnit()).getSBML(depXml.getUnit());
+				Parameter depParam = model.createParameter(depXml.name);
+				String depSbmlUnit = Categories.getCategoryByUnit(depXml.unit).getSBML(depXml.unit);
 
 				depParam.setValue(0.0);
 				depParam.setConstant(false);

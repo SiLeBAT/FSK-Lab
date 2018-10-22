@@ -369,13 +369,13 @@ public final class ModelEditorNodeModel
 		if(depXml != null)
 		{
 			Dep dep = new Dep();
-			dep.setName(depXml.getName());
-			dep.setOrigname(depXml.getOrigName());
-			dep.setMin(depXml.getMin());
-			dep.setMax(depXml.getMax());
-			dep.setCategory(depXml.getCategory());
-			dep.setUnit(depXml.getUnit());
-			dep.setDescription(depXml.getDescription());
+			dep.setName(depXml.name);
+			dep.setOrigname(depXml.origName);
+			dep.setMin(depXml.min);
+			dep.setMax(depXml.max);
+			dep.setCategory(depXml.category);
+			dep.setUnit(depXml.unit);
+			dep.setDescription(depXml.description);
 			outTuple.setDep(dep);
 		}
 
@@ -639,8 +639,8 @@ public final class ModelEditorNodeModel
 		Dep dep = m1DataTuple.getDep();
 		DepXml depXml = new DepXml(dep.getName(), dep.getOrigname(), dep.getCategory(), dep.getUnit(),
 				dep.getDescription());
-		depXml.setMin(dep.getMin());
-		depXml.setMax(dep.getMax());
+		depXml.min = dep.getMin();
+		depXml.max = dep.getMax();
 		outTuple.setValue(Model1Schema.ATT_DEPENDENT, new PmmXmlDoc(depXml));
 
 		PmmXmlDoc paramDoc = new PmmXmlDoc();

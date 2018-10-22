@@ -62,25 +62,25 @@ public class Model1Tuple {
     String depUnitID = species.getUnits();
     if (depUnitID != null) {
       if (depUnitID.equals("dimensionless")) {
-        depXml.setUnit("dimensionless");
-        depXml.setCategory("Dimensionless quantity");
+        depXml.unit = "dimensionless";
+        depXml.category = "Dimensionless quantity";
       } else {
         String depUnitName = model.getUnitDefinition(depUnitID).getName();
-        depXml.setUnit(depUnitName);
+        depXml.unit = depUnitName;
         if (DBUnits.getDBUnits().containsKey(depUnitName)) {
-          depXml.setCategory(DBUnits.getDBUnits().get(depUnitName).getKind_of_property_quantity());
+          depXml.category = DBUnits.getDBUnits().get(depUnitName).getKind_of_property_quantity();
         }
       }
     }
     if (species.isSetDescription()) {
-      depXml.setDescription(species.getDescription());
+      depXml.description = species.getDescription();
     }
 
     // Gets limits
     if (limits.containsKey(species.getId())) {
       Limits depLimits = limits.get(species.getId());
-      depXml.setMax(depLimits.getMax());
-      depXml.setMin(depLimits.getMin());
+      depXml.max = depLimits.getMax();
+      depXml.min = depLimits.getMin();
     }
 
     // Parses indeps

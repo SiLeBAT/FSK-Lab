@@ -307,17 +307,17 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
 				if (!varMap.containsKey(AttributeUtilities.CONCENTRATION) && dep.equals("LOG10N")) dep = AttributeUtilities.CONCENTRATION;
 	    		if (varMap.containsKey(dep)) {
 	    			dx = new DepXml(varMap.get(dep), result.getString("DepCategory"), result.getString("DepUnit"));
-	    			dx.setName(dep);
+	    			dx.name = dep;
 	    		}
 	    		else {
 	    			dx = new DepXml(dep, result.getString("DepCategory"), result.getString("DepUnit"));
 	    		}
 	    		a = result.getArray("DepDescription");
 	    		da = (Object[])a.getArray();
-				if (da != null && da[0] != null) dx.setDescription(da[0].toString());
+				if (da != null && da[0] != null) dx.description = da[0].toString();
 	    		depDoc.add(dx);
 	    		tuple.setValue(Model1Schema.ATT_DEPENDENT, depDoc);
-				if (emrnm != null && (dx.getUnit() == null || dx.getUnit().isEmpty())) addWarningMsg += "\nUnit not defined for dependant variable '" + dx.getName() + "' in model with ID " + cmx.id + "!";
+				if (emrnm != null && (dx.unit == null || dx.unit.isEmpty())) addWarningMsg += "\nUnit not defined for dependant variable '" + dx.name + "' in model with ID " + cmx.id + "!";
 	    		
 	    		emid = result.getInt(Bfrdb.ATT_ESTMODELID);
 				emDoc = new PmmXmlDoc();
@@ -379,7 +379,7 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
 	    		dep = result.getString(Bfrdb.ATT_DEP+"2");
 	    		if (varMap.containsKey(dep)) {
 	    			dx = new DepXml(varMap.get(dep), result.getString("DepCategory2"), result.getString("DepUnit2"));
-	    			dx.setName(dep);
+	    			dx.name = dep;
 	    		}
 	    		else {
 	    			dx = new DepXml(dep, result.getString("DepCategory2"), result.getString("DepUnit2"));
@@ -391,14 +391,14 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
 		    			if (pname != null) {
 	    					formula = MathUtilities.replaceVariable(formula, dep, pname.toString());
 	    					cmx.formula = formula;
-		    				dx.setName(pname.toString());
+		    				dx.name = pname.toString();
 		    			}
 		    		}
 	    		}
 	    		//dx.setName(dep);
 	    		a = result.getArray("DepDescription2");
 	    		da = (Object[])a.getArray();
-				if (da != null && da[0] != null) dx.setDescription(da[0].toString());
+				if (da != null && da[0] != null) dx.description = da[0].toString();
     			//dx.setDescription(result.getString("DepDescription"));
 	    		depDoc.add(dx);
 	    		tuple.setValue(Model2Schema.ATT_DEPENDENT, depDoc);

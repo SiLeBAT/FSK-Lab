@@ -238,23 +238,23 @@ public class Dep implements ViewValue {
 	 */
 	public static Dep toDep(DepXml depXml) {
 		Dep dep = new Dep();
-		dep.setName(depXml.getName());
-		dep.setOrigname(depXml.getOrigName());
-		if (depXml.getMin() != null)
-			dep.setMin(depXml.getMin());
-		if (depXml.getMax() != null)
-			dep.setMax(depXml.getMax());
-		dep.setCategory(depXml.getCategory());
-		dep.setUnit(depXml.getUnit());
-		dep.setDescription(depXml.getDescription());
+		dep.setName(depXml.name);
+		dep.setOrigname(depXml.origName);
+		if (depXml.min != null)
+			dep.setMin(depXml.min);
+		if (depXml.max != null)
+			dep.setMax(depXml.max);
+		dep.setCategory(depXml.category);
+		dep.setUnit(depXml.unit);
+		dep.setDescription(depXml.description);
 
 		return dep;
 	}
 
 	public DepXml toDepXml() {
 		DepXml depXml = new DepXml(name, origname, category, unit, description);
-		depXml.setMin(min);
-		depXml.setMax(max);
+		depXml.min = min;
+		depXml.max = max;
 
 		return depXml;
 	}

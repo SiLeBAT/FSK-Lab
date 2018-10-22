@@ -275,7 +275,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 					PmmXmlDoc depVarSec = modelTuple
 							.getPmmXml(Model2Schema.ATT_DEPENDENT);
 					String depVarSecName = ((DepXml) depVarSec.get(0))
-							.getName();
+							.name;
 					PmmXmlDoc indepVarsSec = modelTuple
 							.getPmmXml(Model2Schema.ATT_INDEPENDENT);
 					PmmXmlDoc newIndepVarsSec = new PmmXmlDoc();
@@ -300,7 +300,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 
 					formulaSec = MathUtilities.replaceVariable(formulaSec,
 							depVarSecName, newDepVarSecName);
-					((DepXml) depVarSec.get(0)).setName(newDepVarSecName);
+					((DepXml) depVarSec.get(0)).name = newDepVarSecName;
 
 					boolean error = false;
 
@@ -466,7 +466,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 					((CatalogModelXml) modelXml.get(0)).name);
 			modelFormulas.put(modelID,
 					((CatalogModelXml) modelXml.get(0)).formula);
-			dependentVariables.put(modelID, depXml.getName());
+			dependentVariables.put(modelID, depXml.name);
 
 			Map<String, String> indepCategories = new LinkedHashMap<>();
 			Map<String, String> indepUnits = new LinkedHashMap<>();

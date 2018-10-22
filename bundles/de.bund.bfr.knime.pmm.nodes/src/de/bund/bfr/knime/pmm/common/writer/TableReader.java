@@ -99,8 +99,8 @@ public class TableReader {
 			List<ParamXml> constXmls) throws XMLStreamException {
 		// Get units from dep, indeps and consts
 		HashSet<String> units = new HashSet<>();
-		if (depXml.getUnit() != null) {
-			units.add(depXml.getUnit());
+		if (depXml.unit != null) {
+			units.add(depXml.unit);
 		}
 
 		for (IndepXml indepXml : indepXmls) {
