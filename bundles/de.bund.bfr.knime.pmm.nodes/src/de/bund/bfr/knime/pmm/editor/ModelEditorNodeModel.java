@@ -228,10 +228,10 @@ public final class ModelEditorNodeModel
 		if(matrixXml != null)
 		{
 			Matrix matrix = new Matrix();
-			matrix.setId(matrixXml.getId());
-			matrix.setName(matrixXml.getName());
-			matrix.setDetail(matrixXml.getDetail());
-			matrix.setDbuuid(matrixXml.getDbuuid());
+			matrix.setId(matrixXml.id);
+			matrix.setName(matrixXml.name);
+			matrix.setDetail(matrixXml.detail);
+			matrix.setDbuuid(matrixXml.dbuuid);
 			outTuple.setMatrix(matrix);
 		}
 

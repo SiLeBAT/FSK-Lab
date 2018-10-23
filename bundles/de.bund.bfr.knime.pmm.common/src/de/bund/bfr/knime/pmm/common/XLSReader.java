@@ -224,7 +224,7 @@ public class XLSReader {
 			}
 
 			if (hasData(matrixDetailsCell)) {
-				((MatrixXml) matrixXml.get(0)).setDetail(getData(matrixDetailsCell));
+				((MatrixXml) matrixXml.get(0)).detail = getData(matrixDetailsCell);
 			}
 
 			tuple.setValue(TimeSeriesSchema.ATT_MDINFO, dataInfo);
@@ -501,7 +501,7 @@ public class XLSReader {
 			}
 
 			if (hasData(matrixDetailsCell)) {
-				((MatrixXml) matrixXml.get(0)).setDetail(getData(matrixDetailsCell));
+				((MatrixXml) matrixXml.get(0)).detail = getData(matrixDetailsCell);
 			}
 
 			dataTuple.setValue(TimeSeriesSchema.ATT_MDINFO, dataInfo);

@@ -374,8 +374,8 @@ public class SecondaryEstimationThread implements Runnable {
 		String depVar = ((DepXml) tuple.getPmmXml(Model2Schema.ATT_DEPENDENT)
 				.get(0)).name;
 		String agentName = agent.name != null ? agent.name : agent.detail;
-		String matrixName = matrix.getName() != null ? matrix.getName()
-				: matrix.getDetail();
+		String matrixName = matrix.name != null ? matrix.name
+				: matrix.detail;
 		String modelName = ((CatalogModelXml) tuple.getPmmXml(
 				Model2Schema.ATT_MODELCATALOG).get(0)).name;
 

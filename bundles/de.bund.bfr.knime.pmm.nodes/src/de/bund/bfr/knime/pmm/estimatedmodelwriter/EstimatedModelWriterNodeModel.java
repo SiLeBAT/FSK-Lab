@@ -172,7 +172,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 					String rowuuid = row.getString(TimeSeriesSchema.ATT_DBUUID);
 					if (rowuuid == null) rowuuid = ts.getDbuuid();
 					if (rowuuid == null && ts.getMatrix() != null && ts.getMatrix().size() > 0) {
-						rowuuid = ((MatrixXml) ts.getMatrix().get(0)).getDbuuid();
+						rowuuid = ((MatrixXml) ts.getMatrix().get(0)).dbuuid;
 					}
 					
 					foreignDbIds = checkIDs(conn, true, dbuuid, row, ts, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);

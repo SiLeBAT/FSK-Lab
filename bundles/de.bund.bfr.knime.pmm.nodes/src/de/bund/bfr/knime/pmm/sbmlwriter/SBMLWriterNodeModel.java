@@ -244,9 +244,9 @@ public class SBMLWriterNodeModel extends NodeModel {
 				Compartment c;
 				Species s;
 
-				if (matrixXml.getName() != null) {
-					c = model.createCompartment(createId(matrixXml.getName()));
-					c.setName(matrixXml.getName());
+				if (matrixXml.name != null) {
+					c = model.createCompartment(createId(matrixXml.name));
+					c.setName(matrixXml.name);
 				} else {
 					c = model.createCompartment(COMPARTMENT_MISSING);
 					c.setName(COMPARTMENT_MISSING);

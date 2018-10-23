@@ -547,7 +547,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 			Integer id;
 
 			if (set.getMatrix() != null) {
-				id = DBKernel.openMatrixDBWindow(matrixButton, set.getMatrix().getId());
+				id = DBKernel.openMatrixDBWindow(matrixButton, set.getMatrix().id);
 			} else {
 				id = DBKernel.openMatrixDBWindow(matrixButton, null);
 			}
@@ -623,7 +623,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 
 					if (set.getMatrixMappings().get(value) != null) {
 						id = DBKernel.openMatrixDBWindow(matrixButtons.get(value),
-								set.getMatrixMappings().get(value).getId());
+								set.getMatrixMappings().get(value).id);
 					} else {
 						id = DBKernel.openMatrixDBWindow(matrixButtons.get(value), null);
 					}
@@ -1114,7 +1114,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 		UI.select(matrixBox, set.getMatrixColumn(), SettingsHelper.DO_NOT_USE);
 
 		if (set.getMatrix() != null) {
-			matrixButton.setText(set.getMatrix().getName());
+			matrixButton.setText(set.getMatrix().name);
 		} else {
 			matrixButton.setText(SettingsHelper.OTHER_PARAMETER);
 		}
@@ -1148,7 +1148,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 				JButton button = new JButton();
 
 				if (set.getMatrixMappings().get(value) != null) {
-					button.setText(set.getMatrixMappings().get(value).getName());
+					button.setText(set.getMatrixMappings().get(value).name);
 				} else {
 					button.setText(SettingsHelper.OTHER_PARAMETER);
 				}

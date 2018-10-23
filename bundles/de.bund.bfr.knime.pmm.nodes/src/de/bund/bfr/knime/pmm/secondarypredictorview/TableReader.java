@@ -308,7 +308,7 @@ public class TableReader {
 				}
 
 				if (matrix != null) {
-					matrixMap.get(id).add(matrix.getName());
+					matrixMap.get(id).add(matrix.name);
 				}
 			}
 		}

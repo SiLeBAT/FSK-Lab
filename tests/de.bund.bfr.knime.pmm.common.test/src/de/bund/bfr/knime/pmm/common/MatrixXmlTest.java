@@ -13,24 +13,24 @@ public class MatrixXmlTest {
 		
 		// Empty constructor
 		MatrixXml matrix0 = new MatrixXml();
-		assertTrue(matrix0.getId() < 0);
-		assertNull(matrix0.getName());
-		assertNull(matrix0.getDetail());
-		assertNull(matrix0.getDbuuid());
+		assertTrue(matrix0.id < 0);
+		assertNull(matrix0.name);
+		assertNull(matrix0.detail);
+		assertNull(matrix0.dbuuid);
 		
 		// Constructor with id, name and detail
 		MatrixXml matrix1 = new MatrixXml(0, "name", "detail");
-		assertTrue(0 == matrix1.getId());
-		assertEquals("name", matrix1.getName());
-		assertEquals("detail", matrix1.getDetail());
-		assertNull(matrix1.getDbuuid());
+		assertTrue(0 == matrix1.id);
+		assertEquals("name", matrix1.name);
+		assertEquals("detail", matrix1.detail);
+		assertNull(matrix1.dbuuid);
 
 		// Fully parameterized constructor
 		MatrixXml matrix2 = new MatrixXml(0, "name", "detail", "dbuuid");
-		assertTrue(0 == matrix2.getId());
-		assertEquals("name", matrix2.getName());
-		assertEquals("detail", matrix2.getDetail());
-		assertEquals("dbuuid", matrix2.getDbuuid());
+		assertTrue(0 == matrix2.id);
+		assertEquals("name", matrix2.name);
+		assertEquals("detail", matrix2.detail);
+		assertEquals("dbuuid", matrix2.dbuuid);
 		
 		// Copy constructor (Element)
 		Element element = new Element(MatrixXml.ELEMENT_MATRIX);
@@ -40,17 +40,17 @@ public class MatrixXmlTest {
 		element.setAttribute("dbuuid", "dbuuid");
 		
 		MatrixXml matrix3 = new MatrixXml(element);
-		assertTrue(0 == matrix3.getId());
-		assertEquals("name", matrix3.getName());
-		assertEquals("detail", matrix3.getDetail());
-		assertEquals("dbuuid", matrix3.getDbuuid());
+		assertTrue(0 == matrix3.id);
+		assertEquals("name", matrix3.name);
+		assertEquals("detail", matrix3.detail);
+		assertEquals("dbuuid", matrix3.dbuuid);
 		
 		// Copy constructor
 		MatrixXml matrix4 = new MatrixXml(matrix3);
-		assertTrue(0 == matrix4.getId());
-		assertEquals("name", matrix4.getName());
-		assertEquals("detail", matrix4.getDetail());
-		assertEquals("dbuuid", matrix4.getDbuuid());
+		assertTrue(0 == matrix4.id);
+		assertEquals("name", matrix4.name);
+		assertEquals("detail", matrix4.detail);
+		assertEquals("dbuuid", matrix4.dbuuid);
 	}
 	
 	@Test

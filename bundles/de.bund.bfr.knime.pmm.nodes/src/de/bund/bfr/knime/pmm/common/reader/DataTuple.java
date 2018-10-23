@@ -69,10 +69,10 @@ public class DataTuple {
 		PMFCompartment compartment = doc.getConcentrationOntologyTerm().getCompartment();
 		MatrixXml originalMatrixXml = new MatrixXml();
 		MDMatrixXml matrixXml = new MDMatrixXml();
-		originalMatrixXml.setName(compartment.getName());
+		originalMatrixXml.name = compartment.getName();
 		matrixXml.setName(compartment.getName());
 		if (compartment.isSetDetail()) {
-			originalMatrixXml.setDetail(compartment.getDetail());
+			originalMatrixXml.detail = compartment.getDetail();
 			matrixXml.setDetail(compartment.getDetail());
 		}
 

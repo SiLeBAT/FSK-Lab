@@ -286,12 +286,12 @@ public class MdReaderUi extends JPanel {
         		if (el instanceof MatrixXml) {
         			MatrixXml mx = (MatrixXml) el;
         			if (matrixID > 0) {
-        				int id = mx.getId();
+        				int id = mx.id;
         				if (matrixID != id) return false;
         			}
         			else {
-            			String s = mx.getName();
-            			String sd = mx.getDetail();
+            			String s = mx.name;
+            			String sd = mx.detail;
             			if (s == null) s = ""; else s = s.toLowerCase();
             			if (sd == null) sd = ""; else sd = sd.toLowerCase();
             			if (!s.contains(matrixString.toLowerCase()) && !sd.contains(matrixString.toLowerCase())) return false;

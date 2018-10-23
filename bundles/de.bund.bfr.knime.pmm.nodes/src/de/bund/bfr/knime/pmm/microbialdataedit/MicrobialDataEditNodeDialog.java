@@ -271,7 +271,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 			if (set.getMatrixDetails().containsKey(id)) {
 				matrixDetailList.add(set.getMatrixDetails().get(id));
 			} else {
-				matrixDetailList.add(((MatrixXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0)).getDetail());
+				matrixDetailList.add(((MatrixXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0)).detail);
 			}
 
 			if (set.getComments().containsKey(id)) {
@@ -1133,7 +1133,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 			MatrixXml matrix = (MatrixXml) value;
 
 			if (matrix != null) {
-				label.setText(matrix.getName());
+				label.setText(matrix.name);
 			} else {
 				label.setText("");
 			}
@@ -1173,7 +1173,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 			Integer id;
 
 			if (matrix != null) {
-				id = DBKernel.openMatrixDBWindow(button, matrix.getId());
+				id = DBKernel.openMatrixDBWindow(button, matrix.id);
 			} else {
 				id = DBKernel.openMatrixDBWindow(button, null);
 			}

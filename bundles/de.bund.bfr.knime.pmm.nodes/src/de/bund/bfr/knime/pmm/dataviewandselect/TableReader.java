@@ -156,9 +156,9 @@ public class TableReader {
 			stringColumns.get(AttributeUtilities.AGENT_DETAILS).add(
 					agent.detail);
 			stringColumns.get(TimeSeriesSchema.ATT_MATRIX)
-					.add(matrix.getName());
+					.add(matrix.name);
 			stringColumns.get(AttributeUtilities.MATRIX_DETAILS).add(
-					matrix.getDetail());
+					matrix.detail);
 			stringColumns.get(MdInfoXml.ATT_COMMENT).add(
 					((MdInfoXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MDINFO)
 							.get(0)).getComment());

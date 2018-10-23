@@ -271,7 +271,7 @@ public class CellIO {
 			} else if (element instanceof AgentXml) {
 				names.add(((AgentXml) element).name);
 			} else if (element instanceof MatrixXml) {
-				names.add(((MatrixXml) element).getName());
+				names.add(((MatrixXml) element).name);
 			} else if (element instanceof TimeSeriesXml) {
 				names.add(((TimeSeriesXml) element).getName());
 			} else if (element instanceof MdInfoXml) {
@@ -424,23 +424,23 @@ public class CellIO {
 					} else if (el instanceof MatrixXml) {
 						MatrixXml matx = (MatrixXml) el;
 						MatrixXml matxDB = ((MatrixXml) fromToXmlDB.get(i));
-						Integer key = matx.getId();
+						Integer key = matx.id;
 						if (key != null && foreignDbIds.containsKey(key)) {
 							if (before) {
-								matxDB.setId(foreignDbIds.get(key)); // schemaTuple.addValue(attr,
+								matxDB.id = foreignDbIds.get(key); // schemaTuple.addValue(attr,
 																		// foreignDbIds.get(key));
 								fromToXmlDB.set(i, matxDB);
-							} else if (foreignDbIds.get(key).intValue() != matxDB.getId()) {
+							} else if (foreignDbIds.get(key).intValue() != matxDB.id) {
 								System.err.println("fillNewIDsIntoForeign ... shouldn't happen...MatrixXml");
-								foreignDbIds.put(key, matxDB.getId());
+								foreignDbIds.put(key, matxDB.id);
 							}
 						} else {
 							if (before) {
-								matxDB.setId(MathUtilities.getRandomNegativeInt()); // schemaTuple.addValue(attr,
+								matxDB.id = MathUtilities.getRandomNegativeInt(); // schemaTuple.addValue(attr,
 																					// MathUtilities.getRandomNegativeInt());
 								fromToXmlDB.set(i, matxDB);
 							} else {
-								foreignDbIds.put(key, matxDB.getId()); // schemaTuple.getIntList(attr).get(i));
+								foreignDbIds.put(key, matxDB.id); // schemaTuple.getIntList(attr).get(i));
 							}
 						}
 					} else if (el instanceof AgentXml) {

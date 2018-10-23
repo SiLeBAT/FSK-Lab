@@ -95,9 +95,9 @@ public class XLSTimeSeriesReaderNodeModel extends NodeModel {
 			for (KnimeTuple tuple : tuples) {
 				PmmXmlDoc matrixXml = tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX);
 
-				((MatrixXml) matrixXml.get(0)).setId(set.getMatrix().getId());
-				((MatrixXml) matrixXml.get(0)).setName(set.getMatrix().getName());
-				((MatrixXml) matrixXml.get(0)).setDbuuid(set.getMatrix().getDbuuid());
+				((MatrixXml) matrixXml.get(0)).id = set.getMatrix().id;
+				((MatrixXml) matrixXml.get(0)).name = set.getMatrix().name;
+				((MatrixXml) matrixXml.get(0)).dbuuid = set.getMatrix().dbuuid;
 				tuple.setValue(TimeSeriesSchema.ATT_MATRIX, matrixXml);
 			}
 		}

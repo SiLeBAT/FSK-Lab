@@ -170,22 +170,22 @@ public class WriterUtils {
 			MiscXml miscXml = (MiscXml) miscDoc.get(i);
 			modelVariables[i] = new ModelVariable(miscXml.getName(), miscXml.getValue());
 		}
-		String compartmentDetail = matrixXml.getDetail();
+		String compartmentDetail = matrixXml.detail;
 
 		String compartmentId;
 		String compartmentName;
 
-		if (matrixXml.getName() == null) {
+		if (matrixXml.name == null) {
 			compartmentId = "MISSING_COMPARTMENT";
 			compartmentName = "MISSING_COMPARTMENT";
 		} else {
-			compartmentId = PMFUtil.createId(matrixXml.getName());
-			compartmentName = matrixXml.getName();
+			compartmentId = PMFUtil.createId(matrixXml.name);
+			compartmentName = matrixXml.name;
 		}
 
 		// Gets PMF code from DB
 		String[] colNames = { "CodeSystem", "Basis" };
-		String[] colVals = { "PMF", matrixXml.getId().toString() };
+		String[] colVals = { "PMF", matrixXml.id.toString() };
 		String pmfCode = (String) DBKernel.getValue(null, "Codes_Matrices", colNames, colVals, "Codes");
 		PMFCompartment compartment = SBMLFactory.createPMFCompartment(compartmentId, compartmentName, pmfCode,
 				compartmentDetail, modelVariables);
