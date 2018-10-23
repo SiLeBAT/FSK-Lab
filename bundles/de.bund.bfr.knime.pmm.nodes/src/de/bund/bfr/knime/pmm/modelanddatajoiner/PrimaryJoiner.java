@@ -188,7 +188,7 @@ public class PrimaryJoiner implements Joiner {
 			}
 
 			assign.put(depVarName, AttributeUtilities.CONCENTRATION);
-			assign.put(((IndepXml) oldIndepVar.get(0)).getName(),
+			assign.put(((IndepXml) oldIndepVar.get(0)).name,
 					AttributeUtilities.TIME);
 
 			if (!assign.containsKey(depVarName)) {
@@ -206,15 +206,15 @@ public class PrimaryJoiner implements Joiner {
 			for (PmmXmlElementConvertable el : oldIndepVar.getElementSet()) {
 				IndepXml iv = (IndepXml) el;
 
-				if (!assign.containsKey(iv.getName())) {
+				if (!assign.containsKey(iv.name)) {
 					error = true;
 					break;
 				}
 
-				oldVars.add(iv.getName());
-				formula = MathUtilities.replaceVariable(formula, iv.getName(),
-						assign.get(iv.getName()));
-				iv.setName(assign.get(iv.getName()));
+				oldVars.add(iv.name);
+				formula = MathUtilities.replaceVariable(formula, iv.name,
+						assign.get(iv.name));
+				iv.name = assign.get(iv.name);
 				newIndepVar.add(iv);
 			}
 
@@ -368,8 +368,8 @@ public class PrimaryJoiner implements Joiner {
 					Model1Schema.ATT_INDEPENDENT).getElementSet()) {
 				IndepXml indep = (IndepXml) el;
 
-				categories.put(indep.getName(), indep.getCategory());
-				units.put(indep.getName(), indep.getUnit());
+				categories.put(indep.name, indep.category);
+				units.put(indep.name, indep.unit);
 			}
 
 			variableCategories.put(id, categories);

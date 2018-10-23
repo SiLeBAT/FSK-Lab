@@ -467,13 +467,13 @@ public final class ModelEditorNodeModel
 			for (int i = 0; i < indepDoc.size(); i++) {
 				IndepXml indepXml = (IndepXml) indepDoc.get(i);
 				Indep indep = new Indep();
-				indep.setName(indepXml.getName());
-				indep.setOrigname(indepXml.getOrigName());
-				indep.setMin(indepXml.getMin());
-				indep.setMax(indepXml.getMax());
-				indep.setCategory(indepXml.getCategory());
-				indep.setUnit(indepXml.getUnit());
-				indep.setDescription(indepXml.getDescription());
+				indep.setName(indepXml.name);
+				indep.setOrigname(indepXml.origName);
+				indep.setMin(indepXml.min);
+				indep.setMax(indepXml.max);
+				indep.setCategory(indepXml.category);
+				indep.setUnit(indepXml.unit);
+				indep.setDescription(indepXml.description);
 				indepArray[i] = indep;
 			}
 			IndepList indepList = new IndepList();
@@ -488,13 +488,13 @@ public final class ModelEditorNodeModel
 			for (int i = 0; i < indepSecDoc.size(); i++) {
 				IndepXml indepSecXml = (IndepXml) indepSecDoc.get(i);
 				Indep indepSec = new Indep();
-				indepSec.setName(indepSecXml.getName());
-				indepSec.setOrigname(indepSecXml.getOrigName());
-				indepSec.setMin(indepSecXml.getMin());
-				indepSec.setMax(indepSecXml.getMax());
-				indepSec.setCategory(indepSecXml.getCategory());
-				indepSec.setUnit(indepSecXml.getUnit());
-				indepSec.setDescription(indepSecXml.getDescription());
+				indepSec.setName(indepSecXml.name);
+				indepSec.setOrigname(indepSecXml.origName);
+				indepSec.setMin(indepSecXml.min);
+				indepSec.setMax(indepSecXml.max);
+				indepSec.setCategory(indepSecXml.category);
+				indepSec.setUnit(indepSecXml.unit);
+				indepSec.setDescription(indepSecXml.description);
 				indepSecArray[i] = indepSec;
 			}
 			IndepList indepSecList = new IndepList();

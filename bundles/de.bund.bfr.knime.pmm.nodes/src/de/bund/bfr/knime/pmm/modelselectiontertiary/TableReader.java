@@ -260,12 +260,12 @@ public class TableReader {
 			for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 				IndepXml element = (IndepXml) el;
 
-				if (element.getName().equals(AttributeUtilities.TIME)) {
-					variables.put(element.getName(),
+				if (element.name.equals(AttributeUtilities.TIME)) {
+					variables.put(element.name,
 							new ArrayList<>(Arrays.asList(0.0)));
-					varMin.put(element.getName(), element.getMin());
-					varMax.put(element.getName(), element.getMax());
-					timeUnit = element.getUnit();
+					varMin.put(element.name, element.min);
+					varMax.put(element.name, element.max);
+					timeUnit = element.unit;
 				}
 			}
 

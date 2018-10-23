@@ -204,8 +204,8 @@ public class PrimaryEstimationThread implements Runnable {
 
 			PmmXmlDoc indepXml = tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 
-			((IndepXml) indepXml.get(0)).setMin(minIndep);
-			((IndepXml) indepXml.get(0)).setMax(maxIndep);
+			((IndepXml) indepXml.get(0)).min = minIndep;
+			((IndepXml) indepXml.get(0)).max = maxIndep;
 
 			PmmXmlDoc estModelXml = tuple.getPmmXml(Model1Schema.ATT_ESTMODEL);
 

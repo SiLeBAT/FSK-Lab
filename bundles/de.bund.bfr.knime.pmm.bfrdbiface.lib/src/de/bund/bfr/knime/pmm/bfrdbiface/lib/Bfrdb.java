@@ -859,13 +859,13 @@ public class Bfrdb {
 		for (PmmXmlElementConvertable el : pm.getIndependent().getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				int indepId = queryParamId(modelId, ix.getOrigName(), PARAMTYPE_INDEP);
+				int indepId = queryParamId(modelId, ix.origName, PARAMTYPE_INDEP);
 				if (indepId >= 0) {
-					insertMinMaxIndep(estModelId, indepId, ix.getMin(), ix.getMax());
-					if (!ix.getOrigName().equals(ix.getName())) hmi.put(ix.getName(), indepId);
-					insertEstParam(estModelId, indepId, null, null, ix.getUnit(), pm, true, ix.getName());
+					insertMinMaxIndep(estModelId, indepId, ix.min, ix.max);
+					if (!ix.origName.equals(ix.name)) hmi.put(ix.name, indepId);
+					insertEstParam(estModelId, indepId, null, null, ix.unit, pm, true, ix.name);
 				} else {
-					System.err.println("insertEm:\t" + ix.getOrigName() + "\t" + modelId);
+					System.err.println("insertEm:\t" + ix.origName + "\t" + modelId);
 				}
 			}
 		}
@@ -1418,9 +1418,9 @@ public class Bfrdb {
 			for (PmmXmlElementConvertable el : m.getIndependent().getElementSet()) {
 				if (el instanceof IndepXml) {
 					IndepXml ix = (IndepXml) el;
-					insertParam(modelId, ix.getOrigName(), PARAMTYPE_INDEP, ix.getMin(), ix.getMax(), ix.getCategory(), ix.getUnit(), ix.getDescription());
-					if (ix.getUnit() == null || ix.getUnit().isEmpty()) {
-						m.setWarning(m.getWarning() + "\nUnit not defined for independant variable '" + ix.getName() + "' in model with ID " + m.getModelId() + "!");
+					insertParam(modelId, ix.origName, PARAMTYPE_INDEP, ix.min, ix.max, ix.category, ix.unit, ix.description);
+					if (ix.unit == null || ix.unit.isEmpty()) {
+						m.setWarning(m.getWarning() + "\nUnit not defined for independant variable '" + ix.name + "' in model with ID " + m.getModelId() + "!");
 					}
 				}
 			}

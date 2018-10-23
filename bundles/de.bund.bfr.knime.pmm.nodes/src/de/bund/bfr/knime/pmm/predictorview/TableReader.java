@@ -365,25 +365,25 @@ public class TableReader {
 			for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 				IndepXml element = (IndepXml) el;
 
-				variables.put(element.getName(), new ArrayList<Double>());
-				varMin.put(element.getName(), element.getMin());
-				varMax.put(element.getName(), element.getMax());
+				variables.put(element.name, new ArrayList<Double>());
+				varMin.put(element.name, element.min);
+				varMax.put(element.name, element.max);
 
-				categories.put(element.getName(),
-						Arrays.asList(element.getCategory()));
-				units.put(element.getName(), element.getUnit());
+				categories.put(element.name,
+						Arrays.asList(element.category));
+				units.put(element.name, element.unit);
 
 				if (Categories.getTempCategory().equals(
-						Categories.getCategoryByUnit(element.getUnit()))) {
-					tempParam.put(id, element.getName());
+						Categories.getCategoryByUnit(element.unit))) {
+					tempParam.put(id, element.name);
 				}
 
-				if (Categories.getPhUnit().equals(element.getUnit())) {
-					phParam.put(id, element.getName());
+				if (Categories.getPhUnit().equals(element.unit)) {
+					phParam.put(id, element.name);
 				}
 
-				if (Categories.getAwUnit().equals(element.getUnit())) {
-					awParam.put(id, element.getName());
+				if (Categories.getAwUnit().equals(element.unit)) {
+					awParam.put(id, element.name);
 				}
 			}
 
@@ -576,10 +576,10 @@ public class TableReader {
 							Model1Schema.ATT_INDEPENDENT).getElementSet()) {
 						IndepXml element = (IndepXml) el;
 
-						if (miscParams.get(i).equals(element.getName())) {
-							min = element.getMin();
-							max = element.getMax();
-							unit = element.getUnit();
+						if (miscParams.get(i).equals(element.name)) {
+							min = element.min;
+							max = element.max;
+							unit = element.unit;
 							break;
 						}
 					}
@@ -633,14 +633,14 @@ public class TableReader {
 			for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 				IndepXml element = (IndepXml) el;
 
-				if (element.getMin() != null) {
-					varData.put(element.getName() + " Min", element.getMin()
-							+ " " + units.get(element.getName()));
+				if (element.min != null) {
+					varData.put(element.name + " Min", element.min
+							+ " " + units.get(element.name));
 				}
 
-				if (element.getMax() != null) {
-					varData.put(element.getName() + " Max", element.getMax()
-							+ " " + units.get(element.getName()));
+				if (element.max != null) {
+					varData.put(element.name + " Max", element.max
+							+ " " + units.get(element.name));
 				}
 			}
 

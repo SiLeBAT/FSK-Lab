@@ -100,9 +100,9 @@ public class XLSModelReaderNodeModel extends NodeModel {
 		}
 
 		if (indepVar.size() == 1) {
-			formula = MathUtilities.replaceVariable(formula, ((IndepXml) indepVar.get(0)).getName(),
+			formula = MathUtilities.replaceVariable(formula, ((IndepXml) indepVar.get(0)).name,
 					AttributeUtilities.TIME);
-			((IndepXml) indepVar.get(0)).setName(AttributeUtilities.TIME);
+			((IndepXml) indepVar.get(0)).name = AttributeUtilities.TIME;
 		}
 
 		((CatalogModelXml) modelXml.get(0)).formula = formula;

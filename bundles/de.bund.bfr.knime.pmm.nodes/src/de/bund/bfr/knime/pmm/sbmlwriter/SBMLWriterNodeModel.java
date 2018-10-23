@@ -310,19 +310,19 @@ public class SBMLWriterNodeModel extends NodeModel {
 				for (PmmXmlElementConvertable el : tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT).getElementSet()) {
 					IndepXml indepXml = (IndepXml) el;
 
-					if (indepXml.getName().equals(AttributeUtilities.TIME)) {
-						indepXml.setName("time");
+					if (indepXml.name.equals(AttributeUtilities.TIME)) {
+						indepXml.name = "time";
 					}
 
-					String name = indepXml.getName();
+					String name = indepXml.name;
 					Parameter param = model.createParameter(name);
-					String sbmlUnit = Categories.getCategoryByUnit(indepXml.getUnit()).getSBML(indepXml.getUnit());
+					String sbmlUnit = Categories.getCategoryByUnit(indepXml.unit).getSBML(indepXml.unit);
 
 					param.setValue(0.0);
 					param.setConstant(false);
 
-					Double min = indepXml.getMin();
-					Double max = indepXml.getMax();
+					Double min = indepXml.min;
+					Double max = indepXml.max;
 
 					if (MathUtilities.isValid(min)) {
 						try {
@@ -391,27 +391,27 @@ public class SBMLWriterNodeModel extends NodeModel {
 			for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 				IndepXml indep = (IndepXml) el;
 
-				if (CELSIUS.equals(indep.getUnit())) {
+				if (CELSIUS.equals(indep.unit)) {
 					try {
-						String replacement = "(" + temp.getConversionString(indep.getName(), KELVIN, CELSIUS) + ")";
+						String replacement = "(" + temp.getConversionString(indep.name, KELVIN, CELSIUS) + ")";
 
 						model.formula =
-								MathUtilities.replaceVariable(model.formula, indep.getName(), replacement);
-						indep.setUnit(KELVIN);
-						indep.setMin(temp.convert(indep.getMin(), CELSIUS, KELVIN));
-						indep.setMax(temp.convert(indep.getMax(), CELSIUS, KELVIN));
+								MathUtilities.replaceVariable(model.formula, indep.name, replacement);
+						indep.unit = KELVIN;
+						indep.min = temp.convert(indep.min, CELSIUS, KELVIN);
+						indep.max = temp.convert(indep.max, CELSIUS, KELVIN);
 					} catch (ConvertException e) {
 						e.printStackTrace();
 					}
-				} else if (FAHRENHEIT.equals(indep.getUnit())) {
+				} else if (FAHRENHEIT.equals(indep.unit)) {
 					try {
-						String replacement = "(" + temp.getConversionString(indep.getName(), KELVIN, FAHRENHEIT) + ")";
+						String replacement = "(" + temp.getConversionString(indep.name, KELVIN, FAHRENHEIT) + ")";
 
 						model.formula = 
-								MathUtilities.replaceVariable(model.formula, indep.getName(), replacement);
-						indep.setUnit(FAHRENHEIT);
-						indep.setMin(temp.convert(indep.getMin(), FAHRENHEIT, KELVIN));
-						indep.setMax(temp.convert(indep.getMax(), FAHRENHEIT, KELVIN));
+								MathUtilities.replaceVariable(model.formula, indep.name, replacement);
+						indep.unit = FAHRENHEIT;
+						indep.min = temp.convert(indep.min, FAHRENHEIT, KELVIN);
+						indep.max = temp.convert(indep.max, FAHRENHEIT, KELVIN);
 					} catch (ConvertException e) {
 						e.printStackTrace();
 					}

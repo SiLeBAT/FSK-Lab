@@ -78,7 +78,7 @@ public class QualityMeasurementComputation {
 				for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 					IndepXml element = (IndepXml) el;
 
-					variableValueMap.get(id).put(element.getName(),
+					variableValueMap.get(id).put(element.name,
 							new ArrayList<Double>());
 				}
 			}

@@ -14,33 +14,33 @@ public class IndepXmlTest {
 		
 		// Test constructor with name, min and max
 		IndepXml indep0 = new IndepXml("name", 0.0, 1.0);
-		assertEquals("name", indep0.getName());
-		assertEquals("name", indep0.getOrigName());
-		assertEquals(0.0, indep0.getMin(), .0);
-		assertEquals(1.0, indep0.getMax(), .0);
-		assertNull(indep0.getCategory());
-		assertNull(indep0.getUnit());
-		assertNull(indep0.getDescription());
+		assertEquals("name", indep0.name);
+		assertEquals("name", indep0.origName);
+		assertEquals(0.0, indep0.min, .0);
+		assertEquals(1.0, indep0.max, .0);
+		assertNull(indep0.category);
+		assertNull(indep0.unit);
+		assertNull(indep0.description);
 		
 		// Test constructor with name, min, max, category and unit
 		IndepXml indep1 = new IndepXml("name", 0.0, 1.0, "category", "unit");
-		assertEquals("name", indep1.getName());
-		assertEquals("name", indep1.getOrigName());
-		assertEquals(0.0, indep1.getMin(), .0);
-		assertEquals(1.0, indep1.getMax(), .0);
-		assertEquals("category", indep1.getCategory());
-		assertEquals("unit", indep1.getUnit());
-		assertNull(indep1.getDescription());
+		assertEquals("name", indep1.name);
+		assertEquals("name", indep1.origName);
+		assertEquals(0.0, indep1.min, .0);
+		assertEquals(1.0, indep1.max, .0);
+		assertEquals("category", indep1.category);
+		assertEquals("unit", indep1.unit);
+		assertNull(indep1.description);
 		
 		// Test fully parameterized constructor
 		IndepXml indep2 = new IndepXml("name", "origName", 0.0, 1.0, "category", "unit", "description");
-		assertEquals("name", indep2.getName());
-		assertEquals("origName", indep2.getOrigName());
-		assertEquals(0.0, indep2.getMin(), .0);
-		assertEquals(1.0, indep2.getMax(), .0);
-		assertEquals("category", indep2.getCategory());
-		assertEquals("unit", indep2.getUnit());
-		assertEquals("description", indep2.getDescription());
+		assertEquals("name", indep2.name);
+		assertEquals("origName", indep2.origName);
+		assertEquals(0.0, indep2.min, .0);
+		assertEquals(1.0, indep2.max, .0);
+		assertEquals("category", indep2.category);
+		assertEquals("unit", indep2.unit);
+		assertEquals("description", indep2.description);
 		
 		// Test copy constructor with Element
 		Element element = new Element(IndepXml.ELEMENT_INDEP);
@@ -53,13 +53,13 @@ public class IndepXmlTest {
 		element.setAttribute("description", "description");
 		
 		IndepXml indep3 = new IndepXml(element);
-		assertEquals("name", indep3.getName());
-		assertEquals("origName", indep3.getOrigName());
-		assertEquals(0.0, indep3.getMin(), .0);
-		assertEquals(1.0, indep3.getMax(), .0);
-		assertEquals("category", indep3.getCategory());
-		assertEquals("unit", indep3.getUnit());
-		assertEquals("description", indep3.getDescription());
+		assertEquals("name", indep3.name);
+		assertEquals("origName", indep3.origName);
+		assertEquals(0.0, indep3.min, .0);
+		assertEquals(1.0, indep3.max, .0);
+		assertEquals("category", indep3.category);
+		assertEquals("unit", indep3.unit);
+		assertEquals("description", indep3.description);
 	}
 	
 	@Test

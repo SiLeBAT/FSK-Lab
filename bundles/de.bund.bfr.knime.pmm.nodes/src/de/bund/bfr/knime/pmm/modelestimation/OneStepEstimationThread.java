@@ -353,8 +353,8 @@ public class OneStepEstimationThread implements Runnable {
 					for (int j = 0; j < indepXml.getElementSet().size(); j++) {
 						IndepXml element = (IndepXml) indepXml.get(j);
 
-						element.setMin(minValues.get(j));
-						element.setMax(maxValues.get(j));
+						element.min = minValues.get(j);
+						element.max = maxValues.get(j);
 					}
 
 					PmmXmlDoc estModelXml = tuple
@@ -419,12 +419,12 @@ public class OneStepEstimationThread implements Runnable {
 					for (PmmXmlElementConvertable el : primIndepXml
 							.getElementSet()) {
 						IndepXml indep = (IndepXml) el;
-						IndepXml d = getIndep(indepMap.get(id), indep.getName());
+						IndepXml d = getIndep(indepMap.get(id), indep.name);
 
 						if (d != null) {
-							indep.setMin(d.getMin());
-							indep.setMax(d.getMax());
-							indep.setUnit(d.getUnit());
+							indep.min = d.min;
+							indep.max = d.max;
+							indep.unit = d.unit;
 						}
 					}
 
@@ -436,12 +436,12 @@ public class OneStepEstimationThread implements Runnable {
 					for (PmmXmlElementConvertable el : secIndepXml
 							.getElementSet()) {
 						IndepXml indep = (IndepXml) el;
-						IndepXml d = getIndep(indepMap.get(id), indep.getName());
+						IndepXml d = getIndep(indepMap.get(id), indep.name);
 
 						if (d != null) {
-							indep.setMin(d.getMin());
-							indep.setMax(d.getMax());
-							indep.setUnit(d.getUnit());
+							indep.min = d.min;
+							indep.max = d.max;
+							indep.unit = d.unit;
 						}
 					}
 
@@ -484,7 +484,7 @@ public class OneStepEstimationThread implements Runnable {
 
 	private static IndepXml getIndep(PmmXmlDoc xml, String indepName) {
 		for (PmmXmlElementConvertable el : xml.getElementSet()) {
-			if (((IndepXml) el).getName().equals(indepName)) {
+			if (((IndepXml) el).name.equals(indepName)) {
 				return (IndepXml) el;
 			}
 		}

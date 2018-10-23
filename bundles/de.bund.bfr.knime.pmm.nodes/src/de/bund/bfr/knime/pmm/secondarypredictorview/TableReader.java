@@ -334,13 +334,13 @@ public class TableReader {
 					.getElementSet()) {
 				IndepXml element = (IndepXml) el;
 
-				arguments.put(element.getName(),
+				arguments.put(element.name,
 						new ArrayList<>(Arrays.asList(0.0)));
-				minArg.put(element.getName(), element.getMin());
-				maxArg.put(element.getName(), element.getMax());
-				categories.put(element.getName(),
-						Arrays.asList(element.getCategory()));
-				units.put(element.getName(), element.getUnit());
+				minArg.put(element.name, element.min);
+				maxArg.put(element.name, element.max);
+				categories.put(element.name,
+						Arrays.asList(element.category));
+				units.put(element.name, element.unit);
 			}
 
 			for (PmmXmlElementConvertable el : paramMap.get(id).getElementSet()) {

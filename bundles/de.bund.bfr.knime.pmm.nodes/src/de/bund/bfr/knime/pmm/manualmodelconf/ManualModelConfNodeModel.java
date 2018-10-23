@@ -205,9 +205,9 @@ public class ManualModelConfNodeModel extends NodeModel {
     		}
     		
     		if (indepVar.size() == 1) {
-    			formula = MathUtilities.replaceVariable(formula, ((IndepXml) indepVar.get(0)).getName(), AttributeUtilities.TIME);
-    			((IndepXml) indepVar.get(0)).setName(AttributeUtilities.TIME);
-    			((IndepXml) indepVar.get(0)).setOrigName(AttributeUtilities.TIME);
+    			formula = MathUtilities.replaceVariable(formula, ((IndepXml) indepVar.get(0)).name, AttributeUtilities.TIME);
+    			((IndepXml) indepVar.get(0)).name = AttributeUtilities.TIME;
+    			((IndepXml) indepVar.get(0)).origName = AttributeUtilities.TIME;
     		}
     		
     		((CatalogModelXml) modelXml.get(0)).formula = formula;

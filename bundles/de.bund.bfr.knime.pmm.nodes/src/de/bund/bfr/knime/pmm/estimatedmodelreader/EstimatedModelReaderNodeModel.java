@@ -478,8 +478,8 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
         			for (PmmXmlElementConvertable xml : tuple.getPmmXml(Model2Schema.ATT_INDEPENDENT).getElementSet()) {
         				IndepXml indep = (IndepXml) xml;
         				
-        				if (indep.getUnit() != null) {
-        					units.put(indep.getName(), indep.getUnit());
+        				if (indep.unit != null) {
+        					units.put(indep.name, indep.unit);
         				}
         			}
         			

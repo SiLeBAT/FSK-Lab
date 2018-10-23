@@ -121,12 +121,12 @@ public class Model1Parser {
 		Parameter indepParam = new Parameter(Categories.getTime());
 		indepParam.setValue(0.0);
 		indepParam.setConstant(false);
-		indepParam.setUnits(indep.getUnit());
+		indepParam.setUnits(indep.unit);
 		model.addParameter(indepParam);
 
 		// Adds indep constraint
-		if (!indep.getName().isEmpty()) {
-			LimitsConstraint lc = new LimitsConstraint(indep.getName(), indep.getMin(), indep.getMax());
+		if (!indep.name.isEmpty()) {
+			LimitsConstraint lc = new LimitsConstraint(indep.name, indep.min, indep.max);
 			if (lc.getConstraint() != null) {
 				model.addConstraint(lc.getConstraint());
 			}

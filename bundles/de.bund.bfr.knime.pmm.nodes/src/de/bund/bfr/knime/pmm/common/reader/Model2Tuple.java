@@ -236,17 +236,17 @@ public class Model2Tuple {
     IndepXml indepXml = new IndepXml(param.getId(), min, max);
 
     SecIndep secIndep = new SecIndep(param);
-    indepXml.setDescription(secIndep.getDescription());
+    indepXml.description = secIndep.getDescription();
 
     // Adds unit and unit category
     String unitID = param.getUnits();
     if (!unitID.equals("dimensionless")) {
       String unitName = unitDefs.get(unitID).getName();
-      indepXml.setUnit(unitName);
+      indepXml.unit = unitName;
 
       if (DBUnits.getDBUnits().containsKey(unitName)) {
         UnitsFromDB ufdb = DBUnits.getDBUnits().get(unitName);
-        indepXml.setCategory(ufdb.getKind_of_property_quantity());
+        indepXml.category = ufdb.getKind_of_property_quantity();
       }
     }
 

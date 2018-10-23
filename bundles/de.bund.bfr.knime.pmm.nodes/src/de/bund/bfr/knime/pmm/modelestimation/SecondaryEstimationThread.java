@@ -327,8 +327,8 @@ public class SecondaryEstimationThread implements Runnable {
 					for (int j = 0; j < indepXml.getElementSet().size(); j++) {
 						IndepXml element = (IndepXml) indepXml.get(j);
 
-						element.setMin(minValues.get(j));
-						element.setMax(maxValues.get(j));
+						element.min = minValues.get(j);
+						element.max = maxValues.get(j);
 					}
 
 					PmmXmlDoc estModelXml = tuple

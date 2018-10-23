@@ -283,7 +283,7 @@ public class CellIO {
 			} else if (element instanceof CatalogModelXml) {
 				names.add(((CatalogModelXml) element).name);
 			} else if (element instanceof IndepXml) {
-				names.add(((IndepXml) element).getName());
+				names.add(((IndepXml) element).name);
 			} else if (element instanceof DepXml) {
 				names.add(((DepXml) element).name);
 			} else {

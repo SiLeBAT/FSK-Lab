@@ -326,11 +326,11 @@ public class SecondaryModelDialog extends JDialog implements ActionListener, Ite
 
 				JComboBox<String> minBox = new JComboBox<>(options.toArray(new String[0]));
 				JComboBox<String> maxBox = new JComboBox<>(options.toArray(new String[0]));
-				JComboBox<String> categoryBox = new JComboBox<>(new String[] { indep.getCategory() });
+				JComboBox<String> categoryBox = new JComboBox<>(new String[] { indep.category });
 
-				mins.put(indep.getName(), UI.select(minBox, mins.get(indep.getName()), SettingsHelper.DO_NOT_USE));
-				maxs.put(indep.getName(), UI.select(maxBox, maxs.get(indep.getName()), SettingsHelper.DO_NOT_USE));
-				categories.put(indep.getName(), indep.getCategory());
+				mins.put(indep.name, UI.select(minBox, mins.get(indep.name), SettingsHelper.DO_NOT_USE));
+				maxs.put(indep.name, UI.select(maxBox, maxs.get(indep.name), SettingsHelper.DO_NOT_USE));
+				categories.put(indep.name, indep.category);
 
 				// String[] unitChoice = Categories
 				// .getCategory(categories.get(indep.getName()))
@@ -338,29 +338,29 @@ public class SecondaryModelDialog extends JDialog implements ActionListener, Ite
 				// String defaultUnit = indep.getUnit() != null ?
 				// indep.getUnit()
 				// : unitChoice[0];
-				JComboBox<String> unitBox = new JComboBox<>(new String[] { indep.getUnit() });
+				JComboBox<String> unitBox = new JComboBox<>(new String[] { indep.unit });
 
-				units.put(indep.getName(), indep.getUnit());
+				units.put(indep.name, indep.unit);
 
 				minBox.addItemListener(this);
 				maxBox.addItemListener(this);
 				// categoryBox.addItemListener(this);
 				// unitBox.addItemListener(this);
-				minBoxes.put(indep.getName(), minBox);
-				maxBoxes.put(indep.getName(), maxBox);
-				categoryBoxes.put(indep.getName(), categoryBox);
-				unitBoxes.put(indep.getName(), unitBox);
+				minBoxes.put(indep.name, minBox);
+				maxBoxes.put(indep.name, maxBox);
+				categoryBoxes.put(indep.name, categoryBox);
+				unitBoxes.put(indep.name, unitBox);
 
-				panel.add(new JLabel("Min " + indep.getName() + ":"), createConstraints(0, row));
+				panel.add(new JLabel("Min " + indep.name + ":"), createConstraints(0, row));
 				panel.add(minBox, createConstraints(1, row));
 				row++;
-				panel.add(new JLabel("Max " + indep.getName() + ":"), createConstraints(0, row));
+				panel.add(new JLabel("Max " + indep.name + ":"), createConstraints(0, row));
 				panel.add(maxBox, createConstraints(1, row));
 				row++;
-				panel.add(new JLabel(indep.getName() + " Category:"), createConstraints(0, row));
+				panel.add(new JLabel(indep.name + " Category:"), createConstraints(0, row));
 				panel.add(categoryBox, createConstraints(1, row));
 				row++;
-				panel.add(new JLabel(indep.getName() + " Unit:"), createConstraints(0, row));
+				panel.add(new JLabel(indep.name + " Unit:"), createConstraints(0, row));
 				panel.add(unitBox, createConstraints(1, row));
 				row++;
 			}
