@@ -294,7 +294,7 @@ public class TableReader {
 		if (isTertiaryModel && containsData) {
 			for (KnimeTuple tuple : tuples) {
 				String id = ((EstModelXml) tuple.getPmmXml(
-						Model1Schema.ATT_ESTMODEL).get(0)).getId()
+						Model1Schema.ATT_ESTMODEL).get(0)).id
 						+ "";
 
 				if (!dataTuples.containsKey(id)) {
@@ -309,7 +309,7 @@ public class TableReader {
 
 		for (KnimeTuple tuple : tuples) {
 			String id = ((EstModelXml) tuple.getPmmXml(
-					Model1Schema.ATT_ESTMODEL).get(0)).getId()
+					Model1Schema.ATT_ESTMODEL).get(0)).id
 					+ "";
 
 			if (!isTertiaryModel && containsData) {
@@ -473,7 +473,7 @@ public class TableReader {
 			stringColumns.get(Model1Schema.FORMULA).add(modelName);			
 			stringColumns.get(Model1Schema.ATT_EMLIT).add(literature);
 			stringColumns.get(Model1Schema.NAME).add(
-					((EstModelXml) estModelXml.get(0)).getName());
+					((EstModelXml) estModelXml.get(0)).name);
 			index++;
 
 			if (isTertiaryModel) {
@@ -515,16 +515,16 @@ public class TableReader {
 			}
 
 			doubleColumns.get(Model1Schema.SSE).add(
-					((EstModelXml) estModelXml.get(0)).getSse());
+					((EstModelXml) estModelXml.get(0)).sse);
 			doubleColumns.get(Model1Schema.MSE).add(
 					MathUtilities.getMSE(((EstModelXml) estModelXml.get(0))
-							.getRms()));
+							.rms));
 			doubleColumns.get(Model1Schema.RMSE).add(
-					((EstModelXml) estModelXml.get(0)).getRms());
+					((EstModelXml) estModelXml.get(0)).rms);
 			doubleColumns.get(Model1Schema.RSQUARED).add(
-					((EstModelXml) estModelXml.get(0)).getR2());
+					((EstModelXml) estModelXml.get(0)).r2);
 			doubleColumns.get(Model1Schema.AIC).add(
-					((EstModelXml) estModelXml.get(0)).getAic());
+					((EstModelXml) estModelXml.get(0)).aic);
 
 			plotable.setFunction(modelXml.formula);
 			plotable.setFunctionValue(depVar);
@@ -536,7 +536,7 @@ public class TableReader {
 			plotable.setFunctionParameters(parameters);
 			plotable.setCovariances(covariances);
 			plotable.setDegreesOfFreedom(((EstModelXml) estModelXml.get(0))
-					.getDof());
+					.dof);
 			plotable.setCategories(categories);
 			plotable.setUnits(units);
 
@@ -775,13 +775,13 @@ public class TableReader {
 		Integer primId = ((CatalogModelXml) current.getPmmXml(
 				Model1Schema.ATT_MODELCATALOG).get(0)).id;
 		Integer secEstId = ((EstModelXml) current.getPmmXml(
-				Model2Schema.ATT_ESTMODEL).get(0)).getId();
+				Model2Schema.ATT_ESTMODEL).get(0)).id;
 
 		for (KnimeTuple tuple : all) {
 			Integer pId = ((CatalogModelXml) tuple.getPmmXml(
 					Model1Schema.ATT_MODELCATALOG).get(0)).id;
 			Integer sId = ((EstModelXml) tuple.getPmmXml(
-					Model2Schema.ATT_ESTMODEL).get(0)).getId();
+					Model2Schema.ATT_ESTMODEL).get(0)).id;
 
 			if (primId.equals(pId) && secEstId.equals(sId)) {
 				tuples.add(tuple);

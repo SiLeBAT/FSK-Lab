@@ -99,7 +99,7 @@ public class Model2Tuple {
     // EstModel
     EstModelXml estModel = ReaderUtils.uncertainties2EstModel(m2Annot.getUncertainties());
     if (model.isSetName()) {
-      estModel.setName(model.getName());
+      estModel.name = model.getName();
     }
 
     Model2Metadata metadata = new Model2Metadata();

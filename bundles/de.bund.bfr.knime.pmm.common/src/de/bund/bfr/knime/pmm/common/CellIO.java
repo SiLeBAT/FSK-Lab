@@ -233,7 +233,7 @@ public class CellIO {
 			} else if (element instanceof ParamXml) {
 				names.add(((ParamXml) element).getName());
 			} else if (element instanceof EstModelXml) {
-				names.add(((EstModelXml) element).getName());
+				names.add(((EstModelXml) element).name);
 			} else if (element instanceof CatalogModelXml) {
 				names.add(((CatalogModelXml) element).name);
 			} else if (element instanceof IndepXml) {
@@ -318,22 +318,22 @@ public class CellIO {
 					if (el instanceof EstModelXml) {
 						EstModelXml emx = (EstModelXml) el;
 						EstModelXml emxDB = ((EstModelXml) fromToXmlDB.get(i));
-						Integer key = emx.getId();
+						Integer key = emx.id;
 						if (key != null && foreignDbIdsTable.containsKey(key)) {
 							if (before) {
 								pm.setEstModelId(foreignDbIdsTable.get(key));
-								emxDB.setId(foreignDbIdsTable.get(key));
+								emxDB.id = foreignDbIdsTable.get(key);
 								fromToXmlDB.set(i, emxDB);
-							} else if (foreignDbIdsTable.get(key).intValue() != emxDB.getId().intValue()) {
-								System.err.println("checkIDs, EstModelXml ... shouldn't happen - " + foreignDbIdsTable.get(key).intValue() + "\t" + emxDB.getId().intValue());
+							} else if (foreignDbIdsTable.get(key).intValue() != emxDB.id.intValue()) {
+								System.err.println("checkIDs, EstModelXml ... shouldn't happen - " + foreignDbIdsTable.get(key).intValue() + "\t" + emxDB.id.intValue());
 							}
 						} else {
 							if (before) {
 								int rn = MathUtilities.getRandomNegativeInt();
 								pm.setEstModelId(rn);
-								emxDB.setId(rn);
+								emxDB.id = rn;
 								fromToXmlDB.set(i, emxDB);
-							} else foreignDbIdsTable.put(key, emxDB.getId());
+							} else foreignDbIdsTable.put(key, emxDB.id);
 						}
 					}
 					i++;

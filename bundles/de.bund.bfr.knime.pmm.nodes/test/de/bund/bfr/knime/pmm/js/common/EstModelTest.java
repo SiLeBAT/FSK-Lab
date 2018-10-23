@@ -202,7 +202,7 @@ public class EstModelTest {
 	@Test
 	public void testToEstModel() {
 		EstModelXml estModelXml = new EstModelXml(id, name, sse, rms, r2, aic, bic, dof, checked, qualityScore, dbuuid);
-		estModelXml.setComment(comment);
+		estModelXml.comment = comment;
 		
 		EstModel estModel = EstModel.toEstModel(estModelXml);
 		assertTrue(id == estModel.getId());
@@ -236,17 +236,17 @@ public class EstModelTest {
 		estModel.setDbuuid(dbuuid);
 		EstModelXml estModelXml = estModel.toEstModelXml();
 		
-		assertTrue(id == estModelXml.getId());
-		assertEquals(name, estModelXml.getName());
-		assertEquals(sse, estModelXml.getSse(), 0.0);
-		assertEquals(rms, estModelXml.getRms(), 0.0);
-		assertEquals(r2, estModelXml.getR2(), 0.0);
-		assertEquals(aic, estModelXml.getAic(), 0.0);
-		assertEquals(bic, estModelXml.getBic(), 0.0);
-		assertTrue(dof == estModelXml.getDof());
-		assertTrue(qualityScore == estModelXml.getQualityScore());
-		assertEquals(checked, estModelXml.getChecked());
-		assertEquals(comment, estModelXml.getComment());
-		assertEquals(dbuuid, estModelXml.getDbuuid());
+		assertTrue(id == estModelXml.id);
+		assertEquals(name, estModelXml.name);
+		assertEquals(sse, estModelXml.sse, 0.0);
+		assertEquals(rms, estModelXml.rms, 0.0);
+		assertEquals(r2, estModelXml.r2, 0.0);
+		assertEquals(aic, estModelXml.aic, 0.0);
+		assertEquals(bic, estModelXml.bic, 0.0);
+		assertTrue(dof == estModelXml.dof);
+		assertTrue(qualityScore == estModelXml.qualityScore);
+		assertEquals(checked, estModelXml.checked);
+		assertEquals(comment, estModelXml.comment);
+		assertEquals(dbuuid, estModelXml.dbuuid);
 	}
 }

@@ -52,12 +52,12 @@ public class QualityMeasurementComputation {
 
 		for (KnimeTuple tuple : tuples) {
 			if (((EstModelXml) tuple.getPmmXml(Model1Schema.ATT_ESTMODEL)
-					.get(0)).getId() == null) {
+					.get(0)).id == null) {
 				continue;
 			}
 
 			String id = ((EstModelXml) tuple.getPmmXml(
-					Model1Schema.ATT_ESTMODEL).get(0)).getId()
+					Model1Schema.ATT_ESTMODEL).get(0)).id
 					+ "";
 
 			if (perDataSet
@@ -236,9 +236,9 @@ public class QualityMeasurementComputation {
 					.getSchema().createSpec(), tuple);
 
 			if (((EstModelXml) tuple.getPmmXml(Model1Schema.ATT_ESTMODEL)
-					.get(0)).getId() != null) {
+					.get(0)).id != null) {
 				String id = ((EstModelXml) tuple.getPmmXml(
-						Model1Schema.ATT_ESTMODEL).get(0)).getId()
+						Model1Schema.ATT_ESTMODEL).get(0)).id
 						+ "";
 
 				if (perDataSet
@@ -250,12 +250,12 @@ public class QualityMeasurementComputation {
 					PmmXmlDoc estModelXml = newTuple
 							.getPmmXml(Model1Schema.ATT_ESTMODEL);
 
-					((EstModelXml) estModelXml.get(0)).setSse(sseMap.get(id));
-					((EstModelXml) estModelXml.get(0)).setRms(rmsMap.get(id));
-					((EstModelXml) estModelXml.get(0)).setR2(rSquaredMap
-							.get(id));
-					((EstModelXml) estModelXml.get(0)).setAic(aicMap.get(id));
-					((EstModelXml) estModelXml.get(0)).setDof(dofMap.get(id));
+					((EstModelXml) estModelXml.get(0)).sse = sseMap.get(id);
+					((EstModelXml) estModelXml.get(0)).rms = rmsMap.get(id);
+					((EstModelXml) estModelXml.get(0)).r2 = rSquaredMap
+							.get(id);
+					((EstModelXml) estModelXml.get(0)).aic = aicMap.get(id);
+					((EstModelXml) estModelXml.get(0)).dof = dofMap.get(id);
 
 					newTuple.setValue(Model1Schema.ATT_ESTMODEL, estModelXml);
 				}
@@ -440,11 +440,11 @@ public class QualityMeasurementComputation {
 				PmmXmlDoc estModelXml = newTuple
 						.getPmmXml(Model2Schema.ATT_ESTMODEL);
 
-				((EstModelXml) estModelXml.get(0)).setSse(sseMap.get(id));
-				((EstModelXml) estModelXml.get(0)).setRms(rmsMap.get(id));
-				((EstModelXml) estModelXml.get(0)).setR2(rSquaredMap.get(id));
-				((EstModelXml) estModelXml.get(0)).setAic(aicMap.get(id));
-				((EstModelXml) estModelXml.get(0)).setDof(dofMap.get(id));
+				((EstModelXml) estModelXml.get(0)).sse = sseMap.get(id);
+				((EstModelXml) estModelXml.get(0)).rms = rmsMap.get(id);
+				((EstModelXml) estModelXml.get(0)).r2 = rSquaredMap.get(id);
+				((EstModelXml) estModelXml.get(0)).aic = aicMap.get(id);
+				((EstModelXml) estModelXml.get(0)).dof = dofMap.get(id);
 
 				newTuple.setValue(Model2Schema.ATT_ESTMODEL, estModelXml);
 			}

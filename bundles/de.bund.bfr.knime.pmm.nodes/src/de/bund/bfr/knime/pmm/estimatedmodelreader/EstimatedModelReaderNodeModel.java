@@ -328,10 +328,10 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
 				if (result.getObject("BIC") != null) bic = result.getDouble("BIC");
 							
 				emx = new EstModelXml(emid, result.getString("FittedModelName"), null, rms, r2, aic, bic, null); // "EM_" + emid
-				emx.setDbuuid(dbuuid);
-				if (result.getObject("Geprueft") != null) emx.setChecked(result.getBoolean("Geprueft"));
-				if (result.getObject("Guetescore") != null) emx.setQualityScore(result.getInt("Guetescore"));
-				if (result.getObject("Kommentar") != null) emx.setComment(result.getString("Kommentar"));
+				emx.dbuuid = dbuuid;
+				if (result.getObject("Geprueft") != null) emx.checked = result.getBoolean("Geprueft");
+				if (result.getObject("Guetescore") != null) emx.qualityScore = result.getInt("Guetescore");
+				if (result.getObject("Kommentar") != null) emx.comment = result.getString("Kommentar");
 				/*
 	    		Object cmt = DBKernel.getValue(conn,"GeschaetzteModelle", "ID", ""+emid, "Kommentar");
 	    		if (cmt != null) emx.setComment((String) cmt);
@@ -416,10 +416,10 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
 		    	bic = null;
 				if (result.getObject("BIC2") != null) bic = result.getDouble("BIC2");
 				emx = new EstModelXml(emid, result.getString("FittedModelName2"), null, rms, r2, aic, bic, null);
-				emx.setDbuuid(dbuuid);
-				if (result.getObject("Geprueft2") != null) emx.setChecked(result.getBoolean("Geprueft2"));
-				if (result.getObject("Guetescore2") != null) emx.setQualityScore(result.getInt("Guetescore2"));
-				if (result.getObject("Kommentar2") != null) emx.setComment(result.getString("Kommentar2"));
+				emx.dbuuid = dbuuid;
+				if (result.getObject("Geprueft2") != null) emx.checked = result.getBoolean("Geprueft2");
+				if (result.getObject("Guetescore2") != null) emx.qualityScore = result.getInt("Guetescore2");
+				if (result.getObject("Kommentar2") != null) emx.comment = result.getString("Kommentar2");
 				/*
 	    		cmt = DBKernel.getValue(conn,"GeschaetzteModelle", "ID", ""+emid, "Kommentar");
 	    		if (cmt != null) emx.setComment((String) cmt);
@@ -461,7 +461,7 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
     		Map<Integer,List<KnimeTuple>> tuplesBySecEstId = new LinkedHashMap<>();
     		
     		for (KnimeTuple tuple : resultSet) {
-    			int secEstId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).getId();
+    			int secEstId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).id;
     			
     			if (!tuplesBySecEstId.containsKey(secEstId)) {
     				tuplesBySecEstId.put(secEstId, new ArrayList<KnimeTuple>());
@@ -472,7 +472,7 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
     		
     		if (!withoutMdData) {
         		for (KnimeTuple tuple : resultSet) {
-        			int secEstId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).getId();
+        			int secEstId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).id;
         			Map<String, String> units = PmmUtilities.getMiscUnits(tuplesBySecEstId.get(secEstId));
         			
         			for (PmmXmlElementConvertable xml : tuple.getPmmXml(Model2Schema.ATT_INDEPENDENT).getElementSet()) {

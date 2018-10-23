@@ -131,15 +131,15 @@ public class WriterUtils {
 	}
 
 	public static Uncertainties estModel2Uncertainties(EstModelXml estModel) {
-		Integer id = estModel.getId();
-		String modelName = estModel.getName();
-		String comment = estModel.getComment();
-		Double r2 = estModel.getR2();
-		Double rms = estModel.getRms();
-		Double sse = estModel.getSse();
-		Double aic = estModel.getAic();
-		Double bic = estModel.getBic();
-		Integer dof = estModel.getDof();
+		Integer id = estModel.id;
+		String modelName = estModel.name;
+		String comment = estModel.comment;
+		Double r2 = estModel.r2;
+		Double rms = estModel.rms;
+		Double sse = estModel.sse;
+		Double aic = estModel.aic;
+		Double bic = estModel.bic;
+		Integer dof = estModel.dof;
 		Uncertainties uncertainties = SBMLFactory.createUncertainties(id, modelName, comment, r2, rms, sse, aic, bic,
 				dof);
 		return uncertainties;
@@ -490,7 +490,7 @@ public class WriterUtils {
 			// Group tuples according to its secondary model
 			Map<Integer, List<KnimeTuple>> secModelMap = new HashMap<>();
 			for (KnimeTuple tuple : tuples) {
-				int secModelId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).getId();
+				int secModelId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).id;
 				if (secModelMap.containsKey(secModelId)) {
 					secModelMap.get(secModelId).add(tuple);
 				} else {
@@ -593,7 +593,7 @@ public class WriterUtils {
 			// Group tuples according to its secondary model
 			Map<Integer, List<KnimeTuple>> secModelMap = new HashMap<>();
 			for (KnimeTuple tuple : tuples) {
-				int secModelId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).getId();
+				int secModelId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).id;
 				if (secModelMap.containsKey(secModelId)) {
 					secModelMap.get(secModelId).add(tuple);
 				} else {
@@ -636,7 +636,7 @@ public class WriterUtils {
 			String docName = String.format("%s_%d.%s", mdName, modelNum, modelExtension);
 
 			Model model = doc.getModel();
-			model.setId(PMFUtil.createId("model" + secEstModel.getId()));
+			model.setId(PMFUtil.createId("model" + secEstModel.id));
 			CompSBMLDocumentPlugin compDocPlugin = (CompSBMLDocumentPlugin) doc.getPlugin(CompConstants.shortLabel);
 			CompModelPlugin compModelPlugin = (CompModelPlugin) model.getPlugin(CompConstants.shortLabel);
 
@@ -736,8 +736,8 @@ public class WriterUtils {
 			// Create model definition
 			String modelId = "model_" + dep.name;
 			Model model = doc.createModel(modelId);
-			if (estModel.getName() != null) {
-				model.setName(estModel.getName());
+			if (estModel.name != null) {
+				model.setName(estModel.name);
 			}
 
 			if (notes != null) {
@@ -1155,7 +1155,7 @@ public class WriterUtils {
 			// Sort tertiary models
 			Map<Integer, List<KnimeTuple>> tertiaryModelMap = new HashMap<>();
 			for (KnimeTuple tuple : tuples) {
-				int primModelId = ((EstModelXml) tuple.getPmmXml(Model1Schema.ATT_ESTMODEL).get(0)).getId();
+				int primModelId = ((EstModelXml) tuple.getPmmXml(Model1Schema.ATT_ESTMODEL).get(0)).id;
 
 				// primary model in tuple is already in tertiaryModelMap
 				if (tertiaryModelMap.containsKey(primModelId)) {

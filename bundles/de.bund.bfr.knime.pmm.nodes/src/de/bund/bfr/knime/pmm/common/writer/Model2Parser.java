@@ -69,8 +69,8 @@ public class Model2Parser {
 
 		// Creates model and names it
 		Model model = sbmlDocument.createModel("model_" + dep.name);
-		if (estModel.getName() != null) {
-			model.setName(estModel.getName());
+		if (estModel.name != null) {
+			model.setName(estModel.name);
 		}
 
 		// Gets model references

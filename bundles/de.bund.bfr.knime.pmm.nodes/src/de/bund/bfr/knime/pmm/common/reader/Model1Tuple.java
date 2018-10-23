@@ -151,7 +151,7 @@ public class Model1Tuple {
 
     EstModelXml estModel = ReaderUtils.uncertainties2EstModel(m1Annot.getUncertainties());
     if (model.isSetName()) {
-      estModel.setName(model.getName());
+      estModel.name = model.getName();
     }
 
     Model1AgentXml agentXml = new Model1AgentXml(MathUtilities.getRandomNegativeInt(),

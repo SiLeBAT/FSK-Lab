@@ -216,10 +216,10 @@ class NodeModel extends org.knime.core.node.NodeModel {
 	}
 
 	private static boolean identicalEstModels(List<KnimeTuple> tuples) {
-		int id = ((EstModelXml) tuples.get(0).getPmmXml(Model1Schema.ATT_ESTMODEL).get(0)).getId();
+		int id = ((EstModelXml) tuples.get(0).getPmmXml(Model1Schema.ATT_ESTMODEL).get(0)).id;
 		for (KnimeTuple tuple : tuples.subList(1, tuples.size())) {
 			EstModelXml estModel = (EstModelXml) tuple.getPmmXml(Model1Schema.ATT_ESTMODEL).get(0);
-			if (id != estModel.getId()) {
+			if (id != estModel.id) {
 				return false;
 			}
 		}

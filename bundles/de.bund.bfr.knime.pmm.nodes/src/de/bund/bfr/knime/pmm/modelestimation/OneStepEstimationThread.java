@@ -360,12 +360,12 @@ public class OneStepEstimationThread implements Runnable {
 					PmmXmlDoc estModelXml = tuple
 							.getPmmXml(Model1Schema.ATT_ESTMODEL);
 
-					((EstModelXml) estModelXml.get(0)).setId(estID);
-					((EstModelXml) estModelXml.get(0)).setSse(sse);
-					((EstModelXml) estModelXml.get(0)).setRms(rms);
-					((EstModelXml) estModelXml.get(0)).setR2(rSquared);
-					((EstModelXml) estModelXml.get(0)).setAic(aic);
-					((EstModelXml) estModelXml.get(0)).setDof(dof);
+					((EstModelXml) estModelXml.get(0)).id = estID;
+					((EstModelXml) estModelXml.get(0)).sse = sse;
+					((EstModelXml) estModelXml.get(0)).rms = rms;
+					((EstModelXml) estModelXml.get(0)).r2 = rSquared;
+					((EstModelXml) estModelXml.get(0)).aic = aic;
+					((EstModelXml) estModelXml.get(0)).dof = dof;
 
 					paramMap.put(id, paramXml);
 					indepMap.put(id, indepXml);
@@ -448,7 +448,7 @@ public class OneStepEstimationThread implements Runnable {
 					t.setValue(Model2Schema.ATT_INDEPENDENT, secIndepXml);
 
 					Integer estID = ((EstModelXml) tuple.getPmmXml(
-							Model1Schema.ATT_ESTMODEL).get(0)).getId();
+							Model1Schema.ATT_ESTMODEL).get(0)).id;
 
 					t.setValue(Model1Schema.ATT_ESTMODEL, new PmmXmlDoc(
 							new EstModelXml(estID, createModelName(tuple),

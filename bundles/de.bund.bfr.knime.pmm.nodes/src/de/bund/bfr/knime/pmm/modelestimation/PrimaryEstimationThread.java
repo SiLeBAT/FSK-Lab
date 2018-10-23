@@ -209,13 +209,13 @@ public class PrimaryEstimationThread implements Runnable {
 
 			PmmXmlDoc estModelXml = tuple.getPmmXml(Model1Schema.ATT_ESTMODEL);
 
-			((EstModelXml) estModelXml.get(0)).setId(estID);
-			((EstModelXml) estModelXml.get(0)).setName(createModelName(tuple));
-			((EstModelXml) estModelXml.get(0)).setSse(sse);
-			((EstModelXml) estModelXml.get(0)).setRms(rms);
-			((EstModelXml) estModelXml.get(0)).setR2(rSquare);
-			((EstModelXml) estModelXml.get(0)).setAic(aic);
-			((EstModelXml) estModelXml.get(0)).setDof(dof);
+			((EstModelXml) estModelXml.get(0)).id = estID;
+			((EstModelXml) estModelXml.get(0)).name = createModelName(tuple);
+			((EstModelXml) estModelXml.get(0)).sse = sse;
+			((EstModelXml) estModelXml.get(0)).rms = rms;
+			((EstModelXml) estModelXml.get(0)).r2 = rSquare;
+			((EstModelXml) estModelXml.get(0)).aic = aic;
+			((EstModelXml) estModelXml.get(0)).dof = dof;
 
 			tuple.setValue(Model1Schema.ATT_PARAMETER, paramXml);
 			tuple.setValue(Model1Schema.ATT_INDEPENDENT, indepXml);

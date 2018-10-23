@@ -346,18 +346,18 @@ public final class ModelEditorNodeModel
 		if(estModelXml != null)
 		{
 			EstModel estModel = new EstModel();
-			estModel.setId(estModelXml.getId());
-			estModel.setName(estModelXml.getName());
-			estModel.setSse(estModelXml.getSse());
-			estModel.setRms(estModelXml.getRms());
-			estModel.setR2(estModelXml.getR2());
-			estModel.setAIC(estModelXml.getAic());
-			estModel.setBIC(estModelXml.getBic());
-			estModel.setDof(estModelXml.getDof());
-			estModel.setQualityScore(estModelXml.getQualityScore());
-			estModel.setChecked(estModelXml.getChecked());
-			estModel.setComment(estModelXml.getComment());
-			estModel.setDbuuid(estModelXml.getDbuuid());
+			estModel.setId(estModelXml.id);
+			estModel.setName(estModelXml.name);
+			estModel.setSse(estModelXml.sse);
+			estModel.setRms(estModelXml.rms);
+			estModel.setR2(estModelXml.r2);
+			estModel.setAIC(estModelXml.aic);
+			estModel.setBIC(estModelXml.bic);
+			estModel.setDof(estModelXml.dof);
+			estModel.setQualityScore(estModelXml.qualityScore);
+			estModel.setChecked(estModelXml.checked);
+			estModel.setComment(estModelXml.comment);
+			estModel.setDbuuid(estModelXml.dbuuid);
 			outTuple.setEstModel(estModel);
 		}
 
@@ -632,7 +632,7 @@ public final class ModelEditorNodeModel
 		EstModelXml estModelXml = new EstModelXml(estModel.getId(), estModel.getName(), estModel.getSse(),
 				estModel.getRms(), estModel.getR2(), estModel.getAIC(), estModel.getBIC(), estModel.getDof(), true,
 				estModel.getQualityScore(), estModel.getDbuuid());
-		estModelXml.setComment(estModel.getComment());
+		estModelXml.comment = estModel.getComment();
 		PmmXmlDoc estModelDoc = new PmmXmlDoc(estModelXml);
 		outTuple.setValue(Model1Schema.ATT_ESTMODEL, estModelDoc);
 

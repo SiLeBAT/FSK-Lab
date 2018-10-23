@@ -59,7 +59,7 @@ public class Model1Parser {
 		IndepXml indep = (IndepXml) tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT).get(0);
 		PmmXmlDoc paramsDoc = tuple.getPmmXml(Model1Schema.ATT_PARAMETER);
 
-		String modelId = PMFUtil.createId("model" + estModel.getId());
+		String modelId = PMFUtil.createId("model" + estModel.id);
 
 		// Creates SBMLDocument for the primary model
 		sbmlDocument = new SBMLDocument(TableReader.LEVEL, TableReader.VERSION);
@@ -73,8 +73,8 @@ public class Model1Parser {
 
 		// Creates model and names it
 		Model model = sbmlDocument.createModel(modelId);
-		if (estModel.getName() != null) {
-			model.setName(estModel.getName());
+		if (estModel.name != null) {
+			model.setName(estModel.name);
 		}
 
 		if (notes != null) {

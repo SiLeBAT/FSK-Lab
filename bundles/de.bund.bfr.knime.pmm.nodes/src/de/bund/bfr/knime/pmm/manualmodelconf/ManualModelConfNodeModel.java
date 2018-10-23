@@ -214,8 +214,8 @@ public class ManualModelConfNodeModel extends NodeModel {
     		if (formulaCreator) {
         		PmmXmlDoc estXml = tupleM1.getPmmXml(Model1Schema.ATT_ESTMODEL);
         		EstModelXml exl =  (EstModelXml) estXml.get(0);    
-        		((CatalogModelXml) modelXml.get(0)).comment = exl.getComment();
-        		exl.setComment("");
+        		((CatalogModelXml) modelXml.get(0)).comment = exl.comment;
+        		exl.comment = "";
         		tupleM1.setValue(Model1Schema.ATT_ESTMODEL, estXml);
         		
     		}

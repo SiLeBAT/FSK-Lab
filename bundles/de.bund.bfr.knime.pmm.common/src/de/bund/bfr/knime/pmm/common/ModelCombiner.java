@@ -179,11 +179,11 @@ public class ModelCombiner {
 			PmmXmlDoc estModelXml = newTuple.getPmmXml(Model1Schema.ATT_ESTMODEL);
 
 			((CatalogModelXml) modelXml.get(0)).id = newID;
-			((EstModelXml) estModelXml.get(0)).setId(usedTuples.get(0).getInt(Model2Schema.ATT_GLOBAL_MODEL_ID));
-			((EstModelXml) estModelXml.get(0)).setSse(null);
-			((EstModelXml) estModelXml.get(0)).setRms(null);
-			((EstModelXml) estModelXml.get(0)).setR2(null);
-			((EstModelXml) estModelXml.get(0)).setAic(null);
+			((EstModelXml) estModelXml.get(0)).id = usedTuples.get(0).getInt(Model2Schema.ATT_GLOBAL_MODEL_ID);
+			((EstModelXml) estModelXml.get(0)).sse = null;
+			((EstModelXml) estModelXml.get(0)).rms = null;
+			((EstModelXml) estModelXml.get(0)).r2 = null;
+			((EstModelXml) estModelXml.get(0)).aic = null;
 
 			newTuple.setValue(Model1Schema.ATT_MODELCATALOG, modelXml);
 			newTuple.setValue(Model1Schema.ATT_ESTMODEL, estModelXml);

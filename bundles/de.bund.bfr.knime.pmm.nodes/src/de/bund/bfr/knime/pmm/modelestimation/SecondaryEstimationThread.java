@@ -334,14 +334,14 @@ public class SecondaryEstimationThread implements Runnable {
 					PmmXmlDoc estModelXml = tuple
 							.getPmmXml(Model2Schema.ATT_ESTMODEL);
 
-					((EstModelXml) estModelXml.get(0)).setId(estID);
+					((EstModelXml) estModelXml.get(0)).id = estID;
 					((EstModelXml) estModelXml.get(0))
-							.setName(createModelName(tuple));
-					((EstModelXml) estModelXml.get(0)).setSse(sse);
-					((EstModelXml) estModelXml.get(0)).setRms(rms);
-					((EstModelXml) estModelXml.get(0)).setR2(rSquared);
-					((EstModelXml) estModelXml.get(0)).setAic(aic);
-					((EstModelXml) estModelXml.get(0)).setDof(dof);
+							.name = createModelName(tuple);
+					((EstModelXml) estModelXml.get(0)).sse = sse;
+					((EstModelXml) estModelXml.get(0)).rms = rms;
+					((EstModelXml) estModelXml.get(0)).r2 = rSquared;
+					((EstModelXml) estModelXml.get(0)).aic = aic;
+					((EstModelXml) estModelXml.get(0)).dof = dof;
 
 					paramMap.put(id, paramXml);
 					indepMap.put(id, indepXml);

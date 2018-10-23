@@ -357,25 +357,25 @@ public class EstModel implements ViewValue {
 	/** Creates an {@link EstModel} from an {@link EstModelXml}. */
 	public static EstModel toEstModel(EstModelXml estModelXml) {
 		EstModel estModel = new EstModel();
-		estModel.setId(estModelXml.getId());
-		estModel.setName(estModelXml.getName());
-		estModel.setSse(estModelXml.getSse());
-		estModel.setRms(estModelXml.getRms());
-		estModel.setR2(estModelXml.getR2());
-		estModel.setAIC(estModelXml.getAic());
-		estModel.setBIC(estModelXml.getBic());
-		estModel.setDof(estModelXml.getDof());
-		estModel.setQualityScore(estModelXml.getQualityScore());
-		estModel.setChecked(estModelXml.getChecked());
-		estModel.setComment(estModelXml.getComment());
-		estModel.setDbuuid(estModelXml.getDbuuid());
+		estModel.setId(estModelXml.id);
+		estModel.setName(estModelXml.name);
+		estModel.setSse(estModelXml.sse);
+		estModel.setRms(estModelXml.rms);
+		estModel.setR2(estModelXml.r2);
+		estModel.setAIC(estModelXml.aic);
+		estModel.setBIC(estModelXml.bic);
+		estModel.setDof(estModelXml.dof);
+		estModel.setQualityScore(estModelXml.qualityScore);
+		estModel.setChecked(estModelXml.checked);
+		estModel.setComment(estModelXml.comment);
+		estModel.setDbuuid(estModelXml.dbuuid);
 
 		return estModel;
 	}
 	
 	public EstModelXml toEstModelXml() {
 		EstModelXml estModelXml = new EstModelXml(id, name, sse, rms, r2, aic, bic, dof, checked, qualityScore, dbuuid);
-		estModelXml.setComment(comment);
+		estModelXml.comment = comment;
 		
 		return estModelXml;
 	}

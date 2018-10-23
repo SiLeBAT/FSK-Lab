@@ -199,16 +199,16 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			for (PmmXmlElementConvertable el : x.getElementSet()) {
 				if (el instanceof EstModelXml) {
 					EstModelXml emx = (EstModelXml) el;
-					this.setEstModelId(emx.getId());
-					this.rms = emx.getRms();
-					this.rsquared = emx.getR2();
-					this.aic = emx.getAic();
-					this.bic = emx.getBic();
-					this.qualityScore = emx.getQualityScore();
-					this.isChecked = emx.getChecked();
-					this.comment = emx.getComment();
-					this.fittedModelName = emx.getName();
-					this.em_dbuuid = emx.getDbuuid();
+					this.setEstModelId(emx.id);
+					this.rms = emx.rms;
+					this.rsquared = emx.r2;
+					this.aic = emx.aic;
+					this.bic = emx.bic;
+					this.qualityScore = emx.qualityScore;
+					this.isChecked = emx.checked;
+					this.comment = emx.comment;
+					this.fittedModelName = emx.name;
+					this.em_dbuuid = emx.dbuuid;
 					break;
 				}
 			}
@@ -413,7 +413,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		PmmXmlDoc emDoc = new PmmXmlDoc();
 		int emid = getEstModelId();
 		EstModelXml emx = new EstModelXml(emid, fittedModelName, null, getRms(), getRsquared(), getAic(), getBic(), null, isChecked, qualityScore, getEMDbUuid()); // "EM_" + emid
-		emx.setComment(comment);
+		emx.comment = comment;
 		emDoc.add(emx);
 		return emDoc;
 	}

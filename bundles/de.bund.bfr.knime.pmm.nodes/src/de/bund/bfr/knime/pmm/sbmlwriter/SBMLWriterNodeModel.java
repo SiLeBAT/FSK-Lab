@@ -205,7 +205,7 @@ public class SBMLWriterNodeModel extends NodeModel {
 				DepXml depXml = (DepXml) tuple.getPmmXml(Model1Schema.ATT_DEPENDENT).get(0);
 				AgentXml organismXml = (AgentXml) tuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0);
 				MatrixXml matrixXml = (MatrixXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0);
-				Integer id = estXml.getId();
+				Integer id = estXml.id;
 
 				if (!idSet.add(id)) {
 					continue;
@@ -224,7 +224,7 @@ public class SBMLWriterNodeModel extends NodeModel {
 				history.addCreator(new Creator(creatorGivenName, creatorFamilyName, null, creatorContact));
 
 				String modelName = ((EstModelXml) tupleMap.get(tuple).get(0).getPmmXml(Model1Schema.ATT_ESTMODEL)
-						.get(0)).getName();
+						.get(0)).name;
 
 				if (modelName == null || modelName.trim().isEmpty()) {
 					throw new IOException("Model Name missing");
