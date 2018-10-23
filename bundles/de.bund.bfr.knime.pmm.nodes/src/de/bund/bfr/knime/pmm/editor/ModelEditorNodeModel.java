@@ -284,20 +284,20 @@ public final class ModelEditorNodeModel
 				LiteratureItem literatureItem = (LiteratureItem) mdLitDoc.get(i);
 	
 				Literature literature = new Literature();
-				literature.setAuthor(literatureItem.getAuthor());
-				literature.setYear(literatureItem.getYear());
-				literature.setTitle(literatureItem.getTitle());
-				literature.setAbstractText(literatureItem.getAbstractText());
-				literature.setJournal(literatureItem.getJournal());
-				literature.setVolume(literatureItem.getVolume());
-				literature.setIssue(literatureItem.getIssue());
-				literature.setPage(literatureItem.getPage());
-				literature.setApprovalMode(literatureItem.getApprovalMode());
-				literature.setWebsite(literatureItem.getWebsite());
-				literature.setType(literatureItem.getType());
-				literature.setComment(literatureItem.getComment());
-				literature.setId(literatureItem.getId());
-				literature.setDbuuid(literatureItem.getDbuuid());
+				literature.setAuthor(literatureItem.author);
+				literature.setYear(literatureItem.year);
+				literature.setTitle(literatureItem.title);
+				literature.setAbstractText(literatureItem.abstractText);
+				literature.setJournal(literatureItem.journal);
+				literature.setVolume(literatureItem.volume);
+				literature.setIssue(literatureItem.issue);
+				literature.setPage(literatureItem.page);
+				literature.setApprovalMode(literatureItem.approvalMode);
+				literature.setWebsite(literatureItem.website);
+				literature.setType(literatureItem.type);
+				literature.setComment(literatureItem.comment);
+				literature.setId(literatureItem.id);
+				literature.setDbuuid(literatureItem.dbuuid);
 	
 				mdLiteratureArray[i] = literature;
 			}
@@ -509,20 +509,20 @@ public final class ModelEditorNodeModel
 			for (int i = 0; i < mLitDoc.size(); i++) {
 				LiteratureItem literatureItem = (LiteratureItem) mLitDoc.get(i);
 				Literature literature = new Literature();
-				literature.setAuthor(literatureItem.getAuthor());
-				literature.setYear(literatureItem.getYear());
-				literature.setTitle(literatureItem.getTitle());
-				literature.setAbstractText(literatureItem.getAbstractText());
-				literature.setJournal(literatureItem.getJournal());
-				literature.setVolume(literatureItem.getVolume());
-				literature.setIssue(literatureItem.getIssue());
-				literature.setPage(literatureItem.getPage());
-				literature.setApprovalMode(literatureItem.getApprovalMode());
-				literature.setWebsite(literatureItem.getWebsite());
-				literature.setType(literatureItem.getType());
-				literature.setComment(literatureItem.getComment());
-				literature.setId(literatureItem.getId());
-				literature.setDbuuid(literatureItem.getDbuuid());
+				literature.setAuthor(literatureItem.author);
+				literature.setYear(literatureItem.year);
+				literature.setTitle(literatureItem.title);
+				literature.setAbstractText(literatureItem.abstractText);
+				literature.setJournal(literatureItem.journal);
+				literature.setVolume(literatureItem.volume);
+				literature.setIssue(literatureItem.issue);
+				literature.setPage(literatureItem.page);
+				literature.setApprovalMode(literatureItem.approvalMode);
+				literature.setWebsite(literatureItem.website);
+				literature.setType(literatureItem.type);
+				literature.setComment(literatureItem.comment);
+				literature.setId(literatureItem.id);
+				literature.setDbuuid(literatureItem.dbuuid);
 	
 				mLiteratureArray[i] = literature;
 			}
@@ -539,20 +539,20 @@ public final class ModelEditorNodeModel
 				LiteratureItem literatureItem = (LiteratureItem) emLitDoc.get(i);
 	
 				Literature literature = new Literature();
-				literature.setAuthor(literatureItem.getAuthor());
-				literature.setYear(literatureItem.getYear());
-				literature.setTitle(literatureItem.getTitle());
-				literature.setAbstractText(literatureItem.getAbstractText());
-				literature.setJournal(literatureItem.getJournal());
-				literature.setVolume(literatureItem.getVolume());
-				literature.setIssue(literatureItem.getIssue());
-				literature.setPage(literatureItem.getPage());
-				literature.setApprovalMode(literatureItem.getApprovalMode());
-				literature.setWebsite(literatureItem.getWebsite());
-				literature.setType(literatureItem.getType());
-				literature.setComment(literatureItem.getComment());
-				literature.setId(literatureItem.getId());
-				literature.setDbuuid(literatureItem.getDbuuid());
+				literature.setAuthor(literatureItem.author);
+				literature.setYear(literatureItem.year);
+				literature.setTitle(literatureItem.title);
+				literature.setAbstractText(literatureItem.abstractText);
+				literature.setJournal(literatureItem.journal);
+				literature.setVolume(literatureItem.volume);
+				literature.setIssue(literatureItem.issue);
+				literature.setPage(literatureItem.page);
+				literature.setApprovalMode(literatureItem.approvalMode);
+				literature.setWebsite(literatureItem.website);
+				literature.setType(literatureItem.type);
+				literature.setComment(literatureItem.comment);
+				literature.setId(literatureItem.id);
+				literature.setDbuuid(literatureItem.dbuuid);
 	
 				emLiteratureArray[i] = literature;
 			}

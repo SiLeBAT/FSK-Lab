@@ -258,12 +258,12 @@ public class MdReaderUi extends JPanel {
         		if (el instanceof LiteratureItem) {
         			LiteratureItem lit = (LiteratureItem) el;
         			if (literatureID > 0) {
-        				int id = lit.getId();
+        				int id = lit.id;
         				if (literatureID == id) return true;
         			}
         			else {
-            			String s = lit.getAuthor();
-            			String sd = lit.getTitle();
+            			String s = lit.author;
+            			String sd = lit.title;
             			if (s == null) s = ""; else s = s.toLowerCase();
             			if (sd == null) sd = ""; else sd = sd.toLowerCase();
             			if (s.equals(literatureString.toLowerCase()) || sd.equals(literatureString.toLowerCase())) return true;
@@ -326,12 +326,12 @@ public class MdReaderUi extends JPanel {
         		if (el instanceof LiteratureItem) {
         			LiteratureItem lit = (LiteratureItem) el;
         			if (literatureID > 0) {
-        				int id = lit.getId();
+        				int id = lit.id;
         				if (literatureID != id) return false;
         			}
         			else {
-            			String s = lit.getAuthor();
-            			String sd = lit.getTitle();
+            			String s = lit.author;
+            			String sd = lit.title;
             			if (s == null) s = ""; else s = s.toLowerCase();
             			if (sd == null) sd = ""; else sd = sd.toLowerCase();
             			if (!s.contains(literatureString.toLowerCase()) && !sd.contains(literatureString.toLowerCase())) return false;

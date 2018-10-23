@@ -60,7 +60,7 @@ public class DBUtilities {
 
 		LiteratureItem li = new LiteratureItem(author, year, title, mAbstract, journal,
 				volume, issue, page, approvalMode, website, type, comment, id);
-		li.setDbuuid(dbuuid);
+		li.dbuuid = dbuuid;
 
 		return li;
 	}

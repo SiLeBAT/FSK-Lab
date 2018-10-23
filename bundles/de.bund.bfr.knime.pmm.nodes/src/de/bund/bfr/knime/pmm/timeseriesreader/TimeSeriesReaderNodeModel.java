@@ -230,7 +230,7 @@ public class TimeSeriesReaderNodeModel extends NodeModel {
 				if (s != null) {
 					PmmXmlDoc l = new PmmXmlDoc();
 					LiteratureItem li = DBUtilities.getLiteratureItem(conn, Integer.valueOf(s), dbuuid);
-					li.setDbuuid(dbuuid);
+					li.dbuuid = dbuuid;
 					l.add(li);
 					tuple.setLiterature(l);
 				}

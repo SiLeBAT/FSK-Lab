@@ -397,20 +397,20 @@ public class Literature implements ViewValue {
 	
 	public static Literature toLiterature(LiteratureItem literatureItem) {
 		Literature literature = new Literature();
-		literature.setId(literatureItem.getId());
-		literature.setAuthor(literatureItem.getAuthor());
-		literature.setTitle(literatureItem.getTitle());
-		literature.setAbstractText(literatureItem.getAbstractText());
-		literature.setYear(literatureItem.getYear());
-		literature.setJournal(literatureItem.getJournal());
-		literature.setVolume(literatureItem.getVolume());
-		literature.setIssue(literatureItem.getIssue());
-		literature.setPage(literatureItem.getPage());
-		literature.setApprovalMode(literatureItem.getApprovalMode());
-		literature.setWebsite(literatureItem.getWebsite());
-		literature.setType(literatureItem.getType());
-		literature.setComment(literatureItem.getComment());
-		literature.setDbuuid(literatureItem.getDbuuid());
+		literature.setId(literatureItem.id);
+		literature.setAuthor(literatureItem.author);
+		literature.setTitle(literatureItem.title);
+		literature.setAbstractText(literatureItem.abstractText);
+		literature.setYear(literatureItem.year);
+		literature.setJournal(literatureItem.journal);
+		literature.setVolume(literatureItem.volume);
+		literature.setIssue(literatureItem.issue);
+		literature.setPage(literatureItem.page);
+		literature.setApprovalMode(literatureItem.approvalMode);
+		literature.setWebsite(literatureItem.website);
+		literature.setType(literatureItem.type);
+		literature.setComment(literatureItem.comment);
+		literature.setDbuuid(literatureItem.dbuuid);
 		
 		return literature;
 	}

@@ -146,18 +146,18 @@ public class WriterUtils {
 	}
 
 	public static Reference literatureItem2Reference(LiteratureItem lit) {
-		String author = lit.getAuthor();
-		Integer year = lit.getYear();
-		String title = lit.getTitle();
-		String abstractText = lit.getAbstractText();
-		String journal = lit.getJournal();
-		String volume = lit.getVolume();
-		String issue = lit.getIssue();
-		Integer page = lit.getPage();
-		Integer approvalMode = lit.getApprovalMode();
-		String website = lit.getWebsite();
-		ReferenceType type = (lit.getType() == null) ? null : ReferenceType.fromValue(lit.getType());
-		String comment = lit.getComment();
+		String author = lit.author;
+		Integer year = lit.year;
+		String title = lit.title;
+		String abstractText = lit.abstractText;
+		String journal = lit.journal;
+		String volume = lit.volume;
+		String issue = lit.issue;
+		Integer page = lit.page;
+		Integer approvalMode = lit.approvalMode;
+		String website = lit.website;
+		ReferenceType type = (lit.type == null) ? null : ReferenceType.fromValue(lit.type);
+		String comment = lit.comment;
 
 		Reference ref = SBMLFactory.createReference(author, year, title, abstractText, journal, volume, issue, page,
 				approvalMode, website, type, comment);

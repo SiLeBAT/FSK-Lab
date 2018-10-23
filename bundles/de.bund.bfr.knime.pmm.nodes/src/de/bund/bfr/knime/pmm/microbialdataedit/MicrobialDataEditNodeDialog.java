@@ -1430,7 +1430,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 				Set<Integer> ids = new LinkedHashSet<>();
 
 				for (LiteratureItem item : ref) {
-					ids.add(item.getId());
+					ids.add(item.id);
 				}
 
 				if (id != null && !ids.contains(id)) {

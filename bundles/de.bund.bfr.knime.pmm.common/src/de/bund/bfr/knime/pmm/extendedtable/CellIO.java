@@ -305,19 +305,19 @@ public class CellIO {
 					if (el instanceof LiteratureItem) {
 						LiteratureItem li = (LiteratureItem) el;
 						LiteratureItem liDB = ((LiteratureItem) fromToXmlDB.get(i));
-						Integer key = li.getId();
+						Integer key = li.id;
 						if (key != null && foreignDbIdsTable.containsKey(key)) {
 							if (before) {
-								liDB.setId(foreignDbIdsTable.get(key));
+								liDB.id = foreignDbIdsTable.get(key);
 								fromToXmlDB.set(i, liDB);
-							} else if (foreignDbIdsTable.get(key).intValue() != liDB.getId().intValue()) {
-								System.err.println("checkIDs, LiteratureItem ... shouldn't happen - " + foreignDbIdsTable.get(key).intValue() + "\t" + liDB.getId().intValue());
+							} else if (foreignDbIdsTable.get(key).intValue() != liDB.id.intValue()) {
+								System.err.println("checkIDs, LiteratureItem ... shouldn't happen - " + foreignDbIdsTable.get(key).intValue() + "\t" + liDB.id.intValue());
 							}
 						} else {
 							if (before) {
-								liDB.setId(MathUtilities.getRandomNegativeInt());
+								liDB.id = MathUtilities.getRandomNegativeInt();
 								fromToXmlDB.set(i, liDB);
-							} else foreignDbIdsTable.put(key, liDB.getId());
+							} else foreignDbIdsTable.put(key, liDB.id);
 						}
 					}
 					i++;
@@ -465,21 +465,21 @@ public class CellIO {
 					} else if (el instanceof LiteratureItem) {
 						LiteratureItem li = (LiteratureItem) el;
 						LiteratureItem liDB = ((LiteratureItem) fromToXmlDB.get(i));
-						Integer key = li.getId();
+						Integer key = li.id;
 						if (key != null && foreignDbIds.containsKey(key)) {
 							if (before) {
-								liDB.setId(foreignDbIds.get(key)); // schemaTuple.addValue(attr,
+								liDB.id = foreignDbIds.get(key); // schemaTuple.addValue(attr,
 																	// foreignDbIds.get(key));
 								fromToXmlDB.set(i, liDB);
-							} else if (foreignDbIds.get(key).intValue() != liDB.getId().intValue()) {
+							} else if (foreignDbIds.get(key).intValue() != liDB.id.intValue()) {
 								System.err.println("fillNewIDsIntoForeign ... shouldn't happen...LiteratureItem");
 							}
 						} else {
 							if (before) {
-								liDB.setId(MathUtilities.getRandomNegativeInt()); // schemaTuple.addValue(attr,
+								liDB.id = MathUtilities.getRandomNegativeInt(); // schemaTuple.addValue(attr,
 																					// MathUtilities.getRandomNegativeInt());
 								fromToXmlDB.set(i, liDB);
-							} else foreignDbIds.put(key, liDB.getId()); // schemaTuple.getIntList(attr).get(i));
+							} else foreignDbIds.put(key, liDB.id); // schemaTuple.getIntList(attr).get(i));
 						}
 					}
 					i++;

@@ -1058,7 +1058,7 @@ public class Bfrdb {
 			List<PmmXmlElementConvertable> l = lit.getElementSet();
 			if (l.size() > 0) {
 				LiteratureItem li = (LiteratureItem) l.get(0);
-				ps.setInt(12, li.getId());
+				ps.setInt(12, li.id);
 			} else {
 				ps.setNull(12, Types.INTEGER);
 			}
@@ -1188,34 +1188,34 @@ public class Bfrdb {
 			for (PmmXmlElementConvertable el : lit.getElementSet()) {
 				if (el instanceof LiteratureItem) {
 					LiteratureItem li = (LiteratureItem) el;
-					if (li.getId() <= 0 || DBKernel.getValue(conn, "Literatur", "ID", "" + li.getId(), "ID") == null) {
+					if (li.id <= 0 || DBKernel.getValue(conn, "Literatur", "ID", "" + li.id, "ID") == null) {
 						PreparedStatement psm = conn.prepareStatement(
 								"INSERT INTO \"Literatur\" (\"Erstautor\", \"Jahr\", \"Titel\", \"Abstract\", \"Journal\", \"Volume\", \"Issue\", \"Seite\", \"FreigabeModus\", \"Webseite\", \"Literaturtyp\", \"Kommentar\") VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
 								Statement.RETURN_GENERATED_KEYS);
-						if (li.getAuthor() == null) psm.setNull(1, Types.VARCHAR);
-						else psm.setString(1, li.getAuthor());
-						if (li.getYear() == null) psm.setNull(2, Types.INTEGER);
-						else psm.setInt(2, li.getYear());
-						if (li.getTitle() == null) psm.setNull(3, Types.VARCHAR);
-						else psm.setString(3, li.getTitle());
-						if (li.getAbstractText() == null) psm.setNull(4, Types.VARCHAR);
-						else psm.setString(4, li.getAbstractText());
-						if (li.getJournal() == null) psm.setNull(5, Types.VARCHAR);
-						else psm.setString(5, li.getJournal());
-						if (li.getVolume() == null) psm.setNull(6, Types.VARCHAR);
-						else psm.setString(6, li.getVolume());
-						if (li.getIssue() == null) psm.setNull(7, Types.VARCHAR);
-						else psm.setString(7, li.getIssue());
-						if (li.getPage() == null) psm.setNull(8, Types.INTEGER);
-						else psm.setInt(8, li.getPage());
-						if (li.getApprovalMode() == null) psm.setNull(9, Types.INTEGER);
-						else psm.setInt(9, li.getApprovalMode());
-						if (li.getWebsite() == null) psm.setNull(10, Types.VARCHAR);
-						else psm.setString(10, li.getWebsite());
-						if (li.getType() == null) psm.setNull(11, Types.INTEGER);
-						else psm.setInt(11, li.getType());
-						if (li.getComment() == null) psm.setNull(12, Types.VARCHAR);
-						else psm.setString(12, li.getComment());
+						if (li.author == null) psm.setNull(1, Types.VARCHAR);
+						else psm.setString(1, li.author);
+						if (li.year == null) psm.setNull(2, Types.INTEGER);
+						else psm.setInt(2, li.year);
+						if (li.title == null) psm.setNull(3, Types.VARCHAR);
+						else psm.setString(3, li.title);
+						if (li.abstractText == null) psm.setNull(4, Types.VARCHAR);
+						else psm.setString(4, li.abstractText);
+						if (li.journal == null) psm.setNull(5, Types.VARCHAR);
+						else psm.setString(5, li.journal);
+						if (li.volume == null) psm.setNull(6, Types.VARCHAR);
+						else psm.setString(6, li.volume);
+						if (li.issue == null) psm.setNull(7, Types.VARCHAR);
+						else psm.setString(7, li.issue);
+						if (li.page == null) psm.setNull(8, Types.INTEGER);
+						else psm.setInt(8, li.page);
+						if (li.approvalMode == null) psm.setNull(9, Types.INTEGER);
+						else psm.setInt(9, li.approvalMode);
+						if (li.website == null) psm.setNull(10, Types.VARCHAR);
+						else psm.setString(10, li.website);
+						if (li.type == null) psm.setNull(11, Types.INTEGER);
+						else psm.setInt(11, li.type);
+						if (li.comment == null) psm.setNull(12, Types.VARCHAR);
+						else psm.setString(12, li.comment);
 						int newID = 0;
 						try {
 							if (psm.executeUpdate() > 0) {
@@ -1228,8 +1228,8 @@ public class Bfrdb {
 							if (e.getMessage().startsWith("integrity constraint violation: unique")) {
 								String sql = "";
 								try {
-									sql = "SELECT \"ID\" FROM \"Literatur\" WHERE \"Erstautor\" = '" + li.getAuthor().replace("'", "''") + "' AND \"Jahr\" = " + li.getYear()
-											+ " AND \"Titel\" = '" + li.getTitle().replace("'", "''") + "'";
+									sql = "SELECT \"ID\" FROM \"Literatur\" WHERE \"Erstautor\" = '" + li.author.replace("'", "''") + "' AND \"Jahr\" = " + li.year
+											+ " AND \"Titel\" = '" + li.title.replace("'", "''") + "'";
 									ResultSet result = getResultSet(sql, false);
 									if (result != null && result.first()) {
 										newID = result.getInt(1);
@@ -1241,7 +1241,7 @@ public class Bfrdb {
 							}
 						}
 						if (newID > 0) {
-							li.setId(newID);
+							li.id = newID;
 							lit.set(i, li);
 						} else {
 							MyLogger.handleMessage("insertLiteratureInCase failed... " + psm);
@@ -1454,14 +1454,14 @@ public class Bfrdb {
 			for (PmmXmlElementConvertable el : modelLit.getElementSet()) {
 				if (el instanceof LiteratureItem) {
 					LiteratureItem li = (LiteratureItem) el;
-					if (li.getId() >= 0) {
+					if (li.id >= 0) {
 						if (!estimatedModels) {
 							psm.setInt(1, modelId);
-							psm.setInt(2, li.getId());
+							psm.setInt(2, li.id);
 							psm.executeUpdate();
 						} else {
 							psgm.setInt(1, modelId);
-							psgm.setInt(2, li.getId());
+							psgm.setInt(2, li.id);
 							psgm.executeUpdate();
 						}
 					}

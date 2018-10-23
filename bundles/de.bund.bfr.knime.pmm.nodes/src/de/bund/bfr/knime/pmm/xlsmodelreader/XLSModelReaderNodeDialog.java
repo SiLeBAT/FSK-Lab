@@ -563,7 +563,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 			Set<Integer> ids = new LinkedHashSet<>();
 
 			for (LiteratureItem item : set.getLiterature()) {
-				ids.add(item.getId());
+				ids.add(item.id);
 			}
 
 			if (id != null && !ids.contains(id)) {
