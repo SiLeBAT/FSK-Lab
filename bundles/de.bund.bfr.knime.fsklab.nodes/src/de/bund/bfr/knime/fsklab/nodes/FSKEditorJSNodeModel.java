@@ -18,24 +18,17 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.io.FileUtils;
@@ -97,7 +90,6 @@ final class FSKEditorJSNodeModel
   private static final String VIEW_NAME = new FSKEditorJSNodeFactory().getInteractiveViewName();
 
   static final AtomicLong TEMP_DIR_UNIFIER = new AtomicLong((int) (100000 * Math.random()));
-  private static final int BUFFER_SIZE = 4096;
 
   public FSKEditorJSNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
@@ -251,14 +243,17 @@ final class FSKEditorJSNodeModel
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
       LOGGER.info("JS EDITOR  " + fskEditorProxyValue.getResourcesFiles());
-      // resources will only be available via online mode of the editor
+
+      // resources files via fskEditorProxyValue will be available only in online mode of the JS
+      // editor
       if (fskEditorProxyValue.getResourcesFiles() != null
           && fskEditorProxyValue.getResourcesFiles().length != 0) {
         for (String fileRequestString : fskEditorProxyValue.getResourcesFiles()) {
-          LOGGER.info("JS EDITOR  " + fileRequestString + ">>>>>>" + outObj.getWorkingDirectory());
           downloadFileToWorkingDir(fileRequestString, outObj.getWorkingDirectory());
         }
-        // delete the parent folder of the uploaded files moving them to the working directory
+        // delete the parent folder of the uploaded files after moving them to the working
+        // directory.
+        // parentFolderPath is always uses KNIME protocol
         String firstFile = fskEditorProxyValue.getResourcesFiles()[0];
         String parentFolderPath = firstFile.substring(0, firstFile.lastIndexOf("/"));
         BundleContext ctx =
