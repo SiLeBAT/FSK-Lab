@@ -1044,6 +1044,12 @@ joiner = function() {
 		$('#paper').height((canvasheight * 25) + 300);
 		paper.setDimensions(canvas.width(), canvas.height());
 		var paperWidth = $('#paper').width();
+		firstModelHeight = firstModelInputParameters.length >firstModelOutputParameters.length? firstModelInputParameters.length* 25:firstModelOutputParameters.length* 25
+
+		var firstModelNameWrap = joint.util.breakText(firstModelName, {
+		    width: 200,
+		    height: firstModelHeight
+		});
 		var firstModelTojoin = new joint.shapes.devs.Atomic({
 
 			position : {
@@ -1052,7 +1058,7 @@ joiner = function() {
 			},
 			size : {
 				width : 200,
-				height : firstModelInputParameters.length >firstModelOutputParameters.length? firstModelInputParameters.length* 25:firstModelOutputParameters.length* 25
+				height : firstModelHeight
 			},
 			inPorts : firstModelInputParameters,
 			outPorts : firstModelOutputParameters,
@@ -1083,7 +1089,7 @@ joiner = function() {
 				stroke : 'black'
 			},
 			text : {
-				text : firstModelName,
+				text : firstModelNameWrap,
 				'font-size' : 12,
 				'font-weight' : 'bold',
 				'font-variant' : 'small-caps',
@@ -1092,7 +1098,11 @@ joiner = function() {
 				padding : '40px'
 			}
 		});
-
+		secondModelHeight = secondModelInputParameters.length >secondModelOutputParameters.length? secondModelInputParameters.length* 25:secondModelOutputParameters.length* 25
+		var secondModelNameWrap = joint.util.breakText(secondModelName, {
+		    width: 200,
+		    height: secondModelHeight
+		});
 		var secondModelToJoin = new joint.shapes.devs.Atomic({
 
 			position : {
@@ -1101,7 +1111,7 @@ joiner = function() {
 			},
 			size : {
 				width : 200,
-				height : secondModelInputParameters.length >secondModelOutputParameters.length? secondModelInputParameters.length* 25:secondModelOutputParameters.length* 25
+				height :secondModelHeight 
 			},
 			inPorts : secondModelInputParameters,
 			outPorts : secondModelOutputParameters,
@@ -1132,7 +1142,7 @@ joiner = function() {
 				stroke : 'black'
 			},
 			text : {
-				text : secondModelName,
+				text : secondModelNameWrap,
 				'font-size' : 12,
 				'font-weight' : 'bold',
 				'font-variant' : 'small-caps',
