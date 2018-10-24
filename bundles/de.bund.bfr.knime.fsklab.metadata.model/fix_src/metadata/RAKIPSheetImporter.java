@@ -822,7 +822,7 @@ public class RAKIPSheetImporter {
 				if (parameterType == ParameterType.INTEGER) {
 					int intValue = doubleValue.intValue();
 					param.setParameterValue(Integer.toString(intValue));
-				} else if (parameterType == ParameterType.DOUBLE) {
+				} else if (parameterType == ParameterType.DOUBLE || parameterType == ParameterType.NUMBER) {
 					param.setParameterValue(Double.toString(doubleValue));
 				}
 			} else {
