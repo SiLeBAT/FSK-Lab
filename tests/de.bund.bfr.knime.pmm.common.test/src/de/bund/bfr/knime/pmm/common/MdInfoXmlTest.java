@@ -14,11 +14,11 @@ public class MdInfoXmlTest {
 		
 		// Test fully parameterized constructor
 		MdInfoXml info0 = new MdInfoXml(0, "name", "comment", 0, true);
-		assertTrue(0 == info0.getId());
-		assertEquals("name", info0.getName());
-		assertEquals("comment", info0.getComment());
-		assertTrue(0 == info0.getQualityScore());
-		assertTrue(info0.getChecked());
+		assertTrue(0 == info0.id);
+		assertEquals("name", info0.name);
+		assertEquals("comment", info0.comment);
+		assertTrue(0 == info0.qualityScore);
+		assertTrue(info0.checked);
 		
 		// Test copy constructor
 		Element element = new Element(MdInfoXml.ELEMENT_MDINFO);
@@ -29,21 +29,21 @@ public class MdInfoXmlTest {
 		element.setAttribute("Checked", "true");
 		
 		MdInfoXml info1 = new MdInfoXml(element);
-		assertTrue(0 == info1.getId());
-		assertEquals("name", info1.getName());
-		assertEquals("comment", info1.getComment());
-		assertTrue(0 == info1.getQualityScore());
-		assertTrue(info1.getChecked());
+		assertTrue(0 == info1.id);
+		assertEquals("name", info1.name);
+		assertEquals("comment", info1.comment);
+		assertTrue(0 == info1.qualityScore);
+		assertTrue(info1.checked);
 	}
 	
 	@Test
 	public void testToXmlElement() throws DataConversionException {
 		MdInfoXml info = new MdInfoXml(0, "name", "comment", 0, true);
-		assertTrue(0 == info.getId());
-		assertEquals("name", info.getName());
-		assertEquals("comment", info.getComment());
-		assertTrue(0 == info.getQualityScore());
-		assertTrue(info.getChecked());
+		assertTrue(0 == info.id);
+		assertEquals("name", info.name);
+		assertEquals("comment", info.comment);
+		assertTrue(0 == info.qualityScore);
+		assertTrue(info.checked);
 		
 		Element element = info.toXmlElement();
 		assertTrue(0 == element.getAttribute("ID").getIntValue());

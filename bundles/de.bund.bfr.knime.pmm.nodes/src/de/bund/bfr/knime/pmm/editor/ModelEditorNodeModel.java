@@ -268,11 +268,11 @@ public final class ModelEditorNodeModel
 		if(mdInfoXml != null)
 		{
 			MdInfo mdInfo = new MdInfo();
-			mdInfo.setId(mdInfoXml.getId());
-			mdInfo.setName(mdInfoXml.getName());
-			mdInfo.setComment(mdInfoXml.getComment());
-			mdInfo.setQualityScore(mdInfoXml.getQualityScore());
-			mdInfo.setChecked(mdInfoXml.getChecked());
+			mdInfo.setId(mdInfoXml.id);
+			mdInfo.setName(mdInfoXml.name);
+			mdInfo.setComment(mdInfoXml.comment);
+			mdInfo.setQualityScore(mdInfoXml.qualityScore);
+			mdInfo.setChecked(mdInfoXml.checked);
 			outTuple.setMdInfo(mdInfo);
 		}
 

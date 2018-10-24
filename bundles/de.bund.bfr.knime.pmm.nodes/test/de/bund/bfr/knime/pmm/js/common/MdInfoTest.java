@@ -122,10 +122,10 @@ public class MdInfoTest {
 		modelInfo.setChecked(checked);
 		MdInfoXml mdInfoXml = modelInfo.toMdInfoXml();
 
-		assertTrue(id == mdInfoXml.getId());
-		assertEquals(name, mdInfoXml.getName());
-		assertEquals(comment, mdInfoXml.getComment());
-		assertTrue(qualityScore == mdInfoXml.getQualityScore());
-		assertEquals(checked, mdInfoXml.getChecked());
+		assertTrue(id == mdInfoXml.id);
+		assertEquals(name, mdInfoXml.name);
+		assertEquals(comment, mdInfoXml.comment);
+		assertTrue(qualityScore == mdInfoXml.qualityScore);
+		assertEquals(checked, mdInfoXml.checked);
 	}
 }

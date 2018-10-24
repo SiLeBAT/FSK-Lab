@@ -277,19 +277,19 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 			if (set.getComments().containsKey(id)) {
 				commentList.add(set.getComments().get(id));
 			} else {
-				commentList.add(infoXml.getComment());
+				commentList.add(infoXml.comment);
 			}
 
 			if (set.getQualityScores().containsKey(id)) {
 				qualityScoreList.add(set.getQualityScores().get(id));
 			} else {
-				qualityScoreList.add(infoXml.getQualityScore());
+				qualityScoreList.add(infoXml.qualityScore);
 			}
 
 			if (set.getChecks().containsKey(id)) {
 				checkedList.add(set.getChecks().get(id));
 			} else {
-				checkedList.add(infoXml.getChecked());
+				checkedList.add(infoXml.checked);
 			}
 
 			if (set.getTimeSeries().containsKey(id)) {

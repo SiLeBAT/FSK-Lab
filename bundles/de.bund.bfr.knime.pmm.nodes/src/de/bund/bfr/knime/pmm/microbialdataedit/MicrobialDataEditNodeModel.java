@@ -141,8 +141,8 @@ public class MicrobialDataEditNodeModel extends NodeModel {
 				PmmXmlDoc infoXml = tuple
 						.getPmmXml(TimeSeriesSchema.ATT_MDINFO);
 
-				((MdInfoXml) infoXml.get(0)).setComment(set.getComments().get(
-						id));
+				((MdInfoXml) infoXml.get(0)).comment = set.getComments().get(
+						id);
 
 				tuple.setValue(TimeSeriesSchema.ATT_MDINFO, infoXml);
 			}
@@ -151,8 +151,8 @@ public class MicrobialDataEditNodeModel extends NodeModel {
 				PmmXmlDoc infoXml = tuple
 						.getPmmXml(TimeSeriesSchema.ATT_MDINFO);
 
-				((MdInfoXml) infoXml.get(0)).setQualityScore(set
-						.getQualityScores().get(id));
+				((MdInfoXml) infoXml.get(0)).qualityScore = set
+						.getQualityScores().get(id);
 
 				tuple.setValue(TimeSeriesSchema.ATT_MDINFO, infoXml);
 			}
@@ -162,7 +162,7 @@ public class MicrobialDataEditNodeModel extends NodeModel {
 						.getPmmXml(TimeSeriesSchema.ATT_MDINFO);
 
 				((MdInfoXml) infoXml.get(0))
-						.setChecked(set.getChecks().get(id));
+						.checked = set.getChecks().get(id);
 
 				tuple.setValue(TimeSeriesSchema.ATT_MDINFO, infoXml);
 			}

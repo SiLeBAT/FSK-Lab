@@ -165,11 +165,11 @@ public class MdInfo implements ViewValue {
 	 */
 	public static MdInfo toMdInfo(MdInfoXml mdInfoXml) {
 		MdInfo mdInfo = new MdInfo();
-		mdInfo.setId(mdInfoXml.getId());
-		mdInfo.setName(mdInfoXml.getName());
-		mdInfo.setComment(mdInfoXml.getComment());
-		mdInfo.setQualityScore(mdInfoXml.getQualityScore());
-		mdInfo.setChecked(mdInfoXml.getChecked());
+		mdInfo.setId(mdInfoXml.id);
+		mdInfo.setName(mdInfoXml.name);
+		mdInfo.setComment(mdInfoXml.comment);
+		mdInfo.setQualityScore(mdInfoXml.qualityScore);
+		mdInfo.setChecked(mdInfoXml.checked);
 		
 		return mdInfo;
 	}

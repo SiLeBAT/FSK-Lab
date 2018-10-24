@@ -31,11 +31,11 @@ public class MdInfoXml implements PmmXmlElementConvertable {
 	public static final String ATT_QUALITYSCORE = "QualityScore";
 	public static final String ATT_CHECKED = "Checked";
 
-	private Integer id;
-	private String name;
-	private String comment;
-	private Integer qualityScore;
-	private Boolean checked;
+	public Integer id;
+	public String name;
+	public String comment;
+	public Integer qualityScore;
+	public Boolean checked;
 
 	public MdInfoXml(Integer id, String name, String comment,
 			Integer qualityScore, Boolean checked) {
@@ -65,45 +65,5 @@ public class MdInfoXml implements PmmXmlElementConvertable {
 		modelElement.setAttribute(ATT_CHECKED, XmlHelper.getNonNull(checked));
 
 		return modelElement;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public Integer getQualityScore() {
-		return qualityScore;
-	}
-
-	public void setQualityScore(Integer qualityScore) {
-		this.qualityScore = qualityScore;
-	}
-
-	public Boolean getChecked() {
-		return checked;
-	}
-
-	public void setChecked(Boolean checked) {
-		this.checked = checked;
 	}
 }

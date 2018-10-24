@@ -141,7 +141,7 @@ public class MMC_TS extends JPanel {
 			
 			PmmXmlDoc mdInfoDoc = theTS.getMdInfo();
 			MdInfoXml mdix = (MdInfoXml) mdInfoDoc.get(0);
-			mdix.setComment(commentField.getText());
+			mdix.comment = commentField.getText();
 			mdInfoDoc = new PmmXmlDoc();
 			mdInfoDoc.add(mdix);
 			theTS.setValue(TimeSeriesSchema.ATT_MDINFO, mdInfoDoc);

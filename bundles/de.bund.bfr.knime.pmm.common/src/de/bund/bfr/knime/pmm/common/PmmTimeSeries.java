@@ -328,7 +328,7 @@ public class PmmTimeSeries extends KnimeTuple implements PmmXmlElementConvertabl
 	    	for (PmmXmlElementConvertable el : mdInfoXmlDoc.getElementSet()) {
 	    		if (el instanceof MdInfoXml) {
 	    			mdix = (MdInfoXml) el;
-	    			return mdix.getComment();
+	    			return mdix.comment;
 	    		}
 	    	}
 		}
@@ -341,7 +341,7 @@ public class PmmTimeSeries extends KnimeTuple implements PmmXmlElementConvertabl
 	    	for (PmmXmlElementConvertable el : mdInfoXmlDoc.getElementSet()) {
 	    		if (el instanceof MdInfoXml) {
 	    			mdix = (MdInfoXml) el;
-	    			return mdix.getQualityScore();
+	    			return mdix.qualityScore;
 	    		}
 	    	}
 		}
@@ -354,7 +354,7 @@ public class PmmTimeSeries extends KnimeTuple implements PmmXmlElementConvertabl
 	    	for (PmmXmlElementConvertable el : mdInfoXmlDoc.getElementSet()) {
 	    		if (el instanceof MdInfoXml) {
 	    			mdix = (MdInfoXml) el;
-	    			return mdix.getChecked();
+	    			return mdix.checked;
 	    		}
 	    	}
 		}

@@ -161,7 +161,7 @@ public class TableReader {
 					matrix.detail);
 			stringColumns.get(MdInfoXml.ATT_COMMENT).add(
 					((MdInfoXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MDINFO)
-							.get(0)).getComment());
+							.get(0)).comment);
 			stringColumns.get(TimeSeriesSchema.ATT_LITMD).add(literature);
 			data.add(dataPoints);
 			shortLegend.put(id, dataName);

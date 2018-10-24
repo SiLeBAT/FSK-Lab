@@ -670,7 +670,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 				matrixButton.setText(SELECT);
 				set.setMatrix(null);
 				idField.setValue(tuple.getString(TimeSeriesSchema.ATT_COMBASEID));
-				commentField.setValue(((MdInfoXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MDINFO).get(0)).getComment());
+				commentField.setValue(((MdInfoXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MDINFO).get(0)).comment);
 
 				PmmXmlDoc miscXML = tuple.getPmmXml(TimeSeriesSchema.ATT_MISC);
 				int n = removeButtons.size();

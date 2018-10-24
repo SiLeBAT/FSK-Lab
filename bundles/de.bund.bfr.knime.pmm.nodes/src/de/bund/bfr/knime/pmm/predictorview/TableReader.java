@@ -511,7 +511,7 @@ public class TableReader {
 				stringColumns.get(MdInfoXml.ATT_COMMENT).add(
 						((MdInfoXml) tuple.getPmmXml(
 								TimeSeriesSchema.ATT_MDINFO).get(0))
-								.getComment());
+								.comment);
 			}
 
 			doubleColumns.get(Model1Schema.SSE).add(
