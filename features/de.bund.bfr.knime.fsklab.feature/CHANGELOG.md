@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved UI of runner node described in https://github.com/SiLeBAT/FSK-Lab/issues/264.
 
 ### Fixed
-- Fix design issue in calculating the distance between ports in joiner node.
+- Fix design issues in calculating the distance between ports and the fitting the model title to the width of the representing rectangle in joiner node.
 - Support importing values of parameters of type Number. 
 - Proper validation of paths in writer and reader node. See https://github.com/SiLeBAT/FSK-Lab/issues/272
 - Https urls in reader node. See See https://github.com/SiLeBAT/FSK-Lab/issues/275
