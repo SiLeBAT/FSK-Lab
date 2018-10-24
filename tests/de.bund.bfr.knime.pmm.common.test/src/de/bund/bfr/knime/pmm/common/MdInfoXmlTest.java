@@ -26,6 +26,7 @@ public class MdInfoXmlTest {
 		element.setAttribute("Name", "name");
 		element.setAttribute("Comment", "comment");
 		element.setAttribute("QualityScore", "0");
+		element.setAttribute("Checked", "true");
 		
 		MdInfoXml info1 = new MdInfoXml(element);
 		assertTrue(0 == info1.getId());
