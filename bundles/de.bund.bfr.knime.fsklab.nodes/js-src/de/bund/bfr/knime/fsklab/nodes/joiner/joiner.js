@@ -1052,7 +1052,7 @@ joiner = function() {
 			},
 			size : {
 				width : 200,
-				height : firstModelInputParameters.length * 25
+				height : firstModelInputParameters.length >firstModelOutputParameters.length? firstModelInputParameters.length* 25:firstModelOutputParameters.length* 25
 			},
 			inPorts : firstModelInputParameters,
 			outPorts : firstModelOutputParameters,
@@ -1101,7 +1101,7 @@ joiner = function() {
 			},
 			size : {
 				width : 200,
-				height : secondModelInputParameters.length * 25
+				height : secondModelInputParameters.length >secondModelOutputParameters.length? secondModelInputParameters.length* 25:secondModelOutputParameters.length* 25
 			},
 			inPorts : secondModelInputParameters,
 			outPorts : secondModelOutputParameters,
