@@ -175,7 +175,7 @@ public class MiscConversion {
 
 		for (int i = 0; i < combaseNames.size(); i++) {
 			combaseToPmmMap.put(combaseNames.get(i).toLowerCase(), pmmLabMiscs.get(i));
-			pmmToCombaseMap.put(pmmLabMiscs.get(i).getName().toLowerCase(), combaseNames.get(i));
+			pmmToCombaseMap.put(pmmLabMiscs.get(i).name.toLowerCase(), combaseNames.get(i));
 		}
 	}
 
@@ -188,10 +188,10 @@ public class MiscConversion {
 	}
 
 	public String pmmToCombase(MiscXml misc) {
-		if (!pmmToCombaseMap.containsKey(misc.getName().toLowerCase())) {
-			throw new RuntimeException("Unknown Condition: " + misc.getName());
+		if (!pmmToCombaseMap.containsKey(misc.name.toLowerCase())) {
+			throw new RuntimeException("Unknown Condition: " + misc.name);
 		}
 
-		return pmmToCombaseMap.get(misc.getName().toLowerCase());
+		return pmmToCombaseMap.get(misc.name.toLowerCase());
 	}
 }

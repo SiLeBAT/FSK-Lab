@@ -105,7 +105,7 @@ public class QualityMeasurementComputation {
 					}
 
 					Double value = ((MiscXml) miscXml.get(miscNames
-							.indexOf(var))).getValue();
+							.indexOf(var))).value;
 
 					if (value == null) {
 						miscMissing = true;
@@ -328,8 +328,8 @@ public class QualityMeasurementComputation {
 				for (PmmXmlElementConvertable el : misc.getElementSet()) {
 					MiscXml element = (MiscXml) el;
 
-					if (param.equals(element.getName())) {
-						paramValue = element.getValue();
+					if (param.equals(element.name)) {
+						paramValue = element.value;
 						break;
 					}
 				}

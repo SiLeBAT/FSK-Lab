@@ -349,12 +349,12 @@ public class MdReaderUi extends JPanel {
 	        	for (PmmXmlElementConvertable el : miscXmlDoc.getElementSet()) {
 	        		if (el instanceof MiscXml) {
 	        			MiscXml mx = (MiscXml) el;
-	        			if (mx.getName().equalsIgnoreCase(par)) {
-	        				if (mx.getValue() == null) {
+	        			if (mx.name.equalsIgnoreCase(par)) {
+	        				if (mx.value == null) {
 	        					paramFound = true;
 	        					break;
 	        				}
-	        				if (dbl[0] != null && mx.getValue() < dbl[0] || dbl[1] != null && mx.getValue() > dbl[1]) {
+	        				if (dbl[0] != null && mx.value < dbl[0] || dbl[1] != null && mx.value > dbl[1]) {
 	        					return false;
 	        				}
 	        				else {

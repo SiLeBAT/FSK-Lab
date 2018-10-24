@@ -267,7 +267,7 @@ public class CellIO {
 
 		for (PmmXmlElementConvertable element : xml.getElementSet()) {
 			if (element instanceof MiscXml) {
-				names.add(((MiscXml) element).getName());
+				names.add(((MiscXml) element).name);
 			} else if (element instanceof AgentXml) {
 				names.add(((AgentXml) element).name);
 			} else if (element instanceof MatrixXml) {
@@ -403,23 +403,23 @@ public class CellIO {
 					if (el instanceof MiscXml) {
 						MiscXml mx = (MiscXml) el;
 						MiscXml mx2DB = ((MiscXml) fromToXmlDB.get(i));
-						Integer key = mx.getId();
+						Integer key = mx.id;
 						if (key != null && key <= -1 && key >= -3) continue; // ATT_TEMPERATURE_ID, ATT_PH_ID or
 																				// ATT_AW_ID
 						if (key != null && foreignDbIds.containsKey(key)) {
 							if (before) {
-								mx2DB.setId(foreignDbIds.get(key)); // schemaTuple.addValue(attr,
+								mx2DB.id = foreignDbIds.get(key); // schemaTuple.addValue(attr,
 																	// foreignDbIds.get(key));
 								fromToXmlDB.set(i, mx2DB);
-							} else if (foreignDbIds.get(key).intValue() != mx2DB.getId().intValue()) {
+							} else if (foreignDbIds.get(key).intValue() != mx2DB.id.intValue()) {
 								System.err.println("fillNewIDsIntoForeign ... shouldn't happen...MiscXml");
 							}
 						} else {
 							if (before) {
-								mx2DB.setId(MathUtilities.getRandomNegativeInt()); // schemaTuple.addValue(attr,
+								mx2DB.id = MathUtilities.getRandomNegativeInt(); // schemaTuple.addValue(attr,
 																					// MathUtilities.getRandomNegativeInt());
 								fromToXmlDB.set(i, mx2DB);
-							} else foreignDbIds.put(key, mx2DB.getId()); // schemaTuple.getIntList(attr).get(i));
+							} else foreignDbIds.put(key, mx2DB.id); // schemaTuple.getIntList(attr).get(i));
 						}
 					} else if (el instanceof MatrixXml) {
 						MatrixXml matx = (MatrixXml) el;

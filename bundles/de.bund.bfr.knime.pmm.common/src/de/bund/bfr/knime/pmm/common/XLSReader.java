@@ -239,17 +239,17 @@ public class XLSReader {
 
 				if (hasData(cell)) {
 					try {
-						misc.setValue(Double.parseDouble(getData(cell).replace(",", ".")));
+						misc.value = Double.parseDouble(getData(cell).replace(",", "."));
 					} catch (NumberFormatException e) {
 						warnings.add(column + " value in row " + (firstRow.getRowNum() + 1) + " is not valid ("
 								+ getData(cell) + ")");
-						misc.setValue(null);
+						misc.value = null;
 					}
 				} else {
-					misc.setValue(null);
+					misc.value = null;
 				}
 
-				misc.setOrigUnit(misc.getUnit());
+				misc.origUnit = misc.unit;
 				miscXML.add(misc);
 			}
 
@@ -338,7 +338,7 @@ public class XLSReader {
 
 					if (hasData(cell)) {
 						try {
-							String param = ((MiscXml) columnMappings.get(column)).getName();
+							String param = ((MiscXml) columnMappings.get(column)).name;
 							double value = Double.parseDouble(getData(cell).replace(",", "."));
 
 							if (!hasSameValue(param, value, misc)) {
@@ -516,7 +516,7 @@ public class XLSReader {
 
 				if (hasData(cell)) {
 					try {
-						misc.setValue(Double.parseDouble(getData(cell).replace(",", ".")));
+						misc.value = Double.parseDouble(getData(cell).replace(",", "."));
 					} catch (NumberFormatException e) {
 						warnings.add(
 								column + " value in row " + (rowNumber + 1) + " is not valid (" + getData(cell) + ")");
@@ -525,7 +525,7 @@ public class XLSReader {
 					warnings.add(column + " value in row " + (rowNumber + 1) + " is missing");
 				}
 
-				misc.setOrigUnit(misc.getUnit());
+				misc.origUnit = misc.unit;
 				miscXML.add(misc);
 			}
 
@@ -1067,7 +1067,7 @@ public class XLSReader {
 		for (PmmXmlElementConvertable el : miscs.getElementSet()) {
 			MiscXml misc = (MiscXml) el;
 
-			if (misc.getName().equals(param) && !value.equals(misc.getValue())) {
+			if (misc.name.equals(param) && !value.equals(misc.value)) {
 				return false;
 			}
 		}

@@ -170,13 +170,13 @@ public class MiscTest {
 		misc.setDbuuid(dbuuid);
 		MiscXml miscXml = misc.toMiscXml();
 		
-		assertTrue(id == miscXml.getId());
-		assertEquals(name, miscXml.getName());
-		assertEquals(description, miscXml.getDescription());
-		assertEquals(value, miscXml.getValue(), 0.0);
-		assertEquals(Arrays.asList(categories), miscXml.getCategories());
-		assertEquals(unit, miscXml.getUnit());
-		assertEquals(origUnit, miscXml.getOrigUnit());
-		assertEquals(dbuuid, miscXml.getDbuuid());
+		assertTrue(id == miscXml.id);
+		assertEquals(name, miscXml.name);
+		assertEquals(description, miscXml.description);
+		assertEquals(value, miscXml.value, 0.0);
+		assertEquals(Arrays.asList(categories), miscXml.categories);
+		assertEquals(unit, miscXml.unit);
+		assertEquals(origUnit, miscXml.origUnit);
+		assertEquals(dbuuid, miscXml.dbuuid);
 	}
 }

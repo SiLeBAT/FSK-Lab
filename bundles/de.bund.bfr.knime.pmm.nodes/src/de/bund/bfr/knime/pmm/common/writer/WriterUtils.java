@@ -168,7 +168,7 @@ public class WriterUtils {
 		ModelVariable[] modelVariables = new ModelVariable[miscDoc.size()];
 		for (int i = 0; i < miscDoc.size(); i++) {
 			MiscXml miscXml = (MiscXml) miscDoc.get(i);
-			modelVariables[i] = new ModelVariable(miscXml.getName(), miscXml.getValue());
+			modelVariables[i] = new ModelVariable(miscXml.name, miscXml.value);
 		}
 		String compartmentDetail = matrixXml.detail;
 

@@ -435,7 +435,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 				String name = null;
 
 				if (assignment instanceof MiscXml) {
-					name = ((MiscXml) assignment).getName();
+					name = ((MiscXml) assignment).name;
 				} else if (assignment instanceof String) {
 					name = (String) assignment;
 				}
@@ -645,7 +645,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 
 					if (set.getColumnMappings().get(column) instanceof MiscXml) {
 						id = DBKernel.openMiscDBWindow(columnButtons.get(column),
-								((MiscXml) set.getColumnMappings().get(column)).getId());
+								((MiscXml) set.getColumnMappings().get(column)).id);
 					} else {
 						id = DBKernel.openMiscDBWindow(columnButtons.get(column), null);
 					}
@@ -774,7 +774,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 					String unit = (String) columnUnitBoxes.get(column).getSelectedItem();
 					MiscXml condition = (MiscXml) set.getColumnMappings().get(column);
 
-					condition.setUnit(unit);
+					condition.unit = unit;
 					return;
 				}
 			}
@@ -1215,7 +1215,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 						button.setEnabled(false);
 						button.setText(SettingsHelper.OTHER_PARAMETER);
 					} else if (mapping instanceof MiscXml) {
-						int id = ((MiscXml) mapping).getId();
+						int id = ((MiscXml) mapping).id;
 
 						if (id == AttributeUtilities.ATT_TEMPERATURE_ID) {
 							UI.select(box, AttributeUtilities.ATT_TEMPERATURE);
@@ -1232,7 +1232,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 						} else {
 							UI.select(box, SettingsHelper.OTHER_PARAMETER);
 							button.setEnabled(true);
-							button.setText(((MiscXml) mapping).getName());
+							button.setText(((MiscXml) mapping).name);
 						}
 					}
 				} else {
@@ -1254,13 +1254,13 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 					MiscXml condition = (MiscXml) set.getColumnMappings().get(column);
 					List<String> allUnits = new ArrayList<>();
 
-					for (String cat : condition.getCategories()) {
+					for (String cat : condition.categories) {
 						allUnits.addAll(Categories.getCategory(cat).getAllUnits());
 					}
 
 					JComboBox<String> unitBox = new JComboBox<>(allUnits.toArray(new String[0]));
 
-					UI.select(unitBox, condition.getUnit());
+					UI.select(unitBox, condition.unit);
 					unitBox.addItemListener(this);
 					columnUnitBoxes.put(column, unitBox);
 					panel.add(unitBox, createConstraints(3, row));

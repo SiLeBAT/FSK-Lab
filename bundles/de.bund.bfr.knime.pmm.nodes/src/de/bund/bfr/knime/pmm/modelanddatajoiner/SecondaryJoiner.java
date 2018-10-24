@@ -385,19 +385,19 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 								.getElementSet()) {
 							MiscXml element = (MiscXml) el;
 
-							if (paramsConvertTo.containsKey(element.getName())) {
+							if (paramsConvertTo.containsKey(element.name)) {
 								Category cat = Categories
 										.getCategory(Categories
 												.getCategoryByUnit(
-														element.getUnit())
+														element.unit)
 												.getName());
 								String unit = paramsConvertTo.get(element
-										.getName());
+										.name);
 
-								element.setValue(cat.convert(
-										element.getValue(), element.getUnit(),
-										unit));
-								element.setUnit(unit);
+								element.value = cat.convert(
+										element.value, element.unit,
+										unit);
+								element.unit = unit;
 							}
 						}
 
@@ -515,8 +515,8 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 					TimeSeriesSchema.ATT_MISC).getElementSet()) {
 				MiscXml element = (MiscXml) el;
 
-				independentParameterCategories.put(element.getName(),
-						Categories.getCategoryByUnit(element.getUnit())
+				independentParameterCategories.put(element.name,
+						Categories.getCategoryByUnit(element.unit)
 								.getName());
 			}
 		}

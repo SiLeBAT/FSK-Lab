@@ -288,9 +288,9 @@ public class TableReader {
 					for (PmmXmlElementConvertable el : misc.getElementSet()) {
 						MiscXml element = (MiscXml) el;
 
-						if (param.equals(element.getName())) {
-							paramValue = element.getValue();
-							miscUnitMaps.get(id).put(param, element.getUnit());
+						if (param.equals(element.name)) {
+							paramValue = element.value;
+							miscUnitMaps.get(id).put(param, element.unit);
 							break;
 						}
 					}

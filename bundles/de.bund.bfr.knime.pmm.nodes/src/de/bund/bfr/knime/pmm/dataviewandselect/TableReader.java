@@ -175,9 +175,9 @@ public class TableReader {
 				for (PmmXmlElementConvertable el : misc.getElementSet()) {
 					MiscXml element = (MiscXml) el;
 
-					if (miscParams.get(i).equals(element.getName())) {
-						conditionValues.get(i).add(element.getValue());
-						conditionUnits.get(i).add(element.getUnit());
+					if (miscParams.get(i).equals(element.name)) {
+						conditionValues.get(i).add(element.value);
+						conditionUnits.get(i).add(element.unit);
 						paramFound = true;
 						break;
 					}

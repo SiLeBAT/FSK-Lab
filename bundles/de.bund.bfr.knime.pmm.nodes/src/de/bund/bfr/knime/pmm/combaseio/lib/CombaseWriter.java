@@ -171,17 +171,17 @@ public class CombaseWriter {
 				if (el instanceof MiscXml) {
 					MiscXml mx = (MiscXml) el;
 
-					if (tempPhAwIds.contains(mx.getId())) {
+					if (tempPhAwIds.contains(mx.id)) {
 						continue;
 					}
 
 					if (!result.isEmpty())
 						result += ", ";
 					result += conversion.pmmToCombase(mx);
-					if (mx.getUnit() != null && !mx.getUnit().isEmpty())
-						result += " (" + mx.getUnit() + ")";
-					if (mx.getValue() != null && !Double.isNaN(mx.getValue()))
-						result += ":" + mx.getValue();
+					if (mx.unit != null && !mx.unit.isEmpty())
+						result += " (" + mx.unit + ")";
+					if (mx.value != null && !Double.isNaN(mx.value))
+						result += ":" + mx.value;
 				}
 			}
 		}

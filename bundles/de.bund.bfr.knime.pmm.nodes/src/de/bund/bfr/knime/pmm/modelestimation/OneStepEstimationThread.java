@@ -205,9 +205,9 @@ public class OneStepEstimationThread implements Runnable {
 				for (PmmXmlElementConvertable el : misc.getElementSet()) {
 					MiscXml element = (MiscXml) el;
 					List<Double> list = new ArrayList<>(Collections.nCopies(
-							timeList.size(), element.getValue()));
+							timeList.size(), element.value));
 
-					miscLists.put(element.getName(), list);
+					miscLists.put(element.name, list);
 				}
 
 				if (!targetValuesMap.containsKey(id)) {

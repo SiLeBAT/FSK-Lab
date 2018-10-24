@@ -75,7 +75,7 @@ public class PmmUtilities {
 			for (PmmXmlElementConvertable el : misc.getElementSet()) {
 				MiscXml element = (MiscXml) el;
 
-				paramSet.add(element.getName());
+				paramSet.add(element.name);
 			}
 		}
 
@@ -92,7 +92,7 @@ public class PmmUtilities {
 			for (PmmXmlElementConvertable el : misc.getElementSet()) {
 				MiscXml element = (MiscXml) el;
 
-				map.put(element.getName(), element.getCategories());
+				map.put(element.name, element.categories);
 			}
 		}
 
@@ -109,19 +109,19 @@ public class PmmUtilities {
 			for (PmmXmlElementConvertable el : misc.getElementSet()) {
 				MiscXml element = (MiscXml) el;
 
-				if (!occurences.containsKey(element.getName())) {
-					occurences.put(element.getName(),
+				if (!occurences.containsKey(element.name)) {
+					occurences.put(element.name,
 							new LinkedHashMap<String, Integer>());
 				}
 
-				Integer value = occurences.get(element.getName()).get(
-						element.getUnit());
+				Integer value = occurences.get(element.name).get(
+						element.unit);
 
 				if (value != null) {
-					occurences.get(element.getName()).put(element.getUnit(),
+					occurences.get(element.name).put(element.unit,
 							value + 1);
 				} else {
-					occurences.get(element.getName()).put(element.getUnit(), 1);
+					occurences.get(element.name).put(element.unit, 1);
 				}
 			}
 		}

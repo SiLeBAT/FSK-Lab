@@ -256,11 +256,11 @@ public class PredictorViewNodeModel extends NodeModel {
 		for (PmmXmlElementConvertable el : miscXml.getElementSet()) {
 			MiscXml element = (MiscXml) el;
 
-			if (conditions.containsKey(element.getName())) {
-				element.setValue(conditions.get(element.getName()).get(0));
+			if (conditions.containsKey(element.name)) {
+				element.value = conditions.get(element.name).get(0);
 			}
 
-			allMiscs.add(element.getName());
+			allMiscs.add(element.name);
 		}
 
 		for (String cond : conditions.keySet()) {

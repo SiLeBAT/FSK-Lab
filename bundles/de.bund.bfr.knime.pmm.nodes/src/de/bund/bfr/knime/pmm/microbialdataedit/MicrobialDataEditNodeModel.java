@@ -187,9 +187,9 @@ public class MicrobialDataEditNodeModel extends NodeModel {
 			for (int miscID : set.getConditions().keySet()) {
 				MiscXml misc = new MiscXml(set.getConditions().get(miscID));
 
-				misc.setValue(set.getConditionValues().get(miscID).get(id));
-				misc.setUnit(set.getConditionUnits().get(miscID).get(id));
-				misc.setOrigUnit(set.getConditionUnits().get(miscID).get(id));
+				misc.value = set.getConditionValues().get(miscID).get(id);
+				misc.unit = set.getConditionUnits().get(miscID).get(id);
+				misc.origUnit = set.getConditionUnits().get(miscID).get(id);
 				miscXml.add(misc);
 			}
 
@@ -200,8 +200,8 @@ public class MicrobialDataEditNodeModel extends NodeModel {
 
 				MiscXml misc = new MiscXml(set.getAddedConditions().get(miscID));
 
-				misc.setValue(set.getAddedConditionValues().get(miscID).get(id));
-				misc.setUnit(set.getAddedConditionUnits().get(miscID).get(id));
+				misc.value = set.getAddedConditionValues().get(miscID).get(id);
+				misc.unit = set.getAddedConditionUnits().get(miscID).get(id);
 				miscXml.add(misc);
 			}
 

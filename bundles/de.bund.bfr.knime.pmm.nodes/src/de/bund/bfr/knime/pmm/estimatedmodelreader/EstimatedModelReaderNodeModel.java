@@ -487,14 +487,14 @@ public class EstimatedModelReaderNodeModel extends NodeModel {
         			
         			for (PmmXmlElementConvertable xml : miscXml.getElementSet()) {
         				MiscXml misc = (MiscXml) xml;
-        				String unit = units.get(misc.getName());
+        				String unit = units.get(misc.name);
         				
-        				if (misc.getUnit() != null && !misc.getUnit().equals(unit)) {
-        					Category cat = Categories.getCategoryByUnit(misc.getUnit());
+        				if (misc.unit != null && !misc.unit.equals(unit)) {
+        					Category cat = Categories.getCategoryByUnit(misc.unit);
         					
         					try {
-    							misc.setValue(cat.convert(misc.getValue(), misc.getUnit(), unit));							
-    							misc.setUnit(unit);
+    							misc.value = cat.convert(misc.value, misc.unit, unit);							
+    							misc.unit = unit;
     						} catch (ConvertException e) {
     							e.printStackTrace();
     						}    					

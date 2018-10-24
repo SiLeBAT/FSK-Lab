@@ -1107,8 +1107,8 @@ public class Bfrdb {
 			for (PmmXmlElementConvertable el : misc.getElementSet()) {
 				if (el instanceof MiscXml) {
 					MiscXml mx = (MiscXml) el;
-					String n = mx.getName();
-					String d = mx.getDescription();
+					String n = mx.name;
+					String d = mx.description;
 					if (n == null || n.isEmpty()) n = d;
 					if (d == null || d.isEmpty() || d.equals("null")) d = n;
 					if (n != null && !n.equals(AttributeUtilities.ATT_TEMPERATURE) && !n.equals(AttributeUtilities.ATT_PH) && !n.equals(AttributeUtilities.ATT_AW)) {
@@ -1138,10 +1138,10 @@ public class Bfrdb {
 								ps = conn.prepareStatement("INSERT INTO \"Versuchsbedingungen_Sonstiges\" (\"Versuchsbedingungen\", \"SonstigeParameter\", \"Wert\", \"Einheit\", \"Ja_Nein\") VALUES (?,?,?,?,?)");
 								ps.setInt(1, condId);
 								ps.setInt(2, paramID);
-								if (mx.getOrigUnit() == null) mx.setOrigUnit(mx.getUnit());
-								Object eid = mx.getOrigUnit() == null || mx.getOrigUnit().isEmpty() ? null : DBKernel.getID("Einheiten", new String[] { "display in GUI as" },
-										new String[] { mx.getOrigUnit() });
-								if (eid == null && (mx.getValue() == null || Double.isNaN(mx.getValue()))) {
+								if (mx.origUnit == null) mx.origUnit = mx.unit;
+								Object eid = mx.origUnit == null || mx.origUnit.isEmpty() ? null : DBKernel.getID("Einheiten", new String[] { "display in GUI as" },
+										new String[] { mx.origUnit });
+								if (eid == null && (mx.value == null || Double.isNaN(mx.value))) {
 									ps.setNull(3, Types.DOUBLE);
 									ps.setNull(4, Types.INTEGER);
 									ps.setBoolean(5, true);
@@ -1149,11 +1149,11 @@ public class Bfrdb {
 								} else {
 									try {
 										ps.setBoolean(5, false);
-										if (mx.getValue() == null || Double.isNaN(mx.getValue())) {
+										if (mx.value == null || Double.isNaN(mx.value)) {
 											ps.setNull(3, Types.DOUBLE);
 										} else {
-											Double origVal = (mx.getOrigUnit() == null ? mx.getValue() : Categories.getCategoryByUnit(mx.getUnit()).convert(mx.getValue(),
-													mx.getUnit(), mx.getOrigUnit()));
+											Double origVal = (mx.origUnit == null ? mx.value : Categories.getCategoryByUnit(mx.unit).convert(mx.value,
+													mx.unit, mx.origUnit));
 											int valId = insertDouble(origVal);
 											ps.setDouble(3, valId);
 										}
@@ -1173,7 +1173,7 @@ public class Bfrdb {
 							}
 						} else {
 							//System.err.println("handleConditions, paramID not known:\t" + val + "\t" + after);
-							result += "Insert of Misc failed:\t" + mx.getName() + "\t" + mx.getDescription() + "\n";
+							result += "Insert of Misc failed:\t" + mx.name + "\t" + mx.description + "\n";
 						}
 					}
 				}

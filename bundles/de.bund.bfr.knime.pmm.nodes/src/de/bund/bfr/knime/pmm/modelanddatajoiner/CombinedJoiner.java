@@ -361,14 +361,14 @@ public class CombinedJoiner implements Joiner {
 				for (PmmXmlElementConvertable el : misc.getElementSet()) {
 					MiscXml element = (MiscXml) el;
 
-					if (paramsConvertTo.containsKey(element.getName())) {
+					if (paramsConvertTo.containsKey(element.name)) {
 						Category cat = Categories.getCategoryByUnit(element
-								.getUnit());
-						String unit = paramsConvertTo.get(element.getName());
+								.unit);
+						String unit = paramsConvertTo.get(element.name);
 
-						element.setValue(cat.convert(element.getValue(),
-								element.getUnit(), unit));
-						element.setUnit(unit);
+						element.value = cat.convert(element.value,
+								element.unit, unit);
+						element.unit = unit;
 					}
 				}
 
@@ -415,8 +415,8 @@ public class CombinedJoiner implements Joiner {
 			for (PmmXmlElementConvertable el : misc.getElementSet()) {
 				MiscXml element = (MiscXml) el;
 
-				secondaryParameterCategories.put(element.getName(), Categories
-						.getCategoryByUnit(element.getUnit()).getName());
+				secondaryParameterCategories.put(element.name, Categories
+						.getCategoryByUnit(element.unit).getName());
 			}
 		}
 	}
@@ -512,12 +512,12 @@ public class CombinedJoiner implements Joiner {
 							TimeSeriesSchema.ATT_MISC).getElementSet()) {
 						MiscXml element = (MiscXml) el;
 
-						if (categories.containsKey(element.getName())
-								&& categories.get(element.getName()) == null) {
-							categories.put(element.getName(), Categories
-									.getCategoryByUnit(element.getUnit())
+						if (categories.containsKey(element.name)
+								&& categories.get(element.name) == null) {
+							categories.put(element.name, Categories
+									.getCategoryByUnit(element.unit)
 									.getName());
-							units.put(element.getName(), element.getUnit());
+							units.put(element.name, element.unit);
 						}
 					}
 				}

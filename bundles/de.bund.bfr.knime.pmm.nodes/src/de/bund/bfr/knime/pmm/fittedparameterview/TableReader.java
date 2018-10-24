@@ -156,16 +156,16 @@ public class TableReader {
 					for (PmmXmlElementConvertable el2 : misc.getElementSet()) {
 						MiscXml element2 = (MiscXml) el2;
 
-						if (param.equals(element2.getName())) {
+						if (param.equals(element2.name)) {
 							String unit = miscUnits.get(modelXml.id).get(
-									element2.getName());
+									element2.name);
 							Category category = Categories
 									.getCategoryByUnit(unit);
 
 							try {
 								paramValue = category.convert(
-										element2.getValue(),
-										element2.getUnit(), unit);
+										element2.value,
+										element2.unit, unit);
 							} catch (ConvertException e) {
 								e.printStackTrace();
 							}

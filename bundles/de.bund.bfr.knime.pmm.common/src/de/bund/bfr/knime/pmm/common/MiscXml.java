@@ -37,33 +37,30 @@ public class MiscXml implements PmmXmlElementConvertable {
 	private static final String ATT_ORIGUNIT = "origUnit";
 	private static final String ATT_DBUUID = "dbuuid";
 
-	private Integer id;
-	private String name;
-	private String description;
-	private Double value;
-	private List<String> categories;
-	private String unit;
-	private String origUnit;
-	private String dbuuid;
+	public Integer id;
+	public String name;
+	public String description;
+	public Double value;
+	public List<String> categories;
+	public String unit;
+	public String origUnit;
+	public String dbuuid;
 
 	public MiscXml(MiscXml misc) {
-		this(misc.getId(), misc.getName(), misc.getDescription(), misc
-				.getValue(), misc.getCategories(), misc.getUnit(), misc
-				.getOrigUnit(), misc.getDbuuid());
+		this(misc.id, misc.name, misc.description, misc.value, misc.categories, misc.unit, misc.origUnit, misc.dbuuid);
 	}
 
-	public MiscXml(Integer id, String name, String description, Double value,
-			List<String> categories, String unit) {
+	public MiscXml(Integer id, String name, String description, Double value, List<String> categories, String unit) {
 		this(id, name, description, value, categories, unit, unit, null);
 	}
 
-	public MiscXml(Integer id, String name, String description, Double value,
-			List<String> categories, String unit, String dbuuid) {
+	public MiscXml(Integer id, String name, String description, Double value, List<String> categories, String unit,
+			String dbuuid) {
 		this(id, name, description, value, categories, unit, unit, dbuuid);
 	}
 
-	public MiscXml(Integer id, String name, String description, Double value,
-			List<String> categories, String unit, String origUnit, String dbuuid) {
+	public MiscXml(Integer id, String name, String description, Double value, List<String> categories, String unit,
+			String origUnit, String dbuuid) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -75,11 +72,9 @@ public class MiscXml implements PmmXmlElementConvertable {
 	}
 
 	public MiscXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME),
-				XmlHelper.getString(el, ATT_DESCRIPTION), XmlHelper.getDouble(
-						el, ATT_VALUE), null,
-				XmlHelper.getString(el, ATT_UNIT), XmlHelper.getString(el,
-						ATT_ORIGUNIT), XmlHelper.getString(el, ATT_DBUUID));
+		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_DESCRIPTION),
+				XmlHelper.getDouble(el, ATT_VALUE), null, XmlHelper.getString(el, ATT_UNIT),
+				XmlHelper.getString(el, ATT_ORIGUNIT), XmlHelper.getString(el, ATT_DBUUID));
 		categories = new ArrayList<>();
 
 		for (int i = 0;; i++) {
@@ -105,75 +100,10 @@ public class MiscXml implements PmmXmlElementConvertable {
 
 		if (categories != null) {
 			for (int i = 0; i < categories.size(); i++) {
-				ret.setAttribute(ATT_CATEGORY + i,
-						XmlHelper.getNonNull(categories.get(i)));
+				ret.setAttribute(ATT_CATEGORY + i, XmlHelper.getNonNull(categories.get(i)));
 			}
 		}
 
 		return ret;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Double getValue() {
-		return value;
-	}
-
-	public void setValue(Double value) {
-		this.value = value;
-	}
-
-	public List<String> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<String> categories) {
-		this.categories = categories;
-	}
-
-	public String getUnit() {
-		return unit;
-	}
-
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-
-	public String getOrigUnit() {
-		return origUnit;
-	}
-
-	public void setOrigUnit(String origUnit) {
-		this.origUnit = origUnit;
-	}
-
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	public void setDbuuid(String dbuuid) {
-		this.dbuuid = dbuuid;
 	}
 }

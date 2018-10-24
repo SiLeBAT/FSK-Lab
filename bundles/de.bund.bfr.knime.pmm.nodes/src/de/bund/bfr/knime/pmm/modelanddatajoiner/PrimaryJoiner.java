@@ -266,19 +266,19 @@ public class PrimaryJoiner implements Joiner {
 				for (PmmXmlElementConvertable el : misc.getElementSet()) {
 					MiscXml element = (MiscXml) el;
 
-					if (paramsConvertTo.containsKey(element.getName())) {
+					if (paramsConvertTo.containsKey(element.name)) {
 						Category cat = Categories.getCategoryByUnit(element
-								.getUnit());
-						String unit = paramsConvertTo.get(element.getName());
+								.unit);
+						String unit = paramsConvertTo.get(element.name);
 
 						try {
-							element.setValue(cat.convert(element.getValue(),
-									element.getUnit(), unit));
+							element.value = cat.convert(element.value,
+									element.unit, unit);
 						} catch (ConvertException e) {
 							e.printStackTrace();
 						}
 
-						element.setUnit(unit);
+						element.unit = unit;
 					}
 				}
 
@@ -393,8 +393,8 @@ public class PrimaryJoiner implements Joiner {
 			for (PmmXmlElementConvertable el : misc.getElementSet()) {
 				MiscXml element = (MiscXml) el;
 
-				parameterCategories.put(element.getName(), Categories
-						.getCategoryByUnit(element.getUnit()).getName());
+				parameterCategories.put(element.name, Categories
+						.getCategoryByUnit(element.unit).getName());
 			}
 		}
 	}

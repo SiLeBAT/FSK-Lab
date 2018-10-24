@@ -284,28 +284,28 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 		}
 
 		for (MiscXml misc : set.getMisc()) {
-			if (misc.getId() == AttributeUtilities.ATT_TEMPERATURE_ID) {
-				temperatureField.setValue(misc.getValue());
-				tempBox.setSelectedItem(misc.getUnit());
-			} else if (misc.getId() == AttributeUtilities.ATT_PH_ID) {
-				phField.setValue(misc.getValue());
-				phBox.setSelectedItem(misc.getUnit());
-			} else if (misc.getId() == AttributeUtilities.ATT_AW_ID) {
-				waterActivityField.setValue(misc.getValue());
-				awBox.setSelectedItem(misc.getUnit());
+			if (misc.id == AttributeUtilities.ATT_TEMPERATURE_ID) {
+				temperatureField.setValue(misc.value);
+				tempBox.setSelectedItem(misc.unit);
+			} else if (misc.id == AttributeUtilities.ATT_PH_ID) {
+				phField.setValue(misc.value);
+				phBox.setSelectedItem(misc.unit);
+			} else if (misc.id == AttributeUtilities.ATT_AW_ID) {
+				waterActivityField.setValue(misc.value);
+				awBox.setSelectedItem(misc.unit);
 			} else {
 				addButtons(0);
-				condButtons.get(0).setText(misc.getName());
+				condButtons.get(0).setText(misc.name);
 				conditions.set(0, misc);
-				condValueFields.get(0).setValue(misc.getValue());
+				condValueFields.get(0).setValue(misc.value);
 
-				for (String category : misc.getCategories()) {
+				for (String category : misc.categories) {
 					for (String u : Categories.getCategory(category).getAllUnits()) {
 						condUnitFields.get(0).addItem(u);
 					}
 				}
 
-				condUnitFields.get(0).setSelectedItem(misc.getUnit());
+				condUnitFields.get(0).setSelectedItem(misc.unit);
 			}
 		}
 	}
@@ -362,10 +362,10 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 		for (int i = 0; i < conditions.size(); i++) {
 			MiscXml cond = conditions.get(i);
 
-			cond.setValue(condValueFields.get(i).getValue());
+			cond.value = condValueFields.get(i).getValue();
 
 			if (condUnitFields.get(i).getSelectedItem() != null) {
-				cond.setUnit((String) condUnitFields.get(i).getSelectedItem());
+				cond.unit = (String) condUnitFields.get(i).getSelectedItem();
 			}
 
 			miscValues.add(cond);
@@ -505,7 +505,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 			Integer id;
 
 			if (conditions.get(i) != null) {
-				id = DBKernel.openMiscDBWindow(condButtons.get(i), conditions.get(i).getId());
+				id = DBKernel.openMiscDBWindow(condButtons.get(i), conditions.get(i).id);
 			} else {
 				id = DBKernel.openMiscDBWindow(condButtons.get(i), null);
 			}
@@ -685,10 +685,10 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 
 				for (int i = 0; i < miscXML.getElementSet().size(); i++) {
 					MiscXml misc = (MiscXml) miscXML.getElementSet().get(i);
-					int id = misc.getId();
-					String name = misc.getName();
-					Double value = misc.getValue();
-					String unit = misc.getUnit();
+					int id = misc.id;
+					String name = misc.name;
+					Double value = misc.value;
+					String unit = misc.unit;
 
 					if (value != null && value.isNaN()) {
 						value = null;
@@ -710,7 +710,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 						condValueFields.get(0).setValue(value);
 						condUnitFields.get(0).removeAllItems();
 
-						for (String u : Categories.getUnitsFromCategories(misc.getCategories())) {
+						for (String u : Categories.getUnitsFromCategories(misc.categories)) {
 							condUnitFields.get(0).addItem(u);
 						}
 
@@ -953,7 +953,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 						if (mappings.get(column) instanceof MiscXml) {
 							MiscXml condition = (MiscXml) mappings.get(column);
 
-							condition.setUnit(unit);
+							condition.unit = unit;
 						} else if (mappings.get(column) instanceof String) {
 							String mapping = (String) mappings.get(column);
 
@@ -991,7 +991,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 						Integer oldID = null;
 
 						if (mappings.get(column) instanceof MiscXml) {
-							oldID = ((MiscXml) mappings.get(column)).getId();
+							oldID = ((MiscXml) mappings.get(column)).id;
 						}
 
 						Integer id = DBKernel.openMiscDBWindow(mappingButtons.get(column), oldID);

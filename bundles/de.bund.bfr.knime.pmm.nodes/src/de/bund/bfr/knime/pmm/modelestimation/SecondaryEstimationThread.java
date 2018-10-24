@@ -163,8 +163,8 @@ public class SecondaryEstimationThread implements Runnable {
 					for (PmmXmlElementConvertable el : misc.getElementSet()) {
 						MiscXml element = (MiscXml) el;
 
-						if (param.equals(element.getName())) {
-							paramValue = element.getValue();
+						if (param.equals(element.name)) {
+							paramValue = element.value;
 							break;
 						}
 					}

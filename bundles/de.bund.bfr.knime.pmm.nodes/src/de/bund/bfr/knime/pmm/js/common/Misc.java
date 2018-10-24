@@ -261,14 +261,14 @@ public class Misc implements ViewValue {
 	 */
 	public static Misc toMisc(MiscXml miscXml) {
 		Misc misc = new Misc();
-		misc.setId(miscXml.getId());
-		misc.setName(miscXml.getName());
-		misc.setDescription(miscXml.getDescription());
-		misc.setValue(miscXml.getValue());
-		misc.setCategories(miscXml.getCategories().toArray(new String[miscXml.getCategories().size()]));
-		misc.setUnit(miscXml.getUnit());
-		misc.setOrigUnit(miscXml.getOrigUnit());
-		misc.setDbuuid(miscXml.getDbuuid());
+		misc.setId(miscXml.id);
+		misc.setName(miscXml.name);
+		misc.setDescription(miscXml.description);
+		misc.setValue(miscXml.value);
+		misc.setCategories(miscXml.categories.toArray(new String[miscXml.categories.size()]));
+		misc.setUnit(miscXml.unit);
+		misc.setOrigUnit(miscXml.origUnit);
+		misc.setDbuuid(miscXml.dbuuid);
 		
 		return misc;
 	}

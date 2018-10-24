@@ -233,8 +233,8 @@ public class PmmTimeSeries extends KnimeTuple implements PmmXmlElementConvertabl
 	    	for (PmmXmlElementConvertable el : miscXmlDoc.getElementSet()) {
 	    		if (el instanceof MiscXml) {
 	    			mx = (MiscXml) el;
-	    			if (mx.getName().equalsIgnoreCase(attribute)) {
-	    				return mx.getValue();
+	    			if (mx.name.equalsIgnoreCase(attribute)) {
+	    				return mx.value;
 	    			}
 	    		}
 	    	}
@@ -248,8 +248,8 @@ public class PmmTimeSeries extends KnimeTuple implements PmmXmlElementConvertabl
 	    	for (PmmXmlElementConvertable el : miscXmlDoc.getElementSet()) {
 	    		if (el instanceof MiscXml) {
 	    			mx = (MiscXml) el;
-	    			if (mx.getName().equalsIgnoreCase(attribute)) {
-	    				return mx.getUnit();
+	    			if (mx.name.equalsIgnoreCase(attribute)) {
+	    				return mx.unit;
 	    			}
 	    		}
 	    	}
@@ -381,7 +381,7 @@ public class PmmTimeSeries extends KnimeTuple implements PmmXmlElementConvertabl
 	    	for (PmmXmlElementConvertable el : miscXmlDoc.getElementSet()) {
 	    		if (el instanceof MiscXml) {
 	    			mx = (MiscXml) el;
-	    			if (mx.getName().equalsIgnoreCase(attribute)) {
+	    			if (mx.name.equalsIgnoreCase(attribute)) {
 	    				return true;
 	    			}
 	    		}
@@ -530,7 +530,7 @@ public class PmmTimeSeries extends KnimeTuple implements PmmXmlElementConvertabl
     	for (PmmXmlElementConvertable el : miscXmlDoc.getElementSet()) {
     		if (el instanceof MiscXml) {
     			mx = (MiscXml) el;
-    			if (mx.getName().equalsIgnoreCase(attribute)) {
+    			if (mx.name.equalsIgnoreCase(attribute)) {
     				paramFound = true;
     				break;
     			}
@@ -557,7 +557,7 @@ public class PmmTimeSeries extends KnimeTuple implements PmmXmlElementConvertabl
 			    	for (PmmXmlElementConvertable el : miscXmlDoc.getElementSet()) {
 			    		if (el instanceof MiscXml) {
 			    			mx = (MiscXml) el;
-			    			if (mx.getName().equalsIgnoreCase(mx2Add.getName())) {
+			    			if (mx.name.equalsIgnoreCase(mx2Add.name)) {
 			    				paramFound = true;
 			    				break;
 			    			}

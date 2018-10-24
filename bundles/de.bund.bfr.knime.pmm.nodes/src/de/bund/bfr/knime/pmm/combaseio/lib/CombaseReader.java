@@ -460,15 +460,15 @@ public class CombaseReader {
 	private MiscXml getMiscXml(String description, Double dbl) {
 		if (!newMiscs.containsKey(description)) {
 			MiscXml m = conversion.combaseToPmm(description);
-			Integer id = (Integer) DBKernel.getValue(null, "SonstigeParameter", "Parameter", m.getName(), "ID");
+			Integer id = (Integer) DBKernel.getValue(null, "SonstigeParameter", "Parameter", m.name, "ID");
 
-			m.setId(id);
+			m.id = id;
 			newMiscs.put(description, m);
 		}
 
 		MiscXml misc = new MiscXml(newMiscs.get(description));
 
-		misc.setValue(dbl);
+		misc.value = dbl;
 
 		return misc;
 	}

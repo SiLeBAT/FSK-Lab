@@ -290,7 +290,7 @@ public class TableReader {
 				for (PmmXmlElementConvertable el : misc.getElementSet()) {
 					MiscXml element = (MiscXml) el;
 
-					miscValues.put(element.getName(), element.getValue());
+					miscValues.put(element.name, element.value);
 				}
 
 				for (int i = 0; i < indepVars.size(); i++) {
@@ -397,9 +397,9 @@ public class TableReader {
 					for (PmmXmlElementConvertable el : misc.getElementSet()) {
 						MiscXml element = (MiscXml) el;
 
-						if (miscParams.get(i).equals(element.getName())) {
-							value = element.getValue();
-							unit = element.getUnit();
+						if (miscParams.get(i).equals(element.name)) {
+							value = element.value;
+							unit = element.unit;
 							break;
 						}
 					}

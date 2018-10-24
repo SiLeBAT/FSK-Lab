@@ -549,8 +549,8 @@ public class TableReader {
 								TimeSeriesSchema.ATT_MISC).getElementSet()) {
 							MiscXml element = (MiscXml) el;
 
-							if (miscParams.get(i).equals(element.getName())) {
-								unit = element.getUnit();
+							if (miscParams.get(i).equals(element.name)) {
+								unit = element.unit;
 								break;
 							}
 						}
@@ -616,9 +616,9 @@ public class TableReader {
 							TimeSeriesSchema.ATT_MISC).getElementSet()) {
 						MiscXml element = (MiscXml) el;
 
-						if (miscParams.get(i).equals(element.getName())) {
-							value = element.getValue();
-							unit = element.getUnit();
+						if (miscParams.get(i).equals(element.name)) {
+							value = element.value;
+							unit = element.unit;
 							break;
 						}
 					}
