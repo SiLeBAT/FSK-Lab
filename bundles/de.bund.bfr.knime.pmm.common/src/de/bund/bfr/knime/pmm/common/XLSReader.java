@@ -224,7 +224,7 @@ public class XLSReader {
 			}
 
 			if (hasData(matrixDetailsCell)) {
-				((MatrixXml) matrixXml.get(0)).setDetail(getData(matrixDetailsCell));
+				((MatrixXml) matrixXml.get(0)).detail = getData(matrixDetailsCell);
 			}
 
 			tuple.setValue(TimeSeriesSchema.ATT_MDINFO, dataInfo);
@@ -501,7 +501,7 @@ public class XLSReader {
 			}
 
 			if (hasData(matrixDetailsCell)) {
-				((MatrixXml) matrixXml.get(0)).setDetail(getData(matrixDetailsCell));
+				((MatrixXml) matrixXml.get(0)).detail = getData(matrixDetailsCell);
 			}
 
 			dataTuple.setValue(TimeSeriesSchema.ATT_MDINFO, dataInfo);
@@ -575,7 +575,7 @@ public class XLSReader {
 
 			if (hasData(indepMinCell)) {
 				try {
-					((IndepXml) indepXml.get(0)).setMin(Double.parseDouble(getData(indepMinCell).replace(",", ".")));
+					((IndepXml) indepXml.get(0)).min = Double.parseDouble(getData(indepMinCell).replace(",", "."));
 				} catch (NumberFormatException e) {
 					warnings.add(modelIndepMin + " value in row " + (rowNumber + 1) + " is not valid ("
 							+ getData(indepMinCell) + ")");
@@ -586,7 +586,7 @@ public class XLSReader {
 
 			if (hasData(indepMaxCell)) {
 				try {
-					((IndepXml) indepXml.get(0)).setMax(Double.parseDouble(getData(indepMaxCell).replace(",", ".")));
+					((IndepXml) indepXml.get(0)).max = Double.parseDouble(getData(indepMaxCell).replace(",", "."));
 				} catch (NumberFormatException e) {
 					warnings.add(modelIndepMax + " value in row " + (rowNumber + 1) + " is not valid ("
 							+ getData(indepMaxCell) + ")");
@@ -595,17 +595,17 @@ public class XLSReader {
 				warnings.add(modelIndepMax + " value in row " + (rowNumber + 1) + " is missing");
 			}
 
-			if (modelIndepUnit != null && !modelIndepUnit.equals(((IndepXml) indepXml.get(0)).getUnit())) {
-				((IndepXml) indepXml.get(0)).setUnit(modelIndepUnit);
+			if (modelIndepUnit != null && !modelIndepUnit.equals(((IndepXml) indepXml.get(0)).unit)) {
+				((IndepXml) indepXml.get(0)).unit = modelIndepUnit;
 				((CatalogModelXml) modelXml.get(0)).id = MathUtilities.getRandomNegativeInt();
 			}
 
-			((EstModelXml) estXml.get(0)).setId(primId);
-			((EstModelXml) estXml.get(0)).setComment(getData(commentCell));
+			((EstModelXml) estXml.get(0)).id = primId;
+			((EstModelXml) estXml.get(0)).comment = getData(commentCell);
 
 			if (hasData(rmseCell)) {
 				try {
-					((EstModelXml) estXml.get(0)).setRms(Double.parseDouble(getData(rmseCell).replace(",", ".")));
+					((EstModelXml) estXml.get(0)).rms = Double.parseDouble(getData(rmseCell).replace(",", "."));
 				} catch (NumberFormatException e) {
 					warnings.add(modelRmse + " value in row " + (rowNumber + 1) + " is not valid (" + getData(rmseCell)
 							+ ")");
@@ -614,7 +614,7 @@ public class XLSReader {
 
 			if (hasData(r2Cell)) {
 				try {
-					((EstModelXml) estXml.get(0)).setR2(Double.parseDouble(getData(r2Cell).replace(",", ".")));
+					((EstModelXml) estXml.get(0)).r2 = Double.parseDouble(getData(r2Cell).replace(",", "."));
 				} catch (NumberFormatException e) {
 					warnings.add(
 							modelR2 + " value in row " + (rowNumber + 1) + " is not valid (" + getData(r2Cell) + ")");
@@ -623,7 +623,7 @@ public class XLSReader {
 
 			if (hasData(aicCell)) {
 				try {
-					((EstModelXml) estXml.get(0)).setAic(Double.parseDouble(getData(aicCell).replace(",", ".")));
+					((EstModelXml) estXml.get(0)).aic = Double.parseDouble(getData(aicCell).replace(",", "."));
 				} catch (NumberFormatException e) {
 					warnings.add(
 							modelAic + " value in row " + (rowNumber + 1) + " is not valid (" + getData(aicCell) + ")");
@@ -634,14 +634,14 @@ public class XLSReader {
 				String data = getData(dataPointsCell).replace(".0", "").replace(",0", "");
 
 				try {
-					((EstModelXml) estXml.get(0)).setDof(Integer.parseInt(data) - paramXml.size());
+					((EstModelXml) estXml.get(0)).dof = Integer.parseInt(data) - paramXml.size();
 				} catch (NumberFormatException e) {
 					warnings.add(modelDataPoints + " value in row " + (rowNumber + 1) + " is not valid (" + data + ")");
 				}
 			}
 
 			if (hasData(idCell)) {
-				((EstModelXml) estXml.get(0)).setName(getData(idCell));
+				((EstModelXml) estXml.get(0)).name = getData(idCell);
 			}
 
 			for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
@@ -715,7 +715,7 @@ public class XLSReader {
 					formula = MathUtilities.replaceVariable(formula, ((DepXml) secDepXml.get(0)).name, param);
 					((CatalogModelXml) secModelXml.get(0)).formula = formula;
 					((DepXml) secDepXml.get(0)).name = param;
-					((EstModelXml) secEstXml.get(0)).setId(secID);
+					((EstModelXml) secEstXml.get(0)).id = secID;
 
 					for (PmmXmlElementConvertable el : secParamXml.getElementSet()) {
 						ParamXml element = (ParamXml) el;
@@ -755,32 +755,32 @@ public class XLSReader {
 
 					for (PmmXmlElementConvertable el : secIndepXml.getElementSet()) {
 						IndepXml element = (IndepXml) el;
-						String category = secModelIndepCategories.get(param).get(element.getName());
-						String unit = secModelIndepUnits.get(param).get(element.getName());
+						String category = secModelIndepCategories.get(param).get(element.name);
+						String unit = secModelIndepUnits.get(param).get(element.name);
 
 						if (category == null || unit == null) {
 							continue;
 						}
 
-						if (!category.equals(element.getCategory())) {
-							element.setCategory(category);
+						if (!category.equals(element.category)) {
+							element.category = category;
 							((CatalogModelXml) secModelXml.get(0)).id = MathUtilities.getRandomNegativeInt();
 						}
 
-						if (!unit.equals(element.getUnit())) {
-							element.setUnit(unit);
+						if (!unit.equals(element.unit)) {
+							element.unit = unit;
 							((CatalogModelXml) secModelXml.get(0)).id = MathUtilities.getRandomNegativeInt();
 						}
 
-						String minColumn = secModelIndepMins.get(param).get(element.getName());
-						String maxColumn = secModelIndepMaxs.get(param).get(element.getName());
+						String minColumn = secModelIndepMins.get(param).get(element.name);
+						String maxColumn = secModelIndepMaxs.get(param).get(element.name);
 
 						if (minColumn != null) {
 							Cell minCell = row.getCell(columns.get(minColumn));
 
 							if (hasData(minCell)) {
 								try {
-									element.setMin(Double.parseDouble(getData(minCell).replace(",", ".")));
+									element.min = Double.parseDouble(getData(minCell).replace(",", "."));
 								} catch (NumberFormatException e) {
 									warnings.add(minColumn + " value in row " + (rowNumber + 1) + " is not valid ("
 											+ getData(minCell) + ")");
@@ -795,7 +795,7 @@ public class XLSReader {
 
 							if (hasData(maxCell)) {
 								try {
-									element.setMax(Double.parseDouble(getData(maxCell).replace(",", ".")));
+									element.max = Double.parseDouble(getData(maxCell).replace(",", "."));
 								} catch (NumberFormatException e) {
 									warnings.add(maxColumn + " value in row " + (rowNumber + 1) + " is not valid ("
 											+ getData(maxCell) + ")");
@@ -817,7 +817,7 @@ public class XLSReader {
 						if (hasData(cell)) {
 							try {
 								((EstModelXml) secEstXml.get(0))
-										.setRms(Double.parseDouble(getData(cell).replace(",", ".")));
+										.rms = Double.parseDouble(getData(cell).replace(",", "."));
 							} catch (NumberFormatException e) {
 								warnings.add(rmse + " value in row " + (rowNumber + 1) + " is not valid ("
 										+ getData(cell) + ")");
@@ -833,7 +833,7 @@ public class XLSReader {
 						if (hasData(cell)) {
 							try {
 								((EstModelXml) secEstXml.get(0))
-										.setR2(Double.parseDouble(getData(cell).replace(",", ".")));
+										.r2 = Double.parseDouble(getData(cell).replace(",", "."));
 							} catch (NumberFormatException e) {
 								warnings.add(r2 + " value in row " + (rowNumber + 1) + " is not valid (" + getData(cell)
 										+ ")");
@@ -849,7 +849,7 @@ public class XLSReader {
 						if (hasData(cell)) {
 							try {
 								((EstModelXml) secEstXml.get(0))
-										.setAic(Double.parseDouble(getData(cell).replace(",", ".")));
+										.aic = Double.parseDouble(getData(cell).replace(",", "."));
 							} catch (NumberFormatException e) {
 								warnings.add(aic + " value in row " + (rowNumber + 1) + " is not valid ("
 										+ getData(cell) + ")");
@@ -866,7 +866,7 @@ public class XLSReader {
 							String data = getData(cell).replace(".0", "").replace(",0", "");
 
 							try {
-								((EstModelXml) secEstXml.get(0)).setDof(Integer.parseInt(data) - secParamXml.size());
+								((EstModelXml) secEstXml.get(0)).dof = Integer.parseInt(data) - secParamXml.size();
 							} catch (NumberFormatException e) {
 								warnings.add(dataPoints + " value in row " + (rowNumber + 1) + " is not valid (" + data
 										+ ")");

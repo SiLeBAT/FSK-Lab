@@ -107,9 +107,9 @@ public class MatrixTest {
 		matrix.setDbuuid(dbuuid);
 		MatrixXml matrixXml = matrix.toMatrixXml();
 
-		assertTrue(id == matrixXml.getId());
-		assertEquals(name, matrixXml.getName());
-		assertEquals(detail, matrixXml.getDetail());
-		assertEquals(dbuuid, matrixXml.getDbuuid());
+		assertTrue(id == matrixXml.id);
+		assertEquals(name, matrixXml.name);
+		assertEquals(detail, matrixXml.detail);
+		assertEquals(dbuuid, matrixXml.dbuuid);
 	}
 }

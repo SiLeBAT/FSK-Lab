@@ -547,7 +547,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 			Integer id;
 
 			if (set.getMatrix() != null) {
-				id = DBKernel.openMatrixDBWindow(matrixButton, set.getMatrix().getId());
+				id = DBKernel.openMatrixDBWindow(matrixButton, set.getMatrix().id);
 			} else {
 				id = DBKernel.openMatrixDBWindow(matrixButton, null);
 			}
@@ -563,7 +563,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 			Set<Integer> ids = new LinkedHashSet<>();
 
 			for (LiteratureItem item : set.getLiterature()) {
-				ids.add(item.getId());
+				ids.add(item.id);
 			}
 
 			if (id != null && !ids.contains(id)) {
@@ -623,7 +623,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 
 					if (set.getMatrixMappings().get(value) != null) {
 						id = DBKernel.openMatrixDBWindow(matrixButtons.get(value),
-								set.getMatrixMappings().get(value).getId());
+								set.getMatrixMappings().get(value).id);
 					} else {
 						id = DBKernel.openMatrixDBWindow(matrixButtons.get(value), null);
 					}
@@ -949,7 +949,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 			depUnitBox = new JComboBox<>(new String[] { depXml.unit });
 			indepMinBox = new JComboBox<>(options.toArray(new String[0]));
 			indepMaxBox = new JComboBox<>(options.toArray(new String[0]));
-			indepUnitBox = new JComboBox<>(new String[] { indepXml.getUnit() });
+			indepUnitBox = new JComboBox<>(new String[] { indepXml.unit });
 			rmseBox = new JComboBox<>(options.toArray(new String[0]));
 			r2Box = new JComboBox<>(options.toArray(new String[0]));
 			aicBox = new JComboBox<>(options.toArray(new String[0]));
@@ -987,13 +987,13 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 			panel.add(new JLabel(depXml.name + " Unit:"), createConstraints(0, row));
 			panel.add(depUnitBox, createConstraints(1, row));
 			row++;
-			panel.add(new JLabel(indepXml.getName() + " Min:"), createConstraints(0, row));
+			panel.add(new JLabel(indepXml.name + " Min:"), createConstraints(0, row));
 			panel.add(indepMinBox, createConstraints(1, row));
 			row++;
-			panel.add(new JLabel(indepXml.getName() + " Max:"), createConstraints(0, row));
+			panel.add(new JLabel(indepXml.name + " Max:"), createConstraints(0, row));
 			panel.add(indepMaxBox, createConstraints(1, row));
 			row++;
-			panel.add(new JLabel(indepXml.getName() + " Unit:"), createConstraints(0, row));
+			panel.add(new JLabel(indepXml.name + " Unit:"), createConstraints(0, row));
 			panel.add(indepUnitBox, createConstraints(1, row));
 			row++;
 			panel.add(new JLabel("RMSE:"), createConstraints(0, row));
@@ -1114,7 +1114,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 		UI.select(matrixBox, set.getMatrixColumn(), SettingsHelper.DO_NOT_USE);
 
 		if (set.getMatrix() != null) {
-			matrixButton.setText(set.getMatrix().getName());
+			matrixButton.setText(set.getMatrix().name);
 		} else {
 			matrixButton.setText(SettingsHelper.OTHER_PARAMETER);
 		}
@@ -1148,7 +1148,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 				JButton button = new JButton();
 
 				if (set.getMatrixMappings().get(value) != null) {
-					button.setText(set.getMatrixMappings().get(value).getName());
+					button.setText(set.getMatrixMappings().get(value).name);
 				} else {
 					button.setText(SettingsHelper.OTHER_PARAMETER);
 				}

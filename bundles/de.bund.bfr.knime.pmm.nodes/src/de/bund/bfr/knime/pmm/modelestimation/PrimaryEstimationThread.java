@@ -204,18 +204,18 @@ public class PrimaryEstimationThread implements Runnable {
 
 			PmmXmlDoc indepXml = tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 
-			((IndepXml) indepXml.get(0)).setMin(minIndep);
-			((IndepXml) indepXml.get(0)).setMax(maxIndep);
+			((IndepXml) indepXml.get(0)).min = minIndep;
+			((IndepXml) indepXml.get(0)).max = maxIndep;
 
 			PmmXmlDoc estModelXml = tuple.getPmmXml(Model1Schema.ATT_ESTMODEL);
 
-			((EstModelXml) estModelXml.get(0)).setId(estID);
-			((EstModelXml) estModelXml.get(0)).setName(createModelName(tuple));
-			((EstModelXml) estModelXml.get(0)).setSse(sse);
-			((EstModelXml) estModelXml.get(0)).setRms(rms);
-			((EstModelXml) estModelXml.get(0)).setR2(rSquare);
-			((EstModelXml) estModelXml.get(0)).setAic(aic);
-			((EstModelXml) estModelXml.get(0)).setDof(dof);
+			((EstModelXml) estModelXml.get(0)).id = estID;
+			((EstModelXml) estModelXml.get(0)).name = createModelName(tuple);
+			((EstModelXml) estModelXml.get(0)).sse = sse;
+			((EstModelXml) estModelXml.get(0)).rms = rms;
+			((EstModelXml) estModelXml.get(0)).r2 = rSquare;
+			((EstModelXml) estModelXml.get(0)).aic = aic;
+			((EstModelXml) estModelXml.get(0)).dof = dof;
 
 			tuple.setValue(Model1Schema.ATT_PARAMETER, paramXml);
 			tuple.setValue(Model1Schema.ATT_INDEPENDENT, indepXml);
@@ -238,8 +238,8 @@ public class PrimaryEstimationThread implements Runnable {
 		String dataName = combaseId != null ? combaseId : String
 				.valueOf(condId);
 		String agentName = agent.name != null ? agent.name : agent.detail;
-		String matrixName = matrix.getName() != null ? matrix.getName()
-				: matrix.getDetail();
+		String matrixName = matrix.name != null ? matrix.name
+				: matrix.detail;
 		String modelName = ((CatalogModelXml) tuple.getPmmXml(
 				Model1Schema.ATT_MODELCATALOG).get(0)).name;
 

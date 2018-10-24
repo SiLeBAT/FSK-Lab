@@ -377,7 +377,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 			Integer id;
 
 			if (set.getMatrix() != null) {
-				id = DBKernel.openMatrixDBWindow(matrixButton, set.getMatrix().getId());
+				id = DBKernel.openMatrixDBWindow(matrixButton, set.getMatrix().id);
 			} else {
 				id = DBKernel.openMatrixDBWindow(matrixButton, null);
 			}
@@ -393,7 +393,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 			Set<Integer> ids = new LinkedHashSet<>();
 
 			for (LiteratureItem item : set.getLiterature()) {
-				ids.add(item.getId());
+				ids.add(item.id);
 			}
 
 			if (id != null && !ids.contains(id)) {
@@ -443,7 +443,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 
 					if (set.getMatrixMappings().get(value) != null) {
 						id = DBKernel.openMatrixDBWindow(matrixButtons.get(value),
-								set.getMatrixMappings().get(value).getId());
+								set.getMatrixMappings().get(value).id);
 					} else {
 						id = DBKernel.openMatrixDBWindow(matrixButtons.get(value), null);
 					}
@@ -698,7 +698,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 		UI.select(matrixBox, set.getMatrixColumn(), DO_NOT_USE);
 
 		if (set.getMatrix() != null) {
-			matrixButton.setText(set.getMatrix().getName());
+			matrixButton.setText(set.getMatrix().name);
 		} else {
 			matrixButton.setText(OTHER_PARAMETER);
 		}
@@ -732,7 +732,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 				JButton button = new JButton();
 
 				if (set.getMatrixMappings().get(value) != null) {
-					button.setText(set.getMatrixMappings().get(value).getName());
+					button.setText(set.getMatrixMappings().get(value).name);
 				} else {
 					button.setText(OTHER_PARAMETER);
 				}

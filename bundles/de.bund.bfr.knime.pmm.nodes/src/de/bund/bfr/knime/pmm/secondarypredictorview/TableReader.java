@@ -172,7 +172,7 @@ public class TableReader {
 					.getPmmXml(Model2Schema.ATT_DEPENDENT).get(0);
 			EstModelXml estXml = (EstModelXml) tuple.getPmmXml(
 					Model2Schema.ATT_ESTMODEL).get(0);
-			String id = depXml.name + estXml.getId();
+			String id = depXml.name + estXml.id;
 
 			if (schemaContainsData) {
 				CatalogModelXml primModelXml = (CatalogModelXml) tuple
@@ -231,7 +231,7 @@ public class TableReader {
 
 				stringColumns.get(Model2Schema.NAME).add(
 						((EstModelXml) tuple.getPmmXml(
-								Model2Schema.ATT_ESTMODEL).get(0)).getName());
+								Model2Schema.ATT_ESTMODEL).get(0)).name);
 				stringColumns.get(Model2Schema.ATT_DEPENDENT)
 						.add(depVarSecDesc);
 				stringColumns.get(Model2Schema.FORMULA).add(modelNameSec);
@@ -248,12 +248,12 @@ public class TableReader {
 						tuple.getPmmXml(Model2Schema.ATT_INDEPENDENT));
 				paramMap.put(id, paramXmlSec);
 				depVarDataMap.put(id, new ArrayList<Double>());
-				sseMap.put(id, ((EstModelXml) estModelXmlSec.get(0)).getSse());
-				rmsMap.put(id, ((EstModelXml) estModelXmlSec.get(0)).getRms());
+				sseMap.put(id, ((EstModelXml) estModelXmlSec.get(0)).sse);
+				rmsMap.put(id, ((EstModelXml) estModelXmlSec.get(0)).rms);
 				rSquaredMap.put(id,
-						((EstModelXml) estModelXmlSec.get(0)).getR2());
-				aicMap.put(id, ((EstModelXml) estModelXmlSec.get(0)).getAic());
-				dofMap.put(id, ((EstModelXml) estModelXmlSec.get(0)).getDof());
+						((EstModelXml) estModelXmlSec.get(0)).r2);
+				aicMap.put(id, ((EstModelXml) estModelXmlSec.get(0)).aic);
+				dofMap.put(id, ((EstModelXml) estModelXmlSec.get(0)).dof);
 				agentMap.put(id, new LinkedHashSet<String>());
 				matrixMap.put(id, new LinkedHashSet<String>());
 
@@ -308,7 +308,7 @@ public class TableReader {
 				}
 
 				if (matrix != null) {
-					matrixMap.get(id).add(matrix.getName());
+					matrixMap.get(id).add(matrix.name);
 				}
 			}
 		}
@@ -334,13 +334,13 @@ public class TableReader {
 					.getElementSet()) {
 				IndepXml element = (IndepXml) el;
 
-				arguments.put(element.getName(),
+				arguments.put(element.name,
 						new ArrayList<>(Arrays.asList(0.0)));
-				minArg.put(element.getName(), element.getMin());
-				maxArg.put(element.getName(), element.getMax());
-				categories.put(element.getName(),
-						Arrays.asList(element.getCategory()));
-				units.put(element.getName(), element.getUnit());
+				minArg.put(element.name, element.min);
+				maxArg.put(element.name, element.max);
+				categories.put(element.name,
+						Arrays.asList(element.category));
+				units.put(element.name, element.unit);
 			}
 
 			for (PmmXmlElementConvertable el : paramMap.get(id).getElementSet()) {

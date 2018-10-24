@@ -54,25 +54,25 @@ public class TableReader {
 		for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 			IndepXml indep = (IndepXml) el;
 
-			if (CELSIUS.equals(indep.getUnit())) {
+			if (CELSIUS.equals(indep.unit)) {
 				try {
-					String replacement = "(" + temp.getConversionString(indep.getName(), KELVIN, CELSIUS) + ")";
+					String replacement = "(" + temp.getConversionString(indep.name, KELVIN, CELSIUS) + ")";
 
-					model.formula = MathUtilities.replaceVariable(model.formula, indep.getName(), replacement);
-					indep.setUnit(KELVIN);
-					indep.setMin(temp.convert(indep.getMin(), CELSIUS, KELVIN));
-					indep.setMax(temp.convert(indep.getMax(), CELSIUS, KELVIN));
+					model.formula = MathUtilities.replaceVariable(model.formula, indep.name, replacement);
+					indep.unit = KELVIN;
+					indep.min = temp.convert(indep.min, CELSIUS, KELVIN);
+					indep.max = temp.convert(indep.max, CELSIUS, KELVIN);
 				} catch (ConvertException e) {
 					e.printStackTrace();
 				}
-			} else if (FAHRENHEIT.equals(indep.getUnit())) {
+			} else if (FAHRENHEIT.equals(indep.unit)) {
 				try {
-					String replacement = "(" + temp.getConversionString(indep.getName(), KELVIN, FAHRENHEIT) + ")";
+					String replacement = "(" + temp.getConversionString(indep.name, KELVIN, FAHRENHEIT) + ")";
 
-					model.formula = MathUtilities.replaceVariable(model.formula, indep.getName(), replacement);
-					indep.setUnit(FAHRENHEIT);
-					indep.setMin(temp.convert(indep.getMin(), FAHRENHEIT, KELVIN));
-					indep.setMax(temp.convert(indep.getMax(), FAHRENHEIT, KELVIN));
+					model.formula = MathUtilities.replaceVariable(model.formula, indep.name, replacement);
+					indep.unit = FAHRENHEIT;
+					indep.min = temp.convert(indep.min, FAHRENHEIT, KELVIN);
+					indep.max = temp.convert(indep.max, FAHRENHEIT, KELVIN);
 				} catch (ConvertException e) {
 					e.printStackTrace();
 				}
@@ -104,8 +104,8 @@ public class TableReader {
 		}
 
 		for (IndepXml indepXml : indepXmls) {
-			if (indepXml.getUnit() != null) {
-				units.add(indepXml.getUnit());
+			if (indepXml.unit != null) {
+				units.add(indepXml.unit);
 			}
 		}
 

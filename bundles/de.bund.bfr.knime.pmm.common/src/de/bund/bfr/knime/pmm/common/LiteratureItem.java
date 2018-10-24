@@ -42,20 +42,20 @@ public class LiteratureItem implements PmmXmlElementConvertable {
 	private static final String ATT_ID = "id";
 	private static final String ATT_DBUUID = "dbuuid";
 
-	private Integer id;
-	private String author;
-	private String title;
-	private String abstractText;
-	private Integer year;
-	private String journal;
-	private String volume;
-	private String issue;
-	private Integer page;
-	private Integer approvalMode;
-	private String website;
-	private Integer type;
-	private String comment;
-	private String dbuuid;
+	public Integer id;
+	public String author;
+	public String title;
+	public String abstractText;
+	public Integer year;
+	public String journal;
+	public String volume;
+	public String issue;
+	public Integer page;
+	public Integer approvalMode;
+	public String website;
+	public Integer type;
+	public String comment;
+	public String dbuuid;
 
 	public LiteratureItem(final String author, final Integer year,
 			final String title, final String abstractText, String journal,
@@ -133,117 +133,5 @@ public class LiteratureItem implements PmmXmlElementConvertable {
 	@Override
 	public String toString() {
 		return author + "_" + year + "_" + title;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getAbstractText() {
-		return abstractText;
-	}
-
-	public void setAbstractText(String abstractText) {
-		this.abstractText = abstractText;
-	}
-
-	public Integer getYear() {
-		return year;
-	}
-
-	public void setYear(Integer year) {
-		this.year = year;
-	}
-
-	public String getJournal() {
-		return journal;
-	}
-
-	public void setJournal(String journal) {
-		this.journal = journal;
-	}
-
-	public String getVolume() {
-		return volume;
-	}
-
-	public void setVolume(String volume) {
-		this.volume = volume;
-	}
-
-	public String getIssue() {
-		return issue;
-	}
-
-	public void setIssue(String issue) {
-		this.issue = issue;
-	}
-
-	public Integer getPage() {
-		return page;
-	}
-
-	public void setPage(Integer page) {
-		this.page = page;
-	}
-
-	public Integer getApprovalMode() {
-		return approvalMode;
-	}
-
-	public void setApprovalMode(Integer approvalMode) {
-		this.approvalMode = approvalMode;
-	}
-
-	public String getWebsite() {
-		return website;
-	}
-
-	public void setWebsite(String website) {
-		this.website = website;
-	}
-
-	public Integer getType() {
-		return type;
-	}
-
-	public void setType(Integer type) {
-		this.type = type;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	public void setDbuuid(String dbuuid) {
-		this.dbuuid = dbuuid;
 	}
 }

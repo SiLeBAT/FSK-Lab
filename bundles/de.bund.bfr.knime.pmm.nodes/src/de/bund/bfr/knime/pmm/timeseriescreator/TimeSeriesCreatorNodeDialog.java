@@ -257,7 +257,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 		}
 
 		if (set.getMatrix() != null) {
-			matrixButton.setText(set.getMatrix().getName());
+			matrixButton.setText(set.getMatrix().name);
 		}
 
 		if (set.getComment() != null) {
@@ -443,7 +443,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 			Set<Integer> ids = new LinkedHashSet<>();
 
 			for (LiteratureItem item : set.getLiterature()) {
-				ids.add(item.getId());
+				ids.add(item.id);
 			}
 
 			if (id != null && !ids.contains(id)) {
@@ -483,7 +483,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 			Integer id;
 
 			if (set.getMatrix() != null) {
-				id = DBKernel.openMatrixDBWindow(matrixButton, set.getMatrix().getId());
+				id = DBKernel.openMatrixDBWindow(matrixButton, set.getMatrix().id);
 			} else {
 				id = DBKernel.openMatrixDBWindow(matrixButton, null);
 			}

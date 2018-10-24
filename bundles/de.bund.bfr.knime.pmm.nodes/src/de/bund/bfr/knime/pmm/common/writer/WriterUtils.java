@@ -131,33 +131,33 @@ public class WriterUtils {
 	}
 
 	public static Uncertainties estModel2Uncertainties(EstModelXml estModel) {
-		Integer id = estModel.getId();
-		String modelName = estModel.getName();
-		String comment = estModel.getComment();
-		Double r2 = estModel.getR2();
-		Double rms = estModel.getRms();
-		Double sse = estModel.getSse();
-		Double aic = estModel.getAic();
-		Double bic = estModel.getBic();
-		Integer dof = estModel.getDof();
+		Integer id = estModel.id;
+		String modelName = estModel.name;
+		String comment = estModel.comment;
+		Double r2 = estModel.r2;
+		Double rms = estModel.rms;
+		Double sse = estModel.sse;
+		Double aic = estModel.aic;
+		Double bic = estModel.bic;
+		Integer dof = estModel.dof;
 		Uncertainties uncertainties = SBMLFactory.createUncertainties(id, modelName, comment, r2, rms, sse, aic, bic,
 				dof);
 		return uncertainties;
 	}
 
 	public static Reference literatureItem2Reference(LiteratureItem lit) {
-		String author = lit.getAuthor();
-		Integer year = lit.getYear();
-		String title = lit.getTitle();
-		String abstractText = lit.getAbstractText();
-		String journal = lit.getJournal();
-		String volume = lit.getVolume();
-		String issue = lit.getIssue();
-		Integer page = lit.getPage();
-		Integer approvalMode = lit.getApprovalMode();
-		String website = lit.getWebsite();
-		ReferenceType type = (lit.getType() == null) ? null : ReferenceType.fromValue(lit.getType());
-		String comment = lit.getComment();
+		String author = lit.author;
+		Integer year = lit.year;
+		String title = lit.title;
+		String abstractText = lit.abstractText;
+		String journal = lit.journal;
+		String volume = lit.volume;
+		String issue = lit.issue;
+		Integer page = lit.page;
+		Integer approvalMode = lit.approvalMode;
+		String website = lit.website;
+		ReferenceType type = (lit.type == null) ? null : ReferenceType.fromValue(lit.type);
+		String comment = lit.comment;
 
 		Reference ref = SBMLFactory.createReference(author, year, title, abstractText, journal, volume, issue, page,
 				approvalMode, website, type, comment);
@@ -170,22 +170,22 @@ public class WriterUtils {
 			MiscXml miscXml = (MiscXml) miscDoc.get(i);
 			modelVariables[i] = new ModelVariable(miscXml.getName(), miscXml.getValue());
 		}
-		String compartmentDetail = matrixXml.getDetail();
+		String compartmentDetail = matrixXml.detail;
 
 		String compartmentId;
 		String compartmentName;
 
-		if (matrixXml.getName() == null) {
+		if (matrixXml.name == null) {
 			compartmentId = "MISSING_COMPARTMENT";
 			compartmentName = "MISSING_COMPARTMENT";
 		} else {
-			compartmentId = PMFUtil.createId(matrixXml.getName());
-			compartmentName = matrixXml.getName();
+			compartmentId = PMFUtil.createId(matrixXml.name);
+			compartmentName = matrixXml.name;
 		}
 
 		// Gets PMF code from DB
 		String[] colNames = { "CodeSystem", "Basis" };
-		String[] colVals = { "PMF", matrixXml.getId().toString() };
+		String[] colVals = { "PMF", matrixXml.id.toString() };
 		String pmfCode = (String) DBKernel.getValue(null, "Codes_Matrices", colNames, colVals, "Codes");
 		PMFCompartment compartment = SBMLFactory.createPMFCompartment(compartmentId, compartmentName, pmfCode,
 				compartmentDetail, modelVariables);
@@ -490,7 +490,7 @@ public class WriterUtils {
 			// Group tuples according to its secondary model
 			Map<Integer, List<KnimeTuple>> secModelMap = new HashMap<>();
 			for (KnimeTuple tuple : tuples) {
-				int secModelId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).getId();
+				int secModelId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).id;
 				if (secModelMap.containsKey(secModelId)) {
 					secModelMap.get(secModelId).add(tuple);
 				} else {
@@ -593,7 +593,7 @@ public class WriterUtils {
 			// Group tuples according to its secondary model
 			Map<Integer, List<KnimeTuple>> secModelMap = new HashMap<>();
 			for (KnimeTuple tuple : tuples) {
-				int secModelId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).getId();
+				int secModelId = ((EstModelXml) tuple.getPmmXml(Model2Schema.ATT_ESTMODEL).get(0)).id;
 				if (secModelMap.containsKey(secModelId)) {
 					secModelMap.get(secModelId).add(tuple);
 				} else {
@@ -636,7 +636,7 @@ public class WriterUtils {
 			String docName = String.format("%s_%d.%s", mdName, modelNum, modelExtension);
 
 			Model model = doc.getModel();
-			model.setId(PMFUtil.createId("model" + secEstModel.getId()));
+			model.setId(PMFUtil.createId("model" + secEstModel.id));
 			CompSBMLDocumentPlugin compDocPlugin = (CompSBMLDocumentPlugin) doc.getPlugin(CompConstants.shortLabel);
 			CompModelPlugin compModelPlugin = (CompModelPlugin) model.getPlugin(CompConstants.shortLabel);
 
@@ -736,8 +736,8 @@ public class WriterUtils {
 			// Create model definition
 			String modelId = "model_" + dep.name;
 			Model model = doc.createModel(modelId);
-			if (estModel.getName() != null) {
-				model.setName(estModel.getName());
+			if (estModel.name != null) {
+				model.setName(estModel.name);
 			}
 
 			if (notes != null) {
@@ -768,10 +768,10 @@ public class WriterUtils {
 			for (IndepXml indepXml : indepXmls) {
 				// Creates SBML parameter
 				// model.addParameter(new SecIndep(indepXml).getParam());
-				SecIndep secIndep = new SecIndep(indepXml.getName(), indepXml.getDescription(), indepXml.getUnit());
+				SecIndep secIndep = new SecIndep(indepXml.name, indepXml.description, indepXml.unit);
 				model.addParameter(secIndep.getParam());
 				// Adds constraint
-				LimitsConstraint lc = new LimitsConstraint(indepXml.getName(), indepXml.getMin(), indepXml.getMax());
+				LimitsConstraint lc = new LimitsConstraint(indepXml.name, indepXml.min, indepXml.max);
 				if (lc.getConstraint() != null) {
 					model.addConstraint(lc.getConstraint());
 				}
@@ -1155,7 +1155,7 @@ public class WriterUtils {
 			// Sort tertiary models
 			Map<Integer, List<KnimeTuple>> tertiaryModelMap = new HashMap<>();
 			for (KnimeTuple tuple : tuples) {
-				int primModelId = ((EstModelXml) tuple.getPmmXml(Model1Schema.ATT_ESTMODEL).get(0)).getId();
+				int primModelId = ((EstModelXml) tuple.getPmmXml(Model1Schema.ATT_ESTMODEL).get(0)).id;
 
 				// primary model in tuple is already in tertiaryModelMap
 				if (tertiaryModelMap.containsKey(primModelId)) {

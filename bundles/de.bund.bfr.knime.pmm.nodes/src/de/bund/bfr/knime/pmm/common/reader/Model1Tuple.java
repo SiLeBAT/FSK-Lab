@@ -90,16 +90,16 @@ public class Model1Tuple {
     if (!indepUnitID.isEmpty()
         && !indepUnitID.equalsIgnoreCase(Unit.Kind.DIMENSIONLESS.getName())) {
       String unitName = model.getUnitDefinition(indepUnitID).getName();
-      indepXml.setUnit(unitName);
-      indepXml.setCategory(Categories.getTimeCategory().getName());
-      indepXml.setDescription(Categories.getTime());
+      indepXml.unit = unitName;
+      indepXml.category = Categories.getTimeCategory().getName();
+      indepXml.description = Categories.getTime();
     }
 
     // Get limits
     if (limits.containsKey(indepParam.getId())) {
       Limits indepLimits = limits.get(indepParam.getId());
-      indepXml.setMax(indepLimits.getMax());
-      indepXml.setMin(indepLimits.getMin());
+      indepXml.max = indepLimits.getMax();
+      indepXml.min = indepLimits.getMin();
     }
 
     // Parse Consts
@@ -151,7 +151,7 @@ public class Model1Tuple {
 
     EstModelXml estModel = ReaderUtils.uncertainties2EstModel(m1Annot.getUncertainties());
     if (model.isSetName()) {
-      estModel.setName(model.getName());
+      estModel.name = model.getName();
     }
 
     Model1AgentXml agentXml = new Model1AgentXml(MathUtilities.getRandomNegativeInt(),

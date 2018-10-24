@@ -38,18 +38,18 @@ public class EstModelXml implements PmmXmlElementConvertable {
 	private static final String ATT_COMMENT = "comment";
 	private static final String ATT_DBUUID = "dbuuid";
 
-	private Integer id;
-	private String name;
-	private Double sse;
-	private Double rms;
-	private Double r2;
-	private Double aic;
-	private Double bic;
-	private Integer dof;
-	private Integer qualityScore;
-	private Boolean checked;
-	private String comment;
-	private String dbuuid;
+	public Integer id;
+	public String name;
+	public Double sse;
+	public Double rms;
+	public Double r2;
+	public Double aic;
+	public Double bic;
+	public Integer dof;
+	public Integer qualityScore;
+	public Boolean checked;
+	public String comment;
+	public String dbuuid;
 
 	public EstModelXml(Integer id, String name, Double sse, Double rms,
 			Double r2, Double aic, Double bic, Integer dof) {
@@ -86,7 +86,7 @@ public class EstModelXml implements PmmXmlElementConvertable {
 						ATT_BIC), XmlHelper.getInt(el, ATT_DOF), XmlHelper
 						.getBoolean(el, ATT_CHECKED), XmlHelper.getInt(el,
 						ATT_QUALITYSCORE), XmlHelper.getString(el, ATT_DBUUID));
-		this.setComment(XmlHelper.getString(el, ATT_COMMENT));
+		this.comment = XmlHelper.getString(el, ATT_COMMENT);
 	}
 
 	@Override
@@ -107,101 +107,5 @@ public class EstModelXml implements PmmXmlElementConvertable {
 		ret.setAttribute(ATT_DBUUID, XmlHelper.getNonNull(dbuuid));
 
 		return ret;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Double getSse() {
-		return sse;
-	}
-
-	public void setSse(Double sse) {
-		this.sse = sse;
-	}
-
-	public Double getRms() {
-		return rms;
-	}
-
-	public void setRms(Double rms) {
-		this.rms = rms;
-	}
-
-	public Double getR2() {
-		return r2;
-	}
-
-	public void setR2(Double r2) {
-		this.r2 = r2;
-	}
-
-	public Double getAic() {
-		return aic;
-	}
-
-	public void setAic(Double aic) {
-		this.aic = aic;
-	}
-
-	public Double getBic() {
-		return bic;
-	}
-
-	public void setBic(Double bic) {
-		this.bic = bic;
-	}
-
-	public Integer getDof() {
-		return dof;
-	}
-
-	public void setDof(Integer dof) {
-		this.dof = dof;
-	}
-
-	public Integer getQualityScore() {
-		return qualityScore;
-	}
-
-	public void setQualityScore(Integer qualityScore) {
-		this.qualityScore = qualityScore;
-	}
-
-	public Boolean getChecked() {
-		return checked;
-	}
-
-	public void setChecked(Boolean checked) {
-		this.checked = checked;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	public void setDbuuid(String dbuuid) {
-		this.dbuuid = dbuuid;
 	}
 }

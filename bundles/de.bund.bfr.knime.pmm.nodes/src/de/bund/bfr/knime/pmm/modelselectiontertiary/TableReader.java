@@ -213,7 +213,7 @@ public class TableReader {
 			Integer catID = ((CatalogModelXml) tuple.getPmmXml(
 					Model1Schema.ATT_MODELCATALOG).get(0)).id;
 			Integer estID = ((EstModelXml) tuple.getPmmXml(
-					Model1Schema.ATT_ESTMODEL).get(0)).getId();
+					Model1Schema.ATT_ESTMODEL).get(0)).id;
 			String id = "";
 
 			if (estID != null) {
@@ -260,12 +260,12 @@ public class TableReader {
 			for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 				IndepXml element = (IndepXml) el;
 
-				if (element.getName().equals(AttributeUtilities.TIME)) {
-					variables.put(element.getName(),
+				if (element.name.equals(AttributeUtilities.TIME)) {
+					variables.put(element.name,
 							new ArrayList<>(Arrays.asList(0.0)));
-					varMin.put(element.getName(), element.getMin());
-					varMax.put(element.getName(), element.getMax());
-					timeUnit = element.getUnit();
+					varMin.put(element.name, element.min);
+					varMax.put(element.name, element.max);
+					timeUnit = element.unit;
 				}
 			}
 
@@ -346,24 +346,24 @@ public class TableReader {
 				stringColumns.get(AttributeUtilities.AGENT_DETAILS).add(
 						agent.detail);
 				stringColumns.get(TimeSeriesSchema.ATT_MATRIX).add(
-						matrix.getName());
+						matrix.name);
 				stringColumns.get(AttributeUtilities.MATRIX_DETAILS).add(
-						matrix.getDetail());
+						matrix.detail);
 				stringColumns.get(MdInfoXml.ATT_COMMENT).add(
 						((MdInfoXml) tuple.getPmmXml(
 								TimeSeriesSchema.ATT_MDINFO).get(0))
 								.getComment());
 				doubleColumns.get(Model1Schema.SSE).add(
-						((EstModelXml) estModelXml.get(0)).getSse());
+						((EstModelXml) estModelXml.get(0)).sse);
 				doubleColumns.get(Model1Schema.MSE).add(
 						MathUtilities.getMSE(((EstModelXml) estModelXml.get(0))
-								.getRms()));
+								.rms));
 				doubleColumns.get(Model1Schema.RMSE).add(
-						((EstModelXml) estModelXml.get(0)).getRms());
+						((EstModelXml) estModelXml.get(0)).rms);
 				doubleColumns.get(Model1Schema.RSQUARED).add(
-						((EstModelXml) estModelXml.get(0)).getR2());
+						((EstModelXml) estModelXml.get(0)).r2);
 				doubleColumns.get(Model1Schema.AIC).add(
-						((EstModelXml) estModelXml.get(0)).getAic());
+						((EstModelXml) estModelXml.get(0)).aic);
 				data.add(dataPoints);
 
 				if (newTuples != null) {
@@ -371,16 +371,16 @@ public class TableReader {
 							Model1Schema.ATT_ESTMODEL);
 
 					doubleColumns.get(Model1Schema.SSE + " (Local)").add(
-							((EstModelXml) newEstModelXml.get(0)).getSse());
+							((EstModelXml) newEstModelXml.get(0)).sse);
 					doubleColumns.get(Model1Schema.MSE + " (Local)").add(
 							MathUtilities.getMSE(((EstModelXml) newEstModelXml
-									.get(0)).getRms()));
+									.get(0)).rms));
 					doubleColumns.get(Model1Schema.RMSE + " (Local)").add(
-							((EstModelXml) newEstModelXml.get(0)).getRms());
+							((EstModelXml) newEstModelXml.get(0)).rms);
 					doubleColumns.get(Model1Schema.RSQUARED + " (Local)").add(
-							((EstModelXml) newEstModelXml.get(0)).getR2());
+							((EstModelXml) newEstModelXml.get(0)).r2);
 					doubleColumns.get(Model1Schema.AIC + " (Local)").add(
-							((EstModelXml) newEstModelXml.get(0)).getAic());
+							((EstModelXml) newEstModelXml.get(0)).aic);
 				} else {
 					doubleColumns.get(Model1Schema.SSE + " (Local)").add(null);
 					doubleColumns.get(Model1Schema.MSE + " (Local)").add(null);
@@ -421,16 +421,16 @@ public class TableReader {
 				shortLegend.put(id, modelName);
 				longLegend.put(id, modelName + " " + formula);
 				doubleColumns.get(Model1Schema.SSE).add(
-						((EstModelXml) estModelXml.get(0)).getSse());
+						((EstModelXml) estModelXml.get(0)).sse);
 				doubleColumns.get(Model1Schema.MSE).add(
 						MathUtilities.getMSE(((EstModelXml) estModelXml.get(0))
-								.getRms()));
+								.rms));
 				doubleColumns.get(Model1Schema.RMSE).add(
-						((EstModelXml) estModelXml.get(0)).getRms());
+						((EstModelXml) estModelXml.get(0)).rms);
 				doubleColumns.get(Model1Schema.RSQUARED).add(
-						((EstModelXml) estModelXml.get(0)).getR2());
+						((EstModelXml) estModelXml.get(0)).r2);
 				doubleColumns.get(Model1Schema.AIC).add(
-						((EstModelXml) estModelXml.get(0)).getAic());
+						((EstModelXml) estModelXml.get(0)).aic);
 			}
 
 			Map<String, List<String>> categories = new LinkedHashMap<>();
@@ -467,7 +467,7 @@ public class TableReader {
 
 			stringColumns.get(Model1Schema.NAME).add(
 					((EstModelXml) tuple.getPmmXml(Model1Schema.ATT_ESTMODEL)
-							.get(0)).getName());
+							.get(0)).name);
 			stringColumns.get(Model1Schema.FORMULA).add(modelName);
 			stringColumns.get(Model1Schema.ATT_EMLIT).add(literature);
 

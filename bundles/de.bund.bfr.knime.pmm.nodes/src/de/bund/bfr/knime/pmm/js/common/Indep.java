@@ -257,15 +257,15 @@ public class Indep implements ViewValue {
 	 */
 	public static Indep toIndep(IndepXml indepXml) {
 		Indep indep = new Indep();
-		indep.setName(indepXml.getName());
-		indep.setOrigname(indepXml.getOrigName());
-		if (indepXml.getMin() != null)
-			indep.setMin(indepXml.getMin());
-		if (indepXml.getMax() != null)
-			indep.setMax(indepXml.getMax());
-		indep.setCategory(indepXml.getCategory());
-		indep.setUnit(indepXml.getUnit());
-		indep.setDescription(indepXml.getDescription());
+		indep.setName(indepXml.name);
+		indep.setOrigname(indepXml.origName);
+		if (indepXml.min != null)
+			indep.setMin(indepXml.min);
+		if (indepXml.max != null)
+			indep.setMax(indepXml.max);
+		indep.setCategory(indepXml.category);
+		indep.setUnit(indepXml.unit);
+		indep.setDescription(indepXml.description);
 
 		return indep;
 	}

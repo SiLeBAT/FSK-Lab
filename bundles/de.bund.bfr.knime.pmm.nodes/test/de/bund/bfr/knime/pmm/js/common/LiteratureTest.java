@@ -258,19 +258,19 @@ public class LiteratureTest {
 		literature.setDbuuid(dbuuid);
 		LiteratureItem literatureItem = literature.toLiteratureItem();
 
-		assertTrue(id == literatureItem.getId());
-		assertEquals(author, literatureItem.getAuthor());
-		assertEquals(title, literatureItem.getTitle());
-		assertEquals(abstractText, literatureItem.getAbstractText());
-		assertTrue(year == literatureItem.getYear());
-		assertEquals(journal, literatureItem.getJournal());
-		assertEquals(volume, literatureItem.getVolume());
-		assertEquals(issue, literatureItem.getIssue());
-		assertTrue(page == literatureItem.getPage());
-		assertTrue(approvalMode == literatureItem.getApprovalMode());
-		assertEquals(website, literatureItem.getWebsite());
-		assertTrue(type == literatureItem.getType());
-		assertEquals(comment, literatureItem.getComment());
-		assertEquals(dbuuid, literatureItem.getDbuuid());
+		assertTrue(id == literatureItem.id);
+		assertEquals(author, literatureItem.author);
+		assertEquals(title, literatureItem.title);
+		assertEquals(abstractText, literatureItem.abstractText);
+		assertTrue(year == literatureItem.year);
+		assertEquals(journal, literatureItem.journal);
+		assertEquals(volume, literatureItem.volume);
+		assertEquals(issue, literatureItem.issue);
+		assertTrue(page == literatureItem.page);
+		assertTrue(approvalMode == literatureItem.approvalMode);
+		assertEquals(website, literatureItem.website);
+		assertTrue(type == literatureItem.type);
+		assertEquals(comment, literatureItem.comment);
+		assertEquals(dbuuid, literatureItem.dbuuid);
 	}
 }

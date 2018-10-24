@@ -266,15 +266,15 @@ public class CombinedJoiner implements Joiner {
 			for (PmmXmlElementConvertable el : indepVar.getElementSet()) {
 				IndepXml iv = (IndepXml) el;
 
-				if (!primAssign.containsKey(iv.getName())) {
+				if (!primAssign.containsKey(iv.name)) {
 					error = true;
 					break;
 				}
 
-				oldPrimVars.add(iv.getName());
-				formula = MathUtilities.replaceVariable(formula, iv.getName(),
-						primAssign.get(iv.getName()));
-				iv.setName(primAssign.get(iv.getName()));
+				oldPrimVars.add(iv.name);
+				formula = MathUtilities.replaceVariable(formula, iv.name,
+						primAssign.get(iv.name));
+				iv.name = primAssign.get(iv.name);
 				newIndepVar.add(iv);
 			}
 
@@ -286,15 +286,15 @@ public class CombinedJoiner implements Joiner {
 			for (PmmXmlElementConvertable el : indepVarSec.getElementSet()) {
 				IndepXml iv = (IndepXml) el;
 
-				if (!secAssign.containsKey(iv.getName())) {
+				if (!secAssign.containsKey(iv.name)) {
 					error = true;
 					break;
 				}
 
-				oldSecVars.add(iv.getName());
+				oldSecVars.add(iv.name);
 				formulaSec = MathUtilities.replaceVariable(formulaSec,
-						iv.getName(), secAssign.get(iv.getName()));
-				iv.setName(secAssign.get(iv.getName()));
+						iv.name, secAssign.get(iv.name));
+				iv.name = secAssign.get(iv.name);
 				newIndepVarSec.add(iv);
 			}
 
@@ -445,7 +445,7 @@ public class CombinedJoiner implements Joiner {
 			int id = ((CatalogModelXml) tuple.getPmmXml(
 					Model1Schema.ATT_MODELCATALOG).get(0)).id;
 			Integer estID = ((EstModelXml) tuple.getPmmXml(
-					Model1Schema.ATT_ESTMODEL).get(0)).getId();
+					Model1Schema.ATT_ESTMODEL).get(0)).id;
 
 			if (estID != null) {
 				if (estIDs.add(estID)) {
@@ -486,8 +486,8 @@ public class CombinedJoiner implements Joiner {
 						Model1Schema.ATT_INDEPENDENT).getElementSet()) {
 					IndepXml element = (IndepXml) el;
 
-					categories.put(element.getName(), element.getCategory());
-					units.put(element.getName(), element.getUnit());
+					categories.put(element.name, element.category);
+					units.put(element.name, element.unit);
 				}
 
 				primaryModelNames.put(modelID, modelXml.name);
@@ -503,8 +503,8 @@ public class CombinedJoiner implements Joiner {
 						Model2Schema.ATT_INDEPENDENT).getElementSet()) {
 					IndepXml element = (IndepXml) el;
 
-					categories.put(element.getName(), element.getCategory());
-					units.put(element.getName(), element.getUnit());
+					categories.put(element.name, element.category);
+					units.put(element.name, element.unit);
 				}
 
 				if (containsData) {

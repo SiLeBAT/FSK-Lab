@@ -59,7 +59,7 @@ public class PmmUtilities {
 			for (PmmXmlElementConvertable el : indep.getElementSet()) {
 				IndepXml element = (IndepXml) el;
 
-				indepSet.add(element.getName());
+				indepSet.add(element.name);
 			}
 		}
 

@@ -199,16 +199,16 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			for (PmmXmlElementConvertable el : x.getElementSet()) {
 				if (el instanceof EstModelXml) {
 					EstModelXml emx = (EstModelXml) el;
-					this.setEstModelId(emx.getId());
-					this.rms = emx.getRms();
-					this.rsquared = emx.getR2();
-					this.aic = emx.getAic();
-					this.bic = emx.getBic();
-					this.qualityScore = emx.getQualityScore();
-					this.isChecked = emx.getChecked();
-					this.comment = emx.getComment();
-					this.fittedModelName = emx.getName();
-					this.em_dbuuid = emx.getDbuuid();
+					this.setEstModelId(emx.id);
+					this.rms = emx.rms;
+					this.rsquared = emx.r2;
+					this.aic = emx.aic;
+					this.bic = emx.bic;
+					this.qualityScore = emx.qualityScore;
+					this.isChecked = emx.checked;
+					this.comment = emx.comment;
+					this.fittedModelName = emx.name;
+					this.em_dbuuid = emx.dbuuid;
 					break;
 				}
 			}
@@ -360,8 +360,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 				for (PmmXmlElementConvertable el : independent.getElementSet()) {
 					if (el instanceof IndepXml) {
 						IndepXml ix = (IndepXml) el;
-						if (ix.getOrigName().equals(origName)) {
-							ix.setName(name);
+						if (ix.origName.equals(origName)) {
+							ix.name = name;
 							break;
 						}
 					}
@@ -413,7 +413,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		PmmXmlDoc emDoc = new PmmXmlDoc();
 		int emid = getEstModelId();
 		EstModelXml emx = new EstModelXml(emid, fittedModelName, null, getRms(), getRsquared(), getAic(), getBic(), null, isChecked, qualityScore, getEMDbUuid()); // "EM_" + emid
-		emx.setComment(comment);
+		emx.comment = comment;
 		emDoc.add(emx);
 		return emDoc;
 	}
@@ -511,8 +511,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
-					ix.setDescription(description);
+				if (ix.name.equals(name)) {
+					ix.description = description;
 					break;
 				}
 			}
@@ -522,8 +522,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
-					ix.setMax(max);
+				if (ix.name.equals(name)) {
+					ix.max = max;
 					break;
 				}
 			}
@@ -533,8 +533,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
-					ix.setMin(min);
+				if (ix.name.equals(name)) {
+					ix.min = min;
 					break;
 				}
 			}
@@ -544,8 +544,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
-					ix.setUnit(unit);
+				if (ix.name.equals(name)) {
+					ix.unit = unit;
 					break;
 				}
 			}
@@ -555,8 +555,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
-					ix.setCategory(category);
+				if (ix.name.equals(name)) {
+					ix.category = category;
 					break;
 				}
 			}
@@ -682,7 +682,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(varName)) {
+				if (ix.name.equals(varName)) {
 					independent.getElementSet().remove(el);
 					break;
 				}
@@ -704,7 +704,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				removeParam(ix.getName());
+				removeParam(ix.name);
 			}
 		}
 	}
@@ -716,7 +716,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	}
 	public void addIndepVar(final String varName, final Double min, final Double max, String category, String unit, String description) {
 		IndepXml ix = new IndepXml(varName, min, max, category, unit);
-		if (description != null) ix.setDescription(description);
+		if (description != null) ix.description = description;
 		independent.add(ix);
 	}
 	
@@ -858,7 +858,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
+				if (ix.name.equals(name)) {
 					return true;
 				}
 			}
@@ -882,8 +882,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
-					return ix.getMin();
+				if (ix.name.equals(name)) {
+					return ix.min;
 				}
 			}
 		}
@@ -894,8 +894,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
-					return ix.getDescription();
+				if (ix.name.equals(name)) {
+					return ix.description;
 				}
 			}
 		}
@@ -905,8 +905,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
-					return ix.getMax();
+				if (ix.name.equals(name)) {
+					return ix.max;
 				}
 			}
 		}
@@ -917,8 +917,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
-					return ix.getUnit();
+				if (ix.name.equals(name)) {
+					return ix.unit;
 				}
 			}
 		}
@@ -928,8 +928,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
 				IndepXml ix = (IndepXml) el;
-				if (ix.getName().equals(name)) {
-					return ix.getCategory();
+				if (ix.name.equals(name)) {
+					return ix.category;
 				}
 			}
 		}
@@ -968,7 +968,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			for (PmmXmlElementConvertable el : independent.getElementSet()) {
 				if (el instanceof IndepXml) {
 					IndepXml ix = (IndepXml) el;
-					result.put(ix.getName(), true);
+					result.put(ix.name, true);
 				}
 			}
 		}
@@ -993,8 +993,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			for (PmmXmlElementConvertable el : independent.getElementSet()) {
 				if (el instanceof IndepXml) {
 					IndepXml ix = (IndepXml) el;
-					if (!ix.getName().equals(ix.getOrigName())) {
-						result = MathUtilities.replaceVariable(result, ix.getName(), ix.getOrigName());									
+					if (!ix.name.equals(ix.origName)) {
+						result = MathUtilities.replaceVariable(result, ix.name, ix.origName);									
 					}
 				}
 			}

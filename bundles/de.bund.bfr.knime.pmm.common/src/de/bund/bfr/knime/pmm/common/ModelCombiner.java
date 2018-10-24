@@ -108,49 +108,49 @@ public class ModelCombiner {
 				for (PmmXmlElementConvertable el : indepVarsSec.getElementSet()) {
 					IndepXml element = (IndepXml) el;
 
-					if (!CellIO.getNameList(newIndepVars).contains(element.getName())) {
+					if (!CellIO.getNameList(newIndepVars).contains(element.name)) {
 						newIndepVars.getElementSet().add(element);
 					} else {
 						IndepXml original = null;
 
 						for (PmmXmlElementConvertable el2 : newIndepVars.getElementSet()) {
-							if (((IndepXml) el2).getName().equals(element.getName())) {
+							if (((IndepXml) el2).name.equals(element.name)) {
 								original = (IndepXml) el2;
 								break;
 							}
 						}
 
-						Double min = element.getMin();
-						Double max = element.getMax();
+						Double min = element.min;
+						Double max = element.max;
 
-						if (original.getUnit() != null && !original.getUnit().equals(element.getUnit())) {
-							Category cat = Categories.getCategoryByUnit(original.getUnit());
+						if (original.unit != null && !original.unit.equals(element.unit)) {
+							Category cat = Categories.getCategoryByUnit(original.unit);
 
 							try {
-								String conversion = "(" + cat.getConversionString(element.getName(), original.getUnit(),
-										element.getUnit()) + ")";
+								String conversion = "(" + cat.getConversionString(element.name, original.unit,
+										element.unit) + ")";
 
-								replacement = MathUtilities.replaceVariable(replacement, element.getName(), conversion);
-								min = cat.convert(min, element.getUnit(), original.getUnit());
-								max = cat.convert(max, element.getUnit(), original.getUnit());
+								replacement = MathUtilities.replaceVariable(replacement, element.name, conversion);
+								min = cat.convert(min, element.unit, original.unit);
+								max = cat.convert(max, element.unit, original.unit);
 							} catch (ConvertException e) {
 								e.printStackTrace();
 							}
 						}
 
 						if (min != null) {
-							if (original.getMin() != null) {
-								original.setMin(Math.min(original.getMin(), min));
+							if (original.min != null) {
+								original.min = Math.min(original.min, min);
 							} else {
-								original.setMin(min);
+								original.min = min;
 							}
 						}
 
 						if (max != null) {
-							if (original.getMax() != null) {
-								original.setMax(Math.max(original.getMax(), max));
+							if (original.max != null) {
+								original.max = Math.max(original.max, max);
 							} else {
-								original.setMax(max);
+								original.max = max;
 							}
 						}
 					}
@@ -179,11 +179,11 @@ public class ModelCombiner {
 			PmmXmlDoc estModelXml = newTuple.getPmmXml(Model1Schema.ATT_ESTMODEL);
 
 			((CatalogModelXml) modelXml.get(0)).id = newID;
-			((EstModelXml) estModelXml.get(0)).setId(usedTuples.get(0).getInt(Model2Schema.ATT_GLOBAL_MODEL_ID));
-			((EstModelXml) estModelXml.get(0)).setSse(null);
-			((EstModelXml) estModelXml.get(0)).setRms(null);
-			((EstModelXml) estModelXml.get(0)).setR2(null);
-			((EstModelXml) estModelXml.get(0)).setAic(null);
+			((EstModelXml) estModelXml.get(0)).id = usedTuples.get(0).getInt(Model2Schema.ATT_GLOBAL_MODEL_ID);
+			((EstModelXml) estModelXml.get(0)).sse = null;
+			((EstModelXml) estModelXml.get(0)).rms = null;
+			((EstModelXml) estModelXml.get(0)).r2 = null;
+			((EstModelXml) estModelXml.get(0)).aic = null;
 
 			newTuple.setValue(Model1Schema.ATT_MODELCATALOG, modelXml);
 			newTuple.setValue(Model1Schema.ATT_ESTMODEL, estModelXml);
@@ -300,9 +300,9 @@ public class ModelCombiner {
 			}
 
 			String organism = ((AgentXml) tuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0)).name;
-			String matrix = ((MatrixXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0)).getName();
+			String matrix = ((MatrixXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0)).name;
 			String organismDetail = ((AgentXml) tuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0)).detail;
-			String matrixDetail = ((MatrixXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0)).getDetail();
+			String matrixDetail = ((MatrixXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0)).detail;
 			String comment = ((MdInfoXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MDINFO).get(0)).getComment();
 
 			if (organism != null) {
@@ -380,8 +380,8 @@ public class ModelCombiner {
 
 			organismXml.name = organism;
 			organismXml.detail = organismDetail;
-			matrixXml.setName(matrix);
-			matrixXml.setDetail(matrixDetail);
+			matrixXml.name = matrix;
+			matrixXml.detail = matrixDetail;
 
 			tuple.setValue(TimeSeriesSchema.ATT_AGENT, new PmmXmlDoc(organismXml));
 			tuple.setValue(TimeSeriesSchema.ATT_MATRIX, new PmmXmlDoc(matrixXml));
@@ -512,8 +512,8 @@ public class ModelCombiner {
 				for (PmmXmlElementConvertable el : tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT).getElementSet()) {
 					IndepXml indep = (IndepXml) el;
 
-					min.put(indep.getName(), Double.POSITIVE_INFINITY);
-					max.put(indep.getName(), Double.NEGATIVE_INFINITY);
+					min.put(indep.name, Double.POSITIVE_INFINITY);
+					max.put(indep.name, Double.NEGATIVE_INFINITY);
 				}
 
 				indepMin.put(id, min);
@@ -526,12 +526,12 @@ public class ModelCombiner {
 			for (PmmXmlElementConvertable el : tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT).getElementSet()) {
 				IndepXml indep = (IndepXml) el;
 
-				if (indep.getMin() != null) {
-					min.put(indep.getName(), Math.min(min.get(indep.getName()), indep.getMin()));
+				if (indep.min != null) {
+					min.put(indep.name, Math.min(min.get(indep.name), indep.min));
 				}
 
-				if (indep.getMax() != null) {
-					max.put(indep.getName(), Math.max(max.get(indep.getName()), indep.getMax()));
+				if (indep.max != null) {
+					max.put(indep.name, Math.max(max.get(indep.name), indep.max));
 				}
 			}
 		}
@@ -545,12 +545,12 @@ public class ModelCombiner {
 			for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 				IndepXml indep = (IndepXml) el;
 
-				if (mins.containsKey(indep.getName())) {
-					Double min = mins.get(indep.getName());
-					Double max = maxs.get(indep.getName());
+				if (mins.containsKey(indep.name)) {
+					Double min = mins.get(indep.name);
+					Double max = maxs.get(indep.name);
 
-					indep.setMin(!min.isInfinite() ? min : null);
-					indep.setMax(!max.isInfinite() ? max : null);
+					indep.min = !min.isInfinite() ? min : null;
+					indep.max = !max.isInfinite() ? max : null;
 				}
 			}
 

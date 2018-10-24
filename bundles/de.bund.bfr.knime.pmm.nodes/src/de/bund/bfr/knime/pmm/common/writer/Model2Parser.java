@@ -69,8 +69,8 @@ public class Model2Parser {
 
 		// Creates model and names it
 		Model model = sbmlDocument.createModel("model_" + dep.name);
-		if (estModel.getName() != null) {
-			model.setName(estModel.getName());
+		if (estModel.name != null) {
+			model.setName(estModel.name);
 		}
 
 		// Gets model references
@@ -113,10 +113,10 @@ public class Model2Parser {
 		// Adds independent parameters
 		for (IndepXml indepXml : indepXmls) {
 			// Creates SBML parameter
-			SecIndep secIndep = new SecIndep(indepXml.getName(), indepXml.getDescription(), indepXml.getUnit());
+			SecIndep secIndep = new SecIndep(indepXml.name, indepXml.description, indepXml.unit);
 			model.addParameter(secIndep.getParam());
 			// Adds constraint
-			LimitsConstraint lc = new LimitsConstraint(indepXml.getName(), indepXml.getMin(), indepXml.getMax());
+			LimitsConstraint lc = new LimitsConstraint(indepXml.name, indepXml.min, indepXml.max);
 			if (lc.getConstraint() != null) {
 				model.addConstraint(lc.getConstraint());
 			}

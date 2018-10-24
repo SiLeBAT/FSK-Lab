@@ -264,7 +264,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 					String modelIDSec = ((CatalogModelXml) modelXmlSec.get(0))
 							.id + "";
 					Integer estIDSec = ((EstModelXml) modelTuple.getPmmXml(
-							Model2Schema.ATT_ESTMODEL).get(0)).getId();
+							Model2Schema.ATT_ESTMODEL).get(0)).id;
 
 					if (!model.equals(modelIDSec) || !usedEstIDs.add(estIDSec)) {
 						continue;
@@ -308,15 +308,15 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 							.getElementSet()) {
 						IndepXml iv = (IndepXml) el;
 
-						if (!replace.containsKey(iv.getName())) {
+						if (!replace.containsKey(iv.name)) {
 							error = true;
 							break;
 						}
 
-						oldIndepVars.add(iv.getName());
+						oldIndepVars.add(iv.name);
 						formulaSec = MathUtilities.replaceVariable(formulaSec,
-								iv.getName(), replace.get(iv.getName()));
-						iv.setName(replace.get(iv.getName()));
+								iv.name, replace.get(iv.name));
+						iv.name = replace.get(iv.name);
 						newIndepVarsSec.add(iv);
 					}
 
@@ -475,8 +475,8 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 					Model2Schema.ATT_INDEPENDENT).getElementSet()) {
 				IndepXml element = (IndepXml) el;
 
-				indepCategories.put(element.getName(), element.getCategory());
-				indepUnits.put(element.getName(), element.getUnit());
+				indepCategories.put(element.name, element.category);
+				indepUnits.put(element.name, element.unit);
 			}
 
 			independentVariableCategories.put(modelID, indepCategories);

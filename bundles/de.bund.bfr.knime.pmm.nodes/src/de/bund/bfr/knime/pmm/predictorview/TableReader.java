@@ -294,7 +294,7 @@ public class TableReader {
 		if (isTertiaryModel && containsData) {
 			for (KnimeTuple tuple : tuples) {
 				String id = ((EstModelXml) tuple.getPmmXml(
-						Model1Schema.ATT_ESTMODEL).get(0)).getId()
+						Model1Schema.ATT_ESTMODEL).get(0)).id
 						+ "";
 
 				if (!dataTuples.containsKey(id)) {
@@ -309,7 +309,7 @@ public class TableReader {
 
 		for (KnimeTuple tuple : tuples) {
 			String id = ((EstModelXml) tuple.getPmmXml(
-					Model1Schema.ATT_ESTMODEL).get(0)).getId()
+					Model1Schema.ATT_ESTMODEL).get(0)).id
 					+ "";
 
 			if (!isTertiaryModel && containsData) {
@@ -365,25 +365,25 @@ public class TableReader {
 			for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 				IndepXml element = (IndepXml) el;
 
-				variables.put(element.getName(), new ArrayList<Double>());
-				varMin.put(element.getName(), element.getMin());
-				varMax.put(element.getName(), element.getMax());
+				variables.put(element.name, new ArrayList<Double>());
+				varMin.put(element.name, element.min);
+				varMax.put(element.name, element.max);
 
-				categories.put(element.getName(),
-						Arrays.asList(element.getCategory()));
-				units.put(element.getName(), element.getUnit());
+				categories.put(element.name,
+						Arrays.asList(element.category));
+				units.put(element.name, element.unit);
 
 				if (Categories.getTempCategory().equals(
-						Categories.getCategoryByUnit(element.getUnit()))) {
-					tempParam.put(id, element.getName());
+						Categories.getCategoryByUnit(element.unit))) {
+					tempParam.put(id, element.name);
 				}
 
-				if (Categories.getPhUnit().equals(element.getUnit())) {
-					phParam.put(id, element.getName());
+				if (Categories.getPhUnit().equals(element.unit)) {
+					phParam.put(id, element.name);
 				}
 
-				if (Categories.getAwUnit().equals(element.getUnit())) {
-					awParam.put(id, element.getName());
+				if (Categories.getAwUnit().equals(element.unit)) {
+					awParam.put(id, element.name);
 				}
 			}
 
@@ -473,7 +473,7 @@ public class TableReader {
 			stringColumns.get(Model1Schema.FORMULA).add(modelName);			
 			stringColumns.get(Model1Schema.ATT_EMLIT).add(literature);
 			stringColumns.get(Model1Schema.NAME).add(
-					((EstModelXml) estModelXml.get(0)).getName());
+					((EstModelXml) estModelXml.get(0)).name);
 			index++;
 
 			if (isTertiaryModel) {
@@ -503,11 +503,11 @@ public class TableReader {
 				stringColumns.get(TimeSeriesSchema.ATT_AGENT).add(
 						agent.name);
 				stringColumns.get(TimeSeriesSchema.ATT_MATRIX).add(
-						matrix.getName());
+						matrix.name);
 				stringColumns.get(AttributeUtilities.AGENT_DETAILS).add(
 						agent.detail);
 				stringColumns.get(AttributeUtilities.MATRIX_DETAILS).add(
-						matrix.getDetail());
+						matrix.detail);
 				stringColumns.get(MdInfoXml.ATT_COMMENT).add(
 						((MdInfoXml) tuple.getPmmXml(
 								TimeSeriesSchema.ATT_MDINFO).get(0))
@@ -515,16 +515,16 @@ public class TableReader {
 			}
 
 			doubleColumns.get(Model1Schema.SSE).add(
-					((EstModelXml) estModelXml.get(0)).getSse());
+					((EstModelXml) estModelXml.get(0)).sse);
 			doubleColumns.get(Model1Schema.MSE).add(
 					MathUtilities.getMSE(((EstModelXml) estModelXml.get(0))
-							.getRms()));
+							.rms));
 			doubleColumns.get(Model1Schema.RMSE).add(
-					((EstModelXml) estModelXml.get(0)).getRms());
+					((EstModelXml) estModelXml.get(0)).rms);
 			doubleColumns.get(Model1Schema.RSQUARED).add(
-					((EstModelXml) estModelXml.get(0)).getR2());
+					((EstModelXml) estModelXml.get(0)).r2);
 			doubleColumns.get(Model1Schema.AIC).add(
-					((EstModelXml) estModelXml.get(0)).getAic());
+					((EstModelXml) estModelXml.get(0)).aic);
 
 			plotable.setFunction(modelXml.formula);
 			plotable.setFunctionValue(depVar);
@@ -536,7 +536,7 @@ public class TableReader {
 			plotable.setFunctionParameters(parameters);
 			plotable.setCovariances(covariances);
 			plotable.setDegreesOfFreedom(((EstModelXml) estModelXml.get(0))
-					.getDof());
+					.dof);
 			plotable.setCategories(categories);
 			plotable.setUnits(units);
 
@@ -576,10 +576,10 @@ public class TableReader {
 							Model1Schema.ATT_INDEPENDENT).getElementSet()) {
 						IndepXml element = (IndepXml) el;
 
-						if (miscParams.get(i).equals(element.getName())) {
-							min = element.getMin();
-							max = element.getMax();
-							unit = element.getUnit();
+						if (miscParams.get(i).equals(element.name)) {
+							min = element.min;
+							max = element.max;
+							unit = element.unit;
 							break;
 						}
 					}
@@ -633,14 +633,14 @@ public class TableReader {
 			for (PmmXmlElementConvertable el : indepXml.getElementSet()) {
 				IndepXml element = (IndepXml) el;
 
-				if (element.getMin() != null) {
-					varData.put(element.getName() + " Min", element.getMin()
-							+ " " + units.get(element.getName()));
+				if (element.min != null) {
+					varData.put(element.name + " Min", element.min
+							+ " " + units.get(element.name));
 				}
 
-				if (element.getMax() != null) {
-					varData.put(element.getName() + " Max", element.getMax()
-							+ " " + units.get(element.getName()));
+				if (element.max != null) {
+					varData.put(element.name + " Max", element.max
+							+ " " + units.get(element.name));
 				}
 			}
 
@@ -775,13 +775,13 @@ public class TableReader {
 		Integer primId = ((CatalogModelXml) current.getPmmXml(
 				Model1Schema.ATT_MODELCATALOG).get(0)).id;
 		Integer secEstId = ((EstModelXml) current.getPmmXml(
-				Model2Schema.ATT_ESTMODEL).get(0)).getId();
+				Model2Schema.ATT_ESTMODEL).get(0)).id;
 
 		for (KnimeTuple tuple : all) {
 			Integer pId = ((CatalogModelXml) tuple.getPmmXml(
 					Model1Schema.ATT_MODELCATALOG).get(0)).id;
 			Integer sId = ((EstModelXml) tuple.getPmmXml(
-					Model2Schema.ATT_ESTMODEL).get(0)).getId();
+					Model2Schema.ATT_ESTMODEL).get(0)).id;
 
 			if (primId.equals(pId) && secEstId.equals(sId)) {
 				tuples.add(tuple);

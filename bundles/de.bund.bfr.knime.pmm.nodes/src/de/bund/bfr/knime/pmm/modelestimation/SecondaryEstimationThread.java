@@ -327,21 +327,21 @@ public class SecondaryEstimationThread implements Runnable {
 					for (int j = 0; j < indepXml.getElementSet().size(); j++) {
 						IndepXml element = (IndepXml) indepXml.get(j);
 
-						element.setMin(minValues.get(j));
-						element.setMax(maxValues.get(j));
+						element.min = minValues.get(j);
+						element.max = maxValues.get(j);
 					}
 
 					PmmXmlDoc estModelXml = tuple
 							.getPmmXml(Model2Schema.ATT_ESTMODEL);
 
-					((EstModelXml) estModelXml.get(0)).setId(estID);
+					((EstModelXml) estModelXml.get(0)).id = estID;
 					((EstModelXml) estModelXml.get(0))
-							.setName(createModelName(tuple));
-					((EstModelXml) estModelXml.get(0)).setSse(sse);
-					((EstModelXml) estModelXml.get(0)).setRms(rms);
-					((EstModelXml) estModelXml.get(0)).setR2(rSquared);
-					((EstModelXml) estModelXml.get(0)).setAic(aic);
-					((EstModelXml) estModelXml.get(0)).setDof(dof);
+							.name = createModelName(tuple);
+					((EstModelXml) estModelXml.get(0)).sse = sse;
+					((EstModelXml) estModelXml.get(0)).rms = rms;
+					((EstModelXml) estModelXml.get(0)).r2 = rSquared;
+					((EstModelXml) estModelXml.get(0)).aic = aic;
+					((EstModelXml) estModelXml.get(0)).dof = dof;
 
 					paramMap.put(id, paramXml);
 					indepMap.put(id, indepXml);
@@ -374,8 +374,8 @@ public class SecondaryEstimationThread implements Runnable {
 		String depVar = ((DepXml) tuple.getPmmXml(Model2Schema.ATT_DEPENDENT)
 				.get(0)).name;
 		String agentName = agent.name != null ? agent.name : agent.detail;
-		String matrixName = matrix.getName() != null ? matrix.getName()
-				: matrix.getDetail();
+		String matrixName = matrix.name != null ? matrix.name
+				: matrix.detail;
 		String modelName = ((CatalogModelXml) tuple.getPmmXml(
 				Model2Schema.ATT_MODELCATALOG).get(0)).name;
 

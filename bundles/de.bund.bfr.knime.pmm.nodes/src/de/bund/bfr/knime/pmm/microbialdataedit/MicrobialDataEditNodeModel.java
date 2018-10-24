@@ -131,8 +131,8 @@ public class MicrobialDataEditNodeModel extends NodeModel {
 				PmmXmlDoc matrixXml = tuple
 						.getPmmXml(TimeSeriesSchema.ATT_MATRIX);
 
-				((MatrixXml) matrixXml.get(0)).setDetail(set.getMatrixDetails()
-						.get(id));
+				((MatrixXml) matrixXml.get(0)).detail = set.getMatrixDetails()
+						.get(id);
 
 				tuple.setValue(TimeSeriesSchema.ATT_MATRIX, matrixXml);
 			}

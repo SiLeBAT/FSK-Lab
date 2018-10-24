@@ -172,7 +172,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 					String rowuuid = row.getString(TimeSeriesSchema.ATT_DBUUID);
 					if (rowuuid == null) rowuuid = ts.getDbuuid();
 					if (rowuuid == null && ts.getMatrix() != null && ts.getMatrix().size() > 0) {
-						rowuuid = ((MatrixXml) ts.getMatrix().get(0)).getDbuuid();
+						rowuuid = ((MatrixXml) ts.getMatrix().get(0)).dbuuid;
 					}
 					
 					foreignDbIds = checkIDs(conn, true, dbuuid, row, ts, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
@@ -201,7 +201,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						}
 					}
 				}
-				Integer rowEstM1ID = emx.getId();//row.getInt(Model1Schema.ATT_ESTMODELID);
+				Integer rowEstM1ID = emx.id;//row.getInt(Model1Schema.ATT_ESTMODELID);
 				Integer dw = row.getInt(Model1Schema.ATT_DATABASEWRITABLE);
 				M1Writable = (dw != null && dw == 1);
 				if (M1Writable) {
@@ -228,10 +228,10 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 					PmmXmlDoc mLitXmlDoc = row.getPmmXml(Model1Schema.ATT_MLIT);
 					PmmXmlDoc emLitXmlDoc = row.getPmmXml(Model1Schema.ATT_EMLIT);
 
-					Double rms = emx.getRms();//row.getDouble(Model1Schema.ATT_RMS);
-					Double r2 = emx.getR2();//row.getDouble(Model1Schema.ATT_RSQUARED);
-					Double aic = emx.getAic();//row.getDouble(Model1Schema.ATT_AIC);
-					Double bic = emx.getBic();//row.getDouble(Model1Schema.ATT_BIC);
+					Double rms = emx.rms;//row.getDouble(Model1Schema.ATT_RMS);
+					Double r2 = emx.r2;//row.getDouble(Model1Schema.ATT_RSQUARED);
+					Double aic = emx.aic;//row.getDouble(Model1Schema.ATT_AIC);
+					Double bic = emx.bic;//row.getDouble(Model1Schema.ATT_BIC);
 
 					// Modellkatalog primary
 					if (alreadyInsertedModel.containsKey(rowMcID)) {
@@ -259,14 +259,14 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						if (!ppm.getWarning().trim().isEmpty()) warnings += ppm.getWarning();
 					}
 					try {
-						ppm.setFittedModelName(emx.getName());
+						ppm.setFittedModelName(emx.name);
 						ppm.setRms(rms == null ? Double.NaN : rms);
 						ppm.setRsquared(r2 == null ? Double.NaN : r2);
 						ppm.setAic(aic == null ? Double.NaN : aic);
 						ppm.setBic(bic == null ? Double.NaN : bic);
-						ppm.setQualityScore(emx.getQualityScore());
-						ppm.setChecked(emx.getChecked());
-						ppm.setComment(emx.getComment());
+						ppm.setQualityScore(emx.qualityScore);
+						ppm.setChecked(emx.checked);
+						ppm.setComment(emx.comment);
 					} catch (Exception e) {
 						warnings += e.getMessage() + " -> ID: " + rowEstM1ID;
 						MyLogger.handleException(e);
@@ -287,7 +287,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 
 						boolean checkAnywayDueToNegativeId = (ppm.getEstModelId() < 0);
 						String rowuuid = row.getString(Model1Schema.ATT_DBUUID);
-						if (rowuuid == null) rowuuid = emx.getDbuuid();
+						if (rowuuid == null) rowuuid = emx.dbuuid;
 						
 						foreignDbIds = checkIDs(conn, true, dbuuid, row, ppm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 						newPrimEstID = db.insertEm(ppm, wfID);
@@ -319,7 +319,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 							}
 						}
 					}
-					rowEstM2ID = emx.getId();
+					rowEstM2ID = emx.id;
 					//System.err.println(newPrimEstID + "\t" + rowEstM2ID);
 					if (M2Writable) {
 						spm = writeM2(row, emx, ppm, dbuuid, wfID);
@@ -362,7 +362,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						}
 					}
 				}
-				rowEstM2ID = emx.getId();
+				rowEstM2ID = emx.id;
 				//System.err.println(newPrimEstID + "\t" + rowEstM2ID);
 				if (M2Writable) {
 					spm = writeM2(row, emx, ppm, dbuuid, wfID);
@@ -392,7 +392,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 	}
 	private ParametricModel writeM2(KnimeTuple row, EstModelXml emx, ParametricModel ppm, String dbuuid, Integer wfID) {
 		ParametricModel spm = null;
-		Integer rowEstM2ID = emx.getId();
+		Integer rowEstM2ID = emx.id;
 		CatalogModelXml cmx = null;
 		PmmXmlDoc catModel = row.getPmmXml(Model2Schema.ATT_MODELCATALOG);
 		if (catModel != null) {
@@ -415,10 +415,10 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 		PmmXmlDoc mLitXmlDoc = row.getPmmXml(Model2Schema.ATT_MLIT);
 		PmmXmlDoc emLitXmlDoc = row.getPmmXml(Model2Schema.ATT_EMLIT);
 
-		Double rms = emx.getRms();//row.getDouble(Model2Schema.ATT_RMS);
-		Double r2 = emx.getR2();//row.getDouble(Model2Schema.ATT_RSQUARED);
-		Double aic = emx.getAic();//row.getDouble(Model2Schema.ATT_AIC);
-		Double bic = emx.getBic();//row.getDouble(Model2Schema.ATT_BIC);
+		Double rms = emx.rms;//row.getDouble(Model2Schema.ATT_RMS);
+		Double r2 = emx.r2;//row.getDouble(Model2Schema.ATT_RSQUARED);
+		Double aic = emx.aic;//row.getDouble(Model2Schema.ATT_AIC);
+		Double bic = emx.bic;//row.getDouble(Model2Schema.ATT_BIC);
 
 		// Modellkatalog secondary
 		if (alreadyInsertedModel.containsKey(rowMcID)) {
@@ -450,14 +450,14 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 			spm = alreadyInsertedEModel.get(rowEstM2ID);
 		} else {
 			try {
-				spm.setFittedModelName(emx.getName());
+				spm.setFittedModelName(emx.name);
 				spm.setRms(rms);
 				spm.setRsquared(r2);
 				spm.setAic(aic);
 				spm.setBic(bic);
-				spm.setQualityScore(emx.getQualityScore());
-				spm.setChecked(emx.getChecked());
-				spm.setComment(emx.getComment());
+				spm.setQualityScore(emx.qualityScore);
+				spm.setChecked(emx.checked);
+				spm.setComment(emx.comment);
 			} catch (Exception e) {
 				warnings += e.getMessage() + " -> ID: " + rowEstM2ID;
 				MyLogger.handleException(e);
@@ -473,7 +473,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 
 			boolean checkAnywayDueToNegativeId = (spm.getEstModelId() < 0);
 			String rowuuid = row.getString(Model2Schema.ATT_DBUUID);
-			if (rowuuid == null) rowuuid = emx.getDbuuid();
+			if (rowuuid == null) rowuuid = emx.dbuuid;
 			foreignDbIds = checkIDs(conn, true, dbuuid, row, spm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 			db.insertEm(spm, wfID, ppm);				
 			foreignDbIds = checkIDs(conn, false, dbuuid, row, spm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);

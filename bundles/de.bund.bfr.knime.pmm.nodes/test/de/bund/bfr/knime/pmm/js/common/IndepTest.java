@@ -152,12 +152,12 @@ public class IndepTest {
 		indep.setDescription(description);
 		IndepXml indepXml = indep.toIndepXml();
 		
-		assertEquals(name, indepXml.getName());
-		assertEquals(origname, indepXml.getOrigName());
-		assertEquals(min, indepXml.getMin(), 0.0);
-		assertEquals(max, indepXml.getMax(), 0.0);
-		assertEquals(category, indepXml.getCategory());
-		assertEquals(unit, indepXml.getUnit());
-		assertEquals(description, indepXml.getDescription());
+		assertEquals(name, indepXml.name);
+		assertEquals(origname, indepXml.origName);
+		assertEquals(min, indepXml.min, 0.0);
+		assertEquals(max, indepXml.max, 0.0);
+		assertEquals(category, indepXml.category);
+		assertEquals(unit, indepXml.unit);
+		assertEquals(description, indepXml.description);
 	}
 }

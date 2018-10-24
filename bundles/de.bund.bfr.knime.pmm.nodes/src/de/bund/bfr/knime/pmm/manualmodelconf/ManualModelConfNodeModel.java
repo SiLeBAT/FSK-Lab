@@ -205,17 +205,17 @@ public class ManualModelConfNodeModel extends NodeModel {
     		}
     		
     		if (indepVar.size() == 1) {
-    			formula = MathUtilities.replaceVariable(formula, ((IndepXml) indepVar.get(0)).getName(), AttributeUtilities.TIME);
-    			((IndepXml) indepVar.get(0)).setName(AttributeUtilities.TIME);
-    			((IndepXml) indepVar.get(0)).setOrigName(AttributeUtilities.TIME);
+    			formula = MathUtilities.replaceVariable(formula, ((IndepXml) indepVar.get(0)).name, AttributeUtilities.TIME);
+    			((IndepXml) indepVar.get(0)).name = AttributeUtilities.TIME;
+    			((IndepXml) indepVar.get(0)).origName = AttributeUtilities.TIME;
     		}
     		
     		((CatalogModelXml) modelXml.get(0)).formula = formula;
     		if (formulaCreator) {
         		PmmXmlDoc estXml = tupleM1.getPmmXml(Model1Schema.ATT_ESTMODEL);
         		EstModelXml exl =  (EstModelXml) estXml.get(0);    
-        		((CatalogModelXml) modelXml.get(0)).comment = exl.getComment();
-        		exl.setComment("");
+        		((CatalogModelXml) modelXml.get(0)).comment = exl.comment;
+        		exl.comment = "";
         		tupleM1.setValue(Model1Schema.ATT_ESTMODEL, estXml);
         		
     		}

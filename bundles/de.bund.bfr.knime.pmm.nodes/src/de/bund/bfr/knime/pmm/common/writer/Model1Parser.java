@@ -59,7 +59,7 @@ public class Model1Parser {
 		IndepXml indep = (IndepXml) tuple.getPmmXml(Model1Schema.ATT_INDEPENDENT).get(0);
 		PmmXmlDoc paramsDoc = tuple.getPmmXml(Model1Schema.ATT_PARAMETER);
 
-		String modelId = PMFUtil.createId("model" + estModel.getId());
+		String modelId = PMFUtil.createId("model" + estModel.id);
 
 		// Creates SBMLDocument for the primary model
 		sbmlDocument = new SBMLDocument(TableReader.LEVEL, TableReader.VERSION);
@@ -73,8 +73,8 @@ public class Model1Parser {
 
 		// Creates model and names it
 		Model model = sbmlDocument.createModel(modelId);
-		if (estModel.getName() != null) {
-			model.setName(estModel.getName());
+		if (estModel.name != null) {
+			model.setName(estModel.name);
 		}
 
 		if (notes != null) {
@@ -121,12 +121,12 @@ public class Model1Parser {
 		Parameter indepParam = new Parameter(Categories.getTime());
 		indepParam.setValue(0.0);
 		indepParam.setConstant(false);
-		indepParam.setUnits(indep.getUnit());
+		indepParam.setUnits(indep.unit);
 		model.addParameter(indepParam);
 
 		// Adds indep constraint
-		if (!indep.getName().isEmpty()) {
-			LimitsConstraint lc = new LimitsConstraint(indep.getName(), indep.getMin(), indep.getMax());
+		if (!indep.name.isEmpty()) {
+			LimitsConstraint lc = new LimitsConstraint(indep.name, indep.min, indep.max);
 			if (lc.getConstraint() != null) {
 				model.addConstraint(lc.getConstraint());
 			}

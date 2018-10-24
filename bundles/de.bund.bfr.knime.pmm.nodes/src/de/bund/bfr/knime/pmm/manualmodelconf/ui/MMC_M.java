@@ -891,7 +891,7 @@ public class MMC_M extends JPanel {
 
 	private void doLit(LiteratureItem oldLi, Boolean isEM) {
 		MyTable lit = DBKernel.myDBi.getTable("Literatur");
-		Integer litID = (oldLi != null && (dbuuid != null && dbuuid.equals(oldLi.getDbuuid()))) ? oldLi.getId() : null;
+		Integer litID = (oldLi != null && (dbuuid != null && dbuuid.equals(oldLi.dbuuid))) ? oldLi.id : null;
 		Integer newVal = (Integer) DBKernel.mainFrame.openNewWindow(lit, litID, (Object) "Literatur", null, 1, 1, null, true, null, this);
 		if (newVal != null && newVal instanceof Integer) {
 			LiteratureItem li = DBUtilities.getLiteratureItem(newVal);
