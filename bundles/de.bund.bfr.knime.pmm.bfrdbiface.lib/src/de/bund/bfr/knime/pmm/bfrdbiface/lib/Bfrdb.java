@@ -834,20 +834,20 @@ public class Bfrdb {
 		for (PmmXmlElementConvertable el : pm.getParameter().getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				int paramId = queryParamId(modelId, px.getOrigName(), PARAMTYPE_PARAM);
+				int paramId = queryParamId(modelId, px.origName, PARAMTYPE_PARAM);
 				if (paramId < 0) {
-					System.err.println("paramId < 0... " + px.getOrigName());
+					System.err.println("paramId < 0... " + px.origName);
 				}
-				if (!px.getOrigName().equals(px.getName())) hmi.put(px.getName(), paramId);
-				insertEstParam(estModelId, paramId, px.getValue(), px.getError(), px.getUnit(), pm, false, px.getName());
+				if (!px.origName.equals(px.name)) hmi.put(px.name, paramId);
+				insertEstParam(estModelId, paramId, px.value, px.error, px.unit, pm, false, px.name);
 			}
 		}
 		for (PmmXmlElementConvertable el : pm.getParameter().getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				int paramId = queryParamId(modelId, px.getOrigName(), PARAMTYPE_PARAM);
+				int paramId = queryParamId(modelId, px.origName, PARAMTYPE_PARAM);
 				if (paramId < 0) {
-					System.err.println("paramId < 0... " + px.getOrigName());
+					System.err.println("paramId < 0... " + px.origName);
 				}
 				insertEstParamCorrs(modelId, estModelId, paramId, px.getAllCorrelations());
 			}
@@ -1429,7 +1429,7 @@ public class Bfrdb {
 			for (PmmXmlElementConvertable el : m.getParameter().getElementSet()) {
 				if (el instanceof ParamXml) {
 					ParamXml px = (ParamXml) el;
-					insertParam(modelId, px.getOrigName(), PARAMTYPE_PARAM, px.getMin(), px.getMax(), px.getCategory(), px.getUnit(), px.getDescription());
+					insertParam(modelId, px.origName, PARAMTYPE_PARAM, px.min, px.max, px.category, px.unit, px.description);
 				}
 			}
 		}

@@ -395,20 +395,20 @@ public final class ModelEditorNodeModel
 			}
 
 			Param param = new Param();
-			param.setName(paramXml.getName());
-			param.setOrigName(paramXml.getOrigName());
-			param.setIsStart(paramXml.isStartParam());
-			param.setValue(paramXml.getValue());
-			param.setError(paramXml.getError());
-			param.setMin(paramXml.getMin());
-			param.setMax(paramXml.getMax());
-			param.setP(paramXml.getP());
-			param.setT(paramXml.getT());
-			param.setMinGuess(paramXml.getMinGuess());
-			param.setMaxGuess(paramXml.getMaxGuess());
-			param.setCategory(paramXml.getCategory());
-			param.setUnit(paramXml.getUnit());
-			param.setDescription(paramXml.getDescription());
+			param.setName(paramXml.name);
+			param.setOrigName(paramXml.origName);
+			param.setIsStart(paramXml.isStartParam);
+			param.setValue(paramXml.value);
+			param.setError(paramXml.error);
+			param.setMin(paramXml.min);
+			param.setMax(paramXml.max);
+			param.setP(paramXml.P);
+			param.setT(paramXml.t);
+			param.setMinGuess(paramXml.minGuess);
+			param.setMaxGuess(paramXml.maxGuess);
+			param.setCategory(paramXml.category);
+			param.setUnit(paramXml.unit);
+			param.setDescription(paramXml.description);
 			param.setCorrelationNames(obtainedCorrelationNames);
 			param.setCorrelationValues(obtainedCorrelationValues);
 
@@ -436,20 +436,20 @@ public final class ModelEditorNodeModel
 				}
 				
 				Param paramSec = new Param();
-				paramSec.setName(paramSecXml.getName());
-				paramSec.setOrigName(paramSecXml.getOrigName());
-				paramSec.setIsStart(paramSecXml.isStartParam());
-				paramSec.setValue(paramSecXml.getValue());
-				paramSec.setError(paramSecXml.getError());
-				paramSec.setMin(paramSecXml.getMin());
-				paramSec.setMax(paramSecXml.getMax());
-				paramSec.setP(paramSecXml.getP());
-				paramSec.setT(paramSecXml.getT());
-				paramSec.setMinGuess(paramSecXml.getMinGuess());
-				paramSec.setMaxGuess(paramSecXml.getMaxGuess());
-				paramSec.setCategory(paramSecXml.getCategory());
-				paramSec.setUnit(paramSecXml.getUnit());
-				paramSec.setDescription(paramSecXml.getDescription());
+				paramSec.setName(paramSecXml.name);
+				paramSec.setOrigName(paramSecXml.origName);
+				paramSec.setIsStart(paramSecXml.isStartParam);
+				paramSec.setValue(paramSecXml.value);
+				paramSec.setError(paramSecXml.error);
+				paramSec.setMin(paramSecXml.min);
+				paramSec.setMax(paramSecXml.max);
+				paramSec.setP(paramSecXml.P);
+				paramSec.setT(paramSecXml.t);
+				paramSec.setMinGuess(paramSecXml.minGuess);
+				paramSec.setMaxGuess(paramSecXml.maxGuess);
+				paramSec.setCategory(paramSecXml.category);
+				paramSec.setUnit(paramSecXml.unit);
+				paramSec.setDescription(paramSecXml.description);
 				paramSec.setCorrelationNames(obtainedCorrelationNames);
 				paramSec.setCorrelationValues(obtainedCorrelationValues);
 				

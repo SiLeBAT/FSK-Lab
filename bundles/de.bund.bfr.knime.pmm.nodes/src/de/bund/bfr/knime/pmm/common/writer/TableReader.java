@@ -110,8 +110,8 @@ public class TableReader {
 		}
 
 		for (ParamXml paramXml : constXmls) {
-			if (paramXml.getUnit() != null) {
-				units.add(paramXml.getUnit());
+			if (paramXml.unit != null) {
+				units.add(paramXml.unit);
 			}
 		}
 

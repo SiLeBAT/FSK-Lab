@@ -103,13 +103,13 @@ public class WriterUtils {
 	}
 
 	public static PMFCoefficient paramXml2Coefficient(ParamXml paramXml) {
-		String name = paramXml.getName();
-		double value = (paramXml.getValue() == null) ? 0.0 : paramXml.getValue();
-		String unit = (paramXml.getUnit() == null) ? "dimensionless" : PMFUtil.createId(paramXml.getUnit());
-		Double P = paramXml.getP();
-		Double error = paramXml.getError();
-		Double t = paramXml.getT();
-		Boolean isStart = paramXml.isStartParam();
+		String name = paramXml.name;
+		double value = (paramXml.value == null) ? 0.0 : paramXml.value;
+		String unit = (paramXml.unit == null) ? "dimensionless" : PMFUtil.createId(paramXml.unit);
+		Double P = paramXml.P;
+		Double error = paramXml.error;
+		Double t = paramXml.t;
+		Boolean isStart = paramXml.isStartParam;
 
 		Map<String, Double> correlationMap = paramXml.getAllCorrelations();
 		Correlation[] correlations = new Correlation[correlationMap.size()];
@@ -123,7 +123,7 @@ public class WriterUtils {
 			i++;
 		}
 
-		String desc = paramXml.getDescription();
+		String desc = paramXml.description;
 
 		PMFCoefficient coefficient = SBMLFactory.createPMFCoefficient(name, value, unit, P, error, t, correlations,
 				desc, isStart);
@@ -784,7 +784,7 @@ public class WriterUtils {
 				model.addParameter(coefficient.getParameter());
 
 				// Adds constraint
-				LimitsConstraint lc = new LimitsConstraint(paramXml.getName(), paramXml.getMin(), paramXml.getMax());
+				LimitsConstraint lc = new LimitsConstraint(paramXml.name, paramXml.min, paramXml.max);
 				if (lc.getConstraint() != null) {
 					model.addConstraint(lc.getConstraint());
 				}

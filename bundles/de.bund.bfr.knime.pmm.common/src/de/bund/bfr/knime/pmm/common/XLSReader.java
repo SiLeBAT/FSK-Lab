@@ -646,14 +646,14 @@ public class XLSReader {
 
 			for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
 				ParamXml element = (ParamXml) el;
-				String mapping = modelMappings.get(element.getName());
+				String mapping = modelMappings.get(element.name);
 
 				if (mapping != null) {
 					Cell cell = row.getCell(columns.get(mapping));
 
 					if (hasData(cell)) {
 						try {
-							element.setValue(Double.parseDouble(getData(cell).replace(",", ".")));
+							element.value = Double.parseDouble(getData(cell).replace(",", "."));
 						} catch (NumberFormatException e) {
 							warnings.add(mapping + " value in row " + (rowNumber + 1) + " is not valid ("
 									+ getData(cell) + ")");
@@ -663,14 +663,14 @@ public class XLSReader {
 					}
 				}
 
-				String errorMapping = modelParamErrors.get(element.getName());
+				String errorMapping = modelParamErrors.get(element.name);
 
 				if (errorMapping != null) {
 					Cell cell = row.getCell(columns.get(errorMapping));
 
 					if (hasData(cell)) {
 						try {
-							element.setError(Double.parseDouble(getData(cell).replace(",", ".")));
+							element.error = Double.parseDouble(getData(cell).replace(",", "."));
 						} catch (NumberFormatException e) {
 							warnings.add(errorMapping + " value in row " + (rowNumber + 1) + " is not valid ("
 									+ getData(cell) + ")");
@@ -719,15 +719,15 @@ public class XLSReader {
 
 					for (PmmXmlElementConvertable el : secParamXml.getElementSet()) {
 						ParamXml element = (ParamXml) el;
-						String mapping = secModelMappings.get(param).get(element.getName());
-						String error = secModelParamErrors.get(param).get(element.getName());
+						String mapping = secModelMappings.get(param).get(element.name);
+						String error = secModelParamErrors.get(param).get(element.name);
 
 						if (mapping != null) {
 							Cell cell = row.getCell(columns.get(mapping));
 
 							if (hasData(cell)) {
 								try {
-									element.setValue(Double.parseDouble(getData(cell).replace(",", ".")));
+									element.value = Double.parseDouble(getData(cell).replace(",", "."));
 								} catch (NumberFormatException e) {
 									warnings.add(mapping + " value in row " + (rowNumber + 1) + " is not valid ("
 											+ getData(cell) + ")");
@@ -742,7 +742,7 @@ public class XLSReader {
 
 							if (hasData(cell)) {
 								try {
-									element.setError(Double.parseDouble(getData(cell).replace(",", ".")));
+									element.error = Double.parseDouble(getData(cell).replace(",", "."));
 								} catch (NumberFormatException e) {
 									warnings.add(error + " value in row " + (rowNumber + 1) + " is not valid ("
 											+ getData(cell) + ")");

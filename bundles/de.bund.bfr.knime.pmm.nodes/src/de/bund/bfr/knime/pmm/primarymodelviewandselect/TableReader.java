@@ -259,16 +259,16 @@ public class TableReader {
 				Map<String, Double> cov = new LinkedHashMap<>();
 
 				for (PmmXmlElementConvertable el2 : paramXml.getElementSet()) {
-					cov.put(((ParamXml) el2).getName(), element
-							.getCorrelation(((ParamXml) el2).getOrigName()));
+					cov.put(((ParamXml) el2).name, element
+							.getCorrelation(((ParamXml) el2).origName));
 				}
 
-				parameters.put(element.getName(), element.getValue());
-				covariances.put(element.getName(), cov);
-				paramData.put(element.getName(), element.getValue());
-				paramData.put(element.getName() + ": SE", element.getError());
-				paramData.put(element.getName() + ": t", element.getT());
-				paramData.put(element.getName() + ": Pr > |t|", element.getP());
+				parameters.put(element.name, element.value);
+				covariances.put(element.name, cov);
+				paramData.put(element.name, element.value);
+				paramData.put(element.name + ": SE", element.error);
+				paramData.put(element.name + ": t", element.t);
+				paramData.put(element.name + ": Pr > |t|", element.P);
 			}
 
 			formulas.add(formula);

@@ -113,24 +113,24 @@ public class Model1Tuple {
       String unitID = param.getUnits();
       if (!unitID.equals(Unit.Kind.DIMENSIONLESS.getName())) {
         String unitName = model.getUnitDefinition(unitID).getName();
-        paramXml.setUnit(unitName);
+        paramXml.unit = unitName;
         if (DBUnits.getDBUnits().containsKey(unitName)) {
-          paramXml.setCategory(DBUnits.getDBUnits().get(unitName).getKind_of_property_quantity());
+          paramXml.category = DBUnits.getDBUnits().get(unitName).getKind_of_property_quantity();
         }
       }
 
       PMFCoefficient coefficient = SBMLFactory.createPMFCoefficient(param);
       if (coefficient.isSetP()) {
-        paramXml.setP(coefficient.getP());
+        paramXml.P = coefficient.getP();
       }
       if (coefficient.isSetError()) {
-        paramXml.setError(coefficient.getError());
+        paramXml.error = coefficient.getError();
       }
       if (coefficient.isSetT()) {
-        paramXml.setT(coefficient.getT());
+        paramXml.t = coefficient.getT();
       }
       if (coefficient.isSetDescription()) {
-        paramXml.setDescription(coefficient.getDescription());
+        paramXml.description = coefficient.getDescription();
       }
       if (coefficient.isSetCorrelations()) {
         for (Correlation correlation : coefficient.getCorrelations()) {
@@ -140,11 +140,11 @@ public class Model1Tuple {
       // Adds limits
       if (limits.containsKey(param.getId())) {
         Limits constLimits = limits.get(param.getId());
-        paramXml.setMax(constLimits.getMax());
-        paramXml.setMin(constLimits.getMin());
+        paramXml.max = constLimits.getMax();
+        paramXml.min = constLimits.getMin();
       }
       if (coefficient.isSetIsStart()) {
-        paramXml.setIsStartParam(coefficient.getIsStart());
+        paramXml.isStartParam = coefficient.getIsStart();
       }
       paramCell.add(paramXml);
     }

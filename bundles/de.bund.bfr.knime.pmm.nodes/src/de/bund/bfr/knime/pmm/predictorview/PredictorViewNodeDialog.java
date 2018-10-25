@@ -195,11 +195,11 @@ public class PredictorViewNodeDialog extends DataAwareNodeDialogPane implements
 				PmmXmlDoc pmmXmlDoc = tuple.getPmmXml(Model1Schema.ATT_PARAMETER);
 				List<PmmXmlElementConvertable> PmmXmlElementConvertableList =pmmXmlDoc.getElementSet(); 
 				for(PmmXmlElementConvertable pxml:PmmXmlElementConvertableList) {
-					if(((ParamXml)pxml).isStartParam()) {
+					if(((ParamXml)pxml).isStartParam) {
 						set.setSelectedIDs(new ArrayList<String>());
 						set.getConcentrationParameters().put(((CatalogModelXml) tuple.getPmmXml(
 								Model1Schema.ATT_MODELCATALOG).get(0)).id
-								+ "", ((ParamXml)pxml).getName());
+								+ "", ((ParamXml)pxml).name);
 						set.setNewConcentrationParameters(set.getConcentrationParameters());
 						
 					}

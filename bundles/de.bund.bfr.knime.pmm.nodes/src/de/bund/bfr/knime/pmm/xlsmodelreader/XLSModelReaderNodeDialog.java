@@ -909,23 +909,23 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 				JButton button = new JButton("Configure");
 				JComboBox<String> errorBox = new JComboBox<>(options.toArray(new String[0]));
 
-				if (!set.getModelMappings().containsKey(param.getName())) {
+				if (!set.getModelMappings().containsKey(param.name)) {
 					UI.select(box, SettingsHelper.DO_NOT_USE);
 					button.setEnabled(false);
-				} else if (set.getModelMappings().get(param.getName()) == null) {
+				} else if (set.getModelMappings().get(param.name) == null) {
 					UI.select(box, SettingsHelper.USE_SECONDARY_MODEL);
 				} else {
-					UI.select(box, set.getModelMappings().get(param.getName()));
+					UI.select(box, set.getModelMappings().get(param.name));
 					button.setEnabled(false);
 				}
 
-				UI.select(errorBox, set.getModelParamErrors().get(param.getName()), SettingsHelper.DO_NOT_USE);
+				UI.select(errorBox, set.getModelParamErrors().get(param.name), SettingsHelper.DO_NOT_USE);
 				box.addItemListener(this);
 				button.addActionListener(this);
 				errorBox.addItemListener(this);
-				modelBoxes.put(param.getName(), box);
-				modelButtons.put(param.getName(), button);
-				paramErrorBoxes.put(param.getName(), errorBox);
+				modelBoxes.put(param.name, box);
+				modelButtons.put(param.name, button);
+				paramErrorBoxes.put(param.name, errorBox);
 
 				JPanel modelPanel = new JPanel();
 
@@ -933,10 +933,10 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 				modelPanel.add(box, BorderLayout.WEST);
 				modelPanel.add(button, BorderLayout.EAST);
 
-				panel.add(new JLabel(param.getName() + ":"), createConstraints(0, row));
+				panel.add(new JLabel(param.name + ":"), createConstraints(0, row));
 				panel.add(modelPanel, createConstraints(1, row));
 				row++;
-				panel.add(new JLabel(param.getName() + " Error:"), createConstraints(0, row));
+				panel.add(new JLabel(param.name + " Error:"), createConstraints(0, row));
 				panel.add(errorBox, createConstraints(1, row));
 				row++;
 			}

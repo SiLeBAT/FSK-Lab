@@ -129,7 +129,7 @@ public class Model2Parser {
 			model.addParameter(coefficient.getParameter());
 
 			// Adds constraint
-			LimitsConstraint lc = new LimitsConstraint(paramXml.getName(), paramXml.getMin(), paramXml.getMax());
+			LimitsConstraint lc = new LimitsConstraint(paramXml.name, paramXml.min, paramXml.max);
 			if (lc.getConstraint() != null) {
 				model.addConstraint(lc.getConstraint());
 			}

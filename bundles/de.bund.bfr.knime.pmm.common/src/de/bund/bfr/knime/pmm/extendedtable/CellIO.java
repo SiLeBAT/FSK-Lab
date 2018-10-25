@@ -277,7 +277,7 @@ public class CellIO {
 			} else if (element instanceof MdInfoXml) {
 				names.add(((MdInfoXml) element).name);
 			} else if (element instanceof ParamXml) {
-				names.add(((ParamXml) element).getName());
+				names.add(((ParamXml) element).name);
 			} else if (element instanceof EstModelXml) {
 				names.add(((EstModelXml) element).name);
 			} else if (element instanceof CatalogModelXml) {

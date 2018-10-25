@@ -98,8 +98,8 @@ public class ModelTableModel extends JTable {
 		for (PmmXmlElementConvertable el : thePM.getParameter().getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getError() != null && !Double.isNaN(px.getError()) ||
-						px.getValue() != null && !Double.isNaN(px.getValue())) {
+				if (px.error != null && !Double.isNaN(px.error) ||
+						px.value != null && !Double.isNaN(px.value)) {
 					return true;
 				}
 			}

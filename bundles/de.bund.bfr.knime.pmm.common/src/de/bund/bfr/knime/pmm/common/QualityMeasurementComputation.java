@@ -169,11 +169,11 @@ public class QualityMeasurementComputation {
 			for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
 				ParamXml element = (ParamXml) el;
 
-				if (element.getValue() == null) {
+				if (element.value == null) {
 					continue loop;
 				}
 
-				parser.addVariable(element.getName(), element.getValue());
+				parser.addVariable(element.name, element.value);
 			}
 
 			for (String var : variableValues.keySet()) {
@@ -316,7 +316,7 @@ public class QualityMeasurementComputation {
 			String depVar = depVarMap.get(id);
 			int depVarIndex = CellIO.getNameList(paramXml).indexOf(depVar);
 			Double depVarValue = ((ParamXml) paramXml.get(depVarIndex))
-					.getValue();
+					.value;
 
 			depVarDataMap.get(id).add(depVarValue);
 
@@ -377,7 +377,7 @@ public class QualityMeasurementComputation {
 			for (PmmXmlElementConvertable el : paramMap.get(id).getElementSet()) {
 				ParamXml element = (ParamXml) el;
 
-				parser.addVariable(element.getName(), element.getValue());
+				parser.addVariable(element.name, element.value);
 			}
 
 			for (String var : indepVars) {

@@ -124,12 +124,12 @@ public class TableReader {
 
 			for (PmmXmlElementConvertable el1 : paramXml.getElementSet()) {
 				ParamXml element1 = (ParamXml) el1;
-				String id = element1.getName() + " (" + modelXml.id + ")";
-				String name = element1.getName() + " (" + modelXml.name
+				String id = element1.name + " (" + modelXml.id + ")";
+				String name = element1.name + " (" + modelXml.name
 						+ ")";
 
 				if (idSet.add(id)) {
-					paramNames.put(id, element1.getName());
+					paramNames.put(id, element1.name);
 					ids.add(id);
 					primModelIDs.put(id, modelXml.id);
 					stringColumns.get(Model1Schema.ATT_PARAMETER).add(name);
@@ -146,7 +146,7 @@ public class TableReader {
 					}
 				}
 
-				paramDataMap.get(id).add(element1.getValue());
+				paramDataMap.get(id).add(element1.value);
 
 				PmmXmlDoc misc = tuple.getPmmXml(TimeSeriesSchema.ATT_MISC);
 

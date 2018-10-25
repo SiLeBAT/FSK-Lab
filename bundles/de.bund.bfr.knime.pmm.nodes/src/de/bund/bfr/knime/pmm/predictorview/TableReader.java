@@ -402,40 +402,40 @@ public class TableReader {
 			for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
 				ParamXml element = (ParamXml) el;
 
-				if (element.getName().equals(initParam)
-						|| element.getName().equals(lagParam)) {
-					variables.put(element.getName(), new ArrayList<Double>());
-					units.put(element.getName(), element.getUnit());
-					categories.put(element.getName(),
-							Arrays.asList(element.getCategory()));
+				if (element.name.equals(initParam)
+						|| element.name.equals(lagParam)) {
+					variables.put(element.name, new ArrayList<Double>());
+					units.put(element.name, element.unit);
+					categories.put(element.name,
+							Arrays.asList(element.category));
 
-					if (element.getName().equals(initParam)
+					if (element.name.equals(initParam)
 							&& minConcentration != null
 							&& maxConcentration != null) {
-						varMin.put(element.getName(), minConcentration);
-						varMax.put(element.getName(), maxConcentration);
+						varMin.put(element.name, minConcentration);
+						varMax.put(element.name, maxConcentration);
 					} else {
-						varMin.put(element.getName(), element.getMin());
-						varMax.put(element.getName(), element.getMax());
+						varMin.put(element.name, element.min);
+						varMax.put(element.name, element.max);
 					}
 
-					if (element.getValue() != null) {
+					if (element.value != null) {
 						plotable.addValueList(
-								element.getName(),
+								element.name,
 								new ArrayList<>(Arrays.asList(element
-										.getValue())));
+										.value)));
 					} else {
-						plotable.addValueList(element.getName(),
+						plotable.addValueList(element.name,
 								new ArrayList<Double>());
 					}
 				} else {
-					parameters.put(element.getName(), element.getValue());
-					paramData.put(element.getName() + (element.getUnit()!=null?" ("+element.getUnit()+")":"") , element.getValue());
-					paramData.put(element.getName() + ": SE",
-							element.getError());
-					paramData.put(element.getName() + ": t", element.getT());
-					paramData.put(element.getName() + ": Pr > |t|",
-							element.getP());
+					parameters.put(element.name, element.value);
+					paramData.put(element.name + (element.unit!=null?" ("+element.unit+")":"") , element.value);
+					paramData.put(element.name + ": SE",
+							element.error);
+					paramData.put(element.name + ": t", element.t);
+					paramData.put(element.name + ": Pr > |t|",
+							element.P);
 				}
 
 				if (initParam == null && lagParam == null) {
@@ -443,11 +443,11 @@ public class TableReader {
 
 					for (PmmXmlElementConvertable el2 : paramXml
 							.getElementSet()) {
-						cov.put(((ParamXml) el2).getName(), element
-								.getCorrelation(((ParamXml) el2).getOrigName()));
+						cov.put(((ParamXml) el2).name, element
+								.getCorrelation(((ParamXml) el2).origName));
 					}
 
-					covariances.put(element.getName(), cov);
+					covariances.put(element.name, cov);
 				}
 			}
 

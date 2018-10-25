@@ -292,16 +292,16 @@ public class SBMLWriterNodeModel extends NodeModel {
 
 				for (PmmXmlElementConvertable el : tuple.getPmmXml(Model1Schema.ATT_PARAMETER).getElementSet()) {
 					ParamXml paramXml = (ParamXml) el;
-					Parameter param = model.createParameter(paramXml.getName());
+					Parameter param = model.createParameter(paramXml.name);
 
-					if (paramXml.getName().equals(varParams)) {
+					if (paramXml.name.equals(varParams)) {
 						param.setConstant(false);
 					} else {
 						param.setConstant(true);
 					}
 
-					if (paramXml.getValue() != null) {
-						param.setValue(paramXml.getValue());
+					if (paramXml.value != null) {
+						param.setValue(paramXml.value);
 					} else {
 						param.setValue(0.0);
 					}

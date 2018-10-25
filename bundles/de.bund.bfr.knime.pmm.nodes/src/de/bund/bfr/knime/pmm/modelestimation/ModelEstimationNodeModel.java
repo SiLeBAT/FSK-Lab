@@ -211,15 +211,15 @@ public class ModelEstimationNodeModel extends NodeModel {
 					double min = Double.NaN;
 					double max = Double.NaN;
 
-					if (element.getMin() != null) {
-						min = element.getMin();
+					if (element.min != null) {
+						min = element.min;
 					}
 
-					if (element.getMax() != null) {
-						max = element.getMax();
+					if (element.max != null) {
+						max = element.max;
 					}
 
-					limits.put(element.getName(), new Point2D.Double(min, max));
+					limits.put(element.name, new Point2D.Double(min, max));
 				}
 
 				parameterLimits.put(id, limits);
@@ -248,15 +248,15 @@ public class ModelEstimationNodeModel extends NodeModel {
 					double min = Double.NaN;
 					double max = Double.NaN;
 
-					if (element.getMin() != null) {
-						min = element.getMin();
+					if (element.min != null) {
+						min = element.min;
 					}
 
-					if (element.getMax() != null) {
-						max = element.getMax();
+					if (element.max != null) {
+						max = element.max;
 					}
 
-					limits.put(element.getName(), new Point2D.Double(min, max));
+					limits.put(element.name, new Point2D.Double(min, max));
 				}
 
 				parameterLimits.put(id, limits);

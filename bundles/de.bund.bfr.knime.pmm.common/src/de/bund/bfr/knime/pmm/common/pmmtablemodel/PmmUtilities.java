@@ -149,14 +149,14 @@ public class PmmUtilities {
 		for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
 			ParamXml element = (ParamXml) el;
 
-			if (element.getValue() != null) {
-				if (element.getMin() != null
-						&& element.getValue() < element.getMin()) {
+			if (element.value != null) {
+				if (element.min != null
+						&& element.value < element.min) {
 					return true;
 				}
 
-				if (element.getMax() != null
-						&& element.getValue() > element.getMax()) {
+				if (element.max != null
+						&& element.value > element.max) {
 					return true;
 				}
 			}
@@ -167,7 +167,7 @@ public class PmmUtilities {
 
 	public static boolean covarianceMatrixMissing(PmmXmlDoc paramXml) {
 		for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
-			if (((ParamXml) el).getError() == null) {
+			if (((ParamXml) el).error == null) {
 				return true;
 			}
 		}
@@ -177,7 +177,7 @@ public class PmmUtilities {
 
 	public static boolean isNotSignificant(PmmXmlDoc paramXml) {
 		for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
-			Double p = ((ParamXml) el).getP();
+			Double p = ((ParamXml) el).P;
 
 			if (p != null && p > 0.95) {
 				return true;

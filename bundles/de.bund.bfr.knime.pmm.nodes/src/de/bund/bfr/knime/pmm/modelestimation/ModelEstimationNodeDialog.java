@@ -271,9 +271,9 @@ public class ModelEstimationNodeDialog extends DataAwareNodeDialogPane
 				for (PmmXmlElementConvertable el : params.getElementSet()) {
 					ParamXml element = (ParamXml) el;
 
-					paramNames.add(element.getName());
-					min.put(element.getName(), element.getMin());
-					max.put(element.getName(), element.getMax());
+					paramNames.add(element.name);
+					min.put(element.name, element.min);
+					max.put(element.name, element.max);
 				}
 
 				modelNames.put(id,
@@ -306,9 +306,9 @@ public class ModelEstimationNodeDialog extends DataAwareNodeDialogPane
 				for (PmmXmlElementConvertable el : params.getElementSet()) {
 					ParamXml element = (ParamXml) el;
 
-					paramNames.add(element.getName());
-					min.put(element.getName(), element.getMin());
-					max.put(element.getName(), element.getMax());
+					paramNames.add(element.name);
+					min.put(element.name, element.min);
+					max.put(element.name, element.max);
 				}
 
 				modelNames.put(id,

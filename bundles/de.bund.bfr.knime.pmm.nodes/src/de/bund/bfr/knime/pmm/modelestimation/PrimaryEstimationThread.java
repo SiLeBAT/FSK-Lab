@@ -104,12 +104,12 @@ public class PrimaryEstimationThread implements Runnable {
 			for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
 				ParamXml element = (ParamXml) el;
 
-				parameters.add(element.getName());
-				minParameterValues.add(element.getMin());
-				maxParameterValues.add(element.getMax());
+				parameters.add(element.name);
+				minParameterValues.add(element.min);
+				maxParameterValues.add(element.max);
 
-				if (guesses != null && guesses.containsKey(element.getName())) {
-					Point2D.Double guess = guesses.get(element.getName());
+				if (guesses != null && guesses.containsKey(element.name)) {
+					Point2D.Double guess = guesses.get(element.name);
 
 					if (!Double.isNaN(guess.x)) {
 						minGuessValues.add(guess.x);
@@ -123,8 +123,8 @@ public class PrimaryEstimationThread implements Runnable {
 						maxGuessValues.add(null);
 					}
 				} else {
-					minGuessValues.add(element.getMin());
-					maxGuessValues.add(element.getMax());
+					minGuessValues.add(element.min);
+					maxGuessValues.add(element.max);
 				}
 			}
 
@@ -190,14 +190,14 @@ public class PrimaryEstimationThread implements Runnable {
 			for (int i = 0; i < paramXml.getElementSet().size(); i++) {
 				ParamXml element = (ParamXml) paramXml.get(i);
 
-				element.setValue(parameterValues.get(i));
-				element.setError(parameterErrors.get(i));
-				element.setT(parameterTValues.get(i));
-				element.setP(parameterPValues.get(i));
+				element.value = parameterValues.get(i);
+				element.error = parameterErrors.get(i);
+				element.t = parameterTValues.get(i);
+				element.P = parameterPValues.get(i);
 
 				for (int j = 0; j < paramXml.getElementSet().size(); j++) {
 					element.addCorrelation(
-							((ParamXml) paramXml.get(j)).getOrigName(),
+							((ParamXml) paramXml.get(j)).origName,
 							covariances.get(i).get(j));
 				}
 			}

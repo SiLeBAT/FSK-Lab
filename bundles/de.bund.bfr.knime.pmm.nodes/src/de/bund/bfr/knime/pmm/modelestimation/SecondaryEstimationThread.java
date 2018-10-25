@@ -133,14 +133,14 @@ public class SecondaryEstimationThread implements Runnable {
 					ParamXml element = (ParamXml) el;
 					String depVarSec = depXml.name;
 
-					if (element.getName().equals(depVarSec)) {
-						if (element.getValue() == null) {
+					if (element.name.equals(depVarSec)) {
+						if (element.value == null) {
 							valueMissing = true;
 						}
 
-						value = element.getValue();
-						minValue = element.getMin();
-						maxValue = element.getMax();
+						value = element.value;
+						minValue = element.min;
+						maxValue = element.max;
 					}
 				}
 
@@ -214,13 +214,13 @@ public class SecondaryEstimationThread implements Runnable {
 					for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
 						ParamXml element = (ParamXml) el;
 
-						parameters.add(element.getName());
-						minParameterValues.add(element.getMin());
-						maxParameterValues.add(element.getMax());
+						parameters.add(element.name);
+						minParameterValues.add(element.min);
+						maxParameterValues.add(element.max);
 
-						if (modelGuesses.containsKey(element.getName())) {
+						if (modelGuesses.containsKey(element.name)) {
 							Point2D.Double guess = modelGuesses.get(element
-									.getName());
+									.name);
 
 							if (!Double.isNaN(guess.x)) {
 								minGuessValues.add(guess.x);
@@ -234,8 +234,8 @@ public class SecondaryEstimationThread implements Runnable {
 								maxGuessValues.add(null);
 							}
 						} else {
-							minGuessValues.add(element.getMin());
-							maxGuessValues.add(element.getMax());
+							minGuessValues.add(element.min);
+							maxGuessValues.add(element.max);
 						}
 					}
 
@@ -312,14 +312,14 @@ public class SecondaryEstimationThread implements Runnable {
 					for (int j = 0; j < paramXml.getElementSet().size(); j++) {
 						ParamXml element = (ParamXml) paramXml.get(j);
 
-						element.setValue(parameterValues.get(j));
-						element.setError(parameterErrors.get(j));
-						element.setT(parameterTValues.get(j));
-						element.setP(parameterPValues.get(j));
+						element.value = parameterValues.get(j);
+						element.error = parameterErrors.get(j);
+						element.t = parameterTValues.get(j);
+						element.P = parameterPValues.get(j);
 
 						for (int k = 0; k < paramXml.getElementSet().size(); k++) {
 							element.addCorrelation(
-									((ParamXml) paramXml.get(k)).getOrigName(),
+									((ParamXml) paramXml.get(k)).origName,
 									covariances.get(j).get(k));
 						}
 					}

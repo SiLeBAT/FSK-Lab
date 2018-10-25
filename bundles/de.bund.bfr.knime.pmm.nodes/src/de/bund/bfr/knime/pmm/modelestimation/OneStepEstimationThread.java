@@ -110,24 +110,24 @@ public class OneStepEstimationThread implements Runnable {
 				for (PmmXmlElementConvertable el : params.getElementSet()) {
 					ParamXml element = (ParamXml) el;
 
-					if (primaryGuesses.containsKey(element.getName())) {
+					if (primaryGuesses.containsKey(element.name)) {
 						Point2D.Double guess = primaryGuesses.get(element
-								.getName());
+								.name);
 
 						if (!Double.isNaN(guess.x)) {
-							element.setMinGuess(guess.x);
+							element.minGuess = guess.x;
 						} else {
-							element.setMinGuess(null);
+							element.minGuess = null;
 						}
 
 						if (!Double.isNaN(guess.y)) {
-							element.setMaxGuess(guess.y);
+							element.maxGuess = guess.y;
 						} else {
-							element.setMaxGuess(null);
+							element.maxGuess = null;
 						}
 					} else {
-						element.setMinGuess(element.getMin());
-						element.setMaxGuess(element.getMax());
+						element.minGuess = element.min;
+						element.maxGuess = element.max;
 					}
 				}
 
@@ -146,24 +146,24 @@ public class OneStepEstimationThread implements Runnable {
 				for (PmmXmlElementConvertable el : secParams.getElementSet()) {
 					ParamXml element = (ParamXml) el;
 
-					if (secGuesses.containsKey(element.getName())) {
+					if (secGuesses.containsKey(element.name)) {
 						Point2D.Double guess = secGuesses
-								.get(element.getName());
+								.get(element.name);
 
 						if (!Double.isNaN(guess.x)) {
-							element.setMinGuess(guess.x);
+							element.minGuess = guess.x;
 						} else {
-							element.setMinGuess(null);
+							element.minGuess = null;
 						}
 
 						if (!Double.isNaN(guess.y)) {
-							element.setMaxGuess(guess.y);
+							element.maxGuess = guess.y;
 						} else {
-							element.setMaxGuess(null);
+							element.maxGuess = null;
 						}
 					} else {
-						element.setMinGuess(element.getMin());
-						element.setMaxGuess(element.getMax());
+						element.minGuess = element.min;
+						element.maxGuess = element.max;
 					}
 				}
 
@@ -263,12 +263,12 @@ public class OneStepEstimationThread implements Runnable {
 					for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
 						ParamXml element = (ParamXml) el;
 
-						parameters.add(element.getName());
-						paramOrigNames.add(element.getOrigName());
-						minParameterValues.add(element.getMin());
-						maxParameterValues.add(element.getMax());
-						minGuessValues.add(element.getMinGuess());
-						maxGuessValues.add(element.getMaxGuess());
+						parameters.add(element.name);
+						paramOrigNames.add(element.origName);
+						minParameterValues.add(element.min);
+						maxParameterValues.add(element.max);
+						minGuessValues.add(element.minGuess);
+						maxGuessValues.add(element.maxGuess);
 					}
 
 					MathUtilities
@@ -338,14 +338,14 @@ public class OneStepEstimationThread implements Runnable {
 					for (int j = 0; j < paramXml.getElementSet().size(); j++) {
 						ParamXml element = (ParamXml) paramXml.get(j);
 
-						element.setValue(parameterValues.get(j));
-						element.setError(parameterErrors.get(j));
-						element.setT(parameterTValues.get(j));
-						element.setP(parameterPValues.get(j));
+						element.value = parameterValues.get(j);
+						element.error = parameterErrors.get(j);
+						element.t = parameterTValues.get(j);
+						element.P = parameterPValues.get(j);
 
 						for (int k = 0; k < paramXml.getElementSet().size(); k++) {
 							element.addCorrelation(
-									((ParamXml) paramXml.get(k)).getOrigName(),
+									((ParamXml) paramXml.get(k)).origName,
 									covariances.get(j).get(k));
 						}
 					}
@@ -381,13 +381,13 @@ public class OneStepEstimationThread implements Runnable {
 					for (PmmXmlElementConvertable el : primParamXml
 							.getElementSet()) {
 						ParamXml param = (ParamXml) el;
-						ParamXml p = getParam(paramMap.get(id), param.getName());
+						ParamXml p = getParam(paramMap.get(id), param.name);
 
 						if (p != null) {
-							param.setValue(p.getValue());
-							param.setError(p.getError());
-							param.setT(p.getT());
-							param.setP(p.getP());
+							param.value = p.value;
+							param.error = p.error;
+							param.t = p.t;
+							param.P = p.P;
 						}
 					}
 
@@ -401,13 +401,13 @@ public class OneStepEstimationThread implements Runnable {
 						ParamXml param = (ParamXml) el;
 						ParamXml p = getParam(paramMap.get(id),
 								renamings.get(tuple).get(t)
-										.get(param.getName()));
+										.get(param.name));
 
 						if (p != null) {
-							param.setValue(p.getValue());
-							param.setError(p.getError());
-							param.setT(p.getT());
-							param.setP(p.getP());
+							param.value = p.value;
+							param.error = p.error;
+							param.t = p.t;
+							param.P = p.P;
 						}
 					}
 
@@ -474,7 +474,7 @@ public class OneStepEstimationThread implements Runnable {
 
 	private static ParamXml getParam(PmmXmlDoc xml, String paramName) {
 		for (PmmXmlElementConvertable el : xml.getElementSet()) {
-			if (((ParamXml) el).getName().equals(paramName)) {
+			if (((ParamXml) el).name.equals(paramName)) {
 				return (ParamXml) el;
 			}
 		}

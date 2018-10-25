@@ -351,8 +351,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 				for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 					if (el instanceof ParamXml) {
 						ParamXml px = (ParamXml) el;
-						if (px.getOrigName().equals(origName)) {
-							px.setName(name);
+						if (px.origName.equals(origName)) {
+							px.name = name;
 							break;
 						}
 					}
@@ -503,7 +503,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	}
 	public void addParam(final String paramName, final Boolean isStartParam, final Double value, final Double error, final Double min, final Double max, String category, String unit, String description) {
 		ParamXml px = new ParamXml(paramName, isStartParam, value, error, min, max, null, null, category, unit);
-		if (description != null) px.setDescription(description);
+		if (description != null) px.description = description;
 		parameter.add(px);
 	}
 		
@@ -566,8 +566,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					px.setIsStartParam(isStart);
+				if (px.name.equals(name)) {
+					px.isStartParam = isStart;
 					break;
 				}
 			}
@@ -577,8 +577,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					px.setValue(value);
+				if (px.name.equals(name)) {
+					px.value = value;
 					break;
 				}
 			}
@@ -588,8 +588,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					px.setError(error);
+				if (px.name.equals(name)) {
+					px.error = error;
 					break;
 				}
 			}
@@ -599,8 +599,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					px.setMin(min);
+				if (px.name.equals(name)) {
+					px.min = min;
 					break;
 				}
 			}
@@ -610,8 +610,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					px.setDescription(description);
+				if (px.name.equals(name)) {
+					px.description = description;
 					break;
 				}
 			}
@@ -621,8 +621,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					px.setMax(max);
+				if (px.name.equals(name)) {
+					px.max = max;
 					break;
 				}
 			}
@@ -632,8 +632,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					px.setUnit(unit);
+				if (px.name.equals(name)) {
+					px.unit = unit;
 					break;
 				}
 			}
@@ -643,8 +643,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					px.setCategory(category);
+				if (px.name.equals(name)) {
+					px.category = category;
 					break;
 				}
 			}
@@ -693,7 +693,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(varName)) {
+				if (px.name.equals(varName)) {
 					parameter.getElementSet().remove(el);
 					break;
 				}
@@ -744,8 +744,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(paramName)) {
-					return px.getP();
+				if (px.name.equals(paramName)) {
+					return px.P;
 				}
 			}
 		}
@@ -755,8 +755,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(paramName)) {
-					return px.getT();
+				if (px.name.equals(paramName)) {
+					return px.t;
 				}
 			}
 		}
@@ -766,8 +766,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(paramName)) {
-					return px.isStartParam();
+				if (px.name.equals(paramName)) {
+					return px.isStartParam;
 				}
 			}
 		}
@@ -777,8 +777,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(paramName)) {
-					return px.getValue();
+				if (px.name.equals(paramName)) {
+					return px.value;
 				}
 			}
 		}
@@ -788,8 +788,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(paramName)) {
-					return px.getError();
+				if (px.name.equals(paramName)) {
+					return px.error;
 				}
 			}
 		}
@@ -800,8 +800,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					return px.getMin();
+				if (px.name.equals(name)) {
+					return px.min;
 				}
 			}
 		}
@@ -812,8 +812,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					return px.getDescription();
+				if (px.name.equals(name)) {
+					return px.description;
 				}
 			}
 		}
@@ -823,8 +823,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					return px.getMax();
+				if (px.name.equals(name)) {
+					return px.max;
 				}
 			}
 		}
@@ -835,8 +835,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					return px.getUnit();
+				if (px.name.equals(name)) {
+					return px.unit;
 				}
 			}
 		}
@@ -846,8 +846,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
-					return px.getCategory();
+				if (px.name.equals(name)) {
+					return px.category;
 				}
 			}
 		}
@@ -870,7 +870,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
-				if (px.getName().equals(name)) {
+				if (px.name.equals(name)) {
 					return true;
 				}
 			}
@@ -960,7 +960,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 				if (el instanceof ParamXml) {
 					ParamXml px = (ParamXml) el;
-					result.put(px.getName(), false);
+					result.put(px.name, false);
 				}
 			}			
 		}
@@ -983,8 +983,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 				if (el instanceof ParamXml) {
 					ParamXml px = (ParamXml) el;
-					if (!px.getName().equals(px.getOrigName())) {
-						result = MathUtilities.replaceVariable(result, px.getName(), px.getOrigName());									
+					if (!px.name.equals(px.origName)) {
+						result = MathUtilities.replaceVariable(result, px.name, px.origName);									
 					}
 				}
 			}			

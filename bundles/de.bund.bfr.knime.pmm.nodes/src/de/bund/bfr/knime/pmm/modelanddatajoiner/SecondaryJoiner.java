@@ -504,7 +504,7 @@ public class SecondaryJoiner implements Joiner, ActionListener {
 						Model1Schema.ATT_PARAMETER).getElementSet()) {
 					ParamXml element = (ParamXml) el;
 
-					params.add(element.getName());
+					params.add(element.name);
 				}
 
 				primaryModelNames.put(modelXml.id, modelXml.name);

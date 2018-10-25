@@ -200,10 +200,10 @@ public class DbIo {
 			    		}
 			    		Boolean ptab = pta == null || pta[i] == null ? null : ((Integer) pta[i]).intValue() == 4;
 						ParamXml px = new ParamXml(onas,ptab,vad,erd,mid,mad,null,null,cc==null?null:(String) cc[i],cu==null?null:(String) cu[i]);
-						px.setName(nas);
-						if (cd != null && cd[i] != null) px.setDescription(stripNonValidXMLCharacters(cd[i].toString()));
-						if (cp != null && cp[i] != null) px.setP(Double.parseDouble(cp[i].toString()));
-						if (ct != null && ct[i] != null) px.setT(Double.parseDouble(ct[i].toString()));
+						px.name = nas;
+						if (cd != null && cd[i] != null) px.description = stripNonValidXMLCharacters(cd[i].toString());
+						if (cp != null && cp[i] != null) px.P = Double.parseDouble(cp[i].toString());
+						if (ct != null && ct[i] != null) px.t = Double.parseDouble(ct[i].toString());
 						if (emid != null) px = addCorrs(px, modelId, emid);
 						paramDoc.add(px);
 					}					
@@ -216,8 +216,8 @@ public class DbIo {
 		return paramDoc;
     }
     private static ParamXml addCorrs(ParamXml px, int modelId, int emid) throws SQLException {
-		Integer paramId = DBKernel.getID("ModellkatalogParameter", new String[]{"Modell", "Parametername", "Parametertyp"}, new String[]{modelId+"", px.getOrigName(), "2"}); // Bfrdb.PARAMTYPE_PARAM
-		if (paramId == null) System.err.println("paramId = null... " + px.getOrigName());
+		Integer paramId = DBKernel.getID("ModellkatalogParameter", new String[]{"Modell", "Parametername", "Parametertyp"}, new String[]{modelId+"", px.origName, "2"}); // Bfrdb.PARAMTYPE_PARAM
+		if (paramId == null) System.err.println("paramId = null... " + px.origName);
 		Integer estParamId = DBKernel.getID("GeschaetzteParameter", new String[]{"GeschaetztesModell", "Parameter"}, new String[]{emid+"", paramId+""});
     	ResultSet rs = DBKernel.getResultSet("SELECT \"param2\",\"Wert\" FROM \"GeschaetzteParameterCovCor\" WHERE \"param1\" = " + estParamId + " AND \"GeschaetztesModell\" = " + emid, false);
     	if (rs != null && rs.first()) {

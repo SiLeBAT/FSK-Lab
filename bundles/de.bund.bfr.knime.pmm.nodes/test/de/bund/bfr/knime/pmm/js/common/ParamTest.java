@@ -298,17 +298,17 @@ public class ParamTest {
 		param.setCorrelationValues(correlationValues);
 		ParamXml paramXml = param.toParamXml();
 		
-		assertEquals(name, paramXml.getName());
-		assertEquals(origname, paramXml.getOrigName());
-		assertEquals(isStart, paramXml.isStartParam());
-		assertEquals(value, paramXml.getValue(), 0.0);
-		assertEquals(error, paramXml.getError(), 0.0);
-		assertEquals(p, paramXml.getP(), 0.0);
-		assertEquals(t, paramXml.getT(), 0.0);
-		assertEquals(minGuess, paramXml.getMinGuess(), 0.0);
-		assertEquals(maxGuess, paramXml.getMaxGuess(), 0.0);
-		assertEquals(category, paramXml.getCategory());
-		assertEquals(description, paramXml.getDescription());
+		assertEquals(name, paramXml.name);
+		assertEquals(origname, paramXml.origName);
+		assertEquals(isStart, paramXml.isStartParam);
+		assertEquals(value, paramXml.value, 0.0);
+		assertEquals(error, paramXml.error, 0.0);
+		assertEquals(p, paramXml.P, 0.0);
+		assertEquals(t, paramXml.t, 0.0);
+		assertEquals(minGuess, paramXml.minGuess, 0.0);
+		assertEquals(maxGuess, paramXml.maxGuess, 0.0);
+		assertEquals(category, paramXml.category);
+		assertEquals(description, paramXml.description);
 		
 		HashMap<String, Double> correlations = new HashMap<>();
 		for (int i = 0; i < correlationNames.length; i++) {

@@ -480,20 +480,20 @@ public class Param implements ViewValue {
 	 */
 	public static Param toParam(ParamXml paramXml) {
 		Param param = new Param();
-		param.setName(paramXml.getName());
-		param.setOrigName(paramXml.getOrigName());
-		param.setIsStart(paramXml.isStartParam());
-		param.setValue(paramXml.getValue());
-		param.setError(paramXml.getError());
-		param.setMin(paramXml.getMin());
-		param.setMax(paramXml.getMax());
-		param.setP(paramXml.getP());
-		param.setT(paramXml.getT());
-		param.setMinGuess(paramXml.getMinGuess());
-		param.setMaxGuess(paramXml.getMaxGuess());
-		param.setCategory(paramXml.getCategory());
-		param.setUnit(paramXml.getUnit());
-		param.setDescription(paramXml.getDescription());
+		param.setName(paramXml.name);
+		param.setOrigName(paramXml.origName);
+		param.setIsStart(paramXml.isStartParam);
+		param.setValue(paramXml.value);
+		param.setError(paramXml.error);
+		param.setMin(paramXml.min);
+		param.setMax(paramXml.max);
+		param.setP(paramXml.P);
+		param.setT(paramXml.t);
+		param.setMinGuess(paramXml.minGuess);
+		param.setMaxGuess(paramXml.maxGuess);
+		param.setCategory(paramXml.category);
+		param.setUnit(paramXml.unit);
+		param.setDescription(paramXml.description);
 		
 		HashMap<String, Double> obtainedCorrelations = paramXml.getAllCorrelations();
 		String[] obtainedCorrelationNames = new String[obtainedCorrelations.size()];

@@ -78,7 +78,7 @@ public class ModelCombiner {
 				for (PmmXmlElementConvertable el : paramsSec.getElementSet()) {
 					ParamXml element = (ParamXml) el;
 					int index = 1;
-					String paramName = element.getName();
+					String paramName = element.name;
 					String newParamName = paramName;
 
 					while (CellIO.getNameList(newTuple.getPmmXml(Model1Schema.ATT_PARAMETER)).contains(newParamName)) {
@@ -90,7 +90,7 @@ public class ModelCombiner {
 
 					if (index > 1) {
 						formulaSec = MathUtilities.replaceVariable(formulaSec, paramName, newParamName);
-						element.setName(newParamName);
+						element.name = newParamName;
 					}
 
 					element.getAllCorrelations().clear();
@@ -249,7 +249,7 @@ public class ModelCombiner {
 				for (PmmXmlElementConvertable el : params.getElementSet()) {
 					ParamXml element = (ParamXml) el;
 
-					element.setValue(null);
+					element.value = null;
 				}
 
 				newTuple.setValue(Model1Schema.ATT_PARAMETER, params);
@@ -414,8 +414,8 @@ public class ModelCombiner {
 				for (PmmXmlElementConvertable el : tuple.getPmmXml(Model1Schema.ATT_PARAMETER).getElementSet()) {
 					ParamXml param = (ParamXml) el;
 
-					sums.put(param.getName(), 0.0);
-					counts.put(param.getName(), 0);
+					sums.put(param.name, 0.0);
+					counts.put(param.name, 0);
 				}
 
 				paramSums.put(id, sums);
@@ -434,28 +434,28 @@ public class ModelCombiner {
 
 			for (PmmXmlElementConvertable el : tuple.getPmmXml(Model1Schema.ATT_PARAMETER).getElementSet()) {
 				ParamXml param = (ParamXml) el;
-				String name = param.getName();
+				String name = param.name;
 
-				if (param.getValue() != null) {
-					sums.put(name, sums.get(name) + param.getValue());
+				if (param.value != null) {
+					sums.put(name, sums.get(name) + param.value);
 					counts.put(name, counts.get(name) + 1);
 				}
 
 				if (!errors.containsKey(name)) {
-					errors.put(name, param.getError());
-				} else if (!Objects.equals(errors.get(name), param.getError())) {
+					errors.put(name, param.error);
+				} else if (!Objects.equals(errors.get(name), param.error)) {
 					errors.put(name, null);
 				}
 
 				if (!ts.containsKey(name)) {
-					ts.put(name, param.getT());
-				} else if (!Objects.equals(ts.get(name), param.getT())) {
+					ts.put(name, param.t);
+				} else if (!Objects.equals(ts.get(name), param.t)) {
 					ts.put(name, null);
 				}
 
 				if (!ps.containsKey(name)) {
-					ps.put(name, param.getP());
-				} else if (!Objects.equals(ps.get(name), param.getP())) {
+					ps.put(name, param.P);
+				} else if (!Objects.equals(ps.get(name), param.P)) {
 					ps.put(name, null);
 				}
 			}
@@ -478,12 +478,12 @@ public class ModelCombiner {
 			for (PmmXmlElementConvertable el : paramXml.getElementSet()) {
 				ParamXml param = (ParamXml) el;
 
-				if (param.getValue() == null && paramValues.get(id).get(param.getName()) != null) {
-					param.setValue(paramValues.get(id).get(param.getName()));
+				if (param.value == null && paramValues.get(id).get(param.name) != null) {
+					param.value = paramValues.get(id).get(param.name);
 					param.getAllCorrelations().clear();
-					param.setError(errorValues.get(id).get(param.getName()));
-					param.setT(tValues.get(id).get(param.getName()));
-					param.setP(pValues.get(id).get(param.getName()));
+					param.error = errorValues.get(id).get(param.name);
+					param.t = tValues.get(id).get(param.name);
+					param.P = pValues.get(id).get(param.name);
 				}
 			}
 

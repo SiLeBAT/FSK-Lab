@@ -200,12 +200,12 @@ public class TableReader {
 				for (PmmXmlElementConvertable el : paramXmlSec.getElementSet()) {
 					ParamXml element = (ParamXml) el;
 
-					paramData.put(element.getName(), element.getValue());
-					paramData.put(element.getName() + ": SE",
-							element.getError());
-					paramData.put(element.getName() + ": t", element.getT());
-					paramData.put(element.getName() + ": Pr > |t|",
-							element.getP());
+					paramData.put(element.name, element.value);
+					paramData.put(element.name + ": SE",
+							element.error);
+					paramData.put(element.name + ": t", element.t);
+					paramData.put(element.name + ": Pr > |t|",
+							element.P);
 				}
 
 				String depVarSecDesc = depVarSec.name;
@@ -277,7 +277,7 @@ public class TableReader {
 				int depVarIndex = CellIO.getNameList(paramXml).indexOf(
 						depVar.name);
 				Double depVarValue = ((ParamXml) paramXml.get(depVarIndex))
-						.getValue();
+						.value;
 
 				depVarDataMap.get(id).add(depVarValue);
 
@@ -353,17 +353,17 @@ public class TableReader {
 			for (PmmXmlElementConvertable el : paramMap.get(id).getElementSet()) {
 				ParamXml element = (ParamXml) el;
 
-				constants.put(element.getName(), element.getValue());
+				constants.put(element.name, element.value);
 
 				Map<String, Double> cov = new LinkedHashMap<>();
 
 				for (PmmXmlElementConvertable el2 : paramMap.get(id)
 						.getElementSet()) {
-					cov.put(((ParamXml) el2).getName(), element
-							.getCorrelation(((ParamXml) el2).getOrigName()));
+					cov.put(((ParamXml) el2).name, element
+							.getCorrelation(((ParamXml) el2).origName));
 				}
 
-				covariances.put(element.getName(), cov);
+				covariances.put(element.name, cov);
 			}
 
 			plotable.setFunction(formulaMap.get(id));

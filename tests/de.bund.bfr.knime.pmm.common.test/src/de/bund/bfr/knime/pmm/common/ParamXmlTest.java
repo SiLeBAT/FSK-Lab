@@ -18,57 +18,57 @@ public class ParamXmlTest {
 
 		// Test constructor with name, isStartParam and value
 		ParamXml param0 = new ParamXml("name", false, 0.0);
-		assertEquals("name", param0.getName());
-		assertEquals("name", param0.getOrigName());
-		assertFalse(param0.isStartParam());
-		assertEquals(0.0, param0.getValue(), .0);
-		assertNull(param0.getError());
-		assertNull(param0.getMin());
-		assertNull(param0.getMax());
-		assertNull(param0.getP());
-		assertNull(param0.getT());
-		assertNull(param0.getMinGuess());
-		assertNull(param0.getMaxGuess());
-		assertNull(param0.getCategory());
-		assertNull(param0.getUnit());
-		assertNull(param0.getDescription());
+		assertEquals("name", param0.name);
+		assertEquals("name", param0.origName);
+		assertFalse(param0.isStartParam);
+		assertEquals(0.0, param0.value, .0);
+		assertNull(param0.error);
+		assertNull(param0.min);
+		assertNull(param0.max);
+		assertNull(param0.P);
+		assertNull(param0.t);
+		assertNull(param0.minGuess);
+		assertNull(param0.maxGuess);
+		assertNull(param0.category);
+		assertNull(param0.unit);
+		assertNull(param0.description);
 		assertTrue(param0.getAllCorrelations().isEmpty());
 
 		// Test constructor with name, isStartParam, value, error, min, max, P and t
 		ParamXml param1 = new ParamXml("name", false, 0.0, 0.0, 0.0, 1.0, 2.0, 3.0);
-		assertEquals("name", param1.getName());
-		assertEquals("name", param1.getOrigName());
-		assertFalse(param1.isStartParam());
-		assertEquals(0.0, param1.getValue(), .0);
-		assertEquals(0.0, param1.getError(), .0);
-		assertEquals(0.0, param1.getMin(), .0);
-		assertEquals(1.0, param1.getMax(), .0);
-		assertEquals(2.0, param1.getP(), .0);
-		assertEquals(3.0, param1.getT(), .0);
-		assertNull(param1.getMinGuess());
-		assertNull(param1.getMaxGuess());
-		assertNull(param1.getCategory());
-		assertNull(param1.getUnit());
-		assertNull(param1.getDescription());
+		assertEquals("name", param1.name);
+		assertEquals("name", param1.origName);
+		assertFalse(param1.isStartParam);
+		assertEquals(0.0, param1.value, .0);
+		assertEquals(0.0, param1.error, .0);
+		assertEquals(0.0, param1.min, .0);
+		assertEquals(1.0, param1.max, .0);
+		assertEquals(2.0, param1.P, .0);
+		assertEquals(3.0, param1.t, .0);
+		assertNull(param1.minGuess);
+		assertNull(param1.maxGuess);
+		assertNull(param1.category);
+		assertNull(param1.unit);
+		assertNull(param1.description);
 		assertTrue(param1.getAllCorrelations().isEmpty());
 
 		// Test constructor with name, isStartParam, value, error, min, max, P, t,
 		// category and unit
 		ParamXml param2 = new ParamXml("name", false, 0.0, 0.0, 0.0, 1.0, 2.0, 3.0, "category", "unit");
-		assertEquals("name", param2.getName());
-		assertEquals("name", param2.getOrigName());
-		assertFalse(param2.isStartParam());
-		assertEquals(0.0, param2.getValue(), .0);
-		assertEquals(0.0, param2.getError(), .0);
-		assertEquals(0.0, param2.getMin(), .0);
-		assertEquals(1.0, param2.getMax(), .0);
-		assertEquals(2.0, param2.getP(), .0);
-		assertEquals(3.0, param2.getT(), .0);
-		assertNull(param2.getMinGuess());
-		assertNull(param2.getMaxGuess());
-		assertEquals("category", param2.getCategory());
-		assertEquals("unit", param2.getUnit());
-		assertNull(param2.getDescription());
+		assertEquals("name", param2.name);
+		assertEquals("name", param2.origName);
+		assertFalse(param2.isStartParam);
+		assertEquals(0.0, param2.value, .0);
+		assertEquals(0.0, param2.error, .0);
+		assertEquals(0.0, param2.min, .0);
+		assertEquals(1.0, param2.max, .0);
+		assertEquals(2.0, param2.P, .0);
+		assertEquals(3.0, param2.t, .0);
+		assertNull(param2.minGuess);
+		assertNull(param2.maxGuess);
+		assertEquals("category", param2.category);
+		assertEquals("unit", param2.unit);
+		assertNull(param2.description);
 		assertTrue(param2.getAllCorrelations().isEmpty());
 
 		// Test copy constructor (Element)
@@ -94,39 +94,39 @@ public class ParamXmlTest {
 		element.addContent(correlation);
 
 		ParamXml param3 = new ParamXml(element);
-		assertEquals("name", param3.getName());
-		assertEquals("origName", param3.getOrigName());
-		assertTrue(param3.isStartParam());
-		assertEquals(0.0, param3.getValue(), .0);
-		assertEquals(1.0, param3.getError(), .0);
-		assertEquals(-5.0, param3.getMin(), .0);
-		assertEquals(5.0, param3.getMax(), .0);
-		assertEquals(0.1, param3.getP(), .0);
-		assertEquals(0.2, param3.getT(), .0);
-		assertEquals(1.0, param3.getMinGuess(), .0);
-		assertEquals(2.0, param3.getMaxGuess(), .0);
-		assertEquals("category", param3.getCategory());
-		assertEquals("unit", param3.getUnit());
-		assertEquals("description", param3.getDescription());
+		assertEquals("name", param3.name);
+		assertEquals("origName", param3.origName);
+		assertTrue(param3.isStartParam);
+		assertEquals(0.0, param3.value, .0);
+		assertEquals(1.0, param3.error, .0);
+		assertEquals(-5.0, param3.min, .0);
+		assertEquals(5.0, param3.max, .0);
+		assertEquals(0.1, param3.P, .0);
+		assertEquals(0.2, param3.t, .0);
+		assertEquals(1.0, param3.minGuess, .0);
+		assertEquals(2.0, param3.maxGuess, .0);
+		assertEquals("category", param3.category);
+		assertEquals("unit", param3.unit);
+		assertEquals("description", param3.description);
 		assertEquals(0.0, param3.getCorrelation("a"), .0);
 
 		// Test fully parameterized constructor
 		ParamXml param4 = new ParamXml("name", "origName", false, 0.0, 0.0, 0.0, 1.0, 0.1, 0.2, 2.0, 3.0, "category",
 				"unit", "description", new HashMap<String, Double>());
-		assertEquals("name", param4.getName());
-		assertEquals("origName", param4.getOrigName());
-		assertFalse(param4.isStartParam());
-		assertEquals(0.0, param4.getValue(), .0);
-		assertEquals(0.0, param4.getError(), .0);
-		assertEquals(0.0, param4.getMin(), .0);
-		assertEquals(1.0, param4.getMax(), .0);
-		assertEquals(0.1, param4.getP(), .0);
-		assertEquals(0.2, param4.getT(), .0);
-		assertEquals(2.0, param4.getMinGuess(), .0);
-		assertEquals(3.0, param4.getMaxGuess(), .0);
-		assertEquals("category", param4.getCategory());
-		assertEquals("unit", param4.getUnit());
-		assertEquals("description", param4.getDescription());
+		assertEquals("name", param4.name);
+		assertEquals("origName", param4.origName);
+		assertFalse(param4.isStartParam);
+		assertEquals(0.0, param4.value, .0);
+		assertEquals(0.0, param4.error, .0);
+		assertEquals(0.0, param4.min, .0);
+		assertEquals(1.0, param4.max, .0);
+		assertEquals(0.1, param4.P, .0);
+		assertEquals(0.2, param4.t, .0);
+		assertEquals(2.0, param4.minGuess, .0);
+		assertEquals(3.0, param4.maxGuess, .0);
+		assertEquals("category", param4.category);
+		assertEquals("unit", param4.unit);
+		assertEquals("description", param4.description);
 		assertTrue(param4.getAllCorrelations().isEmpty());
 	}
 

@@ -299,20 +299,20 @@ public class SecondaryModelDialog extends JDialog implements ActionListener, Ite
 				JComboBox<String> box = new JComboBox<>(options.toArray(new String[0]));
 				JComboBox<String> errorBox = new JComboBox<>(options.toArray(new String[0]));
 
-				mappings.put(secParam.getName(),
-						UI.select(box, mappings.get(secParam.getName()), SettingsHelper.DO_NOT_USE));
-				paramErrors.put(secParam.getName(),
-						UI.select(errorBox, paramErrors.get(secParam.getName()), SettingsHelper.DO_NOT_USE));
+				mappings.put(secParam.name,
+						UI.select(box, mappings.get(secParam.name), SettingsHelper.DO_NOT_USE));
+				paramErrors.put(secParam.name,
+						UI.select(errorBox, paramErrors.get(secParam.name), SettingsHelper.DO_NOT_USE));
 
 				box.addItemListener(this);
 				errorBox.addItemListener(this);
-				modelBoxes.put(secParam.getName(), box);
-				paramErrorBoxes.put(secParam.getName(), errorBox);
+				modelBoxes.put(secParam.name, box);
+				paramErrorBoxes.put(secParam.name, errorBox);
 
-				panel.add(new JLabel(secParam.getName() + ":"), createConstraints(0, row));
+				panel.add(new JLabel(secParam.name + ":"), createConstraints(0, row));
 				panel.add(box, createConstraints(1, row));
 				row++;
-				panel.add(new JLabel(secParam.getName() + " Error:"), createConstraints(0, row));
+				panel.add(new JLabel(secParam.name + " Error:"), createConstraints(0, row));
 				panel.add(errorBox, createConstraints(1, row));
 				row++;
 			}

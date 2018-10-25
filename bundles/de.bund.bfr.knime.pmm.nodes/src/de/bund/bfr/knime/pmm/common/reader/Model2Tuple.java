@@ -191,13 +191,13 @@ public class Model2Tuple {
     String unitID = param.getUnits();
     if (!unitID.equals(Unit.Kind.DIMENSIONLESS.getName())) {
       String unitName = unitDefs.get(unitID).getName();
-      paramXml.setUnit(unitName);
-      paramXml.setCategory(DBUnits.getDBUnits().get(unitName).getKind_of_property_quantity());
+      paramXml.unit = unitName;
+      paramXml.category = DBUnits.getDBUnits().get(unitName).getKind_of_property_quantity();
     }
 
     PMFCoefficient coefficient = SBMLFactory.createPMFCoefficient(param);
     if (coefficient.isSetDescription()) {
-      paramXml.setDescription(coefficient.getDescription());
+      paramXml.description = coefficient.getDescription();
     }
 
     // Adds correlations
@@ -210,12 +210,12 @@ public class Model2Tuple {
     // Adds limits
     if (limits.containsKey(param.getId())) {
       Limits constLimits = limits.get(param.getId());
-      paramXml.setMax(constLimits.getMax());
-      paramXml.setMin(constLimits.getMin());
+      paramXml.max = constLimits.getMax();
+      paramXml.min = constLimits.getMin();
     }
 
     if (coefficient.isSetIsStart()) {
-      paramXml.setIsStartParam(coefficient.getIsStart());
+      paramXml.isStartParam = coefficient.getIsStart();
     }
 
     return paramXml;
