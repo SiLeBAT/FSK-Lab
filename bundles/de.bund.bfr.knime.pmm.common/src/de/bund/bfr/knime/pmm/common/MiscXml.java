@@ -46,19 +46,32 @@ public class MiscXml implements PmmXmlElementConvertable {
 	public String origUnit;
 	public String dbuuid;
 
+	/** Copy constructor. Take very property from another {@link MiscXml}. */
 	public MiscXml(MiscXml misc) {
 		this(misc.id, misc.name, misc.description, misc.value, misc.categories, misc.unit, misc.origUnit, misc.dbuuid);
 	}
 
+	/**
+	 * Constructor with id, name, description, value, categories and unit.
+	 * <ul>
+	 * <li>origUnit is assigned unit
+	 * <li>dbuuid is assigned null
+	 * </ul>
+	 */
 	public MiscXml(Integer id, String name, String description, Double value, List<String> categories, String unit) {
 		this(id, name, description, value, categories, unit, unit, null);
 	}
 
+	/**
+	 * Constructor with id, name, description, value, categories, unit and dbuuid.
+	 * origUnit is assigned unit.
+	 */
 	public MiscXml(Integer id, String name, String description, Double value, List<String> categories, String unit,
 			String dbuuid) {
 		this(id, name, description, value, categories, unit, unit, dbuuid);
 	}
 
+	/** Fully parameterized constructor. */
 	public MiscXml(Integer id, String name, String description, Double value, List<String> categories, String unit,
 			String origUnit, String dbuuid) {
 		this.id = id;
@@ -71,6 +84,21 @@ public class MiscXml implements PmmXmlElementConvertable {
 		this.dbuuid = dbuuid;
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with
+	 * properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "description"
+	 * <li>String "value"
+	 * <li>String "unit"
+	 * <li>String "origUnit"
+	 * <li>String "dbuuid"
+	 * <li>Multiple string properties for categories with prefix "category" and
+	 * suffix <number of category>. E.g.: "category0", "category1", etc.
+	 * </ul>
+	 */
 	public MiscXml(Element el) {
 		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_DESCRIPTION),
 				XmlHelper.getDouble(el, ATT_VALUE), null, XmlHelper.getString(el, ATT_UNIT),
@@ -86,6 +114,20 @@ public class MiscXml implements PmmXmlElementConvertable {
 		}
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "misc" and properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "description"
+	 * <li>String "value"
+	 * <li>String "unit"
+	 * <li>String "origUnit"
+	 * <li>String "dbuuid"
+	 * <li>Multiple string properties for categories with prefix "category" and
+	 * suffix <number of category>. E.g.: "category0", "category1", etc.
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_MISC);

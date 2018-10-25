@@ -57,11 +57,10 @@ public class LiteratureItem implements PmmXmlElementConvertable {
 	public String comment;
 	public String dbuuid;
 
-	public LiteratureItem(final String author, final Integer year,
-			final String title, final String abstractText, String journal,
-			String volume, String issue, Integer page, Integer approvalMode,
-			String website, Integer type, String comment, final Integer id,
-			String dbuuid) {
+	/** Fully parameterized constructor. */
+	public LiteratureItem(final String author, final Integer year, final String title, final String abstractText,
+			String journal, String volume, String issue, Integer page, Integer approvalMode, String website,
+			Integer type, String comment, final Integer id, String dbuuid) {
 		this.author = author;
 		this.year = year;
 		this.title = title;
@@ -78,40 +77,82 @@ public class LiteratureItem implements PmmXmlElementConvertable {
 		this.dbuuid = dbuuid;
 	}
 
-	public LiteratureItem(final String author, final Integer year,
-			final String title, final String abstractText, String journal,
-			String volume, String issue, Integer page, Integer approvalMode,
-			String website, Integer type, String comment, final Integer id) {
-		this(author, year, title, abstractText, journal, volume, issue, page,
-				approvalMode, website, type, comment, id, null);
+	/**
+	 * Constructor with author, year, title, abstractText, journal, volume, issue,
+	 * page, approvalMode, website, type, comment and id. dbuuid is null.
+	 */
+	public LiteratureItem(final String author, final Integer year, final String title, final String abstractText,
+			String journal, String volume, String issue, Integer page, Integer approvalMode, String website,
+			Integer type, String comment, final Integer id) {
+		this(author, year, title, abstractText, journal, volume, issue, page, approvalMode, website, type, comment, id,
+				null);
 	}
 
-	public LiteratureItem(final String author, final Integer year,
-			final String title, final String abstractText, String journal,
-			String volume, String issue, Integer page, Integer approvalMode,
-			String website, Integer type, String comment) {
-		this(author, year, title, abstractText, journal, volume, issue, page,
-				approvalMode, website, type, comment, MathUtilities
-						.getRandomNegativeInt(), null);
+	/**
+	 * Constructor with author, year, title, abstractText, journal, volume, issue,
+	 * page, approvalMode, website, type and comment.
+	 * <ul>
+	 * <li>id is given a random negative int.
+	 * <li>dbuuid is null.
+	 */
+	public LiteratureItem(final String author, final Integer year, final String title, final String abstractText,
+			String journal, String volume, String issue, Integer page, Integer approvalMode, String website,
+			Integer type, String comment) {
+		this(author, year, title, abstractText, journal, volume, issue, page, approvalMode, website, type, comment,
+				MathUtilities.getRandomNegativeInt(), null);
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with properties:
+	 * <ul>
+	 * <li>String "author"
+	 * <li>Integer "year"
+	 * <li>String "title"
+	 * <li>String "abstract"
+	 * <li>String "journal"
+	 * <li>String "volume"
+	 * <li>String "issue"
+	 * <li>Integer "page"
+	 * <li>Integer "approvalMode"
+	 * <li>String "website"
+	 * <li>Integer "type"
+	 * <li>String "comment"
+	 * <li>Integer "id"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	public LiteratureItem(final Element el) {
-		this(XmlHelper.getString(el, ATT_AUTHOR), XmlHelper
-				.getInt(el, ATT_YEAR), XmlHelper.getString(el, ATT_TITLE),
-				XmlHelper.getString(el, ATT_ABSTRACT), XmlHelper.getString(el,
-						ATT_JOURNAL), XmlHelper.getString(el, ATT_VOLUME),
-				XmlHelper.getString(el, ATT_ISSUE), XmlHelper.getInt(el,
-						ATT_PAGE), XmlHelper.getInt(el, ATT_APPROVAL_MODE),
-				XmlHelper.getString(el, ATT_WEBSITE), XmlHelper.getInt(el,
-						ATT_TYPE), XmlHelper.getString(el, ATT_COMMENT),
-				XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el,
-						ATT_DBUUID));
+		this(XmlHelper.getString(el, ATT_AUTHOR), XmlHelper.getInt(el, ATT_YEAR), XmlHelper.getString(el, ATT_TITLE),
+				XmlHelper.getString(el, ATT_ABSTRACT), XmlHelper.getString(el, ATT_JOURNAL),
+				XmlHelper.getString(el, ATT_VOLUME), XmlHelper.getString(el, ATT_ISSUE), XmlHelper.getInt(el, ATT_PAGE),
+				XmlHelper.getInt(el, ATT_APPROVAL_MODE), XmlHelper.getString(el, ATT_WEBSITE),
+				XmlHelper.getInt(el, ATT_TYPE), XmlHelper.getString(el, ATT_COMMENT), XmlHelper.getInt(el, ATT_ID),
+				XmlHelper.getString(el, ATT_DBUUID));
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "Literature" and properties:
+	 * <ul>
+	 * <li>String "author"
+	 * <li>Integer "year"
+	 * <li>String "title"
+	 * <li>String "abstract"
+	 * <li>String "journal"
+	 * <li>String "volume"
+	 * <li>String "issue"
+	 * <li>Integer "page"
+	 * <li>Integer "approvalMode"
+	 * <li>String "website"
+	 * <li>Integer "type"
+	 * <li>String "comment"
+	 * <li>Integer "id"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_LITERATURE);
-		
+
 		ret.setAttribute(ATT_AUTHOR, XmlHelper.getNonNull(author));
 		ret.setAttribute(ATT_YEAR, XmlHelper.getNonNull(year));
 		ret.setAttribute(ATT_TITLE, XmlHelper.removeDirt(title));
@@ -126,7 +167,7 @@ public class LiteratureItem implements PmmXmlElementConvertable {
 		ret.setAttribute(ATT_COMMENT, XmlHelper.getNonNull(comment));
 		ret.setAttribute(ATT_ID, XmlHelper.getNonNull(id));
 		ret.setAttribute(ATT_DBUUID, XmlHelper.getNonNull(dbuuid));
-		
+
 		return ret;
 	}
 

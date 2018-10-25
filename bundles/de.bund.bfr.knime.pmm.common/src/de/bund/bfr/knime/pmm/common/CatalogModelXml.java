@@ -41,13 +41,21 @@ public class CatalogModelXml implements PmmXmlElementConvertable {
 	public String comment;
 	public String dbuuid;
 
-	public CatalogModelXml(Integer id, String name, String formula,
-			Integer modelClass) {
+	/**
+	 * Constructor with id, name, formula and model class. comment and dbuuid are
+	 * null.
+	 */
+	public CatalogModelXml(Integer id, String name, String formula, Integer modelClass) {
 		this(id, name, formula, modelClass, null);
 	}
 
-	public CatalogModelXml(Integer id, String name, String formula,
-			Integer modelClass, String dbuuid) {
+	/**
+	 * Fully parameterized constructor.
+	 * 
+	 * @param id
+	 *            if null a random negative int is assigned.
+	 */
+	public CatalogModelXml(Integer id, String name, String formula, Integer modelClass, String dbuuid) {
 		this.id = id == null ? MathUtilities.getRandomNegativeInt() : id;
 		this.name = name;
 		this.formula = formula;
@@ -55,13 +63,34 @@ public class CatalogModelXml implements PmmXmlElementConvertable {
 		this.dbuuid = dbuuid;
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "formula>
+	 * <li>Integer "modelClass"
+	 * <li>String "dbuuid"
+	 * <li>String "comment"
+	 * </ul>
+	 */
 	public CatalogModelXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME),
-				XmlHelper.getString(el, ATT_FORMULA), XmlHelper.getInt(el,
-						ATT_MODEL_CLASS), XmlHelper.getString(el, ATT_DBUUID));
+		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_FORMULA),
+				XmlHelper.getInt(el, ATT_MODEL_CLASS), XmlHelper.getString(el, ATT_DBUUID));
 		this.comment = XmlHelper.getString(el, ATT_COMMENT);
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "catalogmodelxml" and properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "formula>
+	 * <li>Integer "modelClass"
+	 * <li>String "dbuuid"
+	 * <li>String "comment"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element modelElement = new Element(ELEMENT_CATALOGMODEL);
@@ -69,8 +98,7 @@ public class CatalogModelXml implements PmmXmlElementConvertable {
 		modelElement.setAttribute(ATT_ID, XmlHelper.getNonNull(id));
 		modelElement.setAttribute(ATT_NAME, XmlHelper.getNonNull(name));
 		modelElement.setAttribute(ATT_FORMULA, XmlHelper.getNonNull(formula));
-		modelElement.setAttribute(ATT_MODEL_CLASS,
-				XmlHelper.getNonNull(modelClass));
+		modelElement.setAttribute(ATT_MODEL_CLASS, XmlHelper.getNonNull(modelClass));
 		modelElement.setAttribute(ATT_COMMENT, XmlHelper.getNonNull(comment));
 		modelElement.setAttribute(ATT_DBUUID, XmlHelper.getNonNull(dbuuid));
 

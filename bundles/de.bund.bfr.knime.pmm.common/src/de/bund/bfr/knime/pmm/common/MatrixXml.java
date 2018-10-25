@@ -37,18 +37,22 @@ public class MatrixXml implements PmmXmlElementConvertable {
 	public String detail;
 	public String dbuuid;
 
+	/** Constructor with id, name and detail. dbuuid is null. */
 	public MatrixXml(Integer id, String name, String detail) {
 		this(id, name, detail, null);
 	}
 
+	/** id is given a random negative id. name, detail and dbuuid are null. */
 	public MatrixXml() {
 		this(MathUtilities.getRandomNegativeInt(), null, null, null);
 	}
 
+	/** Copy constructor. Take every property from another {@link MatrixXml}. */
 	public MatrixXml(MatrixXml matrix) {
 		this(matrix.id, matrix.name, matrix.detail, matrix.dbuuid);
 	}
 
+	/** Fully parameterized constructor. */
 	public MatrixXml(Integer id, String name, String detail, String dbuuid) {
 		this.id = id;
 		this.name = name;
@@ -56,11 +60,29 @@ public class MatrixXml implements PmmXmlElementConvertable {
 		this.dbuuid = dbuuid;
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "detail"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	public MatrixXml(Element el) {
 		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_DETAIL),
 				XmlHelper.getString(el, ATT_DBUUID));
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "matrix" and properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "detail"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_MATRIX);

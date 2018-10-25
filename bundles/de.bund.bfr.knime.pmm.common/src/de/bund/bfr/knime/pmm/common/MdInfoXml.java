@@ -37,8 +37,8 @@ public class MdInfoXml implements PmmXmlElementConvertable {
 	public Integer qualityScore;
 	public Boolean checked;
 
-	public MdInfoXml(Integer id, String name, String comment,
-			Integer qualityScore, Boolean checked) {
+	/** Fully parameterized constructor. */
+	public MdInfoXml(Integer id, String name, String comment, Integer qualityScore, Boolean checked) {
 		this.id = id;
 		this.name = name;
 		this.comment = comment;
@@ -46,13 +46,32 @@ public class MdInfoXml implements PmmXmlElementConvertable {
 		this.checked = checked;
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with
+	 * properties:
+	 * <ul>
+	 * <li>Integer "ID"
+	 * <li>String "Name"
+	 * <li>String "Comment"
+	 * <li>Integer "QualityScore"
+	 * <li>Boolean "Checked"
+	 * </ul>
+	 */
 	public MdInfoXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME),
-				XmlHelper.getString(el, ATT_COMMENT), XmlHelper.getInt(el,
-						ATT_QUALITYSCORE), XmlHelper
-						.getBoolean(el, ATT_CHECKED));
+		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_COMMENT),
+				XmlHelper.getInt(el, ATT_QUALITYSCORE), XmlHelper.getBoolean(el, ATT_CHECKED));
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "mdinfoxml" and properties:
+	 * <ul>
+	 * <li>Integer "ID"
+	 * <li>String "Name"
+	 * <li>String "Comment"
+	 * <li>Integer "QualityScore"
+	 * <li>Boolean "Checked"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element modelElement = new Element(ELEMENT_MDINFO);
@@ -60,8 +79,7 @@ public class MdInfoXml implements PmmXmlElementConvertable {
 		modelElement.setAttribute(ATT_ID, XmlHelper.getNonNull(id));
 		modelElement.setAttribute(ATT_NAME, XmlHelper.getNonNull(name));
 		modelElement.setAttribute(ATT_COMMENT, XmlHelper.getNonNull(comment));
-		modelElement.setAttribute(ATT_QUALITYSCORE,
-				XmlHelper.getNonNull(qualityScore));
+		modelElement.setAttribute(ATT_QUALITYSCORE, XmlHelper.getNonNull(qualityScore));
 		modelElement.setAttribute(ATT_CHECKED, XmlHelper.getNonNull(checked));
 
 		return modelElement;

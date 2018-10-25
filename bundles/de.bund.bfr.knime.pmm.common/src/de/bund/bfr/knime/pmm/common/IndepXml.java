@@ -41,17 +41,31 @@ public class IndepXml implements PmmXmlElementConvertable {
 	public String unit;
 	public String description;
 
+	/**
+	 * Constructor with name, min and max.
+	 * <ul>
+	 * <li>origName is assigned name.
+	 * <li>category, unit and description are null.
+	 * </ul>
+	 */
 	public IndepXml(String name, Double min, Double max) {
 		this(name, min, max, null, null);
 	}
 
-	public IndepXml(String name, Double min, Double max, String category,
-			String unit) {
+	/**
+	 * Constructor with name, min, max, category and unit.
+	 * <ul>
+	 * <li>origName is assigned name
+	 * <li>description is null
+	 * </ul>
+	 */
+	public IndepXml(String name, Double min, Double max, String category, String unit) {
 		this(name, name, min, max, category, unit, null);
 	}
 
-	public IndepXml(String name, String origName, Double min, Double max,
-			String category, String unit, String description) {
+	/** Fully parameterized constructor. */
+	public IndepXml(String name, String origName, Double min, Double max, String category, String unit,
+			String description) {
 		this.name = name;
 		this.origName = origName;
 		this.min = min;
@@ -61,14 +75,37 @@ public class IndepXml implements PmmXmlElementConvertable {
 		this.description = description;
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with
+	 * properties:
+	 * <ul>
+	 * <li>String "name"
+	 * <li>String "origName"
+	 * <li>Double "min"
+	 * <li>Double "max"
+	 * <li>String "category"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * </ul>
+	 */
 	public IndepXml(Element el) {
-		this(XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el,
-				ATT_ORIGNAME), XmlHelper.getDouble(el, ATT_MIN), XmlHelper
-				.getDouble(el, ATT_MAX), XmlHelper.getString(el, ATT_CATEGORY),
-				XmlHelper.getString(el, ATT_UNIT), XmlHelper.getString(el,
-						ATT_DESCRIPTION));
+		this(XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_ORIGNAME), XmlHelper.getDouble(el, ATT_MIN),
+				XmlHelper.getDouble(el, ATT_MAX), XmlHelper.getString(el, ATT_CATEGORY),
+				XmlHelper.getString(el, ATT_UNIT), XmlHelper.getString(el, ATT_DESCRIPTION));
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element with name "indep" and properties:
+	 * <ul>
+	 * <li>String "name"
+	 * <li>String "origName"
+	 * <li>Double "min"
+	 * <li>Double "max"
+	 * <li>String "category"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_INDEP);

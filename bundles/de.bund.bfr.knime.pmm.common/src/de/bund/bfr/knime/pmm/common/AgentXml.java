@@ -37,18 +37,22 @@ public class AgentXml implements PmmXmlElementConvertable {
 	public String detail;
 	public String dbuuid;
 
+	/** id is given a random negative int. name, detail and dbuuid are null. */
 	public AgentXml() {
 		this(MathUtilities.getRandomNegativeInt(), null, null, null);
 	}
 
+	/** Constructor with id, name and detail. dbuuid is null. */
 	public AgentXml(Integer id, String name, String detail) {
 		this(id, name, detail, null);
 	}
 
+	/** Copy constructor. Take every property from agent. */
 	public AgentXml(AgentXml agent) {
 		this(agent.id, agent.name, agent.detail, agent.dbuuid);
 	}
 
+	/** Fully parameterized constructor. */
 	public AgentXml(Integer id, String name, String detail, String dbuuid) {
 		this.id = id;
 		this.name = name;
@@ -56,11 +60,29 @@ public class AgentXml implements PmmXmlElementConvertable {
 		this.dbuuid = dbuuid;
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "detail"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	public AgentXml(Element el) {
 		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_DETAIL),
 				XmlHelper.getString(el, ATT_DBUUID));
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "agent" and properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "detail"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_AGENT);

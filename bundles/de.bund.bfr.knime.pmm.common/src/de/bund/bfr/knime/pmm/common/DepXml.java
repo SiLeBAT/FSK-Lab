@@ -41,16 +41,33 @@ public class DepXml implements PmmXmlElementConvertable {
 	public String unit;
 	public String description;
 
+	/**
+	 * Constructor with name.
+	 * <ul>
+	 * <li>origName is assigned name.
+	 * <li>min, max, category, unit and description are null.
+	 * </ul>
+	 */
 	public DepXml(String name) {
 		this(name, null, null);
 	}
 
+	/**
+	 * Constructor with name, category and unit.
+	 * <ul>
+	 * <li>origName is assigned name.
+	 * <li>min, max and description are null.
+	 * </ul>
+	 */
 	public DepXml(String name, String category, String unit) {
 		this(name, name, category, unit, null);
 	}
 
-	public DepXml(String name, String origName, String category, String unit,
-			String description) {
+	/**
+	 * Constructor with name, origName, category, unit and description. min and max
+	 * are null.
+	 */
+	public DepXml(String name, String origName, String category, String unit, String description) {
 		this.name = name;
 		this.origName = origName;
 		this.category = category;
@@ -58,15 +75,39 @@ public class DepXml implements PmmXmlElementConvertable {
 		this.description = description;
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with
+	 * properties:
+	 * <ul>
+	 * <li>String "name"
+	 * <li>String "origName"
+	 * <li>String "category"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * <li>Double "min"
+	 * <li>Double "max"
+	 * </ul>
+	 */
 	public DepXml(Element el) {
-		this(XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el,
-				ATT_ORIGNAME), XmlHelper.getString(el, ATT_CATEGORY), XmlHelper
-				.getString(el, ATT_UNIT), XmlHelper.getString(el,
-				ATT_DESCRIPTION));
+		this(XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_ORIGNAME),
+				XmlHelper.getString(el, ATT_CATEGORY), XmlHelper.getString(el, ATT_UNIT),
+				XmlHelper.getString(el, ATT_DESCRIPTION));
 		this.min = XmlHelper.getDouble(el, ATT_MIN);
 		this.max = XmlHelper.getDouble(el, ATT_MAX);
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "dependent" and properties:
+	 * <ul>
+	 * <li>String "name"
+	 * <li>String "origName"
+	 * <li>String "category"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * <li>Double "min"
+	 * <li>Double "max"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_DEPENDENT);

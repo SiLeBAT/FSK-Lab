@@ -51,20 +51,27 @@ public class EstModelXml implements PmmXmlElementConvertable {
 	public String comment;
 	public String dbuuid;
 
-	public EstModelXml(Integer id, String name, Double sse, Double rms,
-			Double r2, Double aic, Double bic, Integer dof) {
+	/**
+	 * Constructor with id, name, sse, rms, r2, aic, bic and dof, checked,
+	 * qualityScore and dbuuid is null.
+	 */
+	public EstModelXml(Integer id, String name, Double sse, Double rms, Double r2, Double aic, Double bic,
+			Integer dof) {
 		this(id, name, sse, rms, r2, aic, bic, dof, null, null, null);
 	}
 
-	public EstModelXml(Integer id, String name, Double sse, Double rms,
-			Double r2, Double aic, Double bic, Integer dof, Boolean checked,
-			Integer qualityScore) {
+	/**
+	 * Constructor with id, name, sse, rms, r2, aic, bic, dof, checked and
+	 * qualityScore. dbuuid is null.
+	 */
+	public EstModelXml(Integer id, String name, Double sse, Double rms, Double r2, Double aic, Double bic, Integer dof,
+			Boolean checked, Integer qualityScore) {
 		this(id, name, sse, rms, r2, aic, bic, dof, checked, qualityScore, null);
 	}
 
-	public EstModelXml(Integer id, String name, Double sse, Double rms,
-			Double r2, Double aic, Double bic, Integer dof, Boolean checked,
-			Integer qualityScore, String dbuuid) {
+	/** Fully parameterized constructor. */
+	public EstModelXml(Integer id, String name, Double sse, Double rms, Double r2, Double aic, Double bic, Integer dof,
+			Boolean checked, Integer qualityScore, String dbuuid) {
 		this.id = id;
 		this.name = name;
 		this.sse = sse;
@@ -78,17 +85,43 @@ public class EstModelXml implements PmmXmlElementConvertable {
 		this.dbuuid = dbuuid;
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with
+	 * properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>Double "sse"
+	 * <li>Double "rms"
+	 * <li>Double "r2"
+	 * <li>Double "aic"
+	 * <li>Double "bic"
+	 * <li>Integer "qualityScore"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	public EstModelXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME),
-				XmlHelper.getDouble(el, ATT_SSE), XmlHelper.getDouble(el,
-						ATT_RMS), XmlHelper.getDouble(el, ATT_R2), XmlHelper
-						.getDouble(el, ATT_AIC), XmlHelper.getDouble(el,
-						ATT_BIC), XmlHelper.getInt(el, ATT_DOF), XmlHelper
-						.getBoolean(el, ATT_CHECKED), XmlHelper.getInt(el,
-						ATT_QUALITYSCORE), XmlHelper.getString(el, ATT_DBUUID));
+		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getDouble(el, ATT_SSE),
+				XmlHelper.getDouble(el, ATT_RMS), XmlHelper.getDouble(el, ATT_R2), XmlHelper.getDouble(el, ATT_AIC),
+				XmlHelper.getDouble(el, ATT_BIC), XmlHelper.getInt(el, ATT_DOF), XmlHelper.getBoolean(el, ATT_CHECKED),
+				XmlHelper.getInt(el, ATT_QUALITYSCORE), XmlHelper.getString(el, ATT_DBUUID));
 		this.comment = XmlHelper.getString(el, ATT_COMMENT);
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "estmodelxml" and properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>Double "sse"
+	 * <li>Double "rms"
+	 * <li>Double "r2"
+	 * <li>Double "aic"
+	 * <li>Double "bic"
+	 * <li>Integer "qualityScore"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_ESTMODEL);
