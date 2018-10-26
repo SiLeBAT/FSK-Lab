@@ -8,12 +8,99 @@
 	<artifactId>de.bund.bfr.knime.root</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
+
 	<properties>
 		<tycho.version>1.0.0</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<eclipse-repo.url>http://download.eclipse.org/releases/oxygen</eclipse-repo.url>
+		<tycho.testArgLine></tycho.testArgLine>
+		<jacoco-version>0.7.8</jacoco-version>
 	</properties>
+
+	<modules>
+		<!-- Plugins -->
+		<module>com.jgoodies</module>
+		<module>com.thoughtworks.xstream</module>
+		<module>de.bund.bfr.formats</module>
+		<module>de.bund.bfr.knime.fsklab.metadata.model</module>
+		<module>de.bund.bfr.knime.fsklab.nodes</module>
+		<module>de.bund.bfr.knime.fsklab.nodes.common</module>
+		<module>de.bund.bfr.knime.fsklab.nodes.deprecated</module>
+		<module>de.bund.bfr.knime.fsklab.nodes.deprecated2</module>
+		<module>de.bund.bfr.knime.fsklab.preferences</module>
+		<module>de.bund.bfr.knime.fsklab.r</module>
+		<module>de.bund.bfr.knime.fsklab.type</module>
+		<module>de.bund.bfr.knime.fsklab.util</module>
+		<module>de.bund.bfr.knime.internal.nodes</module>
+		<module>de.bund.bfr.knime.nodes.util</module>
+		<module>de.bund.bfr.knime.pmm.bfrdbiface.lib</module>
+		<module>de.bund.bfr.knime.pmm.common</module>
+		<module>de.bund.bfr.knime.pmm.nodes</module>
+		<module>net.sf.jabref</module>
+		<module>org.freixas.jcalendar</module>
+		<module>org.hsh.bfr.db</module>
+		<module>org.javers</module>
+		<module>org.jdom2</module>
+		<module>org.jsoup</module>
+		<module>quick.dbtable</module>
+		
+		<!-- Test plugins -->
+		<module>de.bund.bfr.knime.fsklab.metadata.model.test</module>
+		<module>de.bund.bfr.knime.fsklab.nodes.test</module>
+		<module>de.bund.bfr.knime.pmm.common.test</module>
+
+		<!-- Test report -->
+		<module>de.bund.bfr.knime.testreport</module>
+		
+		<!-- Others -->
+		<module>features</module>
+		<module>releng</module>
+	</modules>
+
+	<profiles>
+		<profile>
+			<id>jacoco</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco-version}</version>
+						<configuration>
+							<excludes>
+								<exclude>**/plugin1/Main.class</exclude>
+							</excludes>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.eluder.coveralls</groupId>
+							<artifactId>coveralls-maven-plugin</artifactId>
+							<version>4.3.0</version>
+							<configuration>
+								<repoToken>${COVERALLS_TOKEN}</repoToken>
+								<jacocoReports>
+									<jacocoReport>${project.basedir}/de.bund.bfr.knime.testreport/target/site/jacoco-aggregate/jacoco.xml</jacocoReport>
+								</jacocoReports>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
@@ -82,11 +169,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<modules>
-		<module>bundles</module>
-		<module>features</module>
-		<module>releng</module>
-		<module>tests</module>
-	</modules>
 </project>
