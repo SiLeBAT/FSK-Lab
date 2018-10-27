@@ -86,9 +86,9 @@ public class TimeSeriesXml implements PmmXmlElementConvertable {
 	 * <ul>
 	 * <li>String "name"
 	 * <li>Double "time"
-	 * <li>String "unit"
+	 * <li>String "timeUnit"
 	 * <li>String "origTimeUnit"
-	 * <li>String "concentration"
+	 * <li>Double "concentration"
 	 * <li>String "concentrationUnit"
 	 * <li>String "concentrationUnitObjectType"
 	 * <li>String "origConcentrationUnit"
@@ -111,7 +111,7 @@ public class TimeSeriesXml implements PmmXmlElementConvertable {
 	 * <ul>
 	 * <li>String "name"
 	 * <li>Double "time"
-	 * <li>String "unit"
+	 * <li>String "timeUnit"
 	 * <li>String "origTimeUnit"
 	 * <li>String "concentration"
 	 * <li>String "concentrationUnit"
