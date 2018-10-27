@@ -25,14 +25,6 @@ public class IndepXml implements PmmXmlElementConvertable {
 
 	public static final String ELEMENT_INDEP = "indep";
 
-	private static final String ATT_NAME = "name";
-	private static final String ATT_ORIGNAME = "origname";
-	private static final String ATT_MIN = "min";
-	private static final String ATT_MAX = "max";
-	private static final String ATT_CATEGORY = "category";
-	private static final String ATT_UNIT = "unit";
-	private static final String ATT_DESCRIPTION = "description";
-
 	public String name;
 	public String origName;
 	public Double min;
@@ -80,7 +72,7 @@ public class IndepXml implements PmmXmlElementConvertable {
 	 * properties:
 	 * <ul>
 	 * <li>String "name"
-	 * <li>String "origName"
+	 * <li>String "origname"
 	 * <li>Double "min"
 	 * <li>Double "max"
 	 * <li>String "category"
@@ -89,16 +81,16 @@ public class IndepXml implements PmmXmlElementConvertable {
 	 * </ul>
 	 */
 	public IndepXml(Element el) {
-		this(XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_ORIGNAME), XmlHelper.getDouble(el, ATT_MIN),
-				XmlHelper.getDouble(el, ATT_MAX), XmlHelper.getString(el, ATT_CATEGORY),
-				XmlHelper.getString(el, ATT_UNIT), XmlHelper.getString(el, ATT_DESCRIPTION));
+		this(XmlHelper.getString(el, "name"), XmlHelper.getString(el, "origname"), XmlHelper.getDouble(el, "min"),
+				XmlHelper.getDouble(el, "max"), XmlHelper.getString(el, "category"),
+				XmlHelper.getString(el, "unit"), XmlHelper.getString(el, "description"));
 	}
 
 	/**
 	 * Generate a {@link org.jdom2.Element with name "indep" and properties:
 	 * <ul>
 	 * <li>String "name"
-	 * <li>String "origName"
+	 * <li>String "origname"
 	 * <li>Double "min"
 	 * <li>Double "max"
 	 * <li>String "category"
@@ -110,13 +102,13 @@ public class IndepXml implements PmmXmlElementConvertable {
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_INDEP);
 
-		ret.setAttribute(ATT_NAME, XmlHelper.getNonNull(name));
-		ret.setAttribute(ATT_ORIGNAME, XmlHelper.getNonNull(origName));
-		ret.setAttribute(ATT_MIN, XmlHelper.getNonNull(min));
-		ret.setAttribute(ATT_MAX, XmlHelper.getNonNull(max));
-		ret.setAttribute(ATT_CATEGORY, XmlHelper.getNonNull(category));
-		ret.setAttribute(ATT_UNIT, XmlHelper.getNonNull(unit));
-		ret.setAttribute(ATT_DESCRIPTION, XmlHelper.getNonNull(description));
+		ret.setAttribute("name", XmlHelper.getNonNull(name));
+		ret.setAttribute("origname", XmlHelper.getNonNull(origName));
+		ret.setAttribute("min", XmlHelper.getNonNull(min));
+		ret.setAttribute("max", XmlHelper.getNonNull(max));
+		ret.setAttribute("category", XmlHelper.getNonNull(category));
+		ret.setAttribute("unit", XmlHelper.getNonNull(unit));
+		ret.setAttribute("description", XmlHelper.getNonNull(description));
 
 		return ret;
 	}
