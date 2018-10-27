@@ -126,11 +126,11 @@ public class QualityMeasurementComputation {
 			for (PmmXmlElementConvertable el : timeSeriesXml.getElementSet()) {
 				TimeSeriesXml element = (TimeSeriesXml) el;
 
-				if (element.getTime() != null
-						&& element.getConcentration() != null) {
-					targetValues.add(element.getConcentration());
+				if (element.time != null
+						&& element.concentration != null) {
+					targetValues.add(element.concentration);
 					variableValues.get(AttributeUtilities.TIME).add(
-							element.getTime());
+							element.time);
 
 					for (String var : variableValues.keySet()) {
 						if (!var.equals(AttributeUtilities.TIME)) {

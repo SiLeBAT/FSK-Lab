@@ -1316,25 +1316,25 @@ public class Bfrdb {
 				TimeSeriesXml tsx = (TimeSeriesXml) el;
 				try {
 					Double origTime = null, origConc = null, origConcStdDev = null;
-					if (tsx.getOrigTimeUnit() == null || tsx.getOrigTimeUnit().trim().isEmpty()) {
-						tsx.setOrigTimeUnit(tsx.getTimeUnit());
-						origTime = tsx.getTime();
+					if (tsx.origTimeUnit == null || tsx.origTimeUnit.trim().isEmpty()) {
+						tsx.origTimeUnit = tsx.timeUnit;
+						origTime = tsx.time;
 					} else {
-						origTime = Categories.getTimeCategory().convert(tsx.getTime(), tsx.getTimeUnit(), tsx.getOrigTimeUnit());
+						origTime = Categories.getTimeCategory().convert(tsx.time, tsx.timeUnit, tsx.origTimeUnit);
 					}
-					if (tsx.getOrigConcentrationUnit() == null || tsx.getOrigConcentrationUnit().trim().isEmpty()) {
-						tsx.setOrigConcentrationUnit(tsx.getConcentrationUnit());
-						origConc = tsx.getConcentration();
-						origConcStdDev = tsx.getConcentrationStdDev();
+					if (tsx.origConcentrationUnit == null || tsx.origConcentrationUnit.trim().isEmpty()) {
+						tsx.origConcentrationUnit = tsx.concentrationUnit;
+						origConc = tsx.concentration;
+						origConcStdDev = tsx.concentrationStdDev;
 					} else {
-						origConc = Categories.getCategoryByUnit(tsx.getConcentrationUnit()).convert(tsx.getConcentration(), tsx.getConcentrationUnit(),
-								tsx.getOrigConcentrationUnit());
-						origConcStdDev = Categories.getCategoryByUnit(tsx.getConcentrationUnit()).convert(tsx.getConcentrationStdDev(), tsx.getConcentrationUnit(),
-								tsx.getOrigConcentrationUnit());
+						origConc = Categories.getCategoryByUnit(tsx.concentrationUnit).convert(tsx.concentration, tsx.concentrationUnit,
+								tsx.origConcentrationUnit);
+						origConcStdDev = Categories.getCategoryByUnit(tsx.concentrationUnit).convert(tsx.concentrationStdDev, tsx.concentrationUnit,
+								tsx.origConcentrationUnit);
 					}
 					int timeId = insertDouble(origTime);
-					int lognId = insertDouble(origConc, origConcStdDev, tsx.getNumberOfMeasurements());
-					insertData(condId, timeId, lognId, tsx.getOrigTimeUnit(), tsx.getOrigConcentrationUnit(), tsx.getConcentrationUnitObjectType());
+					int lognId = insertDouble(origConc, origConcStdDev, tsx.numberOfMeasurements);
+					insertData(condId, timeId, lognId, tsx.origTimeUnit, tsx.origConcentrationUnit, tsx.concentrationUnitObjectType);
 				} catch (ConvertException e) {
 					//System.out.println(tsx.getTime() + "\t" + tsx.getTimeUnit() + "\t" + tsx.getOrigTimeUnit());
 					e.printStackTrace();

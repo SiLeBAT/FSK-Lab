@@ -97,8 +97,8 @@ public class PrimaryEstimationThread implements Runnable {
 			for (PmmXmlElementConvertable el : timeSeriesXml.getElementSet()) {
 				TimeSeriesXml element = (TimeSeriesXml) el;
 
-				timeValues.add(element.getTime());
-				targetValues.add(element.getConcentration());
+				timeValues.add(element.time);
+				targetValues.add(element.concentration);
 			}
 
 			for (PmmXmlElementConvertable el : paramXml.getElementSet()) {

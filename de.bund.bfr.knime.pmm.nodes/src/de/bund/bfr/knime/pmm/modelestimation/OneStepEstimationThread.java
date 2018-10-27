@@ -198,8 +198,8 @@ public class OneStepEstimationThread implements Runnable {
 						.getElementSet()) {
 					TimeSeriesXml element = (TimeSeriesXml) el;
 
-					timeList.add(element.getTime());
-					targetValues.add(element.getConcentration());
+					timeList.add(element.time);
+					targetValues.add(element.concentration);
 				}
 
 				for (PmmXmlElementConvertable el : misc.getElementSet()) {

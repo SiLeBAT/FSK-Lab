@@ -98,7 +98,7 @@ public class DbIo {
 											toksLui,
 											toksSd == null || toksSd[i] == null ? null : convert(Double.parseDouble(toksSd[i].toString()), toksLui, modelUnit, modelUnitCat),
 											toksWdh == null || toksWdh[i] == null ? null : (int) Double.parseDouble(toksWdh[i].toString()));
-							if (toksLot != null && toksLot[i] != null) tsx.setConcentrationUnitObjectType(toksLot[i].toString());
+							if (toksLot != null && toksLot[i] != null) tsx.concentrationUnitObjectType = toksLot[i].toString();
 							tsDoc.add(tsx);
 						}
 						catch (Exception e) {

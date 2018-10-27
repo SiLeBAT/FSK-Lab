@@ -129,7 +129,7 @@ public class CombaseWriter {
 				for (PmmXmlElementConvertable el : tsXmlDoc.getElementSet()) {
 					if (el instanceof TimeSeriesXml) {
 						TimeSeriesXml tsx = (TimeSeriesXml) el;
-						buf.append("\"" + tsx.getTime() + "\"\t\"" + tsx.getConcentration() + "\"\n");
+						buf.append("\"" + tsx.time + "\"\t\"" + tsx.concentration + "\"\n");
 					}
 				}
 			}

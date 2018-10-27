@@ -312,8 +312,8 @@ public class TableReader {
 						.getElementSet()) {
 					TimeSeriesXml element = (TimeSeriesXml) el;
 
-					timeList.add(element.getTime());
-					logcList.add(element.getConcentration());
+					timeList.add(element.time);
+					logcList.add(element.concentration);
 					dataPoints.add(element);
 				}
 

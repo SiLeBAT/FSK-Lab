@@ -40,13 +40,13 @@ public class DataParser {
 		double timeValues[] = new double[mdData.size()];
 		for (int i = 0; i < mdData.size(); i++) {
 			TimeSeriesXml timeSeriesXml = (TimeSeriesXml) mdData.get(i);
-			concValues[i] = timeSeriesXml.getConcentration();
-			timeValues[i] = timeSeriesXml.getTime();
+			concValues[i] = timeSeriesXml.concentration;
+			timeValues[i] = timeSeriesXml.time;
 		}
 
 		// Gets first point
 		TimeSeriesXml aPoint = (TimeSeriesXml) tuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES).get(0);
-		String concUnit = aPoint.getConcentrationUnit();
+		String concUnit = aPoint.concentrationUnit;
 		PMFUnitDefinition concUnitDef = null;
 		try {
 			concUnitDef = WriterUtils.createUnitFromDB(concUnit);
@@ -55,7 +55,7 @@ public class DataParser {
 			e1.printStackTrace();
 		}
 
-		String timeUnit = aPoint.getTimeUnit();
+		String timeUnit = aPoint.timeUnit;
 		PMFUnitDefinition timeUnitDef = null;
 		try {
 			timeUnitDef = WriterUtils.createUnitFromDB(timeUnit);

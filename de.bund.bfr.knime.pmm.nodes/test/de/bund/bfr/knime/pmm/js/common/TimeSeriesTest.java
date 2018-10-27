@@ -206,15 +206,15 @@ public class TimeSeriesTest {
 		timeSeries.setNumberOfMeasurements(numberOfMeasurements);
 		TimeSeriesXml timeSeriesXml = timeSeries.toTimeSeriesXml();
 
-		assertEquals(name, timeSeriesXml.getName());
-		assertEquals(time, timeSeriesXml.getTime(), 0.0);
-		assertEquals(timeUnit, timeSeriesXml.getTimeUnit());
-		assertEquals(origTimeUnit, timeSeriesXml.getOrigTimeUnit());
-		assertEquals(concentration, timeSeriesXml.getConcentration(), 0.0);
-		assertEquals(concentrationUnit, timeSeriesXml.getConcentrationUnit());
-		assertEquals(concentrationUnitObjectType, timeSeriesXml.getConcentrationUnitObjectType());
-		assertEquals(origConcentrationUnit, timeSeriesXml.getOrigConcentrationUnit());
-		assertEquals(concentrationStdDev, timeSeriesXml.getConcentrationStdDev(), 0.0);
-		assertTrue(numberOfMeasurements == timeSeriesXml.getNumberOfMeasurements());
+		assertEquals(name, timeSeriesXml.name);
+		assertEquals(time, timeSeriesXml.time, 0.0);
+		assertEquals(timeUnit, timeSeriesXml.timeUnit);
+		assertEquals(origTimeUnit, timeSeriesXml.origTimeUnit);
+		assertEquals(concentration, timeSeriesXml.concentration, 0.0);
+		assertEquals(concentrationUnit, timeSeriesXml.concentrationUnit);
+		assertEquals(concentrationUnitObjectType, timeSeriesXml.concentrationUnitObjectType);
+		assertEquals(origConcentrationUnit, timeSeriesXml.origConcentrationUnit);
+		assertEquals(concentrationStdDev, timeSeriesXml.concentrationStdDev, 0.0);
+		assertTrue(numberOfMeasurements == timeSeriesXml.numberOfMeasurements);
 	}
 }

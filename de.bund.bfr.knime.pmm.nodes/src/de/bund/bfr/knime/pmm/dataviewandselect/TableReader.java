@@ -123,11 +123,11 @@ public class TableReader {
 			for (PmmXmlElementConvertable el : timeSeriesXml.getElementSet()) {
 				TimeSeriesXml element = (TimeSeriesXml) el;
 
-				timeList.add(element.getTime());
-				logcList.add(element.getConcentration());
+				timeList.add(element.time);
+				logcList.add(element.concentration);
 				dataPoints.add(element);
-				timeUnit = element.getTimeUnit();
-				concentrationUnit = element.getConcentrationUnit();
+				timeUnit = element.timeUnit;
+				concentrationUnit = element.concentrationUnit;
 			}
 
 			if (tuple.getString(TimeSeriesSchema.ATT_COMBASEID) != null) {

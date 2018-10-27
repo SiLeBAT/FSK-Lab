@@ -64,8 +64,8 @@ public class TimeSeriesTable extends JTable implements ActionListener {
 		this(timeSeries.size(), 1, timeEditable, logcEditable);
 
 		for (int i = 0; i < timeSeries.size(); i++) {
-			setTime(i, timeSeries.get(i).getTime());
-			setLogc(i, timeSeries.get(i).getConcentration());
+			setTime(i, timeSeries.get(i).time);
+			setLogc(i, timeSeries.get(i).concentration);
 		}
 	}
 

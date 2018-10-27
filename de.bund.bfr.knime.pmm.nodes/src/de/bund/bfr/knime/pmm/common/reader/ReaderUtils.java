@@ -146,7 +146,7 @@ public class ReaderUtils {
 
       TimeSeriesXml t =
           new TimeSeriesXml(name, time, timeUnit, conc, concUnit, concStdDev, numberOfMeasurements);
-      t.setConcentrationUnitObjectType(concUnitObjectType);
+      t.concentrationUnitObjectType = concUnitObjectType;
       mdData.add(t);
     }
 

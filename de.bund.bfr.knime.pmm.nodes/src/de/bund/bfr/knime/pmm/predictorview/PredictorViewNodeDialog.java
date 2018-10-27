@@ -174,8 +174,8 @@ public class PredictorViewNodeDialog extends DataAwareNodeDialogPane implements
 					for(KnimeTuple tuple : prePredictuples) {
 						PmmXmlDoc mdData = tuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
 						TimeSeriesXml timeSeriesXml = (TimeSeriesXml) mdData.get(mdData.size()-1);
-						previousConcValues = timeSeriesXml.getConcentration();
-						previousConcUnit = timeSeriesXml.getConcentrationUnit();
+						previousConcValues = timeSeriesXml.concentration;
+						previousConcUnit = timeSeriesXml.concentrationUnit;
 						
 						
 					}

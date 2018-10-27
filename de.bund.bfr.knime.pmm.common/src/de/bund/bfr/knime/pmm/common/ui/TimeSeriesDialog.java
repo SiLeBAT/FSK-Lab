@@ -89,10 +89,10 @@ public class TimeSeriesDialog extends JDialog implements ActionListener {
 				.get(0).getStandardUnit();
 
 		for (TimeSeriesXml point : timeSeries) {
-			timeList.add(point.getTime());
-			logcList.add(point.getConcentration());
-			timeUnit = point.getTimeUnit();
-			concentrationUnit = point.getConcentrationUnit();
+			timeList.add(point.time);
+			logcList.add(point.concentration);
+			timeUnit = point.timeUnit;
+			concentrationUnit = point.concentrationUnit;
 		}
 
 		Plotable plotable = new Plotable(Plotable.DATASET);

@@ -798,7 +798,7 @@ public class TableReader {
 		for (KnimeTuple tuple : tuples) {
 			for (PmmXmlElementConvertable el : tuple.getPmmXml(
 					TimeSeriesSchema.ATT_TIMESERIES).getElementSet()) {
-				Double value = ((TimeSeriesXml) el).getConcentration();
+				Double value = ((TimeSeriesXml) el).concentration;
 
 				if (value != null) {
 					min = Math.min(value, min);

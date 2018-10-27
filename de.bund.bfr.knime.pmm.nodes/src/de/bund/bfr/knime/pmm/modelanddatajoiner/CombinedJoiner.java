@@ -349,13 +349,13 @@ public class CombinedJoiner implements Joiner {
 				for (PmmXmlElementConvertable el : timeSeries.getElementSet()) {
 					TimeSeriesXml element = (TimeSeriesXml) el;
 
-					element.setTime(Categories.getTimeCategory().convert(
-							element.getTime(), element.getTimeUnit(), timeUnit));
-					element.setConcentration(concentrationCategory.convert(
-							element.getConcentration(),
-							element.getConcentrationUnit(), concentrationUnit));
-					element.setTimeUnit(timeUnit);
-					element.setConcentrationUnit(concentrationUnit);
+					element.time = Categories.getTimeCategory().convert(
+							element.time, element.timeUnit, timeUnit);
+					element.concentration = concentrationCategory.convert(
+							element.concentration,
+							element.concentrationUnit, concentrationUnit);
+					element.timeUnit = timeUnit;
+					element.concentrationUnit = concentrationUnit;
 				}
 
 				for (PmmXmlElementConvertable el : misc.getElementSet()) {

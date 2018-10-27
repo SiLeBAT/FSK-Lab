@@ -306,16 +306,16 @@ public class TimeSeries implements ViewValue {
 	 */
 	public static TimeSeries toTimeSeries(TimeSeriesXml timeSeriesXml) {
 		TimeSeries timeSeries = new TimeSeries();
-		timeSeries.name = timeSeriesXml.getName();
-		timeSeries.time = timeSeriesXml.getTime();
-		timeSeries.timeUnit = timeSeriesXml.getTimeUnit();
-		timeSeries.origTimeUnit = timeSeriesXml.getOrigTimeUnit();
-		timeSeries.concentration = timeSeriesXml.getConcentration();
-		timeSeries.concentrationUnit = timeSeriesXml.getConcentrationUnit();
-		timeSeries.concentrationUnitObjectType = timeSeriesXml.getConcentrationUnitObjectType();
-		timeSeries.origConcentrationUnit = timeSeriesXml.getOrigConcentrationUnit();
-		timeSeries.concentrationStdDev = timeSeriesXml.getConcentrationStdDev();
-		timeSeries.numberOfMeasurements = timeSeriesXml.getNumberOfMeasurements();
+		timeSeries.name = timeSeriesXml.name;
+		timeSeries.time = timeSeriesXml.time;
+		timeSeries.timeUnit = timeSeriesXml.timeUnit;
+		timeSeries.origTimeUnit = timeSeriesXml.origTimeUnit;
+		timeSeries.concentration = timeSeriesXml.concentration;
+		timeSeries.concentrationUnit = timeSeriesXml.concentrationUnit;
+		timeSeries.concentrationUnitObjectType = timeSeriesXml.concentrationUnitObjectType;
+		timeSeries.origConcentrationUnit = timeSeriesXml.origConcentrationUnit;
+		timeSeries.concentrationStdDev = timeSeriesXml.concentrationStdDev;
+		timeSeries.numberOfMeasurements = timeSeriesXml.numberOfMeasurements;
 
 		return timeSeries;
 	}

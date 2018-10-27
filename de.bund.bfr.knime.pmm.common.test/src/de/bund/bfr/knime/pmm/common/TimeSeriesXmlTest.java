@@ -16,30 +16,30 @@ public class TimeSeriesXmlTest {
 		// Test constructor with name, time, timeUnit, concentration, concentrationUnit,
 		// concentrationStdDev, numberOfMeasurements
 		TimeSeriesXml series0 = new TimeSeriesXml("name", 0.0, "timeUnit", 1.0, "concentrationUnit", 0.0, 1);
-		assertEquals("name", series0.getName());
-		assertEquals(0.0, series0.getTime(), .0);
-		assertEquals("timeUnit", series0.getTimeUnit());
-		assertEquals("timeUnit", series0.getOrigTimeUnit());
-		assertEquals(1.0, series0.getConcentration(), .0);
-		assertEquals("concentrationUnit", series0.getConcentrationUnit());
-		assertNull(series0.getConcentrationUnitObjectType());
-		assertEquals("concentrationUnit", series0.getOrigConcentrationUnit());
-		assertEquals(0.0, series0.getConcentrationStdDev(), .0);
-		assertTrue(1 == series0.getNumberOfMeasurements());
+		assertEquals("name", series0.name);
+		assertEquals(0.0, series0.time, .0);
+		assertEquals("timeUnit", series0.timeUnit);
+		assertEquals("timeUnit", series0.origTimeUnit);
+		assertEquals(1.0, series0.concentration, .0);
+		assertEquals("concentrationUnit", series0.concentrationUnit);
+		assertNull(series0.concentrationUnitObjectType);
+		assertEquals("concentrationUnit", series0.origConcentrationUnit);
+		assertEquals(0.0, series0.concentrationStdDev, .0);
+		assertTrue(1 == series0.numberOfMeasurements);
 
 		// Test fully parameterized constructor
 		TimeSeriesXml series1 = new TimeSeriesXml("name", 0.0, "timeUnit", "origTimeUnit", 1.0, "concentrationUnit",
 				"concentrationUnitObjectType", "origConcentrationUnit", 0.0, 1);
-		assertEquals("name", series0.getName());
-		assertEquals(0.0, series0.getTime(), .0);
-		assertEquals("timeUnit", series0.getTimeUnit());
-		assertEquals("timeUnit", series0.getOrigTimeUnit());
-		assertEquals(1.0, series0.getConcentration(), .0);
-		assertEquals("concentrationUnit", series0.getConcentrationUnit());
-		assertEquals("concentrationUnitObjectType", series1.getConcentrationUnitObjectType());
-		assertEquals("origConcentrationUnit", series1.getOrigConcentrationUnit());
-		assertEquals(0.0, series1.getConcentrationStdDev(), .0);
-		assertTrue(1 == series1.getNumberOfMeasurements());
+		assertEquals("name", series0.name);
+		assertEquals(0.0, series0.time, .0);
+		assertEquals("timeUnit", series0.timeUnit);
+		assertEquals("timeUnit", series0.origTimeUnit);
+		assertEquals(1.0, series0.concentration, .0);
+		assertEquals("concentrationUnit", series0.concentrationUnit);
+		assertEquals("concentrationUnitObjectType", series1.concentrationUnitObjectType);
+		assertEquals("origConcentrationUnit", series1.origConcentrationUnit);
+		assertEquals(0.0, series1.concentrationStdDev, .0);
+		assertTrue(1 == series1.numberOfMeasurements);
 
 		// Test copy constructor with JDOM Element
 		Element element = new Element(TimeSeriesXml.ELEMENT_TIMESERIES);
@@ -55,16 +55,16 @@ public class TimeSeriesXmlTest {
 		element.setAttribute("numberOfMeasurements", "1");
 		
 		TimeSeriesXml series2 = new TimeSeriesXml(element);
-		assertEquals("name", series2.getName());
-		assertEquals(0.0, series2.getTime(), .0);
-		assertEquals("timeUnit", series2.getTimeUnit());
-		assertEquals("origTimeUnit", series2.getOrigTimeUnit());
-		assertEquals(1.0, series2.getConcentration(), .0);
-		assertEquals("concentrationUnit", series2.getConcentrationUnit());
-		assertEquals("concentrationUnitObjectType", series2.getConcentrationUnitObjectType());
-		assertEquals("origConcentrationUnit", series2.getOrigConcentrationUnit());
-		assertEquals(0.0, series2.getConcentrationStdDev(), .0);
-		assertTrue(1 == series2.getNumberOfMeasurements());
+		assertEquals("name", series2.name);
+		assertEquals(0.0, series2.time, .0);
+		assertEquals("timeUnit", series2.timeUnit);
+		assertEquals("origTimeUnit", series2.origTimeUnit);
+		assertEquals(1.0, series2.concentration, .0);
+		assertEquals("concentrationUnit", series2.concentrationUnit);
+		assertEquals("concentrationUnitObjectType", series2.concentrationUnitObjectType);
+		assertEquals("origConcentrationUnit", series2.origConcentrationUnit);
+		assertEquals(0.0, series2.concentrationStdDev, .0);
+		assertTrue(1 == series2.numberOfMeasurements);
 	}
 
 	@Test

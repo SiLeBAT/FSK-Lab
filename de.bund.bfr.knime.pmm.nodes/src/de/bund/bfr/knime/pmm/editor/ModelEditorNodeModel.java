@@ -243,16 +243,16 @@ public final class ModelEditorNodeModel
 				TimeSeriesXml timeSeriesXml = (TimeSeriesXml) timeSeriesDoc.get(i);
 	
 				TimeSeries timeSeries = new TimeSeries();
-				timeSeries.setName(timeSeriesXml.getName());
-				timeSeries.setTime(timeSeriesXml.getTime());
-				timeSeries.setTimeUnit(timeSeriesXml.getTimeUnit());
-				timeSeries.setOrigTimeUnit(timeSeriesXml.getOrigTimeUnit());
-				timeSeries.setConcentration(timeSeriesXml.getConcentration());
-				timeSeries.setConcentrationUnit(timeSeriesXml.getConcentrationUnit());
-				timeSeries.setConcentrationUnitObjectType(timeSeriesXml.getConcentrationUnitObjectType());
-				timeSeries.setOrigConcentrationUnit(timeSeriesXml.getOrigConcentrationUnit());
-				timeSeries.setConcentrationStdDev(timeSeriesXml.getConcentrationStdDev());
-				timeSeries.setNumberOfMeasurements(timeSeriesXml.getNumberOfMeasurements());
+				timeSeries.setName(timeSeriesXml.name);
+				timeSeries.setTime(timeSeriesXml.time);
+				timeSeries.setTimeUnit(timeSeriesXml.timeUnit);
+				timeSeries.setOrigTimeUnit(timeSeriesXml.origTimeUnit);
+				timeSeries.setConcentration(timeSeriesXml.concentration);
+				timeSeries.setConcentrationUnit(timeSeriesXml.concentrationUnit);
+				timeSeries.setConcentrationUnitObjectType(timeSeriesXml.concentrationUnitObjectType);
+				timeSeries.setOrigConcentrationUnit(timeSeriesXml.origConcentrationUnit);
+				timeSeries.setConcentrationStdDev(timeSeriesXml.concentrationStdDev);
+				timeSeries.setNumberOfMeasurements(timeSeriesXml.numberOfMeasurements);
 				timeSeriesArray[i] = timeSeries;
 			}
 			TimeSeriesList timeSeriesList = new TimeSeriesList();

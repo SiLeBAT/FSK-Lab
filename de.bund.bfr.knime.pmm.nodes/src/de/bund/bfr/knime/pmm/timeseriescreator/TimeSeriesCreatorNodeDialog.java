@@ -273,8 +273,8 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 		}
 
 		for (int i = 0; i < set.getTimeSeries().size(); i++) {
-			table.setTime(i, set.getTimeSeries().get(i).getTime());
-			table.setLogc(i, set.getTimeSeries().get(i).getConcentration());
+			table.setTime(i, set.getTimeSeries().get(i).time);
+			table.setLogc(i, set.getTimeSeries().get(i).concentration);
 		}
 
 		int n = removeButtons.size();
@@ -732,10 +732,10 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 					Double logc = null;
 
 					if (i < count) {
-						time = ((TimeSeriesXml) timeSeriesXml.get(i)).getTime();
-						logc = ((TimeSeriesXml) timeSeriesXml.get(i)).getConcentration();
-						timeBox.setSelectedItem(((TimeSeriesXml) timeSeriesXml.get(i)).getTimeUnit());
-						logcBox.setSelectedItem(((TimeSeriesXml) timeSeriesXml.get(i)).getConcentrationUnit());
+						time = ((TimeSeriesXml) timeSeriesXml.get(i)).time;
+						logc = ((TimeSeriesXml) timeSeriesXml.get(i)).concentration;
+						timeBox.setSelectedItem(((TimeSeriesXml) timeSeriesXml.get(i)).timeUnit);
+						logcBox.setSelectedItem(((TimeSeriesXml) timeSeriesXml.get(i)).concentrationUnit);
 					}
 
 					table.setTime(i, time);
