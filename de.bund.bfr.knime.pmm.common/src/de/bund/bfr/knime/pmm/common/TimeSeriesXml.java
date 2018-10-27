@@ -34,7 +34,7 @@ public class TimeSeriesXml implements PmmXmlElementConvertable {
 	private static final String ATT_CONCENTRATION_UNIT_OBJECT_TYPE = "concentrationUnitObjectType";
 	private static final String ATT_ORIG_CONCENTRATION_UNIT = "origConcentrationUnit";
 	private static final String ATT_CONCENTRATION_STDDEV = "concentrationStdDev";
-	private static final String ATT_NUMBER_OF_MEASUREMENTS = "numberOfMeasurements";	
+	private static final String ATT_NUMBER_OF_MEASUREMENTS = "numberOfMeasurements";
 
 	private String name;
 	private Double time;
@@ -47,11 +47,10 @@ public class TimeSeriesXml implements PmmXmlElementConvertable {
 	private Double concentrationStdDev;
 	private Integer numberOfMeasurements;
 
-	public TimeSeriesXml(String name, Double time, String timeUnit,
-			String origTimeUnit, Double concentration,
-			String concentrationUnit, String concentrationUnitObjectType,
-			String origConcentrationUnit, Double concentrationStdDev,
-			Integer numberOfMeasurements) {
+	/** Fully parameterized constructor. */
+	public TimeSeriesXml(String name, Double time, String timeUnit, String origTimeUnit, Double concentration,
+			String concentrationUnit, String concentrationUnitObjectType, String origConcentrationUnit,
+			Double concentrationStdDev, Integer numberOfMeasurements) {
 		this.name = name;
 		this.time = time;
 		this.timeUnit = timeUnit;
@@ -64,26 +63,64 @@ public class TimeSeriesXml implements PmmXmlElementConvertable {
 		this.numberOfMeasurements = numberOfMeasurements;
 	}
 
-	public TimeSeriesXml(String name, Double time, String timeUnit,
-			Double concentration, String concentrationUnit,
+	/**
+	 * Constructor with name, time, timeUnit, concentration, concentrationUnit,
+	 * concentrationStdDev and concentrationUnit.
+	 * 
+	 * <ul>
+	 * <li>origTimeUnit is assigned timeUnit
+	 * <li>concentrationUnitObjectType is assigned null
+	 * <li>origConcentrationUnit is assigned concentrationUnit
+	 * </ul>
+	 */
+	public TimeSeriesXml(String name, Double time, String timeUnit, Double concentration, String concentrationUnit,
 			Double concentrationStdDev, Integer numberOfMeasurements) {
-		this(name, time, timeUnit, timeUnit, concentration, concentrationUnit,
-				null, concentrationUnit, concentrationStdDev,
-				numberOfMeasurements);
+		this(name, time, timeUnit, timeUnit, concentration, concentrationUnit, null, concentrationUnit,
+				concentrationStdDev, numberOfMeasurements);
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with
+	 * properties:
+	 * 
+	 * <ul>
+	 * <li>String "name"
+	 * <li>Double "time"
+	 * <li>String "unit"
+	 * <li>String "origTimeUnit"
+	 * <li>String "concentration"
+	 * <li>String "concentrationUnit"
+	 * <li>String "concentrationUnitObjectType"
+	 * <li>String "origConcentrationUnit"
+	 * <li>Double "concentrationStdDev"
+	 * <li>Integer "numberOfMeasurements"
+	 * </ul>
+	 */
 	public TimeSeriesXml(Element el) {
-		this(XmlHelper.getString(el, ATT_NAME), XmlHelper.getDouble(el,
-				ATT_TIME), XmlHelper.getString(el, ATT_TIME_UNIT), XmlHelper
-				.getString(el, ATT_ORIG_TIME_UNIT), XmlHelper.getDouble(el,
-				ATT_CONCENTRATION), XmlHelper.getString(el,
-				ATT_CONCENTRATION_UNIT), XmlHelper.getString(el,
-				ATT_CONCENTRATION_UNIT_OBJECT_TYPE), XmlHelper.getString(el,
-				ATT_ORIG_CONCENTRATION_UNIT), XmlHelper.getDouble(el,
-				ATT_CONCENTRATION_STDDEV), XmlHelper.getInt(el,
-				ATT_NUMBER_OF_MEASUREMENTS));
+		this(XmlHelper.getString(el, ATT_NAME), XmlHelper.getDouble(el, ATT_TIME),
+				XmlHelper.getString(el, ATT_TIME_UNIT), XmlHelper.getString(el, ATT_ORIG_TIME_UNIT),
+				XmlHelper.getDouble(el, ATT_CONCENTRATION), XmlHelper.getString(el, ATT_CONCENTRATION_UNIT),
+				XmlHelper.getString(el, ATT_CONCENTRATION_UNIT_OBJECT_TYPE),
+				XmlHelper.getString(el, ATT_ORIG_CONCENTRATION_UNIT), XmlHelper.getDouble(el, ATT_CONCENTRATION_STDDEV),
+				XmlHelper.getInt(el, ATT_NUMBER_OF_MEASUREMENTS));
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "timeseriesxml" and
+	 * properties:
+	 * <ul>
+	 * <li>String "name"
+	 * <li>Double "time"
+	 * <li>String "unit"
+	 * <li>String "origTimeUnit"
+	 * <li>String "concentration"
+	 * <li>String "concentrationUnit"
+	 * <li>String "concentrationUnitObjectType"
+	 * <li>String "origConcentrationUnit"
+	 * <li>Double "concentrationStdDev"
+	 * <li>Integer "numberOfMeasurements"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_TIMESERIES);
@@ -93,16 +130,11 @@ public class TimeSeriesXml implements PmmXmlElementConvertable {
 		ret.setAttribute(ATT_TIME_UNIT, XmlHelper.getNonNull(timeUnit));
 		ret.setAttribute(ATT_ORIG_TIME_UNIT, XmlHelper.getNonNull(origTimeUnit));
 		ret.setAttribute(ATT_CONCENTRATION, XmlHelper.getNonNull(concentration));
-		ret.setAttribute(ATT_CONCENTRATION_UNIT,
-				XmlHelper.getNonNull(concentrationUnit));
-		ret.setAttribute(ATT_CONCENTRATION_UNIT_OBJECT_TYPE,
-				XmlHelper.getNonNull(concentrationUnitObjectType));
-		ret.setAttribute(ATT_ORIG_CONCENTRATION_UNIT,
-				XmlHelper.getNonNull(origConcentrationUnit));
-		ret.setAttribute(ATT_CONCENTRATION_STDDEV,
-				XmlHelper.getNonNull(concentrationStdDev));
-		ret.setAttribute(ATT_NUMBER_OF_MEASUREMENTS,
-				XmlHelper.getNonNull(numberOfMeasurements));
+		ret.setAttribute(ATT_CONCENTRATION_UNIT, XmlHelper.getNonNull(concentrationUnit));
+		ret.setAttribute(ATT_CONCENTRATION_UNIT_OBJECT_TYPE, XmlHelper.getNonNull(concentrationUnitObjectType));
+		ret.setAttribute(ATT_ORIG_CONCENTRATION_UNIT, XmlHelper.getNonNull(origConcentrationUnit));
+		ret.setAttribute(ATT_CONCENTRATION_STDDEV, XmlHelper.getNonNull(concentrationStdDev));
+		ret.setAttribute(ATT_NUMBER_OF_MEASUREMENTS, XmlHelper.getNonNull(numberOfMeasurements));
 
 		return ret;
 	}
@@ -159,8 +191,7 @@ public class TimeSeriesXml implements PmmXmlElementConvertable {
 		return concentrationUnitObjectType;
 	}
 
-	public void setConcentrationUnitObjectType(
-			String concentrationUnitObjectType) {
+	public void setConcentrationUnitObjectType(String concentrationUnitObjectType) {
 		this.concentrationUnitObjectType = concentrationUnitObjectType;
 	}
 
