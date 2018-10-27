@@ -115,7 +115,7 @@ public class XLSReader {
 					miscColumns.put(column, columns.get(column));
 				} else if (mapping.equals(ID_COLUMN)) {
 					idColumn = columns.get(column);
-				} else if (mapping.equals(MdInfoXml.ATT_COMMENT)) {
+				} else if (mapping.equals("Comment")) {
 					commentColumn = columns.get(column);
 				} else if (mapping.equals(AttributeUtilities.TIME)) {
 					timeColumn = columns.get(column);
@@ -413,7 +413,7 @@ public class XLSReader {
 					miscColumns.put(column, columns.get(column));
 				} else if (mapping.equals(NAME_COLUMN)) {
 					idColumn = columns.get(column);
-				} else if (mapping.equals(MdInfoXml.ATT_COMMENT)) {
+				} else if (mapping.equals("Comment")) {
 					commentColumn = columns.get(column);
 				} else if (mapping.equals(AttributeUtilities.AGENT_DETAILS)) {
 					agentDetailsColumn = columns.get(column);

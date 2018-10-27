@@ -186,7 +186,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 		settingsPanel.add(new JLabel(AttributeUtilities.getName(TimeSeriesSchema.ATT_MATRIX) + ":"),
 				createConstraints(0, 3));
 		settingsPanel.add(new JLabel("ID:"), createConstraints(0, 4));
-		settingsPanel.add(new JLabel(MdInfoXml.ATT_COMMENT + ":"), createConstraints(0, 5));
+		settingsPanel.add(new JLabel("Comment" + ":"), createConstraints(0, 5));
 		settingsPanel.add(new JLabel(AttributeUtilities.getName(AttributeUtilities.TIME) + ":"),
 				createConstraints(0, 6));
 		settingsPanel.add(new JLabel(AttributeUtilities.getName(AttributeUtilities.CONCENTRATION) + ":"),
@@ -796,7 +796,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 			northPanel.setLayout(new GridBagLayout());
 
 			for (String column : columnList) {
-				JComboBox<String> box = new JComboBox<>(new String[] { XLSReader.ID_COLUMN, MdInfoXml.ATT_COMMENT,
+				JComboBox<String> box = new JComboBox<>(new String[] { XLSReader.ID_COLUMN, "Comment",
 						AttributeUtilities.TIME, AttributeUtilities.CONCENTRATION, AttributeUtilities.ATT_TEMPERATURE,
 						AttributeUtilities.ATT_PH, AttributeUtilities.ATT_AW, OTHER_PARAMETER, NO_PARAMETER });
 				JButton button = new JButton();
@@ -862,7 +862,7 @@ public class TimeSeriesCreatorNodeDialog extends NodeDialogPane implements Actio
 						JButton button = mappingButtons.get(column);
 						String selected = (String) box.getSelectedItem();
 
-						if (selected.equals(XLSReader.ID_COLUMN) || selected.equals(MdInfoXml.ATT_COMMENT)) {
+						if (selected.equals(XLSReader.ID_COLUMN) || selected.equals("Comment")) {
 							button.setEnabled(false);
 							button.setText(OTHER_PARAMETER);
 							mappings.put(column, selected);

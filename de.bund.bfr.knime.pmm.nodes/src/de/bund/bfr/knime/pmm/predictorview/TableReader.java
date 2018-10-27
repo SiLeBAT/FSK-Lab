@@ -206,7 +206,7 @@ public class TableReader {
 					new ArrayList<String>());
 			stringColumns.put(AttributeUtilities.MATRIX_DETAILS,
 					new ArrayList<String>());
-			stringColumns.put(MdInfoXml.ATT_COMMENT, new ArrayList<String>());
+			stringColumns.put("Comment", new ArrayList<String>());
 			standardVisibleColumns = new ArrayList<>(
 					Arrays.asList(ChartSelectionPanel.FORMULA,
 							ChartSelectionPanel.PARAMETERS));
@@ -249,7 +249,7 @@ public class TableReader {
 						new ArrayList<String>());
 				stringColumns.put(AttributeUtilities.MATRIX_DETAILS,
 						new ArrayList<String>());
-				stringColumns.put(MdInfoXml.ATT_COMMENT,
+				stringColumns.put("Comment",
 						new ArrayList<String>());
 				standardVisibleColumns = new ArrayList<>(Arrays.asList(
 						ChartSelectionPanel.FORMULA,
@@ -508,7 +508,7 @@ public class TableReader {
 						agent.detail);
 				stringColumns.get(AttributeUtilities.MATRIX_DETAILS).add(
 						matrix.detail);
-				stringColumns.get(MdInfoXml.ATT_COMMENT).add(
+				stringColumns.get("Comment").add(
 						((MdInfoXml) tuple.getPmmXml(
 								TimeSeriesSchema.ATT_MDINFO).get(0))
 								.comment);

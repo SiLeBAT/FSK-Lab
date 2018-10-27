@@ -77,7 +77,7 @@ public class TableReader {
 		stringColumns.put(TimeSeriesSchema.ATT_MATRIX, new ArrayList<String>());
 		stringColumns.put(AttributeUtilities.MATRIX_DETAILS,
 				new ArrayList<String>());
-		stringColumns.put(MdInfoXml.ATT_COMMENT, new ArrayList<String>());
+		stringColumns.put("Comment", new ArrayList<String>());
 		stringColumns.put(TimeSeriesSchema.ATT_LITMD, new ArrayList<String>());
 		conditions = new ArrayList<>();
 		conditionValues = new ArrayList<>();
@@ -159,7 +159,7 @@ public class TableReader {
 					.add(matrix.name);
 			stringColumns.get(AttributeUtilities.MATRIX_DETAILS).add(
 					matrix.detail);
-			stringColumns.get(MdInfoXml.ATT_COMMENT).add(
+			stringColumns.get("Comment").add(
 					((MdInfoXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MDINFO)
 							.get(0)).comment);
 			stringColumns.get(TimeSeriesSchema.ATT_LITMD).add(literature);

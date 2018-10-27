@@ -127,7 +127,7 @@ public class TableReader {
 					new ArrayList<String>());
 			stringColumns.put(AttributeUtilities.MATRIX_DETAILS,
 					new ArrayList<String>());
-			stringColumns.put(MdInfoXml.ATT_COMMENT, new ArrayList<String>());
+			stringColumns.put("Comment", new ArrayList<String>());
 			doubleColumns = new LinkedHashMap<>();
 			doubleColumns.put(Model1Schema.SSE, new ArrayList<Double>());
 			doubleColumns.put(Model1Schema.MSE, new ArrayList<Double>());
@@ -337,7 +337,7 @@ public class TableReader {
 						matrix.name);
 				stringColumns.get(AttributeUtilities.MATRIX_DETAILS).add(
 						matrix.detail);
-				stringColumns.get(MdInfoXml.ATT_COMMENT).add(
+				stringColumns.get("Comment").add(
 						((EstModelXml) estModelXml.get(0)).comment);
 				doubleColumns.get(Model1Schema.SSE).add(
 						((EstModelXml) estModelXml.get(0)).sse);

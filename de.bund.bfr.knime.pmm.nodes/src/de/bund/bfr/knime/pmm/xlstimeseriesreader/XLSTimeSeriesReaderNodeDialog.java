@@ -522,7 +522,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 				if (e.getSource() == columnBoxes.get(column)) {
 					String selected = (String) columnBoxes.get(column).getSelectedItem();
 
-					if (selected.equals(XLSReader.ID_COLUMN) || selected.equals(MdInfoXml.ATT_COMMENT)
+					if (selected.equals(XLSReader.ID_COLUMN) || selected.equals("Comment")
 							|| selected.equals(AttributeUtilities.TIME)
 							|| selected.equals(AttributeUtilities.CONCENTRATION)
 							|| selected.equals(XLSReader.CONCENTRATION_STDDEV_COLUMN)
@@ -769,7 +769,7 @@ public class XLSTimeSeriesReaderNodeDialog extends NodeDialogPane
 
 			for (String column : fileColumnList) {
 				JComboBox<String> box = new JComboBox<>(new String[] { DO_NOT_USE, OTHER_PARAMETER, XLSReader.ID_COLUMN,
-						MdInfoXml.ATT_COMMENT, AttributeUtilities.TIME, AttributeUtilities.CONCENTRATION,
+						"Comment", AttributeUtilities.TIME, AttributeUtilities.CONCENTRATION,
 						// XLSReader.CONCENTRATION_STDDEV_COLUMN,
 						// XLSReader.CONCENTRATION_MEASURE_NUMBER,
 						AttributeUtilities.AGENT_DETAILS, AttributeUtilities.MATRIX_DETAILS,

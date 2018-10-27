@@ -25,12 +25,6 @@ public class MdInfoXml implements PmmXmlElementConvertable {
 
 	public static final String ELEMENT_MDINFO = "mdinfoxml";
 
-	public static final String ATT_ID = "ID";
-	public static final String ATT_NAME = "Name";
-	public static final String ATT_COMMENT = "Comment";
-	public static final String ATT_QUALITYSCORE = "QualityScore";
-	public static final String ATT_CHECKED = "Checked";
-
 	public Integer id;
 	public String name;
 	public String comment;
@@ -58,8 +52,8 @@ public class MdInfoXml implements PmmXmlElementConvertable {
 	 * </ul>
 	 */
 	public MdInfoXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_COMMENT),
-				XmlHelper.getInt(el, ATT_QUALITYSCORE), XmlHelper.getBoolean(el, ATT_CHECKED));
+		this(XmlHelper.getInt(el, "ID"), XmlHelper.getString(el, "Name"), XmlHelper.getString(el, "Comment"),
+				XmlHelper.getInt(el, "QualityScore"), XmlHelper.getBoolean(el, "Checked"));
 	}
 
 	/**
@@ -76,11 +70,11 @@ public class MdInfoXml implements PmmXmlElementConvertable {
 	public Element toXmlElement() {
 		Element modelElement = new Element(ELEMENT_MDINFO);
 
-		modelElement.setAttribute(ATT_ID, XmlHelper.getNonNull(id));
-		modelElement.setAttribute(ATT_NAME, XmlHelper.getNonNull(name));
-		modelElement.setAttribute(ATT_COMMENT, XmlHelper.getNonNull(comment));
-		modelElement.setAttribute(ATT_QUALITYSCORE, XmlHelper.getNonNull(qualityScore));
-		modelElement.setAttribute(ATT_CHECKED, XmlHelper.getNonNull(checked));
+		modelElement.setAttribute("ID", XmlHelper.getNonNull(id));
+		modelElement.setAttribute("Name", XmlHelper.getNonNull(name));
+		modelElement.setAttribute("Comment", XmlHelper.getNonNull(comment));
+		modelElement.setAttribute("QualityScore", XmlHelper.getNonNull(qualityScore));
+		modelElement.setAttribute("Checked", XmlHelper.getNonNull(checked));
 
 		return modelElement;
 	}

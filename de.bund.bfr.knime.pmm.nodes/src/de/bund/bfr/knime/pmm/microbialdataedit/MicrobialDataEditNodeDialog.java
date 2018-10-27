@@ -383,8 +383,8 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 		table.getColumn(TimeSeriesSchema.ATT_AGENT).setCellEditor(new AgentEditor());
 		table.getColumn(TimeSeriesSchema.ATT_MATRIX).setCellRenderer(new MatrixRenderer());
 		table.getColumn(TimeSeriesSchema.ATT_MATRIX).setCellEditor(new MatrixEditor());
-		table.getColumn(MdInfoXml.ATT_QUALITYSCORE).setCellRenderer(new QualityScoreRenderer());
-		table.getColumn(MdInfoXml.ATT_QUALITYSCORE).setCellEditor(new QualityScoreEditor());
+		table.getColumn("QualityScore").setCellRenderer(new QualityScoreRenderer());
+		table.getColumn("QualityScore").setCellEditor(new QualityScoreEditor());
 		table.getColumn(TimeSeriesSchema.ATT_TIMESERIES).setCellRenderer(new ButtonRenderer("View"));
 		table.getColumn(TimeSeriesSchema.ATT_TIMESERIES).setCellEditor(new TimeSeriesEditor());
 		table.getColumn(AttributeUtilities.getName(TimeSeriesSchema.ATT_LITMD))
@@ -525,7 +525,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 						table.getModel().setValueAt(matrix, i, index);
 					}
 				}
-			} else if (column.equals(MdInfoXml.ATT_COMMENT) || column.equals(AttributeUtilities.AGENT_DETAILS)
+			} else if (column.equals("Comment") || column.equals(AttributeUtilities.AGENT_DETAILS)
 					|| column.equals(AttributeUtilities.MATRIX_DETAILS)) {
 				String value = (String) JOptionPane.showInputDialog(table.getTableHeader(), "Set All Values to?",
 						column, JOptionPane.QUESTION_MESSAGE, null, null, "");
@@ -535,7 +535,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 						table.getModel().setValueAt(value, i, index);
 					}
 				}
-			} else if (column.equals(MdInfoXml.ATT_CHECKED)) {
+			} else if (column.equals("Checked")) {
 				Boolean value = (Boolean) JOptionPane.showInputDialog(table.getTableHeader(), "Set All Values to?",
 						column, JOptionPane.QUESTION_MESSAGE, null, new Object[] { Boolean.TRUE, Boolean.FALSE },
 						Boolean.TRUE);
@@ -545,7 +545,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 						table.getModel().setValueAt(value, i, index);
 					}
 				}
-			} else if (column.equals(MdInfoXml.ATT_QUALITYSCORE)) {
+			} else if (column.equals("QualityScore")) {
 				QualityScoreDialog dialog = new QualityScoreDialog(table.getTableHeader());
 
 				dialog.setVisible(true);
@@ -920,11 +920,11 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 			case 4:
 				return AttributeUtilities.MATRIX_DETAILS;
 			case 5:
-				return MdInfoXml.ATT_COMMENT;
+				return "Comment";
 			case 6:
-				return MdInfoXml.ATT_QUALITYSCORE;
+				return "QualityScore";
 			case 7:
-				return MdInfoXml.ATT_CHECKED;
+				return "Checked";
 			case 8:
 				return TimeSeriesSchema.ATT_TIMESERIES;
 			case 9:
@@ -1467,7 +1467,7 @@ public class MicrobialDataEditNodeDialog extends DataAwareNodeDialogPane impleme
 		private Integer score;
 
 		public QualityScoreDialog(Component owner) {
-			super(JOptionPane.getFrameForComponent(owner), MdInfoXml.ATT_QUALITYSCORE, true);
+			super(JOptionPane.getFrameForComponent(owner), "QualityScore", true);
 			box = new QualityComboBox();
 			okButton = new JButton("OK");
 			okButton.addActionListener(this);

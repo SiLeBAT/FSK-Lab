@@ -741,7 +741,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 				if (e.getSource() == columnBoxes.get(column)) {
 					String selected = (String) columnBoxes.get(column).getSelectedItem();
 
-					if (selected.equals(XLSReader.NAME_COLUMN) || selected.equals(MdInfoXml.ATT_COMMENT)
+					if (selected.equals(XLSReader.NAME_COLUMN) || selected.equals("Comment")
 							|| selected.equals(AttributeUtilities.AGENT_DETAILS)
 							|| selected.equals(AttributeUtilities.MATRIX_DETAILS)) {
 						set.getColumnMappings().put(column, selected);
@@ -1198,7 +1198,7 @@ public class XLSModelReaderNodeDialog extends NodeDialogPane implements ActionLi
 
 			for (String column : fileColumnList) {
 				JComboBox<String> box = new JComboBox<>(new String[] { SettingsHelper.DO_NOT_USE,
-						SettingsHelper.OTHER_PARAMETER, XLSReader.NAME_COLUMN, MdInfoXml.ATT_COMMENT,
+						SettingsHelper.OTHER_PARAMETER, XLSReader.NAME_COLUMN, "Comment",
 						AttributeUtilities.AGENT_DETAILS, AttributeUtilities.MATRIX_DETAILS,
 						AttributeUtilities.ATT_TEMPERATURE, AttributeUtilities.ATT_PH, AttributeUtilities.ATT_AW });
 				JButton button = new JButton();
