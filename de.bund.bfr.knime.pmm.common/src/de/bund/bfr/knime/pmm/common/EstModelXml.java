@@ -25,19 +25,6 @@ public class EstModelXml implements PmmXmlElementConvertable {
 
 	public static final String ELEMENT_ESTMODEL = "estmodelxml";
 
-	private static final String ATT_ID = "id";
-	private static final String ATT_NAME = "name";
-	private static final String ATT_SSE = "sse";
-	private static final String ATT_RMS = "rms";
-	private static final String ATT_R2 = "r2";
-	private static final String ATT_AIC = "aic";
-	private static final String ATT_BIC = "bic";
-	private static final String ATT_DOF = "dof";
-	private static final String ATT_QUALITYSCORE = "qualityScore";
-	private static final String ATT_CHECKED = "checked";
-	private static final String ATT_COMMENT = "comment";
-	private static final String ATT_DBUUID = "dbuuid";
-
 	public Integer id;
 	public String name;
 	public Double sse;
@@ -96,16 +83,19 @@ public class EstModelXml implements PmmXmlElementConvertable {
 	 * <li>Double "r2"
 	 * <li>Double "aic"
 	 * <li>Double "bic"
+	 * <li>Integer "dof"
 	 * <li>Integer "qualityScore"
+	 * <li>Boolean "checked"
+	 * <li>String "comment"
 	 * <li>String "dbuuid"
 	 * </ul>
 	 */
 	public EstModelXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getDouble(el, ATT_SSE),
-				XmlHelper.getDouble(el, ATT_RMS), XmlHelper.getDouble(el, ATT_R2), XmlHelper.getDouble(el, ATT_AIC),
-				XmlHelper.getDouble(el, ATT_BIC), XmlHelper.getInt(el, ATT_DOF), XmlHelper.getBoolean(el, ATT_CHECKED),
-				XmlHelper.getInt(el, ATT_QUALITYSCORE), XmlHelper.getString(el, ATT_DBUUID));
-		this.comment = XmlHelper.getString(el, ATT_COMMENT);
+		this(XmlHelper.getInt(el, "id"), XmlHelper.getString(el, "name"), XmlHelper.getDouble(el, "sse"),
+				XmlHelper.getDouble(el, "rms"), XmlHelper.getDouble(el, "r2"), XmlHelper.getDouble(el, "aic"),
+				XmlHelper.getDouble(el, "bic"), XmlHelper.getInt(el, "dof"), XmlHelper.getBoolean(el, "checked"),
+				XmlHelper.getInt(el, "qualityScore"), XmlHelper.getString(el, "dbuuid"));
+		this.comment = XmlHelper.getString(el, "comment");
 	}
 
 	/**
@@ -118,7 +108,10 @@ public class EstModelXml implements PmmXmlElementConvertable {
 	 * <li>Double "r2"
 	 * <li>Double "aic"
 	 * <li>Double "bic"
+	 * <li>Integer "dof"
 	 * <li>Integer "qualityScore"
+	 * <li>Boolean "checked"
+	 * <li>String "comment"
 	 * <li>String "dbuuid"
 	 * </ul>
 	 */
@@ -126,18 +119,18 @@ public class EstModelXml implements PmmXmlElementConvertable {
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_ESTMODEL);
 
-		ret.setAttribute(ATT_ID, XmlHelper.getNonNull(id));
-		ret.setAttribute(ATT_NAME, XmlHelper.getNonNull(name));
-		ret.setAttribute(ATT_SSE, XmlHelper.getNonNull(sse));
-		ret.setAttribute(ATT_RMS, XmlHelper.getNonNull(rms));
-		ret.setAttribute(ATT_R2, XmlHelper.getNonNull(r2));
-		ret.setAttribute(ATT_AIC, XmlHelper.getNonNull(aic));
-		ret.setAttribute(ATT_BIC, XmlHelper.getNonNull(bic));
-		ret.setAttribute(ATT_DOF, XmlHelper.getNonNull(dof));
-		ret.setAttribute(ATT_QUALITYSCORE, XmlHelper.getNonNull(qualityScore));
-		ret.setAttribute(ATT_CHECKED, XmlHelper.getNonNull(checked));
-		ret.setAttribute(ATT_COMMENT, XmlHelper.getNonNull(comment));
-		ret.setAttribute(ATT_DBUUID, XmlHelper.getNonNull(dbuuid));
+		ret.setAttribute("id", XmlHelper.getNonNull(id));
+		ret.setAttribute("name", XmlHelper.getNonNull(name));
+		ret.setAttribute("sse", XmlHelper.getNonNull(sse));
+		ret.setAttribute("rms", XmlHelper.getNonNull(rms));
+		ret.setAttribute("r2", XmlHelper.getNonNull(r2));
+		ret.setAttribute("aic", XmlHelper.getNonNull(aic));
+		ret.setAttribute("bic", XmlHelper.getNonNull(bic));
+		ret.setAttribute("dof", XmlHelper.getNonNull(dof));
+		ret.setAttribute("qualityScore", XmlHelper.getNonNull(qualityScore));
+		ret.setAttribute("checked", XmlHelper.getNonNull(checked));
+		ret.setAttribute("comment", XmlHelper.getNonNull(comment));
+		ret.setAttribute("dbuuid", XmlHelper.getNonNull(dbuuid));
 
 		return ret;
 	}
