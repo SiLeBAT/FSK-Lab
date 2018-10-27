@@ -28,15 +28,6 @@ public class MiscXml implements PmmXmlElementConvertable {
 
 	public static final String ELEMENT_MISC = "misc";
 
-	private static final String ATT_ID = "id";
-	private static final String ATT_NAME = "name";
-	private static final String ATT_DESCRIPTION = "description";
-	private static final String ATT_VALUE = "value";
-	private static final String ATT_CATEGORY = "category";
-	private static final String ATT_UNIT = "unit";
-	private static final String ATT_ORIGUNIT = "origUnit";
-	private static final String ATT_DBUUID = "dbuuid";
-
 	public Integer id;
 	public String name;
 	public String description;
@@ -100,17 +91,17 @@ public class MiscXml implements PmmXmlElementConvertable {
 	 * </ul>
 	 */
 	public MiscXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_DESCRIPTION),
-				XmlHelper.getDouble(el, ATT_VALUE), null, XmlHelper.getString(el, ATT_UNIT),
-				XmlHelper.getString(el, ATT_ORIGUNIT), XmlHelper.getString(el, ATT_DBUUID));
+		this(XmlHelper.getInt(el, "id"), XmlHelper.getString(el, "name"), XmlHelper.getString(el, "description"),
+				XmlHelper.getDouble(el, "value"), null, XmlHelper.getString(el, "unit"),
+				XmlHelper.getString(el, "origUnit"), XmlHelper.getString(el, "dbuuid"));
 		categories = new ArrayList<>();
 
 		for (int i = 0;; i++) {
-			if (el.getAttribute(ATT_CATEGORY + i) == null) {
+			if (el.getAttribute("category" + i) == null) {
 				break;
 			}
 
-			categories.add(XmlHelper.getString(el, ATT_CATEGORY + i));
+			categories.add(XmlHelper.getString(el, "category" + i));
 		}
 	}
 
@@ -132,17 +123,17 @@ public class MiscXml implements PmmXmlElementConvertable {
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_MISC);
 
-		ret.setAttribute(ATT_ID, XmlHelper.getNonNull(id));
-		ret.setAttribute(ATT_NAME, XmlHelper.getNonNull(name));
-		ret.setAttribute(ATT_DESCRIPTION, XmlHelper.getNonNull(description));
-		ret.setAttribute(ATT_VALUE, XmlHelper.getNonNull(value));
-		ret.setAttribute(ATT_UNIT, XmlHelper.getNonNull(unit));
-		ret.setAttribute(ATT_ORIGUNIT, XmlHelper.getNonNull(origUnit));
-		ret.setAttribute(ATT_DBUUID, XmlHelper.getNonNull(dbuuid));
+		ret.setAttribute("id", XmlHelper.getNonNull(id));
+		ret.setAttribute("name", XmlHelper.getNonNull(name));
+		ret.setAttribute("description", XmlHelper.getNonNull(description));
+		ret.setAttribute("value", XmlHelper.getNonNull(value));
+		ret.setAttribute("unit", XmlHelper.getNonNull(unit));
+		ret.setAttribute("origUnit", XmlHelper.getNonNull(origUnit));
+		ret.setAttribute("dbuuid", XmlHelper.getNonNull(dbuuid));
 
 		if (categories != null) {
 			for (int i = 0; i < categories.size(); i++) {
-				ret.setAttribute(ATT_CATEGORY + i, XmlHelper.getNonNull(categories.get(i)));
+				ret.setAttribute("category" + i, XmlHelper.getNonNull(categories.get(i)));
 			}
 		}
 
