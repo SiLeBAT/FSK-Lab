@@ -27,11 +27,6 @@ public class AgentXml implements PmmXmlElementConvertable {
 
 	public static final String ELEMENT_AGENT = "agent";
 
-	private static final String ATT_ID = "id";
-	private static final String ATT_NAME = "name";
-	private static final String ATT_DETAIL = "detail";
-	private static final String ATT_DBUUID = "dbuuid";
-
 	public Integer id;
 	public String name;
 	public String detail;
@@ -70,8 +65,8 @@ public class AgentXml implements PmmXmlElementConvertable {
 	 * </ul>
 	 */
 	public AgentXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_DETAIL),
-				XmlHelper.getString(el, ATT_DBUUID));
+		this(XmlHelper.getInt(el, "id"), XmlHelper.getString(el, "name"), XmlHelper.getString(el, "detail"),
+				XmlHelper.getString(el, "dbuuid"));
 	}
 
 	/**
@@ -87,10 +82,10 @@ public class AgentXml implements PmmXmlElementConvertable {
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_AGENT);
 
-		ret.setAttribute(ATT_ID, XmlHelper.getNonNull(id));
-		ret.setAttribute(ATT_NAME, XmlHelper.getNonNull(name));
-		ret.setAttribute(ATT_DETAIL, XmlHelper.getNonNull(detail));
-		ret.setAttribute(ATT_DBUUID, XmlHelper.getNonNull(dbuuid));
+		ret.setAttribute("id", XmlHelper.getNonNull(id));
+		ret.setAttribute("name", XmlHelper.getNonNull(name));
+		ret.setAttribute("detail", XmlHelper.getNonNull(detail));
+		ret.setAttribute("dbuuid", XmlHelper.getNonNull(dbuuid));
 
 		return ret;
 	}
