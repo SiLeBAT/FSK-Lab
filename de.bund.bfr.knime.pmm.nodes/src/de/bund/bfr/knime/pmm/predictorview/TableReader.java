@@ -443,8 +443,7 @@ public class TableReader {
 
 					for (PmmXmlElementConvertable el2 : paramXml
 							.getElementSet()) {
-						cov.put(((ParamXml) el2).name, element
-								.getCorrelation(((ParamXml) el2).origName));
+						cov.put(((ParamXml) el2).name, element.correlations.get(((ParamXml) el2).origName));
 					}
 
 					covariances.put(element.name, cov);

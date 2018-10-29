@@ -32,7 +32,7 @@ public class ParamXmlTest {
 		assertNull(param0.category);
 		assertNull(param0.unit);
 		assertNull(param0.description);
-		assertTrue(param0.getAllCorrelations().isEmpty());
+		assertTrue(param0.correlations.isEmpty());
 
 		// Test constructor with name, isStartParam, value, error, min, max, P and t
 		ParamXml param1 = new ParamXml("name", false, 0.0, 0.0, 0.0, 1.0, 2.0, 3.0);
@@ -50,7 +50,7 @@ public class ParamXmlTest {
 		assertNull(param1.category);
 		assertNull(param1.unit);
 		assertNull(param1.description);
-		assertTrue(param1.getAllCorrelations().isEmpty());
+		assertTrue(param1.correlations.isEmpty());
 
 		// Test constructor with name, isStartParam, value, error, min, max, P, t,
 		// category and unit
@@ -69,7 +69,7 @@ public class ParamXmlTest {
 		assertEquals("category", param2.category);
 		assertEquals("unit", param2.unit);
 		assertNull(param2.description);
-		assertTrue(param2.getAllCorrelations().isEmpty());
+		assertTrue(param2.correlations.isEmpty());
 
 		// Test copy constructor (Element)
 		Element element = new Element(ParamXml.ELEMENT_PARAM);
@@ -108,7 +108,7 @@ public class ParamXmlTest {
 		assertEquals("category", param3.category);
 		assertEquals("unit", param3.unit);
 		assertEquals("description", param3.description);
-		assertEquals(0.0, param3.getCorrelation("a"), .0);
+		assertEquals(0.0, param3.correlations.get("a"), .0);
 
 		// Test fully parameterized constructor
 		ParamXml param4 = new ParamXml("name", "origName", false, 0.0, 0.0, 0.0, 1.0, 0.1, 0.2, 2.0, 3.0, "category",
@@ -127,7 +127,7 @@ public class ParamXmlTest {
 		assertEquals("category", param4.category);
 		assertEquals("unit", param4.unit);
 		assertEquals("description", param4.description);
-		assertTrue(param4.getAllCorrelations().isEmpty());
+		assertTrue(param4.correlations.isEmpty());
 	}
 
 	@Test

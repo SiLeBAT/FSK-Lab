@@ -93,7 +93,7 @@ public class ModelCombiner {
 						element.name = newParamName;
 					}
 
-					element.getAllCorrelations().clear();
+					element.correlations.clear();
 				}
 
 				String replacement = "(" + formulaSec.replace(depVarSec + "=", "") + ")";
@@ -480,7 +480,7 @@ public class ModelCombiner {
 
 				if (param.value == null && paramValues.get(id).get(param.name) != null) {
 					param.value = paramValues.get(id).get(param.name);
-					param.getAllCorrelations().clear();
+					param.correlations.clear();
 					param.error = errorValues.get(id).get(param.name);
 					param.t = tValues.get(id).get(param.name);
 					param.P = pValues.get(id).get(param.name);

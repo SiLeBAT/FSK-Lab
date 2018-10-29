@@ -314,6 +314,6 @@ public class ParamTest {
 		for (int i = 0; i < correlationNames.length; i++) {
 			correlations.put(correlationNames[i], correlationValues[i]);
 		}
-		assertEquals(correlations, paramXml.getAllCorrelations());
+		assertEquals(correlations, paramXml.correlations);
 	}
 }

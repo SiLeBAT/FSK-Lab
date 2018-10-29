@@ -384,7 +384,7 @@ public final class ModelEditorNodeModel
 		for (int i = 0; i < paramDoc.size(); i++) {
 			ParamXml paramXml = (ParamXml) paramDoc.get(i);
 
-			HashMap<String, Double> obtainedCorrelations = paramXml.getAllCorrelations();
+			HashMap<String, Double> obtainedCorrelations = paramXml.correlations;
 			String[] obtainedCorrelationNames = new String[obtainedCorrelations.size()];
 			double[] obtainedCorrelationValues = new double[obtainedCorrelations.size()];
 			int j = 0;
@@ -425,7 +425,7 @@ public final class ModelEditorNodeModel
 			for (int i = 0; i < paramSecDoc.size(); i++) {
 				ParamXml paramSecXml = (ParamXml) paramSecDoc.get(i);
 				
-				HashMap<String, Double> obtainedCorrelations = paramSecXml.getAllCorrelations();
+				HashMap<String, Double> obtainedCorrelations = paramSecXml.correlations;
 				String[] obtainedCorrelationNames = new String[obtainedCorrelations.size()];
 				double[] obtainedCorrelationValues = new double[obtainedCorrelations.size()];
 				int j = 0;

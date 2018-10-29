@@ -196,7 +196,7 @@ public class PrimaryEstimationThread implements Runnable {
 				element.P = parameterPValues.get(i);
 
 				for (int j = 0; j < paramXml.getElementSet().size(); j++) {
-					element.addCorrelation(
+					element.correlations.put(
 							((ParamXml) paramXml.get(j)).origName,
 							covariances.get(i).get(j));
 				}

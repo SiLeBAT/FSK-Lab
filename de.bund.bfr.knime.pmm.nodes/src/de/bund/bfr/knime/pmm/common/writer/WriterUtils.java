@@ -111,7 +111,7 @@ public class WriterUtils {
 		Double t = paramXml.t;
 		Boolean isStart = paramXml.isStartParam;
 
-		Map<String, Double> correlationMap = paramXml.getAllCorrelations();
+		Map<String, Double> correlationMap = paramXml.correlations;
 		Correlation[] correlations = new Correlation[correlationMap.size()];
 		int i = 0;
 		for (Map.Entry<String, Double> entry : correlationMap.entrySet()) {

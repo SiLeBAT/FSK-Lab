@@ -225,7 +225,7 @@ public class DbIo {
     			int estParam2Id = rs.getInt("param2");
     			Object param2 = DBKernel.getValue(null,"GeschaetzteParameter", new String[]{"GeschaetztesModell", "ID"}, new String[]{emid+"", estParam2Id+""}, "Parameter");
     			Object o = DBKernel.getValue(null,"ModellkatalogParameter", new String[]{"Modell", "ID", "Parametertyp"}, new String[]{modelId+"", param2+"", "2"}, "Parametername");
-    	    	if (o != null && rs.getObject("Wert") != null) px.addCorrelation(o.toString(), rs.getDouble("Wert"));
+    	    	if (o != null && rs.getObject("Wert") != null) px.correlations.put(o.toString(), rs.getDouble("Wert"));
     		} while(rs.next());
     	}
     	return px;

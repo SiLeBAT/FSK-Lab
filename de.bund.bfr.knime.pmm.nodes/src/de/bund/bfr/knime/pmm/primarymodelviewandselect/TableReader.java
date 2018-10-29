@@ -259,8 +259,7 @@ public class TableReader {
 				Map<String, Double> cov = new LinkedHashMap<>();
 
 				for (PmmXmlElementConvertable el2 : paramXml.getElementSet()) {
-					cov.put(((ParamXml) el2).name, element
-							.getCorrelation(((ParamXml) el2).origName));
+					cov.put(((ParamXml) el2).name, element.correlations.get(((ParamXml) el2).origName));
 				}
 
 				parameters.put(element.name, element.value);

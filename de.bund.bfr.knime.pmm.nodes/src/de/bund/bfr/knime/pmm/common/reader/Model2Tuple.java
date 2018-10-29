@@ -203,7 +203,7 @@ public class Model2Tuple {
     // Adds correlations
     if (coefficient.isSetCorrelations()) {
       for (Correlation corr : coefficient.getCorrelations()) {
-        paramXml.addCorrelation(corr.getName(), corr.getValue());
+        paramXml.correlations.put(corr.getName(), corr.getValue());
       }
     }
 

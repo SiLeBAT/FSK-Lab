@@ -134,7 +134,7 @@ public class Model1Tuple {
       }
       if (coefficient.isSetCorrelations()) {
         for (Correlation correlation : coefficient.getCorrelations()) {
-          paramXml.addCorrelation(correlation.getName(), correlation.getValue());
+          paramXml.correlations.put(correlation.getName(), correlation.getValue());
         }
       }
       // Adds limits

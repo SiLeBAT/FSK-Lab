@@ -495,7 +495,7 @@ public class Param implements ViewValue {
 		param.setUnit(paramXml.unit);
 		param.setDescription(paramXml.description);
 		
-		HashMap<String, Double> obtainedCorrelations = paramXml.getAllCorrelations();
+		HashMap<String, Double> obtainedCorrelations = paramXml.correlations;
 		String[] obtainedCorrelationNames = new String[obtainedCorrelations.size()];
 		double[] obtainedCorrelationValues = new double[obtainedCorrelations.size()];
 		int j = 0;

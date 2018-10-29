@@ -344,7 +344,7 @@ public class OneStepEstimationThread implements Runnable {
 						element.P = parameterPValues.get(j);
 
 						for (int k = 0; k < paramXml.getElementSet().size(); k++) {
-							element.addCorrelation(
+							element.correlations.put(
 									((ParamXml) paramXml.get(k)).origName,
 									covariances.get(j).get(k));
 						}

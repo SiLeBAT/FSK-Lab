@@ -849,7 +849,7 @@ public class Bfrdb {
 				if (paramId < 0) {
 					System.err.println("paramId < 0... " + px.origName);
 				}
-				insertEstParamCorrs(modelId, estModelId, paramId, px.getAllCorrelations());
+				insertEstParamCorrs(modelId, estModelId, paramId, px.correlations);
 			}
 		}
 

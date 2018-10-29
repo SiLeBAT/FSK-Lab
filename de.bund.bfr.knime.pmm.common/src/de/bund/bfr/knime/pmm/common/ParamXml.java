@@ -41,7 +41,7 @@ public class ParamXml implements PmmXmlElementConvertable {
 	public String category;
 	public String unit;
 	public String description;
-	private HashMap<String, Double> correlations;
+	public final HashMap<String, Double> correlations;
 
 	/** Fully parameterized constructor. */
 	public ParamXml(String name, String origName, Boolean isStartParam, Double value, Double error, Double min,
@@ -205,21 +205,5 @@ public class ParamXml implements PmmXmlElementConvertable {
 		}
 
 		return ret;
-	}
-
-	public void addCorrelation(String otherOrigname, Double value) {
-		correlations.put(otherOrigname, value);
-	}
-
-	public Double getCorrelation(String otherOrigname) {
-		if (correlations.containsKey(otherOrigname)) {
-			return correlations.get(otherOrigname);
-		} else {
-			return null;
-		}
-	}
-
-	public HashMap<String, Double> getAllCorrelations() {
-		return correlations;
 	}
 }
