@@ -29,28 +29,27 @@ public class MDMatrixXml implements MatrixXmlI, PmmXmlElementConvertable {
 
 	public static final String ELEMENT_MATRIX = "mdMatrix";
 
-	private static final String ATT_ID = "id";
-	private static final String ATT_NAME = "name";
-	private static final String ATT_DETAIL = "detail";
-	private static final String ATT_DBUUID = "dbuuid";
-
 	private Integer id;
 	private String name;
 	private String detail;
 	private String dbuuid;
 
+	/** Constructor with id, name and detail. dbuuid is null. */
 	public MDMatrixXml(Integer id, String name, String detail) {
 		this(id, name, detail, null);
 	}
 
+	/** id is given a random negative id. name, detail and dbuuid are null. */
 	public MDMatrixXml() {
 		this(MathUtilities.getRandomNegativeInt(), null, null, null);
 	}
 
+	/** Copy constructor. Take every property from another {@link MDMatrixXml}. */
 	public MDMatrixXml(MatrixXmlI matrix) {
 		this(matrix.getId(), matrix.getName(), matrix.getDetail(), matrix.getDbuuid());
 	}
 
+	/** Fully parameterized constructor. */
 	public MDMatrixXml(Integer id, String name, String detail, String dbuuid) {
 		this.id = id;
 		this.name = name;
@@ -58,23 +57,41 @@ public class MDMatrixXml implements MatrixXmlI, PmmXmlElementConvertable {
 		this.dbuuid = dbuuid;
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "detail"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	public MDMatrixXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_DETAIL),
-				XmlHelper.getString(el, ATT_DBUUID));
+		this(XmlHelper.getInt(el, "id"), XmlHelper.getString(el, "name"), XmlHelper.getString(el, "detail"),
+				XmlHelper.getString(el, "dbuuid"));
 	}
 	
 	public String getElementName() {
 		return "mdMatrix";
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "mdMatrix" and properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "detail"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_MATRIX);
 
-		ret.setAttribute(ATT_ID, XmlHelper.getNonNull(id));
-		ret.setAttribute(ATT_NAME, XmlHelper.getNonNull(name));
-		ret.setAttribute(ATT_DETAIL, XmlHelper.getNonNull(detail));
-		ret.setAttribute(ATT_DBUUID, XmlHelper.getNonNull(dbuuid));
+		ret.setAttribute("id", XmlHelper.getNonNull(id));
+		ret.setAttribute("name", XmlHelper.getNonNull(name));
+		ret.setAttribute("detail", XmlHelper.getNonNull(detail));
+		ret.setAttribute("dbuuid", XmlHelper.getNonNull(dbuuid));
 
 		return ret;
 	}
