@@ -27,22 +27,6 @@ public class ParamXml implements PmmXmlElementConvertable {
 
 	public static final String ELEMENT_PARAM = "param";
 
-	private static final String ATT_NAME = "name";
-	private static final String ATT_ORIGNAME = "origname";
-	private static final String ATT_IS_START = "isStart";
-	private static final String ATT_VALUE = "value";
-	private static final String ATT_ERROR = "error";
-	private static final String ATT_MIN = "min";
-	private static final String ATT_MAX = "max";
-	private static final String ATT_P = "P";
-	private static final String ATT_T = "t";
-	private static final String ATT_MINGUESS = "minGuess";
-	private static final String ATT_MAXGUESS = "maxGuess";
-	private static final String ATT_CATEGORY = "category";
-	private static final String ATT_UNIT = "unit";
-	private static final String ATT_DESCRIPTION = "description";
-	private static final String ATT_CORRELATION = "correlation";
-
 	public String name;
 	public String origName;
 	public Boolean isStartParam = false;
@@ -139,6 +123,7 @@ public class ParamXml implements PmmXmlElementConvertable {
 	 * <li>Double "min"
 	 * <li>Double "max"
 	 * <li>Double "P"
+	 * <li>Double "t"
 	 * <li>Double "minGuess"
 	 * <li>Double "maxGuess"
 	 * <li>String "category"
@@ -149,18 +134,18 @@ public class ParamXml implements PmmXmlElementConvertable {
 	 * </ul>
 	 */
 	public ParamXml(Element el) {
-		this(XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_ORIGNAME),
-				XmlHelper.getBoolean(el, ATT_IS_START), XmlHelper.getDouble(el, ATT_VALUE),
-				XmlHelper.getDouble(el, ATT_ERROR), XmlHelper.getDouble(el, ATT_MIN), XmlHelper.getDouble(el, ATT_MAX),
-				XmlHelper.getDouble(el, ATT_P), XmlHelper.getDouble(el, ATT_T), XmlHelper.getDouble(el, ATT_MINGUESS),
-				XmlHelper.getDouble(el, ATT_MAXGUESS), XmlHelper.getString(el, ATT_CATEGORY),
-				XmlHelper.getString(el, ATT_UNIT), XmlHelper.getString(el, ATT_DESCRIPTION),
+		this(XmlHelper.getString(el, "name"), XmlHelper.getString(el, "origname"),
+				XmlHelper.getBoolean(el, "isStart"), XmlHelper.getDouble(el, "value"),
+				XmlHelper.getDouble(el, "error"), XmlHelper.getDouble(el, "min"), XmlHelper.getDouble(el, "max"),
+				XmlHelper.getDouble(el, "P"), XmlHelper.getDouble(el, "t"), XmlHelper.getDouble(el, "minGuess"),
+				XmlHelper.getDouble(el, "maxGuess"), XmlHelper.getString(el, "category"),
+				XmlHelper.getString(el, "unit"), XmlHelper.getString(el, "description"),
 				new HashMap<String, Double>());
 
 		for (Element e : el.getChildren()) {
-			if (e.getName().equals(ATT_CORRELATION)) {
-				String n = e.getAttributeValue(ATT_ORIGNAME);
-				Double d = XmlHelper.getDouble(e, ATT_VALUE);
+			if (e.getName().equals("correlation")) {
+				String n = e.getAttributeValue("origname");
+				Double d = XmlHelper.getDouble(e, "value");
 
 				correlations.put(n, d);
 			}
@@ -179,6 +164,7 @@ public class ParamXml implements PmmXmlElementConvertable {
 	 * <li>Double "min"
 	 * <li>Double "max"
 	 * <li>Double "P"
+	 * <li>Double "t"
 	 * <li>Double "minGuess"
 	 * <li>Double "maxGuess"
 	 * <li>String "category"
@@ -192,28 +178,28 @@ public class ParamXml implements PmmXmlElementConvertable {
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_PARAM);
 
-		ret.setAttribute(ATT_NAME, XmlHelper.getNonNull(name));
-		ret.setAttribute(ATT_ORIGNAME, XmlHelper.getNonNull(origName));
-		ret.setAttribute(ATT_IS_START, XmlHelper.getNonNull(isStartParam));
-		ret.setAttribute(ATT_VALUE, XmlHelper.getNonNull(value));
-		ret.setAttribute(ATT_ERROR, XmlHelper.getNonNull(error));
-		ret.setAttribute(ATT_MIN, XmlHelper.getNonNull(min));
-		ret.setAttribute(ATT_MAX, XmlHelper.getNonNull(max));
-		ret.setAttribute(ATT_P, XmlHelper.getNonNull(P));
-		ret.setAttribute(ATT_T, XmlHelper.getNonNull(t));
-		ret.setAttribute(ATT_MINGUESS, XmlHelper.getNonNull(minGuess));
-		ret.setAttribute(ATT_MAXGUESS, XmlHelper.getNonNull(maxGuess));
-		ret.setAttribute(ATT_CATEGORY, XmlHelper.getNonNull(category));
-		ret.setAttribute(ATT_UNIT, XmlHelper.getNonNull(unit));
-		ret.setAttribute(ATT_DESCRIPTION, XmlHelper.getNonNull(description));
+		ret.setAttribute("name", XmlHelper.getNonNull(name));
+		ret.setAttribute("origname", XmlHelper.getNonNull(origName));
+		ret.setAttribute("isStart", XmlHelper.getNonNull(isStartParam));
+		ret.setAttribute("value", XmlHelper.getNonNull(value));
+		ret.setAttribute("error", XmlHelper.getNonNull(error));
+		ret.setAttribute("min", XmlHelper.getNonNull(min));
+		ret.setAttribute("max", XmlHelper.getNonNull(max));
+		ret.setAttribute("P", XmlHelper.getNonNull(P));
+		ret.setAttribute("t", XmlHelper.getNonNull(t));
+		ret.setAttribute("minGuess", XmlHelper.getNonNull(minGuess));
+		ret.setAttribute("maxGuess", XmlHelper.getNonNull(maxGuess));
+		ret.setAttribute("category", XmlHelper.getNonNull(category));
+		ret.setAttribute("unit", XmlHelper.getNonNull(unit));
+		ret.setAttribute("description", XmlHelper.getNonNull(description));
 
 		if (correlations != null) {
 			for (String origname : correlations.keySet()) {
-				Element element = new Element(ATT_CORRELATION);
+				Element element = new Element("correlation");
 				Double d = correlations.get(origname);
 
-				element.setAttribute(ATT_ORIGNAME, origname);
-				element.setAttribute(ATT_VALUE, XmlHelper.getNonNull(d));
+				element.setAttribute("origname", origname);
+				element.setAttribute("value", XmlHelper.getNonNull(d));
 				ret.addContent(element);
 			}
 		}
