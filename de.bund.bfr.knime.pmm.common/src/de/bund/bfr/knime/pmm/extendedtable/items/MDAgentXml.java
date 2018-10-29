@@ -73,8 +73,7 @@ public class MDAgentXml implements AgentXmlI, PmmXmlElementConvertable {
 	}
 
 	/**
-	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with
-	 * properties:
+	 * Generate a {@link org.jdom2.Element} with name "mdAgent" and properties:
 	 * <ul>
 	 * <li>Integer "id"
 	 * <li>String "name"
