@@ -29,28 +29,27 @@ public class Model2AgentXml implements AgentXmlI, PmmXmlElementConvertable {
 
 	public static final String ELEMENT_AGENT = "model2Agent";
 
-	private static final String ATT_ID = "id";
-	private static final String ATT_NAME = "name";
-	private static final String ATT_DETAIL = "detail";
-	private static final String ATT_DBUUID = "dbuuid";
-
 	private Integer id;
 	private String name;
 	private String detail;
 	private String dbuuid;
 
+	/** id is given a random negative int. name, detail and dbuuid are null. */
 	public Model2AgentXml() {
 		this(MathUtilities.getRandomNegativeInt(), null, null, null);
 	}
 
+	/** Constructor with id, name and detail. dbuuid is null. */
 	public Model2AgentXml(Integer id, String name, String detail) {
 		this(id, name, detail, null);
 	}
 
+	/** Copy constructor. Take every property from agent. */
 	public Model2AgentXml(AgentXmlI agent) {
 		this(agent.getId(), agent.getName(), agent.getDetail(), agent.getDbuuid());
 	}
 
+	/** Fully parameterized constructor. */
 	public Model2AgentXml(Integer id, String name, String detail, String dbuuid) {
 		this.id = id;
 		this.name = name;
@@ -58,18 +57,37 @@ public class Model2AgentXml implements AgentXmlI, PmmXmlElementConvertable {
 		this.dbuuid = dbuuid;
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with
+	 * properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "detail"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	public Model2AgentXml(Element el) {
-		this(XmlHelper.getInt(el, ATT_ID), XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_DETAIL),
-				XmlHelper.getString(el, ATT_DBUUID));
+		this(XmlHelper.getInt(el, "id"), XmlHelper.getString(el, "name"), XmlHelper.getString(el, "detail"),
+				XmlHelper.getString(el, "dbuuid"));
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "model2Agent" and properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "detail"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_AGENT);
 
-		ret.setAttribute(ATT_ID, XmlHelper.getNonNull(id));
-		ret.setAttribute(ATT_NAME, XmlHelper.getNonNull(name));
-		ret.setAttribute(ATT_DETAIL, XmlHelper.getNonNull(detail));
-		ret.setAttribute(ATT_DBUUID, XmlHelper.getNonNull(dbuuid));
+		ret.setAttribute("id", XmlHelper.getNonNull(id));
+		ret.setAttribute("name", XmlHelper.getNonNull(name));
+		ret.setAttribute("detail", XmlHelper.getNonNull(detail));
+		ret.setAttribute("dbuuid", XmlHelper.getNonNull(dbuuid));
 
 		return ret;
 	}
