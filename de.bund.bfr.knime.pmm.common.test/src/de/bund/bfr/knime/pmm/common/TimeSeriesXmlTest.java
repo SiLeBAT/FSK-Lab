@@ -30,12 +30,12 @@ public class TimeSeriesXmlTest {
 		// Test fully parameterized constructor
 		TimeSeriesXml series1 = new TimeSeriesXml("name", 0.0, "timeUnit", "origTimeUnit", 1.0, "concentrationUnit",
 				"concentrationUnitObjectType", "origConcentrationUnit", 0.0, 1);
-		assertEquals("name", series0.name);
-		assertEquals(0.0, series0.time, .0);
-		assertEquals("timeUnit", series0.timeUnit);
-		assertEquals("timeUnit", series0.origTimeUnit);
-		assertEquals(1.0, series0.concentration, .0);
-		assertEquals("concentrationUnit", series0.concentrationUnit);
+		assertEquals("name", series1.name);
+		assertEquals(0.0, series1.time, .0);
+		assertEquals("timeUnit", series1.timeUnit);
+		assertEquals("origTimeUnit", series1.origTimeUnit);
+		assertEquals(1.0, series1.concentration, .0);
+		assertEquals("concentrationUnit", series1.concentrationUnit);
 		assertEquals("concentrationUnitObjectType", series1.concentrationUnitObjectType);
 		assertEquals("origConcentrationUnit", series1.origConcentrationUnit);
 		assertEquals(0.0, series1.concentrationStdDev, .0);
