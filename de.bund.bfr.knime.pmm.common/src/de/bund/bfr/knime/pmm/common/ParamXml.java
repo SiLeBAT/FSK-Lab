@@ -59,13 +59,13 @@ public class ParamXml implements PmmXmlElementConvertable {
 	public String description;
 	private HashMap<String, Double> correlations;
 
-	public ParamXml(String name, String origName, Boolean isStartParam, Double value, Double error,
-			Double min, Double max, Double P, Double t, Double minGuess,
-			Double maxGuess, String category, String unit, String description,
-			HashMap<String, Double> correlations) {
+	/** Fully parameterized constructor. */
+	public ParamXml(String name, String origName, Boolean isStartParam, Double value, Double error, Double min,
+			Double max, Double P, Double t, Double minGuess, Double maxGuess, String category, String unit,
+			String description, HashMap<String, Double> correlations) {
 		this.name = name;
 		this.origName = origName;
-		this.isStartParam = (isStartParam==null?false:isStartParam);
+		this.isStartParam = (isStartParam == null ? false : isStartParam);
 		this.value = value;
 		this.error = error;
 		this.min = min;
@@ -80,33 +80,82 @@ public class ParamXml implements PmmXmlElementConvertable {
 		this.correlations = correlations;
 	}
 
+	/**
+	 * Constructor with name, isStartParam and value.
+	 * 
+	 * <ul>
+	 * <li>origName is assigned name.
+	 * <li>error, min, max, P, t, minGuess, maxGuess, category, unit, description
+	 * are null.
+	 * <li>correlations is assigned an empty map.
+	 * </ul>
+	 */
 	public ParamXml(String name, Boolean isStartParam, Double value) {
-		this(name, name, isStartParam, value, null, null, null, null, null, null, null, null,
-				null, null, new HashMap<String, Double>());
+		this(name, name, isStartParam, value, null, null, null, null, null, null, null, null, null, null,
+				new HashMap<String, Double>());
 	}
 
-	public ParamXml(String name, Boolean isStartParam, Double value, Double error, Double min,
-			Double max, Double P, Double t) {
-		this(name, name, isStartParam, value, error, min, max, P, t, null, null, null, null,
-				null, new HashMap<String, Double>());
+	/**
+	 * Constructor with name, isStartParam, value, error, min, max, P and t.
+	 * 
+	 * <ul>
+	 * <li>origName is assigned name.
+	 * <li>minGuess, maxGuess, category, unit, description are null.
+	 * <li>correlations is assigned an empty map.
+	 * </ul>
+	 */
+	public ParamXml(String name, Boolean isStartParam, Double value, Double error, Double min, Double max, Double P,
+			Double t) {
+		this(name, name, isStartParam, value, error, min, max, P, t, null, null, null, null, null,
+				new HashMap<String, Double>());
 	}
 
-	public ParamXml(String name, Boolean isStartParam, Double value, Double error, Double min,
-			Double max, Double P, Double t, String category, String unit) {
-		this(name, name, isStartParam, value, error, min, max, P, t, null, null, category,
-				unit, null, new HashMap<String, Double>());
+	/**
+	 * Constructor with name, isStartParam, value, error, min, max, P, t, category
+	 * and unit.
+	 * 
+	 * <ul>
+	 * <li>origName is assigned name.
+	 * <li>minGuess, maxGuess and description are null.
+	 * <li>correlations is assigned an empty map.
+	 * </ul>
+	 */
+	public ParamXml(String name, Boolean isStartParam, Double value, Double error, Double min, Double max, Double P,
+			Double t, String category, String unit) {
+		this(name, name, isStartParam, value, error, min, max, P, t, null, null, category, unit, null,
+				new HashMap<String, Double>());
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with
+	 * properties:
+	 * 
+	 * <ul>
+	 * <li>String "name"
+	 * <li>String "origname"
+	 * <li>Boolean "isStart"
+	 * <li>Double "value"
+	 * <li>Double "error"
+	 * <li>Double "min"
+	 * <li>Double "max"
+	 * <li>Double "P"
+	 * <li>Double "minGuess"
+	 * <li>Double "maxGuess"
+	 * <li>String "category"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * <li>Multiple children with name "correlation" and attributes: string
+	 * "origname" and double "value"
+	 * </ul>
+	 */
 	public ParamXml(Element el) {
-		this(XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el,
-				ATT_ORIGNAME), XmlHelper.getBoolean(el, ATT_IS_START), XmlHelper.getDouble(el, ATT_VALUE), XmlHelper
-				.getDouble(el, ATT_ERROR), XmlHelper.getDouble(el, ATT_MIN),
-				XmlHelper.getDouble(el, ATT_MAX), XmlHelper
-						.getDouble(el, ATT_P), XmlHelper.getDouble(el, ATT_T),
-				XmlHelper.getDouble(el, ATT_MINGUESS), XmlHelper.getDouble(el,
-						ATT_MAXGUESS), XmlHelper.getString(el, ATT_CATEGORY),
-				XmlHelper.getString(el, ATT_UNIT), XmlHelper.getString(el,
-						ATT_DESCRIPTION), new HashMap<String, Double>());
+		this(XmlHelper.getString(el, ATT_NAME), XmlHelper.getString(el, ATT_ORIGNAME),
+				XmlHelper.getBoolean(el, ATT_IS_START), XmlHelper.getDouble(el, ATT_VALUE),
+				XmlHelper.getDouble(el, ATT_ERROR), XmlHelper.getDouble(el, ATT_MIN), XmlHelper.getDouble(el, ATT_MAX),
+				XmlHelper.getDouble(el, ATT_P), XmlHelper.getDouble(el, ATT_T), XmlHelper.getDouble(el, ATT_MINGUESS),
+				XmlHelper.getDouble(el, ATT_MAXGUESS), XmlHelper.getString(el, ATT_CATEGORY),
+				XmlHelper.getString(el, ATT_UNIT), XmlHelper.getString(el, ATT_DESCRIPTION),
+				new HashMap<String, Double>());
 
 		for (Element e : el.getChildren()) {
 			if (e.getName().equals(ATT_CORRELATION)) {
@@ -118,6 +167,27 @@ public class ParamXml implements PmmXmlElementConvertable {
 		}
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "param" and properties:
+	 * 
+	 * <ul>
+	 * <li>String "name"
+	 * <li>String "origname"
+	 * <li>Boolean "isStart"
+	 * <li>Double "value"
+	 * <li>Double "error"
+	 * <li>Double "min"
+	 * <li>Double "max"
+	 * <li>Double "P"
+	 * <li>Double "minGuess"
+	 * <li>Double "maxGuess"
+	 * <li>String "category"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * <li>Multiple children with name "correlation" and attributes: string
+	 * "origname" and double "value"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_PARAM);
