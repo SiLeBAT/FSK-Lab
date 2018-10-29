@@ -59,6 +59,7 @@ public class EMLiteratureItem implements LiteratureItemI, PmmXmlElementConvertab
 	private String comment;
 	private String dbuuid;
 
+	/** Fully parameterized constructor. */
 	public EMLiteratureItem(final String author, final Integer year, final String title, final String abstractText,
 			final String journal, final String volume, final String issue, final Integer page,
 			final Integer approvalMode, final String website, final Integer type, final String comment,
@@ -80,6 +81,10 @@ public class EMLiteratureItem implements LiteratureItemI, PmmXmlElementConvertab
 		this.dbuuid = dbuuid;
 	}
 
+	/**
+	 * Constructor with author, year, title, abstractText, journal, volume, issue,
+	 * page, approvalMode, website, type, comment and id. dbuuid is null.
+	 */
 	public EMLiteratureItem(final String author, final Integer year, final String title, final String abstractText,
 			final String journal, final String volume, final String issue, final Integer page,
 			final Integer approvalMode, final String website, final Integer type, final String comment,
@@ -88,6 +93,14 @@ public class EMLiteratureItem implements LiteratureItemI, PmmXmlElementConvertab
 				null);
 	}
 
+	/**
+	 * Constructor with author, year, title, abstractText, journal, volume, issue,
+	 * page, approvalMode, website, type and comment.
+	 * <ul>
+	 * <li>id is given a random negative int.
+	 * <li>dbuuid is null.
+	 * </ul>
+	 */
 	public EMLiteratureItem(final String author, final Integer year, final String title, final String abstractText,
 			final String journal, final String volume, final String issue, final Integer page,
 			final Integer approvalMode, final String website, final Integer type, final String comment) {
@@ -95,6 +108,26 @@ public class EMLiteratureItem implements LiteratureItemI, PmmXmlElementConvertab
 				MathUtilities.getRandomNegativeInt(), null);
 	}
 
+	/**
+	 * Copy constructor. Take every property from a {@link org.jdom2.Element} with
+	 * properties:
+	 * <ul>
+	 * <li>String "author"
+	 * <li>Integer "year"
+	 * <li>String "title"
+	 * <li>String "abstract"
+	 * <li>String "journal"
+	 * <li>String "volume"
+	 * <li>String "issue"
+	 * <li>Integer "page"
+	 * <li>Integer "approvalMode"
+	 * <li>String "website"
+	 * <li>Integer "type"
+	 * <li>String "comment"
+	 * <li>Integer "id"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	public EMLiteratureItem(final Element el) {
 		this(XmlHelper.getString(el, ATT_AUTHOR), XmlHelper.getInt(el, ATT_YEAR), XmlHelper.getString(el, ATT_TITLE),
 				XmlHelper.getString(el, ATT_ABSTRACT), XmlHelper.getString(el, ATT_JOURNAL),
@@ -104,6 +137,7 @@ public class EMLiteratureItem implements LiteratureItemI, PmmXmlElementConvertab
 				XmlHelper.getString(el, ATT_DBUUID));
 	}
 
+	/** Copy constructor. */
 	public EMLiteratureItem(final LiteratureItemI lit) {
 		this(lit.getAuthor(), lit.getYear(), lit.getTitle(), lit.getAbstractText(), lit.getJournal(), lit.getVolume(),
 				lit.getIssue(), lit.getPage(), lit.getApprovalMode(), lit.getWebsite(), lit.getType(), lit.getComment(),
@@ -114,6 +148,25 @@ public class EMLiteratureItem implements LiteratureItemI, PmmXmlElementConvertab
 		return "EstimatedModelLiterature";
 	}
 
+	/**
+	 * Generate a {@link org.jdom2.Element} with name "EstimatedModelLiterature" and properties:
+	 * <ul>
+	 * <li>String "author"
+	 * <li>Integer "year"
+	 * <li>String "title"
+	 * <li>String "abstract"
+	 * <li>String "journal"
+	 * <li>String "volume"
+	 * <li>String "issue"
+	 * <li>Integer "page"
+	 * <li>Integer "approvalMode"
+	 * <li>String "website"
+	 * <li>Integer "type"
+	 * <li>String "comment"
+	 * <li>Integer "id"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	@Override
 	public Element toXmlElement() {
 		Element ret = new Element(ELEMENT_LITERATURE);

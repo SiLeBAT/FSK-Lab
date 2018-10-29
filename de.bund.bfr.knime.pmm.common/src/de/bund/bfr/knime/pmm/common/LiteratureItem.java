@@ -79,6 +79,7 @@ public class LiteratureItem implements PmmXmlElementConvertable {
 	 * <ul>
 	 * <li>id is given a random negative int.
 	 * <li>dbuuid is null.
+	 * </ul>
 	 */
 	public LiteratureItem(final String author, final Integer year, final String title, final String abstractText,
 			String journal, String volume, String issue, Integer page, Integer approvalMode, String website,
