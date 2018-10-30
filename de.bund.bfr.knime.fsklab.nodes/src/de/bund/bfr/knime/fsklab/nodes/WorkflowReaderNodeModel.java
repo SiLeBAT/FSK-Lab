@@ -47,6 +47,7 @@ import org.knime.core.node.port.flowvariable.FlowVariablePortObject;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.NodeID;
+import org.knime.core.node.workflow.NodeUIInformation;
 import org.knime.core.node.workflow.WorkflowAnnotation;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.node.workflow.WorkflowCopyContent;
@@ -127,10 +128,16 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
       WorkflowManager wfm = nodeContext.getWorkflowManager();
       WorkflowCopyContent.Builder orgContentBuilder = WorkflowCopyContent.builder();
       orgContentBuilder.setNodeIDs(embeddedSubWorkflow.getID());
+
       orgContentBuilder.setAnnotation(new WorkflowAnnotation[] {new WorkflowAnnotation()});
       orgContentBuilder.setIncludeInOutConnections(true);
-      wfm.copyFromAndPasteHere((WorkflowManager) embeddedSubWorkflowManager,
+      WorkflowCopyContent copiedContent = wfm.copyFromAndPasteHere((WorkflowManager) embeddedSubWorkflowManager,
           orgContentBuilder.build());
+     //shift the location
+      NodeContainer nc = wfm.getNodeContainer(copiedContent.getNodeIDs()[0]);
+      NodeUIInformation newUii =
+          NodeUIInformation.builder().setNodeLocation(150, 150, 0, 0).build();
+      nc.setUIInformation(newUii);
     } else {
       embeddedSubWorkflowManager.executeAllAndWaitUntilDone();
     }
