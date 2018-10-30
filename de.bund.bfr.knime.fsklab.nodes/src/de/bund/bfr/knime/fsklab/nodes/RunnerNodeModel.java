@@ -73,8 +73,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
 
   private RunnerNodeSettings nodeSettings = new RunnerNodeSettings();
-  // the Process Id
-  private Integer PID;
+
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
@@ -218,7 +217,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
       FskSimulation fskSimulation =
           firstFskObj.simulations.get(firstFskObj.selectedSimulationIndex);
-      PID = controller.eval("Sys.getpid()", true).asInteger();
       // recreate the INPUT or CONSTANT parameters which cause parameterId conflicts
       List<Parameter> alternativeParams = firstFskObj.modelMath.getParameter().stream()
           .filter(p -> p.getParameterID().endsWith(JoinerNodeModel.suffix))
@@ -326,7 +324,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       // get the index of the selected simulation saved by the JavaScript FSK Simulation
       // Configurator the default value is 0 which is the the default simulation
       FskSimulation fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
-      PID = controller.eval("Sys.getpid()", true).asInteger();
 
       ExecutionContext context = exec.createSubExecutionContext(1.0);
 
