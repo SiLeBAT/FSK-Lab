@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knimeNode icon="WorkflowWriter.png" type="Sink" deprecated="false"
+	xmlns="http://knime.org/node/v2.8"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
+	<name>Workflow Writer</name>
+
+	<shortDescription>
+		Write the current workflow to a FSX file.
+    </shortDescription>
+ 
+	<fullDescription>
+		<intro>
+			Write the current workflow with all its nodes and connections except the workflow reader itself.
+			This workflow will be copied and saved in a meta node.
+			The output ports of the selected node will be exported using the output ports of the meta node.
+						
+		</intro>
+		<option name="Output Path">
+			Location to file. May be an absolute URL, a mount-point relative
+			URL or a local path.
+		</option>
+	</fullDescription>
+
+	<ports>
+	</ports>
+</knimeNode>

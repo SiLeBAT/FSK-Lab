@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
+- Add workflow writer and reader nodes.
 - Add upload resource feature to the JS editor during the online mode(This feature work only online)!
 - Support adding resources via the editor JS dialog!
 - Add README tab to the JS Editor View!
