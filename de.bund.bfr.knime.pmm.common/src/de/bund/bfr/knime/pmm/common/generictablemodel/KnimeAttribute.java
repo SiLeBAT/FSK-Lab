@@ -28,21 +28,23 @@ public class KnimeAttribute {
 	public static final int TYPE_DOUBLE = 2;
 	public static final int TYPE_XML = 3;
 
-	private String name;
-	private int type;
+	public final String name;
+	public final int type;
 
-	protected KnimeAttribute(final String name, final int type)
+	public KnimeAttribute(final String name, final int type)
 			throws PmmException {
-		setName(name);
-		setType(type);
-	}
 
-	public String getName() {
-		return name;
-	}
+		if (name == null)
+			throw new PmmException("Column name must not be null.");
 
-	public int getType() {
-		return type;
+		if (name.isEmpty())
+			throw new PmmException("Column name must not be empty.");
+		
+		if (type < 0 || type > 3)
+			throw new PmmException("Unknown column type");
+
+		this.name = name;
+		this.type = type;
 	}
 
 	public boolean isDouble() {
@@ -52,24 +54,4 @@ public class KnimeAttribute {
 	public boolean isInt() {
 		return type == TYPE_INT;
 	}
-
-	public void setName(final String name) throws PmmException {
-
-		if (name == null)
-			throw new PmmException("Column name must not be null.");
-
-		if (name.isEmpty())
-			throw new PmmException("Column name must not be empty.");
-
-		this.name = name;
-	}
-
-	public void setType(final int type) throws PmmException {
-
-		if (type < 0 || type > 3)
-			throw new PmmException("Unknown column type");
-
-		this.type = type;
-	}
-
 }

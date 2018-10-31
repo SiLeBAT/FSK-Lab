@@ -118,7 +118,7 @@ public class KnimeSchema {
 				if (col.isDouble() && cspec.getType() != DoubleCell.TYPE)
 					continue;
 				
-				if (col.getName().equals(cspec.getName())) {
+				if (col.name.equals(cspec.getName())) {
 					present = true;
 					break;
 				}				
@@ -171,7 +171,7 @@ public class KnimeSchema {
 		DataColumnSpec[] spec = new DataColumnSpec[size()];
 		for (int i = 0; i < size(); i++ ) {			
 			KnimeAttribute col = attributeSet.get(i);			
-			switch(col.getType()) {			
+			switch(col.type) {			
 				case KnimeAttribute.TYPE_INT :
 					t = IntCell.TYPE; break;					
 				case KnimeAttribute.TYPE_DOUBLE :
@@ -182,7 +182,7 @@ public class KnimeSchema {
 					t = StringCell.TYPE;
 			}
 			
-			spec[i] = new DataColumnSpecCreator(col.getName(), t).createSpec();
+			spec[i] = new DataColumnSpecCreator(col.name, t).createSpec();
 		}
 		
 		return new DataTableSpec( spec );
@@ -191,7 +191,7 @@ public class KnimeSchema {
 	private void generateMap() {
 		attributeMap = new LinkedHashMap<>();
 		for (int i=0;i<attributeSet.size();i++) {
-			attributeMap.put(attributeSet.get(i).getName(), i);
+			attributeMap.put(attributeSet.get(i).name, i);
 		}		
 	}
 	public int getIndex(String attName) throws PmmException {
@@ -210,10 +210,10 @@ public class KnimeSchema {
 	}
 	
 	public String getName(final int i) {
-		return attributeSet.get(i).getName();
+		return attributeSet.get(i).name;
 	}
 	
-	public int getType(final int i) { return attributeSet.get(i).getType(); }
+	public int getType(final int i) { return attributeSet.get(i).type; }
 	
 	public int size() {
 		return attributeSet.size();
@@ -222,7 +222,7 @@ public class KnimeSchema {
 	private void addAttribute(final KnimeAttribute col) throws PmmException {		
 		if (col == null) throw new PmmException("Attribute must not be null.");		
 		attributeSet.add(col);
-		attributeMap.put(col.getName(), attributeMap.size());
+		attributeMap.put(col.name, attributeMap.size());
 	}
 	
 	private void addAttribute( final String name, final int type ) throws PmmException {
