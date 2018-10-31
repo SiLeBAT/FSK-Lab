@@ -66,7 +66,7 @@ public class KnimeAttribute {
 
 	public void setType(final int type) throws PmmException {
 
-		if (type < 0 || type > 7)
+		if (type < 0 || type > 3)
 			throw new PmmException("Unknown column type");
 
 		this.type = type;
