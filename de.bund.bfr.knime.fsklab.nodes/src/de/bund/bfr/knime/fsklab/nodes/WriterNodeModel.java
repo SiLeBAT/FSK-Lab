@@ -26,12 +26,20 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jdom2.DefaultJDOMFactory;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -59,6 +67,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
+import org.rosuda.REngine.REXP;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.SBMLWriter;
@@ -84,6 +93,8 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.r.client.RController;
+import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
@@ -282,7 +293,7 @@ class WriterNodeModel extends NoInternalsModel {
 
     if (localPath != null) {
       Files.deleteIfExists(localPath);
-      writeArchive(localPath.toFile(), in);
+      writeArchive(localPath.toFile(), in, exec);
     } else {
 
       // Creates archive in temporary archive file
@@ -292,7 +303,7 @@ class WriterNodeModel extends NoInternalsModel {
       archiveFile.delete();
 
       // Writes COMBINE archive
-      writeArchive(archiveFile, in);
+      writeArchive(archiveFile, in, exec);
 
       // Copies temporary file to output stream
       try (OutputStream os = FileUtil.openOutputConnection(url, "PUT").getOutputStream()) {
@@ -306,7 +317,8 @@ class WriterNodeModel extends NoInternalsModel {
     return new PortObject[] {};
   }
 
-  private static void writeArchive(File archiveFile, FskPortObject portObject) throws Exception {
+  private static void writeArchive(File archiveFile, FskPortObject portObject,
+      ExecutionContext exec) throws Exception {
 
     Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
 
@@ -324,32 +336,95 @@ class WriterNodeModel extends NoInternalsModel {
 
         File tempFile = FileUtil.createTempFile("sbml", "");
         new SBMLWriter().write(sbmlModelDoc, tempFile);
-        
+
         String targetName;
         if (portObject instanceof CombinedFskPortObject) {
-          targetName =
-              normalizeName(portObject) + "/" + sbmlModelDoc.getModel().getId() + ".sbml";
+          targetName = normalizeName(portObject) + "/" + sbmlModelDoc.getModel().getId() + ".sbml";
         } else {
           targetName = sbmlModelDoc.getModel().getId() + ".sbml";
         }
-        
+
         archive.addEntry(tempFile, targetName, URIS.get("sbml"));
       }
+      // get package version
+      try (RController controller = new RController()) {
+        final ScriptExecutor executor = new ScriptExecutor(controller);
+        // Gets library URI for the running platform
+        final URI libUri = NodeUtils.getLibURI();
+        JsonArrayBuilder rBuilder = Json.createArrayBuilder();
+        List<String> packagesWithoutInfo = new ArrayList<String>();
+        // Adds R libraries and their info
+        for (String pkg : portObject.packages) {
+          try {
+            REXP c = executor.execute("packageDescription(\"" + pkg + "\")$Version", exec);
+            String[] execResult = c.asStrings();
+            rBuilder.add(getJsonObject(pkg, execResult[0]));
+          } catch (Exception e) {
+            packagesWithoutInfo.add(pkg);
+          }
 
-      // Gets library URI for the running platform
-      final URI libUri = NodeUtils.getLibURI();
-      // Adds R libraries
-      for (String pkg : portObject.packages) {
-        Path path = LibRegistry.instance().getPath(pkg);
-
-        if (path != null) {
-          File file = path.toFile();
-          archive.addEntry(file, file.getName(), libUri);
+          Path path = LibRegistry.instance().getPath(pkg);
+          if (path != null) {
+            File file = path.toFile();
+            archive.addEntry(file, file.getName(), libUri);
+          }
         }
+        // try to get package info for libraries not installed yet.
+        if (packagesWithoutInfo.size() > 0) {
+          try {
+            String command =
+                "available.packages(contriburl = contrib.url(c(\"https://cloud.r-project.org/\"), \"both\"))[c('"
+                    + packagesWithoutInfo.stream().collect(Collectors.joining("','")) + "'),]";
+            REXP cExternal = executor.execute(command, exec);
+            String[] execResult = cExternal.asStrings();
+            for (int index = 0; index < packagesWithoutInfo.size(); index++) {
+              rBuilder.add(getJsonObject(packagesWithoutInfo.get(index),
+                  execResult[index + packagesWithoutInfo.size()]));
+            }
+          } // not able to get package info for some reason. then add only package name.
+          catch (Exception e) {
+            LOGGER.info("not able to get package version for: " + packagesWithoutInfo);
+            for (int index = 0; index < packagesWithoutInfo.size(); index++) {
+              rBuilder.add(getJsonObject(packagesWithoutInfo.get(index), ""));
+            }
+          }
+        }
+
+        JsonArray packageJsonArray = rBuilder.build();
+        JsonObjectBuilder mainBuilder = Json.createObjectBuilder();
+        // TODO is this accepted to put R as default language?
+        if (StringUtils.isBlank(portObject.generalInformation.getLanguageWrittenIn())) {
+          mainBuilder.add("Language", "R");
+        } else {
+          mainBuilder.add("Language", portObject.generalInformation.getLanguageWrittenIn());
+        }
+        mainBuilder.add("PackageList", packageJsonArray);
+        JsonObject packageList = mainBuilder.build();
+
+        addPackagesFile(archive, StringEscapeUtils.unescapeJson(packageList.toString()),
+            "packageList.txt");
       }
 
       archive.pack();
     }
+  }
+
+  public static JsonObject getJsonObject(String pkg, String version) {
+    JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+    jsonObjectBuilder.add("Package", pkg);
+    jsonObjectBuilder.add("Version", version);
+    return jsonObjectBuilder.build();
+  }
+
+  private static void addPackagesFile(final CombineArchive archive, final String packageInfoList,
+      final String filename) throws IOException, URISyntaxException {
+
+    File rPackagesFile = File.createTempFile("packageList", ".txt");
+    FileUtils.writeStringToFile(rPackagesFile, packageInfoList, "UTF-8");
+
+    archive.addEntry(rPackagesFile, filename, FSKML.getURIS(1, 0, 12).get("plain"));
+    rPackagesFile.delete();
+
   }
 
   public static String normalizeName(FskPortObject fskObj) {
