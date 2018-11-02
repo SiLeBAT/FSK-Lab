@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.3.0] - 2018-11-02
+
 ### Added
+- Add a new file packageList.txt contains info about the package version when archiving the FSKX file using the writer node.
 - Add workflow writer and reader nodes.
 - Add upload resource feature to the JS editor during the online mode(This feature work only online)!
 - Support adding resources via the editor JS dialog!
