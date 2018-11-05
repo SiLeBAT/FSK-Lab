@@ -283,7 +283,7 @@ class ReaderNodeModel extends NoInternalsModel {
         for (ArchiveEntry jsonEntry : jsonEntries) {
           String path = jsonEntry.getEntityPath();
           if (path.startsWith(parentPath) && (StringUtils.countMatches(path,
-              "/") == (StringUtils.countMatches(parentPath, "/") + 1))) {
+              "/") == (StringUtils.countMatches(parentPath, "/") + 1)) && path.endsWith("metaData.json")) {
             jsonEntry.extractFile(temp.toFile());
 
             // Loads metadata from temporary file
@@ -489,7 +489,8 @@ class ReaderNodeModel extends NoInternalsModel {
         List<ArchiveEntry> jsonEntries = archive.getEntriesWithFormat(URIS.get("json"));
         for (ArchiveEntry jsonEntry : jsonEntries) {
           String path = jsonEntry.getEntityPath();
-          if (path.indexOf(pathToResource) == 0) {
+          //read the metaData.json file only!
+          if (path.indexOf(pathToResource) == 0 && path.endsWith("metaData.json")) {
             jsonEntry.extractFile(temp.toFile());
 
             // Loads metadata from temporary file

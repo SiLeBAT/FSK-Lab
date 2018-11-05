@@ -402,7 +402,7 @@ class WriterNodeModel extends NoInternalsModel {
         JsonObject packageList = mainBuilder.build();
 
         addPackagesFile(archive, StringEscapeUtils.unescapeJson(packageList.toString()),
-            "packageList.txt");
+            "packages.json");
       }
 
       archive.pack();
@@ -419,10 +419,10 @@ class WriterNodeModel extends NoInternalsModel {
   private static void addPackagesFile(final CombineArchive archive, final String packageInfoList,
       final String filename) throws IOException, URISyntaxException {
 
-    File rPackagesFile = File.createTempFile("packageList", ".txt");
+    File rPackagesFile = File.createTempFile("tempPackage", ".json");
     FileUtils.writeStringToFile(rPackagesFile, packageInfoList, "UTF-8");
 
-    archive.addEntry(rPackagesFile, filename, FSKML.getURIS(1, 0, 12).get("plain"));
+    archive.addEntry(rPackagesFile, filename, FSKML.getURIS(1, 0, 12).get("json"));
     rPackagesFile.delete();
 
   }
