@@ -364,6 +364,15 @@ fskeditorjs = function() {
 			&& window.performance.timing.navigationStart ? window.performance
 			.now()
 			+ window.performance.timing.navigationStart : Date.now();
+	var hash = window.parent.location.hash;
+	var tempSpace = ""
+	if(hash){
+		sub = hash.substring(2,hash.indexOf("?"))
+		tempSpace = sub.substring(0,sub.indexOf("/"))+"/temp/tempspace/";
+		if(tempSpace.indexOf("-Web") < 0){
+			tempSpace = "";
+		}
+	}
 	joinerNode.init = function(representation, value) {
 
 		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
@@ -389,7 +398,7 @@ fskeditorjs = function() {
 			var anotherxhttp = new XMLHttpRequest();
 
 			anotherxhttp.open("put", server
-					+ "/knime/rest/v4/repository/jsEditorTempFolder"
+					+ "/knime/rest/v4/repository/"+tempSpace+"jsEditorTempFolder"
 					+ timeStampInMs, true);
 			anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
 			anotherxhttp.send();
@@ -629,7 +638,7 @@ fskeditorjs = function() {
 							fileUploadAJAXMap[file.name] = $
 									.ajax({
 										url : server
-												+ "/knime/rest/v4/repository/jsEditorTempFolder"
+												+ "/knime/rest/v4/repository/"+tempSpace+"/jsEditorTempFolder"
 												+ timeStampInMs + "/"
 												+ file.name + ":data",
 										xhr : function() {
