@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Changed
  - Change the packages file name from packageList.txt to packages.json!
+ - Create the upload folder in the current temp folder of FSK or RAKIP ( online model creation). If not possible then that folder will be added to the root.
 ## [1.3.0] - 2018-11-02
 
 ### Added
