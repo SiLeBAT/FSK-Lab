@@ -5,9 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+ - Editing the Model scripts of the input models in the joiner window using Tree representation.
 ### Changed
  - Change the packages file name from packageList.txt to packages.json!
  - Create the upload folder in the current temp folder of FSK or RAKIP ( online model creation). If not possible then that folder will be added to the root.
+ - Enable the user to edit the visualization script of the second model since it's the script which will be used to generate the plot.
+ - Remove the visualization script editor of the first model.
+ 
 ## [1.3.0] - 2018-11-02
 
 ### Added

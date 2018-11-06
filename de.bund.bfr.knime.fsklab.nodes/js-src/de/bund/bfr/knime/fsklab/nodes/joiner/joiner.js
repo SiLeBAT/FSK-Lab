@@ -9,7 +9,24 @@ joiner = function() {
 			return this.indexOf(searchString, position) === position;
 		};
 	}
-
+	var nodeSearch = function nodeSearch(treeNodes, searchID){
+	    for (var nodeIdx = 0; nodeIdx <= treeNodes.length-1; nodeIdx++) {
+	        var currentNode = treeNodes[nodeIdx],
+	            currentId = currentNode.id,
+	            currentChildren = currentNode.nodes;
+	        if(currentChildren) {
+	            var foundDescendant = nodeSearch(currentChildren, searchID); 
+	            if (foundDescendant) {
+	            	return foundDescendant;
+	            }
+	        }
+	        if (currentId == searchID) {    
+	            return currentNode;
+	        }
+	        
+	    }
+	    return false;
+	};
 	if (!Array.from) {
 		Array.from = (function() {
 			var toStr = Object.prototype.toString;
@@ -273,7 +290,8 @@ joiner = function() {
 	var _firstModelViz;
 	var _secondModelViz;
 	var _viewValue;
-	
+	var scriptBeingEdited;
+	var _modelScriptTree;  
 	window.joinRelationsMap = {};
 	var firstModelParameterMap = new Object();
 	var secomndModelParameterMap = new Object();
@@ -297,7 +315,7 @@ joiner = function() {
 		 */
 		_secondModelScript = value.secondModelScript;
 		_secondModelViz = value.secondModelViz;
-
+		_modelScriptTree = JSON.parse(value.modelScriptTree);
 		_viewValue = value;
 
 		if (_viewValue.joinRelations && _viewValue.joinRelations != ""){
@@ -384,11 +402,16 @@ joiner = function() {
 			_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
 		}
 		
-		
 		var serializer = new XMLSerializer();
 		var str = serializer.serializeToString(paper.svg);
 		_viewValue.svgRepresentation = str
-		console.log(_viewValue.joinRelations);
+
+		if(window.viscodeMirrorContainerx){
+			 visScript = window.viscodeMirrorContainerx.CodeMirror.getValue();
+			_viewValue.secondModelViz = visScript;
+		}
+		if(_modelScriptTree)
+			_viewValue.modelScriptTree = JSON.stringify(_modelScriptTree);
 		return _viewValue;
 	};
 
@@ -456,27 +479,23 @@ joiner = function() {
 				+ "					 		 </div>"
 				+ "                        </div>\n"
 				+ "                        <div class='tab-pane fade' id='sub25'>\n"
-				+ "                    		 <div  >"
-				+ "								<h4>First Model Script</h4>"
-				+ "								<textarea id='firstModelScript' name='firstModelScript'>"
-				+ _firstModelScript
-				+ "								</textarea>"
-				+ "								<h4>Second Model Script</h4>"
-				+ "								<textarea id='secondModelScript' name='secondModelScript'>"
-				+ _secondModelScript
-				+ "								</textarea>"
-				+ "					 		 </div>"
+				+ "							<div class='row'>"
+				+ " 					         <div class='col-sm-2' id='tree'>" 
+				+ "                        		 </div>"
+				+ "                    			 <div class='col-sm-10'> "
+				+ "									<h4>Model Script</h4>"
+				+ "									<textarea id='firstModelScript' name='firstModelScript'>"
+				+ 										_firstModelScript
+				+ "									</textarea>"
+				+ "					 			 </div>"
+				+ "                        	</div>"
 				+ "                        </div>\n"
 				+ "                        <div class='tab-pane fade' id='sub26'>\n"
-				+ "                    		 <div >"
-				+ "								<h4>First Model Visualization Script</h4>"
-				+ "								<textarea id='firstModelViz' name='firstModelViz'>"
-				+ _firstModelViz
-				+ "								</textarea>"
-				+ "								<h4>Second Model Visualization Script</h4>"
-				+ "								<textarea id='secondModelViz' name='secondModelViz'>"
-				+ _secondModelViz
-				+ "								</textarea>"
+				+ "                		        <div >"
+				+ "								     <h4>Second Model Visualization Script</h4>"
+				+ "								     <textarea id='secondModelViz' name='secondModelViz'>"
+				+   									 _secondModelViz
+				+ "								     </textarea>"
 				+ "					 		 </div>"
 				+ "                        </div>\n"
 				+ "                    </div>\n"
@@ -490,6 +509,16 @@ joiner = function() {
 			e.preventDefault()
 			$(this).tab('show')
 		})
+
+		$('#tree').treeview({data:_modelScriptTree});
+		$('#tree').on('nodeSelected', function(event, data) {
+			
+			console.log(data);
+			scriptBeingEdited = data;
+			window.codeMirrorContainer.CodeMirror.setValue(data.script);
+			window.codeMirrorContainer.CodeMirror.refresh();
+			
+		});
 		function fixInputCSS(source) {
 			source.parent().removeAttr('class');
 			source.parent().parent().find('label').removeAttr('class');
@@ -555,41 +584,18 @@ joiner = function() {
 												paper.setDimensions(canvas
 														.width(), canvas
 														.height());
-												var codeMirrorContainer = $(
+												
+
+												window.codeMirrorContainer = $(
 														'#sub25').find(
 														".CodeMirror")[0];
-												if (codeMirrorContainer
-														&& codeMirrorContainer.CodeMirror) {
-													codeMirrorContainer.CodeMirror
+												if (window.codeMirrorContainer
+														&& window.codeMirrorContainer.CodeMirror) {
+													window.codeMirrorContainer.CodeMirror
 															.refresh();
 
 												} else {
-													window.CodeMirror
-															.fromTextArea(
-																	document
-																			.getElementById("secondModelScript"),
-																	{
-																		lineNumbers : true,
-																		extraKeys : {
-																			"Ctrl-Space" : "autocomplete"
-																		},
-																		mode : {
-																			name : "R"
-																		}
-																	});
-
-												}
-
-												var codeMirrorContainerx = $(
-														'#sub25').find(
-														".CodeMirror")[1];
-												if (codeMirrorContainerx
-														&& codeMirrorContainerx.CodeMirror) {
-													codeMirrorContainerx.CodeMirror
-															.refresh();
-
-												} else {
-													window.CodeMirror
+													window.codeMirrorContainer = window.CodeMirror
 															.fromTextArea(
 																	document
 																			.getElementById("firstModelScript"),
@@ -602,47 +608,36 @@ joiner = function() {
 																			name : "R"
 																		}
 																	});
+													window.codeMirrorContainer.on("blur", function(){
+													    nodeSearch(_modelScriptTree,scriptBeingEdited.id).script = window.codeMirrorContainer.CodeMirror.getValue();
+													    $('#tree').treeview({data:_modelScriptTree});
+														$('#tree').on('nodeSelected', function(event, data) {
+															console.log(data);
+															scriptBeingEdited = data;
+															window.codeMirrorContainer.CodeMirror.setValue(data.script);
+															window.codeMirrorContainer.CodeMirror.refresh();
+															
+														});
+													    
+													});
 
 												}
 
-												var codeMirrorContainer = $(
+												
+
+												window.viscodeMirrorContainerx  = $(
 														'#sub26').find(
 														".CodeMirror")[0];
-												if (codeMirrorContainer
-														&& codeMirrorContainer.CodeMirror) {
-													codeMirrorContainer.CodeMirror
+												if (window.viscodeMirrorContainerx
+														&& window.viscodeMirrorContainerx.CodeMirror) {
+													window.viscodeMirrorContainerx.CodeMirror
 															.refresh();
 
 												} else {
-													window.CodeMirror
+													window.viscodeMirrorContainerx = window.CodeMirror
 															.fromTextArea(
 																	document
 																			.getElementById("secondModelViz"),
-																	{
-																		lineNumbers : true,
-																		extraKeys : {
-																			"Ctrl-Space" : "autocomplete"
-																		},
-																		mode : {
-																			name : "R"
-																		}
-																	});
-
-												}
-
-												var codeMirrorContainerx = $(
-														'#sub26').find(
-														".CodeMirror")[1];
-												if (codeMirrorContainerx
-														&& codeMirrorContainerx.CodeMirror) {
-													codeMirrorContainerx.CodeMirror
-															.refresh();
-
-												} else {
-													window.CodeMirror
-															.fromTextArea(
-																	document
-																			.getElementById("firstModelViz"),
 																	{
 																		lineNumbers : true,
 																		extraKeys : {
@@ -934,19 +929,19 @@ joiner = function() {
 				return true;
 			},
 			//only connection from first mode are allowed
-			validateMagnet : function(cellView, magnet){
+			/*validateMagnet : function(cellView, magnet){
 				console.log(cellView, magnet);
 				return cellView.id != "j_2";
-			},
+			},*/
 			validateEmbedding : function(childView, parentView) {
 
 				return parentView.model instanceof joint.shapes.devs.Coupled;
 			},
 
-			validateConnection : function(sourceView, sourceMagnet, targetView,
+			/*validateConnection : function(sourceView, sourceMagnet, targetView,
 					targetMagnet) {
 				return targetView.id == "j_2";
-			}
+			}*/
 		});
 		var previousOne;
 		paper.on('cell:pointerclick', function(cellView) {

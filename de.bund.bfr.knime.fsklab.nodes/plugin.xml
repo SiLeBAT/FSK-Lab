@@ -107,7 +107,9 @@
        
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/joiner.css" type="CSS" />
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/joiner.js" type="JAVASCRIPT" />
-      
+       
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/bootstrap-treeview.min.css" type="CSS" />
+       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/bootstrap-treeview.min.js" type="JAVASCRIPT" />
        <!-- Dependencies -->
        <webDependency webResourceBundleID="fskeditor" />
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjs"></webDependency>

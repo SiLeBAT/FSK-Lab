@@ -72,6 +72,15 @@ class JoinerViewValue extends JSONViewContent {
   private String joinRelations;
   private String jsonRepresentation;
   private String svgRepresentation;
+  private String modelScriptTree;
+
+  public String getModelScriptTree() {
+    return modelScriptTree;
+  }
+
+  public void setModelScriptTree(String modelScriptTree) {
+    this.modelScriptTree = modelScriptTree;
+  }
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
