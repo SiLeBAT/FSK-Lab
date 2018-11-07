@@ -575,11 +575,14 @@ joiner = function() {
 									.on(
 											'shown.bs.tab',
 											function(e) {
-												var canvas = $('#paper');
-
-												paper.setDimensions(canvas
-														.width(), canvas
-														.height());
+												console.log(e.currentTarget.innerHTML);
+												if(e.currentTarget.innerHTML == "Join Panel"){
+													
+													var canvas = $('#paper');
+													paper.setDimensions(canvas
+															.width(), canvas
+															.height());
+												}
 												
 
 												window.codeMirrorContainer = $(
