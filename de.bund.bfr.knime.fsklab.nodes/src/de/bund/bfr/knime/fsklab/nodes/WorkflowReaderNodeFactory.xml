@@ -6,24 +6,18 @@
 	<name>Workflow Reader</name>
 
 	<shortDescription>
-		Read the workflow saved from a FSKX file.
+		Reads the workflow stored in an FSKX file. 
     </shortDescription>
  
 	<fullDescription>
 		<intro>
-			Read the saved the workflow from a FSKX file.
-			the default mode of this Node is to execute the workflow from file in headless mode and exposed the output. 
-			if the 	'Load the Workflow as meta node' option is selected then the embedded workflow will not be executed but
-			it will be loaded to the host workflow as metanode giving the chance to edit it before execution.
-			
+			Reads the workflow stored in an FSKX file. 
 		</intro>
 		<option name="Output Path">
-			Location to file. May be an absolute URL, a mount-point relative
-			URL or a local path.
+			Location of the FSKX file, as an absolute URL, a mount-point relative URL or a local path. 
 		</option>
 		<option name="Load the Workflow as meta node">
-			The workflow read from fskx file will be loaded into the host workflow then it can be edited before execution.
-			otherwise the Workflow Reader will execute the workflow from file in headless mode and exposed the output. 
+			If checked, the workflow stored in an FSKX file will be loaded into the host workflow as metanode and can be edited before execution. Otherwise the Workflow Reader will execute the workflow from the file in headless mode and expose the output. 
 		</option>
 	</fullDescription>
 

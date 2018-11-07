@@ -11,17 +11,17 @@
  
 	<fullDescription>
 		<intro>
-			Write the current workflow with all its nodes and connections except the workflow reader itself.
-			This workflow will be copied and saved in a meta node.
-			The output ports of the selected node will be exported using the output ports of the meta node.
-						
+			This node can be used to save the current workflow with all its nodes and connections except the workflow reader itself in an FSKX file. 
+			This workflow will be copied and saved in a meta node. 
+			The output ports of the selected node will be exported using the output ports of the meta node. 			
 		</intro>
 		<option name="Output Path">
-			Location to file. May be an absolute URL, a mount-point relative
-			URL or a local path.
+			Location to file. May be an absolute URL, a mount-point relative URL or a local path. 
+		</option>
+		<option name="Output Node">
+			The user must select which of the present nodes should be used to export the output ports to the meta node. 
 		</option>
 	</fullDescription>
-
 	<ports>
 	</ports>
 </knimeNode>
