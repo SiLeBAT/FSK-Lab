@@ -284,10 +284,8 @@ joiner = function() {
 	};
 	var _firstModelMath;
 	var _secondModelMath;
-	var _firstModelScript;
 	var _secondModelScript;
 
-	var _firstModelViz;
 	var _secondModelViz;
 	var _viewValue;
 	var scriptBeingEdited;
@@ -303,8 +301,6 @@ joiner = function() {
 		_firstModel.modelMath = JSON.parse(value.modelMath);
 		_firstModel.dataBackground = JSON.parse(value.dataBackground);
 
-		_firstModelScript = value.firstModelScript;
-		_firstModelViz = value.firstModelViz;
 		_firstModelMath = JSON.parse(value.modelMath1);
 		_secondModelMath = JSON.parse(value.modelMath2);
 		/*
@@ -406,7 +402,7 @@ joiner = function() {
 		var str = serializer.serializeToString(paper.svg);
 		_viewValue.svgRepresentation = str
 
-		if(window.viscodeMirrorContainerx){
+		if(window.viscodeMirrorContainerx && window.viscodeMirrorContainerx.CodeMirror){
 			 visScript = window.viscodeMirrorContainerx.CodeMirror.getValue();
 			_viewValue.secondModelViz = visScript;
 		}
@@ -485,7 +481,7 @@ joiner = function() {
 				+ "                    			 <div class='col-sm-10'> "
 				+ "									<h4>Model Script</h4>"
 				+ "									<textarea id='firstModelScript' name='firstModelScript'>"
-				+ 										_firstModelScript
+												
 				+ "									</textarea>"
 				+ "					 			 </div>"
 				+ "                        	</div>"
@@ -622,7 +618,7 @@ joiner = function() {
 													});
 
 												}
-
+												console.log(window.codeMirrorContainer);
 												
 
 												window.viscodeMirrorContainerx  = $(
@@ -649,7 +645,7 @@ joiner = function() {
 																	});
 
 												}
-
+												console.log(window.viscodeMirrorContainerx);
 											});
 
 						});
