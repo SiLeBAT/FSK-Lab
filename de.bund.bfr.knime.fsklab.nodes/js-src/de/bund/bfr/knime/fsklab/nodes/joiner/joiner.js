@@ -129,7 +129,6 @@ joiner = function() {
 			var a, b, i, val = this.value;
 			/* close any already open lists of autocompleted values */
 			closeAllLists();
-			console.log('val'+val+'val');
 			currentFocus = -1;
 			/* create a DIV element that will contain the items (values): */
 			a = document.createElement("DIV");
@@ -476,12 +475,11 @@ joiner = function() {
 				+ "                        </div>\n"
 				+ "                        <div class='tab-pane fade' id='sub25'>\n"
 				+ "							<div class='row'>"
-				+ " 					         <div class='col-sm-2' id='tree'>" 
+				+ " 					         <div class='col-xs-6 col-sm-6 col-lg-4' id='tree'>" 
 				+ "                        		 </div>"
-				+ "                    			 <div class='col-sm-10'> "
+				+ "                    			 <div class='col-xs-6 col-sm-6 col-lg-8'> "
 				+ "									<h4>Model Script</h4>"
 				+ "									<textarea id='firstModelScript' name='firstModelScript'>"
-												
 				+ "									</textarea>"
 				+ "					 			 </div>"
 				+ "                        	</div>"
@@ -509,7 +507,6 @@ joiner = function() {
 		$('#tree').treeview({data:_modelScriptTree});
 		$('#tree').on('nodeSelected', function(event, data) {
 			
-			console.log(data);
 			scriptBeingEdited = data;
 			window.codeMirrorContainer.CodeMirror.setValue(data.script);
 			window.codeMirrorContainer.CodeMirror.refresh();
@@ -575,7 +572,6 @@ joiner = function() {
 									.on(
 											'shown.bs.tab',
 											function(e) {
-												console.log(e.currentTarget.innerHTML);
 												if(e.currentTarget.innerHTML == "Join Panel"){
 													
 													var canvas = $('#paper');
@@ -611,7 +607,6 @@ joiner = function() {
 													    nodeSearch(_modelScriptTree,scriptBeingEdited.id).script = window.codeMirrorContainer.CodeMirror.getValue();
 													    $('#tree').treeview({data:_modelScriptTree});
 														$('#tree').on('nodeSelected', function(event, data) {
-															console.log(data);
 															scriptBeingEdited = data;
 															window.codeMirrorContainer.CodeMirror.setValue(data.script);
 															window.codeMirrorContainer.CodeMirror.refresh();
@@ -621,8 +616,6 @@ joiner = function() {
 													});
 
 												}
-												console.log(window.codeMirrorContainer);
-												
 
 												window.viscodeMirrorContainerx  = $(
 														'#sub26').find(
@@ -648,7 +641,6 @@ joiner = function() {
 																	});
 
 												}
-												console.log(window.viscodeMirrorContainerx);
 											});
 
 						});
