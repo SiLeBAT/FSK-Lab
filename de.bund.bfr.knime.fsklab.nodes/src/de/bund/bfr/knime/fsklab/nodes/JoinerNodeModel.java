@@ -168,11 +168,19 @@ final class JoinerNodeModel extends
         joinerProxyValue
             .setModelMath(FromEOjectToJSON(combineModelMath(inObj1.modelMath, inObj2.modelMath)));
 
-        joinerProxyValue.setFirstModelScript(inObj1.model);
-        joinerProxyValue.setFirstModelViz(inObj1.viz);
+        if (!(inObj2 instanceof CombinedFskPortObject)) {
+          joinerProxyValue.setSecondModelViz(inObj2.viz);
 
-        joinerProxyValue.setSecondModelScript(inObj2.model);
-        joinerProxyValue.setSecondModelViz(inObj2.viz);
+        } else {
+          /*
+           * extract the visualization script of the second model which may be also an joined
+           * object!
+           */
+          joinerProxyValue.setSecondModelViz(extractSecondObjectVis(inObj2));
+
+
+
+        }
 
         exec.setProgress(1);
       }
@@ -216,10 +224,10 @@ final class JoinerNodeModel extends
       outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(), ModelMath.class);
       JsonArray scriptTree = getScriptArray(joinerProxyValue.getModelScriptTree());
       setScriptBack(inObj1, inObj2, scriptTree);
-      
+
       // outObj.model = joinerProxyValue.getSecondModelScript();
       inObj2.viz = joinerProxyValue.getSecondModelViz();
-      
+
       Set<String> packageSet = new HashSet<>();
       packageSet.addAll(inObj1.packages);
       packageSet.addAll(inObj2.packages);
@@ -236,20 +244,36 @@ final class JoinerNodeModel extends
 
     return new PortObject[] {outObj, imagePort};
   }
-  public void setScriptBack(FskPortObject fskObject1,FskPortObject fskObject2 ,JsonArray scriptTree) {
-    JsonObject obj1 = scriptTree.getJsonObject(0);
-    if(obj1.containsKey("script")) {
-      fskObject1.model=  obj1.getString("script");
-    }else {
-      setScriptBack(((CombinedFskPortObject)fskObject1).getFirstFskPortObject(), ((CombinedFskPortObject)fskObject1).getSecondFskPortObject(), obj1.getJsonArray("nodes"));
-    }
-    JsonObject obj2 = scriptTree.getJsonObject(1);
-    if(obj2.containsKey("script")) {
-      fskObject2.model=  obj2.getString("script");
-    }else {
-      setScriptBack(((CombinedFskPortObject)fskObject2).getFirstFskPortObject(), ((CombinedFskPortObject)fskObject2).getSecondFskPortObject(), obj2.getJsonArray("nodes"));
+
+  // second visualization script is the script which draw and control the plotting!
+  public String extractSecondObjectVis(FskPortObject object) {
+    if (!(object instanceof CombinedFskPortObject)) {
+      return object.viz;
+    } else {
+      return extractSecondObjectVis(((CombinedFskPortObject) object).getSecondFskPortObject());
     }
   }
+
+  public void setScriptBack(FskPortObject fskObject1, FskPortObject fskObject2,
+      JsonArray scriptTree) {
+    JsonObject obj1 = scriptTree.getJsonObject(0);
+    if (obj1.containsKey("script")) {
+      fskObject1.model = obj1.getString("script");
+    } else {
+      setScriptBack(((CombinedFskPortObject) fskObject1).getFirstFskPortObject(),
+          ((CombinedFskPortObject) fskObject1).getSecondFskPortObject(),
+          obj1.getJsonArray("nodes"));
+    }
+    JsonObject obj2 = scriptTree.getJsonObject(1);
+    if (obj2.containsKey("script")) {
+      fskObject2.model = obj2.getString("script");
+    } else {
+      setScriptBack(((CombinedFskPortObject) fskObject2).getFirstFskPortObject(),
+          ((CombinedFskPortObject) fskObject2).getSecondFskPortObject(),
+          obj2.getJsonArray("nodes"));
+    }
+  }
+
   public String buildModelscriptAsTree(FskPortObject inObj1, FskPortObject inObj2) {
     JsonArrayBuilder array = Json.createArrayBuilder();
     array.add(getModelScriptNode(inObj1).build());
@@ -263,9 +287,10 @@ final class JoinerNodeModel extends
     jsonReader.close();
     return array;
   }
+
   public JsonObjectBuilder getModelScriptNode(FskPortObject object) {
     JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
-    jsonObjectBuilder.add("id", ""+generateRandomUnifier());
+    jsonObjectBuilder.add("id", "" + generateRandomUnifier());
     if (object instanceof CombinedFskPortObject) {
       jsonObjectBuilder.add("text", "joined Model");
       FskPortObject first = ((CombinedFskPortObject) object).getFirstFskPortObject();
@@ -281,9 +306,11 @@ final class JoinerNodeModel extends
     }
     return jsonObjectBuilder;
   }
+
   public String generateRandomUnifier() {
     return new AtomicLong((int) (100000 * Math.random())).toString();
   }
+
   public ImagePortObject createSVGImagePortObject(String svgString) {
 
     ImagePortObject imagePort = null;
