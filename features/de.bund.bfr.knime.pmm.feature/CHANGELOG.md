@@ -13,4 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Proper validation in PMF Writer. Users are prompted to fix faulty settings before closing the dialog.
 - Vendor property of PMM-Lab feature to the original BfR name: "German Federal Institute for Risk Assessment (BfR)"
 
+### Fixed
+- Replace NPE in writer when an unit is not found in DB with meaningful exception
+
 [Unreleased]: https://github.com/SiLeBAT/FSK-Lab/compare/v1.0.0...HEAD

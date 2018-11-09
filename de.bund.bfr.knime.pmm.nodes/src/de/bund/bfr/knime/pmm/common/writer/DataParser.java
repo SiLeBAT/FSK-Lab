@@ -54,6 +54,9 @@ public class DataParser {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		if (concUnitDef == null) {
+			throw new IllegalArgumentException("Unit could not be found in DB: " + concUnit);
+		}
 
 		String timeUnit = aPoint.timeUnit;
 		PMFUnitDefinition timeUnitDef = null;
@@ -62,6 +65,9 @@ public class DataParser {
 		} catch (XMLStreamException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		if (timeUnitDef == null) {
+			throw new IllegalArgumentException("Unit could not be found in DB: " + concUnit);
 		}
 
 		MatrixXml matrixXml = (MatrixXml) tuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0);
