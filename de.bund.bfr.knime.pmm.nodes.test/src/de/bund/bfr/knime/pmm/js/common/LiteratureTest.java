@@ -2,7 +2,6 @@ package de.bund.bfr.knime.pmm.js.common;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.knime.core.node.NodeSettings;
@@ -32,7 +31,7 @@ public class LiteratureTest {
 		assertNull(literature.getId());
 
 		literature.setId(id);
-		assertTrue(id == literature.getId());
+		assertEquals(id, literature.getId().intValue());
 	}
 
 	@Test
@@ -68,7 +67,7 @@ public class LiteratureTest {
 		assertNull(literature.getYear());
 
 		literature.setYear(year);
-		assertTrue(year == literature.getYear());
+		assertEquals(year, literature.getYear().intValue());
 	}
 
 	@Test
@@ -95,7 +94,7 @@ public class LiteratureTest {
 		assertNull(literature.getPage());
 
 		literature.setPage(page);
-		assertTrue(page == literature.getPage());
+		assertEquals(page, literature.getPage().intValue());
 	}
 
 	@Test
@@ -104,7 +103,7 @@ public class LiteratureTest {
 		assertNull(literature.getApprovalMode());
 
 		literature.setApprovalMode(approvalMode);
-		assertTrue(approvalMode == literature.getApprovalMode());
+		assertEquals(approvalMode, literature.getApprovalMode().intValue());
 	}
 
 	@Test
@@ -122,7 +121,7 @@ public class LiteratureTest {
 		assertNull(literature.getType());
 
 		literature.setType(type);
-		assertTrue(type == literature.getType());
+		assertEquals(type, literature.getType().intValue());
 	}
 
 	@Test
@@ -164,18 +163,18 @@ public class LiteratureTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		literature.saveToNodeSettings(settings);
 
-		assertTrue(id == settings.getInt(Literature.ID));
+		assertEquals(id, settings.getInt(Literature.ID));
 		assertEquals(author, settings.getString(Literature.AUTHOR));
 		assertEquals(title, settings.getString(Literature.TITLE));
 		assertEquals(abstractText, settings.getString(Literature.ABSTRACT));
-		assertTrue(year == settings.getInt(Literature.YEAR));
+		assertEquals(year, settings.getInt(Literature.YEAR));
 		assertEquals(journal, settings.getString(Literature.JOURNAL));
 		assertEquals(volume, settings.getString(Literature.VOLUME));
 		assertEquals(issue, settings.getString(Literature.ISSUE));
-		assertTrue(page == settings.getInt(Literature.PAGE));
-		assertTrue(approvalMode == settings.getInt(Literature.APPROVAL_MODE));
+		assertEquals(page, settings.getInt(Literature.PAGE));
+		assertEquals(approvalMode, settings.getInt(Literature.APPROVAL_MODE));
 		assertEquals(website, settings.getString(Literature.WEBSITE));
-		assertTrue(type == settings.getInt(Literature.TYPE));
+		assertEquals(type, settings.getInt(Literature.TYPE));
 		assertEquals(comment, settings.getString(Literature.COMMENT));
 		assertEquals(dbuuid, settings.getString(Literature.DBUUID));
 	}
@@ -202,18 +201,18 @@ public class LiteratureTest {
 		Literature literature = new Literature();
 		literature.loadFromNodeSettings(settings);
 
-		assertTrue(id == literature.getId());
+		assertEquals(id, literature.getId().intValue());
 		assertEquals(author, literature.getAuthor());
 		assertEquals(title, literature.getTitle());
 		assertEquals(abstractText, literature.getAbstractText());
-		assertTrue(year == literature.getYear());
+		assertEquals(year, literature.getYear().intValue());
 		assertEquals(journal, literature.getJournal());
 		assertEquals(volume, literature.getVolume());
 		assertEquals(issue, literature.getIssue());
-		assertTrue(page == literature.getPage());
-		assertTrue(approvalMode == literature.getApprovalMode());
+		assertEquals(page, literature.getPage().intValue());
+		assertEquals(approvalMode, literature.getApprovalMode().intValue());
 		assertEquals(website, literature.getWebsite());
-		assertTrue(type == literature.getType());
+		assertEquals(type, literature.getType().intValue());
 		assertEquals(comment, literature.getComment());
 		assertEquals(dbuuid, literature.getDbuuid());
 	}
@@ -223,18 +222,18 @@ public class LiteratureTest {
 		LiteratureItem literatureItem = new LiteratureItem(author, year, title, abstractText, journal, volume, issue, page, approvalMode, website, type, comment, id, dbuuid);
 		Literature literature = Literature.toLiterature(literatureItem);
 		
-		assertTrue(id == literature.getId());
+		assertEquals(id, literature.getId().intValue());
 		assertEquals(author, literature.getAuthor());
 		assertEquals(title, literature.getTitle());
 		assertEquals(abstractText, literature.getAbstractText());
-		assertTrue(year == literature.getYear());
+		assertEquals(year, literature.getYear().intValue());
 		assertEquals(journal, literature.getJournal());
 		assertEquals(volume, literature.getVolume());
 		assertEquals(issue, literature.getIssue());
-		assertTrue(page == literature.getPage());
-		assertTrue(approvalMode == literature.getApprovalMode());
+		assertEquals(page, literature.getPage().intValue());
+		assertEquals(approvalMode, literature.getApprovalMode().intValue());
 		assertEquals(website, literature.getWebsite());
-		assertTrue(type == literature.getType());
+		assertEquals(type, literature.getType().intValue());
 		assertEquals(comment, literature.getComment());
 		assertEquals(dbuuid, literature.getDbuuid());
 	}
@@ -258,18 +257,18 @@ public class LiteratureTest {
 		literature.setDbuuid(dbuuid);
 		LiteratureItem literatureItem = literature.toLiteratureItem();
 
-		assertTrue(id == literatureItem.id);
+		assertEquals(id, literatureItem.id.intValue());
 		assertEquals(author, literatureItem.author);
 		assertEquals(title, literatureItem.title);
 		assertEquals(abstractText, literatureItem.abstractText);
-		assertTrue(year == literatureItem.year);
+		assertEquals(year, literatureItem.year.intValue());
 		assertEquals(journal, literatureItem.journal);
 		assertEquals(volume, literatureItem.volume);
 		assertEquals(issue, literatureItem.issue);
-		assertTrue(page == literatureItem.page);
-		assertTrue(approvalMode == literatureItem.approvalMode);
+		assertEquals(page, literatureItem.page.intValue());
+		assertEquals(approvalMode, literatureItem.approvalMode.intValue());
 		assertEquals(website, literatureItem.website);
-		assertTrue(type == literatureItem.type);
+		assertEquals(type, literatureItem.type.intValue());
 		assertEquals(comment, literatureItem.comment);
 		assertEquals(dbuuid, literatureItem.dbuuid);
 	}

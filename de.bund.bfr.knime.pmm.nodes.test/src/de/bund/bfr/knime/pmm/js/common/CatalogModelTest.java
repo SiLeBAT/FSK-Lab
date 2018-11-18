@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import org.knime.core.node.NodeSettings;
@@ -22,7 +23,7 @@ public class CatalogModelTest {
 		assertNull(catalogModel.getId());
 
 		catalogModel.setId(id);
-		assertTrue(id == catalogModel.getId());
+		assertEquals(id, catalogModel.getId().intValue());
 	}
 
 	@Test
@@ -49,7 +50,7 @@ public class CatalogModelTest {
 		assertNull(catalogModel.getModelClass());
 		
 		catalogModel.setModelClass(modelClass);
-		assertTrue(modelClass == catalogModel.getModelClass());
+		assertEquals(modelClass, catalogModel.getModelClass().intValue());
 	}
 
 	@Test
@@ -83,10 +84,10 @@ public class CatalogModelTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		catalogModel.saveToNodeSettings(settings);
 		
-		assertTrue(id == settings.getInt(CatalogModel.ID));
+		assertEquals(id, settings.getInt(CatalogModel.ID));
 		assertEquals(name, settings.getString(CatalogModel.NAME));
 		assertEquals(formula, settings.getString(CatalogModel.FORMULA));
-		assertTrue(modelClass == settings.getInt(CatalogModel.MODEL_CLASS));
+		assertEquals(modelClass, settings.getInt(CatalogModel.MODEL_CLASS));
 		assertEquals(comment, settings.getString(CatalogModel.COMMENT));
 		assertEquals(dbuuid, settings.getString(CatalogModel.DBUUID));
 	}
@@ -104,10 +105,10 @@ public class CatalogModelTest {
 		CatalogModel catalogModel = new CatalogModel();
 		catalogModel.loadFromNodeSettings(settings);
 		
-		assertTrue(id == catalogModel.getId());
+		assertEquals(id, catalogModel.getId().intValue());
 		assertEquals(name, catalogModel.getName());
 		assertEquals(formula, catalogModel.getFormula());
-		assertTrue(modelClass == catalogModel.getModelClass());
+		assertEquals(modelClass, catalogModel.getModelClass().intValue());
 		assertEquals(comment, catalogModel.getComment());
 		assertEquals(dbuuid, catalogModel.getDbuuid());
 	}
@@ -118,10 +119,10 @@ public class CatalogModelTest {
 		catalogModelXml.comment = comment;
 		CatalogModel catalogModel = CatalogModel.toCatalogModel(catalogModelXml);
 		
-		assertTrue(id == catalogModel.getId());
+		assertEquals(id, catalogModel.getId().intValue());
 		assertEquals(name, catalogModel.getName());
 		assertEquals(formula, catalogModel.getFormula());
-		assertTrue(modelClass == catalogModel.getModelClass());
+		assertEquals(modelClass, catalogModel.getModelClass().intValue());
 		assertEquals(comment, catalogModel.getComment());
 		assertEquals(dbuuid, catalogModel.getDbuuid());
 	}
@@ -137,10 +138,10 @@ public class CatalogModelTest {
 		catalogModel.setDbuuid(dbuuid);
 		CatalogModelXml catalogModelXml = catalogModel.toCatalogModelXml();
 		
-		assertTrue(id == catalogModelXml.id);
+		assertEquals(id, catalogModelXml.id.intValue());
 		assertEquals(name, catalogModelXml.name);
 		assertEquals(formula, catalogModelXml.formula);
-		assertTrue(modelClass == catalogModelXml.modelClass);
+		assertEquals(modelClass, catalogModelXml.modelClass.intValue());
 		assertEquals(comment, catalogModelXml.comment);
 		assertEquals(dbuuid, catalogModelXml.dbuuid);
 	}

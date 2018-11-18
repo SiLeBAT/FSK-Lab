@@ -2,7 +2,6 @@ package de.bund.bfr.knime.pmm.js.common;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -31,7 +30,7 @@ public class EstModelTest {
 		assertNull(estModel.getId());
 
 		estModel.setId(id);
-		assertTrue(id == estModel.getId());
+		assertEquals(id, estModel.getId().intValue());
 	}
 
 	@Test
@@ -94,7 +93,7 @@ public class EstModelTest {
 		assertNull(estModel.getDof());
 
 		estModel.setDof(dof);
-		assertTrue(dof == estModel.getDof());
+		assertEquals(dof, estModel.getDof().intValue());
 	}
 
 	@Test
@@ -103,7 +102,7 @@ public class EstModelTest {
 		assertNull(estModel.getQualityScore());
 
 		estModel.setQualityScore(qualityScore);
-		assertTrue(qualityScore == estModel.getQualityScore());
+		assertEquals(qualityScore, estModel.getQualityScore().intValue());
 	}
 
 	@Test
@@ -152,15 +151,15 @@ public class EstModelTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		estModel.saveToNodeSettings(settings);
 		
-		assertTrue(id == settings.getInt(EstModel.ID));
+		assertEquals(id, settings.getInt(EstModel.ID));
 		assertEquals(name, settings.getString(EstModel.NAME));
 		assertEquals(sse, settings.getDouble(EstModel.SSE), 0.0);
 		assertEquals(rms, settings.getDouble(EstModel.RMS), 0.0);
 		assertEquals(r2, settings.getDouble(EstModel.R2), 0.0);
 		assertEquals(aic, settings.getDouble(EstModel.AIC), 0.0);
 		assertEquals(bic, settings.getDouble(EstModel.BIC), 0.0);
-		assertTrue(dof == settings.getInt(EstModel.DOF));
-		assertTrue(qualityScore == settings.getInt(EstModel.QUALITY_SCORE));
+		assertEquals(dof, settings.getInt(EstModel.DOF));
+		assertEquals(qualityScore, settings.getInt(EstModel.QUALITY_SCORE));
 		assertEquals(checked, settings.getBoolean(EstModel.CHECKED));
 		assertEquals(comment, settings.getString(EstModel.COMMENT));
 		assertEquals(dbuuid, settings.getString(EstModel.DBUUID));
@@ -185,15 +184,15 @@ public class EstModelTest {
 		EstModel estModel = new EstModel();
 		estModel.loadFromNodeSettings(settings);
 		
-		assertTrue(id == estModel.getId());
+		assertEquals(id, estModel.getId().intValue());
 		assertEquals(name, estModel.getName());
 		assertEquals(sse, estModel.getSse(), 0.0);
 		assertEquals(rms, estModel.getRms(), 0.0);
 		assertEquals(r2, estModel.getR2(), 0.0);
 		assertEquals(aic, estModel.getAIC(), 0.0);
 		assertEquals(bic, estModel.getBIC(), 0.0);
-		assertTrue(dof == estModel.getDof());
-		assertTrue(qualityScore == estModel.getQualityScore());
+		assertEquals(dof, estModel.getDof().intValue());
+		assertEquals(qualityScore, estModel.getQualityScore().intValue());
 		assertEquals(checked, estModel.getChecked());
 		assertEquals(comment, estModel.getComment());
 		assertEquals(dbuuid, estModel.getDbuuid());
@@ -205,15 +204,15 @@ public class EstModelTest {
 		estModelXml.comment = comment;
 		
 		EstModel estModel = EstModel.toEstModel(estModelXml);
-		assertTrue(id == estModel.getId());
+		assertEquals(id, estModel.getId().intValue());
 		assertEquals(name, estModel.getName());
 		assertEquals(sse, estModel.getSse(), 0.0);
 		assertEquals(rms, estModel.getRms(), 0.0);
 		assertEquals(r2, estModel.getR2(), 0.0);
 		assertEquals(aic, estModel.getAIC(), 0.0);
 		assertEquals(bic, estModel.getBIC(), 0.0);
-		assertTrue(dof == estModel.getDof());
-		assertTrue(qualityScore == estModel.getQualityScore());
+		assertEquals(dof, estModel.getDof().intValue());
+		assertEquals(qualityScore, estModel.getQualityScore().intValue());
 		assertEquals(checked, estModel.getChecked());
 		assertEquals(comment, estModel.getComment());
 		assertEquals(dbuuid, estModel.getDbuuid());
@@ -236,15 +235,15 @@ public class EstModelTest {
 		estModel.setDbuuid(dbuuid);
 		EstModelXml estModelXml = estModel.toEstModelXml();
 		
-		assertTrue(id == estModelXml.id);
+		assertEquals(id, estModelXml.id.intValue());
 		assertEquals(name, estModelXml.name);
 		assertEquals(sse, estModelXml.sse, 0.0);
 		assertEquals(rms, estModelXml.rms, 0.0);
 		assertEquals(r2, estModelXml.r2, 0.0);
 		assertEquals(aic, estModelXml.aic, 0.0);
 		assertEquals(bic, estModelXml.bic, 0.0);
-		assertTrue(dof == estModelXml.dof);
-		assertTrue(qualityScore == estModelXml.qualityScore);
+		assertEquals(dof, estModelXml.dof.intValue());
+		assertEquals(qualityScore, estModelXml.qualityScore.intValue());
 		assertEquals(checked, estModelXml.checked);
 		assertEquals(comment, estModelXml.comment);
 		assertEquals(dbuuid, estModelXml.dbuuid);

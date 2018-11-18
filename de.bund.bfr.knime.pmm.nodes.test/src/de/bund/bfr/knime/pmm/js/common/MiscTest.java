@@ -1,6 +1,8 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
 
@@ -27,7 +29,7 @@ public class MiscTest {
 		assertNull(misc.getId());
 
 		misc.setId(id);
-		assertTrue(id == misc.getId());
+		assertEquals(id, misc.getId().intValue());
 	}
 
 	@Test
@@ -108,7 +110,7 @@ public class MiscTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		misc.saveToNodeSettings(settings);
 		
-		assertTrue(id == settings.getInt(Misc.ID));
+		assertEquals(id, settings.getInt(Misc.ID));
 		assertEquals(name, settings.getString(Misc.NAME));
 		assertEquals(description, settings.getString(Misc.DESCRIPTION));
 		assertEquals(value, settings.getDouble(Misc.VALUE), 0.0);
@@ -132,7 +134,8 @@ public class MiscTest {
 		Misc misc = new Misc();
 		misc.loadFromNodeSettings(settings);
 		
-		assertTrue(id == misc.getId());
+		assertEquals(id, misc.getId().intValue());
+		assertEquals(id, misc.getId().intValue());
 		assertEquals(name, misc.getName());
 		assertEquals(description, misc.getDescription());
 		assertEquals(value, misc.getValue(), 0.0);
@@ -147,7 +150,7 @@ public class MiscTest {
 		MiscXml miscXml = new MiscXml(id, name, description, value, Arrays.asList(categories), unit, origUnit, dbuuid);
 		Misc misc = Misc.toMisc(miscXml);
 		
-		assertTrue(id == misc.getId());
+		assertEquals(id, misc.getId().intValue());
 		assertEquals(name, misc.getName());
 		assertEquals(description, misc.getDescription());
 		assertEquals(value, misc.getValue(), 0.0);
@@ -170,7 +173,7 @@ public class MiscTest {
 		misc.setDbuuid(dbuuid);
 		MiscXml miscXml = misc.toMiscXml();
 		
-		assertTrue(id == miscXml.id);
+		assertEquals(id, miscXml.id.intValue());
 		assertEquals(name, miscXml.name);
 		assertEquals(description, miscXml.description);
 		assertEquals(value, miscXml.value, 0.0);

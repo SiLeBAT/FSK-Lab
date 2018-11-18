@@ -2,7 +2,6 @@ package de.bund.bfr.knime.pmm.js.common;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -23,7 +22,7 @@ public class AgentTest {
 		assertNull(agent.getId());
 		
 		agent.setId(id);
-		assertTrue(id == agent.getId());
+		assertEquals(id, agent.getId().intValue());
 	}
 
 	@Test
@@ -64,7 +63,7 @@ public class AgentTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		agent.saveToNodeSettings(settings);
 		
-		assertTrue(id == settings.getInt(Agent.ID));
+		assertEquals(id, settings.getInt(Agent.ID));
 		assertEquals(name, settings.getString(Agent.NAME));
 		assertEquals(detail, settings.getString(Agent.DETAIL));
 		assertEquals(dbuuid, settings.getString(Agent.DBUUID));
@@ -81,7 +80,7 @@ public class AgentTest {
 		Agent agent = new Agent();
 		agent.loadFromNodeSettings(settings);
 		
-		assertTrue(id == agent.getId());
+		assertEquals(id, agent.getId().intValue());
 		assertEquals(name, agent.getName());
 		assertEquals(detail, agent.getDetail());
 		assertEquals(dbuuid, agent.getDbuuid());
@@ -91,7 +90,7 @@ public class AgentTest {
 	public void testToAgent() {
 		Agent agent = Agent.toAgent(new AgentXml(id, name, detail, dbuuid));
 		
-		assertTrue(id == agent.getId());
+		assertEquals(id, agent.getId().intValue());
 		assertEquals(name, agent.getName());
 		assertEquals(detail, agent.getDetail());
 		assertEquals(dbuuid, agent.getDbuuid());
@@ -106,7 +105,7 @@ public class AgentTest {
 		agent.setDbuuid(dbuuid);
 		AgentXml agentXml = agent.toAgentXml();
 		
-		assertTrue(id == agentXml.id);
+		assertEquals(id, agentXml.id.intValue());
 		assertEquals(name, agentXml.name);
 		assertEquals(detail, agentXml.detail);
 		assertEquals(dbuuid, agentXml.dbuuid);

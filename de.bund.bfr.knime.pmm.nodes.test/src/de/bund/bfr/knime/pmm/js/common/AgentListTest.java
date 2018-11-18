@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -25,7 +26,7 @@ public class AgentListTest {
 
 		Agent[] agents = new Agent[] { agent };
 		list.setAgents(agents);
-		assertTrue(agents[0].getId() == list.getAgents()[0].getId());
+		assertEquals(agents[0].getId(), list.getAgents()[0].getId());
 		assertEquals(agents[0].getName(), list.getAgents()[0].getName());
 		assertEquals(agents[0].getDetail(), list.getAgents()[0].getDetail());
 		assertEquals(agents[0].getDbuuid(), list.getAgents()[0].getDbuuid());

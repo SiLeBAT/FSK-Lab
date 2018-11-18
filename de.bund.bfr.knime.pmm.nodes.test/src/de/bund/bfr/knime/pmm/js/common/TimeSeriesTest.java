@@ -2,7 +2,6 @@ package de.bund.bfr.knime.pmm.js.common;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -169,7 +168,7 @@ public class TimeSeriesTest {
 		assertEquals(concentrationUnitObjectType, timeSeries.getConcentrationUnitObjectType());
 		assertEquals(origConcentrationUnit, timeSeries.getOrigConcentrationUnit());
 		assertEquals(concentrationStdDev, timeSeries.getConcentrationStdDev(), 0.0);
-		assertTrue(numberOfMeasurements == timeSeries.getNumberOfMeasurements());
+		assertEquals(numberOfMeasurements, timeSeries.getNumberOfMeasurements().intValue());
 	}
 
 	@Test
@@ -188,7 +187,7 @@ public class TimeSeriesTest {
 		assertEquals(concentrationUnitObjectType, timeSeries.getConcentrationUnitObjectType());
 		assertEquals(origConcentrationUnit, timeSeries.getOrigConcentrationUnit());
 		assertEquals(concentrationStdDev, timeSeries.getConcentrationStdDev(), 0.0);
-		assertTrue(numberOfMeasurements == timeSeries.getNumberOfMeasurements());
+		assertEquals(numberOfMeasurements, timeSeries.getNumberOfMeasurements().intValue());
 	}
 	
 	@Test
@@ -215,6 +214,6 @@ public class TimeSeriesTest {
 		assertEquals(concentrationUnitObjectType, timeSeriesXml.concentrationUnitObjectType);
 		assertEquals(origConcentrationUnit, timeSeriesXml.origConcentrationUnit);
 		assertEquals(concentrationStdDev, timeSeriesXml.concentrationStdDev, 0.0);
-		assertTrue(numberOfMeasurements == timeSeriesXml.numberOfMeasurements);
+		assertEquals(numberOfMeasurements, timeSeriesXml.numberOfMeasurements.intValue());
 	}
 }

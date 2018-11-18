@@ -2,7 +2,6 @@ package de.bund.bfr.knime.pmm.js.common;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -23,7 +22,7 @@ public class MatrixTest {
 		assertNull(matrix.getId());
 		
 		matrix.setId(id);
-		assertTrue(id == matrix.getId());
+		assertEquals(id, matrix.getId().intValue());
 	}
 	
 	@Test
@@ -64,7 +63,7 @@ public class MatrixTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		matrix.saveToNodeSettings(settings);
 		
-		assertTrue(id == settings.getInt(Matrix.ID));
+		assertEquals(id, settings.getInt(Matrix.ID));
 		assertEquals(name, settings.getString(Matrix.NAME));
 		assertEquals(detail, settings.getString(Matrix.DETAIL));
 		assertEquals(dbuuid, settings.getString(Matrix.DBUUID));
@@ -81,7 +80,7 @@ public class MatrixTest {
 		Matrix matrix = new Matrix();
 		matrix.loadFromNodeSettings(settings);
 		
-		assertTrue(id == matrix.getId());
+		assertEquals(id, matrix.getId().intValue());
 		assertEquals(name, matrix.getName());
 		assertEquals(detail, matrix.getDetail());
 		assertEquals(dbuuid, matrix.getDbuuid());
@@ -92,7 +91,7 @@ public class MatrixTest {
 		MatrixXml matrixXml = new MatrixXml(id, name, detail, dbuuid);
 		Matrix matrix = Matrix.toMatrix(matrixXml);
 		
-		assertTrue(id == matrix.getId());
+		assertEquals(id, matrix.getId().intValue());
 		assertEquals(name, matrix.getName());
 		assertEquals(detail, matrix.getDetail());
 		assertEquals(dbuuid, matrix.getDbuuid());
@@ -107,7 +106,7 @@ public class MatrixTest {
 		matrix.setDbuuid(dbuuid);
 		MatrixXml matrixXml = matrix.toMatrixXml();
 
-		assertTrue(id == matrixXml.id);
+		assertEquals(id, matrixXml.id.intValue());
 		assertEquals(name, matrixXml.name);
 		assertEquals(detail, matrixXml.detail);
 		assertEquals(dbuuid, matrixXml.dbuuid);

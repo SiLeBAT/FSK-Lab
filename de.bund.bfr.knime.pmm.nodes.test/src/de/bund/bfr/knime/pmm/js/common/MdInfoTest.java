@@ -2,7 +2,6 @@ package de.bund.bfr.knime.pmm.js.common;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -24,7 +23,7 @@ public class MdInfoTest {
 		assertNull(modelInfo.getId());
 
 		modelInfo.setId(id);
-		assertTrue(id == modelInfo.getId());
+		assertEquals(id, modelInfo.getId().intValue());
 	}
 
 	@Test
@@ -51,7 +50,7 @@ public class MdInfoTest {
 		assertNull(modelInfo.getQualityScore());
 
 		modelInfo.setQualityScore(qualityScore);
-		assertTrue(qualityScore == modelInfo.getQualityScore());
+		assertEquals(qualityScore, modelInfo.getQualityScore().intValue());
 	}
 
 	@Test
@@ -75,9 +74,9 @@ public class MdInfoTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		modelInfo.saveToNodeSettings(settings);
 
-		assertTrue(id == settings.getInt(MdInfo.ID));
+		assertEquals(id, settings.getInt(MdInfo.ID));
 		assertEquals(name, settings.getString(MdInfo.NAME));
-		assertTrue(qualityScore == settings.getInt(MdInfo.QUALITYSCORE));
+		assertEquals(qualityScore, settings.getInt(MdInfo.QUALITYSCORE));
 		assertEquals(checked, settings.getBoolean(MdInfo.CHECKED));
 	}
 
@@ -93,10 +92,10 @@ public class MdInfoTest {
 		MdInfo modelInfo = new MdInfo();
 		modelInfo.loadFromNodeSettings(settings);
 
-		assertTrue(id == modelInfo.getId());
+		assertEquals(id, modelInfo.getId().intValue());
 		assertEquals(name, modelInfo.getName());
 		assertEquals(comment, modelInfo.getComment());
-		assertTrue(qualityScore == modelInfo.getQualityScore());
+		assertEquals(qualityScore, modelInfo.getQualityScore().intValue());
 		assertEquals(checked, modelInfo.getChecked());
 	}
 
@@ -105,10 +104,10 @@ public class MdInfoTest {
 		MdInfoXml mdInfoXml = new MdInfoXml(id, name, comment, qualityScore, checked);
 		MdInfo mdInfo = MdInfo.toMdInfo(mdInfoXml);
 
-		assertTrue(id == mdInfo.getId());
+		assertEquals(id, mdInfo.getId().intValue());
 		assertEquals(name, mdInfo.getName());
 		assertEquals(comment, mdInfo.getComment());
-		assertTrue(qualityScore == mdInfo.getQualityScore());
+		assertEquals(qualityScore, mdInfo.getQualityScore().intValue());
 		assertEquals(checked, mdInfo.getChecked());
 	}
 
@@ -122,10 +121,10 @@ public class MdInfoTest {
 		modelInfo.setChecked(checked);
 		MdInfoXml mdInfoXml = modelInfo.toMdInfoXml();
 
-		assertTrue(id == mdInfoXml.id);
+		assertEquals(id, mdInfoXml.id.intValue());
 		assertEquals(name, mdInfoXml.name);
 		assertEquals(comment, mdInfoXml.comment);
-		assertTrue(qualityScore == mdInfoXml.qualityScore);
+		assertEquals(qualityScore, mdInfoXml.qualityScore.intValue());
 		assertEquals(checked, mdInfoXml.checked);
 	}
 }

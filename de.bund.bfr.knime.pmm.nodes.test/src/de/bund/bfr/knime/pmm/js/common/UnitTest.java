@@ -2,7 +2,6 @@ package de.bund.bfr.knime.pmm.js.common;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -30,7 +29,7 @@ public class UnitTest {
 		assertNull(unit.getId());
 
 		unit.setId(id);
-		assertTrue(id == unit.getId());
+		assertEquals(id, unit.getId().intValue());
 	}
 
 	@Test
@@ -161,7 +160,7 @@ public class UnitTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		unit.saveToNodeSettings(settings);
 		
-		assertTrue(id == settings.getInt(Unit.ID));
+		assertEquals(id, settings.getInt(Unit.ID));
 		assertEquals(unitString, settings.getString(Unit.UNIT));
 		assertEquals(description, settings.getString(Unit.DESCRIPTION));
 		assertEquals(kindOfPropertyQuantity, settings.getString(Unit.KIND_OF_PROPERTY_QUANTITY));
@@ -195,7 +194,7 @@ public class UnitTest {
 		Unit unit = new Unit();
 		unit.loadFromNodeSettings(settings);
 		
-		assertTrue(id == unit.getId());
+		assertEquals(id, unit.getId().intValue());
 		assertEquals(name, unit.getName());
 		assertEquals(description, unit.getDescription());
 		assertEquals(kindOfPropertyQuantity, unit.getKindOfPropertyQuantity());
