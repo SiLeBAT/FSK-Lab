@@ -41,12 +41,6 @@ import de.bund.bfr.knime.pmm.common.AgentXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Agent implements ViewValue {
 
-	// Configuration keys
-	static final String ID = "id";
-	static final String NAME = "name";
-	static final String DETAIL = "detail";
-	static final String DBUUID = "dbuuid";
-
 	private Integer id;
 	private String name;
 	private String detail;
@@ -143,31 +137,43 @@ public class Agent implements ViewValue {
 	}
 
 	/**
-	 * Saves agent properties into a {@link NodeSettingsWO}.
+	 * Saves agent properties into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "detail"
+	 * <li>String "dbuuid"
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            settings where to save the {@link Agent} properties
 	 */
 	public void saveToNodeSettings(final NodeSettingsWO settings) {
-		SettingsHelper.addInt(ID, id, settings);
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addString(DETAIL, detail, settings);
-		SettingsHelper.addString(DBUUID, dbuuid, settings);
+		SettingsHelper.addInt("id", id, settings);
+		SettingsHelper.addString("name", name, settings);
+		SettingsHelper.addString("detail", detail, settings);
+		SettingsHelper.addString("dbuuid", dbuuid, settings);
 	}
 
 	/**
 	 * Loads agent properties from a {@link NodeSettingsRO}.
 	 * 
 	 * @param settings
-	 *            The settings where to load the {@link Agent} from
+	 *            settings with properties:
+	 *            <ul>
+	 *            <li>Integer "id"
+	 *            <li>String "name"
+	 *            <li>String "detail"
+	 *            <li>String "dbuuid"
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(final NodeSettingsRO settings) {
-		id = SettingsHelper.getInteger(ID, settings);
-		name = SettingsHelper.getString(NAME, settings);
-		detail = SettingsHelper.getString(DETAIL, settings);
-		dbuuid = SettingsHelper.getString(DBUUID, settings);
+		id = SettingsHelper.getInteger("id", settings);
+		name = SettingsHelper.getString("name", settings);
+		detail = SettingsHelper.getString("detail", settings);
+		dbuuid = SettingsHelper.getString("dbuuid", settings);
 	}
-	
+
 	/**
 	 * Creates an Agent from an {@link AgentXml}.
 	 * 
@@ -179,10 +185,10 @@ public class Agent implements ViewValue {
 		agent.setName(agentXml.name);
 		agent.setDetail(agentXml.detail);
 		agent.setDbuuid(agentXml.dbuuid);
-		
+
 		return agent;
 	}
-	
+
 	/**
 	 * Returns an equivalent AgentXml.
 	 * 

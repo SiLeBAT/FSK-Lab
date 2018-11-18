@@ -63,19 +63,19 @@ public class AgentTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		agent.saveToNodeSettings(settings);
 		
-		assertEquals(id, settings.getInt(Agent.ID));
-		assertEquals(name, settings.getString(Agent.NAME));
-		assertEquals(detail, settings.getString(Agent.DETAIL));
-		assertEquals(dbuuid, settings.getString(Agent.DBUUID));
+		assertEquals(id, settings.getInt("id"));
+		assertEquals(name, settings.getString("name"));
+		assertEquals(detail, settings.getString("detail"));
+		assertEquals(dbuuid, settings.getString("dbuuid"));
 	}
 	
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(Agent.ID, id);
-		settings.addString(Agent.NAME, name);
-		settings.addString(Agent.DETAIL, detail);
-		settings.addString(Agent.DBUUID, dbuuid);
+		settings.addInt("id", id);
+		settings.addString("name", name);
+		settings.addString("detail", detail);
+		settings.addString("dbuuid", dbuuid);
 		
 		Agent agent = new Agent();
 		agent.loadFromNodeSettings(settings);
