@@ -35,8 +35,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class AgentList {
-	static final String NUM_AGENTS = "numAgents";
-	static final String AGENTS = "agents";
 
 	private int numAgents;
 	private Agent[] agents;
@@ -64,15 +62,20 @@ public class AgentList {
 	}
 
 	/**
-	 * Saves the list of agents into a {@link NodeSettingsWO}.
+	 * Saves the list of agents into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>Integer "numAgents"
+	 * <li>Variable number of string properties with prefix "agents" and suffix the
+	 * number of the agent. E.g. "agents0", "agents1", ...
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            settings where to save the {@link AgentList} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		settings.addInt(NUM_AGENTS, numAgents);
+		settings.addInt("numAgents", numAgents);
 		for (int i = 0; i < numAgents; i++) {
-			agents[i].saveToNodeSettings(settings.addNodeSettings(AGENTS + i));
+			agents[i].saveToNodeSettings(settings.addNodeSettings("agents" + i));
 		}
 	}
 
@@ -80,15 +83,20 @@ public class AgentList {
 	 * Loads properties of the agent list from a {@link NodeSettingsRO}.
 	 * 
 	 * @param settings
-	 *            The settings where to load the {@link AgentList} from
+	 *            with properties:
+	 *            <ul>
+	 *            <li>Integer "numAgents"
+	 *            <li>Variable number of string properties with prefix "agents" and
+	 *            suffix the number of the agent. E.g. "agents0", "agents1", ...
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
 		try {
-			numAgents = settings.getInt(NUM_AGENTS);
+			numAgents = settings.getInt("numAgents");
 			agents = new Agent[numAgents];
 			for (int i = 0; i < numAgents; i++) {
 				agents[i] = new Agent();
-				agents[i].loadFromNodeSettings(settings.getNodeSettings(AGENTS + i));
+				agents[i].loadFromNodeSettings(settings.getNodeSettings("agents" + i));
 			}
 		} catch (InvalidSettingsException e) {
 		}

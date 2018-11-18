@@ -41,11 +41,11 @@ public class AgentListTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 		
-		assertEquals(1, settings.getInt(AgentList.NUM_AGENTS));
+		assertEquals(1, settings.getInt("numAgents"));
 		
 		Agent[] obtainedAgents = new Agent[1];
 		obtainedAgents[0] = new Agent();
-		obtainedAgents[0].loadFromNodeSettings(settings.getNodeSettings(AgentList.AGENTS + 0));
+		obtainedAgents[0].loadFromNodeSettings(settings.getNodeSettings("agents" + 0));
 		
 		Agent expected = agents[0];  // expected agent
 		Agent obtained = obtainedAgents[0];  // obtained agent
@@ -59,8 +59,8 @@ public class AgentListTest {
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(AgentList.NUM_AGENTS, 1);
-		agent.saveToNodeSettings(settings.addNodeSettings(AgentList.AGENTS + 0));
+		settings.addInt("numAgents", 1);
+		agent.saveToNodeSettings(settings.addNodeSettings("agents" + 0));
 
 		AgentList list = new AgentList();
 		list.loadFromNodeSettings(settings);
