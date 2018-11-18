@@ -24,14 +24,6 @@ import de.bund.bfr.knime.pmm.common.CatalogModelXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class CatalogModel implements ViewValue {
 
-	// Configuration keys
-	static final String ID = "id";
-	static final String NAME = "name";
-	static final String FORMULA = "formula";
-	static final String MODEL_CLASS = "modelClass";
-	static final String COMMENT = "comment";
-	static final String DBUUID = "dbuuid";
-
 	private Integer id;
 	private String name;
 	private String formula;
@@ -174,33 +166,49 @@ public class CatalogModel implements ViewValue {
 	}
 
 	/**
-	 * Saves catalog model properties into a {@link CatalogModel}.
+	 * Saves catalog model properties into a {@link CatalogModel} with properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "formula"
+	 * <li>Integer "modelClass"
+	 * <li>String "comment"
+	 * <li>String "dbuuid"
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            settings where to save the {@link CatalogModel} properties
 	 */
 	public void saveToNodeSettings(final NodeSettingsWO settings) {
-		SettingsHelper.addInt(ID, id, settings);
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addString(FORMULA, formula, settings);
-		SettingsHelper.addInt(MODEL_CLASS, modelClass, settings);
-		SettingsHelper.addString(COMMENT, comment, settings);
-		SettingsHelper.addString(DBUUID, dbuuid, settings);
+		SettingsHelper.addInt("id", id, settings);
+		SettingsHelper.addString("name", name, settings);
+		SettingsHelper.addString("formula", formula, settings);
+		SettingsHelper.addInt("modelClass", modelClass, settings);
+		SettingsHelper.addString("comment", comment, settings);
+		SettingsHelper.addString("dbuuid", dbuuid, settings);
 	}
 
 	/**
 	 * Loads catalog model properties from a {@link CatalogModel}.
 	 * 
 	 * @param settings
-	 *            the settings where to load the {@link CatalogModel} from
+	 *            with properties:
+	 *            <ul>
+	 *            <li>Integer "id"
+	 *            <li>String "name"
+	 *            <li>String "formula"
+	 *            <li>Integer "modelClass"
+	 *            <li>String "comment"
+	 *            <li>String "dbuuid"
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(final NodeSettingsRO settings) {
-		id = SettingsHelper.getInteger(ID, settings);
-		name = SettingsHelper.getString(NAME, settings);
-		formula = SettingsHelper.getString(FORMULA, settings);
-		modelClass = SettingsHelper.getInteger(MODEL_CLASS, settings);
-		comment = SettingsHelper.getString(COMMENT, settings);
-		dbuuid = SettingsHelper.getString(DBUUID, settings);
+		id = SettingsHelper.getInteger("id", settings);
+		name = SettingsHelper.getString("name", settings);
+		formula = SettingsHelper.getString("formula", settings);
+		modelClass = SettingsHelper.getInteger("modelClass", settings);
+		comment = SettingsHelper.getString("comment", settings);
+		dbuuid = SettingsHelper.getString("dbuuid", settings);
 	}
 
 	/**
@@ -210,7 +218,7 @@ public class CatalogModel implements ViewValue {
 	 */
 	public static CatalogModel toCatalogModel(CatalogModelXml catalogModelXml) {
 		CatalogModel catalogModel = new CatalogModel();
-			catalogModel.setId(catalogModelXml.id);
+		catalogModel.setId(catalogModelXml.id);
 		catalogModel.setName(catalogModelXml.name);
 		catalogModel.setFormula(catalogModelXml.formula);
 		catalogModel.setModelClass(catalogModelXml.modelClass);

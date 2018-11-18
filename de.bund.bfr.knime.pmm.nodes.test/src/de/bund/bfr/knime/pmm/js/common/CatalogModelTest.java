@@ -84,23 +84,23 @@ public class CatalogModelTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		catalogModel.saveToNodeSettings(settings);
 		
-		assertEquals(id, settings.getInt(CatalogModel.ID));
-		assertEquals(name, settings.getString(CatalogModel.NAME));
-		assertEquals(formula, settings.getString(CatalogModel.FORMULA));
-		assertEquals(modelClass, settings.getInt(CatalogModel.MODEL_CLASS));
-		assertEquals(comment, settings.getString(CatalogModel.COMMENT));
-		assertEquals(dbuuid, settings.getString(CatalogModel.DBUUID));
+		assertEquals(id, settings.getInt("id"));
+		assertEquals(name, settings.getString("name"));
+		assertEquals(formula, settings.getString("formula"));
+		assertEquals(modelClass, settings.getInt("modelClass"));
+		assertEquals(comment, settings.getString("comment"));
+		assertEquals(dbuuid, settings.getString("dbuuid"));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(CatalogModel.ID, id);
-		settings.addString(CatalogModel.NAME, name);
-		settings.addString(CatalogModel.FORMULA, formula);
-		settings.addInt(CatalogModel.MODEL_CLASS, modelClass);
-		settings.addString(CatalogModel.COMMENT, comment);
-		settings.addString(CatalogModel.DBUUID, dbuuid);
+		settings.addInt("id", id);
+		settings.addString("name", name);
+		settings.addString("formula", formula);
+		settings.addInt("modelClass", modelClass);
+		settings.addString("comment", comment);
+		settings.addString("dbuuid", dbuuid);
 		
 		CatalogModel catalogModel = new CatalogModel();
 		catalogModel.loadFromNodeSettings(settings);
