@@ -49,20 +49,6 @@ import de.bund.bfr.knime.pmm.common.EstModelXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class EstModel implements ViewValue {
 
-	// Configuration keys
-	static final String ID = "id";
-	static final String NAME = "name";
-	static final String SSE = "sse";
-	static final String RMS = "rms";
-	static final String R2 = "r2";
-	static final String AIC = "aic";
-	static final String BIC = "bic";
-	static final String DOF = "dof";
-	static final String QUALITY_SCORE = "qualityScore";
-	static final String CHECKED = "checked";
-	static final String COMMENT = "comment";
-	static final String DBUUID = "dbuuid";
-
 	private Integer id;
 	private String name;
 	private Double sse;
@@ -211,7 +197,8 @@ public class EstModel implements ViewValue {
 	/**
 	 * Sets the id of this {@link EstModel}.
 	 * 
-	 * @param id the id to be set
+	 * @param id
+	 *            the id to be set
 	 */
 	public void setId(final Integer id) {
 		this.id = id;
@@ -220,7 +207,8 @@ public class EstModel implements ViewValue {
 	/**
 	 * Sets the name of this {@link EstModel}.
 	 * 
-	 * @param name the name to be set
+	 * @param name
+	 *            the name to be set
 	 */
 	public void setName(final String name) {
 		this.name = Strings.emptyToNull(name);
@@ -229,7 +217,8 @@ public class EstModel implements ViewValue {
 	/**
 	 * Sets the SSE of this {@link EstModel}.
 	 * 
-	 * @param sse the SSE to be set
+	 * @param sse
+	 *            the SSE to be set
 	 */
 	public void setSse(final Double sse) {
 		this.sse = sse;
@@ -238,7 +227,8 @@ public class EstModel implements ViewValue {
 	/**
 	 * Sets the RMS of this {@link EstModel}.
 	 * 
-	 * @param rms the RMS to be set
+	 * @param rms
+	 *            the RMS to be set
 	 */
 	public void setRms(final Double rms) {
 		this.rms = rms;
@@ -247,7 +237,8 @@ public class EstModel implements ViewValue {
 	/**
 	 * Sets the R2 of this {@link EstModel}.
 	 * 
-	 * @param r2 the R2 to be set
+	 * @param r2
+	 *            the R2 to be set
 	 */
 	public void setR2(final Double r2) {
 		this.r2 = r2;
@@ -256,7 +247,8 @@ public class EstModel implements ViewValue {
 	/**
 	 * Sets the AIC of this {@link EstModel}.
 	 * 
-	 * @param aic the AIC to be set
+	 * @param aic
+	 *            the AIC to be set
 	 */
 	public void setAIC(final Double aic) {
 		this.aic = aic;
@@ -265,7 +257,8 @@ public class EstModel implements ViewValue {
 	/**
 	 * Sets the BIC of this {@link EstModel}.
 	 * 
-	 * @param bic the BIC to be set
+	 * @param bic
+	 *            the BIC to be set
 	 */
 	public void setBIC(final Double bic) {
 		this.bic = bic;
@@ -274,7 +267,8 @@ public class EstModel implements ViewValue {
 	/**
 	 * Sets the degrees of freedom of this {@link EstModel}.
 	 * 
-	 * @param dof the degrees of freedom to be set
+	 * @param dof
+	 *            the degrees of freedom to be set
 	 */
 	public void setDof(final Integer dof) {
 		this.dof = dof;
@@ -283,7 +277,8 @@ public class EstModel implements ViewValue {
 	/**
 	 * Sets the quality score of this {@link EstModel}.
 	 * 
-	 * @param qualityScore the quality score to be set
+	 * @param qualityScore
+	 *            the quality score to be set
 	 */
 	public void setQualityScore(final Integer qualityScore) {
 		this.qualityScore = qualityScore;
@@ -292,7 +287,8 @@ public class EstModel implements ViewValue {
 	/**
 	 * Sets the checked status of this {@link EstModel}.
 	 * 
-	 * @param checked the checked status to be set
+	 * @param checked
+	 *            the checked status to be set
 	 */
 	public void setChecked(final Boolean checked) {
 		this.checked = checked;
@@ -303,7 +299,8 @@ public class EstModel implements ViewValue {
 	 * 
 	 * Empty strings are converted to null.
 	 * 
-	 * @param comment the comment to be set
+	 * @param comment
+	 *            the comment to be set
 	 */
 	public void setComment(final String comment) {
 		this.comment = Strings.emptyToNull(comment);
@@ -314,44 +311,77 @@ public class EstModel implements ViewValue {
 	 * 
 	 * Empty strings are converted to null.
 	 * 
-	 * @param dbuuid the DBUUID to be set
+	 * @param dbuuid
+	 *            the DBUUID to be set
 	 */
 	public void setDbuuid(final String dbuuid) {
 		this.dbuuid = Strings.emptyToNull(dbuuid);
 	}
 
-	/** Saves estimated model properties into a {@link NodeSettingsWO}. */
+	/**
+	 * Saves estimated model properties into a {@link NodeSettingsWO} with
+	 * properties:
+	 * <ul>
+	 * <li>String "id"
+	 * <li>String "name"
+	 * <li>Double "sse"
+	 * <li>Double "rms"
+	 * <li>Double "r2"
+	 * <li>Double "aic"
+	 * <li>Double "bic"
+	 * <li>Integer "dof"
+	 * <li>Integer "qualityScore"
+	 * <li>Boolean "checked"
+	 * <li>String "comment"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		SettingsHelper.addInt(ID, id, settings);
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addDouble(SSE, sse, settings);
-		SettingsHelper.addDouble(RMS, rms, settings);
-		SettingsHelper.addDouble(R2, r2, settings);
-		SettingsHelper.addDouble(AIC, aic, settings);
-		SettingsHelper.addDouble(BIC, bic, settings);
-		SettingsHelper.addInt(DOF, dof, settings);
-		SettingsHelper.addInt(QUALITY_SCORE, qualityScore, settings);
-		SettingsHelper.addBoolean(CHECKED, checked, settings);
-		SettingsHelper.addString(COMMENT, comment, settings);
-		SettingsHelper.addString(DBUUID, dbuuid, settings);
+		SettingsHelper.addInt("id", id, settings);
+		SettingsHelper.addString("name", name, settings);
+		SettingsHelper.addDouble("sse", sse, settings);
+		SettingsHelper.addDouble("rms", rms, settings);
+		SettingsHelper.addDouble("r2", r2, settings);
+		SettingsHelper.addDouble("aic", aic, settings);
+		SettingsHelper.addDouble("bic", bic, settings);
+		SettingsHelper.addInt("dof", dof, settings);
+		SettingsHelper.addInt("qualityScore", qualityScore, settings);
+		SettingsHelper.addBoolean("checked", checked, settings);
+		SettingsHelper.addString("comment", comment, settings);
+		SettingsHelper.addString("dbuuid", dbuuid, settings);
 	}
 
 	/**
-	 * Loads estimated model properties from a {@link NodeSettingsRO}.
+	 * Loads estimated model properties from a {@link NodeSettingsRO} with
+	 * properties:
+	 * <ul>
+	 * <li>String "id"
+	 * <li>String "name"
+	 * <li>Double "sse"
+	 * <li>Double "rms"
+	 * <li>Double "r2"
+	 * <li>Double "aic"
+	 * <li>Double "bic"
+	 * <li>Integer "dof"
+	 * <li>Integer "qualityScore"
+	 * <li>Boolean "checked"
+	 * <li>String "comment"
+	 * <li>String "dbuuid"
+	 * </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
-		id = SettingsHelper.getInteger(ID, settings);
-		name = SettingsHelper.getString(NAME, settings);
-		sse = SettingsHelper.getDouble(SSE, settings);
-		rms = SettingsHelper.getDouble(RMS, settings);
-		r2 = SettingsHelper.getDouble(R2, settings);
-		aic = SettingsHelper.getDouble(AIC, settings);
-		bic = SettingsHelper.getDouble(BIC, settings);
-		dof = SettingsHelper.getInteger(DOF, settings);
-		qualityScore = SettingsHelper.getInteger(QUALITY_SCORE, settings);
-		checked = SettingsHelper.getBoolean(CHECKED, settings);
-		comment = SettingsHelper.getString(COMMENT, settings);
-		dbuuid = SettingsHelper.getString(DBUUID, settings);
+		id = SettingsHelper.getInteger("id", settings);
+		name = SettingsHelper.getString("name", settings);
+		sse = SettingsHelper.getDouble("sse", settings);
+		rms = SettingsHelper.getDouble("rms", settings);
+		r2 = SettingsHelper.getDouble("r2", settings);
+		aic = SettingsHelper.getDouble("aic", settings);
+		bic = SettingsHelper.getDouble("bic", settings);
+		dof = SettingsHelper.getInteger("dof", settings);
+		qualityScore = SettingsHelper.getInteger("qualityScore", settings);
+		checked = SettingsHelper.getBoolean("checked", settings);
+		comment = SettingsHelper.getString("comment", settings);
+		dbuuid = SettingsHelper.getString("dbuuid", settings);
 	}
 
 	/** Creates an {@link EstModel} from an {@link EstModelXml}. */
@@ -372,11 +402,11 @@ public class EstModel implements ViewValue {
 
 		return estModel;
 	}
-	
+
 	public EstModelXml toEstModelXml() {
 		EstModelXml estModelXml = new EstModelXml(id, name, sse, rms, r2, aic, bic, dof, checked, qualityScore, dbuuid);
 		estModelXml.comment = comment;
-		
+
 		return estModelXml;
 	}
 }

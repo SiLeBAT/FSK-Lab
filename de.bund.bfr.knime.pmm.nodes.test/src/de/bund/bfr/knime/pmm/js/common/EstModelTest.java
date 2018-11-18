@@ -151,35 +151,35 @@ public class EstModelTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		estModel.saveToNodeSettings(settings);
 		
-		assertEquals(id, settings.getInt(EstModel.ID));
-		assertEquals(name, settings.getString(EstModel.NAME));
-		assertEquals(sse, settings.getDouble(EstModel.SSE), 0.0);
-		assertEquals(rms, settings.getDouble(EstModel.RMS), 0.0);
-		assertEquals(r2, settings.getDouble(EstModel.R2), 0.0);
-		assertEquals(aic, settings.getDouble(EstModel.AIC), 0.0);
-		assertEquals(bic, settings.getDouble(EstModel.BIC), 0.0);
-		assertEquals(dof, settings.getInt(EstModel.DOF));
-		assertEquals(qualityScore, settings.getInt(EstModel.QUALITY_SCORE));
-		assertEquals(checked, settings.getBoolean(EstModel.CHECKED));
-		assertEquals(comment, settings.getString(EstModel.COMMENT));
-		assertEquals(dbuuid, settings.getString(EstModel.DBUUID));
+		assertEquals(id, settings.getInt("id"));
+		assertEquals(name, settings.getString("name"));
+		assertEquals(sse, settings.getDouble("sse"), 0.0);
+		assertEquals(rms, settings.getDouble("rms"), 0.0);
+		assertEquals(r2, settings.getDouble("r2"), 0.0);
+		assertEquals(aic, settings.getDouble("aic"), 0.0);
+		assertEquals(bic, settings.getDouble("bic"), 0.0);
+		assertEquals(dof, settings.getInt("dof"));
+		assertEquals(qualityScore, settings.getInt("qualityScore"));
+		assertEquals(checked, settings.getBoolean("checked"));
+		assertEquals(comment, settings.getString("comment"));
+		assertEquals(dbuuid, settings.getString("dbuuid"));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(EstModel.ID, id);
-		settings.addString(EstModel.NAME, name);
-		settings.addDouble(EstModel.SSE, sse);
-		settings.addDouble(EstModel.RMS, rms);
-		settings.addDouble(EstModel.R2, r2);
-		settings.addDouble(EstModel.AIC, aic);
-		settings.addDouble(EstModel.BIC, bic);
-		settings.addInt(EstModel.DOF, dof);
-		settings.addInt(EstModel.QUALITY_SCORE, qualityScore);
-		settings.addBoolean(EstModel.CHECKED, checked);
-		settings.addString(EstModel.COMMENT, comment);
-		settings.addString(EstModel.DBUUID, dbuuid);
+		settings.addInt("id", id);
+		settings.addString("name", name);
+		settings.addDouble("sse", sse);
+		settings.addDouble("rms", rms);
+		settings.addDouble("r2", r2);
+		settings.addDouble("aic", aic);
+		settings.addDouble("bic", bic);
+		settings.addInt("dof", dof);
+		settings.addInt("qualityScore", qualityScore);
+		settings.addBoolean("checked", checked);
+		settings.addString("comment", comment);
+		settings.addString("dbuuid", dbuuid);
 		
 		EstModel estModel = new EstModel();
 		estModel.loadFromNodeSettings(settings);
