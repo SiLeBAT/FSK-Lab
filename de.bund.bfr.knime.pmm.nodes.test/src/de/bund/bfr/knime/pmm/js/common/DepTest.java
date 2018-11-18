@@ -95,25 +95,25 @@ public class DepTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		dep.saveToNodeSettings(settings);
 		
-		assertEquals(name, settings.getString(Dep.NAME));
-		assertEquals(origname, settings.getString(Dep.ORIGNAME));
-		assertEquals(min, settings.getDouble(Dep.MIN), 0.0);
-		assertEquals(max, settings.getDouble(Dep.MAX), 0.0);
-		assertEquals(category, settings.getString(Dep.CATEGORY));
-		assertEquals(unit, settings.getString(Dep.UNIT));
-		assertEquals(description, settings.getString(Dep.DESCRIPTION));
+		assertEquals(name, settings.getString("name"));
+		assertEquals(origname, settings.getString("origname"));
+		assertEquals(min, settings.getDouble("min"), 0.0);
+		assertEquals(max, settings.getDouble("max"), 0.0);
+		assertEquals(category, settings.getString("category"));
+		assertEquals(unit, settings.getString("unit"));
+		assertEquals(description, settings.getString("description"));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addString(Dep.NAME, name);
-		settings.addString(Dep.ORIGNAME, origname);
-		settings.addDouble(Dep.MIN, min);
-		settings.addDouble(Dep.MAX, max);
-		settings.addString(Dep.CATEGORY, category);
-		settings.addString(Dep.UNIT, unit);
-		settings.addString(Dep.DESCRIPTION, description);
+		settings.addString("name", name);
+		settings.addString("origname", origname);
+		settings.addDouble("min", min);
+		settings.addDouble("max", max);
+		settings.addString("category", category);
+		settings.addString("unit", unit);
+		settings.addString("description", description);
 		
 		Dep dep = new Dep();
 		dep.loadFromNodeSettings(settings);

@@ -25,15 +25,6 @@ import de.bund.bfr.knime.pmm.common.DepXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Dep implements ViewValue {
 
-	// Configuration keys
-	static final String NAME = "name";
-	static final String ORIGNAME = "origname";
-	static final String MIN = "min";
-	static final String MAX = "max";
-	static final String CATEGORY = "category";
-	static final String UNIT = "unit";
-	static final String DESCRIPTION = "description";
-
 	private String name;
 	private String origname;
 	private Double min;
@@ -200,35 +191,53 @@ public class Dep implements ViewValue {
 	}
 
 	/**
-	 * Saves dep properties into a {@link NodeSettingsWO}.
+	 * Saves dep properties into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>String "name"
+	 * <li>String "origname"
+	 * <li>Double "min"
+	 * <li>Double "max"
+	 * <li>String "category"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            where to save the {@link Dep} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addString(ORIGNAME, origname, settings);
-		SettingsHelper.addDouble(MIN, min, settings);
-		SettingsHelper.addDouble(MAX, max, settings);
-		SettingsHelper.addString(CATEGORY, category, settings);
-		SettingsHelper.addString(UNIT, unit, settings);
-		SettingsHelper.addString(DESCRIPTION, description, settings);
+		SettingsHelper.addString("name", name, settings);
+		SettingsHelper.addString("origname", origname, settings);
+		SettingsHelper.addDouble("min", min, settings);
+		SettingsHelper.addDouble("max", max, settings);
+		SettingsHelper.addString("category", category, settings);
+		SettingsHelper.addString("unit", unit, settings);
+		SettingsHelper.addString("description", description, settings);
 	}
 
 	/**
-	 * Loads dep properties from a {@link NodeSettingsRO}.
+	 * Loads dep properties from a {@link NodeSettingsRO} with properties:
+	 * <ul>
+	 * <li>String "name"
+	 * <li>String "origname"
+	 * <li>Double "min"
+	 * <li>Double "max"
+	 * <li>String "category"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            The settings where to load the {@link Dep} from
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
-		name = SettingsHelper.getString(NAME, settings);
-		origname = SettingsHelper.getString(ORIGNAME, settings);
-		min = SettingsHelper.getDouble(MIN, settings);
-		max = SettingsHelper.getDouble(MAX, settings);
-		category = SettingsHelper.getString(CATEGORY, settings);
-		unit = SettingsHelper.getString(UNIT, settings);
-		description = SettingsHelper.getString(DESCRIPTION, settings);
+		name = SettingsHelper.getString("name", settings);
+		origname = SettingsHelper.getString("origname", settings);
+		min = SettingsHelper.getDouble("min", settings);
+		max = SettingsHelper.getDouble("max", settings);
+		category = SettingsHelper.getString("category", settings);
+		unit = SettingsHelper.getString("unit", settings);
+		description = SettingsHelper.getString("description", settings);
 	}
 
 	/**
