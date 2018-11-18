@@ -129,5 +129,11 @@
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>de.bund.bfr.knime</groupId>
+			<artifactId>de.bund.bfr.knime.pmm.nodes.test</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
