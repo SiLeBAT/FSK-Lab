@@ -61,11 +61,11 @@ public class UnitListTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 		
-		assertEquals(1, settings.getInt(UnitList.NUM_UNITS));
+		assertEquals(1, settings.getInt("numUnits"));
 		
 		Unit expected = unit;  // expected unit
 		Unit obtained = new Unit();  // obtained unit
-		obtained.loadFromNodeSettings(settings.getNodeSettings(UnitList.UNITS + 0));
+		obtained.loadFromNodeSettings(settings.getNodeSettings("units0"));
 		
 		assertEquals(expected.getId(), obtained.getId());
 		assertEquals(expected.getUnit(), obtained.getUnit());
@@ -85,8 +85,8 @@ public class UnitListTest {
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(UnitList.NUM_UNITS, 1);
-		unit.saveToNodeSettings(settings.addNodeSettings(UnitList.UNITS + 0));
+		settings.addInt("numUnits", 1);
+		unit.saveToNodeSettings(settings.addNodeSettings("units0"));
 		
 		UnitList list = new UnitList();
 		list.loadFromNodeSettings(settings);

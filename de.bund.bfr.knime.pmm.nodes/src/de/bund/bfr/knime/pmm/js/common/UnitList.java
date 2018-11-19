@@ -35,8 +35,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class UnitList {
-	static final String NUM_UNITS = "numUnits";
-	static final String UNITS = "units";
 
 	private int numUnits;
 	private Unit[] units;
@@ -64,15 +62,20 @@ public class UnitList {
 	}
 
 	/**
-	 * Saves the list of units into a {@link NodeSettingsWO}.
+	 * Saves the list of units into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>Integer "numUnits"
+	 * <li>Variable number of settings with key "units" and a suffix. E.g. "units0",
+	 * "units1", etc.
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            settings where to save the {@link UnitList} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		settings.addInt(NUM_UNITS, numUnits);
+		settings.addInt("numUnits", numUnits);
 		for (int i = 0; i < numUnits; i++) {
-			units[i].saveToNodeSettings(settings.addNodeSettings(UNITS + i));
+			units[i].saveToNodeSettings(settings.addNodeSettings("units" + i));
 		}
 	}
 
@@ -80,15 +83,20 @@ public class UnitList {
 	 * Loads properties of the unit list from a {@link NodeSettingsRO}.
 	 * 
 	 * @param settings
-	 *            the settings where to load the {@link UnitLIst} from
+	 *            with properties:
+	 *            <ul>
+	 *            <li>Integer "numUnits"
+	 *            <li>Variable number of settings with key "units" and a suffix.
+	 *            E.g. "units0", "units1", etc.
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
 		try {
-			numUnits = settings.getInt(NUM_UNITS);
+			numUnits = settings.getInt("numUnits");
 			units = new Unit[numUnits];
 			for (int i = 0; i < numUnits; i++) {
 				units[i] = new Unit();
-				units[i].loadFromNodeSettings(settings.getNodeSettings(UNITS + i));
+				units[i].loadFromNodeSettings(settings.getNodeSettings("units" + i));
 			}
 		} catch (InvalidSettingsException e) {
 		}
