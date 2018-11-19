@@ -35,8 +35,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class ParamList {
-	static final String NUM_PARAMS = "numParams";
-	static final String PARAMS = "params";
 
 	private int numParams;
 	private Param[] params;
@@ -55,7 +53,8 @@ public class ParamList {
 	/**
 	 * Sets the parameters in the list.
 	 *
-	 * @param params array of parameters to be set
+	 * @param params
+	 *            array of parameters to be set
 	 */
 	public void setParams(Param[] params) {
 		numParams = params.length;
@@ -63,29 +62,41 @@ public class ParamList {
 	}
 
 	/**
-	 * Saves the list of parameters into a {@link NodeSettingsWO}.
+	 * Saves the list of parameters into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>Integer "numParams"
+	 * <li>Variable number of settings with key "params" and a suffix. E.g.
+	 * "params0", "params1", etc.
+	 * </ul>
 	 *
-	 * @param settings settings where to save the {@link ParamList} properties
+	 * @param settings
+	 *            settings where to save the {@link ParamList} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		settings.addInt(NUM_PARAMS, numParams);
+		settings.addInt("numParams", numParams);
 		for (int i = 0; i < numParams; i++) {
-			params[i].saveToNodeSettings(settings.addNodeSettings(PARAMS + i));
+			params[i].saveToNodeSettings(settings.addNodeSettings("params" + i));
 		}
 	}
 
 	/**
 	 * Loads properties of the parameters list from a {@link NodeSettingsRO}.
 	 *
-	 * @param settings the settings whre to load the {@ink ParamList} from
+	 * @param settings
+	 *            with properties:
+	 *            <ul>
+	 *            <li>Integer "numParams"
+	 *            <li>Variable number of settings with key "params" and a suffix.
+	 *            E.g. "params0", "params1", etc.
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
 		try {
-			numParams = settings.getInt(NUM_PARAMS);
+			numParams = settings.getInt("numParams");
 			params = new Param[numParams];
 			for (int i = 0; i < numParams; i++) {
 				params[i] = new Param();
-				params[i].loadFromNodeSettings(settings.getNodeSettings(PARAMS + i));
+				params[i].loadFromNodeSettings(settings.getNodeSettings("params" + i));
 			}
 		} catch (InvalidSettingsException e) {
 		}

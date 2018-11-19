@@ -68,11 +68,11 @@ public class ParamListTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 
-		assertEquals(1, settings.getInt(ParamList.NUM_PARAMS));
+		assertEquals(1, settings.getInt("numParams"));
 
 		Param expected = param;  // expected Param
 		Param obtained = new Param();  // obtained Param
-		obtained.loadFromNodeSettings(settings.getNodeSettings(ParamList.PARAMS + 0));
+		obtained.loadFromNodeSettings(settings.getNodeSettings("params0"));
 
 		assertEquals(expected.getName(), obtained.getName());
 		assertEquals(expected.getOrigName(), obtained.getOrigName());
@@ -95,8 +95,8 @@ public class ParamListTest {
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(ParamList.NUM_PARAMS, 1);
-		param.saveToNodeSettings(settings.addNodeSettings(ParamList.PARAMS + 0));
+		settings.addInt("numParams", 1);
+		param.saveToNodeSettings(settings.addNodeSettings("params0"));
 
 		ParamList list = new ParamList();
 		list.loadFromNodeSettings(settings);
