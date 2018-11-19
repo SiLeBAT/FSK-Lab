@@ -30,21 +30,6 @@ import com.google.common.base.Strings;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Unit implements ViewValue {
 
-	// Configuration keys
-	static final String ID = "id";
-	static final String UNIT = "unit";
-	static final String DESCRIPTION = "description";
-	static final String NAME = "name";
-	static final String KIND_OF_PROPERTY_QUANTITY = "kindOfPropertyQuantity";
-	static final String NOTATION_CASE_SENSITIVE = "notationCaseSensitive";
-	static final String CONVERT_TO = "convertTo";
-	static final String CONVERSION_FUNCTION_FACTOR = "conversionFunctionFactor";
-	static final String INVERSION_CONVERSION_FUNCTION_FACTOR = "inversionConversionFunctionFactor";
-	static final String OBJECT_TYPE = "objectType";
-	static final String DISPLAY_IN_GUI_AS = "displayInGuiAs";
-	static final String MATHML_STRING = "mathmlString";
-	static final String PRIORITY_FOR_DISPLAY_IN_GUI = "priorityForDisplayInGui";
-
 	// variables
 	private Integer id;
 	private String unit;
@@ -358,25 +343,40 @@ public class Unit implements ViewValue {
 	}
 
 	/**
-	 * Saves unit properties into a {@link NodeSettingsWO}.
+	 * Saves unit properties into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * <li>String "name"
+	 * <li>String "kindOfPropertyQuantity"
+	 * <li>String "notationCaseSensitive"
+	 * <li>String "convertTo"
+	 * <li>String "conversionFunctionFactor"
+	 * <li>String "inversionConversionFunctionFactor"
+	 * <li>String "objectType"
+	 * <li>String "displayInGuiAs"
+	 * <li>String "mathmlString"
+	 * <li>String "priorityForDisplayInGui"
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            settings where to save the {@link Unit} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		SettingsHelper.addInt(ID, id, settings);
-		SettingsHelper.addString(UNIT, unit, settings);
-		SettingsHelper.addString(DESCRIPTION, description, settings);
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addString(KIND_OF_PROPERTY_QUANTITY, kind_of_property_quantity, settings);
-		SettingsHelper.addString(NOTATION_CASE_SENSITIVE, notation_case_sensitive, settings);
-		SettingsHelper.addString(CONVERT_TO, convert_to, settings);
-		SettingsHelper.addString(CONVERSION_FUNCTION_FACTOR, conversion_function_factor, settings);
-		SettingsHelper.addString(INVERSION_CONVERSION_FUNCTION_FACTOR, inverse_conversion_function_factor, settings);
-		SettingsHelper.addString(OBJECT_TYPE, object_type, settings);
-		SettingsHelper.addString(DISPLAY_IN_GUI_AS, display_in_GUI_as, settings);
-		SettingsHelper.addString(MATHML_STRING, mathML_string, settings);
-		SettingsHelper.addString(PRIORITY_FOR_DISPLAY_IN_GUI, priority_for_display_in_GUI, settings);
+		SettingsHelper.addInt("id", id, settings);
+		SettingsHelper.addString("unit", unit, settings);
+		SettingsHelper.addString("description", description, settings);
+		SettingsHelper.addString("name", name, settings);
+		SettingsHelper.addString("kindOfPropertyQuantity", kind_of_property_quantity, settings);
+		SettingsHelper.addString("notationCaseSensitive", notation_case_sensitive, settings);
+		SettingsHelper.addString("convertTo", convert_to, settings);
+		SettingsHelper.addString("conversionFunctionFactor", conversion_function_factor, settings);
+		SettingsHelper.addString("inversionConversionFunctionFactor", inverse_conversion_function_factor, settings);
+		SettingsHelper.addString("objectType", object_type, settings);
+		SettingsHelper.addString("displayInGuiAs", display_in_GUI_as, settings);
+		SettingsHelper.addString("mathmlString", mathML_string, settings);
+		SettingsHelper.addString("priorityForDisplayInGui", priority_for_display_in_GUI, settings);
 	}
 
 	/**
@@ -386,18 +386,18 @@ public class Unit implements ViewValue {
 	 *            The settings where to load the {@link Unit} from
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
-		id = SettingsHelper.getInteger(ID, settings);
-		unit = SettingsHelper.getString(UNIT, settings);
-		description = SettingsHelper.getString(DESCRIPTION, settings);
-		name = SettingsHelper.getString(NAME, settings);
-		kind_of_property_quantity = SettingsHelper.getString(KIND_OF_PROPERTY_QUANTITY, settings);
-		notation_case_sensitive = SettingsHelper.getString(NOTATION_CASE_SENSITIVE, settings);
-		convert_to = SettingsHelper.getString(CONVERT_TO, settings);
-		conversion_function_factor = SettingsHelper.getString(CONVERSION_FUNCTION_FACTOR, settings);
-		inverse_conversion_function_factor = SettingsHelper.getString(INVERSION_CONVERSION_FUNCTION_FACTOR, settings);
-		object_type = SettingsHelper.getString(OBJECT_TYPE, settings);
-		display_in_GUI_as = SettingsHelper.getString(DISPLAY_IN_GUI_AS, settings);
-		mathML_string = SettingsHelper.getString(MATHML_STRING, settings);
-		priority_for_display_in_GUI = SettingsHelper.getString(PRIORITY_FOR_DISPLAY_IN_GUI, settings);
+		id = SettingsHelper.getInteger("id", settings);
+		unit = SettingsHelper.getString("unit", settings);
+		description = SettingsHelper.getString("description", settings);
+		name = SettingsHelper.getString("name", settings);
+		kind_of_property_quantity = SettingsHelper.getString("kindOfPropertyQuantity", settings);
+		notation_case_sensitive = SettingsHelper.getString("notationCaseSensitive", settings);
+		convert_to = SettingsHelper.getString("convertTo", settings);
+		conversion_function_factor = SettingsHelper.getString("conversionFunctionFactor", settings);
+		inverse_conversion_function_factor = SettingsHelper.getString("inversionConversionFunctionFactor", settings);
+		object_type = SettingsHelper.getString("objectType", settings);
+		display_in_GUI_as = SettingsHelper.getString("displayInGuiAs", settings);
+		mathML_string = SettingsHelper.getString("mathmlString", settings);
+		priority_for_display_in_GUI = SettingsHelper.getString("priorityForDisplayInGui", settings);
 	}
 }

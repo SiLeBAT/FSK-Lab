@@ -160,36 +160,36 @@ public class UnitTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		unit.saveToNodeSettings(settings);
 		
-		assertEquals(id, settings.getInt(Unit.ID));
-		assertEquals(unitString, settings.getString(Unit.UNIT));
-		assertEquals(description, settings.getString(Unit.DESCRIPTION));
-		assertEquals(kindOfPropertyQuantity, settings.getString(Unit.KIND_OF_PROPERTY_QUANTITY));
-		assertEquals(notationCaseSensitive, settings.getString(Unit.NOTATION_CASE_SENSITIVE));
-		assertEquals(convertTo, settings.getString(Unit.CONVERT_TO));
-		assertEquals(conversionFunctionFactor, settings.getString(Unit.CONVERSION_FUNCTION_FACTOR));
-		assertEquals(inversionConversionFunctionFactor, settings.getString(Unit.INVERSION_CONVERSION_FUNCTION_FACTOR));
-		assertEquals(objectType, settings.getString(Unit.OBJECT_TYPE));
-		assertEquals(displayInGuiAs, settings.getString(Unit.DISPLAY_IN_GUI_AS));
-		assertEquals(mathMlString, settings.getString(Unit.MATHML_STRING));
-		assertEquals(priorityForDisplayInGui, settings.getString(Unit.PRIORITY_FOR_DISPLAY_IN_GUI));
+		assertEquals(id, settings.getInt("id"));
+		assertEquals(unitString, settings.getString("unit"));
+		assertEquals(description, settings.getString("description"));
+		assertEquals(kindOfPropertyQuantity, settings.getString("kindOfPropertyQuantity"));
+		assertEquals(notationCaseSensitive, settings.getString("notationCaseSensitive"));
+		assertEquals(convertTo, settings.getString("convertTo"));
+		assertEquals(conversionFunctionFactor, settings.getString("conversionFunctionFactor"));
+		assertEquals(inversionConversionFunctionFactor, settings.getString("inversionConversionFunctionFactor"));
+		assertEquals(objectType, settings.getString("objectType"));
+		assertEquals(displayInGuiAs, settings.getString("displayInGuiAs"));
+		assertEquals(mathMlString, settings.getString("mathmlString"));
+		assertEquals(priorityForDisplayInGui, settings.getString("priorityForDisplayInGui"));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(Unit.ID, id);
-		settings.addString(Unit.UNIT, unitString);
-		settings.addString(Unit.DESCRIPTION, description);
-		settings.addString(Unit.NAME, name);
-		settings.addString(Unit.KIND_OF_PROPERTY_QUANTITY, kindOfPropertyQuantity);
-		settings.addString(Unit.NOTATION_CASE_SENSITIVE, notationCaseSensitive);
-		settings.addString(Unit.CONVERT_TO, convertTo);
-		settings.addString(Unit.CONVERSION_FUNCTION_FACTOR, conversionFunctionFactor);
-		settings.addString(Unit.INVERSION_CONVERSION_FUNCTION_FACTOR, inversionConversionFunctionFactor);
-		settings.addString(Unit.OBJECT_TYPE, objectType);
-		settings.addString(Unit.DISPLAY_IN_GUI_AS, displayInGuiAs);
-		settings.addString(Unit.MATHML_STRING, mathMlString);
-		settings.addString(Unit.PRIORITY_FOR_DISPLAY_IN_GUI, priorityForDisplayInGui);
+		settings.addInt("id", id);
+		settings.addString("unit", unitString);
+		settings.addString("description", description);
+		settings.addString("name", name);
+		settings.addString("kindOfPropertyQuantity", kindOfPropertyQuantity);
+		settings.addString("notationCaseSensitive", notationCaseSensitive);
+		settings.addString("convertTo", convertTo);
+		settings.addString("conversionFunctionFactor", conversionFunctionFactor);
+		settings.addString("inversionConversionFunctionFactor", inversionConversionFunctionFactor);
+		settings.addString("objectType", objectType);
+		settings.addString("displayInGuiAs", displayInGuiAs);
+		settings.addString("mathmlString", mathMlString);
+		settings.addString("priorityForDisplayInGui", priorityForDisplayInGui);
 		
 		Unit unit = new Unit();
 		unit.loadFromNodeSettings(settings);
