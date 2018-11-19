@@ -54,11 +54,11 @@ public class TimeSeriesListTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 
-		assertEquals(1, settings.getInt(TimeSeriesList.NUM_TIMESERIES));
+		assertEquals(1, settings.getInt("numTimeSeries"));
 
 		TimeSeries expected = timeSeries;  // expected TimeSeries
 		TimeSeries obtained = new TimeSeries();  // obtained TimeSeries
-		obtained.loadFromNodeSettings(settings.getNodeSettings(TimeSeriesList.TIMESERIES + 0));
+		obtained.loadFromNodeSettings(settings.getNodeSettings("timeSeries0"));
 
 		assertEquals(expected.getName(), obtained.getName());
 		assertEquals(expected.getTimeUnit(), obtained.getTimeUnit());
@@ -74,8 +74,8 @@ public class TimeSeriesListTest {
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(TimeSeriesList.NUM_TIMESERIES, 1);
-		timeSeries.saveToNodeSettings(settings.addNodeSettings(TimeSeriesList.TIMESERIES + 0));
+		settings.addInt("numTimeSeries", 1);
+		timeSeries.saveToNodeSettings(settings.addNodeSettings("timeSeries0"));
 
 		TimeSeriesList list = new TimeSeriesList();
 		list.loadFromNodeSettings(settings);

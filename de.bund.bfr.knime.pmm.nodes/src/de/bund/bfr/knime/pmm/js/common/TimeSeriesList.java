@@ -29,8 +29,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class TimeSeriesList {
-	static final String NUM_TIMESERIES = "numTimeSeries";
-	static final String TIMESERIES = "timeSeries";
 
 	private int numTimeSeries;
 	private TimeSeries[] timeSeries;
@@ -49,7 +47,8 @@ public class TimeSeriesList {
 	/**
 	 * Sets the time series in the list.
 	 *
-	 * @param timeSeries array of tiem series to be set
+	 * @param timeSeries
+	 *            array of tiem series to be set
 	 */
 	public void setTimeSeries(final TimeSeries[] timeSeries) {
 		numTimeSeries = timeSeries.length;
@@ -58,28 +57,41 @@ public class TimeSeriesList {
 
 	/**
 	 * Saves the list of time series into a {@link NodeSettingsWO}.
-	 *
-	 * @param settings settings where to save the {@link TimeSeriesList} properties
+	 * <ul>
+	 * <li>Integer "numTimeSeries"
+	 * <li>Variable number of settings with key "timeSeries" and a suffix. E.g.
+	 * "timeSeries0", "timeSeries1", etc.
+	 * </ul>
+	 * *
+	 * 
+	 * @param settings
+	 *            settings where to save the {@link TimeSeriesList} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		settings.addInt(NUM_TIMESERIES, numTimeSeries);
+		settings.addInt("numTimeSeries", numTimeSeries);
 		for (int i = 0; i < numTimeSeries; i++) {
-			timeSeries[i].saveToNodeSettings(settings.addNodeSettings(TIMESERIES + i));
+			timeSeries[i].saveToNodeSettings(settings.addNodeSettings("timeSeries" + i));
 		}
 	}
 
 	/**
 	 * Loads properties of the time series list from a {@link NodeSettingsRO}.
 	 *
-	 * @param settings the settings where to load the {@link TimeSeriesList} from
+	 * @param settings
+	 *            with properties:
+	 *            <ul>
+	 *            <li>Integer "numTimeSeries"
+	 *            <li>Variable number of settings with key "timeSeries" and a
+	 *            suffix. E.g. "timeSeries0", "timeSeries1", etc.
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
 		try {
-			numTimeSeries = settings.getInt(NUM_TIMESERIES);
+			numTimeSeries = settings.getInt("numTimeSeries");
 			timeSeries = new TimeSeries[numTimeSeries];
 			for (int i = 0; i < numTimeSeries; i++) {
 				timeSeries[i] = new TimeSeries();
-				timeSeries[i].loadFromNodeSettings(settings.getNodeSettings(TIMESERIES + i));
+				timeSeries[i].loadFromNodeSettings(settings.getNodeSettings("timeSeries" + i));
 			}
 		} catch (InvalidSettingsException e) {
 		}
