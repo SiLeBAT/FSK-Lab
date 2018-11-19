@@ -65,11 +65,11 @@ public class LiteratureListTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 
-		assertEquals(1, settings.getInt(LiteratureList.NUM_LITERATURE));
+		assertEquals(1, settings.getInt("numLiterature"));
 
 		Literature[] obtainedReferences = new Literature[1];
 		obtainedReferences[0] = new Literature();
-		obtainedReferences[0].loadFromNodeSettings(settings.getNodeSettings(LiteratureList.LITERATURE + 0));
+		obtainedReferences[0].loadFromNodeSettings(settings.getNodeSettings("literature" + 0));
 
 		Literature expected = references[0]; // expected literature
 		Literature obtained = obtainedReferences[0]; // obtained literature
@@ -93,8 +93,8 @@ public class LiteratureListTest {
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(LiteratureList.NUM_LITERATURE, 1);
-		literature.saveToNodeSettings(settings.addNodeSettings(LiteratureList.LITERATURE + 0));
+		settings.addInt("numLiterature", 1);
+		literature.saveToNodeSettings(settings.addNodeSettings("literature" + 0));
 
 		LiteratureList list = new LiteratureList();
 		list.loadFromNodeSettings(settings);

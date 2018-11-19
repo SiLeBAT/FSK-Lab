@@ -31,59 +31,71 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class LiteratureList {
-  static final String NUM_LITERATURE = "numLiterature";
-  static final String LITERATURE = "literature";
 
-  private int numLiterature;
-  private Literature[] literature;
+	private int numLiterature;
+	private Literature[] literature;
 
-  /**
-   * Returns an array with all the literature references in the list.
-   * 
-   * If not set returns null.
-   * 
-   * @return an array with all the literature references in the list
-   */
-  public Literature[] getLiterature() {
-    return literature;
-  }
+	/**
+	 * Returns an array with all the literature references in the list.
+	 * 
+	 * If not set returns null.
+	 * 
+	 * @return an array with all the literature references in the list
+	 */
+	public Literature[] getLiterature() {
+		return literature;
+	}
 
-  /**
-   * Sets the literature references in the list.
-   * 
-   * @param literature array of literature references to be set
-   */
-  public void setLiterature(final Literature[] literature) {
-    numLiterature = literature != null ? literature.length : 0;
-    this.literature = literature;
-  }
+	/**
+	 * Sets the literature references in the list.
+	 * 
+	 * @param literature
+	 *            array of literature references to be set
+	 */
+	public void setLiterature(final Literature[] literature) {
+		numLiterature = literature != null ? literature.length : 0;
+		this.literature = literature;
+	}
 
-  /**
-   * Saves the list of literature references into a {@link LiteratureList}.
-   * 
-   * @param settings settings where to save the {@link LiteratureList} properties.
-   */
-  public void saveToNodeSettings(NodeSettingsWO settings) {
-    SettingsHelper.addInt(NUM_LITERATURE, numLiterature, settings);
-    for (int i = 0; i < numLiterature; i++) {
-      literature[i].saveToNodeSettings(settings.addNodeSettings(LITERATURE + i));
-    }
-  }
+	/**
+	 * Saves the list of literature references into a {@link LiteratureList} with
+	 * properties:
+	 * <ul>
+	 * <li>Integer "numLiterature"
+	 * <li>Variable number of settings with keys "literature" and a suffix. E.g.
+	 * "literature0", "literature1", ...
+	 * </ul>
+	 * 
+	 * @param settings
+	 *            settings where to save the {@link LiteratureList} properties.
+	 */
+	public void saveToNodeSettings(NodeSettingsWO settings) {
+		SettingsHelper.addInt("numLiterature", numLiterature, settings);
+		for (int i = 0; i < numLiterature; i++) {
+			literature[i].saveToNodeSettings(settings.addNodeSettings("literature" + i));
+		}
+	}
 
-  /**
-   * Load properties of the literature references from a {@link LiteratureList}.
-   * 
-   * @param settings the settings where to load the {@link LiteratureList} from
-   */
-  public void loadFromNodeSettings(NodeSettingsRO settings) {
-    try {
-      numLiterature = settings.getInt(NUM_LITERATURE);
-      literature = new Literature[numLiterature];
-      for (int i = 0; i < numLiterature; i++) {
-        literature[i] = new Literature();
-        literature[i].loadFromNodeSettings(settings.getNodeSettings(LITERATURE + i));
-      }
-    } catch (InvalidSettingsException e) {
-    }
-  }
+	/**
+	 * Load properties of the literature references from a {@link LiteratureList}.
+	 * 
+	 * @param settings
+	 *            with properties:
+	 *            <ul>
+	 *            <li>Integer "numLiterature"
+	 *            <li>Variable number of settings with keys "literature" and a
+	 *            suffix. E.g. "literature0", "literature1", ...
+	 *            </ul>
+	 */
+	public void loadFromNodeSettings(NodeSettingsRO settings) {
+		try {
+			numLiterature = settings.getInt("numLiterature");
+			literature = new Literature[numLiterature];
+			for (int i = 0; i < numLiterature; i++) {
+				literature[i] = new Literature();
+				literature[i].loadFromNodeSettings(settings.getNodeSettings("literature" + i));
+			}
+		} catch (InvalidSettingsException e) {
+		}
+	}
 }
