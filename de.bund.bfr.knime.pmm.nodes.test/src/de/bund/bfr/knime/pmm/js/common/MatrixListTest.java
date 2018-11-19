@@ -44,11 +44,11 @@ public class MatrixListTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 		
-		assertEquals(1, settings.getInt(MatrixList.NUM_MATRICES));
+		assertEquals(1, settings.getInt("numMatrices"));
 		
 		Matrix expected = matrix;  // expected Matrix
 		Matrix obtained = new Matrix();  // obtained Matrix
-		obtained.loadFromNodeSettings(settings.getNodeSettings(MatrixList.MATRICES + 0));
+		obtained.loadFromNodeSettings(settings.getNodeSettings("matrices" + 0));
 		
 		assertEquals(expected.getId(), obtained.getId());
 		assertEquals(expected.getName(), obtained.getName());
@@ -59,8 +59,8 @@ public class MatrixListTest {
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(MatrixList.NUM_MATRICES, 1);
-		matrix.saveToNodeSettings(settings.addNodeSettings(MatrixList.MATRICES + 0));
+		settings.addInt("numMatrices", 1);
+		matrix.saveToNodeSettings(settings.addNodeSettings("matrices" + 0));
 		
 		MatrixList list = new MatrixList();
 		list.loadFromNodeSettings(settings);

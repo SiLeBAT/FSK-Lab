@@ -35,8 +35,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class MatrixList {
-	static final String NUM_MATRICES = "numMatrices";
-	static final String MATRICES = "matrices";
 
 	private int numMatrices;
 	private Matrix[] matrices;
@@ -64,15 +62,20 @@ public class MatrixList {
 	}
 
 	/**
-	 * Saves the list of matrices into a {@link MatrixList}.
+	 * Saves the list of matrices into a {@link MatrixList} with properties:
+	 * <ul>
+	 * <li>Integer "numMatrices"
+	 * <li>Variable number of settings with key "matrices" and a suffix. E.g.
+	 * "matrices0", "matrices1", ...
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            settings where to save the {@link MatrixList} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		settings.addInt(NUM_MATRICES, numMatrices);
+		settings.addInt("numMatrices", numMatrices);
 		for (int i = 0; i < numMatrices; i++) {
-			matrices[i].saveToNodeSettings(settings.addNodeSettings(MATRICES + i));
+			matrices[i].saveToNodeSettings(settings.addNodeSettings("matrices" + i));
 		}
 	}
 
@@ -80,15 +83,20 @@ public class MatrixList {
 	 * Load properties of the matrices from a {@link MatrixList}.
 	 * 
 	 * @param settings
-	 *            the settings where to load the {@MatrixList} from
+	 *            with properties
+	 *            <ul>
+	 *            <li>Integer "numMatrices"
+	 *            <li>Variable number of settings with key "matrices" and a suffix.
+	 *            E.g. "matrices0", "matrices1", ...
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
 		try {
-			numMatrices = settings.getInt(NUM_MATRICES);
+			numMatrices = settings.getInt("numMatrices");
 			matrices = new Matrix[numMatrices];
 			for (int i = 0; i < numMatrices; i++) {
 				matrices[i] = new Matrix();
-				matrices[i].loadFromNodeSettings(settings.getNodeSettings(MATRICES + i));
+				matrices[i].loadFromNodeSettings(settings.getNodeSettings("matrices" + i));
 			}
 		} catch (InvalidSettingsException e) {
 		}
