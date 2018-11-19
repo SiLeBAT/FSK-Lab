@@ -44,15 +44,6 @@ import de.bund.bfr.knime.pmm.common.IndepXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Indep implements ViewValue {
 
-	// Configuration keys
-	static final String NAME = "name";
-	static final String ORIGNAME = "origname";
-	static final String MIN = "min";
-	static final String MAX = "max";
-	static final String CATEGORY = "category";
-	static final String UNIT = "unit";
-	static final String DESCRIPTION = "description";
-
 	private String name;
 	private String origname;
 	private Double min;
