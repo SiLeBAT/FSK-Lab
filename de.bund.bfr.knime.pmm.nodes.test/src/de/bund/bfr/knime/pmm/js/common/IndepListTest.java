@@ -53,7 +53,7 @@ public class IndepListTest {
 
 		Indep[] obtainedIndeps = new Indep[1];
 		obtainedIndeps[0] = new Indep();
-		obtainedIndeps[0].loadFromNodeSettings(settings.getNodeSettings(IndepList.INDEPS + 0));
+		obtainedIndeps[0].loadFromNodeSettings(settings.getNodeSettings("indeps" + 0));
 		
 		Indep expected = indeps[0];  // expected Indep
 		Indep obtained = obtainedIndeps[0];  // obtained Indep
@@ -71,8 +71,8 @@ public class IndepListTest {
 	public void testLoadFromNodeSettings() {
 
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(IndepList.NUM_INDEPS, 1);
-		indep.saveToNodeSettings(settings.addNodeSettings(IndepList.INDEPS + 0));
+		settings.addInt("numIndeps", 1);
+		indep.saveToNodeSettings(settings.addNodeSettings("indeps" + 0));
 
 		IndepList list = new IndepList();
 		list.loadFromNodeSettings(settings);

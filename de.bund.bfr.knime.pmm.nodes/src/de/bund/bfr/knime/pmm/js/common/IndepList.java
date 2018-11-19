@@ -35,9 +35,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class IndepList {
-	
-	static final String NUM_INDEPS = "numIndeps";
-	static final String INDEPS = "indeps";
 
 	private int numIndeps;
 	private Indep[] indeps;
@@ -65,15 +62,21 @@ public class IndepList {
 	}
 
 	/**
-	 * Saves the list of independent variables into a {@link IndepList}.
+	 * Saves the list of independent variables into a {@link IndepList} with
+	 * properties:
+	 * <ul>
+	 * <li>Integer "numIndeps"
+	 * <li>Variable number of nested node settings with key "indeps" and a suffix.
+	 * E.g. "suffix0", "suffix1", ...
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            settings where to save the {@link IndepList} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		settings.addInt(NUM_INDEPS, numIndeps);
+		settings.addInt("numIndeps", numIndeps);
 		for (int i = 0; i < numIndeps; i++) {
-			indeps[i].saveToNodeSettings(settings.addNodeSettings(INDEPS + i));
+			indeps[i].saveToNodeSettings(settings.addNodeSettings("indeps" + i));
 		}
 	}
 
@@ -81,15 +84,20 @@ public class IndepList {
 	 * Load properties of the independent variables from a {@link IndepList}.
 	 * 
 	 * @param settings
-	 *            The settings where to load the {@link AgentList} from
+	 *            with properties:
+	 *            <ul>
+	 *            <li>Integer "numIndeps"
+	 *            <li>Variable number of nested node settings with key "indeps" and
+	 *            a suffix. E.g. "suffix0", "suffix1", ...
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
 		try {
-			numIndeps = settings.getInt(NUM_INDEPS);
+			numIndeps = settings.getInt("numIndeps");
 			indeps = new Indep[numIndeps];
 			for (int i = 0; i < numIndeps; i++) {
 				indeps[i] = new Indep();
-				indeps[i].loadFromNodeSettings(settings.getNodeSettings(INDEPS + i));
+				indeps[i].loadFromNodeSettings(settings.getNodeSettings("indeps" + i));
 			}
 		} catch (InvalidSettingsException e) {
 		}
