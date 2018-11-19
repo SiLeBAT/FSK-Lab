@@ -198,40 +198,40 @@ public class ParamTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		param.saveToNodeSettings(settings);
 		
-		assertEquals(name, settings.getString(Param.NAME));
-		assertEquals(origname, settings.getString(Param.ORIGNAME));
-		assertEquals(isStart, settings.getBoolean(Param.ISSTART));
-		assertEquals(value, settings.getDouble(Param.VALUE), 0.0);
-		assertEquals(error, settings.getDouble(Param.ERROR), 0.0);
-		assertEquals(min, settings.getDouble(Param.MIN), 0.0);
-		assertEquals(max, settings.getDouble(Param.MAX), 0.0);
-		assertEquals(p, settings.getDouble(Param.P), 0.0);
-		assertEquals(t, settings.getDouble(Param.T), 0.0);
-		assertEquals(minGuess, settings.getDouble(Param.MINGUESS), 0.0);
-		assertEquals(maxGuess, settings.getDouble(Param.MAXGUESS), 0.0);
-		assertEquals(category, settings.getString(Param.CATEGORY));
-		assertEquals(unit, settings.getString(Param.UNIT));
-		assertEquals(description, settings.getString(Param.DESCRIPTION));
-		assertArrayEquals(correlationNames, settings.getStringArray(Param.CORRELATION_NAMES));
-		assertArrayEquals(correlationValues, settings.getDoubleArray(Param.CORRELATION_VALUES), 0.0);
+		assertEquals(name, settings.getString("name"));
+		assertEquals(origname, settings.getString("origname"));
+		assertEquals(isStart, settings.getBoolean("isStart"));
+		assertEquals(value, settings.getDouble("value"), 0.0);
+		assertEquals(error, settings.getDouble("error"), 0.0);
+		assertEquals(min, settings.getDouble("min"), 0.0);
+		assertEquals(max, settings.getDouble("max"), 0.0);
+		assertEquals(p, settings.getDouble("P"), 0.0);
+		assertEquals(t, settings.getDouble("t"), 0.0);
+		assertEquals(minGuess, settings.getDouble("minGuess"), 0.0);
+		assertEquals(maxGuess, settings.getDouble("maxGuess"), 0.0);
+		assertEquals(category, settings.getString("category"));
+		assertEquals(unit, settings.getString("unit"));
+		assertEquals(description, settings.getString("description"));
+		assertArrayEquals(correlationNames, settings.getStringArray("correlationNames"));
+		assertArrayEquals(correlationValues, settings.getDoubleArray("correlationValues"), 0.0);
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addString(Param.NAME, name);
-		settings.addString(Param.ORIGNAME, origname);
-		settings.addBoolean(Param.ISSTART, isStart);
-		settings.addDouble(Param.VALUE, value);
-		settings.addDouble(Param.ERROR, error);
-		settings.addDouble(Param.P, p);
-		settings.addDouble(Param.T, t);
-		settings.addDouble(Param.MINGUESS, minGuess);
-		settings.addDouble(Param.MAXGUESS, maxGuess);
-		settings.addString(Param.CATEGORY, category);
-		settings.addString(Param.DESCRIPTION, description);
-		settings.addStringArray(Param.CORRELATION_NAMES, correlationNames);
-		settings.addDoubleArray(Param.CORRELATION_VALUES, correlationValues);
+		settings.addString("name", name);
+		settings.addString("origname", origname);
+		settings.addBoolean("isStart", isStart);
+		settings.addDouble("value", value);
+		settings.addDouble("error", error);
+		settings.addDouble("P", p);
+		settings.addDouble("t", t);
+		settings.addDouble("minGuess", minGuess);
+		settings.addDouble("maxGuess", maxGuess);
+		settings.addString("category", category);
+		settings.addString("description", description);
+		settings.addStringArray("correlationNames", correlationNames);
+		settings.addDoubleArray("correlationValues", correlationValues);
 		
 		Param param = new Param();
 		param.loadFromNodeSettings(settings);

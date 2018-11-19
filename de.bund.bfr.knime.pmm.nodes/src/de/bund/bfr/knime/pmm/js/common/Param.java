@@ -37,24 +37,6 @@ import de.bund.bfr.knime.pmm.common.ParamXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Param implements ViewValue {
 
-	// Configuration keys
-	static final String NAME = "name";
-	static final String ORIGNAME = "origname";
-	static final String ISSTART = "isStart";
-	static final String VALUE = "value";
-	static final String ERROR = "error";
-	static final String MIN = "min";
-	static final String MAX = "max";
-	static final String P = "P";
-	static final String T = "t";
-	static final String MINGUESS = "minGuess";
-	static final String MAXGUESS = "maxGuess";
-	static final String CATEGORY = "category";
-	static final String UNIT = "unit";
-	static final String DESCRIPTION = "description";
-	static final String CORRELATION_NAMES = "correlationNames";
-	static final String CORRELATION_VALUES = "correlationValues";
-
 	private String name;
 	private String origname;
 	private Boolean isStart;
@@ -419,60 +401,96 @@ public class Param implements ViewValue {
 	}
 
 	/**
-	 * Saves param properties into a {@link NodeSettingsWO}.
+	 * Saves param properties into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>String "name"
+	 * <li>String "origname"
+	 * <li>Boolean "isStart"
+	 * <li>Double "value"
+	 * <li>Double "error"
+	 * <li>Double "min"
+	 * <li>Double "max"
+	 * <li>Double "P"
+	 * <li>Double "t"
+	 * <li>Double "minGuess"
+	 * <li>Double "maxGuess"
+	 * <li>String "category"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * <li>StringArray "correlationNames"
+	 * <li>StringArray "correlationValues"
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            where to save the {@link Param} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addString(ORIGNAME, origname, settings);
-		SettingsHelper.addBoolean(ISSTART, isStart, settings);
-		SettingsHelper.addDouble(VALUE, value, settings);
-		SettingsHelper.addDouble(ERROR, error, settings);
-		SettingsHelper.addDouble(MIN, min, settings);
-		SettingsHelper.addDouble(MAX, max, settings);
-		SettingsHelper.addDouble(P, p, settings);
-		SettingsHelper.addDouble(T, t, settings);
-		SettingsHelper.addDouble(MINGUESS, minGuess, settings);
-		SettingsHelper.addDouble(MAXGUESS, maxGuess, settings);
-		SettingsHelper.addString(CATEGORY, category, settings);
-		SettingsHelper.addString(UNIT, unit, settings);
-		SettingsHelper.addString(DESCRIPTION, description, settings);
-		settings.addStringArray(CORRELATION_NAMES, correlationNames);
-		settings.addDoubleArray(CORRELATION_VALUES, correlationValues);
+		SettingsHelper.addString("name", name, settings);
+		SettingsHelper.addString("origname", origname, settings);
+		SettingsHelper.addBoolean("isStart", isStart, settings);
+		SettingsHelper.addDouble("value", value, settings);
+		SettingsHelper.addDouble("error", error, settings);
+		SettingsHelper.addDouble("min", min, settings);
+		SettingsHelper.addDouble("max", max, settings);
+		SettingsHelper.addDouble("P", p, settings);
+		SettingsHelper.addDouble("t", t, settings);
+		SettingsHelper.addDouble("minGuess", minGuess, settings);
+		SettingsHelper.addDouble("maxGuess", maxGuess, settings);
+		SettingsHelper.addString("category", category, settings);
+		SettingsHelper.addString("unit", unit, settings);
+		SettingsHelper.addString("description", description, settings);
+		settings.addStringArray("correlationNames", correlationNames);
+		settings.addDoubleArray("correlationValues", correlationValues);
 	}
 
 	/**
 	 * Loads param properties from a {@link NodeSettingsRO}.
 	 * 
 	 * @param settings
-	 *            The settings where to load the {@link Param} from
+	 *            with properties:
+	 *            <ul>
+	 *            <li>String "name"
+	 *            <li>String "origname"
+	 *            <li>Boolean "isStart"
+	 *            <li>Double "value"
+	 *            <li>Double "error"
+	 *            <li>Double "min"
+	 *            <li>Double "max"
+	 *            <li>Double "P"
+	 *            <li>Double "t"
+	 *            <li>Double "minGuess"
+	 *            <li>Double "maxGuess"
+	 *            <li>String "category"
+	 *            <li>String "unit"
+	 *            <li>String "description"
+	 *            <li>StringArray "correlationNames"
+	 *            <li>StringArray "correlationValues"
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
-		name = SettingsHelper.getString(NAME, settings);
-		origname = SettingsHelper.getString(ORIGNAME, settings);
-		isStart = SettingsHelper.getBoolean(ISSTART, settings);
-		value = SettingsHelper.getDouble(VALUE, settings);
-		error = SettingsHelper.getDouble(ERROR, settings);
-		min = SettingsHelper.getDouble(MIN, settings);
-		max = SettingsHelper.getDouble(MAX, settings);
-		p = SettingsHelper.getDouble(P, settings);
-		t = SettingsHelper.getDouble(T, settings);
-		minGuess = SettingsHelper.getDouble(MINGUESS, settings);
-		maxGuess = SettingsHelper.getDouble(MAXGUESS, settings);
-		category = SettingsHelper.getString(CATEGORY, settings);
-		unit = SettingsHelper.getString(UNIT, settings);
-		description = SettingsHelper.getString(DESCRIPTION, settings);
+		name = SettingsHelper.getString("name", settings);
+		origname = SettingsHelper.getString("origname", settings);
+		isStart = SettingsHelper.getBoolean("isStart", settings);
+		value = SettingsHelper.getDouble("value", settings);
+		error = SettingsHelper.getDouble("error", settings);
+		min = SettingsHelper.getDouble("min", settings);
+		max = SettingsHelper.getDouble("max", settings);
+		p = SettingsHelper.getDouble("P", settings);
+		t = SettingsHelper.getDouble("t", settings);
+		minGuess = SettingsHelper.getDouble("minGuess", settings);
+		maxGuess = SettingsHelper.getDouble("maxGuess", settings);
+		category = SettingsHelper.getString("category", settings);
+		unit = SettingsHelper.getString("unit", settings);
+		description = SettingsHelper.getString("description", settings);
 		try {
-			correlationNames = settings.getStringArray(CORRELATION_NAMES);
-			correlationValues = settings.getDoubleArray(CORRELATION_VALUES);
+			correlationNames = settings.getStringArray("correlationNames");
+			correlationValues = settings.getDoubleArray("correlationValues");
 		} catch (InvalidSettingsException e) {
 			correlationNames = null;
 			correlationValues = null;
 		}
 	}
-	
+
 	/**
 	 * Creates a Param from a ParamXml.
 	 * 
@@ -494,24 +512,24 @@ public class Param implements ViewValue {
 		param.setCategory(paramXml.category);
 		param.setUnit(paramXml.unit);
 		param.setDescription(paramXml.description);
-		
+
 		HashMap<String, Double> obtainedCorrelations = paramXml.correlations;
 		String[] obtainedCorrelationNames = new String[obtainedCorrelations.size()];
 		double[] obtainedCorrelationValues = new double[obtainedCorrelations.size()];
 		int j = 0;
 		for (Map.Entry<String, Double> entry : obtainedCorrelations.entrySet()) {
 			obtainedCorrelationNames[j] = entry.getKey();
-			if(entry.getValue() != null)
+			if (entry.getValue() != null)
 				obtainedCorrelationValues[j] = entry.getValue();
 			j++;
 		}
-		
+
 		param.setCorrelationNames(obtainedCorrelationNames);
 		param.setCorrelationValues(obtainedCorrelationValues);
-		
+
 		return param;
 	}
-	
+
 	/**
 	 * Returns an equivalent ParamXml.
 	 * 
@@ -524,7 +542,8 @@ public class Param implements ViewValue {
 				correlations.put(correlationNames[i], correlationValues[i]);
 			}
 		}
-		
-		return new ParamXml(name, origname, isStart, value, error, min, max, p, t, minGuess, maxGuess, category, unit, description, correlations);
+
+		return new ParamXml(name, origname, isStart, value, error, min, max, p, t, minGuess, maxGuess, category, unit,
+				description, correlations);
 	}
 }
