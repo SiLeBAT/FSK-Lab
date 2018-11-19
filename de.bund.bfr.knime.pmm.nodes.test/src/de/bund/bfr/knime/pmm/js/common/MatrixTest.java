@@ -63,19 +63,19 @@ public class MatrixTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		matrix.saveToNodeSettings(settings);
 		
-		assertEquals(id, settings.getInt(Matrix.ID));
-		assertEquals(name, settings.getString(Matrix.NAME));
-		assertEquals(detail, settings.getString(Matrix.DETAIL));
-		assertEquals(dbuuid, settings.getString(Matrix.DBUUID));
+		assertEquals(id, settings.getInt("id"));
+		assertEquals(name, settings.getString("name"));
+		assertEquals(detail, settings.getString("detail"));
+		assertEquals(dbuuid, settings.getString("dbuuid"));
 	}
 	
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(Matrix.ID, id);
-		settings.addString(Matrix.NAME, name);
-		settings.addString(Matrix.DETAIL, detail);
-		settings.addString(Matrix.DBUUID, dbuuid);
+		settings.addInt("id", id);
+		settings.addString("name", name);
+		settings.addString("detail", detail);
+		settings.addString("dbuuid", dbuuid);
 		
 		Matrix matrix = new Matrix();
 		matrix.loadFromNodeSettings(settings);

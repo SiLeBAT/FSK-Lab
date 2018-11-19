@@ -41,12 +41,6 @@ import de.bund.bfr.knime.pmm.common.MatrixXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Matrix implements ViewValue {
 
-	// Configuration keys
-	static final String ID = "id";
-	static final String NAME = "name";
-	static final String DETAIL = "detail";
-	static final String DBUUID = "dbuuid";
-
 	private Integer id;
 	private String name;
 	private String detail;
@@ -143,31 +137,43 @@ public class Matrix implements ViewValue {
 	}
 
 	/**
-	 * Saves matrix properties into a {@link NodeSettingsWO}.
+	 * Saves matrix properties into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "detail"
+	 * <li>String "dbuuid"
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            settings where to save the {@link Matrix} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		SettingsHelper.addInt(ID, id, settings);
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addString(DETAIL, detail, settings);
-		SettingsHelper.addString(DBUUID, dbuuid, settings);
+		SettingsHelper.addInt("id", id, settings);
+		SettingsHelper.addString("name", name, settings);
+		SettingsHelper.addString("detail", detail, settings);
+		SettingsHelper.addString("dbuuid", dbuuid, settings);
 	}
 
 	/**
 	 * Loads matrix properties from a {@link NodeSettingsRO}.
 	 * 
 	 * @param settings
-	 *            the settings where to load the {@link Matrix} from
+	 *            with properties:
+	 *            <ul>
+	 *            <li>Integer "id"
+	 *            <li>String "name"
+	 *            <li>String "detail"
+	 *            <li>String "dbuuid"
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
-		id = SettingsHelper.getInteger(ID, settings);
-		name = SettingsHelper.getString(NAME, settings);
-		detail = settings.getString(DETAIL, detail);
-		dbuuid = settings.getString(DBUUID, dbuuid);
+		id = SettingsHelper.getInteger("id", settings);
+		name = SettingsHelper.getString("name", settings);
+		detail = settings.getString("detail", detail);
+		dbuuid = settings.getString("dbuuid", dbuuid);
 	}
-	
+
 	/**
 	 * Creates a Matrix from a MatrixXml.
 	 * 
@@ -179,10 +185,10 @@ public class Matrix implements ViewValue {
 		matrix.setName(matrixXml.name);
 		matrix.setDetail(matrixXml.detail);
 		matrix.setDbuuid(matrixXml.dbuuid);
-		
+
 		return matrix;
 	}
-	
+
 	/**
 	 * Returns an equivalent MatrixXml.
 	 * 
