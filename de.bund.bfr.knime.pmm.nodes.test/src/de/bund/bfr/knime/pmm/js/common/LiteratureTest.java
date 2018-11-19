@@ -163,40 +163,40 @@ public class LiteratureTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		literature.saveToNodeSettings(settings);
 
-		assertEquals(id, settings.getInt(Literature.ID));
-		assertEquals(author, settings.getString(Literature.AUTHOR));
-		assertEquals(title, settings.getString(Literature.TITLE));
-		assertEquals(abstractText, settings.getString(Literature.ABSTRACT));
-		assertEquals(year, settings.getInt(Literature.YEAR));
-		assertEquals(journal, settings.getString(Literature.JOURNAL));
-		assertEquals(volume, settings.getString(Literature.VOLUME));
-		assertEquals(issue, settings.getString(Literature.ISSUE));
-		assertEquals(page, settings.getInt(Literature.PAGE));
-		assertEquals(approvalMode, settings.getInt(Literature.APPROVAL_MODE));
-		assertEquals(website, settings.getString(Literature.WEBSITE));
-		assertEquals(type, settings.getInt(Literature.TYPE));
-		assertEquals(comment, settings.getString(Literature.COMMENT));
-		assertEquals(dbuuid, settings.getString(Literature.DBUUID));
+		assertEquals(id, settings.getInt("id"));
+		assertEquals(author, settings.getString("author"));
+		assertEquals(title, settings.getString("title"));
+		assertEquals(abstractText, settings.getString("abstract"));
+		assertEquals(year, settings.getInt("year"));
+		assertEquals(journal, settings.getString("journal"));
+		assertEquals(volume, settings.getString("volume"));
+		assertEquals(issue, settings.getString("issue"));
+		assertEquals(page, settings.getInt("page"));
+		assertEquals(approvalMode, settings.getInt("approvalMode"));
+		assertEquals(website, settings.getString("website"));
+		assertEquals(type, settings.getInt("type"));
+		assertEquals(comment, settings.getString("comment"));
+		assertEquals(dbuuid, settings.getString("dbuuid"));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(Literature.ID, id);
-		settings.addString(Literature.AUTHOR, author);
-		settings.addString(Literature.TITLE, title);
-		settings.addString(Literature.ABSTRACT, abstractText);
-		settings.addInt(Literature.YEAR, year);
-		settings.addString(Literature.JOURNAL, journal);
-		settings.addString(Literature.VOLUME, volume);
-		settings.addString(Literature.ISSUE, issue);
-		settings.addInt(Literature.PAGE, page);
-		settings.addInt(Literature.APPROVAL_MODE, approvalMode);
-		settings.addString(Literature.WEBSITE, website);
-		settings.addInt(Literature.TYPE, type);
-		settings.addString(Literature.COMMENT, comment);
-		settings.addString(Literature.DBUUID, dbuuid);
+		settings.addInt("id", id);
+		settings.addString("author", author);
+		settings.addString("title", title);
+		settings.addString("abstract", abstractText);
+		settings.addInt("year", year);
+		settings.addString("journal", journal);
+		settings.addString("volume", volume);
+		settings.addString("issue", issue);
+		settings.addInt("page", page);
+		settings.addInt("approvalMode", approvalMode);
+		settings.addString("website", website);
+		settings.addInt("type", type);
+		settings.addString("comment", comment);
+		settings.addString("dbuuid", dbuuid);
 
 		Literature literature = new Literature();
 		literature.loadFromNodeSettings(settings);
