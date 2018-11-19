@@ -74,20 +74,21 @@ public class MdInfoTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		modelInfo.saveToNodeSettings(settings);
 
-		assertEquals(id, settings.getInt(MdInfo.ID));
-		assertEquals(name, settings.getString(MdInfo.NAME));
-		assertEquals(qualityScore, settings.getInt(MdInfo.QUALITYSCORE));
-		assertEquals(checked, settings.getBoolean(MdInfo.CHECKED));
+		assertEquals(id, settings.getInt("ID"));
+		assertEquals(name, settings.getString("Name"));
+		assertEquals(comment, settings.getString("Comment"));
+		assertEquals(qualityScore, settings.getInt("QualityScore"));
+		assertEquals(checked, settings.getBoolean("Checked"));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(MdInfo.ID, id);
-		settings.addString(MdInfo.NAME, name);
-		settings.addString(MdInfo.COMMENT, comment);
-		settings.addInt(MdInfo.QUALITYSCORE, qualityScore);
-		settings.addBoolean(MdInfo.CHECKED, checked);
+		settings.addInt("ID", id);
+		settings.addString("Name", name);
+		settings.addString("Comment", comment);
+		settings.addInt("QualityScore", qualityScore);
+		settings.addBoolean("Checked", checked);
 
 		MdInfo modelInfo = new MdInfo();
 		modelInfo.loadFromNodeSettings(settings);

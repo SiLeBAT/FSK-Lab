@@ -23,13 +23,6 @@ import de.bund.bfr.knime.pmm.common.MdInfoXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class MdInfo implements ViewValue {
 
-	// Configuration keys
-	static final String ID = "ID";
-	static final String NAME = "Name";
-	static final String COMMENT = "Comment";
-	static final String QUALITYSCORE = "QualityScore";
-	static final String CHECKED = "Checked";
-
 	private Integer id;
 	private String name;
 	private String comment;
@@ -94,7 +87,8 @@ public class MdInfo implements ViewValue {
 	/**
 	 * Sets the id of this {@link MdInfo}.
 	 * 
-	 * @param id the id to be set
+	 * @param id
+	 *            the id to be set
 	 */
 	public void setId(final Integer id) {
 		this.id = id;
@@ -105,7 +99,8 @@ public class MdInfo implements ViewValue {
 	 * 
 	 * Empty strings are converted to null.
 	 * 
-	 * @param name the name to be set
+	 * @param name
+	 *            the name to be set
 	 */
 	public void setName(final String name) {
 		this.name = Strings.emptyToNull(name);
@@ -116,7 +111,8 @@ public class MdInfo implements ViewValue {
 	 * 
 	 * Empty strings are converted to null.
 	 * 
-	 * @param comment the comment to be set
+	 * @param comment
+	 *            the comment to be set
 	 */
 	public void setComment(final String comment) {
 		this.comment = Strings.emptyToNull(comment);
@@ -125,7 +121,8 @@ public class MdInfo implements ViewValue {
 	/**
 	 * Sets the quality score of this {@link MdInfo}.
 	 * 
-	 * @param qualityScore the quality score to be set
+	 * @param qualityScore
+	 *            the quality score to be set
 	 */
 	public void setQualityScore(final Integer qualityScore) {
 		this.qualityScore = qualityScore;
@@ -134,30 +131,49 @@ public class MdInfo implements ViewValue {
 	/**
 	 * Sets the checked status of this {@link MdInfo}.
 	 * 
-	 * @param checked the checked status to be set
+	 * @param checked
+	 *            the checked status to be set
 	 */
 	public void setChecked(final Boolean checked) {
 		this.checked = checked;
 	}
 
-	/** Saves model info properties into a {@link NodeSettingsWO}. */
+	/**
+	 * Saves model info properties into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>Integer "ID"
+	 * <li>String "Name"
+	 * <li>String "Comment"
+	 * <li>String "QualityScore"
+	 * <li>String "Checked"
+	 * </ul>
+	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		SettingsHelper.addInt(ID, id, settings);
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addString(COMMENT, comment, settings);
-		SettingsHelper.addInt(QUALITYSCORE, qualityScore, settings);
-		SettingsHelper.addBoolean(CHECKED, checked, settings);
+		SettingsHelper.addInt("ID", id, settings);
+		SettingsHelper.addString("Name", name, settings);
+		SettingsHelper.addString("Comment", comment, settings);
+		SettingsHelper.addInt("QualityScore", qualityScore, settings);
+		SettingsHelper.addBoolean("Checked", checked, settings);
 	}
 
-	/** Loads model info properties from a {@link NodeSettingsRO}. */
+	/**
+	 * Loads model info properties from a {@link NodeSettingsRO} with properties:
+	 * <ul>
+	 * <li>Integer "ID"
+	 * <li>String "Name"
+	 * <li>String "Comment"
+	 * <li>String "QualityScore"
+	 * <li>String "Checked"
+	 * </ul>
+	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
-		id = SettingsHelper.getInteger(ID, settings);
-		name = SettingsHelper.getString(NAME, settings);
-		comment = SettingsHelper.getString(COMMENT, settings);
-		qualityScore = SettingsHelper.getInteger(QUALITYSCORE, settings);
-		checked = SettingsHelper.getBoolean(CHECKED, settings);
+		id = SettingsHelper.getInteger("ID", settings);
+		name = SettingsHelper.getString("Name", settings);
+		comment = SettingsHelper.getString("Comment", settings);
+		qualityScore = SettingsHelper.getInteger("QualityScore", settings);
+		checked = SettingsHelper.getBoolean("Checked", settings);
 	}
-	
+
 	/**
 	 * Creates an MdInfo from an {@link MdInfoXml}.
 	 * 
@@ -170,10 +186,10 @@ public class MdInfo implements ViewValue {
 		mdInfo.setComment(mdInfoXml.comment);
 		mdInfo.setQualityScore(mdInfoXml.qualityScore);
 		mdInfo.setChecked(mdInfoXml.checked);
-		
+
 		return mdInfo;
 	}
-	
+
 	/**
 	 * Returns an equivalent MdInfoXml.
 	 * 
