@@ -219,35 +219,53 @@ public class Indep implements ViewValue {
 	}
 
 	/**
-	 * Saves indep properties into a {@link NodeSettingsWO}.
+	 * Saves indep properties into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>String"name"
+	 * <li>String "origname"
+	 * <li>Double "min"
+	 * <li>Double "max"
+	 * <li>String "category"
+	 * <li>String "unit"
+	 * <li>String "description"
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            where to save the {@link Indep} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addString(ORIGNAME, origname, settings);
-		SettingsHelper.addDouble(MIN, min, settings);
-		SettingsHelper.addDouble(MAX, max, settings);
-		SettingsHelper.addString(CATEGORY, category, settings);
-		SettingsHelper.addString(UNIT, unit, settings);
-		SettingsHelper.addString(DESCRIPTION, description, settings);
+		SettingsHelper.addString("name", name, settings);
+		SettingsHelper.addString("origname", origname, settings);
+		SettingsHelper.addDouble("min", min, settings);
+		SettingsHelper.addDouble("max", max, settings);
+		SettingsHelper.addString("category", category, settings);
+		SettingsHelper.addString("unit", unit, settings);
+		SettingsHelper.addString("description", description, settings);
 	}
 
 	/**
 	 * Loads indep properties from a {@link NodeSettingsRO}.
 	 * 
 	 * @param settings
-	 *            the settings where to load the {@link Indep} from
+	 *            with properties:
+	 *            <ul>
+	 *            <li>String"name"
+	 *            <li>String "origname"
+	 *            <li>Double "min"
+	 *            <li>Double "max"
+	 *            <li>String "category"
+	 *            <li>String "unit"
+	 *            <li>String "description"
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
-		name = SettingsHelper.getString(NAME, settings);
-		origname = SettingsHelper.getString(ORIGNAME, settings);
-		min = SettingsHelper.getDouble(MIN, settings);
-		max = SettingsHelper.getDouble(MAX, settings);
-		category = SettingsHelper.getString(CATEGORY, settings);
-		unit = SettingsHelper.getString(UNIT, settings);
-		description = SettingsHelper.getString(DESCRIPTION, settings);
+		name = SettingsHelper.getString("name", settings);
+		origname = SettingsHelper.getString("origname", settings);
+		min = SettingsHelper.getDouble("min", settings);
+		max = SettingsHelper.getDouble("max", settings);
+		category = SettingsHelper.getString("category", settings);
+		unit = SettingsHelper.getString("unit", settings);
+		description = SettingsHelper.getString("description", settings);
 	}
 
 	/**

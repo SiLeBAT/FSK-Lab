@@ -95,25 +95,25 @@ public class IndepTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		indep.saveToNodeSettings(settings);
 		
-		assertEquals(name, settings.getString(Indep.NAME));
-		assertEquals(origname, settings.getString(Indep.ORIGNAME));
-		assertEquals(min, settings.getDouble(Indep.MIN), 0.0);
-		assertEquals(max, settings.getDouble(Indep.MAX), 0.0);
-		assertEquals(category, settings.getString(Indep.CATEGORY));
-		assertEquals(unit, settings.getString(Indep.UNIT));
-		assertEquals(description, settings.getString(Indep.DESCRIPTION));
+		assertEquals(name, settings.getString("name"));
+		assertEquals(origname, settings.getString("origname"));
+		assertEquals(min, settings.getDouble("min"), 0.0);
+		assertEquals(max, settings.getDouble("max"), 0.0);
+		assertEquals(category, settings.getString("category"));
+		assertEquals(unit, settings.getString("unit"));
+		assertEquals(description, settings.getString("description"));
 	}
 	
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addString(Indep.NAME, name);
-		settings.addString(Indep.ORIGNAME, origname);
-		settings.addDouble(Indep.MIN, min);
-		settings.addDouble(Indep.MAX, max);
-		settings.addString(Indep.CATEGORY, category);
-		settings.addString(Indep.UNIT, unit);
-		settings.addString(Indep.DESCRIPTION, description);
+		settings.addString("name", name);
+		settings.addString("origname", origname);
+		settings.addDouble("min", min);
+		settings.addDouble("max", max);
+		settings.addString("category", category);
+		settings.addString("unit", unit);
+		settings.addString("description", description);
 		
 		Indep indep = new Indep();
 		indep.loadFromNodeSettings(settings);
