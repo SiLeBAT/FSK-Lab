@@ -52,11 +52,11 @@ public class MiscListTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 
-		assertEquals(1, settings.getInt(MiscList.NUM_MISCS));
+		assertEquals(1, settings.getInt("numMiscs"));
 
 		Misc expected = misc;  // expected Misc
 		Misc obtained = new Misc();  // obtained Misc
-		obtained.loadFromNodeSettings(settings.getNodeSettings(MiscList.MISCS + 0));
+		obtained.loadFromNodeSettings(settings.getNodeSettings("miscs0"));
 
 		assertEquals(expected.getId(), obtained.getId());
 		assertEquals(expected.getName(), obtained.getName());
@@ -71,8 +71,8 @@ public class MiscListTest {
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(MiscList.NUM_MISCS, 1);
-		misc.saveToNodeSettings(settings.addNodeSettings(MiscList.MISCS + 0));
+		settings.addInt("numMiscs", 1);
+		misc.saveToNodeSettings(settings.addNodeSettings("miscs0"));
 
 		MiscList list = new MiscList();
 		list.loadFromNodeSettings(settings);

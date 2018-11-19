@@ -35,8 +35,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class MiscList {
-	static final String NUM_MISCS = "numMiscs";
-	static final String MISCS = "miscs";
 
 	private int numMiscs;
 	private Misc[] miscs;
@@ -64,15 +62,20 @@ public class MiscList {
 	}
 
 	/**
-	 * Saves the list of miscs into a {@link NodeSettingsWO}.
+	 * Saves the list of miscs into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>Integer "numMiscs"
+	 * <li>Variable number of settings with key "miscs" and a suffix. E.g. "miscs0",
+	 * "miscs1", etc.
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            settings where to save the {@link MiscList} properties
 	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		SettingsHelper.addInt(NUM_MISCS, numMiscs, settings);
+		SettingsHelper.addInt("numMiscs", numMiscs, settings);
 		for (int i = 0; i < numMiscs; i++) {
-			miscs[i].saveToNodeSettings(settings.addNodeSettings(MISCS + i));
+			miscs[i].saveToNodeSettings(settings.addNodeSettings("miscs" + i));
 		}
 	}
 
@@ -80,15 +83,20 @@ public class MiscList {
 	 * Load properties of the matrix list from a {@link NodeSettingsRO}.
 	 * 
 	 * @param settings
-	 *            the settings where to load the {@link MatrixList} from
+	 *            with properties:
+	 *            <ul>
+	 *            <li>Integer "numMiscs"
+	 *            <li>Variable number of settings with key "miscs" and a suffix.
+	 *            E.g. "miscs0", "miscs1", etc.
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
 		try {
-			numMiscs = settings.getInt(NUM_MISCS);
+			numMiscs = settings.getInt("numMiscs");
 			miscs = new Misc[numMiscs];
 			for (int i = 0; i < numMiscs; i++) {
 				miscs[i] = new Misc();
-				miscs[i].loadFromNodeSettings(settings.getNodeSettings(MISCS + i));
+				miscs[i].loadFromNodeSettings(settings.getNodeSettings("miscs" + i));
 			}
 		} catch (InvalidSettingsException e) {
 		}
