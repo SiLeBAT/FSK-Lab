@@ -110,26 +110,26 @@ public class MiscTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		misc.saveToNodeSettings(settings);
 		
-		assertEquals(id, settings.getInt(Misc.ID));
-		assertEquals(name, settings.getString(Misc.NAME));
-		assertEquals(description, settings.getString(Misc.DESCRIPTION));
-		assertEquals(value, settings.getDouble(Misc.VALUE), 0.0);
-		assertEquals(unit, settings.getString(Misc.UNIT));
-		assertEquals(origUnit, settings.getString(Misc.ORIGUNIT));
-		assertEquals(dbuuid, settings.getString(Misc.DBUUID));
+		assertEquals(id, settings.getInt("id"));
+		assertEquals(name, settings.getString("name"));
+		assertEquals(description, settings.getString("description"));
+		assertEquals(value, settings.getDouble("value"), 0.0);
+		assertEquals(unit, settings.getString("unit"));
+		assertEquals(origUnit, settings.getString("origUnit"));
+		assertEquals(dbuuid, settings.getString("dbuuid"));
 	}
 	
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt(Misc.ID, id);
-		settings.addString(Misc.NAME, name);
-		settings.addString(Misc.DESCRIPTION, description);
-		settings.addDouble(Misc.VALUE, value);
-		settings.addStringArray(Misc.CATEGORY, categories);
-		settings.addString(Misc.UNIT, unit);
-		settings.addString(Misc.ORIGUNIT, origUnit);
-		settings.addString(Misc.DBUUID, dbuuid);
+		settings.addInt("id", id);
+		settings.addString("name", name);
+		settings.addString("description", description);
+		settings.addDouble("value", value);
+		settings.addStringArray("category", categories);
+		settings.addString("unit", unit);
+		settings.addString("origUnit", origUnit);
+		settings.addString("dbuuid", dbuuid);
 		
 		Misc misc = new Misc();
 		misc.loadFromNodeSettings(settings);

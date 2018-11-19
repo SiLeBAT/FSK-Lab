@@ -35,16 +35,6 @@ import de.bund.bfr.knime.pmm.common.MiscXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Misc implements ViewValue {
 
-	// Configuration keys
-	static final String ID = "id";
-	static final String NAME = "name";
-	static final String DESCRIPTION = "description";
-	static final String VALUE = "value";
-	static final String CATEGORY = "category";
-	static final String UNIT = "unit";
-	static final String ORIGUNIT = "origUnit";
-	static final String DBUUID = "dbuuid";
-
 	private Integer id;
 	private String name;
 	private String description;
@@ -145,7 +135,8 @@ public class Misc implements ViewValue {
 	/**
 	 * Sets the id of this {@link Misc}.
 	 * 
-	 * @param id the id to be set
+	 * @param id
+	 *            the id to be set
 	 */
 	public void setId(final Integer id) {
 		this.id = id;
@@ -156,7 +147,8 @@ public class Misc implements ViewValue {
 	 * 
 	 * Empty strings are converted to null.
 	 * 
-	 * @param name the name to be set
+	 * @param name
+	 *            the name to be set
 	 */
 	public void setName(final String name) {
 		this.name = Strings.emptyToNull(name);
@@ -167,7 +159,8 @@ public class Misc implements ViewValue {
 	 * 
 	 * Empty strings are converted to null.
 	 * 
-	 * @param description the description of this {@link Misc}
+	 * @param description
+	 *            the description of this {@link Misc}
 	 */
 	public void setDescription(final String description) {
 		this.description = Strings.emptyToNull(description);
@@ -176,7 +169,8 @@ public class Misc implements ViewValue {
 	/**
 	 * Sets the value of this {@link Misc}.
 	 * 
-	 * @param value the value of this {@link Misc}
+	 * @param value
+	 *            the value of this {@link Misc}
 	 */
 	public void setValue(final Double value) {
 		this.value = value;
@@ -185,7 +179,8 @@ public class Misc implements ViewValue {
 	/**
 	 * Sets the categories of this {@link Misc}.
 	 * 
-	 * @param categories the categories to be set
+	 * @param categories
+	 *            the categories to be set
 	 */
 	public void setCategories(final String[] categories) {
 		this.categories = categories;
@@ -196,7 +191,8 @@ public class Misc implements ViewValue {
 	 * 
 	 * Empty strings are converted to null.
 	 * 
-	 * @param unit the unit to be set
+	 * @param unit
+	 *            the unit to be set
 	 */
 	public void setUnit(final String unit) {
 		this.unit = Strings.emptyToNull(unit);
@@ -207,7 +203,8 @@ public class Misc implements ViewValue {
 	 * 
 	 * Empty strings are converted to null.
 	 * 
-	 * @param origUnit the original unit to be set
+	 * @param origUnit
+	 *            the original unit to be set
 	 */
 	public void setOrigUnit(final String origUnit) {
 		this.origUnit = Strings.emptyToNull(origUnit);
@@ -218,42 +215,65 @@ public class Misc implements ViewValue {
 	 * 
 	 * Empty strings are converted to null.
 	 * 
-	 * @param dbuuid the DBUUID to be set
+	 * @param dbuuid
+	 *            the DBUUID to be set
 	 */
 	public void setDbuuid(final String dbuuid) {
 		this.dbuuid = dbuuid;
 	}
 
-	/** Saves misc properties into a {@link NodeSettingsWO}. */
+	/**
+	 * Saves misc properties into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "description"
+	 * <li>Double "value"
+	 * <li>StringArray "category"
+	 * <li>String "unit"
+	 * <li>String "origUnit"
+	 * <li>String "dbuuid"
+	 * </ul>
+	 */
 	public void saveToNodeSettings(NodeSettingsWO settings) {
-		SettingsHelper.addInt(ID, id, settings);
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addString(DESCRIPTION, description, settings);
-		SettingsHelper.addDouble(VALUE, value, settings);
-		settings.addStringArray(CATEGORY, categories);
-		SettingsHelper.addString(UNIT, unit, settings);
-		SettingsHelper.addString(ORIGUNIT, origUnit, settings);
-		SettingsHelper.addString(DBUUID, dbuuid, settings);
+		SettingsHelper.addInt("id", id, settings);
+		SettingsHelper.addString("name", name, settings);
+		SettingsHelper.addString("description", description, settings);
+		SettingsHelper.addDouble("value", value, settings);
+		settings.addStringArray("category", categories);
+		SettingsHelper.addString("unit", unit, settings);
+		SettingsHelper.addString("origUnit", origUnit, settings);
+		SettingsHelper.addString("dbuuid", dbuuid, settings);
 	}
 
 	/**
-	 * Loads misc properties from a {@link NodeSettingsRO}.
+	 * Loads misc properties from a {@link NodeSettingsRO} with properties:
+	 * <ul>
+	 * <li>Integer "id"
+	 * <li>String "name"
+	 * <li>String "description"
+	 * <li>Double "value"
+	 * <li>StringArray "category"
+	 * <li>String "unit"
+	 * <li>String "origUnit"
+	 * <li>String "dbuuid"
+	 * </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
-		id = SettingsHelper.getInteger(ID, settings);
-		name = SettingsHelper.getString(NAME, settings);
-		description = SettingsHelper.getString(DESCRIPTION, settings);
-		value = SettingsHelper.getDouble(VALUE, settings);
+		id = SettingsHelper.getInteger("id", settings);
+		name = SettingsHelper.getString("name", settings);
+		description = SettingsHelper.getString("description", settings);
+		value = SettingsHelper.getDouble("value", settings);
 		try {
-			categories = settings.getStringArray(CATEGORY);
+			categories = settings.getStringArray("category");
 		} catch (InvalidSettingsException e) {
 			categories = null;
 		}
-		unit = SettingsHelper.getString(UNIT, settings);
-		origUnit = SettingsHelper.getString(ORIGUNIT, settings);
-		dbuuid = SettingsHelper.getString(DBUUID, settings);
+		unit = SettingsHelper.getString("unit", settings);
+		origUnit = SettingsHelper.getString("origUnit", settings);
+		dbuuid = SettingsHelper.getString("dbuuid", settings);
 	}
-	
+
 	/**
 	 * Creates a Misc from a MiscXml.
 	 * 
@@ -269,10 +289,10 @@ public class Misc implements ViewValue {
 		misc.setUnit(miscXml.unit);
 		misc.setOrigUnit(miscXml.origUnit);
 		misc.setDbuuid(miscXml.dbuuid);
-		
+
 		return misc;
 	}
-	
+
 	/**
 	 * Returns an equivalent MiscXml.
 	 * 
