@@ -13,18 +13,6 @@ import de.bund.bfr.knime.pmm.common.TimeSeriesXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class TimeSeries implements ViewValue {
 
-	// Configuration keys
-	static final String NAME = "name";
-	static final String TIME = "time";
-	static final String TIME_UNIT = "timeUnit";
-	static final String ORIG_TIME_UNIT = "origTimeUnit";
-	static final String CONCENTRATION = "concentration";
-	static final String CONCENTRATION_UNIT = "concentrationUnit";
-	static final String CONCENTRATION_UNIT_OBJECT_TYPE = "concentrationUnitObjectType";
-	static final String ORIG_CONCENTRATION_UNIT = "origConcentrationUnit";
-	static final String CONCENTRATION_STDDEV = "concentrationStdDev";
-	static final String NUMBER_OF_MEASUREMENTS = "numberOfMeasurements";
-
 	private String name;
 	private Double time;
 	private String timeUnit;
@@ -261,42 +249,66 @@ public class TimeSeries implements ViewValue {
 	}
 
 	/**
-	 * Saves time series properties into a {@link NodeSettingsWO}.
+	 * Saves time series properties into a {@link NodeSettingsWO} with properties:
+	 * <ul>
+	 * <li>String "name"
+	 * <li>Double "time"
+	 * <li>String "timeUnit"
+	 * <li>String "origTimeUnit"
+	 * <li>String "concentration"
+	 * <li>String "concentrationUnit"
+	 * <li>String "concentrationUnitObjectType"
+	 * <li>String "origConcentrationUnit"
+	 * <li>String "concentrationStdDev"
+	 * <li>Integer "numberOfMeasurements"
+	 * </ul>
 	 * 
 	 * @param settings
 	 *            settings where to save the {@link TimeSeries} properties
 	 */
 	public void saveToNodeSettings(final NodeSettingsWO settings) {
-		SettingsHelper.addString(NAME, name, settings);
-		SettingsHelper.addDouble(TIME, time, settings);
-		SettingsHelper.addString(TIME_UNIT, timeUnit, settings);
-		SettingsHelper.addString(ORIG_TIME_UNIT, origTimeUnit, settings);
-		SettingsHelper.addString(ORIG_CONCENTRATION_UNIT, origTimeUnit, settings);
-		SettingsHelper.addDouble(CONCENTRATION, concentration, settings);
-		SettingsHelper.addString(CONCENTRATION_UNIT, concentrationUnit, settings);
-		SettingsHelper.addString(CONCENTRATION_UNIT_OBJECT_TYPE, concentrationUnitObjectType, settings);
-		SettingsHelper.addString(ORIG_CONCENTRATION_UNIT, origConcentrationUnit, settings);
-		SettingsHelper.addDouble(CONCENTRATION_STDDEV, concentrationStdDev, settings);
-		SettingsHelper.addInt(NUMBER_OF_MEASUREMENTS, numberOfMeasurements, settings);
+		SettingsHelper.addString("name", name, settings);
+		SettingsHelper.addDouble("time", time, settings);
+		SettingsHelper.addString("timeUnit", timeUnit, settings);
+		SettingsHelper.addString("origTimeUnit", origTimeUnit, settings);
+		SettingsHelper.addString("origConcentrationUnit", origConcentrationUnit, settings);
+		SettingsHelper.addDouble("concentration", concentration, settings);
+		SettingsHelper.addString("concentrationUnit", concentrationUnit, settings);
+		SettingsHelper.addString("concentrationUnitObjectType", concentrationUnitObjectType, settings);
+		SettingsHelper.addString("origConcentrationUnit", origConcentrationUnit, settings);
+		SettingsHelper.addDouble("concentrationStdDev", concentrationStdDev, settings);
+		SettingsHelper.addInt("numberOfMeasurements", numberOfMeasurements, settings);
 	}
 
 	/**
 	 * Loads time series properties from a {@link NodeSettingsRO}.
 	 * 
 	 * @param settings
-	 *            The settings where to load the {@link TimeSeries} from
+	 *            with properties:
+	 *            <ul>
+	 *            <li>String "name"
+	 *            <li>Double "time"
+	 *            <li>String "timeUnit"
+	 *            <li>String "origTimeUnit"
+	 *            <li>String "concentration"
+	 *            <li>String "concentrationUnit"
+	 *            <li>String "concentrationUnitObjectType"
+	 *            <li>String "origConcentrationUnit"
+	 *            <li>String "concentrationStdDev"
+	 *            <li>Integer "numberOfMeasurements"
+	 *            </ul>
 	 */
 	public void loadFromNodeSettings(NodeSettingsRO settings) {
-		name = SettingsHelper.getString(NAME, settings);
-		time = SettingsHelper.getDouble(TIME, settings);
-		timeUnit = SettingsHelper.getString(TIME_UNIT, settings);
-		origTimeUnit = SettingsHelper.getString(ORIG_TIME_UNIT, settings);
-		concentration = SettingsHelper.getDouble(CONCENTRATION, settings);
-		concentrationUnit = SettingsHelper.getString(CONCENTRATION_UNIT, settings);
-		concentrationUnitObjectType = SettingsHelper.getString(CONCENTRATION_UNIT_OBJECT_TYPE, settings);
-		origConcentrationUnit = SettingsHelper.getString(ORIG_CONCENTRATION_UNIT, settings);
-		concentrationStdDev = SettingsHelper.getDouble(CONCENTRATION_STDDEV, settings);
-		numberOfMeasurements = SettingsHelper.getInteger(NUMBER_OF_MEASUREMENTS, settings);
+		name = SettingsHelper.getString("name", settings);
+		time = SettingsHelper.getDouble("time", settings);
+		timeUnit = SettingsHelper.getString("timeUnit", settings);
+		origTimeUnit = SettingsHelper.getString("origTimeUnit", settings);
+		concentration = SettingsHelper.getDouble("concentration", settings);
+		concentrationUnit = SettingsHelper.getString("concentrationUnit", settings);
+		concentrationUnitObjectType = SettingsHelper.getString("concentrationUnitObjectType", settings);
+		origConcentrationUnit = SettingsHelper.getString("origConcentrationUnit", settings);
+		concentrationStdDev = SettingsHelper.getDouble("concentrationStdDev", settings);
+		numberOfMeasurements = SettingsHelper.getInteger("numberOfMeasurements", settings);
 	}
 
 	/**

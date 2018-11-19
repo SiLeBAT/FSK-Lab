@@ -129,32 +129,32 @@ public class TimeSeriesTest {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		timeSeries.saveToNodeSettings(settings);
 
-		assertEquals(name, settings.getString(TimeSeries.NAME));
-		assertEquals(time, settings.getDouble(TimeSeries.TIME), 0.0);
-		assertEquals(timeUnit, settings.getString(TimeSeries.TIME_UNIT));
-		assertEquals(origTimeUnit, settings.getString(TimeSeries.ORIG_TIME_UNIT));
-		assertEquals(concentration, settings.getDouble(TimeSeries.CONCENTRATION), 0.0);
-		assertEquals(concentrationUnit, settings.getString(TimeSeries.CONCENTRATION_UNIT));
-		assertEquals(concentrationUnitObjectType, settings.getString(TimeSeries.CONCENTRATION_UNIT_OBJECT_TYPE));
-		assertEquals(origConcentrationUnit, settings.getString(TimeSeries.ORIG_CONCENTRATION_UNIT));
-		assertEquals(concentrationStdDev, settings.getDouble(TimeSeries.CONCENTRATION_STDDEV), 0.0);
-		assertEquals(numberOfMeasurements, settings.getInt(TimeSeries.NUMBER_OF_MEASUREMENTS));
+		assertEquals(name, settings.getString("name"));
+		assertEquals(time, settings.getDouble("time"), 0.0);
+		assertEquals(timeUnit, settings.getString("timeUnit"));
+		assertEquals(origTimeUnit, settings.getString("origTimeUnit"));
+		assertEquals(concentration, settings.getDouble("concentration"), 0.0);
+		assertEquals(concentrationUnit, settings.getString("concentrationUnit"));
+		assertEquals(concentrationUnitObjectType, settings.getString("concentrationUnitObjectType"));
+		assertEquals(origConcentrationUnit, settings.getString("origConcentrationUnit"));
+		assertEquals(concentrationStdDev, settings.getDouble("concentrationStdDev"), 0.0);
+		assertEquals(numberOfMeasurements, settings.getInt("numberOfMeasurements"));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addString(TimeSeries.NAME, name);
-		settings.addDouble(TimeSeries.TIME, time);
-		settings.addString(TimeSeries.TIME_UNIT, timeUnit);
-		settings.addString(TimeSeries.ORIG_TIME_UNIT, origTimeUnit);
-		settings.addDouble(TimeSeries.CONCENTRATION, concentration);
-		settings.addString(TimeSeries.CONCENTRATION_UNIT, concentrationUnit);
-		settings.addString(TimeSeries.CONCENTRATION_UNIT_OBJECT_TYPE, concentrationUnitObjectType);
-		settings.addString(TimeSeries.ORIG_CONCENTRATION_UNIT, origConcentrationUnit);
+		settings.addString("name", name);
+		settings.addDouble("time", time);
+		settings.addString("timeUnit", timeUnit);
+		settings.addString("origTimeUnit", origTimeUnit);
+		settings.addDouble("concentration", concentration);
+		settings.addString("concentrationUnit", concentrationUnit);
+		settings.addString("concentrationUnitObjectType", concentrationUnitObjectType);
+		settings.addString("origConcentrationUnit", origConcentrationUnit);
 		;
-		settings.addDouble(TimeSeries.CONCENTRATION_STDDEV, concentrationStdDev);
-		settings.addInt(TimeSeries.NUMBER_OF_MEASUREMENTS, numberOfMeasurements);
+		settings.addDouble("concentrationStdDev", concentrationStdDev);
+		settings.addInt("numberOfMeasurements", numberOfMeasurements);
 
 		TimeSeries timeSeries = new TimeSeries();
 		timeSeries.loadFromNodeSettings(settings);
