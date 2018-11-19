@@ -13,9 +13,3 @@ deploy:
    script: bash bintray.sh
    on:
       branch: release
--  provider: script
-   skip_cleanup: true
-   script: bash bintray_nightly.sh
-   on:
-      branch: master
-      condition: $TRAVIS_EVENT_TYPE = cron
