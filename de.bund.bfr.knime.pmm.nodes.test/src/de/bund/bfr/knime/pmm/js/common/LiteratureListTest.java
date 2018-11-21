@@ -13,20 +13,20 @@ public class LiteratureListTest {
 
 	static {
 		literature = new Literature();
-		literature.setId(LiteratureTest.id);
-		literature.setAuthor(LiteratureTest.author);
-		literature.setTitle(LiteratureTest.title);
-		literature.setAbstractText(LiteratureTest.abstractText);
-		literature.setYear(LiteratureTest.year);
-		literature.setJournal(LiteratureTest.journal);
-		literature.setVolume(LiteratureTest.volume);
-		literature.setIssue(LiteratureTest.issue);
-		literature.setPage(LiteratureTest.page);
-		literature.setApprovalMode(LiteratureTest.approvalMode);
-		literature.setWebsite(LiteratureTest.website);
-		literature.setType(0);
-		literature.setComment(LiteratureTest.comment);
-		literature.setDbuuid(LiteratureTest.dbuuid);
+		literature.id = LiteratureTest.id;
+		literature.author = LiteratureTest.author;
+		literature.title = LiteratureTest.title;
+		literature.abstractText = LiteratureTest.abstractText;
+		literature.year = LiteratureTest.year;
+		literature.journal = LiteratureTest.journal;
+		literature.volume = LiteratureTest.volume;
+		literature.issue = LiteratureTest.issue;
+		literature.page = LiteratureTest.page;
+		literature.approvalMode = LiteratureTest.approvalMode;
+		literature.website = LiteratureTest.website;
+		literature.type = 0;
+		literature.comment = LiteratureTest.comment;
+		literature.dbuuid = LiteratureTest.dbuuid;
 	}
 
 	@Test
@@ -40,20 +40,20 @@ public class LiteratureListTest {
 		Literature expected = references[0]; // expected Literature
 		Literature obtained = list.getLiterature()[0]; // obtained literature
 
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getAuthor(), obtained.getAuthor());
-		assertEquals(expected.getTitle(), obtained.getTitle());
-		assertEquals(expected.getAbstractText(), obtained.getAbstractText());
-		assertEquals(expected.getYear(), obtained.getYear());
-		assertEquals(expected.getJournal(), obtained.getJournal());
-		assertEquals(expected.getVolume(), obtained.getVolume());
-		assertEquals(expected.getIssue(), obtained.getIssue());
-		assertEquals(expected.getPage(), obtained.getPage());
-		assertEquals(expected.getApprovalMode(), obtained.getApprovalMode());
-		assertEquals(expected.getWebsite(), obtained.getWebsite());
-		assertEquals(expected.getType(), obtained.getType());
-		assertEquals(expected.getComment(), obtained.getComment());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+		assertEquals(expected.id, obtained.id);
+		assertEquals(expected.author, obtained.author);
+		assertEquals(expected.title, obtained.title);
+		assertEquals(expected.abstractText, obtained.abstractText);
+		assertEquals(expected.year, obtained.year);
+		assertEquals(expected.journal, obtained.journal);
+		assertEquals(expected.volume, obtained.volume);
+		assertEquals(expected.issue, obtained.issue);
+		assertEquals(expected.page, obtained.page);
+		assertEquals(expected.approvalMode, obtained.approvalMode);
+		assertEquals(expected.website, obtained.website);
+		assertEquals(expected.type, obtained.type);
+		assertEquals(expected.comment, obtained.comment);
+		assertEquals(expected.dbuuid, obtained.dbuuid);
 	}
 
 	@Test
@@ -74,20 +74,20 @@ public class LiteratureListTest {
 		Literature expected = references[0]; // expected literature
 		Literature obtained = obtainedReferences[0]; // obtained literature
 
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getAuthor(), obtained.getAuthor());
-		assertEquals(expected.getTitle(), obtained.getTitle());
-		assertEquals(expected.getAbstractText(), obtained.getAbstractText());
-		assertEquals(expected.getYear(), obtained.getYear());
-		assertEquals(expected.getJournal(), obtained.getJournal());
-		assertEquals(expected.getVolume(), obtained.getVolume());
-		assertEquals(expected.getIssue(), obtained.getIssue());
-		assertEquals(expected.getPage(), obtained.getPage());
-		assertEquals(expected.getApprovalMode(), obtained.getApprovalMode());
-		assertEquals(expected.getWebsite(), obtained.getWebsite());
-		assertEquals(expected.getType(), obtained.getType());
-		assertEquals(expected.getComment(), obtained.getComment());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+		assertEquals(expected.id, obtained.id);
+		assertEquals(expected.author, obtained.author);
+		assertEquals(expected.title, obtained.title);
+		assertEquals(expected.abstractText, obtained.abstractText);
+		assertEquals(expected.year, obtained.year);
+		assertEquals(expected.journal, obtained.journal);
+		assertEquals(expected.volume, obtained.volume);
+		assertEquals(expected.issue, obtained.issue);
+		assertEquals(expected.page, obtained.page);
+		assertEquals(expected.approvalMode, obtained.approvalMode);
+		assertEquals(expected.website, obtained.website);
+		assertEquals(expected.type, obtained.type);
+		assertEquals(expected.comment, obtained.comment);
+		assertEquals(expected.dbuuid, obtained.dbuuid);
 	}
 
 	@Test
@@ -102,19 +102,19 @@ public class LiteratureListTest {
 		Literature expected = literature; // expected Literature
 		Literature obtained = list.getLiterature()[0]; // obtained Literature
 
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getAuthor(), obtained.getAuthor());
-		assertEquals(expected.getTitle(), obtained.getTitle());
-		assertEquals(expected.getAbstractText(), obtained.getAbstractText());
-		assertEquals(expected.getYear(), obtained.getYear());
-		assertEquals(expected.getJournal(), obtained.getJournal());
-		assertEquals(expected.getVolume(), obtained.getVolume());
-		assertEquals(expected.getIssue(), obtained.getIssue());
-		assertEquals(expected.getPage(), obtained.getPage());
-		assertEquals(expected.getApprovalMode(), obtained.getApprovalMode());
-		assertEquals(expected.getWebsite(), obtained.getWebsite());
-		assertEquals(expected.getType(), obtained.getType());
-		assertEquals(expected.getComment(), obtained.getComment());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+		assertEquals(expected.id, obtained.id);
+		assertEquals(expected.author, obtained.author);
+		assertEquals(expected.title, obtained.title);
+		assertEquals(expected.abstractText, obtained.abstractText);
+		assertEquals(expected.year, obtained.year);
+		assertEquals(expected.journal, obtained.journal);
+		assertEquals(expected.volume, obtained.volume);
+		assertEquals(expected.issue, obtained.issue);
+		assertEquals(expected.page, obtained.page);
+		assertEquals(expected.approvalMode, obtained.approvalMode);
+		assertEquals(expected.website, obtained.website);
+		assertEquals(expected.type, obtained.type);
+		assertEquals(expected.comment, obtained.comment);
+		assertEquals(expected.dbuuid, obtained.dbuuid);
 	}
 }

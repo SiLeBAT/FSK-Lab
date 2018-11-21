@@ -178,20 +178,20 @@ public class ModelEditorViewValue extends JSONViewContent {
 		try {
 			while (resultSet.next()) {
 				Literature literature = new Literature();
-				literature.setId(resultSet.getInt("ID"));
-				literature.setAuthor(resultSet.getString("Erstautor"));
-				literature.setTitle(resultSet.getString("Titel"));
-				literature.setAbstractText(resultSet.getString("Abstract"));
-				literature.setJournal(resultSet.getString("Journal"));
-				literature.setVolume(resultSet.getString("Volume"));
-				literature.setIssue(resultSet.getString("Issue"));
-				literature.setWebsite(resultSet.getString("Webseite"));
-				literature.setComment(resultSet.getString("Kommentar"));
-				literature.setYear(resultSet.getInt("Jahr"));
-				literature.setPage(resultSet.getInt("Seite"));
-				literature.setApprovalMode(resultSet.getInt("FreigabeModus"));
-				literature.setType(resultSet.getInt("Literaturtyp"));
-				literature.setDbuuid(DBKernel.getLocalDBUUID());
+				literature.id = resultSet.getInt("ID");
+				literature.author = resultSet.getString("Erstautor");
+				literature.title = resultSet.getString("Titel");
+				literature.abstractText = resultSet.getString("Abstract");
+				literature.journal = resultSet.getString("Journal");
+				literature.volume = resultSet.getString("Volume");
+				literature.issue = resultSet.getString("Issue");
+				literature.website = resultSet.getString("Webseite");
+				literature.comment = resultSet.getString("Kommentar");
+				literature.year = resultSet.getInt("Jahr");
+				literature.page = resultSet.getInt("Seite");
+				literature.approvalMode = resultSet.getInt("FreigabeModus");
+				literature.type = resultSet.getInt("Literaturtyp");
+				literature.dbuuid = DBKernel.getLocalDBUUID();
 
 				literatureList.add(literature);
 			}

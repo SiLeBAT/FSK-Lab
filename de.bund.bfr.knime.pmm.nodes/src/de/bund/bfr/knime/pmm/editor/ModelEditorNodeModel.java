@@ -278,20 +278,20 @@ public final class ModelEditorNodeModel
 				LiteratureItem literatureItem = (LiteratureItem) mdLitDoc.get(i);
 
 				Literature literature = new Literature();
-				literature.setAuthor(literatureItem.author);
-				literature.setYear(literatureItem.year);
-				literature.setTitle(literatureItem.title);
-				literature.setAbstractText(literatureItem.abstractText);
-				literature.setJournal(literatureItem.journal);
-				literature.setVolume(literatureItem.volume);
-				literature.setIssue(literatureItem.issue);
-				literature.setPage(literatureItem.page);
-				literature.setApprovalMode(literatureItem.approvalMode);
-				literature.setWebsite(literatureItem.website);
-				literature.setType(literatureItem.type);
-				literature.setComment(literatureItem.comment);
-				literature.setId(literatureItem.id);
-				literature.setDbuuid(literatureItem.dbuuid);
+				literature.author = literatureItem.author;
+				literature.year = literatureItem.year;
+				literature.title = literatureItem.title;
+				literature.abstractText = literatureItem.abstractText;
+				literature.journal = literatureItem.journal;
+				literature.volume = literatureItem.volume;
+				literature.issue = literatureItem.issue;
+				literature.page = literatureItem.page;
+				literature.approvalMode = literatureItem.approvalMode;
+				literature.website = literatureItem.website;
+				literature.type = literatureItem.type;
+				literature.comment = literatureItem.comment;
+				literature.id = literature.id;
+				literature.dbuuid = literature.dbuuid;
 
 				mdLiteratureArray[i] = literature;
 			}
@@ -495,20 +495,20 @@ public final class ModelEditorNodeModel
 			for (int i = 0; i < mLitDoc.size(); i++) {
 				LiteratureItem literatureItem = (LiteratureItem) mLitDoc.get(i);
 				Literature literature = new Literature();
-				literature.setAuthor(literatureItem.author);
-				literature.setYear(literatureItem.year);
-				literature.setTitle(literatureItem.title);
-				literature.setAbstractText(literatureItem.abstractText);
-				literature.setJournal(literatureItem.journal);
-				literature.setVolume(literatureItem.volume);
-				literature.setIssue(literatureItem.issue);
-				literature.setPage(literatureItem.page);
-				literature.setApprovalMode(literatureItem.approvalMode);
-				literature.setWebsite(literatureItem.website);
-				literature.setType(literatureItem.type);
-				literature.setComment(literatureItem.comment);
-				literature.setId(literatureItem.id);
-				literature.setDbuuid(literatureItem.dbuuid);
+				literature.author = literatureItem.author;
+				literature.year = literatureItem.year;
+				literature.title = literatureItem.title;
+				literature.abstractText = literatureItem.abstractText;
+				literature.journal = literatureItem.journal;
+				literature.volume = literatureItem.volume;
+				literature.issue = literatureItem.issue;
+				literature.page = literatureItem.page;
+				literature.approvalMode = literatureItem.approvalMode;
+				literature.website = literatureItem.website;
+				literature.type = literatureItem.type;
+				literature.comment = literatureItem.comment;
+				literature.id = literatureItem.id;
+				literature.dbuuid = literatureItem.dbuuid;
 
 				mLiteratureArray[i] = literature;
 			}
@@ -524,20 +524,20 @@ public final class ModelEditorNodeModel
 				LiteratureItem literatureItem = (LiteratureItem) emLitDoc.get(i);
 
 				Literature literature = new Literature();
-				literature.setAuthor(literatureItem.author);
-				literature.setYear(literatureItem.year);
-				literature.setTitle(literatureItem.title);
-				literature.setAbstractText(literatureItem.abstractText);
-				literature.setJournal(literatureItem.journal);
-				literature.setVolume(literatureItem.volume);
-				literature.setIssue(literatureItem.issue);
-				literature.setPage(literatureItem.page);
-				literature.setApprovalMode(literatureItem.approvalMode);
-				literature.setWebsite(literatureItem.website);
-				literature.setType(literatureItem.type);
-				literature.setComment(literatureItem.comment);
-				literature.setId(literatureItem.id);
-				literature.setDbuuid(literatureItem.dbuuid);
+				literature.author = literatureItem.author;
+				literature.year = literatureItem.year;
+				literature.title = literatureItem.title;
+				literature.abstractText = literatureItem.abstractText;
+				literature.journal = literatureItem.journal;
+				literature.volume = literatureItem.volume;
+				literature.issue = literatureItem.issue;
+				literature.page = literatureItem.page;
+				literature.approvalMode = literatureItem.approvalMode;
+				literature.website = literatureItem.website;
+				literature.type = literatureItem.type;
+				literature.comment = literatureItem.comment;
+				literature.id = literatureItem.id;
+				literature.dbuuid = literatureItem.dbuuid;
 
 				emLiteratureArray[i] = literature;
 			}
@@ -595,10 +595,10 @@ public final class ModelEditorNodeModel
 
 		PmmXmlDoc mdLitDoc = new PmmXmlDoc();
 		for (Literature literature : m1DataTuple.getLitMd().getLiterature()) {
-			mdLitDoc.add(new LiteratureItem(literature.getAuthor(), literature.getYear(), literature.getTitle(),
-					literature.getAbstractText(), literature.getJournal(), literature.getVolume(),
-					literature.getIssue(), literature.getPage(), literature.getApprovalMode(), literature.getWebsite(),
-					literature.getType(), literature.getComment(), literature.getId(), literature.getDbuuid()));
+			mdLitDoc.add(new LiteratureItem(literature.author, literature.year, literature.title,
+					literature.abstractText, literature.journal, literature.volume, literature.issue, literature.page,
+					literature.approvalMode, literature.website, literature.type, literature.comment, literature.id,
+					literature.dbuuid));
 		}
 		outTuple.setValue(TimeSeriesSchema.ATT_LITMD, mdLitDoc);
 
@@ -654,19 +654,19 @@ public final class ModelEditorNodeModel
 
 		PmmXmlDoc mLitDoc = new PmmXmlDoc();
 		for (Literature literature : m1DataTuple.getmLit().getLiterature()) {
-			mLitDoc.add(new LiteratureItem(literature.getAuthor(), literature.getYear(), literature.getTitle(),
-					literature.getAbstractText(), literature.getJournal(), literature.getVolume(),
-					literature.getIssue(), literature.getPage(), literature.getApprovalMode(), literature.getWebsite(),
-					literature.getType(), literature.getComment(), literature.getId(), literature.getDbuuid()));
+			mLitDoc.add(new LiteratureItem(literature.author, literature.year, literature.title,
+					literature.abstractText, literature.journal, literature.volume, literature.issue, literature.page,
+					literature.approvalMode, literature.website, literature.type, literature.comment, literature.id,
+					literature.dbuuid));
 		}
 		outTuple.setValue(Model1Schema.ATT_MLIT, mLitDoc);
 
 		PmmXmlDoc emLitDoc = new PmmXmlDoc();
 		for (Literature literature : m1DataTuple.getEmLit().getLiterature()) {
-			emLitDoc.add(new LiteratureItem(literature.getAuthor(), literature.getYear(), literature.getTitle(),
-					literature.getAbstractText(), literature.getJournal(), literature.getVolume(),
-					literature.getIssue(), literature.getPage(), literature.getApprovalMode(), literature.getWebsite(),
-					literature.getType(), literature.getComment(), literature.getId(), literature.getDbuuid()));
+			emLitDoc.add(new LiteratureItem(literature.author, literature.year, literature.title,
+					literature.abstractText, literature.journal, literature.volume, literature.issue, literature.page,
+					literature.approvalMode, literature.website, literature.type, literature.comment, literature.id,
+					literature.dbuuid));
 		}
 		outTuple.setValue(Model1Schema.ATT_EMLIT, emLitDoc);
 
