@@ -19,78 +19,27 @@ public class DepTest {
 	static String description = "bacterial population at time t -ln() transformed";
 
 	@Test
-	public void testName() {
+	public void testConstructor() {
 		Dep dep = new Dep();
-		assertNull(dep.getName());
-
-		dep.setName(name);
-		assertEquals(name, dep.getName());
-	}
-
-	@Test
-	public void testOrigname() {
-		Dep dep = new Dep();
-		assertNull(dep.getOrigname());
-
-		dep.setOrigname(origname);
-		assertEquals(origname, dep.getOrigname());
-	}
-
-	@Test
-	public void testMin() {
-		Dep dep = new Dep();
-		assertNull(dep.getMin());
-
-		dep.setMin(min);
-		assertEquals(min, dep.getMin(), 0.0);
-	}
-
-	@Test
-	public void testMax() {
-		Dep dep = new Dep();
-		assertNull(dep.getMax());
-
-		dep.setMax(max);
-		assertEquals(max, dep.getMax(), 0.0);
-	}
-
-	@Test
-	public void testCategory() {
-		Dep dep = new Dep();
-		assertNull(dep.getCategory());
-		
-		dep.setCategory(category);
-		assertEquals(category, dep.getCategory());
-	}
-
-	@Test
-	public void testUnit() {
-		Dep dep = new Dep();
-		assertNull(dep.getUnit());
-		
-		dep.setUnit(unit);
-		assertEquals(unit, dep.getUnit());
-	}
-
-	@Test
-	public void testDescription() {
-		Dep dep = new Dep();
-		assertNull(dep.getDescription());
-		
-		dep.setDescription(description);
-		assertEquals(description, dep.getDescription());
+		assertNull(dep.name);
+		assertNull(dep.origname);
+		assertNull(dep.min);
+		assertNull(dep.max);
+		assertNull(dep.category);
+		assertNull(dep.unit);
+		assertNull(dep.description);
 	}
 
 	@Test
 	public void testSaveToNodeSettings() throws Exception {
 		Dep dep = new Dep();
-		dep.setName(name);
-		dep.setOrigname(origname);
-		dep.setMin(min);
-		dep.setMax(max);
-		dep.setCategory(category);
-		dep.setUnit(unit);
-		dep.setDescription(description);
+		dep.name = name;
+		dep.origname = origname;
+		dep.min = min;
+		dep.max = max;
+		dep.category = category;
+		dep.unit = unit;
+		dep.description = description;
 		
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		dep.saveToNodeSettings(settings);
@@ -118,13 +67,13 @@ public class DepTest {
 		Dep dep = new Dep();
 		dep.loadFromNodeSettings(settings);
 		
-		assertEquals(name, dep.getName());
-		assertEquals(origname, dep.getOrigname());
-		assertEquals(min, dep.getMin(), 0.0);
-		assertEquals(max, dep.getMax(), 0.0);
-		assertEquals(category, dep.getCategory());
-		assertEquals(unit, dep.getUnit());
-		assertEquals(description, dep.getDescription());
+		assertEquals(name, dep.name);
+		assertEquals(origname, dep.origname);
+		assertEquals(min, dep.min, 0.0);
+		assertEquals(max, dep.max, 0.0);
+		assertEquals(category, dep.category);
+		assertEquals(unit, dep.unit);
+		assertEquals(description, dep.description);
 	}
 	
 	@Test
@@ -134,25 +83,25 @@ public class DepTest {
 		depXml.max = max;
 		
 		Dep dep = Dep.toDep(depXml);
-		assertEquals(name, dep.getName());
-		assertEquals(origname, dep.getOrigname());
-		assertEquals(min, dep.getMin(), 0.0);
-		assertEquals(max, dep.getMax(), 0.0);
-		assertEquals(category, dep.getCategory());
-		assertEquals(unit, dep.getUnit());
-		assertEquals(description, dep.getDescription());
+		assertEquals(name, dep.name);
+		assertEquals(origname, dep.origname);
+		assertEquals(min, dep.min, 0.0);
+		assertEquals(max, dep.max, 0.0);
+		assertEquals(category, dep.category);
+		assertEquals(unit, dep.unit);
+		assertEquals(description, dep.description);
 	}
 	
 	@Test
 	public void testToDepXml() {
 		Dep dep = new Dep();
-		dep.setName(name);
-		dep.setOrigname(origname);
-		dep.setMin(min);
-		dep.setMax(max);
-		dep.setCategory(category);
-		dep.setUnit(unit);
-		dep.setDescription(description);
+		dep.name = name;
+		dep.origname = origname;
+		dep.min = min;
+		dep.max = max;
+		dep.category = category;
+		dep.unit = unit;
+		dep.description = description;
 		
 		DepXml depXml = dep.toDepXml();
 		assertEquals(name, depXml.name);

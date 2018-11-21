@@ -24,7 +24,6 @@ import org.knime.core.node.NodeSettingsWO;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.common.base.Strings;
 
 import de.bund.bfr.knime.pmm.common.EstModelXml;
 
@@ -49,274 +48,18 @@ import de.bund.bfr.knime.pmm.common.EstModelXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class EstModel implements ViewValue {
 
-	private Integer id;
-	private String name;
-	private Double sse;
-	private Double rms;
-	private Double r2;
-	private Double aic;
-	private Double bic;
-	private Integer dof;
-	private Integer qualityScore;
-	private Boolean checked;
-	private String comment;
-	private String dbuuid;
-
-	/**
-	 * Returns the id of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the id of this {@link EstModel}
-	 */
-	public Integer getId() {
-		return id;
-	}
-
-	/**
-	 * Returns the name of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the name of this {@link EstModel}
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Returns the SSE of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the SSE of this {@link EstModel}
-	 */
-	public Double getSse() {
-		return sse;
-	}
-
-	/**
-	 * Returns the RMS of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the RMS of this {@link EstModel}
-	 */
-	public Double getRms() {
-		return rms;
-	}
-
-	/**
-	 * Returns the R2 of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the R2 of this {@link EstModel}
-	 */
-	public Double getR2() {
-		return r2;
-	}
-
-	/**
-	 * Returns the AIC of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the AIC of this {@link EstModel}
-	 */
-	public Double getAIC() {
-		return aic;
-	}
-
-	/**
-	 * Returns the BIC of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the BIC of this {@link EstModel}
-	 */
-	public Double getBIC() {
-		return bic;
-	}
-
-	/**
-	 * Returns the DOF of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the DOF of this {@link EstModel}
-	 */
-	public Integer getDof() {
-		return dof;
-	}
-
-	/**
-	 * Returns the quality score of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the quality score of this {@link EstModel}
-	 */
-	public Integer getQualityScore() {
-		return qualityScore;
-	}
-
-	/**
-	 * Returns the checked status of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the checked status of this {@link EstModel}
-	 */
-	public Boolean getChecked() {
-		return checked;
-	}
-
-	/**
-	 * Returns the comment of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the comment of this {@link EstModel}
-	 */
-	public String getComment() {
-		return comment;
-	}
-
-	/**
-	 * Returns the DBUUID of this {@link EstModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the DBUUID of this {@link EstModel}
-	 */
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	/**
-	 * Sets the id of this {@link EstModel}.
-	 * 
-	 * @param id
-	 *            the id to be set
-	 */
-	public void setId(final Integer id) {
-		this.id = id;
-	}
-
-	/**
-	 * Sets the name of this {@link EstModel}.
-	 * 
-	 * @param name
-	 *            the name to be set
-	 */
-	public void setName(final String name) {
-		this.name = Strings.emptyToNull(name);
-	}
-
-	/**
-	 * Sets the SSE of this {@link EstModel}.
-	 * 
-	 * @param sse
-	 *            the SSE to be set
-	 */
-	public void setSse(final Double sse) {
-		this.sse = sse;
-	}
-
-	/**
-	 * Sets the RMS of this {@link EstModel}.
-	 * 
-	 * @param rms
-	 *            the RMS to be set
-	 */
-	public void setRms(final Double rms) {
-		this.rms = rms;
-	}
-
-	/**
-	 * Sets the R2 of this {@link EstModel}.
-	 * 
-	 * @param r2
-	 *            the R2 to be set
-	 */
-	public void setR2(final Double r2) {
-		this.r2 = r2;
-	}
-
-	/**
-	 * Sets the AIC of this {@link EstModel}.
-	 * 
-	 * @param aic
-	 *            the AIC to be set
-	 */
-	public void setAIC(final Double aic) {
-		this.aic = aic;
-	}
-
-	/**
-	 * Sets the BIC of this {@link EstModel}.
-	 * 
-	 * @param bic
-	 *            the BIC to be set
-	 */
-	public void setBIC(final Double bic) {
-		this.bic = bic;
-	}
-
-	/**
-	 * Sets the degrees of freedom of this {@link EstModel}.
-	 * 
-	 * @param dof
-	 *            the degrees of freedom to be set
-	 */
-	public void setDof(final Integer dof) {
-		this.dof = dof;
-	}
-
-	/**
-	 * Sets the quality score of this {@link EstModel}.
-	 * 
-	 * @param qualityScore
-	 *            the quality score to be set
-	 */
-	public void setQualityScore(final Integer qualityScore) {
-		this.qualityScore = qualityScore;
-	}
-
-	/**
-	 * Sets the checked status of this {@link EstModel}.
-	 * 
-	 * @param checked
-	 *            the checked status to be set
-	 */
-	public void setChecked(final Boolean checked) {
-		this.checked = checked;
-	}
-
-	/**
-	 * Sets the comment of this {@link EstModel}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param comment
-	 *            the comment to be set
-	 */
-	public void setComment(final String comment) {
-		this.comment = Strings.emptyToNull(comment);
-	}
-
-	/**
-	 * Sets the DBUUID of this {@link EstModel}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param dbuuid
-	 *            the DBUUID to be set
-	 */
-	public void setDbuuid(final String dbuuid) {
-		this.dbuuid = Strings.emptyToNull(dbuuid);
-	}
+	public Integer id;
+	public String name;
+	public Double sse;
+	public Double rms;
+	public Double r2;
+	public Double aic;
+	public Double bic;
+	public Integer dof;
+	public Integer qualityScore;
+	public Boolean checked;
+	public String comment;
+	public String dbuuid;
 
 	/**
 	 * Saves estimated model properties into a {@link NodeSettingsWO} with
@@ -387,18 +130,18 @@ public class EstModel implements ViewValue {
 	/** Creates an {@link EstModel} from an {@link EstModelXml}. */
 	public static EstModel toEstModel(EstModelXml estModelXml) {
 		EstModel estModel = new EstModel();
-		estModel.setId(estModelXml.id);
-		estModel.setName(estModelXml.name);
-		estModel.setSse(estModelXml.sse);
-		estModel.setRms(estModelXml.rms);
-		estModel.setR2(estModelXml.r2);
-		estModel.setAIC(estModelXml.aic);
-		estModel.setBIC(estModelXml.bic);
-		estModel.setDof(estModelXml.dof);
-		estModel.setQualityScore(estModelXml.qualityScore);
-		estModel.setChecked(estModelXml.checked);
-		estModel.setComment(estModelXml.comment);
-		estModel.setDbuuid(estModelXml.dbuuid);
+		estModel.id = estModelXml.id;
+		estModel.name = estModelXml.name;
+		estModel.sse = estModelXml.sse;
+		estModel.rms = estModelXml.rms;
+		estModel.r2 = estModelXml.r2;
+		estModel.aic = estModelXml.aic;
+		estModel.bic = estModelXml.bic;
+		estModel.dof = estModelXml.dof;
+		estModel.qualityScore = estModelXml.qualityScore;
+		estModel.checked = estModelXml.checked;
+		estModel.comment = estModelXml.comment;
+		estModel.dbuuid = estModelXml.dbuuid;
 
 		return estModel;
 	}

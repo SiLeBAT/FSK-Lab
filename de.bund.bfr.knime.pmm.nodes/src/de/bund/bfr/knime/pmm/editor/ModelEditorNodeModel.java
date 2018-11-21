@@ -337,18 +337,18 @@ public final class ModelEditorNodeModel
 
 		if (estModelXml != null) {
 			EstModel estModel = new EstModel();
-			estModel.setId(estModelXml.id);
-			estModel.setName(estModelXml.name);
-			estModel.setSse(estModelXml.sse);
-			estModel.setRms(estModelXml.rms);
-			estModel.setR2(estModelXml.r2);
-			estModel.setAIC(estModelXml.aic);
-			estModel.setBIC(estModelXml.bic);
-			estModel.setDof(estModelXml.dof);
-			estModel.setQualityScore(estModelXml.qualityScore);
-			estModel.setChecked(estModelXml.checked);
-			estModel.setComment(estModelXml.comment);
-			estModel.setDbuuid(estModelXml.dbuuid);
+			estModel.id = estModelXml.id;
+			estModel.name = estModelXml.name;
+			estModel.sse = estModelXml.sse;
+			estModel.rms = estModelXml.rms;
+			estModel.r2 = estModelXml.r2;
+			estModel.aic = estModelXml.aic;
+			estModel.bic = estModelXml.bic;
+			estModel.dof = estModelXml.dof;
+			estModel.qualityScore = estModelXml.qualityScore;
+			estModel.checked = estModelXml.checked;
+			estModel.comment = estModelXml.comment;
+			estModel.dbuuid = estModelXml.dbuuid;
 			outTuple.setEstModel(estModel);
 		}
 
@@ -359,13 +359,13 @@ public final class ModelEditorNodeModel
 
 		if (depXml != null) {
 			Dep dep = new Dep();
-			dep.setName(depXml.name);
-			dep.setOrigname(depXml.origName);
-			dep.setMin(depXml.min);
-			dep.setMax(depXml.max);
-			dep.setCategory(depXml.category);
-			dep.setUnit(depXml.unit);
-			dep.setDescription(depXml.description);
+			dep.name = depXml.name;
+			dep.origname = depXml.origName;
+			dep.min = depXml.min;
+			dep.max = depXml.max;
+			dep.category = depXml.category;
+			dep.unit = depXml.unit;
+			dep.description = depXml.description;
 			outTuple.setDep(dep);
 		}
 
@@ -613,18 +613,17 @@ public final class ModelEditorNodeModel
 		outTuple.setValue(Model1Schema.ATT_MODELCATALOG, catalogModelDoc);
 
 		EstModel estModel = m1DataTuple.getEstModel();
-		EstModelXml estModelXml = new EstModelXml(estModel.getId(), estModel.getName(), estModel.getSse(),
-				estModel.getRms(), estModel.getR2(), estModel.getAIC(), estModel.getBIC(), estModel.getDof(), true,
-				estModel.getQualityScore(), estModel.getDbuuid());
-		estModelXml.comment = estModel.getComment();
+		EstModelXml estModelXml = new EstModelXml(estModel.id, estModel.name, estModel.sse,
+				estModel.rms, estModel.r2, estModel.aic, estModel.bic, estModel.dof, true,
+				estModel.qualityScore, estModel.dbuuid);
+		estModelXml.comment = estModel.comment;
 		PmmXmlDoc estModelDoc = new PmmXmlDoc(estModelXml);
 		outTuple.setValue(Model1Schema.ATT_ESTMODEL, estModelDoc);
 
 		Dep dep = m1DataTuple.getDep();
-		DepXml depXml = new DepXml(dep.getName(), dep.getOrigname(), dep.getCategory(), dep.getUnit(),
-				dep.getDescription());
-		depXml.min = dep.getMin();
-		depXml.max = dep.getMax();
+		DepXml depXml = new DepXml(dep.name, dep.origname, dep.category, dep.unit, dep.description);
+		depXml.min = dep.min;
+		depXml.max = dep.max;
 		outTuple.setValue(Model1Schema.ATT_DEPENDENT, new PmmXmlDoc(depXml));
 
 		PmmXmlDoc paramDoc = new PmmXmlDoc();

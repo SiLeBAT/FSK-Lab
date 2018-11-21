@@ -25,128 +25,37 @@ public class EstModelTest {
 	static String dbuuid = "6df109d0-f6b1-409d-a286-0687b1aca001";
 
 	@Test
-	public void testId() {
+	public void testConstructor() {
 		EstModel estModel = new EstModel();
-		assertNull(estModel.getId());
-
-		estModel.setId(id);
-		assertEquals(id, estModel.getId().intValue());
-	}
-
-	@Test
-	public void testName() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getName());
-
-		estModel.setName(name);
-		assertEquals(name, estModel.getName());
-	}
-
-	@Test
-	public void testSse() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getSse());
-
-		estModel.setSse(sse);
-		assertEquals(sse, estModel.getSse(), 0.0);
-	}
-
-	@Test
-	public void testRms() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getRms());
-
-		estModel.setRms(rms);
-		assertEquals(rms, estModel.getRms(), 0.0);
-	}
-
-	@Test
-	public void testR2() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getR2());
-
-		estModel.setR2(r2);
-		assertEquals(r2, estModel.getR2(), 0.0);
-	}
-
-	@Test
-	public void testAic() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getAIC());
-
-		estModel.setAIC(aic);
-		assertEquals(aic, estModel.getAIC(), 0.0);
-	}
-
-	@Test
-	public void testBic() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getBIC());
-
-		estModel.setBIC(bic);
-		assertEquals(bic, estModel.getBIC(), 0.0);
-	}
-
-	@Test
-	public void testDof() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getDof());
-
-		estModel.setDof(dof);
-		assertEquals(dof, estModel.getDof().intValue());
-	}
-
-	@Test
-	public void testQualityScore() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getQualityScore());
-
-		estModel.setQualityScore(qualityScore);
-		assertEquals(qualityScore, estModel.getQualityScore().intValue());
-	}
-
-	@Test
-	public void testChecked() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getChecked());
-		
-		estModel.setChecked(checked);
-		assertEquals(checked, estModel.getChecked());
-	}
-
-	@Test
-	public void testComment() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getComment());
-		
-		estModel.setComment(comment);
-		assertEquals(comment, estModel.getComment());
-	}
-
-	@Test
-	public void testDbuuid() {
-		EstModel estModel = new EstModel();
-		assertNull(estModel.getDbuuid());
-		
-		estModel.setDbuuid(dbuuid);
-		assertEquals(dbuuid, estModel.getDbuuid());
+		assertNull(estModel.id);
+		assertNull(estModel.name);
+		assertNull(estModel.sse);
+		assertNull(estModel.rms);
+		assertNull(estModel.r2);
+		assertNull(estModel.aic);
+		assertNull(estModel.bic);
+		assertNull(estModel.dof);
+		assertNull(estModel.qualityScore);
+		assertNull(estModel.checked);
+		assertNull(estModel.comment);
+		assertNull(estModel.dbuuid);
 	}
 	
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
 		EstModel estModel = new EstModel();
-		estModel.setId(id);
-		estModel.setName(name);
-		estModel.setSse(sse);
-		estModel.setRms(rms);
-		estModel.setR2(r2);
-		estModel.setAIC(aic);
-		estModel.setBIC(bic);
-		estModel.setDof(dof);
-		estModel.setQualityScore(qualityScore);
-		estModel.setChecked(checked);
-		estModel.setComment(comment);
-		estModel.setDbuuid(dbuuid);
+		estModel.id = id;
+		estModel.name = name;
+		estModel.sse = sse;
+		estModel.rms = rms;
+		estModel.r2 = r2;
+		estModel.aic = aic;
+		estModel.bic = bic;
+		estModel.dof = dof;
+		estModel.qualityScore = qualityScore;
+		estModel.checked = checked;
+		estModel.comment = comment;
+		estModel.dbuuid = dbuuid;
 		
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		estModel.saveToNodeSettings(settings);
@@ -184,18 +93,18 @@ public class EstModelTest {
 		EstModel estModel = new EstModel();
 		estModel.loadFromNodeSettings(settings);
 		
-		assertEquals(id, estModel.getId().intValue());
-		assertEquals(name, estModel.getName());
-		assertEquals(sse, estModel.getSse(), 0.0);
-		assertEquals(rms, estModel.getRms(), 0.0);
-		assertEquals(r2, estModel.getR2(), 0.0);
-		assertEquals(aic, estModel.getAIC(), 0.0);
-		assertEquals(bic, estModel.getBIC(), 0.0);
-		assertEquals(dof, estModel.getDof().intValue());
-		assertEquals(qualityScore, estModel.getQualityScore().intValue());
-		assertEquals(checked, estModel.getChecked());
-		assertEquals(comment, estModel.getComment());
-		assertEquals(dbuuid, estModel.getDbuuid());
+		assertEquals(id, estModel.id.intValue());
+		assertEquals(name, estModel.name);
+		assertEquals(sse, estModel.sse, 0.0);
+		assertEquals(rms, estModel.rms, 0.0);
+		assertEquals(r2, estModel.r2, 0.0);
+		assertEquals(aic, estModel.aic, 0.0);
+		assertEquals(bic, estModel.bic, 0.0);
+		assertEquals(dof, estModel.dof.intValue());
+		assertEquals(qualityScore, estModel.qualityScore.intValue());
+		assertEquals(checked, estModel.checked);
+		assertEquals(comment, estModel.comment);
+		assertEquals(dbuuid, estModel.dbuuid);
 	}
 	
 	@Test
@@ -204,35 +113,35 @@ public class EstModelTest {
 		estModelXml.comment = comment;
 		
 		EstModel estModel = EstModel.toEstModel(estModelXml);
-		assertEquals(id, estModel.getId().intValue());
-		assertEquals(name, estModel.getName());
-		assertEquals(sse, estModel.getSse(), 0.0);
-		assertEquals(rms, estModel.getRms(), 0.0);
-		assertEquals(r2, estModel.getR2(), 0.0);
-		assertEquals(aic, estModel.getAIC(), 0.0);
-		assertEquals(bic, estModel.getBIC(), 0.0);
-		assertEquals(dof, estModel.getDof().intValue());
-		assertEquals(qualityScore, estModel.getQualityScore().intValue());
-		assertEquals(checked, estModel.getChecked());
-		assertEquals(comment, estModel.getComment());
-		assertEquals(dbuuid, estModel.getDbuuid());
+		assertEquals(id, estModel.id.intValue());
+		assertEquals(name, estModel.name);
+		assertEquals(sse, estModel.sse, 0.0);
+		assertEquals(rms, estModel.rms, 0.0);
+		assertEquals(r2, estModel.r2, 0.0);
+		assertEquals(aic, estModel.aic, 0.0);
+		assertEquals(bic, estModel.bic, 0.0);
+		assertEquals(dof, estModel.dof.intValue());
+		assertEquals(qualityScore, estModel.qualityScore.intValue());
+		assertEquals(checked, estModel.checked);
+		assertEquals(comment, estModel.comment);
+		assertEquals(dbuuid, estModel.dbuuid);
 	}
 	
 	@Test
 	public void testToEstModelXml() {
 		EstModel estModel = new EstModel();
-		estModel.setId(id);
-		estModel.setName(name);
-		estModel.setSse(sse);
-		estModel.setRms(rms);
-		estModel.setR2(r2);
-		estModel.setAIC(aic);
-		estModel.setBIC(bic);
-		estModel.setDof(dof);
-		estModel.setQualityScore(qualityScore);
-		estModel.setChecked(checked);
-		estModel.setComment(comment);
-		estModel.setDbuuid(dbuuid);
+		estModel.id = id;
+		estModel.name = name;
+		estModel.sse = sse;
+		estModel.rms = rms;
+		estModel.r2 = r2;
+		estModel.aic = aic;
+		estModel.bic = bic;
+		estModel.dof = dof;
+		estModel.qualityScore = qualityScore;
+		estModel.checked = checked;
+		estModel.comment = comment;
+		estModel.dbuuid = dbuuid;
 		EstModelXml estModelXml = estModel.toEstModelXml();
 		
 		assertEquals(id, estModelXml.id.intValue());
