@@ -241,11 +241,11 @@ public final class ModelPlotterNodeModel
 			for (UnitsFromDB dbUnit : DBUnits.getDBUnits().values()) {
 				Unit newUnit = new Unit();
 				// only copy attributes that are used
-				newUnit.setDisplayInGuiAs(dbUnit.getDisplay_in_GUI_as());
-				newUnit.setConversionFunctionFactor(dbUnit.getConversion_function_factor());
-				newUnit.setInverseConversionFunctionFactor(dbUnit.getInverse_conversion_function_factor());
-				newUnit.setName(dbUnit.getName());
-				newUnit.setUnit(dbUnit.getUnit());
+				newUnit.display_in_GUI_as = dbUnit.getDisplay_in_GUI_as();
+				newUnit.conversion_function_factor = dbUnit.getConversion_function_factor();
+				newUnit.inverse_conversion_function_factor = dbUnit.getInverse_conversion_function_factor();
+				newUnit.name = dbUnit.getName();
+				newUnit.unit =dbUnit.getUnit();
 
 				tempUnitList.add(newUnit);
 			}

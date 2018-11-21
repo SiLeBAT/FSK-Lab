@@ -24,138 +24,39 @@ public class UnitTest {
 	static String priorityForDisplayInGui = "false";
 
 	@Test
-	public void testId() {
+	public void testConstructor() {
 		Unit unit = new Unit();
-		assertNull(unit.getId());
-
-		unit.setId(id);
-		assertEquals(id, unit.getId().intValue());
-	}
-
-	@Test
-	public void testUnit() {
-		Unit unit = new Unit();
-		assertNull(unit.getUnit());
-
-		unit.setUnit(unitString);
-		assertEquals(unitString, unit.getUnit());
-	}
-
-	@Test
-	public void testDescription() {
-		Unit unit = new Unit();
-		assertNull(unit.getDescription());
-
-		unit.setDescription(description);
-		assertEquals(description, unit.getDescription());
-	}
-
-	@Test
-	public void testName() {
-		Unit unit = new Unit();
-		assertNull(unit.getName());
-
-		unit.setName(name);
-		assertEquals(name, unit.getName());
-	}
-
-	@Test
-	public void testKindOfProperty() {
-		Unit unit = new Unit();
-		assertNull(unit.getKindOfPropertyQuantity());
-
-		unit.setKindOfPropertyQuantity(kindOfPropertyQuantity);
-		assertEquals(kindOfPropertyQuantity, unit.getKindOfPropertyQuantity());
-	}
-
-	@Test
-	public void testNotationCaseSensitive() {
-		Unit unit = new Unit();
-		assertNull(unit.getNotationCaseSensitive());
-
-		unit.setNotationCaseSensitive(notationCaseSensitive);
-		assertEquals(notationCaseSensitive, unit.getNotationCaseSensitive());
-	}
-
-	@Test
-	public void testConvertTo() {
-		Unit unit = new Unit();
-		assertNull(unit.getConvertTo());
-
-		unit.setConvertTo(convertTo);
-		assertEquals(convertTo, unit.getConvertTo());
-	}
-
-	@Test
-	public void testConversionFunctionFactor() {
-		Unit unit = new Unit();
-		assertNull(unit.getConversionFunctionFactor());
-
-		unit.setConversionFunctionFactor(conversionFunctionFactor);
-		assertEquals(conversionFunctionFactor, unit.getConversionFunctionFactor());
-	}
-
-	@Test
-	public void testInverseConversionFunction() {
-		Unit unit = new Unit();
-		assertNull(unit.getInverseConversionFunctionFactor());
-
-		unit.setInverseConversionFunctionFactor(inversionConversionFunctionFactor);
-		assertEquals(inversionConversionFunctionFactor, unit.getInverseConversionFunctionFactor());
-	}
-
-	@Test
-	public void testObjectType() {
-		Unit unit = new Unit();
-		assertNull(unit.getObjectType());
-
-		unit.setObjectType(objectType);
-		assertEquals(objectType, unit.getObjectType());
-	}
-
-	@Test
-	public void testDisplayInGuiAs() {
-		Unit unit = new Unit();
-		assertNull(unit.getDisplayInGuiAs());
-
-		unit.setDisplayInGuiAs(displayInGuiAs);
-		assertEquals(displayInGuiAs, unit.getDisplayInGuiAs());
-	}
-
-	@Test
-	public void testMahthMlString() {
-		Unit unit = new Unit();
-		assertNull(unit.getMathMLString());
-
-		unit.setMathMLString(mathMlString);
-		assertEquals(mathMlString, unit.getMathMLString());
-	}
-
-	@Test
-	public void testPriorityForDisplayInGui() {
-		Unit unit = new Unit();
-		assertNull(unit.getPriorityForDisplayInGui());
-
-		unit.setPriorityForDisplayInGui(priorityForDisplayInGui);
-		assertEquals(priorityForDisplayInGui, unit.getPriorityForDisplayInGui());
+		assertNull(unit.id);
+		assertNull(unit.unit);
+		assertNull(unit.description);
+		assertNull(unit.name);
+		assertNull(unit.kind_of_property_quantity);
+		assertNull(unit.notation_case_sensitive);
+		assertNull(unit.convert_to);
+		assertNull(unit.conversion_function_factor);
+		assertNull(unit.inverse_conversion_function_factor);
+		assertNull(unit.object_type);
+		assertNull(unit.display_in_GUI_as);
+		assertNull(unit.mathML_string);
+		assertNull(unit.priority_for_display_in_GUI);
 	}
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
 		Unit unit = new Unit();
-		unit.setId(id);
-		unit.setUnit(unitString);
-		unit.setDescription(description);
-		unit.setName(name);
-		unit.setKindOfPropertyQuantity(kindOfPropertyQuantity);
-		unit.setNotationCaseSensitive(notationCaseSensitive);
-		unit.setConvertTo(convertTo);
-		unit.setConversionFunctionFactor(conversionFunctionFactor);
-		unit.setInverseConversionFunctionFactor(inversionConversionFunctionFactor);
-		unit.setObjectType(objectType);
-		unit.setDisplayInGuiAs(displayInGuiAs);
-		unit.setMathMLString(mathMlString);
-		unit.setPriorityForDisplayInGui(priorityForDisplayInGui);
+		unit.id = id;
+		unit.unit = unitString;
+		unit.description = description;
+		unit.name = name;
+		unit.kind_of_property_quantity = kindOfPropertyQuantity;
+		unit.notation_case_sensitive = notationCaseSensitive;
+		unit.convert_to = convertTo;
+		unit.conversion_function_factor = conversionFunctionFactor;
+		unit.inverse_conversion_function_factor = inversionConversionFunctionFactor;
+		unit.object_type = objectType;
+		unit.display_in_GUI_as = displayInGuiAs;
+		unit.mathML_string = mathMlString;
+		unit.priority_for_display_in_GUI = priorityForDisplayInGui;
 
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		unit.saveToNodeSettings(settings);
@@ -194,17 +95,17 @@ public class UnitTest {
 		Unit unit = new Unit();
 		unit.loadFromNodeSettings(settings);
 		
-		assertEquals(id, unit.getId().intValue());
-		assertEquals(name, unit.getName());
-		assertEquals(description, unit.getDescription());
-		assertEquals(kindOfPropertyQuantity, unit.getKindOfPropertyQuantity());
-		assertEquals(notationCaseSensitive, unit.getNotationCaseSensitive());
-		assertEquals(convertTo, unit.getConvertTo());
-		assertEquals(conversionFunctionFactor, unit.getConversionFunctionFactor());
-		assertEquals(inversionConversionFunctionFactor, unit.getInverseConversionFunctionFactor());
-		assertEquals(objectType, unit.getObjectType());
-		assertEquals(displayInGuiAs, unit.getDisplayInGuiAs());
-		assertEquals(mathMlString, unit.getMathMLString());
-		assertEquals(priorityForDisplayInGui, unit.getPriorityForDisplayInGui());
+		assertEquals(id, unit.id.intValue());
+		assertEquals(name, unit.name);
+		assertEquals(description, unit.description);
+		assertEquals(kindOfPropertyQuantity, unit.kind_of_property_quantity);
+		assertEquals(notationCaseSensitive, unit.notation_case_sensitive);
+		assertEquals(convertTo, unit.convert_to);
+		assertEquals(conversionFunctionFactor, unit.conversion_function_factor);
+		assertEquals(inversionConversionFunctionFactor, unit.inverse_conversion_function_factor);
+		assertEquals(objectType, unit.object_type);
+		assertEquals(displayInGuiAs, unit.display_in_GUI_as);
+		assertEquals(mathMlString, unit.mathML_string);
+		assertEquals(priorityForDisplayInGui, unit.priority_for_display_in_GUI);
 	}
 }
