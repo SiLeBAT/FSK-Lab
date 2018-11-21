@@ -35,165 +35,47 @@ public class ParamTest {
 		correlationValues = new double[] { 9.845714271085363E-7, -6.137961639952814E-5, 7.843710581862156E-5,
 				3.2387019240707804E-4 };
 	}
-
+	
 	@Test
-	public void testName() {
+	public void testConstructor() {
 		Param param = new Param();
-		assertNull(param.getName());
-
-		param.setName(name);
-		assertEquals(name, param.getName());
-	}
-
-	@Test
-	public void testOrigname() {
-		Param param = new Param();
-		assertNull(param.getOrigName());
-
-		param.setOrigName(origname);
-		assertEquals(origname, param.getOrigName());
-	}
-
-	@Test
-	public void testIsStart() {
-		Param param = new Param();
-		assertNull(param.isStart());
-
-		param.setIsStart(isStart);
-		assertEquals(isStart, param.isStart());
-	}
-
-	@Test
-	public void testValue() {
-		Param param = new Param();
-		assertNull(param.getValue());
-
-		param.setValue(value);
-		assertEquals(value, param.getValue(), .0);
-	}
-
-	@Test
-	public void testError() {
-		Param param = new Param();
-		assertNull(param.getError());
-
-		param.setError(error);
-		assertEquals(error, param.getError(), .0);
-	}
-
-	@Test
-	public void testMin() {
-		Param param = new Param();
-		assertNull(param.getMin());
-
-		param.setMin(min);
-		assertEquals(min, param.getMin(), .0);
-	}
-
-	@Test
-	public void testMax() {
-		Param param = new Param();
-		assertNull(param.getMax());
-
-		param.setMax(max);
-		assertEquals(max, param.getMax(), .0);
-	}
-
-	@Test
-	public void testP() {
-		Param param = new Param();
-		assertNull(param.getP());
-
-		param.setP(p);
-		assertEquals(p, param.getP(), .0);
-	}
-
-	@Test
-	public void testT() {
-		Param param = new Param();
-		assertNull(param.getT());
-
-		param.setT(t);
-		assertEquals(t, param.getT(), .0);
-	}
-
-	@Test
-	public void testMinGuess() {
-		Param param = new Param();
-		assertNull(param.getMinGuess());
-
-		param.setMinGuess(minGuess);
-		assertEquals(minGuess, param.getMinGuess(), .0);
-	}
-
-	@Test
-	public void testMaxGuess() {
-		Param param = new Param();
-		assertNull(param.getMaxGuess());
-
-		param.setMaxGuess(maxGuess);
-		assertEquals(maxGuess, param.getMaxGuess(), .0);
-	}
-
-	@Test
-	public void testCategory() {
-		Param param = new Param();
-		assertNull(param.getCategory());
-
-		param.setCategory(category);
-		assertEquals(category, param.getCategory());
-	}
-
-	@Test
-	public void testUnit() {
-		Param param = new Param();
-		assertNull(param.getUnit());
-
-		param.setUnit(unit);
-		assertEquals(unit, param.getUnit());
-	}
-
-	@Test
-	public void testDescription() {
-		Param param = new Param();
-		assertNull(param.getDescription());
-
-		param.setDescription(description);
-		assertEquals(description, param.getDescription());
-	}
-
-	@Test
-	public void testCorrelations() {
-		Param param = new Param();
-		assertNull(param.getCorrelationNames());
-		assertNull(param.getCorrelationValues());
-
-		param.setCorrelationNames(correlationNames);
-		param.setCorrelationValues(correlationValues);
-
-		assertArrayEquals(correlationNames, param.getCorrelationNames());
-		assertArrayEquals(correlationValues, param.getCorrelationValues(), 0.0);
+		assertNull(param.name);
+		assertNull(param.origName);
+		assertNull(param.isStart);
+		assertNull(param.value);
+		assertNull(param.error);
+		assertNull(param.min);
+		assertNull(param.max);
+		assertNull(param.p);
+		assertNull(param.t);
+		assertNull(param.minGuess);
+		assertNull(param.maxGuess);
+		assertNull(param.category);
+		assertNull(param.unit);
+		assertNull(param.description);
+		assertNull(param.correlationNames);
+		assertNull(param.correlationValues);
 	}
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
 		Param param = new Param();
-		param.setName(name);
-		param.setOrigName(origname);
-		param.setIsStart(isStart);
-		param.setValue(value);
-		param.setError(error);
-		param.setMin(min);
-		param.setMax(max);
-		param.setP(p);
-		param.setT(t);
-		param.setMinGuess(minGuess);
-		param.setMaxGuess(maxGuess);
-		param.setCategory(category);
-		param.setUnit(unit);
-		param.setDescription(description);
-		param.setCorrelationNames(correlationNames);
-		param.setCorrelationValues(correlationValues);
+		param.name = name;
+		param.origName = origname;
+		param.isStart = isStart;
+		param.value = value;
+		param.error = error;
+		param.min = min;
+		param.max = max;
+		param.p = p;
+		param.t = t;
+		param.minGuess = minGuess;
+		param.maxGuess = maxGuess;
+		param.category = category;
+		param.unit = unit;
+		param.description = description;
+		param.correlationNames = correlationNames;
+		param.correlationValues = correlationValues;
 		
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		param.saveToNodeSettings(settings);
@@ -236,19 +118,19 @@ public class ParamTest {
 		Param param = new Param();
 		param.loadFromNodeSettings(settings);
 		
-		assertEquals(name, param.getName());
-		assertEquals(origname, param.getOrigName());
-		assertEquals(isStart, param.isStart());
-		assertEquals(value, param.getValue(), 0.0);
-		assertEquals(error, param.getError(), 0.0);
-		assertEquals(p, param.getP(), 0.0);
-		assertEquals(t, param.getT(), 0.0);
-		assertEquals(minGuess, param.getMinGuess(), 0.0);
-		assertEquals(maxGuess, param.getMaxGuess(), 0.0);
-		assertEquals(category, param.getCategory());
-		assertEquals(description, param.getDescription());
-		assertArrayEquals(correlationNames, param.getCorrelationNames());
-		assertArrayEquals(correlationValues, param.getCorrelationValues(), 0.0);
+		assertEquals(name, param.name);
+		assertEquals(origname, param.origName);
+		assertEquals(isStart, param.isStart);
+		assertEquals(value, param.value, 0.0);
+		assertEquals(error, param.error, 0.0);
+		assertEquals(p, param.p, 0.0);
+		assertEquals(t, param.t, 0.0);
+		assertEquals(minGuess, param.minGuess, 0.0);
+		assertEquals(maxGuess, param.maxGuess, 0.0);
+		assertEquals(category, param.category);
+		assertEquals(description, param.description);
+		assertArrayEquals(correlationNames, param.correlationNames);
+		assertArrayEquals(correlationValues, param.correlationValues, 0.0);
 	}
 	
 	@Test
@@ -262,40 +144,40 @@ public class ParamTest {
 		ParamXml paramXml = new ParamXml(name, origname, isStart, value, error, min, max, p, t, minGuess, maxGuess, category, unit, description, correlations);
 		Param param = Param.toParam(paramXml);
 
-		assertEquals(name, param.getName());
-		assertEquals(origname, param.getOrigName());
-		assertEquals(isStart, param.isStart());
-		assertEquals(value, param.getValue(), 0.0);
-		assertEquals(error, param.getError(), 0.0);
-		assertEquals(p, param.getP(), 0.0);
-		assertEquals(t, param.getT(), 0.0);
-		assertEquals(minGuess, param.getMinGuess(), 0.0);
-		assertEquals(maxGuess, param.getMaxGuess(), 0.0);
-		assertEquals(category, param.getCategory());
-		assertEquals(description, param.getDescription());
-		assertArrayEquals(correlationNames, param.getCorrelationNames());
-		assertArrayEquals(correlationValues, param.getCorrelationValues(), 0.0);
+		assertEquals(name, param.name);
+		assertEquals(origname, param.origName);
+		assertEquals(isStart, param.isStart);
+		assertEquals(value, param.value, 0.0);
+		assertEquals(error, param.error, 0.0);
+		assertEquals(p, param.p, 0.0);
+		assertEquals(t, param.t, 0.0);
+		assertEquals(minGuess, param.minGuess, 0.0);
+		assertEquals(maxGuess, param.maxGuess, 0.0);
+		assertEquals(category, param.category);
+		assertEquals(description, param.description);
+		assertArrayEquals(correlationNames, param.correlationNames);
+		assertArrayEquals(correlationValues, param.correlationValues, 0.0);
 	}
 	
 	@Test
 	public void testToParamXml() {
 		Param param = new Param();
-		param.setName(name);
-		param.setOrigName(origname);
-		param.setIsStart(isStart);
-		param.setValue(value);
-		param.setError(error);
-		param.setMin(min);
-		param.setMax(max);
-		param.setP(p);
-		param.setT(t);
-		param.setMinGuess(minGuess);
-		param.setMaxGuess(maxGuess);
-		param.setCategory(category);
-		param.setUnit(unit);
-		param.setDescription(description);
-		param.setCorrelationNames(correlationNames);
-		param.setCorrelationValues(correlationValues);
+		param.name = name;
+		param.origName = origname;
+		param.isStart = isStart;
+		param.value = value;
+		param.error = error;
+		param.min = min;
+		param.max = max;
+		param.p = p;
+		param.t = t;
+		param.minGuess = minGuess;
+		param.maxGuess = maxGuess;
+		param.category = category;
+		param.unit = unit;
+		param.description = description;
+		param.correlationNames = correlationNames;
+		param.correlationValues = correlationValues;
 		ParamXml paramXml = param.toParamXml();
 		
 		assertEquals(name, paramXml.name);

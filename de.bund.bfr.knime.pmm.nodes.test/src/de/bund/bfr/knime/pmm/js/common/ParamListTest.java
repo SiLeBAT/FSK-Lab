@@ -14,22 +14,22 @@ public class ParamListTest {
 	static Param param;
 	static {
 		param = new Param();	
-		param.setName(ParamTest.name);
-		param.setOrigName(ParamTest.origname);
-		param.setIsStart(ParamTest.isStart);
-		param.setValue(ParamTest.value);
-		param.setError(ParamTest.error);
-		param.setMin(ParamTest.min);
-		param.setMax(ParamTest.max);
-		param.setP(ParamTest.p);
-		param.setT(ParamTest.t);
-		param.setMinGuess(ParamTest.minGuess);
-		param.setMaxGuess(ParamTest.maxGuess);
-		param.setCategory(ParamTest.category);
-		param.setUnit(ParamTest.unit);
-		param.setDescription(ParamTest.description);
-		param.setCorrelationNames(ParamTest.correlationNames);
-		param.setCorrelationValues(ParamTest.correlationValues);
+		param.name = ParamTest.name;
+		param.origName = ParamTest.origname;
+		param.isStart = ParamTest.isStart;
+		param.value = ParamTest.value;
+		param.error = ParamTest.error;
+		param.min = ParamTest.min;
+		param.max = ParamTest.max;
+		param.p = ParamTest.p;
+		param.t = ParamTest.t;
+		param.minGuess = ParamTest.minGuess;
+		param.maxGuess = ParamTest.maxGuess;
+		param.category = ParamTest.category;
+		param.unit = ParamTest.unit;
+		param.description = ParamTest.description;
+		param.correlationNames = ParamTest.correlationNames;
+		param.correlationValues = ParamTest.correlationValues;
 	}
 
 	@Test
@@ -42,22 +42,22 @@ public class ParamListTest {
 		Param expected = param;  // expected Param
 		Param obtained = list.getParams()[0];  // obtained Param
 
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getOrigName(), obtained.getOrigName());
-		assertEquals(expected.isStart(), obtained.isStart());
-		assertEquals(expected.getValue(), obtained.getValue());
-		assertEquals(expected.getError(), obtained.getError());
-		assertEquals(expected.getMin(), obtained.getMin());
-		assertEquals(expected.getMax(), obtained.getMax());
-		assertEquals(expected.getP(), obtained.getP());
-		assertEquals(expected.getT(), obtained.getT());
-		assertEquals(expected.getMinGuess(), obtained.getMinGuess());
-		assertEquals(expected.getMaxGuess(), obtained.getMaxGuess());
-		assertEquals(expected.getCategory(), obtained.getCategory());
-		assertEquals(expected.getUnit(), obtained.getUnit());
-		assertEquals(expected.getDescription(), obtained.getDescription());
-		assertArrayEquals(expected.getCorrelationNames(), obtained.getCorrelationNames());
-		assertArrayEquals(expected.getCorrelationValues(), obtained.getCorrelationValues(), 0.0);
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.origName, obtained.origName);
+		assertEquals(expected.isStart, obtained.isStart);
+		assertEquals(expected.value, obtained.value);
+		assertEquals(expected.error, obtained.error);
+		assertEquals(expected.min, obtained.min);
+		assertEquals(expected.max, obtained.max);
+		assertEquals(expected.p, obtained.p);
+		assertEquals(expected.t, obtained.t);
+		assertEquals(expected.minGuess, obtained.minGuess);
+		assertEquals(expected.maxGuess, obtained.maxGuess);
+		assertEquals(expected.category, obtained.category);
+		assertEquals(expected.unit, obtained.unit);
+		assertEquals(expected.description, obtained.description);
+		assertArrayEquals(expected.correlationNames, obtained.correlationNames);
+		assertArrayEquals(expected.correlationValues, obtained.correlationValues, 0.0);
 	}
 
 	@Test
@@ -74,22 +74,22 @@ public class ParamListTest {
 		Param obtained = new Param();  // obtained Param
 		obtained.loadFromNodeSettings(settings.getNodeSettings("params0"));
 
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getOrigName(), obtained.getOrigName());
-		assertEquals(expected.isStart(), obtained.isStart());
-		assertEquals(expected.getValue(), obtained.getValue());
-		assertEquals(expected.getError(), obtained.getError());
-		assertEquals(expected.getMin(), obtained.getMin());
-		assertEquals(expected.getMax(), obtained.getMax());
-		assertEquals(expected.getP(), obtained.getP());
-		assertEquals(expected.getT(), obtained.getT());
-		assertEquals(expected.getMinGuess(), obtained.getMinGuess());
-		assertEquals(expected.getMaxGuess(), obtained.getMaxGuess());
-		assertEquals(expected.getCategory(), obtained.getCategory());
-		assertEquals(expected.getUnit(), obtained.getUnit());
-		assertEquals(expected.getDescription(), obtained.getDescription());
-		assertArrayEquals(expected.getCorrelationNames(), obtained.getCorrelationNames());
-		assertArrayEquals(expected.getCorrelationValues(), obtained.getCorrelationValues(), 0.0);
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.origName, obtained.origName);
+		assertEquals(expected.isStart, obtained.isStart);
+		assertEquals(expected.value, obtained.value);
+		assertEquals(expected.error, obtained.error);
+		assertEquals(expected.min, obtained.min);
+		assertEquals(expected.max, obtained.max);
+		assertEquals(expected.p, obtained.p);
+		assertEquals(expected.t, obtained.t);
+		assertEquals(expected.minGuess, obtained.minGuess);
+		assertEquals(expected.maxGuess, obtained.maxGuess);
+		assertEquals(expected.category, obtained.category);
+		assertEquals(expected.unit, obtained.unit);
+		assertEquals(expected.description, obtained.description);
+		assertArrayEquals(expected.correlationNames, obtained.correlationNames);
+		assertArrayEquals(expected.correlationValues, obtained.correlationValues, 0.0);
 	}
 
 	@Test
@@ -104,21 +104,21 @@ public class ParamListTest {
 		Param expected = param;  // expected Param
 		Param obtained = list.getParams()[0];  // obtained Param
 
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getOrigName(), obtained.getOrigName());
-		assertEquals(expected.isStart(), obtained.isStart());
-		assertEquals(expected.getValue(), obtained.getValue());
-		assertEquals(expected.getError(), obtained.getError());
-		assertEquals(expected.getMin(), obtained.getMin());
-		assertEquals(expected.getMax(), obtained.getMax());
-		assertEquals(expected.getP(), obtained.getP());
-		assertEquals(expected.getT(), obtained.getT());
-		assertEquals(expected.getMinGuess(), obtained.getMinGuess());
-		assertEquals(expected.getMaxGuess(), obtained.getMaxGuess());
-		assertEquals(expected.getCategory(), obtained.getCategory());
-		assertEquals(expected.getUnit(), obtained.getUnit());
-		assertEquals(expected.getDescription(), obtained.getDescription());
-		assertArrayEquals(expected.getCorrelationNames(), obtained.getCorrelationNames());
-		assertArrayEquals(expected.getCorrelationValues(), obtained.getCorrelationValues(), 0.0);
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.origName, obtained.origName);
+		assertEquals(expected.isStart, obtained.isStart);
+		assertEquals(expected.value, obtained.value);
+		assertEquals(expected.error, obtained.error);
+		assertEquals(expected.min, obtained.min);
+		assertEquals(expected.max, obtained.max);
+		assertEquals(expected.p, obtained.p);
+		assertEquals(expected.t, obtained.t);
+		assertEquals(expected.minGuess, obtained.minGuess);
+		assertEquals(expected.maxGuess, obtained.maxGuess);
+		assertEquals(expected.category, obtained.category);
+		assertEquals(expected.unit, obtained.unit);
+		assertEquals(expected.description, obtained.description);
+		assertArrayEquals(expected.correlationNames, obtained.correlationNames);
+		assertArrayEquals(expected.correlationValues, obtained.correlationValues, 0.0);
 	}
 }

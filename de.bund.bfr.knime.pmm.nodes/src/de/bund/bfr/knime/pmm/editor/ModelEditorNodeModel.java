@@ -385,22 +385,22 @@ public final class ModelEditorNodeModel
 			}
 
 			Param param = new Param();
-			param.setName(paramXml.name);
-			param.setOrigName(paramXml.origName);
-			param.setIsStart(paramXml.isStartParam);
-			param.setValue(paramXml.value);
-			param.setError(paramXml.error);
-			param.setMin(paramXml.min);
-			param.setMax(paramXml.max);
-			param.setP(paramXml.P);
-			param.setT(paramXml.t);
-			param.setMinGuess(paramXml.minGuess);
-			param.setMaxGuess(paramXml.maxGuess);
-			param.setCategory(paramXml.category);
-			param.setUnit(paramXml.unit);
-			param.setDescription(paramXml.description);
-			param.setCorrelationNames(obtainedCorrelationNames);
-			param.setCorrelationValues(obtainedCorrelationValues);
+			param.name = paramXml.name;
+			param.origName = paramXml.origName;
+			param.isStart = paramXml.isStartParam;
+			param.value = paramXml.value;
+			param.error = paramXml.error;
+			param.min = paramXml.min;
+			param.max = paramXml.max;
+			param.p = paramXml.P;
+			param.t = paramXml.t;
+			param.minGuess = paramXml.minGuess;
+			param.maxGuess = paramXml.maxGuess;
+			param.category = paramXml.category;
+			param.unit = paramXml.unit;
+			param.description = paramXml.description;
+			param.correlationNames = obtainedCorrelationNames;
+			param.correlationValues = obtainedCorrelationValues;
 
 			paramArray[i] = param;
 		}
@@ -425,22 +425,22 @@ public final class ModelEditorNodeModel
 				}
 
 				Param paramSec = new Param();
-				paramSec.setName(paramSecXml.name);
-				paramSec.setOrigName(paramSecXml.origName);
-				paramSec.setIsStart(paramSecXml.isStartParam);
-				paramSec.setValue(paramSecXml.value);
-				paramSec.setError(paramSecXml.error);
-				paramSec.setMin(paramSecXml.min);
-				paramSec.setMax(paramSecXml.max);
-				paramSec.setP(paramSecXml.P);
-				paramSec.setT(paramSecXml.t);
-				paramSec.setMinGuess(paramSecXml.minGuess);
-				paramSec.setMaxGuess(paramSecXml.maxGuess);
-				paramSec.setCategory(paramSecXml.category);
-				paramSec.setUnit(paramSecXml.unit);
-				paramSec.setDescription(paramSecXml.description);
-				paramSec.setCorrelationNames(obtainedCorrelationNames);
-				paramSec.setCorrelationValues(obtainedCorrelationValues);
+				paramSec.name = paramSecXml.name;
+				paramSec.origName = paramSecXml.origName;
+				paramSec.isStart = paramSecXml.isStartParam;
+				paramSec.value = paramSecXml.value;
+				paramSec.error = paramSecXml.error;
+				paramSec.min = paramSecXml.min;
+				paramSec.max = paramSecXml.max;
+				paramSec.p = paramSecXml.P;
+				paramSec.t = paramSecXml.t;
+				paramSec.minGuess = paramSecXml.minGuess;
+				paramSec.maxGuess = paramSecXml.maxGuess;
+				paramSec.category = paramSecXml.category;
+				paramSec.unit = paramSecXml.unit;
+				paramSec.description = paramSecXml.description;
+				paramSec.correlationNames = obtainedCorrelationNames;
+				paramSec.correlationValues = obtainedCorrelationValues;
 
 				paramSecArray[i] = paramSec;
 			}
@@ -628,16 +628,16 @@ public final class ModelEditorNodeModel
 		ParamList paramList = m1DataTuple.getParams();
 		for (Param param : paramList.getParams()) {
 			HashMap<String, Double> correlations = new HashMap<>();
-			if (param.getCorrelationNames() != null && param.getCorrelationValues() != null) {
-				for (int i = 0; i < param.getCorrelationNames().length; i++) {
-					String correlationName = param.getCorrelationNames()[i];
-					Double correlationValue = param.getCorrelationValues()[i];
+			if (param.correlationNames != null && param.correlationValues != null) {
+				for (int i = 0; i < param.correlationNames.length; i++) {
+					String correlationName = param.correlationNames[i];
+					Double correlationValue = param.correlationValues[i];
 					correlations.put(correlationName, correlationValue);
 				}
 			}
-			ParamXml paramXml = new ParamXml(param.getName(), param.getOrigName(), param.isStart(), param.getValue(),
-					param.getError(), param.getMin(), param.getMax(), param.getP(), param.getT(), param.getMinGuess(),
-					param.getMaxGuess(), param.getCategory(), param.getUnit(), param.getDescription(), correlations);
+			ParamXml paramXml = new ParamXml(param.name, param.origName, param.isStart, param.value,
+					param.error, param.min, param.max, param.p, param.t, param.minGuess,
+					param.maxGuess, param.category, param.unit, param.description, correlations);
 			paramDoc.add(paramXml);
 		}
 		outTuple.setValue(Model1Schema.ATT_PARAMETER, paramDoc);
