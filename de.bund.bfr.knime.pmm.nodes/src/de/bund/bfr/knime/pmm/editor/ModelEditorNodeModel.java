@@ -455,13 +455,13 @@ public final class ModelEditorNodeModel
 			for (int i = 0; i < indepDoc.size(); i++) {
 				IndepXml indepXml = (IndepXml) indepDoc.get(i);
 				Indep indep = new Indep();
-				indep.setName(indepXml.name);
-				indep.setOrigname(indepXml.origName);
-				indep.setMin(indepXml.min);
-				indep.setMax(indepXml.max);
-				indep.setCategory(indepXml.category);
-				indep.setUnit(indepXml.unit);
-				indep.setDescription(indepXml.description);
+				indep.name = indepXml.name;
+				indep.origname = indepXml.origName;
+				indep.min = indepXml.min;
+				indep.max = indepXml.max;
+				indep.category = indepXml.category;
+				indep.unit = indepXml.unit;
+				indep.description = indepXml.description;
 				indepArray[i] = indep;
 			}
 			IndepList indepList = new IndepList();
@@ -475,13 +475,13 @@ public final class ModelEditorNodeModel
 			for (int i = 0; i < indepSecDoc.size(); i++) {
 				IndepXml indepSecXml = (IndepXml) indepSecDoc.get(i);
 				Indep indepSec = new Indep();
-				indepSec.setName(indepSecXml.name);
-				indepSec.setOrigname(indepSecXml.origName);
-				indepSec.setMin(indepSecXml.min);
-				indepSec.setMax(indepSecXml.max);
-				indepSec.setCategory(indepSecXml.category);
-				indepSec.setUnit(indepSecXml.unit);
-				indepSec.setDescription(indepSecXml.description);
+				indepSec.name = indepSecXml.name;
+				indepSec.origname = indepSecXml.origName;
+				indepSec.min = indepSecXml.min;
+				indepSec.max = indepSecXml.max;
+				indepSec.category = indepSecXml.category;
+				indepSec.unit = indepSecXml.unit;
+				indepSec.description = indepSecXml.description;
 				indepSecArray[i] = indepSec;
 			}
 			IndepList indepSecList = new IndepList();
@@ -613,9 +613,8 @@ public final class ModelEditorNodeModel
 		outTuple.setValue(Model1Schema.ATT_MODELCATALOG, catalogModelDoc);
 
 		EstModel estModel = m1DataTuple.getEstModel();
-		EstModelXml estModelXml = new EstModelXml(estModel.id, estModel.name, estModel.sse,
-				estModel.rms, estModel.r2, estModel.aic, estModel.bic, estModel.dof, true,
-				estModel.qualityScore, estModel.dbuuid);
+		EstModelXml estModelXml = new EstModelXml(estModel.id, estModel.name, estModel.sse, estModel.rms, estModel.r2,
+				estModel.aic, estModel.bic, estModel.dof, true, estModel.qualityScore, estModel.dbuuid);
 		estModelXml.comment = estModel.comment;
 		PmmXmlDoc estModelDoc = new PmmXmlDoc(estModelXml);
 		outTuple.setValue(Model1Schema.ATT_ESTMODEL, estModelDoc);
@@ -647,8 +646,8 @@ public final class ModelEditorNodeModel
 		PmmXmlDoc indepDoc = new PmmXmlDoc();
 		IndepList indepList = m1DataTuple.getIndeps();
 		for (Indep indep : indepList.getIndeps()) {
-			IndepXml indepXml = new IndepXml(indep.getName(), indep.getOrigname(), indep.getMin(), indep.getMax(),
-					indep.getCategory(), indep.getUnit(), indep.getDescription());
+			IndepXml indepXml = new IndepXml(indep.name, indep.origname, indep.min, indep.max, indep.category,
+					indep.unit, indep.description);
 			indepDoc.add(indepXml);
 		}
 		outTuple.setValue(Model1Schema.ATT_INDEPENDENT, indepDoc);

@@ -19,78 +19,27 @@ public class IndepTest {
 	static String description = "time";
 
 	@Test
-	public void testName() {
+	public void testConstructors() {
 		Indep indep = new Indep();
-		assertNull(indep.getName());
-		
-		indep.setName(name);
-		assertEquals(name, indep.getName());
-	}
-
-	@Test
-	public void testOrigname() {
-		Indep indep = new Indep();
-		assertNull(indep.getOrigname());
-		
-		indep.setOrigname(origname);
-		assertEquals(origname, indep.getOrigname());
-	}
-
-	@Test
-	public void testMin() {
-		Indep indep = new Indep();
-		assertNull(indep.getMin());
-		
-		indep.setMin(min);
-		assertEquals(min, indep.getMin(), 0.0);
-	}
-
-	@Test
-	public void testMax() {
-		Indep indep = new Indep();
-		assertNull(indep.getMax());
-		
-		indep.setMax(max);
-		assertEquals(max, indep.getMax(), 0.0);
-	}
-
-	@Test
-	public void testCategory() {
-		Indep indep = new Indep();
-		assertNull(indep.getCategory());
-		
-		indep.setCategory(category);
-		assertEquals(category, indep.getCategory());
-	}
-
-	@Test
-	public void testUnit() {
-		Indep indep = new Indep();
-		assertNull(indep.getUnit());
-		
-		indep.setUnit(unit);
-		assertEquals(unit, indep.getUnit());
-	}
-
-	@Test
-	public void testDescription() {
-		Indep indep = new Indep();
-		assertNull(indep.getDescription());
-		
-		indep.setDescription(description);
-		assertEquals(description, indep.getDescription());
+		assertNull(indep.name);
+		assertNull(indep.origname);
+		assertNull(indep.min);
+		assertNull(indep.max);
+		assertNull(indep.category);
+		assertNull(indep.unit);
+		assertNull(indep.description);
 	}
 	
 	@Test
 	public void testSaveNodeSettings() throws Exception {
 		Indep indep = new Indep();
-		indep.setName(name);
-		indep.setOrigname(origname);
-		indep.setMin(min);
-		indep.setMax(max);
-		indep.setCategory(category);
-		indep.setUnit(unit);
-		indep.setDescription(description);
+		indep.name = name;
+		indep.origname = origname;
+		indep.min = min;
+		indep.max = max;
+		indep.category = category;
+		indep.unit = unit;
+		indep.description = description;
 		
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		indep.saveToNodeSettings(settings);
@@ -118,13 +67,13 @@ public class IndepTest {
 		Indep indep = new Indep();
 		indep.loadFromNodeSettings(settings);
 		
-		assertEquals(name, indep.getName());
-		assertEquals(origname, indep.getOrigname());
-		assertEquals(min, indep.getMin(), 0.0);
-		assertEquals(max, indep.getMax(), 0.0);
-		assertEquals(category, indep.getCategory());
-		assertEquals(unit, indep.getUnit());
-		assertEquals(description, indep.getDescription());
+		assertEquals(name, indep.name);
+		assertEquals(origname, indep.origname);
+		assertEquals(min, indep.min, 0.0);
+		assertEquals(max, indep.max, 0.0);
+		assertEquals(category, indep.category);
+		assertEquals(unit, indep.unit);
+		assertEquals(description, indep.description);
 	}
 	
 	@Test
@@ -132,25 +81,25 @@ public class IndepTest {
 		IndepXml indepXml = new IndepXml(name, origname, min, max, category, unit, description);
 		Indep indep = Indep.toIndep(indepXml);
 		
-		assertEquals(name, indep.getName());
-		assertEquals(origname, indep.getOrigname());
-		assertEquals(min, indep.getMin(), 0.0);
-		assertEquals(max, indep.getMax(), 0.0);
-		assertEquals(category, indep.getCategory());
-		assertEquals(unit, indep.getUnit());
-		assertEquals(description, indep.getDescription());
+		assertEquals(name, indep.name);
+		assertEquals(origname, indep.origname);
+		assertEquals(min, indep.min, 0.0);
+		assertEquals(max, indep.max, 0.0);
+		assertEquals(category, indep.category);
+		assertEquals(unit, indep.unit);
+		assertEquals(description, indep.description);
 	}
 	
 	@Test
 	public void testToIndepXml() {
 		Indep indep = new Indep();
-		indep.setName(name);
-		indep.setOrigname(origname);
-		indep.setMin(min);
-		indep.setMax(max);
-		indep.setCategory(category);
-		indep.setUnit(unit);
-		indep.setDescription(description);
+		indep.name = name;
+		indep.origname = origname;
+		indep.min = min;
+		indep.max = max;
+		indep.category = category;
+		indep.unit = unit;
+		indep.description = description;
 		IndepXml indepXml = indep.toIndepXml();
 		
 		assertEquals(name, indepXml.name);

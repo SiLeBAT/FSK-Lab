@@ -13,13 +13,13 @@ public class IndepListTest {
 
 	static {
 		indep = new Indep();
-		indep.setName(IndepTest.name);
-		indep.setOrigname(IndepTest.origname);
-		indep.setMin(IndepTest.min);
-		indep.setMax(IndepTest.max);
-		indep.setCategory(IndepTest.category);
-		indep.setUnit(IndepTest.unit);
-		indep.setDescription(IndepTest.description);
+		indep.name = IndepTest.name;
+		indep.origname = IndepTest.origname;
+		indep.min = IndepTest.min;
+		indep.max = IndepTest.max;
+		indep.category = IndepTest.category;
+		indep.unit = IndepTest.unit;
+		indep.description = IndepTest.description;
 	}
 
 	@Test
@@ -33,13 +33,13 @@ public class IndepListTest {
 		Indep expected = indeps[0]; // expected Indep
 		Indep obtained = list.getIndeps()[0]; // obtained Indep
 
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getOrigname(), obtained.getOrigname());
-		assertEquals(expected.getMin(), obtained.getMin());
-		assertEquals(expected.getMax(), obtained.getMax());
-		assertEquals(expected.getCategory(), obtained.getCategory());
-		assertEquals(expected.getUnit(), obtained.getUnit());
-		assertEquals(expected.getDescription(), obtained.getDescription());
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.origname, obtained.origname);
+		assertEquals(expected.min, obtained.min);
+		assertEquals(expected.max, obtained.max);
+		assertEquals(expected.category, obtained.category);
+		assertEquals(expected.unit, obtained.unit);
+		assertEquals(expected.description, obtained.description);
 	}
 
 	@Test
@@ -58,13 +58,13 @@ public class IndepListTest {
 		Indep expected = indeps[0];  // expected Indep
 		Indep obtained = obtainedIndeps[0];  // obtained Indep
 
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getOrigname(), obtained.getOrigname());
-		assertEquals(expected.getMin(), obtained.getMin());
-		assertEquals(expected.getMax(), obtained.getMax());
-		assertEquals(expected.getCategory(), obtained.getCategory());
-		assertEquals(expected.getUnit(), obtained.getUnit());
-		assertEquals(expected.getDescription(), obtained.getDescription());
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.origname, obtained.origname);
+		assertEquals(expected.min, obtained.min);
+		assertEquals(expected.max, obtained.max);
+		assertEquals(expected.category, obtained.category);
+		assertEquals(expected.unit, obtained.unit);
+		assertEquals(expected.description, obtained.description);
 	}
 
 	@Test
@@ -80,12 +80,12 @@ public class IndepListTest {
 		Indep expected = indep;  // expected Indep
 		Indep obtained = list.getIndeps()[0];  // obtained Indep
 
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getOrigname(), obtained.getOrigname());
-		assertEquals(expected.getMin(), obtained.getMin());
-		assertEquals(expected.getMax(), obtained.getMax());
-		assertEquals(expected.getCategory(), obtained.getCategory());
-		assertEquals(expected.getUnit(), obtained.getUnit());
-		assertEquals(expected.getDescription(), obtained.getDescription());
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.origname, obtained.origname);
+		assertEquals(expected.min, obtained.min);
+		assertEquals(expected.max, obtained.max);
+		assertEquals(expected.category, obtained.category);
+		assertEquals(expected.unit, obtained.unit);
+		assertEquals(expected.description, obtained.description);
 	}
 }

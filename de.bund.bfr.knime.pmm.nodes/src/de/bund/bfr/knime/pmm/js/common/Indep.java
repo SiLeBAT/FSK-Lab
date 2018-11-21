@@ -24,7 +24,6 @@ import org.knime.core.node.NodeSettingsWO;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.common.base.Strings;
 
 import de.bund.bfr.knime.pmm.common.IndepXml;
 
@@ -44,170 +43,13 @@ import de.bund.bfr.knime.pmm.common.IndepXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Indep implements ViewValue {
 
-	private String name;
-	private String origname;
-	private Double min;
-	private Double max;
-	private String category;
-	private String unit;
-	private String description;
-
-	/**
-	 * Returns the name of this {@link Indep}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the name of this {@link Indep}
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Returns the original name of this {@link Indep}.
-	 * 
-	 * If not set returns null.
-	 *
-	 * @return the original name of this {@link Indep}
-	 */
-	public String getOrigname() {
-		return origname;
-	}
-
-	/**
-	 * Returns the minimum value of this {@link Indep}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the minimum value of this {@link Indep}
-	 */
-	public Double getMin() {
-		return min;
-	}
-
-	/**
-	 * Returns the maximum value of this {@link Indep}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the maximum value of this {@link Indep}
-	 */
-	public Double getMax() {
-		return max;
-	}
-
-	/**
-	 * Returns the category of this {@link Indep}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the category of this {@link Indep}
-	 */
-	public String getCategory() {
-		return category;
-	}
-
-	/**
-	 * Returns the unit of this {@link Indep}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the unit of this {@link Indep}
-	 */
-	public String getUnit() {
-		return unit;
-	}
-
-	/**
-	 * Returns the description of this {@link Indep}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the description of this {@link Indep}
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * Sets the name of this {@link Indep}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param name
-	 *            the name to be set
-	 */
-	public void setName(String name) {
-		this.name = Strings.emptyToNull(name);
-	}
-
-	/**
-	 * Sets the original name of this {@link Indep}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param origname
-	 *            the original name to be set
-	 */
-	public void setOrigname(String origname) {
-		this.origname = Strings.emptyToNull(origname);
-	}
-
-	/**
-	 * Sets the minimum value of this {@link Indep}.
-	 * 
-	 * @param min
-	 *            the minimum value to be set
-	 */
-	public void setMin(Double min) {
-		this.min = min;
-	}
-
-	/**
-	 * Sets the maximum value of this {@link Indep}.
-	 * 
-	 * @param max
-	 *            the maximum value to be set
-	 */
-	public void setMax(Double max) {
-		this.max = max;
-	}
-
-	/**
-	 * Sets the category of this {@link Indep}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param category
-	 *            the category to be set
-	 */
-	public void setCategory(String category) {
-		this.category = Strings.emptyToNull(category);
-	}
-
-	/**
-	 * Sets the unit of this {@link Indep}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param unit
-	 *            the category to be set
-	 */
-	public void setUnit(String unit) {
-		this.unit = Strings.emptyToNull(unit);
-	}
-
-	/**
-	 * Sets the description of this {@link Indep}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param description
-	 *            the description to be set
-	 */
-	public void setDescription(String description) {
-		this.description = Strings.emptyToNull(description);
-	}
+	public String name;
+	public String origname;
+	public Double min;
+	public Double max;
+	public String category;
+	public String unit;
+	public String description;
 
 	/**
 	 * Saves indep properties into a {@link NodeSettingsWO} with properties:
@@ -266,15 +108,13 @@ public class Indep implements ViewValue {
 	 */
 	public static Indep toIndep(IndepXml indepXml) {
 		Indep indep = new Indep();
-		indep.setName(indepXml.name);
-		indep.setOrigname(indepXml.origName);
-		if (indepXml.min != null)
-			indep.setMin(indepXml.min);
-		if (indepXml.max != null)
-			indep.setMax(indepXml.max);
-		indep.setCategory(indepXml.category);
-		indep.setUnit(indepXml.unit);
-		indep.setDescription(indepXml.description);
+		indep.name = indepXml.name;
+		indep.origname = indepXml.origName;
+		indep.min = indepXml.min;
+		indep.max = indepXml.max;
+		indep.category = indepXml.category;
+		indep.unit = indepXml.unit;
+		indep.description = indepXml.description;
 
 		return indep;
 	}
