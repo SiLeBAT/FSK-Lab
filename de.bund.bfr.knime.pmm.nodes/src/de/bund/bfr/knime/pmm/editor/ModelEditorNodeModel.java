@@ -239,16 +239,16 @@ public final class ModelEditorNodeModel
 				TimeSeriesXml timeSeriesXml = (TimeSeriesXml) timeSeriesDoc.get(i);
 
 				TimeSeries timeSeries = new TimeSeries();
-				timeSeries.setName(timeSeriesXml.name);
-				timeSeries.setTime(timeSeriesXml.time);
-				timeSeries.setTimeUnit(timeSeriesXml.timeUnit);
-				timeSeries.setOrigTimeUnit(timeSeriesXml.origTimeUnit);
-				timeSeries.setConcentration(timeSeriesXml.concentration);
-				timeSeries.setConcentrationUnit(timeSeriesXml.concentrationUnit);
-				timeSeries.setConcentrationUnitObjectType(timeSeriesXml.concentrationUnitObjectType);
-				timeSeries.setOrigConcentrationUnit(timeSeriesXml.origConcentrationUnit);
-				timeSeries.setConcentrationStdDev(timeSeriesXml.concentrationStdDev);
-				timeSeries.setNumberOfMeasurements(timeSeriesXml.numberOfMeasurements);
+				timeSeries.name = timeSeriesXml.name;
+				timeSeries.time = timeSeriesXml.time;
+				timeSeries.timeUnit = timeSeriesXml.timeUnit;
+				timeSeries.origTimeUnit = timeSeriesXml.origTimeUnit;
+				timeSeries.concentration = timeSeriesXml.concentration;
+				timeSeries.concentrationUnit = timeSeriesXml.concentrationUnit;
+				timeSeries.concentrationUnitObjectType = timeSeriesXml.concentrationUnitObjectType;
+				timeSeries.origConcentrationUnit = timeSeriesXml.origConcentrationUnit;
+				timeSeries.concentrationStdDev = timeSeriesXml.concentrationStdDev;
+				timeSeries.numberOfMeasurements = timeSeriesXml.numberOfMeasurements;
 				timeSeriesArray[i] = timeSeries;
 			}
 			TimeSeriesList timeSeriesList = new TimeSeriesList();
@@ -580,10 +580,10 @@ public final class ModelEditorNodeModel
 		PmmXmlDoc timeSeriesDoc = new PmmXmlDoc();
 		TimeSeriesList timeSeriesList = m1DataTuple.getTimeSeriesList();
 		for (TimeSeries timeSeries : timeSeriesList.getTimeSeries()) {
-			timeSeriesDoc.add(new TimeSeriesXml(timeSeries.getName(), timeSeries.getTime(), timeSeries.getTimeUnit(),
-					timeSeries.getOrigTimeUnit(), timeSeries.getConcentration(), timeSeries.getConcentrationUnit(),
-					timeSeries.getConcentrationUnitObjectType(), timeSeries.getOrigConcentrationUnit(),
-					timeSeries.getConcentrationStdDev(), timeSeries.getNumberOfMeasurements()));
+			timeSeriesDoc.add(new TimeSeriesXml(timeSeries.name, timeSeries.time, timeSeries.timeUnit,
+					timeSeries.origTimeUnit, timeSeries.concentration, timeSeries.concentrationUnit,
+					timeSeries.concentrationUnitObjectType, timeSeries.origConcentrationUnit,
+					timeSeries.concentrationStdDev, timeSeries.numberOfMeasurements));
 		}
 		outTuple.setValue(TimeSeriesSchema.ATT_TIMESERIES, timeSeriesDoc);
 

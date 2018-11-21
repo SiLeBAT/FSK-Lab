@@ -23,108 +23,34 @@ public class TimeSeriesTest {
 	static int numberOfMeasurements = 1;
 
 	@Test
-	public void testName() {
+	public void testConstructor() {
+		
 		TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.getName());
-
-		timeSeries.setName(name);
-		assertEquals(name, timeSeries.getName());
-	}
-
-	@Test
-	public void testTime() {
-		TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.getTime());
-
-		timeSeries.setTime(time);
-		assertEquals(time, timeSeries.getTime(), 0.0);
-	}
-
-	@Test
-	public void testTimeUnit() {
-		TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.getTimeUnit());
-
-		timeSeries.setTimeUnit(timeUnit);
-		assertEquals(timeUnit, timeSeries.getTimeUnit());
-	}
-
-	@Test
-	public void testOrigTimeUnit() {
-		TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.getOrigTimeUnit());
-
-		timeSeries.setOrigTimeUnit(origTimeUnit);
-		assertEquals(origTimeUnit, timeSeries.getOrigTimeUnit());
-	}
-
-	@Test
-	public void testConcentration() {
-		TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.getConcentration());
-
-		timeSeries.setConcentration(concentration);
-		assertEquals(concentration, timeSeries.getConcentration(), 0.0);
-	}
-
-	@Test
-	public void testConcentrationUnit() {
-		TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.getConcentrationUnit());
-
-		timeSeries.setConcentrationUnit(concentrationUnit);
-		assertEquals(concentrationUnit, timeSeries.getConcentrationUnit());
-	}
-
-	@Test
-	public void testConcentrationUnitObjectType() {
-		TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.getConcentrationUnitObjectType());
-
-		timeSeries.setConcentrationUnitObjectType(concentrationUnitObjectType);
-		assertEquals(concentrationUnitObjectType, timeSeries.getConcentrationUnitObjectType());
-	}
-
-	@Test
-	public void testOrigConcentrationUnit() {
-		TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.getOrigConcentrationUnit());
-
-		timeSeries.setOrigConcentrationUnit(origConcentrationUnit);
-		assertEquals(origConcentrationUnit, timeSeries.getOrigConcentrationUnit());
-	}
-
-	@Test
-	public void testConcentrationStdDev() {
-		TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.getConcentrationStdDev());
-
-		timeSeries.setConcentrationStdDev(concentrationStdDev);
-		assertEquals(concentrationStdDev, timeSeries.getConcentrationStdDev(), 0.0);
-	}
-
-	@Test
-	public void testNumberOfMeasurements() {
-		TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.getNumberOfMeasurements());
-
-		timeSeries.setNumberOfMeasurements(numberOfMeasurements);
-		assertEquals(numberOfMeasurements, timeSeries.getNumberOfMeasurements(), 0.0);
+		assertNull(timeSeries.name);
+		assertNull(timeSeries.time);
+		assertNull(timeSeries.timeUnit);
+		assertNull(timeSeries.origTimeUnit);
+		assertNull(timeSeries.concentration);
+		assertNull(timeSeries.concentrationUnit);
+		assertNull(timeSeries.concentrationUnitObjectType);
+		assertNull(timeSeries.origConcentrationUnit);
+		assertNull(timeSeries.concentrationStdDev);
+		assertNull(timeSeries.numberOfMeasurements);
 	}
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
 		TimeSeries timeSeries = new TimeSeries();
-		timeSeries.setName(name);
-		timeSeries.setTime(time);
-		timeSeries.setTimeUnit(timeUnit);
-		timeSeries.setOrigTimeUnit(origTimeUnit);
-		timeSeries.setConcentration(concentration);
-		timeSeries.setConcentrationUnit(concentrationUnit);
-		timeSeries.setConcentrationUnitObjectType(concentrationUnitObjectType);
-		timeSeries.setOrigConcentrationUnit(origConcentrationUnit);
-		timeSeries.setConcentrationStdDev(concentrationStdDev);
-		timeSeries.setNumberOfMeasurements(numberOfMeasurements);
+		timeSeries.name = name;
+		timeSeries.time = time;
+		timeSeries.timeUnit = timeUnit;
+		timeSeries.origTimeUnit = origTimeUnit;
+		timeSeries.concentration = concentration;
+		timeSeries.concentrationUnit = concentrationUnit;
+		timeSeries.concentrationUnitObjectType = concentrationUnitObjectType;
+		timeSeries.origConcentrationUnit = origConcentrationUnit;
+		timeSeries.concentrationStdDev = concentrationStdDev;
+		timeSeries.numberOfMeasurements = numberOfMeasurements;
 
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		timeSeries.saveToNodeSettings(settings);
@@ -159,16 +85,16 @@ public class TimeSeriesTest {
 		TimeSeries timeSeries = new TimeSeries();
 		timeSeries.loadFromNodeSettings(settings);
 
-		assertEquals(name, timeSeries.getName());
-		assertEquals(time, timeSeries.getTime(), 0.0);
-		assertEquals(timeUnit, timeSeries.getTimeUnit());
-		assertEquals(origTimeUnit, timeSeries.getOrigTimeUnit());
-		assertEquals(concentration, timeSeries.getConcentration(), 0.0);
-		assertEquals(concentrationUnit, timeSeries.getConcentrationUnit());
-		assertEquals(concentrationUnitObjectType, timeSeries.getConcentrationUnitObjectType());
-		assertEquals(origConcentrationUnit, timeSeries.getOrigConcentrationUnit());
-		assertEquals(concentrationStdDev, timeSeries.getConcentrationStdDev(), 0.0);
-		assertEquals(numberOfMeasurements, timeSeries.getNumberOfMeasurements().intValue());
+		assertEquals(name, timeSeries.name);
+		assertEquals(time, timeSeries.time, 0.0);
+		assertEquals(timeUnit, timeSeries.timeUnit);
+		assertEquals(origTimeUnit, timeSeries.origTimeUnit);
+		assertEquals(concentration, timeSeries.concentration, 0.0);
+		assertEquals(concentrationUnit, timeSeries.concentrationUnit);
+		assertEquals(concentrationUnitObjectType, timeSeries.concentrationUnitObjectType);
+		assertEquals(origConcentrationUnit, timeSeries.origConcentrationUnit);
+		assertEquals(concentrationStdDev, timeSeries.concentrationStdDev, 0.0);
+		assertEquals(numberOfMeasurements, timeSeries.numberOfMeasurements.intValue());
 	}
 
 	@Test
@@ -178,31 +104,31 @@ public class TimeSeriesTest {
 				numberOfMeasurements);
 		TimeSeries timeSeries = TimeSeries.toTimeSeries(timeSeriesXml);
 		
-		assertEquals(name, timeSeries.getName());
-		assertEquals(time, timeSeries.getTime(), 0.0);
-		assertEquals(timeUnit, timeSeries.getTimeUnit());
-		assertEquals(origTimeUnit, timeSeries.getOrigTimeUnit());
-		assertEquals(concentration, timeSeries.getConcentration(), 0.0);
-		assertEquals(concentrationUnit, timeSeries.getConcentrationUnit());
-		assertEquals(concentrationUnitObjectType, timeSeries.getConcentrationUnitObjectType());
-		assertEquals(origConcentrationUnit, timeSeries.getOrigConcentrationUnit());
-		assertEquals(concentrationStdDev, timeSeries.getConcentrationStdDev(), 0.0);
-		assertEquals(numberOfMeasurements, timeSeries.getNumberOfMeasurements().intValue());
+		assertEquals(name, timeSeries.name);
+		assertEquals(time, timeSeries.time, 0.0);
+		assertEquals(timeUnit, timeSeries.timeUnit);
+		assertEquals(origTimeUnit, timeSeries.origTimeUnit);
+		assertEquals(concentration, timeSeries.concentration, 0.0);
+		assertEquals(concentrationUnit, timeSeries.concentrationUnit);
+		assertEquals(concentrationUnitObjectType, timeSeries.concentrationUnitObjectType);
+		assertEquals(origConcentrationUnit, timeSeries.origConcentrationUnit);
+		assertEquals(concentrationStdDev, timeSeries.concentrationStdDev, 0.0);
+		assertEquals(numberOfMeasurements, timeSeries.numberOfMeasurements.intValue());
 	}
 	
 	@Test
 	public void testToTimeSeriesXml() {
 		TimeSeries timeSeries = new TimeSeries();
-		timeSeries.setName(name);
-		timeSeries.setTime(time);
-		timeSeries.setTimeUnit(timeUnit);
-		timeSeries.setOrigTimeUnit(origTimeUnit);
-		timeSeries.setConcentration(concentration);
-		timeSeries.setConcentrationUnit(concentrationUnit);
-		timeSeries.setConcentrationUnitObjectType(concentrationUnitObjectType);
-		timeSeries.setOrigConcentrationUnit(origConcentrationUnit);
-		timeSeries.setConcentrationStdDev(concentrationStdDev);
-		timeSeries.setNumberOfMeasurements(numberOfMeasurements);
+		timeSeries.name = name;
+		timeSeries.time = time;
+		timeSeries.timeUnit = timeUnit;
+		timeSeries.origTimeUnit = origTimeUnit;
+		timeSeries.concentration = concentration;
+		timeSeries.concentrationUnit = concentrationUnit;
+		timeSeries.concentrationUnitObjectType = concentrationUnitObjectType;
+		timeSeries.origConcentrationUnit = origConcentrationUnit;
+		timeSeries.concentrationStdDev = concentrationStdDev;
+		timeSeries.numberOfMeasurements = numberOfMeasurements;
 		TimeSeriesXml timeSeriesXml = timeSeries.toTimeSeriesXml();
 
 		assertEquals(name, timeSeriesXml.name);

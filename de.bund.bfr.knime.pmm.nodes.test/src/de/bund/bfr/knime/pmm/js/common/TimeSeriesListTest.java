@@ -14,15 +14,15 @@ public class TimeSeriesListTest {
 
 	static {
 		timeSeries = new TimeSeries();
-		timeSeries.setName(TimeSeriesTest.name);
-		timeSeries.setTimeUnit(TimeSeriesTest.timeUnit);
-		timeSeries.setOrigTimeUnit(TimeSeriesTest.origTimeUnit);
-		timeSeries.setConcentration(TimeSeriesTest.concentration);
-		timeSeries.setConcentrationUnit(TimeSeriesTest.concentrationUnit);
-		timeSeries.setConcentrationUnitObjectType(TimeSeriesTest.concentrationUnitObjectType);
-		timeSeries.setOrigConcentrationUnit(TimeSeriesTest.origConcentrationUnit);
-		timeSeries.setConcentrationStdDev(TimeSeriesTest.concentrationStdDev);
-		timeSeries.setNumberOfMeasurements(TimeSeriesTest.numberOfMeasurements);
+		timeSeries.name = TimeSeriesTest.name;
+		timeSeries.timeUnit = TimeSeriesTest.timeUnit;
+		timeSeries.origTimeUnit = TimeSeriesTest.origTimeUnit;
+		timeSeries.concentration = TimeSeriesTest.concentration;
+		timeSeries.concentrationUnit = TimeSeriesTest.concentrationUnit;
+		timeSeries.concentrationUnitObjectType = TimeSeriesTest.concentrationUnitObjectType;
+		timeSeries.origConcentrationUnit = TimeSeriesTest.origConcentrationUnit;
+		timeSeries.concentrationStdDev = TimeSeriesTest.concentrationStdDev;
+		timeSeries.numberOfMeasurements = TimeSeriesTest.numberOfMeasurements;
 	}
 
 	@Test
@@ -35,15 +35,15 @@ public class TimeSeriesListTest {
 		TimeSeries expected = timeSeries;  // expected TimeSeries
 		TimeSeries obtained = list.getTimeSeries()[0];  // obtained TimeSeries
 
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getTimeUnit(), obtained.getTimeUnit());
-		assertEquals(expected.getOrigTimeUnit(), obtained.getOrigTimeUnit());
-		assertEquals(expected.getConcentration(), obtained.getConcentration(), 0.0);
-		assertEquals(expected.getConcentrationUnit(), obtained.getConcentrationUnit());
-		assertEquals(expected.getConcentrationUnitObjectType(), obtained.getConcentrationUnitObjectType());
-		assertEquals(expected.getOrigConcentrationUnit(), obtained.getOrigConcentrationUnit());
-		assertEquals(expected.getConcentrationStdDev(), obtained.getConcentrationStdDev(), 0.0);
-		assertEquals(expected.getNumberOfMeasurements(), obtained.getNumberOfMeasurements());
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.timeUnit, obtained.timeUnit);
+		assertEquals(expected.origTimeUnit, obtained.origTimeUnit);
+		assertEquals(expected.concentration, obtained.concentration, 0.0);
+		assertEquals(expected.concentrationUnit, obtained.concentrationUnit);
+		assertEquals(expected.concentrationUnitObjectType, obtained.concentrationUnitObjectType);
+		assertEquals(expected.origConcentrationUnit, obtained.origConcentrationUnit);
+		assertEquals(expected.concentrationStdDev, obtained.concentrationStdDev, 0.0);
+		assertEquals(expected.numberOfMeasurements, obtained.numberOfMeasurements);
 	}
 
 	@Test
@@ -60,15 +60,15 @@ public class TimeSeriesListTest {
 		TimeSeries obtained = new TimeSeries();  // obtained TimeSeries
 		obtained.loadFromNodeSettings(settings.getNodeSettings("timeSeries0"));
 
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getTimeUnit(), obtained.getTimeUnit());
-		assertEquals(expected.getOrigTimeUnit(), obtained.getOrigTimeUnit());
-		assertEquals(expected.getConcentration(), obtained.getConcentration(), 0.0);
-		assertEquals(expected.getConcentrationUnit(), obtained.getConcentrationUnit());
-		assertEquals(expected.getConcentrationUnitObjectType(), obtained.getConcentrationUnitObjectType());
-		assertEquals(expected.getOrigConcentrationUnit(), obtained.getOrigConcentrationUnit());
-		assertEquals(expected.getConcentrationStdDev(), obtained.getConcentrationStdDev(), 0.0);
-		assertEquals(expected.getNumberOfMeasurements(), obtained.getNumberOfMeasurements());
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.timeUnit, obtained.timeUnit);
+		assertEquals(expected.origTimeUnit, obtained.origTimeUnit);
+		assertEquals(expected.concentration, obtained.concentration, 0.0);
+		assertEquals(expected.concentrationUnit, obtained.concentrationUnit);
+		assertEquals(expected.concentrationUnitObjectType, obtained.concentrationUnitObjectType);
+		assertEquals(expected.origConcentrationUnit, obtained.origConcentrationUnit);
+		assertEquals(expected.concentrationStdDev, obtained.concentrationStdDev, 0.0);
+		assertEquals(expected.numberOfMeasurements, obtained.numberOfMeasurements);
 	}
 
 	@Test
@@ -83,14 +83,14 @@ public class TimeSeriesListTest {
 		TimeSeries expected = timeSeries;  // expected TimeSeries
 		TimeSeries obtained = list.getTimeSeries()[0];  // obtained TimeSeries
 
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getTimeUnit(), obtained.getTimeUnit());
-		assertEquals(expected.getOrigTimeUnit(), obtained.getOrigTimeUnit());
-		assertEquals(expected.getConcentration(), obtained.getConcentration(), 0.0);
-		assertEquals(expected.getConcentrationUnit(), obtained.getConcentrationUnit());
-		assertEquals(expected.getConcentrationUnitObjectType(), obtained.getConcentrationUnitObjectType());
-		assertEquals(expected.getOrigConcentrationUnit(), obtained.getOrigConcentrationUnit());
-		assertEquals(expected.getConcentrationStdDev(), obtained.getConcentrationStdDev(), 0.0);
-		assertEquals(expected.getNumberOfMeasurements(), obtained.getNumberOfMeasurements());
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.timeUnit, obtained.timeUnit);
+		assertEquals(expected.origTimeUnit, obtained.origTimeUnit);
+		assertEquals(expected.concentration, obtained.concentration, 0.0);
+		assertEquals(expected.concentrationUnit, obtained.concentrationUnit);
+		assertEquals(expected.concentrationUnitObjectType, obtained.concentrationUnitObjectType);
+		assertEquals(expected.origConcentrationUnit, obtained.origConcentrationUnit);
+		assertEquals(expected.concentrationStdDev, obtained.concentrationStdDev, 0.0);
+		assertEquals(expected.numberOfMeasurements, obtained.numberOfMeasurements);
 	}
 }
