@@ -13,10 +13,10 @@ public class AgentListTest {
 
 	static {
 		agent = new Agent();
-		agent.setId(AgentTest.id);
-		agent.setName(AgentTest.name);
-		agent.setDetail(AgentTest.detail);
-		agent.setDbuuid(AgentTest.dbuuid);
+		agent.id = AgentTest.id;
+		agent.name = AgentTest.name;
+		agent.detail = AgentTest.detail;
+		agent.dbuuid = AgentTest.dbuuid;
 	}
 
 	@Test
@@ -26,10 +26,10 @@ public class AgentListTest {
 
 		Agent[] agents = new Agent[] { agent };
 		list.setAgents(agents);
-		assertEquals(agents[0].getId(), list.getAgents()[0].getId());
-		assertEquals(agents[0].getName(), list.getAgents()[0].getName());
-		assertEquals(agents[0].getDetail(), list.getAgents()[0].getDetail());
-		assertEquals(agents[0].getDbuuid(), list.getAgents()[0].getDbuuid());
+		assertEquals(agents[0].id, list.getAgents()[0].id);
+		assertEquals(agents[0].name, list.getAgents()[0].name);
+		assertEquals(agents[0].detail, list.getAgents()[0].detail);
+		assertEquals(agents[0].dbuuid, list.getAgents()[0].dbuuid);
 	}
 
 	@Test
@@ -50,10 +50,10 @@ public class AgentListTest {
 		Agent expected = agents[0];  // expected agent
 		Agent obtained = obtainedAgents[0];  // obtained agent
 		
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getDetail(), obtained.getDetail());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+		assertEquals(expected.id, obtained.id);
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.detail, obtained.detail);
+		assertEquals(expected.dbuuid, obtained.dbuuid);
 	}
 
 	@Test
@@ -68,9 +68,9 @@ public class AgentListTest {
 		Agent expected = agent;  // expected agent
 		Agent obtained = list.getAgents()[0];  // obtained agent
 		
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getDetail(), obtained.getDetail());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+		assertEquals(expected.id, obtained.id);
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.detail, obtained.detail);
+		assertEquals(expected.dbuuid, obtained.dbuuid);
 	}
 }

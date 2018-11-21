@@ -17,48 +17,21 @@ public class AgentTest {
 	static String dbuuid = "6df109d0-f6b1-409d-a286-0687b1aca001";
 	
 	@Test
-	public void testId() {
+	public void testConstructor() {
 		Agent agent = new Agent();
-		assertNull(agent.getId());
-		
-		agent.setId(id);
-		assertEquals(id, agent.getId().intValue());
-	}
-
-	@Test
-	public void testName() {
-		Agent agent = new Agent();
-		assertNull(agent.getName());
-		
-		agent.setName(name);
-		assertEquals(name, agent.getName());
-	}
-	
-	@Test
-	public void testDetail() {
-		Agent agent = new Agent();
-		assertNull(agent.getDetail());
-		
-		agent.setDetail(detail);
-		assertEquals(detail, agent.getDetail());
-	}
-	
-	@Test
-	public void testDbuuid() {
-		Agent agent = new Agent();
-		assertNull(agent.getDbuuid());
-		
-		agent.setDbuuid(dbuuid);
-		assertEquals(dbuuid, agent.getDbuuid());
+		assertNull(agent.id);
+		assertNull(agent.name);
+		assertNull(agent.detail);
+		assertNull(agent.dbuuid);
 	}
 	
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
 		Agent agent = new Agent();
-		agent.setId(id);
-		agent.setName(name);
-		agent.setDetail(detail);
-		agent.setDbuuid(dbuuid);
+		agent.id = id;
+		agent.name = name;
+		agent.detail = detail;
+		agent.dbuuid = dbuuid;
 		
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		agent.saveToNodeSettings(settings);
@@ -80,29 +53,29 @@ public class AgentTest {
 		Agent agent = new Agent();
 		agent.loadFromNodeSettings(settings);
 		
-		assertEquals(id, agent.getId().intValue());
-		assertEquals(name, agent.getName());
-		assertEquals(detail, agent.getDetail());
-		assertEquals(dbuuid, agent.getDbuuid());
+		assertEquals(id, agent.id.intValue());
+		assertEquals(name, agent.name);
+		assertEquals(detail, agent.detail);
+		assertEquals(dbuuid, agent.dbuuid);
 	}
 	
 	@Test
 	public void testToAgent() {
 		Agent agent = Agent.toAgent(new AgentXml(id, name, detail, dbuuid));
 		
-		assertEquals(id, agent.getId().intValue());
-		assertEquals(name, agent.getName());
-		assertEquals(detail, agent.getDetail());
-		assertEquals(dbuuid, agent.getDbuuid());
+		assertEquals(id, agent.id.intValue());
+		assertEquals(name, agent.name);
+		assertEquals(detail, agent.detail);
+		assertEquals(dbuuid, agent.dbuuid);
 	}
 	
 	@Test
 	public void testToAgentXml() {
 		Agent agent = new Agent();
-		agent.setId(id);
-		agent.setName(name);
-		agent.setDetail(detail);
-		agent.setDbuuid(dbuuid);
+		agent.id = id;
+		agent.name = name;
+		agent.detail = detail;
+		agent.dbuuid = dbuuid;
 		AgentXml agentXml = agent.toAgentXml();
 		
 		assertEquals(id, agentXml.id.intValue());

@@ -155,10 +155,10 @@ public class ModelEditorViewValue extends JSONViewContent {
 		try {
 			while (resultSet.next()) {
 				Agent agent = new Agent();
-				agent.setId(resultSet.getInt("ID"));
-				agent.setName(resultSet.getString("Agensname"));
-				agent.setDetail(resultSet.getString("Kommentar"));
-				agent.setDbuuid(DBKernel.getLocalDBUUID());
+				agent.id = resultSet.getInt("ID");
+				agent.name = resultSet.getString("Agensname");
+				agent.detail = resultSet.getString("Kommentar");
+				agent.dbuuid = DBKernel.getLocalDBUUID();
 
 				agentList.add(agent);
 			}

@@ -24,7 +24,6 @@ import org.knime.core.node.NodeSettingsWO;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.common.base.Strings;
 
 import de.bund.bfr.knime.pmm.common.AgentXml;
 
@@ -41,100 +40,10 @@ import de.bund.bfr.knime.pmm.common.AgentXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Agent implements ViewValue {
 
-	private Integer id;
-	private String name;
-	private String detail;
-	private String dbuuid;
-
-	/**
-	 * Returns the id of this {@link Agent}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the id of this {@link Agent}.
-	 */
-	public Integer getId() {
-		return id;
-	}
-
-	/**
-	 * Returns the name of this {@link Agent}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the name of this {@link Agent}
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Returns the detail of this {@link Agent}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the detail of this {@link Agent}.
-	 */
-	public String getDetail() {
-		return detail;
-	}
-
-	/**
-	 * Returns the dbuuid of this {@link Agent}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the dbuuid of this {@link Agent}
-	 */
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	/**
-	 * Sets the id of this {@link Agent}.
-	 * 
-	 * @param id
-	 *            the id to be set
-	 */
-	public void setId(final Integer id) {
-		this.id = id;
-	}
-
-	/**
-	 * Sets the name of this {@link Agent}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param name
-	 *            the name to be set
-	 */
-	public void setName(final String name) {
-		this.name = Strings.emptyToNull(name);
-	}
-
-	/**
-	 * Sets the detail of this {@link Agent}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param detail
-	 *            the detail to be set
-	 */
-	public void setDetail(final String detail) {
-		this.detail = Strings.emptyToNull(detail);
-	}
-
-	/**
-	 * Sets the dbuuid of this {@link Agent}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param dbuuid
-	 *            the dbuuid to be set
-	 */
-	public void setDbuuid(final String dbuuid) {
-		this.dbuuid = Strings.nullToEmpty(dbuuid);
-	}
+	public Integer id;
+	public String name;
+	public String detail;
+	public String dbuuid;
 
 	/**
 	 * Saves agent properties into a {@link NodeSettingsWO} with properties:
@@ -181,10 +90,10 @@ public class Agent implements ViewValue {
 	 */
 	public static Agent toAgent(AgentXml agentXml) {
 		Agent agent = new Agent();
-		agent.setId(agentXml.id);
-		agent.setName(agentXml.name);
-		agent.setDetail(agentXml.detail);
-		agent.setDbuuid(agentXml.dbuuid);
+		agent.id = agentXml.id;
+		agent.name = agentXml.name;
+		agent.detail = agentXml.detail;
+		agent.dbuuid = agentXml.dbuuid;
 
 		return agent;
 	}
