@@ -132,10 +132,10 @@ public class ModelEditorViewValue extends JSONViewContent {
 		try {
 			while (resultSet.next()) {
 				Matrix matrix = new Matrix();
-				matrix.setId(resultSet.getInt("ID"));
-				matrix.setName(resultSet.getString(Bfrdb.ATT_MATRIXNAME));
-				matrix.setDetail(resultSet.getString("Kommentar"));
-				matrix.setDbuuid(DBKernel.getLocalDBUUID());
+				matrix.id = resultSet.getInt("ID");
+				matrix.name = resultSet.getString(Bfrdb.ATT_MATRIXNAME);
+				matrix.detail = resultSet.getString("Kommentar");
+				matrix.dbuuid = DBKernel.getLocalDBUUID();
 
 				matrixList.add(matrix);
 			}

@@ -13,10 +13,10 @@ public class MatrixListTest {
 	
 	static {
 		matrix = new Matrix();
-		matrix.setId(MatrixTest.id);
-		matrix.setName(MatrixTest.name);
-		matrix.setDetail(MatrixTest.detail);
-		matrix.setDbuuid(MatrixTest.dbuuid);
+		matrix.id = MatrixTest.id;
+		matrix.name = MatrixTest.name;
+		matrix.detail = MatrixTest.detail;
+		matrix.dbuuid = MatrixTest.dbuuid;
 	}
 	
 	@Test
@@ -30,10 +30,10 @@ public class MatrixListTest {
 		Matrix expected = matrix;  // expected Matrix
 		Matrix obtained = list.getMatrices()[0];  // obtained Matrix
 		
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getDetail(), obtained.getDetail());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+		assertEquals(expected.id, obtained.id);
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.detail, obtained.detail);
+		assertEquals(expected.dbuuid, obtained.dbuuid);
 	}
 
 	@Test
@@ -50,10 +50,10 @@ public class MatrixListTest {
 		Matrix obtained = new Matrix();  // obtained Matrix
 		obtained.loadFromNodeSettings(settings.getNodeSettings("matrices" + 0));
 		
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getDetail(), obtained.getDetail());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+		assertEquals(expected.id, obtained.id);
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.detail, obtained.detail);
+		assertEquals(expected.dbuuid, obtained.dbuuid);
 	}
 	
 	@Test
@@ -68,9 +68,9 @@ public class MatrixListTest {
 		Matrix expected = matrix;  // expected Matrix
 		Matrix obtained = list.getMatrices()[0];  // obtained Matrix
 		
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getDetail(), obtained.getDetail());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+		assertEquals(expected.id, obtained.id);
+		assertEquals(expected.name, obtained.name);
+		assertEquals(expected.detail, obtained.detail);
+		assertEquals(expected.dbuuid, obtained.dbuuid);
 	}
 }

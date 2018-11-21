@@ -24,7 +24,6 @@ import org.knime.core.node.NodeSettingsWO;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.common.base.Strings;
 
 import de.bund.bfr.knime.pmm.common.MatrixXml;
 
@@ -41,100 +40,10 @@ import de.bund.bfr.knime.pmm.common.MatrixXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class Matrix implements ViewValue {
 
-	private Integer id;
-	private String name;
-	private String detail;
-	private String dbuuid;
-
-	/**
-	 * Returns the id of this {@link Matrix}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the id of this {@link Matrix}
-	 */
-	public Integer getId() {
-		return id;
-	}
-
-	/**
-	 * Returns the name of this {@link Matrix}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the name of this {@link Matrix}.
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Returns the detail of this {@link Matrix}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the name of this {@link Matrix}.
-	 */
-	public String getDetail() {
-		return detail;
-	}
-
-	/**
-	 * Returns the dbuuid of this {@link Matrix}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the dbuuid of this {@link Matrix}.
-	 */
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	/**
-	 * Sets the id of this {@link Matrix}.
-	 * 
-	 * @param id
-	 *            the id to be set
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	/**
-	 * Sets the name of this {@link Matrix}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param name
-	 *            the name to be set
-	 */
-	public void setName(String name) {
-		this.name = Strings.emptyToNull(name);
-	}
-
-	/**
-	 * Sets the detail of this {@link Matrix}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param detail
-	 *            the detail to be set
-	 */
-	public void setDetail(String detail) {
-		this.detail = Strings.emptyToNull(detail);
-	}
-
-	/**
-	 * Sets the dbuuid of this {@link Matrix}.
-	 * 
-	 * Empty strings are conveted to null.
-	 * 
-	 * @param dbuuid
-	 *            the dbuuid to be set
-	 */
-	public void setDbuuid(String dbuuid) {
-		this.dbuuid = Strings.emptyToNull(dbuuid);
-	}
+	public Integer id;
+	public String name;
+	public String detail;
+	public String dbuuid;
 
 	/**
 	 * Saves matrix properties into a {@link NodeSettingsWO} with properties:
@@ -181,10 +90,10 @@ public class Matrix implements ViewValue {
 	 */
 	public static Matrix toMatrix(MatrixXml matrixXml) {
 		Matrix matrix = new Matrix();
-		matrix.setId(matrixXml.id);
-		matrix.setName(matrixXml.name);
-		matrix.setDetail(matrixXml.detail);
-		matrix.setDbuuid(matrixXml.dbuuid);
+		matrix.id = matrixXml.id;
+		matrix.name = matrixXml.name;
+		matrix.detail = matrixXml.detail;
+		matrix.dbuuid = matrixXml.dbuuid;
 
 		return matrix;
 	}

@@ -17,48 +17,21 @@ public class MatrixTest {
 	static String dbuuid = "6df109d0-f6b1-409d-a286-0687b1aca001";
 	
 	@Test
-	public void testId() {
+	public void testConstructor() {
 		Matrix matrix = new Matrix();
-		assertNull(matrix.getId());
-		
-		matrix.setId(id);
-		assertEquals(id, matrix.getId().intValue());
-	}
-	
-	@Test
-	public void testName() {
-		Matrix matrix = new Matrix();
-		assertNull(matrix.getName());
-		
-		matrix.setName(name);
-		assertEquals(name, matrix.getName());
-	}
-	
-	@Test
-	public void testDetail() {
-		Matrix matrix = new Matrix();
-		assertNull(matrix.getDetail());
-		
-		matrix.setDetail(detail);
-		assertEquals(detail, matrix.getDetail());
-	}
-
-	@Test
-	public void testDbuuid() {
-		Matrix matrix = new Matrix();
-		assertNull(matrix.getDbuuid());
-		
-		matrix.setDbuuid(dbuuid);
-		assertEquals(dbuuid, matrix.getDbuuid());
+		assertNull(matrix.id);
+		assertNull(matrix.name);
+		assertNull(matrix.detail);
+		assertNull(matrix.dbuuid);
 	}
 	
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
 		Matrix matrix = new Matrix();
-		matrix.setId(id);
-		matrix.setName(name);
-		matrix.setDetail(detail);
-		matrix.setDbuuid(dbuuid);
+		matrix.id = id;
+		matrix.name = name;
+		matrix.detail = detail;
+		matrix.dbuuid = dbuuid;
 		
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		matrix.saveToNodeSettings(settings);
@@ -80,10 +53,10 @@ public class MatrixTest {
 		Matrix matrix = new Matrix();
 		matrix.loadFromNodeSettings(settings);
 		
-		assertEquals(id, matrix.getId().intValue());
-		assertEquals(name, matrix.getName());
-		assertEquals(detail, matrix.getDetail());
-		assertEquals(dbuuid, matrix.getDbuuid());
+		assertEquals(id, matrix.id.intValue());
+		assertEquals(name, matrix.name);
+		assertEquals(detail, matrix.detail);
+		assertEquals(dbuuid, matrix.dbuuid);
 	}
 	
 	@Test
@@ -91,19 +64,19 @@ public class MatrixTest {
 		MatrixXml matrixXml = new MatrixXml(id, name, detail, dbuuid);
 		Matrix matrix = Matrix.toMatrix(matrixXml);
 		
-		assertEquals(id, matrix.getId().intValue());
-		assertEquals(name, matrix.getName());
-		assertEquals(detail, matrix.getDetail());
-		assertEquals(dbuuid, matrix.getDbuuid());
+		assertEquals(id, matrix.id.intValue());
+		assertEquals(name, matrix.name);
+		assertEquals(detail, matrix.detail);
+		assertEquals(dbuuid, matrix.dbuuid);
 	}
 	
 	@Test
 	public void testToMatrixXml() {
 		Matrix matrix = new Matrix();
-		matrix.setId(id);
-		matrix.setName(name);
-		matrix.setDetail(detail);
-		matrix.setDbuuid(dbuuid);
+		matrix.id = id;
+		matrix.name = name;
+		matrix.detail = detail;
+		matrix.dbuuid = dbuuid;
 		MatrixXml matrixXml = matrix.toMatrixXml();
 
 		assertEquals(id, matrixXml.id.intValue());

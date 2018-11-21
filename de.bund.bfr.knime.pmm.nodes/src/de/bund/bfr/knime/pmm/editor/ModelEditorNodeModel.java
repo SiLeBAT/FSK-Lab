@@ -225,10 +225,10 @@ public final class ModelEditorNodeModel
 		MatrixXml matrixXml = (MatrixXml) inTuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0);
 		if (matrixXml != null) {
 			Matrix matrix = new Matrix();
-			matrix.setId(matrixXml.id);
-			matrix.setName(matrixXml.name);
-			matrix.setDetail(matrixXml.detail);
-			matrix.setDbuuid(matrixXml.dbuuid);
+			matrix.id = matrixXml.id;
+			matrix.name = matrixXml.name;
+			matrix.detail = matrixXml.detail;
+			matrix.dbuuid = matrixXml.dbuuid;
 			outTuple.setMatrix(matrix);
 		}
 
@@ -574,8 +574,7 @@ public final class ModelEditorNodeModel
 		outTuple.setValue(TimeSeriesSchema.ATT_AGENT, agentDoc);
 
 		Matrix matrix = m1DataTuple.getMatrix();
-		PmmXmlDoc matrixDoc = new PmmXmlDoc(
-				new MatrixXml(matrix.getId(), matrix.getName(), matrix.getDetail(), matrix.getDbuuid()));
+		PmmXmlDoc matrixDoc = new PmmXmlDoc(new MatrixXml(matrix.id, matrix.name, matrix.detail, matrix.dbuuid));
 		outTuple.setValue(TimeSeriesSchema.ATT_MATRIX, matrixDoc);
 
 		PmmXmlDoc timeSeriesDoc = new PmmXmlDoc();
