@@ -6,7 +6,6 @@
    <extension id="de.bund.bfr.knime.pmm.fskx.bin.preferences.RPreferenceInitializer"
      point="org.eclipse.core.runtime.preferences">
      <initializer class="de.bund.bfr.knime.fsklab.preferences.RPreferenceInitializer" />
-     <initializer class="de.bund.bfr.knime.fsklab.preferences.LanguagePreferenceInitializer" />
    </extension>
   
    <!-- Preference page for custom R -->
