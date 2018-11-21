@@ -18,58 +18,23 @@ public class MdInfoTest {
 	static boolean checked = false;
 
 	@Test
-	public void testId() {
+	public void testConstructor() {
 		MdInfo modelInfo = new MdInfo();
-		assertNull(modelInfo.getId());
-
-		modelInfo.setId(id);
-		assertEquals(id, modelInfo.getId().intValue());
-	}
-
-	@Test
-	public void testName() {
-		MdInfo modelInfo = new MdInfo();
-		assertNull(modelInfo.getName());
-
-		modelInfo.setName(name);
-		assertEquals(name, modelInfo.getName());
-	}
-
-	@Test
-	public void testComment() {
-		MdInfo modelInfo = new MdInfo();
-		assertNull(modelInfo.getComment());
-
-		modelInfo.setComment(comment);
-		assertEquals(comment, modelInfo.getComment());
-	}
-
-	@Test
-	public void testQualityScore() {
-		MdInfo modelInfo = new MdInfo();
-		assertNull(modelInfo.getQualityScore());
-
-		modelInfo.setQualityScore(qualityScore);
-		assertEquals(qualityScore, modelInfo.getQualityScore().intValue());
-	}
-
-	@Test
-	public void testChecked() {
-		MdInfo modelInfo = new MdInfo();
-		assertNull(modelInfo.getChecked());
-
-		modelInfo.setChecked(checked);
-		assertEquals(checked, modelInfo.getChecked());
+		assertNull(modelInfo.id);
+		assertNull(modelInfo.name);
+		assertNull(modelInfo.comment);
+		assertNull(modelInfo.qualityScore);
+		assertNull(modelInfo.checked);
 	}
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
 		MdInfo modelInfo = new MdInfo();
-		modelInfo.setId(id);
-		modelInfo.setName(name);
-		modelInfo.setComment(comment);
-		modelInfo.setQualityScore(qualityScore);
-		modelInfo.setChecked(checked);
+		modelInfo.id = id;
+		modelInfo.name = name;
+		modelInfo.comment = comment;
+		modelInfo.qualityScore = qualityScore;
+		modelInfo.checked = checked;
 
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		modelInfo.saveToNodeSettings(settings);
@@ -93,11 +58,11 @@ public class MdInfoTest {
 		MdInfo modelInfo = new MdInfo();
 		modelInfo.loadFromNodeSettings(settings);
 
-		assertEquals(id, modelInfo.getId().intValue());
-		assertEquals(name, modelInfo.getName());
-		assertEquals(comment, modelInfo.getComment());
-		assertEquals(qualityScore, modelInfo.getQualityScore().intValue());
-		assertEquals(checked, modelInfo.getChecked());
+		assertEquals(id, modelInfo.id.intValue());
+		assertEquals(name, modelInfo.name);
+		assertEquals(comment, modelInfo.comment);
+		assertEquals(qualityScore, modelInfo.qualityScore.intValue());
+		assertEquals(checked, modelInfo.checked);
 	}
 
 	@Test
@@ -105,21 +70,21 @@ public class MdInfoTest {
 		MdInfoXml mdInfoXml = new MdInfoXml(id, name, comment, qualityScore, checked);
 		MdInfo mdInfo = MdInfo.toMdInfo(mdInfoXml);
 
-		assertEquals(id, mdInfo.getId().intValue());
-		assertEquals(name, mdInfo.getName());
-		assertEquals(comment, mdInfo.getComment());
-		assertEquals(qualityScore, mdInfo.getQualityScore().intValue());
-		assertEquals(checked, mdInfo.getChecked());
+		assertEquals(id, mdInfo.id.intValue());
+		assertEquals(name, mdInfo.name);
+		assertEquals(comment, mdInfo.comment);
+		assertEquals(qualityScore, mdInfo.qualityScore.intValue());
+		assertEquals(checked, mdInfo.checked);
 	}
 
 	@Test
 	public void testToMdInfoXml() {
 		MdInfo modelInfo = new MdInfo();
-		modelInfo.setId(id);
-		modelInfo.setName(name);
-		modelInfo.setComment(comment);
-		modelInfo.setQualityScore(qualityScore);
-		modelInfo.setChecked(checked);
+		modelInfo.id = id;
+		modelInfo.name = name;
+		modelInfo.comment = comment;
+		modelInfo.qualityScore = qualityScore;
+		modelInfo.checked = checked;
 		MdInfoXml mdInfoXml = modelInfo.toMdInfoXml();
 
 		assertEquals(id, mdInfoXml.id.intValue());

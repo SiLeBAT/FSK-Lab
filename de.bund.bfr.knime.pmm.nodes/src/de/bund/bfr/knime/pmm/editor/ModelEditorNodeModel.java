@@ -263,11 +263,11 @@ public final class ModelEditorNodeModel
 
 		if (mdInfoXml != null) {
 			MdInfo mdInfo = new MdInfo();
-			mdInfo.setId(mdInfoXml.id);
-			mdInfo.setName(mdInfoXml.name);
-			mdInfo.setComment(mdInfoXml.comment);
-			mdInfo.setQualityScore(mdInfoXml.qualityScore);
-			mdInfo.setChecked(mdInfoXml.checked);
+			mdInfo.id = mdInfoXml.id;
+			mdInfo.name = mdInfoXml.name;
+			mdInfo.comment = mdInfoXml.comment;
+			mdInfo.qualityScore = mdInfoXml.qualityScore;
+			mdInfo.checked = mdInfoXml.checked;
 			outTuple.setMdInfo(mdInfo);
 		}
 
@@ -588,8 +588,8 @@ public final class ModelEditorNodeModel
 		outTuple.setValue(TimeSeriesSchema.ATT_TIMESERIES, timeSeriesDoc);
 
 		MdInfo mdInfo = (MdInfo) m1DataTuple.getMdInfo();
-		PmmXmlDoc mdInfoDoc = new PmmXmlDoc(new MdInfoXml(mdInfo.getId(), mdInfo.getName(), mdInfo.getComment(),
-				mdInfo.getQualityScore(), mdInfo.getChecked()));
+		PmmXmlDoc mdInfoDoc = new PmmXmlDoc(
+				new MdInfoXml(mdInfo.id, mdInfo.name, mdInfo.comment, mdInfo.qualityScore, mdInfo.checked));
 		outTuple.setValue(TimeSeriesSchema.ATT_MDINFO, mdInfoDoc);
 
 		PmmXmlDoc mdLitDoc = new PmmXmlDoc();
