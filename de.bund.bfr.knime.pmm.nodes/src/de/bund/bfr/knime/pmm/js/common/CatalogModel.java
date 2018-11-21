@@ -5,7 +5,6 @@ import org.knime.core.node.NodeSettingsWO;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.common.base.Strings;
 
 import de.bund.bfr.knime.pmm.common.CatalogModelXml;
 
@@ -24,146 +23,12 @@ import de.bund.bfr.knime.pmm.common.CatalogModelXml;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class CatalogModel implements ViewValue {
 
-	private Integer id;
-	private String name;
-	private String formula;
-	private Integer modelClass;
-	private String comment;
-	private String dbuuid;
-
-	/**
-	 * Returns the id of this {@link CatalogModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the id of this {@link CatalogModel}
-	 */
-	public Integer getId() {
-		return id;
-	}
-
-	/**
-	 * Returns the name of this {@link CatalogModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the name of this {@link CatalogModel}
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Returns the formula of this {@link CatalogModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the formula of this {@link CatalogModel}
-	 */
-	public String getFormula() {
-		return formula;
-	}
-
-	/**
-	 * Returns the model class of this {@link CatalogModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the model class of this {@link CatalogModel}
-	 */
-	public Integer getModelClass() {
-		return modelClass;
-	}
-
-	/**
-	 * Returns the comment of this {@link CatalogModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the comment of this {@link CatalogModel}
-	 */
-	public String getComment() {
-		return comment;
-	}
-
-	/**
-	 * Returns the dbuuid of this {@link CatalogModel}.
-	 * 
-	 * If not set returns null.
-	 * 
-	 * @return the dbuuid of this {@link CatalogModel}
-	 */
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	/**
-	 * Sets the id of this {@link CatalogModel}.
-	 * 
-	 * @param id
-	 *            the id to be set
-	 */
-	public void setId(final Integer id) {
-		this.id = id;
-	}
-
-	/**
-	 * Sets the name of this {@link CatalogModel}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param name
-	 *            the name to be set
-	 */
-	public void setName(final String name) {
-		this.name = Strings.emptyToNull(name);
-	}
-
-	/**
-	 * Sets the formula value of this {@link CatalogModel}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param formula
-	 *            the formula to be set
-	 */
-	public void setFormula(final String formula) {
-		this.formula = Strings.emptyToNull(formula);
-	}
-
-	/**
-	 * Sets the model class of this {@link CatalogModel}.
-	 * 
-	 * @param modelClass
-	 *            the model class to be set
-	 */
-	public void setModelClass(final Integer modelClass) {
-		this.modelClass = modelClass;
-	}
-
-	/**
-	 * Sets the comment of this {@link CatalogModel}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param comment
-	 *            the comment to be set
-	 */
-	public void setComment(final String comment) {
-		this.comment = Strings.emptyToNull(comment);
-	}
-
-	/**
-	 * Sets the dbuuid of this {@link CatalogModel}.
-	 * 
-	 * Empty strings are converted to null.
-	 * 
-	 * @param dbuuid
-	 *            the dbuuid to be set
-	 */
-	public void setDbuuid(final String dbuuid) {
-		this.dbuuid = Strings.emptyToNull(dbuuid);
-	}
+	public Integer id;
+	public String name;
+	public String formula;
+	public Integer modelClass;
+	public String comment;
+	public String dbuuid;
 
 	/**
 	 * Saves catalog model properties into a {@link CatalogModel} with properties:
@@ -218,12 +83,12 @@ public class CatalogModel implements ViewValue {
 	 */
 	public static CatalogModel toCatalogModel(CatalogModelXml catalogModelXml) {
 		CatalogModel catalogModel = new CatalogModel();
-		catalogModel.setId(catalogModelXml.id);
-		catalogModel.setName(catalogModelXml.name);
-		catalogModel.setFormula(catalogModelXml.formula);
-		catalogModel.setModelClass(catalogModelXml.modelClass);
-		catalogModel.setComment(catalogModelXml.comment);
-		catalogModel.setDbuuid(catalogModelXml.dbuuid);
+		catalogModel.id = catalogModelXml.id;
+		catalogModel.name = catalogModelXml.name;
+		catalogModel.formula = catalogModelXml.formula;
+		catalogModel.modelClass = catalogModelXml.modelClass;
+		catalogModel.comment = catalogModelXml.comment;
+		catalogModel.dbuuid = catalogModelXml.dbuuid;
 
 		return catalogModel;
 	}

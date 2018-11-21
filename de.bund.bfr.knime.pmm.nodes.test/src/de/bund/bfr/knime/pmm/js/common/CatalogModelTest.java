@@ -16,70 +16,27 @@ public class CatalogModelTest {
 	static int modelClass = 1;
 	static String comment = "some comment";
 	static String dbuuid = "6df109d0-f6b1-409d-a286-0687b1aca001";
-
+	
 	@Test
-	public void testId() {
+	public void testConstructor() {
 		CatalogModel catalogModel = new CatalogModel();
-		assertNull(catalogModel.getId());
-
-		catalogModel.setId(id);
-		assertEquals(id, catalogModel.getId().intValue());
-	}
-
-	@Test
-	public void testName() {
-		CatalogModel catalogModel = new CatalogModel();
-		assertNull(catalogModel.getName());
-		
-		catalogModel.setName(name);
-		assertEquals(name, catalogModel.getName());
-	}
-
-	@Test
-	public void testFormula() {
-		CatalogModel catalogModel = new CatalogModel();
-		assertNull(catalogModel.getFormula());
-		
-		catalogModel.setFormula(formula);
-		assertEquals(formula, catalogModel.getFormula());
-	}
-
-	@Test
-	public void testModelClass() {
-		CatalogModel catalogModel = new CatalogModel();
-		assertNull(catalogModel.getModelClass());
-		
-		catalogModel.setModelClass(modelClass);
-		assertEquals(modelClass, catalogModel.getModelClass().intValue());
-	}
-
-	@Test
-	public void testComment() {
-		CatalogModel catalogModel = new CatalogModel();
-		assertNull(catalogModel.getComment());
-		
-		catalogModel.setComment(comment);
-		assertEquals(comment, catalogModel.getComment());
-	}
-
-	@Test
-	public void testDbuuid() {
-		CatalogModel catalogModel = new CatalogModel();
-		assertNull(catalogModel.getDbuuid());
-		
-		catalogModel.setDbuuid(dbuuid);
-		assertEquals(dbuuid, catalogModel.getDbuuid());
+		assertNull(catalogModel.id);
+		assertNull(catalogModel.name);
+		assertNull(catalogModel.formula);
+		assertNull(catalogModel.modelClass);
+		assertNull(catalogModel.comment);
+		assertNull(catalogModel.dbuuid);
 	}
 	
 	@Test
 	public void testSaveToNodeSettings() throws Exception {
 		CatalogModel catalogModel = new CatalogModel();
-		catalogModel.setId(id);
-		catalogModel.setName(name);
-		catalogModel.setFormula(formula);
-		catalogModel.setModelClass(modelClass);
-		catalogModel.setComment(comment);
-		catalogModel.setDbuuid(dbuuid);
+		catalogModel.id = id;
+		catalogModel.name = name;
+		catalogModel.formula = formula;
+		catalogModel.modelClass = modelClass;
+		catalogModel.comment = comment;
+		catalogModel.dbuuid = dbuuid;
 
 		NodeSettings settings = new NodeSettings("irrelevantKey");
 		catalogModel.saveToNodeSettings(settings);
@@ -105,12 +62,12 @@ public class CatalogModelTest {
 		CatalogModel catalogModel = new CatalogModel();
 		catalogModel.loadFromNodeSettings(settings);
 		
-		assertEquals(id, catalogModel.getId().intValue());
-		assertEquals(name, catalogModel.getName());
-		assertEquals(formula, catalogModel.getFormula());
-		assertEquals(modelClass, catalogModel.getModelClass().intValue());
-		assertEquals(comment, catalogModel.getComment());
-		assertEquals(dbuuid, catalogModel.getDbuuid());
+		assertEquals(id, catalogModel.id.intValue());
+		assertEquals(name, catalogModel.name);
+		assertEquals(formula, catalogModel.formula);
+		assertEquals(modelClass, catalogModel.modelClass.intValue());
+		assertEquals(comment, catalogModel.comment);
+		assertEquals(dbuuid, catalogModel.dbuuid);
 	}
 	
 	@Test
@@ -119,23 +76,23 @@ public class CatalogModelTest {
 		catalogModelXml.comment = comment;
 		CatalogModel catalogModel = CatalogModel.toCatalogModel(catalogModelXml);
 		
-		assertEquals(id, catalogModel.getId().intValue());
-		assertEquals(name, catalogModel.getName());
-		assertEquals(formula, catalogModel.getFormula());
-		assertEquals(modelClass, catalogModel.getModelClass().intValue());
-		assertEquals(comment, catalogModel.getComment());
-		assertEquals(dbuuid, catalogModel.getDbuuid());
+		assertEquals(id, catalogModel.id.intValue());
+		assertEquals(name, catalogModel.name);
+		assertEquals(formula, catalogModel.formula);
+		assertEquals(modelClass, catalogModel.modelClass.intValue());
+		assertEquals(comment, catalogModel.comment);
+		assertEquals(dbuuid, catalogModel.dbuuid);
 	}
 	
 	@Test
 	public void testToCatalogModelXml() {
 		CatalogModel catalogModel = new CatalogModel();
-		catalogModel.setId(id);
-		catalogModel.setName(name);
-		catalogModel.setFormula(formula);
-		catalogModel.setModelClass(modelClass);
-		catalogModel.setComment(comment);
-		catalogModel.setDbuuid(dbuuid);
+		catalogModel.id = id;
+		catalogModel.name = name;
+		catalogModel.formula = formula;
+		catalogModel.modelClass = modelClass;
+		catalogModel.comment = comment;
+		catalogModel.dbuuid = dbuuid;
 		CatalogModelXml catalogModelXml = catalogModel.toCatalogModelXml();
 		
 		assertEquals(id, catalogModelXml.id.intValue());
