@@ -265,6 +265,7 @@ joiner = function() {
 		version : '1.0.0'
 	};
 	joinerNode.name = 'FSK Joiner';
+	var navigationMap = {};
 	var firstModelName  = '';
 	var secondmodelName = '';
 	var paper;
@@ -344,7 +345,7 @@ joiner = function() {
 						.toISOString();
 			}
 		} catch (err) {
-			console.log(err);
+			//console.log(err);
 		}
 		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ? _firstModel.generalInformation.description
 				: "";
@@ -886,8 +887,78 @@ joiner = function() {
 			currentArea = window.makeId($(this).attr('aria-label'));
 
 		});
+		reDesign("generalinformation");
+		reDesign("scope");
+		reDesign("databackground");
+		reDesign("modelMath");
 	}
-
+	function reDesign(ID){
+		var row = "					<div class='row'>"
+			+ " 					         <div class='col-xs-3 col-sm-3 col-lg-2 "+ID+"SideBar'><div class='list-group' id ='"+ID+"gisidenav'><button type='button' data='"+ID+"General' class='list-group-item list-group-item-action active sidenavibutton'>General</button></div></div>"
+			+ "                    			 <div class='col-xs-9 col-sm-9 col-lg-10 "+ID+"Content'><div data='General'></div> </div>"
+			+ "                        	</div>";
+			
+		$("#"+ID).append( row);
+		$("#"+ID+" div.MuiGrid-typeItem-2 div.table-responsive , #"+ID+" div.MuiGrid-typeItem-2 div.demoform").filter(function(index ,element){
+			//filter out all emfforms of modals
+			return $(element).parents('.modal-dialog').length <= 0;
+			  
+        }).each(function(index, element) {
+		  
+			//console.log($(element));
+		    var parent = $(element).parent().parent();
+		    
+		    var text;
+		    if($(this).attr('class').indexOf('demoform') >= 0 )
+		    	 text = parent.find('.MuiFormLabel-root-100').html();
+		    else
+		    	 text = parent.find('.control-labelal').html();
+		    
+		    
+		    var sideNavigationButton = "<button data='"+text+"' type='button' class='list-group-item list-group-item-action sidenavibutton'>"+text+"</button>\n" ;
+		    $("#"+ID+"gisidenav").append(sideNavigationButton);
+		    
+		    parent.addClass('detailedSide');
+		   
+		    navigationMap[text] = parent;
+			$("#"+ID+" ."+ID+"Content").append( parent);
+			parent.hide();
+			
+		});
+		
+		
+		$("#"+ID+" > div.demoform").each(function(index, element) {
+			//console.log(element);
+			$(element).addClass('detailedSide');
+			navigationMap[ID+"General"] = $(element);
+			$("#"+ID+" div[data='General']").append( element);
+			$("div[data='General']").show();
+		});
+		
+		if($("#"+ID+" div[data='General'] .demoform .MuiGrid-typeItem-2").children().length  < 1 ){
+			
+			$("#"+ID+" button[data='"+ID+"General']").remove();
+			$("#"+ID+" div[data='General']").remove();
+			
+			$("#"+ID).find("div[class$='Content']").children().first().show();
+			
+			$("#"+ID).find("div[class$='list-group']").children().first().addClass('active');
+			//
+			
+			
+			
+		}
+		$(".sidenavibutton").on("click",function(event){
+			//console.log("click ",$(this),event);
+			$(this).parent().parent().parent().find(".detailedSide").hide();
+			$(this).parent().find(".active").removeClass('active');
+			
+			navigationMap[$(this).attr('data')].show(); 
+			$(this).addClass('active');
+			
+		})
+		//console.log(navigationMap);
+	}
 	function drawWorkflow() {
 		graph = new joint.dia.Graph;
 

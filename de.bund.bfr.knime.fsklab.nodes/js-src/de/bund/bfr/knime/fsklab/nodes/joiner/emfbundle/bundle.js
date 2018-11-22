@@ -19,7 +19,7 @@ function createEMFForm(){
 		  // was first rendered. We also want the button to be disabled until the
 		  // component has fully mounted on the DOM
 		  //getInitialState: function() {
-			//console.log('hiiii');
+			////console.log('hiiii');
 		    //return {items: this.props.items, disabled: true}
 		  //},
 
@@ -2371,11 +2371,11 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: store17},
 				App()
 		), document.getElementById('modelMath'));
-		}catch(err){//console.log("modelMath " + err);
+		}catch(err){////console.log("modelMath " + err);
 			
 		}
 		notAProperDiv = $("div:contains('No applicable'):not(:has(div))");
-		//console.log('notAProperDiv '+notAProperDiv);
+		////console.log('notAProperDiv '+notAProperDiv);
 		$.each(notAProperDiv, function( index, value ) {
 			var parentxc ;
 			var areaName;
@@ -2383,7 +2383,7 @@ function createEMFForm(){
 					
 					parentxc = value.parentNode;
 					areaName =  parentxc.firstChild.textContent;
-					//console.log(areaName);
+					////console.log(areaName);
 					if(parentxc.firstChild.textContent.indexOf('*') >= 0){
 						areaName = areaName.slice(0,-1);
 					}
@@ -2394,13 +2394,13 @@ function createEMFForm(){
 						}else{
 							$(parentxc).append( "<div id ='"+areaName+"' class='notReplace' ></div>" );
 						}
-						console.log(areaName, window.toBeReplacedMap[areaName]);
+						//console.log(areaName, window.toBeReplacedMap[areaName]);
 						ReactDOM.render(React.createFactory(Provider)({store: window.toBeReplacedMap[areaName]},
 								App()
 						), document.getElementById(areaName));
 					}
 			}catch(err){
-				//console.log("loop ",parentxc, err);
+				////console.log("loop ",parentxc, err);
 			}
 			
 		});
@@ -2496,7 +2496,7 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: store22},
 				App()
 		), document.getElementById('referenceModelContent'));
-		}catch(err){//console.log("reference " + err);
+		}catch(err){////console.log("reference " + err);
 			
 		}
 
@@ -2564,10 +2564,10 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: window.store13},
 				App()
 		), document.getElementById('modelCategoryModelContent'));
-		}catch(err){//console.log("modelCategory " + err);
+		}catch(err){////console.log("modelCategory " + err);
 			
 		}
-		console.log('DONEMODELCLASS');
+		//console.log('DONEMODELCLASS');
 		//popup modificationdate
 		window.savemodificationdate = function () {
 			if(window.generalInformation.modificationdate == undefined){
@@ -2578,7 +2578,7 @@ function createEMFForm(){
 				window.generalInformation.modificationdate.push(store14.getState().jsonforms.core.data);
 				store1.dispatch(Actions.init(window.generalInformation, window.schema, window.uischema));
 			}
-			//console.log("date ",window.generalInformation.modificationdate);
+			////console.log("date ",window.generalInformation.modificationdate);
 				$(".table tbody tr td div div div input").removeAttr('class');
 				tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
@@ -2624,11 +2624,11 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: store14},
 				App()
 		), document.getElementById('modificationdateModelContent'));
-		}catch(err){//console.log("modificationdate " + err);
+		}catch(err){////console.log("modificationdate " + err);
 			
 		}
 		window.saveCreators = function () {
-			console.log(store24.getState().jsonforms.core.data);
+			//console.log(store24.getState().jsonforms.core.data);
 			if(window.generalInformation.creators == undefined){
 				window.generalInformation.creators = [];
 				window.generalInformation.creators.push(store24.getState().jsonforms.core.data);
@@ -2637,7 +2637,7 @@ function createEMFForm(){
 				window.generalInformation.creators.push(store24.getState().jsonforms.core.data);
 				store1.dispatch(Actions.init(window.generalInformation, window.schema, window.uischema));
 			}
-			//console.log("date ",window.generalInformation.modificationdate);
+			////console.log("date ",window.generalInformation.modificationdate);
 				$(".table tbody tr td div div div input").removeAttr('class');
 				tableInputBootstraping($(".table tbody tr td div div div input"));
 			    $(".table tbody tr td div div div").removeAttr('class');
@@ -2683,7 +2683,7 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: store24},
 				App()
 		), document.getElementById('creatorsModelContent'));
-		}catch(err){//console.log("modificationdate " + err);
+		}catch(err){////console.log("modificationdate " + err);
 			
 		}
 
@@ -2695,11 +2695,11 @@ function createEMFForm(){
 			}
 			if(window.scope.spatialInformation.country == undefined){
 				window.scope.spatialInformation.country = [];
-				console.log(store15.getState().jsonforms.core.data);
+				//console.log(store15.getState().jsonforms.core.data);
 				window.scope.spatialInformation.country.push(store15.getState().jsonforms.core.data);
 				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}else{
-				console.log(store15.getState().jsonforms.core.data);
+				//console.log(store15.getState().jsonforms.core.data);
 				window.scope.spatialInformation.country.push(store15.getState().jsonforms.core.data);
 				window.store2.dispatch(Actions.init(window.scope, window.schema2, window.uischema2));
 			}
@@ -2747,7 +2747,7 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: store15},
 				App()
 		), document.getElementById('countryModelContent'));
-		}catch(err){//console.log("country " + err);
+		}catch(err){////console.log("country " + err);
 			
 		}
 
@@ -2808,7 +2808,7 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: store16},
 				App()
 		), document.getElementById('regionModelContent'));
-		}catch(err){//console.log("country " + err);
+		}catch(err){////console.log("country " + err);
 			
 		}*/
 
@@ -2871,7 +2871,7 @@ function createEMFForm(){
 			
 			
 		parent10 = document.getElementById('modelMath');
-		}catch(err){//console.log("product " + err);
+		}catch(err){////console.log("product " + err);
 			
 		}
 		//popup hazard
@@ -2931,7 +2931,7 @@ function createEMFForm(){
 				App()
 		), document.getElementById('hazardModelContent'));
 		parent10 = document.getElementById('modelMath');
-		}catch(err){//console.log("hazard " + err);
+		}catch(err){////console.log("hazard " + err);
 			
 		}
 
@@ -2992,7 +2992,7 @@ function createEMFForm(){
 		ReactDOM.render(React.createFactory(Provider)({store: window.store18},
 				App()
 		), document.getElementById('parameterModelContent'));
-		}catch(err){//console.log("parameter " + err);
+		}catch(err){////console.log("parameter " + err);
 			
 		}
 		window.saveModelequation = function () {
@@ -3049,7 +3049,7 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: window.store19},
 				App()
 		), document.getElementById('modelequationModelContent'));
-		}catch(err){//console.log("modelequation " + err);
+		}catch(err){////console.log("modelequation " + err);
 			
 		}
 
@@ -3110,8 +3110,8 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: window.store29},
 				App()
 		), document.getElementById('studySampleModelContent'));
-		}catch(err){//console.log("event " + err);
-			console.log("studySampleModelContent " + err);
+		}catch(err){////console.log("event " + err);
+			//console.log("studySampleModelContent " + err);
 		}
 
 
@@ -3172,7 +3172,7 @@ function createEMFForm(){
 				App()
 		), document.getElementById('dietaryAssessmentMethodModelContent'));
 		}catch(err){//
-			console.log("dietaryAssessmentMethodModelContent " + err);
+			//console.log("dietaryAssessmentMethodModelContent " + err);
 		}
 
 
@@ -3233,7 +3233,7 @@ function createEMFForm(){
 				App()
 		), document.getElementById('laboratoryModelContent'));
 		}catch(err){
-			console.log("laboratoryModelContent" + err);
+			//console.log("laboratoryModelContent" + err);
 		}
 
 
@@ -3293,7 +3293,7 @@ function createEMFForm(){
 				App()
 		), document.getElementById('assayModelContent'));
 		}catch(err){
-			console.log("assayModelContent" + err);
+			//console.log("assayModelContent" + err);
 		}
 		///////////////////////
 		/*window.popupschemapopulationSpan= require('./StringObjectModel.json');
@@ -3310,7 +3310,7 @@ function createEMFForm(){
 		window.populationSpanstore.dispatch(Actions.init({}, window.popupschemapopulationSpan, window.popupuischemapopulationSpan));
 		window.savepopulationSpan = function () {
 			
-				//console.log(window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data);		
+				////console.log(window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data);		
 				window.toBeReplacedMap["Population Group"].getState().jsonforms.core.data.populationSpan.push(window.populationSpanstore.getState().jsonforms.core.data);
 				var parentxc ;
 				var areaName;
@@ -3326,7 +3326,7 @@ function createEMFForm(){
 						), document.getElementById("Population Group"));
 						
 				}catch(err){
-					//console.log("loop ",parentxc, err);
+					////console.log("loop ",parentxc, err);
 				}
 		}
 		$(parent9).append(
@@ -3353,7 +3353,7 @@ function createEMFForm(){
 			ReactDOM.render(React.createFactory(Provider)({store: window.populationSpanstore},
 				App()
 		), document.getElementById('populationSpanModelContent'));
-		}catch(err){//console.log("event " + err);
+		}catch(err){////console.log("event " + err);
 
 		}*/
 
@@ -3378,7 +3378,7 @@ function createEMFForm(){
 		$.each(StringObjectPopupsName, function( index, value ) {
 			window.store5.getState().jsonforms.core.data[value] = window.store5.getState().jsonforms.core.data[value] != null ?window.store5.getState().jsonforms.core.data[value]:[];
 		});
-		console.log(window.store5.getState().jsonforms.core.data);
+		//console.log(window.store5.getState().jsonforms.core.data);
 		window.savepopulationGroup = function () {
 			
 			if(window.scope.populationGroup == undefined){
@@ -3436,12 +3436,12 @@ function createEMFForm(){
 				App()
 		), document.getElementById('populationGroupModelContent'));
 		}catch(err){
-			console.log("reference " + err);
+			//console.log("reference " + err);
 		}
 		/*$("#populationGroupModelContent button[aria-describedby*='tooltip-add']").click(function(event) {
 			
 			currentArea = window.makeId($(this).attr('aria-label'));
-			console.log(currentArea);
+			//console.log(currentArea);
 			event.preventDefault(); // Let's stop this event.
 		    event.stopPropagation(); // Really this time.
 		    $('#ptitle'+currentArea).text(currentArea);
@@ -3471,7 +3471,7 @@ function createEMFForm(){
 												"var areaName;"+
 												
 												"cdiv = document.getElementById(\"populationGroupModelContent\");" +
-												"console.log(cdiv);"+
+												"//console.log(cdiv);"+
 												"parentxc = cdiv.parentNode;"+
 												
 												
@@ -3483,7 +3483,7 @@ function createEMFForm(){
 												"$(\"[aria-describedby*=&#39;tooltip-add&#39;]\").click(function(event) {"+
 		        	
 										        	"currentArea = window.makeId($(this).attr(&#39;aria-label&#39;));"+
-										        	"console.log(currentArea);"+
+										        	"//console.log(currentArea);"+
 										        	"event.preventDefault(); "+
 										            "event.stopPropagation();"+
 										            "$(&#39;#title&#39;+currentArea).text(currentArea);"+
@@ -3517,9 +3517,9 @@ function createEMFForm(){
 				ReactDOM.render(React.createFactory(Provider)({store: window.popupstore[value]},
 					App()
 			), document.getElementById('p'+value+'ModelContent'));		
-			console.log(value);
+			//console.log(value);
 			}catch(err){
-				console.log(value + err);
+				//console.log(value + err);
 			}
 		});*/
 
@@ -9865,7 +9865,7 @@ function createEMFForm(){
 		      if (beautify) sourceCode = beautify(sourceCode, opts.beautify);
 		      else console.error('"npm install js-beautify" to use beautify option');
 		    }
-		    // console.log('\n\n\n *** \n', sourceCode);
+		    // //console.log('\n\n\n *** \n', sourceCode);
 		    var validate, validateCode
 		      , transpile = opts._transpileFunc;
 		    try {
@@ -13020,7 +13020,7 @@ function createEMFForm(){
 		    if ($refVal === undefined) {
 		      var $message = 'can\'t resolve reference ' + $schema + ' from id ' + it.baseId;
 		      if (it.opts.missingRefs == 'fail') {
-		        console.log($message);
+		        //console.log($message);
 		        var $$outStack = $$outStack || [];
 		        $$outStack.push(out);
 		        out = ''; /* istanbul ignore else */
@@ -13051,7 +13051,7 @@ function createEMFForm(){
 		          out += ' if (false) { ';
 		        }
 		      } else if (it.opts.missingRefs == 'ignore') {
-		        console.log($message);
+		        //console.log($message);
 		        if ($breakOnError) {
 		          out += ' if (true) { ';
 		        }
@@ -13719,9 +13719,9 @@ function createEMFForm(){
 		      throw new Error('$ref: validation keywords used in schema at path "' + it.errSchemaPath + '"');
 		    } else if (it.opts.extendRefs == 'ignore') {
 		      $refKeywords = false;
-		      console.log('$ref: keywords ignored in schema at path "' + it.errSchemaPath + '"');
+		      //console.log('$ref: keywords ignored in schema at path "' + it.errSchemaPath + '"');
 		    } else if (it.opts.extendRefs !== true) {
-		      console.log('$ref: all keywords used in schema at path "' + it.errSchemaPath + '". It will change in the next major version, see issue #260. Use option { extendRefs: true } to keep current behaviour');
+		      //console.log('$ref: all keywords used in schema at path "' + it.errSchemaPath + '". It will change in the next major version, see issue #260. Use option { extendRefs: true } to keep current behaviour');
 		    }
 		  }
 		  if (it.schema.$ref && !$refKeywords) {
@@ -30093,7 +30093,7 @@ function createEMFForm(){
 		 * @example
 		 *
 		 * _.defer(function(stamp) {
-		 *   console.log(_.now() - stamp);
+		 *   //console.log(_.now() - stamp);
 		 * }, _.now());
 		 * // => Logs the number of milliseconds it took for the deferred invocation.
 		 */
@@ -62305,7 +62305,7 @@ function createEMFForm(){
 		    for (i = 0; i < tokens.length; i++) {
 		        token = tokens[i];
 		        parsedInput = (string.match(getParseRegexForToken(token, config)) || [])[0];
-		        // console.log('token', token, 'parsedInput', parsedInput,
+		        // //console.log('token', token, 'parsedInput', parsedInput,
 		        //         'regex', getParseRegexForToken(token, config));
 		        if (parsedInput) {
 		            skipped = string.substr(0, string.indexOf(parsedInput));
@@ -87210,7 +87210,7 @@ function createEMFForm(){
 
 		      // item is new (entering)
 		      if (hasNext && (!hasPrev || isLeaving)) {
-		        // console.log('entering', key)
+		        // //console.log('entering', key)
 		        children[key] = (0, _react.cloneElement)(child, {
 		          onExited: _this2.handleExited.bind(_this2, child),
 		          in: true,
@@ -87220,13 +87220,13 @@ function createEMFForm(){
 		      }
 		      // item is old (exiting)
 		      else if (!hasNext && hasPrev && !isLeaving) {
-		          // console.log('leaving', key)
+		          // //console.log('leaving', key)
 		          children[key] = (0, _react.cloneElement)(child, { in: false });
 		        }
 		        // item hasn't changed transition states
 		        // copy over the last transition props;
 		        else if (hasNext && hasPrev && (0, _react.isValidElement)(prevChild)) {
-		            // console.log('unchanged', key)
+		            // //console.log('unchanged', key)
 		            children[key] = (0, _react.cloneElement)(child, {
 		              onExited: _this2.handleExited.bind(_this2, child),
 		              in: prevChild.props.in,

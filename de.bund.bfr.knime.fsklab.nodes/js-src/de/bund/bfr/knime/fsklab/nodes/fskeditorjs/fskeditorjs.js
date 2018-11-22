@@ -335,7 +335,7 @@ fskeditorjs = function() {
 		version : '1.0.0'
 	};
 	joinerNode.name = 'FSK Editor JS';
-
+	var navigationMap = {};
 	var resourcesFiles = [];
 
 	var paper;
@@ -359,6 +359,7 @@ fskeditorjs = function() {
 	// only value is available when we run this code in knime server
 	var JWT;
 	var server;
+	
 	var timeStampInMs = window.performance && window.performance.now
 			&& window.performance.timing
 			&& window.performance.timing.navigationStart ? window.performance
@@ -678,13 +679,13 @@ fskeditorjs = function() {
 										data : file,
 										type : 'put',
 										success : function(data) {
-											console.log('SUCCESS !!!', data);
+											//console.log('SUCCESS !!!', data);
 											resourcesFiles
 											.push("knime://knime.mountpoint"
 													+ data.path);
 										},
 										error : function(data) {
-											console.log('ERROR !!!', data);
+											//console.log('ERROR !!!', data);
 										},
 										cache : false,
 										processData : false,
@@ -768,6 +769,18 @@ fskeditorjs = function() {
 									.on(
 											'shown.bs.tab',
 											function(e) {
+												//console.log($(e.currentTarget.hash).find(".active"))
+
+												if(!$(e.currentTarget.hash).find(".active")){
+													
+													$(e.currentTarget.hash).find("button[data$='General']").addClass("active");
+													$(e.currentTarget.hash).find("div[data$='General']").show();
+													//console.log(e.currentTarget.hash,$(e.currentTarget.hash).find("div[data$='General']"),$(e.currentTarget.hash).find("button[data$='General']"))
+												}
+												
+												
+												
+												
 												var codeMirrorContainer = $(
 														'#sub25').find(
 														".CodeMirror")[0];
@@ -927,7 +940,7 @@ fskeditorjs = function() {
 				'patternConsumption', 'populationAge' ];
 		$("[aria-describedby*='tooltip-add']").click(function(event) {
 			currentArea = window.makeId($(this).attr('aria-label'));
-			console.log(currentArea);
+			//console.log(currentArea);
 
 			if ($.inArray(currentArea, StringObjectPopupsName) < 0) {
 				event.preventDefault(); // Let's stop this event.
@@ -1040,7 +1053,7 @@ fskeditorjs = function() {
 		});
 		$("input[type='text']").click(function(event) {
 
-			console.log($(event.target).parent());
+			//console.log($(event.target).parent());
 			var source = $(event.target);
 
 			setTimeout(function() {
@@ -1065,6 +1078,7 @@ fskeditorjs = function() {
 
 		});
 
+		
 		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
 		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
 		$("div[role*='tooltip']:contains('should match format')").parent()
@@ -1075,8 +1089,80 @@ fskeditorjs = function() {
 			currentArea = window.makeId($(this).attr('aria-label'));
 
 		});
+		reDesign("generalinformation");
+		reDesign("scope");
+		reDesign("databackground");
+		reDesign("modelMath");
+		 
 	}
-
+	
+	function reDesign(ID){
+		var row = "					<div class='row'>"
+			+ " 					         <div class='col-xs-3 col-sm-3 col-lg-2 "+ID+"SideBar'><div class='list-group' id ='"+ID+"gisidenav'><button type='button' data='"+ID+"General' class='list-group-item list-group-item-action active sidenavibutton'>General</button></div></div>"
+			+ "                    			 <div class='col-xs-9 col-sm-9 col-lg-10 "+ID+"Content'><div data='General'></div> </div>"
+			+ "                        	</div>";
+			
+		$("#"+ID).append( row);
+		$("#"+ID+" div.MuiGrid-typeItem-2 div.table-responsive , #"+ID+" div.MuiGrid-typeItem-2 div.demoform").filter(function(index ,element){
+			//filter out all emfforms of modals
+			return $(element).parents('.modal-dialog').length <= 0;
+			  
+        }).each(function(index, element) {
+		  
+			//console.log($(element));
+		    var parent = $(element).parent().parent();
+		    
+		    var text;
+		    if($(this).attr('class').indexOf('demoform') >= 0 )
+		    	 text = parent.find('.MuiFormLabel-root-100').html();
+		    else
+		    	 text = parent.find('.control-labelal').html();
+		    
+		    
+		    var sideNavigationButton = "<button data='"+text+"' type='button' class='list-group-item list-group-item-action sidenavibutton'>"+text+"</button>\n" ;
+		    $("#"+ID+"gisidenav").append(sideNavigationButton);
+		    
+		    parent.addClass('detailedSide');
+		   
+		    navigationMap[text] = parent;
+			$("#"+ID+" ."+ID+"Content").append( parent);
+			parent.hide();
+			
+		});
+		
+		
+		$("#"+ID+" > div.demoform").each(function(index, element) {
+			//console.log(element);
+			$(element).addClass('detailedSide');
+			navigationMap[ID+"General"] = $(element);
+			$("#"+ID+" div[data='General']").append( element);
+			$("div[data='General']").show();
+		});
+		
+		if($("#"+ID+" div[data='General'] .demoform .MuiGrid-typeItem-2").children().length  < 1 ){
+			
+			$("#"+ID+" button[data='"+ID+"General']").remove();
+			$("#"+ID+" div[data='General']").remove();
+			
+			$("#"+ID).find("div[class$='Content']").children().first().show();
+			
+			$("#"+ID).find("div[class$='list-group']").children().first().addClass('active');
+			//
+			
+			
+			
+		}
+		$(".sidenavibutton").on("click",function(event){
+			//console.log("click ",$(this),event);
+			$(this).parent().parent().parent().find(".detailedSide").hide();
+			$(this).parent().find(".active").removeClass('active');
+			
+			navigationMap[$(this).attr('data')].show(); 
+			$(this).addClass('active');
+			
+		})
+		//console.log(navigationMap);
+	}
 	if (parent !== undefined && parent.KnimePageLoader !== undefined) {
 		parent.KnimePageLoader.autoResize(window, frameElement.id)
 	}
