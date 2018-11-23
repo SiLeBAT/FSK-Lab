@@ -5,7 +5,7 @@ FOLDER="$TRAVIS_BUILD_DIR/releng/de.bund.bfr.knime.update/target/repository"
 # DEPLOY TO test repo
 # =====================================================================================================
 # Delete previous version 'version'
-curl -u $BINTRAY_USER:$BINTRAY_KEY -X DELETE $API/content/silebat/fsklab_test/update/versions/version
+curl -u $BINTRAY_USER:$BINTRAY_KEY -X DELETE $API/packages/silebat/fsklab_test/update/versions/version
 
 # Create version 'version'
 curl -u $BINTRAY_USER:$BINTRAY_KEY -H "Content-Type: application/json" -X POST -d '{"name": "version", "description": ""}' $API/packages/silebat/fsklab_test/update/versions
