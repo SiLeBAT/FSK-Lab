@@ -293,9 +293,8 @@ public class LibRegistry {
 				currentProgress += step;
 				packageNumber++;
 
-				exec.setProgress(currentProgress);
-
 				String infoMsg = "Installing package [" + packageNumber + "/" + pkgs.size() + "]: " + currentLib;
+				exec.setProgress(currentProgress, infoMsg);
 				LOGGER.info(infoMsg);
 
 				String cmd = "addPackage(" + _pkg(currentLib) + ", '" + _path2String(path) + "', repos = '" + repos
