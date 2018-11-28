@@ -115,10 +115,14 @@ final class FSKEditorJSNodeModel
   public boolean isHideInWizard() {
     return false;
   }
-
+  //This method is being called just when user click apply or close with saving options
   @Override
   public ValidationError validateViewValue(FSKEditorJSViewValue viewContent) {
+    // TODO Use SchemaFactory to create new Schema and Validator from it and then apply
+    // validator.validate() to validate the EMF Object. Any error after the validate can be return
+    // back to the javascript view as ValidationError Object which can contains the error message
     return null;
+
   }
 
   @Override

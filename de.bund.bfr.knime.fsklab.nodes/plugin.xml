@@ -57,6 +57,7 @@
      </javascriptComponent>
      <!-- Javascript component for Fsk Editor JS node -->
      <javascriptComponent
+       setValidationError-method-name="displayErrors"
        getComponentValue-method-name="getComponentValue"
        implementationBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle"
        init-method-name="init"
@@ -108,6 +109,7 @@
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/joiner.css" type="CSS" />
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/joiner.js" type="JAVASCRIPT" />
        
+       
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/bootstrap-treeview.min.css" type="CSS" />
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/bootstrap-treeview.min.js" type="JAVASCRIPT" />
        <!-- Dependencies -->
@@ -115,6 +117,7 @@
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjs"></webDependency>
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjscss"></webDependency>
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js" />
+	   
 	 </webResourceBundle>
 	 
 	 <!-- JS and CSS code for Fsk Editor JS node -->
@@ -215,6 +218,12 @@
         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/punycode.js">
       </webResource>
       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/punycode.js" type="JAVASCRIPT" />
+      
+      <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/sweetalert.js"
+        relativePathTarget="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/sweetalert.js">
+      </webResource>
+      <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/sweetalert.js" type="JAVASCRIPT" />
       
       <webResource
         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/lodash.js"
