@@ -18,8 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.r.client;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -30,9 +30,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.RList;
@@ -57,7 +55,7 @@ public class LibRegistry {
 	private final Path repoPath;
 
 	/** Utility set to keep count of installed libraries. */
-	private final Set<String> installedLibs = new HashSet<>();
+	private final Set<String> installedLibs;
 
 	/** Utility RController for running R commands. */
 	private final RController controller = new RController();
@@ -81,14 +79,36 @@ public class LibRegistry {
 		// Uses R version 3.4 for Windows and 3.0 for Mac and Linux.
 		rVersion = Platform.isWindows() ? "3.4" : "3.0";
 
-		// Creates temporary folders and set them for deletion on shutdown
-		File knimeTempDir = KNIMEConstants.getKNIMETempPath().toFile();
-		repoPath = FileUtil.createTempDir("repo", knimeTempDir, true).toPath();
-		installPath = FileUtil.createTempDir("install", knimeTempDir, true).toPath();
-
+		// Prepare rWrapper
 		rWrapper = new RWrapper();
 		rWrapper.library("miniCRAN");
-		rWrapper.makeRepo(repoPath, "http://cran.us.r-project.org");
+		
+		Path userFolder = Paths.get(System.getProperty("user.home"));
+		Path fskFolder = userFolder.resolve(".fsk");
+		
+		// CRAN and library folders
+		installPath = fskFolder.resolve("library");
+		repoPath = fskFolder.resolve("cran");
+
+		// Validate .fsk folder
+		if (Files.exists(fskFolder)) {
+			// TODO: Need to validate further: library and CRAN
+			
+			// Initialize `installedLibs` with `installPath`
+			String[] pkgArray = installPath.toFile().list();
+			installedLibs = Arrays.stream(pkgArray).collect(Collectors.toSet());
+		} else {
+			
+			// Create directories
+			Files.createDirectory(fskFolder);
+			Files.createDirectory(repoPath);
+			Files.createDirectory(installPath);
+			
+			// Create CRAN structure in repoPath
+			rWrapper.makeRepo(repoPath, "http://cran.us.r-project.org");
+
+			installedLibs = new HashSet<>();
+		}
 	}
 
 	public static LibRegistry instance() throws IOException, RException {
