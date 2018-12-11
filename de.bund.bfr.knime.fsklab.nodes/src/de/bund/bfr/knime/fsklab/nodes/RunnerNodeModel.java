@@ -362,7 +362,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
             .collect(Collectors.toList());
 
         if (!missingLibs.isEmpty()) {
-          libReg.installLibs(missingLibs, exec, LOGGER);
+          libReg.installLibs(missingLibs);
         }
       } catch (RException | REXPMismatchException e) {
         LOGGER.error(e.getMessage());

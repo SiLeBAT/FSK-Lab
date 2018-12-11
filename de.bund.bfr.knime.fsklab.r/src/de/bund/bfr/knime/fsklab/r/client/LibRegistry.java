@@ -29,8 +29,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
-import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.NodeLogger;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.RList;
@@ -173,29 +171,6 @@ public class LibRegistry {
 		installedLibs.addAll(deps);
 	}
 
-	public void installLibs(final List<String> libs, final ExecutionMonitor exec, NodeLogger LOGGER)
-			throws RException, REXPMismatchException {
-
-		/*
-		 * Gets list of R dependencies of libs. pkgDep returns dependencies for the
-		 * required libs of which some may already be installed.
-		 */
-		final List<String> deps = rWrapper.pkgDep(libs).stream().filter(it -> !isInstalled(it))
-				.collect(Collectors.toList());
-
-		// Adds the dependencies to the miniCRAN repository
-		rWrapper.addPackage(deps, repoPath, "http://cran.us.r-project.org", exec, LOGGER);
-
-		// Gets the paths to the binaries of these dependencies
-		List<Path> paths = rWrapper.checkVersions(deps, repoPath);
-
-		// Install binaries
-		rWrapper.installPackages(paths, installPath);
-
-		// Adds names of installed libraries to utility set
-		installedLibs.addAll(deps);
-	}
-
 	/**
 	 * Gets list of paths to the binaries of the desired libraries.
 	 * 
@@ -297,30 +272,8 @@ public class LibRegistry {
 		 */
 		void addPackage(final List<String> pkgs, final Path path, final String repos) throws RException {
 			String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '" + repos
-					+ "', type = '" + type + "', Rversion = '" + rVersion + "', quiet = TRUE)";
+					+ "', type = '" + type + "', Rversion = '" + rVersion + "')";
 			controller.eval(cmd, false);
-		}
-
-		void addPackage(final List<String> pkgs, final Path path, final String repos, final ExecutionMonitor exec,
-				NodeLogger LOGGER) throws RException {
-
-			final double step = pkgs.size() * 0.6;
-			double currentProgress = 0;
-			int packageNumber = 0;
-
-			for (String currentLib : pkgs) {
-
-				currentProgress += step;
-				packageNumber++;
-
-				String infoMsg = "Installing package [" + packageNumber + "/" + pkgs.size() + "]: " + currentLib;
-				exec.setProgress(currentProgress, infoMsg);
-				LOGGER.info(infoMsg);
-
-				String cmd = "addPackage(" + _pkg(currentLib) + ", '" + _path2String(path) + "', repos = '" + repos
-						+ "', type = '" + type + "', Rversion = '" + rVersion + "', quiet = TRUE)";
-				controller.eval(cmd, false);
-			}
 		}
 
 		/**
@@ -411,10 +364,6 @@ public class LibRegistry {
 		// Utility method. Should not be used outside of RCommandBuilder.
 		String _pkgList(final List<String> pkgs) {
 			return "c(" + pkgs.stream().map(pkg -> "'" + pkg + "'").collect(Collectors.joining(", ")) + ")";
-		}
-
-		String _pkg(final String pkg) {
-			return "c('" + pkg + "')";
 		}
 
 		// Utility method. Should not be used outside of RCommandBuilder.
