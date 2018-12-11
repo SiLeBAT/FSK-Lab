@@ -469,6 +469,14 @@ fskeditorjs = function() {
 				: [];
 
 	}
+	joinerNode.displayErrors = function(error) {
+		swal({
+			  type: 'error',
+			  title: "Missing or incorrect values",
+			  text: 'Please correct values listed below!',
+			  footer: error
+			})
+	}
 	joinerNode.getComponentValue = function() {
 		window.store1.getState().jsonforms.core.data.author = window.store23
 				.getState().jsonforms.core.data;

@@ -38,6 +38,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.Diagnostician;
 import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -115,10 +116,35 @@ final class FSKEditorJSNodeModel
   public boolean isHideInWizard() {
     return false;
   }
-
+  //This method is being called just when user click apply or close with saving options
   @Override
   public ValidationError validateViewValue(FSKEditorJSViewValue viewContent) {
+    // TODO 
+    /* Use SchemaFactory to create new Schema and Validator from it and then apply
+     * validator.validate() to validate the EMF Object. Any error after the validate can be return
+     * back to the javascript view as ValidationError Object which can contains the error message
+     * EObject generalInformation;
+     * try {
+     * generalInformation = getEObjectFromJson(viewContent.getGeneralInformation(), GeneralInformation.class);
+     * EObject feed = (EObject)generalInformation.eGet(generalInformation.eClass().getEStructuralFeature("feed")); 
+     *
+     * Diagnostician validator = Diagnostician.INSTANCE;
+     *
+     * // Validate the feed and inspect the resulting diagnostic.
+     * org.eclipse.emf.common.util.Diagnostic diagnostic = validator.validate(feed);
+     *
+     * return new ValidationError(diagnostic.toString());
+     * } catch (InvalidSettingsException e) {
+     *             e.printStackTrace();
+     * }
+     * 
+     * */
+ 
+    
+    
+    
     return null;
+
   }
 
   @Override
