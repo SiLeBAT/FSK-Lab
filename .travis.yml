@@ -1,6 +1,6 @@
 language: java
 # Disable JaCoCo as Coveralls is failing
-script: mvn clean verify # -Pjacoco coveralls:report
+script: mvn clean verify -Pjacoco # coveralls:report
 # Cache maven repository to speed up build
 cache:
    directories:
@@ -10,3 +10,6 @@ deploy:
    skip_cleanup: true # to upload artifacts created during the build
    script: bash bintray.sh
    on: test
+after_success:
+- cd $TRAVIS_BUILD_DIR/de.bund.bfr.knime.testreport/target/site/jacoco-aggregate
+- bash <(curl -s https://codecov.io/bash)
