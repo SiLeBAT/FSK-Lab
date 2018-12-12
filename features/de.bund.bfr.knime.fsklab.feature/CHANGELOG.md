@@ -6,9 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.4.0] - 2018-12-12
+
+### Added
+- Permanent R library. Temporary R library folder is replaced with permanent folder (.fsk) in the user folder.
+
 ### Changed
 - Add side navigation menu (representing subcategories) to the main metadata tabs in the joiner and JS Editor.
-- Permanent R library. Temporary R library folder is replaced with permanent folder (.fsk) in the user folder.
+- One-step installation of R packages replaced with much faster batch installation. All the required packages by a model are downloaded as a batch.
 
 ### Removed
 - Unused language settings.
