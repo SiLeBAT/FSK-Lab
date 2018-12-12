@@ -43,7 +43,7 @@
 		<module>org.jdom2</module>
 		<module>org.jsoup</module>
 		<module>quick.dbtable</module>
-		
+
 		<!-- Test plugins -->
 		<module>de.bund.bfr.knime.fsklab.metadata.model.test</module>
 		<module>de.bund.bfr.knime.fsklab.nodes.test</module>
@@ -52,7 +52,7 @@
 
 		<!-- Test report -->
 		<module>de.bund.bfr.knime.testreport</module>
-		
+
 		<!-- Others -->
 		<module>features</module>
 		<module>releng</module>
@@ -84,21 +84,6 @@
 						</executions>
 					</plugin>
 				</plugins>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.eluder.coveralls</groupId>
-							<artifactId>coveralls-maven-plugin</artifactId>
-							<version>4.3.0</version>
-							<configuration>
-								<repoToken>${COVERALLS_TOKEN}</repoToken>
-								<jacocoReports>
-									<jacocoReport>${project.basedir}/de.bund.bfr.knime.testreport/target/site/jacoco-aggregate/jacoco.xml</jacocoReport>
-								</jacocoReports>
-							</configuration>
-						</plugin>
-					</plugins>
-				</pluginManagement>
 			</build>
 		</profile>
 	</profiles>
