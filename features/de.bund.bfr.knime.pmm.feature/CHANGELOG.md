@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2018-12-12
+
 ### Added
 - Generated PMFX files with the writer node are added a README file.
 
