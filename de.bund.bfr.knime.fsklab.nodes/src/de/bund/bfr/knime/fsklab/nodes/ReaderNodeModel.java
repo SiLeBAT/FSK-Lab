@@ -28,7 +28,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -182,17 +181,13 @@ class ReaderNodeModel extends NoInternalsModel {
     FskPortObject fskObj = null;
 
     try (final CombineArchive archive = new CombineArchive(in)) {
-      Collection<ArchiveEntry> entries = archive.getEntries();
-      // Get the directories inside the archive without duplication
-      Set<String> entriesSet = new HashSet<>();
-      for (ArchiveEntry sEntry : entries) {
-        String path = sEntry.getFilePath().substring(0, sEntry.getFilePath().lastIndexOf("/") + 1);
 
-        int depth = StringUtils.countMatches(path, "/");
-        if (depth > 2 && !path.endsWith("simulations/")) {
-          entriesSet.add(path);
-        }
-      }
+      // Get the directories inside the archive without duplication
+      Set<String> entriesSet = archive.getEntries().parallelStream()
+          .map(ArchiveEntry::getFilePath)
+          .map(fullPath -> fullPath.substring(0, fullPath.lastIndexOf("/") + 1))
+          .filter(path -> StringUtils.countMatches(path, "/") > 2 && !path.endsWith("simulations/"))
+          .collect(Collectors.toSet());
 
       List<String> sortedList = new ArrayList<>(entriesSet);
       // Sort to have the related directories(Joiner One) after each other
