@@ -27,7 +27,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,7 +39,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import javax.swing.tree.TreeNode;
-import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -63,10 +61,10 @@ import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import org.sbml.jsbml.Annotation;
+import org.sbml.jsbml.JSBML;
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.SBMLDocument;
-import org.sbml.jsbml.SBMLReader;
 import org.sbml.jsbml.ext.comp.CompModelPlugin;
 import org.sbml.jsbml.ext.comp.CompSBasePlugin;
 import org.sbml.jsbml.ext.comp.Submodel;
@@ -101,7 +99,6 @@ class ReaderNodeModel extends NoInternalsModel {
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
   private final ReaderNodeSettings nodeSettings = new ReaderNodeSettings();
-  private static final SBMLReader READER = new SBMLReader();
   private static final AtomicLong TEMP_DIR_UNIFIER = new AtomicLong((int) (100000 * Math.random()));
 
   public ReaderNodeModel() {
@@ -150,12 +147,6 @@ class ReaderNodeModel extends NoInternalsModel {
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
     return new PortObjectSpec[] {FskPortObjectSpec.INSTANCE};
-  }
-
-  private static SBMLDocument readModel(Path path) throws IOException, XMLStreamException {
-    try (InputStream stream = Files.newInputStream(path, StandardOpenOption.READ)) {
-      return READER.readSBMLFromStream(stream);
-    }
   }
 
   @Override
@@ -317,7 +308,7 @@ class ReaderNodeModel extends NoInternalsModel {
             Path parentFile = Files.createTempFile("Model", ".sbml");
             sbmlEntry.extractFile(parentFile.toFile());
             try {
-              parentSBMLDoc = readModel(parentFile);
+              parentSBMLDoc = JSBML.readSBMLFromFile(parentFile.toString());
             } catch (Exception ex) {
               ex.printStackTrace();
             }
