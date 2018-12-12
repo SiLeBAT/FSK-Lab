@@ -42,7 +42,6 @@ import javax.swing.tree.TreeNode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jlibsedml.Change;
 import org.jlibsedml.ChangeAttribute;
 import org.jlibsedml.Libsedml;
 import org.jlibsedml.SEDMLTags;
@@ -185,12 +184,10 @@ class ReaderNodeModel extends NoInternalsModel {
 
       // Get the directories inside the archive without duplication
       // The directories are sorted to have the related directories (Joiner One) after each other
-      TreeSet<String> entries =
-          archive.getEntries().parallelStream().map(ArchiveEntry::getFilePath)
-              .map(fullPath -> fullPath.substring(0, fullPath.lastIndexOf("/") + 1))
-              .filter(
-                  path -> StringUtils.countMatches(path, "/") > 2 && !path.endsWith("simulations/"))
-              .collect(Collectors.toCollection(TreeSet::new));
+      TreeSet<String> entries = archive.getEntries().parallelStream().map(ArchiveEntry::getFilePath)
+          .map(fullPath -> fullPath.substring(0, fullPath.lastIndexOf("/") + 1))
+          .filter(path -> StringUtils.countMatches(path, "/") > 2 && !path.endsWith("simulations/"))
+          .collect(Collectors.toCollection(TreeSet::new));
 
       // Get the number of SBML files available in this archive
       // to be used as tag of joining if they are more than one.
@@ -611,19 +608,15 @@ class ReaderNodeModel extends NoInternalsModel {
 
     for (org.jlibsedml.Model model : sedml.getModels()) {
 
-      FskSimulation fskSimulation = new FskSimulation(model.getId());
-
-      for (Change change : model.getListOfChanges()) {
-        if (change.getChangeKind().equals(SEDMLTags.CHANGE_ATTRIBUTE_KIND)) {
-          ChangeAttribute ca = (ChangeAttribute) change;
-
-          String variable = ca.getTargetXPath().toString();
-          String value = ca.getNewValue();
-          fskSimulation.getParameters().put(variable, value);
-        }
-      }
-
-      simulations.add(fskSimulation);
+      Map<String, String> params = model.getListOfChanges().stream()
+          .filter(change -> change.getChangeKind().equals(SEDMLTags.CHANGE_ATTRIBUTE_KIND))
+          .map(change -> (ChangeAttribute) change)
+          .collect(Collectors.toMap(change -> change.getTargetXPath().toString(), ChangeAttribute::getNewValue));
+      
+      FskSimulation sim = new FskSimulation(model.getId());
+      sim.getParameters().putAll(params);
+      
+      simulations.add(sim);
     }
 
     return simulations;
