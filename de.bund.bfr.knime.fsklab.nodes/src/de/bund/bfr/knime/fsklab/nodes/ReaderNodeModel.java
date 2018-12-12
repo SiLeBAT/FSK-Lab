@@ -28,13 +28,14 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import javax.swing.tree.TreeNode;
@@ -183,26 +184,24 @@ class ReaderNodeModel extends NoInternalsModel {
     try (final CombineArchive archive = new CombineArchive(in)) {
 
       // Get the directories inside the archive without duplication
-      Set<String> entriesSet = archive.getEntries().parallelStream()
-          .map(ArchiveEntry::getFilePath)
-          .map(fullPath -> fullPath.substring(0, fullPath.lastIndexOf("/") + 1))
-          .filter(path -> StringUtils.countMatches(path, "/") > 2 && !path.endsWith("simulations/"))
-          .collect(Collectors.toSet());
+      // The directories are sorted to have the related directories (Joiner One) after each other
+      TreeSet<String> entries =
+          archive.getEntries().parallelStream().map(ArchiveEntry::getFilePath)
+              .map(fullPath -> fullPath.substring(0, fullPath.lastIndexOf("/") + 1))
+              .filter(
+                  path -> StringUtils.countMatches(path, "/") > 2 && !path.endsWith("simulations/"))
+              .collect(Collectors.toCollection(TreeSet::new));
 
-      List<String> sortedList = new ArrayList<>(entriesSet);
-      // Sort to have the related directories(Joiner One) after each other
-      Collections.sort(sortedList);
-      // Get the number of the .sbml file which are available in this archive to be used as Tag of
-      // joining if they are more than one.
-      int sbmlFilesNumber = archive.getNumEntriesWithFormat(FSKML.getURIS(1, 0, 12).get("sbml"));
-      if (sbmlFilesNumber > 1) {
-        fskObj = readFskPortObject(archive, sortedList, 0);
-      } else {
-        ArrayList<String> rootList = new ArrayList<>();
-        // No Joining, just normal Fsk Object
-        rootList.add("/");
-        fskObj = readFskPortObject(archive, rootList, 0);
-      }
+      // Get the number of SBML files available in this archive
+      // to be used as tag of joining if they are more than one.
+      URI sbmlUri = FSKML.getURIS(1, 0, 12).get("sbml");
+
+      // If only one SBML entry then no joining, just normal FSK object
+      List<String> listOfPaths =
+          archive.getNumEntriesWithFormat(sbmlUri) > 1 ? new ArrayList<>(entries)
+              : Arrays.asList("/");
+
+      fskObj = readFskPortObject(archive, listOfPaths, 0);
     }
 
     return fskObj;
@@ -268,8 +267,10 @@ class ReaderNodeModel extends NoInternalsModel {
 
         for (ArchiveEntry jsonEntry : jsonEntries) {
           String path = jsonEntry.getEntityPath();
-          if (path.startsWith(parentPath) && (StringUtils.countMatches(path,
-              "/") == (StringUtils.countMatches(parentPath, "/") + 1)) && path.endsWith("metaData.json")) {
+          if (path.startsWith(parentPath)
+              && (StringUtils.countMatches(path,
+                  "/") == (StringUtils.countMatches(parentPath, "/") + 1))
+              && path.endsWith("metaData.json")) {
             jsonEntry.extractFile(temp.toFile());
 
             // Loads metadata from temporary file
@@ -475,7 +476,7 @@ class ReaderNodeModel extends NoInternalsModel {
         List<ArchiveEntry> jsonEntries = archive.getEntriesWithFormat(URIS.get("json"));
         for (ArchiveEntry jsonEntry : jsonEntries) {
           String path = jsonEntry.getEntityPath();
-          //read the metaData.json file only!
+          // read the metaData.json file only!
           if (path.indexOf(pathToResource) == 0 && path.endsWith("metaData.json")) {
             jsonEntry.extractFile(temp.toFile());
 
@@ -568,7 +569,7 @@ class ReaderNodeModel extends NoInternalsModel {
       // extractFile throws IOException if the file does not exist (was deleted manually) or is
       // not writable.
       entry.extractFile(temp);
-      
+
       // readFileToString throws IOException if the file was deleted manually
       contents = FileUtils.readFileToString(temp, "UTF-8");
     } catch (IOException exception) {
