@@ -1,6 +1,6 @@
 # FSK-Lab repository
 [![Build Status](https://travis-ci.org/SiLeBAT/FSK-Lab.svg?branch=master)](https://travis-ci.org/SiLeBAT/FSK-Lab)
-[![Coverage Status](https://coveralls.io/repos/github/SiLeBAT/FSK-Lab/badge.svg?branch=master)](https://coveralls.io/github/SiLeBAT/FSK-Lab?branch=master)
+[![codecov](https://codecov.io/gh/SiLeBAT/FSK-Lab/branch/master/graph/badge.svg)](https://codecov.io/gh/SiLeBAT/FSK-Lab)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a00c75d3653e0c22647a/maintainability)](https://codeclimate.com/github/SiLeBAT/FSK-Lab/maintainability)
 
 This project contains the PMM-Lab and FSK-Lab extension plugins to the data
