@@ -15,7 +15,7 @@
    <feature url="features/de.bund.bfr.knime.internal.feature_0.0.1.qualifier.jar" id="de.bund.bfr.knime.internal.feature" version="0.0.1.qualifier">
       <category name="FSK-Lab"/>
    </feature>
-   <feature url="features/de.bund.bfr.knime.fsklab.feature_1.3.1.qualifier.jar" id="de.bund.bfr.knime.fsklab.feature" version="1.3.1.qualifier">
+   <feature url="features/de.bund.bfr.knime.fsklab.feature_1.4.0.qualifier.jar" id="de.bund.bfr.knime.fsklab.feature" version="1.4.0.qualifier">
       <category name="FSK-Lab"/>
    </feature>
    <category-def name="FSK-Lab" label="FSK-Lab">
