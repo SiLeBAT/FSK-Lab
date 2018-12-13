@@ -355,18 +355,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     // Install needed libraries
     if (!fskObj.packages.isEmpty()) {
-      try {
-        // Install missing libraries
-        LibRegistry libReg = LibRegistry.instance();
-        List<String> missingLibs = fskObj.packages.stream().filter(lib -> !libReg.isInstalled(lib))
-            .collect(Collectors.toList());
-
-        if (!missingLibs.isEmpty()) {
-          libReg.installLibs(missingLibs);
-        }
-      } catch (RException | REXPMismatchException e) {
-        LOGGER.error(e.getMessage());
-      }
+      install(fskObj.packages);
     }
 
     exec.setProgress(0.71, "Add paths to libraries");
@@ -436,4 +425,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     return internalSettings.plot;
   }
 
+  private static synchronized void install(List<String> packages) throws IOException, RException, REXPMismatchException {
+    LibRegistry registry = LibRegistry.instance();
+    
+    List<String> missingPackages = packages.stream().filter(pkg -> !registry.isInstalled(pkg)).collect(Collectors.toList());
+    
+    if (!missingPackages.isEmpty()) {
+      registry.installLibs(missingPackages);
+    }
+  }
 }
