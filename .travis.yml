@@ -11,5 +11,6 @@ deploy:
    script: bash bintray.sh
    on: test
 after_success:
-- cd $TRAVIS_BUILD_DIR/de.bund.bfr.knime.testreport/target/site/jacoco-aggregate
+- pushd $TRAVIS_BUILD_DIR/de.bund.bfr.knime.testreport/target/site/jacoco-aggregate
 - bash <(curl -s https://codecov.io/bash)
+- popd
