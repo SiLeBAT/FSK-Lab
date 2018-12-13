@@ -123,7 +123,7 @@ public class LibRegistry {
 	 *            name of the R library
 	 * @return whether an R library is installed
 	 */
-	public boolean isInstalled(final String libraryName) {
+	private boolean isInstalled(final String libraryName) {
 
 		// Look in libraries installed within LibRegistry
 		if (installedLibs.contains(libraryName))
