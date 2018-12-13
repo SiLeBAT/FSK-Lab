@@ -24,10 +24,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -147,11 +145,7 @@ class FskCreatorNodeModel extends NoInternalsModel {
         try {
           // Install missing libraries
           LibRegistry libReg = LibRegistry.instance();
-          List<String> missingLibs = modelScript.getLibraries().stream()
-              .filter(lib -> !libReg.isInstalled(lib)).collect(Collectors.toList());
-          if (!missingLibs.isEmpty()) {
-            libReg.installLibs(missingLibs);
-          }
+          libReg.install(modelScript.getLibraries());
 
           Set<Path> libPaths = libReg.getPaths(modelScript.getLibraries());
           libPaths.forEach(l -> portObj.libs.add(l.toFile()));

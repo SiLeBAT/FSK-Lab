@@ -162,11 +162,7 @@ public class FskxReaderNodeModel extends NoInternalsModel {
         LibRegistry libRegistry = LibRegistry.instance();
 
         // Filters and installs missing libraries
-        List<String> missingLibs = libNames.stream().filter(lib -> !libRegistry.isInstalled(lib))
-            .collect(Collectors.toList());
-        if (!missingLibs.isEmpty()) {
-          libRegistry.installLibs(missingLibs);
-        }
+        libRegistry.install(libNames);
 
         // Converts and return set of Paths returned from plugin to set
         Set<File> libs =

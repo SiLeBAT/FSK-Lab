@@ -47,7 +47,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
-import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
@@ -355,7 +354,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     // Install needed libraries
     if (!fskObj.packages.isEmpty()) {
-      install(fskObj.packages);
+      LibRegistry.instance().install(fskObj.packages);
     }
 
     exec.setProgress(0.71, "Add paths to libraries");
@@ -423,15 +422,5 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
   Image getResultImage() {
     return internalSettings.plot;
-  }
-
-  private static synchronized void install(List<String> packages) throws IOException, RException, REXPMismatchException {
-    LibRegistry registry = LibRegistry.instance();
-    
-    List<String> missingPackages = packages.stream().filter(pkg -> !registry.isInstalled(pkg)).collect(Collectors.toList());
-    
-    if (!missingPackages.isEmpty()) {
-      registry.installLibs(missingPackages);
-    }
   }
 }

@@ -80,10 +80,10 @@ public class LibRegistry {
 		// Prepare rWrapper
 		rWrapper = new RWrapper();
 		rWrapper.library("miniCRAN");
-		
+
 		Path userFolder = Paths.get(System.getProperty("user.home"));
 		Path fskFolder = userFolder.resolve(".fsk");
-		
+
 		// CRAN and library folders
 		installPath = fskFolder.resolve("library");
 		repoPath = fskFolder.resolve("cran");
@@ -91,17 +91,17 @@ public class LibRegistry {
 		// Validate .fsk folder
 		if (Files.exists(fskFolder)) {
 			// TODO: Need to validate further: library and CRAN
-			
+
 			// Initialize `installedLibs` with `installPath`
 			String[] pkgArray = installPath.toFile().list();
 			installedLibs = Arrays.stream(pkgArray).collect(Collectors.toSet());
 		} else {
-			
+
 			// Create directories
 			Files.createDirectory(fskFolder);
 			Files.createDirectory(repoPath);
 			Files.createDirectory(installPath);
-			
+
 			// Create CRAN structure in repoPath
 			rWrapper.makeRepo(repoPath, "http://cran.us.r-project.org");
 
@@ -109,7 +109,7 @@ public class LibRegistry {
 		}
 	}
 
-	public static LibRegistry instance() throws IOException, RException {
+	public synchronized static LibRegistry instance() throws IOException, RException {
 		if (instance == null) {
 			instance = new LibRegistry();
 		}
@@ -142,33 +142,33 @@ public class LibRegistry {
 	}
 
 	/**
-	 * Install a list of libraries into the repository.
+	 * Install a list of packages into the repository. Already installed packages are ignored.
 	 * 
 	 * @param libs
 	 *            list of names of R libraries
 	 * @throws RException
 	 * @throws REXPMismatchException
 	 */
-	public void installLibs(final List<String> libs) throws RException, REXPMismatchException {
+	public synchronized void install(final List<String> packages) throws RException, REXPMismatchException {
 
-		/*
-		 * Gets list of R dependencies of libs. pkgDep returns dependencies for the
-		 * required libs of which some may already be installed.
-		 */
-		final List<String> deps = rWrapper.pkgDep(libs).stream().filter(it -> !isInstalled(it))
+		// Gets missing packages
+		List<String> missingPackages = rWrapper.pkgDep(packages).stream().filter(pkg -> !isInstalled(pkg))
 				.collect(Collectors.toList());
 
-		// Adds the dependencies to the miniCRAN repository
-		rWrapper.addPackage(deps, repoPath, "http://cran.us.r-project.org");
+		if (!missingPackages.isEmpty()) {
 
-		// Gets the paths to the binaries of these dependencies
-		List<Path> paths = rWrapper.checkVersions(deps, repoPath);
+			// Adds the dependencies to the miniCRAN repository
+			rWrapper.addPackage(missingPackages, repoPath, "http://cran.us.r-project.org");
 
-		// Install binaries
-		rWrapper.installPackages(paths, installPath);
+			// Gets the paths to the binaries of these dependencies
+			List<Path> paths = rWrapper.checkVersions(missingPackages, repoPath);
 
-		// Adds names of installed libraries to utility set
-		installedLibs.addAll(deps);
+			// Install binaries
+			rWrapper.installPackages(paths, installPath);
+
+			// Adds names of installed libraries to utility set
+			installedLibs.addAll(missingPackages);
+		}
 	}
 
 	/**

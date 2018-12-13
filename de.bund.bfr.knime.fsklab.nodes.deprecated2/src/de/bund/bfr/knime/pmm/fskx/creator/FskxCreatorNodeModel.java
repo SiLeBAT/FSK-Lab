@@ -237,7 +237,7 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
 
         // Install missing libraries
         if (!missingLibs.isEmpty()) {
-          libReg.installLibs(missingLibs);
+          libReg.install(missingLibs);
 
           Set<Path> libPaths = libReg.getPaths(libraries);
           libPaths.forEach(l -> portObj.libs.add(l.toFile()));
