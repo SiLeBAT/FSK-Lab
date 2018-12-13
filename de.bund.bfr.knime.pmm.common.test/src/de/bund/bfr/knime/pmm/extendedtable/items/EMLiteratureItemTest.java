@@ -15,50 +15,50 @@ public class EMLiteratureItemTest {
 		// Test fully parameterized constructor
 		EMLiteratureItem item0 = new EMLiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
 				0, "website", 0, "comment", 0, "dbuuid");
-		assertTrue(0 == item0.getId());
-		assertEquals("author", item0.getAuthor());
-		assertTrue(0 == item0.getYear());
-		assertEquals("journal", item0.getJournal());
-		assertEquals("volume", item0.getVolume());
-		assertEquals("issue", item0.getIssue());
-		assertTrue(0 == item0.getPage());
-		assertTrue(0 == item0.getApprovalMode());
-		assertEquals("website", item0.getWebsite());
-		assertTrue(0 == item0.getType());
-		assertEquals("comment", item0.getComment());
-		assertEquals("dbuuid", item0.getDbuuid());
+		assertTrue(0 == item0.id);
+		assertEquals("author", item0.author);
+		assertTrue(0 == item0.year);
+		assertEquals("journal", item0.journal);
+		assertEquals("volume", item0.volume);
+		assertEquals("issue", item0.issue);
+		assertTrue(0 == item0.page);
+		assertTrue(0 == item0.approvalMode);
+		assertEquals("website", item0.website);
+		assertTrue(0 == item0.type);
+		assertEquals("comment", item0.comment);
+		assertEquals("dbuuid", item0.dbuuid);
 
 		// Test constructor without dbbuid
 		EMLiteratureItem item1 = new EMLiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
 				0, "website", 0, "comment", 0);
-		assertTrue(0 == item1.getId());
-		assertEquals("author", item1.getAuthor());
-		assertTrue(0 == item1.getYear());
-		assertEquals("journal", item1.getJournal());
-		assertEquals("volume", item1.getVolume());
-		assertEquals("issue", item1.getIssue());
-		assertTrue(0 == item1.getPage());
-		assertTrue(0 == item1.getApprovalMode());
-		assertEquals("website", item1.getWebsite());
-		assertTrue(0 == item1.getType());
-		assertEquals("comment", item1.getComment());
-		assertNull(item1.getDbuuid());
+		assertTrue(0 == item1.id);
+		assertEquals("author", item1.author);
+		assertTrue(0 == item1.year);
+		assertEquals("journal", item1.journal);
+		assertEquals("volume", item1.volume);
+		assertEquals("issue", item1.issue);
+		assertTrue(0 == item1.page);
+		assertTrue(0 == item1.approvalMode);
+		assertEquals("website", item1.website);
+		assertTrue(0 == item1.type);
+		assertEquals("comment", item1.comment);
+		assertNull(item1.dbuuid);
 
 		// Test constructor without dbbuid and id
 		EMLiteratureItem item2 = new EMLiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
 				0, "website", 0, "comment");
-		assertTrue(item2.getId() < 0);
-		assertEquals("author", item2.getAuthor());
-		assertTrue(0 == item2.getYear());
-		assertEquals("journal", item2.getJournal());
-		assertEquals("volume", item2.getVolume());
-		assertEquals("issue", item2.getIssue());
-		assertTrue(0 == item2.getPage());
-		assertTrue(0 == item2.getApprovalMode());
-		assertEquals("website", item2.getWebsite());
-		assertTrue(0 == item2.getType());
-		assertEquals("comment", item2.getComment());
-		assertNull(item2.getDbuuid());
+		assertTrue(item2.id < 0);
+		assertEquals("author", item2.author);
+		assertTrue(0 == item2.year);
+		assertEquals("journal", item2.journal);
+		assertEquals("volume", item2.volume);
+		assertEquals("issue", item2.issue);
+		assertTrue(0 == item2.page);
+		assertTrue(0 == item2.approvalMode);
+		assertEquals("website", item2.website);
+		assertTrue(0 == item2.type);
+		assertEquals("comment", item2.comment);
+		assertNull(item2.dbuuid);
 		
 		// Test copy constructor with Element
 		Element element = new Element(EMLiteratureItem.ELEMENT_LITERATURE);
@@ -76,18 +76,18 @@ public class EMLiteratureItemTest {
 		element.setAttribute("dbuuid", "dbuuid");
 		
 		EMLiteratureItem item3 = new EMLiteratureItem(element);
-		assertTrue(0 == item3.getId());
-		assertEquals("author", item3.getAuthor());
-		assertTrue(0 == item3.getYear());
-		assertEquals("journal", item3.getJournal());
-		assertEquals("volume", item3.getVolume());
-		assertEquals("issue", item3.getIssue());
-		assertTrue(0 == item3.getPage());
-		assertTrue(0 == item3.getApprovalMode());
-		assertEquals("website", item3.getWebsite());
-		assertTrue(0 == item3.getType());
-		assertEquals("comment", item3.getComment());
-		assertEquals("dbuuid", item3.getDbuuid());
+		assertTrue(0 == item3.id);
+		assertEquals("author", item3.author);
+		assertTrue(0 == item3.year);
+		assertEquals("journal", item3.journal);
+		assertEquals("volume", item3.volume);
+		assertEquals("issue", item3.issue);
+		assertTrue(0 == item3.page);
+		assertTrue(0 == item3.approvalMode);
+		assertEquals("website", item3.website);
+		assertTrue(0 == item3.type);
+		assertEquals("comment", item3.comment);
+		assertEquals("dbuuid", item3.dbuuid);
 	}
 
 	@Test
