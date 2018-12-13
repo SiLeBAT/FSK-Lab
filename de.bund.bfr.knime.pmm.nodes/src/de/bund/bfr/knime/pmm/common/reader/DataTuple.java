@@ -60,10 +60,10 @@ public class DataTuple {
 		AgentXml originalAgentXml = new AgentXml();
 		originalAgentXml.name = species.getName();
 		MDAgentXml agentXml = new MDAgentXml();
-		agentXml.setName(species.getName());
+		agentXml.name = species.getName();
 		if (species.isSetDetail()) {
 			originalAgentXml.detail = species.getDetail();
-			agentXml.setDetail(species.getDetail());
+			agentXml.detail = species.getDetail();
 		}
 
 		PMFCompartment compartment = doc.getConcentrationOntologyTerm().getCompartment();

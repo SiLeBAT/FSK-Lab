@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Federal Institute for Risk Assessment (BfR), Germany
+ * Copyright (c) 2018 Federal Institute for Risk Assessment (BfR), Germany
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,19 +19,16 @@
  *******************************************************************************/
 package de.bund.bfr.knime.pmm.extendedtable.items;
 
-public interface AgentXmlI {
+import org.jdom2.Element;
 
-	public String getElementName();
+public abstract class AgentXml {
 	
-	public Integer getId();
-	public void setId(Integer id);
-
-	public String getName();
-	public void setName(String name);
+	public abstract String getElementName();
 	
-	public String getDetail();
-	public void setDetail(String detail);
+	public abstract Element toXmlElement();
 	
-	public String getDbuuid();
-	public void setDbuuid(String dbuuid);
+	public Integer id;
+	public String name;
+	public String detail;
+	public String dbuuid;
 }

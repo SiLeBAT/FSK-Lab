@@ -12,31 +12,31 @@ public class Model2AgentXmlTest2 {
 		
 		// Test empty constructor
 		Model2AgentXml agent0 = new Model2AgentXml();
-		assertTrue(agent0.getId() < 0);
-		assertNull(agent0.getName());
-		assertNull(agent0.getDetail());
-		assertNull(agent0.getDbuuid());
+		assertTrue(agent0.id < 0);
+		assertNull(agent0.name);
+		assertNull(agent0.detail);
+		assertNull(agent0.dbuuid);
 		
 		// Test constructor with id, name and detail
 		Model2AgentXml agent1 = new Model2AgentXml(0, "name", "detail");
-		assertTrue(0 == agent1.getId());
-		assertEquals("name", agent1.getName());
-		assertEquals("detail", agent1.getDetail());
-		assertNull(agent1.getDbuuid());
+		assertTrue(0 == agent1.id);
+		assertEquals("name", agent1.name);
+		assertEquals("detail", agent1.detail);
+		assertNull(agent1.dbuuid);
 		
 		// Test constructor with id, name, detail and dbuuid
 		Model2AgentXml agent2 = new Model2AgentXml(0, "name", "detail", "dbuuid");
-		assertTrue(0 == agent2.getId());
-		assertEquals("name", agent2.getName());
-		assertEquals("detail", agent2.getDetail());
-		assertEquals("dbuuid", agent2.getDbuuid());
+		assertTrue(0 == agent2.id);
+		assertEquals("name", agent2.name);
+		assertEquals("detail", agent2.detail);
+		assertEquals("dbuuid", agent2.dbuuid);
 		
 		// Test copy constructor
 		Model2AgentXml agent3 = new Model2AgentXml(agent2);
-		assertTrue(0 == agent3.getId());
-		assertEquals("name", agent3.getName());
-		assertEquals("detail", agent3.getDetail());
-		assertEquals("dbuuid", agent3.getDbuuid());
+		assertTrue(0 == agent3.id);
+		assertEquals("name", agent3.name);
+		assertEquals("detail", agent3.detail);
+		assertEquals("dbuuid", agent3.dbuuid);
 		
 		// Test constructor with JDOM Element
 		Element element = new Element(Model2AgentXml.ELEMENT_AGENT);
@@ -46,10 +46,10 @@ public class Model2AgentXmlTest2 {
 		element.setAttribute("dbuuid", "dbuuid");
 		
 		Model2AgentXml agent4 = new Model2AgentXml(element);
-		assertTrue(0 == agent4.getId());
-		assertEquals("name", agent4.getName());
-		assertEquals("detail", agent4.getDetail());
-		assertEquals("dbuuid", agent4.getDbuuid());
+		assertTrue(0 == agent4.id);
+		assertEquals("name", agent4.name);
+		assertEquals("detail", agent4.detail);
+		assertEquals("dbuuid", agent4.dbuuid);
 	}
 	
 	@Test

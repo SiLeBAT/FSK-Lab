@@ -25,14 +25,9 @@ import de.bund.bfr.knime.pmm.common.PmmXmlElementConvertable;
 import de.bund.bfr.knime.pmm.common.XmlHelper;
 import de.bund.bfr.knime.pmm.common.math.MathUtilities;
 
-public class Model1AgentXml implements AgentXmlI, PmmXmlElementConvertable {
+public class Model1AgentXml extends AgentXml implements PmmXmlElementConvertable {
 
 	public static final String ELEMENT_AGENT = "model1Agent";
-
-	private Integer id;
-	private String name;
-	private String detail;
-	private String dbuuid;
 
 	/** id is given a random negative int. name, detail and dbuuid are null. */
 	public Model1AgentXml() {
@@ -45,8 +40,8 @@ public class Model1AgentXml implements AgentXmlI, PmmXmlElementConvertable {
 	}
 
 	/** Copy constructor. Take every property from agent. */
-	public Model1AgentXml(AgentXmlI agent) {
-		this(agent.getId(), agent.getName(), agent.getDetail(), agent.getDbuuid());
+	public Model1AgentXml(AgentXml agent) {
+		this(agent.id, agent.name, agent.detail, agent.dbuuid);
 	}
 
 	/** Fully parameterized constructor. */
@@ -94,37 +89,5 @@ public class Model1AgentXml implements AgentXmlI, PmmXmlElementConvertable {
 
 	public String getElementName() {
 		return "modelLiterature";
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDetail() {
-		return detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	public void setDbuuid(String dbuuid) {
-		this.dbuuid = dbuuid;
 	}
 }
