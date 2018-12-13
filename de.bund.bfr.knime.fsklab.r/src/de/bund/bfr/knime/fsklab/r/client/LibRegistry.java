@@ -272,7 +272,7 @@ public class LibRegistry {
 		 */
 		void addPackage(final List<String> pkgs, final Path path, final String repos) throws RException {
 			String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '" + repos
-					+ "', type = '" + type + "', Rversion = '" + rVersion + "')";
+					+ "', type = '" + type + "', Rversion = '" + rVersion + "', deps = FALSE)";
 			controller.eval(cmd, false);
 		}
 
