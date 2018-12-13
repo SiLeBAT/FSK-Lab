@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## Fixed
+## [1.4.1] - 2018-12-13
+
+### Fixed
 - Concurrent installation of R packages. The installation of R packages is synchronized so that different nodes cannot try to install the same package at the same time. If a node start installing a package, others wait.
 - Remove unnecessary download of package dependencies from R base. They are not needed as they are included in base R.
 
