@@ -108,10 +108,10 @@ public class EMLiteratureItem extends LiteratureItem implements PmmXmlElementCon
 	}
 
 	/** Copy constructor. */
-	public EMLiteratureItem(final LiteratureItemI lit) {
-		this(lit.getAuthor(), lit.getYear(), lit.getTitle(), lit.getAbstractText(), lit.getJournal(), lit.getVolume(),
-				lit.getIssue(), lit.getPage(), lit.getApprovalMode(), lit.getWebsite(), lit.getType(), lit.getComment(),
-				lit.getId(), lit.getDbuuid());
+	public EMLiteratureItem(final LiteratureItem lit) {
+		this(lit.author, lit.year, lit.title, lit.abstractText, lit.journal, lit.volume,
+				lit.issue, lit.page, lit.approvalMode, lit.website, lit.type, lit.comment,
+				lit.id, lit.dbuuid);
 	}
 
 	public String getElementName() {

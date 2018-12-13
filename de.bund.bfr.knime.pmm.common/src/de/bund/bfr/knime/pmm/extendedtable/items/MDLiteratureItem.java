@@ -102,15 +102,13 @@ public class MDLiteratureItem extends LiteratureItem implements PmmXmlElementCon
 		this(XmlHelper.getString(el, "author"), XmlHelper.getInt(el, "year"), XmlHelper.getString(el, "title"),
 				XmlHelper.getString(el, "abstract"), XmlHelper.getString(el, "journal"),
 				XmlHelper.getString(el, "volume"), XmlHelper.getString(el, "issue"), XmlHelper.getInt(el, "page"),
-				XmlHelper.getInt(el, "approvalMode"), XmlHelper.getString(el, "website"),
-				XmlHelper.getInt(el, "type"), XmlHelper.getString(el, "comment"), XmlHelper.getInt(el, "id"),
-				XmlHelper.getString(el, "dbuuid"));
+				XmlHelper.getInt(el, "approvalMode"), XmlHelper.getString(el, "website"), XmlHelper.getInt(el, "type"),
+				XmlHelper.getString(el, "comment"), XmlHelper.getInt(el, "id"), XmlHelper.getString(el, "dbuuid"));
 	}
 
-	public MDLiteratureItem(final LiteratureItemI lit) {
-		this(lit.getAuthor(), lit.getYear(), lit.getTitle(), lit.getAbstractText(), lit.getJournal(), lit.getVolume(),
-				lit.getIssue(), lit.getPage(), lit.getApprovalMode(), lit.getWebsite(), lit.getType(), lit.getComment(),
-				lit.getId(), lit.getDbuuid());
+	public MDLiteratureItem(final LiteratureItem lit) {
+		this(lit.author, lit.year, lit.title, lit.abstractText, lit.journal, lit.volume, lit.issue, lit.page,
+				lit.approvalMode, lit.website, lit.type, lit.comment, lit.id, lit.dbuuid);
 	}
 
 	public String getElementName() {
@@ -118,7 +116,8 @@ public class MDLiteratureItem extends LiteratureItem implements PmmXmlElementCon
 	}
 
 	/**
-	 * Generate a {@link org.jdom2.Element} with name "MDLiteratureItem" and properties:
+	 * Generate a {@link org.jdom2.Element} with name "MDLiteratureItem" and
+	 * properties:
 	 * <ul>
 	 * <li>String "author"
 	 * <li>Integer "year"
