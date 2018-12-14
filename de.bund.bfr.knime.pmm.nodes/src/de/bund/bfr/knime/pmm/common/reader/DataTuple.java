@@ -18,7 +18,6 @@ import de.bund.bfr.knime.pmm.common.units.UnitsFromDB;
 import de.bund.bfr.knime.pmm.dbutil.DBUnits;
 import de.bund.bfr.knime.pmm.extendedtable.TimeSeriesMetadata;
 import de.bund.bfr.knime.pmm.extendedtable.generictablemodel.KnimeTuple;
-import de.bund.bfr.knime.pmm.extendedtable.items.MDAgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.MDLiteratureItem;
 import de.bund.bfr.knime.pmm.extendedtable.items.MDMatrixXml;
 import de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel.SchemaFactory;
@@ -59,7 +58,8 @@ public class DataTuple {
 		PMFSpecies species = doc.getConcentrationOntologyTerm().getSpecies();
 		AgentXml originalAgentXml = new AgentXml();
 		originalAgentXml.name = species.getName();
-		MDAgentXml agentXml = new MDAgentXml();
+		de.bund.bfr.knime.pmm.extendedtable.items.AgentXml agentXml = new de.bund.bfr.knime.pmm.extendedtable.items.AgentXml(
+				de.bund.bfr.knime.pmm.extendedtable.items.AgentXml.Type.MD);
 		agentXml.name = species.getName();
 		if (species.isSetDetail()) {
 			originalAgentXml.detail = species.getDetail();
@@ -152,8 +152,9 @@ public class DataTuple {
 		PMFSpecies species = SBMLFactory.createPMFSpecies(model.getSpecies(0));
 		AgentXml originalAgentXml = new AgentXml(MathUtilities.getRandomNegativeInt(), species.getName(),
 				species.getDetail(), null);
-		MDAgentXml agentXml = new MDAgentXml(MathUtilities.getRandomNegativeInt(), species.getName(),
-				species.getDetail(), null);
+		de.bund.bfr.knime.pmm.extendedtable.items.AgentXml agentXml = new de.bund.bfr.knime.pmm.extendedtable.items.AgentXml(
+				de.bund.bfr.knime.pmm.extendedtable.items.AgentXml.Type.MD, MathUtilities.getRandomNegativeInt(),
+				species.getName(), species.getDetail(), null);
 
 		PMFCompartment compartment = SBMLFactory.createPMFCompartment(model.getCompartment(0));
 		MatrixXml originalMatrixXml = new MatrixXml(MathUtilities.getRandomNegativeInt(), compartment.getName(),

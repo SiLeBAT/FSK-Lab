@@ -22,9 +22,10 @@ import de.bund.bfr.knime.pmm.common.units.UnitsFromDB;
 import de.bund.bfr.knime.pmm.dbutil.DBUnits;
 import de.bund.bfr.knime.pmm.extendedtable.Model2Metadata;
 import de.bund.bfr.knime.pmm.extendedtable.generictablemodel.KnimeTuple;
+import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml;
+import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml.Type;
 import de.bund.bfr.knime.pmm.extendedtable.items.EMLiteratureItem;
 import de.bund.bfr.knime.pmm.extendedtable.items.MLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.Model2AgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.Model2MatrixXml;
 import de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel.Model2Schema;
 import de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel.SchemaFactory;
@@ -106,7 +107,7 @@ public class Model2Tuple {
 
     if (model.getListOfSpecies().size() == 1) {
       PMFSpecies species = SBMLFactory.createPMFSpecies(model.getSpecies(0));
-      Model2AgentXml agentXml = new Model2AgentXml(MathUtilities.getRandomNegativeInt(),
+      AgentXml agentXml = new AgentXml(Type.Model2, MathUtilities.getRandomNegativeInt(),
           species.getName(), species.getDetail(), null);
       metadata.setAgentXml(agentXml);
     }

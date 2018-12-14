@@ -30,10 +30,9 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.DOMOutputter;
 
-import de.bund.bfr.knime.pmm.common.AgentXml;
 import de.bund.bfr.knime.pmm.common.LiteratureItem;
 import de.bund.bfr.knime.pmm.common.MatrixXml;
-import de.bund.bfr.knime.pmm.extendedtable.items.MDAgentXml;
+import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.MDLiteratureItem;
 import de.bund.bfr.knime.pmm.extendedtable.items.MDMatrixXml;
 
@@ -41,7 +40,7 @@ public class TimeSeriesMetadata {
 
 	private static final String ELEMENT_PMMDOC = "PmmDoc";
 
-	private MDAgentXml agentXml;
+	private AgentXml agentXml;
 	private MDMatrixXml matrixXml;
 	private List<MDLiteratureItem> literatureItems;
 	private String warning;
@@ -64,9 +63,9 @@ public class TimeSeriesMetadata {
 
 	private void parseElement(Element rootElement) {
 
-		Element agentElement = rootElement.getChild(AgentXml.ELEMENT_AGENT);
+		Element agentElement = rootElement.getChild("mdAgent");
 		if (agentElement != null) {
-			agentXml = new MDAgentXml(agentElement);
+			agentXml = new AgentXml(agentElement);
 		}
 
 		Element matrixElement = rootElement.getChild(MatrixXml.ELEMENT_MATRIX);
@@ -87,7 +86,7 @@ public class TimeSeriesMetadata {
 		return warning;
 	}
 
-	public void setAgentXml(MDAgentXml agentXml) {
+	public void setAgentXml(AgentXml agentXml) {
 		this.agentXml = agentXml;
 	}
 

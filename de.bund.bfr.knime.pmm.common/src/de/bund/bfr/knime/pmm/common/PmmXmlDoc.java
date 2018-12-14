@@ -32,13 +32,10 @@ import org.jdom2.output.DOMOutputter;
 import org.jdom2.output.XMLOutputter;
 
 import de.bund.bfr.knime.pmm.extendedtable.items.EMLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.MDAgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.MDLiteratureItem;
 import de.bund.bfr.knime.pmm.extendedtable.items.MDMatrixXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.MLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.Model1AgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.Model1MatrixXml;
-import de.bund.bfr.knime.pmm.extendedtable.items.Model2AgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.Model2MatrixXml;
 
 public class PmmXmlDoc {
@@ -115,14 +112,14 @@ public class PmmXmlDoc {
 			case AgentXml.ELEMENT_AGENT:
 				elementSet.add(new AgentXml(el));
 				break;
-			case MDAgentXml.ELEMENT_AGENT:
-				elementSet.add(new MDAgentXml(el));
+			case "mdAgent":
+				elementSet.add(new de.bund.bfr.knime.pmm.extendedtable.items.AgentXml(el));
 				break;
-			case Model1AgentXml.ELEMENT_AGENT:
-				elementSet.add(new Model1AgentXml(el));
+			case "model1Agent":
+				elementSet.add(new de.bund.bfr.knime.pmm.extendedtable.items.AgentXml(el));
 				break;
-			case Model2AgentXml.ELEMENT_AGENT:
-				elementSet.add(new Model2AgentXml(el));
+			case "model2Agent":
+				elementSet.add(new de.bund.bfr.knime.pmm.extendedtable.items.AgentXml(el));
 				break;
 			case MatrixXml.ELEMENT_MATRIX:
 				elementSet.add(new MatrixXml(el));

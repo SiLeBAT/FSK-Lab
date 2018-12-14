@@ -30,16 +30,16 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.DOMOutputter;
 
+import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.EMLiteratureItem;
 import de.bund.bfr.knime.pmm.extendedtable.items.MLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.Model1AgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.Model1MatrixXml;
 
 public class Model1Metadata {
 
 	private static final String ELEMENT_PMMDOC = "PmmDoc";
 
-	private Model1AgentXml agentXml;
+	private AgentXml agentXml;
 	private Model1MatrixXml matrixXml;
 	private List<MLiteratureItem> modelLiteratureItems;
 	private List<EMLiteratureItem> estimatedModelLiteratureItems;
@@ -64,9 +64,9 @@ public class Model1Metadata {
 
 	private void parseElement(Element rootElement) {
 
-		Element agentElement = rootElement.getChild(Model1AgentXml.ELEMENT_AGENT);
+		Element agentElement = rootElement.getChild("model1Agent");
 		if (agentElement != null) {
-			agentXml = new Model1AgentXml(agentElement);
+			agentXml = new AgentXml(agentElement);
 		}
 
 		Element matrixElement = rootElement.getChild(Model1MatrixXml.ELEMENT_MATRIX);
@@ -91,7 +91,7 @@ public class Model1Metadata {
 		return warning;
 	}
 
-	public void setAgentXml(Model1AgentXml agentXml) {
+	public void setAgentXml(AgentXml agentXml) {
 		this.agentXml = agentXml;
 	}
 
