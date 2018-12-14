@@ -70,10 +70,10 @@ public class DataTuple {
 		MatrixXml originalMatrixXml = new MatrixXml();
 		MDMatrixXml matrixXml = new MDMatrixXml();
 		originalMatrixXml.name = compartment.getName();
-		matrixXml.setName(compartment.getName());
+		matrixXml.name = compartment.getName();
 		if (compartment.isSetDetail()) {
 			originalMatrixXml.detail = compartment.getDetail();
-			matrixXml.setDetail(compartment.getDetail());
+			matrixXml.detail = compartment.getDetail();
 		}
 
 		// Gets time series

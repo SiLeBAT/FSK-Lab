@@ -25,14 +25,9 @@ import de.bund.bfr.knime.pmm.common.PmmXmlElementConvertable;
 import de.bund.bfr.knime.pmm.common.XmlHelper;
 import de.bund.bfr.knime.pmm.common.math.MathUtilities;
 
-public class MDMatrixXml implements MatrixXmlI, PmmXmlElementConvertable {
+public class MDMatrixXml extends MatrixXml implements PmmXmlElementConvertable {
 
 	public static final String ELEMENT_MATRIX = "mdMatrix";
-
-	private Integer id;
-	private String name;
-	private String detail;
-	private String dbuuid;
 
 	/** Constructor with id, name and detail. dbuuid is null. */
 	public MDMatrixXml(Integer id, String name, String detail) {
@@ -45,8 +40,8 @@ public class MDMatrixXml implements MatrixXmlI, PmmXmlElementConvertable {
 	}
 
 	/** Copy constructor. Take every property from another {@link MDMatrixXml}. */
-	public MDMatrixXml(MatrixXmlI matrix) {
-		this(matrix.getId(), matrix.getName(), matrix.getDetail(), matrix.getDbuuid());
+	public MDMatrixXml(MatrixXml matrix) {
+		this(matrix.id, matrix.name, matrix.detail, matrix.dbuuid);
 	}
 
 	/** Fully parameterized constructor. */
@@ -94,37 +89,5 @@ public class MDMatrixXml implements MatrixXmlI, PmmXmlElementConvertable {
 		ret.setAttribute("dbuuid", XmlHelper.getNonNull(dbuuid));
 
 		return ret;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDetail() {
-		return detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	public void setDbuuid(String dbuuid) {
-		this.dbuuid = dbuuid;
 	}
 }
