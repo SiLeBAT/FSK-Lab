@@ -33,10 +33,7 @@ import org.jdom2.output.XMLOutputter;
 
 import de.bund.bfr.knime.pmm.extendedtable.items.EMLiteratureItem;
 import de.bund.bfr.knime.pmm.extendedtable.items.MDLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.MDMatrixXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.MLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.Model1MatrixXml;
-import de.bund.bfr.knime.pmm.extendedtable.items.Model2MatrixXml;
 
 public class PmmXmlDoc {
 
@@ -124,14 +121,14 @@ public class PmmXmlDoc {
 			case MatrixXml.ELEMENT_MATRIX:
 				elementSet.add(new MatrixXml(el));
 				break;
-			case MDMatrixXml.ELEMENT_MATRIX:
-				elementSet.add(new MDMatrixXml(el));
+			case "mdMatrix":
+				elementSet.add(new de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml(el));
 				break;
-			case Model1MatrixXml.ELEMENT_MATRIX:
-				elementSet.add(new Model1MatrixXml(el));
+			case "model1Matrix":
+				elementSet.add(new de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml(el));
 				break;
-			case Model2MatrixXml.ELEMENT_MATRIX:
-				elementSet.add(new Model2MatrixXml(el));
+			case "model2Matrix":
+				elementSet.add(new de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml(el));
 				break;
 			case PmmTimeSeries.ELEMENT_TIMESERIES:
 				elementSet.add(new PmmTimeSeries(el));

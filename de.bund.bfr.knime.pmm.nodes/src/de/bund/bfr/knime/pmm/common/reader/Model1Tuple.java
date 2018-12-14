@@ -23,7 +23,7 @@ import de.bund.bfr.knime.pmm.extendedtable.Model1Metadata;
 import de.bund.bfr.knime.pmm.extendedtable.generictablemodel.KnimeTuple;
 import de.bund.bfr.knime.pmm.extendedtable.items.EMLiteratureItem;
 import de.bund.bfr.knime.pmm.extendedtable.items.MLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.Model1MatrixXml;
+import de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml.Type;
 import de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel.Model1Schema;
@@ -159,7 +159,7 @@ public class Model1Tuple {
         species.getName(), species.getDetail(), null);
 
     PMFCompartment compartment = SBMLFactory.createPMFCompartment(model.getCompartment(0));
-    Model1MatrixXml matrixXml = new Model1MatrixXml(MathUtilities.getRandomNegativeInt(),
+    MatrixXml matrixXml = new MatrixXml(MatrixXml.Type.Model1, MathUtilities.getRandomNegativeInt(),
         compartment.getName(), compartment.getDetail(), null);
 
     Model1Metadata metadata = new Model1Metadata();

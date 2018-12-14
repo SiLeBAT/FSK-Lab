@@ -19,7 +19,6 @@ import de.bund.bfr.knime.pmm.dbutil.DBUnits;
 import de.bund.bfr.knime.pmm.extendedtable.TimeSeriesMetadata;
 import de.bund.bfr.knime.pmm.extendedtable.generictablemodel.KnimeTuple;
 import de.bund.bfr.knime.pmm.extendedtable.items.MDLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.MDMatrixXml;
 import de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel.SchemaFactory;
 import de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel.TimeSeriesSchema;
 import de.bund.bfr.pmfml.numl.NuMLDocument;
@@ -68,7 +67,8 @@ public class DataTuple {
 
 		PMFCompartment compartment = doc.getConcentrationOntologyTerm().getCompartment();
 		MatrixXml originalMatrixXml = new MatrixXml();
-		MDMatrixXml matrixXml = new MDMatrixXml();
+		de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml matrixXml = new de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml(
+				de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml.Type.MD);
 		originalMatrixXml.name = compartment.getName();
 		matrixXml.name = compartment.getName();
 		if (compartment.isSetDetail()) {
@@ -159,8 +159,8 @@ public class DataTuple {
 		PMFCompartment compartment = SBMLFactory.createPMFCompartment(model.getCompartment(0));
 		MatrixXml originalMatrixXml = new MatrixXml(MathUtilities.getRandomNegativeInt(), compartment.getName(),
 				compartment.getDetail(), null);
-		MDMatrixXml matrixXml = new MDMatrixXml(MathUtilities.getRandomNegativeInt(), compartment.getName(),
-				compartment.getDetail(), null);
+		de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml matrixXml = new de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml(
+				de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml.Type.MD, MathUtilities.getRandomNegativeInt(), compartment.getName(), compartment.getDetail(), null);
 
 		TimeSeriesMetadata metadata = new TimeSeriesMetadata();
 		metadata.setAgentXml(agentXml);

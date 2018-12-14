@@ -26,7 +26,7 @@ import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml.Type;
 import de.bund.bfr.knime.pmm.extendedtable.items.EMLiteratureItem;
 import de.bund.bfr.knime.pmm.extendedtable.items.MLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.Model2MatrixXml;
+import de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml;
 import de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel.Model2Schema;
 import de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel.SchemaFactory;
 import de.bund.bfr.pmfml.sbml.Correlation;
@@ -114,7 +114,7 @@ public class Model2Tuple {
 
     if (model.getListOfCompartments().size() == 1) {
       PMFCompartment compartment = SBMLFactory.createPMFCompartment(model.getCompartment(0));
-      Model2MatrixXml matrixXml = new Model2MatrixXml(MathUtilities.getRandomNegativeInt(),
+      MatrixXml matrixXml = new MatrixXml(MatrixXml.Type.Model2, MathUtilities.getRandomNegativeInt(),
           compartment.getName(), compartment.getDetail(), null);
       metadata.setMatrixXml(matrixXml);
     }

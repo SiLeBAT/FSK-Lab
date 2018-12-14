@@ -31,17 +31,16 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.DOMOutputter;
 
 import de.bund.bfr.knime.pmm.common.LiteratureItem;
-import de.bund.bfr.knime.pmm.common.MatrixXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml;
 import de.bund.bfr.knime.pmm.extendedtable.items.MDLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.MDMatrixXml;
+import de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml;
 
 public class TimeSeriesMetadata {
 
 	private static final String ELEMENT_PMMDOC = "PmmDoc";
 
 	private AgentXml agentXml;
-	private MDMatrixXml matrixXml;
+	private MatrixXml matrixXml;
 	private List<MDLiteratureItem> literatureItems;
 	private String warning;
 
@@ -68,9 +67,9 @@ public class TimeSeriesMetadata {
 			agentXml = new AgentXml(agentElement);
 		}
 
-		Element matrixElement = rootElement.getChild(MatrixXml.ELEMENT_MATRIX);
+		Element matrixElement = rootElement.getChild("mdMatrix");
 		if (matrixElement != null) {
-			matrixXml = new MDMatrixXml(matrixElement);
+			matrixXml = new MatrixXml(matrixElement);
 		}
 
 		for (Element literatureElement : rootElement.getChildren(MDLiteratureItem.ELEMENT_LITERATURE)) {
@@ -94,7 +93,7 @@ public class TimeSeriesMetadata {
 		this.agentXml = null;
 	}
 
-	public void setMatrixXml(MDMatrixXml matrixXml) {
+	public void setMatrixXml(MatrixXml matrixXml) {
 		this.matrixXml = matrixXml;
 	}
 
