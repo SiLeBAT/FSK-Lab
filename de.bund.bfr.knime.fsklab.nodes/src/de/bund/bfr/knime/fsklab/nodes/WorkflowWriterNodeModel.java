@@ -46,7 +46,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.NodeID;
-import org.knime.core.node.workflow.WorkflowAnnotation;
 import org.knime.core.node.workflow.WorkflowCopyContent;
 import org.knime.core.node.workflow.WorkflowCreationHelper;
 import org.knime.core.node.workflow.WorkflowManager;
@@ -139,7 +138,6 @@ class WorkflowWriterNodeModel extends NoInternalsModel {
 
     WorkflowCopyContent.Builder orgContentBuilder = WorkflowCopyContent.builder();
     orgContentBuilder.setNodeIDs(mine);
-    orgContentBuilder.setAnnotation(new WorkflowAnnotation[] {new WorkflowAnnotation()});
     orgContentBuilder.setIncludeInOutConnections(true);
     subWorkflow.copyFromAndPasteHere(wfm, orgContentBuilder.build());
 

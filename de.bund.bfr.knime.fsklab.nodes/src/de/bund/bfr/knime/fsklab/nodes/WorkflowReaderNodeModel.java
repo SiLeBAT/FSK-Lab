@@ -48,7 +48,6 @@ import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.NodeID;
 import org.knime.core.node.workflow.NodeUIInformation;
-import org.knime.core.node.workflow.WorkflowAnnotation;
 import org.knime.core.node.workflow.WorkflowContext;
 import org.knime.core.node.workflow.WorkflowCopyContent;
 import org.knime.core.node.workflow.WorkflowLoadHelper;
@@ -128,8 +127,6 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
       WorkflowManager wfm = nodeContext.getWorkflowManager();
       WorkflowCopyContent.Builder orgContentBuilder = WorkflowCopyContent.builder();
       orgContentBuilder.setNodeIDs(embeddedSubWorkflow.getID());
-
-      orgContentBuilder.setAnnotation(new WorkflowAnnotation[] {new WorkflowAnnotation()});
       orgContentBuilder.setIncludeInOutConnections(true);
       WorkflowCopyContent copiedContent = wfm.copyFromAndPasteHere((WorkflowManager) embeddedSubWorkflowManager,
           orgContentBuilder.build());
@@ -147,8 +144,6 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
 
     PortObject[] out = new PortObject[2];
     for (int i = 0; i < out.length; i++) {
-      PortObject portObject = embeddedSubWorkflow.getOutPort(i).getPortObject();
-
       if (embeddedSubWorkflow.getOutPort(i).getPortObject() instanceof FlowVariablePortObject) {
         System.out.println("FlowVariablePortObject");
       } else if (embeddedSubWorkflow.getOutPort(i).getPortObject() instanceof BufferedDataTable) {

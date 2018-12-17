@@ -179,7 +179,6 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     try {
       URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile().toString());
       Path localPath = FileUtil.resolveToPath(url);
-      System.out.println(localPath);
       files = Files.walk(localPath).filter(Files::isRegularFile).map(Path::toString)
           .collect(Collectors.toList());
       fileModel.filenames.clear();
