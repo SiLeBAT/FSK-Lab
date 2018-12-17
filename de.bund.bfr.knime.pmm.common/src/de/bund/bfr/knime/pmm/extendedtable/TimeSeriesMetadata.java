@@ -71,9 +71,7 @@ public class TimeSeriesMetadata {
 			matrixXml = new MatrixXml(matrixElement);
 		}
 
-		for (Element literatureElement : rootElement.getChildren("MDLiteratureItem")) {
-			literatureItems.add(new LiteratureItem(literatureElement));
-		}
+		rootElement.getChildren("MDLiteratureItem").stream().map(LiteratureItem::new).forEach(literatureItems::add);
 	}
 
 	public void addWarning(String warning) {
@@ -129,9 +127,7 @@ public class TimeSeriesMetadata {
 		if (matrixXml != null) {
 			rootElement.addContent(matrixXml.toXmlElement());
 		}
-		for (LiteratureItem literatureItem : literatureItems) {
-			rootElement.addContent(literatureItem.toXmlElement());
-		}
+		literatureItems.stream().map(LiteratureItem::toXmlElement).forEach(rootElement::addContent);
 
 		return doc;
 	}
