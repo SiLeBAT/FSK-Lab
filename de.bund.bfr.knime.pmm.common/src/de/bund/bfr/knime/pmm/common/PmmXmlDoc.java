@@ -31,10 +31,6 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.DOMOutputter;
 import org.jdom2.output.XMLOutputter;
 
-import de.bund.bfr.knime.pmm.extendedtable.items.EMLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.MDLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.MLiteratureItem;
-
 public class PmmXmlDoc {
 
 	private static final String ELEMENT_PMMDOC = "PmmDoc";
@@ -91,14 +87,14 @@ public class PmmXmlDoc {
 			case LiteratureItem.ELEMENT_LITERATURE:
 				elementSet.add(new LiteratureItem(el));
 				break;
-			case MLiteratureItem.ELEMENT_LITERATURE:
-				elementSet.add(new MLiteratureItem(el));
+			case "MLiteratureItem":
+				elementSet.add(new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(el));
 				break;
-			case MDLiteratureItem.ELEMENT_LITERATURE:
-				elementSet.add(new MDLiteratureItem(el));
+			case "MDLiteratureItem":
+				elementSet.add(new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(el));
 				break;
-			case EMLiteratureItem.ELEMENT_LITERATURE:
-				elementSet.add(new EMLiteratureItem(el));
+			case "EstimatedModelLiterature":
+				elementSet.add(new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(el));
 				break;
 			case CatalogModelXml.ELEMENT_CATALOGMODEL:
 				elementSet.add(new CatalogModelXml(el));

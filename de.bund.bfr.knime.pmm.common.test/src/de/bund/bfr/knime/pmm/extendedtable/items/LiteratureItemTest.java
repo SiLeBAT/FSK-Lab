@@ -7,13 +7,15 @@ import static org.junit.Assert.assertTrue;
 import org.jdom2.Element;
 import org.junit.Test;
 
-public class EMLiteratureItemTest {
+import de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem.Type;
+
+public class LiteratureItemTest {
 
 	@Test
 	public void testConstructors() {
 
 		// Test fully parameterized constructor
-		EMLiteratureItem item0 = new EMLiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
+		LiteratureItem item0 = new LiteratureItem (Type.M, "author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
 				0, "website", 0, "comment", 0, "dbuuid");
 		assertTrue(0 == item0.id);
 		assertEquals("author", item0.author);
@@ -29,7 +31,7 @@ public class EMLiteratureItemTest {
 		assertEquals("dbuuid", item0.dbuuid);
 
 		// Test constructor without dbbuid
-		EMLiteratureItem item1 = new EMLiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
+		LiteratureItem  item1 = new LiteratureItem (Type.M, "author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
 				0, "website", 0, "comment", 0);
 		assertTrue(0 == item1.id);
 		assertEquals("author", item1.author);
@@ -45,7 +47,7 @@ public class EMLiteratureItemTest {
 		assertNull(item1.dbuuid);
 
 		// Test constructor without dbbuid and id
-		EMLiteratureItem item2 = new EMLiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
+		LiteratureItem  item2 = new LiteratureItem (Type.M, "author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
 				0, "website", 0, "comment");
 		assertTrue(item2.id < 0);
 		assertEquals("author", item2.author);
@@ -61,7 +63,7 @@ public class EMLiteratureItemTest {
 		assertNull(item2.dbuuid);
 		
 		// Test copy constructor with Element
-		Element element = new Element(EMLiteratureItem.ELEMENT_LITERATURE);
+		Element element = new Element("MLiteratureItem");
 		element.setAttribute("id", "0");
 		element.setAttribute("author", "author");
 		element.setAttribute("year", "0");
@@ -75,7 +77,7 @@ public class EMLiteratureItemTest {
 		element.setAttribute("comment", "comment");
 		element.setAttribute("dbuuid", "dbuuid");
 		
-		EMLiteratureItem item3 = new EMLiteratureItem(element);
+		LiteratureItem  item3 = new LiteratureItem (element);
 		assertTrue(0 == item3.id);
 		assertEquals("author", item3.author);
 		assertTrue(0 == item3.year);
@@ -92,7 +94,7 @@ public class EMLiteratureItemTest {
 
 	@Test
 	public void testToXmlElement() throws Exception {
-		EMLiteratureItem item = new EMLiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
+		LiteratureItem  item = new LiteratureItem (Type.M, "author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
 				0, "website", 0, "comment", 0, "dbuuid");
 		Element element = item.toXmlElement();
 		

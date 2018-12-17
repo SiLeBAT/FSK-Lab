@@ -31,8 +31,8 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.DOMOutputter;
 
 import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml;
-import de.bund.bfr.knime.pmm.extendedtable.items.EMLiteratureItem;
-import de.bund.bfr.knime.pmm.extendedtable.items.MLiteratureItem;
+import de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem;
+import de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem.Type;
 import de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml;
 
 public class Model1Metadata {
@@ -41,8 +41,8 @@ public class Model1Metadata {
 
 	private AgentXml agentXml;
 	private MatrixXml matrixXml;
-	private List<MLiteratureItem> modelLiteratureItems;
-	private List<EMLiteratureItem> estimatedModelLiteratureItems;
+	private List<LiteratureItem> modelLiteratureItems;
+	private List<LiteratureItem> estimatedModelLiteratureItems;
 	private String warning;
 
 	public Model1Metadata() {
@@ -74,12 +74,12 @@ public class Model1Metadata {
 			matrixXml = new MatrixXml(matrixElement);
 		}
 
-		for (Element literatureElement : rootElement.getChildren(MLiteratureItem.ELEMENT_LITERATURE)) {
-			modelLiteratureItems.add(new MLiteratureItem(literatureElement));
+		for (Element literatureElement : rootElement.getChildren("MLiteratureItem")) {
+			modelLiteratureItems.add(new LiteratureItem(literatureElement));
 		}
 
-		for (Element literatureElement : rootElement.getChildren(EMLiteratureItem.ELEMENT_LITERATURE)) {
-			estimatedModelLiteratureItems.add(new EMLiteratureItem(literatureElement));
+		for (Element literatureElement : rootElement.getChildren("EstimatedModelLiterature")) {
+			estimatedModelLiteratureItems.add(new LiteratureItem(literatureElement));
 		}
 	}
 
@@ -106,21 +106,21 @@ public class Model1Metadata {
 	public void clearMatrixXml() {
 		this.matrixXml = null;
 	}
-
-	public void addLiteratureItem(MLiteratureItem literatureItem) {
-		modelLiteratureItems.add(literatureItem);
-	}
 	
-	public void removeLiteratureItem(MLiteratureItem literatureItem) {
-		modelLiteratureItems.remove(literatureItem);
+	public void addLiteratureItem(LiteratureItem literatureItem) {
+		if (literatureItem.litType == Type.M) {
+			modelLiteratureItems.add(literatureItem);
+		} else if (literatureItem.litType == Type.EM) {
+			estimatedModelLiteratureItems.add(literatureItem);
+		}
 	}
 
-	public void addLiteratureItem(EMLiteratureItem literatureItem) {
-		estimatedModelLiteratureItems.add(literatureItem);
-	}
-
-	public void removeLiteratureItem(EMLiteratureItem literatureItem) {
-		estimatedModelLiteratureItems.remove(literatureItem);
+	public void removeLiteratureItem(LiteratureItem literatureItem) {
+		if (literatureItem.litType == Type.M) {
+			modelLiteratureItems.remove(literatureItem);
+		} else if (literatureItem.litType == Type.EM) {
+			estimatedModelLiteratureItems.remove(literatureItem);
+		}
 	}
 
 	public org.w3c.dom.Document getW3C() {
@@ -144,10 +144,10 @@ public class Model1Metadata {
 		if (matrixXml != null) {
 			rootElement.addContent(matrixXml.toXmlElement());
 		}
-		for (MLiteratureItem literatureItem : modelLiteratureItems) {
+		for (LiteratureItem literatureItem : modelLiteratureItems) {
 			rootElement.addContent(literatureItem.toXmlElement());
 		}
-		for (EMLiteratureItem literatureItem : estimatedModelLiteratureItems) {
+		for (LiteratureItem literatureItem : estimatedModelLiteratureItems) {
 			rootElement.addContent(literatureItem.toXmlElement());
 		}
 

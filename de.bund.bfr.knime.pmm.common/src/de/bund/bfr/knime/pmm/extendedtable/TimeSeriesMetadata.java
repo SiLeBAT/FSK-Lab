@@ -30,9 +30,8 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.DOMOutputter;
 
-import de.bund.bfr.knime.pmm.common.LiteratureItem;
 import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml;
-import de.bund.bfr.knime.pmm.extendedtable.items.MDLiteratureItem;
+import de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem;
 import de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml;
 
 public class TimeSeriesMetadata {
@@ -41,7 +40,7 @@ public class TimeSeriesMetadata {
 
 	private AgentXml agentXml;
 	private MatrixXml matrixXml;
-	private List<MDLiteratureItem> literatureItems;
+	private List<LiteratureItem> literatureItems;
 	private String warning;
 
 	public TimeSeriesMetadata() {
@@ -72,8 +71,8 @@ public class TimeSeriesMetadata {
 			matrixXml = new MatrixXml(matrixElement);
 		}
 
-		for (Element literatureElement : rootElement.getChildren(MDLiteratureItem.ELEMENT_LITERATURE)) {
-			literatureItems.add(new MDLiteratureItem(literatureElement));
+		for (Element literatureElement : rootElement.getChildren("MDLiteratureItem")) {
+			literatureItems.add(new LiteratureItem(literatureElement));
 		}
 	}
 
@@ -101,7 +100,7 @@ public class TimeSeriesMetadata {
 		this.matrixXml = null;
 	}
 
-	public void addLiteratureItem(MDLiteratureItem literatureItem) {
+	public void addLiteratureItem(LiteratureItem literatureItem) {
 		literatureItems.add(literatureItem);
 	}
 
@@ -130,7 +129,7 @@ public class TimeSeriesMetadata {
 		if (matrixXml != null) {
 			rootElement.addContent(matrixXml.toXmlElement());
 		}
-		for (MDLiteratureItem literatureItem : literatureItems) {
+		for (LiteratureItem literatureItem : literatureItems) {
 			rootElement.addContent(literatureItem.toXmlElement());
 		}
 

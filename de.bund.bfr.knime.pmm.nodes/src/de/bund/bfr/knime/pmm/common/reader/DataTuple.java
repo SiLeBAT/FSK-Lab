@@ -18,7 +18,7 @@ import de.bund.bfr.knime.pmm.common.units.UnitsFromDB;
 import de.bund.bfr.knime.pmm.dbutil.DBUnits;
 import de.bund.bfr.knime.pmm.extendedtable.TimeSeriesMetadata;
 import de.bund.bfr.knime.pmm.extendedtable.generictablemodel.KnimeTuple;
-import de.bund.bfr.knime.pmm.extendedtable.items.MDLiteratureItem;
+import de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem.Type;
 import de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel.SchemaFactory;
 import de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel.TimeSeriesSchema;
 import de.bund.bfr.pmfml.numl.NuMLDocument;
@@ -123,7 +123,7 @@ public class DataTuple {
 					approvalMode, website, typeValue, comment);
 			litDoc.add(lit);
 
-			MDLiteratureItem mdLit = new MDLiteratureItem(author, year, title, abstractText, journal, volume, issue,
+			de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem mdLit = new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(Type.MD, author, year, title, abstractText, journal, volume, issue,
 					page, approvalMode, website, typeValue, comment);
 			metadata.addLiteratureItem(mdLit);
 		}
