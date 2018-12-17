@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -426,8 +428,11 @@ public class FskPortObject implements PortObject {
       }
 
       in.close();
-      //Check the exictance of the working directory and create one if it's not available locally
-	  if (!Files.exists(Paths.get(workingDirectory))) {
+      //Check the exictance of the working directory and create one if it's not available locally.
+      URL url = FileUtil.toURL(workingDirectory);
+      try {
+	  	Path localPath = FileUtil.resolveToPath(url);
+		if (!Files.exists(localPath)) {
 			NodeContext nodeContext = NodeContext.getContext();
 			WorkflowManager wfm = nodeContext.getWorkflowManager();
 			WorkflowContext workflowContext = wfm.getContext();
@@ -443,7 +448,11 @@ public class FskPortObject implements PortObject {
 				currentWorkingDirectory.mkdir();
 				workingDirectory = currentWorkingDirectory.toString();
 			}
-	  }
+	    }
+	   } catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+	   }
       final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript,
           generalInformation, scope, dataBackground, modelMath, workspacePath, packages,
           workingDirectory, plot, readme, spreadsheet);
