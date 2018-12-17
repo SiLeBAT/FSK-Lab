@@ -20,6 +20,7 @@ package de.bund.bfr.knime.fsklab;
 
 import java.awt.BorderLayout;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -27,10 +28,12 @@ import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.ZipEntry;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -60,6 +63,9 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
+import org.knime.core.node.workflow.NodeContext;
+import org.knime.core.node.workflow.WorkflowContext;
+import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
@@ -420,7 +426,24 @@ public class FskPortObject implements PortObject {
       }
 
       in.close();
+      //Check the exictance of the working directory and create one if it's not available locally
+	  if (!Files.exists(Paths.get(workingDirectory))) {
+			NodeContext nodeContext = NodeContext.getContext();
+			WorkflowManager wfm = nodeContext.getWorkflowManager();
+			WorkflowContext workflowContext = wfm.getContext();
 
+			// get the location of the current Workflow to create the working directory in
+			// it and use the
+			// name with current reader node id for the prefix of the working directory name
+			File currentWorkingDirectory = new File(workflowContext.getCurrentLocation(),
+					nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "").replace(" ", "")
+							+ "_" + "workingDirectory"
+							+ new AtomicLong((int) (100000 * Math.random())).getAndIncrement());
+			if (!currentWorkingDirectory.exists()) {
+				currentWorkingDirectory.mkdir();
+				workingDirectory = currentWorkingDirectory.toString();
+			}
+	  }
       final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript,
           generalInformation, scope, dataBackground, modelMath, workspacePath, packages,
           workingDirectory, plot, readme, spreadsheet);
