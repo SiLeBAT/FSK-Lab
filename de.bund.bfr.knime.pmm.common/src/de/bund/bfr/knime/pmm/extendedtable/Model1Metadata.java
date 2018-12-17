@@ -74,13 +74,8 @@ public class Model1Metadata {
 			matrixXml = new MatrixXml(matrixElement);
 		}
 
-		for (Element literatureElement : rootElement.getChildren("MLiteratureItem")) {
-			modelLiteratureItems.add(new LiteratureItem(literatureElement));
-		}
-
-		for (Element literatureElement : rootElement.getChildren("EstimatedModelLiterature")) {
-			estimatedModelLiteratureItems.add(new LiteratureItem(literatureElement));
-		}
+		rootElement.getChildren("MLiteratureItem").stream().map(LiteratureItem::new).forEach(modelLiteratureItems::add);
+		rootElement.getChildren("EstimatedModelLiterature").stream().map(LiteratureItem::new).forEach(estimatedModelLiteratureItems::add);
 	}
 
 	public void addWarning(String warning) {
@@ -147,9 +142,8 @@ public class Model1Metadata {
 		for (LiteratureItem literatureItem : modelLiteratureItems) {
 			rootElement.addContent(literatureItem.toXmlElement());
 		}
-		for (LiteratureItem literatureItem : estimatedModelLiteratureItems) {
-			rootElement.addContent(literatureItem.toXmlElement());
-		}
+		modelLiteratureItems.stream().map(LiteratureItem::toXmlElement).forEach(rootElement::addContent);
+		estimatedModelLiteratureItems.stream().map(LiteratureItem::toXmlElement).forEach(rootElement::addContent);
 
 		return doc;
 	}
