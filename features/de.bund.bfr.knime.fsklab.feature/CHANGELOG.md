@@ -5,8 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.4.2] - 2018-12-17
+
 ### Added
 - Create the working directory if it's not available (It is applied to cases where workflow is shared without reset).
+
 ### Fixed 
 - Fix workflow reader and writer to support KNIME 3.7
 - Fix issues of changing working directory in the FSK JS editor.
