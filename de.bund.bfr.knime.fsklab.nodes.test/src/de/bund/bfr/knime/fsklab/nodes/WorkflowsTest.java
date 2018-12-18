@@ -30,7 +30,6 @@ public class WorkflowsTest {
 	@Test
 	public void testChickenModels() throws Exception {
 		File workflowDir = new File("workflows/InitializeParentsFlocks");
-//		File workflowDir = new File("C:/Users/de/K35ws/InitializeParentsFlocks");
 		runner.runTestWorkflow(workflowDir);
 	}
 }
