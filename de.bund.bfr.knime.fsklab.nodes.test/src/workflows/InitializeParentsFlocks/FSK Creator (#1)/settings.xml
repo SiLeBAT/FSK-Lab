@@ -6,11 +6,11 @@
 <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
 </config>
 <config key="model">
-<entry key="modelScript" type="xstring" value="file:/C:/Users/de/K35ws/InitializeParentsFlocks/FSK%20Creator%20(%231)/drop/model.R"/>
-<entry key="visualizationScript" type="xstring" value="file:/C:/Users/de/K35ws/InitializeParentsFlocks/FSK%20Creator%20(%231)/drop/viz.R"/>
+<entry key="modelScript" type="xstring" value="knime://LOCAL/InitializeParentsFlocks/model.R"/>
+<entry key="visualizationScript" type="xstring" value="knime://LOCAL/InitializeParentsFlocks/viz.R"/>
 <entry key="workingDirectory" type="xstring" value=""/>
 <entry key="readme" type="xstring" value=""/>
-<entry key="spreadsheet" type="xstring" value="file:/C:/Users/de/K35ws/InitializeParentsFlocks/FSK%20Creator%20(%231)/drop/metadata.xlsx"/>
+<entry key="spreadsheet" type="xstring" value="knime://LOCAL/InitializeParentsFlocks/metadata.xlsx"/>
 <entry key="sheet" type="xstring" value="Generic Metadata Schema"/>
 </config>
 <config key="variables">
