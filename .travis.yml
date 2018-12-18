@@ -1,6 +1,7 @@
 language: java
-# Disable JaCoCo as Coveralls is failing
-script: mvn clean verify -Pjacoco # coveralls:report
+
+script: xvfb-run mvn verify -B -Pjacoco
+
 # Cache maven repository to speed up build
 cache:
    directories:
