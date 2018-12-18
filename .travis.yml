@@ -5,12 +5,23 @@ script: mvn clean verify -Pjacoco # coveralls:report
 cache:
    directories:
       - $HOME/.m2
+
+# Before the build, install R with required packages
+before_install:
+- sudo apt-get update 
+- sudo apt-get install -y r-base
+- sudo apt-get install libcurl4-openssl-dev libssl-dev libxml2-dev
+- sudo R --vanilla -e 'install.packages(c("RServe", "miniCRAN"), repos="http://cran.us.r-project.org")'
+
+# If build succeeds upload test coverage report
+after_success:
+- pushd $TRAVIS_BUILD_DIR/de.bund.bfr.knime.testreport/target/site/jacoco-aggregate
+- bash <(curl -s https://codecov.io/bash)
+- popd
+
+# Deploy build
 deploy:
 -  provider: script
    skip_cleanup: true # to upload artifacts created during the build
    script: bash bintray.sh
    on: test
-after_success:
-- pushd $TRAVIS_BUILD_DIR/de.bund.bfr.knime.testreport/target/site/jacoco-aggregate
-- bash <(curl -s https://codecov.io/bash)
-- popd
