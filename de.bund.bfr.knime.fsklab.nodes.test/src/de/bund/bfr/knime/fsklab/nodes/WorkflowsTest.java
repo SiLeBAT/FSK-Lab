@@ -29,6 +29,7 @@ public class WorkflowsTest {
 	
 	@Test
 	public void testChickenModels() throws Exception {
+		runner.runTestWorkflow(new File("workflows/InitializeParentsAnimals"));
 		runner.runTestWorkflow(new File("workflows/InitializeParentsFlocks"));
 		runner.runTestWorkflow(new File("workflows/HorizontalTransmiAnimals"));
 		runner.runTestWorkflow(new File("workflows/HorizontalTransmiFlocks"));
