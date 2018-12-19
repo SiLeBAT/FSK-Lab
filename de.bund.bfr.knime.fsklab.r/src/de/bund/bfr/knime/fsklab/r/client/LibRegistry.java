@@ -117,31 +117,6 @@ public class LibRegistry {
 	}
 
 	/**
-	 * Returns whether an R library is installed.
-	 * 
-	 * @param libraryName
-	 *            name of the R library
-	 * @return whether an R library is installed
-	 */
-	private boolean isInstalled(final String libraryName) {
-
-		// Look in libraries installed within LibRegistry
-		if (installedLibs.contains(libraryName))
-			return true;
-
-		// Look for libraries installed in the R distribution.
-		// Make a library(<libname>) call. If an RException is return the library is
-		// missing.
-		try {
-			rWrapper.library(libraryName);
-			return true;
-		} catch (RException exception) {
-			// the library is not included in .Library or .Library.site
-			return false;
-		}
-	}
-
-	/**
 	 * Install a list of packages into the repository. Already installed packages are ignored.
 	 * 
 	 * @param libs
@@ -152,8 +127,7 @@ public class LibRegistry {
 	public synchronized void install(final List<String> packages) throws RException, REXPMismatchException {
 
 		// Gets missing packages
-		List<String> missingPackages = rWrapper.pkgDep(packages).stream().filter(pkg -> !isInstalled(pkg))
-				.collect(Collectors.toList());
+		List<String> missingPackages = rWrapper.pkgDep(packages).stream().filter(pkg -> !installedLibs.contains(pkg)).collect(Collectors.toList());
 
 		if (!missingPackages.isEmpty()) {
 
