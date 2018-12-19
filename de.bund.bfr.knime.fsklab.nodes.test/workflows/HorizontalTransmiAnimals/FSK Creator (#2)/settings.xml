@@ -13,6 +13,20 @@
 <entry key="spreadsheet" type="xstring" value="knime://LOCAL/HorizontalTransmiAnimals/metadata.xlsx"/>
 <entry key="sheet" type="xstring" value="Generic Metadata Schema"/>
 </config>
+<config key="variables">
+<config key="modelScript">
+<entry key="used_variable" type="xstring" value="knime.node(drop) model.R"/>
+<entry key="exposed_variable" type="xstring" isnull="true" value=""/>
+</config>
+<config key="visualizationScript">
+<entry key="used_variable" type="xstring" value="knime.node(drop) viz.R"/>
+<entry key="exposed_variable" type="xstring" isnull="true" value=""/>
+</config>
+<config key="spreadsheet">
+<entry key="used_variable" type="xstring" value="knime.node(drop) metadata.xlsx"/>
+<entry key="exposed_variable" type="xstring" isnull="true" value=""/>
+</config>
+</config>
 <entry key="customDescription" type="xstring" isnull="true" value=""/>
 <entry key="state" type="xstring" value="EXECUTED"/>
 <entry key="factory" type="xstring" value="de.bund.bfr.knime.fsklab.nodes.CreatorNodeFactory"/>
