@@ -149,6 +149,20 @@ public final class RPathUtil {
         }
       }
     }
+    
+    // Try with location where BfR IT installs applications
+    File bfrR = new File("C:/Program Files (x86)/User/R/");
+    for (File dir : bfrR.listFiles(ff)) {
+      File binDir = new File(dir, "bin");
+      if (binDir.isDirectory()) {
+        File executable = new File(binDir, "R.exe");
+        if (executable.isFile()) {
+          systemRHome = dir;
+          systemRExecutable = executable;
+          break;
+        }
+      }
+    }
   }
 
 
