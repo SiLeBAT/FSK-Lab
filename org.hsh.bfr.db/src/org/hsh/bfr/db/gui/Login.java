@@ -19,52 +19,23 @@
  *******************************************************************************/
 package org.hsh.bfr.db.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.sql.ResultSet;
-import java.util.ResourceBundle;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.hsh.bfr.db.Backup;
-import org.hsh.bfr.db.BackupMyDBI;
-import org.hsh.bfr.db.DBKernel;
-import org.hsh.bfr.db.MyDBI;
-import org.hsh.bfr.db.MyDBTablesNew;
-import org.hsh.bfr.db.MyLogger;
-import org.hsh.bfr.db.UpdateChecker;
-import org.hsh.bfr.db.VersionComprator;
-import org.hsh.bfr.db.gui.dbtable.MyDBTable;
-import org.hsh.bfr.db.gui.dbtree.MyDBTree;
-
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.hsh.bfr.db.*;
+import org.hsh.bfr.db.gui.dbtable.MyDBTable;
+import org.hsh.bfr.db.gui.dbtree.MyDBTree;
+import org.knime.core.node.NodeLogger;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.sql.ResultSet;
+import java.util.ResourceBundle;
 
 /**
  * @author Armin Weiser
@@ -394,10 +365,8 @@ public class Login extends JFrame {
 					if (eclipseWindow != null && DBKernel.isKrise) {						
 						MessageDialog.openInformation(eclipseWindow.getShell(), "Internal database created", "Internal database created in folder '" + DBKernel.HSHDB_PATH + "'");
 					} else {
-						JOptionPane pane = new JOptionPane("Internal database created in folder '" + DBKernel.HSHDB_PATH + "'", JOptionPane.INFORMATION_MESSAGE);
-						JDialog dialog = pane.createDialog("Internal database created");
-						dialog.setAlwaysOnTop(true);
-						dialog.setVisible(true);
+						NodeLogger logger = NodeLogger.getLogger("Login");
+						logger.info("Internal database created in folder '" + DBKernel.HSHDB_PATH + "'");
 					}
 										
 					mf = initGui(myDB);
