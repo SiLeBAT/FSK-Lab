@@ -1,7 +1,7 @@
 # FSK-Lab repository
 [![Build Status](https://travis-ci.org/SiLeBAT/FSK-Lab.svg?branch=master)](https://travis-ci.org/SiLeBAT/FSK-Lab)
 [![codecov](https://codecov.io/gh/SiLeBAT/FSK-Lab/branch/master/graph/badge.svg)](https://codecov.io/gh/SiLeBAT/FSK-Lab)
-[![Maintainability](https://api.codeclimate.com/v1/badges/a00c75d3653e0c22647a/maintainability)](https://codeclimate.com/github/SiLeBAT/FSK-Lab/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a00c75d3653e0c22647a/maintainability)](https://codeclimate.com/github/SiLeBAT/FSK-Lab/maintainability) [![Join the chat at https://gitter.im/SiLeBAT/FSK-Lab](https://badges.gitter.im/SiLeBAT/FSK-Lab.svg)](https://gitter.im/SiLeBAT/FSK-Lab?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This project contains the PMM-Lab and FSK-Lab extension plugins to the data
 analytics software KNIME (www.knime.org). They are developed at the Federal
