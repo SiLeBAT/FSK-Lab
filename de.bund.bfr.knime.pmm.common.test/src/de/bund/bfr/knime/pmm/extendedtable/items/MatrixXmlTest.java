@@ -58,6 +58,26 @@ public class MatrixXmlTest {
 	}
 	
 	@Test
+	public void testElementConstructorMd() {
+		new MatrixXml(new Element("mdMatrix"));
+	}
+	
+	@Test
+	public void testsElementConstructorModel1() {
+		new MatrixXml(new Element("model1Matrix"));
+	}
+	
+	@Test
+	public void testsElementConstructorModel2() {
+		new MatrixXml(new Element("model2Matrix"));
+	}	
+	
+	@Test(expected = RuntimeException.class)
+	public void testElementConstructorOther() {
+		new MatrixXml(new Element("other"));
+	}
+	
+	@Test
 	public void testToXmlElement() throws DataConversionException {
 		MatrixXml matrix = new MatrixXml(Type.MD, 0, "name", "detail", "dbuuid");
 		Element element = matrix.toXmlElement();
