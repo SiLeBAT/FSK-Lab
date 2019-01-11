@@ -100,8 +100,8 @@ public class DataTuple {
 		MdInfoXml mdInfo = new MdInfoXml(null, null, null, null, null);
 
 		TimeSeriesMetadata metadata = new TimeSeriesMetadata();
-		metadata.setAgentXml(agentXml);
-		metadata.setMatrixXml(matrixXml);
+		metadata.agentXml = agentXml;
+		metadata.matrixXml = matrixXml;
 
 		// Gets literature items
 		PmmXmlDoc litDoc = new PmmXmlDoc();
@@ -125,7 +125,7 @@ public class DataTuple {
 
 			de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem mdLit = new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(Type.MD, author, year, title, abstractText, journal, volume, issue,
 					page, approvalMode, website, typeValue, comment);
-			metadata.addLiteratureItem(mdLit);
+			metadata.literatureItems.add(mdLit);
 		}
 
 		// Creates and fills tuple
@@ -163,8 +163,8 @@ public class DataTuple {
 				de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml.Type.MD, MathUtilities.getRandomNegativeInt(), compartment.getName(), compartment.getDetail(), null);
 
 		TimeSeriesMetadata metadata = new TimeSeriesMetadata();
-		metadata.setAgentXml(agentXml);
-		metadata.setMatrixXml(matrixXml);
+		metadata.agentXml = agentXml;
+		metadata.matrixXml = matrixXml;
 
 		PmmXmlDoc miscCell = new PmmXmlDoc();
 		if (compartment.isSetModelVariables()) {

@@ -19,15 +19,12 @@
  *******************************************************************************/
 package de.bund.bfr.knime.pmm.extendedtable;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.DOMOutputter;
 
 import de.bund.bfr.knime.pmm.extendedtable.items.AgentXml;
@@ -38,72 +35,14 @@ public class TimeSeriesMetadata {
 
 	private static final String ELEMENT_PMMDOC = "PmmDoc";
 
-	private AgentXml agentXml;
-	private MatrixXml matrixXml;
-	private List<LiteratureItem> literatureItems;
-	private String warning;
+	public AgentXml agentXml;
+	public MatrixXml matrixXml;
+	public List<LiteratureItem> literatureItems;
 
 	public TimeSeriesMetadata() {
 		agentXml = null;
 		matrixXml = null;
 		literatureItems = new ArrayList<>();
-		warning = "";
-	}
-
-	public TimeSeriesMetadata(String xmlString) throws IOException, JDOMException {
-		this();
-		SAXBuilder builder = new SAXBuilder();
-		Document doc = builder.build(new StringReader(xmlString));
-
-		Element rootElement = doc.getRootElement();
-		parseElement(rootElement);
-	}
-
-	private void parseElement(Element rootElement) {
-
-		Element agentElement = rootElement.getChild("mdAgent");
-		if (agentElement != null) {
-			agentXml = new AgentXml(agentElement);
-		}
-
-		Element matrixElement = rootElement.getChild("mdMatrix");
-		if (matrixElement != null) {
-			matrixXml = new MatrixXml(matrixElement);
-		}
-
-		rootElement.getChildren("MDLiteratureItem").stream().map(LiteratureItem::new).forEach(literatureItems::add);
-	}
-
-	public void addWarning(String warning) {
-		this.warning += warning;
-	}
-
-	public String getWarning() {
-		return warning;
-	}
-
-	public void setAgentXml(AgentXml agentXml) {
-		this.agentXml = agentXml;
-	}
-
-	public void clearAgentXml() {
-		this.agentXml = null;
-	}
-
-	public void setMatrixXml(MatrixXml matrixXml) {
-		this.matrixXml = matrixXml;
-	}
-
-	public void clearMatrixXml() {
-		this.matrixXml = null;
-	}
-
-	public void addLiteratureItem(LiteratureItem literatureItem) {
-		literatureItems.add(literatureItem);
-	}
-
-	public void removeLiteratureItem(LiteratureItem literatureItem) {
-		literatureItems.remove(literatureItem);
 	}
 
 	public org.w3c.dom.Document getW3C() {
@@ -116,7 +55,7 @@ public class TimeSeriesMetadata {
 		return null;
 	}
 
-	public Document toXmlDocument() {
+	private Document toXmlDocument() {
 		Document doc = new Document();
 		Element rootElement = new Element(ELEMENT_PMMDOC);
 		doc.setRootElement(rootElement);
