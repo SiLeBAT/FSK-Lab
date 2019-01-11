@@ -55,6 +55,26 @@ public class AgentXmlTest {
 	}
 	
 	@Test
+	public void testElementConstructorMd() {
+		new AgentXml(new Element("mdAgent"));
+	}
+	
+	@Test
+	public void testElementConstructorModel1() {
+		new AgentXml(new Element("model1Agent"));
+	}
+	
+	@Test
+	public void testElementConstructorModel2() {
+		new AgentXml(new Element("model2Agent"));
+	}
+	
+	@Test(expected = RuntimeException.class)
+	public void testElementConstructorOther() {
+		new AgentXml(new Element("other"));
+	}
+	
+	@Test
 	public void testToXmlElement() throws Exception {
 		AgentXml agent = new AgentXml(Type.MD, 0, "name", "detail", "dbuuid");
 		Element element = agent.toXmlElement();
