@@ -152,16 +152,13 @@ public class Model1Tuple {
 			estModel.name = model.getName();
 		}
 
-		AgentXml agentXml = new AgentXml(Type.Model1, MathUtilities.getRandomNegativeInt(), species.getName(),
-				species.getDetail(), null);
-
-		PMFCompartment compartment = SBMLFactory.createPMFCompartment(model.getCompartment(0));
-		MatrixXml matrixXml = new MatrixXml(MatrixXml.Type.Model1, MathUtilities.getRandomNegativeInt(),
-				compartment.getName(), compartment.getDetail(), null);
-
 		Model1Metadata metadata = new Model1Metadata();
-		metadata.setAgentXml(agentXml);
-		metadata.setMatrixXml(matrixXml);
+		metadata.agentXml = new AgentXml(Type.Model1, MathUtilities.getRandomNegativeInt(), species.getName(),
+				species.getDetail(), null);
+		
+		PMFCompartment compartment = SBMLFactory.createPMFCompartment(model.getCompartment(0));
+		metadata.matrixXml = new MatrixXml(MatrixXml.Type.Model1, MathUtilities.getRandomNegativeInt(),
+				compartment.getName(), compartment.getDetail(), null);
 
 		// Reads model literature
 		PmmXmlDoc mLit = new PmmXmlDoc();
@@ -186,7 +183,7 @@ public class Model1Tuple {
 			de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem mLiteratureItem = new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(
 					de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem.Type.M, author, year, title, abstractText,
 					journal, volume, issue, page, approvalMode, website, type, comment);
-			metadata.addLiteratureItem(mLiteratureItem);
+			metadata.modelLiteratureItems.add(mLiteratureItem);
 		}
 
 		// Reads estimated model literature
@@ -208,7 +205,7 @@ public class Model1Tuple {
 			de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem emLiteratureItem = new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(
 					de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem.Type.EM, author, year, title, abstractText,
 					journal, volume, issue, page, approvalMode, website, type, comment);
-			metadata.addLiteratureItem(emLiteratureItem);
+			metadata.estimatedModelLiteratureItems.add(emLiteratureItem);
 
 			LiteratureItem lit = new LiteratureItem(author, year, title, abstractText, journal, volume, issue, page,
 					approvalMode, website, type, comment);
