@@ -105,16 +105,14 @@ public class Model2Tuple {
 
 		if (model.getListOfSpecies().size() == 1) {
 			PMFSpecies species = SBMLFactory.createPMFSpecies(model.getSpecies(0));
-			AgentXml agentXml = new AgentXml(Type.Model2, MathUtilities.getRandomNegativeInt(), species.getName(),
+			metadata.agentXml = new AgentXml(Type.Model2, MathUtilities.getRandomNegativeInt(), species.getName(),
 					species.getDetail(), null);
-			metadata.setAgentXml(agentXml);
 		}
 
 		if (model.getListOfCompartments().size() == 1) {
 			PMFCompartment compartment = SBMLFactory.createPMFCompartment(model.getCompartment(0));
-			MatrixXml matrixXml = new MatrixXml(MatrixXml.Type.Model2, MathUtilities.getRandomNegativeInt(),
+			metadata.matrixXml = new MatrixXml(MatrixXml.Type.Model2, MathUtilities.getRandomNegativeInt(),
 					compartment.getName(), compartment.getDetail(), null);
-			metadata.setMatrixXml(matrixXml);
 		}
 
 		// Gets model literature
@@ -140,7 +138,7 @@ public class Model2Tuple {
 			de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem mLiteratureItem = new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(
 					de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem.Type.M, author, year, title, abstractText,
 					journal, volume, issue, page, approvalMode, website, type, comment);
-			metadata.addLiteratureItem(mLiteratureItem);
+			metadata.modelLiteratureItems.add(mLiteratureItem);
 		}
 
 		// Gets estimated model literature
@@ -166,7 +164,7 @@ public class Model2Tuple {
 			de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem emLiteratureItem = new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(
 					de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem.Type.EM, author, year, title, abstractText,
 					journal, volume, issue, page, approvalMode, website, type, comment);
-			metadata.addLiteratureItem(emLiteratureItem);
+			metadata.estimatedModelLiteratureItems.add(emLiteratureItem);
 		}
 
 		knimeTuple = new KnimeTuple(schema);
