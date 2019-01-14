@@ -20,33 +20,14 @@
 package de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel;
 
 import de.bund.bfr.knime.pmm.common.PmmException;
-import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeSchema;
 
-public class TimeSeriesSchema extends KnimeSchema {
+public class TimeSeriesSchema extends de.bund.bfr.knime.pmm.common.pmmtablemodel.TimeSeriesSchema {
 
-	public static final String ATT_CONDID = "CondID";
-	public static final String ATT_COMBASEID = "CombaseID";
-	public static final String ATT_MISC = "Misc";
-	public static final String ATT_AGENT = "Organism";
-	public static final String ATT_MATRIX = "Matrix";
-	public static final String ATT_TIMESERIES = "MD_Data";
-	public static final String ATT_MDINFO = "MD_Info";
-	public static final String ATT_LITMD = "MD_Literatur";
-	public static final String ATT_DBUUID = "MD_DB_UID";
 	public static final String ATT_METADATA = "MD_Metadata";
 
 	public TimeSeriesSchema() {
 
 		try {
-			addIntAttribute(ATT_CONDID);
-			addStringAttribute(ATT_COMBASEID);
-			addXmlAttribute(ATT_AGENT);
-			addXmlAttribute(ATT_MATRIX);
-			addXmlAttribute(ATT_TIMESERIES);
-			addXmlAttribute(ATT_MISC);
-			addXmlAttribute(ATT_MDINFO);
-			addXmlAttribute(ATT_LITMD);
-			addStringAttribute(ATT_DBUUID);
 			addXmlAttribute(ATT_METADATA);
 		} catch (PmmException ex) {
 			ex.printStackTrace(System.err);
