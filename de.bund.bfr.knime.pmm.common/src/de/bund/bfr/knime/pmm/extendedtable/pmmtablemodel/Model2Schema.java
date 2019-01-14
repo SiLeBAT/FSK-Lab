@@ -20,48 +20,16 @@
 package de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel;
 
 import de.bund.bfr.knime.pmm.common.PmmException;
-import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeSchema;
 
-public class Model2Schema extends KnimeSchema {
-	
-	public static final String ATT_MODELCATALOG = getAttribute(Model1Schema.ATT_MODELCATALOG, 2);
-	public static final String ATT_ESTMODEL = getAttribute(Model1Schema.ATT_ESTMODEL, 2);
-	public static final String ATT_DEPENDENT = getAttribute(Model1Schema.ATT_DEPENDENT, 2);
-	public static final String ATT_PARAMETER = getAttribute(Model1Schema.ATT_PARAMETER, 2);
-	public static final String ATT_INDEPENDENT = getAttribute(Model1Schema.ATT_INDEPENDENT, 2);
-	public static final String ATT_MLIT = getAttribute(Model1Schema.ATT_MLIT, 2);
-	public static final String ATT_EMLIT = getAttribute(Model1Schema.ATT_EMLIT, 2);
-	public static final String ATT_DATABASEWRITABLE = getAttribute(Model1Schema.ATT_DATABASEWRITABLE, 2);
-	public static final String ATT_DBUUID = getAttribute(Model1Schema.ATT_DBUUID, 2);
+public class Model2Schema extends de.bund.bfr.knime.pmm.common.pmmtablemodel.Model2Schema {
+
 	public static final String ATT_METADATA = getAttribute(Model1Schema.ATT_METADATA, 2);
-	public static final String ATT_GLOBAL_MODEL_ID = "GlobalModelID";
-
-	public static final int WRITABLE = 1;
-	public static final int NOTWRITABLE = 0;
-	public static final String NAME = "Name";
-	public static final String FORMULA = "FormulaSec";
-	public static final String SSE = "SSE";
-	public static final String MSE = "MSE";
-	public static final String RMSE = "RMSE";
-	public static final String RSQUARED = "Rsquared";
-	public static final String AIC = "AIC";	
 	
 	public Model2Schema() {
 		try {
-			addXmlAttribute(ATT_MODELCATALOG);
-			addXmlAttribute(ATT_DEPENDENT);
-			addXmlAttribute(ATT_INDEPENDENT);
-			addXmlAttribute(ATT_PARAMETER);
-			addXmlAttribute(ATT_ESTMODEL);
-			addXmlAttribute(ATT_MLIT);
-			addXmlAttribute(ATT_EMLIT);
-			addIntAttribute(ATT_DATABASEWRITABLE);
-			addStringAttribute(ATT_DBUUID);
 			addXmlAttribute(ATT_METADATA);
-			addIntAttribute(ATT_GLOBAL_MODEL_ID);
 		} catch (PmmException ex) {
 			ex.printStackTrace(System.err);
 		}
 	}
-
 }

@@ -40,10 +40,10 @@ public class Model2SchemaTest {
 		assertEquals("M_DB_UIDSec", schema.getName(8));
 		assertEquals(KnimeAttribute.TYPE_STRING, schema.getType(8));
 		
-		assertEquals("Model_MetadataSec", schema.getName(9));
-		assertEquals(KnimeAttribute.TYPE_XML, schema.getType(9));
+		assertEquals("GlobalModelID", schema.getName(9));
+		assertEquals(KnimeAttribute.TYPE_INT, schema.getType(9));
 		
-		assertEquals("GlobalModelID", schema.getName(10));
-		assertEquals(KnimeAttribute.TYPE_INT, schema.getType(10));
+		assertEquals("Model_MetadataSec", schema.getName(10));
+		assertEquals(KnimeAttribute.TYPE_XML, schema.getType(10));
 	}
 }
