@@ -20,43 +20,13 @@
 package de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel;
 
 import de.bund.bfr.knime.pmm.common.PmmException;
-import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeSchema;
 
-public class Model1Schema extends KnimeSchema {
+public class Model1Schema extends de.bund.bfr.knime.pmm.common.pmmtablemodel.Model1Schema {
 
-	public static final String ATT_MODELCATALOG = "CatModel";
-	public static final String ATT_ESTMODEL = "EstModel";
-	public static final String ATT_DEPENDENT = "Dependent";
-	public static final String ATT_PARAMETER = "Parameter";
-	public static final String ATT_INDEPENDENT = "Independent";
-	public static final String ATT_MLIT = "M_Literatur";
-	public static final String ATT_EMLIT = "EM_Literatur";
-	public static final String ATT_DATABASEWRITABLE = "DatabaseWritable";
-	public static final String ATT_DBUUID = "M_DB_UID";
 	public static final String ATT_METADATA = "Model_Metadata";
-	
-	public static final int WRITABLE = 1;
-	public static final int NOTWRITABLE = 0;
-	public static final String MODEL = "Primary Model";
-	public static final String NAME = "Name";
-	public static final String FORMULA = "Formula";
-	public static final String SSE = "SSE";
-	public static final String MSE = "MSE";
-	public static final String RMSE = "RMSE";
-	public static final String RSQUARED = "Rsquared";
-	public static final String AIC = "AIC";
 	
 	public Model1Schema() {
 		try {
-			addXmlAttribute(ATT_MODELCATALOG);
-			addXmlAttribute(ATT_DEPENDENT);
-			addXmlAttribute(ATT_INDEPENDENT);
-			addXmlAttribute(ATT_PARAMETER);
-			addXmlAttribute(ATT_ESTMODEL);
-			addXmlAttribute(ATT_MLIT);
-			addXmlAttribute(ATT_EMLIT);
-			addIntAttribute(ATT_DATABASEWRITABLE);
-			addStringAttribute(ATT_DBUUID);
 			addXmlAttribute(ATT_METADATA);
 		} catch (PmmException ex) {
 			ex.printStackTrace(System.err);
