@@ -563,6 +563,12 @@ public class RController implements IRController {
 
     exec.setProgress(1.0);
   }
+ 
+  public void loadWorkspace(File workspaceFile) throws RException, CanceledExecutionException {
+	// load workspaces from the file into the current R session
+	String unixPath = FilenameUtils.separatorsToUnix(workspaceFile.getAbsolutePath());
+	eval("load(\"" + unixPath + "\")\n", false);
+  }
 
   @Override
   public Collection<FlowVariable> importFlowVariables(String variableName) throws RException {
