@@ -33,11 +33,11 @@ import org.knime.core.data.def.StringCell;
 import org.knime.core.data.xml.XMLBlobCell;
 import org.knime.core.data.xml.XMLCell;
 
+import de.bund.bfr.knime.pmm.common.CellIO;
 import de.bund.bfr.knime.pmm.common.PmmException;
 import de.bund.bfr.knime.pmm.common.PmmXmlDoc;
 import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeAttribute;
 import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeSchema;
-import de.bund.bfr.knime.pmm.extendedtable.CellIO;
 import de.bund.bfr.knime.pmm.extendedtable.Model1Metadata;
 import de.bund.bfr.knime.pmm.extendedtable.Model2Metadata;
 import de.bund.bfr.knime.pmm.extendedtable.TimeSeriesMetadata;
@@ -51,7 +51,7 @@ public class KnimeTuple implements DataRow {
 		setSchema(schema);
 		cell = new DataCell[schema.size()];
 		for (int i = 0; i < schema.size(); i++) {
-			cell[i] = CellIO.createMissingCell();			
+			cell[i] = de.bund.bfr.knime.pmm.common.CellIO.createMissingCell();			
 		}
 	}
 
