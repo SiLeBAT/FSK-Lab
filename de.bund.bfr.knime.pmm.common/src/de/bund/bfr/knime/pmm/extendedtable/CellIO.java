@@ -56,35 +56,39 @@ import de.bund.bfr.knime.pmm.common.pmmtablemodel.Model1Schema;
 
 public class CellIO {
 
-	//public static long tttxcmldoc = 0;
+	// public static long tttxcmldoc = 0;
 
+	/**
+	 * @param cell
+	 *            DataCell of type {@link StringCell#TYPE}.
+	 * @return null if cell is missing or empty. Otherwise the string contained in
+	 *         cell.
+	 */
 	public static String getString(DataCell cell) {
 		if (cell.isMissing()) {
 			return null;
 		}
 
-		String s = ((StringCell) cell).getStringValue();
-
-		if (s.trim().isEmpty()) {
-			return null;
-		}
-
-		return s;
+		String s = ((StringCell) cell).getStringValue().trim();
+		return s.isEmpty() ? null : s;
 	}
 
+	/**
+	 * @param cell
+	 *            DataCell of type {@link IntCell#TYPE}.
+	 * @return null if cell is missing. Otherwise the integer contained in cell.
+	 */
 	public static Integer getInt(DataCell cell) {
-		if (cell.isMissing()) {
-			return null;
-		}
-
-		return ((IntCell) cell).getIntValue();
+		return cell.isMissing() ? null : ((IntCell) cell).getIntValue();
 	}
 
 	public static PmmXmlDoc getPmmXml(DataCell cell) {
 
-		if (!(cell instanceof DataCell)) return new PmmXmlDoc();
+		if (!(cell instanceof DataCell))
+			return new PmmXmlDoc();
 
-		if (((DataCell) cell).isMissing()) return new PmmXmlDoc();
+		if (((DataCell) cell).isMissing())
+			return new PmmXmlDoc();
 
 		try {
 			return new PmmXmlDoc(((StringValue) cell).getStringValue());
@@ -93,12 +97,12 @@ public class CellIO {
 		}
 	}
 
+	/**
+	 * @param cell DataCell of type {@link DoubleCell#TYPE}.
+	 * @return null if cell is missing. Otherwise the double contained in cell.
+	 */
 	public static Double getDouble(DataCell cell) {
-		if (cell.isMissing()) {
-			return null;
-		}
-
-		return ((DoubleCell) cell).getDoubleValue();
+		return cell.isMissing() ? null : ((DoubleCell) cell).getDoubleValue();
 	}
 
 	public static List<String> getStringList(DataCell cell) {
@@ -170,45 +174,48 @@ public class CellIO {
 	}
 
 	public static DataCell createXmlCell(PmmXmlDoc xmlDoc) {
-		if (xmlDoc == null) return null;
+		if (xmlDoc == null)
+			return null;
 		DataCell xmlCell = null;
-		//long ttt = System.currentTimeMillis();
+		// long ttt = System.currentTimeMillis();
 		org.w3c.dom.Document doc = xmlDoc.getW3C();
 		xmlCell = XMLCellFactory.create(doc);
-		//tttxcmldoc += (System.currentTimeMillis() - ttt);
+		// tttxcmldoc += (System.currentTimeMillis() - ttt);
 		return xmlCell;
 	}
 
 	public static DataCell createXmlCell(TimeSeriesMetadata xmlDoc) {
-		if (xmlDoc == null) return null;
+		if (xmlDoc == null)
+			return null;
 		DataCell xmlCell = null;
-		//long ttt = System.currentTimeMillis();
+		// long ttt = System.currentTimeMillis();
 		org.w3c.dom.Document doc = xmlDoc.getW3C();
 		xmlCell = XMLCellFactory.create(doc);
-		//tttxcmldoc += (System.currentTimeMillis() - ttt);
+		// tttxcmldoc += (System.currentTimeMillis() - ttt);
 		return xmlCell;
 	}
 
 	public static DataCell createXmlCell(Model1Metadata xmlDoc) {
-		if (xmlDoc == null) return null;
+		if (xmlDoc == null)
+			return null;
 		DataCell xmlCell = null;
-		//long ttt = System.currentTimeMillis();
+		// long ttt = System.currentTimeMillis();
 		org.w3c.dom.Document doc = xmlDoc.getW3C();
 		xmlCell = XMLCellFactory.create(doc);
-		//tttxcmldoc += (System.currentTimeMillis() - ttt);
-		return xmlCell;
-	}
-	
-	public static DataCell createXmlCell(Model2Metadata xmlDoc) {
-		if (xmlDoc == null) return null;
-		DataCell xmlCell = null;
-		//long ttt = System.currentTimeMillis();
-		org.w3c.dom.Document doc = xmlDoc.getW3C();
-		xmlCell = XMLCellFactory.create(doc);
-		//tttxcmldoc += (System.currentTimeMillis() - ttt);
+		// tttxcmldoc += (System.currentTimeMillis() - ttt);
 		return xmlCell;
 	}
 
+	public static DataCell createXmlCell(Model2Metadata xmlDoc) {
+		if (xmlDoc == null)
+			return null;
+		DataCell xmlCell = null;
+		// long ttt = System.currentTimeMillis();
+		org.w3c.dom.Document doc = xmlDoc.getW3C();
+		xmlCell = XMLCellFactory.create(doc);
+		// tttxcmldoc += (System.currentTimeMillis() - ttt);
+		return xmlCell;
+	}
 
 	public static DataCell createMissingCell() {
 		return DataType.getMissingCell();
@@ -245,16 +252,19 @@ public class CellIO {
 
 		ret = new LinkedHashMap<>();
 
-		if (dataCell.isMissing()) return ret;
+		if (dataCell.isMissing())
+			return ret;
 
-		if (!(dataCell instanceof StringCell)) throw new PmmException("Only String cell can return map.");
+		if (!(dataCell instanceof StringCell))
+			throw new PmmException("Only String cell can return map.");
 
 		t1 = ((StringCell) dataCell).getStringValue().split(",");
 
 		for (String map : t1) {
 
 			t2 = map.split("=");
-			if (t2.length != 2) throw new PmmException("Map string contains malformed item.");
+			if (t2.length != 2)
+				throw new PmmException("Map string contains malformed item.");
 
 			ret.put(t2[0], t2[1]);
 		}
@@ -294,12 +304,13 @@ public class CellIO {
 		return names;
 	}
 
-	public static HashMap<Integer, Integer> setMIDs(boolean before, String attr, String dbTablename, HashMap<Integer, Integer> foreignDbIdsTable, KnimeTuple row, ParametricModel pm)
-			throws PmmException {
+	public static HashMap<Integer, Integer> setMIDs(boolean before, String attr, String dbTablename,
+			HashMap<Integer, Integer> foreignDbIdsTable, KnimeTuple row, ParametricModel pm) throws PmmException {
 		if (dbTablename.equals("Literatur")) {
 			PmmXmlDoc lili = row.getPmmXml(attr);
 			if (lili != null) {
-				PmmXmlDoc fromToXmlDB = attr.startsWith(Model1Schema.ATT_EMLIT) ? pm.getEstModelLit() : pm.getModelLit();
+				PmmXmlDoc fromToXmlDB = attr.startsWith(Model1Schema.ATT_EMLIT) ? pm.getEstModelLit()
+						: pm.getModelLit();
 				int i = 0;
 				for (PmmXmlElementConvertable el : lili.getElementSet()) {
 					if (el instanceof LiteratureItem) {
@@ -311,19 +322,23 @@ public class CellIO {
 								liDB.id = foreignDbIdsTable.get(key);
 								fromToXmlDB.set(i, liDB);
 							} else if (foreignDbIdsTable.get(key).intValue() != liDB.id.intValue()) {
-								System.err.println("checkIDs, LiteratureItem ... shouldn't happen - " + foreignDbIdsTable.get(key).intValue() + "\t" + liDB.id.intValue());
+								System.err.println("checkIDs, LiteratureItem ... shouldn't happen - "
+										+ foreignDbIdsTable.get(key).intValue() + "\t" + liDB.id.intValue());
 							}
 						} else {
 							if (before) {
 								liDB.id = MathUtilities.getRandomNegativeInt();
 								fromToXmlDB.set(i, liDB);
-							} else foreignDbIdsTable.put(key, liDB.id);
+							} else
+								foreignDbIdsTable.put(key, liDB.id);
 						}
 					}
 					i++;
 				}
-				if (attr.startsWith(Model1Schema.ATT_EMLIT)) pm.setEstLit(fromToXmlDB);
-				else pm.setMLit(fromToXmlDB);
+				if (attr.startsWith(Model1Schema.ATT_EMLIT))
+					pm.setEstLit(fromToXmlDB);
+				else
+					pm.setMLit(fromToXmlDB);
 			}
 		} else if (attr.startsWith(Model1Schema.ATT_MODELCATALOG)) { // Modellkatalog
 			PmmXmlDoc modelCat = row.getPmmXml(attr);
@@ -341,7 +356,8 @@ public class CellIO {
 								cmxDB.id = foreignDbIdsTable.get(key);
 								fromToXmlDB.set(i, cmxDB);
 							} else if (foreignDbIdsTable.get(key).intValue() != cmxDB.id.intValue()) {
-								System.err.println("checkIDs, CatalogModelXml ... shouldn't happen - " + foreignDbIdsTable.get(key).intValue() + "\t" + cmxDB.id.intValue());
+								System.err.println("checkIDs, CatalogModelXml ... shouldn't happen - "
+										+ foreignDbIdsTable.get(key).intValue() + "\t" + cmxDB.id.intValue());
 							}
 						} else {
 							if (before) {
@@ -349,7 +365,8 @@ public class CellIO {
 								pm.setModelId(rn);
 								cmxDB.id = rn;
 								fromToXmlDB.set(i, cmxDB);
-							} else foreignDbIdsTable.put(key, cmxDB.id);
+							} else
+								foreignDbIdsTable.put(key, cmxDB.id);
 						}
 					}
 					i++;
@@ -371,7 +388,8 @@ public class CellIO {
 								emxDB.id = foreignDbIdsTable.get(key);
 								fromToXmlDB.set(i, emxDB);
 							} else if (foreignDbIdsTable.get(key).intValue() != emxDB.id.intValue()) {
-								System.err.println("checkIDs, EstModelXml ... shouldn't happen - " + foreignDbIdsTable.get(key).intValue() + "\t" + emxDB.id.intValue());
+								System.err.println("checkIDs, EstModelXml ... shouldn't happen - "
+										+ foreignDbIdsTable.get(key).intValue() + "\t" + emxDB.id.intValue());
 							}
 						} else {
 							if (before) {
@@ -379,7 +397,8 @@ public class CellIO {
 								pm.setEstModelId(rn);
 								emxDB.id = rn;
 								fromToXmlDB.set(i, emxDB);
-							} else foreignDbIdsTable.put(key, emxDB.id);
+							} else
+								foreignDbIdsTable.put(key, emxDB.id);
 						}
 					}
 					i++;
@@ -389,8 +408,8 @@ public class CellIO {
 		return foreignDbIdsTable;
 	}
 
-	public static HashMap<Integer, Integer> setTsIDs(boolean before, String attr, HashMap<Integer, Integer> foreignDbIds, KnimeTuple row, KnimeTuple schemaTuple)
-			throws PmmException {
+	public static HashMap<Integer, Integer> setTsIDs(boolean before, String attr,
+			HashMap<Integer, Integer> foreignDbIds, KnimeTuple row, KnimeTuple schemaTuple) throws PmmException {
 		int type = schemaTuple.getSchema().getType(row.getIndex(attr));
 		if (type == KnimeAttribute.TYPE_XML) {
 			PmmXmlDoc x = row.getPmmXml(attr);
@@ -404,8 +423,9 @@ public class CellIO {
 						MiscXml mx = (MiscXml) el;
 						MiscXml mx2DB = ((MiscXml) fromToXmlDB.get(i));
 						Integer key = mx.id;
-						if (key != null && key <= -1 && key >= -3) continue; // ATT_TEMPERATURE_ID, ATT_PH_ID or
-																				// ATT_AW_ID
+						if (key != null && key <= -1 && key >= -3)
+							continue; // ATT_TEMPERATURE_ID, ATT_PH_ID or
+										// ATT_AW_ID
 						if (key != null && foreignDbIds.containsKey(key)) {
 							if (before) {
 								mx2DB.id = foreignDbIds.get(key); // schemaTuple.addValue(attr,
@@ -419,7 +439,8 @@ public class CellIO {
 								mx2DB.id = MathUtilities.getRandomNegativeInt(); // schemaTuple.addValue(attr,
 																					// MathUtilities.getRandomNegativeInt());
 								fromToXmlDB.set(i, mx2DB);
-							} else foreignDbIds.put(key, mx2DB.id); // schemaTuple.getIntList(attr).get(i));
+							} else
+								foreignDbIds.put(key, mx2DB.id); // schemaTuple.getIntList(attr).get(i));
 						}
 					} else if (el instanceof MatrixXml) {
 						MatrixXml matx = (MatrixXml) el;
@@ -428,7 +449,7 @@ public class CellIO {
 						if (key != null && foreignDbIds.containsKey(key)) {
 							if (before) {
 								matxDB.id = foreignDbIds.get(key); // schemaTuple.addValue(attr,
-																		// foreignDbIds.get(key));
+																	// foreignDbIds.get(key));
 								fromToXmlDB.set(i, matxDB);
 							} else if (foreignDbIds.get(key).intValue() != matxDB.id) {
 								System.err.println("fillNewIDsIntoForeign ... shouldn't happen...MatrixXml");
@@ -460,7 +481,8 @@ public class CellIO {
 								// schemaTuple.addValue(attr, MathUtilities.getRandomNegativeInt());
 								axDB.id = MathUtilities.getRandomNegativeInt();
 								fromToXmlDB.set(i, ax);
-							} else foreignDbIds.put(key, axDB.id); // schemaTuple.getIntList(attr).get(i));
+							} else
+								foreignDbIds.put(key, axDB.id); // schemaTuple.getIntList(attr).get(i));
 						}
 					} else if (el instanceof LiteratureItem) {
 						LiteratureItem li = (LiteratureItem) el;
@@ -477,9 +499,10 @@ public class CellIO {
 						} else {
 							if (before) {
 								liDB.id = MathUtilities.getRandomNegativeInt(); // schemaTuple.addValue(attr,
-																					// MathUtilities.getRandomNegativeInt());
+																				// MathUtilities.getRandomNegativeInt());
 								fromToXmlDB.set(i, liDB);
-							} else foreignDbIds.put(key, liDB.id); // schemaTuple.getIntList(attr).get(i));
+							} else
+								foreignDbIds.put(key, liDB.id); // schemaTuple.getIntList(attr).get(i));
 						}
 					}
 					i++;
@@ -490,13 +513,16 @@ public class CellIO {
 			Integer key = row.getInt(attr);
 			if (key != null) {
 				if (foreignDbIds.containsKey(key)) {
-					if (before) schemaTuple.setValue(attr, foreignDbIds.get(key));
+					if (before)
+						schemaTuple.setValue(attr, foreignDbIds.get(key));
 					else if (foreignDbIds.get(key).intValue() != schemaTuple.getInt(attr).intValue()) {
 						System.err.println("fillNewIDsIntoForeign ... shouldn't happen");
 					}
 				} else {
-					if (before) schemaTuple.setValue(attr, MathUtilities.getRandomNegativeInt());
-					else foreignDbIds.put(key, schemaTuple.getInt(attr));
+					if (before)
+						schemaTuple.setValue(attr, MathUtilities.getRandomNegativeInt());
+					else
+						foreignDbIds.put(key, schemaTuple.getInt(attr));
 				}
 			}
 		}
