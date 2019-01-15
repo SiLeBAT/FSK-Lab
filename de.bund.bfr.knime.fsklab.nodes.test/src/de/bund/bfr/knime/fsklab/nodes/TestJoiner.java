@@ -70,7 +70,7 @@ public class TestJoiner extends WorkflowTestCase {
 		
 	}
 	
-	/*@Test
+	@Test
 	public void testJoinerWithConnections() throws Exception {
 		NodeID baseID = loadAndSetWorkflow();
 		m_runnerNode = new NodeID(baseID, 6);
@@ -78,8 +78,6 @@ public class TestJoiner extends WorkflowTestCase {
 		//TODO check the results after running with connections already set 
 		executeAndWait(m_runnerNode);
 		NodeContainer runnerNodeContainer = getManager().getNodeContainer(m_runnerNode);
-		System.out.println(((CombinedFskPortObject)runnerNodeContainer.getOutPort(1).getPortObject()).generalInformation.getName());
-		System.out.println(((CombinedFskPortObject)runnerNodeContainer.getOutPort(1).getPortObject()).getJoinerRelation());
 		// port 0 is always flow variable port
 		NodeOutPort runnerOutPort = runnerNodeContainer.getOutPort(1);
 		try (RController controller = new RController()) {
@@ -90,6 +88,6 @@ public class TestJoiner extends WorkflowTestCase {
 		
 		getManager().resetAndConfigureNode(m_runnerNode);
 		
-	}*/
+	}
 	
 }

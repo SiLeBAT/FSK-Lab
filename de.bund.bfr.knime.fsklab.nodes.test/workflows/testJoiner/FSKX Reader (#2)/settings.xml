@@ -6,7 +6,7 @@
 <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
 </config>
 <config key="model">
-<entry key="filename" type="xstring" value="file:/D:/runtime-KNIME/testJoiner/FSKX%20Reader%20(%232)/drop/simplemodel22.fskx"/>
+<entry key="filename" type="xstring" value="knime://LOCAL/testJoiner/simplemodel22.fskx"/>
 </config>
 <config key="variables">
 <config key="filename">
