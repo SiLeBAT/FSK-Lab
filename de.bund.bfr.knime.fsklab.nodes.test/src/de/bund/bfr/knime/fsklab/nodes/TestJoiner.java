@@ -70,7 +70,7 @@ public class TestJoiner extends WorkflowTestCase {
 		
 	}
 	
-	@Test
+	/*@Test
 	public void testJoinerWithConnections() throws Exception {
 		NodeID baseID = loadAndSetWorkflow();
 		m_runnerNode = new NodeID(baseID, 6);
@@ -90,6 +90,6 @@ public class TestJoiner extends WorkflowTestCase {
 		
 		getManager().resetAndConfigureNode(m_runnerNode);
 		
-	}
+	}*/
 	
 }
