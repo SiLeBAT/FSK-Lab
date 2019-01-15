@@ -98,13 +98,20 @@ public class CellIO {
 	}
 
 	/**
-	 * @param cell DataCell of type {@link DoubleCell#TYPE}.
+	 * @param cell
+	 *            DataCell of type {@link DoubleCell#TYPE}.
 	 * @return null if cell is missing. Otherwise the double contained in cell.
 	 */
 	public static Double getDouble(DataCell cell) {
 		return cell.isMissing() ? null : ((DoubleCell) cell).getDoubleValue();
 	}
 
+	/**
+	 * @param cell
+	 *            DataCell of type {@link StringCell#TYPE}. cell keeps a number of
+	 *            strings joined with commas. E.g. "A,B,C"
+	 * @return empty list if cell is missing or list of strings contained in cell.
+	 */
 	public static List<String> getStringList(DataCell cell) {
 		if (cell.isMissing()) {
 			return new ArrayList<>();
@@ -115,6 +122,12 @@ public class CellIO {
 		return new ArrayList<>(Arrays.asList(toks));
 	}
 
+	/**
+	 * @param cell
+	 *            DataCell of type {@link StringCell#TYPE}. cell keeps a number of
+	 *            doubles joined with commas. E.g. "1.9,2.8,3.7".
+	 * @return empty list if cell is missing or list of doubles contained in cell.
+	 */
 	public static List<Double> getDoubleList(DataCell cell) {
 		if (cell.isMissing()) {
 			return new ArrayList<>();
@@ -138,6 +151,12 @@ public class CellIO {
 		return list;
 	}
 
+	/**
+	 * @param cell
+	 *            DataCell of type {@link StringCell#TYPE}. cell keeps a number of
+	 *            integers joined with commas. E.g. "1,2,3".
+	 * @return empty list if cell is missing or list of integers contained in cell.
+	 */
 	public static List<Integer> getIntList(DataCell cell) {
 		if (cell.isMissing()) {
 			return new ArrayList<>();
