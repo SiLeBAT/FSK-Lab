@@ -59,8 +59,6 @@ import de.bund.bfr.knime.pmm.extendedtable.TimeSeriesMetadata;
 
 public class CellIO {
 
-	// public static long tttxcmldoc = 0;
-
 	/**
 	 * @param cell
 	 *            DataCell of type {@link StringCell#TYPE}.
@@ -195,48 +193,24 @@ public class CellIO {
 		return DataType.getMissingCell();
 	}
 
+	/** @return null if xmlDoc is null or XMLCell. */
 	public static DataCell createXmlCell(PmmXmlDoc xmlDoc) {
-		if (xmlDoc == null)
-			return null;
-		DataCell xmlCell = null;
-		// long ttt = System.currentTimeMillis();
-		org.w3c.dom.Document doc = xmlDoc.getW3C();
-		xmlCell = XMLCellFactory.create(doc);
-		// tttxcmldoc += (System.currentTimeMillis() - ttt);
-		return xmlCell;
+		return xmlDoc == null ? null : XMLCellFactory.create(xmlDoc.getW3C());
 	}
 
+	/** @return null if xmlDoc is null or XMLCell. */
 	public static DataCell createXmlCell(TimeSeriesMetadata xmlDoc) {
-		if (xmlDoc == null)
-			return null;
-		DataCell xmlCell = null;
-		// long ttt = System.currentTimeMillis();
-		org.w3c.dom.Document doc = xmlDoc.getW3C();
-		xmlCell = XMLCellFactory.create(doc);
-		// tttxcmldoc += (System.currentTimeMillis() - ttt);
-		return xmlCell;
+		return xmlDoc == null ? null : XMLCellFactory.create(xmlDoc.getW3C());
 	}
 
+	/** @return null if xmlDoc is null or XMLCell. */
 	public static DataCell createXmlCell(Model1Metadata xmlDoc) {
-		if (xmlDoc == null)
-			return null;
-		DataCell xmlCell = null;
-		// long ttt = System.currentTimeMillis();
-		org.w3c.dom.Document doc = xmlDoc.getW3C();
-		xmlCell = XMLCellFactory.create(doc);
-		// tttxcmldoc += (System.currentTimeMillis() - ttt);
-		return xmlCell;
+		return xmlDoc == null ? null : XMLCellFactory.create(xmlDoc.getW3C());
 	}
 
+	/** @return null if xmlDoc is null or XMLCell. */
 	public static DataCell createXmlCell(Model2Metadata xmlDoc) {
-		if (xmlDoc == null)
-			return null;
-		DataCell xmlCell = null;
-		// long ttt = System.currentTimeMillis();
-		org.w3c.dom.Document doc = xmlDoc.getW3C();
-		xmlCell = XMLCellFactory.create(doc);
-		// tttxcmldoc += (System.currentTimeMillis() - ttt);
-		return xmlCell;
+		return xmlDoc == null ? null : XMLCellFactory.create(xmlDoc.getW3C());
 	}
 
 	public static DataCell createMissingCell() {
