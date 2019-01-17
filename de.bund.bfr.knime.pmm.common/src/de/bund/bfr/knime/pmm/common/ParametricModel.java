@@ -121,7 +121,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	private static final String ATT_LEVEL = "Level";
 	private String warningMsg = "";
 	
-	protected ParametricModel() {
+	public ParametricModel() {
 		initVars();
 	}
 	private void initVars() {
