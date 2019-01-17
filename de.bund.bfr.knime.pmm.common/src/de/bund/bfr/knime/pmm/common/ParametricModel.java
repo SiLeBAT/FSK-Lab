@@ -408,7 +408,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	public String getComment() {
 		return comment;
 	}
-	
+
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
@@ -417,7 +417,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	public Boolean isChecked() {
 		return isChecked;
 	}
-	
+
 	public void setChecked(Boolean checked) {
 		this.isChecked = checked;
 	}
@@ -426,7 +426,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	public Integer getQualityScore() {
 		return qualityScore;
 	}
-	
+
 	public void setQualityScore(Integer qScore) {
 		this.qualityScore = qScore;
 	}
@@ -444,7 +444,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	public PmmXmlDoc getIndependent() {
 		return independent;
 	}
-	
+
 	public void setIndependent(PmmXmlDoc independent) {
 		this.independent = independent;
 	}
@@ -453,16 +453,16 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	public PmmXmlDoc getParameter() {
 		return parameter;
 	}
-	
+
 	public void setParameter(PmmXmlDoc parameter) {
 		this.parameter = parameter;
 	}
-	
+
 	// estLit
 	public PmmXmlDoc getEstModelLit() {
 		return estLit;
 	}
-	
+
 	public void setEstLit(PmmXmlDoc estLit) {
 		this.estLit = estLit;
 	}
@@ -470,12 +470,162 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	// modelLit
 	public PmmXmlDoc getModelLit() {
 		return modelLit;
-	}	
-	
+	}
+
 	public void setMLit(PmmXmlDoc modelLit) {
 		this.modelLit = modelLit;
 	}
-	
+
+	// AIC
+	public Double getAic() {
+		return aic;
+	}
+
+	public void setAic(final Double aic) {
+		this.aic = (aic == null) ? Double.NaN : aic;
+	}
+
+	public boolean hasAic() {
+		return !Double.isNaN(aic);
+	}
+
+	// BIC
+	public Double getBic() {
+		return bic;
+	}
+
+	public void setBic(final Double bic) {
+		this.bic = (bic == null) ? Double.NaN : bic;
+	}
+
+	public boolean hasBic() {
+		return !Double.isNaN(bic);
+	}
+
+	// RMS
+	public Double getRms() {
+		return rms;
+	}
+
+	public void setRms(final Double rms) throws PmmException {
+		if (rms == null)
+			this.rms = Double.NaN;
+		else {
+			if (Double.isInfinite(rms)) {
+				throw new PmmException("RMS must be a real positive number.");
+			}
+
+			if (rms < 0) {
+				throw new PmmException("RMS must be a real positive number.");
+			}
+
+			this.rms = rms;
+		}
+	}
+
+	public boolean hasRms() {
+		return !Double.isNaN(rms);
+	}
+
+	// rss
+	public Double getRss() {
+		return rss;
+	}
+
+	public void setRss(final Double rss) throws PmmException {
+		if (rss == null)
+			this.rss = Double.NaN;
+		else {
+			if (Double.isInfinite(rss)) {
+				throw new PmmException("RSS must be a real positive number.");
+			}
+
+			if (rss < 0) {
+				throw new PmmException("RSS must be a real positive number.");
+			}
+
+			this.rss = rss;
+		}
+	}
+
+	// rsquared
+	public Double getRsquared() {
+		return rsquared;
+	}
+
+	public void setRsquared(final Double r2) throws PmmException {
+		if (r2 == null)
+			this.rsquared = Double.NaN;
+		else {
+			if (r2 > 1) {
+				throw new PmmException("Rsquared must not exceed 1: " + r2);
+			}
+			rsquared = r2;
+		}
+	}
+
+	// formula
+	public String revertFormula() {
+		String result = formula;
+		if (depXml != null && !depXml.name.equals(depXml.origName)) {
+			result = MathUtilities.replaceVariable(result, depXml.name, depXml.origName);
+		}
+		if (parameter != null && parameter.getElementSet() != null) {
+			for (PmmXmlElementConvertable el : parameter.getElementSet()) {
+				if (el instanceof ParamXml) {
+					ParamXml px = (ParamXml) el;
+					if (!px.name.equals(px.origName)) {
+						result = MathUtilities.replaceVariable(result, px.name, px.origName);
+					}
+				}
+			}
+		}
+		if (independent != null && independent.getElementSet() != null) {
+			for (PmmXmlElementConvertable el : independent.getElementSet()) {
+				if (el instanceof IndepXml) {
+					IndepXml ix = (IndepXml) el;
+					if (!ix.name.equals(ix.origName)) {
+						result = MathUtilities.replaceVariable(result, ix.name, ix.origName);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	public void setFormula(final String formula) {
+
+		this.formula = formula.replaceAll("~", "=");
+		this.formula = this.formula.replaceAll("\\s", "");
+	}
+
+	public String getFormula() {
+		return formula;
+	}
+
+	// level
+	public int getLevel() {
+		return level;
+	}
+
+	// modelId
+	public int getModelId() {
+		return modelId;
+	}
+
+	public void setModelId(final int modelId) {
+		this.modelId = modelId;
+	}
+
+	// modelName
+	public String getModelName() {
+		return modelName;
+	}
+
+	public void setModelName(final String modelName) {
+		this.modelName = modelName;
+	}
+
 	// other ...
 	public PmmXmlDoc getCatModel() {
 		PmmXmlDoc catModel = new PmmXmlDoc();
@@ -543,33 +693,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		clonedPM.setGlobalModelId(globalModelId);
 
 		return clonedPM;
-	}
-
-	public void setRsquared(final Double r2) throws PmmException {
-		if (r2 == null)
-			this.rsquared = Double.NaN;
-		else {
-			if (r2 > 1) {
-				throw new PmmException("Rsquared must not exceed 1: " + r2);
-			}
-			rsquared = r2;
-		}
-	}
-
-	public void setRss(final Double rss) throws PmmException {
-		if (rss == null)
-			this.rss = Double.NaN;
-		else {
-			if (Double.isInfinite(rss)) {
-				throw new PmmException("RSS must be a real positive number.");
-			}
-
-			if (rss < 0) {
-				throw new PmmException("RSS must be a real positive number.");
-			}
-
-			this.rss = rss;
-		}
 	}
 
 	public void setCondId(final int condId) {
@@ -765,30 +888,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			if (origNameAlso)
 				depXml.origName = depVar;
 		}
-	}
-
-	public void setRms(final Double rms) throws PmmException {
-		if (rms == null)
-			this.rms = Double.NaN;
-		else {
-			if (Double.isInfinite(rms)) {
-				throw new PmmException("RMS must be a real positive number.");
-			}
-
-			if (rms < 0) {
-				throw new PmmException("RMS must be a real positive number.");
-			}
-
-			this.rms = rms;
-		}
-	}
-
-	public void setAic(final Double aic) {
-		this.aic = (aic == null) ? Double.NaN : aic;
-	}
-
-	public void setBic(final Double bic) {
-		this.bic = (bic == null) ? Double.NaN : bic;
 	}
 
 	public void removeIndepVar(final String varName) {
@@ -1116,60 +1215,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		return result;
 	}
 
-	public String revertFormula() {
-		String result = formula;
-		if (depXml != null && !depXml.name.equals(depXml.origName)) {
-			result = MathUtilities.replaceVariable(result, depXml.name, depXml.origName);
-		}
-		if (parameter != null && parameter.getElementSet() != null) {
-			for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-				if (el instanceof ParamXml) {
-					ParamXml px = (ParamXml) el;
-					if (!px.name.equals(px.origName)) {
-						result = MathUtilities.replaceVariable(result, px.name, px.origName);
-					}
-				}
-			}
-		}
-		if (independent != null && independent.getElementSet() != null) {
-			for (PmmXmlElementConvertable el : independent.getElementSet()) {
-				if (el instanceof IndepXml) {
-					IndepXml ix = (IndepXml) el;
-					if (!ix.name.equals(ix.origName)) {
-						result = MathUtilities.replaceVariable(result, ix.name, ix.origName);
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	public void setFormula(final String formula) {
-
-		this.formula = formula.replaceAll("~", "=");
-		this.formula = this.formula.replaceAll("\\s", "");
-	}
-
-	public String getFormula() {
-		return formula;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public int getModelId() {
-		return modelId;
-	}
-
-	public void setModelId(final int modelId) {
-		this.modelId = modelId;
-	}
-
-	public void setModelName(final String modelName) {
-		this.modelName = modelName;
-	}
-
 	public void setModelClass(final Integer modelClass) {
 		this.modelClass = modelClass;
 	}
@@ -1192,30 +1237,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 
 	public int getCondId() {
 		return condId;
-	}
-
-	public Double getRss() {
-		return rss;
-	}
-
-	public Double getRsquared() {
-		return rsquared;
-	}
-
-	public Double getRms() {
-		return rms;
-	}
-
-	public Double getAic() {
-		return aic;
-	}
-
-	public Double getBic() {
-		return bic;
-	}
-
-	public String getModelName() {
-		return modelName;
 	}
 
 	public Integer getModelClass() {
@@ -1285,18 +1306,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		modelElement.addContent(element);
 
 		return modelElement;
-	}
-
-	public boolean hasAic() {
-		return !Double.isNaN(aic);
-	}
-
-	public boolean hasBic() {
-		return !Double.isNaN(bic);
-	}
-
-	public boolean hasRms() {
-		return !Double.isNaN(rms);
 	}
 
 	public KnimeTuple getKnimeTuple() throws PmmException {
