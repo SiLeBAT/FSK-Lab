@@ -80,6 +80,18 @@ public class ParametricModelTest {
 	}
 
 	@Test
+	public void testGlobalModelId() {
+		ParametricModel model = new ParametricModel();
+		
+		// Empty constructor assigns a random negative int to globalModelId
+		assertTrue(model.getGlobalModelId() < 0);
+		
+		// Check change
+		model.setGlobalModelId(1);
+		assertEquals(1, model.getGlobalModelId().intValue());
+	}
+	
+	@Test
 	public void testWarning() {
 		ParametricModel model = new ParametricModel();
 		
@@ -244,4 +256,43 @@ public class ParametricModelTest {
 		assertTrue(Double.isNaN(model.getRms()));
 		assertFalse(model.hasRms());
 	}
+	
+	@Test
+	public void testChecked() {
+		ParametricModel model = new ParametricModel();
+		
+		// Empty constructor assigns null to isChecked
+		assertNull(model.isChecked());
+		
+		// Check change
+		model.setChecked(true);
+		assertTrue(model.isChecked());
+	}
+	
+	@Test
+	public void testFittedModelName() {
+		ParametricModel model = new ParametricModel();
+		
+		// Empty constructor assigns null to fittedModelName
+		assertNull(model.getFittedModelName());
+		
+		// Check change
+		model.setFittedModelName("name");
+		assertEquals("name", model.getFittedModelName());
+	}
+	
+	@Test
+	public void testRss() {
+		ParametricModel model = new ParametricModel();
+		
+		// Empty constructor assigns Double.NAN to rss
+		assertTrue(Double.isNaN(model.getRss()));
+		
+		// Check change
+		model.setRss(0.5);
+		assertEquals(0.5, model.getRss(), .0);
+	}
+	
+	
+	// TODO: rsquared
 }
