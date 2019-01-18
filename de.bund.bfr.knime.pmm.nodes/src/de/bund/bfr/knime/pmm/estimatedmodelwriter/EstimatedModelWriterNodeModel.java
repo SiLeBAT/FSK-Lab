@@ -265,7 +265,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						ppm.setAic(aic == null ? Double.NaN : aic);
 						ppm.setBic(bic == null ? Double.NaN : bic);
 						ppm.setQualityScore(emx.qualityScore);
-						ppm.setChecked(emx.checked);
+						ppm.isChecked = emx.checked;
 						ppm.comment = emx.comment;
 					} catch (Exception e) {
 						warnings += e.getMessage() + " -> ID: " + rowEstM1ID;
@@ -456,7 +456,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 				spm.setAic(aic);
 				spm.setBic(bic);
 				spm.setQualityScore(emx.qualityScore);
-				spm.setChecked(emx.checked);
+				spm.isChecked = emx.checked;
 				spm.comment = emx.comment;
 			} catch (Exception e) {
 				warnings += e.getMessage() + " -> ID: " + rowEstM2ID;

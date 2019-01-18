@@ -119,7 +119,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		this.globalModelId = globalModelId;
 	}
 
-	private Boolean isChecked;
+	public Boolean isChecked;
 	private Integer qualityScore;
 
 	public String comment;
@@ -395,15 +395,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 				}
 			}
 		}
-	}
-
-	// checked
-	public Boolean isChecked() {
-		return isChecked;
-	}
-
-	public void setChecked(Boolean checked) {
-		this.isChecked = checked;
 	}
 
 	// qualityScore
@@ -950,7 +941,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		}
 		clonedPM.setCondId(condId);
 
-		clonedPM.setChecked(isChecked);
+		clonedPM.isChecked = isChecked;
 		clonedPM.comment = comment;
 		clonedPM.setQualityScore(qualityScore);
 		clonedPM.setFittedModelName(fittedModelName);

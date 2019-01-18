@@ -34,7 +34,7 @@ public class ParametricModelTest {
 		assertTrue(Double.isNaN(model.getRms()));
 		assertTrue(Double.isNaN(model.getAic()));
 		assertTrue(Double.isNaN(model.getBic()));
-		assertNull(model.isChecked());
+		assertNull(model.isChecked);
 		assertNull(model.getQualityScore());
 		assertNull(model.comment);
 		assertTrue(model.getModelId() < 0);
@@ -70,7 +70,7 @@ public class ParametricModelTest {
 		assertTrue(Double.isNaN(model.getRms()));
 		assertTrue(Double.isNaN(model.getAic()));
 		assertTrue(Double.isNaN(model.getBic()));
-		assertNull(model.isChecked());
+		assertNull(model.isChecked);
 		assertNull(model.getQualityScore());
 		assertNull(model.comment);
 		assertTrue(model.getGlobalModelId() < 0);
@@ -90,18 +90,6 @@ public class ParametricModelTest {
 		// Check change
 		model.setGlobalModelId(1);
 		assertEquals(1, model.getGlobalModelId().intValue());
-	}
-
-	@Test
-	public void testComment() throws Exception {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns null to comment
-		assertNull(model.comment);
-
-		// Check change
-		model.comment = "Some comment";
-		assertEquals("Some comment", model.comment);
 	}
 
 	@Test
@@ -256,18 +244,6 @@ public class ParametricModelTest {
 	public void testSetRmsNegative() {
 		ParametricModel model = new ParametricModel();
 		model.setRms(-1.0);
-	}
-
-	@Test
-	public void testChecked() {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns null to isChecked
-		assertNull(model.isChecked());
-
-		// Check change
-		model.setChecked(true);
-		assertTrue(model.isChecked());
 	}
 
 	@Test
