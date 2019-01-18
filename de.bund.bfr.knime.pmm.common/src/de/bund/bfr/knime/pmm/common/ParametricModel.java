@@ -491,15 +491,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	}
 
 	public boolean containsIndep(final String name) {
-		for (PmmXmlElementConvertable el : independent.getElementSet()) {
-			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return findIndep(name) != null;
 	}
 
 	public void addIndepVar(final String varName) {
@@ -518,124 +510,71 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		independent.add(ix);
 	}
 
-	public String getIndepDescription(final String name) {
+	private IndepXml findIndep(final String name) {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					return ix.description;
+				IndepXml indep = (IndepXml) el;
+				if (indep.name.equals(name)) {
+					return indep;
 				}
 			}
 		}
 		return null;
+	}
+
+	public String getIndepDescription(final String name) {
+		IndepXml indep = findIndep(name);
+		return indep == null ? null : indep.description;
 	}
 
 	public void setIndepDescription(final String name, final String description) {
-		for (PmmXmlElementConvertable el : independent.getElementSet()) {
-			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					ix.description = description;
-					break;
-				}
-			}
-		}
+		IndepXml indep = findIndep(name);
+		if (indep != null)
+			indep.description = description;
 	}
 
 	public Double getIndepMax(final String name) {
-		for (PmmXmlElementConvertable el : independent.getElementSet()) {
-			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					return ix.max;
-				}
-			}
-		}
-		return null;
+		IndepXml indep = findIndep(name);
+		return indep == null ? null : indep.max;
 	}
 
 	public void setIndepMax(final String name, final Double max) {
-		for (PmmXmlElementConvertable el : independent.getElementSet()) {
-			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					ix.max = max;
-					break;
-				}
-			}
-		}
+		IndepXml indep = findIndep(name);
+		if (indep != null)
+			indep.max = max;
 	}
 
 	public Double getIndepMin(final String name) {
-		for (PmmXmlElementConvertable el : independent.getElementSet()) {
-			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					return ix.min;
-				}
-			}
-		}
-		return null;
+		IndepXml indep = findIndep(name);
+		return indep == null ? null : indep.min;
 	}
 
 	public void setIndepMin(final String name, final Double min) {
-		for (PmmXmlElementConvertable el : independent.getElementSet()) {
-			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					ix.min = min;
-					break;
-				}
-			}
-		}
+		IndepXml indep = findIndep(name);
+		if (indep != null)
+			indep.min = min;
 	}
 
 	public String getIndepUnit(final String name) {
-		for (PmmXmlElementConvertable el : independent.getElementSet()) {
-			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					return ix.unit;
-				}
-			}
-		}
-		return null;
+		IndepXml indep = findIndep(name);
+		return indep == null ? null : indep.unit;
 	}
 
 	public void setIndepUnit(final String name, final String unit) {
-		for (PmmXmlElementConvertable el : independent.getElementSet()) {
-			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					ix.unit = unit;
-					break;
-				}
-			}
-		}
+		IndepXml indep = findIndep(name);
+		if (indep != null)
+			indep.unit = unit;
 	}
 
 	public String getIndepCategory(final String name) {
-		for (PmmXmlElementConvertable el : independent.getElementSet()) {
-			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					return ix.category;
-				}
-			}
-		}
-		return null;
+		IndepXml indep = findIndep(name);
+		return indep == null ? null : indep.category;
 	}
 
 	public void setIndepCategory(final String name, final String category) {
-		for (PmmXmlElementConvertable el : independent.getElementSet()) {
-			if (el instanceof IndepXml) {
-				IndepXml ix = (IndepXml) el;
-				if (ix.name.equals(name)) {
-					ix.category = category;
-					break;
-				}
-			}
-		}
+		IndepXml indep = findIndep(name);
+		if (indep != null)
+			indep.category = category;
 	}
 
 	// other
@@ -670,196 +609,104 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		parameter.add(px);
 	}
 
-	public Double getParamMin(final String name) {
+	private ParamXml findParam(final String name) {
 		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
 			if (el instanceof ParamXml) {
 				ParamXml px = (ParamXml) el;
 				if (px.name.equals(name)) {
-					return px.min;
+					return px;
 				}
 			}
 		}
 		return null;
+	}
+
+	public Double getParamMin(final String name) {
+		ParamXml param = findParam(name);
+		return param == null ? null : param.min;
 	}
 
 	public void setParamMin(final String name, final Double min) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					px.min = min;
-					break;
-				}
-			}
-		}
+		ParamXml param = findParam(name);
+		if (param != null)
+			param.min = min;
 	}
 
 	public Double getParamMax(final String name) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					return px.max;
-				}
-			}
-		}
-		return null;
+		ParamXml param = findParam(name);
+		return param == null ? null : param.max;
 	}
 
 	public void setParamMax(final String name, final Double max) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					px.max = max;
-					break;
-				}
-			}
-		}
+		ParamXml param = findParam(name);
+		if (param != null)
+			param.max = max;
 	}
 
 	public String getParamUnit(final String name) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					return px.unit;
-				}
-			}
-		}
-		return null;
+		ParamXml param = findParam(name);
+		return param == null ? null : param.unit;
 	}
 
 	public void setParamUnit(final String name, final String unit) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					px.unit = unit;
-					break;
-				}
-			}
-		}
+		ParamXml param = findParam(name);
+		if (param != null)
+			param.unit = unit;
 	}
 
 	public String getParamCategory(final String name) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					return px.category;
-				}
-			}
-		}
-		return null;
+		ParamXml param = findParam(name);
+		return param == null ? null : param.category;
 	}
 
 	public void setParamCategory(final String name, final String category) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					px.category = category;
-					break;
-				}
-			}
-		}
+		ParamXml param = findParam(name);
+		if (param != null)
+			param.category = category;
 	}
 
 	public String getParamDescription(final String name) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					return px.description;
-				}
-			}
-		}
-		return null;
+		ParamXml param = findParam(name);
+		return param == null ? null : param.description;
 	}
 
 	public void setParamDescription(final String name, final String description) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					px.description = description;
-					break;
-				}
-			}
-		}
+		ParamXml param = findParam(name);
+		if (param != null)
+			param.description = description;
 	}
 
 	public Boolean getParamIsStart(final String paramName) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(paramName)) {
-					return px.isStartParam;
-				}
-			}
-		}
-		return null;
+		ParamXml param = findParam(paramName);
+		return param == null ? null : param.isStartParam;
 	}
 
 	public void setParamIsStart(final String name, final Boolean isStart) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					px.isStartParam = isStart;
-					break;
-				}
-			}
-		}
+		ParamXml param = findParam(name);
+		if (param != null)
+			param.isStartParam = isStart;
 	}
 
 	public Double getParamValue(final String paramName) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(paramName)) {
-					return px.value;
-				}
-			}
-		}
-		return null;
+		ParamXml param = findParam(paramName);
+		return param == null ? null : param.value;
 	}
 
 	public void setParamValue(final String name, final Double value) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					px.value = value;
-					break;
-				}
-			}
-		}
+		ParamXml param = findParam(name);
+		if (param != null)
+			param.value = value;
 	}
 
 	public Double getParamError(final String paramName) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(paramName)) {
-					return px.error;
-				}
-			}
-		}
-		return null;
+		ParamXml param = findParam(paramName);
+		return param == null ? null : param.error;
 	}
 
 	public void setParamError(final String name, final Double error) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					px.error = error;
-					break;
-				}
-			}
-		}
+		ParamXml param = findParam(name);
+		if (param != null)
+			param.error = error;
 	}
 
 	// estLit
@@ -1144,7 +991,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		return clonedPM;
 	}
 
-
 	public void removeIndepVar(final String varName) {
 		for (PmmXmlElementConvertable el : independent.getElementSet()) {
 			if (el instanceof IndepXml) {
@@ -1237,7 +1083,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		}
 		return false;
 	}
-
 
 	public SortedMap<String, Boolean> getAllParVars() {
 		SortedMap<String, Boolean> result = new TreeMap<>();
