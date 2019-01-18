@@ -171,7 +171,7 @@ public class ManualModelEditorNodeDialog extends DataAwareNodeDialogPane {
 		    			}
 		    			if (hasM1) {
 			    			ParametricModel pm1 = new ParametricModel(row, 1, hasTs ? condID : null);
-			    			m1EstID = pm1.getEstModelId();
+			    			m1EstID = pm1.estModelId;
 			    			if (!m1s.containsKey(m1EstID)) {
 			    				m1s.put(m1EstID, pm1);			    				
 			    			}
@@ -180,7 +180,7 @@ public class ManualModelEditorNodeDialog extends DataAwareNodeDialogPane {
 			    			hs.add(pm1.condId);
 			    			if (hasM2) {
 			    				ParametricModel pm2 = new ParametricModel(row, 2, null);
-			    				m2EstID = pm2.getEstModelId();
+			    				m2EstID = pm2.estModelId;
 				    			if (!m2s.containsKey(m2EstID)) {
 				    				m2s.put(m2EstID, pm2);			    				
 				    			}
@@ -191,7 +191,7 @@ public class ManualModelEditorNodeDialog extends DataAwareNodeDialogPane {
 		    			}
 		    			else if (hasM2) {
 		    				ParametricModel pm2 = new ParametricModel(row, 2, null);
-		    				m2EstID = pm2.getEstModelId();
+		    				m2EstID = pm2.estModelId;
 			    			if (!m2s.containsKey(m2EstID)) {
 			    				m2s.put(m2EstID, pm2);			    				
 			    			}
@@ -232,7 +232,7 @@ public class ManualModelEditorNodeDialog extends DataAwareNodeDialogPane {
 	    								PmmXmlElementConvertable el = mDoc.get(i);
 	    								if (el instanceof ParametricModel) {
 	    									ParametricModel pm = (ParametricModel) el;
-	    									if (m1s.containsKey(pm.getEstModelId())) m1s.put(pm.getEstModelId(), pm);
+	    									if (m1s.containsKey(pm.estModelId)) m1s.put(pm.estModelId, pm);
 	    									else {
 	    			    						checkSec(m_secondaryModels, pm);
 	    									}
@@ -277,7 +277,7 @@ public class ManualModelEditorNodeDialog extends DataAwareNodeDialogPane {
 		for (HashMap<String, ParametricModel> sm : m_secondaryModels.values()) {
 			for (String dep : sm.keySet()) {
 				ParametricModel pms = sm.get(dep);
-				if (pms.getEstModelId() == pm.getEstModelId()) {
+				if (pms.estModelId == pm.estModelId) {
 					idFound = true;
 					sm.put(dep, pm);
 					break;
@@ -290,7 +290,7 @@ public class ManualModelEditorNodeDialog extends DataAwareNodeDialogPane {
 		boolean idFound = false;
 		for (HashMap<String, ParametricModel> sm : m_secondaryModels.values()) {
 			for (ParametricModel pm : sm.values()) {
-				if (pm.getEstModelId() == id) {
+				if (pm.estModelId == id) {
 					idFound = true;
 					for (String property : hm.keySet()) {
 						Object[] o = hm.get(property);
@@ -317,16 +317,16 @@ public class ManualModelEditorNodeDialog extends DataAwareNodeDialogPane {
 	    	    	for (PmmXmlElementConvertable in : inputDoc.getElementSet()) {
 	    	    		if (in instanceof ParametricModel) {
 	    	        		ParametricModel mIn = (ParametricModel) in;	 
-	    	        		if (mOut.getEstModelId() == mIn.getEstModelId()) {
+	    	        		if (mOut.estModelId == mIn.estModelId) {
 	    	        		    Diff diff = javers.compare(mIn, mOut);
 	    	        		    if (diff.getChanges().size() > 0) {
-		    	        		    System.out.println(mOut.getEstModelId() + "\n" + diff);
+		    	        		    System.out.println(mOut.estModelId + "\n" + diff);
 		    	        		    for (ValueChange c : diff.getChangesByType(ValueChange.class)) {
 		    	        		    	//System.out.println(c.getProperty().getName());
 		    	        		    	//System.out.println(c.getLeft());
 		    	        		    	//System.out.println(c.getRight());
-		    	        		    	if (!result.containsKey(mOut.getEstModelId())) result.put(mOut.getEstModelId(), new HashMap<String, Object[]>());
-		    	        		    	HashMap<String, Object[]> hm = result.get(mOut.getEstModelId());
+		    	        		    	if (!result.containsKey(mOut.estModelId)) result.put(mOut.estModelId, new HashMap<String, Object[]>());
+		    	        		    	HashMap<String, Object[]> hm = result.get(mOut.estModelId);
 		    	        		    	String gid = c.getAffectedGlobalId().value();
 		    	        		    	if (gid.indexOf("#") > 0) gid = gid.substring(gid.indexOf("#") + 1) + "#"; // parameter#elementSet/2#
 		    	        		    	else gid = "";
@@ -339,8 +339,8 @@ public class ManualModelEditorNodeDialog extends DataAwareNodeDialogPane {
 		    	        		    	*/
 		    	        		    }
 		    	        		    for (NewObject c : diff.getChangesByType(NewObject.class)) {
-		    	        		    	if (!result.containsKey(mOut.getEstModelId())) result.put(mOut.getEstModelId(), new HashMap<String, Object[]>());
-		    	        		    	HashMap<String, Object[]> hm = result.get(mOut.getEstModelId());
+		    	        		    	if (!result.containsKey(mOut.estModelId)) result.put(mOut.estModelId, new HashMap<String, Object[]>());
+		    	        		    	HashMap<String, Object[]> hm = result.get(mOut.estModelId);
 		    	        		    	String gid = c.getAffectedGlobalId().value();
 		    	        		    	if (gid.indexOf("#") > 0) gid = gid.substring(gid.indexOf("#") + 1) + "#"; // estLit#elementSet/0#
 		    	        		    	else {
@@ -350,8 +350,8 @@ public class ManualModelEditorNodeDialog extends DataAwareNodeDialogPane {
 		    	        		    	hm.put(gid, new Object[]{null,c.getAffectedObject().get()});
 		    	        		    }
 		    	        		    for (ObjectRemoved c : diff.getChangesByType(ObjectRemoved.class)) {
-		    	        		    	if (!result.containsKey(mOut.getEstModelId())) result.put(mOut.getEstModelId(), new HashMap<String, Object[]>());
-		    	        		    	HashMap<String, Object[]> hm = result.get(mOut.getEstModelId());
+		    	        		    	if (!result.containsKey(mOut.estModelId)) result.put(mOut.estModelId, new HashMap<String, Object[]>());
+		    	        		    	HashMap<String, Object[]> hm = result.get(mOut.estModelId);
 		    	        		    	String gid = c.getAffectedGlobalId().value();
 		    	        		    	if (gid.indexOf("#") > 0) gid = gid.substring(gid.indexOf("#") + 1) + "#"; // estLit#elementSet/0#
 		    	        		    	else {

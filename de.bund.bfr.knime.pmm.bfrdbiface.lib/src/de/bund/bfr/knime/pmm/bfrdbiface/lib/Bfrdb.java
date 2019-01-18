@@ -806,7 +806,7 @@ public class Bfrdb {
 		Double rms = pm.getRms();
 		Double r2 = pm.getRsquared();
 
-		estModelId = pm.getEstModelId();
+		estModelId = pm.estModelId;
 		int condId = pm.condId;
 		int modelId = pm.modelId;
 		String fittedModelName = pm.getFittedModelName();
@@ -826,7 +826,7 @@ public class Bfrdb {
 		} else {
 			estModelId = insertEstModel(fittedModelName, condId, modelId, rms, r2, pm.getAic(), pm.getBic(), responseId, pm.qualityScore, pm.isChecked, workflowID,
 					pm.comment);
-			pm.setEstModelId(estModelId);
+			pm.estModelId = estModelId;
 		}
 
 		deleteFrom("GeschaetzteParameterCovCor", "GeschaetztesModell", estModelId);

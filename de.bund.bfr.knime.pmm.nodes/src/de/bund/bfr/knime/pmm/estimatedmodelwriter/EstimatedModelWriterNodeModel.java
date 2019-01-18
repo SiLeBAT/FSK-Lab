@@ -274,9 +274,9 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 
 					ppm.condId = newTsID;
 					if (alreadyInsertedEModel.containsKey(rowEstM1ID)) {
-						newPrimEstID = alreadyInsertedEModel.get(rowEstM1ID).getEstModelId();
+						newPrimEstID = alreadyInsertedEModel.get(rowEstM1ID).estModelId;
 					} else {
-						ppm.setEstModelId(rowEstM1ID == null ? MathUtilities.getRandomNegativeInt() : rowEstM1ID);
+						ppm.estModelId = rowEstM1ID == null ? MathUtilities.getRandomNegativeInt() : rowEstM1ID;
 						ppm.setParameter(paramXml);
 						ppm.setIndependent(indepXml);
 						ppm.setDepXml(dx);
@@ -285,7 +285,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						String[] attrs = new String[] { Model1Schema.ATT_ESTMODEL, Model1Schema.ATT_EMLIT };
 						String[] dbTablenames = new String[] { "GeschaetzteModelle", "Literatur" };
 
-						boolean checkAnywayDueToNegativeId = (ppm.getEstModelId() < 0);
+						boolean checkAnywayDueToNegativeId = ppm.estModelId < 0;
 						String rowuuid = row.getString(Model1Schema.ATT_DBUUID);
 						if (rowuuid == null) rowuuid = emx.dbuuid;
 						
@@ -325,8 +325,8 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						spm = writeM2(row, emx, ppm, dbuuid, wfID);
 						
 						
-						if (!secModels.containsKey(spm.getEstModelId())) secModels.put(spm.getEstModelId(), new ArrayList<Integer>());
-						secModels.get(spm.getEstModelId()).add(newPrimEstID);
+						if (!secModels.containsKey(spm.estModelId)) secModels.put(spm.estModelId, new ArrayList<Integer>());
+						secModels.get(spm.estModelId).add(newPrimEstID);
 						Integer gmSchemaID = row.getInt(Model2Schema.ATT_GLOBAL_MODEL_ID);
 						Integer newGlobalModelId;
 						if (alreadyInsertedGModel.containsKey(gmSchemaID)) {
@@ -338,7 +338,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 							alreadyInsertedGModel.put(gmSchemaID, newGlobalModelId);
 						}
 						if (!globalModels.containsKey(newGlobalModelId)) globalModels.put(newGlobalModelId, new HashSet<Integer>());
-						globalModels.get(newGlobalModelId).add(spm.getEstModelId());
+						globalModels.get(newGlobalModelId).add(spm.estModelId);
 						//}
 					} else {
 						String text = "Estimated secondary model (ID: " + rowEstM2ID + ") is not storable due to joining with unassociated primary model\n";
@@ -462,7 +462,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 				warnings += e.getMessage() + " -> ID: " + rowEstM2ID;
 				MyLogger.handleException(e);
 			}
-			spm.setEstModelId(rowEstM2ID == null ? MathUtilities.getRandomNegativeInt() : rowEstM2ID);
+			spm.estModelId = rowEstM2ID == null ? MathUtilities.getRandomNegativeInt() : rowEstM2ID;
 			spm.setParameter(paramXml);
 			spm.setIndependent(indepXml);
 			spm.setDepXml(dx);
@@ -471,7 +471,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 			String[] attrs = new String[] { Model2Schema.ATT_ESTMODEL, Model2Schema.ATT_EMLIT };
 			String[] dbTablenames = new String[] { "GeschaetzteModelle", "Literatur" };
 
-			boolean checkAnywayDueToNegativeId = (spm.getEstModelId() < 0);
+			boolean checkAnywayDueToNegativeId = spm.estModelId < 0;
 			String rowuuid = row.getString(Model2Schema.ATT_DBUUID);
 			if (rowuuid == null) rowuuid = emx.dbuuid;
 			foreignDbIds = checkIDs(conn, true, dbuuid, row, spm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);

@@ -140,8 +140,8 @@ public class ManualModelConfNodeModel extends NodeModel {
 	    		                		if (ell instanceof PmmTimeSeries) {
 	    		                			PmmTimeSeries ts = (PmmTimeSeries) ell;
 	    		                			boolean addIt = ts.getCondId().intValue() == model.condId;
-	    		                    		if (!addIt && hasEditFeature && oneStepFitTs != null && oneStepFitTs.containsKey(model.getEstModelId())) {
-	    		                    			if (oneStepFitTs.get(model.getEstModelId()).contains(ts.getCondId().intValue())) {
+	    		                    		if (!addIt && hasEditFeature && oneStepFitTs != null && oneStepFitTs.containsKey(model.estModelId)) {
+	    		                    			if (oneStepFitTs.get(model.estModelId).contains(ts.getCondId().intValue())) {
 	    		                    				addIt = true;
 	    		                    			}
 	    		                    		}
@@ -330,7 +330,7 @@ public class ManualModelConfNodeModel extends NodeModel {
 					PmmXmlElementConvertable el = doc.get(i);
 					if (el instanceof ParametricModel) {
 						ParametricModel pm = (ParametricModel) el;
-						mlist.put(pm.getEstModelId(), pm);
+						mlist.put(pm.estModelId, pm);
 					}
 				}
 	    	}
@@ -376,14 +376,14 @@ public class ManualModelConfNodeModel extends NodeModel {
 		    			}
 		    			if (hasM1) {
 			    			ParametricModel pm1 = new ParametricModel(row, 1, hasTs ? condID : null);
-			    			m1EstID = pm1.getEstModelId();
+			    			m1EstID = pm1.estModelId;
 			    			if (!m1s.containsKey(m1EstID)) {
 				    			if (mlist.containsKey(m1EstID)) m1s.put(m1EstID, mlist.get(m1EstID));
 				    			else m1s.put(m1EstID, pm1);			    				
 			    			}
 			    			if (hasM2) {
 			    				ParametricModel pm2 = new ParametricModel(row, 2, null);
-			    				m2EstID = pm2.getEstModelId();
+			    				m2EstID = pm2.estModelId;
 				    			if (!m2s.containsKey(m2EstID)) {
 					    			if (mlist.containsKey(m2EstID)) m2s.put(m2EstID, mlist.get(m2EstID));
 					    			else m2s.put(m2EstID, pm2);			    				

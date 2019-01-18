@@ -683,7 +683,7 @@ public class MMC_M extends JPanel {
 			for (ParametricModel pm_ : hm.values()) {
 				for (HashMap<String, ParametricModel> hmAll : m_secondaryModels.values()) {
 					for (ParametricModel pmAll : hmAll.values()) {
-						if (!pm_.equals(pmAll) && pmAll.getEstModelId() == pm_.getEstModelId()) {
+						if (!pm_.equals(pmAll) && pmAll.estModelId == pm_.estModelId) {
 							System.err.println("WEW");
 						}
 					}
@@ -1013,7 +1013,7 @@ public class MMC_M extends JPanel {
 		ParametricModel pm = table.getPM();
 		if (pm != null) {
 			try {
-				if (!isEditor) pm.setEstModelId(MathUtilities.getRandomNegativeInt());
+				if (!isEditor) pm.estModelId = MathUtilities.getRandomNegativeInt();
 				pm.setFittedModelName(fittedModelName.getText());
 			} catch (PmmException e1) {
 				e1.printStackTrace();

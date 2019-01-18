@@ -105,7 +105,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 
 	public int modelId;
 
-	private int estModelId;
+	public int estModelId;
+
 	private Double rsquared;
 	private Double rss;
 	private Double rms;
@@ -209,7 +210,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			for (PmmXmlElementConvertable el : x.getElementSet()) {
 				if (el instanceof EstModelXml) {
 					EstModelXml emx = (EstModelXml) el;
-					this.setEstModelId(emx.id);
+					this.estModelId = emx.id;
 					this.rms = emx.rms;
 					this.rsquared = emx.r2;
 					this.aic = emx.aic;
@@ -823,15 +824,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		return level;
 	}
 
-	// estModelId
-	public int getEstModelId() {
-		return estModelId;
-	}
-
-	public void setEstModelId(final int estModelId) {
-		this.estModelId = estModelId;
-	}
-
 	// m_dbuuid
 	public String getMDbUuid() {
 		return m_dbuuid;
@@ -860,9 +852,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 
 	public PmmXmlDoc getEstModel() {
 		PmmXmlDoc emDoc = new PmmXmlDoc();
-		int emid = getEstModelId();
-		EstModelXml emx = new EstModelXml(emid, fittedModelName, null, getRms(), getRsquared(), getAic(), getBic(),
-				null, isChecked, qualityScore, getEMDbUuid()); // "EM_" + emid
+		EstModelXml emx = new EstModelXml(estModelId, fittedModelName, null, getRms(), getRsquared(), getAic(), getBic(),
+				null, isChecked, qualityScore, getEMDbUuid());
 		emx.comment = comment;
 		emDoc.add(emx);
 		return emDoc;

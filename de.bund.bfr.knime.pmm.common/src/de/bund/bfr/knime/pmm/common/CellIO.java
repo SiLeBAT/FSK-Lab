@@ -380,7 +380,7 @@ public class CellIO {
 						Integer key = emx.id;
 						if (key != null && foreignDbIdsTable.containsKey(key)) {
 							if (before) {
-								pm.setEstModelId(foreignDbIdsTable.get(key));
+								pm.estModelId = foreignDbIdsTable.get(key);
 								emxDB.id = foreignDbIdsTable.get(key);
 								fromToXmlDB.set(i, emxDB);
 							} else if (foreignDbIdsTable.get(key).intValue() != emxDB.id.intValue()) {
@@ -390,7 +390,7 @@ public class CellIO {
 						} else {
 							if (before) {
 								int rn = MathUtilities.getRandomNegativeInt();
-								pm.setEstModelId(rn);
+								pm.estModelId = rn;
 								emxDB.id = rn;
 								fromToXmlDB.set(i, emxDB);
 							} else
