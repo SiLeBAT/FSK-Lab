@@ -323,18 +323,18 @@ public class ParametricModelTest {
 		ParametricModel model = new ParametricModel();
 		model.setRss(-1.0);
 	}
-	
+
 	@Test
 	public void testRSquared() {
 		ParametricModel model = new ParametricModel();
-		
+
 		// Empty constructor assigns Double.NaN
 		assertTrue(Double.isNaN(model.getRsquared()));
-		
+
 		// Check change
 		model.setRsquared(0.7);
 		assertEquals(0.7, model.getRsquared(), .0);
-		
+
 		// Null is replaced with Double.NaN
 		model.setRsquared(null);
 		assertTrue(Double.isNaN(model.getRsquared()));
@@ -345,7 +345,7 @@ public class ParametricModelTest {
 		ParametricModel model = new ParametricModel();
 		model.setRsquared(2.0);
 	}
-	
+
 	@Test
 	public void testEstModelId() {
 		ParametricModel model = new ParametricModel();
@@ -356,5 +356,54 @@ public class ParametricModelTest {
 		// Check change
 		model.setEstModelId(0);
 		assertEquals(0, model.getEstModelId());
+	}
+
+	@Test
+	public void testIndependent() {
+		ParametricModel model = new ParametricModel();
+
+		// Empty constructor assigns empty PmmXmlDoc
+		assertEquals(0, model.getIndependent().size());
+
+		// Check setIndependent
+		model.setIndependent(null);
+		assertNull(model.getIndependent());
+	}
+
+	@Test
+	public void testSetters() {
+		ParametricModel model = new ParametricModel();
+
+		// When the parameter does not exist the setters do nothing.
+		model.setIndepDescription("aloha", "description");
+		model.setIndepMin("aloha", 0.0);
+		model.setIndepMax("aloha", 1.0);
+		model.setIndepUnit("aloha", "unit");
+		model.setIndepCategory("aloha", "category");
+		
+		// and the getters return null
+		assertNull(model.getIndepDescription("aloha"));
+		assertNull(model.getIndepMin("aloha"));
+		assertNull(model.getIndepMax("aloha"));
+		assertNull(model.getIndepUnit("aloha"));
+		assertNull(model.getIndepCategory("aloha"));
+
+		// Check with existing parameter
+		model.addIndepVar("aloha");
+
+		model.setIndepDescription("aloha", "description");
+		assertEquals("description", model.getIndepDescription("aloha"));
+
+		model.setIndepMin("aloha", 0.0);
+		assertEquals(0.0, model.getIndepMin("aloha"), .0);
+
+		model.setIndepMax("aloha", 1.0);
+		assertEquals(1.0, model.getIndepMax("aloha"), .0);
+
+		model.setIndepUnit("aloha", "unit");
+		assertEquals("unit", model.getIndepUnit("aloha"));
+		
+		model.setIndepCategory("aloha", "category");
+		assertEquals("category", model.getIndepCategory("aloha"));
 	}
 }
