@@ -626,6 +626,51 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		this.modelName = modelName;
 	}
 
+	// modelClass
+	public Integer getModelClass() {
+		return modelClass;
+	}
+
+	public void setModelClass(final Integer modelClass) {
+		this.modelClass = modelClass;
+	}
+
+	// estModelId
+	public int getEstModelId() {
+		return estModelId;
+	}
+
+	public void setEstModelId(final int estModelId) {
+		this.estModelId = estModelId;
+	}
+
+	// m_dbuuid
+	public String getMDbUuid() {
+		return m_dbuuid;
+	}
+
+	public void setMDbUuid(final String dbuuid) {
+		this.m_dbuuid = dbuuid;
+	}
+
+	// em_dbuuid
+	public String getEMDbUuid() {
+		return em_dbuuid;
+	}
+
+	public void setEMDbUuid(final String dbuuid) {
+		this.em_dbuuid = dbuuid;
+	}
+
+	// condId
+	public int getCondId() {
+		return condId;
+	}
+
+	public void setCondId(final int condId) {
+		this.condId = condId;
+	}
+
 	// other ...
 	public PmmXmlDoc getCatModel() {
 		PmmXmlDoc catModel = new PmmXmlDoc();
@@ -693,10 +738,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		clonedPM.setGlobalModelId(globalModelId);
 
 		return clonedPM;
-	}
-
-	public void setCondId(final int condId) {
-		this.condId = condId;
 	}
 
 	public void addParam(final String paramName, final Boolean isStartParam) {
@@ -1213,42 +1254,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			}
 		}
 		return result;
-	}
-
-	public void setModelClass(final Integer modelClass) {
-		this.modelClass = modelClass;
-	}
-
-	public void setMDbUuid(final String dbuuid) {
-		this.m_dbuuid = dbuuid;
-	}
-
-	public void setEMDbUuid(final String dbuuid) {
-		this.em_dbuuid = dbuuid;
-	}
-
-	public int getEstModelId() {
-		return estModelId;
-	}
-
-	public void setEstModelId(final int estModelId) {
-		this.estModelId = estModelId;
-	}
-
-	public int getCondId() {
-		return condId;
-	}
-
-	public Integer getModelClass() {
-		return modelClass;
-	}
-
-	public String getMDbUuid() {
-		return m_dbuuid;
-	}
-
-	public String getEMDbUuid() {
-		return em_dbuuid;
 	}
 
 	public String getDepVar() {
