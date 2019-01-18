@@ -357,6 +357,48 @@ public class ParametricModelTest {
 		model.setEstModelId(0);
 		assertEquals(0, model.getEstModelId());
 	}
+	
+	@Test
+	public void testDependent() {
+		ParametricModel model = new ParametricModel();
+		
+		// Empty constructor assigns null
+		assertNull(model.getDepXml());
+		
+		// When the dep is not set the getters return null
+		assertNull(model.getDepVar());
+		assertNull(model.getDepDescription());
+		assertNull(model.getDepCategory());
+		assertNull(model.getDepUnit());
+		
+		// Setters ignore null
+		model.setDepVar(null);
+		assertNull(model.getDepVar());
+		
+		model.setDepDescription(null);
+		assertNull(model.getDepDescription());
+		
+		model.setDepCategory(null);
+		assertNull(model.getDepCategory());
+		
+		model.setDepUnit(null);
+		assertNull(model.getDepUnit());
+		
+		model.setDepXml(new DepXml("lalala"));
+		assertEquals("lalala", model.getDepXml().name);
+		
+		model.setDepVar("Atreus");
+		assertEquals("Atreus", model.getDepVar());
+		
+		model.setDepDescription("Boy");
+		assertEquals("Boy", model.getDepDescription());
+		
+		model.setDepCategory("Nordic god");
+		assertEquals("Nordic god", model.getDepCategory());
+		
+		model.setDepUnit("Half Kratos");
+		assertEquals("Half Kratos", model.getDepUnit());
+	}
 
 	@Test
 	public void testIndependent() {
@@ -371,8 +413,12 @@ public class ParametricModelTest {
 	}
 
 	@Test
-	public void testSetters() {
+	public void testIndependentSetters() {
 		ParametricModel model = new ParametricModel();
+		model.addIndepVar("indep");
+
+		// Add a non-independent object. Getters/setters must ignore it.
+		model.getIndependent().add(new MatrixXml());
 
 		// When the parameter does not exist the setters do nothing.
 		model.setIndepDescription("aloha", "description");
@@ -380,7 +426,7 @@ public class ParametricModelTest {
 		model.setIndepMax("aloha", 1.0);
 		model.setIndepUnit("aloha", "unit");
 		model.setIndepCategory("aloha", "category");
-		
+
 		// and the getters return null
 		assertNull(model.getIndepDescription("aloha"));
 		assertNull(model.getIndepMin("aloha"));
@@ -389,21 +435,92 @@ public class ParametricModelTest {
 		assertNull(model.getIndepCategory("aloha"));
 
 		// Check with existing parameter
-		model.addIndepVar("aloha");
+		model.addIndepVar("odin");
 
-		model.setIndepDescription("aloha", "description");
-		assertEquals("description", model.getIndepDescription("aloha"));
+		model.setIndepDescription("odin", "description");
+		assertEquals("description", model.getIndepDescription("odin"));
 
-		model.setIndepMin("aloha", 0.0);
-		assertEquals(0.0, model.getIndepMin("aloha"), .0);
+		model.setIndepMin("odin", 0.0);
+		assertEquals(0.0, model.getIndepMin("odin"), .0);
 
-		model.setIndepMax("aloha", 1.0);
-		assertEquals(1.0, model.getIndepMax("aloha"), .0);
+		model.setIndepMax("odin", 1.0);
+		assertEquals(1.0, model.getIndepMax("odin"), .0);
 
-		model.setIndepUnit("aloha", "unit");
-		assertEquals("unit", model.getIndepUnit("aloha"));
+		model.setIndepUnit("odin", "unit");
+		assertEquals("unit", model.getIndepUnit("odin"));
+
+		model.setIndepCategory("odin", "category");
+		assertEquals("category", model.getIndepCategory("odin"));
 		
-		model.setIndepCategory("aloha", "category");
-		assertEquals("category", model.getIndepCategory("aloha"));
+		assertFalse(model.containsIndep("aloha"));
+		assertTrue(model.containsIndep("odin"));
+	}
+
+	@Test
+	public void testParameter() {
+		ParametricModel model = new ParametricModel();
+
+		// Empty constructor assigns empty PmmXmlDoc
+		assertEquals(0, model.getParameter().size());
+
+		// Check setParameter
+		model.setParameter(null);
+		assertNull(model.getParameter());
+	}
+
+	@Test
+	public void testParameterSetters() {
+		ParametricModel model = new ParametricModel();
+		model.addParam("param", false);
+
+		// Add a non-parameter object. Getters/setters must ignore it.
+		model.getParameter().add(new AgentXml());
+
+		// When the parameter does not exist the setters do nothing
+		model.setParamDescription("aloha", "description");
+		model.setParamMin("aloha", 0.0);
+		model.setParamMax("aloha", 1.0);
+		model.setParamUnit("aloha", "unit");
+		model.setParamCategory("aloha", "category");
+		
+		// and the getters return null
+		assertNull(model.getParamDescription("aloha"));
+		assertNull(model.getParamMin("aloha"));
+		assertNull(model.getParamMax("aloha"));
+		assertNull(model.getParamUnit("aloha"));
+		assertNull(model.getParamCategory("aloha"));
+		assertNull(model.getParamIsStart("aloha"));
+		assertNull(model.getParamValue("aloha"));
+		assertNull(model.getParamError("aloha"));
+
+		// Check with existing parameter
+		model.addParam("Baldur", true);
+
+		model.setParamDescription("Baldur", "description");
+		assertEquals("description", model.getParamDescription("Baldur"));
+
+		model.setParamMin("Baldur", 0.0);
+		assertEquals(0.0, model.getParamMin("Baldur"), .0);
+
+		model.setParamMax("Baldur", 1.0);
+		assertEquals(1.0, model.getParamMax("Baldur"), .0);
+
+		model.setParamUnit("Baldur", "unit");
+		assertEquals("unit", model.getParamUnit("Baldur"));
+
+		model.setParamCategory("Baldur", "category");
+		assertEquals("category", model.getParamCategory("Baldur"));
+		
+		model.setParamIsStart("Baldur", false);
+		assertFalse(model.getParamIsStart("Baldur"));
+		
+		model.setParamValue("Baldur", 1.0);
+		assertEquals(1.0, model.getParamValue("Baldur"), .0);
+		
+		model.setParamError("Baldur", 0.5);
+		assertEquals(0.5, model.getParamError("Baldur"), .0);
+		
+		assertFalse(model.containsParam("aloha"));
+		assertTrue(model.containsParam("Baldur"));
 	}
 }
