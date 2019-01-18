@@ -217,7 +217,7 @@ public class MMC_M extends JPanel {
 			insertRefs(pm.getModelLit(), false);
 			if (pm.isChecked != null && pm.isChecked) checkBox1.setSelected(true);
 			else checkBox1.setSelected(false);
-			if (pm.getQualityScore() != null) qScoreBox.setSelectedIndex(pm.getQualityScore());
+			if (pm.qualityScore != null) qScoreBox.setSelectedIndex(pm.qualityScore);
 			else qScoreBox.setSelectedIndex(0);
 			if (pm.comment != null) textField1.setText(pm.comment);
 			else textField1.setText("");
@@ -975,7 +975,7 @@ public class MMC_M extends JPanel {
 		ParametricModel pm = table.getPM();
 		if (pm != null) {
 			try {
-				pm.setQualityScore(qScoreBox.getSelectedIndex());
+				pm.qualityScore = qScoreBox.getSelectedIndex();
 			} catch (PmmException e1) {
 				e1.printStackTrace();
 			}

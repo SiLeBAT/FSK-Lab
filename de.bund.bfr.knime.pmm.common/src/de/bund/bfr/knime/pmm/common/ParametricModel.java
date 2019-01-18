@@ -120,7 +120,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	}
 
 	public Boolean isChecked;
-	private Integer qualityScore;
+
+	public Integer qualityScore;
 
 	public String comment;
 
@@ -395,15 +396,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 				}
 			}
 		}
-	}
-
-	// qualityScore
-	public Integer getQualityScore() {
-		return qualityScore;
-	}
-
-	public void setQualityScore(Integer qScore) {
-		this.qualityScore = qScore;
 	}
 
 	// depXml
@@ -943,7 +935,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 
 		clonedPM.isChecked = isChecked;
 		clonedPM.comment = comment;
-		clonedPM.setQualityScore(qualityScore);
+		clonedPM.qualityScore = qualityScore;
 		clonedPM.setFittedModelName(fittedModelName);
 
 		if (depXml != null)

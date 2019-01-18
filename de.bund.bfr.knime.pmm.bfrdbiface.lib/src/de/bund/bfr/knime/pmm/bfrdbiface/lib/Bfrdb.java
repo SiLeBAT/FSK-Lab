@@ -821,10 +821,10 @@ public class Bfrdb {
 		}
 
 		if (isObjectPresent(REL_ESTMODEL, estModelId)) {
-			updateEstModel(estModelId, fittedModelName, condId, modelId, rms, r2, pm.getAic(), pm.getBic(), responseId, pm.getQualityScore(), pm.isChecked, workflowID,
+			updateEstModel(estModelId, fittedModelName, condId, modelId, rms, r2, pm.getAic(), pm.getBic(), responseId, pm.qualityScore, pm.isChecked, workflowID,
 					pm.comment);
 		} else {
-			estModelId = insertEstModel(fittedModelName, condId, modelId, rms, r2, pm.getAic(), pm.getBic(), responseId, pm.getQualityScore(), pm.isChecked, workflowID,
+			estModelId = insertEstModel(fittedModelName, condId, modelId, rms, r2, pm.getAic(), pm.getBic(), responseId, pm.qualityScore, pm.isChecked, workflowID,
 					pm.comment);
 			pm.setEstModelId(estModelId);
 		}

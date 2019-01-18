@@ -35,7 +35,7 @@ public class ParametricModelTest {
 		assertTrue(Double.isNaN(model.getAic()));
 		assertTrue(Double.isNaN(model.getBic()));
 		assertNull(model.isChecked);
-		assertNull(model.getQualityScore());
+		assertNull(model.qualityScore);
 		assertNull(model.comment);
 		assertTrue(model.getModelId() < 0);
 		assertTrue(model.getEstModelId() < 0);
@@ -71,7 +71,7 @@ public class ParametricModelTest {
 		assertTrue(Double.isNaN(model.getAic()));
 		assertTrue(Double.isNaN(model.getBic()));
 		assertNull(model.isChecked);
-		assertNull(model.getQualityScore());
+		assertNull(model.qualityScore);
 		assertNull(model.comment);
 		assertTrue(model.getGlobalModelId() < 0);
 		assertTrue(model.getEstModelLit().size() == 0);
@@ -90,19 +90,6 @@ public class ParametricModelTest {
 		// Check change
 		model.setGlobalModelId(1);
 		assertEquals(1, model.getGlobalModelId().intValue());
-	}
-
-	@Test
-	public void testQualityScore() throws Exception {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns null to qualityScore
-		assertNull(model.getQualityScore());
-
-		// Check change
-		model.setQualityScore(9001);
-		// Must be over 9000!!
-		assertEquals(9001, model.getQualityScore().intValue());
 	}
 
 	@Test
