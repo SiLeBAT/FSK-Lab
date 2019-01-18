@@ -124,7 +124,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	private String comment;
 
 	private static final String ATT_LEVEL = "Level";
-	private String warningMsg = "";
+
+	public String warning = "";
 
 	public ParametricModel() {
 		initVars();
@@ -393,15 +394,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 				}
 			}
 		}
-	}
-
-	// warning
-	public String getWarning() {
-		return warningMsg;
-	}
-
-	public void setWarning(String warningMsg) {
-		this.warningMsg = warningMsg;
 	}
 
 	// comment
@@ -1049,39 +1041,17 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	}
 
 	public Double getParamP(final String paramName) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(paramName)) {
-					return px.P;
-				}
-			}
-		}
-		return null;
+		ParamXml param = findParam(paramName);
+		return param == null ? null : param.P;
 	}
 
 	public Double getParamT(final String paramName) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(paramName)) {
-					return px.t;
-				}
-			}
-		}
-		return null;
+		ParamXml param = findParam(paramName);
+		return param == null ? null : param.t;
 	}
 
 	public boolean containsParam(final String name) {
-		for (PmmXmlElementConvertable el : parameter.getElementSet()) {
-			if (el instanceof ParamXml) {
-				ParamXml px = (ParamXml) el;
-				if (px.name.equals(name)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return findParam(name) != null;
 	}
 
 	public SortedMap<String, Boolean> getAllParVars() {

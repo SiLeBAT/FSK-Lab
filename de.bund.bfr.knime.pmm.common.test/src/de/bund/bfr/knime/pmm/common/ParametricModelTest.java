@@ -64,6 +64,7 @@ public class ParametricModelTest {
 		assertEquals(1, model.getModelId());
 		assertEquals(2, model.getEstModelId());
 
+		assertTrue(model.warning.isEmpty());
 		assertTrue(Double.isNaN(model.getRss()));
 		assertTrue(Double.isNaN(model.getRsquared()));
 		assertTrue(Double.isNaN(model.getRms()));
@@ -89,18 +90,6 @@ public class ParametricModelTest {
 		// Check change
 		model.setGlobalModelId(1);
 		assertEquals(1, model.getGlobalModelId().intValue());
-	}
-
-	@Test
-	public void testWarning() {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns empty string to warning
-		assertTrue(model.getWarning().isEmpty());
-
-		// Check change
-		model.setWarning("Some warning");
-		assertEquals("Some warning", model.getWarning());
 	}
 
 	@Test
@@ -492,6 +481,8 @@ public class ParametricModelTest {
 		assertNull(model.getParamIsStart("aloha"));
 		assertNull(model.getParamValue("aloha"));
 		assertNull(model.getParamError("aloha"));
+		assertNull(model.getParamP("aloha"));
+		assertNull(model.getParamT("aloha"));
 
 		// Check with existing parameter
 		model.addParam("Baldur", true);
@@ -519,6 +510,9 @@ public class ParametricModelTest {
 		
 		model.setParamError("Baldur", 0.5);
 		assertEquals(0.5, model.getParamError("Baldur"), .0);
+		
+		assertNull(model.getParamP("Baldur"));
+		assertNull(model.getParamT("Baldur"));
 		
 		assertFalse(model.containsParam("aloha"));
 		assertTrue(model.containsParam("Baldur"));

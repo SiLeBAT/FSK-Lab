@@ -153,7 +153,7 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 					foreignDbIds = checkIDs(conn, true, dbuuid, row, pm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 					db.insertM(pm);
 					foreignDbIds = checkIDs(conn, false, dbuuid, row, pm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
-					if (!pm.getWarning().trim().isEmpty()) warnings += pm.getWarning();
+					if (!pm.warning.trim().isEmpty()) warnings += pm.warning;
 				}
 			}
 			if (model2Conform) {
@@ -199,7 +199,7 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 					foreignDbIds = checkIDs(conn, true, dbuuid, row, pm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 					db.insertM(pm);
 					foreignDbIds = checkIDs(conn, false, dbuuid, row, pm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
-					if (!pm.getWarning().trim().isEmpty()) warnings += pm.getWarning();
+					if (!pm.warning.trim().isEmpty()) warnings += pm.warning;
 					//}
 				}
 			}
