@@ -64,6 +64,7 @@ public class ParametricModelTest {
 		assertEquals(1, model.modelId);
 		assertEquals(2, model.getEstModelId());
 
+		assertNull(model.modelClass);
 		assertEquals(0, model.condId);
 		assertTrue(model.warning.isEmpty());
 		assertTrue(Double.isNaN(model.getRss()));
@@ -79,18 +80,6 @@ public class ParametricModelTest {
 		assertEquals(0, model.getModelLit().size());
 		assertEquals(0, model.getIndependent().size());
 		assertEquals(0, model.getParameter().size());
-	}
-
-	@Test
-	public void testModelClass() {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns null to modelClass
-		assertNull(model.getModelClass());
-
-		// Check change
-		model.setModelClass(0);
-		assertEquals(0, model.getModelClass().intValue());
 	}
 
 	@Test

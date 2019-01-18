@@ -180,8 +180,8 @@ public class MMC_M extends JPanel {
 				}
 			}
 			modelnameField.setText(pm.modelName);
-			if (pm.getModelClass() != null) {
-				typeBox.setSelectedItem(DBKernel.myDBi.getHashMap("ModelType").get(pm.getModelClass()));
+			if (pm.modelClass != null) {
+				typeBox.setSelectedItem(DBKernel.myDBi.getHashMap("ModelType").get(pm.modelClass));
 			} else {
 				typeBox.setSelectedItem(null);
 			}
@@ -451,7 +451,7 @@ public class MMC_M extends JPanel {
 		if (pm != null && !pm.getFormula().equals(newFormula)) {
 			String newMN = getNewModelname(pm);
 			ParametricModel newPM = new ParametricModel(newMN, newFormula, pm.getDepXml(), pm.getLevel(), MathUtilities.getRandomNegativeInt());
-			newPM.setModelClass(pm.getModelClass());
+			newPM.modelClass = pm.modelClass;
 			refreshRefsInPM(newPM);
 
 			insertNselectPMintoBox(newPM);
@@ -1057,7 +1057,7 @@ public class MMC_M extends JPanel {
 					dx.description = depDesc;
 					pm = new ParametricModel(modelName, formula, dx, level, modelID);
 					pm.setMDbUuid(db.getDBUUID());
-					pm.setModelClass(result.getInt("Klasse"));
+					pm.modelClass = result.getInt("Klasse");
 					pm.setDepDescription(depDesc);
 					String s = result.getString("LitMID");
 					if (s != null) pm.setMLit(db.getLiteratureXml(s, db.getDBUUID()));
@@ -1089,7 +1089,7 @@ public class MMC_M extends JPanel {
 		}
 
 		if (table != null && table.getPM() != null) {
-			table.getPM().setModelClass(type);
+			table.getPM().modelClass = type;
 		}
 	}
 

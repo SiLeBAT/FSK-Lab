@@ -136,7 +136,7 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 					PmmXmlDoc emLitXmlDoc = row.getPmmXml(Model1Schema.ATT_EMLIT);
 
 					ParametricModel pm = new ParametricModel(modelName, formula, dx, 1, cmx.id);
-					pm.setModelClass(cmx.modelClass);
+					pm.modelClass = cmx.modelClass;
 					pm.comment = cmx.comment;
 					pm.setParameter(paramXml);
 					pm.setIndependent(indepXml);
@@ -182,7 +182,7 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 					PmmXmlDoc emLitXmlDoc = row.getPmmXml(Model2Schema.ATT_EMLIT);
 
 					ParametricModel pm = new ParametricModel(modelName, formula, dx, 2, cmx.id);
-					pm.setModelClass(cmx.modelClass);
+					pm.modelClass = cmx.modelClass;
 					pm.comment = cmx.comment;
 					pm.setParameter(paramXml);
 					pm.setIndependent(indepXml);

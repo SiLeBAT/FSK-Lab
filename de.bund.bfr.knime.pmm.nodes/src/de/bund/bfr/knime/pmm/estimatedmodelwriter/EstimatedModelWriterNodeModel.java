@@ -238,7 +238,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						ppm = alreadyInsertedModel.get(rowMcID);
 					} else {
 						ppm = new ParametricModel(modelName, formula, dx, 1, rowMcID); // , rowEstM1ID == null ? MathUtilities.getRandomNegativeInt() : rowEstM1ID
-						ppm.setModelClass(cmx.modelClass);
+						ppm.modelClass = cmx.modelClass;
 						ppm.setParameter(paramXml);
 						ppm.setIndependent(indepXml);
 						ppm.setFormula(ppm.revertFormula());
@@ -425,7 +425,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 			spm = alreadyInsertedModel.get(rowMcID);
 		} else {
 			spm = new ParametricModel(modelName, formula, dx, 2, rowMcID, rowEstM2ID == null ? MathUtilities.getRandomNegativeInt() : rowEstM2ID);
-			spm.setModelClass(cmx.modelClass);
+			spm.modelClass = cmx.modelClass;
 			spm.setParameter(paramXml);
 			spm.setIndependent(indepXml);
 			spm.setFormula(spm.revertFormula());

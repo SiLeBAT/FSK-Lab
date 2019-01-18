@@ -87,7 +87,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 
 	public String modelName;
 
-	private Integer modelClass;
+	public Integer modelClass;
+
 	private String fittedModelName;
 
 	public String getFittedModelName() {
@@ -244,7 +245,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			this.bic = Double.NaN;
 		if (newTsID != null)
 			this.condId = newTsID;
-
 
 		if (level == 2) {
 			globalModelId = row.getInt(Model2Schema.ATT_GLOBAL_MODEL_ID);
@@ -823,15 +823,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		return level;
 	}
 
-	// modelClass
-	public Integer getModelClass() {
-		return modelClass;
-	}
-
-	public void setModelClass(final Integer modelClass) {
-		this.modelClass = modelClass;
-	}
-
 	// estModelId
 	public int getEstModelId() {
 		return estModelId;
@@ -862,8 +853,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	// other ...
 	public PmmXmlDoc getCatModel() {
 		PmmXmlDoc catModel = new PmmXmlDoc();
-		CatalogModelXml cmx = new CatalogModelXml(modelId, modelName, getFormula(), getModelClass(),
-				getMDbUuid());
+		CatalogModelXml cmx = new CatalogModelXml(modelId, modelName, getFormula(), modelClass, getMDbUuid());
 		catModel.add(cmx);
 		return catModel;
 	}
@@ -880,7 +870,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 
 	public ParametricModel clone() {
 		ParametricModel clonedPM = new ParametricModel(modelName, formula, depXml, level, modelId, estModelId);
-		clonedPM.setModelClass(modelClass);
+		clonedPM.modelClass = modelClass;
 		clonedPM.setMDbUuid(m_dbuuid);
 		clonedPM.setEMDbUuid(em_dbuuid);
 

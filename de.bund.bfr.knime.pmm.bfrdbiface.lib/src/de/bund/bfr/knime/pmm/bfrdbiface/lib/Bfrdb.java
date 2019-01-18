@@ -1382,8 +1382,8 @@ public class Bfrdb {
 				ps.setDate(3, date);
 				ps.setString(4, m.getFormula());
 				ps.setString(5, m.modelName.toLowerCase().replaceAll("\\s", "_"));
-				if (m.getModelClass() == null) ps.setNull(6, java.sql.Types.INTEGER);
-				else ps.setInt(6, m.getModelClass());
+				if (m.modelClass == null) ps.setNull(6, java.sql.Types.INTEGER);
+				else ps.setInt(6, m.modelClass);
 				if (m.comment == null) {
 					ps.setNull(7, Types.VARCHAR);
 				} else {
