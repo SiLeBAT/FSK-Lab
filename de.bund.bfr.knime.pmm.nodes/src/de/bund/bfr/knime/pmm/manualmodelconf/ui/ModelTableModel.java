@@ -319,7 +319,7 @@ public class ModelTableModel extends JTable {
 				    //editor.setEnabled(false);
 				    boolean hasSecondary = !indep && m_secondaryModels != null && m_secondaryModels.containsKey(value);
 				    editor.setFont(editor.getFont().deriveFont(hasSecondary ? Font.BOLD : Font.PLAIN));
-				    editor.setToolTipText(hasSecondary ? m_secondaryModels.get(value).getModelName() : "");
+				    editor.setToolTipText(hasSecondary ? m_secondaryModels.get(value).modelName : "");
 				    editor.setBackground(new Color(244, 244, 244));
 				    editor.setForeground(Color.BLACK);
 				    c = editor;

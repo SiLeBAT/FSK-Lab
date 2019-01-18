@@ -179,7 +179,7 @@ public class MMC_M extends JPanel {
 					setComboBox();
 				}
 			}
-			modelnameField.setText(pm.getModelName());
+			modelnameField.setText(pm.modelName);
 			if (pm.getModelClass() != null) {
 				typeBox.setSelectedItem(DBKernel.myDBi.getHashMap("ModelType").get(pm.getModelClass()));
 			} else {
@@ -470,7 +470,7 @@ public class MMC_M extends JPanel {
 
 	private String getNewModelname(ParametricModel pm) {
 		if (pm == null) return null;
-		String mn = pm.getModelName();
+		String mn = pm.modelName;
 		if (modelNameChangedManually) return mn;
 		int lio = mn.lastIndexOf(" (v");
 		String result = mn;
@@ -488,9 +488,9 @@ public class MMC_M extends JPanel {
 
 	private void modelnameFieldFocusLost(FocusEvent e) {
 		ParametricModel pm = table.getPM();
-		if (pm != null && !pm.getModelName().equals(modelnameField.getText())) {
+		if (pm != null && !pm.modelName.equals(modelnameField.getText())) {
 			ParametricModel newPM = pm.clone();
-			newPM.setModelName(modelnameField.getText());
+			newPM.modelName = modelnameField.getText();
 			newPM.modelId = MathUtilities.getRandomNegativeInt();
 			cloneSecondary(pm, newPM);
 			/*
@@ -660,7 +660,7 @@ public class MMC_M extends JPanel {
 	private ParametricModel finalizePM(int lastSelIndex) {
 		ParametricModel pm = table.getPM();
 		if (table.hasChanged()) {
-			if (pm != null && pm.getModelName().equals(modelnameField.getText())) {
+			if (pm != null && pm.modelName.equals(modelnameField.getText())) {
 				modelnameField.setText(getNewModelname(pm));
 				modelnameFieldFocusLost(null);
 				pm = (ParametricModel) modelNameBox.getSelectedItem();
@@ -1038,7 +1038,7 @@ public class MMC_M extends JPanel {
 		int level = radioButton2.isSelected() ? 2 : 1;
 		ParametricModel pm = new ParametricModel(LABEL_OWNMODEL, "", null, level);
 		modelNameBox.addItem(pm);
-		boolean addPreviousSelectedPM = (ppm != null && !ppm.getModelName().equals(LABEL_OWNMODEL) && (ppm.getLevel() == 2 && getSelRadio() == 2 || pm.getLevel() == 1
+		boolean addPreviousSelectedPM = (ppm != null && !ppm.modelName.equals(LABEL_OWNMODEL) && (ppm.getLevel() == 2 && getSelRadio() == 2 || pm.getLevel() == 1
 				&& getSelRadio() != 2));
 		if (addPreviousSelectedPM) modelNameBox.addItem(ppm);
 		// System.err.println("added1:" + pm + "\t" + pm.hashCode());

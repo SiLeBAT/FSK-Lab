@@ -1352,7 +1352,7 @@ public class Bfrdb {
 		if (iop && fID != null && fID == modelId) {
 			try {
 				PreparedStatement ps = conn.prepareStatement("UPDATE \"Modellkatalog\" SET \"Name\"=?, \"Kommentar\"=? WHERE \"ID\"=?");
-				ps.setString(1, m.getModelName());
+				ps.setString(1, m.modelName);
 				if (m.comment == null) {
 					ps.setNull(2, Types.VARCHAR);
 				} else {
@@ -1377,11 +1377,11 @@ public class Bfrdb {
 				PreparedStatement ps = conn.prepareStatement(
 						"INSERT INTO \"Modellkatalog\" (\"Name\", \"Level\", \"Eingabedatum\", \"Formel\", \"Notation\", \"Klasse\", \"Kommentar\") VALUES( ?, ?, ?, ?, ?, ?, ? )",
 						Statement.RETURN_GENERATED_KEYS);
-				ps.setString(1, m.getModelName()); //  + "_" + (-modelId)
+				ps.setString(1, m.modelName); //  + "_" + (-modelId)
 				ps.setInt(2, m.getLevel());
 				ps.setDate(3, date);
 				ps.setString(4, m.getFormula());
-				ps.setString(5, m.getModelName().toLowerCase().replaceAll("\\s", "_"));
+				ps.setString(5, m.modelName.toLowerCase().replaceAll("\\s", "_"));
 				if (m.getModelClass() == null) ps.setNull(6, java.sql.Types.INTEGER);
 				else ps.setInt(6, m.getModelClass());
 				if (m.comment == null) {

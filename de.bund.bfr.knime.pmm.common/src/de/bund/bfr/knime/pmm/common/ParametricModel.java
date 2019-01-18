@@ -84,7 +84,9 @@ public class ParametricModel implements PmmXmlElementConvertable {
 
 	private String m_dbuuid;
 	private String em_dbuuid;
-	private String modelName;
+
+	public String modelName;
+
 	private Integer modelClass;
 	private String fittedModelName;
 
@@ -819,15 +821,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		return level;
 	}
 
-	// modelName
-	public String getModelName() {
-		return modelName;
-	}
-
-	public void setModelName(final String modelName) {
-		this.modelName = modelName;
-	}
-
 	// modelClass
 	public Integer getModelClass() {
 		return modelClass;
@@ -876,7 +869,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	// other ...
 	public PmmXmlDoc getCatModel() {
 		PmmXmlDoc catModel = new PmmXmlDoc();
-		CatalogModelXml cmx = new CatalogModelXml(modelId, getModelName(), getFormula(), getModelClass(),
+		CatalogModelXml cmx = new CatalogModelXml(modelId, modelName, getFormula(), getModelClass(),
 				getMDbUuid());
 		catModel.add(cmx);
 		return catModel;

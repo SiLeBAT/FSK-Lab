@@ -57,7 +57,7 @@ public class ParametricModelTest {
 
 		ParametricModel model = new ParametricModel("modelName", "formula", dep, 0, 1, 2);
 
-		assertEquals("modelName", model.getModelName());
+		assertEquals("modelName", model.modelName);
 		assertEquals("formula", model.getFormula());
 		assertEquals("dep", model.getDepXml().name);
 		assertEquals(0, model.getLevel());
@@ -78,18 +78,6 @@ public class ParametricModelTest {
 		assertTrue(model.getModelLit().size() == 0);
 		assertTrue(model.getIndependent().size() == 0);
 		assertTrue(model.getParameter().size() == 0);
-	}
-
-	@Test
-	public void testModelName() {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns null to modelName
-		assertNull(model.getModelName());
-
-		// Check change
-		model.setModelName("Some name");
-		assertEquals("Some name", model.getModelName());
 	}
 
 	@Test
