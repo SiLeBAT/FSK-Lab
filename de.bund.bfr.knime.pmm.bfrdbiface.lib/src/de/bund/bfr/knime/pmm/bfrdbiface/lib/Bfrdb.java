@@ -808,7 +808,7 @@ public class Bfrdb {
 
 		estModelId = pm.getEstModelId();
 		int condId = pm.getCondId();
-		int modelId = pm.getModelId();
+		int modelId = pm.modelId;
 		String fittedModelName = pm.getFittedModelName();
 
 		HashMap<String, Integer> hmi = new HashMap<>();
@@ -816,7 +816,7 @@ public class Bfrdb {
 		if (!pm.getDepXml().origName.equals(pm.getDepXml().name)) hmi.put(pm.getDepXml().name, responseId);
 
 		if (responseId < 0) {
-			if (ppm != null) responseId = queryParamId(ppm.getModelId(), pm.getDepXml().origName, PARAMTYPE_PARAM);
+			if (ppm != null) responseId = queryParamId(ppm.modelId, pm.getDepXml().origName, PARAMTYPE_PARAM);
 			if (responseId < 0) System.err.println("responseId < 0..." + pm.getDepVar() + "\t" + pm.getDepXml().origName);
 		}
 
@@ -1345,7 +1345,7 @@ public class Bfrdb {
 	}
 
 	public Integer insertM(final ParametricModel m) {
-		int modelId = m.getModelId();
+		int modelId = m.modelId;
 		Integer fID = getId4Formula(m.getFormula(), m.getLevel(), modelId);
 		boolean iop = isObjectPresent("Modellkatalog", modelId);
 
@@ -1369,7 +1369,7 @@ public class Bfrdb {
 		else {
 			if (iop) {
 				modelId = MathUtilities.getRandomNegativeInt();
-				m.setModelId(modelId);
+				m.modelId = modelId;
 			}
 			Date date = new Date(System.currentTimeMillis());
 
@@ -1395,7 +1395,7 @@ public class Bfrdb {
 					ResultSet result = ps.getGeneratedKeys();
 					result.next();
 					modelId = result.getInt(1);
-					m.setModelId(modelId);
+					m.modelId = modelId;
 					result.close();
 				}
 				ps.close();
@@ -1411,7 +1411,7 @@ public class Bfrdb {
 			DepXml depXml = m.getDepXml();
 			insertParam(modelId, depXml.origName, PARAMTYPE_DEP, null, null, depXml.category, depXml.unit, depXml.description);
 			if (depXml.unit == null || depXml.unit.isEmpty()) {
-				m.warning = m.warning + "\nUnit not defined for dependant variable '" + depXml.name + "' in model with ID " + m.getModelId() + "!";
+				m.warning = m.warning + "\nUnit not defined for dependant variable '" + depXml.name + "' in model with ID " + m.modelId + "!";
 			}
 
 			// insert independent variable set
@@ -1420,7 +1420,7 @@ public class Bfrdb {
 					IndepXml ix = (IndepXml) el;
 					insertParam(modelId, ix.origName, PARAMTYPE_INDEP, ix.min, ix.max, ix.category, ix.unit, ix.description);
 					if (ix.unit == null || ix.unit.isEmpty()) {
-						m.warning = m.warning + "\nUnit not defined for independant variable '" + ix.name + "' in model with ID " + m.getModelId() + "!";
+						m.warning = m.warning + "\nUnit not defined for independant variable '" + ix.name + "' in model with ID " + m.modelId + "!";
 					}
 				}
 			}

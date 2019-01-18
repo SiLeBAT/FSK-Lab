@@ -147,7 +147,7 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 					String[] attrs = new String[] { Model1Schema.ATT_MODELCATALOG, Model1Schema.ATT_MLIT };
 					String[] dbTablenames = new String[] { "Modellkatalog", "Literatur" };
 
-					boolean checkAnywayDueToNegativeId = (pm.getModelId() < 0);
+					boolean checkAnywayDueToNegativeId = (pm.modelId < 0);
 					String rowuuid = row.getString(Model1Schema.ATT_DBUUID);
 					if (rowuuid == null) rowuuid = cmx.dbuuid;
 					foreignDbIds = checkIDs(conn, true, dbuuid, row, pm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
@@ -193,7 +193,7 @@ public class ModelCatalogWriterNodeModel extends NodeModel {
 					String[] attrs = new String[] { Model2Schema.ATT_MODELCATALOG, Model2Schema.ATT_MLIT };
 					String[] dbTablenames = new String[] { "Modellkatalog", "Literatur" };
 
-					boolean checkAnywayDueToNegativeId = (pm.getModelId() < 0);
+					boolean checkAnywayDueToNegativeId = (pm.modelId < 0);
 					String rowuuid = row.getString(Model2Schema.ATT_DBUUID);
 					if (rowuuid == null) rowuuid = cmx.dbuuid;
 					foreignDbIds = checkIDs(conn, true, dbuuid, row, pm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);

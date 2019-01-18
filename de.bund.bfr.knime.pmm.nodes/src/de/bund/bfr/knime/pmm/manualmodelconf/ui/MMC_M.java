@@ -426,7 +426,7 @@ public class MMC_M extends JPanel {
 	private void insertNselectPMintoBox(ParametricModel pm) {
 		int i = 0;
 		for (i = 0; i < modelNameBox.getItemCount(); i++) {
-			if (pm.getModelId() == modelNameBox.getItemAt(i).getModelId()) {
+			if (pm.modelId == modelNameBox.getItemAt(i).modelId) {
 				// if (pm.hashCode() == ((ParametricModel)
 				// modelNameBox.getItemAt(i)).hashCode()) {
 				break;
@@ -491,7 +491,7 @@ public class MMC_M extends JPanel {
 		if (pm != null && !pm.getModelName().equals(modelnameField.getText())) {
 			ParametricModel newPM = pm.clone();
 			newPM.setModelName(modelnameField.getText());
-			newPM.setModelId(MathUtilities.getRandomNegativeInt());
+			newPM.modelId = MathUtilities.getRandomNegativeInt();
 			cloneSecondary(pm, newPM);
 			/*
 			 * System.err.println(pm.getParamValue("a0") + "\t" + pm + "\t" +

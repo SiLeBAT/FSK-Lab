@@ -37,7 +37,7 @@ public class ParametricModelTest {
 		assertNull(model.isChecked);
 		assertNull(model.qualityScore);
 		assertNull(model.comment);
-		assertTrue(model.getModelId() < 0);
+		assertTrue(model.modelId < 0);
 		assertTrue(model.getEstModelId() < 0);
 		assertTrue(model.globalModelId < 0);
 		assertTrue(model.getEstModelLit().size() == 0);
@@ -61,7 +61,7 @@ public class ParametricModelTest {
 		assertEquals("formula", model.getFormula());
 		assertEquals("dep", model.getDepXml().name);
 		assertEquals(0, model.getLevel());
-		assertEquals(1, model.getModelId());
+		assertEquals(1, model.modelId);
 		assertEquals(2, model.getEstModelId());
 
 		assertTrue(model.warning.isEmpty());
@@ -78,18 +78,6 @@ public class ParametricModelTest {
 		assertTrue(model.getModelLit().size() == 0);
 		assertTrue(model.getIndependent().size() == 0);
 		assertTrue(model.getParameter().size() == 0);
-	}
-
-	@Test
-	public void testModelId() {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns a random negative number to modelId
-		assertTrue(model.getModelId() < 0);
-
-		// Check change
-		model.setModelId(0);
-		assertEquals(0, model.getModelId());
 	}
 
 	@Test

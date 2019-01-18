@@ -100,7 +100,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 
 	private int level;
 
-	private int modelId;
+	public int modelId;
+
 	private int estModelId;
 	private Double rsquared;
 	private Double rss;
@@ -818,15 +819,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		return level;
 	}
 
-	// modelId
-	public int getModelId() {
-		return modelId;
-	}
-
-	public void setModelId(final int modelId) {
-		this.modelId = modelId;
-	}
-
 	// modelName
 	public String getModelName() {
 		return modelName;
@@ -884,7 +876,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	// other ...
 	public PmmXmlDoc getCatModel() {
 		PmmXmlDoc catModel = new PmmXmlDoc();
-		CatalogModelXml cmx = new CatalogModelXml(getModelId(), getModelName(), getFormula(), getModelClass(),
+		CatalogModelXml cmx = new CatalogModelXml(modelId, getModelName(), getFormula(), getModelClass(),
 				getMDbUuid());
 		catModel.add(cmx);
 		return catModel;
