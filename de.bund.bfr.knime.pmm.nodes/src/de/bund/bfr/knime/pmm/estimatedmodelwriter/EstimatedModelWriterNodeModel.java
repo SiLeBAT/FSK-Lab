@@ -256,7 +256,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						foreignDbIds = checkIDs(conn, false, dbuuid, row, ppm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 
 						alreadyInsertedModel.put(rowMcID, ppm);
-						if (!ppm.getWarning().trim().isEmpty()) warnings += ppm.getWarning();
+						if (!ppm.warning.trim().isEmpty()) warnings += ppm.warning;
 					}
 					try {
 						ppm.setFittedModelName(emx.name);
@@ -297,7 +297,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 							//ppm.setEstModelId(newPrimEstID);
 							alreadyInsertedEModel.put(rowEstM1ID, ppm.clone());
 						}
-						if (!ppm.getWarning().trim().isEmpty()) warnings += ppm.getWarning();
+						if (!ppm.warning.trim().isEmpty()) warnings += ppm.warning;
 					}
 				} else {
 					String text = "Estimated primary model (ID: " + rowEstM1ID + //row.getInt(Model1Schema.ATT_ESTMODELID) +
@@ -443,7 +443,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 			foreignDbIds = checkIDs(conn, false, dbuuid, row, spm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 
 			alreadyInsertedModel.put(rowMcID, spm);
-			if (!spm.getWarning().trim().isEmpty()) warnings += spm.getWarning();
+			if (!spm.warning.trim().isEmpty()) warnings += spm.warning;
 		}
 
 		if (alreadyInsertedEModel.containsKey(rowEstM2ID)) {
@@ -478,7 +478,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 			db.insertEm(spm, wfID, ppm);				
 			foreignDbIds = checkIDs(conn, false, dbuuid, row, spm, foreignDbIds, attrs, dbTablenames, rowuuid, checkAnywayDueToNegativeId);
 			alreadyInsertedEModel.put(rowEstM2ID, spm.clone());
-			if (!spm.getWarning().trim().isEmpty()) warnings += spm.getWarning();
+			if (!spm.warning.trim().isEmpty()) warnings += spm.warning;
 		}		
 		
 		return spm;

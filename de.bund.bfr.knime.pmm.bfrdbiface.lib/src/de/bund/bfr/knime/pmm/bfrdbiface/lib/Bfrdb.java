@@ -1411,7 +1411,7 @@ public class Bfrdb {
 			DepXml depXml = m.getDepXml();
 			insertParam(modelId, depXml.origName, PARAMTYPE_DEP, null, null, depXml.category, depXml.unit, depXml.description);
 			if (depXml.unit == null || depXml.unit.isEmpty()) {
-				m.setWarning(m.getWarning() + "\nUnit not defined for dependant variable '" + depXml.name + "' in model with ID " + m.getModelId() + "!");
+				m.warning = m.warning + "\nUnit not defined for dependant variable '" + depXml.name + "' in model with ID " + m.getModelId() + "!";
 			}
 
 			// insert independent variable set
@@ -1420,7 +1420,7 @@ public class Bfrdb {
 					IndepXml ix = (IndepXml) el;
 					insertParam(modelId, ix.origName, PARAMTYPE_INDEP, ix.min, ix.max, ix.category, ix.unit, ix.description);
 					if (ix.unit == null || ix.unit.isEmpty()) {
-						m.setWarning(m.getWarning() + "\nUnit not defined for independant variable '" + ix.name + "' in model with ID " + m.getModelId() + "!");
+						m.warning = m.warning + "\nUnit not defined for independant variable '" + ix.name + "' in model with ID " + m.getModelId() + "!";
 					}
 				}
 			}
@@ -1790,7 +1790,7 @@ public class Bfrdb {
 			Object unitID = unit == null || unit.isEmpty() ? null : DBKernel.getID("Einheiten", new String[] { "display in GUI as" }, new String[] { unit });
 			if (unitID == null) {
 				if (isDepIndep) {
-					pm.setWarning(pm.getWarning() + "\nUnit not defined for variable '" + paramName + "' in fitted model with ID " + estModelId + "!");
+					pm.warning = pm.warning + "\nUnit not defined for variable '" + paramName + "' in fitted model with ID " + estModelId + "!";
 				}
 				ps.setNull(5, Types.INTEGER);
 			} else ps.setInt(5, (Integer) unitID);
