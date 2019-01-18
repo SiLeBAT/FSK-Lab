@@ -109,15 +109,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	private Double bic;
 	private int condId;
 
-	private Integer globalModelId = null;
-
-	public Integer getGlobalModelId() {
-		return globalModelId;
-	}
-
-	public void setGlobalModelId(Integer globalModelId) {
-		this.globalModelId = globalModelId;
-	}
+	public Integer globalModelId = null;
 
 	public Boolean isChecked;
 
@@ -953,7 +945,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 			e.printStackTrace();
 		}
 
-		clonedPM.setGlobalModelId(globalModelId);
+		clonedPM.globalModelId = globalModelId;
 
 		return clonedPM;
 	}

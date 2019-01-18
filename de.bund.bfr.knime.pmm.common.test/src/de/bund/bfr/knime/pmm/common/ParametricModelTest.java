@@ -39,7 +39,7 @@ public class ParametricModelTest {
 		assertNull(model.comment);
 		assertTrue(model.getModelId() < 0);
 		assertTrue(model.getEstModelId() < 0);
-		assertTrue(model.getGlobalModelId() < 0);
+		assertTrue(model.globalModelId < 0);
 		assertTrue(model.getEstModelLit().size() == 0);
 		assertTrue(model.getModelLit().size() == 0);
 		assertTrue(model.getIndependent().size() == 0);
@@ -73,23 +73,11 @@ public class ParametricModelTest {
 		assertNull(model.isChecked);
 		assertNull(model.qualityScore);
 		assertNull(model.comment);
-		assertTrue(model.getGlobalModelId() < 0);
+		assertTrue(model.globalModelId < 0);
 		assertTrue(model.getEstModelLit().size() == 0);
 		assertTrue(model.getModelLit().size() == 0);
 		assertTrue(model.getIndependent().size() == 0);
 		assertTrue(model.getParameter().size() == 0);
-	}
-
-	@Test
-	public void testGlobalModelId() {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns a random negative int to globalModelId
-		assertTrue(model.getGlobalModelId() < 0);
-
-		// Check change
-		model.setGlobalModelId(1);
-		assertEquals(1, model.getGlobalModelId().intValue());
 	}
 
 	@Test
