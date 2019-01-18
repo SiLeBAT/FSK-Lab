@@ -64,6 +64,7 @@ public class ParametricModelTest {
 		assertEquals(1, model.modelId);
 		assertEquals(2, model.getEstModelId());
 
+		assertEquals(0, model.condId);
 		assertTrue(model.warning.isEmpty());
 		assertTrue(Double.isNaN(model.getRss()));
 		assertTrue(Double.isNaN(model.getRsquared()));
@@ -74,10 +75,10 @@ public class ParametricModelTest {
 		assertNull(model.qualityScore);
 		assertNull(model.comment);
 		assertTrue(model.globalModelId < 0);
-		assertTrue(model.getEstModelLit().size() == 0);
-		assertTrue(model.getModelLit().size() == 0);
-		assertTrue(model.getIndependent().size() == 0);
-		assertTrue(model.getParameter().size() == 0);
+		assertEquals(0, model.getEstModelLit().size());
+		assertEquals(0, model.getModelLit().size());
+		assertEquals(0, model.getIndependent().size());
+		assertEquals(0, model.getParameter().size());
 	}
 
 	@Test
@@ -114,18 +115,6 @@ public class ParametricModelTest {
 		// Check change
 		model.setEMDbUuid("id");
 		assertEquals("id", model.getEMDbUuid());
-	}
-
-	@Test
-	public void testCondId() {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns 0 to condId
-		assertEquals(0, model.getCondId());
-
-		// Check change
-		model.setCondId(7);
-		assertEquals(7, model.getCondId());
 	}
 
 	@Test

@@ -177,7 +177,7 @@ public class ManualModelEditorNodeDialog extends DataAwareNodeDialogPane {
 			    			}
 			    			if (!oneStepFitTs.containsKey(m1EstID)) oneStepFitTs.put(m1EstID, new HashSet<Integer>());
 			    			HashSet<Integer> hs = oneStepFitTs.get(m1EstID);
-			    			hs.add(pm1.getCondId());
+			    			hs.add(pm1.condId);
 			    			if (hasM2) {
 			    				ParametricModel pm2 = new ParametricModel(row, 2, null);
 			    				m2EstID = pm2.getEstModelId();

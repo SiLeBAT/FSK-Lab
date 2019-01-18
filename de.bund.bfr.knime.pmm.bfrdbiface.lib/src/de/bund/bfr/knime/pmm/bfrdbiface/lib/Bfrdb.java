@@ -807,7 +807,7 @@ public class Bfrdb {
 		Double r2 = pm.getRsquared();
 
 		estModelId = pm.getEstModelId();
-		int condId = pm.getCondId();
+		int condId = pm.condId;
 		int modelId = pm.modelId;
 		String fittedModelName = pm.getFittedModelName();
 

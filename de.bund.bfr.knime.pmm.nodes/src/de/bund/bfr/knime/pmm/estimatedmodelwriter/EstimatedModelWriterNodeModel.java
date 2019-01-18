@@ -272,7 +272,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						MyLogger.handleException(e);
 					}
 
-					ppm.setCondId(newTsID);
+					ppm.condId = newTsID;
 					if (alreadyInsertedEModel.containsKey(rowEstM1ID)) {
 						newPrimEstID = alreadyInsertedEModel.get(rowEstM1ID).getEstModelId();
 					} else {

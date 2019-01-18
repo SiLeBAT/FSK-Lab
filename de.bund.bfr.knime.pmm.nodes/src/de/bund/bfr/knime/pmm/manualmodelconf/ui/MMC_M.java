@@ -706,7 +706,7 @@ public class MMC_M extends JPanel {
 	}
 	public PmmXmlDoc listToDoc() throws InvalidSettingsException {
 		if (listModel == null || listModel.size() == 0) {
-			if (m_mmcts != null && m_mmcts.getCondId() != null) getPM().setCondId(m_mmcts.getCondId());
+			if (m_mmcts != null && m_mmcts.getCondId() != null) getPM().condId = m_mmcts.getCondId();
 			return toDoc();
 		}
 		PmmXmlDoc doc = new PmmXmlDoc();
@@ -1003,7 +1003,7 @@ public class MMC_M extends JPanel {
 			setComboBox();
 			setPM(pm1);
 
-			m_mmcts.setTS(tss.get(pm1.getCondId()));
+			m_mmcts.setTS(tss.get(pm1.condId));
 			
 			table.repaint();
 		}

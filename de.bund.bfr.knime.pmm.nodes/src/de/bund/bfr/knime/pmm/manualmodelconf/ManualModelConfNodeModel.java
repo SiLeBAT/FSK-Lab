@@ -139,7 +139,7 @@ public class ManualModelConfNodeModel extends NodeModel {
 	    		                	for (PmmXmlElementConvertable ell : docTS.getElementSet()) {        		
 	    		                		if (ell instanceof PmmTimeSeries) {
 	    		                			PmmTimeSeries ts = (PmmTimeSeries) ell;
-	    		                			boolean addIt = ts.getCondId().intValue() == model.getCondId();
+	    		                			boolean addIt = ts.getCondId().intValue() == model.condId;
 	    		                    		if (!addIt && hasEditFeature && oneStepFitTs != null && oneStepFitTs.containsKey(model.getEstModelId())) {
 	    		                    			if (oneStepFitTs.get(model.getEstModelId()).contains(ts.getCondId().intValue())) {
 	    		                    				addIt = true;

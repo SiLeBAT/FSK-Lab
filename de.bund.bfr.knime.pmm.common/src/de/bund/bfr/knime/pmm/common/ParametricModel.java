@@ -110,7 +110,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 	private Double rms;
 	private Double aic;
 	private Double bic;
-	private int condId;
+
+	public int condId;
 
 	public Integer globalModelId = null;
 
@@ -242,7 +243,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		if (this.bic == null)
 			this.bic = Double.NaN;
 		if (newTsID != null)
-			this.setCondId(newTsID);
+			this.condId = newTsID;
+
 
 		if (level == 2) {
 			globalModelId = row.getInt(Model2Schema.ATT_GLOBAL_MODEL_ID);
@@ -857,15 +859,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		this.em_dbuuid = dbuuid;
 	}
 
-	// condId
-	public int getCondId() {
-		return condId;
-	}
-
-	public void setCondId(final int condId) {
-		this.condId = condId;
-	}
-
 	// other ...
 	public PmmXmlDoc getCatModel() {
 		PmmXmlDoc catModel = new PmmXmlDoc();
@@ -908,8 +901,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		} catch (PmmException e) {
 			e.printStackTrace();
 		}
-		clonedPM.setCondId(condId);
-
+		clonedPM.condId = condId;
 		clonedPM.isChecked = isChecked;
 		clonedPM.comment = comment;
 		clonedPM.qualityScore = qualityScore;
