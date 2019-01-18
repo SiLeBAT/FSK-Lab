@@ -121,7 +121,8 @@ public class ParametricModel implements PmmXmlElementConvertable {
 
 	private Boolean isChecked;
 	private Integer qualityScore;
-	private String comment;
+
+	public String comment;
 
 	private static final String ATT_LEVEL = "Level";
 
@@ -394,15 +395,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 				}
 			}
 		}
-	}
-
-	// comment
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 	// checked
@@ -959,7 +951,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		clonedPM.setCondId(condId);
 
 		clonedPM.setChecked(isChecked);
-		clonedPM.setComment(comment);
+		clonedPM.comment = comment;
 		clonedPM.setQualityScore(qualityScore);
 		clonedPM.setFittedModelName(fittedModelName);
 

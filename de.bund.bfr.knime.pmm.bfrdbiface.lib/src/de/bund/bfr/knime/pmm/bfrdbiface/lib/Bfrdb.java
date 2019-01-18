@@ -822,10 +822,10 @@ public class Bfrdb {
 
 		if (isObjectPresent(REL_ESTMODEL, estModelId)) {
 			updateEstModel(estModelId, fittedModelName, condId, modelId, rms, r2, pm.getAic(), pm.getBic(), responseId, pm.getQualityScore(), pm.isChecked(), workflowID,
-					pm.getComment());
+					pm.comment);
 		} else {
 			estModelId = insertEstModel(fittedModelName, condId, modelId, rms, r2, pm.getAic(), pm.getBic(), responseId, pm.getQualityScore(), pm.isChecked(), workflowID,
-					pm.getComment());
+					pm.comment);
 			pm.setEstModelId(estModelId);
 		}
 
@@ -1353,10 +1353,10 @@ public class Bfrdb {
 			try {
 				PreparedStatement ps = conn.prepareStatement("UPDATE \"Modellkatalog\" SET \"Name\"=?, \"Kommentar\"=? WHERE \"ID\"=?");
 				ps.setString(1, m.getModelName());
-				if (m.getComment() == null) {
+				if (m.comment == null) {
 					ps.setNull(2, Types.VARCHAR);
 				} else {
-					ps.setString(2, m.getComment());
+					ps.setString(2, m.comment);
 				}
 				ps.setInt(3, modelId);
 
@@ -1384,10 +1384,10 @@ public class Bfrdb {
 				ps.setString(5, m.getModelName().toLowerCase().replaceAll("\\s", "_"));
 				if (m.getModelClass() == null) ps.setNull(6, java.sql.Types.INTEGER);
 				else ps.setInt(6, m.getModelClass());
-				if (m.getComment() == null) {
+				if (m.comment == null) {
 					ps.setNull(7, Types.VARCHAR);
 				} else {
-					ps.setString(7, m.getComment());
+					ps.setString(7, m.comment);
 				}
 
 				modelId = -1;

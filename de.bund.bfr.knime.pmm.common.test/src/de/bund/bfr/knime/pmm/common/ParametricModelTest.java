@@ -36,7 +36,7 @@ public class ParametricModelTest {
 		assertTrue(Double.isNaN(model.getBic()));
 		assertNull(model.isChecked());
 		assertNull(model.getQualityScore());
-		assertNull(model.getComment());
+		assertNull(model.comment);
 		assertTrue(model.getModelId() < 0);
 		assertTrue(model.getEstModelId() < 0);
 		assertTrue(model.getGlobalModelId() < 0);
@@ -72,7 +72,7 @@ public class ParametricModelTest {
 		assertTrue(Double.isNaN(model.getBic()));
 		assertNull(model.isChecked());
 		assertNull(model.getQualityScore());
-		assertNull(model.getComment());
+		assertNull(model.comment);
 		assertTrue(model.getGlobalModelId() < 0);
 		assertTrue(model.getEstModelLit().size() == 0);
 		assertTrue(model.getModelLit().size() == 0);
@@ -97,11 +97,11 @@ public class ParametricModelTest {
 		ParametricModel model = new ParametricModel();
 
 		// Empty constructor assigns null to comment
-		assertNull(model.getComment());
+		assertNull(model.comment);
 
 		// Check change
-		model.setComment("Some comment");
-		assertEquals("Some comment", model.getComment());
+		model.comment = "Some comment";
+		assertEquals("Some comment", model.comment);
 	}
 
 	@Test
