@@ -41,10 +41,10 @@ public class ParametricModelTest {
 		assertTrue(model.modelId < 0);
 		assertTrue(model.estModelId < 0);
 		assertTrue(model.globalModelId < 0);
-		assertTrue(model.getEstModelLit().size() == 0);
-		assertTrue(model.getModelLit().size() == 0);
-		assertTrue(model.getIndependent().size() == 0);
-		assertTrue(model.getParameter().size() == 0);
+		assertEquals(0, model.getEstModelLit().size());
+		assertEquals(0, model.getModelLit().size());
+		assertEquals(0, model.getIndependent().size());
+		assertEquals(0, model.getParameter().size());
 	}
 
 	/**
@@ -66,6 +66,7 @@ public class ParametricModelTest {
 		assertEquals(2, model.estModelId);
 
 		assertNull(model.modelDbUuid);
+		assertNull(model.estimatedModelDbUuid);
 		assertNull(model.modelClass);
 		assertEquals(0, model.condId);
 		assertTrue(model.warning.isEmpty());
@@ -82,18 +83,6 @@ public class ParametricModelTest {
 		assertEquals(0, model.getModelLit().size());
 		assertEquals(0, model.getIndependent().size());
 		assertEquals(0, model.getParameter().size());
-	}
-
-	@Test
-	public void testEMDbUuid() {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns null to m_dbuuid
-		assertNull(model.getEMDbUuid());
-
-		// Check change
-		model.setEMDbUuid("id");
-		assertEquals("id", model.getEMDbUuid());
 	}
 
 	@Test
@@ -387,5 +376,23 @@ public class ParametricModelTest {
 		
 		assertFalse(model.containsParam("aloha"));
 		assertTrue(model.containsParam("Baldur"));
+	}
+	
+	@Test
+	public void testModelLiterature() {
+		
+		ParametricModel model = new ParametricModel();
+		assertEquals(0, model.getModelLit().size());
+		
+		model.setMLit(new PmmXmlDoc(new MatrixXml()));
+		assertEquals(1, model.getModelLit().size());
+		
+		LiteratureItem item = new LiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
+				0, "website", 0, "comment");
+		model.addModelLit(item);
+		assertEquals(2, model.getModelLit().size());
+		
+		model.removeModelLits();
+		assertEquals(0, model.getModelLit().size());
 	}
 }
