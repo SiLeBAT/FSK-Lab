@@ -809,7 +809,7 @@ public class Bfrdb {
 		estModelId = pm.estModelId;
 		int condId = pm.condId;
 		int modelId = pm.modelId;
-		String fittedModelName = pm.getFittedModelName();
+		String fittedModelName = pm.fittedModelName;
 
 		HashMap<String, Integer> hmi = new HashMap<>();
 		int responseId = queryParamId(modelId, pm.getDepXml().origName, PARAMTYPE_DEP);

@@ -34,6 +34,7 @@ public class ParametricModelTest {
 		assertTrue(Double.isNaN(model.getRms()));
 		assertTrue(Double.isNaN(model.getAic()));
 		assertTrue(Double.isNaN(model.getBic()));
+		assertNull(model.fittedModelName);
 		assertNull(model.isChecked);
 		assertNull(model.qualityScore);
 		assertNull(model.comment);
@@ -64,6 +65,7 @@ public class ParametricModelTest {
 		assertEquals(1, model.modelId);
 		assertEquals(2, model.estModelId);
 
+		assertNull(model.modelDbUuid);
 		assertNull(model.modelClass);
 		assertEquals(0, model.condId);
 		assertTrue(model.warning.isEmpty());
@@ -80,18 +82,6 @@ public class ParametricModelTest {
 		assertEquals(0, model.getModelLit().size());
 		assertEquals(0, model.getIndependent().size());
 		assertEquals(0, model.getParameter().size());
-	}
-
-	@Test
-	public void testMDbUuid() {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns null to m_dbuuid
-		assertNull(model.getMDbUuid());
-
-		// Check change
-		model.setMDbUuid("id");
-		assertEquals("id", model.getMDbUuid());
 	}
 
 	@Test
@@ -173,18 +163,6 @@ public class ParametricModelTest {
 	public void testSetRmsNegative() {
 		ParametricModel model = new ParametricModel();
 		model.setRms(-1.0);
-	}
-
-	@Test
-	public void testFittedModelName() {
-		ParametricModel model = new ParametricModel();
-
-		// Empty constructor assigns null to fittedModelName
-		assertNull(model.getFittedModelName());
-
-		// Check change
-		model.setFittedModelName("name");
-		assertEquals("name", model.getFittedModelName());
 	}
 
 	@Test

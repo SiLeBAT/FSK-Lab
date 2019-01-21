@@ -259,7 +259,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 						if (!ppm.warning.trim().isEmpty()) warnings += ppm.warning;
 					}
 					try {
-						ppm.setFittedModelName(emx.name);
+						ppm.fittedModelName = emx.name;
 						ppm.setRms(rms == null ? Double.NaN : rms);
 						ppm.setRsquared(r2 == null ? Double.NaN : r2);
 						ppm.setAic(aic == null ? Double.NaN : aic);
@@ -450,7 +450,7 @@ public class EstimatedModelWriterNodeModel extends NodeModel {
 			spm = alreadyInsertedEModel.get(rowEstM2ID);
 		} else {
 			try {
-				spm.setFittedModelName(emx.name);
+				spm.fittedModelName = emx.name;
 				spm.setRms(rms);
 				spm.setRsquared(r2);
 				spm.setAic(aic);

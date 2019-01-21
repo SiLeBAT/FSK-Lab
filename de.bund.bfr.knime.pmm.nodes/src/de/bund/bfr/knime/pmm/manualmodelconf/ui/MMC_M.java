@@ -185,7 +185,7 @@ public class MMC_M extends JPanel {
 			} else {
 				typeBox.setSelectedItem(null);
 			}
-			fittedModelName.setText(pm.getFittedModelName());
+			fittedModelName.setText(pm.fittedModelName);
 			String depVar = depVarLabel.getText();
 			if (!depVar.isEmpty()) {
 				String formula = pm.getFormula();
@@ -1014,7 +1014,7 @@ public class MMC_M extends JPanel {
 		if (pm != null) {
 			try {
 				if (!isEditor) pm.estModelId = MathUtilities.getRandomNegativeInt();
-				pm.setFittedModelName(fittedModelName.getText());
+				pm.fittedModelName = fittedModelName.getText();
 			} catch (PmmException e1) {
 				e1.printStackTrace();
 			}
@@ -1056,7 +1056,7 @@ public class MMC_M extends JPanel {
 					DepXml dx = new DepXml(result.getString(Bfrdb.ATT_DEP), result.getString("DepCategory"), result.getString("DepUnit"));
 					dx.description = depDesc;
 					pm = new ParametricModel(modelName, formula, dx, level, modelID);
-					pm.setMDbUuid(db.getDBUUID());
+					pm.modelDbUuid = db.getDBUUID();
 					pm.modelClass = result.getInt("Klasse");
 					pm.setDepDescription(depDesc);
 					String s = result.getString("LitMID");
