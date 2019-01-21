@@ -395,4 +395,22 @@ public class ParametricModelTest {
 		model.removeModelLits();
 		assertEquals(0, model.getModelLit().size());
 	}
+	
+	@Test
+	public void testEstimatedModelLiterature() {
+		
+		ParametricModel model = new ParametricModel();
+		assertEquals(0, model.getEstModelLit().size());
+		
+		model.setEstLit(new PmmXmlDoc(new MatrixXml()));
+		assertEquals(1, model.getEstModelLit().size());
+		
+		LiteratureItem item = new LiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
+				0, "website", 0, "comment");
+		model.addEstModelLit(item);
+		assertEquals(2, model.getEstModelLit().size());
+		
+		model.removeEstModelLits();
+		assertEquals(0, model.getEstModelLit().size());
+	}
 }

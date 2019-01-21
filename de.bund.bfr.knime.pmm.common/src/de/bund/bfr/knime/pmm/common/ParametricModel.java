@@ -675,6 +675,14 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		this.estLit = estLit;
 	}
 
+	public void addEstModelLit(final LiteratureItem item) {
+		estLit.add(item);
+	}
+
+	public void removeEstModelLits() {
+		estLit = new PmmXmlDoc();
+	}
+
 	// modelLit
 	public PmmXmlDoc getModelLit() {
 		return modelLit;
@@ -929,14 +937,6 @@ public class ParametricModel implements PmmXmlElementConvertable {
 
 	public void removeIndepVars() {
 		independent = new PmmXmlDoc();
-	}
-
-	public void removeEstModelLits() {
-		estLit = new PmmXmlDoc();
-	}
-
-	public void addEstModelLit(final LiteratureItem item) {
-		estLit.add(item);
 	}
 
 	public Double getParamP(final String paramName) {
