@@ -470,4 +470,22 @@ public class ParametricModelTest {
 		assertEquals(0, element.getAttribute("ModelQualityScore").getIntValue());
 		assertNotNull(element.getChild("DependentXml"));
 	}
+	
+	@Test
+	public void testGetCatModel() {
+		ParametricModel model = new ParametricModel();
+		model.modelId = 0;
+		model.modelName = "Model name";
+		model.setFormula("2+2");
+		model.modelClass = 9001;
+		model.modelDbUuid = "id";
+		
+		CatalogModelXml catModel = (CatalogModelXml) model.getCatModel().get(0);
+		assertEquals(0, catModel.id.intValue());
+		assertEquals("Model name", catModel.name);
+		assertEquals("2+2", catModel.formula);
+		assertEquals(9001, catModel.modelClass.intValue());
+		assertNull(catModel.comment);
+		assertEquals("id", catModel.dbuuid);
+	}
 }
