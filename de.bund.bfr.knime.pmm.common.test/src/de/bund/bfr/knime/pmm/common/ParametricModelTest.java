@@ -21,6 +21,8 @@ package de.bund.bfr.knime.pmm.common;
 
 import static org.junit.Assert.*;
 
+import org.jdom2.DataConversionException;
+import org.jdom2.Element;
 import org.junit.Test;
 
 public class ParametricModelTest {
@@ -412,5 +414,60 @@ public class ParametricModelTest {
 		
 		model.removeEstModelLits();
 		assertEquals(0, model.getEstModelLit().size());
+	}
+	
+	@Test
+	public void testToXmlElement() throws DataConversionException {
+
+		Element element = new ParametricModel().toXmlElement();
+		assertEquals("ParametricModel", element.getName());
+		
+		assertTrue(element.getAttributeValue("M_DB_UID").isEmpty());
+		assertTrue(element.getAttributeValue("EM_DB_UID").isEmpty());
+		assertTrue(element.getAttributeValue("ModelName").isEmpty());
+		assertTrue(element.getAttributeValue("ModelClass").isEmpty());
+		assertTrue(element.getAttributeValue("FittedModelName").isEmpty());
+		assertEquals(0, element.getAttribute("Level").getIntValue());
+		assertTrue(element.getAttribute("ModelCatalogId").getIntValue() < 0);
+		assertTrue(element.getAttribute("EstModelId").getIntValue() < 0);
+		assertTrue(element.getAttribute("GlobalModelId").getIntValue() < 0);
+		assertEquals(0, element.getAttribute("CondId").getIntValue());
+		assertTrue(Double.isNaN(element.getAttribute("RSS").getDoubleValue()));
+		assertTrue(Double.isNaN(element.getAttribute("RMS").getDoubleValue()));
+		assertEquals(Double.NaN, element.getAttribute("AIC").getDoubleValue(), .0);
+		assertEquals(Double.NaN, element.getAttribute("BIC").getDoubleValue(), .0);
+		assertTrue(Double.isNaN(element.getAttribute("AIC").getDoubleValue()));
+		assertTrue(Double.isNaN(element.getAttribute("BIC").getDoubleValue()));
+		assertTrue(element.getAttributeValue("ModelChecked").isEmpty());
+		assertTrue(element.getAttributeValue("ModelComment").isEmpty());
+		assertTrue(element.getAttributeValue("ModelQualityScore").isEmpty());
+		assertTrue(Double.isNaN(element.getAttribute("Rsquared").getDoubleValue()));
+		assertNotNull(element.getChild("Formula"));
+		assertTrue(element.getChild("ParameterXml").getChildren().isEmpty());
+		assertTrue(element.getChild("IndependentXml").getChildren().isEmpty());
+		assertNull(element.getChild("DependentXml"));
+		assertTrue(element.getChild("ModelLiterature").getChildren().isEmpty());
+		assertTrue(element.getChild("EstimatedModelLiterature").getChildren().isEmpty());
+		
+		ParametricModel model = new ParametricModel();
+		model.modelDbUuid = "";
+		model.estimatedModelDbUuid = "";
+		model.modelName = "model name";
+		model.fittedModelName = "fitted model";
+		model.isChecked = true;
+		model.comment = "Comment";
+		model.qualityScore = 0;
+		model.setDepXml(new DepXml("dep"));
+		
+		element = model.toXmlElement();
+		
+		assertTrue(element.getAttributeValue("M_DB_UID").isEmpty());
+		assertTrue(element.getAttributeValue("EM_DB_UID").isEmpty());
+		assertEquals("model name", element.getAttributeValue("ModelName"));
+		assertEquals("fitted model", element.getAttributeValue("FittedModelName"));
+		assertTrue(element.getAttribute("ModelChecked").getBooleanValue());
+		assertEquals("Comment", element.getAttributeValue("ModelComment"));
+		assertEquals(0, element.getAttribute("ModelQualityScore").getIntValue());
+		assertNotNull(element.getChild("DependentXml"));
 	}
 }

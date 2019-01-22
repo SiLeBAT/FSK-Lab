@@ -983,7 +983,7 @@ public class ParametricModel implements PmmXmlElementConvertable {
 		Element modelElement = new Element(ELEMENT_PARAMETRICMODEL);
 		modelElement.setAttribute(ATT_MDBUUID, modelDbUuid == null ? "" : modelDbUuid);
 		modelElement.setAttribute(ATT_EMDBUUID, estimatedModelDbUuid == null ? "" : estimatedModelDbUuid);
-		modelElement.setAttribute(ATT_MODELNAME, modelName);
+		modelElement.setAttribute(ATT_MODELNAME, modelName == null ? "" : modelName);
 		modelElement.setAttribute(ATT_MODELCLASS, XmlHelper.getNonNull(modelClass));
 		modelElement.setAttribute("FittedModelName", fittedModelName == null ? "" : fittedModelName);
 		modelElement.setAttribute(ATT_LEVEL, String.valueOf(level));
