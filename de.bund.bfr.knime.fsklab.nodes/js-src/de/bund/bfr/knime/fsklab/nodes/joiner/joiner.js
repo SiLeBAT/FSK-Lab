@@ -123,83 +123,173 @@ joiner = function() {
 		 * and an array of possible autocompleted values:
 		 */
 		var currentFocus;
-		$(inp).addClass('domdsdsd');
-		/* execute a function when someone writes in the text field: */
-		inp.addEventListener("input", function(e) {
+		function inputHandler(e,value) {
 			var a, b, i, val = this.value;
-			/* close any already open lists of autocompleted values */
+			/*
+			 * close any already open lists of autocompleted
+			 * values
+			 */
 			closeAllLists();
+
 			currentFocus = -1;
-			/* create a DIV element that will contain the items (values): */
+			/*
+			 * create a DIV element that will contain the items
+			 * (values):
+			 */
 			a = document.createElement("DIV");
-			a.setAttribute("id", this.id + "autocomplete-list");
+			a.setAttribute("id", e.target.id + "autocomplete-list");
 			a.setAttribute("class", "autocomplete-items");
-			/* append the DIV element as a child of the autocomplete container: */
-			this.parentNode.appendChild(a);
+			/*
+			 * append the DIV element as a child of the
+			 * autocomplete container:
+			 */
+
+			e.target.parentNode.appendChild(a);
 			/* for each item in the array... */
-			
-			for (i = 0; i < arr.length; i++) {
-				/*
-				 * check if the item starts with the same letters as the text
-				 * field value:
-				 */
-				if (arr[i].substr(0, val.length).toUpperCase() == val
-						.toUpperCase() || val == '' || val == undefined) {
-					/* create a DIV element for each matching element: */
+			if (!val) {
+				for (i = 0; i < arr.length; i++) {
+					/*
+					 * create a DIV element for each matching
+					 * element:
+					 */
 					b = document.createElement("DIV");
 					/* make the matching letters bold: */
-					b.innerHTML = "<strong>" + arr[i].substr(0, val.length)
-							+ "</strong>";
-					b.innerHTML += arr[i].substr(val.length);
+					b.innerHTML = "<strong>"
+							+ arr[i].substr(0, 0) + "</strong>";
+					b.innerHTML += arr[i].substr(0);
 					/*
-					 * insert a input field that will hold the current array
-					 * item's value:
+					 * insert a input field that will hold the
+					 * current array item's value:
 					 */
-					b.innerHTML += "<input type='hidden' value='" + arr[i]
-							+ "'>";
+					b.innerHTML += "<input type='hidden' value='"
+							+ arr[i] + "'>";
 					/*
-					 * execute a function when someone clicks on the item value
-					 * (DIV element):
+					 * execute a function when someone clicks on
+					 * the item value (DIV element):
 					 */
-					b.addEventListener("click", function(e) {
-						/* insert the value for the autocomplete text field: */
-						if(store){
-							store.getState().jsonforms.core.data[fieldName] = this
-									.getElementsByTagName("input")[0].value;
-	
-							store.dispatch(Actions.init(
-									store.getState().jsonforms.core.data, schema,
-									uischema));
-						/*
-						 * close the list of autocompleted values, (or any other
-						 * open lists of autocompleted values:
-						 */
-						}else{
-							$("#commandLanguage").val(this.getElementsByTagName("input")[0].value);
-						}
-						closeAllLists();
-					});
+					b
+							.addEventListener(
+									"click",
+									function(e) {
+										/*
+										 * insert the value for
+										 * the autocomplete text
+										 * field:
+										 */
+
+										store.getState().jsonforms.core.data[fieldName] = this
+												.getElementsByTagName("input")[0].value;
+
+										store
+												.dispatch(Actions
+														.init(
+																store
+																		.getState().jsonforms.core.data,
+																schema,
+																uischema));
+										/*
+										 * close the list of
+										 * autocompleted values,
+										 * (or any other open
+										 * lists of
+										 * autocompleted values:
+										 */
+										closeAllLists();
+									});
 					a.appendChild(b);
 				}
+			} else {
+				for (i = 0; i < arr.length; i++) {
+					/*
+					 * check if the item starts with the same
+					 * letters as the text field value:
+					 */
+					if (arr[i].substr(0, val.length)
+							.toUpperCase() == val.toUpperCase()) {
+						/*
+						 * create a DIV element for each
+						 * matching element:
+						 */
+						b = document.createElement("DIV");
+						/* make the matching letters bold: */
+						b.innerHTML = "<strong>"
+								+ arr[i].substr(0, val.length)
+								+ "</strong>";
+						b.innerHTML += arr[i]
+								.substr(val.length);
+						/*
+						 * insert a input field that will hold
+						 * the current array item's value:
+						 */
+						b.innerHTML += "<input type='hidden' value='"
+								+ arr[i] + "'>";
+						/*
+						 * execute a function when someone
+						 * clicks on the item value (DIV
+						 * element):
+						 */
+						b
+								.addEventListener(
+										"click",
+										function(e) {
+											/*
+											 * insert the value
+											 * for the
+											 * autocomplete text
+											 * field:
+											 */
+
+											store.getState().jsonforms.core.data[fieldName] = this
+													.getElementsByTagName("input")[0].value;
+
+											store
+													.dispatch(Actions
+															.init(
+																	store
+																			.getState().jsonforms.core.data,
+																	schema,
+																	uischema));
+											/*
+											 * close the list of
+											 * autocompleted
+											 * values, (or any
+											 * other open lists
+											 * of autocompleted
+											 * values:
+											 */
+											closeAllLists();
+										});
+						a.appendChild(b);
+					}
+				}
 			}
-		});
+		}
+		$(inp).addClass('domdsdsd');
+		/* execute a function when someone writes in the text field: */
+		inp
+				.addEventListener(
+						"input",inputHandler
+						);
 		/* execute a function presses a key on the keyboard: */
 		inp.addEventListener("keydown", function(e) {
 			
 			var x = document.getElementById(this.id + "autocomplete-list");
+			
 			if (x)
 				x = x.getElementsByTagName("div");
 			if (e.keyCode == 40) {
-				
 				/*
 				 * If the arrow DOWN key is pressed, increase the currentFocus
 				 * variable:
 				 */
-				currentFocus++;
-				
+				console.log(x);
+				if(x == null){
+					inputHandler(e);
+				}else{
+					currentFocus++;
+					addActive(x);
+				}
 				/* and and make the current item more visible: */
-				addActive(x);	
-				
 				
 			} else if (e.keyCode == 38) { // up
 				/*

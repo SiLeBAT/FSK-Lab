@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Trigger Auto complete feature on Arrow down click in Editor JS and Joiner to show all controlled vocabularies associated with this field.
+
 ## [1.4.3] - 2018-12-19
 
 ### Fixed
