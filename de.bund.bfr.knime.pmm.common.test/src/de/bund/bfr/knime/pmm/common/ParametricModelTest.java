@@ -488,4 +488,32 @@ public class ParametricModelTest {
 		assertNull(catModel.comment);
 		assertEquals("id", catModel.dbuuid);
 	}
+	
+	@Test
+	public void testGetEstModel() {
+		ParametricModel model = new ParametricModel();
+		model.estModelId = 0;
+		model.fittedModelName = "name";
+		model.setRss(null);
+		model.setRms(null);
+		model.setRsquared(null);
+		model.setAic(null);
+		model.setBic(null);
+		model.isChecked = true;
+		model.qualityScore = 0;
+		model.estimatedModelDbUuid = "id";
+		
+		EstModelXml estimatedModel = (EstModelXml) model.getEstModel().get(0);
+		assertEquals(0, estimatedModel.id.intValue());
+		assertEquals("name", estimatedModel.name);
+		assertNull(estimatedModel.sse);
+		assertTrue(Double.isNaN(estimatedModel.rms));
+		assertTrue(Double.isNaN(estimatedModel.r2));
+		assertTrue(Double.isNaN(estimatedModel.aic));
+		assertTrue(Double.isNaN(estimatedModel.bic));
+		assertNull(estimatedModel.dof);
+		assertTrue(estimatedModel.checked);
+		assertEquals(0, estimatedModel.qualityScore.intValue());
+		assertEquals("id", estimatedModel.dbuuid);
+	}
 }
