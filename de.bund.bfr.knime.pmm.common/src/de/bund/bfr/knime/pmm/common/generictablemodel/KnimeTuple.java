@@ -37,6 +37,9 @@ import org.knime.core.data.xml.XMLCell;
 import de.bund.bfr.knime.pmm.common.CellIO;
 import de.bund.bfr.knime.pmm.common.PmmException;
 import de.bund.bfr.knime.pmm.common.PmmXmlDoc;
+import de.bund.bfr.knime.pmm.extendedtable.Model1Metadata;
+import de.bund.bfr.knime.pmm.extendedtable.Model2Metadata;
+import de.bund.bfr.knime.pmm.extendedtable.TimeSeriesMetadata;
 
 public class KnimeTuple implements DataRow {
 
@@ -379,6 +382,15 @@ public class KnimeTuple implements DataRow {
 			case KnimeAttribute.TYPE_XML:
 				if (obj instanceof PmmXmlDoc) {
 					cell[i] = CellIO.createXmlCell((PmmXmlDoc) obj);
+					break;
+				} else if (obj instanceof TimeSeriesMetadata) {
+					cell[i] = CellIO.createXmlCell((TimeSeriesMetadata) obj);
+					break;
+				} else if (obj instanceof Model1Metadata) {
+					cell[i] = CellIO.createXmlCell((Model1Metadata) obj);
+					break;
+				} else if (obj instanceof Model2Metadata) {
+					cell[i] = CellIO.createXmlCell((Model2Metadata) obj);
 					break;
 				}
 				throw new PmmException("Bad value type");

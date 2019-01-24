@@ -8,6 +8,7 @@ import org.junit.Test;
 import de.bund.bfr.knime.pmm.common.PmmException;
 import de.bund.bfr.knime.pmm.common.PmmXmlDoc;
 import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeSchema;
+import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeTuple;
 
 public class KnimeTupleTest {
 	

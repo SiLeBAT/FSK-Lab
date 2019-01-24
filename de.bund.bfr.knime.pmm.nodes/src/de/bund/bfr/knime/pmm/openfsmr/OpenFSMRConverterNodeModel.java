@@ -43,7 +43,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelStringArray;
 
 import de.bund.bfr.knime.pmm.FSMRUtils;
 import de.bund.bfr.knime.pmm.common.KnimeUtils;
-import de.bund.bfr.knime.pmm.extendedtable.generictablemodel.KnimeTuple;
+import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeTuple;
 import de.bund.bfr.openfsmr.FSMRTemplate;
 import de.bund.bfr.pmfml.ModelType;
 import de.bund.bfr.pmfml.file.ExperimentalDataFile;
