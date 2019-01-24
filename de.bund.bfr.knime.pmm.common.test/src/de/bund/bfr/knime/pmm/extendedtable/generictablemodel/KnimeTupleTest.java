@@ -1,4 +1,4 @@
-package de.bund.bfr.knime.pmm.common.generictablemodel;
+package de.bund.bfr.knime.pmm.extendedtable.generictablemodel;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import de.bund.bfr.knime.pmm.common.PmmException;
 import de.bund.bfr.knime.pmm.common.PmmXmlDoc;
+import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeSchema;
 
 public class KnimeTupleTest {
 	
