@@ -44,9 +44,9 @@ import org.sbml.jsbml.ext.comp.CompSBMLDocumentPlugin;
 import org.sbml.jsbml.ext.comp.ModelDefinition;
 import org.sbml.jsbml.util.filters.Filter;
 
+import de.bund.bfr.knime.pmm.common.generictablemodel.KnimeTuple;
 import de.bund.bfr.knime.pmm.common.units.UnitsFromDB;
 import de.bund.bfr.knime.pmm.dbutil.DBUnits;
-import de.bund.bfr.knime.pmm.extendedtable.generictablemodel.KnimeTuple;
 import de.bund.bfr.knime.pmm.openfsmr.OpenFSMRSchema;
 import de.bund.bfr.openfsmr.FSMRTemplate;
 import de.bund.bfr.openfsmr.FSMRTemplateImpl;

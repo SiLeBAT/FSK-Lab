@@ -19,6 +19,7 @@
  *******************************************************************************/
 package de.bund.bfr.knime.pmm.common.generictablemodel;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -36,6 +37,9 @@ import org.knime.core.data.xml.XMLCell;
 import de.bund.bfr.knime.pmm.common.CellIO;
 import de.bund.bfr.knime.pmm.common.PmmException;
 import de.bund.bfr.knime.pmm.common.PmmXmlDoc;
+import de.bund.bfr.knime.pmm.extendedtable.Model1Metadata;
+import de.bund.bfr.knime.pmm.extendedtable.Model2Metadata;
+import de.bund.bfr.knime.pmm.extendedtable.TimeSeriesMetadata;
 
 public class KnimeTuple implements DataRow {
 
@@ -45,63 +49,53 @@ public class KnimeTuple implements DataRow {
 	public KnimeTuple(KnimeSchema schema) throws PmmException {
 		setSchema(schema);
 		cell = new DataCell[schema.size()];
-		for (int i = 0; i < schema.size(); i++) {
-			cell[i] = CellIO.createMissingCell();			
+		Arrays.fill(cell, CellIO.createMissingCell());
+	}
+
+	public KnimeTuple(KnimeSchema schema, DataTableSpec spec, DataRow row) throws PmmException {
+
+		this(schema);
+
+		int i, j;
+
+		for (i = 0; i < schema.size(); i++)
+			for (j = 0; j < row.getNumCells(); j++)
+				if (schema.getName(i).equals(spec.getColumnSpec(j).getName()))
+					cell[i] = row.getCell(j);
+
+		for (i = 0; i < schema.size(); i++) {
+
+			if (cell[i].isMissing())
+				continue;
+
+			switch (schema.getType(i)) {
+
+			case KnimeAttribute.TYPE_INT:
+				if (!(cell[i] instanceof IntCell))
+					throw new PmmException("Expected attribute '" + schema.getName(i) + "' to be IntCell.");
+				break;
+
+			case KnimeAttribute.TYPE_DOUBLE:
+				if (!(cell[i] instanceof DoubleCell))
+					throw new PmmException("Expected attribute '" + schema.getName(i) + "' to be DoubleCell.");
+				break;
+
+			case KnimeAttribute.TYPE_XML:
+				if (!(cell[i] instanceof StringValue))
+					throw new PmmException("Expected attribute '" + schema.getName(i) + "' to be XMLCell.");
+				break;
+
+			default:
+				if (!(cell[i] instanceof StringCell))
+					throw new PmmException("Expected attribute '" + schema.getName(i) + "' to be StringCell.");
+			}
 		}
 	}
 
-	public KnimeTuple( KnimeSchema schema, DataTableSpec spec, DataRow row )
-	throws PmmException {
-
-		this( schema );
-
-		int i, j;		
-		
-		for( i = 0; i < schema.size(); i++ )
-			for( j = 0; j < row.getNumCells(); j++ )
-				if( schema.getName( i ).equals( spec.getColumnSpec( j ).getName() ) )
-					cell[ i ] = row.getCell( j );
-		
-		for( i = 0; i < schema.size(); i++ ) {
-			
-			if( cell[ i ].isMissing() )
-				continue;
-			
-			switch( schema.getType( i ) ) {
-			
-				case KnimeAttribute.TYPE_INT :
-					if( !( cell[ i ] instanceof IntCell ) )
-						throw new PmmException( "Expected attribute '"
-						+schema.getName( i )+"' to be IntCell." );
-					break;
-					
-				case KnimeAttribute.TYPE_DOUBLE :
-					if( !( cell[ i ] instanceof DoubleCell ) )
-						throw new PmmException( "Expected attribute '"
-								+schema.getName( i )+"' to be DoubleCell." );
-					break;
-					
-				case KnimeAttribute.TYPE_XML :
-					if( !( cell[ i ] instanceof StringValue ) )
-						throw new PmmException( "Expected attribute '"
-								+schema.getName( i )+"' to be XMLCell." );
-					break;
-
-				default :
-					if( !( cell[ i ] instanceof StringCell ) )
-						throw new PmmException( "Expected attribute '"
-								+schema.getName( i )+"' to be StringCell." );
-			}			
-		}		
-	}
-
-	public KnimeTuple(final KnimeSchema commonSchema, final KnimeTuple set1,
-			final KnimeTuple set2) throws PmmException {
+	public KnimeTuple(final KnimeSchema commonSchema, final KnimeTuple set1, final KnimeTuple set2)
+			throws PmmException {
 
 		this(commonSchema);
-
-		int i;
-		String name;
 
 		if (!commonSchema.conforms(set1.getSchema()))
 			throw new PmmException("Set 1 does not conform common schema.");
@@ -109,21 +103,19 @@ public class KnimeTuple implements DataRow {
 		if (!commonSchema.conforms(set2.getSchema()))
 			throw new PmmException("Set 2 does not conform common schema.");
 
-		for (i = 0; i < set1.size(); i++) {
-
-			name = set1.getName(i);
+		for (int i = 0; i < set1.size(); i++) {
+			String name = set1.getName(i);
 			setCell(name, set1.getCell(i));
 		}
 
-		for (i = 0; i < set2.size(); i++) {
-
-			name = set2.getName(i);
+		for (int i = 0; i < set2.size(); i++) {
+			String name = set2.getName(i);
 			setCell(name, set2.getCell(i));
 		}
 	}
 
-	public static KnimeTuple merge(final KnimeSchema commonSchema,
-			final KnimeTuple set1, final KnimeTuple set2) throws PmmException {
+	public static KnimeTuple merge(final KnimeSchema commonSchema, final KnimeTuple set1, final KnimeTuple set2)
+			throws PmmException {
 		return new KnimeTuple(commonSchema, set1, set2);
 	}
 
@@ -158,13 +150,12 @@ public class KnimeTuple implements DataRow {
 	public boolean isNull(final String attName) throws PmmException {
 		return isNull(getIndex(attName));
 	}
-	
+
 	public DataCell getCell(final String attName) throws PmmException {
 		return cell[getIndex(attName)];
 	}
 
-	public void setCell(final String attName, DataCell cell)
-			throws PmmException {
+	public void setCell(final String attName, DataCell cell) throws PmmException {
 		setCell(getIndex(attName), cell);
 	}
 
@@ -210,8 +201,7 @@ public class KnimeTuple implements DataRow {
 
 		case KnimeAttribute.TYPE_INT:
 		case KnimeAttribute.TYPE_DOUBLE:
-			throw new PmmException(
-					"String cell cannot be put into int/double attributes");
+			throw new PmmException("String cell cannot be put into int/double attributes");
 
 		default:
 			cell[i] = c;
@@ -224,16 +214,14 @@ public class KnimeTuple implements DataRow {
 		switch (schema.getType(i)) {
 
 		case KnimeAttribute.TYPE_INT:
-			throw new PmmException(
-					"Int cell cannot be put into double attribute.");
+			throw new PmmException("Int cell cannot be put into double attribute.");
 
 		case KnimeAttribute.TYPE_DOUBLE:
 			cell[i] = c;
 			break;
 
 		default:
-			throw new PmmException(
-					"Only string cells can be put into this attribute.");
+			throw new PmmException("Only string cells can be put into this attribute.");
 		}
 	}
 
@@ -246,36 +234,32 @@ public class KnimeTuple implements DataRow {
 			break;
 
 		case KnimeAttribute.TYPE_DOUBLE:
-			throw new PmmException(
-					"Only double cells can be put into this attribute.");
+			throw new PmmException("Only double cells can be put into this attribute.");
 
 		default:
-			throw new PmmException(
-					"Only string cells can be put into this attribute.");
+			throw new PmmException("Only string cells can be put into this attribute.");
 		}
 	}
 
 	protected void setCell(final int i, final XMLCell c) throws PmmException {
 		switch (schema.getType(i)) {
-			case KnimeAttribute.TYPE_XML:
-				cell[i] = c;
-				break;
-	
-			default:
-				throw new PmmException(
-						"Some cells are not allowed for XML Types");
+		case KnimeAttribute.TYPE_XML:
+			cell[i] = c;
+			break;
+
+		default:
+			throw new PmmException("Some cells are not allowed for XML Types");
 		}
 	}
-	
+
 	protected void setCell(final int i, final XMLBlobCell c) throws PmmException {
 		switch (schema.getType(i)) {
-			case KnimeAttribute.TYPE_XML:
-				cell[i] = c;
-				break;
-	
-			default:
-				throw new PmmException(
-						"Some cells are not allowed for XML Types");
+		case KnimeAttribute.TYPE_XML:
+			cell[i] = c;
+			break;
+
+		default:
+			throw new PmmException("Some cells are not allowed for XML Types");
 		}
 	}
 
@@ -311,8 +295,7 @@ public class KnimeTuple implements DataRow {
 			throw new PmmException("Will not cast string to double.");
 
 		default:
-			throw new PmmException(
-					"Comma separated type cannot be cast to double.");
+			throw new PmmException("Comma separated type cannot be cast to double.");
 		}
 	}
 
@@ -330,24 +313,23 @@ public class KnimeTuple implements DataRow {
 			throw new PmmException("Will not cast string to double.");
 
 		default:
-			throw new PmmException(
-					"Comma separated type cannot be cast to int.");
+			throw new PmmException("Comma separated type cannot be cast to int.");
 		}
 	}
 
 	private PmmXmlDoc getPmmXml(final int i) throws PmmException {
 		switch (schema.getType(i)) {
-			
-			case KnimeAttribute.TYPE_XML:
-				
-				if( cell[ i ] instanceof StringValue || cell[ i ].isMissing())
-					return CellIO.getPmmXml( cell[i] );
-				
-			default:
-				throw new PmmException(
-				"Type cannot be cast to XML.");
+
+		case KnimeAttribute.TYPE_XML:
+
+			if (cell[i] instanceof StringValue || cell[i].isMissing())
+				return CellIO.getPmmXml(cell[i]);
+
+		default:
+			throw new PmmException("Type cannot be cast to XML.");
 		}
 	}
+
 	private String getString(final int i) {
 
 		switch (schema.getType(i)) {
@@ -368,8 +350,10 @@ public class KnimeTuple implements DataRow {
 	}
 
 	private void setValue(final int i, final Object obj) throws PmmException {
-		if (obj == null) cell[i] = CellIO.createMissingCell();
-		else switch (schema.getType(i)) {
+		if (obj == null)
+			cell[i] = CellIO.createMissingCell();
+		else
+			switch (schema.getType(i)) {
 			case KnimeAttribute.TYPE_INT:
 				if (obj instanceof Integer) {
 					cell[i] = CellIO.createCell((Integer) obj);
@@ -394,10 +378,19 @@ public class KnimeTuple implements DataRow {
 				if (!(obj instanceof String))
 					throw new PmmException("Value must be string.");
 				cell[i] = CellIO.createCell((String) obj);
-				break;			
-			case KnimeAttribute.TYPE_XML :
+				break;
+			case KnimeAttribute.TYPE_XML:
 				if (obj instanceof PmmXmlDoc) {
 					cell[i] = CellIO.createXmlCell((PmmXmlDoc) obj);
+					break;
+				} else if (obj instanceof TimeSeriesMetadata) {
+					cell[i] = CellIO.createXmlCell((TimeSeriesMetadata) obj);
+					break;
+				} else if (obj instanceof Model1Metadata) {
+					cell[i] = CellIO.createXmlCell((Model1Metadata) obj);
+					break;
+				} else if (obj instanceof Model2Metadata) {
+					cell[i] = CellIO.createXmlCell((Model2Metadata) obj);
 					break;
 				}
 				throw new PmmException("Bad value type");
@@ -430,7 +423,6 @@ public class KnimeTuple implements DataRow {
 		public void remove() throws UnsupportedOperationException {
 			throw new UnsupportedOperationException();
 		}
-
 	}
 
 }
