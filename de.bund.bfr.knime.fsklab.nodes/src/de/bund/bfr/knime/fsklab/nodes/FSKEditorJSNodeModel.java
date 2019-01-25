@@ -45,10 +45,12 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.web.ValidationError;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
@@ -139,9 +141,6 @@ final class FSKEditorJSNodeModel
      * }
      * 
      * */
- 
-    
-    
     
     return null;
 
@@ -159,6 +158,7 @@ final class FSKEditorJSNodeModel
         val = createEmptyViewValue();
       }
     }
+
     return val;
   }
 
@@ -198,7 +198,7 @@ final class FSKEditorJSNodeModel
 
     FskPortObject inObj1;
     FskPortObject outObj;
-
+   
     if (inObjects.length > 0 && inObjects[0] != null) {
       inObj1 = (FskPortObject) inObjects[0];
     } else {
@@ -249,6 +249,11 @@ final class FSKEditorJSNodeModel
 
         exec.setProgress(1);
       }
+      else {
+        if(fskEditorProxyValue.isNotCompleted()) {
+          setWarningMessage("Output Parameters are not configured correctly");
+        }
+      }
       outObj = inObj1;
 
       outObj.generalInformation =
@@ -268,7 +273,6 @@ final class FSKEditorJSNodeModel
 
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
-      LOGGER.info("JS EDITOR  " + fskEditorProxyValue.getResourcesFiles());
 
       // resources files via fskEditorProxyValue will be available only in online mode of the JS
       // editor
