@@ -32,7 +32,6 @@ Export-Package: de.bund.bfr.knime.pmm.common,
  de.bund.bfr.knime.pmm.common.ui,
  de.bund.bfr.knime.pmm.common.units,
  de.bund.bfr.knime.pmm.extendedtable,
- de.bund.bfr.knime.pmm.extendedtable.generictablemodel,
  de.bund.bfr.knime.pmm.extendedtable.items,
  de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel
 Automatic-Module-Name: de.bund.bfr.knime.pmm.common
