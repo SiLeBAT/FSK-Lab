@@ -431,7 +431,7 @@ fskeditorjs = function() {
 
 		prepareData(_firstModel);
 		create_body();
-
+		
 	};
 	function prepareData(_firstModel) {
 		// prepare generalInformation
@@ -476,15 +476,55 @@ fskeditorjs = function() {
 				: [];
 		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory != null ? _firstModel.dataBackground.laboratory
 				: [];
-
+		
 	}
+	window.outputParameterNotDefined = false; 
+	joinerNode.validate = function() {
+		if(noValidation){
+			return true;
+		}else{
+		if (window.firstModelScript && window.firstModelScript.save) {
+			window.firstModelScript.save();
+		}
+		if (window.firstModelViz && window.firstModelViz.save) {
+			window.firstModelViz.save();
+		}
+		
+		$.each(window.modelMath.parameter,function(index, param){
+			if(param.parameterClassification == "Output"){
+				parameterID = param.parameterID;
+				const re1 = new RegExp(parameterID +"\\s*<-")
+				const re2 = new RegExp(parameterID +"\\s*=")
+				
+				if(_viewValue.firstModelScript.search(re1) == -1  && _viewValue.firstModelScript.search(re2) == -1){
+					window.outputParameterNotDefined = true;
+				}
+			}
+		})		
+		if(window.outputParameterNotDefined){
+			if (parent !== undefined && parent.KnimePageLoader !== undefined) {    
+				swal({
+				  title: "Are you sure?",
+				  text: "One of the output parameters or more is not declared in your Model script! Do you want to save anyway?!",
+				  icon: "warning",
+				  buttons: true,
+				  dangerMode: true,
+				})
+				.then((saveAnyway) => {
+				  if (saveAnyway) {
+					  noValidation = true;
+				  }
+				});
+			   return false;
+			}
+		}
+		}
+		return true;
+	}
+	noValidation = false
+	
 	joinerNode.displayErrors = function(error) {
-		swal({
-			  type: 'error',
-			  title: "Missing or incorrect values",
-			  text: 'Please correct values listed below!',
-			  footer: error
-			})
+		
 	}
 	joinerNode.getComponentValue = function() {
 		window.store1.getState().jsonforms.core.data.author = window.store23
@@ -505,12 +545,14 @@ fskeditorjs = function() {
 		if (window.firstModelViz && window.firstModelViz.save) {
 			window.firstModelViz.save();
 		}
-
+		
+		
 		_viewValue.firstModelScript = $('#firstModelScript').val();
 		_viewValue.firstModelViz = $('#firstModelViz').val();
 		
 		_viewValue.resourcesFiles = resourcesFiles;
 		_viewValue.serverName = server;
+		_viewValue.notCompleted = ""+window.outputParameterNotDefined;
 		
 		return _viewValue;
 	};

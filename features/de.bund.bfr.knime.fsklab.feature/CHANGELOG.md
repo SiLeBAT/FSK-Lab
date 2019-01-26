@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Trigger Auto complete feature on Arrow down click in Editor JS and Joiner to show all controlled vocabularies associated with this field.
+- Validate the declaration of Output parameters(which are defined in the metadata) in the model script and add warning to the node if they are not so.
 
 ## [1.4.3] - 2018-12-19
 
