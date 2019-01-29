@@ -37,11 +37,7 @@ public class CategoryReader {
 	private Map<String, Category> categories;
 
 	private CategoryReader() {
-		UnitsFromDB unitDB = new UnitsFromDB();
-
-		unitDB.askDB();
-
-		Map<Integer, UnitsFromDB> map = unitDB.getMap();
+		Map<Integer, UnitsFromDB> map = UnitsFromDB.askDB();
 
 		categories = new LinkedHashMap<>();
 

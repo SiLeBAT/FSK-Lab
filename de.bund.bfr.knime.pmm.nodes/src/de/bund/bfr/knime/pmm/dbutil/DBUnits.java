@@ -33,12 +33,9 @@ public class DBUnits {
   /** Get units from DB with their display strings as keys */
   public synchronized static Map<String, UnitsFromDB> getDBUnits() {
     if (dbUnits == null) {
-      UnitsFromDB tempUnits = new UnitsFromDB();
-      tempUnits.askDB();
-
       // Create unit map with unit display as keys
       dbUnits = new HashMap<>();
-      for (UnitsFromDB ufdb : tempUnits.getMap().values()) {
+      for (UnitsFromDB ufdb : UnitsFromDB.askDB().values()) {
           dbUnits.put(ufdb.displayInGuiAs, ufdb);
       }
     }

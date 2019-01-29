@@ -26,7 +26,6 @@ import java.util.Map;
 
 import org.hsh.bfr.db.DBKernel;
 
-
 public class UnitsFromDB {
 
 	public final int id;
@@ -42,28 +41,11 @@ public class UnitsFromDB {
 	public final String displayInGuiAs;
 	public final String mathMlString;
 	public final String priorityForDisplayInGui;
-	
-	private Map<Integer, UnitsFromDB> ghm;
-	
-	public UnitsFromDB() {
-		id = 0;
-		unit = null;
-		description = null;
-		name = null;
-		kindOfPropertyQuantity = null;
-		notationCaseSensitive = null;
-		convertTo = null;
-		conversionFunctionFactor = null;
-		inverseConversionFunctionFactor = null;
-		objectType = null;
-		displayInGuiAs = null;
-		mathMlString = null;
-		priorityForDisplayInGui = null;
-	}
-	
-	private UnitsFromDB(int id, String unit, String description, String name, String kind_of_property_quantity,
-			String notation_case_sensitive, String convert_to, String conversion_function_factor, String inverse_conversion_function_factor,
-			String object_type, String display_in_GUI_as, String MathML_string, String Priority_for_display_in_GUI) {
+
+	public UnitsFromDB(int id, String unit, String description, String name, String kind_of_property_quantity,
+			String notation_case_sensitive, String convert_to, String conversion_function_factor,
+			String inverse_conversion_function_factor, String object_type, String display_in_GUI_as,
+			String MathML_string, String Priority_for_display_in_GUI) {
 		this.id = id;
 		this.unit = unit;
 		this.description = description;
@@ -78,24 +60,26 @@ public class UnitsFromDB {
 		this.mathMlString = MathML_string;
 		this.priorityForDisplayInGui = Priority_for_display_in_GUI;
 	}
-	
-	public void askDB() {
-		ghm = new LinkedHashMap<>();
+
+	public static Map<Integer, UnitsFromDB> askDB() {
+		LinkedHashMap<Integer, UnitsFromDB> ghm = new LinkedHashMap<>();
 		ResultSet rs = DBKernel.getResultSet("SELECT * FROM " + DBKernel.delimitL("Einheiten"), true);
 		try {
 			if (rs != null && rs.first()) {
 				do {
-					UnitsFromDB ufdb = new UnitsFromDB(rs.getInt("ID"), rs.getString("Einheit"), rs.getString("Beschreibung"), rs.getString("name"), rs.getString("kind of property / quantity"),
-							rs.getString("notation case sensitive"), rs.getString("convert to"), rs.getString("conversion function / factor"), rs.getString("inverse conversion function / factor"),
-							rs.getString("object type"), rs.getString("display in GUI as"), rs.getString("MathML string"), rs.getString("Priority for display in GUI"));
+					UnitsFromDB ufdb = new UnitsFromDB(rs.getInt("ID"), rs.getString("Einheit"),
+							rs.getString("Beschreibung"), rs.getString("name"),
+							rs.getString("kind of property / quantity"), rs.getString("notation case sensitive"),
+							rs.getString("convert to"), rs.getString("conversion function / factor"),
+							rs.getString("inverse conversion function / factor"), rs.getString("object type"),
+							rs.getString("display in GUI as"), rs.getString("MathML string"),
+							rs.getString("Priority for display in GUI"));
 					ghm.put(ufdb.id, ufdb);
-				} while(rs.next());
+				} while (rs.next());
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		catch (SQLException e) {e.printStackTrace();}
-	}
-	
-	public Map<Integer, UnitsFromDB> getMap() {
 		return ghm;
 	}
 }
