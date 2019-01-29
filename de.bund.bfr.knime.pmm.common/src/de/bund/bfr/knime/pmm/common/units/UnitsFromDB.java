@@ -29,25 +29,38 @@ import org.hsh.bfr.db.DBKernel;
 
 public class UnitsFromDB {
 
-	private int id;
-	private String unit;
-	private String description;
-	private String name;
-	private String kind_of_property_quantity;
-	private String notation_case_sensitive;
-	private String convert_to;
-	private String conversion_function_factor;
-	private String inverse_conversion_function_factor;
-	private String object_type;
-	private String display_in_GUI_as;
-	private String MathML_string;
-	private String Priority_for_display_in_GUI;
+	public final int id;
+	public final String unit;
+	public final String description;
+	public final String name;
+	public final String kindOfPropertyQuantity;
+	public final String notationCaseSensitive;
+	public final String convertTo;
+	public final String conversionFunctionFactor;
+	public final String inverseConversionFunctionFactor;
+	public final String objectType;
+	public final String displayInGuiAs;
+	public final String mathMlString;
+	public final String priorityForDisplayInGui;
 	
 	private Map<Integer, UnitsFromDB> ghm;
 	
 	public UnitsFromDB() {
-		
+		id = 0;
+		unit = null;
+		description = null;
+		name = null;
+		kindOfPropertyQuantity = null;
+		notationCaseSensitive = null;
+		convertTo = null;
+		conversionFunctionFactor = null;
+		inverseConversionFunctionFactor = null;
+		objectType = null;
+		displayInGuiAs = null;
+		mathMlString = null;
+		priorityForDisplayInGui = null;
 	}
+	
 	private UnitsFromDB(int id, String unit, String description, String name, String kind_of_property_quantity,
 			String notation_case_sensitive, String convert_to, String conversion_function_factor, String inverse_conversion_function_factor,
 			String object_type, String display_in_GUI_as, String MathML_string, String Priority_for_display_in_GUI) {
@@ -55,15 +68,15 @@ public class UnitsFromDB {
 		this.unit = unit;
 		this.description = description;
 		this.name = name;
-		this.kind_of_property_quantity = kind_of_property_quantity;
-		this.notation_case_sensitive = notation_case_sensitive;
-		this.convert_to = convert_to;
-		this.conversion_function_factor = conversion_function_factor;
-		this.inverse_conversion_function_factor = inverse_conversion_function_factor;
-		this.object_type = object_type;
-		this.display_in_GUI_as = display_in_GUI_as;
-		this.MathML_string = MathML_string;
-		this.Priority_for_display_in_GUI = Priority_for_display_in_GUI;
+		this.kindOfPropertyQuantity = kind_of_property_quantity;
+		this.notationCaseSensitive = notation_case_sensitive;
+		this.convertTo = convert_to;
+		this.conversionFunctionFactor = conversion_function_factor;
+		this.inverseConversionFunctionFactor = inverse_conversion_function_factor;
+		this.objectType = object_type;
+		this.displayInGuiAs = display_in_GUI_as;
+		this.mathMlString = MathML_string;
+		this.priorityForDisplayInGui = Priority_for_display_in_GUI;
 	}
 	
 	public void askDB() {
@@ -75,7 +88,7 @@ public class UnitsFromDB {
 					UnitsFromDB ufdb = new UnitsFromDB(rs.getInt("ID"), rs.getString("Einheit"), rs.getString("Beschreibung"), rs.getString("name"), rs.getString("kind of property / quantity"),
 							rs.getString("notation case sensitive"), rs.getString("convert to"), rs.getString("conversion function / factor"), rs.getString("inverse conversion function / factor"),
 							rs.getString("object type"), rs.getString("display in GUI as"), rs.getString("MathML string"), rs.getString("Priority for display in GUI"));
-					ghm.put(ufdb.getId(), ufdb);
+					ghm.put(ufdb.id, ufdb);
 				} while(rs.next());
 			}
 		}
@@ -84,57 +97,5 @@ public class UnitsFromDB {
 	
 	public Map<Integer, UnitsFromDB> getMap() {
 		return ghm;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getUnit() {
-		return unit;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getKind_of_property_quantity() {
-		return kind_of_property_quantity;
-	}
-
-	public String getNotation_case_sensitive() {
-		return notation_case_sensitive;
-	}
-
-	public String getConvert_to() {
-		return convert_to;
-	}
-
-	public String getConversion_function_factor() {
-		return conversion_function_factor;
-	}
-
-	public String getInverse_conversion_function_factor() {
-		return inverse_conversion_function_factor;
-	}
-
-	public String getObject_type() {
-		return object_type;
-	}
-
-	public String getDisplay_in_GUI_as() {
-		return display_in_GUI_as;
-	}
-
-	public String getMathML_string() {
-		return MathML_string;
-	}
-
-	public String getPriority_for_display_in_GUI() {
-		return Priority_for_display_in_GUI;
 	}
 }

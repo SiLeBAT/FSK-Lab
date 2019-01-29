@@ -223,7 +223,7 @@ public class WriterUtils {
 
 		UnitsFromDB dbUnit = DBUnits.getDBUnits().get(unit);
 
-		String mathml = dbUnit.getMathML_string();
+		String mathml = dbUnit.mathMlString;
 		if (mathml != null && !mathml.isEmpty()) {
 
 			// Parse transformation name if present

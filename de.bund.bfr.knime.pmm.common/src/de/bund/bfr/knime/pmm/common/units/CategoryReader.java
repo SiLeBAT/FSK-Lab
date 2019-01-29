@@ -46,7 +46,7 @@ public class CategoryReader {
 		categories = new LinkedHashMap<>();
 
 		for (UnitsFromDB unit : map.values()) {
-			String categoryName = unit.getKind_of_property_quantity();
+			String categoryName = unit.kindOfPropertyQuantity;
 
 			if (categoryName != null && !categories.containsKey(categoryName)) {
 				categories.put(categoryName, createCategory(map, categoryName));
@@ -70,8 +70,7 @@ public class CategoryReader {
 		return categories;
 	}
 
-	private Category createCategory(Map<Integer, UnitsFromDB> units,
-			String categoryName) {
+	private Category createCategory(Map<Integer, UnitsFromDB> units, String categoryName) {
 		DJep parser = MathUtilities.createParser();
 		Map<String, Node> fromFormulas = new LinkedHashMap<>();
 		Map<String, Node> toFormulas = new LinkedHashMap<>();
@@ -83,45 +82,39 @@ public class CategoryReader {
 		parser.addVariable("x", 0.0);
 
 		for (UnitsFromDB unit : units.values()) {
-			if (!categoryName.equals(unit.getKind_of_property_quantity())) {
+			if (!categoryName.equals(unit.kindOfPropertyQuantity)) {
 				continue;
 			}
 
-			String unitName = unit.getDisplay_in_GUI_as();
+			String unitName = unit.displayInGuiAs;
 
-			sbmlStrings.put(unitName, unit.getMathML_string());
+			sbmlStrings.put(unitName, unit.mathMlString);
 
-			if (unit.getPriority_for_display_in_GUI() != null
-					&& unit.getPriority_for_display_in_GUI().equals("TRUE")) {
+			if (unit.priorityForDisplayInGui != null && unit.priorityForDisplayInGui.equals("TRUE")) {
 				standardUnit = unitName;
 			}
 
-			if (unit.getConversion_function_factor() != null) {
+			if (unit.conversionFunctionFactor != null) {
 				try {
-					fromFormulas.put(unitName,
-							parser.parse(unit.getConversion_function_factor()));
-					fromFormulaStrings.put(unitName,
-							unit.getConversion_function_factor());
+					fromFormulas.put(unitName, parser.parse(unit.conversionFunctionFactor));
+					fromFormulaStrings.put(unitName, unit.conversionFunctionFactor);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			}
 
-			if (unit.getInverse_conversion_function_factor() != null) {
+			if (unit.inverseConversionFunctionFactor != null) {
 				try {
-					toFormulas.put(unitName, parser.parse(unit
-							.getInverse_conversion_function_factor()));
-					toFormulaStrings.put(unitName,
-							unit.getInverse_conversion_function_factor());
+					toFormulas.put(unitName, parser.parse(unit.inverseConversionFunctionFactor));
+					toFormulaStrings.put(unitName, unit.inverseConversionFunctionFactor);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 
-		return new DBCategory(categoryName, standardUnit, fromFormulas,
-				toFormulas, fromFormulaStrings, toFormulaStrings, sbmlStrings,
-				parser);
+		return new DBCategory(categoryName, standardUnit, fromFormulas, toFormulas, fromFormulaStrings,
+				toFormulaStrings, sbmlStrings, parser);
 	}
 
 	private static class DBCategory implements Category {
@@ -135,11 +128,9 @@ public class CategoryReader {
 		private Map<String, String> sbmlStrings;
 		private DJep parser;
 
-		public DBCategory(String name, String standardUnit,
-				Map<String, Node> fromFormulas, Map<String, Node> toFormulas,
-				Map<String, String> fromFormulaStrings,
-				Map<String, String> toFormulaStrings,
-				Map<String, String> sbmlStrings, DJep parser) {
+		public DBCategory(String name, String standardUnit, Map<String, Node> fromFormulas,
+				Map<String, Node> toFormulas, Map<String, String> fromFormulaStrings,
+				Map<String, String> toFormulaStrings, Map<String, String> sbmlStrings, DJep parser) {
 			this.name = name;
 			this.standardUnit = standardUnit;
 			this.fromFormulas = fromFormulas;
@@ -166,8 +157,7 @@ public class CategoryReader {
 		}
 
 		@Override
-		public synchronized Double convert(Double value, String fromUnit,
-				String toUnit) throws ConvertException {
+		public synchronized Double convert(Double value, String fromUnit, String toUnit) throws ConvertException {
 			if (fromUnit != null && fromUnit.equals(toUnit)) {
 				return value;
 			}
@@ -176,19 +166,16 @@ public class CategoryReader {
 				return null;
 			}
 
-			if (fromUnit == null || toUnit == null
-					|| fromFormulas.get(fromUnit) == null
+			if (fromUnit == null || toUnit == null || fromFormulas.get(fromUnit) == null
 					|| toFormulas.get(toUnit) == null) {
 				throw new ConvertException(fromUnit, toUnit);
 			}
 
-			return apply(apply(value, fromFormulas.get(fromUnit)),
-					toFormulas.get(toUnit));
+			return apply(apply(value, fromFormulas.get(fromUnit)), toFormulas.get(toUnit));
 		}
 
 		@Override
-		public String getConversionString(String var, String fromUnit,
-				String toUnit) throws ConvertException {
+		public String getConversionString(String var, String fromUnit, String toUnit) throws ConvertException {
 			String from = fromFormulaStrings.get(fromUnit);
 			String to = toFormulaStrings.get(toUnit);
 

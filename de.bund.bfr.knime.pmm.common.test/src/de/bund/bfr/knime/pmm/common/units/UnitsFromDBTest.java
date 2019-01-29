@@ -11,19 +11,19 @@ public class UnitsFromDBTest {
 	public void testConstructor() {
 		UnitsFromDB unit = new UnitsFromDB();
 		
-		assertEquals(0, unit.getId());
-		assertNull(unit.getUnit());
-		assertNull(unit.getDescription());
-		assertNull(unit.getName());
-		assertNull(unit.getKind_of_property_quantity());
-		assertNull(unit.getNotation_case_sensitive());
-		assertNull(unit.getConvert_to());
-		assertNull(unit.getConversion_function_factor());
-		assertNull(unit.getInverse_conversion_function_factor());
-		assertNull(unit.getObject_type());
-		assertNull(unit.getDisplay_in_GUI_as());
-		assertNull(unit.getMathML_string());
-		assertNull(unit.getPriority_for_display_in_GUI());
+		assertEquals(0, unit.id);
+		assertNull(unit.unit);
+		assertNull(unit.description);
+		assertNull(unit.name);
+		assertNull(unit.kindOfPropertyQuantity);
+		assertNull(unit.notationCaseSensitive);
+		assertNull(unit.convertTo);
+		assertNull(unit.conversionFunctionFactor);
+		assertNull(unit.inverseConversionFunctionFactor);
+		assertNull(unit.objectType);
+		assertNull(unit.displayInGuiAs);
+		assertNull(unit.mathMlString);
+		assertNull(unit.priorityForDisplayInGui);
 	}
 
 }

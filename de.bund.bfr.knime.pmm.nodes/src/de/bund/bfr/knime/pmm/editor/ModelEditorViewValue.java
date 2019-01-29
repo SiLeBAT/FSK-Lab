@@ -212,18 +212,18 @@ public class ModelEditorViewValue extends JSONViewContent {
 		int i = 0;
 		for (UnitsFromDB dbUnit : ufdbs) {
 			Unit u = new Unit();
-			u.id = dbUnit.getId();
-			u.unit = dbUnit.getUnit();
-			u.name = dbUnit.getKind_of_property_quantity();
-			u.kind_of_property_quantity = dbUnit.getKind_of_property_quantity();
-			u.notation_case_sensitive = dbUnit.getNotation_case_sensitive();
-			u.convert_to = dbUnit.getConvert_to();
-			u.conversion_function_factor = dbUnit.getConversion_function_factor();
-			u.inverse_conversion_function_factor = dbUnit.getInverse_conversion_function_factor();
-			u.object_type = dbUnit.getObject_type();
-			u.display_in_GUI_as = dbUnit.getDisplay_in_GUI_as();
-			u.mathML_string = dbUnit.getMathML_string();
-			u.priority_for_display_in_GUI = dbUnit.getPriority_for_display_in_GUI();
+			u.id = dbUnit.id;
+			u.unit = dbUnit.unit;
+			u.name = dbUnit.kindOfPropertyQuantity;
+			u.kind_of_property_quantity = dbUnit.kindOfPropertyQuantity;
+			u.notation_case_sensitive = dbUnit.notationCaseSensitive;
+			u.convert_to = dbUnit.convertTo;
+			u.conversion_function_factor = dbUnit.conversionFunctionFactor;
+			u.inverse_conversion_function_factor = dbUnit.inverseConversionFunctionFactor;
+			u.object_type = dbUnit.objectType;
+			u.display_in_GUI_as = dbUnit.displayInGuiAs;
+			u.mathML_string = dbUnit.mathMlString;
+			u.priority_for_display_in_GUI = dbUnit.priorityForDisplayInGui;
 			units[i] = u;
 			i++;
 		}

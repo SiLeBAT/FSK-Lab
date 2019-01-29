@@ -39,7 +39,7 @@ public class DBUnits {
       // Create unit map with unit display as keys
       dbUnits = new HashMap<>();
       for (UnitsFromDB ufdb : tempUnits.getMap().values()) {
-          dbUnits.put(ufdb.getDisplay_in_GUI_as(), ufdb);
+          dbUnits.put(ufdb.displayInGuiAs, ufdb);
       }
     }
     return dbUnits;

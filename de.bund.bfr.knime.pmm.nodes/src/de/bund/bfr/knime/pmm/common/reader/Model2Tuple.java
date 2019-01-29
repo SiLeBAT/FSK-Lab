@@ -68,7 +68,7 @@ public class Model2Tuple {
 			Map<String, UnitsFromDB> dbUnits = DBUnits.getDBUnits();
 			if (dbUnits.containsKey(unitName)) {
 				UnitsFromDB dbUnit = dbUnits.get(unitName);
-				depXml.category = dbUnit.getKind_of_property_quantity();
+				depXml.category = dbUnit.kindOfPropertyQuantity;
 			}
 
 			// Adds limits
@@ -190,7 +190,7 @@ public class Model2Tuple {
 		if (!unitID.equals(Unit.Kind.DIMENSIONLESS.getName())) {
 			String unitName = unitDefs.get(unitID).getName();
 			paramXml.unit = unitName;
-			paramXml.category = DBUnits.getDBUnits().get(unitName).getKind_of_property_quantity();
+			paramXml.category = DBUnits.getDBUnits().get(unitName).kindOfPropertyQuantity;
 		}
 
 		PMFCoefficient coefficient = SBMLFactory.createPMFCoefficient(param);
@@ -243,7 +243,7 @@ public class Model2Tuple {
 
 			if (DBUnits.getDBUnits().containsKey(unitName)) {
 				UnitsFromDB ufdb = DBUnits.getDBUnits().get(unitName);
-				indepXml.category = ufdb.getKind_of_property_quantity();
+				indepXml.category = ufdb.kindOfPropertyQuantity;
 			}
 		}
 

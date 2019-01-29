@@ -67,7 +67,7 @@ public class Model1Tuple {
 				String depUnitName = model.getUnitDefinition(depUnitID).getName();
 				depXml.unit = depUnitName;
 				if (DBUnits.getDBUnits().containsKey(depUnitName)) {
-					depXml.category = DBUnits.getDBUnits().get(depUnitName).getKind_of_property_quantity();
+					depXml.category = DBUnits.getDBUnits().get(depUnitName).kindOfPropertyQuantity;
 				}
 			}
 		}
@@ -113,7 +113,7 @@ public class Model1Tuple {
 				String unitName = model.getUnitDefinition(unitID).getName();
 				paramXml.unit = unitName;
 				if (DBUnits.getDBUnits().containsKey(unitName)) {
-					paramXml.category = DBUnits.getDBUnits().get(unitName).getKind_of_property_quantity();
+					paramXml.category = DBUnits.getDBUnits().get(unitName).kindOfPropertyQuantity;
 				}
 			}
 

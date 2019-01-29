@@ -403,7 +403,7 @@ abstract class TemplateCreator {
       // Sets variable
       if (!unitId.equals("dimensionless") && DBUnits.getDBUnits().containsKey(var.unit)) {
         UnitsFromDB ufdb = DBUnits.getDBUnits().get(var.unit);
-        String category = ufdb.getKind_of_property_quantity();
+        String category = ufdb.kindOfPropertyQuantity;
         var.var = category + " -> " + var.unit;
       }
     }
@@ -564,7 +564,7 @@ class DataTemplateCreator extends TemplateCreator {
 
     // Sets variable
     if (!unitDef.getId().equals("dimensionless") && DBUnits.getDBUnits().containsKey(unitName)) {
-      String unitCategory = DBUnits.getDBUnits().get(unitName).getKind_of_property_quantity();
+      String unitCategory = DBUnits.getDBUnits().get(unitName).kindOfPropertyQuantity;
       template.setDependentVariable(unitCategory + " -> " + unitName);
     }
 
@@ -585,7 +585,7 @@ class DataTemplateCreator extends TemplateCreator {
 
     // Sets variable
     if (DBUnits.getDBUnits().containsKey(unitName)) {
-      String unitCategory = DBUnits.getDBUnits().get(unitName).getKind_of_property_quantity();
+      String unitCategory = DBUnits.getDBUnits().get(unitName).kindOfPropertyQuantity;
       template.setIndependentVariables(new String[] {unitCategory});
     }
 
@@ -1043,7 +1043,7 @@ class ManualSecondaryModelTemplateCreator extends TemplateCreator {
       // Adds unit category
       if (DBUnits.getDBUnits().containsKey(unitName)) {
         UnitsFromDB ufdb = DBUnits.getDBUnits().get(unitName);
-        String category = ufdb.getKind_of_property_quantity();
+        String category = ufdb.kindOfPropertyQuantity;
         template.setDependentVariable(category + " -> " + unitName);
       }
     }

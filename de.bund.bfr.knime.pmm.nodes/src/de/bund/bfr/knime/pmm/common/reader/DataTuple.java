@@ -49,7 +49,7 @@ public class DataTuple {
 		String concUnitObjectType;
 		if (DBUnits.getDBUnits().containsKey(concUnit)) {
 			UnitsFromDB ufdb = DBUnits.getDBUnits().get(concUnit);
-			concUnitObjectType = ufdb.getObject_type();
+			concUnitObjectType = ufdb.objectType;
 		} else {
 			concUnitObjectType = "";
 		}
