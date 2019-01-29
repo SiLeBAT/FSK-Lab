@@ -9,7 +9,7 @@ public class ConvertExceptionTest {
 	@Test
 	public void test() {
 		ConvertException exception = new ConvertException("fromUnit", "toUnit");
-		assertEquals("fromUnit", exception.getFromUnit());
-		assertEquals("toUnit", exception.getToUnit());
+		assertEquals("fromUnit", exception.fromUnit);
+		assertEquals("toUnit", exception.toUnit);
 	}
 }

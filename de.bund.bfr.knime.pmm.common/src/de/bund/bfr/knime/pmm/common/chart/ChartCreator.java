@@ -434,7 +434,7 @@ public class ChartCreator extends ChartPanel {
 			warning += "Uncovertable units: ";
 
 			for (ConvertException e : convertExceptions) {
-				warning += e.getFromUnit() + "->" + e.getToUnit() + ", ";
+				warning += e.fromUnit + "->" + e.toUnit + ", ";
 			}
 
 			warning = warning.substring(0, warning.length() - 2);
