@@ -22,6 +22,7 @@ package de.bund.bfr.knime.pmm.common.units;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Categories {
 
@@ -76,8 +77,7 @@ public class Categories {
 				if (o instanceof Category) {
 					units.addAll(((Category) o).getAllUnits());
 				} else if (o instanceof String) {
-					units.addAll(Categories.getCategory((String) o)
-							.getAllUnits());
+					units.addAll(Categories.getCategory((String) o).getAllUnits());
 				}
 			}
 		}
@@ -94,24 +94,15 @@ public class Categories {
 	}
 
 	public static List<String> getConcentrations() {
-		return Arrays.asList("Number Content (count/mass)",
-				"Number Concentration (count/vol)",
-				"Number Aeric (number/area)", "Number",
-				"Number Concentration Difference", "Number Content Difference",
-				"Number Difference", "Number Fraction", "Arbitrary Fraction",
-				"Energy Content", "Energy Content Rate", "Mass",
-				"Mass Concentration", "Mass Ratio", "Mole Content",
-				"True/False Value", "Volume Concentration", "Volume Ratio");
+		return Arrays.asList("Number Content (count/mass)", "Number Concentration (count/vol)",
+				"Number Aeric (number/area)", "Number", "Number Concentration Difference", "Number Content Difference",
+				"Number Difference", "Number Fraction", "Arbitrary Fraction", "Energy Content", "Energy Content Rate",
+				"Mass", "Mass Concentration", "Mass Ratio", "Mole Content", "True/False Value", "Volume Concentration",
+				"Volume Ratio");
 	}
 
 	public static List<Category> getConcentrationCategories() {
-		List<Category> categories = new ArrayList<>();
-
-		for (String name : getConcentrations()) {
-			categories.add(getCategory(name));
-		}
-
-		return categories;
+		return getConcentrations().stream().map(Categories::getCategory).collect(Collectors.toList());
 	}
 
 	public static Category getTempCategory() {
@@ -125,11 +116,11 @@ public class Categories {
 	public static Category getAwCategory() {
 		return getCategory("Dimensionless quantity");
 	}
-	
+
 	public static String getPhUnit() {
 		return "[pH]";
 	}
-	
+
 	public static String getAwUnit() {
 		return "[aw]";
 	}
