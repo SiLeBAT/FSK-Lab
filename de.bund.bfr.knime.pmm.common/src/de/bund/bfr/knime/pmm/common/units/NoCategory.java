@@ -26,9 +26,6 @@ public class NoCategory implements Category {
 
 	public static final String NO_UNIT = "No Unit";
 
-	public NoCategory() {
-	}
-
 	@Override
 	public String getName() {
 		return Categories.NO_CATEGORY;
@@ -50,8 +47,7 @@ public class NoCategory implements Category {
 	}
 
 	@Override
-	public String getConversionString(String var, String fromUnit, String toUnit)
-			throws ConvertException {
+	public String getConversionString(String var, String fromUnit, String toUnit) throws ConvertException {
 		return var;
 	}
 
@@ -59,5 +55,4 @@ public class NoCategory implements Category {
 	public String getSBML(String unit) {
 		return null;
 	}
-
 }
