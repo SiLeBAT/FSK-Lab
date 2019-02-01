@@ -429,7 +429,7 @@ public class FskPortObject implements PortObject {
 
 			// Check the existence of the working directory and create one if it's not
 			// available locally.
-			if (!workingDirectory.isEmpty()) {
+			/*if (!workingDirectory.isEmpty()) {
 				URL url = FileUtil.toURL(workingDirectory);
 				try {
 					Path localPath = FileUtil.resolveToPath(url);
@@ -454,7 +454,7 @@ public class FskPortObject implements PortObject {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}*/
 
 			final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript, generalInformation, scope,
 					dataBackground, modelMath, workspacePath, packages, workingDirectory, plot, readme, spreadsheet);

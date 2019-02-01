@@ -50,6 +50,7 @@ class JoinerViewValue extends JSONViewContent {
   private static final String CFG_JOINER_RELATION = "joinRelation";
 
   private static final String CFG_JSON_REPRESENTATION = "JSONRepresentation";
+  private static final String CFG_MODELSCRIPT_TREE = "ModelScriptTree";
 
   private String firstModelScript;
   private String secondModelScript;
@@ -91,7 +92,7 @@ class JoinerViewValue extends JSONViewContent {
 
     settings.addString(CFG_JOINER_RELATION, joinRelations);
     settings.addString(CFG_JSON_REPRESENTATION, jsonRepresentation);
-
+    settings.addString(CFG_MODELSCRIPT_TREE, modelScriptTree);
     if (generalInformation != null) {
       saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
     }
@@ -126,6 +127,7 @@ class JoinerViewValue extends JSONViewContent {
     secondModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT2);
     joinRelations = settings.getString(CFG_JOINER_RELATION);
     jsonRepresentation = settings.getString(CFG_JSON_REPRESENTATION);
+    modelScriptTree = settings.getString(CFG_MODELSCRIPT_TREE);
     // load meta data
     if (settings.containsKey(CFG_GENERAL_INFORMATION)) {
       generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION);

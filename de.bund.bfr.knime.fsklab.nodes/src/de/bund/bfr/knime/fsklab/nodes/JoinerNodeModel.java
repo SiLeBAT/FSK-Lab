@@ -222,9 +222,10 @@ final class JoinerNodeModel extends
       outObj.dataBackground =
           getEObjectFromJson(joinerProxyValue.getDataBackground(), DataBackground.class);
       outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(), ModelMath.class);
-      JsonArray scriptTree = getScriptArray(joinerProxyValue.getModelScriptTree());
-      setScriptBack(inObj1, inObj2, scriptTree);
-
+      if(joinerProxyValue.getModelScriptTree() != null) {
+        JsonArray scriptTree = getScriptArray(joinerProxyValue.getModelScriptTree());
+        setScriptBack(inObj1, inObj2, scriptTree);
+      }
       // outObj.model = joinerProxyValue.getSecondModelScript();
       inObj2.viz = joinerProxyValue.getSecondModelViz();
 
