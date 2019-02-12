@@ -36,7 +36,6 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="com.sun.jna"/>
-      <import plugin="org.knime.ext.r.type"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
@@ -46,6 +45,7 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.glassfish.javax.json" version="1.0.4" match="greaterOrEqual"/>
       <import plugin="com.fifesoft.rsyntaxtextarea"/>
       <import plugin="com.google.guava"/>
+      <import plugin="com.toedter.jcalendar"/>
       <import plugin="org.apache.commons.lang"/>
       <import plugin="org.knime.base"/>
       <import plugin="org.knime.ext.svg"/>
@@ -53,7 +53,21 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.knime.json"/>
       <import plugin="org.knime.workbench.repository"/>
       <import plugin="org.slf4j.api"/>
-      <import plugin="com.toedter.jcalendar"/>
+      <import plugin="org.apache.commons.io" version="2.5.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui" version="3.6.1" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime" version="3.6.0" match="compatible"/>
+      <import plugin="org.knime.workbench.repository" version="3.0.0" match="compatible"/>
+      <import plugin="org.knime.base" version="3.2.0" match="compatible"/>
+      <import plugin="com.sun.jna" version="3.2.0"/>
+      <import plugin="org.knime.ext.r.bin" version="3.0.0" match="compatible"/>
+      <import plugin="com.fifesoft.autocomplete" version="2.5.7" match="compatible"/>
+      <import plugin="com.fifesoft.languagesupport" version="2.5.7" match="compatible"/>
+      <import plugin="com.fifesoft.rstaui" version="2.5.7" match="compatible"/>
+      <import plugin="com.fifesoft.rsyntaxtextarea" version="2.5.7" match="compatible"/>
+      <import plugin="com.fifesoft.spellchecker" version="2.5.7" match="compatible"/>
+      <import plugin="org.apache.commons.lang3" version="3.2.1" match="compatible"/>
+      <import plugin="org.knime.ext.svg" version="3.5.0" match="compatible"/>
+      <import plugin="org.knime.core.pmml" version="3.5.0" match="compatible"/>
    </requires>
 
    <plugin
@@ -129,5 +143,15 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.knime.r"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+  <!-- Plugins from KNIME included so that the KNIME update site is not necessary -->
+  <plugin id="org.knime.ext.r.type" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+  <plugin id="org.knime.ext.r.bin" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
 
 </feature>
