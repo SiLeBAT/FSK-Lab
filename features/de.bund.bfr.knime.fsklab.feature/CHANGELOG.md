@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## Changed
+- Add KNIME dependencies *org.knime.ext.r.type* and *org.knime.ext.r.bin* as included plugins so that the KNIME update site is not necessary. Before it would fail when the user does not have this update site or it has been disabled.
+
 ### Fixed
 - Fix the tree view of the model script in Joiner JS.
 
