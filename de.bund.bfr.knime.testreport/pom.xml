@@ -71,12 +71,6 @@
 		</dependency>
 		<dependency>
 			<groupId>de.bund.bfr.knime</groupId>
-			<artifactId>de.bund.bfr.knime.fsklab.nodes.test</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.bund.bfr.knime</groupId>
 			<artifactId>de.bund.bfr.knime.fsklab.preferences</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
