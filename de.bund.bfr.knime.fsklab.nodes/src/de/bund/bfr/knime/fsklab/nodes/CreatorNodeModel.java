@@ -102,7 +102,6 @@ class CreatorNodeModel extends NoInternalsModel {
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
     
     CheckUtils.checkSourceFile(settings.getString("modelScript"));
-    CheckUtils.checkSourceFile(settings.getString("visualizationScript"));
     CheckUtils.checkSourceFile(settings.getString("spreadsheet"));
     
     // Sheet

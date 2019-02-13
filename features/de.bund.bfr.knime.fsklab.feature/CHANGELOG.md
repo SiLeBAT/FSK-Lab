@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Fix the tree view of the model script in Joiner JS.
+- Load 32-bits R bundle on x86 Windows
+- Make visualization scripts optional in the creator node.
 
 ## [1.4.4] - 2019-01-28
 

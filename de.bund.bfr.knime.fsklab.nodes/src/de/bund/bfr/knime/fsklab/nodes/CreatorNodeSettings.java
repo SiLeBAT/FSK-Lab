@@ -55,7 +55,7 @@ public class CreatorNodeSettings {
 
   public void load(final NodeSettingsRO settings) throws InvalidSettingsException {
     modelScript = settings.getString(CFG_MODEL_SCRIPT);
-    visualizationScript = settings.getString(CFG_VISUALIZATION_SCRIPT);
+    visualizationScript = settings.getString(CFG_VISUALIZATION_SCRIPT, "");
     workingDirectory = settings.getString(CFG_WORKING_DIRECTORY);
     readme = settings.getString(CFG_README, "");
     spreadsheet = settings.getString(CFG_SPREADSHEET);
