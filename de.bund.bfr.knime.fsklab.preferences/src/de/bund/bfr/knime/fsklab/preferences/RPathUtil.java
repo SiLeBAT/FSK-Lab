@@ -53,181 +53,171 @@ import org.osgi.framework.Bundle;
  * @author Miguel de Alba, BfR, Berlin.
  */
 public final class RPathUtil {
-  private RPathUtil() {}
+	private RPathUtil() {
+	}
 
-  private static File packagedRExecutable;
+	private static File packagedRExecutable;
 
-  private static File packagedRHome;
+	private static File packagedRHome;
 
-  private static File systemRExecutable;
+	private static File systemRExecutable;
 
-  private static File systemRHome;
+	private static File systemRHome;
 
+	static {
+		findPackagedR();
+		if (Platform.OS_LINUX.equals(Platform.getOS()) || Platform.OS_MACOSX.equals(Platform.getOS())) {
+			findSystemRUnix();
+		} else if (Platform.OS_WIN32.equals(Platform.getOS())) {
+			findSystemRWindows();
+		}
+	}
 
-  static {
-    findPackagedR();
-    if (Platform.OS_LINUX.equals(Platform.getOS()) || Platform.OS_MACOSX.equals(Platform.getOS())) {
-      findSystemRUnix();
-    } else if (Platform.OS_WIN32.equals(Platform.getOS())) {
-      findSystemRWindows();
-    }
-  }
+	private static void findPackagedR() {
 
+		if (!Platform.OS_WIN32.equals(Platform.getOS()))
+			return;
 
-  private static void findPackagedR() {
+		// On Windows (32 or 64 bit) look for the optional plugin with packaged R.
+		String bundleName = Platform.ARCH_X86_64.equals(Platform.getOSArch()) ? "de.bund.bfr.binary.r.win32.x86_64"
+				: "de.bund.bfr.binary.r.win32.x86";
 
-    if (!Platform.OS_WIN32.equals(Platform.getOS()))
-      return;
+		Bundle bundle = Platform.getBundle(bundleName);
+		if (bundle == null)
+			return;
 
-    if (!Platform.ARCH_X86_64.equals(Platform.getOSArch()))
-      return;
-    
-    // On Windows (32 or 64 bit) look  for the optional plugin with packaged R.
-    final String bundleName;
-    if (Platform.ARCH_X86_64.equals(Platform.getOSArch())) {
-      bundleName = "de.bund.bfr.binary.r.win32.x86_64";
-    } else if (Platform.ARCH_X86.equals(Platform.getOSArch())) {
-      bundleName = "de.bund.bfr.binary.r.win32.x86";
-    } else {
-      return;
-    }
-    
-    Bundle bundle = Platform.getBundle(bundleName);
-    if (bundle == null)
-      return;
+		// Look for the R.exe first in the /R-Inst/bin folder. If not found it
+		// look for the it recursively.
+		Enumeration<URL> enumeration = bundle.findEntries("/R-Inst/bin", "R.exe", false);
+		URL rExe = null;
+		if ((enumeration != null) && enumeration.hasMoreElements()) {
+			rExe = enumeration.nextElement();
+		} else {
+			enumeration = bundle.findEntries("/R-Inst/bin", "R", true);
+			if ((enumeration != null) && enumeration.hasMoreElements()) {
+				rExe = enumeration.nextElement();
+			}
+		}
 
-    // Look for the R.exe first in the /R-Inst/bin folder. If not found it
-    // look for the it recursively.
-    Enumeration<URL> enumeration = bundle.findEntries("/R-Inst/bin", "R.exe", false);
-    URL rExe = null;
-    if ((enumeration != null) && enumeration.hasMoreElements()) {
-      rExe = enumeration.nextElement();
-    } else {
-      enumeration = bundle.findEntries("/R-Inst/bin", "R", true);
-      if ((enumeration != null) && enumeration.hasMoreElements()) {
-        rExe = enumeration.nextElement();
-      }
-    }
+		if (rExe == null)
+			return;
 
-    if (rExe == null)
-      return;
+		try {
 
-    try {
+			// Look for R home directory included in the packaged installation which is
+			// named `R-Inst`. It travels up from packagedExecutable.
+			packagedRExecutable = new File(FileLocator.toFileURL(rExe).getFile());
+			// parent is either /bin, /x64 (64-bit) or /i386 (32-bit)
+			File RInstDir = packagedRExecutable.getParentFile();
+			do {
+				RInstDir = RInstDir.getParentFile();
+			} while (!"R-Inst".equals(RInstDir.getName()));
+			packagedRHome = RInstDir;
+		} catch (IOException ex) {
+			NodeLogger.getLogger(RPathUtil.class).info("Could not locate packaged R executable", ex);
+		}
+	}
 
-      // Look for R home directory included in the packaged installation which is
-      // named `R-Inst`. It travels up from packagedExecutable.
-      packagedRExecutable = new File(FileLocator.toFileURL(rExe).getFile());
-      // parent is either /bin, /x64 (64-bit) or /i386 (32-bit)
-      File RInstDir = packagedRExecutable.getParentFile();
-      do {
-        RInstDir = RInstDir.getParentFile();
-      } while (!"R-Inst".equals(RInstDir.getName()));
-      packagedRHome = RInstDir;
-    } catch (IOException ex) {
-      NodeLogger.getLogger(RPathUtil.class).info("Could not locate packaged R executable", ex);
-    }
-  }
+	private static void findSystemRWindows() {
+		FileFilter ff = new FileFilter() {
+			@Override
+			public boolean accept(final File pathname) {
+				return pathname.isDirectory() && pathname.getName().startsWith("R-");
+			}
+		};
 
+		File programFiles = new File(System.getenv("ProgramFiles"));
+		for (File dir : programFiles.listFiles(ff)) {
+			File binDir = new File(dir, "bin");
+			if (binDir.isDirectory()) {
+				File executable = new File(binDir, "R.exe");
+				if (executable.isFile()) {
+					systemRHome = dir;
+					systemRExecutable = executable;
+					break;
+				}
+			}
+		}
 
-  private static void findSystemRWindows() {
-    FileFilter ff = new FileFilter() {
-      @Override
-      public boolean accept(final File pathname) {
-        return pathname.isDirectory() && pathname.getName().startsWith("R-");
-      }
-    };
+		// Try with location where BfR IT installs applications
+		File bfrR = new File("C:/Program Files (x86)/User/R/");
+		for (File dir : bfrR.listFiles(ff)) {
+			File binDir = new File(dir, "bin");
+			if (binDir.isDirectory()) {
+				File executable = new File(binDir, "R.exe");
+				if (executable.isFile()) {
+					systemRHome = dir;
+					systemRExecutable = executable;
+					break;
+				}
+			}
+		}
+	}
 
-    File programFiles = new File(System.getenv("ProgramFiles"));
-    for (File dir : programFiles.listFiles(ff)) {
-      File binDir = new File(dir, "bin");
-      if (binDir.isDirectory()) {
-        File executable = new File(binDir, "R.exe");
-        if (executable.isFile()) {
-          systemRHome = dir;
-          systemRExecutable = executable;
-          break;
-        }
-      }
-    }
-    
-    // Try with location where BfR IT installs applications
-    File bfrR = new File("C:/Program Files (x86)/User/R/");
-    for (File dir : bfrR.listFiles(ff)) {
-      File binDir = new File(dir, "bin");
-      if (binDir.isDirectory()) {
-        File executable = new File(binDir, "R.exe");
-        if (executable.isFile()) {
-          systemRHome = dir;
-          systemRExecutable = executable;
-          break;
-        }
-      }
-    }
-  }
+	private static void findSystemRUnix() {
+		String[] searchPaths = { "/usr/bin/R", "/usr/local/bin/R" };
+		for (String s : searchPaths) {
+			File f = new File(s);
+			if (f.canExecute()) {
+				systemRExecutable = f;
+				break;
+			}
+		}
 
+		searchPaths = new String[] { "/usr/lib64/R", "/usr/lib/R", "/usr/local/lib64/R", "/usr/local/lib/R",
+				"/Library/Frameworks/R.framework/Resources" };
+		for (String s : searchPaths) {
+			File f = new File(s, "bin");
+			if (f.isDirectory()) {
+				systemRHome = f.getParentFile();
+				break;
+			}
+		}
+	}
 
-  private static void findSystemRUnix() {
-    String[] searchPaths = {"/usr/bin/R", "/usr/local/bin/R"};
-    for (String s : searchPaths) {
-      File f = new File(s);
-      if (f.canExecute()) {
-        systemRExecutable = f;
-        break;
-      }
-    }
+	/**
+	 * Returns the path to the executable of a packaged R installation if one
+	 * exists.
+	 *
+	 * @return the R executable or <code>null</code> if no packaged executable was
+	 *         found
+	 */
+	public static File getPackagedRExecutable() {
+		return packagedRExecutable;
+	}
 
-    searchPaths = new String[] {"/usr/lib64/R", "/usr/lib/R", "/usr/local/lib64/R",
-        "/usr/local/lib/R", "/Library/Frameworks/R.framework/Resources"};
-    for (String s : searchPaths) {
-      File f = new File(s, "bin");
-      if (f.isDirectory()) {
-        systemRHome = f.getParentFile();
-        break;
-      }
-    }
-  }
+	/**
+	 * Returns the path to a packaged R installation.
+	 *
+	 * @return the R installation directory or <code>null</code> if no packaged
+	 *         installation was found
+	 */
+	public static File getPackagedRHome() {
+		return packagedRHome;
+	}
 
+	/**
+	 * Returns the path to the executable of an R installation in the operating
+	 * system if one exists. The search is performed by looking at common places
+	 * such as <tt>/usr/lib</tt> under Linux or <tt>C:/Program Files/</tt> under
+	 * Windows.
+	 *
+	 * @return the R executable or <code>null</code> if no system executable was
+	 *         found
+	 */
+	public static File getSystemRExecutable() {
+		return systemRExecutable;
+	}
 
-  /**
-   * Returns the path to the executable of a packaged R installation if one exists.
-   *
-   * @return the R executable or <code>null</code> if no packaged executable was found
-   */
-  public static File getPackagedRExecutable() {
-    return packagedRExecutable;
-  }
-
-
-  /**
-   * Returns the path to a packaged R installation.
-   *
-   * @return the R installation directory or <code>null</code> if no packaged installation was found
-   */
-  public static File getPackagedRHome() {
-    return packagedRHome;
-  }
-
-
-  /**
-   * Returns the path to the executable of an R installation in the operating system if one exists.
-   * The search is performed by looking at common places such as <tt>/usr/lib</tt> under Linux or
-   * <tt>C:/Program Files/</tt> under Windows.
-   *
-   * @return the R executable or <code>null</code> if no system executable was found
-   */
-  public static File getSystemRExecutable() {
-    return systemRExecutable;
-  }
-
-
-  /**
-   * Returns the path to an R installation in the operating system if one exists. The search is
-   * performed by looking at common places such as <tt>/usr/lib</tt> under Linux or
-   * <tt>C:/Program Files/</tt> under Windows.
-   *
-   * @return the R installation directory or <code>null</code> if no system installation was found
-   */
-  public static File getSystemRHome() {
-    return systemRHome;
-  }
+	/**
+	 * Returns the path to an R installation in the operating system if one exists.
+	 * The search is performed by looking at common places such as <tt>/usr/lib</tt>
+	 * under Linux or <tt>C:/Program Files/</tt> under Windows.
+	 *
+	 * @return the R installation directory or <code>null</code> if no system
+	 *         installation was found
+	 */
+	public static File getSystemRHome() {
+		return systemRHome;
+	}
 }
