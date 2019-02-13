@@ -8,4 +8,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: de.bund.bfr.knime.pmm.common,
  de.bund.bfr.knime.pmm.nodes,
  org.junit,
- org.knime.core
+ org.knime.core,
+ de.bund.bfr.knime.fsklab.metadata.model,
+ org.apache.servicemix.bundles.poi,
+ org.glassfish.javax.json,
+ de.bund.bfr.formats
