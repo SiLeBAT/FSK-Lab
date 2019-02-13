@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: de.bund.bfr.knime.tests
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: de.bund.bfr.knime.tests
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: de.bund.bfr.knime.pmm.common,
+ de.bund.bfr.knime.pmm.nodes,
+ org.junit,
+ org.knime.core,
+ de.bund.bfr.knime.fsklab.metadata.model,
+ org.apache.servicemix.bundles.poi,
+ org.glassfish.javax.json,
+ de.bund.bfr.formats,
+ de.bund.bfr.knime.fsklab.nodes,
+ de.bund.bfr.knime.fsklab.r

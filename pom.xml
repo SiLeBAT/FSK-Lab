@@ -45,13 +45,11 @@
 		<module>quick.dbtable</module>
 
 		<!-- Test plugins -->
-		<module>de.bund.bfr.knime.fsklab.metadata.model.test</module>
-		<module>de.bund.bfr.knime.fsklab.nodes.test</module>
-		<module>de.bund.bfr.knime.pmm.common.test</module>
-		<module>de.bund.bfr.knime.pmm.nodes.test</module>
+		<module>de.bund.bfr.knime.tests</module>
+		<module>de.bund.bfr.knime.testflows</module>
 
 		<!-- Test report -->
-		<module>de.bund.bfr.knime.testreport</module>
+ 		<module>de.bund.bfr.knime.testreport</module>
 
 		<!-- Others -->
 		<module>features</module>

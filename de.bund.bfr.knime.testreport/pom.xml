@@ -47,12 +47,6 @@
 		</dependency>
 		<dependency>
 			<groupId>de.bund.bfr.knime</groupId>
-			<artifactId>de.bund.bfr.knime.fsklab.metadata.model.test</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.bund.bfr.knime</groupId>
 			<artifactId>de.bund.bfr.knime.fsklab.nodes</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
@@ -74,12 +68,6 @@
 			<artifactId>de.bund.bfr.knime.fsklab.nodes.deprecated2</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.bund.bfr.knime</groupId>
-			<artifactId>de.bund.bfr.knime.fsklab.nodes.test</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.bund.bfr.knime</groupId>
@@ -119,7 +107,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.bund.bfr.knime</groupId>
-			<artifactId>de.bund.bfr.knime.pmm.common.test</artifactId>
+			<artifactId>de.bund.bfr.knime.tests</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
@@ -128,12 +116,6 @@
 			<artifactId>de.bund.bfr.knime.pmm.nodes</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.bund.bfr.knime</groupId>
-			<artifactId>de.bund.bfr.knime.pmm.nodes.test</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
