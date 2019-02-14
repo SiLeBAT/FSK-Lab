@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -157,14 +158,10 @@ public class NodeUtils {
 
     FskSimulation defaultSimulation = new FskSimulation(DEFAULT_SIMULATION);
 
-    for (Parameter param : parameters) {
-
-      if (param.getParameterClassification() == ParameterClassification.OUTPUT) {
-        continue;
-      }
-
-      defaultSimulation.getParameters().put(param.getParameterID(), param.getParameterValue());
-    }
+    Map<String, String> values = parameters.stream()
+        .filter(it -> it.getParameterClassification() != ParameterClassification.OUTPUT)
+        .collect(Collectors.toMap(Parameter::getParameterID, Parameter::getParameterValue));
+    defaultSimulation.getParameters().putAll(values);
 
     return defaultSimulation;
   }
@@ -172,7 +169,7 @@ public class NodeUtils {
   /** Builds string with R parameters script out. */
   public static String buildParameterScript(FskSimulation simulation) {
 
-    StringBuilder builder = new StringBuilder(); 
+    StringBuilder builder = new StringBuilder();
     for (Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
       String parameterName = entry.getKey();
       String parameterValue = entry.getValue();
