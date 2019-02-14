@@ -8,9 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.4.5] - 2019-02-13
 
-## Changed
-- Add KNIME dependencies *org.knime.ext.r.type* and *org.knime.ext.r.bin* as included plugins so that the KNIME update site is not necessary. Before it would fail when the user does not have this update site or it has been disabled.
-
 ### Fixed
 - Fix the tree view of the model script in Joiner JS.
 - Load 32-bits R bundle on x86 Windows

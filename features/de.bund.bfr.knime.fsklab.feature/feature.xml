@@ -150,18 +150,4 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
-         id="org.knime.ext.r.type"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.knime.ext.r.bin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
 </feature>
