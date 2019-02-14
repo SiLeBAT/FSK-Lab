@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -158,11 +157,10 @@ public class NodeUtils {
 
     FskSimulation defaultSimulation = new FskSimulation(DEFAULT_SIMULATION);
 
-    Map<String, String> values = parameters.stream()
+    // The parameters need to be inserted in order
+    parameters.stream()
         .filter(it -> it.getParameterClassification() != ParameterClassification.OUTPUT)
-        .collect(Collectors.toMap(Parameter::getParameterID, Parameter::getParameterValue));
-    defaultSimulation.getParameters().putAll(values);
-
+        .forEach(p -> defaultSimulation.getParameters().put(p.getParameterID(), p.getParameterValue()));
     return defaultSimulation;
   }
 
