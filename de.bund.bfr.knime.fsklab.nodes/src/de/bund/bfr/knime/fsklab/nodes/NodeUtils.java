@@ -172,14 +172,14 @@ public class NodeUtils {
   /** Builds string with R parameters script out. */
   public static String buildParameterScript(FskSimulation simulation) {
 
-    String paramScript = "";
+    StringBuilder builder = new StringBuilder(); 
     for (Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
       String parameterName = entry.getKey();
       String parameterValue = entry.getValue();
 
-      paramScript += parameterName + " <- " + parameterValue + "\n";
+      builder.append(parameterName + " <- " + parameterValue + "\n");
     }
 
-    return paramScript;
+    return builder.toString();
   }
 }
