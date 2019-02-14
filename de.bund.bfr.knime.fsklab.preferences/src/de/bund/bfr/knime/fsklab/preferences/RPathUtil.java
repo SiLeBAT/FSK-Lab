@@ -127,32 +127,26 @@ public final class RPathUtil {
 		};
 
 		File programFiles = new File(System.getenv("ProgramFiles"));
-		for (File dir : programFiles.listFiles(ff)) {
-			File binDir = new File(dir, "bin");
+		checkInWindowsFolders(programFiles.listFiles(ff));
+		
+		if (systemRHome == null && systemRExecutable == null) {
+			// Try with location where BfR IT installs applications
+			File bfrR = new File("C:/Program Files (x86)/User/R/");
+			checkInWindowsFolders(bfrR.listFiles(ff));
+		}
+	}
+	
+	private static void checkInWindowsFolders(File[] folders) {
+		for (File folder : folders) {
+			File binDir = new File(folder, "bin");
 			if (binDir.isDirectory()) {
 				File executable = new File(binDir, "R.exe");
 				if (executable.isFile()) {
-					systemRHome = dir;
+					systemRHome = folder;
 					systemRExecutable = executable;
-					return;
+					break;
 				}
 			}
-		}
-
-		// Try with location where BfR IT installs applications
-		File bfrR = new File("C:/Program Files (x86)/User/R/");
-		if (bfrR.exists()) {
-			for (File dir : bfrR.listFiles(ff)) {
-				File binDir = new File(dir, "bin");
-				if (binDir.isDirectory()) {
-					File executable = new File(binDir, "R.exe");
-					if (executable.isFile()) {
-						systemRHome = dir;
-						systemRExecutable = executable;
-						break;
-					}
-				}
-			}			
 		}
 	}
 
