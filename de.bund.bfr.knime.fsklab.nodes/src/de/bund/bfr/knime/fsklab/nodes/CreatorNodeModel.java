@@ -38,6 +38,7 @@ import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NoInternalsModel;
@@ -52,6 +53,10 @@ import org.knime.core.util.FileUtil;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
+import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import de.bund.bfr.knime.fsklab.r.client.RController;
+import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;
@@ -231,6 +236,23 @@ class CreatorNodeModel extends NoInternalsModel {
 
     if (modelMath != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
+    }
+    
+    // Validate parameters from spreadsheet
+    try (RController controller = new RController()) {
+      FskSimulation simulation = NodeUtils.createDefaultSimulation(modelMath.getParameter());
+      String script = NodeUtils.buildParameterScript(simulation);
+      ScriptExecutor executor = new ScriptExecutor(controller);
+      
+      executor.setupOutputCapturing(exec);
+      executor.executeIgnoreResult(script, exec);
+      executor.finishOutputCapturing(exec);
+      
+      if (!executor.getStdErr().isEmpty()) {
+        throw new InvalidSettingsException("Invalid parameters:\n" + executor.getStdErr());
+      }
+    } catch (RException | CanceledExecutionException | InterruptedException exception) {
+      throw new InvalidSettingsException("Parameters could not be validate. Please try again.", exception);
     }
 
     return new PortObject[] {portObj};
