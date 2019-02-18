@@ -510,7 +510,7 @@ fskeditorjs = function() {
 				  buttons: true,
 				  dangerMode: true,
 				})
-				.then((saveAnyway) => {
+				.then(function (saveAnyway) {
 				  if (saveAnyway) {
 					  noValidation = true;
 				  }
