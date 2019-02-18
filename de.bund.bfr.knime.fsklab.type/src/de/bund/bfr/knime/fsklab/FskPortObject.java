@@ -45,19 +45,16 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JList;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -531,43 +528,41 @@ public class FskPortObject implements PortObject {
 		private static final long serialVersionUID = -4887698302872695689L;
 
 		private final FormPanel formPanel;
-		private final ScriptPanel scriptPanel;
-		private final FPanel simulationPanel;
 
 		public SimulationsPanel() {
-
 			// Panel to show parameters (show initially the simulation 0)
-			FskSimulation defaultSimulation = simulations.get(0);
-			formPanel = new FormPanel(defaultSimulation.getParameters());
-
-			// Panel to show preview of generated script out of parameters
-			String previewScript = buildParameterScript(defaultSimulation);
-			scriptPanel = new ScriptPanel("Preview", previewScript, false, true);
-
-			simulationPanel = new FPanel();
-
+			formPanel = new FormPanel(simulations.get(0).getParameters());
 			createUI();
 		}
 
 		private void createUI() {
 
-			simulationPanel.setLayout(new BoxLayout(simulationPanel, BoxLayout.Y_AXIS));
-			simulationPanel.add(new JScrollPane(formPanel));
-			simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"));
+			FPanel simulationPanel = new FPanel();
+			simulationPanel.setLayout(new BorderLayout());
+
+			JScrollPane parametersPane = new JScrollPane(
+					UIUtils.createTitledPanel(UIUtils.createNorthPanel(formPanel), "Parameters"));
+			parametersPane.setBorder(null);
+
+			simulationPanel.add(parametersPane, BorderLayout.WEST);
+
+			// Panel to show preview of generated script out of parameters
+			String previewScript = buildParameterScript(simulations.get(0));
+			ScriptPanel scriptPanel = new ScriptPanel("Preview", previewScript, false, true);
+			simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"), BorderLayout.CENTER);
 
 			// Panel to select simulation
-			String[] simulationNames = simulations.stream().map(FskSimulation::getName).toArray(String[]::new);
-			JList<String> list = new JList<>(simulationNames);
-			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			list.addListSelectionListener(new ListSelectionListener() {
-				@Override
-				public void valueChanged(ListSelectionEvent e) {
+			FskSimulation[] simulationsArray = simulations.toArray(new FskSimulation[simulations.size()]);
 
+			JComboBox<FskSimulation> simulationList = new JComboBox<FskSimulation>(simulationsArray);
+			simulationList.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
 					// Get selected simulation
-					int selectedIndex = list.getSelectedIndex();
-					if (selectedIndex != -1) {
-						FskSimulation selectedSimulation = simulations.get(selectedIndex);
-						
+					if (simulationList.getSelectedIndex() != -1) {
+						FskSimulation selectedSimulation = (FskSimulation) simulationList.getSelectedItem();
+
 						// Update parameters
 						formPanel.setValues(selectedSimulation.getParameters());
 
@@ -577,13 +572,13 @@ public class FskPortObject implements PortObject {
 					}
 				}
 			});
-			list.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-			JScrollPane browsePanel = new JScrollPane(list);
+			JPanel simulationSelection = UIUtils
+					.createCenterPanel(UIUtils.createHorizontalPanel(new JLabel("Simulation:"), simulationList));
 
 			// Build simulations panel
 			setLayout(new BorderLayout());
 			setName("Simulations");
-			add(browsePanel, BorderLayout.WEST);
+			add(simulationSelection, BorderLayout.NORTH);
 			add(simulationPanel, BorderLayout.CENTER);
 		}
 
@@ -602,20 +597,20 @@ public class FskPortObject implements PortObject {
 			}
 
 			private void createUI(LinkedHashMap<String, String> parameters) {
-				
+
 				// Create labels
 				List<FLabel> labels = parameters.keySet().stream().map(FLabel::new).collect(Collectors.toList());
-				
+
 				// Create field panels
 				List<JPanel> fieldPanels = new ArrayList<>(parameters.size());
-				
+
 				int i = 0;
-				for (String value : parameters.values()) {		
+				for (String value : parameters.values()) {
 					JPanel panel = createFieldPanel(fields[i], value);
 					fieldPanels.add(panel);
 					i++;
 				}
-				
+
 				int n = labels.size();
 
 				FPanel leftPanel = new FPanel();
@@ -631,7 +626,7 @@ public class FskPortObject implements PortObject {
 				add(leftPanel, BorderLayout.WEST);
 				add(rightPanel, BorderLayout.CENTER);
 			}
-			
+
 			public void setValues(LinkedHashMap<String, String> parameters) {
 				int i = 0;
 				for (String value : parameters.values()) {
@@ -639,7 +634,7 @@ public class FskPortObject implements PortObject {
 					i++;
 				}
 			}
-			
+
 			private JPanel createFieldPanel(JTextField field, String value) {
 				field.setColumns(30);
 				field.setBackground(UIUtils.WHITE);
@@ -647,10 +642,10 @@ public class FskPortObject implements PortObject {
 				field.setHorizontalAlignment(JTextField.RIGHT);
 				field.setEditable(false);
 				field.setBorder(null);
-				
+
 				JButton copyButton = UIUtils.createCopyButton();
 				copyButton.setVisible(false);
-				
+
 				field.addFocusListener(new FieldListener(copyButton));
 
 				copyButton.addActionListener(new ActionListener() {
@@ -660,7 +655,7 @@ public class FskPortObject implements PortObject {
 						clipboard.setContents(new StringSelection(field.getText()), null);
 					}
 				});
-				
+
 				JPanel fieldPanel = new JPanel(new BorderLayout());
 				fieldPanel.setBackground(UIUtils.WHITE);
 				fieldPanel.add(field, BorderLayout.CENTER);
@@ -672,10 +667,10 @@ public class FskPortObject implements PortObject {
 				fieldPanel.setBorder(compoundBorder);
 
 				fieldPanel.setPreferredSize(new Dimension(100, 20));
-				
+
 				return fieldPanel;
 			}
-			
+
 			private class FieldListener implements FocusListener {
 
 				private final JButton button;

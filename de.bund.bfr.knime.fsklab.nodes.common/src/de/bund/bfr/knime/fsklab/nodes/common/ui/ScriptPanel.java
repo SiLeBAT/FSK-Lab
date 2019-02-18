@@ -43,14 +43,13 @@ public class ScriptPanel extends FPanel {
 		setName(title);
 		textArea = new RSnippetTextArea();
 		textArea.setLineWrap(true);
+		
+		RTextScrollPane textPane = new RTextScrollPane(textArea);
+		textPane.setFoldIndicatorEnabled(true);
+		textPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		add(textPane, BorderLayout.CENTER);
 
 		if (copiable) {
-			RTextScrollPane textPane = new RTextScrollPane(textArea);
-			textPane.setFoldIndicatorEnabled(true);
-			textPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-			
-			add(textPane, BorderLayout.CENTER);
-
 			JButton copyButton = UIUtils.createCopyButton();
 			copyButton.addActionListener(new ActionListener() {
 				@Override
@@ -75,11 +74,13 @@ public class ScriptPanel extends FPanel {
 		RTextScrollPane textPane = new RTextScrollPane(textArea);
 		textPane.setFoldIndicatorEnabled(true);
 		textPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		textPane.setBorder(null);
 		
 		add(textPane, BorderLayout.CENTER);
 
 		if (copiable) {
 			JButton copyButton = UIUtils.createCopyButton();
+			copyButton.setFocusPainted(false);
 			copyButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -87,7 +88,7 @@ public class ScriptPanel extends FPanel {
 					clipboard.setContents(new StringSelection(textArea.getText()), null);
 				}
 			});
-			add(copyButton, BorderLayout.EAST);
+			add(UIUtils.createNorthPanel(copyButton), BorderLayout.EAST);
 		}
 	}
 
