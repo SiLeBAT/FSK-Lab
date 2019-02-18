@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## Added
+- Validate parameters on model import (Creator node). https://github.com/SiLeBAT/FSK-Lab/issues/310.
+
+## Changed
+- Simulations tab of the FskPortObject view, https://github.com/SiLeBAT/FSK-Lab/issues/309.
+
 ### Fixed
 - Order of model parameters on model import with the creator node.
 
