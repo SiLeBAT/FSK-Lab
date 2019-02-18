@@ -39,27 +39,7 @@ public class ScriptPanel extends FPanel {
 	private JTree scriptTree;
 
 	public ScriptPanel(final String title, boolean copiable) {
-		setLayout(new BorderLayout());
-		setName(title);
-		textArea = new RSnippetTextArea();
-		textArea.setLineWrap(true);
-		
-		RTextScrollPane textPane = new RTextScrollPane(textArea);
-		textPane.setFoldIndicatorEnabled(true);
-		textPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		add(textPane, BorderLayout.CENTER);
-
-		if (copiable) {
-			JButton copyButton = UIUtils.createCopyButton();
-			copyButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-					clipboard.setContents(new StringSelection(textArea.getText()), null);
-				}
-			});
-			add(copyButton, BorderLayout.EAST);
-		}
+		this(title, "", copiable, false);
 	}
 
 	public ScriptPanel(final String title, final String script, final boolean editable, boolean copiable) {
