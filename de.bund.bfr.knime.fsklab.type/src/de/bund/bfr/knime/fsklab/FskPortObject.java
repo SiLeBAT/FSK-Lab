@@ -19,14 +19,19 @@ package de.bund.bfr.knime.fsklab;
  */
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,18 +39,20 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.ZipEntry;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -66,16 +73,12 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
-import org.knime.core.node.workflow.NodeContext;
-import org.knime.core.node.workflow.WorkflowContext;
-import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
-import de.bund.bfr.knime.fsklab.nodes.common.ui.FTextField;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.GenericModel;
@@ -429,32 +432,26 @@ public class FskPortObject implements PortObject {
 
 			// Check the existence of the working directory and create one if it's not
 			// available locally.
-			/*if (!workingDirectory.isEmpty()) {
-				URL url = FileUtil.toURL(workingDirectory);
-				try {
-					Path localPath = FileUtil.resolveToPath(url);
-					if (!Files.exists(localPath)) {
-						NodeContext nodeContext = NodeContext.getContext();
-						WorkflowManager wfm = nodeContext.getWorkflowManager();
-						WorkflowContext workflowContext = wfm.getContext();
-
-						// get the location of the current workflow to create the working directory in
-						// it and use the name with current reader node id for the prefix of the working
-						// directory name
-						File currentWorkingDirectory = new File(workflowContext.getCurrentLocation(),
-								nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "")
-										.replace(" ", "") + "_" + "workingDirectory"
-										+ new AtomicLong((int) (100000 * Math.random())).getAndIncrement());
-						if (!currentWorkingDirectory.exists()) {
-							currentWorkingDirectory.mkdir();
-							workingDirectory = currentWorkingDirectory.toString();
-						}
-					}
-				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}*/
+			/*
+			 * if (!workingDirectory.isEmpty()) { URL url =
+			 * FileUtil.toURL(workingDirectory); try { Path localPath =
+			 * FileUtil.resolveToPath(url); if (!Files.exists(localPath)) { NodeContext
+			 * nodeContext = NodeContext.getContext(); WorkflowManager wfm =
+			 * nodeContext.getWorkflowManager(); WorkflowContext workflowContext =
+			 * wfm.getContext();
+			 * 
+			 * // get the location of the current workflow to create the working directory
+			 * in // it and use the name with current reader node id for the prefix of the
+			 * working // directory name File currentWorkingDirectory = new
+			 * File(workflowContext.getCurrentLocation(),
+			 * nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W",
+			 * "") .replace(" ", "") + "_" + "workingDirectory" + new AtomicLong((int)
+			 * (100000 * Math.random())).getAndIncrement()); if
+			 * (!currentWorkingDirectory.exists()) { currentWorkingDirectory.mkdir();
+			 * workingDirectory = currentWorkingDirectory.toString(); } } } catch
+			 * (URISyntaxException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); } }
+			 */
 
 			final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript, generalInformation, scope,
 					dataBackground, modelMath, workspacePath, packages, workingDirectory, plot, readme, spreadsheet);
@@ -503,8 +500,8 @@ public class FskPortObject implements PortObject {
 
 	@Override
 	public JComponent[] getViews() {
-		JPanel modelScriptPanel = new ScriptPanel("Model script", model, false);
-		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false);
+		JPanel modelScriptPanel = new ScriptPanel("Model script", model, false, false);
+		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false, false);
 
 		JTree tree = MetadataTree.createTree(generalInformation, scope, dataBackground, modelMath);
 		final JScrollPane metaDataPane = new JScrollPane(tree);
@@ -544,7 +541,7 @@ public class FskPortObject implements PortObject {
 
 			// Panel to show preview of generated script out of parameters
 			String previewScript = buildParameterScript(defaultSimulation);
-			scriptPanel = new ScriptPanel("Preview", previewScript, false);
+			scriptPanel = new ScriptPanel("Preview", previewScript, false, true);
 
 			simulationPanel = new FPanel();
 
@@ -599,20 +596,73 @@ public class FskPortObject implements PortObject {
 
 		private JPanel createFormPane(FskSimulation simulation) {
 
-			List<FLabel> nameLabels = new ArrayList<>(simulations.size());
-			List<JComponent> valueLabels = new ArrayList<>(simulations.size());
-			for (Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
-				nameLabels.add(new FLabel(entry.getKey()));
+			int numParam = simulation.getParameters().size();
 
-				FTextField field = new FTextField();
+			List<FLabel> labels = new ArrayList<>(numParam);
+			List<JPanel> fieldPanels = new ArrayList<>(numParam);
+
+			for (Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
+
+				// Create components
+				JTextField field = new JTextField(30);
+				field.setBackground(UIUtils.WHITE);
 				field.setText(entry.getValue());
+				field.setHorizontalAlignment(JTextField.RIGHT);
 				field.setEditable(false);
-				valueLabels.add(field);
+				field.setBorder(null);
+
+				JButton copyButton = UIUtils.createCopyButton();
+				copyButton.setVisible(false);
+
+				field.addFocusListener(new FieldListener(copyButton));
+
+				copyButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+						clipboard.setContents(new StringSelection(field.getText()), null);
+					}
+				});
+
+				JPanel fieldPanel = new JPanel(new BorderLayout());
+				fieldPanel.setBackground(UIUtils.WHITE);
+				fieldPanel.add(field, BorderLayout.CENTER);
+				fieldPanel.add(copyButton, BorderLayout.EAST);
+
+				Border matteBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, UIUtils.BLUE);
+				Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+				Border compoundBorder = BorderFactory.createCompoundBorder(matteBorder, emptyBorder);
+				fieldPanel.setBorder(compoundBorder);
+
+				fieldPanel.setPreferredSize(new Dimension(100, 20));
+
+				// Add components
+				labels.add(new FLabel(entry.getKey()));
+				fieldPanels.add(fieldPanel);
 			}
 
-			FPanel formPanel = UIUtils.createFormPanel(nameLabels, valueLabels);
+			JPanel formPanel = UIUtils.createFormPanel(labels, fieldPanels);
 
 			return formPanel;
+		}
+
+		private class FieldListener implements FocusListener {
+			
+			private final JButton button;
+
+			public FieldListener(JButton button) {
+				this.button = button;
+			}
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				button.setVisible(true);
+			}
+
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				button.setVisible(false);
+			}
 		}
 	}
 

@@ -65,7 +65,7 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
     textSizeModel = new SpinnerNumberModel(settings.pointSize, null, null, 1);
     simulationModel = new DefaultComboBoxModel<>();
 
-    scriptPanel = new ScriptPanel("Preview", "", false);
+    scriptPanel = new ScriptPanel("Preview", "", false, false);
 
     createUI();
   }

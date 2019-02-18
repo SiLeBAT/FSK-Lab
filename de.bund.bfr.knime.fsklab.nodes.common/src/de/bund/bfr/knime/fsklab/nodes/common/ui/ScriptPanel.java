@@ -19,55 +19,93 @@
 package de.bund.bfr.knime.fsklab.nodes.common.ui;
 
 import java.awt.BorderLayout;
-import javax.swing.JPanel;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JTree;
+import javax.swing.ScrollPaneConstants;
+
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 /** JPanel with an R script */
-public class ScriptPanel extends JPanel {
+public class ScriptPanel extends FPanel {
 
-  private static final long serialVersionUID = -4493061426461816058L;
-  private final RSnippetTextArea textArea;
-  private JTree scriptTree;
+	private static final long serialVersionUID = -4493061426461816058L;
+	private final RSnippetTextArea textArea;
+	private JTree scriptTree;
 
-  public ScriptPanel(final String title) {
-    super(new BorderLayout());
-    setName(title);
-    textArea = new RSnippetTextArea();
-    textArea.setLineWrap(true);
-    add(new RTextScrollPane(textArea), BorderLayout.CENTER);
+	public ScriptPanel(final String title, boolean copiable) {
+		setLayout(new BorderLayout());
+		setName(title);
+		textArea = new RSnippetTextArea();
+		textArea.setLineWrap(true);
 
-  }
+		if (copiable) {
+			RTextScrollPane textPane = new RTextScrollPane(textArea);
+			textPane.setFoldIndicatorEnabled(true);
+			textPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+			
+			add(textPane, BorderLayout.CENTER);
 
-  public ScriptPanel(final String title, final String script, final boolean editable) {
-    super(new BorderLayout());
-    setName(title);
-    textArea = new RSnippetTextArea();
-    textArea.setLineWrap(true);
-    textArea.setText(script);
-    textArea.setEditable(editable);
-    textArea.setEnabled(editable);
-    add(new RTextScrollPane(textArea));
-  }
+			JButton copyButton = UIUtils.createCopyButton();
+			copyButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					clipboard.setContents(new StringSelection(textArea.getText()), null);
+				}
+			});
+			add(copyButton, BorderLayout.EAST);
+		}
+	}
 
-  public String getText() {
-    return textArea.getText();
-  }
+	public ScriptPanel(final String title, final String script, final boolean editable, boolean copiable) {
+		setLayout(new BorderLayout());
+		setName(title);
+		textArea = new RSnippetTextArea();
+		textArea.setLineWrap(true);
+		textArea.setText(script);
+		textArea.setEditable(editable);
+		textArea.setEnabled(editable);
+		
+		RTextScrollPane textPane = new RTextScrollPane(textArea);
+		textPane.setFoldIndicatorEnabled(true);
+		textPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		add(textPane, BorderLayout.CENTER);
 
+		if (copiable) {
+			JButton copyButton = UIUtils.createCopyButton();
+			copyButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					clipboard.setContents(new StringSelection(textArea.getText()), null);
+				}
+			});
+			add(copyButton, BorderLayout.EAST);
+		}
+	}
 
-  public void setText(String text) {
-    textArea.setText(text);
-  }
+	public String getText() {
+		return textArea.getText();
+	}
 
-  public JTree getScriptTree() {
-    return scriptTree;
-  }
+	public void setText(String text) {
+		textArea.setText(text);
+	}
 
-  public void setScriptTree(JTree scriptTree) {
-    this.scriptTree = scriptTree;
-    add(scriptTree, BorderLayout.WEST);
-  }
+	public JTree getScriptTree() {
+		return scriptTree;
+	}
 
-
+	public void setScriptTree(JTree scriptTree) {
+		this.scriptTree = scriptTree;
+		add(scriptTree, BorderLayout.WEST);
+	}
 
 }

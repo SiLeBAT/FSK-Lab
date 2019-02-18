@@ -232,9 +232,9 @@ public class FskPortObject implements PortObject {
 
 	@Override
 	public JComponent[] getViews() {
-		JPanel modelScriptPanel = new ScriptPanel("Model script", model, false);
-		JPanel paramScriptPanel = new ScriptPanel("Param script", param, false);
-		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false);
+		JPanel modelScriptPanel = new ScriptPanel("Model script", model, false, false);
+		JPanel paramScriptPanel = new ScriptPanel("Param script", param, false, false);
+		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false, false);
 
 		// To support change to createLibrariesPanel.
 		List<String> fileNames = libs.stream().map(File::getName).collect(Collectors.toList());

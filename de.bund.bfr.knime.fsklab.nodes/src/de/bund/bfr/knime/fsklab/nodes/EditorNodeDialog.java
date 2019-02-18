@@ -114,9 +114,9 @@ import metadata.StudySample;
 
 public class EditorNodeDialog extends DataAwareNodeDialogPane {
 
-  private final ScriptPanel modelScriptPanel = new ScriptPanel("Model script", "", true);
-  private final ScriptPanel paramScriptPanel = new ScriptPanel("Parameters script", "", true);
-  private final ScriptPanel vizScriptPanel = new ScriptPanel("Visualization script", "", true);
+  private final ScriptPanel modelScriptPanel = new ScriptPanel("Model script", "", true, false);
+  private final ScriptPanel paramScriptPanel = new ScriptPanel("Parameters script", "", true, false);
+  private final ScriptPanel vizScriptPanel = new ScriptPanel("Visualization script", "", true, false);
   private final GeneralInformationPanel generalInformationPanel = new GeneralInformationPanel();
   private final ScopePanel scopePanel = new ScopePanel();
   private final DataBackgroundPanel dataBackgroundPanel = new DataBackgroundPanel();

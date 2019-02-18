@@ -696,7 +696,7 @@ public class CombinedFskPortObject extends FskPortObject {
   /** {Override} */
   @Override
   public JComponent[] getViews() {
-    JPanel modelScriptPanel = new ScriptPanel("Model script");
+    JPanel modelScriptPanel = new ScriptPanel("Model script", false);
     DefaultMutableTreeNode top = new DefaultMutableTreeNode("Model Scripts");
     buildScriptNodes(top, this);
     JTree modelTree = new JTree(top);
@@ -724,7 +724,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
 
 
-    JPanel vizScriptPanel = new ScriptPanel("Visualization script");
+    JPanel vizScriptPanel = new ScriptPanel("Visualization script", false);
     DefaultMutableTreeNode visTop = new DefaultMutableTreeNode("Visualization Scripts");
     buildScriptNodes(visTop, this);
     JTree visTree = new JTree(visTop);
@@ -764,7 +764,7 @@ public class CombinedFskPortObject extends FskPortObject {
     JTextArea readmeArea = new JTextArea("");
     readmeArea.setEnabled(false);
 
-    JPanel readmePanel = new ScriptPanel("README");
+    JPanel readmePanel = new ScriptPanel("README", false);
     DefaultMutableTreeNode readmetop = new DefaultMutableTreeNode("Readme");
     buildScriptNodes(readmetop, this);
     JTree readmeTree = new JTree(readmetop);
@@ -814,7 +814,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
       // Panel to show preview of generated script out of parameters
       String previewScript = buildParameterScript(defaultSimulation);
-      scriptPanel = new ScriptPanel("Preview", previewScript, false);
+      scriptPanel = new ScriptPanel("Preview", previewScript, false, false);
 
       simulationPanel = new FPanel();
 

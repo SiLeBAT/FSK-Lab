@@ -62,9 +62,9 @@ class FskEditorNodeDialog extends DataAwareNodeDialogPane {
     settings = new FskEditorNodeSettings();
 
     // Create panels
-    modelScriptPanel = new ScriptPanel("Model script", "", true);
-    paramScriptPanel = new ScriptPanel("Parameters script", "", true);
-    vizScriptPanel = new ScriptPanel("Visualization script", "", true);
+    modelScriptPanel = new ScriptPanel("Model script", "", true, false);
+    paramScriptPanel = new ScriptPanel("Parameters script", "", true, false);
+    vizScriptPanel = new ScriptPanel("Visualization script", "", true, false);
     metaDataPanel = new MetaDataPanel();
 
     // Add ScriptPanels

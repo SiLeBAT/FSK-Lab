@@ -19,9 +19,9 @@ import de.bund.bfr.knime.pmm.fskx.FskTemplateSettings;
 
 public class FskEditorNodeDialog extends DataAwareNodeDialogPane {
 
-  private ScriptPanel modelScriptPanel = new ScriptPanel("Model script", "", true);
-  private ScriptPanel paramScriptPanel = new ScriptPanel("Parameters script", "", true);
-  private ScriptPanel vizScriptPanel = new ScriptPanel("Visualization script", "", true);
+  private ScriptPanel modelScriptPanel = new ScriptPanel("Model script", "", true, false);
+  private ScriptPanel paramScriptPanel = new ScriptPanel("Parameters script", "", true, false);
+  private ScriptPanel vizScriptPanel = new ScriptPanel("Visualization script", "", true, false);
   private MetaDataPane metaDataPane;
 
   private SettingsModelInteger objectNumber;
