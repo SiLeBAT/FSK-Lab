@@ -24,6 +24,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Optional;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -160,33 +161,25 @@ public class RunnerNodeDialog extends DataAwareNodeDialogPane {
   protected void loadSettingsFrom(NodeSettingsRO settings, PortObject[] inputs)
       throws NotConfigurableException {
 
-    simulationModel.removeAllElements();
+    FskPortObject inObj = (FskPortObject) inputs[0];
 
-    if (inputs.length == 1 && inputs[0] != null) {
-      FskPortObject inObj = (FskPortObject) inputs[0];
+    FskSimulation selectedSimulation;
 
-      // Update combobox
-      inObj.simulations.forEach(simulationModel::addElement);
-
-      // Look for simulation with the name stored in settings. If the simulation is not found
-      // (not contained) in new list of simulations then there is no selection.
-      FskSimulation selectedSimulation = null;
-      for (int i = 0; i < simulationModel.getSize(); i++) {
-        FskSimulation currentSimulation = simulationModel.getElementAt(i);
-        if (currentSimulation.getName().equals(this.settings.simulation)) {
-          selectedSimulation = currentSimulation;
-          break;
-        }
-      }
-
-      // If there is no selection the default simulation is selected (first simulation)
-      if (selectedSimulation != null) {
-        simulationModel.setSelectedItem(selectedSimulation);
-      } else {
-        FskSimulation defaultSimulation = inObj.simulations.get(0);
-        simulationModel.setSelectedItem(defaultSimulation);
-      }
+    String selectedSimulationInSettings = settings.getString("simulation", "");
+    if (!selectedSimulationInSettings.isEmpty()) {
+      // If a simulation is configured in the settings then pick it
+      Optional<FskSimulation> sim = inObj.simulations.stream()
+          .filter(it -> it.getName().equals(selectedSimulationInSettings)).findFirst();
+      // If not present assign default simulation
+      selectedSimulation = sim.orElse(inObj.simulations.get(0));
+    } else {
+      // If no selected simulation is saved in settings then pick the simulation from the input port
+      selectedSimulation = inObj.simulations.get(inObj.selectedSimulationIndex);
     }
+
+    simulationModel.removeAllElements();
+    inObj.simulations.forEach(simulationModel::addElement);
+    simulationModel.setSelectedItem(selectedSimulation);
   }
 
   @Override
