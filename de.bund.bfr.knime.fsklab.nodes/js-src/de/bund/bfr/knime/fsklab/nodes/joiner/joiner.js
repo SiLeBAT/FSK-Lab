@@ -522,7 +522,7 @@ joiner = function() {
 				+ "        </ul>\n"
 				+ "        <div class='tab-content'>\n"
 				+ "            <div class='tab-pane fade active in' id='set1'>\n"
-				+ "					<div class='container-fluid'><div class='row content'><div id='paper' class='col-sm-9 sidenav'></div><div id='details' class='col-sm-3'></div></div> </div>"
+				+ "					<div class='container-fluid'><div class='row content'><div id='paper' class='width: 500px; height: 500px; overflow: scroll;'></div></div> <div id='details' class='col-sm-12'></div></div>"
 				+ "            </div>\n"
 				+ "            <div class='tab-pane fade' id='set2'>\n"
 				+ "                <div class='tabbable'>\n"
@@ -1201,7 +1201,7 @@ joiner = function() {
 		var firstModelTojoin = new joint.shapes.devs.Atomic({
 
 			position : {
-				x : paperWidth - 520,
+				x : paperWidth - 670,
 				y : 60
 			},
 			size : {
@@ -1254,8 +1254,8 @@ joiner = function() {
 		var secondModelToJoin = new joint.shapes.devs.Atomic({
 
 			position : {
-				x : paperWidth - 230,
-				y : 280
+				x : paperWidth - 330,
+				y : 180
 			},
 			size : {
 				width : 200,

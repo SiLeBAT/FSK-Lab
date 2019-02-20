@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Validate parameters on model import (Creator node). https://github.com/SiLeBAT/FSK-Lab/issues/310.
 - Select the active simulation in the FSK Object viewer and mark it with (*) that it is the active one.
 - Fix the model name for joined model in the joinging board to show the full name.
+- Rearrange the diagram area with the join command form to be vertical. 
 
 ## Changed
 - Simulations tab of the FskPortObject view, https://github.com/SiLeBAT/FSK-Lab/issues/309.

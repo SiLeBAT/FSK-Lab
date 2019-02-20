@@ -47,9 +47,7 @@ body {
 	margin-top: -1px;
 }
 
-#paper {
-	overflow: hidden;
-}
+
 
 /* used for sidebar tab/collapse*/
 @media ( max-width : 991px) {
