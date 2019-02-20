@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Added
 - Validate parameters on model import (Creator node). https://github.com/SiLeBAT/FSK-Lab/issues/310.
+- Select the active simulation in the FSK Object viewer and mark it with (*) that it is the active one!
 
 ## Changed
 - Simulations tab of the FskPortObject view, https://github.com/SiLeBAT/FSK-Lab/issues/309.

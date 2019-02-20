@@ -173,7 +173,9 @@ public class UIUtils {
 
 		return northPanel;
 	}
-
+	public static ImageIcon getResourceImageIcon(String iconName) {
+		return new ImageIcon(UIUtils.class.getResource("/img/"+iconName));
+	}
 	/**
 	 * Creates panel to add/remove resource files.
 	 * 

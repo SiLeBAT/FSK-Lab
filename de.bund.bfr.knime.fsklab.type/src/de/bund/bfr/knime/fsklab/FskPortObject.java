@@ -19,8 +19,11 @@ package de.bund.bfr.knime.fsklab;
  */
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -38,6 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,10 +49,14 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -528,10 +536,13 @@ public class FskPortObject implements PortObject {
 		private static final long serialVersionUID = -4887698302872695689L;
 
 		private final FormPanel formPanel;
-
+		private Map<Object, Icon> icons = new HashMap<Object, Icon>(); 
+		private final String SELETCTED_SIMULATION_STR = "selected";
+	
 		public SimulationsPanel() {
 			// Panel to show parameters (show initially the simulation 0)
-			formPanel = new FormPanel(simulations.get(0).getParameters());
+			formPanel = new FormPanel(simulations.get(selectedSimulationIndex).getParameters());
+			icons.put(selectedSimulationIndex, UIUtils.getResourceImageIcon("selectedsimulation.png")); 
 			createUI();
 		}
 
@@ -539,7 +550,6 @@ public class FskPortObject implements PortObject {
 
 			FPanel simulationPanel = new FPanel();
 			simulationPanel.setLayout(new BorderLayout());
-
 			JScrollPane parametersPane = new JScrollPane(
 					UIUtils.createTitledPanel(UIUtils.createNorthPanel(formPanel), "Parameters"));
 			parametersPane.setBorder(null);
@@ -547,14 +557,15 @@ public class FskPortObject implements PortObject {
 			simulationPanel.add(parametersPane, BorderLayout.WEST);
 
 			// Panel to show preview of generated script out of parameters
-			String previewScript = buildParameterScript(simulations.get(0));
+			String previewScript = buildParameterScript(simulations.get(selectedSimulationIndex));
 			ScriptPanel scriptPanel = new ScriptPanel("Preview", previewScript, false, true);
 			simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"), BorderLayout.CENTER);
 
 			// Panel to select simulation
 			FskSimulation[] simulationsArray = simulations.toArray(new FskSimulation[simulations.size()]);
-
+			
 			JComboBox<FskSimulation> simulationList = new JComboBox<FskSimulation>(simulationsArray);
+			simulationList.setRenderer(new IconListRenderer(icons,simulationsArray));
 			simulationList.addActionListener(new ActionListener() {
 
 				@Override
@@ -572,8 +583,13 @@ public class FskPortObject implements PortObject {
 					}
 				}
 			});
+			simulationList.setSelectedIndex(selectedSimulationIndex);
+			JPanel selectionPanel = new JPanel();
+			selectionPanel.setBackground(Color.WHITE);
+			selectionPanel.add(simulationList);
+			//selectionPanel.add(new JLabel(simulationsArray[selectedSimulationIndex].getName()+" is the selected simulation to be used by the FSK Runner to run the model"));
 			JPanel simulationSelection = UIUtils
-					.createCenterPanel(UIUtils.createHorizontalPanel(new JLabel("Simulation:"), simulationList));
+					.createCenterPanel(UIUtils.createHorizontalPanel(new JLabel("Simulation:"), selectionPanel));
 
 			// Build simulations panel
 			setLayout(new BorderLayout());
@@ -581,7 +597,32 @@ public class FskPortObject implements PortObject {
 			add(simulationSelection, BorderLayout.NORTH);
 			add(simulationPanel, BorderLayout.CENTER);
 		}
-
+		class IconListRenderer extends DefaultListCellRenderer{ 
+		    private static final long serialVersionUID = 1L;
+		    private Map<Object, Icon> icons = null; 
+		    private FskSimulation[] simulationsArray;
+		    private String selectedSimulationName;
+		    public IconListRenderer(Map<Object, Icon> icons,FskSimulation[] simulationsArray ){ 
+		        this.icons = icons; 
+		        this.simulationsArray = simulationsArray;
+		        this.selectedSimulationName = simulationsArray[selectedSimulationIndex].getName();
+		    } 
+		
+		    @Override
+		    public Component getListCellRendererComponent(JList list, Object value, int index,boolean isSelected, boolean cellHasFocus)
+		    { 
+		        JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); 
+		        // Get icon to use for the list item value 
+		        Icon icon = icons.get(value); 
+		        if(index == selectedSimulationIndex || (index == -1 && value.toString().trim().equals(selectedSimulationName.trim()))){
+		            icon = icons.get(selectedSimulationIndex); 
+		        }
+		        // Set icon to display for value 
+		        label.setIcon(icon);
+		        return label; 
+		    } 
+		}
+		
 		class FormPanel extends FPanel {
 
 			private static final long serialVersionUID = 4324891441984883445L;
@@ -690,8 +731,8 @@ public class FskPortObject implements PortObject {
 				}
 			}
 		}
+	
 	}
-
 	/** Builds string with R parameters script out. */
 	private static String buildParameterScript(FskSimulation simulation) {
 
