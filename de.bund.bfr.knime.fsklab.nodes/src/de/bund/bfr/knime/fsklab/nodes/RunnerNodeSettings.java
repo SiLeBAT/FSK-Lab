@@ -40,7 +40,7 @@ public class RunnerNodeSettings {
   public String res = "NA";
 
   /** Selected simulation. */
-  public String simulation = NodeUtils.DEFAULT_SIMULATION;
+  public String simulation = "";
 
   /**
    * The default pointsize of plotted text, interpreted as big points (1/72 inch) at {@link res}
@@ -58,7 +58,7 @@ public class RunnerNodeSettings {
      * If CFG_SIMULATION is missing (in case of old workflows) then restore to defaultSimulation.
      * simulation).
      */
-    simulation = settings.getString(CFG_SIMULATION, NodeUtils.DEFAULT_SIMULATION);
+    simulation = settings.getString(CFG_SIMULATION, "");
   }
 
   public void save(final NodeSettingsWO settings) {

@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
@@ -316,13 +317,19 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
       return comFskObj;
     } else {
-      LOGGER.info(
-          " recieving '" + fskObj.selectedSimulationIndex + "' as the selected simulation index!");
-
-
-      // get the index of the selected simulation saved by the JavaScript FSK Simulation
-      // Configurator the default value is 0 which is the the default simulation
-      FskSimulation fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
+      LOGGER.info("Running simulation: " + nodeSettings.simulation);
+      
+      FskSimulation fskSimulation;
+      if (!nodeSettings.simulation.isEmpty()) {
+        // If a simulation is configured in the settings then pick it
+        Optional<FskSimulation> sim = fskObj.simulations.stream()
+            .filter(it -> it.getName().equals(nodeSettings.simulation)).findFirst();
+        // If not present assign default simulation
+        fskSimulation = sim.orElse(fskObj.simulations.get(0));
+      } else {
+        // If no selected simulation is saved in settings then pick the simulation from the input port
+        fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
+      }
 
       ExecutionContext context = exec.createSubExecutionContext(1.0);
 
