@@ -386,8 +386,9 @@ joiner = function() {
 	joinerNode.init = function(representation, value) {
 		_firstModel.generalInformation = JSON.parse(value.generalInformation);
 		_firstModel.scope = JSON.parse(value.scope);
-		firstModelName = _firstModel.generalInformation.name.split(" | ")[0];
-		secondModelName = _firstModel.generalInformation.name.split(" | ")[1];
+		firstModelName = value.firstModelName;
+		secondModelName = value.secondModelName;
+		
 		_firstModel.modelMath = JSON.parse(value.modelMath);
 		_firstModel.dataBackground = JSON.parse(value.dataBackground);
 

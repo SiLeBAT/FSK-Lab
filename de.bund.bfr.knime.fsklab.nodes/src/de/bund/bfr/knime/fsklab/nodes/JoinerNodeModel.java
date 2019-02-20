@@ -158,6 +158,8 @@ final class JoinerNodeModel extends
       // If not executed
       if (joinerProxyValue.getGeneralInformation() == null) {
         joinerProxyValue.setModelScriptTree(buildModelscriptAsTree(inObj1, inObj2));
+        joinerProxyValue.setFirstModelName(inObj1.generalInformation.getName());
+        joinerProxyValue.setSecondModelName(inObj2.generalInformation.getName());
         joinerProxyValue.setModelMath1(FromEOjectToJSON(inObj1.modelMath));
         joinerProxyValue.setModelMath2(FromEOjectToJSON(inObj2.modelMath));
         joinerProxyValue.setGeneralInformation(FromEOjectToJSON(

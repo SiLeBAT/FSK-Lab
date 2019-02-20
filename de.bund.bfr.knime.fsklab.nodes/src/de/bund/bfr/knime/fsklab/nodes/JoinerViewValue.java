@@ -52,6 +52,8 @@ class JoinerViewValue extends JSONViewContent {
   private static final String CFG_JSON_REPRESENTATION = "JSONRepresentation";
   private static final String CFG_MODELSCRIPT_TREE = "ModelScriptTree";
 
+  private static final String FIRST_MODEL_NAME = "firstModelName";
+  private static final String SECOND_MODEL_NAME = "secondModelName";
   private String firstModelScript;
   private String secondModelScript;
 
@@ -74,7 +76,10 @@ class JoinerViewValue extends JSONViewContent {
   private String jsonRepresentation;
   private String svgRepresentation;
   private String modelScriptTree;
+ 
 
+  private String firstModelName;
+  private String secondModelName;
   public String getModelScriptTree() {
     return modelScriptTree;
   }
@@ -85,6 +90,8 @@ class JoinerViewValue extends JSONViewContent {
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
+    settings.addString(FIRST_MODEL_NAME, firstModelName);
+    settings.addString(SECOND_MODEL_NAME, secondModelName);
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT2, secondModelScript);
@@ -121,6 +128,8 @@ class JoinerViewValue extends JSONViewContent {
 
   @Override
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+    firstModelName = settings.getString(FIRST_MODEL_NAME);
+    secondModelName = settings.getString(SECOND_MODEL_NAME);
     firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
     firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
     secondModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT2);
@@ -295,7 +304,21 @@ class JoinerViewValue extends JSONViewContent {
   public void setSvgRepresentation(String svgRepresentation) {
     this.svgRepresentation = svgRepresentation;
   }
+  public String getFirstModelName() {
+    return firstModelName;
+  }
 
+  public void setFirstModelName(String firstModelName) {
+    this.firstModelName = firstModelName;
+  }
+
+  public String getSecondModelName() {
+    return secondModelName;
+  }
+
+  public void setSecondModelName(String secondModelName) {
+    this.secondModelName = secondModelName;
+  }
 
 
 }
