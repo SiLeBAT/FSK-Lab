@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Order of model parameters on model import with the creator node.
+- Use simulation setting set in the runner node
 
 ## [1.4.5] - 2019-02-13
 
