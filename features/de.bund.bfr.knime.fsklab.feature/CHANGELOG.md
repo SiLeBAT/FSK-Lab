@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Order of model parameters on model import with the creator node.
 - Use simulation setting set in the runner node
+- Run joined models generated of multiple step of joining of models which use resources from the working directory.
 
 ## [1.4.5] - 2019-02-13
 
