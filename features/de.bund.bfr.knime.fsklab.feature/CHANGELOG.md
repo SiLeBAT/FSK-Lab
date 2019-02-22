@@ -6,10 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.5.0] - 2019-02-22
+
 ### Added
 - Validate parameters on model import (Creator node). https://github.com/SiLeBAT/FSK-Lab/issues/310.
 - Select the active simulation in the FSK Object viewer and mark it with (*) that it is the active one.
-- Fix the model name for joined model in the joinging board to show the full name.
 - Rearrange the diagram area with the join command form to be vertical. 
 
 ### Changed
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Order of model parameters on model import with the creator node.
 - Use simulation setting set in the runner node
+- Fix the model name for joined model in the joinging board to show the full name.
 - Run joined models generated of multiple step of joining of models which use resources from the working directory.
 - Configure the R library at ~/.fsk/library on startup with .Rprofile. foreach workers are now configured and may use the packages from there. https://github.com/SiLeBAT/FSK-Lab/issues/317
 
