@@ -126,3 +126,9 @@ body {
 	background-color: DodgerBlue !important;
 	color: #ffffff;
 }
+
+.table{
+   overflow-y:auto;
+   height:300px;
+   display:block;
+}

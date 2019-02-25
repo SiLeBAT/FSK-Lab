@@ -29,6 +29,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.io.FileUtils;
@@ -264,10 +265,10 @@ final class FSKEditorJSNodeModel
       outObj.modelMath = getEObjectFromJson(fskEditorProxyValue.getModelMath(), ModelMath.class);
 
       // Create simulation
-      if (outObj.modelMath.getParameter() != null && outObj.modelMath.getParameter().size() > 0
-          && outObj.simulations.size() == 0) {
+      if (outObj.modelMath.getParameter() != null && outObj.modelMath.getParameter().size() > 0) {
         FskSimulation defaultSimulation =
             NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter());
+        outObj.simulations.remove(0);
         outObj.simulations.add(defaultSimulation);
       }
 

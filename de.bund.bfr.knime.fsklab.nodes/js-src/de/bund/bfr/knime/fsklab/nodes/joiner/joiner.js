@@ -270,7 +270,30 @@ joiner = function() {
 				.addEventListener(
 						"input",inputHandler
 						);
+		
 		/* execute a function presses a key on the keyboard: */
+		inp.addEventListener("focus", function(e) {
+			console.log("e");
+			var x = document.getElementById(this.id + "autocomplete-list");
+			if (x)
+				x = x.getElementsByTagName("div");
+			
+			if(x == null){
+				inputHandler(e);
+			}
+		});
+		inp.addEventListener("click", function(e) {
+			event.preventDefault(); // Let's stop this event.
+			event.stopPropagation(); // Really this time.
+			var x = document.getElementById(this.id + "autocomplete-list");
+			if (x)
+				x = x.getElementsByTagName("div");
+			
+			if(x == null){
+				inputHandler(e);
+			}
+			
+		});
 		inp.addEventListener("keydown", function(e) {
 			
 			var x = document.getElementById(this.id + "autocomplete-list");
@@ -769,6 +792,21 @@ joiner = function() {
 			$(value).parent().parent().removeAttr('class');
 			$(value).parent().parent().addClass('form-group');
 			fixInputCSS($(value));
+			$(value).focus(function(){
+			    if(this.value.length > 0){
+			    	if($(value).width() <  ((this.value.length + 1) * 12)){
+			    		this.style.width = ((this.value.length + 1) * 12) + 'px';
+			    		
+			    	}
+			    }
+
+			});
+			$(value).blur(function(){
+			    if(this.value.length > 0){
+			        this.style.width = "";
+			    }
+
+			});
 		});
 
 		$('.MuiFormLabel-root-100').css('font-size', '1.5rem');
@@ -825,7 +863,10 @@ joiner = function() {
 				'patternConsumption', 'populationAge' ];
 		$("[aria-describedby*='tooltip-add']").click(function(event) {
 			currentArea = window.makeId($(this).attr('aria-label'));
-
+			window.generalInformation = window.store1.getState().jsonforms.core.data;
+			window.scope = window.store2.getState().jsonforms.core.data;
+			window.modelMath =  window.store17.getState().jsonforms.core.data;
+			window.dataBackground =  window.store6.getState().jsonforms.core.data;
 			if ($.inArray(currentArea, StringObjectPopupsName) < 0) {
 				event.preventDefault(); // Let's stop this event.
 				event.stopPropagation(); // Really this time.
@@ -1049,6 +1090,9 @@ joiner = function() {
 			
 		})
 		//console.log(navigationMap);
+		$(".table-responsive").parent().css("flex-direction","unset");
+		$(".MuiGrid-typeContainer-1").css("display","inherit");
+		$(".MuiGrid-spacing-xs-16-22").css("display","flex");
 	}
 	function drawWorkflow() {
 		graph = new joint.dia.Graph;

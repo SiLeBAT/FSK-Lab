@@ -129,3 +129,10 @@ body {
 .list-group-hover .list-group-item:hover {
     background-color: #f5f5f5;
 }
+
+
+.table{
+   overflow-y:auto;
+   height:300px;
+   display:block;
+}
