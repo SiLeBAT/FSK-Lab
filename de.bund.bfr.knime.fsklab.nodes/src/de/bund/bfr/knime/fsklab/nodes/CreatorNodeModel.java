@@ -18,10 +18,15 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +38,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.def.StringCell;
@@ -106,10 +112,10 @@ class CreatorNodeModel extends NoInternalsModel {
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-    
+
     CheckUtils.checkSourceFile(settings.getString("modelScript"));
     CheckUtils.checkSourceFile(settings.getString("spreadsheet"));
-    
+
     // Sheet
     CheckUtils.checkArgument(StringUtils.isNotEmpty(settings.getString("sheet")), "Missing sheet");
   }
@@ -125,7 +131,8 @@ class CreatorNodeModel extends NoInternalsModel {
 
   @Override
   protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
-      throws InvalidSettingsException, IOException {
+      throws InvalidSettingsException, IOException, CanceledExecutionException,
+      InvalidFormatException {
 
     // Reads model script
     RScript modelRScript = readScript(nodeSettings.modelScript);
@@ -177,29 +184,27 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     else {
-      // Reads model meta data
-      final File metaDataFile = FileUtil.getFileFromURL(FileUtil.toURL(nodeSettings.spreadsheet));
-      try (XSSFWorkbook workbook = new XSSFWorkbook(metaDataFile)) {
-        workbook.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
-        final XSSFSheet sheet = workbook.getSheet(nodeSettings.sheet);
+      exec.checkCanceled();
 
-        if (sheet.getPhysicalNumberOfRows() > 29) {
-          // Process new RAKIP spreadsheet
-          RAKIPSheetImporter importer = new RAKIPSheetImporter();
-          generalInformation = importer.retrieveGeneralInformation(sheet);
-          scope = importer.retrieveScope(sheet);
-          dataBackground = importer.retrieveDataBackground(sheet);
-          modelMath = importer.retrieveModelMath(sheet);
-        } else {
-          // Process legacy spreadsheet
-          LegacySheetImporter importer = new LegacySheetImporter(sheet);
-          generalInformation = importer.getGeneralInformation();
-          scope = importer.getScope();
-          dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
-          modelMath = importer.getModelMath();
-        }
-      } catch (IOException | InvalidFormatException e) {
-        throw new InvalidSettingsException("Invalid metadata");
+      // Reads model meta data
+      Workbook workbook = getWorkbook(nodeSettings.spreadsheet);
+      workbook.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
+      Sheet sheet = workbook.getSheet(nodeSettings.sheet);
+
+      if (sheet.getPhysicalNumberOfRows() > 29) {
+        // Process new RAKIP spreadsheet
+        RAKIPSheetImporter importer = new RAKIPSheetImporter();
+        generalInformation = importer.retrieveGeneralInformation(sheet);
+        scope = importer.retrieveScope(sheet);
+        dataBackground = importer.retrieveDataBackground(sheet);
+        modelMath = importer.retrieveModelMath(sheet);
+      } else {
+        // Process legacy spreadsheet
+        LegacySheetImporter importer = new LegacySheetImporter(sheet);
+        generalInformation = importer.getGeneralInformation();
+        scope = importer.getScope();
+        dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
+        modelMath = importer.getModelMath();
       }
     }
 
@@ -213,6 +218,7 @@ class CreatorNodeModel extends NoInternalsModel {
     String plotPath = "";
 
     // Retrieve used libraries in scripts. A set is used to avoid duplication.
+    exec.checkCanceled();
     Set<String> librariesSet = new HashSet<>();
     librariesSet.addAll(modelRScript.getLibraries());
     if (vizRScript != null) {
@@ -220,9 +226,9 @@ class CreatorNodeModel extends NoInternalsModel {
     }
     List<String> librariesList = new ArrayList<>(librariesSet);
 
-    String readmePath = nodeSettings.getReadme();
-
     // Import readme
+    exec.checkCanceled();
+    String readmePath = nodeSettings.getReadme();
     String readme;
     if (readmePath.isEmpty()) {
       readme = "";
@@ -238,26 +244,29 @@ class CreatorNodeModel extends NoInternalsModel {
     if (modelMath != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
     }
-    
+
     // Validate parameters from spreadsheet
+    exec.checkCanceled();
     try (RController controller = new RController()) {
-      
-      Path workingDirectoryPath = FileUtil.getFileFromURL(FileUtil.toURL(workingDirectory)).toPath();
+
+      Path workingDirectoryPath =
+          FileUtil.getFileFromURL(FileUtil.toURL(workingDirectory)).toPath();
       controller.setWorkingDirectory(workingDirectoryPath);
 
       FskSimulation simulation = NodeUtils.createDefaultSimulation(modelMath.getParameter());
       String script = NodeUtils.buildParameterScript(simulation);
       ScriptExecutor executor = new ScriptExecutor(controller);
-      
+
       executor.setupOutputCapturing(exec);
       executor.executeIgnoreResult(script, exec);
       executor.finishOutputCapturing(exec);
-      
+
       if (!executor.getStdErr().isEmpty()) {
         throw new InvalidSettingsException("Invalid parameters:\n" + executor.getStdErr());
       }
     } catch (RException | CanceledExecutionException | InterruptedException exception) {
-      throw new InvalidSettingsException("Parameters could not be validate. Please try again.", exception);
+      throw new InvalidSettingsException("Parameters could not be validate. Please try again.",
+          exception);
     }
 
     return new PortObject[] {portObj};
@@ -310,65 +319,65 @@ class CreatorNodeModel extends NoInternalsModel {
   }
 
   private static class LegacySheetImporter {
-    
+
     private final de.bund.bfr.knime.pmm.fskx.FskMetaData legacyMetadata;
-    
-    public LegacySheetImporter(XSSFSheet sheet) {
+
+    public LegacySheetImporter(Sheet sheet) {
       legacyMetadata = new LegacyMetadataImporter().processSpreadsheet(sheet);
     }
-    
+
     GeneralInformation getGeneralInformation() {
 
       GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
-      
+
       if (!legacyMetadata.modelName.isEmpty()) {
         generalInformation.setName(legacyMetadata.modelName);
       }
-      
+
       if (!legacyMetadata.modelId.isEmpty()) {
         generalInformation.setIdentifier(legacyMetadata.modelId);
       }
-      
+
       if (legacyMetadata.createdDate != null) {
         generalInformation.setCreationDate(legacyMetadata.createdDate);
       }
-      
+
       if (!legacyMetadata.rights.isEmpty()) {
         generalInformation.setRights(legacyMetadata.rights);
       }
-      
+
       generalInformation.setAvailable(true);
       generalInformation.setFormat("");
-      
+
       if (legacyMetadata.modifiedDate != null) {
         ModificationDate md = MetadataFactory.eINSTANCE.createModificationDate();
         md.setValue(legacyMetadata.modifiedDate);
         generalInformation.getModificationdate().add(md);
       }
-      
+
       return generalInformation;
     }
-    
+
     Scope getScope() {
-     
+
       Scope scope = MetadataFactory.eINSTANCE.createScope();
-      
+
       Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
       hazard.setHazardName(legacyMetadata.organism);
       hazard.setHazardDescription(legacyMetadata.organismDetails);
-      
+
       Product product = MetadataFactory.eINSTANCE.createProduct();
       product.setProductName(legacyMetadata.matrix);
       product.setProductDescription(legacyMetadata.matrixDetails);
       scope.getProduct().add(product);
 
-      return scope; 
+      return scope;
     }
-    
+
     ModelMath getModelMath() {
-      
+
       ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
-      
+
       Parameter depParam = MetadataFactory.eINSTANCE.createParameter();
       depParam.setParameterID(legacyMetadata.dependentVariable.name);
       depParam.setParameterClassification(ParameterClassification.OUTPUT);
@@ -376,9 +385,9 @@ class CreatorNodeModel extends NoInternalsModel {
       depParam.setParameterUnit(legacyMetadata.dependentVariable.unit);
       depParam.setParameterUnitCategory("");
       depParam.setParameterDataType(ParameterType.OTHER);
-      
+
       modelMath.getParameter().add(depParam);
-      
+
       // Independent variables
       for (Variable indepVar : legacyMetadata.independentVariables) {
         final Parameter indepParam = MetadataFactory.eINSTANCE.createParameter();
@@ -388,14 +397,14 @@ class CreatorNodeModel extends NoInternalsModel {
         indepParam.setParameterUnit(indepVar.unit);
         indepParam.setParameterUnitCategory("");
         indepParam.setParameterDataType(ParameterType.OTHER);
-        
+
         modelMath.getParameter().add(indepParam);
       }
-      
+
       return modelMath;
     }
   }
-  
+
   /** Parses metadata-filled tables imported from a Google Drive spreadsheet. */
   static class TableParser {
 
@@ -940,5 +949,60 @@ class CreatorNodeModel extends NoInternalsModel {
 
       return param;
     }
+  }
+
+  /**
+   * Taken from {@link org.knime.ext.poi.node.read2.XLSUserSettings}.
+   * 
+   * Opens and returns a new buffered input stream on the passed location. The location could either
+   * be a filename or a URL.
+   *
+   * @param location a filename or a URL
+   * @return a new opened buffered input stream.
+   * @throws IOException
+   * 
+   */
+  public static BufferedInputStream getBufferedInputStream(final String location)
+      throws IOException {
+    InputStream in;
+    try {
+      URL url = new URL(location);
+      in = FileUtil.openStreamWithTimeout(url);
+    } catch (MalformedURLException mue) {
+      // then try a file
+      in = new FileInputStream(location);
+    }
+    return new BufferedInputStream(in);
+
+  }
+
+  /**
+   * Taken from {@link org.knime.ext.poi.node.read2.XLSTableSettings}.
+   * 
+   * Loads a workbook from the file system.
+   *
+   * @param path Path to the workbook
+   * @return The workbook or null if it could not be loaded
+   * @throws IOException
+   * @throws InvalidFormatException
+   * @throws RuntimeException the underlying POI library also throws other kind of exceptions
+   */
+  public static Workbook getWorkbook(final String path) throws IOException, InvalidFormatException {
+    Workbook workbook = null;
+    InputStream in = null;
+    try {
+      in = getBufferedInputStream(path);
+      // This should be the only place in the code where a workbook gets loaded
+      workbook = WorkbookFactory.create(in);
+    } finally {
+      if (in != null) {
+        try {
+          in.close();
+        } catch (IOException e2) {
+          // ignore
+        }
+      }
+    }
+    return workbook;
   }
 }

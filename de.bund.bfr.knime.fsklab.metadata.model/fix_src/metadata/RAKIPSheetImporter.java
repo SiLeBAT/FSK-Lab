@@ -11,9 +11,8 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 public class RAKIPSheetImporter {
 
@@ -112,72 +111,72 @@ public class RAKIPSheetImporter {
 	private final int STUDY__STUDY_PROTOCOL_COMPONENTS_NAME = 91;
 	private final int STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE = 92;
 
-	public GeneralInformation retrieveGeneralInformation(XSSFSheet sheet) {
+	public GeneralInformation retrieveGeneralInformation(Sheet sheet) {
 
 		GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
 
-		XSSFCell nameCell = sheet.getRow(GENERAL_INFORMATION__NAME).getCell(I);
+		Cell nameCell = sheet.getRow(GENERAL_INFORMATION__NAME).getCell(I);
 		if (nameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setName(nameCell.getStringCellValue());
 		}
 
-		XSSFCell sourceCell = sheet.getRow(GENERAL_INFORMATION__SOURCE).getCell(I);
+		Cell sourceCell = sheet.getRow(GENERAL_INFORMATION__SOURCE).getCell(I);
 		if (sourceCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setSource(sourceCell.getStringCellValue());
 		}
 
-		XSSFCell identifierCell = sheet.getRow(GENERAL_INFORMATION__IDENTIFIER).getCell(I);
+		Cell identifierCell = sheet.getRow(GENERAL_INFORMATION__IDENTIFIER).getCell(I);
 		if (identifierCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setIdentifier(identifierCell.getStringCellValue());
 		}
 
-		XSSFCell creationDateCell = sheet.getRow(GENERAL_INFORMATION_CREATION_DATE).getCell(I);
+		Cell creationDateCell = sheet.getRow(GENERAL_INFORMATION_CREATION_DATE).getCell(I);
 		if (creationDateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 			generalInformation.setCreationDate(creationDateCell.getDateCellValue());
 		}
 
-		XSSFCell rightsCell = sheet.getRow(GENERAL_INFORMATION__RIGHTS).getCell(I);
+		Cell rightsCell = sheet.getRow(GENERAL_INFORMATION__RIGHTS).getCell(I);
 		if (rightsCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setRights(rightsCell.getStringCellValue());
 		}
 
-		XSSFCell isAvailableCell = sheet.getRow(GENERAL_INFORMATION__AVAILABLE).getCell(I);
+		Cell isAvailableCell = sheet.getRow(GENERAL_INFORMATION__AVAILABLE).getCell(I);
 		if (isAvailableCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			String isAvailableString = isAvailableCell.getStringCellValue();
 			generalInformation.setAvailable(isAvailableString.equals("Yes"));
 		}
 
-		XSSFCell formatCell = sheet.getRow(GENERAL_INFORMATION__FORMAT).getCell(I);
+		Cell formatCell = sheet.getRow(GENERAL_INFORMATION__FORMAT).getCell(I);
 		if (formatCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setFormat(formatCell.getStringCellValue());
 		}
 
-		XSSFCell languageCell = sheet.getRow(GENERAL_INFORMATION__LANGUAGE).getCell(I);
+		Cell languageCell = sheet.getRow(GENERAL_INFORMATION__LANGUAGE).getCell(I);
 		if (languageCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setLanguage(languageCell.getStringCellValue());
 		}
 
-		XSSFCell softwareCell = sheet.getRow(GENERAL_INFORMATION__SOFTWARE).getCell(I);
+		Cell softwareCell = sheet.getRow(GENERAL_INFORMATION__SOFTWARE).getCell(I);
 		if (softwareCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setSoftware(softwareCell.getStringCellValue());
 		}
 
-		XSSFCell languageWrittenInCell = sheet.getRow(GENERAL_INFORMATION__LANGUAGE_WRITTEN_IN).getCell(I);
+		Cell languageWrittenInCell = sheet.getRow(GENERAL_INFORMATION__LANGUAGE_WRITTEN_IN).getCell(I);
 		if (languageWrittenInCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setLanguageWrittenIn(languageWrittenInCell.getStringCellValue());
 		}
 
-		XSSFCell statusCell = sheet.getRow(GENERAL_INFORMATION__STATUS).getCell(I);
+		Cell statusCell = sheet.getRow(GENERAL_INFORMATION__STATUS).getCell(I);
 		if (statusCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setStatus(statusCell.getStringCellValue());
 		}
 
-		XSSFCell objectiveCell = sheet.getRow(GENERAL_INFORMATION__OBJECTIVE).getCell(I);
+		Cell objectiveCell = sheet.getRow(GENERAL_INFORMATION__OBJECTIVE).getCell(I);
 		if (objectiveCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setObjective(objectiveCell.getStringCellValue());
 		}
 
-		XSSFCell descriptionCell = sheet.getRow(GENERAL_INFORMATION__DESCRIPTION).getCell(I);
+		Cell descriptionCell = sheet.getRow(GENERAL_INFORMATION__DESCRIPTION).getCell(I);
 		if (descriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			generalInformation.setDescription(descriptionCell.getStringCellValue());
 		}
@@ -222,7 +221,7 @@ public class RAKIPSheetImporter {
 	/**
 	 * @throw IllegalArgumentException if mail is empty.
 	 */
-	private Contact retrieveContact(XSSFRow row, Map<String, Integer> columns) {
+	private Contact retrieveContact(Row row, Map<String, Integer> columns) {
 
 		// Check mandatory properties and throw exception if missing
 		if (row.getCell(columns.get("mail")).getCellType() == Cell.CELL_TYPE_BLANK) {
@@ -232,47 +231,47 @@ public class RAKIPSheetImporter {
 		Contact contact = MetadataFactory.eINSTANCE.createContact();
 		contact.setEmail(row.getCell(columns.get("mail")).getStringCellValue());
 
-		XSSFCell titleCell = row.getCell(columns.get("title"));
+		Cell titleCell = row.getCell(columns.get("title"));
 		if (titleCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setTitle(titleCell.getStringCellValue());
 		}
 
-		XSSFCell familyNameCell = row.getCell(columns.get("familyName"));
+		Cell familyNameCell = row.getCell(columns.get("familyName"));
 		if (familyNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setFamilyName(familyNameCell.getStringCellValue());
 		}
 
-		XSSFCell givenNameCell = row.getCell(columns.get("givenName"));
+		Cell givenNameCell = row.getCell(columns.get("givenName"));
 		if (givenNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setGivenName(givenNameCell.getStringCellValue());
 		}
 
-		XSSFCell telephoneCell = row.getCell(columns.get("telephone"));
+		Cell telephoneCell = row.getCell(columns.get("telephone"));
 		if (telephoneCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setTelephone(telephoneCell.getStringCellValue());
 		}
 
-		XSSFCell streetAddressCell = row.getCell(columns.get("streetAddress"));
+		Cell streetAddressCell = row.getCell(columns.get("streetAddress"));
 		if (streetAddressCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setStreetAddress(streetAddressCell.getStringCellValue());
 		}
 
-		XSSFCell countryCell = row.getCell(columns.get("country"));
+		Cell countryCell = row.getCell(columns.get("country"));
 		if (countryCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setCountry(countryCell.getStringCellValue());
 		}
 
-		XSSFCell cityCell = row.getCell(columns.get("city"));
+		Cell cityCell = row.getCell(columns.get("city"));
 		if (cityCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setCity(cityCell.getStringCellValue());
 		}
 
-		XSSFCell zipCodeCell = row.getCell(columns.get("zipCode"));
+		Cell zipCodeCell = row.getCell(columns.get("zipCode"));
 		if (zipCodeCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setZipCode(zipCodeCell.getStringCellValue());
 		}
 
-		XSSFCell regionCell = row.getCell(columns.get("region"));
+		Cell regionCell = row.getCell(columns.get("region"));
 		if (regionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setRegion(regionCell.getStringCellValue());
 		}
@@ -281,7 +280,7 @@ public class RAKIPSheetImporter {
 		// gender not included in spreadsheet ?
 		// note not included in spreadsheet ?
 
-		XSSFCell organizationCell = row.getCell(columns.get("organization"));
+		Cell organizationCell = row.getCell(columns.get("organization"));
 		if (organizationCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			contact.setOrganization(organizationCell.getStringCellValue());
 		}
@@ -292,7 +291,7 @@ public class RAKIPSheetImporter {
 	/**
 	 * @throw IllegalArgumentException if mail is empty.
 	 */
-	public Contact retrieveContact(XSSFRow row) {
+	public Contact retrieveContact(Row row) {
 
 		@SuppressWarnings("serial")
 		HashMap<String, Integer> columns = new HashMap<String, Integer>() {
@@ -313,7 +312,7 @@ public class RAKIPSheetImporter {
 		return retrieveContact(row, columns);
 	}
 
-	public Contact retrieveAuthor(XSSFRow row) {
+	public Contact retrieveAuthor(Row row) {
 
 		@SuppressWarnings("serial")
 		HashMap<String, Integer> columns = new HashMap<String, Integer>() {
@@ -382,7 +381,7 @@ public class RAKIPSheetImporter {
 	 * @throws IllegalArgumentException
 	 *             if isReferenceDescription or DOI are missing
 	 */
-	public Reference retrieveReference(XSSFRow row) {
+	public Reference retrieveReference(Row row) {
 
 		/*
 		 * Journal, volume and issue cannot be parsed since there are encoded as free
@@ -409,7 +408,7 @@ public class RAKIPSheetImporter {
 		reference.setIsReferenceDescription(row.getCell(K).getStringCellValue().equals("Yes"));
 		reference.setDoi(row.getCell(O).getStringCellValue());
 
-		XSSFCell publicationTypeCell = row.getCell(L);
+		Cell publicationTypeCell = row.getCell(L);
 		if (publicationTypeCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			String publicationTypeLiteral = publicationTypeCell.getStringCellValue();
 			PublicationType publicationType = PublicationType.get(publicationTypeLiteral);
@@ -418,29 +417,29 @@ public class RAKIPSheetImporter {
 			}
 		}
 
-		XSSFCell publicationDateCell = row.getCell(M);
+		Cell publicationDateCell = row.getCell(M);
 		if (publicationDateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 			Date publicationDate = publicationDateCell.getDateCellValue();
 			publicationDate.setYear(publicationDate.getYear() + 1900);
 			reference.setPublicationDate(publicationDate);
 		}
 
-		XSSFCell pmidCell = row.getCell(N);
+		Cell pmidCell = row.getCell(N);
 		if (pmidCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			reference.setPmid(pmidCell.getStringCellValue());
 		}
 
-		XSSFCell authorListCell = row.getCell(P);
+		Cell authorListCell = row.getCell(P);
 		if (authorListCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			reference.setAuthorList(authorListCell.getStringCellValue());
 		}
 
-		XSSFCell publicationTitleCell = row.getCell(Q);
+		Cell publicationTitleCell = row.getCell(Q);
 		if (publicationTitleCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			reference.setPublicationTitle(publicationTitleCell.getStringCellValue());
 		}
 
-		XSSFCell publicationAbstractCell = row.getCell(R);
+		Cell publicationAbstractCell = row.getCell(R);
 		if (publicationAbstractCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			reference.setPublicationAbstract(publicationAbstractCell.getStringCellValue());
 		}
@@ -448,17 +447,17 @@ public class RAKIPSheetImporter {
 		// TODO: journal
 		// TODO: issue
 
-		XSSFCell publicationStatusCell = row.getCell(T);
+		Cell publicationStatusCell = row.getCell(T);
 		if (publicationStatusCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			reference.setPublicationStatus(publicationStatusCell.getStringCellValue());
 		}
 
-		XSSFCell websiteCell = row.getCell(U);
+		Cell websiteCell = row.getCell(U);
 		if (websiteCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			reference.setPublicationWebsite(websiteCell.getStringCellValue());
 		}
 
-		XSSFCell commentCell = row.getCell(V);
+		Cell commentCell = row.getCell(V);
 		if (commentCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			reference.setComment(commentCell.getStringCellValue());
 		}
@@ -479,7 +478,7 @@ public class RAKIPSheetImporter {
 	 * @throws IllegalArgumentException
 	 *             if modelClass is missing.
 	 */
-	public ModelCategory retrieveModelCategory(XSSFSheet sheet) {
+	public ModelCategory retrieveModelCategory(Sheet sheet) {
 
 		// Check mandatory properties and throw exception if missing
 		if (sheet.getRow(MODEL_CATEGORY__MODEL_CLASS).getCell(I).getCellType() != Cell.CELL_TYPE_STRING) {
@@ -490,18 +489,18 @@ public class RAKIPSheetImporter {
 
 		modelCategory.setModelClass(sheet.getRow(MODEL_CATEGORY__MODEL_CLASS).getCell(I).getStringCellValue());
 
-		XSSFCell subClassCell = sheet.getRow(MODEL_CATEGORY__MODEL_SUB_CLASS).getCell(I);
+		Cell subClassCell = sheet.getRow(MODEL_CATEGORY__MODEL_SUB_CLASS).getCell(I);
 		if (subClassCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(subClassCell.getStringCellValue());
 			modelCategory.getModelSubClass().addAll(stringObjects);
 		}
 
-		XSSFCell modelClassCommentCell = sheet.getRow(MODEL_CATEGORY__CLASS_COMMENT).getCell(I);
+		Cell modelClassCommentCell = sheet.getRow(MODEL_CATEGORY__CLASS_COMMENT).getCell(I);
 		if (modelClassCommentCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			modelCategory.setModelClassComment(modelClassCommentCell.getStringCellValue());
 		}
 
-		XSSFCell basicProcessCell = sheet.getRow(MODEL_CATEGORY__BASIC_PROCESS).getCell(I);
+		Cell basicProcessCell = sheet.getRow(MODEL_CATEGORY__BASIC_PROCESS).getCell(I);
 		if (basicProcessCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			modelCategory.setBasicProcess(basicProcessCell.getStringCellValue());
 		}
@@ -509,13 +508,13 @@ public class RAKIPSheetImporter {
 		return modelCategory;
 	}
 
-	public Scope retrieveScope(XSSFSheet sheet) {
+	public Scope retrieveScope(Sheet sheet) {
 
 		Scope scope = MetadataFactory.eINSTANCE.createScope();
 
 		for (int numrow = 38; numrow <= 49; numrow++) {
 
-			XSSFRow row = sheet.getRow(numrow);
+			Row row = sheet.getRow(numrow);
 
 			try {
 				scope.getProduct().add(retrieveProduct(row));
@@ -536,12 +535,12 @@ public class RAKIPSheetImporter {
 			}
 		}
 
-		XSSFCell generalCommentCell = sheet.getRow(SCOPE__GENERAL_COMMENT).getCell(I);
+		Cell generalCommentCell = sheet.getRow(SCOPE__GENERAL_COMMENT).getCell(I);
 		if (generalCommentCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			scope.setGeneralComment(generalCommentCell.getStringCellValue());
 		}
 
-		XSSFCell temporalInformationCell = sheet.getRow(SCOPE__TEMPORAL_INFORMATION).getCell(I);
+		Cell temporalInformationCell = sheet.getRow(SCOPE__TEMPORAL_INFORMATION).getCell(I);
 		if (temporalInformationCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			scope.setTemporalInformation(temporalInformationCell.getStringCellValue());
 		}
@@ -551,7 +550,7 @@ public class RAKIPSheetImporter {
 		return scope;
 	}
 
-	public DataBackground retrieveDataBackground(XSSFSheet sheet) {
+	public DataBackground retrieveDataBackground(Sheet sheet) {
 
 		DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
 
@@ -597,7 +596,7 @@ public class RAKIPSheetImporter {
 		return dataBackground;
 	}
 
-	public Study retrieveStudy(XSSFSheet sheet) {
+	public Study retrieveStudy(Sheet sheet) {
 
 		// Check first mandatory properties
 		if (sheet.getRow(STUDY__STUDY_TITLE).getCell(I).getCellType() != Cell.CELL_TYPE_STRING) {
@@ -606,80 +605,80 @@ public class RAKIPSheetImporter {
 
 		Study study = MetadataFactory.eINSTANCE.createStudy();
 
-		XSSFCell identifierCell = sheet.getRow(STUDY__STUDY_IDENTIFIER).getCell(I);
+		Cell identifierCell = sheet.getRow(STUDY__STUDY_IDENTIFIER).getCell(I);
 		if (identifierCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyIdentifier(identifierCell.getStringCellValue());
 		}
 
 		study.setStudyTitle(sheet.getRow(STUDY__STUDY_TITLE).getCell(I).getStringCellValue());
 
-		XSSFCell descriptionCell = sheet.getRow(STUDY__STUDY_DESCRIPTION).getCell(I);
+		Cell descriptionCell = sheet.getRow(STUDY__STUDY_DESCRIPTION).getCell(I);
 		if (descriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyDescription(descriptionCell.getStringCellValue());
 		}
 
-		XSSFCell designTypeCell = sheet.getRow(STUDY__STUDY_DESIGN_TYPE).getCell(I);
+		Cell designTypeCell = sheet.getRow(STUDY__STUDY_DESIGN_TYPE).getCell(I);
 		if (designTypeCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyDesignType(designTypeCell.getStringCellValue());
 		}
 
-		XSSFCell measurementTypeCell = sheet.getRow(STUDY__STUDY_ASSAY_MEASUREMENT_TYPE).getCell(I);
+		Cell measurementTypeCell = sheet.getRow(STUDY__STUDY_ASSAY_MEASUREMENT_TYPE).getCell(I);
 		if (measurementTypeCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyAssayMeasurementType(measurementTypeCell.getStringCellValue());
 		}
 
-		XSSFCell technologyTypeCell = sheet.getRow(STUDY__STUDY_ASSAY_TECHNOLOGY_TYPE).getCell(I);
+		Cell technologyTypeCell = sheet.getRow(STUDY__STUDY_ASSAY_TECHNOLOGY_TYPE).getCell(I);
 		if (technologyTypeCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyAssayTechnologyType(technologyTypeCell.getStringCellValue());
 		}
 
-		XSSFCell technologyPlatformCell = sheet.getRow(STUDY__STUDY_ASSAY_TECHNOLOGY_PLATFORM).getCell(I);
+		Cell technologyPlatformCell = sheet.getRow(STUDY__STUDY_ASSAY_TECHNOLOGY_PLATFORM).getCell(I);
 		if (technologyPlatformCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyAssayTechnologyPlatform(technologyPlatformCell.getStringCellValue());
 		}
 
-		XSSFCell accreditationProcedureCell = sheet.getRow(STUDY__ACCREDITATION_PROCEDURE_FOR_THE_ASSAY_TECHNOLOGY)
+		Cell accreditationProcedureCell = sheet.getRow(STUDY__ACCREDITATION_PROCEDURE_FOR_THE_ASSAY_TECHNOLOGY)
 				.getCell(I);
 		if (accreditationProcedureCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setAccreditationProcedureForTheAssayTechnology(accreditationProcedureCell.getStringCellValue());
 		}
 
-		XSSFCell protocolNameCell = sheet.getRow(STUDY__STUDY_PROTOCOL_NAME).getCell(I);
+		Cell protocolNameCell = sheet.getRow(STUDY__STUDY_PROTOCOL_NAME).getCell(I);
 		if (protocolNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyProtocolName(protocolNameCell.getStringCellValue());
 		}
 
-		XSSFCell protocolTypeCell = sheet.getRow(STUDY__STUDY_PROTOCOL_TYPE).getCell(I);
+		Cell protocolTypeCell = sheet.getRow(STUDY__STUDY_PROTOCOL_TYPE).getCell(I);
 		if (protocolTypeCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyProtocolType(protocolTypeCell.getStringCellValue());
 		}
 
-		XSSFCell protocolDescriptionCell = sheet.getRow(STUDY__STUDY_PROTOCOL_DESCRIPTION).getCell(I);
+		Cell protocolDescriptionCell = sheet.getRow(STUDY__STUDY_PROTOCOL_DESCRIPTION).getCell(I);
 		if (protocolDescriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyProtocolDescription(protocolDescriptionCell.getStringCellValue());
 		}
 
-		XSSFCell protocolURICell = sheet.getRow(STUDY__STUDY_PROTOCOL_URI).getCell(I);
+		Cell protocolURICell = sheet.getRow(STUDY__STUDY_PROTOCOL_URI).getCell(I);
 		if (protocolURICell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyProtocolURI(URI.create(protocolURICell.getStringCellValue()));
 		}
 
-		XSSFCell protocolVersionCell = sheet.getRow(STUDY__STUDY_PROTOCOL_VERSION).getCell(I);
+		Cell protocolVersionCell = sheet.getRow(STUDY__STUDY_PROTOCOL_VERSION).getCell(I);
 		if (protocolVersionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyProtocolVersion(protocolVersionCell.getStringCellValue());
 		}
 
-		XSSFCell parameterNameCell = sheet.getRow(STUDY__STUDY_PROTOCOL_PARAMETERS_NAME).getCell(I);
+		Cell parameterNameCell = sheet.getRow(STUDY__STUDY_PROTOCOL_PARAMETERS_NAME).getCell(I);
 		if (parameterNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyProtocolParametersName(parameterNameCell.getStringCellValue());
 		}
 
-		XSSFCell componentNameCell = sheet.getRow(STUDY__STUDY_PROTOCOL_COMPONENTS_NAME).getCell(I);
+		Cell componentNameCell = sheet.getRow(STUDY__STUDY_PROTOCOL_COMPONENTS_NAME).getCell(I);
 		if (componentNameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyProtocolComponentsName(componentNameCell.getStringCellValue());
 		}
 
-		XSSFCell componentTypeCell = sheet.getRow(STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE).getCell(I);
+		Cell componentTypeCell = sheet.getRow(STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE).getCell(I);
 		if (componentTypeCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			study.setStudyProtocolComponentsType(componentTypeCell.getStringCellValue());
 		}
@@ -687,7 +686,7 @@ public class RAKIPSheetImporter {
 		return study;
 	}
 
-	public StudySample retrieveStudySample(XSSFRow row) {
+	public StudySample retrieveStudySample(Row row) {
 
 		// Check mandatory properties
 		if (row.getCell(L).getCellType() == Cell.CELL_TYPE_BLANK) {
@@ -710,17 +709,17 @@ public class RAKIPSheetImporter {
 		studySample.setSampleName(getString(row.getCell(L)));
 		studySample.setProtocolOfSampleCollection(getString(row.getCell(M)));
 
-		XSSFCell strategyCell = row.getCell(N);
+		Cell strategyCell = row.getCell(N);
 		if (strategyCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			studySample.setSamplingStrategy(getString(strategyCell));
 		}
 
-		XSSFCell samplingProgramCell = row.getCell(O);
+		Cell samplingProgramCell = row.getCell(O);
 		if (samplingProgramCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			studySample.setTypeOfSamplingProgram(getString(samplingProgramCell));
 		}
 
-		XSSFCell samplingMethodCell = row.getCell(P);
+		Cell samplingMethodCell = row.getCell(P);
 		if (samplingMethodCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			studySample.setSamplingMethod(getString(samplingMethodCell));
 		}
@@ -729,12 +728,12 @@ public class RAKIPSheetImporter {
 		studySample.setSamplingWeight(getString(row.getCell(R)));
 		studySample.setSamplingSize(getString(row.getCell(S)));
 
-		XSSFCell unitCell = row.getCell(T);
+		Cell unitCell = row.getCell(T);
 		if (unitCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			studySample.setLotSizeUnit(getString(unitCell));
 		}
 
-		XSSFCell pointCell = row.getCell(U);
+		Cell pointCell = row.getCell(U);
 		if (pointCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			studySample.setSamplingPoint(getString(pointCell));
 		}
@@ -742,7 +741,7 @@ public class RAKIPSheetImporter {
 		return studySample;
 	}
 
-	public Parameter retrieveParameter(XSSFRow row) {
+	public Parameter retrieveParameter(Row row) {
 
 		// Check first mandatory properties
 		if (row.getCell(L).getCellType() == Cell.CELL_TYPE_BLANK) {
@@ -776,19 +775,19 @@ public class RAKIPSheetImporter {
 
 		param.setParameterName(getString(row.getCell(N)));
 
-		XSSFCell descriptionCell = row.getCell(O);
+		Cell descriptionCell = row.getCell(O);
 		if (descriptionCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterDescription(getString(descriptionCell));
 		}
 
-		XSSFCell typeCell = row.getCell(P);
+		Cell typeCell = row.getCell(P);
 		if (typeCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterType(getString(typeCell));
 		}
 
 		param.setParameterUnit(getString(row.getCell(Q)));
 
-		XSSFCell unitCategoryCell = row.getCell(R);
+		Cell unitCategoryCell = row.getCell(R);
 		if (unitCategoryCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterUnitCategory(getString(unitCategoryCell));
 		}
@@ -799,22 +798,22 @@ public class RAKIPSheetImporter {
 			param.setParameterDataType(parameterType);
 		}
 
-		XSSFCell parameterSourceCell = row.getCell(T);
+		Cell parameterSourceCell = row.getCell(T);
 		if (parameterSourceCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterSource(getString(parameterSourceCell));
 		}
 
-		XSSFCell parameterSubjectCell = row.getCell(U);
+		Cell parameterSubjectCell = row.getCell(U);
 		if (parameterSubjectCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterSubject(getString(parameterSubjectCell));
 		}
 
-		XSSFCell parameterDistributionCell = row.getCell(V);
+		Cell parameterDistributionCell = row.getCell(V);
 		if (parameterDistributionCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterDistribution(getString(parameterDistributionCell));
 		}
 
-		XSSFCell parameterValueCell = row.getCell(W);
+		Cell parameterValueCell = row.getCell(W);
 		if (parameterValueCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 
 			if (parameterValueCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
@@ -832,22 +831,22 @@ public class RAKIPSheetImporter {
 
 		// TODO: reference
 
-		XSSFCell variabilitySubjectCell = row.getCell(Y);
+		Cell variabilitySubjectCell = row.getCell(Y);
 		if (variabilitySubjectCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterVariabilitySubject(getString(variabilitySubjectCell));
 		}
 
-		XSSFCell maxCell = row.getCell(Z);
+		Cell maxCell = row.getCell(Z);
 		if (maxCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterValueMax(getString(maxCell));
 		}
 
-		XSSFCell minCell = row.getCell(AA);
+		Cell minCell = row.getCell(AA);
 		if (minCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterValueMin(getString(minCell));
 		}
 
-		XSSFCell errorCell = row.getCell(AB);
+		Cell errorCell = row.getCell(AB);
 		if (errorCell.getCellType() != Cell.CELL_TYPE_BLANK) {
 			param.setParameterError(getString(errorCell));
 		}
@@ -855,7 +854,7 @@ public class RAKIPSheetImporter {
 		return param;
 	}
 
-	public Product retrieveProduct(XSSFRow row) {
+	public Product retrieveProduct(Row row) {
 
 		// Check first mandatory properties
 		if (row.getCell(K).getCellType() != Cell.CELL_TYPE_STRING) {
@@ -872,7 +871,7 @@ public class RAKIPSheetImporter {
 		product.setProductName(row.getCell(K).getStringCellValue());
 
 		// product description
-		XSSFCell productDescriptionCell = row.getCell(L);
+		Cell productDescriptionCell = row.getCell(L);
 		if (productDescriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			product.setProductDescription(productDescriptionCell.getStringCellValue());
 		}
@@ -881,43 +880,43 @@ public class RAKIPSheetImporter {
 		product.setProductUnit(row.getCell(M).getStringCellValue());
 
 		// production method
-		XSSFCell productionMethodCell = row.getCell(N);
+		Cell productionMethodCell = row.getCell(N);
 		if (productionMethodCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			product.setProductionMethod(productionMethodCell.getStringCellValue());
 		}
 
 		// packaging
-		XSSFCell packagingCell = row.getCell(O);
+		Cell packagingCell = row.getCell(O);
 		if (packagingCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			product.setPackaging(packagingCell.getStringCellValue());
 		}
 
 		// product treatment
-		XSSFCell productTreatmentCell = row.getCell(P);
+		Cell productTreatmentCell = row.getCell(P);
 		if (productTreatmentCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			product.setProductTreatment(productTreatmentCell.getStringCellValue());
 		}
 
 		// origin country
-		XSSFCell originCountryCell = row.getCell(Q);
+		Cell originCountryCell = row.getCell(Q);
 		if (originCountryCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			product.setOriginCountry(originCountryCell.getStringCellValue());
 		}
 
 		// origin area
-		XSSFCell originAreaCell = row.getCell(R);
+		Cell originAreaCell = row.getCell(R);
 		if (originAreaCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			product.setOriginArea(originAreaCell.getStringCellValue());
 		}
 
 		// fisheries area
-		XSSFCell fisheriesAreaCell = row.getCell(S);
+		Cell fisheriesAreaCell = row.getCell(S);
 		if (fisheriesAreaCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			product.setFisheriesArea(fisheriesAreaCell.getStringCellValue());
 		}
 
 		// production date
-		XSSFCell productionDateCell = row.getCell(T);
+		Cell productionDateCell = row.getCell(T);
 		if (productionDateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 			Date productionDate = productionDateCell.getDateCellValue();
 			productionDate.setYear(productionDate.getYear() + 1900);
@@ -925,7 +924,7 @@ public class RAKIPSheetImporter {
 		}
 
 		// expiry date U
-		XSSFCell expiryDateCell = row.getCell(U);
+		Cell expiryDateCell = row.getCell(U);
 		if (expiryDateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 			Date expiryDate = expiryDateCell.getDateCellValue();
 			expiryDate.setYear(expiryDate.getYear() + 1900);
@@ -935,7 +934,7 @@ public class RAKIPSheetImporter {
 		return product;
 	}
 
-	public Hazard retrieveHazard(XSSFRow row) {
+	public Hazard retrieveHazard(Row row) {
 
 		// Check mandatory properties
 		if (row.getCell(W).getCellType() != Cell.CELL_TYPE_STRING) {
@@ -945,62 +944,62 @@ public class RAKIPSheetImporter {
 		Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
 		hazard.setHazardName(row.getCell(W).getStringCellValue());
 
-		XSSFCell typeCell = row.getCell(V);
+		Cell typeCell = row.getCell(V);
 		if (typeCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setHazardType(typeCell.getStringCellValue());
 		}
 
-		XSSFCell hazardDescriptionCell = row.getCell(X);
+		Cell hazardDescriptionCell = row.getCell(X);
 		if (hazardDescriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setHazardDescription(hazardDescriptionCell.getStringCellValue());
 		}
 
-		XSSFCell hazardUnitCell = row.getCell(Y);
+		Cell hazardUnitCell = row.getCell(Y);
 		if (hazardUnitCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setHazardUnit(hazardUnitCell.getStringCellValue());
 		}
 
-		XSSFCell adverseEffect = row.getCell(Z);
+		Cell adverseEffect = row.getCell(Z);
 		if (adverseEffect.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setAdverseEffect(adverseEffect.getStringCellValue());
 		}
 
-		XSSFCell sourceOfContaminationCell = row.getCell(AA);
+		Cell sourceOfContaminationCell = row.getCell(AA);
 		if (sourceOfContaminationCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setSourceOfContamination(sourceOfContaminationCell.getStringCellValue());
 		}
 
-		XSSFCell bmdCell = row.getCell(AB);
+		Cell bmdCell = row.getCell(AB);
 		if (bmdCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setBenchmarkDose(bmdCell.getStringCellValue());
 		}
 
-		XSSFCell maximumResidueLimitCell = row.getCell(AC);
+		Cell maximumResidueLimitCell = row.getCell(AC);
 		if (maximumResidueLimitCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setMaximumResidueLimit(maximumResidueLimitCell.getStringCellValue());
 		}
 
-		XSSFCell noaelCell = row.getCell(AD);
+		Cell noaelCell = row.getCell(AD);
 		if (noaelCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setNoObservedAdverseAffectLevel(noaelCell.getStringCellValue());
 		}
 
-		XSSFCell loaelCell = row.getCell(AE);
+		Cell loaelCell = row.getCell(AE);
 		if (loaelCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setLowestObservedAdverseAffectLevel(loaelCell.getStringCellValue());
 		}
 
-		XSSFCell aoelCell = row.getCell(AF);
+		Cell aoelCell = row.getCell(AF);
 		if (aoelCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setAcceptableOperatorExposureLevel(aoelCell.getStringCellValue());
 		}
 
-		XSSFCell arfdCell = row.getCell(AG);
+		Cell arfdCell = row.getCell(AG);
 		if (arfdCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setAcuteReferenceDose(arfdCell.getStringCellValue());
 		}
 
-		XSSFCell adiCell = row.getCell(AH);
+		Cell adiCell = row.getCell(AH);
 		if (adiCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			hazard.setAcceptableDailyIntake(adiCell.getStringCellValue());
 		}
@@ -1008,7 +1007,7 @@ public class RAKIPSheetImporter {
 		return hazard;
 	}
 
-	public PopulationGroup retrievePopulationGroup(XSSFRow row) {
+	public PopulationGroup retrievePopulationGroup(Row row) {
 
 		// Check mandatory properties
 		if (row.getCell(AU).getCellType() != Cell.CELL_TYPE_STRING) {
@@ -1017,76 +1016,76 @@ public class RAKIPSheetImporter {
 
 		PopulationGroup populationGroup = MetadataFactory.eINSTANCE.createPopulationGroup();
 
-		XSSFCell nameCell = row.getCell(AJ);
+		Cell nameCell = row.getCell(AJ);
 		if (nameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			populationGroup.setPopulationName(nameCell.getStringCellValue());
 		}
 
-		XSSFCell targetPopulationCell = row.getCell(AK);
+		Cell targetPopulationCell = row.getCell(AK);
 		if (targetPopulationCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			populationGroup.setTargetPopulation(targetPopulationCell.getStringCellValue());
 		}
 
-		XSSFCell spanCell = row.getCell(AL);
+		Cell spanCell = row.getCell(AL);
 		if (spanCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(spanCell.getStringCellValue());
 			populationGroup.getPopulationSpan().addAll(stringObjects);
 		}
 
-		XSSFCell descriptionCell = row.getCell(AM);
+		Cell descriptionCell = row.getCell(AM);
 		if (descriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(descriptionCell.getStringCellValue());
 			populationGroup.getPopulationDescription().addAll(stringObjects);
 		}
 
-		XSSFCell ageCell = row.getCell(AN);
+		Cell ageCell = row.getCell(AN);
 		if (ageCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(ageCell.getStringCellValue());
 			populationGroup.getPopulationAge().addAll(stringObjects);
 		}
 
-		XSSFCell genderCell = row.getCell(AO);
+		Cell genderCell = row.getCell(AO);
 		if (genderCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			populationGroup.setPopulationGender(genderCell.getStringCellValue());
 		}
 
-		XSSFCell bmiCell = row.getCell(AP);
+		Cell bmiCell = row.getCell(AP);
 		if (bmiCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(bmiCell.getStringCellValue());
 			populationGroup.getBmi().addAll(stringObjects);
 		}
 
-		XSSFCell dietCell = row.getCell(AQ);
+		Cell dietCell = row.getCell(AQ);
 		if (dietCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(dietCell.getStringCellValue());
 			populationGroup.getSpecialDietGroups().addAll(stringObjects);
 		}
 
-		XSSFCell consumptionCell = row.getCell(AR);
+		Cell consumptionCell = row.getCell(AR);
 		if (consumptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(consumptionCell.getStringCellValue());
 			populationGroup.getPatternConsumption().addAll(stringObjects);
 		}
 
-		XSSFCell regionCell = row.getCell(AS);
+		Cell regionCell = row.getCell(AS);
 		if (regionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(regionCell.getStringCellValue());
 			populationGroup.getRegion().addAll(stringObjects);
 		}
 
-		XSSFCell countryCell = row.getCell(AT);
+		Cell countryCell = row.getCell(AT);
 		if (countryCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(countryCell.getStringCellValue());
 			populationGroup.getCountry().addAll(stringObjects);
 		}
 
-		XSSFCell factorsCell = row.getCell(AU);
+		Cell factorsCell = row.getCell(AU);
 		if (factorsCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(factorsCell.getStringCellValue());
 			populationGroup.getPopulationRiskFactor().addAll(stringObjects);
 		}
 
-		XSSFCell seasonCell = row.getCell(AV);
+		Cell seasonCell = row.getCell(AV);
 		if (factorsCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			List<StringObject> stringObjects = toStringObject(seasonCell.getStringCellValue());
 			populationGroup.getSeason().addAll(stringObjects);
@@ -1095,7 +1094,7 @@ public class RAKIPSheetImporter {
 		return populationGroup;
 	}
 
-	public DietaryAssessmentMethod retrieveDietaryAssessmentMethod(XSSFRow row) {
+	public DietaryAssessmentMethod retrieveDietaryAssessmentMethod(Row row) {
 
 		// Check first mandatory properties
 		if (row.getCell(L).getCellType() != Cell.CELL_TYPE_STRING) {
@@ -1110,22 +1109,22 @@ public class RAKIPSheetImporter {
 		method.setCollectionTool(row.getCell(L).getStringCellValue());
 		method.setNumberOfNonConsecutiveOneDay(new Double(row.getCell(M).getNumericCellValue()).intValue());
 
-		XSSFCell softwareCell = row.getCell(N);
+		Cell softwareCell = row.getCell(N);
 		if (softwareCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			method.setSoftwareTool(softwareCell.getStringCellValue());
 		}
 
-		XSSFCell foodItemsCell = row.getCell(O);
+		Cell foodItemsCell = row.getCell(O);
 		if (foodItemsCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			method.setNumberOfFoodItems(foodItemsCell.getStringCellValue());
 		}
 
-		XSSFCell recordTypesCell = row.getCell(P);
+		Cell recordTypesCell = row.getCell(P);
 		if (recordTypesCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			method.setRecordTypes(recordTypesCell.getStringCellValue());
 		}
 
-		XSSFCell foodDescriptorsCell = row.getCell(Q);
+		Cell foodDescriptorsCell = row.getCell(Q);
 		if (foodDescriptorsCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			method.setFoodDescriptors(foodDescriptorsCell.getStringCellValue());
 		}
@@ -1133,7 +1132,7 @@ public class RAKIPSheetImporter {
 		return method;
 	}
 
-	public Laboratory retrieveLaboratory(XSSFRow row) {
+	public Laboratory retrieveLaboratory(Row row) {
 
 		// Check first mandatory properties
 		if (row.getCell(L).getCellType() != Cell.CELL_TYPE_STRING) {
@@ -1143,12 +1142,12 @@ public class RAKIPSheetImporter {
 		Laboratory laboratory = MetadataFactory.eINSTANCE.createLaboratory();
 		laboratory.getLaboratoryAccreditation().addAll(toStringObject(row.getCell(L).getStringCellValue()));
 
-		XSSFCell nameCell = row.getCell(M);
+		Cell nameCell = row.getCell(M);
 		if (nameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			laboratory.setLaboratoryName(row.getCell(M).getStringCellValue());
 		}
 
-		XSSFCell countryCell = row.getCell(N);
+		Cell countryCell = row.getCell(N);
 		if (countryCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			laboratory.setLaboratoryCountry(row.getCell(N).getStringCellValue());
 		}
@@ -1156,7 +1155,7 @@ public class RAKIPSheetImporter {
 		return laboratory;
 	}
 
-	public Assay retrieveAssay(XSSFRow row) {
+	public Assay retrieveAssay(Row row) {
 
 		// Check first mandatory properties
 		if (row.getCell(L).getCellType() != Cell.CELL_TYPE_STRING) {
@@ -1166,42 +1165,42 @@ public class RAKIPSheetImporter {
 		Assay assay = MetadataFactory.eINSTANCE.createAssay();
 		assay.setAssayName(row.getCell(L).getStringCellValue());
 
-		XSSFCell descriptionCell = row.getCell(M);
+		Cell descriptionCell = row.getCell(M);
 		if (descriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			assay.setAssayDescription(descriptionCell.getStringCellValue());
 		}
 
-		XSSFCell moistureCell = row.getCell(N);
+		Cell moistureCell = row.getCell(N);
 		if (moistureCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			assay.setPercentageOfMoisture(moistureCell.getStringCellValue());
 		}
 
-		XSSFCell fatCell = row.getCell(O);
+		Cell fatCell = row.getCell(O);
 		if (fatCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			assay.setPercentageOfFat(fatCell.getStringCellValue());
 		}
 
-		XSSFCell detectionCell = row.getCell(P);
+		Cell detectionCell = row.getCell(P);
 		if (detectionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			assay.setLimitOfDetection(detectionCell.getStringCellValue());
 		}
 
-		XSSFCell quantificationCell = row.getCell(Q);
+		Cell quantificationCell = row.getCell(Q);
 		if (quantificationCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			assay.setLimitOfQuantification(quantificationCell.getStringCellValue());
 		}
 
-		XSSFCell dataCell = row.getCell(R);
+		Cell dataCell = row.getCell(R);
 		if (dataCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			assay.setLeftCensoredData(dataCell.getStringCellValue());
 		}
 
-		XSSFCell contaminationCell = row.getCell(S);
+		Cell contaminationCell = row.getCell(S);
 		if (contaminationCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			assay.setRangeOfContamination(contaminationCell.getStringCellValue());
 		}
 
-		XSSFCell uncertaintyCell = row.getCell(T);
+		Cell uncertaintyCell = row.getCell(T);
 		if (uncertaintyCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			assay.setUncertaintyValue(uncertaintyCell.getStringCellValue());
 		}
@@ -1209,31 +1208,31 @@ public class RAKIPSheetImporter {
 		return assay;
 	}
 
-	public JsonObject retrieveQualityMeasures(XSSFSheet sheet) {
+	public JsonObject retrieveQualityMeasures(Sheet sheet) {
 
-		XSSFCell sseCell = sheet.getRow(QUALITY_MEASURES__SSE).getCell(M);
+		Cell sseCell = sheet.getRow(QUALITY_MEASURES__SSE).getCell(M);
 		double sse = sseCell.getCellType() == Cell.CELL_TYPE_NUMERIC ? sseCell.getNumericCellValue() : 0;
 
-		XSSFCell mseCell = sheet.getRow(QUALITY_MEASURES__MSE).getCell(M);
+		Cell mseCell = sheet.getRow(QUALITY_MEASURES__MSE).getCell(M);
 		double mse = mseCell.getCellType() == Cell.CELL_TYPE_NUMERIC ? mseCell.getNumericCellValue() : 0;
 
-		XSSFCell rmseCell = sheet.getRow(QUALITY_MEASURES__RMSE).getCell(M);
+		Cell rmseCell = sheet.getRow(QUALITY_MEASURES__RMSE).getCell(M);
 		double rmse = rmseCell.getCellType() == Cell.CELL_TYPE_NUMERIC ? rmseCell.getNumericCellValue() : 0;
 
-		XSSFCell rsquareCell = sheet.getRow(QUALITY_MEASURES__RSQUARE).getCell(M);
+		Cell rsquareCell = sheet.getRow(QUALITY_MEASURES__RSQUARE).getCell(M);
 		double rsquare = rsquareCell.getCellType() == Cell.CELL_TYPE_NUMERIC ? rsquareCell.getNumericCellValue() : 0;
 
-		XSSFCell aicCell = sheet.getRow(QUALITY_MEASURES__AIC).getCell(M);
+		Cell aicCell = sheet.getRow(QUALITY_MEASURES__AIC).getCell(M);
 		double aic = aicCell.getCellType() == Cell.CELL_TYPE_NUMERIC ? aicCell.getNumericCellValue() : 0;
 
-		XSSFCell bicCell = sheet.getRow(QUALITY_MEASURES__BIC).getCell(M);
+		Cell bicCell = sheet.getRow(QUALITY_MEASURES__BIC).getCell(M);
 		double bic = bicCell.getCellType() == Cell.CELL_TYPE_NUMERIC ? bicCell.getNumericCellValue() : 0;
 
 		return Json.createObjectBuilder().add("SSE", sse).add("MSE", mse).add("RMSE", rmse).add("Rsquared", rsquare)
 				.add("AIC", aic).add("BIC", bic).build();
 	}
 
-	public ModelMath retrieveModelMath(XSSFSheet sheet) {
+	public ModelMath retrieveModelMath(Sheet sheet) {
 
 		ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
 
@@ -1241,7 +1240,7 @@ public class RAKIPSheetImporter {
 
 		for (int rownum = 132; rownum < sheet.getLastRowNum(); rownum++) {
 			try {
-				XSSFRow row = sheet.getRow(rownum);
+				Row row = sheet.getRow(rownum);
 				Parameter param = importer.retrieveParameter(row);
 				modelMath.getParameter().add(param);
 			} catch (Exception exception) {
@@ -1275,7 +1274,7 @@ public class RAKIPSheetImporter {
 		return stringObjects;
 	}
 
-	private static String getString(XSSFCell cell) {
+	private static String getString(Cell cell) {
 
 		int cellType = cell.getCellType();
 
