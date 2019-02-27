@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -240,6 +241,10 @@ class CreatorNodeModel extends NoInternalsModel {
     
     // Validate parameters from spreadsheet
     try (RController controller = new RController()) {
+      
+      Path workingDirectoryPath = FileUtil.getFileFromURL(FileUtil.toURL(workingDirectory)).toPath();
+      controller.setWorkingDirectory(workingDirectoryPath);
+
       FskSimulation simulation = NodeUtils.createDefaultSimulation(modelMath.getParameter());
       String script = NodeUtils.buildParameterScript(simulation);
       ScriptExecutor executor = new ScriptExecutor(controller);

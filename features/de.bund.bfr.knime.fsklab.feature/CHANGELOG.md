@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.5.1] - 2019-02-27
+
 ### Changed
 - Regenerate the default simulation on changing any parameter value.
 - Show the controlled vocabulary on mouse click or focus on the input field.
@@ -12,7 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Make all html tables responsive and scrollable in the Joiner and FSK JS Editor nodes.
 - Make all field responsive on mouse click to fit its content and retrieve default on mouse blur in the Joiner and FSK JS Editor nodes.
-- fix the deletion and add new row issue in all tables in the Joiner and FSK JS Editor nodes.
+- Fix the deletion and add new row issue in all tables in the Joiner and FSK JS Editor nodes.
+- Parameters validation on model import when using resources. The working directory was not set and parameters referencing a resource like a CSV would fail.
 
 
 ## [1.5.0] - 2019-02-22
