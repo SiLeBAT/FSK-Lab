@@ -522,9 +522,36 @@ joiner = function() {
 		}
 		if(_modelScriptTree)
 			_viewValue.modelScriptTree = JSON.stringify(_modelScriptTree);
+		var generalError = "";
+		generalError += validateAgainstSchema(window.schema, window.store1.getState().jsonforms.core.data,"- General Information:");
+		generalError += validateAgainstSchema(window.schema2, window.store2.getState().jsonforms.core.data,"- Scope:");
+		generalError += validateAgainstSchema(window.schema17, window.store17.getState().jsonforms.core.data,"- Model Math:");
+		generalError += validateAgainstSchema(window.schema6, window.store6.getState().jsonforms.core.data,"- Data Background:");
+		_viewValue.validationErrors = generalError
 		return _viewValue;
 	};
-
+	function validateAgainstSchema(schema, data, schemaName){
+		var ajv = new Ajv({allErrors: true});
+		ajv.validate(schema, data); 
+		var requiredErrorText = "   Field(s): ";
+		var formatErrorText = "   Field(s): ";
+		
+		for(i = 0 ; i < ajv.errors.length;i++){
+			theError =  ajv.errors[i]
+			console.log(theError);
+			if(theError.keyword == "required" ){
+				requiredErrorText += (requiredErrorText.length > 13 ? " ," : " ") + theError.params.missingProperty
+			}else if(theError.keyword == "format"){
+				formatErrorText += (formatErrorText.length > 13?" ," : " " )+ theError.params.format
+			}
+		}
+		requiredErrorText = (requiredErrorText.length > 13 ? (schemaName +",,,"+ requiredErrorText + " are(is) required,,,") : " ") ;
+		formatErrorText = (formatErrorText.length > 13 ? (formatErrorText + " have(has) wrong format,,,") : " ") ;
+	    
+	  
+		return requiredErrorText+formatErrorText;
+		
+	}
 	return joinerNode;
 
 	// --- utility functions ---

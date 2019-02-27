@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -253,6 +254,9 @@ final class FSKEditorJSNodeModel
       else {
         if(fskEditorProxyValue.isNotCompleted()) {
           setWarningMessage("Output Parameters are not configured correctly");
+        }
+        if(StringUtils.isNotEmpty(fskEditorProxyValue.getValidationErrors())) {
+          setWarningMessage( "\n"+(fskEditorProxyValue.getValidationErrors()).replaceAll("\"", "").replaceAll(",,,", "\n"));
         }
       }
       outObj = inObj1;

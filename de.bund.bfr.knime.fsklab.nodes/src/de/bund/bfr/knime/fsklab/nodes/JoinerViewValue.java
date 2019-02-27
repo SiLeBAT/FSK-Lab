@@ -80,6 +80,16 @@ class JoinerViewValue extends JSONViewContent {
 
   private String firstModelName;
   private String secondModelName;
+  
+  private String validationErrors;
+  public String getValidationErrors() {
+    return validationErrors;
+  }
+
+  public void setValidationErrors(String validationErrors) {
+    this.validationErrors = validationErrors;
+  }
+
   public String getModelScriptTree() {
     return modelScriptTree;
   }

@@ -36,6 +36,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -186,7 +187,11 @@ final class JoinerNodeModel extends
 
         exec.setProgress(1);
       }
-
+      else {
+        if(StringUtils.isNotEmpty(joinerProxyValue.getValidationErrors())) {
+          setWarningMessage( "\n"+(joinerProxyValue.getValidationErrors()).replaceAll("\"", "").replaceAll(",,,", "\n"));
+        }
+      }
       if (joinerProxyValue.getJoinRelations() != null) {
         String relation = joinerProxyValue.getJoinRelations();
         joinerProxyValue.setJoinRelations(relation);

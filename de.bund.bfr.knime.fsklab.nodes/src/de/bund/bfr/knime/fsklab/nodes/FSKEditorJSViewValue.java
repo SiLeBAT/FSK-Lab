@@ -63,7 +63,16 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private String[] resourcesFiles;
   private String serverName;
   private boolean notCompleted;
+  private String validationErrors;
   
+ 
+  public String getValidationErrors() {
+    return validationErrors;
+  }
+
+  public void setValidationErrors(String validationErrors) {
+    this.validationErrors = validationErrors;
+  }
 
   public boolean isNotCompleted() {
     return notCompleted;
