@@ -3,7 +3,6 @@
 import java.io.File;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -11,7 +10,6 @@ import org.knime.testing.core.TestrunConfiguration;
 
 import nl.esciencecenter.e3dchem.knime.testing.TestFlowRunner;
 
-@Ignore
 public class WorkflowsTest {
 
 	@Rule

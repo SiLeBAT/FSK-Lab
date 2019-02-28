@@ -248,10 +248,12 @@ class CreatorNodeModel extends NoInternalsModel {
     // Validate parameters from spreadsheet
     exec.checkCanceled();
     try (RController controller = new RController()) {
-
-      Path workingDirectoryPath =
-          FileUtil.getFileFromURL(FileUtil.toURL(workingDirectory)).toPath();
-      controller.setWorkingDirectory(workingDirectoryPath);
+      
+      if (!workingDirectory.isEmpty()) {
+        Path workingDirectoryPath =
+            FileUtil.getFileFromURL(FileUtil.toURL(workingDirectory)).toPath();
+        controller.setWorkingDirectory(workingDirectoryPath);
+      }
 
       FskSimulation simulation = NodeUtils.createDefaultSimulation(modelMath.getParameter());
       String script = NodeUtils.buildParameterScript(simulation);
