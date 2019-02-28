@@ -6,18 +6,18 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.Date;
 
 import javax.json.JsonObject;
 
+import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 // TODO: tests methods are commented since GoogleSheetImporter is not implemented yet
 @SuppressWarnings({ "deprecation" })
@@ -26,10 +26,8 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testGeneralInformation() throws IOException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (XSSFWorkbook workbook = new XSSFWorkbook(new File("files/QMRA_Listeria.xlsx"))) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
 		GoogleSheetImporter importer = new GoogleSheetImporter();
@@ -60,13 +58,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testCreator() throws IOException {
+	public void testCreator() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
 		GoogleSheetImporter importer = new GoogleSheetImporter();
@@ -88,13 +83,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testAuthor() throws IOException {
+	public void testAuthor() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
@@ -114,13 +106,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testReference() throws IOException {
+	public void testReference() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
@@ -149,13 +138,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testModelCategory() throws IOException {
+	public void testModelCategory() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
@@ -170,13 +156,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testProduct() throws IOException {
+	public void testProduct() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
 		GoogleSheetImporter importer = new GoogleSheetImporter();
@@ -238,13 +221,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testHazard() throws IOException {
+	public void testHazard() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 
 		MetadataPackage pkg = MetadataPackage.eINSTANCE;
 		String[][] values = readSpreadsheetToMatrix(sheet0);
@@ -271,13 +251,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testPopulationGroup() throws IOException {
+	public void testPopulationGroup() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
 		GoogleSheetImporter importer = new GoogleSheetImporter();
@@ -302,13 +279,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testStudy() throws IOException {
+	public void testStudy() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
 		GoogleSheetImporter importer = new GoogleSheetImporter();
@@ -334,13 +308,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testStudySample() throws IOException {
+	public void testStudySample() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
@@ -386,13 +357,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testDietaryAssessmentMethod() throws IOException {
+	public void testDietaryAssessmentMethod() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
@@ -427,13 +395,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testLaboratory() throws IOException {
+	public void testLaboratory() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
@@ -458,13 +423,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testAssay() throws IOException {
+	public void testAssay() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
 		GoogleSheetImporter importer = new GoogleSheetImporter();
@@ -504,13 +466,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testParameter() throws IOException {
+	public void testParameter() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
 		GoogleSheetImporter importer = new GoogleSheetImporter();
@@ -539,13 +498,10 @@ public class GoogleSheetImporterTest {
 	}
 
 	// TODO: @Test
-	public void testQualityMeasures() throws IOException {
+	public void testQualityMeasures() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		XSSFSheet sheet0;
-		try (InputStream stream = GoogleSheetImporterTest.class.getResourceAsStream("QMRA_Listeria.xlsx");
-				XSSFWorkbook workbook = new XSSFWorkbook(stream)) {
-			sheet0 = workbook.getSheetAt(0);
-		}
+		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		Sheet sheet0 = workbook.getSheetAt(0);
 		String[][] values = readSpreadsheetToMatrix(sheet0);
 
 		GoogleSheetImporter importer = new GoogleSheetImporter();
@@ -560,16 +516,16 @@ public class GoogleSheetImporterTest {
 		assertEquals(0.6, measures.getJsonNumber("BIC").doubleValue(), .0);
 	}
 
-	private static String[][] readSpreadsheetToMatrix(XSSFSheet sheet) {
+	private static String[][] readSpreadsheetToMatrix(Sheet sheet) {
 
 		String[][] values = new String[200][50];
 		for (int i = 0; i < Math.min(200, sheet.getPhysicalNumberOfRows()); i++) {
 
-			XSSFRow row = sheet.getRow(i);
+			Row row = sheet.getRow(i);
 
 			for (int j = 0; j < Math.min(50, row.getPhysicalNumberOfCells()); j++) {
 
-				XSSFCell cell = row.getCell(0);
+				Cell cell = row.getCell(0);
 
 				int type = cell.getCellType();
 
@@ -577,8 +533,6 @@ public class GoogleSheetImporterTest {
 					values[i][j] = "";
 				} else if (type == Cell.CELL_TYPE_BOOLEAN) {
 					values[i][j] = Boolean.toString(cell.getBooleanCellValue());
-				} else if (type == Cell.CELL_TYPE_ERROR) {
-					values[i][j] = cell.getErrorCellString();
 				} else if (type == Cell.CELL_TYPE_FORMULA) {
 					values[i][j] = cell.getCellFormula();
 				} else if (type == Cell.CELL_TYPE_NUMERIC) {
