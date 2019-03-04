@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2019-2-4
+
+### Changed
+- Simplify API of common classes.
+
 ## [1.1.0] - 2018-12-12
 
 ### Added
