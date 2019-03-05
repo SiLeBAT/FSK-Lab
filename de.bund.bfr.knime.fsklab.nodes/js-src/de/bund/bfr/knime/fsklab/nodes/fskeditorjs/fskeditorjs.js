@@ -261,7 +261,6 @@ fskeditorjs = function() {
 						);
 		/* execute a function presses a key on the keyboard: */
 		inp.addEventListener("focus", function(e) {
-			console.log("e");
 			var x = document.getElementById(this.id + "autocomplete-list");
 			if (x)
 				x = x.getElementsByTagName("div");
@@ -293,7 +292,7 @@ fskeditorjs = function() {
 				 * If the arrow DOWN key is pressed, increase the currentFocus
 				 * variable:
 				 */
-				console.log(x);
+				
 				if(x == null){
 					inputHandler(e);
 				}else{
@@ -452,9 +451,45 @@ fskeditorjs = function() {
 		window.dataBackground = _firstModel.dataBackground;
 
 		prepareData(_firstModel);
-		create_body();
 		
+		create_body();
+		fixTableHeaders();
 	};
+	function fixTableHeaders(){
+		var tablePopups ={};
+		tablePopups["modelCategory"] = window.uischema13
+		tablePopups["modificationdate"] = window.uischema14
+		tablePopups["creators"] = window.uischema23
+		tablePopups["reference"] = window.uischema22
+		tablePopups["product"] = window.uischema3
+		tablePopups["hazard"] = window.uischema4
+		tablePopups["studySample"] = window.uischema8
+		tablePopups["populationGroup"] = window.uischema5
+		tablePopups["dietaryAssessmentMethod"] = window.uischema9
+		tablePopups["laboratory"] = window.uischema10
+		tablePopups["parameter"] = window.uischema18
+		tablePopups["assay"] = window.uischema11
+		tablePopups["modelEquation"] = window.uischema19
+		$(".table-responsive").each(function (index, val){
+			var x = $(val).parent().find("[aria-describedby*='tooltip-add']");
+			currentArea = window.makeId($(x).attr('aria-label'));
+			if(tablePopups[currentArea]){
+				$.each($(val).find("th"),function(indexss, th){
+					thText = $(th).text()
+					$.each(tablePopups[currentArea]["elements"],function(indexss, UIElement){
+						textInUIModel = UIElement.label.toLowerCase().replace(new RegExp(" ", 'g'), "");
+						if(textInUIModel == thText.toLowerCase()){
+							$(th).text(UIElement.label)
+						}
+						
+					});
+					
+				});
+			}
+		})
+		
+		$("[role='tooltip']").find("div:contains('should be equal to one of the allowed values')" ).css('visibility', 'hidden');
+	}
 	function prepareData(_firstModel) {
 		// prepare generalInformation
 		try {
@@ -584,6 +619,7 @@ fskeditorjs = function() {
 		generalError += validateAgainstSchema(window.schema17, window.store17.getState().jsonforms.core.data,"- Model Math:");
 		generalError += validateAgainstSchema(window.schema6, window.store6.getState().jsonforms.core.data,"- Data Background:");
 		_viewValue.validationErrors = generalError
+		//console.log(generalError);
 		return _viewValue;
 	};
 	function validateAgainstSchema(schema, data, schemaName){
@@ -591,20 +627,23 @@ fskeditorjs = function() {
 		ajv.validate(schema, data); 
 		var requiredErrorText = "   Field(s): ";
 		var formatErrorText = "   Field(s): ";
-		
 		for(i = 0 ; i < ajv.errors.length;i++){
 			theError =  ajv.errors[i]
-			console.log(theError);
+			console.log(theError)
 			if(theError.keyword == "required" ){
-				requiredErrorText += (requiredErrorText.length > 13 ? " ," : " ") + theError.params.missingProperty
+				requiredErrorText += (requiredErrorText.length > 13 ? " , " : " ") + theError.params.missingProperty
 			}else if(theError.keyword == "format"){
-				formatErrorText += (formatErrorText.length > 13?" ," : " " )+ theError.params.format
+				formatErrorText += (formatErrorText.length > 13?" , " : " " )+ theError.dataPath.substring(1)
 			}
 		}
 		requiredErrorText = (requiredErrorText.length > 13 ? (schemaName +",,,"+ requiredErrorText + " are(is) required,,,") : " ") ;
-		formatErrorText = (formatErrorText.length > 13 ? (formatErrorText + " have(has) wrong format,,,") : " ") ;
-	    
-	  
+		if(requiredErrorText.length == 1 && formatErrorText.length > 13){
+			formatErrorText =  schemaName +",,,"+ formatErrorText + " have(has) wrong format,,,";
+		}else if(formatErrorText.length > 13){
+			formatErrorText = formatErrorText + " have(has) wrong format,,,"
+		}else{
+			formatErrorText = " "
+		}
 		return requiredErrorText+formatErrorText;
 		
 	}

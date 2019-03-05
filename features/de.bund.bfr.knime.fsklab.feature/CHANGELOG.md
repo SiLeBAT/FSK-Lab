@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Creator node] Spreadsheet can be opened even when is already opened by a third party (Excel)
 - [Creator node] Spreadsheet can be downloaded from an URL
 - [Creator node] Spreadsheet is not corrupted after canceling the execution. It should be protected also against node failures but needs more testing.
+- Tables headers in Joiner and JS Editor.
+- Fix the generation of the default simulation for new Model creation using the JS Editor.
 
 ## [1.5.1] - 2019-02-27
 

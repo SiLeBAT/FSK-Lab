@@ -15,9 +15,10 @@
           "parameterClassification": {
             "type": "string",
             "enum": [
-              "constant",
-              "input",
-              "output"
+              "null",
+              "Constant",
+              "Input",
+              "Output"
             ]
           },
           "parameterName": {
@@ -38,6 +39,7 @@
           "parameterDataType": {
             "type": "string",
             "enum": [
+              "null",
               "Integer",
               "Double",
               "Number",
@@ -49,7 +51,8 @@
               "MatrixOfNumbers",
               "MatrixOfStrings",
               "Object",
-              "Other"
+              "Other",
+              "String"
             ]
           },
           "parameterSource": {
@@ -85,6 +88,7 @@
               "publicationType": {
                 "type": "string",
                 "enum": [
+                  "null",
                   "ABST",
                   "ADVS",
                   "AGGR",
@@ -118,6 +122,7 @@
                   "HEAR",
                   "ICOMM",
                   "INPR",
+                  "JOUR",
                   "JFULL",
                   "LEGAL",
                   "MANSCPT",

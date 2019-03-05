@@ -272,7 +272,9 @@ final class FSKEditorJSNodeModel
       if (outObj.modelMath.getParameter() != null && outObj.modelMath.getParameter().size() > 0) {
         FskSimulation defaultSimulation =
             NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter());
-        outObj.simulations.remove(0);
+        if(outObj.simulations.size()>0){
+          outObj.simulations.remove(0);
+        }
         outObj.simulations.add(defaultSimulation);
       }
 
@@ -310,7 +312,6 @@ final class FSKEditorJSNodeModel
       librariesSet.addAll(new RScript(outObj.viz).getLibraries());
       outObj.packages.addAll(new ArrayList<>(librariesSet));
     }
-
     return new PortObject[] {outObj};
   }
 
