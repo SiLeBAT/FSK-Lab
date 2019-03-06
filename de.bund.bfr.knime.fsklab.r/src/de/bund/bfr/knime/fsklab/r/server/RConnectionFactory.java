@@ -356,7 +356,7 @@ public class RConnectionFactory {
 		Path userFolder = Paths.get(System.getProperty("user.home"));
 		Path fskFolder = userFolder.resolve(".fsk");
 
-		Path repoPath = fskFolder.resolve("repo");
+		Path repoPath = fskFolder.resolve("cran");
 		Path installPath = fskFolder.resolve("library");
 
 		if (!Files.exists(fskFolder)) {

@@ -63,6 +63,8 @@ public class LibRegistry {
 	private final String rVersion;
 
 	private RWrapper rWrapper;
+	
+	private final String MIRROR = "http://cran.rstudio.com";
 
 	private LibRegistry() throws IOException, RException {
 
@@ -103,7 +105,7 @@ public class LibRegistry {
 			Files.createDirectory(installPath);
 
 			// Create CRAN structure in repoPath
-			rWrapper.makeRepo(repoPath, "http://cran.us.r-project.org");
+			rWrapper.makeRepo(repoPath);
 
 			installedLibs = new HashSet<>();
 		}
@@ -132,7 +134,7 @@ public class LibRegistry {
 		if (!missingPackages.isEmpty()) {
 
 			// Adds the dependencies to the miniCRAN repository
-			rWrapper.addPackage(missingPackages, repoPath, "http://cran.us.r-project.org");
+			rWrapper.addPackage(missingPackages, repoPath);
 
 			// Gets the paths to the binaries of these dependencies
 			List<Path> paths = rWrapper.checkVersions(missingPackages, repoPath);
@@ -235,17 +237,14 @@ public class LibRegistry {
 		 * @param path
 		 *            Destination download path. This path is the root folder of the
 		 *            repository.
-		 * @param repos
-		 *            URL of the 'contrib' sections of the repository, e.g.
-		 *            "http://cran.us.r-project.org".
 		 * @throws RException
 		 * 
 		 * @see <a href=
 		 *      "https://cran.r-project.org/web/packages/miniCRAN/miniCRAN.pdf">
 		 *      miniCRAN documentation</a>
 		 */
-		void addPackage(final List<String> pkgs, final Path path, final String repos) throws RException {
-			String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '" + repos
+		void addPackage(final List<String> pkgs, final Path path) throws RException {
+			String cmd = "addPackage(" + _pkgList(pkgs) + ", '" + _path2String(path) + "', repos = '" + MIRROR
 					+ "', type = '" + type + "', Rversion = '" + rVersion + "', deps = FALSE)";
 			controller.eval(cmd, false);
 		}
@@ -299,17 +298,14 @@ public class LibRegistry {
 		 * @param path
 		 *            Destination download path. This path is the root folder of the
 		 *            repository.
-		 * @param repos
-		 *            URL of the 'contrib' sections of the repository, e.g.
-		 *            "http://cran.us.r-project.org".
 		 * @throws RException
 		 * 
 		 * @see <a href=
 		 *      "https://cran.r-project.org/web/packages/miniCRAN/miniCRAN.pdf">
 		 *      miniCRAN documentation</a>
 		 */
-		void makeRepo(final Path path, final String repos) throws RException {
-			String cmd = "makeRepo(c(), '" + _path2String(path) + "', repos = '" + repos + "', type = '" + type + "')";
+		void makeRepo(final Path path) throws RException {
+			String cmd = "makeRepo(c(), '" + _path2String(path) + "', repos = '" + MIRROR + "', type = '" + type + "')";
 			controller.eval(cmd, false);
 		}
 
