@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.5.2] - 2019-3-7
+
 ### Added
 - Validate the metadata against the schema and generate warning message if there are errors.
 - Validate the value of input and constant.
