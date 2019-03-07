@@ -405,7 +405,7 @@ fskeditorjs = function() {
 		}
 	}
 	joinerNode.init = function(representation, value) {
-
+		console.log(value)
 		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
 			// send AJAX request to acquire the JWT for the currently logged in
 			// user. Subsequent requests need to carry the token in the
@@ -491,7 +491,7 @@ fskeditorjs = function() {
 		$("[role='tooltip']").find("div:contains('should be equal to one of the allowed values')" ).css('visibility', 'hidden');
 	}
 	function prepareData(_firstModel) {
-		// prepare generalInformation
+		// prepare generalInformation	
 		try {
 			if (_firstModel.generalInformation.creationDate === undefined) {
 				_firstModel.generalInformation.creationDate = '';
@@ -503,6 +503,7 @@ fskeditorjs = function() {
 		} catch (err) {
 			//console.log(err);
 		}
+		
 		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ? _firstModel.generalInformation.description
 				: "";
 		_firstModel.generalInformation.author = _firstModel.generalInformation.author != null ? _firstModel.generalInformation.author
@@ -533,11 +534,12 @@ fskeditorjs = function() {
 				: [];
 		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory != null ? _firstModel.dataBackground.laboratory
 				: [];
-		
+		console.log(_firstModel);
 	}
 	window.outputParameterNotDefined = false; 
+	window.parameterValidationError = ""
 	joinerNode.validate = function() {
-		if(noValidation){
+		if(noValidation == true){
 			return true;
 		}else{
 		if (window.firstModelScript && window.firstModelScript.save) {
@@ -555,6 +557,19 @@ fskeditorjs = function() {
 				
 				if(_viewValue.firstModelScript.search(re1) == -1  && _viewValue.firstModelScript.search(re2) == -1){
 					window.outputParameterNotDefined = true;
+				}
+			}
+			else {
+				if(param.parameterDataType == "Integer" || param.parameterDataType == "Double" || param.parameterDataType == "Number"){
+					if(isNaN(parseFloat(param.parameterValue))){
+						window.parameterValidationError += ",,,Parameter: "+param.parameterID+" should have a value"
+					}else if(param.parameterValueMin != "" &&  param.parameterValueMax != ""){
+						
+							if(parseFloat(param.parameterValue) < parseFloat(param.parameterValueMin) || parseFloat(param.parameterValue) > parseFloat(param.parameterValueMax)){
+								window.parameterValidationError += (",,,Parameter: "+ param.parameterID+" should be between "+param.parameterValueMin +" and "+param.parameterValueMax)
+							}
+						
+					}
 				}
 			}
 		})		
@@ -576,7 +591,6 @@ fskeditorjs = function() {
 			}
 		}
 		}
-		//validate general information part
 		
 		return true;
 	}
@@ -604,6 +618,29 @@ fskeditorjs = function() {
 		if (window.firstModelViz && window.firstModelViz.save) {
 			window.firstModelViz.save();
 		}
+		var ajv = new Ajv({allErrors: true, format:'fast'});		
+		// Add convert keyword for date-time schema
+		ajv = ajv.removeKeyword("format")
+		try{
+			ajv.addKeyword('format',{
+				  type: 'string',
+				  compile: function(sch,parentSchema) {
+				    return parentSchema.format === 'date-time' && sch ? function(value,objectKey,object,key) {
+				      // Update date-time string to Date object
+				      object[key] = new Date(value);
+				      return true;
+				    } : function() {
+				      return true;
+				    }
+				  }
+				});
+			ajv.validate(window.schema,window.store1.getState().jsonforms.core.data); 		
+			ajv.validate(window.schema2, window.store2.getState().jsonforms.core.data); 
+			ajv.validate(window.schema17,window.store17.getState().jsonforms.core.data); 
+			ajv.validate(window.schema6,window.store6.getState().jsonforms.core.data ); 
+		}catch(err){
+			//console.log(err)
+		}
 		
 		
 		_viewValue.firstModelScript = $('#firstModelScript').val();
@@ -616,20 +653,22 @@ fskeditorjs = function() {
 		var generalError = "";
 		generalError += validateAgainstSchema(window.schema, window.store1.getState().jsonforms.core.data,"- General Information:");
 		generalError += validateAgainstSchema(window.schema2, window.store2.getState().jsonforms.core.data,"- Scope:");
+		
 		generalError += validateAgainstSchema(window.schema17, window.store17.getState().jsonforms.core.data,"- Model Math:");
 		generalError += validateAgainstSchema(window.schema6, window.store6.getState().jsonforms.core.data,"- Data Background:");
-		_viewValue.validationErrors = generalError
-		//console.log(generalError);
+		generalError+=window.parameterValidationError
+		_viewValue.validationErrors = generalError.trim();
 		return _viewValue;
 	};
 	function validateAgainstSchema(schema, data, schemaName){
-		var ajv = new Ajv({allErrors: true});
+		
+		var ajv = new Ajv({allErrors: true, format:'fast'});
 		ajv.validate(schema, data); 
 		var requiredErrorText = "   Field(s): ";
 		var formatErrorText = "   Field(s): ";
 		for(i = 0 ; i < ajv.errors.length;i++){
 			theError =  ajv.errors[i]
-			console.log(theError)
+			//console.log(theError);
 			if(theError.keyword == "required" ){
 				requiredErrorText += (requiredErrorText.length > 13 ? " , " : " ") + theError.params.missingProperty
 			}else if(theError.keyword == "format"){

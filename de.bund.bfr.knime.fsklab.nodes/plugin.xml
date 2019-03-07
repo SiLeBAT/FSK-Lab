@@ -57,7 +57,6 @@
      </javascriptComponent>
      <!-- Javascript component for Fsk Editor JS node -->
      <javascriptComponent
-       
        validate-method-name="validate"
        getComponentValue-method-name="getComponentValue"
        implementationBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle"

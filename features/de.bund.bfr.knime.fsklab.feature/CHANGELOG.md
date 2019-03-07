@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Validate the metadata against the schema and generate warning message if there are errors.
-
+- Validate the value of input and constant.
+ 
 ## Fixed
 - [Creator node] Spreadsheet can be opened even when is already opened by a third party (Excel)
 - [Creator node] Spreadsheet can be downloaded from an URL

@@ -549,6 +549,29 @@ joiner = function() {
 			_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
 		}
 		
+		var ajv = new Ajv({allErrors: true, format:'fast'});		
+		// Add convert keyword for date-time schema
+		ajv = ajv.removeKeyword("format")
+		try{
+			ajv.addKeyword('format',{
+				  type: 'string',
+				  compile: function(sch,parentSchema) {
+				    return parentSchema.format === 'date-time' && sch ? function(value,objectKey,object,key) {
+				      // Update date-time string to Date object
+				      object[key] = new Date(value);
+				      return true;
+				    } : function() {
+				      return true;
+				    }
+				  }
+				});
+			ajv.validate(window.schema,window.store1.getState().jsonforms.core.data); 		
+			ajv.validate(window.schema2, window.store2.getState().jsonforms.core.data); 
+			ajv.validate(window.schema17,window.store17.getState().jsonforms.core.data); 
+			ajv.validate(window.schema6,window.store6.getState().jsonforms.core.data ); 
+		}catch(err){
+			console.log(err)
+		}
 		var serializer = new XMLSerializer();
 		var str = serializer.serializeToString(paper.svg);
 		_viewValue.svgRepresentation = str
