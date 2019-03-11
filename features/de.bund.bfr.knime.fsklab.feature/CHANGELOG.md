@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.5.3] - 2019-3-7
+
+## Fixed
+- FSK-Lab settings in the case of R is not installed in ( Program Files (x86)/User ) folder.
+
 ## [1.5.2] - 2019-3-7
 
 ### Added

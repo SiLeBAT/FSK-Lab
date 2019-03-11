@@ -132,7 +132,10 @@ public final class RPathUtil {
 		if (systemRHome == null && systemRExecutable == null) {
 			// Try with location where BfR IT installs applications
 			File bfrR = new File("C:/Program Files (x86)/User/R/");
-			checkInWindowsFolders(bfrR.listFiles(ff));
+			File files[] = bfrR.listFiles(ff);
+			if(files != null) {
+				checkInWindowsFolders(files);
+			}
 		}
 	}
 	
