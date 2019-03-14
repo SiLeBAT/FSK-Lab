@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Remove FSKLab legacy nodes from the list of the features of FSKLab.
 
+### Fixed
+- AJV Library to support validation in Editor JS and Joiner as Wrapped metanode.
 
 ## [1.5.3] - 2019-3-11
 
