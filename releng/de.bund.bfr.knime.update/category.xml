@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/de.bund.bfr.knime.fsklab.legacy.feature_1.0.0.qualifier.jar" id="de.bund.bfr.knime.fsklab.legacy.feature" version="1.0.0.qualifier">
-      <category name="FSK-Lab"/>
-   </feature>
    <feature url="features/de.bund.bfr.knime.fsklab.features.ext.r.bin.x64_3.4.4.201808071522.jar" id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64" version="3.4.4.201808071522">
       <category name="FSK-Lab"/>
    </feature>
@@ -12,10 +9,10 @@
    <feature url="features/de.bund.bfr.knime.internal.feature_0.0.1.qualifier.jar" id="de.bund.bfr.knime.internal.feature" version="0.0.1.qualifier">
       <category name="FSK-Lab"/>
    </feature>
-   <feature url="features/de.bund.bfr.knime.pmm.feature_1.2.0.qualifier.jar" id="de.bund.bfr.knime.pmm.feature" version="1.2.0.qualifier">
+   <feature url="features/de.bund.bfr.knime.fsklab.feature_1.5.4.qualifier.jar" id="de.bund.bfr.knime.fsklab.feature" version="1.5.4.qualifier">
       <category name="FSK-Lab"/>
    </feature>
-   <feature url="features/de.bund.bfr.knime.fsklab.feature_1.5.3.qualifier.jar" id="de.bund.bfr.knime.fsklab.feature" version="1.5.3.qualifier">
+   <feature url="features/de.bund.bfr.knime.pmm.feature_1.2.1.qualifier.jar" id="de.bund.bfr.knime.pmm.feature" version="1.2.1.qualifier">
       <category name="FSK-Lab"/>
    </feature>
    <category-def name="FSK-Lab" label="FSK-Lab">

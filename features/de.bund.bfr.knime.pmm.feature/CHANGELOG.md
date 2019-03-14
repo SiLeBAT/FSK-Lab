@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2019-3-14
+
+### Fixed
+- fix Variable Data Reader in PMMLab by using the up to date version of FileUpload Node.
+
 ## [1.2.0] - 2019-2-4
 
 ### Changed

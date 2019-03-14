@@ -112,25 +112,22 @@ fskeditorjs = function() {
 		 * and an array of possible autocompleted values:
 		 */
 		var currentFocus;
-		function inputHandler(e,value) {
+		function inputHandler(e, value) {
 			var a, b, i, val = this.value;
 			/*
-			 * close any already open lists of autocompleted
-			 * values
+			 * close any already open lists of autocompleted values
 			 */
 			closeAllLists();
 
 			currentFocus = -1;
 			/*
-			 * create a DIV element that will contain the items
-			 * (values):
+			 * create a DIV element that will contain the items (values):
 			 */
 			a = document.createElement("DIV");
 			a.setAttribute("id", e.target.id + "autocomplete-list");
 			a.setAttribute("class", "autocomplete-items");
 			/*
-			 * append the DIV element as a child of the
-			 * autocomplete container:
+			 * append the DIV element as a child of the autocomplete container:
 			 */
 
 			e.target.parentNode.appendChild(a);
@@ -138,94 +135,75 @@ fskeditorjs = function() {
 			if (!val) {
 				for (i = 0; i < arr.length; i++) {
 					/*
-					 * create a DIV element for each matching
-					 * element:
+					 * create a DIV element for each matching element:
 					 */
 					b = document.createElement("DIV");
 					/* make the matching letters bold: */
-					b.innerHTML = "<strong>"
-							+ arr[i].substr(0, 0) + "</strong>";
+					b.innerHTML = "<strong>" + arr[i].substr(0, 0)
+							+ "</strong>";
 					b.innerHTML += arr[i].substr(0);
 					/*
-					 * insert a input field that will hold the
-					 * current array item's value:
+					 * insert a input field that will hold the current array
+					 * item's value:
 					 */
-					b.innerHTML += "<input type='hidden' value='"
-							+ arr[i] + "'>";
+					b.innerHTML += "<input type='hidden' value='" + arr[i]
+							+ "'>";
 					/*
-					 * execute a function when someone clicks on
-					 * the item value (DIV element):
+					 * execute a function when someone clicks on the item value
+					 * (DIV element):
 					 */
-					b
-							.addEventListener(
-									"click",
-									function(e) {
-										/*
-										 * insert the value for
-										 * the autocomplete text
-										 * field:
-										 */
+					b.addEventListener("click", function(e) {
+						/*
+						 * insert the value for the autocomplete text field:
+						 */
 
-										store.getState().jsonforms.core.data[fieldName] = this
-												.getElementsByTagName("input")[0].value;
+						store.getState().jsonforms.core.data[fieldName] = this
+								.getElementsByTagName("input")[0].value;
 
-										store
-												.dispatch(Actions
-														.init(
-																store
-																		.getState().jsonforms.core.data,
-																schema,
-																uischema));
-										/*
-										 * close the list of
-										 * autocompleted values,
-										 * (or any other open
-										 * lists of
-										 * autocompleted values:
-										 */
-										closeAllLists();
-									});
+						store.dispatch(Actions.init(
+								store.getState().jsonforms.core.data, schema,
+								uischema));
+						/*
+						 * close the list of autocompleted values, (or any other
+						 * open lists of autocompleted values:
+						 */
+						closeAllLists();
+					});
 					a.appendChild(b);
 				}
 			} else {
 				for (i = 0; i < arr.length; i++) {
 					/*
-					 * check if the item starts with the same
-					 * letters as the text field value:
+					 * check if the item starts with the same letters as the
+					 * text field value:
 					 */
-					if (arr[i].substr(0, val.length)
-							.toUpperCase() == val.toUpperCase()) {
+					if (arr[i].substr(0, val.length).toUpperCase() == val
+							.toUpperCase()) {
 						/*
-						 * create a DIV element for each
-						 * matching element:
+						 * create a DIV element for each matching element:
 						 */
 						b = document.createElement("DIV");
 						/* make the matching letters bold: */
-						b.innerHTML = "<strong>"
-								+ arr[i].substr(0, val.length)
+						b.innerHTML = "<strong>" + arr[i].substr(0, val.length)
 								+ "</strong>";
-						b.innerHTML += arr[i]
-								.substr(val.length);
+						b.innerHTML += arr[i].substr(val.length);
 						/*
-						 * insert a input field that will hold
-						 * the current array item's value:
+						 * insert a input field that will hold the current array
+						 * item's value:
 						 */
-						b.innerHTML += "<input type='hidden' value='"
-								+ arr[i] + "'>";
+						b.innerHTML += "<input type='hidden' value='" + arr[i]
+								+ "'>";
 						/*
-						 * execute a function when someone
-						 * clicks on the item value (DIV
-						 * element):
+						 * execute a function when someone clicks on the item
+						 * value (DIV element):
 						 */
 						b
 								.addEventListener(
 										"click",
 										function(e) {
 											/*
-											 * insert the value
-											 * for the
-											 * autocomplete text
-											 * field:
+											 * insert the value for the
+											 * autocomplete text field:
 											 */
 
 											store.getState().jsonforms.core.data[fieldName] = this
@@ -239,12 +217,9 @@ fskeditorjs = function() {
 																	schema,
 																	uischema));
 											/*
-											 * close the list of
-											 * autocompleted
-											 * values, (or any
-											 * other open lists
-											 * of autocompleted
-											 * values:
+											 * close the list of autocompleted
+											 * values, (or any other open lists
+											 * of autocompleted values:
 											 */
 											closeAllLists();
 										});
@@ -255,17 +230,14 @@ fskeditorjs = function() {
 		}
 		$(inp).addClass('domdsdsd');
 		/* execute a function when someone writes in the text field: */
-		inp
-				.addEventListener(
-						"input",inputHandler
-						);
+		inp.addEventListener("input", inputHandler);
 		/* execute a function presses a key on the keyboard: */
 		inp.addEventListener("focus", function(e) {
 			var x = document.getElementById(this.id + "autocomplete-list");
 			if (x)
 				x = x.getElementsByTagName("div");
-			
-			if(x == null){
+
+			if (x == null) {
 				inputHandler(e);
 			}
 		});
@@ -275,16 +247,16 @@ fskeditorjs = function() {
 			var x = document.getElementById(this.id + "autocomplete-list");
 			if (x)
 				x = x.getElementsByTagName("div");
-			
-			if(x == null){
+
+			if (x == null) {
 				inputHandler(e);
 			}
-			
+
 		});
 		inp.addEventListener("keydown", function(e) {
-			
+
 			var x = document.getElementById(this.id + "autocomplete-list");
-			
+
 			if (x)
 				x = x.getElementsByTagName("div");
 			if (e.keyCode == 40) {
@@ -292,15 +264,15 @@ fskeditorjs = function() {
 				 * If the arrow DOWN key is pressed, increase the currentFocus
 				 * variable:
 				 */
-				
-				if(x == null){
+
+				if (x == null) {
 					inputHandler(e);
-				}else{
+				} else {
 					currentFocus++;
 					addActive(x);
 				}
 				/* and and make the current item more visible: */
-				
+
 			} else if (e.keyCode == 38) { // up
 				/*
 				 * If the arrow UP key is pressed, decrease the currentFocus
@@ -389,7 +361,7 @@ fskeditorjs = function() {
 	// only value is available when we run this code in knime server
 	var JWT;
 	var server;
-	
+
 	var timeStampInMs = window.performance && window.performance.now
 			&& window.performance.timing
 			&& window.performance.timing.navigationStart ? window.performance
@@ -397,10 +369,10 @@ fskeditorjs = function() {
 			+ window.performance.timing.navigationStart : Date.now();
 	var hash = window.parent.location.hash;
 	var tempSpace = ""
-	if(hash){
-		sub = hash.substring(2,hash.indexOf("?"))
-		tempSpace = sub.substring(0,sub.indexOf("/"))+"/temp/tempspace/";
-		if(tempSpace.indexOf("-Web") < 0){
+	if (hash) {
+		sub = hash.substring(2, hash.indexOf("?"))
+		tempSpace = sub.substring(0, sub.indexOf("/")) + "/temp/tempspace/";
+		if (tempSpace.indexOf("-Web") < 0) {
 			tempSpace = "";
 		}
 	}
@@ -428,9 +400,8 @@ fskeditorjs = function() {
 			// to the fsk object working directory.
 			var anotherxhttp = new XMLHttpRequest();
 
-			anotherxhttp.open("put", server
-					+ "/knime/rest/v4/repository/"+tempSpace+"jsEditorTempFolder"
-					+ timeStampInMs, true);
+			anotherxhttp.open("put", server + "/knime/rest/v4/repository/"
+					+ tempSpace + "jsEditorTempFolder" + timeStampInMs, true);
 			anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
 			anotherxhttp.send();
 		}
@@ -451,12 +422,12 @@ fskeditorjs = function() {
 		window.dataBackground = _firstModel.dataBackground;
 
 		prepareData(_firstModel);
-		
+
 		create_body();
 		fixTableHeaders();
 	};
-	function fixTableHeaders(){
-		var tablePopups ={};
+	function fixTableHeaders() {
+		var tablePopups = {};
 		tablePopups["modelCategory"] = window.uischema13
 		tablePopups["modificationdate"] = window.uischema14
 		tablePopups["creators"] = window.uischema23
@@ -470,28 +441,37 @@ fskeditorjs = function() {
 		tablePopups["parameter"] = window.uischema18
 		tablePopups["assay"] = window.uischema11
 		tablePopups["modelEquation"] = window.uischema19
-		$(".table-responsive").each(function (index, val){
-			var x = $(val).parent().find("[aria-describedby*='tooltip-add']");
-			currentArea = window.makeId($(x).attr('aria-label'));
-			if(tablePopups[currentArea]){
-				$.each($(val).find("th"),function(indexss, th){
-					thText = $(th).text()
-					$.each(tablePopups[currentArea]["elements"],function(indexss, UIElement){
-						textInUIModel = UIElement.label.toLowerCase().replace(new RegExp(" ", 'g'), "");
-						if(textInUIModel == thText.toLowerCase()){
-							$(th).text(UIElement.label)
-						}
-						
-					});
-					
-				});
-			}
-		})
-		
-		$("[role='tooltip']").find("div:contains('should be equal to one of the allowed values')" ).css('visibility', 'hidden');
+		$(".table-responsive").each(
+				function(index, val) {
+					var x = $(val).parent().find(
+							"[aria-describedby*='tooltip-add']");
+					currentArea = window.makeId($(x).attr('aria-label'));
+					if (tablePopups[currentArea]) {
+						$.each($(val).find("th"), function(indexss, th) {
+							thText = $(th).text()
+							$.each(tablePopups[currentArea]["elements"],
+									function(indexss, UIElement) {
+										textInUIModel = UIElement.label
+												.toLowerCase().replace(
+														new RegExp(" ", 'g'),
+														"");
+										if (textInUIModel == thText
+												.toLowerCase()) {
+											$(th).text(UIElement.label)
+										}
+
+									});
+
+						});
+					}
+				})
+
+		$("[role='tooltip']").find(
+				"div:contains('should be equal to one of the allowed values')")
+				.css('visibility', 'hidden');
 	}
 	function prepareData(_firstModel) {
-		// prepare generalInformation	
+		// prepare generalInformation
 		try {
 			if (_firstModel.generalInformation.creationDate === undefined) {
 				_firstModel.generalInformation.creationDate = '';
@@ -501,9 +481,9 @@ fskeditorjs = function() {
 						.toISOString();
 			}
 		} catch (err) {
-			//console.log(err);
+			// console.log(err);
 		}
-		
+
 		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ? _firstModel.generalInformation.description
 				: "";
 		_firstModel.generalInformation.author = _firstModel.generalInformation.author != null ? _firstModel.generalInformation.author
@@ -536,68 +516,85 @@ fskeditorjs = function() {
 				: [];
 		console.log(_firstModel);
 	}
-	window.outputParameterNotDefined = false; 
+	window.outputParameterNotDefined = false;
 	window.parameterValidationError = ""
 	joinerNode.validate = function() {
-		if(noValidation == true){
+		if (noValidation == true) {
 			return true;
-		}else{
-		if (window.firstModelScript && window.firstModelScript.save) {
-			window.firstModelScript.save();
-		}
-		if (window.firstModelViz && window.firstModelViz.save) {
-			window.firstModelViz.save();
-		}
-		
-		$.each(window.modelMath.parameter,function(index, param){
-			if(param.parameterClassification == "Output"){
-				parameterID = param.parameterID;
-				const re1 = new RegExp(parameterID +"\\s*<-")
-				const re2 = new RegExp(parameterID +"\\s*=")
-				
-				if(_viewValue.firstModelScript.search(re1) == -1  && _viewValue.firstModelScript.search(re2) == -1){
-					window.outputParameterNotDefined = true;
+		} else {
+			if (window.firstModelScript && window.firstModelScript.save) {
+				window.firstModelScript.save();
+			}
+			if (window.firstModelViz && window.firstModelViz.save) {
+				window.firstModelViz.save();
+			}
+
+			$
+					.each(
+							window.modelMath.parameter,
+							function(index, param) {
+								if (param.parameterClassification == "Output") {
+									parameterID = param.parameterID;
+									const re1 = new RegExp(parameterID
+											+ "\\s*<-")
+									const re2 = new RegExp(parameterID
+											+ "\\s*=")
+
+									if (_viewValue.firstModelScript.search(re1) == -1
+											&& _viewValue.firstModelScript
+													.search(re2) == -1) {
+										window.outputParameterNotDefined = true;
+									}
+								} else {
+									if (param.parameterDataType == "Integer"
+											|| param.parameterDataType == "Double"
+											|| param.parameterDataType == "Number") {
+										if (isNaN(parseFloat(param.parameterValue))) {
+											window.parameterValidationError += ",,,Parameter: "
+													+ param.parameterID
+													+ " should have a value"
+										} else if (param.parameterValueMin != ""
+												&& param.parameterValueMax != "") {
+
+											if (parseFloat(param.parameterValue) < parseFloat(param.parameterValueMin)
+													|| parseFloat(param.parameterValue) > parseFloat(param.parameterValueMax)) {
+												window.parameterValidationError += (",,,Parameter: "
+														+ param.parameterID
+														+ " should be between "
+														+ param.parameterValueMin
+														+ " and " + param.parameterValueMax)
+											}
+
+										}
+									}
+								}
+							})
+			if (window.outputParameterNotDefined) {
+				if (parent !== undefined
+						&& parent.KnimePageLoader !== undefined) {
+					swal(
+							{
+								title : "Are you sure?",
+								text : "One of the output parameters or more is not declared in your Model script! Do you want to save anyway?!",
+								icon : "warning",
+								buttons : true,
+								dangerMode : true,
+							}).then(function(saveAnyway) {
+						if (saveAnyway) {
+							noValidation = true;
+						}
+					});
+					return false;
 				}
 			}
-			else {
-				if(param.parameterDataType == "Integer" || param.parameterDataType == "Double" || param.parameterDataType == "Number"){
-					if(isNaN(parseFloat(param.parameterValue))){
-						window.parameterValidationError += ",,,Parameter: "+param.parameterID+" should have a value"
-					}else if(param.parameterValueMin != "" &&  param.parameterValueMax != ""){
-						
-							if(parseFloat(param.parameterValue) < parseFloat(param.parameterValueMin) || parseFloat(param.parameterValue) > parseFloat(param.parameterValueMax)){
-								window.parameterValidationError += (",,,Parameter: "+ param.parameterID+" should be between "+param.parameterValueMin +" and "+param.parameterValueMax)
-							}
-						
-					}
-				}
-			}
-		})		
-		if(window.outputParameterNotDefined){
-			if (parent !== undefined && parent.KnimePageLoader !== undefined) {    
-				swal({
-				  title: "Are you sure?",
-				  text: "One of the output parameters or more is not declared in your Model script! Do you want to save anyway?!",
-				  icon: "warning",
-				  buttons: true,
-				  dangerMode: true,
-				})
-				.then(function (saveAnyway) {
-				  if (saveAnyway) {
-					  noValidation = true;
-				  }
-				});
-			   return false;
-			}
 		}
-		}
-		
+
 		return true;
 	}
 	noValidation = false
-	
+
 	joinerNode.displayErrors = function(error) {
-		
+
 	}
 	joinerNode.getComponentValue = function() {
 		window.store1.getState().jsonforms.core.data.author = window.store23
@@ -618,73 +615,96 @@ fskeditorjs = function() {
 		if (window.firstModelViz && window.firstModelViz.save) {
 			window.firstModelViz.save();
 		}
-		var ajv = new Ajv({allErrors: true, format:'fast'});		
+		var ajv = new window.Ajv({
+			allErrors : true,
+			format : 'fast'
+		});
 		// Add convert keyword for date-time schema
 		ajv = ajv.removeKeyword("format")
-		try{
-			ajv.addKeyword('format',{
-				  type: 'string',
-				  compile: function(sch,parentSchema) {
-				    return parentSchema.format === 'date-time' && sch ? function(value,objectKey,object,key) {
-				      // Update date-time string to Date object
-				      object[key] = new Date(value);
-				      return true;
-				    } : function() {
-				      return true;
-				    }
-				  }
-				});
-			ajv.validate(window.schema,window.store1.getState().jsonforms.core.data); 		
-			ajv.validate(window.schema2, window.store2.getState().jsonforms.core.data); 
-			ajv.validate(window.schema17,window.store17.getState().jsonforms.core.data); 
-			ajv.validate(window.schema6,window.store6.getState().jsonforms.core.data ); 
-		}catch(err){
-			//console.log(err)
+		try {
+			ajv
+					.addKeyword('format',
+							{
+								type : 'string',
+								compile : function(sch, parentSchema) {
+									return parentSchema.format === 'date-time'
+											&& sch ? function(value, objectKey,
+											object, key) {
+										// Update date-time string to Date
+										// object
+										object[key] = new Date(value);
+										return true;
+									} : function() {
+										return true;
+									}
+								}
+							});
+			ajv.validate(window.schema,
+					window.store1.getState().jsonforms.core.data);
+			ajv.validate(window.schema2,
+					window.store2.getState().jsonforms.core.data);
+			ajv.validate(window.schema17,
+					window.store17.getState().jsonforms.core.data);
+			ajv.validate(window.schema6,
+					window.store6.getState().jsonforms.core.data);
+		} catch (err) {
+			// console.log(err)
 		}
-		
-		
+
 		_viewValue.firstModelScript = $('#firstModelScript').val();
 		_viewValue.firstModelViz = $('#firstModelViz').val();
-		
+
 		_viewValue.resourcesFiles = resourcesFiles;
 		_viewValue.serverName = server;
-		_viewValue.notCompleted = ""+window.outputParameterNotDefined;
-		
+		_viewValue.notCompleted = "" + window.outputParameterNotDefined;
+
 		var generalError = "";
-		generalError += validateAgainstSchema(window.schema, window.store1.getState().jsonforms.core.data,"- General Information:");
-		generalError += validateAgainstSchema(window.schema2, window.store2.getState().jsonforms.core.data,"- Scope:");
-		
-		generalError += validateAgainstSchema(window.schema17, window.store17.getState().jsonforms.core.data,"- Model Math:");
-		generalError += validateAgainstSchema(window.schema6, window.store6.getState().jsonforms.core.data,"- Data Background:");
-		generalError+=window.parameterValidationError
+		generalError += validateAgainstSchema(window.schema, window.store1
+				.getState().jsonforms.core.data, "- General Information:");
+		generalError += validateAgainstSchema(window.schema2, window.store2
+				.getState().jsonforms.core.data, "- Scope:");
+
+		generalError += validateAgainstSchema(window.schema17, window.store17
+				.getState().jsonforms.core.data, "- Model Math:");
+		generalError += validateAgainstSchema(window.schema6, window.store6
+				.getState().jsonforms.core.data, "- Data Background:");
+		generalError += window.parameterValidationError
 		_viewValue.validationErrors = generalError.trim();
 		return _viewValue;
 	};
-	function validateAgainstSchema(schema, data, schemaName){
-		
-		var ajv = new Ajv({allErrors: true, format:'fast'});
-		ajv.validate(schema, data); 
+	function validateAgainstSchema(schema, data, schemaName) {
+
+		var ajv = new window.Ajv({
+			allErrors : true,
+			format : 'fast'
+		});
+		ajv.validate(schema, data);
 		var requiredErrorText = "   Field(s): ";
 		var formatErrorText = "   Field(s): ";
-		for(i = 0 ; i < ajv.errors.length;i++){
-			theError =  ajv.errors[i]
-			//console.log(theError);
-			if(theError.keyword == "required" ){
-				requiredErrorText += (requiredErrorText.length > 13 ? " , " : " ") + theError.params.missingProperty
-			}else if(theError.keyword == "format"){
-				formatErrorText += (formatErrorText.length > 13?" , " : " " )+ theError.dataPath.substring(1)
+		for (i = 0; i < ajv.errors.length; i++) {
+			theError = ajv.errors[i]
+			// console.log(theError);
+			if (theError.keyword == "required") {
+				requiredErrorText += (requiredErrorText.length > 13 ? " , "
+						: " ")
+						+ theError.params.missingProperty
+			} else if (theError.keyword == "format") {
+				formatErrorText += (formatErrorText.length > 13 ? " , " : " ")
+						+ theError.dataPath.substring(1)
 			}
 		}
-		requiredErrorText = (requiredErrorText.length > 13 ? (schemaName +",,,"+ requiredErrorText + " are(is) required,,,") : " ") ;
-		if(requiredErrorText.length == 1 && formatErrorText.length > 13){
-			formatErrorText =  schemaName +",,,"+ formatErrorText + " have(has) wrong format,,,";
-		}else if(formatErrorText.length > 13){
+		requiredErrorText = (requiredErrorText.length > 13 ? (schemaName
+				+ ",,," + requiredErrorText + " are(is) required,,,") : " ");
+		if (requiredErrorText.length == 1 && formatErrorText.length > 13) {
+			formatErrorText = schemaName + ",,," + formatErrorText
+					+ " have(has) wrong format,,,";
+		} else if (formatErrorText.length > 13) {
 			formatErrorText = formatErrorText + " have(has) wrong format,,,"
-		}else{
+		} else {
 			formatErrorText = " "
 		}
-		return requiredErrorText+formatErrorText;
-		
+		return requiredErrorText + formatErrorText;
+
 	}
 	return joinerNode;
 
@@ -827,7 +847,9 @@ fskeditorjs = function() {
 							fileUploadAJAXMap[file.name] = $
 									.ajax({
 										url : server
-												+ "/knime/rest/v4/repository/"+tempSpace+"/jsEditorTempFolder"
+												+ "/knime/rest/v4/repository/"
+												+ tempSpace
+												+ "/jsEditorTempFolder"
 												+ timeStampInMs + "/"
 												+ file.name + ":data",
 										xhr : function() {
@@ -844,7 +866,7 @@ fskeditorjs = function() {
 
 																		var Percentage = (current * 100)
 																				/ max;
-																		
+
 																		$(
 																				"#"
 																						+ fileIDMap[file.name])
@@ -867,13 +889,13 @@ fskeditorjs = function() {
 										data : file,
 										type : 'put',
 										success : function(data) {
-											//console.log('SUCCESS !!!', data);
+											// console.log('SUCCESS !!!', data);
 											resourcesFiles
-											.push("knime://knime.mountpoint"
-													+ data.path);
+													.push("knime://knime.mountpoint"
+															+ data.path);
 										},
 										error : function(data) {
-											//console.log('ERROR !!!', data);
+											// console.log('ERROR !!!', data);
 										},
 										cache : false,
 										processData : false,
@@ -957,18 +979,22 @@ fskeditorjs = function() {
 									.on(
 											'shown.bs.tab',
 											function(e) {
-												//console.log($(e.currentTarget.hash).find(".active"))
+												// console.log($(e.currentTarget.hash).find(".active"))
 
-												if(!$(e.currentTarget.hash).find(".active")){
-													
-													$(e.currentTarget.hash).find("button[data$='General']").addClass("active");
-													$(e.currentTarget.hash).find("div[data$='General']").show();
-													//console.log(e.currentTarget.hash,$(e.currentTarget.hash).find("div[data$='General']"),$(e.currentTarget.hash).find("button[data$='General']"))
+												if (!$(e.currentTarget.hash)
+														.find(".active")) {
+
+													$(e.currentTarget.hash)
+															.find(
+																	"button[data$='General']")
+															.addClass("active");
+													$(e.currentTarget.hash)
+															.find(
+																	"div[data$='General']")
+															.show();
+													// console.log(e.currentTarget.hash,$(e.currentTarget.hash).find("div[data$='General']"),$(e.currentTarget.hash).find("button[data$='General']"))
 												}
-												
-												
-												
-												
+
 												var codeMirrorContainer = $(
 														'#sub25').find(
 														".CodeMirror")[0];
@@ -1049,7 +1075,7 @@ fskeditorjs = function() {
 		try {
 			createEMFForm();
 		} catch (err) {
-			// console.log(err);
+			console.log(err);
 		}
 
 		// $('html').find('style').remove();
@@ -1065,29 +1091,35 @@ fskeditorjs = function() {
 
 		});
 
-		$.each($("input[type='text']"), function(key, value) {
-			
-			$(value).removeAttr('class');
-			$(value).addClass('form-control');
-			$(value).parent().parent().removeAttr('class');
-			$(value).parent().parent().addClass('form-group');
-			fixInputCSS($(value));
-			$(value).focus(function(){
-			    if(this.value.length > 0){
-			    	if($(value).width() <  ((this.value.length + 1) * 12)){
-			    		this.style.width = ((this.value.length + 1) * 12) + 'px';
-			    		
-			    	}
-			    }
+		$
+				.each(
+						$("input[type='text']"),
+						function(key, value) {
 
-			});
-			$(value).blur(function(){
-			    if(this.value.length > 0){
-			        this.style.width = "";
-			    }
+							$(value).removeAttr('class');
+							$(value).addClass('form-control');
+							$(value).parent().parent().removeAttr('class');
+							$(value).parent().parent().addClass('form-group');
+							fixInputCSS($(value));
+							$(value)
+									.focus(
+											function() {
+												if (this.value.length > 0) {
+													if ($(value).width() < ((this.value.length + 1) * 12)) {
+														this.style.width = ((this.value.length + 1) * 12)
+																+ 'px';
 
-			});
-		});
+													}
+												}
+
+											});
+							$(value).blur(function() {
+								if (this.value.length > 0) {
+									this.style.width = "";
+								}
+
+							});
+						});
 
 		$('.MuiFormLabel-root-100').css('font-size', '1.5rem');
 		$('.MuiDialog-paper-128').css('display', 'inline');
@@ -1141,34 +1173,37 @@ fskeditorjs = function() {
 				'populationDescription', 'bmi', 'specialDietGroups', 'region',
 				'country', 'populationRiskFactor', 'season',
 				'patternConsumption', 'populationAge' ];
-		$("[aria-describedby*='tooltip-add']").click(function(event) {
-			currentArea = window.makeId($(this).attr('aria-label'));
-			window.generalInformation = window.store1.getState().jsonforms.core.data;
-			window.scope = window.store2.getState().jsonforms.core.data;
-			window.modelMath =  window.store17.getState().jsonforms.core.data;
-			window.dataBackground =  window.store6.getState().jsonforms.core.data;
-			if ($.inArray(currentArea, StringObjectPopupsName) < 0) {
-				event.preventDefault(); // Let's stop this event.
-				event.stopPropagation(); // Really this time.
-				$('#title' + currentArea).text(currentArea);
+		$("[aria-describedby*='tooltip-add']")
+				.click(
+						function(event) {
+							currentArea = window.makeId($(this).attr(
+									'aria-label'));
+							window.generalInformation = window.store1
+									.getState().jsonforms.core.data;
+							window.scope = window.store2.getState().jsonforms.core.data;
+							window.modelMath = window.store17.getState().jsonforms.core.data;
+							window.dataBackground = window.store6.getState().jsonforms.core.data;
+							if ($.inArray(currentArea, StringObjectPopupsName) < 0) {
+								event.preventDefault(); // Let's stop this
+														// event.
+								event.stopPropagation(); // Really this time.
+								$('#title' + currentArea).text(currentArea);
 
-				$('#' + currentArea).modal('show');
-				$('.modal-content').resizable({
-				// alsoResize: ".modal-dialog",
-				// minHeight: 150
-				});
-				$('.modal-dialog').draggable();
-				$('#' + currentArea).on('show.bs.modal', function() {
-					$(this).find('.modal-body').css({
-						'max-height' : '100%'
-					});
-				});
-				window.scrollTo(0, 0);
-			}
-		});
-
-
-		
+								$('#' + currentArea).modal('show');
+								$('.modal-content').resizable({
+								// alsoResize: ".modal-dialog",
+								// minHeight: 150
+								});
+								$('.modal-dialog').draggable();
+								$('#' + currentArea).on('show.bs.modal',
+										function() {
+											$(this).find('.modal-body').css({
+												'max-height' : '100%'
+											});
+										});
+								window.scrollTo(0, 0);
+							}
+						});
 
 		autoCompleteCB = [ 'country', 'language', 'source', 'rights', 'format',
 				'software', 'languageWrittenIn', 'modelClass', 'basicProcess',
@@ -1261,7 +1296,7 @@ fskeditorjs = function() {
 		});
 		$("input[type='text']").click(function(event) {
 
-			//console.log($(event.target).parent());
+			// console.log($(event.target).parent());
 			var source = $(event.target);
 
 			setTimeout(function() {
@@ -1286,7 +1321,6 @@ fskeditorjs = function() {
 
 		});
 
-		
 		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
 		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
 		$("div[role*='tooltip']:contains('should match format')").parent()
@@ -1301,82 +1335,96 @@ fskeditorjs = function() {
 		reDesign("scope");
 		reDesign("databackground");
 		reDesign("modelMath");
-		 
+
 	}
-	
-	function reDesign(ID){
+
+	function reDesign(ID) {
 		var row = "					<div class='row'>"
-			+ " 					         <div class='col-xs-3 col-sm-3 col-lg-2 "+ID+"SideBar'><div class='list-group' id ='"+ID+"gisidenav'><button type='button' data='"+ID+"General' class='list-group-item list-group-item-action active sidenavibutton'>General</button></div></div>"
-			+ "                    			 <div class='col-xs-9 col-sm-9 col-lg-10 "+ID+"Content'><div data='General'></div> </div>"
-			+ "                        	</div>";
-			
-		$("#"+ID).append( row);
-		$("#"+ID+" div.MuiGrid-typeItem-2 div.table-responsive , #"+ID+" div.MuiGrid-typeItem-2 div.demoform").filter(function(index ,element){
-			//filter out all emfforms of modals
-			return $(element).parents('.modal-dialog').length <= 0;
-			  
-        }).each(function(index, element) {
-		  
-			//console.log($(element));
-		    var parent = $(element).parent().parent();
-		    
-		    var text;
-		    if($(this).attr('class').indexOf('demoform') >= 0 )
-		    	 text = parent.find('.MuiFormLabel-root-100').html();
-		    else
-		    	 text = parent.find('.control-labelal').html();
-		    
-		    
-		    var sideNavigationButton = "<button data='"+text+"' type='button' class='list-group-item list-group-item-action sidenavibutton'>"+text+"</button>\n" ;
-		    $("#"+ID+"gisidenav").append(sideNavigationButton);
-		    
-		    parent.addClass('detailedSide');
-		   
-		    navigationMap[text] = parent;
-			$("#"+ID+" ."+ID+"Content").append( parent);
-			parent.hide();
-			
-		});
-		
-		
-		$("#"+ID+" > div.demoform").each(function(index, element) {
-			//console.log(element);
+				+ " 					         <div class='col-xs-3 col-sm-3 col-lg-2 "
+				+ ID
+				+ "SideBar'><div class='list-group' id ='"
+				+ ID
+				+ "gisidenav'><button type='button' data='"
+				+ ID
+				+ "General' class='list-group-item list-group-item-action active sidenavibutton'>General</button></div></div>"
+				+ "                    			 <div class='col-xs-9 col-sm-9 col-lg-10 "
+				+ ID + "Content'><div data='General'></div> </div>"
+				+ "                        	</div>";
+
+		$("#" + ID).append(row);
+		$(
+				"#" + ID + " div.MuiGrid-typeItem-2 div.table-responsive , #"
+						+ ID + " div.MuiGrid-typeItem-2 div.demoform")
+				.filter(function(index, element) {
+					// filter out all emfforms of modals
+					return $(element).parents('.modal-dialog').length <= 0;
+
+				})
+				.each(
+						function(index, element) {
+
+							// console.log($(element));
+							var parent = $(element).parent().parent();
+
+							var text;
+							if ($(this).attr('class').indexOf('demoform') >= 0)
+								text = parent.find('.MuiFormLabel-root-100')
+										.html();
+							else
+								text = parent.find('.control-labelal').html();
+
+							var sideNavigationButton = "<button data='"
+									+ text
+									+ "' type='button' class='list-group-item list-group-item-action sidenavibutton'>"
+									+ text + "</button>\n";
+							$("#" + ID + "gisidenav").append(
+									sideNavigationButton);
+
+							parent.addClass('detailedSide');
+
+							navigationMap[text] = parent;
+							$("#" + ID + " ." + ID + "Content").append(parent);
+							parent.hide();
+
+						});
+
+		$("#" + ID + " > div.demoform").each(function(index, element) {
+			// console.log(element);
 			$(element).addClass('detailedSide');
-			navigationMap[ID+"General"] = $(element);
-			$("#"+ID+" div[data='General']").append( element);
+			navigationMap[ID + "General"] = $(element);
+			$("#" + ID + " div[data='General']").append(element);
 			$("div[data='General']").show();
 		});
-		
-		if($("#"+ID+" div[data='General'] .demoform .MuiGrid-typeItem-2").children().length  < 1 ){
-			
-			$("#"+ID+" button[data='"+ID+"General']").remove();
-			$("#"+ID+" div[data='General']").remove();
-			
-			$("#"+ID).find("div[class$='Content']").children().first().show();
-			
-			$("#"+ID).find("div[class$='list-group']").children().first().addClass('active');
+
+		if ($("#" + ID + " div[data='General'] .demoform .MuiGrid-typeItem-2")
+				.children().length < 1) {
+
+			$("#" + ID + " button[data='" + ID + "General']").remove();
+			$("#" + ID + " div[data='General']").remove();
+
+			$("#" + ID).find("div[class$='Content']").children().first().show();
+
+			$("#" + ID).find("div[class$='list-group']").children().first()
+					.addClass('active');
 			//
-			
-			
-			
+
 		}
-		$(".sidenavibutton").on("click",function(event){
-			//console.log("click ",$(this),event);
+		$(".sidenavibutton").on("click", function(event) {
+			// console.log("click ",$(this),event);
 			$(this).parent().parent().parent().find(".detailedSide").hide();
 			$(this).parent().find(".active").removeClass('active');
-			
-			navigationMap[$(this).attr('data')].show(); 
+
+			navigationMap[$(this).attr('data')].show();
 			$(this).addClass('active');
-			
+
 		})
-		//console.log(navigationMap);
-		$(".table-responsive").parent().css("flex-direction","unset");
-		$(".MuiGrid-typeContainer-1").css("display","inherit");
-		$(".MuiGrid-spacing-xs-16-22").css("display","flex");
-		
-		
+		// console.log(navigationMap);
+		$(".table-responsive").parent().css("flex-direction", "unset");
+		$(".MuiGrid-typeContainer-1").css("display", "inherit");
+		$(".MuiGrid-spacing-xs-16-22").css("display", "flex");
+
 	}
-	
+
 	if (parent !== undefined && parent.KnimePageLoader !== undefined) {
 		parent.KnimePageLoader.autoResize(window, frameElement.id)
 	}
