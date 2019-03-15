@@ -31,7 +31,6 @@ import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
-import org.knime.r.controller.ConsoleLikeRExecutor;
 import org.rosuda.REngine.REXPMismatchException;
 
 import de.bund.bfr.knime.fsklab.nodes.common.RunnerNodeInternalSettings;
@@ -209,7 +208,7 @@ public class FsxkRunnerNodeModel extends ExtToolOutputNodeModel {
 			setExternalErrorOutput(output);
 
 			for (final String line : output) {
-				if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
+				if (line.startsWith(ScriptExecutor.ERROR_PREFIX)) {
 					throw new RException("Error in R code: \"" + line + "\"", null);
 				}
 			}
