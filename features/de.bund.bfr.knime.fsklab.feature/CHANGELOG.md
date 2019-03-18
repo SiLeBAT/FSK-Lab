@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.5.4] - 2019-3-15
+## [1.5.5] - 2019-3-18
 
+### Added
+- Write the selected simulation index into the SEDML file in the FSKX File to keep the simulation settings.
+
+## [1.5.4] - 2019-3-15
 
 ### Fixed
 - AJV Library to support validation in Editor JS and Joiner as Wrapped metanode.

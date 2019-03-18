@@ -42,6 +42,7 @@ import javax.swing.tree.TreeNode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jdom.Element;
 import org.jlibsedml.ChangeAttribute;
 import org.jlibsedml.Libsedml;
 import org.jlibsedml.SEDMLTags;
@@ -502,7 +503,7 @@ class ReaderNodeModel extends NoInternalsModel {
         }
         Files.delete(temp); // Deletes temporary file
       }
-
+      int selectedIndex = 0;
       // Get simulations
       List<ArchiveEntry> sedmlEntries = archive.getEntriesWithFormat(URIS.get("sedml"));
       for (ArchiveEntry simEntry : sedmlEntries) {
@@ -513,6 +514,13 @@ class ReaderNodeModel extends NoInternalsModel {
 
           // Loads simulations from temporary file
           SedML sedml = Libsedml.readDocument(simulationsFile).getSedMLModel();
+          List<org.jlibsedml.Annotation> annotations = sedml.getAnnotation();
+          if(annotations != null && annotations.size() > 0) {
+            org.jlibsedml.Annotation selectedIndexAnno=  annotations.get(0);
+            org.jdom.Text e =  (org.jdom.Text) selectedIndexAnno.getAnnotationElement().getContent().get(0);
+            selectedIndex = Integer.parseInt(e.getText());
+           
+          }
           simulations.addAll(loadSimulations(sedml));
         }
       }
@@ -551,6 +559,7 @@ class ReaderNodeModel extends NoInternalsModel {
           scope, dataBackground, modelMath, workspacePath, packagesList,
           workingDirectory.toString(), plotPath, readme, spreadsheetPath);
       fskObj.simulations.addAll(simulations);
+      fskObj.selectedSimulationIndex = selectedIndex;
       return fskObj;
     }
   }

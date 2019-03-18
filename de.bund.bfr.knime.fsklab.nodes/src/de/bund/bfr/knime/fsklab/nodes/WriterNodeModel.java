@@ -610,7 +610,11 @@ class WriterNodeModel extends NoInternalsModel {
       simulation.addAnnotation(new Annotation(ss));
     }
     sedml.addSimulation(simulation);
-
+    //add selected simulation index
+    org.jdom.Element selectedSimulation = new  org.jdom.Element("SelectedSimulation");
+    selectedSimulation.addContent(""+(portObj.selectedSimulationIndex));
+    sedml.addAnnotation(new Annotation(selectedSimulation));
+    
     for (FskSimulation fskSimulation : portObj.simulations) {
 
       // Add model
