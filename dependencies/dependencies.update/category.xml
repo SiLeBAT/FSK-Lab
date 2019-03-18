@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <bundle id="com.jgoodies" version="1.4.0">
+      <category name="fsk_deps"/>
+   </bundle>
+   <bundle id="com.thoughtworks.xstream" version="1.4.7">
+      <category name="fsk_deps"/>
+   </bundle>
+   <bundle id="de.bund.bfr.formats" version="1.0.0.qualifier">
+      <category name="fsk_deps"/>
+   </bundle>
+   <bundle id="net.sf.jabref" version="2.6.0">
+      <category name="fsk_deps"/>
+   </bundle>
+   <bundle id="org.freixas.jcalendar" version="1.1.1">
+      <category name="fsk_deps"/>
+   </bundle>
+   <bundle id="org.javers" version="1.3.4">
+      <category name="fsk_deps"/>
+   </bundle>
+   <bundle id="org.jdom2" version="2.0.1.qualifier">
+      <category name="fsk_deps"/>
+   </bundle>
+   <bundle id="org.jsoup" version="1.9.2.qualifier">
+      <category name="fsk_deps"/>
+   </bundle>
+   <bundle id="quick.dbtable" version="2.0.5">
+      <category name="fsk_deps"/>
+   </bundle>
+   <category-def name="fsk_deps" label="FSK-Lab dependencies"/>
+</site>

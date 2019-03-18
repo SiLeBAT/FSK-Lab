@@ -19,9 +19,6 @@
 
 	<modules>
 		<!-- Plugins -->
-		<module>com.jgoodies</module>
-		<module>com.thoughtworks.xstream</module>
-		<module>de.bund.bfr.formats</module>
 		<module>de.bund.bfr.knime.fsklab.metadata.model</module>
 		<module>de.bund.bfr.knime.fsklab.nodes</module>
 		<module>de.bund.bfr.knime.fsklab.nodes.common</module>
@@ -36,13 +33,7 @@
 		<module>de.bund.bfr.knime.pmm.bfrdbiface.lib</module>
 		<module>de.bund.bfr.knime.pmm.common</module>
 		<module>de.bund.bfr.knime.pmm.nodes</module>
-		<module>net.sf.jabref</module>
-		<module>org.freixas.jcalendar</module>
 		<module>org.hsh.bfr.db</module>
-		<module>org.javers</module>
-		<module>org.jdom2</module>
-		<module>org.jsoup</module>
-		<module>quick.dbtable</module>
 
 		<!-- Test plugins -->
 		<module>de.bund.bfr.knime.tests</module>
