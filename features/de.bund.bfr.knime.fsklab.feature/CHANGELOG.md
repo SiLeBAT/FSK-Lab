@@ -6,10 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.5.5] - 2019-3-18
+## [1.5.5] - 2019-3-19
 
 ### Added
 - Write the selected simulation index into the SEDML file in the FSKX File to keep the simulation settings.
+- Reorder the parameter columns in model math.
 
 ## [1.5.4] - 2019-3-15
 
