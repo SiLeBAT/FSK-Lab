@@ -1212,37 +1212,38 @@ joiner = function() {
 					return {
 						vertexAdd : false
 					};
+					return false;
 				}
 				return true;
 			},
-			//only connection from first mode are allowed
-			/*validateMagnet : function(cellView, magnet){
-				console.log(cellView, magnet);
-				return cellView.id != "j_2";
-			},*/
+			
 			validateEmbedding : function(childView, parentView) {
 
 				return parentView.model instanceof joint.shapes.devs.Coupled;
-			},
+			}
 
-			/*validateConnection : function(sourceView, sourceMagnet, targetView,
-					targetMagnet) {
-				return targetView.id == "j_2";
-			}*/
+			
 		});
 		var previousOne;
+		
+		
 		paper.on('cell:pointerclick', function(cellView) {
+			
 			if(previousOne){
 				previousOne.unhighlight();
 			}
 			previousOne = cellView;
 		    cellView.highlight();
 		});
+		
 		paper
 				.on(
 						'cell:pointerdblclick',
 						function(cellView, evt, x, y) {
+							//console.log(cellView.model?cellView.model.getPorts()[0]:"");
+							//console.log(cellView.model);
 							if (cellView.model instanceof joint.dia.Link) {
+								
 								link = cellView.model
 
 								var sourcePort = link.get('source').port;
@@ -1298,9 +1299,25 @@ joiner = function() {
 		_.each(_firstModelMath.parameter, function(param) {
 			firstModelParameterMap[param.parameterID] = param
 			if (param.parameterClassification == 'Input') {
-				firstModelInputParameters.push(param.parameterID);
+				var port = {
+						id:param.parameterID,
+					    group: 'in',
+					    label: {
+					        markup: '<text class="label-text" fill="black"><title>'+param.parameterDataType+'</title>'+param.parameterID+'</text>'
+					    }
+					   
+					};
+				firstModelInputParameters.push(port);
 			} else {
-				firstModelOutputParameters.push(param.parameterID);
+				var port = {
+						id:param.parameterID,
+					    group: 'out',
+					    label: {
+					        markup: '<text class="label-text" fill="black"><title>'+param.parameterDataType+'</title>'+param.parameterID+'</text>'
+					    }
+					   
+					};
+				firstModelOutputParameters.push(port);
 			}
 
 		});
@@ -1309,9 +1326,25 @@ joiner = function() {
 		_.each(_secondModelMath.parameter, function(param) {
 			secomndModelParameterMap[param.parameterID] = param
 			if (param.parameterClassification == 'Input') {
-				secondModelInputParameters.push(param.parameterID);
+				var port = {
+						id:param.parameterID,
+					    group: 'in',
+					    label: {
+					        markup: '<text class="label-text" fill="black"><title>'+param.parameterDataType+'</title>'+param.parameterID+'</text>'
+					    }
+					   
+					};
+				secondModelInputParameters.push(port);
 			} else {
-				secondModelOutputParameters.push(param.parameterID);
+				var port = {
+						id:param.parameterID,
+					    group: 'out',
+					    label: {
+					        markup: '<text class="label-text" fill="black"><title>'+param.parameterDataType+'</title>'+param.parameterID+'</text>'
+					    }
+					   
+					};
+				secondModelOutputParameters.push(port);
 			}
 		});
 		
@@ -1342,8 +1375,7 @@ joiner = function() {
 				width : 200,
 				height : firstModelHeight
 			},
-			inPorts : firstModelInputParameters,
-			outPorts : firstModelOutputParameters,
+			
 			ports : {
 				groups : {
 					'in' : {
@@ -1363,6 +1395,17 @@ joiner = function() {
 				}
 			}
 		});
+		
+		$.each(firstModelInputParameters, function(index, value){
+			
+			firstModelTojoin.addPort(value);
+			
+		})
+		$.each(firstModelOutputParameters, function(index, value){
+			
+			firstModelTojoin.addPort(value);
+			
+		})
 		firstModelTojoin.attr({
 			rect : {
 				rx : 5,
@@ -1395,8 +1438,6 @@ joiner = function() {
 				width : 200,
 				height :secondModelHeight 
 			},
-			inPorts : secondModelInputParameters,
-			outPorts : secondModelOutputParameters,
 			ports : {
 				groups : {
 					'in' : {
@@ -1416,6 +1457,17 @@ joiner = function() {
 				}
 			}
 		});
+		$.each(secondModelInputParameters, function(index, value){
+			
+			secondModelToJoin.addPort(value);
+			
+		})
+		
+		$.each(secondModelOutputParameters, function(index, value){
+			
+			secondModelToJoin.addPort(value);
+			
+		})
 		secondModelToJoin.attr({
 			rect : {
 				rx : 5,
@@ -1435,6 +1487,7 @@ joiner = function() {
 		});
 
 		paper.on('link:connect', function(evt, cellView, magnet, arrowhead) {
+			console.log(evt.model);
 			sourcePort = evt.model.attributes.source.port;
 			targetPort = evt.model.attributes.target.port;
 			if(!targetPort){

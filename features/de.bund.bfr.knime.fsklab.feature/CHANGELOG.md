@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Tooltip to each port of the models in the joining area showing the parameter data type.
+
 ## [1.5.5] - 2019-3-19
 
 ### Added
