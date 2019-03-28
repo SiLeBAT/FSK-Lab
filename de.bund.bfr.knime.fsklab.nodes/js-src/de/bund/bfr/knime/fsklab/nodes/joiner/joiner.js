@@ -587,7 +587,7 @@ joiner = function() {
 		generalError += validateAgainstSchema(window.schema2, window.store2.getState().jsonforms.core.data,"- Scope:");
 		generalError += validateAgainstSchema(window.schema17, window.store17.getState().jsonforms.core.data,"- Model Math:");
 		generalError += validateAgainstSchema(window.schema6, window.store6.getState().jsonforms.core.data,"- Data Background:");
-		_viewValue.validationErrors = generalError
+		_viewValue.validationErrors = generalError.trim();
 		return _viewValue;
 	};
 	function validateAgainstSchema(schema, data, schemaName){
@@ -1236,6 +1236,20 @@ joiner = function() {
 			previousOne = cellView;
 		    cellView.highlight();
 		});
+		paper.on('link:pointerup', function(linkx) {
+			//console.log(linkx);
+			if (linkx.model instanceof joint.dia.Link) {
+				console.log(linkx) 
+				sourcePort = linkx.model.attributes.source.port;
+				targetPort = linkx.model.attributes.target.port;
+			    console.log('New cell with id ' + linkx.id + ' added to the graph.',sourcePort,targetPort) 
+			    if(targetPort == undefined){
+			    	linkx.remove();
+			    }
+			    
+		
+			}
+		});
 		
 		paper
 				.on(
@@ -1486,7 +1500,7 @@ joiner = function() {
 				padding : '40px'
 			}
 		});
-
+		
 		paper.on('link:connect', function(evt, cellView, magnet, arrowhead) {
 			console.log(evt.model);
 			sourcePort = evt.model.attributes.source.port;
@@ -1578,6 +1592,7 @@ joiner = function() {
 				_viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
 			}
 		})
+		
 
 		/*
 		 * graph.on('change:source change:target', function(link) { var
