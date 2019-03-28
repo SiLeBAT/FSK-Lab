@@ -870,9 +870,10 @@ joiner = function() {
 		});
 		$(window).resize(function() {
 			var canvas = $('#paper');
-
 			paper.setDimensions(canvas.width(), canvas.height());
+			console.log(graph.toJSON());
 			_viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
+			console.log("-------------------------------------------------------------------------------------");
 		});
 
 		$.each($("input[type='text']"), function(key, value) {
@@ -1303,7 +1304,7 @@ joiner = function() {
 						id:param.parameterID,
 					    group: 'in',
 					    label: {
-					        markup: '<text class="label-text" fill="black"><title>'+param.parameterDataType+'</title>'+param.parameterID+'</text>'
+					        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
 					    }
 					   
 					};
@@ -1313,7 +1314,7 @@ joiner = function() {
 						id:param.parameterID,
 					    group: 'out',
 					    label: {
-					        markup: '<text class="label-text" fill="black"><title>'+param.parameterDataType+'</title>'+param.parameterID+'</text>'
+					        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
 					    }
 					   
 					};
@@ -1330,7 +1331,7 @@ joiner = function() {
 						id:param.parameterID,
 					    group: 'in',
 					    label: {
-					        markup: '<text class="label-text" fill="black"><title>'+param.parameterDataType+'</title>'+param.parameterID+'</text>'
+					        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
 					    }
 					   
 					};
@@ -1340,7 +1341,7 @@ joiner = function() {
 						id:param.parameterID,
 					    group: 'out',
 					    label: {
-					        markup: '<text class="label-text" fill="black"><title>'+param.parameterDataType+'</title>'+param.parameterID+'</text>'
+					        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
 					    }
 					   
 					};
@@ -1608,13 +1609,25 @@ joiner = function() {
 			if (_viewValue && _viewValue.jsonRepresentation
 					&& _viewValue.jsonRepresentation != "") {
 				try {
+					graphObject = JSON.parse(_viewValue.jsonRepresentation)
+					
 					graph.fromJSON(JSON.parse(_viewValue.jsonRepresentation));
+					$.each(graphObject.cells, function(cellIndex, cell){
+						//console.log(cell)
+						$.each(cell.ports.items, function(index, item){
+							console.log(item)
+							graph.getCell(cell.id).addPort(item);
+						})
+					})
+					
 				} catch (err) {
-
+					console.log(err)
+					console.log('here err');
 				}
 			}
 		} else {
 			graph.addCells([ firstModelTojoin, secondModelToJoin ]);
+			console.log('here 3 ');
 		}
 
 	}
