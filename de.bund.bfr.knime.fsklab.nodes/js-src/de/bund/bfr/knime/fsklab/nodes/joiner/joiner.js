@@ -1217,14 +1217,47 @@ joiner = function() {
 				}
 				return true;
 			},
-			
-			validateEmbedding : function(childView, parentView) {
-
-				return parentView.model instanceof joint.shapes.devs.Coupled;
-			}
-
-			
+			validateConnection: function(cellViewS, magnetS, cellViewT, magnetT, end, linkView) {
+				if(linkView.sourceView.id != linkView.paper.viewport.children[0].id){ 
+					return false
+				}
+				else{
+					if(cellViewT.id == linkView.paper.viewport.children[0].id && magnetT && magnetT.getAttribute('port-group') === 'in'){
+						return false;
+					}
+				}
+	            if(  magnetT && magnetT.getAttribute('port-group') === 'out' && magnetS && magnetS.getAttribute('port-group') === 'out'  && cellViewS.id === cellViewT.id){
+	        	   return false;
+	            }
+	            
+	            /*if ( validateConnectionDataTypes(cellViewS, magnetS, cellViewT, magnetT, end, linkView) == false) return false;*/
+	            return  true;
+	        },
+	        // Enable marking available cells & magnets
+	        markAvailable: true
 		});
+		/*StringGroup = []
+		IntegerGroup = ["Integer","String","Double","Number"]
+		DoubleGroup = ["Integer","String","Double","Number"]
+		NumberGroup = ["Integer","String","Double","Number"]
+		MatrixOfNumbersGroup = []
+		MatrixOfStringsGroup = []
+		VectorOfNumbersGroup = []
+		VectorOfStringsGroup = []
+		DateGroup = []
+		BooleanGroup = [] 
+		ObjectGroup = []
+		function validateConnectionDataTypes(cellViewS, magnetS, cellViewT, magnetT, end, linkView){
+			console.log($(magnetS)[0].nextElementSibling.children[0].innerHTML , $(magnetT)[0].nextElementSibling.children[0].innerHTML);
+			if($(magnetT)[0].nextElementSibling.children[0].innerHTML == "String"){
+				return true;
+			}else if($(magnetT)[0].nextElementSibling.children[0].innerHTML == "Integer"){
+				
+			}
+			if($(magnetS)[0].nextElementSibling.children[0].innerHTML != $(magnetT)[0].nextElementSibling.children[0].innerHTML){
+				return false;
+			}
+		}*/
 		var previousOne;
 		
 		
