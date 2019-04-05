@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -53,6 +54,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.URI;
@@ -71,7 +73,9 @@ import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FTextField;
@@ -678,14 +682,43 @@ public class CombinedFskPortObject extends FskPortObject {
     }
 
   }
-
-  public void buildScriptNodes(DefaultMutableTreeNode top, FskPortObject currentPortObject) {
+  class CommandScript {
+	String id;
+    String script;
+    public CommandScript(String id, String script) {
+    	this.id = id;
+    	this.script = script;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getScript() {
+		return script;
+	}
+	public void setScript(String script) {
+		this.script = script;
+	}
+	
+	public String toString() {
+		return id;
+	}
+	  
+  }
+  public void buildScriptNodes(DefaultMutableTreeNode top, FskPortObject currentPortObject, boolean  modelScriptFlag) {
     if (currentPortObject instanceof CombinedFskPortObject) {
       DefaultMutableTreeNode anotherJoinedModel = new DefaultMutableTreeNode("joined");
       buildScriptNodes(anotherJoinedModel,
-          ((CombinedFskPortObject) currentPortObject).getFirstFskPortObject());
+          ((CombinedFskPortObject) currentPortObject).getFirstFskPortObject(),modelScriptFlag);
       buildScriptNodes(anotherJoinedModel,
-          ((CombinedFskPortObject) currentPortObject).getSecondFskPortObject());
+          ((CombinedFskPortObject) currentPortObject).getSecondFskPortObject(),modelScriptFlag);
+      if(modelScriptFlag) {
+	      StringBuilder script = new StringBuilder();
+	      ((CombinedFskPortObject)currentPortObject).getJoinerRelation().stream().forEach(connection -> {script.append(connection.getTargetParam().getParameterID() +" <- "+connection.getCommand()+"\n");});
+	      anotherJoinedModel.add( new DefaultMutableTreeNode(new CommandScript("Joining Model Script",script.toString())));
+      }
       top.add(anotherJoinedModel);
     } else {
       DefaultMutableTreeNode childModel = new DefaultMutableTreeNode(currentPortObject);
@@ -698,7 +731,7 @@ public class CombinedFskPortObject extends FskPortObject {
   public JComponent[] getViews() {
     JPanel modelScriptPanel = new ScriptPanel("Model script", false);
     DefaultMutableTreeNode top = new DefaultMutableTreeNode("Model Scripts");
-    buildScriptNodes(top, this);
+    buildScriptNodes(top, this, true);
     JTree modelTree = new JTree(top);
     modelTree.addTreeSelectionListener(new TreeSelectionListener() {
 
@@ -712,8 +745,12 @@ public class CombinedFskPortObject extends FskPortObject {
 
         Object script = node.getUserObject();
         if (node.isLeaf()) {
-          FskPortObject selectedFSK = (FskPortObject) script;
-          ((ScriptPanel) modelScriptPanel).setText(selectedFSK.model);
+	        if(script instanceof FskPortObject) {
+	          FskPortObject selectedFSK = (FskPortObject) script;
+	          ((ScriptPanel) modelScriptPanel).setText(selectedFSK.model);
+	        }else {
+		          ((ScriptPanel) modelScriptPanel).setText(((CommandScript)script).getScript());
+	        }
         }
 
       }
@@ -726,7 +763,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
     JPanel vizScriptPanel = new ScriptPanel("Visualization script", false);
     DefaultMutableTreeNode visTop = new DefaultMutableTreeNode("Visualization Scripts");
-    buildScriptNodes(visTop, this);
+    buildScriptNodes(visTop, this, false);
     JTree visTree = new JTree(visTop);
     visTree.addTreeSelectionListener(new TreeSelectionListener() {
 
@@ -766,7 +803,7 @@ public class CombinedFskPortObject extends FskPortObject {
 
     JPanel readmePanel = new ScriptPanel("README", false);
     DefaultMutableTreeNode readmetop = new DefaultMutableTreeNode("Readme");
-    buildScriptNodes(readmetop, this);
+    buildScriptNodes(readmetop, this, false);
     JTree readmeTree = new JTree(readmetop);
     readmeTree.addTreeSelectionListener(new TreeSelectionListener() {
 

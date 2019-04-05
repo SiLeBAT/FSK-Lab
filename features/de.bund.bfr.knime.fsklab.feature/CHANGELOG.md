@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Tooltip to each port of the models in the joining area showing the parameter data type.
-- Mark valid port for connecting with another color while dragging the connction in the joiner Node.
-
+- Mark valid ports for connecting with another color while dragging the connection in the joiner Node.
+- Add extra script called joining script to the model script tree view in the model script tab to show the script of all commands added by adding connections.
+- Add 
 ## [1.5.5] - 2019-3-19
 
 ### Added

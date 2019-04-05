@@ -49,6 +49,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -373,19 +374,23 @@ public class RConnectionFactory {
 		Path installPath = userFolder.resolve(".fsk/library");
 
 		// Configure .rprofile
+		List<String> lines = new ArrayList<>();
 		String line = ".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "', .libPaths()))";
-
+		String trace = "trace(utils:::unpackPkgZip, quote(Sys.sleep(2.5)), at = list(c(14,4,4,4,3,3)))" ;
+		lines.add(line);
+		lines.add(trace);
 		Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
 		Path rprofile = documentsFolder.resolve(".Rprofile");
 
 		if (!Files.exists(rprofile)) {
 			// create new file with line
-			FileUtils.write(rprofile.toFile(), line, "UTF-8");
+			FileUtils.writeLines(rprofile.toFile(), lines);
+			
 		} else {
 			// Traverse every line looking for line. If it is not included add at the end.
 			boolean isConfigured = FileUtils.readLines(rprofile.toFile(), "UTF-8").stream().anyMatch(line::contains);
 			if (!isConfigured) {
-				Files.write(rprofile, Arrays.asList(line), StandardOpenOption.APPEND);
+				Files.write(rprofile,lines, StandardOpenOption.APPEND);
 			}
 		}
 	}

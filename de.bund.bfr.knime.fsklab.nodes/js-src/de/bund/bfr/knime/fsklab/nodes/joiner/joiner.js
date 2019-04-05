@@ -9,7 +9,7 @@ joiner = function() {
 			return this.indexOf(searchString, position) === position;
 		};
 	}
-	var nodeSearch = function nodeSearch(treeNodes, searchID){
+	var nodeSearch = function(treeNodes, searchID){
 	    for (var nodeIdx = 0; nodeIdx <= treeNodes.length-1; nodeIdx++) {
 	        var currentNode = treeNodes[nodeIdx],
 	            currentId = currentNode.id,
@@ -273,7 +273,6 @@ joiner = function() {
 		
 		/* execute a function presses a key on the keyboard: */
 		inp.addEventListener("focus", function(e) {
-			console.log("e");
 			var x = document.getElementById(this.id + "autocomplete-list");
 			if (x)
 				x = x.getElementsByTagName("div");
@@ -305,7 +304,6 @@ joiner = function() {
 				 * If the arrow DOWN key is pressed, increase the currentFocus
 				 * variable:
 				 */
-				console.log(x);
 				if(x == null){
 					inputHandler(e);
 				}else{
@@ -407,6 +405,7 @@ joiner = function() {
 	var firstModelParameterMap = new Object();
 	var secomndModelParameterMap = new Object();
 	joinerNode.init = function(representation, value) {
+		
 		_firstModel.generalInformation = JSON.parse(value.generalInformation);
 		_firstModel.scope = JSON.parse(value.scope);
 		firstModelName = value.firstModelName;
@@ -426,6 +425,7 @@ joiner = function() {
 		_secondModelScript = value.secondModelScript;
 		_secondModelViz = value.secondModelViz;
 		_modelScriptTree = JSON.parse(value.modelScriptTree);
+		console.log(_modelScriptTree);
 		_viewValue = value;
 
 		if (_viewValue.joinRelations && _viewValue.joinRelations != ""){
@@ -446,8 +446,11 @@ joiner = function() {
 		window.modelMath = _firstModel.modelMath;
 		window.dataBackground = _firstModel.dataBackground;
 		prepareData(_firstModel);
+		
 		create_body();
+		
 		fixTableHeaders();
+		
 	};
 	function fixTableHeaders(){
 		var tablePopups ={};
@@ -464,7 +467,6 @@ joiner = function() {
 		tablePopups["parameter"] = window.uischema18
 		tablePopups["assay"] = window.uischema11
 		tablePopups["modelEquation"] = window.uischema19
-		console.log(tablePopups)
 		$(".table-responsive").each(function (index, val){
 			var x = $(val).parent().find("[aria-describedby*='tooltip-add']");
 			currentArea = window.makeId($(x).attr('aria-label'));
@@ -496,7 +498,7 @@ joiner = function() {
 						.toISOString();
 			}
 		} catch (err) {
-			//console.log(err);
+			console.log(err);
 		}
 		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ? _firstModel.generalInformation.description
 				: "";
@@ -582,6 +584,7 @@ joiner = function() {
 		}
 		if(_modelScriptTree)
 			_viewValue.modelScriptTree = JSON.stringify(_modelScriptTree);
+		console.log(_modelScriptTree);
 		var generalError = "";
 		generalError += validateAgainstSchema(window.schema, window.store1.getState().jsonforms.core.data,"- General Information:");
 		generalError += validateAgainstSchema(window.schema2, window.store2.getState().jsonforms.core.data,"- Scope:");
@@ -597,11 +600,10 @@ joiner = function() {
 		var formatErrorText = "   Field(s): ";
 		for(i = 0 ; i < ajv.errors.length;i++){
 			theError =  ajv.errors[i]
-			console.log(theError)
 			if(theError.keyword == "required" ){
 				requiredErrorText += (requiredErrorText.length > 13 ? " , " : " ") + theError.params.missingProperty
 			}else if(theError.keyword == "format"){
-				formatErrorText += (formatErrorText.length > 13?" , " : " " )+ theError.dataPath.substring(1)
+				formatErrorText += (formatErrorText.length > 13 ? " , " : " " )+ theError.dataPath.substring(1)
 			}
 		}
 		requiredErrorText = (requiredErrorText.length > 13 ? (schemaName +",,,"+ requiredErrorText + " are(is) required,,,") : " ") ;
@@ -709,9 +711,10 @@ joiner = function() {
 			$(this).tab('show')
 		})
 
-		$('#tree').treeview({data:_modelScriptTree});
+		$('#tree').treeview({data:_modelScriptTree ,borderColor: 'blue'});
 		$('#tree').on('nodeSelected', function(event, data) {
-			
+			console.log(_modelScriptTree)
+			console.log(data)
 			scriptBeingEdited = data;
 			window.codeMirrorContainer.CodeMirror.setValue(data.script);
 			window.codeMirrorContainer.CodeMirror.refresh();
@@ -784,7 +787,7 @@ joiner = function() {
 															.width(), canvas
 															.height());
 												}
-												
+												console.log(_modelScriptTree);
 
 												window.codeMirrorContainer = $(
 														'#sub25').find(
@@ -810,7 +813,8 @@ joiner = function() {
 																	});
 													window.codeMirrorContainer.on("blur", function(){
 													    nodeSearch(_modelScriptTree,scriptBeingEdited.id).script = window.codeMirrorContainer.CodeMirror.getValue();
-													    $('#tree').treeview({data:_modelScriptTree});
+													    
+													    $('#tree').treeview({data:_modelScriptTree ,borderColor: 'blue'});
 														$('#tree').on('nodeSelected', function(event, data) {
 															scriptBeingEdited = data;
 															window.codeMirrorContainer.CodeMirror.setValue(data.script);
@@ -849,11 +853,13 @@ joiner = function() {
 											});
 
 						});
+		
 		drawWorkflow();
+		
 		try {
 			createEMFForm();
 		} catch (err) {
-
+			console.log(err)
 		}
 
 		// $('html').find('style').remove();
@@ -871,9 +877,7 @@ joiner = function() {
 		$(window).resize(function() {
 			var canvas = $('#paper');
 			paper.setDimensions(canvas.width(), canvas.height());
-			console.log(graph.toJSON());
 			_viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
-			console.log("-------------------------------------------------------------------------------------");
 		});
 
 		$.each($("input[type='text']"), function(key, value) {
@@ -1229,6 +1233,9 @@ joiner = function() {
 	            if(  magnetT && magnetT.getAttribute('port-group') === 'out' && magnetS && magnetS.getAttribute('port-group') === 'out'  && cellViewS.id === cellViewT.id){
 	        	   return false;
 	            }
+	            if(  magnetT && magnetT.getAttribute('port-group') === 'out' && magnetS && magnetS.getAttribute('port-group') === 'in'  && cellViewS.id === cellViewT.id){
+		        	   return false;
+		            }
 	            
 	            /*if ( validateConnectionDataTypes(cellViewS, magnetS, cellViewT, magnetT, end, linkView) == false) return false;*/
 	            return  true;
@@ -1236,28 +1243,7 @@ joiner = function() {
 	        // Enable marking available cells & magnets
 	        markAvailable: true
 		});
-		/*StringGroup = []
-		IntegerGroup = ["Integer","String","Double","Number"]
-		DoubleGroup = ["Integer","String","Double","Number"]
-		NumberGroup = ["Integer","String","Double","Number"]
-		MatrixOfNumbersGroup = []
-		MatrixOfStringsGroup = []
-		VectorOfNumbersGroup = []
-		VectorOfStringsGroup = []
-		DateGroup = []
-		BooleanGroup = [] 
-		ObjectGroup = []
-		function validateConnectionDataTypes(cellViewS, magnetS, cellViewT, magnetT, end, linkView){
-			console.log($(magnetS)[0].nextElementSibling.children[0].innerHTML , $(magnetT)[0].nextElementSibling.children[0].innerHTML);
-			if($(magnetT)[0].nextElementSibling.children[0].innerHTML == "String"){
-				return true;
-			}else if($(magnetT)[0].nextElementSibling.children[0].innerHTML == "Integer"){
-				
-			}
-			if($(magnetS)[0].nextElementSibling.children[0].innerHTML != $(magnetT)[0].nextElementSibling.children[0].innerHTML){
-				return false;
-			}
-		}*/
+		
 		var previousOne;
 		
 		
@@ -1272,10 +1258,8 @@ joiner = function() {
 		paper.on('link:pointerup', function(linkx) {
 			//console.log(linkx);
 			if (linkx.model instanceof joint.dia.Link) {
-				console.log(linkx) 
 				sourcePort = linkx.model.attributes.source.port;
 				targetPort = linkx.model.attributes.target.port;
-			    console.log('New cell with id ' + linkx.id + ' added to the graph.',sourcePort,targetPort) 
 			    if(targetPort == undefined){
 			    	linkx.remove();
 			    }
@@ -1288,8 +1272,6 @@ joiner = function() {
 				.on(
 						'cell:pointerdblclick',
 						function(cellView, evt, x, y) {
-							//console.log(cellView.model?cellView.model.getPorts()[0]:"");
-							//console.log(cellView.model);
 							if (cellView.model instanceof joint.dia.Link) {
 								
 								link = cellView.model
@@ -1344,56 +1326,67 @@ joiner = function() {
 						});
 		var firstModelInputParameters = [];
 		var firstModelOutputParameters = [];
-		_.each(_firstModelMath.parameter, function(param) {
-			firstModelParameterMap[param.parameterID] = param
-			if (param.parameterClassification == 'Input') {
-				var port = {
-						id:param.parameterID,
-					    group: 'in',
-					    label: {
-					        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
-					    }
-					   
-					};
-				firstModelInputParameters.push(port);
-			} else {
-				var port = {
-						id:param.parameterID,
-					    group: 'out',
-					    label: {
-					        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
-					    }
-					   
-					};
-				firstModelOutputParameters.push(port);
-			}
-
-		});
+		try{
+			_.each(_firstModelMath.parameter, function(param) {
+				if(firstModelParameterMap[param.parameterID] == undefined){
+					if (param.parameterClassification == 'Input' || param.parameterClassification == 'Constant') {
+						var port = {
+								id:param.parameterID,
+							    group: 'in',
+							    label: {
+							        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
+							    }
+							};
+						firstModelInputParameters.push(port);
+					} else {
+						var port = {
+								id:param.parameterID,
+							    group: 'out',
+							    label: {
+							        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
+							    }
+							};
+						firstModelOutputParameters.push(port);
+					}
+					firstModelParameterMap[param.parameterID] = param
+				}
+				else{
+					console.log(param.parameterID);
+				}
+				
+			});
+		}catch(err){
+			console.log(err)
+		}
 		var secondModelInputParameters = [];
 		var secondModelOutputParameters = [];
 		_.each(_secondModelMath.parameter, function(param) {
-			secomndModelParameterMap[param.parameterID] = param
-			if (param.parameterClassification == 'Input') {
-				var port = {
-						id:param.parameterID,
-					    group: 'in',
-					    label: {
-					        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
-					    }
-					   
-					};
-				secondModelInputParameters.push(port);
-			} else {
-				var port = {
-						id:param.parameterID,
-					    group: 'out',
-					    label: {
-					        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
-					    }
-					   
-					};
-				secondModelOutputParameters.push(port);
+			if(firstModelParameterMap[param.parameterID] == undefined){
+				if (param.parameterClassification == 'Input' || param.parameterClassification == 'Constant') {
+					var port = {
+							id:param.parameterID,
+						    group: 'in',
+						    label: {
+						        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
+						    }
+						};
+					secondModelInputParameters.push(port);
+				} else {
+					var port = {
+							id:param.parameterID,
+						    group: 'out',
+						    label: {
+						        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
+						    }
+						};
+					secondModelOutputParameters.push(port);
+				}
+				secomndModelParameterMap[param.parameterID] = param
+			}else{
+				console.log(param.parameterID);
 			}
+			
+			
 		});
 		
 		var canvasheight = 500;
@@ -1444,15 +1437,24 @@ joiner = function() {
 			}
 		});
 		
+		
 		$.each(firstModelInputParameters, function(index, value){
-			
-			firstModelTojoin.addPort(value);
-			
+			try{
+				firstModelTojoin.addPort(value);
+				console.log("port added without error",value);
+			}catch (err) {
+				console.log(err,value);
+			}
 		})
+		
+		
 		$.each(firstModelOutputParameters, function(index, value){
-			
-			firstModelTojoin.addPort(value);
-			
+			try{
+				firstModelTojoin.addPort(value);
+				console.log("port added without error",value);
+			}catch (err) {
+				console.log(err,value);
+			}
 		})
 		firstModelTojoin.attr({
 			rect : {
@@ -1506,15 +1508,21 @@ joiner = function() {
 			}
 		});
 		$.each(secondModelInputParameters, function(index, value){
-			
-			secondModelToJoin.addPort(value);
-			
+			try{
+				secondModelToJoin.addPort(value);
+				console.log("port added without error",value);
+			}catch (err) {
+				console.log(err,value);
+			}
 		})
 		
 		$.each(secondModelOutputParameters, function(index, value){
-			
-			secondModelToJoin.addPort(value);
-			
+			try{
+				secondModelToJoin.addPort(value);
+				console.log("port added without error",value);
+			}catch (err) {
+				console.log(err,value);
+			}
 		})
 		secondModelToJoin.attr({
 			rect : {
@@ -1535,7 +1543,6 @@ joiner = function() {
 		});
 		
 		paper.on('link:connect', function(evt, cellView, magnet, arrowhead) {
-			console.log(evt.model);
 			sourcePort = evt.model.attributes.source.port;
 			targetPort = evt.model.attributes.target.port;
 			if(!targetPort){
@@ -1572,6 +1579,20 @@ joiner = function() {
 			autocomplete(document.getElementById('commandLanguage'), window.Language_written_in,undefined,undefined,undefined);
 			$('#Command').keyup(function() {
 				window.sJoinRealtion.command = $('#Command').val();
+			});
+			$('#Command').blur(function() {
+				joinModelScript = "";
+				$.each(_viewValue.joinRelations,function(index, value){
+					joinModelScript += value.targetParam.parameterName + " <- "+value.command+"\n" 
+					_modelScriptTree[1].script = joinModelScript
+					$('#tree').treeview({data:_modelScriptTree ,borderColor: 'blue'});
+					$('#tree').on('nodeSelected', function(event, data) {
+						scriptBeingEdited = data;
+						window.codeMirrorContainer.CodeMirror.setValue(data.script);
+						window.codeMirrorContainer.CodeMirror.refresh();
+						
+					});
+				});
 				
 			});
 			$('#commandLanguage').change(function() {
@@ -1597,7 +1618,19 @@ joiner = function() {
 					_viewValue.joinRelations = []
 				}
 				_viewValue.joinRelations.push(sJoinRealtion);
-				window.joinRelationsMap[sourcePort+targetPort] = sJoinRealtion 
+				window.joinRelationsMap[sourcePort+targetPort] = sJoinRealtion
+				joinModelScript = "";
+				$.each(_viewValue.joinRelations,function(index, value){
+					joinModelScript += value.targetParam.parameterName + " <- "+value.command+"\n" 
+					_modelScriptTree[1].script = joinModelScript
+				});
+				$('#tree').treeview({data:_modelScriptTree ,borderColor: 'blue'});
+				$('#tree').on('nodeSelected', function(event, data) {
+					scriptBeingEdited = data;
+					window.codeMirrorContainer.CodeMirror.setValue(data.script);
+					window.codeMirrorContainer.CodeMirror.refresh();
+					
+				});
 				_viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
 			}
 			
@@ -1669,13 +1702,10 @@ joiner = function() {
 					})
 					
 				} catch (err) {
-					console.log(err)
-					console.log('here err');
 				}
 			}
 		} else {
 			graph.addCells([ firstModelTojoin, secondModelToJoin ]);
-			console.log('here 3 ');
 		}
 
 	}

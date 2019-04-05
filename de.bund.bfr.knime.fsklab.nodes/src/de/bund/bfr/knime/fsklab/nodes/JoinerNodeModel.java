@@ -272,7 +272,7 @@ final class JoinerNodeModel extends
           ((CombinedFskPortObject) fskObject1).getSecondFskPortObject(),
           obj1.getJsonArray("nodes"));
     }
-    JsonObject obj2 = scriptTree.getJsonObject(1);
+    JsonObject obj2 = scriptTree.getJsonObject(2);
     if (obj2.containsKey("script")) {
       fskObject2.model = obj2.getString("script");
     } else {
@@ -285,6 +285,12 @@ final class JoinerNodeModel extends
   public String buildModelscriptAsTree(FskPortObject inObj1, FskPortObject inObj2) {
     JsonArrayBuilder array = Json.createArrayBuilder();
     array.add(getModelScriptNode(inObj1).build());
+    JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+    jsonObjectBuilder.add("id", "" + generateRandomUnifier());
+    jsonObjectBuilder.add("text", "Joining Model");
+    StringBuilder joinModel = new StringBuilder();
+    jsonObjectBuilder.add("script", joinModel.toString());
+    array.add(jsonObjectBuilder.build());
     array.add(getModelScriptNode(inObj2).build());
     return array.build().toString();
   }
@@ -300,13 +306,19 @@ final class JoinerNodeModel extends
     JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
     jsonObjectBuilder.add("id", "" + generateRandomUnifier());
     if (object instanceof CombinedFskPortObject) {
-      jsonObjectBuilder.add("text", "joined Model");
+      jsonObjectBuilder.add("text", "Joining Script");
+      
+      StringBuilder joinModel = new StringBuilder();
+      if(((CombinedFskPortObject)object).getJoinerRelation() != null){
+        ((CombinedFskPortObject)object).getJoinerRelation().stream().forEach(connection -> {joinModel.append(connection.getTargetParam().getParameterID() + " <- " + connection.getCommand()+";\n");});
+      }
+      jsonObjectBuilder.add("script", joinModel.toString());
       FskPortObject first = ((CombinedFskPortObject) object).getFirstFskPortObject();
       FskPortObject second = ((CombinedFskPortObject) object).getSecondFskPortObject();
       JsonArrayBuilder array = Json.createArrayBuilder();
       array.add(getModelScriptNode(first));
+      array.add(jsonObjectBuilder.build());
       array.add(getModelScriptNode(second));
-
       jsonObjectBuilder.add("nodes", array);
     } else {
       jsonObjectBuilder.add("text", object.generalInformation.getName());
@@ -314,7 +326,11 @@ final class JoinerNodeModel extends
     }
     return jsonObjectBuilder;
   }
-
+  
+ 
+  
+  
+  
   public String generateRandomUnifier() {
     return new AtomicLong((int) (100000 * Math.random())).toString();
   }
