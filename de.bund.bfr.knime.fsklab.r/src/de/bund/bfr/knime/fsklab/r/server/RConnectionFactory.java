@@ -46,9 +46,7 @@ import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
@@ -88,6 +86,12 @@ public class RConnectionFactory {
 	private static final ArrayList<RConnectionResource> m_resources = new ArrayList<>();
 
 	private static final File tempDir;
+
+	/**
+	 * Contents of the original .Rprofile file in the My documents folder of the
+	 * user. If .Rprofile is missing, originalProfile is assigned empty string.
+	 */
+	private static String originalProfile;
 
 	static {
 		// create temporary directory for R
@@ -211,6 +215,7 @@ public class RConnectionFactory {
 		}
 
 		createFskLibrary();
+		backupProfile();
 		configureProfile();
 
 		RInstance rInstance = null;
@@ -345,6 +350,11 @@ public class RConnectionFactory {
 					m_resources.stream()
 							.filter(resource -> resource != null && resource.getUnderlyingRInstance() != null)
 							.forEach(resource -> resource.destroy(false));
+					try {
+						restoreProfile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -376,26 +386,36 @@ public class RConnectionFactory {
 		// Configure .rprofile
 		List<String> lines = new ArrayList<>();
 		String line = ".libPaths(c('" + FilenameUtils.separatorsToUnix(installPath.toString()) + "', .libPaths()))";
-		String trace = "trace(utils:::unpackPkgZip, quote(Sys.sleep(2.5)), at = list(c(14,4,4,4,3,3)))" ;
+		String trace = "trace(utils:::unpackPkgZip, quote(Sys.sleep(2.5)), at = list(c(14,4,4,4,3,3)))";
 		lines.add(line);
 		lines.add(trace);
 		Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
 		Path rprofile = documentsFolder.resolve(".Rprofile");
 
-		if (!Files.exists(rprofile)) {
-			// create new file with line
-			FileUtils.writeLines(rprofile.toFile(), lines);
-			
-		} else {
-			// Traverse every line looking for line. If it is not included add at the end.
-			boolean isConfigured = FileUtils.readLines(rprofile.toFile(), "UTF-8").stream().anyMatch(line::contains);
-			if (!isConfigured) {
-				Files.write(rprofile,Arrays.asList(line), StandardOpenOption.APPEND);
+		FileUtils.writeLines(rprofile.toFile(), lines);
+	}
+
+	private static void backupProfile() throws IOException {
+		// Only backup on the first call to backupProfile when originalProfile is null
+		if (originalProfile == null) {
+			Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
+			Path rprofile = documentsFolder.resolve(".Rprofile");
+			if (Files.exists(rprofile)) {
+				originalProfile = FileUtils.readFileToString(rprofile.toFile(), "UTF-8");
+				Files.delete(rprofile);
+			} else {
+				originalProfile = "";
 			}
-			boolean isTraceConfigured = FileUtils.readLines(rprofile.toFile(), "UTF-8").stream().anyMatch(trace::contains);
-			if (!isTraceConfigured) {
-				Files.write(rprofile,Arrays.asList(trace), StandardOpenOption.APPEND);
-			}
+		}
+	}
+
+	private static void restoreProfile() throws IOException {
+		Path documentsFolder = FileSystemView.getFileSystemView().getDefaultDirectory().toPath();
+		Path rprofile = documentsFolder.resolve(".Rprofile");
+
+		Files.delete(rprofile);
+		if (!originalProfile.isEmpty()) {
+			FileUtils.writeStringToFile(rprofile.toFile(), originalProfile, "UTF-8");
 		}
 	}
 

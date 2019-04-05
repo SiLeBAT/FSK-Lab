@@ -2,7 +2,7 @@
 <feature
       id="de.bund.bfr.knime.fsklab.feature"
       label="BfR FSK-Lab"
-      version="1.5.5.qualifier"
+      version="1.5.6.qualifier"
       provider-name="German Federal Institute for Risk Assessment (BfR)">
 
    <description url="http://www.example.com/description">

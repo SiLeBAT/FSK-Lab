@@ -287,7 +287,7 @@ final class JoinerNodeModel extends
     array.add(getModelScriptNode(inObj1).build());
     JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
     jsonObjectBuilder.add("id", "" + generateRandomUnifier());
-    jsonObjectBuilder.add("text", "Joining Model");
+    jsonObjectBuilder.add("text", "Joining Script");
     StringBuilder joinModel = new StringBuilder();
     jsonObjectBuilder.add("script", joinModel.toString());
     array.add(jsonObjectBuilder.build());
