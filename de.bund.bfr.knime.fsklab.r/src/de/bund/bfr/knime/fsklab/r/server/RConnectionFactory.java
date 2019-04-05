@@ -390,7 +390,11 @@ public class RConnectionFactory {
 			// Traverse every line looking for line. If it is not included add at the end.
 			boolean isConfigured = FileUtils.readLines(rprofile.toFile(), "UTF-8").stream().anyMatch(line::contains);
 			if (!isConfigured) {
-				Files.write(rprofile,lines, StandardOpenOption.APPEND);
+				Files.write(rprofile,Arrays.asList(line), StandardOpenOption.APPEND);
+			}
+			boolean isTraceConfigured = FileUtils.readLines(rprofile.toFile(), "UTF-8").stream().anyMatch(trace::contains);
+			if (!isTraceConfigured) {
+				Files.write(rprofile,Arrays.asList(trace), StandardOpenOption.APPEND);
 			}
 		}
 	}
