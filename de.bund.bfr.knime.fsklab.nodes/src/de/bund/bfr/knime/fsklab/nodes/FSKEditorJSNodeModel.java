@@ -247,7 +247,7 @@ final class FSKEditorJSNodeModel
         fskEditorProxyValue.setModelMath(FromEOjectToJSON(inObj1.modelMath));
         fskEditorProxyValue.setFirstModelScript(inObj1.model);
         fskEditorProxyValue.setFirstModelViz(inObj1.viz);
-        fskEditorProxyValue.setREADME(inObj1.getReadme());
+        fskEditorProxyValue.setReadme(inObj1.getReadme());
 
         exec.setProgress(1);
       }
@@ -280,7 +280,7 @@ final class FSKEditorJSNodeModel
 
       outObj.model = fskEditorProxyValue.getFirstModelScript();
       outObj.viz = fskEditorProxyValue.getFirstModelViz();
-
+      outObj.setReadme(fskEditorProxyValue.getReadme());
       // resources files via fskEditorProxyValue will be available only in online mode of the JS
       // editor
       if (fskEditorProxyValue.getResourcesFiles() != null

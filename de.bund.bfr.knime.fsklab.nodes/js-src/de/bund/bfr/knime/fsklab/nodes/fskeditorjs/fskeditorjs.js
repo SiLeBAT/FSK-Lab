@@ -528,6 +528,9 @@ fskeditorjs = function() {
 			if (window.firstModelViz && window.firstModelViz.save) {
 				window.firstModelViz.save();
 			}
+			if (window.readme && window.readme.save) {
+				window.readme.save();
+			}
 
 			$
 					.each(
@@ -597,6 +600,7 @@ fskeditorjs = function() {
 
 	}
 	joinerNode.getComponentValue = function() {
+		
 		window.store1.getState().jsonforms.core.data.author = window.store23
 				.getState().jsonforms.core.data;
 		window.store6.getState().jsonforms.core.data.study = window.store7
@@ -614,6 +618,9 @@ fskeditorjs = function() {
 		}
 		if (window.firstModelViz && window.firstModelViz.save) {
 			window.firstModelViz.save();
+		}
+		if (window.readme && window.readme.save) {
+			window.readme.save();
 		}
 		var ajv = new window.Ajv({
 			allErrors : true,
@@ -653,6 +660,8 @@ fskeditorjs = function() {
 
 		_viewValue.firstModelScript = $('#firstModelScript').val();
 		_viewValue.firstModelViz = $('#firstModelViz').val();
+		_viewValue.readme = $('#READMEArea').val();
+		console.log(_viewValue.readme);
 
 		_viewValue.resourcesFiles = resourcesFiles;
 		_viewValue.serverName = server;
@@ -776,7 +785,7 @@ fskeditorjs = function() {
 		bodyContent += "                        <div class='tab-pane fade' id='sub27'>\n"
 				+ "                    		 <div  >"
 				+ "								<h4>README</h4>"
-				+ "								<textarea disabled id='READMEArea' name='READMEArea'>"
+				+ "								<textarea  id='READMEArea' name='READMEArea'>"
 				+ _README
 				+ "								</textarea>"
 				+ "					 		 </div>"
@@ -1033,7 +1042,7 @@ fskeditorjs = function() {
 																	document
 																			.getElementById("READMEArea"),
 																	{
-																		readOnly : true,
+																		
 																		lineNumbers : true,
 																		extraKeys : {
 																			"Ctrl-Space" : "autocomplete"

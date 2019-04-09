@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="KNIME Analytics Platform (nightly build)" sequenceNumber="1512743971">
+<?pde version="3.8"?><target name="KNIME Analytics Platform (nightly build)" sequenceNumber="1512743972">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.knime.features.explorer.serverspace.feature.group" version="4.6.0.v201711041633"/>
@@ -11,8 +11,8 @@
 <repository location="http://update.knime.org/analytics-platform/3.5"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64.feature.group" version="3.4.4.201808071522"/>
-<unit id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x86.feature.group" version="3.4.4.201808071522"/>
+<unit id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64.feature.group" version="3.4.4.201904051519"/>
+<unit id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x86.feature.group" version="3.4.4.201904051519"/>
 <repository location="https://dl.bintray.com/silebat/RBundles"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">

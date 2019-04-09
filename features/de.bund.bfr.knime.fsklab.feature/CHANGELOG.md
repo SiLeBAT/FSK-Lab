@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Configure the R library at ~/.fsk/library and Trace command on startup with .Rprofile and restore the original content of the file by closing knime.
+- Make README editable.
 
 ## [1.5.5] - 2019-3-19
 

@@ -126,8 +126,7 @@ public class FskPortObject implements PortObject {
 	private String plot;
 
 	/** README. */
-	private final String readme;
-
+	private String readme;
 	/**
 	 * R workspace file with the results of running the model. It may be null if the
 	 * model has not been run.
@@ -223,6 +222,11 @@ public class FskPortObject implements PortObject {
 	public String getReadme() {
 		return readme;
 	}
+	
+	public void setReadme(String readme) {
+		this.readme = readme;
+	}
+
 
 	/**
 	 * @return empty string if not set.

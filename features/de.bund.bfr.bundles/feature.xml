@@ -18,8 +18,8 @@
    </license>
 
    <requires>
-      <import feature="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64" version="3.4.4.201808071522"/>
-      <import feature="de.bund.bfr.knime.fsklab.features.ext.r.bin.x86" version="3.4.4.201808071522"/>
+      <import feature="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64" version="3.4.4.201904051519"/>
+      <import feature="de.bund.bfr.knime.fsklab.features.ext.r.bin.x86" version="3.4.4.201904051519"/>
    </requires>
 
 </feature>

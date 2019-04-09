@@ -59,7 +59,15 @@ class FSKEditorJSViewValue extends JSONViewContent {
 
   private String firstModelScript;
   private String firstModelViz;
-  private String README;
+  private String readme;
+  public String getReadme() {
+    return readme;
+  }
+
+  public void setReadme(String readme) {
+    this.readme = readme;
+  }
+
   private String[] resourcesFiles;
   private String serverName;
   private boolean notCompleted;
@@ -100,14 +108,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
 
 
 
-  public String getREADME() {
-    return README;
-  }
-
-  public void setREADME(String rEADME) {
-    README = rEADME;
-  }
-
 
 
   public String getFirstModelScript() {
@@ -133,7 +133,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public void saveToNodeSettings(NodeSettingsWO settings) {
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
-    settings.addString(CFG_ORIGINAL_README, README);
+    settings.addString(CFG_ORIGINAL_README, readme);
 
 
 
@@ -162,7 +162,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public void loadFromNodeSettings(NodeSettingsRO settings) throws InvalidSettingsException {
     firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
     firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
-    README = settings.getString(CFG_ORIGINAL_README);
+    readme = settings.getString(CFG_ORIGINAL_README);
 
 
     // load meta data
