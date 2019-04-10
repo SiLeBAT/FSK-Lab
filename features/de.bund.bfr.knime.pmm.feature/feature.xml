@@ -2,7 +2,7 @@
 <feature
       id="de.bund.bfr.knime.pmm.feature"
       label="PMM Nodes"
-      version="1.2.1.qualifier"
+      version="1.2.2.qualifier"
       provider-name="German Federal Institute for Risk Assessment (BfR)">
 
    <description url="http://www.example.com/description">
@@ -40,8 +40,6 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.ext.jep"/>
       <import plugin="org.apache.commons.math3"/>
       <import plugin="com.google.guava"/>
-      <import plugin="org.apache.commons.lang3"/>
-      <import plugin="org.eclipse.osgi"/>
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="com.fasterxml.jackson.core.jackson-databind"/>
@@ -55,7 +53,9 @@ along with this program.  If not, see &quot;http://www.gnu.org/licenses/&quot;.
       <import plugin="org.knime.ext.poi"/>
       <import plugin="org.apache.log4j"/>
       <import plugin="org.junit"/>
+      <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.apache.servicemix.bundles.poi"/>
+      <import plugin="org.eclipse.osgi"/>
       <import plugin="org.apache.commons.io" version="2.5.0" match="greaterOrEqual"/>
    </requires>
 

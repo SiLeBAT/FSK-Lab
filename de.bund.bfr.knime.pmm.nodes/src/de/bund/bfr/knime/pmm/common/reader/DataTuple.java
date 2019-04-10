@@ -91,7 +91,7 @@ public class DataTuple {
 		if (modelVariables == null) {
 			miscDoc = new PmmXmlDoc();
 		} else {
-			Map<String, Double> miscs = Arrays.stream(modelVariables)
+			Map<String, Double> miscs = Arrays.stream(modelVariables).filter(var -> var.getValue() != null)
 					.collect(Collectors.toMap(ModelVariable::getName, ModelVariable::getValue));
 			miscDoc = ReaderUtils.parseMiscs(miscs);
 		}
@@ -123,8 +123,9 @@ public class DataTuple {
 					approvalMode, website, typeValue, comment);
 			litDoc.add(lit);
 
-			de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem mdLit = new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(Type.MD, author, year, title, abstractText, journal, volume, issue,
-					page, approvalMode, website, typeValue, comment);
+			de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem mdLit = new de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem(
+					Type.MD, author, year, title, abstractText, journal, volume, issue, page, approvalMode, website,
+					typeValue, comment);
 			metadata.literatureItems.add(mdLit);
 		}
 
@@ -160,7 +161,8 @@ public class DataTuple {
 		MatrixXml originalMatrixXml = new MatrixXml(MathUtilities.getRandomNegativeInt(), compartment.getName(),
 				compartment.getDetail(), null);
 		de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml matrixXml = new de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml(
-				de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml.Type.MD, MathUtilities.getRandomNegativeInt(), compartment.getName(), compartment.getDetail(), null);
+				de.bund.bfr.knime.pmm.extendedtable.items.MatrixXml.Type.MD, MathUtilities.getRandomNegativeInt(),
+				compartment.getName(), compartment.getDetail(), null);
 
 		TimeSeriesMetadata metadata = new TimeSeriesMetadata();
 		metadata.agentXml = agentXml;
@@ -169,6 +171,7 @@ public class DataTuple {
 		PmmXmlDoc miscCell = new PmmXmlDoc();
 		if (compartment.isSetModelVariables()) {
 			Map<String, Double> miscs = Arrays.stream(compartment.getModelVariables())
+					.filter(var -> var.getValue() != null)
 					.collect(Collectors.toMap(ModelVariable::getName, ModelVariable::getValue));
 			miscCell = ReaderUtils.parseMiscs(miscs);
 		}
