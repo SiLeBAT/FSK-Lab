@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed 
+- fix the issue that the FSK editor JS node removes first simulation scenario if not defaultSimulation.
+
 ## [1.5.6] - 2019-4-05
 
 ### Added

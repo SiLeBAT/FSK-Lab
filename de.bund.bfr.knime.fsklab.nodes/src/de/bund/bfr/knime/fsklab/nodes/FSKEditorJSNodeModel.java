@@ -29,9 +29,11 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -272,10 +274,15 @@ final class FSKEditorJSNodeModel
       if (outObj.modelMath.getParameter() != null && outObj.modelMath.getParameter().size() > 0) {
         FskSimulation defaultSimulation =
             NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter());
-        if(outObj.simulations.size()>0){
-          outObj.simulations.remove(0);
+        if (outObj.simulations.size() > 0) {
+          List<FskSimulation> defaultSim =
+              outObj.simulations.stream().filter(sim -> "defaultSimulation".equals(sim.getName()))
+                  .collect(Collectors.toList());
+          defaultSim.stream().forEach(sim -> {
+            outObj.simulations.remove(sim);
+          });
+          outObj.simulations.add(0, defaultSimulation);
         }
-        outObj.simulations.add(defaultSimulation);
       }
 
       outObj.model = fskEditorProxyValue.getFirstModelScript();
