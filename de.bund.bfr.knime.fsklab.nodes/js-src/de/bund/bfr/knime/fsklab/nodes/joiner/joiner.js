@@ -282,8 +282,8 @@ joiner = function() {
 			}
 		});
 		inp.addEventListener("click", function(e) {
-			event.preventDefault(); // Let's stop this event.
-			event.stopPropagation(); // Really this time.
+			e.preventDefault(); // Let's stop this event.
+			e.stopPropagation(); // Really this time.
 			var x = document.getElementById(this.id + "autocomplete-list");
 			if (x)
 				x = x.getElementsByTagName("div");
@@ -486,6 +486,7 @@ joiner = function() {
 		})
 		
 		$("[role='tooltip']").find("div:contains('should be equal to one of the allowed values')" ).css('visibility', 'hidden');
+		$("[data='Modificationdate']").html( 'Modification Date' );
 	}
 	function prepareData(_firstModel) {
 		// prepare generalInformation
