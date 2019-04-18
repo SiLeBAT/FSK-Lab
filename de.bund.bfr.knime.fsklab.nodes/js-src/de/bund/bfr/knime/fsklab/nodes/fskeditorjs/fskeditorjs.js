@@ -242,8 +242,8 @@ fskeditorjs = function() {
 			}
 		});
 		inp.addEventListener("click", function(e) {
-			event.preventDefault(); // Let's stop this event.
-			event.stopPropagation(); // Really this time.
+			e.preventDefault(); // Let's stop this event.
+			e.stopPropagation(); // Really this time.
 			var x = document.getElementById(this.id + "autocomplete-list");
 			if (x)
 				x = x.getElementsByTagName("div");
@@ -425,6 +425,7 @@ fskeditorjs = function() {
 
 		create_body();
 		fixTableHeaders();
+		
 	};
 	function fixTableHeaders() {
 		var tablePopups = {};
@@ -469,6 +470,9 @@ fskeditorjs = function() {
 		$("[role='tooltip']").find(
 				"div:contains('should be equal to one of the allowed values')")
 				.css('visibility', 'hidden');
+		console.log("Modificationdate ",$("[data='Modificationdate']"));
+		$("[data='Modificationdate']")
+		.html( 'Modification Date' );
 	}
 	function prepareData(_firstModel) {
 		// prepare generalInformation
