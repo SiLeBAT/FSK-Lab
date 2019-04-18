@@ -64,6 +64,7 @@ import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
+import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import metadata.DataBackground;
 import metadata.GeneralInformation;
@@ -83,7 +84,6 @@ final class JoinerNodeModel extends
   private final JoinerNodeSettings nodeSettings = new JoinerNodeSettings();
   private FskPortObject m_port;
   public final static String suffix = "_dup";
-
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE, FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {CombinedFskPortObject.TYPE, ImagePortObject.TYPE};
@@ -242,17 +242,46 @@ final class JoinerNodeModel extends
       outObj.packages.addAll(packageSet);
       resolveParameters(joinerRelation, outObj);
 
-      if (outObj.modelMath != null) {
-        outObj.simulations.add(NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter()));
-      }
+      
       outObj.setJoinerRelation(joinerRelation);
+      if (outObj.modelMath != null) {
+        createSimulation(outObj);
+      }
       imagePort = createSVGImagePortObject(joinerProxyValue.getSvgRepresentation());
     }
 
-
+    
     return new PortObject[] {outObj, imagePort};
   }
+  
+  private void createSimulation(FskPortObject inObj) {
 
+    if (inObj instanceof CombinedFskPortObject) {
+      if (((CombinedFskPortObject) inObj).getJoinerRelation() != null
+          && !((CombinedFskPortObject) inObj).getJoinerRelation().isEmpty()) {
+        
+        inObj.simulations.clear();
+        FskSimulation defaultSimulation =
+            NodeUtils.createDefaultSimulation(inObj.modelMath.getParameter());
+        if(inObj.simulations.size()>0){
+          inObj.simulations.remove(0);
+        }
+        inObj.simulations.add(defaultSimulation);
+       
+        createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject());
+        createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject());
+      }
+    } else {
+      inObj.simulations.clear();
+      FskSimulation defaultSimulation =
+          NodeUtils.createDefaultSimulation(inObj.modelMath.getParameter());
+      if(inObj.simulations.size()>0){
+        inObj.simulations.remove(0);
+      }
+      inObj.simulations.add(defaultSimulation);
+    }
+
+  }
   // second visualization script is the script which draw and control the plotting!
   public String extractSecondObjectVis(FskPortObject object) {
     if (!(object instanceof CombinedFskPortObject)) {

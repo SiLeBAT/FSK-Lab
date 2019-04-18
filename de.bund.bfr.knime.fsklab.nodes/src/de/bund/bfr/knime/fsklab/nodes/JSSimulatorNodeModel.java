@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
@@ -37,6 +38,7 @@ import org.knime.js.core.node.AbstractWizardNodeModel;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.nodes.JSSimulatorViewValue.JSSimulation;
 import metadata.Parameter;
 import metadata.ParameterClassification;
@@ -174,10 +176,10 @@ class JSSimulatorNodeModel
     if (inObj instanceof CombinedFskPortObject) {
       if (((CombinedFskPortObject) inObj).getJoinerRelation() != null
           && !((CombinedFskPortObject) inObj).getJoinerRelation().isEmpty()) {
+        List<Parameter> inputParams = getViewRepresentation().parameters;
         createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject(), val);
         createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject(), val);
         inObj.simulations.clear();
-        List<Parameter> inputParams = getViewRepresentation().parameters;
         for (JSSimulation jsSimulation : val.simulations) {
           FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
           for (int i = 0; i < inputParams.size(); i++) {
@@ -199,18 +201,19 @@ class JSSimulatorNodeModel
         List<Parameter> inputParams = getViewRepresentation().parameters;
         index = 0;
         inputParams.stream().forEach(param -> {
-          String paramWithSuffix = param.getParameterID();
-          paramWithSuffix = paramWithSuffix.replaceAll(JoinerNodeModel.suffix, "");
-          if (modelMathParameter.contains(paramWithSuffix)) {
-            param.setParameterID(paramWithSuffix);
-            properInputParam.add(param);
+          Parameter paramCopy =  EcoreUtil.copy(param);          
+          String paramWithSuffix = paramCopy.getParameterID();
+          String paramWithoutSuffix = paramWithSuffix.replaceAll(JoinerNodeModel.suffix, "");
+          if (modelMathParameter.contains(paramWithoutSuffix) || modelMathParameter.contains(paramWithSuffix)) {
+            paramCopy.setParameterID(paramWithoutSuffix);
+            properInputParam.add(paramCopy);
             indexes.add(index);
           }
           index++;
 
         });
-        inputParams.stream().filter(param -> modelMathParameter.contains(param.getParameterID()))
-            .collect(Collectors.toList());
+        /*inputParams.stream().filter(param -> modelMathParameter.contains(param.getParameterID()))
+            .collect(Collectors.toList());*/
 
         for (int i = 0; i < properInputParam.size(); i++) {
           String paramName = properInputParam.get(i).getParameterID();

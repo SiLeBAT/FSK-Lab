@@ -153,6 +153,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     }
     return embedFSKObject;
   }
+  public FskPortObject getSecondEmbedFSKObject(CombinedFskPortObject comFskObj) {
+    FskPortObject embedFSKObject = comFskObj.getSecondFskPortObject();
+    if (embedFSKObject instanceof CombinedFskPortObject) {
+      embedFSKObject = getEmbedFSKObject((CombinedFskPortObject) embedFSKObject);
+    }
+    return embedFSKObject;
+  }
 
   public FskPortObject runFskPortObject(FskPortObject fskObj, ExecutionContext exec,
       RController controller) throws Exception {
@@ -186,7 +193,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           String oldId = param.getParameterID().substring(0,
               param.getParameterID().indexOf(JoinerNodeModel.suffix));
           // make the old parameter available for the Model script
-          controller.eval(oldId + " <- " + param.getParameterValue(), false);
+          if(fskSimulation.getParameters().get(param.getParameterID()) != null) {
+            controller.eval(oldId + " <- " + fskSimulation.getParameters().get(param.getParameterID()), false);
+          }
         }
       }
 
@@ -274,6 +283,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
    // apply join command for complex join
       if (secondFskObj instanceof CombinedFskPortObject) {
         FskPortObject embedFSKObject = getEmbedFSKObject((CombinedFskPortObject) secondFskObj);
+        FskPortObject secondEmbedFSKObject = getSecondEmbedFSKObject((CombinedFskPortObject) secondFskObj);
+
         if (joinRelations != null) {
           List<Parameter> alternativeParamsx = firstFskObj.modelMath.getParameter().stream()
               .filter(p -> p.getParameterID().endsWith(JoinerNodeModel.suffix))
@@ -300,9 +311,18 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
                   List<Parameter> params = embedFSKObject.modelMath.getParameter().stream()
                       .filter(p -> embedParametername.startsWith(p.getParameterID()))
                       .collect(Collectors.toList());
-
-                  sim.getParameters().put(params.get(0).getParameterID(),
-                      joinRelation.getCommand());
+                  if(params.size()>0) {
+                    sim.getParameters().put(params.get(0).getParameterID(),
+                        joinRelation.getCommand());
+                  }else {
+                     params = secondEmbedFSKObject.modelMath.getParameter().stream()
+                        .filter(p -> embedParametername.startsWith(p.getParameterID()))
+                        .collect(Collectors.toList());
+                     if(params.size()>0) {
+                       sim.getParameters().put(params.get(0).getParameterID(),
+                           joinRelation.getCommand());
+                     }
+                  }
                 }
 
               }
