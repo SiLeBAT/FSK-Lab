@@ -281,8 +281,8 @@ final class FSKEditorJSNodeModel
           defaultSim.stream().forEach(sim -> {
             outObj.simulations.remove(sim);
           });
-          outObj.simulations.add(0, defaultSimulation);
         }
+        outObj.simulations.add(0, defaultSimulation);
       }
 
       outObj.model = fskEditorProxyValue.getFirstModelScript();
