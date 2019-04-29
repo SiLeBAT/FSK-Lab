@@ -712,13 +712,14 @@ public class CombinedFskPortObject extends FskPortObject {
       DefaultMutableTreeNode anotherJoinedModel = new DefaultMutableTreeNode("joined");
       buildScriptNodes(anotherJoinedModel,
           ((CombinedFskPortObject) currentPortObject).getFirstFskPortObject(),modelScriptFlag);
-      buildScriptNodes(anotherJoinedModel,
-          ((CombinedFskPortObject) currentPortObject).getSecondFskPortObject(),modelScriptFlag);
       if(modelScriptFlag) {
 	      StringBuilder script = new StringBuilder();
 	      ((CombinedFskPortObject)currentPortObject).getJoinerRelation().stream().forEach(connection -> {script.append(connection.getTargetParam().getParameterID() +" <- "+connection.getCommand()+"\n");});
 	      anotherJoinedModel.add( new DefaultMutableTreeNode(new CommandScript("Joining Model Script",script.toString())));
       }
+      buildScriptNodes(anotherJoinedModel,
+          ((CombinedFskPortObject) currentPortObject).getSecondFskPortObject(),modelScriptFlag);
+      
       top.add(anotherJoinedModel);
     } else {
       DefaultMutableTreeNode childModel = new DefaultMutableTreeNode(currentPortObject);
