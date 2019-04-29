@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed 
 - fix the issue that the FSK editor JS node removes first simulation scenario if not defaultSimulation.
 - Issue with autocomplete feature of the fields of the editor and the joiner with firefox.
+- Issues in running any joined model with new simulation configuration.
 
 ## [1.5.6] - 2019-4-05
 
