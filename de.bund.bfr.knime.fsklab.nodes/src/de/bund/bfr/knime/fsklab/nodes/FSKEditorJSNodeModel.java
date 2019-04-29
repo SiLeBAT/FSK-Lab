@@ -317,6 +317,7 @@ final class FSKEditorJSNodeModel
       final Set<String> librariesSet = new HashSet<>();
       librariesSet.addAll(new RScript(outObj.model).getLibraries());
       librariesSet.addAll(new RScript(outObj.viz).getLibraries());
+      outObj.packages.clear();
       outObj.packages.addAll(new ArrayList<>(librariesSet));
     }
     return new PortObject[] {outObj};
