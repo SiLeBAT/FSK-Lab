@@ -715,7 +715,8 @@ public class CombinedFskPortObject extends FskPortObject {
       if(modelScriptFlag) {
 	      StringBuilder script = new StringBuilder();
 	      ((CombinedFskPortObject)currentPortObject).getJoinerRelation().stream().forEach(connection -> {script.append(connection.getTargetParam().getParameterID() +" <- "+connection.getCommand()+"\n");});
-	      anotherJoinedModel.add( new DefaultMutableTreeNode(new CommandScript("Joining Model Script",script.toString())));
+	      String language = ((CombinedFskPortObject)currentPortObject).getJoinerRelation().get(0).getLanguage_written_in();
+	      anotherJoinedModel.add( new DefaultMutableTreeNode(new CommandScript("Joining Model Script"+ (language!= null?"( "+language+" )":""),script.toString())));
       }
       buildScriptNodes(anotherJoinedModel,
           ((CombinedFskPortObject) currentPortObject).getSecondFskPortObject(),modelScriptFlag);

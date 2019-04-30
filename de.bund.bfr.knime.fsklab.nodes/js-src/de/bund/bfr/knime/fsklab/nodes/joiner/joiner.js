@@ -176,17 +176,22 @@ joiner = function() {
 										 * the autocomplete text
 										 * field:
 										 */
-
-										store.getState().jsonforms.core.data[fieldName] = this
-												.getElementsByTagName("input")[0].value;
-
-										store
-												.dispatch(Actions
-														.init(
-																store
-																		.getState().jsonforms.core.data,
-																schema,
-																uischema));
+										if(store){
+											store.getState().jsonforms.core.data[fieldName] = this
+													.getElementsByTagName("input")[0].value;
+	
+											store
+													.dispatch(Actions
+															.init(
+																	store
+																			.getState().jsonforms.core.data,
+																	schema,
+																	uischema));
+										}else{
+											
+											$(document.getElementById('commandLanguage')).val(this.getElementsByTagName("input")[0].value);
+											window.sJoinRealtion.language_written_in = this.getElementsByTagName("input")[0].value;
+										}
 										/*
 										 * close the list of
 										 * autocompleted values,
@@ -548,7 +553,16 @@ joiner = function() {
 				.stringify(window.store17.getState().jsonforms.core.data);
 		_viewValue.dataBackground = JSON
 				.stringify(window.store6.getState().jsonforms.core.data);
+		if(!window.geneerr){
+			window.geneerr = "";
+		}
 		if(_viewValue.joinRelations.push){
+			$.each(_viewValue.joinRelations,function (index, value){
+				if(!(value.language_written_in)){
+					window.geneerr += "- The (language_written_in) field of the connection between "+value.sourceParam.parameterID+" and "+value.targetParam.parameterID +" parameters is not required,,,"
+				}
+			})
+			//console.log(geneerr);
 			_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
 		}
 		
@@ -585,13 +599,16 @@ joiner = function() {
 		}
 		if(_modelScriptTree)
 			_viewValue.modelScriptTree = JSON.stringify(_modelScriptTree);
-		console.log(_modelScriptTree);
+		
 		var generalError = "";
 		generalError += validateAgainstSchema(window.schema, window.store1.getState().jsonforms.core.data,"- General Information:");
 		generalError += validateAgainstSchema(window.schema2, window.store2.getState().jsonforms.core.data,"- Scope:");
 		generalError += validateAgainstSchema(window.schema17, window.store17.getState().jsonforms.core.data,"- Model Math:");
 		generalError += validateAgainstSchema(window.schema6, window.store6.getState().jsonforms.core.data,"- Data Background:");
+		generalError += window.geneerr;
+		
 		_viewValue.validationErrors = generalError.trim();
+		console.log(_viewValue);
 		return _viewValue;
 	};
 	function validateAgainstSchema(schema, data, schemaName){
@@ -602,9 +619,9 @@ joiner = function() {
 		for(i = 0 ; i < ajv.errors.length;i++){
 			theError =  ajv.errors[i]
 			if(theError.keyword == "required" ){
-				requiredErrorText += (requiredErrorText.length > 13 ? " , " : " ") + theError.params.missingProperty
+				requiredErrorText += (requiredErrorText.length > 13 ? ", " : " ") + theError.params.missingProperty
 			}else if(theError.keyword == "format"){
-				formatErrorText += (formatErrorText.length > 13 ? " , " : " " )+ theError.dataPath.substring(1)
+				formatErrorText += (formatErrorText.length > 13 ? ", " : " " )+ theError.dataPath.substring(1)
 			}
 		}
 		requiredErrorText = (requiredErrorText.length > 13 ? (schemaName +",,,"+ requiredErrorText + " are(is) required,,,") : " ") ;
@@ -1321,6 +1338,7 @@ joiner = function() {
 								});
 								$('#commandLanguage').change(function() {
 									window.sJoinRealtion.language_written_in = $('#commandLanguage').val();
+									console.log($('#commandLanguage').val());
 								});
 								
 							}
@@ -1596,9 +1614,8 @@ joiner = function() {
 				});
 				
 			});
-			$('#commandLanguage').change(function() {
-				window.sJoinRealtion.language_written_in = $('#commandLanguage').val();
-			});
+			
+			
 			
 			sourceParameter = firstModelParameterMap[sourcePort];
 			if (sourceParameter == undefined) {
@@ -1614,7 +1631,10 @@ joiner = function() {
 						targetParam : targetParameter,
 						command: sourcePort
 					};
-				
+				if(_firstModel.generalInformation.languageWrittenIn){
+					window.sJoinRealtion.language_written_in = _firstModel.generalInformation.languageWrittenIn;
+					$('#commandLanguage').val(_firstModel.generalInformation.languageWrittenIn);
+				}
 				if(!(_viewValue.joinRelations.push)){
 					_viewValue.joinRelations = []
 				}

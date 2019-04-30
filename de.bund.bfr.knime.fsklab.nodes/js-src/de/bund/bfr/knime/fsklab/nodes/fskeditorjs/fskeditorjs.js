@@ -698,11 +698,11 @@ fskeditorjs = function() {
 			theError = ajv.errors[i]
 			// console.log(theError);
 			if (theError.keyword == "required") {
-				requiredErrorText += (requiredErrorText.length > 13 ? " , "
+				requiredErrorText += (requiredErrorText.length > 13 ? ", "
 						: " ")
 						+ theError.params.missingProperty
 			} else if (theError.keyword == "format") {
-				formatErrorText += (formatErrorText.length > 13 ? " , " : " ")
+				formatErrorText += (formatErrorText.length > 13 ? ", " : " ")
 						+ theError.dataPath.substring(1)
 			}
 		}
