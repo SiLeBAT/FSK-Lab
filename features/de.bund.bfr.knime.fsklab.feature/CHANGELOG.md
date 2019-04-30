@@ -6,15 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.5.7] - 2019-4-30
+
 ### Fixed 
-- Fix the issue that the FSK editor JS node removes first simulation scenario if not defaultSimulation.
+- Fix the issue that the FSK editor JS node removes first simulation scenario if not defaultSimulation #324 .
 - Issue with autocomplete feature of the fields of the editor and the joiner with firefox.
 - Issues in running any joined model with new simulation configuration.
-- libraries removing issue as described in #323 
+- libraries removing issue as described in #323 .
 
 ### Changed
-- language wrriten in field of the connection between parameters in the joiner becomes required and set by default to the value of the first model.
-- the port object tree viewer of the joined FSK object shows the command script as second element.
+- Language wrriten in field of the connection between parameters in the joiner becomes required and set by default to the value of the first model.
+- The port object tree viewer of the joined FSK object shows the command script as second element.
 
 
 ## [1.5.6] - 2019-4-05
