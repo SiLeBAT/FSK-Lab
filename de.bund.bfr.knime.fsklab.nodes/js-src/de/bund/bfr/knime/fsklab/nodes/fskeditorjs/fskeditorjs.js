@@ -615,6 +615,7 @@ fskeditorjs = function() {
 				.stringify(window.store2.getState().jsonforms.core.data);
 		_viewValue.modelMath = JSON
 				.stringify(window.store17.getState().jsonforms.core.data);
+		console.log(window.store17.getState().jsonforms.core.data);
 		_viewValue.dataBackground = JSON
 				.stringify(window.store6.getState().jsonforms.core.data);
 		if (window.firstModelScript && window.firstModelScript.save) {
@@ -1348,6 +1349,47 @@ fskeditorjs = function() {
 		reDesign("scope");
 		reDesign("databackground");
 		reDesign("modelMath");
+		$(document).ready(function() {
+		    //Helper function to keep table row from collapsing when being sorted
+			table = $($($(".control-labelal:contains('Parameter')")[15]).parent().parent().parent().parent().parent().find('.table-responsive')[0])
+			table.attr("id", "Parametertable")
+			var fixHelperModified = function(e, tr) {
+				var $originals = tr.children();
+				var $helper = tr.clone();
+				$helper.children().each(function(index)
+				{
+				  $(this).width($originals.eq(index).width())
+				});
+				return $helper;
+			},updateIndex = function(e, ui) {
+		         $('td.index', ui.item.parent()).each(function(i) {
+		             $(this).html(i + 1);
+		          });
+		       }
+		     
+			//Make Parameter table sortable
+			$(table.find('tbody')[0]).sortable({
+		    	helper: fixHelperModified,
+				stop: function(event,ui) {
+					updateIndex(event,ui);
+					console.log(event,ui);
+					newParameterList = [];
+					table.find('tr').each(function (index, value){
+						if(index > 0){
+							$(window.store17.getState().jsonforms.core.data.parameter).each(function(index, valuex){
+									console.log("valuex",valuex.parameterID,$(value).find("input[id='#/properties/parameterIDtable']").first().val())
+									if(valuex.parameterID == $(value).find("input[id='#/properties/parameterIDtable']").first().val()){
+										newParameterList.push(valuex);
+									}
+							});
+							console.log($(value).find("input[id='#/properties/parameterIDtable']").first().val());
+						}
+					});
+					window.store17.getState().jsonforms.core.data.parameter = newParameterList; 
+				}
+			}).disableSelection();
+
+		});
 
 	}
 

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- The functionality to reorder the paramters by Drag & Drop.
+
+
 ## [1.5.7] - 2019-4-30
 
 ### Fixed 
