@@ -139,7 +139,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     if (StringUtils.isNotBlank(nodeSettings.simulation)) {
       FskPortObject fskObjk = fskObj;
       IntStream.range(0, simulation.size())
-          .filter(index -> simulation.get(index).getName().startsWith(nodeSettings.simulation))
+          .filter(index -> simulation.get(index).getName().equals(nodeSettings.simulation))
           .findFirst().ifPresent(index -> reSelectSimulation(fskObjk, index));
     }
     try (RController controller = new RController()) {
