@@ -136,9 +136,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     FskPortObject fskObj = (FskPortObject) inData[0];
     final List<FskSimulation> simulation = fskObj.simulations;
-    if(StringUtils.isNotBlank(nodeSettings.simulation)) {
-      int indexx = IntStream.range(0, simulation.size()).filter(index -> simulation.get(index).getName().startsWith(nodeSettings.simulation)).findFirst().getAsInt();
-      reSelectSimulation(fskObj,indexx);
+    if (StringUtils.isNotBlank(nodeSettings.simulation)) {
+      FskPortObject fskObjk = fskObj;
+      IntStream.range(0, simulation.size())
+          .filter(index -> simulation.get(index).getName().startsWith(nodeSettings.simulation))
+          .findFirst().ifPresent(index -> reSelectSimulation(fskObjk, index));
     }
     try (RController controller = new RController()) {
       fskObj = runFskPortObject(fskObj, exec, controller);
@@ -154,11 +156,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     }
   }
 
-  public void reSelectSimulation( FskPortObject fskObj, int index) {
+  public void reSelectSimulation(FskPortObject fskObj, int index) {
     fskObj.selectedSimulationIndex = index;
     if (fskObj instanceof CombinedFskPortObject) {
-        reSelectSimulation(((CombinedFskPortObject)fskObj).getFirstFskPortObject(), index);
-        reSelectSimulation(((CombinedFskPortObject)fskObj).getSecondFskPortObject(), index);
+      reSelectSimulation(((CombinedFskPortObject) fskObj).getFirstFskPortObject(), index);
+      reSelectSimulation(((CombinedFskPortObject) fskObj).getSecondFskPortObject(), index);
     }
   }
 
@@ -169,6 +171,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     }
     return embedFSKObject;
   }
+
   public FskPortObject getSecondEmbedFSKObject(CombinedFskPortObject comFskObj) {
     FskPortObject embedFSKObject = comFskObj.getSecondFskPortObject();
     if (embedFSKObject instanceof CombinedFskPortObject) {
@@ -188,7 +191,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         firstFskObj = runFskPortObject(firstFskObj, exec, controller);
       }
       FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
-      
+
       LOGGER.info(" recieving '" + firstFskObj.selectedSimulationIndex
           + "' as the selected simulation index!");
 
@@ -209,8 +212,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           String oldId = param.getParameterID().substring(0,
               param.getParameterID().indexOf(JoinerNodeModel.suffix));
           // make the old parameter available for the Model script
-          if(fskSimulation.getParameters().get(param.getParameterID()) != null) {
-            controller.eval(oldId + " <- " + fskSimulation.getParameters().get(param.getParameterID()), false);
+          if (fskSimulation.getParameters().get(param.getParameterID()) != null) {
+            controller.eval(
+                oldId + " <- " + fskSimulation.getParameters().get(param.getParameterID()), false);
           }
         }
       }
@@ -233,7 +237,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
       // run the first model!
       LOGGER.info("Running Snippet of first Model: " + firstFskObj);
-      if(!(firstFskObj instanceof CombinedFskPortObject)) {
+      if (!(firstFskObj instanceof CombinedFskPortObject)) {
         firstFskObj = runSnippet(controller, firstFskObj, fskSimulation, context);
       }
       // move the generated files to the working
@@ -296,10 +300,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       FskSimulation secondfskSimulation =
           secondFskObj.simulations.get(secondFskObj.selectedSimulationIndex);
       LOGGER.info("Running Snippet of second Model: " + secondFskObj);
-   // apply join command for complex join
+      // apply join command for complex join
       if (secondFskObj instanceof CombinedFskPortObject) {
         FskPortObject embedFSKObject = getEmbedFSKObject((CombinedFskPortObject) secondFskObj);
-        FskPortObject secondEmbedFSKObject = getSecondEmbedFSKObject((CombinedFskPortObject) secondFskObj);
+        FskPortObject secondEmbedFSKObject =
+            getSecondEmbedFSKObject((CombinedFskPortObject) secondFskObj);
 
         if (joinRelations != null) {
           List<Parameter> alternativeParamsx = firstFskObj.modelMath.getParameter().stream()
@@ -327,17 +332,17 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
                   List<Parameter> params = embedFSKObject.modelMath.getParameter().stream()
                       .filter(p -> embedParametername.startsWith(p.getParameterID()))
                       .collect(Collectors.toList());
-                  if(params.size()>0) {
+                  if (params.size() > 0) {
                     sim.getParameters().put(params.get(0).getParameterID(),
                         joinRelation.getCommand());
-                  }else {
-                     params = secondEmbedFSKObject.modelMath.getParameter().stream()
+                  } else {
+                    params = secondEmbedFSKObject.modelMath.getParameter().stream()
                         .filter(p -> embedParametername.startsWith(p.getParameterID()))
                         .collect(Collectors.toList());
-                     if(params.size()>0) {
-                       sim.getParameters().put(params.get(0).getParameterID(),
-                           joinRelation.getCommand());
-                     }
+                    if (params.size() > 0) {
+                      sim.getParameters().put(params.get(0).getParameterID(),
+                          joinRelation.getCommand());
+                    }
                   }
                 }
 
@@ -347,7 +352,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         }
 
         secondFskObj = runFskPortObject(secondFskObj, exec, controller);
-      }else {
+      } else {
         secondFskObj = runSnippet(controller, secondFskObj, secondfskSimulation, context);
       }
       fskObj.workspace = secondFskObj.workspace;
@@ -355,7 +360,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       return comFskObj;
     } else {
       LOGGER.info("Running simulation: " + nodeSettings.simulation);
-      
+
       FskSimulation fskSimulation;
       if (!nodeSettings.simulation.isEmpty()) {
         // If a simulation is configured in the settings then pick it
@@ -364,7 +369,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         // If not present assign default simulation
         fskSimulation = sim.orElse(fskObj.simulations.get(0));
       } else {
-        // If no selected simulation is saved in settings then pick the simulation from the input port
+        // If no selected simulation is saved in settings then pick the simulation from the input
+        // port
         fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
       }
 
