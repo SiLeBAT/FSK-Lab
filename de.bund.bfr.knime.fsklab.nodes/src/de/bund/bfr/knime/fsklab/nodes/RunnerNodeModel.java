@@ -25,14 +25,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.CanceledExecutionException;
@@ -132,6 +135,11 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   protected PortObject[] execute(PortObject[] inData, ExecutionContext exec) throws Exception {
 
     FskPortObject fskObj = (FskPortObject) inData[0];
+    final List<FskSimulation> simulation = fskObj.simulations;
+    if(StringUtils.isNotBlank(nodeSettings.simulation)) {
+      int indexx = IntStream.range(0, simulation.size()).filter(index -> simulation.get(index).getName().startsWith(nodeSettings.simulation)).findFirst().getAsInt();
+      reSelectSimulation(fskObj,indexx);
+    }
     try (RController controller = new RController()) {
       fskObj = runFskPortObject(fskObj, exec, controller);
     }
@@ -143,6 +151,14 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     } catch (IOException e) {
       LOGGER.warn("There is no image created");
       return new PortObject[] {fskObj};
+    }
+  }
+
+  public void reSelectSimulation( FskPortObject fskObj, int index) {
+    fskObj.selectedSimulationIndex = index;
+    if (fskObj instanceof CombinedFskPortObject) {
+        reSelectSimulation(((CombinedFskPortObject)fskObj).getFirstFskPortObject(), index);
+        reSelectSimulation(((CombinedFskPortObject)fskObj).getSecondFskPortObject(), index);
     }
   }
 

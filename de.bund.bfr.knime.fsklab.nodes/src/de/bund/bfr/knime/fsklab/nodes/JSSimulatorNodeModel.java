@@ -190,6 +190,7 @@ class JSSimulatorNodeModel
           inObj.simulations.add(fskSimulation);
         }
       }
+      inObj.selectedSimulationIndex = val.selectedSimulationIndex;
     } else {
       inObj.simulations.clear();
       List<String> modelMathParameter = inObj.modelMath.getParameter().stream()

@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
-- The functionality to reorder the paramters by Drag & Drop.
+- The functionality to reorder the paramters defined in the model math by Drag & Drop.
+
+### Changed
+- Change the view of the Combined FSK Object Object to show the selected simulation like the normal FSK Object. 
+
+### Fixed
+- Fixed the Runner node to run the selected simulation chosen in the dialog of the node.
 
 
 ## [1.5.7] - 2019-4-30
