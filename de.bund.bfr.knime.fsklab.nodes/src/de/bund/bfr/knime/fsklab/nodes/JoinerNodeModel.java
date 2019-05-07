@@ -270,6 +270,14 @@ final class JoinerNodeModel extends
        
         createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject());
         createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject());
+      }else {
+        inObj.simulations.clear();
+        FskSimulation defaultSimulation =
+            NodeUtils.createDefaultSimulation(inObj.modelMath.getParameter());
+        if(inObj.simulations.size()>0){
+          inObj.simulations.remove(0);
+        }
+        inObj.simulations.add(defaultSimulation);
       }
     } else {
       inObj.simulations.clear();
