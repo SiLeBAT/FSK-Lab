@@ -47,55 +47,37 @@ simulator = function() {
 			input.val(value);
 			
 		
-			function prepeare(valueToprepeare){
-				return valueToprepeare!=null?valueToprepeare.replace(/"/g, ""):"";
+			function prepare(valueToPrepare) {
+				return valueToPrepare != null ? valueToPrepare.replace(/"/g, "") : "";
 			}
 			
 			input.focusout(function() {
 				_val.simulations[_currentSimulation].values[parameterIndex] = $(this).val();
-			  })
+			});
+			
 			var form = $('<div class="form-group">' +
 				'<label class="col-sm-3 control-label">' + parameter.parameterID + '</label>' +
 				'<div class="col-sm-6">'+
-				'<a data-content="'+
-				'<div><b>Parameter&nbsp;Classification</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterClassification)+'</div>'+
-				'<div><b>Parameter&nbsp;Description</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDescription)+'</div>'+
-				'<div><b>Parameter&nbsp;Distribution</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDistribution)+'</div>'+
-				'<div><b>Parameter&nbsp;Error</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterError)+'</div>'+
-				'<div><b>Parameter&nbsp;ID</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterID)+'</div>'+
-				'<div><b>Parameter&nbsp;Name</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterName)+'</div>'+
-				'<div><b>Parameter&nbsp;Source</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterSource)+'</div>'+
-				'<div><b>Parameter&nbsp;Subject</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterSubject)+'</div>'+
-				'<div><b>Parameter&nbsp;Type</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterType)+'</div>'+
-				'<div><b>Parameter&nbsp;DataType</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterDataType)+'</div>'+
-				'<div><b>Parameter&nbsp;Unit</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterUnit)+'</div>'+
-				'<div><b>Parameter&nbsp;UnitCategory</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterUnitCategory)+'</div>'+
-				'<div><b>Parameter&nbsp;Value</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValue)+'</div>'+
-				'<div><b>Parameter&nbsp;Max Value</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValueMax)+'</div>'+
-				'<div><b>Parameter&nbsp;Min Value</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterValueMin)+'</div>'+
-				'<div><b>Parameter&nbsp;Variability Subject</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].parameterVariabilitySubject)+'</div>'+
-				'<div><b>Parameter&nbsp;Reference</b>&nbsp;:&nbsp;'+prepeare(_rep.parameters[parameterIndex].reference)+'</div>"'+
+				'<a data-content="' +
+				'<div><b>Parameter&nbsp;Classification</b>&nbsp;:&nbsp;' + prepare(parameter.parameterClassification) + '</div>'+
+				'<div><b>Parameter&nbsp;Description</b>&nbsp;:&nbsp;' + prepare(parameter.parameterDescription) + '</div>'+
+				'<div><b>Parameter&nbsp;Distribution</b>&nbsp;:&nbsp;' + prepare(parameter.parameterDistribution) + '</div>'+
+				'<div><b>Parameter&nbsp;Error</b>&nbsp;:&nbsp;' + prepare(parameter.parameterError) + '</div>' +
+				'<div><b>Parameter&nbsp;ID</b>&nbsp;:&nbsp;' + prepare(parameter.parameterID) + '</div>' +
+				'<div><b>Parameter&nbsp;Name</b>&nbsp;:&nbsp;' + prepare(parameter.parameterName) + '</div>' +
+				'<div><b>Parameter&nbsp;Source</b>&nbsp;:&nbsp;' + prepare(parameter.parameterSource) + '</div>' +
+				'<div><b>Parameter&nbsp;Subject</b>&nbsp;:&nbsp;' + prepare(parameter.parameterSubject) + '</div>' +
+				'<div><b>Parameter&nbsp;Type</b>&nbsp;:&nbsp;' + prepare(parameter.parameterType) + '</div>'+
+				'<div><b>Parameter&nbsp;DataType</b>&nbsp;:&nbsp;' + prepare(parameter.parameterDataType) + '</div>'+
+				'<div><b>Parameter&nbsp;Unit</b>&nbsp;:&nbsp;' + prepare(parameter.parameterUnit) + '</div>' +
+				'<div><b>Parameter&nbsp;UnitCategory</b>&nbsp;:&nbsp;' + prepare(parameter.parameterUnitCategory) + '</div>' +
+				'<div><b>Parameter&nbsp;Value</b>&nbsp;:&nbsp;' + prepare(parameter.parameterValue) + '</div>' +
+				'<div><b>Parameter&nbsp;Max Value</b>&nbsp;:&nbsp;' + prepare(parameter.parameterValueMax) + '</div>' +
+				'<div><b>Parameter&nbsp;Min Value</b>&nbsp;:&nbsp;' + prepare(parameter.parameterValueMin) + '</div>' +
+				'<div><b>Parameter&nbsp;Variability Subject</b>&nbsp;:&nbsp;' + prepare(parameter.parameterVariabilitySubject) + '</div>' +
+				'<div><b>Parameter&nbsp;Reference</b>&nbsp;:&nbsp;' + prepare(parameter.reference) + '</div>"' +
 				
-				'tabindex="0" title="'+prepeare(_rep.parameters[parameterIndex].parameterID)+'" data-html="true" data-toggle="popover" data-trigger="focus" href="#"><i class="fa fa-info-circle" aria-hidden="true"></i></a>'+
-				/*' parameterClassification='++
-				' ='+_rep.parameters[parameterIndex].+
-				' ='+_rep.parameters[parameterIndex].+
-				' ='+_rep.parameters[parameterIndex].+
-				' ='+_rep.parameters[parameterIndex].parameterID+
-				' ='+_rep.parameters[parameterIndex].parameterName+
-				' ='+_rep.parameters[parameterIndex].parameterSource+
-				' ='+_rep.parameters[parameterIndex].parameterSubject+
-				' ='+_rep.parameters[parameterIndex].parameterType+
-				' ='+_rep.parameters[parameterIndex].parameterDataType+
-				' ='+_rep.parameters[parameterIndex].parameterUnit+
-				' ='+_rep.parameters[parameterIndex].parameterUnitCategory+
-				' ='+_rep.parameters[parameterIndex].parameterValue+
-				' ='+_rep.parameters[parameterIndex].parameterValueMax+
-				' ='+_rep.parameters[parameterIndex].parameterValueMin+
-				' ='+_rep.parameters[parameterIndex].parameterVariabilitySubject+
-				' ='+_rep.parameters[parameterIndex].reference+
-				
-				'</span></span>'+*/
+				'tabindex="0" title="'+prepare(parameter.parameterID)+'" data-html="true" data-toggle="popover" data-trigger="focus" href="#"><i class="fa fa-info-circle" aria-hidden="true"></i></a>'+
 				'<div class="col-sm-10 xxx"></div></div>' +
 				'  <div class="col-sm-3"><label>' + parameter.parameterUnit + '</label></div>' +
 				'</div>');
