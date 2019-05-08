@@ -283,6 +283,8 @@ final class FSKEditorJSNodeModel
           });
         }
         outObj.simulations.add(0, defaultSimulation);
+      }else {
+        outObj.simulations.add(0, NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter()));
       }
 
       outObj.model = fskEditorProxyValue.getFirstModelScript();
