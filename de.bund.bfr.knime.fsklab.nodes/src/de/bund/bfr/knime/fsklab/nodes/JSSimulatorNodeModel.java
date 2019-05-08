@@ -174,22 +174,20 @@ class JSSimulatorNodeModel
   private void createSimulation(FskPortObject inObj, JSSimulatorViewValue val) {
 
     if (inObj instanceof CombinedFskPortObject) {
-      if (((CombinedFskPortObject) inObj).getJoinerRelation() != null
-          && !((CombinedFskPortObject) inObj).getJoinerRelation().isEmpty()) {
-        List<Parameter> inputParams = getViewRepresentation().parameters;
-        createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject(), val);
-        createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject(), val);
-        inObj.simulations.clear();
-        for (JSSimulation jsSimulation : val.simulations) {
-          FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
-          for (int i = 0; i < inputParams.size(); i++) {
-            String paramName = inputParams.get(i).getParameterID();
-            String paramValue = jsSimulation.values.get(i);
-            fskSimulation.getParameters().put(paramName, paramValue);
-          }
-          inObj.simulations.add(fskSimulation);
+      List<Parameter> inputParams = getViewRepresentation().parameters;
+      createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject(), val);
+      createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject(), val);
+      inObj.simulations.clear();
+      for (JSSimulation jsSimulation : val.simulations) {
+        FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
+        for (int i = 0; i < inputParams.size(); i++) {
+          String paramName = inputParams.get(i).getParameterID();
+          String paramValue = jsSimulation.values.get(i);
+          fskSimulation.getParameters().put(paramName, paramValue);
         }
+        inObj.simulations.add(fskSimulation);
       }
+
       inObj.selectedSimulationIndex = val.selectedSimulationIndex;
     } else {
       inObj.simulations.clear();

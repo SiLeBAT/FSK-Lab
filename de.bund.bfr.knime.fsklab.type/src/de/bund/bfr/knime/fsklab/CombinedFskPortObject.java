@@ -151,7 +151,8 @@ public class CombinedFskPortObject extends FskPortObject {
   public static final String[] RESOURCE_EXTENSIONS = new String[] {"txt", "RData", "csv"};
 
   private static int numOfInstances = 0;
-
+  private static int numOfI = 0;
+  
   public CombinedFskPortObject(final String model, final String param, final String viz,
       final GeneralInformation generalInformation, final Scope scope,
       final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
@@ -242,19 +243,19 @@ public class CombinedFskPortObject extends FskPortObject {
 
     private static final String LIBRARY_LIST = "library.list";
     private static final String BREAK = "break";
-    private int level = 0;
+   // private int level = 0;
 
     @Override
     public void savePortObject(final CombinedFskPortObject portObject,
         final PortObjectZipOutputStream out, final ExecutionMonitor exec)
         throws IOException, CanceledExecutionException {
-      saveFSKPortObject(portObject, out, exec);
+      saveFSKPortObject(portObject, out, exec,numOfI++);
       out.close();
     }
 
     public void saveFSKPortObject(FskPortObject portObject, final PortObjectZipOutputStream out,
-        final ExecutionMonitor exec) throws IOException {
-    	level++;
+        final ExecutionMonitor exec,int level ) throws IOException {
+    	
       // First FSK Object
       // model entry (file with model script)
       if (portObject instanceof CombinedFskPortObject) {
@@ -301,8 +302,8 @@ public class CombinedFskPortObject extends FskPortObject {
         IOUtils.write(portObject.viz, out, "UTF-8");
         out.closeEntry();
 
-        saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec);
-        saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec);
+        saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec,level++);
+        saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec,level++);
 
        
       } else {
@@ -733,12 +734,23 @@ public class CombinedFskPortObject extends FskPortObject {
       DefaultMutableTreeNode anotherJoinedModel = new DefaultMutableTreeNode("joined");
       buildScriptNodes(anotherJoinedModel,
           ((CombinedFskPortObject) currentPortObject).getFirstFskPortObject(),modelScriptFlag);
-      if(modelScriptFlag) {
-	      StringBuilder script = new StringBuilder();
-	      ((CombinedFskPortObject)currentPortObject).getJoinerRelation().stream().forEach(connection -> {script.append(connection.getTargetParam().getParameterID() +" <- "+connection.getCommand()+"\n");});
-	      String language = ((CombinedFskPortObject)currentPortObject).getJoinerRelation().get(0).getLanguage_written_in();
-	      anotherJoinedModel.add( new DefaultMutableTreeNode(new CommandScript("Joining Model Script"+ (language!= null?"( "+language+" )":""),script.toString())));
-      }
+			if (modelScriptFlag) {
+				StringBuilder script = new StringBuilder();
+				String language = "";
+				if (((CombinedFskPortObject) currentPortObject).getJoinerRelation() != null
+						&& ((CombinedFskPortObject) currentPortObject).getJoinerRelation().size() > 0) {
+					((CombinedFskPortObject) currentPortObject).getJoinerRelation().stream().forEach(connection -> {
+						script.append(
+								connection.getTargetParam().getParameterID() + " <- " + connection.getCommand() + "\n");
+					});
+					
+
+					language = ((CombinedFskPortObject) currentPortObject).getJoinerRelation().get(0)
+							.getLanguage_written_in();
+				}
+				anotherJoinedModel.add(new DefaultMutableTreeNode(new CommandScript(
+						"Joining Model Script" + (language != null ? "( " + language + " )" : ""), script.toString())));
+			}
       buildScriptNodes(anotherJoinedModel,
           ((CombinedFskPortObject) currentPortObject).getSecondFskPortObject(),modelScriptFlag);
       

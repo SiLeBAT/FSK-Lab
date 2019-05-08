@@ -96,6 +96,7 @@ public class FSK2MetadataNodeModel extends StatelessModel {
         final String jsonStr = mapper.writeValueAsString(object);
         jsonValue = JSONUtil.parseJSONValue(jsonStr);
       } catch (IOException e) {
+        e.printStackTrace();
       }
     }
 
