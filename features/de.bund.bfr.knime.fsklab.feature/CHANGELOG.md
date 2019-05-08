@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Fixed the Runner node to run the selected simulation chosen in the dialog of the node.
+- Validation of simulation names in Simulation configurator node.
 
 
 ## [1.5.7] - 2019-4-30
