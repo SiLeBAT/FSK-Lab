@@ -163,12 +163,9 @@ simulator = function() {
 				$('.btn-success').prop('disabled', true);
 			} else if (isSimulationContained(name)) {
 				$('.btn-success').prop('disabled', true);
-			}
 			// If simulation name does not match the SId format then disable the add button
-			else if (!_idRegexp.test(name)) {
-				$('.btn-success').prop('disabled', true);
 			} else {
-				$('.btn-success').prop('disabled', false);
+				$('.btn-success').prop('disabled', !_idRegexp.test(name));
 			}
 		});
 
