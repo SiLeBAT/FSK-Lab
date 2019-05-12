@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
@@ -151,7 +152,7 @@ public class CombinedFskPortObject extends FskPortObject {
   public static final String[] RESOURCE_EXTENSIONS = new String[] {"txt", "RData", "csv"};
 
   private static int numOfInstances = 0;
-  private static int numOfI = 0;
+  private static Random ran = new Random();
   
   public CombinedFskPortObject(final String model, final String param, final String viz,
       final GeneralInformation generalInformation, final Scope scope,
@@ -249,18 +250,18 @@ public class CombinedFskPortObject extends FskPortObject {
     public void savePortObject(final CombinedFskPortObject portObject,
         final PortObjectZipOutputStream out, final ExecutionMonitor exec)
         throws IOException, CanceledExecutionException {
-      saveFSKPortObject(portObject, out, exec,numOfI++);
+      saveFSKPortObject(portObject, out, exec);
       out.close();
     }
 
     public void saveFSKPortObject(FskPortObject portObject, final PortObjectZipOutputStream out,
-        final ExecutionMonitor exec,int level ) throws IOException {
+        final ExecutionMonitor exec) throws IOException {
     	
       // First FSK Object
       // model entry (file with model script)
       if (portObject instanceof CombinedFskPortObject) {
         // write tag value to check the type of the fsk port object when read it back
-    	
+    	int level = ran.nextInt();
         out.putNextEntry(new ZipEntry(COMBINED+level));
         IOUtils.write(COMBINED+level, out, "UTF-8");
         out.closeEntry();
@@ -302,12 +303,13 @@ public class CombinedFskPortObject extends FskPortObject {
         IOUtils.write(portObject.viz, out, "UTF-8");
         out.closeEntry();
 
-        saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec,level++);
-        saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec,level++);
+        saveFSKPortObject(joinedPortObject.getFirstFskPortObject(), out, exec);
+        saveFSKPortObject(joinedPortObject.getSecondFskPortObject(), out, exec);
 
        
       } else {
         // model entry (file with model script)
+    	int level = ran.nextInt();
         out.putNextEntry(new ZipEntry(MODEL + level));
         IOUtils.write(portObject.model, out, "UTF-8");
         out.closeEntry();
