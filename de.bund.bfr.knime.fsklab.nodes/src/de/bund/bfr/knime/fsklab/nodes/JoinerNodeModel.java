@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
@@ -250,45 +251,30 @@ final class JoinerNodeModel extends
       imagePort = createSVGImagePortObject(joinerProxyValue.getSvgRepresentation());
     }
 
-    
+   
     return new PortObject[] {outObj, imagePort};
   }
   
   private void createSimulation(FskPortObject inObj) {
 
     if (inObj instanceof CombinedFskPortObject) {
-      if (((CombinedFskPortObject) inObj).getJoinerRelation() != null
-          && !((CombinedFskPortObject) inObj).getJoinerRelation().isEmpty()) {
         
         inObj.simulations.clear();
         FskSimulation defaultSimulation =
             NodeUtils.createDefaultSimulation(inObj.modelMath.getParameter());
-        if(inObj.simulations.size()>0){
-          inObj.simulations.remove(0);
-        }
         inObj.simulations.add(defaultSimulation);
        
         createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject());
         createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject());
-      }else {
-        inObj.simulations.clear();
-        FskSimulation defaultSimulation =
-            NodeUtils.createDefaultSimulation(inObj.modelMath.getParameter());
-        if(inObj.simulations.size()>0){
-          inObj.simulations.remove(0);
-        }
-        inObj.simulations.add(defaultSimulation);
-      }
+     
     } else {
       inObj.simulations.clear();
       FskSimulation defaultSimulation =
           NodeUtils.createDefaultSimulation(inObj.modelMath.getParameter());
-      if(inObj.simulations.size()>0){
-        inObj.simulations.remove(0);
-      }
       inObj.simulations.add(defaultSimulation);
+     
     }
-
+    inObj.selectedSimulationIndex = 0;
   }
   // second visualization script is the script which draw and control the plotting!
   public String extractSecondObjectVis(FskPortObject object) {
@@ -622,8 +608,8 @@ final class JoinerNodeModel extends
     combinedModelMath.getModelEquation().addAll(secondModelMath.getModelEquation());
 
     // parameters
-    combinedModelMath.getParameter().addAll(firstModelMath.getParameter());
-    combinedModelMath.getParameter().addAll(secondModelMath.getParameter());
+    combinedModelMath.getParameter().addAll(EcoreUtil.copyAll(firstModelMath.getParameter()));
+    combinedModelMath.getParameter().addAll(EcoreUtil.copyAll(secondModelMath.getParameter()));
 
     // quality measures
     combinedModelMath.getQualityMeasures().addAll(firstModelMath.getQualityMeasures());
