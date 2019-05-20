@@ -42,7 +42,6 @@ import javax.swing.tree.TreeNode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jdom.Element;
 import org.jlibsedml.ChangeAttribute;
 import org.jlibsedml.Libsedml;
 import org.jlibsedml.SEDMLTags;
@@ -165,7 +164,7 @@ class ReaderNodeModel extends NoInternalsModel {
       File temporaryFile = FileUtil.createTempFile("model", "fskx");
       temporaryFile.delete();
 
-      try (InputStream inStream = FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath));
+      try (InputStream inStream = FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath),0);
           OutputStream outStream = new FileOutputStream(temporaryFile)) {
         IOUtils.copy(inStream, outStream);
       }
