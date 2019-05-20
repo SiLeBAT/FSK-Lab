@@ -164,7 +164,7 @@ class ReaderNodeModel extends NoInternalsModel {
       File temporaryFile = FileUtil.createTempFile("model", "fskx");
       temporaryFile.delete();
 
-      try (InputStream inStream = FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath),0);
+      try (InputStream inStream = FileUtil.openStreamWithTimeout(new URL(nodeSettings.filePath),10000);
           OutputStream outStream = new FileOutputStream(temporaryFile)) {
         IOUtils.copy(inStream, outStream);
       }
