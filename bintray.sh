@@ -5,9 +5,6 @@ FOLDER="$TRAVIS_BUILD_DIR/releng/de.bund.bfr.knime.update/target/repository"
 SUBJECT=silebat
 REPO=fsklab_test
 
-set -e # Fail on first error
-wget https://broken_url # Fail here
-
 # DEPLOY TO test repo
 # =====================================================================================================
 # Delete previous version 'version'
