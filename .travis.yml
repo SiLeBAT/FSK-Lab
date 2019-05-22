@@ -30,8 +30,14 @@ before_deploy:
 - wget -q http://download.knime.org/analytics-platform/linux/knime_3.7.1.linux.gtk.x86_64.tar.gz
 - tar -xzf knime_3.7.1.linux.gtk.x86_64.tar.gz
 - rm knime_3.7.1.linux.gtk.x86_64.tar.gz
-- FSK_REPO="file://$TRAVIS_BUILD_DIR/releng/de.bund.bfr.knime.update/target/repository"
-- knime_3.7.1/knime -application org.eclipse.equinox.p2.director -repository https://update.knime.org/analytics-platform/3.7,$FSK_REPO -installIU de.bund.bfr.knime.fsklab.feature.feature.group
+- KNIME_REPO="https://update.knime.org/analytics-platform/3.7"
+- LOCAL_REPO="file://$TRAVIS_BUILD_DIR/releng/de.bund.bfr.knime.update/target/repository"
+- REMOTE_REPO="https://dl.bintray.com/silebat/fsklab_icpmf"
+# Install FSK-Lab from update site (old build)
+- knime_3.7.1/knime -application org.eclipse.equinox.p2.director -repository $KNIME_REPO,$REMOTE_REPO -installIU de.bund.bfr.knime.fsklab.feature.feature.group
+# Uninstall FSK-Lab and update with new local build
+- knime_3.7.1/knime -application org.eclipse.equinox.p2.director -uninstallIU de.bund.bfr.knime.fsklab.feature.feature.group
+- knime_3.7.1/knime -application org.eclipse.equinox.p2.director -repository $KNIME_REPO,$LOCAL_REPO -installIU de.bund.bfr.knime.fsklab.feature.feature.group
 - rm -Rf knime_3.7.1
 
 # Deploy build
@@ -40,9 +46,7 @@ deploy:
   skip_cleanup: true # to upload artifacts created during the build
   script: bash bintray.sh
   on: test
-deploy:
 - provider: script
   skip_cleanup: true # to upload artifacts created during the build
   script: echo "TEST OK!"
   on: test_release
-
