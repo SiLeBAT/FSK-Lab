@@ -33,5 +33,10 @@ public class WorkflowsTest {
 		runner.runTestWorkflow(new File("workflows/InitializeParentsFlocks"));
 		runner.runTestWorkflow(new File("workflows/HorizontalTransmiAnimals"));
 		runner.runTestWorkflow(new File("workflows/HorizontalTransmiFlocks"));
+		/*runner.runTestWorkflow(new File("workflows/TestJoinerWithConnections"));
+		runner.runTestWorkflow(new File("workflows/TestJoinerWithoutConnections"));*/
+		
 	}
+	
+	
 }

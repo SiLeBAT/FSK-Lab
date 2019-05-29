@@ -29,6 +29,19 @@ class FSKEditorJSNodeSettings {
     private static final String CFG_RESOURCES= "resources";
     private static final String CFG_WORKING_DIRECTORY = "workingDirectory";
    
+    private static final String CFG_GENERAL_INFORMATION = "generalInformation";
+    private static final String CFG_SCOPE = "scope";
+    private static final String CFG_DATA_BACKGROUND = "dataBackground";
+    private static final String CFG_MODEL_MATH = "modelMath";
+
+    
+    public String generalInformation;
+    public String scope;
+    public String dataBackground;
+    public String modelMath;
+    public String model;
+    public String viz;
+    
     /** Paths to resources: plain text files and R workspace files (.rdata). */
     private String workingDirectory = "";
     /** Resources that will be load into the working directory */
@@ -78,6 +91,17 @@ class FSKEditorJSNodeSettings {
       resources = settings.getString(CFG_RESOURCES, "");
       readme = settings.getString(CFG_README, "");
       workingDirectory = settings.getString(CFG_WORKING_DIRECTORY, "");
+      try {
+        generalInformation = settings.getString(CFG_GENERAL_INFORMATION);
+        scope = settings.getString(CFG_SCOPE);
+        dataBackground = settings.getString(CFG_DATA_BACKGROUND);
+        modelMath = settings.getString(CFG_MODEL_MATH);
+      }catch(Exception e) {
+        generalInformation ="";
+        scope ="";
+        dataBackground ="";
+        modelMath ="";
+      }
 
     }
 
@@ -86,6 +110,10 @@ class FSKEditorJSNodeSettings {
       settings.addString(CFG_RESOURCES, resources);
       settings.addString(CFG_README, readme);
       settings.addString(CFG_WORKING_DIRECTORY, workingDirectory);
+      settings.addString(CFG_GENERAL_INFORMATION, generalInformation);
+      settings.addString(CFG_SCOPE, scope);
+      settings.addString(CFG_DATA_BACKGROUND, dataBackground);
+      settings.addString(CFG_MODEL_MATH, modelMath);
 
     }
   }

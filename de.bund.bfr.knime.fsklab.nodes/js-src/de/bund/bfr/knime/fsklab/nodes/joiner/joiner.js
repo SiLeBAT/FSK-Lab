@@ -430,14 +430,15 @@ joiner = function() {
 		_secondModelScript = value.secondModelScript;
 		_secondModelViz = value.secondModelViz;
 		_modelScriptTree = JSON.parse(value.modelScriptTree);
-		console.log(_modelScriptTree);
+		
 		_viewValue = value;
-
+		
 		if (_viewValue.joinRelations && _viewValue.joinRelations != ""){
 			_viewValue.joinRelations = JSON.parse(_viewValue.joinRelations);
 			$.each(_viewValue.joinRelations,function(index,value){
 				if(value ){
-					window.joinRelationsMap[value.sourceParam.parameterID+value.targetParam.parameterID] = value ;	
+					console.log('val',value);
+					window.joinRelationsMap[value.sourceParam.parameterID+","+value.targetParam.parameterID] = value ;	
 				}
 				 
 			})
@@ -446,6 +447,8 @@ joiner = function() {
 		else
 			_viewValue.joinRelations = [];
 
+		
+		console.log(window.joinRelationsMap);
 		window.generalInformation = _firstModel.generalInformation;
 		window.scope = _firstModel.scope;
 		window.modelMath = _firstModel.modelMath;
@@ -504,7 +507,7 @@ joiner = function() {
 						.toISOString();
 			}
 		} catch (err) {
-			console.log(err);
+			//console.log(err);
 		}
 		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ? _firstModel.generalInformation.description
 				: "";
@@ -556,14 +559,16 @@ joiner = function() {
 		if(!window.geneerr){
 			window.geneerr = "";
 		}
+		console.log("relation",_viewValue.joinRelations);
 		if(_viewValue.joinRelations.push){
 			$.each(_viewValue.joinRelations,function (index, value){
 				if(!(value.language_written_in)){
 					window.geneerr += "- The (language_written_in) field of the connection between "+value.sourceParam.parameterID+" and "+value.targetParam.parameterID +" parameters is not required,,,"
 				}
 			})
-			//console.log(geneerr);
+			
 			_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
+			
 		}
 		
 		var ajv = new Ajv({allErrors: true, format:'fast'});		
@@ -587,7 +592,7 @@ joiner = function() {
 			ajv.validate(window.schema17,window.store17.getState().jsonforms.core.data); 
 			ajv.validate(window.schema6,window.store6.getState().jsonforms.core.data ); 
 		}catch(err){
-			console.log(err)
+			//console.log(err)
 		}
 		var serializer = new XMLSerializer();
 		var str = serializer.serializeToString(paper.svg);
@@ -608,7 +613,6 @@ joiner = function() {
 		generalError += window.geneerr;
 		
 		_viewValue.validationErrors = generalError.trim();
-		console.log(_viewValue);
 		return _viewValue;
 	};
 	function validateAgainstSchema(schema, data, schemaName){
@@ -731,8 +735,6 @@ joiner = function() {
 
 		$('#tree').treeview({data:_modelScriptTree ,borderColor: 'blue'});
 		$('#tree').on('nodeSelected', function(event, data) {
-			console.log(_modelScriptTree)
-			console.log(data)
 			scriptBeingEdited = data;
 			window.codeMirrorContainer.CodeMirror.setValue(data.script);
 			window.codeMirrorContainer.CodeMirror.refresh();
@@ -805,8 +807,6 @@ joiner = function() {
 															.width(), canvas
 															.height());
 												}
-												console.log(_modelScriptTree);
-
 												window.codeMirrorContainer = $(
 														'#sub25').find(
 														".CodeMirror")[0];
@@ -877,7 +877,7 @@ joiner = function() {
 		try {
 			createEMFForm();
 		} catch (err) {
-			console.log(err)
+			//console.log(err)
 		}
 
 		// $('html').find('style').remove();
@@ -1160,17 +1160,14 @@ joiner = function() {
 		    	helper: fixHelperModified,
 				stop: function(event,ui) {
 					updateIndex(event,ui);
-					console.log(event,ui);
 					newParameterList = [];
 					table.find('tr').each(function (index, value){
 						if(index > 0){
 							$(window.store17.getState().jsonforms.core.data.parameter).each(function(index, valuex){
-									console.log("valuex",valuex.parameterID,$(value).find("input[id='#/properties/parameterIDtable']").first().val())
 									if(valuex.parameterID == $(value).find("input[id='#/properties/parameterIDtable']").first().val()){
 										newParameterList.push(valuex);
 									}
 							});
-							console.log($(value).find("input[id='#/properties/parameterIDtable']").first().val());
 						}
 					});
 					window.store17.getState().jsonforms.core.data.parameter = newParameterList; 
@@ -1340,7 +1337,7 @@ joiner = function() {
 								var sourceId = link.get('source').id;
 								var targetPort = link.get('target').port;
 								var targetId = link.get('target').id;
-								window.sJoinRealtion = window.joinRelationsMap[sourcePort+targetPort]; 
+								window.sJoinRealtion = window.joinRelationsMap[sourcePort+","+targetPort]; 
 								if(!(document.getElementById("commandLanguage"))){
 									$('#details')
 									.html(
@@ -1380,13 +1377,14 @@ joiner = function() {
 								});
 								$('#commandLanguage').change(function() {
 									window.sJoinRealtion.language_written_in = $('#commandLanguage').val();
-									console.log($('#commandLanguage').val());
 								});
 								
 							}
 						});
 		var firstModelInputParameters = [];
 		var firstModelOutputParameters = [];
+		window.firstPortMap = {};
+		window.secondPortMap = {};
 		try{
 			_.each(_firstModelMath.parameter, function(param) {
 				if(firstModelParameterMap[param.parameterID] == undefined){
@@ -1399,6 +1397,7 @@ joiner = function() {
 							    }
 							};
 						firstModelInputParameters.push(port);
+						window.firstPortMap[param.parameterID] = port;
 					} else {
 						var port = {
 								id:param.parameterID,
@@ -1408,6 +1407,7 @@ joiner = function() {
 							    }
 							};
 						firstModelOutputParameters.push(port);
+						window.firstPortMap[param.parameterID] = port;
 					}
 					firstModelParameterMap[param.parameterID] = param
 				}
@@ -1432,6 +1432,7 @@ joiner = function() {
 						    }
 						};
 					secondModelInputParameters.push(port);
+					window.secondPortMap[param.parameterID] = port;
 				} else {
 					var port = {
 							id:param.parameterID,
@@ -1441,6 +1442,7 @@ joiner = function() {
 						    }
 						};
 					secondModelOutputParameters.push(port);
+					window.secondPortMap[param.parameterID] = port;
 				}
 				secomndModelParameterMap[param.parameterID] = param
 			}else{
@@ -1502,17 +1504,16 @@ joiner = function() {
 		$.each(firstModelInputParameters, function(index, value){
 			try{
 				firstModelTojoin.addPort(value);
-				console.log("port added without error",value);
 			}catch (err) {
 				console.log(err,value);
 			}
 		})
+		console.log('firstModelTojoin',firstModelTojoin);
 		
 		
 		$.each(firstModelOutputParameters, function(index, value){
 			try{
 				firstModelTojoin.addPort(value);
-				console.log("port added without error",value);
 			}catch (err) {
 				console.log(err,value);
 			}
@@ -1571,7 +1572,6 @@ joiner = function() {
 		$.each(secondModelInputParameters, function(index, value){
 			try{
 				secondModelToJoin.addPort(value);
-				console.log("port added without error",value);
 			}catch (err) {
 				console.log(err,value);
 			}
@@ -1580,7 +1580,6 @@ joiner = function() {
 		$.each(secondModelOutputParameters, function(index, value){
 			try{
 				secondModelToJoin.addPort(value);
-				console.log("port added without error",value);
 			}catch (err) {
 				console.log(err,value);
 			}
@@ -1638,13 +1637,16 @@ joiner = function() {
 										+ '<div class="form-group">'
 										+ '</div>' + '</form>');
 			autocomplete(document.getElementById('commandLanguage'), window.Language_written_in,undefined,undefined,undefined);
+			//$(document.getElementById('commandLanguage')).val(this.getElementsByTagName("input")[0].value);
+
 			$('#Command').keyup(function() {
 				window.sJoinRealtion.command = $('#Command').val();
 			});
 			$('#Command').blur(function() {
 				joinModelScript = "";
 				$.each(_viewValue.joinRelations,function(index, value){
-					joinModelScript += value.targetParam.parameterName + " <- "+value.command+"\n" 
+					console.log("modelscript",value);
+					joinModelScript += value.targetParam.parameterID + " <- "+value.command+"\n" 
 					_modelScriptTree[1].script = joinModelScript
 					$('#tree').treeview({data:_modelScriptTree ,borderColor: 'blue'});
 					$('#tree').on('nodeSelected', function(event, data) {
@@ -1681,10 +1683,10 @@ joiner = function() {
 					_viewValue.joinRelations = []
 				}
 				_viewValue.joinRelations.push(sJoinRealtion);
-				window.joinRelationsMap[sourcePort+targetPort] = sJoinRealtion
+				window.joinRelationsMap[sourcePort+","+targetPort] = sJoinRealtion
 				joinModelScript = "";
 				$.each(_viewValue.joinRelations,function(index, value){
-					joinModelScript += value.targetParam.parameterName + " <- "+value.command+"\n" 
+					joinModelScript += value.targetParam.parameterID + " <- "+value.command+"\n" 
 					_modelScriptTree[1].script = joinModelScript
 				});
 				$('#tree').treeview({data:_modelScriptTree ,borderColor: 'blue'});
@@ -1695,6 +1697,7 @@ joiner = function() {
 					
 				});
 				_viewValue.jsonRepresentation = JSON.stringify(graph.toJSON());
+				console.log(graph.toJSON());
 			}
 			
 		});
@@ -1713,8 +1716,10 @@ joiner = function() {
 			}
 			if (targetParameter != undefined) {
 				$.each(_viewValue.joinRelations, function(index, value) {
-					if (value!= undefined && value.sourceParam === sourceParameter
-							&& value.targetParam === targetParameter) {
+					
+					if (value!= undefined && value.sourceParam.parameterID == sourceParameter.parameterID
+							&& value.targetParam.parameterID == targetParameter.parameterID) {
+						console.log(value, sourceParameter,targetParameter);
 						_viewValue.joinRelations.splice(index, 1);
 					}
 				})
@@ -1748,18 +1753,20 @@ joiner = function() {
 		 * 
 		 * });
 		 */
-
+		
+		
+		
 		if (_viewValue.jsonRepresentation != undefined) {
 			if (_viewValue && _viewValue.jsonRepresentation
 					&& _viewValue.jsonRepresentation != "") {
 				try {
 					graphObject = JSON.parse(_viewValue.jsonRepresentation)
-					
+					console.log("here");
 					graph.fromJSON(JSON.parse(_viewValue.jsonRepresentation));
 					$.each(graphObject.cells, function(cellIndex, cell){
 						//console.log(cell)
 						$.each(cell.ports.items, function(index, item){
-							console.log(item)
+							//console.log(item)
 							graph.getCell(cell.id).addPort(item);
 						})
 					})
@@ -1768,8 +1775,35 @@ joiner = function() {
 				}
 			}
 		} else {
-			graph.addCells([ firstModelTojoin, secondModelToJoin ]);
+			graph.addCells([firstModelTojoin,secondModelToJoin]);
+			graphJSON = graph.toJSON();
+			firstNodeId = graphJSON['cells'][0].id;
+			secondNodeId = graphJSON['cells'][1].id;
+			var links = [];
+			$.each(window.joinRelationsMap,function(key,value){
+				var portIds = key.split(",");
+				
+				firstPort = window.firstPortMap[portIds[0]]
+				secondPort = window.secondPortMap[portIds[1]]
+				console.log(portIds,firstPort,secondPort);
+				
+				 var link = new joint.shapes.devs.Link({
+				     source:{
+				    	 id:firstNodeId,
+				    	 port:portIds[0]
+				     },
+				     target: {
+				    	 id:secondNodeId,
+				    	 port:portIds[1]
+				     }
+				   });
+	           
+				 links.push(link);
+			});
+			graph.addCells(links);
 		}
+		console.log(graph.toJSON());
+
 
 	}
 }();
