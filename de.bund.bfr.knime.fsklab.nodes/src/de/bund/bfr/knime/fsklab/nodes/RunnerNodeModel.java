@@ -79,7 +79,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
-
+  public static boolean isTest = true;
   public RunnerNodeModel() {
     super(IN_TYPES, OUT_TYPES);
   }
@@ -416,7 +416,16 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
     exec.setProgress(0.75, "Run models script");
     executor.executeIgnoreResult(fskObj.model, exec);
-
+    if(isTest) {
+      for(Parameter param : fskObj.modelMath.getParameter()) {
+        if(param.getParameterClassification().equals(ParameterClassification.OUTPUT)) {
+          String value = executor.execute("eval("+param.getParameterID()+")", exec).asString();
+          param.setParameterValue(value);
+          
+        }
+      }
+      
+    }
     exec.setProgress(0.9, "Run visualization script");
     try {
       NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings.width,

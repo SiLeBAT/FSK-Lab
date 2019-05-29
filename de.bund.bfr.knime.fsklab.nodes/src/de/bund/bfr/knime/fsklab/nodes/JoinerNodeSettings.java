@@ -22,14 +22,47 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 
+
 class JoinerNodeSettings {
+    private static final String CFG_JOIN_SCRIPT = "JoinScript";    
+    private static final String CFG_GENERAL_INFORMATION = "generalInformation";
+    private static final String CFG_SCOPE = "scope";
+    private static final String CFG_DATA_BACKGROUND = "dataBackground";
+    private static final String CFG_MODEL_MATH = "modelMath";
 
-    private static final String JSON_REPRESENTATION = "jsonRepresentation";
+    
 
+    String generalInformation;
+    String scope;
+    String dataBackground;
+    String modelMath;
+    
+    /** Path to model script. */
+    public String joinScript = "";
+    
 
     void load(final NodeSettingsRO settings) throws InvalidSettingsException {
+      try {
+        joinScript = settings.getString(CFG_JOIN_SCRIPT);
+        generalInformation = settings.getString(CFG_GENERAL_INFORMATION);
+        scope = settings.getString(CFG_SCOPE);
+        dataBackground = settings.getString(CFG_DATA_BACKGROUND);
+        modelMath = settings.getString(CFG_MODEL_MATH);
+      }catch(Exception e) {
+        joinScript = "";
+        generalInformation ="";
+        scope ="";
+        dataBackground ="";
+        modelMath ="";
+      }
     }
 
     void save(final NodeSettingsWO settings) {
+      settings.addString(CFG_JOIN_SCRIPT, joinScript);
+      settings.addString(CFG_GENERAL_INFORMATION, generalInformation);
+      settings.addString(CFG_SCOPE, scope);
+      settings.addString(CFG_DATA_BACKGROUND, dataBackground);
+      settings.addString(CFG_MODEL_MATH, modelMath);
+
     }
   }

@@ -26,11 +26,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -42,22 +45,23 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.Diagnostician;
 import org.emfjson.jackson.resource.JsonResourceFactory;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.web.ValidationError;
+import org.knime.core.node.workflow.NativeNodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowContext;
+import org.knime.core.node.workflow.WorkflowEvent;
+import org.knime.core.node.workflow.WorkflowListener;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.IRemoteFileUtilsService;
@@ -97,6 +101,9 @@ final class FSKEditorJSNodeModel
   private static final String VIEW_NAME = new FSKEditorJSNodeFactory().getInteractiveViewName();
 
   static final AtomicLong TEMP_DIR_UNIFIER = new AtomicLong((int) (100000 * Math.random()));
+  String nodeWithId;
+  String nodeName;
+  String nodeId;
 
   public FSKEditorJSNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
@@ -122,30 +129,30 @@ final class FSKEditorJSNodeModel
   public boolean isHideInWizard() {
     return false;
   }
-  //This method is being called just when user click apply or close with saving options
+
+  // This method is being called just when user click apply or close with saving options
   @Override
   public ValidationError validateViewValue(FSKEditorJSViewValue viewContent) {
-    // TODO 
-    /* Use SchemaFactory to create new Schema and Validator from it and then apply
+    // TODO
+    /*
+     * Use SchemaFactory to create new Schema and Validator from it and then apply
      * validator.validate() to validate the EMF Object. Any error after the validate can be return
      * back to the javascript view as ValidationError Object which can contains the error message
-     * EObject generalInformation;
-     * try {
-     * generalInformation = getEObjectFromJson(viewContent.getGeneralInformation(), GeneralInformation.class);
-     * EObject feed = (EObject)generalInformation.eGet(generalInformation.eClass().getEStructuralFeature("feed")); 
+     * EObject generalInformation; try { generalInformation =
+     * getEObjectFromJson(viewContent.getGeneralInformation(), GeneralInformation.class); EObject
+     * feed =
+     * (EObject)generalInformation.eGet(generalInformation.eClass().getEStructuralFeature("feed"));
      *
      * Diagnostician validator = Diagnostician.INSTANCE;
      *
      * // Validate the feed and inspect the resulting diagnostic.
      * org.eclipse.emf.common.util.Diagnostic diagnostic = validator.validate(feed);
      *
-     * return new ValidationError(diagnostic.toString());
-     * } catch (InvalidSettingsException e) {
-     *             e.printStackTrace();
-     * }
+     * return new ValidationError(diagnostic.toString()); } catch (InvalidSettingsException e) {
+     * e.printStackTrace(); }
      * 
-     * */
-    
+     */
+
     return null;
 
   }
@@ -199,10 +206,12 @@ final class FSKEditorJSNodeModel
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
-
+    nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
+    nodeName = NodeContext.getContext().getNodeContainer().getName();
+    nodeId = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
     FskPortObject inObj1;
     FskPortObject outObj;
-   
+
     if (inObjects.length > 0 && inObjects[0] != null) {
       inObj1 = (FskPortObject) inObjects[0];
     } else {
@@ -241,24 +250,25 @@ final class FSKEditorJSNodeModel
       FSKEditorJSViewValue fskEditorProxyValue = getViewValue();
 
       // If not executed
+
       if (fskEditorProxyValue.getGeneralInformation() == null) {
-
-        fskEditorProxyValue.setGeneralInformation(FromEOjectToJSON(inObj1.generalInformation));
-        fskEditorProxyValue.setScope(FromEOjectToJSON(inObj1.scope));
-        fskEditorProxyValue.setDataBackground(FromEOjectToJSON(inObj1.dataBackground));
-        fskEditorProxyValue.setModelMath(FromEOjectToJSON(inObj1.modelMath));
-        fskEditorProxyValue.setFirstModelScript(inObj1.model);
-        fskEditorProxyValue.setFirstModelViz(inObj1.viz);
-        fskEditorProxyValue.setReadme(inObj1.getReadme());
-
-        exec.setProgress(1);
-      }
-      else {
-        if(fskEditorProxyValue.isNotCompleted()) {
+        loadJsonSetting();
+        if (fskEditorProxyValue.getGeneralInformation() == null) {
+          fskEditorProxyValue.setGeneralInformation(FromEOjectToJSON(inObj1.generalInformation));
+          fskEditorProxyValue.setScope(FromEOjectToJSON(inObj1.scope));
+          fskEditorProxyValue.setDataBackground(FromEOjectToJSON(inObj1.dataBackground));
+          fskEditorProxyValue.setModelMath(FromEOjectToJSON(inObj1.modelMath));
+          fskEditorProxyValue.setFirstModelScript(inObj1.model);
+          fskEditorProxyValue.setFirstModelViz(inObj1.viz);
+          fskEditorProxyValue.setReadme(inObj1.getReadme());
+        }
+      } else {
+        if (fskEditorProxyValue.isNotCompleted()) {
           setWarningMessage("Output Parameters are not configured correctly");
         }
-        if(StringUtils.isNotEmpty(fskEditorProxyValue.getValidationErrors())) {
-          setWarningMessage( "\n"+(fskEditorProxyValue.getValidationErrors()).replaceAll("\"", "").replaceAll(",,,", "\n"));
+        if (StringUtils.isNotEmpty(fskEditorProxyValue.getValidationErrors())) {
+          setWarningMessage("\n" + (fskEditorProxyValue.getValidationErrors()).replaceAll("\"", "")
+              .replaceAll(",,,", "\n"));
         }
       }
       outObj = inObj1;
@@ -283,8 +293,9 @@ final class FSKEditorJSNodeModel
           });
         }
         outObj.simulations.add(0, defaultSimulation);
-      }else {
-        outObj.simulations.add(0, NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter()));
+      } else {
+        outObj.simulations.add(0,
+            NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter()));
       }
 
       outObj.model = fskEditorProxyValue.getFirstModelScript();
@@ -322,6 +333,35 @@ final class FSKEditorJSNodeModel
       outObj.packages.clear();
       outObj.packages.addAll(new ArrayList<>(librariesSet));
     }
+    NodeContext.getContext().getWorkflowManager().addListener(new WorkflowListener() {
+
+      @Override
+      public void workflowChanged(WorkflowEvent event) {
+        if (event.getType().equals(WorkflowEvent.Type.NODE_REMOVED)
+            && event.getOldValue() instanceof NativeNodeContainer) {
+          NativeNodeContainer nnc = (NativeNodeContainer) event.getOldValue();
+          File directory =
+              nnc.getDirectNCParent().getProjectWFM().getContext().getCurrentLocation();
+          String nncnamewithId = nnc.getNameWithID();
+          if (nncnamewithId.equals(nodeWithId)) {
+
+            String containerName = nodeName + " (#" + nodeId + ") setting";
+
+            String settingFolderPath = directory.getPath().concat("/" + containerName);
+            File settingFolder = new File(settingFolderPath);
+
+            try {
+              if (settingFolder.exists()) {
+                Files.walk(settingFolder.toPath()).sorted(Comparator.reverseOrder())
+                    .map(Path::toFile).forEach(File::delete);
+              }
+            } catch (IOException e) {
+              // nothing to do
+            }
+          }
+        }
+      }
+    });
     return new PortObject[] {outObj};
   }
 
@@ -354,6 +394,11 @@ final class FSKEditorJSNodeModel
   @Override
   protected void performReset() {
     m_port = null;
+    nodeSettings.generalInformation = "";
+    nodeSettings.scope = "";
+    nodeSettings.dataBackground = "";
+    nodeSettings.modelMath = "";
+    nodeSettings.setReadme("");
   }
 
   @Override
@@ -361,13 +406,141 @@ final class FSKEditorJSNodeModel
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
-    nodeSettings.save(settings);
+    /*
+     * nodeSettings.generalInformation = getViewValue().getGeneralInformation(); nodeSettings.scope
+     * = getViewValue().getScope(); nodeSettings.dataBackground =
+     * getViewValue().getDataBackground(); nodeSettings.modelMath = getViewValue().getModelMath();
+     * nodeSettings.model = getViewValue().getFirstModelScript(); nodeSettings.viz =
+     * getViewValue().getFirstModelViz(); nodeSettings.save(settings);
+     */
+    try {
+      FSKEditorJSViewValue vv = getViewValue();
+      saveJsonSetting(vv.getGeneralInformation(), vv.getScope(), vv.getDataBackground(),
+          vv.getModelMath(), vv.getFirstModelScript(), vv.getFirstModelViz(), vv.getReadme());
+    } catch (IOException | CanceledExecutionException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    nodeSettings.load(settings);
+    try {
+      loadJsonSetting();
+    } catch (IOException | CanceledExecutionException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  protected void loadJsonSetting() throws IOException, CanceledExecutionException {
+    File directory =
+        NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
+    String name = NodeContext.getContext().getNodeContainer().getName();
+    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    String containerName = name + " (#" + id + ") setting";
+
+    String settingFolderPath = directory.getPath().concat("/" + containerName);
+    File settingFolder = new File(settingFolderPath);
+
+    File generalInformationFile = new File(settingFolder, "generalInformation.json");
+
+    if (generalInformationFile.exists()) {
+      nodeSettings.generalInformation =
+          FileUtils.readFileToString(generalInformationFile, Charset.defaultCharset());
+      getViewValue().setGeneralInformation(nodeSettings.generalInformation);
+    }
+
+    File scopeFile = new File(settingFolder, "scope.json");
+    if (scopeFile.exists()) {
+      nodeSettings.scope = FileUtils.readFileToString(scopeFile, Charset.defaultCharset());
+      getViewValue().setScope(nodeSettings.scope);
+    }
+
+    File dataBackgroundnFile = new File(settingFolder, "dataBackground.json");
+    if (dataBackgroundnFile.exists()) {
+      nodeSettings.dataBackground =
+          FileUtils.readFileToString(dataBackgroundnFile, Charset.defaultCharset());
+      getViewValue().setDataBackground(nodeSettings.dataBackground);
+    }
+
+    File modelMathFile = new File(settingFolder, "modelMath.json");
+    if (modelMathFile.exists()) {
+      nodeSettings.modelMath = FileUtils.readFileToString(modelMathFile, Charset.defaultCharset());
+      getViewValue().setModelMath(nodeSettings.modelMath);
+    }
+
+    File modelScriptFile = new File(settingFolder, "modelScript.txt");
+    if (modelScriptFile.exists()) {
+      String modelScript = FileUtils.readFileToString(modelScriptFile, Charset.defaultCharset());
+      getViewValue().setFirstModelScript(modelScript);
+    }
+
+    File visualizationFile = new File(settingFolder, "visualization.txt");
+    if (visualizationFile.exists()) {
+      String visualizationScript =
+          FileUtils.readFileToString(visualizationFile, Charset.defaultCharset());
+      getViewValue().setFirstModelViz(visualizationScript);
+    }
+    File readmeFile = new File(settingFolder, "readme.txt");
+    if (readmeFile.exists()) {
+      String readme = FileUtils.readFileToString(readmeFile, Charset.defaultCharset());
+      getViewValue().setReadme(readme);
+    }
+  }
+
+  protected void saveJsonSetting(String generalInformation, String scope, String dataBackground,
+      String modelMath, String modelScript, String visualizationScript, String readme)
+      throws IOException, CanceledExecutionException {
+    File directory =
+        NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
+    String name = NodeContext.getContext().getNodeContainer().getName();
+    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    String containerName = name + " (#" + id + ") setting";
+
+    String settingFolderPath = directory.getPath().concat("/" + containerName);
+    File settingFolder = new File(settingFolderPath);
+    if (!settingFolder.exists()) {
+      settingFolder.mkdir();
+    }
+
+    File generalInformationFile = new File(settingFolder, "generalInformation.json");
+    if (generalInformation != null) {
+      FileUtils.writeStringToFile(generalInformationFile, generalInformation,
+          Charset.defaultCharset(), false);
+    }
+
+    File scopeFile = new File(settingFolder, "scope.json");
+    if (scope != null) {
+      FileUtils.writeStringToFile(scopeFile, scope, Charset.defaultCharset(), false);
+    }
+
+    File dataBackgroundFile = new File(settingFolder, "dataBackground.json");
+    if (dataBackground != null) {
+      FileUtils.writeStringToFile(dataBackgroundFile, dataBackground, Charset.defaultCharset(),
+          false);
+    }
+
+    File modelMathFile = new File(settingFolder, "modelMath.json");
+    if (modelMath != null) {
+      FileUtils.writeStringToFile(modelMathFile, modelMath, Charset.defaultCharset(), false);
+    }
+
+    File modelScriptFile = new File(settingFolder, "modelScript.txt");
+    if (modelScript != null) {
+      FileUtils.writeStringToFile(modelScriptFile, modelScript, Charset.defaultCharset(), false);
+    }
+
+    File visualizationFile = new File(settingFolder, "visualization.txt");
+    if (modelScript != null) {
+      FileUtils.writeStringToFile(visualizationFile, visualizationScript, Charset.defaultCharset(),
+          false);
+    }
+    File readmeFile = new File(settingFolder, "readme.txt");
+    if (readme != null) {
+      FileUtils.writeStringToFile(readmeFile, readme, Charset.defaultCharset(), false);
+    }
+
   }
 
   @Override
