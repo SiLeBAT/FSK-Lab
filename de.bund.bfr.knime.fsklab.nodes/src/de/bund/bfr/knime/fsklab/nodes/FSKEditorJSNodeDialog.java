@@ -269,9 +269,9 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
               @Override
               protected Object doInBackground() throws Exception {
                 resourcesButton.setEnabled(false);
-                String toPath = currentWorkingDirectory.toPath().toString() + File.separator
-                    + oneFile.getName();
-                copyFile(oneFile, toPath);
+                Path targetPath = currentWorkingDirectory.toPath().resolve(oneFile.getName());
+                Files.copy(oneFile.toPath(), targetPath);
+                
                 return null;
               }
 
@@ -279,13 +279,9 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
               protected void done() {
                 resourcesButton.setEnabled(true);
               }
-
             };
 
             worker.execute();
-
-
-
           }
           fileModel.filenames.addAll(
               Arrays.stream(files).map(p -> p.toPath().toString()).collect(Collectors.toList()));
@@ -348,35 +344,6 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       default:
         break;
 
-    }
-  }
-
-  private void copyFile(File file, String toPath) {
-    BufferedInputStream bis;
-    BufferedOutputStream baos;
-    try {
-      bis = new BufferedInputStream(new FileInputStream(file));
-      ProgressMonitorInputStream pmis =
-          new ProgressMonitorInputStream(null, "Reading... " + file.getAbsolutePath(), bis);
-
-      pmis.getProgressMonitor().setMillisToPopup(10);
-
-      baos = new BufferedOutputStream(new FileOutputStream(toPath));
-
-      byte[] buffer = new byte[2048];
-      int nRead = 0;
-
-      while ((nRead = pmis.read(buffer)) != -1) {
-        baos.write(buffer, 0, nRead);
-      }
-
-      pmis.close();
-      baos.flush();
-      baos.close();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
     }
   }
 
