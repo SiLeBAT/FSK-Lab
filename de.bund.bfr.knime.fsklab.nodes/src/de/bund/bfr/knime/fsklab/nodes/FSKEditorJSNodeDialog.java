@@ -21,12 +21,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -49,13 +44,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ProgressMonitorInputStream;
 import javax.swing.SwingWorker;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.FlowVariableModel;
 import org.knime.core.node.InvalidSettingsException;
@@ -271,7 +266,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
                 resourcesButton.setEnabled(false);
                 Path targetPath = currentWorkingDirectory.toPath().resolve(oneFile.getName());
                 Files.copy(oneFile.toPath(), targetPath);
-                
+
                 return null;
               }
 
@@ -348,7 +343,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   }
 
   class FileTableModel extends AbstractTableModel {
-    
+
     protected List<String> filenames;
 
     protected String[] columnNames =
@@ -403,40 +398,49 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       }
     }
   }
-  
+
   private class WorkingDirectoryChangeListener implements ChangeListener {
 
     @Override
     public void stateChanged(ChangeEvent e) {
+
+      // Disable text field
       m_workingDirectoryPanel.getComponent(0).setEnabled(false);
-      String selectedFile = m_workingDirectoryPanel.getSelectedFile();
+
+      // Get selected directory
+      String selectedDirectory = m_workingDirectoryPanel.getSelectedFile();
       try {
-        if (selectedFile != null && !selectedFile.equals("")) {
+        // If selected directory is not null or empty
+        if (StringUtils.isNotEmpty(selectedDirectory)) {
+
+          // Create new working directory
           String modifiedSelectedDirectory =
-              FileUtil.getFileFromURL(FileUtil.toURL(selectedFile)).toString();
-          File sfile = new File(modifiedSelectedDirectory);
-          if (!sfile.exists()) {
-            sfile.mkdir();
+              FileUtil.getFileFromURL(FileUtil.toURL(selectedDirectory)).toString();
+          Path newDirectory = Paths.get(modifiedSelectedDirectory);
+          if (!Files.exists(newDirectory)) {
+            Files.createDirectory(newDirectory);
           }
+
+          // If old working directory is set, copy the old directory to the new one
           if (currentWorkingDirectory != null
               && !modifiedSelectedDirectory.equals(currentWorkingDirectory.toString())) {
             changeWorkingDirectory(modifiedSelectedDirectory);
-            currentWorkingDirectory = sfile;
           }
-          List<String> files;
-          try {
 
-            files = Files.walk(Paths.get(modifiedSelectedDirectory)).filter(Files::isRegularFile)
-                .map(Path::toString).collect(Collectors.toList());
+          // Update fileModel.filenames with the files in the new working directory
+          try {
             fileModel.filenames.clear();
-            fileModel.filenames.addAll(files);
+            Files.walk(newDirectory).filter(Files::isRegularFile).map(Path::toString)
+                .forEach(fileModel.filenames::add);
             fileTable.revalidate();
-            currentWorkingDirectory = sfile;
           } catch (IOException e1) {
             e1.printStackTrace();
           }
+
+          // Update currentWorkingDirectory to the new one
+          currentWorkingDirectory = newDirectory.toFile();
         }
-      } catch (InvalidPathException | MalformedURLException e1) {
+      } catch (InvalidPathException | IOException e1) {
         e1.printStackTrace();
       }
 
