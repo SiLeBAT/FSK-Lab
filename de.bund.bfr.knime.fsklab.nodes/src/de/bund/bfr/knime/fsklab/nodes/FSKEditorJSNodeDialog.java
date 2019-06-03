@@ -348,6 +348,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   }
 
   class FileTableModel extends AbstractTableModel {
+    
     protected List<String> filenames;
 
     protected String[] columnNames =
@@ -383,26 +384,26 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       return columnClasses[col];
     }
 
-
     // The method that must actually return the value of each cell.
     public Object getValueAt(int row, int col) {
       File f = new File(filenames.get(row));
       switch (col) {
         case 0:
-          return new File(filenames.get(row)).getName();
+          return f.getName();
         case 1:
-          return new Long(f.length());
+          return Long.valueOf(f.length());
         case 2:
           return new Date(f.lastModified());
         case 3:
-          return f.canRead() ? Boolean.TRUE : Boolean.FALSE;
+          return f.canRead();
         case 4:
-          return f.canWrite() ? Boolean.TRUE : Boolean.FALSE;
+          return f.canWrite();
         default:
           return null;
       }
     }
   }
+  
   private class WorkingDirectoryChangeListener implements ChangeListener {
 
     @Override
