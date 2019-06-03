@@ -102,22 +102,21 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     try {
       this.settings.load(settings);
 
-      // m_readmePanel.updateHistory();
       m_readmePanel.setSelectedFile(this.settings.getReadme());
 
-      // m_workingDirectoryPanel.updateHistory();
       m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
 
-      List<String> files;
-      if (!m_workingDirectoryPanel.getSelectedFile().toString().equals("")) {
+      if (!m_workingDirectoryPanel.getSelectedFile().toString().isEmpty()) {
         try {
           URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile().toString());
           Path localPath = FileUtil.resolveToPath(url);
           if (localPath != null) {
-            files = Files.walk(localPath).filter(Files::isRegularFile).map(Path::toString)
-                .collect(Collectors.toList());
+
+            // Clear and load file names from directory localPath
             fileModel.filenames.clear();
-            fileModel.filenames.addAll(files);
+            Files.walk(localPath).filter(Files::isRegularFile).map(Path::toString)
+                .forEach(fileModel.filenames::add);
+
             fileTable.revalidate();
             currentWorkingDirectory = new File(this.settings.getWorkingDirectory());
           }
@@ -158,11 +157,12 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       // Discard settings and replace them with input model
       this.settings.setReadme(inObj.getReadme());
       this.settings.setWorkingDirectory(inObj.getWorkingDirectory());
-
     }
-    if (!Objects.equals("", inObj.getReadme())) {
+
+    if (!inObj.getReadme().isEmpty()) {
       m_readmePanel.getParent().setVisible(false);
     }
+
     m_readmePanel.updateHistory();
     m_readmePanel.setSelectedFile(this.settings.getReadme());
     m_workingDirectoryPanel.removeChangeListener(changeListener);
@@ -170,21 +170,21 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
     m_workingDirectoryPanel.addChangeListener(changeListener);
 
-    List<String> files;
     try {
       URL url = FileUtil.toURL(m_workingDirectoryPanel.getSelectedFile().toString());
       Path localPath = FileUtil.resolveToPath(url);
-      files = Files.walk(localPath).filter(Files::isRegularFile).map(Path::toString)
-          .collect(Collectors.toList());
+
+      // Clear and load file names from directory localPath
       fileModel.filenames.clear();
-      fileModel.filenames.addAll(files);
+      Files.walk(localPath).filter(Files::isRegularFile).map(Path::toString)
+          .forEach(fileModel.filenames::add);
+
       fileTable.revalidate();
       currentWorkingDirectory = new File(this.settings.getWorkingDirectory());
-    } catch (IOException e1) {
-      e1.printStackTrace();
-    } catch (URISyntaxException e) {
+    } catch (IOException | URISyntaxException e) {
       e.printStackTrace();
     }
+    
     this.settings = editorSettings;
   }
 
@@ -408,9 +408,8 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       } catch (InvalidPathException | IOException e1) {
         e1.printStackTrace();
       }
-
     }
-    
+
     private void changeWorkingDirectory(String selectedDirectory) {
 
       int choice = JOptionPane.showConfirmDialog(null, "Working directory is already set to "
