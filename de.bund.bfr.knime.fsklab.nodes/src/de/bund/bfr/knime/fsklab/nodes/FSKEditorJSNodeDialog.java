@@ -286,8 +286,6 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       }
     });
 
-
-
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(readmePanel);
     container.add(workingDirectoryPanel);
@@ -307,39 +305,6 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     container.add(fileSelector);
 
     addTab("Options", container);
-  }
-
-  public void changeWorkingDirectory(String selectedDirectory) {
-
-    int choise = JOptionPane.showConfirmDialog(null, "Working directory is already set to "
-        + currentWorkingDirectory + " \nAre you sure you want to change?");
-    switch (choise) {
-      case 0:
-        try {
-          URL url = FileUtil.toURL(currentWorkingDirectory.toString());
-          Path localPath = FileUtil.resolveToPath(url);
-          Files.list(localPath).forEach(path -> {
-            try {
-              File currentFile = path.toFile();
-              if (currentFile.isDirectory()) {
-                FileUtils.copyDirectoryToDirectory(currentFile, new File(selectedDirectory));
-              } else {
-                FileUtils.copyFileToDirectory(currentFile, new File(selectedDirectory));
-              }
-
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-          });
-        } catch (IOException | URISyntaxException e1) {
-          e1.printStackTrace();
-        }
-
-        break;
-      default:
-        break;
-
-    }
   }
 
   class FileTableModel extends AbstractTableModel {
@@ -444,6 +409,22 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
         e1.printStackTrace();
       }
 
+    }
+    
+    private void changeWorkingDirectory(String selectedDirectory) {
+
+      int choice = JOptionPane.showConfirmDialog(null, "Working directory is already set to "
+          + currentWorkingDirectory + " \nAre you sure you want to change?");
+
+      if (choice == JOptionPane.YES_OPTION) {
+        try {
+          URL url = FileUtil.toURL(currentWorkingDirectory.toString());
+          Path localPath = FileUtil.resolveToPath(url);
+          FileUtils.copyDirectory(localPath.toFile(), new File(selectedDirectory));
+        } catch (IOException | URISyntaxException e1) {
+          e1.printStackTrace();
+        }
+      }
     }
   }
 }
