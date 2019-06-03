@@ -121,9 +121,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
             currentWorkingDirectory = new File(this.settings.getWorkingDirectory());
           }
 
-        } catch (IOException e1) {
-          e1.printStackTrace();
-        } catch (URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
           e.printStackTrace();
         }
       }
@@ -217,7 +215,6 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     readmePanel.add(m_readmePanel, BorderLayout.NORTH);
     readmePanel.add(Box.createHorizontalGlue());
 
-
     final JPanel workingDirectoryPanel = new JPanel(new BorderLayout());
     workingDirectoryPanel.setBorder(
         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Working directory:"));
@@ -226,14 +223,12 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     m_workingDirectoryPanel.addChangeListener(changeListener);
 
-
     FBrowseButton resourcesButton = new FBrowseButton("Browse");
     resourcesButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
 
         JFileChooser fc = new JFileChooser();
-
         fc.setMultiSelectionEnabled(true);
         fc.setDialogType(JFileChooser.OPEN_DIALOG);
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
