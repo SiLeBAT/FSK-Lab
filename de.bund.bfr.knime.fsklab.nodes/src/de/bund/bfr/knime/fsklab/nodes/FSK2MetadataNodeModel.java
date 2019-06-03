@@ -61,8 +61,7 @@ public class FSK2MetadataNodeModel extends StatelessModel {
     FskPortObject inObj = (FskPortObject) inObjects[0];
 
     // Build container
-    // Argument is not used in configure so null can be passed
-    final DataTableSpec tableSpec = configure(null)[0];
+    final DataTableSpec tableSpec = createTableSpec()[0];
     final BufferedDataContainer container = exec.createDataContainer(tableSpec);
 
     // Create general information cell
@@ -105,26 +104,10 @@ public class FSK2MetadataNodeModel extends StatelessModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-
-    // Column specs
-    final DataColumnSpec generalInformationSpec =
-        new DataColumnSpecCreator("generalInformation", JSONCell.TYPE).createSpec();
-    final DataColumnSpec scopeSpec = new DataColumnSpecCreator("scope", JSONCell.TYPE).createSpec();
-    final DataColumnSpec dataBackgroundSpec =
-        new DataColumnSpecCreator("dataBackground", JSONCell.TYPE).createSpec();
-    final DataColumnSpec modelMathSpec =
-        new DataColumnSpecCreator("modelMath", JSONCell.TYPE).createSpec();
-
-    // table spec
-    final DataTableSpecCreator tableSpec = new DataTableSpecCreator()
-        .addColumns(generalInformationSpec, scopeSpec, dataBackgroundSpec, modelMathSpec);
-    return new DataTableSpec[] {tableSpec.createSpec()};
+    return createTableSpec();
   }
 
-  @Override
-  protected DataTableSpec[] configure(DataTableSpec[] inSpecs) throws InvalidSettingsException {
-
-    // Column specs
+  private DataTableSpec[] createTableSpec() {
     final DataColumnSpec generalInformationSpec =
         new DataColumnSpecCreator("generalInformation", JSONCell.TYPE).createSpec();
     final DataColumnSpec scopeSpec = new DataColumnSpecCreator("scope", JSONCell.TYPE).createSpec();
