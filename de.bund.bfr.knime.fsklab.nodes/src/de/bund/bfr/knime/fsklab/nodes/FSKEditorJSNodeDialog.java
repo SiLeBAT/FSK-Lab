@@ -194,11 +194,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     this.settings.setWorkingDirectory(m_workingDirectoryPanel.getSelectedFile().trim());
     m_workingDirectoryPanel.addToHistory();
 
-    String fileHolder = "";
-    for (String oneFile : fileModel.filenames) {
-      fileHolder = fileHolder + ";" + oneFile;
-    }
-    this.settings.setResources(fileHolder);
+    this.settings.setResources(String.join(";", fileModel.filenames));
 
     this.settings.save(settings);
   }
