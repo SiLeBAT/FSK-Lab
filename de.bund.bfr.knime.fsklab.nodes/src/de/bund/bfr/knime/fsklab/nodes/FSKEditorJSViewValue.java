@@ -31,8 +31,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 
-
-
 class FSKEditorJSViewValue extends JSONViewContent {
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger(FSKEditorJSViewValue.class);
@@ -40,17 +38,14 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
   private static final String CFG_ORIGINAL_README = "README";
 
-
   private static final String CFG_GENERAL_INFORMATION = "generalInformation";
   private static final String CFG_SCOPE = "scope";
   private static final String CFG_DATA_BACKGROUND = "dataBackground";
   private static final String CFG_MODEL_MATH = "modelMath";
 
-
   final static ResourceSet resourceSet = new ResourceSetImpl();
 
   public final int pseudoIdentifier = (new Random()).nextInt();
-
 
   private String generalInformation;
   private String scope;
@@ -60,6 +55,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private String firstModelScript;
   private String firstModelViz;
   private String readme;
+
   public String getReadme() {
     return readme;
   }
@@ -72,8 +68,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private String serverName;
   private boolean notCompleted;
   private String validationErrors;
-  
- 
+
   public String getValidationErrors() {
     return validationErrors;
   }
@@ -106,10 +101,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     this.resourcesFiles = resourcesFiles;
   }
 
-
-
-
-
   public String getFirstModelScript() {
     return firstModelScript;
   }
@@ -117,7 +108,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public void setFirstModelScript(String firstModelScript) {
     this.firstModelScript = firstModelScript;
   }
-
 
   public String getFirstModelViz() {
     return firstModelViz;
@@ -127,15 +117,11 @@ class FSKEditorJSViewValue extends JSONViewContent {
     this.firstModelViz = firstModelViz;
   }
 
-
-
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
     settings.addString(CFG_ORIGINAL_MODEL_SCRIPT, firstModelScript);
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
     settings.addString(CFG_ORIGINAL_README, readme);
-
-
 
     if (generalInformation != null) {
       System.out.println(generalInformation);
@@ -154,8 +140,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
       System.out.println(modelMath);
       saveSettings(settings, CFG_MODEL_MATH, modelMath);
     }
-
-
   }
 
   @Override
@@ -163,7 +147,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     firstModelScript = settings.getString(CFG_ORIGINAL_MODEL_SCRIPT);
     firstModelViz = settings.getString(CFG_ORIGINAL_VISUALIZATION_SCRIPT);
     readme = settings.getString(CFG_ORIGINAL_README);
-
 
     // load meta data
     if (settings.containsKey(CFG_GENERAL_INFORMATION)) {
@@ -178,8 +161,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     if (settings.containsKey(CFG_MODEL_MATH)) {
       modelMath = getEObject(settings, CFG_MODEL_MATH);
     }
-
-
   }
 
   private static void saveSettings(final NodeSettingsWO settings, final String key,
@@ -202,7 +183,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     jsonStr = StringEscapeUtils.unescapeJson(jsonStr);
     jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
     return jsonStr;
-
   }
 
   @Override
@@ -252,6 +232,4 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public void setModelMath(String modelMath) {
     this.modelMath = modelMath;
   }
-
-
 }
