@@ -88,17 +88,10 @@ class FSKEditorJSNodeSettings {
     resources = settings.getString(CFG_RESOURCES, "");
     readme = settings.getString(CFG_README, "");
     workingDirectory = settings.getString(CFG_WORKING_DIRECTORY, "");
-    try {
-      generalInformation = settings.getString(CFG_GENERAL_INFORMATION);
-      scope = settings.getString(CFG_SCOPE);
-      dataBackground = settings.getString(CFG_DATA_BACKGROUND);
-      modelMath = settings.getString(CFG_MODEL_MATH);
-    } catch (Exception e) {
-      generalInformation = "";
-      scope = "";
-      dataBackground = "";
-      modelMath = "";
-    }
+    generalInformation = settings.getString(CFG_GENERAL_INFORMATION, "");
+    scope = settings.getString(CFG_SCOPE, "");
+    dataBackground = settings.getString(CFG_DATA_BACKGROUND, "");
+    modelMath = settings.getString(CFG_MODEL_MATH, "");
   }
 
   void save(final NodeSettingsWO settings) {
