@@ -77,11 +77,11 @@ public class CreatorNodeDialog extends NodeDialogPane {
     settings = new CreatorNodeSettings();
 
     m_modelScriptPanel = new FilesHistoryPanel(modelScriptVariable, "modelScript",
-        LocationValidation.FileInput, ".r");
+        LocationValidation.FileInput, ".r",".py");
     m_modelScriptPanel.setSelectMode(JFileChooser.FILES_ONLY);
 
     m_visualizationScriptPanel = new FilesHistoryPanel(visualizationScriptVariable,
-        "visualizationScript", LocationValidation.FileInput, ".r");
+        "visualizationScript", LocationValidation.FileInput, ".r","py");
     m_visualizationScriptPanel.setSelectMode(JFileChooser.FILES_ONLY);
 
     m_readmePanel =

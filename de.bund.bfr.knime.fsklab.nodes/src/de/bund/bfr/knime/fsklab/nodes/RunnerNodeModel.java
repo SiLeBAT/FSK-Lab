@@ -141,8 +141,14 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           .filter(index -> simulation.get(index).getName().equals(nodeSettings.simulation))
           .findFirst().ifPresent(index -> reSelectSimulation(fskObjk, index));
     }
-    try (RController controller = new RController()) {
-      fskObj = runFskPortObject(fskObj, exec, controller);
+//    try (RController controller = new RController()) {
+//      fskObj = runFskPortObject(fskObj, exec, controller);
+//    }
+    try (ScriptHandler handler = ScriptHandler.createHandler(fskObj.generalInformation.getLanguageWrittenIn())){
+      handler.setController(exec);
+      runFskPortObject(handler, fskObj, exec);
+    }catch (Exception e) {
+      
     }
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
       final PNGImageContent content = new PNGImageContent(fis);
@@ -179,15 +185,14 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     return embedFSKObject;
   }
 
-  public FskPortObject runFskPortObject(FskPortObject fskObj, ExecutionContext exec,
-      RController controller) throws Exception {
+  public FskPortObject runFskPortObject(ScriptHandler handler, FskPortObject fskObj, ExecutionContext exec) throws Exception {
     LOGGER.info("Running Model: " + fskObj);
     if (fskObj instanceof CombinedFskPortObject) {
       CombinedFskPortObject comFskObj = (CombinedFskPortObject) fskObj;
       List<JoinRelation> joinRelations = comFskObj.getJoinerRelation();
       FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
       if (firstFskObj instanceof CombinedFskPortObject) {
-        firstFskObj = runFskPortObject(firstFskObj, exec, controller);
+        firstFskObj = runFskPortObject(handler, firstFskObj, exec);
       }
       FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
 
@@ -212,8 +217,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
               param.getParameterID().indexOf(JoinerNodeModel.suffix));
           // make the old parameter available for the Model script
           if (fskSimulation.getParameters().get(param.getParameterID()) != null) {
-            controller.eval(
-                oldId + " <- " + fskSimulation.getParameters().get(param.getParameterID()), false);
+            handler.runScript(
+                oldId + " <- " + fskSimulation.getParameters().get(param.getParameterID()), exec,false);
           }
         }
       }
@@ -237,7 +242,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
       // run the first model!
       LOGGER.info("Running Snippet of first Model: " + firstFskObj);
       if (!(firstFskObj instanceof CombinedFskPortObject)) {
-        firstFskObj = runSnippet(controller, firstFskObj, fskSimulation, context);
+        firstFskObj = runSnippet(handler, firstFskObj, fskSimulation, context);
       }
       // move the generated files to the working
       // directory of the second model
@@ -270,7 +275,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         String alternativeId = param.getParameterID();
         String oldId = param.getParameterID().substring(0,
             param.getParameterID().indexOf(JoinerNodeModel.suffix));
-        controller.eval(alternativeId + " <- " + oldId, false);
+        handler.runScript(alternativeId + " <- " + oldId, exec, false);
         // controller.eval("rm(" + oldId + ")", false);
         // }
       }
@@ -315,7 +320,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
             String alternativeId = param.getParameterID();
             String oldId = param.getParameterID().substring(0,
                 param.getParameterID().indexOf(JoinerNodeModel.suffix));
-            controller.eval(alternativeId + " <- " + oldId, false);
+            handler.runScript(alternativeId + " <- " + oldId, exec, false);
             // controller.eval("rm(" + oldId + ")", false);
             // }
           }
@@ -350,9 +355,9 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           }
         }
 
-        secondFskObj = runFskPortObject(secondFskObj, exec, controller);
+        secondFskObj = runFskPortObject(handler, secondFskObj, exec);
       } else {
-        secondFskObj = runSnippet(controller, secondFskObj, secondfskSimulation, context);
+        secondFskObj = runSnippet(handler, secondFskObj, secondfskSimulation, context);
       }
       fskObj.workspace = secondFskObj.workspace;
 
@@ -375,103 +380,133 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
       ExecutionContext context = exec.createSubExecutionContext(1.0);
 
-      fskObj = runSnippet(controller, fskObj, fskSimulation, context);
+      fskObj = runSnippet(handler, fskObj, fskSimulation, context);
 
       return fskObj;
     }
   }
 
-  private FskPortObject runSnippet(final RController controller, final FskPortObject fskObj,
-      final FskSimulation simulation, final ExecutionMonitor exec) throws Exception {
-
-    final ScriptExecutor executor = new ScriptExecutor(controller);
-
-    // Sets up working directory with resource files. This directory needs to be deleted.
-    exec.setProgress(0.05, "Add resource files");
-    {
-      String workingDirectoryString = fskObj.getWorkingDirectory();
-      if (!workingDirectoryString.isEmpty()) {
-        Path workingDirectory =
-            FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
-        controller.setWorkingDirectory(workingDirectory);
-      }
-    }
-
-    // START RUNNING MODEL
-    exec.setProgress(0.1, "Setting up output capturing");
-    executor.setupOutputCapturing(exec);
-
-    // Install needed libraries
-    if (!fskObj.packages.isEmpty()) {
-      LibRegistry.instance().install(fskObj.packages);
-    }
-
-    exec.setProgress(0.71, "Add paths to libraries");
-    controller.addPackagePath(LibRegistry.instance().getInstallationPath());
-
-    exec.setProgress(0.72, "Set parameter values");
-    LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
-    String paramScript = NodeUtils.buildParameterScript(simulation);
-    executor.execute(paramScript, exec);
-
-    exec.setProgress(0.75, "Run models script");
-    executor.executeIgnoreResult(fskObj.model, exec);
-    if(isTest) {
-      for(Parameter param : fskObj.modelMath.getParameter()) {
-        if(param.getParameterClassification().equals(ParameterClassification.OUTPUT)) {
-          String value = executor.execute("eval("+param.getParameterID()+")", exec).asString();
-          param.setParameterValue(value);
-          
-        }
-      }
+  private FskPortObject runSnippet(ScriptHandler handler, final FskPortObject fskObj,
+      final FskSimulation simulation, final ExecutionContext exec) throws Exception {
       
-    }
-    exec.setProgress(0.9, "Run visualization script");
-    try {
-      NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings.width,
-          nodeSettings.height, nodeSettings.pointSize, nodeSettings.res, executor, exec);
-
-      // Save path of generated plot
-      fskObj.setPlot(internalSettings.imageFile.getAbsolutePath());
-    } catch (final RException exception) {
-      LOGGER.warn("Visualization script failed", exception);
-    }
-
-    exec.setProgress(0.96, "Restore library paths");
-    controller.restorePackagePath();
-
-    exec.setProgress(0.98, "Collecting captured output");
-    executor.finishOutputCapturing(exec);
-
-    // END RUNNING MODEL
-
-    // Save workspace
-    if (fskObj.workspace == null) {
-      fskObj.workspace = FileUtil.createTempFile("workspace", ".R").toPath();
-    }
-    controller.saveWorkspace(fskObj.workspace, exec);
-
-    // process the return value of error capturing and update error and
-    // output views accordingly
-    if (!executor.getStdOut().isEmpty()) {
-      setExternalOutput(getLinkedListFromOutput(executor.getStdOut()));
-    }
-
-    if (!executor.getStdErr().isEmpty()) {
-      final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
-      setExternalErrorOutput(output);
-
-      for (final String line : output) {
-        if (line.startsWith(ScriptExecutor.ERROR_PREFIX)) {
-          throw new RException(line, null);
-        }
-      }
-    }
-
-    // cleanup temporary variables of output capturing and consoleLikeCommand stuff
-    exec.setProgress(0.99, "Cleaning up");
-    executor.cleanup(exec);
-    return fskObj;
+      handler.runSnippet(fskObj, simulation, exec, LOGGER, internalSettings, nodeSettings);
+        
+        
+        //  } else if (portType.equals(RPortObject.TYPE)) {
+        //      outPorts.add(new RPortObject(tempWorkspaceFile, m_librariesInR));
+         // }
+    
+      
+       
+       // process the return value of error capturing and update error and
+       // output views accordingly
+       if (!handler.getStdOut().isEmpty()) {
+         setExternalOutput(getLinkedListFromOutput(handler.getStdOut()));
+       }
+    
+       if (!handler.getStdErr().isEmpty()) {
+         final LinkedList<String> output = getLinkedListFromOutput(handler.getStdErr());
+         setExternalErrorOutput(output);
+    
+         for (final String line : output) {
+           if (line.startsWith(ScriptExecutor.ERROR_PREFIX)) {
+             throw new RException(line, null);
+           }
+         }
+       }
+    
+       // cleanup temporary variables of output capturing and consoleLikeCommand stuff
+       exec.setProgress(0.99, "Cleaning up");
+       handler.cleanup(exec);
+       return fskObj;
+//    final ScriptExecutor executor = new ScriptExecutor(controller);
+//
+//    // Sets up working directory with resource files. This directory needs to be deleted.
+//    exec.setProgress(0.05, "Add resource files");
+//    {
+//      String workingDirectoryString = fskObj.getWorkingDirectory();
+//      if (!workingDirectoryString.isEmpty()) {
+//        Path workingDirectory =
+//            FileUtil.getFileFromURL(FileUtil.toURL(workingDirectoryString)).toPath();
+//        controller.setWorkingDirectory(workingDirectory);
+//      }
+//    }
+//
+//    // START RUNNING MODEL
+//    exec.setProgress(0.1, "Setting up output capturing");
+//    executor.setupOutputCapturing(exec);
+//
+//    // Install needed libraries
+//    if (!fskObj.packages.isEmpty()) {
+//      LibRegistry.instance().install(fskObj.packages);
+//    }
+//
+//    exec.setProgress(0.71, "Add paths to libraries");
+//    controller.addPackagePath(LibRegistry.instance().getInstallationPath());
+//
+//    exec.setProgress(0.72, "Set parameter values");
+//    LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
+//    String paramScript = NodeUtils.buildParameterScript(simulation);
+//    executor.execute(paramScript, exec);
+//
+//    exec.setProgress(0.75, "Run models script");
+//    executor.executeIgnoreResult(fskObj.model, exec);
+//    if(isTest) {
+//      for(Parameter param : fskObj.modelMath.getParameter()) {
+//        if(param.getParameterClassification().equals(ParameterClassification.OUTPUT)) {
+//          String value = executor.execute("eval("+param.getParameterID()+")", exec).asString();
+//          param.setParameterValue(value);
+//          
+//        }
+//      }
+//      
+//    }
+//    exec.setProgress(0.9, "Run visualization script");
+//    try {
+//      NodeUtils.plot(internalSettings.imageFile, fskObj.viz, nodeSettings.width,
+//          nodeSettings.height, nodeSettings.pointSize, nodeSettings.res, executor, exec);
+//
+//      // Save path of generated plot
+//      fskObj.setPlot(internalSettings.imageFile.getAbsolutePath());
+//    } catch (final RException exception) {
+//      LOGGER.warn("Visualization script failed", exception);
+//    }
+//
+//    exec.setProgress(0.96, "Restore library paths");
+//    controller.restorePackagePath();
+//
+//    exec.setProgress(0.98, "Collecting captured output");
+//    executor.finishOutputCapturing(exec);
+//
+//    // END RUNNING MODEL
+//
+//    // Save workspace
+//    if (fskObj.workspace == null) {
+//      fskObj.workspace = FileUtil.createTempFile("workspace", ".R").toPath();
+//    }
+//    controller.saveWorkspace(fskObj.workspace, exec);
+//
+//    // process the return value of error capturing and update error and
+//    // output views accordingly
+//    if (!executor.getStdOut().isEmpty()) {
+//      setExternalOutput(getLinkedListFromOutput(executor.getStdOut()));
+//    }
+//
+//    if (!executor.getStdErr().isEmpty()) {
+//      final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
+//      setExternalErrorOutput(output);
+//
+//      for (final String line : output) {
+//        if (line.startsWith(ScriptExecutor.ERROR_PREFIX)) {
+//          throw new RException(line, null);
+//        }
+//      }
+//    }
+//
+//    // cleanup temporary variables of output capturing and consoleLikeCommand stuff
+//    exec.setProgress(0.99, "Cleaning up");
+//    executor.cleanup(exec);
+//    return fskObj;
   }
 
   private static final LinkedList<String> getLinkedListFromOutput(final String output) {

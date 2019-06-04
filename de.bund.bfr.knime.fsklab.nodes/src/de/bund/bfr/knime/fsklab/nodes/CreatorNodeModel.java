@@ -57,13 +57,14 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
-import de.bund.bfr.fskml.RScript;
+import de.bund.bfr.fskml.Script;
+import de.bund.bfr.fskml.ScriptFactory;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
-import de.bund.bfr.knime.fsklab.r.client.RController;
-import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
+//import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+//import de.bund.bfr.knime.fsklab.r.client.RController;
+//import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;
@@ -135,10 +136,10 @@ class CreatorNodeModel extends NoInternalsModel {
       InvalidFormatException {
 
     // Reads model script
-    RScript modelRScript = readScript(nodeSettings.modelScript);
+    Script modelRScript = readScript(nodeSettings.modelScript);
 
     // Reads visualization script
-    RScript vizRScript;
+    Script vizRScript;
     if (StringUtils.isNotEmpty(nodeSettings.visualizationScript)) {
       vizRScript = readScript(nodeSettings.visualizationScript);
     } else {
@@ -247,27 +248,27 @@ class CreatorNodeModel extends NoInternalsModel {
 
     // Validate parameters from spreadsheet
     exec.checkCanceled();
-    try (RController controller = new RController()) {
-      
+    try (ScriptHandler handler = ScriptHandler.createHandler(portObj.generalInformation.getLanguageWrittenIn())) {
+      handler.setController(exec);
       if (!workingDirectory.isEmpty()) {
         Path workingDirectoryPath =
             FileUtil.getFileFromURL(FileUtil.toURL(workingDirectory)).toPath();
-        controller.setWorkingDirectory(workingDirectoryPath);
+        handler.setWorkingDirectory(workingDirectoryPath, exec);
       }
 
       FskSimulation simulation = NodeUtils.createDefaultSimulation(modelMath.getParameter());
-      String script = NodeUtils.buildParameterScript(simulation);
-      ScriptExecutor executor = new ScriptExecutor(controller);
+      String script = handler.buildParameterScript(simulation);
+      //ScriptExecutor executor = new ScriptExecutor(controller);
 
-      executor.setupOutputCapturing(exec);
-      executor.executeIgnoreResult(script, exec);
-      executor.finishOutputCapturing(exec);
+      handler.setupOutputCapturing(exec);
+      handler.runScript(script, exec, false);
+      handler.finishOutputCapturing(exec);
 
-      if (!executor.getStdErr().isEmpty()) {
-        throw new InvalidSettingsException("Invalid parameters:\n" + executor.getStdErr());
+      if (!handler.getStdErr().isEmpty()) {
+        throw new InvalidSettingsException("Invalid parameters:\n" + handler.getStdErr());
       }
-    } catch (RException | CanceledExecutionException | InterruptedException exception) {
-      throw new InvalidSettingsException("Parameters could not be validate. Please try again.",
+    } catch ( Exception exception) {
+      throw new InvalidSettingsException("Parameters could not be validate. Please try again. "+exception.getMessage(),
           exception);
     }
 
@@ -297,7 +298,7 @@ class CreatorNodeModel extends NoInternalsModel {
    * @throws InvalidSettingsException if {@link path} is null or whitespace.
    * @throws IOException if the file cannot be read.
    */
-  private static RScript readScript(final String path)
+  private static Script readScript(final String path)
       throws InvalidSettingsException, IOException {
     String trimmedPath = StringUtils.trimToNull(path.trim());
 
@@ -305,7 +306,7 @@ class CreatorNodeModel extends NoInternalsModel {
     try {
       // may throw IOException
       File fScript = FileUtil.getFileFromURL(FileUtil.toURL(trimmedPath));
-      RScript script = new RScript(fScript);
+      Script script = ScriptFactory.createScript(fScript);
       return script;
     } catch (IOException e) {
       LOGGER.error(e.getMessage());
