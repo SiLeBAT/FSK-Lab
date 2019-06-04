@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -443,50 +442,24 @@ final class FSKEditorJSNodeModel
     String settingFolderPath = directory.getPath().concat("/" + containerName);
     File settingFolder = new File(settingFolderPath);
 
-    File generalInformationFile = new File(settingFolder, "generalInformation.json");
-
-    if (generalInformationFile.exists()) {
-      nodeSettings.generalInformation =
-          FileUtils.readFileToString(generalInformationFile, Charset.defaultCharset());
-      getViewValue().setGeneralInformation(nodeSettings.generalInformation);
-    }
-
-    File scopeFile = new File(settingFolder, "scope.json");
-    if (scopeFile.exists()) {
-      nodeSettings.scope = FileUtils.readFileToString(scopeFile, Charset.defaultCharset());
-      getViewValue().setScope(nodeSettings.scope);
-    }
-
-    File dataBackgroundnFile = new File(settingFolder, "dataBackground.json");
-    if (dataBackgroundnFile.exists()) {
-      nodeSettings.dataBackground =
-          FileUtils.readFileToString(dataBackgroundnFile, Charset.defaultCharset());
-      getViewValue().setDataBackground(nodeSettings.dataBackground);
-    }
-
-    File modelMathFile = new File(settingFolder, "modelMath.json");
-    if (modelMathFile.exists()) {
-      nodeSettings.modelMath = FileUtils.readFileToString(modelMathFile, Charset.defaultCharset());
-      getViewValue().setModelMath(nodeSettings.modelMath);
-    }
-
-    File modelScriptFile = new File(settingFolder, "modelScript.txt");
-    if (modelScriptFile.exists()) {
-      String modelScript = FileUtils.readFileToString(modelScriptFile, Charset.defaultCharset());
-      getViewValue().setFirstModelScript(modelScript);
-    }
-
-    File visualizationFile = new File(settingFolder, "visualization.txt");
-    if (visualizationFile.exists()) {
-      String visualizationScript =
-          FileUtils.readFileToString(visualizationFile, Charset.defaultCharset());
-      getViewValue().setFirstModelViz(visualizationScript);
-    }
-    File readmeFile = new File(settingFolder, "readme.txt");
-    if (readmeFile.exists()) {
-      String readme = FileUtils.readFileToString(readmeFile, Charset.defaultCharset());
-      getViewValue().setReadme(readme);
-    }
+    // Read configuration strings
+    nodeSettings.generalInformation = readConfigString(settingFolder, "generalInformation.json");
+    nodeSettings.scope = readConfigString(settingFolder, "scope.json");
+    nodeSettings.dataBackground = readConfigString(settingFolder, "dataBackground.json");
+    nodeSettings.modelMath = readConfigString(settingFolder, "modelMath.json");
+    String modelScript = readConfigString(settingFolder, "modelScript.txt");
+    String visualizationScript = readConfigString(settingFolder, "visualization.txt");
+    String readme = readConfigString(settingFolder, "readme.txt");
+    
+    // Update view value
+    FSKEditorJSViewValue viewValue = getViewValue();
+    viewValue.setGeneralInformation(nodeSettings.generalInformation);
+    viewValue.setScope(nodeSettings.scope);
+    viewValue.setDataBackground(nodeSettings.dataBackground);
+    viewValue.setModelMath(nodeSettings.modelMath);
+    viewValue.setFirstModelScript(modelScript);
+    viewValue.setFirstModelViz(visualizationScript);
+    viewValue.setReadme(readme);
   }
 
   protected void saveJsonSetting(String generalInformation, String scope, String dataBackground,
@@ -504,43 +477,33 @@ final class FSKEditorJSNodeModel
       settingFolder.mkdir();
     }
 
-    File generalInformationFile = new File(settingFolder, "generalInformation.json");
-    if (generalInformation != null) {
-      FileUtils.writeStringToFile(generalInformationFile, generalInformation,
-          Charset.defaultCharset(), false);
+    writeConfigString(generalInformation, settingFolder, "generalInformation.json");
+    writeConfigString(scope, settingFolder, "scope.json");
+    writeConfigString(dataBackground, settingFolder, "dataBackground.json");
+    writeConfigString(modelMath, settingFolder, "modelMath.json");
+    writeConfigString(modelScript, settingFolder, "modelScript.txt");
+    writeConfigString(visualizationScript, settingFolder, "visualization.txt");
+    writeConfigString(readme, settingFolder, "readme.txt");
+  }
+  
+  /**
+   * Read a configuration string from a file under a settings folder.
+   * @throws IOException 
+   */
+  private static String readConfigString(File settingsFolder, String filename) throws IOException {
+    File configFile = new File(settingsFolder, filename);
+    return configFile.exists() ? FileUtils.readFileToString(configFile, "UTF-8") : "";
+  }
+  
+  /**
+   * Write a configuration string to a file under a settings folder
+   * @throws IOException 
+   */
+  private static void writeConfigString(String configString, File settingsFolder, String filename) throws IOException {
+    if (configString != null) {
+      File configFile = new File(settingsFolder, filename);
+      FileUtils.writeStringToFile(configFile, configString, "UTF-8");
     }
-
-    File scopeFile = new File(settingFolder, "scope.json");
-    if (scope != null) {
-      FileUtils.writeStringToFile(scopeFile, scope, Charset.defaultCharset(), false);
-    }
-
-    File dataBackgroundFile = new File(settingFolder, "dataBackground.json");
-    if (dataBackground != null) {
-      FileUtils.writeStringToFile(dataBackgroundFile, dataBackground, Charset.defaultCharset(),
-          false);
-    }
-
-    File modelMathFile = new File(settingFolder, "modelMath.json");
-    if (modelMath != null) {
-      FileUtils.writeStringToFile(modelMathFile, modelMath, Charset.defaultCharset(), false);
-    }
-
-    File modelScriptFile = new File(settingFolder, "modelScript.txt");
-    if (modelScript != null) {
-      FileUtils.writeStringToFile(modelScriptFile, modelScript, Charset.defaultCharset(), false);
-    }
-
-    File visualizationFile = new File(settingFolder, "visualization.txt");
-    if (modelScript != null) {
-      FileUtils.writeStringToFile(visualizationFile, visualizationScript, Charset.defaultCharset(),
-          false);
-    }
-    File readmeFile = new File(settingFolder, "readme.txt");
-    if (readme != null) {
-      FileUtils.writeStringToFile(readmeFile, readme, Charset.defaultCharset(), false);
-    }
-
   }
 
   @Override
