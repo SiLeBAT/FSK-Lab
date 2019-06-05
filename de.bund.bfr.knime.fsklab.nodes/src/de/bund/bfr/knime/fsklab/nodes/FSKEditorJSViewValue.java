@@ -63,21 +63,10 @@ class FSKEditorJSViewValue extends JSONViewContent {
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
     settings.addString(CFG_ORIGINAL_README, readme);
 
-    if (generalInformation != null) {
-      saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
-    }
-
-    if (scope != null) {
-      saveSettings(settings, CFG_SCOPE, scope);
-    }
-
-    if (dataBackground != null) {
-      saveSettings(settings, CFG_DATA_BACKGROUND, dataBackground);
-    }
-
-    if (modelMath != null) {
-      saveSettings(settings, CFG_MODEL_MATH, modelMath);
-    }
+    saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
+    saveSettings(settings, CFG_SCOPE, scope);
+    saveSettings(settings, CFG_DATA_BACKGROUND, dataBackground);
+    saveSettings(settings, CFG_MODEL_MATH, modelMath);
   }
 
   @Override
@@ -104,13 +93,14 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private static void saveSettings(final NodeSettingsWO settings, final String key,
       final String eObject) {
 
-    try {
-      ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-      String jsonStr = objectMapper.writeValueAsString(eObject);
-      System.out.println(jsonStr);
-      settings.addString(key, jsonStr);
-    } catch (JsonProcessingException exception) {
-      LOGGER.warn("Error saving " + key);
+    if (eObject != null) {
+      try {
+        ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+        String jsonStr = objectMapper.writeValueAsString(eObject);
+        settings.addString(key, jsonStr);
+      } catch (JsonProcessingException exception) {
+        LOGGER.warn("Error saving " + key);
+      }
     }
   }
 
