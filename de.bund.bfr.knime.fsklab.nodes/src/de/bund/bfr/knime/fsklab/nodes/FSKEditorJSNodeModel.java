@@ -445,13 +445,13 @@ final class FSKEditorJSNodeModel
     File settingFolder = new File(settingFolderPath);
 
     // Read configuration strings
-    nodeSettings.generalInformation = readConfigString(settingFolder, "generalInformation.json");
-    nodeSettings.scope = readConfigString(settingFolder, "scope.json");
-    nodeSettings.dataBackground = readConfigString(settingFolder, "dataBackground.json");
-    nodeSettings.modelMath = readConfigString(settingFolder, "modelMath.json");
-    String modelScript = readConfigString(settingFolder, "modelScript.txt");
-    String visualizationScript = readConfigString(settingFolder, "visualization.txt");
-    String readme = readConfigString(settingFolder, "readme.txt");
+    nodeSettings.generalInformation = NodeUtils.readConfigString(settingFolder, "generalInformation.json");
+    nodeSettings.scope = NodeUtils.readConfigString(settingFolder, "scope.json");
+    nodeSettings.dataBackground = NodeUtils.readConfigString(settingFolder, "dataBackground.json");
+    nodeSettings.modelMath = NodeUtils.readConfigString(settingFolder, "modelMath.json");
+    String modelScript = NodeUtils.readConfigString(settingFolder, "modelScript.txt");
+    String visualizationScript = NodeUtils.readConfigString(settingFolder, "visualization.txt");
+    String readme = NodeUtils.readConfigString(settingFolder, "readme.txt");
 
     // Update view value
     FSKEditorJSViewValue viewValue = getViewValue();
@@ -479,36 +479,13 @@ final class FSKEditorJSNodeModel
       settingFolder.mkdir();
     }
 
-    writeConfigString(generalInformation, settingFolder, "generalInformation.json");
-    writeConfigString(scope, settingFolder, "scope.json");
-    writeConfigString(dataBackground, settingFolder, "dataBackground.json");
-    writeConfigString(modelMath, settingFolder, "modelMath.json");
-    writeConfigString(modelScript, settingFolder, "modelScript.txt");
-    writeConfigString(visualizationScript, settingFolder, "visualization.txt");
-    writeConfigString(readme, settingFolder, "readme.txt");
-  }
-
-  /**
-   * Read a configuration string from a file under a settings folder.
-   * 
-   * @throws IOException
-   */
-  private static String readConfigString(File settingsFolder, String filename) throws IOException {
-    File configFile = new File(settingsFolder, filename);
-    return configFile.exists() ? FileUtils.readFileToString(configFile, "UTF-8") : "";
-  }
-
-  /**
-   * Write a configuration string to a file under a settings folder
-   * 
-   * @throws IOException
-   */
-  private static void writeConfigString(String configString, File settingsFolder, String filename)
-      throws IOException {
-    if (configString != null) {
-      File configFile = new File(settingsFolder, filename);
-      FileUtils.writeStringToFile(configFile, configString, "UTF-8");
-    }
+    NodeUtils.writeConfigString(generalInformation, settingFolder, "generalInformation.json");
+    NodeUtils.writeConfigString(scope, settingFolder, "scope.json");
+    NodeUtils.writeConfigString(dataBackground, settingFolder, "dataBackground.json");
+    NodeUtils.writeConfigString(modelMath, settingFolder, "modelMath.json");
+    NodeUtils.writeConfigString(modelScript, settingFolder, "modelScript.txt");
+    NodeUtils.writeConfigString(visualizationScript, settingFolder, "visualization.txt");
+    NodeUtils.writeConfigString(readme, settingFolder, "readme.txt");
   }
 
   @Override

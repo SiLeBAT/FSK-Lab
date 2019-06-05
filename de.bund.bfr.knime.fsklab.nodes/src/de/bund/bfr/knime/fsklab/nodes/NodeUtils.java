@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
@@ -176,5 +177,28 @@ public class NodeUtils {
     }
 
     return builder.toString();
+  }
+  
+  /**
+   * Read a configuration string from a file under a settings folder.
+   * 
+   * @throws IOException
+   */
+  static String readConfigString(File settingsFolder, String filename) throws IOException {
+    File configFile = new File(settingsFolder, filename);
+    return configFile.exists() ? FileUtils.readFileToString(configFile, "UTF-8") : "";
+  }
+
+  /**
+   * Write a configuration string to a file under a settings folder
+   * 
+   * @throws IOException
+   */
+  static void writeConfigString(String configString, File settingsFolder, String filename)
+      throws IOException {
+    if (configString != null) {
+      File configFile = new File(settingsFolder, filename);
+      FileUtils.writeStringToFile(configFile, configString, "UTF-8");
+    }
   }
 }

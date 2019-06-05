@@ -40,7 +40,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -498,13 +497,13 @@ final class JoinerNodeModel extends
     String settingFolderPath = directory.getPath().concat("/" + containerName);
     File settingFolder = new File(settingFolderPath);
 
-    nodeSettings.joinScript = readConfigString(settingFolder, "JoinRelations.json");
-    nodeSettings.generalInformation = readConfigString(settingFolder, "generalInformation.json");
-    nodeSettings.scope = readConfigString(settingFolder, "scope.json");
-    nodeSettings.dataBackground = readConfigString(settingFolder, "dataBackground.json");
-    nodeSettings.modelMath = readConfigString(settingFolder, "modelMath.json");
-    String sourceTree = readConfigString(settingFolder, "sourceTree.json");
-    String visualizationScript = readConfigString(settingFolder, "visualization.txt");
+    nodeSettings.joinScript = NodeUtils.readConfigString(settingFolder, "JoinRelations.json");
+    nodeSettings.generalInformation = NodeUtils.readConfigString(settingFolder, "generalInformation.json");
+    nodeSettings.scope = NodeUtils.readConfigString(settingFolder, "scope.json");
+    nodeSettings.dataBackground = NodeUtils.readConfigString(settingFolder, "dataBackground.json");
+    nodeSettings.modelMath = NodeUtils.readConfigString(settingFolder, "modelMath.json");
+    String sourceTree = NodeUtils.readConfigString(settingFolder, "sourceTree.json");
+    String visualizationScript = NodeUtils.readConfigString(settingFolder, "visualization.txt");
 
     JoinerViewValue viewValue = getViewValue();
     viewValue.joinRelations = nodeSettings.joinScript;
@@ -531,13 +530,13 @@ final class JoinerNodeModel extends
       settingFolder.mkdir();
     }
 
-    writeConfigString(joinRelation, settingFolder, "JoinRelations.json");
-    writeConfigString(generalInformation, settingFolder, "generalInformation.json");
-    writeConfigString(scope, settingFolder, "scope.json");
-    writeConfigString(dataBackground, settingFolder, "dataBackground.json");
-    writeConfigString(modelMath, settingFolder, "modelMath.json");
-    writeConfigString(modelScriptTree, settingFolder, "sourceTree.json");
-    writeConfigString(visualizationScript, settingFolder, "visualization.txt");
+    NodeUtils.writeConfigString(joinRelation, settingFolder, "JoinRelations.json");
+    NodeUtils.writeConfigString(generalInformation, settingFolder, "generalInformation.json");
+    NodeUtils.writeConfigString(scope, settingFolder, "scope.json");
+    NodeUtils.writeConfigString(dataBackground, settingFolder, "dataBackground.json");
+    NodeUtils.writeConfigString(modelMath, settingFolder, "modelMath.json");
+    NodeUtils.writeConfigString(modelScriptTree, settingFolder, "sourceTree.json");
+    NodeUtils.writeConfigString(visualizationScript, settingFolder, "visualization.txt");
   }
 
   @Override
@@ -768,28 +767,5 @@ final class JoinerNodeModel extends
     combinedModelMath.getEvent().addAll(secondModelMath.getEvent());
     return combinedModelMath;
 
-  }
-
-  /**
-   * Read a configuration string from a file under a settings folder.
-   * 
-   * @throws IOException
-   */
-  private static String readConfigString(File settingsFolder, String filename) throws IOException {
-    File configFile = new File(settingsFolder, filename);
-    return configFile.exists() ? FileUtils.readFileToString(configFile, "UTF-8") : "";
-  }
-
-  /**
-   * Write a configuration string to a file under a settings folder
-   * 
-   * @throws IOException
-   */
-  private static void writeConfigString(String configString, File settingsFolder, String filename)
-      throws IOException {
-    if (configString != null) {
-      File configFile = new File(settingsFolder, filename);
-      FileUtils.writeStringToFile(configFile, configString, "UTF-8");
-    }
   }
 }
