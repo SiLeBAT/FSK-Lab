@@ -102,6 +102,7 @@ final class JoinerNodeModel extends
   String nodeWithId;
   String nodeName;
   String nodeId;
+
   public JoinerNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
   }
@@ -133,7 +134,8 @@ final class JoinerNodeModel extends
   }
 
   @Override
-  public void saveCurrentValue(NodeSettingsWO content) {}
+  public void saveCurrentValue(NodeSettingsWO content) {
+  }
 
   @Override
   public JoinerViewValue getViewValue() {
@@ -170,68 +172,68 @@ final class JoinerNodeModel extends
     // Clone input object
     synchronized (getLock()) {
       JoinerViewValue joinerProxyValue = getViewValue();
-      
+
       // If not executed
-      if (joinerProxyValue.getGeneralInformation() == null) {
-        joinerProxyValue.setModelScriptTree(buildModelscriptAsTree(inObj1, inObj2));
-        joinerProxyValue.setFirstModelName(inObj1.generalInformation.getName());
-        joinerProxyValue.setSecondModelName(inObj2.generalInformation.getName());
-        joinerProxyValue.setModelMath1(FromEOjectToJSON(inObj1.modelMath));
-        joinerProxyValue.setModelMath2(FromEOjectToJSON(inObj2.modelMath));
+      if (joinerProxyValue.generalInformation == null) {
+        joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
+        joinerProxyValue.firstModelName = inObj1.generalInformation.getName();
+        joinerProxyValue.secondModelName = inObj2.generalInformation.getName();
+        joinerProxyValue.modelMath1 = FromEOjectToJSON(inObj1.modelMath);
+        joinerProxyValue.modelMath2 = FromEOjectToJSON(inObj2.modelMath);
         loadJsonSetting();
-        if(joinerProxyValue.getGeneralInformation() == null) {
-          joinerProxyValue.setGeneralInformation(FromEOjectToJSON(
-              combineGeneralInformation(inObj1.generalInformation, inObj2.generalInformation)));
-          joinerProxyValue.setScope(FromEOjectToJSON(inObj1.scope));
-          joinerProxyValue.setDataBackground(
-              FromEOjectToJSON(combineDataBackground(inObj1.dataBackground, inObj2.dataBackground)));
-          joinerProxyValue
-              .setModelMath(FromEOjectToJSON(combineModelMath(inObj1.modelMath, inObj2.modelMath)));
+        if (joinerProxyValue.generalInformation == null) {
+          joinerProxyValue.generalInformation = FromEOjectToJSON(
+              combineGeneralInformation(inObj1.generalInformation, inObj2.generalInformation));
+          joinerProxyValue.scope = FromEOjectToJSON(inObj1.scope);
+          joinerProxyValue.dataBackground =
+              FromEOjectToJSON(combineDataBackground(inObj1.dataBackground, inObj2.dataBackground));
+          joinerProxyValue.modelMath =
+              FromEOjectToJSON(combineModelMath(inObj1.modelMath, inObj2.modelMath));
         }
-        if(!StringUtils.isNotBlank(joinerProxyValue.getSecondModelViz())) {
+        if (!StringUtils.isNotBlank(joinerProxyValue.secondModelViz)) {
           if (!(inObj2 instanceof CombinedFskPortObject)) {
-            joinerProxyValue.setSecondModelViz(inObj2.viz);
-  
+            joinerProxyValue.secondModelViz = inObj2.viz;
+
           } else {
             /*
              * extract the visualization script of the second model which may be also an joined
              * object!
              */
-            joinerProxyValue.setSecondModelViz(extractSecondObjectVis(inObj2));
+            joinerProxyValue.secondModelViz = extractSecondObjectVis(inObj2);
           }
-        } 
+        }
 
         exec.setProgress(1);
-      }
-      else {
-        if(StringUtils.isNotEmpty(joinerProxyValue.getValidationErrors())) {
-          setWarningMessage( "\n"+(joinerProxyValue.getValidationErrors()).replaceAll("\"", "").replaceAll(",,,", "\n"));
+      } else {
+        if (StringUtils.isNotEmpty(joinerProxyValue.validationErrors)) {
+          setWarningMessage("\n"
+              + (joinerProxyValue.validationErrors).replaceAll("\"", "").replaceAll(",,,", "\n"));
         }
       }
-      if (joinerProxyValue.getJoinRelations() != null) {
-        String relation = joinerProxyValue.getJoinRelations();
-        
-        //pushFlowVariableString("generatedJoinScript", relation);
-        
+      if (joinerProxyValue.joinRelations != null) {
+        String relation = joinerProxyValue.joinRelations;
+
+        // pushFlowVariableString("generatedJoinScript", relation);
+
         creatRelationList(relation, joinerProxyValue, joinerRelation);
- 
-      }else if(StringUtils.isNotBlank(nodeSettings.joinScript)){
+
+      } else if (StringUtils.isNotBlank(nodeSettings.joinScript)) {
         creatRelationList(nodeSettings.joinScript, joinerProxyValue, joinerRelation);
       }
 
       outObj.generalInformation =
-          getEObjectFromJson(joinerProxyValue.getGeneralInformation(), GeneralInformation.class);
-      outObj.scope = getEObjectFromJson(joinerProxyValue.getScope(), Scope.class);
+          getEObjectFromJson(joinerProxyValue.generalInformation, GeneralInformation.class);
+      outObj.scope = getEObjectFromJson(joinerProxyValue.scope, Scope.class);
       outObj.dataBackground =
-          getEObjectFromJson(joinerProxyValue.getDataBackground(), DataBackground.class);
-      outObj.modelMath = getEObjectFromJson(joinerProxyValue.getModelMath(), ModelMath.class);
-      if(StringUtils.isNotEmpty(joinerProxyValue.getModelScriptTree())) {
-        JsonArray scriptTree = getScriptArray(joinerProxyValue.getModelScriptTree());
+          getEObjectFromJson(joinerProxyValue.dataBackground, DataBackground.class);
+      outObj.modelMath = getEObjectFromJson(joinerProxyValue.modelMath, ModelMath.class);
+      if (StringUtils.isNotEmpty(joinerProxyValue.modelScriptTree)) {
+        JsonArray scriptTree = getScriptArray(joinerProxyValue.modelScriptTree);
         setScriptBack(inObj1, inObj2, scriptTree);
-      }else {
-        joinerProxyValue.setModelScriptTree(buildModelscriptAsTree(inObj1, inObj2));
+      } else {
+        joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
       }
-      inObj2.viz = joinerProxyValue.getSecondModelViz();
+      inObj2.viz = joinerProxyValue.secondModelViz;
 
       Set<String> packageSet = new HashSet<>();
       packageSet.addAll(inObj1.packages);
@@ -239,46 +241,50 @@ final class JoinerNodeModel extends
       outObj.packages.addAll(packageSet);
       resolveParameters(joinerRelation, outObj);
 
-      
+
       outObj.setJoinerRelation(joinerRelation);
       if (outObj.modelMath != null) {
         createSimulation(outObj);
       }
-      imagePort = createSVGImagePortObject(joinerProxyValue.getSvgRepresentation());
+      imagePort = createSVGImagePortObject(joinerProxyValue.svgRepresentation);
     }
-   
+
     NodeContext.getContext().getWorkflowManager().addListener(new WorkflowListener() {
-      
+
       @Override
       public void workflowChanged(WorkflowEvent event) {
-       if(event.getType().equals(WorkflowEvent.Type.NODE_REMOVED) && event.getOldValue() instanceof NativeNodeContainer) {
-         NativeNodeContainer nnc = (NativeNodeContainer)event.getOldValue();
-         File directory = nnc.getDirectNCParent().getProjectWFM().getContext().getCurrentLocation();
-         String nncnamewithId = nnc.getNameWithID();
-         if(nncnamewithId.equals(nodeWithId)) {
-          
-           String containerName = nodeName+" (#"+nodeId+") setting";
-           
-           String settingFolderPath = directory.getPath().concat("/"+containerName);
-           File settingFolder = new File(settingFolderPath);
-          
-           try {
-             if(settingFolder.exists()) {
-               Files.walk(settingFolder.toPath())
-                   .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-             }
-           } catch (IOException e) {
-             //nothing to do
-           }
-       }
-       }
+        if (event.getType().equals(WorkflowEvent.Type.NODE_REMOVED)
+            && event.getOldValue() instanceof NativeNodeContainer) {
+          NativeNodeContainer nnc = (NativeNodeContainer) event.getOldValue();
+          File directory =
+              nnc.getDirectNCParent().getProjectWFM().getContext().getCurrentLocation();
+          String nncnamewithId = nnc.getNameWithID();
+          if (nncnamewithId.equals(nodeWithId)) {
+
+            String containerName = nodeName + " (#" + nodeId + ") setting";
+
+            String settingFolderPath = directory.getPath().concat("/" + containerName);
+            File settingFolder = new File(settingFolderPath);
+
+            try {
+              if (settingFolder.exists()) {
+                Files.walk(settingFolder.toPath()).sorted(Comparator.reverseOrder())
+                    .map(Path::toFile).forEach(File::delete);
+              }
+            } catch (IOException e) {
+              // nothing to do
+            }
+          }
+        }
       }
     });
     return new PortObject[] {outObj, imagePort};
   }
-  private void creatRelationList(String relation, JoinerViewValue joinerProxyValue,List<JoinRelation> joinerRelation ) throws InvalidSettingsException {
+
+  private void creatRelationList(String relation, JoinerViewValue joinerProxyValue,
+      List<JoinRelation> joinerRelation) throws InvalidSettingsException {
     if (StringUtils.isNotBlank(relation)) {
-      joinerProxyValue.setJoinRelations(relation);
+      joinerProxyValue.joinRelations = relation;
       JsonReader jsonReader = Json.createReader(new StringReader(relation));
       JsonArray relationJsonArray = jsonReader.readArray();
       jsonReader.close();
@@ -292,12 +298,12 @@ final class JoinerNodeModel extends
           jR.setLanguage_written_in(sourceTargetRelation.getString("language_written_in"));
         }
         if (sourceTargetRelation.containsKey("sourceParam")) {
-          jR.setSourceParam(getEObjectFromJson(
-              sourceTargetRelation.get("sourceParam").toString(), Parameter.class));
+          jR.setSourceParam(getEObjectFromJson(sourceTargetRelation.get("sourceParam").toString(),
+              Parameter.class));
         }
         if (sourceTargetRelation.containsKey("targetParam")) {
-          jR.setTargetParam(getEObjectFromJson(
-              sourceTargetRelation.get("targetParam").toString(), Parameter.class));
+          jR.setTargetParam(getEObjectFromJson(sourceTargetRelation.get("targetParam").toString(),
+              Parameter.class));
         }
 
 
@@ -306,27 +312,29 @@ final class JoinerNodeModel extends
       }
     }
   }
+
   private void createSimulation(FskPortObject inObj) {
 
     if (inObj instanceof CombinedFskPortObject) {
-        
-        inObj.simulations.clear();
-        FskSimulation defaultSimulation =
-            NodeUtils.createDefaultSimulation(inObj.modelMath.getParameter());
-        inObj.simulations.add(defaultSimulation);
-       
-        createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject());
-        createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject());
-     
+
+      inObj.simulations.clear();
+      FskSimulation defaultSimulation =
+          NodeUtils.createDefaultSimulation(inObj.modelMath.getParameter());
+      inObj.simulations.add(defaultSimulation);
+
+      createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject());
+      createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject());
+
     } else {
       inObj.simulations.clear();
       FskSimulation defaultSimulation =
           NodeUtils.createDefaultSimulation(inObj.modelMath.getParameter());
       inObj.simulations.add(defaultSimulation);
-     
+
     }
     inObj.selectedSimulationIndex = 0;
   }
+
   // second visualization script is the script which draw and control the plotting!
   public String extractSecondObjectVis(FskPortObject object) {
     if (!(object instanceof CombinedFskPortObject)) {
@@ -381,10 +389,13 @@ final class JoinerNodeModel extends
     jsonObjectBuilder.add("id", "" + generateRandomUnifier());
     if (object instanceof CombinedFskPortObject) {
       jsonObjectBuilder.add("text", "Joining Script");
-      
+
       StringBuilder joinModel = new StringBuilder();
-      if(((CombinedFskPortObject)object).getJoinerRelation() != null){
-        ((CombinedFskPortObject)object).getJoinerRelation().stream().forEach(connection -> {joinModel.append(connection.getTargetParam().getParameterID() + " <- " + connection.getCommand()+";\n");});
+      if (((CombinedFskPortObject) object).getJoinerRelation() != null) {
+        ((CombinedFskPortObject) object).getJoinerRelation().stream().forEach(connection -> {
+          joinModel.append(connection.getTargetParam().getParameterID() + " <- "
+              + connection.getCommand() + ";\n");
+        });
       }
       jsonObjectBuilder.add("script", joinModel.toString());
       FskPortObject first = ((CombinedFskPortObject) object).getFirstFskPortObject();
@@ -400,11 +411,9 @@ final class JoinerNodeModel extends
     }
     return jsonObjectBuilder;
   }
-  
- 
-  
-  
-  
+
+
+
   public String generateRandomUnifier() {
     return new AtomicLong((int) (100000 * Math.random())).toString();
   }
@@ -472,24 +481,23 @@ final class JoinerNodeModel extends
     nodeSettings.joinScript = "";
     m_port = null;
   }
- 
+
   @Override
   protected void useCurrentValueAsDefault() {
   }
-  
- 
-  protected void loadJsonSetting() throws IOException,
-      CanceledExecutionException {
-    
+
+
+  protected void loadJsonSetting() throws IOException, CanceledExecutionException {
+
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    String  name = NodeContext.getContext().getNodeContainer().getName();
-    String  id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
-    String containerName = name+" (#"+id+") setting";
-    
-    String settingFolderPath = directory.getPath().concat("/"+containerName);
+    String name = NodeContext.getContext().getNodeContainer().getName();
+    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    String containerName = name + " (#" + id + ") setting";
+
+    String settingFolderPath = directory.getPath().concat("/" + containerName);
     File settingFolder = new File(settingFolderPath);
-   
+
     nodeSettings.joinScript = readConfigString(settingFolder, "JoinRelations.json");
     nodeSettings.generalInformation = readConfigString(settingFolder, "generalInformation.json");
     nodeSettings.scope = readConfigString(settingFolder, "scope.json");
@@ -497,30 +505,32 @@ final class JoinerNodeModel extends
     nodeSettings.modelMath = readConfigString(settingFolder, "modelMath.json");
     String sourceTree = readConfigString(settingFolder, "sourceTree.json");
     String visualizationScript = readConfigString(settingFolder, "visualization.txt");
-    
+
     JoinerViewValue viewValue = getViewValue();
-    viewValue.setJoinRelations(nodeSettings.joinScript);
-    viewValue.setGeneralInformation(nodeSettings.generalInformation);
-    viewValue.setScope(nodeSettings.scope);
-    viewValue.setDataBackground(nodeSettings.dataBackground);
-    viewValue.setModelMath(nodeSettings.modelMath);
-    viewValue.setModelScriptTree(sourceTree);
-    viewValue.setSecondModelViz(visualizationScript);
+    viewValue.joinRelations = nodeSettings.joinScript;
+    viewValue.generalInformation = nodeSettings.generalInformation;
+    viewValue.scope = nodeSettings.scope;
+    viewValue.dataBackground = nodeSettings.dataBackground;
+    viewValue.modelMath = nodeSettings.modelMath;
+    viewValue.modelScriptTree = sourceTree;
+    viewValue.secondModelViz = visualizationScript;
   }
 
-  protected void saveJsonSetting(String joinRelation,String generalInformation,String scope,String dataBackground,String modelMath,String modelScriptTree,String visualizationScript) throws IOException, CanceledExecutionException {
+  protected void saveJsonSetting(String joinRelation, String generalInformation, String scope,
+      String dataBackground, String modelMath, String modelScriptTree, String visualizationScript)
+      throws IOException, CanceledExecutionException {
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    String  name = NodeContext.getContext().getNodeContainer().getName();
-    String  id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
-    String containerName = name+" (#"+id+") setting";
-    
-    String settingFolderPath = directory.getPath().concat("/"+containerName);
+    String name = NodeContext.getContext().getNodeContainer().getName();
+    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    String containerName = name + " (#" + id + ") setting";
+
+    String settingFolderPath = directory.getPath().concat("/" + containerName);
     File settingFolder = new File(settingFolderPath);
-    if (! settingFolder.exists()){
+    if (!settingFolder.exists()) {
       settingFolder.mkdir();
     }
-    
+
     writeConfigString(joinRelation, settingFolder, "JoinRelations.json");
     writeConfigString(generalInformation, settingFolder, "generalInformation.json");
     writeConfigString(scope, settingFolder, "scope.json");
@@ -534,38 +544,42 @@ final class JoinerNodeModel extends
   protected void saveSettingsTo(NodeSettingsWO settings) {
     try {
       JoinerViewValue vv = getViewValue();
-      saveJsonSetting(vv.getJoinRelations(),vv.getGeneralInformation(),vv.getScope(),vv.getDataBackground(),vv.getModelMath(),vv.getModelScriptTree(),vv.getSecondModelViz());
+      saveJsonSetting(vv.joinRelations, vv.generalInformation, vv.scope, vv.dataBackground,
+          vv.modelMath, vv.modelScriptTree, vv.secondModelViz);
     } catch (IOException | CanceledExecutionException e) {
       e.printStackTrace();
     }
-  /*  nodeSettings.joinScript = getViewValue().getJoinRelations();
-    nodeSettings.generalInformation = getViewValue().getGeneralInformation();
-    nodeSettings.scope = getViewValue().getScope();
-    nodeSettings.dataBackground = getViewValue().getDataBackground();
-    nodeSettings.modelMath = getViewValue().getModelMath();
-    
-    nodeSettings.save(settings);*/
+    /*
+     * nodeSettings.joinScript = getViewValue().getJoinRelations(); nodeSettings.generalInformation
+     * = getViewValue().getGeneralInformation(); nodeSettings.scope = getViewValue().getScope();
+     * nodeSettings.dataBackground = getViewValue().getDataBackground(); nodeSettings.modelMath =
+     * getViewValue().getModelMath();
+     * 
+     * nodeSettings.save(settings);
+     */
   }
 
   @Override
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
-    /*nodeSettings.load(settings);
-    getViewValue().setJoinRelations(nodeSettings.joinScript);
-    getViewValue().setGeneralInformation(nodeSettings.generalInformation);
-    getViewValue().setScope(nodeSettings.scope);
-    getViewValue().setDataBackground(nodeSettings.dataBackground);
-    getViewValue().setModelMath(nodeSettings.modelMath);*/
+    /*
+     * nodeSettings.load(settings); getViewValue().setJoinRelations(nodeSettings.joinScript);
+     * getViewValue().setGeneralInformation(nodeSettings.generalInformation);
+     * getViewValue().setScope(nodeSettings.scope);
+     * getViewValue().setDataBackground(nodeSettings.dataBackground);
+     * getViewValue().setModelMath(nodeSettings.modelMath);
+     */
     try {
       loadJsonSetting();
     } catch (IOException | CanceledExecutionException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    }    
+    }
   }
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+  }
 
   @Override
   public PortObject[] getInternalPortObjects() {
@@ -577,7 +591,8 @@ final class JoinerNodeModel extends
     m_port = (FskPortObject) portObjects[0];
   }
 
-  public void setHideInWizard(boolean hide) {}
+  public void setHideInWizard(boolean hide) {
+  }
 
   public void resolveParameterNamesConflict(FskPortObject fskPort1, FskPortObject fskPort2) {
     for (Parameter firstParam : fskPort1.modelMath.getParameter()) {
@@ -757,18 +772,21 @@ final class JoinerNodeModel extends
 
   /**
    * Read a configuration string from a file under a settings folder.
-   * @throws IOException 
+   * 
+   * @throws IOException
    */
   private static String readConfigString(File settingsFolder, String filename) throws IOException {
     File configFile = new File(settingsFolder, filename);
     return configFile.exists() ? FileUtils.readFileToString(configFile, "UTF-8") : "";
   }
-  
+
   /**
    * Write a configuration string to a file under a settings folder
-   * @throws IOException 
+   * 
+   * @throws IOException
    */
-  private static void writeConfigString(String configString, File settingsFolder, String filename) throws IOException {
+  private static void writeConfigString(String configString, File settingsFolder, String filename)
+      throws IOException {
     if (configString != null) {
       File configFile = new File(settingsFolder, filename);
       FileUtils.writeStringToFile(configFile, configString, "UTF-8");

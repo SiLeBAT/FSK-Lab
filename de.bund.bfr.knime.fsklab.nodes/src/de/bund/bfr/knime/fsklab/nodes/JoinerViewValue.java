@@ -54,49 +54,29 @@ class JoinerViewValue extends JSONViewContent {
 
   private static final String FIRST_MODEL_NAME = "firstModelName";
   private static final String SECOND_MODEL_NAME = "secondModelName";
-  private String firstModelScript;
-  private String secondModelScript;
+  public String firstModelScript;
+  public String secondModelScript;
 
-  private String firstModelViz;
-  private String secondModelViz;
+  public String firstModelViz;
+  public String secondModelViz;
 
+  public String generalInformation;
+  public String scope;
+  public String dataBackground;
+  public String modelMath;
 
+  public String modelMath1;
+  public String modelMath2;
 
-  private String generalInformation;
-  private String scope;
-  private String dataBackground;
-  private String modelMath;
+  public String joinRelations;
+  public String jsonRepresentation;
+  public String svgRepresentation;
+  public String modelScriptTree;
 
-  private String modelMath1;
-
-
-  private String modelMath2;
-
-  private String joinRelations;
-  private String jsonRepresentation;
-  private String svgRepresentation;
-  private String modelScriptTree;
- 
-
-  private String firstModelName;
-  private String secondModelName;
+  public String firstModelName;
+  public String secondModelName;
   
-  private String validationErrors;
-  public String getValidationErrors() {
-    return validationErrors;
-  }
-
-  public void setValidationErrors(String validationErrors) {
-    this.validationErrors = validationErrors;
-  }
-
-  public String getModelScriptTree() {
-    return modelScriptTree;
-  }
-
-  public void setModelScriptTree(String modelScriptTree) {
-    this.modelScriptTree = modelScriptTree;
-  }
+  public String validationErrors;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
@@ -131,9 +111,6 @@ class JoinerViewValue extends JSONViewContent {
     if (modelMath2 != null) {
       saveSettings(settings, CFG_MODEL_MATH2, modelMath2);
     }
-
-
-
   }
 
   @Override
@@ -166,8 +143,6 @@ class JoinerViewValue extends JSONViewContent {
     if (settings.containsKey(CFG_MODEL_MATH2)) {
       modelMath2 = getEObject(settings, CFG_MODEL_MATH2);
     }
-
-
   }
 
   private static void saveSettings(final NodeSettingsWO settings, final String key,
@@ -207,128 +182,4 @@ class JoinerViewValue extends JSONViewContent {
   public int hashCode() {
     return pseudoIdentifier;
   }
-
-  public String getFirstModelScript() {
-    return firstModelScript;
-  }
-
-  public void setFirstModelScript(String firstModelScript) {
-    this.firstModelScript = firstModelScript;
-  }
-
-  public String getSecondModelScript() {
-    return secondModelScript;
-  }
-
-  public void setSecondModelScript(String secondModelScript) {
-    this.secondModelScript = secondModelScript;
-  }
-
-  public String getFirstModelViz() {
-    return firstModelViz;
-  }
-
-  public void setFirstModelViz(String firstModelViz) {
-    this.firstModelViz = firstModelViz;
-  }
-
-  public String getSecondModelViz() {
-    return secondModelViz;
-  }
-
-  public void setSecondModelViz(String secondModelViz) {
-    this.secondModelViz = secondModelViz;
-  }
-
-
-  public String getGeneralInformation() {
-    return generalInformation;
-  }
-
-  public void setGeneralInformation(String generalInformation) {
-    this.generalInformation = generalInformation;
-  }
-
-  public String getScope() {
-    return scope;
-  }
-
-  public void setScope(String scope) {
-    this.scope = scope;
-  }
-
-  public String getDataBackground() {
-    return dataBackground;
-  }
-
-  public void setDataBackground(String dataBackground) {
-    this.dataBackground = dataBackground;
-  }
-
-  public String getModelMath() {
-    return modelMath;
-  }
-
-  public void setModelMath(String modelMath) {
-    this.modelMath = modelMath;
-  }
-
-  public String getModelMath1() {
-    return modelMath1;
-  }
-
-  public void setModelMath1(String modelMath1) {
-    this.modelMath1 = modelMath1;
-  }
-
-  public String getModelMath2() {
-    return modelMath2;
-  }
-
-  public void setModelMath2(String modelMath2) {
-    this.modelMath2 = modelMath2;
-  }
-
-  public String getJsonRepresentation() {
-    return jsonRepresentation;
-  }
-
-  public String getJoinRelations() {
-    return joinRelations;
-  }
-
-  public void setJoinRelations(String joinRelations) {
-    this.joinRelations = joinRelations;
-  }
-
-  public void setJsonRepresentation(String jsonRepresentation) {
-    this.jsonRepresentation = jsonRepresentation;
-  }
-
-
-
-  public String getSvgRepresentation() {
-    return svgRepresentation;
-  }
-
-  public void setSvgRepresentation(String svgRepresentation) {
-    this.svgRepresentation = svgRepresentation;
-  }
-  public String getFirstModelName() {
-    return firstModelName;
-  }
-
-  public void setFirstModelName(String firstModelName) {
-    this.firstModelName = firstModelName;
-  }
-
-  public String getSecondModelName() {
-    return secondModelName;
-  }
-
-  public void setSecondModelName(String secondModelName) {
-    this.secondModelName = secondModelName;
-  }
-
-
 }
