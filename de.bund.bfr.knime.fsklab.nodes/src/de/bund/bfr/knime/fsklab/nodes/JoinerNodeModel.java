@@ -20,8 +20,6 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -29,13 +27,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.json.Json;
@@ -56,12 +52,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
-import org.knime.core.internal.ReferencedFile;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeSettings;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -71,7 +64,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.node.web.ValidationError;
-import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NativeNodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowEvent;
@@ -546,10 +538,6 @@ final class JoinerNodeModel extends
     
   }
 
-  /**
-   * {@inheritDoc}
-   */
- 
   protected void saveJsonSetting(String joinRelation,String generalInformation,String scope,String dataBackground,String modelMath,String modelScriptTree,String visualizationScript) throws IOException, CanceledExecutionException {
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
@@ -562,41 +550,14 @@ final class JoinerNodeModel extends
     if (! settingFolder.exists()){
       settingFolder.mkdir();
     }
-    File joinRelationFile = new File(settingFolder, "JoinRelations.json");
-    if (joinRelation != null) {
-      FileUtils.writeStringToFile(joinRelationFile, joinRelation,Charset.defaultCharset(),  false);
-    }
     
-    File generalInformationFile = new File(settingFolder, "generalInformation.json");
-    if (generalInformation != null) {
-      FileUtils.writeStringToFile(generalInformationFile, generalInformation,Charset.defaultCharset(),  false);
-    }
-    
-    File scopeFile = new File(settingFolder, "scope.json");
-    if (scope != null) {
-      FileUtils.writeStringToFile(scopeFile, scope,Charset.defaultCharset(),  false);
-    }
-    
-    File dataBackgroundFile = new File(settingFolder, "dataBackground.json");
-    if (dataBackground != null) {
-      FileUtils.writeStringToFile(dataBackgroundFile, dataBackground,Charset.defaultCharset(),  false);
-    }
-    
-    File modelMathFile = new File(settingFolder, "modelMath.json");
-    if (modelMath != null) {
-      FileUtils.writeStringToFile(modelMathFile, modelMath,Charset.defaultCharset(),  false);
-    }
-    
-    File sourceTreeFile = new File(settingFolder, "sourceTree.json");
-    if(sourceTreeFile != null) {
-      FileUtils.writeStringToFile(sourceTreeFile, modelScriptTree,Charset.defaultCharset(),  false);
-    }
-    
-    File visualizationFile = new File(settingFolder, "visualization.txt");
-    if(visualizationFile != null) {
-      FileUtils.writeStringToFile(visualizationFile, visualizationScript,Charset.defaultCharset(),  false);
-    }
-    
+    writeConfigString(joinRelation, settingFolder, "JoinRelations.json");
+    writeConfigString(generalInformation, settingFolder, "generalInformation.json");
+    writeConfigString(scope, settingFolder, "scope.json");
+    writeConfigString(dataBackground, settingFolder, "dataBackground.json");
+    writeConfigString(modelMath, settingFolder, "modelMath.json");
+    writeConfigString(modelScriptTree, settingFolder, "sourceTree.json");
+    writeConfigString(visualizationScript, settingFolder, "visualization.txt");
   }
 
   @Override
@@ -824,4 +785,23 @@ final class JoinerNodeModel extends
 
   }
 
+  /**
+   * Read a configuration string from a file under a settings folder.
+   * @throws IOException 
+   */
+  private static String readConfigString(File settingsFolder, String filename) throws IOException {
+    File configFile = new File(settingsFolder, filename);
+    return configFile.exists() ? FileUtils.readFileToString(configFile, "UTF-8") : "";
+  }
+  
+  /**
+   * Write a configuration string to a file under a settings folder
+   * @throws IOException 
+   */
+  private static void writeConfigString(String configString, File settingsFolder, String filename) throws IOException {
+    if (configString != null) {
+      File configFile = new File(settingsFolder, filename);
+      FileUtils.writeStringToFile(configFile, configString, "UTF-8");
+    }
+  }
 }
