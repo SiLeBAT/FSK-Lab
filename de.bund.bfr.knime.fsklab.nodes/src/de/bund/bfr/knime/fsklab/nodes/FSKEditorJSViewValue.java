@@ -47,75 +47,19 @@ class FSKEditorJSViewValue extends JSONViewContent {
 
   public final int pseudoIdentifier = (new Random()).nextInt();
 
-  private String generalInformation;
-  private String scope;
-  private String dataBackground;
-  private String modelMath;
+  public String generalInformation;
+  public String scope;
+  public String dataBackground;
+  public String modelMath;
 
-  private String firstModelScript;
-  private String firstModelViz;
-  private String readme;
+  public String firstModelScript;
+  public String firstModelViz;
+  public String readme;
 
-  public String getReadme() {
-    return readme;
-  }
-
-  public void setReadme(String readme) {
-    this.readme = readme;
-  }
-
-  private String[] resourcesFiles;
-  private String serverName;
-  private boolean notCompleted;
-  private String validationErrors;
-
-  public String getValidationErrors() {
-    return validationErrors;
-  }
-
-  public void setValidationErrors(String validationErrors) {
-    this.validationErrors = validationErrors;
-  }
-
-  public boolean isNotCompleted() {
-    return notCompleted;
-  }
-
-  public void setNotCompleted(boolean notCompleted) {
-    this.notCompleted = notCompleted;
-  }
-
-  public String getServerName() {
-    return serverName;
-  }
-
-  public void setServerName(String serverName) {
-    this.serverName = serverName;
-  }
-
-  public String[] getResourcesFiles() {
-    return resourcesFiles;
-  }
-
-  public void setResourcesFiles(String[] resourcesFiles) {
-    this.resourcesFiles = resourcesFiles;
-  }
-
-  public String getFirstModelScript() {
-    return firstModelScript;
-  }
-
-  public void setFirstModelScript(String firstModelScript) {
-    this.firstModelScript = firstModelScript;
-  }
-
-  public String getFirstModelViz() {
-    return firstModelViz;
-  }
-
-  public void setFirstModelViz(String firstModelViz) {
-    this.firstModelViz = firstModelViz;
-  }
+  public String[] resourcesFiles;
+  public String serverName;
+  public boolean notCompleted;
+  public String validationErrors;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
@@ -124,7 +68,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     settings.addString(CFG_ORIGINAL_README, readme);
 
     if (generalInformation != null) {
-      System.out.println(generalInformation);
       saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
     }
 
@@ -137,7 +80,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
     }
 
     if (modelMath != null) {
-      System.out.println(modelMath);
       saveSettings(settings, CFG_MODEL_MATH, modelMath);
     }
   }
@@ -199,37 +141,5 @@ class FSKEditorJSViewValue extends JSONViewContent {
   @Override
   public int hashCode() {
     return pseudoIdentifier;
-  }
-
-  public String getGeneralInformation() {
-    return generalInformation;
-  }
-
-  public void setGeneralInformation(String generalInformation) {
-    this.generalInformation = generalInformation;
-  }
-
-  public String getScope() {
-    return scope;
-  }
-
-  public void setScope(String scope) {
-    this.scope = scope;
-  }
-
-  public String getDataBackground() {
-    return dataBackground;
-  }
-
-  public void setDataBackground(String dataBackground) {
-    this.dataBackground = dataBackground;
-  }
-
-  public String getModelMath() {
-    return modelMath;
-  }
-
-  public void setModelMath(String modelMath) {
-    this.modelMath = modelMath;
   }
 }

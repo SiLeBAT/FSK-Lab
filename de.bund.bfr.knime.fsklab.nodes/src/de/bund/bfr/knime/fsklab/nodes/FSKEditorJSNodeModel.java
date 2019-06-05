@@ -157,7 +157,8 @@ final class FSKEditorJSNodeModel
   }
 
   @Override
-  public void saveCurrentValue(NodeSettingsWO content) {}
+  public void saveCurrentValue(NodeSettingsWO content) {
+  }
 
   @Override
   public FSKEditorJSViewValue getViewValue() {
@@ -250,34 +251,34 @@ final class FSKEditorJSNodeModel
 
       // If not executed
 
-      if (fskEditorProxyValue.getGeneralInformation() == null) {
+      if (fskEditorProxyValue.generalInformation == null) {
         loadJsonSetting();
-        if (fskEditorProxyValue.getGeneralInformation() == null) {
-          fskEditorProxyValue.setGeneralInformation(FromEOjectToJSON(inObj1.generalInformation));
-          fskEditorProxyValue.setScope(FromEOjectToJSON(inObj1.scope));
-          fskEditorProxyValue.setDataBackground(FromEOjectToJSON(inObj1.dataBackground));
-          fskEditorProxyValue.setModelMath(FromEOjectToJSON(inObj1.modelMath));
-          fskEditorProxyValue.setFirstModelScript(inObj1.model);
-          fskEditorProxyValue.setFirstModelViz(inObj1.viz);
-          fskEditorProxyValue.setReadme(inObj1.getReadme());
+        if (fskEditorProxyValue.generalInformation == null) {
+          fskEditorProxyValue.generalInformation = FromEOjectToJSON(inObj1.generalInformation);
+          fskEditorProxyValue.scope = FromEOjectToJSON(inObj1.scope);
+          fskEditorProxyValue.dataBackground = FromEOjectToJSON(inObj1.dataBackground);
+          fskEditorProxyValue.modelMath = FromEOjectToJSON(inObj1.modelMath);
+          fskEditorProxyValue.firstModelScript = inObj1.model;
+          fskEditorProxyValue.firstModelViz = inObj1.viz;
+          fskEditorProxyValue.readme = inObj1.getReadme();
         }
       } else {
-        if (fskEditorProxyValue.isNotCompleted()) {
+        if (fskEditorProxyValue.notCompleted) {
           setWarningMessage("Output Parameters are not configured correctly");
         }
-        if (StringUtils.isNotEmpty(fskEditorProxyValue.getValidationErrors())) {
-          setWarningMessage("\n" + (fskEditorProxyValue.getValidationErrors()).replaceAll("\"", "")
+        if (StringUtils.isNotEmpty(fskEditorProxyValue.validationErrors)) {
+          setWarningMessage("\n" + (fskEditorProxyValue.validationErrors).replaceAll("\"", "")
               .replaceAll(",,,", "\n"));
         }
       }
       outObj = inObj1;
 
       outObj.generalInformation =
-          getEObjectFromJson(fskEditorProxyValue.getGeneralInformation(), GeneralInformation.class);
-      outObj.scope = getEObjectFromJson(fskEditorProxyValue.getScope(), Scope.class);
+          getEObjectFromJson(fskEditorProxyValue.generalInformation, GeneralInformation.class);
+      outObj.scope = getEObjectFromJson(fskEditorProxyValue.scope, Scope.class);
       outObj.dataBackground =
-          getEObjectFromJson(fskEditorProxyValue.getDataBackground(), DataBackground.class);
-      outObj.modelMath = getEObjectFromJson(fskEditorProxyValue.getModelMath(), ModelMath.class);
+          getEObjectFromJson(fskEditorProxyValue.dataBackground, DataBackground.class);
+      outObj.modelMath = getEObjectFromJson(fskEditorProxyValue.modelMath, ModelMath.class);
 
       // Create simulation
       if (outObj.modelMath.getParameter() != null && outObj.modelMath.getParameter().size() > 0) {
@@ -297,20 +298,20 @@ final class FSKEditorJSNodeModel
             NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter()));
       }
 
-      outObj.model = fskEditorProxyValue.getFirstModelScript();
-      outObj.viz = fskEditorProxyValue.getFirstModelViz();
-      outObj.setReadme(fskEditorProxyValue.getReadme());
+      outObj.model = fskEditorProxyValue.firstModelScript;
+      outObj.viz = fskEditorProxyValue.firstModelViz;
+      outObj.setReadme(fskEditorProxyValue.readme);
       // resources files via fskEditorProxyValue will be available only in online mode of the JS
       // editor
-      if (fskEditorProxyValue.getResourcesFiles() != null
-          && fskEditorProxyValue.getResourcesFiles().length != 0) {
-        for (String fileRequestString : fskEditorProxyValue.getResourcesFiles()) {
+      if (fskEditorProxyValue.resourcesFiles != null
+          && fskEditorProxyValue.resourcesFiles.length != 0) {
+        for (String fileRequestString : fskEditorProxyValue.resourcesFiles) {
           downloadFileToWorkingDir(fileRequestString, outObj.getWorkingDirectory());
         }
         // delete the parent folder of the uploaded files after moving them to the working
         // directory.
         // parentFolderPath is always uses KNIME protocol
-        String firstFile = fskEditorProxyValue.getResourcesFiles()[0];
+        String firstFile = fskEditorProxyValue.resourcesFiles[0];
         String parentFolderPath = firstFile.substring(0, firstFile.lastIndexOf("/"));
         BundleContext ctx =
             FrameworkUtil.getBundle(IRemoteFileUtilsService.class).getBundleContext();
@@ -401,7 +402,8 @@ final class FSKEditorJSNodeModel
   }
 
   @Override
-  protected void useCurrentValueAsDefault() {}
+  protected void useCurrentValueAsDefault() {
+  }
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
@@ -414,8 +416,8 @@ final class FSKEditorJSNodeModel
      */
     try {
       FSKEditorJSViewValue vv = getViewValue();
-      saveJsonSetting(vv.getGeneralInformation(), vv.getScope(), vv.getDataBackground(),
-          vv.getModelMath(), vv.getFirstModelScript(), vv.getFirstModelViz(), vv.getReadme());
+      saveJsonSetting(vv.generalInformation, vv.scope, vv.dataBackground, vv.modelMath,
+          vv.firstModelScript, vv.firstModelViz, vv.readme);
     } catch (IOException | CanceledExecutionException e) {
       e.printStackTrace();
     }
@@ -450,16 +452,16 @@ final class FSKEditorJSNodeModel
     String modelScript = readConfigString(settingFolder, "modelScript.txt");
     String visualizationScript = readConfigString(settingFolder, "visualization.txt");
     String readme = readConfigString(settingFolder, "readme.txt");
-    
+
     // Update view value
     FSKEditorJSViewValue viewValue = getViewValue();
-    viewValue.setGeneralInformation(nodeSettings.generalInformation);
-    viewValue.setScope(nodeSettings.scope);
-    viewValue.setDataBackground(nodeSettings.dataBackground);
-    viewValue.setModelMath(nodeSettings.modelMath);
-    viewValue.setFirstModelScript(modelScript);
-    viewValue.setFirstModelViz(visualizationScript);
-    viewValue.setReadme(readme);
+    viewValue.generalInformation = nodeSettings.generalInformation;
+    viewValue.scope = nodeSettings.scope;
+    viewValue.dataBackground = nodeSettings.dataBackground;
+    viewValue.modelMath = nodeSettings.modelMath;
+    viewValue.firstModelScript = modelScript;
+    viewValue.firstModelViz = visualizationScript;
+    viewValue.readme = readme;
   }
 
   protected void saveJsonSetting(String generalInformation, String scope, String dataBackground,
@@ -485,21 +487,24 @@ final class FSKEditorJSNodeModel
     writeConfigString(visualizationScript, settingFolder, "visualization.txt");
     writeConfigString(readme, settingFolder, "readme.txt");
   }
-  
+
   /**
    * Read a configuration string from a file under a settings folder.
-   * @throws IOException 
+   * 
+   * @throws IOException
    */
   private static String readConfigString(File settingsFolder, String filename) throws IOException {
     File configFile = new File(settingsFolder, filename);
     return configFile.exists() ? FileUtils.readFileToString(configFile, "UTF-8") : "";
   }
-  
+
   /**
    * Write a configuration string to a file under a settings folder
-   * @throws IOException 
+   * 
+   * @throws IOException
    */
-  private static void writeConfigString(String configString, File settingsFolder, String filename) throws IOException {
+  private static void writeConfigString(String configString, File settingsFolder, String filename)
+      throws IOException {
     if (configString != null) {
       File configFile = new File(settingsFolder, filename);
       FileUtils.writeStringToFile(configFile, configString, "UTF-8");
@@ -507,7 +512,8 @@ final class FSKEditorJSNodeModel
   }
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
+  }
 
   @Override
   public PortObject[] getInternalPortObjects() {
@@ -519,5 +525,6 @@ final class FSKEditorJSNodeModel
     m_port = (FskPortObject) portObjects[0];
   }
 
-  public void setHideInWizard(boolean hide) {}
+  public void setHideInWizard(boolean hide) {
+  }
 }
