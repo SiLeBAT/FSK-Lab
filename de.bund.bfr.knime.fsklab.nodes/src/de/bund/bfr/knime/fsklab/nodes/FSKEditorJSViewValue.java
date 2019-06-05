@@ -20,8 +20,6 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.util.Random;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -42,8 +40,6 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private static final String CFG_SCOPE = "scope";
   private static final String CFG_DATA_BACKGROUND = "dataBackground";
   private static final String CFG_MODEL_MATH = "modelMath";
-
-  final static ResourceSet resourceSet = new ResourceSetImpl();
 
   public final int pseudoIdentifier = (new Random()).nextInt();
 
