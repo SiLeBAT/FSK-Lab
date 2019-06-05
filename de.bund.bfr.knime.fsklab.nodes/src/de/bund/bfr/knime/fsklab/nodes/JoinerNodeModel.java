@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -491,51 +490,22 @@ final class JoinerNodeModel extends
     String settingFolderPath = directory.getPath().concat("/"+containerName);
     File settingFolder = new File(settingFolderPath);
    
-    File joinRelationFile = new File(settingFolder, "JoinRelations.json");
-    if (joinRelationFile.exists()) {
-      nodeSettings.joinScript =
-          FileUtils.readFileToString(joinRelationFile, Charset.defaultCharset());
-      getViewValue().setJoinRelations(nodeSettings.joinScript);
-    }
-    File generalInformationFile = new File(settingFolder, "generalInformation.json");
-
-    if (generalInformationFile.exists()) {
-      nodeSettings.generalInformation =
-          FileUtils.readFileToString(generalInformationFile, Charset.defaultCharset());
-      getViewValue().setGeneralInformation(nodeSettings.generalInformation);
-    }
-
-    File scopeFile = new File(settingFolder, "scope.json");
-    if (scopeFile.exists()) {
-      nodeSettings.scope = FileUtils.readFileToString(scopeFile, Charset.defaultCharset());
-      getViewValue().setScope(nodeSettings.scope);
-    }
-
-    File dataBackgroundnFile = new File(settingFolder, "dataBackground.json");
-    if (dataBackgroundnFile.exists()) {
-      nodeSettings.dataBackground =
-          FileUtils.readFileToString(dataBackgroundnFile, Charset.defaultCharset());
-      getViewValue().setDataBackground(nodeSettings.dataBackground);
-    }
-
-    File modelMathFile = new File(settingFolder, "modelMath.json");
-    if (modelMathFile.exists()) {
-      nodeSettings.modelMath = FileUtils.readFileToString(modelMathFile, Charset.defaultCharset());
-      getViewValue().setModelMath(nodeSettings.modelMath);
-    }
+    nodeSettings.joinScript = readConfigString(settingFolder, "JoinRelations.json");
+    nodeSettings.generalInformation = readConfigString(settingFolder, "generalInformation.json");
+    nodeSettings.scope = readConfigString(settingFolder, "scope.json");
+    nodeSettings.dataBackground = readConfigString(settingFolder, "dataBackground.json");
+    nodeSettings.modelMath = readConfigString(settingFolder, "modelMath.json");
+    String sourceTree = readConfigString(settingFolder, "sourceTree.json");
+    String visualizationScript = readConfigString(settingFolder, "visualization.txt");
     
-    File sourceTreeFile = new File(settingFolder, "sourceTree.json");
-    if (sourceTreeFile.exists()) {
-      String sourceTree = FileUtils.readFileToString(sourceTreeFile, Charset.defaultCharset());      
-      getViewValue().setModelScriptTree(sourceTree);
-    }
-    
-    File visualizationFile = new File(settingFolder, "visualization.txt");
-    if (visualizationFile.exists()) {
-      String visualizationScript = FileUtils.readFileToString(visualizationFile, Charset.defaultCharset());      
-      getViewValue().setSecondModelViz(visualizationScript);
-    }
-    
+    JoinerViewValue viewValue = getViewValue();
+    viewValue.setJoinRelations(nodeSettings.joinScript);
+    viewValue.setGeneralInformation(nodeSettings.generalInformation);
+    viewValue.setScope(nodeSettings.scope);
+    viewValue.setDataBackground(nodeSettings.dataBackground);
+    viewValue.setModelMath(nodeSettings.modelMath);
+    viewValue.setModelScriptTree(sourceTree);
+    viewValue.setSecondModelViz(visualizationScript);
   }
 
   protected void saveJsonSetting(String joinRelation,String generalInformation,String scope,String dataBackground,String modelMath,String modelScriptTree,String visualizationScript) throws IOException, CanceledExecutionException {
