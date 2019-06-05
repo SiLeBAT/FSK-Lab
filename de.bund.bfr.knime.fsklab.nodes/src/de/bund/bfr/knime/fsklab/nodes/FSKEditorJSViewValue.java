@@ -76,18 +76,10 @@ class FSKEditorJSViewValue extends JSONViewContent {
     readme = settings.getString(CFG_ORIGINAL_README);
 
     // load meta data
-    if (settings.containsKey(CFG_GENERAL_INFORMATION)) {
-      generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION);
-    }
-    if (settings.containsKey(CFG_SCOPE)) {
-      scope = getEObject(settings, CFG_SCOPE);
-    }
-    if (settings.containsKey(CFG_DATA_BACKGROUND)) {
-      dataBackground = getEObject(settings, CFG_DATA_BACKGROUND);
-    }
-    if (settings.containsKey(CFG_MODEL_MATH)) {
-      modelMath = getEObject(settings, CFG_MODEL_MATH);
-    }
+    generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION);
+    scope = getEObject(settings, CFG_SCOPE);
+    dataBackground = getEObject(settings, CFG_DATA_BACKGROUND);
+    modelMath = getEObject(settings, CFG_MODEL_MATH);
   }
 
   private static void saveSettings(final NodeSettingsWO settings, final String key,
@@ -106,10 +98,13 @@ class FSKEditorJSViewValue extends JSONViewContent {
 
   private static String getEObject(NodeSettingsRO settings, String key)
       throws InvalidSettingsException {
-
-    String jsonStr = settings.getString(key);
-    jsonStr = StringEscapeUtils.unescapeJson(jsonStr);
-    jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
+    
+    // If entry is missing return null.
+    String jsonStr = settings.getString(key, null);
+    if (jsonStr != null) {
+      jsonStr = StringEscapeUtils.unescapeJson(jsonStr);
+      jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
+    }
     return jsonStr;
   }
 
