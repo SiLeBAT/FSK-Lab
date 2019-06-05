@@ -3,6 +3,7 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
@@ -186,7 +187,7 @@ public class NodeUtils {
    */
   static String readConfigString(File settingsFolder, String filename) throws IOException {
     File configFile = new File(settingsFolder, filename);
-    return configFile.exists() ? FileUtils.readFileToString(configFile, "UTF-8") : "";
+    return configFile.exists() ? FileUtils.readFileToString(configFile, StandardCharsets.UTF_8) : null;
   }
 
   /**
@@ -198,7 +199,7 @@ public class NodeUtils {
       throws IOException {
     if (configString != null) {
       File configFile = new File(settingsFolder, filename);
-      FileUtils.writeStringToFile(configFile, configString, "UTF-8");
+      FileUtils.writeStringToFile(configFile, configString, StandardCharsets.UTF_8);
     }
   }
 }

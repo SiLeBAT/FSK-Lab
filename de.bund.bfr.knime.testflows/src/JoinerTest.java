@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeID;
@@ -42,7 +41,7 @@ public class JoinerTest extends WorkflowTestCase {
 		RunnerNodeModel.isTest = true;
 	}
 
-	@Ignore
+	
 	@Test
 	public void testJoiner() throws Exception {
 		NodeID baseID = loadAndSetWorkflow("TestJoiner");
