@@ -19,21 +19,17 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.Deflater;
 import org.apache.commons.io.FileUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -49,6 +45,7 @@ import org.knime.core.node.workflow.NodeID;
 import org.knime.core.node.workflow.WorkflowCopyContent;
 import org.knime.core.node.workflow.WorkflowCreationHelper;
 import org.knime.core.node.workflow.WorkflowManager;
+import org.knime.core.util.FileUtil;
 
 class WorkflowWriterNodeModel extends NoInternalsModel {
 
@@ -80,7 +77,8 @@ class WorkflowWriterNodeModel extends NoInternalsModel {
   }
 
   @Override
-  protected void reset() {}
+  protected void reset() {
+  }
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
@@ -170,39 +168,11 @@ class WorkflowWriterNodeModel extends NoInternalsModel {
       e.printStackTrace();
     }
 
-
-
     // TODO saving as a fskx file and not as zip file
-    zipFolder(tempdisDirWithPrefix, new File(nodeSettings.filePath).toPath());
-
-
+    Collection<File> includeList = Arrays.asList(destDir.listFiles());
+    FileUtil.zipDir(new File(nodeSettings.filePath), includeList, Deflater.DEFAULT_COMPRESSION,
+        FileUtil.ZIP_INCLUDEALL_FILTER, exec);
 
     return new PortObject[] {};
   }
-
-  private void zipFolder(Path sourceFolderPath, Path zipPath) throws Exception {
-
-    ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipPath.toFile()));
-
-    Files.walkFileTree(sourceFolderPath, new SimpleFileVisitor<Path>() {
-
-      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-
-        zos.putNextEntry(new ZipEntry(sourceFolderPath.relativize(file).toString()));
-
-        Files.copy(file, zos);
-
-        zos.closeEntry();
-
-        return FileVisitResult.CONTINUE;
-
-      }
-
-    });
-
-    zos.close();
-
-  }
-
-
 }
