@@ -50,6 +50,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
+import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
@@ -419,9 +420,13 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     if(isTest) {
       for(Parameter param : fskObj.modelMath.getParameter()) {
         if(param.getParameterClassification().equals(ParameterClassification.OUTPUT)) {
-          String value = executor.execute("eval("+param.getParameterID()+")", exec).asString();
-          param.setParameterValue(value);
-          
+          String paramID = param.getParameterID();
+          try {
+            String value = executor.execute("eval("+ paramID + ")", exec).asString();
+            param.setParameterValue(value);
+          } catch (RException | REXPMismatchException e) {
+            throw new Exception("Uninitialized output parameter: " + paramID, e);
+          }
         }
       }
       
