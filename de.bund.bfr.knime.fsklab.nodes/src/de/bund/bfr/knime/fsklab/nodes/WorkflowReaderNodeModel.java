@@ -19,9 +19,6 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -29,8 +26,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
@@ -53,6 +48,7 @@ import org.knime.core.node.workflow.WorkflowCopyContent;
 import org.knime.core.node.workflow.WorkflowLoadHelper;
 import org.knime.core.node.workflow.WorkflowManager;
 import org.knime.core.node.workflow.WorkflowPersistor.WorkflowLoadResult;
+import org.knime.core.util.FileUtil;
 
 class WorkflowReaderNodeModel extends NoInternalsModel {
 
@@ -60,8 +56,6 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
   private static final PortType[] OUT_TYPES = {PortObject.TYPE, BufferedDataTable.TYPE};
 
   private static final NodeLogger LOGGER = NodeLogger.getLogger("Workflow Reader node");
-
-
 
   private final WorkflowReaderNodeSettings nodeSettings = new WorkflowReaderNodeSettings();
 
@@ -93,7 +87,6 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
     return new PortObjectSpec[] {};
   }
 
-
   @Override
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
     exec.setMessage("Reading subworkflow");
@@ -102,8 +95,7 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
     Path tempDirWithPrefix = Files.createTempDirectory(nodeContext.getNodeContainer()
         .getNameWithID().toString().replaceAll("\\W", "").replace(" ", ""));
 
-    unZipIt(nodeSettings.filePath, tempDirWithPrefix.toString());
-
+    FileUtil.unzip(new File(nodeSettings.filePath), tempDirWithPrefix.toFile());
 
     // reading the workflow from the temp folder
     WorkflowLoadResult result = WorkflowManager.loadProject(tempDirWithPrefix.toFile(), exec,
@@ -139,7 +131,6 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
       embeddedSubWorkflowManager.executeAllAndWaitUntilDone();
     }
 
-
     // result
 
     PortObject[] out = new PortObject[2];
@@ -151,8 +142,8 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
       } else if (embeddedSubWorkflow.getOutPort(i).getPortObject() instanceof PortObject) {
         out[0] = embeddedSubWorkflow.getOutPort(i).getPortObject();
       }
-
     }
+    
     // result
     for (int i = 0; i < out.length; i++) {
       if (out[i] == null) {
@@ -167,50 +158,6 @@ class WorkflowReaderNodeModel extends NoInternalsModel {
       }
     }
 
-
     return out;
   }
-
-
-
-  /**
-   * Unzip it
-   * 
-   * @param zipFile input zip file
-   * @param output zip file output folder
-   */
-  public void unZipIt(String zipFile, String outputFolder) {
-    byte[] buffer = new byte[1024];
-    try {
-      // create output directory is not exists
-      File folder = new File(outputFolder);
-      if (!folder.exists()) {
-        folder.mkdir();
-      }
-      // get the zip file content
-      ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
-      // get the zipped file list entry
-      ZipEntry ze = zis.getNextEntry();
-      while (ze != null) {
-        String fileName = ze.getName();
-        File newFile = new File(outputFolder + File.separator + fileName);
-        // create all non exists folders
-        // else you will hit FileNotFoundException for compressed folder
-        new File(newFile.getParent()).mkdirs();
-        FileOutputStream fos = new FileOutputStream(newFile);
-        int len;
-        while ((len = zis.read(buffer)) > 0) {
-          fos.write(buffer, 0, len);
-        }
-        fos.close();
-        ze = zis.getNextEntry();
-      }
-      zis.closeEntry();
-      zis.close();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    }
-  }
-
-
 }
