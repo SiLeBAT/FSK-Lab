@@ -30,7 +30,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeSettingsRO;
@@ -61,7 +60,6 @@ class WorkflowWriterNodeDialog extends NodeDialogPane {
     Map<NodeID, Object> nodes = wfm.findNodes(Object.class, true);
     Set<NodeID> nodeIdSet = nodes.keySet();
     NodeID[] currentNodeIDs = new NodeID[nodeIdSet.size() - 1];
-    ExtToolOutputNodeModel[] nodesObject = new ExtToolOutputNodeModel[nodeIdSet.size() - 1];
     Iterator<NodeID> iter = nodeIdSet.iterator();
     int x = 0;
     while (iter.hasNext()) {
@@ -71,9 +69,7 @@ class WorkflowWriterNodeDialog extends NodeDialogPane {
         comboNodes.addItem(nodes.get(d).getClass().getSimpleName() + " with Id: " + d.toString());
         x++;
       }
-
     }
-    comboNodes.setSelectedIndex(nodeSettings.selectedIndex);
   }
 
   private final WorkflowWriterNodeSettings nodeSettings;
@@ -92,6 +88,7 @@ class WorkflowWriterNodeDialog extends NodeDialogPane {
     try {
       nodeSettings.load(settings);
       field.setText(nodeSettings.filePath);
+      comboNodes.setSelectedIndex(nodeSettings.selectedIndex);
     } catch (InvalidSettingsException exception) {
       throw new NotConfigurableException(exception.getMessage(), exception);
     }
@@ -142,7 +139,4 @@ class WorkflowWriterNodeDialog extends NodeDialogPane {
 
     addTab("Options", northPanel);
   }
-
-
-
 }
