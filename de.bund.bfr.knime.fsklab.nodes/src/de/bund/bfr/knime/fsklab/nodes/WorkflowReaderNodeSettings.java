@@ -26,42 +26,25 @@ class WorkflowReaderNodeSettings {
 
   private static final String CFG_FILE = "file";
   private static final String CFG_SELECTED = "selected";
-  private static final String CFG_NodeID = "NodeID";
+  private static final String CFG_NODEID = "NodeID";
   private static final String CFG_SELECTEDINDEX = "INDEX";
-  private String selectedNodeID;
-  private int selectedIndex;
+  
+  String selectedNodeID;
+  int selectedIndex;
   String filePath = "";
-  boolean loadedAsMetaNode = false;
+  boolean loadedAsMetaNode;
 
   void load(final NodeSettingsRO settings) throws InvalidSettingsException {
     filePath = settings.getString(CFG_FILE);
     loadedAsMetaNode = settings.getBoolean(CFG_SELECTED);
-    String nodeId = settings.getString(CFG_NodeID);
-    selectedNodeID = nodeId != null ? nodeId : selectedNodeID;
+    selectedNodeID = settings.getString(CFG_NODEID, selectedNodeID);
     selectedIndex = settings.getInt(CFG_SELECTEDINDEX);
-
   }
 
   void save(final NodeSettingsWO settings) {
     settings.addString(CFG_FILE, filePath);
     settings.addBoolean(CFG_SELECTED, loadedAsMetaNode);
-    settings.addString(CFG_NodeID, selectedNodeID);
+    settings.addString(CFG_NODEID, selectedNodeID);
     settings.addInt(CFG_SELECTEDINDEX, selectedIndex);
-  }
-
-  public String getSelectedNodeID() {
-    return selectedNodeID;
-  }
-
-  public void setSelectedNodeID(String selectedNodeID) {
-    this.selectedNodeID = selectedNodeID;
-  }
-
-  public int getSelectedIndex() {
-    return selectedIndex;
-  }
-
-  public void setSelectedIndex(int selectedIndex) {
-    this.selectedIndex = selectedIndex;
   }
 }
