@@ -95,11 +95,11 @@ class WorkflowWriterNodeModel extends NoInternalsModel {
     // get selected node out ports
 
     NodeContainer selectedNodeContainer =
-        wfm.getNodeContainer(NodeID.fromString(nodeSettings.getSelectedNodeID()));
+        wfm.getNodeContainer(NodeID.fromString(nodeSettings.selectedNodeID));
     PortType[] listOfOutPortType = new PortType[selectedNodeContainer.getNrOutPorts()];
     for (int i = 0; i < listOfOutPortType.length; i++) {
       listOfOutPortType[i] =
-          wfm.getNodeContainer(NodeID.fromString(nodeSettings.getSelectedNodeID())).getOutPort(i)
+          wfm.getNodeContainer(NodeID.fromString(nodeSettings.selectedNodeID)).getOutPort(i)
               .getPortType();
     }
 
@@ -146,7 +146,7 @@ class WorkflowWriterNodeModel extends NoInternalsModel {
     List<NodeID> pastedNodes = pastednodes.keySet().stream().collect(Collectors.toList());
 
     // connect the output port of the responsible node to the output of the subworkflow
-    int index = Arrays.binarySearch(mine, NodeID.fromString(nodeSettings.getSelectedNodeID()));
+    int index = Arrays.binarySearch(mine, NodeID.fromString(nodeSettings.selectedNodeID));
     for (int i = 0; i < listOfOutPortType.length; i++) {
       subWorkflow.addConnection(pastedNodes.get(index), i, subWorkflow.getID(), i);
     }

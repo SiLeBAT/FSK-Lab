@@ -73,9 +73,7 @@ class WorkflowWriterNodeDialog extends NodeDialogPane {
       }
 
     }
-    comboNodes.setSelectedIndex(nodeSettings.getSelectedIndex());
-
-
+    comboNodes.setSelectedIndex(nodeSettings.selectedIndex);
   }
 
   private final WorkflowWriterNodeSettings nodeSettings;
@@ -129,8 +127,8 @@ class WorkflowWriterNodeDialog extends NodeDialogPane {
           String selectedSring = item.toString();
           String IdString =
               item.toString().substring(selectedSring.indexOf("Id: ") + 4, selectedSring.length());
-          nodeSettings.setSelectedNodeID(IdString);
-          nodeSettings.setSelectedIndex(cb.getSelectedIndex());
+          nodeSettings.selectedNodeID = IdString;
+          nodeSettings.selectedIndex = cb.getSelectedIndex();
           // Item was just selected
         }
       }
