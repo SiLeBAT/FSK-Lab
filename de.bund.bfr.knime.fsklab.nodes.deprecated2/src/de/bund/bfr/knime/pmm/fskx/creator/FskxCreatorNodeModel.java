@@ -56,6 +56,7 @@ import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry.NoInternetException;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData;
 import metadata.LegacyMetadataImporter;
 
@@ -147,10 +148,11 @@ public class FskxCreatorNodeModel extends ExtToolOutputNodeModel {
 	/**
 	 * @throws InvalidFormatException
 	 *             if the specified metadata file does not exist.
+	 * @throws NoInternetException 
 	 */
 	@Override
 	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
-			throws InvalidSettingsException, IOException, InvalidFormatException {
+			throws InvalidSettingsException, IOException, InvalidFormatException, NoInternetException {
 
 		FskPortObject portObj = new FskPortObject();
 

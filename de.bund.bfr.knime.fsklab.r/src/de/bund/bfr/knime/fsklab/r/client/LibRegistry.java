@@ -19,6 +19,9 @@
 package de.bund.bfr.knime.fsklab.r.client;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,7 +66,7 @@ public class LibRegistry {
 	private final String rVersion;
 
 	private RWrapper rWrapper;
-	
+
 	private final String MIRROR = "http://cran.rstudio.com";
 
 	private LibRegistry() throws IOException, RException {
@@ -119,17 +122,26 @@ public class LibRegistry {
 	}
 
 	/**
-	 * Install a list of packages into the repository. Already installed packages are ignored.
+	 * Install a list of packages into the repository. Already installed packages
+	 * are ignored.
 	 * 
-	 * @param libs
-	 *            list of names of R libraries
+	 * @param libs list of names of R libraries
 	 * @throws RException
 	 * @throws REXPMismatchException
+	 * @throws NoInternetException 
 	 */
-	public synchronized void install(final List<String> packages) throws RException, REXPMismatchException {
+	public synchronized void install(final List<String> packages) throws RException, REXPMismatchException, NoInternetException {
+
+		if (installedLibs.containsAll(packages))
+			return;
+
+		if (!isNetAvailable()) {
+			throw new NoInternetException(packages);
+		}
 
 		// Gets missing packages
-		List<String> missingPackages = rWrapper.pkgDep(packages).stream().filter(pkg -> !installedLibs.contains(pkg)).collect(Collectors.toList());
+		List<String> missingPackages = rWrapper.pkgDep(packages).stream().filter(pkg -> !installedLibs.contains(pkg))
+				.collect(Collectors.toList());
 
 		if (!missingPackages.isEmpty()) {
 
@@ -183,14 +195,37 @@ public class LibRegistry {
 		return repoPath;
 	}
 
+	private boolean isNetAvailable() {
+		try {
+			final URL url = new URL(MIRROR);
+			final URLConnection conn = url.openConnection();
+			conn.connect();
+			conn.getInputStream().close();
+			return true;
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	public static class NoInternetException extends Exception {
+		/** Generated serialVersionUID */
+		private static final long serialVersionUID = 2815440774381106769L;
+
+		/** Constructor */
+		public NoInternetException(final List<String> packages) {
+			super("Not connected to Internet. Packages {" + String.join(",", packages) + "} could not be downloaded");
+		}
+	}
+
 	private class RWrapper {
 
 		// R commands
 		/**
 		 * Load and attach add-on packages.
 		 * 
-		 * @param pkg
-		 *            The name of a package.
+		 * @param pkg The name of a package.
 		 * @throws RException
 		 * 
 		 * @see <a href=
@@ -205,12 +240,10 @@ public class LibRegistry {
 		/**
 		 * Install packages from local files.
 		 * 
-		 * @param pkgs
-		 *            List of package files. The files can be source distributions
-		 *            (.tar.gz) or binary distributions (.zip for Windows and .tgz for
-		 *            Mac).
-		 * @param lib
-		 *            Directory where packages are installed.
+		 * @param pkgs List of package files. The files can be source distributions
+		 *             (.tar.gz) or binary distributions (.zip for Windows and .tgz for
+		 *             Mac).
+		 * @param lib  Directory where packages are installed.
 		 * @throws RException
 		 * 
 		 * @see <a href=
@@ -232,11 +265,9 @@ public class LibRegistry {
 		/**
 		 * Add packages to a miniCRAN repository.
 		 * 
-		 * @param pkgs
-		 *            List of names of packages to be downloaded.
-		 * @param path
-		 *            Destination download path. This path is the root folder of the
-		 *            repository.
+		 * @param pkgs List of names of packages to be downloaded.
+		 * @param path Destination download path. This path is the root folder of the
+		 *             repository.
 		 * @throws RException
 		 * 
 		 * @see <a href=
@@ -252,10 +283,8 @@ public class LibRegistry {
 		/**
 		 * Returns the file paths for the specified packages.
 		 * 
-		 * @param pkgs
-		 *            List of names of packages.
-		 * @param path
-		 *            The local path to the directory where the miniCRAN repo resides.
+		 * @param pkgs List of names of packages.
+		 * @param path The local path to the directory where the miniCRAN repo resides.
 		 * @return the file paths for the specified packages
 		 * @throws REXPMismatchException
 		 * @throws RException
@@ -295,9 +324,8 @@ public class LibRegistry {
 		 * required structure and files of a CRAN repository, it supports functions like
 		 * <i>install.packages()</i>.
 		 * 
-		 * @param path
-		 *            Destination download path. This path is the root folder of the
-		 *            repository.
+		 * @param path Destination download path. This path is the root folder of the
+		 *             repository.
 		 * @throws RException
 		 * 
 		 * @see <a href=
@@ -315,8 +343,7 @@ public class LibRegistry {
 		 * Perform recursive retrieve for Depends, Imports and LinkLibrary. Performs
 		 * non-recursive retrieve for Suggests.
 		 * 
-		 * @param pkgs
-		 *            List of names of packages.
+		 * @param pkgs List of names of packages.
 		 * @return the dependencies of the specified packages
 		 * @throws RException
 		 * @throws REXPMismatchException

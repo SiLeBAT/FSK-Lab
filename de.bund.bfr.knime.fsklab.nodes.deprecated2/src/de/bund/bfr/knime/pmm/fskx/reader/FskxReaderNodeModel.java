@@ -66,6 +66,7 @@ import de.bund.bfr.knime.fsklab.nodes.port.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.port.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry.NoInternetException;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData;
 import de.bund.bfr.knime.pmm.fskx.FskMetaDataTuple;
@@ -115,11 +116,12 @@ public class FskxReaderNodeModel extends NodeModel {
    * @throws REXPMismatchException
    * @throws InvalidPathException
    * @throws IOException
+ * @throws NoInternetException 
    */
   @Override
   protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
       throws CombineArchiveException, REXPMismatchException, RException, InvalidPathException,
-      IOException {
+      IOException, NoInternetException {
 
     FskPortObject portObj = new FskPortObject();
 

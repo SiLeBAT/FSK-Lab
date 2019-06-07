@@ -53,6 +53,7 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.knime.fsklab.r.client.LibRegistry.NoInternetException;
 
 /**
  * A port object for an FSK model port providing R scripts and model meta data.
@@ -217,7 +218,7 @@ public class FskPortObject implements PortObject {
 							// Adds to libs the Paths of the libraries converted to
 							// Files
 							libRegistry.getPaths(libNames).forEach(p -> portObj.libs.add(p.toFile()));
-						} catch (RException | REXPMismatchException error) {
+						} catch (RException | REXPMismatchException | NoInternetException error) {
 							throw new IOException(error.getMessage());
 						}
 					}
