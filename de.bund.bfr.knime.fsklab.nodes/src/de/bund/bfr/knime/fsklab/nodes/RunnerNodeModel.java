@@ -79,7 +79,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
-  public static boolean isTest = true;
+  public static boolean isTest = false;
   public RunnerNodeModel() {
     super(IN_TYPES, OUT_TYPES);
   }

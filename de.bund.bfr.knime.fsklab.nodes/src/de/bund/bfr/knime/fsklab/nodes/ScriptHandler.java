@@ -83,18 +83,18 @@ public abstract class ScriptHandler implements AutoCloseable {
     exec.setProgress(0.75, "Run models script");
     runScript(fskObj.model, exec, false);
     
-    /*
-     if(isTest) {
+    
+     if(RunnerNodeModel.isTest) {//(fskObj.generalInformation.getLanguageWrittenIn().toLowerCase().startsWith("r")) {
       for(Parameter param : fskObj.modelMath.getParameter()) {
         if(param.getParameterClassification().equals(ParameterClassification.OUTPUT)) {
-          String value = executor.execute("eval("+param.getParameterID()+")", exec).asString();
-          param.setParameterValue(value);
+          String[] value = runScript("eval("+param.getParameterID()+")", exec,true);
+          param.setParameterValue(value[0]);
           
         }
       }
       
     }
-    */
+    
     exec.setProgress(0.9, "Run visualization script");
     //convertToKnimeDataTable(fskObj,exec);
     
