@@ -80,7 +80,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
-  public static boolean isTest = true;
+  //isTest field is used only by maven testing phase and should not be true in production.
+  public static boolean isTest = false;
   public RunnerNodeModel() {
     super(IN_TYPES, OUT_TYPES);
   }
