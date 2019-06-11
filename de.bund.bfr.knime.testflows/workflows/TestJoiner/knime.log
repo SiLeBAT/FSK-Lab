@@ -18731,3 +18731,1629 @@ org.knime.core.node.InvalidSettingsException: Directory 'D:\runtime-KNIME\testJo
 2019-06-11 14:28:23,977 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:1 : Removing all (0) views from model.
 2019-06-11 14:28:23,977 : DEBUG : main : Node : FSKX Reader : 0:1 : clean output ports.
 2019-06-11 14:28:23,978 : DEBUG : main : WorkflowManager : TestJoiner : 0 : Project "TestJoiner 0" removed (1 remaining)
+2019-06-11 14:30:14,347 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,447 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,512 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,585 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,689 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,708 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,727 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,740 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,756 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,774 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,788 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,794 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,816 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,834 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,863 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,867 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,874 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:14,880 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:15,028 : DEBUG : ModalContext : Node : FSKX Reader : 0:1 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:30:15,089 : DEBUG : ModalContext : Node : FSKX Reader : 0:2 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:30:15,112 : DEBUG : ModalContext : Node : FSKX Reader : 0:7 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:30:15,139 : DEBUG : ModalContext : Node : FSKX Reader : 0:8 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:30:15,141 : ERROR : ModalContext : Node : FSKX Reader : 0:11 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#11)\drop' of output file does not exist
+2019-06-11 14:30:15,152 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#11)\drop' of output file does not exist
+org.knime.core.node.InvalidSettingsException: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#11)\drop' of output file does not exist
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:370)
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:322)
+	at de.bund.bfr.knime.fsklab.nodes.ReaderNodeModel.validateSettings(ReaderNodeModel.java:120)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:627)
+	at org.knime.core.node.workflow.FileNativeNodeContainerPersistor.loadNCAndWashModelSettings(FileNativeNodeContainerPersistor.java:226)
+	at org.knime.core.node.workflow.FileSingleNodeContainerPersistor.loadNodeContainer(FileSingleNodeContainerPersistor.java:267)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7874)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7890)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7719)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7640)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7613)
+	at org.knime.core.node.workflow.WorkflowManager.loadProject(WorkflowManager.java:7458)
+	at org.knime.workbench.editor2.LoadWorkflowRunnable.run(LoadWorkflowRunnable.java:174)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+2019-06-11 14:30:15,154 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : reset
+2019-06-11 14:30:15,165 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : clean output ports.
+2019-06-11 14:30:15,193 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:30:15,195 : ERROR : ModalContext : Node : FSKX Reader : 0:14 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#14)\drop' of output file does not exist
+2019-06-11 14:30:15,196 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#14)\drop' of output file does not exist
+org.knime.core.node.InvalidSettingsException: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#14)\drop' of output file does not exist
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:370)
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:322)
+	at de.bund.bfr.knime.fsklab.nodes.ReaderNodeModel.validateSettings(ReaderNodeModel.java:120)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:627)
+	at org.knime.core.node.workflow.FileNativeNodeContainerPersistor.loadNCAndWashModelSettings(FileNativeNodeContainerPersistor.java:226)
+	at org.knime.core.node.workflow.FileSingleNodeContainerPersistor.loadNodeContainer(FileSingleNodeContainerPersistor.java:267)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7874)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7890)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7719)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7640)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7613)
+	at org.knime.core.node.workflow.WorkflowManager.loadProject(WorkflowManager.java:7458)
+	at org.knime.workbench.editor2.LoadWorkflowRunnable.run(LoadWorkflowRunnable.java:174)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+2019-06-11 14:30:15,197 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : reset
+2019-06-11 14:30:15,200 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : clean output ports.
+2019-06-11 14:30:15,246 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:30:15,274 : DEBUG : ModalContext : Node : FSK Joiner : 0:3 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:30:15,306 : DEBUG : ModalContext : Node : FSK Joiner : 0:13 : reset
+2019-06-11 14:30:15,314 : DEBUG : ModalContext : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:30:15,315 : DEBUG : ModalContext : Node : FSK Joiner : 0:13 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:30:15,315 : DEBUG : ModalContext : Node : FSK Runner : 0:4 : Configure succeeded. (FSK Runner)
+2019-06-11 14:30:15,316 : DEBUG : ModalContext : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:30:15,323 : DEBUG : ModalContext : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:30:15,324 : DEBUG : ModalContext : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:30:15,325 : DEBUG : ModalContext : Node : FSK Joiner : 0:5 : reset
+2019-06-11 14:30:15,325 : DEBUG : ModalContext : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:30:15,326 : DEBUG : ModalContext : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:30:15,326 : DEBUG : ModalContext : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:30:15,332 : DEBUG : ModalContext : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:30:15,332 : DEBUG : ModalContext : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:30:15,344 : DEBUG : ModalContext : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:30:15,344 : DEBUG : ModalContext : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:30:15,350 : DEBUG : ModalContext : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:30:15,351 : DEBUG : ModalContext : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:30:15,354 : DEBUG : ModalContext : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:30:15,354 : DEBUG : ModalContext : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:30:19,734 : DEBUG : ModalContext : StringInputQuickFormNodeFactory : Metanode : 0:112 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:19,801 : DEBUG : ModalContext : WriterNodeFactory : Metanode : 0:112 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:19,841 : DEBUG : ModalContext : ReaderNodeFactory : Metanode : 0:112 : Factory is already initialized. Nothing to do.
+2019-06-11 14:30:19,885 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:100(1) to node 0:112:0:102(1)
+2019-06-11 14:30:19,886 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:98(0) to node 0:112:0:100(0)
+2019-06-11 14:30:19,886 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:101(2) to node 0:112:0:98(1)
+2019-06-11 14:30:19,886 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:47(1) to node 0:112:0:98(0)
+2019-06-11 14:49:18,386 : DEBUG : main : ProjectWorkflowMap : TestJoiner : 0 : Removing "file:/D:/runtime-KNIME/TestJoiner/" from project map (0 remaining)
+2019-06-11 14:49:18,387 : DEBUG : main : WorkflowManager : TestJoiner : 0 : Removing project "TestJoiner 0"
+2019-06-11 14:49:18,390 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:114 : Removing all (0) views from model.
+2019-06-11 14:49:18,390 : DEBUG : main : Node : FSK Runner : 0:114 : clean output ports.
+2019-06-11 14:49:18,391 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:116 : Removing all (0) views from model.
+2019-06-11 14:49:18,391 : DEBUG : main : Node : FSK Runner : 0:116 : clean output ports.
+2019-06-11 14:49:18,391 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:113 : Removing all (0) views from model.
+2019-06-11 14:49:18,391 : DEBUG : main : Node : FSK Joiner : 0:113 : clean output ports.
+2019-06-11 14:49:18,391 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:115 : Removing all (0) views from model.
+2019-06-11 14:49:18,391 : DEBUG : main : Node : FSK Joiner : 0:115 : clean output ports.
+2019-06-11 14:49:18,391 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 0:112:0:102 : Removing all (0) views from model.
+2019-06-11 14:49:18,391 : DEBUG : main : Node : WrappedNode Output : 0:112:0:102 : clean output ports.
+2019-06-11 14:49:18,391 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:112:0:100 : Removing all (0) views from model.
+2019-06-11 14:49:18,391 : DEBUG : main : Node : FSKX Reader : 0:112:0:100 : clean output ports.
+2019-06-11 14:49:18,392 : DEBUG : main : WriterNodeModel : FSKX Writer : 0:112:0:98 : Removing all (0) views from model.
+2019-06-11 14:49:18,392 : DEBUG : main : Node : FSKX Writer : 0:112:0:98 : clean output ports.
+2019-06-11 14:49:18,392 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 0:112:0:101 : Removing all (0) views from model.
+2019-06-11 14:49:18,392 : DEBUG : main : Node : WrappedNode Input : 0:112:0:101 : clean output ports.
+2019-06-11 14:49:18,392 : DEBUG : main : StringInputQuickFormNodeModel : String Input : 0:112:0:47 : Removing all (0) views from model.
+2019-06-11 14:49:18,392 : DEBUG : main : Node : String Input : 0:112:0:47 : clean output ports.
+2019-06-11 14:49:18,392 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:10 : Removing all (0) views from model.
+2019-06-11 14:49:18,392 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:49:18,393 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:9 : Removing all (0) views from model.
+2019-06-11 14:49:18,393 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:49:18,393 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:6 : Removing all (0) views from model.
+2019-06-11 14:49:18,393 : DEBUG : main : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:49:18,393 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:5 : Removing all (0) views from model.
+2019-06-11 14:49:18,393 : DEBUG : main : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:49:18,393 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:12 : Removing all (0) views from model.
+2019-06-11 14:49:18,393 : DEBUG : main : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:49:18,393 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:4 : Removing all (0) views from model.
+2019-06-11 14:49:18,393 : DEBUG : main : Node : FSK Runner : 0:4 : clean output ports.
+2019-06-11 14:49:18,393 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:13 : Removing all (0) views from model.
+2019-06-11 14:49:18,393 : DEBUG : main : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:49:18,393 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:3 : Removing all (0) views from model.
+2019-06-11 14:49:18,393 : DEBUG : main : Node : FSK Joiner : 0:3 : clean output ports.
+2019-06-11 14:49:18,393 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:14 : Removing all (0) views from model.
+2019-06-11 14:49:18,393 : DEBUG : main : Node : FSKX Reader : 0:14 : clean output ports.
+2019-06-11 14:49:18,394 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:11 : Removing all (0) views from model.
+2019-06-11 14:49:18,394 : DEBUG : main : Node : FSKX Reader : 0:11 : clean output ports.
+2019-06-11 14:49:18,394 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:8 : Removing all (0) views from model.
+2019-06-11 14:49:18,394 : DEBUG : main : Node : FSKX Reader : 0:8 : clean output ports.
+2019-06-11 14:49:18,394 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:7 : Removing all (0) views from model.
+2019-06-11 14:49:18,394 : DEBUG : main : Node : FSKX Reader : 0:7 : clean output ports.
+2019-06-11 14:49:18,394 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:2 : Removing all (0) views from model.
+2019-06-11 14:49:18,394 : DEBUG : main : Node : FSKX Reader : 0:2 : clean output ports.
+2019-06-11 14:49:18,394 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:1 : Removing all (0) views from model.
+2019-06-11 14:49:18,394 : DEBUG : main : Node : FSKX Reader : 0:1 : clean output ports.
+2019-06-11 14:49:18,399 : DEBUG : main : WorkflowManager : TestJoiner : 0 : Project "TestJoiner 0" removed (1 remaining)
+2019-06-11 14:49:21,183 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,189 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,199 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,207 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,211 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,213 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,219 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,226 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,228 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,231 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,235 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,238 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,242 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,244 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,258 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,264 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,270 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,275 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,317 : DEBUG : ModalContext : Node : FSKX Reader : 0:1 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:49:21,358 : DEBUG : ModalContext : Node : FSKX Reader : 0:2 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:49:21,397 : DEBUG : ModalContext : Node : FSKX Reader : 0:7 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:49:21,438 : DEBUG : ModalContext : Node : FSKX Reader : 0:8 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:49:21,439 : ERROR : ModalContext : Node : FSKX Reader : 0:11 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#11)\drop' of output file does not exist
+2019-06-11 14:49:21,439 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#11)\drop' of output file does not exist
+org.knime.core.node.InvalidSettingsException: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#11)\drop' of output file does not exist
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:370)
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:322)
+	at de.bund.bfr.knime.fsklab.nodes.ReaderNodeModel.validateSettings(ReaderNodeModel.java:120)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:627)
+	at org.knime.core.node.workflow.FileNativeNodeContainerPersistor.loadNCAndWashModelSettings(FileNativeNodeContainerPersistor.java:226)
+	at org.knime.core.node.workflow.FileSingleNodeContainerPersistor.loadNodeContainer(FileSingleNodeContainerPersistor.java:267)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7874)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7890)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7719)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7640)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7613)
+	at org.knime.core.node.workflow.WorkflowManager.loadProject(WorkflowManager.java:7458)
+	at org.knime.workbench.editor2.LoadWorkflowRunnable.run(LoadWorkflowRunnable.java:174)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+2019-06-11 14:49:21,440 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : reset
+2019-06-11 14:49:21,444 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : clean output ports.
+2019-06-11 14:49:21,568 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:49:21,570 : ERROR : ModalContext : Node : FSKX Reader : 0:14 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#14)\drop' of output file does not exist
+2019-06-11 14:49:21,570 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#14)\drop' of output file does not exist
+org.knime.core.node.InvalidSettingsException: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#14)\drop' of output file does not exist
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:370)
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:322)
+	at de.bund.bfr.knime.fsklab.nodes.ReaderNodeModel.validateSettings(ReaderNodeModel.java:120)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:627)
+	at org.knime.core.node.workflow.FileNativeNodeContainerPersistor.loadNCAndWashModelSettings(FileNativeNodeContainerPersistor.java:226)
+	at org.knime.core.node.workflow.FileSingleNodeContainerPersistor.loadNodeContainer(FileSingleNodeContainerPersistor.java:267)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7874)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7890)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7719)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7640)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7613)
+	at org.knime.core.node.workflow.WorkflowManager.loadProject(WorkflowManager.java:7458)
+	at org.knime.workbench.editor2.LoadWorkflowRunnable.run(LoadWorkflowRunnable.java:174)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+2019-06-11 14:49:21,570 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : reset
+2019-06-11 14:49:21,574 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : clean output ports.
+2019-06-11 14:49:21,617 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:49:21,618 : DEBUG : ModalContext : Node : FSK Joiner : 0:3 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:49:21,644 : DEBUG : ModalContext : Node : FSK Joiner : 0:13 : reset
+2019-06-11 14:49:21,644 : DEBUG : ModalContext : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:49:21,644 : DEBUG : ModalContext : Node : FSK Joiner : 0:13 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:49:21,645 : DEBUG : ModalContext : Node : FSK Runner : 0:4 : Configure succeeded. (FSK Runner)
+2019-06-11 14:49:21,645 : DEBUG : ModalContext : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:49:21,646 : DEBUG : ModalContext : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:49:21,646 : DEBUG : ModalContext : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:49:21,647 : DEBUG : ModalContext : Node : FSK Joiner : 0:5 : reset
+2019-06-11 14:49:21,647 : DEBUG : ModalContext : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:49:21,647 : DEBUG : ModalContext : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:49:21,647 : DEBUG : ModalContext : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:49:21,649 : DEBUG : ModalContext : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:49:21,649 : DEBUG : ModalContext : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:49:21,671 : DEBUG : ModalContext : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:49:21,672 : DEBUG : ModalContext : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:49:21,672 : DEBUG : ModalContext : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:49:21,672 : DEBUG : ModalContext : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:49:21,673 : DEBUG : ModalContext : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:49:21,674 : DEBUG : ModalContext : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:49:21,679 : DEBUG : ModalContext : StringInputQuickFormNodeFactory : Metanode : 0:112 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,687 : DEBUG : ModalContext : WriterNodeFactory : Metanode : 0:112 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,692 : DEBUG : ModalContext : ReaderNodeFactory : Metanode : 0:112 : Factory is already initialized. Nothing to do.
+2019-06-11 14:49:21,702 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:100(1) to node 0:112:0:102(1)
+2019-06-11 14:49:21,702 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:98(0) to node 0:112:0:100(0)
+2019-06-11 14:49:21,702 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:101(2) to node 0:112:0:98(1)
+2019-06-11 14:49:21,702 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:47(1) to node 0:112:0:98(0)
+2019-06-11 14:49:27,845 : DEBUG : main : ProjectWorkflowMap : TestJoiner : 0 : Removing "file:/D:/runtime-KNIME/TestJoiner/" from project map (0 remaining)
+2019-06-11 14:49:27,845 : DEBUG : main : WorkflowManager : TestJoiner : 0 : Removing project "TestJoiner 0"
+2019-06-11 14:49:27,849 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:114 : Removing all (0) views from model.
+2019-06-11 14:49:27,849 : DEBUG : main : Node : FSK Runner : 0:114 : clean output ports.
+2019-06-11 14:49:27,849 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:116 : Removing all (0) views from model.
+2019-06-11 14:49:27,849 : DEBUG : main : Node : FSK Runner : 0:116 : clean output ports.
+2019-06-11 14:49:27,849 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:113 : Removing all (0) views from model.
+2019-06-11 14:49:27,849 : DEBUG : main : Node : FSK Joiner : 0:113 : clean output ports.
+2019-06-11 14:49:27,849 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:115 : Removing all (0) views from model.
+2019-06-11 14:49:27,849 : DEBUG : main : Node : FSK Joiner : 0:115 : clean output ports.
+2019-06-11 14:49:27,850 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 0:112:0:102 : Removing all (0) views from model.
+2019-06-11 14:49:27,850 : DEBUG : main : Node : WrappedNode Output : 0:112:0:102 : clean output ports.
+2019-06-11 14:49:27,850 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:112:0:100 : Removing all (0) views from model.
+2019-06-11 14:49:27,851 : DEBUG : main : Node : FSKX Reader : 0:112:0:100 : clean output ports.
+2019-06-11 14:49:27,851 : DEBUG : main : WriterNodeModel : FSKX Writer : 0:112:0:98 : Removing all (0) views from model.
+2019-06-11 14:49:27,851 : DEBUG : main : Node : FSKX Writer : 0:112:0:98 : clean output ports.
+2019-06-11 14:49:27,851 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 0:112:0:101 : Removing all (0) views from model.
+2019-06-11 14:49:27,851 : DEBUG : main : Node : WrappedNode Input : 0:112:0:101 : clean output ports.
+2019-06-11 14:49:27,852 : DEBUG : main : StringInputQuickFormNodeModel : String Input : 0:112:0:47 : Removing all (0) views from model.
+2019-06-11 14:49:27,852 : DEBUG : main : Node : String Input : 0:112:0:47 : clean output ports.
+2019-06-11 14:49:27,852 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:10 : Removing all (0) views from model.
+2019-06-11 14:49:27,852 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:49:27,852 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:9 : Removing all (0) views from model.
+2019-06-11 14:49:27,852 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:49:27,852 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:6 : Removing all (0) views from model.
+2019-06-11 14:49:27,852 : DEBUG : main : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:49:27,852 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:5 : Removing all (0) views from model.
+2019-06-11 14:49:27,852 : DEBUG : main : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:49:27,852 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:12 : Removing all (0) views from model.
+2019-06-11 14:49:27,852 : DEBUG : main : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:49:27,852 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:4 : Removing all (0) views from model.
+2019-06-11 14:49:27,852 : DEBUG : main : Node : FSK Runner : 0:4 : clean output ports.
+2019-06-11 14:49:27,853 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:13 : Removing all (0) views from model.
+2019-06-11 14:49:27,853 : DEBUG : main : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:49:27,853 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:3 : Removing all (0) views from model.
+2019-06-11 14:49:27,853 : DEBUG : main : Node : FSK Joiner : 0:3 : clean output ports.
+2019-06-11 14:49:27,853 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:14 : Removing all (0) views from model.
+2019-06-11 14:49:27,853 : DEBUG : main : Node : FSKX Reader : 0:14 : clean output ports.
+2019-06-11 14:49:27,853 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:11 : Removing all (0) views from model.
+2019-06-11 14:49:27,853 : DEBUG : main : Node : FSKX Reader : 0:11 : clean output ports.
+2019-06-11 14:49:27,853 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:8 : Removing all (0) views from model.
+2019-06-11 14:49:27,853 : DEBUG : main : Node : FSKX Reader : 0:8 : clean output ports.
+2019-06-11 14:49:27,853 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:7 : Removing all (0) views from model.
+2019-06-11 14:49:27,853 : DEBUG : main : Node : FSKX Reader : 0:7 : clean output ports.
+2019-06-11 14:49:27,853 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:2 : Removing all (0) views from model.
+2019-06-11 14:49:27,853 : DEBUG : main : Node : FSKX Reader : 0:2 : clean output ports.
+2019-06-11 14:49:27,854 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:1 : Removing all (0) views from model.
+2019-06-11 14:49:27,854 : DEBUG : main : Node : FSKX Reader : 0:1 : clean output ports.
+2019-06-11 14:49:27,854 : DEBUG : main : WorkflowManager : TestJoiner : 0 : Project "TestJoiner 0" removed (1 remaining)
+2019-06-11 14:50:31,388 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,391 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,393 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,397 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,401 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,405 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,409 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,411 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,414 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,417 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,422 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,424 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,428 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,431 : DEBUG : ModalContext : ReaderNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,436 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,439 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,442 : DEBUG : ModalContext : JoinerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,445 : DEBUG : ModalContext : RunnerNodeFactory : TestJoiner : 0 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,475 : DEBUG : ModalContext : Node : FSKX Reader : 0:1 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:50:31,498 : DEBUG : ModalContext : Node : FSKX Reader : 0:2 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:50:31,518 : DEBUG : ModalContext : Node : FSKX Reader : 0:7 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:50:31,539 : DEBUG : ModalContext : Node : FSKX Reader : 0:8 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:50:31,540 : ERROR : ModalContext : Node : FSKX Reader : 0:11 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#11)\drop' of output file does not exist
+2019-06-11 14:50:31,540 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#11)\drop' of output file does not exist
+org.knime.core.node.InvalidSettingsException: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#11)\drop' of output file does not exist
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:370)
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:322)
+	at de.bund.bfr.knime.fsklab.nodes.ReaderNodeModel.validateSettings(ReaderNodeModel.java:120)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:627)
+	at org.knime.core.node.workflow.FileNativeNodeContainerPersistor.loadNCAndWashModelSettings(FileNativeNodeContainerPersistor.java:226)
+	at org.knime.core.node.workflow.FileSingleNodeContainerPersistor.loadNodeContainer(FileSingleNodeContainerPersistor.java:267)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7874)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7890)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7719)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7640)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7613)
+	at org.knime.core.node.workflow.WorkflowManager.loadProject(WorkflowManager.java:7458)
+	at org.knime.workbench.editor2.LoadWorkflowRunnable.run(LoadWorkflowRunnable.java:174)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+2019-06-11 14:50:31,541 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : reset
+2019-06-11 14:50:31,544 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : clean output ports.
+2019-06-11 14:50:31,566 : DEBUG : ModalContext : Node : FSKX Reader : 0:11 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:50:31,568 : ERROR : ModalContext : Node : FSKX Reader : 0:14 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#14)\drop' of output file does not exist
+2019-06-11 14:50:31,568 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : Loading model settings failed: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#14)\drop' of output file does not exist
+org.knime.core.node.InvalidSettingsException: Directory 'D:\runtime-KNIME\testJoinerWithConnections\FSKX Reader (#14)\drop' of output file does not exist
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:370)
+	at org.knime.core.node.util.CheckUtils.checkDestinationFile(CheckUtils.java:322)
+	at de.bund.bfr.knime.fsklab.nodes.ReaderNodeModel.validateSettings(ReaderNodeModel.java:120)
+	at org.knime.core.node.Node.validateModelSettings(Node.java:627)
+	at org.knime.core.node.workflow.FileNativeNodeContainerPersistor.loadNCAndWashModelSettings(FileNativeNodeContainerPersistor.java:226)
+	at org.knime.core.node.workflow.FileSingleNodeContainerPersistor.loadNodeContainer(FileSingleNodeContainerPersistor.java:267)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7874)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.postLoad(WorkflowManager.java:7890)
+	at org.knime.core.node.workflow.WorkflowManager.loadContent(WorkflowManager.java:7765)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7719)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7640)
+	at org.knime.core.node.workflow.WorkflowManager.load(WorkflowManager.java:7613)
+	at org.knime.core.node.workflow.WorkflowManager.loadProject(WorkflowManager.java:7458)
+	at org.knime.workbench.editor2.LoadWorkflowRunnable.run(LoadWorkflowRunnable.java:174)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+2019-06-11 14:50:31,568 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : reset
+2019-06-11 14:50:31,572 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : clean output ports.
+2019-06-11 14:50:31,594 : DEBUG : ModalContext : Node : FSKX Reader : 0:14 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:50:31,594 : DEBUG : ModalContext : Node : FSK Joiner : 0:3 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:50:31,597 : DEBUG : ModalContext : Node : FSK Joiner : 0:13 : reset
+2019-06-11 14:50:31,597 : DEBUG : ModalContext : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:50:31,598 : DEBUG : ModalContext : Node : FSK Joiner : 0:13 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:50:31,598 : DEBUG : ModalContext : Node : FSK Runner : 0:4 : Configure succeeded. (FSK Runner)
+2019-06-11 14:50:31,598 : DEBUG : ModalContext : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:50:31,599 : DEBUG : ModalContext : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:50:31,600 : DEBUG : ModalContext : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:50:31,600 : DEBUG : ModalContext : Node : FSK Joiner : 0:5 : reset
+2019-06-11 14:50:31,600 : DEBUG : ModalContext : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:50:31,601 : DEBUG : ModalContext : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:50:31,601 : DEBUG : ModalContext : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:50:31,603 : DEBUG : ModalContext : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:50:31,603 : DEBUG : ModalContext : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:50:31,608 : DEBUG : ModalContext : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:50:31,608 : DEBUG : ModalContext : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:50:31,608 : DEBUG : ModalContext : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:50:31,608 : DEBUG : ModalContext : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:50:31,610 : DEBUG : ModalContext : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:50:31,610 : DEBUG : ModalContext : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:50:31,612 : DEBUG : ModalContext : StringInputQuickFormNodeFactory : Metanode : 0:112 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,615 : DEBUG : ModalContext : WriterNodeFactory : Metanode : 0:112 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,618 : DEBUG : ModalContext : ReaderNodeFactory : Metanode : 0:112 : Factory is already initialized. Nothing to do.
+2019-06-11 14:50:31,623 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:100(1) to node 0:112:0:102(1)
+2019-06-11 14:50:31,623 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:98(0) to node 0:112:0:100(0)
+2019-06-11 14:50:31,623 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:101(2) to node 0:112:0:98(1)
+2019-06-11 14:50:31,623 : DEBUG : ModalContext : WorkflowManager : Metanode : 0:112 : Added new connection from node 0:112:0:47(1) to node 0:112:0:98(0)
+2019-06-11 14:50:39,851 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:50:39,852 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:50:39,855 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:50:39,855 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:50:39,855 : DEBUG : main : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:50:39,855 : DEBUG : main : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:50:39,856 : DEBUG : main : Node : FSK Joiner : 0:5 : reset
+2019-06-11 14:50:39,856 : DEBUG : main : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:50:39,859 : DEBUG : main : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:50:39,860 : DEBUG : main : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:50:39,863 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:50:39,864 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:50:45,611 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:50:45,611 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:50:45,612 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:50:45,612 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:50:45,613 : DEBUG : main : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:50:45,613 : DEBUG : main : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:50:45,614 : DEBUG : main : Node : FSK Joiner : 0:5 : reset
+2019-06-11 14:50:45,614 : DEBUG : main : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:50:45,615 : DEBUG : main : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:50:45,616 : DEBUG : main : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:50:45,616 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:50:45,617 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:50:53,789 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:50:53,790 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:50:53,790 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:50:53,790 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:50:53,791 : DEBUG : main : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:50:53,791 : DEBUG : main : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:50:53,792 : DEBUG : main : Node : FSK Joiner : 0:5 : reset
+2019-06-11 14:50:53,792 : DEBUG : main : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:50:53,792 : DEBUG : main : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:50:53,793 : DEBUG : main : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:50:53,793 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:50:53,794 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:01,716 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSKX Reader : 0:7 : FSKX Reader 0:7 doBeforePreExecution
+2019-06-11 14:51:01,716 : DEBUG : KNIME-Worker-1 : NodeContainer : FSKX Reader : 0:7 : FSKX Reader 0:7 has new state: PREEXECUTE
+2019-06-11 14:51:01,716 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSKX Reader : 0:7 : FSKX Reader 0:7 doBeforeExecution
+2019-06-11 14:51:01,717 : DEBUG : KNIME-Worker-1 : NodeContainer : FSKX Reader : 0:7 : FSKX Reader 0:7 has new state: EXECUTING
+2019-06-11 14:51:01,718 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSKX Reader : 0:7 : Adding handler 76d73f91-4ab1-438a-b054-1ce6211111bc (FSKX Reader 0:7: <no directory>) - 1 in total
+2019-06-11 14:51:01,718 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : FSKX Reader : 0:7 : FSKX Reader 0:7 Start execute
+2019-06-11 14:51:01,719 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:8 : FSKX Reader 0:8 doBeforePreExecution
+2019-06-11 14:51:01,719 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:8 : FSKX Reader 0:8 has new state: PREEXECUTE
+2019-06-11 14:51:01,719 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:8 : FSKX Reader 0:8 doBeforeExecution
+2019-06-11 14:51:01,719 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:8 : FSKX Reader 0:8 has new state: EXECUTING
+2019-06-11 14:51:01,720 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSKX Reader : 0:8 : Adding handler 75b406fa-3f85-451c-a0be-e27a70c3a752 (FSKX Reader 0:8: <no directory>) - 2 in total
+2019-06-11 14:51:01,720 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : FSKX Reader : 0:8 : FSKX Reader 0:8 Start execute
+2019-06-11 14:51:02,316 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : FSKX Reader : 0:8 : FSKX Reader 0:8 End execute (0 secs)
+2019-06-11 14:51:02,316 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:8 : FSKX Reader 0:8 doBeforePostExecution
+2019-06-11 14:51:02,316 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:8 : FSKX Reader 0:8 has new state: POSTEXECUTE
+2019-06-11 14:51:02,316 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:8 : FSKX Reader 0:8 doAfterExecute - success
+2019-06-11 14:51:02,316 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:8 : FSKX Reader 0:8 has new state: EXECUTED
+2019-06-11 14:51:02,317 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : FSKX Reader : 0:7 : FSKX Reader 0:7 End execute (0 secs)
+2019-06-11 14:51:02,318 : DEBUG : KNIME-Worker-2 : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:02,321 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSKX Reader : 0:7 : FSKX Reader 0:7 doBeforePostExecution
+2019-06-11 14:51:02,321 : DEBUG : KNIME-Worker-1 : NodeContainer : FSKX Reader : 0:7 : FSKX Reader 0:7 has new state: POSTEXECUTE
+2019-06-11 14:51:02,321 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSKX Reader : 0:7 : FSKX Reader 0:7 doAfterExecute - success
+2019-06-11 14:51:02,321 : DEBUG : KNIME-Worker-1 : NodeContainer : FSKX Reader : 0:7 : FSKX Reader 0:7 has new state: EXECUTED
+2019-06-11 14:51:02,322 : DEBUG : KNIME-Worker-1 : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:02,322 : DEBUG : KNIME-Worker-1 : NodeContainer : FSKX Reader : 0:7 : FSK Joiner 0:5 has new state: CONFIGURED_QUEUED
+2019-06-11 14:51:02,322 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:5 : FSK Joiner 0:5 doBeforePreExecution
+2019-06-11 14:51:02,322 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:5 : FSK Joiner 0:5 has new state: PREEXECUTE
+2019-06-11 14:51:02,322 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:5 : FSK Joiner 0:5 doBeforeExecution
+2019-06-11 14:51:02,323 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:5 : FSK Joiner 0:5 has new state: EXECUTING
+2019-06-11 14:51:02,323 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:5 : Adding handler d8fbf280-f52d-47a6-80d6-6cf046e798f8 (FSK Joiner 0:5: <no directory>) - 3 in total
+2019-06-11 14:51:02,323 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Joiner : 0:5 : FSK Joiner 0:5 Start execute
+2019-06-11 14:51:02,774 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Joiner : 0:5 : FSK Joiner 0:5 End execute (0 secs)
+2019-06-11 14:51:02,774 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:5 : FSK Joiner 0:5 doBeforePostExecution
+2019-06-11 14:51:02,774 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:5 : FSK Joiner 0:5 has new state: POSTEXECUTE
+2019-06-11 14:51:02,774 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:5 : FSK Joiner 0:5 doAfterExecute - success
+2019-06-11 14:51:02,775 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:5 : FSK Joiner 0:5 has new state: EXECUTED
+2019-06-11 14:51:02,775 : DEBUG : KNIME-Worker-2 : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:02,776 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:5 : TestJoiner 0 has new state: IDLE
+2019-06-11 14:51:21,146 : DEBUG : Chrome COMET query thread CDwindow-4A2AF36157E0E54DB3BFF02046FB33D7 : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:51:21,147 : DEBUG : Chrome COMET query thread CDwindow-4A2AF36157E0E54DB3BFF02046FB33D7 : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:51:21,147 : DEBUG : Chrome COMET query thread CDwindow-4A2AF36157E0E54DB3BFF02046FB33D7 : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:51:21,147 : DEBUG : Chrome COMET query thread CDwindow-4A2AF36157E0E54DB3BFF02046FB33D7 : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:51:21,147 : DEBUG : Chrome COMET query thread CDwindow-4A2AF36157E0E54DB3BFF02046FB33D7 : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:51:21,152 : DEBUG : Chrome COMET query thread CDwindow-4A2AF36157E0E54DB3BFF02046FB33D7 : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:51:21,152 : DEBUG : Chrome COMET query thread CDwindow-4A2AF36157E0E54DB3BFF02046FB33D7 : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:21,153 : DEBUG : Chrome COMET query thread CDwindow-4A2AF36157E0E54DB3BFF02046FB33D7 : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:21,153 : DEBUG : Chrome COMET query thread CDwindow-4A2AF36157E0E54DB3BFF02046FB33D7 : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:21,156 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:5 : FSK Joiner 0:5 doBeforePreExecution
+2019-06-11 14:51:21,156 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:5 : FSK Joiner 0:5 has new state: PREEXECUTE
+2019-06-11 14:51:21,156 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:5 : FSK Joiner 0:5 doBeforeExecution
+2019-06-11 14:51:21,156 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:5 : FSK Joiner 0:5 has new state: EXECUTING
+2019-06-11 14:51:21,156 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:5 : Removing handler d8fbf280-f52d-47a6-80d6-6cf046e798f8 (FSK Joiner 0:5: <no directory>) - 2 remaining
+2019-06-11 14:51:21,156 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:5 : Adding handler 1e20d9b6-3f37-4c63-81e8-5dc380e521ac (FSK Joiner 0:5: <no directory>) - 3 in total
+2019-06-11 14:51:21,156 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Joiner : 0:5 : FSK Joiner 0:5 Start execute
+2019-06-11 14:51:21,849 : ERROR : KNIME-Worker-1 : ChromeWizardNodeView : FSK Joiner : 0:5 : NodeView.modelChanged() causes an error during notification of a changed model, reason: no such session
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+Build info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T15:15:03.216Z'
+System info: host: 'PC-160503-W7', ip: '192.168.225.129', os.name: 'Windows 7', os.arch: 'amd64', os.version: '6.1', java.version: '1.8.0_144'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\Users\swaid\AppData\Loca...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:53417}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 74.0.3729.169, webStorageEnabled: true}
+Session ID: 9b6b89ccad57ef950889acc863108dfa
+2019-06-11 14:51:21,849 : DEBUG : KNIME-Worker-1 : ChromeWizardNodeView : FSK Joiner : 0:5 : NodeView.modelChanged() causes an error during notification of a changed model, reason: no such session
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+Build info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T15:15:03.216Z'
+System info: host: 'PC-160503-W7', ip: '192.168.225.129', os.name: 'Windows 7', os.arch: 'amd64', os.version: '6.1', java.version: '1.8.0_144'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\Users\swaid\AppData\Loca...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:53417}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 74.0.3729.169, webStorageEnabled: true}
+Session ID: 9b6b89ccad57ef950889acc863108dfa
+org.openqa.selenium.NoSuchSessionException: no such session
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+Build info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T15:15:03.216Z'
+System info: host: 'PC-160503-W7', ip: '192.168.225.129', os.name: 'Windows 7', os.arch: 'amd64', os.version: '6.1', java.version: '1.8.0_144'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\Users\swaid\AppData\Loca...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:53417}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 74.0.3729.169, webStorageEnabled: true}
+Session ID: 9b6b89ccad57ef950889acc863108dfa
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.openqa.selenium.remote.ErrorHandler.createThrowable(ErrorHandler.java:214)
+	at org.openqa.selenium.remote.ErrorHandler.throwIfResponseFailed(ErrorHandler.java:166)
+	at org.openqa.selenium.remote.http.JsonHttpResponseCodec.reconstructValue(JsonHttpResponseCodec.java:40)
+	at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:80)
+	at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:44)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:158)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:83)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:543)
+	at org.openqa.selenium.remote.RemoteWebDriver.executeScript(RemoteWebDriver.java:480)
+	at org.knime.ext.seleniumdrivers.multios.ChromeWizardNodeView.modelChanged(ChromeWizardNodeView.java:187)
+	at org.knime.core.node.AbstractNodeView.callModelChanged(AbstractNodeView.java:151)
+	at org.knime.core.node.NodeModel.stateChanged(NodeModel.java:837)
+	at org.knime.core.node.NodeModel.setHasContent(NodeModel.java:685)
+	at org.knime.core.node.Node.execute(Node.java:910)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:561)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:95)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:179)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:110)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:328)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:204)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2019-06-11 14:51:21,942 : WARN  : KNIME-Worker-1 : Node : FSK Joiner : 0:5 : 
+- Model Math:
+   Field(s):  parameterUnit, parameterUnit, parameterUnit, parameterUnit are(is) required
+
+2019-06-11 14:51:23,766 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Joiner : 0:5 : FSK Joiner 0:5 End execute (2 secs)
+2019-06-11 14:51:23,766 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:5 : FSK Joiner 0:5 doBeforePostExecution
+2019-06-11 14:51:23,791 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:5 : FSK Joiner 0:5 has new state: POSTEXECUTE
+2019-06-11 14:51:23,791 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:5 : FSK Joiner 0:5 doAfterExecute - success
+2019-06-11 14:51:23,791 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:5 : FSK Joiner 0:5 has new state: EXECUTED
+2019-06-11 14:51:23,791 : DEBUG : KNIME-Worker-1 : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:23,792 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:5 : TestJoiner 0 has new state: IDLE
+2019-06-11 14:51:28,952 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:51:28,952 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:51:28,953 : DEBUG : main : NodeContainer : FSKX Reader : 0:14 : FSK Runner 0:10 has new state: IDLE
+2019-06-11 14:51:28,953 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:51:28,953 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:51:28,954 : DEBUG : main : NodeContainer : FSKX Reader : 0:14 : FSK Joiner 0:9 has new state: IDLE
+2019-06-11 14:51:28,954 : DEBUG : main : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:51:28,954 : DEBUG : main : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:51:28,955 : DEBUG : main : NodeContainer : FSKX Reader : 0:14 : FSK Runner 0:12 has new state: IDLE
+2019-06-11 14:51:28,955 : DEBUG : main : Node : FSK Joiner : 0:13 : reset
+2019-06-11 14:51:28,955 : DEBUG : main : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:51:28,955 : DEBUG : main : NodeContainer : FSKX Reader : 0:14 : FSK Joiner 0:13 has new state: IDLE
+2019-06-11 14:51:28,955 : DEBUG : main : Node : FSKX Reader : 0:14 : reset
+2019-06-11 14:51:28,959 : DEBUG : main : Node : FSKX Reader : 0:14 : clean output ports.
+2019-06-11 14:51:28,960 : DEBUG : main : NodeContainer : FSKX Reader : 0:14 : FSKX Reader 0:14 has new state: IDLE
+2019-06-11 14:51:29,049 : DEBUG : main : Node : FSKX Reader : 0:14 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:51:29,050 : DEBUG : main : NodeContainer : FSKX Reader : 0:14 : FSKX Reader 0:14 has new state: CONFIGURED
+2019-06-11 14:51:29,050 : DEBUG : main : Node : FSK Joiner : 0:13 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:29,050 : DEBUG : main : NodeContainer : FSKX Reader : 0:14 : FSK Joiner 0:13 has new state: CONFIGURED
+2019-06-11 14:51:29,050 : DEBUG : main : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:29,051 : DEBUG : main : NodeContainer : FSKX Reader : 0:14 : FSK Runner 0:12 has new state: CONFIGURED
+2019-06-11 14:51:29,052 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:29,052 : DEBUG : main : NodeContainer : FSKX Reader : 0:14 : FSK Joiner 0:9 has new state: CONFIGURED
+2019-06-11 14:51:29,052 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:29,052 : DEBUG : main : NodeContainer : FSKX Reader : 0:14 : FSK Runner 0:10 has new state: CONFIGURED
+2019-06-11 14:51:32,421 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:51:32,422 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:51:32,422 : DEBUG : main : NodeContainer : FSKX Reader : 0:11 : FSK Runner 0:10 has new state: IDLE
+2019-06-11 14:51:32,423 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:51:32,423 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:51:32,423 : DEBUG : main : NodeContainer : FSKX Reader : 0:11 : FSK Joiner 0:9 has new state: IDLE
+2019-06-11 14:51:32,423 : DEBUG : main : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:51:32,424 : DEBUG : main : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:51:32,424 : DEBUG : main : NodeContainer : FSKX Reader : 0:11 : FSK Runner 0:12 has new state: IDLE
+2019-06-11 14:51:32,424 : DEBUG : main : Node : FSK Joiner : 0:13 : reset
+2019-06-11 14:51:32,424 : DEBUG : main : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:51:32,425 : DEBUG : main : NodeContainer : FSKX Reader : 0:11 : FSK Joiner 0:13 has new state: IDLE
+2019-06-11 14:51:32,425 : DEBUG : main : Node : FSKX Reader : 0:11 : reset
+2019-06-11 14:51:32,428 : DEBUG : main : Node : FSKX Reader : 0:11 : clean output ports.
+2019-06-11 14:51:32,429 : DEBUG : main : NodeContainer : FSKX Reader : 0:11 : FSKX Reader 0:11 has new state: IDLE
+2019-06-11 14:51:32,488 : DEBUG : main : Node : FSKX Reader : 0:11 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:51:32,488 : DEBUG : main : NodeContainer : FSKX Reader : 0:11 : FSKX Reader 0:11 has new state: CONFIGURED
+2019-06-11 14:51:32,488 : DEBUG : main : Node : FSK Joiner : 0:13 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:32,489 : DEBUG : main : NodeContainer : FSKX Reader : 0:11 : FSK Joiner 0:13 has new state: CONFIGURED
+2019-06-11 14:51:32,489 : DEBUG : main : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:32,489 : DEBUG : main : NodeContainer : FSKX Reader : 0:11 : FSK Runner 0:12 has new state: CONFIGURED
+2019-06-11 14:51:32,490 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:32,490 : DEBUG : main : NodeContainer : FSKX Reader : 0:11 : FSK Joiner 0:9 has new state: CONFIGURED
+2019-06-11 14:51:32,490 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:32,491 : DEBUG : main : NodeContainer : FSKX Reader : 0:11 : FSK Runner 0:10 has new state: CONFIGURED
+2019-06-11 14:51:34,323 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:14 : FSKX Reader 0:14 doBeforePreExecution
+2019-06-11 14:51:34,324 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:14 : FSKX Reader 0:14 has new state: PREEXECUTE
+2019-06-11 14:51:34,324 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:14 : FSKX Reader 0:14 doBeforeExecution
+2019-06-11 14:51:34,324 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:14 : FSKX Reader 0:14 has new state: EXECUTING
+2019-06-11 14:51:34,325 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSKX Reader : 0:14 : Adding handler 8def2053-8ff3-448e-95c4-9e36c41fb287 (FSKX Reader 0:14: <no directory>) - 4 in total
+2019-06-11 14:51:34,325 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : FSKX Reader : 0:14 : FSKX Reader 0:14 Start execute
+2019-06-11 14:51:34,325 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSKX Reader : 0:11 : FSKX Reader 0:11 doBeforePreExecution
+2019-06-11 14:51:34,325 : DEBUG : KNIME-Worker-1 : NodeContainer : FSKX Reader : 0:11 : FSKX Reader 0:11 has new state: PREEXECUTE
+2019-06-11 14:51:34,325 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSKX Reader : 0:11 : FSKX Reader 0:11 doBeforeExecution
+2019-06-11 14:51:34,325 : DEBUG : KNIME-Worker-1 : NodeContainer : FSKX Reader : 0:11 : FSKX Reader 0:11 has new state: EXECUTING
+2019-06-11 14:51:34,326 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSKX Reader : 0:11 : Adding handler 79fd90b2-5692-4c0c-86eb-2001fd85a8da (FSKX Reader 0:11: <no directory>) - 5 in total
+2019-06-11 14:51:34,326 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : FSKX Reader : 0:11 : FSKX Reader 0:11 Start execute
+2019-06-11 14:51:34,456 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : FSKX Reader : 0:14 : FSKX Reader 0:14 End execute (0 secs)
+2019-06-11 14:51:34,456 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:14 : FSKX Reader 0:14 doBeforePostExecution
+2019-06-11 14:51:34,456 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:14 : FSKX Reader 0:14 has new state: POSTEXECUTE
+2019-06-11 14:51:34,456 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSKX Reader : 0:14 : FSKX Reader 0:14 doAfterExecute - success
+2019-06-11 14:51:34,457 : DEBUG : KNIME-Worker-2 : NodeContainer : FSKX Reader : 0:14 : FSKX Reader 0:14 has new state: EXECUTED
+2019-06-11 14:51:34,457 : DEBUG : KNIME-Worker-2 : Node : FSK Joiner : 0:13 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:34,512 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : FSKX Reader : 0:11 : FSKX Reader 0:11 End execute (0 secs)
+2019-06-11 14:51:34,512 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSKX Reader : 0:11 : FSKX Reader 0:11 doBeforePostExecution
+2019-06-11 14:51:34,512 : DEBUG : KNIME-Worker-1 : NodeContainer : FSKX Reader : 0:11 : FSKX Reader 0:11 has new state: POSTEXECUTE
+2019-06-11 14:51:34,512 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSKX Reader : 0:11 : FSKX Reader 0:11 doAfterExecute - success
+2019-06-11 14:51:34,512 : DEBUG : KNIME-Worker-1 : NodeContainer : FSKX Reader : 0:11 : FSKX Reader 0:11 has new state: EXECUTED
+2019-06-11 14:51:34,513 : DEBUG : KNIME-Worker-1 : Node : FSK Joiner : 0:13 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:34,513 : DEBUG : KNIME-Worker-1 : NodeContainer : FSKX Reader : 0:11 : FSK Joiner 0:13 has new state: CONFIGURED_QUEUED
+2019-06-11 14:51:34,515 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:13 : FSK Joiner 0:13 doBeforePreExecution
+2019-06-11 14:51:34,515 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:13 : FSK Joiner 0:13 has new state: PREEXECUTE
+2019-06-11 14:51:34,515 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:13 : FSK Joiner 0:13 doBeforeExecution
+2019-06-11 14:51:34,515 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:13 : FSK Joiner 0:13 has new state: EXECUTING
+2019-06-11 14:51:34,515 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:13 : Adding handler f6be94a7-54a6-4f8f-a64c-9400be09bdd9 (FSK Joiner 0:13: <no directory>) - 6 in total
+2019-06-11 14:51:34,516 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Joiner : 0:13 : FSK Joiner 0:13 Start execute
+2019-06-11 14:51:34,597 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Joiner : 0:13 : FSK Joiner 0:13 End execute (0 secs)
+2019-06-11 14:51:34,597 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:13 : FSK Joiner 0:13 doBeforePostExecution
+2019-06-11 14:51:34,597 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:13 : FSK Joiner 0:13 has new state: POSTEXECUTE
+2019-06-11 14:51:34,597 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:13 : FSK Joiner 0:13 doAfterExecute - success
+2019-06-11 14:51:34,597 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:13 : FSK Joiner 0:13 has new state: EXECUTED
+2019-06-11 14:51:34,598 : DEBUG : KNIME-Worker-2 : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:34,598 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:13 : TestJoiner 0 has new state: IDLE
+2019-06-11 14:51:46,421 : DEBUG : Chrome COMET query thread CDwindow-A60B85BD5EBDD34BCB98CF75C845170B : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:51:46,422 : DEBUG : Chrome COMET query thread CDwindow-A60B85BD5EBDD34BCB98CF75C845170B : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:51:46,422 : DEBUG : Chrome COMET query thread CDwindow-A60B85BD5EBDD34BCB98CF75C845170B : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:51:46,422 : DEBUG : Chrome COMET query thread CDwindow-A60B85BD5EBDD34BCB98CF75C845170B : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:51:46,423 : DEBUG : Chrome COMET query thread CDwindow-A60B85BD5EBDD34BCB98CF75C845170B : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:51:46,423 : DEBUG : Chrome COMET query thread CDwindow-A60B85BD5EBDD34BCB98CF75C845170B : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:51:46,423 : DEBUG : Chrome COMET query thread CDwindow-A60B85BD5EBDD34BCB98CF75C845170B : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:46,424 : DEBUG : Chrome COMET query thread CDwindow-A60B85BD5EBDD34BCB98CF75C845170B : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:46,424 : DEBUG : Chrome COMET query thread CDwindow-A60B85BD5EBDD34BCB98CF75C845170B : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:46,424 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:13 : FSK Joiner 0:13 doBeforePreExecution
+2019-06-11 14:51:46,424 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:13 : FSK Joiner 0:13 has new state: PREEXECUTE
+2019-06-11 14:51:46,424 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:13 : FSK Joiner 0:13 doBeforeExecution
+2019-06-11 14:51:46,424 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:13 : FSK Joiner 0:13 has new state: EXECUTING
+2019-06-11 14:51:46,424 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:13 : Removing handler f6be94a7-54a6-4f8f-a64c-9400be09bdd9 (FSK Joiner 0:13: <no directory>) - 5 remaining
+2019-06-11 14:51:46,425 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:13 : Adding handler 761f0df4-1daa-4020-aab4-15c5b7fe68c6 (FSK Joiner 0:13: <no directory>) - 6 in total
+2019-06-11 14:51:46,425 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Joiner : 0:13 : FSK Joiner 0:13 Start execute
+2019-06-11 14:51:47,679 : WARN  : KNIME-Worker-1 : Node : FSK Joiner : 0:13 : 
+- Model Math:
+   Field(s):  parameterUnit, parameterUnit, parameterUnit, parameterUnit are(is) required
+
+2019-06-11 14:51:47,699 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Joiner : 0:13 : FSK Joiner 0:13 End execute (1 sec)
+2019-06-11 14:51:47,699 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:13 : FSK Joiner 0:13 doBeforePostExecution
+2019-06-11 14:51:47,725 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:13 : FSK Joiner 0:13 has new state: POSTEXECUTE
+2019-06-11 14:51:47,725 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:13 : FSK Joiner 0:13 doAfterExecute - success
+2019-06-11 14:51:47,725 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:13 : FSK Joiner 0:13 has new state: EXECUTED
+2019-06-11 14:51:47,726 : DEBUG : KNIME-Worker-1 : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:47,726 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:13 : TestJoiner 0 has new state: IDLE
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:12 : FSK Runner 0:12 doBeforePreExecution
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : FSK Runner 0:12 has new state: PREEXECUTE
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:12 : FSK Runner 0:12 doBeforeExecution
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : FSK Runner 0:12 has new state: EXECUTING
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:12 : Adding handler fdcc445f-7681-4e08-bd84-220098fb7f1b (FSK Runner 0:12: <no directory>) - 7 in total
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Runner : 0:12 : FSK Runner 0:12 Start execute
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:6 : FSK Runner 0:6 doBeforePreExecution
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:6 : FSK Runner 0:6 has new state: PREEXECUTE
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:6 : FSK Runner 0:6 doBeforeExecution
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:6 : FSK Runner 0:6 has new state: EXECUTING
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:6 : Adding handler d903dde4-80df-4228-a39f-3ba81b70b028 (FSK Runner 0:6: <no directory>) - 8 in total
+2019-06-11 14:51:49,658 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Runner : 0:6 : FSK Runner 0:6 Start execute
+2019-06-11 14:51:49,814 : WARN  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:12 : There is no image created
+2019-06-11 14:51:49,814 : DEBUG : KNIME-Worker-2 : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:51:49,814 : ERROR : KNIME-Worker-2 : Node : FSK Runner : 0:12 : Execute failed: Invalid result. Execution failed. Reason: Incorrect implementation; the execute method in RunnerNodeModel returned null or an incorrect number of output tables.
+2019-06-11 14:51:49,814 : DEBUG : KNIME-Worker-2 : Node : FSK Runner : 0:12 : Execute failed: Invalid result. Execution failed. Reason: Incorrect implementation; the execute method in RunnerNodeModel returned null or an incorrect number of output tables.
+java.lang.IllegalStateException: Invalid result. Execution failed. Reason: Incorrect implementation; the execute method in RunnerNodeModel returned null or an incorrect number of output tables.
+	at org.knime.core.node.NodeModel.executeModel(NodeModel.java:619)
+	at org.knime.core.node.Node.invokeFullyNodeModelExecute(Node.java:1177)
+	at org.knime.core.node.Node.execute(Node.java:964)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:561)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:95)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:179)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:110)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:328)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:204)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2019-06-11 14:51:49,815 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:12 : FSK Runner 0:12 doBeforePostExecution
+2019-06-11 14:51:49,815 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : FSK Runner 0:12 has new state: POSTEXECUTE
+2019-06-11 14:51:49,815 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:12 : FSK Runner 0:12 doAfterExecute - failure
+2019-06-11 14:51:49,815 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : FSK Joiner 0:9 has new state: CONFIGURED
+2019-06-11 14:51:49,815 : DEBUG : KNIME-Worker-2 : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:51:49,816 : DEBUG : KNIME-Worker-2 : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:51:49,816 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:12 : Removing handler fdcc445f-7681-4e08-bd84-220098fb7f1b (FSK Runner 0:12: <no directory>) - 7 remaining
+2019-06-11 14:51:49,816 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : FSK Runner 0:12 has new state: IDLE
+2019-06-11 14:51:49,816 : DEBUG : KNIME-Worker-2 : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:49,816 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : FSK Runner 0:12 has new state: CONFIGURED
+2019-06-11 14:51:49,816 : DEBUG : KNIME-Worker-2 : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:50,793 : DEBUG : KNIME-Worker-1 : RController : FSK Runner : 0:6 : Connected to Rserve in 1 attempts.
+2019-06-11 14:51:50,802 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:6 : Running Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:51:50,802 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:6 :  recieving '0' as the selected simulation index!
+2019-06-11 14:51:50,804 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:6 : Running Snippet of first Model: Simple Model 1
+2019-06-11 14:51:51,008 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:6 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:51:52,815 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:6 : Running Snippet of second Model: Simple Model 2
+2019-06-11 14:51:53,016 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:6 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:51:54,217 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:12 : FSK Runner 0:12 doBeforePreExecution
+2019-06-11 14:51:54,217 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : FSK Runner 0:12 has new state: PREEXECUTE
+2019-06-11 14:51:54,217 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:12 : FSK Runner 0:12 doBeforeExecution
+2019-06-11 14:51:54,217 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : FSK Runner 0:12 has new state: EXECUTING
+2019-06-11 14:51:54,217 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:12 : Adding handler b3059222-e1a9-4062-888d-59ca26d29c15 (FSK Runner 0:12: <no directory>) - 8 in total
+2019-06-11 14:51:54,217 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Runner : 0:12 : FSK Runner 0:12 Start execute
+2019-06-11 14:51:54,831 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Runner : 0:6 : FSK Runner 0:6 End execute (5 secs)
+2019-06-11 14:51:54,831 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:6 : FSK Runner 0:6 doBeforePostExecution
+2019-06-11 14:51:54,832 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:6 : FSK Runner 0:6 has new state: POSTEXECUTE
+2019-06-11 14:51:54,832 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:6 : FSK Runner 0:6 doAfterExecute - success
+2019-06-11 14:51:54,832 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:6 : FSK Runner 0:6 has new state: EXECUTED
+2019-06-11 14:51:54,832 : DEBUG : KNIME-Worker-1 : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:54,952 : DEBUG : KNIME-Worker-2 : RController : FSK Runner : 0:12 : Connected to Rserve in 1 attempts.
+2019-06-11 14:51:54,953 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:12 : Running Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:51:54,953 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:12 :  recieving '0' as the selected simulation index!
+2019-06-11 14:51:54,954 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:12 : Running Snippet of first Model: Another Simple Model 1
+2019-06-11 14:51:55,155 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:12 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:51:56,959 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:12 : Running Snippet of second Model: Another Simple Model 2
+2019-06-11 14:51:57,160 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:12 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:51:58,973 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Runner : 0:12 : FSK Runner 0:12 End execute (4 secs)
+2019-06-11 14:51:58,974 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:12 : FSK Runner 0:12 doBeforePostExecution
+2019-06-11 14:51:58,974 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : FSK Runner 0:12 has new state: POSTEXECUTE
+2019-06-11 14:51:58,974 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:12 : FSK Runner 0:12 doAfterExecute - success
+2019-06-11 14:51:58,974 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : FSK Runner 0:12 has new state: EXECUTED
+2019-06-11 14:51:58,974 : DEBUG : KNIME-Worker-2 : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:58,974 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:12 : TestJoiner 0 has new state: IDLE
+2019-06-11 14:51:59,527 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:9 : FSK Joiner 0:9 doBeforePreExecution
+2019-06-11 14:51:59,528 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : FSK Joiner 0:9 has new state: PREEXECUTE
+2019-06-11 14:51:59,528 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:9 : FSK Joiner 0:9 doBeforeExecution
+2019-06-11 14:51:59,528 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : FSK Joiner 0:9 has new state: EXECUTING
+2019-06-11 14:51:59,528 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:9 : Adding handler 0cb702ef-2b0f-4844-a663-de8e94ecd01b (FSK Joiner 0:9: <no directory>) - 9 in total
+2019-06-11 14:51:59,528 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Joiner : 0:9 : FSK Joiner 0:9 Start execute
+2019-06-11 14:51:59,665 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Joiner : 0:9 : FSK Joiner 0:9 End execute (0 secs)
+2019-06-11 14:51:59,665 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:9 : FSK Joiner 0:9 doBeforePostExecution
+2019-06-11 14:51:59,665 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : FSK Joiner 0:9 has new state: POSTEXECUTE
+2019-06-11 14:51:59,666 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:9 : FSK Joiner 0:9 doAfterExecute - success
+2019-06-11 14:51:59,666 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : FSK Joiner 0:9 has new state: EXECUTED
+2019-06-11 14:51:59,666 : DEBUG : KNIME-Worker-1 : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:59,666 : DEBUG : KNIME-Worker-1 : Node : String Input : 0:112:0:47 : Configure succeeded. (String Input)
+2019-06-11 14:51:59,666 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : Setting dirty flag on String Input 0:112:0:47
+2019-06-11 14:51:59,666 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : Setting dirty flag on Metanode 0:112:0
+2019-06-11 14:51:59,667 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : String Input 0:112:0:47 has new state: CONFIGURED
+2019-06-11 14:51:59,667 : DEBUG : KNIME-Worker-1 : Node : WrappedNode Input : 0:112:0:101 : Configure succeeded. (WrappedNode Input)
+2019-06-11 14:51:59,667 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : Setting dirty flag on WrappedNode Input 0:112:0:101
+2019-06-11 14:51:59,668 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : WrappedNode Input 0:112:0:101 has new state: CONFIGURED
+2019-06-11 14:51:59,703 : DEBUG : KNIME-Worker-1 : Node : FSKX Writer : 0:112:0:98 : Configure succeeded. (FSKX Writer)
+2019-06-11 14:51:59,703 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : Setting dirty flag on FSKX Writer 0:112:0:98
+2019-06-11 14:51:59,703 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : FSKX Writer 0:112:0:98 has new state: CONFIGURED
+2019-06-11 14:51:59,739 : DEBUG : KNIME-Worker-1 : Node : FSKX Reader : 0:112:0:100 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:51:59,739 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : Setting dirty flag on FSKX Reader 0:112:0:100
+2019-06-11 14:51:59,739 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : FSKX Reader 0:112:0:100 has new state: CONFIGURED
+2019-06-11 14:51:59,740 : DEBUG : KNIME-Worker-1 : Node : WrappedNode Output : 0:112:0:102 : Configure succeeded. (WrappedNode Output)
+2019-06-11 14:51:59,740 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : Setting dirty flag on WrappedNode Output 0:112:0:102
+2019-06-11 14:51:59,740 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : WrappedNode Output 0:112:0:102 has new state: CONFIGURED
+2019-06-11 14:51:59,740 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : Metanode 0:112:0 has new state: CONFIGURED
+2019-06-11 14:51:59,740 : DEBUG : KNIME-Worker-1 : NodeContainer : Metanode : 0:112 : Metanode 0:112 has new state: CONFIGURED
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : Node : FSK Joiner : 0:115 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : Setting dirty flag on FSK Joiner 0:115
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : FSK Joiner 0:115 has new state: CONFIGURED
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : Node : FSK Joiner : 0:113 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : Setting dirty flag on FSK Joiner 0:113
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : FSK Joiner 0:113 has new state: CONFIGURED
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : Node : FSK Runner : 0:116 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : Setting dirty flag on FSK Runner 0:116
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : FSK Runner 0:116 has new state: CONFIGURED
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : Node : FSK Runner : 0:114 : Configure succeeded. (FSK Runner)
+2019-06-11 14:51:59,741 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : Setting dirty flag on FSK Runner 0:114
+2019-06-11 14:51:59,742 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : FSK Runner 0:114 has new state: CONFIGURED
+2019-06-11 14:51:59,742 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:9 : TestJoiner 0 has new state: CONFIGURED
+2019-06-11 14:52:14,936 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Runner : 0:116 : reset
+2019-06-11 14:52:14,937 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Runner : 0:116 : clean output ports.
+2019-06-11 14:52:14,937 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Joiner : 0:115 : reset
+2019-06-11 14:52:14,937 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Joiner : 0:115 : clean output ports.
+2019-06-11 14:52:14,937 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Runner : 0:114 : reset
+2019-06-11 14:52:14,938 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Runner : 0:114 : clean output ports.
+2019-06-11 14:52:14,938 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Joiner : 0:113 : reset
+2019-06-11 14:52:14,938 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Joiner : 0:113 : clean output ports.
+2019-06-11 14:52:14,938 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:52:14,939 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:52:14,939 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : String Input : 0:112:0:47 : reset
+2019-06-11 14:52:14,939 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : String Input : 0:112:0:47 : clean output ports.
+2019-06-11 14:52:14,939 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : String Input 0:112:0:47 has new state: IDLE
+2019-06-11 14:52:14,939 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSKX Writer : 0:112:0:98 : reset
+2019-06-11 14:52:14,939 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSKX Writer : 0:112:0:98 : clean output ports.
+2019-06-11 14:52:14,940 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : FSKX Writer 0:112:0:98 has new state: IDLE
+2019-06-11 14:52:14,940 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSKX Reader : 0:112:0:100 : reset
+2019-06-11 14:52:14,970 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSKX Reader : 0:112:0:100 : clean output ports.
+2019-06-11 14:52:14,970 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : FSKX Reader 0:112:0:100 has new state: IDLE
+2019-06-11 14:52:14,970 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : WrappedNode Input : 0:112:0:101 : reset
+2019-06-11 14:52:14,970 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : WrappedNode Input : 0:112:0:101 : clean output ports.
+2019-06-11 14:52:14,971 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : WrappedNode Input 0:112:0:101 has new state: IDLE
+2019-06-11 14:52:14,971 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : WrappedNode Output : 0:112:0:102 : reset
+2019-06-11 14:52:14,971 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : WrappedNode Output : 0:112:0:102 : clean output ports.
+2019-06-11 14:52:14,971 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : WrappedNode Output 0:112:0:102 has new state: IDLE
+2019-06-11 14:52:14,971 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : Metanode 0:112:0 has new state: IDLE
+2019-06-11 14:52:14,971 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:52:14,972 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : String Input : 0:112:0:47 : Configure succeeded. (String Input)
+2019-06-11 14:52:14,972 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : String Input 0:112:0:47 has new state: CONFIGURED
+2019-06-11 14:52:14,972 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : WrappedNode Input : 0:112:0:101 : Configure succeeded. (WrappedNode Input)
+2019-06-11 14:52:14,972 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : WrappedNode Input 0:112:0:101 has new state: CONFIGURED
+2019-06-11 14:52:15,011 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSKX Writer : 0:112:0:98 : Configure succeeded. (FSKX Writer)
+2019-06-11 14:52:15,011 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : FSKX Writer 0:112:0:98 has new state: CONFIGURED
+2019-06-11 14:52:15,048 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSKX Reader : 0:112:0:100 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:52:15,048 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : FSKX Reader 0:112:0:100 has new state: CONFIGURED
+2019-06-11 14:52:15,048 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : WrappedNode Output : 0:112:0:102 : Configure succeeded. (WrappedNode Output)
+2019-06-11 14:52:15,048 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : WrappedNode Output 0:112:0:102 has new state: CONFIGURED
+2019-06-11 14:52:15,048 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : Metanode 0:112:0 has new state: CONFIGURED
+2019-06-11 14:52:15,049 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : NodeContainer : Metanode : 0:112 : Metanode 0:112 has new state: CONFIGURED
+2019-06-11 14:52:15,049 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Joiner : 0:115 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:52:15,049 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Joiner : 0:113 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:52:15,049 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Runner : 0:116 : Configure succeeded. (FSK Runner)
+2019-06-11 14:52:15,050 : DEBUG : Chrome COMET query thread CDwindow-8F971DDBE2265EA68EB1BFB0ACDD4383 : Node : FSK Runner : 0:114 : Configure succeeded. (FSK Runner)
+2019-06-11 14:52:15,050 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:9 : FSK Joiner 0:9 doBeforePreExecution
+2019-06-11 14:52:15,050 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:9 : FSK Joiner 0:9 has new state: PREEXECUTE
+2019-06-11 14:52:15,050 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:9 : FSK Joiner 0:9 doBeforeExecution
+2019-06-11 14:52:15,050 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:9 : FSK Joiner 0:9 has new state: EXECUTING
+2019-06-11 14:52:15,050 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:9 : Removing handler 0cb702ef-2b0f-4844-a663-de8e94ecd01b (FSK Joiner 0:9: <no directory>) - 8 remaining
+2019-06-11 14:52:15,050 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:9 : Adding handler b6aba70d-bad9-4330-88c7-b6fdf4136ec6 (FSK Joiner 0:9: <no directory>) - 9 in total
+2019-06-11 14:52:15,050 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Joiner : 0:9 : FSK Joiner 0:9 Start execute
+2019-06-11 14:52:15,328 : ERROR : KNIME-Worker-2 : ChromeWizardNodeView : FSK Joiner : 0:9 : NodeView.modelChanged() causes an error during notification of a changed model, reason: no such session
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+Build info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T15:15:03.216Z'
+System info: host: 'PC-160503-W7', ip: '192.168.225.129', os.name: 'Windows 7', os.arch: 'amd64', os.version: '6.1', java.version: '1.8.0_144'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\Users\swaid\AppData\Loca...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:53456}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 74.0.3729.169, webStorageEnabled: true}
+Session ID: 6bbee3bf7158f9ca03c2244ec7e06dcf
+2019-06-11 14:52:15,328 : DEBUG : KNIME-Worker-2 : ChromeWizardNodeView : FSK Joiner : 0:9 : NodeView.modelChanged() causes an error during notification of a changed model, reason: no such session
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+Build info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T15:15:03.216Z'
+System info: host: 'PC-160503-W7', ip: '192.168.225.129', os.name: 'Windows 7', os.arch: 'amd64', os.version: '6.1', java.version: '1.8.0_144'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\Users\swaid\AppData\Loca...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:53456}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 74.0.3729.169, webStorageEnabled: true}
+Session ID: 6bbee3bf7158f9ca03c2244ec7e06dcf
+org.openqa.selenium.NoSuchSessionException: no such session
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+Build info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T15:15:03.216Z'
+System info: host: 'PC-160503-W7', ip: '192.168.225.129', os.name: 'Windows 7', os.arch: 'amd64', os.version: '6.1', java.version: '1.8.0_144'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\Users\swaid\AppData\Loca...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:53456}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 74.0.3729.169, webStorageEnabled: true}
+Session ID: 6bbee3bf7158f9ca03c2244ec7e06dcf
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.openqa.selenium.remote.ErrorHandler.createThrowable(ErrorHandler.java:214)
+	at org.openqa.selenium.remote.ErrorHandler.throwIfResponseFailed(ErrorHandler.java:166)
+	at org.openqa.selenium.remote.http.JsonHttpResponseCodec.reconstructValue(JsonHttpResponseCodec.java:40)
+	at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:80)
+	at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:44)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:158)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:83)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:543)
+	at org.openqa.selenium.remote.RemoteWebDriver.executeScript(RemoteWebDriver.java:480)
+	at org.knime.ext.seleniumdrivers.multios.ChromeWizardNodeView.modelChanged(ChromeWizardNodeView.java:187)
+	at org.knime.core.node.AbstractNodeView.callModelChanged(AbstractNodeView.java:151)
+	at org.knime.core.node.NodeModel.stateChanged(NodeModel.java:837)
+	at org.knime.core.node.NodeModel.setHasContent(NodeModel.java:685)
+	at org.knime.core.node.Node.execute(Node.java:910)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:561)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:95)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:179)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:110)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:328)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:204)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2019-06-11 14:52:15,477 : WARN  : KNIME-Worker-2 : Node : FSK Joiner : 0:9 : 
+- Model Math:
+   Field(s):  parameterUnit, parameterUnit, parameterUnit, parameterUnit, parameterUnit, parameterUnit are(is) required
+ - Data Background:
+   Field(s):  studyTitle are(is) required
+
+2019-06-11 14:52:16,511 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Joiner : 0:9 : FSK Joiner 0:9 End execute (1 sec)
+2019-06-11 14:52:16,511 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:9 : FSK Joiner 0:9 doBeforePostExecution
+2019-06-11 14:52:16,541 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:9 : FSK Joiner 0:9 has new state: POSTEXECUTE
+2019-06-11 14:52:16,541 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Joiner : 0:9 : FSK Joiner 0:9 doAfterExecute - success
+2019-06-11 14:52:16,542 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:9 : FSK Joiner 0:9 has new state: EXECUTED
+2019-06-11 14:52:16,542 : DEBUG : KNIME-Worker-2 : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:52:16,542 : DEBUG : KNIME-Worker-2 : Node : String Input : 0:112:0:47 : Configure succeeded. (String Input)
+2019-06-11 14:52:16,542 : DEBUG : KNIME-Worker-2 : Node : WrappedNode Input : 0:112:0:101 : Configure succeeded. (WrappedNode Input)
+2019-06-11 14:52:16,587 : DEBUG : KNIME-Worker-2 : Node : FSKX Writer : 0:112:0:98 : Configure succeeded. (FSKX Writer)
+2019-06-11 14:52:16,626 : DEBUG : KNIME-Worker-2 : Node : FSKX Reader : 0:112:0:100 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:52:16,632 : DEBUG : KNIME-Worker-2 : Node : WrappedNode Output : 0:112:0:102 : Configure succeeded. (WrappedNode Output)
+2019-06-11 14:52:16,632 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Joiner : 0:9 : TestJoiner 0 has new state: CONFIGURED
+2019-06-11 14:52:16,717 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:10 : FSK Runner 0:10 doBeforePreExecution
+2019-06-11 14:52:16,717 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:10 : FSK Runner 0:10 has new state: PREEXECUTE
+2019-06-11 14:52:16,717 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:10 : FSK Runner 0:10 doBeforeExecution
+2019-06-11 14:52:16,717 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:10 : FSK Runner 0:10 has new state: EXECUTING
+2019-06-11 14:52:16,717 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:10 : Adding handler d2a2ee86-133c-4914-8655-666d12b480b5 (FSK Runner 0:10: <no directory>) - 10 in total
+2019-06-11 14:52:16,717 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Runner : 0:10 : FSK Runner 0:10 Start execute
+2019-06-11 14:52:17,079 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 : Running Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:52:17,080 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 : Running Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:52:17,080 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 :  recieving '0' as the selected simulation index!
+2019-06-11 14:52:17,080 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 : Running Snippet of first Model: Simple Model 1
+2019-06-11 14:52:17,282 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:52:18,392 : DEBUG : KNIME-Worker-2 : WorkflowManager : Metanode : 0:112 : Metanode 0:112 doBeforePreExecution
+2019-06-11 14:52:18,393 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : Metanode 0:112 has new state: PREEXECUTE
+2019-06-11 14:52:18,393 : DEBUG : KNIME-Worker-2 : WorkflowManager : Metanode : 0:112 : Metanode 0:112 doBeforeExecution
+2019-06-11 14:52:18,393 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : Metanode 0:112 has new state: EXECUTING
+2019-06-11 14:52:18,393 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : Metanode : 0:112 : Metanode 0:112 Start execute
+2019-06-11 14:52:18,393 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : WrappedNode Input 0:112:0:101 has new state: CONFIGURED_MARKEDFOREXEC
+2019-06-11 14:52:18,393 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : WrappedNode Input 0:112:0:101 has new state: CONFIGURED_QUEUED
+2019-06-11 14:52:18,393 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : String Input 0:112:0:47 has new state: CONFIGURED_MARKEDFOREXEC
+2019-06-11 14:52:18,393 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : String Input 0:112:0:47 has new state: CONFIGURED_QUEUED
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : FSKX Writer 0:112:0:98 has new state: CONFIGURED_MARKEDFOREXEC
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : FSKX Reader 0:112:0:100 has new state: CONFIGURED_MARKEDFOREXEC
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : WrappedNode Output 0:112:0:102 has new state: CONFIGURED_MARKEDFOREXEC
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : Metanode 0:112:0 has new state: EXECUTING
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-3 : WorkflowManager : WrappedNode Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 doBeforePreExecution
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-3 : NodeContainer : WrappedNode Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 has new state: PREEXECUTE
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-3 : WorkflowManager : WrappedNode Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 doBeforeExecution
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-3 : NodeContainer : WrappedNode Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 has new state: EXECUTING
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-3 : WorkflowFileStoreHandlerRepository : WrappedNode Input : 0:112:0:101 : Adding handler 6aac3f4f-b02e-4b63-8ec3-c9b265138454 (WrappedNode Input 0:112:0:101: <no directory>) - 11 in total
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-4 : WorkflowManager : String Input : 0:112:0:47 : String Input 0:112:0:47 doBeforePreExecution
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-4 : NodeContainer : String Input : 0:112:0:47 : String Input 0:112:0:47 has new state: PREEXECUTE
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-4 : WorkflowManager : String Input : 0:112:0:47 : String Input 0:112:0:47 doBeforeExecution
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-3 : LocalNodeExecutionJob : WrappedNode Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 Start execute
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-4 : 2019-06-11 14:52:18,394NodeContainer :  : DEBUG : KNIME-Worker-3 : LocalNodeExecutionJob : WrappedNode Input : String Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 Start execute
+0:112:0:47 : String Input 0:112:0:47 has new state: EXECUTING
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-4 : WorkflowFileStoreHandlerRepository : String Input : 0:112:0:47 : Adding handler e3c62204-bf2d-433f-bb2c-63c631865dea (String Input 0:112:0:47: <no directory>) - 12 in total
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-4 : LocalNodeExecutionJob : String Input : 0:112:0:47 : String Input 0:112:0:47 Start execute
+2019-06-11 14:52:18,394 : INFO  : KNIME-Worker-4 : LocalNodeExecutionJob : String Input : 0:112:0:47 : String Input 0:112:0:47 End execute (0 secs)
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-4 : WorkflowManager : String Input : 0:112:0:47 : String Input 0:112:0:47 doBeforePostExecution
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-4 : NodeContainer : String Input : 0:112:0:47 : String Input 0:112:0:47 has new state: POSTEXECUTE
+2019-06-11 14:52:18,394 : DEBUG : KNIME-Worker-4 : WorkflowManager : String Input : 0:112:0:47 : String Input 0:112:0:47 doAfterExecute - success
+2019-06-11 14:52:18,395 : DEBUG : KNIME-Worker-4 : NodeContainer : String Input : 0:112:0:47 : String Input 0:112:0:47 has new state: EXECUTED
+2019-06-11 14:52:18,440 : DEBUG : KNIME-Worker-4 : Node : FSKX Writer : 0:112:0:98 : Configure succeeded. (FSKX Writer)
+2019-06-11 14:52:18,442 : INFO  : KNIME-Worker-3 : LocalNodeExecutionJob : WrappedNode Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 End execute (0 secs)
+2019-06-11 14:52:18,442 : DEBUG : KNIME-Worker-3 : WorkflowManager : WrappedNode Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 doBeforePostExecution
+2019-06-11 14:52:18,442 : DEBUG : KNIME-Worker-3 : NodeContainer : WrappedNode Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 has new state: POSTEXECUTE
+2019-06-11 14:52:18,442 : DEBUG : KNIME-Worker-3 : WorkflowManager : WrappedNode Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 doAfterExecute - success
+2019-06-11 14:52:18,442 : DEBUG : KNIME-Worker-3 : NodeContainer : WrappedNode Input : 0:112:0:101 : WrappedNode Input 0:112:0:101 has new state: EXECUTED
+2019-06-11 14:52:18,489 : DEBUG : KNIME-Worker-3 : Node : FSKX Writer : 0:112:0:98 : Configure succeeded. (FSKX Writer)
+2019-06-11 14:52:18,489 : DEBUG : KNIME-Worker-3 : NodeContainer : WrappedNode Input : 0:112:0:101 : FSKX Writer 0:112:0:98 has new state: CONFIGURED_QUEUED
+2019-06-11 14:52:18,490 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSKX Writer : 0:112:0:98 : FSKX Writer 0:112:0:98 doBeforePreExecution
+2019-06-11 14:52:18,490 : DEBUG : KNIME-Worker-4 : NodeContainer : FSKX Writer : 0:112:0:98 : FSKX Writer 0:112:0:98 has new state: PREEXECUTE
+2019-06-11 14:52:18,490 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSKX Writer : 0:112:0:98 : FSKX Writer 0:112:0:98 doBeforeExecution
+2019-06-11 14:52:18,490 : DEBUG : KNIME-Worker-4 : NodeContainer : FSKX Writer : 0:112:0:98 : FSKX Writer 0:112:0:98 has new state: EXECUTING
+2019-06-11 14:52:18,490 : DEBUG : KNIME-Worker-4 : WorkflowFileStoreHandlerRepository : FSKX Writer : 0:112:0:98 : Adding handler 4306d723-c090-49b1-9d45-602b81ef21cb (FSKX Writer 0:112:0:98: <no directory>) - 13 in total
+2019-06-11 14:52:18,490 : DEBUG : KNIME-Worker-4 : LocalNodeExecutionJob : FSKX Writer : 0:112:0:98 : FSKX Writer 0:112:0:98 Start execute
+2019-06-11 14:52:19,082 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 : Running Snippet of second Model: Simple Model 2
+2019-06-11 14:52:19,283 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:52:19,365 : INFO  : KNIME-Worker-4 : LocalNodeExecutionJob : FSKX Writer : 0:112:0:98 : FSKX Writer 0:112:0:98 End execute (0 secs)
+2019-06-11 14:52:19,365 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSKX Writer : 0:112:0:98 : FSKX Writer 0:112:0:98 doBeforePostExecution
+2019-06-11 14:52:19,365 : DEBUG : KNIME-Worker-4 : NodeContainer : FSKX Writer : 0:112:0:98 : FSKX Writer 0:112:0:98 has new state: POSTEXECUTE
+2019-06-11 14:52:19,365 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSKX Writer : 0:112:0:98 : FSKX Writer 0:112:0:98 doAfterExecute - success
+2019-06-11 14:52:19,365 : DEBUG : KNIME-Worker-4 : NodeContainer : FSKX Writer : 0:112:0:98 : FSKX Writer 0:112:0:98 has new state: EXECUTED
+2019-06-11 14:52:19,402 : DEBUG : KNIME-Worker-4 : Node : FSKX Reader : 0:112:0:100 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:52:19,402 : DEBUG : KNIME-Worker-4 : NodeContainer : FSKX Writer : 0:112:0:98 : FSKX Reader 0:112:0:100 has new state: CONFIGURED_QUEUED
+2019-06-11 14:52:19,402 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSKX Reader : 0:112:0:100 : FSKX Reader 0:112:0:100 doBeforePreExecution
+2019-06-11 14:52:19,402 : DEBUG : KNIME-Worker-3 : NodeContainer : FSKX Reader : 0:112:0:100 : FSKX Reader 0:112:0:100 has new state: PREEXECUTE
+2019-06-11 14:52:19,402 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSKX Reader : 0:112:0:100 : FSKX Reader 0:112:0:100 doBeforeExecution
+2019-06-11 14:52:19,402 : DEBUG : KNIME-Worker-3 : NodeContainer : FSKX Reader : 0:112:0:100 : FSKX Reader 0:112:0:100 has new state: EXECUTING
+2019-06-11 14:52:19,402 : DEBUG : KNIME-Worker-3 : WorkflowFileStoreHandlerRepository : FSKX Reader : 0:112:0:100 : Adding handler 309e37ba-182c-4015-9211-9b3b7054ada9 (FSKX Reader 0:112:0:100: <no directory>) - 14 in total
+2019-06-11 14:52:19,403 : DEBUG : KNIME-Worker-3 : LocalNodeExecutionJob : FSKX Reader : 0:112:0:100 : FSKX Reader 0:112:0:100 Start execute
+2019-06-11 14:52:19,834 : INFO  : KNIME-Worker-3 : LocalNodeExecutionJob : FSKX Reader : 0:112:0:100 : FSKX Reader 0:112:0:100 End execute (0 secs)
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSKX Reader : 0:112:0:100 : FSKX Reader 0:112:0:100 doBeforePostExecution
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-3 : NodeContainer : FSKX Reader : 0:112:0:100 : FSKX Reader 0:112:0:100 has new state: POSTEXECUTE
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSKX Reader : 0:112:0:100 : FSKX Reader 0:112:0:100 doAfterExecute - success
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-3 : NodeContainer : FSKX Reader : 0:112:0:100 : FSKX Reader 0:112:0:100 has new state: EXECUTED
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-3 : Node : WrappedNode Output : 0:112:0:102 : Configure succeeded. (WrappedNode Output)
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-3 : NodeContainer : FSKX Reader : 0:112:0:100 : WrappedNode Output 0:112:0:102 has new state: CONFIGURED_QUEUED
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-4 : WorkflowManager : WrappedNode Output : 0:112:0:102 : WrappedNode Output 0:112:0:102 doBeforePreExecution
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-4 : NodeContainer : WrappedNode Output : 0:112:0:102 : WrappedNode Output 0:112:0:102 has new state: PREEXECUTE
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-4 : WorkflowManager : WrappedNode Output : 0:112:0:102 : WrappedNode Output 0:112:0:102 doBeforeExecution
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-4 : NodeContainer : WrappedNode Output : 0:112:0:102 : WrappedNode Output 0:112:0:102 has new state: EXECUTING
+2019-06-11 14:52:19,834 : DEBUG : KNIME-Worker-4 : WorkflowFileStoreHandlerRepository : WrappedNode Output : 0:112:0:102 : Adding handler 2b804d67-3b5e-4d0d-bd78-aa1cbf84ba2e (WrappedNode Output 0:112:0:102: <no directory>) - 15 in total
+2019-06-11 14:52:19,835 : DEBUG : KNIME-Worker-4 : LocalNodeExecutionJob : WrappedNode Output : 0:112:0:102 : WrappedNode Output 0:112:0:102 Start execute
+2019-06-11 14:52:19,912 : INFO  : KNIME-Worker-4 : LocalNodeExecutionJob : WrappedNode Output : 0:112:0:102 : WrappedNode Output 0:112:0:102 End execute (0 secs)
+2019-06-11 14:52:19,912 : DEBUG : KNIME-Worker-4 : WorkflowManager : WrappedNode Output : 0:112:0:102 : WrappedNode Output 0:112:0:102 doBeforePostExecution
+2019-06-11 14:52:19,912 : DEBUG : KNIME-Worker-4 : NodeContainer : WrappedNode Output : 0:112:0:102 : WrappedNode Output 0:112:0:102 has new state: POSTEXECUTE
+2019-06-11 14:52:19,912 : DEBUG : KNIME-Worker-4 : WorkflowManager : WrappedNode Output : 0:112:0:102 : WrappedNode Output 0:112:0:102 doAfterExecute - success
+2019-06-11 14:52:19,912 : DEBUG : KNIME-Worker-4 : NodeContainer : WrappedNode Output : 0:112:0:102 : WrappedNode Output 0:112:0:102 has new state: EXECUTED
+2019-06-11 14:52:19,912 : DEBUG : KNIME-Worker-4 : NodeContainer : WrappedNode Output : 0:112:0:102 : Metanode 0:112:0 has new state: EXECUTED
+2019-06-11 14:52:19,913 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : Metanode : 0:112 : Metanode 0:112 End execute (1 sec)
+2019-06-11 14:52:19,913 : DEBUG : KNIME-Worker-2 : WorkflowManager : Metanode : 0:112 : Metanode 0:112 doBeforePostExecution
+2019-06-11 14:52:19,914 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : Metanode 0:112 has new state: POSTEXECUTE
+2019-06-11 14:52:19,914 : DEBUG : KNIME-Worker-2 : WorkflowManager : Metanode : 0:112 : Metanode 0:112 doAfterExecute - success
+2019-06-11 14:52:19,914 : DEBUG : KNIME-Worker-2 : NodeContainer : Metanode : 0:112 : Metanode 0:112 has new state: EXECUTED
+2019-06-11 14:52:19,915 : DEBUG : KNIME-Worker-2 : Node : FSK Joiner : 0:113 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:52:19,915 : DEBUG : KNIME-Worker-2 : Node : FSK Joiner : 0:115 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:52:21,088 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 :  recieving '0' as the selected simulation index!
+2019-06-11 14:52:21,297 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 : Running Snippet of first Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:52:21,899 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 : Running Snippet of second Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:52:22,500 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 : Running Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:52:22,500 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 :  recieving '0' as the selected simulation index!
+2019-06-11 14:52:22,501 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 : Running Snippet of first Model: Another Simple Model 1
+2019-06-11 14:52:22,702 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:52:24,506 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 : Running Snippet of second Model: Another Simple Model 2
+2019-06-11 14:52:24,707 : INFO  : KNIME-Worker-1 : Fskx Runner Node Model : FSK Runner : 0:10 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:52:26,513 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Runner : 0:10 : FSK Runner 0:10 End execute (9 secs)
+2019-06-11 14:52:26,513 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:10 : FSK Runner 0:10 doBeforePostExecution
+2019-06-11 14:52:26,513 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:10 : FSK Runner 0:10 has new state: POSTEXECUTE
+2019-06-11 14:52:26,514 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Runner : 0:10 : FSK Runner 0:10 doAfterExecute - success
+2019-06-11 14:52:26,514 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:10 : FSK Runner 0:10 has new state: EXECUTED
+2019-06-11 14:52:26,514 : DEBUG : KNIME-Worker-1 : Node : FSK Joiner : 0:115 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:52:26,514 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Runner : 0:10 : FSK Joiner 0:115 has new state: CONFIGURED_QUEUED
+2019-06-11 14:52:26,514 : DEBUG : KNIME-Worker-1 : Node : FSK Joiner : 0:113 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:52:26,514 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Joiner : 0:115 : FSK Joiner 0:115 doBeforePreExecution
+2019-06-11 14:52:26,514 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Joiner : 0:115 : FSK Joiner 0:115 has new state: PREEXECUTE
+2019-06-11 14:52:26,515 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Joiner : 0:115 : FSK Joiner 0:115 doBeforeExecution
+2019-06-11 14:52:26,515 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Joiner : 0:115 : FSK Joiner 0:115 has new state: EXECUTING
+2019-06-11 14:52:26,515 : DEBUG : KNIME-Worker-3 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:115 : Adding handler 24154b8a-aa7e-4d4a-8519-b7b139b54e08 (FSK Joiner 0:115: <no directory>) - 16 in total
+2019-06-11 14:52:26,515 : DEBUG : KNIME-Worker-3 : LocalNodeExecutionJob : FSK Joiner : 0:115 : FSK Joiner 0:115 Start execute
+2019-06-11 14:52:26,693 : INFO  : KNIME-Worker-3 : LocalNodeExecutionJob : FSK Joiner : 0:115 : FSK Joiner 0:115 End execute (0 secs)
+2019-06-11 14:52:26,693 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Joiner : 0:115 : FSK Joiner 0:115 doBeforePostExecution
+2019-06-11 14:52:26,695 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Joiner : 0:115 : FSK Joiner 0:115 has new state: POSTEXECUTE
+2019-06-11 14:52:26,695 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Joiner : 0:115 : FSK Joiner 0:115 doAfterExecute - success
+2019-06-11 14:52:26,695 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Joiner : 0:115 : FSK Joiner 0:115 has new state: EXECUTED
+2019-06-11 14:52:26,696 : DEBUG : KNIME-Worker-3 : Node : FSK Runner : 0:116 : Configure succeeded. (FSK Runner)
+2019-06-11 14:52:26,696 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Joiner : 0:115 : TestJoiner 0 has new state: CONFIGURED
+2019-06-11 14:52:44,011 : DEBUG : Chrome COMET query thread CDwindow-972287A12ED999170FB647B0228C0739 : Node : FSK Runner : 0:116 : reset
+2019-06-11 14:52:44,011 : DEBUG : Chrome COMET query thread CDwindow-972287A12ED999170FB647B0228C0739 : Node : FSK Runner : 0:116 : clean output ports.
+2019-06-11 14:52:44,012 : DEBUG : Chrome COMET query thread CDwindow-972287A12ED999170FB647B0228C0739 : Node : FSK Runner : 0:116 : Configure succeeded. (FSK Runner)
+2019-06-11 14:52:44,012 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSK Joiner : 0:115 : FSK Joiner 0:115 doBeforePreExecution
+2019-06-11 14:52:44,012 : DEBUG : KNIME-Worker-4 : NodeContainer : FSK Joiner : 0:115 : FSK Joiner 0:115 has new state: PREEXECUTE
+2019-06-11 14:52:44,012 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSK Joiner : 0:115 : FSK Joiner 0:115 doBeforeExecution
+2019-06-11 14:52:44,012 : DEBUG : KNIME-Worker-4 : NodeContainer : FSK Joiner : 0:115 : FSK Joiner 0:115 has new state: EXECUTING
+2019-06-11 14:52:44,012 : DEBUG : KNIME-Worker-4 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:115 : Removing handler 24154b8a-aa7e-4d4a-8519-b7b139b54e08 (FSK Joiner 0:115: <no directory>) - 15 remaining
+2019-06-11 14:52:44,012 : DEBUG : KNIME-Worker-4 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:115 : Adding handler 0c16efa9-bea6-418b-be41-02dd6caa75cb (FSK Joiner 0:115: <no directory>) - 16 in total
+2019-06-11 14:52:44,012 : DEBUG : KNIME-Worker-4 : LocalNodeExecutionJob : FSK Joiner : 0:115 : FSK Joiner 0:115 Start execute
+2019-06-11 14:52:44,207 : ERROR : KNIME-Worker-4 : ChromeWizardNodeView : FSK Joiner : 0:115 : NodeView.modelChanged() causes an error during notification of a changed model, reason: no such session
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+Build info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T15:15:03.216Z'
+System info: host: 'PC-160503-W7', ip: '192.168.225.129', os.name: 'Windows 7', os.arch: 'amd64', os.version: '6.1', java.version: '1.8.0_144'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\Users\swaid\AppData\Loca...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:53477}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 74.0.3729.169, webStorageEnabled: true}
+Session ID: e7c170ed8fb51f884c738dfb4d71aca8
+2019-06-11 14:52:44,208 : DEBUG : KNIME-Worker-4 : ChromeWizardNodeView : FSK Joiner : 0:115 : NodeView.modelChanged() causes an error during notification of a changed model, reason: no such session
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+Build info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T15:15:03.216Z'
+System info: host: 'PC-160503-W7', ip: '192.168.225.129', os.name: 'Windows 7', os.arch: 'amd64', os.version: '6.1', java.version: '1.8.0_144'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\Users\swaid\AppData\Loca...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:53477}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 74.0.3729.169, webStorageEnabled: true}
+Session ID: e7c170ed8fb51f884c738dfb4d71aca8
+org.openqa.selenium.NoSuchSessionException: no such session
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64) (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 0 milliseconds
+Build info: version: '3.12.0', revision: '7c6e0b3', time: '2018-05-08T15:15:03.216Z'
+System info: host: 'PC-160503-W7', ip: '192.168.225.129', os.name: 'Windows 7', os.arch: 'amd64', os.version: '6.1', java.version: '1.8.0_144'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, acceptSslCerts: false, applicationCacheEnabled: false, browserConnectionEnabled: false, browserName: chrome, chrome: {chromedriverVersion: 2.41.578737 (49da6702b16031..., userDataDir: C:\Users\swaid\AppData\Loca...}, cssSelectorsEnabled: true, databaseEnabled: false, goog:chromeOptions: {debuggerAddress: localhost:53477}, handlesAlerts: true, hasTouchScreen: false, javascriptEnabled: true, locationContextEnabled: true, mobileEmulationEnabled: false, nativeEvents: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: XP, platformName: XP, rotatable: false, setWindowRect: true, takesHeapSnapshot: true, takesScreenshot: true, unexpectedAlertBehaviour: , unhandledPromptBehavior: , version: 74.0.3729.169, webStorageEnabled: true}
+Session ID: e7c170ed8fb51f884c738dfb4d71aca8
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.openqa.selenium.remote.ErrorHandler.createThrowable(ErrorHandler.java:214)
+	at org.openqa.selenium.remote.ErrorHandler.throwIfResponseFailed(ErrorHandler.java:166)
+	at org.openqa.selenium.remote.http.JsonHttpResponseCodec.reconstructValue(JsonHttpResponseCodec.java:40)
+	at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:80)
+	at org.openqa.selenium.remote.http.AbstractHttpResponseCodec.decode(AbstractHttpResponseCodec.java:44)
+	at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:158)
+	at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:83)
+	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:543)
+	at org.openqa.selenium.remote.RemoteWebDriver.executeScript(RemoteWebDriver.java:480)
+	at org.knime.ext.seleniumdrivers.multios.ChromeWizardNodeView.modelChanged(ChromeWizardNodeView.java:187)
+	at org.knime.core.node.AbstractNodeView.callModelChanged(AbstractNodeView.java:151)
+	at org.knime.core.node.NodeModel.stateChanged(NodeModel.java:837)
+	at org.knime.core.node.NodeModel.setHasContent(NodeModel.java:685)
+	at org.knime.core.node.Node.execute(Node.java:910)
+	at org.knime.core.node.workflow.NativeNodeContainer.performExecuteNode(NativeNodeContainer.java:561)
+	at org.knime.core.node.exec.LocalNodeExecutionJob.mainExecute(LocalNodeExecutionJob.java:95)
+	at org.knime.core.node.workflow.NodeExecutionJob.internalRun(NodeExecutionJob.java:179)
+	at org.knime.core.node.workflow.NodeExecutionJob.run(NodeExecutionJob.java:110)
+	at org.knime.core.util.ThreadUtils$RunnableWithContextImpl.runWithContext(ThreadUtils.java:328)
+	at org.knime.core.util.ThreadUtils$RunnableWithContext.run(ThreadUtils.java:204)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at org.knime.core.util.ThreadPool$MyFuture.run(ThreadPool.java:123)
+	at org.knime.core.util.ThreadPool$Worker.run(ThreadPool.java:246)
+2019-06-11 14:52:44,410 : WARN  : KNIME-Worker-4 : Node : FSK Joiner : 0:115 : 
+- Model Math:
+   Field(s):  parameterUnit, parameterUnit, parameterUnit, parameterUnit, parameterUnit, parameterUnit, parameterUnit, parameterUnit, parameterUnit, parameterUnit are(is) required
+ - Data Background:
+   Field(s):  studyTitle are(is) required
+
+2019-06-11 14:52:45,441 : INFO  : KNIME-Worker-4 : LocalNodeExecutionJob : FSK Joiner : 0:115 : FSK Joiner 0:115 End execute (1 sec)
+2019-06-11 14:52:45,442 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSK Joiner : 0:115 : FSK Joiner 0:115 doBeforePostExecution
+2019-06-11 14:52:45,472 : DEBUG : KNIME-Worker-4 : NodeContainer : FSK Joiner : 0:115 : FSK Joiner 0:115 has new state: POSTEXECUTE
+2019-06-11 14:52:45,472 : DEBUG : KNIME-Worker-4 : WorkflowManager : FSK Joiner : 0:115 : FSK Joiner 0:115 doAfterExecute - success
+2019-06-11 14:52:45,472 : DEBUG : KNIME-Worker-4 : NodeContainer : FSK Joiner : 0:115 : FSK Joiner 0:115 has new state: EXECUTED
+2019-06-11 14:52:45,472 : DEBUG : KNIME-Worker-4 : Node : FSK Runner : 0:116 : Configure succeeded. (FSK Runner)
+2019-06-11 14:52:45,473 : DEBUG : KNIME-Worker-4 : NodeContainer : FSK Joiner : 0:115 : TestJoiner 0 has new state: CONFIGURED
+2019-06-11 14:52:45,996 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:116 : FSK Runner 0:116 doBeforePreExecution
+2019-06-11 14:52:45,996 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:116 : FSK Runner 0:116 has new state: PREEXECUTE
+2019-06-11 14:52:45,996 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:116 : FSK Runner 0:116 doBeforeExecution
+2019-06-11 14:52:45,996 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:116 : FSK Runner 0:116 has new state: EXECUTING
+2019-06-11 14:52:45,996 : DEBUG : KNIME-Worker-2 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:116 : Adding handler 29edef57-beac-4495-9aad-e6f458837691 (FSK Runner 0:116: <no directory>) - 17 in total
+2019-06-11 14:52:45,996 : DEBUG : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Runner : 0:116 : FSK Runner 0:116 Start execute
+2019-06-11 14:52:46,330 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2 | Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:52:46,330 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:52:46,330 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:52:46,330 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  recieving '0' as the selected simulation index!
+2019-06-11 14:52:46,330 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of first Model: Simple Model 1
+2019-06-11 14:52:46,534 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:52:48,346 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of second Model: Simple Model 2
+2019-06-11 14:52:48,547 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:52:50,347 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  recieving '0' as the selected simulation index!
+2019-06-11 14:52:50,548 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of first Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:52:51,149 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of second Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:52:51,749 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:52:51,749 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  recieving '0' as the selected simulation index!
+2019-06-11 14:52:51,750 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of first Model: Another Simple Model 1
+2019-06-11 14:52:51,951 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:52:53,754 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of second Model: Another Simple Model 2
+2019-06-11 14:52:53,955 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:52:55,758 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  recieving '0' as the selected simulation index!
+2019-06-11 14:52:55,960 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of first Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:52:56,961 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of second Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:52:57,963 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:52:57,963 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:52:57,963 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  recieving '0' as the selected simulation index!
+2019-06-11 14:52:57,964 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of first Model: Simple Model 1
+2019-06-11 14:52:58,165 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:52:59,966 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of second Model: Simple Model 2
+2019-06-11 14:53:00,167 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:01,969 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  recieving '0' as the selected simulation index!
+2019-06-11 14:53:01,970 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of first Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:53:02,371 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of second Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:02,771 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:02,771 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  recieving '0' as the selected simulation index!
+2019-06-11 14:53:02,772 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of first Model: Another Simple Model 1
+2019-06-11 14:53:02,973 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:04,775 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 : Running Snippet of second Model: Another Simple Model 2
+2019-06-11 14:53:04,976 : INFO  : KNIME-Worker-2 : Fskx Runner Node Model : FSK Runner : 0:116 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:06,784 : INFO  : KNIME-Worker-2 : LocalNodeExecutionJob : FSK Runner : 0:116 : FSK Runner 0:116 End execute (20 secs)
+2019-06-11 14:53:06,784 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:116 : FSK Runner 0:116 doBeforePostExecution
+2019-06-11 14:53:06,784 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:116 : FSK Runner 0:116 has new state: POSTEXECUTE
+2019-06-11 14:53:06,784 : DEBUG : KNIME-Worker-2 : WorkflowManager : FSK Runner : 0:116 : FSK Runner 0:116 doAfterExecute - success
+2019-06-11 14:53:06,784 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:116 : FSK Runner 0:116 has new state: EXECUTED
+2019-06-11 14:53:06,784 : DEBUG : KNIME-Worker-2 : NodeContainer : FSK Runner : 0:116 : TestJoiner 0 has new state: CONFIGURED
+2019-06-11 14:53:11,273 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:113 : FSK Joiner 0:113 doBeforePreExecution
+2019-06-11 14:53:11,273 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:113 : FSK Joiner 0:113 has new state: PREEXECUTE
+2019-06-11 14:53:11,274 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:113 : FSK Joiner 0:113 doBeforeExecution
+2019-06-11 14:53:11,274 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:113 : FSK Joiner 0:113 has new state: EXECUTING
+2019-06-11 14:53:11,274 : DEBUG : KNIME-Worker-1 : WorkflowFileStoreHandlerRepository : FSK Joiner : 0:113 : Adding handler a8197e54-54bd-4503-bb3f-bd993bb08016 (FSK Joiner 0:113: <no directory>) - 18 in total
+2019-06-11 14:53:11,274 : DEBUG : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Joiner : 0:113 : FSK Joiner 0:113 Start execute
+2019-06-11 14:53:11,433 : INFO  : KNIME-Worker-1 : LocalNodeExecutionJob : FSK Joiner : 0:113 : FSK Joiner 0:113 End execute (0 secs)
+2019-06-11 14:53:11,433 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:113 : FSK Joiner 0:113 doBeforePostExecution
+2019-06-11 14:53:11,433 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:113 : FSK Joiner 0:113 has new state: POSTEXECUTE
+2019-06-11 14:53:11,433 : DEBUG : KNIME-Worker-1 : WorkflowManager : FSK Joiner : 0:113 : FSK Joiner 0:113 doAfterExecute - success
+2019-06-11 14:53:11,433 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:113 : FSK Joiner 0:113 has new state: EXECUTED
+2019-06-11 14:53:11,434 : DEBUG : KNIME-Worker-1 : Node : FSK Runner : 0:114 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:11,434 : DEBUG : KNIME-Worker-1 : NodeContainer : FSK Joiner : 0:113 : FSK Runner 0:114 has new state: CONFIGURED_QUEUED
+2019-06-11 14:53:11,434 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 0:114 : FSK Runner 0:114 doBeforePreExecution
+2019-06-11 14:53:11,434 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 0:114 : FSK Runner 0:114 has new state: PREEXECUTE
+2019-06-11 14:53:11,434 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 0:114 : FSK Runner 0:114 doBeforeExecution
+2019-06-11 14:53:11,434 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 0:114 : FSK Runner 0:114 has new state: EXECUTING
+2019-06-11 14:53:11,434 : DEBUG : KNIME-Worker-3 : WorkflowFileStoreHandlerRepository : FSK Runner : 0:114 : Adding handler b3d326b9-aaab-41a6-a324-5e1401d2722e (FSK Runner 0:114: <no directory>) - 19 in total
+2019-06-11 14:53:11,434 : DEBUG : KNIME-Worker-3 : LocalNodeExecutionJob : FSK Runner : 0:114 : FSK Runner 0:114 Start execute
+2019-06-11 14:53:11,743 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2 | Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:11,743 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:11,743 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:53:11,743 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  recieving '0' as the selected simulation index!
+2019-06-11 14:53:11,744 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of first Model: Simple Model 1
+2019-06-11 14:53:11,944 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:13,746 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of second Model: Simple Model 2
+2019-06-11 14:53:13,947 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:15,748 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  recieving '0' as the selected simulation index!
+2019-06-11 14:53:15,950 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of first Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:53:16,551 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of second Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:17,152 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:17,152 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  recieving '0' as the selected simulation index!
+2019-06-11 14:53:17,153 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of first Model: Another Simple Model 1
+2019-06-11 14:53:17,354 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:19,155 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of second Model: Another Simple Model 2
+2019-06-11 14:53:19,356 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:21,161 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  recieving '0' as the selected simulation index!
+2019-06-11 14:53:21,361 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of first Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:22,363 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of second Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:23,363 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Model: Simple Model 1 | Simple Model 2 | Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:23,363 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:53:23,363 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  recieving '0' as the selected simulation index!
+2019-06-11 14:53:23,364 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of first Model: Simple Model 1
+2019-06-11 14:53:23,565 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:25,368 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of second Model: Simple Model 2
+2019-06-11 14:53:25,569 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:27,370 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  recieving '0' as the selected simulation index!
+2019-06-11 14:53:27,371 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of first Model: Simple Model 1 | Simple Model 2
+2019-06-11 14:53:27,772 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of second Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:28,172 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Model: Another Simple Model 1 | Another Simple Model 2
+2019-06-11 14:53:28,172 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  recieving '0' as the selected simulation index!
+2019-06-11 14:53:28,173 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of first Model: Another Simple Model 1
+2019-06-11 14:53:28,374 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:30,177 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 : Running Snippet of second Model: Another Simple Model 2
+2019-06-11 14:53:30,378 : INFO  : KNIME-Worker-3 : Fskx Runner Node Model : FSK Runner : 0:114 :  Running with 'defaultSimulation' simulation!
+2019-06-11 14:53:32,184 : INFO  : KNIME-Worker-3 : LocalNodeExecutionJob : FSK Runner : 0:114 : FSK Runner 0:114 End execute (20 secs)
+2019-06-11 14:53:32,184 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 0:114 : FSK Runner 0:114 doBeforePostExecution
+2019-06-11 14:53:32,184 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 0:114 : FSK Runner 0:114 has new state: POSTEXECUTE
+2019-06-11 14:53:32,184 : DEBUG : KNIME-Worker-3 : WorkflowManager : FSK Runner : 0:114 : FSK Runner 0:114 doAfterExecute - success
+2019-06-11 14:53:32,184 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 0:114 : FSK Runner 0:114 has new state: EXECUTED
+2019-06-11 14:53:32,184 : DEBUG : KNIME-Worker-3 : NodeContainer : FSK Runner : 0:114 : TestJoiner 0 has new state: CONFIGURED
+2019-06-11 14:53:40,356 : DEBUG : main : Node : FSK Runner : 0:4 : reset
+2019-06-11 14:53:40,358 : DEBUG : main : Node : FSK Runner : 0:4 : clean output ports.
+2019-06-11 14:53:40,358 : DEBUG : main : Node : FSK Joiner : 0:3 : reset
+2019-06-11 14:53:40,358 : DEBUG : main : Node : FSK Joiner : 0:3 : clean output ports.
+2019-06-11 14:53:40,359 : DEBUG : main : Node : FSKX Reader : 0:1 : reset
+2019-06-11 14:53:40,362 : DEBUG : main : Node : FSKX Reader : 0:1 : clean output ports.
+2019-06-11 14:53:40,403 : DEBUG : main : Node : FSKX Reader : 0:1 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:53:40,404 : DEBUG : main : Node : FSK Joiner : 0:3 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,404 : DEBUG : main : Node : FSK Runner : 0:4 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,405 : DEBUG : main : Node : FSK Runner : 0:4 : reset
+2019-06-11 14:53:40,405 : DEBUG : main : Node : FSK Runner : 0:4 : clean output ports.
+2019-06-11 14:53:40,405 : DEBUG : main : Node : FSK Joiner : 0:3 : reset
+2019-06-11 14:53:40,405 : DEBUG : main : Node : FSK Joiner : 0:3 : clean output ports.
+2019-06-11 14:53:40,406 : DEBUG : main : Node : FSKX Reader : 0:2 : reset
+2019-06-11 14:53:40,409 : DEBUG : main : Node : FSKX Reader : 0:2 : clean output ports.
+2019-06-11 14:53:40,446 : DEBUG : main : Node : FSKX Reader : 0:2 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:53:40,446 : DEBUG : main : Node : FSK Joiner : 0:3 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,447 : DEBUG : main : Node : FSK Runner : 0:4 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,447 : DEBUG : main : Node : FSK Runner : 0:4 : reset
+2019-06-11 14:53:40,447 : DEBUG : main : Node : FSK Runner : 0:4 : clean output ports.
+2019-06-11 14:53:40,448 : DEBUG : main : Node : FSK Joiner : 0:3 : reset
+2019-06-11 14:53:40,448 : DEBUG : main : Node : FSK Joiner : 0:3 : clean output ports.
+2019-06-11 14:53:40,448 : DEBUG : main : Node : FSK Joiner : 0:3 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,449 : DEBUG : main : Node : FSK Runner : 0:4 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,449 : DEBUG : main : Node : FSK Runner : 0:4 : reset
+2019-06-11 14:53:40,450 : DEBUG : main : Node : FSK Runner : 0:4 : clean output ports.
+2019-06-11 14:53:40,450 : DEBUG : main : Node : FSK Runner : 0:4 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,451 : DEBUG : main : Node : FSK Runner : 0:116 : reset
+2019-06-11 14:53:40,452 : DEBUG : main : Node : FSK Runner : 0:116 : clean output ports.
+2019-06-11 14:53:40,453 : DEBUG : main : Node : FSK Joiner : 0:115 : reset
+2019-06-11 14:53:40,454 : DEBUG : main : Node : FSK Joiner : 0:115 : clean output ports.
+2019-06-11 14:53:40,454 : DEBUG : main : Node : FSK Runner : 0:114 : reset
+2019-06-11 14:53:40,455 : DEBUG : main : Node : FSK Runner : 0:114 : clean output ports.
+2019-06-11 14:53:40,456 : DEBUG : main : Node : FSK Joiner : 0:113 : reset
+2019-06-11 14:53:40,456 : DEBUG : main : Node : FSK Joiner : 0:113 : clean output ports.
+2019-06-11 14:53:40,456 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:53:40,457 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:40,458 : DEBUG : main : Node : String Input : 0:112:0:47 : reset
+2019-06-11 14:53:40,458 : DEBUG : main : Node : String Input : 0:112:0:47 : clean output ports.
+2019-06-11 14:53:40,458 : DEBUG : main : WorkflowFileStoreHandlerRepository : Metanode : 0:112 : Removing handler e3c62204-bf2d-433f-bb2c-63c631865dea (String Input 0:112:0:47: <no directory>) - 13 remaining
+2019-06-11 14:53:40,459 : DEBUG : main : NodeContainer : Metanode : 0:112 : String Input 0:112:0:47 has new state: IDLE
+2019-06-11 14:53:40,459 : DEBUG : main : Node : FSKX Writer : 0:112:0:98 : reset
+2019-06-11 14:53:40,459 : DEBUG : main : Node : FSKX Writer : 0:112:0:98 : clean output ports.
+2019-06-11 14:53:40,459 : DEBUG : main : WorkflowFileStoreHandlerRepository : Metanode : 0:112 : Removing handler 4306d723-c090-49b1-9d45-602b81ef21cb (FSKX Writer 0:112:0:98: <no directory>) - 12 remaining
+2019-06-11 14:53:40,459 : DEBUG : main : NodeContainer : Metanode : 0:112 : FSKX Writer 0:112:0:98 has new state: IDLE
+2019-06-11 14:53:40,459 : DEBUG : main : Node : FSKX Reader : 0:112:0:100 : reset
+2019-06-11 14:53:40,468 : DEBUG : main : Node : FSKX Reader : 0:112:0:100 : clean output ports.
+2019-06-11 14:53:40,468 : DEBUG : main : WorkflowFileStoreHandlerRepository : Metanode : 0:112 : Removing handler 309e37ba-182c-4015-9211-9b3b7054ada9 (FSKX Reader 0:112:0:100: <no directory>) - 11 remaining
+2019-06-11 14:53:40,468 : DEBUG : main : NodeContainer : Metanode : 0:112 : FSKX Reader 0:112:0:100 has new state: IDLE
+2019-06-11 14:53:40,468 : DEBUG : main : Node : WrappedNode Input : 0:112:0:101 : reset
+2019-06-11 14:53:40,468 : DEBUG : main : Node : WrappedNode Input : 0:112:0:101 : clean output ports.
+2019-06-11 14:53:40,468 : DEBUG : main : WorkflowFileStoreHandlerRepository : Metanode : 0:112 : Removing handler 6aac3f4f-b02e-4b63-8ec3-c9b265138454 (WrappedNode Input 0:112:0:101: <no directory>) - 10 remaining
+2019-06-11 14:53:40,469 : DEBUG : main : NodeContainer : Metanode : 0:112 : WrappedNode Input 0:112:0:101 has new state: IDLE
+2019-06-11 14:53:40,469 : DEBUG : main : Node : WrappedNode Output : 0:112:0:102 : reset
+2019-06-11 14:53:40,469 : DEBUG : main : Node : WrappedNode Output : 0:112:0:102 : clean output ports.
+2019-06-11 14:53:40,469 : DEBUG : main : WorkflowFileStoreHandlerRepository : Metanode : 0:112 : Removing handler 2b804d67-3b5e-4d0d-bd78-aa1cbf84ba2e (WrappedNode Output 0:112:0:102: <no directory>) - 9 remaining
+2019-06-11 14:53:40,469 : DEBUG : main : NodeContainer : Metanode : 0:112 : WrappedNode Output 0:112:0:102 has new state: IDLE
+2019-06-11 14:53:40,469 : DEBUG : main : NodeContainer : Metanode : 0:112 : Metanode 0:112:0 has new state: IDLE
+2019-06-11 14:53:40,469 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:53:40,470 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:53:40,470 : DEBUG : main : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:53:40,471 : DEBUG : main : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:53:40,471 : DEBUG : main : Node : FSK Joiner : 0:5 : reset
+2019-06-11 14:53:40,472 : DEBUG : main : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:53:40,473 : DEBUG : main : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,473 : DEBUG : main : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,474 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,474 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,475 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:53:40,475 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:40,476 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:53:40,476 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:53:40,476 : DEBUG : main : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:53:40,476 : DEBUG : main : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:53:40,477 : DEBUG : main : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,477 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,478 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,479 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:53:40,479 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:40,479 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:53:40,479 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:53:40,480 : DEBUG : main : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:53:40,480 : DEBUG : main : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:53:40,481 : DEBUG : main : Node : FSK Joiner : 0:5 : reset
+2019-06-11 14:53:40,481 : DEBUG : main : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:53:40,481 : DEBUG : main : Node : FSKX Reader : 0:7 : reset
+2019-06-11 14:53:40,486 : DEBUG : main : Node : FSKX Reader : 0:7 : clean output ports.
+2019-06-11 14:53:40,507 : DEBUG : main : Node : FSKX Reader : 0:7 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:53:40,508 : DEBUG : main : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,508 : DEBUG : main : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,509 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,509 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,510 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:53:40,510 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:40,510 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:53:40,511 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:53:40,511 : DEBUG : main : Node : FSK Runner : 0:6 : reset
+2019-06-11 14:53:40,511 : DEBUG : main : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:53:40,512 : DEBUG : main : Node : FSK Joiner : 0:5 : reset
+2019-06-11 14:53:40,512 : DEBUG : main : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:53:40,512 : DEBUG : main : Node : FSKX Reader : 0:8 : reset
+2019-06-11 14:53:40,515 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:8 : Reset failed due to a UncheckedIOException
+java.io.UncheckedIOException: java.nio.file.AccessDeniedException: D:\runtime-KNIME\TestJoiner\FSKXReader07_workingDirectory67453
+	at java.nio.file.FileTreeIterator.fetchNextIfNeeded(FileTreeIterator.java:88)
+	at java.nio.file.FileTreeIterator.hasNext(FileTreeIterator.java:104)
+	at java.util.Iterator.forEachRemaining(Iterator.java:115)
+	at java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1801)
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:481)
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:471)
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:418)
+	at de.bund.bfr.knime.fsklab.nodes.ReaderNodeModel.reset(ReaderNodeModel.java:139)
+	at org.knime.core.node.NodeModel.resetModel(NodeModel.java:800)
+	at org.knime.core.node.Node.reset(Node.java:1499)
+	at org.knime.core.node.workflow.NativeNodeContainer.performReset(NativeNodeContainer.java:582)
+	at org.knime.core.node.workflow.SingleNodeContainer.rawReset(SingleNodeContainer.java:425)
+	at org.knime.core.node.workflow.WorkflowManager.invokeResetOnSingleNodeContainer(WorkflowManager.java:4558)
+	at org.knime.core.node.workflow.WorkflowManager.resetNodeAndSuccessors(WorkflowManager.java:4654)
+	at org.knime.core.node.workflow.WorkflowManager.resetAndConfigureNodeAndSuccessors(WorkflowManager.java:4803)
+	at org.knime.core.node.workflow.WorkflowManager.resetAndConfigureNode(WorkflowManager.java:4761)
+	at org.knime.core.ui.wrapper.WorkflowManagerWrapper.resetAndConfigureNode(WorkflowManagerWrapper.java:199)
+	at org.knime.workbench.editor2.actions.ResetAction.runOnNodes(ResetAction.java:161)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction.runInSWT(AbstractNodeAction.java:172)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction$1.run(AbstractNodeAction.java:158)
+	at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:233)
+	at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:144)
+	at org.eclipse.swt.widgets.Display.syncExec(Display.java:4889)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction.run(AbstractNodeAction.java:155)
+	at org.knime.workbench.editor2.actions.delegates.AbstractEditorAction.run(AbstractEditorAction.java:112)
+	at org.eclipse.ui.internal.PluginAction.runWithEvent(PluginAction.java:247)
+	at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:565)
+	at org.eclipse.jface.action.ActionContributionItem.lambda$5(ActionContributionItem.java:436)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:86)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4428)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1079)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4238)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3817)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:336)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1039)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:153)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:680)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:336)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:594)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:148)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:144)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:134)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:388)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:243)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:653)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:590)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1499)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1472)
+Caused by: java.nio.file.AccessDeniedException: D:\runtime-KNIME\TestJoiner\FSKXReader07_workingDirectory67453
+	at sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:83)
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:97)
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:102)
+	at sun.nio.fs.WindowsDirectoryStream.<init>(WindowsDirectoryStream.java:86)
+	at sun.nio.fs.WindowsFileSystemProvider.newDirectoryStream(WindowsFileSystemProvider.java:518)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at java.nio.file.FileTreeWalker.visit(FileTreeWalker.java:300)
+	at java.nio.file.FileTreeWalker.next(FileTreeWalker.java:372)
+	at java.nio.file.FileTreeIterator.fetchNextIfNeeded(FileTreeIterator.java:95)
+	... 57 more
+2019-06-11 14:53:40,516 : DEBUG : main : Node : FSKX Reader : 0:8 : clean output ports.
+2019-06-11 14:53:40,536 : DEBUG : main : Node : FSKX Reader : 0:8 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:53:40,537 : DEBUG : main : Node : FSK Joiner : 0:5 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,537 : DEBUG : main : Node : FSK Runner : 0:6 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,538 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,538 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,539 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:53:40,539 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:40,540 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:53:40,540 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:53:40,540 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,541 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,542 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:53:40,542 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:40,542 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,543 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:53:40,543 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:40,544 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:53:40,544 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:53:40,545 : DEBUG : main : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:53:40,546 : DEBUG : main : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:53:40,547 : DEBUG : main : Node : FSK Joiner : 0:13 : reset
+2019-06-11 14:53:40,547 : DEBUG : main : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:53:40,548 : DEBUG : main : Node : FSKX Reader : 0:11 : reset
+2019-06-11 14:53:40,550 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:11 : Reset failed due to a UncheckedIOException
+java.io.UncheckedIOException: java.nio.file.AccessDeniedException: D:\runtime-KNIME\TestJoiner\FSKXReader07_workingDirectory67453
+	at java.nio.file.FileTreeIterator.fetchNextIfNeeded(FileTreeIterator.java:88)
+	at java.nio.file.FileTreeIterator.hasNext(FileTreeIterator.java:104)
+	at java.util.Iterator.forEachRemaining(Iterator.java:115)
+	at java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1801)
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:481)
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:471)
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:418)
+	at de.bund.bfr.knime.fsklab.nodes.ReaderNodeModel.reset(ReaderNodeModel.java:139)
+	at org.knime.core.node.NodeModel.resetModel(NodeModel.java:800)
+	at org.knime.core.node.Node.reset(Node.java:1499)
+	at org.knime.core.node.workflow.NativeNodeContainer.performReset(NativeNodeContainer.java:582)
+	at org.knime.core.node.workflow.SingleNodeContainer.rawReset(SingleNodeContainer.java:425)
+	at org.knime.core.node.workflow.WorkflowManager.invokeResetOnSingleNodeContainer(WorkflowManager.java:4558)
+	at org.knime.core.node.workflow.WorkflowManager.resetNodeAndSuccessors(WorkflowManager.java:4654)
+	at org.knime.core.node.workflow.WorkflowManager.resetAndConfigureNodeAndSuccessors(WorkflowManager.java:4803)
+	at org.knime.core.node.workflow.WorkflowManager.resetAndConfigureNode(WorkflowManager.java:4761)
+	at org.knime.core.ui.wrapper.WorkflowManagerWrapper.resetAndConfigureNode(WorkflowManagerWrapper.java:199)
+	at org.knime.workbench.editor2.actions.ResetAction.runOnNodes(ResetAction.java:161)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction.runInSWT(AbstractNodeAction.java:172)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction$1.run(AbstractNodeAction.java:158)
+	at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:233)
+	at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:144)
+	at org.eclipse.swt.widgets.Display.syncExec(Display.java:4889)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction.run(AbstractNodeAction.java:155)
+	at org.knime.workbench.editor2.actions.delegates.AbstractEditorAction.run(AbstractEditorAction.java:112)
+	at org.eclipse.ui.internal.PluginAction.runWithEvent(PluginAction.java:247)
+	at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:565)
+	at org.eclipse.jface.action.ActionContributionItem.lambda$5(ActionContributionItem.java:436)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:86)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4428)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1079)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4238)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3817)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:336)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1039)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:153)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:680)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:336)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:594)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:148)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:144)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:134)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:388)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:243)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:653)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:590)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1499)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1472)
+Caused by: java.nio.file.AccessDeniedException: D:\runtime-KNIME\TestJoiner\FSKXReader07_workingDirectory67453
+	at sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:83)
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:97)
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:102)
+	at sun.nio.fs.WindowsDirectoryStream.<init>(WindowsDirectoryStream.java:86)
+	at sun.nio.fs.WindowsFileSystemProvider.newDirectoryStream(WindowsFileSystemProvider.java:518)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at java.nio.file.FileTreeWalker.visit(FileTreeWalker.java:300)
+	at java.nio.file.FileTreeWalker.next(FileTreeWalker.java:372)
+	at java.nio.file.FileTreeIterator.fetchNextIfNeeded(FileTreeIterator.java:95)
+	... 57 more
+2019-06-11 14:53:40,551 : DEBUG : main : Node : FSKX Reader : 0:11 : clean output ports.
+2019-06-11 14:53:40,572 : DEBUG : main : Node : FSKX Reader : 0:11 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:53:40,572 : DEBUG : main : Node : FSK Joiner : 0:13 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,573 : DEBUG : main : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,573 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,574 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,575 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:53:40,575 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:40,575 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:53:40,575 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:53:40,576 : DEBUG : main : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:53:40,576 : DEBUG : main : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:53:40,577 : DEBUG : main : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,577 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,578 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,578 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:53:40,579 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:40,579 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:53:40,579 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:53:40,580 : DEBUG : main : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:53:40,580 : DEBUG : main : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:53:40,580 : DEBUG : main : Node : FSK Joiner : 0:13 : reset
+2019-06-11 14:53:40,580 : DEBUG : main : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:53:40,581 : DEBUG : main : Node : FSK Joiner : 0:13 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,582 : DEBUG : main : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,582 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,583 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,583 : DEBUG : main : Node : FSK Runner : 0:10 : reset
+2019-06-11 14:53:40,584 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:40,584 : DEBUG : main : Node : FSK Joiner : 0:9 : reset
+2019-06-11 14:53:40,584 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:53:40,585 : DEBUG : main : Node : FSK Runner : 0:12 : reset
+2019-06-11 14:53:40,585 : DEBUG : main : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:53:40,585 : DEBUG : main : Node : FSK Joiner : 0:13 : reset
+2019-06-11 14:53:40,585 : DEBUG : main : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:53:40,586 : DEBUG : main : Node : FSKX Reader : 0:14 : reset
+2019-06-11 14:53:40,588 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:14 : Reset failed due to a UncheckedIOException
+java.io.UncheckedIOException: java.nio.file.AccessDeniedException: D:\runtime-KNIME\TestJoiner\FSKXReader07_workingDirectory67453
+	at java.nio.file.FileTreeIterator.fetchNextIfNeeded(FileTreeIterator.java:88)
+	at java.nio.file.FileTreeIterator.hasNext(FileTreeIterator.java:104)
+	at java.util.Iterator.forEachRemaining(Iterator.java:115)
+	at java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1801)
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:481)
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:471)
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:418)
+	at de.bund.bfr.knime.fsklab.nodes.ReaderNodeModel.reset(ReaderNodeModel.java:139)
+	at org.knime.core.node.NodeModel.resetModel(NodeModel.java:800)
+	at org.knime.core.node.Node.reset(Node.java:1499)
+	at org.knime.core.node.workflow.NativeNodeContainer.performReset(NativeNodeContainer.java:582)
+	at org.knime.core.node.workflow.SingleNodeContainer.rawReset(SingleNodeContainer.java:425)
+	at org.knime.core.node.workflow.WorkflowManager.invokeResetOnSingleNodeContainer(WorkflowManager.java:4558)
+	at org.knime.core.node.workflow.WorkflowManager.resetNodeAndSuccessors(WorkflowManager.java:4654)
+	at org.knime.core.node.workflow.WorkflowManager.resetAndConfigureNodeAndSuccessors(WorkflowManager.java:4803)
+	at org.knime.core.node.workflow.WorkflowManager.resetAndConfigureNode(WorkflowManager.java:4761)
+	at org.knime.core.ui.wrapper.WorkflowManagerWrapper.resetAndConfigureNode(WorkflowManagerWrapper.java:199)
+	at org.knime.workbench.editor2.actions.ResetAction.runOnNodes(ResetAction.java:161)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction.runInSWT(AbstractNodeAction.java:172)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction$1.run(AbstractNodeAction.java:158)
+	at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:233)
+	at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:144)
+	at org.eclipse.swt.widgets.Display.syncExec(Display.java:4889)
+	at org.knime.workbench.editor2.actions.AbstractNodeAction.run(AbstractNodeAction.java:155)
+	at org.knime.workbench.editor2.actions.delegates.AbstractEditorAction.run(AbstractEditorAction.java:112)
+	at org.eclipse.ui.internal.PluginAction.runWithEvent(PluginAction.java:247)
+	at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:565)
+	at org.eclipse.jface.action.ActionContributionItem.lambda$5(ActionContributionItem.java:436)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:86)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4428)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1079)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4238)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3817)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1150)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:336)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1039)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:153)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:680)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:336)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:594)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:148)
+	at org.knime.product.rcp.KNIMEApplication.start(KNIMEApplication.java:144)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:196)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:134)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:388)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:243)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:653)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:590)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1499)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1472)
+Caused by: java.nio.file.AccessDeniedException: D:\runtime-KNIME\TestJoiner\FSKXReader07_workingDirectory67453
+	at sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:83)
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:97)
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:102)
+	at sun.nio.fs.WindowsDirectoryStream.<init>(WindowsDirectoryStream.java:86)
+	at sun.nio.fs.WindowsFileSystemProvider.newDirectoryStream(WindowsFileSystemProvider.java:518)
+	at java.nio.file.Files.newDirectoryStream(Files.java:457)
+	at java.nio.file.FileTreeWalker.visit(FileTreeWalker.java:300)
+	at java.nio.file.FileTreeWalker.next(FileTreeWalker.java:372)
+	at java.nio.file.FileTreeIterator.fetchNextIfNeeded(FileTreeIterator.java:95)
+	... 57 more
+2019-06-11 14:53:40,589 : DEBUG : main : Node : FSKX Reader : 0:14 : clean output ports.
+2019-06-11 14:53:40,609 : DEBUG : main : Node : FSKX Reader : 0:14 : Configure succeeded. (FSKX Reader)
+2019-06-11 14:53:40,610 : DEBUG : main : Node : FSK Joiner : 0:13 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,610 : DEBUG : main : Node : FSK Runner : 0:12 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:40,611 : DEBUG : main : Node : FSK Joiner : 0:9 : Configure succeeded. (FSK Joiner)
+2019-06-11 14:53:40,611 : DEBUG : main : Node : FSK Runner : 0:10 : Configure succeeded. (FSK Runner)
+2019-06-11 14:53:44,811 : DEBUG : main : ProjectWorkflowMap : TestJoiner : 0 : Removing "file:/D:/runtime-KNIME/TestJoiner/" from project map (0 remaining)
+2019-06-11 14:53:44,811 : DEBUG : main : WorkflowManager : TestJoiner : 0 : Removing project "TestJoiner 0"
+2019-06-11 14:53:44,813 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:114 : Removing all (0) views from model.
+2019-06-11 14:53:44,813 : DEBUG : main : Node : FSK Runner : 0:114 : clean output ports.
+2019-06-11 14:53:44,813 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:116 : Removing all (0) views from model.
+2019-06-11 14:53:44,813 : DEBUG : main : Node : FSK Runner : 0:116 : clean output ports.
+2019-06-11 14:53:44,813 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:113 : Removing all (0) views from model.
+2019-06-11 14:53:44,813 : DEBUG : main : Node : FSK Joiner : 0:113 : clean output ports.
+2019-06-11 14:53:44,813 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:115 : Removing all (1) views from model.
+2019-06-11 14:53:44,813 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:115 : Unregistering view from model (0 remaining).
+2019-06-11 14:53:44,813 : DEBUG : main : Node : FSK Joiner : 0:115 : clean output ports.
+2019-06-11 14:53:44,813 : DEBUG : main : VirtualSubNodeOutputNodeModel : WrappedNode Output : 0:112:0:102 : Removing all (0) views from model.
+2019-06-11 14:53:44,813 : DEBUG : main : Node : WrappedNode Output : 0:112:0:102 : clean output ports.
+2019-06-11 14:53:44,813 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:112:0:100 : Removing all (0) views from model.
+2019-06-11 14:53:44,813 : DEBUG : main : Node : FSKX Reader : 0:112:0:100 : clean output ports.
+2019-06-11 14:53:44,814 : DEBUG : main : WriterNodeModel : FSKX Writer : 0:112:0:98 : Removing all (0) views from model.
+2019-06-11 14:53:44,814 : DEBUG : main : Node : FSKX Writer : 0:112:0:98 : clean output ports.
+2019-06-11 14:53:44,814 : DEBUG : main : VirtualSubNodeInputNodeModel : WrappedNode Input : 0:112:0:101 : Removing all (0) views from model.
+2019-06-11 14:53:44,814 : DEBUG : main : Node : WrappedNode Input : 0:112:0:101 : clean output ports.
+2019-06-11 14:53:44,814 : DEBUG : main : StringInputQuickFormNodeModel : String Input : 0:112:0:47 : Removing all (0) views from model.
+2019-06-11 14:53:44,814 : DEBUG : main : Node : String Input : 0:112:0:47 : clean output ports.
+2019-06-11 14:53:44,814 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:10 : Removing all (0) views from model.
+2019-06-11 14:53:44,814 : DEBUG : main : Node : FSK Runner : 0:10 : clean output ports.
+2019-06-11 14:53:44,814 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:9 : Removing all (1) views from model.
+2019-06-11 14:53:44,814 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:9 : Unregistering view from model (0 remaining).
+2019-06-11 14:53:44,814 : DEBUG : main : Node : FSK Joiner : 0:9 : clean output ports.
+2019-06-11 14:53:44,814 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:12 : Removing all (0) views from model.
+2019-06-11 14:53:44,814 : DEBUG : main : Node : FSK Runner : 0:12 : clean output ports.
+2019-06-11 14:53:44,814 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:6 : Removing all (0) views from model.
+2019-06-11 14:53:44,814 : DEBUG : main : Node : FSK Runner : 0:6 : clean output ports.
+2019-06-11 14:53:44,814 : DEBUG : main : RunnerNodeModel : FSK Runner : 0:4 : Removing all (0) views from model.
+2019-06-11 14:53:44,814 : DEBUG : main : Node : FSK Runner : 0:4 : clean output ports.
+2019-06-11 14:53:44,815 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:13 : Removing all (1) views from model.
+2019-06-11 14:53:44,815 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:13 : Unregistering view from model (0 remaining).
+2019-06-11 14:53:44,815 : DEBUG : main : Node : FSK Joiner : 0:13 : clean output ports.
+2019-06-11 14:53:44,815 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:5 : Removing all (1) views from model.
+2019-06-11 14:53:44,815 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:5 : Unregistering view from model (0 remaining).
+2019-06-11 14:53:44,815 : DEBUG : main : Node : FSK Joiner : 0:5 : clean output ports.
+2019-06-11 14:53:44,815 : DEBUG : main : JoinerNodeModel : FSK Joiner : 0:3 : Removing all (0) views from model.
+2019-06-11 14:53:44,815 : DEBUG : main : Node : FSK Joiner : 0:3 : clean output ports.
+2019-06-11 14:53:44,815 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:14 : Removing all (0) views from model.
+2019-06-11 14:53:44,815 : DEBUG : main : Node : FSKX Reader : 0:14 : clean output ports.
+2019-06-11 14:53:44,815 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:11 : Removing all (0) views from model.
+2019-06-11 14:53:44,815 : DEBUG : main : Node : FSKX Reader : 0:11 : clean output ports.
+2019-06-11 14:53:44,815 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:8 : Removing all (0) views from model.
+2019-06-11 14:53:44,815 : DEBUG : main : Node : FSKX Reader : 0:8 : clean output ports.
+2019-06-11 14:53:44,815 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:7 : Removing all (0) views from model.
+2019-06-11 14:53:44,815 : DEBUG : main : Node : FSKX Reader : 0:7 : clean output ports.
+2019-06-11 14:53:44,815 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:2 : Removing all (0) views from model.
+2019-06-11 14:53:44,815 : DEBUG : main : Node : FSKX Reader : 0:2 : clean output ports.
+2019-06-11 14:53:44,815 : DEBUG : main : ReaderNodeModel : FSKX Reader : 0:1 : Removing all (0) views from model.
+2019-06-11 14:53:44,815 : DEBUG : main : Node : FSKX Reader : 0:1 : clean output ports.
+2019-06-11 14:53:44,816 : DEBUG : main : WorkflowManager : TestJoiner : 0 : Project "TestJoiner 0" removed (1 remaining)
