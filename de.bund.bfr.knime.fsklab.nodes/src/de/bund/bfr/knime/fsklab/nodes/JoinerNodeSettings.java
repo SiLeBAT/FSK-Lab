@@ -28,11 +28,15 @@ class JoinerNodeSettings {
     private static final String CFG_SCOPE = "scope";
     private static final String CFG_DATA_BACKGROUND = "dataBackground";
     private static final String CFG_MODEL_MATH = "modelMath";
+    private static final String CFG_MODEL_MATH1 = "modelMath1";
+    private static final String CFG_MODEL_MATH2 = "modelMath2";
 
     String generalInformation;
     String scope;
     String dataBackground;
     String modelMath;
+    String modelMath1;
+    String modelMath2;
     
     /** Path to model script. */
     public String joinScript = "";
@@ -43,6 +47,8 @@ class JoinerNodeSettings {
       scope = settings.getString(CFG_SCOPE, "");
       dataBackground = settings.getString(CFG_DATA_BACKGROUND, "");
       modelMath = settings.getString(CFG_MODEL_MATH, "");
+      modelMath1 = settings.getString(CFG_MODEL_MATH1, "");
+      modelMath2 = settings.getString(CFG_MODEL_MATH2, "");
     }
 
     void save(final NodeSettingsWO settings) {
@@ -51,5 +57,7 @@ class JoinerNodeSettings {
       settings.addString(CFG_SCOPE, scope);
       settings.addString(CFG_DATA_BACKGROUND, dataBackground);
       settings.addString(CFG_MODEL_MATH, modelMath);
+      settings.addString(CFG_MODEL_MATH1, modelMath1);
+      settings.addString(CFG_MODEL_MATH2, modelMath2);
     }
   }

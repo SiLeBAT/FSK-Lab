@@ -1,0 +1,18 @@
+{
+  "eClass" : "http://BfR/bund/de/knime/model/metadata_V1.0.3#//ModelMath",
+  "parameter" : [ {
+    "eClass" : "http://BfR/bund/de/knime/model/metadata_V1.0.3#//Parameter",
+    "parameterID" : "FirstModelInput",
+    "parameterClassification" : "Input",
+    "parameterName" : "FirstModelInput",
+    "parameterDataType" : "Integer",
+    "parameterValue" : "10"
+  }, {
+    "eClass" : "http://BfR/bund/de/knime/model/metadata_V1.0.3#//Parameter",
+    "parameterID" : "FirstModelOutput",
+    "parameterClassification" : "Output",
+    "parameterName" : "FirstModelOutput",
+    "parameterDataType" : "Integer",
+    "parameterValue" : ""
+  } ]
+}
