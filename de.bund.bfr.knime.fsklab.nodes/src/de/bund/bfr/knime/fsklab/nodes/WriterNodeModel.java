@@ -124,7 +124,7 @@ class WriterNodeModel extends NoInternalsModel {
   public static final String METADATA_NS = "fsk";
   public static final String METADATA_COMMAND = "command";
   public static final String METADATA_COMMAND_VALUE = "commandValue";
-
+  static ScriptHandler scriptHandler;
 
   private final WriterNodeSettings nodeSettings = new WriterNodeSettings();
 
@@ -161,11 +161,11 @@ class WriterNodeModel extends NoInternalsModel {
 
     addVersion(archive);
     // Adds model script
-    final ArchiveEntry modelEntry = addRScript(archive, fskObj.model, filePrefix + "model.r");
+    final ArchiveEntry modelEntry = addRScript(archive, fskObj.model, filePrefix + "model." + scriptHandler.getFileExtension());
     modelEntry.addDescription(new FskMetaDataObject(ResourceType.modelScript).metaDataObject);
 
     // Adds visualization script
-    final ArchiveEntry vizEntry = addRScript(archive, fskObj.viz, filePrefix + "visualization.r");
+    final ArchiveEntry vizEntry = addRScript(archive, fskObj.viz, filePrefix + "visualization." + scriptHandler.getFileExtension());
     vizEntry.addDescription(new FskMetaDataObject(ResourceType.visualizationScript).metaDataObject);
 
     // Adds R workspace file
@@ -287,7 +287,7 @@ class WriterNodeModel extends NoInternalsModel {
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
     FskPortObject in = (FskPortObject) inObjects[0];
-
+    scriptHandler = ScriptHandler.createHandler(in.generalInformation.getLanguageWrittenIn());
     URL url = FileUtil.toURL(nodeSettings.filePath);
     Path localPath = FileUtil.resolveToPath(url);
 
@@ -347,8 +347,9 @@ class WriterNodeModel extends NoInternalsModel {
         archive.addEntry(tempFile, targetName, URIS.get("sbml"));
       }
       // get package version
-      try (RController controller = new RController()) {
-        final ScriptExecutor executor = new ScriptExecutor(controller);
+      try  {
+        scriptHandler.setController(exec);
+        //final ScriptExecutor executor = new ScriptExecutor(controller);
         // Gets library URI for the running platform
         final URI libUri = NodeUtils.getLibURI();
         JsonArrayBuilder rBuilder = Json.createArrayBuilder();
@@ -356,8 +357,10 @@ class WriterNodeModel extends NoInternalsModel {
         // Adds R libraries and their info
         for (String pkg : portObject.packages) {
           try {
-            REXP c = executor.execute("packageDescription(\"" + pkg + "\")$Version", exec);
-            String[] execResult = c.asStrings();
+//            REXP c = executor.execute("packageDescription(\"" + pkg + "\")$Version", exec);
+//            String[] execResult = c.asStrings();
+            String command = scriptHandler.getPackageVersionCommand(pkg);
+            String[] execResult = scriptHandler.runScript(command, exec, true);
             rBuilder.add(getJsonObject(pkg, execResult[0]));
           } catch (Exception e) {
             packagesWithoutInfo.add(pkg);
@@ -372,11 +375,14 @@ class WriterNodeModel extends NoInternalsModel {
         // try to get package info for libraries not installed yet.
         if (packagesWithoutInfo.size() > 0) {
           try {
-            String command =
-                "available.packages(contriburl = contrib.url(c(\"https://cloud.r-project.org/\"), \"both\"))[c('"
-                    + packagesWithoutInfo.stream().collect(Collectors.joining("','")) + "'),]";
-            REXP cExternal = executor.execute(command, exec);
-            String[] execResult = cExternal.asStrings();
+//            String command =
+//                "available.packages(contriburl = contrib.url(c(\"https://cloud.r-project.org/\"), \"both\"))[c('"
+//                    + packagesWithoutInfo.stream().collect(Collectors.joining("','")) + "'),]";
+//            REXP cExternal = executor.execute(command, exec);
+//            String[] execResult = cExternal.asStrings();
+            String command = scriptHandler.getPackageVersionCommand(packagesWithoutInfo);
+            String[] execResult = scriptHandler.runScript(command, exec, true);
+
             for (int index = 0; index < packagesWithoutInfo.size(); index++) {
               rBuilder.add(getJsonObject(packagesWithoutInfo.get(index),
                   execResult[index + packagesWithoutInfo.size()]));
@@ -403,6 +409,9 @@ class WriterNodeModel extends NoInternalsModel {
 
         addPackagesFile(archive, StringEscapeUtils.unescapeJson(packageList.toString()),
             "packages.json");
+      }catch(Exception e)
+      {
+        
       }
 
       archive.pack();
@@ -606,7 +615,7 @@ class WriterNodeModel extends NoInternalsModel {
     SteadyState simulation = new SteadyState("steadyState", "", new Algorithm(" "));
     {
       SourceScript ss =
-          new SourceScript("https://iana.org/assignments/mediatypes/text/x-r", "./param.r");
+          new SourceScript("https://iana.org/assignments/mediatypes/text/x-"+scriptHandler.getFileExtension(), "./param."+scriptHandler.getFileExtension());
       simulation.addAnnotation(new Annotation(ss));
     }
     sedml.addSimulation(simulation);
@@ -619,7 +628,7 @@ class WriterNodeModel extends NoInternalsModel {
 
       // Add model
       Model model = new Model(fskSimulation.getName(), "",
-          "https://iana.org/assignments/mediatypes/text/x-r", "./model.r");
+          "https://iana.org/assignments/mediatypes/text/x-"+scriptHandler.getFileExtension(), "./model."+scriptHandler.getFileExtension());
       sedml.addModel(model);
 
       // Add task
@@ -645,7 +654,7 @@ class WriterNodeModel extends NoInternalsModel {
     // Add plot
     {
       SourceScript ss =
-          new SourceScript("https://iana.org/assignments/mediatypes/text/x-r", "./visualization.r");
+          new SourceScript("https://iana.org/assignments/mediatypes/text/x-"+scriptHandler.getFileExtension(), "./visualization."+scriptHandler.getFileExtension());
 
       Plot2D plot = new Plot2D("plot1", "");
       plot.addAnnotation(new Annotation(ss));
@@ -685,7 +694,7 @@ class WriterNodeModel extends NoInternalsModel {
     // Only save R workspace smaller than 100 MB
     if (fileSizeInMB < 100) {
       final ArchiveEntry workspaceEntry = archive.addEntry(workspace.toFile(),
-          filePrefix + "workspace.r", FSKML.getURIS(1, 0, 12).get("r"));
+          filePrefix + "workspace."+ scriptHandler.getFileExtension(), FSKML.getURIS(1, 0, 12).get(scriptHandler.getFileExtension()));
       workspaceEntry.addDescription(new FskMetaDataObject(ResourceType.workspace).metaDataObject);
     } else {
       LOGGER.warn("Results file larger than 100 MB -> Skipping file");
@@ -696,13 +705,13 @@ class WriterNodeModel extends NoInternalsModel {
   private static void addParameterScript(CombineArchive archive, FskSimulation simulation,
       String filePrefix) throws IOException {
 
-    String script = NodeUtils.buildParameterScript(simulation);
+    String script = scriptHandler.buildParameterScript(simulation);
 
-    File tempFile = File.createTempFile("temp", ".R");
+    File tempFile = File.createTempFile("temp",  "." + scriptHandler.getFileExtension());
     FileUtils.writeStringToFile(tempFile, script, "UTF-8");
 
-    String targetName = filePrefix + "simulations/" + simulation.getName() + ".R";
-    archive.addEntry(tempFile, targetName, FSKML.getURIS(1, 0, 12).get("r"));
+    String targetName = filePrefix + "simulations/" + simulation.getName() +  "." + scriptHandler.getFileExtension();
+    archive.addEntry(tempFile, targetName, FSKML.getURIS(1, 0, 12).get( scriptHandler.getFileExtension()));
 
     tempFile.delete();
   }
