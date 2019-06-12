@@ -1,19 +1,15 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
-import org.rosuda.REngine.REXPMismatchException;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
@@ -21,7 +17,6 @@ import de.bund.bfr.knime.fsklab.r.client.RController;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import metadata.Parameter;
 import metadata.ParameterClassification;
-import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 
 public class RScriptHandler extends ScriptHandler {
   ScriptExecutor executor;

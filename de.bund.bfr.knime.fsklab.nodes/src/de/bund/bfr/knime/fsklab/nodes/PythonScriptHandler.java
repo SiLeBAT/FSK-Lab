@@ -1,15 +1,9 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.io.FilenameUtils;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.python2.kernel.PythonKernel;
