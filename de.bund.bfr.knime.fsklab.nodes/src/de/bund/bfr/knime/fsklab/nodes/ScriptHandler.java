@@ -14,7 +14,7 @@ public abstract class ScriptHandler implements AutoCloseable {
   /**
    * This template method runs a snippet of script code. It does not save the stdOutput or the
    * stdErrOutput. After running this method, "cleanup" has to be called in order to close the
-   * communica-tion with the script-interpreter.
+   * communication with the script-interpreter.
    *
    *
    * @param fskObj A {@link FSKPortObject} containing the model scripts
@@ -28,14 +28,11 @@ public abstract class ScriptHandler implements AutoCloseable {
    * @param nodeSettings settings of the node containing the dimensions of the output im-age
    * @throws Exception
    */
-  
-  
-  public final void runSnippet(final FskPortObject fskObj,
-      final FskSimulation simulation,
-      final ExecutionContext exec,
-      NodeLogger LOGGER,
-      final RunnerNodeInternalSettings internalSettings,
-      RunnerNodeSettings nodeSettings)
+
+
+  public final void runSnippet(final FskPortObject fskObj, final FskSimulation simulation,
+      final ExecutionContext exec, NodeLogger LOGGER,
+      final RunnerNodeInternalSettings internalSettings, RunnerNodeSettings nodeSettings)
       throws Exception {
     // Sets up working directory with resource files. This directory needs to be deleted.
     exec.setProgress(0.05, "Add resource files");
@@ -50,36 +47,33 @@ public abstract class ScriptHandler implements AutoCloseable {
     // START RUNNING MODEL
     exec.setProgress(0.1, "Setting up output capturing");
     setupOutputCapturing(exec);
-   
+
     // Install needed libraries
     if (!fskObj.packages.isEmpty()) {
       installLibs(fskObj, exec, LOGGER);
     }
-    
-        
+
     exec.setProgress(0.72, "Set parameter values");
     LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
     String paramScript = buildParameterScript(simulation);
-    
+
     runScript(paramScript, exec, true);
     exec.setProgress(0.75, "Run models script");
     runScript(fskObj.model, exec, false);
-    
-    
-     if(RunnerNodeModel.isTest) {//(fskObj.generalInformation.getLanguageWrittenIn().toLowerCase().startsWith("r")) {
-      for(Parameter param : fskObj.modelMath.getParameter()) {
-        if(param.getParameterClassification().equals(ParameterClassification.OUTPUT)) {
-          String[] value = runScript("eval("+param.getParameterID()+")", exec,true);
+
+    if (RunnerNodeModel.isTest) {
+      for (Parameter param : fskObj.modelMath.getParameter()) {
+        if (param.getParameterClassification().equals(ParameterClassification.OUTPUT)) {
+          String[] value = runScript("eval(" + param.getParameterID() + ")", exec, true);
           param.setParameterValue(value[0]);
-          
         }
       }
-      
+
     }
-    
+
     exec.setProgress(0.9, "Run visualization script");
-    //convertToKnimeDataTable(fskObj,exec);
-    
+    // convertToKnimeDataTable(fskObj,exec);
+
     try {
       plotToImageFile(internalSettings, nodeSettings, fskObj, exec);
       // Save path of generated plot
@@ -87,33 +81,31 @@ public abstract class ScriptHandler implements AutoCloseable {
     } catch (final Exception exception) {
       LOGGER.warn("Visualization script failed", exception);
     }
-    
+
     exec.setProgress(0.96, "Restore library paths");
     restoreDefaultLibrary();
-    
+
     exec.setProgress(0.98, "Collecting captured output");
     finishOutputCapturing(exec);
-    
+
     saveWorkspace(fskObj, exec);
-    
-    
-    
   }
-  abstract void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception;
-  public static ScriptHandler createHandler(String script_type)
-  {
-    if(script_type == null)
+
+  abstract void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec)
+      throws Exception;
+
+  public static ScriptHandler createHandler(String script_type) {
+    if (script_type == null)
       return new RScriptHandler();
-    if(script_type.toLowerCase().startsWith("r"))
+    if (script_type.toLowerCase().startsWith("r"))
       return new RScriptHandler();
-    if(script_type.toLowerCase().startsWith("py"))
+    if (script_type.toLowerCase().startsWith("py"))
       return new PythonScriptHandler();
     return new RScriptHandler();
   }
-  
+
   abstract void setController(ExecutionContext exec) throws Exception;
-  
-  
+
   /**
    * Set the directory in which the interpreter can temporarily save data while executing the script
    * 
@@ -146,9 +138,9 @@ public abstract class ScriptHandler implements AutoCloseable {
    * 
    * @throws Exception
    */
-//  public abstract void setController(ExecutionContext exec) throws Exception;
+  // public abstract void setController(ExecutionContext exec) throws Exception;
 
-  
+
   public abstract String[] runScript(String script, ExecutionContext exec, Boolean showErrors)
       throws Exception;
 
@@ -245,7 +237,6 @@ public abstract class ScriptHandler implements AutoCloseable {
   public abstract String getPackageVersionCommand(List<String> pkg_names);
 
   /**
-   *
    * @return The file extension of script files of the specific language (e.g. in R: return value
    *         would be "r" )
    */

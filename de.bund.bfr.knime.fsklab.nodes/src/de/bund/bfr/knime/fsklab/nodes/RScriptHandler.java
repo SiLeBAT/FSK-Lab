@@ -44,6 +44,7 @@ public class RScriptHandler extends ScriptHandler {
     }
     return null;
   }
+  
   void convertToKnimeDataTable(FskPortObject fskObj,ExecutionContext exec) throws Exception{
     LibRegistry.instance().install(Arrays.asList("data.table"));
     
