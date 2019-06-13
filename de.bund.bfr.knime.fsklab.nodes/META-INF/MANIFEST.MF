@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes
 Bundle-ManifestVersion: 2
 Bundle-Name: BfR FSK-Lab extension nodes
 Bundle-SymbolicName: de.bund.bfr.knime.fsklab.nodes;singleton:=true
@@ -53,15 +54,29 @@ Bundle-ClassPath: .,
  libs/fskml-1.0.13.jar
 Export-Package: de.bund.bfr.knime.fsklab;
   uses:="org.osgi.framework,
-   de.bund.bfr.knime.fsklab.rakip,
+   org.emfjson.jackson.resource,
    com.fasterxml.jackson.databind,
-   org.eclipse.ui.plugin,
-   org.knime.core.node.port",
+   org.eclipse.ui.plugin",
+ de.bund.bfr.knime.fsklab.features;uses:="org.togglz.core.manager,org.togglz.core.spi,org.togglz.core",
  de.bund.bfr.knime.fsklab.nodes;
-  uses:="org.knime.base.node.util.exttool,
-   de.bund.bfr.knime.fsklab,
-   javax.swing.event,
-   de.bund.bfr.knime.fsklab.nodes.controller,
-   de.bund.bfr.knime.fsklab.rakip,
-   javax.swing"
-Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes
+  uses:="de.bund.bfr.knime.fsklab,
+   org.knime.base.node.util.exttool,
+   metadata,
+   javax.swing.table,
+   org.knime.js.core,
+   org.knime.core.node.port.image,
+   org.knime.js.core.node,
+   org.apache.poi.ss.usermodel,
+   org.knime.python2.kernel,
+   org.knime.core.node,
+   javax.json,
+   org.knime.core.node.workflow,
+   org.sbml.jsbml.ext.comp,
+   org.knime.core.node.web,
+   org.knime.core.node.port,
+   org.knime.core.node.wizard,
+   org.sbml.jsbml,
+   de.unirostock.sems.cbarchive,
+   de.bund.bfr.knime.fsklab.r.client,
+   javax.swing",
+ de.bund.bfr.knime.fsklab.nodes.plot;uses:="de.bund.bfr.knime.fsklab.r.client"

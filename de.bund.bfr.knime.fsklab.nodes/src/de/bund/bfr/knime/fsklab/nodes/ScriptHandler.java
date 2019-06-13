@@ -68,7 +68,6 @@ public abstract class ScriptHandler implements AutoCloseable {
           param.setParameterValue(value[0]);
         }
       }
-
     }
 
     exec.setProgress(0.9, "Run visualization script");

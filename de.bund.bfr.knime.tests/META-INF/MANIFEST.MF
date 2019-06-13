@@ -14,4 +14,5 @@ Require-Bundle: de.bund.bfr.knime.pmm.common,
  org.glassfish.javax.json,
  de.bund.bfr.formats,
  de.bund.bfr.knime.fsklab.nodes,
- de.bund.bfr.knime.fsklab.r
+ de.bund.bfr.knime.fsklab.r,
+ org.hamcrest.library
