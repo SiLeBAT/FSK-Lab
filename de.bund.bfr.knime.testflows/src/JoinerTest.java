@@ -23,7 +23,6 @@ public class JoinerTest extends WorkflowTestCase {
 	private final String expectedthirdconversionJoinedModel_OutputwithConnections = "5120.0";
 	private final String expectedthirdNormalJoinedModel_OutputwithConnections = "2560.0";
 
-
 	private NodeID m_joinerNode1;
 	private NodeID m_runnerNode1;
 	private NodeID m_joinerNode2;
@@ -33,18 +32,19 @@ public class JoinerTest extends WorkflowTestCase {
 	private NodeID m_runnerNode114;
 	private NodeID m_runnerNode116;
 	private NodeID m_runnerNode118;
-	
+
 	private NodeID m_ReaderNode1;
 	private NodeID m_ReaderNode2;
 	private NodeID m_ReaderNode3;
 	private NodeID m_ReaderNode4;
+	private NodeID m_ReaderNode11;
+	private NodeID m_ReaderNode14;
 
 	@Before
 	public void prepearRunnerForTest() {
 		RunnerNodeModel.isTest = true;
 	}
 
-	
 	@Test
 	public void testJoiner() throws Exception {
 		NodeID baseID = loadAndSetWorkflow("TestJoiner");
@@ -56,9 +56,11 @@ public class JoinerTest extends WorkflowTestCase {
 
 		m_ReaderNode3 = new NodeID(baseID, 7);
 		m_ReaderNode4 = new NodeID(baseID, 8);
+		m_ReaderNode14 = new NodeID(baseID, 14);
+		m_ReaderNode11 = new NodeID(baseID, 11);
 		m_joinerNode2 = new NodeID(baseID, 5);
 		m_runnerNode2 = new NodeID(baseID, 6);
-		
+
 		m_runnerNode10 = new NodeID(baseID, 10);
 		m_runnerNode12 = new NodeID(baseID, 12);
 		m_runnerNode114 = new NodeID(baseID, 114);
@@ -84,8 +86,8 @@ public class JoinerTest extends WorkflowTestCase {
 		// TODO test joined scope
 		assertNotNull(((CombinedFskPortObject) outPort.getPortObject()).scope);
 		// TODO check the a results after running
-		
-		//without connection
+
+		// without connection
 		NodeContainer runner1NodeContainer = getManager().getNodeContainer(m_runnerNode1);
 		// port 0 is always flow variable port
 		NodeOutPort runner1OutPort = runner1NodeContainer.getOutPort(1);
@@ -93,7 +95,7 @@ public class JoinerTest extends WorkflowTestCase {
 		assertEquals(expectedJoinedModel_OutputwithoutConnections,
 				((CombinedFskPortObject) runner1OutPort.getPortObject()).getSecondFskPortObject().modelMath
 						.getParameter().get(1).getParameterValue());
-		
+
 		// with connection first level of join
 		executeAndWait(m_runnerNode2);
 		NodeContainer runner2NodeContainer = getManager().getNodeContainer(m_runnerNode2);
@@ -103,7 +105,7 @@ public class JoinerTest extends WorkflowTestCase {
 		assertEquals(expectedJoinedModel_OutputwithConnections,
 				((CombinedFskPortObject) runner2OutPort.getPortObject()).getSecondFskPortObject().modelMath
 						.getParameter().get(1).getParameterValue());
-		
+
 		executeAndWait(m_runnerNode12);
 		NodeContainer runner12NodeContainer = getManager().getNodeContainer(m_runnerNode12);
 		// port 0 is always a flow variable port
@@ -112,7 +114,7 @@ public class JoinerTest extends WorkflowTestCase {
 		assertEquals(expectedJoinedModel_OutputwithConnections,
 				((CombinedFskPortObject) runner12OutPort.getPortObject()).getSecondFskPortObject().modelMath
 						.getParameter().get(1).getParameterValue());
-		
+
 		// with connection second level of join
 		executeAndWait(m_runnerNode10);
 		NodeContainer runner10NodeContainer = getManager().getNodeContainer(m_runnerNode10);
@@ -120,18 +122,21 @@ public class JoinerTest extends WorkflowTestCase {
 		NodeOutPort runner10OutPort = runner10NodeContainer.getOutPort(1);
 
 		assertEquals(expectedsecondJoinedModel_OutputwithConnections,
-				((CombinedFskPortObject)((CombinedFskPortObject) runner10OutPort.getPortObject()).getSecondFskPortObject()).getSecondFskPortObject().modelMath
-						.getParameter().get(1).getParameterValue());
-		// with connection third level of join with writing and reading back the joined Object to test the writer and the reader with it.
-		// 1.  with conversion in use
+				((CombinedFskPortObject) ((CombinedFskPortObject) runner10OutPort.getPortObject())
+						.getSecondFskPortObject()).getSecondFskPortObject().modelMath.getParameter().get(1)
+								.getParameterValue());
+		// with connection third level of join with writing and reading back the joined
+		// Object to test the writer and the reader with it.
+		// 1. with conversion in use
 		executeAndWait(m_runnerNode116);
 		NodeContainer runner116NodeContainer = getManager().getNodeContainer(m_runnerNode116);
 		// port 0 is always a flow variable port
 		NodeOutPort runner116OutPort = runner116NodeContainer.getOutPort(1);
 
 		assertEquals(expectedthirdconversionJoinedModel_OutputwithConnections,
-				((CombinedFskPortObject)((CombinedFskPortObject)((CombinedFskPortObject) runner116OutPort.getPortObject()).getSecondFskPortObject()).getSecondFskPortObject()).getSecondFskPortObject().modelMath
-						.getParameter().get(1).getParameterValue());
+				((CombinedFskPortObject) ((CombinedFskPortObject) ((CombinedFskPortObject) runner116OutPort
+						.getPortObject()).getSecondFskPortObject()).getSecondFskPortObject())
+								.getSecondFskPortObject().modelMath.getParameter().get(1).getParameterValue());
 		// 2. without conversion
 		executeAndWait(m_runnerNode114);
 		NodeContainer runner114NodeContainer = getManager().getNodeContainer(m_runnerNode114);
@@ -139,18 +144,19 @@ public class JoinerTest extends WorkflowTestCase {
 		NodeOutPort runner114OutPort = runner114NodeContainer.getOutPort(1);
 
 		assertEquals(expectedthirdNormalJoinedModel_OutputwithConnections,
-				((CombinedFskPortObject)((CombinedFskPortObject)((CombinedFskPortObject) runner114OutPort.getPortObject()).getSecondFskPortObject()).getSecondFskPortObject()).getSecondFskPortObject().modelMath
-						.getParameter().get(1).getParameterValue());
+				((CombinedFskPortObject) ((CombinedFskPortObject) ((CombinedFskPortObject) runner114OutPort
+						.getPortObject()).getSecondFskPortObject()).getSecondFskPortObject())
+								.getSecondFskPortObject().modelMath.getParameter().get(1).getParameterValue());
 
-		
 		executeAndWait(m_runnerNode118);
 		NodeContainer runner118NodeContainer = getManager().getNodeContainer(m_runnerNode118);
 		// port 0 is always a flow variable port
 		NodeOutPort runner118OutPort = runner118NodeContainer.getOutPort(1);
 
 		assertEquals(expectedValueWithSimulation,
-				 ((FskPortObject)runner118OutPort.getPortObject()).modelMath.getParameter().get(1).getParameterValue());
-		
+				((FskPortObject) runner118OutPort.getPortObject()).modelMath.getParameter().get(1).getParameterValue());
+		// wait until R processes are killed
+
 		getManager().resetAndConfigureNode(m_ReaderNode1);
 		getManager().resetAndConfigureNode(m_ReaderNode2);
 		getManager().resetAndConfigureNode(m_joinerNode1);
@@ -160,13 +166,14 @@ public class JoinerTest extends WorkflowTestCase {
 		getManager().resetAndConfigureNode(m_ReaderNode4);
 		getManager().resetAndConfigureNode(m_joinerNode2);
 		getManager().resetAndConfigureNode(m_runnerNode2);
-		
+
 		getManager().resetAndConfigureNode(m_runnerNode12);
 		getManager().resetAndConfigureNode(m_runnerNode10);
 		getManager().resetAndConfigureNode(m_runnerNode116);
 		getManager().resetAndConfigureNode(m_runnerNode114);
 		getManager().resetAndConfigureNode(m_runnerNode118);
-		
+		getManager().resetAndConfigureNode(m_ReaderNode11);
+		getManager().resetAndConfigureNode(m_ReaderNode14);
 
 	}
 
