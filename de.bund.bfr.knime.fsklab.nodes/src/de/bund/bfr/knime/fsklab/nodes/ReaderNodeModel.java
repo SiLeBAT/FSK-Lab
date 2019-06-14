@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -136,7 +137,13 @@ class ReaderNodeModel extends NoInternalsModel {
           .filter(path -> path.toString()
               .contains(nodeContext.getNodeContainer().getNameWithID().toString()
                   .replaceAll("\\W", "").replace(" ", "") + "_" + "workingDirectory"))
-          .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+          .sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(file -> {
+           try {
+             file.delete();
+           }catch(Exception ex) {
+             ex.printStackTrace();
+           }
+          });
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -197,8 +204,14 @@ class ReaderNodeModel extends NoInternalsModel {
       List<String> listOfPaths =
           archive.getNumEntriesWithFormat(sbmlUri) > 1 ? new ArrayList<>(entries)
               : Arrays.asList("/");
-
-      fskObj = readFskPortObject(archive, listOfPaths, 0);
+      
+      NodeContext nodeContext = NodeContext.getContext();
+      WorkflowManager wfm = nodeContext.getWorkflowManager();
+      WorkflowContext workflowContext = wfm.getContext();
+      File currentWorkingDirectory = new File(workflowContext.getCurrentLocation(),
+              nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "").replace(" ",
+                  "") + "_" + "workingDirectory" );
+      fskObj = readFskPortObject(archive, listOfPaths, 0, currentWorkingDirectory);
     }
 
     return fskObj;
@@ -213,19 +226,15 @@ class ReaderNodeModel extends NoInternalsModel {
   }
 
   private FskPortObject readFskPortObject(CombineArchive archive, List<String> ListOfPaths,
-      int readLevel) throws Exception {
+      int readLevel, File currentWorkingDirectory) throws Exception {
     Map<String, URI> URIS = FSKML.getURIS(1, 0, 12);
     // each sub Model has it's own working directory to avoid resource conflict.
     // get current node's and workflow's context
-    NodeContext nodeContext = NodeContext.getContext();
-    WorkflowManager wfm = nodeContext.getWorkflowManager();
-    WorkflowContext workflowContext = wfm.getContext();
+   
 
     // get the location of the current Workflow to create the working directory in it and use the
     // name with current reader node id for the prefix of the working directory name
-    File currentWorkingDirectory = new File(workflowContext.getCurrentLocation(),
-        nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W", "").replace(" ",
-            "") + "_" + "workingDirectory" + TEMP_DIR_UNIFIER.getAndIncrement());
+   
     if (!currentWorkingDirectory.exists()) {
       currentWorkingDirectory.mkdir();
     }
@@ -251,8 +260,8 @@ class ReaderNodeModel extends NoInternalsModel {
       }
 
       // invoke this mothod recursively to get the sub model using the corresponding path group
-      FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup, ++readLevel);
-      FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup, ++readLevel);
+      FskPortObject firstFskPortObject = readFskPortObject(archive, firstGroup, ++readLevel,new File(currentWorkingDirectory,"sub"+readLevel));
+      FskPortObject secondFskPortObject = readFskPortObject(archive, secondGroup, ++readLevel,new File(currentWorkingDirectory,"sub"+readLevel));
       String tempString = firstelement.substring(0, firstelement.length() - 2);
       String parentPath = tempString.substring(0, tempString.lastIndexOf('/'));
       // Gets metadata
@@ -461,8 +470,13 @@ class ReaderNodeModel extends NoInternalsModel {
         String path = entry.getEntityPath();
         if (path.indexOf(pathToResource) == 0) {
           Path targetPath = workingDirectory.resolve(entry.getFileName());
-          Files.createFile(targetPath);
-          entry.extractFile(targetPath.toFile());
+          
+          try {
+            Files.createFile(targetPath);
+            entry.extractFile(targetPath.toFile());
+          }catch (FileAlreadyExistsException e) {
+            //Do nothing, the resource is already there
+          }
         }
       }
 

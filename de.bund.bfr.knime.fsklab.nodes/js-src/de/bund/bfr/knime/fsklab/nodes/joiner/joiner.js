@@ -455,8 +455,11 @@ joiner = function() {
 		window.dataBackground = _firstModel.dataBackground;
 		prepareData(_firstModel);
 		
-		create_body();
-		
+		create_body(value.different);
+		$('[data-toggle="popover"]').popover()
+		$('.popover-dismiss').popover({
+		  trigger: 'focus'
+		})
 		fixTableHeaders();
 		
 	};
@@ -643,13 +646,19 @@ joiner = function() {
 
 	// --- utility functions ---
 
-	function create_body() {
+	function create_body(different) {
 		$.ajaxSetup({
 			cache : true
 		});
 		document.createElement("body");
+		warn = false;
+		folderName = "";
+		if(different && different.startsWith('isDifferent')){
+			warn = true;
+			folderName = different.split(",")[1];
+		}
 		bodyContent = "<meta http-equiv='X-UA-Compatible' content='IE=edge'>"
-				+ "<h3>Combined FSK Object </h3>"
+				+ "<h3>Combined FSK Object "+ ( warn ? "<a data-content='<div><b>The metadata loaded from the setting is different from the version generated from the input ports. </br>To reset, please delete this folder </b>"+folderName+"' tabindex='0' title='Incompitable versions' data-html='true' data-toggle='popover' data-trigger='focus' href='#'><i class='fa fa-exclamation-circle' aria-hidden='true'></i></a>" : "" )+"</h3>" 
 				+ "        <div class='tabbable boxed parentTabs'>\n"
 				+ "        <ul class='nav nav-tabs'>\n"
 				+ "            <li class='active'><a href='#set1'>Join Panel</a>\n"

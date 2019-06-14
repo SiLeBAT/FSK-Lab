@@ -18,12 +18,28 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.emfjson.jackson.resource.JsonResourceFactory;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
@@ -34,12 +50,20 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
+import org.knime.core.node.workflow.NativeNodeContainer;
+import org.knime.core.node.workflow.NodeContext;
+import org.knime.core.node.workflow.WorkflowEvent;
+import org.knime.core.node.workflow.WorkflowListener;
 import org.knime.js.core.node.AbstractWizardNodeModel;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
+import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.nodes.JSSimulatorViewValue.JSSimulation;
+import metadata.MetadataPackage;
+import metadata.ModelMath;
 import metadata.Parameter;
 import metadata.ParameterClassification;
 
@@ -56,6 +80,10 @@ class JSSimulatorNodeModel
 
   private static final String VIEW_NAME = new JSSimulatorNodeFactory().getInteractiveViewName();
   int index = 0;
+
+  String nodeWithId;
+  String nodeName;
+  String nodeId;
 
   public JSSimulatorNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
@@ -134,10 +162,24 @@ class JSSimulatorNodeModel
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
     return inSpecs;
   }
+  public void deleteSettingFolder(String settingFolderPath) {
+    File settingFolder = new File(settingFolderPath);
 
+    try {
+      if (settingFolder.exists()) {
+        Files.walk(settingFolder.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile)
+            .forEach(File::delete);
+      }
+    } catch (IOException e) {
+      // nothing to do
+    }
+  }
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
-      throws IOException {
+      throws IOException, CanceledExecutionException, InvalidSettingsException {
+    nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
+    nodeName = NodeContext.getContext().getNodeContainer().getName();
+    nodeId = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
 
     FskPortObject inObj = (FskPortObject) inObjects[0];
 
@@ -147,12 +189,26 @@ class JSSimulatorNodeModel
 
       // If not executed
       if (val.simulations == null) {
-
-        // Convert FskSimulation(s) to JSSimulation(s)
-        val.simulations =
+        loadJsonSetting();
+        List<JSSimulation> simulations =
             inObj.simulations.stream().map(it -> toJSSimulation(it, inObj.modelMath.getParameter()))
                 .collect(Collectors.toList());
-
+        if (val.modelMath != null) {
+          ModelMath modelMathFromSetting = getEObjectFromJson(val.modelMath, ModelMath.class);
+          if (!EcoreUtil.equals(modelMathFromSetting.getParameter(),
+              inObj.modelMath.getParameter())) {
+            // Convert FskSimulation(s) to JSSimulation(s)
+            val.simulations = simulations;
+            File directory = NodeContext.getContext().getWorkflowManager().getProjectWFM()
+                .getContext().getCurrentLocation();
+            String containerName = nodeName + " (#" + nodeId + ") setting";
+            String settingFolderPath = directory.getPath().concat("/" + containerName);
+            deleteSettingFolder(settingFolderPath);
+          }
+        } else {
+          val.simulations = simulations;
+          val.modelMath = FromEOjectToJSON(inObj.modelMath);
+        }
         port = inObj;
       }
 
@@ -167,7 +223,35 @@ class JSSimulatorNodeModel
     }
 
     exec.setProgress(1);
+    NodeContext.getContext().getWorkflowManager().addListener(new WorkflowListener() {
 
+      @Override
+      public void workflowChanged(WorkflowEvent event) {
+        if (event.getType().equals(WorkflowEvent.Type.NODE_REMOVED)
+            && event.getOldValue() instanceof NativeNodeContainer) {
+          NativeNodeContainer nnc = (NativeNodeContainer) event.getOldValue();
+          File directory =
+              nnc.getDirectNCParent().getProjectWFM().getContext().getCurrentLocation();
+          String nncnamewithId = nnc.getNameWithID();
+          if (nncnamewithId.equals(nodeWithId)) {
+
+            String containerName = nodeName + " (#" + nodeId + ") setting";
+
+            String settingFolderPath = directory.getPath().concat("/" + containerName);
+            File settingFolder = new File(settingFolderPath);
+
+            try {
+              if (settingFolder.exists()) {
+                Files.walk(settingFolder.toPath()).sorted(Comparator.reverseOrder())
+                    .map(Path::toFile).forEach(File::delete);
+              }
+            } catch (IOException e) {
+              // nothing to do
+            }
+          }
+        }
+      }
+    });
     return new PortObject[] {inObj};
   }
 
@@ -200,10 +284,11 @@ class JSSimulatorNodeModel
         List<Parameter> inputParams = getViewRepresentation().parameters;
         index = 0;
         inputParams.stream().forEach(param -> {
-          Parameter paramCopy =  EcoreUtil.copy(param);          
+          Parameter paramCopy = EcoreUtil.copy(param);
           String paramWithSuffix = paramCopy.getParameterID();
           String paramWithoutSuffix = paramWithSuffix.replaceAll(JoinerNodeModel.suffix, "");
-          if (modelMathParameter.contains(paramWithoutSuffix) || modelMathParameter.contains(paramWithSuffix)) {
+          if (modelMathParameter.contains(paramWithoutSuffix)
+              || modelMathParameter.contains(paramWithSuffix)) {
             paramCopy.setParameterID(paramWithoutSuffix);
             properInputParam.add(paramCopy);
             indexes.add(index);
@@ -211,8 +296,10 @@ class JSSimulatorNodeModel
           index++;
 
         });
-        /*inputParams.stream().filter(param -> modelMathParameter.contains(param.getParameterID()))
-            .collect(Collectors.toList());*/
+        /*
+         * inputParams.stream().filter(param -> modelMathParameter.contains(param.getParameterID()))
+         * .collect(Collectors.toList());
+         */
 
         for (int i = 0; i < properInputParam.size(); i++) {
           String paramName = properInputParam.get(i).getParameterID();
@@ -235,15 +322,11 @@ class JSSimulatorNodeModel
   @Override
   protected void useCurrentValueAsDefault() {}
 
-  @Override
-  protected void saveSettingsTo(NodeSettingsWO settings) {}
+
 
   @Override
   protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
-  @Override
-  protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
-      throws InvalidSettingsException {}
 
   @Override
   public PortObject[] getInternalPortObjects() {
@@ -268,5 +351,118 @@ class JSSimulatorNodeModel
         .collect(Collectors.toList());
 
     return jsSim;
+  }
+
+
+
+  @Override
+  protected void saveSettingsTo(NodeSettingsWO settings) {
+
+    try {
+      JSSimulatorViewValue vv = getViewValue();
+      saveJsonSetting(vv.simulations, vv.modelMath);
+    } catch (IOException | CanceledExecutionException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
+      throws InvalidSettingsException {
+    try {
+      loadJsonSetting();
+    } catch (IOException | CanceledExecutionException e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  protected void loadJsonSetting() throws IOException, CanceledExecutionException {
+    File directory =
+        NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
+    String name = NodeContext.getContext().getNodeContainer().getName();
+    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    String containerName = name + " (#" + id + ") setting";
+
+    String settingFolderPath = directory.getPath().concat("/" + containerName);
+    File settingFolder = new File(settingFolderPath);
+
+    // Read configuration strings
+    String simulationString = NodeUtils.readConfigString(settingFolder, "simulations.json");
+   
+    // Update view value
+    if (!StringUtils.isBlank(simulationString)) {
+      String selectedIndex = simulationString.split(">>><<<")[0];
+      getViewValue().selectedSimulationIndex = Integer.parseInt(selectedIndex);
+      simulationString = simulationString.split(">>><<<")[1];
+      
+      List<JSSimulation> simulations = new ArrayList<JSSimulation>();
+      JSSimulatorViewValue viewValue = getViewValue();
+      List<String> listOfSimulations = Arrays.asList(simulationString.split("<<<>>>"));
+
+      listOfSimulations.forEach(lineOfSimulation -> {
+        String[] oneSimualtion = lineOfSimulation.split("  ,:  ");
+
+        if (oneSimualtion != null && oneSimualtion.length == 2) {
+          JSSimulation jsSim = new JSSimulation();
+          jsSim.name = oneSimualtion[0];
+          jsSim.values = Arrays.asList(oneSimualtion[1].split(":::"));
+          simulations.add(jsSim);
+        }
+
+      });
+      viewValue.simulations = simulations;
+      viewValue.modelMath = NodeUtils.readConfigString(settingFolder, "modelMath.json");
+    }
+  }
+
+  protected void saveJsonSetting(List<JSSimulation> simulationList, String modelMath)
+      throws IOException, CanceledExecutionException {
+    if (simulationList == null) {
+      return;
+    }
+    File directory =
+        NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
+    String name = NodeContext.getContext().getNodeContainer().getName();
+    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    String containerName = name + " (#" + id + ") setting";
+
+    String settingFolderPath = directory.getPath().concat("/" + containerName);
+    File settingFolder = new File(settingFolderPath);
+    if (!settingFolder.exists()) {
+      settingFolder.mkdir();
+    }
+    String joinedSimulations = ""+getViewValue().selectedSimulationIndex+">>><<<";
+    joinedSimulations += simulationList.stream()
+        .map(simulation -> simulation.buildStringValue()).collect(Collectors.joining("<<<>>>"));
+    NodeUtils.writeConfigString(joinedSimulations, settingFolder, "simulations.json");
+    NodeUtils.writeConfigString(modelMath, settingFolder, "modelMath.json");
+
+  }
+
+  private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType)
+      throws InvalidSettingsException {
+    final ResourceSet resourceSet = new ResourceSetImpl();
+    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+        .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
+    resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
+        MetadataPackage.eINSTANCE);
+
+    Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
+    InputStream inStream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
+    try {
+      resource.load(inStream, null);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return (T) resource.getContents().get(0);
+  }
+
+  private static String FromEOjectToJSON(final EObject eObject) throws JsonProcessingException {
+    ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    String jsonStr = objectMapper.writeValueAsString(eObject);
+    return jsonStr;
   }
 }

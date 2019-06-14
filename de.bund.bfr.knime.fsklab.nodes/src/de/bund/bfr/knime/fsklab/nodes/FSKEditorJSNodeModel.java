@@ -252,7 +252,9 @@ final class FSKEditorJSNodeModel
       // If not executed
 
       if (fskEditorProxyValue.generalInformation == null) {
-        loadJsonSetting();
+        if(inObjects[0] == null) {
+          loadJsonSetting();
+        }
         if (fskEditorProxyValue.generalInformation == null) {
           fskEditorProxyValue.generalInformation = FromEOjectToJSON(inObj1.generalInformation);
           fskEditorProxyValue.scope = FromEOjectToJSON(inObj1.scope);

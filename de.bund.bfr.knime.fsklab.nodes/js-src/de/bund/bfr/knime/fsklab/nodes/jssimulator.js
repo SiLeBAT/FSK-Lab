@@ -35,7 +35,6 @@ simulator = function() {
 			
 			var parameter = _rep.parameters[parameterIndex];
 			var value = _val.simulations[_currentSimulation].values[parameterIndex];
-			console.log(_rep.parameters[parameterIndex]);
 			var inputType;
 			if (parameter.dataType === "Integer" || parameter.dataType === "Double" ||
 				parameter.dataType === "Number") {
@@ -190,11 +189,16 @@ simulator = function() {
 			form.input.prop('disabled', true);
 			parameterForm.append(form);
 		}
+		$.each($('.simulation-button'),function(index,value){
+			if(index == _val.selectedSimulationIndex){
+				$(value).trigger( "click" );
+			}
+		});
 	}
 
 	function createSimulationButton(simulationName) {
 
-		var button = $('<button type="button" class="btn btn-default btn-block">'
+		var button = $('<button type="button" class="btn btn-default btn-block simulation-button">'
 			+ simulationName + '</button>');
 
 		button.click(function() {

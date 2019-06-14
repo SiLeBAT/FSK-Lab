@@ -77,6 +77,7 @@ class JoinerViewValue extends JSONViewContent {
   public String secondModelName;
   
   public String validationErrors;
+  public String different;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
