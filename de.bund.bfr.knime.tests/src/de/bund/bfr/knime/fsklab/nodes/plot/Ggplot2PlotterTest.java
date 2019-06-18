@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Arrays;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -13,7 +12,6 @@ import org.junit.rules.TemporaryFolder;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 
-@Ignore
 public class Ggplot2PlotterTest {
 
 	@Rule

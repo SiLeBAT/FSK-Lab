@@ -128,11 +128,15 @@ public class LibRegistry {
 	 * @param libs list of names of R libraries
 	 * @throws RException
 	 * @throws REXPMismatchException
-	 * @throws NoInternetException 
+	 * @throws NoInternetException
 	 */
-	public synchronized void install(final List<String> packages) throws RException, REXPMismatchException, NoInternetException {
+	public synchronized void install(final List<String> packages)
+			throws RException, REXPMismatchException, NoInternetException {
 
 		if (installedLibs.containsAll(packages))
+			return;
+		
+		if (rWrapper.areAllInstalled(packages))
 			return;
 
 		if (!isNetAvailable()) {
@@ -148,14 +152,19 @@ public class LibRegistry {
 			// Adds the dependencies to the miniCRAN repository
 			rWrapper.addPackage(missingPackages, repoPath);
 
-			// Gets the paths to the binaries of these dependencies
-			List<Path> paths = rWrapper.checkVersions(missingPackages, repoPath);
+			// Install with install.packages directly on Linux
+			if (Platform.isLinux()) {
+				rWrapper.installOnLinux(missingPackages, installPath);
+			} else {
+				// Gets the paths to the binaries of these dependencies
+				List<Path> paths = rWrapper.checkVersions(missingPackages, repoPath);
 
-			// Install binaries
-			rWrapper.installPackages(paths, installPath);
+				// Install binaries
+				rWrapper.installPackages(paths, installPath);
 
-			// Adds names of installed libraries to utility set
-			installedLibs.addAll(missingPackages);
+				// Adds names of installed libraries to utility set
+				installedLibs.addAll(missingPackages);
+			}
 		}
 	}
 
@@ -237,6 +246,17 @@ public class LibRegistry {
 			controller.eval(cmd, false);
 		}
 
+		boolean areAllInstalled(final List<String> pkgs) {
+			for (String pkg : pkgs) {
+				try {
+					library(pkg);
+				} catch (RException e) {
+					return false;
+				}
+			}
+			return true;
+		}
+
 		/**
 		 * Install packages from local files.
 		 * 
@@ -258,6 +278,13 @@ public class LibRegistry {
 			String pkgList = "c(" + pkgsAsString + ")";
 			String cmd = "install.packages(" + pkgList + ", repos = NULL, lib = '" + _path2String(lib) + "', type = '"
 					+ type + "')";
+			controller.eval(cmd, false);
+		}
+
+		void installOnLinux(final List<String> packages, final Path lib) throws RException {
+			String pkgList = "c(" + packages.stream().map(str -> "'" + str + "'").collect(Collectors.joining(", "))
+					+ ")";
+			String cmd = String.format("install.packages(%s, lib = '%s')", pkgList, _path2String(lib));
 			controller.eval(cmd, false);
 		}
 
