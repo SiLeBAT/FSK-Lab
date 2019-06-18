@@ -607,15 +607,22 @@ fskeditorjs = function() {
 		
 		window.store1.getState().jsonforms.core.data.author = window.store23
 				.getState().jsonforms.core.data;
+		
+		
 		window.store6.getState().jsonforms.core.data.study = window.store7
 				.getState().jsonforms.core.data;
 		_viewValue.generalInformation = JSON
 				.stringify(window.store1.getState().jsonforms.core.data);
+		window.store2.getState().jsonforms.core.data.spatialInformation = window.toBeReplacedMap["Spatial Information"]
+		.getState().jsonforms.core.data;
 		_viewValue.scope = JSON
 				.stringify(window.store2.getState().jsonforms.core.data);
+		
+		window.store17.getState().jsonforms.core.data.exposure = window.toBeReplacedMap["Exposure"]
+		.getState().jsonforms.core.data;
 		_viewValue.modelMath = JSON
 				.stringify(window.store17.getState().jsonforms.core.data);
-		console.log(window.store17.getState().jsonforms.core.data);
+		
 		_viewValue.dataBackground = JSON
 				.stringify(window.store6.getState().jsonforms.core.data);
 		if (window.firstModelScript && window.firstModelScript.save) {
@@ -666,7 +673,7 @@ fskeditorjs = function() {
 		_viewValue.firstModelScript = $('#firstModelScript').val();
 		_viewValue.firstModelViz = $('#firstModelViz').val();
 		_viewValue.readme = $('#READMEArea').val();
-		console.log(_viewValue.readme);
+		
 
 		_viewValue.resourcesFiles = resourcesFiles;
 		_viewValue.serverName = server;
@@ -684,6 +691,7 @@ fskeditorjs = function() {
 				.getState().jsonforms.core.data, "- Data Background:");
 		generalError += window.parameterValidationError
 		_viewValue.validationErrors = generalError.trim();
+		console.log(_viewValue);
 		return _viewValue;
 	};
 	function validateAgainstSchema(schema, data, schemaName) {
@@ -1186,23 +1194,25 @@ fskeditorjs = function() {
 				'laboratoryAccreditation', 'populationSpan',
 				'populationDescription', 'bmi', 'specialDietGroups', 'region',
 				'country', 'populationRiskFactor', 'season',
-				'patternConsumption', 'populationAge' ];
+				'patternConsumption', 'populationAge', 'modelSubClass','hypothesisOfTheModel','reference' ];
+		var keepLast = "";
 		$("[aria-describedby*='tooltip-add']")
 				.click(
 						function(event) {
 							currentArea = window.makeId($(this).attr(
 									'aria-label'));
+							console.log(currentArea);
 							window.generalInformation = window.store1
 									.getState().jsonforms.core.data;
 							window.scope = window.store2.getState().jsonforms.core.data;
 							window.modelMath = window.store17.getState().jsonforms.core.data;
 							window.dataBackground = window.store6.getState().jsonforms.core.data;
-							if ($.inArray(currentArea, StringObjectPopupsName) < 0) {
+							if ($.inArray(currentArea, StringObjectPopupsName) < 0 || (currentArea == "reference" && keepLast != "modelEquation")) {
 								event.preventDefault(); // Let's stop this
 														// event.
 								event.stopPropagation(); // Really this time.
 								$('#title' + currentArea).text(currentArea);
-
+								keepLast = currentArea == "modelEquation" ? "modelEquation" : "" ;
 								$('#' + currentArea).modal('show');
 								$('.modal-content').resizable({
 								// alsoResize: ".modal-dialog",
@@ -1414,10 +1424,16 @@ fskeditorjs = function() {
 					// filter out all emfforms of modals
 					return $(element).parents('.modal-dialog').length <= 0;
 
-				})
+				}).each(
+						function(index, element) {
+							 $(element).addClass('selectedParent');
+						})
 				.each(
 						function(index, element) {
-
+							if($(element).parents().hasClass('selectedParent')){
+								console.log(element);
+								return;
+							}
 							// console.log($(element));
 							var parent = $(element).parent().parent();
 
@@ -1444,7 +1460,6 @@ fskeditorjs = function() {
 						});
 
 		$("#" + ID + " > div.demoform").each(function(index, element) {
-			// console.log(element);
 			$(element).addClass('detailedSide');
 			navigationMap[ID + "General"] = $(element);
 			$("#" + ID + " div[data='General']").append(element);

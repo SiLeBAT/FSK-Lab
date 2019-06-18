@@ -181,9 +181,9 @@
         eType="#//StringObject" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="populationGender" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patternConsumption" upperBound="-1"
-        eType="#//StringObject"/>
+        eType="#//StringObject" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="populationAge" upperBound="-1"
-        eType="#//StringObject"/>
+        eType="#//StringObject" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Scope">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="generalComment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

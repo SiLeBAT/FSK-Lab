@@ -45,373 +45,373 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ScopeImpl extends MinimalEObjectImpl.Container implements Scope {
 	/**
-   * The default value of the '{@link #getGeneralComment() <em>General Comment</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getGeneralComment() <em>General Comment</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getGeneralComment()
-   * @generated
-   * @ordered
-   */
+	 * @see #getGeneralComment()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String GENERAL_COMMENT_EDEFAULT = null;
 
 	/**
-   * The cached value of the '{@link #getGeneralComment() <em>General Comment</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getGeneralComment() <em>General Comment</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getGeneralComment()
-   * @generated
-   * @ordered
-   */
+	 * @see #getGeneralComment()
+	 * @generated
+	 * @ordered
+	 */
 	protected String generalComment = GENERAL_COMMENT_EDEFAULT;
 
 	/**
-   * The default value of the '{@link #getTemporalInformation() <em>Temporal Information</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getTemporalInformation() <em>Temporal Information</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getTemporalInformation()
-   * @generated
-   * @ordered
-   */
+	 * @see #getTemporalInformation()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String TEMPORAL_INFORMATION_EDEFAULT = null;
 
 	/**
-   * The cached value of the '{@link #getTemporalInformation() <em>Temporal Information</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getTemporalInformation() <em>Temporal Information</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getTemporalInformation()
-   * @generated
-   * @ordered
-   */
+	 * @see #getTemporalInformation()
+	 * @generated
+	 * @ordered
+	 */
 	protected String temporalInformation = TEMPORAL_INFORMATION_EDEFAULT;
 
 	/**
-   * The cached value of the '{@link #getProduct() <em>Product</em>}' containment reference list.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getProduct() <em>Product</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getProduct()
-   * @generated
-   * @ordered
-   */
+	 * @see #getProduct()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<Product> product;
 
 	/**
-   * The cached value of the '{@link #getHazard() <em>Hazard</em>}' containment reference list.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getHazard() <em>Hazard</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getHazard()
-   * @generated
-   * @ordered
-   */
+	 * @see #getHazard()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<Hazard> hazard;
 
 	/**
-   * The cached value of the '{@link #getPopulationGroup() <em>Population Group</em>}' containment reference list.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getPopulationGroup() <em>Population Group</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getPopulationGroup()
-   * @generated
-   * @ordered
-   */
+	 * @see #getPopulationGroup()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<PopulationGroup> populationGroup;
 
 	/**
-   * The cached value of the '{@link #getSpatialInformation() <em>Spatial Information</em>}' containment reference.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getSpatialInformation() <em>Spatial Information</em>}' containment reference.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getSpatialInformation()
-   * @generated
-   * @ordered
-   */
+	 * @see #getSpatialInformation()
+	 * @generated
+	 * @ordered
+	 */
 	protected SpatialInformation spatialInformation;
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	protected ScopeImpl() {
-    super();
-  }
+		super();
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
-    return MetadataPackage.Literals.SCOPE;
-  }
+		return MetadataPackage.Literals.SCOPE;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public String getGeneralComment() {
-    return generalComment;
-  }
+		return generalComment;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public void setGeneralComment(String newGeneralComment) {
-    String oldGeneralComment = generalComment;
-    generalComment = newGeneralComment;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__GENERAL_COMMENT, oldGeneralComment, generalComment));
-  }
+		String oldGeneralComment = generalComment;
+		generalComment = newGeneralComment;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__GENERAL_COMMENT, oldGeneralComment, generalComment));
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public String getTemporalInformation() {
-    return temporalInformation;
-  }
+		return temporalInformation;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public void setTemporalInformation(String newTemporalInformation) {
-    String oldTemporalInformation = temporalInformation;
-    temporalInformation = newTemporalInformation;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__TEMPORAL_INFORMATION, oldTemporalInformation, temporalInformation));
-  }
+		String oldTemporalInformation = temporalInformation;
+		temporalInformation = newTemporalInformation;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__TEMPORAL_INFORMATION, oldTemporalInformation, temporalInformation));
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public EList<Product> getProduct() {
-    if (product == null) {
-      product = new EObjectContainmentEList<Product>(Product.class, this, MetadataPackage.SCOPE__PRODUCT);
-    }
-    return product;
-  }
+		if (product == null) {
+			product = new EObjectContainmentEList<Product>(Product.class, this, MetadataPackage.SCOPE__PRODUCT);
+		}
+		return product;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public EList<Hazard> getHazard() {
-    if (hazard == null) {
-      hazard = new EObjectContainmentEList<Hazard>(Hazard.class, this, MetadataPackage.SCOPE__HAZARD);
-    }
-    return hazard;
-  }
+		if (hazard == null) {
+			hazard = new EObjectContainmentEList<Hazard>(Hazard.class, this, MetadataPackage.SCOPE__HAZARD);
+		}
+		return hazard;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public EList<PopulationGroup> getPopulationGroup() {
-    if (populationGroup == null) {
-      populationGroup = new EObjectContainmentEList<PopulationGroup>(PopulationGroup.class, this, MetadataPackage.SCOPE__POPULATION_GROUP);
-    }
-    return populationGroup;
-  }
+		if (populationGroup == null) {
+			populationGroup = new EObjectContainmentEList<PopulationGroup>(PopulationGroup.class, this, MetadataPackage.SCOPE__POPULATION_GROUP);
+		}
+		return populationGroup;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public SpatialInformation getSpatialInformation() {
-    return spatialInformation;
-  }
+		return spatialInformation;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public NotificationChain basicSetSpatialInformation(SpatialInformation newSpatialInformation, NotificationChain msgs) {
-    SpatialInformation oldSpatialInformation = spatialInformation;
-    spatialInformation = newSpatialInformation;
-    if (eNotificationRequired()) {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__SPATIAL_INFORMATION, oldSpatialInformation, newSpatialInformation);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
+		SpatialInformation oldSpatialInformation = spatialInformation;
+		spatialInformation = newSpatialInformation;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__SPATIAL_INFORMATION, oldSpatialInformation, newSpatialInformation);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public void setSpatialInformation(SpatialInformation newSpatialInformation) {
-    if (newSpatialInformation != spatialInformation) {
-      NotificationChain msgs = null;
-      if (spatialInformation != null)
-        msgs = ((InternalEObject)spatialInformation).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.SCOPE__SPATIAL_INFORMATION, null, msgs);
-      if (newSpatialInformation != null)
-        msgs = ((InternalEObject)newSpatialInformation).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.SCOPE__SPATIAL_INFORMATION, null, msgs);
-      msgs = basicSetSpatialInformation(newSpatialInformation, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__SPATIAL_INFORMATION, newSpatialInformation, newSpatialInformation));
-  }
+		if (newSpatialInformation != spatialInformation) {
+			NotificationChain msgs = null;
+			if (spatialInformation != null)
+				msgs = ((InternalEObject)spatialInformation).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.SCOPE__SPATIAL_INFORMATION, null, msgs);
+			if (newSpatialInformation != null)
+				msgs = ((InternalEObject)newSpatialInformation).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.SCOPE__SPATIAL_INFORMATION, null, msgs);
+			msgs = basicSetSpatialInformation(newSpatialInformation, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.SCOPE__SPATIAL_INFORMATION, newSpatialInformation, newSpatialInformation));
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-    switch (featureID) {
-      case MetadataPackage.SCOPE__PRODUCT:
-        return ((InternalEList<?>)getProduct()).basicRemove(otherEnd, msgs);
-      case MetadataPackage.SCOPE__HAZARD:
-        return ((InternalEList<?>)getHazard()).basicRemove(otherEnd, msgs);
-      case MetadataPackage.SCOPE__POPULATION_GROUP:
-        return ((InternalEList<?>)getPopulationGroup()).basicRemove(otherEnd, msgs);
-      case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
-        return basicSetSpatialInformation(null, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
-  }
+		switch (featureID) {
+			case MetadataPackage.SCOPE__PRODUCT:
+				return ((InternalEList<?>)getProduct()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.SCOPE__HAZARD:
+				return ((InternalEList<?>)getHazard()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.SCOPE__POPULATION_GROUP:
+				return ((InternalEList<?>)getPopulationGroup()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
+				return basicSetSpatialInformation(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-    switch (featureID) {
-      case MetadataPackage.SCOPE__GENERAL_COMMENT:
-        return getGeneralComment();
-      case MetadataPackage.SCOPE__TEMPORAL_INFORMATION:
-        return getTemporalInformation();
-      case MetadataPackage.SCOPE__PRODUCT:
-        return getProduct();
-      case MetadataPackage.SCOPE__HAZARD:
-        return getHazard();
-      case MetadataPackage.SCOPE__POPULATION_GROUP:
-        return getPopulationGroup();
-      case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
-        return getSpatialInformation();
-    }
-    return super.eGet(featureID, resolve, coreType);
-  }
+		switch (featureID) {
+			case MetadataPackage.SCOPE__GENERAL_COMMENT:
+				return getGeneralComment();
+			case MetadataPackage.SCOPE__TEMPORAL_INFORMATION:
+				return getTemporalInformation();
+			case MetadataPackage.SCOPE__PRODUCT:
+				return getProduct();
+			case MetadataPackage.SCOPE__HAZARD:
+				return getHazard();
+			case MetadataPackage.SCOPE__POPULATION_GROUP:
+				return getPopulationGroup();
+			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
+				return getSpatialInformation();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-    switch (featureID) {
-      case MetadataPackage.SCOPE__GENERAL_COMMENT:
-        setGeneralComment((String)newValue);
-        return;
-      case MetadataPackage.SCOPE__TEMPORAL_INFORMATION:
-        setTemporalInformation((String)newValue);
-        return;
-      case MetadataPackage.SCOPE__PRODUCT:
-        getProduct().clear();
-        getProduct().addAll((Collection<? extends Product>)newValue);
-        return;
-      case MetadataPackage.SCOPE__HAZARD:
-        getHazard().clear();
-        getHazard().addAll((Collection<? extends Hazard>)newValue);
-        return;
-      case MetadataPackage.SCOPE__POPULATION_GROUP:
-        getPopulationGroup().clear();
-        getPopulationGroup().addAll((Collection<? extends PopulationGroup>)newValue);
-        return;
-      case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
-        setSpatialInformation((SpatialInformation)newValue);
-        return;
-    }
-    super.eSet(featureID, newValue);
-  }
+		switch (featureID) {
+			case MetadataPackage.SCOPE__GENERAL_COMMENT:
+				setGeneralComment((String)newValue);
+				return;
+			case MetadataPackage.SCOPE__TEMPORAL_INFORMATION:
+				setTemporalInformation((String)newValue);
+				return;
+			case MetadataPackage.SCOPE__PRODUCT:
+				getProduct().clear();
+				getProduct().addAll((Collection<? extends Product>)newValue);
+				return;
+			case MetadataPackage.SCOPE__HAZARD:
+				getHazard().clear();
+				getHazard().addAll((Collection<? extends Hazard>)newValue);
+				return;
+			case MetadataPackage.SCOPE__POPULATION_GROUP:
+				getPopulationGroup().clear();
+				getPopulationGroup().addAll((Collection<? extends PopulationGroup>)newValue);
+				return;
+			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
+				setSpatialInformation((SpatialInformation)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public void eUnset(int featureID) {
-    switch (featureID) {
-      case MetadataPackage.SCOPE__GENERAL_COMMENT:
-        setGeneralComment(GENERAL_COMMENT_EDEFAULT);
-        return;
-      case MetadataPackage.SCOPE__TEMPORAL_INFORMATION:
-        setTemporalInformation(TEMPORAL_INFORMATION_EDEFAULT);
-        return;
-      case MetadataPackage.SCOPE__PRODUCT:
-        getProduct().clear();
-        return;
-      case MetadataPackage.SCOPE__HAZARD:
-        getHazard().clear();
-        return;
-      case MetadataPackage.SCOPE__POPULATION_GROUP:
-        getPopulationGroup().clear();
-        return;
-      case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
-        setSpatialInformation((SpatialInformation)null);
-        return;
-    }
-    super.eUnset(featureID);
-  }
+		switch (featureID) {
+			case MetadataPackage.SCOPE__GENERAL_COMMENT:
+				setGeneralComment(GENERAL_COMMENT_EDEFAULT);
+				return;
+			case MetadataPackage.SCOPE__TEMPORAL_INFORMATION:
+				setTemporalInformation(TEMPORAL_INFORMATION_EDEFAULT);
+				return;
+			case MetadataPackage.SCOPE__PRODUCT:
+				getProduct().clear();
+				return;
+			case MetadataPackage.SCOPE__HAZARD:
+				getHazard().clear();
+				return;
+			case MetadataPackage.SCOPE__POPULATION_GROUP:
+				getPopulationGroup().clear();
+				return;
+			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
+				setSpatialInformation((SpatialInformation)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public boolean eIsSet(int featureID) {
-    switch (featureID) {
-      case MetadataPackage.SCOPE__GENERAL_COMMENT:
-        return GENERAL_COMMENT_EDEFAULT == null ? generalComment != null : !GENERAL_COMMENT_EDEFAULT.equals(generalComment);
-      case MetadataPackage.SCOPE__TEMPORAL_INFORMATION:
-        return TEMPORAL_INFORMATION_EDEFAULT == null ? temporalInformation != null : !TEMPORAL_INFORMATION_EDEFAULT.equals(temporalInformation);
-      case MetadataPackage.SCOPE__PRODUCT:
-        return product != null && !product.isEmpty();
-      case MetadataPackage.SCOPE__HAZARD:
-        return hazard != null && !hazard.isEmpty();
-      case MetadataPackage.SCOPE__POPULATION_GROUP:
-        return populationGroup != null && !populationGroup.isEmpty();
-      case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
-        return spatialInformation != null;
-    }
-    return super.eIsSet(featureID);
-  }
+		switch (featureID) {
+			case MetadataPackage.SCOPE__GENERAL_COMMENT:
+				return GENERAL_COMMENT_EDEFAULT == null ? generalComment != null : !GENERAL_COMMENT_EDEFAULT.equals(generalComment);
+			case MetadataPackage.SCOPE__TEMPORAL_INFORMATION:
+				return TEMPORAL_INFORMATION_EDEFAULT == null ? temporalInformation != null : !TEMPORAL_INFORMATION_EDEFAULT.equals(temporalInformation);
+			case MetadataPackage.SCOPE__PRODUCT:
+				return product != null && !product.isEmpty();
+			case MetadataPackage.SCOPE__HAZARD:
+				return hazard != null && !hazard.isEmpty();
+			case MetadataPackage.SCOPE__POPULATION_GROUP:
+				return populationGroup != null && !populationGroup.isEmpty();
+			case MetadataPackage.SCOPE__SPATIAL_INFORMATION:
+				return spatialInformation != null;
+		}
+		return super.eIsSet(featureID);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public String toString() {
-    if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (generalComment: ");
-    result.append(generalComment);
-    result.append(", temporalInformation: ");
-    result.append(temporalInformation);
-    result.append(')');
-    return result.toString();
-  }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (generalComment: ");
+		result.append(generalComment);
+		result.append(", temporalInformation: ");
+		result.append(temporalInformation);
+		result.append(')');
+		return result.toString();
+	}
 
 } //ScopeImpl

@@ -553,8 +553,15 @@ joiner = function() {
 				.getState().jsonforms.core.data;
 		_viewValue.generalInformation = JSON
 				.stringify(window.store1.getState().jsonforms.core.data);
+		window.store2.getState().jsonforms.core.data.spatialInformation = window.toBeReplacedMap["Spatial Information"]
+		.getState().jsonforms.core.data;
+		
 		_viewValue.scope = JSON
 				.stringify(window.store2.getState().jsonforms.core.data);
+		window.store17.getState().jsonforms.core.data.exposure = window.toBeReplacedMap["Exposure"]
+		.getState().jsonforms.core.data;
+		
+		
 		_viewValue.modelMath = JSON
 				.stringify(window.store17.getState().jsonforms.core.data);
 		_viewValue.dataBackground = JSON
@@ -982,14 +989,14 @@ joiner = function() {
 				'laboratoryAccreditation', 'populationSpan',
 				'populationDescription', 'bmi', 'specialDietGroups', 'region',
 				'country', 'populationRiskFactor', 'season',
-				'patternConsumption', 'populationAge' ];
+				'patternConsumption', 'populationAge', 'modelSubClass','hypothesisOfTheModel','reference' ];
 		$("[aria-describedby*='tooltip-add']").click(function(event) {
 			currentArea = window.makeId($(this).attr('aria-label'));
 			window.generalInformation = window.store1.getState().jsonforms.core.data;
 			window.scope = window.store2.getState().jsonforms.core.data;
 			window.modelMath =  window.store17.getState().jsonforms.core.data;
 			window.dataBackground =  window.store6.getState().jsonforms.core.data;
-			if ($.inArray(currentArea, StringObjectPopupsName) < 0) {
+			if ($.inArray(currentArea, StringObjectPopupsName) < 0 || (currentArea == "reference" && keepLast != "modelEquation")) {
 				event.preventDefault(); // Let's stop this event.
 				event.stopPropagation(); // Really this time.
 				$('#title' + currentArea).text(currentArea);
@@ -1195,10 +1202,19 @@ joiner = function() {
 		$("#"+ID+" div.MuiGrid-typeItem-2 div.table-responsive , #"+ID+" div.MuiGrid-typeItem-2 div.demoform").filter(function(index ,element){
 			//filter out all emfforms of modals
 			return $(element).parents('.modal-dialog').length <= 0;
-			  
-        }).each(function(index, element) {
-		  
-			//console.log($(element));
+
+							  
+        })
+		.each(function(index, element) {
+			$(element).addClass('selectedParent');
+		})
+		.each(
+			function(index, element) {
+				if ($(element).parents().hasClass('selectedParent')) {
+					console.log(element);
+					return;
+				}
+			
 		    var parent = $(element).parent().parent();
 		    
 		    var text;

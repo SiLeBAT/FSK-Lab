@@ -36,153 +36,153 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class SpatialInformationImpl extends MinimalEObjectImpl.Container implements SpatialInformation {
 	/**
-   * The cached value of the '{@link #getRegion() <em>Region</em>}' containment reference list.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRegion() <em>Region</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getRegion()
-   * @generated
-   * @ordered
-   */
+	 * @see #getRegion()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<StringObject> region;
 
 	/**
-   * The cached value of the '{@link #getCountry() <em>Country</em>}' containment reference list.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getCountry() <em>Country</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getCountry()
-   * @generated
-   * @ordered
-   */
+	 * @see #getCountry()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<StringObject> country;
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	protected SpatialInformationImpl() {
-    super();
-  }
+		super();
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
-    return MetadataPackage.Literals.SPATIAL_INFORMATION;
-  }
+		return MetadataPackage.Literals.SPATIAL_INFORMATION;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public EList<StringObject> getRegion() {
-    if (region == null) {
-      region = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.SPATIAL_INFORMATION__REGION);
-    }
-    return region;
-  }
+		if (region == null) {
+			region = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.SPATIAL_INFORMATION__REGION);
+		}
+		return region;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public EList<StringObject> getCountry() {
-    if (country == null) {
-      country = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.SPATIAL_INFORMATION__COUNTRY);
-    }
-    return country;
-  }
+		if (country == null) {
+			country = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.SPATIAL_INFORMATION__COUNTRY);
+		}
+		return country;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-    switch (featureID) {
-      case MetadataPackage.SPATIAL_INFORMATION__REGION:
-        return ((InternalEList<?>)getRegion()).basicRemove(otherEnd, msgs);
-      case MetadataPackage.SPATIAL_INFORMATION__COUNTRY:
-        return ((InternalEList<?>)getCountry()).basicRemove(otherEnd, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
-  }
+		switch (featureID) {
+			case MetadataPackage.SPATIAL_INFORMATION__REGION:
+				return ((InternalEList<?>)getRegion()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.SPATIAL_INFORMATION__COUNTRY:
+				return ((InternalEList<?>)getCountry()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-    switch (featureID) {
-      case MetadataPackage.SPATIAL_INFORMATION__REGION:
-        return getRegion();
-      case MetadataPackage.SPATIAL_INFORMATION__COUNTRY:
-        return getCountry();
-    }
-    return super.eGet(featureID, resolve, coreType);
-  }
+		switch (featureID) {
+			case MetadataPackage.SPATIAL_INFORMATION__REGION:
+				return getRegion();
+			case MetadataPackage.SPATIAL_INFORMATION__COUNTRY:
+				return getCountry();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-    switch (featureID) {
-      case MetadataPackage.SPATIAL_INFORMATION__REGION:
-        getRegion().clear();
-        getRegion().addAll((Collection<? extends StringObject>)newValue);
-        return;
-      case MetadataPackage.SPATIAL_INFORMATION__COUNTRY:
-        getCountry().clear();
-        getCountry().addAll((Collection<? extends StringObject>)newValue);
-        return;
-    }
-    super.eSet(featureID, newValue);
-  }
+		switch (featureID) {
+			case MetadataPackage.SPATIAL_INFORMATION__REGION:
+				getRegion().clear();
+				getRegion().addAll((Collection<? extends StringObject>)newValue);
+				return;
+			case MetadataPackage.SPATIAL_INFORMATION__COUNTRY:
+				getCountry().clear();
+				getCountry().addAll((Collection<? extends StringObject>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public void eUnset(int featureID) {
-    switch (featureID) {
-      case MetadataPackage.SPATIAL_INFORMATION__REGION:
-        getRegion().clear();
-        return;
-      case MetadataPackage.SPATIAL_INFORMATION__COUNTRY:
-        getCountry().clear();
-        return;
-    }
-    super.eUnset(featureID);
-  }
+		switch (featureID) {
+			case MetadataPackage.SPATIAL_INFORMATION__REGION:
+				getRegion().clear();
+				return;
+			case MetadataPackage.SPATIAL_INFORMATION__COUNTRY:
+				getCountry().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public boolean eIsSet(int featureID) {
-    switch (featureID) {
-      case MetadataPackage.SPATIAL_INFORMATION__REGION:
-        return region != null && !region.isEmpty();
-      case MetadataPackage.SPATIAL_INFORMATION__COUNTRY:
-        return country != null && !country.isEmpty();
-    }
-    return super.eIsSet(featureID);
-  }
+		switch (featureID) {
+			case MetadataPackage.SPATIAL_INFORMATION__REGION:
+				return region != null && !region.isEmpty();
+			case MetadataPackage.SPATIAL_INFORMATION__COUNTRY:
+				return country != null && !country.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //SpatialInformationImpl

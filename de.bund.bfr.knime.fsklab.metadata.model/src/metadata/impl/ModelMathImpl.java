@@ -45,355 +45,355 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class ModelMathImpl extends MinimalEObjectImpl.Container implements ModelMath {
 	/**
-   * The default value of the '{@link #getFittingProcedure() <em>Fitting Procedure</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getFittingProcedure() <em>Fitting Procedure</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getFittingProcedure()
-   * @generated
-   * @ordered
-   */
+	 * @see #getFittingProcedure()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String FITTING_PROCEDURE_EDEFAULT = null;
 
 	/**
-   * The cached value of the '{@link #getFittingProcedure() <em>Fitting Procedure</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getFittingProcedure() <em>Fitting Procedure</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getFittingProcedure()
-   * @generated
-   * @ordered
-   */
+	 * @see #getFittingProcedure()
+	 * @generated
+	 * @ordered
+	 */
 	protected String fittingProcedure = FITTING_PROCEDURE_EDEFAULT;
 
 	/**
-   * The cached value of the '{@link #getParameter() <em>Parameter</em>}' containment reference list.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getParameter() <em>Parameter</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getParameter()
-   * @generated
-   * @ordered
-   */
+	 * @see #getParameter()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<Parameter> parameter;
 
 	/**
-   * The cached value of the '{@link #getModelEquation() <em>Model Equation</em>}' containment reference list.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getModelEquation() <em>Model Equation</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getModelEquation()
-   * @generated
-   * @ordered
-   */
+	 * @see #getModelEquation()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<ModelEquation> modelEquation;
 
 	/**
-   * The cached value of the '{@link #getExposure() <em>Exposure</em>}' containment reference.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getExposure() <em>Exposure</em>}' containment reference.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getExposure()
-   * @generated
-   * @ordered
-   */
+	 * @see #getExposure()
+	 * @generated
+	 * @ordered
+	 */
 	protected Exposure exposure;
 
 	/**
-   * The cached value of the '{@link #getQualityMeasures() <em>Quality Measures</em>}' containment reference list.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getQualityMeasures() <em>Quality Measures</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getQualityMeasures()
-   * @generated
-   * @ordered
-   */
+	 * @see #getQualityMeasures()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<StringObject> qualityMeasures;
 
 	/**
-   * The cached value of the '{@link #getEvent() <em>Event</em>}' containment reference list.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getEvent() <em>Event</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getEvent()
-   * @generated
-   * @ordered
-   */
+	 * @see #getEvent()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<StringObject> event;
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	protected ModelMathImpl() {
-    super();
-  }
+		super();
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
-    return MetadataPackage.Literals.MODEL_MATH;
-  }
+		return MetadataPackage.Literals.MODEL_MATH;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public String getFittingProcedure() {
-    return fittingProcedure;
-  }
+		return fittingProcedure;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public void setFittingProcedure(String newFittingProcedure) {
-    String oldFittingProcedure = fittingProcedure;
-    fittingProcedure = newFittingProcedure;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.MODEL_MATH__FITTING_PROCEDURE, oldFittingProcedure, fittingProcedure));
-  }
+		String oldFittingProcedure = fittingProcedure;
+		fittingProcedure = newFittingProcedure;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.MODEL_MATH__FITTING_PROCEDURE, oldFittingProcedure, fittingProcedure));
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public EList<Parameter> getParameter() {
-    if (parameter == null) {
-      parameter = new EObjectContainmentEList<Parameter>(Parameter.class, this, MetadataPackage.MODEL_MATH__PARAMETER);
-    }
-    return parameter;
-  }
+		if (parameter == null) {
+			parameter = new EObjectContainmentEList<Parameter>(Parameter.class, this, MetadataPackage.MODEL_MATH__PARAMETER);
+		}
+		return parameter;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public EList<ModelEquation> getModelEquation() {
-    if (modelEquation == null) {
-      modelEquation = new EObjectContainmentEList<ModelEquation>(ModelEquation.class, this, MetadataPackage.MODEL_MATH__MODEL_EQUATION);
-    }
-    return modelEquation;
-  }
+		if (modelEquation == null) {
+			modelEquation = new EObjectContainmentEList<ModelEquation>(ModelEquation.class, this, MetadataPackage.MODEL_MATH__MODEL_EQUATION);
+		}
+		return modelEquation;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public Exposure getExposure() {
-    return exposure;
-  }
+		return exposure;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public NotificationChain basicSetExposure(Exposure newExposure, NotificationChain msgs) {
-    Exposure oldExposure = exposure;
-    exposure = newExposure;
-    if (eNotificationRequired()) {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MetadataPackage.MODEL_MATH__EXPOSURE, oldExposure, newExposure);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
+		Exposure oldExposure = exposure;
+		exposure = newExposure;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MetadataPackage.MODEL_MATH__EXPOSURE, oldExposure, newExposure);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public void setExposure(Exposure newExposure) {
-    if (newExposure != exposure) {
-      NotificationChain msgs = null;
-      if (exposure != null)
-        msgs = ((InternalEObject)exposure).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.MODEL_MATH__EXPOSURE, null, msgs);
-      if (newExposure != null)
-        msgs = ((InternalEObject)newExposure).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.MODEL_MATH__EXPOSURE, null, msgs);
-      msgs = basicSetExposure(newExposure, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.MODEL_MATH__EXPOSURE, newExposure, newExposure));
-  }
+		if (newExposure != exposure) {
+			NotificationChain msgs = null;
+			if (exposure != null)
+				msgs = ((InternalEObject)exposure).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.MODEL_MATH__EXPOSURE, null, msgs);
+			if (newExposure != null)
+				msgs = ((InternalEObject)newExposure).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MetadataPackage.MODEL_MATH__EXPOSURE, null, msgs);
+			msgs = basicSetExposure(newExposure, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.MODEL_MATH__EXPOSURE, newExposure, newExposure));
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public EList<StringObject> getQualityMeasures() {
-    if (qualityMeasures == null) {
-      qualityMeasures = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.MODEL_MATH__QUALITY_MEASURES);
-    }
-    return qualityMeasures;
-  }
+		if (qualityMeasures == null) {
+			qualityMeasures = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.MODEL_MATH__QUALITY_MEASURES);
+		}
+		return qualityMeasures;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public EList<StringObject> getEvent() {
-    if (event == null) {
-      event = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.MODEL_MATH__EVENT);
-    }
-    return event;
-  }
+		if (event == null) {
+			event = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.MODEL_MATH__EVENT);
+		}
+		return event;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-    switch (featureID) {
-      case MetadataPackage.MODEL_MATH__PARAMETER:
-        return ((InternalEList<?>)getParameter()).basicRemove(otherEnd, msgs);
-      case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
-        return ((InternalEList<?>)getModelEquation()).basicRemove(otherEnd, msgs);
-      case MetadataPackage.MODEL_MATH__EXPOSURE:
-        return basicSetExposure(null, msgs);
-      case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
-        return ((InternalEList<?>)getQualityMeasures()).basicRemove(otherEnd, msgs);
-      case MetadataPackage.MODEL_MATH__EVENT:
-        return ((InternalEList<?>)getEvent()).basicRemove(otherEnd, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
-  }
+		switch (featureID) {
+			case MetadataPackage.MODEL_MATH__PARAMETER:
+				return ((InternalEList<?>)getParameter()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
+				return ((InternalEList<?>)getModelEquation()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.MODEL_MATH__EXPOSURE:
+				return basicSetExposure(null, msgs);
+			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
+				return ((InternalEList<?>)getQualityMeasures()).basicRemove(otherEnd, msgs);
+			case MetadataPackage.MODEL_MATH__EVENT:
+				return ((InternalEList<?>)getEvent()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-    switch (featureID) {
-      case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
-        return getFittingProcedure();
-      case MetadataPackage.MODEL_MATH__PARAMETER:
-        return getParameter();
-      case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
-        return getModelEquation();
-      case MetadataPackage.MODEL_MATH__EXPOSURE:
-        return getExposure();
-      case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
-        return getQualityMeasures();
-      case MetadataPackage.MODEL_MATH__EVENT:
-        return getEvent();
-    }
-    return super.eGet(featureID, resolve, coreType);
-  }
+		switch (featureID) {
+			case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
+				return getFittingProcedure();
+			case MetadataPackage.MODEL_MATH__PARAMETER:
+				return getParameter();
+			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
+				return getModelEquation();
+			case MetadataPackage.MODEL_MATH__EXPOSURE:
+				return getExposure();
+			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
+				return getQualityMeasures();
+			case MetadataPackage.MODEL_MATH__EVENT:
+				return getEvent();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-    switch (featureID) {
-      case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
-        setFittingProcedure((String)newValue);
-        return;
-      case MetadataPackage.MODEL_MATH__PARAMETER:
-        getParameter().clear();
-        getParameter().addAll((Collection<? extends Parameter>)newValue);
-        return;
-      case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
-        getModelEquation().clear();
-        getModelEquation().addAll((Collection<? extends ModelEquation>)newValue);
-        return;
-      case MetadataPackage.MODEL_MATH__EXPOSURE:
-        setExposure((Exposure)newValue);
-        return;
-      case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
-        getQualityMeasures().clear();
-        getQualityMeasures().addAll((Collection<? extends StringObject>)newValue);
-        return;
-      case MetadataPackage.MODEL_MATH__EVENT:
-        getEvent().clear();
-        getEvent().addAll((Collection<? extends StringObject>)newValue);
-        return;
-    }
-    super.eSet(featureID, newValue);
-  }
+		switch (featureID) {
+			case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
+				setFittingProcedure((String)newValue);
+				return;
+			case MetadataPackage.MODEL_MATH__PARAMETER:
+				getParameter().clear();
+				getParameter().addAll((Collection<? extends Parameter>)newValue);
+				return;
+			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
+				getModelEquation().clear();
+				getModelEquation().addAll((Collection<? extends ModelEquation>)newValue);
+				return;
+			case MetadataPackage.MODEL_MATH__EXPOSURE:
+				setExposure((Exposure)newValue);
+				return;
+			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
+				getQualityMeasures().clear();
+				getQualityMeasures().addAll((Collection<? extends StringObject>)newValue);
+				return;
+			case MetadataPackage.MODEL_MATH__EVENT:
+				getEvent().clear();
+				getEvent().addAll((Collection<? extends StringObject>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public void eUnset(int featureID) {
-    switch (featureID) {
-      case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
-        setFittingProcedure(FITTING_PROCEDURE_EDEFAULT);
-        return;
-      case MetadataPackage.MODEL_MATH__PARAMETER:
-        getParameter().clear();
-        return;
-      case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
-        getModelEquation().clear();
-        return;
-      case MetadataPackage.MODEL_MATH__EXPOSURE:
-        setExposure((Exposure)null);
-        return;
-      case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
-        getQualityMeasures().clear();
-        return;
-      case MetadataPackage.MODEL_MATH__EVENT:
-        getEvent().clear();
-        return;
-    }
-    super.eUnset(featureID);
-  }
+		switch (featureID) {
+			case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
+				setFittingProcedure(FITTING_PROCEDURE_EDEFAULT);
+				return;
+			case MetadataPackage.MODEL_MATH__PARAMETER:
+				getParameter().clear();
+				return;
+			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
+				getModelEquation().clear();
+				return;
+			case MetadataPackage.MODEL_MATH__EXPOSURE:
+				setExposure((Exposure)null);
+				return;
+			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
+				getQualityMeasures().clear();
+				return;
+			case MetadataPackage.MODEL_MATH__EVENT:
+				getEvent().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public boolean eIsSet(int featureID) {
-    switch (featureID) {
-      case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
-        return FITTING_PROCEDURE_EDEFAULT == null ? fittingProcedure != null : !FITTING_PROCEDURE_EDEFAULT.equals(fittingProcedure);
-      case MetadataPackage.MODEL_MATH__PARAMETER:
-        return parameter != null && !parameter.isEmpty();
-      case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
-        return modelEquation != null && !modelEquation.isEmpty();
-      case MetadataPackage.MODEL_MATH__EXPOSURE:
-        return exposure != null;
-      case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
-        return qualityMeasures != null && !qualityMeasures.isEmpty();
-      case MetadataPackage.MODEL_MATH__EVENT:
-        return event != null && !event.isEmpty();
-    }
-    return super.eIsSet(featureID);
-  }
+		switch (featureID) {
+			case MetadataPackage.MODEL_MATH__FITTING_PROCEDURE:
+				return FITTING_PROCEDURE_EDEFAULT == null ? fittingProcedure != null : !FITTING_PROCEDURE_EDEFAULT.equals(fittingProcedure);
+			case MetadataPackage.MODEL_MATH__PARAMETER:
+				return parameter != null && !parameter.isEmpty();
+			case MetadataPackage.MODEL_MATH__MODEL_EQUATION:
+				return modelEquation != null && !modelEquation.isEmpty();
+			case MetadataPackage.MODEL_MATH__EXPOSURE:
+				return exposure != null;
+			case MetadataPackage.MODEL_MATH__QUALITY_MEASURES:
+				return qualityMeasures != null && !qualityMeasures.isEmpty();
+			case MetadataPackage.MODEL_MATH__EVENT:
+				return event != null && !event.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public String toString() {
-    if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (fittingProcedure: ");
-    result.append(fittingProcedure);
-    result.append(')');
-    return result.toString();
-  }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (fittingProcedure: ");
+		result.append(fittingProcedure);
+		result.append(')');
+		return result.toString();
+	}
 
 } //ModelMathImpl

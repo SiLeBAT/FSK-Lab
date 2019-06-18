@@ -7,9 +7,9 @@
     "parameterClassification": {
       "type": "string",
       "enum": [
-        "constant",
-        "input",
-        "output"
+        "Constant",
+        "Input",
+        "Output"
       ]
     },
     "parameterName": {

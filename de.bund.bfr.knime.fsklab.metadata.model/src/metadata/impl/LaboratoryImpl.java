@@ -39,238 +39,238 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class LaboratoryImpl extends MinimalEObjectImpl.Container implements Laboratory {
 	/**
-   * The default value of the '{@link #getLaboratoryName() <em>Laboratory Name</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getLaboratoryName() <em>Laboratory Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getLaboratoryName()
-   * @generated
-   * @ordered
-   */
+	 * @see #getLaboratoryName()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String LABORATORY_NAME_EDEFAULT = null;
 
 	/**
-   * The cached value of the '{@link #getLaboratoryName() <em>Laboratory Name</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getLaboratoryName() <em>Laboratory Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getLaboratoryName()
-   * @generated
-   * @ordered
-   */
+	 * @see #getLaboratoryName()
+	 * @generated
+	 * @ordered
+	 */
 	protected String laboratoryName = LABORATORY_NAME_EDEFAULT;
 
 	/**
-   * The default value of the '{@link #getLaboratoryCountry() <em>Laboratory Country</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getLaboratoryCountry() <em>Laboratory Country</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getLaboratoryCountry()
-   * @generated
-   * @ordered
-   */
+	 * @see #getLaboratoryCountry()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String LABORATORY_COUNTRY_EDEFAULT = null;
 
 	/**
-   * The cached value of the '{@link #getLaboratoryCountry() <em>Laboratory Country</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getLaboratoryCountry() <em>Laboratory Country</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getLaboratoryCountry()
-   * @generated
-   * @ordered
-   */
+	 * @see #getLaboratoryCountry()
+	 * @generated
+	 * @ordered
+	 */
 	protected String laboratoryCountry = LABORATORY_COUNTRY_EDEFAULT;
 
 	/**
-   * The cached value of the '{@link #getLaboratoryAccreditation() <em>Laboratory Accreditation</em>}' containment reference list.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getLaboratoryAccreditation() <em>Laboratory Accreditation</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @see #getLaboratoryAccreditation()
-   * @generated
-   * @ordered
-   */
+	 * @see #getLaboratoryAccreditation()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<StringObject> laboratoryAccreditation;
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	protected LaboratoryImpl() {
-    super();
-  }
+		super();
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
-    return MetadataPackage.Literals.LABORATORY;
-  }
+		return MetadataPackage.Literals.LABORATORY;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public String getLaboratoryName() {
-    return laboratoryName;
-  }
+		return laboratoryName;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public void setLaboratoryName(String newLaboratoryName) {
-    String oldLaboratoryName = laboratoryName;
-    laboratoryName = newLaboratoryName;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.LABORATORY__LABORATORY_NAME, oldLaboratoryName, laboratoryName));
-  }
+		String oldLaboratoryName = laboratoryName;
+		laboratoryName = newLaboratoryName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.LABORATORY__LABORATORY_NAME, oldLaboratoryName, laboratoryName));
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public String getLaboratoryCountry() {
-    return laboratoryCountry;
-  }
+		return laboratoryCountry;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public void setLaboratoryCountry(String newLaboratoryCountry) {
-    String oldLaboratoryCountry = laboratoryCountry;
-    laboratoryCountry = newLaboratoryCountry;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.LABORATORY__LABORATORY_COUNTRY, oldLaboratoryCountry, laboratoryCountry));
-  }
+		String oldLaboratoryCountry = laboratoryCountry;
+		laboratoryCountry = newLaboratoryCountry;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MetadataPackage.LABORATORY__LABORATORY_COUNTRY, oldLaboratoryCountry, laboratoryCountry));
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	public EList<StringObject> getLaboratoryAccreditation() {
-    if (laboratoryAccreditation == null) {
-      laboratoryAccreditation = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION);
-    }
-    return laboratoryAccreditation;
-  }
+		if (laboratoryAccreditation == null) {
+			laboratoryAccreditation = new EObjectContainmentEList<StringObject>(StringObject.class, this, MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION);
+		}
+		return laboratoryAccreditation;
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-    switch (featureID) {
-      case MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION:
-        return ((InternalEList<?>)getLaboratoryAccreditation()).basicRemove(otherEnd, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
-  }
+		switch (featureID) {
+			case MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION:
+				return ((InternalEList<?>)getLaboratoryAccreditation()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-    switch (featureID) {
-      case MetadataPackage.LABORATORY__LABORATORY_NAME:
-        return getLaboratoryName();
-      case MetadataPackage.LABORATORY__LABORATORY_COUNTRY:
-        return getLaboratoryCountry();
-      case MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION:
-        return getLaboratoryAccreditation();
-    }
-    return super.eGet(featureID, resolve, coreType);
-  }
+		switch (featureID) {
+			case MetadataPackage.LABORATORY__LABORATORY_NAME:
+				return getLaboratoryName();
+			case MetadataPackage.LABORATORY__LABORATORY_COUNTRY:
+				return getLaboratoryCountry();
+			case MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION:
+				return getLaboratoryAccreditation();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-    switch (featureID) {
-      case MetadataPackage.LABORATORY__LABORATORY_NAME:
-        setLaboratoryName((String)newValue);
-        return;
-      case MetadataPackage.LABORATORY__LABORATORY_COUNTRY:
-        setLaboratoryCountry((String)newValue);
-        return;
-      case MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION:
-        getLaboratoryAccreditation().clear();
-        getLaboratoryAccreditation().addAll((Collection<? extends StringObject>)newValue);
-        return;
-    }
-    super.eSet(featureID, newValue);
-  }
+		switch (featureID) {
+			case MetadataPackage.LABORATORY__LABORATORY_NAME:
+				setLaboratoryName((String)newValue);
+				return;
+			case MetadataPackage.LABORATORY__LABORATORY_COUNTRY:
+				setLaboratoryCountry((String)newValue);
+				return;
+			case MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION:
+				getLaboratoryAccreditation().clear();
+				getLaboratoryAccreditation().addAll((Collection<? extends StringObject>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public void eUnset(int featureID) {
-    switch (featureID) {
-      case MetadataPackage.LABORATORY__LABORATORY_NAME:
-        setLaboratoryName(LABORATORY_NAME_EDEFAULT);
-        return;
-      case MetadataPackage.LABORATORY__LABORATORY_COUNTRY:
-        setLaboratoryCountry(LABORATORY_COUNTRY_EDEFAULT);
-        return;
-      case MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION:
-        getLaboratoryAccreditation().clear();
-        return;
-    }
-    super.eUnset(featureID);
-  }
+		switch (featureID) {
+			case MetadataPackage.LABORATORY__LABORATORY_NAME:
+				setLaboratoryName(LABORATORY_NAME_EDEFAULT);
+				return;
+			case MetadataPackage.LABORATORY__LABORATORY_COUNTRY:
+				setLaboratoryCountry(LABORATORY_COUNTRY_EDEFAULT);
+				return;
+			case MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION:
+				getLaboratoryAccreditation().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public boolean eIsSet(int featureID) {
-    switch (featureID) {
-      case MetadataPackage.LABORATORY__LABORATORY_NAME:
-        return LABORATORY_NAME_EDEFAULT == null ? laboratoryName != null : !LABORATORY_NAME_EDEFAULT.equals(laboratoryName);
-      case MetadataPackage.LABORATORY__LABORATORY_COUNTRY:
-        return LABORATORY_COUNTRY_EDEFAULT == null ? laboratoryCountry != null : !LABORATORY_COUNTRY_EDEFAULT.equals(laboratoryCountry);
-      case MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION:
-        return laboratoryAccreditation != null && !laboratoryAccreditation.isEmpty();
-    }
-    return super.eIsSet(featureID);
-  }
+		switch (featureID) {
+			case MetadataPackage.LABORATORY__LABORATORY_NAME:
+				return LABORATORY_NAME_EDEFAULT == null ? laboratoryName != null : !LABORATORY_NAME_EDEFAULT.equals(laboratoryName);
+			case MetadataPackage.LABORATORY__LABORATORY_COUNTRY:
+				return LABORATORY_COUNTRY_EDEFAULT == null ? laboratoryCountry != null : !LABORATORY_COUNTRY_EDEFAULT.equals(laboratoryCountry);
+			case MetadataPackage.LABORATORY__LABORATORY_ACCREDITATION:
+				return laboratoryAccreditation != null && !laboratoryAccreditation.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 	/**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
 	@Override
 	public String toString() {
-    if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (laboratoryName: ");
-    result.append(laboratoryName);
-    result.append(", laboratoryCountry: ");
-    result.append(laboratoryCountry);
-    result.append(')');
-    return result.toString();
-  }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (laboratoryName: ");
+		result.append(laboratoryName);
+		result.append(", laboratoryCountry: ");
+		result.append(laboratoryCountry);
+		result.append(')');
+		return result.toString();
+	}
 
 } //LaboratoryImpl
