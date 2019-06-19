@@ -62,9 +62,9 @@ import de.bund.bfr.fskml.ScriptFactory;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-//import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
-//import de.bund.bfr.knime.fsklab.r.client.RController;
-//import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
+// import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+// import de.bund.bfr.knime.fsklab.r.client.RController;
+// import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;
@@ -128,7 +128,8 @@ class CreatorNodeModel extends NoInternalsModel {
   }
 
   @Override
-  protected void reset() {}
+  protected void reset() {
+  }
 
   @Override
   protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
@@ -248,8 +249,8 @@ class CreatorNodeModel extends NoInternalsModel {
 
     // Validate parameters from spreadsheet
     exec.checkCanceled();
-    try (ScriptHandler handler = ScriptHandler.createHandler(portObj.generalInformation.getLanguageWrittenIn())) {
-      handler.setController(exec);
+    try (ScriptHandler handler = ScriptHandler
+        .createHandler(portObj.generalInformation.getLanguageWrittenIn(), portObj.packages)) {
       if (!workingDirectory.isEmpty()) {
         Path workingDirectoryPath =
             FileUtil.getFileFromURL(FileUtil.toURL(workingDirectory)).toPath();
@@ -258,7 +259,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
       FskSimulation simulation = NodeUtils.createDefaultSimulation(modelMath.getParameter());
       String script = handler.buildParameterScript(simulation);
-      //ScriptExecutor executor = new ScriptExecutor(controller);
+      // ScriptExecutor executor = new ScriptExecutor(controller);
 
       handler.setupOutputCapturing(exec);
       handler.runScript(script, exec, false);
@@ -267,8 +268,9 @@ class CreatorNodeModel extends NoInternalsModel {
       if (!handler.getStdErr().isEmpty()) {
         throw new InvalidSettingsException("Invalid parameters:\n" + handler.getStdErr());
       }
-    } catch ( Exception exception) {
-      throw new InvalidSettingsException("Parameters could not be validate. Please try again. "+exception.getMessage(),
+    } catch (Exception exception) {
+      throw new InvalidSettingsException(
+          "Parameters could not be validate. Please try again. " + exception.getMessage(),
           exception);
     }
 
@@ -298,8 +300,7 @@ class CreatorNodeModel extends NoInternalsModel {
    * @throws InvalidSettingsException if {@link path} is null or whitespace.
    * @throws IOException if the file cannot be read.
    */
-  private static Script readScript(final String path)
-      throws InvalidSettingsException, IOException {
+  private static Script readScript(final String path) throws InvalidSettingsException, IOException {
     String trimmedPath = StringUtils.trimToNull(path.trim());
 
     // path is not null or whitespace, thus try to read it

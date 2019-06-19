@@ -1,5 +1,6 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import org.knime.core.node.ExecutionContext;
@@ -9,9 +10,6 @@ import org.knime.python2.kernel.PythonKernel;
 import org.knime.python2.kernel.PythonKernelOptions;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.nodes.eval.Evaluator;
-import de.bund.bfr.knime.fsklab.nodes.eval.PythonEvaluator;
-import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
 
 public class PythonScriptHandler extends ScriptHandler {
@@ -20,16 +18,17 @@ public class PythonScriptHandler extends ScriptHandler {
   // controller that communicates with Python Installation
   PythonKernel controller;
 
-  @Override
-  public void setController(ExecutionContext exec) throws Exception {
+  // Currently only PythonPlotter is assigned as it is the only available for Python
+  public PythonScriptHandler() throws IOException {
     // automatically receive information about used Python Version (2.7 or 3.x)
     PythonKernelOptions m_kernelOptions = new PythonKernelOptions();
     controller = new PythonKernel(m_kernelOptions);
-   
+    
+    this.plotter = new PythonPlotter(controller);
   }
 
   @Override
-  void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception{
+  void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception {
 
   }
 
@@ -37,9 +36,9 @@ public class PythonScriptHandler extends ScriptHandler {
   public String[] runScript(String script, ExecutionContext exec, Boolean showErrors)
       throws Exception {
     String[] output = controller.execute(script.replaceAll("<-", "="));
-    if(!output[0].isEmpty())
+    if (!output[0].isEmpty())
       std_out += output[0] + "\n";
-    if(!output[1].isEmpty())
+    if (!output[1].isEmpty())
       std_err += output[1] + "\n";
     return output;
   }
@@ -59,10 +58,8 @@ public class PythonScriptHandler extends ScriptHandler {
 
   @Override
   void plotToImageFile(RunnerNodeInternalSettings internalSettings, RunnerNodeSettings nodeSettings,
-      FskPortObject fskObj, ExecutionContext exec) throws Exception {   
-    Evaluator evaluator = new PythonEvaluator(controller);
-    ModelPlotter plotter = new PythonPlotter();
-    plotter.plot(evaluator, internalSettings.imageFile, fskObj.viz);
+      FskPortObject fskObj, ExecutionContext exec) throws Exception {
+    plotter.plot(internalSettings.imageFile, fskObj.viz);
   }
 
   @Override
@@ -78,7 +75,7 @@ public class PythonScriptHandler extends ScriptHandler {
 
   @Override
   public String getStdOut() {
-    
+
     return std_out;
   }
 
@@ -89,7 +86,7 @@ public class PythonScriptHandler extends ScriptHandler {
 
   @Override
   public void cleanup(ExecutionContext exec) throws Exception {
-    
+
     std_out = "";
     std_err = "";
   }
@@ -98,11 +95,11 @@ public class PythonScriptHandler extends ScriptHandler {
   void setWorkingDirectory(Path workingDirectory, ExecutionContext exec) throws Exception {
     String cmd = "import os\n";
     String directory = workingDirectory.toString().replaceAll("\\\\", "/");
-    
+
     cmd += "os.chdir('" + directory + "')";
-    
-    runScript(cmd,exec,false);
-    }
+
+    runScript(cmd, exec, false);
+  }
 
   @Override
   void setupOutputCapturing(ExecutionContext exec) throws Exception {
@@ -135,6 +132,6 @@ public class PythonScriptHandler extends ScriptHandler {
   @Override
   public void close() throws Exception {
     controller.close();
-    
+
   }
 }

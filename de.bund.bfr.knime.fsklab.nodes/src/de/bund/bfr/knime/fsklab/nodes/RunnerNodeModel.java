@@ -145,8 +145,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
     // fskObj = runFskPortObject(fskObj, exec, controller);
     // }
     try (ScriptHandler handler =
-        ScriptHandler.createHandler(fskObj.generalInformation.getLanguageWrittenIn())) {
-      handler.setController(exec);
+        ScriptHandler.createHandler(fskObj.generalInformation.getLanguageWrittenIn(), fskObj.packages)) {
       runFskPortObject(handler, fskObj, exec);
     } catch (Exception e) {
 

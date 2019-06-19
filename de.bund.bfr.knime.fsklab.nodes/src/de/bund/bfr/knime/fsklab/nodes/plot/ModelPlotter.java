@@ -1,7 +1,6 @@
 package de.bund.bfr.knime.fsklab.nodes.plot;
 
 import java.io.File;
-import de.bund.bfr.knime.fsklab.nodes.eval.Evaluator;
 
 public interface ModelPlotter {
 
@@ -14,5 +13,5 @@ public interface ModelPlotter {
    * @param height Width in pixels
    * @throws Exception
    */
-  public void plot(Evaluator evaluator, File file, String script) throws Exception;
+  public void plot(File file, String script) throws Exception;
 }

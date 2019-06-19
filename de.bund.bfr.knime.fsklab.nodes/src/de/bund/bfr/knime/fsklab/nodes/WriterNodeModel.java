@@ -67,7 +67,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
-import org.rosuda.REngine.REXP;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.SBMLWriter;
@@ -93,8 +92,6 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
-import de.bund.bfr.knime.fsklab.r.client.RController;
-import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
@@ -287,7 +284,7 @@ class WriterNodeModel extends NoInternalsModel {
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
     FskPortObject in = (FskPortObject) inObjects[0];
-    scriptHandler = ScriptHandler.createHandler(in.generalInformation.getLanguageWrittenIn());
+    scriptHandler = ScriptHandler.createHandler(in.generalInformation.getLanguageWrittenIn(), in.packages);
     URL url = FileUtil.toURL(nodeSettings.filePath);
     Path localPath = FileUtil.resolveToPath(url);
 
@@ -348,7 +345,6 @@ class WriterNodeModel extends NoInternalsModel {
       }
       // get package version
       try  {
-        scriptHandler.setController(exec);
         //final ScriptExecutor executor = new ScriptExecutor(controller);
         // Gets library URI for the running platform
         final URI libUri = NodeUtils.getLibURI();

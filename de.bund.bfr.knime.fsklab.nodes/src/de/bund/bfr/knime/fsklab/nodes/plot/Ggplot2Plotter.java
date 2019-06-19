@@ -2,7 +2,7 @@ package de.bund.bfr.knime.fsklab.nodes.plot;
 
 import java.io.File;
 import org.apache.commons.io.FilenameUtils;
-import de.bund.bfr.knime.fsklab.nodes.eval.Evaluator;
+import de.bund.bfr.knime.fsklab.r.client.RController;
 
 /**
  * Plotter for the R package ggplot2.
@@ -12,14 +12,20 @@ import de.bund.bfr.knime.fsklab.nodes.eval.Evaluator;
  */
 public class Ggplot2Plotter implements ModelPlotter {
 
+  private final RController controller;
+  
+  public Ggplot2Plotter(RController controller) {
+    this.controller = controller;
+  }
+  
   @Override
-  public void plot(Evaluator evaluator, File file, String script) throws Exception {
+  public void plot(File file, String script) throws Exception {
 
     // Get image path (with proper slashes)
     final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
         
-    evaluator.eval("png('" + path + "')");
-    evaluator.eval(script);
-    evaluator.eval("print(last_plot()); dev.off()");
+    controller.eval("png('" + path + "')", false);
+    controller.eval(script, false);
+    controller.eval("print(last_plot()); dev.off()", false);
   }
 }

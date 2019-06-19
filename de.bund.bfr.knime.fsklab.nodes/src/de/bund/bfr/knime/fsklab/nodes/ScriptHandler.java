@@ -7,10 +7,14 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import metadata.Parameter;
 import metadata.ParameterClassification;
 
 public abstract class ScriptHandler implements AutoCloseable {
+  
+  protected ModelPlotter plotter;
+  
   /**
    * This template method runs a snippet of script code. It does not save the stdOutput or the
    * stdErrOutput. After running this method, "cleanup" has to be called in order to close the
@@ -28,8 +32,6 @@ public abstract class ScriptHandler implements AutoCloseable {
    * @param nodeSettings settings of the node containing the dimensions of the output im-age
    * @throws Exception
    */
-
-
   public final void runSnippet(final FskPortObject fskObj, final FskSimulation simulation,
       final ExecutionContext exec, NodeLogger LOGGER,
       final RunnerNodeInternalSettings internalSettings, RunnerNodeSettings nodeSettings)
@@ -74,7 +76,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     // convertToKnimeDataTable(fskObj,exec);
 
     try {
-      plotToImageFile(internalSettings, nodeSettings, fskObj, exec);
+      plotter.plot(internalSettings.imageFile, fskObj.viz);
       // Save path of generated plot
       fskObj.setPlot(internalSettings.imageFile.getAbsolutePath());
     } catch (final Exception exception) {
@@ -93,17 +95,25 @@ public abstract class ScriptHandler implements AutoCloseable {
   abstract void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec)
       throws Exception;
 
-  public static ScriptHandler createHandler(String script_type) {
-    if (script_type == null)
-      return new RScriptHandler();
-    if (script_type.toLowerCase().startsWith("r"))
-      return new RScriptHandler();
-    if (script_type.toLowerCase().startsWith("py"))
-      return new PythonScriptHandler();
-    return new RScriptHandler();
+  public static ScriptHandler createHandler(String script_type, List<String> packages) throws Exception {
+    
+    final ScriptHandler handler;
+    
+    if (script_type == null) {
+      handler = new RScriptHandler(packages);
+    } else {
+      final String type = script_type.toLowerCase();
+      if (type.startsWith("r")) {
+        handler = new RScriptHandler(packages);
+      } else if (type.startsWith("py")) {
+        handler = new PythonScriptHandler();
+      } else {
+        handler = new RScriptHandler();
+      }
+    }
+    
+    return handler;
   }
-
-  abstract void setController(ExecutionContext exec) throws Exception;
 
   /**
    * Set the directory in which the interpreter can temporarily save data while executing the script

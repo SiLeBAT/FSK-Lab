@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +13,9 @@ import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.knime.fsklab.nodes.eval.Evaluator;
-import de.bund.bfr.knime.fsklab.nodes.eval.REvaluator;
-import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
-import de.bund.bfr.knime.fsklab.nodes.plot.Util;
+import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
+import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
+import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
@@ -23,12 +23,23 @@ import metadata.Parameter;
 import metadata.ParameterClassification;
 
 public class RScriptHandler extends ScriptHandler {
+
   ScriptExecutor executor;
   RController controller;
 
-  public void setController(ExecutionContext exec) throws Exception {
+  public RScriptHandler() throws RException {
+    this(new ArrayList<String>(0));
+  }
+
+  public RScriptHandler(List<String> packages) throws RException {
     this.controller = new RController();
     this.executor = new ScriptExecutor(controller);
+    
+    if (packages.contains("ggplot2")) {
+      plotter = new Ggplot2Plotter(controller);
+    } else {
+      plotter = new BasePlotter(controller);
+    }
   }
 
   void setWorkingDirectory(Path workingDirectory, ExecutionContext exec) throws Exception {
@@ -41,61 +52,60 @@ public class RScriptHandler extends ScriptHandler {
     if (showErrors) {
       REXP c = executor.execute(script, exec);
       String[] execResult = c.asStrings();
-     
+
       return execResult;
     } else {
       executor.executeIgnoreResult(script, exec);
     }
     return null;
   }
-  
-  void convertToKnimeDataTable(FskPortObject fskObj,ExecutionContext exec) throws Exception{
+
+  void convertToKnimeDataTable(FskPortObject fskObj, ExecutionContext exec) throws Exception {
     LibRegistry.instance().install(Arrays.asList("data.table"));
-    
-    String DT ="library(data.table)\n"; 
-        //"install.packages(\"data.table\")\n"
-                
-                //+"knime.out <-list(x,Value)\n"
-                //+"knime.out <- setDT(lapply(knime.out,\"length<-\",max(length(knime.out))))[]";
-    
-    FskSimulation fskSimulation =fskObj.simulations.get(fskObj.selectedSimulationIndex);
+
+    String DT = "library(data.table)\n";
+    // "install.packages(\"data.table\")\n"
+
+    // +"knime.out <-list(x,Value)\n"
+    // +"knime.out <- setDT(lapply(knime.out,\"length<-\",max(length(knime.out))))[]";
+
+    FskSimulation fskSimulation = fskObj.simulations.get(fskObj.selectedSimulationIndex);
     String input_lst = "";
     for (Map.Entry<String, String> entry : fskSimulation.getParameters().entrySet()) {
       String parameterName = entry.getKey();
-      //String parameterValue = entry.getValue();
+      // String parameterValue = entry.getValue();
 
-      input_lst += parameterName + "= "+parameterName+",";
-      
+      input_lst += parameterName + "= " + parameterName + ",";
+
     }
 
     String output_lst = "";
     List<Parameter> paras = fskObj.modelMath.getParameter();
-    for(Parameter p : paras)
-    {
-      if(p.getParameterClassification() == ParameterClassification.OUTPUT)
-      {
-        output_lst += p.getParameterName() + "= "+p.getParameterName()+",";
+    for (Parameter p : paras) {
+      if (p.getParameterClassification() == ParameterClassification.OUTPUT) {
+        output_lst += p.getParameterName() + "= " + p.getParameterName() + ",";
       }
     }
-    
+
     String lst = input_lst + output_lst;
     lst = lst.substring(0, lst.lastIndexOf(","));
-    
-    DT += "knime.out <- list("+lst+")\n";
+
+    DT += "knime.out <- list(" + lst + ")\n";
     DT += "knime.out <- setDT(lapply(knime.out,\"length<-\",max(length(knime.out))))[]";
-    
-    //lst[lst.lastIndexOf(",")] = ")";
+
+    // lst[lst.lastIndexOf(",")] = ")";
     controller.eval(DT, false);
     BufferedDataTable out = controller.importBufferedDataTable("knime.out", false, exec);
-    
-    //----------------CONVERT KNIME TABLE BACK TO R
-  
-    //controller.exportFlowVariables(inFlowVariables, name, exec);
-    //controller.importDataFromPorts(inData, exec, batchSize, rType, sendRowNames);
-    controller.monitoredAssign("knime.in", out, exec, 100,"String", true);
-    //monitoredAssign("knime.in", out, exec.createSubProgress(0.5),batchSize, rType, true);
-    
+
+    // ----------------CONVERT KNIME TABLE BACK TO R
+
+    // controller.exportFlowVariables(inFlowVariables, name, exec);
+    // controller.importDataFromPorts(inData, exec, batchSize, rType, sendRowNames);
+    controller.monitoredAssign("knime.in", out, exec, 100, "String", true);
+    // monitoredAssign("knime.in", out, exec.createSubProgress(0.5),batchSize, rType, true);
+
   }
+
   @Override
   void installLibs(final FskPortObject fskObj, ExecutionContext exec, NodeLogger LOGGER)
       throws Exception {
@@ -117,9 +127,7 @@ public class RScriptHandler extends ScriptHandler {
   void plotToImageFile(final RunnerNodeInternalSettings internalSettings,
       RunnerNodeSettings nodeSettings, final FskPortObject fskObj, ExecutionContext exec)
       throws Exception {
-    Evaluator evaluator = new REvaluator(controller);
-    ModelPlotter plotter = Util.findPlotter(fskObj.packages);
-    plotter.plot(evaluator, internalSettings.imageFile, fskObj.viz);
+    plotter.plot(internalSettings.imageFile, fskObj.viz);
   }
 
   @Override
@@ -133,7 +141,7 @@ public class RScriptHandler extends ScriptHandler {
   @Override
   void restoreDefaultLibrary() throws Exception {
     controller.restorePackagePath();
-   }
+  }
 
   @Override
   public String getStdOut() {
@@ -181,6 +189,6 @@ public class RScriptHandler extends ScriptHandler {
   @Override
   public void close() throws Exception {
     controller.close();
-    
+
   }
 }
