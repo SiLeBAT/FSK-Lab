@@ -127,7 +127,7 @@ public class RScriptHandler extends ScriptHandler {
   void plotToImageFile(final RunnerNodeInternalSettings internalSettings,
       RunnerNodeSettings nodeSettings, final FskPortObject fskObj, ExecutionContext exec)
       throws Exception {
-    plotter.plot(internalSettings.imageFile, fskObj.viz);
+    plotter.plotPng(internalSettings.imageFile, fskObj.viz);
   }
 
   @Override

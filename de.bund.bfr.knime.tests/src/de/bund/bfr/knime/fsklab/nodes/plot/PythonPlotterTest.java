@@ -29,7 +29,7 @@ public class PythonPlotterTest {
 					+ "fig, ax = plt.subplots()\n" + "ax.plot(t, s)\n"
 					+ "ax.set(xlabel='time (s)', ylabel='voltage (mV)',\n"
 					+ "       title='About as simple as it gets, folks')\n" + "ax.grid()";
-			plotter.plot(file, script);
+			plotter.plotPng(file, script);
 		}
 		
 		// Check that the plot.png file was generated and is not empty

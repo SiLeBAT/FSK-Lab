@@ -19,7 +19,7 @@ public class Ggplot2Plotter implements ModelPlotter {
   }
   
   @Override
-  public void plot(File file, String script) throws Exception {
+  public void plotPng(File file, String script) throws Exception {
 
     // Get image path (with proper slashes)
     final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());

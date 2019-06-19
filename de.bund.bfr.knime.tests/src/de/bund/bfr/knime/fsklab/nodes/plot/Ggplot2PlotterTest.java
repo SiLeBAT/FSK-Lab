@@ -30,7 +30,7 @@ public class Ggplot2PlotterTest {
 			Ggplot2Plotter plotter = new Ggplot2Plotter(controller);
 			String script = "library(ggplot2);"
 					+ "ggplot(mtcars, aes(factor(cyl), mpg)) + geom_violin(aes(fill = cyl))";
-			plotter.plot(file, script);
+			plotter.plotPng(file, script);
 		}
 
 		// Check that the plot.png file was generated and is not empty

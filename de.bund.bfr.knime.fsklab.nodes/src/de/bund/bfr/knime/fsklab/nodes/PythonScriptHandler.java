@@ -59,7 +59,7 @@ public class PythonScriptHandler extends ScriptHandler {
   @Override
   void plotToImageFile(RunnerNodeInternalSettings internalSettings, RunnerNodeSettings nodeSettings,
       FskPortObject fskObj, ExecutionContext exec) throws Exception {
-    plotter.plot(internalSettings.imageFile, fskObj.viz);
+    plotter.plotPng(internalSettings.imageFile, fskObj.viz);
   }
 
   @Override

@@ -23,7 +23,7 @@ public class BasePlotterTest {
 		try (RController controller = new RController()) {
 			BasePlotter plotter = new BasePlotter(controller);
 			String script = "hist(airquality$Temp)";
-			plotter.plot(file, script);
+			plotter.plotPng(file, script);
 		}
 		
 		// Check that the plot.png file was generated and is not empty

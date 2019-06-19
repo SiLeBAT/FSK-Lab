@@ -19,7 +19,7 @@ public class BasePlotter implements ModelPlotter {
   }
 
   @Override
-  public void plot(File file, String script) throws Exception {
+  public void plotPng(File file, String script) throws Exception {
 
     // Initialize necessary R stuff to plot
     String configCmd =
