@@ -52,14 +52,14 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="com.google.guava"/>
       <import plugin="com.toedter.jcalendar"/>
       <import plugin="org.apache.commons.lang"/>
-      <import plugin="org.jdom2"/>
       <import plugin="org.knime.base"/>
       <import plugin="org.knime.ext.svg"/>
       <import plugin="org.knime.js.core"/>
       <import plugin="org.knime.json"/>
       <import plugin="org.knime.workbench.repository"/>
       <import plugin="org.slf4j.api"/>
-      <import plugin="de.bund.bfr.formats"/>
+      <import plugin="org.knime.python2"/>
+      <import plugin="org.apache.commons.io" version="2.5.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
