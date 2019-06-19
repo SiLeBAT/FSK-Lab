@@ -2,7 +2,6 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.nio.file.Path;
 import java.util.List;
-import org.apache.commons.io.FilenameUtils;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -10,6 +9,10 @@ import org.knime.python2.kernel.PythonKernel;
 import org.knime.python2.kernel.PythonKernelOptions;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.nodes.eval.Evaluator;
+import de.bund.bfr.knime.fsklab.nodes.eval.PythonEvaluator;
+import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
+import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
 
 public class PythonScriptHandler extends ScriptHandler {
   String std_out = "";
@@ -56,32 +59,10 @@ public class PythonScriptHandler extends ScriptHandler {
 
   @Override
   void plotToImageFile(RunnerNodeInternalSettings internalSettings, RunnerNodeSettings nodeSettings,
-      FskPortObject fskObj, ExecutionContext exec) throws Exception {
-    String plot_setup = "import matplotlib.pyplot as fsk_eclipse_plt\n" + "matplotlib.use('Agg')";
-    String[] output = controller.execute(plot_setup);
-    if(!output[0].isEmpty())
-      std_out += output[0] + "\n";
-    if(!output[1].isEmpty())
-      std_err += output[1] + "\n";
-   // Get image path (with proper slashes)
-    final String path =
-        FilenameUtils.separatorsToUnix(internalSettings.imageFile.getAbsolutePath());
-    // Gets values
-    
-    output = controller.execute(fskObj.viz);
-    if(!output[0].isEmpty())
-      std_out += output[0] + "\n";
-    if(!output[1].isEmpty())
-      std_err += output[1] + "\n";
-
-    String pngCommand = "fsk_eclipse_fig = fsk_eclipse_plt.figure(1)\n"+
-                        "fsk_eclipse_fig.savefig('" + path + "')\n"+
-                         "fsk_eclipse_plt.clf()";
-    output = controller.execute(pngCommand);
-    if(!output[0].isEmpty())
-      std_out += output[0] + "\n";
-    if(!output[1].isEmpty())
-      std_err += output[1] + "\n";
+      FskPortObject fskObj, ExecutionContext exec) throws Exception {   
+    Evaluator evaluator = new PythonEvaluator(controller);
+    ModelPlotter plotter = new PythonPlotter();
+    plotter.plot(evaluator, internalSettings.imageFile, fskObj.viz);
   }
 
   @Override
