@@ -13,19 +13,29 @@ import de.bund.bfr.knime.fsklab.r.client.RController;
 public class Ggplot2Plotter implements ModelPlotter {
 
   private final RController controller;
-  
+
   public Ggplot2Plotter(RController controller) {
     this.controller = controller;
   }
-  
+
   @Override
   public void plotPng(File file, String script) throws Exception {
 
     // Get image path (with proper slashes)
     final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
-        
+
     controller.eval("png('" + path + "')", false);
     controller.eval(script, false);
     controller.eval("print(last_plot()); dev.off()", false);
+  }
+
+  @Override
+  public void plotSvg(File file, String script) throws Exception {
+
+    // Get image path (with proper slashes)
+    final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
+
+     final String wholeScript = script + "\nggsave('" + path + "')";
+    controller.eval(wholeScript, false);
   }
 }

@@ -10,4 +10,6 @@ public interface ModelPlotter {
    * @throws Exception
    */
   public void plotPng(File file, String script) throws Exception;
+  
+  public void plotSvg(File file, String script) throws Exception;
 }

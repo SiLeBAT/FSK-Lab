@@ -20,7 +20,19 @@ public class PythonPlotter implements ModelPlotter {
 
     // Disable interactive IO with plt.ioff() and save current figure with plt.gcf
     final String wholeScript = String.join("\n", "import matplotlib.pyplot as plt", "import numpy as np",
-        "plt.ioff()", script, "plt.gcf().savefig('" + path + "')");
+        "plt.ioff()", script, "plt.gcf().savefig('" + path + "', format='png')");
+    kernel.execute(wholeScript);
+  }
+  
+  @Override
+  public void plotSvg(File file, String script) throws Exception {
+
+    // Get image path (with proper slashes)
+    final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
+
+    // Disable interactive IO with plt.ioff() and save current figure with plt.gcf
+    final String wholeScript = String.join("\n", "import matplotlib.pyplot as plt", "import numpy as np",
+        "plt.ioff()", script, "plt.gcf().savefig('" + path + "', format='svg')");
     kernel.execute(wholeScript);
   }
 }
