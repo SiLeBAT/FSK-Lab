@@ -12,6 +12,8 @@ import org.knime.core.util.FileUtil;
 import org.rosuda.REngine.REXP;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.knime.fsklab.nodes.eval.Evaluator;
+import de.bund.bfr.knime.fsklab.nodes.eval.REvaluator;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.Util;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
@@ -115,8 +117,9 @@ public class RScriptHandler extends ScriptHandler {
   void plotToImageFile(final RunnerNodeInternalSettings internalSettings,
       RunnerNodeSettings nodeSettings, final FskPortObject fskObj, ExecutionContext exec)
       throws Exception {
+    Evaluator evaluator = new REvaluator(controller);
     ModelPlotter plotter = Util.findPlotter(fskObj.packages);
-    plotter.plot(controller, internalSettings.imageFile, fskObj.viz);
+    plotter.plot(evaluator, internalSettings.imageFile, fskObj.viz);
   }
 
   @Override

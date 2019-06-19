@@ -79,4 +79,5 @@ Export-Package: de.bund.bfr.knime.fsklab;
    de.unirostock.sems.cbarchive,
    de.bund.bfr.knime.fsklab.r.client,
    javax.swing",
+ de.bund.bfr.knime.fsklab.nodes.eval,
  de.bund.bfr.knime.fsklab.nodes.plot;uses:="de.bund.bfr.knime.fsklab.r.client"
