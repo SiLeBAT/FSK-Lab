@@ -7,15 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
-- The functionality to reorder the paramters defined in the model math by Drag & Drop.
+- The functionality to reorder the parameters defined in the model math by Drag & Drop.
+- Add support for R ggplot2 plots.
 
 ### Changed
-- Change the view of the Combined FSK Object Object to show the selected simulation like the normal FSK Object. 
+- Change the view of the Combined FSK Object Object to show the selected simulation like the normal FSK Object.
+- Change the format of the output image of the runner to SVG (PNG before).
+- Move all the plotting code to the ModelPlotter classes.
 
 ### Fixed
 - Fixed the Runner node to run the selected simulation chosen in the dialog of the node.
 - Validation of simulation names in Simulation configurator node.
 
+### Removed
+- View of the runner node. This view relied on a PNG image that is no longer generated. Unlike the SVG, this image does not resize. It is removed and could be restored if it could support an SVG.
 
 ## [1.5.7] - 2019-4-30
 

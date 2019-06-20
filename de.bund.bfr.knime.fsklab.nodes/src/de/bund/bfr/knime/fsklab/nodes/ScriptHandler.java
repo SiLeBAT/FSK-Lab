@@ -76,7 +76,7 @@ public abstract class ScriptHandler implements AutoCloseable {
     // convertToKnimeDataTable(fskObj,exec);
 
     try {
-      plotter.plotPng(internalSettings.imageFile, fskObj.viz);
+      plotter.plotSvg(internalSettings.imageFile, fskObj.viz);
       // Save path of generated plot
       fskObj.setPlot(internalSettings.imageFile.getAbsolutePath());
     } catch (final Exception exception) {

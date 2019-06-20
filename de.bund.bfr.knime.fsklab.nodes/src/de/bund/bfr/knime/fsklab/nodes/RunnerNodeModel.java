@@ -18,7 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,8 +34,9 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.knime.base.data.xml.SvgCell;
+import org.knime.base.data.xml.SvgImageContent;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
-import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -67,8 +67,8 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   /** Output spec for an FSK object. */
   private static final FskPortObjectSpec FSK_SPEC = FskPortObjectSpec.INSTANCE;
 
-  /** Output spec for a PNG image. */
-  private static final ImagePortObjectSpec PNG_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
+  /** Output spec for an SVG image. */
+  private static final ImagePortObjectSpec SVG_SPEC = new ImagePortObjectSpec(SvgCell.TYPE);
 
   private final RunnerNodeInternalSettings internalSettings = new RunnerNodeInternalSettings();
 
@@ -77,6 +77,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
   // Input and output port types
   private static final PortType[] IN_TYPES = {FskPortObject.TYPE};
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE, ImagePortObject.TYPE_OPTIONAL};
+  
   // isTest field is only used by maven build
   public static boolean isTest = false;
 
@@ -100,10 +101,6 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
   @Override
   protected void reset() {
-    /*
-     * try (RController controller = new RController()) { controller.eval("tools::pskill(" + PID +
-     * ")", true); } catch (RException e) { e.printStackTrace(); }
-     */
     internalSettings.reset();
   }
 
@@ -127,7 +124,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
   @Override
   protected PortObjectSpec[] configure(PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-    return new PortObjectSpec[] {FSK_SPEC, PNG_SPEC};
+    return new PortObjectSpec[] {FSK_SPEC, SVG_SPEC};
   }
 
   @Override
@@ -141,19 +138,16 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
           .filter(index -> simulation.get(index).getName().equals(nodeSettings.simulation))
           .findFirst().ifPresent(index -> reSelectSimulation(fskObjk, index));
     }
-    // try (RController controller = new RController()) {
-    // fskObj = runFskPortObject(fskObj, exec, controller);
-    // }
+
     try (ScriptHandler handler =
         ScriptHandler.createHandler(fskObj.generalInformation.getLanguageWrittenIn(), fskObj.packages)) {
       runFskPortObject(handler, fskObj, exec);
     } catch (Exception e) {
-
     }
+    
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {
-      final PNGImageContent content = new PNGImageContent(fis);
-      internalSettings.plot = content.getImage();
-      ImagePortObject imgObj = new ImagePortObject(content, PNG_SPEC);
+      final SvgImageContent content = new SvgImageContent(fis);
+      ImagePortObject imgObj = new ImagePortObject(content, SVG_SPEC);
       return new PortObject[] {fskObj, imgObj};
     } catch (IOException e) {
       LOGGER.warn("There is no image created");
@@ -418,9 +412,5 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
 
   private static final LinkedList<String> getLinkedListFromOutput(final String output) {
     return Arrays.stream(output.split("\\r?\\n")).collect(Collectors.toCollection(LinkedList::new));
-  }
-
-  Image getResultImage() {
-    return internalSettings.plot;
   }
 }
