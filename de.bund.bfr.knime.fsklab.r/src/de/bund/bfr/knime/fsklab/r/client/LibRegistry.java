@@ -19,7 +19,10 @@
 package de.bund.bfr.knime.fsklab.r.client;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -67,7 +70,7 @@ public class LibRegistry {
 
 	private RWrapper rWrapper;
 
-	private final String MIRROR = "http://cran.rstudio.com";
+	private final String MIRROR = "https://cran.rstudio.com";
 
 	private LibRegistry() throws IOException, RException {
 
@@ -207,7 +210,15 @@ public class LibRegistry {
 	private boolean isNetAvailable() {
 		try {
 			final URL url = new URL(MIRROR);
-			final URLConnection conn = url.openConnection();
+			final URLConnection conn;
+			
+			// Open url with proxy if on BfR computer
+			if (InetAddress.getLocalHost().getCanonicalHostName().endsWith("it.bfr-science.de")) {
+				conn = url.openConnection(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("webproxy", 8080)));
+			} else {
+				conn = url.openConnection();
+			}
+			
 			conn.connect();
 			conn.getInputStream().close();
 			return true;
@@ -217,7 +228,7 @@ public class LibRegistry {
 			return false;
 		}
 	}
-
+	
 	public static class NoInternetException extends Exception {
 		/** Generated serialVersionUID */
 		private static final long serialVersionUID = 2815440774381106769L;
