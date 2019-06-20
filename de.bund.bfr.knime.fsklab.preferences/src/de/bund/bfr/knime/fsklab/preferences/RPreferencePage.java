@@ -97,11 +97,24 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
 					return true;
 				}
 
-				final String rservePath = props.getProperty("Rserve.path");
 				// Check if null or empty
-				if (StringUtils.isEmpty(rservePath)) {
+				if (StringUtils.isEmpty(props.getProperty("Rserve.path"))) {
 					setMessage("The package 'Rserve' needs to be installed in your R installation. "
 							+ "Please install it in R using \"install.packages('Rserve')\".", ERROR);
+					return false;
+				}
+				
+				// Check if null or empty
+				if (StringUtils.isEmpty(props.getProperty("miniCRAN.path"))) {
+					setMessage("The package 'miniCRAN' needs to be installed in your R installation. "
+							+ "Please install it in R using \"install.packages('miniCRAN')\".", ERROR);
+					return false;
+				}
+				
+				// Check if null or empty
+				if (StringUtils.isEmpty(props.getProperty("svglite.path"))) {
+					setMessage("The package 'svglite' needs to be installed in your R installation. "
+							+ "Please install it in R using \"install.packages('svglite')\".", ERROR);
 					return false;
 				}
 

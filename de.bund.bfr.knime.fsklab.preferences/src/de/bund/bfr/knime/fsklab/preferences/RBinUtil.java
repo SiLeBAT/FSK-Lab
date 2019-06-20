@@ -127,6 +127,7 @@ public class RBinUtil {
 				+ "foo <- append(foo, paste('memory.limit', memory.limit(), sep='='))\n"
 				+ "foo <- append(foo, paste('Rserve.path', find.package('Rserve', quiet=TRUE), sep='='))\n"
 				+ "foo <- append(foo, paste('miniCRAN.path', find.package('miniCRAN', quiet=TRUE), sep='='))\n"
+				+ "foo <- append(foo, paste('svglite.path', find.package('svglite', quiet=TRUE), sep='='))\n"
 				+ "foo <- append(foo, paste('Cairo.path', find.package('Cairo', quiet=TRUE), sep='='))\n"
 				+ "foo <- append(foo, paste('rhome', R.home(), sep='='))\n" //
 				+ "write(foo, file='" + propertiesPath + "', ncolumns=1, append=FALSE, sep='\\n')\nq()";
