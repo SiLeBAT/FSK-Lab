@@ -39,8 +39,4 @@
 		  visualization script then this port will hold no image (optional).
 		</outPort>
 	</ports>
-	
-	<views>
-		<view name="R View" index="0"></view>
-	</views>
 </knimeNode>
