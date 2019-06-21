@@ -41,7 +41,7 @@ public class RunnerNodeInternalSettings {
 
   public RunnerNodeInternalSettings() {
     try {
-      imageFile = FileUtil.createTempFile("FskxRunner-", ".png");
+      imageFile = FileUtil.createTempFile("FskxRunner-", ".svg");
     } catch (IOException e) {
       LOGGER.error("Cannot create temporary file.", e);
       throw new RuntimeException(e);
@@ -50,7 +50,7 @@ public class RunnerNodeInternalSettings {
 
   /** Loads the saved image. */
   public void loadInternals(File nodeInternDir) throws IOException {
-    final File file = new File(nodeInternDir, "Rplot.png");
+    final File file = new File(nodeInternDir, "Rplot.svg");
 
     if (file.exists() && file.canRead()) {
       FileUtil.copy(file, imageFile);
@@ -63,7 +63,7 @@ public class RunnerNodeInternalSettings {
   /** Saves the saved image. */
   public void saveInternals(File nodeInternDir) throws IOException {
     if (plot != null) {
-      final File file = new File(nodeInternDir, "Rplot.png");
+      final File file = new File(nodeInternDir, "Rplot.svg");
       FileUtil.copy(imageFile, file);
     }
   }
