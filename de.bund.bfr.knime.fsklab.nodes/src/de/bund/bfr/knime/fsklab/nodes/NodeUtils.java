@@ -13,6 +13,8 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.node.workflow.NodeContext;
 import org.rosuda.REngine.REXPMismatchException;
 import com.sun.jna.Platform;
 import de.bund.bfr.fskml.FSKML;
@@ -161,8 +163,8 @@ public class NodeUtils {
 
     // The parameters need to be inserted in order
     parameters.stream()
-        .filter(it -> it.getParameterClassification() != ParameterClassification.OUTPUT)
-        .forEach(p -> defaultSimulation.getParameters().put(p.getParameterID(), p.getParameterValue()));
+        .filter(it -> it.getParameterClassification() != ParameterClassification.OUTPUT).forEach(
+            p -> defaultSimulation.getParameters().put(p.getParameterID(), p.getParameterValue()));
     return defaultSimulation;
   }
 
@@ -179,15 +181,25 @@ public class NodeUtils {
 
     return builder.toString();
   }
-  
+
   /**
    * Read a configuration string from a file under a settings folder.
    * 
    * @throws IOException
    */
   static String readConfigString(File settingsFolder, String filename) throws IOException {
-    File configFile = new File(settingsFolder, filename);
-    return configFile.exists() ? FileUtils.readFileToString(configFile, StandardCharsets.UTF_8) : null;
+    FlowVariable aFlowVariable = null;
+    if (NodeContext.getContext().getNodeContainer().getFlowObjectStack() != null) {
+      aFlowVariable = NodeContext.getContext().getNodeContainer().getFlowObjectStack()
+          .getAvailableFlowVariables().get(filename);
+    }
+    if (aFlowVariable != null) {
+      return aFlowVariable.getStringValue();
+    } else {
+      File configFile = new File(settingsFolder, filename);
+      return configFile.exists() ? FileUtils.readFileToString(configFile, StandardCharsets.UTF_8)
+          : null;
+    }
   }
 
   /**
