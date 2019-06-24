@@ -2,6 +2,7 @@ package de.bund.bfr.knime.fsklab.nodes.plot;
 
 import java.io.File;
 import org.apache.commons.io.FilenameUtils;
+import com.sun.jna.Platform;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 
 /**
@@ -20,6 +21,12 @@ public class Ggplot2Plotter implements ModelPlotter {
 
   @Override
   public void plotPng(File file, String script) throws Exception {
+    
+    // Initialize necessary R stuff to plot
+    String configCmd =
+        Platform.isMac() ? "library('Cairo'); options(device='png', bitmapType='cairo')"
+            : "options(device='png')";
+    controller.eval(configCmd, false);
 
     // Get image path (with proper slashes)
     final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
@@ -35,7 +42,7 @@ public class Ggplot2Plotter implements ModelPlotter {
     // Get image path (with proper slashes)
     final String path = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
 
-     final String wholeScript = script + "\nggsave('" + path + "')";
+    final String wholeScript = script + "\nggsave('" + path + "')";
     controller.eval(wholeScript, false);
   }
 }
