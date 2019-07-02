@@ -17,6 +17,29 @@
 		<jacoco-version>0.7.8</jacoco-version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>knime-36</id>
+			<url>https://update.knime.org/analytics-platform/3.6</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>knime-testflows</id>
+			<url>https://3d-e-chem.github.io/updates</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>fsk-dependencies</id>
+			<url>https://dl.bintray.com/silebat/fsk_dependencies</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>RBundles</id>
+			<url>https://dl.bintray.com/silebat/RBundles</url>
+			<layout>p2</layout>
+		</repository>
+	</repositories>
+
 	<modules>
 		<!-- Plugins -->
 		<module>de.bund.bfr.knime.fsklab.metadata.model</module>
@@ -40,11 +63,13 @@
 		<module>de.bund.bfr.knime.testflows</module>
 
 		<!-- Test report -->
- 		<module>de.bund.bfr.knime.testreport</module>
+		<module>de.bund.bfr.knime.testreport</module>
 
-		<!-- Others -->
+		<!-- Features -->
 		<module>features</module>
-		<module>releng</module>
+		
+		<!-- Update site -->
+		<module>de.bund.bfr.knime.update</module>
 	</modules>
 
 	<profiles>
@@ -100,47 +125,6 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho.version}</version>
-				<configuration>
-					<target>
-						<artifact>
-							<groupId>de.bund.bfr.knime</groupId>
-							<artifactId>de.bund.bfr.knime.target</artifactId>
-							<version>1.0.0-SNAPSHOT</version>
-						</artifact>
-					</target>
-					<environments>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86_64</arch>
-						</environment>
-					</environments>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
