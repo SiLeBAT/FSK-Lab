@@ -55,7 +55,7 @@ Export-Package: de.bund.bfr.knime.pmm.combaseio,
  de.bund.bfr.knime.pmm.xlsmodelreader,
  de.bund.bfr.knime.pmm.xlstimeseriesreader,
  de.bund.bfr.knime.pmm.xml2table
-Bundle-ClassPath: library.jar,
+Bundle-ClassPath: .,
  bfr-swing-1.0-SNAPSHOT.jar,
  jcalendar-1.4.jar,
  nashorn.jar,
