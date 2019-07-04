@@ -488,13 +488,170 @@ public class SwaggerUtil {
 		
 		return hazard;
 	}
-	
+
+
 	public static de.bund.bfr.metadata.swagger.GenericModelDataBackground convert(metadata.DataBackground emfDBG){
 		de.bund.bfr.metadata.swagger.GenericModelDataBackground swaggerDBG = new de.bund.bfr.metadata.swagger.GenericModelDataBackground();
+		
+		//assay
+		if(emfDBG.getAssay() != null) {
+			for(metadata.Assay item : emfDBG.getAssay()) {
+				swaggerDBG.addAssayItem(convert(item));
+			}
+		}
+		
+		//dietaryassessment
+		if(emfDBG.getDietaryAssessmentMethod() != null) {
+			for(metadata.DietaryAssessmentMethod item : emfDBG.getDietaryAssessmentMethod()) {
+				swaggerDBG.addDietaryAssessmentMethodItem(convert(item));
+			}
+		}
+		
+		//laboratroy
+		if(emfDBG.getLaboratory() != null) {
+			for(metadata.Laboratory item : emfDBG.getLaboratory()) {
+				swaggerDBG.addLaboratoryItem(convert(item));
+			}
+		}
+		
+		//study sample
+		if(emfDBG.getStudySample() != null) {
+			for(metadata.StudySample item : emfDBG.getStudySample()) {
+				swaggerDBG.addStudySampleItem(convert(item));
+			}
+		}
+		
+		//study
+		if(emfDBG.getStudy() != null)
+			swaggerDBG.setStudy(convert(emfDBG.getStudy()));
 		
 		
 		return swaggerDBG;
 	} 
+	public static de.bund.bfr.metadata.swagger.Assay convert(metadata.Assay deprecated){
+		de.bund.bfr.metadata.swagger.Assay assay = new de.bund.bfr.metadata.swagger.Assay();
+		
+		if(StringUtils.isNotEmpty(deprecated.getAssayDescription()))
+			assay.setDescription(deprecated.getAssayDescription());
+		if(StringUtils.isNotEmpty(deprecated.getRangeOfContamination()))
+			assay.setContaminationRange(deprecated.getRangeOfContamination());
+		if(StringUtils.isNotEmpty(deprecated.getLimitOfDetection()))
+			assay.setDetectionLimit(deprecated.getLimitOfDetection());
+		if(StringUtils.isNotEmpty(deprecated.getPercentageOfFat()))
+			assay.setFatPercentage(deprecated.getPercentageOfFat());
+		if(StringUtils.isNotEmpty(deprecated.getLeftCensoredData()))
+			assay.setLeftCensoredData(deprecated.getLeftCensoredData());
+		if(StringUtils.isNotEmpty(deprecated.getPercentageOfMoisture()))
+			assay.setMoisturePercentage(deprecated.getPercentageOfMoisture());
+		if(StringUtils.isNotEmpty(deprecated.getAssayName()))
+			assay.setName(deprecated.getAssayName());
+		if(StringUtils.isNotEmpty(deprecated.getLimitOfQuantification()))
+			assay.setQuantificationLimit(deprecated.getLimitOfQuantification());
+		if(StringUtils.isNotEmpty(deprecated.getUncertaintyValue()))
+			assay.setUncertaintyValue(deprecated.getUncertaintyValue());
+		
+		return assay;
+	}
+	
+	public static de.bund.bfr.metadata.swagger.DietaryAssessmentMethod convert(metadata.DietaryAssessmentMethod deprecated){
+		de.bund.bfr.metadata.swagger.DietaryAssessmentMethod diet = new de.bund.bfr.metadata.swagger.DietaryAssessmentMethod();
+		
+		if(StringUtils.isNotEmpty(deprecated.getFoodDescriptors()))
+			diet.addFoodDescriptorsItem(deprecated.getFoodDescriptors());
+		if(StringUtils.isNotEmpty(deprecated.getNumberOfFoodItems()))
+			diet.addNumberOfFoodItemsItem(deprecated.getNumberOfFoodItems());
+		if(StringUtils.isNotEmpty(deprecated.getRecordTypes()))
+			diet.addRecordTypesItem(deprecated.getRecordTypes());
+		if(StringUtils.isNotEmpty(deprecated.getCollectionTool()))
+			diet.setCollectionTool(deprecated.getCollectionTool());
+		if(deprecated.getNumberOfNonConsecutiveOneDay() != 0)
+			diet.setNumberOfNonConsecutiveOneDay(Integer.toString(deprecated.getNumberOfNonConsecutiveOneDay()));
+		if(StringUtils.isNotEmpty(deprecated.getSoftwareTool()))
+			diet.setSoftwareTool(deprecated.getSoftwareTool());
+		
+		return diet;
+	}
+	
+	public static de.bund.bfr.metadata.swagger.Laboratory convert(metadata.Laboratory deprecated){
+		de.bund.bfr.metadata.swagger.Laboratory lab = new de.bund.bfr.metadata.swagger.Laboratory();
+		
+		if(deprecated.getLaboratoryAccreditation() != null) {
+			for(StringObject item : deprecated.getLaboratoryAccreditation()) {
+				lab.addAccreditationItem(item.getValue());
+			}
+		}
+		
+		if(StringUtils.isNotEmpty(deprecated.getLaboratoryCountry()))
+			lab.setCountry(deprecated.getLaboratoryCountry());
+		if(StringUtils.isNotEmpty(deprecated.getLaboratoryName()))
+			lab.setName(deprecated.getLaboratoryName());
+		
+		return lab;
+	}
+	
+	public static de.bund.bfr.metadata.swagger.StudySample convert(metadata.StudySample deprecated){
+		de.bund.bfr.metadata.swagger.StudySample sample = new de.bund.bfr.metadata.swagger.StudySample();
+		
+		if(StringUtils.isNotEmpty(deprecated.getLotSizeUnit()))
+			sample.setLotSizeUnit(deprecated.getLotSizeUnit());
+		if(StringUtils.isNotEmpty(deprecated.getProtocolOfSampleCollection()))
+			sample.setProtocolOfSampleCollection(deprecated.getProtocolOfSampleCollection());
+		if(StringUtils.isNotEmpty(deprecated.getSampleName()))
+			sample.setSampleName(deprecated.getSampleName());
+		if(StringUtils.isNotEmpty(deprecated.getSamplingMethod()))
+			sample.setSamplingMethod(deprecated.getSamplingMethod());
+		if(StringUtils.isNotEmpty(deprecated.getSamplingPlan()))
+			sample.setSamplingPlan(deprecated.getSamplingPlan());
+		if(StringUtils.isNotEmpty(deprecated.getSamplingPoint()))
+			sample.setSamplingPoint(deprecated.getSamplingPoint());
+		if(StringUtils.isNotEmpty(deprecated.getSamplingSize()))
+			sample.setSamplingSize(deprecated.getSamplingSize());
+		if(StringUtils.isNotEmpty(deprecated.getSamplingStrategy()))
+			sample.setSamplingStrategy(deprecated.getSamplingStrategy());
+		if(StringUtils.isNotEmpty(deprecated.getSamplingWeight()))
+			sample.setSamplingWeight(deprecated.getSamplingWeight());
+		if(StringUtils.isNotEmpty(deprecated.getTypeOfSamplingProgram()))
+			sample.setTypeOfSamplingProgram(deprecated.getTypeOfSamplingProgram());
+		return sample;
+	}
+	
+	public static de.bund.bfr.metadata.swagger.Study convert(metadata.Study deprecated){
+		de.bund.bfr.metadata.swagger.Study study = new de.bund.bfr.metadata.swagger.Study();
+		
+		if(StringUtils.isNotEmpty(deprecated.getAccreditationProcedureForTheAssayTechnology()))
+			study.setAccreditationProcedureForTheAssayTechnology(deprecated.getAccreditationProcedureForTheAssayTechnology());
+		if(StringUtils.isNotEmpty(deprecated.getStudyAssayMeasurementType()))
+			study.setAssayMeasurementType(deprecated.getStudyAssayMeasurementType());
+		if(StringUtils.isNotEmpty(deprecated.getStudyAssayTechnologyPlatform()))
+			study.setAssayTechnologyPlatform(deprecated.getStudyAssayTechnologyPlatform());
+		if(StringUtils.isNotEmpty(deprecated.getStudyAssayTechnologyType()))
+			study.setAssayTechnologyType(deprecated.getStudyAssayTechnologyType());
+		if(StringUtils.isNotEmpty(deprecated.getStudyDescription()))
+			study.setDescription(deprecated.getStudyDescription());
+		if(StringUtils.isNotEmpty(deprecated.getStudyDesignType()))
+			study.setDesignType(deprecated.getStudyDesignType());
+		if(StringUtils.isNotEmpty(deprecated.getStudyIdentifier()))
+			study.setIdentifier(deprecated.getStudyIdentifier());
+		if(StringUtils.isNotEmpty(deprecated.getStudyProtocolComponentsName()))
+			study.setProtocolComponentsName(deprecated.getStudyProtocolComponentsName());
+		if(StringUtils.isNotEmpty(deprecated.getStudyProtocolComponentsType()))
+			study.setProtocolComponentsType(deprecated.getStudyProtocolComponentsType());
+		if(StringUtils.isNotEmpty(deprecated.getStudyProtocolDescription()))
+			study.setProtocolDescription(deprecated.getStudyProtocolDescription());
+		if(StringUtils.isNotEmpty(deprecated.getStudyProtocolName()))
+			study.setProtocolName(deprecated.getStudyProtocolName());
+		if(StringUtils.isNotEmpty(deprecated.getStudyProtocolParametersName()))
+			study.setProtocolParametersName(deprecated.getStudyProtocolParametersName());
+		if(StringUtils.isNotEmpty(deprecated.getStudyProtocolType()))
+			study.setProtocolType(deprecated.getStudyProtocolType());
+		if(deprecated.getStudyProtocolURI() != null)
+			study.setProtocolURI(deprecated.getStudyProtocolURI().toString());
+		if(StringUtils.isNotEmpty(deprecated.getStudyProtocolVersion()))
+			study.setProtocolVersion(deprecated.getStudyProtocolVersion());
+		if(StringUtils.isNotEmpty(deprecated.getStudyTitle()))
+			study.setTitle(deprecated.getStudyTitle());
+		return study;
+	}
 	/** Internal map used to convert RIS types to 1.0.4 Reference types. */
 	private static Map<Type, PublicationTypeEnum> PUBLICATION_TYPE;
 	static {
