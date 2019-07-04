@@ -1,4 +1,4 @@
-package de.bund.bfr.metadata.swagger;
+package metadata;
 
 
 
@@ -19,6 +19,25 @@ import org.threeten.bp.LocalDate;
 
 import com.gmail.gcolaianni5.jris.bean.Type;
 
+import de.bund.bfr.metadata.swagger.Assay;
+import de.bund.bfr.metadata.swagger.Contact;
+import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
+import de.bund.bfr.metadata.swagger.Exposure;
+import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
+import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.GenericModelModelMath;
+import de.bund.bfr.metadata.swagger.GenericModelScope;
+import de.bund.bfr.metadata.swagger.Hazard;
+import de.bund.bfr.metadata.swagger.Laboratory;
+import de.bund.bfr.metadata.swagger.ModelCategory;
+import de.bund.bfr.metadata.swagger.ModelEquation;
+import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.PopulationGroup;
+import de.bund.bfr.metadata.swagger.Product;
+import de.bund.bfr.metadata.swagger.QualityMeasures;
+import de.bund.bfr.metadata.swagger.Reference;
+import de.bund.bfr.metadata.swagger.Study;
+import de.bund.bfr.metadata.swagger.StudySample;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 import metadata.StringObject;
 
