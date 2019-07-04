@@ -2,6 +2,7 @@ package metadata;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.ModelCategory;
+import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 
@@ -116,6 +118,51 @@ public class SwaggerUtilTest {
 		assertEquals("gender", contact.getGender());
 		assertEquals("note", contact.getNote());
 		assertEquals("organization", contact.getOrganization());
+	}
+	
+	@Test
+	public void testConvertParameter() {
+		
+		Parameter param = new Parameter();
+		{
+			metadata.Parameter deprecated = metadata.MetadataFactory.eINSTANCE.createParameter();
+			deprecated.setParameterID("id");
+			deprecated.setParameterClassification(metadata.ParameterClassification.CONSTANT);
+			deprecated.setParameterName("name");
+			deprecated.setParameterDescription("description");
+			deprecated.setParameterType("type");
+			deprecated.setParameterUnit("unit");
+			deprecated.setParameterUnitCategory("unitCategory");
+			deprecated.setParameterDataType(metadata.ParameterType.BOOLEAN);
+			deprecated.setParameterSource("source");
+			deprecated.setParameterSubject("subject");
+			deprecated.setParameterDistribution("distribution");
+			deprecated.setParameterValue("value");
+			deprecated.setParameterVariabilitySubject("subject");
+			deprecated.setParameterValueMin("false");
+			deprecated.setParameterValueMax("true");
+			deprecated.setParameterError("2.718");
+			deprecated.setReference(metadata.MetadataFactory.eINSTANCE.createReference());
+			
+			param = SwaggerUtil.convert(deprecated);
+		}
+
+		assertEquals("id", param.getId());
+		assertEquals(Parameter.ClassificationEnum.CONSTANT, param.getClassification());
+		assertEquals("name", param.getName());
+		assertEquals("description", param.getDescription());
+		assertEquals("unit", param.getUnit());
+		assertEquals("unitCategory", param.getUnitCategory());
+		assertEquals(Parameter.DataTypeEnum.BOOLEAN, param.getDataType());
+		assertEquals("source", param.getSource());
+		assertEquals("subject", param.getSubject());
+		assertEquals("distribution", param.getDistribution());
+		assertEquals("value", param.getValue());
+		assertEquals("subject", param.getVariabilitySubject());
+		assertEquals("false", param.getMinValue());
+		assertEquals("true", param.getMaxValue());
+		assertEquals("2.718", param.getError());
+		assertNotNull(param.getReference());
 	}
 
 	private static StringObject createStringObject(String string) {
