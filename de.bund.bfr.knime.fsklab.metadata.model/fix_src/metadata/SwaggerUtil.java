@@ -147,34 +147,19 @@ public class SwaggerUtil {
 	public static de.bund.bfr.metadata.swagger.Contact convert(metadata.Contact deprecated) {
 		
 		de.bund.bfr.metadata.swagger.Contact contact = new de.bund.bfr.metadata.swagger.Contact();
-		
-		if(StringUtils.isNotEmpty(deprecated.getCountry()))
-			contact.setCountry(deprecated.getCountry());
-		if(StringUtils.isNotEmpty(deprecated.getEmail()))
-			contact.setEmail(deprecated.getEmail());
-		if(StringUtils.isNotEmpty(deprecated.getFamilyName()))
-			contact.setFamilyName(deprecated.getFamilyName());
-		if(StringUtils.isNotEmpty(deprecated.getGender()))
-			contact.setGender(deprecated.getGender());
-		if(StringUtils.isNotEmpty(deprecated.getGivenName()))
-			contact.setGivenName(deprecated.getGivenName());
-		if(StringUtils.isNotEmpty(deprecated.getNote()))
-			contact.setNote(deprecated.getNote());
-		if(StringUtils.isNotEmpty(deprecated.getOrganization()))
-			contact.setOrganization(deprecated.getOrganization());
-		if(StringUtils.isNotEmpty(deprecated.getRegion()))
-			contact.setRegion(deprecated.getRegion());
-		if(StringUtils.isNotEmpty(deprecated.getStreetAddress()))
-			contact.setStreetAddress(deprecated.getStreetAddress());
-		if(StringUtils.isNotEmpty(deprecated.getTelephone()))
-			contact.setTelephone(deprecated.getTelephone());
-		if(StringUtils.isNotEmpty(deprecated.getTimeZone()))
-			contact.setTimeZone(deprecated.getTimeZone());
-		if(StringUtils.isNotEmpty(deprecated.getTitle()))
-			contact.setTitle(deprecated.getTitle());
-		if(StringUtils.isNotEmpty(deprecated.getZipCode()))
-			contact.setZipCode(deprecated.getZipCode());
-		
+		contact.setCountry(deprecated.getCountry());
+		contact.setEmail(deprecated.getEmail());
+		contact.setFamilyName(deprecated.getFamilyName());
+		contact.setGender(deprecated.getGender());
+		contact.setGivenName(deprecated.getGivenName());
+		contact.setNote(deprecated.getNote());
+		contact.setOrganization(deprecated.getOrganization());
+		contact.setRegion(deprecated.getRegion());
+		contact.setStreetAddress(deprecated.getStreetAddress());
+		contact.setTelephone(deprecated.getTelephone());
+		contact.setTimeZone(deprecated.getTimeZone());
+		contact.setTitle(deprecated.getTitle());
+		contact.setZipCode(deprecated.getZipCode());
 		
 		return contact;
 	}

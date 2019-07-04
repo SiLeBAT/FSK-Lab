@@ -87,20 +87,35 @@ public class SwaggerUtilTest {
 			metadata.Contact deprecated = metadata.MetadataFactory.eINSTANCE.createContact();
 			deprecated.setTitle("title");
 			deprecated.setFamilyName("familyName");
-// *   <li>{@link metadata.Contact#getGivenName <em>Given Name</em>}</li>
 			deprecated.setGivenName("givenName");
-// *   <li>{@link metadata.Contact#getEmail <em>Email</em>}</li>
-// *   <li>{@link metadata.Contact#getTelephone <em>Telephone</em>}</li>
-// *   <li>{@link metadata.Contact#getStreetAddress <em>Street Address</em>}</li>
-// *   <li>{@link metadata.Contact#getCountry <em>Country</em>}</li>
-// *   <li>{@link metadata.Contact#getCity <em>City</em>}</li>
-// *   <li>{@link metadata.Contact#getZipCode <em>Zip Code</em>}</li>
-// *   <li>{@link metadata.Contact#getRegion <em>Region</em>}</li>
-// *   <li>{@link metadata.Contact#getTimeZone <em>Time Zone</em>}</li>
-// *   <li>{@link metadata.Contact#getGender <em>Gender</em>}</li>
-// *   <li>{@link metadata.Contact#getNote <em>Note</em>}</li>
-// *   <li>{@link metadata.Contact#getOrganization <em>Organization</em>}</li>
+			deprecated.setEmail("john@doe.com");
+			deprecated.setTelephone("0123456789");
+			deprecated.setStreetAddress("streetAddress");
+			deprecated.setCountry("country");
+			deprecated.setCity("city");
+			deprecated.setZipCode("12345");
+			deprecated.setRegion("region");
+			deprecated.setTimeZone("timeZone");
+			deprecated.setGender("gender");
+			deprecated.setNote("note");
+			deprecated.setOrganization("organization");
+			
+			contact = SwaggerUtil.convert(deprecated);
 		}
+
+		assertEquals("title", contact.getTitle());
+		assertEquals("familyName", contact.getFamilyName());
+		assertEquals("givenName", contact.getGivenName());
+		assertEquals("john@doe.com", contact.getEmail());
+		assertEquals("0123456789", contact.getTelephone());
+		assertEquals("streetAddress", contact.getStreetAddress());
+		assertEquals("country", contact.getCountry());
+		assertEquals("12345", contact.getZipCode());
+		assertEquals("region", contact.getRegion());
+		assertEquals("timeZone", contact.getTimeZone());
+		assertEquals("gender", contact.getGender());
+		assertEquals("note", contact.getNote());
+		assertEquals("organization", contact.getOrganization());
 	}
 
 	private static StringObject createStringObject(String string) {
