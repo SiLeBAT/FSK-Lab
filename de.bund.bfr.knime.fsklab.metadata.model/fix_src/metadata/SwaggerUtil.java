@@ -4,7 +4,6 @@ package metadata;
 
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,29 +16,11 @@ import javax.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.threeten.bp.LocalDate;
 
-import com.gmail.gcolaianni5.jris.bean.Type;
+import metadata.PublicationType;
 
-import de.bund.bfr.metadata.swagger.Assay;
-import de.bund.bfr.metadata.swagger.Contact;
-import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
-import de.bund.bfr.metadata.swagger.Exposure;
-import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.GenericModelModelMath;
-import de.bund.bfr.metadata.swagger.GenericModelScope;
-import de.bund.bfr.metadata.swagger.Hazard;
-import de.bund.bfr.metadata.swagger.Laboratory;
 import de.bund.bfr.metadata.swagger.ModelCategory;
-import de.bund.bfr.metadata.swagger.ModelEquation;
-import de.bund.bfr.metadata.swagger.Parameter;
-import de.bund.bfr.metadata.swagger.PopulationGroup;
-import de.bund.bfr.metadata.swagger.Product;
-import de.bund.bfr.metadata.swagger.QualityMeasures;
-import de.bund.bfr.metadata.swagger.Reference;
-import de.bund.bfr.metadata.swagger.Study;
-import de.bund.bfr.metadata.swagger.StudySample;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
-import metadata.StringObject;
 
 public class SwaggerUtil {
 
@@ -140,8 +121,7 @@ public class SwaggerUtil {
 
 		de.bund.bfr.metadata.swagger.Reference reference = new de.bund.bfr.metadata.swagger.Reference();
 
-		// Is reference description is not included in RIS
-		reference.setIsReferenceDescription(false);
+		reference.setIsReferenceDescription(record.isIsReferenceDescription());
 		
 		if (record.getPublicationType() != null) {
 			reference.addPublicationTypeItem(PUBLICATION_TYPE.get(record.getPublicationType()));
@@ -149,20 +129,15 @@ public class SwaggerUtil {
 
 		// Parse RIS date to LocalDate. Since both use ISO 8601 there is no need to add
 		// the date format.
-		
 		reference.setDate(toLocalDate(record.getPublicationDate()));
-		
+		reference.setPmid(record.getPmid());
 		reference.setDoi(record.getDoi());
-
 		reference.setAuthorList(record.getAuthorList());
-		
 		reference.setTitle(record.getPublicationTitle());
 		reference.setAbstract(record.getPublicationAbstract());
 		reference.setVolume(Integer.toString(record.getPublicationVolume()));
-
-		
 		reference.setIssue(Integer.toString(record.getPublicationIssue()));
-		
+		reference.setStatus(record.getPublicationStatus());
 		reference.setWebsite(record.getPublicationWebsite());
 
 		return reference;
@@ -672,70 +647,69 @@ public class SwaggerUtil {
 		return study;
 	}
 	/** Internal map used to convert RIS types to 1.0.4 Reference types. */
-	private static Map<Type, PublicationTypeEnum> PUBLICATION_TYPE;
+	private static Map<PublicationType, PublicationTypeEnum> PUBLICATION_TYPE;
 	static {
-		PUBLICATION_TYPE = new HashMap<Type, PublicationTypeEnum>();
+		PUBLICATION_TYPE = new HashMap<PublicationType, PublicationTypeEnum>();
 
-		PUBLICATION_TYPE.put(Type.ABST, PublicationTypeEnum.ABST);
-		PUBLICATION_TYPE.put(Type.ADVS, PublicationTypeEnum.ADVS);
-		PUBLICATION_TYPE.put(Type.AGGR, PublicationTypeEnum.AGGR);
-		PUBLICATION_TYPE.put(Type.ANCIENT, PublicationTypeEnum.ANCIENT);
-		PUBLICATION_TYPE.put(Type.ART, PublicationTypeEnum.ART);
-		PUBLICATION_TYPE.put(Type.BILL, PublicationTypeEnum.BILL);
-		PUBLICATION_TYPE.put(Type.BLOG, PublicationTypeEnum.BLOG);
-		PUBLICATION_TYPE.put(Type.BOOK, PublicationTypeEnum.BOOK);
-		PUBLICATION_TYPE.put(Type.CASE, PublicationTypeEnum.CASE);
-		PUBLICATION_TYPE.put(Type.CHAP, PublicationTypeEnum.CHAP);
-		PUBLICATION_TYPE.put(Type.CHART, PublicationTypeEnum.CHART);
-		PUBLICATION_TYPE.put(Type.CLSWK, PublicationTypeEnum.CLSWK);
-		PUBLICATION_TYPE.put(Type.COMP, PublicationTypeEnum.COMP);
-		PUBLICATION_TYPE.put(Type.CONF, PublicationTypeEnum.CONF);
-		PUBLICATION_TYPE.put(Type.CPAPER, PublicationTypeEnum.CPAPER);
-		PUBLICATION_TYPE.put(Type.CTLG, PublicationTypeEnum.CTLG);
-		PUBLICATION_TYPE.put(Type.DATA, PublicationTypeEnum.DATA);
-		PUBLICATION_TYPE.put(Type.DBASE, PublicationTypeEnum.DBASE);
-		PUBLICATION_TYPE.put(Type.DICT, PublicationTypeEnum.DICT);
-		PUBLICATION_TYPE.put(Type.EBOOK, PublicationTypeEnum.EBOOK);
-		PUBLICATION_TYPE.put(Type.ECHAP, PublicationTypeEnum.ECHAP);
-		PUBLICATION_TYPE.put(Type.EDBOOK, PublicationTypeEnum.EDBOOK);
-		PUBLICATION_TYPE.put(Type.EJOUR, PublicationTypeEnum.EJOUR);
-		// Typo in PublicationTypeEnum. It should be 'ELEC'
-		PUBLICATION_TYPE.put(Type.ELEC, PublicationTypeEnum.ELECT);
-		PUBLICATION_TYPE.put(Type.ENCYC, PublicationTypeEnum.ENCYC);
-		PUBLICATION_TYPE.put(Type.EQUA, PublicationTypeEnum.EQUA);
-		PUBLICATION_TYPE.put(Type.FIGURE, PublicationTypeEnum.FIGURE);
-		PUBLICATION_TYPE.put(Type.GEN, PublicationTypeEnum.GEN);
-		PUBLICATION_TYPE.put(Type.GOVDOC, PublicationTypeEnum.GOVDOC);
-		PUBLICATION_TYPE.put(Type.GRANT, PublicationTypeEnum.GRANT);
-		PUBLICATION_TYPE.put(Type.HEAR, PublicationTypeEnum.HEAR);
-		PUBLICATION_TYPE.put(Type.ICOMM, PublicationTypeEnum.ICOMM);
-		PUBLICATION_TYPE.put(Type.INPR, PublicationTypeEnum.INPR);
-		PUBLICATION_TYPE.put(Type.JOUR, PublicationTypeEnum.JOUR);
-		PUBLICATION_TYPE.put(Type.JFULL, PublicationTypeEnum.JFULL);
-		PUBLICATION_TYPE.put(Type.LEGAL, PublicationTypeEnum.LEGAL);
-		PUBLICATION_TYPE.put(Type.MANSCPT, PublicationTypeEnum.MANSCPT);
-		PUBLICATION_TYPE.put(Type.MAP, PublicationTypeEnum.MAP);
-		PUBLICATION_TYPE.put(Type.MGZN, PublicationTypeEnum.MGZN);
-		PUBLICATION_TYPE.put(Type.MPCT, PublicationTypeEnum.MPCT);
-		PUBLICATION_TYPE.put(Type.MULTI, PublicationTypeEnum.MULTI);
-		PUBLICATION_TYPE.put(Type.MUSIC, PublicationTypeEnum.MUSIC);
+		PUBLICATION_TYPE.put(PublicationType.ABST, PublicationTypeEnum.ABST);
+		PUBLICATION_TYPE.put(PublicationType.ADVS, PublicationTypeEnum.ADVS);
+		PUBLICATION_TYPE.put(PublicationType.AGGR, PublicationTypeEnum.AGGR);
+		PUBLICATION_TYPE.put(PublicationType.ANCIENT, PublicationTypeEnum.ANCIENT);
+		PUBLICATION_TYPE.put(PublicationType.ART, PublicationTypeEnum.ART);
+		PUBLICATION_TYPE.put(PublicationType.BILL, PublicationTypeEnum.BILL);
+		PUBLICATION_TYPE.put(PublicationType.BLOG, PublicationTypeEnum.BLOG);
+		PUBLICATION_TYPE.put(PublicationType.BOOK, PublicationTypeEnum.BOOK);
+		PUBLICATION_TYPE.put(PublicationType.CASE, PublicationTypeEnum.CASE);
+		PUBLICATION_TYPE.put(PublicationType.CHAP, PublicationTypeEnum.CHAP);
+		PUBLICATION_TYPE.put(PublicationType.CHART, PublicationTypeEnum.CHART);
+		PUBLICATION_TYPE.put(PublicationType.CLSWK, PublicationTypeEnum.CLSWK);
+		PUBLICATION_TYPE.put(PublicationType.COMP, PublicationTypeEnum.COMP);
+		PUBLICATION_TYPE.put(PublicationType.CONF, PublicationTypeEnum.CONF);
+		PUBLICATION_TYPE.put(PublicationType.CPAPER, PublicationTypeEnum.CPAPER);
+		PUBLICATION_TYPE.put(PublicationType.CTLG, PublicationTypeEnum.CTLG);
+		PUBLICATION_TYPE.put(PublicationType.DATA, PublicationTypeEnum.DATA);
+		PUBLICATION_TYPE.put(PublicationType.DBASE, PublicationTypeEnum.DBASE);
+		PUBLICATION_TYPE.put(PublicationType.DICT, PublicationTypeEnum.DICT);
+		PUBLICATION_TYPE.put(PublicationType.EBOOK, PublicationTypeEnum.EBOOK);
+		PUBLICATION_TYPE.put(PublicationType.ECHAP, PublicationTypeEnum.ECHAP);
+		PUBLICATION_TYPE.put(PublicationType.EDBOOK, PublicationTypeEnum.EDBOOK);
+		PUBLICATION_TYPE.put(PublicationType.EJOUR, PublicationTypeEnum.EJOUR);
+		PUBLICATION_TYPE.put(PublicationType.ELECT, PublicationTypeEnum.ELECT);
+		PUBLICATION_TYPE.put(PublicationType.ENCYC, PublicationTypeEnum.ENCYC);
+		PUBLICATION_TYPE.put(PublicationType.EQUA, PublicationTypeEnum.EQUA);
+		PUBLICATION_TYPE.put(PublicationType.FIGURE, PublicationTypeEnum.FIGURE);
+		PUBLICATION_TYPE.put(PublicationType.GEN, PublicationTypeEnum.GEN);
+		PUBLICATION_TYPE.put(PublicationType.GOVDOC, PublicationTypeEnum.GOVDOC);
+		PUBLICATION_TYPE.put(PublicationType.GRANT, PublicationTypeEnum.GRANT);
+		PUBLICATION_TYPE.put(PublicationType.HEAR, PublicationTypeEnum.HEAR);
+		PUBLICATION_TYPE.put(PublicationType.ICOMM, PublicationTypeEnum.ICOMM);
+		PUBLICATION_TYPE.put(PublicationType.INPR, PublicationTypeEnum.INPR);
+		PUBLICATION_TYPE.put(PublicationType.JOUR, PublicationTypeEnum.JOUR);
+		PUBLICATION_TYPE.put(PublicationType.JFULL, PublicationTypeEnum.JFULL);
+		PUBLICATION_TYPE.put(PublicationType.LEGAL, PublicationTypeEnum.LEGAL);
+		PUBLICATION_TYPE.put(PublicationType.MANSCPT, PublicationTypeEnum.MANSCPT);
+		PUBLICATION_TYPE.put(PublicationType.MAP, PublicationTypeEnum.MAP);
+		PUBLICATION_TYPE.put(PublicationType.MGZN, PublicationTypeEnum.MGZN);
+		PUBLICATION_TYPE.put(PublicationType.MPCT, PublicationTypeEnum.MPCT);
+		PUBLICATION_TYPE.put(PublicationType.MULTI, PublicationTypeEnum.MULTI);
+		PUBLICATION_TYPE.put(PublicationType.MUSIC, PublicationTypeEnum.MUSIC);
 		// Typo in PublicationTypeEnum. It should be 'NEWS'
-		PUBLICATION_TYPE.put(Type.NEWS, PublicationTypeEnum.NEW);
-		PUBLICATION_TYPE.put(Type.PAMP, PublicationTypeEnum.PAMP);
-		PUBLICATION_TYPE.put(Type.PAT, PublicationTypeEnum.PAT);
-		PUBLICATION_TYPE.put(Type.PCOMM, PublicationTypeEnum.PCOMM);
-		PUBLICATION_TYPE.put(Type.RPRT, PublicationTypeEnum.RPRT);
-		PUBLICATION_TYPE.put(Type.SER, PublicationTypeEnum.SER);
-		PUBLICATION_TYPE.put(Type.SLIDE, PublicationTypeEnum.SLIDE);
-		PUBLICATION_TYPE.put(Type.SOUND, PublicationTypeEnum.SOUND);
-		PUBLICATION_TYPE.put(Type.STAND, PublicationTypeEnum.STAND);
-		PUBLICATION_TYPE.put(Type.STAT, PublicationTypeEnum.STAT);
-		PUBLICATION_TYPE.put(Type.THES, PublicationTypeEnum.THES);
-		PUBLICATION_TYPE.put(Type.UNPB, PublicationTypeEnum.UNPB);
-		PUBLICATION_TYPE.put(Type.VIDEO, PublicationTypeEnum.VIDEO);
+		PUBLICATION_TYPE.put(PublicationType.NEWS, PublicationTypeEnum.NEW);
+		PUBLICATION_TYPE.put(PublicationType.PAMP, PublicationTypeEnum.PAMP);
+		PUBLICATION_TYPE.put(PublicationType.PAT, PublicationTypeEnum.PAT);
+		PUBLICATION_TYPE.put(PublicationType.PCOMM, PublicationTypeEnum.PCOMM);
+		PUBLICATION_TYPE.put(PublicationType.RPRT, PublicationTypeEnum.RPRT);
+		PUBLICATION_TYPE.put(PublicationType.SER, PublicationTypeEnum.SER);
+		PUBLICATION_TYPE.put(PublicationType.SLIDE, PublicationTypeEnum.SLIDE);
+		PUBLICATION_TYPE.put(PublicationType.SOUND, PublicationTypeEnum.SOUND);
+		PUBLICATION_TYPE.put(PublicationType.STAND, PublicationTypeEnum.STAND);
+		PUBLICATION_TYPE.put(PublicationType.STAT, PublicationTypeEnum.STAT);
+		PUBLICATION_TYPE.put(PublicationType.THES, PublicationTypeEnum.THES);
+		PUBLICATION_TYPE.put(PublicationType.UNPB, PublicationTypeEnum.UNPB);
+		PUBLICATION_TYPE.put(PublicationType.VIDEO, PublicationTypeEnum.VIDEO);
 	}
 	@SuppressWarnings("deprecation")
 	private static LocalDate toLocalDate(Date date) {
-		return LocalDate.of(date.getYear(), date.getMonth(), date.getDay());
+		return LocalDate.of(date.getYear(), date.getMonth() + 1, date.getDate());
 	}
 }
