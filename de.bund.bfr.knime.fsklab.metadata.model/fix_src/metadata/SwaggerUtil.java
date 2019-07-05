@@ -352,37 +352,14 @@ public class SwaggerUtil {
 	public static de.bund.bfr.metadata.swagger.GenericModelDataBackground convert(metadata.DataBackground emfDBG) {
 		de.bund.bfr.metadata.swagger.GenericModelDataBackground swaggerDBG = new de.bund.bfr.metadata.swagger.GenericModelDataBackground();
 
-		// assay
-		if (emfDBG.getAssay() != null) {
-			for (metadata.Assay item : emfDBG.getAssay()) {
-				swaggerDBG.addAssayItem(convert(item));
-			}
-		}
-
-		// dietaryassessment
-		if (emfDBG.getDietaryAssessmentMethod() != null) {
-			for (metadata.DietaryAssessmentMethod item : emfDBG.getDietaryAssessmentMethod()) {
-				swaggerDBG.addDietaryAssessmentMethodItem(convert(item));
-			}
-		}
-
-		// laboratroy
-		if (emfDBG.getLaboratory() != null) {
-			for (metadata.Laboratory item : emfDBG.getLaboratory()) {
-				swaggerDBG.addLaboratoryItem(convert(item));
-			}
-		}
-
-		// study sample
-		if (emfDBG.getStudySample() != null) {
-			for (metadata.StudySample item : emfDBG.getStudySample()) {
-				swaggerDBG.addStudySampleItem(convert(item));
-			}
-		}
-
-		// study
 		if (emfDBG.getStudy() != null)
 			swaggerDBG.setStudy(convert(emfDBG.getStudy()));
+
+		emfDBG.getStudySample().stream().map(SwaggerUtil::convert).forEach(swaggerDBG::addStudySampleItem);
+		emfDBG.getAssay().stream().map(SwaggerUtil::convert).forEach(swaggerDBG::addAssayItem);
+		emfDBG.getDietaryAssessmentMethod().stream().map(SwaggerUtil::convert)
+				.forEach(swaggerDBG::addDietaryAssessmentMethodItem);
+		emfDBG.getLaboratory().stream().map(SwaggerUtil::convert).forEach(swaggerDBG::addLaboratoryItem);
 
 		return swaggerDBG;
 	}

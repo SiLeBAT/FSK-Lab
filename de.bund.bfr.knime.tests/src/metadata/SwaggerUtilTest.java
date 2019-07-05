@@ -11,6 +11,7 @@ import org.threeten.bp.LocalDate;
 import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
+import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.Hazard;
@@ -505,6 +506,28 @@ public class SwaggerUtilTest {
 		assertEquals("name", laboratory.getName());
 		assertEquals("country", laboratory.getCountry());
 		assertEquals("accreditation", laboratory.getAccreditation().get(0));
+	}
+	
+	@Test
+	public void testConvertDataBackground() {
+		
+		GenericModelDataBackground background;
+		{
+			metadata.DataBackground deprecated = metadata.MetadataFactory.eINSTANCE.createDataBackground();
+			deprecated.setStudy(metadata.MetadataFactory.eINSTANCE.createStudy());
+			deprecated.getStudySample().add(metadata.MetadataFactory.eINSTANCE.createStudySample());
+			deprecated.getDietaryAssessmentMethod().add(metadata.MetadataFactory.eINSTANCE.createDietaryAssessmentMethod());
+			deprecated.getLaboratory().add(metadata.MetadataFactory.eINSTANCE.createLaboratory());
+			deprecated.getAssay().add(metadata.MetadataFactory.eINSTANCE.createAssay());
+			
+			background = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertNotNull(background.getStudy());
+		assertEquals(1, background.getStudySample().size());
+		assertEquals(1, background.getDietaryAssessmentMethod().size());
+		assertEquals(1, background.getLaboratory().size());
+		assertEquals(1, background.getAssay().size());
 	}
 	
 	private static StringObject createStringObject(String string) {
