@@ -218,23 +218,12 @@ public class SwaggerUtil {
 	public static de.bund.bfr.metadata.swagger.ModelEquation convert(metadata.ModelEquation deprecated) {
 
 		de.bund.bfr.metadata.swagger.ModelEquation modelEq = new de.bund.bfr.metadata.swagger.ModelEquation();
-
-		// hypothesis
-		if (deprecated.getHypothesisOfTheModel() != null) {
-			for (StringObject item : deprecated.getHypothesisOfTheModel()) {
-				modelEq.addModelHypothesisItem(item.getValue());
-			}
-		}
-
-		// reference
-		if (deprecated.getReference() != null) {
-			for (metadata.Reference item : deprecated.getReference()) {
-				modelEq.addReferenceItem(convert(item));
-			}
-		}
-
-		if (StringUtils.isNotEmpty(deprecated.getModelEquation()))
-			modelEq.setModelEquation(deprecated.getModelEquation());
+		modelEq.setName(deprecated.getModelEquationName());
+		modelEq.setPropertyClass(deprecated.getModelEquationClass());
+		modelEq.setModelEquation(deprecated.getModelEquation());
+		deprecated.getReference().stream().map(SwaggerUtil::convert).forEach(modelEq::addReferenceItem);
+		deprecated.getHypothesisOfTheModel().stream().map(StringObject::getValue)
+				.forEach(modelEq::addModelHypothesisItem);
 
 		return modelEq;
 	}

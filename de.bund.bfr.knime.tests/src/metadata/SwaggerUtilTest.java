@@ -24,6 +24,7 @@ import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 import de.bund.bfr.metadata.swagger.Study;
 import de.bund.bfr.metadata.swagger.StudySample;
+import de.bund.bfr.metadata.swagger.ModelEquation;
 
 public class SwaggerUtilTest {
 
@@ -528,6 +529,28 @@ public class SwaggerUtilTest {
 		assertEquals(1, background.getDietaryAssessmentMethod().size());
 		assertEquals(1, background.getLaboratory().size());
 		assertEquals(1, background.getAssay().size());
+	}
+	
+	@Test
+	public void testConvertModelEquation() {
+		
+		ModelEquation equation;
+		{
+			metadata.ModelEquation deprecated = metadata.MetadataFactory.eINSTANCE.createModelEquation();
+			deprecated.setModelEquationName("name");
+			deprecated.setModelEquationClass("class");
+			deprecated.setModelEquation("equation");
+			deprecated.getReference().add(metadata.MetadataFactory.eINSTANCE.createReference());
+			deprecated.getHypothesisOfTheModel().add(createStringObject("hypothesis"));
+			
+			equation = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals("name", equation.getName());
+		assertEquals("class", equation.getPropertyClass());
+		assertEquals("equation", equation.getModelEquation());
+		assertEquals(1, equation.getReference().size());
+		assertEquals("hypothesis", equation.getModelHypothesis().get(0));
 	}
 	
 	private static StringObject createStringObject(String string) {
