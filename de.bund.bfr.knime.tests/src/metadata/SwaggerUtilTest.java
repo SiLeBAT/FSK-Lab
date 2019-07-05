@@ -10,6 +10,7 @@ import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Product;
@@ -228,7 +229,7 @@ public class SwaggerUtilTest {
 	@Test
 	public void testConvertProduct() {
 		
-		Product product = new Product();
+		Product product;
 		{
 			metadata.Product deprecated = metadata.MetadataFactory.eINSTANCE.createProduct();
 			deprecated.setProductName("name");
@@ -257,6 +258,46 @@ public class SwaggerUtilTest {
 		assertEquals("fisheriesArea", product.getFisheriesArea());
 		assertEquals(LocalDate.of(2018, 1, 1), product.getProductionDate());
 		assertEquals(LocalDate.of(2019, 1, 1), product.getExpiryDate());
+	}
+	
+	@Test
+	public void testConvertHazard() {
+	
+		Hazard hazard;
+		{
+			metadata.Hazard deprecated = metadata.MetadataFactory.eINSTANCE.createHazard();
+			deprecated.setHazardType("type");
+			deprecated.setHazardName("name");
+			deprecated.setHazardDescription("description");
+			deprecated.setHazardUnit("unit");
+			deprecated.setAdverseEffect("adverseEffect");
+			deprecated.setSourceOfContamination("sourceOfContamination");
+			deprecated.setBenchmarkDose("benchmarkDose");
+			deprecated.setMaximumResidueLimit("maximumResidueLimit");
+			deprecated.setNoObservedAdverseAffectLevel("level");
+			deprecated.setLowestObservedAdverseAffectLevel("level");
+			deprecated.setAcceptableOperatorExposureLevel("level");
+			deprecated.setAcuteReferenceDose("dose");
+			deprecated.setAcceptableDailyIntake("intake");
+			deprecated.setHazardIndSum("sum");
+			
+			hazard = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals("type", hazard.getType());
+		assertEquals("name", hazard.getName());
+		assertEquals("description", hazard.getDescription());
+		assertEquals("unit", hazard.getUnit());
+		assertEquals("adverseEffect", hazard.getAdverseEffect());
+		assertEquals("sourceOfContamination", hazard.getSourceOfContamination());
+		assertEquals("benchmarkDose", hazard.getBenchmarkDose());
+		assertEquals("maximumResidueLimit", hazard.getMaximumResidueLimit());
+		assertEquals("level", hazard.getNoObservedAdverseAffectLevel());
+		assertEquals("level", hazard.getLowestObservedAdverseAffectLevel());
+		assertEquals("level", hazard.getAcceptableOperatorsExposureLevel());
+		assertEquals("dose", hazard.getAcuteReferenceDose());
+		assertEquals("intake", hazard.getAcceptableDailyIntake());
+		assertEquals("sum", hazard.getIndSum());
 	}
 
 	private static StringObject createStringObject(String string) {

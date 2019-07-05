@@ -367,36 +367,22 @@ public class SwaggerUtil {
 	}
 
 	public static de.bund.bfr.metadata.swagger.Hazard convert(metadata.Hazard deprecated) {
-		de.bund.bfr.metadata.swagger.Hazard hazard = new de.bund.bfr.metadata.swagger.Hazard();
 
-		if (StringUtils.isNotEmpty(deprecated.getAcceptableDailyIntake()))
-			hazard.setAcceptableDailyIntake(deprecated.getAcceptableDailyIntake());
-		if (StringUtils.isNotEmpty(deprecated.getAcceptableOperatorExposureLevel()))
-			hazard.setAcceptableOperatorsExposureLevel(deprecated.getAcceptableOperatorExposureLevel());
-		if (StringUtils.isNotEmpty(deprecated.getAcuteReferenceDose()))
-			hazard.setAcuteReferenceDose(deprecated.getAcuteReferenceDose());
-		if (StringUtils.isNotEmpty(deprecated.getAdverseEffect()))
-			hazard.setAdverseEffect(deprecated.getAdverseEffect());
-		if (StringUtils.isNotEmpty(deprecated.getBenchmarkDose()))
-			hazard.setBenchmarkDose(deprecated.getBenchmarkDose());
-		if (StringUtils.isNotEmpty(deprecated.getHazardDescription()))
-			hazard.setDescription(deprecated.getHazardDescription());
-		if (StringUtils.isNotEmpty(deprecated.getHazardIndSum()))
-			hazard.setIndSum(deprecated.getHazardIndSum());
-		if (StringUtils.isNotEmpty(deprecated.getLowestObservedAdverseAffectLevel()))
-			hazard.setLowestObservedAdverseAffectLevel(deprecated.getLowestObservedAdverseAffectLevel());
-		if (StringUtils.isNotEmpty(deprecated.getMaximumResidueLimit()))
-			hazard.setMaximumResidueLimit(deprecated.getMaximumResidueLimit());
-		if (StringUtils.isNotEmpty(deprecated.getHazardName()))
-			hazard.setName(deprecated.getHazardName());
-		if (StringUtils.isNotEmpty(deprecated.getNoObservedAdverseAffectLevel()))
-			hazard.setNoObservedAdverseAffectLevel(deprecated.getNoObservedAdverseAffectLevel());
-		if (StringUtils.isNotEmpty(deprecated.getSourceOfContamination()))
-			hazard.setSourceOfContamination(deprecated.getSourceOfContamination());
-		if (StringUtils.isNotEmpty(deprecated.getHazardType()))
-			hazard.setType(deprecated.getHazardType());
-		if (StringUtils.isNotEmpty(deprecated.getHazardUnit()))
-			hazard.setUnit(deprecated.getHazardUnit());
+		de.bund.bfr.metadata.swagger.Hazard hazard = new de.bund.bfr.metadata.swagger.Hazard();
+		hazard.setType(deprecated.getHazardType());
+		hazard.setName(deprecated.getHazardName());
+		hazard.setDescription(deprecated.getHazardDescription());
+		hazard.setUnit(deprecated.getHazardUnit());
+		hazard.setAdverseEffect(deprecated.getAdverseEffect());
+		hazard.setSourceOfContamination(deprecated.getSourceOfContamination());
+		hazard.setBenchmarkDose(deprecated.getBenchmarkDose());
+		hazard.setMaximumResidueLimit(deprecated.getMaximumResidueLimit());
+		hazard.setNoObservedAdverseAffectLevel(deprecated.getNoObservedAdverseAffectLevel());
+		hazard.setLowestObservedAdverseAffectLevel(deprecated.getLowestObservedAdverseAffectLevel());
+		hazard.setAcceptableDailyIntake(deprecated.getAcceptableDailyIntake());
+		hazard.setIndSum(deprecated.getHazardIndSum());
+		hazard.setAcceptableOperatorsExposureLevel(deprecated.getAcceptableOperatorExposureLevel());
+		hazard.setAcuteReferenceDose(deprecated.getAcuteReferenceDose());
 
 		return hazard;
 	}
