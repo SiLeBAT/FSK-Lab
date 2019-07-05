@@ -1,6 +1,9 @@
 package metadata;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.net.URI;
 import java.util.Date;
@@ -21,6 +24,7 @@ import de.bund.bfr.metadata.swagger.Product;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 import de.bund.bfr.metadata.swagger.Study;
+import de.bund.bfr.metadata.swagger.StudySample;
 
 public class SwaggerUtilTest {
 
@@ -454,7 +458,39 @@ public class SwaggerUtilTest {
 		assertEquals("name", study.getProtocolComponentsName());
 		assertEquals("type", study.getProtocolComponentsType());
 	}
-
+	
+	@Test
+	public void testConvertStudySample() {
+		
+		StudySample sample;
+		{
+			metadata.StudySample deprecated = metadata.MetadataFactory.eINSTANCE.createStudySample();
+			deprecated.setSampleName("name");
+			deprecated.setProtocolOfSampleCollection("collection");
+			deprecated.setSamplingStrategy("strategy");
+			deprecated.setTypeOfSamplingProgram("program");
+			deprecated.setSamplingMethod("method");
+			deprecated.setSamplingPlan("plan");
+			deprecated.setSamplingWeight("weight");
+			deprecated.setSamplingSize("size");
+			deprecated.setLotSizeUnit("unit");
+			deprecated.setSamplingPoint("point");
+			
+			sample = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals("name", sample.getSampleName());
+		assertEquals("collection", sample.getProtocolOfSampleCollection());
+		assertEquals("strategy", sample.getSamplingStrategy());
+		assertEquals("program", sample.getTypeOfSamplingProgram());
+		assertEquals("method", sample.getSamplingMethod());
+		assertEquals("plan", sample.getSamplingPlan());
+		assertEquals("weight", sample.getSamplingWeight());
+		assertEquals("size", sample.getSamplingSize());
+		assertEquals("unit", sample.getLotSizeUnit());
+		assertEquals("point", sample.getSamplingPoint());
+	}
+	
 	private static StringObject createStringObject(String string) {
 		StringObject so = metadata.MetadataFactory.eINSTANCE.createStringObject();
 		so.setValue(string);

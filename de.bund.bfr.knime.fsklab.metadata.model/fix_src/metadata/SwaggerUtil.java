@@ -435,28 +435,19 @@ public class SwaggerUtil {
 	}
 
 	public static de.bund.bfr.metadata.swagger.StudySample convert(metadata.StudySample deprecated) {
-		de.bund.bfr.metadata.swagger.StudySample sample = new de.bund.bfr.metadata.swagger.StudySample();
 
-		if (StringUtils.isNotEmpty(deprecated.getLotSizeUnit()))
-			sample.setLotSizeUnit(deprecated.getLotSizeUnit());
-		if (StringUtils.isNotEmpty(deprecated.getProtocolOfSampleCollection()))
-			sample.setProtocolOfSampleCollection(deprecated.getProtocolOfSampleCollection());
-		if (StringUtils.isNotEmpty(deprecated.getSampleName()))
-			sample.setSampleName(deprecated.getSampleName());
-		if (StringUtils.isNotEmpty(deprecated.getSamplingMethod()))
-			sample.setSamplingMethod(deprecated.getSamplingMethod());
-		if (StringUtils.isNotEmpty(deprecated.getSamplingPlan()))
-			sample.setSamplingPlan(deprecated.getSamplingPlan());
-		if (StringUtils.isNotEmpty(deprecated.getSamplingPoint()))
-			sample.setSamplingPoint(deprecated.getSamplingPoint());
-		if (StringUtils.isNotEmpty(deprecated.getSamplingSize()))
-			sample.setSamplingSize(deprecated.getSamplingSize());
-		if (StringUtils.isNotEmpty(deprecated.getSamplingStrategy()))
-			sample.setSamplingStrategy(deprecated.getSamplingStrategy());
-		if (StringUtils.isNotEmpty(deprecated.getSamplingWeight()))
-			sample.setSamplingWeight(deprecated.getSamplingWeight());
-		if (StringUtils.isNotEmpty(deprecated.getTypeOfSamplingProgram()))
-			sample.setTypeOfSamplingProgram(deprecated.getTypeOfSamplingProgram());
+		de.bund.bfr.metadata.swagger.StudySample sample = new de.bund.bfr.metadata.swagger.StudySample();
+		sample.setSampleName(deprecated.getSampleName());
+		sample.setProtocolOfSampleCollection(deprecated.getProtocolOfSampleCollection());
+		sample.setSamplingStrategy(deprecated.getSamplingStrategy());
+		sample.setTypeOfSamplingProgram(deprecated.getTypeOfSamplingProgram());
+		sample.setSamplingMethod(deprecated.getSamplingMethod());
+		sample.setSamplingPlan(deprecated.getSamplingPlan());
+		sample.setSamplingWeight(deprecated.getSamplingWeight());
+		sample.setSamplingSize(deprecated.getSamplingSize());
+		sample.setLotSizeUnit(deprecated.getLotSizeUnit());
+		sample.setSamplingPoint(deprecated.getSamplingPoint());
+
 		return sample;
 	}
 
