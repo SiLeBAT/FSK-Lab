@@ -461,41 +461,30 @@ public class SwaggerUtil {
 	}
 
 	public static de.bund.bfr.metadata.swagger.Study convert(metadata.Study deprecated) {
-		de.bund.bfr.metadata.swagger.Study study = new de.bund.bfr.metadata.swagger.Study();
 
-		if (StringUtils.isNotEmpty(deprecated.getAccreditationProcedureForTheAssayTechnology()))
-			study.setAccreditationProcedureForTheAssayTechnology(
-					deprecated.getAccreditationProcedureForTheAssayTechnology());
-		if (StringUtils.isNotEmpty(deprecated.getStudyAssayMeasurementType()))
-			study.setAssayMeasurementType(deprecated.getStudyAssayMeasurementType());
-		if (StringUtils.isNotEmpty(deprecated.getStudyAssayTechnologyPlatform()))
-			study.setAssayTechnologyPlatform(deprecated.getStudyAssayTechnologyPlatform());
-		if (StringUtils.isNotEmpty(deprecated.getStudyAssayTechnologyType()))
-			study.setAssayTechnologyType(deprecated.getStudyAssayTechnologyType());
-		if (StringUtils.isNotEmpty(deprecated.getStudyDescription()))
-			study.setDescription(deprecated.getStudyDescription());
-		if (StringUtils.isNotEmpty(deprecated.getStudyDesignType()))
-			study.setDesignType(deprecated.getStudyDesignType());
-		if (StringUtils.isNotEmpty(deprecated.getStudyIdentifier()))
-			study.setIdentifier(deprecated.getStudyIdentifier());
-		if (StringUtils.isNotEmpty(deprecated.getStudyProtocolComponentsName()))
-			study.setProtocolComponentsName(deprecated.getStudyProtocolComponentsName());
-		if (StringUtils.isNotEmpty(deprecated.getStudyProtocolComponentsType()))
-			study.setProtocolComponentsType(deprecated.getStudyProtocolComponentsType());
-		if (StringUtils.isNotEmpty(deprecated.getStudyProtocolDescription()))
-			study.setProtocolDescription(deprecated.getStudyProtocolDescription());
-		if (StringUtils.isNotEmpty(deprecated.getStudyProtocolName()))
-			study.setProtocolName(deprecated.getStudyProtocolName());
-		if (StringUtils.isNotEmpty(deprecated.getStudyProtocolParametersName()))
-			study.setProtocolParametersName(deprecated.getStudyProtocolParametersName());
-		if (StringUtils.isNotEmpty(deprecated.getStudyProtocolType()))
-			study.setProtocolType(deprecated.getStudyProtocolType());
-		if (deprecated.getStudyProtocolURI() != null)
+		de.bund.bfr.metadata.swagger.Study study = new de.bund.bfr.metadata.swagger.Study();
+		study.setIdentifier(deprecated.getStudyIdentifier());
+		study.setTitle(deprecated.getStudyTitle());
+		study.setDescription(deprecated.getStudyDescription());
+		study.setDesignType(deprecated.getStudyDesignType());
+		study.setAssayMeasurementType(deprecated.getStudyAssayMeasurementType());
+		study.setAssayTechnologyType(deprecated.getStudyAssayTechnologyType());
+		study.setAssayTechnologyPlatform(deprecated.getStudyAssayTechnologyPlatform());
+		study.setAccreditationProcedureForTheAssayTechnology(
+				deprecated.getAccreditationProcedureForTheAssayTechnology());
+		study.setProtocolName(deprecated.getStudyProtocolName());
+		study.setProtocolType(deprecated.getStudyProtocolType());
+		study.setProtocolDescription(deprecated.getStudyProtocolDescription());
+
+		if (deprecated.getStudyProtocolURI() != null) {
 			study.setProtocolURI(deprecated.getStudyProtocolURI().toString());
-		if (StringUtils.isNotEmpty(deprecated.getStudyProtocolVersion()))
-			study.setProtocolVersion(deprecated.getStudyProtocolVersion());
-		if (StringUtils.isNotEmpty(deprecated.getStudyTitle()))
-			study.setTitle(deprecated.getStudyTitle());
+		}
+
+		study.setProtocolVersion(deprecated.getStudyProtocolVersion());
+		study.setProtocolParametersName(deprecated.getStudyProtocolParametersName());
+		study.setProtocolComponentsName(deprecated.getStudyProtocolComponentsName());
+		study.setProtocolComponentsType(deprecated.getStudyProtocolComponentsType());
+
 		return study;
 	}
 

@@ -1,10 +1,8 @@
 package metadata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
+import java.net.URI;
 import java.util.Date;
 
 import org.junit.Test;
@@ -22,6 +20,7 @@ import de.bund.bfr.metadata.swagger.PopulationGroup;
 import de.bund.bfr.metadata.swagger.Product;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
+import de.bund.bfr.metadata.swagger.Study;
 
 public class SwaggerUtilTest {
 
@@ -32,7 +31,7 @@ public class SwaggerUtilTest {
 		GenericModelGeneralInformation gi = new GenericModelGeneralInformation();
 		{
 			metadata.GeneralInformation deprecated = metadata.MetadataFactory.eINSTANCE.createGeneralInformation();
-			
+
 			deprecated.setName("name");
 			deprecated.setSource("source");
 			deprecated.setIdentifier("identifier");
@@ -47,7 +46,7 @@ public class SwaggerUtilTest {
 			deprecated.setObjective("objective");
 			deprecated.setDescription("description");
 			deprecated.getModelCategory().add(metadata.MetadataFactory.eINSTANCE.createModelCategory());
-			
+
 			metadata.ModificationDate md = metadata.MetadataFactory.eINSTANCE.createModificationDate();
 			md.setValue(new Date(2018, 0, 1));
 			deprecated.getModificationdate().add(md);
@@ -55,10 +54,10 @@ public class SwaggerUtilTest {
 			deprecated.setAuthor(metadata.MetadataFactory.eINSTANCE.createContact());
 			deprecated.getCreators().add(metadata.MetadataFactory.eINSTANCE.createContact());
 			deprecated.getReference().add(metadata.MetadataFactory.eINSTANCE.createReference());
-			
+
 			gi = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("name", gi.getName());
 		assertEquals("source", gi.getSource());
 		assertEquals("identifier", gi.getIdentifier());
@@ -135,10 +134,10 @@ public class SwaggerUtilTest {
 		assertEquals("Published", reference.getStatus());
 		assertEquals("www.efsa.europa.eu", reference.getWebsite());
 	}
-	
+
 	@Test
 	public void testConvertContact() {
-		
+
 		Contact contact = new Contact();
 		{
 			metadata.Contact deprecated = metadata.MetadataFactory.eINSTANCE.createContact();
@@ -156,7 +155,7 @@ public class SwaggerUtilTest {
 			deprecated.setGender("gender");
 			deprecated.setNote("note");
 			deprecated.setOrganization("organization");
-			
+
 			contact = SwaggerUtil.convert(deprecated);
 		}
 
@@ -174,10 +173,10 @@ public class SwaggerUtilTest {
 		assertEquals("note", contact.getNote());
 		assertEquals("organization", contact.getOrganization());
 	}
-	
+
 	@Test
 	public void testConvertParameter() {
-		
+
 		Parameter param;
 		{
 			metadata.Parameter deprecated = metadata.MetadataFactory.eINSTANCE.createParameter();
@@ -198,7 +197,7 @@ public class SwaggerUtilTest {
 			deprecated.setParameterValueMax("true");
 			deprecated.setParameterError("2.718");
 			deprecated.setReference(metadata.MetadataFactory.eINSTANCE.createReference());
-			
+
 			param = SwaggerUtil.convert(deprecated);
 		}
 
@@ -232,7 +231,7 @@ public class SwaggerUtilTest {
 			deprecated.setGeneralComment("comment");
 			deprecated.setTemporalInformation("information");
 			deprecated.setSpatialInformation(metadata.MetadataFactory.eINSTANCE.createSpatialInformation());
-			
+
 			scope = SwaggerUtil.convert(deprecated);
 		}
 
@@ -243,11 +242,11 @@ public class SwaggerUtilTest {
 		assertEquals("information", scope.getTemporalInformation());
 		// FIXME: there is an error in spatial information
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testConvertProduct() {
-		
+
 		Product product;
 		{
 			metadata.Product deprecated = metadata.MetadataFactory.eINSTANCE.createProduct();
@@ -262,10 +261,10 @@ public class SwaggerUtilTest {
 			deprecated.setFisheriesArea("fisheriesArea");
 			deprecated.setProductionDate(new Date(2018, 0, 1));
 			deprecated.setExpiryDate(new Date(2019, 0, 1));
-			
+
 			product = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("name", product.getName());
 		assertEquals("description", product.getDescription());
 		assertEquals("unit", product.getUnit());
@@ -278,10 +277,10 @@ public class SwaggerUtilTest {
 		assertEquals(LocalDate.of(2018, 1, 1), product.getProductionDate());
 		assertEquals(LocalDate.of(2019, 1, 1), product.getExpiryDate());
 	}
-	
+
 	@Test
 	public void testConvertHazard() {
-	
+
 		Hazard hazard;
 		{
 			metadata.Hazard deprecated = metadata.MetadataFactory.eINSTANCE.createHazard();
@@ -299,10 +298,10 @@ public class SwaggerUtilTest {
 			deprecated.setAcuteReferenceDose("dose");
 			deprecated.setAcceptableDailyIntake("intake");
 			deprecated.setHazardIndSum("sum");
-			
+
 			hazard = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("type", hazard.getType());
 		assertEquals("name", hazard.getName());
 		assertEquals("description", hazard.getDescription());
@@ -318,10 +317,10 @@ public class SwaggerUtilTest {
 		assertEquals("intake", hazard.getAcceptableDailyIntake());
 		assertEquals("sum", hazard.getIndSum());
 	}
-	
+
 	@Test
 	public void testConvertPopulationGroup() {
-		
+
 		PopulationGroup pg;
 		{
 			metadata.PopulationGroup deprecated = metadata.MetadataFactory.eINSTANCE.createPopulationGroup();
@@ -338,10 +337,10 @@ public class SwaggerUtilTest {
 			deprecated.setPopulationGender("gender");
 			deprecated.getPatternConsumption().add(createStringObject("consumption"));
 			deprecated.getPopulationAge().add(createStringObject("age"));
-			
+
 			pg = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("name", pg.getName());
 		assertEquals("population", pg.getTargetPopulation());
 		assertEquals("span", pg.getPopulationSpan().get(0));
@@ -356,10 +355,10 @@ public class SwaggerUtilTest {
 		assertEquals("factor", pg.getPopulationRiskFactor().get(0));
 		assertEquals("season", pg.getSeason().get(0));
 	}
-	
+
 	@Test
 	public void testConvertAssay() {
-		
+
 		Assay assay;
 		{
 			metadata.Assay deprecated = metadata.MetadataFactory.eINSTANCE.createAssay();
@@ -372,10 +371,10 @@ public class SwaggerUtilTest {
 			deprecated.setLeftCensoredData("data");
 			deprecated.setRangeOfContamination("contamination");
 			deprecated.setUncertaintyValue("value");
-			
+
 			assay = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("name", assay.getName());
 		assertEquals("description", assay.getDescription());
 		assertEquals("0.5", assay.getMoisturePercentage());
@@ -386,29 +385,74 @@ public class SwaggerUtilTest {
 		assertEquals("contamination", assay.getContaminationRange());
 		assertEquals("value", assay.getUncertaintyValue());
 	}
-	
+
 	@Test
 	public void testConvertDietaryAssessmentMethod() {
-		
+
 		DietaryAssessmentMethod method;
 		{
-			metadata.DietaryAssessmentMethod deprecated = metadata.MetadataFactory.eINSTANCE.createDietaryAssessmentMethod();
+			metadata.DietaryAssessmentMethod deprecated = metadata.MetadataFactory.eINSTANCE
+					.createDietaryAssessmentMethod();
 			deprecated.setCollectionTool("tool");
 			deprecated.setNumberOfNonConsecutiveOneDay(0);
 			deprecated.setSoftwareTool("tool");
 			deprecated.setNumberOfFoodItems("items");
 			deprecated.setRecordTypes("types");
 			deprecated.setFoodDescriptors("descriptors");
-			
+
 			method = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("tool", method.getCollectionTool());
 		assertEquals("0", method.getNumberOfNonConsecutiveOneDay());
 		assertEquals("tool", method.getSoftwareTool());
 		assertEquals("items", method.getNumberOfFoodItems().get(0));
 		assertEquals("types", method.getRecordTypes().get(0));
 		assertEquals("descriptors", method.getFoodDescriptors().get(0));
+	}
+
+	@Test
+	public void testConvertStudy() {
+
+		Study study;
+		{
+			metadata.Study deprecated = metadata.MetadataFactory.eINSTANCE.createStudy();
+			deprecated.setStudyIdentifier("identifier");
+			deprecated.setStudyTitle("title");
+			deprecated.setStudyDescription("description");
+			deprecated.setStudyDesignType("type");
+			deprecated.setStudyAssayMeasurementType("type");
+			deprecated.setStudyAssayTechnologyType("type");
+			deprecated.setStudyAssayTechnologyPlatform("platform");
+			deprecated.setAccreditationProcedureForTheAssayTechnology("technology");
+			deprecated.setStudyProtocolName("name");
+			deprecated.setStudyProtocolType("type");
+			deprecated.setStudyProtocolDescription("description");
+			deprecated.setStudyProtocolURI(URI.create("https://bfr.bund.de"));
+			deprecated.setStudyProtocolVersion("1.0");
+			deprecated.setStudyProtocolParametersName("name");
+			deprecated.setStudyProtocolComponentsName("name");
+			deprecated.setStudyProtocolComponentsType("type");
+
+			study = SwaggerUtil.convert(deprecated);
+		}
+
+		assertEquals("identifier", study.getIdentifier());
+		assertEquals("title", study.getTitle());
+		assertEquals("description", study.getDescription());
+		assertEquals("type", study.getDesignType());
+		assertEquals("type", study.getAssayMeasurementType());
+		assertEquals("type", study.getAssayTechnologyType());
+		assertEquals("platform", study.getAssayTechnologyPlatform());
+		assertEquals("technology", study.getAccreditationProcedureForTheAssayTechnology());
+		assertEquals("name", study.getProtocolName());
+		assertEquals("type", study.getProtocolType());
+		assertEquals("description", study.getProtocolDescription());
+		assertEquals("https://bfr.bund.de", study.getProtocolURI());
+		assertEquals("1.0", study.getProtocolVersion());
+		assertEquals("name", study.getProtocolParametersName());
+		assertEquals("name", study.getProtocolComponentsName());
+		assertEquals("type", study.getProtocolComponentsType());
 	}
 
 	private static StringObject createStringObject(String string) {
