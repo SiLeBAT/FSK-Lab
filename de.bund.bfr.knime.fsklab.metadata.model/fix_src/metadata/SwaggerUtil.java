@@ -307,33 +307,17 @@ public class SwaggerUtil {
 	public static de.bund.bfr.metadata.swagger.Product convert(metadata.Product deprecated) {
 
 		de.bund.bfr.metadata.swagger.Product product = new de.bund.bfr.metadata.swagger.Product();
-		// methodItem
-		if (StringUtils.isNotEmpty(deprecated.getProductionMethod()))
-			product.addMethodItem(deprecated.getProductionMethod());
-
-		// packaging
-		if (StringUtils.isNotEmpty(deprecated.getPackaging()))
-			product.addPackagingItem(deprecated.getPackaging());
-		// treatment
-		if (StringUtils.isNotEmpty(deprecated.getProductTreatment()))
-			product.addTreatmentItem(deprecated.getProductTreatment());
-
-		if (StringUtils.isNotEmpty(deprecated.getProductDescription()))
-			product.setDescription(deprecated.getProductDescription());
-		if (deprecated.getExpiryDate() != null)
-			product.setExpiryDate(toLocalDate(deprecated.getExpiryDate()));
-		if (StringUtils.isNotEmpty(deprecated.getFisheriesArea()))
-			product.setFisheriesArea(deprecated.getFisheriesArea());
-		if (StringUtils.isNotEmpty(deprecated.getProductName()))
-			product.setName(deprecated.getProductName());
-		if (StringUtils.isNotEmpty(deprecated.getOriginArea()))
-			product.setOriginArea(deprecated.getOriginArea());
-		if (StringUtils.isNotEmpty(deprecated.getOriginCountry()))
-			product.setOriginCountry(deprecated.getOriginCountry());
-		if (deprecated.getProductionDate() != null)
-			product.setProductionDate(toLocalDate(deprecated.getProductionDate()));
-		if (StringUtils.isNotEmpty(deprecated.getProductUnit()))
-			product.setUnit(deprecated.getProductUnit());
+		product.setName(deprecated.getProductName());
+		product.setDescription(deprecated.getProductDescription());
+		product.setUnit(deprecated.getProductUnit());
+		product.addMethodItem(deprecated.getProductionMethod());
+		product.addPackagingItem(deprecated.getPackaging());
+		product.addTreatmentItem(deprecated.getProductTreatment());
+		product.setOriginCountry(deprecated.getOriginCountry());
+		product.setOriginArea(deprecated.getOriginArea());
+		product.setFisheriesArea(deprecated.getFisheriesArea());
+		product.setProductionDate(toLocalDate(deprecated.getProductionDate()));
+		product.setExpiryDate(toLocalDate(deprecated.getExpiryDate()));
 
 		return product;
 	}

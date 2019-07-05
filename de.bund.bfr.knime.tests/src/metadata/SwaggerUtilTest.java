@@ -1,12 +1,10 @@
 package metadata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.util.Date;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
@@ -14,6 +12,7 @@ import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Product;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 
@@ -172,7 +171,7 @@ public class SwaggerUtilTest {
 	@Test
 	public void testConvertParameter() {
 		
-		Parameter param = new Parameter();
+		Parameter param;
 		{
 			metadata.Parameter deprecated = metadata.MetadataFactory.eINSTANCE.createParameter();
 			deprecated.setParameterID("id");
@@ -212,6 +211,52 @@ public class SwaggerUtilTest {
 		assertEquals("true", param.getMaxValue());
 		assertEquals("2.718", param.getError());
 		assertNotNull(param.getReference());
+	}
+
+	@Ignore
+	@Test
+	public void testConvertScope() {
+		// TODO: check product
+		// TODO: hazard
+		// TODO: populationGroup
+		// TODO: generalComment
+		// TODO: temporalInformation
+		// TODO: spatialInformation
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testConvertProduct() {
+		
+		Product product = new Product();
+		{
+			metadata.Product deprecated = metadata.MetadataFactory.eINSTANCE.createProduct();
+			deprecated.setProductName("name");
+			deprecated.setProductDescription("description");
+			deprecated.setProductUnit("unit");
+			deprecated.setProductionMethod("method");
+			deprecated.setPackaging("packaging");
+			deprecated.setProductTreatment("treatment");
+			deprecated.setOriginCountry("originCountry");
+			deprecated.setOriginArea("originArea");
+			deprecated.setFisheriesArea("fisheriesArea");
+			deprecated.setProductionDate(new Date(2018, 0, 1));
+			deprecated.setExpiryDate(new Date(2019, 0, 1));
+			
+			product = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals("name", product.getName());
+		assertEquals("description", product.getDescription());
+		assertEquals("unit", product.getUnit());
+		assertEquals("method", product.getMethod().get(0));
+		assertEquals("packaging", product.getPackaging().get(0));
+		assertEquals("treatment", product.getTreatment().get(0));
+		assertEquals("originCountry", product.getOriginCountry());
+		assertEquals("originArea", product.getOriginArea());
+		assertEquals("fisheriesArea", product.getFisheriesArea());
+		assertEquals(LocalDate.of(2018, 1, 1), product.getProductionDate());
+		assertEquals(LocalDate.of(2019, 1, 1), product.getExpiryDate());
 	}
 
 	private static StringObject createStringObject(String string) {
