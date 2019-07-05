@@ -231,29 +231,13 @@ public class SwaggerUtil {
 	public static de.bund.bfr.metadata.swagger.Exposure convert(metadata.Exposure deprecated) {
 
 		de.bund.bfr.metadata.swagger.Exposure exposure = new de.bund.bfr.metadata.swagger.Exposure();
-		// contamination
-		if (deprecated.getLevelOfContaminationAfterLeftCensoredDataTreatment() != null) {
-			for (StringObject item : deprecated.getLevelOfContaminationAfterLeftCensoredDataTreatment()) {
-				exposure.addContaminationItem(item.getValue());
-			}
-		}
-
-		// scenario
-		if (deprecated.getScenario() != null) {
-			for (StringObject item : deprecated.getScenario()) {
-				exposure.addScenarioItem(item.getValue());
-			}
-		}
-		// treatment
-		if (deprecated.getMethodologicalTreatmentOfLeftCensoredData() != null) {
-			for (StringObject item : deprecated.getMethodologicalTreatmentOfLeftCensoredData()) {
-				exposure.addTreatmentItem(item.getValue());
-			}
-		}
-		if (StringUtils.isNotEmpty(deprecated.getTypeOfExposure()))
-			exposure.setType(deprecated.getTypeOfExposure());
-		if (StringUtils.isNotEmpty(deprecated.getUncertaintyEstimation()))
-			exposure.setUncertaintyEstimation(deprecated.getUncertaintyEstimation());
+		exposure.setType(deprecated.getTypeOfExposure());
+		exposure.setUncertaintyEstimation(deprecated.getUncertaintyEstimation());
+		deprecated.getMethodologicalTreatmentOfLeftCensoredData().stream().map(StringObject::getValue)
+				.forEach(exposure::addTreatmentItem);
+		deprecated.getLevelOfContaminationAfterLeftCensoredDataTreatment().stream().map(StringObject::getValue)
+				.forEach(exposure::addContaminationItem);
+		deprecated.getScenario().stream().map(StringObject::getValue).forEach(exposure::addScenarioItem);
 
 		return exposure;
 	}

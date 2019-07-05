@@ -11,6 +11,7 @@ import org.threeten.bp.LocalDate;
 import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
+import de.bund.bfr.metadata.swagger.Exposure;
 import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelScope;
@@ -551,6 +552,28 @@ public class SwaggerUtilTest {
 		assertEquals("equation", equation.getModelEquation());
 		assertEquals(1, equation.getReference().size());
 		assertEquals("hypothesis", equation.getModelHypothesis().get(0));
+	}
+	
+	@Test
+	public void testConvertExposure() {
+		
+		Exposure exposure;
+		{
+			metadata.Exposure deprecated = metadata.MetadataFactory.eINSTANCE.createExposure();
+			deprecated.setTypeOfExposure("exposure");
+			deprecated.setUncertaintyEstimation("estimation");
+			deprecated.getMethodologicalTreatmentOfLeftCensoredData().add(createStringObject("data"));
+			deprecated.getLevelOfContaminationAfterLeftCensoredDataTreatment().add(createStringObject("treatment"));
+			deprecated.getScenario().add(createStringObject("scenario"));
+			
+			exposure = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals("exposure", exposure.getType());
+		assertEquals("estimation", exposure.getUncertaintyEstimation());
+		assertEquals("data", exposure.getTreatment().get(0));
+		assertEquals("treatment", exposure.getContamination().get(0));
+		assertEquals("scenario", exposure.getScenario().get(0));
 	}
 	
 	private static StringObject createStringObject(String string) {
