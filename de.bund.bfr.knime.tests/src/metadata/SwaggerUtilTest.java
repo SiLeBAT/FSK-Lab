@@ -10,6 +10,7 @@ import java.util.Date;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
+import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelScope;
@@ -353,6 +354,36 @@ public class SwaggerUtilTest {
 		assertEquals("country", pg.getCountry().get(0));
 		assertEquals("factor", pg.getPopulationRiskFactor().get(0));
 		assertEquals("season", pg.getSeason().get(0));
+	}
+	
+	@Test
+	public void testConvertAssay() {
+		
+		Assay assay;
+		{
+			metadata.Assay deprecated = metadata.MetadataFactory.eINSTANCE.createAssay();
+			deprecated.setAssayName("name");
+			deprecated.setAssayDescription("description");
+			deprecated.setPercentageOfMoisture("0.5");
+			deprecated.setPercentageOfFat("0.3");
+			deprecated.setLimitOfDetection("detection");
+			deprecated.setLimitOfQuantification("quantification");
+			deprecated.setLeftCensoredData("data");
+			deprecated.setRangeOfContamination("contamination");
+			deprecated.setUncertaintyValue("value");
+			
+			assay = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals("name", assay.getName());
+		assertEquals("description", assay.getDescription());
+		assertEquals("0.5", assay.getMoisturePercentage());
+		assertEquals("0.3", assay.getFatPercentage());
+		assertEquals("detection", assay.getDetectionLimit());
+		assertEquals("quantification", assay.getQuantificationLimit());
+		assertEquals("data", assay.getLeftCensoredData());
+		assertEquals("contamination", assay.getContaminationRange());
+		assertEquals("value", assay.getUncertaintyValue());
 	}
 
 	private static StringObject createStringObject(String string) {

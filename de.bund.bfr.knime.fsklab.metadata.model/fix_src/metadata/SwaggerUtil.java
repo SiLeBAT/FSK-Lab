@@ -388,26 +388,17 @@ public class SwaggerUtil {
 	}
 
 	public static de.bund.bfr.metadata.swagger.Assay convert(metadata.Assay deprecated) {
-		de.bund.bfr.metadata.swagger.Assay assay = new de.bund.bfr.metadata.swagger.Assay();
 
-		if (StringUtils.isNotEmpty(deprecated.getAssayDescription()))
-			assay.setDescription(deprecated.getAssayDescription());
-		if (StringUtils.isNotEmpty(deprecated.getRangeOfContamination()))
-			assay.setContaminationRange(deprecated.getRangeOfContamination());
-		if (StringUtils.isNotEmpty(deprecated.getLimitOfDetection()))
-			assay.setDetectionLimit(deprecated.getLimitOfDetection());
-		if (StringUtils.isNotEmpty(deprecated.getPercentageOfFat()))
-			assay.setFatPercentage(deprecated.getPercentageOfFat());
-		if (StringUtils.isNotEmpty(deprecated.getLeftCensoredData()))
-			assay.setLeftCensoredData(deprecated.getLeftCensoredData());
-		if (StringUtils.isNotEmpty(deprecated.getPercentageOfMoisture()))
-			assay.setMoisturePercentage(deprecated.getPercentageOfMoisture());
-		if (StringUtils.isNotEmpty(deprecated.getAssayName()))
-			assay.setName(deprecated.getAssayName());
-		if (StringUtils.isNotEmpty(deprecated.getLimitOfQuantification()))
-			assay.setQuantificationLimit(deprecated.getLimitOfQuantification());
-		if (StringUtils.isNotEmpty(deprecated.getUncertaintyValue()))
-			assay.setUncertaintyValue(deprecated.getUncertaintyValue());
+		de.bund.bfr.metadata.swagger.Assay assay = new de.bund.bfr.metadata.swagger.Assay();
+		assay.setName(deprecated.getAssayName());
+		assay.setDescription(deprecated.getAssayDescription());
+		assay.setMoisturePercentage(deprecated.getPercentageOfMoisture());
+		assay.setFatPercentage(deprecated.getPercentageOfFat());
+		assay.setDetectionLimit(deprecated.getLimitOfDetection());
+		assay.setQuantificationLimit(deprecated.getLimitOfQuantification());
+		assay.setLeftCensoredData(deprecated.getLeftCensoredData());
+		assay.setContaminationRange(deprecated.getRangeOfContamination());
+		assay.setUncertaintyValue(deprecated.getUncertaintyValue());
 
 		return assay;
 	}
