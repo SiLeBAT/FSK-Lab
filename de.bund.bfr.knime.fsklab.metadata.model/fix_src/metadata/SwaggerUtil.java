@@ -405,20 +405,14 @@ public class SwaggerUtil {
 
 	public static de.bund.bfr.metadata.swagger.DietaryAssessmentMethod convert(
 			metadata.DietaryAssessmentMethod deprecated) {
-		de.bund.bfr.metadata.swagger.DietaryAssessmentMethod diet = new de.bund.bfr.metadata.swagger.DietaryAssessmentMethod();
 
-		if (StringUtils.isNotEmpty(deprecated.getFoodDescriptors()))
-			diet.addFoodDescriptorsItem(deprecated.getFoodDescriptors());
-		if (StringUtils.isNotEmpty(deprecated.getNumberOfFoodItems()))
-			diet.addNumberOfFoodItemsItem(deprecated.getNumberOfFoodItems());
-		if (StringUtils.isNotEmpty(deprecated.getRecordTypes()))
-			diet.addRecordTypesItem(deprecated.getRecordTypes());
-		if (StringUtils.isNotEmpty(deprecated.getCollectionTool()))
-			diet.setCollectionTool(deprecated.getCollectionTool());
-		if (deprecated.getNumberOfNonConsecutiveOneDay() != 0)
-			diet.setNumberOfNonConsecutiveOneDay(Integer.toString(deprecated.getNumberOfNonConsecutiveOneDay()));
-		if (StringUtils.isNotEmpty(deprecated.getSoftwareTool()))
-			diet.setSoftwareTool(deprecated.getSoftwareTool());
+		de.bund.bfr.metadata.swagger.DietaryAssessmentMethod diet = new de.bund.bfr.metadata.swagger.DietaryAssessmentMethod();
+		diet.setCollectionTool(deprecated.getCollectionTool());
+		diet.setNumberOfNonConsecutiveOneDay(Integer.toString(deprecated.getNumberOfNonConsecutiveOneDay()));
+		diet.setSoftwareTool(deprecated.getSoftwareTool());
+		diet.addNumberOfFoodItemsItem(deprecated.getNumberOfFoodItems());
+		diet.addRecordTypesItem(deprecated.getRecordTypes());
+		diet.addFoodDescriptorsItem(deprecated.getFoodDescriptors());
 
 		return diet;
 	}

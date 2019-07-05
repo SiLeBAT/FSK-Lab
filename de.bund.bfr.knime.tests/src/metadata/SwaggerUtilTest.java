@@ -12,6 +12,7 @@ import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
+import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.Hazard;
@@ -384,6 +385,30 @@ public class SwaggerUtilTest {
 		assertEquals("data", assay.getLeftCensoredData());
 		assertEquals("contamination", assay.getContaminationRange());
 		assertEquals("value", assay.getUncertaintyValue());
+	}
+	
+	@Test
+	public void testConvertDietaryAssessmentMethod() {
+		
+		DietaryAssessmentMethod method;
+		{
+			metadata.DietaryAssessmentMethod deprecated = metadata.MetadataFactory.eINSTANCE.createDietaryAssessmentMethod();
+			deprecated.setCollectionTool("tool");
+			deprecated.setNumberOfNonConsecutiveOneDay(0);
+			deprecated.setSoftwareTool("tool");
+			deprecated.setNumberOfFoodItems("items");
+			deprecated.setRecordTypes("types");
+			deprecated.setFoodDescriptors("descriptors");
+			
+			method = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals("tool", method.getCollectionTool());
+		assertEquals("0", method.getNumberOfNonConsecutiveOneDay());
+		assertEquals("tool", method.getSoftwareTool());
+		assertEquals("items", method.getNumberOfFoodItems().get(0));
+		assertEquals("types", method.getRecordTypes().get(0));
+		assertEquals("descriptors", method.getFoodDescriptors().get(0));
 	}
 
 	private static StringObject createStringObject(String string) {
