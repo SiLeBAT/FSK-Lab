@@ -1,9 +1,6 @@
 package metadata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.net.URI;
 import java.util.Date;
@@ -17,6 +14,7 @@ import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.Hazard;
+import de.bund.bfr.metadata.swagger.Laboratory;
 import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.PopulationGroup;
@@ -489,6 +487,24 @@ public class SwaggerUtilTest {
 		assertEquals("size", sample.getSamplingSize());
 		assertEquals("unit", sample.getLotSizeUnit());
 		assertEquals("point", sample.getSamplingPoint());
+	}
+	
+	@Test
+	public void testConvertLaboratory() {
+		
+		Laboratory laboratory;
+		{
+			metadata.Laboratory deprecated = metadata.MetadataFactory.eINSTANCE.createLaboratory();
+			deprecated.setLaboratoryName("name");
+			deprecated.setLaboratoryCountry("country");
+			deprecated.getLaboratoryAccreditation().add(createStringObject("accreditation"));
+			
+			laboratory = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals("name", laboratory.getName());
+		assertEquals("country", laboratory.getCountry());
+		assertEquals("accreditation", laboratory.getAccreditation().get(0));
 	}
 	
 	private static StringObject createStringObject(String string) {

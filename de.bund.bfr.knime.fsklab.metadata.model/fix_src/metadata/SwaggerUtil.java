@@ -418,18 +418,11 @@ public class SwaggerUtil {
 	}
 
 	public static de.bund.bfr.metadata.swagger.Laboratory convert(metadata.Laboratory deprecated) {
+
 		de.bund.bfr.metadata.swagger.Laboratory lab = new de.bund.bfr.metadata.swagger.Laboratory();
-
-		if (deprecated.getLaboratoryAccreditation() != null) {
-			for (StringObject item : deprecated.getLaboratoryAccreditation()) {
-				lab.addAccreditationItem(item.getValue());
-			}
-		}
-
-		if (StringUtils.isNotEmpty(deprecated.getLaboratoryCountry()))
-			lab.setCountry(deprecated.getLaboratoryCountry());
-		if (StringUtils.isNotEmpty(deprecated.getLaboratoryName()))
-			lab.setName(deprecated.getLaboratoryName());
+		lab.setName(deprecated.getLaboratoryName());
+		lab.setCountry(deprecated.getLaboratoryCountry());
+		deprecated.getLaboratoryAccreditation().stream().map(StringObject::getValue).forEach(lab::addAccreditationItem);
 
 		return lab;
 	}
