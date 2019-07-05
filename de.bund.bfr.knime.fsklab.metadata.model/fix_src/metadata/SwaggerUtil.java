@@ -272,35 +272,14 @@ public class SwaggerUtil {
 	public static de.bund.bfr.metadata.swagger.GenericModelScope convert(metadata.Scope emfScope) {
 		de.bund.bfr.metadata.swagger.GenericModelScope swaggerS = new de.bund.bfr.metadata.swagger.GenericModelScope();
 
-		// hazard
-		if (emfScope.getHazard() != null) {
-			for (metadata.Hazard item : emfScope.getHazard()) {
-				swaggerS.addHazardItem(convert(item));
-			}
-		}
-		// populationGroup
-		if (emfScope.getPopulationGroup() != null) {
-			for (metadata.PopulationGroup item : emfScope.getPopulationGroup()) {
-				swaggerS.addPopulationGroupItem(convert(item));
-			}
-		}
-		// product
-		if (emfScope.getProduct() != null) {
-			for (metadata.Product item : emfScope.getProduct()) {
-				swaggerS.addProductItem(convert(item));
-			}
-		}
+		emfScope.getProduct().stream().map(SwaggerUtil::convert).forEach(swaggerS::addProductItem);
+		emfScope.getHazard().stream().map(SwaggerUtil::convert).forEach(swaggerS::addHazardItem);
+		emfScope.getPopulationGroup().stream().map(SwaggerUtil::convert).forEach(swaggerS::addPopulationGroupItem);
+		swaggerS.setGeneralComment(emfScope.getGeneralComment());
+		swaggerS.setTemporalInformation(emfScope.getTemporalInformation());
+		// FIXME: Wrong SpatialInformation. We need a SpatialInformation class instead
+		// of a String.
 
-		// TODO: SPACIAL INFORMATION
-//		if(emfScope.getSpatialInformation() != null) {
-//			metadata.SpatialInformation sp = emfScope.getSpatialInformation();
-//			swaggerS.addSpatialInformationItem(sp.get)
-//		}
-//		swaggerS.get
-		if (StringUtils.isNotEmpty(emfScope.getGeneralComment()))
-			swaggerS.setGeneralComment(emfScope.getGeneralComment());
-		if (StringUtils.isNotEmpty(emfScope.getTemporalInformation()))
-			swaggerS.setTemporalInformation(emfScope.getTemporalInformation());
 		return swaggerS;
 	}
 
@@ -316,8 +295,14 @@ public class SwaggerUtil {
 		product.setOriginCountry(deprecated.getOriginCountry());
 		product.setOriginArea(deprecated.getOriginArea());
 		product.setFisheriesArea(deprecated.getFisheriesArea());
-		product.setProductionDate(toLocalDate(deprecated.getProductionDate()));
-		product.setExpiryDate(toLocalDate(deprecated.getExpiryDate()));
+
+		if (deprecated.getProductionDate() != null) {
+			product.setProductionDate(toLocalDate(deprecated.getProductionDate()));
+		}
+
+		if (deprecated.getExpiryDate() != null) {
+			product.setExpiryDate(toLocalDate(deprecated.getExpiryDate()));
+		}
 
 		return product;
 	}
@@ -333,7 +318,8 @@ public class SwaggerUtil {
 		deprecated.getSpecialDietGroups().stream().map(StringObject::getValue).forEach(pop::addSpecialDietGroupsItem);
 		deprecated.getRegion().stream().map(StringObject::getValue).forEach(pop::addRegionItem);
 		deprecated.getCountry().stream().map(StringObject::getValue).forEach(pop::addCountryItem);
-		deprecated.getPopulationRiskFactor().stream().map(StringObject::getValue).forEach(pop::addPopulationRiskFactorItem);
+		deprecated.getPopulationRiskFactor().stream().map(StringObject::getValue)
+				.forEach(pop::addPopulationRiskFactorItem);
 		deprecated.getSeason().stream().map(StringObject::getValue).forEach(pop::addSeasonItem);
 		pop.setPopulationGender(deprecated.getPopulationGender());
 		deprecated.getPatternConsumption().stream().map(StringObject::getValue).forEach(pop::addPatternConsumptionItem);

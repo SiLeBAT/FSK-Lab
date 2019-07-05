@@ -1,15 +1,18 @@
 package metadata;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.Date;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.Parameter;
@@ -215,15 +218,28 @@ public class SwaggerUtilTest {
 		assertNotNull(param.getReference());
 	}
 
-	@Ignore
 	@Test
 	public void testConvertScope() {
-		// TODO: check product
-		// TODO: hazard
-		// TODO: populationGroup
-		// TODO: generalComment
-		// TODO: temporalInformation
-		// TODO: spatialInformation
+
+		GenericModelScope scope = new GenericModelScope();
+		{
+			metadata.Scope deprecated = metadata.MetadataFactory.eINSTANCE.createScope();
+			deprecated.getProduct().add(metadata.MetadataFactory.eINSTANCE.createProduct());
+			deprecated.getHazard().add(metadata.MetadataFactory.eINSTANCE.createHazard());
+			deprecated.getPopulationGroup().add(metadata.MetadataFactory.eINSTANCE.createPopulationGroup());
+			deprecated.setGeneralComment("comment");
+			deprecated.setTemporalInformation("information");
+			deprecated.setSpatialInformation(metadata.MetadataFactory.eINSTANCE.createSpatialInformation());
+			
+			scope = SwaggerUtil.convert(deprecated);
+		}
+
+		assertEquals(1, scope.getProduct().size());
+		assertEquals(1, scope.getHazard().size());
+		assertEquals(1, scope.getPopulationGroup().size());
+		assertEquals("comment", scope.getGeneralComment());
+		assertEquals("information", scope.getTemporalInformation());
+		// FIXME: there is an error in spatial information
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -304,7 +320,7 @@ public class SwaggerUtilTest {
 	@Test
 	public void testConvertPopulationGroup() {
 		
-		PopulationGroup pg = new PopulationGroup();
+		PopulationGroup pg;
 		{
 			metadata.PopulationGroup deprecated = metadata.MetadataFactory.eINSTANCE.createPopulationGroup();
 			deprecated.setPopulationName("name");
