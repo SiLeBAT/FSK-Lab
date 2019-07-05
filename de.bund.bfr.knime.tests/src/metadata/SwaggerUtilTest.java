@@ -3,15 +3,15 @@ package metadata;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNull;
 
 import java.util.Date;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.Contact;
+import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Reference;
@@ -19,10 +19,59 @@ import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 
 public class SwaggerUtilTest {
 
-	@Ignore
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testConvertGeneralInformation() {
-		fail("Missing test");
+
+		GenericModelGeneralInformation gi = new GenericModelGeneralInformation();
+		{
+			metadata.GeneralInformation deprecated = metadata.MetadataFactory.eINSTANCE.createGeneralInformation();
+			
+			deprecated.setName("name");
+			deprecated.setSource("source");
+			deprecated.setIdentifier("identifier");
+			deprecated.setCreationDate(new Date(2018, 0, 1));
+			deprecated.setRights("rights");
+			deprecated.setAvailable(true);
+			deprecated.setFormat("format");
+			deprecated.setLanguage("language");
+			deprecated.setSoftware("software");
+			deprecated.setLanguageWrittenIn("languageWrittenIn");
+			deprecated.setStatus("status");
+			deprecated.setObjective("objective");
+			deprecated.setDescription("description");
+			deprecated.getModelCategory().add(metadata.MetadataFactory.eINSTANCE.createModelCategory());
+			
+			metadata.ModificationDate md = metadata.MetadataFactory.eINSTANCE.createModificationDate();
+			md.setValue(new Date(2018, 0, 1));
+			deprecated.getModificationdate().add(md);
+
+			deprecated.setAuthor(metadata.MetadataFactory.eINSTANCE.createContact());
+			deprecated.getCreators().add(metadata.MetadataFactory.eINSTANCE.createContact());
+			deprecated.getReference().add(metadata.MetadataFactory.eINSTANCE.createReference());
+			
+			gi = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals("name", gi.getName());
+		assertEquals("source", gi.getSource());
+		assertEquals("identifier", gi.getIdentifier());
+		assertEquals(1, gi.getAuthor().size());
+		assertEquals(1, gi.getCreator().size());
+		assertEquals(LocalDate.of(2018, 1, 1), gi.getCreationDate());
+		assertEquals(LocalDate.of(2018, 1, 1), gi.getModificationDate().get(0));
+		assertEquals("rights", gi.getRights());
+		assertEquals("true", gi.getAvailability());
+		assertNull(gi.getUrl());
+		assertEquals("format", gi.getFormat());
+		assertEquals(1, gi.getReference().size());
+		assertEquals("language", gi.getLanguage());
+		assertEquals("software", gi.getSoftware());
+		assertEquals("languageWrittenIn", gi.getLanguageWrittenIn());
+		assertNotNull(gi.getModelCategory());
+		assertEquals("status", gi.getStatus());
+		assertEquals("objective", gi.getObjective());
+		assertEquals("description", gi.getDescription());
 	}
 
 	@Test

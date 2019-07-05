@@ -22,70 +22,46 @@ public class SwaggerUtil {
 
 	public static de.bund.bfr.metadata.swagger.GenericModelGeneralInformation convert(
 			metadata.GeneralInformation deprecatedGeneralInformation) {
-		// TODO Auto-generated method stub
 		GenericModelGeneralInformation swaggerGI = new GenericModelGeneralInformation();
 
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getName())) {
-			swaggerGI.setName(deprecatedGeneralInformation.getName());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getSource())) {
-			swaggerGI.setSource(deprecatedGeneralInformation.getSource());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getDescription())) {
-			swaggerGI.setDescription(deprecatedGeneralInformation.getDescription());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getIdentifier())) {
-			swaggerGI.setIdentifier(deprecatedGeneralInformation.getIdentifier());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getLanguage())) {
-			swaggerGI.setLanguage(deprecatedGeneralInformation.getLanguage());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getLanguageWrittenIn())) {
-			swaggerGI.setLanguageWrittenIn(deprecatedGeneralInformation.getLanguageWrittenIn());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getObjective())) {
-			swaggerGI.setObjective(deprecatedGeneralInformation.getObjective());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getRights())) {
-			swaggerGI.setRights(deprecatedGeneralInformation.getRights());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getSoftware())) {
-			swaggerGI.setSoftware(deprecatedGeneralInformation.getSoftware());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getSource())) {
-			swaggerGI.setSource(deprecatedGeneralInformation.getSource());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getStatus())) {
-			swaggerGI.setStatus(deprecatedGeneralInformation.getStatus());
-		}
-		if (StringUtils.isNotEmpty(deprecatedGeneralInformation.getFormat())) {
-			swaggerGI.setFormat(deprecatedGeneralInformation.getFormat());
-		}
-
-		swaggerGI.setAvailability(Boolean.toString(deprecatedGeneralInformation.isAvailable()));
-		for (metadata.Reference record : deprecatedGeneralInformation.getReference()) {
-			swaggerGI.addReferenceItem(convert(record));
-		}
-		if (deprecatedGeneralInformation.getCreationDate() != null) {
-			swaggerGI.setCreationDate(toLocalDate(deprecatedGeneralInformation.getCreationDate()));
-		}
-		for (metadata.ModificationDate date : deprecatedGeneralInformation.getModificationdate()) {
-			swaggerGI.addModificationDateItem(toLocalDate(date.getValue()));
-		}
-
-		if (deprecatedGeneralInformation.getModelCategory() != null) {
-			swaggerGI.setModelCategory(convert(deprecatedGeneralInformation.getModelCategory().get(0)));
-		}
+		swaggerGI.setName(deprecatedGeneralInformation.getName());
+		swaggerGI.setSource(deprecatedGeneralInformation.getSource());
+		swaggerGI.setIdentifier(deprecatedGeneralInformation.getIdentifier());
 
 		if (deprecatedGeneralInformation.getAuthor() != null) {
 			swaggerGI.addAuthorItem(convert(deprecatedGeneralInformation.getAuthor()));
 		}
 
-		if (deprecatedGeneralInformation.getCreators() != null) {
-			for (metadata.Contact creator : deprecatedGeneralInformation.getCreators()) {
-				swaggerGI.addCreatorItem(convert(creator));
-			}
+		deprecatedGeneralInformation.getCreators().stream().map(SwaggerUtil::convert)
+				.forEach(swaggerGI::addCreatorItem);
+
+		if (deprecatedGeneralInformation.getCreationDate() != null) {
+			swaggerGI.setCreationDate(toLocalDate(deprecatedGeneralInformation.getCreationDate()));
 		}
+
+		deprecatedGeneralInformation.getModificationdate().stream().map(ModificationDate::getValue)
+				.map(SwaggerUtil::toLocalDate).forEach(swaggerGI::addModificationDateItem);
+
+		swaggerGI.setRights(deprecatedGeneralInformation.getRights());
+		swaggerGI.setAvailability(Boolean.toString(deprecatedGeneralInformation.isAvailable()));
+
+		// has no URL
+
+		swaggerGI.setFormat(deprecatedGeneralInformation.getFormat());
+
+		deprecatedGeneralInformation.getReference().stream().map(SwaggerUtil::convert)
+				.forEach(swaggerGI::addReferenceItem);
+		swaggerGI.setLanguage(deprecatedGeneralInformation.getLanguage());
+		swaggerGI.setSoftware(deprecatedGeneralInformation.getSoftware());
+		swaggerGI.setLanguageWrittenIn(deprecatedGeneralInformation.getLanguageWrittenIn());
+
+		if (deprecatedGeneralInformation.getModelCategory() != null) {
+			swaggerGI.setModelCategory(convert(deprecatedGeneralInformation.getModelCategory().get(0)));
+		}
+
+		swaggerGI.setStatus(deprecatedGeneralInformation.getStatus());
+		swaggerGI.setObjective(deprecatedGeneralInformation.getObjective());
+		swaggerGI.setDescription(deprecatedGeneralInformation.getDescription());
 
 		return swaggerGI;
 	}
