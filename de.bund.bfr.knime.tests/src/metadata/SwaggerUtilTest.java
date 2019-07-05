@@ -1,6 +1,9 @@
 package metadata;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.net.URI;
 import java.util.Date;
@@ -14,10 +17,12 @@ import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
 import de.bund.bfr.metadata.swagger.Exposure;
 import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.GenericModelModelMath;
 import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.Laboratory;
 import de.bund.bfr.metadata.swagger.ModelCategory;
+import de.bund.bfr.metadata.swagger.ModelEquation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.PopulationGroup;
 import de.bund.bfr.metadata.swagger.Product;
@@ -25,7 +30,6 @@ import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 import de.bund.bfr.metadata.swagger.Study;
 import de.bund.bfr.metadata.swagger.StudySample;
-import de.bund.bfr.metadata.swagger.ModelEquation;
 
 public class SwaggerUtilTest {
 
@@ -574,6 +578,29 @@ public class SwaggerUtilTest {
 		assertEquals("data", exposure.getTreatment().get(0));
 		assertEquals("treatment", exposure.getContamination().get(0));
 		assertEquals("scenario", exposure.getScenario().get(0));
+	}
+	
+	@Test
+	public void testConvertModelMath() {
+		
+		GenericModelModelMath math;
+		{
+			metadata.ModelMath deprecated = metadata.MetadataFactory.eINSTANCE.createModelMath();
+			deprecated.setFittingProcedure("procedure");
+			deprecated.getParameter().add(metadata.MetadataFactory.eINSTANCE.createParameter());
+			deprecated.getModelEquation().add(metadata.MetadataFactory.eINSTANCE.createModelEquation());
+			deprecated.setExposure(metadata.MetadataFactory.eINSTANCE.createExposure());
+			deprecated.getEvent().add(createStringObject("event"));
+			
+			math = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals(1, math.getParameter().size());
+		assertNull(math.getQualityMeasures());
+		assertEquals(1, math.getModelEquation().size());
+		assertEquals("procedure", math.getFittingProcedure());
+		assertEquals(1, math.getExposure().size());
+		assertEquals("event", math.getEvent().get(0));
 	}
 	
 	private static StringObject createStringObject(String string) {

@@ -210,7 +210,10 @@ public class SwaggerUtil {
 		parameter.setMinValue(deprecated.getParameterValueMin());
 		parameter.setMaxValue(deprecated.getParameterValueMax());
 		parameter.setError(deprecated.getParameterError());
-		parameter.setReference(convert(deprecated.getReference()));
+
+		if (deprecated.getReference() != null) {
+			parameter.setReference(convert(deprecated.getReference()));
+		}
 
 		return parameter;
 	}
