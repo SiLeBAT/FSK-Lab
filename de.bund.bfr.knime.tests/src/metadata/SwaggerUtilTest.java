@@ -13,6 +13,7 @@ import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.PopulationGroup;
 import de.bund.bfr.metadata.swagger.Product;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
@@ -298,6 +299,44 @@ public class SwaggerUtilTest {
 		assertEquals("dose", hazard.getAcuteReferenceDose());
 		assertEquals("intake", hazard.getAcceptableDailyIntake());
 		assertEquals("sum", hazard.getIndSum());
+	}
+	
+	@Test
+	public void testConvertPopulationGroup() {
+		
+		PopulationGroup pg = new PopulationGroup();
+		{
+			metadata.PopulationGroup deprecated = metadata.MetadataFactory.eINSTANCE.createPopulationGroup();
+			deprecated.setPopulationName("name");
+			deprecated.setTargetPopulation("population");
+			deprecated.getPopulationSpan().add(createStringObject("span"));
+			deprecated.getPopulationDescription().add(createStringObject("description"));
+			deprecated.getBmi().add(createStringObject("bmi"));
+			deprecated.getSpecialDietGroups().add(createStringObject("group"));
+			deprecated.getRegion().add(createStringObject("region"));
+			deprecated.getCountry().add(createStringObject("country"));
+			deprecated.getPopulationRiskFactor().add(createStringObject("factor"));
+			deprecated.getSeason().add(createStringObject("season"));
+			deprecated.setPopulationGender("gender");
+			deprecated.getPatternConsumption().add(createStringObject("consumption"));
+			deprecated.getPopulationAge().add(createStringObject("age"));
+			
+			pg = SwaggerUtil.convert(deprecated);
+		}
+		
+		assertEquals("name", pg.getName());
+		assertEquals("population", pg.getTargetPopulation());
+		assertEquals("span", pg.getPopulationSpan().get(0));
+		assertEquals("description", pg.getPopulationDescription().get(0));
+		assertEquals("age", pg.getPopulationAge().get(0));
+		assertEquals("gender", pg.getPopulationGender());
+		assertEquals("bmi", pg.getBmi().get(0));
+		assertEquals("group", pg.getSpecialDietGroups().get(0));
+		assertEquals("consumption", pg.getPatternConsumption().get(0));
+		assertEquals("region", pg.getRegion().get(0));
+		assertEquals("country", pg.getCountry().get(0));
+		assertEquals("factor", pg.getPopulationRiskFactor().get(0));
+		assertEquals("season", pg.getSeason().get(0));
 	}
 
 	private static StringObject createStringObject(String string) {

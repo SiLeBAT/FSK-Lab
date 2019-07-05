@@ -324,44 +324,20 @@ public class SwaggerUtil {
 
 	public static de.bund.bfr.metadata.swagger.PopulationGroup convert(metadata.PopulationGroup deprecated) {
 		de.bund.bfr.metadata.swagger.PopulationGroup pop = new de.bund.bfr.metadata.swagger.PopulationGroup();
-
-		for (StringObject item : deprecated.getBmi()) {
-			pop.addBmiItem(item.getValue());
-		}
-		for (StringObject item : deprecated.getCountry()) {
-			pop.addCountryItem(item.getValue());
-		}
-		for (StringObject item : deprecated.getPatternConsumption()) {
-			pop.addPatternConsumptionItem(item.getValue());
-		}
-		for (StringObject item : deprecated.getPopulationAge()) {
-			pop.addPopulationAgeItem(item.getValue());
-		}
-		for (StringObject item : deprecated.getPopulationDescription()) {
-			pop.addPopulationDescriptionItem(item.getValue());
-		}
-		for (StringObject item : deprecated.getPopulationRiskFactor()) {
-			pop.addPopulationRiskFactorItem(item.getValue());
-		}
-		for (StringObject item : deprecated.getPopulationSpan()) {
-			pop.addPopulationSpanItem(item.getValue());
-		}
-		for (StringObject item : deprecated.getRegion()) {
-			pop.addRegionItem(item.getValue());
-		}
-		for (StringObject item : deprecated.getSeason()) {
-			pop.addSeasonItem(item.getValue());
-		}
-		for (StringObject item : deprecated.getSpecialDietGroups()) {
-			pop.addSpecialDietGroupsItem(item.getValue());
-		}
-
-		if (StringUtils.isNotEmpty(deprecated.getPopulationName()))
-			pop.setName(deprecated.getPopulationName());
-		if (StringUtils.isNotEmpty(deprecated.getPopulationGender()))
-			pop.setPopulationGender(deprecated.getPopulationGender());
-		if (StringUtils.isNotEmpty(deprecated.getTargetPopulation()))
-			pop.setTargetPopulation(deprecated.getTargetPopulation());
+		pop.setName(deprecated.getPopulationName());
+		pop.setTargetPopulation(deprecated.getTargetPopulation());
+		deprecated.getPopulationSpan().stream().map(StringObject::getValue).forEach(pop::addPopulationSpanItem);
+		deprecated.getPopulationDescription().stream().map(StringObject::getValue)
+				.forEach(pop::addPopulationDescriptionItem);
+		deprecated.getBmi().stream().map(StringObject::getValue).forEach(pop::addBmiItem);
+		deprecated.getSpecialDietGroups().stream().map(StringObject::getValue).forEach(pop::addSpecialDietGroupsItem);
+		deprecated.getRegion().stream().map(StringObject::getValue).forEach(pop::addRegionItem);
+		deprecated.getCountry().stream().map(StringObject::getValue).forEach(pop::addCountryItem);
+		deprecated.getPopulationRiskFactor().stream().map(StringObject::getValue).forEach(pop::addPopulationRiskFactorItem);
+		deprecated.getSeason().stream().map(StringObject::getValue).forEach(pop::addSeasonItem);
+		pop.setPopulationGender(deprecated.getPopulationGender());
+		deprecated.getPatternConsumption().stream().map(StringObject::getValue).forEach(pop::addPatternConsumptionItem);
+		deprecated.getPopulationAge().stream().map(StringObject::getValue).forEach(pop::addPopulationAgeItem);
 
 		return pop;
 	}
