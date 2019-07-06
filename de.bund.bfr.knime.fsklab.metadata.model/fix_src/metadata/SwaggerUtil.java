@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
@@ -136,31 +135,8 @@ public class SwaggerUtil {
 	public static de.bund.bfr.metadata.swagger.GenericModelModelMath convert(metadata.ModelMath emfMM) {
 
 		de.bund.bfr.metadata.swagger.GenericModelModelMath swaggerMM = new de.bund.bfr.metadata.swagger.GenericModelModelMath();
-
-		// Events
-		if (emfMM.getEvent() != null) {
-			for (StringObject e : emfMM.getEvent()) {
-				swaggerMM.addEventItem(e.getValue());
-			}
-		}
-
-		// Exposure
-		if (emfMM.getExposure() != null) {
-			swaggerMM.addExposureItem(convert(emfMM.getExposure()));
-		}
-
-		// model exuation
-		if (emfMM.getModelEquation() != null) {
-			for (metadata.ModelEquation equation : emfMM.getModelEquation()) {
-				swaggerMM.addModelEquationItem(convert(equation));
-			}
-		}
-		// parameter
-		if (emfMM.getParameter() != null) {
-			for (metadata.Parameter parameter : emfMM.getParameter()) {
-				swaggerMM.addParameterItem(convert(parameter));
-			}
-		}
+		swaggerMM.setFittingProcedure(emfMM.getFittingProcedure());
+		emfMM.getParameter().stream().map(SwaggerUtil::convert).forEach(swaggerMM::addParameterItem);
 
 		// quality measures
 		if (emfMM.getQualityMeasures() != null) {
@@ -185,9 +161,13 @@ public class SwaggerUtil {
 			}
 		}
 
-		// fittingProcedure
-		if (StringUtils.isNotEmpty(emfMM.getFittingProcedure()))
-			swaggerMM.setFittingProcedure(emfMM.getFittingProcedure());
+		// Exposure
+		if (emfMM.getExposure() != null) {
+			swaggerMM.addExposureItem(convert(emfMM.getExposure()));
+		}
+
+		emfMM.getModelEquation().stream().map(SwaggerUtil::convert).forEach(swaggerMM::addModelEquationItem);
+		emfMM.getEvent().stream().map(StringObject::getValue).forEach(swaggerMM::addEventItem);
 
 		return swaggerMM;
 	}
