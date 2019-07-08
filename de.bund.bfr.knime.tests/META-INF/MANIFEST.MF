@@ -28,5 +28,4 @@ Export-Package: de.bund.bfr.knime.fsklab.nodes,
  de.bund.bfr.knime.pmm.extendedtable.items,
  de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel,
  de.bund.bfr.knime.pmm.fskx,
- de.bund.bfr.knime.pmm.js.common,
- metadata
+ de.bund.bfr.knime.pmm.js.common

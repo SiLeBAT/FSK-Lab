@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import de.bund.bfr.knime.fsklab.nodes.Variable;
@@ -21,13 +20,6 @@ import de.bund.bfr.pmfml.ModelClass;
 
 public class LegacyMetadataImporterTest {
 
-	/*
-	 *  TODO: linkage error with POI.
-	 *  loader constraint violation: loader (instance of
-	 *  org/eclipse/osgi/internal/loader/EquinoxClassLoader) previously initiated loading for
-	 *  a different type with name "org/apache/poi/ss/usermodel/Workbook"
-	 */
-	@Ignore
 	@Test
 	public void test() throws Exception {
 		Sheet sheet0;

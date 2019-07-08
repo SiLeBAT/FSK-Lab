@@ -14,16 +14,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
-/*
- *  TODO: linkage error with POI.
- *  loader constraint violation: loader (instance of
- *  org/eclipse/osgi/internal/loader/EquinoxClassLoader) previously initiated loading for
- *  a different type with name "org/apache/poi/ss/usermodel/Workbook"
- */
-@Ignore
 @SuppressWarnings("static-method")
 public class RAKIPSheetImporterTest {
 

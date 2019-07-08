@@ -61,6 +61,7 @@
 		<!-- Test plugins -->
 		<module>de.bund.bfr.knime.tests</module>
 		<module>de.bund.bfr.knime.testflows</module>
+		<module>de.bund.bfr.knime.fsklab.metadata.model.tests</module>
 
 		<!-- Test report -->
 		<module>de.bund.bfr.knime.testreport</module>
