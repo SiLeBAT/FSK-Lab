@@ -6,6 +6,5 @@ Bundle-Version: 1.0.0.qualifier
 Fragment-Host: de.bund.bfr.knime.fsklab.metadata.model;bundle-version="0.1.0"
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.metadata.model.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: de.bund.bfr.knime.fsklab.metadata.model.tests,
- de.bund.bfr.knime.fsklab.rakip,
+Export-Package: de.bund.bfr.knime.fsklab.rakip,
  metadata
