@@ -1511,7 +1511,7 @@ public class RakipUtil {
 	}
 
 	/** Internal map used to convert parameter classification to 1.0.4. */
-	private static Map<Parameter.Classification, de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum> CLASSIF;
+	public static Map<Parameter.Classification, de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum> CLASSIF;
 	static {
 		CLASSIF = new HashMap<>();
 
@@ -1522,7 +1522,7 @@ public class RakipUtil {
 	}
 
 	/** Internal map used to convert parameter types to 1.0.4. */
-	private static Map<Parameter.DataTypes, de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum> TYPES;
+	public static Map<Parameter.DataTypes, de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum> TYPES;
 	static {
 		TYPES = new HashMap<>();
 
