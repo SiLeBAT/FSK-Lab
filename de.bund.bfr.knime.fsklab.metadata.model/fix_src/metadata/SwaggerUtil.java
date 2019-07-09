@@ -406,7 +406,7 @@ public class SwaggerUtil {
 	}
 
 	/** Internal map used to convert RIS types to 1.0.4 Reference types. */
-	private static Map<PublicationType, PublicationTypeEnum> PUBLICATION_TYPE;
+	public static Map<PublicationType, PublicationTypeEnum> PUBLICATION_TYPE;
 	static {
 		PUBLICATION_TYPE = new HashMap<PublicationType, PublicationTypeEnum>();
 
@@ -469,7 +469,7 @@ public class SwaggerUtil {
 	}
 
 	/** Internal map used to convert parameter classification to 1.0.4. */
-	private static Map<metadata.ParameterClassification, de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum> CLASSIF;
+	public static Map<metadata.ParameterClassification, de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum> CLASSIF;
 	static {
 		CLASSIF = new HashMap<>();
 
@@ -482,7 +482,7 @@ public class SwaggerUtil {
 	}
 
 	/** Internal map used to convert parameter types to 1.0.4. */
-	private static Map<metadata.ParameterType, de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum> TYPES;
+	public static Map<metadata.ParameterType, de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum> TYPES;
 	static {
 		TYPES = new HashMap<>();
 

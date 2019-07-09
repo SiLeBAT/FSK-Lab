@@ -11,8 +11,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.threeten.bp.LocalDate;
 
-import de.bund.bfr.knime.fsklab.rakip.Parameter.DataTypes;
-import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
 import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
@@ -28,7 +26,6 @@ import de.bund.bfr.metadata.swagger.PopulationGroup;
 import de.bund.bfr.metadata.swagger.Product;
 import de.bund.bfr.metadata.swagger.QualityMeasures;
 import de.bund.bfr.metadata.swagger.Reference;
-import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 import de.bund.bfr.metadata.swagger.Study;
 import de.bund.bfr.metadata.swagger.StudySample;
 
@@ -363,9 +360,9 @@ public class RAKIPSheetImporter2 {
 		// publication type
 		Cell typeCell = row.getCell(L);
 		if (typeCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			PublicationTypeEnum type = PublicationTypeEnum.fromValue(typeCell.getStringCellValue());
+			PublicationType type = PublicationType.get(typeCell.getStringCellValue());
 			if (type != null) {
-				reference.addPublicationTypeItem(type);
+				reference.addPublicationTypeItem(SwaggerUtil.PUBLICATION_TYPE.get(type));
 			}
 		}
 
@@ -1058,11 +1055,9 @@ public class RAKIPSheetImporter2 {
 		Parameter param = new Parameter();
 		param.setId(row.getCell(L).getStringCellValue());
 
-		String classificationLiteral = row.getCell(M).getStringCellValue();
-		de.bund.bfr.knime.fsklab.rakip.Parameter.Classification pc = de.bund.bfr.knime.fsklab.rakip.Parameter.Classification
-				.valueOf(classificationLiteral);
+		ParameterClassification pc = ParameterClassification.get(row.getCell(M).getStringCellValue());
 		if (pc != null) {
-			param.setClassification(RakipUtil.CLASSIF.get(pc));
+			param.setClassification(SwaggerUtil.CLASSIF.get(pc));
 		}
 
 		param.setName(row.getCell(N).getStringCellValue());
@@ -1079,10 +1074,9 @@ public class RAKIPSheetImporter2 {
 			param.setUnitCategory(unitCategoryCell.getStringCellValue());
 		}
 
-		de.bund.bfr.knime.fsklab.rakip.Parameter.DataTypes pt = de.bund.bfr.knime.fsklab.rakip.Parameter.DataTypes
-				.valueOf(row.getCell(S).getStringCellValue());
-		if (pt != null) {
-			param.setDataType(RakipUtil.TYPES.get(pt));
+		ParameterType parameterType = ParameterType.get(row.getCell(S).getStringCellValue());
+		if (parameterType != null) {
+			param.setDataType(SwaggerUtil.TYPES.get(parameterType));
 		}
 
 		Cell sourceCell = row.getCell(T);
@@ -1105,9 +1099,9 @@ public class RAKIPSheetImporter2 {
 
 			if (valueCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 				Double doubleValue = valueCell.getNumericCellValue();
-				if (pt == DataTypes.Integer) {
+				if (parameterType == ParameterType.INTEGER) {
 					param.setValue(Integer.toString(doubleValue.intValue()));
-				} else if (pt == DataTypes.Double || pt == DataTypes.Number) {
+				} else if (parameterType == ParameterType.DOUBLE || parameterType == ParameterType.NUMBER) {
 					param.setValue(Double.toString(doubleValue));
 				}
 			} else {
