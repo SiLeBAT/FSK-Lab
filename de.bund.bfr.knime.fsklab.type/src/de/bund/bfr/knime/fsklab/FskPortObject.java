@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -51,7 +50,6 @@ import java.util.zip.ZipEntry;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -67,7 +65,6 @@ import javax.swing.border.Border;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -89,16 +86,24 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
-import metadata.DataBackground;
-import metadata.GeneralInformation;
-import metadata.MetadataFactory;
+import de.bund.bfr.metadata.swagger.ConsumptionModel;
+import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.ExposureModel;
+import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.HealthModel;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.OtherModel;
+import de.bund.bfr.metadata.swagger.PredictiveModel;
+import de.bund.bfr.metadata.swagger.ProcessModel;
+import de.bund.bfr.metadata.swagger.QraModel;
+import de.bund.bfr.metadata.swagger.RiskModel;
+import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 import metadata.MetadataPackage;
 import metadata.MetadataTree;
-import metadata.ModelMath;
-import metadata.Scope;
+import metadata.SwaggerUtil;
 
 /**
  * A port object for an FSK model port providing R scripts and model meta data.
@@ -145,24 +150,16 @@ public class FskPortObject implements PortObject {
 	public int selectedSimulationIndex = 0;
 	public final List<FskSimulation> simulations = new ArrayList<>();
 
-	// EMF metadata
-	public GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
-	public Scope scope = MetadataFactory.eINSTANCE.createScope();
-	public DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
-	public ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
+	public Model modelMetadata;
 
-	public FskPortObject(final String model, final String viz, final GeneralInformation generalInformation,
-			final Scope scope, final DataBackground dataBackground, final ModelMath modelMath, final Path workspace,
+	public FskPortObject(final String model, final String viz, final Model modelMetadata, final Path workspace,
 			final List<String> packages, final String workingDirectory, final String plot, final String readme,
 			final String spreadsheet) throws IOException {
 
 		this.model = model;
 		this.viz = viz;
 
-		this.generalInformation = generalInformation;
-		this.scope = scope;
-		this.dataBackground = dataBackground;
-		this.modelMath = modelMath;
+		this.modelMetadata = modelMetadata;
 
 		this.workspace = workspace;
 		this.packages = packages;
@@ -222,11 +219,10 @@ public class FskPortObject implements PortObject {
 	public String getReadme() {
 		return readme;
 	}
-	
+
 	public void setReadme(String readme) {
 		this.readme = readme;
 	}
-
 
 	/**
 	 * @return empty string if not set.
@@ -247,9 +243,6 @@ public class FskPortObject implements PortObject {
 		private static final String META_DATA = "metaData";
 
 		private static final String CFG_GENERAL_INFORMATION = "generalInformation";
-		private static final String CFG_SCOPE = "scope";
-		private static final String CFG_DATA_BACKGROUND = "dataBackground";
-		private static final String CFG_MODEL_MATH = "modelMath";
 
 		private static final String WORKSPACE = "workspace";
 		private static final String SIMULATION = "simulation";
@@ -262,6 +255,8 @@ public class FskPortObject implements PortObject {
 		private static final String README = "readme";
 
 		private static final String SPREADSHEET = "spreadsheet";
+
+		private static final ObjectMapper MAPPER = new ObjectMapper();
 
 		@Override
 		public void savePortObject(final FskPortObject portObject, final PortObjectZipOutputStream out,
@@ -277,10 +272,13 @@ public class FskPortObject implements PortObject {
 			IOUtils.write(portObject.viz, out, "UTF-8");
 			out.closeEntry();
 
-			writeEObject(CFG_GENERAL_INFORMATION, portObject.generalInformation, out);
-			writeEObject(CFG_SCOPE, portObject.scope, out);
-			writeEObject(CFG_DATA_BACKGROUND, portObject.dataBackground, out);
-			writeEObject(CFG_MODEL_MATH, portObject.modelMath, out);
+			out.putNextEntry(new ZipEntry("modelType"));
+			IOUtils.write(portObject.modelMetadata.getModelType(), out, "UTF-8");
+			out.closeEntry();
+
+			out.putNextEntry(new ZipEntry("swagger"));
+			MAPPER.writeValue(out, portObject.modelMetadata);
+			out.closeEntry();
 
 			// workspace entry
 			if (portObject.workspace != null) {
@@ -359,13 +357,10 @@ public class FskPortObject implements PortObject {
 			String modelScript = "";
 			String visualizationScript = "";
 
-			GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
-			Scope scope = MetadataFactory.eINSTANCE.createScope();
-			DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
-			ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
-
 			Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
 			List<String> packages = new ArrayList<>();
+
+			Model modelMetadata = null;
 
 			String workingDirectory = ""; // Empty string if not set
 
@@ -392,22 +387,48 @@ public class FskPortObject implements PortObject {
 
 					final String metaDataAsString = IOUtils.toString(in, "UTF-8");
 					ObjectMapper mapper = new ObjectMapper().registerModule(new RakipModule());
-					GenericModel genericModel = mapper.readValue(metaDataAsString, GenericModel.class);
+					de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel = mapper.readValue(metaDataAsString,
+							de.bund.bfr.knime.fsklab.rakip.GenericModel.class);
 
-					generalInformation = RakipUtil.convert(genericModel.generalInformation);
-					scope = RakipUtil.convert(genericModel.scope);
-					dataBackground = RakipUtil.convert(genericModel.dataBackground);
-					modelMath = RakipUtil.convert(genericModel.modelMath);
+					GenericModel gm = new GenericModel();
+					gm.setModelType("genericModel");
+					gm.setGeneralInformation(RakipUtil.convert2(genericModel.generalInformation));
+					gm.setScope(RakipUtil.convert2(genericModel.scope));
+					gm.setDataBackground(RakipUtil.convert2(genericModel.dataBackground));
+					gm.setModelMath(RakipUtil.convert2(genericModel.modelMath));
+
+					modelMetadata = gm;
 				}
 
 				else if (entryName.equals(CFG_GENERAL_INFORMATION)) {
-					generalInformation = readEObject(in, GeneralInformation.class);
-				} else if (entryName.equals(CFG_SCOPE)) {
-					scope = readEObject(in, Scope.class);
-				} else if (entryName.equals(CFG_DATA_BACKGROUND)) {
-					dataBackground = readEObject(in, DataBackground.class);
-				} else if (entryName.equals(CFG_MODEL_MATH)) {
-					modelMath = readEObject(in, ModelMath.class);
+					// Read deprecated EMF metadata
+					metadata.GeneralInformation deprecatedInformation = readEObject(in,
+							metadata.GeneralInformation.class);
+					in.getNextEntry();
+
+					metadata.Scope deprecatedScope = readEObject(in, metadata.Scope.class);
+					in.getNextEntry();
+
+					metadata.DataBackground deprecatedBackground = readEObject(in, metadata.DataBackground.class);
+					in.getNextEntry();
+
+					metadata.ModelMath deprecatedMath = readEObject(in, metadata.ModelMath.class);
+					in.getNextEntry();
+
+					// Convert to new metadata schema
+					GenericModel gm = new GenericModel();
+					gm.setModelType("genericModel");
+					gm.setGeneralInformation(SwaggerUtil.convert(deprecatedInformation));
+					gm.setScope(SwaggerUtil.convert(deprecatedScope));
+					gm.setDataBackground(SwaggerUtil.convert(deprecatedBackground));
+					gm.setModelMath(SwaggerUtil.convert(deprecatedMath));
+					modelMetadata = gm;
+				} else if (entryName.equals("modelType")) {
+					// deserialize new models
+					String modelClass = IOUtils.toString(in, "UTF-8");
+					in.getNextEntry();
+
+					modelMetadata = MAPPER.readValue(in, modelClasses.get(modelClass));
 				} else if (entryName.equals(WORKSPACE)) {
 					Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
 				} else if (entryName.equals("library.list")) {
@@ -442,31 +463,8 @@ public class FskPortObject implements PortObject {
 
 			in.close();
 
-			// Check the existence of the working directory and create one if it's not
-			// available locally.
-			/*
-			 * if (!workingDirectory.isEmpty()) { URL url =
-			 * FileUtil.toURL(workingDirectory); try { Path localPath =
-			 * FileUtil.resolveToPath(url); if (!Files.exists(localPath)) { NodeContext
-			 * nodeContext = NodeContext.getContext(); WorkflowManager wfm =
-			 * nodeContext.getWorkflowManager(); WorkflowContext workflowContext =
-			 * wfm.getContext();
-			 * 
-			 * // get the location of the current workflow to create the working directory
-			 * in // it and use the name with current reader node id for the prefix of the
-			 * working // directory name File currentWorkingDirectory = new
-			 * File(workflowContext.getCurrentLocation(),
-			 * nodeContext.getNodeContainer().getNameWithID().toString().replaceAll("\\W",
-			 * "") .replace(" ", "") + "_" + "workingDirectory" + new AtomicLong((int)
-			 * (100000 * Math.random())).getAndIncrement()); if
-			 * (!currentWorkingDirectory.exists()) { currentWorkingDirectory.mkdir();
-			 * workingDirectory = currentWorkingDirectory.toString(); } } } catch
-			 * (URISyntaxException e) { // TODO Auto-generated catch block
-			 * e.printStackTrace(); } }
-			 */
-
-			final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript, generalInformation, scope,
-					dataBackground, modelMath, workspacePath, packages, workingDirectory, plot, readme, spreadsheet);
+			final FskPortObject portObj = new FskPortObject(modelScript, visualizationScript, modelMetadata,
+					workspacePath, packages, workingDirectory, plot, readme, spreadsheet);
 
 			if (!simulations.isEmpty()) {
 				portObj.simulations.addAll(simulations);
@@ -492,21 +490,20 @@ public class FskPortObject implements PortObject {
 			return (T) resource.getContents().get(0);
 		}
 
-		/**
-		 * Create {@link ZipEntry} with Json string representing a metadata class.
-		 * 
-		 * @throws IOException
-		 */
-		private static <T extends EObject> void writeEObject(String entryName, T value, PortObjectZipOutputStream out)
-				throws IOException {
-
-			out.putNextEntry(new ZipEntry(entryName));
-
-			ObjectMapper mapper = EMFModule.setupDefaultMapper();
-			String jsonStr = mapper.writeValueAsString(value);
-			IOUtils.write(jsonStr, out, "UTF-8");
-
-			out.closeEntry();
+		private static Map<String, Class<? extends Model>> modelClasses;
+		static {
+			modelClasses.put("genericModel", GenericModel.class);
+			modelClasses.put("dataModel", DataModel.class);
+			modelClasses.put("predictiveModel", PredictiveModel.class);
+			modelClasses.put("otherModel", OtherModel.class);
+			modelClasses.put("exposureModel", ExposureModel.class);
+			modelClasses.put("toxicologicalModel", ToxicologicalModel.class);
+			modelClasses.put("doseResponseModel", DoseResponseModel.class);
+			modelClasses.put("processModel", ProcessModel.class);
+			modelClasses.put("consumptionModel", ConsumptionModel.class);
+			modelClasses.put("healthModel", HealthModel.class);
+			modelClasses.put("riskModel", RiskModel.class);
+			modelClasses.put("qraModel", QraModel.class);
 		}
 	}
 
@@ -540,13 +537,13 @@ public class FskPortObject implements PortObject {
 		private static final long serialVersionUID = -4887698302872695689L;
 
 		private final FormPanel formPanel;
-		private Map<Object, Icon> icons = new HashMap<Object, Icon>(); 
+		private Map<Object, Icon> icons = new HashMap<Object, Icon>();
 		private final String SELETCTED_SIMULATION_STR = "selected";
-	
+
 		public SimulationsPanel() {
 			// Panel to show parameters (show initially the simulation 0)
 			formPanel = new FormPanel(simulations.get(selectedSimulationIndex).getParameters());
-			icons.put(selectedSimulationIndex, UIUtils.getResourceImageIcon("selectedsimulation.png")); 
+			icons.put(selectedSimulationIndex, UIUtils.getResourceImageIcon("selectedsimulation.png"));
 			createUI();
 		}
 
@@ -567,9 +564,9 @@ public class FskPortObject implements PortObject {
 
 			// Panel to select simulation
 			FskSimulation[] simulationsArray = simulations.toArray(new FskSimulation[simulations.size()]);
-			
+
 			JComboBox<FskSimulation> simulationList = new JComboBox<FskSimulation>(simulationsArray);
-			simulationList.setRenderer(new IconListRenderer(icons,simulationsArray));
+			simulationList.setRenderer(new IconListRenderer(icons, simulationsArray));
 			simulationList.addActionListener(new ActionListener() {
 
 				@Override
@@ -591,7 +588,9 @@ public class FskPortObject implements PortObject {
 			JPanel selectionPanel = new JPanel();
 			selectionPanel.setBackground(Color.WHITE);
 			selectionPanel.add(simulationList);
-			//selectionPanel.add(new JLabel(simulationsArray[selectedSimulationIndex].getName()+" is the selected simulation to be used by the FSK Runner to run the model"));
+			// selectionPanel.add(new
+			// JLabel(simulationsArray[selectedSimulationIndex].getName()+" is the selected
+			// simulation to be used by the FSK Runner to run the model"));
 			JPanel simulationSelection = UIUtils
 					.createCenterPanel(UIUtils.createHorizontalPanel(new JLabel("Simulation:"), selectionPanel));
 
@@ -601,32 +600,36 @@ public class FskPortObject implements PortObject {
 			add(simulationSelection, BorderLayout.NORTH);
 			add(simulationPanel, BorderLayout.CENTER);
 		}
-		class IconListRenderer extends DefaultListCellRenderer{ 
-		    private static final long serialVersionUID = 1L;
-		    private Map<Object, Icon> icons = null; 
-		    private FskSimulation[] simulationsArray;
-		    private String selectedSimulationName;
-		    public IconListRenderer(Map<Object, Icon> icons,FskSimulation[] simulationsArray ){ 
-		        this.icons = icons; 
-		        this.simulationsArray = simulationsArray;
-		        this.selectedSimulationName = simulationsArray[selectedSimulationIndex].getName();
-		    } 
-		
-		    @Override
-		    public Component getListCellRendererComponent(JList list, Object value, int index,boolean isSelected, boolean cellHasFocus)
-		    { 
-		        JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); 
-		        // Get icon to use for the list item value 
-		        Icon icon = icons.get(value); 
-		        if(index == selectedSimulationIndex || (index == -1 && value.toString().trim().equals(selectedSimulationName.trim()))){
-		            icon = icons.get(selectedSimulationIndex); 
-		        }
-		        // Set icon to display for value 
-		        label.setIcon(icon);
-		        return label; 
-		    } 
+
+		class IconListRenderer extends DefaultListCellRenderer {
+			private static final long serialVersionUID = 1L;
+			private Map<Object, Icon> icons = null;
+			private FskSimulation[] simulationsArray;
+			private String selectedSimulationName;
+
+			public IconListRenderer(Map<Object, Icon> icons, FskSimulation[] simulationsArray) {
+				this.icons = icons;
+				this.simulationsArray = simulationsArray;
+				this.selectedSimulationName = simulationsArray[selectedSimulationIndex].getName();
+			}
+
+			@Override
+			public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected,
+						cellHasFocus);
+				// Get icon to use for the list item value
+				Icon icon = icons.get(value);
+				if (index == selectedSimulationIndex
+						|| (index == -1 && value.toString().trim().equals(selectedSimulationName.trim()))) {
+					icon = icons.get(selectedSimulationIndex);
+				}
+				// Set icon to display for value
+				label.setIcon(icon);
+				return label;
+			}
 		}
-		
+
 		class FormPanel extends FPanel {
 
 			private static final long serialVersionUID = 4324891441984883445L;
@@ -735,8 +738,9 @@ public class FskPortObject implements PortObject {
 				}
 			}
 		}
-	
+
 	}
+
 	/** Builds string with R parameters script out. */
 	private static String buildParameterScript(FskSimulation simulation) {
 
