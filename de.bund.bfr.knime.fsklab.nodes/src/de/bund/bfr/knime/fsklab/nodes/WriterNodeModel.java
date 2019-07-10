@@ -466,14 +466,14 @@ class WriterNodeModel extends NoInternalsModel {
         if (relations != null) {
           for (JoinRelation joinRelarion : relations) {
             org.sbml.jsbml.Parameter overridedParameter =
-                fskmodel.createParameter(joinRelarion.getTargetParam().getParameterID());
+                fskmodel.createParameter(joinRelarion.getTargetParam().getId());
 
             overridedParameter.setConstant(false);
 
             CompSBasePlugin plugin =
                 (CompSBasePlugin) overridedParameter.getPlugin(CompConstants.shortLabel);
             ReplacedBy replacedBy = plugin.createReplacedBy();
-            replacedBy.setIdRef(joinRelarion.getSourceParam().getParameterID());
+            replacedBy.setIdRef(joinRelarion.getSourceParam().getId());
             replacedBy.setSubmodelRef(SUB_MODEL1);
             // annotate the conversion command
             org.sbml.jsbml.Annotation annot = overridedParameter.getAnnotation();

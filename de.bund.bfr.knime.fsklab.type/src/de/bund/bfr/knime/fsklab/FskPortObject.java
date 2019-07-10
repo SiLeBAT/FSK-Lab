@@ -490,7 +490,7 @@ public class FskPortObject implements PortObject {
 			return (T) resource.getContents().get(0);
 		}
 
-		private static Map<String, Class<? extends Model>> modelClasses;
+		public static Map<String, Class<? extends Model>> modelClasses;
 		static {
 			modelClasses.put("genericModel", GenericModel.class);
 			modelClasses.put("dataModel", DataModel.class);
