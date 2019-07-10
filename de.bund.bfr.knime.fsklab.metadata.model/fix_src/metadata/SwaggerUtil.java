@@ -523,7 +523,7 @@ public class SwaggerUtil {
 		return LocalDate.of(date.getYear(), date.getMonth() + 1, date.getDate());
 	}
 
-	public List<Parameter> getParameter(Model model) {
+	public static List<Parameter> getParameter(Model model) {
 		List<Parameter> parameters;
 	
 		final String modelType = model.getModelType();
