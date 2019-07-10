@@ -8,8 +8,9 @@ import org.knime.core.util.FileUtil;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.plot.ModelPlotter;
-import metadata.Parameter;
-import metadata.ParameterClassification;
+import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
+import metadata.SwaggerUtil;
 
 public abstract class ScriptHandler implements AutoCloseable {
   
@@ -64,10 +65,11 @@ public abstract class ScriptHandler implements AutoCloseable {
     runScript(fskObj.model, exec, false);
 
     if (RunnerNodeModel.isTest) {
-      for (Parameter param : fskObj.modelMath.getParameter()) {
-        if (param.getParameterClassification().equals(ParameterClassification.OUTPUT)) {
-          String[] value = runScript("eval(" + param.getParameterID() + ")", exec, true);
-          param.setParameterValue(value[0]);
+      List<Parameter> parameters = SwaggerUtil.getParameter(fskObj.modelMetadata);
+      for (Parameter param : parameters) {
+        if (param.getClassification() == ClassificationEnum.OUTPUT) {
+          String[] value = runScript("eval(" + param.getId() + ")", exec, true);
+          param.setValue(value[0]);
         }
       }
     }
