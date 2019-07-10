@@ -624,4 +624,136 @@ public class SwaggerUtil {
 
 		return language;
 	}
+	
+	public static Object getGeneralInformation(Model model) {
+		Object information;
+
+		final String modelType = model.getModelType();
+		if (modelType.equals("genericModel")) {
+			information = ((GenericModel) model).getGeneralInformation();
+		} else if (modelType.equals("dataModel")) {
+			information = ((DataModel) model).getGeneralInformation();
+		} else if (modelType.equals("predictiveModel")) {
+			information = ((PredictiveModel) model).getGeneralInformation();
+		} else if (modelType.equals("otherModel")) {
+			information = ((OtherModel) model).getGeneralInformation();
+		} else if (modelType.equals("exposureModel")) {
+			information = ((ExposureModel) model).getGeneralInformation();
+		} else if (modelType.equals("toxicologicalModel")) {
+			information = ((ToxicologicalModel) model).getGeneralInformation();
+		} else if (modelType.equals("doseResponseModel")) {
+			information = ((DoseResponseModel) model).getGeneralInformation();
+		} else if (modelType.equals("processModel")) {
+			information = ((ProcessModel) model).getGeneralInformation();
+		} else if (modelType.equals("consumptionModel")) {
+			information = ((ConsumptionModel) model).getGeneralInformation();
+		} else if (modelType.equals("riskModel")) {
+			information = ((RiskModel) model).getGeneralInformation();
+		} else if (modelType.equals("qraModel")) {
+			information = ((QraModel) model).getGeneralInformation();
+		} else {
+			information = null;
+		}
+
+		return information;
+	}
+
+	public static Object getScope(Model model) {
+		Object scope;
+
+		final String modelType = model.getModelType();
+		if (modelType.equals("genericModel")) {
+			scope = ((GenericModel) model).getScope();
+		} else if (modelType.equals("dataModel")) {
+			scope = ((DataModel) model).getScope();
+		} else if (modelType.equals("predictiveModel")) {
+			scope = ((PredictiveModel) model).getScope();
+		} else if (modelType.equals("otherModel")) {
+			scope = ((OtherModel) model).getScope();
+		} else if (modelType.equals("exposureModel")) {
+			scope = ((ExposureModel) model).getScope();
+		} else if (modelType.equals("toxicologicalModel")) {
+			scope = ((ToxicologicalModel) model).getScope();
+		} else if (modelType.equals("doseResponseModel")) {
+			scope = ((DoseResponseModel) model).getScope();
+		} else if (modelType.equals("processModel")) {
+			scope = ((ProcessModel) model).getScope();
+		} else if (modelType.equals("consumptionModel")) {
+			scope = ((ConsumptionModel) model).getScope();
+		} else if (modelType.equals("riskModel")) {
+			scope = ((RiskModel) model).getScope();
+		} else if (modelType.equals("qraModel")) {
+			scope = ((QraModel) model).getScope();
+		} else {
+			scope = null;
+		}
+
+		return scope;
+	}
+
+	public static Object getDataBackground(Model model) {
+		Object background;
+
+		final String modelType = model.getModelType();
+		if (modelType.equals("genericModel")) {
+			background = ((GenericModel) model).getDataBackground();
+		} else if (modelType.equals("dataModel")) {
+			background = ((DataModel) model).getDataBackground();
+		} else if (modelType.equals("predictiveModel")) {
+			background = ((PredictiveModel) model).getDataBackground();
+		} else if (modelType.equals("otherModel")) {
+			background = ((OtherModel) model).getDataBackground();
+		} else if (modelType.equals("exposureModel")) {
+			background = ((ExposureModel) model).getDataBackground();
+		} else if (modelType.equals("toxicologicalModel")) {
+			background = ((ToxicologicalModel) model).getDataBackground();
+		} else if (modelType.equals("doseResponseModel")) {
+			background = ((DoseResponseModel) model).getDataBackground();
+		} else if (modelType.equals("processModel")) {
+			background = ((ProcessModel) model).getDataBackground();
+		} else if (modelType.equals("consumptionModel")) {
+			background = ((ConsumptionModel) model).getDataBackground();
+		} else if (modelType.equals("riskModel")) {
+			background = ((RiskModel) model).getDataBackground();
+		} else if (modelType.equals("qraModel")) {
+			background = ((QraModel) model).getDataBackground();
+		} else {
+			background = null;
+		}
+
+		return background;
+	}
+
+	public static Object getModelMath(Model model) {
+		Object math;
+
+		final String modelType = model.getModelType();
+		if (modelType.equals("genericModel")) {
+			math = ((GenericModel) model).getModelMath();
+		} else if (modelType.equals("dataModel")) {
+			math = ((DataModel) model).getModelMath();
+		} else if (modelType.equals("predictiveModel")) {
+			math = ((PredictiveModel) model).getModelMath();
+		} else if (modelType.equals("otherModel")) {
+			math = ((OtherModel) model).getModelMath();
+		} else if (modelType.equals("exposureModel")) {
+			math = ((ExposureModel) model).getModelMath();
+		} else if (modelType.equals("toxicologicalModel")) {
+			math = ((ToxicologicalModel) model).getModelMath();
+		} else if (modelType.equals("doseResponseModel")) {
+			math = ((DoseResponseModel) model).getModelMath();
+		} else if (modelType.equals("processModel")) {
+			math = ((ProcessModel) model).getModelMath();
+		} else if (modelType.equals("consumptionModel")) {
+			math = ((ConsumptionModel) model).getModelMath();
+		} else if (modelType.equals("riskModel")) {
+			math = ((RiskModel) model).getModelMath();
+		} else if (modelType.equals("qraModel")) {
+			math = ((QraModel) model).getModelMath();
+		} else {
+			math = null;
+		}
+
+		return math;
+	}
 }
