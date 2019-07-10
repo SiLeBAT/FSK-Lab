@@ -280,7 +280,21 @@ class ReaderNodeModel extends NoInternalsModel {
             final ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
             JsonNode modelNode = mapper.readTree(temp.toFile());
-            model = mapper.treeToValue(modelNode.get("modelType"), Model.class);
+            if(modelNode.has("modelType")) {
+              Class<? extends Model> modelClass = FskPortObject.Serializer.modelClasses.get(modelNode.get("modelType").asText());
+              model = mapper.readValue(temp.toFile(), modelClass);
+            }
+            else if(modelNode.get("version") != null) {
+              GenericModel gm = new GenericModel();
+              gm.setModelType("genericModel");
+              gm.setGeneralInformation(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("generalInformation"), metadata.GeneralInformation.class)));
+              gm.setScope(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("scope"), metadata.Scope.class)));
+              gm.setDataBackground(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("dataBackground"), metadata.DataBackground.class)));
+              gm.setModelMath(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("modelMath"), metadata.ModelMath.class)));
+              model = gm;
+            }
+            
+           
 //            generalInformation =
 //                mapper.treeToValue(modelNode.get("generalInformation"), GeneralInformation.class);
 //            scope = mapper.treeToValue(modelNode.get("scope"), Scope.class);
@@ -401,13 +415,15 @@ class ReaderNodeModel extends NoInternalsModel {
       CombinedFskPortObject topfskObj;
       String currentModelID = SwaggerUtil.getModelName(firstFskPortObject.modelMetadata).replaceAll("\\W", "");
       if (currentModelID.equals(firstModelId)) {
-        topfskObj = new CombinedFskPortObject("", "", generalInformation, scope, dataBackground,
-            modelMath, workingDirectory.toString(), new ArrayList<>(), firstFskPortObject,
+        topfskObj = new CombinedFskPortObject("", "", model, workingDirectory.toString(), new ArrayList<>(), firstFskPortObject,
             secondFskPortObject);
       } else {
-        topfskObj = new CombinedFskPortObject("", "", generalInformation, scope, dataBackground,
-            modelMath, workingDirectory.toString(), new ArrayList<>(), secondFskPortObject,
-            firstFskPortObject);
+//        topfskObj = new CombinedFskPortObject("", "", generalInformation, scope, dataBackground,
+//      modelMath, workingDirectory.toString(), new ArrayList<>(), secondFskPortObject,
+//      firstFskPortObject);
+        topfskObj = new CombinedFskPortObject("", "", model, workingDirectory.toString(), new ArrayList<>(), secondFskPortObject,
+          firstFskPortObject);
+      
       }
 
       topfskObj.viz = getEmbedSecondFSKObject(topfskObj).viz;
@@ -504,15 +520,19 @@ class ReaderNodeModel extends NoInternalsModel {
               gm.setScope(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("scope"), metadata.Scope.class)));
               gm.setDataBackground(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("dataBackground"), metadata.DataBackground.class)));
               gm.setModelMath(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("modelMath"), metadata.ModelMath.class)));
+              model = gm;
               
             } else {
               // pre Rakip
+              GenericModel gm = new GenericModel();
+              gm.setModelType("genericModel");
               modelNode = mapper.readTree(temp.toFile());
-              GenericModel genericModel = mapper.readValue(temp.toFile(), GenericModel.class);
-              generalInformation = RakipUtil.convert(genericModel.generalInformation);
-              scope = RakipUtil.convert(genericModel.scope);
-              dataBackground = RakipUtil.convert(genericModel.dataBackground);
-              modelMath = RakipUtil.convert(genericModel.modelMath);
+              de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel = mapper.readValue(temp.toFile(), de.bund.bfr.knime.fsklab.rakip.GenericModel.class);
+              gm.setGeneralInformation(RakipUtil.convert2(genericModel.generalInformation));
+              gm.setScope(RakipUtil.convert2(genericModel.scope));
+              gm.dataBackground(RakipUtil.convert2(genericModel.dataBackground));
+              gm.modelMath(RakipUtil.convert2(genericModel.modelMath));
+              model = gm;
             }
           }
         }
