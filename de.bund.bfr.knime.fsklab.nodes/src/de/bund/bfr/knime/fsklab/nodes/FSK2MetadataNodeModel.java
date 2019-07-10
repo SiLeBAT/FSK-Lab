@@ -41,6 +41,7 @@ import org.knime.json.util.JSONUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
+import metadata.SwaggerUtil;
 
 public class FSK2MetadataNodeModel extends StatelessModel {
 
@@ -59,22 +60,20 @@ public class FSK2MetadataNodeModel extends StatelessModel {
 
     // Get model metadata
     FskPortObject inObj = (FskPortObject) inObjects[0];
+    Object generalInformation = SwaggerUtil.getGeneralInformation(inObj.modelMetadata);
+    Object scope = SwaggerUtil.getScope(inObj.modelMetadata);
+    Object dataBackground = SwaggerUtil.getDataBackground(inObj.modelMetadata);
+    Object modelMath = SwaggerUtil.getModelMath(inObj.modelMetadata);
 
     // Build container
     final DataTableSpec tableSpec = createTableSpec()[0];
     final BufferedDataContainer container = exec.createDataContainer(tableSpec);
 
-    // Create general information cell
-    final DataCell giCell = createJSONCell(inObj.generalInformation);
-
-    // Create scope cell
-    final DataCell scopeCell = createJSONCell(inObj.scope);
-
-    // Create data background cell
-    final DataCell dbCell = createJSONCell(inObj.dataBackground);
-
-    // Create model math cell
-    final DataCell mathCell = createJSONCell(inObj.modelMath);
+    // Create JSON cells
+    final DataCell giCell = createJSONCell(generalInformation);
+    final DataCell scopeCell = createJSONCell(scope);
+    final DataCell dbCell = createJSONCell(dataBackground);
+    final DataCell mathCell = createJSONCell(modelMath);
 
     // Create and add row to container
     final DefaultRow row =
