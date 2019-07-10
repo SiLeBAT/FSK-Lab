@@ -23,6 +23,7 @@ import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.OtherModel;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.PredictiveModel;
 import de.bund.bfr.metadata.swagger.ProcessModel;
 import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
@@ -525,16 +526,16 @@ public class SwaggerUtil {
 
 	public static List<Parameter> getParameter(Model model) {
 		List<Parameter> parameters;
-	
+
 		final String modelType = model.getModelType();
 		if (modelType.equals("genericModel")) {
 			parameters = ((GenericModel) model).getModelMath().getParameter();
 		} else if (modelType.equals("dataModel")) {
 			parameters = ((DataModel) model).getModelMath().getParameter();
 		} else if (modelType.equals("predictiveModel")) {
-			parameters = ((OtherModel) model).getModelMath().getParameter();
+			parameters = ((PredictiveModel) model).getModelMath().getParameter();
 		} else if (modelType.equals("otherModel")) {
-			parameters = ((ExposureModel) model).getModelMath().getParameter();
+			parameters = ((OtherModel) model).getModelMath().getParameter();
 		} else if (modelType.equals("exposureModel")) {
 			parameters = ((ExposureModel) model).getModelMath().getParameter();
 		} else if (modelType.equals("toxicologicalModel")) {
@@ -552,7 +553,75 @@ public class SwaggerUtil {
 		} else {
 			parameters = null;
 		}
-		
+
 		return parameters;
+	}
+
+	/** @return language written in. Null if missing. */
+	public static String getLanguageWrittenIn(Model model) {
+		String language;
+
+		final String modelType = model.getModelType();
+		if (modelType.equals("genericModel")) {
+			language = ((GenericModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else if (modelType.equals("dataModel")) {
+			language = null;
+		} else if (modelType.equals("predictiveModel")) {
+			language = ((PredictiveModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else if (modelType.equals("otherModel")) {
+			language = ((OtherModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else if (modelType.equals("exposureModel")) {
+			language = ((ExposureModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else if (modelType.equals("toxicologicalModel")) {
+			language = ((ToxicologicalModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else if (modelType.equals("doseResponseModel")) {
+			language = ((DoseResponseModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else if (modelType.equals("processModel")) {
+			language = ((ProcessModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else if (modelType.equals("consumptionModel")) {
+			language = ((ConsumptionModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else if (modelType.equals("riskModel")) {
+			language = ((RiskModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else if (modelType.equals("qraModel")) {
+			language = ((QraModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else {
+			language = null;
+		}
+
+		return language;
+	}
+	
+	/** @return language written in. Null if missing. */
+	public static String getModelName(Model model) {
+		String language;
+
+		final String modelType = model.getModelType();
+		if (modelType.equals("genericModel")) {
+			language = ((GenericModel) model).getGeneralInformation().getName();
+		} else if (modelType.equals("dataModel")) {
+			language = ((DataModel) model).getGeneralInformation().getName();
+		} else if (modelType.equals("predictiveModel")) {
+			language = ((PredictiveModel) model).getGeneralInformation().getName();
+		} else if (modelType.equals("otherModel")) {
+			language = ((OtherModel) model).getGeneralInformation().getName();
+		} else if (modelType.equals("exposureModel")) {
+			language = ((ExposureModel) model).getGeneralInformation().getName();
+		} else if (modelType.equals("toxicologicalModel")) {
+			language = ((ToxicologicalModel) model).getGeneralInformation().getName();
+		} else if (modelType.equals("doseResponseModel")) {
+			language = ((DoseResponseModel) model).getGeneralInformation().getModelName();
+		} else if (modelType.equals("processModel")) {
+			language = ((ProcessModel) model).getGeneralInformation().getName();
+		} else if (modelType.equals("consumptionModel")) {
+			language = ((ConsumptionModel) model).getGeneralInformation().getName();
+		} else if (modelType.equals("riskModel")) {
+			language = ((RiskModel) model).getGeneralInformation().getName();
+		} else if (modelType.equals("qraModel")) {
+			language = ((QraModel) model).getGeneralInformation().getName();
+		} else {
+			language = null;
+		}
+
+		return language;
 	}
 }
