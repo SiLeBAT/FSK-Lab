@@ -757,6 +757,6 @@ public class FskPortObject implements PortObject {
 
 	@Override
 	public String toString() {
-		return generalInformation != null && generalInformation.getName() != null ? generalInformation.getName() : "";
+		return modelMetadata != null ? modelMetadata.toString() : "";
 	}
 }
