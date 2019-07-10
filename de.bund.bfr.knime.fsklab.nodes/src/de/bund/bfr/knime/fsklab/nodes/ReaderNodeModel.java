@@ -510,7 +510,10 @@ class ReaderNodeModel extends NoInternalsModel {
             JsonNode modelNode = mapper.readTree(temp.toFile());
             Object version = modelNode.get("version");
 
-            
+            if(modelNode.has("modelType")) {
+              Class<? extends Model> modelClass = FskPortObject.Serializer.modelClasses.get(modelNode.get("modelType").asText());
+              model = mapper.readValue(temp.toFile(), modelClass);
+            }
             if (version != null) {
               // 1.0.3 (with EMF)
               
