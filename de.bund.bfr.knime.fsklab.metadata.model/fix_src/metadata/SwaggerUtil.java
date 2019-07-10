@@ -13,9 +13,21 @@ import javax.json.JsonObject;
 
 import org.threeten.bp.LocalDate;
 
+import de.bund.bfr.metadata.swagger.ConsumptionModel;
+import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.ExposureModel;
+import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.ModelCategory;
+import de.bund.bfr.metadata.swagger.OtherModel;
+import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.ProcessModel;
+import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
+import de.bund.bfr.metadata.swagger.RiskModel;
+import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 
 public class SwaggerUtil {
 
@@ -509,5 +521,38 @@ public class SwaggerUtil {
 	@SuppressWarnings("deprecation")
 	private static LocalDate toLocalDate(Date date) {
 		return LocalDate.of(date.getYear(), date.getMonth() + 1, date.getDate());
+	}
+
+	public List<Parameter> getParameter(Model model) {
+		List<Parameter> parameters;
+	
+		final String modelType = model.getModelType();
+		if (modelType.equals("genericModel")) {
+			parameters = ((GenericModel) model).getModelMath().getParameter();
+		} else if (modelType.equals("dataModel")) {
+			parameters = ((DataModel) model).getModelMath().getParameter();
+		} else if (modelType.equals("predictiveModel")) {
+			parameters = ((OtherModel) model).getModelMath().getParameter();
+		} else if (modelType.equals("otherModel")) {
+			parameters = ((ExposureModel) model).getModelMath().getParameter();
+		} else if (modelType.equals("exposureModel")) {
+			parameters = ((ExposureModel) model).getModelMath().getParameter();
+		} else if (modelType.equals("toxicologicalModel")) {
+			parameters = ((ToxicologicalModel) model).getModelMath().getParameter();
+		} else if (modelType.equals("doseResponseModel")) {
+			parameters = ((DoseResponseModel) model).getModelMath().getParameter();
+		} else if (modelType.equals("processModel")) {
+			parameters = ((ProcessModel) model).getModelMath().getParameter();
+		} else if (modelType.equals("consumptionModel")) {
+			parameters = ((ConsumptionModel) model).getModelMath().getParameter();
+		} else if (modelType.equals("riskModel")) {
+			parameters = ((RiskModel) model).getModelMath().getParameter();
+		} else if (modelType.equals("qraModel")) {
+			parameters = ((QraModel) model).getModelMath().getParameter();
+		} else {
+			parameters = null;
+		}
+		
+		return parameters;
 	}
 }
