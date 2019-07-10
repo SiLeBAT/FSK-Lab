@@ -43,7 +43,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataRow;
-import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -62,9 +61,9 @@ import de.bund.bfr.fskml.ScriptFactory;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-// import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
-// import de.bund.bfr.knime.fsklab.r.client.RController;
-// import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
+import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;
@@ -72,18 +71,14 @@ import metadata.DietaryAssessmentMethod;
 import metadata.GeneralInformation;
 import metadata.Hazard;
 import metadata.Laboratory;
-import metadata.LegacyMetadataImporter;
 import metadata.MetadataFactory;
 import metadata.ModelCategory;
-import metadata.ModelMath;
-import metadata.ModificationDate;
-import metadata.Parameter;
 import metadata.ParameterClassification;
 import metadata.ParameterType;
 import metadata.PopulationGroup;
-import metadata.Product;
+import metadata.PreRakipSheetImporter;
 import metadata.PublicationType;
-import metadata.RAKIPSheetImporter;
+import metadata.RAKIPSheetImporter2;
 import metadata.RakipColumn;
 import metadata.RakipRow;
 import metadata.Reference;
@@ -91,6 +86,7 @@ import metadata.Scope;
 import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
+import metadata.SwaggerUtil;
 
 class CreatorNodeModel extends NoInternalsModel {
 
@@ -147,42 +143,40 @@ class CreatorNodeModel extends NoInternalsModel {
       vizRScript = null;
     }
 
-    final GeneralInformation generalInformation;
-    final Scope scope;
-    final DataBackground dataBackground;
-    final ModelMath modelMath;
+    Model modelMetadata = null;
 
     // If an input table is connected then parse the metadata
     if (inData.length == 1 && inData[0] != null) {
-      BufferedDataTable metadataTable = (BufferedDataTable) inData[0];
-
-      // parse table
-      String[][] values = new String[200][50];
-      int i = 0;
-      for (DataRow row : metadataTable) {
-        if (isRowEmpty(row))
-          break;
-        int j = 0;
-        for (DataCell cell : row) {
-          values[i][j] = !cell.isMissing() ? ((StringCell) cell).getStringValue() : "";
-          j++;
-        }
-        i++;
-      }
-
-      generalInformation = TableParser.retrieveGeneralInformation(values);
-      scope = TableParser.retrieveScope(values);
-      dataBackground = TableParser.retrieveDataBackground(values);
-
-      modelMath = MetadataFactory.eINSTANCE.createModelMath();
-      for (i = 132; i <= 152; i++) {
-        try {
-          Parameter param = TableParser.retrieveParameter(values, i);
-          modelMath.getParameter().add(param);
-        } catch (Exception exception) {
-          exception.printStackTrace();
-        }
-      }
+      // TODO: Need to update input table parser: TableParser
+      // BufferedDataTable metadataTable = (BufferedDataTable) inData[0];
+      //
+      // // parse table
+      // String[][] values = new String[200][50];
+      // int i = 0;
+      // for (DataRow row : metadataTable) {
+      // if (isRowEmpty(row))
+      // break;
+      // int j = 0;
+      // for (DataCell cell : row) {
+      // values[i][j] = !cell.isMissing() ? ((StringCell) cell).getStringValue() : "";
+      // j++;
+      // }
+      // i++;
+      // }
+      //
+      // generalInformation = TableParser.retrieveGeneralInformation(values);
+      // scope = TableParser.retrieveScope(values);
+      // dataBackground = TableParser.retrieveDataBackground(values);
+      //
+      // modelMath = MetadataFactory.eINSTANCE.createModelMath();
+      // for (i = 132; i <= 152; i++) {
+      // try {
+      // Parameter param = TableParser.retrieveParameter(values, i);
+      // modelMath.getParameter().add(param);
+      // } catch (Exception exception) {
+      // exception.printStackTrace();
+      // }
+      // }
     }
 
     else {
@@ -194,19 +188,26 @@ class CreatorNodeModel extends NoInternalsModel {
       Sheet sheet = workbook.getSheet(nodeSettings.sheet);
 
       if (sheet.getPhysicalNumberOfRows() > 29) {
-        // Process new RAKIP spreadsheet
-        RAKIPSheetImporter importer = new RAKIPSheetImporter();
-        generalInformation = importer.retrieveGeneralInformation(sheet);
-        scope = importer.retrieveScope(sheet);
-        dataBackground = importer.retrieveDataBackground(sheet);
-        modelMath = importer.retrieveModelMath(sheet);
+        // Process 1.0.3 RAKIP spreadsheet
+        RAKIPSheetImporter2 importer = new RAKIPSheetImporter2();
+        GenericModel gm = new GenericModel();
+        gm.setModelType("genericModel");
+        gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+        gm.setScope(importer.retrieveScope(sheet));
+        gm.setDataBackground(importer.retrieveBackground(sheet));
+        gm.setModelMath(importer.retrieveModelMath(sheet));
+
+        modelMetadata = gm;
       } else {
-        // Process legacy spreadsheet
-        LegacySheetImporter importer = new LegacySheetImporter(sheet);
-        generalInformation = importer.getGeneralInformation();
-        scope = importer.getScope();
-        dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
-        modelMath = importer.getModelMath();
+        // Process legacy spreadsheet: prior RAKIP
+        PreRakipSheetImporter importer = new PreRakipSheetImporter();
+        GenericModel gm = new GenericModel();
+        gm.setModelType("genericModel");
+        gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+        gm.setScope(importer.retrieveScope(sheet));
+        gm.setModelMath(importer.retrieveModelMath(sheet));
+
+        modelMetadata = gm;
       }
     }
 
@@ -239,25 +240,25 @@ class CreatorNodeModel extends NoInternalsModel {
       readme = FileUtils.readFileToString(readmeFile, "UTF-8");
     }
 
-    final FskPortObject portObj = new FskPortObject(modelScript, vizScript, generalInformation,
-        scope, dataBackground, modelMath, null, librariesList, workingDirectory, plotPath, readme,
-        nodeSettings.spreadsheet);
+    final FskPortObject portObj = new FskPortObject(modelScript, vizScript, modelMetadata, null,
+        librariesList, workingDirectory, plotPath, readme, nodeSettings.spreadsheet);
 
-    if (modelMath != null) {
-      portObj.simulations.add(NodeUtils.createDefaultSimulation(modelMath.getParameter()));
+    List<Parameter> parameters = SwaggerUtil.getParameter(modelMetadata);
+    if (((GenericModel)modelMetadata).getModelMath() != null) {
+      portObj.simulations.add(NodeUtils.createDefaultSimulation(parameters));
     }
 
     // Validate parameters from spreadsheet
     exec.checkCanceled();
     try (ScriptHandler handler = ScriptHandler
-        .createHandler(portObj.generalInformation.getLanguageWrittenIn(), portObj.packages)) {
+        .createHandler(SwaggerUtil.getLanguageWrittenIn(modelMetadata), portObj.packages)) {
       if (!workingDirectory.isEmpty()) {
         Path workingDirectoryPath =
             FileUtil.getFileFromURL(FileUtil.toURL(workingDirectory)).toPath();
         handler.setWorkingDirectory(workingDirectoryPath, exec);
       }
 
-      FskSimulation simulation = NodeUtils.createDefaultSimulation(modelMath.getParameter());
+      FskSimulation simulation = NodeUtils.createDefaultSimulation(parameters);
       String script = handler.buildParameterScript(simulation);
       // ScriptExecutor executor = new ScriptExecutor(controller);
 
@@ -320,93 +321,6 @@ class CreatorNodeModel extends NoInternalsModel {
       if (!cell.isMissing())
         return false;
     return true;
-  }
-
-  private static class LegacySheetImporter {
-
-    private final de.bund.bfr.knime.pmm.fskx.FskMetaData legacyMetadata;
-
-    public LegacySheetImporter(Sheet sheet) {
-      legacyMetadata = new LegacyMetadataImporter().processSpreadsheet(sheet);
-    }
-
-    GeneralInformation getGeneralInformation() {
-
-      GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
-
-      if (!legacyMetadata.modelName.isEmpty()) {
-        generalInformation.setName(legacyMetadata.modelName);
-      }
-
-      if (!legacyMetadata.modelId.isEmpty()) {
-        generalInformation.setIdentifier(legacyMetadata.modelId);
-      }
-
-      if (legacyMetadata.createdDate != null) {
-        generalInformation.setCreationDate(legacyMetadata.createdDate);
-      }
-
-      if (!legacyMetadata.rights.isEmpty()) {
-        generalInformation.setRights(legacyMetadata.rights);
-      }
-
-      generalInformation.setAvailable(true);
-      generalInformation.setFormat("");
-
-      if (legacyMetadata.modifiedDate != null) {
-        ModificationDate md = MetadataFactory.eINSTANCE.createModificationDate();
-        md.setValue(legacyMetadata.modifiedDate);
-        generalInformation.getModificationdate().add(md);
-      }
-
-      return generalInformation;
-    }
-
-    Scope getScope() {
-
-      Scope scope = MetadataFactory.eINSTANCE.createScope();
-
-      Hazard hazard = MetadataFactory.eINSTANCE.createHazard();
-      hazard.setHazardName(legacyMetadata.organism);
-      hazard.setHazardDescription(legacyMetadata.organismDetails);
-
-      Product product = MetadataFactory.eINSTANCE.createProduct();
-      product.setProductName(legacyMetadata.matrix);
-      product.setProductDescription(legacyMetadata.matrixDetails);
-      scope.getProduct().add(product);
-
-      return scope;
-    }
-
-    ModelMath getModelMath() {
-
-      ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
-
-      Parameter depParam = MetadataFactory.eINSTANCE.createParameter();
-      depParam.setParameterID(legacyMetadata.dependentVariable.name);
-      depParam.setParameterClassification(ParameterClassification.OUTPUT);
-      depParam.setParameterName(legacyMetadata.dependentVariable.name);
-      depParam.setParameterUnit(legacyMetadata.dependentVariable.unit);
-      depParam.setParameterUnitCategory("");
-      depParam.setParameterDataType(ParameterType.OTHER);
-
-      modelMath.getParameter().add(depParam);
-
-      // Independent variables
-      for (Variable indepVar : legacyMetadata.independentVariables) {
-        final Parameter indepParam = MetadataFactory.eINSTANCE.createParameter();
-        indepParam.setParameterID(indepVar.name);
-        indepParam.setParameterClassification(ParameterClassification.INPUT);
-        indepParam.setParameterName(indepVar.name);
-        indepParam.setParameterUnit(indepVar.unit);
-        indepParam.setParameterUnitCategory("");
-        indepParam.setParameterDataType(ParameterType.OTHER);
-
-        modelMath.getParameter().add(indepParam);
-      }
-
-      return modelMath;
-    }
   }
 
   /** Parses metadata-filled tables imported from a Google Drive spreadsheet. */
@@ -894,7 +808,7 @@ class CreatorNodeModel extends NoInternalsModel {
     }
 
     /** @throws IllegalArgumentException if a mandatory property is missing. */
-    static Parameter retrieveParameter(String[][] values, int row) {
+    static metadata.Parameter retrieveParameter(String[][] values, int row) {
 
       // Check mandatory properties
       if (values[row][RakipColumn.L.ordinal()].isEmpty()) {
@@ -917,7 +831,7 @@ class CreatorNodeModel extends NoInternalsModel {
         throw new IllegalArgumentException("Missing data type");
       }
 
-      Parameter param = MetadataFactory.eINSTANCE.createParameter();
+      metadata.Parameter param = MetadataFactory.eINSTANCE.createParameter();
       param.setParameterID(values[row][RakipColumn.L.ordinal()]);
 
       String classificationText = values[row][RakipColumn.M.ordinal()].toLowerCase();
