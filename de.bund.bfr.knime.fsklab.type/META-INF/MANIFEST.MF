@@ -21,3 +21,4 @@ Export-Package: de.bund.bfr.knime.fsklab,
  de.bund.bfr.knime.fsklab.nodes.port,
  de.bund.bfr.knime.pmm.fskx.port
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
+Import-Package: com.google.gson

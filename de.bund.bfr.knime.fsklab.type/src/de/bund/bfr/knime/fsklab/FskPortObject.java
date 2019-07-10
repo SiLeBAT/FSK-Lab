@@ -59,7 +59,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTree;
 import javax.swing.border.Border;
 
 import org.apache.commons.io.IOUtils;
@@ -81,6 +80,8 @@ import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
@@ -102,7 +103,6 @@ import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.RiskModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 import metadata.MetadataPackage;
-import metadata.MetadataTree;
 import metadata.SwaggerUtil;
 
 /**
@@ -511,8 +511,12 @@ public class FskPortObject implements PortObject {
 	public JComponent[] getViews() {
 		JPanel modelScriptPanel = new ScriptPanel("Model script", model, false, false);
 		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false, false);
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String jsonInString = gson.toJson(modelMetadata);
+	    String modelMetadataAsJSON = gson.toJson(jsonInString);
 
-		JTree tree = MetadataTree.createTree(generalInformation, scope, dataBackground, modelMath);
+		JTextArea tree = new JTextArea(modelMetadataAsJSON);
+		//JTree tree = MetadataTree.createTree(generalInformation, scope, dataBackground, modelMath);
 		final JScrollPane metaDataPane = new JScrollPane(tree);
 		metaDataPane.setName("Meta data");
 

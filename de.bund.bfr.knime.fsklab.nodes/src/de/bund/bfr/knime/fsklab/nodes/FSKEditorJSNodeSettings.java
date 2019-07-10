@@ -29,17 +29,13 @@ class FSKEditorJSNodeSettings {
   private static final String CFG_RESOURCES = "resources";
   private static final String CFG_WORKING_DIRECTORY = "workingDirectory";
 
-  private static final String CFG_GENERAL_INFORMATION = "generalInformation";
-  private static final String CFG_SCOPE = "scope";
-  private static final String CFG_DATA_BACKGROUND = "dataBackground";
-  private static final String CFG_MODEL_MATH = "modelMath";
-
-  public String generalInformation;
-  public String scope;
-  public String dataBackground;
-  public String modelMath;
+  private static final String CFG_MODEL_METADATA = "ModelMetaData";
+  
+  private static final String CFG_MODELTYPE = "modelType";
+  public String modelMetaData;
   public String model;
   public String viz;
+  public String modelType = ""; 
   String jsonRepresentation = "";
 
   /** Paths to resources: plain text files and R workspace files (.rdata). */
@@ -88,10 +84,8 @@ class FSKEditorJSNodeSettings {
     resources = settings.getString(CFG_RESOURCES, "");
     readme = settings.getString(CFG_README, "");
     workingDirectory = settings.getString(CFG_WORKING_DIRECTORY, "");
-    generalInformation = settings.getString(CFG_GENERAL_INFORMATION, "");
-    scope = settings.getString(CFG_SCOPE, "");
-    dataBackground = settings.getString(CFG_DATA_BACKGROUND, "");
-    modelMath = settings.getString(CFG_MODEL_MATH, "");
+    modelMetaData = settings.getString(CFG_MODEL_METADATA, "");
+    modelType = settings.getString(CFG_MODELTYPE,"");
   }
 
   void save(final NodeSettingsWO settings) {
@@ -99,9 +93,8 @@ class FSKEditorJSNodeSettings {
     settings.addString(CFG_RESOURCES, resources);
     settings.addString(CFG_README, readme);
     settings.addString(CFG_WORKING_DIRECTORY, workingDirectory);
-    settings.addString(CFG_GENERAL_INFORMATION, generalInformation);
-    settings.addString(CFG_SCOPE, scope);
-    settings.addString(CFG_DATA_BACKGROUND, dataBackground);
-    settings.addString(CFG_MODEL_MATH, modelMath);
+    settings.addString(CFG_MODEL_METADATA, modelMetaData);
+    settings.addString(CFG_MODELTYPE, modelType);
+
   }
 }

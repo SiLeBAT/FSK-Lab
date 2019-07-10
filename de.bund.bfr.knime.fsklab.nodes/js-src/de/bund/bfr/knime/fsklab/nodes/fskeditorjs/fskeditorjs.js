@@ -9,12 +9,29 @@ fskeditorjs = function() {
 			return this.indexOf(searchString, position) === position;
 		};
 	}
+	window.idIndex = {}
 	function bin2String(array) {
 		var result = "";
 		for (var i = 0; i < array.length; i++) {
 			result += String.fromCharCode(parseInt(array[i], 2));
 		}
 		return result;
+	}
+	function getLastDigits(s) {
+	    return s.match(/\d+$/)[0];
+	}
+	function getCurrentStoreInfo(){
+		var currenStoreInfo;
+		
+			$.each($('li.active'),function(index, value){
+				currentSection = $(value).find('a')[0].innerText.toLowerCase().replace(
+						new RegExp(" ", 'g'),
+				"");
+				currenStoreInfo = window.parentStores[currentSection];
+				
+			})
+			return currenStoreInfo;
+		
 	}
 	if (!Array.from) {
 		Array.from = (function() {
@@ -106,7 +123,7 @@ fskeditorjs = function() {
 			};
 		}());
 	}
-	function autocomplete(inp, arr, store, schema, uischema, fieldName) {
+	function autocomplete(originalname, inp, arr, store, schema, uischema, fieldName,currentArea) {
 		/*
 		 * the autocomplete function takes two arguments, the text field element
 		 * and an array of possible autocompleted values:
@@ -156,13 +173,41 @@ fskeditorjs = function() {
 						/*
 						 * insert the value for the autocomplete text field:
 						 */
+						
+						if(!fieldName.indexOf('#/properties/') == 0){
+							
+							store.getState().jsonforms.core.data[originalname] = e.srcElement.innerText;
+							console.log('clicked',fieldName,originalname, e.srcElement.innerText,store.getState().jsonforms.core.data, schema,
+									uischema);
+							dispatched = store.dispatch(Actions.init(
+									store.getState().jsonforms.core.data, schema,
+									uischema));
+							console.log(dispatched);
+							document.getElementById('#/properties/' + fieldName)
+								.focus();
+	
+						}else{
+							console.log('click');
+							currentSection = getCurrentStoreInfo();
+							currentFormId = $(e.srcElement.closest( ".demoform" )).parent().attr('id')
+							// rejoinStores();
+							document.getElementById( fieldName).value = e.srcElement.innerText;
+							store.getState().jsonforms.core.data[currentArea][getLastDigits(fieldName)] = {'value':document.getElementById( fieldName).value};
+							store.dispatch(Actions.init(
+									store.getState().jsonforms.core.data, schema,
+									uischema));
+							
+							currentSection[0].getState().jsonforms.core.data[currentFormId] = store.getState().jsonforms.core.data;
+							currentSection[0].dispatch(Actions.init(
+									currentSection[0].getState().jsonforms.core.data, currentSection[1],
+									currentSection[2]));
+							
+							document.getElementById( fieldName)
+								.focus();
 
-						store.getState().jsonforms.core.data[fieldName] = this
-								.getElementsByTagName("input")[0].value;
+						}
 
-						store.dispatch(Actions.init(
-								store.getState().jsonforms.core.data, schema,
-								uischema));
+						
 						/*
 						 * close the list of autocompleted values, (or any other
 						 * open lists of autocompleted values:
@@ -216,6 +261,10 @@ fskeditorjs = function() {
 																			.getState().jsonforms.core.data,
 																	schema,
 																	uischema));
+											if(document.getElementById('#/properties/' + fieldName)){
+												document.getElementById('#/properties/' + fieldName)
+												.focus();
+											}
 											/*
 											 * close the list of autocompleted
 											 * values, (or any other open lists
@@ -377,7 +426,8 @@ fskeditorjs = function() {
 		}
 	}
 	joinerNode.init = function(representation, value) {
-		console.log(value)
+		window.modelPrefix = (value.modelType ? value.modelType
+				: "GenericModel");
 		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
 			// send AJAX request to acquire the JWT for the currently logged in
 			// user. Subsequent requests need to carry the token in the
@@ -425,13 +475,13 @@ fskeditorjs = function() {
 
 		create_body();
 		fixTableHeaders();
-		
+
 	};
 	function fixTableHeaders() {
 		var tablePopups = {};
 		tablePopups["modelCategory"] = window.uischema13
-		tablePopups["modificationdate"] = window.uischema14
-		tablePopups["creators"] = window.uischema23
+		tablePopups["modificationDate"] = window.uischema14
+		tablePopups["creator"] = window.uischema23
 		tablePopups["reference"] = window.uischema22
 		tablePopups["product"] = window.uischema3
 		tablePopups["hazard"] = window.uischema4
@@ -470,10 +520,10 @@ fskeditorjs = function() {
 		$("[role='tooltip']").find(
 				"div:contains('should be equal to one of the allowed values')")
 				.css('visibility', 'hidden');
-		
-		$("[data='Modificationdate']")
-		.html( 'Modification Date' );
-	}
+
+		/*
+		 * $("[data='Modificationdate']") .html( 'Modification Date' );
+		 */}
 	function prepareData(_firstModel) {
 		// prepare generalInformation
 		try {
@@ -490,8 +540,6 @@ fskeditorjs = function() {
 
 		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ? _firstModel.generalInformation.description
 				: "";
-		_firstModel.generalInformation.author = _firstModel.generalInformation.author != null ? _firstModel.generalInformation.author
-				: {};
 		_firstModel.generalInformation.format = _firstModel.generalInformation.format != null ? _firstModel.generalInformation.format
 				: "";
 		_firstModel.generalInformation.language = _firstModel.generalInformation.language != null ? _firstModel.generalInformation.language
@@ -518,7 +566,6 @@ fskeditorjs = function() {
 				: [];
 		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory != null ? _firstModel.dataBackground.laboratory
 				: [];
-		console.log(_firstModel);
 	}
 	window.outputParameterNotDefined = false;
 	window.parameterValidationError = ""
@@ -603,95 +650,93 @@ fskeditorjs = function() {
 	joinerNode.displayErrors = function(error) {
 
 	}
+	function rejoinStores(){
+		$.each($('.demoform'),function(index, value){
+			id = $(value).parent().parent().parent().parent().attr('id')
+			parentId = $(value).parent().parent().parent().parent().attr('id')
+			
+			if(window.parentStores[parentId] && id){
+				console.log(window.parentStores[parentId]);
+			}
+				
+			
+		})
+	}
 	joinerNode.getComponentValue = function() {
-		
-		window.store1.getState().jsonforms.core.data.author = window.store23
-				.getState().jsonforms.core.data;
-		
-		
-		window.store6.getState().jsonforms.core.data.study = window.store7
-				.getState().jsonforms.core.data;
+		rejoinStores();
 		_viewValue.generalInformation = JSON
 				.stringify(window.store1.getState().jsonforms.core.data);
-		window.store2.getState().jsonforms.core.data.spatialInformation = window.toBeReplacedMap["Spatial Information"]
-		.getState().jsonforms.core.data;
 		_viewValue.scope = JSON
 				.stringify(window.store2.getState().jsonforms.core.data);
-		
-		window.store17.getState().jsonforms.core.data.exposure = window.toBeReplacedMap["Exposure"]
-		.getState().jsonforms.core.data;
 		_viewValue.modelMath = JSON
 				.stringify(window.store17.getState().jsonforms.core.data);
-		
 		_viewValue.dataBackground = JSON
 				.stringify(window.store6.getState().jsonforms.core.data);
-		if (window.firstModelScript && window.firstModelScript.save) {
-			window.firstModelScript.save();
-		}
-		if (window.firstModelViz && window.firstModelViz.save) {
-			window.firstModelViz.save();
-		}
-		if (window.readme && window.readme.save) {
-			window.readme.save();
-		}
-		var ajv = new window.Ajv({
-			allErrors : true,
-			format : 'fast'
-		});
-		// Add convert keyword for date-time schema
-		ajv = ajv.removeKeyword("format")
-		try {
-			ajv
-					.addKeyword('format',
-							{
-								type : 'string',
-								compile : function(sch, parentSchema) {
-									return parentSchema.format === 'date-time'
-											&& sch ? function(value, objectKey,
-											object, key) {
-										// Update date-time string to Date
-										// object
-										object[key] = new Date(value);
-										return true;
-									} : function() {
-										return true;
-									}
-								}
-							});
-			ajv.validate(window.schema,
-					window.store1.getState().jsonforms.core.data);
-			ajv.validate(window.schema2,
-					window.store2.getState().jsonforms.core.data);
-			ajv.validate(window.schema17,
-					window.store17.getState().jsonforms.core.data);
-			ajv.validate(window.schema6,
-					window.store6.getState().jsonforms.core.data);
-		} catch (err) {
-			// console.log(err)
-		}
 
-		_viewValue.firstModelScript = $('#firstModelScript').val();
-		_viewValue.firstModelViz = $('#firstModelViz').val();
-		_viewValue.readme = $('#READMEArea').val();
-		
-
-		_viewValue.resourcesFiles = resourcesFiles;
-		_viewValue.serverName = server;
-		_viewValue.notCompleted = "" + window.outputParameterNotDefined;
-
-		var generalError = "";
-		generalError += validateAgainstSchema(window.schema, window.store1
-				.getState().jsonforms.core.data, "- General Information:");
-		generalError += validateAgainstSchema(window.schema2, window.store2
-				.getState().jsonforms.core.data, "- Scope:");
-
-		generalError += validateAgainstSchema(window.schema17, window.store17
-				.getState().jsonforms.core.data, "- Model Math:");
-		generalError += validateAgainstSchema(window.schema6, window.store6
-				.getState().jsonforms.core.data, "- Data Background:");
-		generalError += window.parameterValidationError
-		_viewValue.validationErrors = generalError.trim();
 		console.log(_viewValue);
+		/*
+		 * window.store1.getState().jsonforms.core.data.author = window.store23
+		 * .getState().jsonforms.core.data;
+		 * 
+		 * 
+		 * window.store6.getState().jsonforms.core.data.study = window.store7
+		 * .getState().jsonforms.core.data; _viewValue.generalInformation = JSON
+		 * .stringify(window.store1.getState().jsonforms.core.data);
+		 * window.store2.getState().jsonforms.core.data.spatialInformation =
+		 * window.toBeReplacedMap["Spatial Information"]
+		 * .getState().jsonforms.core.data; _viewValue.scope = JSON
+		 * .stringify(window.store2.getState().jsonforms.core.data);
+		 * 
+		 * window.store17.getState().jsonforms.core.data.exposure =
+		 * window.toBeReplacedMap["Exposure"] .getState().jsonforms.core.data;
+		 * _viewValue.modelMath = JSON
+		 * .stringify(window.store17.getState().jsonforms.core.data);
+		 * 
+		 * _viewValue.dataBackground = JSON
+		 * .stringify(window.store6.getState().jsonforms.core.data); if
+		 * (window.firstModelScript && window.firstModelScript.save) {
+		 * window.firstModelScript.save(); } if (window.firstModelViz &&
+		 * window.firstModelViz.save) { window.firstModelViz.save(); } if
+		 * (window.readme && window.readme.save) { window.readme.save(); } var
+		 * ajv = new window.Ajv({ allErrors : true, format : 'fast' }); // Add
+		 * convert keyword for date-time schema ajv =
+		 * ajv.removeKeyword("format") try { ajv .addKeyword('format', { type :
+		 * 'string', compile : function(sch, parentSchema) { return
+		 * parentSchema.format === 'date-time' && sch ? function(value,
+		 * objectKey, object, key) { // Update date-time string to Date //
+		 * object object[key] = new Date(value); return true; } : function() {
+		 * return true; } } }); ajv.validate(window.schema,
+		 * window.store1.getState().jsonforms.core.data);
+		 * ajv.validate(window.schema2,
+		 * window.store2.getState().jsonforms.core.data);
+		 * ajv.validate(window.schema17,
+		 * window.store17.getState().jsonforms.core.data);
+		 * ajv.validate(window.schema6,
+		 * window.store6.getState().jsonforms.core.data); } catch (err) { //
+		 * console.log(err) }
+		 * 
+		 * _viewValue.firstModelScript = $('#firstModelScript').val();
+		 * _viewValue.firstModelViz = $('#firstModelViz').val();
+		 * _viewValue.readme = $('#READMEArea').val();
+		 * 
+		 * 
+		 * _viewValue.resourcesFiles = resourcesFiles; _viewValue.serverName =
+		 * server; _viewValue.notCompleted = "" +
+		 * window.outputParameterNotDefined;
+		 * 
+		 * var generalError = ""; generalError +=
+		 * validateAgainstSchema(window.schema, window.store1
+		 * .getState().jsonforms.core.data, "- General Information:");
+		 * generalError += validateAgainstSchema(window.schema2, window.store2
+		 * .getState().jsonforms.core.data, "- Scope:");
+		 * 
+		 * generalError += validateAgainstSchema(window.schema17, window.store17
+		 * .getState().jsonforms.core.data, "- Model Math:"); generalError +=
+		 * validateAgainstSchema(window.schema6, window.store6
+		 * .getState().jsonforms.core.data, "- Data Background:"); generalError +=
+		 * window.parameterValidationError _viewValue.validationErrors =
+		 * generalError.trim(); console.log(_viewValue);
+		 */
 		return _viewValue;
 	};
 	function validateAgainstSchema(schema, data, schemaName) {
@@ -1055,7 +1100,7 @@ fskeditorjs = function() {
 																	document
 																			.getElementById("READMEArea"),
 																	{
-																		
+
 																		lineNumbers : true,
 																		extraKeys : {
 																			"Ctrl-Space" : "autocomplete"
@@ -1109,6 +1154,8 @@ fskeditorjs = function() {
 				$(value).remove();
 			} else if ($(value).attr('data-meta') == 'MuiFormLabel') {
 				$(value).remove();
+			} else if ($(value).attr('data-meta') == 'MuiFormHelperText') {
+				$(value).remove();
 			}
 
 		});
@@ -1148,29 +1195,29 @@ fskeditorjs = function() {
 		$('.MuiDialog-paper-128').css('max-height', '');
 		$('.MuiDialog-paper-128').css('overflow-y', 'visible');
 
-		$(".MuiTable-root-222 thead").removeAttr('class');
-		$(".MuiTable-root-222 thead tr").removeAttr('class');
-		$(".MuiTable-root-222 thead tr th").removeAttr('class');
-		$(".MuiTable-root-222 thead tr th th").removeAttr('class');
-		$(".MuiTable-root-222 tbody").removeAttr('class');
-		$(".MuiTable-root-222 tbody tr").removeAttr('class');
-		$(".MuiTable-root-222 tbody tr td").removeAttr('class');
-		$(".MuiTable-root-222 tbody tr td div").removeAttr('class');
-		$(".MuiTable-root-222 tbody tr td div div").removeAttr('class');
-		$(".MuiTable-root-222 tbody tr td div div div").removeAttr('class');
+		$(".MuiTable-root-201 thead").removeAttr('class');
+		$(".MuiTable-root-201 thead tr").removeAttr('class');
+		$(".MuiTable-root-201 thead tr th").removeAttr('class');
+		$(".MuiTable-root-201 thead tr th th").removeAttr('class');
+		$(".MuiTable-root-201 tbody").removeAttr('class');
+		$(".MuiTable-root-201 tbody tr").removeAttr('class');
+		$(".MuiTable-root-201 tbody tr td").removeAttr('class');
+		$(".MuiTable-root-201 tbody tr td div").removeAttr('class');
+		$(".MuiTable-root-201 tbody tr td div div").removeAttr('class');
+		$(".MuiTable-root-201 tbody tr td div div div").removeAttr('class');
 
-		$(".MuiTable-root-222 tbody tr td div div div input").removeAttr(
+		$(".MuiTable-root-201 tbody tr td div div div input").removeAttr(
 				'class');
 		window
-				.tableInputBootstraping($(".MuiTable-root-222 tbody tr td div div div input"));
+				.tableInputBootstraping($(".MuiTable-root-201 tbody tr td div div div input"));
 
-		$('.MuiTable-root-222').addClass('table');
-		$('.MuiTable-root-222').parent().addClass('table-responsive');
-		$('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2');
-		$('.MuiTable-root-222').removeClass('MuiTable-root-222');
+		$('.MuiTable-root-201').addClass('table');
+		$('.MuiTable-root-201').parent().addClass('table-responsive');
+		$('.MuiTable-root-201').parent().removeClass('MuiGrid-typeItem-2');
+		$('.MuiTable-root-201').removeClass('MuiTable-root-201');
 
 		$('.MuiFormControl-root-90').addClass('form-group');
-		$.each($('.MuiToolbar-root-196').find('h2'), function(index, value) {
+		$.each($('.MuiToolbar-root-135').find('h2'), function(index, value) {
 			text = $(value).text();
 
 			$(value).replaceWith(
@@ -1189,30 +1236,28 @@ fskeditorjs = function() {
 			return m[0].toLowerCase() + "" + m.substring(1);
 
 		}
-
-		var StringObjectPopupsName = [ 'qualityMeasures', 'event',
-				'laboratoryAccreditation', 'populationSpan',
-				'populationDescription', 'bmi', 'specialDietGroups', 'region',
-				'country', 'populationRiskFactor', 'season',
-				'patternConsumption', 'populationAge', 'modelSubClass','hypothesisOfTheModel','reference' ];
 		var keepLast = "";
 		$("[aria-describedby*='tooltip-add']")
 				.click(
 						function(event) {
 							currentArea = window.makeId($(this).attr(
 									'aria-label'));
-							console.log(currentArea);
 							window.generalInformation = window.store1
 									.getState().jsonforms.core.data;
 							window.scope = window.store2.getState().jsonforms.core.data;
 							window.modelMath = window.store17.getState().jsonforms.core.data;
 							window.dataBackground = window.store6.getState().jsonforms.core.data;
-							if ($.inArray(currentArea, StringObjectPopupsName) < 0 || (currentArea == "reference" && keepLast != "modelEquation")) {
+							console
+									.log("length "
+											+ $('#' + currentArea).length);
+							if ($('#' + currentArea).length > 0
+									|| (currentArea == "reference" && keepLast != "modelEquation")) {
 								event.preventDefault(); // Let's stop this
-														// event.
+								// event.
 								event.stopPropagation(); // Really this time.
 								$('#title' + currentArea).text(currentArea);
-								keepLast = currentArea == "modelEquation" ? "modelEquation" : "" ;
+								keepLast = currentArea == "modelEquation" ? "modelEquation"
+										: "";
 								$('#' + currentArea).modal('show');
 								$('.modal-content').resizable({
 								// alsoResize: ".modal-dialog",
@@ -1225,88 +1270,256 @@ fskeditorjs = function() {
 												'max-height' : '100%'
 											});
 										});
-								window.scrollTo(0, 0);
-							}
-						});
+								notAProperDiv = $("div:contains('No applicable'):not(:has(div))");
 
-		autoCompleteCB = [ 'country', 'language', 'source', 'rights', 'format',
+								$
+										.each(
+												notAProperDiv,
+												function(index, value) {
+
+													var parentxc;
+													var areaName;
+													try {
+
+														parentxc = value.parentNode;
+														areaName = parentxc.firstChild.textContent;
+														console
+																.log(
+																		"No applicable",
+																		areaName);
+														if (parentxc.firstChild.textContent
+																.indexOf('*') >= 0) {
+															areaName = areaName
+																	.slice(0,
+																			-1);
+														}
+														if (areaName == 'Model Category') {
+															areaName = "modelCategory";
+														} else if (areaName == 'Modification Date') {
+															areaName = "modificationDate";
+														}
+														if (areaName
+																.indexOf('No applicable field found') < 0) {
+															$(value).remove();
+															if (areaName != 'Exposure') {
+																$(parentxc)
+																		.append(
+																				"<div id ='"
+																						+ areaName
+																						+ "' class='replaced' ></div>");
+															} else {
+																$(parentxc)
+																		.append(
+																				"<div id ='"
+																						+ areaName
+																						+ "' class='notReplace' ></div>");
+															}
+															ReactDOM
+																	.render(
+																			React
+																					.createFactory(
+																							Provider)
+																					(
+																							{
+																								store : window.toBeReplacedMap[areaName]
+																							},
+																							App()),
+																			document
+																					.getElementById(areaName));
+														}
+													} catch (err) {
+														// console.log("loop
+														// ",parentxc, err);
+													}
+
+												});
+								window.scrollTo(0, 0);
+							} else {
+
+								var description = currentArea.replace(
+										/([a-z])([A-Z])/g, '$1 $2');
+								var element = $(
+										"button[aria-label*='Add to "
+												+ description.charAt(0)
+														.toUpperCase()+description.substring(1,description.length) + "']")
+										.parent().parent().parent().parent()
+										.parent().parent().parent().parent();
+								
+								
+								setTimeout(function(){
+									$.each(element.find(".table-responsive .MuiInput-input-113"), function(index,
+											value) {
+										theID = $(value).attr('id');
+										splited = theID.split('/')
+										modifiedID = '';
+										$.each(splited,function(index, value){
+											if(index != splited.length -1 ){
+												modifiedID += value+'/';
+											}else{
+												modifiedID += currentArea;
+											}
+										});
+										if(autoCompleteCB.indexOf(currentArea) < 0){
+											return
+										}
+										if(!window.idIndex[modifiedID]){
+											window.idIndex[modifiedID] = 0
+										}
+										modifiedID = modifiedID + (window.idIndex[modifiedID]++);
+										$(value).attr('id',modifiedID);
+										
+										try {
+											indexx = autoCompleteCB.indexOf(currentArea);
+											document.getElementById(modifiedID).className = 'form-control';
+											autocomplete(modelAutoCompleteCB[indexx],document.getElementById(modifiedID),
+													autoCompleteArray[indexx],
+
+													autoCompleteStores[indexx], autoCompleteSchemas[indexx],
+													autoCompleteUischema[indexx], modifiedID,currentArea);
+
+										} catch (error) {
+										}
+										
+										
+									});
+								}, 50);							
+							}});
+		autoCompletInitialIDS = [ 'country', 'language', 'source', 'rights', 'format',
 				'software', 'languageWrittenIn', 'modelClass', 'basicProcess',
-				'status', 'productName', 'productUnit', 'productionMethod',
-				'packaging', 'productTreatment', 'originArea', 'originCountry',
-				'fisheriesArea', 'hazardType', 'hazardName', 'hazardUnit',
-				'hazardIndSum', 'populationName', 'studyAssayTechnologyType',
+				'status', 'name', 'unit', 'method', 'packaging', 'treatment',
+				'originArea', 'originCountry', 'fisheriesArea', 'type', 'name',
+				'unit', 'indSum', 'name', 'studyAssayTechnologyType',
 				'accreditationProcedureForTheAssayTechnology',
 				'samplingStrategy', 'typeOfSamplingProgram', 'samplingMethod',
 				'lotSizeUnit', 'samplingPoint', 'collectionTool',
 				'recordTypes', 'foodDescriptors', 'laboratoryCountry',
 				'parameterType', 'parameterUnit', 'parameterUnitCategory',
 				'parameterSource', 'parameterSubject', 'parameterDistribution',
-				'modelEquationClass', 'typeOfExposure' ];
-		autoCompleteArray = [ window.Country, window.Language, window.Source,
-				window.Rights, window.Format, window.Software,
-				window.Language_written_in, window.Model_Class,
-				window.Basic_process, window.Status,
-				window.Product_matrix_name, window.Parameter_unit,
-				window.Method_of_production, window.Packaging,
-				window.Product_treatment, window.Area_of_origin,
-				window.Country, window.Fisheries_area, window.Hazard_type,
-				window.Hazard_name, window.Parameter_unit,
-				window.Hazard_ind_sum, window.Population_name,
-				window.Study_Assay_Technology_Type,
-				window.Accreditation_procedure_Ass_Tec,
-				window.Sampling_strategy, window.Type_of_sampling_program,
-				window.Sampling_method, window.Parameter_unit,
-				window.Sampling_point, window.Method_tool_to_collect_data,
-				window.Type_of_records, window.Food_descriptors,
-				window.Country, window.Parameter_type, window.Parameter_unit,
-				window.Parameter_unit_category, window.Parameter_source,
-				window.Parameter_subject, window.Parameter_distribution,
-				window.Model_equation_class_distr, window.Type_of_exposure ];
-		autoCompleteStores = [ window.store23, window.store1, window.store1,
-				window.store1, window.store1, window.store1, window.store1,
-				window.store13, window.store13, window.store1, window.store3,
-				window.store3, window.store3, window.store3, window.store3,
-				window.store3, window.store3, window.store3, window.store4,
-				window.store4, window.store4, window.store4, window.store5,
-				window.store7, window.store7, window.store29, window.store29,
-				window.store29, window.store29, window.store29, window.store9,
-				window.store9, window.store9, window.store10, window.store18,
-				window.store18, window.store18, window.store18, window.store18,
-				window.store18, window.store19, window.store21 ];
-		autoCompleteSchemas = [ window.schema23, window.schema, window.schema,
-				window.schema, window.schema, window.schema, window.schema,
-				window.schema13, window.schema13, window.schema,
-				window.schema3, window.schema3, window.schema3, window.schema3,
-				window.schema3, window.schema3, window.schema3, window.schema3,
-				window.schema4, window.schema4, window.schema4, window.schema4,
-				window.schema5, window.schema7, window.schema7,
-				window.schema29, window.schema29, window.schema29,
-				window.schema29, window.schema29, window.schema9,
-				window.schema9, window.schema9, window.schema10,
-				window.schema18, window.schema18, window.schema18,
-				window.schema18, window.schema18, window.schema18,
-				window.schema19, window.schema21 ];
-		autoCompleteUischema = [ window.uischema23, window.uischema,
-				window.uischema, window.uischema, window.uischema,
-				window.uischema, window.uischema, window.uischema13,
-				window.uischema13, window.uischema, window.uischema3,
-				window.uischema3, window.uischema3, window.uischema3,
-				window.uischema3, window.uischema3, window.uischema3,
-				window.uischema3, window.uischema4, window.uischema4,
-				window.uischema4, window.uischema4, window.uischema5,
-				window.uischema7, window.uischema7, window.uischema29,
-				window.uischema29, window.uischema29, window.uischema29,
-				window.uischema29, window.uischema9, window.uischema9,
-				window.uischema9, window.uischema10, window.uischema18,
-				window.uischema18, window.uischema18, window.uischema18,
-				window.uischema18, window.uischema18, window.uischema19,
-				window.uischema21 ];
+				'modelEquationClass', 'typeOfExposure' ];				
+		$.each(autoCompletInitialIDS,function(index,value){
+			var ID = '#/properties/' + value;
+			currentField = $("[id='"+ID+"']")
+			if(currentField.length > 1){
+			$.each(currentField,function(ind, val){
+				parentID = $($(val).closest( ".demoform" )).parent().attr('id');
+				
+				splited = ID.split('/')
+				modifiedID = '';
+				$.each(splited,function(indexx, valuex){
+					if(indexx != splited.length -1 ){
+						modifiedID += valuex+'/';
+					}else{
+						modifiedID += parentID+valuex;
+					}
+				});
+				$(val).attr('id',modifiedID);
+				console.log(modifiedID);
+			})}
+			
+		});
+		autoCompleteCB = [ 'creatorModelContentcountry', 'authorModelContentcountry', 'laboratoryModelContentcountry', 'language',
+			'generalinformationsource','parameterModelContentsource', 'rights', 'format',
+			'software', 'languageWrittenIn', 'modelClass', 'basicProcess',
+			'generalinformationstatus', 'productModelContentname', 'unit', 'method', 'packaging', 'treatment',
+			'originArea', 'originCountry', 'fisheriesArea', 'type', 'hazardModelContentname',
+			'unit', 'indSum', 'populationGroupModelContentname', 'studyAssayTechnologyType',
+			'accreditationProcedureForTheAssayTechnology',
+			'samplingStrategy', 'typeOfSamplingProgram', 'samplingMethod',
+			'lotSizeUnit', 'samplingPoint', 'collectionTool',
+			'recordTypes', 'foodDescriptors', 'laboratoryCountry',
+			'parameterType', 'parameterModelContentunit', 'unitCategory',
+			'source', 'subject', 'distribution',
+			'modelEquationClass', 'typeOfExposure' ];
+		modelAutoCompleteCB = [ 'country','country','country', 'language', 'source','source', 'rights', 'format',
+			'software', 'languageWrittenIn', 'modelClass', 'basicProcess',
+			'status', 'name', 'unit', 'method', 'packaging', 'treatment',
+			'originArea', 'originCountry', 'fisheriesArea', 'type', 'name',
+			'unit', 'indSum', 'name', 'studyAssayTechnologyType',
+			'accreditationProcedureForTheAssayTechnology',
+			'samplingStrategy', 'typeOfSamplingProgram', 'samplingMethod',
+			'lotSizeUnit', 'samplingPoint', 'collectionTool',
+			'recordTypes', 'foodDescriptors', 'laboratoryCountry',
+			'type', 'unit', 'unitCategory',
+			'source', 'subject', 'distribution',
+			'modelEquationClass', 'typeOfExposure' ];
+	
+	autoCompleteArray = [ window.Country,window.Country,window.Country, window.Language, window.Source , window.Source,
+			window.Rights, window.Format, window.Software,
+			window.Language_written_in, window.Model_Class,
+			window.Basic_process, window.Status,
+			window.Product_matrix_name, window.Parameter_unit,
+			window.Method_of_production, window.Packaging,
+			window.Product_treatment, window.Area_of_origin,
+			window.Country, window.Fisheries_area, window.Hazard_type,
+			window.Hazard_name, window.Parameter_unit,
+			window.Hazard_ind_sum, window.Population_name,
+			window.Study_Assay_Technology_Type,
+			window.Accreditation_procedure_Ass_Tec,
+			window.Sampling_strategy, window.Type_of_sampling_program,
+			window.Sampling_method, window.Parameter_unit,
+			window.Sampling_point, window.Method_tool_to_collect_data,
+			window.Type_of_records, window.Food_descriptors,
+			window.Country, window.Parameter_type, window.Parameter_unit,
+			window.Parameter_unit_category, window.Parameter_source,
+			window.Parameter_subject, window.Parameter_distribution,
+			window.Model_equation_class_distr, window.Type_of_exposure ];
+	autoCompleteStores = [ window.store24 ,window.store23,window.store10, window.store1, window.store1 , window.store18,
+			window.store1, window.store1, window.store1, window.store1,
+			window.store13, window.store13, window.store1, window.store3,
+			window.store3, window.store3, window.store3, window.store3,
+			window.store3, window.store3, window.store3, window.store4,
+			window.store4, window.store4, window.store4, window.store5,
+			window.store7, window.store7, window.store29, window.store29,
+			window.store29, window.store29, window.store29, window.store9,
+			window.store9, window.store9, window.store10, window.store18,
+			window.store18, window.store18, window.store18, window.store18,
+			window.store18, window.store19, window.store21 ];
+	autoCompleteSchemas = [ window.schema23,window.schema23,window.schema10, window.schema, window.schema , window.schema18,
+			window.schema, window.schema, window.schema, window.schema,
+			window.schema13, window.schema13, window.schema,
+			window.schema3, window.schema3, window.schema3, window.schema3,
+			window.schema3, window.schema3, window.schema3, window.schema3,
+			window.schema4, window.schema4, window.schema4, window.schema4,
+			window.schema5, window.schema7, window.schema7,
+			window.schema29, window.schema29, window.schema29,
+			window.schema29, window.schema29, window.schema9,
+			window.schema9, window.schema9, window.schema10,
+			window.schema18, window.schema18, window.schema18,
+			window.schema18, window.schema18, window.schema18,
+			window.schema19, window.schema21 ];
+	autoCompleteUischema = [ window.uischema23,window.uischema23,window.uischema10, window.uischema, window.uischema, window.uischema18,
+			window.uischema, window.uischema, window.uischema,
+			window.uischema, window.uischema13,
+			window.uischema13, window.uischema, window.uischema3,
+			window.uischema3, window.uischema3, window.uischema3,
+			window.uischema3, window.uischema3, window.uischema3,
+			window.uischema3, window.uischema4, window.uischema4,
+			window.uischema4, window.uischema4, window.uischema5,
+			window.uischema7, window.uischema7, window.uischema29,
+			window.uischema29, window.uischema29, window.uischema29,
+			window.uischema29, window.uischema9, window.uischema9,
+			window.uischema9, window.uischema10, window.uischema18,
+			window.uischema18, window.uischema18, window.uischema18,
+			window.uischema18, window.uischema18, window.uischema19,
+			window.uischema21 ];
+		window.parentStores = {
+								"generalinformation":[window.store1,window.schema,window.uischema],
+							    "scope":[window.store2,window.schema2,window.uischema2],
+							    "databackground":[window.store6,window.schema6,window.uischema6],
+							    "modelmath":[window.store17,window.schema17,window.uischema17]
+							  }
 		window.autocomplete = autocomplete;
 		$.each(autoCompleteCB, function(index, value) {
 			var ID = '#/properties/' + value;
-			autocomplete(document.getElementById(ID), autoCompleteArray[index],
-					autoCompleteStores[index], autoCompleteSchemas[index],
-					autoCompleteUischema[index], autoCompleteCB[index]);
+			try {
+				autocomplete(modelAutoCompleteCB[index],document.getElementById(ID),
+						autoCompleteArray[index],
+
+						autoCompleteStores[index], autoCompleteSchemas[index],
+						autoCompleteUischema[index], autoCompleteCB[index]);
+
+			} catch (error) {
+			}
 
 		})
 
@@ -1344,7 +1557,7 @@ fskeditorjs = function() {
 			fixInputCSS($(event.target));
 
 		});
-
+		
 		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
 		$(".notReplace button[aria-describedby*='tooltip-add']").off("click");
 		$("div[role*='tooltip']:contains('should match format')").parent()
@@ -1359,47 +1572,86 @@ fskeditorjs = function() {
 		reDesign("scope");
 		reDesign("databackground");
 		reDesign("modelMath");
-		$(document).ready(function() {
-		    //Helper function to keep table row from collapsing when being sorted
-			table = $($($(".control-labelal:contains('Parameter')")[15]).parent().parent().parent().parent().parent().find('.table-responsive')[0])
-			table.attr("id", "Parametertable")
-			var fixHelperModified = function(e, tr) {
-				var $originals = tr.children();
-				var $helper = tr.clone();
-				$helper.children().each(function(index)
-				{
-				  $(this).width($originals.eq(index).width())
-				});
-				return $helper;
-			},updateIndex = function(e, ui) {
-		         $('td.index', ui.item.parent()).each(function(i) {
-		             $(this).html(i + 1);
-		          });
-		       }
-		     
-			//Make Parameter table sortable
-			$(table.find('tbody')[0]).sortable({
-		    	helper: fixHelperModified,
-				stop: function(event,ui) {
-					updateIndex(event,ui);
-					console.log(event,ui);
-					newParameterList = [];
-					table.find('tr').each(function (index, value){
-						if(index > 0){
-							$(window.store17.getState().jsonforms.core.data.parameter).each(function(index, valuex){
-									console.log("valuex",valuex.parameterID,$(value).find("input[id='#/properties/parameterIDtable']").first().val())
-									if(valuex.parameterID == $(value).find("input[id='#/properties/parameterIDtable']").first().val()){
-										newParameterList.push(valuex);
-									}
-							});
-							console.log($(value).find("input[id='#/properties/parameterIDtable']").first().val());
-						}
-					});
-					window.store17.getState().jsonforms.core.data.parameter = newParameterList; 
-				}
-			}).disableSelection();
+		$(document)
+				.ready(
+						function() {
+							// Helper function to keep table row from collapsing
+							// when being sorted
+							table = $($(
+									$(".control-labelal:contains('Parameter')")[15])
+									.parent().parent().parent().parent()
+									.parent().find('.table-responsive')[0])
+							table.attr("id", "Parametertable")
+							var fixHelperModified = function(e, tr) {
+								var $originals = tr.children();
+								var $helper = tr.clone();
+								$helper.children().each(function(index) {
+									$(this).width($originals.eq(index).width())
+								});
+								return $helper;
+							}, updateIndex = function(e, ui) {
+								$('td.index', ui.item.parent()).each(
+										function(i) {
+											$(this).html(i + 1);
+										});
+							}
 
-		});
+							// Make Parameter table sortable
+							$(table.find('tbody')[0])
+									.sortable(
+											{
+												helper : fixHelperModified,
+												stop : function(event, ui) {
+													updateIndex(event, ui);
+													newParameterList = [];
+													table
+															.find('tr')
+															.each(
+																	function(
+																			index,
+																			value) {
+																		if (index > 0) {
+																			$(
+																					window.store17
+																							.getState().jsonforms.core.data.parameter)
+																					.each(
+																							function(
+																									index,
+																									valuex) {
+																								console
+																										.log(
+																												"valuex",
+																												valuex.parameterID,
+																												$(
+																														value)
+																														.find(
+																																"input[id='#/properties/parameterIDtable']")
+																														.first()
+																														.val())
+																								if (valuex.parameterID == $(
+																										value)
+																										.find(
+																												"input[id='#/properties/parameterIDtable']")
+																										.first()
+																										.val()) {
+																									newParameterList
+																											.push(valuex);
+																								}
+																							});
+																			console
+																					.log($(
+																							value)
+																							.find(
+																									"input[id='#/properties/parameterIDtable']")
+																							.first()
+																							.val());
+																		}
+																	});
+													window.store17.getState().jsonforms.core.data.parameter = newParameterList;
+												}
+											}).disableSelection();
+
+						});
 
 	}
 
@@ -1424,14 +1676,13 @@ fskeditorjs = function() {
 					// filter out all emfforms of modals
 					return $(element).parents('.modal-dialog').length <= 0;
 
-				}).each(
-						function(index, element) {
-							 $(element).addClass('selectedParent');
-						})
+				})
+				.each(function(index, element) {
+					$(element).addClass('selectedParent');
+				})
 				.each(
 						function(index, element) {
-							if($(element).parents().hasClass('selectedParent')){
-								console.log(element);
+							if ($(element).parents().hasClass('selectedParent')) {
 								return;
 							}
 							// console.log($(element));

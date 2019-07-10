@@ -19,8 +19,11 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.awt.BorderLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -39,6 +42,8 @@ import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -72,6 +77,8 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.FBrowseButton;
 class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
   private FSKEditorJSNodeSettings settings;
+  
+  private final DefaultComboBoxModel<String> modeltype;
   private final FilesHistoryPanel m_readmePanel;
   private final FilesHistoryPanel m_workingDirectoryPanel;
   private final FlowVariableModel directoryVariable;
@@ -81,9 +88,14 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
   private JPanel container = new JPanel();
   private File currentWorkingDirectory;
   private WorkingDirectoryChangeListener changeListener = new WorkingDirectoryChangeListener();
-
+  String [] modelTypes = {"GenericModel","DataModel","PredictiveModel","ExposureModel","ToxicologicalModel","DoseResponseModel","ProcessModel",
+      "ConsumptionModel","HealthModel","RiskModel","QraModel","OtherModel"};
   public FSKEditorJSNodeDialog() {
     settings = new FSKEditorJSNodeSettings();
+    modeltype = new DefaultComboBoxModel<>();
+    for(String modelType: modelTypes) {
+      modeltype.addElement(modelType);
+    }
     FlowVariableModel readmeVariable = createFlowVariableModel("readme", FlowVariable.Type.STRING);
     m_readmePanel =
         new FilesHistoryPanel(readmeVariable, "readme", LocationValidation.None, ".txt");
@@ -101,9 +113,9 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
       throws NotConfigurableException {
     try {
       this.settings.load(settings);
-
+      modeltype.setSelectedItem(this.settings.modelType);
       m_readmePanel.setSelectedFile(this.settings.getReadme());
-
+      
       m_workingDirectoryPanel.setSelectedFile(this.settings.getWorkingDirectory());
 
       if (!m_workingDirectoryPanel.getSelectedFile().toString().isEmpty()) {
@@ -182,7 +194,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     } catch (IOException | URISyntaxException e) {
       e.printStackTrace();
     }
-    
+    this.settings.modelType = (String) modeltype.getSelectedItem();
     this.settings = editorSettings;
   }
 
@@ -204,7 +216,22 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     final NodeContext nodeContext = NodeContext.getContext();
     final WorkflowManager wfm = nodeContext.getWorkflowManager();
     final WorkflowContext workflowContext = wfm.getContext();
-
+    final JPanel modelTypePanel = new JPanel(new BorderLayout());
+    modelTypePanel
+        .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Model Type:"));
+    JComboBox combo = new JComboBox<>(modeltype);
+    combo.addItemListener(new ItemListener() {
+      
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        settings.modelType = (String) e.getItem();
+        
+      }
+    });
+    modelTypePanel.add(combo, BorderLayout.NORTH);
+    modelTypePanel.add(Box.createHorizontalGlue());
+    
+    
     final JPanel readmePanel = new JPanel(new BorderLayout());
     readmePanel
         .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Readme:"));
@@ -278,6 +305,8 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     });
 
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+  
+    container.add(modelTypePanel);
     container.add(readmePanel);
     container.add(workingDirectoryPanel);
     JPanel fileSelector = new JPanel(new BorderLayout());
@@ -295,6 +324,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
 
     container.add(fileSelector);
 
+    
     addTab("Options", container);
   }
 

@@ -75,11 +75,14 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.DataBackground;
 import metadata.GeneralInformation;
 import metadata.MetadataPackage;
 import metadata.ModelMath;
 import metadata.Scope;
+import metadata.SwaggerUtil;
 
 
 /**
@@ -157,8 +160,7 @@ final class FSKEditorJSNodeModel
   }
 
   @Override
-  public void saveCurrentValue(NodeSettingsWO content) {
-  }
+  public void saveCurrentValue(NodeSettingsWO content) {}
 
   @Override
   public FSKEditorJSViewValue getViewValue() {
@@ -248,18 +250,15 @@ final class FSKEditorJSNodeModel
     // Clone input object
     synchronized (getLock()) {
       FSKEditorJSViewValue fskEditorProxyValue = getViewValue();
-
+      fskEditorProxyValue.modelType = nodeSettings.modelType;
       // If not executed
 
-      if (fskEditorProxyValue.generalInformation == null) {
-        if(inObjects[0] == null) {
+      if (fskEditorProxyValue.modelMetaData == null) {
+        if (inObjects[0] == null) {
           loadJsonSetting();
         }
-        if (fskEditorProxyValue.generalInformation == null) {
-          fskEditorProxyValue.generalInformation = FromEOjectToJSON(inObj1.generalInformation);
-          fskEditorProxyValue.scope = FromEOjectToJSON(inObj1.scope);
-          fskEditorProxyValue.dataBackground = FromEOjectToJSON(inObj1.dataBackground);
-          fskEditorProxyValue.modelMath = FromEOjectToJSON(inObj1.modelMath);
+        if (fskEditorProxyValue.modelMetaData == null) {
+          fskEditorProxyValue.modelMetaData = FromOjectToJSON(inObj1.modelMetadata);
           fskEditorProxyValue.firstModelScript = inObj1.model;
           fskEditorProxyValue.firstModelViz = inObj1.viz;
           fskEditorProxyValue.readme = inObj1.getReadme();
@@ -275,17 +274,12 @@ final class FSKEditorJSNodeModel
       }
       outObj = inObj1;
 
-      outObj.generalInformation =
-          getEObjectFromJson(fskEditorProxyValue.generalInformation, GeneralInformation.class);
-      outObj.scope = getEObjectFromJson(fskEditorProxyValue.scope, Scope.class);
-      outObj.dataBackground =
-          getEObjectFromJson(fskEditorProxyValue.dataBackground, DataBackground.class);
-      outObj.modelMath = getEObjectFromJson(fskEditorProxyValue.modelMath, ModelMath.class);
+      outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.modelMetaData, Model.class);
 
+      List<Parameter> parametersList = SwaggerUtil.getParameter(outObj.modelMetadata);
       // Create simulation
-      if (outObj.modelMath.getParameter() != null && outObj.modelMath.getParameter().size() > 0) {
-        FskSimulation defaultSimulation =
-            NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter());
+      if (parametersList != null && parametersList.size() > 0) {
+        FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(parametersList);
         if (outObj.simulations.size() > 0) {
           List<FskSimulation> defaultSim =
               outObj.simulations.stream().filter(sim -> "defaultSimulation".equals(sim.getName()))
@@ -296,8 +290,7 @@ final class FSKEditorJSNodeModel
         }
         outObj.simulations.add(0, defaultSimulation);
       } else {
-        outObj.simulations.add(0,
-            NodeUtils.createDefaultSimulation(outObj.modelMath.getParameter()));
+        outObj.simulations.add(0, NodeUtils.createDefaultSimulation(parametersList));
       }
 
       outObj.model = fskEditorProxyValue.firstModelScript;
@@ -367,13 +360,13 @@ final class FSKEditorJSNodeModel
     return new PortObject[] {outObj};
   }
 
-  private static String FromEOjectToJSON(final EObject eObject) throws JsonProcessingException {
+  private static String FromOjectToJSON(final Object object) throws JsonProcessingException {
     ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    String jsonStr = objectMapper.writeValueAsString(eObject);
+    String jsonStr = objectMapper.writeValueAsString(object);
     return jsonStr;
   }
 
-  private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType)
+  private static <T> T getObjectFromJson(String jsonStr, Class<T> valueType)
       throws InvalidSettingsException {
     final ResourceSet resourceSet = new ResourceSetImpl();
     ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
@@ -396,16 +389,12 @@ final class FSKEditorJSNodeModel
   @Override
   protected void performReset() {
     m_port = null;
-    nodeSettings.generalInformation = "";
-    nodeSettings.scope = "";
-    nodeSettings.dataBackground = "";
-    nodeSettings.modelMath = "";
+    nodeSettings.modelMetaData = "";
     nodeSettings.setReadme("");
   }
 
   @Override
-  protected void useCurrentValueAsDefault() {
-  }
+  protected void useCurrentValueAsDefault() {}
 
   @Override
   protected void saveSettingsTo(NodeSettingsWO settings) {
@@ -418,7 +407,7 @@ final class FSKEditorJSNodeModel
      */
     try {
       FSKEditorJSViewValue vv = getViewValue();
-      saveJsonSetting(vv.generalInformation, vv.scope, vv.dataBackground, vv.modelMath,
+      saveJsonSetting(vv.modelMetaData,
           vv.firstModelScript, vv.firstModelViz, vv.readme);
     } catch (IOException | CanceledExecutionException e) {
       e.printStackTrace();
@@ -429,6 +418,7 @@ final class FSKEditorJSNodeModel
   protected void loadValidatedSettingsFrom(NodeSettingsRO settings)
       throws InvalidSettingsException {
     try {
+      nodeSettings.load(settings);
       loadJsonSetting();
     } catch (IOException | CanceledExecutionException e) {
       // TODO Auto-generated catch block
@@ -447,28 +437,22 @@ final class FSKEditorJSNodeModel
     File settingFolder = new File(settingFolderPath);
 
     // Read configuration strings
-    nodeSettings.generalInformation = NodeUtils.readConfigString(settingFolder, "generalInformation.json");
-    nodeSettings.scope = NodeUtils.readConfigString(settingFolder, "scope.json");
-    nodeSettings.dataBackground = NodeUtils.readConfigString(settingFolder, "dataBackground.json");
-    nodeSettings.modelMath = NodeUtils.readConfigString(settingFolder, "modelMath.json");
+    nodeSettings.modelMetaData =
+        NodeUtils.readConfigString(settingFolder, "modelMetaData.json");
     String modelScript = NodeUtils.readConfigString(settingFolder, "modelScript.txt");
     String visualizationScript = NodeUtils.readConfigString(settingFolder, "visualization.txt");
     String readme = NodeUtils.readConfigString(settingFolder, "readme.txt");
 
     // Update view value
     FSKEditorJSViewValue viewValue = getViewValue();
-    viewValue.generalInformation = nodeSettings.generalInformation;
-    viewValue.scope = nodeSettings.scope;
-    viewValue.dataBackground = nodeSettings.dataBackground;
-    viewValue.modelMath = nodeSettings.modelMath;
+    viewValue.modelMetaData = nodeSettings.modelMetaData;
     viewValue.firstModelScript = modelScript;
     viewValue.firstModelViz = visualizationScript;
     viewValue.readme = readme;
   }
 
-  protected void saveJsonSetting(String generalInformation, String scope, String dataBackground,
-      String modelMath, String modelScript, String visualizationScript, String readme)
-      throws IOException, CanceledExecutionException {
+  protected void saveJsonSetting(String modelMetaData, String modelScript,
+      String visualizationScript, String readme) throws IOException, CanceledExecutionException {
     File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
     String name = NodeContext.getContext().getNodeContainer().getName();
@@ -481,18 +465,14 @@ final class FSKEditorJSNodeModel
       settingFolder.mkdir();
     }
 
-    NodeUtils.writeConfigString(generalInformation, settingFolder, "generalInformation.json");
-    NodeUtils.writeConfigString(scope, settingFolder, "scope.json");
-    NodeUtils.writeConfigString(dataBackground, settingFolder, "dataBackground.json");
-    NodeUtils.writeConfigString(modelMath, settingFolder, "modelMath.json");
+    NodeUtils.writeConfigString(modelMetaData, settingFolder, "modelMetaData.json");
     NodeUtils.writeConfigString(modelScript, settingFolder, "modelScript.txt");
     NodeUtils.writeConfigString(visualizationScript, settingFolder, "visualization.txt");
     NodeUtils.writeConfigString(readme, settingFolder, "readme.txt");
   }
 
   @Override
-  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {
-  }
+  protected void validateSettings(NodeSettingsRO settings) throws InvalidSettingsException {}
 
   @Override
   public PortObject[] getInternalPortObjects() {
@@ -504,6 +484,5 @@ final class FSKEditorJSNodeModel
     m_port = (FskPortObject) portObjects[0];
   }
 
-  public void setHideInWizard(boolean hide) {
-  }
+  public void setHideInWizard(boolean hide) {}
 }

@@ -36,17 +36,11 @@ class FSKEditorJSViewValue extends JSONViewContent {
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT = "originalVisualizationScript";
   private static final String CFG_ORIGINAL_README = "README";
 
-  private static final String CFG_GENERAL_INFORMATION = "generalInformation";
-  private static final String CFG_SCOPE = "scope";
-  private static final String CFG_DATA_BACKGROUND = "dataBackground";
-  private static final String CFG_MODEL_MATH = "modelMath";
+  private static final String CFG_MODEL_METADATA = "ModelMetaData";
 
   public final int pseudoIdentifier = (new Random()).nextInt();
 
-  public String generalInformation;
-  public String scope;
-  public String dataBackground;
-  public String modelMath;
+  public String modelMetaData;
 
   public String firstModelScript;
   public String firstModelViz;
@@ -56,6 +50,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
   public String serverName;
   public boolean notCompleted;
   public String validationErrors;
+  public String modelType ;
 
   @Override
   public void saveToNodeSettings(NodeSettingsWO settings) {
@@ -63,10 +58,8 @@ class FSKEditorJSViewValue extends JSONViewContent {
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
     settings.addString(CFG_ORIGINAL_README, readme);
 
-    saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
-    saveSettings(settings, CFG_SCOPE, scope);
-    saveSettings(settings, CFG_DATA_BACKGROUND, dataBackground);
-    saveSettings(settings, CFG_MODEL_MATH, modelMath);
+    saveSettings(settings, CFG_MODEL_METADATA, modelMetaData);
+   
   }
 
   @Override
@@ -76,10 +69,8 @@ class FSKEditorJSViewValue extends JSONViewContent {
     readme = settings.getString(CFG_ORIGINAL_README);
 
     // load meta data
-    generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION);
-    scope = getEObject(settings, CFG_SCOPE);
-    dataBackground = getEObject(settings, CFG_DATA_BACKGROUND);
-    modelMath = getEObject(settings, CFG_MODEL_MATH);
+    modelMetaData = getEObject(settings, CFG_MODEL_METADATA);
+   
   }
 
   private static void saveSettings(final NodeSettingsWO settings, final String key,
