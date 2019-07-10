@@ -23,8 +23,8 @@ import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
-import metadata.Parameter;
-import metadata.ParameterClassification;
+import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
 
 public class NodeUtils {
 
@@ -159,13 +159,13 @@ public class NodeUtils {
 
   public static FskSimulation createDefaultSimulation(List<Parameter> parameters) {
 
-    FskSimulation defaultSimulation = new FskSimulation(DEFAULT_SIMULATION);
+    FskSimulation simulation = new FskSimulation(DEFAULT_SIMULATION);
 
-    // The parameters need to be inserted in order
-    parameters.stream()
-        .filter(it -> it.getParameterClassification() != ParameterClassification.OUTPUT).forEach(
-            p -> defaultSimulation.getParameters().put(p.getParameterID(), p.getParameterValue()));
-    return defaultSimulation;
+    // The parameters to be inserted in order
+    parameters.stream().filter(p -> p.getClassification() != ClassificationEnum.OUTPUT)
+        .forEach(p -> simulation.getParameters().put(p.getId(), p.getValue()));
+
+    return simulation;
   }
 
   /** Builds string with R parameters script out. */
