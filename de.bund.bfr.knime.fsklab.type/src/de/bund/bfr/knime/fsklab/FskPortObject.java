@@ -513,10 +513,11 @@ public class FskPortObject implements PortObject {
 		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false, false);
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String jsonInString = gson.toJson(modelMetadata);
-	    String modelMetadataAsJSON = gson.toJson(jsonInString);
+		String modelMetadataAsJSON = gson.toJson(jsonInString);
 
 		JTextArea tree = new JTextArea(modelMetadataAsJSON);
-		//JTree tree = MetadataTree.createTree(generalInformation, scope, dataBackground, modelMath);
+		// JTree tree = MetadataTree.createTree(generalInformation, scope,
+		// dataBackground, modelMath);
 		final JScrollPane metaDataPane = new JScrollPane(tree);
 		metaDataPane.setName("Meta data");
 
