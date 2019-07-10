@@ -16,11 +16,11 @@ import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.plot.BasePlotter;
 import de.bund.bfr.knime.fsklab.nodes.plot.Ggplot2Plotter;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
+import metadata.SwaggerUtil;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 import de.bund.bfr.knime.fsklab.r.client.ScriptExecutor;
-import metadata.Parameter;
-import metadata.ParameterClassification;
+import de.bund.bfr.metadata.swagger.Parameter;
 
 public class RScriptHandler extends ScriptHandler {
 
@@ -80,10 +80,10 @@ public class RScriptHandler extends ScriptHandler {
     }
 
     String output_lst = "";
-    List<Parameter> paras = fskObj.modelMath.getParameter();
+    List<Parameter> paras = SwaggerUtil.getParameter(fskObj.modelMetadata);
     for (Parameter p : paras) {
-      if (p.getParameterClassification() == ParameterClassification.OUTPUT) {
-        output_lst += p.getParameterName() + "= " + p.getParameterName() + ",";
+      if (p.getClassification() == Parameter.ClassificationEnum.OUTPUT) {
+        output_lst += p.getName() + "= " + p.getName() + ",";
       }
     }
 

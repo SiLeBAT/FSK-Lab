@@ -48,7 +48,6 @@ import org.jlibsedml.Annotation;
 import org.jlibsedml.ChangeAttribute;
 import org.jlibsedml.DataGenerator;
 import org.jlibsedml.Libsedml;
-import org.jlibsedml.Model;
 import org.jlibsedml.Plot2D;
 import org.jlibsedml.SEDMLDocument;
 import org.jlibsedml.SedML;
@@ -81,7 +80,6 @@ import org.sbml.jsbml.xml.XMLAttributes;
 import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
@@ -96,13 +94,9 @@ import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
 import de.unirostock.sems.cbarchive.meta.MetaDataObject;
-import metadata.DataBackground;
-import metadata.GeneralInformation;
-import metadata.MetadataPackage;
-import metadata.ModelMath;
-import metadata.Parameter;
-import metadata.ParameterClassification;
-import metadata.Scope;
+import metadata.SwaggerUtil;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.Parameter;
 
 class WriterNodeModel extends NoInternalsModel {
 
@@ -171,8 +165,7 @@ class WriterNodeModel extends NoInternalsModel {
     }
 
     // Adds model metadata
-    addMetaData(archive, fskObj.generalInformation, fskObj.scope, fskObj.dataBackground,
-        fskObj.modelMath, filePrefix + "metaData.json");
+    addMetaData(archive, fskObj.modelMetadata, filePrefix + "metaData.json");
 
     // If the model has an associated working directory with resources these resources
     // need to be saved into the archive.
@@ -267,8 +260,7 @@ class WriterNodeModel extends NoInternalsModel {
     }
 
     // Adds model metadata of combined model
-    addMetaData(archive, fskObj.generalInformation, fskObj.scope, fskObj.dataBackground,
-        fskObj.modelMath, filePrefix + "metaData.json");
+    addMetaData(archive, fskObj.modelMetadata, filePrefix + "metaData.json");
     // Add combined simulations
     {
       SEDMLDocument sedmlDoc = createSedml(fskObj);
@@ -284,7 +276,7 @@ class WriterNodeModel extends NoInternalsModel {
   protected PortObject[] execute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
 
     FskPortObject in = (FskPortObject) inObjects[0];
-    scriptHandler = ScriptHandler.createHandler(in.generalInformation.getLanguageWrittenIn(), in.packages);
+    scriptHandler = ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(in.modelMetadata), in.packages);
     URL url = FileUtil.toURL(nodeSettings.filePath);
     Path localPath = FileUtil.resolveToPath(url);
 
@@ -395,10 +387,10 @@ class WriterNodeModel extends NoInternalsModel {
         JsonArray packageJsonArray = rBuilder.build();
         JsonObjectBuilder mainBuilder = Json.createObjectBuilder();
         // TODO is this accepted to put R as default language?
-        if (StringUtils.isBlank(portObject.generalInformation.getLanguageWrittenIn())) {
+        if (StringUtils.isBlank(SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata))) {
           mainBuilder.add("Language", "R");
         } else {
-          mainBuilder.add("Language", portObject.generalInformation.getLanguageWrittenIn());
+          mainBuilder.add("Language", SwaggerUtil.getLanguageWrittenIn(portObject.modelMetadata));
         }
         mainBuilder.add("PackageList", packageJsonArray);
         JsonObject packageList = mainBuilder.build();
@@ -433,7 +425,7 @@ class WriterNodeModel extends NoInternalsModel {
   }
 
   public static String normalizeName(FskPortObject fskObj) {
-    return fskObj.generalInformation.getName().replaceAll("\\W", "").replace(" ", "");
+    return SwaggerUtil.getModelName(fskObj.modelMetadata).replaceAll("\\W", "").replace(" ", "");
   }
 
   private static SBMLDocument createSBML(FskPortObject fskObj, CombineArchive archive,
@@ -451,11 +443,12 @@ class WriterNodeModel extends NoInternalsModel {
         CompModelPlugin compMainModel = (CompModelPlugin) fskmodel.getPlugin("comp");
 
         FskPortObject firstFskObj = comFskObj.getFirstFskPortObject();
+        
         SBMLDocument doc1 =
             createSBML(firstFskObj, archive, normalizeName(firstFskObj), URIS, filePrefix);
         String doc1FileName = writeSBMLFile(doc1, archive,
             filePrefix + normalizeName(firstFskObj) + System.getProperty("file.separator"), URIS);
-        createExtSubModel(doc1, doc1FileName, filePrefix + firstFskObj.generalInformation.getName(),
+        createExtSubModel(doc1, doc1FileName, filePrefix + SwaggerUtil.getModelName(firstFskObj.modelMetadata),
             compDoc, compMainModel, SUB_MODEL1);
 
         FskPortObject secondFskObj = comFskObj.getSecondFskPortObject();
@@ -464,7 +457,7 @@ class WriterNodeModel extends NoInternalsModel {
         String doc2FileName = writeSBMLFile(doc2, archive,
             filePrefix + normalizeName(secondFskObj) + System.getProperty("file.separator"), URIS);
         createExtSubModel(doc2, doc2FileName,
-            filePrefix + secondFskObj.generalInformation.getName(), compDoc, compMainModel,
+            filePrefix + SwaggerUtil.getModelName(secondFskObj.modelMetadata), compDoc, compMainModel,
             SUB_MODEL2);
 
         fskmodel.setId(normalizeName(fskObj));
@@ -499,16 +492,16 @@ class WriterNodeModel extends NoInternalsModel {
     } else {
 
       org.sbml.jsbml.Model fskmodel = doc.createModel(ModelId);
-      for (Parameter param : fskObj.modelMath.getParameter()) {
+      for (Parameter param : SwaggerUtil.getParameter(fskObj.modelMetadata) ) {
         org.sbml.jsbml.Parameter sbmlParameter = fskmodel.createParameter();
-        sbmlParameter.setName(param.getParameterName());
-        sbmlParameter.setId(param.getParameterID());
+        sbmlParameter.setName(param.getName());
+        sbmlParameter.setId(param.getId());
         sbmlParameter.setConstant(
-            param.getParameterClassification().equals(ParameterClassification.CONSTANT));
-        if (param.getParameterValue() != null && !param.getParameterValue().equals("")) {
+            param.getClassification().equals(Parameter.ClassificationEnum.CONSTANT));
+        if (param.getValue() != null && !param.getValue().equals("")) {
           org.sbml.jsbml.Annotation annot = sbmlParameter.getAnnotation();
           XMLAttributes attrs = new XMLAttributes();
-          attrs.add("value", param.getParameterValue());
+          attrs.add("value", param.getValue());
           XMLNode parameterNode =
               new XMLNode(new XMLTriple(METADATA_TAG, null, METADATA_NS), attrs);
           annot.appendNonRDFAnnotation(parameterNode);
@@ -554,20 +547,14 @@ class WriterNodeModel extends NoInternalsModel {
   }
 
   private static ArchiveEntry addMetaData(CombineArchive archive,
-      GeneralInformation generalInformation, Scope scope, DataBackground dataBackground,
-      ModelMath modelMath, String filename) throws IOException {
+      Model model, String filename) throws IOException {
 
     ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
-    ObjectNode modelNode = mapper.createObjectNode();
-    modelNode.set("version", mapper.valueToTree(MetadataPackage.eNS_URI));
-    modelNode.set("generalInformation", mapper.valueToTree(generalInformation));
-    modelNode.set("scope", mapper.valueToTree(scope));
-    modelNode.set("dataBackground", mapper.valueToTree(dataBackground));
-    modelNode.set("modelMath", mapper.valueToTree(modelMath));
-
     File file = File.createTempFile("temp", ".json");
-    mapper.writeValue(file, modelNode);
+    
+    mapper.writeValue(file, model);
+
 
     ArchiveEntry entry = archive.addEntry(file, filename, FSKML.getURIS(1, 0, 12).get("json"));
     file.delete();
@@ -596,14 +583,14 @@ class WriterNodeModel extends NoInternalsModel {
     SEDMLDocument doc = Libsedml.createDocument();
     SedML sedml = doc.getSedMLModel();
 
-    for (Parameter param : portObj.modelMath.getParameter()) {
+    for (Parameter param : SwaggerUtil.getParameter(portObj.modelMetadata)) {
       // Ignore not output parameters (inputs or constants)
-      if (param.getParameterClassification() != ParameterClassification.CONSTANT) {
+      if (param.getClassification() != Parameter.ClassificationEnum.CONSTANT) {
         continue;
       }
 
-      ASTNode node = Libsedml.parseFormulaString(param.getParameterID());
-      DataGenerator dg = new DataGenerator(param.getParameterID(), "", node);
+      ASTNode node = Libsedml.parseFormulaString(param.getId());
+      DataGenerator dg = new DataGenerator(param.getId(), "", node);
       sedml.addDataGenerator(dg);
     }
 
@@ -623,7 +610,7 @@ class WriterNodeModel extends NoInternalsModel {
     for (FskSimulation fskSimulation : portObj.simulations) {
 
       // Add model
-      Model model = new Model(fskSimulation.getName(), "",
+      org.jlibsedml.Model model = new org.jlibsedml.Model(fskSimulation.getName(), "",
           "https://iana.org/assignments/mediatypes/text/x-"+scriptHandler.getFileExtension(), "./model."+scriptHandler.getFileExtension());
       sedml.addModel(model);
 

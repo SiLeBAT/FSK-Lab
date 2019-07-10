@@ -21,7 +21,9 @@ package de.bund.bfr.knime.fsklab;
 import org.emfjson.jackson.module.EMFModule;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import metadata.Parameter;
+
+import de.bund.bfr.metadata.swagger.Parameter;
+
 
 /**
  * An object that describe the relation between two FSK Objects.

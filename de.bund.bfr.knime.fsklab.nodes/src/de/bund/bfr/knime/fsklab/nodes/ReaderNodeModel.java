@@ -63,7 +63,7 @@ import org.knime.core.util.FileUtil;
 import org.sbml.jsbml.Annotation;
 import org.sbml.jsbml.JSBML;
 import org.sbml.jsbml.ListOf;
-import org.sbml.jsbml.Parameter;
+
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.ext.comp.CompModelPlugin;
 import org.sbml.jsbml.ext.comp.CompSBasePlugin;
@@ -82,16 +82,16 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
-import de.bund.bfr.knime.fsklab.rakip.GenericModel;
+
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
+import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.Parameter;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.MetaDataObject;
-import metadata.DataBackground;
-import metadata.GeneralInformation;
-import metadata.MetadataFactory;
-import metadata.ModelMath;
-import metadata.Scope;
+import metadata.SwaggerUtil;
+
 
 class ReaderNodeModel extends NoInternalsModel {
 
@@ -241,10 +241,7 @@ class ReaderNodeModel extends NoInternalsModel {
 
     final Path workingDirectory = currentWorkingDirectory.toPath();
 
-    GeneralInformation generalInformation = MetadataFactory.eINSTANCE.createGeneralInformation();
-    Scope scope = MetadataFactory.eINSTANCE.createScope();
-    DataBackground dataBackground = MetadataFactory.eINSTANCE.createDataBackground();
-    ModelMath modelMath = MetadataFactory.eINSTANCE.createModelMath();
+    Model model = new Model();
 
 
     // more one than one element means this model is joined one
@@ -283,13 +280,13 @@ class ReaderNodeModel extends NoInternalsModel {
             final ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
 
             JsonNode modelNode = mapper.readTree(temp.toFile());
-
-            generalInformation =
-                mapper.treeToValue(modelNode.get("generalInformation"), GeneralInformation.class);
-            scope = mapper.treeToValue(modelNode.get("scope"), Scope.class);
-            dataBackground =
-                mapper.treeToValue(modelNode.get("dataBackground"), DataBackground.class);
-            modelMath = mapper.treeToValue(modelNode.get("modelMath"), ModelMath.class);
+            model = mapper.treeToValue(modelNode.get("modelType"), Model.class);
+//            generalInformation =
+//                mapper.treeToValue(modelNode.get("generalInformation"), GeneralInformation.class);
+//            scope = mapper.treeToValue(modelNode.get("scope"), Scope.class);
+//            dataBackground =
+//                mapper.treeToValue(modelNode.get("dataBackground"), DataBackground.class);
+//            modelMath = mapper.treeToValue(modelNode.get("modelMath"), ModelMath.class);
 
           }
         }
@@ -319,7 +316,7 @@ class ReaderNodeModel extends NoInternalsModel {
         }
 
         if (parentSBMLDoc != null) {
-          ListOf<Parameter> params = parentSBMLDoc.getModel().getListOfParameters();
+          ListOf<org.sbml.jsbml.Parameter> params = parentSBMLDoc.getModel().getListOfParameters();
           CompModelPlugin subModels =
               (CompModelPlugin) parentSBMLDoc.getModel().getExtension("comp");
           List<Submodel> listOfSubModels = subModels.getListOfSubmodels();
@@ -327,16 +324,16 @@ class ReaderNodeModel extends NoInternalsModel {
             firstModelId = listOfSubModels.get(0).getModelRef();
           }
           // String s = subModels.getReplacedBy().getIdRef();
-          for (Parameter param : params) {
+          for (org.sbml.jsbml.Parameter param : params) {
             JoinRelation jR = new JoinRelation();
 
-            List<metadata.Parameter> coll =
-                secondFskPortObject.modelMath.getParameter().stream().filter(cp -> {
-                  String paramId = cp.getParameterID();
+            List<Parameter> coll =
+                SwaggerUtil.getParameter(secondFskPortObject.modelMetadata).stream().filter(cp -> {
+                  String paramId = cp.getId();
                   String compareTo = param.getId();
                   if (paramId.replaceAll(JoinerNodeModel.suffix, "")
                       .equals(compareTo.replaceAll(JoinerNodeModel.suffix, ""))) {
-                    cp.setParameterID(param.getId());
+                    cp.setId(param.getId());
                     return true;
                   } else {
                     return false;
@@ -346,22 +343,22 @@ class ReaderNodeModel extends NoInternalsModel {
             if (coll.size() == 0) {
               continue;
             }
-            metadata.Parameter targetParam = coll.get(0);
+            Parameter targetParam = coll.get(0);
             jR.setTargetParam(targetParam);
             CompSBasePlugin a = (CompSBasePlugin) param.getExtension("comp");
             String replacmentLement = a.getReplacedBy().getIdRef();
-            metadata.Parameter sourceParam =
-                firstFskPortObject.modelMath.getParameter().stream().filter(cp -> {
-                  String paramId = cp.getParameterID();
+            Parameter sourceParam =
+                SwaggerUtil.getParameter(firstFskPortObject.modelMetadata).stream().filter(cp -> {
+                  String paramId = cp.getId();
                   if (paramId.replaceAll(JoinerNodeModel.suffix, "")
                       .equals(replacmentLement.replaceAll(JoinerNodeModel.suffix, ""))) {
-                    cp.setParameterID(a.getReplacedBy().getIdRef());
+                    cp.setId(a.getReplacedBy().getIdRef());
                     return true;
                   } else {
                     return false;
                   }
 
-                }).filter(cp -> cp.getParameterID().equals(replacmentLement))
+                }).filter(cp -> cp.getId().equals(replacmentLement))
                     .collect(Collectors.toList()).get(0);
             jR.setSourceParam(sourceParam);
             Annotation annotation = param.getAnnotation();
@@ -402,7 +399,7 @@ class ReaderNodeModel extends NoInternalsModel {
         }
       }
       CombinedFskPortObject topfskObj;
-      String currentModelID = firstFskPortObject.generalInformation.getName().replaceAll("\\W", "");
+      String currentModelID = SwaggerUtil.getModelName(firstFskPortObject.modelMetadata).replaceAll("\\W", "");
       if (currentModelID.equals(firstModelId)) {
         topfskObj = new CombinedFskPortObject("", "", generalInformation, scope, dataBackground,
             modelMath, workingDirectory.toString(), new ArrayList<>(), firstFskPortObject,
@@ -497,14 +494,19 @@ class ReaderNodeModel extends NoInternalsModel {
             JsonNode modelNode = mapper.readTree(temp.toFile());
             Object version = modelNode.get("version");
 
+            
             if (version != null) {
-              generalInformation =
-                  mapper.treeToValue(modelNode.get("generalInformation"), GeneralInformation.class);
-              scope = mapper.treeToValue(modelNode.get("scope"), Scope.class);
-              dataBackground =
-                  mapper.treeToValue(modelNode.get("dataBackground"), DataBackground.class);
-              modelMath = mapper.treeToValue(modelNode.get("modelMath"), ModelMath.class);
+              // 1.0.3 (with EMF)
+              
+              GenericModel gm = new GenericModel();
+              gm.setModelType("genericModel");
+              gm.setGeneralInformation(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("generalInformation"), metadata.GeneralInformation.class)));
+              gm.setScope(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("scope"), metadata.Scope.class)));
+              gm.setDataBackground(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("dataBackground"), metadata.DataBackground.class)));
+              gm.setModelMath(SwaggerUtil.convert(mapper.treeToValue(modelNode.get("modelMath"), metadata.ModelMath.class)));
+              
             } else {
+              // pre Rakip
               modelNode = mapper.readTree(temp.toFile());
               GenericModel genericModel = mapper.readValue(temp.toFile(), GenericModel.class);
               generalInformation = RakipUtil.convert(genericModel.generalInformation);
@@ -568,8 +570,7 @@ class ReaderNodeModel extends NoInternalsModel {
       // empty string is used.
       String plotPath = "";
 
-      FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript, generalInformation,
-          scope, dataBackground, modelMath, workspacePath, packagesList,
+      FskPortObject fskObj = new FskPortObject(modelScript, visualizationScript, model, workspacePath, packagesList,
           workingDirectory.toString(), plotPath, readme, spreadsheetPath);
       fskObj.simulations.addAll(simulations);
       fskObj.selectedSimulationIndex = selectedIndex;
