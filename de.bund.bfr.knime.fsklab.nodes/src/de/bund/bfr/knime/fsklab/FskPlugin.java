@@ -21,8 +21,11 @@ package de.bund.bfr.knime.fsklab;
 import java.util.ResourceBundle;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.emfjson.jackson.module.EMFModule;
-import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.osgi.framework.BundleContext;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
@@ -32,12 +35,16 @@ public class FskPlugin extends AbstractUIPlugin {
   private static FskPlugin plugin;
 
   /**
+   * Object mapper for 1.0.4 classes generated with Swagger at de.bund.bfr.metadata.swagger
+   */
+  public ObjectMapper MAPPER104;
+
+  /**
    * Jackson object mapper with {@link RakipModule}. Initialized with {@link #start(BundleContext)}
    * and assigned null with {@link #stop(BundleContext)}.
    */
   public ObjectMapper OBJECT_MAPPER;
-  public ObjectMapper OLD_OBJECT_MAPPER ;
-  public JsonResourceFactory FACTORY;
+  public ObjectMapper OLD_OBJECT_MAPPER;
 
   public FskPlugin() {
     plugin = this;
@@ -46,11 +53,21 @@ public class FskPlugin extends AbstractUIPlugin {
   @Override
   public void start(BundleContext context) throws Exception {
     super.start(context);
+    
+    // ObjectMapper defaults to use a JsonFactory that automatically closes
+    // the stream. When further entries are added to the archive the stream
+    // is closed and fails. The AUTO_CLOSE_TARGET needs to be disabled.
+    // ThreeTenModule is added for dates and null fields are skipped.
+    JsonFactory jsonFactory = new JsonFactory();
+    jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+    MAPPER104 = new ObjectMapper(jsonFactory);
+    MAPPER104.registerModule(new ThreeTenModule());
+    MAPPER104.setSerializationInclusion(Include.NON_NULL);
 
     OBJECT_MAPPER = EMFModule.setupDefaultMapper();
     OBJECT_MAPPER.registerModule(new ThreeTenModule());
-    
-    FACTORY = new JsonResourceFactory(OBJECT_MAPPER);
+
     OLD_OBJECT_MAPPER = new ObjectMapper().registerModule(new RakipModule());
   }
 

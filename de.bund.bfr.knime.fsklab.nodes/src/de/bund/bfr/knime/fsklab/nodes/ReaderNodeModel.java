@@ -63,7 +63,6 @@ import org.knime.core.util.FileUtil;
 import org.sbml.jsbml.Annotation;
 import org.sbml.jsbml.JSBML;
 import org.sbml.jsbml.ListOf;
-
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.ext.comp.CompModelPlugin;
 import org.sbml.jsbml.ext.comp.CompSBasePlugin;
@@ -82,7 +81,6 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
-
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
@@ -99,7 +97,6 @@ class ReaderNodeModel extends NoInternalsModel {
   private static final PortType[] OUT_TYPES = {FskPortObject.TYPE};
 
   private final ReaderNodeSettings nodeSettings = new ReaderNodeSettings();
-  private static final AtomicLong TEMP_DIR_UNIFIER = new AtomicLong((int) (100000 * Math.random()));
 
   public ReaderNodeModel() {
     super(IN_TYPES, OUT_TYPES);
@@ -512,9 +509,8 @@ class ReaderNodeModel extends NoInternalsModel {
 
             if(modelNode.has("modelType")) {
               Class<? extends Model> modelClass = FskPortObject.Serializer.modelClasses.get(modelNode.get("modelType").asText());
-              model = mapper.readValue(temp.toFile(), modelClass);
-            }
-            if (version != null) {
+              model = FskPlugin.getDefault().MAPPER104.readValue(temp.toFile(), modelClass);
+            } else if (version != null) {
               // 1.0.3 (with EMF)
               
               GenericModel gm = new GenericModel();

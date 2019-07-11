@@ -79,24 +79,28 @@ import org.sbml.jsbml.ext.comp.Submodel;
 import org.sbml.jsbml.xml.XMLAttributes;
 import org.sbml.jsbml.xml.XMLNode;
 import org.sbml.jsbml.xml.XMLTriple;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import de.bund.bfr.fskml.FSKML;
 import de.bund.bfr.fskml.FskMetaDataObject;
 import de.bund.bfr.fskml.FskMetaDataObject.ResourceType;
 import de.bund.bfr.fskml.sedml.SourceScript;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
-import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.JoinRelation;
 import de.bund.bfr.knime.fsklab.r.client.LibRegistry;
+import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.Parameter;
 import de.unirostock.sems.cbarchive.ArchiveEntry;
 import de.unirostock.sems.cbarchive.CombineArchive;
 import de.unirostock.sems.cbarchive.meta.DefaultMetaDataObject;
 import de.unirostock.sems.cbarchive.meta.MetaDataObject;
 import metadata.SwaggerUtil;
-import de.bund.bfr.metadata.swagger.Model;
-import de.bund.bfr.metadata.swagger.Parameter;
 
 class WriterNodeModel extends NoInternalsModel {
 
@@ -335,18 +339,18 @@ class WriterNodeModel extends NoInternalsModel {
 
         archive.addEntry(tempFile, targetName, URIS.get("sbml"));
       }
+      
       // get package version
       try  {
-        //final ScriptExecutor executor = new ScriptExecutor(controller);
+        
         // Gets library URI for the running platform
         final URI libUri = NodeUtils.getLibURI();
         JsonArrayBuilder rBuilder = Json.createArrayBuilder();
         List<String> packagesWithoutInfo = new ArrayList<String>();
+        
         // Adds R libraries and their info
         for (String pkg : portObject.packages) {
           try {
-//            REXP c = executor.execute("packageDescription(\"" + pkg + "\")$Version", exec);
-//            String[] execResult = c.asStrings();
             String command = scriptHandler.getPackageVersionCommand(pkg);
             String[] execResult = scriptHandler.runScript(command, exec, true);
             rBuilder.add(getJsonObject(pkg, execResult[0]));
@@ -360,14 +364,10 @@ class WriterNodeModel extends NoInternalsModel {
             archive.addEntry(file, file.getName(), libUri);
           }
         }
+        
         // try to get package info for libraries not installed yet.
         if (packagesWithoutInfo.size() > 0) {
           try {
-//            String command =
-//                "available.packages(contriburl = contrib.url(c(\"https://cloud.r-project.org/\"), \"both\"))[c('"
-//                    + packagesWithoutInfo.stream().collect(Collectors.joining("','")) + "'),]";
-//            REXP cExternal = executor.execute(command, exec);
-//            String[] execResult = cExternal.asStrings();
             String command = scriptHandler.getPackageVersionCommand(packagesWithoutInfo);
             String[] execResult = scriptHandler.runScript(command, exec, true);
 
@@ -549,7 +549,12 @@ class WriterNodeModel extends NoInternalsModel {
   private static ArchiveEntry addMetaData(CombineArchive archive,
       Model model, String filename) throws IOException {
 
-    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    JsonFactory jsonFactory = new JsonFactory();
+    jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+    ObjectMapper mapper = new ObjectMapper(jsonFactory);
+    mapper.registerModule(new ThreeTenModule());
+    mapper.setSerializationInclusion(Include.NON_NULL);
 
     File file = File.createTempFile("temp", ".json");
     
