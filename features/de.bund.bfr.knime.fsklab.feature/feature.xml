@@ -44,6 +44,7 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.apache.servicemix.bundles.poi"/>
       <import plugin="org.junit"/>
       <import plugin="org.glassfish.javax.json" version="1.0.4" match="greaterOrEqual"/>
+      <import plugin="com.google.gson"/>
       <import plugin="com.fifesoft.rsyntaxtextarea"/>
       <import plugin="com.google.guava"/>
       <import plugin="com.toedter.jcalendar"/>

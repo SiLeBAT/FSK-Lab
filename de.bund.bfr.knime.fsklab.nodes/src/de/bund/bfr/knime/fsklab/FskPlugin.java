@@ -24,6 +24,7 @@ import org.emfjson.jackson.module.EMFModule;
 import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.osgi.framework.BundleContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 
 public class FskPlugin extends AbstractUIPlugin {
@@ -47,6 +48,8 @@ public class FskPlugin extends AbstractUIPlugin {
     super.start(context);
 
     OBJECT_MAPPER = EMFModule.setupDefaultMapper();
+    OBJECT_MAPPER.registerModule(new ThreeTenModule());
+    
     FACTORY = new JsonResourceFactory(OBJECT_MAPPER);
     OLD_OBJECT_MAPPER = new ObjectMapper().registerModule(new RakipModule());
   }
