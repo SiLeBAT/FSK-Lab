@@ -84,6 +84,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -275,6 +276,7 @@ public class FskPortObject implements PortObject {
 				jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
 				jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
 				MAPPER = new ObjectMapper(jsonFactory);
+				MAPPER.registerModule(new ThreeTenModule());
 
 				modelClasses = new HashMap<>();
 				modelClasses.put("genericModel", GenericModel.class);
