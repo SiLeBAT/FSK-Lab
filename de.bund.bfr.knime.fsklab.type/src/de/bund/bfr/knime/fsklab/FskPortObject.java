@@ -116,7 +116,7 @@ import metadata.SwaggerUtil;
  * @author Miguel Alba, BfR, Berlin.
  */
 public class FskPortObject implements PortObject {
-	
+
 	private static NodeLogger LOGGER = NodeLogger.getLogger(FskPortObject.class);
 
 	/**
@@ -263,7 +263,11 @@ public class FskPortObject implements PortObject {
 
 		private static final String SPREADSHEET = "spreadsheet";
 
-		private static final ObjectMapper MAPPER;
+		/** Object mapper for 1.0.3 metadata. */
+		private static final ObjectMapper MAPPER103;
+
+		/** Object mapper for 1.0.4 metadata. */
+		private static final ObjectMapper MAPPER104;
 
 		public static Map<String, Class<? extends Model>> modelClasses;
 
@@ -275,8 +279,12 @@ public class FskPortObject implements PortObject {
 				JsonFactory jsonFactory = new JsonFactory();
 				jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
 				jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
-				MAPPER = new ObjectMapper(jsonFactory);
-				MAPPER.registerModule(new ThreeTenModule());
+
+				MAPPER103 = new ObjectMapper(jsonFactory);
+				MAPPER103.registerModule(new EMFModule());
+
+				MAPPER104 = new ObjectMapper(jsonFactory);
+				MAPPER104.registerModule(new ThreeTenModule());
 
 				modelClasses = new HashMap<>();
 				modelClasses.put("genericModel", GenericModel.class);
@@ -317,7 +325,7 @@ public class FskPortObject implements PortObject {
 			out.closeEntry();
 
 			out.putNextEntry(new ZipEntry("swagger"));
-			MAPPER.writeValue(out, portObject.modelMetadata);
+			MAPPER104.writeValue(out, portObject.modelMetadata);
 			out.closeEntry();
 
 			// workspace entry
@@ -442,17 +450,18 @@ public class FskPortObject implements PortObject {
 
 				else if (entryName.equals(CFG_GENERAL_INFORMATION)) {
 					// Read deprecated EMF metadata
-					metadata.GeneralInformation deprecatedInformation = readEObject(in,
+					metadata.GeneralInformation deprecatedInformation = MAPPER103.readValue(in,
 							metadata.GeneralInformation.class);
 					in.getNextEntry();
 
-					metadata.Scope deprecatedScope = readEObject(in, metadata.Scope.class);
+					metadata.Scope deprecatedScope = MAPPER103.readValue(in, metadata.Scope.class);
 					in.getNextEntry();
 
-					metadata.DataBackground deprecatedBackground = readEObject(in, metadata.DataBackground.class);
+					metadata.DataBackground deprecatedBackground = MAPPER103.readValue(in,
+							metadata.DataBackground.class);
 					in.getNextEntry();
 
-					metadata.ModelMath deprecatedMath = readEObject(in, metadata.ModelMath.class);
+					metadata.ModelMath deprecatedMath = MAPPER103.readValue(in, metadata.ModelMath.class);
 					in.getNextEntry();
 
 					// Convert to new metadata schema
@@ -468,7 +477,7 @@ public class FskPortObject implements PortObject {
 					String modelClass = IOUtils.toString(in, "UTF-8");
 					in.getNextEntry();
 
-					modelMetadata = MAPPER.readValue(in, modelClasses.get(modelClass));
+					modelMetadata = MAPPER104.readValue(in, modelClasses.get(modelClass));
 				} else if (entryName.equals(WORKSPACE)) {
 					Files.copy(in, workspacePath, StandardCopyOption.REPLACE_EXISTING);
 				} else if (entryName.equals("library.list")) {
@@ -511,23 +520,6 @@ public class FskPortObject implements PortObject {
 			}
 			portObj.selectedSimulationIndex = selectedSimulationIndex;
 			return portObj;
-		}
-
-		@SuppressWarnings("unchecked")
-		private <T> T readEObject(PortObjectZipInputStream zipStream, Class<T> valueType) throws IOException {
-			final ResourceSet resourceSet = new ResourceSetImpl();
-			String jsonStr = IOUtils.toString(zipStream, "UTF-8");
-
-			ObjectMapper mapper = EMFModule.setupDefaultMapper();
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-					.put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
-			resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(), MetadataPackage.eINSTANCE);
-
-			Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
-			InputStream inStream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
-			resource.load(inStream, null);
-
-			return (T) resource.getContents().get(0);
 		}
 	}
 
