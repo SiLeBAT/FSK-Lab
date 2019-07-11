@@ -67,7 +67,7 @@ public class SwaggerUtil {
 		swaggerGI.setSoftware(deprecatedGeneralInformation.getSoftware());
 		swaggerGI.setLanguageWrittenIn(deprecatedGeneralInformation.getLanguageWrittenIn());
 
-		if (deprecatedGeneralInformation.getModelCategory() != null) {
+		if (deprecatedGeneralInformation.getModelCategory() != null && deprecatedGeneralInformation.getModelCategory().size() > 0) {
 			swaggerGI.setModelCategory(convert(deprecatedGeneralInformation.getModelCategory().get(0)));
 		}
 

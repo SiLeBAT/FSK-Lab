@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeID;
@@ -12,9 +13,9 @@ import org.knime.core.node.workflow.NodeOutPort;
 import de.bund.bfr.knime.fsklab.CombinedFskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeModel;
-import metadata.GeneralInformation;
 import metadata.SwaggerUtil;
 
+@Ignore
 public class JoinerTest extends WorkflowTestCase {
 	private final String expectedJoinedModel_Name = "Simple Model 1 | Simple Model 2";
 	private final String expectedJoinedModel_OutputwithoutConnections = "20.0";
