@@ -19,6 +19,7 @@ Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.type
 Bundle-ActivationPolicy: lazy
 Export-Package: de.bund.bfr.knime.fsklab,
  de.bund.bfr.knime.fsklab.nodes.port,
+ de.bund.bfr.knime.fsklab.nodes.type,
  de.bund.bfr.knime.pmm.fskx.port
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Import-Package: com.google.gson
