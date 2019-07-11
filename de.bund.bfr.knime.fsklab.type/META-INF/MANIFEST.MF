@@ -13,7 +13,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.apache.commons.lang3,
  org.eclipse.core.runtime,
  org.knime.core,
- de.bund.bfr.formats
+ de.bund.bfr.formats,
+ com.google.gson
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: de.bund.bfr.knime.fsklab.nodes.type
 Bundle-ActivationPolicy: lazy
@@ -22,4 +23,3 @@ Export-Package: de.bund.bfr.knime.fsklab,
  de.bund.bfr.knime.fsklab.nodes.type,
  de.bund.bfr.knime.pmm.fskx.port
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
-Import-Package: com.google.gson

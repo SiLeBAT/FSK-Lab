@@ -71,6 +71,7 @@ import org.emfjson.jackson.module.EMFModule;
 import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
@@ -111,6 +112,8 @@ import metadata.SwaggerUtil;
  * @author Miguel Alba, BfR, Berlin.
  */
 public class FskPortObject implements PortObject {
+	
+	private static NodeLogger LOGGER = NodeLogger.getLogger(FskPortObject.class);
 
 	/**
 	 * Convenience access member for <code>new PortType(FSKPortObject.class)</code>
@@ -256,7 +259,33 @@ public class FskPortObject implements PortObject {
 
 		private static final String SPREADSHEET = "spreadsheet";
 
-		private static final ObjectMapper MAPPER = new ObjectMapper();
+		private static final ObjectMapper MAPPER;
+
+		public static Map<String, Class<? extends Model>> modelClasses;
+
+		static {
+			try {
+				MAPPER = new ObjectMapper();
+
+				modelClasses = new HashMap<>();
+				modelClasses.put("genericModel", GenericModel.class);
+				modelClasses.put("dataModel", DataModel.class);
+				modelClasses.put("predictiveModel", PredictiveModel.class);
+				modelClasses.put("otherModel", OtherModel.class);
+				modelClasses.put("exposureModel", ExposureModel.class);
+				modelClasses.put("toxicologicalModel", ToxicologicalModel.class);
+				modelClasses.put("doseResponseModel", DoseResponseModel.class);
+				modelClasses.put("processModel", ProcessModel.class);
+				modelClasses.put("consumptionModel", ConsumptionModel.class);
+				modelClasses.put("healthModel", HealthModel.class);
+				modelClasses.put("riskModel", RiskModel.class);
+				modelClasses.put("qraModel", QraModel.class);
+
+			} catch (Throwable throwable) {
+				LOGGER.error("Failure during static initialization", throwable);
+				throw throwable;
+			}
+		}
 
 		@Override
 		public void savePortObject(final FskPortObject portObject, final PortObjectZipOutputStream out,
@@ -489,22 +518,6 @@ public class FskPortObject implements PortObject {
 
 			return (T) resource.getContents().get(0);
 		}
-
-		public static Map<String, Class<? extends Model>> modelClasses;
-		static {
-			modelClasses.put("genericModel", GenericModel.class);
-			modelClasses.put("dataModel", DataModel.class);
-			modelClasses.put("predictiveModel", PredictiveModel.class);
-			modelClasses.put("otherModel", OtherModel.class);
-			modelClasses.put("exposureModel", ExposureModel.class);
-			modelClasses.put("toxicologicalModel", ToxicologicalModel.class);
-			modelClasses.put("doseResponseModel", DoseResponseModel.class);
-			modelClasses.put("processModel", ProcessModel.class);
-			modelClasses.put("consumptionModel", ConsumptionModel.class);
-			modelClasses.put("healthModel", HealthModel.class);
-			modelClasses.put("riskModel", RiskModel.class);
-			modelClasses.put("qraModel", QraModel.class);
-		}
 	}
 
 	@Override
@@ -513,7 +526,7 @@ public class FskPortObject implements PortObject {
 		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false, false);
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String jsonInString = gson.toJson(modelMetadata);
-		String modelMetadataAsJSON = gson.toJson(jsonInString);
+		String modelMetadataAsJSON = "<html>" + gson.toJson(jsonInString) + "</html>";
 
 		JTextArea tree = new JTextArea(modelMetadataAsJSON);
 		// JTree tree = MetadataTree.createTree(generalInformation, scope,
