@@ -557,6 +557,35 @@ public class SwaggerUtil {
 		return parameters;
 	}
 
+	public static void setParameter(Model model, List<Parameter> pList) {
+
+		final String modelType = model.getModelType();
+		if (modelType.equals("genericModel")) {
+			((GenericModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equals("dataModel")) {
+			((DataModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equals("predictiveModel")) {
+			((PredictiveModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equals("otherModel")) {
+			((OtherModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equals("exposureModel")) {
+			((ExposureModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equals("toxicologicalModel")) {
+			((ToxicologicalModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equals("doseResponseModel")) {
+			((DoseResponseModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equals("processModel")) {
+			((ProcessModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equals("consumptionModel")) {
+			((ConsumptionModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equals("riskModel")) {
+			((RiskModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equals("qraModel")) {
+			((QraModel) model).getModelMath().setParameter(pList);
+		}
+
+	}
+
 	/** @return language written in. Null if missing. */
 	public static String getLanguageWrittenIn(Model model) {
 		String language;
@@ -590,7 +619,7 @@ public class SwaggerUtil {
 
 		return language;
 	}
-	
+
 	/** @return language written in. Null if missing. */
 	public static String getModelName(Model model) {
 		String language;
@@ -624,7 +653,7 @@ public class SwaggerUtil {
 
 		return language;
 	}
-	
+
 	public static Object getGeneralInformation(Model model) {
 		Object information;
 
@@ -756,4 +785,24 @@ public class SwaggerUtil {
 
 		return math;
 	}
+
+	public static Parameter cloneParameter(Parameter old) {
+		Parameter param = new Parameter();
+		param.setClassification(old.getClassification());
+		param.setDataType(old.getDataType());
+		param.setDescription(old.getDescription());
+		param.setError(old.getError());
+		param.setId(old.getId());
+		param.setMaxValue(old.getMaxValue());
+		param.setMinValue(old.getMinValue());
+		param.setName(old.getName());
+		param.setReference(old.getReference());
+		param.setSource(old.getSource());
+		param.setSubject(old.getSubject());
+		param.setUnit(old.getUnit());
+		param.setValue(old.getValue());
+		param.setVariabilitySubject(old.getVariabilitySubject());
+		return param;
+	}
+
 }

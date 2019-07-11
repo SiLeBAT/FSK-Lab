@@ -455,11 +455,22 @@ fskeditorjs = function() {
 			anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
 			anotherxhttp.send();
 		}
-		_firstModel.generalInformation = JSON.parse(value.generalInformation);
-		_firstModel.scope = JSON.parse(value.scope);
+		console.log(value);
+		if(!value.modelMetaData || value.modelMetaData == "null" ){
+			
+			_firstModel.generalInformation = JSON.parse("{}");
+			_firstModel.generalInformation = JSON.parse("{}");
+			_firstModel.scope = JSON.parse("{}");
 
-		_firstModel.modelMath = JSON.parse(value.modelMath);
-		_firstModel.dataBackground = JSON.parse(value.dataBackground);
+			_firstModel.modelMath = JSON.parse("{}");
+			_firstModel.dataBackground = JSON.parse("{}");
+		}else{
+			_firstModel.generalInformation = JSON.parse(value.modelMetaData.generalInformation);
+			_firstModel.scope = JSON.parse(value.modelMetaData.scope);
+	
+			_firstModel.modelMath = JSON.parse(value.modelMetaData.modelMath);
+			_firstModel.dataBackground = JSON.parse(value.modelMetaData.dataBackground);
+		}
 		_firstModelScript = value.firstModelScript;
 		_README = value.readme != undefined ? value.readme : "";
 		_firstModelViz = value.firstModelViz;
@@ -663,17 +674,19 @@ fskeditorjs = function() {
 		})
 	}
 	joinerNode.getComponentValue = function() {
-		rejoinStores();
-		_viewValue.generalInformation = JSON
-				.stringify(window.store1.getState().jsonforms.core.data);
-		_viewValue.scope = JSON
-				.stringify(window.store2.getState().jsonforms.core.data);
-		_viewValue.modelMath = JSON
-				.stringify(window.store17.getState().jsonforms.core.data);
-		_viewValue.dataBackground = JSON
-				.stringify(window.store6.getState().jsonforms.core.data);
+		//rejoinStores();
+		modelMetaData = {
+									generalInformation : window.store1.getState().jsonforms.core.data,
+									scope : window.store2.getState().jsonforms.core.data,
+									modelMath : window.store17.getState().jsonforms.core.data,
+									dataBackground : window.store6.getState().jsonforms.core.data,
+									
+									}; 
+		_viewValue.modelMetaData = JSON
+				.stringify(modelMetaData);
+		
 
-		console.log(_viewValue);
+		console.log(_viewValue,window.store1.getState().jsonforms.core.data);
 		/*
 		 * window.store1.getState().jsonforms.core.data.author = window.store23
 		 * .getState().jsonforms.core.data;

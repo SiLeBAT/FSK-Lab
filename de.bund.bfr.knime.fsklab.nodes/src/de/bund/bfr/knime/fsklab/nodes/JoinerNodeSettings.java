@@ -24,17 +24,13 @@ import org.knime.core.node.NodeSettingsWO;
 
 class JoinerNodeSettings {
     private static final String CFG_JOIN_SCRIPT = "JoinScript";    
-    private static final String CFG_GENERAL_INFORMATION = "generalInformation";
-    private static final String CFG_SCOPE = "scope";
-    private static final String CFG_DATA_BACKGROUND = "dataBackground";
-    private static final String CFG_MODEL_MATH = "modelMath";
+    private static final String CFG_MODEL_METADATA = "modelMetaData";
+   
     private static final String CFG_MODEL_MATH1 = "modelMath1";
     private static final String CFG_MODEL_MATH2 = "modelMath2";
 
-    String generalInformation;
-    String scope;
-    String dataBackground;
-    String modelMath;
+    String modelMetaData;
+  
     String modelMath1;
     String modelMath2;
     
@@ -43,20 +39,16 @@ class JoinerNodeSettings {
 
     void load(final NodeSettingsRO settings) throws InvalidSettingsException {
       joinScript = settings.getString(CFG_JOIN_SCRIPT, "");
-      generalInformation = settings.getString(CFG_GENERAL_INFORMATION, "");
-      scope = settings.getString(CFG_SCOPE, "");
-      dataBackground = settings.getString(CFG_DATA_BACKGROUND, "");
-      modelMath = settings.getString(CFG_MODEL_MATH, "");
+      modelMetaData = settings.getString(CFG_MODEL_METADATA, "");
+      
       modelMath1 = settings.getString(CFG_MODEL_MATH1, "");
       modelMath2 = settings.getString(CFG_MODEL_MATH2, "");
     }
 
     void save(final NodeSettingsWO settings) {
       settings.addString(CFG_JOIN_SCRIPT, joinScript);
-      settings.addString(CFG_GENERAL_INFORMATION, generalInformation);
-      settings.addString(CFG_SCOPE, scope);
-      settings.addString(CFG_DATA_BACKGROUND, dataBackground);
-      settings.addString(CFG_MODEL_MATH, modelMath);
+      settings.addString(CFG_MODEL_METADATA, modelMetaData);
+      
       settings.addString(CFG_MODEL_MATH1, modelMath1);
       settings.addString(CFG_MODEL_MATH2, modelMath2);
     }

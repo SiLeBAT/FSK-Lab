@@ -18,7 +18,6 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,7 +25,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -39,12 +37,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -68,7 +60,9 @@ import org.knime.js.core.node.AbstractWizardNodeModel;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.bund.bfr.fskml.RScript;
 import de.bund.bfr.knime.fsklab.FskPlugin;
@@ -77,11 +71,6 @@ import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
-import metadata.DataBackground;
-import metadata.GeneralInformation;
-import metadata.MetadataPackage;
-import metadata.ModelMath;
-import metadata.Scope;
 import metadata.SwaggerUtil;
 
 
@@ -276,23 +265,25 @@ final class FSKEditorJSNodeModel
 
       outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.modelMetaData, Model.class);
 
-      List<Parameter> parametersList = SwaggerUtil.getParameter(outObj.modelMetadata);
-      // Create simulation
-      if (parametersList != null && parametersList.size() > 0) {
-        FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(parametersList);
-        if (outObj.simulations.size() > 0) {
-          List<FskSimulation> defaultSim =
-              outObj.simulations.stream().filter(sim -> "defaultSimulation".equals(sim.getName()))
-                  .collect(Collectors.toList());
-          defaultSim.stream().forEach(sim -> {
-            outObj.simulations.remove(sim);
-          });
-        }
-        outObj.simulations.add(0, defaultSimulation);
-      } else {
-        outObj.simulations.add(0, NodeUtils.createDefaultSimulation(parametersList));
-      }
+      if (outObj.modelMetadata != null) {
+        List<Parameter> parametersList = SwaggerUtil.getParameter(outObj.modelMetadata);
 
+        // Create simulation
+        if (parametersList != null && parametersList.size() > 0) {
+          FskSimulation defaultSimulation = NodeUtils.createDefaultSimulation(parametersList);
+          if (outObj.simulations.size() > 0) {
+            List<FskSimulation> defaultSim =
+                outObj.simulations.stream().filter(sim -> "defaultSimulation".equals(sim.getName()))
+                    .collect(Collectors.toList());
+            defaultSim.stream().forEach(sim -> {
+              outObj.simulations.remove(sim);
+            });
+          }
+          outObj.simulations.add(0, defaultSimulation);
+        } else {
+          outObj.simulations.add(0, NodeUtils.createDefaultSimulation(parametersList));
+        }
+      }
       outObj.model = fskEditorProxyValue.firstModelScript;
       outObj.viz = fskEditorProxyValue.firstModelViz;
       outObj.setReadme(fskEditorProxyValue.readme);
@@ -367,23 +358,11 @@ final class FSKEditorJSNodeModel
   }
 
   private static <T> T getObjectFromJson(String jsonStr, Class<T> valueType)
-      throws InvalidSettingsException {
-    final ResourceSet resourceSet = new ResourceSetImpl();
+      throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
     ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-        .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
-    resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(),
-        MetadataPackage.eINSTANCE);
+    Object object = mapper.readValue(jsonStr, valueType);
 
-    Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
-    InputStream inStream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
-    try {
-      resource.load(inStream, null);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    return (T) resource.getContents().get(0);
+    return valueType.cast(object);
   }
 
   @Override
@@ -407,8 +386,7 @@ final class FSKEditorJSNodeModel
      */
     try {
       FSKEditorJSViewValue vv = getViewValue();
-      saveJsonSetting(vv.modelMetaData,
-          vv.firstModelScript, vv.firstModelViz, vv.readme);
+      saveJsonSetting(vv.modelMetaData, vv.firstModelScript, vv.firstModelViz, vv.readme);
     } catch (IOException | CanceledExecutionException e) {
       e.printStackTrace();
     }
@@ -437,8 +415,7 @@ final class FSKEditorJSNodeModel
     File settingFolder = new File(settingFolderPath);
 
     // Read configuration strings
-    nodeSettings.modelMetaData =
-        NodeUtils.readConfigString(settingFolder, "modelMetaData.json");
+    nodeSettings.modelMetaData = NodeUtils.readConfigString(settingFolder, "modelMetaData.json");
     String modelScript = NodeUtils.readConfigString(settingFolder, "modelScript.txt");
     String visualizationScript = NodeUtils.readConfigString(settingFolder, "visualization.txt");
     String readme = NodeUtils.readConfigString(settingFolder, "readme.txt");

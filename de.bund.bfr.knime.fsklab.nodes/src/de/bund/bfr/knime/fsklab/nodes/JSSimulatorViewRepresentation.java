@@ -25,7 +25,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import metadata.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter;
 
 /**
  * Representation of the Javascript Simulator node.

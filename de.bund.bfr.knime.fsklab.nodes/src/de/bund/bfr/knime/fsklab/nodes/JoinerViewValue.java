@@ -39,10 +39,8 @@ class JoinerViewValue extends JSONViewContent {
   private static final String CFG_ORIGINAL_MODEL_SCRIPT2 = "originalModelScript2";
   private static final String CFG_ORIGINAL_VISUALIZATION_SCRIPT2 = "originalVisualizationScript2";
   public final int pseudoIdentifier = (new Random()).nextInt();
-  private static final String CFG_GENERAL_INFORMATION = "generalInformation";
-  private static final String CFG_SCOPE = "scope";
-  private static final String CFG_DATA_BACKGROUND = "dataBackground";
-  private static final String CFG_MODEL_MATH = "modelMath";
+  private static final String CFG_MODEL_METADATA = "ModelMetaData";
+
 
   private static final String CFG_MODEL_MATH1 = "modelMath1";
   private static final String CFG_MODEL_MATH2 = "modelMath2";
@@ -60,10 +58,7 @@ class JoinerViewValue extends JSONViewContent {
   public String firstModelViz;
   public String secondModelViz;
 
-  public String generalInformation;
-  public String scope;
-  public String dataBackground;
-  public String modelMath;
+  public String modelMetaData;
 
   public String modelMath1;
   public String modelMath2;
@@ -91,21 +86,10 @@ class JoinerViewValue extends JSONViewContent {
     settings.addString(CFG_JOINER_RELATION, joinRelations);
     settings.addString(CFG_JSON_REPRESENTATION, jsonRepresentation);
     settings.addString(CFG_MODELSCRIPT_TREE, modelScriptTree);
-    if (generalInformation != null) {
-      saveSettings(settings, CFG_GENERAL_INFORMATION, generalInformation);
+    if (modelMetaData != null) {
+      saveSettings(settings,CFG_MODEL_METADATA, modelMetaData);
     }
 
-    if (scope != null) {
-      saveSettings(settings, CFG_SCOPE, scope);
-    }
-
-    if (dataBackground != null) {
-      saveSettings(settings, CFG_DATA_BACKGROUND, dataBackground);
-    }
-
-    if (modelMath != null) {
-      saveSettings(settings, CFG_MODEL_MATH, modelMath);
-    }
     if (modelMath1 != null) {
       saveSettings(settings, CFG_MODEL_MATH1, modelMath1);
     }
@@ -126,18 +110,10 @@ class JoinerViewValue extends JSONViewContent {
     jsonRepresentation = settings.getString(CFG_JSON_REPRESENTATION);
     modelScriptTree = settings.getString(CFG_MODELSCRIPT_TREE);
     // load meta data
-    if (settings.containsKey(CFG_GENERAL_INFORMATION)) {
-      generalInformation = getEObject(settings, CFG_GENERAL_INFORMATION);
+    if (settings.containsKey(CFG_MODEL_METADATA)) {
+      modelMetaData = getEObject(settings, CFG_MODEL_METADATA);
     }
-    if (settings.containsKey(CFG_SCOPE)) {
-      scope = getEObject(settings, CFG_SCOPE);
-    }
-    if (settings.containsKey(CFG_DATA_BACKGROUND)) {
-      dataBackground = getEObject(settings, CFG_DATA_BACKGROUND);
-    }
-    if (settings.containsKey(CFG_MODEL_MATH)) {
-      modelMath = getEObject(settings, CFG_MODEL_MATH);
-    }
+    
     if (settings.containsKey(CFG_MODEL_MATH1)) {
       modelMath1 = getEObject(settings, CFG_MODEL_MATH1);
     }
