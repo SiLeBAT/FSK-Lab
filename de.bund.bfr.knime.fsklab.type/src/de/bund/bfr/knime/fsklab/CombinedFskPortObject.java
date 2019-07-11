@@ -30,9 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
@@ -55,7 +53,6 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -68,10 +65,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -79,13 +73,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emfjson.jackson.module.EMFModule;
-import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
@@ -96,7 +84,11 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FLabel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.FPanel;
@@ -106,14 +98,7 @@ import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
-import metadata.DataBackground;
-import metadata.GeneralInformation;
-import metadata.MetadataFactory;
-import metadata.MetadataPackage;
-import metadata.MetadataTree;
-import metadata.ModelMath;
-import metadata.Parameter;
-import metadata.Scope;
+import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
 /**
@@ -208,9 +193,6 @@ public class CombinedFskPortObject extends FskPortObject {
 		private static final String META_DATA = "metaData";
 
 		private static final String CFG_GENERAL_INFORMATION = "generalInformation";
-		private static final String CFG_SCOPE = "scope";
-		private static final String CFG_DATA_BACKGROUND = "dataBackground";
-		private static final String CFG_MODEL_MATH = "modelMath";
 		private static final String JOINED_GENERAL_INFORMATION = "joinedGeneralInformation";
 		private static final String JOINED_SIMULATION = "joinedsimulation";
 		private static final String JOINED_WORKSPACE = "joinedworkspace";
@@ -524,18 +506,19 @@ public class CombinedFskPortObject extends FskPortObject {
 					}
 
 					else if (entryName.startsWith(CFG_GENERAL_INFORMATION)) {
-						metadata.GeneralInformation deprecatedInformation = readEObject(in, metadata.GeneralInformation.class);
+						metadata.GeneralInformation deprecatedInformation = readEObject(in,
+								metadata.GeneralInformation.class);
 						in.getNextEntry();
-						
+
 						metadata.Scope deprecatedScope = readEObject(in, metadata.Scope.class);
 						in.getNextEntry();
-						
+
 						metadata.DataBackground deprecatedBackground = readEObject(in, metadata.DataBackground.class);
 						in.getNextEntry();
-						
+
 						metadata.ModelMath deprecatedMath = readEObject(in, metadata.ModelMath.class);
 						in.getNextEntry();
-						
+
 						GenericModel gm = new GenericModel();
 						gm.setModelType("genericModel");
 						gm.setGeneralInformation(SwaggerUtil.convert(deprecatedInformation));
@@ -595,39 +578,16 @@ public class CombinedFskPortObject extends FskPortObject {
 			return portObj;
 		}
 
-		@SuppressWarnings("unchecked")
 		private <T> T readEObject(PortObjectZipInputStream zipStream, Class<T> valueType) throws IOException {
-			final ResourceSet resourceSet = new ResourceSetImpl();
 			String jsonStr = IOUtils.toString(zipStream, "UTF-8");
-
 			ObjectMapper mapper = EMFModule.setupDefaultMapper();
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-					.put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
-			resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(), MetadataPackage.eINSTANCE);
-
-			Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
-			InputStream inStream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
-			resource.load(inStream, null);
-
-			return (T) resource.getContents().get(0);
+			return mapper.readValue(jsonStr, valueType);
 		}
 
-		private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType) throws InvalidSettingsException {
-			final ResourceSet resourceSet = new ResourceSetImpl();
+		private static <T> T getEObjectFromJson(String jsonStr, Class<T> valueType)
+				throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
 			ObjectMapper mapper = EMFModule.setupDefaultMapper();
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-					.put(Resource.Factory.Registry.DEFAULT_EXTENSION, new JsonResourceFactory(mapper));
-			resourceSet.getPackageRegistry().put(MetadataPackage.eINSTANCE.getNsURI(), MetadataPackage.eINSTANCE);
-
-			Resource resource = resourceSet.createResource(URI.createURI("*.extension"));
-			InputStream inStream = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8));
-			try {
-				resource.load(inStream, null);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			return (T) resource.getContents().get(0);
+			return mapper.readValue(jsonStr, valueType);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -641,6 +601,7 @@ public class CombinedFskPortObject extends FskPortObject {
 				JsonReader jsonReader = Json.createReader(new StringReader(jsonStr));
 				JsonArray relationJsonArray = jsonReader.readArray();
 				jsonReader.close();
+				
 				for (JsonValue element : relationJsonArray) {
 					JsonObject sourceTargetRelation = ((JsonObject) element);
 					JoinRelation jR = new JoinRelation();
@@ -728,8 +689,7 @@ public class CombinedFskPortObject extends FskPortObject {
 				if (((CombinedFskPortObject) currentPortObject).getJoinerRelation() != null
 						&& ((CombinedFskPortObject) currentPortObject).getJoinerRelation().size() > 0) {
 					((CombinedFskPortObject) currentPortObject).getJoinerRelation().stream().forEach(connection -> {
-						script.append(
-								connection.getTargetParam().getParameterID() + " <- " + connection.getCommand() + "\n");
+						script.append(connection.getTargetParam().getId() + " <- " + connection.getCommand() + "\n");
 					});
 
 					language = ((CombinedFskPortObject) currentPortObject).getJoinerRelation().get(0)
@@ -805,8 +765,10 @@ public class CombinedFskPortObject extends FskPortObject {
 		visTree.setVisible(true);
 		((ScriptPanel) vizScriptPanel).setScriptTree(visTree);
 
-		JTree tree = MetadataTree.createTree(generalInformation, scope, dataBackground, modelMath);
-		final JScrollPane metaDataPane = new JScrollPane(tree);
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String jsonString = gson.toJson(modelMetadata);
+
+		final JScrollPane metaDataPane = new JScrollPane(new JTextArea(jsonString));
 		metaDataPane.setName("Meta data");
 
 		final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
