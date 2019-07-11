@@ -80,6 +80,9 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -265,7 +268,13 @@ public class FskPortObject implements PortObject {
 
 		static {
 			try {
-				MAPPER = new ObjectMapper();
+				// ObjectMapper defaults to use a JsonFactory that automatically closes
+				// the stream. When further entries are added to the archive the stream
+				// is closed and fails. The AUTO_CLOSE_TARGET needs to be disabled.
+				JsonFactory jsonFactory = new JsonFactory();
+				jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+				jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+				MAPPER = new ObjectMapper(jsonFactory);
 
 				modelClasses = new HashMap<>();
 				modelClasses.put("genericModel", GenericModel.class);
