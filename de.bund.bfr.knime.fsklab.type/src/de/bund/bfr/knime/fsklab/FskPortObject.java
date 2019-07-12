@@ -30,9 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -63,12 +61,7 @@ import javax.swing.border.Border;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.emfjson.jackson.module.EMFModule;
-import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
@@ -107,7 +100,6 @@ import de.bund.bfr.metadata.swagger.ProcessModel;
 import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.RiskModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
-import metadata.MetadataPackage;
 import metadata.SwaggerUtil;
 
 /**
@@ -263,6 +255,9 @@ public class FskPortObject implements PortObject {
 
 		private static final String SPREADSHEET = "spreadsheet";
 
+		/** Object mapper for 1.0.2 metadata. */
+		private static final ObjectMapper MAPPER102;
+
 		/** Object mapper for 1.0.3 metadata. */
 		private static final ObjectMapper MAPPER103;
 
@@ -279,6 +274,9 @@ public class FskPortObject implements PortObject {
 				JsonFactory jsonFactory = new JsonFactory();
 				jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
 				jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+
+				MAPPER102 = new ObjectMapper(jsonFactory);
+				MAPPER102.registerModule(new RakipModule());
 
 				MAPPER103 = new ObjectMapper(jsonFactory);
 				MAPPER103.registerModule(new EMFModule());
@@ -433,9 +431,7 @@ public class FskPortObject implements PortObject {
 				// metadata
 				else if (entryName.equals(META_DATA)) {
 
-					final String metaDataAsString = IOUtils.toString(in, "UTF-8");
-					ObjectMapper mapper = new ObjectMapper().registerModule(new RakipModule());
-					de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel = mapper.readValue(metaDataAsString,
+					de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel = MAPPER102.readValue(in,
 							de.bund.bfr.knime.fsklab.rakip.GenericModel.class);
 
 					GenericModel gm = new GenericModel();
