@@ -57,9 +57,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.Border;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.emfjson.jackson.module.EMFModule;
 import org.knime.core.node.CanceledExecutionException;
@@ -523,11 +525,14 @@ public class FskPortObject implements PortObject {
 	public JComponent[] getViews() {
 		JPanel modelScriptPanel = new ScriptPanel("Model script", model, false, false);
 		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false, false);
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 		String jsonInString = gson.toJson(modelMetadata);
-		String modelMetadataAsJSON = "<html>" + gson.toJson(jsonInString) + "</html>";
+		String modelMetadataAsJSON = "<html><pre id='json'>" +StringEscapeUtils.unescapeJson(StringEscapeUtils.unescapeJson(gson.toJson(jsonInString))) + "</pre></html>";
 
-		JTextArea tree = new JTextArea(modelMetadataAsJSON);
+		JTextPane tree = new JTextPane();
+		
+		tree.setContentType("text/html");
+		tree.setText(modelMetadataAsJSON);
 		// JTree tree = MetadataTree.createTree(generalInformation, scope,
 		// dataBackground, modelMath);
 		final JScrollPane metaDataPane = new JScrollPane(tree);

@@ -19,6 +19,7 @@ import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.ExposureModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.HealthModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.OtherModel;
@@ -417,7 +418,21 @@ public class SwaggerUtil {
 
 		return study;
 	}
-
+	public static Map<String, Class<? extends Model>> modelClasses = new HashMap<>();
+	static {
+		modelClasses.put("GenericModel", GenericModel.class);
+		modelClasses.put("DataModel", DataModel.class);
+		modelClasses.put("PredictiveModel", PredictiveModel.class);
+		modelClasses.put("OtherModel", OtherModel.class);
+		modelClasses.put("ExposureModel", ExposureModel.class);
+		modelClasses.put("ToxicologicalModel", ToxicologicalModel.class);
+		modelClasses.put("DoseResponseModel", DoseResponseModel.class);
+		modelClasses.put("ProcessModel", ProcessModel.class);
+		modelClasses.put("ConsumptionModel", ConsumptionModel.class);
+		modelClasses.put("HealthModel", HealthModel.class);
+		modelClasses.put("RiskModel", RiskModel.class);
+		modelClasses.put("QraModel", QraModel.class);
+	}
 	/** Internal map used to convert RIS types to 1.0.4 Reference types. */
 	public static Map<PublicationType, PublicationTypeEnum> PUBLICATION_TYPE;
 	static {
@@ -757,27 +772,27 @@ public class SwaggerUtil {
 		Object math;
 
 		final String modelType = model.getModelType();
-		if (modelType.equals("genericModel")) {
+		if (modelType.equalsIgnoreCase("genericModel")) {
 			math = ((GenericModel) model).getModelMath();
-		} else if (modelType.equals("dataModel")) {
+		} else if (modelType.equalsIgnoreCase("dataModel")) {
 			math = ((DataModel) model).getModelMath();
-		} else if (modelType.equals("predictiveModel")) {
+		} else if (modelType.equalsIgnoreCase("predictiveModel")) {
 			math = ((PredictiveModel) model).getModelMath();
-		} else if (modelType.equals("otherModel")) {
+		} else if (modelType.equalsIgnoreCase("otherModel")) {
 			math = ((OtherModel) model).getModelMath();
-		} else if (modelType.equals("exposureModel")) {
+		} else if (modelType.equalsIgnoreCase("exposureModel")) {
 			math = ((ExposureModel) model).getModelMath();
-		} else if (modelType.equals("toxicologicalModel")) {
+		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			math = ((ToxicologicalModel) model).getModelMath();
-		} else if (modelType.equals("doseResponseModel")) {
+		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
 			math = ((DoseResponseModel) model).getModelMath();
-		} else if (modelType.equals("processModel")) {
+		} else if (modelType.equalsIgnoreCase("processModel")) {
 			math = ((ProcessModel) model).getModelMath();
-		} else if (modelType.equals("consumptionModel")) {
+		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
 			math = ((ConsumptionModel) model).getModelMath();
-		} else if (modelType.equals("riskModel")) {
+		} else if (modelType.equalsIgnoreCase("riskModel")) {
 			math = ((RiskModel) model).getModelMath();
-		} else if (modelType.equals("qraModel")) {
+		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			math = ((QraModel) model).getModelMath();
 		} else {
 			math = null;

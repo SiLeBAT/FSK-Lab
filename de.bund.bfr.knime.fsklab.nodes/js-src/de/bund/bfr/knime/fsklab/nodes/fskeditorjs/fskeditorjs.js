@@ -465,11 +465,12 @@ fskeditorjs = function() {
 			_firstModel.modelMath = JSON.parse("{}");
 			_firstModel.dataBackground = JSON.parse("{}");
 		}else{
-			_firstModel.generalInformation = JSON.parse(value.modelMetaData.generalInformation);
-			_firstModel.scope = JSON.parse(value.modelMetaData.scope);
+			metaData =  JSON.parse(value.modelMetaData);
+			_firstModel.generalInformation = metaData.generalInformation;
+			_firstModel.scope =metaData.scope;
 	
-			_firstModel.modelMath = JSON.parse(value.modelMetaData.modelMath);
-			_firstModel.dataBackground = JSON.parse(value.modelMetaData.dataBackground);
+			_firstModel.modelMath = metaData.modelMath;
+			_firstModel.dataBackground = metaData.dataBackground;
 		}
 		_firstModelScript = value.firstModelScript;
 		_README = value.readme != undefined ? value.readme : "";
@@ -482,7 +483,7 @@ fskeditorjs = function() {
 		window.modelMath = _firstModel.modelMath;
 		window.dataBackground = _firstModel.dataBackground;
 
-		prepareData(_firstModel);
+		//prepareData(_firstModel);
 
 		create_body();
 		fixTableHeaders();
@@ -675,7 +676,26 @@ fskeditorjs = function() {
 	}
 	joinerNode.getComponentValue = function() {
 		//rejoinStores();
-		modelMetaData = {
+		console.log(window.store1.getState().jsonforms.core.data);
+		/*if(window.store1.getState().jsonforms.core.data.reference){
+			arr = [];
+			$.each(window.store1.getState().jsonforms.core.data.reference,function(index, value){
+				console.log("reference",value);
+				if(value.publicationType){
+					
+					$.each(value.publicationType,function(ind, pt){
+						arr.push(pt.value);
+					});
+				}
+				
+				window.store1.getState().jsonforms.core.data.reference[index].publicationType = arr;
+			});
+			
+			
+			console.log('generalInfo',JSON.stringify(window.store1.getState().jsonforms.core.data));
+		}*/
+		
+		modelMetaData = {			modelType: window.modelPrefix,
 									generalInformation : window.store1.getState().jsonforms.core.data,
 									scope : window.store2.getState().jsonforms.core.data,
 									modelMath : window.store17.getState().jsonforms.core.data,
@@ -684,9 +704,7 @@ fskeditorjs = function() {
 									}; 
 		_viewValue.modelMetaData = JSON
 				.stringify(modelMetaData);
-		
-
-		console.log(_viewValue,window.store1.getState().jsonforms.core.data);
+		console.log(_viewValue);
 		/*
 		 * window.store1.getState().jsonforms.core.data.author = window.store23
 		 * .getState().jsonforms.core.data;

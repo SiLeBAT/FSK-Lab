@@ -263,9 +263,9 @@ final class FSKEditorJSNodeModel
       }
       outObj = inObj1;
 
-      outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.modelMetaData, Model.class);
+      outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.modelMetaData,SwaggerUtil.modelClasses.get(fskEditorProxyValue.modelType) );
 
-      if (outObj.modelMetadata != null) {
+      if (outObj.modelMetadata != null && SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
         List<Parameter> parametersList = SwaggerUtil.getParameter(outObj.modelMetadata);
 
         // Create simulation
@@ -281,6 +281,7 @@ final class FSKEditorJSNodeModel
           }
           outObj.simulations.add(0, defaultSimulation);
         } else {
+          parametersList = new ArrayList<>();
           outObj.simulations.add(0, NodeUtils.createDefaultSimulation(parametersList));
         }
       }
