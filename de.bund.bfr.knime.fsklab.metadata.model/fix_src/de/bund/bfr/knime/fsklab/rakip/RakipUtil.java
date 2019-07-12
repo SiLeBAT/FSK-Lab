@@ -64,7 +64,7 @@ public class RakipUtil {
 		reference.setIsReferenceDescription(false);
 
 		if (record.getType() != null) {
-			reference.addPublicationTypeItem(PUBLICATION_TYPE.get(record.getType()));
+			reference.setPublicationType(PUBLICATION_TYPE.get(record.getType()));
 		}
 
 		// Parse RIS date to LocalDate. Since both use ISO 8601 there is no need to add

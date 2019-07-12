@@ -56,7 +56,7 @@ public class RakipUtilTest {
 		}
 
 		assertFalse(reference.isIsReferenceDescription());
-		assertEquals(PublicationTypeEnum.RPRT, reference.getPublicationType().get(0));
+		assertEquals(PublicationTypeEnum.RPRT, reference.getPublicationType());
 		assertEquals(LocalDate.of(2018, 1, 1), reference.getDate());
 		assertEquals("10.2903/j.efsa.2018.5134", reference.getDoi());
 		assertEquals("Miguel", reference.getAuthorList());

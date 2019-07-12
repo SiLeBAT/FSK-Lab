@@ -105,7 +105,7 @@ public class SwaggerUtil {
 		reference.setIsReferenceDescription(record.isIsReferenceDescription());
 
 		if (record.getPublicationType() != null) {
-			reference.addPublicationTypeItem(PUBLICATION_TYPE.get(record.getPublicationType()));
+			reference.setPublicationType(PUBLICATION_TYPE.get(record.getPublicationType()));
 		}
 
 		if (record.getPublicationDate() != null) {

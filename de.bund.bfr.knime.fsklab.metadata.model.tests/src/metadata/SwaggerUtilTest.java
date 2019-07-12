@@ -132,7 +132,7 @@ public class SwaggerUtilTest {
 		}
 
 		assertFalse(reference.isIsReferenceDescription());
-		assertEquals(PublicationTypeEnum.RPRT, reference.getPublicationType().get(0));
+		assertEquals(PublicationTypeEnum.RPRT, reference.getPublicationType());
 		assertEquals(LocalDate.of(2018, 1, 1), reference.getDate());
 		assertEquals("pmid", reference.getPmid());
 		assertEquals("10.2903/j.efsa.2018.5134", reference.getDoi());

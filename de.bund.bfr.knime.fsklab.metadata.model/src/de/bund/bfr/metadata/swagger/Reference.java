@@ -22,20 +22,18 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import org.threeten.bp.LocalDate;
 
 /**
  * Reference
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-02T16:22:48.194+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-12T14:55:16.594+02:00")
 public class Reference {
   @SerializedName("isReferenceDescription")
   private Boolean isReferenceDescription = null;
 
   /**
-   * Gets or Sets publicationType
+   * The type of publication, e.g. Report, Journal article, Book, Online database, ...
    */
   @JsonAdapter(PublicationTypeEnum.Adapter.class)
   public enum PublicationTypeEnum {
@@ -187,8 +185,8 @@ public class Reference {
     }
   }
 
-  @SerializedName("PublicationType")
-  private List<PublicationTypeEnum> publicationType = null;
+  @SerializedName("publicationType")
+  private PublicationTypeEnum publicationType = null;
 
   @SerializedName("date")
   private LocalDate date = null;
@@ -244,16 +242,8 @@ public class Reference {
     this.isReferenceDescription = isReferenceDescription;
   }
 
-  public Reference publicationType(List<PublicationTypeEnum> publicationType) {
+  public Reference publicationType(PublicationTypeEnum publicationType) {
     this.publicationType = publicationType;
-    return this;
-  }
-
-  public Reference addPublicationTypeItem(PublicationTypeEnum publicationTypeItem) {
-    if (this.publicationType == null) {
-      this.publicationType = new ArrayList<PublicationTypeEnum>();
-    }
-    this.publicationType.add(publicationTypeItem);
     return this;
   }
 
@@ -262,11 +252,11 @@ public class Reference {
    * @return publicationType
   **/
   @ApiModelProperty(value = "The type of publication, e.g. Report, Journal article, Book, Online database, ...")
-  public List<PublicationTypeEnum> getPublicationType() {
+  public PublicationTypeEnum getPublicationType() {
     return publicationType;
   }
 
-  public void setPublicationType(List<PublicationTypeEnum> publicationType) {
+  public void setPublicationType(PublicationTypeEnum publicationType) {
     this.publicationType = publicationType;
   }
 

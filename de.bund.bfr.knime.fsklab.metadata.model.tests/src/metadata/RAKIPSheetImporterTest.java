@@ -140,7 +140,7 @@ public class RAKIPSheetImporterTest {
 		Reference reference = importer.retrieveReference(sheet.getRow(14));
 
 		assertTrue(reference.isIsReferenceDescription());
-		assertEquals(PublicationTypeEnum.RPRT, reference.getPublicationType().get(0));
+		assertEquals(PublicationTypeEnum.RPRT, reference.getPublicationType());
 		assertEquals(LocalDate.of(2017, 12, 6), reference.getDate());
 		assertNull(reference.getPmid());
 		assertEquals("10.2903/j.efsa.2018.5134", reference.getDoi());
