@@ -86,6 +86,7 @@ import metadata.Scope;
 import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
+import metadata.SwaggerSheetImporter;
 import metadata.SwaggerUtil;
 
 class CreatorNodeModel extends NoInternalsModel {
@@ -186,30 +187,52 @@ class CreatorNodeModel extends NoInternalsModel {
       Workbook workbook = getWorkbook(nodeSettings.spreadsheet);
       workbook.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
       Sheet sheet = workbook.getSheet(nodeSettings.sheet);
+      if(sheet.getPhysicalNumberOfRows() > 29) {
+        // 1.0.3 RAKIP spreadsheet has "parameter type" P:131 (or 130 if index starts at 0), 1.04 doesn't
+          if(!sheet.getRow(130).getCell(15).getStringCellValue().equals("Parameter type")) { //SWAGGER 1.04
 
-      if (sheet.getPhysicalNumberOfRows() > 29) {
-        // Process 1.0.3 RAKIP spreadsheet
-        RAKIPSheetImporter importer = new RAKIPSheetImporter();
-        GenericModel gm = new GenericModel();
-        gm.setModelType("genericModel");
-        gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
-        gm.setScope(importer.retrieveScope(sheet));
-        gm.setDataBackground(importer.retrieveBackground(sheet));
-        gm.setModelMath(importer.retrieveModelMath(sheet));
+            if(sheet.getSheetName().equals("Generic Metadata Schema") ) {
+              SwaggerSheetImporter importer = new SwaggerSheetImporter();
+              GenericModel gm = new GenericModel();
+              gm.setModelType("genericModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
 
-        modelMetadata = gm;
-      } else {
-        // Process legacy spreadsheet: prior RAKIP
-        PreRakipSheetImporter importer = new PreRakipSheetImporter();
-        GenericModel gm = new GenericModel();
-        gm.setModelType("genericModel");
-        gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
-        gm.setScope(importer.retrieveScope(sheet));
-        gm.setModelMath(importer.retrieveModelMath(sheet));
+              modelMetadata = gm;
 
-        modelMetadata = gm;
-      }
-    }
+            }//if generic
+              
+            
+          }else { //RAKIP 1.03
+            // Process 1.0.3 RAKIP spreadsheet has "parameter type" P:131 (or 130 if index starts at 0)
+            RAKIPSheetImporter importer = new RAKIPSheetImporter();
+            GenericModel gm = new GenericModel();
+            gm.setModelType("genericModel");
+            gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+            gm.setScope(importer.retrieveScope(sheet));
+            gm.setDataBackground(importer.retrieveBackground(sheet));
+            gm.setModelMath(importer.retrieveModelMath(sheet));
+
+            modelMetadata = gm;
+          }//else RAKIP
+         
+         }//end if newer than 1.03
+         else {
+           // Process legacy spreadsheet: prior RAKIP
+           PreRakipSheetImporter importer = new PreRakipSheetImporter();
+           GenericModel gm = new GenericModel();
+           gm.setModelType("genericModel");
+           gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+           gm.setScope(importer.retrieveScope(sheet));
+           gm.setModelMath(importer.retrieveModelMath(sheet));
+       
+           modelMetadata = gm;
+         }
+       }//end if check version and create modelmetadata
+
+
 
     String modelScript = modelRScript.getScript();
     String vizScript = vizRScript != null ? vizRScript.getScript() : "";
