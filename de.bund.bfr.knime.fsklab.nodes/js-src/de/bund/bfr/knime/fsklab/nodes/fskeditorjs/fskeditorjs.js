@@ -465,12 +465,11 @@ fskeditorjs = function() {
 			_firstModel.modelMath = JSON.parse("{}");
 			_firstModel.dataBackground = JSON.parse("{}");
 		}else{
-			metadata = JSON.parse(value.modelMetaData);
-			_firstModel.generalInformation = metadata.generalInformation;
-			_firstModel.scope = metadata.scope;
+			_firstModel.generalInformation = JSON.parse(value.modelMetaData.generalInformation);
+			_firstModel.scope = JSON.parse(value.modelMetaData.scope);
 	
-			_firstModel.modelMath = metadata.modelMath;
-			_firstModel.dataBackground =metadata.dataBackground;
+			_firstModel.modelMath = JSON.parse(value.modelMetaData.modelMath);
+			_firstModel.dataBackground = JSON.parse(value.modelMetaData.dataBackground);
 		}
 		_firstModelScript = value.firstModelScript;
 		_README = value.readme != undefined ? value.readme : "";
@@ -483,7 +482,7 @@ fskeditorjs = function() {
 		window.modelMath = _firstModel.modelMath;
 		window.dataBackground = _firstModel.dataBackground;
 
-		//prepareData(_firstModel);
+		prepareData(_firstModel);
 
 		create_body();
 		fixTableHeaders();
@@ -676,19 +675,18 @@ fskeditorjs = function() {
 	}
 	joinerNode.getComponentValue = function() {
 		//rejoinStores();
-		
-		modelMetaData = {			modelType: window.modelPrefix,
+		modelMetaData = {
 									generalInformation : window.store1.getState().jsonforms.core.data,
 									scope : window.store2.getState().jsonforms.core.data,
 									modelMath : window.store17.getState().jsonforms.core.data,
 									dataBackground : window.store6.getState().jsonforms.core.data,
 									
 									}; 
-		
 		_viewValue.modelMetaData = JSON
 				.stringify(modelMetaData);
-		console.log(_viewValue,JSON
-				.stringify(window.store1.getState().jsonforms.core.data));
+		
+
+		console.log(_viewValue,window.store1.getState().jsonforms.core.data);
 		/*
 		 * window.store1.getState().jsonforms.core.data.author = window.store23
 		 * .getState().jsonforms.core.data;

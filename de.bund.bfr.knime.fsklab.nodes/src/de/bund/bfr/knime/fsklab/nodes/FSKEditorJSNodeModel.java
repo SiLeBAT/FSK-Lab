@@ -192,6 +192,8 @@ final class FSKEditorJSNodeModel
     }
   }
 
+
+
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws Exception {
@@ -261,9 +263,9 @@ final class FSKEditorJSNodeModel
       }
       outObj = inObj1;
 
-      outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.modelMetaData,SwaggerUtil.modelClasses.get(fskEditorProxyValue.modelType) );
+      outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.modelMetaData, Model.class);
 
-      if (outObj.modelMetadata != null && SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
+      if (outObj.modelMetadata != null) {
         List<Parameter> parametersList = SwaggerUtil.getParameter(outObj.modelMetadata);
 
         // Create simulation
@@ -282,8 +284,8 @@ final class FSKEditorJSNodeModel
           outObj.simulations.add(0, NodeUtils.createDefaultSimulation(parametersList));
         }
       }
-      outObj.model = fskEditorProxyValue.firstModelScript == null?"":fskEditorProxyValue.firstModelScript;
-      outObj.viz = fskEditorProxyValue.firstModelViz == null?"":fskEditorProxyValue.firstModelViz;
+      outObj.model = fskEditorProxyValue.firstModelScript;
+      outObj.viz = fskEditorProxyValue.firstModelViz;
       outObj.setReadme(fskEditorProxyValue.readme);
       // resources files via fskEditorProxyValue will be available only in online mode of the JS
       // editor
