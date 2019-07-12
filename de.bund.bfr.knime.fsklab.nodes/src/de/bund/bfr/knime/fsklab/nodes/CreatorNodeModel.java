@@ -61,9 +61,11 @@ import de.bund.bfr.fskml.ScriptFactory;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.PredictiveModel;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;
@@ -86,6 +88,9 @@ import metadata.Scope;
 import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
+import metadata.SwaggerDoseResponseSheetImporter;
+import metadata.SwaggerGenericSheetImporter;
+import metadata.SwaggerPredictiveModelSheetImporter;
 import metadata.SwaggerSheetImporter;
 import metadata.SwaggerUtil;
 
@@ -192,7 +197,7 @@ class CreatorNodeModel extends NoInternalsModel {
           if(!sheet.getRow(130).getCell(15).getStringCellValue().equals("Parameter type")) { //SWAGGER 1.04
 
             if(sheet.getSheetName().equals("Generic Metadata Schema") ) {
-              SwaggerSheetImporter importer = new SwaggerSheetImporter();
+              SwaggerGenericSheetImporter importer = new SwaggerGenericSheetImporter();
               GenericModel gm = new GenericModel();
               gm.setModelType("genericModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
@@ -202,7 +207,36 @@ class CreatorNodeModel extends NoInternalsModel {
 
               modelMetadata = gm;
 
-            }//if generic
+            }//end if generic
+            
+            //Dose Response Model
+            if(sheet.getSheetName().equals("Dose-response Model") ) {
+              SwaggerDoseResponseSheetImporter importer = new SwaggerDoseResponseSheetImporter();
+              DoseResponseModel gm = new DoseResponseModel();
+              gm.setModelType("DoseResponseModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }//end if dose response
+            
+            // Predictive Model
+            if(sheet.getSheetName().equals("Predictive Model") ) {
+              SwaggerPredictiveModelSheetImporter importer = new SwaggerPredictiveModelSheetImporter();
+              PredictiveModel gm = new PredictiveModel();
+              gm.setModelType("PredictiveModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }  // end if         
+   
               
             
           }else { //RAKIP 1.03

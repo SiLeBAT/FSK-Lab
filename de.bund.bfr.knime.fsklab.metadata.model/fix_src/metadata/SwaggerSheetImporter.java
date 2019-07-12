@@ -31,213 +31,102 @@ import de.bund.bfr.metadata.swagger.StudySample;
 
 public class SwaggerSheetImporter {
 
-	private int A = 0;
-	private int B = 1;
-	private int C = 2;
-	private int D = 3;
-	private int E = 4;
-	private int F = 5;
-	private int G = 6;
-	private int H = 7;
-	private int I = 8;
-	private int J = 9;
-	private int K = 10;
-	private int L = 11;
-	private int M = 12;
-	private int N = 13;
-	private int O = 14;
-	private int P = 15;
-	private int Q = 16;
-	private int R = 17;
-	private int S = 18;
-	private int T = 19;
-	private int U = 20;
-	private int V = 21;
-	private int W = 22;
-	private int X = 23;
-	private int Y = 24;
-	private int Z = 25;
-	private int AA = 26;
-	private int AB = 27;
-	private int AC = 28;
-	private int AD = 29;
-	private int AE = 30;
-	private int AF = 31;
-	private int AG = 32;
-	private int AH = 33;
-	private int AI = 34;
-	private int AJ = 35;
-	private int AK = 36;
-	private int AL = 37;
-	private int AM = 38;
-	private int AN = 39;
-	private int AO = 40;
-	private int AP = 41;
-	private int AQ = 42;
-	private int AR = 43;
-	private int AS = 44;
-	private int AT = 45;
-	private int AU = 46;
-	private int AV = 47;
+	protected int A = 0;
+	protected int B = 1;
+	protected int C = 2;
+	protected int D = 3;
+	protected int E = 4;
+	protected int F = 5;
+	protected int G = 6;
+	protected int H = 7;
+	protected int I = 8;
+	protected int J = 9;
+	protected int K = 10;
+	protected int L = 11;
+	protected int M = 12;
+	protected int N = 13;
+	protected int O = 14;
+	protected int P = 15;
+	protected int Q = 16;
+	protected int R = 17;
+	protected int S = 18;
+	protected int T = 19;
+	protected int U = 20;
+	protected int V = 21;
+	protected int W = 22;
+	protected int X = 23;
+	protected int Y = 24;
+	protected int Z = 25;
+	protected int AA = 26;
+	protected int AB = 27;
+	protected int AC = 28;
+	protected int AD = 29;
+	protected int AE = 30;
+	protected int AF = 31;
+	protected int AG = 32;
+	protected int AH = 33;
+	protected int AI = 34;
+	protected int AJ = 35;
+	protected int AK = 36;
+	protected int AL = 37;
+	protected int AM = 38;
+	protected int AN = 39;
+	protected int AO = 40;
+	protected int AP = 41;
+	protected int AQ = 42;
+	protected int AR = 43;
+	protected int AS = 44;
+	protected int AT = 45;
+	protected int AU = 46;
+	protected int AV = 47;
 
-	private final int GENERAL_INFORMATION__NAME = 1;
-	private final int GENERAL_INFORMATION__SOURCE = 2;
-	private final int GENERAL_INFORMATION__IDENTIFIER = 3;
-	private final int GENERAL_INFORMATION_CREATION_DATE = 6;
-	private final int GENERAL_INFORMATION__RIGHTS = 8;
-	private final int GENERAL_INFORMATION__AVAILABLE = 9;
-	private final int GENERAL_INFORMATION__URL = 10;
-	private final int GENERAL_INFORMATION__FORMAT = 11;
-	private final int GENERAL_INFORMATION__LANGUAGE = 24;
-	private final int GENERAL_INFORMATION__SOFTWARE = 25;
-	private final int GENERAL_INFORMATION__LANGUAGE_WRITTEN_IN = 26;
-	private final int GENERAL_INFORMATION__STATUS = 32;
-	private final int GENERAL_INFORMATION__OBJECTIVE = 33;
-	private final int GENERAL_INFORMATION__DESCRIPTION = 34;
+	protected final int GENERAL_INFORMATION__NAME = 1;
+	protected final int GENERAL_INFORMATION__SOURCE = 2;
+	protected final int GENERAL_INFORMATION__IDENTIFIER = 3;
+	protected final int GENERAL_INFORMATION_CREATION_DATE = 6;
+	protected final int GENERAL_INFORMATION__RIGHTS = 8;
+	protected final int GENERAL_INFORMATION__AVAILABLE = 9;
+	protected final int GENERAL_INFORMATION__URL = 10;
+	protected final int GENERAL_INFORMATION__FORMAT = 11;
+	protected final int GENERAL_INFORMATION__LANGUAGE = 24;
+	protected final int GENERAL_INFORMATION__SOFTWARE = 25;
+	protected final int GENERAL_INFORMATION__LANGUAGE_WRITTEN_IN = 26;
+	protected final int GENERAL_INFORMATION__STATUS = 32;
+	protected final int GENERAL_INFORMATION__OBJECTIVE = 33;
+	protected final int GENERAL_INFORMATION__DESCRIPTION = 34;
 
-	private final int MODEL_CATEGORY__MODEL_CLASS = 27;
-	private final int MODEL_CATEGORY__MODEL_SUB_CLASS = 28;
-	private final int MODEL_CATEGORY__CLASS_COMMENT = 29;
-	private final int MODEL_CATEGORY__BASIC_PROCESS = 30;
+	protected final int MODEL_CATEGORY__MODEL_CLASS = 27;
+	protected final int MODEL_CATEGORY__MODEL_SUB_CLASS = 28;
+	protected final int MODEL_CATEGORY__CLASS_COMMENT = 29;
+	protected final int MODEL_CATEGORY__BASIC_PROCESS = 30;
 
-	private final int QUALITY_MEASURES__SSE = 123;
-	private final int QUALITY_MEASURES__MSE = 124;
-	private final int QUALITY_MEASURES__RMSE = 125;
-	private final int QUALITY_MEASURES__RSQUARE = 126;
-	private final int QUALITY_MEASURES__AIC = 127;
-	private final int QUALITY_MEASURES__BIC = 128;
+	protected final int QUALITY_MEASURES__SSE = 123;
+	protected final int QUALITY_MEASURES__MSE = 124;
+	protected final int QUALITY_MEASURES__RMSE = 125;
+	protected final int QUALITY_MEASURES__RSQUARE = 126;
+	protected final int QUALITY_MEASURES__AIC = 127;
+	protected final int QUALITY_MEASURES__BIC = 128;
 
-	private final int SCOPE__GENERAL_COMMENT = 73;
-	private final int SCOPE__TEMPORAL_INFORMATION = 74;
+	protected final int SCOPE__GENERAL_COMMENT = 73;
+	protected final int SCOPE__TEMPORAL_INFORMATION = 74;
 
-	private final int STUDY__STUDY_IDENTIFIER = 77;
-	private final int STUDY__STUDY_TITLE = 78;
-	private final int STUDY__STUDY_DESCRIPTION = 79;
-	private final int STUDY__STUDY_DESIGN_TYPE = 80;
-	private final int STUDY__STUDY_ASSAY_MEASUREMENT_TYPE = 81;
-	private final int STUDY__STUDY_ASSAY_TECHNOLOGY_TYPE = 82;
-	private final int STUDY__STUDY_ASSAY_TECHNOLOGY_PLATFORM = 83;
-	private final int STUDY__ACCREDITATION_PROCEDURE_FOR_THE_ASSAY_TECHNOLOGY = 84;
-	private final int STUDY__STUDY_PROTOCOL_NAME = 85;
-	private final int STUDY__STUDY_PROTOCOL_TYPE = 86;
-	private final int STUDY__STUDY_PROTOCOL_DESCRIPTION = 87;
-	private final int STUDY__STUDY_PROTOCOL_URI = 88;
-	private final int STUDY__STUDY_PROTOCOL_VERSION = 89;
-	private final int STUDY__STUDY_PROTOCOL_PARAMETERS_NAME = 90;
-	private final int STUDY__STUDY_PROTOCOL_COMPONENTS_NAME = 91;
-	private final int STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE = 92;
+	protected final int STUDY__STUDY_IDENTIFIER = 77;
+	protected final int STUDY__STUDY_TITLE = 78;
+	protected final int STUDY__STUDY_DESCRIPTION = 79;
+	protected final int STUDY__STUDY_DESIGN_TYPE = 80;
+	protected final int STUDY__STUDY_ASSAY_MEASUREMENT_TYPE = 81;
+	protected final int STUDY__STUDY_ASSAY_TECHNOLOGY_TYPE = 82;
+	protected final int STUDY__STUDY_ASSAY_TECHNOLOGY_PLATFORM = 83;
+	protected final int STUDY__ACCREDITATION_PROCEDURE_FOR_THE_ASSAY_TECHNOLOGY = 84;
+	protected final int STUDY__STUDY_PROTOCOL_NAME = 85;
+	protected final int STUDY__STUDY_PROTOCOL_TYPE = 86;
+	protected final int STUDY__STUDY_PROTOCOL_DESCRIPTION = 87;
+	protected final int STUDY__STUDY_PROTOCOL_URI = 88;
+	protected final int STUDY__STUDY_PROTOCOL_VERSION = 89;
+	protected final int STUDY__STUDY_PROTOCOL_PARAMETERS_NAME = 90;
+	protected final int STUDY__STUDY_PROTOCOL_COMPONENTS_NAME = 91;
+	protected final int STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE = 92;
 
-	public GenericModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
-
-		GenericModelGeneralInformation information = new GenericModelGeneralInformation();
-
-		Cell nameCell = sheet.getRow(GENERAL_INFORMATION__NAME).getCell(I);
-		if (nameCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setName(nameCell.getStringCellValue());
-		}
-
-		Cell sourceCell = sheet.getRow(GENERAL_INFORMATION__SOURCE).getCell(I);
-		if (sourceCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setSource(sourceCell.getStringCellValue());
-		}
-
-		Cell identifierCell = sheet.getRow(GENERAL_INFORMATION__IDENTIFIER).getCell(I);
-		if (identifierCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setIdentifier(identifierCell.getStringCellValue());
-		}
-
-		try {
-			Contact author = retrieveCreator(sheet.getRow(3));
-			information.addAuthorItem(author);
-		} catch (Exception exception) {
-		}
-
-		for (int numRow = 3; numRow < 7; numRow++) {
-			try {
-				Contact contact = retrieveAuthor(sheet.getRow(numRow));
-				information.addCreatorItem(contact);
-			} catch (Exception exception) {
-			}
-		}
-
-		Cell creationDateCell = sheet.getRow(GENERAL_INFORMATION_CREATION_DATE).getCell(I);
-		if (creationDateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-			Date creationDate = creationDateCell.getDateCellValue();
-			LocalDate localDate = LocalDate.of(creationDate.getYear() + 1900, creationDate.getMonth() + 1,
-					creationDate.getDate());
-			information.setCreationDate(localDate);
-		}
-
-		// TODO: modificationDate
-
-		Cell rightsCell = sheet.getRow(GENERAL_INFORMATION__RIGHTS).getCell(I);
-		if (rightsCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setRights(rightsCell.getStringCellValue());
-		}
-
-		Cell isAvailableCell = sheet.getRow(GENERAL_INFORMATION__AVAILABLE).getCell(I);
-		if (isAvailableCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setAvailability(isAvailableCell.getStringCellValue());
-		}
-
-		Cell urlCell = sheet.getRow(GENERAL_INFORMATION__URL).getCell(I);
-		if (urlCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setUrl(urlCell.getStringCellValue());
-		}
-
-		Cell formatCell = sheet.getRow(GENERAL_INFORMATION__FORMAT).getCell(I);
-		if (formatCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setFormat(formatCell.getStringCellValue());
-		}
-
-		// reference (1..n)
-		for (int numRow = 14; numRow < 17; numRow++) {
-			try {
-				Reference reference = retrieveReference(sheet.getRow(numRow));
-				information.addReferenceItem(reference);
-			} catch (Exception exception) {
-			}
-		}
-
-		Cell languageCell = sheet.getRow(GENERAL_INFORMATION__LANGUAGE).getCell(I);
-		if (languageCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setLanguage(languageCell.getStringCellValue());
-		}
-
-		Cell softwareCell = sheet.getRow(GENERAL_INFORMATION__SOFTWARE).getCell(I);
-		if (softwareCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setSoftware(softwareCell.getStringCellValue());
-		}
-
-		Cell languageWrittenInCell = sheet.getRow(GENERAL_INFORMATION__LANGUAGE_WRITTEN_IN).getCell(I);
-		if (languageWrittenInCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setLanguageWrittenIn(languageWrittenInCell.getStringCellValue());
-		}
-
-		// model category (0..n)
-		try {
-			ModelCategory category = retrieveModelCategory(sheet);
-			information.setModelCategory(category);
-		} catch (Exception exception) {
-		}
-
-		Cell statusCell = sheet.getRow(GENERAL_INFORMATION__STATUS).getCell(I);
-		if (statusCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setStatus(statusCell.getStringCellValue());
-		}
-
-		Cell objectiveCell = sheet.getRow(GENERAL_INFORMATION__OBJECTIVE).getCell(I);
-		if (objectiveCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setObjective(objectiveCell.getStringCellValue());
-		}
-
-		Cell descriptionCell = sheet.getRow(GENERAL_INFORMATION__DESCRIPTION).getCell(I);
-		if (descriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setDescription(descriptionCell.getStringCellValue());
-		}
-
-		return information;
-	}
 
 	public Contact retrieveCreator(Row row) {
 		@SuppressWarnings("serial")
@@ -441,69 +330,6 @@ public class SwaggerSheetImporter {
 		return category;
 	}
 
-	public Product retrieveProduct(Row row) {
-
-		// Check first mandatory properties
-		if (row.getCell(K).getCellType() != Cell.CELL_TYPE_STRING) {
-			throw new IllegalArgumentException("Missing product name");
-		}
-		if (row.getCell(M).getCellType() != Cell.CELL_TYPE_STRING) {
-			throw new IllegalArgumentException("Missing product unit");
-		}
-
-		Product product = new Product();
-		product.setName(row.getCell(K).getStringCellValue());
-		product.setUnit(row.getCell(M).getStringCellValue());
-
-		Cell descriptionCell = row.getCell(L);
-		if (descriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			product.setDescription(descriptionCell.getStringCellValue());
-		}
-
-		Cell methodCell = row.getCell(N);
-		if (methodCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			product.addMethodItem(methodCell.getStringCellValue());
-		}
-
-		Cell packagingCell = row.getCell(O);
-		if (packagingCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			product.addPackagingItem(packagingCell.getStringCellValue());
-		}
-
-		Cell treatmentCell = row.getCell(P);
-		if (treatmentCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			product.addTreatmentItem(treatmentCell.getStringCellValue());
-		}
-
-		Cell originCountryCell = row.getCell(Q);
-		if (originCountryCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			product.setOriginCountry(originCountryCell.getStringCellValue());
-		}
-
-		Cell originAreaCell = row.getCell(R);
-		if (originAreaCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			product.setOriginArea(originAreaCell.getStringCellValue());
-		}
-
-		Cell fisheriesAreaCell = row.getCell(S);
-		if (fisheriesAreaCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			product.setFisheriesArea(fisheriesAreaCell.getStringCellValue());
-		}
-
-		Cell productionDateCell = row.getCell(T);
-		if (productionDateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-			Date date = productionDateCell.getDateCellValue();
-			product.setProductionDate(LocalDate.of(date.getYear() + 1900, date.getMonth(), date.getDate()));
-		}
-
-		Cell expiryDateCell = row.getCell(U);
-		if (expiryDateCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-			Date date = expiryDateCell.getDateCellValue();
-			product.setExpiryDate(LocalDate.of(date.getYear() + 1900, date.getMonth(), date.getDate()));
-		}
-
-		return product;
-	}
 
 	public Hazard retrieveHazard(Row row) {
 		// Check mandatory properties
@@ -658,47 +484,6 @@ public class SwaggerSheetImporter {
 		return group;
 	}
 
-	public GenericModelScope retrieveScope(Sheet sheet) {
-
-		GenericModelScope scope = new GenericModelScope();
-
-		for (int numrow = 38; numrow <= 49; numrow++) {
-
-			Row row = sheet.getRow(numrow);
-
-			try {
-				scope.addProductItem(retrieveProduct(row));
-			} catch (IllegalArgumentException exception) {
-				// ignore exception since products are optional (*)
-			}
-
-			try {
-				scope.addHazardItem(retrieveHazard(row));
-			} catch (IllegalArgumentException exception) {
-				// ignore exception since products are optional (*)
-			}
-
-			try {
-				scope.addPopulationGroupItem(retrievePopulationGroup(row));
-			} catch (IllegalArgumentException exception) {
-				// ignore exception since population groups are optional (*)
-			}
-		}
-
-		Cell generalCommentCell = sheet.getRow(SCOPE__GENERAL_COMMENT).getCell(I);
-		if (generalCommentCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			scope.setGeneralComment(generalCommentCell.getStringCellValue());
-		}
-
-		Cell temporalInformationCell = sheet.getRow(SCOPE__TEMPORAL_INFORMATION).getCell(I);
-		if (temporalInformationCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			scope.setTemporalInformation(temporalInformationCell.getStringCellValue());
-		}
-
-		// TODO: Spatial information
-
-		return scope;
-	}
 
 	public Study retrieveStudy(Sheet sheet) {
 
@@ -790,51 +575,6 @@ public class SwaggerSheetImporter {
 		return study;
 	}
 
-	public GenericModelDataBackground retrieveBackground(Sheet sheet) {
-
-		GenericModelDataBackground background = new GenericModelDataBackground();
-
-		try {
-			Study study = retrieveStudy(sheet);
-			background.setStudy(study);
-		} catch (Exception exception) {
-		}
-
-		for (int numrow = 96; numrow < 99; numrow++) {
-			try {
-				StudySample sample = retrieveStudySample(sheet.getRow(numrow));
-				background.addStudySampleItem(sample);
-			} catch (Exception exception) {
-			}
-		}
-
-		for (int numrow = 103; numrow < 106; numrow++) {
-			try {
-				DietaryAssessmentMethod method = retrieveDietaryAssessmentMethod(sheet.getRow(numrow));
-				background.addDietaryAssessmentMethodItem(method);
-			} catch (Exception exception) {
-			}
-		}
-
-		for (int numrow = 110; numrow < 113; numrow++) {
-			try {
-				Laboratory laboratory = retrieveLaboratory(sheet.getRow(numrow));
-				background.addLaboratoryItem(laboratory);
-			} catch (Exception exception) {
-			}
-		}
-
-		for (int numrow = 117; numrow < 120; numrow++) {
-			try {
-				Assay assay = retrieveAssay(sheet.getRow(numrow));
-				background.addAssayItem(assay);
-			} catch (Exception exception) {
-				// ignore errors since Assay is optional
-			}
-		}
-
-		return background;
-	}
 
 	public StudySample retrieveStudySample(Row row) {
 
@@ -1004,29 +744,6 @@ public class SwaggerSheetImporter {
 		return assay;
 	}
 
-	public GenericModelModelMath retrieveModelMath(Sheet sheet) {
-		
-		GenericModelModelMath math = new GenericModelModelMath();
-
-		for (int rownum = 132; rownum < sheet.getLastRowNum(); rownum++) {
-			try {
-				Row row = sheet.getRow(rownum);
-				Parameter param = retrieveParameter(row);
-				math.addParameterItem(param);
-			} catch (Exception exception) {
-				// ...
-			}
-		}
-
-		try {
-			QualityMeasures measures = retrieveQualityMeasures(sheet);
-			math.addQualityMeasuresItem(measures);
-		} catch (Exception exception) {
-			// ...
-		}
-
-		return math;
-	}
 
 	public Parameter retrieveParameter(Row row) {
 
