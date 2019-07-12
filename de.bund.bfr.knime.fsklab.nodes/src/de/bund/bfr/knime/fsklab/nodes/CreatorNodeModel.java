@@ -78,7 +78,7 @@ import metadata.ParameterType;
 import metadata.PopulationGroup;
 import metadata.PreRakipSheetImporter;
 import metadata.PublicationType;
-import metadata.RAKIPSheetImporter2;
+import metadata.RAKIPSheetImporter;
 import metadata.RakipColumn;
 import metadata.RakipRow;
 import metadata.Reference;
@@ -189,7 +189,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
       if (sheet.getPhysicalNumberOfRows() > 29) {
         // Process 1.0.3 RAKIP spreadsheet
-        RAKIPSheetImporter2 importer = new RAKIPSheetImporter2();
+        RAKIPSheetImporter importer = new RAKIPSheetImporter();
         GenericModel gm = new GenericModel();
         gm.setModelType("genericModel");
         gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));

@@ -1,26 +1,43 @@
 package metadata;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.net.URI;
-import java.util.Date;
-
-import javax.json.JsonObject;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.threeten.bp.LocalDate;
 
-@SuppressWarnings("static-method")
+import de.bund.bfr.metadata.swagger.Assay;
+import de.bund.bfr.metadata.swagger.Contact;
+import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
+import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
+import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.GenericModelModelMath;
+import de.bund.bfr.metadata.swagger.GenericModelScope;
+import de.bund.bfr.metadata.swagger.Hazard;
+import de.bund.bfr.metadata.swagger.Laboratory;
+import de.bund.bfr.metadata.swagger.ModelCategory;
+import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
+import de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum;
+import de.bund.bfr.metadata.swagger.PopulationGroup;
+import de.bund.bfr.metadata.swagger.Product;
+import de.bund.bfr.metadata.swagger.QualityMeasures;
+import de.bund.bfr.metadata.swagger.Reference;
+import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
+import de.bund.bfr.metadata.swagger.Study;
+import de.bund.bfr.metadata.swagger.StudySample;
+
 public class RAKIPSheetImporterTest {
 
 	private static Sheet sheet;
-
 	private static RAKIPSheetImporter importer;
 
 	@BeforeClass
@@ -31,49 +48,74 @@ public class RAKIPSheetImporterTest {
 	}
 
 	@Test
-	public void testGeneralInformation() throws Exception {
+	public void testGeneralInformation() {
+		GenericModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
+		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getName());
+		assertEquals("PUBLISHED SCIENTIFIC STUDIES", information.getSource());
+		assertEquals("DR000001", information.getIdentifier());
+		assertEquals(1, information.getAuthor().size());
+		assertEquals(1, information.getCreator().size());
+		assertEquals(LocalDate.of(2018, 3, 30), information.getCreationDate());
+		assertNull(information.getModificationDate()); // Not set
+		assertEquals("CC0", information.getRights());
+		assertEquals("Open access", information.getAvailability());
+		assertEquals("http://onlinelibrary.wiley.com/doi/10.2903/sp.efsa.2017.EN-1252/abstract", information.getUrl());
+		assertEquals(".fskx", information.getFormat());
+		assertEquals(1, information.getReference().size());
+		assertEquals("English", information.getLanguage());
+		assertEquals("FSK-Lab", information.getSoftware());
+		assertEquals("R 3", information.getLanguageWrittenIn());
+		assertNotNull(information.getModelCategory());
+		assertEquals("Uncurated", information.getStatus());
+		assertNull(information.getObjective()); // Not set
+		assertNull(information.getDescription()); // Not set
+	}
 
-		GeneralInformation generalInformation = importer.retrieveGeneralInformation(sheet);
+	@Test
+	public void testScope() {
+		GenericModelScope scope = importer.retrieveScope(sheet);
+		assertEquals(12, scope.getProduct().size());
+		assertEquals(1, scope.getHazard().size());
+		assertEquals(1, scope.getPopulationGroup().size());
+		assertNull(scope.getGeneralComment());
+		assertNull(scope.getTemporalInformation());
+		// TODO: spatial information: String*
+	}
 
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
+	@Test
+	public void testDataBackground() {
+		GenericModelDataBackground background = importer.retrieveBackground(sheet);
+		assertNotNull(background.getStudy());
+		assertEquals(3, background.getStudySample().size());
+		assertEquals(3, background.getDietaryAssessmentMethod().size());
+		assertEquals(3, background.getLaboratory().size());
+		assertEquals(3, background.getAssay().size());
+	}
 
-		assertEquals("Listeria Monocytogenes (DR of gQMRA)", generalInformation.getName());
-		assertEquals("PUBLISHED SCIENTIFIC STUDIES", generalInformation.getSource());
-		assertEquals("DR000001", generalInformation.getIdentifier());
-		assertEquals("CC0", generalInformation.getRights());
-		// TODO: availability is boolean in EMF model. Need to change its type to
-		// string.
-		// assertEquals("Open access", generalInformation.ava)
-
-		// TODO: url is missing in EMF model.
-		// assertEquals("", generalInformation.getURL());
-
-		assertEquals(".fskx", generalInformation.getFormat());
-
-		assertEquals("English", generalInformation.getLanguage());
-		assertEquals("FSK-Lab", generalInformation.getSoftware());
-		assertEquals("R 3", generalInformation.getLanguageWrittenIn());
-		assertEquals("Uncurated", generalInformation.getStatus());
-		assertFalse(generalInformation.eIsSet(pkg.getGeneralInformation_Objective()));
-		assertFalse(generalInformation.eIsSet(pkg.getGeneralInformation_Description()));
+	@Test
+	public void testModelMath() {
+		GenericModelModelMath math = importer.retrieveModelMath(sheet);
+		assertEquals(9, math.getParameter().size());
+		assertEquals(1, math.getQualityMeasures().size());
+		assertNull(math.getModelEquation());
+		assertNull(math.getFittingProcedure());
+		assertNull(math.getExposure());
+		assertNull(math.getEvent());
 	}
 
 	@Test
 	public void testCreator() throws Exception {
 
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
-
-		Contact contact = importer.retrieveContact(sheet.getRow(3));
-		assertFalse(contact.eIsSet(pkg.getContact_Title()));
+		Contact contact = importer.retrieveCreator(sheet.getRow(3));
+		assertNull(contact.getTitle());
 		assertEquals("Mesa Varona", contact.getFamilyName());
-		assertFalse(contact.eIsSet(pkg.getContact_GivenName()));
+		assertNull(contact.getGivenName());
 		assertEquals("octavio.mesa-varona@bfr.bund.de", contact.getEmail());
-		assertFalse(contact.eIsSet(pkg.getContact_Telephone()));
+		assertNull(contact.getTelephone());
 		assertEquals("Alt-Marienfelde 17-21", contact.getStreetAddress());
 		assertEquals("Germany", contact.getCountry());
-		assertEquals("Berlin", contact.getCity());
-		assertFalse(contact.eIsSet(pkg.getContact_ZipCode()));
-		assertFalse(contact.eIsSet(pkg.getContact_Region()));
+		assertNull(contact.getZipCode());
+		assertNull(contact.getRegion());
 		assertEquals("BfR", contact.getOrganization());
 	}
 
@@ -88,7 +130,6 @@ public class RAKIPSheetImporterTest {
 		assertEquals("080 12345566", contact.getTelephone());
 		assertEquals("Berliner Strasse 2", contact.getStreetAddress());
 		assertEquals("Saint Vincent and the Grenadines", contact.getCountry());
-		assertEquals("Berlin", contact.getCity());
 		assertEquals("12345", contact.getZipCode());
 		assertEquals("Greater New Yorker Area", contact.getRegion());
 		assertEquals("NYU", contact.getOrganization());
@@ -96,169 +137,150 @@ public class RAKIPSheetImporterTest {
 
 	@Test
 	public void testReference() throws Exception {
-
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
-
 		Reference reference = importer.retrieveReference(sheet.getRow(14));
 
 		assertTrue(reference.isIsReferenceDescription());
-		assertEquals(PublicationType.RPRT, reference.getPublicationType());
-
-		// 6th December 2017
-		assertEquals(new Date(2017, 11, 6), reference.getPublicationDate());
-
-		assertFalse(reference.eIsSet(pkg.getReference_Pmid()));
+		assertEquals(PublicationTypeEnum.RPRT, reference.getPublicationType().get(0));
+		assertEquals(LocalDate.of(2017, 12, 6), reference.getDate());
+		assertNull(reference.getPmid());
 		assertEquals("10.2903/j.efsa.2018.5134", reference.getDoi());
 		assertEquals("authors", reference.getAuthorList());
 		assertEquals("Listeria monocytogenes contamination of ready-to-eat\n"
-				+ " foods and the risk for human health in the EU", reference.getPublicationTitle());
-		assertEquals("abstract", reference.getPublicationAbstract());
-		// TODO: journal/volume/issue
-		assertEquals("Published", reference.getPublicationStatus());
-		assertEquals("www.efsa.europa.eu/efsajournal", reference.getPublicationWebsite());
+				+ " foods and the risk for human health in the EU", reference.getTitle());
+		assertEquals("abstract", reference.getAbstract());
+		// TODO: journal
+		// TODO: volume
+		// TODO: issue
+		assertEquals("Published", reference.getStatus());
+		assertEquals("www.efsa.europa.eu/efsajournal", reference.getWebsite());
 		assertEquals("comment", reference.getComment());
 	}
 
 	@Test
 	public void testModelCategory() throws Exception {
-
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
-
 		ModelCategory modelCategory = importer.retrieveModelCategory(sheet);
 		assertEquals("Dose-response model", modelCategory.getModelClass());
-		assertFalse(modelCategory.eIsSet(pkg.getModelCategory_ModelSubClass()));
-		assertFalse(modelCategory.eIsSet(pkg.getModelCategory_ModelClassComment()));
-		assertFalse(modelCategory.eIsSet(pkg.getModelCategory_BasicProcess()));
+		assertNull(modelCategory.getModelSubClass());
+		assertNull(modelCategory.getModelClassComment());
+		assertNull(modelCategory.getBasicProcess());
 	}
 
 	@Test
 	public void testProduct() throws Exception {
 
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
-
 		// Test product at row 39
 		{
 			Product product39 = importer.retrieveProduct(sheet.getRow(38));
-			assertEquals("Allspice", product39.getProductName());
-			assertEquals("description", product39.getProductDescription());
-			assertEquals("[]", product39.getProductUnit());
-			assertFalse(product39.eIsSet(pkg.getProduct_ProductionMethod()));
-			assertEquals("Aluminium foil - aluminium sheet", product39.getPackaging());
-			assertEquals("Canning", product39.getProductTreatment());
+			assertEquals("Allspice", product39.getName());
+			assertEquals("description", product39.getDescription());
+			assertEquals("[]", product39.getUnit());
+			assertNull(product39.getMethod());
+			assertEquals("Aluminium foil - aluminium sheet", product39.getPackaging().get(0));
+			assertEquals("Canning", product39.getTreatment().get(0));
 			assertEquals("Afghanistan", product39.getOriginCountry());
 			assertEquals("A Coruña", product39.getOriginArea());
 			assertEquals("Adriatic", product39.getFisheriesArea());
-			// 30th November 2017
-			assertEquals(new Date(2017, 10, 30), product39.getProductionDate());
-			// 30th November 2018
-			assertEquals(new Date(2018, 10, 30), product39.getExpiryDate());
+			assertEquals(LocalDate.of(2017, 10, 30), product39.getProductionDate());
+			assertEquals(LocalDate.of(2018, 10, 30), product39.getExpiryDate());
 		}
 
 		// Test product at row 40
 		{
 			Product product40 = importer.retrieveProduct(sheet.getRow(39));
-			assertEquals("Almonds", product40.getProductName());
-			assertEquals("almonds", product40.getProductDescription());
-			assertEquals("[aw]", product40.getProductUnit());
-			assertEquals("Farmed Domestic or cultivated", product40.getProductionMethod());
-			assertFalse(product40.eIsSet(pkg.getProduct_Packaging()));
-			assertEquals("Churning", product40.getProductTreatment());
+			assertEquals("Almonds", product40.getName());
+			assertEquals("almonds", product40.getDescription());
+			assertEquals("[aw]", product40.getUnit());
+			assertEquals("Farmed Domestic or cultivated", product40.getMethod().get(0));
+			assertNull(product40.getPackaging());
+			assertEquals("Churning", product40.getTreatment().get(0));
 			assertEquals("Aland Islands", product40.getOriginCountry());
 			assertEquals("Aachen, Kreis", product40.getOriginArea());
 			assertEquals("Aegean", product40.getFisheriesArea());
-			// 30th November 2017
-			assertEquals(new Date(2017, 10, 30), product40.getProductionDate());
-			// 30th November 2018
-			assertEquals(new Date(2018, 10, 30), product40.getExpiryDate());
+			assertEquals(LocalDate.of(2017, 10, 30), product40.getProductionDate());
+			assertEquals(LocalDate.of(2018, 10, 30), product40.getExpiryDate());
 		}
 
 		// Test product at row 41
 		{
 			Product product41 = importer.retrieveProduct(sheet.getRow(40));
-			assertEquals("American persimmon (Virginia kaki)", product41.getProductName());
-			assertEquals("american", product41.getProductDescription());
-			assertEquals("[Fluorescence]", product41.getProductUnit());
-			assertEquals("Free range production", product41.getProductionMethod());
-			assertEquals("Blister (film)", product41.getPackaging());
-			assertEquals("Concentration", product41.getProductTreatment());
+			assertEquals("American persimmon (Virginia kaki)", product41.getName());
+			assertEquals("american", product41.getDescription());
+			assertEquals("[Fluorescence]", product41.getUnit());
+			assertEquals("Free range production", product41.getMethod().get(0));
+			assertEquals("Blister (film)", product41.getPackaging().get(0));
+			assertEquals("Concentration", product41.getTreatment().get(0));
 			assertEquals("Albania", product41.getOriginCountry());
 			assertEquals("Aachen, Kreisfreie Stadt", product41.getOriginArea());
 			assertEquals("Amazon", product41.getFisheriesArea());
-			// 30th November 2017
-			assertEquals(new Date(2017, 10, 30), product41.getProductionDate());
-			// 30th November 2018
-			assertEquals(new Date(2018, 10, 30), product41.getExpiryDate());
+			assertEquals(LocalDate.of(2017, 10, 30), product41.getProductionDate());
+			assertEquals(LocalDate.of(2018, 10, 30), product41.getExpiryDate());
 		}
 	}
 
 	@Test
 	public void testHazard() throws Exception {
-
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
-
 		// Test hazard at row 39
 		{
 			Hazard hazard39 = importer.retrieveHazard(sheet.getRow(38));
-			assertEquals("Biogenic amines", hazard39.getHazardType());
+			assertEquals("Biogenic amines", hazard39.getType());
 			assertEquals("'Prohexadione (prohexadione (acid) and its salts expressed as prohexadione-calcium)",
-					hazard39.getHazardName());
-			assertFalse(hazard39.eIsSet(pkg.getHazard_HazardDescription()));
-			assertEquals("[]", hazard39.getHazardUnit());
+					hazard39.getName());
+			assertNull(hazard39.getDescription());
+			assertEquals("[]", hazard39.getUnit());
 			assertEquals("effect", hazard39.getAdverseEffect());
 			assertEquals("source", hazard39.getSourceOfContamination());
 			assertEquals("BMD", hazard39.getBenchmarkDose());
 			assertEquals("MRL", hazard39.getMaximumResidueLimit());
 			assertEquals("NOAEL", hazard39.getNoObservedAdverseAffectLevel());
 			assertEquals("LOAEL", hazard39.getLowestObservedAdverseAffectLevel());
-			assertEquals("AOEL", hazard39.getAcceptableOperatorExposureLevel());
+			assertEquals("AOEL", hazard39.getAcceptableOperatorsExposureLevel());
 			assertEquals("ARfD", hazard39.getAcuteReferenceDose());
 			assertEquals("ADI", hazard39.getAcceptableDailyIntake());
+			assertNull(hazard39.getIndSum());
 		}
 	}
 
 	@Test
 	public void testPopulationGroup() throws Exception {
-
 		// Test population group at row 39
 		{
 			PopulationGroup populationGroup39 = importer.retrievePopulationGroup(sheet.getRow(38));
-			assertEquals("Other", populationGroup39.getPopulationName());
+			assertEquals("Other", populationGroup39.getName());
 			assertEquals("target", populationGroup39.getTargetPopulation());
-			assertEquals("span", populationGroup39.getPopulationSpan().get(0).getValue());
-			assertEquals("description", populationGroup39.getPopulationDescription().get(0).getValue());
-			assertEquals("age", populationGroup39.getPopulationAge().get(0).getValue());
+			assertEquals("span", populationGroup39.getPopulationSpan().get(0));
+			assertEquals("description", populationGroup39.getPopulationDescription().get(0));
+			assertEquals("age", populationGroup39.getPopulationAge().get(0));
 			assertEquals("gender", populationGroup39.getPopulationGender());
-			assertEquals("bmi", populationGroup39.getBmi().get(0).getValue());
-			assertEquals("group", populationGroup39.getSpecialDietGroups().get(0).getValue());
-			assertEquals("consumption", populationGroup39.getPatternConsumption().get(0).getValue());
-			assertEquals("A Coruña", populationGroup39.getRegion().get(0).getValue());
-			assertEquals("Afghanistan", populationGroup39.getCountry().get(0).getValue());
-			assertEquals("factors", populationGroup39.getPopulationRiskFactor().get(0).getValue());
-			assertEquals("Season", populationGroup39.getSeason().get(0).getValue());
+			assertEquals("bmi", populationGroup39.getBmi().get(0));
+			assertEquals("group", populationGroup39.getSpecialDietGroups().get(0));
+			assertEquals("consumption", populationGroup39.getPatternConsumption().get(0));
+			assertEquals("A Coruña", populationGroup39.getRegion().get(0));
+			assertEquals("Afghanistan", populationGroup39.getCountry().get(0));
+			assertEquals("factors", populationGroup39.getPopulationRiskFactor().get(0));
+			assertEquals("Season", populationGroup39.getSeason().get(0));
 		}
 	}
 
 	@Test
 	public void testStudy() throws Exception {
-
 		Study study = importer.retrieveStudy(sheet);
-		assertEquals("identifier", study.getStudyIdentifier());
+		assertEquals("identifier", study.getIdentifier());
 		assertEquals("Listeria monocytogenes generic Quantitative Microbiological Risk Assessment (gQMRA) model",
-				study.getStudyTitle());
-		assertEquals("description", study.getStudyDescription());
-		assertEquals("design type", study.getStudyDesignType());
-		assertEquals("type", study.getStudyAssayMeasurementType());
-		assertEquals("AAS", study.getStudyAssayTechnologyType());
-		assertEquals("platform", study.getStudyAssayTechnologyPlatform());
+				study.getTitle());
+		assertEquals("description", study.getDescription());
+		assertEquals("design type", study.getDesignType());
+		assertEquals("type", study.getAssayMeasurementType());
+		assertEquals("AAS", study.getAssayTechnologyType());
+		assertEquals("platform", study.getAssayTechnologyPlatform());
 		assertEquals("Internally validated", study.getAccreditationProcedureForTheAssayTechnology());
-		assertEquals("name", study.getStudyProtocolName());
-		assertEquals("type", study.getStudyProtocolType());
-		assertEquals("description", study.getStudyDescription());
-		assertEquals(URI.create("uri"), study.getStudyProtocolURI());
-		assertEquals("version", study.getStudyProtocolVersion());
-		assertEquals("name", study.getStudyProtocolParametersName());
-		assertEquals("name", study.getStudyProtocolComponentsName());
-		assertEquals("type", study.getStudyProtocolComponentsType());
+		assertEquals("name", study.getProtocolName());
+		assertEquals("type", study.getProtocolType());
+		assertEquals("description", study.getProtocolDescription());
+		assertEquals("uri", study.getProtocolURI());
+		assertEquals("version", study.getProtocolVersion());
+		assertEquals("name", study.getProtocolParametersName());
+		assertEquals("name", study.getProtocolComponentsName());
+		assertEquals("type", study.getProtocolComponentsType());
 	}
 
 	@Test
@@ -310,30 +332,29 @@ public class RAKIPSheetImporterTest {
 		// Test DietaryAssessmentMethod from row 104
 		DietaryAssessmentMethod method104 = importer.retrieveDietaryAssessmentMethod(sheet.getRow(103));
 		assertEquals("24-hour recall interview", method104.getCollectionTool());
-		assertEquals(0, method104.getNumberOfNonConsecutiveOneDay());
+		assertEquals("0.0", method104.getNumberOfNonConsecutiveOneDay());
 		assertEquals("a", method104.getSoftwareTool());
-		assertEquals("a", method104.getNumberOfFoodItems());
-		assertEquals("f", method104.getRecordTypes());
-		assertEquals("(Beet) Sugar", method104.getFoodDescriptors());
+		assertEquals("a", method104.getNumberOfFoodItems().get(0));
+		assertEquals("f", method104.getRecordTypes().get(0));
+		assertEquals("(Beet) Sugar", method104.getFoodDescriptors().get(0));
 
 		// Test DietaryAssessmentMethod from row 105
 		DietaryAssessmentMethod method105 = importer.retrieveDietaryAssessmentMethod(sheet.getRow(104));
 		assertEquals("eating outside questionnaire", method105.getCollectionTool());
-		assertEquals(1, method105.getNumberOfNonConsecutiveOneDay());
+		assertEquals("1.0", method105.getNumberOfNonConsecutiveOneDay());
 		assertEquals("b", method105.getSoftwareTool());
-		assertEquals("b", method105.getNumberOfFoodItems());
-		assertEquals("e", method105.getRecordTypes());
-		assertEquals("(Beet) Sugar", method105.getFoodDescriptors());
+		assertEquals("b", method105.getNumberOfFoodItems().get(0));
+		assertEquals("e", method105.getRecordTypes().get(0));
+		assertEquals("(Beet) Sugar", method105.getFoodDescriptors().get(0));
 
 		// Test DietaryAssessmentMethod from row 106
-		// food diaries 2 c c d (Beet) Sugar
 		DietaryAssessmentMethod method106 = importer.retrieveDietaryAssessmentMethod(sheet.getRow(105));
 		assertEquals("food diaries", method106.getCollectionTool());
-		assertEquals(2, method106.getNumberOfNonConsecutiveOneDay());
+		assertEquals("2.0", method106.getNumberOfNonConsecutiveOneDay());
 		assertEquals("c", method106.getSoftwareTool());
-		assertEquals("c", method106.getNumberOfFoodItems());
-		assertEquals("d", method106.getRecordTypes());
-		assertEquals("(Beet) Sugar", method106.getFoodDescriptors());
+		assertEquals("c", method106.getNumberOfFoodItems().get(0));
+		assertEquals("d", method106.getRecordTypes().get(0));
+		assertEquals("(Beet) Sugar", method106.getFoodDescriptors().get(0));
 	}
 
 	@Test
@@ -341,21 +362,21 @@ public class RAKIPSheetImporterTest {
 
 		// Test Laboratory at row 111
 		Laboratory laboratory111 = importer.retrieveLaboratory(sheet.getRow(110));
-		assertEquals("Accredited", laboratory111.getLaboratoryAccreditation().get(0).getValue());
-		assertEquals("a", laboratory111.getLaboratoryName());
-		assertEquals("Afghanistan", laboratory111.getLaboratoryCountry());
+		assertEquals("Accredited", laboratory111.getAccreditation().get(0));
+		assertEquals("a", laboratory111.getName());
+		assertEquals("Afghanistan", laboratory111.getCountry());
 
 		// Test Laboratory at row 112
 		Laboratory laboratory112 = importer.retrieveLaboratory(sheet.getRow(111));
-		assertEquals("None", laboratory112.getLaboratoryAccreditation().get(0).getValue());
-		assertEquals("b", laboratory112.getLaboratoryName());
-		assertEquals("Aland Islands", laboratory112.getLaboratoryCountry());
+		assertEquals("None", laboratory112.getAccreditation().get(0));
+		assertEquals("b", laboratory112.getName());
+		assertEquals("Aland Islands", laboratory112.getCountry());
 
 		// Test Laboratory at row 113
 		Laboratory laboratory113 = importer.retrieveLaboratory(sheet.getRow(112));
-		assertEquals("Other", laboratory113.getLaboratoryAccreditation().get(0).getValue());
-		assertEquals("c", laboratory113.getLaboratoryName());
-		assertEquals("Albania", laboratory113.getLaboratoryCountry());
+		assertEquals("Other", laboratory113.getAccreditation().get(0));
+		assertEquals("c", laboratory113.getName());
+		assertEquals("Albania", laboratory113.getCountry());
 	}
 
 	@Test
@@ -363,35 +384,35 @@ public class RAKIPSheetImporterTest {
 
 		// Test assay at row 118
 		Assay assay118 = importer.retrieveAssay(sheet.getRow(117));
-		assertEquals("name0", assay118.getAssayName());
-		assertEquals("descr0", assay118.getAssayDescription());
-		assertEquals("moist0", assay118.getPercentageOfMoisture());
-		assertEquals("fat0", assay118.getPercentageOfFat());
-		assertEquals("detect0", assay118.getLimitOfDetection());
-		assertEquals("quant0", assay118.getLimitOfQuantification());
-		assertEquals("range0", assay118.getRangeOfContamination());
+		assertEquals("name0", assay118.getName());
+		assertEquals("descr0", assay118.getDescription());
+		assertEquals("moist0", assay118.getMoisturePercentage());
+		assertEquals("fat0", assay118.getFatPercentage());
+		assertEquals("detect0", assay118.getDetectionLimit());
+		assertEquals("quant0", assay118.getQuantificationLimit());
+		assertEquals("range0", assay118.getContaminationRange());
 		assertEquals("uncert0", assay118.getUncertaintyValue());
 
 		// Test assay at row 119
 		Assay assay119 = importer.retrieveAssay(sheet.getRow(118));
-		assertEquals("name1", assay119.getAssayName());
-		assertEquals("descr1", assay119.getAssayDescription());
-		assertEquals("moist1", assay119.getPercentageOfMoisture());
-		assertEquals("fat1", assay119.getPercentageOfFat());
-		assertEquals("detect1", assay119.getLimitOfDetection());
-		assertEquals("quant1", assay119.getLimitOfQuantification());
-		assertEquals("range1", assay119.getRangeOfContamination());
+		assertEquals("name1", assay119.getName());
+		assertEquals("descr1", assay119.getDescription());
+		assertEquals("moist1", assay119.getMoisturePercentage());
+		assertEquals("fat1", assay119.getFatPercentage());
+		assertEquals("detect1", assay119.getDetectionLimit());
+		assertEquals("quant1", assay119.getQuantificationLimit());
+		assertEquals("range1", assay119.getContaminationRange());
 		assertEquals("uncert1", assay119.getUncertaintyValue());
 
 		// Test assay at row 120
 		Assay assay120 = importer.retrieveAssay(sheet.getRow(119));
-		assertEquals("name2", assay120.getAssayName());
-		assertEquals("descr2", assay120.getAssayDescription());
-		assertEquals("moist2", assay120.getPercentageOfMoisture());
-		assertEquals("fat2", assay120.getPercentageOfFat());
-		assertEquals("detect2", assay120.getLimitOfDetection());
-		assertEquals("quant2", assay120.getLimitOfQuantification());
-		assertEquals("range2", assay120.getRangeOfContamination());
+		assertEquals("name2", assay120.getName());
+		assertEquals("descr2", assay120.getDescription());
+		assertEquals("moist2", assay120.getMoisturePercentage());
+		assertEquals("fat2", assay120.getFatPercentage());
+		assertEquals("detect2", assay120.getDetectionLimit());
+		assertEquals("quant2", assay120.getQuantificationLimit());
+		assertEquals("range2", assay120.getContaminationRange());
 		assertEquals("uncert2", assay120.getUncertaintyValue());
 	}
 
@@ -401,36 +422,35 @@ public class RAKIPSheetImporterTest {
 		// Check parameter at row 133
 		Parameter param133 = importer.retrieveParameter(sheet.getRow(132));
 
-		assertEquals("DR_Inputs3", param133.getParameterID());
-		assertEquals(ParameterClassification.INPUT, param133.getParameterClassification());
-		assertEquals("DR_Inputs3.csv", param133.getParameterName());
-		assertEquals("DR values, relative risk", param133.getParameterDescription());
-		assertEquals("[]", param133.getParameterUnit());
-		assertEquals("Dimensionless Quantity", param133.getParameterUnitCategory());
-		assertEquals(ParameterType.FILE, param133.getParameterDataType());
-		assertEquals("Boolean", param133.getParameterSource());
-		assertEquals("Boolean", param133.getParameterSubject());
-		assertEquals("Boolean", param133.getParameterDistribution());
+		assertEquals("DR_Inputs3", param133.getId());
+		assertEquals(ClassificationEnum.INPUT, param133.getClassification());
+		assertEquals("DR_Inputs3.csv", param133.getName());
+		assertEquals("DR values, relative risk", param133.getDescription());
+		assertEquals("[]", param133.getUnit());
+		assertEquals("Dimensionless Quantity", param133.getUnitCategory());
+		assertEquals(DataTypeEnum.FILE, param133.getDataType());
+		assertEquals("Boolean", param133.getSource());
+		assertEquals("Boolean", param133.getSubject());
+		assertEquals("Boolean", param133.getDistribution());
 		assertEquals(
 				"C:\\Users\\mesa\\Desktop\\Listeria monocitogenes(KJ) QMRA\\listeria project\\model\\DR\\DR_inputs3.csv",
-				param133.getParameterValue());
+				param133.getValue());
 		// reference
-		assertEquals("a", param133.getParameterVariabilitySubject());
-		assertEquals("max0", param133.getParameterValueMax());
-		assertEquals("min0", param133.getParameterValueMin());
-		assertEquals("error0", param133.getParameterError());
+		assertEquals("a", param133.getVariabilitySubject());
+		assertEquals("max0", param133.getMaxValue());
+		assertEquals("min0", param133.getMinValue());
+		assertEquals("error0", param133.getError());
 	}
-
+	
 	@Test
 	public void testQualityMeasures() throws Exception {
 
-		JsonObject measures = importer.retrieveQualityMeasures(sheet);
-
-		assertEquals(0.1, measures.getJsonNumber("SSE").doubleValue(), .0);
-		assertEquals(0.2, measures.getJsonNumber("MSE").doubleValue(), .0);
-		assertEquals(0.3, measures.getJsonNumber("RMSE").doubleValue(), .0);
-		assertEquals(0.4, measures.getJsonNumber("Rsquared").doubleValue(), .0);
-		assertEquals(0.5, measures.getJsonNumber("AIC").doubleValue(), .0);
-		assertEquals(0.6, measures.getJsonNumber("BIC").doubleValue(), .0);
+		QualityMeasures measures = importer.retrieveQualityMeasures(sheet);
+		assertEquals(0.1, measures.getSSE().doubleValue(), .0);
+		assertEquals(0.2, measures.getMSE().doubleValue(), .0);
+		assertEquals(0.3, measures.getRMSE().doubleValue(), .0);
+		assertEquals(0.4, measures.getRsquared().doubleValue(), .0);
+		assertEquals(0.5, measures.getAIC().doubleValue(), .0);
+		assertEquals(0.6, measures.getBIC().doubleValue(), .0);
 	}
 }
