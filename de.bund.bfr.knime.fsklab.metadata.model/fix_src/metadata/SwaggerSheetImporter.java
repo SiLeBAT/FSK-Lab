@@ -361,7 +361,7 @@ public class SwaggerSheetImporter {
 		if (typeCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			PublicationType type = PublicationType.get(typeCell.getStringCellValue());
 			if (type != null) {
-				reference.addPublicationTypeItem(SwaggerUtil.PUBLICATION_TYPE.get(type));
+				reference.setPublicationType(SwaggerUtil.PUBLICATION_TYPE.get(type));
 			}
 		}
 
