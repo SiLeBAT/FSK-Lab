@@ -187,7 +187,7 @@ public class Reference {
     }
   }
 
-  @SerializedName("PublicationType")
+  @SerializedName("publicationType")
   private List<PublicationTypeEnum> publicationType = null;
 
   @SerializedName("date")
