@@ -436,10 +436,10 @@ public class FskPortObject implements PortObject {
 
 					GenericModel gm = new GenericModel();
 					gm.setModelType("genericModel");
-					gm.setGeneralInformation(RakipUtil.convert2(genericModel.generalInformation));
-					gm.setScope(RakipUtil.convert2(genericModel.scope));
-					gm.setDataBackground(RakipUtil.convert2(genericModel.dataBackground));
-					gm.setModelMath(RakipUtil.convert2(genericModel.modelMath));
+					gm.setGeneralInformation(RakipUtil.convert(genericModel.generalInformation));
+					gm.setScope(RakipUtil.convert(genericModel.scope));
+					gm.setDataBackground(RakipUtil.convert(genericModel.dataBackground));
+					gm.setModelMath(RakipUtil.convert(genericModel.modelMath));
 
 					modelMetadata = gm;
 				}

@@ -52,7 +52,7 @@ public class RakipUtilTest {
 			record.setIssueNumber(0);
 			record.setUrl("www.efsa.europa.eu");
 
-			reference = RakipUtil.convert2(record);
+			reference = RakipUtil.convert(record);
 		}
 
 		assertFalse(reference.isIsReferenceDescription());
@@ -78,7 +78,7 @@ public class RakipUtilTest {
 			deprecated.modelClassComment = "classComment";
 			deprecated.basicProcess.add("basicProcess");
 
-			modelCategory = RakipUtil.convert2(deprecated);
+			modelCategory = RakipUtil.convert(deprecated);
 		}
 
 		assertEquals("modelClass", modelCategory.getModelClass());
@@ -101,7 +101,7 @@ public class RakipUtilTest {
 			deprecated.region.add("region");
 			deprecated.country.add("country");
 
-			scope = RakipUtil.convert2(deprecated);
+			scope = RakipUtil.convert(deprecated);
 		}
 
 		assertEquals("generalComment", scope.getGeneralComment());
@@ -129,7 +129,7 @@ public class RakipUtilTest {
 			deprecated.productionDate = new Date();
 			deprecated.expirationDate = new Date();
 
-			product = RakipUtil.convert2(deprecated);
+			product = RakipUtil.convert(deprecated);
 		}
 
 		assertEquals("environmentName", product.getName());
@@ -166,7 +166,7 @@ public class RakipUtilTest {
 			deprecated.adi = "adi";
 			deprecated.hazardIndSum = "hazardIndSum";
 
-			hazard = RakipUtil.convert2(deprecated);
+			hazard = RakipUtil.convert(deprecated);
 		}
 
 		assertEquals("hazardType", hazard.getType());
@@ -205,7 +205,7 @@ public class RakipUtilTest {
 			deprecated.populationRiskFactor.add("factor");
 			deprecated.season.add("season");
 
-			populationGroup = RakipUtil.convert2(deprecated);
+			populationGroup = RakipUtil.convert(deprecated);
 		}
 
 		assertEquals("populationName", populationGroup.getName());
@@ -235,7 +235,7 @@ public class RakipUtilTest {
 			deprecated.laboratory = new de.bund.bfr.knime.fsklab.rakip.Laboratory();
 			deprecated.assay = new de.bund.bfr.knime.fsklab.rakip.Assay();
 
-			dataBackground = RakipUtil.convert2(deprecated);
+			dataBackground = RakipUtil.convert(deprecated);
 		}
 
 		assertNotNull(dataBackground.getStudy());
@@ -268,7 +268,7 @@ public class RakipUtilTest {
 			deprecated.componentsName = "componentsName";
 			deprecated.componentsType = "componentsType";
 
-			study = RakipUtil.convert2(deprecated);
+			study = RakipUtil.convert(deprecated);
 		}
 
 		assertEquals("id", study.getIdentifier());
@@ -305,7 +305,7 @@ public class RakipUtilTest {
 			deprecated.samplingSize = "samplingSize";
 			deprecated.lotSizeUnit = "lotSizeUnit";
 
-			studySample = RakipUtil.convert2(deprecated);
+			studySample = RakipUtil.convert(deprecated);
 		}
 
 		assertEquals("sample", studySample.getSampleName());
@@ -333,7 +333,7 @@ public class RakipUtilTest {
 			deprecated.recordTypes.add("type");
 			deprecated.foodDescriptors.add("descriptor");
 
-			method = RakipUtil.convert2(deprecated);
+			method = RakipUtil.convert(deprecated);
 		}
 
 		assertEquals("collectionTool", method.getCollectionTool());
@@ -354,7 +354,7 @@ public class RakipUtilTest {
 			deprecated.name = "name";
 			deprecated.country = "country";
 			
-			laboratory = RakipUtil.convert2(deprecated);
+			laboratory = RakipUtil.convert(deprecated);
 		}
 		
 		assertEquals("accreditation", laboratory.getAccreditation().get(0));
@@ -378,7 +378,7 @@ public class RakipUtilTest {
 			deprecated.contaminationRange = "contaminationRange";
 			deprecated.uncertaintyValue = "uncertaintyValue";
 			
-			assay = RakipUtil.convert2(deprecated);
+			assay = RakipUtil.convert(deprecated);
 		}
 		
 		assertEquals("name", assay.getName());
@@ -409,7 +409,7 @@ public class RakipUtilTest {
 			deprecated.exposure = new de.bund.bfr.knime.fsklab.rakip.Exposure();
 			deprecated.event.add("Event");
 			
-			math = RakipUtil.convert2(deprecated);
+			math = RakipUtil.convert(deprecated);
 		}
 
 		assertTrue(math.getParameter().isEmpty());
@@ -446,7 +446,7 @@ public class RakipUtilTest {
 			deprecated.modelApplicability.add("applicability");
 			deprecated.error = 2.718;
 			
-			param = RakipUtil.convert2(deprecated);
+			param = RakipUtil.convert(deprecated);
 		}
 		
 		assertEquals("id", param.getId());
@@ -478,7 +478,7 @@ public class RakipUtilTest {
 			deprecated.equationReference.add(new Record());
 			deprecated.equation = "equation";
 			
-			equation = RakipUtil.convert2(deprecated);
+			equation = RakipUtil.convert(deprecated);
 		}
 		
 		assertEquals("equationName", equation.getName());
@@ -500,7 +500,7 @@ public class RakipUtilTest {
 			deprecated.scenario = "scenario";
 			deprecated.uncertaintyEstimation = "uncertaintyEstimation";
 			
-			exposure = RakipUtil.convert2(deprecated);
+			exposure = RakipUtil.convert(deprecated);
 		}
 		
 		assertEquals("treatment", exposure.getTreatment().get(0));

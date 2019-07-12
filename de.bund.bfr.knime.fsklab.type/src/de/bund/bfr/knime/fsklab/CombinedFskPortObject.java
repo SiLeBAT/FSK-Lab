@@ -499,10 +499,10 @@ public class CombinedFskPortObject extends FskPortObject {
 
 						GenericModel gm = new GenericModel();
 						gm.setModelType("genericModel");
-						gm.setGeneralInformation(RakipUtil.convert2(deprecatedModel.generalInformation));
-						gm.setScope(RakipUtil.convert2(deprecatedModel.scope));
-						gm.setDataBackground(RakipUtil.convert2(deprecatedModel.dataBackground));
-						gm.setModelMath(RakipUtil.convert2(deprecatedModel.modelMath));
+						gm.setGeneralInformation(RakipUtil.convert(deprecatedModel.generalInformation));
+						gm.setScope(RakipUtil.convert(deprecatedModel.scope));
+						gm.setDataBackground(RakipUtil.convert(deprecatedModel.dataBackground));
+						gm.setModelMath(RakipUtil.convert(deprecatedModel.modelMath));
 					}
 
 					else if (entryName.startsWith(CFG_GENERAL_INFORMATION)) {

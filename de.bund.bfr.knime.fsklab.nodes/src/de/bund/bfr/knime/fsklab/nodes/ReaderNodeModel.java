@@ -526,10 +526,10 @@ class ReaderNodeModel extends NoInternalsModel {
               gm.setModelType("genericModel");
               modelNode = mapper.readTree(temp.toFile());
               de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel = mapper.readValue(temp.toFile(), de.bund.bfr.knime.fsklab.rakip.GenericModel.class);
-              gm.setGeneralInformation(RakipUtil.convert2(genericModel.generalInformation));
-              gm.setScope(RakipUtil.convert2(genericModel.scope));
-              gm.dataBackground(RakipUtil.convert2(genericModel.dataBackground));
-              gm.modelMath(RakipUtil.convert2(genericModel.modelMath));
+              gm.setGeneralInformation(RakipUtil.convert(genericModel.generalInformation));
+              gm.setScope(RakipUtil.convert(genericModel.scope));
+              gm.dataBackground(RakipUtil.convert(genericModel.dataBackground));
+              gm.modelMath(RakipUtil.convert(genericModel.modelMath));
               model = gm;
             }
           }
