@@ -86,7 +86,6 @@ import metadata.Scope;
 import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
-import metadata.SwaggerSheetImporter;
 import metadata.SwaggerUtil;
 
 class CreatorNodeModel extends NoInternalsModel {
@@ -185,25 +184,11 @@ class CreatorNodeModel extends NoInternalsModel {
 
       // Reads model meta data
       Workbook workbook = getWorkbook(nodeSettings.spreadsheet);
-      
       workbook.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
       Sheet sheet = workbook.getSheet(nodeSettings.sheet);
-      
-      
-      if(sheet.getSheetName().equals("Generic Metadata Schema") ) {
-               
-        SwaggerSheetImporter importer = new SwaggerSheetImporter();
-        GenericModel gm = new GenericModel();
-        gm.setModelType("genericModel");
-        gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
-        gm.setScope(importer.retrieveScope(sheet));
-        gm.setDataBackground(importer.retrieveBackground(sheet));
-        gm.setModelMath(importer.retrieveModelMath(sheet));
 
-        modelMetadata = gm;
-      }else if (sheet.getPhysicalNumberOfRows() > 29) {
-      
-        // Process 1.0.3 RAKIP spreadsheet has "parameter type" P:131 (or 130 if index starts at 0)
+      if (sheet.getPhysicalNumberOfRows() > 29) {
+        // Process 1.0.3 RAKIP spreadsheet
         RAKIPSheetImporter2 importer = new RAKIPSheetImporter2();
         GenericModel gm = new GenericModel();
         gm.setModelType("genericModel");
