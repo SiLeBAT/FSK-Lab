@@ -1,11 +1,7 @@
 package metadata;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import java.net.URI;
 import java.util.Date;
@@ -701,11 +697,30 @@ public class SwaggerUtilTest {
 		assertThat(SwaggerUtil.getModelMath(createRiskModel()), instanceOf(GenericModelModelMath.class));
 		assertThat(SwaggerUtil.getModelMath(createQraModel()), instanceOf(GenericModelModelMath.class));
 	}
+	
+	@Test
+	public void testGetLanguageWrittenIn() {
+		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createGenericModel()));
+		assertNull(SwaggerUtil.getLanguageWrittenIn(createDataModel()));
+		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createPredictiveModel()));
+		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createOtherModel()));
+		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createExposureModel()));
+		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createToxicologicalModel()));
+		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createDoseResponseModel()));
+		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createProcessModel()));
+		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createConsumptionModel()));
+		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createRiskModel()));
+		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createQraModel()));
+	}
 
 	private static GenericModel createGenericModel() {
 		GenericModel model = new GenericModel();
 		model.setModelType("genericModel");
-		model.setGeneralInformation(new GenericModelGeneralInformation());
+		
+		GenericModelGeneralInformation information = new GenericModelGeneralInformation();
+		information.setLanguageWrittenIn("R");
+		
+		model.setGeneralInformation(information);
 		model.setScope(new GenericModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new GenericModelModelMath());
@@ -727,7 +742,11 @@ public class SwaggerUtilTest {
 	private static PredictiveModel createPredictiveModel() {
 		PredictiveModel model = new PredictiveModel();
 		model.setModelType("predictiveModel");
-		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+		
+		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setLanguageWrittenIn("R");
+		model.setGeneralInformation(information);
+
 		model.setScope(new PredictiveModelScope());
 		model.setDataBackground(new PredictiveModelDataBackground());
 		model.setModelMath(new PredictiveModelModelMath());
@@ -738,7 +757,11 @@ public class SwaggerUtilTest {
 	private static OtherModel createOtherModel() {
 		OtherModel model = new OtherModel();
 		model.setModelType("otherModel");
-		model.setGeneralInformation(new OtherModelGeneralInformation());
+		
+		OtherModelGeneralInformation information = new OtherModelGeneralInformation();
+		information.setLanguageWrittenIn("R");
+		model.setGeneralInformation(information);
+
 		model.setScope(new OtherModelScope());
 		model.setDataBackground(new OtherModelDataBackground());
 		model.setModelMath(new OtherModelModelMath());
@@ -749,7 +772,11 @@ public class SwaggerUtilTest {
 	private static ExposureModel createExposureModel() {
 		ExposureModel model = new ExposureModel();
 		model.setModelType("exposureModel");
-		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+
+		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setLanguageWrittenIn("R");
+		model.setGeneralInformation(information);
+
 		model.setScope(new ExposureModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new GenericModelModelMath());
@@ -760,7 +787,11 @@ public class SwaggerUtilTest {
 	private static ToxicologicalModel createToxicologicalModel() {
 		ToxicologicalModel model = new ToxicologicalModel();
 		model.setModelType("toxicologicalModel");
-		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+
+		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setLanguageWrittenIn("R");
+		model.setGeneralInformation(information);
+
 		model.setScope(new ToxicologicalModelScope());
 		model.setDataBackground(new PredictiveModelDataBackground());
 		model.setModelMath(new GenericModelModelMath());
@@ -771,7 +802,11 @@ public class SwaggerUtilTest {
 	private static DoseResponseModel createDoseResponseModel() {
 		DoseResponseModel model = new DoseResponseModel();
 		model.setModelType("doseResponseModel");
-		model.setGeneralInformation(new DoseResponseModelGeneralInformation());
+
+		DoseResponseModelGeneralInformation information = new DoseResponseModelGeneralInformation();
+		information.setLanguageWrittenIn("R");
+		model.setGeneralInformation(information);
+
 		model.setScope(new DoseResponseModelScope());
 		model.setDataBackground(new PredictiveModelDataBackground());
 		model.setModelMath(new DoseResponseModelModelMath());
@@ -782,7 +817,11 @@ public class SwaggerUtilTest {
 	private static ProcessModel createProcessModel() {
 		ProcessModel model = new ProcessModel();
 		model.setModelType("processModel");
-		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+
+		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setLanguageWrittenIn("R");
+		model.setGeneralInformation(information);
+
 		model.setScope(new ProcessModelScope());
 		model.setDataBackground(new PredictiveModelDataBackground());
 		model.setModelMath(new PredictiveModelModelMath());
@@ -793,7 +832,11 @@ public class SwaggerUtilTest {
 	private static ConsumptionModel createConsumptionModel() {
 		ConsumptionModel model = new ConsumptionModel();
 		model.setModelType("consumptionModel");
-		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+		
+		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setLanguageWrittenIn("R");
+		model.setGeneralInformation(information);
+		
 		model.setScope(new ConsumptionModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new PredictiveModelModelMath());
@@ -804,7 +847,11 @@ public class SwaggerUtilTest {
 	private static RiskModel createRiskModel() {
 		RiskModel model = new RiskModel();
 		model.setModelType("riskModel");
-		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+
+		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setLanguageWrittenIn("R");
+		model.setGeneralInformation(information);
+
 		model.setScope(new ExposureModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new GenericModelModelMath());
@@ -815,7 +862,11 @@ public class SwaggerUtilTest {
 	private static QraModel createQraModel() {
 		QraModel model = new QraModel();
 		model.setModelType("qraModel");
-		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+
+		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setLanguageWrittenIn("R");
+		model.setGeneralInformation(information);
+
 		model.setScope(new ExposureModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new GenericModelModelMath());
