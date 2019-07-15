@@ -712,12 +712,28 @@ public class SwaggerUtilTest {
 		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createRiskModel()));
 		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createQraModel()));
 	}
+	
+	@Test
+	public void testGetModelName() {
+		assertEquals("name", SwaggerUtil.getModelName(createGenericModel()));
+		assertEquals("name", SwaggerUtil.getModelName(createDataModel()));
+		assertEquals("name", SwaggerUtil.getModelName(createPredictiveModel()));
+		assertEquals("name", SwaggerUtil.getModelName(createOtherModel()));
+		assertEquals("name", SwaggerUtil.getModelName(createExposureModel()));
+		assertEquals("name", SwaggerUtil.getModelName(createToxicologicalModel()));
+		assertEquals("name", SwaggerUtil.getModelName(createDoseResponseModel()));
+		assertEquals("name", SwaggerUtil.getModelName(createProcessModel()));
+		assertEquals("name", SwaggerUtil.getModelName(createConsumptionModel()));
+		assertEquals("name", SwaggerUtil.getModelName(createRiskModel()));
+		assertEquals("name", SwaggerUtil.getModelName(createQraModel()));
+	}
 
 	private static GenericModel createGenericModel() {
 		GenericModel model = new GenericModel();
 		model.setModelType("genericModel");
 		
 		GenericModelGeneralInformation information = new GenericModelGeneralInformation();
+		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		
 		model.setGeneralInformation(information);
@@ -731,7 +747,11 @@ public class SwaggerUtilTest {
 	private static DataModel createDataModel() {
 		DataModel model = new DataModel();
 		model.setModelType("dataModel");
-		model.setGeneralInformation(new DataModelGeneralInformation());
+
+		DataModelGeneralInformation information = new DataModelGeneralInformation();
+		information.setName("name");
+		model.setGeneralInformation(information);
+
 		model.setScope(new GenericModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new DataModelModelMath());
@@ -744,6 +764,7 @@ public class SwaggerUtilTest {
 		model.setModelType("predictiveModel");
 		
 		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
 
@@ -759,6 +780,7 @@ public class SwaggerUtilTest {
 		model.setModelType("otherModel");
 		
 		OtherModelGeneralInformation information = new OtherModelGeneralInformation();
+		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
 
@@ -774,6 +796,7 @@ public class SwaggerUtilTest {
 		model.setModelType("exposureModel");
 
 		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
 
@@ -789,6 +812,7 @@ public class SwaggerUtilTest {
 		model.setModelType("toxicologicalModel");
 
 		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
 
@@ -804,6 +828,7 @@ public class SwaggerUtilTest {
 		model.setModelType("doseResponseModel");
 
 		DoseResponseModelGeneralInformation information = new DoseResponseModelGeneralInformation();
+		information.setModelName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
 
@@ -819,6 +844,7 @@ public class SwaggerUtilTest {
 		model.setModelType("processModel");
 
 		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
 
@@ -834,6 +860,7 @@ public class SwaggerUtilTest {
 		model.setModelType("consumptionModel");
 		
 		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
 		
@@ -849,6 +876,7 @@ public class SwaggerUtilTest {
 		model.setModelType("riskModel");
 
 		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
 
@@ -864,6 +892,7 @@ public class SwaggerUtilTest {
 		model.setModelType("qraModel");
 
 		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
 

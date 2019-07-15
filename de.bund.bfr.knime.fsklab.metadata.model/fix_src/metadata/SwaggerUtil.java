@@ -637,36 +637,36 @@ public class SwaggerUtil {
 
 	/** @return language written in. Null if missing. */
 	public static String getModelName(Model model) {
-		String language;
+		String name;
 
 		final String modelType = model.getModelType();
 		if (modelType.equals("genericModel")) {
-			language = ((GenericModel) model).getGeneralInformation().getName();
+			name = ((GenericModel) model).getGeneralInformation().getName();
 		} else if (modelType.equals("dataModel")) {
-			language = ((DataModel) model).getGeneralInformation().getName();
+			name = ((DataModel) model).getGeneralInformation().getName();
 		} else if (modelType.equals("predictiveModel")) {
-			language = ((PredictiveModel) model).getGeneralInformation().getName();
+			name = ((PredictiveModel) model).getGeneralInformation().getName();
 		} else if (modelType.equals("otherModel")) {
-			language = ((OtherModel) model).getGeneralInformation().getName();
+			name = ((OtherModel) model).getGeneralInformation().getName();
 		} else if (modelType.equals("exposureModel")) {
-			language = ((ExposureModel) model).getGeneralInformation().getName();
+			name = ((ExposureModel) model).getGeneralInformation().getName();
 		} else if (modelType.equals("toxicologicalModel")) {
-			language = ((ToxicologicalModel) model).getGeneralInformation().getName();
+			name = ((ToxicologicalModel) model).getGeneralInformation().getName();
 		} else if (modelType.equals("doseResponseModel")) {
-			language = ((DoseResponseModel) model).getGeneralInformation().getModelName();
+			name = ((DoseResponseModel) model).getGeneralInformation().getModelName();
 		} else if (modelType.equals("processModel")) {
-			language = ((ProcessModel) model).getGeneralInformation().getName();
+			name = ((ProcessModel) model).getGeneralInformation().getName();
 		} else if (modelType.equals("consumptionModel")) {
-			language = ((ConsumptionModel) model).getGeneralInformation().getName();
+			name = ((ConsumptionModel) model).getGeneralInformation().getName();
 		} else if (modelType.equals("riskModel")) {
-			language = ((RiskModel) model).getGeneralInformation().getName();
+			name = ((RiskModel) model).getGeneralInformation().getName();
 		} else if (modelType.equals("qraModel")) {
-			language = ((QraModel) model).getGeneralInformation().getName();
+			name = ((QraModel) model).getGeneralInformation().getName();
 		} else {
-			language = null;
+			name = null;
 		}
 
-		return language;
+		return name;
 	}
 
 	public static Object getGeneralInformation(Model model) {
