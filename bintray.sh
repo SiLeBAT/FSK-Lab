@@ -1,6 +1,6 @@
 API="https://api.bintray.com"
 PROPS=";bt_package=update;bt_version=version;publish=1;override=1"
-FOLDER="$TRAVIS_BUILD_DIR/releng/de.bund.bfr.knime.update/target/repository"
+FOLDER="$TRAVIS_BUILD_DIR/de.bund.bfr.knime.update/target/repository"
 
 SUBJECT=silebat
 REPO=fsklab_test
