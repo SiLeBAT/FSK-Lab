@@ -7,24 +7,29 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.threeten.bp.LocalDate;
 
+import de.bund.bfr.metadata.swagger.Assay;
 import de.bund.bfr.metadata.swagger.Contact;
-import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.DoseResponseModelModelMath;
-import de.bund.bfr.metadata.swagger.DoseResponseModelScope;
+import de.bund.bfr.metadata.swagger.Laboratory;
 import de.bund.bfr.metadata.swagger.ModelCategory;
+import de.bund.bfr.metadata.swagger.OtherModelDataBackground;
+import de.bund.bfr.metadata.swagger.OtherModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.OtherModelModelMath;
+import de.bund.bfr.metadata.swagger.OtherModelScope;
 import de.bund.bfr.metadata.swagger.Parameter;
-import de.bund.bfr.metadata.swagger.PredictiveModelDataBackground;
 import de.bund.bfr.metadata.swagger.QualityMeasures;
 import de.bund.bfr.metadata.swagger.Reference;
+import de.bund.bfr.metadata.swagger.Study;
+import de.bund.bfr.metadata.swagger.StudySample;
 
-public class SwaggerDoseResponseSheetImporter extends SwaggerSheetImporter {
-	public DoseResponseModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
+public class SwaggerOtherModelSheetImporter extends SwaggerSheetImporter {
 
-		DoseResponseModelGeneralInformation information = new DoseResponseModelGeneralInformation();
+	public OtherModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
+
+		OtherModelGeneralInformation information = new OtherModelGeneralInformation();
 
 		Cell nameCell = sheet.getRow(GENERAL_INFORMATION__NAME).getCell(I);
 		if (nameCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setModelName(nameCell.getStringCellValue());
+			information.setName(nameCell.getStringCellValue());
 		}
 
 		Cell sourceCell = sheet.getRow(GENERAL_INFORMATION__SOURCE).getCell(I);
@@ -129,19 +134,81 @@ public class SwaggerDoseResponseSheetImporter extends SwaggerSheetImporter {
 
 		return information;
 	}
-	public PredictiveModelDataBackground retrieveBackground(Sheet sheet) {
-		SwaggerPredictiveModelSheetImporter importer = new SwaggerPredictiveModelSheetImporter();
-		return importer.retrieveBackground(sheet);
+	public OtherModelModelMath retrieveModelMath(Sheet sheet) {
+		
+		OtherModelModelMath math = new OtherModelModelMath();
+
+		for (int rownum = 132; rownum < sheet.getLastRowNum(); rownum++) {
+			try {
+				Row row = sheet.getRow(rownum);
+				Parameter param = retrieveParameter(row);
+				math.addParameterItem(param);
+			} catch (Exception exception) {
+				// ...
+			}
+		}
+
+		try {
+			QualityMeasures measures = retrieveQualityMeasures(sheet);
+			math.addQualityMeasuresItem(measures);
+		} catch (Exception exception) {
+			// ...
+		}
+
+		return math;
 	}
-	public DoseResponseModelScope retrieveScope(Sheet sheet) {
+	public OtherModelDataBackground retrieveBackground(Sheet sheet) {
 
-		DoseResponseModelScope scope = new DoseResponseModelScope();
+		OtherModelDataBackground background = new OtherModelDataBackground();
 
+		try {
+			Study study = retrieveStudy(sheet);
+			background.setStudy(study);
+		} catch (Exception exception) {
+		}
+
+		for (int numrow = 96; numrow < 99; numrow++) {
+			try {
+				StudySample sample = retrieveStudySample(sheet.getRow(numrow));
+				background.addStudySampleItem(sample);
+			} catch (Exception exception) {
+			}
+		}
+
+
+		for (int numrow = 110; numrow < 113; numrow++) {
+			try {
+				Laboratory laboratory = retrieveLaboratory(sheet.getRow(numrow));
+				background.addLaboratoryItem(laboratory);
+			} catch (Exception exception) {
+			}
+		}
+
+		for (int numrow = 117; numrow < 120; numrow++) {
+			try {
+				Assay assay = retrieveAssay(sheet.getRow(numrow));
+				background.addAssayItem(assay);
+			} catch (Exception exception) {
+				// ignore errors since Assay is optional
+			}
+		}
+
+		return background;
+	}
+	public OtherModelScope retrieveScope(Sheet sheet) {
+
+		OtherModelScope scope = new OtherModelScope();
+		SwaggerGenericSheetImporter importer = new SwaggerGenericSheetImporter();
+		
 		for (int numrow = 38; numrow <= 49; numrow++) {
 
 			Row row = sheet.getRow(numrow);
 
-			
+			try {
+				scope.addProductItem(importer.retrieveProduct(row));
+			} catch (IllegalArgumentException exception) {
+				// ignore exception since products are optional (*)
+			}
 
 			try {
 				scope.addHazardItem(retrieveHazard(row));
@@ -170,30 +237,4 @@ public class SwaggerDoseResponseSheetImporter extends SwaggerSheetImporter {
 
 		return scope;
 	}
-	
-	public DoseResponseModelModelMath retrieveModelMath(Sheet sheet) {
-		
-		DoseResponseModelModelMath math = new DoseResponseModelModelMath();
-
-		for (int rownum = 132; rownum < sheet.getLastRowNum(); rownum++) {
-			try {
-				Row row = sheet.getRow(rownum);
-				Parameter param = retrieveParameter(row);
-				math.addParameterItem(param);
-			} catch (Exception exception) {
-				// ...
-			}
-		}
-
-		try {
-			QualityMeasures measures = retrieveQualityMeasures(sheet);
-			math.addQualityMeasuresItem(measures);
-		} catch (Exception exception) {
-			// ...
-		}
-
-		return math;
-	}
-
-
 }

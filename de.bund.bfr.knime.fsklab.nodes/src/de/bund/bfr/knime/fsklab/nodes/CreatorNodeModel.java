@@ -61,11 +61,19 @@ import de.bund.bfr.fskml.ScriptFactory;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.metadata.swagger.ConsumptionModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.ExposureModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.HealthModel;
 import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.OtherModel;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.PredictiveModel;
+import de.bund.bfr.metadata.swagger.ProcessModel;
+import de.bund.bfr.metadata.swagger.QraModel;
+import de.bund.bfr.metadata.swagger.RiskModel;
+import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 import metadata.Assay;
 import metadata.Contact;
 import metadata.DataBackground;
@@ -88,10 +96,18 @@ import metadata.Scope;
 import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
+import metadata.SwaggerConsumptionSheetImporter;
 import metadata.SwaggerDoseResponseSheetImporter;
+import metadata.SwaggerExposureSheetImporter;
 import metadata.SwaggerGenericSheetImporter;
+import metadata.SwaggerHealthModelSheetImporter;
+import metadata.SwaggerOtherModelSheetImporter;
 import metadata.SwaggerPredictiveModelSheetImporter;
+import metadata.SwaggerProcessModelSheetImporter;
+import metadata.SwaggerQraModelSheetImporter;
+import metadata.SwaggerRiskModelSheetImporter;
 import metadata.SwaggerSheetImporter;
+import metadata.SwaggerToxicologicalSheetImporter;
 import metadata.SwaggerUtil;
 
 class CreatorNodeModel extends NoInternalsModel {
@@ -236,7 +252,110 @@ class CreatorNodeModel extends NoInternalsModel {
               modelMetadata = gm;
 
             }  // end if         
-   
+            // Exposure Model
+            if(sheet.getSheetName().equals("Expsure Model") ) {
+              SwaggerExposureSheetImporter importer = new SwaggerExposureSheetImporter();
+              ExposureModel gm = new ExposureModel();
+              gm.setModelType("ExpsoureModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }  // end if         
+            // Process Model
+            if(sheet.getSheetName().equals("Process Model") ) {
+              SwaggerProcessModelSheetImporter importer = new SwaggerProcessModelSheetImporter();
+              ProcessModel gm = new ProcessModel();
+              gm.setModelType("ProcessModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }  // end if         
+            // Toxicological Model
+            if(sheet.getSheetName().equals("Toxicological reference value Model") ) {
+              SwaggerToxicologicalSheetImporter importer = new SwaggerToxicologicalSheetImporter();
+              ToxicologicalModel gm = new ToxicologicalModel();
+              gm.setModelType("ToxicologicalModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }  // end if         
+            // QRA Model
+            if(sheet.getSheetName().equals("QRA Models") ) {
+              SwaggerQraModelSheetImporter importer = new SwaggerQraModelSheetImporter();
+              QraModel gm = new QraModel();
+              gm.setModelType("QraModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }  // end if         
+            // Risk Model
+            if(sheet.getSheetName().equals("Risk Charact Model") ) {
+              SwaggerRiskModelSheetImporter importer = new SwaggerRiskModelSheetImporter();
+              RiskModel gm = new RiskModel();
+              gm.setModelType("RiskModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }  // end if         
+            // Other Model
+            if(sheet.getSheetName().equals("Other Empirical Model") ) {
+              SwaggerOtherModelSheetImporter importer = new SwaggerOtherModelSheetImporter();
+              OtherModel gm = new OtherModel();
+              gm.setModelType("OtherModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }  // end if         
+            // Consumption Model
+            if(sheet.getSheetName().equals("Comsumption Model") ) {
+              SwaggerConsumptionSheetImporter importer = new SwaggerConsumptionSheetImporter();
+              ConsumptionModel gm = new ConsumptionModel();
+              gm.setModelType("ConsumptionModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }  // end if         
+            // Health Model
+            if(sheet.getSheetName().equals("Health metrics Models") ) {
+              SwaggerHealthModelSheetImporter importer = new SwaggerHealthModelSheetImporter();
+              HealthModel gm = new HealthModel();
+              gm.setModelType("HealthModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }  // end if         
               
             
           }else { //RAKIP 1.03

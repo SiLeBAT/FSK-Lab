@@ -8,23 +8,21 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.Contact;
-import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.DoseResponseModelModelMath;
-import de.bund.bfr.metadata.swagger.DoseResponseModelScope;
-import de.bund.bfr.metadata.swagger.ModelCategory;
+import de.bund.bfr.metadata.swagger.DataModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.DataModelModelMath;
+import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
+import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.Parameter;
-import de.bund.bfr.metadata.swagger.PredictiveModelDataBackground;
-import de.bund.bfr.metadata.swagger.QualityMeasures;
 import de.bund.bfr.metadata.swagger.Reference;
 
-public class SwaggerDoseResponseSheetImporter extends SwaggerSheetImporter {
-	public DoseResponseModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
+public class SwaggerDataModelSheetImporter extends SwaggerSheetImporter {
+	public DataModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
 
-		DoseResponseModelGeneralInformation information = new DoseResponseModelGeneralInformation();
+		DataModelGeneralInformation information = new DataModelGeneralInformation();
 
 		Cell nameCell = sheet.getRow(GENERAL_INFORMATION__NAME).getCell(I);
 		if (nameCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setModelName(nameCell.getStringCellValue());
+			information.setName(nameCell.getStringCellValue());
 		}
 
 		Cell sourceCell = sheet.getRow(GENERAL_INFORMATION__SOURCE).getCell(I);
@@ -95,22 +93,8 @@ public class SwaggerDoseResponseSheetImporter extends SwaggerSheetImporter {
 			information.setLanguage(languageCell.getStringCellValue());
 		}
 
-		Cell softwareCell = sheet.getRow(GENERAL_INFORMATION__SOFTWARE).getCell(I);
-		if (softwareCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setSoftware(softwareCell.getStringCellValue());
-		}
-
-		Cell languageWrittenInCell = sheet.getRow(GENERAL_INFORMATION__LANGUAGE_WRITTEN_IN).getCell(I);
-		if (languageWrittenInCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			information.setLanguageWrittenIn(languageWrittenInCell.getStringCellValue());
-		}
 
 		// model category (0..n)
-		try {
-			ModelCategory category = retrieveModelCategory(sheet);
-			information.setModelCategory(category);
-		} catch (Exception exception) {
-		}
 
 		Cell statusCell = sheet.getRow(GENERAL_INFORMATION__STATUS).getCell(I);
 		if (statusCell.getCellType() == Cell.CELL_TYPE_STRING) {
@@ -129,51 +113,21 @@ public class SwaggerDoseResponseSheetImporter extends SwaggerSheetImporter {
 
 		return information;
 	}
-	public PredictiveModelDataBackground retrieveBackground(Sheet sheet) {
-		SwaggerPredictiveModelSheetImporter importer = new SwaggerPredictiveModelSheetImporter();
-		return importer.retrieveBackground(sheet);
-	}
-	public DoseResponseModelScope retrieveScope(Sheet sheet) {
-
-		DoseResponseModelScope scope = new DoseResponseModelScope();
-
-		for (int numrow = 38; numrow <= 49; numrow++) {
-
-			Row row = sheet.getRow(numrow);
-
-			
-
-			try {
-				scope.addHazardItem(retrieveHazard(row));
-			} catch (IllegalArgumentException exception) {
-				// ignore exception since products are optional (*)
-			}
-
-			try {
-				scope.addPopulationGroupItem(retrievePopulationGroup(row));
-			} catch (IllegalArgumentException exception) {
-				// ignore exception since population groups are optional (*)
-			}
-		}
-
-		Cell generalCommentCell = sheet.getRow(SCOPE__GENERAL_COMMENT).getCell(I);
-		if (generalCommentCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			scope.setGeneralComment(generalCommentCell.getStringCellValue());
-		}
-
-		Cell temporalInformationCell = sheet.getRow(SCOPE__TEMPORAL_INFORMATION).getCell(I);
-		if (temporalInformationCell.getCellType() == Cell.CELL_TYPE_STRING) {
-			scope.setTemporalInformation(temporalInformationCell.getStringCellValue());
-		}
-
-		// TODO: Spatial information
-
-		return scope;
-	}
+	public GenericModelScope retrieveScope(Sheet sheet) {
 	
-	public DoseResponseModelModelMath retrieveModelMath(Sheet sheet) {
+		SwaggerGenericSheetImporter importer = new SwaggerGenericSheetImporter();
+		return importer.retrieveScope(sheet);
 		
-		DoseResponseModelModelMath math = new DoseResponseModelModelMath();
+	}
+	public GenericModelDataBackground retrieveBackground(Sheet sheet) {
+
+		SwaggerGenericSheetImporter importer = new SwaggerGenericSheetImporter();
+		return importer.retrieveBackground(sheet);
+		
+	}
+	public DataModelModelMath retrieveModelMath(Sheet sheet) {
+		
+		DataModelModelMath math = new DataModelModelMath();
 
 		for (int rownum = 132; rownum < sheet.getLastRowNum(); rownum++) {
 			try {
@@ -185,15 +139,7 @@ public class SwaggerDoseResponseSheetImporter extends SwaggerSheetImporter {
 			}
 		}
 
-		try {
-			QualityMeasures measures = retrieveQualityMeasures(sheet);
-			math.addQualityMeasuresItem(measures);
-		} catch (Exception exception) {
-			// ...
-		}
 
 		return math;
 	}
-
-
 }
