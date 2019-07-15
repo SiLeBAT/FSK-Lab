@@ -307,5 +307,4 @@ public class SwaggerGenericSheetImporter extends SwaggerSheetImporter {
 
 		return product;
 	}
-
 }
