@@ -1,9 +1,11 @@
 package metadata;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 import java.net.URI;
 import java.util.Date;
@@ -12,9 +14,21 @@ import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.Assay;
+import de.bund.bfr.metadata.swagger.ConsumptionModel;
+import de.bund.bfr.metadata.swagger.ConsumptionModelScope;
 import de.bund.bfr.metadata.swagger.Contact;
+import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DataModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.DataModelModelMath;
 import de.bund.bfr.metadata.swagger.DietaryAssessmentMethod;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.DoseResponseModelModelMath;
+import de.bund.bfr.metadata.swagger.DoseResponseModelScope;
 import de.bund.bfr.metadata.swagger.Exposure;
+import de.bund.bfr.metadata.swagger.ExposureModel;
+import de.bund.bfr.metadata.swagger.ExposureModelScope;
+import de.bund.bfr.metadata.swagger.GenericModel;
 import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelModelMath;
@@ -23,13 +37,29 @@ import de.bund.bfr.metadata.swagger.Hazard;
 import de.bund.bfr.metadata.swagger.Laboratory;
 import de.bund.bfr.metadata.swagger.ModelCategory;
 import de.bund.bfr.metadata.swagger.ModelEquation;
+import de.bund.bfr.metadata.swagger.OtherModel;
+import de.bund.bfr.metadata.swagger.OtherModelDataBackground;
+import de.bund.bfr.metadata.swagger.OtherModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.OtherModelModelMath;
+import de.bund.bfr.metadata.swagger.OtherModelScope;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.PopulationGroup;
+import de.bund.bfr.metadata.swagger.PredictiveModel;
+import de.bund.bfr.metadata.swagger.PredictiveModelDataBackground;
+import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.PredictiveModelModelMath;
+import de.bund.bfr.metadata.swagger.PredictiveModelScope;
+import de.bund.bfr.metadata.swagger.ProcessModel;
+import de.bund.bfr.metadata.swagger.ProcessModelScope;
 import de.bund.bfr.metadata.swagger.Product;
+import de.bund.bfr.metadata.swagger.QraModel;
 import de.bund.bfr.metadata.swagger.Reference;
 import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
+import de.bund.bfr.metadata.swagger.RiskModel;
 import de.bund.bfr.metadata.swagger.Study;
 import de.bund.bfr.metadata.swagger.StudySample;
+import de.bund.bfr.metadata.swagger.ToxicologicalModel;
+import de.bund.bfr.metadata.swagger.ToxicologicalModelScope;
 
 public class SwaggerUtilTest {
 
@@ -463,10 +493,10 @@ public class SwaggerUtilTest {
 		assertEquals("name", study.getProtocolComponentsName());
 		assertEquals("type", study.getProtocolComponentsType());
 	}
-	
+
 	@Test
 	public void testConvertStudySample() {
-		
+
 		StudySample sample;
 		{
 			metadata.StudySample deprecated = metadata.MetadataFactory.eINSTANCE.createStudySample();
@@ -480,10 +510,10 @@ public class SwaggerUtilTest {
 			deprecated.setSamplingSize("size");
 			deprecated.setLotSizeUnit("unit");
 			deprecated.setSamplingPoint("point");
-			
+
 			sample = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("name", sample.getSampleName());
 		assertEquals("collection", sample.getProtocolOfSampleCollection());
 		assertEquals("strategy", sample.getSamplingStrategy());
@@ -495,50 +525,51 @@ public class SwaggerUtilTest {
 		assertEquals("unit", sample.getLotSizeUnit());
 		assertEquals("point", sample.getSamplingPoint());
 	}
-	
+
 	@Test
 	public void testConvertLaboratory() {
-		
+
 		Laboratory laboratory;
 		{
 			metadata.Laboratory deprecated = metadata.MetadataFactory.eINSTANCE.createLaboratory();
 			deprecated.setLaboratoryName("name");
 			deprecated.setLaboratoryCountry("country");
 			deprecated.getLaboratoryAccreditation().add(createStringObject("accreditation"));
-			
+
 			laboratory = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("name", laboratory.getName());
 		assertEquals("country", laboratory.getCountry());
 		assertEquals("accreditation", laboratory.getAccreditation().get(0));
 	}
-	
+
 	@Test
 	public void testConvertDataBackground() {
-		
+
 		GenericModelDataBackground background;
 		{
 			metadata.DataBackground deprecated = metadata.MetadataFactory.eINSTANCE.createDataBackground();
 			deprecated.setStudy(metadata.MetadataFactory.eINSTANCE.createStudy());
 			deprecated.getStudySample().add(metadata.MetadataFactory.eINSTANCE.createStudySample());
-			deprecated.getDietaryAssessmentMethod().add(metadata.MetadataFactory.eINSTANCE.createDietaryAssessmentMethod());
+			deprecated.getDietaryAssessmentMethod()
+					.add(metadata.MetadataFactory.eINSTANCE.createDietaryAssessmentMethod());
 			deprecated.getLaboratory().add(metadata.MetadataFactory.eINSTANCE.createLaboratory());
 			deprecated.getAssay().add(metadata.MetadataFactory.eINSTANCE.createAssay());
-			
+
 			background = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertNotNull(background.getStudy());
 		assertEquals(1, background.getStudySample().size());
 		assertEquals(1, background.getDietaryAssessmentMethod().size());
 		assertEquals(1, background.getLaboratory().size());
 		assertEquals(1, background.getAssay().size());
 	}
-	
+
 	@Test
 	public void testConvertModelEquation() {
-		
+
 		ModelEquation equation;
 		{
 			metadata.ModelEquation deprecated = metadata.MetadataFactory.eINSTANCE.createModelEquation();
@@ -547,20 +578,20 @@ public class SwaggerUtilTest {
 			deprecated.setModelEquation("equation");
 			deprecated.getReference().add(metadata.MetadataFactory.eINSTANCE.createReference());
 			deprecated.getHypothesisOfTheModel().add(createStringObject("hypothesis"));
-			
+
 			equation = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("name", equation.getName());
 		assertEquals("class", equation.getPropertyClass());
 		assertEquals("equation", equation.getModelEquation());
 		assertEquals(1, equation.getReference().size());
 		assertEquals("hypothesis", equation.getModelHypothesis().get(0));
 	}
-	
+
 	@Test
 	public void testConvertExposure() {
-		
+
 		Exposure exposure;
 		{
 			metadata.Exposure deprecated = metadata.MetadataFactory.eINSTANCE.createExposure();
@@ -569,20 +600,20 @@ public class SwaggerUtilTest {
 			deprecated.getMethodologicalTreatmentOfLeftCensoredData().add(createStringObject("data"));
 			deprecated.getLevelOfContaminationAfterLeftCensoredDataTreatment().add(createStringObject("treatment"));
 			deprecated.getScenario().add(createStringObject("scenario"));
-			
+
 			exposure = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("exposure", exposure.getType());
 		assertEquals("estimation", exposure.getUncertaintyEstimation());
 		assertEquals("data", exposure.getTreatment().get(0));
 		assertEquals("treatment", exposure.getContamination().get(0));
 		assertEquals("scenario", exposure.getScenario().get(0));
 	}
-	
+
 	@Test
 	public void testConvertModelMath() {
-		
+
 		GenericModelModelMath math;
 		{
 			metadata.ModelMath deprecated = metadata.MetadataFactory.eINSTANCE.createModelMath();
@@ -591,10 +622,10 @@ public class SwaggerUtilTest {
 			deprecated.getModelEquation().add(metadata.MetadataFactory.eINSTANCE.createModelEquation());
 			deprecated.setExposure(metadata.MetadataFactory.eINSTANCE.createExposure());
 			deprecated.getEvent().add(createStringObject("event"));
-			
+
 			math = SwaggerUtil.convert(deprecated);
 		}
-		
+
 		assertEquals(1, math.getParameter().size());
 		assertNull(math.getQualityMeasures());
 		assertEquals(1, math.getModelEquation().size());
@@ -602,11 +633,193 @@ public class SwaggerUtilTest {
 		assertEquals(1, math.getExposure().size());
 		assertEquals("event", math.getEvent().get(0));
 	}
-	
+
 	private static StringObject createStringObject(String string) {
 		StringObject so = metadata.MetadataFactory.eINSTANCE.createStringObject();
 		so.setValue(string);
 
 		return so;
+	}
+
+	@Test
+	public void testGetGeneralInformation() {
+
+		assertThat(SwaggerUtil.getGeneralInformation(createGenericModel()), instanceOf(GenericModelGeneralInformation.class));
+		assertThat(SwaggerUtil.getGeneralInformation(createDataModel()), instanceOf(DataModelGeneralInformation.class));
+		assertThat(SwaggerUtil.getGeneralInformation(createPredictiveModel()), instanceOf(PredictiveModelGeneralInformation.class));
+		assertThat(SwaggerUtil.getGeneralInformation(createOtherModel()), instanceOf(OtherModelGeneralInformation.class));
+		assertThat(SwaggerUtil.getGeneralInformation(createExposureModel()), instanceOf(PredictiveModelGeneralInformation.class));
+		assertThat(SwaggerUtil.getGeneralInformation(createToxicologicalModel()), instanceOf(PredictiveModelGeneralInformation.class));
+		assertThat(SwaggerUtil.getGeneralInformation(createDoseResponseModel()), instanceOf(DoseResponseModelGeneralInformation.class));
+		assertThat(SwaggerUtil.getGeneralInformation(createProcessModel()), instanceOf(PredictiveModelGeneralInformation.class));
+		assertThat(SwaggerUtil.getGeneralInformation(createConsumptionModel()), instanceOf(PredictiveModelGeneralInformation.class));
+		assertThat(SwaggerUtil.getGeneralInformation(createRiskModel()), instanceOf(PredictiveModelGeneralInformation.class));
+		assertThat(SwaggerUtil.getGeneralInformation(createQraModel()), instanceOf(PredictiveModelGeneralInformation.class));
+	}
+
+	@Test
+	public void testGetScope() {
+		assertThat(SwaggerUtil.getScope(createGenericModel()), instanceOf(GenericModelScope.class));
+		assertThat(SwaggerUtil.getScope(createDataModel()), instanceOf(GenericModelScope.class));
+		assertThat(SwaggerUtil.getScope(createPredictiveModel()), instanceOf(PredictiveModelScope.class));
+		assertThat(SwaggerUtil.getScope(createOtherModel()), instanceOf(OtherModelScope.class));
+		assertThat(SwaggerUtil.getScope(createExposureModel()), instanceOf(ExposureModelScope.class));
+		assertThat(SwaggerUtil.getScope(createToxicologicalModel()), instanceOf(ToxicologicalModelScope.class));
+		assertThat(SwaggerUtil.getScope(createDoseResponseModel()), instanceOf(DoseResponseModelScope.class));
+		assertThat(SwaggerUtil.getScope(createProcessModel()), instanceOf(ProcessModelScope.class));
+		assertThat(SwaggerUtil.getScope(createConsumptionModel()), instanceOf(ConsumptionModelScope.class));
+		assertThat(SwaggerUtil.getScope(createRiskModel()),  instanceOf(ExposureModelScope.class));
+		assertThat(SwaggerUtil.getScope(createQraModel()), instanceOf(ExposureModelScope.class));
+	}
+
+	@Test
+	public void testGetDataBackground() {
+		assertThat(SwaggerUtil.getDataBackground(createGenericModel()), instanceOf(GenericModelDataBackground.class));
+		assertThat(SwaggerUtil.getDataBackground(createDataModel()), instanceOf(GenericModelDataBackground.class));
+		assertThat(SwaggerUtil.getDataBackground(createPredictiveModel()), instanceOf(PredictiveModelDataBackground.class));
+		assertThat(SwaggerUtil.getDataBackground(createOtherModel()), instanceOf(OtherModelDataBackground.class));
+		assertThat(SwaggerUtil.getDataBackground(createExposureModel()), instanceOf(GenericModelDataBackground.class));
+		assertThat(SwaggerUtil.getDataBackground(createToxicologicalModel()), instanceOf(PredictiveModelDataBackground.class));
+		assertThat(SwaggerUtil.getDataBackground(createDoseResponseModel()), instanceOf(PredictiveModelDataBackground.class));
+		assertThat(SwaggerUtil.getDataBackground(createProcessModel()), instanceOf(PredictiveModelDataBackground.class));
+		assertThat(SwaggerUtil.getDataBackground(createConsumptionModel()), instanceOf(GenericModelDataBackground.class));
+		assertThat(SwaggerUtil.getDataBackground(createRiskModel()), instanceOf(GenericModelDataBackground.class));
+		assertThat(SwaggerUtil.getDataBackground(createQraModel()), instanceOf(GenericModelDataBackground.class));
+	}
+
+	@Test
+	public void testGetModelMath() {
+		assertThat(SwaggerUtil.getModelMath(createGenericModel()), instanceOf(GenericModelModelMath.class));
+		assertThat(SwaggerUtil.getModelMath(createDataModel()), instanceOf(DataModelModelMath.class));
+		assertThat(SwaggerUtil.getModelMath(createPredictiveModel()), instanceOf(PredictiveModelModelMath.class));
+		assertThat(SwaggerUtil.getModelMath(createOtherModel()), instanceOf(OtherModelModelMath.class));
+		assertThat(SwaggerUtil.getModelMath(createExposureModel()), instanceOf(GenericModelModelMath.class));
+		assertThat(SwaggerUtil.getModelMath(createToxicologicalModel()), instanceOf(GenericModelModelMath.class));
+		assertThat(SwaggerUtil.getModelMath(createDoseResponseModel()), instanceOf(DoseResponseModelModelMath.class));
+		assertThat(SwaggerUtil.getModelMath(createProcessModel()), instanceOf(PredictiveModelModelMath.class));
+		assertThat(SwaggerUtil.getModelMath(createConsumptionModel()), instanceOf(PredictiveModelModelMath.class));
+		assertThat(SwaggerUtil.getModelMath(createRiskModel()), instanceOf(GenericModelModelMath.class));
+		assertThat(SwaggerUtil.getModelMath(createQraModel()), instanceOf(GenericModelModelMath.class));
+	}
+
+	private static GenericModel createGenericModel() {
+		GenericModel model = new GenericModel();
+		model.setModelType("genericModel");
+		model.setGeneralInformation(new GenericModelGeneralInformation());
+		model.setScope(new GenericModelScope());
+		model.setDataBackground(new GenericModelDataBackground());
+		model.setModelMath(new GenericModelModelMath());
+
+		return model;
+	}
+
+	private static DataModel createDataModel() {
+		DataModel model = new DataModel();
+		model.setModelType("dataModel");
+		model.setGeneralInformation(new DataModelGeneralInformation());
+		model.setScope(new GenericModelScope());
+		model.setDataBackground(new GenericModelDataBackground());
+		model.setModelMath(new DataModelModelMath());
+		
+		return model;
+	}
+	
+	private static PredictiveModel createPredictiveModel() {
+		PredictiveModel model = new PredictiveModel();
+		model.setModelType("predictiveModel");
+		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+		model.setScope(new PredictiveModelScope());
+		model.setDataBackground(new PredictiveModelDataBackground());
+		model.setModelMath(new PredictiveModelModelMath());
+		
+		return model;
+	}
+	
+	private static OtherModel createOtherModel() {
+		OtherModel model = new OtherModel();
+		model.setModelType("otherModel");
+		model.setGeneralInformation(new OtherModelGeneralInformation());
+		model.setScope(new OtherModelScope());
+		model.setDataBackground(new OtherModelDataBackground());
+		model.setModelMath(new OtherModelModelMath());
+		
+		return model;
+	}
+	
+	private static ExposureModel createExposureModel() {
+		ExposureModel model = new ExposureModel();
+		model.setModelType("exposureModel");
+		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+		model.setScope(new ExposureModelScope());
+		model.setDataBackground(new GenericModelDataBackground());
+		model.setModelMath(new GenericModelModelMath());
+		
+		return model;
+	}
+	
+	private static ToxicologicalModel createToxicologicalModel() {
+		ToxicologicalModel model = new ToxicologicalModel();
+		model.setModelType("toxicologicalModel");
+		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+		model.setScope(new ToxicologicalModelScope());
+		model.setDataBackground(new PredictiveModelDataBackground());
+		model.setModelMath(new GenericModelModelMath());
+		
+		return model;
+	}
+	
+	private static DoseResponseModel createDoseResponseModel() {
+		DoseResponseModel model = new DoseResponseModel();
+		model.setModelType("doseResponseModel");
+		model.setGeneralInformation(new DoseResponseModelGeneralInformation());
+		model.setScope(new DoseResponseModelScope());
+		model.setDataBackground(new PredictiveModelDataBackground());
+		model.setModelMath(new DoseResponseModelModelMath());
+		
+		return model;
+	}
+
+	private static ProcessModel createProcessModel() {
+		ProcessModel model = new ProcessModel();
+		model.setModelType("processModel");
+		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+		model.setScope(new ProcessModelScope());
+		model.setDataBackground(new PredictiveModelDataBackground());
+		model.setModelMath(new PredictiveModelModelMath());
+		
+		return model;
+	}
+
+	private static ConsumptionModel createConsumptionModel() {
+		ConsumptionModel model = new ConsumptionModel();
+		model.setModelType("consumptionModel");
+		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+		model.setScope(new ConsumptionModelScope());
+		model.setDataBackground(new GenericModelDataBackground());
+		model.setModelMath(new PredictiveModelModelMath());
+		
+		return model;
+	}
+
+	private static RiskModel createRiskModel() {
+		RiskModel model = new RiskModel();
+		model.setModelType("riskModel");
+		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+		model.setScope(new ExposureModelScope());
+		model.setDataBackground(new GenericModelDataBackground());
+		model.setModelMath(new GenericModelModelMath());
+		
+		return model;
+	}
+
+	private static QraModel createQraModel() {
+		QraModel model = new QraModel();
+		model.setModelType("qraModel");
+		model.setGeneralInformation(new PredictiveModelGeneralInformation());
+		model.setScope(new ExposureModelScope());
+		model.setDataBackground(new GenericModelDataBackground());
+		model.setModelMath(new GenericModelModelMath());
+		
+		return model;
 	}
 }
