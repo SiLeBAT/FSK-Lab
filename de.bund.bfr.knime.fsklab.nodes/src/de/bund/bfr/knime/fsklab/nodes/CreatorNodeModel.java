@@ -210,8 +210,22 @@ class CreatorNodeModel extends NoInternalsModel {
       Sheet sheet = workbook.getSheet(nodeSettings.sheet);
       if(sheet.getPhysicalNumberOfRows() > 29) {
         // 1.0.3 RAKIP spreadsheet has "parameter type" P:131 (or 130 if index starts at 0), 1.04 doesn't
-          if(!sheet.getRow(130).getCell(15).getStringCellValue().equals("Parameter type")) { //SWAGGER 1.04
+        
+          if(sheet.getSheetName().equals("Generic Metadata Schema") && sheet.getRow(130).getCell(15).getStringCellValue().equals("Parameter type")) { //SWAGGER 1.04
+            // Process 1.0.3 RAKIP spreadsheet has "parameter type" P:131 (or 130 if index starts at 0)
+            RAKIPSheetImporter importer = new RAKIPSheetImporter();
+            GenericModel gm = new GenericModel();
+            gm.setModelType("genericModel");
+            gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+            gm.setScope(importer.retrieveScope(sheet));
+            gm.setDataBackground(importer.retrieveBackground(sheet));
+            gm.setModelMath(importer.retrieveModelMath(sheet));
 
+            modelMetadata = gm;
+               
+              
+            
+          }else { //RAKIP 1.03
             if(sheet.getSheetName().equals("Generic Metadata Schema") ) {
               SwaggerGenericSheetImporter importer = new SwaggerGenericSheetImporter();
               GenericModel gm = new GenericModel();
@@ -229,7 +243,7 @@ class CreatorNodeModel extends NoInternalsModel {
             if(sheet.getSheetName().equals("Dose-response Model") ) {
               SwaggerDoseResponseSheetImporter importer = new SwaggerDoseResponseSheetImporter();
               DoseResponseModel gm = new DoseResponseModel();
-              gm.setModelType("DoseResponseModel");
+              gm.setModelType("doseResponseModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -243,7 +257,7 @@ class CreatorNodeModel extends NoInternalsModel {
             if(sheet.getSheetName().equals("Predictive Model") ) {
               SwaggerPredictiveModelSheetImporter importer = new SwaggerPredictiveModelSheetImporter();
               PredictiveModel gm = new PredictiveModel();
-              gm.setModelType("PredictiveModel");
+              gm.setModelType("predictiveModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -256,7 +270,7 @@ class CreatorNodeModel extends NoInternalsModel {
             if(sheet.getSheetName().equals("Expsure Model") ) {
               SwaggerExposureSheetImporter importer = new SwaggerExposureSheetImporter();
               ExposureModel gm = new ExposureModel();
-              gm.setModelType("ExpsoureModel");
+              gm.setModelType("expsoureModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -269,7 +283,7 @@ class CreatorNodeModel extends NoInternalsModel {
             if(sheet.getSheetName().equals("Process Model") ) {
               SwaggerProcessModelSheetImporter importer = new SwaggerProcessModelSheetImporter();
               ProcessModel gm = new ProcessModel();
-              gm.setModelType("ProcessModel");
+              gm.setModelType("processModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -282,7 +296,7 @@ class CreatorNodeModel extends NoInternalsModel {
             if(sheet.getSheetName().equals("Toxicological reference value Model") ) {
               SwaggerToxicologicalSheetImporter importer = new SwaggerToxicologicalSheetImporter();
               ToxicologicalModel gm = new ToxicologicalModel();
-              gm.setModelType("ToxicologicalModel");
+              gm.setModelType("toxicologicalModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -295,7 +309,7 @@ class CreatorNodeModel extends NoInternalsModel {
             if(sheet.getSheetName().equals("QRA Models") ) {
               SwaggerQraModelSheetImporter importer = new SwaggerQraModelSheetImporter();
               QraModel gm = new QraModel();
-              gm.setModelType("QraModel");
+              gm.setModelType("qraModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -308,7 +322,7 @@ class CreatorNodeModel extends NoInternalsModel {
             if(sheet.getSheetName().equals("Risk Charact Model") ) {
               SwaggerRiskModelSheetImporter importer = new SwaggerRiskModelSheetImporter();
               RiskModel gm = new RiskModel();
-              gm.setModelType("RiskModel");
+              gm.setModelType("riskModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -321,7 +335,7 @@ class CreatorNodeModel extends NoInternalsModel {
             if(sheet.getSheetName().equals("Other Empirical Model") ) {
               SwaggerOtherModelSheetImporter importer = new SwaggerOtherModelSheetImporter();
               OtherModel gm = new OtherModel();
-              gm.setModelType("OtherModel");
+              gm.setModelType("otherModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -331,10 +345,10 @@ class CreatorNodeModel extends NoInternalsModel {
 
             }  // end if         
             // Consumption Model
-            if(sheet.getSheetName().equals("Comsumption Model") ) {
+            if(sheet.getSheetName().equals("omsumption Model") ) {
               SwaggerConsumptionSheetImporter importer = new SwaggerConsumptionSheetImporter();
               ConsumptionModel gm = new ConsumptionModel();
-              gm.setModelType("ConsumptionModel");
+              gm.setModelType("consumptionModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -347,7 +361,7 @@ class CreatorNodeModel extends NoInternalsModel {
             if(sheet.getSheetName().equals("Health metrics Models") ) {
               SwaggerHealthModelSheetImporter importer = new SwaggerHealthModelSheetImporter();
               HealthModel gm = new HealthModel();
-              gm.setModelType("HealthModel");
+              gm.setModelType("healthModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -355,20 +369,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
               modelMetadata = gm;
 
-            }  // end if         
-              
-            
-          }else { //RAKIP 1.03
-            // Process 1.0.3 RAKIP spreadsheet has "parameter type" P:131 (or 130 if index starts at 0)
-            RAKIPSheetImporter importer = new RAKIPSheetImporter();
-            GenericModel gm = new GenericModel();
-            gm.setModelType("genericModel");
-            gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
-            gm.setScope(importer.retrieveScope(sheet));
-            gm.setDataBackground(importer.retrieveBackground(sheet));
-            gm.setModelMath(importer.retrieveModelMath(sheet));
-
-            modelMetadata = gm;
+            }  // end if     
           }//else RAKIP
          
          }//end if newer than 1.03
@@ -420,7 +421,7 @@ class CreatorNodeModel extends NoInternalsModel {
         librariesList, workingDirectory, plotPath, readme, nodeSettings.spreadsheet);
 
     List<Parameter> parameters = SwaggerUtil.getParameter(modelMetadata);
-    if (((GenericModel)modelMetadata).getModelMath() != null) {
+    if (SwaggerUtil.getModelMath(modelMetadata) != null) {
       portObj.simulations.add(NodeUtils.createDefaultSimulation(parameters));
     }
 

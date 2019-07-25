@@ -26,103 +26,115 @@ import de.bund.bfr.metadata.swagger.StudySample;
 
 public class SwaggerSheetImporter {
 
-	protected int A = 0;
-	protected int B = 1;
-	protected int C = 2;
-	protected int D = 3;
-	protected int E = 4;
-	protected int F = 5;
-	protected int G = 6;
-	protected int H = 7;
-	protected int I = 8;
-	protected int J = 9;
-	protected int K = 10;
-	protected int L = 11;
-	protected int M = 12;
-	protected int N = 13;
-	protected int O = 14;
-	protected int P = 15;
-	protected int Q = 16;
-	protected int R = 17;
-	protected int S = 18;
-	protected int T = 19;
-	protected int U = 20;
-	protected int V = 21;
-	protected int W = 22;
-	protected int X = 23;
-	protected int Y = 24;
-	protected int Z = 25;
-	protected int AA = 26;
-	protected int AB = 27;
-	protected int AC = 28;
-	protected int AD = 29;
-	protected int AE = 30;
-	protected int AF = 31;
-	protected int AG = 32;
-	protected int AH = 33;
-	protected int AI = 34;
-	protected int AJ = 35;
-	protected int AK = 36;
-	protected int AL = 37;
-	protected int AM = 38;
-	protected int AN = 39;
-	protected int AO = 40;
-	protected int AP = 41;
-	protected int AQ = 42;
-	protected int AR = 43;
-	protected int AS = 44;
-	protected int AT = 45;
-	protected int AU = 46;
-	protected int AV = 47;
+	static protected int A = 0;
+	static protected int B = 1;
+	static protected int C = 2;
+	static protected int D = 3;
+	static protected int E = 4;
+	static protected int F = 5;
+	static protected int G = 6;
+	static protected int H = 7;
+	static protected int I = 8;
+	static protected int J = 9;
+	static protected int K = 10;
+	static protected int L = 11;
+	static protected int M = 12;
+	static protected int N = 13;
+	static protected int O = 14;
+	static protected int P = 15;
+	static protected int Q = 16;
+	static protected int R = 17;
+	static protected int S = 18;
+	static protected int T = 19;
+	static protected int U = 20;
+	static protected int V = 21;
+	static protected int W = 22;
+	static protected int X = 23;
+	static protected int Y = 24;
+	static protected int Z = 25;
+	static protected int AA = 26;
+	static protected int AB = 27;
+	static protected int AC = 28;
+	static protected int AD = 29;
+	static protected int AE = 30;
+	static protected int AF = 31;
+	static protected int AG = 32;
+	static protected int AH = 33;
+	static protected int AI = 34;
+	static protected int AJ = 35;
+	static protected int AK = 36;
+	static protected int AL = 37;
+	static protected int AM = 38;
+	static protected int AN = 39;
+	static protected int AO = 40;
+	static protected int AP = 41;
+	static protected int AQ = 42;
+	static protected int AR = 43;
+	static protected int AS = 44;
+	static protected int AT = 45;
+	static protected int AU = 46;
+	static protected int AV = 47;
 
-	protected final int GENERAL_INFORMATION__NAME = 1;
-	protected final int GENERAL_INFORMATION__SOURCE = 2;
-	protected final int GENERAL_INFORMATION__IDENTIFIER = 3;
-	protected final int GENERAL_INFORMATION_CREATION_DATE = 6;
-	protected final int GENERAL_INFORMATION__RIGHTS = 8;
-	protected final int GENERAL_INFORMATION__AVAILABLE = 9;
-	protected final int GENERAL_INFORMATION__URL = 10;
-	protected final int GENERAL_INFORMATION__FORMAT = 11;
-	protected final int GENERAL_INFORMATION__LANGUAGE = 24;
-	protected final int GENERAL_INFORMATION__SOFTWARE = 25;
-	protected final int GENERAL_INFORMATION__LANGUAGE_WRITTEN_IN = 26;
-	protected final int GENERAL_INFORMATION__STATUS = 32;
-	protected final int GENERAL_INFORMATION__OBJECTIVE = 33;
-	protected final int GENERAL_INFORMATION__DESCRIPTION = 34;
+	static protected int GENERAL_INFORMATION__NAME = 1;
+	static protected int GENERAL_INFORMATION__SOURCE = 2;
+	static protected int GENERAL_INFORMATION__IDENTIFIER = 3;
+	static protected int GENERAL_INFORMATION_CREATION_DATE = 6;
+	static protected int GENERAL_INFORMATION__RIGHTS = 8;
+	static protected int GENERAL_INFORMATION__AVAILABLE = 9;
+	static protected int GENERAL_INFORMATION__URL = 10;
+	static protected int GENERAL_INFORMATION__FORMAT = 11;
+	static protected int GENERAL_INFORMATION__LANGUAGE = 24;
+	static protected int GENERAL_INFORMATION__SOFTWARE = 25;
+	static protected int GENERAL_INFORMATION__LANGUAGE_WRITTEN_IN = 26;
+	static protected int GENERAL_INFORMATION__STATUS = 32;
+	static protected int GENERAL_INFORMATION__OBJECTIVE = 33;
+	static protected int GENERAL_INFORMATION__DESCRIPTION = 34;
 
-	protected final int MODEL_CATEGORY__MODEL_CLASS = 27;
-	protected final int MODEL_CATEGORY__MODEL_SUB_CLASS = 28;
-	protected final int MODEL_CATEGORY__CLASS_COMMENT = 29;
-	protected final int MODEL_CATEGORY__BASIC_PROCESS = 30;
+	static protected int MODEL_CATEGORY__MODEL_CLASS = 27;
+	static protected int MODEL_CATEGORY__MODEL_SUB_CLASS = 28;
+	static protected int MODEL_CATEGORY__CLASS_COMMENT = 29;
+	static protected int MODEL_CATEGORY__BASIC_PROCESS = 30;
 
-	protected final int QUALITY_MEASURES__SSE = 123;
-	protected final int QUALITY_MEASURES__MSE = 124;
-	protected final int QUALITY_MEASURES__RMSE = 125;
-	protected final int QUALITY_MEASURES__RSQUARE = 126;
-	protected final int QUALITY_MEASURES__AIC = 127;
-	protected final int QUALITY_MEASURES__BIC = 128;
+	static protected int QUALITY_MEASURES__SSE = 123;
+	static protected int QUALITY_MEASURES__MSE = 124;
+	static protected int QUALITY_MEASURES__RMSE = 125;
+	static protected int QUALITY_MEASURES__RSQUARE = 126;
+	static protected int QUALITY_MEASURES__AIC = 127;
+	static protected int QUALITY_MEASURES__BIC = 128;
 
-	protected final int SCOPE__GENERAL_COMMENT = 73;
-	protected final int SCOPE__TEMPORAL_INFORMATION = 74;
+	static protected int SCOPE__GENERAL_COMMENT = 73;
+	static protected int SCOPE__TEMPORAL_INFORMATION = 74;
 
-	protected final int STUDY__STUDY_IDENTIFIER = 77;
-	protected final int STUDY__STUDY_TITLE = 78;
-	protected final int STUDY__STUDY_DESCRIPTION = 79;
-	protected final int STUDY__STUDY_DESIGN_TYPE = 80;
-	protected final int STUDY__STUDY_ASSAY_MEASUREMENT_TYPE = 81;
-	protected final int STUDY__STUDY_ASSAY_TECHNOLOGY_TYPE = 82;
-	protected final int STUDY__STUDY_ASSAY_TECHNOLOGY_PLATFORM = 83;
-	protected final int STUDY__ACCREDITATION_PROCEDURE_FOR_THE_ASSAY_TECHNOLOGY = 84;
-	protected final int STUDY__STUDY_PROTOCOL_NAME = 85;
-	protected final int STUDY__STUDY_PROTOCOL_TYPE = 86;
-	protected final int STUDY__STUDY_PROTOCOL_DESCRIPTION = 87;
-	protected final int STUDY__STUDY_PROTOCOL_URI = 88;
-	protected final int STUDY__STUDY_PROTOCOL_VERSION = 89;
-	protected final int STUDY__STUDY_PROTOCOL_PARAMETERS_NAME = 90;
-	protected final int STUDY__STUDY_PROTOCOL_COMPONENTS_NAME = 91;
-	protected final int STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE = 92;
-
-
+	static protected int STUDY__STUDY_IDENTIFIER = 77;
+	static protected int STUDY__STUDY_TITLE = 78;
+	static protected int STUDY__STUDY_DESCRIPTION = 79;
+	static protected int STUDY__STUDY_DESIGN_TYPE = 80;
+	static protected int STUDY__STUDY_ASSAY_MEASUREMENT_TYPE = 81;
+	static protected int STUDY__STUDY_ASSAY_TECHNOLOGY_TYPE = 82;
+	static protected int STUDY__STUDY_ASSAY_TECHNOLOGY_PLATFORM = 83;
+	static protected int STUDY__ACCREDITATION_PROCEDURE_FOR_THE_ASSAY_TECHNOLOGY = 84;
+	static protected int STUDY__STUDY_PROTOCOL_NAME = 85;
+	static protected int STUDY__STUDY_PROTOCOL_TYPE = 86;
+	static protected int STUDY__STUDY_PROTOCOL_DESCRIPTION = 87;
+	static protected int STUDY__STUDY_PROTOCOL_URI = 88;
+	static protected int STUDY__STUDY_PROTOCOL_VERSION = 89;
+	static protected int STUDY__STUDY_PROTOCOL_PARAMETERS_NAME = 90;
+	static protected int STUDY__STUDY_PROTOCOL_COMPONENTS_NAME = 91;
+	static protected int STUDY__STUDY_PROTOCOL_COMPONENTS_TYPE = 92;
+	
+	static protected int GI_CREATOR_ROW = 3;
+	static protected int GI_REFERENCE_ROW = 14;
+	static protected int SCOPE_PRODHAZPOP_ROW = 38;
+	static protected int BG_STUDY_SAMPLE_ROW = 96;
+	static protected int BG_DIET_ASSESS_ROW = 103;
+	static protected int BG_LABORATORY_ROW = 110;
+	static protected int BG_ASSAY_ROW = 117;
+	static protected int BG_QUALITY_MEAS_ROW = 123;
+	static protected int BG_EVENT_ROW = 109;
+	static protected int MM_PARAMETER_ROW = 132;
+	
+	
+	
 	public Contact retrieveCreator(Row row) {
 		@SuppressWarnings("serial")
 		HashMap<String, Integer> columns = new HashMap<String, Integer>() {
@@ -166,6 +178,9 @@ public class SwaggerSheetImporter {
 
 	private Contact retrieveContact(Row row, Map<String, Integer> columns) {
 
+		String x = row.getCell(L).getStringCellValue();
+		x= row.getCell(AA).getStringCellValue();
+		x= row.getCell(AE).getStringCellValue();
 		// Check mandatory properties and throw exception if missing
 		if (row.getCell(columns.get("mail")).getCellType() == Cell.CELL_TYPE_BLANK) {
 			throw new IllegalArgumentException("Missing mail");
@@ -404,74 +419,75 @@ public class SwaggerSheetImporter {
 	}
 
 	public PopulationGroup retrievePopulationGroup(Row row) {
+		
 		// Check mandatory properties
-		if (row.getCell(AU).getCellType() != Cell.CELL_TYPE_STRING) {
-			throw new IllegalArgumentException("Missing Risk and population factors");
+		if (row.getCell(Y).getCellType() != Cell.CELL_TYPE_STRING) {
+			throw new IllegalArgumentException("Missing population name");
 		}
 
 		PopulationGroup group = new PopulationGroup();
 
-		Cell nameCell = row.getCell(AJ);
+		Cell nameCell = row.getCell(Y);
 		if (nameCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			group.setName(nameCell.getStringCellValue());
 		}
 
-		Cell targetPopulationCell = row.getCell(AK);
+		Cell targetPopulationCell = row.getCell(Z);
 		if (targetPopulationCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			group.setTargetPopulation(targetPopulationCell.getStringCellValue());
 		}
 
-		Cell spanCell = row.getCell(AL);
+		Cell spanCell = row.getCell(AA);
 		if (spanCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			Arrays.stream(spanCell.getStringCellValue().split(",")).forEach(group::addPopulationSpanItem);
 		}
 
-		Cell descriptionCell = row.getCell(AM);
+		Cell descriptionCell = row.getCell(AB);
 		if (descriptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			Arrays.stream(descriptionCell.getStringCellValue().split(",")).forEach(group::addPopulationDescriptionItem);
 		}
 
-		Cell ageCell = row.getCell(AN);
+		Cell ageCell = row.getCell(AC);
 		if (ageCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			Arrays.stream(ageCell.getStringCellValue().split(",")).forEach(group::addPopulationAgeItem);
 		}
 
-		Cell genderCell = row.getCell(AO);
+		Cell genderCell = row.getCell(AD);
 		if (genderCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			group.setPopulationGender(genderCell.getStringCellValue());
 		}
 
-		Cell bmiCell = row.getCell(AP);
+		Cell bmiCell = row.getCell(AE);
 		if (bmiCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			Arrays.stream(bmiCell.getStringCellValue().split(",")).forEach(group::addBmiItem);
 		}
 
-		Cell dietCell = row.getCell(AQ);
+		Cell dietCell = row.getCell(AF);
 		if (dietCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			Arrays.stream(dietCell.getStringCellValue().split(",")).forEach(group::addSpecialDietGroupsItem);
 		}
 
-		Cell consumptionCell = row.getCell(AR);
+		Cell consumptionCell = row.getCell(AG);
 		if (consumptionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			Arrays.stream(consumptionCell.getStringCellValue().split(",")).forEach(group::addPatternConsumptionItem);
 		}
 
-		Cell regionCell = row.getCell(AS);
+		Cell regionCell = row.getCell(AH);
 		if (regionCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			Arrays.stream(regionCell.getStringCellValue().split(",")).forEach(group::addRegionItem);
 		}
 
-		Cell countryCell = row.getCell(AT);
+		Cell countryCell = row.getCell(AI);
 		if (countryCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			Arrays.stream(countryCell.getStringCellValue().split(",")).forEach(group::addCountryItem);
 		}
 
-		Cell factorsCell = row.getCell(AU);
+		Cell factorsCell = row.getCell(AJ);
 		if (factorsCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			Arrays.stream(factorsCell.getStringCellValue().split(",")).forEach(group::addPopulationRiskFactorItem);
 		}
 
-		Cell seasonCell = row.getCell(AV);
+		Cell seasonCell = row.getCell(AK);
 		if (seasonCell.getCellType() == Cell.CELL_TYPE_STRING) {
 			Arrays.stream(seasonCell.getStringCellValue().split(",")).forEach(group::addSeasonItem);
 		}
@@ -880,4 +896,5 @@ public class SwaggerSheetImporter {
 		
 		return measures;
 	}
+
 }
