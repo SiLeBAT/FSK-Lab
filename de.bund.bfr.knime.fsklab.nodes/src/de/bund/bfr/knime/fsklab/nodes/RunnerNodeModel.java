@@ -143,6 +143,7 @@ public class RunnerNodeModel extends ExtToolOutputNodeModel {
         ScriptHandler.createHandler(SwaggerUtil.getLanguageWrittenIn(fskObj.modelMetadata), fskObj.packages)) {
       runFskPortObject(handler, fskObj, exec);
     } catch (Exception e) {
+      e.printStackTrace();
     }
     
     try (FileInputStream fis = new FileInputStream(internalSettings.imageFile)) {

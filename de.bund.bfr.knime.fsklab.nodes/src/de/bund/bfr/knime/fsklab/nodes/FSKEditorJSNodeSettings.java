@@ -35,7 +35,7 @@ class FSKEditorJSNodeSettings {
   public String modelMetaData;
   public String model;
   public String viz;
-  public String modelType = ""; 
+  public String modelType = "GenericModel"; 
   String jsonRepresentation = "";
 
   /** Paths to resources: plain text files and R workspace files (.rdata). */

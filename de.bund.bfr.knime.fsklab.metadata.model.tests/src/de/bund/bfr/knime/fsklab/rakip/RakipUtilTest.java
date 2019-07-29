@@ -482,7 +482,7 @@ public class RakipUtilTest {
 		}
 		
 		assertEquals("equationName", equation.getName());
-		assertEquals("equationClass", equation.getPropertyClass());
+		assertEquals("equationClass", equation.getModelEquationClass());
 		assertEquals(1, equation.getReference().size());
 		assertEquals("equation", equation.getModelEquation());
 		assertNull(equation.getModelHypothesis());

@@ -446,11 +446,11 @@ public class RAKIPSheetImporterTest {
 	public void testQualityMeasures() throws Exception {
 
 		QualityMeasures measures = importer.retrieveQualityMeasures(sheet);
-		assertEquals(0.1, measures.getSSE().doubleValue(), .0);
-		assertEquals(0.2, measures.getMSE().doubleValue(), .0);
-		assertEquals(0.3, measures.getRMSE().doubleValue(), .0);
+		assertEquals(0.1, measures.getSse().doubleValue(), .0);
+		assertEquals(0.2, measures.getMse().doubleValue(), .0);
+		assertEquals(0.3, measures.getRmse().doubleValue(), .0);
 		assertEquals(0.4, measures.getRsquared().doubleValue(), .0);
-		assertEquals(0.5, measures.getAIC().doubleValue(), .0);
-		assertEquals(0.6, measures.getBIC().doubleValue(), .0);
+		assertEquals(0.5, measures.getAic().doubleValue(), .0);
+		assertEquals(0.6, measures.getBic().doubleValue(), .0);
 	}
 }

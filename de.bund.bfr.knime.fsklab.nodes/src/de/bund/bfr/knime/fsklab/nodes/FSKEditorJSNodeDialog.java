@@ -220,6 +220,7 @@ class FSKEditorJSNodeDialog extends DataAwareNodeDialogPane {
     modelTypePanel
         .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Model Type:"));
     JComboBox combo = new JComboBox<>(modeltype);
+ 
     combo.addItemListener(new ItemListener() {
       
       @Override

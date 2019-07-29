@@ -14,14 +14,15 @@
 package de.bund.bfr.metadata.swagger;
 
 import java.util.Objects;
+import java.util.Arrays;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import de.bund.bfr.metadata.swagger.Reference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +30,13 @@ import java.util.List;
 /**
  * ModelEquation
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-02T16:22:48.194+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-25T13:50:49.666Z")
 public class ModelEquation {
   @SerializedName("name")
   private String name = null;
 
-  @SerializedName("class")
-  private String propertyClass = null;
+  @SerializedName("modelEquationClass")
+  private String modelEquationClass = null;
 
   @SerializedName("reference")
   private List<Reference> reference = null;
@@ -64,22 +65,22 @@ public class ModelEquation {
     this.name = name;
   }
 
-  public ModelEquation propertyClass(String propertyClass) {
-    this.propertyClass = propertyClass;
+  public ModelEquation modelEquationClass(String modelEquationClass) {
+    this.modelEquationClass = modelEquationClass;
     return this;
   }
 
    /**
    * Information on that helps to categorize model equations
-   * @return propertyClass
+   * @return modelEquationClass
   **/
   @ApiModelProperty(value = "Information on that helps to categorize model equations")
-  public String getPropertyClass() {
-    return propertyClass;
+  public String getModelEquationClass() {
+    return modelEquationClass;
   }
 
-  public void setPropertyClass(String propertyClass) {
-    this.propertyClass = propertyClass;
+  public void setModelEquationClass(String modelEquationClass) {
+    this.modelEquationClass = modelEquationClass;
   }
 
   public ModelEquation reference(List<Reference> reference) {
@@ -163,7 +164,7 @@ public class ModelEquation {
     }
     ModelEquation modelEquation = (ModelEquation) o;
     return Objects.equals(this.name, modelEquation.name) &&
-        Objects.equals(this.propertyClass, modelEquation.propertyClass) &&
+        Objects.equals(this.modelEquationClass, modelEquation.modelEquationClass) &&
         Objects.equals(this.reference, modelEquation.reference) &&
         Objects.equals(this.modelEquation, modelEquation.modelEquation) &&
         Objects.equals(this.modelHypothesis, modelEquation.modelHypothesis);
@@ -171,7 +172,7 @@ public class ModelEquation {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, propertyClass, reference, modelEquation, modelHypothesis);
+    return Objects.hash(name, modelEquationClass, reference, modelEquation, modelHypothesis);
   }
 
 
@@ -181,7 +182,7 @@ public class ModelEquation {
     sb.append("class ModelEquation {\n");
     
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    propertyClass: ").append(toIndentedString(propertyClass)).append("\n");
+    sb.append("    modelEquationClass: ").append(toIndentedString(modelEquationClass)).append("\n");
     sb.append("    reference: ").append(toIndentedString(reference)).append("\n");
     sb.append("    modelEquation: ").append(toIndentedString(modelEquation)).append("\n");
     sb.append("    modelHypothesis: ").append(toIndentedString(modelHypothesis)).append("\n");

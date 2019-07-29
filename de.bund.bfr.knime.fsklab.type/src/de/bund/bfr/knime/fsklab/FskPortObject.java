@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
@@ -286,7 +287,7 @@ public class FskPortObject implements PortObject {
 				MAPPER104 = new ObjectMapper(jsonFactory);
 				MAPPER104.registerModule(new ThreeTenModule());
 
-				modelClasses = new HashMap<>();
+				modelClasses =  new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 				modelClasses.put("genericModel", GenericModel.class);
 				modelClasses.put("dataModel", DataModel.class);
 				modelClasses.put("predictiveModel", PredictiveModel.class);

@@ -305,11 +305,11 @@ public class RakipUtil {
 		deprecated.parameter.stream().map(RakipUtil::convert).forEach(math::addParameterItem);
 
 		de.bund.bfr.metadata.swagger.QualityMeasures measures = new de.bund.bfr.metadata.swagger.QualityMeasures();
-		measures.setSSE(new BigDecimal(deprecated.sse));
-		measures.setMSE(new BigDecimal(deprecated.mse));
-		measures.setRMSE(new BigDecimal(deprecated.rmse));
-		measures.setAIC(new BigDecimal(deprecated.aic));
-		measures.setBIC(new BigDecimal(deprecated.bic));
+		measures.setSse(new BigDecimal(deprecated.sse));
+		measures.setMse(new BigDecimal(deprecated.mse));
+		measures.setRmse(new BigDecimal(deprecated.rmse));
+		measures.setAic(new BigDecimal(deprecated.aic));
+		measures.setBic(new BigDecimal(deprecated.bic));
 		math.addQualityMeasuresItem(measures);
 
 		deprecated.modelEquation.stream().map(RakipUtil::convert).forEach(math::addModelEquationItem);
@@ -352,7 +352,7 @@ public class RakipUtil {
 	public static de.bund.bfr.metadata.swagger.ModelEquation convert(ModelEquation deprecated) {
 		de.bund.bfr.metadata.swagger.ModelEquation equation = new de.bund.bfr.metadata.swagger.ModelEquation();
 		equation.setName(deprecated.equationName);
-		equation.setPropertyClass(deprecated.equationClass);
+		equation.setModelEquationClass(deprecated.equationClass);
 		deprecated.equationReference.stream().map(RakipUtil::convert).forEach(equation::addReferenceItem);
 		equation.setModelEquation(deprecated.equation);
 

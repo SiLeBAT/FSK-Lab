@@ -143,7 +143,6 @@ final class FSKEditorJSNodeModel
      * e.printStackTrace(); }
      * 
      */
-
     return null;
 
   }
@@ -242,12 +241,12 @@ final class FSKEditorJSNodeModel
       fskEditorProxyValue.modelType = nodeSettings.modelType;
       // If not executed
 
-      if (fskEditorProxyValue.modelMetaData == null) {
+      if (fskEditorProxyValue.getModelMetaData() == null) {
         if (inObjects[0] == null) {
           loadJsonSetting();
         }
-        if (fskEditorProxyValue.modelMetaData == null) {
-          fskEditorProxyValue.modelMetaData = FromOjectToJSON(inObj1.modelMetadata);
+        if (fskEditorProxyValue.getModelMetaData() == null) {
+          fskEditorProxyValue.setModelMetaData( FromOjectToJSON(inObj1.modelMetadata));
           fskEditorProxyValue.firstModelScript = inObj1.model;
           fskEditorProxyValue.firstModelViz = inObj1.viz;
           fskEditorProxyValue.readme = inObj1.getReadme();
@@ -263,7 +262,7 @@ final class FSKEditorJSNodeModel
       }
       outObj = inObj1;
 
-      outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.modelMetaData,SwaggerUtil.modelClasses.get(fskEditorProxyValue.modelType) );
+      outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.getModelMetaData(),SwaggerUtil.modelClasses.get(fskEditorProxyValue.modelType) );
 
       if (outObj.modelMetadata != null && SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
         List<Parameter> parametersList = SwaggerUtil.getParameter(outObj.modelMetadata);
@@ -387,7 +386,7 @@ final class FSKEditorJSNodeModel
      */
     try {
       FSKEditorJSViewValue vv = getViewValue();
-      saveJsonSetting(vv.modelMetaData, vv.firstModelScript, vv.firstModelViz, vv.readme);
+      saveJsonSetting(vv.getModelMetaData(), vv.firstModelScript, vv.firstModelViz, vv.readme);
     } catch (IOException | CanceledExecutionException e) {
       e.printStackTrace();
     }
@@ -423,7 +422,7 @@ final class FSKEditorJSNodeModel
 
     // Update view value
     FSKEditorJSViewValue viewValue = getViewValue();
-    viewValue.modelMetaData = nodeSettings.modelMetaData;
+    viewValue.setModelMetaData( nodeSettings.modelMetaData);
     viewValue.firstModelScript = modelScript;
     viewValue.firstModelViz = visualizationScript;
     viewValue.readme = readme;

@@ -177,17 +177,15 @@ fskeditorjs = function() {
 						if(!fieldName.indexOf('#/properties/') == 0){
 							
 							store.getState().jsonforms.core.data[originalname] = e.srcElement.innerText;
-							console.log('clicked',fieldName,originalname, e.srcElement.innerText,store.getState().jsonforms.core.data, schema,
-									uischema);
+							
 							dispatched = store.dispatch(Actions.init(
 									store.getState().jsonforms.core.data, schema,
 									uischema));
-							console.log(dispatched);
+							
 							document.getElementById('#/properties/' + fieldName)
 								.focus();
 	
 						}else{
-							console.log('click');
 							currentSection = getCurrentStoreInfo();
 							currentFormId = $(e.srcElement.closest( ".demoform" )).parent().attr('id')
 							// rejoinStores();
@@ -425,9 +423,36 @@ fskeditorjs = function() {
 			tempSpace = "";
 		}
 	}
+	function traverse(obj) {
+		  let keys = Object.keys(obj)
+		  for (let i = 0; i < keys.length; ++i) {
+		    let val = obj[keys[i]]
+		    if (isObj(val)) {
+		      traverse(val)
+		    } else if (Array.isArray(val)) {
+		      for (let j = 0; j < val.length; ++j) {
+		        if (isObj(val[j])) {
+			      traverse(val)
+			    }
+		      }
+		    } else {
+		      if(val == null){
+		    	  delete obj[keys[i]]
+		      }
+		    }
+		  }
+		  return  obj;
+		}
+		 
+		function isObj(obj) {
+		  if (obj == null) { return false }
+		  return obj.constructor.name === "Object"
+		}
 	joinerNode.init = function(representation, value) {
 		window.modelPrefix = (value.modelType ? value.modelType
 				: "GenericModel");
+		
+	  
 		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
 			// send AJAX request to acquire the JWT for the currently logged in
 			// user. Subsequent requests need to carry the token in the
@@ -455,7 +480,7 @@ fskeditorjs = function() {
 			anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
 			anotherxhttp.send();
 		}
-		console.log(value);
+		//console.log(value);
 		if(!value.modelMetaData || value.modelMetaData == "null" ){
 			
 			_firstModel.generalInformation = JSON.parse("{}");
@@ -466,12 +491,18 @@ fskeditorjs = function() {
 			_firstModel.dataBackground = JSON.parse("{}");
 		}else{
 			metaData =  JSON.parse(value.modelMetaData);
+			if(metaData){
+				metaData = 	traverse(metaData);
+			}
 			_firstModel.generalInformation = metaData.generalInformation;
+			console.log(_firstModel.generalInformation);
 			_firstModel.scope =metaData.scope;
 	
 			_firstModel.modelMath = metaData.modelMath;
 			_firstModel.dataBackground = metaData.dataBackground;
+			
 		}
+		
 		_firstModelScript = value.firstModelScript;
 		_README = value.readme != undefined ? value.readme : "";
 		_firstModelViz = value.firstModelViz;
@@ -483,11 +514,80 @@ fskeditorjs = function() {
 		window.modelMath = _firstModel.modelMath;
 		window.dataBackground = _firstModel.dataBackground;
 
+		window.objectsToFix = [window.generalInformation,
+			    window.scope,
+			    window.databackground,
+			    window.modelmath
+			  ]
+		
 		//prepareData(_firstModel);
-
+		$.each(window.objectsToFix,function(storeindex,currentObjectToFix){
+			if(!currentObjectToFix)
+				return true ;
+			$.each(Object.keys(currentObjectToFix),function (index, theValue){
+				if(currentObjectToFix[theValue] == null){
+				}else if(typeof currentObjectToFix[theValue] === "object"  ){
+					console.log(currentObjectToFix[theValue]);
+					if(Array.isArray(currentObjectToFix[theValue]) && currentObjectToFix[theValue].length  > 0  ){
+						console.log(currentObjectToFix[theValue]);
+						arrayOfObjects = [];
+				 		$.each(currentObjectToFix[theValue],function(index,val){
+				 			
+				 			if(typeof val === "string"){
+				 					arrayOfObjects.push({'value': val});
+				 			}
+				 			else{
+				 				console.log("val",val);
+				 				if(!val)
+				 					return true ;
+				 				$.each(Object.keys(val),function (inex, oneKey){
+				 					console.log("inex, oneKey",inex, oneKey);
+				 					if(Array.isArray(val[oneKey]) && val[oneKey].length  > 0 && (typeof val[oneKey][0] === "string") ){
+				 						anotherArrayOfObjects = [];
+				 						$.each(val[oneKey],function(index,stringValue){
+				 							anotherArrayOfObjects.push({'value': stringValue});
+				 						});
+				 						val[oneKey] = anotherArrayOfObjects;
+				 					}
+				 				});
+				 			}
+				 		})
+				 		if(arrayOfObjects.length > 0 ){
+				 			currentObjectToFix[theValue]= arrayOfObjects
+				 		}
+					}
+					else{
+						if(!currentObjectToFix[theValue]){
+							return true ;
+						}
+						 $.each(Object.keys(currentObjectToFix[theValue]),function(ind,key){
+							 console.log(key);
+						 	if(Array.isArray(currentObjectToFix[theValue][key])){
+						 		arrayOfObjects = [];
+						 		$.each(currentObjectToFix[theValue][key],function(index,val){
+						 			console.log(val);
+						 			if(typeof val === "string"){
+						 				arrayOfObjects.push({'value':val});
+						 			}
+						 		})
+						 		if(arrayOfObjects.length > 0 ){
+							 		currentObjectToFix[theValue][key] = arrayOfObjects
+						 		}
+						 	}
+						 });
+					}
+					
+				}
+					
+			});
+			console.log('currentObjectToFix',currentObjectToFix);
+		});
+		
+		console.log('view Value',traverse(JSON.parse(_viewValue.modelMetaData)));
 		create_body();
 		fixTableHeaders();
-
+		
+		
 	};
 	function fixTableHeaders() {
 		var tablePopups = {};
@@ -581,8 +681,9 @@ fskeditorjs = function() {
 	}
 	window.outputParameterNotDefined = false;
 	window.parameterValidationError = ""
+	mapOfSingleValueTable = {};
 	joinerNode.validate = function() {
-		if (noValidation == true) {
+		/*if (noValidation == true) {
 			return true;
 		} else {
 			if (window.firstModelScript && window.firstModelScript.save) {
@@ -653,8 +754,9 @@ fskeditorjs = function() {
 					return false;
 				}
 			}
-		}
-
+		}*/
+		console.log("validate ",_viewValue);
+		
 		return true;
 	}
 	noValidation = false
@@ -674,29 +776,115 @@ fskeditorjs = function() {
 			
 		})
 	}
+	checked = false;
 	joinerNode.getComponentValue = function() {
 		//rejoinStores();
-		console.log(window.store1.getState().jsonforms.core.data);
-		/*if(window.store1.getState().jsonforms.core.data.reference){
-			arr = [];
-			$.each(window.store1.getState().jsonforms.core.data.reference,function(index, value){
-				console.log("reference",value);
-				if(value.publicationType){
-					
-					$.each(value.publicationType,function(ind, pt){
-						arr.push(pt.value);
-					});
-				}
-				
-				window.store1.getState().jsonforms.core.data.reference[index].publicationType = arr;
+		if(window.store7.getState().jsonforms.core.data){
+			window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data
+		}
+		if(window.store13.getState().jsonforms.core.data){
+			window.store1.getState().jsonforms.core.data.modelCategory = window.store13.getState().jsonforms.core.data
+		}
+		if(!checked){
+			checked = true;
+			console.log(window.generalInformation);
+			
+			$.each(window.parentStores,function(storeindex,container){
+				currentStore = container[0]
+				$.each(Object.keys(currentStore.getState().jsonforms.core.data),function (index, theValue){
+					if(typeof currentStore.getState().jsonforms.core.data[theValue] === "object"){
+						console.log(currentStore.getState().jsonforms.core.data[theValue]);
+						if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue]) && currentStore.getState().jsonforms.core.data[theValue].length  > 0){
+							console.log(currentStore.getState().jsonforms.core.data[theValue]);
+							arrayOfObjects = [];
+					 		$.each(currentStore.getState().jsonforms.core.data[theValue],function(index,val){
+					 			console.log(index,val,typeof val);
+					 			if(typeof val === "object" && Object.keys(val).length == 1 && val.value){
+					 				arrayOfObjects.push(val.value);
+					 			}else if(typeof val === "object") {
+					 				console.log(index,val);
+					 				try{
+						 				$.each(Object.keys(val),function(indexx,valx){
+						 					if(Array.isArray(val[valx]) && val[valx].length  > 0 && (typeof val[valx][0] === "object") ){
+												console.log('val[valx]',val[valx]);
+												console.log('val',val);
+												anotherArrayOfObjects = [];
+										 		$.each(val[valx],function(index,valxx){
+										 			
+										 			if(typeof valxx === "object" && valxx.value){
+										 				anotherArrayOfObjects.push(valxx.value);
+										 			}
+										 		})
+										 		if(anotherArrayOfObjects.length > 0 ){
+										 			val[valx]= anotherArrayOfObjects
+										 		}
+											}
+						 				});
+					 				}catch(erro){
+					 					console.log(erro);
+					 				}
+					 			}
+					 		})
+					 		if(arrayOfObjects.length > 0 ){
+					 			currentStore.getState().jsonforms.core.data[theValue]= arrayOfObjects
+					 		}
+						}
+						else{
+							 $.each(Object.keys(currentStore.getState().jsonforms.core.data[theValue]),function(ind,key){
+								 console.log(key);
+							 	if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue][key])){
+							 		arrayOfObjects = [];
+							 		$.each(currentStore.getState().jsonforms.core.data[theValue][key],function(index,val){
+							 			console.log(val);
+							 			if(typeof val === "object" && val.value){
+							 				arrayOfObjects.push(val.value);
+							 			}
+							 		})
+							 		currentStore.getState().jsonforms.core.data[theValue][key] = arrayOfObjects
+							 	}
+							 });
+						}
+						
+					}	
+				});
 			});
+			console.log(window.store1.getState().jsonforms.core.data);
 			
 			
-			console.log('generalInfo',JSON.stringify(window.store1.getState().jsonforms.core.data));
-		}*/
+		}
+		function removeAdditionalProperties(schema,data){
+			var ajv = new window.Ajv({
+				allErrors : true,
+				format : 'fast'
+			});
+			ajv.validate(schema,data);
+			console.log(ajv.errors);
+			$.each(ajv.errors,function(index,value){
+				if(value.keyword == 'additionalProperties'){
+					additionalProperty = value.params.additionalProperty;
+					console.log(additionalProperty);
+					if(value.dataPath == ""){
+						console.log('delete',value);
+						delete data[additionalProperty];
+						
+					}else{
+						matches = value.dataPath.match(/\[(.*?)\]/);
+						var index = matches[1];
+						var holder = value.dataPath.substr(1,matches.index-1);
+						console.log('delete',value);
+						delete data[holder][index][additionalProperty];
+					}
+				}
+			});
+		}
+		
+		removeAdditionalProperties(window.schema, window.store1.getState().jsonforms.core.data);
+		removeAdditionalProperties(window.schema2, window.store2.getState().jsonforms.core.data);
+		removeAdditionalProperties(window.schema6, window.store6.getState().jsonforms.core.data);
+		removeAdditionalProperties(window.schema17, window.store17.getState().jsonforms.core.data);
 		
 		modelMetaData = {			modelType: window.modelPrefix,
-									generalInformation : window.store1.getState().jsonforms.core.data,
+									generalInformation : window.store1.getState().jsonforms.core.data ,
 									scope : window.store2.getState().jsonforms.core.data,
 									modelMath : window.store17.getState().jsonforms.core.data,
 									dataBackground : window.store6.getState().jsonforms.core.data,
@@ -705,6 +893,37 @@ fskeditorjs = function() {
 		_viewValue.modelMetaData = JSON
 				.stringify(modelMetaData);
 		console.log(_viewValue);
+		if(window.firstModelScript && window.firstModelScript.save) {
+		  window.firstModelScript.save(); 
+		} 
+		if (window.firstModelViz && window.firstModelViz.save) {
+			window.firstModelViz.save();
+		}
+		if(window.readme && window.readme.save) {
+			window.readme.save(); 
+		}
+		_viewValue.firstModelScript = $('#firstModelScript').val();
+		 _viewValue.firstModelViz = $('#firstModelViz').val();
+		 _viewValue.readme = $('#READMEArea').val();
+		 
+		 
+		 _viewValue.resourcesFiles = resourcesFiles;
+		 _viewValue.serverName = server;
+		 /*_viewValue.notCompleted = "" + window.outputParameterNotDefined;
+		 
+		 var generalError = ""; generalError +=
+		 validateAgainstSchema(window.schema, window.store1
+		 .getState().jsonforms.core.data, "- General Information:");
+		 generalError += validateAgainstSchema(window.schema2, window.store2
+		 .getState().jsonforms.core.data, "- Scope:");
+		 
+		 generalError += validateAgainstSchema(window.schema17, window.store17
+		 .getState().jsonforms.core.data, "- Model Math:"); generalError +=
+		 validateAgainstSchema(window.schema6, window.store6
+		 .getState().jsonforms.core.data, "- Data Background:"); generalError +=
+		 window.parameterValidationError _viewValue.validationErrors =
+		 generalError.trim(); console.log(_viewValue);*/
+		 
 		/*
 		 * window.store1.getState().jsonforms.core.data.author = window.store23
 		 * .getState().jsonforms.core.data;
@@ -768,6 +987,7 @@ fskeditorjs = function() {
 		 * window.parameterValidationError _viewValue.validationErrors =
 		 * generalError.trim(); console.log(_viewValue);
 		 */
+		 console.log(_viewValue);
 		return _viewValue;
 	};
 	function validateAgainstSchema(schema, data, schemaName) {
@@ -1268,11 +1488,13 @@ fskeditorjs = function() {
 
 		}
 		var keepLast = "";
+		
 		$("[aria-describedby*='tooltip-add']")
 				.click(
 						function(event) {
 							currentArea = window.makeId($(this).attr(
 									'aria-label'));
+							parentID = $($(this).closest( ".demoform" )).parent().attr('id');
 							window.generalInformation = window.store1
 									.getState().jsonforms.core.data;
 							window.scope = window.store2.getState().jsonforms.core.data;
@@ -1301,74 +1523,13 @@ fskeditorjs = function() {
 												'max-height' : '100%'
 											});
 										});
-								notAProperDiv = $("div:contains('No applicable'):not(:has(div))");
-
-								$
-										.each(
-												notAProperDiv,
-												function(index, value) {
-
-													var parentxc;
-													var areaName;
-													try {
-
-														parentxc = value.parentNode;
-														areaName = parentxc.firstChild.textContent;
-														console
-																.log(
-																		"No applicable",
-																		areaName);
-														if (parentxc.firstChild.textContent
-																.indexOf('*') >= 0) {
-															areaName = areaName
-																	.slice(0,
-																			-1);
-														}
-														if (areaName == 'Model Category') {
-															areaName = "modelCategory";
-														} else if (areaName == 'Modification Date') {
-															areaName = "modificationDate";
-														}
-														if (areaName
-																.indexOf('No applicable field found') < 0) {
-															$(value).remove();
-															if (areaName != 'Exposure') {
-																$(parentxc)
-																		.append(
-																				"<div id ='"
-																						+ areaName
-																						+ "' class='replaced' ></div>");
-															} else {
-																$(parentxc)
-																		.append(
-																				"<div id ='"
-																						+ areaName
-																						+ "' class='notReplace' ></div>");
-															}
-															ReactDOM
-																	.render(
-																			React
-																					.createFactory(
-																							Provider)
-																					(
-																							{
-																								store : window.toBeReplacedMap[areaName]
-																							},
-																							App()),
-																			document
-																					.getElementById(areaName));
-														}
-													} catch (err) {
-														// console.log("loop
-														// ",parentxc, err);
-													}
-
-												});
+								fixNotAvailible();
 								window.scrollTo(0, 0);
 							} else {
 
 								var description = currentArea.replace(
 										/([a-z])([A-Z])/g, '$1 $2');
+								
 								var element = $(
 										"button[aria-label*='Add to "
 												+ description.charAt(0)
@@ -1380,7 +1541,9 @@ fskeditorjs = function() {
 								setTimeout(function(){
 									$.each(element.find(".table-responsive .MuiInput-input-113"), function(index,
 											value) {
+										
 										theID = $(value).attr('id');
+										
 										splited = theID.split('/')
 										modifiedID = '';
 										$.each(splited,function(index, value){
@@ -1390,7 +1553,16 @@ fskeditorjs = function() {
 												modifiedID += currentArea;
 											}
 										});
+										$.each($('li.active'),function(index, value){
+											currentSection = $(value).find('a')[0].innerText.toLowerCase().replace(
+													new RegExp(" ", 'g'),
+											"");
+											mapOfSingleValueTable[currentArea] = [parentID,currentSection,getCurrentStoreInfo()]
+										})
 										if(autoCompleteCB.indexOf(currentArea) < 0){
+											$(value).attr('id',"");
+											//console.log('not found ', $(value));
+											
 											return
 										}
 										if(!window.idIndex[modifiedID]){
@@ -1398,7 +1570,7 @@ fskeditorjs = function() {
 										}
 										modifiedID = modifiedID + (window.idIndex[modifiedID]++);
 										$(value).attr('id',modifiedID);
-										
+										;
 										try {
 											indexx = autoCompleteCB.indexOf(currentArea);
 											document.getElementById(modifiedID).className = 'form-control';
@@ -1409,12 +1581,14 @@ fskeditorjs = function() {
 													autoCompleteUischema[indexx], modifiedID,currentArea);
 
 										} catch (error) {
+											console.log(error);
 										}
 										
 										
 									});
-								}, 50);							
+								}, 1);							
 							}});
+		
 		autoCompletInitialIDS = [ 'country', 'language', 'source', 'rights', 'format',
 				'software', 'languageWrittenIn', 'modelClass', 'basicProcess',
 				'status', 'name', 'unit', 'method', 'packaging', 'treatment',
@@ -1444,7 +1618,7 @@ fskeditorjs = function() {
 					}
 				});
 				$(val).attr('id',modifiedID);
-				console.log(modifiedID);
+				//console.log(modifiedID);
 			})}
 			
 		});
@@ -1685,7 +1859,44 @@ fskeditorjs = function() {
 						});
 
 	}
+	function fixNotAvailible(){
 
+		notAProperDiv = $("div:contains('No applicable'):not(:has(div))");
+
+		$.each(notAProperDiv, function( index, value ) {
+			
+			var parentxc ;
+			var areaName;
+			try{
+					
+					parentxc = value.parentNode;
+					areaName =  parentxc.firstChild.textContent;
+					console.log("No applicable",value);
+					if(parentxc.firstChild.textContent.indexOf('*') >= 0){
+						areaName = areaName.slice(0,-1);
+					}
+					if(areaName == 'Model Category'){
+						areaName = "modelCategory";
+					}else if(areaName == 'Modification Date'){
+						areaName = "modificationDate";
+					}
+					if(areaName.indexOf('No applicable field found') < 0){
+						$(value).remove();
+						if(areaName !='Exposure' ){
+							$(parentxc).append( "<div id ='"+areaName+"' class='replaced' ></div>" );
+						}else{
+							$(parentxc).append( "<div id ='"+areaName+"' class='notReplace' ></div>" );
+						}
+						ReactDOM.render(React.createFactory(Provider)({store: window.toBeReplacedMap[areaName]},
+								App()
+						), document.getElementById(areaName));
+					}
+			}catch(err){
+				//console.log("loop ",parentxc, err);
+			}
+			
+		});
+	}
 	function reDesign(ID) {
 		var row = "					<div class='row'>"
 				+ " 					         <div class='col-xs-3 col-sm-3 col-lg-2 "

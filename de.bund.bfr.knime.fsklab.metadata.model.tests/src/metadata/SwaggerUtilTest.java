@@ -579,7 +579,7 @@ public class SwaggerUtilTest {
 		}
 
 		assertEquals("name", equation.getName());
-		assertEquals("class", equation.getPropertyClass());
+		assertEquals("class", equation.getModelEquationClass());
 		assertEquals("equation", equation.getModelEquation());
 		assertEquals(1, equation.getReference().size());
 		assertEquals("hypothesis", equation.getModelHypothesis().get(0));

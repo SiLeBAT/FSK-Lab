@@ -14,12 +14,12 @@
 package de.bund.bfr.metadata.swagger;
 
 import java.util.Objects;
+import java.util.Arrays;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import de.bund.bfr.metadata.swagger.Reference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * Parameter
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-02T16:22:48.194+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-25T13:56:22.998Z")
 public class Parameter {
   @SerializedName("id")
   private String id = null;
@@ -37,11 +37,11 @@ public class Parameter {
    */
   @JsonAdapter(ClassificationEnum.Adapter.class)
   public enum ClassificationEnum {
-    CONSTANT("constant"),
+    CONSTANT("CONSTANT"),
     
-    INPUT("input"),
+    INPUT("INPUT"),
     
-    OUTPUT("output");
+    OUTPUT("OUTPUT");
 
     private String value;
 
@@ -101,29 +101,29 @@ public class Parameter {
    */
   @JsonAdapter(DataTypeEnum.Adapter.class)
   public enum DataTypeEnum {
-    INTEGER("integer"),
+    INTEGER("INTEGER"),
     
-    DOUBLE("double"),
+    DOUBLE("DOUBLE"),
     
-    NUMBER("number"),
+    NUMBER("NUMBER"),
     
-    DATE("date"),
+    DATE("DATE"),
     
-    FILE("file"),
+    FILE("FILE"),
     
-    BOOLEAN("boolean"),
+    BOOLEAN("BOOLEAN"),
     
-    VECTOROFNUMBERS("vectorOfNumbers"),
+    VECTOROFNUMBERS("VECTOROFNUMBERS"),
     
-    VECTOROFSTRINGS("vectorOfStrings"),
+    VECTOROFSTRINGS("VECTOROFSTRINGS"),
     
-    MATRIXOFNUMBERS("matrixOfNumbers"),
+    MATRIXOFNUMBERS("MATRIXOFNUMBERS"),
     
-    MATRIXOFSTRINGS("matrixOfStrings"),
+    MATRIXOFSTRINGS("MATRIXOFSTRINGS"),
     
-    OBJECT("object"),
+    OBJECT("OBJECT"),
     
-    STRING("string");
+    STRING("STRING");
 
     private String value;
 

@@ -40,7 +40,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
 
   public final int pseudoIdentifier = (new Random()).nextInt();
 
-  public String modelMetaData;
+  private String modelMetaData;
 
   public String firstModelScript;
   public String firstModelViz;
@@ -58,7 +58,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     settings.addString(CFG_ORIGINAL_VISUALIZATION_SCRIPT, firstModelViz);
     settings.addString(CFG_ORIGINAL_README, readme);
 
-    saveSettings(settings, CFG_MODEL_METADATA, modelMetaData);
+    saveSettings(settings, CFG_MODEL_METADATA, getModelMetaData());
    
   }
 
@@ -69,7 +69,7 @@ class FSKEditorJSViewValue extends JSONViewContent {
     readme = settings.getString(CFG_ORIGINAL_README);
 
     // load meta data
-    modelMetaData = getEObject(settings, CFG_MODEL_METADATA);
+    setModelMetaData(getEObject(settings, CFG_MODEL_METADATA));
    
   }
 
@@ -113,5 +113,13 @@ class FSKEditorJSViewValue extends JSONViewContent {
   @Override
   public int hashCode() {
     return pseudoIdentifier;
+  }
+
+  public String getModelMetaData() {
+    return modelMetaData;
+  }
+
+  public void setModelMetaData(String modelMetaData) {
+    this.modelMetaData = modelMetaData;
   }
 }

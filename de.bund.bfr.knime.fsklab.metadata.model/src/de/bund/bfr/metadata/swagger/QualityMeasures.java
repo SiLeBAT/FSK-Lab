@@ -14,6 +14,7 @@
 package de.bund.bfr.metadata.swagger;
 
 import java.util.Objects;
+import java.util.Arrays;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -27,78 +28,81 @@ import java.math.BigDecimal;
 /**
  * QualityMeasures
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-02T16:22:48.194+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2019-07-26T06:49:42.862Z")
 public class QualityMeasures {
-  @SerializedName("SSE")
-  private BigDecimal SSE = null;
+  @SerializedName("sse")
+  private BigDecimal sse = null;
 
-  @SerializedName("MSE")
-  private BigDecimal MSE = null;
+  @SerializedName("mse")
+  private BigDecimal mse = null;
 
-  @SerializedName("RMSE")
-  private BigDecimal RMSE = null;
+  @SerializedName("rmse")
+  private BigDecimal rmse = null;
 
-  @SerializedName("RSquared")
+  @SerializedName("rsquared")
   private BigDecimal rsquared = null;
 
-  @SerializedName("AIC")
-  private BigDecimal AIC = null;
+  @SerializedName("aic")
+  private BigDecimal aic = null;
 
-  @SerializedName("BIC")
-  private BigDecimal BIC = null;
+  @SerializedName("bic")
+  private BigDecimal bic = null;
 
-  public QualityMeasures SSE(BigDecimal SSE) {
-    this.SSE = SSE;
+  @SerializedName("sensitivityAnalysis")
+  private String sensitivityAnalysis = null;
+
+  public QualityMeasures sse(BigDecimal sse) {
+    this.sse = sse;
     return this;
   }
 
    /**
    * Statistical values calculated to describe the performance of the model fitting procedure
-   * @return SSE
+   * @return sse
   **/
   @ApiModelProperty(value = "Statistical values calculated to describe the performance of the model fitting procedure")
-  public BigDecimal getSSE() {
-    return SSE;
+  public BigDecimal getSse() {
+    return sse;
   }
 
-  public void setSSE(BigDecimal SSE) {
-    this.SSE = SSE;
+  public void setSse(BigDecimal sse) {
+    this.sse = sse;
   }
 
-  public QualityMeasures MSE(BigDecimal MSE) {
-    this.MSE = MSE;
+  public QualityMeasures mse(BigDecimal mse) {
+    this.mse = mse;
     return this;
   }
 
    /**
    * Statistical values calculated to describe the performance of the model fitting procedure
-   * @return MSE
+   * @return mse
   **/
   @ApiModelProperty(value = "Statistical values calculated to describe the performance of the model fitting procedure")
-  public BigDecimal getMSE() {
-    return MSE;
+  public BigDecimal getMse() {
+    return mse;
   }
 
-  public void setMSE(BigDecimal MSE) {
-    this.MSE = MSE;
+  public void setMse(BigDecimal mse) {
+    this.mse = mse;
   }
 
-  public QualityMeasures RMSE(BigDecimal RMSE) {
-    this.RMSE = RMSE;
+  public QualityMeasures rmse(BigDecimal rmse) {
+    this.rmse = rmse;
     return this;
   }
 
    /**
    * Statistical values calculated to describe the performance of the model fitting procedure
-   * @return RMSE
+   * @return rmse
   **/
   @ApiModelProperty(value = "Statistical values calculated to describe the performance of the model fitting procedure")
-  public BigDecimal getRMSE() {
-    return RMSE;
+  public BigDecimal getRmse() {
+    return rmse;
   }
 
-  public void setRMSE(BigDecimal RMSE) {
-    this.RMSE = RMSE;
+  public void setRmse(BigDecimal rmse) {
+    this.rmse = rmse;
   }
 
   public QualityMeasures rsquared(BigDecimal rsquared) {
@@ -119,40 +123,58 @@ public class QualityMeasures {
     this.rsquared = rsquared;
   }
 
-  public QualityMeasures AIC(BigDecimal AIC) {
-    this.AIC = AIC;
+  public QualityMeasures aic(BigDecimal aic) {
+    this.aic = aic;
     return this;
   }
 
    /**
    * Statistical values calculated to describe the performance of the model fitting procedure
-   * @return AIC
+   * @return aic
   **/
   @ApiModelProperty(value = "Statistical values calculated to describe the performance of the model fitting procedure")
-  public BigDecimal getAIC() {
-    return AIC;
+  public BigDecimal getAic() {
+    return aic;
   }
 
-  public void setAIC(BigDecimal AIC) {
-    this.AIC = AIC;
+  public void setAic(BigDecimal aic) {
+    this.aic = aic;
   }
 
-  public QualityMeasures BIC(BigDecimal BIC) {
-    this.BIC = BIC;
+  public QualityMeasures bic(BigDecimal bic) {
+    this.bic = bic;
     return this;
   }
 
    /**
    * Statistical values calculated to describe the performance of the model fitting procedure
-   * @return BIC
+   * @return bic
   **/
   @ApiModelProperty(value = "Statistical values calculated to describe the performance of the model fitting procedure")
-  public BigDecimal getBIC() {
-    return BIC;
+  public BigDecimal getBic() {
+    return bic;
   }
 
-  public void setBIC(BigDecimal BIC) {
-    this.BIC = BIC;
+  public void setBic(BigDecimal bic) {
+    this.bic = bic;
+  }
+
+  public QualityMeasures sensitivityAnalysis(String sensitivityAnalysis) {
+    this.sensitivityAnalysis = sensitivityAnalysis;
+    return this;
+  }
+
+   /**
+   * Description of the results of an sensitivity analysis, i.e. how independence assumptions are met or how variables will affect the output of model
+   * @return sensitivityAnalysis
+  **/
+  @ApiModelProperty(value = "Description of the results of an sensitivity analysis, i.e. how independence assumptions are met or how variables will affect the output of model")
+  public String getSensitivityAnalysis() {
+    return sensitivityAnalysis;
+  }
+
+  public void setSensitivityAnalysis(String sensitivityAnalysis) {
+    this.sensitivityAnalysis = sensitivityAnalysis;
   }
 
 
@@ -165,17 +187,18 @@ public class QualityMeasures {
       return false;
     }
     QualityMeasures qualityMeasures = (QualityMeasures) o;
-    return Objects.equals(this.SSE, qualityMeasures.SSE) &&
-        Objects.equals(this.MSE, qualityMeasures.MSE) &&
-        Objects.equals(this.RMSE, qualityMeasures.RMSE) &&
+    return Objects.equals(this.sse, qualityMeasures.sse) &&
+        Objects.equals(this.mse, qualityMeasures.mse) &&
+        Objects.equals(this.rmse, qualityMeasures.rmse) &&
         Objects.equals(this.rsquared, qualityMeasures.rsquared) &&
-        Objects.equals(this.AIC, qualityMeasures.AIC) &&
-        Objects.equals(this.BIC, qualityMeasures.BIC);
+        Objects.equals(this.aic, qualityMeasures.aic) &&
+        Objects.equals(this.bic, qualityMeasures.bic) &&
+        Objects.equals(this.sensitivityAnalysis, qualityMeasures.sensitivityAnalysis);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(SSE, MSE, RMSE, rsquared, AIC, BIC);
+    return Objects.hash(sse, mse, rmse, rsquared, aic, bic, sensitivityAnalysis);
   }
 
 
@@ -184,12 +207,13 @@ public class QualityMeasures {
     StringBuilder sb = new StringBuilder();
     sb.append("class QualityMeasures {\n");
     
-    sb.append("    SSE: ").append(toIndentedString(SSE)).append("\n");
-    sb.append("    MSE: ").append(toIndentedString(MSE)).append("\n");
-    sb.append("    RMSE: ").append(toIndentedString(RMSE)).append("\n");
+    sb.append("    sse: ").append(toIndentedString(sse)).append("\n");
+    sb.append("    mse: ").append(toIndentedString(mse)).append("\n");
+    sb.append("    rmse: ").append(toIndentedString(rmse)).append("\n");
     sb.append("    rsquared: ").append(toIndentedString(rsquared)).append("\n");
-    sb.append("    AIC: ").append(toIndentedString(AIC)).append("\n");
-    sb.append("    BIC: ").append(toIndentedString(BIC)).append("\n");
+    sb.append("    aic: ").append(toIndentedString(aic)).append("\n");
+    sb.append("    bic: ").append(toIndentedString(bic)).append("\n");
+    sb.append("    sensitivityAnalysis: ").append(toIndentedString(sensitivityAnalysis)).append("\n");
     sb.append("}");
     return sb.toString();
   }

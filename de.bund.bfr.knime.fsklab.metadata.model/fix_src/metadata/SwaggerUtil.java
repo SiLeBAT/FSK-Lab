@@ -159,15 +159,15 @@ public class SwaggerUtil {
 
 				JsonObject measures = Json.createReader(new StringReader(item.getValue())).readObject();
 				if (measures.containsKey("SSE"))
-					qm.setSSE(measures.getJsonNumber("SSE").bigDecimalValue());
+					qm.setSse(measures.getJsonNumber("SSE").bigDecimalValue());
 				if (measures.containsKey("AIC"))
-					qm.setAIC(measures.getJsonNumber("AIC").bigDecimalValue());
+					qm.setAic(measures.getJsonNumber("AIC").bigDecimalValue());
 				if (measures.containsKey("BIC"))
-					qm.setBIC(measures.getJsonNumber("BIC").bigDecimalValue());
+					qm.setBic(measures.getJsonNumber("BIC").bigDecimalValue());
 				if (measures.containsKey("MSE"))
-					qm.setMSE(measures.getJsonNumber("MSE").bigDecimalValue());
+					qm.setMse(measures.getJsonNumber("MSE").bigDecimalValue());
 				if (measures.containsKey("RMSE"))
-					qm.setRMSE(measures.getJsonNumber("RMSE").bigDecimalValue());
+					qm.setRmse(measures.getJsonNumber("RMSE").bigDecimalValue());
 				if (measures.containsKey("rsquared"))
 					qm.setRsquared(measures.getJsonNumber("rsquared").bigDecimalValue());
 
@@ -216,7 +216,7 @@ public class SwaggerUtil {
 
 		de.bund.bfr.metadata.swagger.ModelEquation modelEq = new de.bund.bfr.metadata.swagger.ModelEquation();
 		modelEq.setName(deprecated.getModelEquationName());
-		modelEq.setPropertyClass(deprecated.getModelEquationClass());
+		modelEq.setModelEquationClass(deprecated.getModelEquationClass());
 		modelEq.setModelEquation(deprecated.getModelEquation());
 		deprecated.getReference().stream().map(SwaggerUtil::convert).forEach(modelEq::addReferenceItem);
 		deprecated.getHypothesisOfTheModel().stream().map(StringObject::getValue)
@@ -543,27 +543,27 @@ public class SwaggerUtil {
 		List<Parameter> parameters;
 
 		final String modelType = model.getModelType();
-		if (modelType.equals("genericModel")) {
+		if (modelType.equalsIgnoreCase("genericModel")) {
 			parameters = ((GenericModel) model).getModelMath().getParameter();
-		} else if (modelType.equals("dataModel")) {
+		} else if (modelType.equalsIgnoreCase("dataModel")) {
 			parameters = ((DataModel) model).getModelMath().getParameter();
-		} else if (modelType.equals("predictiveModel")) {
+		} else if (modelType.equalsIgnoreCase("predictiveModel")) {
 			parameters = ((PredictiveModel) model).getModelMath().getParameter();
-		} else if (modelType.equals("otherModel")) {
+		} else if (modelType.equalsIgnoreCase("otherModel")) {
 			parameters = ((OtherModel) model).getModelMath().getParameter();
-		} else if (modelType.equals("exposureModel")) {
+		} else if (modelType.equalsIgnoreCase("exposureModel")) {
 			parameters = ((ExposureModel) model).getModelMath().getParameter();
-		} else if (modelType.equals("toxicologicalModel")) {
+		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			parameters = ((ToxicologicalModel) model).getModelMath().getParameter();
-		} else if (modelType.equals("doseResponseModel")) {
+		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
 			parameters = ((DoseResponseModel) model).getModelMath().getParameter();
-		} else if (modelType.equals("processModel")) {
+		} else if (modelType.equalsIgnoreCase("processModel")) {
 			parameters = ((ProcessModel) model).getModelMath().getParameter();
-		} else if (modelType.equals("consumptionModel")) {
+		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
 			parameters = ((ConsumptionModel) model).getModelMath().getParameter();
-		} else if (modelType.equals("riskModel")) {
+		} else if (modelType.equalsIgnoreCase("riskModel")) {
 			parameters = ((RiskModel) model).getModelMath().getParameter();
-		} else if (modelType.equals("qraModel")) {
+		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			parameters = ((QraModel) model).getModelMath().getParameter();
 		} else {
 			parameters = null;
@@ -575,27 +575,27 @@ public class SwaggerUtil {
 	public static void setParameter(Model model, List<Parameter> pList) {
 
 		final String modelType = model.getModelType();
-		if (modelType.equals("genericModel")) {
+		if (modelType.equalsIgnoreCase("genericModel")) {
 			((GenericModel) model).getModelMath().setParameter(pList);
-		} else if (modelType.equals("dataModel")) {
+		} else if (modelType.equalsIgnoreCase("dataModel")) {
 			((DataModel) model).getModelMath().setParameter(pList);
-		} else if (modelType.equals("predictiveModel")) {
+		} else if (modelType.equalsIgnoreCase("predictiveModel")) {
 			((PredictiveModel) model).getModelMath().setParameter(pList);
-		} else if (modelType.equals("otherModel")) {
+		} else if (modelType.equalsIgnoreCase("otherModel")) {
 			((OtherModel) model).getModelMath().setParameter(pList);
-		} else if (modelType.equals("exposureModel")) {
+		} else if (modelType.equalsIgnoreCase("exposureModel")) {
 			((ExposureModel) model).getModelMath().setParameter(pList);
-		} else if (modelType.equals("toxicologicalModel")) {
+		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			((ToxicologicalModel) model).getModelMath().setParameter(pList);
-		} else if (modelType.equals("doseResponseModel")) {
+		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
 			((DoseResponseModel) model).getModelMath().setParameter(pList);
-		} else if (modelType.equals("processModel")) {
+		} else if (modelType.equalsIgnoreCase("processModel")) {
 			((ProcessModel) model).getModelMath().setParameter(pList);
-		} else if (modelType.equals("consumptionModel")) {
+		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
 			((ConsumptionModel) model).getModelMath().setParameter(pList);
-		} else if (modelType.equals("riskModel")) {
+		} else if (modelType.equalsIgnoreCase("riskModel")) {
 			((RiskModel) model).getModelMath().setParameter(pList);
-		} else if (modelType.equals("qraModel")) {
+		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			((QraModel) model).getModelMath().setParameter(pList);
 		}
 
@@ -606,27 +606,27 @@ public class SwaggerUtil {
 		String language;
 
 		final String modelType = model.getModelType();
-		if (modelType.equals("genericModel")) {
+		if (modelType.equalsIgnoreCase("genericModel")) {
 			language = ((GenericModel) model).getGeneralInformation().getLanguageWrittenIn();
-		} else if (modelType.equals("dataModel")) {
+		} else if (modelType.equalsIgnoreCase("dataModel")) {
 			language = null;
-		} else if (modelType.equals("predictiveModel")) {
+		} else if (modelType.equalsIgnoreCase("predictiveModel")) {
 			language = ((PredictiveModel) model).getGeneralInformation().getLanguageWrittenIn();
-		} else if (modelType.equals("otherModel")) {
+		} else if (modelType.equalsIgnoreCase("otherModel")) {
 			language = ((OtherModel) model).getGeneralInformation().getLanguageWrittenIn();
-		} else if (modelType.equals("exposureModel")) {
+		} else if (modelType.equalsIgnoreCase("exposureModel")) {
 			language = ((ExposureModel) model).getGeneralInformation().getLanguageWrittenIn();
-		} else if (modelType.equals("toxicologicalModel")) {
+		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			language = ((ToxicologicalModel) model).getGeneralInformation().getLanguageWrittenIn();
-		} else if (modelType.equals("doseResponseModel")) {
+		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
 			language = ((DoseResponseModel) model).getGeneralInformation().getLanguageWrittenIn();
-		} else if (modelType.equals("processModel")) {
+		} else if (modelType.equalsIgnoreCase("processModel")) {
 			language = ((ProcessModel) model).getGeneralInformation().getLanguageWrittenIn();
-		} else if (modelType.equals("consumptionModel")) {
+		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
 			language = ((ConsumptionModel) model).getGeneralInformation().getLanguageWrittenIn();
-		} else if (modelType.equals("riskModel")) {
+		} else if (modelType.equalsIgnoreCase("riskModel")) {
 			language = ((RiskModel) model).getGeneralInformation().getLanguageWrittenIn();
-		} else if (modelType.equals("qraModel")) {
+		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			language = ((QraModel) model).getGeneralInformation().getLanguageWrittenIn();
 		} else {
 			language = null;
@@ -640,27 +640,27 @@ public class SwaggerUtil {
 		String name;
 
 		final String modelType = model.getModelType();
-		if (modelType.equals("genericModel")) {
+		if (modelType.equalsIgnoreCase("genericModel")) {
 			name = ((GenericModel) model).getGeneralInformation().getName();
-		} else if (modelType.equals("dataModel")) {
+		} else if (modelType.equalsIgnoreCase("dataModel")) {
 			name = ((DataModel) model).getGeneralInformation().getName();
-		} else if (modelType.equals("predictiveModel")) {
+		} else if (modelType.equalsIgnoreCase("predictiveModel")) {
 			name = ((PredictiveModel) model).getGeneralInformation().getName();
-		} else if (modelType.equals("otherModel")) {
+		} else if (modelType.equalsIgnoreCase("otherModel")) {
 			name = ((OtherModel) model).getGeneralInformation().getName();
-		} else if (modelType.equals("exposureModel")) {
+		} else if (modelType.equalsIgnoreCase("exposureModel")) {
 			name = ((ExposureModel) model).getGeneralInformation().getName();
-		} else if (modelType.equals("toxicologicalModel")) {
+		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			name = ((ToxicologicalModel) model).getGeneralInformation().getName();
-		} else if (modelType.equals("doseResponseModel")) {
+		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
 			name = ((DoseResponseModel) model).getGeneralInformation().getModelName();
-		} else if (modelType.equals("processModel")) {
+		} else if (modelType.equalsIgnoreCase("processModel")) {
 			name = ((ProcessModel) model).getGeneralInformation().getName();
-		} else if (modelType.equals("consumptionModel")) {
+		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
 			name = ((ConsumptionModel) model).getGeneralInformation().getName();
-		} else if (modelType.equals("riskModel")) {
+		} else if (modelType.equalsIgnoreCase("riskModel")) {
 			name = ((RiskModel) model).getGeneralInformation().getName();
-		} else if (modelType.equals("qraModel")) {
+		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			name = ((QraModel) model).getGeneralInformation().getName();
 		} else {
 			name = null;
@@ -673,27 +673,27 @@ public class SwaggerUtil {
 		Object information;
 
 		final String modelType = model.getModelType();
-		if (modelType.equals("genericModel")) {
+		if (modelType.equalsIgnoreCase("genericModel")) {
 			information = ((GenericModel) model).getGeneralInformation();
-		} else if (modelType.equals("dataModel")) {
+		} else if (modelType.equalsIgnoreCase("dataModel")) {
 			information = ((DataModel) model).getGeneralInformation();
-		} else if (modelType.equals("predictiveModel")) {
+		} else if (modelType.equalsIgnoreCase("predictiveModel")) {
 			information = ((PredictiveModel) model).getGeneralInformation();
-		} else if (modelType.equals("otherModel")) {
+		} else if (modelType.equalsIgnoreCase("otherModel")) {
 			information = ((OtherModel) model).getGeneralInformation();
-		} else if (modelType.equals("exposureModel")) {
+		} else if (modelType.equalsIgnoreCase("exposureModel")) {
 			information = ((ExposureModel) model).getGeneralInformation();
-		} else if (modelType.equals("toxicologicalModel")) {
+		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			information = ((ToxicologicalModel) model).getGeneralInformation();
-		} else if (modelType.equals("doseResponseModel")) {
+		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
 			information = ((DoseResponseModel) model).getGeneralInformation();
-		} else if (modelType.equals("processModel")) {
+		} else if (modelType.equalsIgnoreCase("processModel")) {
 			information = ((ProcessModel) model).getGeneralInformation();
-		} else if (modelType.equals("consumptionModel")) {
+		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
 			information = ((ConsumptionModel) model).getGeneralInformation();
-		} else if (modelType.equals("riskModel")) {
+		} else if (modelType.equalsIgnoreCase("riskModel")) {
 			information = ((RiskModel) model).getGeneralInformation();
-		} else if (modelType.equals("qraModel")) {
+		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			information = ((QraModel) model).getGeneralInformation();
 		} else {
 			information = null;
@@ -706,27 +706,27 @@ public class SwaggerUtil {
 		Object scope;
 
 		final String modelType = model.getModelType();
-		if (modelType.equals("genericModel")) {
+		if (modelType.equalsIgnoreCase("genericModel")) {
 			scope = ((GenericModel) model).getScope();
-		} else if (modelType.equals("dataModel")) {
+		} else if (modelType.equalsIgnoreCase("dataModel")) {
 			scope = ((DataModel) model).getScope();
-		} else if (modelType.equals("predictiveModel")) {
+		} else if (modelType.equalsIgnoreCase("predictiveModel")) {
 			scope = ((PredictiveModel) model).getScope();
-		} else if (modelType.equals("otherModel")) {
+		} else if (modelType.equalsIgnoreCase("otherModel")) {
 			scope = ((OtherModel) model).getScope();
-		} else if (modelType.equals("exposureModel")) {
+		} else if (modelType.equalsIgnoreCase("exposureModel")) {
 			scope = ((ExposureModel) model).getScope();
-		} else if (modelType.equals("toxicologicalModel")) {
+		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			scope = ((ToxicologicalModel) model).getScope();
-		} else if (modelType.equals("doseResponseModel")) {
+		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
 			scope = ((DoseResponseModel) model).getScope();
-		} else if (modelType.equals("processModel")) {
+		} else if (modelType.equalsIgnoreCase("processModel")) {
 			scope = ((ProcessModel) model).getScope();
-		} else if (modelType.equals("consumptionModel")) {
+		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
 			scope = ((ConsumptionModel) model).getScope();
-		} else if (modelType.equals("riskModel")) {
+		} else if (modelType.equalsIgnoreCase("riskModel")) {
 			scope = ((RiskModel) model).getScope();
-		} else if (modelType.equals("qraModel")) {
+		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			scope = ((QraModel) model).getScope();
 		} else {
 			scope = null;
@@ -739,27 +739,27 @@ public class SwaggerUtil {
 		Object background;
 
 		final String modelType = model.getModelType();
-		if (modelType.equals("genericModel")) {
+		if (modelType.equalsIgnoreCase("genericModel")) {
 			background = ((GenericModel) model).getDataBackground();
-		} else if (modelType.equals("dataModel")) {
+		} else if (modelType.equalsIgnoreCase("dataModel")) {
 			background = ((DataModel) model).getDataBackground();
-		} else if (modelType.equals("predictiveModel")) {
+		} else if (modelType.equalsIgnoreCase("predictiveModel")) {
 			background = ((PredictiveModel) model).getDataBackground();
-		} else if (modelType.equals("otherModel")) {
+		} else if (modelType.equalsIgnoreCase("otherModel")) {
 			background = ((OtherModel) model).getDataBackground();
-		} else if (modelType.equals("exposureModel")) {
+		} else if (modelType.equalsIgnoreCase("exposureModel")) {
 			background = ((ExposureModel) model).getDataBackground();
-		} else if (modelType.equals("toxicologicalModel")) {
+		} else if (modelType.equalsIgnoreCase("toxicologicalModel")) {
 			background = ((ToxicologicalModel) model).getDataBackground();
-		} else if (modelType.equals("doseResponseModel")) {
+		} else if (modelType.equalsIgnoreCase("doseResponseModel")) {
 			background = ((DoseResponseModel) model).getDataBackground();
-		} else if (modelType.equals("processModel")) {
+		} else if (modelType.equalsIgnoreCase("processModel")) {
 			background = ((ProcessModel) model).getDataBackground();
-		} else if (modelType.equals("consumptionModel")) {
+		} else if (modelType.equalsIgnoreCase("consumptionModel")) {
 			background = ((ConsumptionModel) model).getDataBackground();
-		} else if (modelType.equals("riskModel")) {
+		} else if (modelType.equalsIgnoreCase("riskModel")) {
 			background = ((RiskModel) model).getDataBackground();
-		} else if (modelType.equals("qraModel")) {
+		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			background = ((QraModel) model).getDataBackground();
 		} else {
 			background = null;

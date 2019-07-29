@@ -1150,17 +1150,17 @@ public class SwaggerGenericSheetImporter  {
 
 		Cell sseCell = sheet.getRow(QUALITY_MEASURES__SSE).getCell(M);
 		if (sseCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-			measures.setSSE(BigDecimal.valueOf(sseCell.getNumericCellValue()));
+			measures.setSse(BigDecimal.valueOf(sseCell.getNumericCellValue()));
 		}
 
 		Cell mseCell = sheet.getRow(QUALITY_MEASURES__MSE).getCell(M);
 		if (mseCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-			measures.setMSE(BigDecimal.valueOf(mseCell.getNumericCellValue()));
+			measures.setMse(BigDecimal.valueOf(mseCell.getNumericCellValue()));
 		}
 
 		Cell rmseCell = sheet.getRow(QUALITY_MEASURES__RMSE).getCell(M);
 		if (rmseCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-			measures.setRMSE(BigDecimal.valueOf(rmseCell.getNumericCellValue()));
+			measures.setRmse(BigDecimal.valueOf(rmseCell.getNumericCellValue()));
 		}
 
 		Cell rsquareCell = sheet.getRow(QUALITY_MEASURES__RSQUARE).getCell(M);
@@ -1170,12 +1170,12 @@ public class SwaggerGenericSheetImporter  {
 
 		Cell aicCell = sheet.getRow(QUALITY_MEASURES__AIC).getCell(M);
 		if (aicCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-			measures.setAIC(BigDecimal.valueOf(aicCell.getNumericCellValue()));
+			measures.setAic(BigDecimal.valueOf(aicCell.getNumericCellValue()));
 		}
 
 		Cell bicCell = sheet.getRow(QUALITY_MEASURES__BIC).getCell(M);
 		if (bicCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-			measures.setBIC(BigDecimal.valueOf(bicCell.getNumericCellValue()));
+			measures.setBic(BigDecimal.valueOf(bicCell.getNumericCellValue()));
 		}
 		
 		return measures;
