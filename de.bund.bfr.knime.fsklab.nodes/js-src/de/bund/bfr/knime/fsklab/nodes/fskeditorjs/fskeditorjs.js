@@ -431,9 +431,11 @@ fskeditorjs = function() {
 	      traverse(val)
 	    } else if (Array.isArray(val)) {
 	      for (let j = 0; j < val.length; ++j) {
-	        if (isObj(val[j])) {
-		      traverse(val)
-		    }
+	    	  if (isObj(val[j]) && val[j] != null) {
+			      traverse(val[j])
+			    }else{
+			    	delete obj[keys[i]];
+			    }
 	      }
 	    } else {
 	      if(val == null){

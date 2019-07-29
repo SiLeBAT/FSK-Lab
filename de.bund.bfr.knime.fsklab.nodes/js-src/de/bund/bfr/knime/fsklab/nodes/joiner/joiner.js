@@ -282,10 +282,8 @@ joiner = function() {
 		}
 		$(inp).addClass('domdsdsd');
 		/* execute a function when someone writes in the text field: */
-		inp
-				.addEventListener(
-						"input",inputHandler
-						);
+		if(inp.addEventListener)
+		inp.addEventListener("input",inputHandler);
 		
 		/* execute a function presses a key on the keyboard: */
 		inp.addEventListener("focus", function(e) {
@@ -428,8 +426,10 @@ joiner = function() {
 		      traverse(val)
 		    } else if (Array.isArray(val)) {
 		      for (let j = 0; j < val.length; ++j) {
-		        if (isObj(val[j])) {
-			      traverse(val)
+		        if (isObj(val[j]) && val[j] != null) {
+			      traverse(val[j])
+			    }else{
+			    	delete obj[keys[i]];
 			    }
 		      }
 		    } else {
@@ -461,10 +461,11 @@ joiner = function() {
 			metaData =  JSON.parse(value.modelMetaData);
 			if(metaData){
 				metaData = 	traverse(metaData);
+				console.log("metaData",metaData);
 			}
 			_firstModel.generalInformation = metaData.generalInformation;
 			console.log(_firstModel.generalInformation);
-			_firstModel.scope =metaData.scope;
+			_firstModel.scope = metaData.scope;
 	
 			_firstModel.modelMath = metaData.modelMath;
 			_firstModel.dataBackground = metaData.dataBackground;
@@ -494,7 +495,7 @@ joiner = function() {
 			$.each(_viewValue.joinRelations,function(index,value){
 				if(value ){
 					console.log('val',value);
-					window.joinRelationsMap[value.sourceParam.parameterID+","+value.targetParam.parameterID] = value ;	
+					window.joinRelationsMap[value.sourceParam.id+","+value.targetParam.id] = value ;	
 				}
 				 
 			})
@@ -509,10 +510,10 @@ joiner = function() {
 		window.scope = _firstModel.scope;
 		window.modelMath = _firstModel.modelMath;
 		window.dataBackground = _firstModel.dataBackground;
-		window.objectsToFix = [window.generalInformation,
-		    window.scope,
-		    window.databackground,
-		    window.modelmath
+		window.objectsToFix = [_firstModel.generalInformation,
+			_firstModel.scope,
+			_firstModel.dataBackground,
+			_firstModel.modelMath
 		  ]
 	
 	//prepareData(_firstModel);
@@ -522,9 +523,9 @@ joiner = function() {
 			$.each(Object.keys(currentObjectToFix),function (index, theValue){
 				if(currentObjectToFix[theValue] == null){
 				}else if(typeof currentObjectToFix[theValue] === "object"  ){
-					console.log(currentObjectToFix[theValue]);
+					//console.log(currentObjectToFix[theValue]);
 					if(Array.isArray(currentObjectToFix[theValue]) && currentObjectToFix[theValue].length  > 0  ){
-						console.log(currentObjectToFix[theValue]);
+						//console.log(currentObjectToFix[theValue]);
 						arrayOfObjects = [];
 				 		$.each(currentObjectToFix[theValue],function(index,val){
 				 			
@@ -532,11 +533,9 @@ joiner = function() {
 				 					arrayOfObjects.push({'value': val});
 				 			}
 				 			else{
-				 				console.log("val",val);
 				 				if(!val)
 				 					return true ;
 				 				$.each(Object.keys(val),function (inex, oneKey){
-				 					console.log("inex, oneKey",inex, oneKey);
 				 					if(Array.isArray(val[oneKey]) && val[oneKey].length  > 0 && (typeof val[oneKey][0] === "string") ){
 				 						anotherArrayOfObjects = [];
 				 						$.each(val[oneKey],function(index,stringValue){
@@ -556,11 +555,11 @@ joiner = function() {
 							return true ;
 						}
 						 $.each(Object.keys(currentObjectToFix[theValue]),function(ind,key){
-							 console.log(key);
+							 //console.log(key);
 						 	if(Array.isArray(currentObjectToFix[theValue][key])){
 						 		arrayOfObjects = [];
 						 		$.each(currentObjectToFix[theValue][key],function(index,val){
-						 			console.log(val);
+						 			//
 						 			if(typeof val === "string"){
 						 				arrayOfObjects.push({'value':val});
 						 			}
@@ -577,7 +576,7 @@ joiner = function() {
 			});
 			console.log('currentObjectToFix',currentObjectToFix);
 		});
-		
+		console.log(_firstModel);
 		create_body(value.different);
 		$('[data-toggle="popover"]').popover()
 		$('.popover-dismiss').popover({
@@ -669,6 +668,7 @@ joiner = function() {
 	}
 	checked = false;
 	joinerNode.getComponentValue = function() {
+		try{
 		if(window.store7.getState().jsonforms.core.data){
 			window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data
 		}
@@ -677,31 +677,30 @@ joiner = function() {
 		}
 		if(!checked){
 			checked = true;
-			console.log(window.generalInformation);
-			
+					
 			$.each(window.parentStores,function(storeindex,container){
 				currentStore = container[0]
 				$.each(Object.keys(currentStore.getState().jsonforms.core.data),function (index, theValue){
 					if(typeof currentStore.getState().jsonforms.core.data[theValue] === "object"){
-						console.log(currentStore.getState().jsonforms.core.data[theValue]);
+						//console.log(currentStore.getState().jsonforms.core.data[theValue]);
 						if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue]) && currentStore.getState().jsonforms.core.data[theValue].length  > 0){
-							console.log(currentStore.getState().jsonforms.core.data[theValue]);
+							//console.log(currentStore.getState().jsonforms.core.data[theValue]);
 							arrayOfObjects = [];
 					 		$.each(currentStore.getState().jsonforms.core.data[theValue],function(index,val){
-					 			console.log(index,val,typeof val);
-					 			if(typeof val === "object" && Object.keys(val).length == 1 && val.value){
+					 			//console.log(index,val,typeof val);
+					 			if(val != null && typeof val === "object" && Object.keys(val).length == 1 && val.value){
 					 				arrayOfObjects.push(val.value);
 					 			}else if(typeof val === "object") {
-					 				console.log(index,val);
+					 				//console.log(index,val);
 					 				try{
 						 				$.each(Object.keys(val),function(indexx,valx){
 						 					if(Array.isArray(val[valx]) && val[valx].length  > 0 && (typeof val[valx][0] === "object") ){
-												console.log('val[valx]',val[valx]);
-												console.log('val',val);
+												//console.log('val[valx]',val[valx]);
+												//console.log('val',val);
 												anotherArrayOfObjects = [];
 										 		$.each(val[valx],function(index,valxx){
 										 			
-										 			if(typeof valxx === "object" && valxx.value){
+										 			if(valxx!=null && typeof valxx === "object" && valxx.value){
 										 				anotherArrayOfObjects.push(valxx.value);
 										 			}
 										 		})
@@ -721,12 +720,12 @@ joiner = function() {
 						}
 						else{
 							 $.each(Object.keys(currentStore.getState().jsonforms.core.data[theValue]),function(ind,key){
-								 console.log(key);
+								//console.log(key);
 							 	if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue][key])){
 							 		arrayOfObjects = [];
 							 		$.each(currentStore.getState().jsonforms.core.data[theValue][key],function(index,val){
 							 			console.log(val);
-							 			if(typeof val === "object" && val.value){
+							 			if(val!=null && typeof val === "object" && val.value){
 							 				arrayOfObjects.push(val.value);
 							 			}
 							 		})
@@ -772,7 +771,9 @@ joiner = function() {
 		removeAdditionalProperties(window.schema2, window.store2.getState().jsonforms.core.data);
 		removeAdditionalProperties(window.schema6, window.store6.getState().jsonforms.core.data);
 		removeAdditionalProperties(window.schema17, window.store17.getState().jsonforms.core.data);
-		
+		}catch(err){
+			console.log(err);
+		}
 		modelMetaData = {			modelType: window.modelPrefix,
 									generalInformation : window.store1.getState().jsonforms.core.data ,
 									scope : window.store2.getState().jsonforms.core.data,
@@ -1126,9 +1127,10 @@ joiner = function() {
 		drawWorkflow();
 		
 		try {
+			console.log('hust before',window.generalInformation,window.scope,window.dataBackground,window.modelMath);
 			createEMFForm();
 		} catch (err) {
-			console.log(err)
+			
 		}
 
 		// $('html').find('style').remove();
@@ -2046,7 +2048,8 @@ var keepLast = "";
 										+ '</div>'
 										+ '<div class="form-group">'
 										+ '</div>' + '</form>');
-			autocomplete(document.getElementById('commandLanguage'), window.Language_written_in,undefined,undefined,undefined);
+			//autocomplete(document.getElementById('commandLanguage'), window.Language_written_in,undefined,undefined,undefined);
+			
 			//$(document.getElementById('commandLanguage')).val(this.getElementsByTagName("input")[0].value);
 
 			$('#Command').keyup(function() {

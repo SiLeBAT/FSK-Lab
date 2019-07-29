@@ -4,7 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
+
 import org.junit.Test;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeID;
@@ -15,7 +15,7 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.nodes.RunnerNodeModel;
 import metadata.SwaggerUtil;
 
-@Ignore
+
 public class JoinerTest extends WorkflowTestCase {
 	private final String expectedJoinedModel_Name = "Simple Model 1 | Simple Model 2";
 	private final String expectedJoinedModel_OutputwithoutConnections = "20.0";
@@ -33,7 +33,6 @@ public class JoinerTest extends WorkflowTestCase {
 	private NodeID m_runnerNode12;
 	private NodeID m_runnerNode114;
 	private NodeID m_runnerNode116;
-	private NodeID m_runnerNode118;
 
 	private NodeID m_ReaderNode1;
 	private NodeID m_ReaderNode2;
@@ -67,7 +66,6 @@ public class JoinerTest extends WorkflowTestCase {
 		m_runnerNode12 = new NodeID(baseID, 12);
 		m_runnerNode114 = new NodeID(baseID, 114);
 		m_runnerNode116 = new NodeID(baseID, 116);
-		m_runnerNode118 = new NodeID(baseID, 118);
 
 		// TODO check the results after running with connections already set
 		executeAndWait(m_runnerNode1);
@@ -154,13 +152,6 @@ public class JoinerTest extends WorkflowTestCase {
 						.getPortObject()).getSecondFskPortObject()).getSecondFskPortObject())
 								.getSecondFskPortObject().modelMetadata).get(1).getValue());
 
-		executeAndWait(m_runnerNode118);
-		NodeContainer runner118NodeContainer = getManager().getNodeContainer(m_runnerNode118);
-		// port 0 is always a flow variable port
-		NodeOutPort runner118OutPort = runner118NodeContainer.getOutPort(1);
-
-		assertEquals(expectedValueWithSimulation,
-				SwaggerUtil.getParameter(((FskPortObject) runner118OutPort.getPortObject()).modelMetadata).get(1).getValue());
 		// wait until R processes are killed
 
 		getManager().resetAndConfigureNode(m_ReaderNode1);
@@ -177,7 +168,6 @@ public class JoinerTest extends WorkflowTestCase {
 		getManager().resetAndConfigureNode(m_runnerNode10);
 		getManager().resetAndConfigureNode(m_runnerNode116);
 		getManager().resetAndConfigureNode(m_runnerNode114);
-		getManager().resetAndConfigureNode(m_runnerNode118);
 		getManager().resetAndConfigureNode(m_ReaderNode11);
 		getManager().resetAndConfigureNode(m_ReaderNode14);
 
