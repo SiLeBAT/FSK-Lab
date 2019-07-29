@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Arrays;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -39,6 +40,7 @@ public class Ggplot2PlotterTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testPlotSvg() throws Exception {
 
 		File file = testFolder.newFile("plot.svg");

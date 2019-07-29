@@ -44,6 +44,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
@@ -77,6 +78,7 @@ import org.emfjson.jackson.module.EMFModule;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
@@ -84,9 +86,13 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -96,9 +102,20 @@ import de.bund.bfr.knime.fsklab.nodes.common.ui.ScriptPanel;
 import de.bund.bfr.knime.fsklab.nodes.common.ui.UIUtils;
 import de.bund.bfr.knime.fsklab.rakip.RakipModule;
 import de.bund.bfr.knime.fsklab.rakip.RakipUtil;
+import de.bund.bfr.metadata.swagger.ConsumptionModel;
+import de.bund.bfr.metadata.swagger.DataModel;
+import de.bund.bfr.metadata.swagger.DoseResponseModel;
+import de.bund.bfr.metadata.swagger.ExposureModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.HealthModel;
 import de.bund.bfr.metadata.swagger.Model;
+import de.bund.bfr.metadata.swagger.OtherModel;
 import de.bund.bfr.metadata.swagger.Parameter;
+import de.bund.bfr.metadata.swagger.PredictiveModel;
+import de.bund.bfr.metadata.swagger.ProcessModel;
+import de.bund.bfr.metadata.swagger.QraModel;
+import de.bund.bfr.metadata.swagger.RiskModel;
+import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 import metadata.SwaggerUtil;
 
 /**
@@ -107,7 +124,7 @@ import metadata.SwaggerUtil;
  * @author Ahmad Swaid, BfR, Berlin.
  */
 public class CombinedFskPortObject extends FskPortObject {
-
+	private static NodeLogger LOGGER = NodeLogger.getLogger(CombinedFskPortObject.class);
 	final FskPortObject firstFskPortObject;
 
 	public FskPortObject getFirstFskPortObject() {
@@ -215,7 +232,55 @@ public class CombinedFskPortObject extends FskPortObject {
 		private static final String LIBRARY_LIST = "library.list";
 		private static final String BREAK = "break";
 
-		private static final ObjectMapper MAPPER = new ObjectMapper();
+		
+		/** Object mapper for 1.0.2 metadata. */
+		private static final ObjectMapper MAPPER102;
+
+		/** Object mapper for 1.0.3 metadata. */
+		private static final ObjectMapper MAPPER103;
+
+		/** Object mapper for 1.0.4 metadata. */
+		private static final ObjectMapper MAPPER104;
+
+		public static Map<String, Class<? extends Model>> modelClasses;
+
+		static {
+			try {
+				// ObjectMapper defaults to use a JsonFactory that automatically closes
+				// the stream. When further entries are added to the archive the stream
+				// is closed and fails. The AUTO_CLOSE_TARGET needs to be disabled.
+				JsonFactory jsonFactory = new JsonFactory();
+				jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+				jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+
+				MAPPER102 = new ObjectMapper(jsonFactory);
+				MAPPER102.registerModule(new RakipModule());
+
+				MAPPER103 = new ObjectMapper(jsonFactory);
+				MAPPER103.registerModule(new EMFModule());
+
+				MAPPER104 = new ObjectMapper(jsonFactory);
+				MAPPER104.registerModule(new ThreeTenModule());
+
+				modelClasses =  new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+				modelClasses.put("genericModel", GenericModel.class);
+				modelClasses.put("dataModel", DataModel.class);
+				modelClasses.put("predictiveModel", PredictiveModel.class);
+				modelClasses.put("otherModel", OtherModel.class);
+				modelClasses.put("exposureModel", ExposureModel.class);
+				modelClasses.put("toxicologicalModel", ToxicologicalModel.class);
+				modelClasses.put("doseResponseModel", DoseResponseModel.class);
+				modelClasses.put("processModel", ProcessModel.class);
+				modelClasses.put("consumptionModel", ConsumptionModel.class);
+				modelClasses.put("healthModel", HealthModel.class);
+				modelClasses.put("riskModel", RiskModel.class);
+				modelClasses.put("qraModel", QraModel.class);
+
+			} catch (Throwable throwable) {
+				LOGGER.error("Failure during static initialization", throwable);
+				throw throwable;
+			}
+		}
 
 		@Override
 		public void savePortObject(final CombinedFskPortObject portObject, final PortObjectZipOutputStream out,
@@ -267,7 +332,7 @@ public class CombinedFskPortObject extends FskPortObject {
 				out.closeEntry();
 
 				out.putNextEntry(new ZipEntry("swagger" + level));
-				MAPPER.writeValue(out, portObject.modelMetadata);
+				MAPPER104.writeValue(out, portObject.modelMetadata);
 				out.closeEntry();
 
 				// joined viz entry (file with visualization script)
@@ -296,7 +361,7 @@ public class CombinedFskPortObject extends FskPortObject {
 				out.closeEntry();
 
 				out.putNextEntry(new ZipEntry("swagger" + level));
-				MAPPER.writeValue(out, portObject.modelMetadata);
+				MAPPER104.writeValue(out, portObject.modelMetadata);
 				out.closeEntry();
 
 				// workspace entry
@@ -434,8 +499,16 @@ public class CombinedFskPortObject extends FskPortObject {
 							e.printStackTrace();
 						}
 					}
+					entry = in.getNextEntry();
+					entryName = entry.getName();
+					if (entryName.equals("modelType"+ level)) {
+						// deserialize new models
+						String modelClass = IOUtils.toString(in, "UTF-8");
+						in.getNextEntry();
 
-					if (entryName.startsWith(JOINED_GENERAL_INFORMATION + level)) {
+						modelMetadata = MAPPER104.readValue(in, modelClasses.get(modelClass));
+					}
+					else if (entryName.startsWith(JOINED_GENERAL_INFORMATION + level)) {
 						metadata.GeneralInformation deprecatedInformation = readEObject(in,
 								metadata.GeneralInformation.class);
 						in.getNextEntry();
@@ -487,7 +560,14 @@ public class CombinedFskPortObject extends FskPortObject {
 					} else if (entryName.startsWith(VIZ)) {
 						visualizationScript = IOUtils.toString(in, "UTF-8");
 					}
+					
+					if (entryName.startsWith("modelType")) {
+						// deserialize new models
+						String modelClass = IOUtils.toString(in, "UTF-8");
+						in.getNextEntry();
 
+						modelMetadata = MAPPER104.readValue(in, modelClasses.get(modelClass));
+					}
 					// If found old deprecated metadata, restore it and convert it to new EMF
 					// metadata
 					else if (entryName.startsWith(META_DATA)) {
