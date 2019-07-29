@@ -424,30 +424,30 @@ fskeditorjs = function() {
 		}
 	}
 	function traverse(obj) {
-		  let keys = Object.keys(obj)
-		  for (let i = 0; i < keys.length; ++i) {
-		    let val = obj[keys[i]]
-		    if (isObj(val)) {
+	  let keys = Object.keys(obj)
+	  for (let i = 0; i < keys.length; ++i) {
+	    let val = obj[keys[i]]
+	    if (isObj(val)) {
+	      traverse(val)
+	    } else if (Array.isArray(val)) {
+	      for (let j = 0; j < val.length; ++j) {
+	        if (isObj(val[j])) {
 		      traverse(val)
-		    } else if (Array.isArray(val)) {
-		      for (let j = 0; j < val.length; ++j) {
-		        if (isObj(val[j])) {
-			      traverse(val)
-			    }
-		      }
-		    } else {
-		      if(val == null){
-		    	  delete obj[keys[i]]
-		      }
 		    }
-		  }
-		  return  obj;
-		}
-		 
-		function isObj(obj) {
-		  if (obj == null) { return false }
-		  return obj.constructor.name === "Object"
-		}
+	      }
+	    } else {
+	      if(val == null){
+	    	  delete obj[keys[i]]
+	      }
+	    }
+	  }
+	  return  obj;
+	}
+	 
+	function isObj(obj) {
+	  if (obj == null) { return false }
+	  return obj.constructor.name === "Object"
+	}
 	joinerNode.init = function(representation, value) {
 		window.modelPrefix = (value.modelType ? value.modelType
 				: "GenericModel");

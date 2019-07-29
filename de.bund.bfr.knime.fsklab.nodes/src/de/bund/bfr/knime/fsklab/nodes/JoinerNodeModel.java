@@ -163,7 +163,7 @@ final class JoinerNodeModel extends
     // Clone input object
     synchronized (getLock()) {
       JoinerViewValue joinerProxyValue = getViewValue();
-
+      
       // If not executed
       if (joinerProxyValue.modelMetaData == null) {
         joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
@@ -236,9 +236,9 @@ final class JoinerNodeModel extends
       } else if (StringUtils.isNotBlank(nodeSettings.joinScript)) {
         creatRelationList(nodeSettings.joinScript, joinerProxyValue, joinerRelation);
       }
-
-      outObj.modelMetadata = getObjectFromJson(joinerProxyValue.modelMetaData, Model.class);
-
+      // Consider Here that the model type is the same as the second model
+      outObj.modelMetadata = getObjectFromJson(joinerProxyValue.modelMetaData,SwaggerUtil.modelClasses.get(inObj2.modelMetadata.getModelType()));
+      joinerProxyValue.modelType = inObj2.modelMetadata.getModelType();
       if (StringUtils.isNotEmpty(joinerProxyValue.modelScriptTree)) {
         JsonArray scriptTree = getScriptArray(joinerProxyValue.modelScriptTree);
         setScriptBack(inObj1, inObj2, scriptTree);

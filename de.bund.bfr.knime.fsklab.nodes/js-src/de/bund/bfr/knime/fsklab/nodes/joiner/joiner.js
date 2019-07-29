@@ -117,7 +117,7 @@ joiner = function() {
 			};
 		}());
 	}
-	function autocomplete(inp, arr, store, schema, uischema, fieldName) {
+	function autocomplete(originalname, inp, arr, store, schema, uischema, fieldName,currentArea) {
 		/*
 		 * the autocomplete function takes two arguments, the text field element
 		 * and an array of possible autocompleted values:
@@ -167,28 +167,39 @@ joiner = function() {
 					 * execute a function when someone clicks on
 					 * the item value (DIV element):
 					 */
-					b
-							.addEventListener(
-									"click",
-									function(e) {
-										/*
-										 * insert the value for
-										 * the autocomplete text
-										 * field:
-										 */
-										if(store){
-											store.getState().jsonforms.core.data[fieldName] = this
-													.getElementsByTagName("input")[0].value;
-	
-											store
-													.dispatch(Actions
-															.init(
-																	store
-																			.getState().jsonforms.core.data,
-																	schema,
-																	uischema));
+					b.addEventListener("click", function(e) {
+						/*
+						 * insert the value for the autocomplete text field:
+						 */
+						
+						if(!fieldName.indexOf('#/properties/') == 0){
+							
+							store.getState().jsonforms.core.data[originalname] = e.srcElement.innerText;
+							
+							dispatched = store.dispatch(Actions.init(
+									store.getState().jsonforms.core.data, schema,
+									uischema));
+							
+							document.getElementById('#/properties/' + fieldName)
+								.focus();
+								
 										}else{
+											currentSection = getCurrentStoreInfo();
+											currentFormId = $(e.srcElement.closest( ".demoform" )).parent().attr('id')
+											// rejoinStores();
+											document.getElementById( fieldName).value = e.srcElement.innerText;
+											store.getState().jsonforms.core.data[currentArea][getLastDigits(fieldName)] = {'value':document.getElementById( fieldName).value};
+											store.dispatch(Actions.init(
+													store.getState().jsonforms.core.data, schema,
+													uischema));
 											
+											currentSection[0].getState().jsonforms.core.data[currentFormId] = store.getState().jsonforms.core.data;
+											currentSection[0].dispatch(Actions.init(
+													currentSection[0].getState().jsonforms.core.data, currentSection[1],
+													currentSection[2]));
+											
+											document.getElementById( fieldName)
+												.focus();
 											$(document.getElementById('commandLanguage')).val(this.getElementsByTagName("input")[0].value);
 											window.sJoinRealtion.language_written_in = this.getElementsByTagName("input")[0].value;
 										}
@@ -409,15 +420,60 @@ joiner = function() {
 	window.joinRelationsMap = {};
 	var firstModelParameterMap = new Object();
 	var secomndModelParameterMap = new Object();
+	function traverse(obj) {
+		  let keys = Object.keys(obj)
+		  for (let i = 0; i < keys.length; ++i) {
+		    let val = obj[keys[i]]
+		    if (isObj(val)) {
+		      traverse(val)
+		    } else if (Array.isArray(val)) {
+		      for (let j = 0; j < val.length; ++j) {
+		        if (isObj(val[j])) {
+			      traverse(val)
+			    }
+		      }
+		    } else {
+		      if(val == null){
+		    	  delete obj[keys[i]]
+		      }
+		    }
+		  }
+		  return  obj;
+		}
+		 
+		function isObj(obj) {
+		  if (obj == null) { return false }
+		  return obj.constructor.name === "Object"
+		}
 	joinerNode.init = function(representation, value) {
-		
-		_firstModel.generalInformation = JSON.parse(value.generalInformation);
-		_firstModel.scope = JSON.parse(value.scope);
+		modelType = (value.modelType ? value.modelType
+				: "GenericModel");
+		window.modelPrefix = modelType.charAt(0).toUpperCase() + modelType.slice(1);
+		if(!value.modelMetaData || value.modelMetaData == "null" ){
+			
+			_firstModel.generalInformation = JSON.parse("{}");
+			_firstModel.generalInformation = JSON.parse("{}");
+			_firstModel.scope = JSON.parse("{}");
+
+			_firstModel.modelMath = JSON.parse("{}");
+			_firstModel.dataBackground = JSON.parse("{}");
+		}else{
+			metaData =  JSON.parse(value.modelMetaData);
+			if(metaData){
+				metaData = 	traverse(metaData);
+			}
+			_firstModel.generalInformation = metaData.generalInformation;
+			console.log(_firstModel.generalInformation);
+			_firstModel.scope =metaData.scope;
+	
+			_firstModel.modelMath = metaData.modelMath;
+			_firstModel.dataBackground = metaData.dataBackground;
+			
+		}
 		firstModelName = value.firstModelName;
 		secondModelName = value.secondModelName;
 		
-		_firstModel.modelMath = JSON.parse(value.modelMath);
-		_firstModel.dataBackground = JSON.parse(value.dataBackground);
+		
 
 		_firstModelMath = JSON.parse(value.modelMath1);
 		_secondModelMath = JSON.parse(value.modelMath2);
@@ -453,7 +509,74 @@ joiner = function() {
 		window.scope = _firstModel.scope;
 		window.modelMath = _firstModel.modelMath;
 		window.dataBackground = _firstModel.dataBackground;
-		prepareData(_firstModel);
+		window.objectsToFix = [window.generalInformation,
+		    window.scope,
+		    window.databackground,
+		    window.modelmath
+		  ]
+	
+	//prepareData(_firstModel);
+	$.each(window.objectsToFix,function(storeindex,currentObjectToFix){
+			if(!currentObjectToFix)
+				return true ;
+			$.each(Object.keys(currentObjectToFix),function (index, theValue){
+				if(currentObjectToFix[theValue] == null){
+				}else if(typeof currentObjectToFix[theValue] === "object"  ){
+					console.log(currentObjectToFix[theValue]);
+					if(Array.isArray(currentObjectToFix[theValue]) && currentObjectToFix[theValue].length  > 0  ){
+						console.log(currentObjectToFix[theValue]);
+						arrayOfObjects = [];
+				 		$.each(currentObjectToFix[theValue],function(index,val){
+				 			
+				 			if(typeof val === "string"){
+				 					arrayOfObjects.push({'value': val});
+				 			}
+				 			else{
+				 				console.log("val",val);
+				 				if(!val)
+				 					return true ;
+				 				$.each(Object.keys(val),function (inex, oneKey){
+				 					console.log("inex, oneKey",inex, oneKey);
+				 					if(Array.isArray(val[oneKey]) && val[oneKey].length  > 0 && (typeof val[oneKey][0] === "string") ){
+				 						anotherArrayOfObjects = [];
+				 						$.each(val[oneKey],function(index,stringValue){
+				 							anotherArrayOfObjects.push({'value': stringValue});
+				 						});
+				 						val[oneKey] = anotherArrayOfObjects;
+				 					}
+				 				});
+				 			}
+				 		})
+				 		if(arrayOfObjects.length > 0 ){
+				 			currentObjectToFix[theValue]= arrayOfObjects
+				 		}
+					}
+					else{
+						if(!currentObjectToFix[theValue]){
+							return true ;
+						}
+						 $.each(Object.keys(currentObjectToFix[theValue]),function(ind,key){
+							 console.log(key);
+						 	if(Array.isArray(currentObjectToFix[theValue][key])){
+						 		arrayOfObjects = [];
+						 		$.each(currentObjectToFix[theValue][key],function(index,val){
+						 			console.log(val);
+						 			if(typeof val === "string"){
+						 				arrayOfObjects.push({'value':val});
+						 			}
+						 		})
+						 		if(arrayOfObjects.length > 0 ){
+							 		currentObjectToFix[theValue][key] = arrayOfObjects
+						 		}
+						 	}
+						 });
+					}
+					
+				}
+					
+			});
+			console.log('currentObjectToFix',currentObjectToFix);
+		});
 		
 		create_body(value.different);
 		$('[data-toggle="popover"]').popover()
@@ -544,10 +667,122 @@ joiner = function() {
 				: [];
 
 	}
-	
+	checked = false;
 	joinerNode.getComponentValue = function() {
+		if(window.store7.getState().jsonforms.core.data){
+			window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data
+		}
+		if(window.store13.getState().jsonforms.core.data){
+			window.store1.getState().jsonforms.core.data.modelCategory = window.store13.getState().jsonforms.core.data
+		}
+		if(!checked){
+			checked = true;
+			console.log(window.generalInformation);
+			
+			$.each(window.parentStores,function(storeindex,container){
+				currentStore = container[0]
+				$.each(Object.keys(currentStore.getState().jsonforms.core.data),function (index, theValue){
+					if(typeof currentStore.getState().jsonforms.core.data[theValue] === "object"){
+						console.log(currentStore.getState().jsonforms.core.data[theValue]);
+						if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue]) && currentStore.getState().jsonforms.core.data[theValue].length  > 0){
+							console.log(currentStore.getState().jsonforms.core.data[theValue]);
+							arrayOfObjects = [];
+					 		$.each(currentStore.getState().jsonforms.core.data[theValue],function(index,val){
+					 			console.log(index,val,typeof val);
+					 			if(typeof val === "object" && Object.keys(val).length == 1 && val.value){
+					 				arrayOfObjects.push(val.value);
+					 			}else if(typeof val === "object") {
+					 				console.log(index,val);
+					 				try{
+						 				$.each(Object.keys(val),function(indexx,valx){
+						 					if(Array.isArray(val[valx]) && val[valx].length  > 0 && (typeof val[valx][0] === "object") ){
+												console.log('val[valx]',val[valx]);
+												console.log('val',val);
+												anotherArrayOfObjects = [];
+										 		$.each(val[valx],function(index,valxx){
+										 			
+										 			if(typeof valxx === "object" && valxx.value){
+										 				anotherArrayOfObjects.push(valxx.value);
+										 			}
+										 		})
+										 		if(anotherArrayOfObjects.length > 0 ){
+										 			val[valx]= anotherArrayOfObjects
+										 		}
+											}
+						 				});
+					 				}catch(erro){
+					 					console.log(erro);
+					 				}
+					 			}
+					 		})
+					 		if(arrayOfObjects.length > 0 ){
+					 			currentStore.getState().jsonforms.core.data[theValue]= arrayOfObjects
+					 		}
+						}
+						else{
+							 $.each(Object.keys(currentStore.getState().jsonforms.core.data[theValue]),function(ind,key){
+								 console.log(key);
+							 	if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue][key])){
+							 		arrayOfObjects = [];
+							 		$.each(currentStore.getState().jsonforms.core.data[theValue][key],function(index,val){
+							 			console.log(val);
+							 			if(typeof val === "object" && val.value){
+							 				arrayOfObjects.push(val.value);
+							 			}
+							 		})
+							 		currentStore.getState().jsonforms.core.data[theValue][key] = arrayOfObjects
+							 	}
+							 });
+						}
+						
+					}	
+				});
+			});
+			console.log(window.store1.getState().jsonforms.core.data);
+			
+			
+		}
+		function removeAdditionalProperties(schema,data){
+			var ajv = new window.Ajv({
+				allErrors : true,
+				format : 'fast'
+			});
+			ajv.validate(schema,data);
+			console.log(ajv.errors);
+			$.each(ajv.errors,function(index,value){
+				if(value.keyword == 'additionalProperties'){
+					additionalProperty = value.params.additionalProperty;
+					console.log(additionalProperty);
+					if(value.dataPath == ""){
+						console.log('delete',value);
+						delete data[additionalProperty];
+						
+					}else{
+						matches = value.dataPath.match(/\[(.*?)\]/);
+						var index = matches[1];
+						var holder = value.dataPath.substr(1,matches.index-1);
+						console.log('delete',value);
+						delete data[holder][index][additionalProperty];
+					}
+				}
+			});
+		}
 		
-		window.store1.getState().jsonforms.core.data.author = window.store23
+		removeAdditionalProperties(window.schema, window.store1.getState().jsonforms.core.data);
+		removeAdditionalProperties(window.schema2, window.store2.getState().jsonforms.core.data);
+		removeAdditionalProperties(window.schema6, window.store6.getState().jsonforms.core.data);
+		removeAdditionalProperties(window.schema17, window.store17.getState().jsonforms.core.data);
+		
+		modelMetaData = {			modelType: window.modelPrefix,
+									generalInformation : window.store1.getState().jsonforms.core.data ,
+									scope : window.store2.getState().jsonforms.core.data,
+									modelMath : window.store17.getState().jsonforms.core.data,
+									dataBackground : window.store6.getState().jsonforms.core.data,
+									
+									}; 
+		_viewValue.modelMetaData = JSON
+				.stringify(modelMetaData);
+		/*window.store1.getState().jsonforms.core.data.author = window.store23
 				.getState().jsonforms.core.data;
 		window.store6.getState().jsonforms.core.data.study = window.store7
 				.getState().jsonforms.core.data;
@@ -568,7 +803,7 @@ joiner = function() {
 				.stringify(window.store6.getState().jsonforms.core.data);
 		if(!window.geneerr){
 			window.geneerr = "";
-		}
+		}*/
 		console.log("relation",_viewValue.joinRelations);
 		if(_viewValue.joinRelations.push){
 			$.each(_viewValue.joinRelations,function (index, value){
@@ -581,7 +816,7 @@ joiner = function() {
 			
 		}
 		
-		var ajv = new Ajv({allErrors: true, format:'fast'});		
+		/*var ajv = new Ajv({allErrors: true, format:'fast'});		
 		// Add convert keyword for date-time schema
 		ajv = ajv.removeKeyword("format")
 		try{
@@ -622,7 +857,7 @@ joiner = function() {
 		generalError += validateAgainstSchema(window.schema6, window.store6.getState().jsonforms.core.data,"- Data Background:");
 		generalError += window.geneerr;
 		
-		_viewValue.validationErrors = generalError.trim();
+		_viewValue.validationErrors = generalError.trim();*/
 		return _viewValue;
 	};
 	function validateAgainstSchema(schema, data, schemaName){
@@ -893,7 +1128,7 @@ joiner = function() {
 		try {
 			createEMFForm();
 		} catch (err) {
-			//console.log(err)
+			console.log(err)
 		}
 
 		// $('html').find('style').remove();
@@ -904,6 +1139,8 @@ joiner = function() {
 			} else if ($(value).attr('data-meta') == 'MuiInputLabel') {
 				$(value).remove();
 			} else if ($(value).attr('data-meta') == 'MuiFormLabel') {
+				$(value).remove();
+			}else if ($(value).attr('data-meta') == 'MuiFormHelperText') {
 				$(value).remove();
 			}
 
@@ -943,29 +1180,29 @@ joiner = function() {
 		$('.MuiDialog-paper-128').css('max-height', '');
 		$('.MuiDialog-paper-128').css('overflow-y', 'visible');
 
-		$(".MuiTable-root-222 thead").removeAttr('class');
-		$(".MuiTable-root-222 thead tr").removeAttr('class');
-		$(".MuiTable-root-222 thead tr th").removeAttr('class');
-		$(".MuiTable-root-222 thead tr th th").removeAttr('class');
-		$(".MuiTable-root-222 tbody").removeAttr('class');
-		$(".MuiTable-root-222 tbody tr").removeAttr('class');
-		$(".MuiTable-root-222 tbody tr td").removeAttr('class');
-		$(".MuiTable-root-222 tbody tr td div").removeAttr('class');
-		$(".MuiTable-root-222 tbody tr td div div").removeAttr('class');
-		$(".MuiTable-root-222 tbody tr td div div div").removeAttr('class');
+		$(".MuiTable-root-201 thead").removeAttr('class');
+		$(".MuiTable-root-201 thead tr").removeAttr('class');
+		$(".MuiTable-root-201 thead tr th").removeAttr('class');
+		$(".MuiTable-root-201 thead tr th th").removeAttr('class');
+		$(".MuiTable-root-201 tbody").removeAttr('class');
+		$(".MuiTable-root-201 tbody tr").removeAttr('class');
+		$(".MuiTable-root-201 tbody tr td").removeAttr('class');
+		$(".MuiTable-root-201 tbody tr td div").removeAttr('class');
+		$(".MuiTable-root-201 tbody tr td div div").removeAttr('class');
+		$(".MuiTable-root-201 tbody tr td div div div").removeAttr('class');
 
-		$(".MuiTable-root-222 tbody tr td div div div input").removeAttr(
+		$(".MuiTable-root-201 tbody tr td div div div input").removeAttr(
 				'class');
 		window
-				.tableInputBootstraping($(".MuiTable-root-222 tbody tr td div div div input"));
+				.tableInputBootstraping($(".MuiTable-root-201 tbody tr td div div div input"));
 
-		$('.MuiTable-root-222').addClass('table');
-		$('.MuiTable-root-222').parent().addClass('table-responsive');
-		$('.MuiTable-root-222').parent().removeClass('MuiGrid-typeItem-2');
-		$('.MuiTable-root-222').removeClass('MuiTable-root-222');
+		$('.MuiTable-root-201').addClass('table');
+		$('.MuiTable-root-201').parent().addClass('table-responsive');
+		$('.MuiTable-root-201').parent().removeClass('MuiGrid-typeItem-2');
+		$('.MuiTable-root-201').removeClass('MuiTable-root-201');
 
 		$('.MuiFormControl-root-90').addClass('form-group');
-		$.each($('.MuiToolbar-root-196').find('h2'), function(index, value) {
+		$.each($('.MuiToolbar-root-135').find('h2'), function(index, value) {
 			text = $(value).text();
 
 			$(value).replaceWith(
@@ -985,116 +1222,251 @@ joiner = function() {
 
 		}
 
-		var StringObjectPopupsName = [ 'qualityMeasures', 'event',
-				'laboratoryAccreditation', 'populationSpan',
-				'populationDescription', 'bmi', 'specialDietGroups', 'region',
-				'country', 'populationRiskFactor', 'season',
-				'patternConsumption', 'populationAge', 'modelSubClass','hypothesisOfTheModel','reference' ];
-		$("[aria-describedby*='tooltip-add']").click(function(event) {
-			currentArea = window.makeId($(this).attr('aria-label'));
-			window.generalInformation = window.store1.getState().jsonforms.core.data;
-			window.scope = window.store2.getState().jsonforms.core.data;
-			window.modelMath =  window.store17.getState().jsonforms.core.data;
-			window.dataBackground =  window.store6.getState().jsonforms.core.data;
-			if ($.inArray(currentArea, StringObjectPopupsName) < 0 || (currentArea == "reference" && keepLast != "modelEquation")) {
-				event.preventDefault(); // Let's stop this event.
-				event.stopPropagation(); // Really this time.
-				$('#title' + currentArea).text(currentArea);
+var keepLast = "";
+		
+		$("[aria-describedby*='tooltip-add']")
+				.click(
+						function(event) {
+							currentArea = window.makeId($(this).attr(
+									'aria-label'));
+							parentID = $($(this).closest( ".demoform" )).parent().attr('id');
+							window.generalInformation = window.store1
+									.getState().jsonforms.core.data;
+							window.scope = window.store2.getState().jsonforms.core.data;
+							window.modelMath = window.store17.getState().jsonforms.core.data;
+							window.dataBackground = window.store6.getState().jsonforms.core.data;
+							console
+									.log("length "
+											+ $('#' + currentArea).length);
+							if ($('#' + currentArea).length > 0
+									|| (currentArea == "reference" && keepLast != "modelEquation")) {
+								event.preventDefault(); // Let's stop this
+								// event.
+								event.stopPropagation(); // Really this time.
+								$('#title' + currentArea).text(currentArea);
+								keepLast = currentArea == "modelEquation" ? "modelEquation"
+										: "";
+								$('#' + currentArea).modal('show');
+								$('.modal-content').resizable({
+								// alsoResize: ".modal-dialog",
+								// minHeight: 150
+								});
+								$('.modal-dialog').draggable();
+								$('#' + currentArea).on('show.bs.modal',
+										function() {
+											$(this).find('.modal-body').css({
+												'max-height' : '100%'
+											});
+										});
+								fixNotAvailible();
+								window.scrollTo(0, 0);
+							} else {
 
-				$('#' + currentArea).modal('show');
-				$('.modal-content').resizable({
-				// alsoResize: ".modal-dialog",
-				// minHeight: 150
-				});
-				$('.modal-dialog').draggable();
-				$('#' + currentArea).on('show.bs.modal', function() {
-					$(this).find('.modal-body').css({
-						'max-height' : '100%'
-					});
-				});
-				window.scrollTo(0, 0);
-			}
-		});
-		autoCompleteCB = [ 'country', 'language', 'source', 'rights', 'format',
+								var description = currentArea.replace(
+										/([a-z])([A-Z])/g, '$1 $2');
+								
+								var element = $(
+										"button[aria-label*='Add to "
+												+ description.charAt(0)
+														.toUpperCase()+description.substring(1,description.length) + "']")
+										.parent().parent().parent().parent()
+										.parent().parent().parent().parent();
+								
+								
+								setTimeout(function(){
+									$.each(element.find(".table-responsive .MuiInput-input-113"), function(index,
+											value) {
+										
+										theID = $(value).attr('id');
+										
+										splited = theID.split('/')
+										modifiedID = '';
+										$.each(splited,function(index, value){
+											if(index != splited.length -1 ){
+												modifiedID += value+'/';
+											}else{
+												modifiedID += currentArea;
+											}
+										});
+										$.each($('li.active'),function(index, value){
+											currentSection = $(value).find('a')[0].innerText.toLowerCase().replace(
+													new RegExp(" ", 'g'),
+											"");
+											mapOfSingleValueTable[currentArea] = [parentID,currentSection,getCurrentStoreInfo()]
+										})
+										if(autoCompleteCB.indexOf(currentArea) < 0){
+											$(value).attr('id',"");
+											//console.log('not found ', $(value));
+											
+											return
+										}
+										if(!window.idIndex[modifiedID]){
+											window.idIndex[modifiedID] = 0
+										}
+										modifiedID = modifiedID + (window.idIndex[modifiedID]++);
+										$(value).attr('id',modifiedID);
+										;
+										try {
+											indexx = autoCompleteCB.indexOf(currentArea);
+											document.getElementById(modifiedID).className = 'form-control';
+											autocomplete(modelAutoCompleteCB[indexx],document.getElementById(modifiedID),
+													autoCompleteArray[indexx],
+
+													autoCompleteStores[indexx], autoCompleteSchemas[indexx],
+													autoCompleteUischema[indexx], modifiedID,currentArea);
+
+										} catch (error) {
+											console.log(error);
+										}
+										
+										
+									});
+								}, 1);							
+							}});
+		
+		autoCompletInitialIDS = [ 'country', 'language', 'source', 'rights', 'format',
 				'software', 'languageWrittenIn', 'modelClass', 'basicProcess',
-				'status', 'productName', 'productUnit', 'productionMethod',
-				'packaging', 'productTreatment', 'originArea', 'originCountry',
-				'fisheriesArea', 'hazardType', 'hazardName', 'hazardUnit',
-				'hazardIndSum', 'populationName', 'studyAssayTechnologyType',
+				'status', 'name', 'unit', 'method', 'packaging', 'treatment',
+				'originArea', 'originCountry', 'fisheriesArea', 'type', 'name',
+				'unit', 'indSum', 'name', 'studyAssayTechnologyType',
 				'accreditationProcedureForTheAssayTechnology',
 				'samplingStrategy', 'typeOfSamplingProgram', 'samplingMethod',
 				'lotSizeUnit', 'samplingPoint', 'collectionTool',
 				'recordTypes', 'foodDescriptors', 'laboratoryCountry',
 				'parameterType', 'parameterUnit', 'parameterUnitCategory',
 				'parameterSource', 'parameterSubject', 'parameterDistribution',
-				'modelEquationClass', 'typeOfExposure' ];
-		autoCompleteArray = [ window.Country, window.Language, window.Source,
-				window.Rights, window.Format, window.Software,
-				window.Language_written_in, window.Model_Class,
-				window.Basic_process, window.Status,
-				window.Product_matrix_name, window.Parameter_unit,
-				window.Method_of_production, window.Packaging,
-				window.Product_treatment, window.Area_of_origin,
-				window.Country, window.Fisheries_area, window.Hazard_type,
-				window.Hazard_name, window.Parameter_unit,
-				window.Hazard_ind_sum, window.Population_name,
-				window.Study_Assay_Technology_Type,
-				window.Accreditation_procedure_Ass_Tec,
-				window.Sampling_strategy, window.Type_of_sampling_program,
-				window.Sampling_method, window.Parameter_unit,
-				window.Sampling_point, window.Method_tool_to_collect_data,
-				window.Type_of_records, window.Food_descriptors,
-				window.Country, window.Parameter_type, window.Parameter_unit,
-				window.Parameter_unit_category, window.Parameter_source,
-				window.Parameter_subject, window.Parameter_distribution,
-				window.Model_equation_class_distr, window.Type_of_exposure ];
-		autoCompleteStores = [ window.store23, window.store1, window.store1,
-				window.store1, window.store1, window.store1, window.store1,
-				window.store13, window.store13, window.store1, window.store3,
-				window.store3, window.store3, window.store3, window.store3,
-				window.store3, window.store3, window.store3, window.store4,
-				window.store4, window.store4, window.store4, window.store5,
-				window.store7, window.store7, window.store29, window.store29,
-				window.store29, window.store29, window.store29, window.store9,
-				window.store9, window.store9, window.store10, window.store18,
-				window.store18, window.store18, window.store18, window.store18,
-				window.store18, window.store19, window.store21 ];
-		autoCompleteSchemas = [ window.schema23, window.schema, window.schema,
-				window.schema, window.schema, window.schema, window.schema,
-				window.schema13, window.schema13, window.schema,
-				window.schema3, window.schema3, window.schema3, window.schema3,
-				window.schema3, window.schema3, window.schema3, window.schema3,
-				window.schema4, window.schema4, window.schema4, window.schema4,
-				window.schema5, window.schema7, window.schema7,
-				window.schema29, window.schema29, window.schema29,
-				window.schema29, window.schema29, window.schema9,
-				window.schema9, window.schema9, window.schema10,
-				window.schema18, window.schema18, window.schema18,
-				window.schema18, window.schema18, window.schema18,
-				window.schema19, window.schema21 ];
-		autoCompleteUischema = [ window.uischema23, window.uischema,
-				window.uischema, window.uischema, window.uischema,
-				window.uischema, window.uischema, window.uischema13,
-				window.uischema13, window.uischema, window.uischema3,
-				window.uischema3, window.uischema3, window.uischema3,
-				window.uischema3, window.uischema3, window.uischema3,
-				window.uischema3, window.uischema4, window.uischema4,
-				window.uischema4, window.uischema4, window.uischema5,
-				window.uischema7, window.uischema7, window.uischema29,
-				window.uischema29, window.uischema29, window.uischema29,
-				window.uischema29, window.uischema9, window.uischema9,
-				window.uischema9, window.uischema10, window.uischema18,
-				window.uischema18, window.uischema18, window.uischema18,
-				window.uischema18, window.uischema18, window.uischema19,
-				window.uischema21 ];
-		window.autocomplete = autocomplete;
-		$.each(autoCompleteCB, function(index, value) {
+				'modelEquationClass', 'typeOfExposure' ];				
+		$.each(autoCompletInitialIDS,function(index,value){
 			var ID = '#/properties/' + value;
-			autocomplete(document.getElementById(ID), autoCompleteArray[index],
-					autoCompleteStores[index], autoCompleteSchemas[index],
-					autoCompleteUischema[index], autoCompleteCB[index]);
+			currentField = $("[id='"+ID+"']")
+			if(currentField.length > 1){
+			$.each(currentField,function(ind, val){
+				parentID = $($(val).closest( ".demoform" )).parent().attr('id');
+				
+				splited = ID.split('/')
+				modifiedID = '';
+				$.each(splited,function(indexx, valuex){
+					if(indexx != splited.length -1 ){
+						modifiedID += valuex+'/';
+					}else{
+						modifiedID += parentID+valuex;
+					}
+				});
+				$(val).attr('id',modifiedID);
+				//console.log(modifiedID);
+			})}
+			
+		});
+		autoCompleteCB = [ 'creatorModelContentcountry', 'authorModelContentcountry', 'laboratoryModelContentcountry', 'language',
+			'generalinformationsource','parameterModelContentsource', 'rights', 'format',
+			'software', 'languageWrittenIn', 'modelClass', 'basicProcess',
+			'generalinformationstatus', 'productModelContentname', 'unit', 'method', 'packaging', 'treatment',
+			'originArea', 'originCountry', 'fisheriesArea', 'type', 'hazardModelContentname',
+			'unit', 'indSum', 'populationGroupModelContentname', 'studyAssayTechnologyType',
+			'accreditationProcedureForTheAssayTechnology',
+			'samplingStrategy', 'typeOfSamplingProgram', 'samplingMethod',
+			'lotSizeUnit', 'samplingPoint', 'collectionTool',
+			'recordTypes', 'foodDescriptors', 'laboratoryCountry',
+			'parameterType', 'parameterModelContentunit', 'unitCategory',
+			'source', 'subject', 'distribution',
+			'modelEquationClass', 'typeOfExposure' ];
+		modelAutoCompleteCB = [ 'country','country','country', 'language', 'source','source', 'rights', 'format',
+			'software', 'languageWrittenIn', 'modelClass', 'basicProcess',
+			'status', 'name', 'unit', 'method', 'packaging', 'treatment',
+			'originArea', 'originCountry', 'fisheriesArea', 'type', 'name',
+			'unit', 'indSum', 'name', 'studyAssayTechnologyType',
+			'accreditationProcedureForTheAssayTechnology',
+			'samplingStrategy', 'typeOfSamplingProgram', 'samplingMethod',
+			'lotSizeUnit', 'samplingPoint', 'collectionTool',
+			'recordTypes', 'foodDescriptors', 'laboratoryCountry',
+			'type', 'unit', 'unitCategory',
+			'source', 'subject', 'distribution',
+			'modelEquationClass', 'typeOfExposure' ];
+	
+	autoCompleteArray = [ window.Country,window.Country,window.Country, window.Language, window.Source , window.Source,
+			window.Rights, window.Format, window.Software,
+			window.Language_written_in, window.Model_Class,
+			window.Basic_process, window.Status,
+			window.Product_matrix_name, window.Parameter_unit,
+			window.Method_of_production, window.Packaging,
+			window.Product_treatment, window.Area_of_origin,
+			window.Country, window.Fisheries_area, window.Hazard_type,
+			window.Hazard_name, window.Parameter_unit,
+			window.Hazard_ind_sum, window.Population_name,
+			window.Study_Assay_Technology_Type,
+			window.Accreditation_procedure_Ass_Tec,
+			window.Sampling_strategy, window.Type_of_sampling_program,
+			window.Sampling_method, window.Parameter_unit,
+			window.Sampling_point, window.Method_tool_to_collect_data,
+			window.Type_of_records, window.Food_descriptors,
+			window.Country, window.Parameter_type, window.Parameter_unit,
+			window.Parameter_unit_category, window.Parameter_source,
+			window.Parameter_subject, window.Parameter_distribution,
+			window.Model_equation_class_distr, window.Type_of_exposure ];
+	autoCompleteStores = [ window.store24 ,window.store23,window.store10, window.store1, window.store1 , window.store18,
+			window.store1, window.store1, window.store1, window.store1,
+			window.store13, window.store13, window.store1, window.store3,
+			window.store3, window.store3, window.store3, window.store3,
+			window.store3, window.store3, window.store3, window.store4,
+			window.store4, window.store4, window.store4, window.store5,
+			window.store7, window.store7, window.store29, window.store29,
+			window.store29, window.store29, window.store29, window.store9,
+			window.store9, window.store9, window.store10, window.store18,
+			window.store18, window.store18, window.store18, window.store18,
+			window.store18, window.store19, window.store21 ];
+	autoCompleteSchemas = [ window.schema23,window.schema23,window.schema10, window.schema, window.schema , window.schema18,
+			window.schema, window.schema, window.schema, window.schema,
+			window.schema13, window.schema13, window.schema,
+			window.schema3, window.schema3, window.schema3, window.schema3,
+			window.schema3, window.schema3, window.schema3, window.schema3,
+			window.schema4, window.schema4, window.schema4, window.schema4,
+			window.schema5, window.schema7, window.schema7,
+			window.schema29, window.schema29, window.schema29,
+			window.schema29, window.schema29, window.schema9,
+			window.schema9, window.schema9, window.schema10,
+			window.schema18, window.schema18, window.schema18,
+			window.schema18, window.schema18, window.schema18,
+			window.schema19, window.schema21 ];
+	autoCompleteUischema = [ window.uischema23,window.uischema23,window.uischema10, window.uischema, window.uischema, window.uischema18,
+			window.uischema, window.uischema, window.uischema,
+			window.uischema, window.uischema13,
+			window.uischema13, window.uischema, window.uischema3,
+			window.uischema3, window.uischema3, window.uischema3,
+			window.uischema3, window.uischema3, window.uischema3,
+			window.uischema3, window.uischema4, window.uischema4,
+			window.uischema4, window.uischema4, window.uischema5,
+			window.uischema7, window.uischema7, window.uischema29,
+			window.uischema29, window.uischema29, window.uischema29,
+			window.uischema29, window.uischema9, window.uischema9,
+			window.uischema9, window.uischema10, window.uischema18,
+			window.uischema18, window.uischema18, window.uischema18,
+			window.uischema18, window.uischema18, window.uischema19,
+			window.uischema21 ];
+		window.parentStores = {
+								"generalinformation":[window.store1,window.schema,window.uischema],
+							    "scope":[window.store2,window.schema2,window.uischema2],
+							    "databackground":[window.store6,window.schema6,window.uischema6],
+							    "modelmath":[window.store17,window.schema17,window.uischema17]
+							  }
+		window.autocomplete = autocomplete;
+		
+		try{
+			$.each(autoCompleteCB, function(index, value) {
+				var ID = '#/properties/' + value;
+				try {
+					autocomplete(modelAutoCompleteCB[index],document.getElementById(ID),
+							autoCompleteArray[index],
 
-		})
+							autoCompleteStores[index], autoCompleteSchemas[index],
+							autoCompleteUischema[index], autoCompleteCB[index]);
+
+				} catch (error) {
+				}
+
+			})
+		}catch(error){
+			console.log(error);
+		}
 		$("input[type='text']").focus(function(event) {
 			event.preventDefault(); // Let's stop this event.
 			event.stopPropagation(); // Really this time.
@@ -1148,11 +1520,14 @@ joiner = function() {
 			currentArea = window.makeId($(this).attr('aria-label'));
 
 		});
-		reDesign("generalinformation");
-		reDesign("scope");
-		reDesign("databackground");
-		reDesign("modelMath");
-
+		try{
+			reDesign("generalinformation");
+			reDesign("scope");
+			reDesign("databackground");
+			reDesign("modelMath");
+		}catch(error){
+			console.log(reDesign);
+		}
 		$(document).ready(function() {
 		    //Helper function to keep table row from collapsing when being sorted
 			table = $($($(".control-labelal:contains('Parameter')")[15]).parent().parent().parent().parent().parent().find('.table-responsive')[0])
@@ -1192,84 +1567,93 @@ joiner = function() {
 
 		});
 	}
-	function reDesign(ID){
+	function reDesign(ID) {
 		var row = "					<div class='row'>"
-			+ " 					         <div class='col-xs-3 col-sm-3 col-lg-2 "+ID+"SideBar'><div class='list-group' id ='"+ID+"gisidenav'><button type='button' data='"+ID+"General' class='list-group-item list-group-item-action active sidenavibutton'>General</button></div></div>"
-			+ "                    			 <div class='col-xs-9 col-sm-9 col-lg-10 "+ID+"Content'><div data='General'></div> </div>"
-			+ "                        	</div>";
-			
-		$("#"+ID).append( row);
-		$("#"+ID+" div.MuiGrid-typeItem-2 div.table-responsive , #"+ID+" div.MuiGrid-typeItem-2 div.demoform").filter(function(index ,element){
-			//filter out all emfforms of modals
-			return $(element).parents('.modal-dialog').length <= 0;
+				+ " 					         <div class='col-xs-3 col-sm-3 col-lg-2 "
+				+ ID
+				+ "SideBar'><div class='list-group' id ='"
+				+ ID
+				+ "gisidenav'><button type='button' data='"
+				+ ID
+				+ "General' class='list-group-item list-group-item-action active sidenavibutton'>General</button></div></div>"
+				+ "                    			 <div class='col-xs-9 col-sm-9 col-lg-10 "
+				+ ID + "Content'><div data='General'></div> </div>"
+				+ "                        	</div>";
 
-							  
-        })
-		.each(function(index, element) {
-			$(element).addClass('selectedParent');
-		})
-		.each(
-			function(index, element) {
-				if ($(element).parents().hasClass('selectedParent')) {
-					console.log(element);
-					return;
-				}
-			
-		    var parent = $(element).parent().parent();
-		    
-		    var text;
-		    if($(this).attr('class').indexOf('demoform') >= 0 )
-		    	 text = parent.find('.MuiFormLabel-root-100').html();
-		    else
-		    	 text = parent.find('.control-labelal').html();
-		    
-		    
-		    var sideNavigationButton = "<button data='"+text+"' type='button' class='list-group-item list-group-item-action sidenavibutton'>"+text+"</button>\n" ;
-		    $("#"+ID+"gisidenav").append(sideNavigationButton);
-		    
-		    parent.addClass('detailedSide');
-		   
-		    navigationMap[text] = parent;
-			$("#"+ID+" ."+ID+"Content").append( parent);
-			parent.hide();
-			
-		});
-		
-		
-		$("#"+ID+" > div.demoform").each(function(index, element) {
-			//console.log(element);
+		$("#" + ID).append(row);
+		$(
+				"#" + ID + " div.MuiGrid-typeItem-2 div.table-responsive , #"
+						+ ID + " div.MuiGrid-typeItem-2 div.demoform")
+				.filter(function(index, element) {
+					// filter out all emfforms of modals
+					return $(element).parents('.modal-dialog').length <= 0;
+
+				})
+				.each(function(index, element) {
+					$(element).addClass('selectedParent');
+				})
+				.each(
+						function(index, element) {
+							if ($(element).parents().hasClass('selectedParent')) {
+								return;
+							}
+							var parent = $(element).parent().parent();
+
+							var text;
+							if ($(this).attr('class').indexOf('demoform') >= 0)
+								text = parent.find('.MuiFormLabel-root-100')
+										.html();
+							else
+								text = parent.find('.control-labelal').html();
+
+							var sideNavigationButton = "<button data='"
+									+ text
+									+ "' type='button' class='list-group-item list-group-item-action sidenavibutton'>"
+									+ text + "</button>\n";
+							$("#" + ID + "gisidenav").append(
+									sideNavigationButton);
+
+							parent.addClass('detailedSide');
+
+							navigationMap[text] = parent;
+							$("#" + ID + " ." + ID + "Content").append(parent);
+							parent.hide();
+
+						});
+
+		$("#" + ID + " > div.demoform").each(function(index, element) {
 			$(element).addClass('detailedSide');
-			navigationMap[ID+"General"] = $(element);
-			$("#"+ID+" div[data='General']").append( element);
+			navigationMap[ID + "General"] = $(element);
+			$("#" + ID + " div[data='General']").append(element);
 			$("div[data='General']").show();
 		});
-		
-		if($("#"+ID+" div[data='General'] .demoform .MuiGrid-typeItem-2").children().length  < 1 ){
-			
-			$("#"+ID+" button[data='"+ID+"General']").remove();
-			$("#"+ID+" div[data='General']").remove();
-			
-			$("#"+ID).find("div[class$='Content']").children().first().show();
-			
-			$("#"+ID).find("div[class$='list-group']").children().first().addClass('active');
+
+		if ($("#" + ID + " div[data='General'] .demoform .MuiGrid-typeItem-2")
+				.children().length < 1) {
+
+			$("#" + ID + " button[data='" + ID + "General']").remove();
+			$("#" + ID + " div[data='General']").remove();
+
+			$("#" + ID).find("div[class$='Content']").children().first().show();
+
+			$("#" + ID).find("div[class$='list-group']").children().first()
+					.addClass('active');
 			//
-			
-			
-			
+
 		}
-		$(".sidenavibutton").on("click",function(event){
-			//console.log("click ",$(this),event);
+		$(".sidenavibutton").on("click", function(event) {
+			// console.log("click ",$(this),event);
 			$(this).parent().parent().parent().find(".detailedSide").hide();
 			$(this).parent().find(".active").removeClass('active');
-			
-			navigationMap[$(this).attr('data')].show(); 
+
+			navigationMap[$(this).attr('data')].show();
 			$(this).addClass('active');
-			
+
 		})
-		//console.log(navigationMap);
-		$(".table-responsive").parent().css("flex-direction","unset");
-		$(".MuiGrid-typeContainer-1").css("display","inherit");
-		$(".MuiGrid-spacing-xs-16-22").css("display","flex");
+		$(".table-responsive").parent().css("flex-direction", "unset");
+		$(".MuiGrid-typeContainer-1").css("display", "inherit");
+		$(".MuiGrid-spacing-xs-16-22").css("display", "flex");
+
 	}
 	function drawWorkflow() {
 		graph = new joint.dia.Graph;
@@ -1412,32 +1796,33 @@ joiner = function() {
 		window.secondPortMap = {};
 		try{
 			_.each(_firstModelMath.parameter, function(param) {
-				if(firstModelParameterMap[param.parameterID] == undefined){
-					if (param.parameterClassification == 'Input' || param.parameterClassification == 'Constant') {
+				console.log(param);
+				if(firstModelParameterMap[param.id] == undefined){
+					if (param.classification == 'INPUT' || param.parameterClassification == 'CONSTANT') {
 						var port = {
-								id:param.parameterID,
+								id:param.id,
 							    group: 'in',
 							    label: {
-							        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
+							        markup: "<text class='label-text' fill='black'><title>"+param.dataType+"</title>"+param.id+"</text>"
 							    }
 							};
 						firstModelInputParameters.push(port);
-						window.firstPortMap[param.parameterID] = port;
+						window.firstPortMap[param.id] = port;
 					} else {
 						var port = {
-								id:param.parameterID,
+								id:param.id,
 							    group: 'out',
 							    label: {
-							        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
+							        markup: "<text class='label-text' fill='black'><title>"+param.dataType+"</title>"+param.id+"</text>"
 							    }
 							};
 						firstModelOutputParameters.push(port);
-						window.firstPortMap[param.parameterID] = port;
+						window.firstPortMap[param.id] = port;
 					}
-					firstModelParameterMap[param.parameterID] = param
+					firstModelParameterMap[param.id] = param
 				}
 				else{
-					console.log(param.parameterID);
+					console.log(param.id);
 				}
 				
 			});
@@ -1447,31 +1832,31 @@ joiner = function() {
 		var secondModelInputParameters = [];
 		var secondModelOutputParameters = [];
 		_.each(_secondModelMath.parameter, function(param) {
-			if(firstModelParameterMap[param.parameterID] == undefined){
-				if (param.parameterClassification == 'Input' || param.parameterClassification == 'Constant') {
+			if(firstModelParameterMap[param.id] == undefined){
+				if (param.classification == 'INPUT' || param.classification == 'CONSTANT') {
 					var port = {
-							id:param.parameterID,
+							id:param.id,
 						    group: 'in',
 						    label: {
-						        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
+						        markup: "<text class='label-text' fill='black'><title>"+param.dataType+"</title>"+param.id+"</text>"
 						    }
 						};
 					secondModelInputParameters.push(port);
-					window.secondPortMap[param.parameterID] = port;
+					window.secondPortMap[param.id] = port;
 				} else {
 					var port = {
-							id:param.parameterID,
+							id:param.id,
 						    group: 'out',
 						    label: {
-						        markup: "<text class='label-text' fill='black'><title>"+param.parameterDataType+"</title>"+param.parameterID+"</text>"
+						        markup: "<text class='label-text' fill='black'><title>"+param.dataType+"</title>"+param.id+"</text>"
 						    }
 						};
 					secondModelOutputParameters.push(port);
-					window.secondPortMap[param.parameterID] = port;
+					window.secondPortMap[param.id] = port;
 				}
-				secomndModelParameterMap[param.parameterID] = param
+				secomndModelParameterMap[param.id] = param
 			}else{
-				console.log(param.parameterID);
+				console.log(param.id);
 			}
 			
 			

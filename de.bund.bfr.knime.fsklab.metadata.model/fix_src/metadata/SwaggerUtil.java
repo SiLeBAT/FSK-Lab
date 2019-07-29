@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -418,7 +419,7 @@ public class SwaggerUtil {
 
 		return study;
 	}
-	public static Map<String, Class<? extends Model>> modelClasses = new HashMap<>();
+	public static Map<String, Class<? extends Model>> modelClasses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 	static {
 		modelClasses.put("GenericModel", GenericModel.class);
 		modelClasses.put("DataModel", DataModel.class);

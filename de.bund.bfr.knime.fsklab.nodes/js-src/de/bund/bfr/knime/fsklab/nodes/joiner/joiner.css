@@ -142,3 +142,22 @@ body {
 .available-cell rect {
     stroke-dasharray: 5, 2;
 }
+.MuiFormHelperText-root-119 {
+  color: rgba(0, 0, 0, 0.54);
+  margin: 0;
+  font-size: 1.5rem;
+  text-align: left;
+  margin-top: 8px;
+  min-height: 1em;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  line-height: 1em;
+}
+.MuiFormHelperText-dense-120 {
+  margin-top: 4px;
+}
+.MuiFormHelperText-error-121 {
+  color: #ff1744;
+}
+.MuiFormHelperText-disabled-122 {
+  color: rgba(0, 0, 0, 0.42);
+}
