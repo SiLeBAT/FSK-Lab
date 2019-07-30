@@ -34,5 +34,6 @@ public class PythonPlotter implements ModelPlotter {
     final String wholeScript = String.join("\n", "import matplotlib.pyplot as plt", "import numpy as np",
         "plt.ioff()", script, "plt.gcf().savefig('" + path + "', format='svg')");
     kernel.execute(wholeScript);
+    kernel.execute("plt.clf()");
   }
 }

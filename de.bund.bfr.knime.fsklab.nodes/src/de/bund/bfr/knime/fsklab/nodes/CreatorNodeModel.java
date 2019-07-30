@@ -156,7 +156,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
     // Reads model script
     Script modelRScript = readScript(nodeSettings.modelScript);
-
+    
     // Reads visualization script
     Script vizRScript;
     if (StringUtils.isNotEmpty(nodeSettings.visualizationScript)) {
@@ -267,10 +267,10 @@ class CreatorNodeModel extends NoInternalsModel {
 
             }  // end if         
             // Exposure Model
-            if(sheet.getSheetName().equals("Expsure Model") ) {
+            if(sheet.getSheetName().equals("Exposure Model") ) {
               SwaggerExposureSheetImporter importer = new SwaggerExposureSheetImporter();
               ExposureModel gm = new ExposureModel();
-              gm.setModelType("expsoureModel");
+              gm.setModelType("exposureModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));
@@ -438,7 +438,17 @@ class CreatorNodeModel extends NoInternalsModel {
       FskSimulation simulation = NodeUtils.createDefaultSimulation(parameters);
       String script = handler.buildParameterScript(simulation);
       // ScriptExecutor executor = new ScriptExecutor(controller);
-
+      
+        Arrays.stream(modelScript.split("\\r?\\n")).filter(id -> id.startsWith("import")).forEach(line -> {
+          try {
+            handler.runScript(line,exec,false);
+            
+          } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+        });//.map(id -> id.split(" ")[1]).forEach(libraries::add);
+      
       handler.setupOutputCapturing(exec);
       handler.runScript(script, exec, false);
       handler.finishOutputCapturing(exec);

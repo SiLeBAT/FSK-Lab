@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
@@ -58,7 +59,18 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     exec.setProgress(0.72, "Set parameter values");
     LOGGER.info(" Running with '" + simulation.getName() + "' simulation!");
+    
+    //load libraries before (python) parameters are evaluated 
     String paramScript = buildParameterScript(simulation);
+    Arrays.stream(fskObj.model.split("\\r?\\n")).filter(id -> id.startsWith("import")).forEach(line -> {
+      try {
+        runScript(line,exec,false);
+        
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    });//.map(id -> id.split(" ")[1]).forEach(libraries::add);
 
     runScript(paramScript, exec, true);
     exec.setProgress(0.75, "Run models script");
@@ -79,6 +91,7 @@ public abstract class ScriptHandler implements AutoCloseable {
 
     try {
       plotter.plotSvg(internalSettings.imageFile, fskObj.viz);
+
       // Save path of generated plot
       fskObj.setPlot(internalSettings.imageFile.getAbsolutePath());
     } catch (final Exception exception) {
