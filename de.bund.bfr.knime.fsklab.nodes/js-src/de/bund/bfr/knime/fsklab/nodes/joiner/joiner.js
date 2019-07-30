@@ -666,81 +666,80 @@ joiner = function() {
 				: [];
 
 	}
-	checked = false;
 	joinerNode.getComponentValue = function() {
-		try{
+	try{
 		if(window.store7.getState().jsonforms.core.data){
 			window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data
 		}
 		if(window.store13.getState().jsonforms.core.data){
 			window.store1.getState().jsonforms.core.data.modelCategory = window.store13.getState().jsonforms.core.data
 		}
-		if(!checked){
-			checked = true;
+	
+			
 					
-			$.each(window.parentStores,function(storeindex,container){
-				currentStore = container[0]
-				$.each(Object.keys(currentStore.getState().jsonforms.core.data),function (index, theValue){
-					if(typeof currentStore.getState().jsonforms.core.data[theValue] === "object"){
+		$.each(window.parentStores,function(storeindex,container){
+			currentStore = container[0]
+			$.each(Object.keys(currentStore.getState().jsonforms.core.data),function (index, theValue){
+				if(typeof currentStore.getState().jsonforms.core.data[theValue] === "object"){
+					//console.log(currentStore.getState().jsonforms.core.data[theValue]);
+					if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue]) && currentStore.getState().jsonforms.core.data[theValue].length  > 0){
 						//console.log(currentStore.getState().jsonforms.core.data[theValue]);
-						if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue]) && currentStore.getState().jsonforms.core.data[theValue].length  > 0){
-							//console.log(currentStore.getState().jsonforms.core.data[theValue]);
-							arrayOfObjects = [];
-					 		$.each(currentStore.getState().jsonforms.core.data[theValue],function(index,val){
-					 			//console.log(index,val,typeof val);
-					 			if(val != null && typeof val === "object" && Object.keys(val).length == 1 && val.value){
-					 				arrayOfObjects.push(val.value);
-					 			}else if(typeof val === "object") {
-					 				//console.log(index,val);
-					 				try{
-						 				$.each(Object.keys(val),function(indexx,valx){
-						 					if(Array.isArray(val[valx]) && val[valx].length  > 0 && (typeof val[valx][0] === "object") ){
-												//console.log('val[valx]',val[valx]);
-												//console.log('val',val);
-												anotherArrayOfObjects = [];
-										 		$.each(val[valx],function(index,valxx){
-										 			
-										 			if(valxx!=null && typeof valxx === "object" && valxx.value){
-										 				anotherArrayOfObjects.push(valxx.value);
-										 			}
-										 		})
-										 		if(anotherArrayOfObjects.length > 0 ){
-										 			val[valx]= anotherArrayOfObjects
-										 		}
-											}
-						 				});
-					 				}catch(erro){
-					 					console.log(erro);
-					 				}
-					 			}
-					 		})
-					 		if(arrayOfObjects.length > 0 ){
-					 			currentStore.getState().jsonforms.core.data[theValue]= arrayOfObjects
-					 		}
-						}
-						else{
-							 $.each(Object.keys(currentStore.getState().jsonforms.core.data[theValue]),function(ind,key){
-								//console.log(key);
-							 	if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue][key])){
-							 		arrayOfObjects = [];
-							 		$.each(currentStore.getState().jsonforms.core.data[theValue][key],function(index,val){
-							 			console.log(val);
-							 			if(val!=null && typeof val === "object" && val.value){
-							 				arrayOfObjects.push(val.value);
-							 			}
-							 		})
-							 		currentStore.getState().jsonforms.core.data[theValue][key] = arrayOfObjects
-							 	}
-							 });
-						}
-						
-					}	
-				});
+						arrayOfObjects = [];
+				 		$.each(currentStore.getState().jsonforms.core.data[theValue],function(index,val){
+				 			//console.log(index,val,typeof val);
+				 			if(val != null && typeof val === "object" && Object.keys(val).length == 1 && val.value){
+				 				arrayOfObjects.push(val.value);
+				 			}else if(typeof val === "object") {
+				 				//console.log(index,val);
+				 				try{
+					 				$.each(Object.keys(val),function(indexx,valx){
+					 					if(Array.isArray(val[valx]) && val[valx].length  > 0 && (typeof val[valx][0] === "object") ){
+											//console.log('val[valx]',val[valx]);
+											//console.log('val',val);
+											anotherArrayOfObjects = [];
+									 		$.each(val[valx],function(index,valxx){
+									 			
+									 			if(valxx!=null && typeof valxx === "object" && valxx.value){
+									 				anotherArrayOfObjects.push(valxx.value);
+									 			}
+									 		})
+									 		if(anotherArrayOfObjects.length > 0 ){
+									 			val[valx]= anotherArrayOfObjects
+									 		}
+										}
+					 				});
+				 				}catch(erro){
+				 					console.log(erro);
+				 				}
+				 			}
+				 		})
+				 		if(arrayOfObjects.length > 0 ){
+				 			currentStore.getState().jsonforms.core.data[theValue]= arrayOfObjects
+				 		}
+					}
+					else{
+						 $.each(Object.keys(currentStore.getState().jsonforms.core.data[theValue]),function(ind,key){
+							//console.log(key);
+						 	if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue][key])){
+						 		arrayOfObjects = [];
+						 		$.each(currentStore.getState().jsonforms.core.data[theValue][key],function(index,val){
+						 			console.log(val);
+						 			if(val!=null && typeof val === "object" && val.value){
+						 				arrayOfObjects.push(val.value);
+						 			}
+						 		})
+						 		currentStore.getState().jsonforms.core.data[theValue][key] = arrayOfObjects
+						 	}
+						 });
+					}
+					
+				}	
 			});
-			console.log(window.store1.getState().jsonforms.core.data);
+		});
+		console.log(window.store1.getState().jsonforms.core.data);
+		
 			
-			
-		}
+		
 		function removeAdditionalProperties(schema,data){
 			var ajv = new window.Ajv({
 				allErrors : true,

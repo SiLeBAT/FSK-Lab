@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.util.SystemOutLogger;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -69,7 +70,6 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
-import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
@@ -238,7 +238,13 @@ final class FSKEditorJSNodeModel
     // Clone input object
     synchronized (getLock()) {
       FSKEditorJSViewValue fskEditorProxyValue = getViewValue();
-      fskEditorProxyValue.modelType = nodeSettings.modelType;
+      if(!StringUtils.isBlank(nodeSettings.modelType)) {
+        fskEditorProxyValue.modelType = nodeSettings.modelType;
+      }else if(inObj1!=null){
+        fskEditorProxyValue.modelType = inObj1.modelMetadata.getModelType();
+      }else {
+        fskEditorProxyValue.modelType = "GenericModel";
+      }
       // If not executed
 
       if (fskEditorProxyValue.getModelMetaData() == null) {
@@ -250,6 +256,7 @@ final class FSKEditorJSNodeModel
           fskEditorProxyValue.firstModelScript = inObj1.model;
           fskEditorProxyValue.firstModelViz = inObj1.viz;
           fskEditorProxyValue.readme = inObj1.getReadme();
+          
         }
       } else {
         if (fskEditorProxyValue.notCompleted) {

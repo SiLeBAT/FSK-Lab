@@ -539,11 +539,11 @@ fskeditorjs = function() {
 				 					arrayOfObjects.push({'value': val});
 				 			}
 				 			else{
-				 				console.log("val",val);
+				 				//console.log("val",val);
 				 				if(!val)
 				 					return true ;
 				 				$.each(Object.keys(val),function (inex, oneKey){
-				 					console.log("inex, oneKey",inex, oneKey);
+				 					//console.log("inex, oneKey",inex, oneKey);
 				 					if(Array.isArray(val[oneKey]) && val[oneKey].length  > 0 && (typeof val[oneKey][0] === "string") ){
 				 						anotherArrayOfObjects = [];
 				 						$.each(val[oneKey],function(index,stringValue){
@@ -563,11 +563,11 @@ fskeditorjs = function() {
 							return true ;
 						}
 						 $.each(Object.keys(currentObjectToFix[theValue]),function(ind,key){
-							 console.log(key);
+							 //console.log(key);
 						 	if(Array.isArray(currentObjectToFix[theValue][key])){
 						 		arrayOfObjects = [];
 						 		$.each(currentObjectToFix[theValue][key],function(index,val){
-						 			console.log(val);
+						 			//console.log(val);
 						 			if(typeof val === "string"){
 						 				arrayOfObjects.push({'value':val});
 						 			}
@@ -786,73 +786,6 @@ fskeditorjs = function() {
 		if(window.store13.getState().jsonforms.core.data){
 			window.store1.getState().jsonforms.core.data.modelCategory = window.store13.getState().jsonforms.core.data
 		}
-		if(!checked){
-			checked = true;
-			console.log(window.generalInformation);
-			
-			$.each(window.parentStores,function(storeindex,container){
-				currentStore = container[0]
-				$.each(Object.keys(currentStore.getState().jsonforms.core.data),function (index, theValue){
-					if(typeof currentStore.getState().jsonforms.core.data[theValue] === "object"){
-						console.log(currentStore.getState().jsonforms.core.data[theValue]);
-						if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue]) && currentStore.getState().jsonforms.core.data[theValue].length  > 0){
-							console.log(currentStore.getState().jsonforms.core.data[theValue]);
-							arrayOfObjects = [];
-					 		$.each(currentStore.getState().jsonforms.core.data[theValue],function(index,val){
-					 			console.log(index,val,typeof val);
-					 			if(typeof val === "object" && Object.keys(val).length == 1 && val.value){
-					 				arrayOfObjects.push(val.value);
-					 			}else if(typeof val === "object") {
-					 				console.log(index,val);
-					 				try{
-						 				$.each(Object.keys(val),function(indexx,valx){
-						 					if(Array.isArray(val[valx]) && val[valx].length  > 0 && (typeof val[valx][0] === "object") ){
-												console.log('val[valx]',val[valx]);
-												console.log('val',val);
-												anotherArrayOfObjects = [];
-										 		$.each(val[valx],function(index,valxx){
-										 			
-										 			if(typeof valxx === "object" && valxx.value){
-										 				anotherArrayOfObjects.push(valxx.value);
-										 			}
-										 		})
-										 		if(anotherArrayOfObjects.length > 0 ){
-										 			val[valx]= anotherArrayOfObjects
-										 		}
-											}
-						 				});
-					 				}catch(erro){
-					 					console.log(erro);
-					 				}
-					 			}
-					 		})
-					 		if(arrayOfObjects.length > 0 ){
-					 			currentStore.getState().jsonforms.core.data[theValue]= arrayOfObjects
-					 		}
-						}
-						else{
-							 $.each(Object.keys(currentStore.getState().jsonforms.core.data[theValue]),function(ind,key){
-								 console.log(key);
-							 	if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue][key])){
-							 		arrayOfObjects = [];
-							 		$.each(currentStore.getState().jsonforms.core.data[theValue][key],function(index,val){
-							 			console.log(val);
-							 			if(typeof val === "object" && val.value){
-							 				arrayOfObjects.push(val.value);
-							 			}
-							 		})
-							 		currentStore.getState().jsonforms.core.data[theValue][key] = arrayOfObjects
-							 	}
-							 });
-						}
-						
-					}	
-				});
-			});
-			console.log(window.store1.getState().jsonforms.core.data);
-			
-			
-		}
 		function removeAdditionalProperties(schema,data){
 			var ajv = new window.Ajv({
 				allErrors : true,
@@ -884,6 +817,65 @@ fskeditorjs = function() {
 		removeAdditionalProperties(window.schema6, window.store6.getState().jsonforms.core.data);
 		removeAdditionalProperties(window.schema17, window.store17.getState().jsonforms.core.data);
 		
+		$.each(window.parentStores,function(storeindex,container){
+			currentStore = container[0]
+			$.each(Object.keys(currentStore.getState().jsonforms.core.data),function (index, theValue){
+				if(typeof currentStore.getState().jsonforms.core.data[theValue] === "object"){
+					console.log("currentStore.getState().jsonforms.core.data[theValue] ",currentStore.getState().jsonforms.core.data[theValue]);
+					if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue]) && currentStore.getState().jsonforms.core.data[theValue].length  > 0){
+						console.log(currentStore.getState().jsonforms.core.data[theValue]);
+						arrayOfObjects = [];
+				 		$.each(currentStore.getState().jsonforms.core.data[theValue],function(index,val){
+				 			console.log(index,val,typeof val);
+				 			if(typeof val === "object" && Object.keys(val).length == 1 && val.value){
+				 				arrayOfObjects.push(val.value);
+				 			}else if(typeof val === "object") {
+				 				console.log(index,val);
+				 				try{
+					 				$.each(Object.keys(val),function(indexx,valx){
+					 					if(Array.isArray(val[valx]) && val[valx].length  > 0 && (typeof val[valx][0] === "object") ){
+											console.log('val[valx]',val[valx]);
+											console.log('val',val);
+											anotherArrayOfObjects = [];
+									 		$.each(val[valx],function(index,valxx){
+									 			
+									 			if(typeof valxx === "object" && valxx.value){
+									 				anotherArrayOfObjects.push(valxx.value);
+									 			}
+									 		})
+									 		if(anotherArrayOfObjects.length > 0 ){
+									 			val[valx]= anotherArrayOfObjects
+									 		}
+										}
+					 				});
+				 				}catch(erro){
+				 					console.log(erro);
+				 				}
+				 			}
+				 		})
+				 		if(arrayOfObjects.length > 0 ){
+				 			currentStore.getState().jsonforms.core.data[theValue]= arrayOfObjects
+				 		}
+					}
+					else{
+						 $.each(Object.keys(currentStore.getState().jsonforms.core.data[theValue]),function(ind,key){
+							 console.log(key);
+						 	if(Array.isArray(currentStore.getState().jsonforms.core.data[theValue][key])){
+						 		arrayOfObjects = [];
+						 		$.each(currentStore.getState().jsonforms.core.data[theValue][key],function(index,val){
+						 			console.log(val);
+						 			if(typeof val === "object" && val.value){
+						 				arrayOfObjects.push(val.value);
+						 			}
+						 		})
+						 		currentStore.getState().jsonforms.core.data[theValue][key] = arrayOfObjects
+						 	}
+						 });
+					}
+					
+				}	
+			});
+		});
 		modelMetaData = {			modelType: window.modelPrefix,
 									generalInformation : window.store1.getState().jsonforms.core.data ,
 									scope : window.store2.getState().jsonforms.core.data,
@@ -988,7 +980,7 @@ fskeditorjs = function() {
 		 * window.parameterValidationError _viewValue.validationErrors =
 		 * generalError.trim(); console.log(_viewValue);
 		 */
-		 console.log(_viewValue);
+		 console.log("_viewValue.modelMetaData",_viewValue.modelMetaData);
 		return _viewValue;
 	};
 	function validateAgainstSchema(schema, data, schemaName) {
