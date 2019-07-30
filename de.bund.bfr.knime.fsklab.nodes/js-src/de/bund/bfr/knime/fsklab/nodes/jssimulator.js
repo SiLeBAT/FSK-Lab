@@ -55,30 +55,30 @@ simulator = function() {
 			});
 			
 			var form = $('<div class="form-group">' +
-				'<label class="col-sm-3 control-label">' + parameter.parameterID + '</label>' +
+				'<label class="col-sm-3 control-label">' + parameter.id + '</label>' +
 				'<div class="col-sm-6">'+
 				'<a data-content="' +
-				'<div><b>Parameter&nbsp;Classification</b>&nbsp;:&nbsp;' + prepare(parameter.parameterClassification) + '</div>'+
-				'<div><b>Parameter&nbsp;Description</b>&nbsp;:&nbsp;' + prepare(parameter.parameterDescription) + '</div>'+
-				'<div><b>Parameter&nbsp;Distribution</b>&nbsp;:&nbsp;' + prepare(parameter.parameterDistribution) + '</div>'+
-				'<div><b>Parameter&nbsp;Error</b>&nbsp;:&nbsp;' + prepare(parameter.parameterError) + '</div>' +
-				'<div><b>Parameter&nbsp;ID</b>&nbsp;:&nbsp;' + prepare(parameter.parameterID) + '</div>' +
-				'<div><b>Parameter&nbsp;Name</b>&nbsp;:&nbsp;' + prepare(parameter.parameterName) + '</div>' +
-				'<div><b>Parameter&nbsp;Source</b>&nbsp;:&nbsp;' + prepare(parameter.parameterSource) + '</div>' +
-				'<div><b>Parameter&nbsp;Subject</b>&nbsp;:&nbsp;' + prepare(parameter.parameterSubject) + '</div>' +
-				'<div><b>Parameter&nbsp;Type</b>&nbsp;:&nbsp;' + prepare(parameter.parameterType) + '</div>'+
-				'<div><b>Parameter&nbsp;DataType</b>&nbsp;:&nbsp;' + prepare(parameter.parameterDataType) + '</div>'+
-				'<div><b>Parameter&nbsp;Unit</b>&nbsp;:&nbsp;' + prepare(parameter.parameterUnit) + '</div>' +
-				'<div><b>Parameter&nbsp;UnitCategory</b>&nbsp;:&nbsp;' + prepare(parameter.parameterUnitCategory) + '</div>' +
-				'<div><b>Parameter&nbsp;Value</b>&nbsp;:&nbsp;' + prepare(parameter.parameterValue) + '</div>' +
-				'<div><b>Parameter&nbsp;Max Value</b>&nbsp;:&nbsp;' + prepare(parameter.parameterValueMax) + '</div>' +
-				'<div><b>Parameter&nbsp;Min Value</b>&nbsp;:&nbsp;' + prepare(parameter.parameterValueMin) + '</div>' +
-				'<div><b>Parameter&nbsp;Variability Subject</b>&nbsp;:&nbsp;' + prepare(parameter.parameterVariabilitySubject) + '</div>' +
+				'<div><b>Parameter&nbsp;Classification</b>&nbsp;:&nbsp;' + prepare(parameter.classification) + '</div>'+
+				'<div><b>Parameter&nbsp;Description</b>&nbsp;:&nbsp;' + prepare(parameter.description) + '</div>'+
+				'<div><b>Parameter&nbsp;Distribution</b>&nbsp;:&nbsp;' + prepare(parameter.distribution) + '</div>'+
+				'<div><b>Parameter&nbsp;Error</b>&nbsp;:&nbsp;' + prepare(parameter.error) + '</div>' +
+				'<div><b>Parameter&nbsp;ID</b>&nbsp;:&nbsp;' + prepare(parameter.id) + '</div>' +
+				'<div><b>Parameter&nbsp;Name</b>&nbsp;:&nbsp;' + prepare(parameter.name) + '</div>' +
+				'<div><b>Parameter&nbsp;Source</b>&nbsp;:&nbsp;' + prepare(parameter.source) + '</div>' +
+				'<div><b>Parameter&nbsp;Subject</b>&nbsp;:&nbsp;' + prepare(parameter.subject) + '</div>' +
+				'<div><b>Parameter&nbsp;Type</b>&nbsp;:&nbsp;' + prepare(parameter.type) + '</div>'+
+				'<div><b>Parameter&nbsp;DataType</b>&nbsp;:&nbsp;' + prepare(parameter.dataType) + '</div>'+
+				'<div><b>Parameter&nbsp;Unit</b>&nbsp;:&nbsp;' + prepare(parameter.unit) + '</div>' +
+				'<div><b>Parameter&nbsp;unitCategory</b>&nbsp;:&nbsp;' + prepare(parameter.unitCategory) + '</div>' +
+				'<div><b>Parameter&nbsp;Value</b>&nbsp;:&nbsp;' + prepare(parameter.value) + '</div>' +
+				'<div><b>Parameter&nbsp;Max Value</b>&nbsp;:&nbsp;' + prepare(parameter.maxValue) + '</div>' +
+				'<div><b>Parameter&nbsp;Min Value</b>&nbsp;:&nbsp;' + prepare(parameter.minValue) + '</div>' +
+				'<div><b>Parameter&nbsp;Variability Subject</b>&nbsp;:&nbsp;' + prepare(parameter.variabilitySubject) + '</div>' +
 				'<div><b>Parameter&nbsp;Reference</b>&nbsp;:&nbsp;' + prepare(parameter.reference) + '</div>"' +
 				
-				'tabindex="0" title="'+prepare(parameter.parameterID)+'" data-html="true" data-toggle="popover" data-trigger="focus" href="#"><i class="fa fa-info-circle" aria-hidden="true"></i></a>'+
+				'tabindex="0" title="'+prepare(parameter.id)+'" data-html="true" data-toggle="popover" data-trigger="focus" href="#"><i class="fa fa-info-circle" aria-hidden="true"></i></a>'+
 				'<div class="col-sm-10 xxx"></div></div>' +
-				'  <div class="col-sm-3"><label>' + parameter.parameterUnit + '</label></div>' +
+				'  <div class="col-sm-3"><label>' + parameter.unit + '</label></div>' +
 				'</div>');
 			$('.xxx', form).append(input);
 			form.input = input;

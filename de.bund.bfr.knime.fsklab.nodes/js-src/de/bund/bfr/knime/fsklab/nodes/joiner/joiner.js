@@ -816,7 +816,9 @@ joiner = function() {
 			_viewValue.joinRelations = JSON.stringify(_viewValue.joinRelations);
 			
 		}
-		
+		var serializer = new XMLSerializer();
+		var str = serializer.serializeToString(paper.svg);
+		_viewValue.svgRepresentation = str
 		/*var ajv = new Ajv({allErrors: true, format:'fast'});		
 		// Add convert keyword for date-time schema
 		ajv = ajv.removeKeyword("format")
@@ -840,9 +842,7 @@ joiner = function() {
 		}catch(err){
 			//console.log(err)
 		}
-		var serializer = new XMLSerializer();
-		var str = serializer.serializeToString(paper.svg);
-		_viewValue.svgRepresentation = str
+		
 
 		if(window.viscodeMirrorContainerx && window.viscodeMirrorContainerx.CodeMirror){
 			 visScript = window.viscodeMirrorContainerx.CodeMirror.getValue();

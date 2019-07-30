@@ -451,8 +451,9 @@ fskeditorjs = function() {
 	  return obj.constructor.name === "Object"
 	}
 	joinerNode.init = function(representation, value) {
-		window.modelPrefix = (value.modelType ? value.modelType
+		modelType = (value.modelType ? value.modelType
 				: "GenericModel");
+		window.modelPrefix = modelType.charAt(0).toUpperCase() + modelType.slice(1);
 		
 	  
 		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
@@ -482,10 +483,9 @@ fskeditorjs = function() {
 			anotherxhttp.setRequestHeader("Authorization", "Bearer" + JWT);
 			anotherxhttp.send();
 		}
-		//console.log(value);
-		if(!value.modelMetaData || value.modelMetaData == "null" ){
-			
-			_firstModel.generalInformation = JSON.parse("{}");
+		
+		if(!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == ""){
+			console.log("value",value);
 			_firstModel.generalInformation = JSON.parse("{}");
 			_firstModel.scope = JSON.parse("{}");
 
@@ -585,10 +585,9 @@ fskeditorjs = function() {
 			console.log('currentObjectToFix',currentObjectToFix);
 		});
 		
-		console.log('view Value',traverse(JSON.parse(_viewValue.modelMetaData)));
+		
 		create_body();
 		fixTableHeaders();
-		
 		
 	};
 	function fixTableHeaders() {

@@ -129,7 +129,7 @@ public class JoinerTest extends WorkflowTestCase {
 				SwaggerUtil.getParameter(((CombinedFskPortObject) ((CombinedFskPortObject) runner10OutPort.getPortObject())
 						.getSecondFskPortObject()).getSecondFskPortObject().modelMetadata).get(1)
 								.getValue());
-		// with connection third level of join with writing and reading back the joined
+		// with connection, third level of join with writing and reading back the joined
 		// Object to test the writer and the reader with it.
 		// 1. with conversion in use
 		executeAndWait(m_runnerNode116);

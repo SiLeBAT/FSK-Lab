@@ -40,7 +40,6 @@ public class Ggplot2PlotterTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testPlotSvg() throws Exception {
 
 		File file = testFolder.newFile("plot.svg");
