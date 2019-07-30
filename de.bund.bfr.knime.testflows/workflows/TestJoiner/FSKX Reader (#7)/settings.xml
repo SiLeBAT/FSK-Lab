@@ -6,7 +6,13 @@
 <entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
 </config>
 <config key="model">
-<entry key="filename" type="xstring" value="D:\runtime-KNIME\TestJoiner\FSKX Reader (#7)\drop\simplemodel11.fskx"/>
+<entry key="filename" type="xstring" value="knime://LOCAL/TestJoiner/FSKX%20Reader%20(%237)/drop/simplemodel11.fskx"/>
+</config>
+<config key="variables">
+<config key="filename">
+<entry key="used_variable" type="xstring" value="knime.node(drop) simplemodel11.fskx"/>
+<entry key="exposed_variable" type="xstring" isnull="true" value=""/>
+</config>
 </config>
 <entry key="customDescription" type="xstring" isnull="true" value=""/>
 <entry key="state" type="xstring" value="CONFIGURED"/>

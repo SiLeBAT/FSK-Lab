@@ -778,45 +778,8 @@ fskeditorjs = function() {
 		})
 	}
 	checked = false;
-	joinerNode.getComponentValue = function() {
-		//rejoinStores();
-		if(window.store7.getState().jsonforms.core.data){
-			window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data
-		}
-		if(window.store13.getState().jsonforms.core.data){
-			window.store1.getState().jsonforms.core.data.modelCategory = window.store13.getState().jsonforms.core.data
-		}
-		function removeAdditionalProperties(schema,data){
-			var ajv = new window.Ajv({
-				allErrors : true,
-				format : 'fast'
-			});
-			ajv.validate(schema,data);
-			console.log(ajv.errors);
-			$.each(ajv.errors,function(index,value){
-				if(value.keyword == 'additionalProperties'){
-					additionalProperty = value.params.additionalProperty;
-					console.log(additionalProperty);
-					if(value.dataPath == ""){
-						console.log('delete',value);
-						delete data[additionalProperty];
-						
-					}else{
-						matches = value.dataPath.match(/\[(.*?)\]/);
-						var index = matches[1];
-						var holder = value.dataPath.substr(1,matches.index-1);
-						console.log('delete',value);
-						delete data[holder][index][additionalProperty];
-					}
-				}
-			});
-		}
-		
-		removeAdditionalProperties(window.schema, window.store1.getState().jsonforms.core.data);
-		removeAdditionalProperties(window.schema2, window.store2.getState().jsonforms.core.data);
-		removeAdditionalProperties(window.schema6, window.store6.getState().jsonforms.core.data);
-		removeAdditionalProperties(window.schema17, window.store17.getState().jsonforms.core.data);
-		
+	theSecondCall = false;
+	function fixValueIssue(){
 		$.each(window.parentStores,function(storeindex,container){
 			currentStore = container[0]
 			$.each(Object.keys(currentStore.getState().jsonforms.core.data),function (index, theValue){
@@ -876,6 +839,61 @@ fskeditorjs = function() {
 				}	
 			});
 		});
+	}
+	joinerNode.getComponentValue = function() {
+		//rejoinStores();
+		if(window.store7.getState().jsonforms.core.data){
+			window.store6.getState().jsonforms.core.data.study = window.store7.getState().jsonforms.core.data
+		}
+		if(window.store13.getState().jsonforms.core.data){
+			window.store1.getState().jsonforms.core.data.modelCategory = window.store13.getState().jsonforms.core.data
+		}
+		function removeAdditionalProperties(schema,data){
+			var ajv = new window.Ajv({
+				allErrors : true,
+				format : 'fast'
+			});
+			ajv.validate(schema,data);
+			console.log(ajv.errors);
+			$.each(ajv.errors,function(index,value){
+				if(value.keyword == 'additionalProperties'){
+					additionalProperty = value.params.additionalProperty;
+					console.log(additionalProperty);
+					if(value.dataPath == ""){
+						console.log('delete',value);
+						delete data[additionalProperty];
+						
+					}else{
+						matches = value.dataPath.match(/\[(.*?)\]/);
+						var index = matches[1];
+						var holder = value.dataPath.substr(1,matches.index-1);
+						console.log('delete',value);
+						delete data[holder][index][additionalProperty];
+					}
+				}
+			});
+		}
+		
+		removeAdditionalProperties(window.schema, window.store1.getState().jsonforms.core.data);
+		removeAdditionalProperties(window.schema2, window.store2.getState().jsonforms.core.data);
+		removeAdditionalProperties(window.schema6, window.store6.getState().jsonforms.core.data);
+		removeAdditionalProperties(window.schema17, window.store17.getState().jsonforms.core.data);
+		if(!checked ){
+			if(parent !== undefined && parent.KnimePageLoader !== undefined){
+				if(!theSecondCall ){
+					theSecondCall = true;
+				}else{
+					fixValueIssue();
+				}
+			}else{
+				checked = true;
+				fixValueIssue();
+			}
+			
+			
+			console.log("modelMetaData",window.store1.getState().jsonforms.core.data);
+			
+		}
 		modelMetaData = {			modelType: window.modelPrefix,
 									generalInformation : window.store1.getState().jsonforms.core.data ,
 									scope : window.store2.getState().jsonforms.core.data,
