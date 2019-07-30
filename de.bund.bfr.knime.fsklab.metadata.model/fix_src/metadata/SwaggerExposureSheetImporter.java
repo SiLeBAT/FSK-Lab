@@ -132,8 +132,8 @@ public class SwaggerExposureSheetImporter  {
 	protected int SCOPE_PRODHAZPOP_ROW = 38;
 	protected int BG_STUDY_SAMPLE_ROW = 96;
 	protected int BG_DIET_ASSESS_ROW = 102;
-	protected int BG_EVENT_ROW = 109;
-	protected int BG_LABORATORY_ROW = 110;
+	protected int BG_EVENT_ROW = 108;
+	protected int BG_LABORATORY_ROW = 109;
 	protected int BG_ASSAY_ROW = 115;
 	protected int BG_QUALITY_MEAS_ROW = 124;
 	protected int BG_Model_EQ_ROW = 124;
@@ -1166,7 +1166,7 @@ public class SwaggerExposureSheetImporter  {
 		DietaryAssessmentMethod method = new DietaryAssessmentMethod();
 
 		method.setCollectionTool(row.getCell(K).getStringCellValue());
-		method.setNumberOfNonConsecutiveOneDay(Double.toString(row.getCell(M).getNumericCellValue()));
+		method.setNumberOfNonConsecutiveOneDay(Double.toString(row.getCell(L).getNumericCellValue()));
 
 		Cell softwareCell = row.getCell(M);
 		if (softwareCell.getCellType() == Cell.CELL_TYPE_STRING) {

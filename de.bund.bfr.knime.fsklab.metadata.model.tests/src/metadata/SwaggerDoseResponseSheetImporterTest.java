@@ -13,28 +13,27 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
-import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
-import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
-import de.bund.bfr.metadata.swagger.GenericModelModelMath;
-import de.bund.bfr.metadata.swagger.GenericModelScope;
+import de.bund.bfr.metadata.swagger.DoseResponseModelGeneralInformation;
+import de.bund.bfr.metadata.swagger.DoseResponseModelModelMath;
+import de.bund.bfr.metadata.swagger.DoseResponseModelScope;
+import de.bund.bfr.metadata.swagger.PredictiveModelDataBackground;
 
-public class SwaggerGenericSheetImporterTest {
-	
+public class SwaggerDoseResponseSheetImporterTest {
+
 	private static Sheet sheet;
-	private static SwaggerGenericSheetImporter importer;
+	private static SwaggerDoseResponseSheetImporter importer;
 
 	@BeforeClass
 	public static void setup() throws Exception {
 		Workbook workbook = WorkbookFactory.create(new File("files/annotation_v1.0.4.xlsx"));
-		sheet = workbook.getSheet("Generic Metadata Schema");
-		importer = new SwaggerGenericSheetImporter();
-		
+		sheet = workbook.getSheet("Dose-Response Model");
+		importer = new SwaggerDoseResponseSheetImporter();
 	}
 	
 	@Test
 	public void testGeneralInformation() throws Exception {
-		GenericModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
-		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getName());
+		DoseResponseModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
+		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getModelName());
 		assertEquals("PUBLISHED SCIENTIFIC STUDIES", information.getSource());
 		assertEquals("DR000001", information.getIdentifier());
 		assertEquals(1, information.getAuthor().size());
@@ -57,8 +56,7 @@ public class SwaggerGenericSheetImporterTest {
 	
 	@Test
 	public void testScope() {
-		GenericModelScope scope = importer.retrieveScope(sheet);
-		assertEquals(12, scope.getProduct().size());
+		DoseResponseModelScope scope = importer.retrieveScope(sheet);
 		assertEquals(1, scope.getHazard().size());
 		assertEquals(1, scope.getPopulationGroup().size());
 		assertNull(scope.getGeneralComment());
@@ -68,17 +66,16 @@ public class SwaggerGenericSheetImporterTest {
 
 	@Test
 	public void testDataBackground() {
-		GenericModelDataBackground background = importer.retrieveBackground(sheet);
+		PredictiveModelDataBackground background = importer.retrieveBackground(sheet);
 		assertNotNull(background.getStudy());
 		assertEquals(3, background.getStudySample().size());
-		assertEquals(3, background.getDietaryAssessmentMethod().size());
 		assertEquals(3, background.getLaboratory().size());
 		assertEquals(3, background.getAssay().size());
 	}
 
 	@Test
 	public void testModelMath() {
-		GenericModelModelMath math = importer.retrieveModelMath(sheet);
+		DoseResponseModelModelMath math = importer.retrieveModelMath(sheet);
 		assertEquals(9, math.getParameter().size());
 		assertEquals(1, math.getQualityMeasures().size());
 		assertNull(math.getModelEquation());

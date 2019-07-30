@@ -10,30 +10,31 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
+import de.bund.bfr.metadata.swagger.ExposureModelScope;
 import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
 import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelModelMath;
 import de.bund.bfr.metadata.swagger.GenericModelScope;
+import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
 
-public class SwaggerGenericSheetImporterTest {
-	
+public class SwaggerExposureModelImporterTest {
 	private static Sheet sheet;
-	private static SwaggerGenericSheetImporter importer;
+	private static SwaggerExposureSheetImporter importer;
 
 	@BeforeClass
 	public static void setup() throws Exception {
 		Workbook workbook = WorkbookFactory.create(new File("files/annotation_v1.0.4.xlsx"));
-		sheet = workbook.getSheet("Generic Metadata Schema");
-		importer = new SwaggerGenericSheetImporter();
-		
+		sheet = workbook.getSheet("Exposure Model");
+		importer = new SwaggerExposureSheetImporter();
 	}
 	
 	@Test
 	public void testGeneralInformation() throws Exception {
-		GenericModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
+		PredictiveModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
 		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getName());
 		assertEquals("PUBLISHED SCIENTIFIC STUDIES", information.getSource());
 		assertEquals("DR000001", information.getIdentifier());
@@ -57,7 +58,7 @@ public class SwaggerGenericSheetImporterTest {
 	
 	@Test
 	public void testScope() {
-		GenericModelScope scope = importer.retrieveScope(sheet);
+		ExposureModelScope scope = importer.retrieveScope(sheet);
 		assertEquals(12, scope.getProduct().size());
 		assertEquals(1, scope.getHazard().size());
 		assertEquals(1, scope.getPopulationGroup().size());
