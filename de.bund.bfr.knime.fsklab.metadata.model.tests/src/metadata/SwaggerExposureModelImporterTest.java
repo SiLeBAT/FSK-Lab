@@ -4,21 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.io.File;
-
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.ExposureModelScope;
 import de.bund.bfr.metadata.swagger.GenericModelDataBackground;
-import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelModelMath;
-import de.bund.bfr.metadata.swagger.GenericModelScope;
 import de.bund.bfr.metadata.swagger.PredictiveModelGeneralInformation;
 
 public class SwaggerExposureModelImporterTest {
@@ -27,11 +20,11 @@ public class SwaggerExposureModelImporterTest {
 
 	@BeforeClass
 	public static void setup() throws Exception {
-		Workbook workbook = WorkbookFactory.create(new File("files/annotation_v1.0.4.xlsx"));
-		sheet = workbook.getSheet("Exposure Model");
+
+		sheet = SwaggerUtilTest.workbook.getSheet("Exposure Model");
 		importer = new SwaggerExposureSheetImporter();
 	}
-	
+
 	@Test
 	public void testGeneralInformation() throws Exception {
 		PredictiveModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
@@ -53,9 +46,9 @@ public class SwaggerExposureModelImporterTest {
 		assertNotNull(information.getModelCategory());
 		assertEquals("Uncurated", information.getStatus());
 		assertNull(information.getObjective()); // Not set
-		assertNull(information.getDescription()); // Not set	
+		assertNull(information.getDescription()); // Not set
 	}
-	
+
 	@Test
 	public void testScope() {
 		ExposureModelScope scope = importer.retrieveScope(sheet);

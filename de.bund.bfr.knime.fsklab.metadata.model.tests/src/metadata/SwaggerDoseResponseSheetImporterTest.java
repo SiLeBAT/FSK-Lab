@@ -4,11 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.io.File;
-
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
@@ -25,11 +21,10 @@ public class SwaggerDoseResponseSheetImporterTest {
 
 	@BeforeClass
 	public static void setup() throws Exception {
-		Workbook workbook = WorkbookFactory.create(new File("files/annotation_v1.0.4.xlsx"));
-		sheet = workbook.getSheet("Dose-Response Model");
+		sheet = SwaggerUtilTest.workbook.getSheet("Dose-Response Model");
 		importer = new SwaggerDoseResponseSheetImporter();
 	}
-	
+
 	@Test
 	public void testGeneralInformation() throws Exception {
 		DoseResponseModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
@@ -51,9 +46,9 @@ public class SwaggerDoseResponseSheetImporterTest {
 		assertNotNull(information.getModelCategory());
 		assertEquals("Uncurated", information.getStatus());
 		assertNull(information.getObjective()); // Not set
-		assertNull(information.getDescription()); // Not set	
+		assertNull(information.getDescription()); // Not set
 	}
-	
+
 	@Test
 	public void testScope() {
 		DoseResponseModelScope scope = importer.retrieveScope(sheet);
