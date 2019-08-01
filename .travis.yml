@@ -15,7 +15,7 @@ before_install:
 - gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
 - gpg -a --export E084DAB9 | sudo apt-key add -
 - sudo apt-get update -qq > /dev/null
-- sudo apt-get install r-base -qq > /dev/null
+- sudo apt-get --allow-unauthenticated install r-base -qq > /dev/null
 # Install packages
 - sudo apt-get install libcurl4-openssl-dev libxml2-dev libssl-dev -qq > /dev/null
 - sudo R --vanilla -e 'install.packages(c("Rserve", "miniCRAN", "ggplot2", "svglite"), repos="http://cran.us.r-project.org", Ncpus=2)' > /dev/null
