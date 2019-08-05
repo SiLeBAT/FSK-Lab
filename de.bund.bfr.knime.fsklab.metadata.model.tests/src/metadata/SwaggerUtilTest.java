@@ -1,17 +1,15 @@
 package metadata;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
 
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
@@ -64,15 +62,7 @@ import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModelScope;
 
 public class SwaggerUtilTest {
-	protected static Workbook workbook;
-	static {
-		try {
-			workbook = WorkbookFactory.create(new File("files/annotation_v1.0.4.xlsx"));
-		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testConvertGeneralInformation() {

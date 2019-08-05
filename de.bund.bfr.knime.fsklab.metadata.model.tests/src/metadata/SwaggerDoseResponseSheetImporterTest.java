@@ -4,7 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
@@ -21,8 +28,17 @@ public class SwaggerDoseResponseSheetImporterTest {
 
 	@BeforeClass
 	public static void setup() throws Exception {
-		sheet = SwaggerUtilTest.workbook.getSheet("Dose-Response Model");
+		try (InputStream stream = Files.newInputStream(Paths.get("files/annotation_v1.0.4.xlsx"));
+				Workbook workbook = WorkbookFactory.create(stream)) {
+			sheet = workbook.getSheet("Dose-Response Model");
+		}
 		importer = new SwaggerDoseResponseSheetImporter();
+	}
+	
+	@AfterClass
+	public static void after() {
+		sheet = null;
+		importer = null;
 	}
 
 	@Test
