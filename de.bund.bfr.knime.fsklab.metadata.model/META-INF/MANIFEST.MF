@@ -52,7 +52,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.servicemix.bundles.poi,
  org.apache.commons.lang3,
  org.junit,
- org.glassfish.javax.json;bundle-version="1.0.4",
+ org.glassfish.javax.json,
  de.bund.bfr.formats,
  com.google.gson
 Bundle-ActivationPolicy: lazy

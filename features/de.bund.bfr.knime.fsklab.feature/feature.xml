@@ -36,7 +36,6 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="com.sun.jna"/>
-      <import plugin="org.knime.ext.r.type" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="com.fasterxml.jackson.core.jackson-annotations"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
@@ -55,8 +54,9 @@ along with this program.  If not, see &amp;quot;http://www.gnu.org/licenses/&amp
       <import plugin="org.knime.json"/>
       <import plugin="org.knime.workbench.repository"/>
       <import plugin="org.slf4j.api"/>
+      <import plugin="org.knime.python2"/>
       <import plugin="org.apache.commons.io" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="de.bund.bfr.knime.fsklab.python"/>
+      <import plugin="org.knime.ext.r.type"/>
    </requires>
 
    <plugin

@@ -8,15 +8,14 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: de.bund.bfr.knime.pmm.common,
  de.bund.bfr.knime.pmm.nodes,
  org.junit,
- org.knime.core;bundle-version="3.5.4",
+ org.knime.core,
  de.bund.bfr.knime.fsklab.metadata.model,
  org.apache.servicemix.bundles.poi,
  org.glassfish.javax.json,
  de.bund.bfr.formats,
  de.bund.bfr.knime.fsklab.nodes,
  de.bund.bfr.knime.fsklab.r,
- org.hamcrest.library,
- de.bund.bfr.knime.fsklab.python;bundle-version="1.0.0"
+ org.knime.python2
 Export-Package: de.bund.bfr.knime.fsklab.nodes,
  de.bund.bfr.knime.fsklab.nodes.plot,
  de.bund.bfr.knime.pmm.common,

@@ -18,7 +18,7 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.ext.r.type,
  org.knime.workbench.repository,
  org.jdom2,
- de.bund.bfr.knime.fsklab.type;bundle-version="1.0.0",
+ de.bund.bfr.knime.fsklab.type,
  de.bund.bfr.formats
 Bundle-ClassPath: .,
  libs/fskml-0.0.1-SNAPSHOT.jar
