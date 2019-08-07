@@ -31,7 +31,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	static final String PYTHON2_PATH_CFG = "python2Path";
 
 	private static RPreferenceProvider cachedRProvider = null;
-	private static PythonPreferenceProvider cachedPythonProvider = null;
 
 	@Override
 	public void initializeDefaultPreferences() {
@@ -59,15 +58,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		return cachedRProvider;
 	}
 	
-	public static final PythonPreferenceProvider getPythonProvider() {
-		final String pythonHome = Plugin.getDefault().getPreferenceStore().getString(PYTHON2_PATH_CFG);
-		if (cachedPythonProvider == null || !cachedPythonProvider.getPythonHome().equals(pythonHome)) {
-			cachedPythonProvider = new DefaultPythonPreferenceProvider(pythonHome);
-		}
-		
-		return cachedPythonProvider;
-	}
-
 	/**
 	 * Invalidate the cached R3 preference provider returned by
 	 * {@link #getR3Provider()}, to refetch R properties (which launches an external
@@ -75,6 +65,5 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public static final void invalidateProviderCache() {
 		cachedRProvider = null;
-		cachedPythonProvider = null;
 	}
 }
