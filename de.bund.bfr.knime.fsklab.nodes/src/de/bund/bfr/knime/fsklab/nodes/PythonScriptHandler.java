@@ -6,11 +6,11 @@ import java.util.List;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
-import org.knime.python2.kernel.PythonKernel;
-import org.knime.python2.kernel.PythonKernelOptions;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.plot.PythonPlotter;
+import de.bund.bfr.knime.fsklab.python.kernel.PythonKernel;
+import de.bund.bfr.knime.fsklab.python.kernel.PythonKernelOptions;
 
 public class PythonScriptHandler extends ScriptHandler {
   String std_out = "";

@@ -8,8 +8,9 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.knime.python2.kernel.PythonKernel;
-import org.knime.python2.kernel.PythonKernelOptions;
+
+import de.bund.bfr.knime.fsklab.python.kernel.PythonKernel;
+import de.bund.bfr.knime.fsklab.python.kernel.PythonKernelOptions;
 
 @Ignore
 public class PythonPlotterTest {

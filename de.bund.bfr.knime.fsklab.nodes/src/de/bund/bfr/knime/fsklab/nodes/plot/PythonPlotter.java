@@ -2,7 +2,7 @@ package de.bund.bfr.knime.fsklab.nodes.plot;
 
 import java.io.File;
 import org.apache.commons.io.FilenameUtils;
-import org.knime.python2.kernel.PythonKernel;
+import de.bund.bfr.knime.fsklab.python.kernel.PythonKernel;
 
 public class PythonPlotter implements ModelPlotter {
   
