@@ -24,12 +24,14 @@ import org.eclipse.jface.preference.IPreferenceStore;
  *
  * @author Miguel Alba
  */
-public class RPreferenceInitializer extends AbstractPreferenceInitializer {
+public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 	/** Path to R v.3 */
-	static final String R3_PATH = "r3.path";
+	static final String R3_PATH_CFG = "r3.path";
+	static final String PYTHON2_PATH_CFG = "python2Path";
 
-	private static RPreferenceProvider cachedProvider = null;
+	private static RPreferenceProvider cachedRProvider = null;
+	private static PythonPreferenceProvider cachedPythonProvider = null;
 
 	@Override
 	public void initializeDefaultPreferences() {
@@ -43,17 +45,27 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
 		}
 
 		IPreferenceStore store = Plugin.getDefault().getPreferenceStore();
-		store.setDefault(R3_PATH, rHome);
+		store.setDefault(R3_PATH_CFG, rHome);
+		store.setDefault(PYTHON2_PATH_CFG, "");
 	}
 
 	/** @return provider to the path to the R3 executable. */
 	public static final RPreferenceProvider getR3Provider() {
-		final String r3Home = Plugin.getDefault().getPreferenceStore().getString(R3_PATH);
-		if (cachedProvider == null || !cachedProvider.getRHome().equals(r3Home)) {
-			cachedProvider = new DefaultRPreferenceProvider(r3Home);
+		final String r3Home = Plugin.getDefault().getPreferenceStore().getString(R3_PATH_CFG);
+		if (cachedRProvider == null || !cachedRProvider.getRHome().equals(r3Home)) {
+			cachedRProvider = new DefaultRPreferenceProvider(r3Home);
 		}
 
-		return cachedProvider;
+		return cachedRProvider;
+	}
+	
+	public static final PythonPreferenceProvider getPythonProvider() {
+		final String pythonHome = Plugin.getDefault().getPreferenceStore().getString(PYTHON2_PATH_CFG);
+		if (cachedPythonProvider == null || !cachedPythonProvider.getPythonHome().equals(pythonHome)) {
+			cachedPythonProvider = new DefaultPythonPreferenceProvider(pythonHome);
+		}
+		
+		return cachedPythonProvider;
 	}
 
 	/**
@@ -62,6 +74,7 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
 	 * R command).
 	 */
 	public static final void invalidateProviderCache() {
-		cachedProvider = null;
+		cachedRProvider = null;
+		cachedPythonProvider = null;
 	}
 }

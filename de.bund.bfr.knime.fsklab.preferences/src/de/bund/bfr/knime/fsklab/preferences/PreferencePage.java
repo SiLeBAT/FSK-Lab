@@ -37,20 +37,21 @@ import de.bund.bfr.knime.fsklab.preferences.RBinUtil.InvalidRHomeException;
  * 
  * @author Miguel Alba
  */
-public class RPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public class PreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	/** Creates a new preference page. */
-	public RPreferencePage() {
+	public PreferencePage() {
 		super(GRID);
 
 		setPreferenceStore(Plugin.getDefault().getPreferenceStore());
-		setDescription("FSK-Lab preferences");
+		setDescription("FSK-Lab");
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		Composite parent = getFieldEditorParent();
-		addField(new RHomeDirectoryFieldEditor(RPreferenceInitializer.R3_PATH, "R v3 environment location", parent));
+		addField(new RHomeDirectoryFieldEditor(PreferenceInitializer.R3_PATH_CFG, "Path to R 3", parent));
+		addField(new DirectoryFieldEditor(PreferenceInitializer.PYTHON2_PATH_CFG, "Path to Python 2", parent));
 	}
 
 	@Override

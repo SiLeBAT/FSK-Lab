@@ -98,7 +98,7 @@ public class RBinUtil {
 	 *             in case that running R fails.
 	 */
 	public static Properties retrieveRProperties() throws IOException {
-		return retrieveRProperties(RPreferenceInitializer.getR3Provider());
+		return retrieveRProperties(PreferenceInitializer.getR3Provider());
 	}
 
 	/**

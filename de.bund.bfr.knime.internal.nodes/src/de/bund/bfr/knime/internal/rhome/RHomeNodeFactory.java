@@ -19,7 +19,7 @@ import org.knime.core.node.StatelessModel;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.port.PortType;
 
-import de.bund.bfr.knime.fsklab.preferences.RPreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.preferences.RPreferenceProvider;
 
 
@@ -48,7 +48,7 @@ public class RHomeNodeFactory extends NodeFactory<NodeModel> {
 				BufferedDataContainer container = exec.createDataContainer(tableSpec);
 
 				// Cells
-				RPreferenceProvider provider = RPreferenceInitializer.getR3Provider();
+				RPreferenceProvider provider = PreferenceInitializer.getR3Provider();
 
 				// R home, bin and Rserve paths
 				String rHome = "";

@@ -119,7 +119,7 @@ import de.bund.bfr.knime.fsklab.preferences.RBinUtil;
 import de.bund.bfr.knime.fsklab.preferences.RBinUtil.InvalidRHomeException;
 import de.bund.bfr.knime.fsklab.r.server.RConnectionFactory;
 import de.bund.bfr.knime.fsklab.r.server.RConnectionFactory.RConnectionResource;
-import de.bund.bfr.knime.fsklab.preferences.RPreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 
 /**
  * RController.
@@ -284,7 +284,7 @@ public class RController implements IRController {
    */
   private void initR() throws RException {
     try {
-      String rHome = RPreferenceInitializer.getR3Provider().getRHome();
+      String rHome = PreferenceInitializer.getR3Provider().getRHome();
 
       // FIXME: Workaround for Linux server in BfR. If R home is not configure then
       // defaults to /usr/lib/R/

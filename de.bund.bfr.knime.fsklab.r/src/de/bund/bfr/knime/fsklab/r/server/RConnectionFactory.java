@@ -65,7 +65,7 @@ import org.rosuda.REngine.Rserve.RserveException;
 
 import com.sun.jna.Platform;
 
-import de.bund.bfr.knime.fsklab.preferences.RPreferenceInitializer;
+import de.bund.bfr.knime.fsklab.preferences.PreferenceInitializer;
 import de.bund.bfr.knime.fsklab.r.client.IRController.RException;
 import de.bund.bfr.knime.fsklab.r.client.RController;
 
@@ -145,7 +145,7 @@ public class RConnectionFactory {
 	 */
 	private static Process launchRserveProcess(final String command, final String host, final Integer port)
 			throws IOException {
-		final String rHome = RPreferenceInitializer.getR3Provider().getRHome();
+		final String rHome = PreferenceInitializer.getR3Provider().getRHome();
 
 		final File configFile = createRserverConfig();
 		final ProcessBuilder builder = new ProcessBuilder();
@@ -159,7 +159,7 @@ public class RConnectionFactory {
 			// bin folder on path
 
 			// archProperty is "i386" for 32 bit or "x86_64" for 64 bit
-			final String archProperty = RPreferenceInitializer.getR3Provider().getProperties().getProperty("arch");
+			final String archProperty = PreferenceInitializer.getR3Provider().getProperties().getProperty("arch");
 
 			// "x64" for 64 bit and "i386" for 32 bit.
 			final String arch = archProperty.equals("x86_64") ? "x64" : "i386";
@@ -308,7 +308,7 @@ public class RConnectionFactory {
 				}
 			}
 			// no existing resource is available. Create a new one.
-			String path = RPreferenceInitializer.getR3Provider().getRServeBinPath().toString();
+			String path = PreferenceInitializer.getR3Provider().getRServeBinPath().toString();
 			int port = findFreePort();
 			final RInstance instance = launchRserve(path, "127.0.0.1", port);
 			RConnectionResource resource = new RConnectionResource(instance);
