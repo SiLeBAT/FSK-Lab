@@ -48,6 +48,7 @@
 		<module>de.bund.bfr.knime.fsklab.nodes.deprecated</module>
 		<module>de.bund.bfr.knime.fsklab.nodes.deprecated2</module>
 		<module>de.bund.bfr.knime.fsklab.preferences</module>
+		<module>de.bund.bfr.knime.fsklab.python</module>
 		<module>de.bund.bfr.knime.fsklab.r</module>
 		<module>de.bund.bfr.knime.fsklab.type</module>
 		<module>de.bund.bfr.knime.fsklab.util</module>
