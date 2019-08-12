@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Arrays;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -21,15 +20,15 @@ public class Ggplot2PlotterTest {
 	@Test
 	public void testPlotPng() throws Exception {
 
-		File file = testFolder.newFile("plot.png");
+		final File file = testFolder.newFile("plot.png");
 
 		try (RController controller = new RController()) {
-			
+
 			// Install ggplot2 if missing
 			LibRegistry.instance().install(Arrays.asList("ggplot2"));
-			
-			Ggplot2Plotter plotter = new Ggplot2Plotter(controller);
-			String script = "library(ggplot2);"
+
+			final Ggplot2Plotter plotter = new Ggplot2Plotter(controller);
+			final String script = "library(ggplot2);"
 					+ "ggplot(mtcars, aes(factor(cyl), mpg)) + geom_violin(aes(fill = cyl))";
 			plotter.plotPng(file, script);
 		}
@@ -38,19 +37,19 @@ public class Ggplot2PlotterTest {
 		assertTrue(file.exists());
 		assertTrue(file.length() > 0);
 	}
-	
+
 	@Test
 	public void testPlotSvg() throws Exception {
 
-		File file = testFolder.newFile("plot.svg");
+		final File file = testFolder.newFile("plot.svg");
 
 		try (RController controller = new RController()) {
-			
+
 			// Install ggplot2 if missing
 			LibRegistry.instance().install(Arrays.asList("ggplot2"));
-			
-			Ggplot2Plotter plotter = new Ggplot2Plotter(controller);
-			String script = "library(ggplot2);"
+
+			final Ggplot2Plotter plotter = new Ggplot2Plotter(controller);
+			final String script = "library(ggplot2);"
 					+ "ggplot(mtcars, aes(factor(cyl), mpg)) + geom_violin(aes(fill = cyl))";
 			plotter.plotSvg(file, script);
 		}
