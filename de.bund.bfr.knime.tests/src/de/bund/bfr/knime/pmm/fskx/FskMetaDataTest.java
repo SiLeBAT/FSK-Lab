@@ -9,13 +9,13 @@ import org.junit.Test;
 
 import de.bund.bfr.pmfml.ModelClass;
 
+@SuppressWarnings("static-method")
 public class FskMetaDataTest {
 
-	@SuppressWarnings("static-method")
 	@Test
 	public void testConstructor() {
 
-		FskMetaData metaData = new FskMetaData();
+		final FskMetaData metaData = new FskMetaData();
 
 		assertNull(metaData.modelName);
 		assertNull(metaData.modelId);

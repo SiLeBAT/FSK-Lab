@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettings;
 
+@SuppressWarnings("static-method")
 public class IndepListTest {
 
 	static Indep indep;
@@ -24,14 +25,14 @@ public class IndepListTest {
 
 	@Test
 	public void testIndeps() {
-		IndepList list = new IndepList();
+		final IndepList list = new IndepList();
 		assertNull(list.getIndeps());
 
-		Indep[] indeps = new Indep[] { indep };
+		final Indep[] indeps = new Indep[] { indep };
 		list.setIndeps(indeps);
 
-		Indep expected = indeps[0]; // expected Indep
-		Indep obtained = list.getIndeps()[0]; // obtained Indep
+		final Indep expected = indeps[0]; // expected Indep
+		final Indep obtained = list.getIndeps()[0]; // obtained Indep
 
 		assertEquals(expected.name, obtained.name);
 		assertEquals(expected.origname, obtained.origname);
@@ -44,19 +45,19 @@ public class IndepListTest {
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		Indep[] indeps = new Indep[] { indep };
-		IndepList list = new IndepList();
+		final Indep[] indeps = new Indep[] { indep };
+		final IndepList list = new IndepList();
 		list.setIndeps(indeps);
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 
-		Indep[] obtainedIndeps = new Indep[1];
+		final Indep[] obtainedIndeps = new Indep[1];
 		obtainedIndeps[0] = new Indep();
 		obtainedIndeps[0].loadFromNodeSettings(settings.getNodeSettings("indeps" + 0));
-		
-		Indep expected = indeps[0];  // expected Indep
-		Indep obtained = obtainedIndeps[0];  // obtained Indep
+
+		final Indep expected = indeps[0];  // expected Indep
+		final Indep obtained = obtainedIndeps[0];  // obtained Indep
 
 		assertEquals(expected.name, obtained.name);
 		assertEquals(expected.origname, obtained.origname);
@@ -70,15 +71,15 @@ public class IndepListTest {
 	@Test
 	public void testLoadFromNodeSettings() {
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addInt("numIndeps", 1);
 		indep.saveToNodeSettings(settings.addNodeSettings("indeps" + 0));
 
-		IndepList list = new IndepList();
+		final IndepList list = new IndepList();
 		list.loadFromNodeSettings(settings);
-		
-		Indep expected = indep;  // expected Indep
-		Indep obtained = list.getIndeps()[0];  // obtained Indep
+
+		final Indep expected = indep;  // expected Indep
+		final Indep obtained = list.getIndeps()[0];  // obtained Indep
 
 		assertEquals(expected.name, obtained.name);
 		assertEquals(expected.origname, obtained.origname);

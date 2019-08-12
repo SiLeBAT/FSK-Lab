@@ -9,6 +9,7 @@ import org.knime.core.node.NodeSettings;
 
 import de.bund.bfr.knime.pmm.common.TimeSeriesXml;
 
+@SuppressWarnings("static-method")
 public class TimeSeriesTest {
 
 	static String name = "t0";
@@ -24,8 +25,8 @@ public class TimeSeriesTest {
 
 	@Test
 	public void testConstructor() {
-		
-		TimeSeries timeSeries = new TimeSeries();
+
+		final TimeSeries timeSeries = new TimeSeries();
 		assertNull(timeSeries.name);
 		assertNull(timeSeries.time);
 		assertNull(timeSeries.timeUnit);
@@ -40,7 +41,7 @@ public class TimeSeriesTest {
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		TimeSeries timeSeries = new TimeSeries();
+		final TimeSeries timeSeries = new TimeSeries();
 		timeSeries.name = name;
 		timeSeries.time = time;
 		timeSeries.timeUnit = timeUnit;
@@ -52,7 +53,7 @@ public class TimeSeriesTest {
 		timeSeries.concentrationStdDev = concentrationStdDev;
 		timeSeries.numberOfMeasurements = numberOfMeasurements;
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		timeSeries.saveToNodeSettings(settings);
 
 		assertEquals(name, settings.getString("name"));
@@ -69,7 +70,7 @@ public class TimeSeriesTest {
 
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addString("name", name);
 		settings.addDouble("time", time);
 		settings.addString("timeUnit", timeUnit);
@@ -82,7 +83,7 @@ public class TimeSeriesTest {
 		settings.addDouble("concentrationStdDev", concentrationStdDev);
 		settings.addInt("numberOfMeasurements", numberOfMeasurements);
 
-		TimeSeries timeSeries = new TimeSeries();
+		final TimeSeries timeSeries = new TimeSeries();
 		timeSeries.loadFromNodeSettings(settings);
 
 		assertEquals(name, timeSeries.name);
@@ -99,11 +100,11 @@ public class TimeSeriesTest {
 
 	@Test
 	public void testToTimeSeries() {
-		TimeSeriesXml timeSeriesXml = new TimeSeriesXml(name, time, timeUnit, origTimeUnit, concentration,
+		final TimeSeriesXml timeSeriesXml = new TimeSeriesXml(name, time, timeUnit, origTimeUnit, concentration,
 				concentrationUnit, concentrationUnitObjectType, origConcentrationUnit, concentrationStdDev,
 				numberOfMeasurements);
-		TimeSeries timeSeries = TimeSeries.toTimeSeries(timeSeriesXml);
-		
+		final TimeSeries timeSeries = TimeSeries.toTimeSeries(timeSeriesXml);
+
 		assertEquals(name, timeSeries.name);
 		assertEquals(time, timeSeries.time, 0.0);
 		assertEquals(timeUnit, timeSeries.timeUnit);
@@ -115,10 +116,10 @@ public class TimeSeriesTest {
 		assertEquals(concentrationStdDev, timeSeries.concentrationStdDev, 0.0);
 		assertEquals(numberOfMeasurements, timeSeries.numberOfMeasurements.intValue());
 	}
-	
+
 	@Test
 	public void testToTimeSeriesXml() {
-		TimeSeries timeSeries = new TimeSeries();
+		final TimeSeries timeSeries = new TimeSeries();
 		timeSeries.name = name;
 		timeSeries.time = time;
 		timeSeries.timeUnit = timeUnit;
@@ -129,7 +130,7 @@ public class TimeSeriesTest {
 		timeSeries.origConcentrationUnit = origConcentrationUnit;
 		timeSeries.concentrationStdDev = concentrationStdDev;
 		timeSeries.numberOfMeasurements = numberOfMeasurements;
-		TimeSeriesXml timeSeriesXml = timeSeries.toTimeSeriesXml();
+		final TimeSeriesXml timeSeriesXml = timeSeries.toTimeSeriesXml();
 
 		assertEquals(name, timeSeriesXml.name);
 		assertEquals(time, timeSeriesXml.time, 0.0);

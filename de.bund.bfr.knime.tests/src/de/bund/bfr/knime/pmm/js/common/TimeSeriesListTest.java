@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettings;
 
-
+@SuppressWarnings("static-method")
 public class TimeSeriesListTest {
 
 	static TimeSeries timeSeries;
@@ -27,13 +27,13 @@ public class TimeSeriesListTest {
 
 	@Test
 	public void testTimeSeries() {
-		TimeSeriesList  list = new TimeSeriesList();
+		final TimeSeriesList  list = new TimeSeriesList();
 		assertNull(list.getTimeSeries());
 
 		list.setTimeSeries(new TimeSeries[] { timeSeries });
 
-		TimeSeries expected = timeSeries;  // expected TimeSeries
-		TimeSeries obtained = list.getTimeSeries()[0];  // obtained TimeSeries
+		final TimeSeries expected = timeSeries;  // expected TimeSeries
+		final TimeSeries obtained = list.getTimeSeries()[0];  // obtained TimeSeries
 
 		assertEquals(expected.name, obtained.name);
 		assertEquals(expected.timeUnit, obtained.timeUnit);
@@ -48,16 +48,16 @@ public class TimeSeriesListTest {
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		TimeSeriesList list = new TimeSeriesList();
+		final TimeSeriesList list = new TimeSeriesList();
 		list.setTimeSeries(new TimeSeries[] { timeSeries });
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 
 		assertEquals(1, settings.getInt("numTimeSeries"));
 
-		TimeSeries expected = timeSeries;  // expected TimeSeries
-		TimeSeries obtained = new TimeSeries();  // obtained TimeSeries
+		final TimeSeries expected = timeSeries;  // expected TimeSeries
+		final TimeSeries obtained = new TimeSeries();  // obtained TimeSeries
 		obtained.loadFromNodeSettings(settings.getNodeSettings("timeSeries0"));
 
 		assertEquals(expected.name, obtained.name);
@@ -73,15 +73,15 @@ public class TimeSeriesListTest {
 
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addInt("numTimeSeries", 1);
 		timeSeries.saveToNodeSettings(settings.addNodeSettings("timeSeries0"));
 
-		TimeSeriesList list = new TimeSeriesList();
+		final TimeSeriesList list = new TimeSeriesList();
 		list.loadFromNodeSettings(settings);
 
-		TimeSeries expected = timeSeries;  // expected TimeSeries
-		TimeSeries obtained = list.getTimeSeries()[0];  // obtained TimeSeries
+		final TimeSeries expected = timeSeries;  // expected TimeSeries
+		final TimeSeries obtained = list.getTimeSeries()[0];  // obtained TimeSeries
 
 		assertEquals(expected.name, obtained.name);
 		assertEquals(expected.timeUnit, obtained.timeUnit);

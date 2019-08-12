@@ -8,6 +8,7 @@ import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 import org.junit.Test;
 
+@SuppressWarnings("static-method")
 public class TimeSeriesXmlTest {
 
 	@Test
@@ -15,7 +16,7 @@ public class TimeSeriesXmlTest {
 
 		// Test constructor with name, time, timeUnit, concentration, concentrationUnit,
 		// concentrationStdDev, numberOfMeasurements
-		TimeSeriesXml series0 = new TimeSeriesXml("name", 0.0, "timeUnit", 1.0, "concentrationUnit", 0.0, 1);
+		final TimeSeriesXml series0 = new TimeSeriesXml("name", 0.0, "timeUnit", 1.0, "concentrationUnit", 0.0, 1);
 		assertEquals("name", series0.name);
 		assertEquals(0.0, series0.time, .0);
 		assertEquals("timeUnit", series0.timeUnit);
@@ -28,7 +29,7 @@ public class TimeSeriesXmlTest {
 		assertTrue(1 == series0.numberOfMeasurements);
 
 		// Test fully parameterized constructor
-		TimeSeriesXml series1 = new TimeSeriesXml("name", 0.0, "timeUnit", "origTimeUnit", 1.0, "concentrationUnit",
+		final TimeSeriesXml series1 = new TimeSeriesXml("name", 0.0, "timeUnit", "origTimeUnit", 1.0, "concentrationUnit",
 				"concentrationUnitObjectType", "origConcentrationUnit", 0.0, 1);
 		assertEquals("name", series1.name);
 		assertEquals(0.0, series1.time, .0);
@@ -42,7 +43,7 @@ public class TimeSeriesXmlTest {
 		assertTrue(1 == series1.numberOfMeasurements);
 
 		// Test copy constructor with JDOM Element
-		Element element = new Element(TimeSeriesXml.ELEMENT_TIMESERIES);
+		final Element element = new Element(TimeSeriesXml.ELEMENT_TIMESERIES);
 		element.setAttribute("name", "name");
 		element.setAttribute("time", "0.0");
 		element.setAttribute("timeUnit", "timeUnit");
@@ -53,8 +54,8 @@ public class TimeSeriesXmlTest {
 		element.setAttribute("origConcentrationUnit", "origConcentrationUnit");
 		element.setAttribute("concentrationStdDev", "0.0");
 		element.setAttribute("numberOfMeasurements", "1");
-		
-		TimeSeriesXml series2 = new TimeSeriesXml(element);
+
+		final TimeSeriesXml series2 = new TimeSeriesXml(element);
 		assertEquals("name", series2.name);
 		assertEquals(0.0, series2.time, .0);
 		assertEquals("timeUnit", series2.timeUnit);
@@ -69,10 +70,10 @@ public class TimeSeriesXmlTest {
 
 	@Test
 	public void testToXmlElement() throws DataConversionException {
-		TimeSeriesXml series = new TimeSeriesXml("name", 0.0, "timeUnit", "origTimeUnit", 1.0, "concentrationUnit",
+		final TimeSeriesXml series = new TimeSeriesXml("name", 0.0, "timeUnit", "origTimeUnit", 1.0, "concentrationUnit",
 				"concentrationUnitObjectType", "origConcentrationUnit", 0.0, 1);
-		Element element = series.toXmlElement();
-		
+		final Element element = series.toXmlElement();
+
 		assertEquals("name", element.getAttributeValue("name"));
 		assertEquals(0.0, element.getAttribute("time").getDoubleValue(), .0);
 		assertEquals("timeUnit", element.getAttributeValue("timeUnit"));

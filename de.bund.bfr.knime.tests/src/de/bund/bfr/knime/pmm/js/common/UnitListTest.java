@@ -7,10 +7,11 @@ import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettings;
 
+@SuppressWarnings("static-method")
 public class UnitListTest {
-	
+
 	static Unit unit;
-	
+
 	static {
 		unit = new Unit();
 		unit.id = UnitTest.id;
@@ -30,14 +31,14 @@ public class UnitListTest {
 
 	@Test
 	public void testUnits() {
-		UnitList list = new UnitList();
+		final UnitList list = new UnitList();
 		assertNull(list.getUnits());
-		
+
 		list.setUnits(new Unit[] { unit });
-		
-		Unit expected = unit;  // expected Unit
-		Unit obtained = list.getUnits()[0];  // obtained Unit
-		
+
+		final Unit expected = unit;  // expected Unit
+		final Unit obtained = list.getUnits()[0];  // obtained Unit
+
 		assertEquals(expected.id, obtained.id);
 		assertEquals(expected.unit, obtained.unit);
 		assertEquals(expected.description, obtained.description);
@@ -52,21 +53,21 @@ public class UnitListTest {
 		assertEquals(expected.mathML_string, obtained.mathML_string);
 		assertEquals(expected.priority_for_display_in_GUI, obtained.priority_for_display_in_GUI);
 	}
-	
+
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		UnitList list = new UnitList();
+		final UnitList list = new UnitList();
 		list.setUnits(new Unit[] { unit });
-		
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
-		
+
 		assertEquals(1, settings.getInt("numUnits"));
-		
-		Unit expected = unit;  // expected unit
-		Unit obtained = new Unit();  // obtained unit
+
+		final Unit expected = unit;  // expected unit
+		final Unit obtained = new Unit();  // obtained unit
 		obtained.loadFromNodeSettings(settings.getNodeSettings("units0"));
-		
+
 		assertEquals(expected.id, obtained.id);
 		assertEquals(expected.unit, obtained.unit);
 		assertEquals(expected.description, obtained.description);
@@ -81,19 +82,19 @@ public class UnitListTest {
 		assertEquals(expected.mathML_string, obtained.mathML_string);
 		assertEquals(expected.priority_for_display_in_GUI, obtained.priority_for_display_in_GUI);
 	}
-	
+
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addInt("numUnits", 1);
 		unit.saveToNodeSettings(settings.addNodeSettings("units0"));
-		
-		UnitList list = new UnitList();
+
+		final UnitList list = new UnitList();
 		list.loadFromNodeSettings(settings);
-		
-		Unit expected = unit;  // expected Unit
-		Unit obtained = list.getUnits()[0];  // obtained Unit
-		
+
+		final Unit expected = unit;  // expected Unit
+		final Unit obtained = list.getUnits()[0];  // obtained Unit
+
 		assertEquals(expected.id, obtained.id);
 		assertEquals(expected.unit, obtained.unit);
 		assertEquals(expected.description, obtained.description);

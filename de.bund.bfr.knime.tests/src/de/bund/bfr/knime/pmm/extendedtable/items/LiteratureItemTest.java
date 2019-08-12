@@ -9,13 +9,14 @@ import org.junit.Test;
 
 import de.bund.bfr.knime.pmm.extendedtable.items.LiteratureItem.Type;
 
+@SuppressWarnings("static-method")
 public class LiteratureItemTest {
 
 	@Test
 	public void testConstructors() {
 
 		// Test fully parameterized constructor
-		LiteratureItem item0 = new LiteratureItem(Type.M, "author", 0, "title", "abstractText", "journal", "volume",
+		final LiteratureItem item0 = new LiteratureItem(Type.M, "author", 0, "title", "abstractText", "journal", "volume",
 				"issue", 0, 0, "website", 0, "comment", 0, "dbuuid");
 		assertTrue(0 == item0.id);
 		assertEquals("author", item0.author);
@@ -31,7 +32,7 @@ public class LiteratureItemTest {
 		assertEquals("dbuuid", item0.dbuuid);
 
 		// Test constructor without dbbuid
-		LiteratureItem item1 = new LiteratureItem(Type.M, "author", 0, "title", "abstractText", "journal", "volume",
+		final LiteratureItem item1 = new LiteratureItem(Type.M, "author", 0, "title", "abstractText", "journal", "volume",
 				"issue", 0, 0, "website", 0, "comment", 0);
 		assertTrue(0 == item1.id);
 		assertEquals("author", item1.author);
@@ -47,7 +48,7 @@ public class LiteratureItemTest {
 		assertNull(item1.dbuuid);
 
 		// Test constructor without dbbuid and id
-		LiteratureItem item2 = new LiteratureItem(Type.M, "author", 0, "title", "abstractText", "journal", "volume",
+		final LiteratureItem item2 = new LiteratureItem(Type.M, "author", 0, "title", "abstractText", "journal", "volume",
 				"issue", 0, 0, "website", 0, "comment");
 		assertTrue(item2.id < 0);
 		assertEquals("author", item2.author);
@@ -63,7 +64,7 @@ public class LiteratureItemTest {
 		assertNull(item2.dbuuid);
 
 		// Test copy constructor with Element
-		Element element = new Element("MLiteratureItem");
+		final Element element = new Element("MLiteratureItem");
 		element.setAttribute("id", "0");
 		element.setAttribute("author", "author");
 		element.setAttribute("year", "0");
@@ -77,7 +78,7 @@ public class LiteratureItemTest {
 		element.setAttribute("comment", "comment");
 		element.setAttribute("dbuuid", "dbuuid");
 
-		LiteratureItem item3 = new LiteratureItem(element);
+		final LiteratureItem item3 = new LiteratureItem(element);
 		assertTrue(0 == item3.id);
 		assertEquals("author", item3.author);
 		assertTrue(0 == item3.year);
@@ -122,9 +123,9 @@ public class LiteratureItemTest {
 
 	@Test
 	public void testToXmlElement() throws Exception {
-		LiteratureItem item = new LiteratureItem(Type.M, "author", 0, "title", "abstractText", "journal", "volume",
+		final LiteratureItem item = new LiteratureItem(Type.M, "author", 0, "title", "abstractText", "journal", "volume",
 				"issue", 0, 0, "website", 0, "comment", 0, "dbuuid");
-		Element element = item.toXmlElement();
+		final Element element = item.toXmlElement();
 
 		assertTrue(0 == element.getAttribute("id").getIntValue());
 		assertEquals("author", element.getAttributeValue("author"));

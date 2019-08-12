@@ -9,6 +9,7 @@ import org.knime.core.node.NodeSettings;
 
 import de.bund.bfr.knime.pmm.common.EstModelXml;
 
+@SuppressWarnings("static-method")
 public class EstModelTest {
 
 	static int id = 67;
@@ -26,7 +27,7 @@ public class EstModelTest {
 
 	@Test
 	public void testConstructor() {
-		EstModel estModel = new EstModel();
+		final EstModel estModel = new EstModel();
 		assertNull(estModel.id);
 		assertNull(estModel.name);
 		assertNull(estModel.sse);
@@ -40,10 +41,10 @@ public class EstModelTest {
 		assertNull(estModel.comment);
 		assertNull(estModel.dbuuid);
 	}
-	
+
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		EstModel estModel = new EstModel();
+		final EstModel estModel = new EstModel();
 		estModel.id = id;
 		estModel.name = name;
 		estModel.sse = sse;
@@ -56,10 +57,10 @@ public class EstModelTest {
 		estModel.checked = checked;
 		estModel.comment = comment;
 		estModel.dbuuid = dbuuid;
-		
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		estModel.saveToNodeSettings(settings);
-		
+
 		assertEquals(id, settings.getInt("id"));
 		assertEquals(name, settings.getString("name"));
 		assertEquals(sse, settings.getDouble("sse"), 0.0);
@@ -76,7 +77,7 @@ public class EstModelTest {
 
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addInt("id", id);
 		settings.addString("name", name);
 		settings.addDouble("sse", sse);
@@ -89,10 +90,10 @@ public class EstModelTest {
 		settings.addBoolean("checked", checked);
 		settings.addString("comment", comment);
 		settings.addString("dbuuid", dbuuid);
-		
-		EstModel estModel = new EstModel();
+
+		final EstModel estModel = new EstModel();
 		estModel.loadFromNodeSettings(settings);
-		
+
 		assertEquals(id, estModel.id.intValue());
 		assertEquals(name, estModel.name);
 		assertEquals(sse, estModel.sse, 0.0);
@@ -106,13 +107,13 @@ public class EstModelTest {
 		assertEquals(comment, estModel.comment);
 		assertEquals(dbuuid, estModel.dbuuid);
 	}
-	
+
 	@Test
 	public void testToEstModel() {
-		EstModelXml estModelXml = new EstModelXml(id, name, sse, rms, r2, aic, bic, dof, checked, qualityScore, dbuuid);
+		final EstModelXml estModelXml = new EstModelXml(id, name, sse, rms, r2, aic, bic, dof, checked, qualityScore, dbuuid);
 		estModelXml.comment = comment;
-		
-		EstModel estModel = EstModel.toEstModel(estModelXml);
+
+		final EstModel estModel = EstModel.toEstModel(estModelXml);
 		assertEquals(id, estModel.id.intValue());
 		assertEquals(name, estModel.name);
 		assertEquals(sse, estModel.sse, 0.0);
@@ -126,10 +127,10 @@ public class EstModelTest {
 		assertEquals(comment, estModel.comment);
 		assertEquals(dbuuid, estModel.dbuuid);
 	}
-	
+
 	@Test
 	public void testToEstModelXml() {
-		EstModel estModel = new EstModel();
+		final EstModel estModel = new EstModel();
 		estModel.id = id;
 		estModel.name = name;
 		estModel.sse = sse;
@@ -142,8 +143,8 @@ public class EstModelTest {
 		estModel.checked = checked;
 		estModel.comment = comment;
 		estModel.dbuuid = dbuuid;
-		EstModelXml estModelXml = estModel.toEstModelXml();
-		
+		final EstModelXml estModelXml = estModel.toEstModelXml();
+
 		assertEquals(id, estModelXml.id.intValue());
 		assertEquals(name, estModelXml.name);
 		assertEquals(sse, estModelXml.sse, 0.0);

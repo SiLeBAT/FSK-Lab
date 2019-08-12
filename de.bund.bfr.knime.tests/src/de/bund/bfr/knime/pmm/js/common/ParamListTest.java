@@ -8,12 +8,12 @@ import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettings;
 
-
+@SuppressWarnings("static-method")
 public class ParamListTest {
 
 	static Param param;
 	static {
-		param = new Param();	
+		param = new Param();
 		param.name = ParamTest.name;
 		param.origName = ParamTest.origname;
 		param.isStart = ParamTest.isStart;
@@ -34,13 +34,13 @@ public class ParamListTest {
 
 	@Test
 	public void testParams() {
-		ParamList list = new ParamList();
+		final ParamList list = new ParamList();
 		assertNull(list.getParams());
 
 		list.setParams(new Param[] { param} );
 
-		Param expected = param;  // expected Param
-		Param obtained = list.getParams()[0];  // obtained Param
+		final Param expected = param;  // expected Param
+		final Param obtained = list.getParams()[0];  // obtained Param
 
 		assertEquals(expected.name, obtained.name);
 		assertEquals(expected.origName, obtained.origName);
@@ -62,16 +62,16 @@ public class ParamListTest {
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		ParamList list = new ParamList();
+		final ParamList list = new ParamList();
 		list.setParams(new Param[] { param });
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 
 		assertEquals(1, settings.getInt("numParams"));
 
-		Param expected = param;  // expected Param
-		Param obtained = new Param();  // obtained Param
+		final Param expected = param;  // expected Param
+		final Param obtained = new Param();  // obtained Param
 		obtained.loadFromNodeSettings(settings.getNodeSettings("params0"));
 
 		assertEquals(expected.name, obtained.name);
@@ -94,15 +94,15 @@ public class ParamListTest {
 
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addInt("numParams", 1);
 		param.saveToNodeSettings(settings.addNodeSettings("params0"));
 
-		ParamList list = new ParamList();
+		final ParamList list = new ParamList();
 		list.loadFromNodeSettings(settings);
 
-		Param expected = param;  // expected Param
-		Param obtained = list.getParams()[0];  // obtained Param
+		final Param expected = param;  // expected Param
+		final Param obtained = list.getParams()[0];  // obtained Param
 
 		assertEquals(expected.name, obtained.name);
 		assertEquals(expected.origName, obtained.origName);

@@ -11,13 +11,14 @@ import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 import org.junit.Test;
 
+@SuppressWarnings("static-method")
 public class ParamXmlTest {
 
 	@Test
 	public void testConstructors() {
 
 		// Test constructor with name, isStartParam and value
-		ParamXml param0 = new ParamXml("name", false, 0.0);
+		final ParamXml param0 = new ParamXml("name", false, 0.0);
 		assertEquals("name", param0.name);
 		assertEquals("name", param0.origName);
 		assertFalse(param0.isStartParam);
@@ -35,7 +36,7 @@ public class ParamXmlTest {
 		assertTrue(param0.correlations.isEmpty());
 
 		// Test constructor with name, isStartParam, value, error, min, max, P and t
-		ParamXml param1 = new ParamXml("name", false, 0.0, 0.0, 0.0, 1.0, 2.0, 3.0);
+		final ParamXml param1 = new ParamXml("name", false, 0.0, 0.0, 0.0, 1.0, 2.0, 3.0);
 		assertEquals("name", param1.name);
 		assertEquals("name", param1.origName);
 		assertFalse(param1.isStartParam);
@@ -54,7 +55,7 @@ public class ParamXmlTest {
 
 		// Test constructor with name, isStartParam, value, error, min, max, P, t,
 		// category and unit
-		ParamXml param2 = new ParamXml("name", false, 0.0, 0.0, 0.0, 1.0, 2.0, 3.0, "category", "unit");
+		final ParamXml param2 = new ParamXml("name", false, 0.0, 0.0, 0.0, 1.0, 2.0, 3.0, "category", "unit");
 		assertEquals("name", param2.name);
 		assertEquals("name", param2.origName);
 		assertFalse(param2.isStartParam);
@@ -72,7 +73,7 @@ public class ParamXmlTest {
 		assertTrue(param2.correlations.isEmpty());
 
 		// Test copy constructor (Element)
-		Element element = new Element(ParamXml.ELEMENT_PARAM);
+		final Element element = new Element(ParamXml.ELEMENT_PARAM);
 		element.setAttribute("name", "name");
 		element.setAttribute("origname", "origName");
 		element.setAttribute("isStart", "true");
@@ -88,12 +89,12 @@ public class ParamXmlTest {
 		element.setAttribute("unit", "unit");
 		element.setAttribute("description", "description");
 
-		Element correlation = new Element("correlation");
+		final Element correlation = new Element("correlation");
 		correlation.setAttribute("origname", "a");
 		correlation.setAttribute("value", "0.0");
 		element.addContent(correlation);
 
-		ParamXml param3 = new ParamXml(element);
+		final ParamXml param3 = new ParamXml(element);
 		assertEquals("name", param3.name);
 		assertEquals("origName", param3.origName);
 		assertTrue(param3.isStartParam);
@@ -111,7 +112,7 @@ public class ParamXmlTest {
 		assertEquals(0.0, param3.correlations.get("a"), .0);
 
 		// Test fully parameterized constructor
-		ParamXml param4 = new ParamXml("name", "origName", false, 0.0, 0.0, 0.0, 1.0, 0.1, 0.2, 2.0, 3.0, "category",
+		final ParamXml param4 = new ParamXml("name", "origName", false, 0.0, 0.0, 0.0, 1.0, 0.1, 0.2, 2.0, 3.0, "category",
 				"unit", "description", new HashMap<String, Double>());
 		assertEquals("name", param4.name);
 		assertEquals("origName", param4.origName);
@@ -133,13 +134,13 @@ public class ParamXmlTest {
 	@Test
 	public void testToXmlElement() throws DataConversionException {
 
-		HashMap<String, Double> correlations = new HashMap<>();
+		final HashMap<String, Double> correlations = new HashMap<>();
 		correlations.put("a", 0.0);
-		ParamXml param = new ParamXml("name", "origName", false, 0.0, 0.0, 0.0, 1.0, 0.1, 0.2, 2.0, 3.0, "category",
+		final ParamXml param = new ParamXml("name", "origName", false, 0.0, 0.0, 0.0, 1.0, 0.1, 0.2, 2.0, 3.0, "category",
 				"unit", "description", correlations);
-		
-		Element element = param.toXmlElement();
-		
+
+		final Element element = param.toXmlElement();
+
 		assertEquals("name", element.getAttributeValue("name"));
 		assertEquals("origName", element.getAttributeValue("origname"));
 		assertFalse(element.getAttribute("isStart").getBooleanValue());
@@ -154,9 +155,9 @@ public class ParamXmlTest {
 		assertEquals("category", element.getAttributeValue("category"));
 		assertEquals("unit", element.getAttributeValue("unit"));
 		assertEquals("description", element.getAttributeValue("description"));
-	
+
 		assertTrue(element.getChildren().size() == 1);
-		Element childElement = element.getChild("correlation");
+		final Element childElement = element.getChild("correlation");
 		assertEquals("a", childElement.getAttributeValue("origname"));
 		assertEquals(0.0, childElement.getAttribute("value").getDoubleValue(), .0);
 	}

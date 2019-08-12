@@ -19,17 +19,22 @@
  *******************************************************************************/
 package de.bund.bfr.knime.pmm.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 import org.junit.Test;
 
+@SuppressWarnings("static-method")
 public class ParametricModelTest {
 
 	@Test
 	public void testEmptyConstructor() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 
 		assertTrue(Double.isNaN(model.getRss()));
 		assertTrue(Double.isNaN(model.getRsquared()));
@@ -56,9 +61,9 @@ public class ParametricModelTest {
 	@Test
 	public void testConstructor2() {
 
-		DepXml dep = new DepXml("dep");
+		final DepXml dep = new DepXml("dep");
 
-		ParametricModel model = new ParametricModel("modelName", "formula", dep, 0, 1, 2);
+		final ParametricModel model = new ParametricModel("modelName", "formula", dep, 0, 1, 2);
 
 		assertEquals("modelName", model.modelName);
 		assertEquals("formula", model.getFormula());
@@ -89,7 +94,7 @@ public class ParametricModelTest {
 
 	@Test
 	public void testAic() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 
 		// Empty constructor assigns Double#NAN to aic
 		assertTrue(Double.isNaN(model.getAic()));
@@ -108,7 +113,7 @@ public class ParametricModelTest {
 
 	@Test
 	public void testBic() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 
 		// Empty constructor assigns Double#NAN to aic
 		assertTrue(Double.isNaN(model.getBic()));
@@ -127,7 +132,7 @@ public class ParametricModelTest {
 
 	@Test
 	public void testRMS() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 
 		// Empty constructor assigns Double#NAN to aic
 		assertTrue(Double.isNaN(model.getRms()));
@@ -146,19 +151,19 @@ public class ParametricModelTest {
 
 	@Test(expected = PmmException.class)
 	public void testSetRmsInfinite() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 		model.setRms(Double.POSITIVE_INFINITY);
 	}
 
 	@Test(expected = PmmException.class)
 	public void testSetRmsNegative() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 		model.setRms(-1.0);
 	}
 
 	@Test
 	public void testRss() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 
 		// Empty constructor assigns Double.NAN to rss
 		assertTrue(Double.isNaN(model.getRss()));
@@ -170,26 +175,26 @@ public class ParametricModelTest {
 
 	@Test
 	public void testRssNull() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 		model.setRss(null);
 		assertTrue(Double.isNaN(model.getRss()));
 	}
 
 	@Test(expected = PmmException.class)
 	public void testRssInfinite() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 		model.setRss(Double.POSITIVE_INFINITY);
 	}
 
 	@Test(expected = PmmException.class)
 	public void testRssNegative() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 		model.setRss(-1.0);
 	}
 
 	@Test
 	public void testRSquared() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 
 		// Empty constructor assigns Double.NaN
 		assertTrue(Double.isNaN(model.getRsquared()));
@@ -205,55 +210,55 @@ public class ParametricModelTest {
 
 	@Test(expected = PmmException.class)
 	public void testSetRsquaredException() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 		model.setRsquared(2.0);
 	}
-	
+
 	@Test
 	public void testDependent() {
-		ParametricModel model = new ParametricModel();
-		
+		final ParametricModel model = new ParametricModel();
+
 		// Empty constructor assigns null
 		assertNull(model.getDepXml());
-		
+
 		// When the dep is not set the getters return null
 		assertNull(model.getDepVar());
 		assertNull(model.getDepDescription());
 		assertNull(model.getDepCategory());
 		assertNull(model.getDepUnit());
-		
+
 		// Setters ignore null
 		model.setDepVar(null);
 		assertNull(model.getDepVar());
-		
+
 		model.setDepDescription(null);
 		assertNull(model.getDepDescription());
-		
+
 		model.setDepCategory(null);
 		assertNull(model.getDepCategory());
-		
+
 		model.setDepUnit(null);
 		assertNull(model.getDepUnit());
-		
+
 		model.setDepXml(new DepXml("lalala"));
 		assertEquals("lalala", model.getDepXml().name);
-		
+
 		model.setDepVar("Atreus");
 		assertEquals("Atreus", model.getDepVar());
-		
+
 		model.setDepDescription("Boy");
 		assertEquals("Boy", model.getDepDescription());
-		
+
 		model.setDepCategory("Nordic god");
 		assertEquals("Nordic god", model.getDepCategory());
-		
+
 		model.setDepUnit("Half Kratos");
 		assertEquals("Half Kratos", model.getDepUnit());
 	}
 
 	@Test
 	public void testIndependent() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 
 		// Empty constructor assigns empty PmmXmlDoc
 		assertEquals(0, model.getIndependent().size());
@@ -265,7 +270,7 @@ public class ParametricModelTest {
 
 	@Test
 	public void testIndependentSetters() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 		model.addIndepVar("indep");
 
 		// Add a non-independent object. Getters/setters must ignore it.
@@ -302,14 +307,14 @@ public class ParametricModelTest {
 
 		model.setIndepCategory("odin", "category");
 		assertEquals("category", model.getIndepCategory("odin"));
-		
+
 		assertFalse(model.containsIndep("aloha"));
 		assertTrue(model.containsIndep("odin"));
 	}
 
 	@Test
 	public void testParameter() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 
 		// Empty constructor assigns empty PmmXmlDoc
 		assertEquals(0, model.getParameter().size());
@@ -321,7 +326,7 @@ public class ParametricModelTest {
 
 	@Test
 	public void testParameterSetters() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 		model.addParam("param", false);
 
 		// Add a non-parameter object. Getters/setters must ignore it.
@@ -333,7 +338,7 @@ public class ParametricModelTest {
 		model.setParamMax("aloha", 1.0);
 		model.setParamUnit("aloha", "unit");
 		model.setParamCategory("aloha", "category");
-		
+
 		// and the getters return null
 		assertNull(model.getParamDescription("aloha"));
 		assertNull(model.getParamMin("aloha"));
@@ -363,65 +368,65 @@ public class ParametricModelTest {
 
 		model.setParamCategory("Baldur", "category");
 		assertEquals("category", model.getParamCategory("Baldur"));
-		
+
 		model.setParamIsStart("Baldur", false);
 		assertFalse(model.getParamIsStart("Baldur"));
-		
+
 		model.setParamValue("Baldur", 1.0);
 		assertEquals(1.0, model.getParamValue("Baldur"), .0);
-		
+
 		model.setParamError("Baldur", 0.5);
 		assertEquals(0.5, model.getParamError("Baldur"), .0);
-		
+
 		assertNull(model.getParamP("Baldur"));
 		assertNull(model.getParamT("Baldur"));
-		
+
 		assertFalse(model.containsParam("aloha"));
 		assertTrue(model.containsParam("Baldur"));
 	}
-	
+
 	@Test
 	public void testModelLiterature() {
-		
-		ParametricModel model = new ParametricModel();
+
+		final ParametricModel model = new ParametricModel();
 		assertEquals(0, model.getModelLit().size());
-		
+
 		model.setMLit(new PmmXmlDoc(new MatrixXml()));
 		assertEquals(1, model.getModelLit().size());
-		
-		LiteratureItem item = new LiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
+
+		final LiteratureItem item = new LiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
 				0, "website", 0, "comment");
 		model.addModelLit(item);
 		assertEquals(2, model.getModelLit().size());
-		
+
 		model.removeModelLits();
 		assertEquals(0, model.getModelLit().size());
 	}
-	
+
 	@Test
 	public void testEstimatedModelLiterature() {
-		
-		ParametricModel model = new ParametricModel();
+
+		final ParametricModel model = new ParametricModel();
 		assertEquals(0, model.getEstModelLit().size());
-		
+
 		model.setEstLit(new PmmXmlDoc(new MatrixXml()));
 		assertEquals(1, model.getEstModelLit().size());
-		
-		LiteratureItem item = new LiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
+
+		final LiteratureItem item = new LiteratureItem("author", 0, "title", "abstractText", "journal", "volume", "issue", 0,
 				0, "website", 0, "comment");
 		model.addEstModelLit(item);
 		assertEquals(2, model.getEstModelLit().size());
-		
+
 		model.removeEstModelLits();
 		assertEquals(0, model.getEstModelLit().size());
 	}
-	
+
 	@Test
 	public void testToXmlElement() throws DataConversionException {
 
 		Element element = new ParametricModel().toXmlElement();
 		assertEquals("ParametricModel", element.getName());
-		
+
 		assertTrue(element.getAttributeValue("M_DB_UID").isEmpty());
 		assertTrue(element.getAttributeValue("EM_DB_UID").isEmpty());
 		assertTrue(element.getAttributeValue("ModelName").isEmpty());
@@ -448,8 +453,8 @@ public class ParametricModelTest {
 		assertNull(element.getChild("DependentXml"));
 		assertTrue(element.getChild("ModelLiterature").getChildren().isEmpty());
 		assertTrue(element.getChild("EstimatedModelLiterature").getChildren().isEmpty());
-		
-		ParametricModel model = new ParametricModel();
+
+		final ParametricModel model = new ParametricModel();
 		model.modelDbUuid = "";
 		model.estimatedModelDbUuid = "";
 		model.modelName = "model name";
@@ -458,9 +463,9 @@ public class ParametricModelTest {
 		model.comment = "Comment";
 		model.qualityScore = 0;
 		model.setDepXml(new DepXml("dep"));
-		
+
 		element = model.toXmlElement();
-		
+
 		assertTrue(element.getAttributeValue("M_DB_UID").isEmpty());
 		assertTrue(element.getAttributeValue("EM_DB_UID").isEmpty());
 		assertEquals("model name", element.getAttributeValue("ModelName"));
@@ -470,17 +475,17 @@ public class ParametricModelTest {
 		assertEquals(0, element.getAttribute("ModelQualityScore").getIntValue());
 		assertNotNull(element.getChild("DependentXml"));
 	}
-	
+
 	@Test
 	public void testGetCatModel() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 		model.modelId = 0;
 		model.modelName = "Model name";
 		model.setFormula("2+2");
 		model.modelClass = 9001;
 		model.modelDbUuid = "id";
-		
-		CatalogModelXml catModel = (CatalogModelXml) model.getCatModel().get(0);
+
+		final CatalogModelXml catModel = (CatalogModelXml) model.getCatModel().get(0);
 		assertEquals(0, catModel.id.intValue());
 		assertEquals("Model name", catModel.name);
 		assertEquals("2+2", catModel.formula);
@@ -488,10 +493,10 @@ public class ParametricModelTest {
 		assertNull(catModel.comment);
 		assertEquals("id", catModel.dbuuid);
 	}
-	
+
 	@Test
 	public void testGetEstModel() {
-		ParametricModel model = new ParametricModel();
+		final ParametricModel model = new ParametricModel();
 		model.estModelId = 0;
 		model.fittedModelName = "name";
 		model.setRss(null);
@@ -502,8 +507,8 @@ public class ParametricModelTest {
 		model.isChecked = true;
 		model.qualityScore = 0;
 		model.estimatedModelDbUuid = "id";
-		
-		EstModelXml estimatedModel = (EstModelXml) model.getEstModel().get(0);
+
+		final EstModelXml estimatedModel = (EstModelXml) model.getEstModel().get(0);
 		assertEquals(0, estimatedModel.id.intValue());
 		assertEquals("name", estimatedModel.name);
 		assertNull(estimatedModel.sse);

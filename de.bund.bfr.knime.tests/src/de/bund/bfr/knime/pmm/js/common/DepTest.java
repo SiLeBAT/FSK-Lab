@@ -8,6 +8,7 @@ import org.knime.core.node.NodeSettings;
 
 import de.bund.bfr.knime.pmm.common.DepXml;
 
+@SuppressWarnings("static-method")
 public class DepTest {
 
 	static String name = "Value";
@@ -20,7 +21,7 @@ public class DepTest {
 
 	@Test
 	public void testConstructor() {
-		Dep dep = new Dep();
+		final Dep dep = new Dep();
 		assertNull(dep.name);
 		assertNull(dep.origname);
 		assertNull(dep.min);
@@ -32,7 +33,7 @@ public class DepTest {
 
 	@Test
 	public void testSaveToNodeSettings() throws Exception {
-		Dep dep = new Dep();
+		final Dep dep = new Dep();
 		dep.name = name;
 		dep.origname = origname;
 		dep.min = min;
@@ -40,10 +41,10 @@ public class DepTest {
 		dep.category = category;
 		dep.unit = unit;
 		dep.description = description;
-		
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		dep.saveToNodeSettings(settings);
-		
+
 		assertEquals(name, settings.getString("name"));
 		assertEquals(origname, settings.getString("origname"));
 		assertEquals(min, settings.getDouble("min"), 0.0);
@@ -55,7 +56,7 @@ public class DepTest {
 
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addString("name", name);
 		settings.addString("origname", origname);
 		settings.addDouble("min", min);
@@ -63,10 +64,10 @@ public class DepTest {
 		settings.addString("category", category);
 		settings.addString("unit", unit);
 		settings.addString("description", description);
-		
-		Dep dep = new Dep();
+
+		final Dep dep = new Dep();
 		dep.loadFromNodeSettings(settings);
-		
+
 		assertEquals(name, dep.name);
 		assertEquals(origname, dep.origname);
 		assertEquals(min, dep.min, 0.0);
@@ -75,14 +76,14 @@ public class DepTest {
 		assertEquals(unit, dep.unit);
 		assertEquals(description, dep.description);
 	}
-	
+
 	@Test
 	public void testToDep() {
-		DepXml depXml = new DepXml(name, origname, category, unit, description);
+		final DepXml depXml = new DepXml(name, origname, category, unit, description);
 		depXml.min = min;
 		depXml.max = max;
-		
-		Dep dep = Dep.toDep(depXml);
+
+		final Dep dep = Dep.toDep(depXml);
 		assertEquals(name, dep.name);
 		assertEquals(origname, dep.origname);
 		assertEquals(min, dep.min, 0.0);
@@ -91,10 +92,10 @@ public class DepTest {
 		assertEquals(unit, dep.unit);
 		assertEquals(description, dep.description);
 	}
-	
+
 	@Test
 	public void testToDepXml() {
-		Dep dep = new Dep();
+		final Dep dep = new Dep();
 		dep.name = name;
 		dep.origname = origname;
 		dep.min = min;
@@ -102,8 +103,8 @@ public class DepTest {
 		dep.category = category;
 		dep.unit = unit;
 		dep.description = description;
-		
-		DepXml depXml = dep.toDepXml();
+
+		final DepXml depXml = dep.toDepXml();
 		assertEquals(name, depXml.name);
 		assertEquals(origname, depXml.origName);
 		assertEquals(min, depXml.min, 0.0);

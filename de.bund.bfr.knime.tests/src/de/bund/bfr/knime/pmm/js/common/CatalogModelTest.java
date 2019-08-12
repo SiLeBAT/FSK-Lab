@@ -8,6 +8,7 @@ import org.knime.core.node.NodeSettings;
 
 import de.bund.bfr.knime.pmm.common.CatalogModelXml;
 
+@SuppressWarnings("static-method")
 public class CatalogModelTest {
 
 	static int id = 77;
@@ -16,10 +17,10 @@ public class CatalogModelTest {
 	static int modelClass = 1;
 	static String comment = "some comment";
 	static String dbuuid = "6df109d0-f6b1-409d-a286-0687b1aca001";
-	
+
 	@Test
 	public void testConstructor() {
-		CatalogModel catalogModel = new CatalogModel();
+		final CatalogModel catalogModel = new CatalogModel();
 		assertNull(catalogModel.id);
 		assertNull(catalogModel.name);
 		assertNull(catalogModel.formula);
@@ -27,10 +28,10 @@ public class CatalogModelTest {
 		assertNull(catalogModel.comment);
 		assertNull(catalogModel.dbuuid);
 	}
-	
+
 	@Test
 	public void testSaveToNodeSettings() throws Exception {
-		CatalogModel catalogModel = new CatalogModel();
+		final CatalogModel catalogModel = new CatalogModel();
 		catalogModel.id = id;
 		catalogModel.name = name;
 		catalogModel.formula = formula;
@@ -38,9 +39,9 @@ public class CatalogModelTest {
 		catalogModel.comment = comment;
 		catalogModel.dbuuid = dbuuid;
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		catalogModel.saveToNodeSettings(settings);
-		
+
 		assertEquals(id, settings.getInt("id"));
 		assertEquals(name, settings.getString("name"));
 		assertEquals(formula, settings.getString("formula"));
@@ -51,17 +52,17 @@ public class CatalogModelTest {
 
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addInt("id", id);
 		settings.addString("name", name);
 		settings.addString("formula", formula);
 		settings.addInt("modelClass", modelClass);
 		settings.addString("comment", comment);
 		settings.addString("dbuuid", dbuuid);
-		
-		CatalogModel catalogModel = new CatalogModel();
+
+		final CatalogModel catalogModel = new CatalogModel();
 		catalogModel.loadFromNodeSettings(settings);
-		
+
 		assertEquals(id, catalogModel.id.intValue());
 		assertEquals(name, catalogModel.name);
 		assertEquals(formula, catalogModel.formula);
@@ -69,13 +70,13 @@ public class CatalogModelTest {
 		assertEquals(comment, catalogModel.comment);
 		assertEquals(dbuuid, catalogModel.dbuuid);
 	}
-	
+
 	@Test
 	public void testToCatalogModel() {
-		CatalogModelXml catalogModelXml = new CatalogModelXml(id, name, formula, modelClass, dbuuid);
+		final CatalogModelXml catalogModelXml = new CatalogModelXml(id, name, formula, modelClass, dbuuid);
 		catalogModelXml.comment = comment;
-		CatalogModel catalogModel = CatalogModel.toCatalogModel(catalogModelXml);
-		
+		final CatalogModel catalogModel = CatalogModel.toCatalogModel(catalogModelXml);
+
 		assertEquals(id, catalogModel.id.intValue());
 		assertEquals(name, catalogModel.name);
 		assertEquals(formula, catalogModel.formula);
@@ -83,18 +84,18 @@ public class CatalogModelTest {
 		assertEquals(comment, catalogModel.comment);
 		assertEquals(dbuuid, catalogModel.dbuuid);
 	}
-	
+
 	@Test
 	public void testToCatalogModelXml() {
-		CatalogModel catalogModel = new CatalogModel();
+		final CatalogModel catalogModel = new CatalogModel();
 		catalogModel.id = id;
 		catalogModel.name = name;
 		catalogModel.formula = formula;
 		catalogModel.modelClass = modelClass;
 		catalogModel.comment = comment;
 		catalogModel.dbuuid = dbuuid;
-		CatalogModelXml catalogModelXml = catalogModel.toCatalogModelXml();
-		
+		final CatalogModelXml catalogModelXml = catalogModel.toCatalogModelXml();
+
 		assertEquals(id, catalogModelXml.id.intValue());
 		assertEquals(name, catalogModelXml.name);
 		assertEquals(formula, catalogModelXml.formula);

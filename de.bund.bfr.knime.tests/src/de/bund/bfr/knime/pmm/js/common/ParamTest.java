@@ -12,6 +12,7 @@ import org.knime.core.node.NodeSettings;
 
 import de.bund.bfr.knime.pmm.common.ParamXml;
 
+@SuppressWarnings("static-method")
 public class ParamTest {
 
 	static String name = "mu_max";
@@ -35,10 +36,10 @@ public class ParamTest {
 		correlationValues = new double[] { 9.845714271085363E-7, -6.137961639952814E-5, 7.843710581862156E-5,
 				3.2387019240707804E-4 };
 	}
-	
+
 	@Test
 	public void testConstructor() {
-		Param param = new Param();
+		final Param param = new Param();
 		assertNull(param.name);
 		assertNull(param.origName);
 		assertNull(param.isStart);
@@ -59,7 +60,7 @@ public class ParamTest {
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		Param param = new Param();
+		final Param param = new Param();
 		param.name = name;
 		param.origName = origname;
 		param.isStart = isStart;
@@ -76,10 +77,10 @@ public class ParamTest {
 		param.description = description;
 		param.correlationNames = correlationNames;
 		param.correlationValues = correlationValues;
-		
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		param.saveToNodeSettings(settings);
-		
+
 		assertEquals(name, settings.getString("name"));
 		assertEquals(origname, settings.getString("origname"));
 		assertEquals(isStart, settings.getBoolean("isStart"));
@@ -100,7 +101,7 @@ public class ParamTest {
 
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addString("name", name);
 		settings.addString("origname", origname);
 		settings.addBoolean("isStart", isStart);
@@ -114,10 +115,10 @@ public class ParamTest {
 		settings.addString("description", description);
 		settings.addStringArray("correlationNames", correlationNames);
 		settings.addDoubleArray("correlationValues", correlationValues);
-		
-		Param param = new Param();
+
+		final Param param = new Param();
 		param.loadFromNodeSettings(settings);
-		
+
 		assertEquals(name, param.name);
 		assertEquals(origname, param.origName);
 		assertEquals(isStart, param.isStart);
@@ -132,17 +133,17 @@ public class ParamTest {
 		assertArrayEquals(correlationNames, param.correlationNames);
 		assertArrayEquals(correlationValues, param.correlationValues, 0.0);
 	}
-	
+
 	@Test
 	public void testToParam() {
-		
-		HashMap<String, Double> correlations = new HashMap<>();
+
+		final HashMap<String, Double> correlations = new HashMap<>();
 		for (int i = 0; i < correlationNames.length; i++) {
 			correlations.put(correlationNames[i], correlationValues[i]);
 		}
 
-		ParamXml paramXml = new ParamXml(name, origname, isStart, value, error, min, max, p, t, minGuess, maxGuess, category, unit, description, correlations);
-		Param param = Param.toParam(paramXml);
+		final ParamXml paramXml = new ParamXml(name, origname, isStart, value, error, min, max, p, t, minGuess, maxGuess, category, unit, description, correlations);
+		final Param param = Param.toParam(paramXml);
 
 		assertEquals(name, param.name);
 		assertEquals(origname, param.origName);
@@ -158,10 +159,10 @@ public class ParamTest {
 		assertArrayEquals(correlationNames, param.correlationNames);
 		assertArrayEquals(correlationValues, param.correlationValues, 0.0);
 	}
-	
+
 	@Test
 	public void testToParamXml() {
-		Param param = new Param();
+		final Param param = new Param();
 		param.name = name;
 		param.origName = origname;
 		param.isStart = isStart;
@@ -178,8 +179,8 @@ public class ParamTest {
 		param.description = description;
 		param.correlationNames = correlationNames;
 		param.correlationValues = correlationValues;
-		ParamXml paramXml = param.toParamXml();
-		
+		final ParamXml paramXml = param.toParamXml();
+
 		assertEquals(name, paramXml.name);
 		assertEquals(origname, paramXml.origName);
 		assertEquals(isStart, paramXml.isStartParam);
@@ -191,8 +192,8 @@ public class ParamTest {
 		assertEquals(maxGuess, paramXml.maxGuess, 0.0);
 		assertEquals(category, paramXml.category);
 		assertEquals(description, paramXml.description);
-		
-		HashMap<String, Double> correlations = new HashMap<>();
+
+		final HashMap<String, Double> correlations = new HashMap<>();
 		for (int i = 0; i < correlationNames.length; i++) {
 			correlations.put(correlationNames[i], correlationValues[i]);
 		}

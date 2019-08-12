@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettings;
 
+@SuppressWarnings("static-method")
 public class UnitTest {
 
 	static int id = 1;
@@ -25,7 +26,7 @@ public class UnitTest {
 
 	@Test
 	public void testConstructor() {
-		Unit unit = new Unit();
+		final Unit unit = new Unit();
 		assertNull(unit.id);
 		assertNull(unit.unit);
 		assertNull(unit.description);
@@ -43,7 +44,7 @@ public class UnitTest {
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		Unit unit = new Unit();
+		final Unit unit = new Unit();
 		unit.id = id;
 		unit.unit = unitString;
 		unit.description = description;
@@ -58,9 +59,9 @@ public class UnitTest {
 		unit.mathML_string = mathMlString;
 		unit.priority_for_display_in_GUI = priorityForDisplayInGui;
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		unit.saveToNodeSettings(settings);
-		
+
 		assertEquals(id, settings.getInt("id"));
 		assertEquals(unitString, settings.getString("unit"));
 		assertEquals(description, settings.getString("description"));
@@ -77,7 +78,7 @@ public class UnitTest {
 
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addInt("id", id);
 		settings.addString("unit", unitString);
 		settings.addString("description", description);
@@ -91,10 +92,10 @@ public class UnitTest {
 		settings.addString("displayInGuiAs", displayInGuiAs);
 		settings.addString("mathmlString", mathMlString);
 		settings.addString("priorityForDisplayInGui", priorityForDisplayInGui);
-		
-		Unit unit = new Unit();
+
+		final Unit unit = new Unit();
 		unit.loadFromNodeSettings(settings);
-		
+
 		assertEquals(id, unit.id.intValue());
 		assertEquals(name, unit.name);
 		assertEquals(description, unit.description);

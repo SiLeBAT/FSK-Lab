@@ -9,6 +9,7 @@ import org.knime.core.node.NodeSettings;
 
 import de.bund.bfr.knime.pmm.common.MdInfoXml;
 
+@SuppressWarnings("static-method")
 public class MdInfoTest {
 
 	static int id = 99;
@@ -19,7 +20,7 @@ public class MdInfoTest {
 
 	@Test
 	public void testConstructor() {
-		MdInfo modelInfo = new MdInfo();
+		final MdInfo modelInfo = new MdInfo();
 		assertNull(modelInfo.id);
 		assertNull(modelInfo.name);
 		assertNull(modelInfo.comment);
@@ -29,14 +30,14 @@ public class MdInfoTest {
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		MdInfo modelInfo = new MdInfo();
+		final MdInfo modelInfo = new MdInfo();
 		modelInfo.id = id;
 		modelInfo.name = name;
 		modelInfo.comment = comment;
 		modelInfo.qualityScore = qualityScore;
 		modelInfo.checked = checked;
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		modelInfo.saveToNodeSettings(settings);
 
 		assertEquals(id, settings.getInt("ID"));
@@ -48,14 +49,14 @@ public class MdInfoTest {
 
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addInt("ID", id);
 		settings.addString("Name", name);
 		settings.addString("Comment", comment);
 		settings.addInt("QualityScore", qualityScore);
 		settings.addBoolean("Checked", checked);
 
-		MdInfo modelInfo = new MdInfo();
+		final MdInfo modelInfo = new MdInfo();
 		modelInfo.loadFromNodeSettings(settings);
 
 		assertEquals(id, modelInfo.id.intValue());
@@ -67,8 +68,8 @@ public class MdInfoTest {
 
 	@Test
 	public void testToMdInfo() {
-		MdInfoXml mdInfoXml = new MdInfoXml(id, name, comment, qualityScore, checked);
-		MdInfo mdInfo = MdInfo.toMdInfo(mdInfoXml);
+		final MdInfoXml mdInfoXml = new MdInfoXml(id, name, comment, qualityScore, checked);
+		final MdInfo mdInfo = MdInfo.toMdInfo(mdInfoXml);
 
 		assertEquals(id, mdInfo.id.intValue());
 		assertEquals(name, mdInfo.name);
@@ -79,13 +80,13 @@ public class MdInfoTest {
 
 	@Test
 	public void testToMdInfoXml() {
-		MdInfo modelInfo = new MdInfo();
+		final MdInfo modelInfo = new MdInfo();
 		modelInfo.id = id;
 		modelInfo.name = name;
 		modelInfo.comment = comment;
 		modelInfo.qualityScore = qualityScore;
 		modelInfo.checked = checked;
-		MdInfoXml mdInfoXml = modelInfo.toMdInfoXml();
+		final MdInfoXml mdInfoXml = modelInfo.toMdInfoXml();
 
 		assertEquals(id, mdInfoXml.id.intValue());
 		assertEquals(name, mdInfoXml.name);

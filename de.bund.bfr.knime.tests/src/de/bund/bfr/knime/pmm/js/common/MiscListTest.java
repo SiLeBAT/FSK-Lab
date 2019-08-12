@@ -8,10 +8,11 @@ import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettings;
 
+@SuppressWarnings("static-method")
 public class MiscListTest {
-	
+
 	static Misc misc;
-	
+
 	static {
 		misc = new Misc();
 		misc.setId(MiscTest.id);
@@ -26,13 +27,13 @@ public class MiscListTest {
 
 	@Test
 	public void testMiscs() {
-		MiscList list = new MiscList();
+		final MiscList list = new MiscList();
 		assertNull(list.getMiscs());
 
 		list.setMiscs(new Misc[] { misc });
 
-		Misc expected = misc;  // expected Misc
-		Misc obtained = list.getMiscs()[0];  // obtained Misc
+		final Misc expected = misc;  // expected Misc
+		final Misc obtained = list.getMiscs()[0];  // obtained Misc
 
 		assertEquals(expected.getId(), obtained.getId());
 		assertEquals(expected.getName(), obtained.getName());
@@ -46,16 +47,16 @@ public class MiscListTest {
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		MiscList list = new MiscList();
+		final MiscList list = new MiscList();
 		list.setMiscs(new Misc[] { misc });
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 
 		assertEquals(1, settings.getInt("numMiscs"));
 
-		Misc expected = misc;  // expected Misc
-		Misc obtained = new Misc();  // obtained Misc
+		final Misc expected = misc;  // expected Misc
+		final Misc obtained = new Misc();  // obtained Misc
 		obtained.loadFromNodeSettings(settings.getNodeSettings("miscs0"));
 
 		assertEquals(expected.getId(), obtained.getId());
@@ -70,15 +71,15 @@ public class MiscListTest {
 
 	@Test
 	public void testLoadFromNodeSettings() {
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addInt("numMiscs", 1);
 		misc.saveToNodeSettings(settings.addNodeSettings("miscs0"));
 
-		MiscList list = new MiscList();
+		final MiscList list = new MiscList();
 		list.loadFromNodeSettings(settings);
 
-		Misc expected = misc;  // expected Misc
-		Misc obtained = list.getMiscs()[0];  // obtained Misc
+		final Misc expected = misc;  // expected Misc
+		final Misc obtained = list.getMiscs()[0];  // obtained Misc
 
 		assertEquals(expected.getId(), obtained.getId());
 		assertEquals(expected.getName(), obtained.getName());

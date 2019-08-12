@@ -1,6 +1,8 @@
 package de.bund.bfr.knime.pmm.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
@@ -17,6 +19,7 @@ import de.bund.bfr.knime.pmm.extendedtable.Model1Metadata;
 import de.bund.bfr.knime.pmm.extendedtable.Model2Metadata;
 import de.bund.bfr.knime.pmm.extendedtable.TimeSeriesMetadata;
 
+@SuppressWarnings("static-method")
 public class CellIOTest {
 
 	@Test
@@ -34,13 +37,13 @@ public class CellIOTest {
 
 	@Test
 	public void testGetPmmXml() throws Exception {
-		PmmXmlDoc doc0 = CellIO.getPmmXml(DataType.getMissingCell());
+		final PmmXmlDoc doc0 = CellIO.getPmmXml(DataType.getMissingCell());
 		assertTrue(doc0 instanceof PmmXmlDoc && doc0.size() == 0);
 
-		DataCell cell = XMLCellFactory.create("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + "<note>\r\n"
+		final DataCell cell = XMLCellFactory.create("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + "<note>\r\n"
 				+ "  <to>Tove</to>\r\n" + "  <from>Jani</from>\r\n" + "  <heading>Reminder</heading>\r\n"
 				+ "  <body>Don't forget me this weekend!</body>\r\n" + "</note>");
-		PmmXmlDoc doc1 = CellIO.getPmmXml(cell);
+		final PmmXmlDoc doc1 = CellIO.getPmmXml(cell);
 		assertTrue(doc1 instanceof PmmXmlDoc);
 	}
 
@@ -88,25 +91,25 @@ public class CellIOTest {
 		// #createXMLCell(PmmXmlDoc)
 		assertNull(CellIO.createXmlCell((PmmXmlDoc) null));
 
-		XMLCell cell0 = (XMLCell) CellIO.createXmlCell(new PmmXmlDoc(new MatrixXml()));
+		final XMLCell cell0 = (XMLCell) CellIO.createXmlCell(new PmmXmlDoc(new MatrixXml()));
 		assertEquals("matrix", cell0.getDocument().getFirstChild().getFirstChild().getNodeName());
 
 		// #createXMLCell(TimeSeriesMetadata)
 		assertNull(CellIO.createXmlCell((TimeSeriesMetadata) null));
 
-		XMLCell cell1 = (XMLCell) CellIO.createXmlCell(new TimeSeriesMetadata());
+		final XMLCell cell1 = (XMLCell) CellIO.createXmlCell(new TimeSeriesMetadata());
 		assertEquals("PmmDoc", cell1.getDocument().getFirstChild().getNodeName());
 
 		// #createXMLCell(Model1Metadata)
 		assertNull(CellIO.createXmlCell((Model1Metadata) null));
 
-		XMLCell cell2 = (XMLCell) CellIO.createXmlCell(new Model1Metadata());
+		final XMLCell cell2 = (XMLCell) CellIO.createXmlCell(new Model1Metadata());
 		assertEquals("PmmDoc", cell2.getDocument().getFirstChild().getNodeName());
 
 		// #createXMLCell(Model2Metadata)
 		assertNull(CellIO.createXmlCell((Model2Metadata) null));
 
-		XMLCell cell3 = (XMLCell) CellIO.createXmlCell(new Model2Metadata());
+		final XMLCell cell3 = (XMLCell) CellIO.createXmlCell(new Model2Metadata());
 		assertEquals("PmmDoc", cell3.getDocument().getFirstChild().getNodeName());
 	}
 }

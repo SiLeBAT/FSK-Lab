@@ -4,15 +4,16 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+@SuppressWarnings("static-method")
 public class UnitsFromDBTest {
 
 	@Test
 	public void testConstructor() {
-	
-		UnitsFromDB unit = new UnitsFromDB(0, "unit", "description", "name", "kindOfPropertyQuantity",
+
+		final UnitsFromDB unit = new UnitsFromDB(0, "unit", "description", "name", "kindOfPropertyQuantity",
 				"notationCaseSensitive", "convertTo", "conversionFunctionFactor", "inverseConversionFunctionFactor",
 				"objectType", "displayInGuiAs", "mathMlString", "priorityForDisplayInGui");
-		
+
 		assertEquals(0, unit.id);
 		assertEquals("unit", unit.unit);
 		assertEquals("description", unit.description);

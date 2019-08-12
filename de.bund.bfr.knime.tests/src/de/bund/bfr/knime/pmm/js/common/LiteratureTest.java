@@ -8,6 +8,7 @@ import org.knime.core.node.NodeSettings;
 
 import de.bund.bfr.knime.pmm.common.LiteratureItem;
 
+@SuppressWarnings("static-method")
 public class LiteratureTest {
 
 	static int id = 56;
@@ -27,7 +28,7 @@ public class LiteratureTest {
 
 	@Test
 	public void testConstructor() {
-		Literature literature = new Literature();
+		final Literature literature = new Literature();
 		assertNull(literature.id);
 		assertNull(literature.author);
 		assertNull(literature.title);
@@ -45,7 +46,7 @@ public class LiteratureTest {
 
 	@Test
 	public void testSaveToNodeSettings() throws Exception {
-		Literature literature = new Literature();
+		final Literature literature = new Literature();
 		literature.id = id;
 		literature.author = author;
 		literature.title = title;
@@ -61,7 +62,7 @@ public class LiteratureTest {
 		literature.comment = comment;
 		literature.dbuuid = dbuuid;
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		literature.saveToNodeSettings(settings);
 
 		assertEquals(id, settings.getInt("id"));
@@ -83,7 +84,7 @@ public class LiteratureTest {
 	@Test
 	public void testLoadFromNodeSettings() {
 
-		NodeSettings settings = new NodeSettings("irrelevantKey");
+		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		settings.addInt("id", id);
 		settings.addString("author", author);
 		settings.addString("title", title);
@@ -99,7 +100,7 @@ public class LiteratureTest {
 		settings.addString("comment", comment);
 		settings.addString("dbuuid", dbuuid);
 
-		Literature literature = new Literature();
+		final Literature literature = new Literature();
 		literature.loadFromNodeSettings(settings);
 
 		assertEquals(id, literature.id.intValue());
@@ -117,12 +118,12 @@ public class LiteratureTest {
 		assertEquals(comment, literature.comment);
 		assertEquals(dbuuid, literature.dbuuid);
 	}
-	
+
 	@Test
 	public void testToLiterature() {
-		LiteratureItem literatureItem = new LiteratureItem(author, year, title, abstractText, journal, volume, issue, page, approvalMode, website, type, comment, id, dbuuid);
-		Literature literature = Literature.toLiterature(literatureItem);
-		
+		final LiteratureItem literatureItem = new LiteratureItem(author, year, title, abstractText, journal, volume, issue, page, approvalMode, website, type, comment, id, dbuuid);
+		final Literature literature = Literature.toLiterature(literatureItem);
+
 		assertEquals(id, literature.id.intValue());
 		assertEquals(author, literature.author);
 		assertEquals(title, literature.title);
@@ -138,10 +139,10 @@ public class LiteratureTest {
 		assertEquals(comment, literature.comment);
 		assertEquals(dbuuid, literature.dbuuid);
 	}
-	
+
 	@Test
 	public void testToLiteratureItem() {
-		Literature literature = new Literature();
+		final Literature literature = new Literature();
 		literature.id = id;
 		literature.author = author;
 		literature.title = title;
@@ -156,7 +157,7 @@ public class LiteratureTest {
 		literature.type = 0;
 		literature.comment = comment;
 		literature.dbuuid = dbuuid;
-		LiteratureItem literatureItem = literature.toLiteratureItem();
+		final LiteratureItem literatureItem = literature.toLiteratureItem();
 
 		assertEquals(id, literatureItem.id.intValue());
 		assertEquals(author, literatureItem.author);
