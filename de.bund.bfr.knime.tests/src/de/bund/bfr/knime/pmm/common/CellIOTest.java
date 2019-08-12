@@ -92,24 +92,24 @@ public class CellIOTest {
 		assertNull(CellIO.createXmlCell((PmmXmlDoc) null));
 
 		final XMLCell cell0 = (XMLCell) CellIO.createXmlCell(new PmmXmlDoc(new MatrixXml()));
-		assertEquals("matrix", cell0.getDocument().getFirstChild().getFirstChild().getNodeName());
+		assertEquals("matrix", cell0.getDocumentSupplier().get().getFirstChild().getFirstChild().getNodeName());
 
 		// #createXMLCell(TimeSeriesMetadata)
 		assertNull(CellIO.createXmlCell((TimeSeriesMetadata) null));
 
 		final XMLCell cell1 = (XMLCell) CellIO.createXmlCell(new TimeSeriesMetadata());
-		assertEquals("PmmDoc", cell1.getDocument().getFirstChild().getNodeName());
+		assertEquals("PmmDoc", cell1.getDocumentSupplier().get().getFirstChild().getNodeName());
 
 		// #createXMLCell(Model1Metadata)
 		assertNull(CellIO.createXmlCell((Model1Metadata) null));
 
 		final XMLCell cell2 = (XMLCell) CellIO.createXmlCell(new Model1Metadata());
-		assertEquals("PmmDoc", cell2.getDocument().getFirstChild().getNodeName());
+		assertEquals("PmmDoc", cell2.getDocumentSupplier().get().getFirstChild().getNodeName());
 
 		// #createXMLCell(Model2Metadata)
 		assertNull(CellIO.createXmlCell((Model2Metadata) null));
 
 		final XMLCell cell3 = (XMLCell) CellIO.createXmlCell(new Model2Metadata());
-		assertEquals("PmmDoc", cell3.getDocument().getFirstChild().getNodeName());
+		assertEquals("PmmDoc", cell3.getDocumentSupplier().get().getFirstChild().getNodeName());
 	}
 }
