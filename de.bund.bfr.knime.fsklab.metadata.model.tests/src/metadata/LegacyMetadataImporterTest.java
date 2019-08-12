@@ -8,6 +8,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -31,9 +35,6 @@ public class LegacyMetadataImporterTest {
 			sheet0 = workbook.getSheetAt(0);
 		}
 
-//		Workbook workbook = WorkbookFactory.create(new File("files/Duarte_MetaData.xlsx"));
-//		sheet0 = workbook.getSheetAt(0);
-
 		final LegacyMetadataImporter importer = new LegacyMetadataImporter();
 		final FskMetaData metadata = importer.processSpreadsheet(sheet0);
 
@@ -46,13 +47,11 @@ public class LegacyMetadataImporterTest {
 		assertEquals("Duarte, A.S.R.; Filter, M.", metadata.creator);
 		assertEquals("asrd@food.dtu.dk", metadata.referenceDescription);
 
-		assertEquals(2016, metadata.createdDate.getYear());
-		assertEquals(10, metadata.createdDate.getMonth());
-		assertEquals(9, metadata.createdDate.getDate());
+		final LocalDate creationDate = toLocalDate(metadata.createdDate);
+		assertEquals(LocalDate.of(2016, 11, 9), creationDate);
 
-		assertEquals(2016, metadata.modifiedDate.getYear());
-		assertEquals(10, metadata.modifiedDate.getMonth());
-		assertEquals(9, metadata.modifiedDate.getDate());
+		final LocalDate modificationDate = toLocalDate(metadata.modifiedDate);
+		assertEquals(LocalDate.of(2016,  11,  9), modificationDate);
 
 		assertEquals("Public", metadata.rights);
 		assertNull(metadata.type);
@@ -93,5 +92,11 @@ public class LegacyMetadataImporterTest {
 		assertEquals("1000", sdStart.max);
 
 		assertFalse(metadata.hasData);
+	}
+
+	private static LocalDate toLocalDate(final Date date) {
+		final Instant instant = Instant.ofEpochMilli(date.getTime());
+		final LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+		return localDate;
 	}
 }
