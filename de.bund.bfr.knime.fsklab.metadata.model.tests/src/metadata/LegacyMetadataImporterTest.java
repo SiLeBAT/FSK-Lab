@@ -8,16 +8,14 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.junit.Test;
 
+import de.bund.bfr.knime.fsklab.metadata.model.tests.TestUtils;
 import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData;
 import de.bund.bfr.pmfml.ModelClass;
@@ -47,10 +45,10 @@ public class LegacyMetadataImporterTest {
 		assertEquals("Duarte, A.S.R.; Filter, M.", metadata.creator);
 		assertEquals("asrd@food.dtu.dk", metadata.referenceDescription);
 
-		final LocalDate creationDate = toLocalDate(metadata.createdDate);
+		final LocalDate creationDate = TestUtils.toLocalDate(metadata.createdDate);
 		assertEquals(LocalDate.of(2016, 11, 9), creationDate);
 
-		final LocalDate modificationDate = toLocalDate(metadata.modifiedDate);
+		final LocalDate modificationDate = TestUtils.toLocalDate(metadata.modifiedDate);
 		assertEquals(LocalDate.of(2016,  11,  9), modificationDate);
 
 		assertEquals("Public", metadata.rights);
@@ -92,11 +90,5 @@ public class LegacyMetadataImporterTest {
 		assertEquals("1000", sdStart.max);
 
 		assertFalse(metadata.hasData);
-	}
-
-	private static LocalDate toLocalDate(final Date date) {
-		final Instant instant = Instant.ofEpochMilli(date.getTime());
-		final LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-		return localDate;
 	}
 }

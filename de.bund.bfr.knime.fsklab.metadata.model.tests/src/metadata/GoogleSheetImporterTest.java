@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.json.JsonObject;
 
@@ -19,8 +19,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import de.bund.bfr.knime.fsklab.metadata.model.tests.TestUtils;
+
 // TODO: tests methods are commented since GoogleSheetImporter is not implemented yet
-@SuppressWarnings({ "deprecation", "static-method" })
+@SuppressWarnings("static-method")
 public class GoogleSheetImporterTest {
 
 	// TODO: @Test
@@ -123,7 +125,7 @@ public class GoogleSheetImporterTest {
 		assertEquals(PublicationType.RPRT, reference.getPublicationType());
 
 		// 6th December 2017
-		assertEquals(new Date(2017, 11, 6), reference.getPublicationDate());
+		assertEquals(LocalDate.of(2017, 11, 6), TestUtils.toLocalDate(reference.getPublicationDate()));
 
 		assertFalse(reference.eIsSet(pkg.getReference_Pmid()));
 		assertEquals("10.2903/j.efsa.2018.5134", reference.getDoi());
@@ -178,9 +180,9 @@ public class GoogleSheetImporterTest {
 			assertEquals("A Coruña", product39.getOriginArea());
 			assertEquals("Adriatic", product39.getFisheriesArea());
 			// 30th November 2017
-			assertEquals(new Date(2017, 10, 30), product39.getProductionDate());
+			assertEquals(LocalDate.of(2017, 10, 30), TestUtils.toLocalDate(product39.getProductionDate()));
 			// 30th November 2018
-			assertEquals(new Date(2018, 10, 30), product39.getExpiryDate());
+			assertEquals(LocalDate.of(2018, 10, 30), TestUtils.toLocalDate(product39.getExpiryDate()));
 		}
 
 		// Test product at row 40
@@ -196,9 +198,9 @@ public class GoogleSheetImporterTest {
 			assertEquals("Aachen, Kreis", product40.getOriginArea());
 			assertEquals("Aegean", product40.getFisheriesArea());
 			// 30th November 2017
-			assertEquals(new Date(2017, 10, 30), product40.getProductionDate());
+			assertEquals(LocalDate.of(2017, 10, 30), TestUtils.toLocalDate(product40.getProductionDate()));
 			// 30th November 2018
-			assertEquals(new Date(2018, 10, 30), product40.getExpiryDate());
+			assertEquals(LocalDate.of(2017, 10, 30), TestUtils.toLocalDate(product40.getExpiryDate()));
 		}
 
 		// Test product at row 41
@@ -214,9 +216,9 @@ public class GoogleSheetImporterTest {
 			assertEquals("Aachen, Kreisfreie Stadt", product41.getOriginArea());
 			assertEquals("Amazon", product41.getFisheriesArea());
 			// 30th November 2017
-			assertEquals(new Date(2017, 10, 30), product41.getProductionDate());
+			assertEquals(LocalDate.of(2017, 10, 30), TestUtils.toLocalDate(product41.getProductionDate()));
 			// 30th November 2018
-			assertEquals(new Date(2018, 10, 30), product41.getExpiryDate());
+			assertEquals(LocalDate.of(2018, 10, 30), TestUtils.toLocalDate(product41.getExpiryDate()));
 		}
 	}
 
