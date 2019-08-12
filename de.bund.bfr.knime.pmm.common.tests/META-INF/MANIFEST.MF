@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests for PMM-Lab common
+Bundle-SymbolicName: de.bund.bfr.knime.pmm.common.tests
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: de.bund.bfr.knime.pmm.common;bundle-version="1.0.0"
+Automatic-Module-Name: de.bund.bfr.knime.pmm.common.tests
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
+Require-Bundle: org.junit
+Export-Package: de.bund.bfr.knime.pmm.common,
+ de.bund.bfr.knime.pmm.common.generictablemodel,
+ de.bund.bfr.knime.pmm.common.pmmtablemodel,
+ de.bund.bfr.knime.pmm.common.units,
+ de.bund.bfr.knime.pmm.extendedtable,
+ de.bund.bfr.knime.pmm.extendedtable.generictablemodel,
+ de.bund.bfr.knime.pmm.extendedtable.items,
+ de.bund.bfr.knime.pmm.extendedtable.pmmtablemodel

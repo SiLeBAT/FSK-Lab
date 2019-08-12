@@ -58,10 +58,11 @@
 		<module>de.bund.bfr.knime.pmm.nodes</module>
 		<module>org.hsh.bfr.db</module>
 
-		<!-- Test plugins -->
+		<!-- Test plugins and fragments -->
 		<module>de.bund.bfr.knime.tests</module>
 		<!-- <module>de.bund.bfr.knime.testflows</module> -->
 		<module>de.bund.bfr.knime.fsklab.metadata.model.tests</module>
+		<module>de.bund.bfr.knime.pmm.common.tests</module>
 
 		<!-- Test report -->
 		<module>de.bund.bfr.knime.testreport</module>
