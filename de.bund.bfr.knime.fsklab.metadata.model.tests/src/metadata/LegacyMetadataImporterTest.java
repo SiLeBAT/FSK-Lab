@@ -18,23 +18,24 @@ import de.bund.bfr.knime.fsklab.nodes.Variable;
 import de.bund.bfr.knime.pmm.fskx.FskMetaData;
 import de.bund.bfr.pmfml.ModelClass;
 
+@SuppressWarnings("static-method")
 public class LegacyMetadataImporterTest {
 
 	@Test
 	public void test() throws Exception {
 		Sheet sheet0;
-		
-		Path path = Paths.get("files/Duarte_MetaData.xlsx");
+
+		final Path path = Paths.get("files/Duarte_MetaData.xlsx");
 		try (InputStream stream = Files.newInputStream(path)) {
-			Workbook workbook = WorkbookFactory.create(stream);
+			final Workbook workbook = WorkbookFactory.create(stream);
 			sheet0 = workbook.getSheetAt(0);
 		}
-		
+
 //		Workbook workbook = WorkbookFactory.create(new File("files/Duarte_MetaData.xlsx"));
 //		sheet0 = workbook.getSheetAt(0);
 
-		LegacyMetadataImporter importer = new LegacyMetadataImporter();
-		FskMetaData metadata = importer.processSpreadsheet(sheet0);
+		final LegacyMetadataImporter importer = new LegacyMetadataImporter();
+		final FskMetaData metadata = importer.processSpreadsheet(sheet0);
 
 		assertEquals("Duarte_R", metadata.modelId);
 		assertEquals("Duarte_FittingDistributionToMicrobialCounts", metadata.modelName);
@@ -64,28 +65,28 @@ public class LegacyMetadataImporterTest {
 		assertEquals("12.0", metadata.dependentVariable.max);
 
 		// Check first independent variable: mu.init
-		Variable muInit = metadata.independentVariables.get(0);
+		final Variable muInit = metadata.independentVariables.get(0);
 		assertEquals("mu.init", muInit.name);
 		assertEquals("log10(CFU)", muInit.unit);
 		assertEquals("0", muInit.min);
 		assertEquals("1000", muInit.max);
 
 		// Check second independent variable: sd.init
-		Variable sdInit = metadata.independentVariables.get(1);
+		final Variable sdInit = metadata.independentVariables.get(1);
 		assertEquals("sd.init", sdInit.name);
 		assertEquals("log10(CFU)", sdInit.unit);
 		assertEquals("0", sdInit.min);
 		assertEquals("1000", sdInit.max);
 
 		// Check third independent variable: mu.start
-		Variable muStart = metadata.independentVariables.get(2);
+		final Variable muStart = metadata.independentVariables.get(2);
 		assertEquals("mu.start", muStart.name);
 		assertEquals("log10(CFU)", muStart.unit);
 		assertEquals("0", muStart.min);
 		assertEquals("1000", muStart.max);
 
 		// Check fourth independent variable: sd.start
-		Variable sdStart = metadata.independentVariables.get(3);
+		final Variable sdStart = metadata.independentVariables.get(3);
 		assertEquals("sd.start", sdStart.name);
 		assertEquals("log10(CFU)", sdStart.unit);
 		assertEquals("0", sdStart.min);

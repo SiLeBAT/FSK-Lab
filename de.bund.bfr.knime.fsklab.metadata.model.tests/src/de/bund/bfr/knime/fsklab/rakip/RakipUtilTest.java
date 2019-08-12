@@ -1,6 +1,5 @@
 package de.bund.bfr.knime.fsklab.rakip;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -33,6 +32,7 @@ import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 import de.bund.bfr.metadata.swagger.Study;
 import de.bund.bfr.metadata.swagger.StudySample;
 
+@SuppressWarnings("static-method")
 public class RakipUtilTest {
 
 	@Test
@@ -40,7 +40,7 @@ public class RakipUtilTest {
 
 		Reference reference;
 		{
-			Record record = new Record();
+			final Record record = new Record();
 			record.setType(com.gmail.gcolaianni5.jris.bean.Type.RPRT);
 			record.setPrimaryDate("2018-01-01");
 			record.setDoi("10.2903/j.efsa.2018.5134");
@@ -72,7 +72,7 @@ public class RakipUtilTest {
 
 		ModelCategory modelCategory;
 		{
-			de.bund.bfr.knime.fsklab.rakip.ModelCategory deprecated = new de.bund.bfr.knime.fsklab.rakip.ModelCategory();
+			final de.bund.bfr.knime.fsklab.rakip.ModelCategory deprecated = new de.bund.bfr.knime.fsklab.rakip.ModelCategory();
 			deprecated.modelClass = "modelClass";
 			deprecated.modelSubClass.add("subClass");
 			deprecated.modelClassComment = "classComment";
@@ -92,7 +92,7 @@ public class RakipUtilTest {
 
 		GenericModelScope scope;
 		{
-			de.bund.bfr.knime.fsklab.rakip.Scope deprecated = new de.bund.bfr.knime.fsklab.rakip.Scope();
+			final de.bund.bfr.knime.fsklab.rakip.Scope deprecated = new de.bund.bfr.knime.fsklab.rakip.Scope();
 			deprecated.generalComment = "generalComment";
 			deprecated.temporalInformation = "temporalInformation";
 			deprecated.product = new de.bund.bfr.knime.fsklab.rakip.Product();
@@ -116,7 +116,7 @@ public class RakipUtilTest {
 
 		Product product;
 		{
-			de.bund.bfr.knime.fsklab.rakip.Product deprecated = new de.bund.bfr.knime.fsklab.rakip.Product();
+			final de.bund.bfr.knime.fsklab.rakip.Product deprecated = new de.bund.bfr.knime.fsklab.rakip.Product();
 			deprecated.environmentName = "environmentName";
 			deprecated.environmentDescription = "environmentDescription";
 			deprecated.environmentUnit = "environmentUnit";
@@ -150,7 +150,7 @@ public class RakipUtilTest {
 
 		Hazard hazard;
 		{
-			de.bund.bfr.knime.fsklab.rakip.Hazard deprecated = new de.bund.bfr.knime.fsklab.rakip.Hazard();
+			final de.bund.bfr.knime.fsklab.rakip.Hazard deprecated = new de.bund.bfr.knime.fsklab.rakip.Hazard();
 			deprecated.hazardType = "hazardType";
 			deprecated.hazardName = "hazardName";
 			deprecated.hazardDescription = "hazardDescription";
@@ -190,7 +190,7 @@ public class RakipUtilTest {
 
 		PopulationGroup populationGroup;
 		{
-			de.bund.bfr.knime.fsklab.rakip.PopulationGroup deprecated = new de.bund.bfr.knime.fsklab.rakip.PopulationGroup();
+			final de.bund.bfr.knime.fsklab.rakip.PopulationGroup deprecated = new de.bund.bfr.knime.fsklab.rakip.PopulationGroup();
 			deprecated.populationName = "populationName";
 			deprecated.targetPopulation = "targetPopulation";
 			deprecated.populationSpan.add("span");
@@ -228,7 +228,7 @@ public class RakipUtilTest {
 
 		GenericModelDataBackground dataBackground;
 		{
-			de.bund.bfr.knime.fsklab.rakip.DataBackground deprecated = new de.bund.bfr.knime.fsklab.rakip.DataBackground();
+			final de.bund.bfr.knime.fsklab.rakip.DataBackground deprecated = new de.bund.bfr.knime.fsklab.rakip.DataBackground();
 			deprecated.study = new de.bund.bfr.knime.fsklab.rakip.Study();
 			deprecated.studySample = new de.bund.bfr.knime.fsklab.rakip.StudySample();
 			deprecated.dietaryAssessmentMethod = new de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod();
@@ -250,7 +250,7 @@ public class RakipUtilTest {
 
 		Study study;
 		{
-			de.bund.bfr.knime.fsklab.rakip.Study deprecated = new de.bund.bfr.knime.fsklab.rakip.Study();
+			final de.bund.bfr.knime.fsklab.rakip.Study deprecated = new de.bund.bfr.knime.fsklab.rakip.Study();
 			deprecated.id = "id";
 			deprecated.title = "title";
 			deprecated.description = "description";
@@ -294,7 +294,7 @@ public class RakipUtilTest {
 
 		StudySample studySample;
 		{
-			de.bund.bfr.knime.fsklab.rakip.StudySample deprecated = new de.bund.bfr.knime.fsklab.rakip.StudySample();
+			final de.bund.bfr.knime.fsklab.rakip.StudySample deprecated = new de.bund.bfr.knime.fsklab.rakip.StudySample();
 			deprecated.sample = "sample";
 			deprecated.collectionProtocol = "collectionProtocol";
 			deprecated.samplingStrategy = "samplingStrategy";
@@ -325,7 +325,7 @@ public class RakipUtilTest {
 
 		DietaryAssessmentMethod method;
 		{
-			de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod deprecated = new de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod();
+			final de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod deprecated = new de.bund.bfr.knime.fsklab.rakip.DietaryAssessmentMethod();
 			deprecated.collectionTool = "collectionTool";
 			deprecated.numberOfNonConsecutiveOneDay = 0;
 			deprecated.softwareTool = "softwareTool";
@@ -343,31 +343,31 @@ public class RakipUtilTest {
 		assertEquals("type", method.getRecordTypes().get(0));
 		assertEquals("descriptor", method.getFoodDescriptors().get(0));
 	}
-	
+
 	@Test
 	public void testConvertLaboratory() {
-		
+
 		Laboratory laboratory;
 		{
-			de.bund.bfr.knime.fsklab.rakip.Laboratory deprecated = new de.bund.bfr.knime.fsklab.rakip.Laboratory();
+			final de.bund.bfr.knime.fsklab.rakip.Laboratory deprecated = new de.bund.bfr.knime.fsklab.rakip.Laboratory();
 			deprecated.accreditation = "accreditation";
 			deprecated.name = "name";
 			deprecated.country = "country";
-			
+
 			laboratory = RakipUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("accreditation", laboratory.getAccreditation().get(0));
 		assertEquals("name", laboratory.getName());
 		assertEquals("country", laboratory.getCountry());
 	}
-	
+
 	@Test
 	public void testConvertAssay() {
-		
+
 		Assay assay;
 		{
-			de.bund.bfr.knime.fsklab.rakip.Assay deprecated = new de.bund.bfr.knime.fsklab.rakip.Assay();
+			final de.bund.bfr.knime.fsklab.rakip.Assay deprecated = new de.bund.bfr.knime.fsklab.rakip.Assay();
 			deprecated.name = "name";
 			deprecated.description = "description";
 			deprecated.moisturePercentage = "moisturePercentage";
@@ -377,10 +377,10 @@ public class RakipUtilTest {
 			deprecated.leftCensoredData = "leftCensoredData";
 			deprecated.contaminationRange = "contaminationRange";
 			deprecated.uncertaintyValue = "uncertaintyValue";
-			
+
 			assay = RakipUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("name", assay.getName());
 		assertEquals("description", assay.getDescription());
 		assertEquals("moisturePercentage", assay.getMoisturePercentage());
@@ -391,13 +391,13 @@ public class RakipUtilTest {
 		assertEquals("contaminationRange", assay.getContaminationRange());
 		assertEquals("uncertaintyValue", assay.getUncertaintyValue());
 	}
-	
+
 	@Test
 	public void testConvertModelMath() {
 
 		GenericModelModelMath math;
 		{
-			de.bund.bfr.knime.fsklab.rakip.ModelMath deprecated = new de.bund.bfr.knime.fsklab.rakip.ModelMath();
+			final de.bund.bfr.knime.fsklab.rakip.ModelMath deprecated = new de.bund.bfr.knime.fsklab.rakip.ModelMath();
 			deprecated.sse = 0;
 			deprecated.mse = 1;
 			deprecated.rmse = 2;
@@ -408,7 +408,7 @@ public class RakipUtilTest {
 			deprecated.fittingProcedure = "fittingProcedure";
 			deprecated.exposure = new de.bund.bfr.knime.fsklab.rakip.Exposure();
 			deprecated.event.add("Event");
-			
+
 			math = RakipUtil.convert(deprecated);
 		}
 
@@ -419,13 +419,13 @@ public class RakipUtilTest {
 		assertFalse(math.getExposure().isEmpty());
 		assertEquals("Event", math.getEvent().get(0));
 	}
-	
+
 	@Test
 	public void testConvertParameter() {
-		
+
 		Parameter param;
 		{
-			de.bund.bfr.knime.fsklab.rakip.Parameter deprecated = new de.bund.bfr.knime.fsklab.rakip.Parameter();
+			final de.bund.bfr.knime.fsklab.rakip.Parameter deprecated = new de.bund.bfr.knime.fsklab.rakip.Parameter();
 			deprecated.id = "id";
 			deprecated.classification = de.bund.bfr.knime.fsklab.rakip.Parameter.Classification.constant;
 			deprecated.name = "name";
@@ -445,10 +445,10 @@ public class RakipUtilTest {
 			deprecated.rangeOfApplicability = "rangeOfApplicability";
 			deprecated.modelApplicability.add("applicability");
 			deprecated.error = 2.718;
-			
+
 			param = RakipUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("id", param.getId());
 		assertEquals(Parameter.ClassificationEnum.CONSTANT, param.getClassification());
 		assertEquals("name", param.getName());
@@ -466,43 +466,43 @@ public class RakipUtilTest {
 		assertEquals("true", param.getMaxValue());
 		assertEquals("2.718", param.getError());
 	}
-	
+
 	@Test
 	public void testConvertModelEquation() {
-		
+
 		ModelEquation equation;
 		{
-			de.bund.bfr.knime.fsklab.rakip.ModelEquation deprecated = new de.bund.bfr.knime.fsklab.rakip.ModelEquation();
+			final de.bund.bfr.knime.fsklab.rakip.ModelEquation deprecated = new de.bund.bfr.knime.fsklab.rakip.ModelEquation();
 			deprecated.equationName = "equationName";
 			deprecated.equationClass = "equationClass";
 			deprecated.equationReference.add(new Record());
 			deprecated.equation = "equation";
-			
+
 			equation = RakipUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("equationName", equation.getName());
 		assertEquals("equationClass", equation.getModelEquationClass());
 		assertEquals(1, equation.getReference().size());
 		assertEquals("equation", equation.getModelEquation());
 		assertNull(equation.getModelHypothesis());
 	}
-	
+
 	@Test
 	public void testConvertExposure() {
-		
+
 		Exposure exposure;
 		{
-			de.bund.bfr.knime.fsklab.rakip.Exposure deprecated = new de.bund.bfr.knime.fsklab.rakip.Exposure();
+			final de.bund.bfr.knime.fsklab.rakip.Exposure deprecated = new de.bund.bfr.knime.fsklab.rakip.Exposure();
 			deprecated.treatment = "treatment";
 			deprecated.contaminationLevel = "contaminationLevel";
 			deprecated.exposureType = "exposureType";
 			deprecated.scenario = "scenario";
 			deprecated.uncertaintyEstimation = "uncertaintyEstimation";
-			
+
 			exposure = RakipUtil.convert(deprecated);
 		}
-		
+
 		assertEquals("treatment", exposure.getTreatment().get(0));
 		assertEquals("contaminationLevel", exposure.getContamination().get(0));
 		assertEquals("exposureType", exposure.getType());

@@ -21,6 +21,7 @@ import de.bund.bfr.metadata.swagger.DoseResponseModelModelMath;
 import de.bund.bfr.metadata.swagger.DoseResponseModelScope;
 import de.bund.bfr.metadata.swagger.PredictiveModelDataBackground;
 
+@SuppressWarnings("static-method")
 public class SwaggerDoseResponseSheetImporterTest {
 
 	private static Sheet sheet;
@@ -34,7 +35,7 @@ public class SwaggerDoseResponseSheetImporterTest {
 		}
 		importer = new SwaggerDoseResponseSheetImporter();
 	}
-	
+
 	@AfterClass
 	public static void after() {
 		sheet = null;
@@ -43,7 +44,7 @@ public class SwaggerDoseResponseSheetImporterTest {
 
 	@Test
 	public void testGeneralInformation() throws Exception {
-		DoseResponseModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
+		final DoseResponseModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
 		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getModelName());
 		assertEquals("PUBLISHED SCIENTIFIC STUDIES", information.getSource());
 		assertEquals("DR000001", information.getIdentifier());
@@ -67,7 +68,7 @@ public class SwaggerDoseResponseSheetImporterTest {
 
 	@Test
 	public void testScope() {
-		DoseResponseModelScope scope = importer.retrieveScope(sheet);
+		final DoseResponseModelScope scope = importer.retrieveScope(sheet);
 		assertEquals(1, scope.getHazard().size());
 		assertEquals(1, scope.getPopulationGroup().size());
 		assertNull(scope.getGeneralComment());
@@ -77,7 +78,7 @@ public class SwaggerDoseResponseSheetImporterTest {
 
 	@Test
 	public void testDataBackground() {
-		PredictiveModelDataBackground background = importer.retrieveBackground(sheet);
+		final PredictiveModelDataBackground background = importer.retrieveBackground(sheet);
 		assertNotNull(background.getStudy());
 		assertEquals(3, background.getStudySample().size());
 		assertEquals(3, background.getLaboratory().size());
@@ -86,7 +87,7 @@ public class SwaggerDoseResponseSheetImporterTest {
 
 	@Test
 	public void testModelMath() {
-		DoseResponseModelModelMath math = importer.retrieveModelMath(sheet);
+		final DoseResponseModelModelMath math = importer.retrieveModelMath(sheet);
 		assertEquals(9, math.getParameter().size());
 		assertEquals(1, math.getQualityMeasures().size());
 		assertNull(math.getModelEquation());

@@ -21,6 +21,7 @@ import de.bund.bfr.metadata.swagger.GenericModelGeneralInformation;
 import de.bund.bfr.metadata.swagger.GenericModelModelMath;
 import de.bund.bfr.metadata.swagger.GenericModelScope;
 
+@SuppressWarnings("static-method")
 public class SwaggerGenericSheetImporterTest {
 
 	private static Sheet sheet;
@@ -43,7 +44,7 @@ public class SwaggerGenericSheetImporterTest {
 
 	@Test
 	public void testGeneralInformation() throws Exception {
-		GenericModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
+		final GenericModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
 		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getName());
 		assertEquals("PUBLISHED SCIENTIFIC STUDIES", information.getSource());
 		assertEquals("DR000001", information.getIdentifier());
@@ -67,7 +68,7 @@ public class SwaggerGenericSheetImporterTest {
 
 	@Test
 	public void testScope() {
-		GenericModelScope scope = importer.retrieveScope(sheet);
+		final GenericModelScope scope = importer.retrieveScope(sheet);
 		assertEquals(12, scope.getProduct().size());
 		assertEquals(1, scope.getHazard().size());
 		assertEquals(1, scope.getPopulationGroup().size());
@@ -78,7 +79,7 @@ public class SwaggerGenericSheetImporterTest {
 
 	@Test
 	public void testDataBackground() {
-		GenericModelDataBackground background = importer.retrieveBackground(sheet);
+		final GenericModelDataBackground background = importer.retrieveBackground(sheet);
 		assertNotNull(background.getStudy());
 		assertEquals(3, background.getStudySample().size());
 		assertEquals(3, background.getDietaryAssessmentMethod().size());
@@ -88,7 +89,7 @@ public class SwaggerGenericSheetImporterTest {
 
 	@Test
 	public void testModelMath() {
-		GenericModelModelMath math = importer.retrieveModelMath(sheet);
+		final GenericModelModelMath math = importer.retrieveModelMath(sheet);
 		assertEquals(9, math.getParameter().size());
 		assertEquals(1, math.getQualityMeasures().size());
 		assertNull(math.getModelEquation());

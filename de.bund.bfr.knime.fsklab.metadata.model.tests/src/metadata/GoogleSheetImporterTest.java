@@ -20,21 +20,21 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 // TODO: tests methods are commented since GoogleSheetImporter is not implemented yet
-@SuppressWarnings({ "deprecation" })
+@SuppressWarnings({ "deprecation", "static-method" })
 public class GoogleSheetImporterTest {
 
 	// TODO: @Test
 	public void testGeneralInformation() throws IOException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 
-		GeneralInformation generalInformation = importer.retrieveGeneralInformation(values);
+		final GeneralInformation generalInformation = importer.retrieveGeneralInformation(values);
 
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
+		final MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		assertEquals("Listeria Monocytogenes (DR of gQMRA)", generalInformation.getName());
 		assertEquals("PUBLISHED SCIENTIFIC STUDIES", generalInformation.getSource());
@@ -60,15 +60,15 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testCreator() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
+		final MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
-		Contact contact = importer.retrieveContact(values[3]);
+		final Contact contact = importer.retrieveContact(values[3]);
 		assertFalse(contact.eIsSet(pkg.getContact_Title()));
 		assertEquals("Mesa Varona", contact.getFamilyName());
 		assertFalse(contact.eIsSet(pkg.getContact_GivenName()));
@@ -85,13 +85,13 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testAuthor() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
 
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
-		Contact contact = importer.retrieveAuthor(values[3]);
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
+		final Contact contact = importer.retrieveAuthor(values[3]);
 		assertEquals("Prof", contact.getTitle());
 		assertEquals("Mosley", contact.getFamilyName());
 		assertEquals("Steve", contact.getGivenName());
@@ -108,16 +108,16 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testReference() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
 
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
+		final MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
-		Reference reference = importer.retrieveReference(values[14]);
+		final Reference reference = importer.retrieveReference(values[14]);
 
 		assertTrue(reference.isIsReferenceDescription());
 		assertEquals(PublicationType.RPRT, reference.getPublicationType());
@@ -140,15 +140,15 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testModelCategory() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
 
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
+		final MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
-		ModelCategory modelCategory = importer.retrieveModelCategory(values);
+		final ModelCategory modelCategory = importer.retrieveModelCategory(values);
 		assertEquals("Dose-response model", modelCategory.getModelClass());
 		assertFalse(modelCategory.eIsSet(pkg.getModelCategory_ModelSubClass()));
 		assertFalse(modelCategory.eIsSet(pkg.getModelCategory_ModelClassComment()));
@@ -158,16 +158,16 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testProduct() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
+		final MetadataPackage pkg = MetadataPackage.eINSTANCE;
 
 		// Test product at row 39
 		{
-			Product product39 = importer.retrieveProduct(values[38]);
+			final Product product39 = importer.retrieveProduct(values[38]);
 			assertEquals("Allspice", product39.getProductName());
 			assertEquals("description", product39.getProductDescription());
 			assertEquals("[]", product39.getProductUnit());
@@ -185,7 +185,7 @@ public class GoogleSheetImporterTest {
 
 		// Test product at row 40
 		{
-			Product product40 = importer.retrieveProduct(values[39]);
+			final Product product40 = importer.retrieveProduct(values[39]);
 			assertEquals("Almonds", product40.getProductName());
 			assertEquals("almonds", product40.getProductDescription());
 			assertEquals("[aw]", product40.getProductUnit());
@@ -203,7 +203,7 @@ public class GoogleSheetImporterTest {
 
 		// Test product at row 41
 		{
-			Product product41 = importer.retrieveProduct(values[40]);
+			final Product product41 = importer.retrieveProduct(values[40]);
 			assertEquals("American persimmon (Virginia kaki)", product41.getProductName());
 			assertEquals("american", product41.getProductDescription());
 			assertEquals("[Fluorescence]", product41.getProductUnit());
@@ -223,16 +223,16 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testHazard() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
 
-		MetadataPackage pkg = MetadataPackage.eINSTANCE;
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final MetadataPackage pkg = MetadataPackage.eINSTANCE;
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 		// Test hazard at row 39
 		{
-			Hazard hazard39 = importer.retrieveHazard(values[38]);
+			final Hazard hazard39 = importer.retrieveHazard(values[38]);
 			assertEquals("Biogenic amines", hazard39.getHazardType());
 			assertEquals("'Prohexadione (prohexadione (acid) and its salts expressed as prohexadione-calcium)",
 					hazard39.getHazardName());
@@ -253,15 +253,15 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testPopulationGroup() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 
 		// Test population group at row 39
 		{
-			PopulationGroup populationGroup39 = importer.retrievePopulationGroup(values[38]);
+			final PopulationGroup populationGroup39 = importer.retrievePopulationGroup(values[38]);
 			assertEquals("Other", populationGroup39.getPopulationName());
 			assertEquals("target", populationGroup39.getTargetPopulation());
 			assertEquals("span", populationGroup39.getPopulationSpan().get(0).getValue());
@@ -281,13 +281,13 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testStudy() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 
-		Study study = importer.retrieveStudy(values);
+		final Study study = importer.retrieveStudy(values);
 		assertEquals("identifier", study.getStudyIdentifier());
 		assertEquals("Listeria monocytogenes generic Quantitative Microbiological Risk Assessment (gQMRA) model",
 				study.getStudyTitle());
@@ -310,14 +310,14 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testStudySample() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
 
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 		// Test study sample from row 97
-		StudySample studySample97 = importer.retrieveStudySample(values[96]);
+		final StudySample studySample97 = importer.retrieveStudySample(values[96]);
 		assertEquals("name", studySample97.getSampleName());
 		assertEquals("collection", studySample97.getProtocolOfSampleCollection());
 		assertEquals("Census", studySample97.getSamplingStrategy());
@@ -330,7 +330,7 @@ public class GoogleSheetImporterTest {
 		assertEquals("Air transport", studySample97.getSamplingPoint());
 
 		// Test study sample from row 98
-		StudySample studySample98 = importer.retrieveStudySample(values[97]);
+		final StudySample studySample98 = importer.retrieveStudySample(values[97]);
 		assertEquals("name2", studySample98.getSampleName());
 		assertEquals("collection3", studySample98.getProtocolOfSampleCollection());
 		assertEquals("Convenient sampling", studySample98.getSamplingStrategy());
@@ -343,7 +343,7 @@ public class GoogleSheetImporterTest {
 		assertEquals("Aquaculture", studySample98.getSamplingPoint());
 
 		// Test study sample from row 99
-		StudySample studySample99 = importer.retrieveStudySample(values[98]);
+		final StudySample studySample99 = importer.retrieveStudySample(values[98]);
 		assertEquals("name3", studySample99.getSampleName());
 		assertEquals("collection4", studySample99.getProtocolOfSampleCollection());
 		assertEquals("Not specified", studySample99.getSamplingStrategy());
@@ -359,14 +359,14 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testDietaryAssessmentMethod() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
 
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 		// Test DietaryAssessmentMethod from row 104
-		DietaryAssessmentMethod method104 = importer.retrieveDietaryAssessmentMethod(values[103]);
+		final DietaryAssessmentMethod method104 = importer.retrieveDietaryAssessmentMethod(values[103]);
 		assertEquals("24-hour recall interview", method104.getCollectionTool());
 		assertEquals(0, method104.getNumberOfNonConsecutiveOneDay());
 		assertEquals("a", method104.getSoftwareTool());
@@ -375,7 +375,7 @@ public class GoogleSheetImporterTest {
 		assertEquals("(Beet) Sugar", method104.getFoodDescriptors());
 
 		// Test DietaryAssessmentMethod from row 105
-		DietaryAssessmentMethod method105 = importer.retrieveDietaryAssessmentMethod(values[104]);
+		final DietaryAssessmentMethod method105 = importer.retrieveDietaryAssessmentMethod(values[104]);
 		assertEquals("eating outside questionnaire", method105.getCollectionTool());
 		assertEquals(1, method105.getNumberOfNonConsecutiveOneDay());
 		assertEquals("b", method105.getSoftwareTool());
@@ -385,7 +385,7 @@ public class GoogleSheetImporterTest {
 
 		// Test DietaryAssessmentMethod from row 106
 		// food diaries 2 c c d (Beet) Sugar
-		DietaryAssessmentMethod method106 = importer.retrieveDietaryAssessmentMethod(values[105]);
+		final DietaryAssessmentMethod method106 = importer.retrieveDietaryAssessmentMethod(values[105]);
 		assertEquals("food diaries", method106.getCollectionTool());
 		assertEquals(2, method106.getNumberOfNonConsecutiveOneDay());
 		assertEquals("c", method106.getSoftwareTool());
@@ -397,26 +397,26 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testLaboratory() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
 
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 		// Test Laboratory at row 111
-		Laboratory laboratory111 = importer.retrieveLaboratory(values[110]);
+		final Laboratory laboratory111 = importer.retrieveLaboratory(values[110]);
 		assertEquals("Accredited", laboratory111.getLaboratoryAccreditation().get(0).getValue());
 		assertEquals("a", laboratory111.getLaboratoryName());
 		assertEquals("Afghanistan", laboratory111.getLaboratoryCountry());
 
 		// Test Laboratory at row 112
-		Laboratory laboratory112 = importer.retrieveLaboratory(values[111]);
+		final Laboratory laboratory112 = importer.retrieveLaboratory(values[111]);
 		assertEquals("None", laboratory112.getLaboratoryAccreditation().get(0).getValue());
 		assertEquals("b", laboratory112.getLaboratoryName());
 		assertEquals("Aland Islands", laboratory112.getLaboratoryCountry());
 
 		// Test Laboratory at row 113
-		Laboratory laboratory113 = importer.retrieveLaboratory(values[112]);
+		final Laboratory laboratory113 = importer.retrieveLaboratory(values[112]);
 		assertEquals("Other", laboratory113.getLaboratoryAccreditation().get(0).getValue());
 		assertEquals("c", laboratory113.getLaboratoryName());
 		assertEquals("Albania", laboratory113.getLaboratoryCountry());
@@ -425,14 +425,14 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testAssay() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 
 		// Test assay at row 118
-		Assay assay118 = importer.retrieveAssay(values[117]);
+		final Assay assay118 = importer.retrieveAssay(values[117]);
 		assertEquals("name0", assay118.getAssayName());
 		assertEquals("descr0", assay118.getAssayDescription());
 		assertEquals("moist0", assay118.getPercentageOfMoisture());
@@ -443,7 +443,7 @@ public class GoogleSheetImporterTest {
 		assertEquals("uncert0", assay118.getUncertaintyValue());
 
 		// Test assay at row 119
-		Assay assay119 = importer.retrieveAssay(values[118]);
+		final Assay assay119 = importer.retrieveAssay(values[118]);
 		assertEquals("name1", assay119.getAssayName());
 		assertEquals("descr1", assay119.getAssayDescription());
 		assertEquals("moist1", assay119.getPercentageOfMoisture());
@@ -454,7 +454,7 @@ public class GoogleSheetImporterTest {
 		assertEquals("uncert1", assay119.getUncertaintyValue());
 
 		// Test assay at row 120
-		Assay assay120 = importer.retrieveAssay(values[119]);
+		final Assay assay120 = importer.retrieveAssay(values[119]);
 		assertEquals("name2", assay120.getAssayName());
 		assertEquals("descr2", assay120.getAssayDescription());
 		assertEquals("moist2", assay120.getPercentageOfMoisture());
@@ -468,14 +468,14 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testParameter() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 
 		// Check parameter at row 133
-		Parameter param133 = importer.retrieveParameter(values[132]);
+		final Parameter param133 = importer.retrieveParameter(values[132]);
 
 		assertEquals("DR_Inputs3", param133.getParameterID());
 		assertEquals(ParameterClassification.INPUT, param133.getParameterClassification());
@@ -500,13 +500,13 @@ public class GoogleSheetImporterTest {
 	// TODO: @Test
 	public void testQualityMeasures() throws IOException, EncryptedDocumentException, InvalidFormatException {
 
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
-		Sheet sheet0 = workbook.getSheetAt(0);
-		String[][] values = readSpreadsheetToMatrix(sheet0);
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Sheet sheet0 = workbook.getSheetAt(0);
+		final String[][] values = readSpreadsheetToMatrix(sheet0);
 
-		GoogleSheetImporter importer = new GoogleSheetImporter();
+		final GoogleSheetImporter importer = new GoogleSheetImporter();
 
-		JsonObject measures = importer.retrieveQualityMeasures(values);
+		final JsonObject measures = importer.retrieveQualityMeasures(values);
 
 		assertEquals(0.1, measures.getJsonNumber("SSE").doubleValue(), .0);
 		assertEquals(0.2, measures.getJsonNumber("MSE").doubleValue(), .0);
@@ -518,16 +518,16 @@ public class GoogleSheetImporterTest {
 
 	private static String[][] readSpreadsheetToMatrix(Sheet sheet) {
 
-		String[][] values = new String[200][50];
+		final String[][] values = new String[200][50];
 		for (int i = 0; i < Math.min(200, sheet.getPhysicalNumberOfRows()); i++) {
 
-			Row row = sheet.getRow(i);
+			final Row row = sheet.getRow(i);
 
 			for (int j = 0; j < Math.min(50, row.getPhysicalNumberOfCells()); j++) {
 
-				Cell cell = row.getCell(0);
+				final Cell cell = row.getCell(0);
 
-				int type = cell.getCellType();
+				final int type = cell.getCellType();
 
 				if (type == Cell.CELL_TYPE_BLANK) {
 					values[i][j] = "";

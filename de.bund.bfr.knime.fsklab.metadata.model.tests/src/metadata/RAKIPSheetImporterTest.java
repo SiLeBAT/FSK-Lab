@@ -35,6 +35,7 @@ import de.bund.bfr.metadata.swagger.Reference.PublicationTypeEnum;
 import de.bund.bfr.metadata.swagger.Study;
 import de.bund.bfr.metadata.swagger.StudySample;
 
+@SuppressWarnings("static-method")
 public class RAKIPSheetImporterTest {
 
 	private static Sheet sheet;
@@ -42,14 +43,14 @@ public class RAKIPSheetImporterTest {
 
 	@BeforeClass
 	public static void setup() throws Exception {
-		Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
+		final Workbook workbook = WorkbookFactory.create(new File("files/QMRA_Listeria.xlsx"));
 		sheet = workbook.getSheetAt(0);
 		importer = new RAKIPSheetImporter();
 	}
 
 	@Test
 	public void testGeneralInformation() {
-		GenericModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
+		final GenericModelGeneralInformation information = importer.retrieveGeneralInformation(sheet);
 		assertEquals("Listeria Monocytogenes (DR of gQMRA)", information.getName());
 		assertEquals("PUBLISHED SCIENTIFIC STUDIES", information.getSource());
 		assertEquals("DR000001", information.getIdentifier());
@@ -73,7 +74,7 @@ public class RAKIPSheetImporterTest {
 
 	@Test
 	public void testScope() {
-		GenericModelScope scope = importer.retrieveScope(sheet);
+		final GenericModelScope scope = importer.retrieveScope(sheet);
 		assertEquals(12, scope.getProduct().size());
 		assertEquals(1, scope.getHazard().size());
 		assertEquals(1, scope.getPopulationGroup().size());
@@ -84,7 +85,7 @@ public class RAKIPSheetImporterTest {
 
 	@Test
 	public void testDataBackground() {
-		GenericModelDataBackground background = importer.retrieveBackground(sheet);
+		final GenericModelDataBackground background = importer.retrieveBackground(sheet);
 		assertNotNull(background.getStudy());
 		assertEquals(3, background.getStudySample().size());
 		assertEquals(3, background.getDietaryAssessmentMethod().size());
@@ -94,7 +95,7 @@ public class RAKIPSheetImporterTest {
 
 	@Test
 	public void testModelMath() {
-		GenericModelModelMath math = importer.retrieveModelMath(sheet);
+		final GenericModelModelMath math = importer.retrieveModelMath(sheet);
 		assertEquals(9, math.getParameter().size());
 		assertEquals(1, math.getQualityMeasures().size());
 		assertNull(math.getModelEquation());
@@ -106,7 +107,7 @@ public class RAKIPSheetImporterTest {
 	@Test
 	public void testCreator() throws Exception {
 
-		Contact contact = importer.retrieveCreator(sheet.getRow(3));
+		final Contact contact = importer.retrieveCreator(sheet.getRow(3));
 		assertNull(contact.getTitle());
 		assertEquals("Mesa Varona", contact.getFamilyName());
 		assertNull(contact.getGivenName());
@@ -122,7 +123,7 @@ public class RAKIPSheetImporterTest {
 	@Test
 	public void testAuthor() throws Exception {
 
-		Contact contact = importer.retrieveAuthor(sheet.getRow(3));
+		final Contact contact = importer.retrieveAuthor(sheet.getRow(3));
 		assertEquals("Prof", contact.getTitle());
 		assertEquals("Mosley", contact.getFamilyName());
 		assertEquals("Steve", contact.getGivenName());
@@ -137,7 +138,7 @@ public class RAKIPSheetImporterTest {
 
 	@Test
 	public void testReference() throws Exception {
-		Reference reference = importer.retrieveReference(sheet.getRow(14));
+		final Reference reference = importer.retrieveReference(sheet.getRow(14));
 
 		assertTrue(reference.isIsReferenceDescription());
 		assertEquals(PublicationTypeEnum.RPRT, reference.getPublicationType());
@@ -158,7 +159,7 @@ public class RAKIPSheetImporterTest {
 
 	@Test
 	public void testModelCategory() throws Exception {
-		ModelCategory modelCategory = importer.retrieveModelCategory(sheet);
+		final ModelCategory modelCategory = importer.retrieveModelCategory(sheet);
 		assertEquals("Dose-response model", modelCategory.getModelClass());
 		assertNull(modelCategory.getModelSubClass());
 		assertNull(modelCategory.getModelClassComment());
@@ -170,7 +171,7 @@ public class RAKIPSheetImporterTest {
 
 		// Test product at row 39
 		{
-			Product product39 = importer.retrieveProduct(sheet.getRow(38));
+			final Product product39 = importer.retrieveProduct(sheet.getRow(38));
 			assertEquals("Allspice", product39.getName());
 			assertEquals("description", product39.getDescription());
 			assertEquals("[]", product39.getUnit());
@@ -186,7 +187,7 @@ public class RAKIPSheetImporterTest {
 
 		// Test product at row 40
 		{
-			Product product40 = importer.retrieveProduct(sheet.getRow(39));
+			final Product product40 = importer.retrieveProduct(sheet.getRow(39));
 			assertEquals("Almonds", product40.getName());
 			assertEquals("almonds", product40.getDescription());
 			assertEquals("[aw]", product40.getUnit());
@@ -202,7 +203,7 @@ public class RAKIPSheetImporterTest {
 
 		// Test product at row 41
 		{
-			Product product41 = importer.retrieveProduct(sheet.getRow(40));
+			final Product product41 = importer.retrieveProduct(sheet.getRow(40));
 			assertEquals("American persimmon (Virginia kaki)", product41.getName());
 			assertEquals("american", product41.getDescription());
 			assertEquals("[Fluorescence]", product41.getUnit());
@@ -221,7 +222,7 @@ public class RAKIPSheetImporterTest {
 	public void testHazard() throws Exception {
 		// Test hazard at row 39
 		{
-			Hazard hazard39 = importer.retrieveHazard(sheet.getRow(38));
+			final Hazard hazard39 = importer.retrieveHazard(sheet.getRow(38));
 			assertEquals("Biogenic amines", hazard39.getType());
 			assertEquals("'Prohexadione (prohexadione (acid) and its salts expressed as prohexadione-calcium)",
 					hazard39.getName());
@@ -244,7 +245,7 @@ public class RAKIPSheetImporterTest {
 	public void testPopulationGroup() throws Exception {
 		// Test population group at row 39
 		{
-			PopulationGroup populationGroup39 = importer.retrievePopulationGroup(sheet.getRow(38));
+			final PopulationGroup populationGroup39 = importer.retrievePopulationGroup(sheet.getRow(38));
 			assertEquals("Other", populationGroup39.getName());
 			assertEquals("target", populationGroup39.getTargetPopulation());
 			assertEquals("span", populationGroup39.getPopulationSpan().get(0));
@@ -263,7 +264,7 @@ public class RAKIPSheetImporterTest {
 
 	@Test
 	public void testStudy() throws Exception {
-		Study study = importer.retrieveStudy(sheet);
+		final Study study = importer.retrieveStudy(sheet);
 		assertEquals("identifier", study.getIdentifier());
 		assertEquals("Listeria monocytogenes generic Quantitative Microbiological Risk Assessment (gQMRA) model",
 				study.getTitle());
@@ -287,7 +288,7 @@ public class RAKIPSheetImporterTest {
 	public void testStudySample() throws Exception {
 
 		// Test study sample from row 97
-		StudySample studySample97 = importer.retrieveStudySample(sheet.getRow(96));
+		final StudySample studySample97 = importer.retrieveStudySample(sheet.getRow(96));
 		assertEquals("name", studySample97.getSampleName());
 		assertEquals("collection", studySample97.getProtocolOfSampleCollection());
 		assertEquals("Census", studySample97.getSamplingStrategy());
@@ -300,7 +301,7 @@ public class RAKIPSheetImporterTest {
 		assertEquals("Air transport", studySample97.getSamplingPoint());
 
 		// Test study sample from row 98
-		StudySample studySample98 = importer.retrieveStudySample(sheet.getRow(97));
+		final StudySample studySample98 = importer.retrieveStudySample(sheet.getRow(97));
 		assertEquals("name2", studySample98.getSampleName());
 		assertEquals("collection3", studySample98.getProtocolOfSampleCollection());
 		assertEquals("Convenient sampling", studySample98.getSamplingStrategy());
@@ -313,7 +314,7 @@ public class RAKIPSheetImporterTest {
 		assertEquals("Aquaculture", studySample98.getSamplingPoint());
 
 		// Test study sample from row 99
-		StudySample studySample99 = importer.retrieveStudySample(sheet.getRow(98));
+		final StudySample studySample99 = importer.retrieveStudySample(sheet.getRow(98));
 		assertEquals("name3", studySample99.getSampleName());
 		assertEquals("collection4", studySample99.getProtocolOfSampleCollection());
 		assertEquals("Not specified", studySample99.getSamplingStrategy());
@@ -330,7 +331,7 @@ public class RAKIPSheetImporterTest {
 	public void testDietaryAssessmentMethod() throws Exception {
 
 		// Test DietaryAssessmentMethod from row 104
-		DietaryAssessmentMethod method104 = importer.retrieveDietaryAssessmentMethod(sheet.getRow(103));
+		final DietaryAssessmentMethod method104 = importer.retrieveDietaryAssessmentMethod(sheet.getRow(103));
 		assertEquals("24-hour recall interview", method104.getCollectionTool());
 		assertEquals("0.0", method104.getNumberOfNonConsecutiveOneDay());
 		assertEquals("a", method104.getSoftwareTool());
@@ -339,7 +340,7 @@ public class RAKIPSheetImporterTest {
 		assertEquals("(Beet) Sugar", method104.getFoodDescriptors().get(0));
 
 		// Test DietaryAssessmentMethod from row 105
-		DietaryAssessmentMethod method105 = importer.retrieveDietaryAssessmentMethod(sheet.getRow(104));
+		final DietaryAssessmentMethod method105 = importer.retrieveDietaryAssessmentMethod(sheet.getRow(104));
 		assertEquals("eating outside questionnaire", method105.getCollectionTool());
 		assertEquals("1.0", method105.getNumberOfNonConsecutiveOneDay());
 		assertEquals("b", method105.getSoftwareTool());
@@ -348,7 +349,7 @@ public class RAKIPSheetImporterTest {
 		assertEquals("(Beet) Sugar", method105.getFoodDescriptors().get(0));
 
 		// Test DietaryAssessmentMethod from row 106
-		DietaryAssessmentMethod method106 = importer.retrieveDietaryAssessmentMethod(sheet.getRow(105));
+		final DietaryAssessmentMethod method106 = importer.retrieveDietaryAssessmentMethod(sheet.getRow(105));
 		assertEquals("food diaries", method106.getCollectionTool());
 		assertEquals("2.0", method106.getNumberOfNonConsecutiveOneDay());
 		assertEquals("c", method106.getSoftwareTool());
@@ -361,19 +362,19 @@ public class RAKIPSheetImporterTest {
 	public void testLaboratory() throws Exception {
 
 		// Test Laboratory at row 111
-		Laboratory laboratory111 = importer.retrieveLaboratory(sheet.getRow(110));
+		final Laboratory laboratory111 = importer.retrieveLaboratory(sheet.getRow(110));
 		assertEquals("Accredited", laboratory111.getAccreditation().get(0));
 		assertEquals("a", laboratory111.getName());
 		assertEquals("Afghanistan", laboratory111.getCountry());
 
 		// Test Laboratory at row 112
-		Laboratory laboratory112 = importer.retrieveLaboratory(sheet.getRow(111));
+		final Laboratory laboratory112 = importer.retrieveLaboratory(sheet.getRow(111));
 		assertEquals("None", laboratory112.getAccreditation().get(0));
 		assertEquals("b", laboratory112.getName());
 		assertEquals("Aland Islands", laboratory112.getCountry());
 
 		// Test Laboratory at row 113
-		Laboratory laboratory113 = importer.retrieveLaboratory(sheet.getRow(112));
+		final Laboratory laboratory113 = importer.retrieveLaboratory(sheet.getRow(112));
 		assertEquals("Other", laboratory113.getAccreditation().get(0));
 		assertEquals("c", laboratory113.getName());
 		assertEquals("Albania", laboratory113.getCountry());
@@ -383,7 +384,7 @@ public class RAKIPSheetImporterTest {
 	public void testAssay() throws Exception {
 
 		// Test assay at row 118
-		Assay assay118 = importer.retrieveAssay(sheet.getRow(117));
+		final Assay assay118 = importer.retrieveAssay(sheet.getRow(117));
 		assertEquals("name0", assay118.getName());
 		assertEquals("descr0", assay118.getDescription());
 		assertEquals("moist0", assay118.getMoisturePercentage());
@@ -394,7 +395,7 @@ public class RAKIPSheetImporterTest {
 		assertEquals("uncert0", assay118.getUncertaintyValue());
 
 		// Test assay at row 119
-		Assay assay119 = importer.retrieveAssay(sheet.getRow(118));
+		final Assay assay119 = importer.retrieveAssay(sheet.getRow(118));
 		assertEquals("name1", assay119.getName());
 		assertEquals("descr1", assay119.getDescription());
 		assertEquals("moist1", assay119.getMoisturePercentage());
@@ -405,7 +406,7 @@ public class RAKIPSheetImporterTest {
 		assertEquals("uncert1", assay119.getUncertaintyValue());
 
 		// Test assay at row 120
-		Assay assay120 = importer.retrieveAssay(sheet.getRow(119));
+		final Assay assay120 = importer.retrieveAssay(sheet.getRow(119));
 		assertEquals("name2", assay120.getName());
 		assertEquals("descr2", assay120.getDescription());
 		assertEquals("moist2", assay120.getMoisturePercentage());
@@ -420,7 +421,7 @@ public class RAKIPSheetImporterTest {
 	public void testParameter() throws Exception {
 
 		// Check parameter at row 133
-		Parameter param133 = importer.retrieveParameter(sheet.getRow(132));
+		final Parameter param133 = importer.retrieveParameter(sheet.getRow(132));
 
 		assertEquals("DR_Inputs3", param133.getId());
 		assertEquals(ClassificationEnum.INPUT, param133.getClassification());
@@ -441,11 +442,11 @@ public class RAKIPSheetImporterTest {
 		assertEquals("min0", param133.getMinValue());
 		assertEquals("error0", param133.getError());
 	}
-	
+
 	@Test
 	public void testQualityMeasures() throws Exception {
 
-		QualityMeasures measures = importer.retrieveQualityMeasures(sheet);
+		final QualityMeasures measures = importer.retrieveQualityMeasures(sheet);
 		assertEquals(0.1, measures.getSse().doubleValue(), .0);
 		assertEquals(0.2, measures.getMse().doubleValue(), .0);
 		assertEquals(0.3, measures.getRmse().doubleValue(), .0);

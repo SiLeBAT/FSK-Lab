@@ -61,6 +61,7 @@ import de.bund.bfr.metadata.swagger.StudySample;
 import de.bund.bfr.metadata.swagger.ToxicologicalModel;
 import de.bund.bfr.metadata.swagger.ToxicologicalModelScope;
 
+@SuppressWarnings("static-method")
 public class SwaggerUtilTest {
 
 	@SuppressWarnings("deprecation")
@@ -69,7 +70,7 @@ public class SwaggerUtilTest {
 
 		GenericModelGeneralInformation gi = new GenericModelGeneralInformation();
 		{
-			metadata.GeneralInformation deprecated = metadata.MetadataFactory.eINSTANCE.createGeneralInformation();
+			final metadata.GeneralInformation deprecated = metadata.MetadataFactory.eINSTANCE.createGeneralInformation();
 
 			deprecated.setName("name");
 			deprecated.setSource("source");
@@ -86,7 +87,7 @@ public class SwaggerUtilTest {
 			deprecated.setDescription("description");
 			deprecated.getModelCategory().add(metadata.MetadataFactory.eINSTANCE.createModelCategory());
 
-			metadata.ModificationDate md = metadata.MetadataFactory.eINSTANCE.createModificationDate();
+			final metadata.ModificationDate md = metadata.MetadataFactory.eINSTANCE.createModificationDate();
 			md.setValue(new Date(2018, 0, 1));
 			deprecated.getModificationdate().add(md);
 
@@ -122,7 +123,7 @@ public class SwaggerUtilTest {
 	public void testConvertModelCategory() {
 		ModelCategory modelCategory;
 		{
-			metadata.ModelCategory deprecated = metadata.MetadataFactory.eINSTANCE.createModelCategory();
+			final metadata.ModelCategory deprecated = metadata.MetadataFactory.eINSTANCE.createModelCategory();
 			deprecated.setModelClass("modelClass");
 			deprecated.getModelSubClass().add(createStringObject("subClass"));
 			deprecated.setModelClassComment("classComment");
@@ -143,7 +144,7 @@ public class SwaggerUtilTest {
 
 		Reference reference;
 		{
-			metadata.Reference deprecated = metadata.MetadataFactory.eINSTANCE.createReference();
+			final metadata.Reference deprecated = metadata.MetadataFactory.eINSTANCE.createReference();
 			deprecated.setIsReferenceDescription(false);
 			deprecated.setPublicationType(metadata.PublicationType.RPRT);
 			deprecated.setPublicationDate(new Date(2018, 0, 1));
@@ -179,7 +180,7 @@ public class SwaggerUtilTest {
 
 		Contact contact = new Contact();
 		{
-			metadata.Contact deprecated = metadata.MetadataFactory.eINSTANCE.createContact();
+			final metadata.Contact deprecated = metadata.MetadataFactory.eINSTANCE.createContact();
 			deprecated.setTitle("title");
 			deprecated.setFamilyName("familyName");
 			deprecated.setGivenName("givenName");
@@ -218,7 +219,7 @@ public class SwaggerUtilTest {
 
 		Parameter param;
 		{
-			metadata.Parameter deprecated = metadata.MetadataFactory.eINSTANCE.createParameter();
+			final metadata.Parameter deprecated = metadata.MetadataFactory.eINSTANCE.createParameter();
 			deprecated.setParameterID("id");
 			deprecated.setParameterClassification(metadata.ParameterClassification.CONSTANT);
 			deprecated.setParameterName("name");
@@ -263,7 +264,7 @@ public class SwaggerUtilTest {
 
 		GenericModelScope scope = new GenericModelScope();
 		{
-			metadata.Scope deprecated = metadata.MetadataFactory.eINSTANCE.createScope();
+			final metadata.Scope deprecated = metadata.MetadataFactory.eINSTANCE.createScope();
 			deprecated.getProduct().add(metadata.MetadataFactory.eINSTANCE.createProduct());
 			deprecated.getHazard().add(metadata.MetadataFactory.eINSTANCE.createHazard());
 			deprecated.getPopulationGroup().add(metadata.MetadataFactory.eINSTANCE.createPopulationGroup());
@@ -288,7 +289,7 @@ public class SwaggerUtilTest {
 
 		Product product;
 		{
-			metadata.Product deprecated = metadata.MetadataFactory.eINSTANCE.createProduct();
+			final metadata.Product deprecated = metadata.MetadataFactory.eINSTANCE.createProduct();
 			deprecated.setProductName("name");
 			deprecated.setProductDescription("description");
 			deprecated.setProductUnit("unit");
@@ -322,7 +323,7 @@ public class SwaggerUtilTest {
 
 		Hazard hazard;
 		{
-			metadata.Hazard deprecated = metadata.MetadataFactory.eINSTANCE.createHazard();
+			final metadata.Hazard deprecated = metadata.MetadataFactory.eINSTANCE.createHazard();
 			deprecated.setHazardType("type");
 			deprecated.setHazardName("name");
 			deprecated.setHazardDescription("description");
@@ -362,7 +363,7 @@ public class SwaggerUtilTest {
 
 		PopulationGroup pg;
 		{
-			metadata.PopulationGroup deprecated = metadata.MetadataFactory.eINSTANCE.createPopulationGroup();
+			final metadata.PopulationGroup deprecated = metadata.MetadataFactory.eINSTANCE.createPopulationGroup();
 			deprecated.setPopulationName("name");
 			deprecated.setTargetPopulation("population");
 			deprecated.getPopulationSpan().add(createStringObject("span"));
@@ -400,7 +401,7 @@ public class SwaggerUtilTest {
 
 		Assay assay;
 		{
-			metadata.Assay deprecated = metadata.MetadataFactory.eINSTANCE.createAssay();
+			final metadata.Assay deprecated = metadata.MetadataFactory.eINSTANCE.createAssay();
 			deprecated.setAssayName("name");
 			deprecated.setAssayDescription("description");
 			deprecated.setPercentageOfMoisture("0.5");
@@ -430,7 +431,7 @@ public class SwaggerUtilTest {
 
 		DietaryAssessmentMethod method;
 		{
-			metadata.DietaryAssessmentMethod deprecated = metadata.MetadataFactory.eINSTANCE
+			final metadata.DietaryAssessmentMethod deprecated = metadata.MetadataFactory.eINSTANCE
 					.createDietaryAssessmentMethod();
 			deprecated.setCollectionTool("tool");
 			deprecated.setNumberOfNonConsecutiveOneDay(0);
@@ -455,7 +456,7 @@ public class SwaggerUtilTest {
 
 		Study study;
 		{
-			metadata.Study deprecated = metadata.MetadataFactory.eINSTANCE.createStudy();
+			final metadata.Study deprecated = metadata.MetadataFactory.eINSTANCE.createStudy();
 			deprecated.setStudyIdentifier("identifier");
 			deprecated.setStudyTitle("title");
 			deprecated.setStudyDescription("description");
@@ -499,7 +500,7 @@ public class SwaggerUtilTest {
 
 		StudySample sample;
 		{
-			metadata.StudySample deprecated = metadata.MetadataFactory.eINSTANCE.createStudySample();
+			final metadata.StudySample deprecated = metadata.MetadataFactory.eINSTANCE.createStudySample();
 			deprecated.setSampleName("name");
 			deprecated.setProtocolOfSampleCollection("collection");
 			deprecated.setSamplingStrategy("strategy");
@@ -531,7 +532,7 @@ public class SwaggerUtilTest {
 
 		Laboratory laboratory;
 		{
-			metadata.Laboratory deprecated = metadata.MetadataFactory.eINSTANCE.createLaboratory();
+			final metadata.Laboratory deprecated = metadata.MetadataFactory.eINSTANCE.createLaboratory();
 			deprecated.setLaboratoryName("name");
 			deprecated.setLaboratoryCountry("country");
 			deprecated.getLaboratoryAccreditation().add(createStringObject("accreditation"));
@@ -549,7 +550,7 @@ public class SwaggerUtilTest {
 
 		GenericModelDataBackground background;
 		{
-			metadata.DataBackground deprecated = metadata.MetadataFactory.eINSTANCE.createDataBackground();
+			final metadata.DataBackground deprecated = metadata.MetadataFactory.eINSTANCE.createDataBackground();
 			deprecated.setStudy(metadata.MetadataFactory.eINSTANCE.createStudy());
 			deprecated.getStudySample().add(metadata.MetadataFactory.eINSTANCE.createStudySample());
 			deprecated.getDietaryAssessmentMethod()
@@ -572,7 +573,7 @@ public class SwaggerUtilTest {
 
 		ModelEquation equation;
 		{
-			metadata.ModelEquation deprecated = metadata.MetadataFactory.eINSTANCE.createModelEquation();
+			final metadata.ModelEquation deprecated = metadata.MetadataFactory.eINSTANCE.createModelEquation();
 			deprecated.setModelEquationName("name");
 			deprecated.setModelEquationClass("class");
 			deprecated.setModelEquation("equation");
@@ -594,7 +595,7 @@ public class SwaggerUtilTest {
 
 		Exposure exposure;
 		{
-			metadata.Exposure deprecated = metadata.MetadataFactory.eINSTANCE.createExposure();
+			final metadata.Exposure deprecated = metadata.MetadataFactory.eINSTANCE.createExposure();
 			deprecated.setTypeOfExposure("exposure");
 			deprecated.setUncertaintyEstimation("estimation");
 			deprecated.getMethodologicalTreatmentOfLeftCensoredData().add(createStringObject("data"));
@@ -616,7 +617,7 @@ public class SwaggerUtilTest {
 
 		GenericModelModelMath math;
 		{
-			metadata.ModelMath deprecated = metadata.MetadataFactory.eINSTANCE.createModelMath();
+			final metadata.ModelMath deprecated = metadata.MetadataFactory.eINSTANCE.createModelMath();
 			deprecated.setFittingProcedure("procedure");
 			deprecated.getParameter().add(metadata.MetadataFactory.eINSTANCE.createParameter());
 			deprecated.getModelEquation().add(metadata.MetadataFactory.eINSTANCE.createModelEquation());
@@ -635,7 +636,7 @@ public class SwaggerUtilTest {
 	}
 
 	private static StringObject createStringObject(String string) {
-		StringObject so = metadata.MetadataFactory.eINSTANCE.createStringObject();
+		final StringObject so = metadata.MetadataFactory.eINSTANCE.createStringObject();
 		so.setValue(string);
 
 		return so;
@@ -701,7 +702,7 @@ public class SwaggerUtilTest {
 		assertThat(SwaggerUtil.getModelMath(createRiskModel()), instanceOf(GenericModelModelMath.class));
 		assertThat(SwaggerUtil.getModelMath(createQraModel()), instanceOf(GenericModelModelMath.class));
 	}
-	
+
 	@Test
 	public void testGetLanguageWrittenIn() {
 		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createGenericModel()));
@@ -716,7 +717,7 @@ public class SwaggerUtilTest {
 		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createRiskModel()));
 		assertEquals("R", SwaggerUtil.getLanguageWrittenIn(createQraModel()));
 	}
-	
+
 	@Test
 	public void testGetModelName() {
 		assertEquals("name", SwaggerUtil.getModelName(createGenericModel()));
@@ -733,13 +734,13 @@ public class SwaggerUtilTest {
 	}
 
 	private static GenericModel createGenericModel() {
-		GenericModel model = new GenericModel();
+		final GenericModel model = new GenericModel();
 		model.setModelType("genericModel");
-		
-		GenericModelGeneralInformation information = new GenericModelGeneralInformation();
+
+		final GenericModelGeneralInformation information = new GenericModelGeneralInformation();
 		information.setName("name");
 		information.setLanguageWrittenIn("R");
-		
+
 		model.setGeneralInformation(information);
 		model.setScope(new GenericModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
@@ -749,25 +750,25 @@ public class SwaggerUtilTest {
 	}
 
 	private static DataModel createDataModel() {
-		DataModel model = new DataModel();
+		final DataModel model = new DataModel();
 		model.setModelType("dataModel");
 
-		DataModelGeneralInformation information = new DataModelGeneralInformation();
+		final DataModelGeneralInformation information = new DataModelGeneralInformation();
 		information.setName("name");
 		model.setGeneralInformation(information);
 
 		model.setScope(new GenericModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new DataModelModelMath());
-		
+
 		return model;
 	}
-	
+
 	private static PredictiveModel createPredictiveModel() {
-		PredictiveModel model = new PredictiveModel();
+		final PredictiveModel model = new PredictiveModel();
 		model.setModelType("predictiveModel");
-		
-		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+
+		final PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
 		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
@@ -775,15 +776,15 @@ public class SwaggerUtilTest {
 		model.setScope(new PredictiveModelScope());
 		model.setDataBackground(new PredictiveModelDataBackground());
 		model.setModelMath(new PredictiveModelModelMath());
-		
+
 		return model;
 	}
-	
+
 	private static OtherModel createOtherModel() {
-		OtherModel model = new OtherModel();
+		final OtherModel model = new OtherModel();
 		model.setModelType("otherModel");
-		
-		OtherModelGeneralInformation information = new OtherModelGeneralInformation();
+
+		final OtherModelGeneralInformation information = new OtherModelGeneralInformation();
 		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
@@ -791,15 +792,15 @@ public class SwaggerUtilTest {
 		model.setScope(new OtherModelScope());
 		model.setDataBackground(new OtherModelDataBackground());
 		model.setModelMath(new OtherModelModelMath());
-		
+
 		return model;
 	}
-	
+
 	private static ExposureModel createExposureModel() {
-		ExposureModel model = new ExposureModel();
+		final ExposureModel model = new ExposureModel();
 		model.setModelType("exposureModel");
 
-		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		final PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
 		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
@@ -807,15 +808,15 @@ public class SwaggerUtilTest {
 		model.setScope(new ExposureModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new GenericModelModelMath());
-		
+
 		return model;
 	}
-	
+
 	private static ToxicologicalModel createToxicologicalModel() {
-		ToxicologicalModel model = new ToxicologicalModel();
+		final ToxicologicalModel model = new ToxicologicalModel();
 		model.setModelType("toxicologicalModel");
 
-		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		final PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
 		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
@@ -823,15 +824,15 @@ public class SwaggerUtilTest {
 		model.setScope(new ToxicologicalModelScope());
 		model.setDataBackground(new PredictiveModelDataBackground());
 		model.setModelMath(new GenericModelModelMath());
-		
+
 		return model;
 	}
-	
+
 	private static DoseResponseModel createDoseResponseModel() {
-		DoseResponseModel model = new DoseResponseModel();
+		final DoseResponseModel model = new DoseResponseModel();
 		model.setModelType("doseResponseModel");
 
-		DoseResponseModelGeneralInformation information = new DoseResponseModelGeneralInformation();
+		final DoseResponseModelGeneralInformation information = new DoseResponseModelGeneralInformation();
 		information.setModelName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
@@ -839,15 +840,15 @@ public class SwaggerUtilTest {
 		model.setScope(new DoseResponseModelScope());
 		model.setDataBackground(new PredictiveModelDataBackground());
 		model.setModelMath(new DoseResponseModelModelMath());
-		
+
 		return model;
 	}
 
 	private static ProcessModel createProcessModel() {
-		ProcessModel model = new ProcessModel();
+		final ProcessModel model = new ProcessModel();
 		model.setModelType("processModel");
 
-		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		final PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
 		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
@@ -855,31 +856,31 @@ public class SwaggerUtilTest {
 		model.setScope(new ProcessModelScope());
 		model.setDataBackground(new PredictiveModelDataBackground());
 		model.setModelMath(new PredictiveModelModelMath());
-		
+
 		return model;
 	}
 
 	private static ConsumptionModel createConsumptionModel() {
-		ConsumptionModel model = new ConsumptionModel();
+		final ConsumptionModel model = new ConsumptionModel();
 		model.setModelType("consumptionModel");
-		
-		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+
+		final PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
 		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
-		
+
 		model.setScope(new ConsumptionModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new PredictiveModelModelMath());
-		
+
 		return model;
 	}
 
 	private static RiskModel createRiskModel() {
-		RiskModel model = new RiskModel();
+		final RiskModel model = new RiskModel();
 		model.setModelType("riskModel");
 
-		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		final PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
 		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
@@ -887,15 +888,15 @@ public class SwaggerUtilTest {
 		model.setScope(new ExposureModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new GenericModelModelMath());
-		
+
 		return model;
 	}
 
 	private static QraModel createQraModel() {
-		QraModel model = new QraModel();
+		final QraModel model = new QraModel();
 		model.setModelType("qraModel");
 
-		PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
+		final PredictiveModelGeneralInformation information = new PredictiveModelGeneralInformation();
 		information.setName("name");
 		information.setLanguageWrittenIn("R");
 		model.setGeneralInformation(information);
@@ -903,7 +904,7 @@ public class SwaggerUtilTest {
 		model.setScope(new ExposureModelScope());
 		model.setDataBackground(new GenericModelDataBackground());
 		model.setModelMath(new GenericModelModelMath());
-		
+
 		return model;
 	}
 }
