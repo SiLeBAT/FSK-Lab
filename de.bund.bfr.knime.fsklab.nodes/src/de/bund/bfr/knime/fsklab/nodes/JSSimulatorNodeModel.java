@@ -18,11 +18,8 @@
  */
 package de.bund.bfr.knime.fsklab.nodes;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -31,14 +28,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.emfjson.jackson.resource.JsonResourceFactory;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -51,9 +42,9 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
 import org.knime.core.node.workflow.NativeNodeContainer;
+import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowEvent;
-import org.knime.core.node.workflow.WorkflowListener;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -66,16 +57,16 @@ import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.JSSimulatorViewValue.JSSimulation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
-import metadata.MetadataPackage;
 import metadata.ModelMath;
-import metadata.ParameterClassification;
 import metadata.SwaggerUtil;
 
 class JSSimulatorNodeModel
     extends AbstractWizardNodeModel<JSSimulatorViewRepresentation, JSSimulatorViewValue>
     implements PortObjectHolder {
+
   private static final NodeLogger LOGGER =
       NodeLogger.getLogger("JavaScript FSK Simulation Configurator");
+
   private FskPortObject port;
 
   // Input and output port types
@@ -84,10 +75,6 @@ class JSSimulatorNodeModel
 
   private static final String VIEW_NAME = new JSSimulatorNodeFactory().getInteractiveViewName();
   int index = 0;
-
-  String nodeWithId;
-  String nodeName;
-  String nodeId;
 
   public JSSimulatorNodeModel() {
     super(IN_TYPES, OUT_TYPES, VIEW_NAME);
@@ -134,7 +121,7 @@ class JSSimulatorNodeModel
 
       if (val.simulations == null && port != null && port.simulations != null) {
         // Convert from FskSimulation(s) to JSSimulation(s)
-        List<Parameter> parameters = SwaggerUtil.getParameter(port.modelMetadata);
+        final List<Parameter> parameters = SwaggerUtil.getParameter(port.modelMetadata);
         val.simulations = port.simulations.stream().map(it -> toJSSimulation(it, parameters))
             .collect(Collectors.toList());
       }
@@ -167,47 +154,36 @@ class JSSimulatorNodeModel
     return inSpecs;
   }
 
-  public void deleteSettingFolder(String settingFolderPath) {
-    File settingFolder = new File(settingFolderPath);
-
-    try {
-      if (settingFolder.exists()) {
-        Files.walk(settingFolder.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile)
-            .forEach(File::delete);
-      }
-    } catch (IOException e) {
-      // nothing to do
-    }
-  }
-
   @Override
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws IOException, CanceledExecutionException, InvalidSettingsException {
-    nodeWithId = NodeContext.getContext().getNodeContainer().getNameWithID();
-    nodeName = NodeContext.getContext().getNodeContainer().getName();
-    nodeId = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
 
-    FskPortObject inObj = (FskPortObject) inObjects[0];
+    final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
+    final String nameWithID = nodeContainer.getNameWithID();
+    final String nodeName = nodeContainer.getName();
+    final int nodeId = nodeContainer.getID().getIndex();
+
+    final FskPortObject inObj = (FskPortObject) inObjects[0];
 
     synchronized (getLock()) {
 
-      JSSimulatorViewValue val = getViewValue();
+      final JSSimulatorViewValue val = getViewValue();
 
       // If not executed
       if (val.simulations == null) {
         final List<Parameter> parameters = SwaggerUtil.getParameter(inObj.modelMetadata);
 
         loadJsonSetting();
-        List<JSSimulation> simulations = inObj.simulations.stream()
+        final List<JSSimulation> simulations = inObj.simulations.stream()
             .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
 
         if (val.modelMath != null) {
-          ModelMath modelMathFromSetting = getObjectFromJson(val.modelMath, ModelMath.class);
+          final ModelMath modelMathFromSetting = getObjectFromJson(val.modelMath, ModelMath.class);
           // TODO validate for setting save
           /*if (!EcoreUtil.equals(modelMathFromSetting.getParameter(), parameters)) {
             // Convert FskSimulation(s) to JSSimulation(s)
             val.simulations = simulations;
-            
+
             File directory = NodeContext.getContext().getWorkflowManager().getProjectWFM()
                 .getContext().getCurrentLocation();
             String containerName = nodeName + " (#" + nodeId + ") setting";
@@ -232,31 +208,27 @@ class JSSimulatorNodeModel
     }
 
     exec.setProgress(1);
-    NodeContext.getContext().getWorkflowManager().addListener(new WorkflowListener() {
+    NodeContext.getContext().getWorkflowManager().addListener(event -> {
+      if (event.getType().equals(WorkflowEvent.Type.NODE_REMOVED)
+          && event.getOldValue() instanceof NativeNodeContainer) {
+        final NativeNodeContainer nnc = (NativeNodeContainer) event.getOldValue();
+        final File directory =
+            nnc.getDirectNCParent().getProjectWFM().getContext().getCurrentLocation();
+        final String nncnamewithId = nnc.getNameWithID();
+        if (nncnamewithId.equals(nameWithID)) {
 
-      @Override
-      public void workflowChanged(WorkflowEvent event) {
-        if (event.getType().equals(WorkflowEvent.Type.NODE_REMOVED)
-            && event.getOldValue() instanceof NativeNodeContainer) {
-          NativeNodeContainer nnc = (NativeNodeContainer) event.getOldValue();
-          File directory =
-              nnc.getDirectNCParent().getProjectWFM().getContext().getCurrentLocation();
-          String nncnamewithId = nnc.getNameWithID();
-          if (nncnamewithId.equals(nodeWithId)) {
+          final String containerName = nodeName + " (#" + nodeId + ") setting";
 
-            String containerName = nodeName + " (#" + nodeId + ") setting";
+          final String settingFolderPath = directory.getPath().concat("/" + containerName);
+          final File settingFolder = new File(settingFolderPath);
 
-            String settingFolderPath = directory.getPath().concat("/" + containerName);
-            File settingFolder = new File(settingFolderPath);
-
-            try {
-              if (settingFolder.exists()) {
-                Files.walk(settingFolder.toPath()).sorted(Comparator.reverseOrder())
-                    .map(Path::toFile).forEach(File::delete);
-              }
-            } catch (IOException e) {
-              // nothing to do
+          try {
+            if (settingFolder.exists()) {
+              Files.walk(settingFolder.toPath()).sorted(Comparator.reverseOrder())
+                  .map(Path::toFile).forEach(File::delete);
             }
+          } catch (final IOException e) {
+            // nothing to do
           }
         }
       }
@@ -267,15 +239,15 @@ class JSSimulatorNodeModel
   private void createSimulation(FskPortObject inObj, JSSimulatorViewValue val) {
 
     if (inObj instanceof CombinedFskPortObject) {
-      List<Parameter> inputParams = getViewRepresentation().parameters;
+      final List<Parameter> inputParams = getViewRepresentation().parameters;
       createSimulation(((CombinedFskPortObject) inObj).getFirstFskPortObject(), val);
       createSimulation(((CombinedFskPortObject) inObj).getSecondFskPortObject(), val);
       inObj.simulations.clear();
-      for (JSSimulation jsSimulation : val.simulations) {
-        FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
+      for (final JSSimulation jsSimulation : val.simulations) {
+        final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
         for (int i = 0; i < inputParams.size(); i++) {
-          String paramName = inputParams.get(i).getId();
-          String paramValue = jsSimulation.values.get(i);
+          final String paramName = inputParams.get(i).getId();
+          final String paramValue = jsSimulation.values.get(i);
           fskSimulation.getParameters().put(paramName, paramValue);
         }
         inObj.simulations.add(fskSimulation);
@@ -284,18 +256,18 @@ class JSSimulatorNodeModel
       inObj.selectedSimulationIndex = val.selectedSimulationIndex;
     } else {
       inObj.simulations.clear();
-      List<String> modelMathParameter =SwaggerUtil.getParameter(inObj.modelMetadata).stream()
+      final List<String> modelMathParameter =SwaggerUtil.getParameter(inObj.modelMetadata).stream()
           .map(Parameter::getId).collect(Collectors.toList());
-      List<Integer> indexes = new ArrayList<Integer>();
-      List<Parameter> properInputParam = new ArrayList<Parameter>();
-      for (JSSimulation jsSimulation : val.simulations) {
-        FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
-        List<Parameter> inputParams = getViewRepresentation().parameters;
+      final List<Integer> indexes = new ArrayList<>();
+      final List<Parameter> properInputParam = new ArrayList<>();
+      for (final JSSimulation jsSimulation : val.simulations) {
+        final FskSimulation fskSimulation = new FskSimulation(jsSimulation.name);
+        final List<Parameter> inputParams = getViewRepresentation().parameters;
         index = 0;
         inputParams.stream().forEach(param -> {
-          Parameter paramCopy = SwaggerUtil.cloneParameter(param);
-          String paramWithSuffix = paramCopy.getId();
-          String paramWithoutSuffix = paramWithSuffix.replaceAll(JoinerNodeModel.suffix, "");
+          final Parameter paramCopy = SwaggerUtil.cloneParameter(param);
+          final String paramWithSuffix = paramCopy.getId();
+          final String paramWithoutSuffix = paramWithSuffix.replaceAll(JoinerNodeModel.suffix, "");
           if (modelMathParameter.contains(paramWithoutSuffix)
               || modelMathParameter.contains(paramWithSuffix)) {
             paramCopy.setId(paramWithoutSuffix);
@@ -307,8 +279,8 @@ class JSSimulatorNodeModel
         });
 
         for (int i = 0; i < properInputParam.size(); i++) {
-          String paramName = properInputParam.get(i).getId();
-          String paramValue = jsSimulation.values.get(indexes.get(i));
+          final String paramName = properInputParam.get(i).getId();
+          final String paramValue = jsSimulation.values.get(indexes.get(i));
           fskSimulation.getParameters().put(paramName, paramValue);
         }
         inObj.simulations.add(fskSimulation);
@@ -341,15 +313,16 @@ class JSSimulatorNodeModel
     port = (FskPortObject) portObjects[0];
   }
 
+  @Override
   public void setHideInWizard(boolean hide) {
   }
 
   private static JSSimulation toJSSimulation(FskSimulation fskSim, List<Parameter> parameters) {
-    JSSimulation jsSim = new JSSimulation();
+    final JSSimulation jsSim = new JSSimulation();
     jsSim.name = fskSim.getName();
 
     // Get input and constant parameters
-    List<de.bund.bfr.metadata.swagger.Parameter> nonOutputs =
+    final List<de.bund.bfr.metadata.swagger.Parameter> nonOutputs =
         parameters.stream().filter(p -> p.getClassification() != ClassificationEnum.OUTPUT)
             .collect(Collectors.toList());
 
@@ -364,7 +337,7 @@ class JSSimulatorNodeModel
   protected void saveSettingsTo(NodeSettingsWO settings) {
 
     try {
-      JSSimulatorViewValue vv = getViewValue();
+      final JSSimulatorViewValue vv = getViewValue();
       saveJsonSetting(vv.simulations, vv.modelMath);
     } catch (IOException | CanceledExecutionException e) {
       e.printStackTrace();
@@ -383,33 +356,33 @@ class JSSimulatorNodeModel
 
 
   protected void loadJsonSetting() throws IOException, CanceledExecutionException {
-    File directory =
+    final File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    String name = NodeContext.getContext().getNodeContainer().getName();
-    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
-    String containerName = name + " (#" + id + ") setting";
+    final String name = NodeContext.getContext().getNodeContainer().getName();
+    final String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    final String containerName = name + " (#" + id + ") setting";
 
-    String settingFolderPath = directory.getPath().concat("/" + containerName);
-    File settingFolder = new File(settingFolderPath);
+    final String settingFolderPath = directory.getPath().concat("/" + containerName);
+    final File settingFolder = new File(settingFolderPath);
 
     // Read configuration strings
     String simulationString = NodeUtils.readConfigString(settingFolder, "simulations.json");
 
     // Update view value
     if (!StringUtils.isBlank(simulationString)) {
-      String selectedIndex = simulationString.split(">>><<<")[0];
+      final String selectedIndex = simulationString.split(">>><<<")[0];
       getViewValue().selectedSimulationIndex = Integer.parseInt(selectedIndex);
       simulationString = simulationString.split(">>><<<")[1];
 
-      List<JSSimulation> simulations = new ArrayList<JSSimulation>();
-      JSSimulatorViewValue viewValue = getViewValue();
-      List<String> listOfSimulations = Arrays.asList(simulationString.split("<<<>>>"));
+      final List<JSSimulation> simulations = new ArrayList<JSSimulation>();
+      final JSSimulatorViewValue viewValue = getViewValue();
+      final List<String> listOfSimulations = Arrays.asList(simulationString.split("<<<>>>"));
 
       listOfSimulations.forEach(lineOfSimulation -> {
-        String[] oneSimualtion = lineOfSimulation.split("  ,:  ");
+        final String[] oneSimualtion = lineOfSimulation.split("  ,:  ");
 
         if (oneSimualtion != null && oneSimualtion.length == 2) {
-          JSSimulation jsSim = new JSSimulation();
+          final JSSimulation jsSim = new JSSimulation();
           jsSim.name = oneSimualtion[0];
           jsSim.values = Arrays.asList(oneSimualtion[1].split(":::"));
           simulations.add(jsSim);
@@ -426,14 +399,14 @@ class JSSimulatorNodeModel
     if (simulationList == null) {
       return;
     }
-    File directory =
+    final File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    String name = NodeContext.getContext().getNodeContainer().getName();
-    String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
-    String containerName = name + " (#" + id + ") setting";
+    final String name = NodeContext.getContext().getNodeContainer().getName();
+    final String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
+    final String containerName = name + " (#" + id + ") setting";
 
-    String settingFolderPath = directory.getPath().concat("/" + containerName);
-    File settingFolder = new File(settingFolderPath);
+    final String settingFolderPath = directory.getPath().concat("/" + containerName);
+    final File settingFolder = new File(settingFolderPath);
     if (!settingFolder.exists()) {
       settingFolder.mkdir();
     }
@@ -448,14 +421,14 @@ class JSSimulatorNodeModel
   private static <T> T getObjectFromJson(String jsonStr, Class<T> valueType)
       throws InvalidSettingsException, JsonParseException, JsonMappingException, IOException {
     final ResourceSet resourceSet = new ResourceSetImpl();
-    ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    final ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
     return mapper.readValue(jsonStr, valueType);
-   
+
   }
 
   private static String FromOjectToJSON(final Object object) throws JsonProcessingException {
-    ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
-    String jsonStr = objectMapper.writeValueAsString(object);
+    final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
+    final String jsonStr = objectMapper.writeValueAsString(object);
     return jsonStr;
   }
 }

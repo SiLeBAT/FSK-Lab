@@ -26,7 +26,6 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import de.bund.bfr.knime.fsklab.rakip.ModelMath;
 
 /**
  * Value of the JavaScript simulator node.
@@ -57,7 +56,7 @@ class JSSimulatorViewValue extends JSONViewContent {
       return false;
     }
 
-    JSSimulatorViewValue other = (JSSimulatorViewValue) obj;
+    final JSSimulatorViewValue other = (JSSimulatorViewValue) obj;
     return simulations.equals(other.simulations)
         && selectedSimulationIndex == other.selectedSimulationIndex;
   }
@@ -86,7 +85,7 @@ class JSSimulatorViewValue extends JSONViewContent {
         return false;
       }
 
-      JSSimulation other = (JSSimulation) obj;
+      final JSSimulation other = (JSSimulation) obj;
       return Objects.equals(name, other.name) && Objects.equals(values, other.values);
     }
 
@@ -94,7 +93,7 @@ class JSSimulatorViewValue extends JSONViewContent {
     public int hashCode() {
       return Objects.hash(name, values);
     }
-    
+
     public String buildStringValue() {
       return name +"  ,:  "+ String.join(":::", values);
     }
