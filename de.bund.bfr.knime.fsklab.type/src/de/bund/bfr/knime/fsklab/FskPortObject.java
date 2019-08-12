@@ -26,8 +26,6 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;
@@ -107,7 +105,7 @@ import metadata.SwaggerUtil;
 
 /**
  * A port object for an FSK model port providing R scripts and model meta data.
- * 
+ *
  * @author Miguel Alba, BfR, Berlin.
  */
 public class FskPortObject implements PortObject {
@@ -127,7 +125,7 @@ public class FskPortObject implements PortObject {
 	public String viz;
 
 	/** Paths to resources: plain text files and R workspace files (.rdata). */
-	private String workingDirectory;
+	private final String workingDirectory;
 
 	/** Path to plot. */
 	private String plot;
@@ -182,7 +180,7 @@ public class FskPortObject implements PortObject {
 		this.packages = packages;
 
 		this.readme = readme;
-		this.spreadsheet = "";
+		spreadsheet = "";
 	}
 
 	@Override
@@ -235,7 +233,7 @@ public class FskPortObject implements PortObject {
 
 	/**
 	 * Serializer used to save this port object.
-	 * 
+	 *
 	 * @return a {@link FskPortObject}.
 	 */
 	public static final class Serializer extends PortObjectSerializer<FskPortObject> {
@@ -274,7 +272,7 @@ public class FskPortObject implements PortObject {
 				// ObjectMapper defaults to use a JsonFactory that automatically closes
 				// the stream. When further entries are added to the archive the stream
 				// is closed and fails. The AUTO_CLOSE_TARGET needs to be disabled.
-				JsonFactory jsonFactory = new JsonFactory();
+				final JsonFactory jsonFactory = new JsonFactory();
 				jsonFactory.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
 				jsonFactory.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
 
@@ -301,7 +299,7 @@ public class FskPortObject implements PortObject {
 				modelClasses.put("riskModel", RiskModel.class);
 				modelClasses.put("qraModel", QraModel.class);
 
-			} catch (Throwable throwable) {
+			} catch (final Throwable throwable) {
 				LOGGER.error("Failure during static initialization", throwable);
 				throw throwable;
 			}
@@ -376,9 +374,9 @@ public class FskPortObject implements PortObject {
 				out.putNextEntry(new ZipEntry(SIMULATION));
 
 				try {
-					ObjectOutputStream oos = new ObjectOutputStream(out);
+					final ObjectOutputStream oos = new ObjectOutputStream(out);
 					oos.writeObject(portObject.simulations);
-				} catch (IOException exception) {
+				} catch (final IOException exception) {
 					// TODO: deal with exception
 				}
 				out.closeEntry();
@@ -388,9 +386,9 @@ public class FskPortObject implements PortObject {
 			out.putNextEntry(new ZipEntry(SIMULATION_INDEX));
 
 			try {
-				ObjectOutputStream oos = new ObjectOutputStream(out);
+				final ObjectOutputStream oos = new ObjectOutputStream(out);
 				oos.writeObject(portObject.selectedSimulationIndex);
-			} catch (IOException exception) {
+			} catch (final IOException exception) {
 				// TODO: deal with exception
 			}
 			out.closeEntry();
@@ -406,7 +404,7 @@ public class FskPortObject implements PortObject {
 			String modelScript = "";
 			String visualizationScript = "";
 
-			Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
+			final Path workspacePath = FileUtil.createTempFile("workspace", ".r").toPath();
 			List<String> packages = new ArrayList<>();
 
 			Model modelMetadata = null;
@@ -422,7 +420,7 @@ public class FskPortObject implements PortObject {
 
 			ZipEntry entry;
 			while ((entry = in.getNextEntry()) != null) {
-				String entryName = entry.getName();
+				final String entryName = entry.getName();
 
 				if (entryName.equals(MODEL)) {
 					modelScript = IOUtils.toString(in, "UTF-8");
@@ -434,10 +432,10 @@ public class FskPortObject implements PortObject {
 				// metadata
 				else if (entryName.equals(META_DATA)) {
 
-					de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel = MAPPER102.readValue(in,
+					final de.bund.bfr.knime.fsklab.rakip.GenericModel genericModel = MAPPER102.readValue(in,
 							de.bund.bfr.knime.fsklab.rakip.GenericModel.class);
 
-					GenericModel gm = new GenericModel();
+					final GenericModel gm = new GenericModel();
 					gm.setModelType("genericModel");
 					gm.setGeneralInformation(RakipUtil.convert(genericModel.generalInformation));
 					gm.setScope(RakipUtil.convert(genericModel.scope));
@@ -449,22 +447,22 @@ public class FskPortObject implements PortObject {
 
 				else if (entryName.equals(CFG_GENERAL_INFORMATION)) {
 					// Read deprecated EMF metadata
-					metadata.GeneralInformation deprecatedInformation = MAPPER103.readValue(in,
+					final metadata.GeneralInformation deprecatedInformation = MAPPER103.readValue(in,
 							metadata.GeneralInformation.class);
 					in.getNextEntry();
 
-					metadata.Scope deprecatedScope = MAPPER103.readValue(in, metadata.Scope.class);
+					final metadata.Scope deprecatedScope = MAPPER103.readValue(in, metadata.Scope.class);
 					in.getNextEntry();
 
-					metadata.DataBackground deprecatedBackground = MAPPER103.readValue(in,
+					final metadata.DataBackground deprecatedBackground = MAPPER103.readValue(in,
 							metadata.DataBackground.class);
 					in.getNextEntry();
 
-					metadata.ModelMath deprecatedMath = MAPPER103.readValue(in, metadata.ModelMath.class);
+					final metadata.ModelMath deprecatedMath = MAPPER103.readValue(in, metadata.ModelMath.class);
 					in.getNextEntry();
 
 					// Convert to new metadata schema
-					GenericModel gm = new GenericModel();
+					final GenericModel gm = new GenericModel();
 					gm.setModelType("genericModel");
 					gm.setGeneralInformation(SwaggerUtil.convert(deprecatedInformation));
 					gm.setScope(SwaggerUtil.convert(deprecatedScope));
@@ -473,7 +471,7 @@ public class FskPortObject implements PortObject {
 					modelMetadata = gm;
 				} else if (entryName.equals("modelType")) {
 					// deserialize new models
-					String modelClass = IOUtils.toString(in, "UTF-8");
+					final String modelClass = IOUtils.toString(in, "UTF-8");
 					in.getNextEntry();
 
 					modelMetadata = MAPPER104.readValue(in, modelClasses.get(modelClass));
@@ -491,18 +489,18 @@ public class FskPortObject implements PortObject {
 					spreadsheet = IOUtils.toString(in, "UTF-8");
 				} else if (entryName.equals(SIMULATION)) {
 					try {
-						ObjectInputStream ois = new ObjectInputStream(in);
-						simulations = ((List<FskSimulation>) ois.readObject());
-					} catch (ClassNotFoundException e) {
+						final ObjectInputStream ois = new ObjectInputStream(in);
+						simulations = (List<FskSimulation>) ois.readObject();
+					} catch (final ClassNotFoundException e) {
 						e.printStackTrace();
 					}
 				}
 
 				else if (entryName.equals(SIMULATION_INDEX)) {
-					ObjectInputStream ois = new ObjectInputStream(in);
+					final ObjectInputStream ois = new ObjectInputStream(in);
 					try {
 						selectedSimulationIndex = ((Integer) ois.readObject()).intValue();
-					} catch (ClassNotFoundException e) {
+					} catch (final ClassNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -524,14 +522,14 @@ public class FskPortObject implements PortObject {
 
 	@Override
 	public JComponent[] getViews() {
-		JPanel modelScriptPanel = new ScriptPanel("Model script", model, false, false);
-		JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false, false);
-		Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-		String jsonInString = gson.toJson(modelMetadata);
-		String modelMetadataAsJSON = "<html><pre id='json'>" +StringEscapeUtils.unescapeJson(StringEscapeUtils.unescapeJson(gson.toJson(jsonInString))) + "</pre></html>";
+		final JPanel modelScriptPanel = new ScriptPanel("Model script", model, false, false);
+		final JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false, false);
+		final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+		final String jsonInString = gson.toJson(modelMetadata);
+		final String modelMetadataAsJSON = "<html><pre id='json'>" +StringEscapeUtils.unescapeJson(StringEscapeUtils.unescapeJson(gson.toJson(jsonInString))) + "</pre></html>";
 
-		JTextPane tree = new JTextPane();
-		
+		final JTextPane tree = new JTextPane();
+
 		tree.setContentType("text/html");
 		tree.setText(modelMetadataAsJSON);
 		// JTree tree = MetadataTree.createTree(generalInformation, scope,
@@ -541,13 +539,13 @@ public class FskPortObject implements PortObject {
 
 		final JPanel librariesPanel = UIUtils.createLibrariesPanel(packages);
 
-		JPanel simulationsPanel = new SimulationsPanel();
+		final JPanel simulationsPanel = new SimulationsPanel();
 
 		// Readme
-		JTextArea readmeArea = new JTextArea(readme);
+		final JTextArea readmeArea = new JTextArea(readme);
 		readmeArea.setEnabled(false);
 
-		JPanel readmePanel = new JPanel(new BorderLayout());
+		final JPanel readmePanel = new JPanel(new BorderLayout());
 		readmePanel.setName("README");
 		readmePanel.add(new JScrollPane(readmeArea));
 
@@ -560,7 +558,7 @@ public class FskPortObject implements PortObject {
 		private static final long serialVersionUID = -4887698302872695689L;
 
 		private final FormPanel formPanel;
-		private Map<Object, Icon> icons = new HashMap<Object, Icon>();
+		private final Map<Object, Icon> icons = new HashMap<Object, Icon>();
 		private final String SELETCTED_SIMULATION_STR = "selected";
 
 		public SimulationsPanel() {
@@ -572,49 +570,45 @@ public class FskPortObject implements PortObject {
 
 		private void createUI() {
 
-			FPanel simulationPanel = new FPanel();
+			final FPanel simulationPanel = new FPanel();
 			simulationPanel.setLayout(new BorderLayout());
-			JScrollPane parametersPane = new JScrollPane(
+			final JScrollPane parametersPane = new JScrollPane(
 					UIUtils.createTitledPanel(UIUtils.createNorthPanel(formPanel), "Parameters"));
 			parametersPane.setBorder(null);
 
 			simulationPanel.add(parametersPane, BorderLayout.WEST);
 
 			// Panel to show preview of generated script out of parameters
-			String previewScript = buildParameterScript(simulations.get(selectedSimulationIndex));
-			ScriptPanel scriptPanel = new ScriptPanel("Preview", previewScript, false, true);
+			final String previewScript = buildParameterScript(simulations.get(selectedSimulationIndex));
+			final ScriptPanel scriptPanel = new ScriptPanel("Preview", previewScript, false, true);
 			simulationPanel.add(UIUtils.createTitledPanel(scriptPanel, "Preview script"), BorderLayout.CENTER);
 
 			// Panel to select simulation
-			FskSimulation[] simulationsArray = simulations.toArray(new FskSimulation[simulations.size()]);
+			final FskSimulation[] simulationsArray = simulations.toArray(new FskSimulation[simulations.size()]);
 
-			JComboBox<FskSimulation> simulationList = new JComboBox<FskSimulation>(simulationsArray);
+			final JComboBox<FskSimulation> simulationList = new JComboBox<>(simulationsArray);
 			simulationList.setRenderer(new IconListRenderer(icons, simulationsArray));
-			simulationList.addActionListener(new ActionListener() {
+			simulationList.addActionListener(e -> {
+				// Get selected simulation
+				if (simulationList.getSelectedIndex() != -1) {
+					final FskSimulation selectedSimulation = (FskSimulation) simulationList.getSelectedItem();
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// Get selected simulation
-					if (simulationList.getSelectedIndex() != -1) {
-						FskSimulation selectedSimulation = (FskSimulation) simulationList.getSelectedItem();
+					// Update parameters
+					formPanel.setValues(selectedSimulation.getParameters());
 
-						// Update parameters
-						formPanel.setValues(selectedSimulation.getParameters());
-
-						// Update previewPanel
-						String previewScript = buildParameterScript(selectedSimulation);
-						scriptPanel.setText(previewScript);
-					}
+					// Update previewPanel
+					final String previewScript1 = buildParameterScript(selectedSimulation);
+					scriptPanel.setText(previewScript1);
 				}
 			});
 			simulationList.setSelectedIndex(selectedSimulationIndex);
-			JPanel selectionPanel = new JPanel();
+			final JPanel selectionPanel = new JPanel();
 			selectionPanel.setBackground(Color.WHITE);
 			selectionPanel.add(simulationList);
 			// selectionPanel.add(new
 			// JLabel(simulationsArray[selectedSimulationIndex].getName()+" is the selected
 			// simulation to be used by the FSK Runner to run the model"));
-			JPanel simulationSelection = UIUtils
+			final JPanel simulationSelection = UIUtils
 					.createCenterPanel(UIUtils.createHorizontalPanel(new JLabel("Simulation:"), selectionPanel));
 
 			// Build simulations panel
@@ -627,24 +621,22 @@ public class FskPortObject implements PortObject {
 		class IconListRenderer extends DefaultListCellRenderer {
 			private static final long serialVersionUID = 1L;
 			private Map<Object, Icon> icons = null;
-			private FskSimulation[] simulationsArray;
-			private String selectedSimulationName;
+			private final String selectedSimulationName;
 
 			public IconListRenderer(Map<Object, Icon> icons, FskSimulation[] simulationsArray) {
 				this.icons = icons;
-				this.simulationsArray = simulationsArray;
-				this.selectedSimulationName = simulationsArray[selectedSimulationIndex].getName();
+				selectedSimulationName = simulationsArray[selectedSimulationIndex].getName();
 			}
 
 			@Override
 			public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 					boolean cellHasFocus) {
-				JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected,
+				final JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected,
 						cellHasFocus);
 				// Get icon to use for the list item value
 				Icon icon = icons.get(value);
 				if (index == selectedSimulationIndex
-						|| (index == -1 && value.toString().trim().equals(selectedSimulationName.trim()))) {
+						|| index == -1 && value.toString().trim().equals(selectedSimulationName.trim())) {
 					icon = icons.get(selectedSimulationIndex);
 				}
 				// Set icon to display for value
@@ -670,25 +662,25 @@ public class FskPortObject implements PortObject {
 			private void createUI(LinkedHashMap<String, String> parameters) {
 
 				// Create labels
-				List<FLabel> labels = parameters.keySet().stream().map(FLabel::new).collect(Collectors.toList());
+				final List<FLabel> labels = parameters.keySet().stream().map(FLabel::new).collect(Collectors.toList());
 
 				// Create field panels
-				List<JPanel> fieldPanels = new ArrayList<>(parameters.size());
+				final List<JPanel> fieldPanels = new ArrayList<>(parameters.size());
 
 				int i = 0;
-				for (String value : parameters.values()) {
-					JPanel panel = createFieldPanel(fields[i], value);
+				for (final String value : parameters.values()) {
+					final JPanel panel = createFieldPanel(fields[i], value);
 					fieldPanels.add(panel);
 					i++;
 				}
 
-				int n = labels.size();
+				final int n = labels.size();
 
-				FPanel leftPanel = new FPanel();
+				final FPanel leftPanel = new FPanel();
 				leftPanel.setLayout(new GridLayout(n, 1, 5, 5));
 				labels.forEach(leftPanel::add);
 
-				FPanel rightPanel = new FPanel();
+				final FPanel rightPanel = new FPanel();
 				rightPanel.setLayout(new GridLayout(n, 1, 5, 5));
 				fieldPanels.forEach(rightPanel::add);
 
@@ -700,7 +692,7 @@ public class FskPortObject implements PortObject {
 
 			public void setValues(LinkedHashMap<String, String> parameters) {
 				int i = 0;
-				for (String value : parameters.values()) {
+				for (final String value : parameters.values()) {
 					fields[i].setText(value);
 					i++;
 				}
@@ -714,27 +706,24 @@ public class FskPortObject implements PortObject {
 				field.setEditable(false);
 				field.setBorder(null);
 
-				JButton copyButton = UIUtils.createCopyButton();
+				final JButton copyButton = UIUtils.createCopyButton();
 				copyButton.setVisible(false);
 
 				field.addFocusListener(new FieldListener(copyButton));
 
-				copyButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-						clipboard.setContents(new StringSelection(field.getText()), null);
-					}
+				copyButton.addActionListener(e -> {
+					final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					clipboard.setContents(new StringSelection(field.getText()), null);
 				});
 
-				JPanel fieldPanel = new JPanel(new BorderLayout());
+				final JPanel fieldPanel = new JPanel(new BorderLayout());
 				fieldPanel.setBackground(UIUtils.WHITE);
 				fieldPanel.add(field, BorderLayout.CENTER);
 				fieldPanel.add(copyButton, BorderLayout.EAST);
 
-				Border matteBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, UIUtils.BLUE);
-				Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-				Border compoundBorder = BorderFactory.createCompoundBorder(matteBorder, emptyBorder);
+				final Border matteBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, UIUtils.BLUE);
+				final Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+				final Border compoundBorder = BorderFactory.createCompoundBorder(matteBorder, emptyBorder);
 				fieldPanel.setBorder(compoundBorder);
 
 				fieldPanel.setPreferredSize(new Dimension(100, 20));
@@ -768,9 +757,9 @@ public class FskPortObject implements PortObject {
 	private static String buildParameterScript(FskSimulation simulation) {
 
 		String paramScript = "";
-		for (Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
-			String parameterName = entry.getKey();
-			String parameterValue = entry.getValue();
+		for (final Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
+			final String parameterName = entry.getKey();
+			final String parameterValue = entry.getValue();
 
 			paramScript += parameterName + " <- " + parameterValue + "\n";
 		}
