@@ -20,11 +20,8 @@ package de.bund.bfr.knime.fsklab.nodes;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
@@ -45,6 +42,7 @@ import org.knime.core.node.workflow.NativeNodeContainer;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowEvent;
+import org.knime.core.util.FileUtil;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -158,10 +156,8 @@ class JSSimulatorNodeModel
   protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec)
       throws IOException, CanceledExecutionException, InvalidSettingsException {
 
-    final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
-    final String nameWithID = nodeContainer.getNameWithID();
-    final String nodeName = nodeContainer.getName();
-    final int nodeId = nodeContainer.getID().getIndex();
+    final String nameWithID = NodeContext.getContext().getNodeContainer().getNameWithID();
+    final String containerName = buildContainerName();
 
     final FskPortObject inObj = (FskPortObject) inObjects[0];
 
@@ -180,16 +176,15 @@ class JSSimulatorNodeModel
         if (val.modelMath != null) {
           final ModelMath modelMathFromSetting = getObjectFromJson(val.modelMath, ModelMath.class);
           // TODO validate for setting save
-          /*if (!EcoreUtil.equals(modelMathFromSetting.getParameter(), parameters)) {
-            // Convert FskSimulation(s) to JSSimulation(s)
-            val.simulations = simulations;
-
-            File directory = NodeContext.getContext().getWorkflowManager().getProjectWFM()
-                .getContext().getCurrentLocation();
-            String containerName = nodeName + " (#" + nodeId + ") setting";
-            String settingFolderPath = directory.getPath().concat("/" + containerName);
-            deleteSettingFolder(settingFolderPath);
-          }*/
+          /*
+           * if (!EcoreUtil.equals(modelMathFromSetting.getParameter(), parameters)) { // Convert
+           * FskSimulation(s) to JSSimulation(s) val.simulations = simulations;
+           *
+           * File directory = NodeContext.getContext().getWorkflowManager().getProjectWFM()
+           * .getContext().getCurrentLocation(); String containerName = nodeName + " (#" + nodeId +
+           * ") setting"; String settingFolderPath = directory.getPath().concat("/" +
+           * containerName); deleteSettingFolder(settingFolderPath); }
+           */
         } else {
           val.simulations = simulations;
           val.modelMath = FromOjectToJSON(SwaggerUtil.getModelMath(inObj.modelMetadata));
@@ -217,18 +212,11 @@ class JSSimulatorNodeModel
         final String nncnamewithId = nnc.getNameWithID();
         if (nncnamewithId.equals(nameWithID)) {
 
-          final String containerName = nodeName + " (#" + nodeId + ") setting";
-
           final String settingFolderPath = directory.getPath().concat("/" + containerName);
           final File settingFolder = new File(settingFolderPath);
 
-          try {
-            if (settingFolder.exists()) {
-              Files.walk(settingFolder.toPath()).sorted(Comparator.reverseOrder())
-                  .map(Path::toFile).forEach(File::delete);
-            }
-          } catch (final IOException e) {
-            // nothing to do
+          if (settingFolder.exists()) {
+            FileUtil.deleteRecursively(settingFolder);
           }
         }
       }
@@ -256,7 +244,7 @@ class JSSimulatorNodeModel
       inObj.selectedSimulationIndex = val.selectedSimulationIndex;
     } else {
       inObj.simulations.clear();
-      final List<String> modelMathParameter =SwaggerUtil.getParameter(inObj.modelMetadata).stream()
+      final List<String> modelMathParameter = SwaggerUtil.getParameter(inObj.modelMetadata).stream()
           .map(Parameter::getId).collect(Collectors.toList());
       final List<Integer> indexes = new ArrayList<>();
       final List<Parameter> properInputParam = new ArrayList<>();
@@ -358,9 +346,7 @@ class JSSimulatorNodeModel
   protected void loadJsonSetting() throws IOException, CanceledExecutionException {
     final File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    final String name = NodeContext.getContext().getNodeContainer().getName();
-    final String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
-    final String containerName = name + " (#" + id + ") setting";
+    final String containerName = buildContainerName();
 
     final String settingFolderPath = directory.getPath().concat("/" + containerName);
     final File settingFolder = new File(settingFolderPath);
@@ -396,26 +382,27 @@ class JSSimulatorNodeModel
 
   protected void saveJsonSetting(List<JSSimulation> simulationList, String modelMath)
       throws IOException, CanceledExecutionException {
+
     if (simulationList == null) {
       return;
     }
+
     final File directory =
         NodeContext.getContext().getWorkflowManager().getContext().getCurrentLocation();
-    final String name = NodeContext.getContext().getNodeContainer().getName();
-    final String id = NodeContext.getContext().getNodeContainer().getID().toString().split(":")[1];
-    final String containerName = name + " (#" + id + ") setting";
+
+    final String containerName = buildContainerName();
 
     final String settingFolderPath = directory.getPath().concat("/" + containerName);
     final File settingFolder = new File(settingFolderPath);
     if (!settingFolder.exists()) {
       settingFolder.mkdir();
     }
+
     String joinedSimulations = "" + getViewValue().selectedSimulationIndex + ">>><<<";
     joinedSimulations += simulationList.stream().map(simulation -> simulation.buildStringValue())
         .collect(Collectors.joining("<<<>>>"));
     NodeUtils.writeConfigString(joinedSimulations, settingFolder, "simulations.json");
     NodeUtils.writeConfigString(modelMath, settingFolder, "modelMath.json");
-
   }
 
   private static <T> T getObjectFromJson(String jsonStr, Class<T> valueType)
@@ -423,12 +410,17 @@ class JSSimulatorNodeModel
     final ResourceSet resourceSet = new ResourceSetImpl();
     final ObjectMapper mapper = FskPlugin.getDefault().OBJECT_MAPPER;
     return mapper.readValue(jsonStr, valueType);
-
   }
 
   private static String FromOjectToJSON(final Object object) throws JsonProcessingException {
     final ObjectMapper objectMapper = FskPlugin.getDefault().OBJECT_MAPPER;
     final String jsonStr = objectMapper.writeValueAsString(object);
     return jsonStr;
+  }
+
+  /** @return string with node name and id with format "{name} (#{id}) setting". */
+  private static String buildContainerName() {
+    final NodeContainer nodeContainer = NodeContext.getContext().getNodeContainer();
+    return nodeContainer.getName() + " (#" + nodeContainer.getID().getIndex() + ") setting";
   }
 }
