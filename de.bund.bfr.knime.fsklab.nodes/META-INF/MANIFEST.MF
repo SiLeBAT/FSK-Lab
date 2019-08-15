@@ -34,7 +34,8 @@ Require-Bundle: com.fasterxml.jackson.core.jackson-annotations,
  org.knime.json,
  org.knime.workbench.repository,
  org.slf4j.api,
- org.knime.python2
+ org.knime.python2,
+ org.knime.python2.serde.flatbuffers
 Bundle-Vendor: German Federal Institute for Risk Assessment (BfR)
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.bund.bfr.knime.fsklab.FskPlugin
