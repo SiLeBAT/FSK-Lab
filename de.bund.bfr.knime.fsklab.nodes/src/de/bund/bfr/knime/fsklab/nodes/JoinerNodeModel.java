@@ -169,7 +169,7 @@ final class JoinerNodeModel extends
         joinerProxyValue.modelScriptTree = buildModelscriptAsTree(inObj1, inObj2);
 
         joinerProxyValue.firstModelName = SwaggerUtil.getModelName(inObj1.modelMetadata);
-        joinerProxyValue.secondModelName = SwaggerUtil.getModelName(inObj1.modelMetadata);
+        joinerProxyValue.secondModelName = SwaggerUtil.getModelName(inObj2.modelMetadata);
         loadJsonSetting();
         if (joinerProxyValue.modelMetaData == null) {
           loadFromPorts(inObj1, inObj2, joinerProxyValue);
