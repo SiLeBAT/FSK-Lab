@@ -460,7 +460,7 @@ class ReaderNodeModel extends NoInternalsModel {
       Set<ArchiveEntry> resourceEntries = new HashSet<>();
 
       // Take README.txt and leave other txt as resources.
-      List<ArchiveEntry> txtEntries = archive.getEntriesWithFormat(URIS.get("plainText"));
+      List<ArchiveEntry> txtEntries = archive.getEntriesWithFormat(URI.create("http://purl.org/NET/mediatypes/text-xplain"));
       for (ArchiveEntry entry : txtEntries) {
         String path = entry.getEntityPath();
         if (path.indexOf(pathToResource) == 0) {
