@@ -391,7 +391,7 @@ public class LibRegistry {
 		 *      miniCRAN documentation</a>
 		 */
 		List<String> pkgDep(final List<String> pkgs) throws RException, REXPMismatchException {
-			String cmd = "pkgDep(" + _pkgList(pkgs) + ", type = '" + type + "', Rversion = '" + rVersion + "')";
+			String cmd = "pkgDep(" + _pkgList(pkgs) + ", type = '" + type + "', Rversion = '" + rVersion + "', repos = '" + MIRROR +"')";
 			REXP rexp = controller.eval(cmd, true);
 			return Arrays.asList(rexp.asStrings());
 		}
