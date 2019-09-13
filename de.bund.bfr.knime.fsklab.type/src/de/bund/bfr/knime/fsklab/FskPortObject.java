@@ -57,6 +57,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 
 import org.apache.commons.io.IOUtils;
@@ -285,7 +286,7 @@ public class FskPortObject implements PortObject {
 				MAPPER104 = new ObjectMapper(jsonFactory);
 				MAPPER104.registerModule(new ThreeTenModule());
 
-				modelClasses =  new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+				modelClasses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 				modelClasses.put("genericModel", GenericModel.class);
 				modelClasses.put("dataModel", DataModel.class);
 				modelClasses.put("predictiveModel", PredictiveModel.class);
@@ -526,14 +527,15 @@ public class FskPortObject implements PortObject {
 		final JPanel vizScriptPanel = new ScriptPanel("Visualization script", viz, false, false);
 		final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 		final String jsonInString = gson.toJson(modelMetadata);
-		final String modelMetadataAsJSON = "<html><pre id='json'>" +StringEscapeUtils.unescapeJson(StringEscapeUtils.unescapeJson(gson.toJson(jsonInString))) + "</pre></html>";
+		final String modelMetadataAsJSON = "<html><pre id='json'>"
+				+ StringEscapeUtils.unescapeJson(StringEscapeUtils.unescapeJson(gson.toJson(jsonInString)))
+				+ "</pre></html>";
 
 		final JTextPane tree = new JTextPane();
 
 		tree.setContentType("text/html");
 		tree.setText(modelMetadataAsJSON);
-		// JTree tree = MetadataTree.createTree(generalInformation, scope,
-		// dataBackground, modelMath);
+
 		final JScrollPane metaDataPane = new JScrollPane(tree);
 		metaDataPane.setName("Meta data");
 
@@ -544,10 +546,13 @@ public class FskPortObject implements PortObject {
 		// Readme
 		final JTextArea readmeArea = new JTextArea(readme);
 		readmeArea.setEnabled(false);
+		readmeArea.setWrapStyleWord(true);
+		readmeArea.setLineWrap(true);
 
 		final JPanel readmePanel = new JPanel(new BorderLayout());
 		readmePanel.setName("README");
-		readmePanel.add(new JScrollPane(readmeArea));
+		readmePanel.add(new JScrollPane(readmeArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
 
 		return new JComponent[] { modelScriptPanel, vizScriptPanel, metaDataPane, librariesPanel, simulationsPanel,
 				readmePanel };

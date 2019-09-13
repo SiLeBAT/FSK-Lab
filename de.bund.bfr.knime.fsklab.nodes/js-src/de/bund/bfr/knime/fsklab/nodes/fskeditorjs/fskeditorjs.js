@@ -1364,6 +1364,7 @@ fskeditorjs = function() {
 																	{
 
 																		lineNumbers : true,
+																		lineWrapping: true,
 																		extraKeys : {
 																			"Ctrl-Space" : "autocomplete"
 																		},
