@@ -840,6 +840,19 @@ fskeditorjs = function() {
 			});
 		});
 	}
+	
+	// Create a CodeMirror for a given text area
+	function createCodeMirror(textAreaId, language) {
+		return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
+				{
+					lineNumbers: true,
+					lineWrapping: true,
+					extraKeys: {'Ctrl-Space': 'autocomplete'},
+					mode: {'name': language}
+				});
+	}
+	
+	
 	joinerNode.getComponentValue = function() {
 		//rejoinStores();
 		if(window.store7.getState().jsonforms.core.data){
@@ -1307,84 +1320,28 @@ fskeditorjs = function() {
 															.find(
 																	"div[data$='General']")
 															.show();
-													// console.log(e.currentTarget.hash,$(e.currentTarget.hash).find("div[data$='General']"),$(e.currentTarget.hash).find("button[data$='General']"))
 												}
 
-												var codeMirrorContainer = $(
-														'#sub25').find(
-														".CodeMirror")[0];
-												if (codeMirrorContainer
-														&& codeMirrorContainer.CodeMirror) {
-													codeMirrorContainer.CodeMirror
-															.refresh();
-
+												var codeMirrorContainer = $('#sub25').find(".CodeMirror")[0];
+												if (codeMirrorContainer && codeMirrorContainer.CodeMirror) {
+													codeMirrorContainer.CodeMirror.refresh();
 												} else {
-													window.firstModelScript = window.CodeMirror
-															.fromTextArea(
-																	document
-																			.getElementById("firstModelScript"),
-																	{
-																		lineNumbers : true,
-																		extraKeys : {
-																			"Ctrl-Space" : "autocomplete"
-																		},
-																		mode : {
-																			name : "R"
-																		}
-																	});
-
+													window.firstModelScript = createCodeMirror("firstModelScript", "R");
 												}
-												var codeMirrorContainer = $(
-														'#sub27').find(
-														".CodeMirror")[0];
-												if (codeMirrorContainer
-														&& codeMirrorContainer.CodeMirror) {
-													codeMirrorContainer.CodeMirror
-															.refresh();
-
+												
+												var codeMirrorContainer = $('#sub27').find(".CodeMirror")[0];
+												if (codeMirrorContainer && codeMirrorContainer.CodeMirror) {
+													codeMirrorContainer.CodeMirror.refresh();
 												} else {
-													window.readme = window.CodeMirror
-															.fromTextArea(
-																	document
-																			.getElementById("READMEArea"),
-																	{
-
-																		lineNumbers : true,
-																		lineWrapping: true,
-																		extraKeys : {
-																			"Ctrl-Space" : "autocomplete"
-																		},
-																		mode : {
-																			name : "htmlmixed"
-																		}
-																	});
-
+													window.readme = createCodeMirror("READMEArea", "htmlmixed");
 												}
-												var codeMirrorContainer = $(
-														'#sub26').find(
-														".CodeMirror")[0];
-												if (codeMirrorContainer
-														&& codeMirrorContainer.CodeMirror) {
-													codeMirrorContainer.CodeMirror
-															.refresh();
-
+												
+												var codeMirrorContainer = $('#sub26').find(".CodeMirror")[0];
+												if (codeMirrorContainer && codeMirrorContainer.CodeMirror) {
+													codeMirrorContainer.CodeMirror.refresh();
 												} else {
-													window.firstModelViz = window.CodeMirror
-															.fromTextArea(
-																	document
-																			.getElementById("firstModelViz"),
-																	{
-																		lineNumbers : true,
-																		extraKeys : {
-																			"Ctrl-Space" : "autocomplete"
-																		},
-																		mode : {
-																			name : "R"
-																		}
-																	});
-
+													window.firstModelViz = createCodeMirror("firstModelViz", "R");
 												}
-
 											});
 
 						});
