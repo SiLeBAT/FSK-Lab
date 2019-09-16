@@ -1102,30 +1102,16 @@ fskeditorjs = function() {
 					+ "					 		 </div>" + "                        </div>"
 
 		}
-		bodyContent += "                        <div class='tab-pane fade' id='sub27'>\n"
-				+ "                    		 <div  >"
-				+ "								<h4>README</h4>"
-				+ "								<textarea  id='READMEArea' name='READMEArea'>"
-				+ _README
-				+ "								</textarea>"
-				+ "					 		 </div>"
+		bodyContent += "                   <div class='tab-pane fade' id='sub27'>\n"
+				+ "						     <textarea  id='READMEArea' name='READMEArea'>" + _README + "</textarea>"
 				+ "                        </div>"
 
 				+ "                        <div class='tab-pane fade' id='sub25'>\n"
-				+ "                    		 <div  >"
-				+ "								<h4>Model Script</h4>"
-				+ "								<textarea id='firstModelScript' name='firstModelScript'>"
-				+ _firstModelScript
-				+ "								</textarea>"
-				+ "					 		 </div>"
+				+ "						     <textarea id='firstModelScript' name='firstModelScript'>" + _firstModelScript + "</textarea>"
 				+ "                        </div>\n"
+				
 				+ "                        <div class='tab-pane fade' id='sub26'>\n"
-				+ "                    		 <div >"
-				+ "								<h4>Model Visualization Script</h4>"
-				+ "								<textarea id='firstModelViz' name='firstModelViz'>"
-				+ _firstModelViz
-				+ "								</textarea>"
-				+ "					 		 </div>"
+				+ "						     <textarea id='firstModelViz' name='firstModelViz'>" + _firstModelViz + "</textarea>"
 				+ "                        </div>\n"
 				+ "                    </div>\n" + "                </div>\n"
 
