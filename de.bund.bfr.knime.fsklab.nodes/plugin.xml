@@ -245,6 +245,12 @@
       </webResource>
       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/codemirror.css" type="CSS" />
       
+	  <webResource
+        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/r.js"
+        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/r.js">
+      </webResource>
+      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/r.js" type="JAVASCRIPT" />
+      
       <webResource
         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/App.css"
         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/App.css">

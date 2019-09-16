@@ -1326,7 +1326,7 @@ fskeditorjs = function() {
 												if (codeMirrorContainer && codeMirrorContainer.CodeMirror) {
 													codeMirrorContainer.CodeMirror.refresh();
 												} else {
-													window.firstModelScript = createCodeMirror("firstModelScript", "R");
+													window.firstModelScript = createCodeMirror("firstModelScript", "text/x-rsrc");
 												}
 												
 												var codeMirrorContainer = $('#sub27').find(".CodeMirror")[0];
@@ -1340,7 +1340,7 @@ fskeditorjs = function() {
 												if (codeMirrorContainer && codeMirrorContainer.CodeMirror) {
 													codeMirrorContainer.CodeMirror.refresh();
 												} else {
-													window.firstModelViz = createCodeMirror("firstModelViz", "R");
+													window.firstModelViz = createCodeMirror("firstModelViz", "text/x-rsrc");
 												}
 											});
 
