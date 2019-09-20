@@ -4,7 +4,13 @@
 }
 
 .parametersDiv {
-
 	border-left: 1px solid;
-	
+}
+
+.form-horizontal {
+	padding-top: 5px;
+}
+
+.collapse {
+	padding-top: 7px;
 }

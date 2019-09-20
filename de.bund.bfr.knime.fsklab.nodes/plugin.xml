@@ -78,10 +78,10 @@
        
        <!-- JS and CSS code -->
        <webResource
-         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.js"
-         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator.js">
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator2.js"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/jssimulator2.js">
        </webResource>
-       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator.js" type="JAVASCRIPT" />
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/jssimulator2.js" type="JAVASCRIPT" />
        
        <webResource
          relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/jssimulator.css"
