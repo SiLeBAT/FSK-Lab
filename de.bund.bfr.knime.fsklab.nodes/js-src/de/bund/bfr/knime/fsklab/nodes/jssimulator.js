@@ -249,15 +249,18 @@ simulator = function() {
      * Checks missing values and range (min and max values).
      */
     function validateParameter(value, metadata) {
-      return value ? true: false;
 
       // Check missing value
       if (!value) return false;
       
       // Check range for integers and doubles
-      if (value.metadata === "INTEGER" || value.metadata === "DOUBLE") {
-        if (metadata.minValue && metadata.minValue > value) return false;
-        if (metadata.maxValue && metadata.maxValue < value) return false;
+      if (metadata.dataType === "INTEGER" || metadata.dataType === "DOUBLE") {
+        if (metadata.minValue && parseFloat(metadata.minValue) > value) {
+          return false;
+        }
+        if (metadata.maxValue && parseFloat(metadata.maxValue) < value) {
+          return false;
+        }
       }
 
       return true;
