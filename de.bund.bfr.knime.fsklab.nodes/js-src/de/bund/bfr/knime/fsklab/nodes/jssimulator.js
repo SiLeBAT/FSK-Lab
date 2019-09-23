@@ -14,237 +14,300 @@ simulator = function() {
 
 	view.init = function(representation, value) {
 		_rep = representation;
-		_val = value;
+    _val = value;
 
-		create_body();
-		$('[data-toggle="popover"]').popover()
-		$('.popover-dismiss').popover({
-		  trigger: 'focus'
-		})
+		create_body2();
+    initUI();
+    updateSimulationName(0);  // Show initially defaultSimulation (0)
+    updateParameterValues(0); // Show initially the values for simulation 0.
 	};
 
 	view.getComponentValue = function() {
 		return _val;
-	};
-
+  };
+  
 	return view;
 
-	function create_body() {
+  /**
+   * Create UI.
+   * 
+   * - Create top panel with simulation select (#simulationSelect) and simulation buttons (remove, add and save).
+   * - Create parameter panels with parameter names and values.
+   */
+	function create_body2() {
+		let body = `
+    <div class="container">
+      
+      <form class="form-horizontal">
+        <div class="form-group form-group-lg">
+          <label class="col-md-3 control-label" for="simulationSelect">Simulation</label>
+          <div class="col-md-5">
+            <select class="form-control" id ="simulationSelect"></select>
+          </div>
+          <button id="removeButton" type="button" class="btn btn-lg btn-danger col-md-offset-1 col-xs-offset-1" title="Remove current simulation">
+            <i class="glyphicon glyphicon-trash"></i>
+          </button>
+          <button id="addButton" type="button" class="btn btn-lg btn-primary" title="Add new simulation">
+            <i class="glyphicon glyphicon-plus"></i>
+          </button>
+          <button id="saveButton" type="button" class="btn btn-lg btn-success" title="Save changes">
+            <i class="glyphicon glyphicon-floppy-disk"></i>
+          </button>
+        </div>
+      </form>
 
-		function create_form(parameterIndex) {
-			
-			var parameter = _rep.parameters[parameterIndex];
-			var value = _val.simulations[_currentSimulation].values[parameterIndex];
-			var inputType;
-			if (parameter.dataType === "Integer" || parameter.dataType === "Double" ||
-				parameter.dataType === "Number") {
-				inputType = "number";
-			} else {
-				inputType = "text";
-			}
-			var input = $('<input  type="' + inputType + '" class="form-control" value=""></input>');
-			input.val(value);
-			
-		
-			function prepare(valueToPrepare) {
-				return valueToPrepare != null ? valueToPrepare.replace(/"/g, "") : "";
-			}
-			
-			input.focusout(function() {
-				_val.simulations[_currentSimulation].values[parameterIndex] = $(this).val();
-			});
-			
-			var form = $('<div class="form-group">' +
-				'<label class="col-sm-3 control-label">' + parameter.id + '</label>' +
-				'<div class="col-sm-6">'+
-				'<a data-content="' +
-				'<div><b>Parameter&nbsp;Classification</b>&nbsp;:&nbsp;' + prepare(parameter.classification) + '</div>'+
-				'<div><b>Parameter&nbsp;Description</b>&nbsp;:&nbsp;' + prepare(parameter.description) + '</div>'+
-				'<div><b>Parameter&nbsp;Distribution</b>&nbsp;:&nbsp;' + prepare(parameter.distribution) + '</div>'+
-				'<div><b>Parameter&nbsp;Error</b>&nbsp;:&nbsp;' + prepare(parameter.error) + '</div>' +
-				'<div><b>Parameter&nbsp;ID</b>&nbsp;:&nbsp;' + prepare(parameter.id) + '</div>' +
-				'<div><b>Parameter&nbsp;Name</b>&nbsp;:&nbsp;' + prepare(parameter.name) + '</div>' +
-				'<div><b>Parameter&nbsp;Source</b>&nbsp;:&nbsp;' + prepare(parameter.source) + '</div>' +
-				'<div><b>Parameter&nbsp;Subject</b>&nbsp;:&nbsp;' + prepare(parameter.subject) + '</div>' +
-				'<div><b>Parameter&nbsp;Type</b>&nbsp;:&nbsp;' + prepare(parameter.type) + '</div>'+
-				'<div><b>Parameter&nbsp;DataType</b>&nbsp;:&nbsp;' + prepare(parameter.dataType) + '</div>'+
-				'<div><b>Parameter&nbsp;Unit</b>&nbsp;:&nbsp;' + prepare(parameter.unit) + '</div>' +
-				'<div><b>Parameter&nbsp;unitCategory</b>&nbsp;:&nbsp;' + prepare(parameter.unitCategory) + '</div>' +
-				'<div><b>Parameter&nbsp;Value</b>&nbsp;:&nbsp;' + prepare(parameter.value) + '</div>' +
-				'<div><b>Parameter&nbsp;Max Value</b>&nbsp;:&nbsp;' + prepare(parameter.maxValue) + '</div>' +
-				'<div><b>Parameter&nbsp;Min Value</b>&nbsp;:&nbsp;' + prepare(parameter.minValue) + '</div>' +
-				'<div><b>Parameter&nbsp;Variability Subject</b>&nbsp;:&nbsp;' + prepare(parameter.variabilitySubject) + '</div>' +
-				'<div><b>Parameter&nbsp;Reference</b>&nbsp;:&nbsp;' + prepare(parameter.reference) + '</div>"' +
-				
-				'tabindex="0" title="'+prepare(parameter.id)+'" data-html="true" data-toggle="popover" data-trigger="focus" href="#"><i class="fa fa-info-circle" aria-hidden="true"></i></a>'+
-				'<div class="col-sm-10 xxx"></div></div>' +
-				'  <div class="col-sm-3"><label>' + parameter.unit + '</label></div>' +
-				'</div>');
-			$('.xxx', form).append(input);
-			form.input = input;
+      <form class="form-horizontal">
+        <div class="form-group form-group-lg">
+          <label class="col-md-3 control-label" for="simulationName">Simulation name</label>
+          <div class="col-md-5">
+            <input id="simulationName" type="text" class="form-control">
+          </div>
+        </div>
+      </form>
 
-			return form;
-		}
+      <form class="form-horizontal" id="parameter-form"></form>
+		</div> <!-- container -->
+		`;
 
 		document.createElement('body');
+		$('body').html(body);
 
-		// Create simulations and parameters divs
-		$('body').html(
-			'<div class="row">' +
-			'  <div class="col-md-4 simulationsDiv">'+
-			'   <h2>Simulations</h2>  ' +
-			'    <div id="simulationNamesDiv"></div>' +
-			'    <form class="form-inline">' +
-			// The remove button is disabled initially for the default simulation
-			'      <button type="button" class="btn btn-default btn-warning" disabled>Remove</button>' +
-			'      <div id="buttonsDiv" class="form-group">' +	
-			'        <input id="nameInput"  type="text" placeholder="Enter new simulation">' +
-			// The add button is disabled initially (#nameInput is empty)
-			'      </div>' +
-			'      <button type="button" class="btn btn-default btn-success" disabled>Add</button>' +
-			'    </form>' +
-			'  </div>' +
-			'  <div class="col-md-8 parametersDiv">' +
-			'    <h2>defaultSimulation</h2>' +
-			'    <form class="form-horizontal"></form>' +
-			'  </div>' +
-			'</div> ');
-		
-		// Add simulation names to simulationsDiv
-		for (var i = 0; i < _val.simulations.length; i++) {
-			var simulationName = _val.simulations[i].name;
-			var button = createSimulationButton(simulationName);
-			$('#simulationNamesDiv').append(button);
-		}
+		$('#removeButton').click(function() {
 
-		$('#nameInput').keypress(function(event){
-			var keycode = (event.keyCode ? event.keyCode : event.which);
-			if(keycode == '13'){
-				event.preventDefault(); // Let's stop this event.
-                event.stopPropagation(); // Really this time.	
-			}
+      let simulationSelect = $('#simulationSelect');
+      let selectedSimulationIndex = simulationSelect.prop('selectedIndex');
+
+      if (selectedSimulationIndex != 0) {
+        // Remove simulation in select
+        $(`#simulationSelect option:eq(${selectedSimulationIndex})`).remove();
+
+        // Remove simulation data
+        _val.simulations.splice(selectedSimulationIndex, 1);
+
+        // Select the default simulation (0)
+        simulationSelect.val('defaultSimulation');
+
+        // Update UI
+        updateSimulationName(0);
+        updateParameterValues(0);
+      }
 		});
 
-		// Remove simulation event
-		$('.btn-warning').click(function() {
-			var index = $('#simulationNamesDiv button.btn-primary').index();
-			_val.simulations.splice(index, 1);  // Remove selected simulation
-			$('.btn-primary').remove();
-			var firstSimulation = $('#simulationNamesDiv button:first');
-			firstSimulation.removeClass('btn-default');
-			firstSimulation.addClass('btn-primary');
-			firstSimulation.trigger( "click" );
-		})
-
-		// Enables the add button for valid simulation names
-		$('#nameInput').on('input', function() {
-			var name = $(this).val();
-
-			if (!name) {
-				$('.btn-success').prop('disabled', true);
-			} else if (isSimulationContained(name)) {
-				$('.btn-success').prop('disabled', true);
-			// If simulation name does not match the SId format then disable the add button
-			} else {
-				$('.btn-success').prop('disabled', !_idRegexp.test(name));
-			}
-		});
-
-		// Add button event
-		$('.btn-success').click(function() {
-
-			// Take name of simulation from nameInput
-			var simulationName = $('#nameInput').val();
-
-			// If simulation name is not empty
-			if (simulationName) {
-				var button = createSimulationButton(simulationName);
-				$('#simulationNamesDiv').append(button);
-				
-				// Wipe out the name entry
-				$('#nameInput').val('');
-	
-				// Create and save new simulation (the values are taken from the default simulation)
-				valuesArray = [];
-				$.each(_val.simulations[0].values,function(index,value){
-					valuesArray.push(value);
-				})
-				var newSimulation = {'name': simulationName, 'values': valuesArray }
-				_val.simulations.push(newSimulation);
-				$(button).trigger( "click" );
-			}
-		});
-
-
-		// Marks first simulation simulation as selected
-		var firstSimulation = $('#simulationNamesDiv button:first');
-		firstSimulation.removeClass('btn-default');
-		firstSimulation.addClass('btn-primary');
-
-		var parameterForm = $('.parametersDiv form');
-		for (var i = 0; i < _rep.parameters.length; i++) {
-			var form = create_form(i);
-
-			// disables the input for the default simulation
-			form.input.prop('disabled', true);
-			parameterForm.append(form);
-		}
-		$.each($('.simulation-button'),function(index,value){
-			if(index == _val.selectedSimulationIndex){
-				$(value).trigger( "click" );
-			}
-		});
+		$('#addButton').click(addSimulation);
+		$('#saveButton').click(submitSimulation);
+    
+    $('#simulationSelect').change(function() {
+      let selectedIndex = document.getElementById("simulationSelect").selectedIndex;
+      updateSimulationName(selectedIndex);
+      updateParameterValues(selectedIndex);
+    });
 	}
 
-	function createSimulationButton(simulationName) {
+  /**
+   * Initialize UI.
+   * 
+   * - Enter simulation names into the simulation select (#simulationSelect).
+   * - Create parameters and add them (only names). Parameter values are added later for the current simulation.
+   */
+  function initUI() {
+    
+    // Include simulations
+    let simulationSelect = $('#simulationSelect');
+    _val.simulations.forEach(simulation => {
+      simulationSelect.append(`<option>${simulation.name}</option>`);                  
+    });
 
-		var button = $('<button type="button" class="btn btn-default btn-block simulation-button">'
-			+ simulationName + '</button>');
+    // Add parameters
+    let parameterForm = $('#parameter-form');
+    _rep.parameters.forEach(parameter => {
 
-		button.click(function() {
-			var button = $(this);
+      let inputType;
+      if (parameter.dataType === "Integer" || parameter.dataType === "Double" || parameter.dataType === "Number") {
+        inputType = "number";
+      } else {
+        inputType = "text";
+      }
 
-			var simulationName = button.text();
+      let metadataId = parameter.id + "-metadata";
 
-			// Find index of selected simulation
-			for (var i = 0; i < _val.simulations.length; i++) {
-				if (simulationName === _val.simulations[i].name) {
-					_currentSimulation = i;
-					break;
-				}
-			}
-			_val.selectedSimulationIndex = _currentSimulation;
-			var newDisabledValue = simulationName === 'defaultSimulation';
+      let parameterHtml = `<div class="form-group form-group-sm">
+        <label class="col-sm-3 control-label">${parameter.id}</label>
+        <div class="col-sm-8">
+          <input type="${inputType}" class="form-control parameter-input" value=""></input>
+          <div class="collapse" id="${metadataId}" >
+            <div class="alert alert-info card card-body">
+              <ul>
+                ${parameter.id ? `<li><b>ID</b>: ${parameter.id}</li>` : ''}
+                ${parameter.name ? `<li><b>Name</b>: ${parameter.name}</li>` : ''}
+                ${parameter.description ? `<li><b>Description</b>: ${parameter.description.substring(0,50)}</li>` : ''}
+                ${parameter.unit ? `<li><b>Unit</b>: ${parameter.unit}</li>` : ''}
+                ${parameter.unitCategory ? `<li><b>Unit category</b>: ${parameter.unitCategory}</li>` : ''}
+                ${parameter.dataType ? `<li><b>Data type</b>: ${parameter.dataType}</li>` : ''}
+                ${parameter.source ? `<li><b>Source</b>: ${parameter.source}</li>` : ''}
+                ${parameter.subject ? `<li><b>Subject</b>: ${parameter.subject}</li>` : ''}
+                ${parameter.distribution ? `<li><b>Distribution</b>: ${parameter.distribution}</li>` : ''}
+                ${parameter.reference ? `<li><b>Reference</b>: ${parameter.reference}</li>` : ''}
+                ${parameter.variabilitySubject ? `<li><b>Variability subject</b>: ${parameter.variabilitySubject}</li>` : ''}
+                ${parameter.minValue ? `<li><b>Min value</b>: ${parameter.minValue}</li>` : ''}
+                ${parameter.maxValue ? `<li><b>Max value</b>: ${parameter.maxValue}</li>` : ''}
+                ${parameter.error ? `<li><b>Error</b>: ${parameter.error}</li>` : ''}
+              </ul>
+            </div>
+          </div>
+        </div>       
+        <button class="btn" type="button" data-toggle="collapse" data-target="#${metadataId}" aria-expanded="false" aria-controls="${metadataId}" title="Show information">
+          <i class="glyphicon glyphicon-info-sign"></i>
+        </button>
+      </div>`;
+      parameterForm.append(parameterHtml);
 
-			// Disables the remove button for the default simulation which cannot be removed
-			$('.btn-warning').prop('disabled', newDisabledValue);
+      // Hide other parameter metadata panel when one is clicked.
+      $('#' + metadataId).on('show.bs.collapse', function() {
+        $('.collapse.in').collapse('hide');
+      });
+    });
+  }
 
-			// Mark selected simulation as selected and unselect previously selected
-			$('.btn-primary').removeClass('btn-primary');
+  /**
+   * Update the simulation name input (#simulationName) when another simulation is selected.
+   * 
+   * - Disable the input for the default simulation.
+   */
+  function updateSimulationName(simulationIndex) {
+    let simulationName = $('#simulationName');
+    simulationName.val(_val.simulations[simulationIndex].name);
+    simulationName.prop('disabled', simulationIndex == 0);    
+  }
 
-			button.removeClass('btn-default');
-			button.addClass('btn-primary');
+  /**
+   * Update parameter values for the given simulation.
+   * 
+   * - All the parameter values are retrieved and displayed in the UI.
+   * - Parameter inputs are disabled for the default simulation that is unmodifiable.
+   */
+  function updateParameterValues(simulationIndex) {
 
-			// Update title
-			$('.parametersDiv h2').text(simulationName);
-			
-			// Update values for the selected simulation
-			$('.parametersDiv input').each(function(index) {
-				isConstant = $($(this).parent().parent().find('a')).attr('data-content').indexOf('CONSTANT') > -1;
-				$(this).prop('disabled', (newDisabledValue || isConstant));
-				$(this).val(_val.simulations[_currentSimulation].values[index]);
-			});
-		});
+    // Disable parameter inputs for the default simulation.
+    let isDisabled = simulationIndex == 0;
 
-		return button;
-	}
+    $('.parameter-input').each(function(parameterIndex) {
+      let parameterValue = _val.simulations[simulationIndex].values[parameterIndex];
+      $(this).val(parameterValue);
+      $(this).prop('disabled', isDisabled);
+    });
+  }
 
-	function isSimulationContained(simulationName) {
-		for (var i = 0; i < _val.simulations.length; i++) {
-			if (simulationName === _val.simulations[i].name) {
-				return true;
-			}
-		}
-		return false;
-	}
+  /**
+   * Prepare the UI to enter a new simulation.
+   * 
+   * - Clear simulation select (#simulationSelect).
+   * - Clear and enable the simulation name input (#simulationName).
+   * - Clear every parameter input (.parameter-input) and assign the default value.
+   */
+  function addSimulation() {
+    $('#simulationSelect').val('');
+
+    let simulationName = $('#simulationName');
+    simulationName.val('');
+    simulationName.prop('disabled', false);
+
+    // Take the values from the default simulation
+    let defaultSimulationValues = _val.simulations[0].values;
+    $('.parameter-input').each(function(parameterIndex) {
+      $(this).val(defaultSimulationValues[parameterIndex]);
+      $(this).prop('disabled', false);
+    });
+  }
+
+  /**
+   * Validate simulation and submit if it is error free.
+   */
+  function submitSimulation() {
+
+    /**
+     * Validate the entered name for a new simulation.
+     * - Check that the name is not used already
+     * - Check that the name is not empty.
+     * - Check that the name is a valid SId.
+     */
+    function validateSimulationName(name) {
+
+      // Check that it is not duplicated
+      let isDuplicated = false;
+      for (let i = 0; i < _val.simulations.length && !isDuplicated; ++i) {
+        if (name === _val.simulations[i].name) {
+          isDuplicated = true;
+        }
+      }
+
+      return !isDuplicated && name && _idRegexp.test(name);
+    }
+
+    /**
+     * Validate parameter value.
+     * 
+     * Checks missing values and range (min and max values).
+     */
+    function validateParameter(value, metadata) {
+      return value ? true: false;
+
+      // Check missing value
+      if (!value) return false;
+      
+      // Check range for integers and doubles
+      if (value.metadata === "INTEGER" || value.metadata === "DOUBLE") {
+        if (metadata.minValue && metadata.minValue > value) return false;
+        if (metadata.maxValue && metadata.maxValue < value) return false;
+      }
+
+      return true;
+    }
+
+    let errorCount = 0;
+    
+    // Validate simulation name
+    let simulationNameInput = $('#simulationName');
+    let newSimulationName = simulationNameInput.val();
+    
+    let simulationNameValidation;
+    if (validateSimulationName(newSimulationName)) {
+      simulationNameValidation = "has-success";
+    } else {
+      simulationNameValidation = "has-error";
+      errorCount++;
+    }
+    let formDiv = simulationNameInput.parent().parent(); // Get the form-group div
+    formDiv.removeClass('has-success has-error'); // error previous validation classes
+    formDiv.addClass(simulationNameValidation);
+
+    // Validate parameter inputs
+    let parameterValues = [];
+    $('.parameter-input').each(function(parameterIndex) {
+      let value = $(this).val();
+      parameterValues.push(value);  // cache value
+
+      let parameterValidation;
+      if (validateParameter(value, _rep.parameters[parameterIndex])) {
+        parameterValidation = "has-success";
+      } else {
+        parameterValidation = "has-error";
+        errorCount++;
+      }
+
+      let formDiv = $(this).parent().parent(); // Get the form-group div
+      formDiv.removeClass('has-success has-error'); // error previous validation classes
+      formDiv.addClass(parameterValidation);
+    });
+
+    if (errorCount == 0) {
+      // Save simulation in _val
+      let newSimulation = {'name': newSimulationName, 'values': parameterValues};
+      _val.simulations.push(newSimulation);
+
+      // Add simulation name in simulationSelect
+      $('#simulationSelect').append(`<option>${newSimulationName}</option>`);
+      // and select it
+      $('#simulationSelect option').last().prop('selected', true);
+    }
+  }
 }();
