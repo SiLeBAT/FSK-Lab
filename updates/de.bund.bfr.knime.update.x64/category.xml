@@ -12,7 +12,7 @@
    <feature url="features/de.bund.bfr.knime.fsklab.features.ext.r.bin.x64_3.4.4.201904051519.jar" id="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64" version="3.4.4.201904051519">
       <category name="FSK-Lab"/>
    </feature>
-   <feature url="features/de.bund.bfr.knime.fsklab.feature_1.5.7.qualifier.jar" id="de.bund.bfr.knime.fsklab.feature" version="1.5.7.qualifier">
+   <feature url="features/de.bund.bfr.knime.fsklab.feature_1.6.0.qualifier.jar" id="de.bund.bfr.knime.fsklab.feature" version="1.6.0.qualifier">
       <category name="FSK-Lab"/>
    </feature>
    <category-def name="FSK-Lab" label="FSK-Lab">

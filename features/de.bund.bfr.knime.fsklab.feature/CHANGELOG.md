@@ -6,21 +6,30 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.6.0] - 2019-9-23
+
 ### Added
 - The functionality to reorder the parameters defined in the model math by Drag & Drop.
 - Add support for R ggplot2 plots.
+- Validation of parameter values in the simulator node: https://github.com/SiLeBAT/FSK-Lab/issues/361
 
 ### Changed
 - Change the view of the Combined FSK Object Object to show the selected simulation like the normal FSK Object.
 - Change the format of the output image of the runner to SVG (PNG before).
 - Move all the plotting code to the ModelPlotter classes.
+- Wrap scripts instead of using horizontal scroll bars in the editor node: https://github.com/SiLeBAT/FSK-Lab/issues/375 and https://github.com/SiLeBAT/FSK-Lab/issues/373
 
 ### Fixed
 - Fixed the Runner node to run the selected simulation chosen in the dialog of the node.
 - Validation of simulation names in Simulation configurator node.
+- Order of all the properties in the generated JSON forms of the editor node: https://github.com/SiLeBAT/FSK-Lab/issues/362
+- Syntax hightlighting for R in the editor node: https://github.com/SiLeBAT/FSK-Lab/issues/376
+- README not loaded in the editor node: https://github.com/SiLeBAT/FSK-Lab/issues/363
 
 ### Removed
 - View of the runner node. This view relied on a PNG image that is no longer generated. Unlike the SVG, this image does not resize. It is removed and could be restored if it could support an SVG.
+- Duplicated tab titles in the editor node: https://github.com/SiLeBAT/FSK-Lab/issues/374
+- Unnecessary unit label in simulation node: https://github.com/SiLeBAT/FSK-Lab/issues/377
 
 ## [1.5.7] - 2019-4-30
 
