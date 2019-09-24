@@ -42,7 +42,10 @@ simulator = function() {
         <div class="form-group form-group-lg">
           <label class="col-md-3 control-label" for="simulationSelect">Simulation</label>
           <div class="col-md-5">
-            <select class="form-control" id ="simulationSelect"></select>
+            <select class="form-control" id ="simulationSelect">
+              <!-- Add simulations to select -->
+              ${_val.simulations.map(simulation => `<option>${simulation.name}</option>`)}
+            </select>
           </div>
           <button id="removeButton" type="button" class="btn btn-lg btn-danger col-md-offset-1 col-xs-offset-1" title="Remove current simulation">
             <i class="glyphicon glyphicon-trash"></i>
@@ -106,16 +109,31 @@ simulator = function() {
   /**
    * Initialize UI.
    * 
-   * - Enter simulation names into the simulation select (#simulationSelect).
    * - Create parameters and add them (only names). Parameter values are added later for the current simulation.
    */
   function initUI() {
-    
-    // Include simulations
-    let simulationSelect = $('#simulationSelect');
-    _val.simulations.forEach(simulation => {
-      simulationSelect.append(`<option>${simulation.name}</option>`);                  
-    });
+
+    function createMetadataList(parameter) {
+
+      const formatProperty = (name, value) => value ? `<li><b>${name}</b>: ${value}</li>` : '';
+
+      return `<ul>
+        ${formatProperty("ID", parameter.id)}
+        ${formatProperty("Name", parameter.name)}
+        ${parameter.description ? `<li><b>Description</b>: ${parameter.description.substring(0,50)}</li>` : ''}
+        ${formatProperty("Unit", parameter.unit)}
+        ${formatProperty("Unit category", parameter.unitCategory)}
+        ${formatProperty("Data type", parameter.dataType)}
+        ${formatProperty("Source", parameter.source)}
+        ${formatProperty("Subject", parameter.subject)}
+        ${formatProperty("Distribution", parameter.distribution)}
+        ${formatProperty("Reference", parameter.reference)}
+        ${formatProperty("Variability subject", parameter.variabilitySubject)}
+        ${formatProperty("Min value", parameter.minValue)}
+        ${formatProperty("Max value", parameter.maxValue)}
+        ${formatProperty("Error", parameter.error)}
+      </ul>`;
+    }
 
     // Add parameters
     let parameterForm = $('#parameter-form');
@@ -136,22 +154,7 @@ simulator = function() {
           <input type="${inputType}" class="form-control parameter-input" value=""></input>
           <div class="collapse" id="${metadataId}" >
             <div class="alert alert-info card card-body">
-              <ul>
-                ${parameter.id ? `<li><b>ID</b>: ${parameter.id}</li>` : ''}
-                ${parameter.name ? `<li><b>Name</b>: ${parameter.name}</li>` : ''}
-                ${parameter.description ? `<li><b>Description</b>: ${parameter.description.substring(0,50)}</li>` : ''}
-                ${parameter.unit ? `<li><b>Unit</b>: ${parameter.unit}</li>` : ''}
-                ${parameter.unitCategory ? `<li><b>Unit category</b>: ${parameter.unitCategory}</li>` : ''}
-                ${parameter.dataType ? `<li><b>Data type</b>: ${parameter.dataType}</li>` : ''}
-                ${parameter.source ? `<li><b>Source</b>: ${parameter.source}</li>` : ''}
-                ${parameter.subject ? `<li><b>Subject</b>: ${parameter.subject}</li>` : ''}
-                ${parameter.distribution ? `<li><b>Distribution</b>: ${parameter.distribution}</li>` : ''}
-                ${parameter.reference ? `<li><b>Reference</b>: ${parameter.reference}</li>` : ''}
-                ${parameter.variabilitySubject ? `<li><b>Variability subject</b>: ${parameter.variabilitySubject}</li>` : ''}
-                ${parameter.minValue ? `<li><b>Min value</b>: ${parameter.minValue}</li>` : ''}
-                ${parameter.maxValue ? `<li><b>Max value</b>: ${parameter.maxValue}</li>` : ''}
-                ${parameter.error ? `<li><b>Error</b>: ${parameter.error}</li>` : ''}
-              </ul>
+              ${createMetadataList(parameter)}
             </div>
           </div>
         </div>       
