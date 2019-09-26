@@ -327,16 +327,12 @@ fskeditorjs = function() {
 	  return  obj;
 	}
 	 
-	function isObj(obj) {
-	  if (obj == null) { return false }
-	  return obj.constructor.name === "Object"
-	}
+	const isObj = (obj) => obj ? obj.constructor.name === "Object" : false;
+
 	joinerNode.init = function(representation, value) {
-		modelType = (value.modelType ? value.modelType
-				: "GenericModel");
+		modelType = value.modelType ? value.modelType : "GenericModel";
 		window.modelPrefix = modelType.charAt(0).toUpperCase() + modelType.slice(1);
-		
-	  
+			  
 		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
 			// send AJAX request to acquire the JWT for the currently logged in
 			// user. Subsequent requests need to carry the token in the
@@ -346,11 +342,10 @@ fskeditorjs = function() {
 
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-
 					JWT = this.responseText;
-
 				}
 			};
+
 			xhttp.open("GET", server + "/knime/rest/session", true);
 			xhttp.send();
 			// create temp folder for the current running instance of the
@@ -365,25 +360,21 @@ fskeditorjs = function() {
 			anotherxhttp.send();
 		}
 		
-		if(!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == ""){
-			console.log("value",value);
+		if (!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == "") {
 			_firstModel.generalInformation = JSON.parse("{}");
 			_firstModel.scope = JSON.parse("{}");
-
 			_firstModel.modelMath = JSON.parse("{}");
 			_firstModel.dataBackground = JSON.parse("{}");
-		}else{
+		} else{
 			metaData =  JSON.parse(value.modelMetaData);
-			if(metaData){
-				metaData = 	traverse(metaData);
+			if (metaData) {
+				metaData = traverse(metaData);
 			}
+
 			_firstModel.generalInformation = metaData.generalInformation;
-			console.log(_firstModel.generalInformation);
-			_firstModel.scope =metaData.scope;
-	
+			_firstModel.scope = metaData.scope;
 			_firstModel.modelMath = metaData.modelMath;
-			_firstModel.dataBackground = metaData.dataBackground;
-			
+			_firstModel.dataBackground = metaData.dataBackground;	
 		}
 		
 		_firstModelScript = value.firstModelScript;
@@ -532,120 +523,31 @@ fskeditorjs = function() {
 			// console.log(err);
 		}
 
-		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ? _firstModel.generalInformation.description
-				: "";
-		_firstModel.generalInformation.format = _firstModel.generalInformation.format != null ? _firstModel.generalInformation.format
-				: "";
-		_firstModel.generalInformation.language = _firstModel.generalInformation.language != null ? _firstModel.generalInformation.language
-				: "";
-		_firstModel.generalInformation.languageWrittenIn = _firstModel.generalInformation.languageWrittenIn != null ? _firstModel.generalInformation.languageWrittenIn
-				: "";
-		_firstModel.generalInformation.software = _firstModel.generalInformation.software != null ? _firstModel.generalInformation.software
-				: "";
-		_firstModel.generalInformation.source = _firstModel.generalInformation.source != null ? _firstModel.generalInformation.source
-				: "";
-		_firstModel.generalInformation.status = _firstModel.generalInformation.status != null ? _firstModel.generalInformation.status
-				: "";
-		_firstModel.generalInformation.objective = _firstModel.generalInformation.objective != null ? _firstModel.generalInformation.objective
-				: "";
-
-		_firstModel.scope.generalComment = _firstModel.scope.generalComment != null ? _firstModel.scope.generalComment
-				: "";
-		_firstModel.scope.temporalInformation = _firstModel.scope.temporalInformation != null ? _firstModel.scope.temporalInformation
-				: "";
-
-		_firstModel.dataBackground.study = _firstModel.dataBackground.study != null ? _firstModel.dataBackground.study
-				: {};
-		_firstModel.dataBackground.dietaryassessmentmethod = _firstModel.dataBackground.dietaryassessmentmethod != null ? _firstModel.dataBackground.dietaryassessmentmethod
-				: [];
-		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory != null ? _firstModel.dataBackground.laboratory
-				: [];
+		_firstModel.generalInformation.description = _firstModel.generalInformation.description != null ? _firstModel.generalInformation.description : "";
+		_firstModel.generalInformation.format = _firstModel.generalInformation.format != null ? _firstModel.generalInformation.format : "";
+		_firstModel.generalInformation.language = _firstModel.generalInformation.language != null ? _firstModel.generalInformation.language : "";
+		_firstModel.generalInformation.languageWrittenIn = _firstModel.generalInformation.languageWrittenIn != null ? _firstModel.generalInformation.languageWrittenIn : "";
+		_firstModel.generalInformation.software = _firstModel.generalInformation.software != null ? _firstModel.generalInformation.software : "";
+		_firstModel.generalInformation.source = _firstModel.generalInformation.source != null ? _firstModel.generalInformation.source : "";
+		_firstModel.generalInformation.status = _firstModel.generalInformation.status != null ? _firstModel.generalInformation.status : "";
+		_firstModel.generalInformation.objective = _firstModel.generalInformation.objective != null ? _firstModel.generalInformation.objective : "";
+		_firstModel.scope.generalComment = _firstModel.scope.generalComment != null ? _firstModel.scope.generalComment : "";
+		_firstModel.scope.temporalInformation = _firstModel.scope.temporalInformation != null ? _firstModel.scope.temporalInformation : "";
+		_firstModel.dataBackground.study = _firstModel.dataBackground.study != null ? _firstModel.dataBackground.study : {};
+		_firstModel.dataBackground.dietaryassessmentmethod = _firstModel.dataBackground.dietaryassessmentmethod != null ? _firstModel.dataBackground.dietaryassessmentmethod : [];
+		_firstModel.dataBackground.laboratory = _firstModel.dataBackground.laboratory != null ? _firstModel.dataBackground.laboratory : [];
 	}
+
 	window.outputParameterNotDefined = false;
 	window.parameterValidationError = ""
 	mapOfSingleValueTable = {};
-	joinerNode.validate = function() {
-		/*if (noValidation == true) {
-			return true;
-		} else {
-			if (window.firstModelScript && window.firstModelScript.save) {
-				window.firstModelScript.save();
-			}
-			if (window.firstModelViz && window.firstModelViz.save) {
-				window.firstModelViz.save();
-			}
-			if (window.readme && window.readme.save) {
-				window.readme.save();
-			}
 
-			$
-					.each(
-							window.modelMath.parameter,
-							function(index, param) {
-								if (param.parameterClassification == "Output") {
-									parameterID = param.parameterID;
-									const re1 = new RegExp(parameterID
-											+ "\\s*<-")
-									const re2 = new RegExp(parameterID
-											+ "\\s*=")
-
-									if (_viewValue.firstModelScript.search(re1) == -1
-											&& _viewValue.firstModelScript
-													.search(re2) == -1) {
-										window.outputParameterNotDefined = true;
-									}
-								} else {
-									if (param.parameterDataType == "Integer"
-											|| param.parameterDataType == "Double"
-											|| param.parameterDataType == "Number") {
-										if (isNaN(parseFloat(param.parameterValue))) {
-											window.parameterValidationError += ",,,Parameter: "
-													+ param.parameterID
-													+ " should have a value"
-										} else if (param.parameterValueMin != ""
-												&& param.parameterValueMax != "") {
-
-											if (parseFloat(param.parameterValue) < parseFloat(param.parameterValueMin)
-													|| parseFloat(param.parameterValue) > parseFloat(param.parameterValueMax)) {
-												window.parameterValidationError += (",,,Parameter: "
-														+ param.parameterID
-														+ " should be between "
-														+ param.parameterValueMin
-														+ " and " + param.parameterValueMax)
-											}
-
-										}
-									}
-								}
-							})
-			if (window.outputParameterNotDefined) {
-				if (parent !== undefined
-						&& parent.KnimePageLoader !== undefined) {
-					swal(
-							{
-								title : "Are you sure?",
-								text : "One of the output parameters or more is not declared in your Model script! Do you want to save anyway?!",
-								icon : "warning",
-								buttons : true,
-								dangerMode : true,
-							}).then(function(saveAnyway) {
-						if (saveAnyway) {
-							noValidation = true;
-						}
-					});
-					return false;
-				}
-			}
-		}*/
-		console.log("validate ",_viewValue);
-		
-		return true;
-	}
+	joinerNode.validate = () => true;
 	noValidation = false
 
 	joinerNode.displayErrors = function(error) {
-
 	}
+
 	function rejoinStores(){
 		$.each($('.demoform'),function(index, value){
 			id = $(value).parent().parent().parent().parent().attr('id')
@@ -654,10 +556,9 @@ fskeditorjs = function() {
 			if(window.parentStores[parentId] && id){
 				console.log(window.parentStores[parentId]);
 			}
-				
-			
 		})
 	}
+
 	checked = false;
 	theSecondCall = false;
 	function fixValueIssue(){
@@ -749,15 +650,15 @@ fskeditorjs = function() {
 			});
 			ajv.validate(schema,data);
 			console.log(ajv.errors);
-			$.each(ajv.errors,function(index,value){
-				if(value.keyword == 'additionalProperties'){
+			$.each(ajv.errors,function(index,value) {
+				if (value.keyword == 'additionalProperties') {
 					additionalProperty = value.params.additionalProperty;
 					console.log(additionalProperty);
-					if(value.dataPath == ""){
+					if (value.dataPath == "") {
 						console.log('delete',value);
 						delete data[additionalProperty];
 						
-					}else{
+					} else {
 						matches = value.dataPath.match(/\[(.*?)\]/);
 						var index = matches[1];
 						var holder = value.dataPath.substr(1,matches.index-1);
@@ -772,129 +673,51 @@ fskeditorjs = function() {
 		removeAdditionalProperties(window.schema2, window.store2.getState().jsonforms.core.data);
 		removeAdditionalProperties(window.schema6, window.store6.getState().jsonforms.core.data);
 		removeAdditionalProperties(window.schema17, window.store17.getState().jsonforms.core.data);
-		if(!checked ){
-			if(parent !== undefined && parent.KnimePageLoader !== undefined){
-				if(!theSecondCall ){
+		
+		if (!checked ) {
+			if (parent !== undefined && parent.KnimePageLoader !== undefined) {
+				if (!theSecondCall ) {
 					theSecondCall = true;
-				}else{
+				} else {
 					fixValueIssue();
 				}
-			}else{
+			} else {
 				checked = true;
 				fixValueIssue();
 			}
-			
-			
-			console.log("modelMetaData",window.store1.getState().jsonforms.core.data);
-			
+
+			console.log("modelMetaData",window.store1.getState().jsonforms.core.data);			
 		}
-		modelMetaData = {			modelType: window.modelPrefix,
-									generalInformation : window.store1.getState().jsonforms.core.data ,
-									scope : window.store2.getState().jsonforms.core.data,
-									modelMath : window.store17.getState().jsonforms.core.data,
-									dataBackground : window.store6.getState().jsonforms.core.data,
-									
-									}; 
-		_viewValue.modelMetaData = JSON
-				.stringify(modelMetaData);
-		console.log(_viewValue);
+		
+		modelMetaData = {
+			modelType: window.modelPrefix,
+			generalInformation : window.store1.getState().jsonforms.core.data ,
+			scope : window.store2.getState().jsonforms.core.data,
+			modelMath : window.store17.getState().jsonforms.core.data,
+			dataBackground : window.store6.getState().jsonforms.core.data}; 
+		_viewValue.modelMetaData = JSON.stringify(modelMetaData);
+
 		if(window.firstModelScript && window.firstModelScript.save) {
 		  window.firstModelScript.save(); 
 		} 
+
 		if (window.firstModelViz && window.firstModelViz.save) {
 			window.firstModelViz.save();
 		}
+
 		if(window.readme && window.readme.save) {
 			window.readme.save(); 
 		}
-		_viewValue.firstModelScript = $('#firstModelScript').val();
-		 _viewValue.firstModelViz = $('#firstModelViz').val();
-		 _viewValue.readme = $('#READMEArea').val();
-		 
-		 
-		 _viewValue.resourcesFiles = resourcesFiles;
-		 _viewValue.serverName = server;
-		 /*_viewValue.notCompleted = "" + window.outputParameterNotDefined;
-		 
-		 var generalError = ""; generalError +=
-		 validateAgainstSchema(window.schema, window.store1
-		 .getState().jsonforms.core.data, "- General Information:");
-		 generalError += validateAgainstSchema(window.schema2, window.store2
-		 .getState().jsonforms.core.data, "- Scope:");
-		 
-		 generalError += validateAgainstSchema(window.schema17, window.store17
-		 .getState().jsonforms.core.data, "- Model Math:"); generalError +=
-		 validateAgainstSchema(window.schema6, window.store6
-		 .getState().jsonforms.core.data, "- Data Background:"); generalError +=
-		 window.parameterValidationError _viewValue.validationErrors =
-		 generalError.trim(); console.log(_viewValue);*/
-		 
-		/*
-		 * window.store1.getState().jsonforms.core.data.author = window.store23
-		 * .getState().jsonforms.core.data;
-		 * 
-		 * 
-		 * window.store6.getState().jsonforms.core.data.study = window.store7
-		 * .getState().jsonforms.core.data; _viewValue.generalInformation = JSON
-		 * .stringify(window.store1.getState().jsonforms.core.data);
-		 * window.store2.getState().jsonforms.core.data.spatialInformation =
-		 * window.toBeReplacedMap["Spatial Information"]
-		 * .getState().jsonforms.core.data; _viewValue.scope = JSON
-		 * .stringify(window.store2.getState().jsonforms.core.data);
-		 * 
-		 * window.store17.getState().jsonforms.core.data.exposure =
-		 * window.toBeReplacedMap["Exposure"] .getState().jsonforms.core.data;
-		 * _viewValue.modelMath = JSON
-		 * .stringify(window.store17.getState().jsonforms.core.data);
-		 * 
-		 * _viewValue.dataBackground = JSON
-		 * .stringify(window.store6.getState().jsonforms.core.data); if
-		 * (window.firstModelScript && window.firstModelScript.save) {
-		 * window.firstModelScript.save(); } if (window.firstModelViz &&
-		 * window.firstModelViz.save) { window.firstModelViz.save(); } if
-		 * (window.readme && window.readme.save) { window.readme.save(); } var
-		 * ajv = new window.Ajv({ allErrors : true, format : 'fast' }); // Add
-		 * convert keyword for date-time schema ajv =
-		 * ajv.removeKeyword("format") try { ajv .addKeyword('format', { type :
-		 * 'string', compile : function(sch, parentSchema) { return
-		 * parentSchema.format === 'date-time' && sch ? function(value,
-		 * objectKey, object, key) { // Update date-time string to Date //
-		 * object object[key] = new Date(value); return true; } : function() {
-		 * return true; } } }); ajv.validate(window.schema,
-		 * window.store1.getState().jsonforms.core.data);
-		 * ajv.validate(window.schema2,
-		 * window.store2.getState().jsonforms.core.data);
-		 * ajv.validate(window.schema17,
-		 * window.store17.getState().jsonforms.core.data);
-		 * ajv.validate(window.schema6,
-		 * window.store6.getState().jsonforms.core.data); } catch (err) { //
-		 * console.log(err) }
-		 * 
-		 * _viewValue.firstModelScript = $('#firstModelScript').val();
-		 * _viewValue.firstModelViz = $('#firstModelViz').val();
-		 * _viewValue.readme = $('#READMEArea').val();
-		 * 
-		 * 
-		 * _viewValue.resourcesFiles = resourcesFiles; _viewValue.serverName =
-		 * server; _viewValue.notCompleted = "" +
-		 * window.outputParameterNotDefined;
-		 * 
-		 * var generalError = ""; generalError +=
-		 * validateAgainstSchema(window.schema, window.store1
-		 * .getState().jsonforms.core.data, "- General Information:");
-		 * generalError += validateAgainstSchema(window.schema2, window.store2
-		 * .getState().jsonforms.core.data, "- Scope:");
-		 * 
-		 * generalError += validateAgainstSchema(window.schema17, window.store17
-		 * .getState().jsonforms.core.data, "- Model Math:"); generalError +=
-		 * validateAgainstSchema(window.schema6, window.store6
-		 * .getState().jsonforms.core.data, "- Data Background:"); generalError +=
-		 * window.parameterValidationError _viewValue.validationErrors =
-		 * generalError.trim(); console.log(_viewValue);
-		 */
-		 console.log("_viewValue.modelMetaData",_viewValue.modelMetaData);
+
+		_viewValue.firstModelScript = document.getElementById('firstModelScript').value;
+		_viewValue.firstModelViz = document.getElementById('firstModelViz').value;
+		_viewValue.readme = document.getElementById('READMEArea').value;
+		_viewValue.resourcesFiles = resourcesFiles;
+		_viewValue.serverName = server;
+		
 		return _viewValue;
 	};
+
 	function validateAgainstSchema(schema, data, schemaName) {
 
 		var ajv = new window.Ajv({
