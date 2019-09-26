@@ -9,121 +9,26 @@ fskeditorjs = function() {
 			return this.indexOf(searchString, position) === position;
 		};
 	}
+
 	window.idIndex = {}
-	function bin2String(array) {
-		var result = "";
-		for (var i = 0; i < array.length; i++) {
-			result += String.fromCharCode(parseInt(array[i], 2));
-		}
-		return result;
-	}
+
 	function getLastDigits(s) {
 	    return s.match(/\d+$/)[0];
 	}
+
 	function getCurrentStoreInfo(){
 		var currenStoreInfo;
-		
-			$.each($('li.active'),function(index, value){
-				currentSection = $(value).find('a')[0].innerText.toLowerCase().replace(
-						new RegExp(" ", 'g'),
-				"");
-				currenStoreInfo = window.parentStores[currentSection];
-				
-			})
-			return currenStoreInfo;
-		
+		$.each($('li.active'),function(index, value){
+			currentSection = $(value).find('a')[0].innerText.toLowerCase().replace(
+					new RegExp(" ", 'g'),
+			"");
+			currenStoreInfo = window.parentStores[currentSection];
+		});
+		return currenStoreInfo;
 	}
-	if (!Array.from) {
-		Array.from = (function() {
-			var toStr = Object.prototype.toString;
-			var isCallable = function(fn) {
-				return typeof fn === 'function'
-						|| toStr.call(fn) === '[object Function]';
-			};
-			var toInteger = function(value) {
-				var number = Number(value);
-				if (isNaN(number)) {
-					return 0;
-				}
-				if (number === 0 || !isFinite(number)) {
-					return number;
-				}
-				return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
-			};
-			var maxSafeInteger = Math.pow(2, 53) - 1;
-			var toLength = function(value) {
-				var len = toInteger(value);
-				return Math.min(Math.max(len, 0), maxSafeInteger);
-			};
 
-			// The length property of the from method is 1.
-			return function from(arrayLike/* , mapFn, thisArg */) {
-				// 1. Let C be the this value.
-				var C = this;
-
-				// 2. Let items be ToObject(arrayLike).
-				var items = Object(arrayLike);
-
-				// 3. ReturnIfAbrupt(items).
-				if (arrayLike == null) {
-					throw new TypeError(
-							'Array.from requires an array-like object - not null or undefined');
-				}
-
-				// 4. If mapfn is undefined, then let mapping be false.
-				var mapFn = arguments.length > 1 ? arguments[1]
-						: void undefined;
-				var T;
-				if (typeof mapFn !== 'undefined') {
-					// 5. else
-					// 5. a If IsCallable(mapfn) is false, throw a TypeError
-					// exception.
-					if (!isCallable(mapFn)) {
-						throw new TypeError(
-								'Array.from: when provided, the second argument must be a function');
-					}
-
-					// 5. b. If thisArg was supplied, let T be thisArg; else let
-					// T be undefined.
-					if (arguments.length > 2) {
-						T = arguments[2];
-					}
-				}
-
-				// 10. Let lenValue be Get(items, "length").
-				// 11. Let len be ToLength(lenValue).
-				var len = toLength(items.length);
-
-				// 13. If IsConstructor(C) is true, then
-				// 13. a. Let A be the result of calling the [[Construct]]
-				// internal method
-				// of C with an argument list containing the single item len.
-				// 14. a. Else, Let A be ArrayCreate(len).
-				var A = isCallable(C) ? Object(new C(len)) : new Array(len);
-
-				// 16. Let k be 0.
-				var k = 0;
-				// 17. Repeat, while k < len… (also steps a - h)
-				var kValue;
-				while (k < len) {
-					kValue = items[k];
-					if (mapFn) {
-						A[k] = typeof T === 'undefined' ? mapFn(kValue, k)
-								: mapFn.call(T, kValue, k);
-					} else {
-						A[k] = kValue;
-					}
-					k += 1;
-				}
-				// 18. Let putStatus be Put(A, "length", len, true).
-				A.length = len;
-				// 20. Return A
-				;
-				return A;
-			};
-		}());
-	}
-	function autocomplete(originalname, inp, arr, store, schema, uischema, fieldName,currentArea) {
+	function autocomplete(originalname, inp, arr, store, schema, uischema, fieldName, currentArea) {
+		
 		/*
 		 * the autocomplete function takes two arguments, the text field element
 		 * and an array of possible autocompleted values:
@@ -137,55 +42,49 @@ fskeditorjs = function() {
 			closeAllLists();
 
 			currentFocus = -1;
-			/*
-			 * create a DIV element that will contain the items (values):
-			 */
+
+			// create a DIV element that will contain the items (values):
 			a = document.createElement("DIV");
 			a.setAttribute("id", e.target.id + "autocomplete-list");
 			a.setAttribute("class", "autocomplete-items");
-			/*
-			 * append the DIV element as a child of the autocomplete container:
-			 */
 
+			// append the DIV element as a child of the autocomplete container:
 			e.target.parentNode.appendChild(a);
+			
 			/* for each item in the array... */
 			if (!val) {
+
 				for (i = 0; i < arr.length; i++) {
-					/*
-					 * create a DIV element for each matching element:
-					 */
+					
+					// create a DIV element for each matching element:
 					b = document.createElement("DIV");
-					/* make the matching letters bold: */
-					b.innerHTML = "<strong>" + arr[i].substr(0, 0)
-							+ "</strong>";
+
+					// make the matching letters bold:
+					b.innerHTML = `<strong>${arr[i].substr(0, 0)}</strong>`;
 					b.innerHTML += arr[i].substr(0);
+
 					/*
 					 * insert a input field that will hold the current array
 					 * item's value:
 					 */
-					b.innerHTML += "<input type='hidden' value='" + arr[i]
-							+ "'>";
+					b.innerHTML += `<input type='hidden' value='${arr[i]}'>`;
+
 					/*
 					 * execute a function when someone clicks on the item value
 					 * (DIV element):
 					 */
 					b.addEventListener("click", function(e) {
-						/*
-						 * insert the value for the autocomplete text field:
-						 */
 						
-						if(!fieldName.indexOf('#/properties/') == 0){
+						// insert the value for the autocomplete text field:
+						if (fieldName.indexOf('#/properties/') != 0) {							
+
+							const data = store.getState().jsonforms.core.data;
+							data[originalname] = e.srcElement.innerText;
+							dispatched = store.dispatch(Actions.init(data, schema, uischema));
 							
-							store.getState().jsonforms.core.data[originalname] = e.srcElement.innerText;
-							
-							dispatched = store.dispatch(Actions.init(
-									store.getState().jsonforms.core.data, schema,
-									uischema));
-							
-							document.getElementById('#/properties/' + fieldName)
-								.focus();
+							document.getElementById('#/properties/' + fieldName).focus();
 	
-						}else{
+						} else {
 							currentSection = getCurrentStoreInfo();
 							currentFormId = $(e.srcElement.closest( ".demoform" )).parent().attr('id')
 							// rejoinStores();
@@ -202,10 +101,8 @@ fskeditorjs = function() {
 							
 							document.getElementById( fieldName)
 								.focus();
-
 						}
 
-						
 						/*
 						 * close the list of autocompleted values, (or any other
 						 * open lists of autocompleted values:
@@ -222,59 +119,49 @@ fskeditorjs = function() {
 					 */
 					if (arr[i].substr(0, val.length).toUpperCase() == val
 							.toUpperCase()) {
-						/*
-						 * create a DIV element for each matching element:
-						 */
+						// create a DIV element for each matching element:
 						b = document.createElement("DIV");
-						/* make the matching letters bold: */
+						
+						// make the matching letters bold:
 						b.innerHTML = "<strong>" + arr[i].substr(0, val.length)
 								+ "</strong>";
 						b.innerHTML += arr[i].substr(val.length);
+
 						/*
 						 * insert a input field that will hold the current array
 						 * item's value:
 						 */
 						b.innerHTML += "<input type='hidden' value='" + arr[i]
 								+ "'>";
+
 						/*
 						 * execute a function when someone clicks on the item
 						 * value (DIV element):
 						 */
-						b
-								.addEventListener(
-										"click",
-										function(e) {
-											/*
-											 * insert the value for the
-											 * autocomplete text field:
-											 */
+						b.addEventListener("click", function(e) {
+							// insert the value for the autocomplete text field:
 
-											store.getState().jsonforms.core.data[fieldName] = this
-													.getElementsByTagName("input")[0].value;
+							store.getState().jsonforms.core.data[fieldName] = this.getElementsByTagName("input")[0].value;
 
-											store
-													.dispatch(Actions
-															.init(
-																	store
-																			.getState().jsonforms.core.data,
-																	schema,
-																	uischema));
-											if(document.getElementById('#/properties/' + fieldName)){
-												document.getElementById('#/properties/' + fieldName)
-												.focus();
-											}
-											/*
-											 * close the list of autocompleted
-											 * values, (or any other open lists
-											 * of autocompleted values:
-											 */
-											closeAllLists();
-										});
+							store.dispatch(Actions.init(store.getState().jsonforms.core.data,
+														schema, uischema));
+							if (document.getElementById('#/properties/' + fieldName)) {
+								document.getElementById('#/properties/' + fieldName).focus();
+							}
+							
+							/*
+							 * close the list of autocompleted
+							 * values, (or any other open lists
+							 * of autocompleted values:
+							 */
+							closeAllLists();
+						});
 						a.appendChild(b);
 					}
 				}
 			}
 		}
+
 		$(inp).addClass('domdsdsd');
 		/* execute a function when someone writes in the text field: */
 		inp.addEventListener("input", inputHandler);
