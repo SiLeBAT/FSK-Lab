@@ -123,16 +123,14 @@ fskeditorjs = function() {
 						b = document.createElement("DIV");
 						
 						// make the matching letters bold:
-						b.innerHTML = "<strong>" + arr[i].substr(0, val.length)
-								+ "</strong>";
+						b.innerHTML = `<strong>${arr[i].substr(0, val.length)}</strong>`;
 						b.innerHTML += arr[i].substr(val.length);
 
 						/*
 						 * insert a input field that will hold the current array
 						 * item's value:
 						 */
-						b.innerHTML += "<input type='hidden' value='" + arr[i]
-								+ "'>";
+						b.innerHTML += `<input type='hidden' value='${arr[i]}'>`;
 
 						/*
 						 * execute a function when someone clicks on the item
@@ -140,19 +138,16 @@ fskeditorjs = function() {
 						 */
 						b.addEventListener("click", function(e) {
 							// insert the value for the autocomplete text field:
-
-							store.getState().jsonforms.core.data[fieldName] = this.getElementsByTagName("input")[0].value;
-
-							store.dispatch(Actions.init(store.getState().jsonforms.core.data,
-														schema, uischema));
-							if (document.getElementById('#/properties/' + fieldName)) {
-								document.getElementById('#/properties/' + fieldName).focus();
-							}
+							const data = store.getState().jsonforms.core.data;
+							data[fieldName] = this.getElementsByTagName("input")[0].value;
+							store.dispatch(Actions.init(data, schema, uischema));
+							
+							const input = document.getElementById('#/properties/' + fieldName);
+							if (input) input.focus();
 							
 							/*
-							 * close the list of autocompleted
-							 * values, (or any other open lists
-							 * of autocompleted values:
+							 * close the list of autocompleted values, (or any
+							 * other open lists of autocompleted values:
 							 */
 							closeAllLists();
 						});
@@ -241,15 +236,15 @@ fskeditorjs = function() {
 			/* add class "autocomplete-active": */
 			x[currentFocus].classList.add("autocomplete-active");
 		}
+
 		function removeActive(x) {
 			/*
 			 * a function to remove the "active" class from all autocomplete
 			 * items:
 			 */
-			for (var i = 0; i < x.length; i++) {
-				x[i].classList.remove("autocomplete-active");
-			}
+			Array.from(x).forEach((item) => item.classList.remove("autocomplete-active"));
 		}
+
 		function closeAllLists(elmnt) {
 			/*
 			 * close all autocomplete lists in the document, except the one
@@ -262,10 +257,9 @@ fskeditorjs = function() {
 				}
 			}
 		}
-		/* execute a function when someone clicks in the document: */
-		document.addEventListener("click", function(e) {
-			closeAllLists(e.target);
-		});
+
+		// execute a function when someone clicks in the document:
+		document.addEventListener("click", (e) => closeAllLists(e.target));
 	}
 	var joinerNode = {
 		version : '1.0.0'
