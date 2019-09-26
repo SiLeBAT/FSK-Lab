@@ -64,6 +64,7 @@ simulator = function() {
           <label class="col-md-3 control-label" for="simulationName">Simulation name</label>
           <div class="col-md-5">
             <input id="simulationName" type="text" class="form-control">
+            <span id="helpBlock-simulationName" class="help-block"></span>
           </div>
         </div>
       </form>
@@ -96,8 +97,8 @@ simulator = function() {
       }
 		});
 
-		$('#addButton').click(addSimulation);
-		$('#saveButton').click(submitSimulation);
+    document.getElementById('addButton').onclick = addSimulation;
+    document.getElementById('saveButton').onclick = submitSimulation;
     
     $('#simulationSelect').change(function() {
       let selectedIndex = document.getElementById("simulationSelect").selectedIndex;
@@ -152,6 +153,7 @@ simulator = function() {
         <label class="col-sm-3 control-label">${parameter.id}</label>
         <div class="col-sm-8">
           <input type="${inputType}" class="form-control parameter-input" value=""></input>
+          <span class="help-block"></span>
           <div class="collapse" id="${metadataId}" >
             <div class="alert alert-info card card-body">
               ${createMetadataList(parameter)}
@@ -176,10 +178,10 @@ simulator = function() {
    * 
    * - Disable the input for the default simulation.
    */
-  function updateSimulationName(simulationIndex) {
-    let simulationName = $('#simulationName');
-    simulationName.val(_val.simulations[simulationIndex].name);
-    simulationName.prop('disabled', simulationIndex == 0);    
+  function updateSimulationName(simulationIndex) {    
+    const simulationName = document.getElementById('simulationName');
+    simulationName.value = _val.simulations[simulationIndex].name;
+    simulationName.disabled = simulationIndex == 0;
   }
 
   /**
@@ -191,12 +193,12 @@ simulator = function() {
   function updateParameterValues(simulationIndex) {
 
     // Disable parameter inputs for the default simulation.
-    let isDisabled = simulationIndex == 0;
+    const isDisabled = simulationIndex == 0;
 
-    $('.parameter-input').each(function(parameterIndex) {
-      let parameterValue = _val.simulations[simulationIndex].values[parameterIndex];
-      $(this).val(parameterValue);
-      $(this).prop('disabled', isDisabled);
+    const inputs = document.getElementsByClassName('parameter-input');
+    Array.from(inputs).forEach((input, parameterIndex) => {
+      input.value = _val.simulations[simulationIndex].values[parameterIndex];
+      input.disabled = isDisabled;
     });
   }
 
@@ -208,17 +210,19 @@ simulator = function() {
    * - Clear every parameter input (.parameter-input) and assign the default value.
    */
   function addSimulation() {
-    $('#simulationSelect').val('');
 
-    let simulationName = $('#simulationName');
-    simulationName.val('');
-    simulationName.prop('disabled', false);
+    document.getElementById('simulationSelect').value = '';
+
+    const simulationName = document.getElementById('simulationName');
+    simulationName.value = '';
+    simulationName.disabled = false;
 
     // Take the values from the default simulation
-    let defaultSimulationValues = _val.simulations[0].values;
-    $('.parameter-input').each(function(parameterIndex) {
-      $(this).val(defaultSimulationValues[parameterIndex]);
-      $(this).prop('disabled', false);
+    const defaultSimulationValues = _val.simulations[0].values;
+    const inputs = document.getElementsByClassName('parameter-input');
+    Array.from(inputs).forEach((input, index) => {
+      input.value = defaultSimulationValues[index];
+      input.disabled = false;
     });
   }
 
@@ -232,18 +236,21 @@ simulator = function() {
      * - Check that the name is not used already
      * - Check that the name is not empty.
      * - Check that the name is a valid SId.
+     * 
+     * @returns An error if found. If not null.
      */
     function validateSimulationName(name) {
 
       // Check that it is not duplicated
-      let isDuplicated = false;
-      for (let i = 0; i < _val.simulations.length && !isDuplicated; ++i) {
+      for (let i = 0; i < _val.simulations.length; ++i) {
         if (name === _val.simulations[i].name) {
-          isDuplicated = true;
+          return "Simulation name already exists"
         }
       }
 
-      return !isDuplicated && name && _idRegexp.test(name);
+      if (!_idRegexp.test(name)) return "Not a valid simulation name (SId)";
+
+      return null;
     }
 
     /**
@@ -254,64 +261,81 @@ simulator = function() {
     function validateParameter(value, metadata) {
 
       // Check missing value
-      if (!value) return false;
+      if (!value) return `Please provide a value for ${metadata.id}`;
       
       // Check range for integers and doubles
       if (metadata.dataType === "INTEGER" || metadata.dataType === "DOUBLE") {
         if (metadata.minValue && parseFloat(metadata.minValue) > value) {
-          return false;
+          return `Invalid value. Value is lower than minimal value (${metadata.minValue})`;
         }
         if (metadata.maxValue && parseFloat(metadata.maxValue) < value) {
-          return false;
+          return `Invalid value. Value is higher than maximal value (${metadata.maxValue})`;
         }
       }
 
-      return true;
+      return null;
     }
 
     let errorCount = 0;
     
     // Validate simulation name
-    let simulationNameInput = $('#simulationName');
-    let newSimulationName = simulationNameInput.val();
-    
-    let simulationNameValidation;
-    if (validateSimulationName(newSimulationName)) {
-      simulationNameValidation = "has-success";
+    const simulationNameInput = document.getElementById("simulationName");
+    const nameValidationResult = validateSimulationName(simulationNameInput.value);
+    const helpBlock = document.getElementById("helpBlock-simulationName");
+
+    if (!nameValidationResult) {
+      // Clear and hide the help block
+      helpBlock.textContent = "";
+      helpBlock.style.visibility = "hidden";
     } else {
-      simulationNameValidation = "has-error";
+      // Add error and show the help block
+      helpBlock.textContent = nameValidationResult;
+      helpBlock.style.visibility = "visible";
+
       errorCount++;
     }
-    let formDiv = simulationNameInput.parent().parent(); // Get the form-group div
-    formDiv.removeClass('has-success has-error'); // error previous validation classes
-    formDiv.addClass(simulationNameValidation);
+
+    // Get the form-group div and set the validation status
+    const formDiv = simulationNameInput.parentNode.parentNode;
+    formDiv.classList.remove('has-success', 'has-error');
+    formDiv.classList.add(!nameValidationResult ? 'has-success' : 'has-error');
 
     // Validate parameter inputs
     let parameterValues = [];
-    $('.parameter-input').each(function(parameterIndex) {
-      let value = $(this).val();
-      parameterValues.push(value);  // cache value
 
-      let parameterValidation;
-      if (validateParameter(value, _rep.parameters[parameterIndex])) {
-        parameterValidation = "has-success";
+    const parameterInputs = document.getElementsByClassName('parameter-input');
+    Array.from(parameterInputs).forEach(function(parameter, index) {
+
+      parameterValues.push(parameter.value); // cache value
+
+      const parameterHelp = parameter.parentNode.querySelector('.help-block');
+      
+      const validationResult = validateParameter(parameter.value, _rep.parameters[index]);
+      if (!validationResult) {
+        // Clear and hide the help block
+        parameterHelp.textContent = "";
+        parameterHelp.style.visibility = "hidden";
       } else {
-        parameterValidation = "has-error";
+        // Add error and show the help block
+        parameterHelp.textContent = validationResult;
+        parameterHelp.style.visibility = "visible";
+
         errorCount++;
       }
 
-      let formDiv = $(this).parent().parent(); // Get the form-group div
-      formDiv.removeClass('has-success has-error'); // error previous validation classes
-      formDiv.addClass(parameterValidation);
+      // Get the form-group div and set the validation status
+      const formDiv = parameter.parentNode.parentNode;
+      formDiv.classList.remove('has-success', 'has-error');
+      formDiv.classList.add(!validationResult ? 'has-success' : 'has-error');
     });
 
     if (errorCount == 0) {
       // Save simulation in _val
-      let newSimulation = {'name': newSimulationName, 'values': parameterValues};
+      let newSimulation = {'name': simulationNameInput.value, 'values': parameterValues};
       _val.simulations.push(newSimulation);
 
       // Add simulation name in simulationSelect
-      $('#simulationSelect').append(`<option>${newSimulationName}</option>`);
+      $('#simulationSelect').append(`<option>${simulationNameInput.value}</option>`);
       // and select it
       $('#simulationSelect option').last().prop('selected', true);
     }
