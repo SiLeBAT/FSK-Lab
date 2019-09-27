@@ -1549,51 +1549,42 @@ fskeditorjs = function() {
 </div>`;
 
 		$("#" + ID).append(row);
-		$(
-				"#" + ID + " div.MuiGrid-typeItem-2 div.table-responsive , #"
-						+ ID + " div.MuiGrid-typeItem-2 div.demoform")
-				.filter(function(index, element) {
-					// filter out all emfforms of modals
-					return $(element).parents('.modal-dialog').length <= 0;
+		$("#" + ID + " div.MuiGrid-typeItem-2 div.table-responsive , #"
+      + ID + " div.MuiGrid-typeItem-2 div.demoform")
+      .filter(function(index, element) {
+			  // filter out all emfforms of modals
+				return $(element).parents('.modal-dialog').length <= 0;
+      })
+      .each(function(index, element) {$(element).addClass('selectedParent');})
+      .each(function(index, element) {
+        if ($(element).parents().hasClass('selectedParent')) {
+          return;
+        }
 
-				})
-				.each(function(index, element) {
-					$(element).addClass('selectedParent');
-				})
-				.each(
-						function(index, element) {
-							if ($(element).parents().hasClass('selectedParent')) {
-								return;
-							}
-							// console.log($(element));
-							var parent = $(element).parent().parent();
+        var parent = $(element).parent().parent();
 
-							var text;
-							if ($(this).attr('class').indexOf('demoform') >= 0)
-								text = parent.find('.MuiFormLabel-root-100')
-										.html();
-							else
-								text = parent.find('.control-labelal').html();
+        var text;
+        if ($(this).attr('class').indexOf('demoform') >= 0)
+          text = parent.find('.MuiFormLabel-root-100').html();
+        else
+          text = parent.find('.control-labelal').html();
+          
+        const sideNavigationButton = `<button data='${text}' type='button'
+class='list-group-item list-group-item-action sidenavibutton'>${text}</button>`;
 
-							var sideNavigationButton = "<button data='"
-									+ text
-									+ "' type='button' class='list-group-item list-group-item-action sidenavibutton'>"
-									+ text + "</button>\n";
-							$("#" + ID + "gisidenav").append(
-									sideNavigationButton);
+        $(`#${ID}gisidenav`).append(sideNavigationButton);              
 
-							parent.addClass('detailedSide');
+        parent.addClass('detailedSide');
 
-							navigationMap[text] = parent;
-							$("#" + ID + " ." + ID + "Content").append(parent);
-							parent.hide();
-
-						});
+        navigationMap[text] = parent;
+        $(`#${ID} .${ID}Content`).append(parent);
+        parent.hide();
+      });
 
 		$("#" + ID + " > div.demoform").each(function(index, element) {
 			$(element).addClass('detailedSide');
 			navigationMap[ID + "General"] = $(element);
-			$("#" + ID + " div[data='General']").append(element);
+      $(`#${ID} div[data='General']`).append(element);
 			$("div[data='General']").show();
 		});
 
@@ -1607,11 +1598,9 @@ fskeditorjs = function() {
 
 			$("#" + ID).find("div[class$='list-group']").children().first()
 					.addClass('active');
-			//
-
-		}
+    }
+    
 		$(".sidenavibutton").on("click", function(event) {
-			// console.log("click ",$(this),event);
 			$(this).parent().parent().parent().find(".detailedSide").hide();
 			$(this).parent().find(".active").removeClass('active');
 
