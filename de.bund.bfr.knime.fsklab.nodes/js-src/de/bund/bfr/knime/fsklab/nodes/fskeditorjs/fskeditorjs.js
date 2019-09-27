@@ -714,7 +714,7 @@ fskeditorjs = function() {
 		_viewValue.readme = document.getElementById('READMEArea').value;
 		_viewValue.resourcesFiles = resourcesFiles;
 		_viewValue.serverName = server;
-		
+
 		return _viewValue;
 	};
 
@@ -761,76 +761,53 @@ fskeditorjs = function() {
 			cache : true
 		});
 		document.createElement("body");
-		bodyContent = "<meta http-equiv='X-UA-Compatible' content='IE=edge'>"
-				+ "<h3>FSK Object</h3>"
-				+
-
-				"                <div class='tabbable'>\n"
-				+ "                    <ul class='nav nav-tabs'>\n"
-				+ "                        <li class='active'><a href='#sub21'>General Information</a>\n"
-				+ "                        </li>\n"
-				+ "                        <li><a href='#sub22'>Scope</a>\n"
-				+ "                        </li>\n"
-				+ "                        <li><a href='#sub23'>Data Background</a>\n"
-				+ "                        </li>\n"
-				+ "                        <li><a href='#sub24'>Model Math</a>\n"
-				+ "                        </li>\n"
-				+ "                        <li ><a href='#sub25'>Model Script</a>\n"
-				+ "                        </li>\n"
-				+ "                        <li ><a href='#sub26'>Visualization Script</a>\n"
-				+ "                        </li>\n"
-				+ "                        <li ><a href='#sub27'>README</a>\n"
-				+ "                        </li>\n"
-		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
-			bodyContent += "                        <li ><a href='#sub28'>Resources</a>\n"
-					+ "                        </li>\n";
-		}
-		bodyContent += "                    </ul>\n"
-				+ "                    <div class='tab-content'>\n"
-				+ "                        <div class='tab-pane fade active in' id='sub21'>\n"
-				+ "                     		<div id=\"generalinformation\" class=\"App\">"
-				+ "								<div class=\"demoform\">"
-				+ "								</div>"
-				+ "					  		</div>"
-				+ "                        </div>\n"
-				+ "                        <div class='tab-pane fade' id='sub22'>\n"
-				+ "                    		 <div id=\"scope\" class=\"App\">"
-				+ "								<div class=\"demoform\">"
-				+ "								</div>"
-				+ "					 		 </div>"
-				+ "                        </div>\n"
-				+ "                        <div class='tab-pane fade' id='sub23'>\n"
-				+ "                    		 <div id=\"databackground\" class=\"App\">"
-				+ "								<div class=\"demoform\">"
-				+ "								</div>"
-				+ "					 		 </div>"
-				+ "                        </div>\n"
-				+ "                        <div class='tab-pane fade' id='sub24'>\n"
-				+ "                    		 <div id=\"modelMath\" class=\"App\">"
-				+ "								<div class=\"demoform\">" + "								</div>"
-				+ "					 		 </div>" + "                        </div>\n"
-		if (parent !== undefined && parent.KnimePageLoader !== undefined) {
-			bodyContent += "                        <div class='tab-pane fade' id='sub28'>\n"
-					+ "                    		 <div>"
-					+ "								<h4>resources</h4>"
-					+ "						   		<input id='filesInput' type='file' multiple style='display:none' />"
-					+ "				   				<button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>+ Add Files</button>"
-					+ "				  				<div id='filesArea'></div>"
-					+ "					 		 </div>" + "                        </div>"
-
-		}
-		bodyContent += "                   <div class='tab-pane fade' id='sub27'>\n"
-				+ "						     <textarea  id='READMEArea' name='READMEArea'>" + _README + "</textarea>"
-				+ "                        </div>"
-
-				+ "                        <div class='tab-pane fade' id='sub25'>\n"
-				+ "						     <textarea id='firstModelScript' name='firstModelScript'>" + _firstModelScript + "</textarea>"
-				+ "                        </div>\n"
-				
-				+ "                        <div class='tab-pane fade' id='sub26'>\n"
-				+ "						     <textarea id='firstModelViz' name='firstModelViz'>" + _firstModelViz + "</textarea>"
-				+ "                        </div>\n"
-				+ "                    </div>\n" + "                </div>\n"
+		
+		bodyContent = `<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+		<h3>FSK Object</h3>
+		<div class='tabbable'>
+		  <ul class='nav nav-tabs'>
+			  <li class='active'><a href='#sub21'>General information</a></li>
+			  <li><a href='#sub22'>Scope</a></li>
+			  <li><a href='#sub23'>Data Background</a></li>
+			  <li><a href='#sub24'>Model Math</a></li>
+			  <li><a href='#sub25'>Model Script</a></li>
+			  <li><a href='#sub26'>Visualization Script</a></li>
+			  <li><a href='#sub27'>README</a></li>
+			  ${parent && parent.KnimePageLoader ? "<li><a href='#sub28'>Resources</a></li>" : ""}
+      </ul>
+		  <div class='tab-content'>
+		    <div class='tab-pane fade active in' id='sub21'>
+		      <div id='generalinformation' class='App'><div class='demoform'></div></div>
+		    </div>
+        <div class='tab-pane fade' id='sub22'>
+          <div id='scope' class='App'><div class='demoform'></div></div>"
+        </div>
+        <div class='tab-pane fade' id='sub23'>
+          <div id='databackground' class='App'>"<div class='demoform'></div></div>"
+        </div>
+        <div class='tab-pane fade' id='sub24'>
+          <div id='modelMath' class='App'><div class='demoform'></div></div>
+        </div>
+        ${parent && parent.KnimePageLoader ?
+        `<div class='tab-pane fade' id='sub28'>
+          <div>
+            <h4>resources</h4>
+            <input id='filesInput' type='file' multiple style='display:none' />
+            <button id='filesButton' type='button' style='border-radius: 5px; background-color: #fff; color: green;'>+ Add Files</button>"
+            <div id='filesArea'></div>"
+          </div>
+        </div>` : ''}
+        <div class='tab-pane fade' id='sub27'>
+				  <textarea id='READMEArea' name='READMEArea'>${_README}</textarea>
+        </div>
+        <div class='tab-pane fade' id='sub25'>
+				  <textarea id='firstModelScript' name='firstModelScript'>${_firstModelScript}</textarea>
+        </div>
+        <div class='tab-pane fade' id='sub26'>
+				  <textarea id='firstModelViz' name='firstModelViz'>${_firstModelViz}</textarea>
+        </div>
+      </div>
+    </div>`;
 
 		$('body').append(bodyContent);
 
