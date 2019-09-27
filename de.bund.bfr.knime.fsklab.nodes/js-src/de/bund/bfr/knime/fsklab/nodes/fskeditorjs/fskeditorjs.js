@@ -780,10 +780,10 @@ fskeditorjs = function() {
 		      <div id='generalinformation' class='App'><div class='demoform'></div></div>
 		    </div>
         <div class='tab-pane fade' id='sub22'>
-          <div id='scope' class='App'><div class='demoform'></div></div>"
+          <div id='scope' class='App'><div class='demoform'></div></div>
         </div>
         <div class='tab-pane fade' id='sub23'>
-          <div id='databackground' class='App'>"<div class='demoform'></div></div>"
+          <div id='databackground' class='App'>"<div class='demoform'></div></div>
         </div>
         <div class='tab-pane fade' id='sub24'>
           <div id='modelMath' class='App'><div class='demoform'></div></div>
@@ -1534,17 +1534,19 @@ fskeditorjs = function() {
 		});
 	}
 	function reDesign(ID) {
-		var row = "					<div class='row'>"
-				+ " 					         <div class='col-xs-3 col-sm-3 col-lg-2 "
-				+ ID
-				+ "SideBar'><div class='list-group' id ='"
-				+ ID
-				+ "gisidenav'><button type='button' data='"
-				+ ID
-				+ "General' class='list-group-item list-group-item-action active sidenavibutton'>General</button></div></div>"
-				+ "                    			 <div class='col-xs-9 col-sm-9 col-lg-10 "
-				+ ID + "Content'><div data='General'></div> </div>"
-				+ "                        	</div>";
+        
+    const row = `<div class='row'>
+  <div class='col-xs-3 col-sm-3 col-lg-2 ${ID}SideBar'>
+    <div class='list-group' id='${ID}gisidenav'>
+      <button type='button' data='${ID}General' class='list-group-item list-group-item-action active sidenavibutton'>
+        General
+      </button>
+    </div>
+  </div>
+  <div class='col-xs-9 col-sm-9 col-lg-10 ${ID}Content'>
+    <div data='General'></div>
+  </div>
+</div>`;
 
 		$("#" + ID).append(row);
 		$(
