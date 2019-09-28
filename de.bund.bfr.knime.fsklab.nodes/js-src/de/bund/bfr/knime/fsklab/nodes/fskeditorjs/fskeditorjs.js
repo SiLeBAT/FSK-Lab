@@ -933,11 +933,21 @@ fskeditorjs = function() {
 			e.preventDefault()
 			$(this).tab('show')
 		})
+
 		function fixInputCSS(source) {
-			source.parent().removeAttr('class');
-			source.parent().parent().find('label').removeAttr('class');
-			source.parent().parent().find('label').addClass('control-labelal');
+
+			// Get the MuiInput-root-X div and remove its classes
+			const muiInputDiv = source.parent();
+			muiInputDiv.removeClass();
+			muiInputDiv.addClass('col-sm-10');
+
+			// Get the MuiFormLabel (at same level as the MuiInput-root-X)
+			const muiFormLabel = muiInputDiv.parent().find('label');
+			// and replace its classes with control-labelal and col-sm-2
+			muiFormLabel.removeClass();
+			muiFormLabel.addClass('control-labelal col-sm-2');
 		}
+
 		window.tableInputBootstraping = function(elements) {
 			$.each(elements, function(index, value) {
 				id = $(value).attr("id");
@@ -945,6 +955,7 @@ fskeditorjs = function() {
 				$(value).addClass("form-control");
 			})
 		}
+
 		$(document)
 				.ready(
 						function() {
@@ -1047,35 +1058,36 @@ fskeditorjs = function() {
 
 		});
 
-		$
-				.each(
-						$("input[type='text']"),
-						function(key, value) {
+		$.each($("input[type='text']"), function(key, value) {
 
-							$(value).removeAttr('class');
-							$(value).addClass('form-control');
-							$(value).parent().parent().removeAttr('class');
-							$(value).parent().parent().addClass('form-group');
-							fixInputCSS($(value));
-							$(value)
-									.focus(
-											function() {
-												if (this.value.length > 0) {
-													if ($(value).width() < ((this.value.length + 1) * 12)) {
-														this.style.width = ((this.value.length + 1) * 12)
-																+ 'px';
+			// Replace all the classes of the text input with form-control
+			const input = $(value);
+			input.removeClass('class');
+			input.addClass('form-control');
 
-													}
-												}
+			// Get the MuiFormControl-root-X div
+			const formControlDiv = input.parent().parent();
+			// and replace all its classes with form-group and row
+			formControlDiv.removeClass();
+			formControlDiv.addClass('form-group row');
 
-											});
-							$(value).blur(function() {
-								if (this.value.length > 0) {
-									this.style.width = "";
-								}
+			fixInputCSS(input);
+			
+			input.focus(function() {
+				if (this.value.length > 0) {
+					if ($(value).width() < ((this.value.length + 1) * 12)) {
+						this.style.width = ((this.value.length + 1) * 12)
+								+ 'px';
+					}
+				}
+			});
 
-							});
-						});
+			input.blur(function() {
+				if (this.value.length > 0) {
+					this.style.width = "";
+				}
+			});
+		});
 
 		$('.MuiFormLabel-root-100').css('font-size', '1.5rem');
 		$('.MuiDialog-paper-128').css('display', 'inline');
