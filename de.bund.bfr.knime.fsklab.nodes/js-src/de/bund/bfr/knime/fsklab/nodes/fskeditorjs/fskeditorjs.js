@@ -1042,20 +1042,14 @@ fskeditorjs = function() {
 		} catch (err) {
 			console.log(err);
 		}
-
-		// $('html').find('style').remove();
-		// data-meta MuiInputLabel
-		$.each($('html').find('style'), function(key, value) {
-			if ($(value).attr('data-meta') == 'MuiInput') {
-				$(value).remove();
-			} else if ($(value).attr('data-meta') == 'MuiInputLabel') {
-				$(value).remove();
-			} else if ($(value).attr('data-meta') == 'MuiFormLabel') {
-				$(value).remove();
-			} else if ($(value).attr('data-meta') == 'MuiFormHelperText') {
+	
+		// Remove styles of Mui components
+		$('*').find('style').each(function (key, value) {
+			const dataMeta = $(value).attr('data-meta');
+			if (dataMeta == 'MuiInput' || dataMeta == 'MuiInputLabel' ||
+				dataMeta == 'MuiFormLabel' || dataMeta == 'MuiFormHelperText') {
 				$(value).remove();
 			}
-
 		});
 
 		$.each($("input[type='text']"), function(key, value) {
