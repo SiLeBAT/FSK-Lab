@@ -1059,6 +1059,9 @@ fskeditorjs = function() {
 			input.removeClass('class');
 			input.addClass('form-control');
 
+			// Add help-block
+			input.parent().append('<p class="help-block"></p>'); 
+
 			// Get the MuiFormControl-root-X div
 			const formControlDiv = input.parent().parent();
 			// and replace all its classes with form-group and row
@@ -1081,6 +1084,17 @@ fskeditorjs = function() {
 					this.style.width = "";
 				}
 			});
+		});
+
+		/* Updates help-block with description from the MuiFormHelperText
+		 * tooltip which is also hidden.
+		 */
+		$('body').on('DOMSubtreeModified', ".MuiFormHelperText-root-119", function() {
+			$(this).hide();  // Hide .MuiFormHelperText-root-119	
+
+			const formGroupDiv = $(this).parent();
+			const helpBlock = formGroupDiv.find(".help-block");
+			helpBlock.text($(this).text());
 		});
 
 		$('.MuiFormLabel-root-100').css('font-size', '1.5rem');
