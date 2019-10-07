@@ -1,0 +1,12 @@
+title: BfR-KNIME-Nodes
+items:
+
+- title: Home
+  url: index.html
+  folder: home
+- title: Installation
+  url: installation.html
+- title: FSK-Lab
+  url: fsklab.html
+- title: PMM-Lab
+  url: pmmlab.html

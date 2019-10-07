@@ -1,0 +1,19 @@
+entries:
+
+- name: home_sidebar
+  items:
+  - title: Introduction
+    url: index.html
+  - title: Installation
+    url: installation.html
+  - title: FSK-Lab
+    url: fsklab.html
+  - title: PMM-Lab
+    url: pmmlab.html
+
+- name: fsk_sidebar
+  items:
+  - title: FSK-Lab
+    url: fsklab.html
+  - title: R plots
+    url: r_plots.html
