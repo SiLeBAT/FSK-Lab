@@ -1056,11 +1056,11 @@ fskeditorjs = function() {
 
 			// Replace all the classes of the text input with form-control
 			const input = $(value);
-			input.removeClass('class');
+			input.removeAttr('class');
 			input.addClass('form-control');
 
 			// Add help-block
-			input.parent().append('<p class="help-block"></p>'); 
+			input.parent().append('<small class="help-block"></small>'); 
 
 			// Get the MuiFormControl-root-X div
 			const formControlDiv = input.parent().parent();
@@ -1069,21 +1069,6 @@ fskeditorjs = function() {
 			formControlDiv.addClass('form-group row');
 
 			fixInputCSS(input);
-			
-			input.focus(function() {
-				if (this.value.length > 0) {
-					if ($(value).width() < ((this.value.length + 1) * 12)) {
-						this.style.width = ((this.value.length + 1) * 12)
-								+ 'px';
-					}
-				}
-			});
-
-			input.blur(function() {
-				if (this.value.length > 0) {
-					this.style.width = "";
-				}
-			});
 		});
 
 		/* Updates help-block with description from the MuiFormHelperText
