@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
@@ -36,18 +35,21 @@ public class NodeUtils {
    * @throws InvalidSettingsException if the running platform is not supported.
    */
   public static URI getLibURI() throws InvalidSettingsException {
-    if (Platform.isWindows())
+    if (Platform.isWindows()) {
       return FSKML.getURIS(1, 0, 12).get("zip");
-    if (Platform.isMac())
+    }
+    if (Platform.isMac()) {
       return FSKML.getURIS(1, 0, 12).get("tgz");
-    if (Platform.isLinux())
+    }
+    if (Platform.isLinux()) {
       return FSKML.getURIS(1, 0, 12).get("tar_gz");
+    }
     throw new InvalidSettingsException("Unsupported platform");
   }
 
   /**
    * Plots model results and generates a chart using a visualization script.
-   * 
+   *
    * @param imgFile Chart file
    * @param vizScript Visualization script
    * @param executor R executor
@@ -55,7 +57,7 @@ public class NodeUtils {
    * @throws InterruptedException
    * @throws CanceledExecutionException
    * @throws RException
-   * 
+   *
    */
   public static void plot(final File imageFile, final String vizScript, final int width,
       final int height, final int pointSize, final String res, final ScriptExecutor executor,
@@ -74,7 +76,7 @@ public class NodeUtils {
     final String path = FilenameUtils.separatorsToUnix(imageFile.getAbsolutePath());
 
     // Gets values
-    String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize="
+    final String pngCommand = "png('" + path + "', width=" + width + ", height=" + height + ", pointsize="
         + pointSize + ", res='" + res + "')";
 
     executor.executeIgnoreResult(pngCommand, monitor);
@@ -115,51 +117,9 @@ public class NodeUtils {
     executor.finishOutputCapturing(monitor);
   }
 
-  public static FskSimulation createDefaultSimulation(String parameterScript) {
-    FskSimulation defaultSimulation = new FskSimulation(DEFAULT_SIMULATION);
-
-    for (String line : parameterScript.split("\\r?\\n")) {
-      if (line.startsWith("#") || StringUtils.isBlank(line)) {
-        continue;
-      }
-
-      if (line.contains("<-")) {
-        line = line.trim();
-
-        String[] tokens = line.split("<-");
-        String name = tokens[0].trim();
-        String value = tokens[1].trim();
-
-        // Remove comments from values in the parameters script
-        int poundPos = value.indexOf("#");
-        if (poundPos != -1) {
-          value = value.substring(0, poundPos);
-        }
-
-        defaultSimulation.getParameters().put(name, value);
-      } else if (line.contains("=")) {
-        line = line.trim();
-
-        String[] tokens = line.split("=");
-        String name = tokens[0].trim();
-        String value = tokens[1].trim();
-
-        // Remove comments from values in the parameters script
-        int poundPos = value.indexOf("#");
-        if (poundPos != -1) {
-          value = value.substring(0, poundPos);
-        }
-
-        defaultSimulation.getParameters().put(name, value);
-      }
-    }
-
-    return defaultSimulation;
-  }
-
   public static FskSimulation createDefaultSimulation(List<Parameter> parameters) {
 
-    FskSimulation simulation = new FskSimulation(DEFAULT_SIMULATION);
+    final FskSimulation simulation = new FskSimulation(DEFAULT_SIMULATION);
 
     // The parameters to be inserted in order
     parameters.stream().filter(p -> p.getClassification() != ClassificationEnum.OUTPUT)
@@ -171,10 +131,10 @@ public class NodeUtils {
   /** Builds string with R parameters script out. */
   public static String buildParameterScript(FskSimulation simulation) {
 
-    StringBuilder builder = new StringBuilder();
-    for (Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
-      String parameterName = entry.getKey();
-      String parameterValue = entry.getValue();
+    final StringBuilder builder = new StringBuilder();
+    for (final Map.Entry<String, String> entry : simulation.getParameters().entrySet()) {
+      final String parameterName = entry.getKey();
+      final String parameterValue = entry.getValue();
 
       builder.append(parameterName + " <- " + parameterValue + "\n");
     }
@@ -184,7 +144,7 @@ public class NodeUtils {
 
   /**
    * Read a configuration string from a file under a settings folder.
-   * 
+   *
    * @throws IOException
    */
   static String readConfigString(File settingsFolder, String filename) throws IOException {
@@ -196,7 +156,7 @@ public class NodeUtils {
     if (aFlowVariable != null) {
       return aFlowVariable.getStringValue();
     } else {
-      File configFile = new File(settingsFolder, filename);
+      final File configFile = new File(settingsFolder, filename);
       return configFile.exists() ? FileUtils.readFileToString(configFile, StandardCharsets.UTF_8)
           : null;
     }
@@ -204,13 +164,13 @@ public class NodeUtils {
 
   /**
    * Write a configuration string to a file under a settings folder
-   * 
+   *
    * @throws IOException
    */
   static void writeConfigString(String configString, File settingsFolder, String filename)
       throws IOException {
     if (configString != null) {
-      File configFile = new File(settingsFolder, filename);
+      final File configFile = new File(settingsFolder, filename);
       FileUtils.writeStringToFile(configFile, configString, StandardCharsets.UTF_8);
     }
   }
