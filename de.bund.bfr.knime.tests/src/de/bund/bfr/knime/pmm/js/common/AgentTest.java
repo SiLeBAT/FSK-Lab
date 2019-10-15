@@ -1,7 +1,10 @@
 package de.bund.bfr.knime.pmm.js.common;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -20,10 +23,10 @@ public class AgentTest {
 	@Test
 	public void testConstructor() {
 		final Agent agent = new Agent();
-		assertNull(agent.id);
-		assertNull(agent.name);
-		assertNull(agent.detail);
-		assertNull(agent.dbuuid);
+		assertThat(agent.id, is(nullValue()));
+		assertThat(agent.name, is(nullValue()));
+		assertThat(agent.detail, is(nullValue()));
+		assertThat(agent.dbuuid, is(nullValue()));
 	}
 
 	@Test
@@ -37,10 +40,10 @@ public class AgentTest {
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		agent.saveToNodeSettings(settings);
 
-		assertEquals(id, settings.getInt("id"));
-		assertEquals(name, settings.getString("name"));
-		assertEquals(detail, settings.getString("detail"));
-		assertEquals(dbuuid, settings.getString("dbuuid"));
+		assertThat(settings.getInt("id"), equalTo(id));
+		assertThat(settings.getString("name"), equalTo(name));
+		assertThat(settings.getString("detail"), equalTo(detail));
+		assertThat(settings.getString("dbuuid"), equalTo(dbuuid));
 	}
 
 	@Test
@@ -54,20 +57,19 @@ public class AgentTest {
 		final Agent agent = new Agent();
 		agent.loadFromNodeSettings(settings);
 
-		assertEquals(id, agent.id.intValue());
-		assertEquals(name, agent.name);
-		assertEquals(detail, agent.detail);
-		assertEquals(dbuuid, agent.dbuuid);
+		assertThat(agent.id, equalTo(id));
+		assertThat(agent.name, equalTo(name));
+		assertThat(agent.detail, equalTo(detail));
+		assertThat(agent.dbuuid, equalTo(dbuuid));
 	}
 
 	@Test
 	public void testToAgent() {
 		final Agent agent = Agent.toAgent(new AgentXml(id, name, detail, dbuuid));
-
-		assertEquals(id, agent.id.intValue());
-		assertEquals(name, agent.name);
-		assertEquals(detail, agent.detail);
-		assertEquals(dbuuid, agent.dbuuid);
+		assertThat(agent.id, equalTo(id));
+		assertThat(agent.name, equalTo(name));
+		assertThat(agent.detail, equalTo(detail));
+		assertThat(agent.dbuuid, equalTo(dbuuid));
 	}
 
 	@Test

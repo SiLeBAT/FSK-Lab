@@ -1,7 +1,9 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -23,14 +25,17 @@ public class AgentListTest {
 	@Test
 	public void testAgents() {
 		final AgentList list = new AgentList();
-		assertNull(list.getAgents());
+		assertThat(list.getAgents(), is(nullValue()));
 
 		final Agent[] agents = new Agent[] { agent };
 		list.setAgents(agents);
-		assertEquals(agents[0].id, list.getAgents()[0].id);
-		assertEquals(agents[0].name, list.getAgents()[0].name);
-		assertEquals(agents[0].detail, list.getAgents()[0].detail);
-		assertEquals(agents[0].dbuuid, list.getAgents()[0].dbuuid);
+
+		final Agent actualAgent = list.getAgents()[0];
+
+		assertThat(actualAgent.id, equalTo(agent.id));
+		assertThat(actualAgent.name, equalTo(agent.name));
+		assertThat(actualAgent.detail, equalTo(agent.detail));
+		assertThat(actualAgent.dbuuid, equalTo(agent.dbuuid));
 	}
 
 	@Test
@@ -41,8 +46,7 @@ public class AgentListTest {
 
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
-
-		assertEquals(1, settings.getInt("numAgents"));
+		assertThat(settings.getInt("numAgents"), is(1));
 
 		final Agent[] obtainedAgents = new Agent[1];
 		obtainedAgents[0] = new Agent();
@@ -51,10 +55,10 @@ public class AgentListTest {
 		final Agent expected = agents[0];  // expected agent
 		final Agent obtained = obtainedAgents[0];  // obtained agent
 
-		assertEquals(expected.id, obtained.id);
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.detail, obtained.detail);
-		assertEquals(expected.dbuuid, obtained.dbuuid);
+		assertThat(expected.id, equalTo(obtained.id));
+		assertThat(expected.name, equalTo(obtained.name));
+		assertThat(expected.detail, equalTo(obtained.detail));
+		assertThat(expected.dbuuid, equalTo(obtained.dbuuid));
 	}
 
 	@Test
@@ -69,9 +73,9 @@ public class AgentListTest {
 		final Agent expected = agent;  // expected agent
 		final Agent obtained = list.getAgents()[0];  // obtained agent
 
-		assertEquals(expected.id, obtained.id);
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.detail, obtained.detail);
-		assertEquals(expected.dbuuid, obtained.dbuuid);
+		assertThat(expected.id, equalTo(obtained.id));
+		assertThat(expected.name, equalTo(obtained.name));
+		assertThat(expected.detail, equalTo(obtained.detail));
+		assertThat(expected.dbuuid, equalTo(obtained.dbuuid));
 	}
 }
