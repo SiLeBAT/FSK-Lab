@@ -15,7 +15,8 @@ Require-Bundle: de.bund.bfr.knime.pmm.nodes,
  de.bund.bfr.knime.fsklab.nodes,
  de.bund.bfr.knime.fsklab.r,
  org.knime.python2,
- de.bund.bfr.knime.pmm.common
+ de.bund.bfr.knime.pmm.common,
+ org.hamcrest.library
 Export-Package: de.bund.bfr.knime.fsklab.nodes,
  de.bund.bfr.knime.fsklab.nodes.plot,
  de.bund.bfr.knime.pmm.fskx,
