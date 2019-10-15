@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.fsklab.nodes;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
 
@@ -22,22 +23,22 @@ public class WriterNodeUtilsTest {
 
 	@Test
 	public void testEmptyUserReadme() {
-		String expectedReadme = instructions;
-		String actualReadme = WriterNodeUtils.prepareReadme("");
-		assertEquals(expectedReadme, actualReadme);
+		final String expectedReadme = instructions;
+		final String actualReadme = WriterNodeUtils.prepareReadme("");
+		assertThat(expectedReadme, equalTo(actualReadme));
 	}
 
 	@Test
 	public void testNonEmptyUserReadme() {
 
 		// Test readme without instructions (only user's content)
-		String usersContent = "Bla bla";
-		String expectedReadme = instructions + "\n" + usersContent;
+		final String usersContent = "Bla bla";
+		final String expectedReadme = instructions + "\n" + usersContent;
 		String actualReadme = WriterNodeUtils.prepareReadme(usersContent);
-		assertEquals(expectedReadme, actualReadme);
+		assertThat(expectedReadme, equalTo(actualReadme));
 		
 		// Test readme with instructions and user's content
 		actualReadme = WriterNodeUtils.prepareReadme(expectedReadme);
-		assertEquals(expectedReadme, actualReadme);
+		assertThat(expectedReadme, equalTo(actualReadme));
 	}
 }
