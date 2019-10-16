@@ -1,5 +1,7 @@
 package de.bund.bfr.knime.pmm.js.common;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -10,24 +12,7 @@ import org.knime.core.node.NodeSettings;
 @SuppressWarnings("static-method")
 public class UnitListTest {
 
-	static Unit unit;
-
-	static {
-		unit = new Unit();
-		unit.id = UnitTest.id;
-		unit.unit = UnitTest.unitString;
-		unit.description = UnitTest.description;
-		unit.name = UnitTest.name;
-		unit.kind_of_property_quantity = UnitTest.kindOfPropertyQuantity;
-		unit.notation_case_sensitive = UnitTest.notationCaseSensitive;
-		unit.convert_to = UnitTest.convertTo;
-		unit.conversion_function_factor = UnitTest.conversionFunctionFactor;
-		unit.inverse_conversion_function_factor = UnitTest.inversionConversionFunctionFactor;
-		unit.object_type = UnitTest.objectType;
-		unit.display_in_GUI_as = UnitTest.displayInGuiAs;
-		unit.mathML_string = UnitTest.mathMlString;
-		unit.priority_for_display_in_GUI = UnitTest.priorityForDisplayInGui;
-	}
+	static Unit unit = UnitTest.unit;
 
 	@Test
 	public void testUnits() {
@@ -36,22 +21,10 @@ public class UnitListTest {
 
 		list.setUnits(new Unit[] { unit });
 
-		final Unit expected = unit;  // expected Unit
-		final Unit obtained = list.getUnits()[0];  // obtained Unit
+		final Unit expected = unit; // expected Unit
+		final Unit obtained = list.getUnits()[0]; // obtained Unit
 
-		assertEquals(expected.id, obtained.id);
-		assertEquals(expected.unit, obtained.unit);
-		assertEquals(expected.description, obtained.description);
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.kind_of_property_quantity, obtained.kind_of_property_quantity);
-		assertEquals(expected.notation_case_sensitive, obtained.notation_case_sensitive);
-		assertEquals(expected.convert_to, obtained.convert_to);
-		assertEquals(expected.conversion_function_factor, obtained.conversion_function_factor);
-		assertEquals(expected.inverse_conversion_function_factor, obtained.inverse_conversion_function_factor);
-		assertEquals(expected.object_type, obtained.object_type);
-		assertEquals(expected.display_in_GUI_as, obtained.display_in_GUI_as);
-		assertEquals(expected.mathML_string, obtained.mathML_string);
-		assertEquals(expected.priority_for_display_in_GUI, obtained.priority_for_display_in_GUI);
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -64,23 +37,11 @@ public class UnitListTest {
 
 		assertEquals(1, settings.getInt("numUnits"));
 
-		final Unit expected = unit;  // expected unit
-		final Unit obtained = new Unit();  // obtained unit
+		final Unit expected = unit; // expected unit
+		final Unit obtained = new Unit(); // obtained unit
 		obtained.loadFromNodeSettings(settings.getNodeSettings("units0"));
 
-		assertEquals(expected.id, obtained.id);
-		assertEquals(expected.unit, obtained.unit);
-		assertEquals(expected.description, obtained.description);
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.kind_of_property_quantity, obtained.kind_of_property_quantity);
-		assertEquals(expected.notation_case_sensitive, obtained.notation_case_sensitive);
-		assertEquals(expected.convert_to, obtained.convert_to);
-		assertEquals(expected.conversion_function_factor, obtained.conversion_function_factor);
-		assertEquals(expected.inverse_conversion_function_factor, obtained.inverse_conversion_function_factor);
-		assertEquals(expected.object_type, obtained.object_type);
-		assertEquals(expected.display_in_GUI_as, obtained.display_in_GUI_as);
-		assertEquals(expected.mathML_string, obtained.mathML_string);
-		assertEquals(expected.priority_for_display_in_GUI, obtained.priority_for_display_in_GUI);
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -92,21 +53,24 @@ public class UnitListTest {
 		final UnitList list = new UnitList();
 		list.loadFromNodeSettings(settings);
 
-		final Unit expected = unit;  // expected Unit
-		final Unit obtained = list.getUnits()[0];  // obtained Unit
+		final Unit expected = unit; // expected Unit
+		final Unit obtained = list.getUnits()[0]; // obtained Unit
+		compare(obtained, expected);
+	}
 
-		assertEquals(expected.id, obtained.id);
-		assertEquals(expected.unit, obtained.unit);
-		assertEquals(expected.description, obtained.description);
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.kind_of_property_quantity, obtained.kind_of_property_quantity);
-		assertEquals(expected.notation_case_sensitive, obtained.notation_case_sensitive);
-		assertEquals(expected.convert_to, obtained.convert_to);
-		assertEquals(expected.conversion_function_factor, obtained.conversion_function_factor);
-		assertEquals(expected.inverse_conversion_function_factor, obtained.inverse_conversion_function_factor);
-		assertEquals(expected.object_type, obtained.object_type);
-		assertEquals(expected.display_in_GUI_as, obtained.display_in_GUI_as);
-		assertEquals(expected.mathML_string, obtained.mathML_string);
-		assertEquals(expected.priority_for_display_in_GUI, obtained.priority_for_display_in_GUI);
+	private static void compare(Unit obtained, Unit expected) {
+		assertThat(obtained.id, equalTo(expected.id));
+		assertThat(obtained.unit, equalTo(expected.unit));
+		assertThat(obtained.description, equalTo(expected.description));
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.kind_of_property_quantity, equalTo(expected.kind_of_property_quantity));
+		assertThat(obtained.notation_case_sensitive, equalTo(expected.notation_case_sensitive));
+		assertThat(obtained.convert_to, equalTo(expected.convert_to));
+		assertThat(obtained.conversion_function_factor, equalTo(expected.conversion_function_factor));
+		assertThat(obtained.inverse_conversion_function_factor, equalTo(expected.inverse_conversion_function_factor));
+		assertThat(obtained.object_type, equalTo(expected.object_type));
+		assertThat(obtained.display_in_GUI_as, equalTo(expected.display_in_GUI_as));
+		assertThat(obtained.mathML_string, equalTo(expected.mathML_string));
+		assertThat(obtained.priority_for_display_in_GUI, equalTo(expected.priority_for_display_in_GUI));
 	}
 }

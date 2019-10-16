@@ -1,5 +1,7 @@
 package de.bund.bfr.knime.pmm.js.common;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -10,40 +12,18 @@ import org.knime.core.node.NodeSettings;
 @SuppressWarnings("static-method")
 public class TimeSeriesListTest {
 
-	static TimeSeries timeSeries;
-
-	static {
-		timeSeries = new TimeSeries();
-		timeSeries.name = TimeSeriesTest.name;
-		timeSeries.timeUnit = TimeSeriesTest.timeUnit;
-		timeSeries.origTimeUnit = TimeSeriesTest.origTimeUnit;
-		timeSeries.concentration = TimeSeriesTest.concentration;
-		timeSeries.concentrationUnit = TimeSeriesTest.concentrationUnit;
-		timeSeries.concentrationUnitObjectType = TimeSeriesTest.concentrationUnitObjectType;
-		timeSeries.origConcentrationUnit = TimeSeriesTest.origConcentrationUnit;
-		timeSeries.concentrationStdDev = TimeSeriesTest.concentrationStdDev;
-		timeSeries.numberOfMeasurements = TimeSeriesTest.numberOfMeasurements;
-	}
+	static TimeSeries timeSeries = TimeSeriesTest.timeSeries;
 
 	@Test
 	public void testTimeSeries() {
-		final TimeSeriesList  list = new TimeSeriesList();
+		final TimeSeriesList list = new TimeSeriesList();
 		assertNull(list.getTimeSeries());
 
 		list.setTimeSeries(new TimeSeries[] { timeSeries });
 
-		final TimeSeries expected = timeSeries;  // expected TimeSeries
-		final TimeSeries obtained = list.getTimeSeries()[0];  // obtained TimeSeries
-
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.timeUnit, obtained.timeUnit);
-		assertEquals(expected.origTimeUnit, obtained.origTimeUnit);
-		assertEquals(expected.concentration, obtained.concentration, 0.0);
-		assertEquals(expected.concentrationUnit, obtained.concentrationUnit);
-		assertEquals(expected.concentrationUnitObjectType, obtained.concentrationUnitObjectType);
-		assertEquals(expected.origConcentrationUnit, obtained.origConcentrationUnit);
-		assertEquals(expected.concentrationStdDev, obtained.concentrationStdDev, 0.0);
-		assertEquals(expected.numberOfMeasurements, obtained.numberOfMeasurements);
+		final TimeSeries expected = timeSeries; // expected TimeSeries
+		final TimeSeries obtained = list.getTimeSeries()[0]; // obtained TimeSeries
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -56,19 +36,11 @@ public class TimeSeriesListTest {
 
 		assertEquals(1, settings.getInt("numTimeSeries"));
 
-		final TimeSeries expected = timeSeries;  // expected TimeSeries
-		final TimeSeries obtained = new TimeSeries();  // obtained TimeSeries
+		final TimeSeries expected = timeSeries; // expected TimeSeries
+		final TimeSeries obtained = new TimeSeries(); // obtained TimeSeries
 		obtained.loadFromNodeSettings(settings.getNodeSettings("timeSeries0"));
 
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.timeUnit, obtained.timeUnit);
-		assertEquals(expected.origTimeUnit, obtained.origTimeUnit);
-		assertEquals(expected.concentration, obtained.concentration, 0.0);
-		assertEquals(expected.concentrationUnit, obtained.concentrationUnit);
-		assertEquals(expected.concentrationUnitObjectType, obtained.concentrationUnitObjectType);
-		assertEquals(expected.origConcentrationUnit, obtained.origConcentrationUnit);
-		assertEquals(expected.concentrationStdDev, obtained.concentrationStdDev, 0.0);
-		assertEquals(expected.numberOfMeasurements, obtained.numberOfMeasurements);
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -80,17 +52,20 @@ public class TimeSeriesListTest {
 		final TimeSeriesList list = new TimeSeriesList();
 		list.loadFromNodeSettings(settings);
 
-		final TimeSeries expected = timeSeries;  // expected TimeSeries
-		final TimeSeries obtained = list.getTimeSeries()[0];  // obtained TimeSeries
+		final TimeSeries expected = timeSeries; // expected TimeSeries
+		final TimeSeries obtained = list.getTimeSeries()[0]; // obtained TimeSeries
+		compare(obtained, expected);
+	}
 
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.timeUnit, obtained.timeUnit);
-		assertEquals(expected.origTimeUnit, obtained.origTimeUnit);
-		assertEquals(expected.concentration, obtained.concentration, 0.0);
-		assertEquals(expected.concentrationUnit, obtained.concentrationUnit);
-		assertEquals(expected.concentrationUnitObjectType, obtained.concentrationUnitObjectType);
-		assertEquals(expected.origConcentrationUnit, obtained.origConcentrationUnit);
-		assertEquals(expected.concentrationStdDev, obtained.concentrationStdDev, 0.0);
-		assertEquals(expected.numberOfMeasurements, obtained.numberOfMeasurements);
+	private static void compare(TimeSeries obtained, TimeSeries expected) {
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.timeUnit, equalTo(expected.timeUnit));
+		assertThat(obtained.origTimeUnit, equalTo(expected.origTimeUnit));
+		assertThat(obtained.concentration, equalTo(expected.concentration));
+		assertThat(obtained.concentrationUnit, equalTo(expected.concentrationUnit));
+		assertThat(obtained.concentrationUnitObjectType, equalTo(expected.concentrationUnitObjectType));
+		assertThat(obtained.origConcentrationUnit, equalTo(expected.origConcentrationUnit));
+		assertThat(obtained.concentrationStdDev, equalTo(expected.concentrationStdDev));
+		assertThat(obtained.numberOfMeasurements, equalTo(expected.numberOfMeasurements));
 	}
 }

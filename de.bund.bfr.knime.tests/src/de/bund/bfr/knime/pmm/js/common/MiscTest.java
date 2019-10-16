@@ -1,8 +1,11 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.util.Arrays;
 
@@ -15,172 +18,152 @@ import de.bund.bfr.knime.pmm.common.MiscXml;
 @SuppressWarnings("static-method")
 public class MiscTest {
 
-	static int id = -1;
-	static String name = "Temperature";
-	static String description = "Temperature";
-	static double value = 10.0;
-	static String[] categories = new String[] { "Temperature" };
-	static String unit = "Â°C";
-	static String origUnit = "Â°C";
-	static String dbuuid = "6df109d0-f6b1-409d-a286-0687b1aca001";
+	static Misc misc;
+	static {
+		misc = new Misc();
+		misc.setId(-1);
+		misc.setName("Temperature");
+		misc.setDescription("Temperature");
+		misc.setValue(10.0);
+		misc.setCategories(new String[] { "Temperature" });
+		misc.setUnit("°C");
+		misc.setOrigUnit("°C");
+		misc.setDbuuid("6df109d0-f6b1-409d-a286-0687b1aca001");
+	}
 
 	@Test
 	public void testId() {
-		final Misc misc = new Misc();
-		assertNull(misc.getId());
+		final Misc aMisc = new Misc();
+		assertThat(aMisc.getId(), is(nullValue()));
 
-		misc.setId(id);
-		assertEquals(id, misc.getId().intValue());
+		aMisc.setId(misc.getId());
+		assertThat(aMisc.getId(), equalTo(misc.getId()));
 	}
 
 	@Test
 	public void testName() {
-		final Misc misc = new Misc();
-		assertNull(misc.getName());
+		final Misc aMisc = new Misc();
+		assertThat(aMisc.getName(), is(nullValue()));
 
-		misc.setName(name);
-		assertEquals(name, misc.getName());
+		aMisc.setName(misc.getName());
+		assertThat(aMisc.getName(), equalTo(misc.getName()));
 	}
 
 	@Test
 	public void testDescription() {
-		final Misc misc = new Misc();
-		assertNull(misc.getDescription());
+		final Misc aMisc = new Misc();
+		assertThat(aMisc.getDescription(), is(nullValue()));
 
-		misc.setDescription(description);
-		assertEquals(description, misc.getDescription());
+		aMisc.setDescription(misc.getDescription());
+		assertThat(aMisc.getDescription(), equalTo(misc.getDescription()));
 	}
 
 	@Test
 	public void testValue() {
-		final Misc misc = new Misc();
-		assertNull(misc.getValue());
+		final Misc aMisc = new Misc();
+		assertThat(aMisc.getValue(), is(nullValue()));
 
-		misc.setValue(value);
-		assertEquals(value, misc.getValue(), 0.0);
+		aMisc.setValue(misc.getValue());
+		assertThat(aMisc.getValue(), equalTo(misc.getValue()));
 	}
 
 	@Test
 	public void testCategories() {
-		final Misc misc = new Misc();
-		assertNull(misc.getCategories());
+		final Misc aMisc = new Misc();
+		assertThat(aMisc.getCategories(), is(nullValue()));
 
-		misc.setCategories(categories);
-		assertArrayEquals(categories, misc.getCategories());
+		aMisc.setCategories(misc.getCategories());
+		assertThat(aMisc.getCategories(), arrayContaining(misc.getCategories()));
 	}
 
 	@Test
 	public void testUnit() {
-		final Misc misc = new Misc();
-		assertNull(misc.getUnit());
+		final Misc aMisc = new Misc();
+		assertThat(aMisc.getUnit(), is(nullValue()));
 
-		misc.setUnit(unit);
-		assertEquals(unit, misc.getUnit());
+		aMisc.setUnit(misc.getUnit());
+		assertThat(aMisc.getUnit(), equalTo(misc.getUnit()));
 	}
 
 	@Test
 	public void testOrigUnit() {
-		final Misc misc = new Misc();
-		assertNull(misc.getOrigUnit());
+		final Misc aMisc = new Misc();
+		assertThat(aMisc.getOrigUnit(), is(nullValue()));
 
-		misc.setOrigUnit(origUnit);
-		assertEquals(origUnit, misc.getOrigUnit());
+		aMisc.setOrigUnit(misc.getOrigUnit());
+		assertThat(aMisc.getOrigUnit(), equalTo(misc.getOrigUnit()));
 	}
 
 	@Test
 	public void testDbuuid() {
-		final Misc misc = new Misc();
-		assertNull(misc.getDbuuid());
+		final Misc aMisc = new Misc();
+		assertThat(aMisc.getDbuuid(), is(nullValue()));
 
-		misc.setDbuuid(dbuuid);
-		assertEquals(dbuuid, misc.getDbuuid());
+		aMisc.setDbuuid(misc.getDbuuid());
+		assertThat(aMisc.getDbuuid(), equalTo(misc.getDbuuid()));
 	}
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		final Misc misc = new Misc();
-		misc.setId(id);
-		misc.setName(name);
-		misc.setDescription(description);
-		misc.setValue(value);
-		misc.setCategories(categories);
-		misc.setUnit(unit);
-		misc.setOrigUnit(origUnit);
-		misc.setDbuuid(dbuuid);
 
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		misc.saveToNodeSettings(settings);
 
-		assertEquals(id, settings.getInt("id"));
-		assertEquals(name, settings.getString("name"));
-		assertEquals(description, settings.getString("description"));
-		assertEquals(value, settings.getDouble("value"), 0.0);
-		assertEquals(unit, settings.getString("unit"));
-		assertEquals(origUnit, settings.getString("origUnit"));
-		assertEquals(dbuuid, settings.getString("dbuuid"));
+		assertThat(settings.getInt("id"), equalTo(misc.getId()));
+		assertThat(settings.getString("name"), equalTo(misc.getName()));
+		assertThat(settings.getString("description"), equalTo(misc.getDescription()));
+		assertThat(settings.getDouble("value"), equalTo(misc.getValue()));
+		assertThat(settings.getString("unit"), equalTo(misc.getUnit()));
+		assertThat(settings.getString("origUnit"), equalTo(misc.getOrigUnit()));
+		assertThat(settings.getString("dbuuid"), equalTo(misc.getDbuuid()));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt("id", id);
-		settings.addString("name", name);
-		settings.addString("description", description);
-		settings.addDouble("value", value);
-		settings.addStringArray("category", categories);
-		settings.addString("unit", unit);
-		settings.addString("origUnit", origUnit);
-		settings.addString("dbuuid", dbuuid);
+		settings.addInt("id", misc.getId());
+		settings.addString("name", misc.getName());
+		settings.addString("description", misc.getDescription());
+		settings.addDouble("value", misc.getValue());
+		settings.addStringArray("category", misc.getCategories());
+		settings.addString("unit", misc.getUnit());
+		settings.addString("origUnit", misc.getOrigUnit());
+		settings.addString("dbuuid", misc.getDbuuid());
 
-		final Misc misc = new Misc();
-		misc.loadFromNodeSettings(settings);
-
-		assertEquals(id, misc.getId().intValue());
-		assertEquals(id, misc.getId().intValue());
-		assertEquals(name, misc.getName());
-		assertEquals(description, misc.getDescription());
-		assertEquals(value, misc.getValue(), 0.0);
-		assertArrayEquals(categories, misc.getCategories());
-		assertEquals(unit, misc.getUnit());
-		assertEquals(origUnit, misc.getOrigUnit());
-		assertEquals(dbuuid, misc.getDbuuid());
+		final Misc obtained = new Misc();
+		obtained.loadFromNodeSettings(settings);
+		compare(obtained, misc);
 	}
 
 	@Test
 	public void testToMisc() {
-		final MiscXml miscXml = new MiscXml(id, name, description, value, Arrays.asList(categories), unit, origUnit, dbuuid);
-		final Misc misc = Misc.toMisc(miscXml);
-
-		assertEquals(id, misc.getId().intValue());
-		assertEquals(name, misc.getName());
-		assertEquals(description, misc.getDescription());
-		assertEquals(value, misc.getValue(), 0.0);
-		assertArrayEquals(categories, misc.getCategories());
-		assertEquals(unit, misc.getUnit());
-		assertEquals(origUnit, misc.getOrigUnit());
-		assertEquals(dbuuid, misc.getDbuuid());
+		final MiscXml miscXml = new MiscXml(misc.getId(), misc.getName(), misc.getDescription(), misc.getValue(),
+				Arrays.asList(misc.getCategories()), misc.getUnit(), misc.getOrigUnit(), misc.getDbuuid());
+		final Misc obtained = Misc.toMisc(miscXml);
+		compare(obtained, misc);
 	}
 
 	@Test
 	public void testToMiscXml() {
-		final Misc misc = new Misc();
-		misc.setId(id);
-		misc.setName(name);
-		misc.setDescription(description);
-		misc.setValue(value);
-		misc.setCategories(categories);
-		misc.setUnit(unit);
-		misc.setOrigUnit(origUnit);
-		misc.setDbuuid(dbuuid);
-		final MiscXml miscXml = misc.toMiscXml();
+		final MiscXml obtained = misc.toMiscXml();
+		assertThat(obtained.id, equalTo(misc.getId()));
+		assertThat(obtained.name, equalTo(misc.getName()));
+		assertThat(obtained.description, equalTo(misc.getDescription()));
+		assertThat(obtained.value, equalTo(misc.getValue()));
+		assertThat(obtained.categories, contains(misc.getCategories()));
+		assertThat(obtained.unit, equalTo(misc.getUnit()));
+		assertThat(obtained.origUnit, equalTo(misc.getOrigUnit()));
+		assertThat(obtained.dbuuid, equalTo(misc.getDbuuid()));
+	}
 
-		assertEquals(id, miscXml.id.intValue());
-		assertEquals(name, miscXml.name);
-		assertEquals(description, miscXml.description);
-		assertEquals(value, miscXml.value, 0.0);
-		assertEquals(Arrays.asList(categories), miscXml.categories);
-		assertEquals(unit, miscXml.unit);
-		assertEquals(origUnit, miscXml.origUnit);
-		assertEquals(dbuuid, miscXml.dbuuid);
+	private static void compare(Misc obtained, Misc expected) {
+		assertThat(obtained.getId(), equalTo(expected.getId()));
+		assertThat(obtained.getName(), equalTo(expected.getName()));
+		assertThat(obtained.getDescription(), equalTo(expected.getDescription()));
+		assertThat(obtained.getValue(), equalTo(expected.getValue()));
+		assertThat(obtained.getCategories(), arrayContaining(expected.getCategories()));
+		assertThat(obtained.getUnit(), equalTo(expected.getUnit()));
+		assertThat(obtained.getOrigUnit(), equalTo(expected.getOrigUnit()));
+		assertThat(obtained.getDbuuid(), equalTo(expected.getDbuuid()));
 	}
 }

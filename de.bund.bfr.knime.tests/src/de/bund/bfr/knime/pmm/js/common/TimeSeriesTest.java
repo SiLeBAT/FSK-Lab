@@ -1,7 +1,9 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -12,135 +14,106 @@ import de.bund.bfr.knime.pmm.common.TimeSeriesXml;
 @SuppressWarnings("static-method")
 public class TimeSeriesTest {
 
-	static String name = "t0";
-	static double time = 0.0;
-	static String timeUnit = "h";
-	static String origTimeUnit = "h";
-	static double concentration = 6.147902198294102;
-	static String concentrationUnit = "ln(count/g";
-	static String concentrationUnitObjectType = "CFU";
-	static String origConcentrationUnit = "log10(count/g)";
-	static double concentrationStdDev = 0.91025171;
-	static int numberOfMeasurements = 1;
+	static TimeSeries timeSeries;
+	static {
+		timeSeries = new TimeSeries();
+		timeSeries.name = "t0";
+		timeSeries.time = 0.0;
+		timeSeries.timeUnit = "h";
+		timeSeries.origTimeUnit = "h";
+		timeSeries.concentration = 6.147902198294102;
+		timeSeries.concentrationUnit = "ln(count/g";
+		timeSeries.concentrationUnitObjectType = "CFU";
+		timeSeries.origConcentrationUnit = "log10(count/g)";
+		timeSeries.concentrationStdDev = 0.91025171;
+		timeSeries.numberOfMeasurements = 1;
+	}
 
 	@Test
 	public void testConstructor() {
-
 		final TimeSeries timeSeries = new TimeSeries();
-		assertNull(timeSeries.name);
-		assertNull(timeSeries.time);
-		assertNull(timeSeries.timeUnit);
-		assertNull(timeSeries.origTimeUnit);
-		assertNull(timeSeries.concentration);
-		assertNull(timeSeries.concentrationUnit);
-		assertNull(timeSeries.concentrationUnitObjectType);
-		assertNull(timeSeries.origConcentrationUnit);
-		assertNull(timeSeries.concentrationStdDev);
-		assertNull(timeSeries.numberOfMeasurements);
+		assertThat(timeSeries.name, is(nullValue()));
+		assertThat(timeSeries.time, is(nullValue()));
+		assertThat(timeSeries.timeUnit, is(nullValue()));
+		assertThat(timeSeries.concentration, is(nullValue()));
+		assertThat(timeSeries.concentrationUnit, is(nullValue()));
+		assertThat(timeSeries.concentrationUnitObjectType, is(nullValue()));
+		assertThat(timeSeries.origConcentrationUnit, is(nullValue()));
+		assertThat(timeSeries.concentrationStdDev, is(nullValue()));
+		assertThat(timeSeries.numberOfMeasurements, is(nullValue()));
 	}
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		final TimeSeries timeSeries = new TimeSeries();
-		timeSeries.name = name;
-		timeSeries.time = time;
-		timeSeries.timeUnit = timeUnit;
-		timeSeries.origTimeUnit = origTimeUnit;
-		timeSeries.concentration = concentration;
-		timeSeries.concentrationUnit = concentrationUnit;
-		timeSeries.concentrationUnitObjectType = concentrationUnitObjectType;
-		timeSeries.origConcentrationUnit = origConcentrationUnit;
-		timeSeries.concentrationStdDev = concentrationStdDev;
-		timeSeries.numberOfMeasurements = numberOfMeasurements;
-
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		timeSeries.saveToNodeSettings(settings);
 
-		assertEquals(name, settings.getString("name"));
-		assertEquals(time, settings.getDouble("time"), 0.0);
-		assertEquals(timeUnit, settings.getString("timeUnit"));
-		assertEquals(origTimeUnit, settings.getString("origTimeUnit"));
-		assertEquals(concentration, settings.getDouble("concentration"), 0.0);
-		assertEquals(concentrationUnit, settings.getString("concentrationUnit"));
-		assertEquals(concentrationUnitObjectType, settings.getString("concentrationUnitObjectType"));
-		assertEquals(origConcentrationUnit, settings.getString("origConcentrationUnit"));
-		assertEquals(concentrationStdDev, settings.getDouble("concentrationStdDev"), 0.0);
-		assertEquals(numberOfMeasurements, settings.getInt("numberOfMeasurements"));
+		assertThat(settings.getString("name"), equalTo(timeSeries.name));
+		assertThat(settings.getDouble("time"), equalTo(timeSeries.time));
+		assertThat(settings.getString("timeUnit"), equalTo(timeSeries.timeUnit));
+		assertThat(settings.getString("origTimeUnit"), equalTo(timeSeries.origTimeUnit));
+		assertThat(settings.getDouble("concentration"), equalTo(timeSeries.concentration));
+		assertThat(settings.getString("concentrationUnit"), equalTo(timeSeries.concentrationUnit));
+		assertThat(settings.getString("concentrationUnitObjectType"), equalTo(timeSeries.concentrationUnitObjectType));
+		assertThat(settings.getString("origConcentrationUnit"), equalTo(timeSeries.origConcentrationUnit));
+		assertThat(settings.getDouble("concentrationStdDev"), equalTo(timeSeries.concentrationStdDev));
+		assertThat(settings.getInt("numberOfMeasurements"), equalTo(timeSeries.numberOfMeasurements));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addString("name", name);
-		settings.addDouble("time", time);
-		settings.addString("timeUnit", timeUnit);
-		settings.addString("origTimeUnit", origTimeUnit);
-		settings.addDouble("concentration", concentration);
-		settings.addString("concentrationUnit", concentrationUnit);
-		settings.addString("concentrationUnitObjectType", concentrationUnitObjectType);
-		settings.addString("origConcentrationUnit", origConcentrationUnit);
-		;
-		settings.addDouble("concentrationStdDev", concentrationStdDev);
-		settings.addInt("numberOfMeasurements", numberOfMeasurements);
+		settings.addString("name", timeSeries.name);
+		settings.addDouble("time", timeSeries.time);
+		settings.addString("timeUnit", timeSeries.timeUnit);
+		settings.addString("origTimeUnit", timeSeries.origTimeUnit);
+		settings.addDouble("concentration", timeSeries.concentration);
+		settings.addString("concentrationUnit", timeSeries.concentrationUnit);
+		settings.addString("concentrationUnitObjectType", timeSeries.concentrationUnitObjectType);
+		settings.addString("origConcentrationUnit", timeSeries.origConcentrationUnit);
+		settings.addDouble("concentrationStdDev", timeSeries.concentrationStdDev);
+		settings.addInt("numberOfMeasurements", timeSeries.numberOfMeasurements);
 
-		final TimeSeries timeSeries = new TimeSeries();
-		timeSeries.loadFromNodeSettings(settings);
-
-		assertEquals(name, timeSeries.name);
-		assertEquals(time, timeSeries.time, 0.0);
-		assertEquals(timeUnit, timeSeries.timeUnit);
-		assertEquals(origTimeUnit, timeSeries.origTimeUnit);
-		assertEquals(concentration, timeSeries.concentration, 0.0);
-		assertEquals(concentrationUnit, timeSeries.concentrationUnit);
-		assertEquals(concentrationUnitObjectType, timeSeries.concentrationUnitObjectType);
-		assertEquals(origConcentrationUnit, timeSeries.origConcentrationUnit);
-		assertEquals(concentrationStdDev, timeSeries.concentrationStdDev, 0.0);
-		assertEquals(numberOfMeasurements, timeSeries.numberOfMeasurements.intValue());
+		final TimeSeries obtained = new TimeSeries();
+		obtained.loadFromNodeSettings(settings);
+		compare(obtained, timeSeries);
 	}
 
 	@Test
 	public void testToTimeSeries() {
-		final TimeSeriesXml timeSeriesXml = new TimeSeriesXml(name, time, timeUnit, origTimeUnit, concentration,
-				concentrationUnit, concentrationUnitObjectType, origConcentrationUnit, concentrationStdDev,
-				numberOfMeasurements);
-		final TimeSeries timeSeries = TimeSeries.toTimeSeries(timeSeriesXml);
-
-		assertEquals(name, timeSeries.name);
-		assertEquals(time, timeSeries.time, 0.0);
-		assertEquals(timeUnit, timeSeries.timeUnit);
-		assertEquals(origTimeUnit, timeSeries.origTimeUnit);
-		assertEquals(concentration, timeSeries.concentration, 0.0);
-		assertEquals(concentrationUnit, timeSeries.concentrationUnit);
-		assertEquals(concentrationUnitObjectType, timeSeries.concentrationUnitObjectType);
-		assertEquals(origConcentrationUnit, timeSeries.origConcentrationUnit);
-		assertEquals(concentrationStdDev, timeSeries.concentrationStdDev, 0.0);
-		assertEquals(numberOfMeasurements, timeSeries.numberOfMeasurements.intValue());
+		final TimeSeriesXml timeSeriesXml = new TimeSeriesXml(timeSeries.name, timeSeries.time, timeSeries.timeUnit,
+				timeSeries.origTimeUnit, timeSeries.concentration, timeSeries.concentrationUnit,
+				timeSeries.concentrationUnitObjectType, timeSeries.origConcentrationUnit,
+				timeSeries.concentrationStdDev, timeSeries.numberOfMeasurements);
+		final TimeSeries obtained = TimeSeries.toTimeSeries(timeSeriesXml);
+		compare(obtained, timeSeries);
 	}
 
 	@Test
 	public void testToTimeSeriesXml() {
-		final TimeSeries timeSeries = new TimeSeries();
-		timeSeries.name = name;
-		timeSeries.time = time;
-		timeSeries.timeUnit = timeUnit;
-		timeSeries.origTimeUnit = origTimeUnit;
-		timeSeries.concentration = concentration;
-		timeSeries.concentrationUnit = concentrationUnit;
-		timeSeries.concentrationUnitObjectType = concentrationUnitObjectType;
-		timeSeries.origConcentrationUnit = origConcentrationUnit;
-		timeSeries.concentrationStdDev = concentrationStdDev;
-		timeSeries.numberOfMeasurements = numberOfMeasurements;
-		final TimeSeriesXml timeSeriesXml = timeSeries.toTimeSeriesXml();
+		final TimeSeriesXml obtained = timeSeries.toTimeSeriesXml();
 
-		assertEquals(name, timeSeriesXml.name);
-		assertEquals(time, timeSeriesXml.time, 0.0);
-		assertEquals(timeUnit, timeSeriesXml.timeUnit);
-		assertEquals(origTimeUnit, timeSeriesXml.origTimeUnit);
-		assertEquals(concentration, timeSeriesXml.concentration, 0.0);
-		assertEquals(concentrationUnit, timeSeriesXml.concentrationUnit);
-		assertEquals(concentrationUnitObjectType, timeSeriesXml.concentrationUnitObjectType);
-		assertEquals(origConcentrationUnit, timeSeriesXml.origConcentrationUnit);
-		assertEquals(concentrationStdDev, timeSeriesXml.concentrationStdDev, 0.0);
-		assertEquals(numberOfMeasurements, timeSeriesXml.numberOfMeasurements.intValue());
+		assertThat(obtained.name, equalTo(timeSeries.name));
+		assertThat(obtained.time, equalTo(timeSeries.time));
+		assertThat(obtained.timeUnit, equalTo(timeSeries.timeUnit));
+		assertThat(obtained.origTimeUnit, equalTo(timeSeries.origTimeUnit));
+		assertThat(obtained.concentration, equalTo(timeSeries.concentration));
+		assertThat(obtained.concentrationUnit, equalTo(timeSeries.concentrationUnit));
+		assertThat(obtained.concentrationUnitObjectType, equalTo(timeSeries.concentrationUnitObjectType));
+		assertThat(obtained.origConcentrationUnit, equalTo(timeSeries.origConcentrationUnit));
+		assertThat(obtained.concentrationStdDev, equalTo(timeSeries.concentrationStdDev));
+		assertThat(obtained.numberOfMeasurements, equalTo(timeSeries.numberOfMeasurements));
+	}
+
+	private static void compare(TimeSeries obtained, TimeSeries expected) {
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.timeUnit, equalTo(expected.timeUnit));
+		assertThat(obtained.origTimeUnit, equalTo(expected.origTimeUnit));
+		assertThat(obtained.concentration, equalTo(expected.concentration));
+		assertThat(obtained.concentrationUnit, equalTo(expected.concentrationUnit));
+		assertThat(obtained.concentrationUnitObjectType, equalTo(expected.concentrationUnitObjectType));
+		assertThat(obtained.origConcentrationUnit, equalTo(expected.origConcentrationUnit));
+		assertThat(obtained.concentrationStdDev, equalTo(expected.concentrationStdDev));
+		assertThat(obtained.numberOfMeasurements, equalTo(expected.numberOfMeasurements));
 	}
 }

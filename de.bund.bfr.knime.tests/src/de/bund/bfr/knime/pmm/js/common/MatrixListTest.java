@@ -1,7 +1,10 @@
 package de.bund.bfr.knime.pmm.js.common;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -10,31 +13,19 @@ import org.knime.core.node.NodeSettings;
 @SuppressWarnings("static-method")
 public class MatrixListTest {
 
-	static Matrix matrix;
-
-	static {
-		matrix = new Matrix();
-		matrix.id = MatrixTest.id;
-		matrix.name = MatrixTest.name;
-		matrix.detail = MatrixTest.detail;
-		matrix.dbuuid = MatrixTest.dbuuid;
-	}
+	static Matrix matrix = MatrixTest.matrix;
 
 	@Test
 	public void testMatrices() {
 		final MatrixList list = new MatrixList();
-		assertNull(list.getMatrices());
+		assertThat(list.getMatrices(), is(nullValue()));
 
 		final Matrix[] matrices = new Matrix[] { matrix };
 		list.setMatrices(matrices);
 
 		final Matrix expected = matrix;  // expected Matrix
 		final Matrix obtained = list.getMatrices()[0];  // obtained Matrix
-
-		assertEquals(expected.id, obtained.id);
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.detail, obtained.detail);
-		assertEquals(expected.dbuuid, obtained.dbuuid);
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -51,10 +42,7 @@ public class MatrixListTest {
 		final Matrix obtained = new Matrix();  // obtained Matrix
 		obtained.loadFromNodeSettings(settings.getNodeSettings("matrices" + 0));
 
-		assertEquals(expected.id, obtained.id);
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.detail, obtained.detail);
-		assertEquals(expected.dbuuid, obtained.dbuuid);
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -68,10 +56,13 @@ public class MatrixListTest {
 
 		final Matrix expected = matrix;  // expected Matrix
 		final Matrix obtained = list.getMatrices()[0];  // obtained Matrix
+		compare(obtained, expected);
+	}
 
-		assertEquals(expected.id, obtained.id);
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.detail, obtained.detail);
-		assertEquals(expected.dbuuid, obtained.dbuuid);
+	private static void compare(Matrix obtained, Matrix expected) {
+		assertThat(obtained.id, equalTo(expected.id));
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.detail, equalTo(expected.detail));
+		assertThat(obtained.dbuuid, equalTo(expected.dbuuid));
 	}
 }

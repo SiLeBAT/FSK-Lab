@@ -1,6 +1,7 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
@@ -10,18 +11,7 @@ import org.knime.core.node.NodeSettings;
 @SuppressWarnings("static-method")
 public class IndepListTest {
 
-	static Indep indep;
-
-	static {
-		indep = new Indep();
-		indep.name = IndepTest.name;
-		indep.origname = IndepTest.origname;
-		indep.min = IndepTest.min;
-		indep.max = IndepTest.max;
-		indep.category = IndepTest.category;
-		indep.unit = IndepTest.unit;
-		indep.description = IndepTest.description;
-	}
+	private static Indep indep = IndepTest.indep;
 
 	@Test
 	public void testIndeps() {
@@ -33,14 +23,7 @@ public class IndepListTest {
 
 		final Indep expected = indeps[0]; // expected Indep
 		final Indep obtained = list.getIndeps()[0]; // obtained Indep
-
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.origname, obtained.origname);
-		assertEquals(expected.min, obtained.min);
-		assertEquals(expected.max, obtained.max);
-		assertEquals(expected.category, obtained.category);
-		assertEquals(expected.unit, obtained.unit);
-		assertEquals(expected.description, obtained.description);
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -58,14 +41,7 @@ public class IndepListTest {
 
 		final Indep expected = indeps[0];  // expected Indep
 		final Indep obtained = obtainedIndeps[0];  // obtained Indep
-
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.origname, obtained.origname);
-		assertEquals(expected.min, obtained.min);
-		assertEquals(expected.max, obtained.max);
-		assertEquals(expected.category, obtained.category);
-		assertEquals(expected.unit, obtained.unit);
-		assertEquals(expected.description, obtained.description);
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -80,13 +56,16 @@ public class IndepListTest {
 
 		final Indep expected = indep;  // expected Indep
 		final Indep obtained = list.getIndeps()[0];  // obtained Indep
+		compare(obtained, expected);
+	}
 
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.origname, obtained.origname);
-		assertEquals(expected.min, obtained.min);
-		assertEquals(expected.max, obtained.max);
-		assertEquals(expected.category, obtained.category);
-		assertEquals(expected.unit, obtained.unit);
-		assertEquals(expected.description, obtained.description);
+	private static void compare(Indep obtained, Indep expected) {
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.origname, equalTo(expected.origname));
+		assertThat(obtained.min, equalTo(expected.min));
+		assertThat(obtained.max, equalTo(expected.max));
+		assertThat(obtained.category, equalTo(expected.category));
+		assertThat(obtained.unit, equalTo(expected.unit));
+		assertThat(obtained.description, equalTo(expected.description));
 	}
 }

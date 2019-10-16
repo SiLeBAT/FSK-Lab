@@ -1,7 +1,9 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -10,103 +12,96 @@ import org.knime.core.node.NodeSettings;
 @SuppressWarnings("static-method")
 public class UnitTest {
 
-	static int id = 1;
-	static String unitString = "log10(Anzahl pro g)";
-	static String description = "log10 Anzahl (Zellen, Partikel, ...) pro Gramm (log10 Anzahl/g)";
-	static String name = "log10(number of objects per g)";
-	static String kindOfPropertyQuantity = "Number Content (count/mass)";
-	static String notationCaseSensitive = "log10(1/g)";
-	static String convertTo = "1/g";
-	static String conversionFunctionFactor = "10^x";
-	static String inversionConversionFunctionFactor = "log10(x)";
-	static String objectType = "not_CFU";
-	static String displayInGuiAs = "log10(count/g)";
-	static String mathMlString = "<unitDefinition id=\"log10_item_g\"><annotation><transformation name=\"log10\" xmlns=\"http://sourceforge.net/projects/microbialmodelingexchange/files/Units\"/></annotation><listOfUnits><unit kind=\"item\"/><unit exponent=\"-1\" kind=\"gram\"/></listOfUnits></unitDefinition>";
-	static String priorityForDisplayInGui = "false";
+	static Unit unit;
+	static {
+		unit = new Unit();
+		unit.id = 1;
+		unit.unit = "log10(Anzahl pro g)";
+		unit.description = "log10 Anzahl (Zellen, Partikel, ...) pro Gramm (log10 Anzahl/g)";
+		unit.name = "log10(number of objects per g)";
+		unit.kind_of_property_quantity = "Number Content (count/mass)";
+		unit.notation_case_sensitive = "log10(1/g)";
+		unit.convert_to = "1/g";
+		unit.conversion_function_factor = "10^x";
+		unit.inverse_conversion_function_factor = "log10(x)";
+		unit.object_type = "not_CFU";
+		unit.display_in_GUI_as = "log10(count/g)";
+		unit.mathML_string = "<unitDefinition id=\"log10_item_g\"><annotation><transformation name=\"log10\" xmlns=\"http://sourceforge.net/projects/microbialmodelingexchange/files/Units\"/></annotation><listOfUnits><unit kind=\"item\"/><unit exponent=\"-1\" kind=\"gram\"/></listOfUnits></unitDefinition>";
+		unit.priority_for_display_in_GUI = "false";
+	}
 
 	@Test
 	public void testConstructor() {
 		final Unit unit = new Unit();
-		assertNull(unit.id);
-		assertNull(unit.unit);
-		assertNull(unit.description);
-		assertNull(unit.name);
-		assertNull(unit.kind_of_property_quantity);
-		assertNull(unit.notation_case_sensitive);
-		assertNull(unit.convert_to);
-		assertNull(unit.conversion_function_factor);
-		assertNull(unit.inverse_conversion_function_factor);
-		assertNull(unit.object_type);
-		assertNull(unit.display_in_GUI_as);
-		assertNull(unit.mathML_string);
-		assertNull(unit.priority_for_display_in_GUI);
+		assertThat(unit.id, is(nullValue()));
+		assertThat(unit.unit, is(nullValue()));
+		assertThat(unit.description, is(nullValue()));
+		assertThat(unit.name, is(nullValue()));
+		assertThat(unit.kind_of_property_quantity, is(nullValue()));
+		assertThat(unit.notation_case_sensitive, is(nullValue()));
+		assertThat(unit.convert_to, is(nullValue()));
+		assertThat(unit.conversion_function_factor, is(nullValue()));
+		assertThat(unit.inverse_conversion_function_factor, is(nullValue()));
+		assertThat(unit.object_type, is(nullValue()));
+		assertThat(unit.display_in_GUI_as, is(nullValue()));
+		assertThat(unit.mathML_string, is(nullValue()));
+		assertThat(unit.priority_for_display_in_GUI, is(nullValue()));
 	}
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		final Unit unit = new Unit();
-		unit.id = id;
-		unit.unit = unitString;
-		unit.description = description;
-		unit.name = name;
-		unit.kind_of_property_quantity = kindOfPropertyQuantity;
-		unit.notation_case_sensitive = notationCaseSensitive;
-		unit.convert_to = convertTo;
-		unit.conversion_function_factor = conversionFunctionFactor;
-		unit.inverse_conversion_function_factor = inversionConversionFunctionFactor;
-		unit.object_type = objectType;
-		unit.display_in_GUI_as = displayInGuiAs;
-		unit.mathML_string = mathMlString;
-		unit.priority_for_display_in_GUI = priorityForDisplayInGui;
-
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		unit.saveToNodeSettings(settings);
 
-		assertEquals(id, settings.getInt("id"));
-		assertEquals(unitString, settings.getString("unit"));
-		assertEquals(description, settings.getString("description"));
-		assertEquals(kindOfPropertyQuantity, settings.getString("kindOfPropertyQuantity"));
-		assertEquals(notationCaseSensitive, settings.getString("notationCaseSensitive"));
-		assertEquals(convertTo, settings.getString("convertTo"));
-		assertEquals(conversionFunctionFactor, settings.getString("conversionFunctionFactor"));
-		assertEquals(inversionConversionFunctionFactor, settings.getString("inversionConversionFunctionFactor"));
-		assertEquals(objectType, settings.getString("objectType"));
-		assertEquals(displayInGuiAs, settings.getString("displayInGuiAs"));
-		assertEquals(mathMlString, settings.getString("mathmlString"));
-		assertEquals(priorityForDisplayInGui, settings.getString("priorityForDisplayInGui"));
+		assertThat(settings.getInt("id"), equalTo(unit.id));
+		assertThat(settings.getString("unit"), equalTo(unit.unit));
+		assertThat(settings.getString("description"), equalTo(unit.description));
+		assertThat(settings.getString("kindOfPropertyQuantity"), equalTo(unit.kind_of_property_quantity));
+		assertThat(settings.getString("notationCaseSensitive"), equalTo(unit.notation_case_sensitive));
+		assertThat(settings.getString("convertTo"), equalTo(unit.convert_to));
+		assertThat(settings.getString("conversionFunctionFactor"), equalTo(unit.conversion_function_factor));
+		assertThat(settings.getString("inversionConversionFunctionFactor"), equalTo(unit.inverse_conversion_function_factor));
+		assertThat(settings.getString("objectType"), equalTo(unit.object_type));
+		assertThat(settings.getString("displayInGuiAs"), equalTo(unit.display_in_GUI_as));
+		assertThat(settings.getString("mathmlString"), equalTo(unit.mathML_string));
+		assertThat(settings.getString("priorityForDisplayInGui"), equalTo(unit.priority_for_display_in_GUI));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt("id", id);
-		settings.addString("unit", unitString);
-		settings.addString("description", description);
-		settings.addString("name", name);
-		settings.addString("kindOfPropertyQuantity", kindOfPropertyQuantity);
-		settings.addString("notationCaseSensitive", notationCaseSensitive);
-		settings.addString("convertTo", convertTo);
-		settings.addString("conversionFunctionFactor", conversionFunctionFactor);
-		settings.addString("inversionConversionFunctionFactor", inversionConversionFunctionFactor);
-		settings.addString("objectType", objectType);
-		settings.addString("displayInGuiAs", displayInGuiAs);
-		settings.addString("mathmlString", mathMlString);
-		settings.addString("priorityForDisplayInGui", priorityForDisplayInGui);
+		settings.addInt("id", unit.id);
+		settings.addString("unit", unit.unit);
+		settings.addString("description", unit.description);
+		settings.addString("name", unit.name);
+		settings.addString("kindOfPropertyQuantity", unit.kind_of_property_quantity);
+		settings.addString("notationCaseSensitive", unit.notation_case_sensitive);
+		settings.addString("convertTo", unit.convert_to);
+		settings.addString("conversionFunctionFactor", unit.conversion_function_factor);
+		settings.addString("inversionConversionFunctionFactor", unit.inverse_conversion_function_factor);
+		settings.addString("objectType", unit.object_type);
+		settings.addString("displayInGuiAs", unit.display_in_GUI_as);
+		settings.addString("mathmlString", unit.mathML_string);
+		settings.addString("priorityForDisplayInGui", unit.priority_for_display_in_GUI);
 
-		final Unit unit = new Unit();
-		unit.loadFromNodeSettings(settings);
+		final Unit actual = new Unit();
+		actual.loadFromNodeSettings(settings);
+		compare(actual, unit);
+	}
 
-		assertEquals(id, unit.id.intValue());
-		assertEquals(name, unit.name);
-		assertEquals(description, unit.description);
-		assertEquals(kindOfPropertyQuantity, unit.kind_of_property_quantity);
-		assertEquals(notationCaseSensitive, unit.notation_case_sensitive);
-		assertEquals(convertTo, unit.convert_to);
-		assertEquals(conversionFunctionFactor, unit.conversion_function_factor);
-		assertEquals(inversionConversionFunctionFactor, unit.inverse_conversion_function_factor);
-		assertEquals(objectType, unit.object_type);
-		assertEquals(displayInGuiAs, unit.display_in_GUI_as);
-		assertEquals(mathMlString, unit.mathML_string);
-		assertEquals(priorityForDisplayInGui, unit.priority_for_display_in_GUI);
+	private static void compare(Unit obtained, Unit expected) {
+		assertThat(obtained.id, equalTo(expected.id));
+		assertThat(obtained.unit, equalTo(expected.unit));
+		assertThat(obtained.description, equalTo(expected.description));
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.kind_of_property_quantity, equalTo(expected.kind_of_property_quantity));
+		assertThat(obtained.notation_case_sensitive, equalTo(expected.notation_case_sensitive));
+		assertThat(obtained.convert_to, equalTo(expected.convert_to));
+		assertThat(obtained.conversion_function_factor, equalTo(expected.conversion_function_factor));
+		assertThat(obtained.inverse_conversion_function_factor, equalTo(expected.inverse_conversion_function_factor));
+		assertThat(obtained.object_type, equalTo(expected.object_type));
+		assertThat(obtained.display_in_GUI_as, equalTo(expected.display_in_GUI_as));
+		assertThat(obtained.mathML_string, equalTo(expected.mathML_string));
+		assertThat(obtained.priority_for_display_in_GUI, equalTo(expected.priority_for_display_in_GUI));
 	}
 }

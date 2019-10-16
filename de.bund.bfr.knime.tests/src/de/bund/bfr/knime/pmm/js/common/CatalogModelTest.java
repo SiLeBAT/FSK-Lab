@@ -1,7 +1,9 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Test;
 import org.knime.core.node.NodeSettings;
@@ -11,96 +13,85 @@ import de.bund.bfr.knime.pmm.common.CatalogModelXml;
 @SuppressWarnings("static-method")
 public class CatalogModelTest {
 
-	static int id = 77;
-	static String name = "Baranyi model (Baranyi and Roberts,1995) - iPMP Full Growth Models Eq 6_outdated";
-	static String formula = "Value=Y0+mu_max*Time+ln(exp(-mu_max*Time)+exp(-h0)-exp(-mu_max*Time-h0))-ln(1+((exp(mu_max*(Time+(1/mu_max)*ln(exp(-mu_max*Time)+exp(-h0)-exp(-mu_max*Time-h0))))-1)/(exp(Ymax-Y0))))*((((((Ymax&gt;Y0)*(mu_max&gt;=0))))))";
-	static int modelClass = 1;
-	static String comment = "some comment";
-	static String dbuuid = "6df109d0-f6b1-409d-a286-0687b1aca001";
+	private static CatalogModel catalogModel;
+	static {
+		catalogModel = new CatalogModel();
+		catalogModel.id = 77;
+		catalogModel.name = "Baranyi model (Baranyi and Roberts,1995) - iPMP Full Growth Models Eq 6_outdated";
+		catalogModel.formula = "Value=Y0+mu_max*Time+ln(exp(-mu_max*Time)+exp(-h0)-exp(-mu_max*Time-h0))-ln(1+((exp(mu_max*(Time+(1/mu_max)*ln(exp(-mu_max*Time)+exp(-h0)-exp(-mu_max*Time-h0))))-1)/(exp(Ymax-Y0))))*((((((Ymax&gt;Y0)*(mu_max&gt;=0))))))";
+		catalogModel.modelClass = 1;
+		catalogModel.comment = "some comment";
+		catalogModel.dbuuid = "6df109d0-f6b1-409d-a286-0687b1aca001";
+	}
 
 	@Test
 	public void testConstructor() {
 		final CatalogModel catalogModel = new CatalogModel();
-		assertNull(catalogModel.id);
-		assertNull(catalogModel.name);
-		assertNull(catalogModel.formula);
-		assertNull(catalogModel.modelClass);
-		assertNull(catalogModel.comment);
-		assertNull(catalogModel.dbuuid);
+		assertThat(catalogModel.id, is(nullValue()));
+		assertThat(catalogModel.name, is(nullValue()));
+		assertThat(catalogModel.formula, is(nullValue()));
+		assertThat(catalogModel.modelClass, is(nullValue()));
+		assertThat(catalogModel.comment, is(nullValue()));
+		assertThat(catalogModel.dbuuid, is(nullValue()));
 	}
 
 	@Test
 	public void testSaveToNodeSettings() throws Exception {
-		final CatalogModel catalogModel = new CatalogModel();
-		catalogModel.id = id;
-		catalogModel.name = name;
-		catalogModel.formula = formula;
-		catalogModel.modelClass = modelClass;
-		catalogModel.comment = comment;
-		catalogModel.dbuuid = dbuuid;
-
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		catalogModel.saveToNodeSettings(settings);
 
-		assertEquals(id, settings.getInt("id"));
-		assertEquals(name, settings.getString("name"));
-		assertEquals(formula, settings.getString("formula"));
-		assertEquals(modelClass, settings.getInt("modelClass"));
-		assertEquals(comment, settings.getString("comment"));
-		assertEquals(dbuuid, settings.getString("dbuuid"));
+		assertThat(settings.getInt("id"), equalTo(catalogModel.id));
+		assertThat(settings.getString("name"), equalTo(catalogModel.name));
+		assertThat(settings.getString("formula"), equalTo(catalogModel.formula));
+		assertThat(settings.getInt("modelClass"), equalTo(catalogModel.modelClass));
+		assertThat(settings.getString("comment"), equalTo(catalogModel.comment));
+		assertThat(settings.getString("dbuuid"), equalTo(catalogModel.dbuuid));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt("id", id);
-		settings.addString("name", name);
-		settings.addString("formula", formula);
-		settings.addInt("modelClass", modelClass);
-		settings.addString("comment", comment);
-		settings.addString("dbuuid", dbuuid);
+		settings.addInt("id", catalogModel.id);
+		settings.addString("name", catalogModel.name);
+		settings.addString("formula", catalogModel.formula);
+		settings.addInt("modelClass", catalogModel.modelClass);
+		settings.addString("comment", catalogModel.comment);
+		settings.addString("dbuuid", catalogModel.dbuuid);
 
-		final CatalogModel catalogModel = new CatalogModel();
-		catalogModel.loadFromNodeSettings(settings);
+		final CatalogModel obtained = new CatalogModel();
+		obtained.loadFromNodeSettings(settings);
 
-		assertEquals(id, catalogModel.id.intValue());
-		assertEquals(name, catalogModel.name);
-		assertEquals(formula, catalogModel.formula);
-		assertEquals(modelClass, catalogModel.modelClass.intValue());
-		assertEquals(comment, catalogModel.comment);
-		assertEquals(dbuuid, catalogModel.dbuuid);
+		compare(obtained, catalogModel);
 	}
 
 	@Test
 	public void testToCatalogModel() {
-		final CatalogModelXml catalogModelXml = new CatalogModelXml(id, name, formula, modelClass, dbuuid);
-		catalogModelXml.comment = comment;
-		final CatalogModel catalogModel = CatalogModel.toCatalogModel(catalogModelXml);
+		final CatalogModelXml catalogModelXml = new CatalogModelXml(catalogModel.id, catalogModel.name,
+				catalogModel.formula, catalogModel.modelClass, catalogModel.dbuuid);
+		catalogModelXml.comment = catalogModel.comment;
+		final CatalogModel obtained = CatalogModel.toCatalogModel(catalogModelXml);
 
-		assertEquals(id, catalogModel.id.intValue());
-		assertEquals(name, catalogModel.name);
-		assertEquals(formula, catalogModel.formula);
-		assertEquals(modelClass, catalogModel.modelClass.intValue());
-		assertEquals(comment, catalogModel.comment);
-		assertEquals(dbuuid, catalogModel.dbuuid);
+		compare(obtained, catalogModel);
 	}
 
 	@Test
 	public void testToCatalogModelXml() {
-		final CatalogModel catalogModel = new CatalogModel();
-		catalogModel.id = id;
-		catalogModel.name = name;
-		catalogModel.formula = formula;
-		catalogModel.modelClass = modelClass;
-		catalogModel.comment = comment;
-		catalogModel.dbuuid = dbuuid;
 		final CatalogModelXml catalogModelXml = catalogModel.toCatalogModelXml();
 
-		assertEquals(id, catalogModelXml.id.intValue());
-		assertEquals(name, catalogModelXml.name);
-		assertEquals(formula, catalogModelXml.formula);
-		assertEquals(modelClass, catalogModelXml.modelClass.intValue());
-		assertEquals(comment, catalogModelXml.comment);
-		assertEquals(dbuuid, catalogModelXml.dbuuid);
+		assertThat(catalogModelXml.id, equalTo(catalogModel.id));
+		assertThat(catalogModelXml.name, equalTo(catalogModel.name));
+		assertThat(catalogModelXml.formula, equalTo(catalogModel.formula));
+		assertThat(catalogModelXml.modelClass, equalTo(catalogModel.modelClass));
+		assertThat(catalogModelXml.comment, equalTo(catalogModel.comment));
+		assertThat(catalogModelXml.dbuuid, equalTo(catalogModel.dbuuid));
+	}
+
+	private static void compare(CatalogModel obtained, CatalogModel expected) {
+		assertThat(obtained.id, equalTo(expected.id));
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.formula, equalTo(expected.formula));
+		assertThat(obtained.modelClass, equalTo(expected.modelClass));
+		assertThat(obtained.comment, equalTo(expected.comment));
+		assertThat(obtained.dbuuid, equalTo(expected.dbuuid));
 	}
 }

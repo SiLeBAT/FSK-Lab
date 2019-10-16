@@ -1,7 +1,9 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -12,86 +14,74 @@ import de.bund.bfr.knime.pmm.common.MdInfoXml;
 @SuppressWarnings("static-method")
 public class MdInfoTest {
 
-	static int id = 99;
-	static String name = "neunundneunzig";
-	static String comment = "comment";
-	static int qualityScore = 9;
-	static boolean checked = false;
+	static MdInfo mdInfo;
+	static {
+		mdInfo = new MdInfo();
+		mdInfo.id = 99;
+		mdInfo.name = "neunundneunzig";
+		mdInfo.comment = "comment";
+		mdInfo.qualityScore = 9;
+		mdInfo.checked = false;
+	}
 
 	@Test
 	public void testConstructor() {
 		final MdInfo modelInfo = new MdInfo();
-		assertNull(modelInfo.id);
-		assertNull(modelInfo.name);
-		assertNull(modelInfo.comment);
-		assertNull(modelInfo.qualityScore);
-		assertNull(modelInfo.checked);
+		assertThat(modelInfo.id, is(nullValue()));
+		assertThat(modelInfo.name, is(nullValue()));
+		assertThat(modelInfo.comment, is(nullValue()));
+		assertThat(modelInfo.qualityScore, is(nullValue()));
+		assertThat(modelInfo.checked, is(nullValue()));
 	}
 
 	@Test
 	public void testSaveToNodeSettings() throws InvalidSettingsException {
-		final MdInfo modelInfo = new MdInfo();
-		modelInfo.id = id;
-		modelInfo.name = name;
-		modelInfo.comment = comment;
-		modelInfo.qualityScore = qualityScore;
-		modelInfo.checked = checked;
-
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
-		modelInfo.saveToNodeSettings(settings);
+		mdInfo.saveToNodeSettings(settings);
 
-		assertEquals(id, settings.getInt("ID"));
-		assertEquals(name, settings.getString("Name"));
-		assertEquals(comment, settings.getString("Comment"));
-		assertEquals(qualityScore, settings.getInt("QualityScore"));
-		assertEquals(checked, settings.getBoolean("Checked"));
+		assertThat(settings.getInt("ID"), equalTo(mdInfo.id));
+		assertThat(settings.getString("Name"), equalTo(mdInfo.name));
+		assertThat(settings.getString("Comment"), equalTo(mdInfo.comment));
+		assertThat(settings.getInt("QualityScore"), equalTo(mdInfo.qualityScore));
+		assertThat(settings.getBoolean("Checked"), equalTo(mdInfo.checked));
 	}
 
 	@Test
 	public void testLoadFromNodeSettings() {
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
-		settings.addInt("ID", id);
-		settings.addString("Name", name);
-		settings.addString("Comment", comment);
-		settings.addInt("QualityScore", qualityScore);
-		settings.addBoolean("Checked", checked);
+		settings.addInt("ID", mdInfo.id);
+		settings.addString("Name", mdInfo.name);
+		settings.addString("Comment", mdInfo.comment);
+		settings.addInt("QualityScore", mdInfo.qualityScore);
+		settings.addBoolean("Checked", mdInfo.checked);
 
-		final MdInfo modelInfo = new MdInfo();
-		modelInfo.loadFromNodeSettings(settings);
-
-		assertEquals(id, modelInfo.id.intValue());
-		assertEquals(name, modelInfo.name);
-		assertEquals(comment, modelInfo.comment);
-		assertEquals(qualityScore, modelInfo.qualityScore.intValue());
-		assertEquals(checked, modelInfo.checked);
+		final MdInfo obtained = new MdInfo();
+		obtained.loadFromNodeSettings(settings);
+		compare(obtained, mdInfo);
 	}
 
 	@Test
 	public void testToMdInfo() {
-		final MdInfoXml mdInfoXml = new MdInfoXml(id, name, comment, qualityScore, checked);
-		final MdInfo mdInfo = MdInfo.toMdInfo(mdInfoXml);
-
-		assertEquals(id, mdInfo.id.intValue());
-		assertEquals(name, mdInfo.name);
-		assertEquals(comment, mdInfo.comment);
-		assertEquals(qualityScore, mdInfo.qualityScore.intValue());
-		assertEquals(checked, mdInfo.checked);
+		final MdInfoXml mdInfoXml = new MdInfoXml(mdInfo.id, mdInfo.name, mdInfo.comment, mdInfo.qualityScore, mdInfo.checked);
+		final MdInfo obtained = MdInfo.toMdInfo(mdInfoXml);
+		compare(obtained, mdInfo);
 	}
 
 	@Test
 	public void testToMdInfoXml() {
-		final MdInfo modelInfo = new MdInfo();
-		modelInfo.id = id;
-		modelInfo.name = name;
-		modelInfo.comment = comment;
-		modelInfo.qualityScore = qualityScore;
-		modelInfo.checked = checked;
-		final MdInfoXml mdInfoXml = modelInfo.toMdInfoXml();
+		final MdInfoXml mdInfoXml = mdInfo.toMdInfoXml();
+		assertThat(mdInfoXml.id, equalTo(mdInfo.id));
+		assertThat(mdInfoXml.name, equalTo(mdInfo.name));
+		assertThat(mdInfoXml.comment, equalTo(mdInfo.comment));
+		assertThat(mdInfoXml.qualityScore, equalTo(mdInfo.qualityScore));
+		assertThat(mdInfoXml.checked, equalTo(mdInfo.checked));
+	}
 
-		assertEquals(id, mdInfoXml.id.intValue());
-		assertEquals(name, mdInfoXml.name);
-		assertEquals(comment, mdInfoXml.comment);
-		assertEquals(qualityScore, mdInfoXml.qualityScore.intValue());
-		assertEquals(checked, mdInfoXml.checked);
+	private static void compare(MdInfo obtained, MdInfo expected) {
+		assertThat(obtained.id, equalTo(expected.id));
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.comment, equalTo(expected.comment));
+		assertThat(obtained.qualityScore, equalTo(expected.qualityScore));
+		assertThat(obtained.checked, equalTo(expected.checked));
 	}
 }

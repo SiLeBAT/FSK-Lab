@@ -1,8 +1,9 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -11,53 +12,18 @@ import org.knime.core.node.NodeSettings;
 @SuppressWarnings("static-method")
 public class ParamListTest {
 
-	static Param param;
-	static {
-		param = new Param();
-		param.name = ParamTest.name;
-		param.origName = ParamTest.origname;
-		param.isStart = ParamTest.isStart;
-		param.value = ParamTest.value;
-		param.error = ParamTest.error;
-		param.min = ParamTest.min;
-		param.max = ParamTest.max;
-		param.p = ParamTest.p;
-		param.t = ParamTest.t;
-		param.minGuess = ParamTest.minGuess;
-		param.maxGuess = ParamTest.maxGuess;
-		param.category = ParamTest.category;
-		param.unit = ParamTest.unit;
-		param.description = ParamTest.description;
-		param.correlationNames = ParamTest.correlationNames;
-		param.correlationValues = ParamTest.correlationValues;
-	}
+	static Param param = ParamTest.param;
 
 	@Test
 	public void testParams() {
 		final ParamList list = new ParamList();
-		assertNull(list.getParams());
+		assertThat(list.getParams(), is(nullValue()));
 
-		list.setParams(new Param[] { param} );
+		list.setParams(new Param[] { param });
 
-		final Param expected = param;  // expected Param
-		final Param obtained = list.getParams()[0];  // obtained Param
-
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.origName, obtained.origName);
-		assertEquals(expected.isStart, obtained.isStart);
-		assertEquals(expected.value, obtained.value);
-		assertEquals(expected.error, obtained.error);
-		assertEquals(expected.min, obtained.min);
-		assertEquals(expected.max, obtained.max);
-		assertEquals(expected.p, obtained.p);
-		assertEquals(expected.t, obtained.t);
-		assertEquals(expected.minGuess, obtained.minGuess);
-		assertEquals(expected.maxGuess, obtained.maxGuess);
-		assertEquals(expected.category, obtained.category);
-		assertEquals(expected.unit, obtained.unit);
-		assertEquals(expected.description, obtained.description);
-		assertArrayEquals(expected.correlationNames, obtained.correlationNames);
-		assertArrayEquals(expected.correlationValues, obtained.correlationValues, 0.0);
+		final Param expected = param; // expected Param
+		final Param obtained = list.getParams()[0]; // obtained Param
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -68,28 +34,13 @@ public class ParamListTest {
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 
-		assertEquals(1, settings.getInt("numParams"));
+		assertThat(settings.getInt("numParams"), is(1));
 
-		final Param expected = param;  // expected Param
-		final Param obtained = new Param();  // obtained Param
+		final Param expected = param; // expected Param
+		final Param obtained = new Param(); // obtained Param
 		obtained.loadFromNodeSettings(settings.getNodeSettings("params0"));
 
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.origName, obtained.origName);
-		assertEquals(expected.isStart, obtained.isStart);
-		assertEquals(expected.value, obtained.value);
-		assertEquals(expected.error, obtained.error);
-		assertEquals(expected.min, obtained.min);
-		assertEquals(expected.max, obtained.max);
-		assertEquals(expected.p, obtained.p);
-		assertEquals(expected.t, obtained.t);
-		assertEquals(expected.minGuess, obtained.minGuess);
-		assertEquals(expected.maxGuess, obtained.maxGuess);
-		assertEquals(expected.category, obtained.category);
-		assertEquals(expected.unit, obtained.unit);
-		assertEquals(expected.description, obtained.description);
-		assertArrayEquals(expected.correlationNames, obtained.correlationNames);
-		assertArrayEquals(expected.correlationValues, obtained.correlationValues, 0.0);
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -101,24 +52,27 @@ public class ParamListTest {
 		final ParamList list = new ParamList();
 		list.loadFromNodeSettings(settings);
 
-		final Param expected = param;  // expected Param
-		final Param obtained = list.getParams()[0];  // obtained Param
+		final Param expected = param; // expected Param
+		final Param obtained = list.getParams()[0]; // obtained Param
+		compare(obtained, expected);
+	}
 
-		assertEquals(expected.name, obtained.name);
-		assertEquals(expected.origName, obtained.origName);
-		assertEquals(expected.isStart, obtained.isStart);
-		assertEquals(expected.value, obtained.value);
-		assertEquals(expected.error, obtained.error);
-		assertEquals(expected.min, obtained.min);
-		assertEquals(expected.max, obtained.max);
-		assertEquals(expected.p, obtained.p);
-		assertEquals(expected.t, obtained.t);
-		assertEquals(expected.minGuess, obtained.minGuess);
-		assertEquals(expected.maxGuess, obtained.maxGuess);
-		assertEquals(expected.category, obtained.category);
-		assertEquals(expected.unit, obtained.unit);
-		assertEquals(expected.description, obtained.description);
-		assertArrayEquals(expected.correlationNames, obtained.correlationNames);
-		assertArrayEquals(expected.correlationValues, obtained.correlationValues, 0.0);
+	private static void compare(Param obtained, Param expected) {
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.origName, equalTo(expected.origName));
+		assertThat(obtained.isStart, equalTo(expected.isStart));
+		assertThat(obtained.value, equalTo(expected.value));
+		assertThat(obtained.error, equalTo(expected.error));
+		assertThat(obtained.min, equalTo(expected.min));
+		assertThat(obtained.max, equalTo(expected.max));
+		assertThat(obtained.p, equalTo(expected.p));
+		assertThat(obtained.t, equalTo(expected.t));
+		assertThat(obtained.minGuess, equalTo(expected.minGuess));
+		assertThat(obtained.maxGuess, equalTo(expected.maxGuess));
+		assertThat(obtained.category, equalTo(expected.category));
+		assertThat(obtained.unit, equalTo(expected.unit));
+		assertThat(obtained.description, equalTo(expected.description));
+		assertThat(obtained.correlationNames, equalTo(expected.correlationNames));
+		assertThat(obtained.correlationValues, equalTo(expected.correlationValues));
 	}
 }

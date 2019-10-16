@@ -12,15 +12,7 @@ import org.knime.core.node.NodeSettings;
 @SuppressWarnings("static-method")
 public class AgentListTest {
 
-	static Agent agent;
-
-	static {
-		agent = new Agent();
-		agent.id = AgentTest.id;
-		agent.name = AgentTest.name;
-		agent.detail = AgentTest.detail;
-		agent.dbuuid = AgentTest.dbuuid;
-	}
+	static Agent agent = AgentTest.agent;
 
 	@Test
 	public void testAgents() {
@@ -30,12 +22,7 @@ public class AgentListTest {
 		final Agent[] agents = new Agent[] { agent };
 		list.setAgents(agents);
 
-		final Agent actualAgent = list.getAgents()[0];
-
-		assertThat(actualAgent.id, equalTo(agent.id));
-		assertThat(actualAgent.name, equalTo(agent.name));
-		assertThat(actualAgent.detail, equalTo(agent.detail));
-		assertThat(actualAgent.dbuuid, equalTo(agent.dbuuid));
+		compare(list.getAgents()[0], agent);
 	}
 
 	@Test
@@ -52,13 +39,7 @@ public class AgentListTest {
 		obtainedAgents[0] = new Agent();
 		obtainedAgents[0].loadFromNodeSettings(settings.getNodeSettings("agents" + 0));
 
-		final Agent expected = agents[0];  // expected agent
-		final Agent obtained = obtainedAgents[0];  // obtained agent
-
-		assertThat(expected.id, equalTo(obtained.id));
-		assertThat(expected.name, equalTo(obtained.name));
-		assertThat(expected.detail, equalTo(obtained.detail));
-		assertThat(expected.dbuuid, equalTo(obtained.dbuuid));
+		compare(obtainedAgents[0], agents[0]);
 	}
 
 	@Test
@@ -70,12 +51,13 @@ public class AgentListTest {
 		final AgentList list = new AgentList();
 		list.loadFromNodeSettings(settings);
 
-		final Agent expected = agent;  // expected agent
-		final Agent obtained = list.getAgents()[0];  // obtained agent
+		compare(list.getAgents()[0], agent);
+	}
 
-		assertThat(expected.id, equalTo(obtained.id));
-		assertThat(expected.name, equalTo(obtained.name));
-		assertThat(expected.detail, equalTo(obtained.detail));
-		assertThat(expected.dbuuid, equalTo(obtained.dbuuid));
+	private static void compare(final Agent obtained, final Agent expected) {
+		assertThat(obtained.id, equalTo(expected.id));
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.detail, equalTo(expected.detail));
+		assertThat(obtained.dbuuid, equalTo(expected.dbuuid));
 	}
 }

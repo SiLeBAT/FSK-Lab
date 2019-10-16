@@ -1,8 +1,10 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Test;
 import org.knime.core.node.InvalidSettingsException;
@@ -11,38 +13,18 @@ import org.knime.core.node.NodeSettings;
 @SuppressWarnings("static-method")
 public class MiscListTest {
 
-	static Misc misc;
-
-	static {
-		misc = new Misc();
-		misc.setId(MiscTest.id);
-		misc.setName(MiscTest.name);
-		misc.setDescription(MiscTest.description);
-		misc.setValue(MiscTest.value);
-		misc.setCategories(MiscTest.categories);
-		misc.setUnit(MiscTest.unit);
-		misc.setOrigUnit(MiscTest.origUnit);
-		misc.setDbuuid(MiscTest.dbuuid);
-	}
+	static Misc misc = MiscTest.misc;
 
 	@Test
 	public void testMiscs() {
 		final MiscList list = new MiscList();
-		assertNull(list.getMiscs());
+		assertThat(list.getMiscs(), is(nullValue()));
 
 		list.setMiscs(new Misc[] { misc });
 
 		final Misc expected = misc;  // expected Misc
 		final Misc obtained = list.getMiscs()[0];  // obtained Misc
-
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getDescription(), obtained.getDescription());
-		assertEquals(expected.getValue(), obtained.getValue());
-		assertArrayEquals(expected.getCategories(), obtained.getCategories());
-		assertEquals(expected.getUnit(), obtained.getUnit());
-		assertEquals(expected.getOrigUnit(), obtained.getOrigUnit());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -53,20 +35,13 @@ public class MiscListTest {
 		final NodeSettings settings = new NodeSettings("irrelevantKey");
 		list.saveToNodeSettings(settings);
 
-		assertEquals(1, settings.getInt("numMiscs"));
+		assertThat(settings.getInt("numMiscs"), is(1));
 
 		final Misc expected = misc;  // expected Misc
 		final Misc obtained = new Misc();  // obtained Misc
 		obtained.loadFromNodeSettings(settings.getNodeSettings("miscs0"));
 
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getDescription(), obtained.getDescription());
-		assertEquals(expected.getValue(), obtained.getValue());
-		assertArrayEquals(expected.getCategories(), obtained.getCategories());
-		assertEquals(expected.getUnit(), obtained.getUnit());
-		assertEquals(expected.getOrigUnit(), obtained.getOrigUnit());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+		compare(obtained, expected);
 	}
 
 	@Test
@@ -80,14 +55,14 @@ public class MiscListTest {
 
 		final Misc expected = misc;  // expected Misc
 		final Misc obtained = list.getMiscs()[0];  // obtained Misc
+		compare(obtained, expected);
+	}
 
-		assertEquals(expected.getId(), obtained.getId());
-		assertEquals(expected.getName(), obtained.getName());
-		assertEquals(expected.getDescription(), obtained.getDescription());
-		assertEquals(expected.getValue(), obtained.getValue());
-		assertArrayEquals(expected.getCategories(), obtained.getCategories());
-		assertEquals(expected.getUnit(), obtained.getUnit());
-		assertEquals(expected.getOrigUnit(), obtained.getOrigUnit());
-		assertEquals(expected.getDbuuid(), obtained.getDbuuid());
+	private static void compare(Misc obtained, Misc expected) {
+		assertThat(obtained.getId(), equalTo(expected.getId()));
+		assertThat(obtained.getName(), equalTo(expected.getName()));
+		assertThat(obtained.getDescription(), equalTo(expected.getDescription()));
+		assertThat(obtained.getValue(), equalTo(expected.getValue()));
+		assertThat(obtained.getCategories(), arrayContaining(expected.getCategories()));
 	}
 }
