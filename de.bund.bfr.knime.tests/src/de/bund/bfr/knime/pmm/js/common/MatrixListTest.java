@@ -1,6 +1,5 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -25,7 +24,7 @@ public class MatrixListTest {
 
 		final Matrix expected = matrix;  // expected Matrix
 		final Matrix obtained = list.getMatrices()[0];  // obtained Matrix
-		compare(obtained, expected);
+		TestUtils.compare(obtained, expected);
 	}
 
 	@Test
@@ -42,7 +41,7 @@ public class MatrixListTest {
 		final Matrix obtained = new Matrix();  // obtained Matrix
 		obtained.loadFromNodeSettings(settings.getNodeSettings("matrices" + 0));
 
-		compare(obtained, expected);
+		TestUtils.compare(obtained, expected);
 	}
 
 	@Test
@@ -56,13 +55,6 @@ public class MatrixListTest {
 
 		final Matrix expected = matrix;  // expected Matrix
 		final Matrix obtained = list.getMatrices()[0];  // obtained Matrix
-		compare(obtained, expected);
-	}
-
-	private static void compare(Matrix obtained, Matrix expected) {
-		assertThat(obtained.id, equalTo(expected.id));
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.detail, equalTo(expected.detail));
-		assertThat(obtained.dbuuid, equalTo(expected.dbuuid));
+		TestUtils.compare(obtained, expected);
 	}
 }

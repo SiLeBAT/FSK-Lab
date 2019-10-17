@@ -86,7 +86,7 @@ public class EstModelTest {
 
 		final EstModel obtained = new EstModel();
 		obtained.loadFromNodeSettings(settings);
-		compare(obtained, estModel);
+		TestUtils.compare(obtained, estModel);
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class EstModelTest {
 		estModelXml.comment = estModel.comment;
 
 		final EstModel obtained = EstModel.toEstModel(estModelXml);
-		compare(obtained, estModel);
+		TestUtils.compare(obtained, estModel);
 	}
 
 	@Test
@@ -116,20 +116,5 @@ public class EstModelTest {
 		assertThat(estModelXml.checked, equalTo(estModel.checked));
 		assertThat(estModelXml.comment, equalTo(estModel.comment));
 		assertThat(estModelXml.dbuuid, equalTo(estModel.dbuuid));
-	}
-
-	private static void compare(EstModel obtained, EstModel expected) {
-		assertThat(obtained.id, equalTo(expected.id));
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.sse, equalTo(expected.sse));
-		assertThat(obtained.rms, equalTo(expected.rms));
-		assertThat(obtained.r2, equalTo(expected.r2));
-		assertThat(obtained.aic, equalTo(expected.aic));
-		assertThat(obtained.bic, equalTo(expected.bic));
-		assertThat(obtained.dof, equalTo(expected.dof));
-		assertThat(obtained.qualityScore, equalTo(expected.qualityScore));
-		assertThat(obtained.checked, equalTo(expected.checked));
-		assertThat(obtained.comment, equalTo(expected.comment));
-		assertThat(obtained.dbuuid, equalTo(expected.dbuuid));
 	}
 }

@@ -76,7 +76,7 @@ public class TimeSeriesTest {
 
 		final TimeSeries obtained = new TimeSeries();
 		obtained.loadFromNodeSettings(settings);
-		compare(obtained, timeSeries);
+		TestUtils.compare(obtained, timeSeries);
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class TimeSeriesTest {
 				timeSeries.concentrationUnitObjectType, timeSeries.origConcentrationUnit,
 				timeSeries.concentrationStdDev, timeSeries.numberOfMeasurements);
 		final TimeSeries obtained = TimeSeries.toTimeSeries(timeSeriesXml);
-		compare(obtained, timeSeries);
+		TestUtils.compare(obtained, timeSeries);
 	}
 
 	@Test
@@ -103,17 +103,5 @@ public class TimeSeriesTest {
 		assertThat(obtained.origConcentrationUnit, equalTo(timeSeries.origConcentrationUnit));
 		assertThat(obtained.concentrationStdDev, equalTo(timeSeries.concentrationStdDev));
 		assertThat(obtained.numberOfMeasurements, equalTo(timeSeries.numberOfMeasurements));
-	}
-
-	private static void compare(TimeSeries obtained, TimeSeries expected) {
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.timeUnit, equalTo(expected.timeUnit));
-		assertThat(obtained.origTimeUnit, equalTo(expected.origTimeUnit));
-		assertThat(obtained.concentration, equalTo(expected.concentration));
-		assertThat(obtained.concentrationUnit, equalTo(expected.concentrationUnit));
-		assertThat(obtained.concentrationUnitObjectType, equalTo(expected.concentrationUnitObjectType));
-		assertThat(obtained.origConcentrationUnit, equalTo(expected.origConcentrationUnit));
-		assertThat(obtained.concentrationStdDev, equalTo(expected.concentrationStdDev));
-		assertThat(obtained.numberOfMeasurements, equalTo(expected.numberOfMeasurements));
 	}
 }

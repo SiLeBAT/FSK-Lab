@@ -65,8 +65,7 @@ public class DepTest {
 
 		final Dep obtained = new Dep();
 		obtained.loadFromNodeSettings(settings);
-
-		compare(obtained, dep);
+		TestUtils.compare(obtained, dep);
 	}
 
 	@Test
@@ -76,7 +75,7 @@ public class DepTest {
 		depXml.max = dep.max;
 
 		final Dep obtained = Dep.toDep(depXml);
-		compare(obtained, dep);
+		TestUtils.compare(obtained, dep);
 	}
 
 	@Test
@@ -89,15 +88,5 @@ public class DepTest {
 		assertThat(depXml.category, equalTo(dep.category));
 		assertThat(depXml.unit, equalTo(dep.unit));
 		assertThat(depXml.description, equalTo(dep.description));
-	}
-
-	private static void compare(Dep obtained, Dep expected) {
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.origname, equalTo(expected.origname));
-		assertThat(obtained.min, equalTo(expected.min));
-		assertThat(obtained.max, equalTo(expected.max));
-		assertThat(obtained.category, equalTo(expected.category));
-		assertThat(obtained.unit, equalTo(expected.unit));
-		assertThat(obtained.description, equalTo(expected.description));
 	}
 }

@@ -104,7 +104,7 @@ public class ParamTest {
 
 		final Param obtained = new Param();
 		obtained.loadFromNodeSettings(settings);
-		compare(obtained, param);
+		TestUtils.compare(obtained, param);
 	}
 
 	@Test
@@ -119,7 +119,7 @@ public class ParamTest {
 				param.maxGuess, param.category, param.unit, param.description, correlations);
 		final Param obtained = Param.toParam(paramXml);
 
-		compare(obtained, param);
+		TestUtils.compare(obtained, param);
 	}
 
 	@Test
@@ -143,24 +143,5 @@ public class ParamTest {
 			correlations.put(param.correlationNames[i], param.correlationValues[i]);
 		}
 		assertThat(correlations, equalTo(obtained.correlations));
-	}
-
-	private static void compare(Param obtained, Param expected) {
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.origName, equalTo(expected.origName));
-		assertThat(obtained.isStart, equalTo(expected.isStart));
-		assertThat(obtained.value, equalTo(expected.value));
-		assertThat(obtained.error, equalTo(expected.error));
-		assertThat(obtained.min, equalTo(expected.min));
-		assertThat(obtained.max, equalTo(expected.max));
-		assertThat(obtained.p, equalTo(expected.p));
-		assertThat(obtained.t, equalTo(expected.t));
-		assertThat(obtained.minGuess, equalTo(expected.minGuess));
-		assertThat(obtained.maxGuess, equalTo(expected.maxGuess));
-		assertThat(obtained.category, equalTo(expected.category));
-		assertThat(obtained.unit, equalTo(expected.unit));
-		assertThat(obtained.description, equalTo(expected.description));
-		assertThat(obtained.correlationNames, equalTo(expected.correlationNames));
-		assertThat(obtained.correlationValues, equalTo(expected.correlationValues));
 	}
 }

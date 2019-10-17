@@ -132,7 +132,7 @@ public class MiscTest {
 
 		final Misc obtained = new Misc();
 		obtained.loadFromNodeSettings(settings);
-		compare(obtained, misc);
+		TestUtils.compare(obtained, misc);
 	}
 
 	@Test
@@ -140,7 +140,7 @@ public class MiscTest {
 		final MiscXml miscXml = new MiscXml(misc.getId(), misc.getName(), misc.getDescription(), misc.getValue(),
 				Arrays.asList(misc.getCategories()), misc.getUnit(), misc.getOrigUnit(), misc.getDbuuid());
 		final Misc obtained = Misc.toMisc(miscXml);
-		compare(obtained, misc);
+		TestUtils.compare(obtained, misc);
 	}
 
 	@Test
@@ -154,16 +154,5 @@ public class MiscTest {
 		assertThat(obtained.unit, equalTo(misc.getUnit()));
 		assertThat(obtained.origUnit, equalTo(misc.getOrigUnit()));
 		assertThat(obtained.dbuuid, equalTo(misc.getDbuuid()));
-	}
-
-	private static void compare(Misc obtained, Misc expected) {
-		assertThat(obtained.getId(), equalTo(expected.getId()));
-		assertThat(obtained.getName(), equalTo(expected.getName()));
-		assertThat(obtained.getDescription(), equalTo(expected.getDescription()));
-		assertThat(obtained.getValue(), equalTo(expected.getValue()));
-		assertThat(obtained.getCategories(), arrayContaining(expected.getCategories()));
-		assertThat(obtained.getUnit(), equalTo(expected.getUnit()));
-		assertThat(obtained.getOrigUnit(), equalTo(expected.getOrigUnit()));
-		assertThat(obtained.getDbuuid(), equalTo(expected.getDbuuid()));
 	}
 }

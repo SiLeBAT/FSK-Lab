@@ -64,14 +64,14 @@ public class IndepTest {
 
 		final Indep obtained = new Indep();
 		obtained.loadFromNodeSettings(settings);
-		compare(obtained, indep);
+		TestUtils.compare(obtained, indep);
 	}
 
 	@Test
 	public void testToIndep() {
 		final IndepXml indepXml = new IndepXml(indep.name, indep.origname, indep.min, indep.max, indep.category, indep.unit, indep.description);
 		final Indep obtained = Indep.toIndep(indepXml);
-		compare(obtained, indep);
+		TestUtils.compare(obtained, indep);
 	}
 
 	@Test
@@ -85,15 +85,5 @@ public class IndepTest {
 		assertThat(indepXml.category, equalTo(indep.category));
 		assertThat(indepXml.unit, equalTo(indep.unit));
 		assertThat(indepXml.description, equalTo(indep.description));
-	}
-
-	private static void compare(Indep obtained, Indep expected) {
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.origname, equalTo(expected.origname));
-		assertThat(obtained.min, equalTo(expected.min));
-		assertThat(obtained.max, equalTo(expected.max));
-		assertThat(obtained.category, equalTo(expected.category));
-		assertThat(obtained.unit, equalTo(expected.unit));
-		assertThat(obtained.description, equalTo(expected.description));
 	}
 }

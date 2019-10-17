@@ -86,22 +86,6 @@ public class UnitTest {
 
 		final Unit actual = new Unit();
 		actual.loadFromNodeSettings(settings);
-		compare(actual, unit);
-	}
-
-	private static void compare(Unit obtained, Unit expected) {
-		assertThat(obtained.id, equalTo(expected.id));
-		assertThat(obtained.unit, equalTo(expected.unit));
-		assertThat(obtained.description, equalTo(expected.description));
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.kind_of_property_quantity, equalTo(expected.kind_of_property_quantity));
-		assertThat(obtained.notation_case_sensitive, equalTo(expected.notation_case_sensitive));
-		assertThat(obtained.convert_to, equalTo(expected.convert_to));
-		assertThat(obtained.conversion_function_factor, equalTo(expected.conversion_function_factor));
-		assertThat(obtained.inverse_conversion_function_factor, equalTo(expected.inverse_conversion_function_factor));
-		assertThat(obtained.object_type, equalTo(expected.object_type));
-		assertThat(obtained.display_in_GUI_as, equalTo(expected.display_in_GUI_as));
-		assertThat(obtained.mathML_string, equalTo(expected.mathML_string));
-		assertThat(obtained.priority_for_display_in_GUI, equalTo(expected.priority_for_display_in_GUI));
+		TestUtils.compare(actual, unit);
 	}
 }

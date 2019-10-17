@@ -54,13 +54,13 @@ public class AgentTest {
 		final Agent obtained = new Agent();
 		obtained.loadFromNodeSettings(settings);
 
-		compare(obtained, agent);
+		TestUtils.compare(obtained, agent);
 	}
 
 	@Test
 	public void testToAgent() {
 		final Agent obtained = Agent.toAgent(new AgentXml(agent.id, agent.name, agent.detail, agent.dbuuid));
-		compare(obtained, agent);
+		TestUtils.compare(obtained, agent);
 	}
 
 	@Test
@@ -71,12 +71,5 @@ public class AgentTest {
 		assertThat(agentXml.name, equalTo(agent.name));
 		assertThat(agentXml.detail, equalTo(agent.detail));
 		assertThat(agentXml.dbuuid, equalTo(agent.dbuuid));
-	}
-
-	private static void compare(final Agent obtained, final Agent expected) {
-		assertThat(obtained.id, equalTo(expected.id));
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.detail, equalTo(expected.detail));
-		assertThat(obtained.dbuuid, equalTo(expected.dbuuid));
 	}
 }

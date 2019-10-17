@@ -1,6 +1,5 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -22,7 +21,7 @@ public class AgentListTest {
 		final Agent[] agents = new Agent[] { agent };
 		list.setAgents(agents);
 
-		compare(list.getAgents()[0], agent);
+		TestUtils.compare(list.getAgents()[0], agent);
 	}
 
 	@Test
@@ -39,7 +38,7 @@ public class AgentListTest {
 		obtainedAgents[0] = new Agent();
 		obtainedAgents[0].loadFromNodeSettings(settings.getNodeSettings("agents" + 0));
 
-		compare(obtainedAgents[0], agents[0]);
+		TestUtils.compare(obtainedAgents[0], agents[0]);
 	}
 
 	@Test
@@ -51,13 +50,6 @@ public class AgentListTest {
 		final AgentList list = new AgentList();
 		list.loadFromNodeSettings(settings);
 
-		compare(list.getAgents()[0], agent);
-	}
-
-	private static void compare(final Agent obtained, final Agent expected) {
-		assertThat(obtained.id, equalTo(expected.id));
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.detail, equalTo(expected.detail));
-		assertThat(obtained.dbuuid, equalTo(expected.dbuuid));
+		TestUtils.compare(list.getAgents()[0], agent);
 	}
 }

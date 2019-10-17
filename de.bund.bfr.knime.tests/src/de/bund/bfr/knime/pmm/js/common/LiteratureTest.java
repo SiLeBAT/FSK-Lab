@@ -92,7 +92,7 @@ public class LiteratureTest {
 
 		final Literature obtained = new Literature();
 		obtained.loadFromNodeSettings(settings);
-		compare(obtained, literature);
+		TestUtils.compare(obtained, literature);
 	}
 
 	@Test
@@ -102,7 +102,7 @@ public class LiteratureTest {
 				literature.approvalMode, literature.website, literature.type, literature.comment, literature.id,
 				literature.dbuuid);
 		final Literature obtained = Literature.toLiterature(literatureItem);
-		compare(obtained, literature);
+		TestUtils.compare(obtained, literature);
 	}
 
 	@Test
@@ -122,22 +122,5 @@ public class LiteratureTest {
 		assertThat(literatureItem.type, equalTo(literature.type));
 		assertThat(literatureItem.comment, equalTo(literature.comment));
 		assertThat(literatureItem.dbuuid, equalTo(literature.dbuuid));
-	}
-
-	private static void compare(Literature obtained, Literature expected) {
-		assertThat(obtained.id, equalTo(expected.id));
-		assertThat(obtained.author, equalTo(expected.author));
-		assertThat(obtained.title, equalTo(expected.title));
-		assertThat(obtained.abstractText, equalTo(expected.abstractText));
-		assertThat(obtained.year, equalTo(expected.year));
-		assertThat(obtained.journal, equalTo(expected.journal));
-		assertThat(obtained.volume, equalTo(expected.volume));
-		assertThat(obtained.issue, equalTo(expected.issue));
-		assertThat(obtained.page, equalTo(expected.page));
-		assertThat(obtained.approvalMode, equalTo(expected.approvalMode));
-		assertThat(obtained.website, equalTo(expected.website));
-		assertThat(obtained.type, equalTo(expected.type));
-		assertThat(obtained.comment, equalTo(expected.comment));
-		assertThat(obtained.dbuuid, equalTo(expected.dbuuid));
 	}
 }

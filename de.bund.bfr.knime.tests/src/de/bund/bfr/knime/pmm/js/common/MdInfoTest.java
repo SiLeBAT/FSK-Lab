@@ -57,14 +57,14 @@ public class MdInfoTest {
 
 		final MdInfo obtained = new MdInfo();
 		obtained.loadFromNodeSettings(settings);
-		compare(obtained, mdInfo);
+		TestUtils.compare(obtained, mdInfo);
 	}
 
 	@Test
 	public void testToMdInfo() {
 		final MdInfoXml mdInfoXml = new MdInfoXml(mdInfo.id, mdInfo.name, mdInfo.comment, mdInfo.qualityScore, mdInfo.checked);
 		final MdInfo obtained = MdInfo.toMdInfo(mdInfoXml);
-		compare(obtained, mdInfo);
+		TestUtils.compare(obtained, mdInfo);
 	}
 
 	@Test
@@ -75,13 +75,5 @@ public class MdInfoTest {
 		assertThat(mdInfoXml.comment, equalTo(mdInfo.comment));
 		assertThat(mdInfoXml.qualityScore, equalTo(mdInfo.qualityScore));
 		assertThat(mdInfoXml.checked, equalTo(mdInfo.checked));
-	}
-
-	private static void compare(MdInfo obtained, MdInfo expected) {
-		assertThat(obtained.id, equalTo(expected.id));
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.comment, equalTo(expected.comment));
-		assertThat(obtained.qualityScore, equalTo(expected.qualityScore));
-		assertThat(obtained.checked, equalTo(expected.checked));
 	}
 }

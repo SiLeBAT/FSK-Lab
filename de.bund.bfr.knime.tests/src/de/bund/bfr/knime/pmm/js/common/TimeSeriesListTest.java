@@ -1,7 +1,5 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -23,7 +21,7 @@ public class TimeSeriesListTest {
 
 		final TimeSeries expected = timeSeries; // expected TimeSeries
 		final TimeSeries obtained = list.getTimeSeries()[0]; // obtained TimeSeries
-		compare(obtained, expected);
+		TestUtils.compare(obtained, expected);
 	}
 
 	@Test
@@ -40,7 +38,7 @@ public class TimeSeriesListTest {
 		final TimeSeries obtained = new TimeSeries(); // obtained TimeSeries
 		obtained.loadFromNodeSettings(settings.getNodeSettings("timeSeries0"));
 
-		compare(obtained, expected);
+		TestUtils.compare(obtained, expected);
 	}
 
 	@Test
@@ -54,18 +52,6 @@ public class TimeSeriesListTest {
 
 		final TimeSeries expected = timeSeries; // expected TimeSeries
 		final TimeSeries obtained = list.getTimeSeries()[0]; // obtained TimeSeries
-		compare(obtained, expected);
-	}
-
-	private static void compare(TimeSeries obtained, TimeSeries expected) {
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.timeUnit, equalTo(expected.timeUnit));
-		assertThat(obtained.origTimeUnit, equalTo(expected.origTimeUnit));
-		assertThat(obtained.concentration, equalTo(expected.concentration));
-		assertThat(obtained.concentrationUnit, equalTo(expected.concentrationUnit));
-		assertThat(obtained.concentrationUnitObjectType, equalTo(expected.concentrationUnitObjectType));
-		assertThat(obtained.origConcentrationUnit, equalTo(expected.origConcentrationUnit));
-		assertThat(obtained.concentrationStdDev, equalTo(expected.concentrationStdDev));
-		assertThat(obtained.numberOfMeasurements, equalTo(expected.numberOfMeasurements));
+		TestUtils.compare(obtained, expected);
 	}
 }

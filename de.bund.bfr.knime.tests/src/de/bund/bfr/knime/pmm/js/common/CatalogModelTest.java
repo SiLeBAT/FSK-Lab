@@ -61,7 +61,7 @@ public class CatalogModelTest {
 		final CatalogModel obtained = new CatalogModel();
 		obtained.loadFromNodeSettings(settings);
 
-		compare(obtained, catalogModel);
+		TestUtils.compare(obtained, catalogModel);
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class CatalogModelTest {
 		catalogModelXml.comment = catalogModel.comment;
 		final CatalogModel obtained = CatalogModel.toCatalogModel(catalogModelXml);
 
-		compare(obtained, catalogModel);
+		TestUtils.compare(obtained, catalogModel);
 	}
 
 	@Test
@@ -84,14 +84,5 @@ public class CatalogModelTest {
 		assertThat(catalogModelXml.modelClass, equalTo(catalogModel.modelClass));
 		assertThat(catalogModelXml.comment, equalTo(catalogModel.comment));
 		assertThat(catalogModelXml.dbuuid, equalTo(catalogModel.dbuuid));
-	}
-
-	private static void compare(CatalogModel obtained, CatalogModel expected) {
-		assertThat(obtained.id, equalTo(expected.id));
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.formula, equalTo(expected.formula));
-		assertThat(obtained.modelClass, equalTo(expected.modelClass));
-		assertThat(obtained.comment, equalTo(expected.comment));
-		assertThat(obtained.dbuuid, equalTo(expected.dbuuid));
 	}
 }

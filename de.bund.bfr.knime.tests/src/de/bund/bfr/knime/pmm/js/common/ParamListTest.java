@@ -1,6 +1,5 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -23,7 +22,7 @@ public class ParamListTest {
 
 		final Param expected = param; // expected Param
 		final Param obtained = list.getParams()[0]; // obtained Param
-		compare(obtained, expected);
+		TestUtils.compare(obtained, expected);
 	}
 
 	@Test
@@ -40,7 +39,7 @@ public class ParamListTest {
 		final Param obtained = new Param(); // obtained Param
 		obtained.loadFromNodeSettings(settings.getNodeSettings("params0"));
 
-		compare(obtained, expected);
+		TestUtils.compare(obtained, expected);
 	}
 
 	@Test
@@ -54,25 +53,6 @@ public class ParamListTest {
 
 		final Param expected = param; // expected Param
 		final Param obtained = list.getParams()[0]; // obtained Param
-		compare(obtained, expected);
-	}
-
-	private static void compare(Param obtained, Param expected) {
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.origName, equalTo(expected.origName));
-		assertThat(obtained.isStart, equalTo(expected.isStart));
-		assertThat(obtained.value, equalTo(expected.value));
-		assertThat(obtained.error, equalTo(expected.error));
-		assertThat(obtained.min, equalTo(expected.min));
-		assertThat(obtained.max, equalTo(expected.max));
-		assertThat(obtained.p, equalTo(expected.p));
-		assertThat(obtained.t, equalTo(expected.t));
-		assertThat(obtained.minGuess, equalTo(expected.minGuess));
-		assertThat(obtained.maxGuess, equalTo(expected.maxGuess));
-		assertThat(obtained.category, equalTo(expected.category));
-		assertThat(obtained.unit, equalTo(expected.unit));
-		assertThat(obtained.description, equalTo(expected.description));
-		assertThat(obtained.correlationNames, equalTo(expected.correlationNames));
-		assertThat(obtained.correlationValues, equalTo(expected.correlationValues));
+		TestUtils.compare(obtained, expected);
 	}
 }

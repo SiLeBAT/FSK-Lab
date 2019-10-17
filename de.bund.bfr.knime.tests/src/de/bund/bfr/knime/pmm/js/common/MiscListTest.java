@@ -1,8 +1,6 @@
 package de.bund.bfr.knime.pmm.js.common;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -24,7 +22,7 @@ public class MiscListTest {
 
 		final Misc expected = misc;  // expected Misc
 		final Misc obtained = list.getMiscs()[0];  // obtained Misc
-		compare(obtained, expected);
+		TestUtils.compare(obtained, expected);
 	}
 
 	@Test
@@ -41,7 +39,7 @@ public class MiscListTest {
 		final Misc obtained = new Misc();  // obtained Misc
 		obtained.loadFromNodeSettings(settings.getNodeSettings("miscs0"));
 
-		compare(obtained, expected);
+		TestUtils.compare(obtained, expected);
 	}
 
 	@Test
@@ -55,14 +53,6 @@ public class MiscListTest {
 
 		final Misc expected = misc;  // expected Misc
 		final Misc obtained = list.getMiscs()[0];  // obtained Misc
-		compare(obtained, expected);
-	}
-
-	private static void compare(Misc obtained, Misc expected) {
-		assertThat(obtained.getId(), equalTo(expected.getId()));
-		assertThat(obtained.getName(), equalTo(expected.getName()));
-		assertThat(obtained.getDescription(), equalTo(expected.getDescription()));
-		assertThat(obtained.getValue(), equalTo(expected.getValue()));
-		assertThat(obtained.getCategories(), arrayContaining(expected.getCategories()));
+		TestUtils.compare(obtained, expected);
 	}
 }

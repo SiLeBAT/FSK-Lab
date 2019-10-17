@@ -52,14 +52,14 @@ public class MatrixTest {
 
 		final Matrix obtained = new Matrix();
 		obtained.loadFromNodeSettings(settings);
-		compare(obtained, matrix);
+		TestUtils.compare(obtained, matrix);
 	}
 
 	@Test
 	public void testToMatrix() {
 		final MatrixXml matrixXml = new MatrixXml(matrix.id, matrix.name, matrix.detail, matrix.dbuuid);
 		final Matrix obtained = Matrix.toMatrix(matrixXml);
-		compare(obtained, matrix);
+		TestUtils.compare(obtained, matrix);
 	}
 
 	@Test
@@ -69,12 +69,5 @@ public class MatrixTest {
 		assertThat(obtained.name, equalTo(matrix.name));
 		assertThat(obtained.detail, equalTo(matrix.detail));
 		assertThat(obtained.dbuuid, equalTo(matrix.dbuuid));
-	}
-
-	private static void compare(Matrix obtained, Matrix expected) {
-		assertThat(obtained.id, equalTo(expected.id));
-		assertThat(obtained.name, equalTo(expected.name));
-		assertThat(obtained.detail, equalTo(expected.detail));
-		assertThat(obtained.dbuuid, equalTo(expected.dbuuid));
 	}
 }
