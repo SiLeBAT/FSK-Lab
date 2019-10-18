@@ -116,8 +116,8 @@ public final class ModelEditorNodeModel
 
 	@Override
 	protected PortObject[] performExecute(PortObject[] inObjects, ExecutionContext exec) throws Exception {
-		BufferedDataTable table = (BufferedDataTable) inObjects[0];
-		List<KnimeTuple> tuples = PmmUtilities.getTuples(table, SchemaFactory.createM1DataSchema());
+		final BufferedDataTable table = (BufferedDataTable) inObjects[0];
+		final List<KnimeTuple> tuples = PmmUtilities.getTuples(table, SchemaFactory.createM1DataSchema());
 
 		ModelEditorViewValue viewValue = getViewValue();
 		if (viewValue == null) {
@@ -130,11 +130,11 @@ public final class ModelEditorNodeModel
 			// viewValue.setModels(m_config.getModels());
 
 			// Convert KNIME tuples to Model1DataTuple
-			Model1DataTuple[] m1DataTuples = new Model1DataTuple[tuples.size()];
+			final Model1DataTuple[] m1DataTuples = new Model1DataTuple[tuples.size()];
 			for (int i = 0; i < tuples.size(); i++) {
 				m1DataTuples[i] = codeTuple(tuples.get(i));
 			}
-			ModelList modelList = new ModelList();
+			final ModelList modelList = new ModelList();
 			modelList.setModels(m1DataTuples);
 			viewValue.setModels(modelList);
 
@@ -145,10 +145,10 @@ public final class ModelEditorNodeModel
 		exec.setProgress(1);
 
 		// return edited table
-		BufferedDataContainer container = exec.createDataContainer(SchemaFactory.createM1DataSchema().createSpec());
-		ModelList outModelList = getViewValue().getModels();
-		for (Model1DataTuple m1DataTuple : outModelList.getModels()) {
-			KnimeTuple outTuple = decodeTuple(m1DataTuple);
+		final BufferedDataContainer container = exec.createDataContainer(SchemaFactory.createM1DataSchema().createSpec());
+		final ModelList outModelList = getViewValue().getModels();
+		for (final Model1DataTuple m1DataTuple : outModelList.getModels()) {
+			final KnimeTuple outTuple = decodeTuple(m1DataTuple);
 			container.addRowToTable(outTuple);
 		}
 		container.close();
@@ -185,36 +185,36 @@ public final class ModelEditorNodeModel
 
 	// TODO: Move to another class: --> Model1DataTuple
 	public static Model1DataTuple codeTuple(KnimeTuple inTuple) {
-		Model1DataTuple outTuple = new Model1DataTuple();
+		final Model1DataTuple outTuple = new Model1DataTuple();
 		// process
 		outTuple.setCondId(inTuple.getInt(TimeSeriesSchema.ATT_CONDID));
 		outTuple.setCombaseId(inTuple.getString(TimeSeriesSchema.ATT_COMBASEID));
 		outTuple.setGlobalModelId(inTuple.getInt(TimeSeriesSchema.ATT_GLOBALMODELID));
 
-		PmmXmlDoc miscDoc = (PmmXmlDoc) inTuple.getPmmXml(TimeSeriesSchema.ATT_MISC);
+		final PmmXmlDoc miscDoc = inTuple.getPmmXml(TimeSeriesSchema.ATT_MISC);
 		if (miscDoc != null) {
-			Misc[] miscs = new Misc[miscDoc.size()];
+			final Misc[] miscs = new Misc[miscDoc.size()];
 			for (int i = 0; i < miscDoc.size(); i++) {
-				MiscXml miscXml = (MiscXml) miscDoc.get(i);
-				Misc misc = new Misc();
-				misc.setId(miscXml.id);
-				misc.setName(miscXml.name);
-				misc.setDescription(miscXml.description);
-				misc.setValue(miscXml.value);
-				misc.setCategories(miscXml.categories.toArray(new String[miscXml.categories.size()]));
-				misc.setUnit(miscXml.unit);
-				misc.setOrigUnit(miscXml.origUnit);
-				misc.setDbuuid(miscXml.dbuuid);
+				final MiscXml miscXml = (MiscXml) miscDoc.get(i);
+				final Misc misc = new Misc();
+				misc.id = miscXml.id;
+				misc.name = miscXml.name;
+				misc.description = miscXml.description;
+				misc.value = miscXml.value;
+				misc.categories = miscXml.categories.toArray(new String[miscXml.categories.size()]);
+				misc.unit = miscXml.unit;
+				misc.origUnit = miscXml.origUnit;
+				misc.dbuuid = miscXml.dbuuid;
 				miscs[i] = misc;
 			}
-			MiscList miscList = new MiscList();
+			final MiscList miscList = new MiscList();
 			miscList.setMiscs(miscs);
 			outTuple.setMiscList(miscList);
 		}
 
-		AgentXml agentXml = (AgentXml) inTuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0);
+		final AgentXml agentXml = (AgentXml) inTuple.getPmmXml(TimeSeriesSchema.ATT_AGENT).get(0);
 		if (agentXml != null) {
-			Agent agent = new Agent();
+			final Agent agent = new Agent();
 			agent.id = agentXml.id;
 			agent.name = agentXml.name;
 			agent.detail = agentXml.detail;
@@ -222,9 +222,9 @@ public final class ModelEditorNodeModel
 			outTuple.setAgent(agent);
 		}
 
-		MatrixXml matrixXml = (MatrixXml) inTuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0);
+		final MatrixXml matrixXml = (MatrixXml) inTuple.getPmmXml(TimeSeriesSchema.ATT_MATRIX).get(0);
 		if (matrixXml != null) {
-			Matrix matrix = new Matrix();
+			final Matrix matrix = new Matrix();
 			matrix.id = matrixXml.id;
 			matrix.name = matrixXml.name;
 			matrix.detail = matrixXml.detail;
@@ -232,13 +232,13 @@ public final class ModelEditorNodeModel
 			outTuple.setMatrix(matrix);
 		}
 
-		PmmXmlDoc timeSeriesDoc = (PmmXmlDoc) inTuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
+		final PmmXmlDoc timeSeriesDoc = inTuple.getPmmXml(TimeSeriesSchema.ATT_TIMESERIES);
 		if (timeSeriesDoc != null) {
-			TimeSeries[] timeSeriesArray = new TimeSeries[timeSeriesDoc.size()];
+			final TimeSeries[] timeSeriesArray = new TimeSeries[timeSeriesDoc.size()];
 			for (int i = 0; i < timeSeriesDoc.size(); i++) {
-				TimeSeriesXml timeSeriesXml = (TimeSeriesXml) timeSeriesDoc.get(i);
+				final TimeSeriesXml timeSeriesXml = (TimeSeriesXml) timeSeriesDoc.get(i);
 
-				TimeSeries timeSeries = new TimeSeries();
+				final TimeSeries timeSeries = new TimeSeries();
 				timeSeries.name = timeSeriesXml.name;
 				timeSeries.time = timeSeriesXml.time;
 				timeSeries.timeUnit = timeSeriesXml.timeUnit;
@@ -251,18 +251,19 @@ public final class ModelEditorNodeModel
 				timeSeries.numberOfMeasurements = timeSeriesXml.numberOfMeasurements;
 				timeSeriesArray[i] = timeSeries;
 			}
-			TimeSeriesList timeSeriesList = new TimeSeriesList();
+			final TimeSeriesList timeSeriesList = new TimeSeriesList();
 			timeSeriesList.setTimeSeries(timeSeriesArray);
 			outTuple.setTimeSeriesList(timeSeriesList);
 		}
 
-		PmmXmlDoc mdInfoAtt = inTuple.getPmmXml(TimeSeriesSchema.ATT_MDINFO);
+		final PmmXmlDoc mdInfoAtt = inTuple.getPmmXml(TimeSeriesSchema.ATT_MDINFO);
 		MdInfoXml mdInfoXml = null;
-		if (mdInfoAtt != null)
+		if (mdInfoAtt != null) {
 			mdInfoXml = (MdInfoXml) mdInfoAtt.get(0);
+		}
 
 		if (mdInfoXml != null) {
-			MdInfo mdInfo = new MdInfo();
+			final MdInfo mdInfo = new MdInfo();
 			mdInfo.id = mdInfoXml.id;
 			mdInfo.name = mdInfoXml.name;
 			mdInfo.comment = mdInfoXml.comment;
@@ -271,13 +272,13 @@ public final class ModelEditorNodeModel
 			outTuple.setMdInfo(mdInfo);
 		}
 
-		PmmXmlDoc mdLitDoc = (PmmXmlDoc) inTuple.getPmmXml(TimeSeriesSchema.ATT_LITMD);
+		final PmmXmlDoc mdLitDoc = inTuple.getPmmXml(TimeSeriesSchema.ATT_LITMD);
 		if (mdLitDoc != null) {
-			Literature[] mdLiteratureArray = new Literature[mdLitDoc.size()];
+			final Literature[] mdLiteratureArray = new Literature[mdLitDoc.size()];
 			for (int i = 0; i < mdLitDoc.size(); i++) {
-				LiteratureItem literatureItem = (LiteratureItem) mdLitDoc.get(i);
+				final LiteratureItem literatureItem = (LiteratureItem) mdLitDoc.get(i);
 
-				Literature literature = new Literature();
+				final Literature literature = new Literature();
 				literature.author = literatureItem.author;
 				literature.year = literatureItem.year;
 				literature.title = literatureItem.title;
@@ -295,16 +296,16 @@ public final class ModelEditorNodeModel
 
 				mdLiteratureArray[i] = literature;
 			}
-			LiteratureList mdLiteratureList = new LiteratureList();
+			final LiteratureList mdLiteratureList = new LiteratureList();
 			mdLiteratureList.setLiterature(mdLiteratureArray);
 			outTuple.setLitMd(mdLiteratureList);
 		}
 
 		outTuple.setDbuuid(inTuple.getString(TimeSeriesSchema.ATT_DBUUID)); // deprecated?
 
-		CatalogModelXml catalogModelXml = (CatalogModelXml) inTuple.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0);
+		final CatalogModelXml catalogModelXml = (CatalogModelXml) inTuple.getPmmXml(Model1Schema.ATT_MODELCATALOG).get(0);
 		if (catalogModelXml != null) {
-			CatalogModel catalogModel = new CatalogModel();
+			final CatalogModel catalogModel = new CatalogModel();
 			catalogModel.id = catalogModelXml.id;
 			catalogModel.name = catalogModelXml.name;
 			catalogModel.formula = catalogModelXml.formula;
@@ -314,13 +315,14 @@ public final class ModelEditorNodeModel
 			outTuple.setCatModel(catalogModel);
 		}
 
-		PmmXmlDoc catalogModelSecAtt = inTuple.getPmmXml(Model2Schema.ATT_MODELCATALOG);
+		final PmmXmlDoc catalogModelSecAtt = inTuple.getPmmXml(Model2Schema.ATT_MODELCATALOG);
 		CatalogModelXml catalogModelSecXml = null;
-		if (catalogModelSecAtt != null)
+		if (catalogModelSecAtt != null) {
 			catalogModelSecXml = (CatalogModelXml) catalogModelSecAtt.get(0);
+		}
 
 		if (catalogModelSecXml != null) {
-			CatalogModel catalogModelSec = new CatalogModel();
+			final CatalogModel catalogModelSec = new CatalogModel();
 			catalogModelSec.id = catalogModelSecXml.id;
 			catalogModelSec.name = catalogModelSecXml.name;
 			catalogModelSec.formula = catalogModelSecXml.formula;
@@ -330,13 +332,14 @@ public final class ModelEditorNodeModel
 			outTuple.setCatModelSec(catalogModelSec);
 		}
 
-		PmmXmlDoc estModelAtt = inTuple.getPmmXml(Model1Schema.ATT_ESTMODEL);
+		final PmmXmlDoc estModelAtt = inTuple.getPmmXml(Model1Schema.ATT_ESTMODEL);
 		EstModelXml estModelXml = null;
-		if (estModelAtt != null)
+		if (estModelAtt != null) {
 			estModelXml = (EstModelXml) estModelAtt.get(0);
+		}
 
 		if (estModelXml != null) {
-			EstModel estModel = new EstModel();
+			final EstModel estModel = new EstModel();
 			estModel.id = estModelXml.id;
 			estModel.name = estModelXml.name;
 			estModel.sse = estModelXml.sse;
@@ -352,13 +355,14 @@ public final class ModelEditorNodeModel
 			outTuple.setEstModel(estModel);
 		}
 
-		PmmXmlDoc depAtt = inTuple.getPmmXml(Model1Schema.ATT_DEPENDENT);
+		final PmmXmlDoc depAtt = inTuple.getPmmXml(Model1Schema.ATT_DEPENDENT);
 		DepXml depXml = null;
-		if (depAtt != null)
+		if (depAtt != null) {
 			depXml = (DepXml) depAtt.get(0);
+		}
 
 		if (depXml != null) {
-			Dep dep = new Dep();
+			final Dep dep = new Dep();
 			dep.name = depXml.name;
 			dep.origname = depXml.origName;
 			dep.min = depXml.min;
@@ -369,22 +373,22 @@ public final class ModelEditorNodeModel
 			outTuple.setDep(dep);
 		}
 
-		PmmXmlDoc paramDoc = inTuple.getPmmXml(Model1Schema.ATT_PARAMETER);
-		Param[] paramArray = new Param[paramDoc.size()];
+		final PmmXmlDoc paramDoc = inTuple.getPmmXml(Model1Schema.ATT_PARAMETER);
+		final Param[] paramArray = new Param[paramDoc.size()];
 		for (int i = 0; i < paramDoc.size(); i++) {
-			ParamXml paramXml = (ParamXml) paramDoc.get(i);
+			final ParamXml paramXml = (ParamXml) paramDoc.get(i);
 
-			HashMap<String, Double> obtainedCorrelations = paramXml.correlations;
-			String[] obtainedCorrelationNames = new String[obtainedCorrelations.size()];
-			double[] obtainedCorrelationValues = new double[obtainedCorrelations.size()];
+			final HashMap<String, Double> obtainedCorrelations = paramXml.correlations;
+			final String[] obtainedCorrelationNames = new String[obtainedCorrelations.size()];
+			final double[] obtainedCorrelationValues = new double[obtainedCorrelations.size()];
 			int j = 0;
-			for (Map.Entry<String, Double> entry : obtainedCorrelations.entrySet()) {
+			for (final Map.Entry<String, Double> entry : obtainedCorrelations.entrySet()) {
 				obtainedCorrelationNames[j] = entry.getKey();
 				obtainedCorrelationValues[j] = entry.getValue();
 				j++;
 			}
 
-			Param param = new Param();
+			final Param param = new Param();
 			param.name = paramXml.name;
 			param.origName = paramXml.origName;
 			param.isStart = paramXml.isStartParam;
@@ -404,27 +408,27 @@ public final class ModelEditorNodeModel
 
 			paramArray[i] = param;
 		}
-		ParamList paramList = new ParamList();
+		final ParamList paramList = new ParamList();
 		paramList.setParams(paramArray);
 		outTuple.setParams(paramList);
 
-		PmmXmlDoc paramSecDoc = inTuple.getPmmXml(Model2Schema.ATT_PARAMETER);
+		final PmmXmlDoc paramSecDoc = inTuple.getPmmXml(Model2Schema.ATT_PARAMETER);
 		if (paramSecDoc != null) {
-			Param[] paramSecArray = new Param[paramSecDoc.size()];
+			final Param[] paramSecArray = new Param[paramSecDoc.size()];
 			for (int i = 0; i < paramSecDoc.size(); i++) {
-				ParamXml paramSecXml = (ParamXml) paramSecDoc.get(i);
+				final ParamXml paramSecXml = (ParamXml) paramSecDoc.get(i);
 
-				HashMap<String, Double> obtainedCorrelations = paramSecXml.correlations;
-				String[] obtainedCorrelationNames = new String[obtainedCorrelations.size()];
-				double[] obtainedCorrelationValues = new double[obtainedCorrelations.size()];
+				final HashMap<String, Double> obtainedCorrelations = paramSecXml.correlations;
+				final String[] obtainedCorrelationNames = new String[obtainedCorrelations.size()];
+				final double[] obtainedCorrelationValues = new double[obtainedCorrelations.size()];
 				int j = 0;
-				for (Map.Entry<String, Double> entry : obtainedCorrelations.entrySet()) {
+				for (final Map.Entry<String, Double> entry : obtainedCorrelations.entrySet()) {
 					obtainedCorrelationNames[j] = entry.getKey();
 					obtainedCorrelationValues[j] = entry.getValue();
 					j++;
 				}
 
-				Param paramSec = new Param();
+				final Param paramSec = new Param();
 				paramSec.name = paramSecXml.name;
 				paramSec.origName = paramSecXml.origName;
 				paramSec.isStart = paramSecXml.isStartParam;
@@ -444,17 +448,17 @@ public final class ModelEditorNodeModel
 
 				paramSecArray[i] = paramSec;
 			}
-			ParamList paramSecList = new ParamList();
+			final ParamList paramSecList = new ParamList();
 			paramSecList.setParams(paramSecArray);
 			outTuple.setParamsSec(paramSecList);
 		}
 
-		PmmXmlDoc indepDoc = inTuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
+		final PmmXmlDoc indepDoc = inTuple.getPmmXml(Model1Schema.ATT_INDEPENDENT);
 		if (indepDoc != null) {
-			Indep[] indepArray = new Indep[indepDoc.size()];
+			final Indep[] indepArray = new Indep[indepDoc.size()];
 			for (int i = 0; i < indepDoc.size(); i++) {
-				IndepXml indepXml = (IndepXml) indepDoc.get(i);
-				Indep indep = new Indep();
+				final IndepXml indepXml = (IndepXml) indepDoc.get(i);
+				final Indep indep = new Indep();
 				indep.name = indepXml.name;
 				indep.origname = indepXml.origName;
 				indep.min = indepXml.min;
@@ -464,17 +468,17 @@ public final class ModelEditorNodeModel
 				indep.description = indepXml.description;
 				indepArray[i] = indep;
 			}
-			IndepList indepList = new IndepList();
+			final IndepList indepList = new IndepList();
 			indepList.setIndeps(indepArray);
 			outTuple.setIndeps(indepList);
 		}
 
-		PmmXmlDoc indepSecDoc = inTuple.getPmmXml(Model2Schema.ATT_INDEPENDENT);
+		final PmmXmlDoc indepSecDoc = inTuple.getPmmXml(Model2Schema.ATT_INDEPENDENT);
 		if (indepSecDoc != null) {
-			Indep[] indepSecArray = new Indep[indepSecDoc.size()];
+			final Indep[] indepSecArray = new Indep[indepSecDoc.size()];
 			for (int i = 0; i < indepSecDoc.size(); i++) {
-				IndepXml indepSecXml = (IndepXml) indepSecDoc.get(i);
-				Indep indepSec = new Indep();
+				final IndepXml indepSecXml = (IndepXml) indepSecDoc.get(i);
+				final Indep indepSec = new Indep();
 				indepSec.name = indepSecXml.name;
 				indepSec.origname = indepSecXml.origName;
 				indepSec.min = indepSecXml.min;
@@ -484,17 +488,17 @@ public final class ModelEditorNodeModel
 				indepSec.description = indepSecXml.description;
 				indepSecArray[i] = indepSec;
 			}
-			IndepList indepSecList = new IndepList();
+			final IndepList indepSecList = new IndepList();
 			indepSecList.setIndeps(indepSecArray);
 			outTuple.setIndepsSec(indepSecList);
 		}
 
-		PmmXmlDoc mLitDoc = (PmmXmlDoc) inTuple.getPmmXml(Model1Schema.ATT_MLIT);
+		final PmmXmlDoc mLitDoc = inTuple.getPmmXml(Model1Schema.ATT_MLIT);
 		if (mLitDoc != null) {
-			Literature[] mLiteratureArray = new Literature[mLitDoc.size()];
+			final Literature[] mLiteratureArray = new Literature[mLitDoc.size()];
 			for (int i = 0; i < mLitDoc.size(); i++) {
-				LiteratureItem literatureItem = (LiteratureItem) mLitDoc.get(i);
-				Literature literature = new Literature();
+				final LiteratureItem literatureItem = (LiteratureItem) mLitDoc.get(i);
+				final Literature literature = new Literature();
 				literature.author = literatureItem.author;
 				literature.year = literatureItem.year;
 				literature.title = literatureItem.title;
@@ -512,18 +516,18 @@ public final class ModelEditorNodeModel
 
 				mLiteratureArray[i] = literature;
 			}
-			LiteratureList mLiteratureList = new LiteratureList();
+			final LiteratureList mLiteratureList = new LiteratureList();
 			mLiteratureList.setLiterature(mLiteratureArray);
 			outTuple.setmLit(mLiteratureList);
 		}
 
-		PmmXmlDoc emLitDoc = (PmmXmlDoc) inTuple.getPmmXml(Model1Schema.ATT_EMLIT);
+		final PmmXmlDoc emLitDoc = inTuple.getPmmXml(Model1Schema.ATT_EMLIT);
 		if (emLitDoc != null) {
-			Literature[] emLiteratureArray = new Literature[emLitDoc.size()];
+			final Literature[] emLiteratureArray = new Literature[emLitDoc.size()];
 			for (int i = 0; i < emLitDoc.size(); i++) {
-				LiteratureItem literatureItem = (LiteratureItem) emLitDoc.get(i);
+				final LiteratureItem literatureItem = (LiteratureItem) emLitDoc.get(i);
 
-				Literature literature = new Literature();
+				final Literature literature = new Literature();
 				literature.author = literatureItem.author;
 				literature.year = literatureItem.year;
 				literature.title = literatureItem.title;
@@ -541,45 +545,47 @@ public final class ModelEditorNodeModel
 
 				emLiteratureArray[i] = literature;
 			}
-			LiteratureList emLiteratureList = new LiteratureList();
+			final LiteratureList emLiteratureList = new LiteratureList();
 			emLiteratureList.setLiterature(emLiteratureArray);
 			outTuple.setEmLit(emLiteratureList);
 		}
 
-		if (inTuple.getInt(Model1Schema.ATT_DATABASEWRITABLE) != null)
+		if (inTuple.getInt(Model1Schema.ATT_DATABASEWRITABLE) != null) {
 			outTuple.setDatabaseWritable(Model1Schema.WRITABLE == inTuple.getInt(Model1Schema.ATT_DATABASEWRITABLE));
-		else
+		}
+		else {
 			outTuple.setDatabaseWritable(false); // default is false
+		}
 
 		return outTuple;
 	}
 
 	// TODO: Move to another class: --> Model1DataTuple
 	public static KnimeTuple decodeTuple(final Model1DataTuple m1DataTuple) {
-		KnimeTuple outTuple = new KnimeTuple(SchemaFactory.createM1DataSchema());
+		final KnimeTuple outTuple = new KnimeTuple(SchemaFactory.createM1DataSchema());
 
 		outTuple.setValue(TimeSeriesSchema.ATT_CONDID, m1DataTuple.getCondId());
 		outTuple.setValue(TimeSeriesSchema.ATT_COMBASEID, m1DataTuple.getCombaseId());
 
-		MiscList miscList = m1DataTuple.getMiscList();
-		PmmXmlDoc miscDoc = new PmmXmlDoc();
-		for (Misc misc : miscList.getMiscs()) {
-			miscDoc.add(new MiscXml(misc.getId(), misc.getName(), misc.getDescription(), misc.getValue(),
-					Arrays.asList(misc.getCategories()), misc.getUnit(), misc.getOrigUnit(), misc.getDbuuid()));
+		final MiscList miscList = m1DataTuple.getMiscList();
+		final PmmXmlDoc miscDoc = new PmmXmlDoc();
+		for (final Misc misc : miscList.getMiscs()) {
+			miscDoc.add(new MiscXml(misc.id, misc.name, misc.description, misc.value,
+					Arrays.asList(misc.categories), misc.unit, misc.origUnit, misc.dbuuid));
 		}
 		outTuple.setValue(TimeSeriesSchema.ATT_MISC, miscDoc);
 
-		Agent agent = m1DataTuple.getAgent();
-		PmmXmlDoc agentDoc = new PmmXmlDoc(new AgentXml(agent.id, agent.name, agent.detail, agent.dbuuid));
+		final Agent agent = m1DataTuple.getAgent();
+		final PmmXmlDoc agentDoc = new PmmXmlDoc(new AgentXml(agent.id, agent.name, agent.detail, agent.dbuuid));
 		outTuple.setValue(TimeSeriesSchema.ATT_AGENT, agentDoc);
 
-		Matrix matrix = m1DataTuple.getMatrix();
-		PmmXmlDoc matrixDoc = new PmmXmlDoc(new MatrixXml(matrix.id, matrix.name, matrix.detail, matrix.dbuuid));
+		final Matrix matrix = m1DataTuple.getMatrix();
+		final PmmXmlDoc matrixDoc = new PmmXmlDoc(new MatrixXml(matrix.id, matrix.name, matrix.detail, matrix.dbuuid));
 		outTuple.setValue(TimeSeriesSchema.ATT_MATRIX, matrixDoc);
 
-		PmmXmlDoc timeSeriesDoc = new PmmXmlDoc();
-		TimeSeriesList timeSeriesList = m1DataTuple.getTimeSeriesList();
-		for (TimeSeries timeSeries : timeSeriesList.getTimeSeries()) {
+		final PmmXmlDoc timeSeriesDoc = new PmmXmlDoc();
+		final TimeSeriesList timeSeriesList = m1DataTuple.getTimeSeriesList();
+		for (final TimeSeries timeSeries : timeSeriesList.getTimeSeries()) {
 			timeSeriesDoc.add(new TimeSeriesXml(timeSeries.name, timeSeries.time, timeSeries.timeUnit,
 					timeSeries.origTimeUnit, timeSeries.concentration, timeSeries.concentrationUnit,
 					timeSeries.concentrationUnitObjectType, timeSeries.origConcentrationUnit,
@@ -587,13 +593,13 @@ public final class ModelEditorNodeModel
 		}
 		outTuple.setValue(TimeSeriesSchema.ATT_TIMESERIES, timeSeriesDoc);
 
-		MdInfo mdInfo = (MdInfo) m1DataTuple.getMdInfo();
-		PmmXmlDoc mdInfoDoc = new PmmXmlDoc(
+		final MdInfo mdInfo = m1DataTuple.getMdInfo();
+		final PmmXmlDoc mdInfoDoc = new PmmXmlDoc(
 				new MdInfoXml(mdInfo.id, mdInfo.name, mdInfo.comment, mdInfo.qualityScore, mdInfo.checked));
 		outTuple.setValue(TimeSeriesSchema.ATT_MDINFO, mdInfoDoc);
 
-		PmmXmlDoc mdLitDoc = new PmmXmlDoc();
-		for (Literature literature : m1DataTuple.getLitMd().getLiterature()) {
+		final PmmXmlDoc mdLitDoc = new PmmXmlDoc();
+		for (final Literature literature : m1DataTuple.getLitMd().getLiterature()) {
 			mdLitDoc.add(new LiteratureItem(literature.author, literature.year, literature.title,
 					literature.abstractText, literature.journal, literature.volume, literature.issue, literature.page,
 					literature.approvalMode, literature.website, literature.type, literature.comment, literature.id,
@@ -604,55 +610,55 @@ public final class ModelEditorNodeModel
 		outTuple.setValue(TimeSeriesSchema.ATT_DBUUID, m1DataTuple.getDbuuid());
 		outTuple.setValue(Model1Schema.ATT_DBUUID, m1DataTuple.getDbuuid());
 
-		CatalogModel catalogModel = m1DataTuple.getCatModel();
-		CatalogModelXml catalogModelXml = new CatalogModelXml(catalogModel.id, catalogModel.name, catalogModel.formula,
+		final CatalogModel catalogModel = m1DataTuple.getCatModel();
+		final CatalogModelXml catalogModelXml = new CatalogModelXml(catalogModel.id, catalogModel.name, catalogModel.formula,
 				catalogModel.modelClass, catalogModel.dbuuid);
 		catalogModelXml.comment = catalogModel.comment;
-		PmmXmlDoc catalogModelDoc = new PmmXmlDoc(catalogModelXml);
+		final PmmXmlDoc catalogModelDoc = new PmmXmlDoc(catalogModelXml);
 		outTuple.setValue(Model1Schema.ATT_MODELCATALOG, catalogModelDoc);
 
-		EstModel estModel = m1DataTuple.getEstModel();
-		EstModelXml estModelXml = new EstModelXml(estModel.id, estModel.name, estModel.sse, estModel.rms, estModel.r2,
+		final EstModel estModel = m1DataTuple.getEstModel();
+		final EstModelXml estModelXml = new EstModelXml(estModel.id, estModel.name, estModel.sse, estModel.rms, estModel.r2,
 				estModel.aic, estModel.bic, estModel.dof, true, estModel.qualityScore, estModel.dbuuid);
 		estModelXml.comment = estModel.comment;
-		PmmXmlDoc estModelDoc = new PmmXmlDoc(estModelXml);
+		final PmmXmlDoc estModelDoc = new PmmXmlDoc(estModelXml);
 		outTuple.setValue(Model1Schema.ATT_ESTMODEL, estModelDoc);
 
-		Dep dep = m1DataTuple.getDep();
-		DepXml depXml = new DepXml(dep.name, dep.origname, dep.category, dep.unit, dep.description);
+		final Dep dep = m1DataTuple.getDep();
+		final DepXml depXml = new DepXml(dep.name, dep.origname, dep.category, dep.unit, dep.description);
 		depXml.min = dep.min;
 		depXml.max = dep.max;
 		outTuple.setValue(Model1Schema.ATT_DEPENDENT, new PmmXmlDoc(depXml));
 
-		PmmXmlDoc paramDoc = new PmmXmlDoc();
-		ParamList paramList = m1DataTuple.getParams();
-		for (Param param : paramList.getParams()) {
-			HashMap<String, Double> correlations = new HashMap<>();
+		final PmmXmlDoc paramDoc = new PmmXmlDoc();
+		final ParamList paramList = m1DataTuple.getParams();
+		for (final Param param : paramList.getParams()) {
+			final HashMap<String, Double> correlations = new HashMap<>();
 			if (param.correlationNames != null && param.correlationValues != null) {
 				for (int i = 0; i < param.correlationNames.length; i++) {
-					String correlationName = param.correlationNames[i];
-					Double correlationValue = param.correlationValues[i];
+					final String correlationName = param.correlationNames[i];
+					final Double correlationValue = param.correlationValues[i];
 					correlations.put(correlationName, correlationValue);
 				}
 			}
-			ParamXml paramXml = new ParamXml(param.name, param.origName, param.isStart, param.value,
+			final ParamXml paramXml = new ParamXml(param.name, param.origName, param.isStart, param.value,
 					param.error, param.min, param.max, param.p, param.t, param.minGuess,
 					param.maxGuess, param.category, param.unit, param.description, correlations);
 			paramDoc.add(paramXml);
 		}
 		outTuple.setValue(Model1Schema.ATT_PARAMETER, paramDoc);
 
-		PmmXmlDoc indepDoc = new PmmXmlDoc();
-		IndepList indepList = m1DataTuple.getIndeps();
-		for (Indep indep : indepList.getIndeps()) {
-			IndepXml indepXml = new IndepXml(indep.name, indep.origname, indep.min, indep.max, indep.category,
+		final PmmXmlDoc indepDoc = new PmmXmlDoc();
+		final IndepList indepList = m1DataTuple.getIndeps();
+		for (final Indep indep : indepList.getIndeps()) {
+			final IndepXml indepXml = new IndepXml(indep.name, indep.origname, indep.min, indep.max, indep.category,
 					indep.unit, indep.description);
 			indepDoc.add(indepXml);
 		}
 		outTuple.setValue(Model1Schema.ATT_INDEPENDENT, indepDoc);
 
-		PmmXmlDoc mLitDoc = new PmmXmlDoc();
-		for (Literature literature : m1DataTuple.getmLit().getLiterature()) {
+		final PmmXmlDoc mLitDoc = new PmmXmlDoc();
+		for (final Literature literature : m1DataTuple.getmLit().getLiterature()) {
 			mLitDoc.add(new LiteratureItem(literature.author, literature.year, literature.title,
 					literature.abstractText, literature.journal, literature.volume, literature.issue, literature.page,
 					literature.approvalMode, literature.website, literature.type, literature.comment, literature.id,
@@ -660,8 +666,8 @@ public final class ModelEditorNodeModel
 		}
 		outTuple.setValue(Model1Schema.ATT_MLIT, mLitDoc);
 
-		PmmXmlDoc emLitDoc = new PmmXmlDoc();
-		for (Literature literature : m1DataTuple.getEmLit().getLiterature()) {
+		final PmmXmlDoc emLitDoc = new PmmXmlDoc();
+		for (final Literature literature : m1DataTuple.getEmLit().getLiterature()) {
 			emLitDoc.add(new LiteratureItem(literature.author, literature.year, literature.title,
 					literature.abstractText, literature.journal, literature.volume, literature.issue, literature.page,
 					literature.approvalMode, literature.website, literature.type, literature.comment, literature.id,
@@ -669,7 +675,7 @@ public final class ModelEditorNodeModel
 		}
 		outTuple.setValue(Model1Schema.ATT_EMLIT, emLitDoc);
 
-		int dbWritableAsInt = m1DataTuple.isDatabaseWritable() ? 1 : 0;
+		final int dbWritableAsInt = m1DataTuple.isDatabaseWritable() ? 1 : 0;
 		outTuple.setValue(Model1Schema.ATT_DATABASEWRITABLE, dbWritableAsInt);
 
 		return outTuple;

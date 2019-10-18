@@ -93,11 +93,11 @@ class TestUtils {
 	}
 
 	static void compare(Misc obtained, Misc expected) {
-		assertThat(obtained.getId(), equalTo(expected.getId()));
-		assertThat(obtained.getName(), equalTo(expected.getName()));
-		assertThat(obtained.getDescription(), equalTo(expected.getDescription()));
-		assertThat(obtained.getValue(), equalTo(expected.getValue()));
-		assertThat(obtained.getCategories(), arrayContaining(expected.getCategories()));
+		assertThat(obtained.id, equalTo(expected.id));
+		assertThat(obtained.name, equalTo(expected.name));
+		assertThat(obtained.description, equalTo(expected.description));
+		assertThat(obtained.value, equalTo(expected.value));
+		assertThat(obtained.categories, arrayContaining(expected.categories));
 	}
 
 	static void compare(Param obtained, Param expected) {
