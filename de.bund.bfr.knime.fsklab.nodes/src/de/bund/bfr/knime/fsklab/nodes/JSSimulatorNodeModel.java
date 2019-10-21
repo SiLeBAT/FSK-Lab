@@ -21,10 +21,8 @@ package de.bund.bfr.knime.fsklab.nodes;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.knime.core.node.CanceledExecutionException;
@@ -43,6 +41,7 @@ import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowEvent;
 import org.knime.core.util.FileUtil;
+import org.knime.core.util.Pair;
 import org.knime.js.core.node.AbstractWizardNodeModel;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -352,32 +351,18 @@ class JSSimulatorNodeModel
     final File settingFolder = new File(settingFolderPath);
 
     // Read configuration strings
-    String simulationString = NodeUtils.readConfigString(settingFolder, "simulations.json");
+    final String simulationString = NodeUtils.readConfigString(settingFolder, "simulations.json");
 
     // Update view value
-    if (!StringUtils.isBlank(simulationString)) {
-      final String selectedIndex = simulationString.split(">>><<<")[0];
-      getViewValue().selectedSimulationIndex = Integer.parseInt(selectedIndex);
-      simulationString = simulationString.split(">>><<<")[1];
+    final JSSimulatorViewValue viewValue = getViewValue();
 
-      final List<JSSimulation> simulations = new ArrayList<JSSimulation>();
-      final JSSimulatorViewValue viewValue = getViewValue();
-      final List<String> listOfSimulations = Arrays.asList(simulationString.split("<<<>>>"));
+    // Parse simulation string and update view Value
+    final Pair<Integer, List<JSSimulation>> simulationsInfo =
+        SimulationSetting.from(simulationString);
+    viewValue.selectedSimulationIndex = simulationsInfo.getFirst();
+    viewValue.simulations = simulationsInfo.getSecond();
 
-      listOfSimulations.forEach(lineOfSimulation -> {
-        final String[] oneSimualtion = lineOfSimulation.split("  ,:  ");
-
-        if (oneSimualtion != null && oneSimualtion.length == 2) {
-          final JSSimulation jsSim = new JSSimulation();
-          jsSim.name = oneSimualtion[0];
-          jsSim.values = Arrays.asList(oneSimualtion[1].split(":::"));
-          simulations.add(jsSim);
-        }
-
-      });
-      viewValue.simulations = simulations;
-      viewValue.modelMath = NodeUtils.readConfigString(settingFolder, "modelMath.json");
-    }
+    viewValue.modelMath = NodeUtils.readConfigString(settingFolder, "modelMath.json");
   }
 
   protected void saveJsonSetting(List<JSSimulation> simulationList, String modelMath)
@@ -398,9 +383,8 @@ class JSSimulatorNodeModel
       settingFolder.mkdir();
     }
 
-    String joinedSimulations = "" + getViewValue().selectedSimulationIndex + ">>><<<";
-    joinedSimulations += simulationList.stream().map(simulation -> simulation.buildStringValue())
-        .collect(Collectors.joining("<<<>>>"));
+    final String joinedSimulations = SimulationSetting
+        .toString(new Pair<>(getViewValue().selectedSimulationIndex, simulationList));
     NodeUtils.writeConfigString(joinedSimulations, settingFolder, "simulations.json");
     NodeUtils.writeConfigString(modelMath, settingFolder, "modelMath.json");
   }

@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
  * It contains the simulation name and the parameter values.
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-class JSSimulatorViewValue extends JSONViewContent {
+public class JSSimulatorViewValue extends JSONViewContent {
 
   List<JSSimulation> simulations;
   int selectedSimulationIndex = 0;
@@ -67,11 +67,11 @@ class JSSimulatorViewValue extends JSONViewContent {
   }
 
   @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-  static class JSSimulation {
+  public static class JSSimulation {
 
-    String name;
+    public String name;
 
-    List<String> values = new ArrayList<>();
+    public List<String> values = new ArrayList<>();
 
     @Override
     public boolean equals(Object obj) {
