@@ -93,9 +93,5 @@ public class JSSimulatorViewValue extends JSONViewContent {
     public int hashCode() {
       return Objects.hash(name, values);
     }
-
-    public String buildStringValue() {
-      return name +"  ,:  "+ String.join(":::", values);
-    }
   }
 }
