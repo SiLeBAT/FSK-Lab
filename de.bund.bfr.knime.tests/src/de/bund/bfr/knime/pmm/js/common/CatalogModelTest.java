@@ -13,7 +13,7 @@ import de.bund.bfr.knime.pmm.common.CatalogModelXml;
 @SuppressWarnings("static-method")
 public class CatalogModelTest {
 
-	private static CatalogModel catalogModel;
+	static CatalogModel catalogModel;
 	static {
 		catalogModel = new CatalogModel();
 		catalogModel.id = 77;

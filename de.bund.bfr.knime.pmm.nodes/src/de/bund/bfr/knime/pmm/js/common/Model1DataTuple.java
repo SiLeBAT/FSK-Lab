@@ -6,7 +6,6 @@ import org.knime.core.node.NodeSettingsWO;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.common.base.Strings;
 
 @JsonAutoDetect
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
@@ -32,195 +31,27 @@ public class Model1DataTuple implements ViewValue {
 	private static final String EMLIT = "EM_Literatur";
 	private static final String DATABASEWRITABLE = "DatabaseWritable";
 
-	private Integer condId;
-	private Integer globalModelId;
-	private String combaseId;
-	private Agent agent = new Agent();
-	private Matrix matrix = new Matrix();
-	private TimeSeriesList timeSeriesList = new TimeSeriesList();
-	private MiscList miscList = new MiscList();
-	private MdInfo mdInfo = new MdInfo();
-	private LiteratureList litMd = new LiteratureList();
-	private String dbuuid;
-	private CatalogModel catModel = new CatalogModel();
-	private CatalogModel catModelSec = new CatalogModel();
-	private EstModel estModel = new EstModel();
-	private Dep dep = new Dep();
-	private ParamList params = new ParamList();
-	private ParamList paramsSec = new ParamList();
-	private IndepList indeps = new IndepList();
-	private IndepList indepsSec = new IndepList();
-	private LiteratureList mLit = new LiteratureList();
-	private LiteratureList emLit = new LiteratureList();
-	private Boolean databaseWritable;
-
-	public Integer getCondId() {
-		return condId;
-	}
-
-	public Integer getGlobalModelId() {
-		return globalModelId;
-	};
-	
-	public String getCombaseId() {
-		return combaseId;
-	}
-
-	public Agent getAgent() {
-		return agent;
-	}
-
-	public Matrix getMatrix() {
-		return matrix;
-	}
-
-	public TimeSeriesList getTimeSeriesList() {
-		return timeSeriesList;
-	}
-
-	public MiscList getMiscList() {
-		return miscList;
-	}
-
-	public MdInfo getMdInfo() {
-		return mdInfo;
-	}
-
-	public LiteratureList getLitMd() {
-		return litMd;
-	}
-
-	public String getDbuuid() {
-		return dbuuid;
-	}
-
-	public CatalogModel getCatModel() {
-		return catModel;
-	}
-	
-	public CatalogModel getCatModelSec() {
-		return catModelSec;
-	}
-
-	public EstModel getEstModel() {
-		return estModel;
-	}
-
-	public Dep getDep() {
-		return dep;
-	}
-
-	public ParamList getParams() {
-		return params;
-	}		
-	
-	public ParamList getParamsSec() {
-		return paramsSec;
-	}
-
-	public IndepList getIndeps() {
-		return indeps;
-	}
-	
-	public IndepList getIndepsSec() {
-		return indepsSec;
-	}
-
-	public LiteratureList getmLit() {
-		return mLit;
-	}
-
-	public LiteratureList getEmLit() {
-		return emLit;
-	}
-
-	public Boolean isDatabaseWritable() {
-		return databaseWritable;
-	}
-
-	public void setCondId(final Integer condId) {
-		this.condId = condId;
-	}
-	
-	public void setGlobalModelId(final Integer globalModelId) {
-		this.globalModelId = globalModelId;
-	};
-
-	public void setCombaseId(final String combaseId) {
-		this.combaseId = Strings.emptyToNull(combaseId);
-	}
-
-	public void setAgent(final Agent agent) {
-		this.agent = agent;
-	}
-
-	public void setMatrix(final Matrix matrix) {
-		this.matrix = matrix;
-	}
-
-	public void setTimeSeriesList(final TimeSeriesList timeSeriesList) {
-		this.timeSeriesList = timeSeriesList;
-	}
-
-	public void setMiscList(final MiscList miscList) {
-		this.miscList = miscList;
-	}
-
-	public void setMdInfo(final MdInfo mdInfo) {
-		this.mdInfo = mdInfo;
-	}
-
-	public void setLitMd(final LiteratureList litMd) {
-		this.litMd = litMd;
-	}
-
-	public void setDbuuid(final String dbuuid) {
-		this.dbuuid = Strings.emptyToNull(dbuuid);
-	}
-
-	public void setCatModel(final CatalogModel catModel) {
-		this.catModel = catModel;
-	}
-	
-	public void setCatModelSec(final CatalogModel catModelSec) {
-		this.catModelSec = catModelSec;
-	}
-
-	public void setEstModel(final EstModel estModel) {
-		this.estModel = estModel;
-	}
-
-	public void setDep(final Dep dep) {
-		this.dep = dep;
-	}
-
-	public void setParams(final ParamList params) {
-		this.params = params;
-	}
-	
-	public void setParamsSec(final ParamList params) {
-		this.paramsSec = params;
-	}
-
-	public void setIndeps(final IndepList indeps) {
-		this.indeps = indeps;
-	}
-	
-	public void setIndepsSec(final IndepList indepsSec) {
-		this.indepsSec = indepsSec;
-	}
-
-	public void setmLit(final LiteratureList mLit) {
-		this.mLit = mLit;
-	}
-
-	public void setEmLit(final LiteratureList emLit) {
-		this.emLit = emLit;
-	}
-
-	public void setDatabaseWritable(final Boolean databaseWritable) {
-		this.databaseWritable = databaseWritable;
-	}
+	public Integer condId;
+	public Integer globalModelId;
+	public String combaseId;
+	public Agent agent = new Agent();
+	public Matrix matrix = new Matrix();
+	public TimeSeriesList timeSeriesList = new TimeSeriesList();
+	public MiscList miscList = new MiscList();
+	public MdInfo mdInfo = new MdInfo();
+	public LiteratureList litMd = new LiteratureList();
+	public String dbuuid;
+	public CatalogModel catModel = new CatalogModel();
+	public CatalogModel catModelSec = new CatalogModel();
+	public EstModel estModel = new EstModel();
+	public Dep dep = new Dep();
+	public ParamList params = new ParamList();
+	public ParamList paramsSec = new ParamList();
+	public IndepList indeps = new IndepList();
+	public IndepList indepsSec = new IndepList();
+	public LiteratureList mLit = new LiteratureList();
+	public LiteratureList emLit = new LiteratureList();
+	public Boolean databaseWritable;
 
 	@Override
 	public void saveToNodeSettings(NodeSettingsWO settings) {
