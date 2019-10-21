@@ -156,14 +156,14 @@ public class SwaggerGenericSheetImporter  {
 		}
 
 		try {
-			Contact author = retrieveCreator(sheet.getRow(3));
+			Contact author = retrieveAuthor(sheet.getRow(3));
 			information.addAuthorItem(author);
 		} catch (Exception exception) {
 		}
 
 		for (int numRow = GI_CREATOR_ROW; numRow < (GI_CREATOR_ROW + 5); numRow++) {
 			try {
-				Contact contact = retrieveAuthor(sheet.getRow(numRow));
+				Contact contact = retrieveCreator(sheet.getRow(numRow));
 				information.addCreatorItem(contact);
 			} catch (Exception exception) {
 			}
@@ -257,6 +257,7 @@ public class SwaggerGenericSheetImporter  {
 				Parameter param = retrieveParameter(row);
 				math.addParameterItem(param);
 			} catch (Exception exception) {
+				System.out.println(exception.getMessage());
 				// ...
 			}
 		}
@@ -1129,17 +1130,26 @@ public class SwaggerGenericSheetImporter  {
 
 		Cell maxCell = row.getCell(Y);
 		if (maxCell.getCellType() != Cell.CELL_TYPE_BLANK) {
-			param.setMaxValue(maxCell.getStringCellValue());
+			if(maxCell.getCellType() != Cell.CELL_TYPE_STRING)
+				param.setMaxValue(String.valueOf(maxCell.getNumericCellValue()));
+			else param.setMaxValue(maxCell.getStringCellValue());
+			
 		}
+		
+		
 
 		Cell minCell = row.getCell(Z);
 		if (minCell.getCellType() != Cell.CELL_TYPE_BLANK) {
-			param.setMinValue(minCell.getStringCellValue());
+			if(minCell.getCellType() != Cell.CELL_TYPE_STRING)
+				param.setMinValue(String.valueOf(minCell.getNumericCellValue()));
+			else param.setMinValue(minCell.getStringCellValue());
 		}
 
 		Cell errorCell = row.getCell(AA);
 		if (errorCell.getCellType() != Cell.CELL_TYPE_BLANK) {
-			param.setError(errorCell.getStringCellValue());
+			if(errorCell.getCellType() != Cell.CELL_TYPE_STRING)
+				param.setError(String.valueOf(errorCell.getNumericCellValue()));
+			else param.setError(errorCell.getStringCellValue());
 		}
 
 		return param;

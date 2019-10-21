@@ -62,6 +62,7 @@ import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
+import de.bund.bfr.metadata.swagger.DataModel;
 import de.bund.bfr.metadata.swagger.DoseResponseModel;
 import de.bund.bfr.metadata.swagger.ExposureModel;
 import de.bund.bfr.metadata.swagger.GenericModel;
@@ -97,6 +98,7 @@ import metadata.StringObject;
 import metadata.Study;
 import metadata.StudySample;
 import metadata.SwaggerConsumptionSheetImporter;
+import metadata.SwaggerDataModelSheetImporter;
 import metadata.SwaggerDoseResponseSheetImporter;
 import metadata.SwaggerExposureSheetImporter;
 import metadata.SwaggerGenericSheetImporter;
@@ -225,7 +227,8 @@ class CreatorNodeModel extends NoInternalsModel {
                
               
             
-          }else { //RAKIP 1.03
+          }else { 
+            //SWAGGER 1.0.4
             if(sheet.getSheetName().equals("Generic Metadata Schema") ) {
               SwaggerGenericSheetImporter importer = new SwaggerGenericSheetImporter();
               GenericModel gm = new GenericModel();
@@ -362,6 +365,20 @@ class CreatorNodeModel extends NoInternalsModel {
               SwaggerHealthModelSheetImporter importer = new SwaggerHealthModelSheetImporter();
               HealthModel gm = new HealthModel();
               gm.setModelType("healthModel");
+              gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
+              gm.setScope(importer.retrieveScope(sheet));
+              gm.setDataBackground(importer.retrieveBackground(sheet));
+              gm.setModelMath(importer.retrieveModelMath(sheet));
+
+              modelMetadata = gm;
+
+            }  // end if     
+            
+            // Data Model
+            if(sheet.getSheetName().equals("(Data)") ) {
+              SwaggerDataModelSheetImporter importer = new SwaggerDataModelSheetImporter();
+              DataModel gm = new DataModel();
+              gm.setModelType("dataModel");
               gm.setGeneralInformation(importer.retrieveGeneralInformation(sheet));
               gm.setScope(importer.retrieveScope(sheet));
               gm.setDataBackground(importer.retrieveBackground(sheet));

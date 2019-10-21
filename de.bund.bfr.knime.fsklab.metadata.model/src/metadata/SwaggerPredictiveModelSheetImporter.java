@@ -100,12 +100,12 @@ public class SwaggerPredictiveModelSheetImporter  {
 	 protected int MODEL_CATEGORY__CLASS_COMMENT = 29;
 	 protected int MODEL_CATEGORY__BASIC_PROCESS = 30;
 
-	 protected int QUALITY_MEASURES__SSE = 105;
-	 protected int QUALITY_MEASURES__MSE = 106;
-	 protected int QUALITY_MEASURES__RMSE = 107;
-	 protected int QUALITY_MEASURES__RSQUARE = 108;
-	 protected int QUALITY_MEASURES__AIC = 109;
-	 protected int QUALITY_MEASURES__BIC = 110;
+	 protected int QUALITY_MEASURES__SSE = 104;
+	 protected int QUALITY_MEASURES__MSE = 105;
+	 protected int QUALITY_MEASURES__RMSE = 106;
+	 protected int QUALITY_MEASURES__RSQUARE = 107;
+	 protected int QUALITY_MEASURES__AIC = 108;
+	 protected int QUALITY_MEASURES__BIC = 109;
 
 	 protected int SCOPE__GENERAL_COMMENT = 60;
 	 protected int SCOPE__TEMPORAL_INFORMATION = 61;
@@ -1006,19 +1006,25 @@ public class SwaggerPredictiveModelSheetImporter  {
 
 		Cell maxCell = row.getCell(Y);
 		if (maxCell.getCellType() != Cell.CELL_TYPE_BLANK) {
-			param.setMaxValue(maxCell.getStringCellValue());
+			if(maxCell.getCellType() != Cell.CELL_TYPE_STRING)
+				param.setMaxValue(String.valueOf(maxCell.getNumericCellValue()));
+			else param.setMaxValue(maxCell.getStringCellValue());
+			
 		}
-
+		
 		Cell minCell = row.getCell(Z);
 		if (minCell.getCellType() != Cell.CELL_TYPE_BLANK) {
-			param.setMinValue(minCell.getStringCellValue());
+			if(minCell.getCellType() != Cell.CELL_TYPE_STRING)
+				param.setMinValue(String.valueOf(minCell.getNumericCellValue()));
+			else param.setMinValue(minCell.getStringCellValue());
 		}
 
 		Cell errorCell = row.getCell(AA);
 		if (errorCell.getCellType() != Cell.CELL_TYPE_BLANK) {
-			param.setError(errorCell.getStringCellValue());
+			if(errorCell.getCellType() != Cell.CELL_TYPE_STRING)
+				param.setError(String.valueOf(errorCell.getNumericCellValue()));
+			else param.setError(errorCell.getStringCellValue());
 		}
-
 		return param;
 	}
 

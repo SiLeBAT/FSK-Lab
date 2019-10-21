@@ -1026,17 +1026,24 @@ public class SwaggerDoseResponseSheetImporter{
 
 		Cell maxCell = row.getCell(X);
 		if (maxCell.getCellType() != Cell.CELL_TYPE_BLANK) {
-			param.setMaxValue(maxCell.getStringCellValue());
+			if(maxCell.getCellType() != Cell.CELL_TYPE_STRING)
+				param.setMaxValue(String.valueOf(maxCell.getNumericCellValue()));
+			else param.setMaxValue(maxCell.getStringCellValue());
+			
 		}
-
+		
 		Cell minCell = row.getCell(Y);
 		if (minCell.getCellType() != Cell.CELL_TYPE_BLANK) {
-			param.setMinValue(minCell.getStringCellValue());
+			if(minCell.getCellType() != Cell.CELL_TYPE_STRING)
+				param.setMinValue(String.valueOf(minCell.getNumericCellValue()));
+			else param.setMinValue(minCell.getStringCellValue());
 		}
 
 		Cell errorCell = row.getCell(Z);
 		if (errorCell.getCellType() != Cell.CELL_TYPE_BLANK) {
-			param.setError(errorCell.getStringCellValue());
+			if(errorCell.getCellType() != Cell.CELL_TYPE_STRING)
+				param.setError(String.valueOf(errorCell.getNumericCellValue()));
+			else param.setError(errorCell.getStringCellValue());
 		}
 
 		return param;
