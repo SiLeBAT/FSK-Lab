@@ -14,7 +14,7 @@ import de.bund.bfr.knime.pmm.common.EstModelXml;
 @SuppressWarnings("static-method")
 public class EstModelTest {
 
-	private static EstModel estModel;
+	static EstModel estModel;
 	static {
 		estModel = new EstModel();
 		estModel.id = 67;

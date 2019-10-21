@@ -146,4 +146,27 @@ class TestUtils {
 		assertThat(obtained.mathML_string, equalTo(expected.mathML_string));
 		assertThat(obtained.priority_for_display_in_GUI, equalTo(expected.priority_for_display_in_GUI));
 	}
+
+	static void compare(Model1DataTuple actual, Model1DataTuple expected) {
+
+		assertThat(actual.condId, equalTo(expected.condId));
+		assertThat(actual.combaseId, equalTo(expected.combaseId));
+		assertThat(actual.miscList.getMiscs().length, equalTo(expected.miscList.getMiscs().length));
+		compare(actual.agent, expected.agent);
+		compare(actual.matrix, expected.matrix);
+		assertThat(actual.timeSeriesList.getTimeSeries().length, equalTo(expected.timeSeriesList.getTimeSeries().length));
+		compare(actual.mdInfo, expected.mdInfo);
+		assertThat(actual.litMd.getLiterature().length, equalTo(expected.litMd.getLiterature().length));
+		assertThat(actual.dbuuid, equalTo(expected.dbuuid));
+		compare(actual.catModel, expected.catModel);
+		compare(actual.catModelSec, expected.catModelSec);
+		compare(actual.estModel, expected.estModel);
+		compare(actual.dep, expected.dep);
+		assertThat(actual.params.getParams().length, equalTo(expected.params.getParams().length));
+		assertThat(actual.indeps.getIndeps().length, equalTo(expected.indeps.getIndeps().length));
+		assertThat(actual.indepsSec.getIndeps().length, equalTo(expected.indepsSec.getIndeps().length));
+		assertThat(actual.mLit.getLiterature().length, equalTo(expected.mLit.getLiterature().length));
+		assertThat(actual.emLit.getLiterature().length, equalTo(expected.emLit.getLiterature().length));
+		assertThat(actual.databaseWritable, equalTo(expected.databaseWritable));
+	}
 }
