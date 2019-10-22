@@ -566,6 +566,8 @@ public class SwaggerUtil {
 			parameters = ((RiskModel) model).getModelMath().getParameter();
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			parameters = ((QraModel) model).getModelMath().getParameter();
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
+			parameters = ((HealthModel) model).getModelMath().getParameter();
 		} else {
 			parameters = null;
 		}
@@ -596,6 +598,8 @@ public class SwaggerUtil {
 			((ConsumptionModel) model).getModelMath().setParameter(pList);
 		} else if (modelType.equalsIgnoreCase("riskModel")) {
 			((RiskModel) model).getModelMath().setParameter(pList);
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
+			((HealthModel) model).getModelMath().setParameter(pList);
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			((QraModel) model).getModelMath().setParameter(pList);
 		}
@@ -629,6 +633,8 @@ public class SwaggerUtil {
 			language = ((RiskModel) model).getGeneralInformation().getLanguageWrittenIn();
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			language = ((QraModel) model).getGeneralInformation().getLanguageWrittenIn();
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
+			language = ((HealthModel) model).getGeneralInformation().getLanguageWrittenIn();
 		} else {
 			language = null;
 		}
@@ -663,6 +669,8 @@ public class SwaggerUtil {
 			name = ((RiskModel) model).getGeneralInformation().getName();
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			name = ((QraModel) model).getGeneralInformation().getName();
+		}  else if (modelType.equalsIgnoreCase("healthModel")) {
+			name = ((HealthModel) model).getGeneralInformation().getName();
 		} else {
 			name = null;
 		}
@@ -696,6 +704,8 @@ public class SwaggerUtil {
 			information = ((RiskModel) model).getGeneralInformation();
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			information = ((QraModel) model).getGeneralInformation();
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
+			information = ((HealthModel) model).getGeneralInformation();
 		} else {
 			information = null;
 		}
@@ -729,6 +739,8 @@ public class SwaggerUtil {
 			scope = ((RiskModel) model).getScope();
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			scope = ((QraModel) model).getScope();
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
+			scope = ((HealthModel) model).getScope();
 		} else {
 			scope = null;
 		}
@@ -762,6 +774,8 @@ public class SwaggerUtil {
 			background = ((RiskModel) model).getDataBackground();
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			background = ((QraModel) model).getDataBackground();
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
+			background = ((HealthModel) model).getDataBackground();
 		} else {
 			background = null;
 		}
@@ -795,6 +809,8 @@ public class SwaggerUtil {
 			math = ((RiskModel) model).getModelMath();
 		} else if (modelType.equalsIgnoreCase("qraModel")) {
 			math = ((QraModel) model).getModelMath();
+		} else if (modelType.equalsIgnoreCase("healthModel")) {
+			math = ((HealthModel) model).getModelMath();
 		} else {
 			math = null;
 		}

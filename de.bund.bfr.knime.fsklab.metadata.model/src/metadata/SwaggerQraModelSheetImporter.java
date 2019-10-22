@@ -137,10 +137,11 @@ public class SwaggerQraModelSheetImporter  {
 	protected int BG_EVENT_ROW = 108;
 	protected int BG_LABORATORY_ROW = 109;
 	protected int BG_ASSAY_ROW = 115;
-	protected int BG_QUALITY_MEAS_ROW = 124;
-	protected int BG_Model_EQ_ROW = 124;
+	protected int BG_QUALITY_MEAS_ROW = 123;
+	protected int BG_Model_EQ_ROW = 123;
 
 	protected int MM_PARAMETER_ROW = 133;
+	protected int MM_FITTING_PROCEDURE_ROW = 149;
 
 	 
 	public GenericModelDataBackground retrieveBackground(Sheet sheet) {
@@ -209,7 +210,12 @@ public class SwaggerQraModelSheetImporter  {
 		} catch (Exception exception) {
 			// ...
 		}
-
+		
+		Cell fittingProcedureCell = sheet.getRow(MM_FITTING_PROCEDURE_ROW).getCell(J);
+		if (fittingProcedureCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			math.setFittingProcedure(fittingProcedureCell.getStringCellValue());
+		}
+		
 		return math;		
 	}
 

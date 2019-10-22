@@ -138,6 +138,7 @@ public class SwaggerPredictiveModelSheetImporter  {
 	 protected int BG_Model_EQ_ROW = 104;
 
 	 protected int MM_PARAMETER_ROW = 114;
+		protected int MM_FITTING_PROCEDURE_ROW = 130;
 
 	 public PredictiveModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
 
@@ -270,7 +271,11 @@ public class SwaggerPredictiveModelSheetImporter  {
 		} catch (Exception exception) {
 			// ...
 		}
-
+		Cell fittingProcedureCell = sheet.getRow(MM_FITTING_PROCEDURE_ROW).getCell(J);
+		if (fittingProcedureCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			math.setFittingProcedure(fittingProcedureCell.getStringCellValue());
+		}
+		
 		return math;
 	}
 	public PredictiveModelDataBackground retrieveBackground(Sheet sheet) {

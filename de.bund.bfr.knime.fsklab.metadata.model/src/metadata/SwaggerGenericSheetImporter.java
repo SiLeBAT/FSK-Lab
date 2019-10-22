@@ -136,6 +136,8 @@ public class SwaggerGenericSheetImporter  {
 	 protected int BG_QUALITY_MEAS_ROW = 123;
 	 protected int BG_EVENT_ROW = 109;
 	 protected int MM_PARAMETER_ROW = 132;
+		protected int MM_FITTING_PROCEDURE_ROW = 149;
+
 	public GenericModelGeneralInformation retrieveGeneralInformation(Sheet sheet) {
 
 		final GenericModelGeneralInformation information = new GenericModelGeneralInformation();
@@ -267,7 +269,11 @@ public class SwaggerGenericSheetImporter  {
 		} catch (final Exception exception) {
 			// ...
 		}
-
+		Cell fittingProcedureCell = sheet.getRow(MM_FITTING_PROCEDURE_ROW).getCell(J);
+		if (fittingProcedureCell.getCellType() == Cell.CELL_TYPE_STRING) {
+			math.setFittingProcedure(fittingProcedureCell.getStringCellValue());
+		}
+		
 		return math;
 	}
 	public GenericModelDataBackground retrieveBackground(Sheet sheet) {

@@ -296,7 +296,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
             }  // end if         
             // Toxicological Model
-            if(sheet.getSheetName().equals("Toxicological reference value Model") ) {
+            if(sheet.getSheetName().startsWith("Toxic") ) {
               SwaggerToxicologicalSheetImporter importer = new SwaggerToxicologicalSheetImporter();
               ToxicologicalModel gm = new ToxicologicalModel();
               gm.setModelType("toxicologicalModel");
@@ -322,7 +322,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
             }  // end if         
             // Risk Model
-            if(sheet.getSheetName().equals("Risk Charact Model") ) {
+            if(sheet.getSheetName().startsWith("Risk") ) {
               SwaggerRiskModelSheetImporter importer = new SwaggerRiskModelSheetImporter();
               RiskModel gm = new RiskModel();
               gm.setModelType("riskModel");
@@ -348,7 +348,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
             }  // end if         
             // Consumption Model
-            if(sheet.getSheetName().equals("omsumption Model") ) {
+            if(sheet.getSheetName().startsWith("Consumption") ) {
               SwaggerConsumptionSheetImporter importer = new SwaggerConsumptionSheetImporter();
               ConsumptionModel gm = new ConsumptionModel();
               gm.setModelType("consumptionModel");
@@ -361,7 +361,7 @@ class CreatorNodeModel extends NoInternalsModel {
 
             }  // end if         
             // Health Model
-            if(sheet.getSheetName().equals("Health metrics Models") ) {
+            if(sheet.getSheetName().startsWith("Health") ) {
               SwaggerHealthModelSheetImporter importer = new SwaggerHealthModelSheetImporter();
               HealthModel gm = new HealthModel();
               gm.setModelType("healthModel");
