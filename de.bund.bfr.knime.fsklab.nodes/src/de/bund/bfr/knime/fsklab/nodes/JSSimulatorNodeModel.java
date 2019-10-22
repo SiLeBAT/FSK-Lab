@@ -54,7 +54,6 @@ import de.bund.bfr.knime.fsklab.FskSimulation;
 import de.bund.bfr.knime.fsklab.nodes.JSSimulatorViewValue.JSSimulation;
 import de.bund.bfr.metadata.swagger.Parameter;
 import de.bund.bfr.metadata.swagger.Parameter.ClassificationEnum;
-import metadata.ModelMath;
 import metadata.SwaggerUtil;
 
 class JSSimulatorNodeModel
@@ -172,19 +171,7 @@ class JSSimulatorNodeModel
         final List<JSSimulation> simulations = inObj.simulations.stream()
             .map(it -> toJSSimulation(it, parameters)).collect(Collectors.toList());
 
-        if (val.modelMath != null) {
-          final ModelMath modelMathFromSetting = getObjectFromJson(val.modelMath, ModelMath.class);
-          // TODO validate for setting save
-          /*
-           * if (!EcoreUtil.equals(modelMathFromSetting.getParameter(), parameters)) { // Convert
-           * FskSimulation(s) to JSSimulation(s) val.simulations = simulations;
-           *
-           * File directory = NodeContext.getContext().getWorkflowManager().getProjectWFM()
-           * .getContext().getCurrentLocation(); String containerName = nodeName + " (#" + nodeId +
-           * ") setting"; String settingFolderPath = directory.getPath().concat("/" +
-           * containerName); deleteSettingFolder(settingFolderPath); }
-           */
-        } else {
+        if (val.modelMath == null) {
           val.simulations = simulations;
           val.modelMath = FromOjectToJSON(SwaggerUtil.getModelMath(inObj.modelMetadata));
         }
