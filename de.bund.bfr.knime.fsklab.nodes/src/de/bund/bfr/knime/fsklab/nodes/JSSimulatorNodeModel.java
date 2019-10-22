@@ -36,7 +36,6 @@ import org.knime.core.node.port.PortObjectHolder;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.web.ValidationError;
-import org.knime.core.node.workflow.NativeNodeContainer;
 import org.knime.core.node.workflow.NodeContainer;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.WorkflowEvent;
@@ -189,24 +188,32 @@ class JSSimulatorNodeModel
     }
 
     exec.setProgress(1);
+    
+    // Listener to remove extra settings folder when the node is removed in the workflow.
     NodeContext.getContext().getWorkflowManager().addListener(event -> {
-      if (event.getType().equals(WorkflowEvent.Type.NODE_REMOVED)
-          && event.getOldValue() instanceof NativeNodeContainer) {
-        final NativeNodeContainer nnc = (NativeNodeContainer) event.getOldValue();
-        final File directory =
-            nnc.getDirectNCParent().getProjectWFM().getContext().getCurrentLocation();
-        final String nncnamewithId = nnc.getNameWithID();
-        if (nncnamewithId.equals(nameWithID)) {
 
-          final String settingFolderPath = directory.getPath().concat("/" + containerName);
-          final File settingFolder = new File(settingFolderPath);
-
-          if (settingFolder.exists()) {
-            FileUtil.deleteRecursively(settingFolder);
+      // Check event in the workflow. A node must be removed and the event must be a NodeContainer
+      if (event.getType() == WorkflowEvent.Type.NODE_REMOVED && event.getOldValue() instanceof NodeContainer) {
+      
+        // Get NodeContainer
+        final NodeContainer nodeContainer = (NodeContainer) event.getOldValue();
+        
+        // Check that the name of the node being removed is the same as the previously created simulator node
+        if (nodeContainer.getNameWithID().equals(nameWithID)) {
+          
+          // Get path to the workflow containing the node being removed
+          final File workflowDir = nodeContainer.getDirectNCParent().getProjectWFM().getContext()
+              .getCurrentLocation();
+          
+          // Get path to the extra settings folder of the node being removed
+          final File extraSettingsFolder = new File(workflowDir, containerName);
+          if (extraSettingsFolder.exists()) {
+            FileUtil.deleteRecursively(extraSettingsFolder);
           }
         }
       }
     });
+    
     return new PortObject[] {inObj};
   }
 
