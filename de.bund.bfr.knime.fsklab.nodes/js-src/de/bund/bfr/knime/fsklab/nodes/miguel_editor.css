@@ -2,3 +2,7 @@
     /* height: calc(100vh - 190px); */
     height: 100vh;
 }
+
+#viewContent {
+    padding: 5px;
+}
