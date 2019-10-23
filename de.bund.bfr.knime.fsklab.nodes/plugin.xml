@@ -92,6 +92,33 @@
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
      </webResourceBundle>
      
+	 <!-- JS and CSS for experimental editor (Miguel) -->
+     <webResourceBundle
+       debug="true"
+       name="FSK Editor JS"
+       usesDefine="true"
+       version="1.0.0"
+       webResourceBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle">
+       
+       <!-- JS and CSS code -->
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/miguel_editor.js"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/miguel_editor.js">
+       </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/miguel_editor.js" type="JAVASCRIPT" />
+       
+       <webResource
+         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/miguel_editor.css"
+         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/miguel_editor.css">
+       </webResource>
+       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/miguel_editor.css" type="CSS" />
+
+       <webDependency webResourceBundleID="jQuery_3.1.1"></webDependency>
+       <webDependency webResourceBundleID="codemirror"></webDependency>
+       <webDependency webResourceBundleID="bootstrap_4.3.1"></webDependency>
+       
+     </webResourceBundle>
+     
      <!-- JS and CSS code for Fsk Joiner node -->
      <webResourceBundle
        debug="true"
@@ -118,6 +145,7 @@
 	 </webResourceBundle>
 	 
 	 <!-- JS and CSS code for Fsk Editor JS node -->
+	 <!--
      <webResourceBundle
        debug="true"
        name="FSK Editor JS"
@@ -132,10 +160,10 @@
        
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/fskeditorjs/fskeditorjs.css" type="CSS" />
        <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/fskeditorjs/fskeditorjs.js" type="JAVASCRIPT" />
-       <!-- Dependencies -->
        <webDependency webResourceBundleID="fskeditor" />
 	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js" />
 	 </webResourceBundle>
+	 -->
 	 
 	 <webResourceBundle debug="true" name="Jointjs" version="1.0.0"
 	   webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjs">
@@ -301,5 +329,17 @@
       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/react/react-dom.min.js" type="JAVASCRIPT" />      
     </webResourceBundle>
     
+    <webResourceBundle debug="false" name="bootstrap4" usesDefine="true" version="4.3.1" webResourceBundleID="bootstrap_4.3.1">
+       <webResource relativePathSource="js-src/bootstrap-4.3.1/" relativePathTarget="js-src/bootstrap-4.3.1/"></webResource>
+       <importResource relativePath="js-src/bootstrap-4.3.1/bootstrap.bundle.min.js" type="JAVASCRIPT" />
+       <importResource relativePath="js-src/bootstrap-4.3.1/bootstrap.min.css" type="CSS" />
+    </webResourceBundle>
+    
+    <webResourceBundle debug="false" name="codemirror" usesDefine="true" version="" webResourceBundleID="codemirror">    
+      <webResource relativePathSource="js-src/codemirror/" relativePathTarget="codemirror"></webResource>
+	  <importResource relativePath="codemirror/codemirror.js" type="JAVASCRIPT" />
+	  <importResource relativePath="codemirror/codemirror.css" type="CSS" />
+	  <importResource relativePath="codemirror/r.js" type="JAVASCRIPT" />
+    </webResourceBundle>
   </extension>
 </plugin>
