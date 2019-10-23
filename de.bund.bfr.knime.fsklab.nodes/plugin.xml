@@ -101,22 +101,14 @@
        webResourceBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle">
        
        <!-- JS and CSS code -->
-       <webResource
-         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/miguel_editor.js"
-         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/miguel_editor.js">
-       </webResource>
-       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/miguel_editor.js" type="JAVASCRIPT" />
-       
-       <webResource
-         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/miguel_editor.css"
-         relativePathTarget="de/bund/bfr/knime/fsklab/nodes/miguel_editor.css">
-       </webResource>
-       <importResource relativePath="de/bund/bfr/knime/fsklab/nodes/miguel_editor.css" type="CSS" />
+       <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes" relativePathTarget="nodes" />
+       <importResource relativePath="nodes/miguel_editor.js" type="JAVASCRIPT" />
+       <importResource relativePath="nodes/miguel_editor_data.js" type="JAVASCRIPT" />
+       <importResource relativePath="nodes/miguel_editor.css" type="CSS" />
 
        <webDependency webResourceBundleID="jQuery_3.1.1"></webDependency>
        <webDependency webResourceBundleID="codemirror"></webDependency>
        <webDependency webResourceBundleID="bootstrap_4.3.1"></webDependency>
-       
      </webResourceBundle>
      
      <!-- JS and CSS code for Fsk Joiner node -->
