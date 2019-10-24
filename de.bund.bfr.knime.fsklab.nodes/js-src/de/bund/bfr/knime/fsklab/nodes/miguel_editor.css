@@ -1,6 +1,5 @@
 .CodeMirror {
-    /* height: calc(100vh - 190px); */
-    height: 100vh;
+    height: 100%;
 }
 
 #viewContent {
