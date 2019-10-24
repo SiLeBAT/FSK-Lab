@@ -106,9 +106,8 @@
        <importResource relativePath="nodes/miguel_editor_data.js" type="JAVASCRIPT" />
        <importResource relativePath="nodes/miguel_editor.css" type="CSS" />
 
-       <webDependency webResourceBundleID="jQuery_3.1.1"></webDependency>
        <webDependency webResourceBundleID="codemirror"></webDependency>
-       <webDependency webResourceBundleID="bootstrap_4.3.1"></webDependency>
+       <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
      </webResourceBundle>
      
      <!-- JS and CSS code for Fsk Joiner node -->

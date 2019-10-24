@@ -11,6 +11,10 @@ fskeditorjs = function() {
     var _readmeCodeMirror;
 
     view.init = function(representation, value) {
+      console.log(value.ModelMetaData);
+      console.log(JSON.parse(value.ModelMetaData));
+
+
         _rep = representation;
         _val = value;
 
@@ -26,54 +30,79 @@ fskeditorjs = function() {
 
         let bodyContent = `
 <div class="container-fluid">
-  <div class="row">
-    <div class="col">
-      <ul class="nav nav-tabs" id="viewTab" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="generalInformation-tab"
-             data-toggle="tab" href="#generalInformation" role="tab"
-             aria-controls="generalInformation" aria-selected="true">
-             <h3>General information</h3></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="modelScript-tab" data-toggle="tab"
-            href="#modelScript" role="tab" aria-controls="modelScript"
-            aria-selected="false"><h3>Model script</h3></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="visualizationScript-tab" data-toggle="tab"
-            href="#visualizationScript" role="tab"
-            aria-controls="visualizationScript" aria-selected="false">
-            <h3>Visualization script</h3>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="readme-tab" data-toggle="tab"
-            href="#readme" role="tab" aria-controls="readme"
-            aria-selected="false"><h3>README</h3></a>
-        </li>
+  <ul class="nav nav-tabs" id="viewTab" role="tablist">
+    <li role="presentation" class="active dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+        aria-haspopup="true" aria-expanded="false">
+        General information <span class="caret">
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="#generalInformation" aria-controls="generalInformation" role="button" data-toggle="tab">General</a></li>
+        <li><a href="#modelCategory" aria-controls="modelCategory" role="button" data-toggle="tab">Model category</a></li>
+        <li><a href="#modificationDate" aria-controls="modificationDate" role="button" data-toggle="tab">Modification date</a></li>
+        <li><a href="#author" aria-controls="author" role="button" data-toggle="tab">Author</a></li>
+        <li><a href="#creator" aria-controls="creator" role="button" data-toggle="tab">Creator</a></li>
+        <li><a href="#reference" aria-controls="reference" role="button" data-toggle="tab">Reference</a></li>
       </ul>
+    </li>
+    <li role="presentation" class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+        aria-haspopup="true" aria-expanded="false">
+        Scope <span class="caret">
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="#scopeGeneral" aria-controls="#scopeGeneral" role="button" data-toggle="tab">General</a></li>
+      </ul>
+    <li role="presentation">
+      <a href="#modelScript" aria-controls="modelScript" role="tab"
+        data-toggle="tab">Model script</a>
+    </li>
+    <li role="presentation">
+      <a href="#visualizationScript" aria-controls="visualizationScript"
+        role="tab" data-toggle="tab">Visualization script</a>
+    </li>
+    <li role="presentation">
+      <a href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
+    </li>
+  </ul>
 
-      <div class="tab-content" id="viewContent">
-        <div class="tab-pane fade show active" id="generalInformation"
-          role="tabpanel" aria-labelledby="generalInformation-tab">
-          ${createGeneralInformationForm()}
-          <!-- ${createGeneralInformationPanel()} -->
-        </div>
-        <div class="tab-pane fade show" id="modelScript" role="tabpanel"
-          aria-labelledby="modelScript-tab">
-          <textarea id="modelScriptArea" name="modelScriptArea">${_val.firstModelScript}</textarea>
-        </div>
-        <div class="tab-pane fade show" id="visualizationScript" role="tabpanel"
-          aria-labelledby="visualizationScript-tab">
-          <textarea id="visualizationScriptArea" name="visualizationScriptArea">${_val.firstModelViz}</textarea>
-        </div>
-        <div class="tab-pane fade show" id="readme" role="tabpanel"
-          aria-labelledby="readme-tab">
-          <textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>
-        </div>
-      </div>
+  <div class="tab-content" id="viewContent">
+    <div role="tabpanel" class="tab-pane active" id="generalInformation">
+      ${createGeneralInformationForm()}
+    </div>
 
+    <div role="tabpanel" class="tab-pane" id="modelCategory">
+      ${createModelCategory()}
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="modificationDate">
+      Modification date
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="author">
+      Author
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="creator">
+      Creator
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="reference">
+      Reference
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="scopeGeneral">Scope general</div>
+
+    <div role="tabpanel" class="tab-pane" id="modelScript">
+      <textarea id="modelScriptArea" name="modelScriptArea">${_val.firstModelScript}</textarea>    
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="visualizationScript">
+      <textarea id="visualizationScriptArea" name="visualizationScriptArea">${_val.firstModelViz}</textarea>    
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="readme">
+      <textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>
     </div>
   </div>
 </div>`;
@@ -162,21 +191,29 @@ fskeditorjs = function() {
     </form>`;
   }
 
-  function createGeneralInformationPanel() {
+  function createModelCategory() {
 
-    return `<ul class="nav nav-tabs flex-column">
-      <li class="nav-item">
-        <a class="nav-link active" id="generalInformationGeneral-tab"
-          data-toggle="tab" href="#generalInformation" role="tab"
-          aria-controls="generalInformation" aria-selected="true">General</a>
-      </li>
-      <li class="nav-item"><a class="nav-link" href="#">Model category</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Modification date</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Author</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Creators</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Reference</a></li>
-    </ul>
-    <div class="tab-content" id="generalInformationContent">
+    return `<div>
+      <span class="pull-right">
+        <button type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </button>
+      </span>
+      <table class="table">
+      <tr>
+        <th><input type="checkbox"></th>
+        <th>Model class</th>
+        <th>Model sub class</th>
+        <th>Model class comment</th>
+        <th>Basic process</th>
+      </tr>
+
+      </table>
     </div>`;
   }
+
+
 }();
