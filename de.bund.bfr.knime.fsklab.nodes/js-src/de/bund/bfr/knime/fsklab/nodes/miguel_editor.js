@@ -6,19 +6,40 @@ fskeditorjs = function() {
     var _rep;
     var _val;
 
+    var _metadata = {
+      generalInformation : {},
+      scope : {},
+      dataBackground : {},
+      modelMath : {}
+    };
+
     var _modelCodeMirror;
     var _visualizationCodeMirror;
     var _readmeCodeMirror;
 
     view.init = function(representation, value) {
-      console.log(value.ModelMetaData);
-      console.log(JSON.parse(value.ModelMetaData));
+      
+      _rep = representation;
+      _val = value;
 
+      if (!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == "") {
+        _metadata.generalInformation = {};
+        _metadata.scope = {};
+        _metadata.modelMath = {};
+        _metadata.dataBackground = {}
+      } else {
+        let metaData = JSON.parse(value.modelMetaData);
+        if (metaData) {
+          metaData = traverse(metaData);
+        }
+  
+        _metadata.generalInformation = metaData.generalInformation;
+        _metadata.scope = metaData.scope;
+        _metadata.modelMath = metaData.modelMath;
+        _metadata.dataBackground = metaData.dataBackground;
+      }      
 
-        _rep = representation;
-        _val = value;
-
-        createUI();
+      createUI();
     }
 
     view.getComponentValue = () => _val;
@@ -26,6 +47,35 @@ fskeditorjs = function() {
 
     return view;
 
+    /** Functions taken from the old editor to parse metadata. */
+    function isObj(obj) {
+      return obj ? obj.constructor.name === "Object" : false;
+    }
+
+    function traverse(obj) {
+      let keys = Object.keys(obj)
+      for (let i = 0; i < keys.length; ++i) {
+        let val = obj[keys[i]]
+        if (isObj(val)) {
+          traverse(val)
+        } else if (Array.isArray(val)) {
+          for (let j = 0; j < val.length; ++j) {
+            if (isObj(val[j]) && val[j] != null) {
+              traverse(val[j])
+            }else{
+              delete obj[keys[i]];
+            }
+          }
+        } else {
+          if(val == null){
+            delete obj[keys[i]]
+          }
+        }
+      }
+      return  obj;
+    }
+
+    /** UI code. */
     function createUI() {
 
         let bodyContent = `
@@ -76,15 +126,15 @@ fskeditorjs = function() {
     </div>
 
     <div role="tabpanel" class="tab-pane" id="modificationDate">
-      Modification date
+      ${createModificationDate()}
     </div>
 
     <div role="tabpanel" class="tab-pane" id="author">
-      Author
+      ${createAuthor()}
     </div>
 
     <div role="tabpanel" class="tab-pane" id="creator">
-      Creator
+      ${createCreator()}
     </div>
 
     <div role="tabpanel" class="tab-pane" id="reference">
@@ -112,8 +162,8 @@ fskeditorjs = function() {
 
         // Create code mirrors for text areas with scripts and readme
         _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
-        _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc")
-        _readmeCodeMirror = createCodeMirror("readmeArea", "htmlmixed")
+        _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
+        _readmeCodeMirror = createCodeMirror("readmeArea", "htmlmixed");
 
         // Every time a tab is shown
         $('.nav-tabs a').on('shown.bs.tab', () => {
@@ -124,7 +174,7 @@ fskeditorjs = function() {
         });
     }
 
-    // Create a CodeMirror for a given text area
+  // Create a CodeMirror for a given text area
 	function createCodeMirror(textAreaId, language) {
 		return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
 				{
@@ -134,86 +184,173 @@ fskeditorjs = function() {
 					mode: {'name': language}
 				});
   }
+
+  function createStringGroup(label, id, value, helperText) {
+    return `<div class="form-group row">
+      <label for="${id}" class="col-sm-2 col-form-label">${label}</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="${id}" value="${value}" placeholder="${helperText}">
+      </div>
+    </div>`;
+  }
+
+  function createCheckboxGroup(label, id, value, helperText) {
+    return `<div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="${id}" ${value ? "checked" : ""}>
+      <label class="form-check-label" for="${id}">${label}</label>
+    </div>`;
+  }
+
+  function createUrlGroup(label, id, value, helperText) {
+    return `<div class="form-group row">
+      <label for="${id}" class="col-sm-2 col-form-label">${label}</label>        
+      <div class="col-sm-10">
+        <input type="url" class="form-control" id="${id}" value="${value}" placeholder="${helperText}">
+      </div>
+    </div>`
+  }
+
+  function createDateGroup(label, id, value, helperText) {
+    return `<div class="form-group row">
+      <label for="${id}" class="col-sm-2 col-form-label">${label}</label>        
+      <div class="col-sm-10">
+        <input type="date" class="form-control" value="${value}" id="${id}">
+      </div>
+    </div>`
+  }
+
+  function createForm(formData) {
+    let value = _metadata.generalInformation[formData.id];
+    if (formData.type === 'text')        
+      return createStringGroup(formData.label, formData.id, value, formData.description);
+    if (formData.type === 'boolean')
+      return createCheckboxGroup(formData.label, formData.id, value, formData.description);
+    if (formData.type === 'url')
+      return createUrlGroup(formData.label, formData.id, value, formData.description);
+    if (formData.type === 'date')
+      return createDateGroup(formData.label, formData.id, value, formData.description)
+  }
+
+  /** Create a table with a single (data) column to edit a string array. */
+  function createStringTable(label) {
+    return `<div>
+    <span class="pull-right">
+      <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      </button>
+      <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </button>
+    </span>
+    <table class="table">
+      <tr>
+        <th><input type="checkbox"></th>
+        <th>${label}</th>
+      </tr>
+      <tr></tr>
+      </tr>
+    </table>
+   </div>`;
+  }
+
+  function createDateTable(label) {
+    return `<div>
+    <span class="pull-right">
+      <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      </button>
+      <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </button>
+    </span>
+    <table class="table">
+      <tr>
+        <th><input type="checkbox"></th>
+        <th>${label}</th>
+      </tr>
+      <tr></tr>
+    </table>
+   </div>`;
+  }
+
+  /**
+   * Create a Bootstrap 3 panel.
+   * - title: string
+   * - body: HTML string
+   */
+  function createPanel(title, body) {
+    return `<div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">${title}</h3>
+      </div>
+      <div class="panel-body">${body}</div>
+    </div>`;
+  }
   
   function createGeneralInformationForm() {
 
-    function createStringGroup(label, id, helperText) {
-      return `<div class="form-group row">
-        <label for="${id}" class="col-sm-2 col-form-label">${label}</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="${id}" placeholder="${helperText}">
-        </div>
-      </div>`;
+    let form = "<form>"
+    for (prop of ui['generalInformation']) {
+      form += createForm(prop);
     }
+    form += "</form>";
 
-    function createCheckboxGroup(label, id, helperText) {
-      return `<div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="${id}">
-        <label class="form-check-label" for="${id}">${label}</label>
-      </div>`;
-    }
-
-    function createUrlGroup(label, id, helperText) {
-      return `<div class="form-group row">
-        <label for="${id}" class="col-sm-2 col-form-label">${label}</label>        
-        <div class="col-sm-10">
-          <input type="url" class="form-control" id="${id}" placeholder="${helperText}">
-        </div>
-      </div>`
-    }
-
-    function createDateGroup(label, id, helperText) {
-      return `<div class="form-group row">
-        <label for="${id}" class="col-sm-2 col-form-label">${label}</label>        
-        <div class="col-sm-10">
-          <input type="date" class="form-control" value="" id="${id}">
-        </div>
-      </div>`
-    }
-
-    const generalInformationDescriptions = descriptions['generalInformation'];
-    
-    return `<form>
-    ${createStringGroup("Name", "generalInformationName", generalInformationDescriptions['name'])}
-    ${createStringGroup("Source", "generalInformationSource", generalInformationDescriptions['source'])}
-    ${createStringGroup("Identifier", "generalInformationIdentifier", generalInformationDescriptions['identifier'])}
-    ${createDateGroup("Creation date", "generalInformationCreationDate", generalInformationDescriptions['creationDate'])}
-    ${createStringGroup("Rights", "generalInformationRights", generalInformationDescriptions['rights'])}
-    ${createCheckboxGroup("Availability", "generalInformationAvailability", generalInformationDescriptions['availability'])}
-    ${createStringGroup("URL", "generalInformationUrl", generalInformationDescriptions['url'])}
-    ${createStringGroup("Format", "generalInformationFormat", generalInformationDescriptions['format'])}
-    ${createStringGroup("Language", "generalInformationLanguage", generalInformationDescriptions['language'])}
-    ${createStringGroup("Software", "generalInformationSoftware", generalInformationDescriptions['software'])}
-    ${createStringGroup("Language written in", "generalInformationLanguageWrittenIn", generalInformationDescriptions['languageWrittenIn'])}
-    ${createStringGroup("Status", "generalInformationStatus", generalInformationDescriptions['status'])}
-    ${createStringGroup("Objective", "generalInformationObjective", generalInformationDescriptions['objective'])}
-    ${createStringGroup("Description", "generalInformationDescription", generalInformationDescriptions['description'])}
-    </form>`;
+    return createPanel("General", form);
   }
 
   function createModelCategory() {
 
-    return `<div>
-      <span class="pull-right">
-        <button type="button" class="btn btn-default">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        </button>
-        <button type="button" class="btn btn-default">
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-        </button>
-      </span>
-      <table class="table">
-      <tr>
-        <th><input type="checkbox"></th>
-        <th>Model class</th>
-        <th>Model sub class</th>
-        <th>Model class comment</th>
-        <th>Basic process</th>
-      </tr>
+    let body = `<form>
+    ${createForm(ui.modelCategory[0])}
+    ${createForm(ui.modelCategory[1])}
+    </form>
+    ${createStringTable("Model sub class")}
+    ${createStringTable("Basic process")}`;
 
-      </table>
-    </div>`;
+    return createPanel("Model category", body);
   }
 
+  function createModificationDate() {
+    return createPanel("Modification date", createDateTable("Modification date"));
+  }
 
+  function createContactTable() {
+    return `<div>
+    <span class="pull-right">
+      <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+      </button>
+      <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </button>
+    </span>
+    <table class="table">
+      <tr>
+        <th><input type="checkbox"></th>
+        <th>Title</th>
+        <th>Family name</th>
+        <th>Given name</th>
+        <th>Email</th>
+        <th>Telephone</th>
+        <th>Street address</th>
+        <th>Country</th>
+        <th>Zip code<th>
+        <th>Region</th>
+        <th>Time zone</th>
+        <th>Gender</th>
+        <th>Note</th>
+        <th>Organization</th>
+      </tr>
+      <tr></tr>
+    </table>
+   </div>`;
+  }
+
+  function createAuthor() {
+    return createPanel("Author", createContactTable());
+  }
+
+  function createCreator() {
+    return createPanel("Creator", createContactTable());
+  }
 }();
