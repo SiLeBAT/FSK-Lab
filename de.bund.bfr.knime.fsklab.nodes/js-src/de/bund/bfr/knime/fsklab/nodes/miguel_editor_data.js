@@ -359,8 +359,7 @@ const ui = {
             "label": "Ind sum",
             "type": "text",
             "description": "Define if the parameter reported is an individual residue/analyte, a summed residue definition or part of a sum a summed residue definition"
-        }
-    ],
+        }],
     "populationGroup": [{
         "id": "name",
         "label": "Name",
@@ -421,6 +420,225 @@ const ui = {
         "label": "Season",
         "type": "text-array",
         "description": "Distribution of surveyed people according to the season (influence consumption pattern)"
-    }
-    ]
+    }],
+    "study": [{
+        "id": "identifier",
+        "label": "Identifier",
+        "type": "text",
+        "description": "A user-defined identifier for the study"
+    }, {
+        "id": "title",
+        "label": "Title",
+        "type": "text",
+        "description": "A title for the Study"
+    }, {
+        "id": "description",
+        "label": "Description",
+        "type": "text",
+        "description": "A brief description of the study aims"
+    }, {
+        "id": "designType",
+        "label": "Design type",
+        "type": "text",
+        "description": "The type of study design being employed"
+    }, {
+        "id": "assayMeasurementType",
+        "label": "Measurement type",
+        "type": "text",
+        "description": "The measurement being observed in this assay"
+    }, {
+        "id": "assayTechnologyType",
+        "label": "Technology type",
+        "type": "text",
+        "description": "The technology being employed to observe this measurement"
+    }, {
+        "id": "assayTechnologyPlatform",
+        "label": "Technology platform",
+        "type": "text",
+        "description": "The technology platform used"
+    }, {
+        "id": "accreditationProcedureForTheAssayTechnology",
+        "label": "Accreditation procedure",
+        "type": "text",
+        "description": "Accreditation procedure for the analytical method used"
+    }, {
+        "id": "protocolName",
+        "label": "Protocol name",
+        "type": "text",
+        "description": "The name of the protocol, e.g.Extraction Protocol"
+    }, {
+        "id": "protocolDescription",
+        "label": "Protocol description",
+        "type": "text",
+        "description": "A description of the Protocol"
+    }, {
+        "id": "protocolURI",
+        "label": "Protocol URI",
+        "type": "text",
+        "description": "A URI to link out to a publication, web page, etc. describing the protocol."
+    }, {
+        "id": "protocolVersion",
+        "label": "Protocol version",
+        "type": "text",
+        "description": "The version of the protocol used, where applicable"
+    }, {
+        "id": "protocolParametersName",
+        "label": "Parameters name",
+        "type": "text",
+        "description": "The parameters used when executing this protocol"
+    }, {
+        "id": "protocolComponentsName",
+        "label": "Components name",
+        "type": "text",
+        "description": "The components used when carrying out this protocol"
+    }, {
+        "id": "protocolComponentsType",
+        "label": "Components type",
+        "type": "text",
+        "description": ""
+    }],
+    "studySample": [{
+        "id": "sampleName",
+        "label": "Name",
+        "type": "text",
+        "description": "An unambiguous ID given to the samples used in the assay"
+    }, {
+        "id": "protocolOfSampleCollection",
+        "label": "Protocol",
+        "type": "text",
+        "description": "Additional protocol for sample and sample collection. Corresponds to the Protocol REF in ISA"
+    }, {
+        "id": "samplingStrategy",
+        "label": "Sampling strategy",
+        "type": "text",
+        "description": "Sampling strategy (ref. EUROSTAT - Typology of sampling strategy, version of July 2009)"
+    }, {
+        "id": "typeOfSamplingProgram",
+        "label": "Sampling program",
+        "type": "text",
+        "description": "Indicate the type of programm for which the samples have been collected"
+    }, {
+        "id": "samplingMethod",
+        "label": "Sampling method",
+        "type": "text",
+        "description": "Sampling method used to take the sample"
+    }, {
+        "id": "samplingPlan",
+        "label": "Sampling plan",
+        "type": "text",
+        "description": "Description of data collection technique (stratified or complex sampling (several stages))"
+    }, {
+        "id": "samplingWeight",
+        "label": "Sampling weight",
+        "type": "text",
+        "description": "Description of the method employed to compute sampling weight (nonresponse-adjusted weight)"
+    }, {
+        "id": "samplingSize",
+        "label": "Sampling size",
+        "type": "text",
+        "description": "Number of units, full participants, partial participants, eligibles, not eligible, unresolved (eligibility status not resolved)..."
+    }, {
+        "id": "lotSizeUnit",
+        "label": "Size unit",
+        "type": "text",
+        "description": "Unit in which the lot size is expressed"
+    }, {
+        "id": "samplingPoint",
+        "label": "Sampling point",
+        "type": "text",
+        "description": "Point in the food chain where the sample was taken. (Doc. ESTAT/F5/ES/155 “Data dictionary of activities of the establishments”)"
+    }],
+    "dietaryAssessmentMethod": [{
+        "id": "collectionTool",
+        "label": "Collection tool",
+        "type": "text",
+        "description": "Food diaries, interview, 24-hour recall interview, food propensy questionnaire, portion size measurement aids, eating outside questionnaire"
+    }, {
+        "id": "numberOfNonConsecutiveOneDay",
+        "label": "Non-consecutive one day",
+        "type": "text",
+        "description": "Number of non-consecutive one-day recorded"
+    }, {
+        "id": "softwareTool",
+        "label": "Software tool",
+        "type": "text",
+        "description": "Name of the software used to collect the data"
+    }, {
+        "id": "numberOfFoodItems",
+        "label": "Food items",
+        "type": "text",
+        "description": "Number of food items"
+    }, {
+        "id": "recordTypes",
+        "label": "Record types",
+        "type": "text-array",
+        "description": "Consumption occasion, mean of consumption, quantified and described as eaten, recipes for self-made"
+    }, {
+        "id": "foodDescriptors",
+        "label": "Food descriptors",
+        "type": "text-array",
+        "description": "Description using FoodEx2 facet"
+    }],
+    "laboratory": [{
+        "id": "name",
+        "label": "Name",
+        "type": "text",
+        "description": "Laboratory code (National laboratory code if available) or Laboratory name"
+    }, {
+        "id": "country",
+        "label": "Country",
+        "type": "text",
+        "description": "Country where the laboratory is placed. (ISO 3166-1-alpha-2)"
+    }, {
+        "id": "accreditation",
+        "label": "Accreditation",
+        "type": "text-array",
+        "description": "The laboratory accreditation to ISO/IEC 17025"
+    }],
+    "assay": [{
+        "id": "name",
+        "label": "Name",
+        "type": "text",
+        "description": "A name given to the assay"
+    }, {
+        "id": "description",
+        "label": "Description",
+        "type": "text",
+        "description": "General description of the assay. Corresponds to the Protocol REF in ISA"
+    }, {
+        "id": "moisturePercentage",
+        "label": "Moisture %",
+        "type": "text",
+        "description": "Percentage of moisture in the original sample"
+    }, {
+        "id": "fatPercentage",
+        "label": "Fat %",
+        "type": "text",
+        "description": "Percentage of fat in the original sample"
+    }, {
+        "id": "detectionLimit",
+        "label": "Detection limit",
+        "type": "text",
+        "description": "Limit of detection reported in the unit specified by the variable 'Hazard unit'"
+    }, {
+        "id": "quantificationLimit",
+        "label": "Quantification limit",
+        "type": "text",
+        "description": "Limit of quantification reported in the unit specified by the variable 'Hazard unit'"
+    }, {
+        "id": "leftCensoredData",
+        "label": "Censored data",
+        "type": "text",
+        "description": "Percentage of measures equal to LOQ and/or LOD"
+    }, {
+        "id": "contaminationRange",
+        "label": "Contamination range",
+        "type": "text",
+        "description": "Contamination range"
+    }, {
+        "id": "uncertaintyValue",
+        "label": "Uncertainty value",
+        "type": "text",
+        "description": "Indicate the expanded uncertainty (usually 95% confidence interval) value associated with the measurement expressed in the unit reported in the field 'Hazard unit'"
+    }]
 }
