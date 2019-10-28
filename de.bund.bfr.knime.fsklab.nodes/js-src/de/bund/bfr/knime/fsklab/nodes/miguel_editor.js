@@ -92,6 +92,11 @@ fskeditorjs = function () {
       { "id": "hazard", "label": "Hazard" },
       { "id": "population", "label": "Population group" },
       { "id": "spatialInformation", "label": "Spatial information" }])}
+    ${createSubMenu("Data Background", [{"id": "study", "label": "Study"},
+      {"id": "studySample", "label": "Study sample"},
+      {"id": "dietaryAssessmentMethod", "label": "Dietary assessment method"},
+      {"id": "laboratory", "label": "Laboratory"},
+      {"id": "assay", "label": "Assay"}])}
     <li role="presentation">
       <a href="#modelScript" aria-controls="modelScript" role="tab"
         data-toggle="tab">Model script</a>
@@ -127,6 +132,13 @@ fskeditorjs = function () {
     <div role="tabpanel" class="tab-pane" id="hazard">${createTablePanel("Hazard", "hazardDialog", ui['hazard'])}</div>
     <div role="tabpanel" class="tab-pane" id="population">${createTablePanel("Population group", "populationDialog", ui['populationGroup'])}</div>
     <div role="tabpanel" class="tab-pane" id="spatialInformation">${createStringTable("Spatial information", "spatialInformation")}</div>
+    <div role="tabpanel" class="tab-pane" id="study">${createStudy()}</div>
+    <div role="tabpanel" class="tab-pane" id="studySample">${createTablePanel("Study sample", "studySampleDialog", ui['studySample'])}</div>
+    <div role="tabpanel" class="tab-pane" id="dietaryAssessmentMethod">
+      ${createTablePanel("Dietary assessment method", "methodDialog", ui['dietaryAssessmentMethod'])}
+    </div>
+    <div role="tabpanel" class="tab-pane" id="laboratory">${createTablePanel("Laboratory", "laboratoryDialog", ui['laboratory'])}</div>
+    <div role="tabpanel" class="tab-pane" id="assay">${createTablePanel("Assay", "assayDialog", ui['assay'])}</div>
 
     <div role="tabpanel" class="tab-pane" id="modelScript">
       <textarea id="modelScriptArea" name="modelScriptArea">${_val.firstModelScript}</textarea>    
@@ -141,11 +153,15 @@ fskeditorjs = function () {
     </div>
   </div>
   <!-- Modal dialogs -->
-  ${createDialog("contactDialog", ui['contact'])}
-  ${createDialog("referenceDialog", ui['reference'])}
-  ${createDialog("productDialog", ui['product'])}
-  ${createDialog("hazardDialog", ui['hazard'])}
-  ${createDialog("populationDialog", ui['populationGroup'])}
+  ${createDialog("contactDialog", "Add contact", ui['contact'])}
+  ${createDialog("referenceDialog", "Add reference", ui['reference'])}
+  ${createDialog("productDialog", "Add product", ui['product'])}
+  ${createDialog("hazardDialog", "Add hazard", ui['hazard'])}
+  ${createDialog("populationDialog", "Add population group", ui['populationGroup'])}
+  ${createDialog("studySampleDialog", "Add study sample", ui['studySample'])}
+  ${createDialog("methodDialog", "Add method", ui['dietaryAssessmentMethod'])}
+  ${createDialog("laboratoryDialog", "Add laboratory", ui['laboratory'])}
+  ${createDialog("assayDialog", "Add assay", ui['assay'])}
 </div>`;
 
     document.createElement('body');
@@ -308,6 +324,11 @@ fskeditorjs = function () {
     return createPanel("Model category", body);
   }
 
+  function createStudy() {
+    let body = `<form>${ui['study'].map(prop => createForm(prop, "")).join("")}</form>`;
+    return createPanel("Study", body);
+  }
+
   /**
    * Create a Bootstrap 3 panel with controls in the heading and a table as body.
    * 
@@ -389,17 +410,18 @@ fskeditorjs = function () {
 
   /**
    * Creates a Bootstrap 3 modal dialog.
-   * @param {string} id ID of the modal dialog. 
-   * @param {object} formData Object holding the metadata properties.
+   * @param {string} id ID of the modal dialog
+   * @param {string} title Dialog title
+   * @param {object} formData Object holding the metadata properties
    */
-  function createDialog(id, formData) {
+  function createDialog(id, title, formData) {
     return `<div class="modal fade" id="${id}" taxindex="-1" role="dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span area-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title">Add reference</h4>
+          <h4 class="modal-title">${title}</h4>
         </div>
         <div class="modal-body">
           <form>${formData.map(prop => createForm(prop)).join("")}</form>
