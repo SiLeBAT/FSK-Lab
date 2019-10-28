@@ -1,108 +1,97 @@
-fskeditorjs = function() {
-    
-    const view = { version: "1.0.0" };
-    view.name = "Javascript FSK Editor";
+fskeditorjs = function () {
 
-    var _rep;
-    var _val;
+  const view = { version: "1.0.0" };
+  view.name = "Javascript FSK Editor";
 
-    var _metadata = {
-      generalInformation : {},
-      scope : {},
-      dataBackground : {},
-      modelMath : {}
-    };
+  var _rep;
+  var _val;
 
-    var _modelCodeMirror;
-    var _visualizationCodeMirror;
-    var _readmeCodeMirror;
+  var _metadata = {
+    generalInformation: {},
+    scope: {},
+    dataBackground: {},
+    modelMath: {}
+  };
 
-    view.init = function(representation, value) {
-      
-      _rep = representation;
-      _val = value;
+  var _modelCodeMirror;
+  var _visualizationCodeMirror;
+  var _readmeCodeMirror;
 
-      if (!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == "") {
-        _metadata.generalInformation = {};
-        _metadata.scope = {};
-        _metadata.modelMath = {};
-        _metadata.dataBackground = {}
-      } else {
-        let metaData = JSON.parse(value.modelMetaData);
-        if (metaData) {
-          metaData = traverse(metaData);
+  view.init = function (representation, value) {
+
+    _rep = representation;
+    _val = value;
+
+    if (!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == "") {
+      _metadata.generalInformation = {};
+      _metadata.scope = {};
+      _metadata.modelMath = {};
+      _metadata.dataBackground = {}
+    } else {
+      let metaData = JSON.parse(value.modelMetaData);
+      if (metaData) {
+        metaData = traverse(metaData);
+      }
+
+      _metadata.generalInformation = metaData.generalInformation;
+      _metadata.scope = metaData.scope;
+      _metadata.modelMath = metaData.modelMath;
+      _metadata.dataBackground = metaData.dataBackground;
+    }
+
+    createUI();
+  }
+
+  view.getComponentValue = () => _val;
+  view.validate = () => true;
+
+  return view;
+
+  /** Functions taken from the old editor to parse metadata. */
+  function isObj(obj) {
+    return obj ? obj.constructor.name === "Object" : false;
+  }
+
+  function traverse(obj) {
+    let keys = Object.keys(obj)
+    for (let i = 0; i < keys.length; ++i) {
+      let val = obj[keys[i]]
+      if (isObj(val)) {
+        traverse(val)
+      } else if (Array.isArray(val)) {
+        for (let j = 0; j < val.length; ++j) {
+          if (isObj(val[j]) && val[j] != null) {
+            traverse(val[j])
+          } else {
+            delete obj[keys[i]];
+          }
         }
-  
-        _metadata.generalInformation = metaData.generalInformation;
-        _metadata.scope = metaData.scope;
-        _metadata.modelMath = metaData.modelMath;
-        _metadata.dataBackground = metaData.dataBackground;
-      }      
-
-      createUI();
-    }
-
-    view.getComponentValue = () => _val;
-    view.validate = () => true;
-
-    return view;
-
-    /** Functions taken from the old editor to parse metadata. */
-    function isObj(obj) {
-      return obj ? obj.constructor.name === "Object" : false;
-    }
-
-    function traverse(obj) {
-      let keys = Object.keys(obj)
-      for (let i = 0; i < keys.length; ++i) {
-        let val = obj[keys[i]]
-        if (isObj(val)) {
-          traverse(val)
-        } else if (Array.isArray(val)) {
-          for (let j = 0; j < val.length; ++j) {
-            if (isObj(val[j]) && val[j] != null) {
-              traverse(val[j])
-            }else{
-              delete obj[keys[i]];
-            }
-          }
-        } else {
-          if(val == null){
-            delete obj[keys[i]]
-          }
+      } else {
+        if (val == null) {
+          delete obj[keys[i]]
         }
       }
-      return  obj;
     }
+    return obj;
+  }
 
-    /** UI code. */
-    function createUI() {
+  /** UI code. */
+  function createUI() {
 
-        let bodyContent = `
+    let bodyContent = `
 <div class="container-fluid">
   <ul class="nav nav-tabs" id="viewTab" role="tablist">
-    <li role="presentation" class="active dropdown">
-      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-        aria-haspopup="true" aria-expanded="false">
-        General information <span class="caret">
-      </a>
-      <ul class="dropdown-menu">
-        <li><a href="#generalInformation" aria-controls="generalInformation" role="button" data-toggle="tab">General</a></li>
-        <li><a href="#modelCategory" aria-controls="modelCategory" role="button" data-toggle="tab">Model category</a></li>
-        <li><a href="#modificationDate" aria-controls="modificationDate" role="button" data-toggle="tab">Modification date</a></li>
-        <li><a href="#author" aria-controls="author" role="button" data-toggle="tab">Author</a></li>
-        <li><a href="#creator" aria-controls="creator" role="button" data-toggle="tab">Creator</a></li>
-        <li><a href="#reference" aria-controls="reference" role="button" data-toggle="tab">Reference</a></li>
-      </ul>
-    </li>
-    <li role="presentation" class="dropdown">
-      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-        aria-haspopup="true" aria-expanded="false">
-        Scope <span class="caret">
-      </a>
-      <ul class="dropdown-menu">
-        <li><a href="#scopeGeneral" aria-controls="#scopeGeneral" role="button" data-toggle="tab">General</a></li>
-      </ul>
+    ${createSubMenu("General information", [{ "id": "generalInformation", "label": "General" },
+      { "id": "modelCategory", "label": "Model category" },
+      { "id": "modificationDate", "label": "Modification date" },
+      { "id": "author", "label": "Author" },
+      { "id": "creator", "label": "Creator" },
+      { "id": "reference", "label": "Reference" }], true)}
+    ${createSubMenu("Scope", [{ "id": "scopeGeneral", "label": "General" },
+      { "id": "product", "label": "Product" },
+      { "id": "hazard", "label": "Hazard" },
+      { "id": "population", "label": "Population group" },
+      { "id": "spatialInformation", "label": "Spatial information" }])}
     <li role="presentation">
       <a href="#modelScript" aria-controls="modelScript" role="tab"
         data-toggle="tab">Model script</a>
@@ -126,22 +115,18 @@ fskeditorjs = function() {
     </div>
 
     <div role="tabpanel" class="tab-pane" id="modificationDate">
-      ${createModificationDate()}
+      ${createPanel("Modification date", createDateTable("Modification date"))}
     </div>
 
-    <div role="tabpanel" class="tab-pane" id="author">
-      ${createAuthor()}
-    </div>
-
-    <div role="tabpanel" class="tab-pane" id="creator">
-      ${createCreator()}
-    </div>
-
-    <div role="tabpanel" class="tab-pane" id="reference">
-      Reference
-    </div>
+    <div role="tabpanel" class="tab-pane" id="author">${createTablePanel("Author", "contactDialog", ui['contact'])}</div>
+    <div role="tabpanel" class="tab-pane" id="creator">${createTablePanel("Creator", "contactDialog", ui['contact'])}</div>
+    <div role="tabpanel" class="tab-pane" id="reference">${createTablePanel("Reference", "referenceDialog", ui['reference'])}</div>
 
     <div role="tabpanel" class="tab-pane" id="scopeGeneral">Scope general</div>
+    <div role="tabpanel" class="tab-pane" id="product">${createTablePanel("Product", "productDialog", ui['product'])}</div>
+    <div role="tabpanel" class="tab-pane" id="hazard">${createTablePanel("Hazard", "hazardDialog", ui['hazard'])}</div>
+    <div role="tabpanel" class="tab-pane" id="population">${createTablePanel("Population group", "populationDialog", ui['populationGroup'])}</div>
+    <div role="tabpanel" class="tab-pane" id="spatialInformation">${createStringTable("Spatial information", "spatialInformation")}</div>
 
     <div role="tabpanel" class="tab-pane" id="modelScript">
       <textarea id="modelScriptArea" name="modelScriptArea">${_val.firstModelScript}</textarea>    
@@ -155,34 +140,58 @@ fskeditorjs = function() {
       <textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>
     </div>
   </div>
+  <!-- Modal dialogs -->
+  ${createDialog("contactDialog", ui['contact'])}
+  ${createDialog("referenceDialog", ui['reference'])}
+  ${createDialog("productDialog", ui['product'])}
+  ${createDialog("hazardDialog", ui['hazard'])}
+  ${createDialog("populationDialog", ui['populationGroup'])}
 </div>`;
 
-        document.createElement('body');
-        $('body').html(bodyContent);
+    document.createElement('body');
+    $('body').html(bodyContent);
 
-        // Create code mirrors for text areas with scripts and readme
-        _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
-        _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
-        _readmeCodeMirror = createCodeMirror("readmeArea", "htmlmixed");
+    // Create code mirrors for text areas with scripts and readme
+    _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
+    _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
+    _readmeCodeMirror = createCodeMirror("readmeArea", "htmlmixed");
 
-        // Every time a tab is shown
-        $('.nav-tabs a').on('shown.bs.tab', () => {
-            // Refresh code mirrors
-            _modelCodeMirror.refresh();
-            _visualizationCodeMirror.refresh();
-            _readmeCodeMirror.refresh();
-        });
-    }
+    // Every time a tab is shown
+    $('.nav-tabs a').on('shown.bs.tab', () => {
+      // Refresh code mirrors
+      _modelCodeMirror.refresh();
+      _visualizationCodeMirror.refresh();
+      _readmeCodeMirror.refresh();
+    });
+  }
+
+  /**
+   * Create a Bootstrap dropdown menu.
+   * @param {string} name Menu name 
+   * @param {array} submenus Array of hashes of id and name of the submenus. 
+   * @param {boolean} isActive If the menu is active initially.
+   */
+  function createSubMenu(name, submenus, isActive = false) {
+
+    return `<li role="presentation" class="${isActive ? "active" : ""} dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+        aria-haspopup="true" aria-expanded="false">${name}<span class="caret"></a>
+      <ul class="dropdown-menu">
+      ${submenus.map(entry => `<li><a href="#${entry.id}" aria-controls="#${entry.id}"
+        role="button" data-toggle="tab">${entry.label}</a></li>`).join("")}
+      </ul>
+    </li>`;
+  }
 
   // Create a CodeMirror for a given text area
-	function createCodeMirror(textAreaId, language) {
-		return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
-				{
-					lineNumbers: true,
-					lineWrapping: true,
-					extraKeys: {'Ctrl-Space': 'autocomplete'},
-					mode: {'name': language}
-				});
+  function createCodeMirror(textAreaId, language) {
+    return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
+      {
+        lineNumbers: true,
+        lineWrapping: true,
+        extraKeys: { 'Ctrl-Space': 'autocomplete' },
+        mode: { 'name': language }
+      });
   }
 
   function createStringGroup(label, id, value, helperText) {
@@ -219,10 +228,11 @@ fskeditorjs = function() {
     </div>`
   }
 
-  function createForm(formData) {
-    let value = _metadata.generalInformation[formData.id];
-    if (formData.type === 'text')        
+  function createForm(formData, value = "") {
+    if (formData.type === 'text')
       return createStringGroup(formData.label, formData.id, value, formData.description);
+    if (formData.type === 'text-array')
+      return createStringTable(formData.label, formData.id);
     if (formData.type === 'boolean')
       return createCheckboxGroup(formData.label, formData.id, value, formData.description);
     if (formData.type === 'url')
@@ -286,71 +296,119 @@ fskeditorjs = function() {
       <div class="panel-body">${body}</div>
     </div>`;
   }
-  
+
   function createGeneralInformationForm() {
 
-    let form = "<form>"
-    for (prop of ui['generalInformation']) {
-      form += createForm(prop);
-    }
-    form += "</form>";
-
+    let form = `<form>${ui['generalInformation'].map(prop => createForm(prop, _metadata.generalInformation[prop.id])).join("")}</form>`;
     return createPanel("General", form);
   }
 
   function createModelCategory() {
-
-    let body = `<form>
-    ${createForm(ui.modelCategory[0])}
-    ${createForm(ui.modelCategory[1])}
-    </form>
-    ${createStringTable("Model sub class")}
-    ${createStringTable("Basic process")}`;
-
+    let body = `<form>${ui['modelCategory'].map(prop => createForm(prop, "")).join("")}</form>`;
     return createPanel("Model category", body);
   }
 
-  function createModificationDate() {
-    return createPanel("Modification date", createDateTable("Modification date"));
+  /**
+   * Create a Bootstrap 3 panel with controls in the heading and a table as body.
+   * 
+   * @param {string} title Panel title
+   * @param {string} dialog ID of the dialog to add more items.
+   * @param {object} formData UI form data holding the metadata properties.
+   */
+  function createTablePanel(title, dialog, formData) {
+    return `<div class="panel panel-default">
+      <div class="panel-heading clearfix">
+        <h4 class="panel-title pull-left" style="padding-top:7.5px;">${title}</h4>
+        <div class="input-group">
+          <p class="pull-right" /> <!-- gutter -->
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#${dialog}">
+              <i class="glyphicon glyphicon-plus"></i>
+            </button>
+            <button class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+            <button class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>    
+          </div>
+        </div>
+      </div>
+      <table class="table">
+        <tr>
+          <th><input type="checkbox"></th>
+          ${formData.map(prop => `<th>${prop.label}</th>`).join("")}
+        </tr>
+      </table>
+    </div>`;
   }
 
-  function createContactTable() {
-    return `<div>
-    <span class="pull-right">
-      <button type="button" class="btn btn-default">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-      </button>
-      <button type="button" class="btn btn-default">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-      </button>
-    </span>
-    <table class="table">
-      <tr>
-        <th><input type="checkbox"></th>
-        <th>Title</th>
-        <th>Family name</th>
-        <th>Given name</th>
-        <th>Email</th>
-        <th>Telephone</th>
-        <th>Street address</th>
-        <th>Country</th>
-        <th>Zip code<th>
-        <th>Region</th>
-        <th>Time zone</th>
-        <th>Gender</th>
-        <th>Note</th>
-        <th>Organization</th>
-      </tr>
-      <tr></tr>
-    </table>
-   </div>`;
+  /**
+   * Create a Bootstrap 3 panel for control a list of strings.
+   * 
+   * @param {string} title Panel title
+   * @param {string} table ID to the table. This ID will be used later to update
+   * the table on an event.
+   */
+  function createStringTable(title, table) {
+    return `<div class="panel panel-default">
+      <div class="panel-heading clearfix">
+        <h4 class="panel-title pull-left" style="padding-top:7.5px;">${title}</h4>
+        <div class="input-group">
+          <p class="pull-right" /> <!-- gutter -->
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#">
+              <i class="glyphicon glyphicon-plus"></i>
+            </button>
+            <button class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+            <button class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>    
+          </div>
+        </div>
+      </div>
+      <table id="${table}" class="table"></table>
+    </div>`;
   }
 
-  function createAuthor() {
-    return createPanel("Author", createContactTable());
+  /**
+   * Create an inline table that adds rows without a dialog by pressing an add
+   * button.
+   */
+  function createInlineTable() {
+    return `<div class="panel panel-default">
+      <div class="panel-heading clearfix">
+          <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Panel header</h4>
+          <div class="input-group">
+            <p style="pull-right" />
+            <div class="input-group-btn">
+              <button class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
+              <button class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+            </div>
+          </div>
+      </div>
+      <div class="panel-body">
+          Panel content
+      </div>
+    </div>`;
   }
 
-  function createCreator() {
-    return createPanel("Creator", createContactTable());
+  /**
+   * Creates a Bootstrap 3 modal dialog.
+   * @param {string} id ID of the modal dialog. 
+   * @param {object} formData Object holding the metadata properties.
+   */
+  function createDialog(id, formData) {
+    return `<div class="modal fade" id="${id}" taxindex="-1" role="dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span area-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Add reference</h4>
+        </div>
+        <div class="modal-body">
+          <form>${formData.map(prop => createForm(prop)).join("")}</form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>`;
   }
 }();
