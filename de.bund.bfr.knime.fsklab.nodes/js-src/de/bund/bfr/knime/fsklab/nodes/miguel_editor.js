@@ -7,20 +7,21 @@ fskeditorjs = function () {
    * Create a div to edit string arrays.
    * 
    * ```
-   * <div>
-   *   <span class="pull-right">
-   *     <button type="button"></button>
-   *     <button type="button"></button>
-   *   </span>
-   *   <table class="table">
-   *     <thead>
-   *       <tr>
-   *         <th><input type="checkbox"></th>
-   *         <th>Label</th>
-   *       </tr>
-   *     </thead>
-   *     <tbody></tbody>
-   *   </table>
+   * <div class="panel panel-default">
+   *   <div class="panel-heading clearfix">
+   *     <h4 class="panel-title pull-left" style="padding-top:7.5px;">Title</h4>
+   *     <div class="input-group">
+   *       <p class="pull-right" /> <!-- gutter -->
+   *       <div class="input-group-btn">
+   *         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#">
+   *           <i class="glyphicon glyphicon-plus"></i>
+   *         </button>
+   *         <button class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+   *         <button class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>
+   *       </div>
+   *      </div>
+   *    </div>
+   *   <table id="${table}" class="table"></table>
    * </div>
    * ```
    */
@@ -32,48 +33,66 @@ fskeditorjs = function () {
     }
 
     _create(name, value, helperText) {
-      
-      let addSpan = document.createElement("span");
-      addSpan.classList.add("glyphicon", "glyphicon-plus");
-      addSpan.setAttribute("aria-hidden", "true");
+
+      // Create buttons with icons
+      let addIcon = document.createElement("i");
+      addIcon.classList.add("glyphicon", "glyphicon-plus");
 
       let addButton = document.createElement("button");
       addButton.type = "button";
       addButton.classList.add("btn", "btn-default");
-      addButton.appendChild(addSpan);
+      addButton.appendChild(addIcon);
 
-      let removeSpan = document.createElement("span");
-      removeSpan.classList.add("glyphicon", "glyphicon-remove");
-      removeSpan.setAttribute("aria-hidden", "true");
+      let removeIcon = document.createElement("i");
+      removeIcon.classList.add("glyphicon", "glyphicon-remove");
 
       let removeButton = document.createElement("button");
       removeButton.type = "button";
       removeButton.classList.add("btn", "btn-default");
-      removeButton.appendChild(removeSpan);
+      removeButton.appendChild(removeIcon);
 
-      let controlSpan = document.createElement("span");
-      controlSpan.classList.add("pull-right");
-      controlSpan.appendChild(addButton);
-      controlSpan.appendChild(removeButton);
+      let trashIcon = document.createElement("i");
+      trashIcon.classList.add("glyphicon", "glyphicon-trash");
 
-      let row = document.createElement("tr");
+      let trashButton = document.createElement("button");
+      trashButton.type = "button";
+      trashButton.classList.add("btn", "btn-default");
+      trashButton.appendChild(trashIcon);
 
-      let checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
+      // Create buttonDiv with buttons
+      let buttonDiv = document.createElement("div");
+      buttonDiv.classList.add("input-group-btn");
+      buttonDiv.appendChild(addButton);
+      buttonDiv.appendChild(removeButton);
+      buttonDiv.appendChild(trashButton);
 
-      let checkboxCell = document.createElement("th");
-      checkboxCell.appendChild(checkbox);
+      // Create gutter (p)
+      let gutter = document.createElement("p");
+      gutter.classList.add("pull-right");
 
-      let header = document.createElement("thead");
-      header.appendChild(row);
+      // Create input-group
+      let inputGroup = document.createElement("div");
+      inputGroup.classList.add("input-group");
+      inputGroup.appendChild(gutter);
+      inputGroup.appendChild(buttonDiv);
 
-      let body = document.createElement("tbody");
+      // Create title
+      let title = document.createElement("h4");
+      title.classList.add("panel-title", "pull-left");
+      title.style = "padding-top:7.5px";
+      title.textContent = name;
+
+      // Create panel-heading
+      let panelHeading = document.createElement("div");
+      panelHeading.classList.add("panel-heading", "clearfix");
+      panelHeading.appendChild(title);
+      panelHeading.appendChild(inputGroup);
 
       let table = document.createElement("table");
-      table.appendChild(header);
-      table.appendChild(body);
 
-      this.group.appendChild(controlSpan);
+      // Create panel in group
+      this.group.classList.add("panel", "panel-default");
+      this.group.appendChild(panelHeading);
       this.group.appendChild(table);
     }
   }
@@ -113,15 +132,15 @@ fskeditorjs = function () {
       label.classList.add("col-sm-2", "col-form-label");
       label.innerText = name;
 
-      // Create div for input
-      let inputDiv = document.createElement("div");
-      inputDiv.classList.add("col-sm-10");
-      inputDiv.appendChild(this.input);
-
       // Create input
       this.input.classList.add("form-control");
       this.input.type = type;
       this.input.placeholder = helperText;
+
+      // Create div for input
+      let inputDiv = document.createElement("div");
+      inputDiv.classList.add("col-sm-10");
+      inputDiv.appendChild(this.input);
 
       // Collect everything into group
       this.group.classList.add("form-group", "row");
@@ -204,8 +223,7 @@ fskeditorjs = function () {
           inputForm = new InputForm(prop.label, "checkbox", prop.description);
         } else if (prop.type === "text-array") {
           // TODO: Fix StringArrayForm
-          // inputForm = new StringArrayForm(prop.label, "", prop.description);
-          return;
+          inputForm = new StringArrayForm(prop.label, "", prop.description);
         } else {
           return;
         }
@@ -241,7 +259,7 @@ fskeditorjs = function () {
         checkboxCell.appendChild(checkbox);
         newRow.appendChild(checkboxCell);
 
-        this.formData.forEach(prop => {
+        formData.forEach(prop => {
           let cell = document.createElement("td");
           cell.textContent = prop.label;
           newRow.appendChild(cell);
