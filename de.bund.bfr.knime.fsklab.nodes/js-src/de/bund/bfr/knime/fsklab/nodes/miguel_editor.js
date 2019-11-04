@@ -187,6 +187,7 @@ fskeditorjs = function () {
      */
     constructor (id, title, formData) {
       this.inputs = {};  // Hash of inputs by id
+      this.modal = document.createElement("div");      
       this.create(id, title, formData);
     }
 
@@ -280,14 +281,115 @@ fskeditorjs = function () {
       content.appendChild(modalBody);
       content.appendChild(footer);
 
-      this.modal = document.createElement("div");
       this.modal.classList.add("modal", "fade");
       this.modal.id = id;
       this.modal.tabIndex = -1;
       this.modal.setAttribute("role", "dialog");
       this.modal.appendChild(content);
     }
-    
+  }
+
+  /**
+   * Create a Bootstrap 3 panel with controls in the heading and a table as body.
+   * 
+   * ```
+   * <div class="panel panel-default">
+   *   <div class="panel-heading clearfix">
+   *     <h4 class="panel-title pull-left" style="padding-top:7.5px;">${title}</h4>
+   *     <div class="input-group">
+   *       <p class="pull-right" /> <!-- gutter -->
+   *       <div class="input-group-btn">
+   *         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#${dialog}">
+   *           <i class="glyphicon glyphicon-plus"></i>
+   *         </button>
+   *         <button class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+   *         <button class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>
+   *       </div>
+   *     </div>
+   *   </div>
+   *   <table class="table">
+   *     <tr>
+   *       <th><input type="checkbox"></th>
+   *     </tr>
+   *   </table>
+   * </div>`
+   * ```
+   */
+  class TablePanel {
+
+    constructor (title, dialog, formData) {
+
+      this.panel = document.createElement("div");
+      this._create(title, dialog, formData);
+    }
+
+    _create(title, dialog, formData) {
+
+      // Add button
+      let addIcon = document.createElement("i");
+      addIcon.classList.add("glyphicon", "glyphicon-plus");
+
+      let addButton = document.createElement("button");
+      addButton.classList.add("btn", "btn-default");
+      addButton.setAttribute("data-toggle", "modal");
+      addButton.setAttribute("data-target", "#" + dialog);
+      addButton.appendChild(addIcon);
+
+      // Remove button
+      let removeIcon = document.createElement("i");
+      removeIcon.classList.add("glyphicon", "glyphicon-remove");
+
+      let removeButton = document.createElement("button");
+      removeButton.classList.add("btn", "btn-default");
+      removeButton.appendChild(removeIcon);
+      
+      // Trash button
+      let trashIcon = document.createElement("i");
+      trashIcon.classList.add("glyphicon", "glyphicon-trash");
+
+      let trashButton = document.createElement("button");
+      trashButton.classList.add("btn", "btn-default");
+      trashButton.appendChild(trashIcon);
+
+      // input-group-btn
+      let inputGroupBtn = document.createElement("div");
+      inputGroupBtn.className = "input-group-btn";
+      inputGroupBtn.appendChild(addButton);
+      inputGroupBtn.appendChild(removeButton);
+      inputGroupBtn.appendChild(trashButton);
+
+      // Gutter
+      let gutter = document.createElement("p");
+      gutter.className = "pull-right";
+
+      // input-group
+      let inputGroup = document.createElement("div");
+      inputGroup.className = "input-group";
+      inputGroup.appendChild(gutter);
+      inputGroup.appendChild(inputGroupBtn);
+
+      // heading
+      let heading = document.createElement("h4");
+      heading.classList.add("panel-title", "pull-left");
+      heading.style = "padding-top: 7.5px;";
+      heading.textContent = title;
+
+      // panel heading
+      let panelHeading = document.createElement("div");
+      panelHeading.classList.add("panel-heading", "clearfix");
+      panelHeading.appendChild(heading);
+      panelHeading.appendChild(inputGroup);
+
+      // table
+      let table = document.createElement("table");
+      table.className = "table";
+      // TODO: Add headers
+
+      // panel
+      this.panel.classList.add("panel", "panel-default");
+      this.panel.appendChild(panelHeading);
+      this.panel.appendChild(table);
+    }
   }
 
   var _rep;
@@ -383,21 +485,10 @@ fskeditorjs = function () {
       {id: "generalInformation", panel: createGeneralInformationForm(), "active": true},
       {id: "modelCategory", panel: createModelCategory()},
       {id: "modificationDate", panel: createPanel("Modification date", createDateTable("Modification date"))},
-      {id: "author", panel: createTablePanel("Author", "contactDialog", ui.contact)},
-      {id: "creator", panel: createTablePanel("Creator", "contactDialog", ui.contact)},
-      {id: "reference", panel: createTablePanel("Reference", "referenceDialog", ui.reference)},
       {id: "scopeGeneral", panel: "Scope general"},
-      {id: "product", panel: createTablePanel("Product", "productDialog", ui.product)},
-      {id: "hazard", panel: createTablePanel("Hazard", "hazardDialog", ui.hazard)},
-      {id: "population", panel: createTablePanel("Population group", "populationDialog", ui.populationGroup)},
       {id: "spatialInformation", panel: createStringTable("Spatial information", "spatialInformation")},
       {id: "study", panel: createStudy()},
-      {id: "studySample", panel: createTablePanel("Study sample", "studySampleDialog", ui.studySample)},
       {id: "dietaryAssessmentMethod", panel: createTablePanel("Dietary assessment method", "methodDialog", ui.dietaryAssessmentMethod)},
-      {id: "laboratory", panel: createTablePanel("Laboratory", "laboratoryDialog", ui.laboratory)},
-      {id: "assay", panel: createTablePanel("Assay", "assayDialog", ui.assay)},
-      {id: "parameter", panel: createTablePanel("Parameter", "parameterDialog", ui.parameter)},
-      {id: "qualityMeasures", panel: createTablePanel("Quality measures", "measuresDialog", ui.qualityMeasures)},
       {id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.firstModelScript}</textarea>`},
       {id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.firstModelViz}</textarea>`},
       {id: "readme", panel: `<textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>`}      
@@ -453,6 +544,34 @@ fskeditorjs = function () {
     // Add dialogs
     const container = document.getElementsByClassName("container-fluid")[0];
     Object.values(dialogs).forEach(dialog => container.appendChild(dialog.modal));
+
+    // Add (table) panels
+    let tablePanels = {
+      author: new TablePanel("Author", "contactDialog", ui.contact),
+      creator: new TablePanel("Creator", "contactDialog", ui.contact),
+      reference: new TablePanel("Reference", "referenceDialog", ui.reference),
+      product: new TablePanel("Product", "productDialog", ui.product),
+      hazard: new TablePanel("Hazard", "hazardDialog", ui.hazard),
+      population: new TablePanel("Population", "populationDialog", ui.population),
+      studySample: new TablePanel("Study sample", "studySampleDialog", ui.studySample),
+      dietaryAssessmentMethod: new TablePanel("Dietary assessment method", "methodDialog", ui.dietaryAssessmentMethod),
+      laboratory: new TablePanel("Laboratory", "laboratoryDialog", ui.laboratory),
+      assay: new TablePanel("Assay", "assayDialog", ui.assay),
+      parameter: new TablePanel("Parameter", "parameterDialog", ui.parameter),
+      qualityMeasures: new TablePanel("Quality measures", "measuresDialog", ui.qualityMeasures)
+    };
+
+    const viewContent = document.getElementById("viewContent");    
+
+    Object.entries(tablePanels).forEach(([key, value]) => {
+      let tabPanel = document.createElement("div");
+      tabPanel.setAttribute("role", "tabpanel");
+      tabPanel.className = "tab-pane";
+      tabPanel.id = key;
+      tabPanel.appendChild(value.panel);
+
+      viewContent.appendChild(tabPanel);
+    });
 
     // Create code mirrors for text areas with scripts and readme
     _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
