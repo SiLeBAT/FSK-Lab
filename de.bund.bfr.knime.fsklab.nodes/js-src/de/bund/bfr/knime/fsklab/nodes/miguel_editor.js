@@ -113,15 +113,15 @@ fskeditorjs = function () {
      *   </div>
      * </div>`;
      * ```
-     * ```
+     * 
      * If type === checkbox
-     *
-     * 	<div class="form-group row">
-     * 		<label >name</label>
-     *		<div class="col-sm-10">
-     *   		<input class="form-check-input" type="checkbox" checked="">
-   	 *		</div>
-	 *	</div>
+     * ```
+     * <div class="form-group row">
+     *   <label >name</label>
+     *   <div class="col-sm-10">
+     *     <input class="form-check-input" type="checkbox" checked="">
+   	 *	 </div>
+	   * </div>
      * ```
      * @param {string} name Property name
      * @param {string} type Property type: text, url, checkbox, etc.
@@ -142,10 +142,7 @@ fskeditorjs = function () {
       label.innerText = name;
 
       // Create input
-      if(type === "checkbox")
-    	  this.input.classList.add("form-check-input");
-      else
-    	  this.input.classList.add("form-control");
+      this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
       this.input.type = type;
       this.input.placeholder = helperText;
 
