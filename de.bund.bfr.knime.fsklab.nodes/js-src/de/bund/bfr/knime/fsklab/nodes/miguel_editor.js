@@ -136,10 +136,6 @@ fskeditorjs = function () {
     }
 
     _create(name, type, helperText, vocabulary) {
-      // Create label
-      let label = document.createElement("label");
-      label.classList.add("col-sm-2", "col-form-label");
-      label.innerText = name;
 
       // Create input
       this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
@@ -162,7 +158,7 @@ fskeditorjs = function () {
 
       // Collect everything into group
       this.group.classList.add("form-group", "row");
-      this.group.appendChild(label);
+      this.group.innerHTML = `<label class="col-sm-2 col-form-label">${name}</label>`;
       this.group.appendChild(inputDiv);
     }
 
