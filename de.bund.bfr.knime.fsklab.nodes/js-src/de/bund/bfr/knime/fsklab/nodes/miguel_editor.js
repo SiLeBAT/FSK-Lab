@@ -46,11 +46,13 @@ fskeditorjs = function () {
       removeButton.type = "button";
       removeButton.classList.add("btn", "btn-default");
       removeButton.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
+      removeButton.onclick = () => this.simpleTable.remove();
 
       let trashButton = document.createElement("button");
       trashButton.type = "button";
       trashButton.classList.add("btn", "btn-default");
       trashButton.innerHTML = '<i class="glyphicon glyphicon-trash"></i>';
+      trashButton.onclick = () => this.simpleTable.trash();      
 
       // Create buttonDiv with buttons
       let buttonDiv = document.createElement("div");
@@ -114,11 +116,24 @@ fskeditorjs = function () {
     }
 
     remove() {
-      // TODO: add
+      // TODO: trash
+
+      // Find checked rows and delete them
+      Array.from(this.body.children).forEach(row => {
+        console.log(row);
+        // Get checkbox (tr > td > input)
+        let checkbox = row.firstChild.firstChild;
+        if (checkbox.checked) {
+          this.body.removeChild(row);
+        }
+      });
     }
 
+    /**
+     * Remove every row in the table
+     */
     trash() {
-      // TODO: trash
+      this.body.innerHTML = "";      
     }
 
     _createRow() {
