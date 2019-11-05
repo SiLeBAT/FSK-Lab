@@ -811,30 +811,4 @@ fskeditorjs = function () {
       <table id="${table}" class="table"></table>
     </div>`;
   }
-
-  /**
-   * Creates a Bootstrap 3 modal dialog.
-   * @param {string} id ID of the modal dialog
-   * @param {string} title Dialog title
-   * @param {object} formData Object holding the metadata properties
-   */
-  function createDialog(id, title, formData) {
-    return `<div class="modal fade" id="${id}" taxindex="-1" role="dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span area-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title">${title}</h4>
-        </div>
-        <div class="modal-body">
-          <form>${formData.map(prop => createForm(prop)).join("")}</form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>`;
-  }
 }();
