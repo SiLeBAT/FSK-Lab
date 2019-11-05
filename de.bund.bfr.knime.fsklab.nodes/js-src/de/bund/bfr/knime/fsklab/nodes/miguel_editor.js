@@ -29,6 +29,7 @@ fskeditorjs = function () {
 
     constructor (name, value, helperText) {
       this.group = document.createElement("div");      
+      this.simpleTable = new SimpleTable(["a", "b", "c"], null);
       this._create(name, value, helperText);
     }
 
@@ -39,6 +40,7 @@ fskeditorjs = function () {
       addButton.type = "button";
       addButton.classList.add("btn", "btn-default");
       addButton.innerHTML = '<i class="glyphicon glyphicon-plus"></i>';
+      addButton.onclick = () => this.simpleTable.add();
 
       let removeButton = document.createElement("button");
       removeButton.type = "button";
@@ -66,15 +68,87 @@ fskeditorjs = function () {
       // Create panel-heading
       let panelHeading = document.createElement("div");
       panelHeading.classList.add("panel-heading", "clearfix");
-      panelHeading.innerHTML = `<h4 class="panel-title pull-left" style="padding-top:7.5px;">${name}</h4>`;
       panelHeading.appendChild(inputGroup);
 
-      let table = document.createElement("table");
-
       // Create panel in group
-      this.group.classList.add("panel", "panel-default");
-      this.group.appendChild(panelHeading);
-      this.group.appendChild(table);
+      let panelDiv = document.createElement("div");
+      panelDiv.classList.add("panel", "panel-default");
+      panelDiv.appendChild(panelHeading);
+      panelDiv.appendChild(this.simpleTable.table);
+
+      let formDiv = document.createElement("div");
+      formDiv.className = "col-sm-10";
+      formDiv.appendChild(panelDiv);
+
+      this.group.classList.add("form-group", "row");
+      this.group.innerHTML = `<label class="col-sm-2 col-form-label">${name}</label>`;
+      this.group.appendChild(formDiv);
+    }
+  }
+
+  class SimpleTable {
+
+    constructor (data, vocabulary) {
+      this.table = document.createElement("table");
+      this.table.className = "table";
+      this.table.innerHTML = `<thread><thead>`;
+
+      this.body = document.createElement("tbody");
+      this.table.appendChild(this.body);
+    }
+
+    /**
+     * Create new row to enter data if the last row value is not empty.
+     */
+    add() {
+
+      // If it has no rows or the last row value is not empty
+      if (!this.body.lastChild || this.body.lastChild.lastChild.firstChild.value) {
+
+        // let newRow = document.createElement("tr");
+        // newRow.innerHTML = `<td><input type="checkbox"></td>
+        // <td><input type="text" class="form-control"></td>`;
+        // this.body.appendChild(newRow);
+        this._createRow();
+      }
+    }
+
+    remove() {
+      // TODO: add
+    }
+
+    trash() {
+      // TODO: trash
+    }
+
+    _createRow() {
+      let input = document.createElement("input");
+      input.type = "text";
+      input.className = "form-control";
+
+      // If enter is pressed when the input if focused, lose focus and add a
+      // new row (like clicking the add button). The new input from calling add
+      // is focused.
+      input.addEventListener("keyup", (event) => {
+        if (event.key === "Enter") {
+          input.blur();
+          this.add();
+        }
+      });
+      
+      // Create cell with input
+      let inputCell = document.createElement("td");
+      inputCell.appendChild(input);
+
+      // Create row with checkbox and input
+      let newRow = document.createElement("tr");
+      newRow.innerHTML = '<td><input type="checkbox"></td>'
+      newRow.appendChild(inputCell);
+
+      // Add row
+      this.body.appendChild(newRow);
+
+      input.focus(); // Focus the new input      
     }
   }
 
