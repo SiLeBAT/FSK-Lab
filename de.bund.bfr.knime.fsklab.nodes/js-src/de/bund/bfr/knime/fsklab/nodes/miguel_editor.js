@@ -35,29 +35,20 @@ fskeditorjs = function () {
     _create(name, value, helperText) {
 
       // Create buttons with icons
-      let addIcon = document.createElement("i");
-      addIcon.classList.add("glyphicon", "glyphicon-plus");
-
       let addButton = document.createElement("button");
       addButton.type = "button";
       addButton.classList.add("btn", "btn-default");
-      addButton.appendChild(addIcon);
-
-      let removeIcon = document.createElement("i");
-      removeIcon.classList.add("glyphicon", "glyphicon-remove");
+      addButton.innerHTML = '<i class="glyphicon glyphicon-plus"></i>';
 
       let removeButton = document.createElement("button");
       removeButton.type = "button";
       removeButton.classList.add("btn", "btn-default");
-      removeButton.appendChild(removeIcon);
-
-      let trashIcon = document.createElement("i");
-      trashIcon.classList.add("glyphicon", "glyphicon-trash");
+      removeButton.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
 
       let trashButton = document.createElement("button");
       trashButton.type = "button";
       trashButton.classList.add("btn", "btn-default");
-      trashButton.appendChild(trashIcon);
+      trashButton.innerHTML = '<i class="glyphicon glyphicon-trash"></i>';
 
       // Create buttonDiv with buttons
       let buttonDiv = document.createElement("div");
@@ -66,26 +57,16 @@ fskeditorjs = function () {
       buttonDiv.appendChild(removeButton);
       buttonDiv.appendChild(trashButton);
 
-      // Create gutter (p)
-      let gutter = document.createElement("p");
-      gutter.classList.add("pull-right");
-
       // Create input-group
       let inputGroup = document.createElement("div");
       inputGroup.classList.add("input-group");
-      inputGroup.appendChild(gutter);
+      inputGroup.innerHTML = '<p class="pull-right" />'; // gutter
       inputGroup.appendChild(buttonDiv);
-
-      // Create title
-      let title = document.createElement("h4");
-      title.classList.add("panel-title", "pull-left");
-      title.style = "padding-top:7.5px";
-      title.textContent = name;
 
       // Create panel-heading
       let panelHeading = document.createElement("div");
       panelHeading.classList.add("panel-heading", "clearfix");
-      panelHeading.appendChild(title);
+      panelHeading.innerHTML = `<h4 class="panel-title pull-left" style="padding-top:7.5px;">${name}</h4>`;
       panelHeading.appendChild(inputGroup);
 
       let table = document.createElement("table");
