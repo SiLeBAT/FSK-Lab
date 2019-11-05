@@ -38,7 +38,8 @@ const ui = {
         "id": "format",
         "label": "Format",
         "type": "text",
-        "description": "File extension of the model or data file (including version number of format if applicable)"
+        "description": "File extension of the model or data file (including version number of format if applicable)",
+        "vocabulary": "Format"
     }, {
         "id": "language",
         "label": "Language",
@@ -167,7 +168,8 @@ const ui = {
             "id": "publicationType",
             "label": "Type",
             "type": "text",
-            "description": "The type of publication, e.g. Report, Journal article, Book, Online database, ..."
+            "description": "The type of publication, e.g. Report, Journal article, Book, Online database, ...",
+            "vocabulary": "Publication_Type"
         }, {
             "id": "date",
             "label": "Date",

@@ -127,15 +127,15 @@ fskeditorjs = function () {
      * @param {string} type Property type: text, url, checkbox, etc.
      * @param {string} helperText Tooltip
      */
-    constructor (name, type, helperText) {
+    constructor (name, type, helperText, vocabulary=null) {
       
       this.input = document.createElement("input");
       this.group = document.createElement("div");
 
-      this._create(name, type, helperText);
+      this._create(name, type, helperText, vocabulary);
     }
 
-    _create(name, type, helperText) {
+    _create(name, type, helperText, vocabulary) {
       // Create label
       let label = document.createElement("label");
       label.classList.add("col-sm-2", "col-form-label");
@@ -150,6 +150,15 @@ fskeditorjs = function () {
       let inputDiv = document.createElement("div");
       inputDiv.classList.add("col-sm-10");
       inputDiv.appendChild(this.input);
+
+      // Add autocomplete to input with vocabulary
+      if (vocabulary) {
+        $(this.input).typeahead({
+          source: vocabulary,
+          autoSelect: true,
+          fitToElement: true
+        });
+      }
 
       // Collect everything into group
       this.group.classList.add("form-group", "row");
@@ -228,7 +237,8 @@ fskeditorjs = function () {
         let inputForm;
         if (prop.type === "text" || prop.type === "number" ||
           prop.type === "url" || prop.type === "date") {
-          inputForm = new InputForm(prop.label, prop.type, prop.description);            
+          inputForm = new InputForm(prop.label, prop.type, prop.description,
+            prop.vocabulary ? vocabularies[prop.vocabulary] : null);            
         } else if (prop.type === "boolean") {
           inputForm = new InputForm(prop.label, "checkbox", prop.description);
         } else if (prop.type === "text-array") {
