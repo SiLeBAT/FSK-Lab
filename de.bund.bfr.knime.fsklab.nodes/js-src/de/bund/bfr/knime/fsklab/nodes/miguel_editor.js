@@ -210,26 +210,6 @@ fskeditorjs = function () {
     }
 
     create(id, title, formData) {
-      // modal header
-      let closeControl = document.createElement("button");
-      closeControl.type = "button";
-      closeControl.classList.add("close");
-      closeControl.setAttribute("data-dismiss", "modal");
-      closeControl.setAttribute("aria-label", "Close");
-
-      let span = document.createElement("span");
-      span.setAttribute("aria-hidden", "true");
-      span.innerHTML = "&times;";
-      closeControl.appendChild(span);
-
-      let modalTitle = document.createElement("h4");
-      modalTitle.classList.add("modal-title");
-      modalTitle.textContent = title;
-
-      let modalHeader = document.createElement("div");
-      modalHeader.classList.add("modal-header");
-      modalHeader.appendChild(closeControl);
-      modalHeader.appendChild(modalTitle);
 
       // modal body
       let form = document.createElement("form");
@@ -296,7 +276,12 @@ fskeditorjs = function () {
 
       let content = document.createElement("div");
       content.classList.add("modal-content");
-      content.appendChild(modalHeader);
+      content.innerHTML = `<div class="modal-header">
+      <button class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h4 class="modal-title">${title}</h4>
+      </div>`;
       content.appendChild(modalBody);
       content.appendChild(footer);
 
