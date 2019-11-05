@@ -411,6 +411,67 @@ fskeditorjs = function () {
     }
   }
 
+  /**
+   * Simple panel for non nested data like General information, study, etc.
+   */
+  class FormPanel {
+
+    constructor(title, formData) {
+      this.panel = document.createElement("div");
+      this.inputs = {};
+
+      this._create(title, formData);
+    }
+
+    /**
+     * ```
+     * <div class="panel panel-default">
+     *   <div class="panel-heading">
+     *     <h3 class="panel-title">Some title</h3>
+     *   </div>
+     *   <div class="panel-body">
+     *     <form></form>
+     *   </div>
+     * </div>
+     * ```
+     * @param {*} title 
+     * @param {*} formData 
+     */
+    _create(title, formData) {
+      
+      this.panel.classList.add("panel", "panel-default");
+      this.panel.innerHTML = `<div class="panel-heading">
+      <h3 class="panel-title">${title}</h3>
+      </div>`;
+
+      let form = document.createElement("form");
+      formData.forEach(prop => {
+        let inputForm;
+        if (prop.type === "text" || prop.type === "number" ||
+          prop.type === "url" || prop.type === "date") {
+          inputForm = new InputForm(prop.label, prop.type, prop.description,
+            prop.vocabulary ? vocabularies[prop.vocabulary] : null);            
+        } else if (prop.type === "boolean") {
+          inputForm = new InputForm(prop.label, "checkbox", prop.description);
+        } else if (prop.type === "text-array") {
+          // TODO: Fix StringArrayForm
+          inputForm = new StringArrayForm(prop.label, "", prop.description);
+        } else {
+          return;
+        }
+
+        form.appendChild(inputForm.group);
+        this.inputs[prop.id] = inputForm;
+      });
+
+      let body = document.createElement("div");
+      body.className = "panel-body";
+      body.appendChild(form);
+
+      this.panel.appendChild(body);
+    }
+  }
+
   var _rep;
   var _val;
 
@@ -501,12 +562,9 @@ fskeditorjs = function () {
     }
 
     let panelsById = [
-      {id: "generalInformation", panel: createGeneralInformationForm(), "active": true},
-      {id: "modelCategory", panel: createModelCategory()},
       {id: "modificationDate", panel: createPanel("Modification date", createDateTable("Modification date"))},
       {id: "scopeGeneral", panel: "Scope general"},
       {id: "spatialInformation", panel: createStringTable("Spatial information", "spatialInformation")},
-      {id: "study", panel: createStudy()},
       {id: "dietaryAssessmentMethod", panel: createTablePanel("Dietary assessment method", "methodDialog", ui.dietaryAssessmentMethod)},
       {id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.firstModelScript}</textarea>`},
       {id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.firstModelViz}</textarea>`},
@@ -566,12 +624,15 @@ fskeditorjs = function () {
 
     // Add (table) panels
     let tablePanels = {
+      generalInformation: new FormPanel("General", ui.generalInformation),
+      modelCategory: new FormPanel("Model category", ui.modelCategory),
       author: new TablePanel("Author", "contactDialog", ui.contact),
       creator: new TablePanel("Creator", "contactDialog", ui.contact),
       reference: new TablePanel("Reference", "referenceDialog", ui.reference),
       product: new TablePanel("Product", "productDialog", ui.product),
       hazard: new TablePanel("Hazard", "hazardDialog", ui.hazard),
       population: new TablePanel("Population", "populationDialog", ui.population),
+      study: new FormPanel("Study", ui.study),
       studySample: new TablePanel("Study sample", "studySampleDialog", ui.studySample),
       dietaryAssessmentMethod: new TablePanel("Dietary assessment method", "methodDialog", ui.dietaryAssessmentMethod),
       laboratory: new TablePanel("Laboratory", "laboratoryDialog", ui.laboratory),
@@ -591,6 +652,9 @@ fskeditorjs = function () {
 
       viewContent.appendChild(tabPanel);
     });
+
+    // Set the first tab (general information) as active
+    document.getElementById("generalInformation").classList.add("active");
 
     // Create code mirrors for text areas with scripts and readme
     _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
@@ -614,7 +678,7 @@ fskeditorjs = function () {
    */
   function createSubMenu(name, submenus, isActive = false) {
 
-    return `<li role="presentation" class="${isActive ? "active" : ""} dropdown">
+    return `<li role="presentation" class="${isActive ? "active" : ""}">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
         aria-haspopup="true" aria-expanded="false">${name}<span class="caret"></a>
       <ul class="dropdown-menu">
@@ -747,22 +811,6 @@ fskeditorjs = function () {
       </div>
       <div class="panel-body">${body}</div>
     </div>`;
-  }
-
-  function createGeneralInformationForm() {
-
-    let form = `<form>${ui['generalInformation'].map(prop => createForm(prop, _metadata.generalInformation[prop.id])).join("")}</form>`;
-    return createPanel("General", form);
-  }
-
-  function createModelCategory() {
-    let body = `<form>${ui['modelCategory'].map(prop => createForm(prop, "")).join("")}</form>`;
-    return createPanel("Model category", body);
-  }
-
-  function createStudy() {
-    let body = `<form>${ui['study'].map(prop => createForm(prop, "")).join("")}</form>`;
-    return createPanel("Study", body);
   }
 
   /**
