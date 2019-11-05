@@ -345,30 +345,21 @@ fskeditorjs = function () {
     _create(title, dialog, formData) {
 
       // Add button
-      let addIcon = document.createElement("i");
-      addIcon.classList.add("glyphicon", "glyphicon-plus");
-
       let addButton = document.createElement("button");
       addButton.classList.add("btn", "btn-default");
       addButton.setAttribute("data-toggle", "modal");
       addButton.setAttribute("data-target", "#" + dialog);
-      addButton.appendChild(addIcon);
+      addButton.innerHTML = '<i class="glyphicon glyphicon-plus"></i>';
 
       // Remove button
-      let removeIcon = document.createElement("i");
-      removeIcon.classList.add("glyphicon", "glyphicon-remove");
-
       let removeButton = document.createElement("button");
       removeButton.classList.add("btn", "btn-default");
-      removeButton.appendChild(removeIcon);
+      removeButton.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
       
       // Trash button
-      let trashIcon = document.createElement("i");
-      trashIcon.classList.add("glyphicon", "glyphicon-trash");
-
       let trashButton = document.createElement("button");
       trashButton.classList.add("btn", "btn-default");
-      trashButton.appendChild(trashIcon);
+      trashButton.innerHTML = '<i class="glyphicon glyphicon-trash"></i>';
 
       // input-group-btn
       let inputGroupBtn = document.createElement("div");
@@ -377,32 +368,21 @@ fskeditorjs = function () {
       inputGroupBtn.appendChild(removeButton);
       inputGroupBtn.appendChild(trashButton);
 
-      // Gutter
-      let gutter = document.createElement("p");
-      gutter.className = "pull-right";
-
       // input-group
       let inputGroup = document.createElement("div");
       inputGroup.className = "input-group";
-      inputGroup.appendChild(gutter);
+      inputGroup.innerHTML = '<p class="pull-right" />'; // gutter
       inputGroup.appendChild(inputGroupBtn);
-
-      // heading
-      let heading = document.createElement("h4");
-      heading.classList.add("panel-title", "pull-left");
-      heading.style = "padding-top: 7.5px;";
-      heading.textContent = title;
 
       // panel heading
       let panelHeading = document.createElement("div");
       panelHeading.classList.add("panel-heading", "clearfix");
-      panelHeading.appendChild(heading);
+      panelHeading.innerHTML = `<h4 class="panel-title pull-left" style="padding-top:7.5px;">${title}</h4>`;
       panelHeading.appendChild(inputGroup);
 
       // table
       let table = document.createElement("table");
       table.className = "table";
-      // TODO: Add headers
 
       // panel
       this.panel.classList.add("panel", "panel-default");
