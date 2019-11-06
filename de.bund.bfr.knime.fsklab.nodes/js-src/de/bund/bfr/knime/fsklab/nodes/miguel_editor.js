@@ -16,6 +16,15 @@ fskeditorjs = function () {
     });
   }
 
+  /** Take a date input and convert it to a Bootstrap datepicker. */
+  function createDatePicker(input) {
+    input.type = "text";
+    $(input).datepicker({
+      format:'dd/mm/yyyy',
+      autoclose:true,
+    });
+  }
+
   /**
    * Create an horizontal form for a metadata property.
    * 
@@ -171,14 +180,8 @@ fskeditorjs = function () {
     _createRow() {
       let input = document.createElement("input");
       input.type = this.type;
-    
-      //Datepicker for input date elements
-      if(input.type === "date"){
-    	  input.type = "text";
-    	  $(input).datepicker({
-    		 format:'dd/mm/yyyy',
-    		 autoclose:true,
-    	  });
+      if (input.type === "date") {
+    	  createDatePicker(input);
       }
       input.className = "form-control";
 
@@ -318,13 +321,8 @@ fskeditorjs = function () {
       // Create input
       this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
       this.input.type = type;
-      //DatePicker for input date elements
-      if(this.input.type === "date"){
-    	  this.input.type = "text";
-    	  $(this.input).datepicker({
-    		 format:'dd/mm/yyyy',
-    		 autoclose:true,
-    	  });
+      if (this.input.type === "date") {
+    	  createDatePicker(this.input);
       }
       this.input.placeholder = helperText;
 
