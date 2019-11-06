@@ -675,23 +675,22 @@ fskeditorjs = function () {
   function createUI() {
 
     let dialogs = {
-      contactDialog: new Dialog("contactDialog", "Add contact", ui['contact']),
-      referenceDialog: new Dialog("referenceDialog", "Add reference", ui['reference']),
-      productDialog: new Dialog("productDialog", "Add product", ui['product']),
-      hazardDialog: new Dialog("hazardDialog", "Add hazard", ui['hazard']),
-      populationDialog: new Dialog("populationDialog", "Add population", ui['populationGroup']),
-      studySampleDialog: new Dialog("studySampleDialog", "Add study sample", ui['studySample']),
-      methodDialog: new Dialog("methodDialog", "Add method", ui['dietaryAssessmentMethod']),
-      laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", ui['laboratory']),
-      assayDialog: new Dialog("assayDialog", "Add assay", ui['assay']),
-      parameterDialog: new Dialog("parameterDialog", "Add parameter", ui['parameter']),
-      measuresDialog: new Dialog("measuresDialog", "Add quality measures", ui['qualityMeasures']),
-      equationDialog: new Dialog("equationDialog", "Add model equation", ui['modelEquation'])
+      contactDialog: new Dialog("contactDialog", "Add contact", ui.contact),
+      referenceDialog: new Dialog("referenceDialog", "Add reference", ui.reference),
+      productDialog: new Dialog("productDialog", "Add product", ui.product),
+      hazardDialog: new Dialog("hazardDialog", "Add hazard", ui.hazard),
+      populationDialog: new Dialog("populationDialog", "Add population", ui.populationGroup),
+      studySampleDialog: new Dialog("studySampleDialog", "Add study sample", ui.studySample),
+      methodDialog: new Dialog("methodDialog", "Add method", ui.dietaryAssessmentMethod),
+      laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", ui.laboratory),
+      assayDialog: new Dialog("assayDialog", "Add assay", ui.assay),
+      parameterDialog: new Dialog("parameterDialog", "Add parameter", ui.parameter),
+      measuresDialog: new Dialog("measuresDialog", "Add quality measures", ui.qualityMeasures),
+      equationDialog: new Dialog("equationDialog", "Add model equation", ui.modelEquation),
+      exposureDialog: new Dialog("exposureDialog", "Add exposure", ui.exposure)
     }
 
     let panelsById = [
-      {id: "scopeGeneral", panel: "Scope general"},
-      {id: "spatialInformation", panel: createStringTable("Spatial information", "spatialInformation")},
       {id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.firstModelScript}</textarea>`},
       {id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.firstModelViz}</textarea>`},
       {id: "readme", panel: `<textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>`}      
@@ -710,8 +709,7 @@ fskeditorjs = function () {
       ${createSubMenu("Scope", [{ "id": "scopeGeneral", "label": "General" },
         { "id": "product", "label": "Product" },
         { "id": "hazard", "label": "Hazard" },
-        { "id": "population", "label": "Population group" },
-        { "id": "spatialInformation", "label": "Spatial information" }])}
+        { "id": "population", "label": "Population group" }])}
       ${createSubMenu("Data Background", [{ "id": "study", "label": "Study" },
         { "id": "studySample", "label": "Study sample" },
         { "id": "dietaryAssessmentMethod", "label": "Dietary assessment method" },
@@ -737,9 +735,8 @@ fskeditorjs = function () {
     </div>
   </nav>
   <div class="tab-content" id="viewContent">
-  ${panelsById.map(entry =>
-    `<div role="tabpanel" class="tab-pane ${"active" in entry ? 'active' : ''}"
-      id="${entry.id}">${entry.panel}</div>`).join("")}
+    ${panelsById.map(entry => `<div role="tabpanel" class="tab-pane"
+    id="${entry.id}">${entry.panel}</div>`).join("")}
   </div>
 </div>`;
 
@@ -757,6 +754,7 @@ fskeditorjs = function () {
       author: new TablePanel("Author", dialogs.contactDialog, ui.contact),
       creator: new TablePanel("Creator", dialogs.contactDialog, ui.contact),
       reference: new TablePanel("Reference", dialogs.referenceDialog, ui.reference),
+      scopeGeneral: new FormPanel("General", ui.scope),
       product: new TablePanel("Product", dialogs.productDialog, ui.product),
       hazard: new TablePanel("Hazard", dialogs.hazardDialog, ui.hazard),
       population: new TablePanel("Population", dialogs.populationDialog, ui.populationGroup),
@@ -767,7 +765,8 @@ fskeditorjs = function () {
       assay: new TablePanel("Assay", dialogs.assayDialog, ui.assay),
       parameter: new TablePanel("Parameter", dialogs.parameterDialog, ui.parameter),
       qualityMeasures: new TablePanel("Quality measures", dialogs.measuresDialog, ui.qualityMeasures),
-      modelEquation: new TablePanel("Model equation", dialogs.equationDialog, ui.modelEquation)
+      modelEquation: new TablePanel("Model equation", dialogs.equationDialog, ui.modelEquation),
+      exposure: new TablePanel("Exposure", dialogs.exposureDialog, ui.exposure)
     };
 
     const viewContent = document.getElementById("viewContent");    
@@ -829,53 +828,5 @@ fskeditorjs = function () {
         extraKeys: { 'Ctrl-Space': 'autocomplete' },
         mode: { 'name': language }
       });
-  }
-
-  /** Create a table with a single (data) column to edit a string array. */
-  function createStringTable(label) {
-    return `<div>
-    <span class="pull-right">
-      <button type="button" class="btn btn-default">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-      </button>
-      <button type="button" class="btn btn-default">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-      </button>
-    </span>
-    <table class="table">
-      <tr>
-        <th><input type="checkbox"></th>
-        <th>${label}</th>
-      </tr>
-      <tr></tr>
-      </tr>
-    </table>
-   </div>`;
-  }
-
-  /**
-   * Create a Bootstrap 3 panel for control a list of strings.
-   * 
-   * @param {string} title Panel title
-   * @param {string} table ID to the table. This ID will be used later to update
-   * the table on an event.
-   */
-  function createStringTable(title, table) {
-    return `<div class="panel panel-default">
-      <div class="panel-heading clearfix">
-        <h4 class="panel-title pull-left" style="padding-top:7.5px;">${title}</h4>
-        <div class="input-group">
-          <p class="pull-right" /> <!-- gutter -->
-          <div class="input-group-btn">
-            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#">
-              <i class="glyphicon glyphicon-plus"></i>
-            </button>
-            <button class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
-            <button class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>    
-          </div>
-        </div>
-      </div>
-      <table id="${table}" class="table"></table>
-    </div>`;
   }
 }();
