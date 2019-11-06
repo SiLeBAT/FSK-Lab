@@ -17,6 +17,28 @@ fskeditorjs = function () {
   }
 
   /**
+   * Create an horizontal form for a metadata property.
+   * 
+   * @param {object} prop Metadata property. It can be of type: text, number,
+   * url, data, boolean or text-array.
+   * @returns InputForm or StringArrayForm for the supported type. If wrong type
+   * it returns undefined.
+   */
+  function createForm(prop) {
+    let vocabulary = prop.vocabulary ? vocabularies[prop.vocabulary] : null;
+
+    if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
+      prop.type === "date")
+      return new InputForm(prop.label, prop.type, prop.description, vocabulary);
+    
+    if (prop.type === "boolean")
+      return new InputForm(prop.label, "checkbox", prop.description);
+    
+    if (prop.type === "text-array")
+      return new StringArrayForm(prop.label, "", prop.description, vocabulary);
+  }
+
+  /**
    * Create a div to edit string arrays.
    * 
    * ```
@@ -287,22 +309,11 @@ fskeditorjs = function () {
       // modal body
       let form = document.createElement("form");
       formData.forEach(prop => {
-        let inputForm;
-        if (prop.type === "text" || prop.type === "number" ||
-          prop.type === "url" || prop.type === "date") {
-          inputForm = new InputForm(prop.label, prop.type, prop.description,
-            prop.vocabulary ? vocabularies[prop.vocabulary] : null);            
-        } else if (prop.type === "boolean") {
-          inputForm = new InputForm(prop.label, "checkbox", prop.description);
-        } else if (prop.type === "text-array") {
-          inputForm = new StringArrayForm(prop.label, "", prop.description,
-            prop.vocabulary ? vocabularies[prop.vocabulary] : null);
-        } else {
-          return;
+        let inputForm = createForm(prop);
+        if (inputForm) {
+          form.appendChild(inputForm.group);
+          this.inputs[prop.id] = inputForm;
         }
-
-        form.appendChild(inputForm.group);
-        this.inputs[prop.id] = inputForm;
       });
 
       let modalBody = document.createElement("div");
@@ -784,21 +795,6 @@ fskeditorjs = function () {
         <input type="date" class="form-control" value="${value}" id="${id}">
       </div>
     </div>`
-  }
-
-  function createForm(formData, value = "") {
-    if (formData.type === 'text')
-      return createStringGroup(formData.label, formData.id, value, formData.description);
-    if (formData.type === 'text-array')
-      return createStringTable(formData.label, formData.id);
-    if (formData.type === 'number')
-      return createNumberGroup(formData.label, formData.id, value, formData.description);
-    if (formData.type === 'boolean')
-      return createCheckboxGroup(formData.label, formData.id, value, formData.description);
-    if (formData.type === 'url')
-      return createUrlGroup(formData.label, formData.id, value, formData.description);
-    if (formData.type === 'date')
-      return createDateGroup(formData.label, formData.id, value, formData.description)
   }
 
   /** Create a table with a single (data) column to edit a string array. */
