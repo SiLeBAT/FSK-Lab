@@ -611,7 +611,6 @@ fskeditorjs = function () {
     }
 
     let panelsById = [
-      {id: "modificationDate", panel: createPanel("Modification date", createDateTable("Modification date"))},
       {id: "scopeGeneral", panel: "Scope general"},
       {id: "spatialInformation", panel: createStringTable("Spatial information", "spatialInformation")},
       {id: "dietaryAssessmentMethod", panel: createTablePanel("Dietary assessment method", "methodDialog", ui.dietaryAssessmentMethod)},
@@ -627,7 +626,6 @@ fskeditorjs = function () {
       <ul class="nav navbar-nav" id="viewTab">
       ${createSubMenu("General information", [{ "id": "generalInformation", "label": "General" },
         { "id": "modelCategory", "label": "Model category" },
-        { "id": "modificationDate", "label": "Modification date" },
         { "id": "author", "label": "Author" },
         { "id": "creator", "label": "Creator" },
         { "id": "reference", "label": "Reference" }])}
