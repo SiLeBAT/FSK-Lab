@@ -20,7 +20,7 @@ fskeditorjs = function () {
    * Create an horizontal form for a metadata property.
    * 
    * @param {object} prop Metadata property. It can be of type: text, number,
-   * url, data, boolean or text-array.
+   * url, data, boolean, text-array and date-array.
    * @returns InputForm or StringArrayForm for the supported type. If wrong type
    * it returns undefined.
    */
@@ -35,7 +35,10 @@ fskeditorjs = function () {
       return new InputForm(prop.label, "checkbox", prop.description);
     
     if (prop.type === "text-array")
-      return new StringArrayForm(prop.label, "", prop.description, vocabulary);
+      return new ArrayForm(prop.label, prop.type, prop.description, vocabulary);
+
+    if (prop.type === "date-array")
+      return new ArrayForm(prop.label, prop.type, prop.description, vocabulary);
   }
 
   /**
@@ -60,15 +63,15 @@ fskeditorjs = function () {
    * </div>
    * ```
    */
-  class StringArrayForm {
+  class ArrayForm {
 
-    constructor (name, value, helperText, vocabulary) {
+    constructor (name, type, value, helperText, vocabulary) {
       this.group = document.createElement("div");      
-      this.simpleTable = new SimpleTable(["a", "b", "c"], vocabulary);
-      this._create(name, value, helperText);
+      this.simpleTable = new SimpleTable(type, ["a", "b", "c"], vocabulary);
+      this._create(name, helperText);
     }
 
-    _create(name, value, helperText, vocabulary) {
+    _create(name, helperText) {
 
       // Create buttons with icons
       let addButton = document.createElement("button");
@@ -125,7 +128,8 @@ fskeditorjs = function () {
 
   class SimpleTable {
 
-    constructor (data, vocabulary) {
+    constructor (type, data, vocabulary) {
+      this.type = type === "text-array" ? "text" : "date";
       this.vocabulary = vocabulary;
 
       this.table = document.createElement("table");
@@ -166,7 +170,7 @@ fskeditorjs = function () {
 
     _createRow() {
       let input = document.createElement("input");
-      input.type = "text";
+      input.type = this.type;
       input.className = "form-control";
 
       // Add autocomplete to input with vocabulary
@@ -502,22 +506,11 @@ fskeditorjs = function () {
 
       let form = document.createElement("form");
       formData.forEach(prop => {
-        let inputForm;
-        if (prop.type === "text" || prop.type === "number" ||
-          prop.type === "url" || prop.type === "date") {
-          inputForm = new InputForm(prop.label, prop.type, prop.description,
-            prop.vocabulary ? vocabularies[prop.vocabulary] : null);            
-        } else if (prop.type === "boolean") {
-          inputForm = new InputForm(prop.label, "checkbox", prop.description);
-        } else if (prop.type === "text-array") {
-          // TODO: Fix StringArrayForm
-          inputForm = new StringArrayForm(prop.label, "", prop.description);
-        } else {
-          return;
+        let inputForm = createForm(prop);
+        if (inputForm) {
+          form.appendChild(inputForm.group);
+          this.inputs[prop.id] = inputForm;
         }
-
-        form.appendChild(inputForm.group);
-        this.inputs[prop.id] = inputForm;
       });
 
       let body = document.createElement("div");
