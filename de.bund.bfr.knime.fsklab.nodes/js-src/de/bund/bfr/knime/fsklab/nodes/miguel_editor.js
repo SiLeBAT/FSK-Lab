@@ -27,13 +27,13 @@ fskeditorjs = function () {
    */
   class StringArrayForm {
 
-    constructor (name, value, helperText) {
+    constructor (name, value, helperText, vocabulary) {
       this.group = document.createElement("div");      
-      this.simpleTable = new SimpleTable(["a", "b", "c"], null);
+      this.simpleTable = new SimpleTable(["a", "b", "c"], vocabulary);
       this._create(name, value, helperText);
     }
 
-    _create(name, value, helperText) {
+    _create(name, value, helperText, vocabulary) {
 
       // Create buttons with icons
       let addButton = document.createElement("button");
@@ -91,6 +91,8 @@ fskeditorjs = function () {
   class SimpleTable {
 
     constructor (data, vocabulary) {
+      this.vocabulary = vocabulary;
+
       this.table = document.createElement("table");
       this.table.className = "table";
       this.table.innerHTML = `<thread><thead>`;
@@ -103,24 +105,15 @@ fskeditorjs = function () {
      * Create new row to enter data if the last row value is not empty.
      */
     add() {
-
       // If it has no rows or the last row value is not empty
       if (!this.body.lastChild || this.body.lastChild.lastChild.firstChild.value) {
-
-        // let newRow = document.createElement("tr");
-        // newRow.innerHTML = `<td><input type="checkbox"></td>
-        // <td><input type="text" class="form-control"></td>`;
-        // this.body.appendChild(newRow);
         this._createRow();
       }
     }
 
     remove() {
-      // TODO: trash
-
       // Find checked rows and delete them
       Array.from(this.body.children).forEach(row => {
-        console.log(row);
         // Get checkbox (tr > td > input)
         let checkbox = row.firstChild.firstChild;
         if (checkbox.checked) {
@@ -140,6 +133,15 @@ fskeditorjs = function () {
       let input = document.createElement("input");
       input.type = "text";
       input.className = "form-control";
+
+      // Add autocomplete to input with vocabulary
+      if (this.vocabulary) {
+        $(input).typeahead({
+          source: this.vocabulary,
+          autoSelect: true,
+          fitToElement: true
+        });
+      }
 
       // If enter is pressed when the input if focused, lose focus and add a
       // new row (like clicking the add button). The new input from calling add
@@ -288,8 +290,8 @@ fskeditorjs = function () {
         } else if (prop.type === "boolean") {
           inputForm = new InputForm(prop.label, "checkbox", prop.description);
         } else if (prop.type === "text-array") {
-          // TODO: Fix StringArrayForm
-          inputForm = new StringArrayForm(prop.label, "", prop.description);
+          inputForm = new StringArrayForm(prop.label, "", prop.description,
+            prop.vocabulary ? vocabularies[prop.vocabulary] : null);
         } else {
           return;
         }
@@ -315,7 +317,7 @@ fskeditorjs = function () {
       saveButton.textContent = "Save changes";
       saveButton.onclick = () => {
         console.log("saveButton says hi");
-        $("#" + id).modal('hide');
+        $(this.modal).modal('hide');
         // Create new row
         let newRow = document.createElement("tr");
 
