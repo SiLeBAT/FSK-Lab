@@ -134,7 +134,7 @@ fskeditorjs = function () {
 
       this.table = document.createElement("table");
       this.table.className = "table";
-      this.table.innerHTML = `<thread><thead>`;
+      this.table.innerHTML = `<thead><thead>`;
 
       this.body = document.createElement("tbody");
       this.table.appendChild(this.body);
@@ -204,6 +204,68 @@ fskeditorjs = function () {
     }
   }
 
+  class AdvancedTable {
+
+    constructor (data, formData) {
+      this.data = data;
+      this.formData = formData;
+
+      this.table = document.createElement("table");
+      this.table.className = "table";
+
+      // Create headers
+      let head = document.createElement("thead");
+      head.innerHTML = `<tr>
+        <th><input type="checkbox"></th>
+        ${this.formData.map(prop => `<th>${prop.label}</th>`).join("")}
+      </tr>`;
+
+      this.body = document.createElement("tbody");
+      this.table.appendChild(head);
+      this.table.appendChild(this.body);
+    }
+
+    /**
+     * Create a new row with new metadata from a dialog.
+     * 
+     * @param {Object} data JSON object with new metadata.
+     */
+    add(data) {
+      // Add new row (Order is fixed by formData)
+      let newRow = document.createElement("tr");
+      newRow.innerHTML = '<td><input type="checkbox"></td>';
+
+      this.formData.forEach(prop => {
+        // Get value for the current property
+        let value = data[prop.id] ? data[prop.id] : "";
+        // Add new cell with value
+        newRow.innerHTML += `<td>${value}</td>`;
+      });
+
+      this.body.appendChild(newRow);
+    }
+
+    /**
+     * Remove checked rows.
+     */
+    remove() {
+      Array.from(this.body.children).forEach(row => {
+        // Get checkbox (tr > td > input)
+        let checkbox = row.firstChild.firstChild;
+        if (checkbox.checked) {
+          this.body.removeChild(row);
+        }
+      });
+    }
+
+    /**
+     * Remove every row in the table.
+     */
+    trash() {
+      this.body.innerHTML = "";
+    }
+  }
+
   /**
    * Bootstrap 3 form-group for an input.
    */
@@ -267,6 +329,10 @@ fskeditorjs = function () {
 
     get value ()  {
       return this.input.value;
+    }
+
+    set value(newValue) {
+       this.input.value = newValue;
     }
   }
 
@@ -338,25 +404,17 @@ fskeditorjs = function () {
       saveButton.classList.add("btn", "btn-primary");
       saveButton.textContent = "Save changes";
       saveButton.onclick = () => {
-        console.log("saveButton says hi");
         $(this.modal).modal('hide');
-        // Create new row
-        let newRow = document.createElement("tr");
 
-        let checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        let checkboxCell = document.createElement("th");
-        checkboxCell.appendChild(checkbox);
-        newRow.appendChild(checkboxCell);
+        // Retrieve data and clear inputs
+        let data = {};
+        for (const inputId in this.inputs) {
+          let currentInput = this.inputs[inputId];
+          data[inputId] = currentInput.value; // Save input value
+          currentInput.value = ""; // Clear input
+        }
 
-        formData.forEach(prop => {
-          let cell = document.createElement("td");
-          cell.textContent = prop.label;
-          newRow.appendChild(cell);
-        })
-
-        // Save data to panel (add new row)
-        document.querySelector("#author tbody").appendChild(newRow);
+        this.table.add(data); // Table is added by TablePanel
       }
 
       let footer = document.createElement("div");
@@ -419,6 +477,7 @@ fskeditorjs = function () {
     constructor (title, dialog, formData) {
 
       this.panel = document.createElement("div");
+      this.table = new AdvancedTable([], formData);
       this._create(title, dialog, formData);
     }
 
@@ -428,18 +487,22 @@ fskeditorjs = function () {
       let addButton = document.createElement("button");
       addButton.classList.add("btn", "btn-default");
       addButton.setAttribute("data-toggle", "modal");
-      addButton.setAttribute("data-target", "#" + dialog);
+      addButton.setAttribute("data-target", "#" + dialog.modal.id);
       addButton.innerHTML = '<i class="glyphicon glyphicon-plus"></i>';
+      // Set dialog to add to this panel's table
+      dialog.table = this.table;
 
       // Remove button
       let removeButton = document.createElement("button");
       removeButton.classList.add("btn", "btn-default");
       removeButton.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
+      removeButton.onclick = () => this.table.remove();
       
       // Trash button
       let trashButton = document.createElement("button");
       trashButton.classList.add("btn", "btn-default");
       trashButton.innerHTML = '<i class="glyphicon glyphicon-trash"></i>';
+      trashButton.onclick = () => this.table.trash();
 
       // input-group-btn
       let inputGroupBtn = document.createElement("div");
@@ -460,14 +523,10 @@ fskeditorjs = function () {
       panelHeading.innerHTML = `<h4 class="panel-title pull-left" style="padding-top:7.5px;">${title}</h4>`;
       panelHeading.appendChild(inputGroup);
 
-      // table
-      let table = document.createElement("table");
-      table.className = "table";
-
       // panel
       this.panel.classList.add("panel", "panel-default");
       this.panel.appendChild(panelHeading);
-      this.panel.appendChild(table);
+      this.panel.appendChild(this.table.table);
     }
   }
 
@@ -675,19 +734,19 @@ fskeditorjs = function () {
     let tablePanels = {
       generalInformation: new FormPanel("General", ui.generalInformation),
       modelCategory: new FormPanel("Model category", ui.modelCategory),
-      author: new TablePanel("Author", "contactDialog", ui.contact),
-      creator: new TablePanel("Creator", "contactDialog", ui.contact),
-      reference: new TablePanel("Reference", "referenceDialog", ui.reference),
-      product: new TablePanel("Product", "productDialog", ui.product),
-      hazard: new TablePanel("Hazard", "hazardDialog", ui.hazard),
-      population: new TablePanel("Population", "populationDialog", ui.population),
+      author: new TablePanel("Author", dialogs.contactDialog, ui.contact),
+      creator: new TablePanel("Creator", dialogs.contactDialog, ui.contact),
+      reference: new TablePanel("Reference", dialogs.referenceDialog, ui.reference),
+      product: new TablePanel("Product", dialogs.productDialog, ui.product),
+      hazard: new TablePanel("Hazard", dialogs.hazardDialog, ui.hazard),
+      population: new TablePanel("Population", dialogs.populationDialog, ui.populationGroup),
       study: new FormPanel("Study", ui.study),
-      studySample: new TablePanel("Study sample", "studySampleDialog", ui.studySample),
-      dietaryAssessmentMethod: new TablePanel("Dietary assessment method", "methodDialog", ui.dietaryAssessmentMethod),
-      laboratory: new TablePanel("Laboratory", "laboratoryDialog", ui.laboratory),
-      assay: new TablePanel("Assay", "assayDialog", ui.assay),
-      parameter: new TablePanel("Parameter", "parameterDialog", ui.parameter),
-      qualityMeasures: new TablePanel("Quality measures", "measuresDialog", ui.qualityMeasures)
+      studySample: new TablePanel("Study sample", dialogs.studySampleDialog, ui.studySample),
+      dietaryAssessmentMethod: new TablePanel("Dietary assessment method", dialogs.methodDialog, ui.dietaryAssessmentMethod),
+      laboratory: new TablePanel("Laboratory", dialogs.laboratoryDialog, ui.laboratory),
+      assay: new TablePanel("Assay", dialogs.assayDialog, ui.assay),
+      parameter: new TablePanel("Parameter", dialogs.parameterDialog, ui.parameter),
+      qualityMeasures: new TablePanel("Quality measures", dialogs.measuresDialog, ui.qualityMeasures)
     };
 
     const viewContent = document.getElementById("viewContent");    
