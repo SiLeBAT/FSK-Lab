@@ -835,5 +835,31 @@ const ui = {
         "label": "Sensitivity analysis",
         "type": "text",
         "description": "Description of the results of an sensitivity analysis, i.e. how independence assumptions are met or how variables will affect the output of model"
-    }] 
+    }],
+    "modelEquation": [{
+        "id": "name",
+        "label": "Name",
+        "type": "text",
+        "description": "A name given to the model equation",
+        "required": true,
+    }, {
+        "id": "modelEquationClass",
+        "label": "Class",
+        "type": "text",
+        "description": "Information on that helps to categorize model equations"
+    },
+    // TODO: reference
+    {
+        "id": "modelEquation",
+        "label": "Equation",
+        "type": "text",
+        "description": "The pointer to the file that holds the software code (e.g. R-script)",
+        "required": true
+    }, {
+        "id": "modelHypothesis",
+        "label": "Hypothesis",
+        "type": "text-array",
+        "description": "Description of the hypothesis of the model"
+    }]
+    // TODO: exposure (Exposure)
 }
