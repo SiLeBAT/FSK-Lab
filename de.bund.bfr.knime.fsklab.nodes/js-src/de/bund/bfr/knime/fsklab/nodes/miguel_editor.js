@@ -613,7 +613,6 @@ fskeditorjs = function () {
     let panelsById = [
       {id: "scopeGeneral", panel: "Scope general"},
       {id: "spatialInformation", panel: createStringTable("Spatial information", "spatialInformation")},
-      {id: "dietaryAssessmentMethod", panel: createTablePanel("Dietary assessment method", "methodDialog", ui.dietaryAssessmentMethod)},
       {id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.firstModelScript}</textarea>`},
       {id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.firstModelViz}</textarea>`},
       {id: "readme", panel: `<textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>`}      
