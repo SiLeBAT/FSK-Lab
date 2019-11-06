@@ -3,7 +3,8 @@ const ui = {
         "id": "name",
         "label": "Name",
         "type": "text",
-        "description": "A name given to the model or data"
+        "description": "A name given to the model or data",
+        "required": true
     }, {
         "id": "source",
         "label": "Source",
@@ -14,12 +15,14 @@ const ui = {
         "id": "identifier",
         "label": "Identifier",
         "type": "text",
-        "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool"
+        "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
+        "required": true
     }, {
         "id": "creationDate",
         "label": "Creation date",
         "type": "date",
-        "description": "Creation date/time of the FSK file"
+        "description": "Creation date/time of the FSK file",
+        "required": true
     }, {
         "id": "modificationDate",
         "label": "Modification date",
@@ -30,7 +33,8 @@ const ui = {
         "label": "Rights",
         "type": "text",
         "description": "Rights granted for usage, distribution and modification of this FSK file",
-        "vocabulary": "Rights"
+        "vocabulary": "Rights",
+        "required": true
     }, {
         "id": "availability",
         "label": "Availability",
@@ -88,7 +92,8 @@ const ui = {
         "label": "Model class",
         "type": "text",
         "description": "Type of model according to RAKIP classification",
-        "vocabulary": "Model_Class"
+        "vocabulary": "Model_Class",
+        "required": true
     }, {
         "id": "modelClassComment",
         "label": "Comment",
@@ -126,7 +131,8 @@ const ui = {
         "id": "email",
         "label": "Email",
         "type": "text",
-        "description": "The address for eletronic mail communication."
+        "description": "The address for eletronic mail communication.",
+        "required": true
     }, {
         "id": "telephone",
         "label": "Telephone",
@@ -180,7 +186,8 @@ const ui = {
             "id": "isReferenceDescription",
             "label": "Is reference",
             "type": "boolean",
-            "description": "Indicates whether this specific publication serves as the reference description for the model. There has to be at least one reference where this field is set to 'True'"
+            "description": "Indicates whether this specific publication serves as the reference description for the model. There has to be at least one reference where this field is set to 'True'",
+            "required": true
         }, {
             "id": "publicationType",
             "label": "Type",
@@ -201,7 +208,8 @@ const ui = {
             "id": "doi",
             "label": "DOI",
             "type": "text",
-            "description": "DOI related to this publication"
+            "description": "DOI related to this publication",
+            "required": true
         }, {
             "id": "authorList",
             "label": "Author list",
@@ -212,6 +220,7 @@ const ui = {
             "label": "Title",
             "type": "text",
             "description": "Title of the publication in which the model or the data has been described",
+            "required": true
         }, {
             "id": "abstract",
             "label": "Abstract",
@@ -256,7 +265,8 @@ const ui = {
             "label": "Name",
             "type": "text",
             "description": "The product, matrix or environment (e.g food product, lab media, soil etc.) for which the model or data applies",
-            "vocabulary": "Product_matrix_name"
+            "vocabulary": "Product_matrix_name",
+            "required": true
         }, {
             "id": "description",
             "label": "Description",
@@ -267,7 +277,8 @@ const ui = {
             "label": "Unit",
             "type": "text",
             "description": "Unit of the product, matrix or environment for which the model or data applies",
-            "vocabulary": "Parameter_unit"
+            "vocabulary": "Parameter_unit",
+            "required": true
         }, {
             "id": "method",
             "label": "Method",
@@ -328,7 +339,8 @@ const ui = {
             "label": "Name",
             "type": "text",
             "description": "Name of the hazard (agent, contaminant, chemical) for which the data or model applies",
-            "vocabulary": "Hazard_name"
+            "vocabulary": "Hazard_name",
+            "required": true
         }, {
             "id": "description",
             "label": "Description",
@@ -396,7 +408,8 @@ const ui = {
         "id": "name",
         "label": "Name",
         "type": "text",
-        "description": "Name of the population for which the model or data applies"
+        "description": "Name of the population for which the model or data applies",
+        "required": true
     }, {
         "id": "targetPopulation",
         "label": "Target population",
@@ -459,7 +472,8 @@ const ui = {
         "id": "identifier",
         "label": "Identifier",
         "type": "text",
-        "description": "A user-defined identifier for the study"
+        "description": "A user-defined identifier for the study",
+        "required": true
     }, {
         "id": "title",
         "label": "Title",
@@ -537,12 +551,14 @@ const ui = {
         "id": "sampleName",
         "label": "Name",
         "type": "text",
-        "description": "An unambiguous ID given to the samples used in the assay"
+        "description": "An unambiguous ID given to the samples used in the assay",
+        "required": true
     }, {
         "id": "protocolOfSampleCollection",
         "label": "Protocol",
         "type": "text",
-        "description": "Additional protocol for sample and sample collection. Corresponds to the Protocol REF in ISA"
+        "description": "Additional protocol for sample and sample collection. Corresponds to the Protocol REF in ISA",
+        "required": true
     }, {
         "id": "samplingStrategy",
         "label": "Sampling strategy",
@@ -565,17 +581,20 @@ const ui = {
         "id": "samplingPlan",
         "label": "Sampling plan",
         "type": "text",
-        "description": "Description of data collection technique (stratified or complex sampling (several stages))"
+        "description": "Description of data collection technique (stratified or complex sampling (several stages))",
+        "required": true
     }, {
         "id": "samplingWeight",
         "label": "Sampling weight",
         "type": "text",
-        "description": "Description of the method employed to compute sampling weight (nonresponse-adjusted weight)"
+        "description": "Description of the method employed to compute sampling weight (nonresponse-adjusted weight)",
+        "required": true
     }, {
         "id": "samplingSize",
         "label": "Sampling size",
         "type": "text",
-        "description": "Number of units, full participants, partial participants, eligibles, not eligible, unresolved (eligibility status not resolved)..."
+        "description": "Number of units, full participants, partial participants, eligibles, not eligible, unresolved (eligibility status not resolved)...",
+        "required": true
     }, {
         "id": "lotSizeUnit",
         "label": "Size unit",
@@ -593,12 +612,14 @@ const ui = {
         "label": "Collection tool",
         "type": "text",
         "description": "Food diaries, interview, 24-hour recall interview, food propensy questionnaire, portion size measurement aids, eating outside questionnaire",
-        "vocabulary": "Method_tool_to_collect_data"
+        "vocabulary": "Method_tool_to_collect_data",
+        "required": true
     }, {
         "id": "numberOfNonConsecutiveOneDay",
         "label": "Non-consecutive one day",
         "type": "text",
-        "description": "Number of non-consecutive one-day recorded"
+        "description": "Number of non-consecutive one-day recorded",
+        "required": true
     }, {
         "id": "softwareTool",
         "label": "Software tool",
@@ -608,17 +629,20 @@ const ui = {
         "id": "numberOfFoodItems",
         "label": "Food items",
         "type": "text",
-        "description": "Number of food items"
+        "description": "Number of food items",
+        "required": true
     }, {
         "id": "recordTypes",
         "label": "Record types",
         "type": "text-array",
-        "description": "Consumption occasion, mean of consumption, quantified and described as eaten, recipes for self-made"
+        "description": "Consumption occasion, mean of consumption, quantified and described as eaten, recipes for self-made",
+        "required": true
     }, {
         "id": "foodDescriptors",
         "label": "Food descriptors",
         "type": "text-array",
-        "description": "Description using FoodEx2 facet"
+        "description": "Description using FoodEx2 facet",
+        "required": true
     }],
     "laboratory": [{
         "id": "name",
@@ -636,13 +660,15 @@ const ui = {
         "label": "Accreditation",
         "type": "text-array",
         "description": "The laboratory accreditation to ISO/IEC 17025",
-        "vocabulary": "Laboratory_accreditation"
+        "vocabulary": "Laboratory_accreditation",
+        "required": true
     }],
     "assay": [{
         "id": "name",
         "label": "Name",
         "type": "text",
-        "description": "A name given to the assay"
+        "description": "A name given to the assay",
+        "required": true
     }, {
         "id": "description",
         "label": "Description",
@@ -688,18 +714,21 @@ const ui = {
         "id": "id",
         "label": "ID",
         "type": "text",
-        "description": "An unambiguous ID given to each of the parameters - preferably autogenerated by a software tool and compatible with SBML ID requirements, only letters from A to Z, numbers and '_'"
+        "description": "An unambiguous ID given to each of the parameters - preferably autogenerated by a software tool and compatible with SBML ID requirements, only letters from A to Z, numbers and '_'",
+        "required": true
     }, {
         "id": "classification",
         "label": "Classification",
         "type": "text",
         "description": "General classification of the parameter (e.g. Input, Constant, Output...)",
-        "vocabulary": "Parameter_classification"
+        "vocabulary": "Parameter_classification",
+        "required": true
     }, {
         "id": "name",
         "label": "Name",
         "type": "text",
-        "description": "A name given to the parameter"
+        "description": "A name given to the parameter",
+        "required": true
     }, {
         "id": "description",
         "label": "Description",
@@ -710,7 +739,8 @@ const ui = {
         "label": "Unit",
         "type": "text",
         "description": "Unit of the parameter",
-        "vocabulary": "Parameter_unit"
+        "vocabulary": "Parameter_unit",
+        "required": true
     }, {
         "id": "unitCategory",
         "label": "Unit category",
@@ -722,7 +752,8 @@ const ui = {
         "label": "Data type",
         "type": "text",
         "description": "Information on the data format of the parameter, e.g. if it the input parameter is a file location or a date or a number. This is important for software tools interpreting the metadata and generate user interfaces for parameter input.",
-        "vocabulary": "Parameter_data_type"
+        "vocabulary": "Parameter_data_type",
+        "required": true
     }, {
         "id": "source",
         "label": "Source",

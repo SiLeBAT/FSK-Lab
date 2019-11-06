@@ -35,13 +35,14 @@ fskeditorjs = function () {
    */
   function createForm(prop) {
     let vocabulary = prop.vocabulary ? vocabularies[prop.vocabulary] : null;
+    let isMandatory = prop.required ? prop.required : false;
 
     if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
       prop.type === "date")
-      return new InputForm(prop.label, prop.type, prop.description, vocabulary);
+      return new InputForm(prop.label, isMandatory, prop.type, prop.description, vocabulary);
     
     if (prop.type === "boolean")
-      return new InputForm(prop.label, "checkbox", prop.description);
+      return new InputForm(prop.label, isMandatory, "checkbox", prop.description);
     
     if (prop.type === "text-array")
       return new ArrayForm(prop.label, prop.type, prop.description, vocabulary);
@@ -74,13 +75,13 @@ fskeditorjs = function () {
    */
   class ArrayForm {
 
-    constructor (name, type, value, helperText, vocabulary) {
+    constructor (name, mandatory, type, value, helperText, vocabulary) {
       this.group = document.createElement("div");      
       this.simpleTable = new SimpleTable(type, ["a", "b", "c"], vocabulary);
-      this._create(name, helperText);
+      this._create(name, mandatory, helperText);
     }
 
-    _create(name, helperText) {
+    _create(name, mandatory, helperText) {
 
       // Create buttons with icons
       let addButton = document.createElement("button");
@@ -130,7 +131,8 @@ fskeditorjs = function () {
       formDiv.appendChild(panelDiv);
 
       this.group.classList.add("form-group", "row");
-      this.group.innerHTML = `<label class="col-sm-2 col-form-label">${name}</label>`;
+      this.group.innerHTML = `<label class="col-sm-2 col-form-label">
+        ${name + (mandatory ? " *" : "")}</label>`;
       this.group.appendChild(formDiv);
     }
   }
@@ -305,18 +307,19 @@ fskeditorjs = function () {
 	   * </div>
      * ```
      * @param {string} name Property name
+     * @param {boolean} mandatory `true` if mandatory, `false` if optional.
      * @param {string} type Property type: text, url, checkbox, etc.
      * @param {string} helperText Tooltip
      */
-    constructor (name, type, helperText, vocabulary=null) {
+    constructor (name, mandatory, type, helperText, vocabulary=null) {
       
       this.input = document.createElement("input");
       this.group = document.createElement("div");
 
-      this._create(name, type, helperText, vocabulary);
+      this._create(name, mandatory, type, helperText, vocabulary);
     }
 
-    _create(name, type, helperText, vocabulary) {
+    _create(name, mandatory, type, helperText, vocabulary) {
 
       // Create input
       this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
@@ -338,7 +341,8 @@ fskeditorjs = function () {
 
       // Collect everything into group
       this.group.classList.add("form-group", "row");
-      this.group.innerHTML = `<label class="col-sm-2 col-form-label">${name}</label>`;
+      this.group.innerHTML = `<label class="col-sm-2 col-form-label">
+        ${name + (mandatory ? " *" : "")}</label>`;
       this.group.appendChild(inputDiv);
     }
 
