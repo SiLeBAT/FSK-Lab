@@ -611,45 +611,48 @@ fskeditorjs = function () {
 
     let bodyContent = `
 <div class="container-fluid">
-  <ul class="nav nav-tabs" id="viewTab" role="tablist">
-    ${createSubMenu("General information", [{ "id": "generalInformation", "label": "General" },
-      { "id": "modelCategory", "label": "Model category" },
-      { "id": "modificationDate", "label": "Modification date" },
-      { "id": "author", "label": "Author" },
-      { "id": "creator", "label": "Creator" },
-      { "id": "reference", "label": "Reference" }], true)}
-    ${createSubMenu("Scope", [{ "id": "scopeGeneral", "label": "General" },
-      { "id": "product", "label": "Product" },
-      { "id": "hazard", "label": "Hazard" },
-      { "id": "population", "label": "Population group" },
-      { "id": "spatialInformation", "label": "Spatial information" }])}
-    ${createSubMenu("Data Background", [{ "id": "study", "label": "Study" },
-      { "id": "studySample", "label": "Study sample" },
-      { "id": "dietaryAssessmentMethod", "label": "Dietary assessment method" },
-      { "id": "laboratory", "label": "Laboratory" },
-      { "id": "assay", "label": "Assay" }])}
-    ${createSubMenu("Model math", [{ "id": "mathGeneral", "label": "General" },
-      { "id": "parameter", "label": "Parameter" },
-      { "id": "qualityMeasures", "label": "Quality measures" },
-      { "id": "modelEquation", "label": "Model equation" },
-      { "id": "exposure", "label": "Exposure" }])}
-    <li role="presentation">
-      <a href="#modelScript" aria-controls="modelScript" role="tab"
-        data-toggle="tab">Model script</a>
-    </li>
-    <li role="presentation">
-      <a href="#visualizationScript" aria-controls="visualizationScript"
-        role="tab" data-toggle="tab">Visualization script</a>
-    </li>
-    <li role="presentation">
-      <a href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
-    </li>
-  </ul>
-
+  <nav class="navbar navbar-default">
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav" id="viewTab">
+      ${createSubMenu("General information", [{ "id": "generalInformation", "label": "General" },
+        { "id": "modelCategory", "label": "Model category" },
+        { "id": "modificationDate", "label": "Modification date" },
+        { "id": "author", "label": "Author" },
+        { "id": "creator", "label": "Creator" },
+        { "id": "reference", "label": "Reference" }])}
+      ${createSubMenu("Scope", [{ "id": "scopeGeneral", "label": "General" },
+        { "id": "product", "label": "Product" },
+        { "id": "hazard", "label": "Hazard" },
+        { "id": "population", "label": "Population group" },
+        { "id": "spatialInformation", "label": "Spatial information" }])}
+      ${createSubMenu("Data Background", [{ "id": "study", "label": "Study" },
+        { "id": "studySample", "label": "Study sample" },
+        { "id": "dietaryAssessmentMethod", "label": "Dietary assessment method" },
+        { "id": "laboratory", "label": "Laboratory" },
+        { "id": "assay", "label": "Assay" }])}
+      ${createSubMenu("Model math", [{ "id": "mathGeneral", "label": "General" },
+        { "id": "parameter", "label": "Parameter" },
+        { "id": "qualityMeasures", "label": "Quality measures" },
+        { "id": "modelEquation", "label": "Model equation" },
+        { "id": "exposure", "label": "Exposure" }])}
+        <li role="presentation">
+          <a id="modelScript-tab" href="#modelScript"
+            aria-controls="modelScript" role="tab" data-toggle="tab">Model script</a>
+        </li>
+        <li role="presentation">
+          <a id="visualizationScript-tab" href="#visualizationScript"
+            aria-controls="visualizationScript" role="tab" data-toggle="tab">Visualization script</a>
+        </li>
+        <li role="presentation">
+          <a href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
   <div class="tab-content" id="viewContent">
-    ${panelsById.map(entry =>
-      `<div role="tabpanel" class="tab-pane ${"active" in entry ? 'active' : ''}"
-        id="${entry.id}">${entry.panel}</div>`).join("")}
+  ${panelsById.map(entry =>
+    `<div role="tabpanel" class="tab-pane ${"active" in entry ? 'active' : ''}"
+      id="${entry.id}">${entry.panel}</div>`).join("")}
   </div>
 </div>`;
 
@@ -699,11 +702,15 @@ fskeditorjs = function () {
     _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
     _readmeCodeMirror = createCodeMirror("readmeArea", "htmlmixed");
 
-    // Every time a tab is shown
-    $('.nav-tabs a').on('shown.bs.tab', () => {
-      // Refresh code mirrors
+    $('#modelScript-tab').on('shown.bs.tab', () => {
       _modelCodeMirror.refresh();
+    });
+
+    $('#visualizationScript-tab').on('shown.bs.tab', () => {
       _visualizationCodeMirror.refresh();
+    });
+
+    $('#readme-tab').on('shown.bs.tab', () => {
       _readmeCodeMirror.refresh();
     });
   }
@@ -711,12 +718,11 @@ fskeditorjs = function () {
   /**
    * Create a Bootstrap dropdown menu.
    * @param {string} name Menu name 
-   * @param {array} submenus Array of hashes of id and name of the submenus. 
-   * @param {boolean} isActive If the menu is active initially.
+   * @param {array} submenus Array of hashes of id and name of the submenus.
    */
-  function createSubMenu(name, submenus, isActive = false) {
+  function createSubMenu(name, submenus) {
 
-    return `<li role="presentation" class="${isActive ? "active" : ""}">
+    return `<li class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
         aria-haspopup="true" aria-expanded="false">${name}<span class="caret"></a>
       <ul class="dropdown-menu">
