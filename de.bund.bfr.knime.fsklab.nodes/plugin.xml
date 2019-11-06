@@ -110,6 +110,8 @@
        <webDependency webResourceBundleID="codemirror"></webDependency>
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
        <webDependency webResourceBundleID="bootstrap3_typeahead_4.0.2"></webDependency>
+       <webDependency webResourceBundleID="datepicker"></webDependency>
+       
      </webResourceBundle>
      
      <!-- JS and CSS code for Fsk Joiner node -->
@@ -333,5 +335,11 @@
       <webResource relativePathSource="js-lib/bootstrap3_typeahead" relativePathTarget="bootstrap3_typeahead" />
       <importResource relativePath="bootstrap3_typeahead/bootstrap3-typeahead.min.js" type="JAVASCRIPT" />
     </webResourceBundle>
+
+    <webResourceBundle debug="false" name="datepicker" usesDefine="false" version="1.9.0" webResourceBundleID="datepicker">
+      <webResource relativePathSource="js-lib/datepicker" relativePathTarget="datepicker" />
+      <importResource relativePath="datepicker/bootstrap-datepicker.min.js" type="JAVASCRIPT" />
+    </webResourceBundle>
+
   </extension>
 </plugin>
