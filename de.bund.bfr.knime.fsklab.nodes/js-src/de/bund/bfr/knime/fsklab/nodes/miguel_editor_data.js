@@ -21,6 +21,11 @@ const ui = {
         "type": "date",
         "description": "Creation date/time of the FSK file"
     }, {
+        "id": "modificationDate",
+        "label": "Modification date",
+        "type": "date-array",
+        "description": "Date/time of the last version of the FSK file"
+    }, {
         "id": "rights",
         "label": "Rights",
         "type": "text",
