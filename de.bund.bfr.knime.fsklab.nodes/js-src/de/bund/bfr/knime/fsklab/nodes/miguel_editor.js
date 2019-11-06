@@ -4,6 +4,19 @@ fskeditorjs = function () {
   view.name = "Javascript FSK Editor";
 
   /**
+   * Add controlled vocabulary to an input.
+   * @param {Element} input Input element
+   * @param {Array} vocabulary String array with vocabulary terms.
+   */
+  function addControlledVocabulary(input, vocabulary) {
+    $(input).typeahead({
+      source: vocabulary,
+      autoSelect: true,
+      fitToElement: true
+    });
+  }
+
+  /**
    * Create a div to edit string arrays.
    * 
    * ```
@@ -136,11 +149,7 @@ fskeditorjs = function () {
 
       // Add autocomplete to input with vocabulary
       if (this.vocabulary) {
-        $(input).typeahead({
-          source: this.vocabulary,
-          autoSelect: true,
-          fitToElement: true
-        });
+        addControlledVocabulary(input, this.vocabulary);
       }
 
       // If enter is pressed when the input if focused, lose focus and add a
@@ -221,11 +230,7 @@ fskeditorjs = function () {
 
       // Add autocomplete to input with vocabulary
       if (vocabulary) {
-        $(this.input).typeahead({
-          source: vocabulary,
-          autoSelect: true,
-          fitToElement: true
-        });
+        addControlledVocabulary(this.input, vocabulary);
       }
 
       // Collect everything into group
