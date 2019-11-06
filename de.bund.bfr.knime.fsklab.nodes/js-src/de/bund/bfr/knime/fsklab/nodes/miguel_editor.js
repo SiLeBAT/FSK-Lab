@@ -171,6 +171,15 @@ fskeditorjs = function () {
     _createRow() {
       let input = document.createElement("input");
       input.type = this.type;
+    
+      //Datepicker for input date elements
+      if(input.type === "date"){
+    	  input.type = "text";
+    	  $(input).datepicker({
+    		 format:'dd/mm/yyyy',
+    		 autoclose:true,
+    	  });
+      }
       input.className = "form-control";
 
       // Add autocomplete to input with vocabulary
@@ -309,6 +318,14 @@ fskeditorjs = function () {
       // Create input
       this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
       this.input.type = type;
+      //DatePicker for input date elements
+      if(this.input.type === "date"){
+    	  this.input.type = "text";
+    	  $(this.input).datepicker({
+    		 format:'dd/mm/yyyy',
+    		 autoclose:true,
+    	  });
+      }
       this.input.placeholder = helperText;
 
       // Create div for input
