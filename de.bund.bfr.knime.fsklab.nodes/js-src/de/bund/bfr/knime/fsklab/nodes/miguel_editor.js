@@ -276,19 +276,21 @@ fskeditorjs = function () {
      * 
      * ```
      * <div class="modal-fade">
-     *   <div class="modal-content">
-     *     <div class="modal-header">
-     *       <button>
-     *         <span>
-     *       </button>
-     *       <h4 class="modal-title">title</h4>
-     *     </div>
-     *     <div class="modal-body">
-     *       <form>...</form>
-     *     </div>
-     *     <div class="modal-footer">
-     *       <button type="button">Close</button>
-     *       <button type="button">Save changes</button>
+     *   <div class="modal-dialog" role="document">
+     *     <div class="modal-content">
+     *       <div class="modal-header">
+     *         <button>
+     *           <span>
+     *         </button>
+     *         <h4 class="modal-title">title</h4>
+     *       </div>
+     *       <div class="modal-body">
+     *         <form>...</form>
+     *       </div>
+     *       <div class="modal-footer">
+     *         <button type="button">Close</button>
+     *         <button type="button">Save changes</button>
+     *       </div>
      *     </div>
      *   </div>
      * </div>
@@ -369,11 +371,16 @@ fskeditorjs = function () {
       content.appendChild(modalBody);
       content.appendChild(footer);
 
+      let modalDialog = document.createElement("div");
+      modalDialog.classList.add("modal-dialog", "modal-dialog-centered");
+      modalDialog.setAttribute("role", "document");
+      modalDialog.appendChild(content);
+
       this.modal.classList.add("modal", "fade");
       this.modal.id = id;
       this.modal.tabIndex = -1;
       this.modal.setAttribute("role", "dialog");
-      this.modal.appendChild(content);
+      this.modal.appendChild(modalDialog);
     }
   }
 
