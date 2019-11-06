@@ -831,49 +831,6 @@ fskeditorjs = function () {
       });
   }
 
-  function createStringGroup(label, id, value, helperText) {
-    return `<div class="form-group row">
-      <label for="${id}" class="col-sm-2 col-form-label">${label}</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="${id}" value="${value}" placeholder="${helperText}">
-      </div>
-    </div>`;
-  }
-
-  function createNumberGroup(label, id, value, helperText) {
-    return `<div class="form-group row">
-      <label for="${id}" class="col-sm-2 col-form-label">${label}</label>
-      <div class="col-sm-10">
-        <input type="number" class="form-control" id="${id}" value="${value}" placeholder="${helperText}">
-      </div>
-    </div>`;
-  }
-
-  function createCheckboxGroup(label, id, value, helperText) {
-    return `<div class="form-check">
-      <input class="form-check-input" type="checkbox" value="" id="${id}" ${value ? "checked" : ""}>
-      <label class="form-check-label" for="${id}">${label}</label>
-    </div>`;
-  }
-
-  function createUrlGroup(label, id, value, helperText) {
-    return `<div class="form-group row">
-      <label for="${id}" class="col-sm-2 col-form-label">${label}</label>        
-      <div class="col-sm-10">
-        <input type="url" class="form-control" id="${id}" value="${value}" placeholder="${helperText}">
-      </div>
-    </div>`
-  }
-
-  function createDateGroup(label, id, value, helperText) {
-    return `<div class="form-group row">
-      <label for="${id}" class="col-sm-2 col-form-label">${label}</label>        
-      <div class="col-sm-10">
-        <input type="date" class="form-control" value="${value}" id="${id}">
-      </div>
-    </div>`
-  }
-
   /** Create a table with a single (data) column to edit a string array. */
   function createStringTable(label) {
     return `<div>
@@ -894,71 +851,6 @@ fskeditorjs = function () {
       </tr>
     </table>
    </div>`;
-  }
-
-  function createDateTable(label) {
-    return `<div>
-    <span class="pull-right">
-      <button type="button" class="btn btn-default">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-      </button>
-      <button type="button" class="btn btn-default">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-      </button>
-    </span>
-    <table class="table">
-      <tr>
-        <th><input type="checkbox"></th>
-        <th>${label}</th>
-      </tr>
-      <tr></tr>
-    </table>
-   </div>`;
-  }
-
-  /**
-   * Create a Bootstrap 3 panel.
-   * - title: string
-   * - body: HTML string
-   */
-  function createPanel(title, body) {
-    return `<div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">${title}</h3>
-      </div>
-      <div class="panel-body">${body}</div>
-    </div>`;
-  }
-
-  /**
-   * Create a Bootstrap 3 panel with controls in the heading and a table as body.
-   * 
-   * @param {string} title Panel title
-   * @param {string} dialog ID of the dialog to add more items.
-   * @param {object} formData UI form data holding the metadata properties.
-   */
-  function createTablePanel(title, dialog, formData) {
-    return `<div class="panel panel-default">
-      <div class="panel-heading clearfix">
-        <h4 class="panel-title pull-left" style="padding-top:7.5px;">${title}</h4>
-        <div class="input-group">
-          <p class="pull-right" /> <!-- gutter -->
-          <div class="input-group-btn">
-            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#${dialog}">
-              <i class="glyphicon glyphicon-plus"></i>
-            </button>
-            <button class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
-            <button class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>    
-          </div>
-        </div>
-      </div>
-      <table class="table">
-        <tr>
-          <th><input type="checkbox"></th>
-          ${formData.map(prop => `<th>${prop.label}</th>`).join("")}
-        </tr>
-      </table>
-    </div>`;
   }
 
   /**
