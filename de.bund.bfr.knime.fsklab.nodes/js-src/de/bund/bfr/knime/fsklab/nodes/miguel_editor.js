@@ -45,10 +45,10 @@ fskeditorjs = function () {
       return new InputForm(prop.label, isMandatory, "checkbox", prop.description);
     
     if (prop.type === "text-array")
-      return new ArrayForm(prop.label, prop.type, prop.description, vocabulary);
+      return new ArrayForm(prop.label, isMandatory, prop.type, prop.description, vocabulary);
 
     if (prop.type === "date-array")
-      return new ArrayForm(prop.label, prop.type, prop.description, vocabulary);
+      return new ArrayForm(prop.label, isMandatory, prop.type, prop.description, vocabulary);
   }
 
   /**
@@ -685,7 +685,8 @@ fskeditorjs = function () {
       laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", ui['laboratory']),
       assayDialog: new Dialog("assayDialog", "Add assay", ui['assay']),
       parameterDialog: new Dialog("parameterDialog", "Add parameter", ui['parameter']),
-      measuresDialog: new Dialog("measuresDialog", "Add quality measures", ui['qualityMeasures'])
+      measuresDialog: new Dialog("measuresDialog", "Add quality measures", ui['qualityMeasures']),
+      equationDialog: new Dialog("equationDialog", "Add model equation", ui['modelEquation'])
     }
 
     let panelsById = [
@@ -765,7 +766,8 @@ fskeditorjs = function () {
       laboratory: new TablePanel("Laboratory", dialogs.laboratoryDialog, ui.laboratory),
       assay: new TablePanel("Assay", dialogs.assayDialog, ui.assay),
       parameter: new TablePanel("Parameter", dialogs.parameterDialog, ui.parameter),
-      qualityMeasures: new TablePanel("Quality measures", dialogs.measuresDialog, ui.qualityMeasures)
+      qualityMeasures: new TablePanel("Quality measures", dialogs.measuresDialog, ui.qualityMeasures),
+      modelEquation: new TablePanel("Model equation", dialogs.equationDialog, ui.modelEquation)
     };
 
     const viewContent = document.getElementById("viewContent");    
