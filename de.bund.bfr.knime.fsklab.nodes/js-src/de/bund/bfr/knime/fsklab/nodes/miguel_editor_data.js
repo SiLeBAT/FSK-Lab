@@ -259,6 +259,17 @@ const ui = {
             "description": "Further comments related to the reference description, e.g. which section in there describes the specific model or which figure in there can be reproduced with the visualization script"
         }
     ],
+    "scope": [{
+        "id": "generalComment",
+        "label": "General comment",
+        "type": "text",
+        "description": "General comments on the scope of the study, data or model",
+    }, {
+        "id": "spatialInformation",
+        "label": "Spatial information",
+        "type": "text-array",
+        "description": "Spatial information (area) on which the model or data applies"
+    }],
     "product": [
         {
             "id": "name",
@@ -860,6 +871,32 @@ const ui = {
         "label": "Hypothesis",
         "type": "text-array",
         "description": "Description of the hypothesis of the model"
+    }],
+    "exposure": [{
+        "id": "treatment",
+        "label": "Treatment",
+        "type": "text-array",
+        "description": "Description of the mathematical method to replace left-censored data (recommandation of WHO (2013), distribution or others)"
+    }, {
+        "id": "contamination",
+        "label": "Contamination",
+        "type": "text-array",
+        "description": "Description of the range of of the level of contamination after left censored data treatment"
+    }, {
+        "id": "type",
+        "label": "Type",
+        "type": "text",
+        "description": "Description of the type of exposure",
+        "required": true
+    }, {
+        "id": "scenario",
+        "label": "Scenario",
+        "type": "text-array",
+        "description": "Description of the different scenarii used in exposure assessment"
+    }, {
+        "id": "uncertaintyEstimation",
+        "label": "Uncertainty estimation",
+        "type": "text",
+        "description": "Analysis to estimate uncertainty"
     }]
-    // TODO: exposure (Exposure)
 }
