@@ -213,9 +213,10 @@ fskeditorjs = function () {
 
   class AdvancedTable {
 
-    constructor (data, formData) {
+    constructor (data, formData, dialog) {
       this.data = data;
       this.formData = formData;
+      this.dialog = dialog;
 
       this.table = document.createElement("table");
       this.table.className = "table";
@@ -254,19 +255,33 @@ fskeditorjs = function () {
       this.formData.forEach(prop => {
         // Get value for the current property
         let value = data[prop.id] ? data[prop.id] : "";
-        
+
         let cell = document.createElement("td");
         cell.title = value; // Set the whole value as tooltip
         cell.textContent = value.length > 20 ? value.substring(0, 24) + "..." : value;
         newRow.appendChild(cell);
       });
 
-      // TODO: Edit button
       let editButton = document.createElement("button");
       editButton.classList.add("btn", "btn-primary", "btn-sm");
-      // TODO: maybe we need to something with the modal here
       editButton.innerHTML = '<i class="glyphicon glyphicon-edit"></i>';
       editButton.title = "Edit";
+      editButton.onclick = (e) => {
+        // Get current row (button > btn-group > td > tr)
+        let currentRow = e.currentTarget.parentNode.parentNode.parentNode;
+
+        // Iterate every cell but the last one (with buttons)
+        for (let i = 0; i < this.formData.length; i++) {
+          let prop = this.formData[i];
+          let currentCell = currentRow.childNodes[i];
+          // Update dialog with the cell value (from title). The tooltip title
+          // has the full value. The textContent may be truncated.
+          this.dialog.inputs[prop.id].value = currentCell.title;
+        }
+
+        this.dialog.editedRow = currentRow.rowIndex - 1;
+        $(this.dialog.modal).modal('show');
+      }
 
       // Remove button
       let removeButton = document.createElement("button");
@@ -291,6 +306,19 @@ fskeditorjs = function () {
       newRow.appendChild(buttonCell);
 
       this.body.appendChild(newRow);
+    }
+
+    edit(rowNumber, data) {
+      let row = this.body.childNodes[rowNumber];
+      
+      for (let i = 0; i < this.formData.length; i++) {
+        let prop = this.formData[i];
+        let cell = row.childNodes[i];
+
+        let value = data[prop.id];
+        cell.title = value;
+        cell.textContent = value.length > 25 ? value.substring(0, 24) : value;
+      }
     }
 
     /**
@@ -421,6 +449,11 @@ fskeditorjs = function () {
      */
     constructor (id, title, formData) {
       this.inputs = {};  // Hash of inputs by id
+
+      // Index of the row currently edited. It is -1 if no row is being edited.
+      // This is the case of when a new row is added.
+      this.editedRow = -1;
+
       this.modal = document.createElement("div");      
       this.create(id, title, formData);
     }
@@ -463,7 +496,12 @@ fskeditorjs = function () {
           currentInput.value = ""; // Clear input
         }
 
-        this.table.add(data); // Table is added by TablePanel
+        if (this.editedRow != -1) {
+          this.table.edit(this.editedRow, data);
+          this.editedRow = -1;
+        } else {
+          this.table.add(data);
+        }
       }
 
       let footer = document.createElement("div");
@@ -535,7 +573,7 @@ fskeditorjs = function () {
     constructor (title, dialog, formData, data) {
 
       this.panel = document.createElement("div");
-      this.table = new AdvancedTable(data, formData);
+      this.table = new AdvancedTable(data, formData, dialog);
       this._create(title, dialog, formData);
     }
 
