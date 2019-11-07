@@ -16,39 +16,35 @@ fskeditorjs = function () {
     });
   }
 
-  /** Take a date input and convert it to a Bootstrap datepicker. */
-  function createDatePicker(input) {
-    input.type = "text";
-    $(input).datepicker({
-      format:'dd/mm/yyyy',
-      autoclose:true,
-    });
-  }
-
   /**
-   * Create an horizontal form for a metadata property.
+   * Create an horizontal form for a metadata property. Missing values with
+   * *null* or *undefined* are replaced with an empty string.
    * 
    * @param {object} prop Metadata property. It can be of type: text, number,
-   * url, data, boolean, text-array and date-array.
+   *  url, data, boolean, text-array and date-array.
+   * @param {string} value Input value. It can be *null* or *undefined* for
+   *  missing values.
+   * 
    * @returns InputForm or StringArrayForm for the supported type. If wrong type
-   * it returns undefined.
+   *  it returns undefined.
    */
-  function createForm(prop) {
+  function createForm(prop, value) {
+    value = value ? value : "";
     let vocabulary = prop.vocabulary ? vocabularies[prop.vocabulary] : null;
     let isMandatory = prop.required ? prop.required : false;
 
     if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
       prop.type === "date")
-      return new InputForm(prop.label, isMandatory, prop.type, prop.description, vocabulary);
+      return new InputForm(prop.label, isMandatory, prop.type, prop.description, value, vocabulary);
     
     if (prop.type === "boolean")
-      return new InputForm(prop.label, isMandatory, "checkbox", prop.description);
+      return new InputForm(prop.label, isMandatory, "checkbox", value, prop.description);
     
     if (prop.type === "text-array")
-      return new ArrayForm(prop.label, isMandatory, prop.type, prop.description, vocabulary);
+      return new ArrayForm(prop.label, isMandatory, prop.type, prop.description, value, vocabulary);
 
     if (prop.type === "date-array")
-      return new ArrayForm(prop.label, isMandatory, prop.type, prop.description, vocabulary);
+      return new ArrayForm(prop.label, isMandatory, prop.type, prop.description, value, vocabulary);
   }
 
   /**
@@ -182,9 +178,6 @@ fskeditorjs = function () {
     _createRow() {
       let input = document.createElement("input");
       input.type = this.type;
-      if (input.type === "date") {
-    	  createDatePicker(input);
-      }
       input.className = "form-control";
 
       // Add autocomplete to input with vocabulary
@@ -237,6 +230,10 @@ fskeditorjs = function () {
       this.body = document.createElement("tbody");
       this.table.appendChild(head);
       this.table.appendChild(this.body);
+
+      if (data) {
+        data.forEach(entry => this.add(entry));
+      }
     }
 
     /**
@@ -306,28 +303,37 @@ fskeditorjs = function () {
    	 *	 </div>
 	   * </div>
      * ```
+     * 
      * @param {string} name Property name
      * @param {boolean} mandatory `true` if mandatory, `false` if optional.
      * @param {string} type Property type: text, url, checkbox, etc.
      * @param {string} helperText Tooltip
+     * @param {string} value Initial value of the property.
+     * @param {Array} vocabulary List of possible value for autocompletion.
      */
-    constructor (name, mandatory, type, helperText, vocabulary=null) {
+    constructor (name, mandatory, type, helperText, value, vocabulary=null) {
       
       this.input = document.createElement("input");
       this.group = document.createElement("div");
 
-      this._create(name, mandatory, type, helperText, vocabulary);
+      this._create(name, mandatory, type, helperText, value, vocabulary);
     }
 
-    _create(name, mandatory, type, helperText, vocabulary) {
+    /**
+     * @param {string} name Property name
+     * @param {boolean} mandatory `true` if mandatory, `false` if optional.
+     * @param {string} type Property type: text, url, checkbox, etc.
+     * @param {string} helperText Tooltip
+     * @param {string} value Initial value of the property.
+     * @param {Array} vocabulary List of possible value for autocompletion.
+     */
+    _create(name, mandatory, type, helperText, value, vocabulary) {
 
       // Create input
       this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
       this.input.type = type;
-      if (this.input.type === "date") {
-    	  createDatePicker(this.input);
-      }
       this.input.placeholder = helperText;
+      this.input.value = value;
 
       // Create div for input
       let inputDiv = document.createElement("div");
@@ -493,13 +499,30 @@ fskeditorjs = function () {
    */
   class TablePanel {
 
-    constructor (title, dialog, formData) {
+    /**
+     * Create a TablePanel.
+     * 
+     * @param {string} title Panel title.  
+     * @param {Dialog} dialog Reference to Dialog object. This Dialog is later
+     *   used for adding new entries and editing existing ones. 
+     * @param {object} formData Related data from the UI schema.
+     * @param {object} data Initial data of the table.
+     */
+    constructor (title, dialog, formData, data) {
 
       this.panel = document.createElement("div");
-      this.table = new AdvancedTable([], formData);
+      this.table = new AdvancedTable(data, formData);
       this._create(title, dialog, formData);
     }
 
+    /**
+     * Create UI of the TablePanel.
+     * 
+     * @param {string} title Panel title.  
+     * @param {Dialog} dialog Reference to Dialog object. This Dialog is later
+     *   used for adding new entries and editing existing ones. 
+     * @param {object} formData Related data from the UI schema.
+     */
     _create(title, dialog, formData) {
 
       // Add button
@@ -554,11 +577,11 @@ fskeditorjs = function () {
    */
   class FormPanel {
 
-    constructor(title, formData) {
+    constructor(title, formData, data) {
       this.panel = document.createElement("div");
       this.inputs = {};
 
-      this._create(title, formData);
+      this._create(title, formData, data);
     }
 
     /**
@@ -575,7 +598,7 @@ fskeditorjs = function () {
      * @param {*} title 
      * @param {*} formData 
      */
-    _create(title, formData) {
+    _create(title, formData, data) {
       
       this.panel.classList.add("panel", "panel-default");
       this.panel.innerHTML = `<div class="panel-heading">
@@ -584,7 +607,7 @@ fskeditorjs = function () {
 
       let form = document.createElement("form");
       formData.forEach(prop => {
-        let inputForm = createForm(prop);
+        let inputForm = createForm(prop, data[prop.id]);
         if (inputForm) {
           form.appendChild(inputForm.group);
           this.inputs[prop.id] = inputForm;
@@ -608,6 +631,8 @@ fskeditorjs = function () {
     dataBackground: {},
     modelMath: {}
   };
+
+  var _panels = {}; // Metadata panels created in createUI.
 
   var _modelCodeMirror;
   var _visualizationCodeMirror;
@@ -638,7 +663,27 @@ fskeditorjs = function () {
     createUI();
   }
 
-  view.getComponentValue = () => _val;
+  view.getComponentValue = () => {
+
+    Object.entries(tablePanels.generalInformation.inputs).forEach(([id, input]) => {
+      _metadata.generalInformation[id] = input.value;
+    });
+
+    _metadata.modelType = "GenericModel";
+    let metaDataString = JSON.stringify(_metadata);
+
+    let viewValue = {
+      modelMetaData: metaDataString,
+      firstModelScript: _modelCodeMirror.getValue(),
+      firstModelViz: _visualizationCodeMirror.getValue(),
+      readme: _readmeCodeMirror.getValue(),
+      resourceFiles: _val.resourceFiles, // TODO: get actual resource files from editor
+      serverName: _val.serverName // TODO: get actual serverName from editor?
+    }
+
+    return viewValue;
+  }
+
   view.validate = () => true;
 
   return view;
@@ -748,25 +793,25 @@ fskeditorjs = function () {
     Object.values(dialogs).forEach(dialog => container.appendChild(dialog.modal));
 
     // Add (table) panels
-    let tablePanels = {
-      generalInformation: new FormPanel("General", ui.generalInformation),
-      modelCategory: new FormPanel("Model category", ui.modelCategory),
-      author: new TablePanel("Author", dialogs.contactDialog, ui.contact),
-      creator: new TablePanel("Creator", dialogs.contactDialog, ui.contact),
-      reference: new TablePanel("Reference", dialogs.referenceDialog, ui.reference),
-      scopeGeneral: new FormPanel("General", ui.scope),
-      product: new TablePanel("Product", dialogs.productDialog, ui.product),
-      hazard: new TablePanel("Hazard", dialogs.hazardDialog, ui.hazard),
-      population: new TablePanel("Population", dialogs.populationDialog, ui.populationGroup),
-      study: new FormPanel("Study", ui.study),
-      studySample: new TablePanel("Study sample", dialogs.studySampleDialog, ui.studySample),
-      dietaryAssessmentMethod: new TablePanel("Dietary assessment method", dialogs.methodDialog, ui.dietaryAssessmentMethod),
-      laboratory: new TablePanel("Laboratory", dialogs.laboratoryDialog, ui.laboratory),
-      assay: new TablePanel("Assay", dialogs.assayDialog, ui.assay),
-      parameter: new TablePanel("Parameter", dialogs.parameterDialog, ui.parameter),
-      qualityMeasures: new TablePanel("Quality measures", dialogs.measuresDialog, ui.qualityMeasures),
-      modelEquation: new TablePanel("Model equation", dialogs.equationDialog, ui.modelEquation),
-      exposure: new TablePanel("Exposure", dialogs.exposureDialog, ui.exposure)
+    tablePanels = {
+      generalInformation: new FormPanel("General", ui.generalInformation, _metadata.generalInformation),
+      modelCategory: new FormPanel("Model category", ui.modelCategory, _metadata.generalInformation.modelCategory),
+      author: new TablePanel("Author", dialogs.contactDialog, ui.contact, _metadata.generalInformation.author),
+      creator: new TablePanel("Creator", dialogs.contactDialog, ui.contact, _metadata.generalInformation.creator),
+      reference: new TablePanel("Reference", dialogs.referenceDialog, ui.reference, _metadata.generalInformation.reference),
+      scopeGeneral: new FormPanel("General", ui.scope, _metadata.scope),
+      product: new TablePanel("Product", dialogs.productDialog, ui.product, _metadata.scope.product),
+      hazard: new TablePanel("Hazard", dialogs.hazardDialog, ui.hazard, _metadata.scope.hazard),
+      population: new TablePanel("Population", dialogs.populationDialog, ui.populationGroup, _metadata.scope.populationGroup),
+      study: new FormPanel("Study", ui.study, _metadata.dataBackground.study),
+      studySample: new TablePanel("Study sample", dialogs.studySampleDialog, ui.studySample, _metadata.dataBackground.studySample),
+      dietaryAssessmentMethod: new TablePanel("Dietary assessment method", dialogs.methodDialog, ui.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
+      laboratory: new TablePanel("Laboratory", dialogs.laboratoryDialog, ui.laboratory, _metadata.dataBackground.laboratory),
+      assay: new TablePanel("Assay", dialogs.assayDialog, ui.assay, _metadata.dataBackground.assay),
+      parameter: new TablePanel("Parameter", dialogs.parameterDialog, ui.parameter, _metadata.modelMath.parameter),
+      qualityMeasures: new TablePanel("Quality measures", dialogs.measuresDialog, ui.qualityMeasures, _metadata.modelMath.qualityMeasures),
+      modelEquation: new TablePanel("Model equation", dialogs.equationDialog, ui.modelEquation, _metadata.modelMath.modelEquation),
+      exposure: new TablePanel("Exposure", dialogs.exposureDialog, ui.exposure, _metadata.modelMath.exposure)
     };
 
     const viewContent = document.getElementById("viewContent");    
