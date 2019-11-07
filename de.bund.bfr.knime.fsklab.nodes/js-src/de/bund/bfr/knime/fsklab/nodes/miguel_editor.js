@@ -220,11 +220,16 @@ fskeditorjs = function () {
       this.table = document.createElement("table");
       this.table.className = "table";
 
-      // Create headers
+      // Apply striped rows if table has over 10 rows.
+      if (data && data.length > 10) {
+        this.table.classList.add("table-striped");
+      }
+
+      // Create headers (1 extra columns at the end for buttons)
       let head = document.createElement("thead");
       head.innerHTML = `<tr>
-        <th><input type="checkbox"></th>
         ${this.formData.map(prop => `<th>${prop.label}</th>`).join("")}
+        <th></th>
       </tr>`;
 
       this.body = document.createElement("tbody");
@@ -242,31 +247,50 @@ fskeditorjs = function () {
      * @param {Object} data JSON object with new metadata.
      */
     add(data) {
+
       // Add new row (Order is fixed by formData)
       let newRow = document.createElement("tr");
-      newRow.innerHTML = '<td><input type="checkbox"></td>';
 
       this.formData.forEach(prop => {
         // Get value for the current property
         let value = data[prop.id] ? data[prop.id] : "";
-        // Add new cell with value
-        newRow.innerHTML += `<td>${value}</td>`;
+        
+        let cell = document.createElement("td");
+        cell.title = value; // Set the whole value as tooltip
+        cell.textContent = value.length > 20 ? value.substring(0, 24) + "..." : value;
+        newRow.appendChild(cell);
       });
+
+      // TODO: Edit button
+      let editButton = document.createElement("button");
+      editButton.classList.add("btn", "btn-primary", "btn-sm");
+      // TODO: maybe we need to something with the modal here
+      editButton.innerHTML = '<i class="glyphicon glyphicon-edit"></i>';
+      editButton.title = "Edit";
+
+      // Remove button
+      let removeButton = document.createElement("button");
+      removeButton.classList.add("btn", "btn-warning", "btn-sm");
+      removeButton.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
+      removeButton.onclick = (e) => {
+        // Get current row (button > btn-group > td > tr)
+        let currentRow = e.currentTarget.parentNode.parentNode.parentNode;
+        this.body.removeChild(currentRow);
+      };
+
+      removeButton.title = "Remove";
+
+      let btnGroup = document.createElement("div");
+      btnGroup.className = "btn-group";
+      btnGroup.setAttribute("role", "group");
+      btnGroup.appendChild(editButton);
+      btnGroup.appendChild(removeButton);
+
+      let buttonCell = document.createElement("td");
+      buttonCell.appendChild(btnGroup);
+      newRow.appendChild(buttonCell);
 
       this.body.appendChild(newRow);
-    }
-
-    /**
-     * Remove checked rows.
-     */
-    remove() {
-      Array.from(this.body.children).forEach(row => {
-        // Get checkbox (tr > td > input)
-        let checkbox = row.firstChild.firstChild;
-        if (checkbox.checked) {
-          this.body.removeChild(row);
-        }
-      });
     }
 
     /**
@@ -527,30 +551,25 @@ fskeditorjs = function () {
 
       // Add button
       let addButton = document.createElement("button");
-      addButton.classList.add("btn", "btn-default");
+      addButton.classList.add("btn", "btn-primary");
       addButton.setAttribute("data-toggle", "modal");
       addButton.setAttribute("data-target", "#" + dialog.modal.id);
       addButton.innerHTML = '<i class="glyphicon glyphicon-plus"></i>';
+      addButton.title = "Add a " + title;
       // Set dialog to add to this panel's table
       dialog.table = this.table;
-
-      // Remove button
-      let removeButton = document.createElement("button");
-      removeButton.classList.add("btn", "btn-default");
-      removeButton.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
-      removeButton.onclick = () => this.table.remove();
       
       // Trash button
       let trashButton = document.createElement("button");
-      trashButton.classList.add("btn", "btn-default");
+      trashButton.classList.add("btn", "btn-danger");
       trashButton.innerHTML = '<i class="glyphicon glyphicon-trash"></i>';
       trashButton.onclick = () => this.table.trash();
+      trashButton.title = `Remove all ${title}(s)`;
 
       // input-group-btn
       let inputGroupBtn = document.createElement("div");
       inputGroupBtn.className = "input-group-btn";
       inputGroupBtn.appendChild(addButton);
-      inputGroupBtn.appendChild(removeButton);
       inputGroupBtn.appendChild(trashButton);
 
       // input-group
