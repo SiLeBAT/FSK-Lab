@@ -161,7 +161,7 @@ const ui = {
         "description": "State or province",
         "vocabulary": "Region"
     }, {
-        "id": "timezone",
+        "id": "timeZone",
         "label": "Timezone",
         "type": "text",
         "description": "Time zone"
@@ -334,7 +334,7 @@ const ui = {
         }, {
             "id": "expiryDate",
             "label": "Expiration date",
-            "type": "text",
+            "type": "date",
             "description": "Date of expiry of food/product"
         }
     ],
@@ -394,7 +394,7 @@ const ui = {
             "type": "text",
             "description": "Lowest concentration or amount of a substance found by experiment or observation that causes an adverse alteration of morphology, function, capacity, growth, development, or lifespan of a target organism distinguished from normal organisms of the same species under defined conditions of exposure"
         }, {
-            "id": "acceptableOperatorExposureLevel",
+            "id": "acceptableOperatorsExposureLevel",
             "label": "AOEL",
             "type": "text",
             "description": "Maximum amount of active substance to which the operator may be exposed without any adverse health effects. The AOEL is expressed as milligrams of the chemical per kilogram body weight of the operator"
@@ -639,7 +639,7 @@ const ui = {
     }, {
         "id": "numberOfFoodItems",
         "label": "Food items",
-        "type": "text",
+        "type": "text-array",
         "description": "Number of food items",
         "required": true
     }, {
