@@ -16,6 +16,65 @@ fskeditorjs = function () {
     });
   }
 
+  // Hash of publication types full names to keys.
+  // See more at https://en.wikipedia.org/w/index.php?title=RIS_(file_format)
+  const RIS_TYPES = {
+    "Abstract": "ABST",
+    "Audiovisual material": "ADVS",
+    "Aggregated Database": "AGGR",
+    "Ancient Text": "ANCIENT",
+    "Art Work": "ART",
+    "Bill": "BILL",
+    "Blog": "BLOG",
+    "Whole book": "BOOK",
+    "Case": "CASE",
+    "Book chapter": "CHAP",
+    "Chart": "CHART",
+    "Classical Work": "CLSWK",
+    "Computer program": "COMP",
+    "Conference proceeding": "CONF",
+    "Conference paper": "CPAPER",
+    "Catalog": "CTLG",
+    "Data file": "DATA",
+    "Online Database": "DBASE",
+    "Dictionary": "DICT",
+    "Electronic Book": "EBOOK",
+    "Electronic Book Section": "ECHAP",
+    "Edited Book": "EDBOOK",
+    "Electronic Article": "EJOUR",
+    "Web Page": "ELEC",
+    "Encyclopedia": "ENCYC",
+    "Equation": "EQUA",
+    "Figure": "FIGURE",
+    "Generic": "GEN",
+    "Government Document": "GOVDOC",
+    "Grant": "GRANT",
+    "Hearing": "HEAR",
+    "Internet Communication": "ICOMM",
+    "In Press": "INPR",
+    "Journal (full)": "JFULL",
+    "Journal": "JOUR",
+    "Legal Rule or Regulation": "LEGAL",
+    "Manuscript": "MANSCPT",
+    "Map": "MAP",
+    "Magazine article": "MGZN",
+    "Motion picture": "MPCT",
+    "Online Multimedia": "MULTI",
+    "Music score": "MUSIC",
+    "Newspaper": "NEWS",
+    "Pamphlet": "PAMP",
+    "Patent": "PAT",
+    "Personal communication": "PCOMM",
+    "Report": "RPRT",
+    "Serial publication": "SER",
+    "Slide": "SLIDE",
+    "Sound recording": "SOUND",
+    "Standard": "STAND",
+    "Statute": "STAT",
+    "Thesis/Dissertation": "THES",
+    "Video recording": "VIDEO"
+  }
+
   /**
    * Create an horizontal form for a metadata property. Missing values with
    * *null* or *undefined* are replaced with an empty string.
@@ -38,7 +97,7 @@ fskeditorjs = function () {
       return new InputForm(prop.label, isMandatory, prop.type, prop.description, value, vocabulary);
     
     if (prop.type === "boolean")
-      return new InputForm(prop.label, isMandatory, "checkbox", value, prop.description);
+      return new InputForm(prop.label, isMandatory, "checkbox", prop.description, value, prop.description);
     
     if (prop.type === "text-array")
       return new ArrayForm(prop.label, isMandatory, prop.type, prop.description, value, vocabulary);
@@ -267,19 +326,18 @@ fskeditorjs = function () {
       editButton.innerHTML = '<i class="glyphicon glyphicon-edit"></i>';
       editButton.title = "Edit";
       editButton.onclick = (e) => {
-        // Get current row (button > btn-group > td > tr)
-        let currentRow = e.currentTarget.parentNode.parentNode.parentNode;
 
-        // Iterate every cell but the last one (with buttons)
-        for (let i = 0; i < this.formData.length; i++) {
-          let prop = this.formData[i];
-          let currentCell = currentRow.childNodes[i];
-          // Update dialog with the cell value (from title). The tooltip title
-          // has the full value. The textContent may be truncated.
-          this.dialog.inputs[prop.id].value = currentCell.title;
+        // Get current row (button > btn-group > td > tr). It starts at 1
+        // (it counts the header)
+        let rowIndex = e.currentTarget.parentNode.parentNode.parentNode.rowIndex - 1;
+
+        // Update inputs in dialog
+        let originalData = this.data[rowIndex];
+        for (let prop in originalData) {
+          this.dialog.inputs[prop].value = originalData[prop];
         }
 
-        this.dialog.editedRow = currentRow.rowIndex - 1;
+        this.dialog.editedRow = rowIndex;
         $(this.dialog.modal).modal('show');
       }
 
@@ -288,9 +346,10 @@ fskeditorjs = function () {
       removeButton.classList.add("btn", "btn-warning", "btn-sm");
       removeButton.innerHTML = '<i class="glyphicon glyphicon-remove"></i>';
       removeButton.onclick = (e) => {
-        // Get current row (button > btn-group > td > tr)
-        let currentRow = e.currentTarget.parentNode.parentNode.parentNode;
-        this.body.removeChild(currentRow);
+        // Get current row (button > btn-group > td > tr). It starts at 1
+        // (it counts the header)
+        let rowIndex = e.currentTarget.parentNode.parentNode.parentNode.rowIndex - 1;
+        this.remove(rowIndex);
       };
 
       removeButton.title = "Remove";
@@ -319,6 +378,13 @@ fskeditorjs = function () {
         cell.title = value;
         cell.textContent = value.length > 25 ? value.substring(0, 24) : value;
       }
+    }
+
+    /**
+     * Remove row at the given index.
+     */
+    remove(index) {
+      this.body.removeChild(this.body.childNodes[index]);
     }
 
     /**
@@ -364,6 +430,11 @@ fskeditorjs = function () {
      * @param {Array} vocabulary List of possible value for autocompletion.
      */
     constructor (name, mandatory, type, helperText, value, vocabulary=null) {
+
+      this.name = name;
+      this.mandatory = mandatory;
+      this.type = type;
+      this.helperText = helperText;
       
       this.input = document.createElement("input");
       this.group = document.createElement("div");
@@ -405,7 +476,7 @@ fskeditorjs = function () {
     }
 
     get value ()  {
-      return this.input.value;
+      return this.type !== "checkbox" ? this.input.value : this.input.checked;
     }
 
     set value(newValue) {
@@ -497,10 +568,10 @@ fskeditorjs = function () {
         }
 
         if (this.editedRow != -1) {
-          this.table.edit(this.editedRow, data);
+          this.panel.edit(this.editedRow, data);
           this.editedRow = -1;
         } else {
-          this.table.add(data);
+          this.panel.add(data);
         }
       }
 
@@ -575,6 +646,11 @@ fskeditorjs = function () {
       this.panel = document.createElement("div");
       this.table = new AdvancedTable(data, formData, dialog);
       this._create(title, dialog, formData);
+      this.data = data ? data : []; // Initialize null or undefined data
+
+      // Register this panel in dialog (this should be done in Dialog's constr)
+      this.dialog = dialog;
+      this.dialog.panel = this;
     }
 
     /**
@@ -594,8 +670,6 @@ fskeditorjs = function () {
       addButton.setAttribute("data-target", "#" + dialog.modal.id);
       addButton.innerHTML = '<i class="glyphicon glyphicon-plus"></i>';
       addButton.title = "Add a " + title;
-      // Set dialog to add to this panel's table
-      dialog.table = this.table;
       
       // Trash button
       let trashButton = document.createElement("button");
@@ -626,6 +700,26 @@ fskeditorjs = function () {
       this.panel.classList.add("panel", "panel-default");
       this.panel.appendChild(panelHeading);
       this.panel.appendChild(this.table.table);
+    }
+
+    add(data) {
+      this.data.push(data); // add data
+      this.table.add(data); // Update table
+    }
+
+    edit(index, newData) {
+      this.data[index] = newData; // Update this.data
+      this.table.edit(index, newData); // Update table
+    }
+
+    remove(index) {
+      this.data.splice(index, 1); // Update this.data
+      this.table.remove(index); // TODO: update table
+    }
+
+    removeAll() {
+      this.data = []; // Clear data
+      this.table.trash();  // Empty table
     }
   }
 
@@ -722,9 +816,53 @@ fskeditorjs = function () {
 
   view.getComponentValue = () => {
 
+    // Save generalInformation -> general
     Object.entries(tablePanels.generalInformation.inputs).forEach(([id, input]) => {
       _metadata.generalInformation[id] = input.value;
     });
+
+    // Save generalInformation -> modelCategory
+    Object.entries(tablePanels.modelCategory.inputs).forEach(([id, input]) => {
+      _metadata.generalInformation.modelCategory[id] = input.value;
+    });
+
+    // Save generalInformation -> author, creator and reference
+    _metadata.generalInformation.author = tablePanels.author.data;
+    _metadata.generalInformation.creator = tablePanels.creator.data;
+
+    _metadata.generalInformation.reference = tablePanels.reference.data;
+    // Ignore temporarily publication type
+    // TODO: publicationType takes the abbreviation instead of the full string
+    // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+    // the value cannot be converted here. The 1st call to getComponentValue
+    // would get the abbreviation but the 2nd call would corrupt it. The HTML
+    // select should instead use the full string as label and the abreviation
+    // as value.
+    _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
+
+    // Scope general
+    Object.entries(tablePanels.scopeGeneral.inputs).forEach(([id, input]) => {
+      _metadata.scope[id] = input.value;
+    });
+
+    _metadata.scope.product = tablePanels.product.data;
+    _metadata.scope.hazard = tablePanels.hazard.data;
+    _metadata.scope.populationGroup = tablePanels.population.data;
+
+    // Data background
+    Object.entries(tablePanels.study.inputs).forEach(([id, input]) => {
+      _metadata.dataBackground.study[id] = input.value;
+    });
+    _metadata.dataBackground.studySample = tablePanels.studySample.data;
+    _metadata.dataBackground.dietaryAssessmentMethod = tablePanels.dietaryAssessmentMethod.data;
+    _metadata.dataBackground.laboratory = tablePanels.laboratory.data;
+    _metadata.dataBackground.assay = tablePanels.assay.data;
+
+    // TODO: Model math
+    _metadata.modelMath.parameter = tablePanels.parameter.data;
+    _metadata.modelMath.qualityMeasures = tablePanels.qualityMeasures.data;
+    _metadata.modelMath.modelEquation = tablePanels.modelEquation.data;
+    _metadata.modelMath.exposure = tablePanels.exposure.data;
 
     _metadata.modelType = "GenericModel";
     let metaDataString = JSON.stringify(_metadata);
@@ -777,7 +915,8 @@ fskeditorjs = function () {
   function createUI() {
 
     let dialogs = {
-      contactDialog: new Dialog("contactDialog", "Add contact", ui.contact),
+      authorDialog: new Dialog("authorDialog", "Add dialog", ui.contact),
+      creatorDialog: new Dialog("creatorDialog", "Add creator", ui.contact),
       referenceDialog: new Dialog("referenceDialog", "Add reference", ui.reference),
       productDialog: new Dialog("productDialog", "Add product", ui.product),
       hazardDialog: new Dialog("hazardDialog", "Add hazard", ui.hazard),
@@ -853,8 +992,8 @@ fskeditorjs = function () {
     tablePanels = {
       generalInformation: new FormPanel("General", ui.generalInformation, _metadata.generalInformation),
       modelCategory: new FormPanel("Model category", ui.modelCategory, _metadata.generalInformation.modelCategory),
-      author: new TablePanel("Author", dialogs.contactDialog, ui.contact, _metadata.generalInformation.author),
-      creator: new TablePanel("Creator", dialogs.contactDialog, ui.contact, _metadata.generalInformation.creator),
+      author: new TablePanel("Author", dialogs.authorDialog, ui.contact, _metadata.generalInformation.author),
+      creator: new TablePanel("Creator", dialogs.creatorDialog, ui.contact, _metadata.generalInformation.creator),
       reference: new TablePanel("Reference", dialogs.referenceDialog, ui.reference, _metadata.generalInformation.reference),
       scopeGeneral: new FormPanel("General", ui.scope, _metadata.scope),
       product: new TablePanel("Product", dialogs.productDialog, ui.product, _metadata.scope.product),
