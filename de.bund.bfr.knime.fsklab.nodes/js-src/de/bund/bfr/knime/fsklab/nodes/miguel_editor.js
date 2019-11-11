@@ -84,26 +84,29 @@ fskeditorjs = function () {
    * @param {string} value Input value. It can be *null* or *undefined* for
    *  missing values.
    * 
-   * @returns InputForm or StringArrayForm for the supported type. If wrong type
+   * @returns InputForm or ArrayForm for the supported type. If wrong type
    *  it returns undefined.
    */
   function createForm(prop, value) {
-    value = value ? value : "";
     let vocabulary = prop.vocabulary ? vocabularies[prop.vocabulary] : null;
     let isMandatory = prop.required ? prop.required : false;
 
     if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
       prop.type === "date")
-      return new InputForm(prop.label, isMandatory, prop.type, prop.description, value, vocabulary);
+      return new InputForm(prop.label, isMandatory, prop.type, prop.description,
+         value ? value : "", vocabulary);
     
     if (prop.type === "boolean")
-      return new InputForm(prop.label, isMandatory, "checkbox", prop.description, value, prop.description);
+      return new InputForm(prop.label, isMandatory, "checkbox",
+        prop.description, value, prop.description);
     
     if (prop.type === "text-array")
-      return new ArrayForm(prop.label, isMandatory, prop.type, prop.description, value, vocabulary);
+      return new ArrayForm(prop.label, isMandatory, prop.type,
+        value ? value : [], prop.description, vocabulary);
 
     if (prop.type === "date-array")
-      return new ArrayForm(prop.label, isMandatory, prop.type, prop.description, value, vocabulary);
+      return new ArrayForm(prop.label, isMandatory, prop.type,
+        value ? value : [], prop.description, vocabulary);
   }
 
   /**
@@ -132,7 +135,7 @@ fskeditorjs = function () {
 
     constructor (name, mandatory, type, value, helperText, vocabulary) {
       this.group = document.createElement("div");      
-      this.simpleTable = new SimpleTable(type, ["a", "b", "c"], vocabulary);
+      this.simpleTable = new SimpleTable(type, value, vocabulary);
       this._create(name, mandatory, helperText);
     }
 
@@ -190,6 +193,10 @@ fskeditorjs = function () {
         ${name + (mandatory ? " *" : "")}</label>`;
       this.group.appendChild(formDiv);
     }
+
+    get value() {
+      return this.simpleTable.value;
+    }
   }
 
   class SimpleTable {
@@ -204,6 +211,8 @@ fskeditorjs = function () {
 
       this.body = document.createElement("tbody");
       this.table.appendChild(this.body);
+
+      data.forEach(value => this._createRow(value));
     }
 
     /**
@@ -231,13 +240,14 @@ fskeditorjs = function () {
      * Remove every row in the table
      */
     trash() {
-      this.body.innerHTML = "";      
+      this.body.innerHTML = "";
     }
 
-    _createRow() {
+    _createRow(value = "") {
       let input = document.createElement("input");
       input.type = this.type;
       input.className = "form-control";
+      input.value = value;
 
       // Add autocomplete to input with vocabulary
       if (this.vocabulary) {
@@ -267,6 +277,17 @@ fskeditorjs = function () {
       this.body.appendChild(newRow);
 
       input.focus(); // Focus the new input      
+    }
+
+    get value() {
+      let data = [];
+      this.body.childNodes.forEach(tr => {
+        let inputCell = tr.lastChild; // 2nd cell (with input)
+        let input = inputCell.firstChild; // <input>
+        data.push(input.value);
+      });
+
+      return data;
     }
   }
 
@@ -896,10 +917,10 @@ fskeditorjs = function () {
         traverse(val)
       } else if (Array.isArray(val)) {
         for (let j = 0; j < val.length; ++j) {
-          if (isObj(val[j]) && val[j] != null) {
-            traverse(val[j])
-          } else {
-            delete obj[keys[i]];
+          if (!val[j]) {
+            delete obj[keys[j]];
+          } else if (isObj(val[j])) {
+            traverse(val[j]);
           }
         }
       } else {
