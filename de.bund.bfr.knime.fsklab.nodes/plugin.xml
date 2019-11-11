@@ -101,11 +101,11 @@
        webResourceBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle">
        
        <!-- JS and CSS code -->
-       <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes" relativePathTarget="nodes" />
-       <importResource relativePath="nodes/miguel_editor.js" type="JAVASCRIPT" />
-       <importResource relativePath="nodes/miguel_editor_data.js" type="JAVASCRIPT" />
-       <importResource relativePath="nodes/miguel_editor.css" type="CSS" />
-       <importResource relativePath="nodes/ControlledVocabulary.js" type="JAVASCRIPT" />
+       <webResource relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/neweditor" relativePathTarget="neweditor" />
+       <importResource relativePath="neweditor/editor.js" type="JAVASCRIPT" />
+       <importResource relativePath="neweditor/editor_data.js" type="JAVASCRIPT" />
+       <importResource relativePath="neweditor/editor.css" type="CSS" />
+       <importResource relativePath="neweditor/ControlledVocabulary.js" type="JAVASCRIPT" />
 
        <webDependency webResourceBundleID="codemirror"></webDependency>
        <webDependency webResourceBundleID="bootstrap_3.3.6"></webDependency>
@@ -140,26 +140,6 @@
 	 </webResourceBundle>
 	 
 	 <!-- JS and CSS code for Fsk Editor JS node -->
-	 <!--
-     <webResourceBundle
-       debug="true"
-       name="FSK Editor JS"
-       usesDefine="true"
-       version="1.0.0"
-       webResourceBundleID="de.bund.bfr.knime.fsklab.js.FSKEditorJS.bundle">
-     
-       <webResource
-         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/fskeditorjs/"
-         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/fskeditorjs/">
-       </webResource>
-       
-       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/fskeditorjs/fskeditorjs.css" type="CSS" />
-       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/fskeditorjs/fskeditorjs.js" type="JAVASCRIPT" />
-       <webDependency webResourceBundleID="fskeditor" />
-	   <webDependency webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.bundle.js" />
-	 </webResourceBundle>
-	 -->
-	 
 	 <webResourceBundle debug="true" name="Jointjs" version="1.0.0"
 	   webResourceBundleID="de.bund.bfr.knime.fsklab.nodes.joiner.jointjs">
 	   <webResource
