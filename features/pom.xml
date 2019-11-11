@@ -16,7 +16,7 @@
         <module>de.bund.bfr.knime.fsklab.legacy.feature</module>
         <module>de.bund.bfr.knime.internal.feature</module>
         <module>de.bund.bfr.knime.pmm.feature</module>
-        <module>de.bund.bfr.bundles</module>
+        <module>de.bund.bfr.bundles.feature</module>
     </modules>
 </project>
 
