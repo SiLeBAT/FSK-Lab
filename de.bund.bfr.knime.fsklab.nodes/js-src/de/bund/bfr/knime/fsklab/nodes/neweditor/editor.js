@@ -197,6 +197,15 @@ fskeditorjs = function () {
     get value() {
       return this.simpleTable.value;
     }
+
+    set value(newValue) {
+      this.simpleTable.trash();
+      newValue.forEach(item => this.simpleTable._createRow(item));
+    }
+
+    clear() {
+      this.simpleTable.trash();
+    }
   }
 
   class SimpleTable {
@@ -503,6 +512,10 @@ fskeditorjs = function () {
     set value(newValue) {
        this.input.value = newValue;
     }
+
+    clear() {
+      this.input.value = "";
+    }
   }
 
   /**
@@ -585,7 +598,7 @@ fskeditorjs = function () {
         for (const inputId in this.inputs) {
           let currentInput = this.inputs[inputId];
           data[inputId] = currentInput.value; // Save input value
-          currentInput.value = ""; // Clear input
+          currentInput.clear(); // Clear input
         }
 
         if (this.editedRow != -1) {
