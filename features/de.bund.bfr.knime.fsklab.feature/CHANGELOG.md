@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.7.0] - 2019-11-11
+
+### Changed
+- New UI for the editor node. The JSON forms-generated UI is replaced with a native Bootstrap application. Many issues are solved now. Only the frontend is changed, the backend and JS view value is unchanged.
+- New UI for the simulation configurator node. Like in the editor node, the backend is unchanged.
+
 ## [1.6.0] - 2019-9-23
 
 ### Added
