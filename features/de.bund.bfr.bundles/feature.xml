@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="de.bund.bfr.bundles"
+      label="Bundles"
+      version="1.0.0.qualifier"
+      provider-name="German Federal Institute for Risk Assessment (BfR)">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import feature="de.bund.bfr.knime.fsklab.features.ext.r.bin.x64" version="3.4.4.201904051519"/>
+      <import feature="de.bund.bfr.knime.fsklab.features.ext.r.bin.x86" version="3.4.4.201904051519"/>
+   </requires>
+
+</feature>

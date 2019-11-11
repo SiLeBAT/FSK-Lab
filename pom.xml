@@ -71,7 +71,7 @@
 		<module>features</module>
 		
 		<!-- Update site -->
-		<module>updates</module>
+		<module>de.bund.bfr.knime.update</module>
 	</modules>
 
 	<profiles>
