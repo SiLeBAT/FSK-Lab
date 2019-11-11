@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="de.bund.bfr.bundles"
+      id="de.bund.bfr.bundles.feature"
       label="Bundles"
       version="1.0.0.qualifier"
       provider-name="German Federal Institute for Risk Assessment (BfR)">
