@@ -779,7 +779,7 @@ fskeditorjs = function () {
 
       let form = document.createElement("form");
       formData.forEach(prop => {
-        let inputForm = createForm(prop, data[prop.id]);
+        let inputForm = createForm(prop, data ? data[prop.id] : null);
         if (inputForm) {
           form.appendChild(inputForm.group);
           this.inputs[prop.id] = inputForm;
