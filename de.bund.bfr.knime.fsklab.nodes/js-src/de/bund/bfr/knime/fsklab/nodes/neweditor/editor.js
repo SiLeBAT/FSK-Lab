@@ -302,10 +302,10 @@ fskeditorjs = function () {
 
   class AdvancedTable {
 
-    constructor (data, formData, dialog) {
-      this.data = data;
+    constructor (data, formData, dialog, panel) {
       this.formData = formData;
       this.dialog = dialog;
+      this.panel = panel;
 
       this.table = document.createElement("table");
       this.table.className = "table";
@@ -362,7 +362,7 @@ fskeditorjs = function () {
         let rowIndex = e.currentTarget.parentNode.parentNode.parentNode.rowIndex - 1;
 
         // Update inputs in dialog
-        let originalData = this.data[rowIndex];
+        let originalData = this.panel.data[rowIndex];
         for (let prop in originalData) {
           this.dialog.inputs[prop].value = originalData[prop];
         }
@@ -379,7 +379,7 @@ fskeditorjs = function () {
         // Get current row (button > btn-group > td > tr). It starts at 1
         // (it counts the header)
         let rowIndex = e.currentTarget.parentNode.parentNode.parentNode.rowIndex - 1;
-        this.remove(rowIndex);
+        this.panel.remove(rowIndex);
       };
 
       removeButton.title = "Remove";
@@ -678,11 +678,13 @@ fskeditorjs = function () {
     constructor (title, dialog, formData, data) {
 
       this.panel = document.createElement("div");
-      this.table = new AdvancedTable(data, formData, dialog);
+
+      this.table = new AdvancedTable(data, formData, dialog, this);
+
       this._create(title, dialog, formData);
       this.data = data ? data : []; // Initialize null or undefined data
 
-      // Register this panel in dialog (this should be done in Dialog's constr)
+      // Register this panel in dialog (TODO: this should be done in Dialog's constr)
       this.dialog = dialog;
       this.dialog.panel = this;
     }
@@ -709,7 +711,7 @@ fskeditorjs = function () {
       let trashButton = document.createElement("button");
       trashButton.classList.add("btn", "btn-danger");
       trashButton.innerHTML = '<i class="glyphicon glyphicon-trash"></i>';
-      trashButton.onclick = () => this.table.trash();
+      trashButton.onclick = () => this.removeAll();
       trashButton.title = `Remove all ${title}(s)`;
 
       // input-group-btn
