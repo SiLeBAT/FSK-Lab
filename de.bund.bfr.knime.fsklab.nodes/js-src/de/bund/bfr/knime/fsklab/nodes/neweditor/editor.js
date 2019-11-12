@@ -604,6 +604,7 @@ fskeditorjs = function () {
         if (this.editedRow != -1) {
           this.panel.edit(this.editedRow, data);
           this.editedRow = -1;
+          this.inputs.forEach(input => input.clear()); // Clear inputs
         } else {
           this.panel.add(data);
         }
