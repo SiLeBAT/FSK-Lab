@@ -910,7 +910,7 @@ fskeditorjs = function () {
     }
 
     return viewValue;
-  }
+  };
 
   view.validate = () => true;
 

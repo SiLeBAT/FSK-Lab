@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.7.1] - 2019.11.12
+
+### Fixed
+- Table events in editor node for adding and removing items.
+- Clear add dialogue after an item is edited.
+- NPE for modification dates in SwaggerUtil utility methods.
+
 ## [1.7.0] - 2019-11-11
 
 ### Changed
