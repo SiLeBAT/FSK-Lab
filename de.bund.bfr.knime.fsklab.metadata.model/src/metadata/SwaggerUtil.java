@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import javax.json.Json;
@@ -54,7 +55,8 @@ public class SwaggerUtil {
 		}
 
 		deprecatedGeneralInformation.getModificationdate().stream().map(ModificationDate::getValue)
-				.map(SwaggerUtil::toLocalDate).forEach(swaggerGI::addModificationDateItem);
+			.filter(Objects::nonNull).map(SwaggerUtil::toLocalDate)
+			.forEach(swaggerGI::addModificationDateItem);
 
 		swaggerGI.setRights(deprecatedGeneralInformation.getRights());
 		swaggerGI.setAvailability(Boolean.toString(deprecatedGeneralInformation.isAvailable()));
