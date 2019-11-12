@@ -835,10 +835,6 @@ fskeditorjs = function () {
       _metadata.dataBackground = {}
     } else {
       let metaData = JSON.parse(value.modelMetaData);
-      if (metaData) {
-        metaData = traverse(metaData);
-      }
-
       _metadata.generalInformation = metaData.generalInformation;
       _metadata.scope = metaData.scope;
       _metadata.modelMath = metaData.modelMath;
@@ -920,29 +916,6 @@ fskeditorjs = function () {
   /** Functions taken from the old editor to parse metadata. */
   function isObj(obj) {
     return obj ? obj.constructor.name === "Object" : false;
-  }
-
-  function traverse(obj) {
-    let keys = Object.keys(obj)
-    for (let i = 0; i < keys.length; ++i) {
-      let val = obj[keys[i]]
-      if (isObj(val)) {
-        traverse(val)
-      } else if (Array.isArray(val)) {
-        for (let j = 0; j < val.length; ++j) {
-          if (!val[j]) {
-            delete obj[keys[j]];
-          } else if (isObj(val[j])) {
-            traverse(val[j]);
-          }
-        }
-      } else {
-        if (val == null) {
-          delete obj[keys[i]]
-        }
-      }
-    }
-    return obj;
   }
 
   /** UI code. */
