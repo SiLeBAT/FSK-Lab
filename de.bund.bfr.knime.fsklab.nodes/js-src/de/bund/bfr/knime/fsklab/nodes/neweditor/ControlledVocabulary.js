@@ -4,3 +4,9 @@ const vocabularies = {"Publication_Status":["Accepted","Draft","Forthcoming","Le
 vocabularies.Parameter_data_type = ["INTEGER", "DOUBLE", "NUMBER", "DATE", "FILE",
   "BOOLEAN", "VECTOROFNUMBERS", "VECTOROFSTRINGS", "MATRIXOFNUMBERS",
   "MATRIXOFSTRINGS", "OBJECT", "STRING"];
+
+vocabularies.Model_Class = ["Generic model", "Data model", "Predictive model",
+  "Other empirical models", "Exposure model", "Toxicological reference value",
+  "Dose-response model", "Process model", "Consumption model",
+  "Health metrics model", "Risk characterization model",
+  "Quantitative risk assessment"];
