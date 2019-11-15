@@ -90,7 +90,7 @@ const ui = {
     "modelCategory": [{
         "id": "modelClass",
         "label": "Model class",
-        "type": "text",
+        "type": "enum",
         "description": "Type of model according to RAKIP classification",
         "vocabulary": "Model_Class",
         "required": true

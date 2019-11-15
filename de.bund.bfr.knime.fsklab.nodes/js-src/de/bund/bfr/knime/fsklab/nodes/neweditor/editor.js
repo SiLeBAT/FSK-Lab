@@ -95,6 +95,10 @@ fskeditorjs = function () {
       prop.type === "date")
       return new InputForm(prop.label, isMandatory, prop.type, prop.description,
          value ? value : "", vocabulary);
+
+    if (prop.type === "enum")
+      return new SelectForm(prop.label, isMandatory, prop.description, value,
+        vocabulary);
     
     if (prop.type === "boolean")
       return new InputForm(prop.label, isMandatory, "checkbox",
@@ -519,6 +523,59 @@ fskeditorjs = function () {
 
     clear() {
       this.input.value = "";
+    }
+  }
+
+  /**
+   * Bootstrap 3 form with a select.
+   */
+  class SelectForm {
+
+    /**
+     * Create a Bootstrap 3 form-group with a select.
+     * 
+     * ```
+     * <div class="form-group row">
+     *   <label>name</label>
+     *   <select class="form-control">
+     *     <option>1</option>
+     *     <option>2</option>
+     *   </select>
+     * </div>```
+     */
+    constructor (name, mandatory, helperText, value, vocabulary=null) {
+
+      this.name = name;
+      this.mandatory = mandatory;
+      this.helperText = helperText;
+      this.value = value;
+      this.vocabulary = vocabulary;
+
+      this.select = document.createElement("select");
+      this.group = document.createElement("div");
+
+      this._create(name, mandatory, helperText, value, vocabulary);
+    }
+
+    _create(name, mandatory, helperText, value, vocabulary) {
+
+      this.select.className = "form-control";
+      // Add options from vocabulary. The option matching value is selected.
+      this.select.innerHTML = vocabulary.map(item =>
+        `<option${value === item ? ' selected' : ''}>${item}</option>`)
+      .join("");
+      this.select.title = helperText;
+
+      // Create div for select
+      let selectDiv = document.createElement("div");
+      selectDiv.className = "col-sm-10";
+      selectDiv.appendChild(this.select);
+
+      // this.group
+      this.group.classList.add("form-group", "row");
+      this.group.innerHTML = `<label class="col-sm-2 col-form-label">
+      ${name + (mandatory ? " *" : "")}</label>`;
+      this.group.appendChild(selectDiv);
     }
   }
 
