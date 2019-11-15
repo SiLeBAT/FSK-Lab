@@ -737,10 +737,15 @@ fskeditorjs = function () {
       panelHeading.innerHTML = `<h4 class="panel-title pull-left" style="padding-top:7.5px;">${title}</h4>`;
       panelHeading.appendChild(inputGroup);
 
+      // content div: responsive div for the table (no overflows)
+      let content = document.createElement("div");
+      content.className = "table-responsive";
+      content.appendChild(this.table.table);
+
       // panel
       this.panel.classList.add("panel", "panel-default");
       this.panel.appendChild(panelHeading);
-      this.panel.appendChild(this.table.table);
+      this.panel.appendChild(content);
     }
 
     add(data) {
