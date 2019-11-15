@@ -100,10 +100,13 @@ simulator = function() {
     document.getElementById('addButton').onclick = addSimulation;
     document.getElementById('saveButton').onclick = submitSimulation;
     
-    $('#simulationSelect').change(function() {
+    $('#simulationSelect').change(() => {
       let selectedIndex = document.getElementById("simulationSelect").selectedIndex;
       updateSimulationName(selectedIndex);
       updateParameterValues(selectedIndex);
+
+      // Store the index of the selected simulation as selected in the view value
+      _val.selectedSimulationIndex = selectedIndex;
     });
 	}
 
@@ -333,6 +336,9 @@ simulator = function() {
       // Save simulation in _val
       let newSimulation = {'name': simulationNameInput.value, 'values': parameterValues};
       _val.simulations.push(newSimulation);
+
+      // Mark newSimulation as selected
+      _val.selectedSimulationIndex = _val.simulations.length - 1;
 
       // Add simulation name in simulationSelect
       $('#simulationSelect').append(`<option>${simulationNameInput.value}</option>`);
