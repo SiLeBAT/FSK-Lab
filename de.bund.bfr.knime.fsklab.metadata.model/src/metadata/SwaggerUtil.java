@@ -530,7 +530,7 @@ public class SwaggerUtil {
 				de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum.VECTOROFSTRINGS);
 		TYPES.put(metadata.ParameterType.MATRIX_OF_NUMBERS,
 				de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum.MATRIXOFNUMBERS);
-		TYPES.put(metadata.ParameterType.VECTOR_OF_NUMBERS,
+		TYPES.put(metadata.ParameterType.MATRIX_OF_STRINGS,
 				de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum.MATRIXOFSTRINGS);
 		TYPES.put(metadata.ParameterType.OBJECT, de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum.OBJECT);
 		TYPES.put(metadata.ParameterType.OTHER, de.bund.bfr.metadata.swagger.Parameter.DataTypeEnum.OBJECT);
