@@ -545,12 +545,6 @@ fskeditorjs = function () {
      */
     constructor (name, mandatory, helperText, value, vocabulary=null) {
 
-      this.name = name;
-      this.mandatory = mandatory;
-      this.helperText = helperText;
-      this.value = value;
-      this.vocabulary = vocabulary;
-
       this.select = document.createElement("select");
       this.group = document.createElement("div");
 
@@ -561,9 +555,9 @@ fskeditorjs = function () {
 
       this.select.className = "form-control";
       // Add options from vocabulary. The option matching value is selected.
-      this.select.innerHTML = vocabulary.map(item =>
-        `<option${value === item ? ' selected' : ''}>${item}</option>`)
-      .join("");
+      this.select.innerHTML = vocabulary.map(item =>`<option>${item}</option>`)
+        .join("");
+      this.select.value = value;
       this.select.title = helperText;
 
       // Create div for select
@@ -576,6 +570,18 @@ fskeditorjs = function () {
       this.group.innerHTML = `<label class="col-sm-2 col-form-label">
       ${name + (mandatory ? " *" : "")}</label>`;
       this.group.appendChild(selectDiv);
+    }
+
+    get value() {
+      return this.select.value;
+    }
+
+    set value(newValue) {
+      this.select.value = newValue;
+    }
+
+    clear() {
+      this.select.value = "";
     }
   }
 
