@@ -346,8 +346,12 @@ fskeditorjs = function () {
         let value = data[prop.id] ? data[prop.id] : "";
 
         let cell = document.createElement("td");
-        cell.title = value; // Set the whole value as tooltip
-        cell.textContent = value.length > 20 ? value.substring(0, 24) + "..." : value;
+        if (prop.type === "boolean" && value) {
+          cell.innerHTML = '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>';
+        } else {
+          cell.title = value; // Set the whole value as tooltip
+          cell.textContent = value.length > 20 ? value.substring(0, 24) + "..." : value;
+        }
         newRow.appendChild(cell);
       });
 
