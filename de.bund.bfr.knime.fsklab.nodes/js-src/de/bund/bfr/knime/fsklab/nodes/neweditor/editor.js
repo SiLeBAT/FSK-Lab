@@ -191,10 +191,11 @@ fskeditorjs = function () {
       let formDiv = document.createElement("div");
       formDiv.className = "col-sm-10";
       formDiv.appendChild(panelDiv);
+      formDiv.title = helperText;
+      $(formDiv).tooltip();
 
       this.group.classList.add("form-group", "row");
-      this.group.innerHTML = `<label class="col-sm-2 control-label">
-        ${name + (mandatory ? " *" : "")}</label>`;
+      this.group.appendChild(createLabel(name, mandatory, helperText));
       this.group.appendChild(formDiv);
     }
 
@@ -500,8 +501,9 @@ fskeditorjs = function () {
       // Create input
       this.input.className = type === "checkbox" ? "form-check-input" : "form-control";
       this.input.type = type;
-      this.input.placeholder = helperText;
       this.input.value = value;
+      this.input.title = helperText;
+      $(this.input).tooltip();
 
       // Create div for input
       let inputDiv = document.createElement("div");
@@ -522,8 +524,7 @@ fskeditorjs = function () {
 
       // Collect everything into group
       this.group.classList.add("form-group", "row");
-      this.group.innerHTML = `<label class="col-sm-2 control-label">
-        ${name + (mandatory ? " *" : "")}</label>`;
+      this.group.appendChild(createLabel(name, mandatory, helperText));
       this.group.appendChild(inputDiv);
     }
 
@@ -605,6 +606,7 @@ fskeditorjs = function () {
         .join("");
       this.select.value = value;
       this.select.title = helperText;
+      $(this.select).tooltip();
 
       // Create div for select
       let selectDiv = document.createElement("div");
@@ -613,8 +615,7 @@ fskeditorjs = function () {
 
       // this.group
       this.group.classList.add("form-group", "row");
-      this.group.innerHTML = `<label class="col-sm-2 control-label">
-      ${name + (mandatory ? " *" : "")}</label>`;
+      this.group.appendChild(createLabel(name, mandatory, helperText));
       this.group.appendChild(selectDiv);
     }
 
@@ -1251,5 +1252,17 @@ fskeditorjs = function () {
         extraKeys: { 'Ctrl-Space': 'autocomplete' },
         mode: { 'name': language }
       });
+  }
+
+  function createLabel(name, isMandatory, description) {
+    let label = document.createElement("label");
+    label.classList.add("col-sm-2", "control-label");
+    label.title = description;
+    label.setAttribute("data-toggle", "tooltip");
+    label.textContent = name + (isMandatory ? "*" : "");
+
+    $(label).tooltip();  // Enable Bootstrap tooltip
+
+    return label;
   }
 }();
