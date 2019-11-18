@@ -1050,7 +1050,10 @@ fskeditorjs = function () {
     _metadata.dataBackground.laboratory = tablePanels.laboratory.data;
     _metadata.dataBackground.assay = tablePanels.assay.data;
 
-    // TODO: Model math
+    // Model math
+    Object.entries(tablePanels.modelMath.inputs).forEach(([id, input]) => {
+      _metadata.modelMath[id] = input.value;
+    });
     _metadata.modelMath.parameter = tablePanels.parameter.data;
     _metadata.modelMath.qualityMeasures = tablePanels.qualityMeasures.data;
     _metadata.modelMath.modelEquation = tablePanels.modelEquation.data;
@@ -1134,7 +1137,7 @@ fskeditorjs = function () {
         { "id": "dietaryAssessmentMethod", "label": "Dietary assessment method" },
         { "id": "laboratory", "label": "Laboratory" },
         { "id": "assay", "label": "Assay" }])}
-      ${createSubMenu("Model math", [{ "id": "mathGeneral", "label": "General" },
+      ${createSubMenu("Model math", [{ "id": "modelMath", "label": "General" },
         { "id": "parameter", "label": "Parameter" },
         { "id": "qualityMeasures", "label": "Quality measures" },
         { "id": "modelEquation", "label": "Model equation" },
@@ -1182,6 +1185,7 @@ fskeditorjs = function () {
       dietaryAssessmentMethod: new TablePanel("Dietary assessment method", dialogs.methodDialog, ui.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
       laboratory: new TablePanel("Laboratory", dialogs.laboratoryDialog, ui.laboratory, _metadata.dataBackground.laboratory),
       assay: new TablePanel("Assay", dialogs.assayDialog, ui.assay, _metadata.dataBackground.assay),
+      modelMath: new FormPanel("Model math", ui.modelMath, _metadata.modelMath),
       parameter: new TablePanel("Parameter", dialogs.parameterDialog, ui.parameter, _metadata.modelMath.parameter),
       qualityMeasures: new TablePanel("Quality measures", dialogs.measuresDialog, ui.qualityMeasures, _metadata.modelMath.qualityMeasures),
       modelEquation: new TablePanel("Model equation", dialogs.equationDialog, ui.modelEquation, _metadata.modelMath.modelEquation),

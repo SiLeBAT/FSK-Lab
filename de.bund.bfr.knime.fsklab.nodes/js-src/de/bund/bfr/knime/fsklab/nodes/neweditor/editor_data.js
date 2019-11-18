@@ -721,6 +721,17 @@ const ui = {
         "type": "text",
         "description": "Indicate the expanded uncertainty (usually 95% confidence interval) value associated with the measurement expressed in the unit reported in the field 'Hazard unit'"
     }],
+    "modelMath": [{
+        "id": "fittingProcedure",
+        "label": "Fitting procedure",
+        "type": "text",
+        "description": "Procedure used to fit the data to the model equation"
+    }, {
+        "id": "event",
+        "label": "Event",
+        "type": "text-array",
+        "description": "Definition of time-dependent parameter changes"
+    }],
     "parameter": [{
         "id": "id",
         "label": "ID",
