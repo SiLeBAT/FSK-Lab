@@ -955,6 +955,9 @@ fskeditorjs = function () {
     _metadata.scope.populationGroup = tablePanels.population.data;
 
     // Data background
+    if (!_metadata.dataBackground.study) {
+      _metadata.dataBackground.study = {};
+    }
     Object.entries(tablePanels.study.inputs).forEach(([id, input]) => {
       _metadata.dataBackground.study[id] = input.value;
     });
