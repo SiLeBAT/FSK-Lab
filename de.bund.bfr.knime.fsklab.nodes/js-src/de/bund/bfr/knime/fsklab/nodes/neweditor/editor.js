@@ -12,7 +12,8 @@ fskeditorjs = function () {
     $(input).typeahead({
       source: vocabulary,
       autoSelect: true,
-      fitToElement: true
+      fitToElement: true,
+      showHintOnFocus: true
     });
   }
 
