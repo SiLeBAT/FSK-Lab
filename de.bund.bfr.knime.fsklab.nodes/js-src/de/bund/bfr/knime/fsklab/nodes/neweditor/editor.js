@@ -957,6 +957,13 @@ fskeditorjs = function () {
 
       this.panel.appendChild(body);
     }
+
+    validate() {
+      let isValid = true;
+      Object.values(this.inputs).forEach(input => {
+        if (!input.validate()) isValid = false;});
+      return isValid;
+    }
   }
 
   var _rep;
@@ -1064,7 +1071,16 @@ fskeditorjs = function () {
     return viewValue;
   };
 
-  view.validate = () => true;
+  view.validate = () => {
+
+    let isValid = true;
+    if (!tablePanels.generalInformation.validate()) isValid = false;
+    if (!tablePanels.modelCategory.validate()) isValid = false;
+    if (!tablePanels.scopeGeneral.validate()) isValid = false;
+    if (!tablePanels.study.validate()) isValid = false;
+
+    return isValid;
+  }
 
   return view;
 
