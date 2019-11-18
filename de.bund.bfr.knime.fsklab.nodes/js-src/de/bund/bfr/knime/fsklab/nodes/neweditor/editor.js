@@ -193,7 +193,6 @@ fskeditorjs = function () {
       formDiv.className = "col-sm-10";
       formDiv.appendChild(panelDiv);
       formDiv.title = helperText;
-      $(formDiv).tooltip();
 
       this.group.classList.add("form-group", "row");
       this.group.appendChild(createLabel(name, mandatory, helperText));
@@ -504,7 +503,6 @@ fskeditorjs = function () {
       this.input.type = type;
       this.input.value = value;
       this.input.title = helperText;
-      $(this.input).tooltip();
 
       // Create div for input
       let inputDiv = document.createElement("div");
@@ -607,7 +605,6 @@ fskeditorjs = function () {
         .join("");
       this.select.value = value;
       this.select.title = helperText;
-      $(this.select).tooltip();
 
       // Create div for select
       let selectDiv = document.createElement("div");
