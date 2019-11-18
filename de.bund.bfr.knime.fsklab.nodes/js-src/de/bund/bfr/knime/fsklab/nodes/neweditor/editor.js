@@ -193,7 +193,7 @@ fskeditorjs = function () {
       formDiv.appendChild(panelDiv);
 
       this.group.classList.add("form-group", "row");
-      this.group.innerHTML = `<label class="col-sm-2 col-form-label">
+      this.group.innerHTML = `<label class="col-sm-2 control-label">
         ${name + (mandatory ? " *" : "")}</label>`;
       this.group.appendChild(formDiv);
     }
@@ -209,6 +209,14 @@ fskeditorjs = function () {
 
     clear() {
       this.simpleTable.trash();
+    }
+
+    /**
+     * @returns {boolean} If the input is valid.
+     */
+    validate() {
+      // TODO: Implement validate in ArrayForm
+      return true;
     }
   }
 
@@ -476,7 +484,6 @@ fskeditorjs = function () {
       
       this.input = document.createElement("input");
       this.group = document.createElement("div");
-
       this._create(name, mandatory, type, helperText, value, vocabulary);
     }
 
@@ -500,6 +507,13 @@ fskeditorjs = function () {
       let inputDiv = document.createElement("div");
       inputDiv.classList.add("col-sm-10");
       inputDiv.appendChild(this.input);
+      if (mandatory) {
+        this.helpBlock = document.createElement("span");
+        this.helpBlock.className = "help-block";
+        this.helpBlock.style.display = "none";
+        this.helpBlock.textContent = `${name} is a required property`;
+        inputDiv.appendChild(this.helpBlock);
+      }
 
       // Add autocomplete to input with vocabulary
       if (vocabulary) {
@@ -508,7 +522,7 @@ fskeditorjs = function () {
 
       // Collect everything into group
       this.group.classList.add("form-group", "row");
-      this.group.innerHTML = `<label class="col-sm-2 col-form-label">
+      this.group.innerHTML = `<label class="col-sm-2 control-label">
         ${name + (mandatory ? " *" : "")}</label>`;
       this.group.appendChild(inputDiv);
     }
@@ -523,6 +537,38 @@ fskeditorjs = function () {
 
     clear() {
       this.input.value = "";
+
+      if (this.helpBlock) {
+        this.helpBlock.style.display = "none";
+      }
+
+      // Remove validation classes
+      this.group.classList.remove("has-success", "has-error"); 
+    }
+
+    /**
+     * @returns {boolean} If the input is valid.
+     */
+    validate() {
+
+      let isValid;
+      if (!this.mandatory) {
+        isValid = true;
+      } else {
+        isValid = this.input.value ? true : false;
+      }
+
+      if (!isValid) {
+        this.helpBlock.style.display = "block";
+      }
+
+      // Remove validation classes
+      this.group.classList.remove("has-success", "has-error"); 
+
+      // Add new validation class
+      this.group.classList.add(isValid ? "has-success" : "has-error");
+
+      return isValid;
     }
   }
 
@@ -567,7 +613,7 @@ fskeditorjs = function () {
 
       // this.group
       this.group.classList.add("form-group", "row");
-      this.group.innerHTML = `<label class="col-sm-2 col-form-label">
+      this.group.innerHTML = `<label class="col-sm-2 control-label">
       ${name + (mandatory ? " *" : "")}</label>`;
       this.group.appendChild(selectDiv);
     }
@@ -582,6 +628,27 @@ fskeditorjs = function () {
 
     clear() {
       this.select.value = "";
+    }
+
+    /**
+     * @returns {boolean} If the input is valid.
+     */
+    validate() {
+
+      let isValid;
+      if (!this.mandatory) {
+        isValid = true;
+      } else {
+        isValid = this.input.value ? true : false;
+      }
+
+      // Remove validation classes
+      this.group.classList.remove("has-success", "has-error"); 
+
+      // Add new validation class
+      this.group.classList.add(isValid ? "has-success" : "has-error");
+
+      return isValid;
     }
   }
 
@@ -658,6 +725,14 @@ fskeditorjs = function () {
       saveButton.classList.add("btn", "btn-primary");
       saveButton.textContent = "Save changes";
       saveButton.onclick = () => {
+
+        // Validate inputs and stop saving if errors are found.
+        let hasError = false;
+        Object.values(this.inputs).forEach(input => {
+          if (!input.validate()) hasError = true;
+        });
+        if (hasError) return;
+
         $(this.modal).modal('hide');
 
         // Retrieve data and clear inputs
@@ -770,10 +845,12 @@ fskeditorjs = function () {
       // Add button
       let addButton = document.createElement("button");
       addButton.classList.add("btn", "btn-primary");
-      addButton.setAttribute("data-toggle", "modal");
-      addButton.setAttribute("data-target", "#" + dialog.modal.id);
       addButton.innerHTML = '<i class="glyphicon glyphicon-plus"></i>';
       addButton.title = "Add a " + title;
+      addButton.onclick = () => {
+        Object.values(dialog.inputs).forEach(input => input.clear());
+        $(dialog.modal).modal('show');
+      };
       
       // Trash button
       let trashButton = document.createElement("button");
