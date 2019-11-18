@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Selected simulation not saved in simulation configurator node: https://github.com/SiLeBAT/FSK-Lab/issues/380
 - Parameter data type Vector[Numbers] is lost: https://github.com/SiLeBAT/FSK-Lab/issues/381
 - Not responsive tables in editor: https://github.com/SiLeBAT/FSK-Lab/issues/382
+- Add validation in editor: https://github.com/SiLeBAT/FSK-Lab/issues/385
 
 ## [1.7.1] - 2019.11.12
 
