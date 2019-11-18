@@ -1151,7 +1151,7 @@ fskeditorjs = function () {
             aria-controls="visualizationScript" role="tab" data-toggle="tab">Visualization script</a>
         </li>
         <li role="presentation">
-          <a href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
+          <a id="readme-tab" href="#readme" aria-controls="readme" role="tab" data-toggle="tab">README</a>
         </li>
       </ul>
     </div>
@@ -1210,7 +1210,7 @@ fskeditorjs = function () {
     // Create code mirrors for text areas with scripts and readme
     _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
     _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
-    _readmeCodeMirror = createCodeMirror("readmeArea", "htmlmixed");
+    _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
 
     $('#modelScript-tab').on('shown.bs.tab', () => {
       _modelCodeMirror.refresh();
