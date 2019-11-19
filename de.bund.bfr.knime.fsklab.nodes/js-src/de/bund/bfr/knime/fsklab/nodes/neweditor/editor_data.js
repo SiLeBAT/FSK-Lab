@@ -1011,6 +1011,7 @@ const schemas = {
                 "description": "General description of the study, data or model"
             }
         ],
+        modelCategory: ui.modelCategory,
         contact: ui.contact,
         reference: ui.reference,
 
@@ -1031,7 +1032,7 @@ const schemas = {
             {
                 id: "spatialInformation",
                 label: "Spatial information",
-                type: "text",
+                type: "text-array",
                 description: "" // TODO: spatial information description
             }
         ],
@@ -1067,46 +1068,48 @@ const schemas = {
     },
 
     doseResponseModel: {
+
+        // General information
         generalInformation: [
             {
                 id: "modelName",
                 label: "Model name",
                 type: "text",
-                description: "", // TODO: Model name description
+                description: "A name given to the model",
                 required: true
             },
             {
                 id: "source",
                 label: "Source",
                 type: "text",
-                description: "", // TODO: source description
+                description: "A related resource from which the described resource is derived",
                 vocabulary: "Source"
             },
             {
                 id: "identifier",
                 label: "Identifier",
                 type: "text",
-                description: "", // TODO: identifier description
+                description: "An unambiguous ID given to the model",
                 required: true
             },
             {
                 id: "creationDate",
                 label: "Creation date",
                 type: "date",
-                description: "", // TODO: creation date description
+                description: "Temporal information on the model creation date",
                 required: true
             },
             {
                 id: "modificationDate",
                 label: "Modification date",
                 type: "date-array",
-                description: "", // TODO: modification date description
+                description: "Temporal information on the last modification of the model"
             },
             {
                 id: "rights",
                 label: "Rights",
                 type: "text",
-                description: "", // TODO: rights description
+                description: "Information on rights held in an over the resource",
                 vocabulary: "Rights",
                 required: true
             },
@@ -1114,85 +1117,86 @@ const schemas = {
                 id: "availability",
                 label: "Availability",
                 type: "text",
-                description: "", // TODO: availability description
+                description: "Availability of model",
                 vocabulary: "Availability"
             },
             {
                 id: "url",
                 label: "URL",
                 type: "url",
-                description: "" // TODO: url description
+                description: "Web adress referencing the resource location"
             },
             {
                 id: "format",
                 label: "Format",
                 type: "text",
-                description: "", // TODO: format description
+                description: "form of the model (file extension)",
                 vocabulary: "Format"
             },
             {
                 id: "language",
                 label: "Language",
                 type: "text",
-                description: "", // TODO: language description
+                description: "A language of the resource (some data or reports can be available in French language for example)",
                 vocabulary: "Language"
             },
             {
                 id: "software",
                 label: "Software",
                 type: "text",
-                description: "", // TODO: software description
+                description: "The program in which the model has been implemented",
                 vocabulary: "Software"
             },
             {
                 id: "languageWrittenIn",
                 label: "Language written in",
                 type: "text",
-                description: "", // TODO: language written in description
+                description: "Language used to write the model, e.g. R or MatLab",
                 vocabulary: "Language_written_in"
             },
             {
                 id: "status",
                 label: "Status",
                 type: "text",
-                description: "", // TODO: status description
+                description: "The curation status of the model",
                 vocabulary: "Status"
             },
             {
                 id: "objective",
                 label: "Objective",
                 type: "text",
-                description: "" // TODO: objective description
+                description: "Objective of the model"
             },
             {
                 id: "description",
                 label: "Description",
                 type: "text",
-                description: "" // TODO: description
+                description: "General description of the model"
             }
         ],
 
         contact: ui.contact,
         reference: ui.reference,
 
+        // Scope
         scope: [
             {
                 id: "generalComment",
                 label: "General comment",
                 type: "text",
-                description: "" // TODO: general comment description
+                description: "General comments on the scope of the model"
             },
             {
                 id: "temporalInformation",
                 label: "Temporal information",
                 type: "text",
-                description: "" // TODO: temporal information description
+                description: "Temporal information on which the model applies / An interval of time that is named or defined by its start and end dates (period of study)"
             },
             {
                 id: "spatialInformation",
                 label: "Spatial information",
                 type: "text",
-                description: "" // TODO: spatial information description
+                description: "Spatial information (area) on which the model applies"
             }
         ],
         hazard: ui.hazard,
@@ -1210,13 +1214,13 @@ const schemas = {
                 id: "fittingProcedure",
                 label: "Fitting procedure",
                 type: "text",
-                description: "" // TODO: fitting procedure description
+                description: "Procedure used to fit the data to the model equation"
             },
             {
                 id: "event",
                 label: "Event",
                 type: "text-array",
-                description: "" // TODO: event description
+                description: "Definition of time-dependent parameter changes"
             }
         ],
         parameter: ui.parameter,

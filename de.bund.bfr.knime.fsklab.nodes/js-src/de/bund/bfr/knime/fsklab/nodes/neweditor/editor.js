@@ -17,6 +17,166 @@ fskeditorjs = function () {
     });
   }
 
+  // Handler for generic model schema
+  class GenericModel {
+
+    constructor() {
+      this.dialogs = this._createDialogs();
+      this.panels = this._createPanels();
+      this.menus = this._createMenus();
+    }
+
+    get metaData() {
+
+      // Save generalInformation -> general
+      Object.entries(this.panels.generalInformation.inputs).forEach(([id, input]) => {
+        _metadata.generalInformation[id] = input.value;
+      });
+
+      // Save generalInformation -> modelCategory
+      Object.entries(this.panels.modelCategory.inputs).forEach(([id, input]) => {
+        _metadata.generalInformation.modelCategory[id] = input.value;
+      });
+
+      // Save generalInformation -> author, creator and reference
+      _metadata.generalInformation.author = this.panels.author.data;
+      _metadata.generalInformation.creator = this.panels.creator.data;
+
+      _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
+
+      // Scope general
+      Object.entries(this.panels.scopeGeneral.inputs).forEach(([id, input]) => {
+        _metadata.scope[id] = input.value;
+      });
+
+      _metadata.scope.product = this.panels.product.data;
+      _metadata.scope.hazard = this.panels.hazard.data;
+      _metadata.scope.populationGroup = this.panels.population.data;
+
+      // Data background
+      if (!_metadata.dataBackground.study) {
+        _metadata.dataBackground.study = {};
+      }
+      Object.entries(this.panels.study.inputs).forEach(([id, input]) => {
+        _metadata.dataBackground.study[id] = input.value;
+      });
+      _metadata.dataBackground.studySample = this.panels.studySample.data;
+      _metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
+      _metadata.dataBackground.laboratory = this.panels.laboratory.data;
+      _metadata.dataBackground.assay = this.panels.assay.data;
+
+      // Model math
+      Object.entries(this.panels.modelMath.inputs).forEach(([id, input]) => {
+        _metadata.modelMath[id] = input.value;
+      });
+      _metadata.modelMath.parameter = this.panels.parameter.data;
+      _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+      _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+      _metadata.modelMath.exposure = this.panels.exposure.data;
+
+      _metadata.modelType = "GenericModel";
+      
+      return _metadata;
+    }
+
+    // Validate this.panels and return boolean
+    validate() {
+      let isValid = true;
+      if (!this.panels.generalInformation.validate()) isValid = false;
+      if (!this.panels.modelCategory.validate()) isValid = false;
+      if (!this.panels.scopeGeneral.validate()) isValid = false;
+      if (!this.panels.study.validate()) isValid = false;
+      return isValid;
+    }
+
+    _createDialogs() {
+
+      let schema = schemas.genericModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        methodDialog: new Dialog("methodDialog", "Add method", schema.dietaryAssessmentMethod),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
+    }
+
+    _createPanels() {
+
+      let schema = schemas.genericModel;
+
+      return {
+        generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
+        modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
+        scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
+          _metadata.scope.populationGroup),
+        study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+          _metadata.dataBackground.studySample),
+        dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
+          schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
+        modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+          _metadata.modelMath.qualityMeasures),
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation),
+        exposure: new TablePanel("Exposure", this.dialogs.exposureDialog, schema.exposure, _metadata.modelMath.exposure)
+      };
+    }
+
+    _createMenus() {
+      return createSubMenu("General information", [
+        { "id": "generalInformation", "label": "General" },
+        { "id": "modelCategory", "label": "Model category" },
+        { "id": "author", "label": "Author" },
+        { "id": "creator", "label": "Creator" },
+        { "id": "reference", "label": "Reference" }]) +
+        createSubMenu("Scope", [{ "id": "scopeGeneral", "label": "General" },
+        { "id": "product", "label": "Product" },
+        { "id": "hazard", "label": "Hazard" },
+        { "id": "population", "label": "Population group" }]) +
+        createSubMenu("Data Background", [{ "id": "study", "label": "Study" },
+        { "id": "studySample", "label": "Study sample" },
+        { "id": "dietaryAssessmentMethod", "label": "Dietary assessment method" },
+        { "id": "laboratory", "label": "Laboratory" },
+        { "id": "assay", "label": "Assay" }]) +
+        createSubMenu("Model math", [{ "id": "modelMath", "label": "General" },
+        { "id": "parameter", "label": "Parameter" },
+        { "id": "qualityMeasures", "label": "Quality measures" },
+        { "id": "modelEquation", "label": "Model equation" },
+        { "id": "exposure", "label": "Exposure" }]);
+    }
+  }
+
   // Hash of publication types full names to keys.
   // See more at https://en.wikipedia.org/w/index.php?title=RIS_(file_format)
   const RIS_TYPES = {
@@ -975,11 +1135,11 @@ fskeditorjs = function () {
     modelMath: {}
   };
 
-  var _panels = {}; // Metadata panels created in createUI.
-
   var _modelCodeMirror;
   var _visualizationCodeMirror;
   var _readmeCodeMirror;
+
+  let handler;
 
   view.init = function (representation, value) {
 
@@ -999,66 +1159,16 @@ fskeditorjs = function () {
       _metadata.dataBackground = metaData.dataBackground;
     }
 
+    if (value.modelType === "genericModel") {
+      handler = new GenericModel();
+    }
+
     createUI();
   }
 
   view.getComponentValue = () => {
 
-    // Save generalInformation -> general
-    Object.entries(tablePanels.generalInformation.inputs).forEach(([id, input]) => {
-      _metadata.generalInformation[id] = input.value;
-    });
-
-    // Save generalInformation -> modelCategory
-    Object.entries(tablePanels.modelCategory.inputs).forEach(([id, input]) => {
-      _metadata.generalInformation.modelCategory[id] = input.value;
-    });
-
-    // Save generalInformation -> author, creator and reference
-    _metadata.generalInformation.author = tablePanels.author.data;
-    _metadata.generalInformation.creator = tablePanels.creator.data;
-
-    _metadata.generalInformation.reference = tablePanels.reference.data;
-    // Ignore temporarily publication type
-    // TODO: publicationType takes the abbreviation instead of the full string
-    // used in the Reference dialog. Since KNIME runs getComponentValue twice,
-    // the value cannot be converted here. The 1st call to getComponentValue
-    // would get the abbreviation but the 2nd call would corrupt it. The HTML
-    // select should instead use the full string as label and the abreviation
-    // as value.
-    _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
-
-    // Scope general
-    Object.entries(tablePanels.scopeGeneral.inputs).forEach(([id, input]) => {
-      _metadata.scope[id] = input.value;
-    });
-
-    _metadata.scope.product = tablePanels.product.data;
-    _metadata.scope.hazard = tablePanels.hazard.data;
-    _metadata.scope.populationGroup = tablePanels.population.data;
-
-    // Data background
-    if (!_metadata.dataBackground.study) {
-      _metadata.dataBackground.study = {};
-    }
-    Object.entries(tablePanels.study.inputs).forEach(([id, input]) => {
-      _metadata.dataBackground.study[id] = input.value;
-    });
-    _metadata.dataBackground.studySample = tablePanels.studySample.data;
-    _metadata.dataBackground.dietaryAssessmentMethod = tablePanels.dietaryAssessmentMethod.data;
-    _metadata.dataBackground.laboratory = tablePanels.laboratory.data;
-    _metadata.dataBackground.assay = tablePanels.assay.data;
-
-    // Model math
-    Object.entries(tablePanels.modelMath.inputs).forEach(([id, input]) => {
-      _metadata.modelMath[id] = input.value;
-    });
-    _metadata.modelMath.parameter = tablePanels.parameter.data;
-    _metadata.modelMath.qualityMeasures = tablePanels.qualityMeasures.data;
-    _metadata.modelMath.modelEquation = tablePanels.modelEquation.data;
-    _metadata.modelMath.exposure = tablePanels.exposure.data;
-
-    _metadata.modelType = "GenericModel";
+    _metadata = handler.metaData;
     let metaDataString = JSON.stringify(_metadata);
 
     let viewValue = {
@@ -1074,42 +1184,13 @@ fskeditorjs = function () {
   };
 
   view.validate = () => {
-
-    let isValid = true;
-    if (!tablePanels.generalInformation.validate()) isValid = false;
-    if (!tablePanels.modelCategory.validate()) isValid = false;
-    if (!tablePanels.scopeGeneral.validate()) isValid = false;
-    if (!tablePanels.study.validate()) isValid = false;
-
-    return isValid;
+    return handler.validate();
   }
 
   return view;
 
-  /** Functions taken from the old editor to parse metadata. */
-  function isObj(obj) {
-    return obj ? obj.constructor.name === "Object" : false;
-  }
-
   /** UI code. */
   function createUI() {
-
-    let dialogs = {
-      authorDialog: new Dialog("authorDialog", "Add dialog", ui.contact),
-      creatorDialog: new Dialog("creatorDialog", "Add creator", ui.contact),
-      referenceDialog: new Dialog("referenceDialog", "Add reference", ui.reference),
-      productDialog: new Dialog("productDialog", "Add product", ui.product),
-      hazardDialog: new Dialog("hazardDialog", "Add hazard", ui.hazard),
-      populationDialog: new Dialog("populationDialog", "Add population", ui.populationGroup),
-      studySampleDialog: new Dialog("studySampleDialog", "Add study sample", ui.studySample),
-      methodDialog: new Dialog("methodDialog", "Add method", ui.dietaryAssessmentMethod),
-      laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", ui.laboratory),
-      assayDialog: new Dialog("assayDialog", "Add assay", ui.assay),
-      parameterDialog: new Dialog("parameterDialog", "Add parameter", ui.parameter),
-      measuresDialog: new Dialog("measuresDialog", "Add quality measures", ui.qualityMeasures),
-      equationDialog: new Dialog("equationDialog", "Add model equation", ui.modelEquation),
-      exposureDialog: new Dialog("exposureDialog", "Add exposure", ui.exposure)
-    }
 
     let panelsById = [
       {id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.firstModelScript}</textarea>`},
@@ -1122,25 +1203,7 @@ fskeditorjs = function () {
   <nav class="navbar navbar-default">
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav" id="viewTab">
-      ${createSubMenu("General information", [{ "id": "generalInformation", "label": "General" },
-        { "id": "modelCategory", "label": "Model category" },
-        { "id": "author", "label": "Author" },
-        { "id": "creator", "label": "Creator" },
-        { "id": "reference", "label": "Reference" }])}
-      ${createSubMenu("Scope", [{ "id": "scopeGeneral", "label": "General" },
-        { "id": "product", "label": "Product" },
-        { "id": "hazard", "label": "Hazard" },
-        { "id": "population", "label": "Population group" }])}
-      ${createSubMenu("Data Background", [{ "id": "study", "label": "Study" },
-        { "id": "studySample", "label": "Study sample" },
-        { "id": "dietaryAssessmentMethod", "label": "Dietary assessment method" },
-        { "id": "laboratory", "label": "Laboratory" },
-        { "id": "assay", "label": "Assay" }])}
-      ${createSubMenu("Model math", [{ "id": "modelMath", "label": "General" },
-        { "id": "parameter", "label": "Parameter" },
-        { "id": "qualityMeasures", "label": "Quality measures" },
-        { "id": "modelEquation", "label": "Model equation" },
-        { "id": "exposure", "label": "Exposure" }])}
+        ${handler.menus}
         <li role="presentation">
           <a id="modelScript-tab" href="#modelScript"
             aria-controls="modelScript" role="tab" data-toggle="tab">Model script</a>
@@ -1166,34 +1229,11 @@ fskeditorjs = function () {
 
     // Add dialogs
     const container = document.getElementsByClassName("container-fluid")[0];
-    Object.values(dialogs).forEach(dialog => container.appendChild(dialog.modal));
-
-    // Add (table) panels
-    tablePanels = {
-      generalInformation: new FormPanel("General", ui.generalInformation, _metadata.generalInformation),
-      modelCategory: new FormPanel("Model category", ui.modelCategory, _metadata.generalInformation.modelCategory),
-      author: new TablePanel("Author", dialogs.authorDialog, ui.contact, _metadata.generalInformation.author),
-      creator: new TablePanel("Creator", dialogs.creatorDialog, ui.contact, _metadata.generalInformation.creator),
-      reference: new TablePanel("Reference", dialogs.referenceDialog, ui.reference, _metadata.generalInformation.reference),
-      scopeGeneral: new FormPanel("General", ui.scope, _metadata.scope),
-      product: new TablePanel("Product", dialogs.productDialog, ui.product, _metadata.scope.product),
-      hazard: new TablePanel("Hazard", dialogs.hazardDialog, ui.hazard, _metadata.scope.hazard),
-      population: new TablePanel("Population", dialogs.populationDialog, ui.populationGroup, _metadata.scope.populationGroup),
-      study: new FormPanel("Study", ui.study, _metadata.dataBackground.study),
-      studySample: new TablePanel("Study sample", dialogs.studySampleDialog, ui.studySample, _metadata.dataBackground.studySample),
-      dietaryAssessmentMethod: new TablePanel("Dietary assessment method", dialogs.methodDialog, ui.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
-      laboratory: new TablePanel("Laboratory", dialogs.laboratoryDialog, ui.laboratory, _metadata.dataBackground.laboratory),
-      assay: new TablePanel("Assay", dialogs.assayDialog, ui.assay, _metadata.dataBackground.assay),
-      modelMath: new FormPanel("Model math", ui.modelMath, _metadata.modelMath),
-      parameter: new TablePanel("Parameter", dialogs.parameterDialog, ui.parameter, _metadata.modelMath.parameter),
-      qualityMeasures: new TablePanel("Quality measures", dialogs.measuresDialog, ui.qualityMeasures, _metadata.modelMath.qualityMeasures),
-      modelEquation: new TablePanel("Model equation", dialogs.equationDialog, ui.modelEquation, _metadata.modelMath.modelEquation),
-      exposure: new TablePanel("Exposure", dialogs.exposureDialog, ui.exposure, _metadata.modelMath.exposure)
-    };
+    Object.values(handler.dialogs).forEach(dialog => container.appendChild(dialog.modal));
 
     const viewContent = document.getElementById("viewContent");    
 
-    Object.entries(tablePanels).forEach(([key, value]) => {
+    Object.entries(handler.panels).forEach(([key, value]) => {
       let tabPanel = document.createElement("div");
       tabPanel.setAttribute("role", "tabpanel");
       tabPanel.className = "tab-pane";
