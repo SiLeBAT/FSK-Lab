@@ -1174,7 +1174,7 @@ const schemas = {
                 description: "General description of the model"
             }
         ],
-
+        modelCategory: ui.modelCategory,
         contact: ui.contact,
         reference: ui.reference,
 

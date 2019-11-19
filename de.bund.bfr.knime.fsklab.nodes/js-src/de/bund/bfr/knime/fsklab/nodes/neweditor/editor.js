@@ -177,6 +177,157 @@ fskeditorjs = function () {
     }
   }
 
+  // Handler for dose response model schema
+  class DoseResponseModel {
+    
+    constructor() {
+      this.dialogs = this._createDialogs();
+      this.panels = this._createPanels();
+      this.menus = this._createMenus();
+    }
+
+    get metaData() {
+      // Save generalInformation -> general
+      Object.entries(this.panels.generalInformation.inputs).forEach(([id, input]) => {
+        _metadata.generalInformation[id] = input.value;
+      });
+
+      // Save generalInformation -> modelCategory
+      Object.entries(this.panels.modelCategory.inputs).forEach(([id, input]) => {
+        _metadata.generalInformation.modelCategory[id] = input.value;
+      });
+
+      // Save generalInformation -> author, creator and reference
+      _metadata.generalInformation.author = this.panels.author.data;
+      _metadata.generalInformation.creator = this.panels.creator.data;
+
+      _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
+
+      // Scope general
+      Object.entries(this.panels.scopeGeneral.inputs).forEach(([id, input]) => {
+        _metadata.scope[id] = input.value;
+      });
+
+      _metadata.scope.hazard = this.panels.hazard.data;
+      _metadata.scope.populationGroup = this.panels.population.data;
+
+      // Data background
+      if (!_metadata.dataBackground.study) {
+        _metadata.dataBackground.study = {};
+      }
+      Object.entries(this.panels.study.inputs).forEach(([id, input]) => {
+        _metadata.dataBackground.study[id] = input.value;
+      });
+      _metadata.dataBackground.studySample = this.panels.studySample.data;
+      _metadata.dataBackground.laboratory = this.panels.laboratory.data;
+      _metadata.dataBackground.assay = this.panels.assay.data;
+
+      // Model math
+      Object.entries(this.panels.modelMath.inputs).forEach(([id, input]) => {
+        _metadata.modelMath[id] = input.value;
+      });
+      _metadata.modelMath.parameter = this.panels.parameter.data;
+      _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+      _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+
+      _metadata.modelMath.exposure = {};
+      Object.entries(this.panels.exposure.inputs).forEach(([id, input]) => {
+        _metadata.modelMath.exposure[id] = input.value; 
+      });
+
+      _metadata.modelType = "DoseResponseModel";
+      
+      return _metadata;
+    }
+
+    validate() {
+      let isValid = true;
+      if (!this.panels.generalInformation.validate()) isValid = false;
+      if (!this.panels.modelCategory.validate()) isValid = false;
+      if (!this.panels.scopeGeneral.validate()) isValid = false;
+      if (!this.panels.study.validate()) isValid = false;
+      return isValid;
+    }
+
+    _createDialogs() {
+      let schema = schemas.doseResponseModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
+    }
+
+    _createPanels() {
+      let schema = schemas.doseResponseModel;
+
+      return {
+        generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
+        modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
+        scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
+          _metadata.scope.populationGroup),
+        study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+          _metadata.dataBackground.studySample),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
+        modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+          _metadata.modelMath.qualityMeasures),
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation),
+        exposure: new FormPanel("Exposure", schema.exposure, _metadata.modelMath.exposure)
+      };
+    }
+
+    _createMenus() {
+      return createSubMenu("General information", [
+        { "id": "generalInformation", "label": "General" },
+        { "id": "modelCategory", "label": "Model category" },
+        { "id": "author", "label": "Author" },
+        { "id": "creator", "label": "Creator" },
+        { "id": "reference", "label": "Reference" }]) +
+        createSubMenu("Scope", [{ "id": "scopeGeneral", "label": "General" },
+        { "id": "hazard", "label": "Hazard" },
+        { "id": "population", "label": "Population group" }]) +
+        createSubMenu("Data Background", [{ "id": "study", "label": "Study" },
+        { "id": "studySample", "label": "Study sample" },
+        { "id": "laboratory", "label": "Laboratory" },
+        { "id": "assay", "label": "Assay" }]) +
+        createSubMenu("Model math", [{ "id": "modelMath", "label": "General" },
+        { "id": "parameter", "label": "Parameter" },
+        { "id": "qualityMeasures", "label": "Quality measures" },
+        { "id": "modelEquation", "label": "Model equation" },
+        { "id": "exposure", "label": "Exposure" }]);
+    }
+  }
+
   // Hash of publication types full names to keys.
   // See more at https://en.wikipedia.org/w/index.php?title=RIS_(file_format)
   const RIS_TYPES = {
@@ -1161,6 +1312,8 @@ fskeditorjs = function () {
 
     if (value.modelType === "genericModel") {
       handler = new GenericModel();
+    } else if (value.modelType === "doseResponseModel") {
+      handler = new DoseResponseModel();
     }
 
     createUI();
