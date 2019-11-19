@@ -1067,6 +1067,136 @@ const schemas = {
         exposure: ui.exposure,
     },
 
+    dataModel: {
+        generalInformation: [
+            {
+                "id": "name",
+                "label": "Data name",
+                "type": "text",
+                "description": "A name given to the data",
+                "required": true
+            },
+            {
+                "id": "source",
+                "label": "Source",
+                "type": "text",
+                "description": "A related resource from which the described resource is derived",
+                "vocabulary": "Source"
+            },
+            {
+                "id": "identifier",
+                "label": "Identifier",
+                "type": "text",
+                "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
+                "required": true
+            },
+            {
+                "id": "creationDate",
+                "label": "Creation date",
+                "type": "date",
+                "description": "Temporal information on the model creation date",
+                "required": true
+            },
+            {
+                "id": "modificationDate",
+                "label": "Modification date",
+                "type": "date-array",
+                "description": "Temporal information on the last modification of the model"
+            },
+            {
+                "id": "rights",
+                "label": "Rights",
+                "type": "text",
+                "description": "Information on rights held in an over the resource",
+                "vocabulary": "Rights",
+                "required": true
+            },
+            {
+                "id": "availability",
+                "label": "Availability",
+                "type": "text",
+                "description": "Availability of data",
+                "vocabulary": "Availability"
+            },
+            {
+                "id": "url",
+                "label": "URL",
+                "type": "url",
+                "description": "Web address referencing the resource location"
+            },
+            {
+                "id": "format",
+                "label": "Format",
+                "type": "text",
+                "description": "Form of data (file extension)",
+                "vocabulary": "Format"
+            },
+            {
+                "id": "language",
+                "label": "Language",
+                "type": "text",
+                "description": "A language of the resource (some data or reports can be available in French language for example)",
+                "vocabulary": "Language"
+            },
+            {
+                "id": "status",
+                "label": "Status",
+                "type": "text",
+                "description": "The curation status of the model",
+                "vocabulary": "Status"
+            },
+            {
+                "id": "objective",
+                "label": "Objective",
+                "type": "text",
+                "description": "Objective of the model or data"
+            },
+            {
+                "id": "description",
+                "label": "Description",
+                "type": "text",
+                "description": "General description of the study, data or model"
+            }
+        ],
+        contact: ui.contact,
+        reference: ui.reference,
+
+        // scope
+        scope: [
+            {
+                id: "generalComment",
+                label: "General comment",
+                type: "text",
+                description: "General comments on the scope of the study, data or model"
+            },
+            {
+                id: "temporalInformation",
+                label: "Temporal information",
+                type: "text",
+                description: "Spatial information (area) on which the model or data applies"
+            },
+            {
+                id: "spatialInformation",
+                label: "Spatial information",
+                type: "text-array",
+                description: "" // TODO: spatial information description
+            }
+        ],
+        product: ui.product,
+        hazard: ui.hazard,
+        populationGroup: ui.populationGroup,
+
+        // data background
+        study: ui.study,
+        studySample: ui.studySample,
+        dietaryAssessmentMethod: ui.dietaryAssessmentMethod,
+        laboratory: ui.laboratory,
+        assay: ui.assay,
+
+        // model math
+        parameter: ui.parameter,
+    },
+
     doseResponseModel: {
 
         // General information
