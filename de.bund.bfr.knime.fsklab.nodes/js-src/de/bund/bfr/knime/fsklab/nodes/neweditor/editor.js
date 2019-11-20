@@ -930,6 +930,131 @@ fskeditorjs = function () {
     }
   }
 
+  class ProcessModel {
+
+    constructor() {
+      this.dialogs = this._createDialogs();
+      this.panels = this._createPanels();
+      this.menus = this._createMenus();
+    }
+
+    // TODO: update get metaData
+    get metaData() {
+
+      // generalInformation
+      _metadata.generalInformation = this.panels.generalInformation.data;
+      _metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+      _metadata.generalInformation.author = this.panels.author.data;
+      _metadata.generalInformation.creator = this.panels.creator.data;
+      _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
+
+      // Scope
+      _metadata.scope = this.panels.scopeGeneral.data;
+      _metadata.scope.product = this.panels.product.data;
+      _metadata.scope.hazard = this.panels.hazard.data;
+
+      // Data background
+      _metadata.dataBackground.study = this.panels.study.data;
+      _metadata.dataBackground.studySample = this.panels.studySample.data;
+      _metadata.dataBackground.laboratory = this.panels.laboratory.data;
+      _metadata.dataBackground.assay = this.panels.assay.data;
+
+      // Model math
+      _metadata.modelMath = this.panels.modelMath.data;
+      _metadata.modelMath.parameter = this.panels.parameter.data;
+      _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+      _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+
+      _metadata.modelType = "ProcessModel";
+      
+      return _metadata;
+    }
+
+    // Validate this.panels and return boolean
+    validate() {
+      let isValid = true;
+      if (!this.panels.generalInformation.validate()) isValid = false;
+      if (!this.panels.modelCategory.validate()) isValid = false;
+      if (!this.panels.scopeGeneral.validate()) isValid = false;
+      if (!this.panels.study.validate()) isValid = false;
+      return isValid;
+    }
+
+    _createDialogs() {
+
+      let schema = schemas.predictiveModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        productDialog: new Dialog("productDialog", "Add product", schema.product),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation)
+      };
+    }
+
+    _createPanels() {
+
+      let schema = schemas.predictiveModel;
+
+      return {
+        generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
+        modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
+        scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
+        product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+          _metadata.dataBackground.studySample),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
+        modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+          _metadata.modelMath.qualityMeasures),
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation)
+      };
+    }
+
+    _createMenus() {
+      return createSubMenu("General information", [
+        { "id": "generalInformation", "label": "General" },
+        { "id": "author", "label": "Author" },
+        { "id": "creator", "label": "Creator" },
+        { "id": "reference", "label": "Reference" }]) +
+        createSubMenu("Scope", [{ "id": "scopeGeneral", "label": "General" },
+        { "id": "product", "label": "Product" },
+        { "id": "hazard", "label": "Hazard" }]) +
+        createSubMenu("Data Background", [{ "id": "study", "label": "Study" },
+        { "id": "studySample", "label": "Study sample" },
+        { "id": "laboratory", "label": "Laboratory" },
+        { "id": "assay", "label": "Assay" }]) +
+        createSubMenu("Model math", [{ "id": "parameter", "label": "Parameter" },
+        { "id": "qualityMeasures", "label": "Quality measures" },
+        { "id": "modelEquation", "label": "Model equation" }]);
+    }
+  }
+
   // Hash of publication types full names to keys.
   // See more at https://en.wikipedia.org/w/index.php?title=RIS_(file_format)
   const RIS_TYPES = {
@@ -1932,6 +2057,8 @@ fskeditorjs = function () {
       handler = new DoseResponseModel();
     } else if (value.modelType === "exposureModel") {
       handler = new ExposureModel();
+    } else if (value.modelType === "processModel") {
+      handler = new ProcessModel();
     }
 
     createUI();
