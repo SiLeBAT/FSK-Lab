@@ -912,6 +912,218 @@ const ui = {
     }]
 }
 
+const _genericModelScope = {
+    scope: [
+        {
+            id: "generalComment",
+            label: "General comment",
+            type: "text",
+            description: "General comments on the scope of the study, data or model"
+        },
+        {
+            id: "temporalInformation",
+            label: "Temporal information",
+            type: "text",
+            description: "Spatial information (area) on which the model or data applies"
+        },
+        {
+            id: "spatialInformation",
+            label: "Spatial information",
+            type: "text-array",
+            description: "" // TODO: spatial information description
+        }
+    ],
+    product: ui.product,
+    hazard: ui.hazard,
+    populationGroup: ui.populationGroup
+};
+
+const _exposureModelScope = {
+    // scope
+    scope: [
+        {
+            id: "generalComment",
+            label: "General comment",
+            type: "text",
+            description: "General comments on the scope of the study, data or model"
+        },
+        {
+            id: "temporalInformation",
+            label: "Temporal information",
+            type: "text",
+            description: "Spatial information (area) on which the model or data applies"
+        },
+        {
+            id: "spatialInformation",
+            label: "Spatial information",
+            type: "text-array",
+            description: "" // TODO: spatial information description
+        }
+    ],
+    product: ui.product,
+    hazard: ui.hazard,
+    populationGroup: ui.populationGroup
+};
+
+const _genericModelDataBackground = {
+    study: ui.study,
+    studySample: ui.studySample,
+    dietaryAssessmentMethod: ui.dietaryAssessmentMethod,
+    laboratory: ui.laboratory,
+    assay: ui.assay
+};
+
+const _predictiveModelDataBackground = {
+    study: ui.study,
+    studySample: ui.studySample,
+    laboratory: ui.laboratory,
+    assay: ui.assay
+};
+
+const _genericModelModelMath = {
+    modelMath: [
+        {
+            id: "fittingProcedure",
+            label: "Fitting procedure",
+            type: "text",
+            description: "Procedure used to fit the data to the model equation"
+        }, {
+            id: "event",
+            label: "Event",
+            type: "text-array",
+            description: "Definition of time-dependent parameter changes"
+        }
+    ],
+    parameter: ui.parameter,
+    qualityMeasures: ui.qualityMeasures,
+    modelEquation: ui.modelEquation,
+    exposure: ui.exposure
+};
+
+const _predictiveModelModelMath = {
+    modelMath: [
+        {
+            id: "fittingProcedure",
+            label: "Fitting procedure",
+            type: "text",
+            description: "Procedure used to fit the data to the model equation"
+        }, {
+            id: "event",
+            label: "Event",
+            type: "text-array",
+            description: "Definition of time-dependent parameter changes"
+        }
+    ],
+    parameter: ui.parameter,
+    qualityMeasures: ui.qualityMeasures,
+    modelEquation: ui.modelEquation
+};
+
+const _predictiveModelGeneralInformation = {
+    generalInformation: [
+        {
+            "id": "name",
+            "label": "Model name",
+            "type": "text",
+            "description": "A name given to the model or data",
+            "required": true
+        },
+        {
+            "id": "source",
+            "label": "Source",
+            "type": "text",
+            "description": "A source from which the model/data is derived",
+            "vocabulary": "Source"
+        },
+        {
+            "id": "identifier",
+            "label": "Identifier",
+            "type": "text",
+            "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
+            "required": true
+        },
+        {
+            "id": "creationDate",
+            "label": "Creation date",
+            "type": "date",
+            "description": "Creation date/time of the FSK file",
+            "required": true
+        }, {
+            "id": "modificationDate",
+            "label": "Modification date",
+            "type": "date-array",
+            "description": "Date/time of the last version of the FSK file"
+        },
+        {
+            "id": "rights",
+            "label": "Rights",
+            "type": "text",
+            "description": "Rights granted for usage, distribution and modification of this FSK file",
+            "vocabulary": "Rights",
+            "required": true
+        }, {
+            "id": "availability",
+            "label": "Availability",
+            "type": "text",
+            "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
+            "vocabulary": "Availability"
+        },
+        {
+            "id": "url",
+            "label": "URL",
+            "type": "url",
+            "description": "Web address referencing the resource location (data for example)"
+        }, {
+            "id": "format",
+            "label": "Format",
+            "type": "text",
+            "description": "File extension of the model or data file (including version number of format if applicable)",
+            "vocabulary": "Format"
+        }, {
+            "id": "language",
+            "label": "Language",
+            "type": "text",
+            "description": "A language of the resource (some data or reports can be available in French language for example)",
+            "vocabulary": "Language"
+        },
+        {
+            "id": "software",
+            "label": "Software",
+            "type": "text",
+            "description": "The program or software language in which the model has been implemented",
+            "vocabulary": "Software"
+        }, {
+            "id": "languageWrittenIn",
+            "label": "Language written in",
+            "type": "text",
+            "description": "Software language used to write the model, e.g. R or MatLab",
+            "vocabulary": "Language_written_in"
+        },
+        {
+            "id": "status",
+            "label": "Status",
+            "type": "text",
+            "description": "The curation status of the model",
+            "vocabulary": "Status"
+        },
+        {
+            "id": "objective",
+            "label": "Objective",
+            "type": "text",
+            "description": "Objective of the model or data"
+        },
+        {
+            "id": "description",
+            "label": "Description",
+            "type": "text",
+            "description": "General description of the study, data or model"
+        }
+    ],
+    modelCategory: ui.modelCategory,
+    contact: ui.contact,
+    reference: ui.reference
+};
+
 const schemas = {
 
     genericModel: {
@@ -1008,58 +1220,7 @@ const schemas = {
         ],
         modelCategory: ui.modelCategory,
         contact: ui.contact,
-        reference: ui.reference,
-
-        // scope
-        scope: [
-            {
-                id: "generalComment",
-                label: "General comment",
-                type: "text",
-                description: "General comments on the scope of the study, data or model"
-            },
-            {
-                id: "temporalInformation",
-                label: "Temporal information",
-                type: "text",
-                description: "Spatial information (area) on which the model or data applies"
-            },
-            {
-                id: "spatialInformation",
-                label: "Spatial information",
-                type: "text-array",
-                description: "" // TODO: spatial information description
-            }
-        ],
-        product: ui.product,
-        hazard: ui.hazard,
-        populationGroup: ui.populationGroup,
-
-        // data background
-        study: ui.study,
-        studySample: ui.studySample,
-        dietaryAssessmentMethod: ui.dietaryAssessmentMethod,
-        laboratory: ui.laboratory,
-        assay: ui.assay,
-
-        // model math
-        modelMath: [
-            {
-                id: "fittingProcedure",
-                label: "Fitting procedure",
-                type: "text",
-                description: "Procedure used to fit the data to the model equation"
-            }, {
-                id: "event",
-                label: "Event",
-                type: "text-array",
-                description: "Definition of time-dependent parameter changes"
-            }
-        ],
-        parameter: ui.parameter,
-        qualityMeasures: ui.qualityMeasures,
-        modelEquation: ui.modelEquation,
-        exposure: ui.exposure
+        reference: ui.reference
     },
 
     dataModel: {
@@ -1156,148 +1317,12 @@ const schemas = {
         contact: ui.contact,
         reference: ui.reference,
 
-        // scope
-        scope: [
-            {
-                id: "generalComment",
-                label: "General comment",
-                type: "text",
-                description: "General comments on the scope of the study, data or model"
-            },
-            {
-                id: "temporalInformation",
-                label: "Temporal information",
-                type: "text",
-                description: "Spatial information (area) on which the model or data applies"
-            },
-            {
-                id: "spatialInformation",
-                label: "Spatial information",
-                type: "text-array",
-                description: "" // TODO: spatial information description
-            }
-        ],
-        product: ui.product,
-        hazard: ui.hazard,
-        populationGroup: ui.populationGroup,
-
-        // data background
-        study: ui.study,
-        studySample: ui.studySample,
-        dietaryAssessmentMethod: ui.dietaryAssessmentMethod,
-        laboratory: ui.laboratory,
-        assay: ui.assay,
-
         // model math
         parameter: ui.parameter,
     },
 
     predictiveModel: {
 
-        // general information
-        generalInformation: [
-            {
-                "id": "name",
-                "label": "Model name",
-                "type": "text",
-                "description": "A name given to the model or data",
-                "required": true
-            },
-            {
-                "id": "source",
-                "label": "Source",
-                "type": "text",
-                "description": "A source from which the model/data is derived",
-                "vocabulary": "Source"
-            },
-            {
-                "id": "identifier",
-                "label": "Identifier",
-                "type": "text",
-                "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
-                "required": true
-            },
-            {
-                "id": "creationDate",
-                "label": "Creation date",
-                "type": "date",
-                "description": "Creation date/time of the FSK file",
-                "required": true
-            }, {
-                "id": "modificationDate",
-                "label": "Modification date",
-                "type": "date-array",
-                "description": "Date/time of the last version of the FSK file"
-            },
-            {
-                "id": "rights",
-                "label": "Rights",
-                "type": "text",
-                "description": "Rights granted for usage, distribution and modification of this FSK file",
-                "vocabulary": "Rights",
-                "required": true
-            }, {
-                "id": "availability",
-                "label": "Availability",
-                "type": "text",
-                "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-                "vocabulary": "Availability"
-            },
-            {
-                "id": "url",
-                "label": "URL",
-                "type": "url",
-                "description": "Web address referencing the resource location (data for example)"
-            }, {
-                "id": "format",
-                "label": "Format",
-                "type": "text",
-                "description": "File extension of the model or data file (including version number of format if applicable)",
-                "vocabulary": "Format"
-            }, {
-                "id": "language",
-                "label": "Language",
-                "type": "text",
-                "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
-            },
-            {
-                "id": "software",
-                "label": "Software",
-                "type": "text",
-                "description": "The program or software language in which the model has been implemented",
-                "vocabulary": "Software"
-            }, {
-                "id": "languageWrittenIn",
-                "label": "Language written in",
-                "type": "text",
-                "description": "Software language used to write the model, e.g. R or MatLab",
-                "vocabulary": "Language_written_in"
-            },
-            {
-                "id": "status",
-                "label": "Status",
-                "type": "text",
-                "description": "The curation status of the model",
-                "vocabulary": "Status"
-            },
-            {
-                "id": "objective",
-                "label": "Objective",
-                "type": "text",
-                "description": "Objective of the model or data"
-            },
-            {
-                "id": "description",
-                "label": "Description",
-                "type": "text",
-                "description": "General description of the study, data or model"
-            }
-        ],
-        modelCategory: ui.modelCategory,
-        contact: ui.contact,
-        reference: ui.reference,
-
         // scope
         scope: [
             {
@@ -1320,31 +1345,7 @@ const schemas = {
             }
         ],
         product: ui.product,
-        hazard: ui.hazard,
-
-        // data background
-        study: ui.study,
-        studySample: ui.studySample,
-        laboratory: ui.laboratory,
-        assay: ui.assay,
-
-        // model math
-        modelMath: [
-            {
-                id: "fittingProcedure",
-                label: "Fitting procedure",
-                type: "text",
-                description: "Procedure used to fit the data to the model equation"
-            }, {
-                id: "event",
-                label: "Event",
-                type: "text-array",
-                description: "Definition of time-dependent parameter changes"
-            }
-        ],
-        parameter: ui.parameter,
-        qualityMeasures: ui.qualityMeasures,
-        modelEquation: ui.modelEquation
+        hazard: ui.hazard
     },
 
     otherModel: {
@@ -1643,12 +1644,6 @@ const schemas = {
         hazard: ui.hazard,
         populationGroup: ui.populationGroup,
 
-        // Data background
-        study: ui.study,
-        studySample: ui.studySample,
-        laboratory: ui.laboratory,
-        assay: ui.assay,
-
         // Model math
         modelMath: [
             {
@@ -1672,110 +1667,6 @@ const schemas = {
 
     toxicologicalModel: {
 
-        // general information
-        generalInformation: [
-            {
-                "id": "name",
-                "label": "Model name",
-                "type": "text",
-                "description": "A name given to the model or data",
-                "required": true
-            },
-            {
-                "id": "source",
-                "label": "Source",
-                "type": "text",
-                "description": "A source from which the model/data is derived",
-                "vocabulary": "Source"
-            },
-            {
-                "id": "identifier",
-                "label": "Identifier",
-                "type": "text",
-                "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
-                "required": true
-            },
-            {
-                "id": "creationDate",
-                "label": "Creation date",
-                "type": "date",
-                "description": "Creation date/time of the FSK file",
-                "required": true
-            }, {
-                "id": "modificationDate",
-                "label": "Modification date",
-                "type": "date-array",
-                "description": "Date/time of the last version of the FSK file"
-            },
-            {
-                "id": "rights",
-                "label": "Rights",
-                "type": "text",
-                "description": "Rights granted for usage, distribution and modification of this FSK file",
-                "vocabulary": "Rights",
-                "required": true
-            }, {
-                "id": "availability",
-                "label": "Availability",
-                "type": "text",
-                "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-                "vocabulary": "Availability"
-            },
-            {
-                "id": "url",
-                "label": "URL",
-                "type": "url",
-                "description": "Web address referencing the resource location (data for example)"
-            }, {
-                "id": "format",
-                "label": "Format",
-                "type": "text",
-                "description": "File extension of the model or data file (including version number of format if applicable)",
-                "vocabulary": "Format"
-            }, {
-                "id": "language",
-                "label": "Language",
-                "type": "text",
-                "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
-            },
-            {
-                "id": "software",
-                "label": "Software",
-                "type": "text",
-                "description": "The program or software language in which the model has been implemented",
-                "vocabulary": "Software"
-            }, {
-                "id": "languageWrittenIn",
-                "label": "Language written in",
-                "type": "text",
-                "description": "Software language used to write the model, e.g. R or MatLab",
-                "vocabulary": "Language_written_in"
-            },
-            {
-                "id": "status",
-                "label": "Status",
-                "type": "text",
-                "description": "The curation status of the model",
-                "vocabulary": "Status"
-            },
-            {
-                "id": "objective",
-                "label": "Objective",
-                "type": "text",
-                "description": "Objective of the model or data"
-            },
-            {
-                "id": "description",
-                "label": "Description",
-                "type": "text",
-                "description": "General description of the study, data or model"
-            }
-        ],
-        modelCategory: ui.modelCategory,
-        contact: ui.contact,
-        reference: ui.reference,
-
         // scope
         scope: [
             {
@@ -1798,298 +1689,13 @@ const schemas = {
             }
         ],
         hazard: ui.hazard,
-        populationGroup: ui.populationGroup,
-
-        // data background
-        study: ui.study,
-        studySample: ui.studySample,
-        laboratory: ui.laboratory,
-        assay: ui.assay,
-
-        // model math
-        modelMath: [
-            {
-                id: "fittingProcedure",
-                label: "Fitting procedure",
-                type: "text",
-                description: "Procedure used to fit the data to the model equation"
-            }, {
-                id: "event",
-                label: "Event",
-                type: "text-array",
-                description: "Definition of time-dependent parameter changes"
-            }
-        ],
-        parameter: ui.parameter,
-        qualityMeasures: ui.qualityMeasures,
-        modelEquation: ui.modelEquation,
-        exposure: ui.exposure
+        populationGroup: ui.populationGroup
     },
 
-    exposureModel: {
-
-        // general information
-        generalInformation: [
-            {
-                "id": "name",
-                "label": "Model name",
-                "type": "text",
-                "description": "A name given to the model or data",
-                "required": true
-            },
-            {
-                "id": "source",
-                "label": "Source",
-                "type": "text",
-                "description": "A source from which the model/data is derived",
-                "vocabulary": "Source"
-            },
-            {
-                "id": "identifier",
-                "label": "Identifier",
-                "type": "text",
-                "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
-                "required": true
-            },
-            {
-                "id": "creationDate",
-                "label": "Creation date",
-                "type": "date",
-                "description": "Creation date/time of the FSK file",
-                "required": true
-            }, {
-                "id": "modificationDate",
-                "label": "Modification date",
-                "type": "date-array",
-                "description": "Date/time of the last version of the FSK file"
-            },
-            {
-                "id": "rights",
-                "label": "Rights",
-                "type": "text",
-                "description": "Rights granted for usage, distribution and modification of this FSK file",
-                "vocabulary": "Rights",
-                "required": true
-            }, {
-                "id": "availability",
-                "label": "Availability",
-                "type": "text",
-                "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-                "vocabulary": "Availability"
-            },
-            {
-                "id": "url",
-                "label": "URL",
-                "type": "url",
-                "description": "Web address referencing the resource location (data for example)"
-            }, {
-                "id": "format",
-                "label": "Format",
-                "type": "text",
-                "description": "File extension of the model or data file (including version number of format if applicable)",
-                "vocabulary": "Format"
-            }, {
-                "id": "language",
-                "label": "Language",
-                "type": "text",
-                "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
-            },
-            {
-                "id": "software",
-                "label": "Software",
-                "type": "text",
-                "description": "The program or software language in which the model has been implemented",
-                "vocabulary": "Software"
-            }, {
-                "id": "languageWrittenIn",
-                "label": "Language written in",
-                "type": "text",
-                "description": "Software language used to write the model, e.g. R or MatLab",
-                "vocabulary": "Language_written_in"
-            },
-            {
-                "id": "status",
-                "label": "Status",
-                "type": "text",
-                "description": "The curation status of the model",
-                "vocabulary": "Status"
-            },
-            {
-                "id": "objective",
-                "label": "Objective",
-                "type": "text",
-                "description": "Objective of the model or data"
-            },
-            {
-                "id": "description",
-                "label": "Description",
-                "type": "text",
-                "description": "General description of the study, data or model"
-            }
-        ],
-        modelCategory: ui.modelCategory,
-        contact: ui.contact,
-        reference: ui.reference,
-        
-        // scope
-        scope: [
-            {
-                id: "generalComment",
-                label: "General comment",
-                type: "text",
-                description: "General comments on the scope of the study, data or model"
-            },
-            {
-                id: "temporalInformation",
-                label: "Temporal information",
-                type: "text",
-                description: "Spatial information (area) on which the model or data applies"
-            },
-            {
-                id: "spatialInformation",
-                label: "Spatial information",
-                type: "text-array",
-                description: "" // TODO: spatial information description
-            }
-        ],
-        product: ui.product,
-        hazard: ui.hazard,
-        populationGroup: ui.populationGroup,
-
-        // data background
-        study: ui.study,
-        studySample: ui.studySample,
-        dietaryAssessmentMethod: ui.dietaryAssessmentMethod,
-        laboratory: ui.laboratory,
-        assay: ui.assay,
-
-        // model math
-        modelMath: [
-            {
-                id: "fittingProcedure",
-                label: "Fitting procedure",
-                type: "text",
-                description: "Procedure used to fit the data to the model equation"
-            }, {
-                id: "event",
-                label: "Event",
-                type: "text-array",
-                description: "Definition of time-dependent parameter changes"
-            }
-        ],
-        parameter: ui.parameter,
-        qualityMeasures: ui.qualityMeasures,
-        modelEquation: ui.modelEquation,
-        exposure: ui.exposure
-    },
+    exposureModel: {},
 
     processModel: {
 
-        // general information from predictive model
-        generalInformation: [
-            {
-                "id": "name",
-                "label": "Model name",
-                "type": "text",
-                "description": "A name given to the model or data",
-                "required": true
-            },
-            {
-                "id": "source",
-                "label": "Source",
-                "type": "text",
-                "description": "A source from which the model/data is derived",
-                "vocabulary": "Source"
-            },
-            {
-                "id": "identifier",
-                "label": "Identifier",
-                "type": "text",
-                "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
-                "required": true
-            },
-            {
-                "id": "creationDate",
-                "label": "Creation date",
-                "type": "date",
-                "description": "Creation date/time of the FSK file",
-                "required": true
-            }, {
-                "id": "modificationDate",
-                "label": "Modification date",
-                "type": "date-array",
-                "description": "Date/time of the last version of the FSK file"
-            },
-            {
-                "id": "rights",
-                "label": "Rights",
-                "type": "text",
-                "description": "Rights granted for usage, distribution and modification of this FSK file",
-                "vocabulary": "Rights",
-                "required": true
-            }, {
-                "id": "availability",
-                "label": "Availability",
-                "type": "text",
-                "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-                "vocabulary": "Availability"
-            },
-            {
-                "id": "url",
-                "label": "URL",
-                "type": "url",
-                "description": "Web address referencing the resource location (data for example)"
-            }, {
-                "id": "format",
-                "label": "Format",
-                "type": "text",
-                "description": "File extension of the model or data file (including version number of format if applicable)",
-                "vocabulary": "Format"
-            }, {
-                "id": "language",
-                "label": "Language",
-                "type": "text",
-                "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
-            },
-            {
-                "id": "software",
-                "label": "Software",
-                "type": "text",
-                "description": "The program or software language in which the model has been implemented",
-                "vocabulary": "Software"
-            }, {
-                "id": "languageWrittenIn",
-                "label": "Language written in",
-                "type": "text",
-                "description": "Software language used to write the model, e.g. R or MatLab",
-                "vocabulary": "Language_written_in"
-            },
-            {
-                "id": "status",
-                "label": "Status",
-                "type": "text",
-                "description": "The curation status of the model",
-                "vocabulary": "Status"
-            },
-            {
-                "id": "objective",
-                "label": "Objective",
-                "type": "text",
-                "description": "Objective of the model or data"
-            },
-            {
-                "id": "description",
-                "label": "Description",
-                "type": "text",
-                "description": "General description of the study, data or model"
-            }
-        ],
-        modelCategory: ui.modelCategory,
-        contact: ui.contact,
-        reference: ui.reference,
-
         // scope
         scope: [
             {
@@ -2112,137 +1718,10 @@ const schemas = {
             }
         ],
         product: ui.product,
-        hazard: ui.hazard,
-
-        // data background
-        study: ui.study,
-        studySample: ui.studySample,
-        laboratory: ui.laboratory,
-        assay: ui.assay,
-
-        // model math
-        modelMath: [
-            {
-                id: "fittingProcedure",
-                label: "Fitting procedure",
-                type: "text",
-                description: "Procedure used to fit the data to the model equation"
-            }, {
-                id: "event",
-                label: "Event",
-                type: "text-array",
-                description: "Definition of time-dependent parameter changes"
-            }
-        ],
-        parameter: ui.parameter,
-        qualityMeasures: ui.qualityMeasures,
-        modelEquation: ui.modelEquation
+        hazard: ui.hazard
     },
 
     consumptionModel: {
-        // general information
-        generalInformation: [
-            {
-                "id": "name",
-                "label": "Model name",
-                "type": "text",
-                "description": "A name given to the model or data",
-                "required": true
-            },
-            {
-                "id": "source",
-                "label": "Source",
-                "type": "text",
-                "description": "A source from which the model/data is derived",
-                "vocabulary": "Source"
-            },
-            {
-                "id": "identifier",
-                "label": "Identifier",
-                "type": "text",
-                "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
-                "required": true
-            },
-            {
-                "id": "creationDate",
-                "label": "Creation date",
-                "type": "date",
-                "description": "Creation date/time of the FSK file",
-                "required": true
-            }, {
-                "id": "modificationDate",
-                "label": "Modification date",
-                "type": "date-array",
-                "description": "Date/time of the last version of the FSK file"
-            },
-            {
-                "id": "rights",
-                "label": "Rights",
-                "type": "text",
-                "description": "Rights granted for usage, distribution and modification of this FSK file",
-                "vocabulary": "Rights",
-                "required": true
-            }, {
-                "id": "availability",
-                "label": "Availability",
-                "type": "text",
-                "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-                "vocabulary": "Availability"
-            },
-            {
-                "id": "url",
-                "label": "URL",
-                "type": "url",
-                "description": "Web address referencing the resource location (data for example)"
-            }, {
-                "id": "format",
-                "label": "Format",
-                "type": "text",
-                "description": "File extension of the model or data file (including version number of format if applicable)",
-                "vocabulary": "Format"
-            }, {
-                "id": "language",
-                "label": "Language",
-                "type": "text",
-                "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
-            },
-            {
-                "id": "software",
-                "label": "Software",
-                "type": "text",
-                "description": "The program or software language in which the model has been implemented",
-                "vocabulary": "Software"
-            }, {
-                "id": "languageWrittenIn",
-                "label": "Language written in",
-                "type": "text",
-                "description": "Software language used to write the model, e.g. R or MatLab",
-                "vocabulary": "Language_written_in"
-            },
-            {
-                "id": "status",
-                "label": "Status",
-                "type": "text",
-                "description": "The curation status of the model",
-                "vocabulary": "Status"
-            },
-            {
-                "id": "objective",
-                "label": "Objective",
-                "type": "text",
-                "description": "Objective of the model or data"
-            },
-            {
-                "id": "description",
-                "label": "Description",
-                "type": "text",
-                "description": "General description of the study, data or model"
-            }
-        ],
-        modelCategory: ui.modelCategory,
-        contact: ui.contact,
-        reference: ui.reference,
 
         // scope
         scope: [
@@ -2273,133 +1752,11 @@ const schemas = {
         studySample: ui.studySample,
         dietaryAssessmentMethod: ui.dietaryAssessmentMethod,
         laboratory: ui.laboratory,
-        assay: ui.assay,
-
-        // model math
-        modelMath: [
-            {
-                id: "fittingProcedure",
-                label: "Fitting procedure",
-                type: "text",
-                description: "Procedure used to fit the data to the model equation"
-            }, {
-                id: "event",
-                label: "Event",
-                type: "text-array",
-                description: "Definition of time-dependent parameter changes"
-            }
-        ],
-        parameter: ui.parameter,
-        qualityMeasures: ui.qualityMeasures,
-        modelEquation: ui.modelEquation
+        assay: ui.assay
     },
 
     healthModel: {
 
-        // general information
-        generalInformation: [
-            {
-                "id": "name",
-                "label": "Model name",
-                "type": "text",
-                "description": "A name given to the model or data",
-                "required": true
-            },
-            {
-                "id": "source",
-                "label": "Source",
-                "type": "text",
-                "description": "A source from which the model/data is derived",
-                "vocabulary": "Source"
-            },
-            {
-                "id": "identifier",
-                "label": "Identifier",
-                "type": "text",
-                "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
-                "required": true
-            },
-            {
-                "id": "creationDate",
-                "label": "Creation date",
-                "type": "date",
-                "description": "Creation date/time of the FSK file",
-                "required": true
-            }, {
-                "id": "modificationDate",
-                "label": "Modification date",
-                "type": "date-array",
-                "description": "Date/time of the last version of the FSK file"
-            },
-            {
-                "id": "rights",
-                "label": "Rights",
-                "type": "text",
-                "description": "Rights granted for usage, distribution and modification of this FSK file",
-                "vocabulary": "Rights",
-                "required": true
-            }, {
-                "id": "availability",
-                "label": "Availability",
-                "type": "text",
-                "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-                "vocabulary": "Availability"
-            },
-            {
-                "id": "url",
-                "label": "URL",
-                "type": "url",
-                "description": "Web address referencing the resource location (data for example)"
-            }, {
-                "id": "format",
-                "label": "Format",
-                "type": "text",
-                "description": "File extension of the model or data file (including version number of format if applicable)",
-                "vocabulary": "Format"
-            }, {
-                "id": "language",
-                "label": "Language",
-                "type": "text",
-                "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
-            },
-            {
-                "id": "software",
-                "label": "Software",
-                "type": "text",
-                "description": "The program or software language in which the model has been implemented",
-                "vocabulary": "Software"
-            }, {
-                "id": "languageWrittenIn",
-                "label": "Language written in",
-                "type": "text",
-                "description": "Software language used to write the model, e.g. R or MatLab",
-                "vocabulary": "Language_written_in"
-            },
-            {
-                "id": "status",
-                "label": "Status",
-                "type": "text",
-                "description": "The curation status of the model",
-                "vocabulary": "Status"
-            },
-            {
-                "id": "objective",
-                "label": "Objective",
-                "type": "text",
-                "description": "Objective of the model or data"
-            },
-            {
-                "id": "description",
-                "label": "Description",
-                "type": "text",
-                "description": "General description of the study, data or model"
-            }
-        ],
-        modelCategory: ui.modelCategory,
-        contact: ui.contact,
-        reference: ui.reference,
-
         // scope
         scope: [
             {
@@ -2422,344 +1779,52 @@ const schemas = {
             }
         ],
         hazard: ui.hazard,
-        populationGroup: ui.populationGroup,
-
-        // data background
-        study: ui.study,
-        studySample: ui.studySample,
-        laboratory: ui.laboratory,
-        assay: ui.assay,
-
-        // model math
-        modelMath: [
-            {
-                id: "fittingProcedure",
-                label: "Fitting procedure",
-                type: "text",
-                description: "Procedure used to fit the data to the model equation"
-            }, {
-                id: "event",
-                label: "Event",
-                type: "text-array",
-                description: "Definition of time-dependent parameter changes"
-            }
-        ],
-        parameter: ui.parameter,
-        qualityMeasures: ui.qualityMeasures,
-        modelEquation: ui.modelEquation,
-        exposure: ui.exposure
+        populationGroup: ui.populationGroup
     },
 
-    riskModel: {
-        // general information
-        generalInformation: [
-            {
-                "id": "name",
-                "label": "Model name",
-                "type": "text",
-                "description": "A name given to the model or data",
-                "required": true
-            },
-            {
-                "id": "source",
-                "label": "Source",
-                "type": "text",
-                "description": "A source from which the model/data is derived",
-                "vocabulary": "Source"
-            },
-            {
-                "id": "identifier",
-                "label": "Identifier",
-                "type": "text",
-                "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
-                "required": true
-            },
-            {
-                "id": "creationDate",
-                "label": "Creation date",
-                "type": "date",
-                "description": "Creation date/time of the FSK file",
-                "required": true
-            }, {
-                "id": "modificationDate",
-                "label": "Modification date",
-                "type": "date-array",
-                "description": "Date/time of the last version of the FSK file"
-            },
-            {
-                "id": "rights",
-                "label": "Rights",
-                "type": "text",
-                "description": "Rights granted for usage, distribution and modification of this FSK file",
-                "vocabulary": "Rights",
-                "required": true
-            }, {
-                "id": "availability",
-                "label": "Availability",
-                "type": "text",
-                "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-                "vocabulary": "Availability"
-            },
-            {
-                "id": "url",
-                "label": "URL",
-                "type": "url",
-                "description": "Web address referencing the resource location (data for example)"
-            }, {
-                "id": "format",
-                "label": "Format",
-                "type": "text",
-                "description": "File extension of the model or data file (including version number of format if applicable)",
-                "vocabulary": "Format"
-            }, {
-                "id": "language",
-                "label": "Language",
-                "type": "text",
-                "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
-            },
-            {
-                "id": "software",
-                "label": "Software",
-                "type": "text",
-                "description": "The program or software language in which the model has been implemented",
-                "vocabulary": "Software"
-            }, {
-                "id": "languageWrittenIn",
-                "label": "Language written in",
-                "type": "text",
-                "description": "Software language used to write the model, e.g. R or MatLab",
-                "vocabulary": "Language_written_in"
-            },
-            {
-                "id": "status",
-                "label": "Status",
-                "type": "text",
-                "description": "The curation status of the model",
-                "vocabulary": "Status"
-            },
-            {
-                "id": "objective",
-                "label": "Objective",
-                "type": "text",
-                "description": "Objective of the model or data"
-            },
-            {
-                "id": "description",
-                "label": "Description",
-                "type": "text",
-                "description": "General description of the study, data or model"
-            }
-        ],
-        modelCategory: ui.modelCategory,
-        contact: ui.contact,
-        reference: ui.reference,
-
-        // scope
-        scope: [
-            {
-                id: "generalComment",
-                label: "General comment",
-                type: "text",
-                description: "General comments on the scope of the study, data or model"
-            },
-            {
-                id: "temporalInformation",
-                label: "Temporal information",
-                type: "text",
-                description: "Spatial information (area) on which the model or data applies"
-            },
-            {
-                id: "spatialInformation",
-                label: "Spatial information",
-                type: "text-array",
-                description: "" // TODO: spatial information description
-            }
-        ],
-        product: ui.product,
-        hazard: ui.hazard,
-        populationGroup: ui.populationGroup,
-
-        // data background
-        study: ui.study,
-        studySample: ui.studySample,
-        dietaryAssessmentMethod: ui.dietaryAssessmentMethod,
-        laboratory: ui.laboratory,
-        assay: ui.assay,
-
-        // model math
-        modelMath: [
-            {
-                id: "fittingProcedure",
-                label: "Fitting procedure",
-                type: "text",
-                description: "Procedure used to fit the data to the model equation"
-            }, {
-                id: "event",
-                label: "Event",
-                type: "text-array",
-                description: "Definition of time-dependent parameter changes"
-            }
-        ],
-        parameter: ui.parameter,
-        qualityMeasures: ui.qualityMeasures,
-        modelEquation: ui.modelEquation,
-        exposure: ui.exposure
-    },
-    qraModel: {
-        // general information
-        generalInformation: [
-            {
-                "id": "name",
-                "label": "Model name",
-                "type": "text",
-                "description": "A name given to the model or data",
-                "required": true
-            },
-            {
-                "id": "source",
-                "label": "Source",
-                "type": "text",
-                "description": "A source from which the model/data is derived",
-                "vocabulary": "Source"
-            },
-            {
-                "id": "identifier",
-                "label": "Identifier",
-                "type": "text",
-                "description": "An unambiguous ID given to the model or data. This can also be created automatically by a software tool",
-                "required": true
-            },
-            {
-                "id": "creationDate",
-                "label": "Creation date",
-                "type": "date",
-                "description": "Creation date/time of the FSK file",
-                "required": true
-            }, {
-                "id": "modificationDate",
-                "label": "Modification date",
-                "type": "date-array",
-                "description": "Date/time of the last version of the FSK file"
-            },
-            {
-                "id": "rights",
-                "label": "Rights",
-                "type": "text",
-                "description": "Rights granted for usage, distribution and modification of this FSK file",
-                "vocabulary": "Rights",
-                "required": true
-            }, {
-                "id": "availability",
-                "label": "Availability",
-                "type": "text",
-                "description": "Availability of data or model, i.e. if the annotated model code / data is included in this FSK file",
-                "vocabulary": "Availability"
-            },
-            {
-                "id": "url",
-                "label": "URL",
-                "type": "url",
-                "description": "Web address referencing the resource location (data for example)"
-            }, {
-                "id": "format",
-                "label": "Format",
-                "type": "text",
-                "description": "File extension of the model or data file (including version number of format if applicable)",
-                "vocabulary": "Format"
-            }, {
-                "id": "language",
-                "label": "Language",
-                "type": "text",
-                "description": "A language of the resource (some data or reports can be available in French language for example)",
-                "vocabulary": "Language"
-            },
-            {
-                "id": "software",
-                "label": "Software",
-                "type": "text",
-                "description": "The program or software language in which the model has been implemented",
-                "vocabulary": "Software"
-            }, {
-                "id": "languageWrittenIn",
-                "label": "Language written in",
-                "type": "text",
-                "description": "Software language used to write the model, e.g. R or MatLab",
-                "vocabulary": "Language_written_in"
-            },
-            {
-                "id": "status",
-                "label": "Status",
-                "type": "text",
-                "description": "The curation status of the model",
-                "vocabulary": "Status"
-            },
-            {
-                "id": "objective",
-                "label": "Objective",
-                "type": "text",
-                "description": "Objective of the model or data"
-            },
-            {
-                "id": "description",
-                "label": "Description",
-                "type": "text",
-                "description": "General description of the study, data or model"
-            }
-        ],
-        modelCategory: ui.modelCategory,
-        contact: ui.contact,
-        reference: ui.reference,
-
-        // scope
-        scope: [
-            {
-                id: "generalComment",
-                label: "General comment",
-                type: "text",
-                description: "General comments on the scope of the study, data or model"
-            },
-            {
-                id: "temporalInformation",
-                label: "Temporal information",
-                type: "text",
-                description: "Spatial information (area) on which the model or data applies"
-            },
-            {
-                id: "spatialInformation",
-                label: "Spatial information",
-                type: "text-array",
-                description: "" // TODO: spatial information description
-            }
-        ],
-        product: ui.product,
-        hazard: ui.hazard,
-        populationGroup: ui.populationGroup,
-
-        // data background
-        study: ui.study,
-        studySample: ui.studySample,
-        dietaryAssessmentMethod: ui.dietaryAssessmentMethod,
-        laboratory: ui.laboratory,
-        assay: ui.assay,
-
-        // model math
-        modelMath: [
-            {
-                id: "fittingProcedure",
-                label: "Fitting procedure",
-                type: "text",
-                description: "Procedure used to fit the data to the model equation"
-            }, {
-                id: "event",
-                label: "Event",
-                type: "text-array",
-                description: "Definition of time-dependent parameter changes"
-            }
-        ],
-        parameter: ui.parameter,
-        qualityMeasures: ui.qualityMeasures,
-        modelEquation: ui.modelEquation,
-        exposure: ui.exposure
-    }
+    riskModel: {},
+    qraModel: {}
 }
+
+schemas.genericModel = Object.assign(schemas.genericModel, _genericModelScope);
+schemas.genericModel = Object.assign(schemas.genericModel, _genericModelDataBackground);
+schemas.genericModel = Object.assign(schemas.genericModel, _genericModelModelMath);
+
+schemas.dataModel = Object.assign(schemas.dataModel, _genericModelScope);
+schemas.dataModel = Object.assign(schemas.dataModel, _genericModelDataBackground);
+
+schemas.doseResponseModel = Object.assign(schemas.doseResponseModel, _predictiveModelDataBackground);
+
+schemas.toxicologicalModel = Object.assign(schemas.toxicologicalModel, _predictiveModelGeneralInformation);
+schemas.toxicologicalModel = Object.assign(schemas.toxicologicalModel, _predictiveModelDataBackground);
+schemas.toxicologicalModel = Object.assign(schemas.toxicologicalModel, _genericModelModelMath);
+
+schemas.predictiveModel = Object.assign(schemas.predictiveModel, _predictiveModelGeneralInformation);
+schemas.predictiveModel = Object.assign(schemas.predictiveModel, _predictiveModelDataBackground);
+schemas.predictiveModel = Object.assign(schemas.predictiveModel, _predictiveModelModelMath);
+
+schemas.exposureModel = Object.assign(schemas.exposureModel, _predictiveModelGeneralInformation);
+schemas.exposureModel = Object.assign(schemas.exposureModel, _exposureModelScope);
+schemas.exposureModel = Object.assign(schemas.exposureModel, _genericModelDataBackground);
+schemas.exposureModel = Object.assign(schemas.exposureModel, _genericModelModelMath);
+
+schemas.processModel = Object.assign(schemas.processModel, _predictiveModelGeneralInformation);
+schemas.processModel = Object.assign(schemas.processModel, _predictiveModelDataBackground);
+schemas.processModel = Object.assign(schemas.processModel, _predictiveModelModelMath);
+
+schemas.consumptionModel = Object.assign(schemas.consumptionModel, _predictiveModelGeneralInformation);
+schemas.consumptionModel = Object.assign(schemas.consumptionModel, _predictiveModelModelMath);
+
+schemas.healthModel = Object.assign(schemas.healthModel, _predictiveModelGeneralInformation);
+schemas.healthModel = Object.assign(schemas.healthModel, _predictiveModelDataBackground);
+schemas.healthModel = Object.assign(schemas.healthModel, _genericModelModelMath);
+
+schemas.riskModel = Object.assign(schemas.riskModel, _predictiveModelGeneralInformation);
+schemas.riskModel = Object.assign(schemas.riskModel, _exposureModelScope);
+schemas.riskModel = Object.assign(schemas.riskModel, _genericModelDataBackground);
+schemas.riskModel = Object.assign(schemas.riskModel, _genericModelModelMath);
+
+schemas.qraModel = Object.assign(schemas.qraModel, _predictiveModelGeneralInformation);
+schemas.qraModel = Object.assign(schemas.qraModel, _exposureModelScope);
+schemas.qraModel = Object.assign(schemas.qraModel, _genericModelDataBackground);
+schemas.qraModel = Object.assign(schemas.qraModel, _genericModelModelMath);
