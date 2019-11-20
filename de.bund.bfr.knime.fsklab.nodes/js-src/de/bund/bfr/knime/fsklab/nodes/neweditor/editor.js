@@ -657,6 +657,139 @@ fskeditorjs = function () {
     }
   }
 
+  class ToxicologicalModel {
+
+    constructor() {
+      this.dialogs = this._createDialogs();
+      this.panels = this._createPanels();
+      this.menus = this._createMenus();
+    }
+
+    get metaData() {
+
+      // generalInformation
+      _metadata.generalInformation = this.panels.generalInformation.data;
+      _metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+      _metadata.generalInformation.author = this.panels.author.data;
+      _metadata.generalInformation.creator = this.panels.creator.data;
+      _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
+
+      // Scope
+      _metadata.scope = this.panels.scopeGeneral.data;
+      _metadata.scope.hazard = this.panels.hazard.data;
+      _metadata.scope.populationGroup = this.panels.population.data;
+
+      // Data background
+      _metadata.dataBackground.study = this.panels.study.data;
+      _metadata.dataBackground.studySample = this.panels.studySample.data;
+      _metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
+      _metadata.dataBackground.laboratory = this.panels.laboratory.data;
+      _metadata.dataBackground.assay = this.panels.assay.data;
+
+      // Model math
+      _metadata.modelMath = this.panels.modelMath.data;
+      _metadata.modelMath.parameter = this.panels.parameter.data;
+      _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+      _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+      _metadata.modelMath.exposure = this.panels.exposure.data;
+
+      _metadata.modelType = "ToxicologicalModel";
+      
+      return _metadata;
+    }
+
+    // Validate this.panels and return boolean
+    validate() {
+      let isValid = true;
+      if (!this.panels.generalInformation.validate()) isValid = false;
+      if (!this.panels.modelCategory.validate()) isValid = false;
+      if (!this.panels.scopeGeneral.validate()) isValid = false;
+      if (!this.panels.study.validate()) isValid = false;
+      return isValid;
+    }
+
+    _createDialogs() {
+
+      let schema = schemas.genericModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        methodDialog: new Dialog("methodDialog", "Add method", schema.dietaryAssessmentMethod),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
+    }
+
+    _createPanels() {
+
+      let schema = schemas.genericModel;
+
+      return {
+        generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
+        modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
+        scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
+          _metadata.scope.populationGroup),
+        study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+          _metadata.dataBackground.studySample),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
+        modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+          _metadata.modelMath.qualityMeasures),
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation),
+        exposure: new TablePanel("Exposure", this.dialogs.exposureDialog, schema.exposure, _metadata.modelMath.exposure)
+      };
+    }
+
+    _createMenus() {
+      return createSubMenu("General information", [
+        { "id": "generalInformation", "label": "General" },
+        { "id": "modelCategory", "label": "Model category" },
+        { "id": "author", "label": "Author" },
+        { "id": "creator", "label": "Creator" },
+        { "id": "reference", "label": "Reference" }]) +
+        createSubMenu("Scope", [{ "id": "scopeGeneral", "label": "General" },
+        { "id": "hazard", "label": "Hazard" },
+        { "id": "population", "label": "Population group" }]) +
+        createSubMenu("Data Background", [{ "id": "study", "label": "Study" },
+        { "id": "studySample", "label": "Study sample" },
+        { "id": "laboratory", "label": "Laboratory" },
+        { "id": "assay", "label": "Assay" }]) +
+        createSubMenu("Model math", [{ "id": "modelMath", "label": "General" },
+        { "id": "parameter", "label": "Parameter" },
+        { "id": "qualityMeasures", "label": "Quality measures" },
+        { "id": "modelEquation", "label": "Model equation" },
+        { "id": "exposure", "label": "Exposure" }]);
+    }
+  }
+
   class ExposureModel {
 
     constructor() {
@@ -1793,6 +1926,8 @@ fskeditorjs = function () {
       handler = new PredictiveModel();
     } else if (value.modelType === "otherModel") {
       handler = new OtherModel();
+    } else if (value.modelType === "toxicologicalModel") {
+      handler = new ToxicologicalModel();
     } else if (value.modelType === "doseResponseModel") {
       handler = new DoseResponseModel();
     } else if (value.modelType === "exposureModel") {
