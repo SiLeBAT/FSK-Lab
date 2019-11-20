@@ -28,20 +28,11 @@ fskeditorjs = function () {
 
     get metaData() {
 
-      // Save generalInformation -> general
-      Object.entries(this.panels.generalInformation.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation[id] = input.value;
-      });
-
-      // Save generalInformation -> modelCategory
-      Object.entries(this.panels.modelCategory.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation.modelCategory[id] = input.value;
-      });
-
-      // Save generalInformation -> author, creator and reference
+      // generalInformation
+      _metadata.generalInformation = this.panels.generalInformation.data;
+      _metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
-
       _metadata.generalInformation.reference = this.panels.reference.data;
 
       // Ignore temporarily publication type
@@ -53,31 +44,21 @@ fskeditorjs = function () {
       // as value.
       _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
-      // Scope general
-      Object.entries(this.panels.scopeGeneral.inputs).forEach(([id, input]) => {
-        _metadata.scope[id] = input.value;
-      });
-
+      // Scope
+      _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
       _metadata.scope.hazard = this.panels.hazard.data;
       _metadata.scope.populationGroup = this.panels.population.data;
 
       // Data background
-      if (!_metadata.dataBackground.study) {
-        _metadata.dataBackground.study = {};
-      }
-      Object.entries(this.panels.study.inputs).forEach(([id, input]) => {
-        _metadata.dataBackground.study[id] = input.value;
-      });
+      _metadata.dataBackground.study = this.panels.study.data;
       _metadata.dataBackground.studySample = this.panels.studySample.data;
       _metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
       _metadata.dataBackground.laboratory = this.panels.laboratory.data;
       _metadata.dataBackground.assay = this.panels.assay.data;
 
       // Model math
-      Object.entries(this.panels.modelMath.inputs).forEach(([id, input]) => {
-        _metadata.modelMath[id] = input.value;
-      });
+      _metadata.modelMath = this.panels.modelMath.data;
       _metadata.modelMath.parameter = this.panels.parameter.data;
       _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
@@ -196,15 +177,10 @@ fskeditorjs = function () {
 
     get metaData() {
 
-      // Save generalInformation -> general
-      Object.entries(this.panels.generalInformation.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation[id] = input.value;
-      });
-
-      // Save generalInformation -> author, creator and reference
+      // generalInformation
+      _metadata.generalInformation = this.panels.generalInformation.data;
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
-
       _metadata.generalInformation.reference = this.panels.reference.data;
 
       // Ignore temporarily publication type
@@ -216,22 +192,14 @@ fskeditorjs = function () {
       // as value.
       _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
-      // Scope general
-      Object.entries(this.panels.scopeGeneral.inputs).forEach(([id, input]) => {
-        _metadata.scope[id] = input.value;
-      });
-
+      // Scope
+      _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
       _metadata.scope.hazard = this.panels.hazard.data;
       _metadata.scope.populationGroup = this.panels.population.data;
 
       // Data background
-      if (!_metadata.dataBackground.study) {
-        _metadata.dataBackground.study = {};
-      }
-      Object.entries(this.panels.study.inputs).forEach(([id, input]) => {
-        _metadata.dataBackground.study[id] = input.value;
-      });
+      _metadata.dataBackground.study = this.panels.study.data;
       _metadata.dataBackground.studySample = this.panels.studySample.data;
       _metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
       _metadata.dataBackground.laboratory = this.panels.laboratory.data;
@@ -321,20 +289,11 @@ fskeditorjs = function () {
     // TODO: update get metaData
     get metaData() {
 
-      // Save generalInformation -> general
-      Object.entries(this.panels.generalInformation.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation[id] = input.value;
-      });
-
-      // Save generalInformation -> modelCategory
-      Object.entries(this.panels.modelCategory.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation.modelCategory[id] = input.value;
-      });
-
-      // Save generalInformation -> author, creator and reference
+      // generalInformation
+      _metadata.generalInformation = this.panels.generalInformation.data;
+      _metadata.generalInformation.modelCategory = this.panels.modelCategory;
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
-
       _metadata.generalInformation.reference = this.panels.reference.data;
 
       // Ignore temporarily publication type
@@ -346,31 +305,21 @@ fskeditorjs = function () {
       // as value.
       _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
-      // Scope general
-      Object.entries(this.panels.scopeGeneral.inputs).forEach(([id, input]) => {
-        _metadata.scope[id] = input.value;
-      });
-
+      // Scope
+      _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
       _metadata.scope.hazard = this.panels.hazard.data;
       _metadata.scope.populationGroup = this.panels.population.data;
 
       // Data background
-      if (!_metadata.dataBackground.study) {
-        _metadata.dataBackground.study = {};
-      }
-      Object.entries(this.panels.study.inputs).forEach(([id, input]) => {
-        _metadata.dataBackground.study[id] = input.value;
-      });
+      _metadata.dataBackground.study = this.panels.study.data;
       _metadata.dataBackground.studySample = this.panels.studySample.data;
       _metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
       _metadata.dataBackground.laboratory = this.panels.laboratory.data;
       _metadata.dataBackground.assay = this.panels.assay.data;
 
       // Model math
-      Object.entries(this.panels.modelMath.inputs).forEach(([id, input]) => {
-        _metadata.modelMath[id] = input.value;
-      });
+      _metadata.modelMath = this.panels.modelMath.data;
       _metadata.modelMath.parameter = this.panels.parameter.data;
       _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
@@ -458,20 +407,11 @@ fskeditorjs = function () {
 
     get metaData() {
 
-      // Save generalInformation -> general
-      Object.entries(this.panels.generalInformation.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation[id] = input.value;
-      });
-
-      // Save generalInformation -> modelCategory
-      Object.entries(this.panels.modelCategory.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation.modelCategory[id] = input.value;
-      });
-
-      // Save generalInformation -> author, creator and reference
+      // general information
+      _metadata.generalInformation = this.panels.generalInformation.data;
+      _metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
-
       _metadata.generalInformation.reference = this.panels.reference.data;
 
       // Ignore temporarily publication type
@@ -483,30 +423,20 @@ fskeditorjs = function () {
       // as value.
       _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
-      // Scope general
-      Object.entries(this.panels.scopeGeneral.inputs).forEach(([id, input]) => {
-        _metadata.scope[id] = input.value;
-      });
-
+      // scope
+      _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
       _metadata.scope.hazard = this.panels.hazard.data;
       _metadata.scope.populationGroup = this.panels.population.data;
 
       // Data background
-      if (!_metadata.dataBackground.study) {
-        _metadata.dataBackground.study = {};
-      }
-      Object.entries(this.panels.study.inputs).forEach(([id, input]) => {
-        _metadata.dataBackground.study[id] = input.value;
-      });
+      _metadata.dataBackground.study = this.panels.study.data;
       _metadata.dataBackground.studySample = this.panels.studySample.data;
       _metadata.dataBackground.laboratory = this.panels.laboratory.data;
       _metadata.dataBackground.assay = this.panels.assay.data;
 
       // Model math
-      Object.entries(this.panels.modelMath.inputs).forEach(([id, input]) => {
-        _metadata.modelMath[id] = input.value;
-      });
+      _metadata.modelMath = this.panels.modelMath.data;
       _metadata.modelMath.parameter = this.panels.parameter.data;
       _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
@@ -608,20 +538,12 @@ fskeditorjs = function () {
     }
 
     get metaData() {
-      // Save generalInformation -> general
-      Object.entries(this.panels.generalInformation.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation[id] = input.value;
-      });
 
-      // Save generalInformation -> modelCategory
-      Object.entries(this.panels.modelCategory.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation.modelCategory[id] = input.value;
-      });
-
-      // Save generalInformation -> author, creator and reference
+      // general information
+      _metadata.generalInformation = this.panels.generalInformation.data;
+      _metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
-
       _metadata.generalInformation.reference = this.panels.reference.data;
 
       // Ignore temporarily publication type
@@ -633,37 +555,23 @@ fskeditorjs = function () {
       // as value.
       _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
-      // Scope general
-      Object.entries(this.panels.scopeGeneral.inputs).forEach(([id, input]) => {
-        _metadata.scope[id] = input.value;
-      });
-
+      // scope
+      _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.hazard = this.panels.hazard.data;
       _metadata.scope.populationGroup = this.panels.population.data;
 
       // Data background
-      if (!_metadata.dataBackground.study) {
-        _metadata.dataBackground.study = {};
-      }
-      Object.entries(this.panels.study.inputs).forEach(([id, input]) => {
-        _metadata.dataBackground.study[id] = input.value;
-      });
+      _metadata.dataBackground.study = this.panels.study.data;
       _metadata.dataBackground.studySample = this.panels.studySample.data;
       _metadata.dataBackground.laboratory = this.panels.laboratory.data;
       _metadata.dataBackground.assay = this.panels.assay.data;
 
       // Model math
-      Object.entries(this.panels.modelMath.inputs).forEach(([id, input]) => {
-        _metadata.modelMath[id] = input.value;
-      });
+      _metadata.modelMath = this.panels.modelMath.data;
       _metadata.modelMath.parameter = this.panels.parameter.data;
       _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
-
-      _metadata.modelMath.exposure = {};
-      Object.entries(this.panels.exposure.inputs).forEach(([id, input]) => {
-        _metadata.modelMath.exposure[id] = input.value; 
-      });
+      _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "DoseResponseModel";
       
@@ -759,20 +667,11 @@ fskeditorjs = function () {
 
     get metaData() {
 
-      // Save generalInformation -> general
-      Object.entries(this.panels.generalInformation.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation[id] = input.value;
-      });
-
-      // Save generalInformation -> modelCategory
-      Object.entries(this.panels.modelCategory.inputs).forEach(([id, input]) => {
-        _metadata.generalInformation.modelCategory[id] = input.value;
-      });
-
-      // Save generalInformation -> author, creator and reference
+      // general information
+      _metadata.generalInformation = this.panels.generalInformation.data;
+      _metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
       _metadata.generalInformation.author = this.panels.author.data;
       _metadata.generalInformation.creator = this.panels.creator.data;
-
       _metadata.generalInformation.reference = this.panels.reference.data;
 
       // Ignore temporarily publication type
@@ -784,31 +683,21 @@ fskeditorjs = function () {
       // as value.
       _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
 
-      // Scope general
-      Object.entries(this.panels.scopeGeneral.inputs).forEach(([id, input]) => {
-        _metadata.scope[id] = input.value;
-      });
-
+      // scope
+      _metadata.scope = this.panels.scopeGeneral.data;
       _metadata.scope.product = this.panels.product.data;
       _metadata.scope.hazard = this.panels.hazard.data;
       _metadata.scope.populationGroup = this.panels.population.data;
 
       // Data background
-      if (!_metadata.dataBackground.study) {
-        _metadata.dataBackground.study = {};
-      }
-      Object.entries(this.panels.study.inputs).forEach(([id, input]) => {
-        _metadata.dataBackground.study[id] = input.value;
-      });
+      _metadata.dataBackground.study = this.panels.study.data;
       _metadata.dataBackground.studySample = this.panels.studySample.data;
       _metadata.dataBackground.dietaryAssessmentMethod = this.panels.dietaryAssessmentMethod.data;
       _metadata.dataBackground.laboratory = this.panels.laboratory.data;
       _metadata.dataBackground.assay = this.panels.assay.data;
 
       // Model math
-      Object.entries(this.panels.modelMath.inputs).forEach(([id, input]) => {
-        _metadata.modelMath[id] = input.value;
-      });
+      _metadata.modelMath = this.panels.modelMath.data;
       _metadata.modelMath.parameter = this.panels.parameter.data;
       _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
@@ -1853,6 +1742,12 @@ fskeditorjs = function () {
       Object.values(this.inputs).forEach(input => {
         if (!input.validate()) isValid = false;});
       return isValid;
+    }
+
+    get data() {
+      let data = {};
+      Object.entries(this.inputs).forEach(([id, input]) => data[id] = input.value);
+      return data;
     }
   }
 
