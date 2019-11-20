@@ -65,7 +65,7 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "GenericModel";
-      
+
       return _metadata;
     }
 
@@ -117,7 +117,7 @@ fskeditorjs = function () {
         population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
         dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
           schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
@@ -126,7 +126,7 @@ fskeditorjs = function () {
         assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
         parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
         modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
           _metadata.modelMath.modelEquation),
@@ -166,7 +166,7 @@ fskeditorjs = function () {
       this.menus = this._createMenus();
     }
 
-     // Validate this.panels and return boolean
+    // Validate this.panels and return boolean
     validate() {
       let isValid = true;
       if (!this.panels.generalInformation.validate()) isValid = false;
@@ -209,7 +209,7 @@ fskeditorjs = function () {
       _metadata.modelMath.parameter = this.panels.parameter.data;
 
       _metadata.modelType = "DataModel";
-      
+
       return _metadata;
     }
 
@@ -248,7 +248,7 @@ fskeditorjs = function () {
         population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
         dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
           schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
@@ -326,7 +326,7 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "PredictiveModel";
-      
+
       return _metadata;
     }
 
@@ -370,7 +370,7 @@ fskeditorjs = function () {
         product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
         hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
         laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
           _metadata.dataBackground.laboratory),
@@ -442,7 +442,7 @@ fskeditorjs = function () {
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
 
       _metadata.modelType = "OtherModel";
-      
+
       return _metadata;
     }
 
@@ -492,14 +492,14 @@ fskeditorjs = function () {
         population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
         laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
           _metadata.dataBackground.laboratory),
         assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
         parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
         modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
           _metadata.modelMath.modelEquation)
@@ -530,7 +530,7 @@ fskeditorjs = function () {
 
   // Handler for dose response model schema
   class DoseResponseModel {
-    
+
     constructor() {
       this.dialogs = this._createDialogs();
       this.panels = this._createPanels();
@@ -574,7 +574,7 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "DoseResponseModel";
-      
+
       return _metadata;
     }
 
@@ -620,14 +620,14 @@ fskeditorjs = function () {
         population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
         laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
           _metadata.dataBackground.laboratory),
         assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
         parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
         modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
           _metadata.modelMath.modelEquation),
@@ -703,7 +703,7 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "ToxicologicalModel";
-      
+
       return _metadata;
     }
 
@@ -753,14 +753,14 @@ fskeditorjs = function () {
         population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
         laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
           _metadata.dataBackground.laboratory),
         assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
         parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
         modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
           _metadata.modelMath.modelEquation),
@@ -837,7 +837,7 @@ fskeditorjs = function () {
       _metadata.modelMath.exposure = this.panels.exposure.data;
 
       _metadata.modelType = "ExposureModel";
-      
+
       return _metadata;
     }
 
@@ -889,7 +889,7 @@ fskeditorjs = function () {
         population: new TablePanel("Population", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
         dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
           schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
@@ -898,7 +898,7 @@ fskeditorjs = function () {
         assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
         parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
         modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
           _metadata.modelMath.modelEquation),
@@ -975,7 +975,7 @@ fskeditorjs = function () {
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
 
       _metadata.modelType = "ProcessModel";
-      
+
       return _metadata;
     }
 
@@ -1022,14 +1022,14 @@ fskeditorjs = function () {
         product: new TablePanel("Product", this.dialogs.productDialog, schema.product, _metadata.scope.product),
         hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
         laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
           _metadata.dataBackground.laboratory),
         assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
         parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
         modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
           _metadata.modelMath.modelEquation)
@@ -1101,7 +1101,7 @@ fskeditorjs = function () {
       _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
 
       _metadata.modelType = "ConsumptionModel";
-      
+
       return _metadata;
     }
 
@@ -1150,7 +1150,7 @@ fskeditorjs = function () {
         populationGroup: new TablePanel("Population group", this.dialogs.populationDialog, schema.populationGroup,
           _metadata.scope.populationGroup),
         study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
-        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample, 
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
           _metadata.dataBackground.studySample),
         dietaryAssessmentMethod: new TablePanel("Dietary assessment method", this.dialogs.methodDialog,
           schema.dietaryAssessmentMethod, _metadata.dataBackground.dietaryAssessmentMethod),
@@ -1159,7 +1159,7 @@ fskeditorjs = function () {
         assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
         modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
         parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
-        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures, 
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
           _metadata.modelMath.qualityMeasures),
         modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
           _metadata.modelMath.modelEquation)
@@ -1169,7 +1169,7 @@ fskeditorjs = function () {
     _createMenus() {
       return createSubMenu("General information", [
         { "id": "generalInformation", "label": "General" },
-        { "id": "modelCategory", "label": "Model category"},
+        { "id": "modelCategory", "label": "Model category" },
         { "id": "author", "label": "Author" },
         { "id": "creator", "label": "Creator" },
         { "id": "reference", "label": "Reference" }]) +
@@ -1183,6 +1183,138 @@ fskeditorjs = function () {
         createSubMenu("Model math", [{ "id": "parameter", "label": "Parameter" },
         { "id": "qualityMeasures", "label": "Quality measures" },
         { "id": "modelEquation", "label": "Model equation" }]);
+    }
+  }
+
+  class HealthModel {
+
+    constructor() {
+      this.dialogs = this._createDialogs();
+      this.panels = this._createPanels();
+      this.menus = this._createMenus();
+    }
+
+    // TODO: update get metaData
+    get metaData() {
+
+      // generalInformation
+      _metadata.generalInformation = this.panels.generalInformation.data;
+      _metadata.generalInformation.modelCategory = this.panels.modelCategory.data;
+      _metadata.generalInformation.author = this.panels.author.data;
+      _metadata.generalInformation.creator = this.panels.creator.data;
+      _metadata.generalInformation.reference = this.panels.reference.data;
+
+      // Ignore temporarily publication type
+      // TODO: publicationType takes the abbreviation instead of the full string
+      // used in the Reference dialog. Since KNIME runs getComponentValue twice,
+      // the value cannot be converted here. The 1st call to getComponentValue
+      // would get the abbreviation but the 2nd call would corrupt it. The HTML
+      // select should instead use the full string as label and the abreviation
+      // as value.
+      _metadata.generalInformation.reference.forEach(ref => ref.publicationType = null);
+
+      // Scope
+      _metadata.scope = this.panels.scopeGeneral.data;
+      _metadata.scope.hazard = this.panels.hazard.data;
+      _metadata.scope.populationGroup = this.panels.populationGroup.data;
+
+      // Data background
+      _metadata.dataBackground.study = this.panels.study.data;
+      _metadata.dataBackground.studySample = this.panels.studySample.data;
+      _metadata.dataBackground.laboratory = this.panels.laboratory.data;
+      _metadata.dataBackground.assay = this.panels.assay.data;
+
+      // Model math
+      _metadata.modelMath = this.panels.modelMath.data;
+      _metadata.modelMath.parameter = this.panels.parameter.data;
+      _metadata.modelMath.qualityMeasures = this.panels.qualityMeasures.data;
+      _metadata.modelMath.modelEquation = this.panels.modelEquation.data;
+      _metadata.modelMath.exposure = this.panels.exposure.data;
+
+      _metadata.modelType = "HealthModel";
+
+      return _metadata;
+    }
+
+    // Validate this.panels and return boolean
+    validate() {
+      let isValid = true;
+      if (!this.panels.generalInformation.validate()) isValid = false;
+      if (!this.panels.modelCategory.validate()) isValid = false;
+      if (!this.panels.scopeGeneral.validate()) isValid = false;
+      if (!this.panels.study.validate()) isValid = false;
+      return isValid;
+    }
+
+    _createDialogs() {
+
+      let schema = schemas.healthModel;
+
+      return {
+        authorDialog: new Dialog("authorDialog", "Add dialog", schema.contact),
+        creatorDialog: new Dialog("creatorDialog", "Add creator", schema.contact),
+        referenceDialog: new Dialog("referenceDialog", "Add reference", schema.reference),
+        hazardDialog: new Dialog("hazardDialog", "Add hazard", schema.hazard),
+        populationDialog: new Dialog("populationDialog", "Add population group", schema.populationGroup),
+        studySampleDialog: new Dialog("studySampleDialog", "Add study sample", schema.studySample),
+        laboratoryDialog: new Dialog("laboratoryDialog", "Add laboratory", schema.laboratory),
+        assayDialog: new Dialog("assayDialog", "Add assay", schema.assay),
+        parameterDialog: new Dialog("parameterDialog", "Add parameter", schema.parameter),
+        measuresDialog: new Dialog("measuresDialog", "Add quality measures", schema.qualityMeasures),
+        equationDialog: new Dialog("equationDialog", "Add model equation", schema.modelEquation),
+        exposureDialog: new Dialog("exposureDialog", "Add exposure", schema.exposure)
+      };
+    }
+
+    _createPanels() {
+
+      let schema = schemas.healthModel;
+
+      return {
+        generalInformation: new FormPanel("General", schema.generalInformation, _metadata.generalInformation),
+        modelCategory: new FormPanel("Model category", schema.modelCategory, _metadata.generalInformation.modelCategory),
+        author: new TablePanel("Author", this.dialogs.authorDialog, schema.contact, _metadata.generalInformation.author),
+        creator: new TablePanel("Creator", this.dialogs.creatorDialog, schema.contact, _metadata.generalInformation.creator),
+        reference: new TablePanel("Reference", this.dialogs.referenceDialog, schema.reference, _metadata.generalInformation.reference),
+        scopeGeneral: new FormPanel("General", schema.scope, _metadata.scope),
+        hazard: new TablePanel("Hazard", this.dialogs.hazardDialog, schema.hazard, _metadata.scope.hazard),
+        populationGroup: new TablePanel("Population group", this.dialogs.populationDialog, schema.populationGroup,
+          _metadata.scope.populationGroup),
+        study: new FormPanel("Study", schema.study, _metadata.dataBackground.study),
+        studySample: new TablePanel("Study sample", this.dialogs.studySampleDialog, schema.studySample,
+          _metadata.dataBackground.studySample),
+        laboratory: new TablePanel("Laboratory", this.dialogs.laboratoryDialog, schema.laboratory,
+          _metadata.dataBackground.laboratory),
+        assay: new TablePanel("Assay", this.dialogs.assayDialog, schema.assay, _metadata.dataBackground.assay),
+        modelMath: new FormPanel("Model math", schema.modelMath, _metadata.modelMath),
+        parameter: new TablePanel("Parameter", this.dialogs.parameterDialog, schema.parameter, _metadata.modelMath.parameter),
+        qualityMeasures: new TablePanel("Quality measures", this.dialogs.measuresDialog, schema.qualityMeasures,
+          _metadata.modelMath.qualityMeasures),
+        modelEquation: new TablePanel("Model equation", this.dialogs.equationDialog, schema.modelEquation,
+          _metadata.modelMath.modelEquation),
+        exposure: new TablePanel("Exposure", this.dialogs.exposureDialog, schema.exposure, _metadata.modelMath.exposure)
+      };
+    }
+
+    _createMenus() {
+      return createSubMenu("General information", [
+        { "id": "generalInformation", "label": "General" },
+        { "id": "modelCategory", "label": "Model category" },
+        { "id": "author", "label": "Author" },
+        { "id": "creator", "label": "Creator" },
+        { "id": "reference", "label": "Reference" }]) +
+        createSubMenu("Scope", [{ "id": "scopeGeneral", "label": "General" },
+        { "id": "hazard", "label": "Hazard" },
+        { "id": "populationGroup", "label": "Population group" }]) +
+        createSubMenu("Data Background", [{ "id": "study", "label": "Study" },
+        { "id": "studySample", "label": "Study sample" },
+        { "id": "laboratory", "label": "Laboratory" },
+        { "id": "assay", "label": "Assay" }]) +
+        createSubMenu("Model math", [{ "id": "modelMath", "label": "General" },
+        { "id": "parameter", "label": "Parameter" },
+        { "id": "qualityMeasures", "label": "Quality measures" },
+        { "id": "modelEquation", "label": "Model equation" },
+        { "id": "exposure", "label": "Exposure" }]);
     }
   }
 
@@ -1264,16 +1396,16 @@ fskeditorjs = function () {
     if (prop.type === "text" || prop.type === "number" || prop.type === "url" ||
       prop.type === "date")
       return new InputForm(prop.label, isMandatory, prop.type, prop.description,
-         value ? value : "", vocabulary);
+        value ? value : "", vocabulary);
 
     if (prop.type === "enum")
       return new SelectForm(prop.label, isMandatory, prop.description, value,
         vocabulary);
-    
+
     if (prop.type === "boolean")
       return new InputForm(prop.label, isMandatory, "checkbox",
         prop.description, value, prop.description);
-    
+
     if (prop.type === "text-array")
       return new ArrayForm(prop.label, isMandatory, prop.type,
         value ? value : [], prop.description, vocabulary);
@@ -1307,8 +1439,8 @@ fskeditorjs = function () {
    */
   class ArrayForm {
 
-    constructor (name, mandatory, type, value, helperText, vocabulary) {
-      this.group = document.createElement("div");      
+    constructor(name, mandatory, type, value, helperText, vocabulary) {
+      this.group = document.createElement("div");
       this.simpleTable = new SimpleTable(type, value, vocabulary);
       this._create(name, mandatory, helperText);
     }
@@ -1332,7 +1464,7 @@ fskeditorjs = function () {
       trashButton.type = "button";
       trashButton.classList.add("btn", "btn-default");
       trashButton.innerHTML = '<i class="glyphicon glyphicon-trash"></i>';
-      trashButton.onclick = () => this.simpleTable.trash();      
+      trashButton.onclick = () => this.simpleTable.trash();
 
       // Create buttonDiv with buttons
       let buttonDiv = document.createElement("div");
@@ -1392,7 +1524,7 @@ fskeditorjs = function () {
 
   class SimpleTable {
 
-    constructor (type, data, vocabulary) {
+    constructor(type, data, vocabulary) {
       this.type = type === "text-array" ? "text" : "date";
       this.vocabulary = vocabulary;
 
@@ -1454,7 +1586,7 @@ fskeditorjs = function () {
           this.add();
         }
       });
-      
+
       // Create cell with input
       let inputCell = document.createElement("td");
       inputCell.appendChild(input);
@@ -1484,7 +1616,7 @@ fskeditorjs = function () {
 
   class AdvancedTable {
 
-    constructor (data, formData, dialog, panel) {
+    constructor(data, formData, dialog, panel) {
       this.formData = formData;
       this.dialog = dialog;
       this.panel = panel;
@@ -1585,7 +1717,7 @@ fskeditorjs = function () {
 
     edit(rowNumber, data) {
       let row = this.body.childNodes[rowNumber];
-      
+
       for (let i = 0; i < this.formData.length; i++) {
         let prop = this.formData[i];
         let cell = row.childNodes[i];
@@ -1615,7 +1747,7 @@ fskeditorjs = function () {
    * Bootstrap 3 form-group for an input.
    */
   class InputForm {
-    
+
     /**
      * Create a Bootstrap 3 form-group.
      * 
@@ -1645,13 +1777,13 @@ fskeditorjs = function () {
      * @param {string} value Initial value of the property.
      * @param {Array} vocabulary List of possible value for autocompletion.
      */
-    constructor (name, mandatory, type, helperText, value, vocabulary=null) {
+    constructor(name, mandatory, type, helperText, value, vocabulary = null) {
 
       this.name = name;
       this.mandatory = mandatory;
       this.type = type;
       this.helperText = helperText;
-      
+
       this.input = document.createElement("input");
       this.group = document.createElement("div");
       this._create(name, mandatory, type, helperText, value, vocabulary);
@@ -1696,12 +1828,12 @@ fskeditorjs = function () {
       this.group.appendChild(inputDiv);
     }
 
-    get value ()  {
+    get value() {
       return this.type !== "checkbox" ? this.input.value : this.input.checked;
     }
 
     set value(newValue) {
-       this.input.value = newValue;
+      this.input.value = newValue;
     }
 
     clear() {
@@ -1712,7 +1844,7 @@ fskeditorjs = function () {
       }
 
       // Remove validation classes
-      this.group.classList.remove("has-success", "has-error"); 
+      this.group.classList.remove("has-success", "has-error");
     }
 
     /**
@@ -1732,7 +1864,7 @@ fskeditorjs = function () {
       }
 
       // Remove validation classes
-      this.group.classList.remove("has-success", "has-error"); 
+      this.group.classList.remove("has-success", "has-error");
 
       // Add new validation class
       this.group.classList.add(isValid ? "has-success" : "has-error");
@@ -1758,7 +1890,7 @@ fskeditorjs = function () {
      *   </select>
      * </div>```
      */
-    constructor (name, mandatory, helperText, value, vocabulary=null) {
+    constructor(name, mandatory, helperText, value, vocabulary = null) {
 
       this.select = document.createElement("select");
       this.group = document.createElement("div");
@@ -1770,7 +1902,7 @@ fskeditorjs = function () {
 
       this.select.className = "form-control";
       // Add options from vocabulary. The option matching value is selected.
-      this.select.innerHTML = vocabulary.map(item =>`<option>${item}</option>`)
+      this.select.innerHTML = vocabulary.map(item => `<option>${item}</option>`)
         .join("");
       this.select.value = value;
       this.select.title = helperText;
@@ -1811,7 +1943,7 @@ fskeditorjs = function () {
       }
 
       // Remove validation classes
-      this.group.classList.remove("has-success", "has-error"); 
+      this.group.classList.remove("has-success", "has-error");
 
       // Add new validation class
       this.group.classList.add(isValid ? "has-success" : "has-error");
@@ -1854,14 +1986,14 @@ fskeditorjs = function () {
      * @param {title} title Dialog title
      * @param {formData} formData Object with form data
      */
-    constructor (id, title, formData) {
+    constructor(id, title, formData) {
       this.inputs = {};  // Hash of inputs by id
 
       // Index of the row currently edited. It is -1 if no row is being edited.
       // This is the case of when a new row is added.
       this.editedRow = -1;
 
-      this.modal = document.createElement("div");      
+      this.modal = document.createElement("div");
       this.create(id, title, formData);
     }
 
@@ -1986,7 +2118,7 @@ fskeditorjs = function () {
      * @param {object} formData Related data from the UI schema.
      * @param {object} data Initial data of the table.
      */
-    constructor (title, dialog, formData, data) {
+    constructor(title, dialog, formData, data) {
 
       this.panel = document.createElement("div");
 
@@ -2019,7 +2151,7 @@ fskeditorjs = function () {
         Object.values(dialog.inputs).forEach(input => input.clear());
         $(dialog.modal).modal('show');
       };
-      
+
       // Trash button
       let trashButton = document.createElement("button");
       trashButton.classList.add("btn", "btn-danger");
@@ -2104,7 +2236,7 @@ fskeditorjs = function () {
      * @param {*} formData 
      */
     _create(title, formData, data) {
-      
+
       this.panel.classList.add("panel", "panel-default");
       this.panel.innerHTML = `<div class="panel-heading">
       <h3 class="panel-title">${title}</h3>
@@ -2129,7 +2261,8 @@ fskeditorjs = function () {
     validate() {
       let isValid = true;
       Object.values(this.inputs).forEach(input => {
-        if (!input.validate()) isValid = false;});
+        if (!input.validate()) isValid = false;
+      });
       return isValid;
     }
 
@@ -2192,6 +2325,8 @@ fskeditorjs = function () {
       handler = new ProcessModel();
     } else if (value.modelType === "consumptionModel") {
       handler = new ConsumptionModel();
+    } else if (value.modelType === "healthModel") {
+      handler = new HealthModel();
     }
 
     createUI();
@@ -2224,9 +2359,9 @@ fskeditorjs = function () {
   function createUI() {
 
     let panelsById = [
-      {id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.firstModelScript}</textarea>`},
-      {id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.firstModelViz}</textarea>`},
-      {id: "readme", panel: `<textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>`}      
+      { id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.firstModelScript}</textarea>` },
+      { id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.firstModelViz}</textarea>` },
+      { id: "readme", panel: `<textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>` }
     ];
 
     let bodyContent = `
@@ -2262,7 +2397,7 @@ fskeditorjs = function () {
     const container = document.getElementsByClassName("container-fluid")[0];
     Object.values(handler.dialogs).forEach(dialog => container.appendChild(dialog.modal));
 
-    const viewContent = document.getElementById("viewContent");    
+    const viewContent = document.getElementById("viewContent");
 
     Object.entries(handler.panels).forEach(([key, value]) => {
       let tabPanel = document.createElement("div");
