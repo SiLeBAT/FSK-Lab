@@ -2577,15 +2577,22 @@ fskeditorjs = function () {
 
     if (!value.modelMetaData || value.modelMetaData == "null" || value.modelMetaData == "") {
       _metadata.generalInformation = {};
+      _metadata.generalInformation.modelCategory = {};
       _metadata.scope = {};
       _metadata.modelMath = {};
       _metadata.dataBackground = {}
     } else {
       let metaData = JSON.parse(value.modelMetaData);
-      _metadata.generalInformation = metaData.generalInformation;
-      _metadata.scope = metaData.scope;
-      _metadata.modelMath = metaData.modelMath;
-      _metadata.dataBackground = metaData.dataBackground;
+
+      if (!metaData.generalInformation) {
+        _metadata.generalInformation = { modelCategory: {} };
+      } else {
+        _metadata = metaData.generalInformation;
+      }
+
+      _metadata.scope = metaData.scope ? metaData.scope : {};
+      _metadata.dataBackground = metaData.dataBackground ? metaData.dataBackground : {};
+      _metadata.modelMath = metaData.modelMath ? metaData.modelMath : {};
     }
 
     if (value.modelType === "genericModel") {
@@ -2612,6 +2619,8 @@ fskeditorjs = function () {
       handler = new RiskModel();
     } else if (value.modelType === "qraModel") {
       handler = new QraModel();
+    } else {
+      handler = new GenericModel();
     }
 
     createUI();

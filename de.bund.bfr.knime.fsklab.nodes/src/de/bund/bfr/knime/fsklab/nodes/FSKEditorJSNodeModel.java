@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.util.SystemOutLogger;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -70,6 +69,8 @@ import de.bund.bfr.knime.fsklab.FskPlugin;
 import de.bund.bfr.knime.fsklab.FskPortObject;
 import de.bund.bfr.knime.fsklab.FskPortObjectSpec;
 import de.bund.bfr.knime.fsklab.FskSimulation;
+import de.bund.bfr.metadata.swagger.GenericModel;
+import de.bund.bfr.metadata.swagger.Model;
 import de.bund.bfr.metadata.swagger.Parameter;
 import metadata.SwaggerUtil;
 
@@ -230,23 +231,27 @@ final class FSKEditorJSNodeModel
         currentWorkingDirectory.mkdir();
         workingDirectory = currentWorkingDirectory.getPath();
       }
+      
       inObj1 = new FskPortObject(workingDirectory, readme, new ArrayList<>());
       inObj1.model = "";
       inObj1.viz = "";
+      inObj1.modelMetadata = new GenericModel();
+      inObj1.modelMetadata.modelType("genericModel");
     }
 
     // Clone input object
     synchronized (getLock()) {
       FSKEditorJSViewValue fskEditorProxyValue = getViewValue();
-      if(!StringUtils.isBlank(nodeSettings.modelType)) {
+      
+      if (!StringUtils.isBlank(nodeSettings.modelType)) {
         fskEditorProxyValue.modelType = nodeSettings.modelType;
-      }else if(inObj1!=null){
+      } else if(inObj1 != null && inObj1.modelMetadata != null) {
         fskEditorProxyValue.modelType = inObj1.modelMetadata.getModelType();
-      }else {
+      } else {
         fskEditorProxyValue.modelType = "GenericModel";
       }
+      
       // If not executed
-
       if (fskEditorProxyValue.getModelMetaData() == null) {
         if (inObjects[0] == null) {
           loadJsonSetting();
@@ -255,6 +260,7 @@ final class FSKEditorJSNodeModel
           fskEditorProxyValue.setModelMetaData( FromOjectToJSON(inObj1.modelMetadata));
           fskEditorProxyValue.firstModelScript = inObj1.model;
           fskEditorProxyValue.firstModelViz = inObj1.viz;
+          fskEditorProxyValue.modelType = inObj1.modelMetadata.getModelType();
           fskEditorProxyValue.readme = inObj1.getReadme();
           
         }
@@ -269,7 +275,8 @@ final class FSKEditorJSNodeModel
       }
       outObj = inObj1;
 
-      outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.getModelMetaData(),SwaggerUtil.modelClasses.get(fskEditorProxyValue.modelType) );
+      Class <? extends Model> modelClass = SwaggerUtil.modelClasses.get(fskEditorProxyValue.modelType);
+      outObj.modelMetadata = getObjectFromJson(fskEditorProxyValue.getModelMetaData(), modelClass);
 
       if (outObj.modelMetadata != null && SwaggerUtil.getModelMath(outObj.modelMetadata) != null) {
         List<Parameter> parametersList = SwaggerUtil.getParameter(outObj.modelMetadata);
@@ -291,6 +298,7 @@ final class FSKEditorJSNodeModel
           outObj.simulations.add(0, NodeUtils.createDefaultSimulation(parametersList));
         }
       }
+      
       outObj.model = fskEditorProxyValue.firstModelScript;
       outObj.viz = fskEditorProxyValue.firstModelViz;
       outObj.setReadme(fskEditorProxyValue.readme);
