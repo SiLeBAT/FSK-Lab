@@ -2706,15 +2706,15 @@ fskeditorjs = function () {
     _visualizationCodeMirror = createCodeMirror("visualizationScript", "text/x-rsrc");
     _readmeCodeMirror = createCodeMirror("readme", "text/x-markdown");
 
-    $('#modelScript-tab').on('shown.bs.tab', () => {
+    $('#modelScript').on('shown.bs.tab', () => {
       _modelCodeMirror.refresh();
     });
 
-    $('#visualizationScript-tab').on('shown.bs.tab', () => {
+    $('#visualizationScript').on('shown.bs.tab', () => {
       _visualizationCodeMirror.refresh();
     });
 
-    $('#readme-tab').on('shown.bs.tab', () => {
+    $('#readme').on('shown.bs.tab', () => {
       _readmeCodeMirror.refresh();
     });
   }
