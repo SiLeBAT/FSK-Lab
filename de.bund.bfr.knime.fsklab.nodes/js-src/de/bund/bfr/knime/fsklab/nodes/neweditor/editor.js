@@ -2429,15 +2429,15 @@ fskeditorjs = function () {
     _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
     _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
 
-    $('#modelScript').on('shown.bs.tab', () => {
+    $('#modelScript-tab').on('shown.bs.tab', () => {
       _modelCodeMirror.refresh();
     });
 
-    $('#visualizationScript').on('shown.bs.tab', () => {
+    $('#visualizationScript-tab').on('shown.bs.tab', () => {
       _visualizationCodeMirror.refresh();
     });
 
-    $('#readme').on('shown.bs.tab', () => {
+    $('#readme-tab').on('shown.bs.tab', () => {
       _readmeCodeMirror.refresh();
     });
   }
