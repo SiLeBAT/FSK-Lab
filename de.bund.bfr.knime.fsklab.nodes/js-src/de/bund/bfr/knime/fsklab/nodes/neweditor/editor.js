@@ -2300,7 +2300,7 @@ fskeditorjs = function () {
       if (!metaData.generalInformation) {
         _metadata.generalInformation = { modelCategory: {} };
       } else {
-        _metadata = metaData.generalInformation;
+        _metadata.generalInformation = metaData.generalInformation;
       }
 
       _metadata.scope = metaData.scope ? metaData.scope : {};
