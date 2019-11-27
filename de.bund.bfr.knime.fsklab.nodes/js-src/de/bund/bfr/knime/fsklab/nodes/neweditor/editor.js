@@ -2365,6 +2365,12 @@ fskeditorjs = function () {
   /** UI code. */
   function createUI() {
 
+    let panelsById = [
+      { id: "modelScript", panel: `<textarea id="modelScriptArea">${_val.firstModelScript}</textarea>` },
+      { id: "visualizationScript", panel: `<textarea id="visualizationScriptArea">${_val.firstModelViz}</textarea>` },
+      { id: "readme", panel: `<textarea id="readmeArea" name="readmeArea">${_val.readme}</textarea>` }
+    ];
+
     let bodyContent = `
 <div class="container-fluid">
   <nav class="navbar navbar-default">
@@ -2386,9 +2392,8 @@ fskeditorjs = function () {
     </div>
   </nav>
   <div class="tab-content" id="viewContent">
-    <div id="modelScript" role="tabpanel" class="tab-pane">${_val.firstModelScript}</div>
-    <div id="visualizationScript" role="tabpanel" class="tab-pane">${_val.firstModelViz}</div>
-    <div id="readme" role="tabpanel" class="tab-pane">${_val.readme}</div>
+    ${panelsById.map(entry => `<div role="tabpanel" class="tab-pane"
+    id="${entry.id}">${entry.panel}</div>`).join("")}
   </div>
 </div>`;
 
@@ -2420,9 +2425,9 @@ fskeditorjs = function () {
     document.getElementById("generalInformation").classList.add("active");
 
     // Create code mirrors for text areas with scripts and readme
-    _modelCodeMirror = createCodeMirror("modelScript", "text/x-rsrc");
-    _visualizationCodeMirror = createCodeMirror("visualizationScript", "text/x-rsrc");
-    _readmeCodeMirror = createCodeMirror("readme", "text/x-markdown");
+    _modelCodeMirror = createCodeMirror("modelScriptArea", "text/x-rsrc");
+    _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
+    _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
 
     $('#modelScript').on('shown.bs.tab', () => {
       _modelCodeMirror.refresh();
@@ -2454,9 +2459,9 @@ fskeditorjs = function () {
     </li>`;
   }
 
-  // Create a CodeMirror for a given element
-  function createCodeMirror(elementId, language) {
-    return new CodeMirror(document.getElementById(elementId),
+  // Create a CodeMirror for a given text area
+  function createCodeMirror(textAreaId, language) {
+    return window.CodeMirror.fromTextArea(document.getElementById(textAreaId),
       {
         lineNumbers: true,
         lineWrapping: true,
