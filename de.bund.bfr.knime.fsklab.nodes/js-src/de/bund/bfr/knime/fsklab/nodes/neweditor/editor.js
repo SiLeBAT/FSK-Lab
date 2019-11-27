@@ -2429,16 +2429,21 @@ fskeditorjs = function () {
     _visualizationCodeMirror = createCodeMirror("visualizationScriptArea", "text/x-rsrc");
     _readmeCodeMirror = createCodeMirror("readmeArea", "text/x-markdown");
 
+    _modelCodeMirror.on("blur", () => { _modelCodeMirror.focus(); });
+    _visualizationCodeMirror.on("blur", () => { _visualizationCodeMirror.focus(); });
+    _readmeCodeMirror.on("blur", () =>{ _readmeCodeMirror.focus(); });
     $('#modelScript-tab').on('shown.bs.tab', () => {
-      _modelCodeMirror.refresh();
+      _modelCodeMirror.refresh(); 
+      _modelCodeMirror.focus();
     });
 
     $('#visualizationScript-tab').on('shown.bs.tab', () => {
       _visualizationCodeMirror.refresh();
+      _visualizationCodeMirror.focus();
     });
-
     $('#readme-tab').on('shown.bs.tab', () => {
       _readmeCodeMirror.refresh();
+      _readmeCodeMirror.focus();
     });
   }
 
