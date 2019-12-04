@@ -248,12 +248,6 @@
       </webResource>
       <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/codemirror.css" type="CSS" />
       
-	  <webResource
-        relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/r.js"
-        relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/r.js">
-      </webResource>
-      <importResource relativePath="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/fskemfeditor/r.js" type="JAVASCRIPT" />
-      
       <webResource
         relativePathSource="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/App.css"
         relativePathTarget="js-src/de/bund/bfr/knime/fsklab/nodes/joiner/emfbundle/App.css">
@@ -308,8 +302,6 @@
       <webResource relativePathSource="js-lib/codemirror/" relativePathTarget="codemirror"></webResource>
 	  <importResource relativePath="codemirror/codemirror.js" type="JAVASCRIPT" />
 	  <importResource relativePath="codemirror/codemirror.css" type="CSS" />
-	  <!-- <importResource relativePath="codemirror/r.js" type="JAVASCRIPT" /> -->
-	  <!-- <importResource relativePath="codemirror/markdown.js" type="JAVASCRIPT" /> -->
     </webResourceBundle>
     
     <webResourceBundle debug="false" name="Bootstrap 3 Typeahead" usesDefine="false" version="4.0.2" webResourceBundleID="bootstrap3_typeahead_4.0.2">
