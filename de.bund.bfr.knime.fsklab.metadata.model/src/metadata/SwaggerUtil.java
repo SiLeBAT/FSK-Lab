@@ -14,7 +14,6 @@ import java.util.TreeMap;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 
 import de.bund.bfr.metadata.swagger.ConsumptionModel;
