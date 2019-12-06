@@ -64,7 +64,6 @@ import de.bund.bfr.metadata.swagger.ToxicologicalModelScope;
 @SuppressWarnings("static-method")
 public class SwaggerUtilTest {
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testConvertGeneralInformation() {
 
@@ -75,7 +74,7 @@ public class SwaggerUtilTest {
 			deprecated.setName("name");
 			deprecated.setSource("source");
 			deprecated.setIdentifier("identifier");
-			deprecated.setCreationDate(new Date(2018, 0, 1));
+			deprecated.setCreationDate(createDate(2018, 0, 1));
 			deprecated.setRights("rights");
 			deprecated.setAvailable(true);
 			deprecated.setFormat("format");
@@ -88,7 +87,7 @@ public class SwaggerUtilTest {
 			deprecated.getModelCategory().add(metadata.MetadataFactory.eINSTANCE.createModelCategory());
 
 			final metadata.ModificationDate md = metadata.MetadataFactory.eINSTANCE.createModificationDate();
-			md.setValue(new Date(2018, 0, 1));
+			md.setValue(createDate(2018, 0, 1));
 			deprecated.getModificationdate().add(md);
 
 			deprecated.setAuthor(metadata.MetadataFactory.eINSTANCE.createContact());
@@ -147,7 +146,7 @@ public class SwaggerUtilTest {
 			final metadata.Reference deprecated = metadata.MetadataFactory.eINSTANCE.createReference();
 			deprecated.setIsReferenceDescription(false);
 			deprecated.setPublicationType(metadata.PublicationType.RPRT);
-			deprecated.setPublicationDate(new Date(2018, 0, 1));
+			deprecated.setPublicationDate(createDate(2018, 0, 1));
 			deprecated.setPmid("pmid");
 			deprecated.setDoi("10.2903/j.efsa.2018.5134");
 			deprecated.setAuthorList("Miguel");
@@ -299,8 +298,8 @@ public class SwaggerUtilTest {
 			deprecated.setOriginCountry("originCountry");
 			deprecated.setOriginArea("originArea");
 			deprecated.setFisheriesArea("fisheriesArea");
-			deprecated.setProductionDate(new Date(2018, 0, 1));
-			deprecated.setExpiryDate(new Date(2019, 0, 1));
+			deprecated.setProductionDate(createDate(2018, 0, 1));
+			deprecated.setExpiryDate(createDate(2019, 0, 1));
 
 			product = SwaggerUtil.convert(deprecated);
 		}
@@ -906,5 +905,9 @@ public class SwaggerUtilTest {
 		model.setModelMath(new GenericModelModelMath());
 
 		return model;
+	}
+	
+	private static Date createDate(int year, int month, int date) {
+		return new Date(year - 1900, month, date);
 	}
 }
